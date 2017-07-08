@@ -483,6 +483,10 @@
     function _getOrderedServices(data, options) {
       var servicesToProcess = ['messaging', 'conferencing', 'communications', 'webexEEConferencing',
         'roomSystems', 'sparkBoard', 'care', 'advanceCare'];
+      var careServices = {
+        care: 'isCareEnabled',
+        advanceCare: 'isAdvanceCareEnabled',
+      };
       var servicesManagedByCurrentPartner = [];
       var servicesManagedByAnotherPartner = [];
 
@@ -491,10 +495,9 @@
         if (service === 'webexEEConferencing') {
           serviceToAdd = 'webex';
         }
-        var isCareOrCareVoice = service === 'care' || service === 'advanceCare';
-        var isValidCareService = service === 'care' && _.get(options, 'isCareEnabled', true);
-        var isValidCareVoiceService = service === 'advanceCare' && _.get(options, 'isAdvanceCareEnabled', true);
-        if (!isCareOrCareVoice || isValidCareService || isValidCareVoiceService) {
+
+        var careServiceEnabledPropertyName = careServices[service];
+        if (!careServices[service] || _.get(options, careServiceEnabledPropertyName, true)) {
           if (isServiceManagedByCurrentPartner(data[service])) {
             servicesManagedByCurrentPartner.push(serviceToAdd);
           } else {

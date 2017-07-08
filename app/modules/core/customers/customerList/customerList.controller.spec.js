@@ -194,7 +194,7 @@ describe('Controller: CustomerListCtrl', function () {
       initController();
       expect(controller.managedOrgsList).toBeDefined();
       expect(controller.managedOrgsList[0].customerName).toBe('testOrg');
-      expect(controller.managedOrgsList.length).toEqual(6);
+      expect(controller.managedOrgsList.length).toBe(6);
       expect(controller.managedOrgsList[1].customerName).toBe('Atlas_Test_Trial_vt453w4p8d');
       expect(controller.totalOrgs).toBe(6);
     });
@@ -205,7 +205,7 @@ describe('Controller: CustomerListCtrl', function () {
       initController();
       verifyPartnerOrgServiceObjects(controller.managedOrgsList[0]);
       // Since isCareEnabled is false, care service gets ignored. So, we expect 6 services.
-      expect(controller.managedOrgsList[0].orderedServices.servicesManagedByCurrentPartner.length).toEqual(6);
+      expect(controller.managedOrgsList[0].orderedServices.servicesManagedByCurrentPartner.length).toBe(6);
     });
 
     it('check service objects, where isCareEnabled true, of myOrg being added to the top of manangedOrgsList', function () {
@@ -215,7 +215,7 @@ describe('Controller: CustomerListCtrl', function () {
       initController();
       verifyPartnerOrgServiceObjects(controller.managedOrgsList[0]);
       // Since isCareEnabled is true, care service gets included. So, we expect 7 services.
-      expect(controller.managedOrgsList[0].orderedServices.servicesManagedByCurrentPartner.length).toEqual(7);
+      expect(controller.managedOrgsList[0].orderedServices.servicesManagedByCurrentPartner.length).toBe(7);
     });
 
     it('check service objects, where isCareEnabled and isAdvanceCareEnabled true, of myOrg being added to the top of manangedOrgsList', function () {
@@ -226,13 +226,13 @@ describe('Controller: CustomerListCtrl', function () {
       initController();
       verifyPartnerOrgServiceObjects(controller.managedOrgsList[0]);
       // Since isCareEnabled and isAdvanceCareEnabled is true, care service gets included. So, we expect 8 services.
-      expect(controller.managedOrgsList[0].orderedServices.servicesManagedByCurrentPartner.length).toEqual(8);
+      expect(controller.managedOrgsList[0].orderedServices.servicesManagedByCurrentPartner.length).toBe(8);
     });
 
     it('if myOrg is in managedOrgsList, myOrg should not be added to the list', function () {
       initController();
       expect(controller.managedOrgsList).toBeDefined();
-      expect(controller.managedOrgsList.length).toEqual(5);
+      expect(controller.managedOrgsList.length).toBe(5);
       expect(controller.totalOrgs).toBe(5);
     });
   });
