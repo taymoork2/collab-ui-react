@@ -1,6 +1,8 @@
 <setting-section setting="$ctrl.clusterSection" class="needs-border-top">
 
-  <expressway-cluster-history-section cluster-id="$ctrl.clusterId" cluster-name="$ctrl.cluster.name" ng-if="$ctrl.atlasHybridAuditLogEnabled"></expressway-cluster-history-section>
+  <expressway-cluster-history-section cluster-id="$ctrl.clusterId"
+                                      cluster-name="$ctrl.cluster.name"
+                                      ng-if="$ctrl.atlasHybridAuditLogEnabled && $ctrl.serviceId === 'squared-fusion-cal'"></expressway-cluster-history-section>
 
   <div class="sub-section" ng-if="$ctrl.showRenameSection" id="renameSection">
     <h5 class="sub-section__label" translate="common.rename"></h5>
