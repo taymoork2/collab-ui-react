@@ -336,7 +336,7 @@ class Helper {
       .value());
 
     const labelKey = 'CsdmStatus.upgradeChannels.' + channel;
-    let label = this.$translate.instant('CsdmStatus.upgradeChannels.' + channel);
+    let label = channel && this.$translate.instant('CsdmStatus.upgradeChannels.' + channel) || channel;
     if (label === labelKey) {
       label = channel;
     }
