@@ -113,7 +113,8 @@ class LineOverview implements ng.IComponentController {
     this.MediaOnHoldService.getCompanyMohOptions()
     .then(mediaList => {
       this.lineMediaOptions = mediaList;
-    });
+    })
+    .catch(error => this.Notification.errorResponse(error, 'serviceSetupModal.mohGetError'));
   }
 
   public setDirectoryNumbers(internalNumber: string, externalNumber: string): void {
@@ -172,8 +173,8 @@ class LineOverview implements ng.IComponentController {
     }
   }
 
-  public setLineMedia(LineMediaId: string): void {
-    this.lineOverviewData.lineMoh = LineMediaId;
+  public setLineMedia(lineMediaId: string): void {
+    this.lineOverviewData.lineMoh = lineMediaId;
     if (this.LineOverviewService.matchesOriginalConfig(this.lineOverviewData)) {
       this.resetForm();
     }
