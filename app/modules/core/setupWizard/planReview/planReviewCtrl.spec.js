@@ -243,4 +243,20 @@ describe('Controller: PlanReviewCtrl', function () {
       expect(searchResult).toBe(false);
     });
   });
+
+  describe('getNamedLabel function ', function () {
+    it('should return Chat and Callback string for a subscription that has license offer name CDC', function () {
+      var licenseOfferName = 'CDC';
+      var label = 'onboardModal.paidCDC';
+      var result = controller.getNamedLabel(licenseOfferName);
+      expect(result).toEqual(label);
+    });
+
+    it('should return Chat, Callback and Inbound Call string for a subscription that has license offer name CVC', function () {
+      var licenseOfferName = 'CVC';
+      var label = 'onboardModal.paidCVC';
+      var result = controller.getNamedLabel(licenseOfferName);
+      expect(result).toEqual(label);
+    });
+  });
 });
