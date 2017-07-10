@@ -234,11 +234,11 @@ describe('Partner Service -', function () {
       isCareEnabled: true,
       isAdvanceCareEnabled: true,
     });
-    var expectedServices = ['messaging', 'communications', 'webex', 'roomSystems', 'sparkBoard', 'care'];
+    var expectedServices = ['messaging', 'communications', 'webex', 'roomSystems', 'sparkBoard', 'care', 'advanceCare'];
     var expectedServicesManagedByOthers = ['conferencing'];
 
     // Verify the ordered service property
-    expect(returnList[0].orderedServices.servicesManagedByCurrentPartner.length).toBe(6);
+    expect(returnList[0].orderedServices.servicesManagedByCurrentPartner.length).toBe(7);
     expect(returnList[0].orderedServices.servicesManagedByCurrentPartner).toEqual(expectedServices);
     expect(returnList[0].orderedServices.servicesManagedByAnotherPartner.length).toBe(1);
     expect(returnList[0].orderedServices.servicesManagedByAnotherPartner).toEqual(expectedServicesManagedByOthers);
