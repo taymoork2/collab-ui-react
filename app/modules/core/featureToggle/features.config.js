@@ -203,4 +203,5 @@ module.exports = {
   hI1484: 'h-i1484',
   hI1485: 'h-i1485',
   atlasRolesAndSecurity: 'atlas-roles-and-security',
+  csdmMultipleDevicesPerPlace: 'csdm-multiple-devices-per-place',
 };

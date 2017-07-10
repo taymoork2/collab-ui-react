@@ -17,7 +17,6 @@ class PlaceOverview implements ng.IComponentController {
   private csdmHybridCalendarFeature = false;
   private hybridCalendarEnabledOnOrg = false;
   private hybridCallEnabledOnOrg = false;
-  public generateCodeIsDisabled = true;
 
   private currentPlace: IPlace = <IPlace>{ devices: {} };
   private csdmHuronUserDeviceService;
@@ -84,16 +83,16 @@ class PlaceOverview implements ng.IComponentController {
   }
 
   private fetchAsyncSettings() {
-    const ataPromise = this.FeatureToggleService.csdmATAGetStatus().then(feature => {
+    this.FeatureToggleService.csdmATAGetStatus().then(feature => {
       this.showATA = feature;
     });
-    const hybridPromise = this.FeatureToggleService.csdmHybridCallGetStatus().then(feature => {
+    this.FeatureToggleService.csdmHybridCallGetStatus().then(feature => {
       this.csdmHybridCallFeature = feature;
     });
-    const placeCalendarPromise = this.FeatureToggleService.csdmPlaceCalendarGetStatus().then(feature => {
+    this.FeatureToggleService.csdmPlaceCalendarGetStatus().then(feature => {
       this.csdmHybridCalendarFeature = feature;
     });
-    const anyCalendarEnabledPromise = this.ServiceDescriptorService.getServices().then(services => {
+    this.ServiceDescriptorService.getServices().then(services => {
       this.hybridCalendarEnabledOnOrg = _.chain(this.ServiceDescriptorService.filterEnabledServices(services)).filter(service => {
         return service.id === 'squared-fusion-gcal' || service.id === 'squared-fusion-cal';
       }).some().value();
@@ -102,9 +101,7 @@ class PlaceOverview implements ng.IComponentController {
       }).some().value();
     });
 
-    this.$q.all([ataPromise, hybridPromise, placeCalendarPromise, anyCalendarEnabledPromise, this.fetchDetailsForLoggedInUser()]).finally(() => {
-      this.generateCodeIsDisabled = false;
-    });
+    this.fetchDetailsForLoggedInUser();
 
     if (this.currentPlace.type === 'cloudberry') {
       this.$q.all([
@@ -124,7 +121,6 @@ class PlaceOverview implements ng.IComponentController {
   }
 
   private fetchDetailsForLoggedInUser() {
-    const userDetailsDeferred = this.$q.defer();
     this.Userservice.getUser('me', (data) => {
       if (data.success) {
         this.adminUserDetails = {
@@ -136,9 +132,7 @@ class PlaceOverview implements ng.IComponentController {
           organizationId: data.meta.organizationID,
         };
       }
-      userDetailsDeferred.resolve();
     });
-    return userDetailsDeferred.promise;
   }
 
   private loadActions(): void {
