@@ -10,7 +10,7 @@ class ExpresswayClusterHistorySectionCtrl implements ng.IComponentController {
     private $modal: IToolkitModalService,
   ) { }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }) {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }) {
     const { clusterId, clusterName } = changes;
     if (clusterId && clusterId.currentValue) {
       this.clusterId = clusterId.currentValue;
