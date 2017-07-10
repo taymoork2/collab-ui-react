@@ -1274,6 +1274,7 @@
     "firstName": "First Name",
     "general": "General",
     "help": "Help",
+    "history": "History",
     "hideAllAdminUsers": "Hide administrators",
     "id": "ID",
     "incorrectFormat": "Incorrect format",
@@ -1987,7 +1988,6 @@
       }
     },
     "status": {
-      "unknown": "Status unknown",
       "not_configured": "Not configured",
       "installing": "Installing",
       "disabled": "Disabled",
@@ -2274,6 +2274,21 @@
       "serviceWasDeactivated": "{{serviceName}} successfully deactivated.",
       "connectWarning": "Are you sure? Remote device configuration will be removed and the service will be disabled for your users.",
       "deactivateCallServiceConnect": "Deactivate Call Service Connect"
+    },
+    "clusterHistoryTable": {
+      "types": {
+        "nameChange": "Cluster Name",
+        "resourceGroup": "Resource Group",
+        "releaseChannel": "Release Channel",
+        "c_mgmtVersion": "Management Connector Target Version",
+        "c_calVersion": "Calendar Connector Target Version",
+        "c_ucmcVersion": "Call Connector Target Version",
+        "upgradeSchedule": "Upgrade Schedule"
+      },
+      "errorMessage": "Could not read cluster history. Error message: {{errorMessage}}",
+      "windowTitle": "Cluster History for {{clusterName}}",
+      "showHistory": "Show History",
+      "opensNewWindow": "Opens a new window where you can view the cluster history during the last 60 days."
     },
     "clusterListComponent": {
       "clusters-title-squared-fusion-cal": "Expressway Clusters",
