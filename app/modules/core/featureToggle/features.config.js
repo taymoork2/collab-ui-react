@@ -164,6 +164,7 @@ module.exports = {
   atlasHybridImp: 'atlas-hybrid-imp',
   atlasHybridCallDiagnosticTool: 'atlas-hybrid-call-diagnostic-tool',
   atlasHybridCallUserTestTool: 'atlas-hybrid-call-user-test-tool',
+  atlasHybridAuditLog: 'atlas-hybrid-audit-log',
   gemServicesTab: 'gem-services-tab',
   avrilVmEnable: 'avril-vm-enable',
   avrilVmMailboxEnable: 'avril-vm-mailbox-enable',

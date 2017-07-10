@@ -6,6 +6,7 @@ describe('Component: hsRenameAndDeregisterClusterSection', function () {
     this.injectDependencies('$componentController', '$q', '$scope', 'PrivateTrunkService', 'HybridServicesClusterService', 'Notification', 'FeatureToggleService');
 
     spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
     spyOn(this.HybridServicesClusterService, 'setClusterInformation').and.returnValue(this.$q.resolve({}));
     spyOn(this.PrivateTrunkService, 'setPrivateTrunkResource').and.returnValue(this.$q.resolve({}));
     spyOn(this.Notification, 'error');
