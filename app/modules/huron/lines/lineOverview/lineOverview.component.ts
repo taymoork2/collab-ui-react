@@ -2,11 +2,13 @@ import { CallForward } from 'modules/huron/callForward';
 import { LineService, LineConsumerType, LINE_CHANGE, Line } from 'modules/huron/lines/services';
 import { LineOverviewService, LineOverviewData } from './index';
 import { DirectoryNumberOptionsService, Availability, ExternalNumberType, Pattern } from 'modules/huron/directoryNumber';
+import { MediaOnHoldService } from 'modules/huron/media-on-hold';
 import { IActionItem } from 'modules/core/components/sectionTitle/sectionTitle.component';
 import { Member, MemberService } from 'modules/huron/members';
 import { SharedLine, SharedLineService } from 'modules/huron/sharedLine';
 import { Notification } from 'modules/core/notifications';
 import { AutoAnswerService } from 'modules/huron/autoAnswer';
+import { IOption } from 'modules/huron/dialing';
 
 class LineOverview implements ng.IComponentController {
   private ownerType: string;
@@ -34,6 +36,7 @@ class LineOverview implements ng.IComponentController {
 
   // Data from services
   public lineOverviewData: LineOverviewData;
+  public lineMediaOptions: IOption[] = [];
   private userVoicemailEnabled: boolean = false;
   /* @ngInject */
   constructor(
@@ -45,6 +48,7 @@ class LineOverview implements ng.IComponentController {
     private $state,
     private $modal,
     private MemberService: MemberService,
+    private MediaOnHoldService: MediaOnHoldService,
     private Notification: Notification,
     private SharedLineService: SharedLineService,
     private CsdmDataModelService,
@@ -92,6 +96,7 @@ class LineOverview implements ng.IComponentController {
   }
 
   public getLineOverviewData(): void {
+    this.initLineOptions();
     this.LineOverviewService.get(this.consumerType, this.ownerId, this.numberId, this.wide)
     .then(lineOverviewData => {
       this.lineOverviewData = lineOverviewData;
@@ -101,6 +106,13 @@ class LineOverview implements ng.IComponentController {
         this.lineOverviewData.line.internal = this.internalNumbers[0];
         this.form.$setDirty();
       }
+    });
+  }
+
+  public initLineOptions(): void {
+    this.MediaOnHoldService.getCompanyMohOptions()
+    .then(mediaList => {
+      this.lineMediaOptions = mediaList;
     });
   }
 
@@ -157,6 +169,13 @@ class LineOverview implements ng.IComponentController {
       this.resetForm();
     } else {
       this.form.$setDirty();
+    }
+  }
+
+  public setLineMedia(LineMediaId: string): void {
+    this.lineOverviewData.lineMoh = LineMediaId;
+    if (this.LineOverviewService.matchesOriginalConfig(this.lineOverviewData)) {
+      this.resetForm();
     }
   }
 

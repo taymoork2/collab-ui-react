@@ -3,6 +3,7 @@ import { HuronSiteService } from 'modules/huron/sites';
 import { CallForward, CallForwardAll, CallForwardBusy, CallForwardService } from 'modules/huron/callForward';
 import { SharedLine, SharedLineService, SharedLinePhone, SharedLinePhoneListItem } from 'modules/huron/sharedLine';
 import { Member } from 'modules/huron/members';
+import { MediaOnHoldService } from 'modules/huron/media-on-hold';
 import { ICallerID, CallerIDService } from 'modules/huron/callerId';
 import { AutoAnswer, AutoAnswerService } from 'modules/huron/autoAnswer';
 import { HuronVoicemailService } from 'modules/huron/voicemail';
@@ -15,6 +16,7 @@ export class LineOverviewData {
   public callerId: ICallerID;
   public companyNumbers: any;
   public autoAnswer: AutoAnswer;
+  public lineMoh: string;
   public voicemailEnabled: boolean;
   public services: string[];
 }
@@ -26,6 +28,7 @@ export class LineOverviewService {
   private callForwardBusyProperties: string[] = ['internalDestination', 'internalVoicemailEnabled', 'externalDestination', 'externalVoicemailEnabled', 'ringDurationTimer'];
   private lineOverviewDataCopy: LineOverviewData;
   private errors: any[] = [];
+  private supportsLineMoh: boolean = false;
 
   /* @ngInject */
   constructor(
@@ -33,6 +36,7 @@ export class LineOverviewService {
     private HuronSiteService: HuronSiteService,
     private CallForwardService: CallForwardService,
     private SharedLineService: SharedLineService,
+    private MediaOnHoldService: MediaOnHoldService,
     private AutoAnswerService: AutoAnswerService,
     private Notification,
     private $q: ng.IQService,
@@ -40,7 +44,11 @@ export class LineOverviewService {
     private HuronVoicemailService: HuronVoicemailService,
     private HuronUserService: HuronUserService,
     private FeatureToggleService,
-  ) {}
+  ) {
+    //Line Media On Hold Support
+    this.FeatureToggleService.supports(FeatureToggleService.features.huronMOHEnable)
+      .then(result => this.supportsLineMoh = result);
+  }
 
   public get(consumerType: LineConsumerType, ownerId: string, numberId: string = '', wide: boolean = true): ng.IPromise<LineOverviewData> {
     const lineOverviewData = new LineOverviewData();
@@ -53,6 +61,7 @@ export class LineOverviewService {
     promises.push(this.listCompanyNumbers());
     promises.push(this.getAutoAnswerSupportedDeviceAndMember(consumerType, ownerId, numberId));
     promises.push(this.HuronUserService.getUserServices(ownerId));
+    promises.push(this.getLineMediaOnHold(numberId));
     return this.$q.all(promises).then((data) => {
       if (this.errors.length > 0) {
         this.Notification.notify(this.errors, 'error');
@@ -65,6 +74,7 @@ export class LineOverviewService {
       lineOverviewData.companyNumbers = data[4];
       lineOverviewData.autoAnswer = data[5];
       lineOverviewData.services = data[6];
+      lineOverviewData.lineMoh = data[7];
       lineOverviewData.voicemailEnabled = this.HuronVoicemailService.isEnabledForUser(lineOverviewData.services);
       this.lineOverviewDataCopy = this.cloneLineOverviewData(lineOverviewData);
       return lineOverviewData;
@@ -147,6 +157,11 @@ export class LineOverviewService {
         }
       }
 
+      //update line media on hold
+      if (!_.isEqual(data.lineMoh, this.lineOverviewDataCopy.lineMoh)) {
+        promises.push(this.MediaOnHoldService.updateMediaOnHold(data.lineMoh, numberId));
+      }
+
       return this.$q.all(promises)
         .then(() => this.rejectAndNotifyPossibleErrors())
         .then<any>(() => {
@@ -219,6 +234,17 @@ export class LineOverviewService {
       .catch(error => {
         this.errors.push(this.Notification.processErrorResponse(error, 'directoryNumberPanel.updateCallForwardError'));
       });
+  }
+
+  private getLineMediaOnHold(numberId: string = ''): ng.IPromise<string> {
+    if (this.supportsLineMoh) {
+      return this.MediaOnHoldService.getLineMedia(numberId)
+        .catch(error => {
+          this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohGetError'));
+          return this.$q.reject();
+        });
+    }
+    return this.$q.resolve('');
   }
 
   private getSharedLines(consumerType: LineConsumerType, ownerId: string, numberId: string): ng.IPromise<SharedLine[]> {
