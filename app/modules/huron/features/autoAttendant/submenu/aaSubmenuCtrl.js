@@ -50,7 +50,7 @@
     }, {
       label: $translate.instant('autoAttendant.actionSayMessage'),
       name: 'phoneMenuSayMessage',
-      action: ['say', 'play'],
+      action: ['say', 'play', 'dynamic'],
     }, {
       label: $translate.instant('autoAttendant.phoneMenuDialExt'),
       name: 'phoneMenuDialExt',
@@ -195,7 +195,7 @@
                     if (this.name === keyAction.action) {
                       return true;
                     } else if (keyAction.action.length > 1) {
-                      return (this.name === keyAction.action[0] || this.name === keyAction.action[1]);
+                      return (this.name === keyAction.action[0] || this.name === keyAction.action[1] || this.name === keyAction.action[2]);
                     }
                   }
                 }, menuEntry.actions[0]));

@@ -61,7 +61,7 @@
     vm.setMessageOptions = setMessageOptions;
     vm.isDynamicToggle = isDynamicToggle;
     vm.dynamicTags = ['DYNAMIC-EXAMPLE'];
-    vm.dynamicValues = undefined;
+    vm.dynamicValues = [];
     vm.mediaState = {};
     vm.mediaState.uploadProgress = false;
 
@@ -103,8 +103,7 @@
         if (action.name === vm.messageOptions[actionType.PLAY].action) {
           if (isDynamicToggle()) {
             action.name = 'dynamic';
-            vm.dynamicValues = [];
-            vm.menuEntry.dynamicList = [{
+            action.dynamicList = [{
               say: {
                 value: '',
                 voice: '',
@@ -135,11 +134,12 @@
     }
 
     function saveDynamicUi() {
+      var action = vm.actionEntry;
       var range = AADynaAnnounceService.getRange();
       finalList = [];
       var dynamicList = range.endContainer.ownerDocument.activeElement;
-      if (dynamicList.className.includes('dynamic-prompt') && !(dynamicList.id === 'messageType{{schedule + index + menuKeyIndex}}')) {
-        vm.menuEntry.dynamicList = createDynamicList(dynamicList);
+      if (canDynamicListUpdated(dynamicList, range)) {
+        action.dynamicList = createDynamicList(dynamicList);
         if (_.isEmpty(finalList)) {
           finalList.push({
             say: {
@@ -149,10 +149,14 @@
             isDynamic: false,
             htmlModel: '',
           });
-          vm.menuEntry.dynamicList = finalList;
+          action.dynamicList = finalList;
         }
         AACommonService.setSayMessageStatus(true);
       }
+    }
+
+    function canDynamicListUpdated(dynamicList, range) {
+      return dynamicList.className.includes('dynamic-prompt') && !(dynamicList.id === 'messageType{{schedule + index + menuKeyIndex + menuId}}') && range.collapsed == true;
     }
 
     function createDynamicList(dynamicList) {
@@ -231,6 +235,22 @@
           if (vm.actionEntry.value && !_.startsWith(vm.actionEntry.value, 'http')) {
             vm.messageOption = vm.messageOptions[actionType.SAY];
             vm.messageInput = vm.actionEntry.value;
+          } else if (_.has(vm.actionEntry, 'dynamicList')) {
+            _.forEach(vm.actionEntry.dynamicList, function (opt) {
+              var model;
+              if (!opt.isDynamic) {
+                model = {
+                  model: opt.say.value,
+                  html: opt.say.value,
+                };
+              } else {
+                model = {
+                  model: opt.say.value,
+                  html: decodeURIComponent(opt.htmlModel),
+                };
+              }
+              vm.dynamicValues.push(model);
+            });
           } else {
             vm.messageOption = vm.messageOptions[actionType.PLAY];
           }
@@ -239,9 +259,8 @@
           vm.messageInput = vm.actionEntry.value;
         }
       } else {
-        if (_.has(vm.menuEntry, 'dynamicList')) {
-          vm.dynamicValues = [];
-          _.forEach(vm.menuEntry.dynamicList, function (opt) {
+        if (_.has(vm.actionEntry, 'dynamicList')) {
+          _.forEach(vm.actionEntry.dynamicList, function (opt) {
             var model = {};
             if (!opt.isDynamic) {
               model = {
