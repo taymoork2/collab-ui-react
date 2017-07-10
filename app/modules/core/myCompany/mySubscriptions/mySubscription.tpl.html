@@ -10,9 +10,11 @@
     <cs-card class="full subscriptions" ng-if="mcpSub.hybridServices.length > 0 || mcpSub.visibleSubscriptions">
       <article>
         <header ng-if="mcpSub.licenseSummary">
-          <span class="column medium-2 card-title" ng-class="mcpSub.oneOnlineSub ? 'h5' : 'h3'">{{mcpSub.licenseSummary}}</span>
-          <div class="subscription-badge" ng-if="mcpSub.showSingleSub && mcpSub.subscriptionDetails[0].isOnline">
-            <span class="badge ng-scope" ng-class="mcpSub.subscriptionDetails[0].badge">{{::mcpSub.subscriptionDetails[0].endDate}}</span>
+          <div class="column medium-2 card-title">
+            <span ng-class="mcpSub.oneOnlineSub ? 'h5' : 'h3'">{{mcpSub.licenseSummary}}</span>
+            <div class="subscription-badge" ng-if="mcpSub.showSingleSub && mcpSub.subscriptionDetails[0].isOnline">
+              <span class="badge ng-scope" ng-class="mcpSub.subscriptionDetails[0].badge">{{::mcpSub.subscriptionDetails[0].endDate}}</span>
+            </div>
           </div>
           <div class="column medium-5 sub-name" ng-if="mcpSub.showSingleSub">
             <div class="container text-right">
