@@ -16,7 +16,7 @@ offers.push(new TrialOffer({
   licenseCount: 5,
 }));
 
-export function huronCustomer(test, numberRange) {
+export function huronCustomer(test, numberRange, users, pstn) {
   const customerName = `${os.userInfo().username}_${test}`;
   const customer = {
     partner: testPartner,
@@ -33,6 +33,8 @@ export function huronCustomer(test, numberRange) {
       endNumber: numberRange ? numberRange.endNumber : '399',
     }),
     users: undefined,
+    pstn: pstn || undefined,
   };
   return customer;
 }
+
