@@ -183,14 +183,7 @@ export class HybridServicesAuditLogService {
     const formattedItems: IExpresswayClusterHistoryItem[] = [];
 
     if (item.payload.name || item.payload.oldName) {
-      formattedItems.push({
-        userId: item.context.principalId,
-        principalType: item.context.principalType,
-        timestamp: item.timestamp,
-        type: 'nameChange',
-        previousValue: _.get(item, 'payload.oldName', ')'),
-        newValue: _.get(item, 'payload.name', ''),
-      });
+      formattedItems.push(this.processClusterUpdateItem(item, 'nameChange', _.get(item, 'payload.oldName', ''), _.get(item, 'payload.name', '')));
     }
 
     if ((item.payload.releaseChannel || item.payload.oldReleaseChannel) && item.payload.releaseChannel !== item.payload.oldReleaseChannel) {
@@ -203,57 +196,23 @@ export class HybridServicesAuditLogService {
         newValue = this.HybridServicesI18NService.getLocalizedReleaseChannel(item.payload.releaseChannel);
       }
 
-      formattedItems.push({
-        userId: item.context.principalId,
-        principalType: item.context.principalType,
-        timestamp: item.timestamp,
-        type: 'releaseChannel',
-        previousValue: previousValue,
-        newValue: newValue,
-      });
+      formattedItems.push(this.processClusterUpdateItem(item, 'releaseChannel', previousValue, newValue));
     }
 
     if (item.payload.resourceGroupId || item.payload.oldResourceGroupId) {
-      formattedItems.push({
-        userId: item.context.principalId,
-        principalType: item.context.principalType,
-        timestamp: item.timestamp,
-        type: 'resourceGroup',
-        previousValue: _.get(item, 'payload.oldResourceGroupId', ''),
-        newValue: _.get(item, 'payload.resourceGroupId', ''),
-      });
+      formattedItems.push(this.processClusterUpdateItem(item, 'resourceGroup', _.get(item, 'payload.oldResourceGroupId', ''), _.get(item, 'payload.resourceGroupId', '')));
     }
 
     if (item.payload.softwarePackages || item.payload.oldSoftwarePackages) {
       if (item.payload.softwarePackages && item.payload.softwarePackages.c_ucmc || item.payload.oldSoftwarePackages && item.payload.oldSoftwarePackages.c_ucmc) {
-        formattedItems.push({
-          userId: item.context.principalId,
-          principalType: item.context.principalType,
-          timestamp: item.timestamp,
-          type: 'c_ucmcVersion',
-          previousValue: _.get(item, 'payload.oldSoftwarePackages.c_ucmc.version', ''),
-          newValue: _.get(item, 'payload.softwarePackages.c_ucmc.version', ''),
-        });
+        formattedItems.push(this.processClusterUpdateItem(item, 'c_ucmcVersion', _.get(item, 'payload.oldSoftwarePackages.c_ucmc.version', ''), _.get(item, 'payload.softwarePackages.c_ucmc.version', '')));
+
       }
       if (item.payload.softwarePackages && item.payload.softwarePackages.c_cal || item.payload.oldSoftwarePackages && item.payload.oldSoftwarePackages.c_cal) {
-        formattedItems.push({
-          userId: item.context.principalId,
-          principalType: item.context.principalType,
-          timestamp: item.timestamp,
-          type: 'c_calVersion',
-          previousValue: _.get(item, 'payload.oldSoftwarePackages.c_cal.version', ''),
-          newValue: _.get(item, 'payload.softwarePackages.c_cal.version', ''),
-        });
+        formattedItems.push(this.processClusterUpdateItem(item, 'c_calVersion', _.get(item, 'payload.oldSoftwarePackages.c_cal.version', ''), _.get(item, 'payload.softwarePackages.c_cal.version', '')));
       }
       if (item.payload.softwarePackages && item.payload.softwarePackages.c_mgmt || item.payload.oldSoftwarePackages && item.payload.oldSoftwarePackages.c_mgmt) {
-        formattedItems.push({
-          userId: item.context.principalId,
-          principalType: item.context.principalType,
-          timestamp: item.timestamp,
-          type: 'c_mgmtVersion',
-          previousValue: _.get(item, 'payload.oldSoftwarePackages.c_mgmt.version', ''),
-          newValue: _.get(item, 'payload.softwarePackages.c_mgmt.version', ''),
-        });
+        formattedItems.push(this.processClusterUpdateItem(item, 'c_mgmtVersion', _.get(item, 'payload.oldSoftwarePackages.c_mgmt.version', ''), _.get(item, 'payload.softwarePackages.c_mgmt.version', '')));
       }
     }
 
@@ -266,17 +225,20 @@ export class HybridServicesAuditLogService {
       if (item.payload.upgradeSchedule) {
         newValue = `${this.HybridServicesI18NService.formatTimeAndDate(item.payload.upgradeSchedule)}, ${item.payload.upgradeSchedule.scheduleTimeZone}`;
       }
-      formattedItems.push({
-        userId: item.context.principalId,
-        principalType: item.context.principalType,
-        timestamp: item.timestamp,
-        type: 'upgradeSchedule',
-        previousValue: previousValue,
-        newValue: newValue,
-      });
-
+      formattedItems.push(this.processClusterUpdateItem(item, 'upgradeSchedule', previousValue, newValue));
     }
     return formattedItems;
+  }
+
+  private processClusterUpdateItem(item: IClusterUpdatedItem, type: ClusterEventType, previousValue: string, newValue: string): IExpresswayClusterHistoryItem {
+    return {
+      type: type,
+      userId: item.context.principalId,
+      principalType: item.context.principalType,
+      timestamp: item.timestamp,
+      previousValue: previousValue,
+      newValue: newValue,
+    };
   }
 
 
