@@ -26,9 +26,8 @@
       return deferred.promise;
     };
 
-    // Currently we are differentiating trial migration orders for WebEx meeting sites setup by a prefix/suffix of 'ordersimp' in the users email.
-    $scope.isOrderSimplificationToggled = function () {
-      return SetupWizardService.isOrderSimplificationToggled();
+    $scope.hasPendingLicenses = function () {
+      return !_.isEmpty(SetupWizardService.pendingMeetingLicenses);
     };
   }
 })();

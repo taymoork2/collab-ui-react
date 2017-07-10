@@ -1,5 +1,5 @@
 import './_meeting-settings.scss';
-import { IWebExSite, ISiteNameError, IConferenceService, IExistingTrialSites, IWebexLicencesPayload, IPendingOrderSubscription } from './meeting-settings.interface';
+import { IWebExSite, ISiteNameError, IConferenceService, IExistingTrialSites, IWebexLicencesPayload } from './meeting-settings.interface';
 
 export class MeetingSettingsCtrl {
   public siteModel: IWebExSite = {
@@ -35,14 +35,12 @@ export class MeetingSettingsCtrl {
     private TrialTimeZoneService,
     private TrialWebexService,
     private SetupWizardService,
-    private SessionStorage,
   ) {
     this.init();
   }
 
   private init(): void {
     this.findExistingWebexTrialSites();
-    this.actingSubscriptionId = this.Authinfo.getSubscriptions()[0].externalSubscriptionId;
 
     // If user clicked back after setting WebEx sites in the meeting-settings tab, we want to preserve the entered sites
     const webexSitesData = this.TrialWebexService.getProvisioningWebexSitesData();
@@ -52,7 +50,7 @@ export class MeetingSettingsCtrl {
 
     this.$rootScope.$on('wizard-meeting-settings-setup-save-event', (): void => {
       const webexLicenses: IWebexLicencesPayload = this.constructWebexLicensesPayload();
-      this.TrialWebexService.setProvisioningWebexSitesData(webexLicenses, this.getInternalSubscriptionId());
+      this.TrialWebexService.setProvisioningWebexSitesData(webexLicenses, this.SetupWizardService.getInternalSubscriptionId());
       this.SetupWizardService.addProvisioningCallbacks(() => {
         return this.TrialWebexService.provisionWebexSites().then(() => {
           this.Notification.success('firstTimeWizard.webexProvisioningSuccess');
@@ -186,15 +184,11 @@ export class MeetingSettingsCtrl {
     this.siteModel.timezone = '';
   }
 
-  private getServiceOrderUUID(): string {
-    return _.get<string>(this.getActingSubscription(), 'pendingServiceOrderUUID');
-  }
-
   private constructWebexLicensesPayload(): IWebexLicencesPayload {
     const webexSiteDetailsList: IWebExSite[] = [];
     const webexLicensesPayload: IWebexLicencesPayload = {
       provisionOrder: true,
-      serviceOrderUUID: this.getServiceOrderUUID(),
+      serviceOrderUUID: this.SetupWizardService.getServiceOrderUUID(),
     };
 
     if (_.isEmpty(this.sitesArray)) {
@@ -218,20 +212,6 @@ export class MeetingSettingsCtrl {
     });
 
     return webexLicensesPayload;
-  }
-
-  private getActingSubscriptionId(): string {
-    const subscriptionId = this.SessionStorage.get('subscriptionId');
-    return subscriptionId || this.actingSubscriptionId;
-  }
-
-  private getInternalSubscriptionId(): string {
-    const actingSubscription = this.getActingSubscription();
-    return _.get<string>(actingSubscription, 'subscriptionId');
-  }
-
-  private getActingSubscription(): IPendingOrderSubscription {
-    return _.find(this.Authinfo.getSubscriptions(), { externalSubscriptionId: this.getActingSubscriptionId() });
   }
 
 }

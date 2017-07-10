@@ -1,12 +1,26 @@
+import { IPendingOrderSubscription, IPendingLicense } from './setup-wizard-service.interface';
+
 export class SetupWizardService {
+  public pendingMeetingLicenses: IPendingLicense[];
+  public pendingLicenses: IPendingLicense[];
+  private callbacks: Function[] = [];
 
   /* @ngInject */
   constructor(
     private $q,
+    private $http,
     private Authinfo,
-  ) { }
+    private Config,
+    private Notification,
+    private SessionStorage,
+    private UrlConfig,
+  ) {
+    this.init();
+  }
 
-  private callbacks: Function[] = [];
+  private init() {
+    this.getPendingLicenses();
+  }
 
   public addProvisioningCallbacks(func: Function) {
     this.callbacks.push(func);
@@ -20,12 +34,46 @@ export class SetupWizardService {
     return this.$q.all(_.uniq(promises));
   }
 
-  public isOrderSimplificationToggled(userEmail: string) {
-    if (!userEmail) {
-      userEmail = this.Authinfo.getUserName();
+  private getActingSubscriptionId(): string {
+    const subscriptionId = this.SessionStorage.get('subscriptionId');
+    return subscriptionId || this.Authinfo.getSubscriptions()[0].externalSubscriptionId;
+  }
+
+  public getInternalSubscriptionId(): string {
+    const actingSubscription = this.getActingSubscription();
+    return _.get<string>(actingSubscription, 'subscriptionId');
+  }
+
+  public getActingSubscriptionServiceOrderUUID(): string {
+    return _.get<string>(this.getActingSubscription(), 'pendingServiceOrderUUID');
+  }
+
+  private getActingSubscription(): IPendingOrderSubscription {
+    return _.find(this.Authinfo.getSubscriptions(), { externalSubscriptionId: this.getActingSubscriptionId() });
+  }
+
+  private getPendingLicenses() {
+    this.getPendingLicensesFromActiveSubscription(this.getActingSubscriptionId())
+      .then(response => {
+        this.populatePendingLicenses(response);
+      })
+      .catch(response => {
+        this.Notification.errorWithTrackingId(response, 'firstTimeWizard.pendingLicensesError');
+      });
+  }
+
+  private populatePendingLicenses(response): void {
+    this.pendingLicenses = _.get<IPendingLicense[]>(response, 'data.licenseFeatures');
+    this.pendingMeetingLicenses = _.filter(this.pendingLicenses, (license: IPendingLicense) => { return license.status === this.Config.licenseStatus.INITIALIZED && (license.offerName === this.Config.offerCodes.EE || license.offerName === this.Config.offerCodes.MC || license.offerName === this.Config.offerCodes.EC || license.offerName === this.Config.offerCodes.TC || license.offerName === this.Config.offerCodes.SC); });
+  }
+
+  private getPendingLicensesFromActiveSubscription(externalSubscriptionId) {
+    if (!_.isString(externalSubscriptionId)) {
+      return this.$q.reject('An invalid subscriptionId was passed.');
     }
-    // Currently we are differentiating trial migration orders for WebEx meeting sites setup by a prefix/suffix of 'ordersimp' in the users email.
-    return _.toLower(userEmail.split('+')[1]) === 'ordersimp@gmail.com' || _.toLower(userEmail.split('+')[0]) === 'ordersimp' || _.toLower(userEmail.split('-')[0]) === 'ordersimp';
+    const pendingLicensesUrl = this.UrlConfig.getAdminServiceUrl() + 'subscriptions/pending?externalSubscriptionId=' + externalSubscriptionId;
+
+    return this.$http.get(pendingLicensesUrl);
   }
 
 }

@@ -119,7 +119,6 @@ require('./_setup-wizard.scss');
     }
 
     function initMeetingSettingsTab(tabs) {
-      var userEmail = Authinfo.getUserName();
       var meetingTab = {
         name: 'meetingSettings',
         required: true,
@@ -147,7 +146,7 @@ require('./_setup-wizard.scss');
         }],
       };
 
-      if (showMeetingSettingsTab(userEmail)) {
+      if (showMeetingSettingsTab()) {
         if (!hasWebexMeetingTrial()) {
           _.remove(meetingTab.steps, { name: 'migrateTrial' });
         }
@@ -222,8 +221,8 @@ require('./_setup-wizard.scss');
       }
     }
 
-    function showMeetingSettingsTab(userEmail) {
-      return SetupWizardService.isOrderSimplificationToggled(userEmail);
+    function showMeetingSettingsTab() {
+      return !_.isEmpty(SetupWizardService.pendingMeetingLicenses);
     }
 
     function hasWebexMeetingTrial() {
