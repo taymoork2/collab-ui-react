@@ -2426,7 +2426,7 @@
         "help": "Visit <a href=\"{{helpLink}}\" target=\"_blank\">Help Central</a> for further information about {{localizedServiceName}}.",
         "downloadExpressway": "Download Cisco Expressway software from <a href=\"{{downloadLink}}\" target=\"_blank\">software.cisco.com</a>.",
         "downloadECP": "<a href=\"{{downloadLink}}\" target=\"_blank\">Download {{serviceName}} software</a>.",
-        "downloadDemoHybridMedia": "<a href=\"{{downloadLink}}\" target=\"_blank\">Download Full Software Image</a> (Full capacity and used for production deployment of Hybrid Media)<br> <a href=\"{{downloadDemoLink}}\" target=\"_blank\">Download Demo Software Image</a> (Limited capacity, lifespan, and lower CPU requirement for demo deployment of Hybrid Media)"
+        "downloadDemoHybridMedia": "<a href=\"{{downloadLink}}\" target=\"_blank\">Download Full Software Image</a><br> (Full capacity and used for production deployments of Hybrid Media)<br> <a href=\"{{downloadDemoLink}}\" target=\"_blank\">Download Demo Software Image</a> <br>(Limited capacity, lifespan of 90 days, and only used for demos of Hybrid Media)"
       },
       "call": {
         "domainVerification": "Domain Verification",
@@ -5704,8 +5704,9 @@
       "firstStepNo4": "3. Proceed to register your Hybrid Media Node following the steps below.",
       "yesProceed": "Yes, I’m ready to register my Hybrid Media Node.",
       "noProceed": "No, I need to install and configure the software.",
-      "fullOva": "Download Full Software Image",
-      "demoOva": "Download Demo Software Image",
+      "fullOva": "Full capacity production deployment",
+      "demoOva": "Limited capacity 90 day demo",
+      "ovaHelpText": "Choose between the limited capacity demo software with 90 days lifespan or the full capacity software used for production deployment.",
       "fullOva-helpText": "(Full capacity and used for production deployment of Hybrid Media)",
       "demoOva-helpText": "(Limited capacity, lifespan, and lower CPU requirement for demo deployment of Hybrid Media)",
       "noProceed-helptext": "(Software will automatically download)",
