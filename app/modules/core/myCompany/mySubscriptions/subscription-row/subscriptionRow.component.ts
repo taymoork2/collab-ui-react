@@ -1,8 +1,10 @@
 import { IOfferData } from 'modules/core/myCompany/mySubscriptions/subscriptionsInterfaces';
+import { ProPackService } from 'modules/core/proPack/proPack.service';
 import { SharedMeetingsReportService } from 'modules/core/myCompany/mySubscriptions/sharedMeetings/sharedMeetingsReport.service';
 
 class SubscriptionRowCtrl {
-  public isSharedMeetingsReportsEnabled: boolean;
+  public isSharedMeetingsReportsEnabled: boolean = false;
+  public isProPackEnabled: boolean = false;
   public offer: IOfferData;
   public wrapped: boolean;
 
@@ -12,6 +14,7 @@ class SubscriptionRowCtrl {
     private $window: ng.IWindowService,
     private Config,
     private FeatureToggleService,
+    private ProPackService: ProPackService,
     private SharedMeetingsReportService: SharedMeetingsReportService,
     private WebExUtilsFact,
   ) { }
@@ -19,6 +22,10 @@ class SubscriptionRowCtrl {
   public $onInit(): void {
     this.FeatureToggleService.atlasSharedMeetingsReportsGetStatus().then((sharedMeetingReportsStatus) => {
       this.isSharedMeetingsReportsEnabled = sharedMeetingReportsStatus;
+    });
+
+    this.ProPackService.hasProPackEnabled().then((isProPackEnabled: boolean): void => {
+      this.isProPackEnabled = isProPackEnabled;
     });
   }
 

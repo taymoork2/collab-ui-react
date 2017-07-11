@@ -1,5 +1,9 @@
 <div class="subscriptions-container">
   <cr-trial-notice-banner ng-if="mcpSub.hasEnterpriseTrial || mcpSub.trialUrlFailed"></cr-trial-notice-banner>
+  <cs-alert-banner class="overage-warning" ng-if="mcpSub.overage && mcpSub.isProPackEnabled" type="danger">
+    <span class="icon icon-warning"></span>
+    <span translate="subscriptions.overageWarning"></span>
+  </cs-alert-banner>
   <cs-card-layout block-view="true">
     <cs-card class="full detail-view" ng-repeat="subscription in mcpSub.subscriptionDetails" ng-if="mcpSub.subscriptionDetails.length > 1" ng-class="{ 'subscription-expanded': subscription.viewAll }">
       <article><section>
@@ -9,14 +13,13 @@
 
     <cs-card class="full subscriptions" ng-if="mcpSub.hybridServices.length > 0 || mcpSub.visibleSubscriptions">
       <article>
-        <header ng-if="mcpSub.licenseSummary">
-          <div class="column medium-2 card-title">
-            <span ng-class="mcpSub.oneOnlineSub ? 'h5' : 'h3'">{{mcpSub.licenseSummary}}</span>
-            <div class="subscription-badge" ng-if="mcpSub.showSingleSub && mcpSub.subscriptionDetails[0].isOnline">
-              <span class="badge ng-scope" ng-class="mcpSub.subscriptionDetails[0].badge">{{::mcpSub.subscriptionDetails[0].endDate}}</span>
-            </div>
+        <header>
+          <span ng-if="!mcpSub.licenseSummary" class="column medium-2 card-title h3" translate="subscriptions.licenseSummary"></span>
+          <span ng-if="mcpSub.licenseSummary" class="column medium-2 card-title" ng-class="mcpSub.oneOnlineSub ? 'h5' : 'h3'">{{mcpSub.licenseSummary}}</span>
+          <div class="subscription-badge" ng-if="mcpSub.showSingleSub && mcpSub.subscriptionDetails[0].isOnline">
+            <span class="badge ng-scope" ng-class="mcpSub.subscriptionDetails[0].badge">{{::mcpSub.subscriptionDetails[0].endDate}}</span>
           </div>
-          <div class="column medium-5 sub-name" ng-if="mcpSub.showSingleSub">
+          <div class="column medium-5 sub-name right" ng-if="mcpSub.showSingleSub">
             <div class="container text-right">
               <bmmp-subscription-upgrade-button ng-if="mcpSub.subscriptionDetails[0].isOnline"
                 class="btn btn--primary upgrade-button"
@@ -40,7 +43,7 @@
               </div>
 
               <!-- if category wraps offers -->
-              <div ng-if="mcpSub.wrapsOffers(licenseCategory)" class="category-data-section" ng-repeat="wrapper in licenseCategory.offerWrapper" ng-class="{'item-with-borders': !mcpSub.isSharedMeetingsLicense}">
+              <div ng-if="mcpSub.wrapsOffers(licenseCategory)" class="category-data-section" ng-repeat="wrapper in licenseCategory.offerWrapper" ng-class="{'item-without-borders': mcpSub.isSharedMeetingsLicense, 'item-with-borders': !mcpSub.isSharedMeetingsLicense}">
                 <div class="license-item" ng-repeat="offer in wrapper.offers">
                   <subscription-row offer="offer" wrapped="true"></subscription-row>
                 </div>
@@ -51,6 +54,11 @@
           <div class="row category-row" ng-show="mcpSub.hybridServices && mcpSub.hybridServices.length > 0">
             <div class="columns medium-2 category-title">
               <span class="h5" translate="subscriptions.hybrid"></span>
+            </div>
+            <div class="columns medium-2 category-data-section">
+              <div class="category-description">
+                <span class="name h6" translate="subscriptions.enitireOrg"></span>
+              </div>
             </div>
             <div class="columns medium-2 category-data-section">
               <ul class="category-list">
@@ -71,16 +79,21 @@
           <div class="row category-row">
             <div class="columns medium-2 category-title">
               <span class="h5" translate="subscriptions.licenseTypes.MGMTPRO"></span>
-              <i class="h5 icon icon-certified category-icon"></i>
+              <span><i class="h5 icon icon-certified category-icon"></i></span>
             </div>
             <div class="columns medium-2 category-data-section">
               <cs-donut name="mcpSub.proPackData.id" value="mcpSub.proPackData.usage" max="mcpSub.proPackData.volume" ssize="48" class="text-center"></cs-donut>
               <div class="category-description">
-                <div class="name h5" translate="subscriptions.activeUsers"></div>
+                <div>
+                  <span class="name h5" translate="subscriptions.activeUsers"></span>
+                  <span ng-if="mcpSub.proPackData.usage > mcpSub.proPackData.volume" class="badge alert" translate="subscriptions.overage"></span>
+                </div>
                 <div class="h6 category-usage">
                   <span translate="subscriptions.usage"></span>
                   <span ng-class="{ 'warning': mcpSub.proPackData.usage > mcpSub.proPackData.volume }">{{::mcpSub.proPackData.usage}}/{{::mcpSub.proPackData.volume}}</span>
-                  <i class="icon icon-information premium-info" tooltip="{{::mcpSub.premiumTooltip}}" tooltip-placement="right" tooltip-trigger="mouseenter" tooltip-animation="true" tooltip-append-to-body="true"></i>
+                  <span>
+                    <i class="icon icon-information premium-info" tooltip="{{::mcpSub.premiumTooltip}}" tooltip-placement="right" tooltip-trigger="mouseenter" tooltip-animation="true" tooltip-append-to-body="true"></i>
+                  </span>
                 </div>
               </div>
             </div>

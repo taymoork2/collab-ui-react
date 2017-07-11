@@ -3,7 +3,6 @@ import { IProdInst } from 'modules/online/upgrade/upgrade.service';
 
 describe('Controller: MySubscriptionCtrl', function () {
   const onlineIntSubId: string = 'intSubId';
-  const trialUrl: string = 'https://atlas-intb.ciscospark.com/admin/api/v1/commerce/online/' + onlineIntSubId;
   const trialUrlResponse: string = 'trialUrlResponse';
   const drUrlResponse: string = 'drUrlResponse';
   const ccwTrialSubId: string = 'Trial';
@@ -19,7 +18,6 @@ describe('Controller: MySubscriptionCtrl', function () {
   beforeEach(function () {
     this.initModules(subscriptionModule);
     this.injectDependencies('$controller',
-      '$httpBackend',
       '$rootScope',
       '$scope',
       '$translate',
@@ -42,9 +40,11 @@ describe('Controller: MySubscriptionCtrl', function () {
     spyOn(this.ServiceDescriptorService, 'getServices').and.returnValue(this.$q.resolve(this.data.servicesResponse));
     spyOn(this.FeatureToggleService, 'atlasSharedMeetingsReportsGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.OnlineUpgradeService, 'getProductInstances').and.returnValue(this.$q.resolve(productInstanceResponse));
-    spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(false));
+    spyOn(this.ProPackService, 'hasProPackEnabled').and.returnValue(this.$q.resolve(false));
+    spyOn(this.ProPackService, 'getProPackPurchased').and.returnValue(this.$q.resolve(false));
     spyOn(this.Authinfo, 'getUserId').and.returnValue('12345');
     spyOn(this.DigitalRiverService, 'getDigitalRiverToken');
+    spyOn(this.DigitalRiverService, 'getDigitalRiverUpgradeTrialUrl').and.returnValue(this.$q.resolve({ data: trialUrlResponse }));
     spyOn(this.DigitalRiverService, 'getSubscriptionsUrl').and.returnValue(this.$q.resolve(drUrlResponse));
     spyOn(this.$rootScope, '$broadcast').and.callThrough();
 
@@ -67,11 +67,6 @@ describe('Controller: MySubscriptionCtrl', function () {
     };
   });
 
-  afterEach(function () {
-    this.$httpBackend.verifyNoOutstandingExpectation();
-    this.$httpBackend.verifyNoOutstandingRequest();
-  });
-
   it('should initialize with expected data for ccw orgs', function () {
     spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.data.subscriptionsResponse));
     this.startController();
@@ -80,7 +75,7 @@ describe('Controller: MySubscriptionCtrl', function () {
     expect(this.controller.licenseCategory).toEqual(this.data.licensesFormatted);
     expect(this.controller.subscriptionDetails).toEqual(this.data.subscriptionsFormatted);
     expect(this.controller.visibleSubscriptions).toBeTruthy();
-    expect(this.controller.licenseSummary).toEqual(this.$translate.instant('subscriptions.licenseSummary'));
+    expect(this.controller.licenseSummary).toBeUndefined();
     expect(this.$rootScope.$broadcast).toHaveBeenCalled();
   });
 
@@ -104,7 +99,7 @@ describe('Controller: MySubscriptionCtrl', function () {
 
     expect(this.controller.visibleSubscriptions).toBeTruthy();
     expect(this.DigitalRiverService.getDigitalRiverToken).toHaveBeenCalled();
-    expect(this.controller.licenseSummary).toEqual(this.$translate.instant('subscriptions.licenseSummaryOnline'));
+    expect(this.controller.licenseSummary).toEqual('subscriptions.licenseSummaryOnline');
     expect(this.$rootScope.$broadcast).toHaveBeenCalled();
   });
 
@@ -119,14 +114,13 @@ describe('Controller: MySubscriptionCtrl', function () {
     expect(this.controller.licenseCategory).toEqual(this.data.trialLicenseData);
     expect(this.controller.subscriptionDetails).toEqual(this.data.trialSubscriptionData);
     expect(this.controller.visibleSubscriptions).toBeTruthy();
-    expect(this.controller.licenseSummary).toEqual(this.$translate.instant('subscriptions.licenseSummary'));
+    expect(this.controller.licenseSummary).toBeUndefined();
     expect(this.$rootScope.$broadcast).toHaveBeenCalled();
   });
 
   it('should initialize with expected data for online trial orgs', function () {
     this.data.subscriptionsTrialResponse[0].internalSubscriptionId = onlineIntSubId;
     this.data.subscriptionsTrialResponse[0].endDate = 'subEndDate';
-    this.$httpBackend.whenGET(trialUrl).respond(this.$q.resolve(trialUrlResponse));
     spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.data.subscriptionsTrialResponse));
     this.data.trialSubscriptionData[0].isOnline = true;
     this.data.trialSubscriptionData[0].upgradeTrialUrl = trialUrlResponse;
@@ -138,7 +132,6 @@ describe('Controller: MySubscriptionCtrl', function () {
     this.data.trialSubscriptionData[0].badge = 'alert';
 
     this.startController();
-    this.$httpBackend.flush();
 
     expect(this.controller.hybridServices).toEqual(this.data.servicesFormatted);
     expect(this.controller.licenseCategory).toEqual(this.data.trialLicenseData);
@@ -147,11 +140,6 @@ describe('Controller: MySubscriptionCtrl', function () {
     expect(this.$rootScope.$broadcast).toHaveBeenCalled();
     expect(this.controller.licenseSummary).toEqual(this.$translate.instant('subscriptions.licenseSummaryOnline'));
     expect(this.DigitalRiverService.getDigitalRiverToken).toHaveBeenCalled();
-  });
-
-  describe('Tests for Named User Licenses : ', function () {
-    beforeEach(function () {
-    });
   });
 
   describe('Tests for Shared Meeting Licenses : ', function () {
