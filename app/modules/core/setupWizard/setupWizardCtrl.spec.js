@@ -25,7 +25,7 @@ describe('SetupWizardCtrl', function () {
     spyOn(this.Authinfo, 'isSetupDone').and.returnValue(false);
     spyOn(this.Authinfo, 'isCSB').and.returnValue(true);
     spyOn(this.Authinfo, 'isCare').and.returnValue(false);
-    spyOn(this.SetupWizardService, 'hasPendingLicenses').and.returnValue(true);
+    spyOn(this.SetupWizardService, 'getPendingLicenses').and.returnValue(this.$q.resolve([{ LicenseId: '1' }, { LicenseId: '2' }]));
     spyOn(this.Authinfo, 'getLicenses').and.returnValue([{
       licenseType: 'SHARED_DEVICES',
     }]);

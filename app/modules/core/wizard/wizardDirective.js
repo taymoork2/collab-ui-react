@@ -390,7 +390,7 @@ require('./_wizard.scss');
     }
 
     function hasPendingLicenses() {
-      return !_.isEmpty(SetupWizardService.pendingMeetingLicenses);
+      return SetupWizardService.hasPendingLicenses();
     }
 
     function setNextText() {

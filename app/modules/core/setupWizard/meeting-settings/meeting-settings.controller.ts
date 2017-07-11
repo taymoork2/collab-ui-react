@@ -51,13 +51,13 @@ export class MeetingSettingsCtrl {
     this.$rootScope.$on('wizard-meeting-settings-setup-save-event', (): void => {
       const webexLicenses: IWebexLicencesPayload = this.constructWebexLicensesPayload();
       this.TrialWebexService.setProvisioningWebexSitesData(webexLicenses, this.SetupWizardService.getInternalSubscriptionId());
-      this.SetupWizardService.addProvisioningCallbacks(() => {
+      this.SetupWizardService.addProvisioningCallbacks({meetingSettings: () => {
         return this.TrialWebexService.provisionWebexSites().then(() => {
           this.Notification.success('firstTimeWizard.webexProvisioningSuccess');
         }).catch((response) => {
           this.Notification.errorWithTrackingId(response, 'firstTimeWizard.webexProvisioningError');
         });
-      });
+      }});
     });
   }
 
@@ -188,7 +188,7 @@ export class MeetingSettingsCtrl {
     const webexSiteDetailsList: IWebExSite[] = [];
     const webexLicensesPayload: IWebexLicencesPayload = {
       provisionOrder: true,
-      serviceOrderUUID: this.SetupWizardService.getServiceOrderUUID(),
+      serviceOrderUUID: this.SetupWizardService.getActingSubscriptionServiceOrderUUID(),
     };
 
     if (_.isEmpty(this.sitesArray)) {

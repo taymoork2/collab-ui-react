@@ -1,33 +1,30 @@
-import { IPendingOrderSubscription, IPendingLicense } from './setup-wizard-service.interface';
+import { IPendingOrderSubscription, IPendingLicense } from './meeting-settings/meeting-settings.interface';
+import { Notification } from 'modules/core/notifications';
 
 export class SetupWizardService {
   public pendingMeetingLicenses: IPendingLicense[];
   public pendingLicenses: IPendingLicense[];
-  private callbacks: Function[] = [];
+  public provisioningCallbacks = {};
 
   /* @ngInject */
   constructor(
-    private $q,
-    private $http,
+    private $q: ng.IQService,
+    private $http: ng.IHttpService,
     private Authinfo,
     private Config,
-    private Notification,
+    private Notification: Notification,
     private SessionStorage,
+    private StorageKeys,
     private UrlConfig,
-  ) {
-    this.init();
-  }
+  ) { }
 
-  private init() {
-    this.getPendingLicenses();
-  }
-
-  public addProvisioningCallbacks(func: Function) {
-    this.callbacks.push(func);
+  public addProvisioningCallbacks(callObject: { [keys: string]: Function }) {
+    _.assign(this.provisioningCallbacks, callObject);
   }
 
   public processCallbacks() {
-    const promises = _.map(this.callbacks, (callback) => {
+    const calls: Function[] = _.values<Function>(this.provisioningCallbacks);
+    const promises = _.map(calls, (callback) => {
       return this.$q.resolve(callback());
     });
 
@@ -35,8 +32,8 @@ export class SetupWizardService {
   }
 
   private getActingSubscriptionId(): string {
-    const subscriptionId = this.SessionStorage.get('subscriptionId');
-    return subscriptionId || this.Authinfo.getSubscriptions()[0].externalSubscriptionId;
+    const subscriptionId = this.SessionStorage.get(this.StorageKeys.SUBSCRIPTION_ID);
+    return subscriptionId || _.get(this.Authinfo.getSubscriptions()[0], 'externalSubscriptionId');
   }
 
   public getInternalSubscriptionId(): string {
@@ -48,30 +45,35 @@ export class SetupWizardService {
     return _.get<string>(this.getActingSubscription(), 'pendingServiceOrderUUID');
   }
 
+  public hasPendingLicenses() {
+    return !_.isEmpty(this.pendingMeetingLicenses);
+  }
+
   private getActingSubscription(): IPendingOrderSubscription {
     return _.find(this.Authinfo.getSubscriptions(), { externalSubscriptionId: this.getActingSubscriptionId() });
   }
 
-  private getPendingLicenses() {
-    this.getPendingLicensesFromActiveSubscription(this.getActingSubscriptionId())
+  public getPendingLicenses(): ng.IPromise<IPendingLicense[]> {
+    return this.getPendingLicensesFromActiveSubscription(this.getActingSubscriptionId())
       .then(response => {
-        this.populatePendingLicenses(response);
+        return this.populatePendingLicenses(response);
       })
       .catch(response => {
         this.Notification.errorWithTrackingId(response, 'firstTimeWizard.pendingLicensesError');
+        return this.$q.reject(response);
       });
   }
 
-  private populatePendingLicenses(response): void {
+  private populatePendingLicenses(response) {
     this.pendingLicenses = _.get<IPendingLicense[]>(response, 'data.licenseFeatures');
-    this.pendingMeetingLicenses = _.filter(this.pendingLicenses, (license: IPendingLicense) => { return license.status === this.Config.licenseStatus.INITIALIZED && (license.offerName === this.Config.offerCodes.EE || license.offerName === this.Config.offerCodes.MC || license.offerName === this.Config.offerCodes.EC || license.offerName === this.Config.offerCodes.TC || license.offerName === this.Config.offerCodes.SC); });
+    return this.pendingMeetingLicenses = _.filter(this.pendingLicenses, (license: IPendingLicense) => { return license.status === this.Config.licenseStatus.INITIALIZED && (_.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC], license.offerName)); });
   }
 
   private getPendingLicensesFromActiveSubscription(externalSubscriptionId) {
     if (!_.isString(externalSubscriptionId)) {
       return this.$q.reject('An invalid subscriptionId was passed.');
     }
-    const pendingLicensesUrl = this.UrlConfig.getAdminServiceUrl() + 'subscriptions/pending?externalSubscriptionId=' + externalSubscriptionId;
+    const pendingLicensesUrl = `${this.UrlConfig.getAdminServiceUrl()}subscriptions/pending?externalSubscriptionId=${externalSubscriptionId}`;
 
     return this.$http.get(pendingLicensesUrl);
   }
