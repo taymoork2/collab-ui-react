@@ -131,7 +131,7 @@ var auth = {
   },
   'contactcenter-admin': {
     user: 'sunlight-atlas-test-admn@outlook.com',
-    pass: 'C1sco123=',
+    pass: 'C1sco123!',
     org: '36de4632-ccb9-4edf-8124-b74ce6943285',
   },
   'aa-admin': {
