@@ -4,8 +4,8 @@ import { CallSettingsPage } from '../pages/callSettings.page';
 
 const callSettings = new CallSettingsPage();
 
-describe('Huron Functional: external-dial-with-pstn', () => {
-  const customer = huronCustomer('external-dial-with-pstn', null, null, true);
+describe('Huron Functional: ext-dial', () => {
+  const customer = huronCustomer('ext-dial', null, null, true);
   beforeAll(done => {
     provisioner.provisionCustomerAndLogin(customer)
       .then(done);
