@@ -13,7 +13,7 @@ export class AddPlacesPage {
     this.nxtBtn4 = element(by.css('[ng-click="editServices.next()"]'));
     this.addExtension = element(by.name('internalNumber'));
     this.nxtBtn3 = element(by.css('[ng-click="addLines.next()"]'));
-    this.qrCode = element.all(by.css('div.qrCodeSection')).first();
+    this.qrCode = element.all(by.css('.activation-code')).first();
     this.closeGrp = element(by.css('button.close'));
     this.searchPlaces = element(by.css('i.icon-search'));
     this.clearSearchPlace = element(by.css('i.icon-exit-outline'));
