@@ -35,6 +35,7 @@ export class SparkReportService {
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
+    private $http: ng.IHttpService,
     private $q: ng.IQService,
     private chartColors,
     private CommonReportService: CommonReportService,
@@ -567,5 +568,13 @@ export class SparkReportService {
       deviceArray.graphData.push(tempGraph);
     });
     return deviceArray;
+  }
+
+  public getCDRReport(): ng.IPromise<any> {
+    const url = 'http://localhost:8080/s3transporter/squared/getObjects';
+    return this.$http.get(url)
+        .then(function (response) {
+          return response;
+        });
   }
 }

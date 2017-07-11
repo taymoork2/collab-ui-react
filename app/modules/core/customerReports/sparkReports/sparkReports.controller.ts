@@ -42,11 +42,31 @@ interface IConversationPopulated {
   rooms: boolean;
 }
 
+interface ICdrDataParam {
+  calling_partyNumber: string;
+  called_partyNumber: string;
+}
+
+export interface ICdrData {
+  type: string;
+  format: string;
+  from: string;
+  to: string;
+  dataParam: ICdrDataParam;
+}
+
 export class SparkReportCtrl {
+
+  public gridOptions: uiGrid.IGridOptions;
+  public gridData: ICdrData[]= [];
+  public gridRefresh: boolean = true;
+
   /* @ngInject */
   constructor(
+    private $scope: ng.IScope,
     private $rootScope: ng.IRootScopeService,
     private $timeout: ng.ITimeoutService,
+    private $translate: ng.translate.ITranslateService,
     private CardUtils: CardUtils,
     private ReportPrintService: ReportPrintService,
     private SparkGraphService: SparkGraphService,
@@ -65,6 +85,15 @@ export class SparkReportCtrl {
     this.filterArray[2].toggle = (): void => {
       this.resetCards(this.QUALITY);
     };
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.hI802)
+      .then(supports => {
+        if (supports) {
+          this.filterArray[3].toggle = (): void => {
+            this.resetCards(this.DETAILS);
+            this.onInit();
+          };
+        }
+      });
 
     this.reportsUpdateToggle.then((response: boolean): void => {
       this.displayNewReports = response;
@@ -150,6 +179,87 @@ export class SparkReportCtrl {
     });
   }
 
+  public onInit(): void {
+    this.onRefreshed();
+    this.setGridData();
+    this.setGridOptions();
+  }
+
+  private onRefreshed(): void {
+    const deregister = this.$rootScope.$on('refreshed', () => {
+      this.gridData = [];
+      this.gridRefresh = true;
+    });
+    this.$scope.$on('$destroy', deregister);
+  }
+
+  private setGridData(): void {
+    this.SparkReportService.getCDRReport().then((res) => {
+      const dta: any = _.get(res, 'data.CDR');
+      _.forEach(dta, (item) => {
+        item.caller_partyNumber = item.dataParam.calling_partyNumber;
+        item.callie_partyNumber = item.dataParam.called_partyNumber;
+        item.dte = item.ts;
+        item.duration = item.dataParam.duration;
+        item.typeOfCall = 'PSTN';
+        item.calltype = 'Voice';
+        item.status = 'Sucessful';
+      });
+      this.gridData =  dta;
+      this.gridRefresh = false;
+    });
+  }
+
+  private setGridOptions(): void {
+    const columnDefs = [{
+      sortable: true,
+      width: '11%',
+      field: 'typeOfCall',
+      displayName: this.$translate.instant('reportsPage.type'),
+    }, {
+      sortable: true,
+      width: '12%',
+      field: 'calltype',
+      displayName: this.$translate.instant('reportsPage.format'),
+    }, {
+      width: '21%',
+      sortable: true,
+      field: 'caller_partyNumber',
+      displayName: this.$translate.instant('reportsPage.from'),
+    }, {
+      width: '21%',
+      sortable: true,
+      field: 'callie_partyNumber',
+      displayName: this.$translate.instant('reportsPage.to'),
+    }, {
+      width: '12%',
+      sortable: true,
+      field: 'dte',
+      displayName: this.$translate.instant('reportsPage.date'),
+    }, {
+      width: '10%',
+      sortable: true,
+      field: 'duration',
+      displayName: this.$translate.instant('reportsPage.duration'),
+    }, {
+      width: '13%',
+      sortable: true,
+      field: 'status',
+      displayName: this.$translate.instant('reportsPage.status'),
+    }];
+
+    this.gridOptions = {
+      rowHeight: 45,
+      data: 'nav.gridData',
+      multiSelect: false,
+      columnDefs: columnDefs,
+      enableRowHeaderSelection: false,
+      enableColumnMenus: false,
+      enableHorizontalScrollbar: 0,
+      infiniteScrollDown: true,
+    };
+  }
+
   public displayNewReports: boolean = false;
   private reportsUpdateToggle = this.FeatureToggleService.atlasReportsUpdateGetStatus();
   private minMax: IMinMax;
@@ -180,10 +290,12 @@ export class SparkReportCtrl {
   public readonly ALL: string = this.ReportConstants.ALL;
   public readonly ENGAGEMENT: string = this.ReportConstants.ENGAGEMENT;
   public readonly QUALITY: string = this.ReportConstants.QUALITY;
+  public readonly DETAILS: string = this.ReportConstants.DETAILS;
   public currentFilter: string = this.ALL;
   public displayEngagement: boolean = true;
   public displayQuality: boolean = true;
-  public filterArray: IFilterObject[] = _.cloneDeep(this.ReportConstants.filterArray);
+  public displayDetails: boolean = false;
+  public filterArray: IFilterObject[] = this.ReportConstants.FILTER_ARRAY;
 
   // Time Filter Controls
   public timeOptions: ITimespan[] = _.cloneDeep(this.ReportConstants.TIME_FILTER);
@@ -997,11 +1109,16 @@ export class SparkReportCtrl {
     if (this.currentFilter !== filter) {
       this.displayEngagement = false;
       this.displayQuality = false;
+      this.displayDetails = false;
       if (filter === this.ALL || filter === this.ENGAGEMENT) {
         this.displayEngagement = true;
       }
       if (filter === this.ALL || filter === this.QUALITY) {
         this.displayQuality = true;
+      }
+      if (filter === this.DETAILS) {
+        this.displayDetails = true;
+        this.$rootScope.$emit('refreshed');
       }
       this.CardUtils.resize(500);
       this.currentFilter = filter;
