@@ -494,6 +494,8 @@ export class HuronSettingsService {
           || !_.isEqual(this.huronSettingsDataCopy.customer.hasVoicemailService, customerData.hasVoicemailService)
           || !_.isEqual(this.huronSettingsDataCopy.avrilFeatures, avrilFeatures)) {
           return this.updateAvrilSite(siteData, avrilFeatures);
+        } else if (_.isEqual(this.huronSettingsDataCopy.site.routingPrefix, siteData.routingPrefix)) {
+          return this.updateAvrilSite(siteData, avrilFeatures);
         } else {
           return this.$q.resolve();
         }
