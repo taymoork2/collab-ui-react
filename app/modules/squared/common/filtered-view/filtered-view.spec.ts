@@ -59,6 +59,14 @@ describe('Class: FilteredView', () => {
       expect(test.controller.isInState(test.controller.searchonly));
     });
 
+    it('should be in searchOnly state if search string is empty', () => {
+      test.controller.setCurrentSearch('');
+
+      test.$timeout.flush(10000);
+      test.$rootScope.$digest();
+      expect(test.controller.isInState(test.controller.searchonly));
+    });
+
     describe('with server side search result', () => {
       beforeEach(() => {
         spyOn(test.mockDataSource, 'search').and.returnValue(test.$q.resolve(serverSideSearchRes));
