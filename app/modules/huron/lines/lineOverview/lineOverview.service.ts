@@ -3,6 +3,7 @@ import { HuronSiteService } from 'modules/huron/sites';
 import { CallForward, CallForwardAll, CallForwardBusy, CallForwardService } from 'modules/huron/callForward';
 import { SharedLine, SharedLineService, SharedLinePhone, SharedLinePhoneListItem } from 'modules/huron/sharedLine';
 import { Member } from 'modules/huron/members';
+import { MediaOnHoldService } from 'modules/huron/media-on-hold';
 import { ICallerID, CallerIDService } from 'modules/huron/callerId';
 import { AutoAnswer, AutoAnswerService } from 'modules/huron/autoAnswer';
 import { HuronVoicemailService } from 'modules/huron/voicemail';
@@ -15,6 +16,7 @@ export class LineOverviewData {
   public callerId: ICallerID;
   public companyNumbers: any;
   public autoAnswer: AutoAnswer;
+  public lineMoh: string;
   public voicemailEnabled: boolean;
   public services: string[];
 }
@@ -33,6 +35,7 @@ export class LineOverviewService {
     private HuronSiteService: HuronSiteService,
     private CallForwardService: CallForwardService,
     private SharedLineService: SharedLineService,
+    private MediaOnHoldService: MediaOnHoldService,
     private AutoAnswerService: AutoAnswerService,
     private Notification,
     private $q: ng.IQService,
@@ -45,26 +48,28 @@ export class LineOverviewService {
   public get(consumerType: LineConsumerType, ownerId: string, numberId: string = '', wide: boolean = true): ng.IPromise<LineOverviewData> {
     const lineOverviewData = new LineOverviewData();
     this.errors = [];
-    const promises: ng.IPromise<any>[] = [];
-    promises.push(this.getLine(consumerType, ownerId, numberId, wide));
-    promises.push(this.getCallForward(consumerType, ownerId, numberId));
-    promises.push(this.getSharedLines(consumerType, ownerId, numberId));
-    promises.push(this.getCallerId(consumerType, ownerId, numberId));
-    promises.push(this.listCompanyNumbers());
-    promises.push(this.getAutoAnswerSupportedDeviceAndMember(consumerType, ownerId, numberId));
-    promises.push(this.HuronUserService.getUserServices(ownerId));
-    return this.$q.all(promises).then((data) => {
+    return this.$q.all({
+      getLine: this.getLine(consumerType, ownerId, numberId, wide),
+      getCallForward: this.getCallForward(consumerType, ownerId, numberId),
+      getSharedLines: this.getSharedLines(consumerType, ownerId, numberId),
+      getCallerId: this.getCallerId(consumerType, ownerId, numberId),
+      listCompanyNumbers: this.listCompanyNumbers(),
+      getAutoAnswerSupportedDeviceAndMember: this.getAutoAnswerSupportedDeviceAndMember(consumerType, ownerId, numberId),
+      getUserServices: this.HuronUserService.getUserServices(ownerId),
+      getLineMediaOnHold: this.getLineMediaOnHold(numberId),
+    }).then(response => {
       if (this.errors.length > 0) {
         this.Notification.notify(this.errors, 'error');
         return this.$q.reject();
       }
-      lineOverviewData.line = data[0];
-      lineOverviewData.callForward = data[1];
-      lineOverviewData.sharedLines = data[2];
-      lineOverviewData.callerId = data[3];
-      lineOverviewData.companyNumbers = data[4];
-      lineOverviewData.autoAnswer = data[5];
-      lineOverviewData.services = data[6];
+      lineOverviewData.line = _.get<Line>(response, 'getLine');
+      lineOverviewData.callForward = _.get<CallForward>(response, 'getCallForward');
+      lineOverviewData.sharedLines = _.get<SharedLine[]>(response, 'getSharedLines');
+      lineOverviewData.callerId = _.get<ICallerID>(response, 'getCallerId');
+      lineOverviewData.companyNumbers = _.get<any>(response, 'listCompanyNumbers');
+      lineOverviewData.autoAnswer = _.get<AutoAnswer>(response, 'getAutoAnswerSupportedDeviceAndMember');
+      lineOverviewData.services = _.get<string[]>(response, 'getUserServices');
+      lineOverviewData.lineMoh = _.get<string>(response, 'getLineMediaOnHold');
       lineOverviewData.voicemailEnabled = this.HuronVoicemailService.isEnabledForUser(lineOverviewData.services);
       this.lineOverviewDataCopy = this.cloneLineOverviewData(lineOverviewData);
       return lineOverviewData;
@@ -147,6 +152,11 @@ export class LineOverviewService {
         }
       }
 
+      //update line media on hold
+      if (!_.isEqual(data.lineMoh, this.lineOverviewDataCopy.lineMoh)) {
+        promises.push(this.MediaOnHoldService.updateMediaOnHold(data.lineMoh, numberId));
+      }
+
       return this.$q.all(promises)
         .then(() => this.rejectAndNotifyPossibleErrors())
         .then<any>(() => {
@@ -218,6 +228,20 @@ export class LineOverviewService {
     return this.CallForwardService.updateCallForward(consumerType, ownerId, numberId, data)
       .catch(error => {
         this.errors.push(this.Notification.processErrorResponse(error, 'directoryNumberPanel.updateCallForwardError'));
+      });
+  }
+
+  private getLineMediaOnHold(numberId: string = ''): ng.IPromise<string> {
+    return this.FeatureToggleService.supports(this.FeatureToggleService.features.huronMOHEnable)
+      .then(supportsLineMoh => {
+        if (supportsLineMoh) {
+          return this.MediaOnHoldService.getLineMedia(numberId);
+        } else {
+          return this.$q.resolve('');
+        }
+      })
+      .catch(error => {
+        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohLineError'));
       });
   }
 

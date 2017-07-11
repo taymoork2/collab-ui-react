@@ -49,6 +49,7 @@ describe('Component: lineOverview', () => {
       'LineOverviewService',
       'DirectoryNumberOptionsService',
       'CallerIDService',
+      'MediaOnHoldService',
       'FeatureToggleService',
       'Notification',
     );
@@ -58,6 +59,7 @@ describe('Component: lineOverview', () => {
     this.esnPrefix = esnPrefix;
     this.internalNumbers = internalNumbers;
     this.externalNumbers = externalNumbers;
+    this.lineMediaOptions = getJSONFixture('huron/json/settings/company-moh.json');
 
     this.$scope.ownerName = 'Bond James Bond';
     this.$scope.ownerId = '007';
@@ -77,6 +79,8 @@ describe('Component: lineOverview', () => {
     spyOn(this.LineOverviewService, 'save').and.returnValue(this.saveDefer.promise);
 
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
+
+    spyOn(this.MediaOnHoldService, 'getCompanyMohOptions').and.returnValue(this.$q.resolve(this.lineMediaOptions));
 
     spyOn(this.Notification, 'errorResponse');
   });
@@ -111,6 +115,7 @@ describe('Component: lineOverview', () => {
       expect(this.DirectoryNumberOptionsService.getInternalNumberOptions).toHaveBeenCalled();
       expect(this.LineOverviewService.getEsnPrefix).toHaveBeenCalled();
       expect(this.DirectoryNumberOptionsService.getExternalNumberOptions).toHaveBeenCalled();
+      expect(this.MediaOnHoldService.getCompanyMohOptions).toHaveBeenCalled();
       expect(this.view.find(LINE_LABEL_INPUT)).toExist();
       expect(this.view.find(LINE_LABEL_INPUT).val()).toEqual('someuser@some.com');
     });
@@ -192,6 +197,7 @@ describe('Component: lineOverview', () => {
 
     it('should initialize assigned number and notify failure for internal number pool', function () {
       expect(this.LineOverviewService.get).toHaveBeenCalled();
+      expect(this.MediaOnHoldService.getCompanyMohOptions).toHaveBeenCalled();
       expect(this.lineOverview.line.internal).toEqual('1234');
       expect(this.DirectoryNumberOptionsService.getInternalNumberOptions).toHaveBeenCalled();
       expect(this.LineOverviewService.getEsnPrefix).toHaveBeenCalled();
