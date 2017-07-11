@@ -84,8 +84,32 @@ describe('Controller: AADynamicAnnouncementsModalCtrl', function () {
 
       it('should validate controller creation', function () {
         expect(controller).toBeDefined();
-        expect(controller.variableOptions.length).toEqual(6);
+        expect(controller.variableOptions.length).toEqual(10);
         expect(controller.readAsOptions.length).toEqual(4);
+      });
+    });
+    describe('with session variables plus added ui variables', function () {
+      beforeEach(function () {
+        // tests for duplicate variables from query
+        customVarJson.push('account_no');
+
+        spyOn(AASessionVariableService, 'getSessionVariables').and.returnValue(q.resolve(customVarJson));
+        spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
+        // test for duplicate variables at same time
+        spyOn(AACommonService, 'collectThisCeActionValue').and.returnValue(['aaaaaa', 'zzzzzzz', 'aaaaaa', 'zzzzzzz']);
+        controller = $controller('AADynamicAnnouncementsModalCtrl', {
+          $scope: $scope,
+          $modalInstance: modalFake,
+          variableSelection: selection,
+          readAsSelection: selection,
+        });
+        $scope.$apply();
+      });
+
+      it('should validate ui vars got added', function () {
+        expect(controller).toBeDefined();
+        // no dups
+        expect(controller.variableOptions.length).toEqual(12);
       });
     });
 
