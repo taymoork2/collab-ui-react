@@ -9,7 +9,27 @@
   }
 
   .axis text {
-    font-family: sans-serif;
+    stroke: $gray-light-2;
+    stroke-width: 0.5;
     font-size: 11px;
+  }
+
+  .showUser {
+    stroke: $gray-light-2;
+    stroke-width: 0.5;
+    font-size: 12px;
+    text-anchor: end;
+  }
+
+  .gridLine {
+    stroke: $gray-light-2;
+    stroke-width: 0.5;
+  }
+
+  .showCircleTips .circleTips,
+  .lineMsgTips .msgTips {
+    stroke: $gray-light-2;
+    stroke-width: 0.5;
+    font-size: 12px;
   }
 }

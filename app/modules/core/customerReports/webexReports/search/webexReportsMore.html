@@ -32,7 +32,7 @@
             <h4 ng-hide="$ctrl.data.overview.status === 1">{{::'webexReports.end' | translate}}</h4></header>
           <section>
             <p ng-bind="$ctrl.data.overview.endTime_" ng-show="$ctrl.data.overview.status === 2"></p>
-            <p ng-show="$ctrl.data.overview.status === 1 && $ctrl.data.overview.endTime_ === ''">{{::'webexReports.onGoing' | translate}}<i cs-loader class="loader-example--small"></i></p>
+            <p ng-show="$ctrl.data.overview.status === 1">{{::'webexReports.onGoing' | translate}}<i cs-loader class="loader-example--small"></i></p>
           </section>
           <span ng-hide="$ctrl.data.overview.status === 1" ng-bind="$ctrl.data.overview.endDate"></span>
         </article>
@@ -71,9 +71,14 @@
       </div>
     </cs-card-layout>
 
-    <div class="timeline">
-      <cust-time-line source-data="$ctrl.data"></cust-time-line>
+    <div class="timeline" ng-if="$ctrl.loadingMeetingline">
+      <cust-time-line source-data="$ctrl.dataSet"></cust-time-line>
     </div>
+
+    <div ng-if="!$ctrl.loadingMeetingline">
+      <i class="icon icon-spinner"></i>
+    </div>
+
   </div>
 
 </cs-sp-container>
