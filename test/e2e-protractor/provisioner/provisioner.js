@@ -78,6 +78,8 @@ export function setupPSTN(customer) {
         obj.firstName = customer.cmiCustomer.name;
         obj.email = customer.trial.customerEmail;
         obj.uuid = customer.cmiCustomer.uuid;
+        obj.name = customer.name;
+        obj.pstnLines = customer.pstnLines;
         obj.resellerId = helper.auth[customer.partner].org;
         const pstnCustomer = new PstnCustomer(obj);
         return pstnHelper.createPstnCustomer(token, pstnCustomer)
@@ -87,12 +89,38 @@ export function setupPSTN(customer) {
             return pstnHelper.putE911Signee(token, pstnCustomer)
               .then(() => {
                 console.log('Adding phone numbers to customer');
-                pstnCustomer.numbers = ['19193922000', '14692550000', '14084339465'];
+                pstnCustomer.numbers = customerNumbersPSTN(pstnCustomer.lines);
                 return pstnHelper.addPstnNumbers(token, pstnCustomer);
               });
           });
       });
   }
+}
+
+export function customerNumbersPSTN(number) {
+  var prevNumber = 0;
+  var pstnNumbers = [];
+  for (var i = 0; i < number; i++) {
+    var numbers = numberPSTN(prevNumber);
+    prevNumber = numbers[1];
+    pstnNumbers.push(numbers[0]);
+  }
+  return pstnNumbers;
+}
+
+export function numberPSTN(prevNumber) {
+  var date = Date.now();
+  console.log(date);
+  // If created at same millisecond as previous
+  if (date <= prevNumber) {
+    date = ++prevNumber;
+  } else {
+    prevNumber = date;
+  }
+  // get last 10 digits from date
+  date = date % 10000000000;
+  date = parseInt(('1' + date.toString()), 10);
+  return [date, prevNumber];
 }
 
 export function tearDownAtlasCustomer(partnerName, customerName) {

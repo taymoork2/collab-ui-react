@@ -1,6 +1,6 @@
 import * as helper from '../../api_sanity/test_helper';
 const rp = require('request-promise');
-// rp.debug = true;
+rp.debug = true;
 
 export function getToken(userName) {
   return protractor.promise.controlFlow().execute(() => {
