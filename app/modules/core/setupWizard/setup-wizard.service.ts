@@ -46,7 +46,7 @@ export class SetupWizardService {
   }
 
   public hasPendingLicenses() {
-    return !_.isEmpty(this.pendingMeetingLicenses);
+    return !_.isEmpty(this.pendingLicenses);
   }
 
   private getActingSubscription(): IPendingOrderSubscription {
