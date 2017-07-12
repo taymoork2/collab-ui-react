@@ -12,7 +12,7 @@ describe('Component: CallLocationsComponent', () => {
       '$state',
       '$q',
     );
-    spyOn(this.LocationsService, 'getLocations').and.returnValue(this.$q.reject());
+    spyOn(this.LocationsService, 'getLocationList').and.returnValue(this.$q.reject());
     spyOn(this.$state, 'go');
     this.compileComponent('callLocations', {});
   });
@@ -40,8 +40,8 @@ describe('Component: CallLocationsComponent', () => {
       '$state',
       '$q',
     );
-    spyOn(this.LocationsService, 'getLocations');
-    this.LocationsService.getLocations.and.returnValue(this.$q.resolve([]));
+    spyOn(this.LocationsService, 'getLocationList');
+    this.LocationsService.getLocationList.and.returnValue(this.$q.resolve([]));
     this.compileComponent('callLocations', {});
   });
 
@@ -70,9 +70,9 @@ describe('Component: CallLocationsComponent', () => {
       '$state',
       '$q',
     );
-    spyOn(this.LocationsService, 'getLocations');
+    spyOn(this.LocationsService, 'getLocationList');
     spyOn(this.LocationsService, 'filterCards');
-    this.LocationsService.getLocations.and.returnValue(this.$q.resolve(SUCCESS_DATA));
+    this.LocationsService.getLocationList.and.returnValue(this.$q.resolve(SUCCESS_DATA));
     this.compileComponent('callLocations', {});
   });
 

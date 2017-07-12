@@ -1,5 +1,5 @@
-import { LocationDetail } from '../location';
-import { LocationsService } from '../locations.service';
+import { Location } from 'modules/call/locations/location';
+import { LocationsService } from 'modules/call/locations/locations.service';
 
 import {
   PstnModel, PstnService, PstnCarrier,
@@ -42,7 +42,7 @@ class LocationsWizardController implements ng.IComponentController {
   public namePlaceholder: string;
   public huronSettingsData: HuronSettingsData;
 
-  public locationDetail: LocationDetail;
+  public locationDetail: Location;
   public defaultCountry: string = 'US'; //TODO: KPC What is this for?
   public voicemailToEmail: boolean = false;  //TODO: KPC What is this for?
 
@@ -102,12 +102,13 @@ class LocationsWizardController implements ng.IComponentController {
     this.$q.resolve(this.initSettingsComponent());
   }
 
-  private initSettingsComponent(): ng.IPromise<any> {
+  private initSettingsComponent(): ng.IPromise<void> {
     return this.HuronSettingsOptionsService.getOptions().then((options: HuronSettingsOptions) => {
       this.settingsOptions = options;
-      this.locationDetail = new LocationDetail();
+      this.locationDetail = new Location();
     }).catch(response => {
       this.Notification.errorResponse(response);
+      this.locationDetail = new Location();
     });
   }
 
@@ -269,7 +270,7 @@ class LocationsWizardController implements ng.IComponentController {
   }
 
   private saveLocation() {
-    this.LocationsService.createLocation(this.Authinfo.getOrgId(), this.locationDetail).then(() => {
+    this.LocationsService.createLocation(this.locationDetail).then(() => {
       this.$state.go('calllocations');
     }).catch((error) => {
       this.Notification.errorResponse(error, 'locations.createFailed');

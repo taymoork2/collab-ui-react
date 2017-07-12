@@ -12,12 +12,11 @@ class DeleteLocationCtrl implements ng.IComponentController {
   constructor (
     private LocationsService: LocationsService,
     private Notification: Notification,
-    private Authinfo,
   ) {}
 
   public deleteLocation() {
     this.saveInProcess = true;
-    this.LocationsService.deleteLocation(this.Authinfo.getOrgId(), this.uuid).then(() => {
+    this.LocationsService.deleteLocation(this.uuid).then(() => {
       this.close();
     })
     .catch(error => this.Notification.errorResponse(error, 'locations.deleteFailed'))
