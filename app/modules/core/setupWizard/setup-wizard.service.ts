@@ -49,6 +49,14 @@ export class SetupWizardService {
     return !_.isEmpty(this.pendingLicenses);
   }
 
+  public hasPendingMeetingLicenses() {
+    return _.filter(this.pendingLicenses, (license: IPendingLicense) => { return license.status === this.Config.licenseStatus.INITIALIZED && (_.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC], license.offerName)); });
+  }
+
+  public hasPendingCallLicenses() {
+    return _.filter(this.pendingLicenses, (license: IPendingLicense) => { return license.status === this.Config.licenseStatus.INITIALIZED && (_.includes([this.Config.licenseTypes.COMMUNICATION, this.Config.licenseTypes.SHARED_DEVICES], license.licenseType)); });
+  }
+
   private getActingSubscription(): IPendingOrderSubscription {
     return _.find(this.Authinfo.getSubscriptions(), { externalSubscriptionId: this.getActingSubscriptionId() });
   }
@@ -65,8 +73,7 @@ export class SetupWizardService {
   }
 
   private populatePendingLicenses(response) {
-    this.pendingLicenses = _.get<IPendingLicense[]>(response, 'data.licenseFeatures');
-    return this.pendingMeetingLicenses = _.filter(this.pendingLicenses, (license: IPendingLicense) => { return license.status === this.Config.licenseStatus.INITIALIZED && (_.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC], license.offerName)); });
+    return this.pendingLicenses = _.get<IPendingLicense[]>(response, 'data.licenseFeatures', []);
   }
 
   private getPendingLicensesFromActiveSubscription(externalSubscriptionId) {
