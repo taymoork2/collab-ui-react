@@ -127,7 +127,6 @@ export class OnlineUpgradeService {
       subscriptionId: id,
     }, {
       action: CANCEL,
-      downgradeSubscription: true,
     }).$promise;
   }
 

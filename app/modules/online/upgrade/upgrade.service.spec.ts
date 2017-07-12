@@ -139,7 +139,6 @@ describe('Service: OnlineUpgradeService', () => {
 
     const patchPayload = {
       action: CANCEL,
-      downgradeSubscription: true,
     };
 
     it('cancelSubscriptions() should invoke PATCH for each subscription', function () {
