@@ -205,4 +205,5 @@ module.exports = {
   prov3698: 'prov-3698',
   atlasRolesAndSecurity: 'atlas-roles-and-security',
   csdmMultipleDevicesPerPlace: 'csdm-multiple-devices-per-place',
+  avrilI1558: 'avril-i1558',
 };
