@@ -1,5 +1,5 @@
 import { ExternalTransferService } from './externaltransfer.service';
-import { Site, HuronSiteService } from 'modules/huron/sites';
+import { ISite, HuronSiteService } from 'modules/huron/sites';
 import { Notification } from 'modules/core/notifications';
 
 class ExternalTransferCtrl implements ng.IComponentController {
@@ -102,7 +102,7 @@ class ExternalTransferCtrl implements ng.IComponentController {
     }
   }
 
-  public getOrgSetting(): ng.IPromise<Site> {
+  public getOrgSetting(): ng.IPromise<ISite> {
     return this.HuronSiteService.getSite(this.Authinfo.getOrgId());
   }
 }

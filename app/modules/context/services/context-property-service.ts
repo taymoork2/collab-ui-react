@@ -26,7 +26,7 @@ export class PropertyService implements IPropertyService {
     return this.getStringProperty(propertyName, orgId)
       .then(value => {
         if (isNaN(Number(value))) {
-          return this.$q.reject('Not a number');
+          return this.$q.reject('Not a number') as atlas.QRejectWorkaround<number>;
         }
         return Number(value);
       });

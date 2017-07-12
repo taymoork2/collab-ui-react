@@ -39,7 +39,7 @@ export class SparkLineReportService {
   ) {}
 
   // Active User Data
-  public getActiveUserData(filter: ITimespan): ng.IHttpPromise<IActiveUserWrapper> {
+  public getActiveUserData(filter: ITimespan): ng.IPromise<IActiveUserWrapper> {
     // cancel any currently running jobs
     if (this.activeDeferred) {
       this.activeDeferred.resolve(this.ReportConstants.ABORT);
@@ -59,7 +59,7 @@ export class SparkLineReportService {
       } else {
         return returnData;
       }
-    }).catch((error: any): IActiveUserWrapper => {
+    }).catch((error): IActiveUserWrapper => {
       return this.CommonReportService.returnErrorCheck(error, 'activeUsers.overallActiveUserGraphError', returnData);
     });
   }
@@ -142,7 +142,7 @@ export class SparkLineReportService {
   }
 
   // Conversation Data
-  public getConversationData(filter: ITimespan): ng.IHttpPromise<IConversationWrapper> {
+  public getConversationData(filter: ITimespan): ng.IPromise<IConversationWrapper> {
     // cancel any currently running jobs
     if (this.conversationsDeferred) {
       this.conversationsDeferred.resolve(this.ReportConstants.ABORT);
@@ -200,13 +200,13 @@ export class SparkLineReportService {
       });
 
       return returnItem;
-    }).catch((error: any): IConversationWrapper => {
+    }).catch((error): IConversationWrapper => {
       return this.CommonReportService.returnErrorCheck(error, 'reportsPage.conversationError', returnItem);
     });
   }
 
   // Media Quality Data
-  public getMediaQualityData(filter: ITimespan): ng.IHttpPromise<IMediaData[]> {
+  public getMediaQualityData(filter: ITimespan): ng.IPromise<IMediaData[]> {
     // cancel any currently running jobs
     if (this.mediaDeferred) {
       this.mediaDeferred.resolve(this.ReportConstants.ABORT);
@@ -284,12 +284,12 @@ export class SparkLineReportService {
         return graph;
       }
     }, (error): IMediaData[] => {
-      return this.CommonReportService.returnErrorCheck(error, 'mediaQuality.customerError', []);
+      return this.CommonReportService.returnErrorCheck<IMediaData[]>(error, 'mediaQuality.customerError', []);
     });
   }
 
   // Call Metrics Services
-  public getMetricsData(filter: ITimespan): ng.IHttpPromise<IMetricsData[]> {
+  public getMetricsData(filter: ITimespan): ng.IPromise<IMetricsData[]> {
     // cancel any currently running jobs
     if (this.metricsDeferred) {
       this.metricsDeferred.resolve(this.ReportConstants.ABORT);
@@ -349,7 +349,7 @@ export class SparkLineReportService {
   }
 
   // Registered Devices Data
-  public getDeviceData(filter: ITimespan): ng.IHttpPromise<IEndpointContainer> {
+  public getDeviceData(filter: ITimespan): ng.IPromise<IEndpointContainer> {
     // cancel any currently running jobs
     if (this.deviceDeferred) {
       this.deviceDeferred.resolve(this.ReportConstants.ABORT);

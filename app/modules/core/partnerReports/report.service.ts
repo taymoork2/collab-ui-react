@@ -28,7 +28,7 @@ export class ReportService {
   // promise tracking
   private ABORT: string = 'ABORT';
   private TIMEOUT: string = 'TIMEOUT';
-  private activeUserDetailedPromise: ng.IHttpPromise<any>;
+  private activeUserDetailedPromise: ng.IPromise<any>;
   private activeUserCancelPromise: ng.IDeferred<any>;
   private activeTableCancelPromise: ng.IDeferred<any>;
   private callMetricsCancelPromise: ng.IDeferred<any>;
@@ -46,7 +46,7 @@ export class ReportService {
     private PartnerService,
   ) {}
 
-  public getCustomerList(): ng.IHttpPromise<any> {
+  public getCustomerList(): ng.IPromise<any[]> {
     return this.PartnerService.getManagedOrgsList()
       .catch((error) => {
         this.Notification.errorWithTrackingId(error, 'reportsPage.customerLoadError');
@@ -144,7 +144,7 @@ export class ReportService {
     };
   }
 
-  public getActiveUserData(customers: IReportsCustomer[], filter: ITimespan): ng.IHttpPromise<IActiveUserReturnData> {
+  public getActiveUserData(customers: IReportsCustomer[], filter: ITimespan): ng.IPromise<IActiveUserReturnData> {
     let overallStatus = true;
     let promise: ng.IPromise<any>;
 
@@ -257,7 +257,7 @@ export class ReportService {
     return graphData;
   }
 
-  public getActiveTableData(customers: IReportsCustomer[], filter: ITimespan): ng.IHttpPromise<IActiveTableData[]> {
+  public getActiveTableData(customers: IReportsCustomer[], filter: ITimespan): ng.IPromise<IActiveTableData[]> {
     if (this.activeTableCancelPromise) {
       this.activeTableCancelPromise.resolve(this.ABORT);
     }
@@ -279,8 +279,8 @@ export class ReportService {
 
       return this.CommonReportService.getPartnerReportByReportType(reportOptions, extraOptions, customerArray, this.activeTableCancelPromise).then((response) => {
         const tableData: IActiveTableData[] = [];
-        _.forEach(_.get(response, 'data.data'), (org) => {
-          _.forEach(_.get(org, 'data'), (item) => {
+        _.forEach<any>(_.get(response, 'data.data'), (org) => {
+          _.forEach<any>(_.get(org, 'data'), (item) => {
             tableData.push({
               orgName: org.orgName,
               numCalls: _.toInteger(item.details.sparkCalls) + _.toInteger(item.details.sparkUcCalls),
@@ -297,7 +297,7 @@ export class ReportService {
     }
   }
 
-  public getMediaQualityMetrics(customers: IReportsCustomer[], filter: ITimespan): ng.IHttpPromise<IMediaQualityData[]> {
+  public getMediaQualityMetrics(customers: IReportsCustomer[], filter: ITimespan): ng.IPromise<IMediaQualityData[]> {
     if (this.qualityCancelPromise) {
       this.qualityCancelPromise.resolve(this.ABORT);
     }
@@ -392,7 +392,7 @@ export class ReportService {
     return baseGraph;
   }
 
-  public getCallMetricsData(customers: IReportsCustomer[], filter: ITimespan): ng.IHttpPromise<ICallMetricsData> {
+  public getCallMetricsData(customers: IReportsCustomer[], filter: ITimespan): ng.IPromise<ICallMetricsData> {
     if (this.callMetricsCancelPromise) {
       this.callMetricsCancelPromise.resolve(this.ABORT);
     }
@@ -453,7 +453,7 @@ export class ReportService {
     });
   }
 
-  public getRegisteredEndpoints(customers: IReportsCustomer[], filter: ITimespan): ng.IHttpPromise<IEndpointData[][]> {
+  public getRegisteredEndpoints(customers: IReportsCustomer[], filter: ITimespan): ng.IPromise<IEndpointData[][]> {
     if (this.endpointsCancelPromise) {
       this.endpointsCancelPromise.resolve(this.ABORT);
     }

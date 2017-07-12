@@ -4,7 +4,7 @@ import { CallForward, CallForwardAll, CallForwardBusy, CallForwardService } from
 import { SharedLine, SharedLineService, SharedLinePhone, SharedLinePhoneListItem } from 'modules/huron/sharedLine';
 import { Member } from 'modules/huron/members';
 import { MediaOnHoldService } from 'modules/huron/media-on-hold';
-import { ICallerID, CallerIDService } from 'modules/huron/callerId';
+import { CallerID, ICallerID, CallerIDService } from 'modules/huron/callerId';
 import { AutoAnswer, AutoAnswerService } from 'modules/huron/autoAnswer';
 import { HuronVoicemailService } from 'modules/huron/voicemail';
 import { HuronUserService } from 'modules/huron/users';
@@ -60,7 +60,7 @@ export class LineOverviewService {
     }).then(response => {
       if (this.errors.length > 0) {
         this.Notification.notify(this.errors, 'error');
-        return this.$q.reject();
+        return this.$q.reject() as atlas.QRejectWorkaround<LineOverviewData>;
       }
       lineOverviewData.line = _.get<Line>(response, 'getLine');
       lineOverviewData.callForward = _.get<CallForward>(response, 'getCallForward');
@@ -270,7 +270,7 @@ export class LineOverviewService {
   }
   private getCallerId(consumerType: LineConsumerType, ownerId: string, numberId: string): ng.IPromise<ICallerID> {
     if (!numberId) {
-      return this.$q.resolve({});
+      return this.$q.resolve(new CallerID());
     } else {
       return this.CallerIDService.getCallerId(consumerType, ownerId, numberId)
         .then(callerIdRes => {
@@ -281,7 +281,7 @@ export class LineOverviewService {
 
   private getAutoAnswerSupportedDeviceAndMember(consumerType: LineConsumerType, ownerId: string, numberId: string): ng.IPromise<AutoAnswer> {
     if (!numberId) {
-      return this.$q.resolve({});
+      return this.$q.resolve(new AutoAnswer());
     } else {
       return this.AutoAnswerService.getSupportedPhonesAndMember(consumerType, ownerId, numberId)
         .then(autoAnswerRes => {

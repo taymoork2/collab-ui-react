@@ -6,10 +6,8 @@ import { GraphService } from './graph.service';
 import { ReportService } from './report.service';
 import {
   IActiveUserData,
-  IActiveUserReturnData,
   IActiveTableData,
   ICallMetricsData,
-  IEndpointData,
   IFilterObject,
   IMediaQualityData,
   IPopulationData,
@@ -65,7 +63,7 @@ class PartnerReportCtrl {
     };
 
     this.ReportService.getOverallActiveUserData(this.timeSelected);
-    this.ReportService.getCustomerList().then((response: any[]): void => {
+    this.ReportService.getCustomerList().then((response): void => {
       this.setAllDummyData();
       this.updateCustomerFilter(response);
       if (this.customerSelected.length > 0) {
@@ -238,7 +236,7 @@ class PartnerReportCtrl {
     this.$rootScope.$broadcast(this.activeUserSecondaryReportOptions.broadcast);
 
     const promises: ng.IPromise<any>[] = [];
-    const activePromise: ng.IPromise<any> = this.ReportService.getActiveUserData(this.customerSelected, this.timeSelected).then((response: IActiveUserReturnData) => {
+    const activePromise: ng.IPromise<any> = this.ReportService.getActiveUserData(this.customerSelected, this.timeSelected).then((response) => {
       if (_.isArray(response.popData) && _.isArray(response.graphData)) {
         this.activeUserReportOptions.state = this.ReportConstants.EMPTY;
         this.populationReportOptions.state = this.ReportConstants.EMPTY;
@@ -296,7 +294,7 @@ class PartnerReportCtrl {
 
   // endpoint controls
   private getRegisteredEndpoints(): void {
-    this.ReportService.getRegisteredEndpoints(this.customerSelected, this.timeSelected).then((response: IEndpointData[][]) => {
+    this.ReportService.getRegisteredEndpoints(this.customerSelected, this.timeSelected).then((response) => {
       if (_.isArray(response)) {
         if (!_.isArray(response) || response.length === 0) {
           this.endpointReportOptions.state = this.ReportConstants.EMPTY;
@@ -312,7 +310,7 @@ class PartnerReportCtrl {
 
   // media controls
   private getMediaQualityReports(): void {
-    this.ReportService.getMediaQualityMetrics(this.customerSelected, this.timeSelected).then((response: IMediaQualityData[]) => {
+    this.ReportService.getMediaQualityMetrics(this.customerSelected, this.timeSelected).then((response) => {
       if (_.isArray(response)) {
         this.setMediaQualityGraph(response);
         this.mediaReportOptions.state = this.ReportConstants.EMPTY;
@@ -335,7 +333,7 @@ class PartnerReportCtrl {
 
   // metrics controls
   private getCallMetricsReports(): void {
-    this.ReportService.getCallMetricsData(this.customerSelected, this.timeSelected).then((response: ICallMetricsData) => {
+    this.ReportService.getCallMetricsData(this.customerSelected, this.timeSelected).then((response) => {
       if (response) {
         this.callMetricsReportOptions.state = this.ReportConstants.EMPTY;
         if (_.isArray(response.dataProvider) && response.dataProvider.length > 0) {
