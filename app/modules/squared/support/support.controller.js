@@ -7,7 +7,7 @@ require('./_support.scss');
     .controller('SupportCtrl', SupportCtrl);
 
   /* @ngInject */
-  function SupportCtrl($filter, $scope, $translate, $state, $stateParams, $window, Authinfo, CallflowService, CardUtils, Config, FeedbackService, hasAtlasHybridCallUserTestTool, Log, LogService, ModalService, Notification, Orgservice, PageParam, ReportsService, UrlConfig, Userservice, Utils, WindowLocation) {
+  function SupportCtrl($filter, $scope, $translate, $state, $stateParams, $window, Authinfo, CallflowService, CardUtils, Config, FeatureToggleService, FeedbackService, hasAtlasHybridCallUserTestTool, Log, LogService, ModalService, Notification, Orgservice, PageParam, ReportsService, UrlConfig, Userservice, Utils, WindowLocation) {
     $scope.showSupportDetails = false;
     $scope.showSystemDetails = false;
     $scope.problemHandler = ' by Cisco';
@@ -30,7 +30,9 @@ require('./_support.scss');
     $scope.gotoCdrSupport = gotoCdrSupport;
     $scope.gotoEdiscovery = gotoEdiscovery;
     $scope.gotoPartnerManagement = gotoPartnerManagement;
+    $scope.gotoProvisioningConsole = gotoProvisioningConsole;
     $scope.hasAtlasHybridCallUserTestTool = hasAtlasHybridCallUserTestTool;
+    $scope.showOrderProvisioningConsole = false;
 
     var vm = this;
     vm.masonryRefreshed = false;
@@ -55,7 +57,15 @@ require('./_support.scss');
       $state.go('partnerManagement.search');
     }
 
+    function gotoProvisioningConsole() {
+      var url = $state.href('provisioning.pending');
+      $window.open(url, '_blank');
+    }
+
     function initializeShowLinks() {
+      FeatureToggleService.atlasOrderProvisioningConsoleGetStatus().then(function (result) {
+        $scope.showOrderProvisioningConsole = result;
+      });
       Userservice.getUser('me', function (user, status) {
         if (user.success) {
           var bReinstate = false;

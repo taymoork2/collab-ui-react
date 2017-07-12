@@ -1,0 +1,27 @@
+<div id="order-provisioning" class="">
+  <div class="">
+    <!-- General header (instead of using main.tpl) -->
+    <cs-header navstyle="" headertitle="Cisco Collaboration Management" icon="icon-cisco-logo">
+      <cs-header-left>
+      </cs-header-left>
+      <cs-header-right>
+        <cr-user-info></cr-user-info>
+      </cs-header-right>
+    </cs-header>
+    <br>
+    <br>
+
+    <!-- Page header (instead of using main.tpl) -->
+    <cs-page-header title-name="Provisioning Console" tabs="provisioningCtrl.tabs"></cs-page-header>
+
+    <!-- Wrapper for the search and table -->
+    <div class="page-content-wrapper container-fluid" role="main">
+      <div class="row full collapse">
+        <div class="medium-12 columns content-view" ui-view>
+          <div class="medium-12 columns content-view" ui-view="provisioningView">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

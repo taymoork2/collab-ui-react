@@ -7,10 +7,10 @@ describe('Controller: SupportCtrl', function () {
   beforeEach(angular.mock.module('Squared'));
 
   var controller, Authinfo, Userservice, currentUser, Config,
-    $scope, $httpBackend, WindowLocation, UrlConfig, Notification;
+    $scope, $httpBackend, $q, FeatureToggleService, WindowLocation, UrlConfig, Notification;
   var roles = ['ciscouc.devsupport', 'atlas-portal.support'];
 
-  beforeEach(inject(function ($rootScope, $controller, _Userservice_, _Authinfo_, _Config_, _WindowLocation_, _UrlConfig_, _$httpBackend_, _Notification_) {
+  beforeEach(inject(function ($rootScope, $controller, _$q_, _Userservice_, _Authinfo_, _Config_, _FeatureToggleService_, _WindowLocation_, _UrlConfig_, _$httpBackend_, _Notification_) {
     Userservice = _Userservice_;
     Authinfo = _Authinfo_;
     Config = _Config_;
@@ -18,6 +18,8 @@ describe('Controller: SupportCtrl', function () {
     UrlConfig = _UrlConfig_;
     $httpBackend = _$httpBackend_;
     Notification = _Notification_;
+    $q = _$q_;
+    FeatureToggleService = _FeatureToggleService_;
 
     currentUser = {
       success: true,
@@ -28,7 +30,9 @@ describe('Controller: SupportCtrl', function () {
       callback(currentUser, 200);
     });
     spyOn(Authinfo, 'isCiscoMock').and.returnValue(true);
+    spyOn(Authinfo, 'isCisco').and.returnValue(false);
     spyOn(Config, 'isProd').and.returnValue(false);
+    spyOn(FeatureToggleService, 'atlasOrderProvisioningConsoleGetStatus').and.returnValue($q.resolve(true));
     $scope = $rootScope.$new();
     controller = $controller('SupportCtrl', {
       $scope: $scope,
@@ -62,7 +66,28 @@ describe('Controller: SupportCtrl', function () {
     $scope.initializeShowLinks();
     expect($scope.showPartnerManagementLink).toEqual(false);
   });
+  describe('launch Order Provisioning Console', function () {
+    beforeEach(function () {
+      $httpBackend.whenGET('https://ciscospark.statuspage.io/index.json').respond(200, {});
+      $httpBackend.whenGET('https://identity.webex.com/organization/scim/v1/Orgs/null?basicInfo=true').respond(200, {});
+    });
 
+    it('should show the launch button if FT is set to true', function () {
+      Userservice.getUser.and.callFake(function (uid, callback) {
+        callback(currentUser, 200);
+      });
+      $scope.initializeShowLinks();
+      $scope.$apply();
+      expect($scope.showOrderProvisioningConsole).toEqual(true);
+    });
+
+    it('should NOT show the launch button if FT is set to false', function () {
+      FeatureToggleService.atlasOrderProvisioningConsoleGetStatus.and.returnValue($q.resolve(false));
+      $scope.initializeShowLinks();
+      $scope.$apply();
+      expect($scope.showOrderProvisioningConsole).toEqual(false);
+    });
+  });
   it('should return cisdoDevRole true for user that has devsupport or devops role', function () {
     var isSupportRole = $scope.isCiscoDevRole(roles);
     expect(isSupportRole).toBe(true);

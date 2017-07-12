@@ -1,0 +1,70 @@
+@import '~collab-ui/scss/settings/colors';
+
+#order-provisioning {
+  background-color: white;
+  height: 100vh;
+  .medium-12.columns.content-view {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+.provisioning-details {
+  .side-panel-header {
+    height: 170px;
+    padding-top: 2.25rem;
+
+    div {
+      float: left;
+      margin-top: 0.5em;
+
+      .manual-task {
+        max-width: 170px;
+        word-break: break-word;
+      }
+      &:first-child {
+        margin-right: 2em;
+      }
+    }
+  }
+  .side-panel-container {
+    padding: 0;
+    padding-bottom: 170px;
+  }
+  .side-panel-wrapper {
+    padding: 0;
+
+    .breadcrumb-container {
+      display: none;
+    }
+
+    .site-selector {
+      margin-bottom: 1em;
+    }
+
+    .side-panel-section {
+      padding-top: 1rem;
+      padding-right: 1.5625rem;
+      padding-left: 1.5625rem;
+
+      h5 {
+        margin-bottom: 1em;
+        margin-top: 0.5em;
+      }
+      .form-group {
+        .control-label {
+          padding-left: 0;
+        }
+      }
+      .services-title {
+        margin-top: 1.75em;
+      }
+      .provisioning-services {
+        h6 {
+          margin-top: 1.2em;
+          margin-bottom: 0.5em;
+        }
+      }
+    }
+  }
+}

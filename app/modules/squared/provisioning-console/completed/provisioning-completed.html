@@ -1,0 +1,10 @@
+<!-- Sub header with search -->
+<cs-page-sub-header>
+  <cs-page-sub-header-left>
+    <cs-searchfilter placeholder-text="Order number" search-item-fn="provisioningCtrl.setCurrentSearch(searchStr)">
+    </cs-searchfilter>
+  </cs-page-sub-header-left>
+</cs-page-sub-header>
+
+<!-- Table -->
+<div style="background-color: white !important;" class="gridStyle table table-striped table-hover" ui-grid="provisioningCtrl.gridOptions.completed" ui-grid-selection></div>

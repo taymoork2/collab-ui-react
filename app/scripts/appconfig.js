@@ -2799,6 +2799,59 @@
               id: null,
               orgId: null,
             },
+          })
+          .state('provisioning-main', {
+            views: {
+              'main@': {
+                controller: 'ProvisioningController',
+                controllerAs: 'provisioningCtrl',
+                templateUrl: 'modules/squared/provisioning-console/provisioning.html',
+              },
+            },
+            abstract: true,
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('./main'));
+                }, 'modules');
+              }),
+            },
+            sticky: true,
+          })
+          .state('provisioning', {
+            url: '/provisioning',
+            parent: 'provisioning-main',
+          })
+          .state('provisioning.pending', {
+            url: '/pending',
+            views: {
+              provisioningView: {
+                templateUrl: 'modules/squared/provisioning-console/pending/provisioning-pending.html',
+              },
+            },
+          })
+          .state('provisioning.completed', {
+            url: '/completed',
+            views: {
+              provisioningView: {
+                templateUrl: 'modules/squared/provisioning-console/completed/provisioning-completed.html',
+                controller: 'ProvisioningController',
+                controllerAs: 'provisioningCtrl',
+              },
+            },
+          })
+          .state('order-details', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                controller: 'ProvisioningDetailsController',
+                controllerAs: 'provisioningDetailsCtrl',
+                templateUrl: 'modules/squared/provisioning-console/overview/provisioning-details.html',
+              },
+            },
+            params: {
+              order: {},
+            },
           });
 
         $stateProvider
