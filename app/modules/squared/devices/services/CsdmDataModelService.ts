@@ -273,7 +273,8 @@ export class CsdmDataModelService implements ICsdmDataModelService {
       });
   }
 
-  public updateCloudberryPlace(objectToUpdate, entitlements, directoryNumber, externalNumber, externalLinkedAccounts) {
+  public updateCloudberryPlace(objectToUpdate,
+                               { entitlements, directoryNumber, externalNumber, externalLinkedAccounts }) {
     const placeUrl = this.getPlaceUrl(objectToUpdate);
     return this.CsdmPlaceService.updatePlace(placeUrl, entitlements, directoryNumber, externalNumber, externalLinkedAccounts)
       .then((place) => {
