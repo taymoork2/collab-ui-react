@@ -34,7 +34,7 @@ export function huronCustomer(test, numberRange, users, pstn, pstnLines) {
     }),
     users: undefined,
     pstn: pstn || undefined,
-    pstnLines: pstnLines || undefined,
+    pstnLines: pstnLines || 3,
   };
   return customer;
 }
