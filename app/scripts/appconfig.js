@@ -3425,11 +3425,12 @@
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<context-fieldset-modal existing-fieldset-ids="$resolve.existingFieldsetIds" existing-fieldset-data="$resolve.existingFieldsetData" callback="$resolve.callback" dismiss="$dismiss()" class="context-modal"></context-fieldset-modal>',
+                template: '<context-fieldset-modal existing-fieldset-ids="$resolve.existingFieldsetIds" existing-fieldset-data="$resolve.existingFieldsetData" in-use="$resolve.inUse" callback="$resolve.callback" dismiss="$dismiss()" class="context-modal"></context-fieldset-modal>',
               },
             },
             params: {
               existingFieldsetIds: [],
+              inUse: false,
               existingFieldsetData: {},
               callback: function () {},
             },
@@ -3439,6 +3440,9 @@
               },
               existingFieldsetData: /* @ngIngect */function ($stateParams) {
                 return $stateParams.existingFieldsetData;
+              },
+              inUse: /* @ngIngect */function ($stateParams) {
+                return $stateParams.inUse;
               },
               callback: /* @ngInject */ function ($stateParams) {
                 return $stateParams.callback;

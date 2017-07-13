@@ -11,21 +11,39 @@ describe('Component: Fieldset SidePanel', function () {
     ],
     publiclyAccessible: false,
     fieldDefinitions: [
-      {
-        id: 'AAA_TEST_FIELD',
-        lastUpdated: '2017-02-02T17:12:33.167Z',
-      },
-      {
-        id: 'AAA_TEST_FIELD4',
-        lastUpdated: '2017-02-02T21:22:35.106Z',
-      },
-      {
-        id: 'Agent_ID',
-        lastUpdated: '2017-01-23T16:48:50.021Z',
-      },
+      { id: 'AAA_TEST_FIELD', lastUpdated: '2017-02-02T17:12:33.167Z' },
+      { id: 'AAA_TEST_FIELD4', lastUpdated: '2017-02-02T21:22:35.106Z' },
+      { id: 'Agent_ID', lastUpdated: '2017-01-23T16:48:50.021Z' },
     ],
     refUrl: '/dictionary/fieldset/v1/id/aaa_custom_fieldset',
     id: 'aaa_custom_fieldset',
+    lastUpdated: '2017-02-10T19:37:36.998Z',
+  };
+
+  var customFieldsetWithInactiveFields = {
+    orgId: 'd06308f8-c24f-4281-8b6f-03f672d34231',
+    description: 'custom fieldset with inactive fields',
+    fields: [
+      'AAA_TEST_FIELD',
+      'Agent_ID',
+      'AAA_TEST_FIELD4',
+      'INACTIVE_FIELD1',
+      'INACTIVE_FIELD2',
+    ],
+    inactiveFields: [
+      'INACTIVE_FIELD1',
+      'INACTIVE_FIELD2',
+    ],
+    publiclyAccessible: false,
+    fieldDefinitions: [
+      { id: 'AAA_TEST_FIELD', lastUpdated: '2017-02-02T17:12:33.167Z' },
+      { id: 'AAA_TEST_FIELD4', lastUpdated: '2017-02-02T21:22:35.106Z' },
+      { id: 'Agent_ID', lastUpdated: '2017-01-23T16:48:50.021Z' },
+      { id: 'INACTIVE_FIELD1', lastUpdated: '2017-01-23T16:48:50.021Z' },
+      { id: 'INACTIVE_FIELD2', lastUpdated: '2017-01-23T16:48:50.021Z' },
+    ],
+    refUrl: '/dictionary/fieldset/v1/id/custom_fieldset_with_inactive_fields',
+    id: 'custom_fieldset_with_inactive_fields',
     lastUpdated: '2017-02-10T19:37:36.998Z',
   };
 
@@ -38,18 +56,9 @@ describe('Component: Fieldset SidePanel', function () {
     ],
     publiclyAccessible: true,
     fieldDefinitions: [
-      {
-        id: 'AAA_TEST_FIELD',
-        lastUpdated: '2017-02-02T17:12:33.167Z',
-      },
-      {
-        id: 'AAA_TEST_FIELD4',
-        lastUpdated: '2017-02-02T21:22:35.106Z',
-      },
-      {
-        id: 'Agent_ID',
-        lastUpdated: '2017-01-23T16:48:50.021Z',
-      },
+      { id: 'AAA_TEST_FIELD', lastUpdated: '2017-02-02T17:12:33.167Z' },
+      { id: 'AAA_TEST_FIELD4', lastUpdated: '2017-02-02T21:22:35.106Z' },
+      { id: 'Agent_ID', lastUpdated: '2017-01-23T16:48:50.021Z' },
     ],
     refUrl: '/dictionary/fieldset/v1/id/aaa_cisco_fieldset',
     id: 'aaa_cisco_fieldset',
@@ -136,7 +145,7 @@ describe('Component: Fieldset SidePanel', function () {
         expect(ContextFieldsetsService.getInUse).toHaveBeenCalledWith(customFieldset.id);
         expect(ctrl.fieldset.id).toEqual(customFieldset.id);
         expect(ctrl.inUse).toBe(true);
-        expect(ctrl.isEditable()).toBe(false);
+        expect(ctrl.isEditable()).toBe(true);
       });
 
       it('should be a Cisco fieldset with no description', function () {
@@ -154,25 +163,28 @@ describe('Component: Fieldset SidePanel', function () {
         expect(ctrl.hasDescription).toBe(false);
         expect(ctrl.isEditable()).toBe(false);
       });
+
+      it('should be a Custom fieldset with inactive fields', function () {
+        getInUseSpy.and.returnValue($q.resolve(false));
+        initController(customFieldsetWithInactiveFields);
+        $rootScope.$apply();
+
+        expect(ContextFieldsetsService.getInUse).toHaveBeenCalledWith(customFieldsetWithInactiveFields.id);
+        expect(ctrl.lastUpdated).not.toBeNull();
+        expect(ctrl.fields.length).toBe(3); // Total fields (5) - Inactive fields (2) = 3
+        expect(ctrl.fieldset.id).toEqual(customFieldsetWithInactiveFields.id);
+        expect(ctrl.fieldset.description).toEqual('custom fieldset with inactive fields');
+        expect(ctrl.inUse).toBe(false);
+        expect(ctrl.publiclyAccessible).toBe(false);
+        expect(ctrl.hasDescription).toBe(true);
+        expect(ctrl.isEditable()).toBe(true);
+      });
     });
 
     describe('isEditable', function () {
       it('should return false if publicly accessible', function () {
         ctrl.publiclyAccessible = true;
-        ctrl.inUse = false;
         expect(ctrl.isEditable()).toBe(false);
-      });
-
-      it('should return false if in Use', function () {
-        ctrl.publiclyAccessible = false;
-        ctrl.inUse = true;
-        expect(ctrl.isEditable()).toBe(false);
-      });
-
-      it('should return true if not publicly accessible and not in use', function () {
-        ctrl.publiclyAccessible = false;
-        ctrl.inUse = false;
-        expect(ctrl.isEditable()).toBe(true);
       });
     });
 
