@@ -103,11 +103,12 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
     this.invalidCount = 0;
   }
 
-  public searchCarrierInventory(value: string, block: boolean, quantity: number, consecutive: boolean): void {
+  public searchCarrierInventory(value: string, block: boolean, quantity: number, consecutive: boolean, stateAbbreviation: string): void {
     this.model.paginateOptions.currentPage = 0;
     this.model.block = block;
     this.model.quantity = quantity;
     this.model.consecutive = consecutive;
+    this.model.stateAbbreviation = stateAbbreviation;
     this.trialData.details.pstnNumberInfo.areaCode = {
       code: ('' + value).slice(0, MIN_VALID_CODE),
     };
@@ -117,6 +118,7 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
       npa: this.trialData.details.pstnNumberInfo.areaCode.code,
       count: MAX_DID_QUANTITY,
       sequential: false,
+      state: this.model.stateAbbreviation,
     };
 
     if (value.length === MAX_VALID_CODE) {
