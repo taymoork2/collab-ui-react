@@ -1683,8 +1683,7 @@
         //deleteUrl has been configured
         //else it will go to a sayList, blank or otherwise
         //which is used later to trigger play or say
-        //--if (_.get(list, '[0].deleteUrl', undefined)) {
-        if (_.has(list[0].deleteUrl, undefined)) {
+        if (_.has(list, '[0].deleteUrl')) {
           inputAction.prompts.announcements = [{
             play: {
               deleteUrl: list[0].deleteUrl,
