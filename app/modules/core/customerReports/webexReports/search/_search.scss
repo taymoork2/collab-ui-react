@@ -31,17 +31,10 @@
 
           &:hover {
             background-color: $gray-light-4;
-
-            .pull-right {
-              color: $focus-color;
-            }
           }
 
           .pull-right {
-            .icon-right-arrow {
-              position: relative;
-              top: 1px;
-            }
+            color: $focus-color;
           }
         }
       }
@@ -223,7 +216,7 @@
         .name {
           color: $gray-base;
           line-height: 1;
-          font-size: 1.2rem;
+          font-size: 1rem;
           font-family: "CiscoSans";
         }
 
@@ -257,10 +250,12 @@
         }
       }
     }
+  }
 
-    .timeline {
-      margin-top: 15px;
-    }
+  .timeline {
+    margin-top: 25px;
+    min-height: 340px;
+    text-align: center;
   }
 
   .row {

@@ -133,24 +133,27 @@ class TimeLine implements ng.IComponentController {
     const data = _.map(this.sourceData.lines, (item: any) => {
       const leaveTime = item.leaveTime || this.sourceData.overview.endTime;
       const joinTime = item.joinTime;
+      const end = this.time2line(this.timestampToDate(leaveTime)) - this.data.gridVerticalLineNum * 0.5;
+      const end_ = this.coordinate.endX - this.coordinate.x;
 
       return {
         text: item.jmtQuality,
         userName: item.userName,
-        joinTime: this.time2line(this.timestampToDate(joinTime)),
-        leaveTime: this.time2line(this.timestampToDate(leaveTime)) - this.data.gridVerticalLineNum * 0.5,
+        end: end > end_ ? end_ : end,
+        start: this.time2line(this.timestampToDate(joinTime)),
         lineColor: item.dataQuality ? this.colorArr[item.dataQuality - 1] : this.colorArr[3],
         circleColor: item.jmtQuality ? this.colorArr[item.jmtQuality - 1] : this.colorArr[3],
       };
     });
+
     this.data.joinsLine = data;
     _.forEach(data, (item) => {
       y += this.data.yStep;
 
       this.svg.append('svg:line')
-        .attr('x1', x + item.joinTime)
+        .attr('x1', x + item.start)
         .attr('y1', y)
-        .attr('x2', x + item.leaveTime)
+        .attr('x2', x + item.end)
         .attr('y2', y)
         .style('stroke', item.lineColor)
         .style('stroke-width', 1);
@@ -164,7 +167,7 @@ class TimeLine implements ng.IComponentController {
     y = 0;
     const badges = this.svg.append('g');
     _.forEach(this.data.joinsLine, (item: any) => {
-      x = this.coordinate.x + item.joinTime;
+      x = this.coordinate.x + item.start;
       y += this.coordinate.y / this.data.gridHorizontalLineNum;
       badges.append('circle')
         .attr('cx', x)

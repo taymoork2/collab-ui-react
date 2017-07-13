@@ -133,8 +133,8 @@ class WebexReportsSearch implements ng.IComponentController {
   }
 
   private setGridData(): void {
-    const endDate = this.isDatePickerShow ? moment(this.endDate + ' ' + moment().format('hh:mm:ss')).utc().format('YYYY-MM-DD') : '';
-    const startDate = this.isDatePickerShow ? moment(this.startDate + ' ' + moment().format('hh:mm:ss')).utc().format('YYYY-MM-DD') : '';
+    const endDate = this.isDatePickerShow ? moment(this.endDate + ' ' + moment().format('HH:mm:ss')).utc().format('YYYY-MM-DD') : '';
+    const startDate = this.isDatePickerShow ? moment(this.startDate + ' ' + moment().format('HH:mm:ss')).utc().format('YYYY-MM-DD') : '';
     const data = {
       endDate : endDate,
       email: this.email,
