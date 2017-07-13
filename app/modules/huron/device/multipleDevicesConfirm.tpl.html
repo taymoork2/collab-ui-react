@@ -1,0 +1,31 @@
+<!-- header -->
+<div class="modal-header">
+  <h3 class="modal-title" translate="multipleDevicesConfirm.title"></h3>
+</div>
+
+<!-- body -->
+<div
+  class="modal-body">
+  <p class="spacing-for-second-paragraph">
+    <span translate="multipleDevicesConfirm.activationCodeExplanation"></span>
+  </p>
+  <p>
+    <span translate="multipleDevicesConfirm.multipleDevicesWarning"></span>
+  </p>
+</div>
+
+<!-- footer -->
+<div
+  class="modal-footer">
+  <button
+    class="btn"
+    ng-click="$dismiss()">
+    <span translate="common.cancel">
+    </span>
+  </button>
+  <button
+    class="btn btn--primary"
+    ng-click="$close()">
+    <span translate="multipleDevicesConfirm.okGotIt"></span>
+  </button>
+</div>

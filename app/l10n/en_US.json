@@ -387,6 +387,7 @@
     "generateActivationCodeText": "Generate an activation code to enable a new device for this user.",
     "generateActivationCodeTextPlace": "Generate an activation code to enable a new device for this place.",
     "generateActivationCodeDesc": "If you have lost your code, please generate a new activation code. ",
+    "multipleDevicesWarning": "The devices in this place are not designed to work together. Therefore, there may be interference issues.",
     "activationCodeTitle": "Activation Code",
     "expires": "Expires",
     "editServices": "Edit services",
@@ -666,10 +667,12 @@
     "end": "End",
     "audio": "Audio",
     "start": "Start",
+    "details": "Details",
     "created": "Created",
     "classic": "Classic",
     "quality": "Quality",
     "session": "Session",
+    "meeting": "Meeting",
     "session_": "SESSION",
     "endTime": "End Date",
     "onGoing": "On Going",
@@ -689,7 +692,6 @@
     "meetingNumber": "Meeting Number",
     "scheduledFrom": "Scheduled From",
     "placeholder-date": "Choose a day",
-    "meetingDetails": "Meeting Details",
     "hostNameAndId":"Host Name / Host ID",
     "siteIdAndName": "Site ID / Site Name",
     "search-info-title": "Search for a meeting",
@@ -3417,6 +3419,7 @@
     "needHelp": "Need help - ",
     "needHelpExplain": "Search the knowledge base.",
     "planReview": "Plan Review",
+    "pendingLicensesError": "There was an error in the call for pending licenses",
     "subscriptionId": "Subscription IDs",
     "subscriptionID": "Subscription ID: ",
     "spark": "Cisco Spark",
@@ -4602,7 +4605,7 @@
     "feature1": "Use existing PSTN provider",
     "feature2": "Import your phone numbers",
     "feature3": "Bridge the cloud & enterprise",
-    "feature4": "Self mananged E911"
+    "feature4": "Self managed E911"
   },
   "partnerHomePage": {
     "trialsHeading": "Trials",
@@ -5210,10 +5213,13 @@
       "existingOrNewPlace": "Assign to an existing place or a new place?",
       "existingOrNewPlaceDeskPhoneInstructions": "Select existing place if the previous code for this place has been lost or has expired. You can also add multiple desk phones to the same place - all phones in that place will then share the same calling configuration. For example, desk phones will share the same lines.",
       "existingOrNewPlaceCollaborationDeviceInstructions": "Select existing place if the previous code for this place has been lost or has expired.",
+      "existingOrNewPlaceMultipleDevicesInstructions": "Select existing place if the previous code for this place has been lost or has expired, or to have multiple devices in a place.",
+      "existingOrNewCloudberryPlaceMultipleDevicesInstructions": "Select existing place to activate a new device if the previous code for this place has been lost or has expired, or to have multiple devices in a place. If you put multiple devices in a place that are not designed to work together, it may create interference issues.",
       "existingPlace": "Existing Place",
       "whichPlace": "Which existing place will the device be assigned to?",
       "existingDeskPhonePlaceInstructions": "Select from the below places. Only desk phone places are shown since desk phones and room devices cannot share the same place.",
       "existingCollaborationDevicePlaceInstructions": "Only empty room device places are shown since there is a maximum of one room device in a place, and desk phones and room devices cannot share the same place.",
+      "existingRoomDevicePlaceMultipleRoomDeviceInstructions": "Note that if you put multiple devices in a place that are not designed to work together, it could create interference issues between them.",
       "existingPlaceInstructions": "A room device place can only contain one device, so existing room device places with an activated device will not be shown.",
       "selectPlace": "Search for a place",
       "newPlace": "New Place",
@@ -6474,6 +6480,7 @@
   "locations": {
     "locationName": "Location Name",
     "addText": "Add Location",
+    "namePlaceholder": "Name the Location",
     "copyTitle": "Copy Location",
     "copyDesc": "This location will use the customized setting from the location that you copied.",
     "deleteTitle": "Delete Location",
@@ -8873,5 +8880,11 @@
     "deleteMediaError": "An error occurred deleting media.",
     "cleanupMediaError": "An error occurred cleaning up a failed media upload.",
     "unsupportedTypeError": "File type selected for upload is not supported."
+  },
+  "multipleDevicesConfirm": {
+    "title": "About Devices in a Place",
+    "activationCodeExplanation": "An activation code can be used to activate a new device or reactivate an existing device.",
+    "multipleDevicesWarning": "Note that if you put multiple devices in a place that are not designed to work together, it could create interference issues between them.",
+    "okGotIt": "Ok, got it"
   }
 }

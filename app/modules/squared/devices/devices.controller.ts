@@ -19,6 +19,7 @@ export class DevicesController {
   private huronDeviceService: any;
   private currentDevice: IDevice;
   private showATA: boolean;
+  private csdmMultipleDevicesPerPlaceFeature: boolean;
   private csdmHybridCallFeature: boolean;
   private showPersonal: boolean;
   private csdmHybridCalendarFeature: boolean;
@@ -203,7 +204,10 @@ export class DevicesController {
         return service.id === 'squared-fusion-uc';
       }).some().value();
     });
-    this.$q.all([ataPromise, hybridPromise, personalPromise, placeCalendarPromise, anyCalendarEnabledPromise, getLoggedOnUserPromise]).finally(() => {
+    const multipleDevicesPerPlacePromise = this.FeatureToggleService.csdmMultipleDevicesPerPlaceGetStatus().then(feature => {
+      this.csdmMultipleDevicesPerPlaceFeature = feature;
+    });
+    this.$q.all([ataPromise, hybridPromise, personalPromise, placeCalendarPromise, anyCalendarEnabledPromise, getLoggedOnUserPromise, multipleDevicesPerPlacePromise]).finally(() => {
       this.addDeviceIsDisabled = false;
     });
 
@@ -262,6 +266,7 @@ export class DevicesController {
         function: 'addDevice',
         showATA: this.showATA,
         showPersonal: false,
+        multipleRoomDevices: this.csdmMultipleDevicesPerPlaceFeature,
         admin: this.adminUserDetails,
         csdmHybridCallFeature: this.csdmHybridCallFeature,
         csdmHybridCalendarFeature: this.csdmHybridCalendarFeature,
@@ -341,6 +346,7 @@ export class DevicesController {
         function: 'addDevice',
         showATA: this.showATA,
         showPersonal: true,
+        multipleRoomDevices: this.csdmMultipleDevicesPerPlaceFeature,
         admin: this.adminUserDetails,
         csdmHybridCallFeature: this.csdmHybridCallFeature,
         csdmHybridCalendarFeature: this.csdmHybridCalendarFeature,

@@ -68,3 +68,14 @@ export interface IPendingOrderSubscription {
   subscriptionId?: string;
   trialDuration?: number;
 }
+
+export interface IPendingLicense {
+  licenseId: string;
+  offerName: string;
+  masterOfferName: string;
+  licenseType: string;
+  features: string[];
+  volume: number;
+  isTrial: boolean;
+  status: string;
+}

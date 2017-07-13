@@ -18,7 +18,7 @@
       <uc-device-list
         owner-type="place"
         device-list="$ctrl.currentPlace.devices"
-        multiple-otp="$ctrl.currentPlace.type !== 'cloudberry'"
+        place-type="$ctrl.currentPlace.type"
         on-generate-fn="$ctrl.onGenerateOtpFn()"
         on-show-device-detail-fn="$ctrl.showDeviceDetails(device)">
       </uc-device-list>

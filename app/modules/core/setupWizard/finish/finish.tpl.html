@@ -1,9 +1,9 @@
-<div ng-if="!isOrderSimplificationToggled()" class="finish-page">
+<div ng-if="!hasPendingLicenses" class="finish-page">
   <i class="icon icon-circle-check" />
   <h3 translate="firstTimeWizard.readyToGo"></h3>
   <p translate="firstTimeWizard.finishDesc"></p>
 </div>
-<div ng-if="isOrderSimplificationToggled()" class="activate-page">
+<div ng-if="hasPendingLicenses" class="activate-page">
   <div class="activate-page__section">
     <p class="activate-page__header" translate="firstTimeWizard.activateAndBeginBilling"></p>
     <p translate="firstTimeWizard.activateBillingDescription"></p>

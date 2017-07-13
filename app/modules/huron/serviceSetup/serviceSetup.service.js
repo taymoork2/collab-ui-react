@@ -218,18 +218,7 @@
 
       getSiteLanguages: function () {
         return getAllLanguages().then(function (languages) {
-          return FeatureToggleService.supports(
-              FeatureToggleService.features.huronUserLocale2
-            ).then(function (isHuronUserLocale2Enabled) {
-              if (!isHuronUserLocale2Enabled) {
-                languages = _.filter(languages, function (tLanguage) {
-                  return (!tLanguage.featureToggle || tLanguage.featureToggle !== FeatureToggleService.features.huronUserLocale2);
-                });
-              }
-              return languages;
-            }).catch(function () {
-              return languages;
-            });
+          return filterFeatureToggleEnabledObjects(languages);
         });
       },
 
@@ -244,7 +233,7 @@
 
       getSiteCountries: function () {
         return SiteCountryService.query().$promise.then(function (countries) {
-          return filterFeatureToggleEnabledCountries(countries);
+          return filterFeatureToggleEnabledObjects(countries);
         });
       },
 
@@ -298,27 +287,27 @@
       },
     };
 
-    function filterFeatureToggleEnabledCountries(countries) {
+    function filterFeatureToggleEnabledObjects(objects) {
       var promises = {};
-      var ftSupportedCountries = [];
-      _.forEach(countries, function (country) {
-        if (country.featureToggle) {
-          promises[country.value] = checkFeatureToggleSupport(country.featureToggle);
+      var ftSupportedObjects = [];
+      _.forEach(objects, function (object) {
+        if (object.featureToggle) {
+          promises[object.value] = checkFeatureToggleSupport(object.featureToggle);
         } else {
-          ftSupportedCountries.push(country);
+          ftSupportedObjects.push(object);
         }
       });
-      if (_.isEmpty(promises)) { return ftSupportedCountries; }
+      if (_.isEmpty(promises)) { return ftSupportedObjects; }
       return $q.all(promises).then(function (data) {
         _.forEach(data, function (value, key) {
           if (value) {
-            ftSupportedCountries.push(_.find(countries, { value: key }));
+            ftSupportedObjects.push(_.find(objects, { value: key }));
           }
         });
-        return ftSupportedCountries;
+        return ftSupportedObjects;
       })
       .catch(function () {
-        return ftSupportedCountries;
+        return ftSupportedObjects;
       });
     }
 

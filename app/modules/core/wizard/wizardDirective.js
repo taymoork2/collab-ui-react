@@ -139,7 +139,7 @@ require('./_wizard.scss');
       initCurrent();
       setNextText();
       vm.isNextDisabled = false;
-      if (isOrderSimplificationToggled()) {
+      if (hasPendingLicenses()) {
         vm.showDontActivate = true;
       }
     }
@@ -389,14 +389,14 @@ require('./_wizard.scss');
       return true;
     }
 
-    function isOrderSimplificationToggled() {
-      return SetupWizardService.isOrderSimplificationToggled();
+    function hasPendingLicenses() {
+      return SetupWizardService.hasPendingLicenses();
     }
 
     function setNextText() {
       if ((isFirstTab() && isFirstTime() && !isCustomerPartner() && !isFromPartnerLaunch()) || (isFirstTab() && isFirstStep() && !isSingleTabSingleStep())) {
         vm.nextText = $translate.instant('firstTimeWizard.getStarted');
-      } else if (isFirstTime() && isLastTab() && isLastStep() && isOrderSimplificationToggled()) {
+      } else if (isFirstTime() && isLastTab() && isLastStep() && hasPendingLicenses()) {
         vm.nextText = $translate.instant('common.activate');
       } else if (isFirstTime() && isLastTab() && isLastStep()) {
         vm.nextText = $translate.instant('common.finish');

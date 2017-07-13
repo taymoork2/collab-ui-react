@@ -78,7 +78,6 @@ module.exports = {
   huronAAReturnCaller: 'huron-aa-returncaller',
   huronClassOfService: 'COS',
   huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
-  huronUserLocale2: 'huron-l10n-user-locale-2',
   huronMOHEnable: 'huron-moh-enable',
   huronPlaceMOHEnable: 'huron-place-moh-enable',
   iosActionBar: 'ios-action-bar',
@@ -202,4 +201,5 @@ module.exports = {
   hI1484: 'h-i1484',
   hI1485: 'h-i1485',
   atlasRolesAndSecurity: 'atlas-roles-and-security',
+  csdmMultipleDevicesPerPlace: 'csdm-multiple-devices-per-place',
 };

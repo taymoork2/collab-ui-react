@@ -11,9 +11,14 @@
     <button
       class="btn btn--people btn-center"
       ng-click="$ctrl.onGenerateCode()"
+      ng-disabled="$ctrl.generateCodeIsDisabled"
       translate="usersPreview.generateActivationCode">
     </button>
   </div>
+</div>
+<div class="multiple-devices-warning" ng-if="$ctrl.showMultipleDeviceWarning">
+  <i class="icon icon-warning"></i>
+  <span translate="usersPreview.multipleDevicesWarning"></span>
 </div>
 <div class="feature-list">
   <ul>

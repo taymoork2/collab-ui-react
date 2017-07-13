@@ -59,7 +59,7 @@ export class HuronSiteService {
       });
   }
 
-  public getSite(siteId: string): ng.IPromise<ISite> {
+  public getSite(siteId: string): ng.IPromise<Site> {
     return this.huronSiteService.get({
       customerId: this.Authinfo.getOrgId(),
       siteId: siteId,

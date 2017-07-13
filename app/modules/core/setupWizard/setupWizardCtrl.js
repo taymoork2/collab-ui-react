@@ -10,6 +10,7 @@ require('./_setup-wizard.scss');
     var isFirstTimeSetup = _.get($state, 'current.data.firstTimeSetup', false);
     var shouldRemoveSSOSteps = false;
     var isSharedDevicesOnlyLicense = false;
+    var shouldShowMeetingsTab = false;
     var supportsAtlasPMRonM2 = false;
     $scope.tabs = [];
     $scope.isTelstraCsbEnabled = false;
@@ -26,6 +27,11 @@ require('./_setup-wizard.scss');
       var tenDigitExtPromise = FeatureToggleService.supports(FeatureToggleService.features.sparkCallTenDigitExt)
         .then(function (sparkCallTenDigitExt) {
           $scope.sparkCallTenDigitExtEnabled = sparkCallTenDigitExt;
+        });
+
+      var meetingSettingsTabPromise = SetupWizardService.getPendingLicenses()
+        .then(function (response) {
+          shouldShowMeetingsTab = !_.isEmpty(response);
         });
 
       var hI1484Promise = FeatureToggleService.supports(FeatureToggleService.features.hI1484)
@@ -49,6 +55,7 @@ require('./_setup-wizard.scss');
         adminOrgUsagePromise,
         atlasPMRonM2Promise,
         tenDigitExtPromise,
+        meetingSettingsTabPromise,
         hI1484Promise,
       ]);
     }
@@ -119,7 +126,6 @@ require('./_setup-wizard.scss');
     }
 
     function initMeetingSettingsTab(tabs) {
-      var userEmail = Authinfo.getUserName();
       var meetingTab = {
         name: 'meetingSettings',
         required: true,
@@ -147,7 +153,7 @@ require('./_setup-wizard.scss');
         }],
       };
 
-      if (showMeetingSettingsTab(userEmail)) {
+      if (shouldShowMeetingsTab) {
         if (!hasWebexMeetingTrial()) {
           _.remove(meetingTab.steps, { name: 'migrateTrial' });
         }
@@ -220,10 +226,6 @@ require('./_setup-wizard.scss');
           });
         }
       }
-    }
-
-    function showMeetingSettingsTab(userEmail) {
-      return SetupWizardService.isOrderSimplificationToggled(userEmail);
     }
 
     function hasWebexMeetingTrial() {
@@ -306,7 +308,7 @@ require('./_setup-wizard.scss');
           }],
         };
 
-        if (showMeetingSettingsTab(Authinfo.getUserName())) {
+        if (shouldShowMeetingsTab) {
           tab.title = 'firstTimeWizard.activateAndBeginBilling';
         }
         tabs.push(tab);

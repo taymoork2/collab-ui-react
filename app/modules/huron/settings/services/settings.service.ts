@@ -574,18 +574,18 @@ export class HuronSettingsService {
       return this.$q.resolve(new AvrilSite());
     } else {
       return this.AvrilService.getAvrilSite(site.uuid || '')
-      .catch(error => {
+      .catch((error): any => {
         if (error.status === 404) {
           return new AvrilSite();
         } else {
           this.errors.push(this.Notification.processErrorResponse(error, 'avril get error'));
-          return this.$q.reject();
+          return this.$q.reject(error);
         }
       });
     }
   }
 
-  private updateAvrilSite(site: ISite, avrilFeatures: IAvrilFeatures): ng.IPromise<void> {
+  private updateAvrilSite(site: ISite, avrilFeatures: IAvrilFeatures): ng.IPromise<string | void> {
     return this.AvrilService.updateAvrilSite(
       <IAvrilSite>{
         guid: site.uuid,

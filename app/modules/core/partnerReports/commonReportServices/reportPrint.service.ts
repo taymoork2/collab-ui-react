@@ -397,7 +397,7 @@ export class ReportPrintService {
           });
         });
       } else if (chartData.table) {
-        const tableBody: IPDFMakeContent[] = [];
+        const tableBody: IPDFMakeContent[][] = [];
         const tableHeaders: IPDFMakeContent[] = [];
         _.forEach(chartData.table.headers, (header: IReportsHeader, index: number): void => {
           const rowStyle: string[] = [this.DEFAULT];

@@ -1835,15 +1835,6 @@
               },
             },
           })
-          // TODO, From UE Design, We should combine reports.webex_ with reports.webex, Next time we will do -- zoncao@cisco.com
-          .state('reports.webex_', {
-            url: '/webex_',
-            views: { tabContent: { template: '<cust-webex-reports></cust-webex-reports>' } },
-          })
-          .state('reports.webex_.search', {
-            url: '/reports/webex_/search',
-            template: '<cust-webex-reports-search></cust-webex-reports-search>',
-          })
           .state('reports.webex', {
             url: '/webex',
             views: {
@@ -3434,11 +3425,12 @@
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<context-fieldset-modal existing-fieldset-ids="$resolve.existingFieldsetIds" existing-fieldset-data="$resolve.existingFieldsetData" callback="$resolve.callback" dismiss="$dismiss()" class="context-modal"></context-fieldset-modal>',
+                template: '<context-fieldset-modal existing-fieldset-ids="$resolve.existingFieldsetIds" existing-fieldset-data="$resolve.existingFieldsetData" in-use="$resolve.inUse" callback="$resolve.callback" dismiss="$dismiss()" class="context-modal"></context-fieldset-modal>',
               },
             },
             params: {
               existingFieldsetIds: [],
+              inUse: false,
               existingFieldsetData: {},
               callback: function () {},
             },
@@ -3448,6 +3440,9 @@
               },
               existingFieldsetData: /* @ngIngect */function ($stateParams) {
                 return $stateParams.existingFieldsetData;
+              },
+              inUse: /* @ngIngect */function ($stateParams) {
+                return $stateParams.inUse;
               },
               callback: /* @ngInject */ function ($stateParams) {
                 return $stateParams.callback;

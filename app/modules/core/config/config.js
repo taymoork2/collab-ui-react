@@ -230,6 +230,7 @@
         ACTIVE: 'ACTIVE',
         CANCELLED: 'CANCELLED',
         SUSPENDED: 'SUSPENDED',
+        INITIALIZED: 'INITIALIZED',
       },
 
       licenseTypes: {
