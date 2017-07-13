@@ -6,7 +6,10 @@ import {
   SWIVEL,
 } from 'modules/huron/pstn';
 
-import { HuronSettingsOptionsService, HuronSettingsOptions } from 'modules/huron/settings/services';
+import {
+  HuronSettingsOptionsService, HuronSettingsOptions,
+  HuronSettingsService, HuronSettingsData,
+} from 'modules/huron/settings/services';
 import { IOption } from 'modules/huron/dialing';
 import { CompanyNumber } from 'modules/huron/settings/companyCallerId';
 import { Notification } from 'modules/core/notifications';
@@ -36,6 +39,8 @@ class LocationsWizardController implements ng.IComponentController {
   public validationMessages = {
     required: this.$translate.instant('common.invalidRequired'),
   };
+  public namePlaceholder: string;
+  public huronSettingsData: HuronSettingsData;
 
   public locationDetail: LocationDetail;
   public defaultCountry: string = 'US'; //TODO: KPC What is this for?
@@ -55,10 +60,11 @@ class LocationsWizardController implements ng.IComponentController {
               private PstnService: PstnService,
               private $q: ng.IQService,
               private HuronSettingsOptionsService: HuronSettingsOptionsService,
+              private HuronSettingsService: HuronSettingsService,
               private LocationsService: LocationsService,
               private PstnServiceAddressService,
               private Notification: Notification) {
-
+    this.namePlaceholder = this.$translate.instant('locations.namePlaceholder');
   }
 
   public $onInit(): void {
@@ -75,16 +81,23 @@ class LocationsWizardController implements ng.IComponentController {
     this.PstnService.getCustomer(this.Authinfo.getOrgId()).then(() => {
       this.PstnModel.setCustomerId(this.Authinfo.getOrgId());
       this.PstnModel.setCustomerExists(true);
+
+      this.PstnService.listCustomerCarriers(this.Authinfo.getOrgId()).then(carriers => {
+        if (_.get(carriers, '[0].apiImplementation') !== SWIVEL) {
+          this.PstnModel.setProvider(_.get<PstnCarrier>(carriers, '[0]'));
+          this.showEmergencyServiceAddress = true;
+        } else {
+          this.lastIndex = 5;
+        }
+      }).catch(() => this.lastIndex = 5);
     });
 
-    this.PstnService.listCustomerCarriers(this.Authinfo.getOrgId()).then(carriers => {
-      if (_.get(carriers, '[0].apiImplementation') !== SWIVEL) {
-        this.PstnModel.setProvider(<PstnCarrier>_.get(carriers, '[0]'));
-        this.showEmergencyServiceAddress = true;
-      } else {
-        this.lastIndex = 5;
-      }
-    }).catch(() => this.lastIndex = 5);
+    //Use default site for now
+    this.HuronSettingsService.get('').then((huronSettingsData: HuronSettingsData) => {
+      this.huronSettingsData = huronSettingsData;
+    }).catch(response => {
+      this.Notification.errorResponse(response);
+    });
 
     this.$q.resolve(this.initSettingsComponent());
   }
@@ -93,6 +106,8 @@ class LocationsWizardController implements ng.IComponentController {
     return this.HuronSettingsOptionsService.getOptions().then((options: HuronSettingsOptions) => {
       this.settingsOptions = options;
       this.locationDetail = new LocationDetail();
+    }).catch(response => {
+      this.Notification.errorResponse(response);
     });
   }
 
@@ -155,7 +170,13 @@ class LocationsWizardController implements ng.IComponentController {
   }
 
   public onCompanyCallerIdChanged(companyNumber: CompanyNumber): void {
-    this.locationDetail.callerIdNumber = companyNumber.name;
+    if (companyNumber) {
+      this.locationDetail.callerIdNumber = companyNumber.pattern;
+    } else {
+      if (this.locationDetail.callerIdNumber) {
+        delete this.locationDetail.callerIdNumber;
+      }
+    }
   }
 
   public onCompanyVoicemailFilter(filter: string): ng.IPromise<IOption[]> {

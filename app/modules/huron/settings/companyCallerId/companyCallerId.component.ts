@@ -50,13 +50,17 @@ class CompanyCallerId implements ng.IComponentController {
 
   public onCompanyCallerIdToggled(toggleValue: boolean): void {
     if (toggleValue) {
-      this.selectedNumber = _.get<string>(this.externalNumberOptions, '[0].value');
-      const companyNumber = new CompanyNumber({
-        name: this.customerName,
-        pattern: this.selectedNumber,
-        externalCallerIdType: ExternalCallerIdType.COMPANY_CALLER_ID_TYPE,
-      });
-      this.onChange(companyNumber);
+      if (!this.selectedNumber) {
+        this.selectedNumber = _.get<string>(this.externalNumberOptions, '[0].value');
+        const companyNumber = new CompanyNumber({
+          name: this.customerName,
+          pattern: this.selectedNumber,
+          externalCallerIdType: ExternalCallerIdType.COMPANY_CALLER_ID_TYPE,
+        });
+        this.onChange(companyNumber);
+      } else {
+        this.onChange(this.companyCallerId);
+      }
     } else {
       this.onChange(undefined);
     }
