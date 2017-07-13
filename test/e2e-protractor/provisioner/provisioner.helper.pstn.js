@@ -13,27 +13,27 @@ export function createPstnCustomer(token, customer) {
   return provisionerHelper.makeRequest(options);
 }
 
-export function putE911Signee(token, customer) {
+export function putE911Signee(token, customerE911) {
   const options = {
     method: 'PUT',
-    uri: `${config.getTerminusServiceUrl()}v1/customers/${customer.uuid}`,
+    uri: `${config.getTerminusServiceUrl()}v1/customers/${customerE911.e911Signee}`,
     headers: {
       Authorization: `Bearer  ${token}`,
     },
-    body: customer,
+    body: customerE911,
     json: true,
   };
   return provisionerHelper.makeRequest(options);
 }
 
-export function addPstnNumbers(token, customer) {
+export function addPstnNumbers(token, customerNumbers, uuid) {
   const options = {
     method: 'POST',
-    uri: `${config.getTerminusServiceUrl()}v2/customers/${customer.uuid}/numbers/orders`,
+    uri: `${config.getTerminusServiceUrl()}v2/customers/${uuid}/numbers/orders`,
     headers: {
       Authorization: `Bearer ${token}`,
     },
-    body: customer,
+    body: customerNumbers,
     json: true,
   };
   return provisionerHelper.makeRequest(options);
