@@ -4,7 +4,9 @@ import * as cmiHelper from './provisioner.helper.cmi';
 import * as helper from '../../api_sanity/test_helper';
 import * as _ from 'lodash';
 import * as Promise from 'promise';
-import { PstnCustomer } from './pstn-customer';
+import { PstnCustomer } from './terminus-customers';
+import { PstnCustomerE911Signee } from './terminus-customers-customer-e911';
+import { PstnNumbersOrders } from './terminus-numbers-orders';
 import * as pstnHelper from './provisioner.helper.pstn';
 
 /* global LONG_TIMEOUT */
@@ -74,23 +76,29 @@ export function setupPSTN(customer) {
     return provisionerHelper.getToken(customer.partner)
       .then(token => {
         console.log('Creating PSTN customer');
-        const obj = {};
+        var obj = {};
         obj.firstName = customer.cmiCustomer.name;
         obj.email = customer.trial.customerEmail;
         obj.uuid = customer.cmiCustomer.uuid;
         obj.name = customer.name;
-        obj.pstnLines = customer.pstnLines;
         obj.resellerId = helper.auth[customer.partner].org;
         const pstnCustomer = new PstnCustomer(obj);
         return pstnHelper.createPstnCustomer(token, pstnCustomer)
           .then(() => {
             console.log('Adding e911 signature to customer');
-            pstnCustomer.e911Signee = customer.cmiCustomer.uuid;
-            return pstnHelper.putE911Signee(token, pstnCustomer)
+            obj = {};
+            obj.firstName = customer.cmiCustomer.name;
+            obj.email = customer.trial.customerEmail;
+            obj.name = customer.name;
+            obj.e911Signee = customer.cmiCustomer.uuid;
+            const pstnCustomerE911 = new PstnCustomerE911Signee(obj);
+            return pstnHelper.putE911Signee(token, pstnCustomerE911)
               .then(() => {
                 console.log('Adding phone numbers to customer');
-                pstnCustomer.numbers = customerNumbersPSTN(pstnCustomer.lines);
-                return pstnHelper.addPstnNumbers(token, pstnCustomer);
+                obj = {};
+                obj.numbers = customerNumbersPSTN(customer.pstnLines);
+                const pstnNumbersOrders = new PstnNumbersOrders(obj);
+                return pstnHelper.addPstnNumbers(token, pstnNumbersOrders, customer.cmiCustomer.uuid);
               });
           });
       });
@@ -117,9 +125,9 @@ export function numberPSTN(prevNumber) {
   } else {
     prevNumber = date;
   }
-  // get last 10 digits from date
-  date = date % 10000000000;
-  date = parseInt(('1' + date.toString()), 10);
+  // get last 10 digits from date and format into PSTN number
+  date = date.toString();
+  date = ('+1919' + date.substr(date.length - 7));
   return [date, prevNumber];
 }
 
