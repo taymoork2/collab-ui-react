@@ -32,13 +32,20 @@
             <h4 ng-hide="$ctrl.data.overview.status === 1">{{::'webexReports.end' | translate}}</h4></header>
           <section>
             <p ng-bind="$ctrl.data.overview.endTime_" ng-show="$ctrl.data.overview.status === 2"></p>
-            <p ng-show="$ctrl.data.overview.status === 1">{{::'webexReports.onGoing' | translate}}<i cs-loader class="loader-example--small"></i></p>
+            <p ng-show="$ctrl.data.overview.status === 1">{{::'webexReports.meetingStatus.inProcess' | translate}}<i cs-loader class="loader-example--small"></i></p>
           </section>
           <span ng-hide="$ctrl.data.overview.status === 1" ng-bind="$ctrl.data.overview.endDate"></span>
         </article>
       </cs-card>
     </cs-card-layout>
 
+
+    <div class="timeline">
+      <cust-time-line source-data="$ctrl.dataSet" ng-if="$ctrl.loadingMeetingline"></cust-time-line>
+      <div ng-if="!$ctrl.loadingMeetingline">
+        <i class="icon icon-spinner"></i>
+      </div>
+    </div>
 
     <cs-card-layout>
       <div class="session-list">
@@ -59,8 +66,8 @@
                   </div>
                   <div class="text-center">
                     <small>{{::'webexReports.end' | translate}}</small>
-                    <h5 ng-bind="sessions.endTime" ng-show="$ctrl.data.overview.status === 2 || sessions.endTime !== ''"></h5>
-                    <H5 ng-show="$ctrl.data.overview.status === 1 && sessions.endTime === ''">{{::'webexReports.meetingStatus.inProcess' | translate}}</H5>
+                    <h6 ng-bind="sessions.endTime" ng-show="$ctrl.data.overview.status === 2 || sessions.endTime !== ''"></h6>
+                    <h6 ng-show="$ctrl.data.overview.status === 1 && sessions.endTime === ''">{{::'webexReports.meetingStatus.inProcess' | translate}}</h6>
                   </div>
                 </section>
               </div>
@@ -71,13 +78,9 @@
       </div>
     </cs-card-layout>
 
-    <div class="timeline" ng-if="$ctrl.loadingMeetingline">
-      <cust-time-line source-data="$ctrl.dataSet"></cust-time-line>
-    </div>
 
-    <div ng-if="!$ctrl.loadingMeetingline">
-      <i class="icon icon-spinner"></i>
-    </div>
+
+
 
   </div>
 
