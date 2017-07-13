@@ -387,7 +387,7 @@
     "generateActivationCodeText": "Generate an activation code to enable a new device for this user.",
     "generateActivationCodeTextPlace": "Generate an activation code to enable a new device for this place.",
     "generateActivationCodeDesc": "If you have lost your code, please generate a new activation code. ",
-    "mutipleDevicesWarning": "The devices in this place are not designed to work together in the same place. Therefore, there may be interference issues.",
+    "multipleDevicesWarning": "The devices in this place are not designed to work together. Therefore, there may be interference issues.",
     "activationCodeTitle": "Activation Code",
     "expires": "Expires",
     "editServices": "Edit services",
@@ -5213,7 +5213,7 @@
       "existingOrNewPlaceDeskPhoneInstructions": "Select existing place if the previous code for this place has been lost or has expired. You can also add multiple desk phones to the same place - all phones in that place will then share the same calling configuration. For example, desk phones will share the same lines.",
       "existingOrNewPlaceCollaborationDeviceInstructions": "Select existing place if the previous code for this place has been lost or has expired.",
       "existingOrNewPlaceMultipleDevicesInstructions": "Select existing place if the previous code for this place has been lost or has expired, or to have multiple devices in a place.",
-      "existingOrNewCloudberryPlaceMultipleDevicesInstructions": "Select existing place to activate a new device if the previous code for this place has been lost or has expired, or to have multiple devices in a place. Note that if you put multiple devices in a place that are not designed to work together, it could create interference issues between them.",
+      "existingOrNewCloudberryPlaceMultipleDevicesInstructions": "Select existing place to activate a new device if the previous code for this place has been lost or has expired, or to have multiple devices in a place. If you put multiple devices in a place that are not designed to work together, it may create interference issues.",
       "existingPlace": "Existing Place",
       "whichPlace": "Which existing place will the device be assigned to?",
       "existingDeskPhonePlaceInstructions": "Select from the below places. Only desk phone places are shown since desk phones and room devices cannot share the same place.",
@@ -8880,7 +8880,7 @@
     "unsupportedTypeError": "File type selected for upload is not supported."
   },
   "multipleDevicesConfirm": {
-    "title": "Activating Devices in a Place",
+    "title": "About Devices in a Place",
     "activationCodeExplanation": "An activation code can be used to activate a new device or reactivate an existing device.",
     "multipleDevicesWarning": "Note that if you put multiple devices in a place that are not designed to work together, it could create interference issues between them.",
     "okGotIt": "Ok, got it"
