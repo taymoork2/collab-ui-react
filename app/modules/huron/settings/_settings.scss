@@ -8,11 +8,6 @@
   @extend %page-background-white;
 }
 
-// TODO (jlowery): remove when sparkCallTenDigitExt feature toggle is removed.
-.huronsettingsnew-state {
-  @extend %page-background-white;
-}
-
 .huron-settings {
   @extend %content-header;
 

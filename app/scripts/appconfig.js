@@ -3056,14 +3056,6 @@
           .state('huronsettings', {
             url: '/services/call-settings',
             parent: 'hurondetails',
-            templateUrl: 'modules/huron/settings/settings.tpl.html',
-            controller: 'HuronSettingsCtrl',
-            controllerAs: 'settings',
-          })
-          // TODO (jlowery): rename the huronsettingsnew to huronsettings state when sparkCallTenDigitExt is removed.
-          .state('huronsettingsnew', {
-            url: '/services/call-settingsnew',
-            parent: 'hurondetails',
             template: '<uc-settings ftsw="false"></uc-settings>',
             resolve: {
               lazy: resolveLazyLoad(function (done) {

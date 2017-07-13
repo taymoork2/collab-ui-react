@@ -324,14 +324,7 @@ export class LineOverviewService {
     return this.HuronSiteService.listSites().then(sites => {
       if (sites.length > 0) {
         return this.HuronSiteService.getTheOnlySite().then(site => {
-          return this.FeatureToggleService.sparkCallTenDigitExtGetStatus()
-            .then(routingPrefixSupported => {
-              if (routingPrefixSupported) {
-                return _.get(site, 'routingPrefix', '');
-              } else {
-                return _.get(site, 'steeringDigit', '') + _.get(site, 'siteCode', '');
-              }
-            });
+          return _.get(site, 'routingPrefix', '');
         });
       } else {
         return '';

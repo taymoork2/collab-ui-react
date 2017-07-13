@@ -126,11 +126,7 @@
               <span>{{helpdeskOrgCtrl.callCard.areaCode}}</span>
             </div>
           </div>
-          <div cr-feature-toggle feature-hide="i751-10d-ext" ng-if="helpdeskOrgCtrl.callCard.voiceMailPrefix">
-            <h5 translate="helpdesk.vmprefix"></h5>
-            <span>{{helpdeskOrgCtrl.callCard.voiceMailPrefix}}</span>
-          </div>
-          <div cr-feature-toggle feature-show="i751-10d-ext" ng-if="helpdeskOrgCtrl.callCard.routingPrefix">
+          <div ng-if="helpdeskOrgCtrl.callCard.routingPrefix">
             <h5 translate="helpdesk.routingPrefix"></h5>
             <span>{{helpdeskOrgCtrl.callCard.routingPrefix}}</span>
           </div>
