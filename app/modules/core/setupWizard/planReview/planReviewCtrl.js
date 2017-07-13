@@ -56,6 +56,17 @@
     };
     vm.isCareEnabled = false;
 
+    vm.getNamedLabel = function (label) {
+      switch (label) {
+        case Config.offerCodes.CDC:
+          return $translate.instant('onboardModal.paidCDC');
+        case Config.offerCodes.CVC:
+          return $translate.instant('onboardModal.paidCVC');
+        default:
+          return '';
+      }
+    };
+
     //TODO this function has to be removed when atlas-care-trials feature is removed
     vm.getGridColumnClassName = function () {
       return vm.isCareEnabled ? 'small-3' : 'small-4';
