@@ -42,7 +42,11 @@ export class SetupWizardService {
   }
 
   public getActingSubscriptionServiceOrderUUID(): string {
-    return _.get<string>(this.getActingSubscription(), 'pendingServiceOrderUUID');
+    return _.get<string>(this.getActingSubscription(), 'pendingServiceOrderUUID', undefined);
+  }
+
+  public hasPendingServiceOrder() {
+    return this.getActingSubscriptionServiceOrderUUID() !== undefined;
   }
 
   public hasPendingLicenses() {

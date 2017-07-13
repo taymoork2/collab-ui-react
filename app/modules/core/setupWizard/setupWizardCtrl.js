@@ -26,11 +26,10 @@ require('./_setup-wizard.scss');
         shouldRemoveSSOSteps = true;
       }
 
-      var tabsBasedOnPendingLicensesPromise = SetupWizardService.getPendingLicenses()
-        .then(function () {
-          shouldShowMeetingsTab = SetupWizardService.hasPendingMeetingLicenses();
-          hasPendingCallLicenses = SetupWizardService.hasPendingCallLicenses();
-        });
+      var tabsBasedOnPendingLicensesPromise = SetupWizardService.getPendingLicenses().then(function () {
+        shouldShowMeetingsTab = SetupWizardService.hasPendingMeetingLicenses();
+        hasPendingCallLicenses = SetupWizardService.hasPendingCallLicenses();
+      });
 
       var hI1484Promise = FeatureToggleService.supports(FeatureToggleService.features.hI1484)
         .then(function (ishI1484) {
@@ -49,17 +48,17 @@ require('./_setup-wizard.scss');
           supportsAtlasPMRonM2 = _supportsAtlasPMRonM2;
         });
 
-      return $q.all([
+      var promises = [
         adminOrgUsagePromise,
         atlasPMRonM2Promise,
-<<<<<<< a2f1262a45e373c19203a987cb9cfb37a30fa52e
-        meetingSettingsTabPromise,
-=======
-        tenDigitExtPromise,
-        tabsBasedOnPendingLicensesPromise,
->>>>>>> feat(core): Show Call Settings tab based on pending call licenses
         hI1484Promise,
-      ]);
+      ];
+
+      if (SetupWizardService.hasPendingServiceOrder()) {
+        promises.push(tabsBasedOnPendingLicensesPromise);
+      }
+
+      return $q.all(promises);
     }
 
     function init() {
