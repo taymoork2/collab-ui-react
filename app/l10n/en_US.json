@@ -458,7 +458,8 @@
     "gssTabDesc": "Global Service Status Management",
     "careTab": "Care",
     "careTabDesc": "Cloud Contact Center",
-    "editFeatureToggles": "Edit Feature Toggles"
+    "editFeatureToggles": "Edit Feature Toggles",
+    "managedByPartner": "Managed by {{partnerOrgName}}"
   },
   "index": {
     "welcome": "Welcome!",

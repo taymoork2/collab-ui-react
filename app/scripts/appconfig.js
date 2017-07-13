@@ -297,7 +297,12 @@
           .state('sidepanel', {
             abstract: true,
             onExit: panelOnExit,
-            onEnter: panelOnEnter({ type: '' }),
+            resolve: {
+              atlas2017NameChangeFeatureToggled: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlas2017NameChange);
+              },
+            },
+            onEnter: panelOnEnter(),
           })
           .state('largepanel', {
             abstract: true,
@@ -308,7 +313,15 @@
         // Enter and Exit functions for panel(large or side)
         function panelOnEnter(options) {
           options = options || {};
-          return /* @ngInject */ function ($modal, $state, $previousState) {
+          return /* @ngInject */ function ($modal, $state, $previousState, atlas2017NameChangeFeatureToggled) {
+            if (atlas2017NameChangeFeatureToggled) {
+              if (!options.type) {
+                options.type = 'side-panel-full-height';
+              } else {
+                options.type += ' side-panel-full-height';
+              }
+            }
+
             if ($state.sidepanel) {
               $state.sidepanel.stopPreviousState = true;
             } else {

@@ -5,6 +5,7 @@
     var tabsController, $q, $controller, $rootScope, injectedRootScope, $scope, $location, Authinfo, Auth, UrlConfig, $provide, $injector;
     var featureToggleService = {
       supports: function () {},
+      atlas2017NameChangeGetStatus: function () {},
     };
     var tabConfig;
 
@@ -90,6 +91,7 @@
       spyOn($location, 'path');
       $provide.value('tabConfig', tabConfig);
       states = ['tab1', 'subTab1', 'subTab2', 'devTab', 'subDevTab'];
+      spyOn(featureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue($q.resolve(false));
     }));
 
     function initTabsController(args, dontApply) {

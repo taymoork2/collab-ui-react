@@ -18,6 +18,12 @@ $overlay-panel-height: 93px;
   }
 }
 
+.call-pickup-save {
+  @include vr-spacing(pv, .5);
+  border-bottom: 1px solid $gray-light;
+  background-color: $white;
+}
+
 .call-pickup-edit .call-pickup-notification-form {
   input {
     width: 3.7rem;
