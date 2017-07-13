@@ -72,6 +72,10 @@ require('./_fieldsets-sidepanel.scss');
       return (!vm.publiclyAccessible);
     };
 
+    vm.isDeletable = function () {
+      return (!vm.publiclyAccessible && !vm.inUse);
+    };
+
     vm.openDeleteConfirmDialog = function () {
       ModalService.open({
         title: $translate.instant('context.dictionary.fieldsetPage.deleteFieldset'),

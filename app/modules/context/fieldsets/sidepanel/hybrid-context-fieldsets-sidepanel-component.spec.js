@@ -186,6 +186,29 @@ describe('Component: Fieldset SidePanel', function () {
         ctrl.publiclyAccessible = true;
         expect(ctrl.isEditable()).toBe(false);
       });
+      it('should return true if it is not publicly accessible', function () {
+        ctrl.publiclyAccessible = false;
+        expect(ctrl.isEditable()).toBe(true);
+      });
+    });
+    describe('isDeletable', function () {
+      it('should return false if publicly accessible', function () {
+        ctrl.publiclyAccessible = true;
+        ctrl.inUse = false;
+        expect(ctrl.isDeletable()).toBe(false);
+      });
+
+      it('should return false if in Use', function () {
+        ctrl.publiclyAccessible = false;
+        ctrl.inUse = true;
+        expect(ctrl.isDeletable()).toBe(false);
+      });
+
+      it('should return true if not publicly accessible and not in use', function () {
+        ctrl.publiclyAccessible = false;
+        ctrl.inUse = false;
+        expect(ctrl.isDeletable()).toBe(true);
+      });
     });
 
     describe('openDeleteConfirmDialog', function () {
