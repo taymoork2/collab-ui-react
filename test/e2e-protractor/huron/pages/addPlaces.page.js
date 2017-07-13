@@ -2,6 +2,7 @@ export class AddPlacesPage {
   constructor() {
     this.placesTab = element(by.css('i.icon-location'));
     this.addNewPlace = element.all(by.css('button.add-button')).first();
+    this.addNewPlaceEmpty = element.all(by.css('button.add-button.places-empty')).first();
     this.newPlaceInput = element(by.id('newPlace'));
     this.nxtBtn = element(by.id('next-button'));
     this.nxtBtn2 = element(by.css('[ng-click="chooseDeviceType.next()"]'));
@@ -12,7 +13,7 @@ export class AddPlacesPage {
     this.nxtBtn4 = element(by.css('[ng-click="editServices.next()"]'));
     this.addExtension = element(by.name('internalNumber'));
     this.nxtBtn3 = element(by.css('[ng-click="addLines.next()"]'));
-    this.qrCode = element.all(by.css('div.qrCodeSection')).first();
+    this.qrCode = element.all(by.css('.activation-code')).first();
     this.closeGrp = element(by.css('button.close'));
     this.searchPlaces = element(by.css('i.icon-search'));
     this.clearSearchPlace = element(by.css('i.icon-exit-outline'));

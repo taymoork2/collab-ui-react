@@ -355,16 +355,18 @@ export class MySubscriptionCtrl {
             }
           } else {
             const prodResponse: IProdInst = _.find(instances, ['subscriptionId', subscription.internalSubscriptionId]);
-            if (prodResponse.autoBilling) {
-              this.subscriptionDetails[index].endDate = '';
-            }
-            if (subscription.isTrial) {
-              this.setBMMPTrial(subscription, prodResponse);
-            } else {
-              this.setBMMP(subscription, prodResponse);
-            }
-            if (this.subscriptionDetails.length === 1) {
-              this.licenseSummary = this.$translate.instant('subscriptions.licenseSummaryOnline', { name: prodResponse.name });
+            if (prodResponse) {
+              if (prodResponse.autoBilling) {
+                this.subscriptionDetails[index].endDate = '';
+              }
+              if (subscription.isTrial) {
+                this.setBMMPTrial(subscription, prodResponse);
+              } else {
+                this.setBMMP(subscription, prodResponse);
+              }
+              if (this.subscriptionDetails.length === 1) {
+                this.licenseSummary = this.$translate.instant('subscriptions.licenseSummaryOnline', { name: prodResponse.name });
+              }
             }
           }
         });

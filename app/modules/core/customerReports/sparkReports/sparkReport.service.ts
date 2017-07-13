@@ -163,14 +163,14 @@ export class SparkReportService {
 
     const groupPromise: ng.IHttpPromise<any> = this.CommonReportService.getCustomerReport(groupOptions, this.groupDeferred).then((response: any): any[] => {
       return _.get(response, 'data.data', []);
-    }, (error: any): void => {
+    }, (error: any) => {
       return this.CommonReportService.returnErrorCheck(error, 'avgRooms.groupError', []);
     });
     promises.push(groupPromise);
 
     const oneToOnePromise: ng.IHttpPromise<any> = this.CommonReportService.getCustomerReport(oneToOneOptions, this.oneToOneDeferred).then((response: any): any[] => {
       return _.get(response, 'data.data', []);
-    }, (error: any): void => {
+    }, (error: any) => {
       return this.CommonReportService.returnErrorCheck(error, 'avgRooms.oneToOneError', []);
     });
     promises.push(oneToOnePromise);
@@ -285,14 +285,14 @@ export class SparkReportService {
 
     const contentSharedPromise: ng.IHttpPromise<any> = this.CommonReportService.getCustomerReport(contentSharedOptions, this.contentSharedDeferred).then((response: any): any[] => {
       return _.get(response, 'data.data', []);
-    }, (error: any): void => {
+    }, (error: any) => {
       return this.CommonReportService.returnErrorCheck(error, 'filesShared.contentSharedError', []);
     });
     promises.push(contentSharedPromise);
 
     const contentShareSizesPromise: ng.IHttpPromise<any> = this.CommonReportService.getCustomerReport(contentShareSizesOptions, this.contentShareSizesDeferred).then((response: any): any[] => {
       return _.get(response, 'data.data', []);
-    }, (error: any): void => {
+    }, (error: any) => {
       return this.CommonReportService.returnErrorCheck(error, 'filesShared.contentShareSizesDataError', []);
     });
     promises.push(contentShareSizesPromise);

@@ -182,6 +182,8 @@ export class FilteredView<T> {
       } else if (!this.isInState(FilteredViewState.initializing)) {
         if (!isSearchOnly && _.isEmpty(this.fetchedDataMap)) {
           this.listState = FilteredViewState.emptydatasource;
+        } else if (isSearchOnly && !this.currentSearchString) {
+          this.listState = FilteredViewState.searchonly;
         } else {
           this.listState = FilteredViewState.emptysearchresult;
         }

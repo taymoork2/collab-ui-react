@@ -14,6 +14,7 @@ class UserCallOverviewCtrl implements ng.IComponentController {
   public userVmEnabled: boolean = false;
   public userServices: string[] = [];
   public snrEnabled: boolean = false;
+  public wide: boolean = true;
 
   /* @ngInject */
   constructor(
@@ -120,7 +121,7 @@ class UserCallOverviewCtrl implements ng.IComponentController {
   }
 
   private initNumbers(): void {
-    this.LineService.getLineList(LineConsumerType.USERS, this.currentUser.id)
+    this.LineService.getLineList(LineConsumerType.USERS, this.currentUser.id, this.wide)
       .then(lines => this.directoryNumbers = lines);
   }
 }

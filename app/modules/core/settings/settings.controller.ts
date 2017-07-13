@@ -94,7 +94,7 @@ export class SettingsCtrl {
     if (_.isElement(settingElement[0])) {
       settingElement[0].scrollIntoView({ behavior: 'instant' });
       const body = $('body');
-      body.scrollTop(body.scrollTop() - $('.settings').offset().top);
+      body.scrollTop(body.scrollTop() - ($('.settings').offset() || { top: 0 }).top);
     }
   }
 

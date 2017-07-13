@@ -8,7 +8,7 @@ const AddUser = new AddUserPage();
 
 describe('Huron Functional: add-user', () => {
   const customer = huronCustomer('add-user');
-  const USER_EMAIL = 'huron.ui.test.blue.user+captainphasma@gmail.com';
+  const USER_EMAIL = `huron.ui.test.partner+${customer.name}_captainphasma@gmail.com`;
   const USER_FIRST_NAME = 'Captain';
   const USER_LAST_NAME = 'Phasma';
 

@@ -63,16 +63,13 @@
         <div class="flex-2">
           <h4 translate="trialModal.pstn.phoneNumbers"></h4>
           <h6 class="section__description" translate="pstnSetup.newNumbersTabDesc"></h6>
-          <uc-pstn-selector
-           search="$ctrl.searchCarrierInventory(value)"
-           search-results="$ctrl.searchResults"
-           paginate-options="$ctrl.paginateOptions"
-           add-to-cart="$ctrl.addToCart(searchResultModel)"
-           simple="true"
-           max-selection="$ctrl.maxSelection"
-           error-message="{{'pstnSetup.errors.phoneNumbers' | translate}}"
-           show-no-result="$ctrl.showNoResult">
-          </uc-pstn-selector>
+          <uc-pstn-number-search
+            model="$ctrl.model"
+            search="$ctrl.searchCarrierInventory(value, block, quantity, consecutive)"
+            add-to-cart="$ctrl.addToCart(searchResultModel)"
+            country-code="$ctrl.countryCode"
+          >
+          </uc-pstn-number-search>
         </div>
         <div class="flex-1">
           <div class="provider-flex center"><h1 class="h5" translate="pstnSetup.numberCart"></h1><h1 class="h4"><span class="badge badge--round info">{{$ctrl.trialData.details.pstnNumberInfo.numbers.length}}</span></h1></div>

@@ -62,7 +62,7 @@ export class HybridServicesI18NService {
 
   private labelForDay = (day: DayOfWeek): string => {
     return this.$translate.instant('weekDays.everyDay', {
-      day: this.$translate.instant(`weekDays.${day}`),
+      day: this.$translate.instant(`weekDays.${(day as string).toLowerCase()}`), // Hack, remove once FMS is standardized on using week days in lowercase
     });
   }
 }

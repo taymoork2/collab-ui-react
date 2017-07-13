@@ -1,12 +1,12 @@
 import { Notification } from 'modules/core/notifications/notification.service';
 import { IEmergencyAddress } from 'modules/squared/devices/emergencyServices/index';
-import { NumberModel, INumbersModel } from './number.model';
 import { PstnWizardService } from './pstnWizard.service';
 import { DirectInwardDialing } from './directInwardDialing';
 import { TokenMethods } from '../pstnSwivelNumbers';
 import { TOKEN_FIELD_ID } from '../pstn.const';
 import { PstnService } from '../pstn.service';
 import { PstnModel, IOrder } from '../pstn.model';
+import { NumberModel, INumbersModel } from '../pstnNumberSearch';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
 
 export class PstnWizardComponent implements ng.IComponentOptions {
@@ -396,7 +396,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
     this.PstnWizardService.searchCarrierTollFreeInventory(areaCode, block, quantity, consecutive, this.model).then(() => this.loading = false);
   }
 
-  public addToCart(orderType: string, numberType: string, quantity: number, searchResultsModel: {}): void {
+  public addToCart(orderType: string, numberType: string, quantity: number, searchResultsModel: boolean[]): void {
     this.model.pstn.addLoading = true;
     this.model.tollFree.addLoading = true;
     this.PstnWizardService.addToCart(orderType, numberType, quantity, searchResultsModel, this.orderCart, this.model).then(orderCart => {
@@ -415,7 +415,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
     this.validCount = 0;
     this.invalidCount = 0;
     this.did.clearList();
-    angular.element('#' + this.tokenfieldId).tokenfield('setTokens', tmpDids);
+    (angular.element('#' + this.tokenfieldId) as any).tokenfield('setTokens', tmpDids);
   }
 
   public getInvalidTokens(): JQuery {

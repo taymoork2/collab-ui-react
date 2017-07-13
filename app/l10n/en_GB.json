@@ -3504,7 +3504,7 @@
     "selectConditionPlaceholder": "Select Condition",
     "selectActionPlaceholder": "Select Action",
     "decisionCallerReturned": "The Caller has Returned",
-    "decisionNumberDialed": "The Number that was Dialled",
+    "decisionNumberDialed": "The Number that was Dialed",
     "decisionCallerNumber": "The Caller's Number",
     "decisionCallerName": "The Caller's Name",
     "decisionCallerCountryCode": "The Caller's Country Code",

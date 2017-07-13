@@ -4,6 +4,8 @@ import * as cmiHelper from './provisioner.helper.cmi';
 import * as helper from '../../api_sanity/test_helper';
 import * as _ from 'lodash';
 import * as Promise from 'promise';
+import { PstnCustomer } from './pstn-customer';
+import * as pstnHelper from './provisioner.helper.pstn';
 
 /* global LONG_TIMEOUT */
 
@@ -57,6 +59,7 @@ export function provisionCustomerAndLogin(customer) {
         customer.cmiCustomer.uuid = atlasCustomer.customerOrgId;
         customer.cmiCustomer.name = atlasCustomer.customerName;
         return this.provisionCmiCustomer(customer.partner, customer.cmiCustomer, customer.cmiSite, customer.numberRange)
+          .then(() => setupPSTN(customer))
           .then(() => loginPartner(customer.partner))
           .then(() => switchToCustomerWindow(customer.name));
       } else {
@@ -64,6 +67,32 @@ export function provisionCustomerAndLogin(customer) {
           .then(() => switchToCustomerWindow(customer.name));
       }
     });
+}
+
+export function setupPSTN(customer) {
+  if (customer.pstn) {
+    return provisionerHelper.getToken(customer.partner)
+      .then(token => {
+        console.log('Creating PSTN customer');
+        const obj = {};
+        obj.firstName = customer.cmiCustomer.name;
+        obj.email = customer.trial.customerEmail;
+        obj.uuid = customer.cmiCustomer.uuid;
+        obj.resellerId = helper.auth[customer.partner].org;
+        const pstnCustomer = new PstnCustomer(obj);
+        return pstnHelper.createPstnCustomer(token, pstnCustomer)
+          .then(() => {
+            console.log('Adding e911 signature to customer');
+            pstnCustomer.e911Signee = customer.cmiCustomer.uuid;
+            return pstnHelper.putE911Signee(token, pstnCustomer)
+              .then(() => {
+                console.log('Adding phone numbers to customer');
+                pstnCustomer.numbers = ['19193922000', '14692550000', '14084339465'];
+                return pstnHelper.addPstnNumbers(token, pstnCustomer);
+              });
+          });
+      });
+  }
 }
 
 export function tearDownAtlasCustomer(partnerName, customerName) {
@@ -99,7 +128,7 @@ function deleteAtlasCustomerIfFound(token, partnerName, customerName) {
         console.log(`${customerName} not found in Atlas!`);
         return true;
       }
-    })
+    });
 }
 
 export function loginPartner(partnerEmail) {
@@ -113,3 +142,4 @@ function switchToCustomerWindow(customerName) {
     return utils.wait(navigation.tabs, LONG_TIMEOUT);
   });
 }
+

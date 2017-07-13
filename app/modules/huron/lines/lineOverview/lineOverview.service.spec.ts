@@ -14,6 +14,8 @@ describe('Service: LineOverviewService', () => {
       'CallForwardService',
       'SharedLineService',
       'CallerIDService',
+      'MediaOnHoldService',
+      'FeatureToggleService',
       'AutoAnswerService',
       'HuronVoicemailService',
       'HuronUserService',
@@ -30,6 +32,10 @@ describe('Service: LineOverviewService', () => {
       external: null,
       siteToSite: '710012345',
       incomingCallMaximum: 2,
+      label: {
+        value: 'someuser@some.com',
+        appliesToAllSharedLines: false,
+      },
     });
     this.callerId = {
       externalCallerIdType: 'EXT_CALLER_ID_COMPANY_NUMBER',
@@ -116,6 +122,7 @@ describe('Service: LineOverviewService', () => {
     });
     autoAnswerData.member = new AutoAnswerMember(_.get(autoAnswerRead, AutoAnswerConst.MEMBER));
     this.autoAnswer = autoAnswerData;
+    this.lineMoh = 'default-media';
 
     this.callForward = new CallForward();
     this.lineOverview = new LineOverviewData();
@@ -126,6 +133,7 @@ describe('Service: LineOverviewService', () => {
     this.lineOverview.companyNumbers = [];
     this.lineOverview.autoAnswer = this.autoAnswer;
     this.lineOverview.voicemailEnabled = false;
+    this.lineOverview.lineMoh = this.lineMoh;
     this.lineOverview.services = [];
 
     this.getLineDefer = this.$q.defer();
@@ -157,6 +165,12 @@ describe('Service: LineOverviewService', () => {
     this.updateCallerIdDefer = this.$q.defer();
     spyOn(this.CallerIDService, 'updateCallerId').and.returnValue(this.updateCallerIdDefer.promise);
 
+    this.getLineMohDefer = this.$q.defer();
+    spyOn(this.MediaOnHoldService, 'getLineMedia').and.returnValue(this.getLineMohDefer.promise);
+
+    this.updateLineMohDefer = this.$q.defer();
+    spyOn(this.MediaOnHoldService, 'updateMediaOnHold').and.returnValue(this.updateLineMohDefer.promise);
+
     this.listCompanyNumbersDefer = this.$q.defer();
     spyOn(this.CallerIDService, 'listCompanyNumbers').and.returnValue(this.listCompanyNumbersDefer.promise);
 
@@ -174,6 +188,7 @@ describe('Service: LineOverviewService', () => {
     spyOn(this.HuronUserService, 'getUserServices').and.returnValue(this.userServiceDefer.promise);
     spyOn(this.HuronVoicemailService, 'isEnabledForUser').and.returnValue(false);
     spyOn(this.HuronVoicemailService, 'update').and.returnValue(this.$q.resolve(200));
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
 
     installPromiseMatchers();
   });
@@ -187,6 +202,7 @@ describe('Service: LineOverviewService', () => {
       this.getCallerIdDefer.resolve(this.callerId);
       this.listCompanyNumbersDefer.resolve([]);
       this.getAutoAnswerDefer.resolve(this.autoAnswer);
+      this.getLineMohDefer.resolve(this.lineMoh);
       this.userServiceDefer.resolve([]);
     });
 
@@ -201,6 +217,7 @@ describe('Service: LineOverviewService', () => {
       expect(this.CallerIDService.getCallerId).toHaveBeenCalled();
       expect(this.AutoAnswerService.getSupportedPhonesAndMember).toHaveBeenCalled();
       expect(this.LineOverviewService.cloneLineOverviewData).toHaveBeenCalled();
+      expect(this.MediaOnHoldService.getLineMedia).toHaveBeenCalled();
     });
 
     it('should return an exact copy of LineOverviewData when getOriginalConfig is called', function () {
@@ -230,6 +247,7 @@ describe('Service: LineOverviewService', () => {
         this.getSharedLinePhonesDefer.resolve(_.cloneDeep(this.sharedlinePhones));
         this.getCallerIdDefer.resolve(_.cloneDeep(this.callerId));
         this.getAutoAnswerDefer.resolve(_.cloneDeep(this.autoAnswer));
+        this.getLineMohDefer.resolve(_.cloneDeep(this.lineMoh));
       });
       it('should only update line when only line is changed', function () {
         this.LineOverviewService.get(LineConsumerType.PLACES, '12345', '0000001');
@@ -240,6 +258,7 @@ describe('Service: LineOverviewService', () => {
         expect(this.CallForwardService.updateCallForward).not.toHaveBeenCalled();
         expect(this.CallerIDService.updateCallerId).not.toHaveBeenCalled();
         expect(this.AutoAnswerService.updateAutoAnswer).not.toHaveBeenCalled();
+        expect(this.MediaOnHoldService.updateMediaOnHold).not.toHaveBeenCalled();
       });
 
       it('should only update callForward when only callForward is changed', function () {
@@ -251,6 +270,7 @@ describe('Service: LineOverviewService', () => {
         expect(this.CallForwardService.updateCallForward).toHaveBeenCalled();
         expect(this.CallerIDService.updateCallerId).not.toHaveBeenCalled();
         expect(this.AutoAnswerService.updateAutoAnswer).not.toHaveBeenCalled();
+        expect(this.MediaOnHoldService.updateMediaOnHold).not.toHaveBeenCalled();
       });
 
       it('should only update callerId when only callerId is changed', function () {
@@ -262,6 +282,7 @@ describe('Service: LineOverviewService', () => {
         expect(this.CallForwardService.updateCallForward).not.toHaveBeenCalled();
         expect(this.$q.all).toHaveBeenCalledWith([]);
         expect(this.AutoAnswerService.updateAutoAnswer).not.toHaveBeenCalled();
+        expect(this.MediaOnHoldService.updateMediaOnHold).not.toHaveBeenCalled();
       });
 
       it('should only update autoAnswer when only autoAnswer is changed', function () {
@@ -275,10 +296,23 @@ describe('Service: LineOverviewService', () => {
           expect(this.CallerIDService.updateCallerId).not.toHaveBeenCalled();
           expect(this.AutoAnswerService.createUpdateAutoAnswerPayload).toHaveBeenCalled();
           expect(this.AutoAnswerService.updateAutoAnswer).toHaveBeenCalled();
+          expect(this.MediaOnHoldService.updateMediaOnHold).not.toHaveBeenCalled();
         });
         this.$rootScope.$digest();
         expect(promise).toBeResolved();
 
+      });
+
+      it('should only update Line Moh when only lineMoh is changed', function () {
+        this.LineOverviewService.get(LineConsumerType.PLACES, '12345', '0000001');
+        this.$rootScope.$digest();
+        this.lineOverview.lineMoh = 'sample-test-media';
+        this.LineOverviewService.save(LineConsumerType.PLACES, '12345', '0000001', this.lineOverview, []);
+        expect(this.LineService.updateLine).not.toHaveBeenCalled();
+        expect(this.CallForwardService.updateCallForward).not.toHaveBeenCalled();
+        expect(this.CallerIDService.updateCallerId).not.toHaveBeenCalled();
+        expect(this.AutoAnswerService.updateAutoAnswer).not.toHaveBeenCalled();
+        expect(this.MediaOnHoldService.updateMediaOnHold).toHaveBeenCalled();
       });
     });
   });
@@ -293,6 +327,7 @@ describe('Service: LineOverviewService', () => {
       this.getAutoAnswerDefer.resolve(_.cloneDeep(this.autoAnswer));
       this.listCompanyNumbersDefer.resolve([]);
       this.userServiceDefer.resolve([]);
+      this.getLineMohDefer.resolve('');
     });
 
     it('save should call PUT after changing extension', function () {

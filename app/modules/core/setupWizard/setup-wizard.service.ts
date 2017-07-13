@@ -1,22 +1,81 @@
+import { IPendingOrderSubscription, IPendingLicense } from './meeting-settings/meeting-settings.interface';
+import { Notification } from 'modules/core/notifications';
+
 export class SetupWizardService {
+  public pendingMeetingLicenses: IPendingLicense[];
+  public pendingLicenses: IPendingLicense[];
+  public provisioningCallbacks = {};
 
   /* @ngInject */
   constructor(
-    private $q,
+    private $q: ng.IQService,
+    private $http: ng.IHttpService,
+    private Authinfo,
+    private Config,
+    private Notification: Notification,
+    private SessionStorage,
+    private StorageKeys,
+    private UrlConfig,
   ) { }
 
-  private callbacks: Function[] = [];
-
-  public addProvisioningCallbacks(func: Function) {
-    this.callbacks.push(func);
+  public addProvisioningCallbacks(callObject: { [keys: string]: Function }) {
+    _.assign(this.provisioningCallbacks, callObject);
   }
 
   public processCallbacks() {
-    const promises = _.map(this.callbacks, (callback) => {
+    const calls: Function[] = _.values<Function>(this.provisioningCallbacks);
+    const promises = _.map(calls, (callback) => {
       return this.$q.resolve(callback());
     });
 
     return this.$q.all(_.uniq(promises));
+  }
+
+  private getActingSubscriptionId(): string {
+    const subscriptionId = this.SessionStorage.get(this.StorageKeys.SUBSCRIPTION_ID);
+    return subscriptionId || _.get(this.Authinfo.getSubscriptions()[0], 'externalSubscriptionId');
+  }
+
+  public getInternalSubscriptionId(): string {
+    const actingSubscription = this.getActingSubscription();
+    return _.get<string>(actingSubscription, 'subscriptionId');
+  }
+
+  public getActingSubscriptionServiceOrderUUID(): string {
+    return _.get<string>(this.getActingSubscription(), 'pendingServiceOrderUUID');
+  }
+
+  public hasPendingLicenses() {
+    return !_.isEmpty(this.pendingLicenses);
+  }
+
+  private getActingSubscription(): IPendingOrderSubscription {
+    return _.find(this.Authinfo.getSubscriptions(), { externalSubscriptionId: this.getActingSubscriptionId() });
+  }
+
+  public getPendingLicenses(): ng.IPromise<IPendingLicense[]> {
+    return this.getPendingLicensesFromActiveSubscription(this.getActingSubscriptionId())
+      .then(response => {
+        return this.populatePendingLicenses(response);
+      })
+      .catch(response => {
+        this.Notification.errorWithTrackingId(response, 'firstTimeWizard.pendingLicensesError');
+        return this.$q.reject(response);
+      });
+  }
+
+  private populatePendingLicenses(response) {
+    this.pendingLicenses = _.get<IPendingLicense[]>(response, 'data.licenseFeatures');
+    return this.pendingMeetingLicenses = _.filter(this.pendingLicenses, (license: IPendingLicense) => { return license.status === this.Config.licenseStatus.INITIALIZED && (_.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC], license.offerName)); });
+  }
+
+  private getPendingLicensesFromActiveSubscription(externalSubscriptionId) {
+    if (!_.isString(externalSubscriptionId)) {
+      return this.$q.reject('An invalid subscriptionId was passed.');
+    }
+    const pendingLicensesUrl = `${this.UrlConfig.getAdminServiceUrl()}subscriptions/pending?externalSubscriptionId=${externalSubscriptionId}`;
+
+    return this.$http.get(pendingLicensesUrl);
   }
 
 }

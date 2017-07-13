@@ -13,6 +13,7 @@ export class DigitalRiverService {
   constructor(
     private $document: ng.IDocumentService,
     private $http: ng.IHttpService,
+    private $sce: ng.ISCEService,
     private UrlConfig,
   ) {}
 
@@ -35,7 +36,7 @@ export class DigitalRiverService {
   }
 
   public logout(env: string): ng.IHttpPromise<any> {
-    return this.$http.jsonp(_.get(DIGITAL_RIVER_URL, env) + 'remoteLogout?callback=JSON_CALLBACK');
+    return this.$http.jsonp(this.$sce.trustAsResourceUrl(`${_.get(DIGITAL_RIVER_URL, env)}remoteLogout`));
   }
 
   public getDigitalRiverToken(): ng.IPromise<string> {

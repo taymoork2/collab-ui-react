@@ -1,4 +1,6 @@
 import { MediaOnHoldService } from './media-on-hold.service';
+import { MediaOnHoldComponent } from './media-on-hold.component';
+import './moh.scss';
 
 export * from './media-on-hold';
 export * from './media-on-hold.service';
@@ -12,5 +14,6 @@ export default angular
     require('modules/core/scripts/services/authinfo'),
     require('modules/huron/telephony/telephonyConfig'),
   ])
+  .component('ucMediaOnHold', new MediaOnHoldComponent())
   .service('MediaOnHoldService', MediaOnHoldService)
   .name;

@@ -1,5 +1,6 @@
 export const TIMEOUT: number = 100;
 export const SWIVEL: string = 'SWIVEL';
+export const MAX_NUM_PAGE: number = 15;
 export const MIN_VALID_CODE: number = 3;
 export const MAX_VALID_CODE: number = 6;
 export const NPA: string = 'npa';
@@ -16,6 +17,7 @@ export const SWIVEL_ORDER: string = 'SWIVEL_ORDER';
 export const ORDER: string = 'order';
 export const MIN_BLOCK_QUANTITY: number = 2;
 export const MAX_BLOCK_QUANTITY: number = 100;
+export const MAX_SEARCH_SELECTION: number = 10;
 export const TOKEN_FIELD_ID: string = 'pstn-port-numbers';
 export const PSTN: string = 'PSTN';
 export const GROUP_BY: string = 'groupBy';

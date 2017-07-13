@@ -405,6 +405,7 @@
     "dirsyncToolTip": "Use DirSync to update the user's preferred language.",
     "rolesAndSecurity": "Roles and Security",
     "security": "Security",
+    "resetAccessTipForBasicPack": "To reset access for your users, contact your partner or Cisco account manager about Pro Pack.",
     "resetAccessSuccess": "{{name}}'s access reset successfully. Please allow a few hours to take effect.",
     "resetAccessFailure": "Unable to reset {{name}}'s access. Please try later.",
     "resetAccess": "Reset Access",
@@ -662,6 +663,7 @@
     }
   },
   "webexReports": {
+    "to": "to",
     "end": "End",
     "audio": "Audio",
     "start": "Start",
@@ -671,7 +673,7 @@
     "session": "Session",
     "session_": "SESSION",
     "endTime": "End Date",
-    "onGoing": "on going",
+    "onGoing": "On Going",
     "duration": "Duration",
     "features": "Features",
     "hostEmail": "Host Email",
@@ -679,7 +681,6 @@
     "startTime": "Start Date",
     "connection": "Connection",
     "engagement": "Engagement",
-    "createTime": "Create Time",
     "participant": "Participant",
     "sessionInfo": "Session Info",
     "meetingName": "Meeting Name",
@@ -688,15 +689,15 @@
     "participants_": "PARTICIPANTS",
     "meetingNumber": "Meeting Number",
     "scheduledFrom": "Scheduled From",
-    "placeholder-date": "Choose a Day",
+    "placeholder-date": "Choose a day",
     "meetingDetails": "Meeting Details",
     "hostNameAndId":"Host Name / Host ID",
     "siteIdAndName": "Site ID / Site Name",
     "search-info-title": "Search for a meeting",
     "placeholder-text": "Search email or meeting number",
-    "searchError": "Please enter the correct email or meeting number",
+    "searchError": "Enter the correct email or meeting number",
     "search-info": "The meeting list will display when narrowed by search",
-    "end-date-tooltip": "The end date must not be greater than the start date",
+    "end-date-tooltip": "The start date must not be greater than the end date",
     "searchGridHeader": {
       "status": "Status",
       "endTime": "End Date",
@@ -709,7 +710,7 @@
       "chat": "Chat",
       "poll": "Poll",
       "flash": "FLASH",
-      "appShare": "APP Share",
+      "appShare": "App Share",
       "docShare": "Doc Share",
       "fileShare": "File Share"
     },
@@ -743,13 +744,13 @@
       "sessionType_50": "NBR2",
       "sessionType_10": "Other",
       "sessionType_20": "MMP Audio",
-      "sessionType_21": "MMP Vudio",
+      "sessionType_21": "MMP Video",
       "sessionType_25": "Hybrid PSTN",
       "sessionType_12": "VOIP Session",
       "sessionType_0": "Agent Session",
       "sessionType_11": "Video Session",
       "sessionType_22": "Hybrid MMP VoIP",
-      "sessionType_4": "App share Session",
+      "sessionType_4": "App Share Session",
       "sessionType_5": "Teleagent Session",
       "sessionType_4005": "Other Teleconference AB",
       "sessionType_3005": "Other Teleconference NBR2"
@@ -1236,6 +1237,7 @@
   "common": {
     "actions": "Actions",
     "activate": "Activate",
+    "doNotActivate": "Don't Activate",
     "add": "Add",
     "agree": "Agree",
     "alert": "Alert",
@@ -1275,6 +1277,7 @@
     "firstName": "First Name",
     "general": "General",
     "help": "Help",
+    "history": "History",
     "hideAllAdminUsers": "Hide administrators",
     "id": "ID",
     "incorrectFormat": "Incorrect format",
@@ -1582,6 +1585,7 @@
     "siteError": "Failed to create site.",
     "siteGetError": "Failed to retrieve site.",
     "siteUpdateError": "Failed to update site.",
+    "mohLineError": "Failed to get Line Media On Hold Service.",
     "mohGetError": "Failed to get Company Media on Hold Service.",
     "mohUpdateError": "Failed to update Company Media On Hold File",
     "customerGetError": "Failed to get customer services.",
@@ -1991,7 +1995,6 @@
       }
     },
     "status": {
-      "unknown": "Status unknown",
       "not_configured": "Not configured",
       "installing": "Installing",
       "disabled": "Disabled",
@@ -2279,6 +2282,21 @@
       "connectWarning": "Are you sure? Remote device configuration will be removed and the service will be disabled for your users.",
       "deactivateCallServiceConnect": "Deactivate Call Service Connect"
     },
+    "clusterHistoryTable": {
+      "types": {
+        "nameChange": "Cluster Name",
+        "resourceGroup": "Resource Group",
+        "releaseChannel": "Release Channel",
+        "c_mgmtVersion": "Management Connector Target Version",
+        "c_calVersion": "Calendar Connector Target Version",
+        "c_ucmcVersion": "Call Connector Target Version",
+        "upgradeSchedule": "Upgrade Schedule"
+      },
+      "errorMessage": "Could not read cluster history. Error message: {{errorMessage}}",
+      "windowTitle": "Cluster History for {{clusterName}}",
+      "showHistory": "Show History",
+      "opensNewWindow": "Opens a new window where you can view the cluster history during the last 60 days."
+    },
     "clusterListComponent": {
       "clusters-title-squared-fusion-cal": "Expressway Clusters",
       "clusters-title-squared-fusion-uc": "Expressway Clusters",
@@ -2405,10 +2423,12 @@
       },
       "documentation": {
         "heading": "Documentation and Software",
+        "headingDoc": "Documentation",
+        "headingSoftware": "Software",
         "help": "Visit <a href=\"{{helpLink}}\" target=\"_blank\">Help Central</a> for further information about {{localizedServiceName}}.",
         "downloadExpressway": "Download Cisco Expressway software from <a href=\"{{downloadLink}}\" target=\"_blank\">software.cisco.com</a>.",
         "downloadECP": "<a href=\"{{downloadLink}}\" target=\"_blank\">Download {{serviceName}} software</a>.",
-        "downloadDemoEcp": "<a href=\"{{downloadLink}}\" target=\"_blank\">Download {{serviceName}} software</a> <b><i>OR</b></i> <a href=\"{{downloadDemoLink}}\" target=\"_blank\">Download Demo {{serviceName}} software</a>."
+        "downloadDemoHybridMedia": "<a href=\"{{downloadLink}}\" target=\"_blank\">Download Full Software Image</a><br> (Full capacity and used for production deployments of Hybrid Media)<br> <a href=\"{{downloadDemoLink}}\" target=\"_blank\">Download Demo Software Image</a> <br>(Limited capacity, lifespan of 90 days, and only used for demos of Hybrid Media)"
       },
       "call": {
         "domainVerification": "Domain Verification",
@@ -3228,9 +3248,9 @@
       "requestFailed": "Request Failed: Tracking ID {{trackingId}}"
     },
     "encryption": {
-      "instructions" : "After downloading your report, use this password to open the .zip file. You can also access the password by clicking on the key icon in the reports list.",
+      "instructions": "After downloading your report, use this password to open the .zip file. You can also access the password by clicking on the key icon in the reports list.",
       "instructionsShort": "After downloading your report, use this password to open the .zip file.",
-      "passwordFor" : "Password for {{reportName}}",
+      "passwordFor": "Password for {{reportName}}",
       "tooltipContact": "Contact {{name}} to access this report.",
       "unableGetPassword": "Unable to get the password"
     },
@@ -3391,10 +3411,16 @@
     "uploadSub": "Best method for adding up to {{maxUsers}} users at a time.",
     "downloadSub": "Download CSV template",
     "advancedSub": "Synchronize users from Active Directory.",
+    "activateAndBeginBilling": "Activate and Begin Billing",
+    "activateBillingDescription": "By clicking on the Activate button you are activating the subscription for your customer and they will be billed for all the services that have been purchased.",
+    "activateBillingWarning": "Do not proceed if you do not want your customer to be billed. If you click on the Don't Activate button below, your customer will not be billed, also all the information you entered into this service setup wizard will be discarded and you will have to set up services again from scratch.",
+    "sendEmailToCustomer": "Send email to customer notifying them that their services are ready",
     "needHelp": "Need help - ",
     "needHelpExplain": "Search the knowledge base.",
     "planReview": "Plan Review",
+    "pendingLicensesError": "There was an error in the call for pending licenses",
     "subscriptionId": "Subscription IDs",
+    "subscriptionID": "Subscription ID: ",
     "spark": "Cisco Spark",
     "sparkStub": "Set up Cisco Spark",
     "webex": "WebEx",
@@ -3416,6 +3442,7 @@
     "meetingSettings": "Meeting Settings",
     "meetingSettingsDescription": "This step of Service SetUp will help you create one or more WebEx site names. A WebEx site name is the URL people will type into their web browser in order to join the meetings that you are hosting.",
     "meetingCenterLicensesRemaining": "Meeting Center Licenses Remaining",
+    "enterpriseEditionLicensesRemaining": "Enterprise Edition Licenses Remaining",
     "existingWebExTrialSites": "You have the following WebEx site that was part of your free trial, would you like to continue using it?",
     "setupSitesDescription": "Now it's time to choose the URL you will use for each site. This is the URL people will type into their browser in order to join a meeting that you host",
     "keepExistingWebexSites": "Keep your existing WebEx sites?",
@@ -3428,7 +3455,6 @@
     "pleaseEnterSiteName": "Please enter a site name",
     "distributeYourWebExLicenses": "Distribute your licenses between sites",
     "webExServiceWillBeSetup": "Your WebEx service will be setup with the following parameters.",
-    "provisioningNotice": "Please Note: Pressing the Save button below will start provisioning and you will not be able to make further changes to WebEx setup.",
     "pleaseSelectTimeZone": "Please select a Time Zone",
     "siteName": "Site Name",
     "theseWillBeYourWebExSites": "These will be your {{siteCount}} WebEx sites",
@@ -4578,7 +4604,7 @@
     "feature1": "Use existing PSTN provider",
     "feature2": "Import your phone numbers",
     "feature3": "Bridge the cloud & enterprise",
-    "feature4": "Self mananged E911"
+    "feature4": "Self managed E911"
   },
   "partnerHomePage": {
     "trialsHeading": "Trials",
@@ -5684,8 +5710,9 @@
       "firstStepNo4": "3. Proceed to register your Hybrid Media Node following the steps below.",
       "yesProceed": "Yes, I’m ready to register my Hybrid Media Node.",
       "noProceed": "No, I need to install and configure the software.",
-      "fullOva": "Download Full Software Image",
-      "demoOva": "Download Demo Software Image",
+      "fullOva": "Full capacity production deployment",
+      "demoOva": "Limited capacity 90 day demo",
+      "ovaHelpText": "Choose between the limited capacity demo software with 90 days lifespan or the full capacity software used for production deployment.",
       "fullOva-helpText": "(Full capacity and used for production deployment of Hybrid Media)",
       "demoOva-helpText": "(Limited capacity, lifespan, and lower CPU requirement for demo deployment of Hybrid Media)",
       "noProceed-helptext": "(Software will automatically download)",

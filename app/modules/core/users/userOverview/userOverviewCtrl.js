@@ -300,7 +300,8 @@
       var formattedLanguage = ciLanguageCode ? UserOverviewService.formatLanguage(ciLanguageCode) : ciLanguageCode;
       UserOverviewService.getUserPreferredLanguage(formattedLanguage).then(function (userLanguageDetails) {
         preferredLanguageState.detail = !_.isEmpty(userLanguageDetails.language) ? _.get(userLanguageDetails.language, 'label') : formattedLanguage;
-        preferredLanguageDetails.languageOptions = !_.isEmpty(userLanguageDetails.translatedLanguages) ? _.get(userLanguageDetails, 'translatedLanguages') : [];
+        var languageOptions = !_.isEmpty(userLanguageDetails.translatedLanguages) ? _.get(userLanguageDetails, 'translatedLanguages') : [];
+        preferredLanguageDetails.languageOptions = _.sortBy(languageOptions, 'label');
       }).catch(function (error) {
         Notification.errorResponse(error, 'usersPreview.userPreferredLanguageError');
       });

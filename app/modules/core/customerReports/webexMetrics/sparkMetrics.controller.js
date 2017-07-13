@@ -32,6 +32,7 @@
       },
     ];
     vm.reportView = vm.sparkMetrics.views[0];
+    vm.reportType = 'Spark';
 
     function generateWebexMetricsUrl() {
       ProPackService.getProPackPurchased().then(function (isPurchased) {
@@ -65,12 +66,13 @@
       };
 
       var viewType = _.get(vm, 'reportView.view');
-      var getSparkReportData = _.get(QlikService, 'getSparkReportQBSfor' + viewType + 'Url');
+
+      var getSparkReportData = _.get(QlikService, 'getReportQBSUrl');
 
       if (!_.isFunction(getSparkReportData)) {
         return;
       }
-      getSparkReportData(userInfo).then(function (data) {
+      getSparkReportData(vm.reportType, viewType, userInfo).then(function (data) {
         vm.sparkMetrics.appData = {
           ticket: data.ticket,
           appId: vm.reportView.appName,

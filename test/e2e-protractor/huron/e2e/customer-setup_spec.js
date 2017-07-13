@@ -15,7 +15,7 @@ describe('Huron Functional: e2e-customer-setup', () => {
   const testPartner = 'huron-ui-test-partner';
   const CUSTOMER_NAME = `${os.userInfo().username}_e2e-customer-setup`;
   const CUSTOMER_EMAIL = `huron.ui.test.partner+${CUSTOMER_NAME}@gmail.com`;
-  const USER_EMAIL = 'huron.ui.test.user+captainphasma@gmail.com';
+  const USER_EMAIL = `huron.ui.test.partner+${CUSTOMER_NAME}_captainphasma@gmail.com`;
   const USER_FIRST_NAME = 'Captain';
   const USER_LAST_NAME = 'Phasma';
   var partnerWindow;
@@ -78,7 +78,7 @@ describe('Huron Functional: e2e-customer-setup', () => {
     });
     it('should launch customer service wizard setup portal', () => {
       utils.click(customerSetup.launchCustomerPortalButton);
-      utils.switchToNewWindow().then(() => { 
+      utils.switchToNewWindow().then(() => {
         utils.wait(wizard.wizard, LONG_TIMEOUT);
         utils.waitIsDisplayed(wizard.leftNav);
         utils.waitIsDisplayed(wizard.mainView);
@@ -155,7 +155,7 @@ describe('Huron Functional: e2e-customer-setup', () => {
         utils.expectIsDisplayed(manageUsersPage.manual.radio.emailAddress);
       });
       it('Should contain valid input fields on selecting names and email', () => {
-        utils.click(manageUsersPage.manual.radio.nameAndEmail);      
+        utils.click(manageUsersPage.manual.radio.nameAndEmail);
         utils.expectIsDisplayed(manageUsersPage.manual.namesAndEmail.firstName);
       });
 

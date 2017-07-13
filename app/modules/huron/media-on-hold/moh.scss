@@ -1,0 +1,15 @@
+@import '~collab-ui/scss/settings/colors';
+
+.moh-settings {
+  position: relative;
+  .display-flex {
+    display: inline-flex;
+  }
+  .warning-padding {
+    padding: 0;
+  }
+
+  .link-color {
+    color: $color-primary-base;
+  }
+}

@@ -77,17 +77,16 @@
         </div>
       </form>
     </div>
-    <div class="myAddResourceDownloadForm">
+    <div class="myAddResourceDownloadForm" ng-show="redirectResource.radio === '0'">
+      <div translate="mediaFusion.add-resource-dialog.ovaHelpText"></div>
       <form name="myAddResourceDownloadForm">
         <div class="cs-radio-group">
           <div class="radioDisplay">
-            <input cs-input type="radio" ng-model="redirectResource.ovaType" id="full" name="redirectResource" value="1" cs-input-label="{{'mediaFusion.add-resource-dialog.fullOva' | translate}}"
-              cs-input-help-text="{{'mediaFusion.add-resource-dialog.fullOva-helpText' | translate}}" class="radioNoTranform"
+            <input cs-input type="radio" ng-model="redirectResource.ovaType" id="full" name="redirectResource" value="1" cs-input-label="{{'mediaFusion.add-resource-dialog.fullOva' | translate}}" class="radioNoTranform"
               ng-disabled="redirectResource.radio == 1">
           </div>
           <div class="radioDisplay">
-            <input cs-input type="radio" ng-model="redirectResource.ovaType" id="demo" name="redirectResource" value="0" cs-input-label="{{'mediaFusion.add-resource-dialog.demoOva' | translate}}"
-              cs-input-help-text="{{'mediaFusion.add-resource-dialog.demoOva-helpText' | translate}}" class="radioNoTranform"
+            <input cs-input type="radio" ng-model="redirectResource.ovaType" id="demo" name="redirectResource" value="0" cs-input-label="{{'mediaFusion.add-resource-dialog.demoOva' | translate}}" class="radioNoTranform"
               ng-disabled="redirectResource.radio == 1">
           </div>
         </div>

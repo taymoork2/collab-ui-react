@@ -15,7 +15,7 @@
         show-actions="$ctrl.showActions">
       </section-title>
       <uc-line-label     
-        line-label="$ctrl.lineOverviewData.line.siteToSite"
+        line-label="$ctrl.lineOverviewData.line.label.value"
         ng-if="$ctrl.lineOverviewData.line.uuid">
       </uc-line-label>
       <uc-directory-number
@@ -58,6 +58,12 @@
         on-change-fn="$ctrl.setAutoAnswer(phoneId, enabled, mode)"
         ng-if="!$ctrl.isCloudberryPlace()">
       </uc-auto-answer>
+      <uc-media-on-hold
+        cr-feature-toggle feature-show="huron-moh-enable"
+        line-moh="$ctrl.lineOverviewData.lineMoh"
+        line-moh-options="$ctrl.lineMediaOptions"
+        on-change-fn="$ctrl.setLineMedia(lineMoh)">
+      </uc-media-on-hold>
       <uc-shared-line
         shared-lines="$ctrl.lineOverviewData.sharedLines"
         new-shared-line-members="$ctrl.newSharedLineMembers"

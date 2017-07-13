@@ -61,6 +61,7 @@
           BMMP_DISMISSAL: 'BMMP Banner dismissal',
           LEARN_MORE: 'Learn More option selected',
           PREMIUM_FILTER: 'Customer Overview Filtering',
+          RESET_ACCESS: 'Reset Access',
         },
         persistentProperties: null,
       },

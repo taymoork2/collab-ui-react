@@ -5,7 +5,7 @@
     .controller('PstnContractInfoCtrl', PstnContractInfoCtrl);
 
   /* @ngInject */
-  function PstnContractInfoCtrl($state, PstnModel, FeatureToggleService) {
+  function PstnContractInfoCtrl($state, PstnModel) {
     var vm = this;
     vm.validateContactInfo = validateContactInfo;
     vm.hasBackButton = hasBackButton;
@@ -18,11 +18,6 @@
       vm.firstName = PstnModel.getCustomerFirstName();
       vm.lastName = PstnModel.getCustomerLastName();
       vm.emailAddress = PstnModel.getCustomerEmail();
-
-      FeatureToggleService.supports(FeatureToggleService.features.huronFederatedSparkCall)
-      .then(function (results) {
-        vm.ftHuronFederatedSparkCall = results;
-      });
     }
 
     function setCustomerData() {

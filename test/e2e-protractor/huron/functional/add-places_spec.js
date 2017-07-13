@@ -28,7 +28,7 @@ describe('Huron Functional: add-places', () => {
   describe('Internal Places Section', () => {
     describe('create a new place with Phone Dialing only', () => {
       it('should show an option to add new place', () => {
-        utils.click(addPlaces.addNewPlace);
+        utils.click(addPlaces.addNewPlaceEmpty);
         utils.expectIsDisplayed(addPlaces.newPlaceInput);
       });
       it('should take a new location input and allow to save', () => {

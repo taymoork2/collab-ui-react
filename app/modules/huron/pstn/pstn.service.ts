@@ -150,7 +150,7 @@ export class PstnService {
     return this.$q.all(promises);
   }
 
-  public getCarrierInventory(carrierId: string, state: string, npa: string): ng.IPromise<any> {
+  public getCarrierInventory(carrierId: string, state: string, npa?: string): ng.IPromise<any> {
     const config: any = {
       carrierId: carrierId,
       numberType: NUMTYPE_DID,
@@ -240,7 +240,7 @@ export class PstnService {
       }).$promise;
     } else {
         // Otherwise release with carrier
-      return this.TerminusService.resellerCarrierNumbersReservationV2().delete({
+      return this.TerminusService.resellerNumberReservationV2().delete({
         resellerId: this.Authinfo.getCallPartnerOrgId(),
         reservationId: reservationId,
       }, {

@@ -77,6 +77,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     $scope.isSquaredEnabled = isSquaredEnabled;
     $scope.isHuronEnabled = isHuronEnabled;
     $scope.isOnlyAdmin = isOnlyAdmin;
+    $scope.isOnlineBuyer = isOnlineBuyer;
     $scope.resendInvitation = resendInvitation;
     $scope.setDeactivateUser = setDeactivateUser;
     $scope.setDeactivateSelf = setDeactivateSelf;
@@ -414,7 +415,8 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
         return false;
       }
 
-      return !$scope.isOnlyAdmin(user) && !_.includes($scope.userList.partnerUsers, user);
+      return !$scope.isOnlyAdmin(user) && !_.includes($scope.userList.partnerUsers, user) &&
+        !$scope.isOnlineBuyer(user);
     }
 
     function handleDeleteUser($event, user, isSelf) {
@@ -478,6 +480,11 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
         return $scope.userList.adminUsers[0].userName === entity.userName;
       }
       return false;
+    }
+
+    // cannot delete an online buyer
+    function isOnlineBuyer(user) {
+      return Authinfo.isOnline() && _.eq(user.userName, Authinfo.getCustomerAdminEmail());
     }
 
     function canShowResendInvite(user) {

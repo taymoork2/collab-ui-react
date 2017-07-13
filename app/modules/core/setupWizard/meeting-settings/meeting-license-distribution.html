@@ -7,7 +7,7 @@
       <cs-card>
         <article>
           <section class="row">
-            <p class="col-sm-7" translate="firstTimeWizard.meetingCenterLicensesRemaining"></p>
+            <p class="col-sm-7" translate="firstTimeWizard.enterpriseEditionLicensesRemaining"></p>
             <p class="col-sm-5 count align-license-count">{{meetingCtrl.calculateLicensesRemaining()}}</p>
           </section>
         </article>
@@ -15,7 +15,7 @@
     </div>
   </div>
   <div class="row" ng-repeat="site in meetingCtrl.sitesArray">
-    <div class="col-md-4">{{site.name}}.webex.com</div>
+    <div class="col-md-4">{{site.siteUrl}}.webex.com</div>
     <div class="col-md-4">
       <input
         cs-input

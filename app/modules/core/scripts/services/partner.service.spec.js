@@ -4,11 +4,11 @@ describe('Partner Service -', function () {
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Huron'));
 
-  var $httpBackend, $translate, $scope, Analytics, Authinfo, Config, PartnerService, TrialService, UrlConfig;
+  var $httpBackend, $translate, $scope, Analytics, Authinfo, Config, PartnerService, UrlConfig;
 
   var testData;
 
-  beforeEach(inject(function (_$httpBackend_, $rootScope, _$translate_, _Analytics_, _Authinfo_, _Config_, _PartnerService_, _TrialService_, _UrlConfig_) {
+  beforeEach(inject(function (_$httpBackend_, $rootScope, _$translate_, _Analytics_, _Authinfo_, _Config_, _PartnerService_, _UrlConfig_) {
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     $translate = _$translate_;
@@ -16,7 +16,6 @@ describe('Partner Service -', function () {
     Authinfo = _Authinfo_;
     Config = _Config_;
     PartnerService = _PartnerService_;
-    TrialService = _TrialService_;
     UrlConfig = _UrlConfig_;
 
     testData = getJSONFixture('core/json/partner/partner.service.json');
@@ -42,30 +41,6 @@ describe('Partner Service -', function () {
     expect(PartnerService.customerStatus.NOTE_NO_LICENSE).toBe(0);
     expect(PartnerService.customerStatus.NOTE_CANCELED).toBe(0);
     expect(PartnerService.customerStatus.NOTE_NOT_EXPIRED).toBe(99);
-  });
-
-  it('should successfully return an array of 3 customers from calling getTrialsList', function () {
-    $httpBackend.whenGET(PartnerService.trialsUrl).respond(testData.trialsResponse.status, testData.trialsResponse.data);
-
-    TrialService.getTrialsList(function (data, status) {
-      expect(status).toBe(200);
-      expect(data.trials.length).toBe(3);
-      expect(data.trials).toEqual(testData.trialsResponse.data.trials);
-    });
-
-    $httpBackend.flush();
-  });
-
-  it('should successfully return an array of 5 customers from calling getManagedOrgsList', function () {
-    $httpBackend.whenGET(PartnerService.managedOrgsUrl).respond(testData.managedOrgsResponse.status, testData.managedOrgsResponse.data);
-
-    PartnerService.getManagedOrgsList(function (data, status) {
-      expect(status).toBe(200);
-      expect(data.organizations.length).toBe(5);
-      expect(data.organizations).toEqual(testData.managedOrgsResponse.data.organizations);
-    });
-
-    $httpBackend.flush();
   });
 
   it('should successfully return an array of 5 customers from calling getManagedOrgsList with customerName search', function () {
@@ -234,11 +209,11 @@ describe('Partner Service -', function () {
       isCareEnabled: true,
       isAdvanceCareEnabled: true,
     });
-    var expectedServices = ['messaging', 'communications', 'webex', 'roomSystems', 'sparkBoard', 'care'];
+    var expectedServices = ['messaging', 'communications', 'webex', 'roomSystems', 'sparkBoard', 'care', 'advanceCare'];
     var expectedServicesManagedByOthers = ['conferencing'];
 
     // Verify the ordered service property
-    expect(returnList[0].orderedServices.servicesManagedByCurrentPartner.length).toBe(6);
+    expect(returnList[0].orderedServices.servicesManagedByCurrentPartner.length).toBe(7);
     expect(returnList[0].orderedServices.servicesManagedByCurrentPartner).toEqual(expectedServices);
     expect(returnList[0].orderedServices.servicesManagedByAnotherPartner.length).toBe(1);
     expect(returnList[0].orderedServices.servicesManagedByAnotherPartner).toEqual(expectedServicesManagedByOthers);
@@ -263,7 +238,8 @@ describe('Partner Service -', function () {
   });
 
   it('should successfully return an array of customers from calling exportCSV', function () {
-    $httpBackend.whenGET(PartnerService.managedOrgsUrl).respond(testData.managedOrgsResponse.status, testData.managedOrgsResponse.data);
+    var url = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
+    $httpBackend.expectGET(url).respond(testData.managedOrgsResponse.status, testData.managedOrgsResponse.data);
     var promise = PartnerService.exportCSV(false);
     promise.then(function (customers) {
       expect(customers).toEqual(testData.exportCSVResult);
@@ -272,7 +248,8 @@ describe('Partner Service -', function () {
   });
 
   it('should successfully return an array of customers with care entitlements from calling exportCSV', function () {
-    $httpBackend.whenGET(PartnerService.managedOrgsUrl).respond(testData.managedOrgsResponse.status, testData.managedOrgsResponse.data);
+    var url = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
+    $httpBackend.whenGET(url).respond(testData.managedOrgsResponse.status, testData.managedOrgsResponse.data);
     var promise = PartnerService.exportCSV(true);
     promise.then(function (customers) {
       expect(customers).toEqual(testData.exportCSVResultWithCare);
