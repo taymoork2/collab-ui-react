@@ -22,8 +22,11 @@ class PlaceCallOverview implements ng.IComponentController {
   public displayDescription: string;
   public wide: boolean = true;
 
+  public isprov3698: boolean = false;
+
   /* @ngInject */
   constructor(
+    private $q: ng.IQService,
     private $scope: ng.IScope,
     private $state: ng.ui.IStateService,
     $stateParams: any,
@@ -31,6 +34,7 @@ class PlaceCallOverview implements ng.IComponentController {
     CsdmDataModelService: any,
     private LineService: LineService,
     private Notification: Notification,
+    private FeatureToggleService,
     private PlaceCallOverviewService: PlaceCallOverviewService,
   ) {
 
@@ -53,6 +57,7 @@ class PlaceCallOverview implements ng.IComponentController {
       this.initPlaceCallOverviewData();
     }
     this.setDisplayDescription();
+    this.loadFeatureToggles();
   }
 
   private displayPlace(newPlace) {
@@ -184,6 +189,12 @@ class PlaceCallOverview implements ng.IComponentController {
       currentPlace: this.currentPlace,
     });
     this.onCancelPreferredLanguage();
+  }
+
+  private loadFeatureToggles(): ng.IPromise<any> {
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.prov3698)
+      .then(result => this.isprov3698 = result);
+    return this.$q.resolve();
   }
 }
 

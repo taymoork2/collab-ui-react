@@ -116,6 +116,7 @@
     'huron.bulk-enable-vm',
     'huron.TerminusServices',
     'huron.externalNumberService',
+    'huron.place-overview',
     require('modules/huron/lineSettings/callerIdService'),
     require('modules/huron/telephony/telephonyConfig'),
     require('modules/huron/telephony/cmiServices'),

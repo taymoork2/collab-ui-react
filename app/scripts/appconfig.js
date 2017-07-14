@@ -1130,7 +1130,7 @@
             },
           })
           .state('user-overview.userDetails', {
-            template: '<uc-user-details-overview preferred-language-details="$resolve.preferredLanguageDetails"></uc-user-details-overview>',
+            template: '<uc-preferred-language-details preferred-language-feature="$resolve.preferredLanguageDetails"></uc-preferred-language-details>',
             params: {
               reloadToggle: false,
             },
@@ -1141,8 +1141,8 @@
               },
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/huron/users/userDetailsOverview'));
-                }, 'uc-user-details-overview');
+                  done(require('modules/huron/preferredLanguage/preferredLanguageDetails'));
+                }, 'uc-preferred-language-details');
               }),
               preferredLanguageDetails: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams, 'preferredLanguageDetails');
@@ -1943,6 +1943,44 @@
             },
             data: {
               displayName: 'Overview',
+            },
+          })
+          .state('place-overview.placeLocationDetails', {
+            template: '<user-location-details></user-location-details>',
+            params: {
+              reloadToggle: false,
+            },
+            data: {},
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('place-overview.placeLocationDetails').data.displayName = $translate.instant('usersPreview.location');
+              },
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/call/locations/user-location-details'));
+                }, 'user-location-details');
+              }),
+            },
+          })
+          .state('place-overview.preferredLanguage', {
+            template: '<uc-preferred-language-details preferred-language-feature="$resolve.preferredLanguageFeature"></uc-preferred-language-details>',
+            params: {
+              reloadToggle: false,
+              preferredLanguageFeature: {},
+            },
+            data: {},
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('place-overview.preferredLanguage').data.displayName = $translate.instant('serviceSetupModal.preferredLanguage');
+              },
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/huron/preferredLanguage/preferredLanguageDetails'));
+                }, 'uc-preferred-language-details');
+              }),
+              preferredLanguageFeature: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams, 'preferredLanguageFeature');
+              },
             },
           })
           .state('place-overview.csdmDevice', {
