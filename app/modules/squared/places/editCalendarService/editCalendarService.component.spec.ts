@@ -325,11 +325,18 @@ describe('EditCalendarService component:', () => {
         test.$rootScope.$digest();
 
         expect(test.CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalled();
-        const wizardState = test.CsdmDataModelService.updateCloudberryPlace.calls.mostRecent().args;
-
-        expect(wizardState[1]).toEqual(['webex-squared', 'spark', FUSION_CAL_ENTITLEMENT]);
-        expect(wizardState[4][0].accountGUID).toEqual(email);
-        expect(wizardState[4][0].providerID).toEqual(FUSION_CAL_ENTITLEMENT);
+        expect(jasmine).not.toBeUndefined();
+        expect(test.CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalledWith(jasmine.anything(),
+          {
+            entitlements: ['webex-squared', 'spark', FUSION_CAL_ENTITLEMENT],
+            externalNumber: undefined,
+            directoryNumber: undefined,
+            externalLinkedAccounts: [{
+              accountGUID: email,
+              providerID: FUSION_CAL_ENTITLEMENT,
+              status: 'unconfirmed-email',
+            }],
+          });
       });
     });
 
@@ -348,28 +355,35 @@ describe('EditCalendarService component:', () => {
         test.$rootScope.$digest();
 
         expect(test.CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalled();
-        const wizardState = test.CsdmDataModelService.updateCloudberryPlace.calls.mostRecent().args;
-        expect(wizardState[1]).toEqual(['webex-squared', 'spark', FUSION_GCAL_ENTITLEMENT]);
-        expect(wizardState[4][0].accountGUID).toEqual(email);
-        expect(wizardState[4][0].providerID).toEqual(FUSION_GCAL_ENTITLEMENT);
+        expect(test.CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalledWith(jasmine.anything(),
+          {
+            entitlements: ['webex-squared', 'spark', FUSION_GCAL_ENTITLEMENT],
+            externalNumber: undefined,
+            directoryNumber: undefined,
+            externalLinkedAccounts: [{
+              accountGUID: email,
+              providerID: FUSION_GCAL_ENTITLEMENT,
+              status: 'unconfirmed-email',
+            }],
+          });
+        it('save should be enabled', () => {
+          test.$rootScope.$digest();
+          state.controller.calService = FUSION_GCAL_ENTITLEMENT;
+          state.controller.emailOfMailbox = email;
+          expect(state.controller.isSaveDisabled()).toBeFalsy();
+        });
       });
-      it('save should be enabled', () => {
-        test.$rootScope.$digest();
-        state.controller.calService = FUSION_GCAL_ENTITLEMENT;
-        state.controller.emailOfMailbox = email;
-        expect(state.controller.isSaveDisabled()).toBeFalsy();
-      });
-    });
 
-    describe('with none selected', () => {
-      beforeEach(() => {
-        state.controller.calService = '';
-        state.controller.emailOfMailbox = 'test@example.com';
+      describe('with none selected', () => {
+        beforeEach(() => {
+          state.controller.calService = '';
+          state.controller.emailOfMailbox = 'test@example.com';
+        });
+        it('save should be disabled', () => {
+          expect(state.controller.isSaveDisabled()).toBeTruthy();
+        });
       });
-      it('save should be disabled', () => {
-        expect(state.controller.isSaveDisabled()).toBeTruthy();
-      });
-    });
 
+    });
   });
 });
