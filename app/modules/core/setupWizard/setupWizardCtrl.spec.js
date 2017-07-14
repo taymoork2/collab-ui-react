@@ -119,6 +119,28 @@ describe('SetupWizardCtrl', function () {
     });
   });
 
+  describe('When subscription does not have a pending service order', function () {
+    beforeEach(function () {
+      this.SetupWizardService.hasPendingServiceOrder.and.returnValue(false);
+      this.initController();
+    });
+
+    it('the setup wizard should not call getPendingLicenses API', function () {
+      expect(this.SetupWizardService.getPendingLicenses).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('When subscription has a pending service order', function () {
+    beforeEach(function () {
+      this.SetupWizardService.hasPendingServiceOrder.and.returnValue(true);
+      this.initController();
+    });
+
+    it('the setup wizard should call getPendingLicenses API', function () {
+      expect(this.SetupWizardService.getPendingLicenses).toHaveBeenCalled();
+    });
+  });
+
   describe('When Authinfo.isSetupDone is true', function () {
     beforeEach(function () {
       this.Authinfo.isSetupDone.and.returnValue(true);
