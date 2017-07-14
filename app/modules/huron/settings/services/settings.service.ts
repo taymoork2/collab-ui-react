@@ -1,4 +1,6 @@
-import { Customer, Link, HuronCustomerService } from 'modules/huron/customer';
+import {
+  Customer, CustomerVoice, Link, HuronCustomerService,
+} from 'modules/huron/customer';
 import { ISite, HuronSiteService } from 'modules/huron/sites';
 import { IExtensionRange } from 'modules/huron/settings/extensionRange';
 import { Notification } from 'modules/core/notifications';
@@ -10,6 +12,7 @@ import { ExtensionLengthService } from './extensionLength.service';
 
 export class HuronSettingsData {
   public customer: CustomerSettings;
+  public customerVoice: CustomerVoice;
   public site: ISite;
   public companyMoh: string;
   public internalNumberRanges: IExtensionRange[];
@@ -103,6 +106,14 @@ export class HuronSettingsService {
           return this.getCustomer()
             .then((customer: CustomerSettings) => {
               huronSettingsData.customer = customer;
+              this.HuronCustomerService.getVoiceCustomer()
+              .then((customerVoice: CustomerVoice) => {
+                huronSettingsData.customerVoice = customerVoice;
+              })
+              .catch(error => {
+                this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.customerGetError'));
+                return this.$q.reject();
+              });
               if (_.get<boolean>(customer, 'hasVoicemailService') && !this.supportsAvrilVoicemailMailbox) {
                 return this.getVoicemailUserTemplate()
                   .then(userTemplate => this.getVoicemailToEmail(_.get(userTemplate, 'objectId', '')))
