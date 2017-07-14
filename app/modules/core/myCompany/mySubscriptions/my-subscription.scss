@@ -187,6 +187,10 @@
   }
 
   .pro-pack-card {
+    .card-title {
+      @include vr-spacing(mb, 1);
+    }
+
     .category-icon {
       font-size: vr-adjust(20);
     }
@@ -212,7 +216,6 @@
   .pro-pack-card,
   .subscriptions {
     .card-title {
-      @include vr-spacing(mb, 1);
       @include vr-spacing(pl, 0);
       @include vr-spacing(pt, 0);
       color: $gray-dark-1;
