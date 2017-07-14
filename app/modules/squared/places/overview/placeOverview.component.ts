@@ -72,10 +72,10 @@ class PlaceOverview implements ng.IComponentController {
       this.initPlaceCallOverviewData();
       this.initActions();
     }
+    this.getPlaceLocation();
     this.fetchAsyncSettings();
     this.setDisplayDescription();
     this.loadFeatureToggles();
-    this.getPlaceLocation();
     this.initPreferredLanguage();
   }
 
@@ -115,8 +115,9 @@ class PlaceOverview implements ng.IComponentController {
     }
   }
 
+  //TODO:Change to use appropriate API call when the PLACES Location is available on the API
   public getPlaceLocation(): void {
-    this.LocationsService.getLocation('123').then(result => {
+    this.LocationsService.getUserLocation(this.currentPlace.cisUuid).then(result => {
       this.placeLocation = result.name;
     });
   }
