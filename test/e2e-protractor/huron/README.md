@@ -18,7 +18,45 @@
 npm run protractor-babel -- --specs ./test/e2e-protractor/huron/functional/call-settings_spec.js
 ```
 * Via Sauce Labs
-  * TBD
+```
+export SAUCE__MAX_INSTANCES="2"
+export SAUCE__USERNAME="atlas-web-limited"
+export SAUCE__ACCESS_KEY="b99c8bc7-4a28-4d87-8cd8-eba7c688d48c”
+npm run protractor-babel -- --specs ./test/e2e-protractor/huron/functional/<test name>.js --sauce –int
+```
+
+* Ruuning all files in a given directory change directory to huron and apply the cmd.
+```
+npm run protractor-babel -- --suite huron  --sauce –int 
+```
+
+* The VS code debug launch config is  as follows for running a given sepc file in debugger mode
+
+```
+{
+    "name": "Launch Protractor with Babel",
+    "type": "node",
+    "request": "launch",
+    "program": "${workspaceRoot}/node_modules/.bin/protractor",
+    // "args": [ "--specs", "${workspaceRoot}/test/e2e-protractor/squared/login_spec.js"],
+    "args": [ "--specs", "${file}"],
+    // "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/babel-node",
+    // "runtimeArgs": [
+    // "--nolazy"
+    // ],
+    "protocol": "inspector",
+    "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/babel-node",
+    "runtimeArgs": [
+    "--presets=es2015"
+    // "latest"
+    ],
+    // "stopOnEntry": false,
+    "sourceMaps": true,
+    "outFiles": []
+    // "console": "internalConsole"
+}
+``` 
+
 ## Developing Tests
 Listed below are some guidelines and best practices we need to follow when writing our tests.
 * The outer `describe()` function should be formatted with 'Huron Functional: `<test name>`'

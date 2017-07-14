@@ -42,7 +42,7 @@ export class SparkReportService {
   ) {}
 
   // Active User Data
-  public getActiveUserData(filter: ITimespan): ng.IHttpPromise<IActiveUserWrapper> {
+  public getActiveUserData(filter: ITimespan): ng.IPromise<IActiveUserWrapper> {
     // cancel any currently running jobs
     if (this.activeDeferred) {
       this.activeDeferred.resolve(this.ReportConstants.ABORT);
@@ -159,30 +159,30 @@ export class SparkReportService {
     const groupOptions: ICustomerIntervalQuery = this.CommonReportService.getCustomerOptions(filter, 'conversations', this.CommonReportService.TIME_CHARTS, true);
     const oneToOneOptions: ICustomerIntervalQuery = this.CommonReportService.getCustomerOptions(filter, 'convOneOnOne', this.CommonReportService.TIME_CHARTS, true);
     const avgOptions: ICustomerIntervalQuery = this.CommonReportService.getCustomerOptions(filter, 'avgConversations', this.CommonReportService.TIME_CHARTS, true);
-    const promises: ng.IHttpPromise<any>[] = [];
+    const promises: ng.IPromise<any[]>[] = [];
 
-    const groupPromise: ng.IHttpPromise<any> = this.CommonReportService.getCustomerReport(groupOptions, this.groupDeferred).then((response: any): any[] => {
+    const groupPromise: ng.IPromise<any[]> = this.CommonReportService.getCustomerReport(groupOptions, this.groupDeferred).then((response) => {
       return _.get(response, 'data.data', []);
     }, (error: any) => {
       return this.CommonReportService.returnErrorCheck(error, 'avgRooms.groupError', []);
     });
     promises.push(groupPromise);
 
-    const oneToOnePromise: ng.IHttpPromise<any> = this.CommonReportService.getCustomerReport(oneToOneOptions, this.oneToOneDeferred).then((response: any): any[] => {
+    const oneToOnePromise: ng.IPromise<any[]> = this.CommonReportService.getCustomerReport(oneToOneOptions, this.oneToOneDeferred).then((response) => {
       return _.get(response, 'data.data', []);
     }, (error: any) => {
       return this.CommonReportService.returnErrorCheck(error, 'avgRooms.oneToOneError', []);
     });
     promises.push(oneToOnePromise);
 
-    const avgPromise: ng.IHttpPromise<any> = this.CommonReportService.getCustomerReport(avgOptions, this.avgDeferred).then((response: any): any[] => {
+    const avgPromise: ng.IPromise<any[]> = this.CommonReportService.getCustomerReport(avgOptions, this.avgDeferred).then((response) => {
       return _.get(response, 'data.data', []);
     }, (error: any): any[] => {
       return this.CommonReportService.returnErrorCheck(error, 'avgRooms.avgError', []);
     });
     promises.push(avgPromise);
 
-    return this.$q.all(promises).then((values: any[]) => {
+    return this.$q.all(promises).then((values) => {
       return this.combineAvgRooms(values[0], values[1], values[2], filter);
     }, () => {
       return [];
@@ -281,23 +281,23 @@ export class SparkReportService {
 
     const contentSharedOptions: ICustomerIntervalQuery = this.CommonReportService.getCustomerOptions(filter, 'contentShared', this.CommonReportService.TIME_CHARTS, true);
     const contentShareSizesOptions: ICustomerIntervalQuery = this.CommonReportService.getCustomerOptions(filter, 'contentShareSizes', this.CommonReportService.TIME_CHARTS, true);
-    const promises: ng.IHttpPromise<any>[] = [];
+    const promises: ng.IPromise<any[]>[] = [];
 
-    const contentSharedPromise: ng.IHttpPromise<any> = this.CommonReportService.getCustomerReport(contentSharedOptions, this.contentSharedDeferred).then((response: any): any[] => {
+    const contentSharedPromise: ng.IPromise<any[]> = this.CommonReportService.getCustomerReport(contentSharedOptions, this.contentSharedDeferred).then((response) => {
       return _.get(response, 'data.data', []);
     }, (error: any) => {
       return this.CommonReportService.returnErrorCheck(error, 'filesShared.contentSharedError', []);
     });
     promises.push(contentSharedPromise);
 
-    const contentShareSizesPromise: ng.IHttpPromise<any> = this.CommonReportService.getCustomerReport(contentShareSizesOptions, this.contentShareSizesDeferred).then((response: any): any[] => {
+    const contentShareSizesPromise: ng.IPromise<any[]> = this.CommonReportService.getCustomerReport(contentShareSizesOptions, this.contentShareSizesDeferred).then((response) => {
       return _.get(response, 'data.data', []);
     }, (error: any) => {
       return this.CommonReportService.returnErrorCheck(error, 'filesShared.contentShareSizesDataError', []);
     });
     promises.push(contentShareSizesPromise);
 
-    return this.$q.all(promises).then((values: any[]): IFilesShared[] => {
+    return this.$q.all(promises).then((values): IFilesShared[] => {
       return this.combineFilesShared(values[0], values[1], filter);
     }, (): IFilesShared[] => {
       return [];
@@ -359,7 +359,7 @@ export class SparkReportService {
   }
 
   // Call Metrics Data
-  public getCallMetricsData(filter: ITimespan): ng.IHttpPromise<IMetricsData> {
+  public getCallMetricsData(filter: ITimespan): ng.IPromise<IMetricsData> {
     // cancel any currently running jobs
     if (this.metricsDeferred) {
       this.metricsDeferred.resolve(this.ReportConstants.ABORT);
@@ -382,7 +382,7 @@ export class SparkReportService {
     };
     const options: ICustomerIntervalQuery = this.CommonReportService.getAltCustomerOptions(filter, 'callMetrics', this.CommonReportService.DETAILED, undefined);
 
-    return this.CommonReportService.getCustomerReport(options, this.metricsDeferred).then((response: any): IMetricsData => {
+    return this.CommonReportService.getCustomerReport(options, this.metricsDeferred).then((response): IMetricsData => {
       const details: any = _.get(response, 'data.data[0].data[0].details');
       if (details) {
         const totalCalls: number = _.toInteger(details.totalCalls);
@@ -406,13 +406,13 @@ export class SparkReportService {
         }
       }
       return returnArray;
-    }).catch((error: any): IMetricsData => {
+    }).catch((error): IMetricsData => {
       return this.CommonReportService.returnErrorCheck(error, 'callMetrics.customerError', returnArray);
     });
   }
 
   // Media Quality Data
-  public getMediaQualityData(filter: ITimespan): ng.IHttpPromise<IMediaData[]> {
+  public getMediaQualityData(filter: ITimespan): ng.IPromise<IMediaData[]> {
     // cancel any currently running jobs
     if (this.mediaDeferred) {
       this.mediaDeferred.resolve(this.ReportConstants.ABORT);
@@ -491,12 +491,12 @@ export class SparkReportService {
         return graph;
       }
     }).catch((error): IMediaData[] => {
-      return this.CommonReportService.returnErrorCheck(error, 'mediaQuality.customerError', []);
+      return this.CommonReportService.returnErrorCheck<IMediaData[]>(error, 'mediaQuality.customerError', []);
     });
   }
 
   // Registered Endpoints Data
-  public getDeviceData(filter: ITimespan): ng.IHttpPromise<IEndpointContainer> {
+  public getDeviceData(filter: ITimespan): ng.IPromise<IEndpointContainer> {
     // cancel any currently running jobs
     if (this.deviceDeferred) {
       this.deviceDeferred.resolve(this.ReportConstants.ABORT);
@@ -513,7 +513,7 @@ export class SparkReportService {
     };
 
     const options: ITypeQuery = this.CommonReportService.getTypeOptions(filter, 'deviceType');
-    return this.CommonReportService.getCustomerReportByType(options, this.deviceDeferred).then((response: any): IEndpointContainer => {
+    return this.CommonReportService.getCustomerReportByType(options, this.deviceDeferred).then((response): IEndpointContainer => {
       return this.analyzeDeviceData(response, filter, deviceArray);
     }).catch((error: any): IEndpointContainer => {
       return this.CommonReportService.returnErrorCheck(error, 'registeredEndpoints.customerError', deviceArray);

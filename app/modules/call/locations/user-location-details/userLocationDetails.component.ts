@@ -16,7 +16,6 @@ class UserLocationDetailsCtrl implements ng.IComponentController {
   constructor(
     public LocationsService: LocationsService,
     // private Notification: Notification,
-    private Authinfo,
   ) { }
 
   public $onInit(): void {
@@ -29,7 +28,7 @@ class UserLocationDetailsCtrl implements ng.IComponentController {
   }
 
   public loadLocations(): void {
-    this.LocationsService.getLocations(this.Authinfo.getOrgId()).then(result => {
+    this.LocationsService.getLocationList().then(result => {
       this.locationOptions = [];
       const tempThis = this;
       _.forEach(result, function (result) {
@@ -39,7 +38,7 @@ class UserLocationDetailsCtrl implements ng.IComponentController {
   }
 
   public getUserLocation(): void {
-    this.LocationsService.getLocationDetails('123').then(result => {
+    this.LocationsService.getLocation('123').then(result => {
       this.selectedLocation = result.name;
     });
   }

@@ -199,7 +199,7 @@
         if (!_.isUndefined(data)) {
           vm.webexMetrics.appData = {
             ticket: data.ticket,
-            appId: vm.reportView.appName,
+            appId: data.appName,
             node: data.host,
             qrp: data.qlik_reverse_proxy,
             persistent: data.isPersistent,

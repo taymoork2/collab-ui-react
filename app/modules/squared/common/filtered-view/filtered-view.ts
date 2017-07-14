@@ -94,7 +94,7 @@ export class FilteredView<T> {
 
   public setCurrentSearch(searchString: string): IPromise<T[]> {
 
-    const deferredRes = this.$q.defer();
+    const deferredRes = this.$q.defer<T[]>();
 
     this.isSearchOnly.then((isSearchOnly) => {
       if (isSearchOnly) {

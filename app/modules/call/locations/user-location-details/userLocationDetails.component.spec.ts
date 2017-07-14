@@ -17,7 +17,7 @@ describe('component: UserLocationDetailsComponent', () => {
       '$state',
       '$q',
     );
-    spyOn(this.LocationsService, 'getLocations').and.returnValue(this.$q.resolve(SUCCESS_DATA));
+    spyOn(this.LocationsService, 'getLocationList').and.returnValue(this.$q.resolve(SUCCESS_DATA));
     spyOn(this.LocationsService, 'updateLocation').and.returnValue(this.$q.resolve());
     spyOn(this.$state, 'go');
     this.compileComponent('userLocationDetails', {});
@@ -25,7 +25,7 @@ describe('component: UserLocationDetailsComponent', () => {
 
   it('should get locations', function() {
     this.controller.loadLocations();
-    expect(this.LocationsService.getLocations).toHaveBeenCalled();
+    expect(this.LocationsService.getLocationList).toHaveBeenCalled();
   });
 
   it('should update', function() {

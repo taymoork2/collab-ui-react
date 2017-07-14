@@ -1,12 +1,15 @@
-import { LocationDetail } from '../location';
-import { LocationsService } from '../locations.service';
+import { Location } from 'modules/call/locations/location';
+import { LocationsService } from 'modules/call/locations/locations.service';
 
 import {
   PstnModel, PstnService, PstnCarrier,
   SWIVEL,
 } from 'modules/huron/pstn';
 
-import { HuronSettingsOptionsService, HuronSettingsOptions } from 'modules/huron/settings/services';
+import {
+  HuronSettingsOptionsService, HuronSettingsOptions,
+  HuronSettingsService, HuronSettingsData,
+} from 'modules/huron/settings/services';
 import { IOption } from 'modules/huron/dialing';
 import { CompanyNumber } from 'modules/huron/settings/companyCallerId';
 import { Notification } from 'modules/core/notifications';
@@ -36,8 +39,10 @@ class LocationsWizardController implements ng.IComponentController {
   public validationMessages = {
     required: this.$translate.instant('common.invalidRequired'),
   };
+  public namePlaceholder: string;
+  public huronSettingsData: HuronSettingsData;
 
-  public locationDetail: LocationDetail;
+  public locationDetail: Location;
   public defaultCountry: string = 'US'; //TODO: KPC What is this for?
   public voicemailToEmail: boolean = false;  //TODO: KPC What is this for?
 
@@ -55,10 +60,11 @@ class LocationsWizardController implements ng.IComponentController {
               private PstnService: PstnService,
               private $q: ng.IQService,
               private HuronSettingsOptionsService: HuronSettingsOptionsService,
+              private HuronSettingsService: HuronSettingsService,
               private LocationsService: LocationsService,
               private PstnServiceAddressService,
               private Notification: Notification) {
-
+    this.namePlaceholder = this.$translate.instant('locations.namePlaceholder');
   }
 
   public $onInit(): void {
@@ -75,24 +81,34 @@ class LocationsWizardController implements ng.IComponentController {
     this.PstnService.getCustomer(this.Authinfo.getOrgId()).then(() => {
       this.PstnModel.setCustomerId(this.Authinfo.getOrgId());
       this.PstnModel.setCustomerExists(true);
+
+      this.PstnService.listCustomerCarriers(this.Authinfo.getOrgId()).then(carriers => {
+        if (_.get(carriers, '[0].apiImplementation') !== SWIVEL) {
+          this.PstnModel.setProvider(_.get<PstnCarrier>(carriers, '[0]'));
+          this.showEmergencyServiceAddress = true;
+        } else {
+          this.lastIndex = 5;
+        }
+      }).catch(() => this.lastIndex = 5);
     });
 
-    this.PstnService.listCustomerCarriers(this.Authinfo.getOrgId()).then(carriers => {
-      if (_.get(carriers, '[0].apiImplementation') !== SWIVEL) {
-        this.PstnModel.setProvider(<PstnCarrier>_.get(carriers, '[0]'));
-        this.showEmergencyServiceAddress = true;
-      } else {
-        this.lastIndex = 5;
-      }
-    }).catch(() => this.lastIndex = 5);
+    //Use default site for now
+    this.HuronSettingsService.get('').then((huronSettingsData: HuronSettingsData) => {
+      this.huronSettingsData = huronSettingsData;
+    }).catch(response => {
+      this.Notification.errorResponse(response);
+    });
 
     this.$q.resolve(this.initSettingsComponent());
   }
 
-  private initSettingsComponent(): ng.IPromise<any> {
+  private initSettingsComponent(): ng.IPromise<void> {
     return this.HuronSettingsOptionsService.getOptions().then((options: HuronSettingsOptions) => {
       this.settingsOptions = options;
-      this.locationDetail = new LocationDetail();
+      this.locationDetail = new Location();
+    }).catch(response => {
+      this.Notification.errorResponse(response);
+      this.locationDetail = new Location();
     });
   }
 
@@ -155,7 +171,13 @@ class LocationsWizardController implements ng.IComponentController {
   }
 
   public onCompanyCallerIdChanged(companyNumber: CompanyNumber): void {
-    this.locationDetail.callerIdNumber = companyNumber.name;
+    if (companyNumber) {
+      this.locationDetail.callerIdNumber = companyNumber.pattern;
+    } else {
+      if (this.locationDetail.callerIdNumber) {
+        delete this.locationDetail.callerIdNumber;
+      }
+    }
   }
 
   public onCompanyVoicemailFilter(filter: string): ng.IPromise<IOption[]> {
@@ -248,7 +270,7 @@ class LocationsWizardController implements ng.IComponentController {
   }
 
   private saveLocation() {
-    this.LocationsService.createLocation(this.Authinfo.getOrgId(), this.locationDetail).then(() => {
+    this.LocationsService.createLocation(this.locationDetail).then(() => {
       this.$state.go('calllocations');
     }).catch((error) => {
       this.Notification.errorResponse(error, 'locations.createFailed');

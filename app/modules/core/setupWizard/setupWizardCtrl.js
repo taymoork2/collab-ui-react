@@ -24,10 +24,6 @@ require('./_setup-wizard.scss');
       if (isFirstTimeSetup) {
         shouldRemoveSSOSteps = true;
       }
-      var tenDigitExtPromise = FeatureToggleService.supports(FeatureToggleService.features.sparkCallTenDigitExt)
-        .then(function (sparkCallTenDigitExt) {
-          $scope.sparkCallTenDigitExtEnabled = sparkCallTenDigitExt;
-        });
 
       var meetingSettingsTabPromise = SetupWizardService.getPendingLicenses()
         .then(function (response) {
@@ -54,7 +50,6 @@ require('./_setup-wizard.scss');
       return $q.all([
         adminOrgUsagePromise,
         atlasPMRonM2Promise,
-        tenDigitExtPromise,
         meetingSettingsTabPromise,
         hI1484Promise,
       ]);
@@ -187,44 +182,23 @@ require('./_setup-wizard.scss');
         template: 'modules/core/setupWizard/callSettings/serviceSetupInit.html',
       };
       if (showCallSettings()) {
-        if ($scope.sparkCallTenDigitExtEnabled) {
-          var steps = [{
-            name: 'init',
-            template: 'modules/core/setupWizard/callSettings/serviceSetup.html',
-          }];
-          if ($scope.ishI1484) {
-            steps.splice(0, 0, initialStep);
-          }
-          tabs.splice(1, 0, {
-            name: 'serviceSetup',
-            required: true,
-            label: 'firstTimeWizard.callSettings',
-            description: 'firstTimeWizard.serviceSetupSub',
-            icon: 'icon-calls',
-            title: 'firstTimeWizard.unifiedCommunication',
-            controllerAs: '$ctrl',
-            steps: steps,
-          });
-        } else {
-          steps = [{
-            name: 'init',
-            template: 'modules/core/setupWizard/callSettings/serviceSetup.tpl.html',
-          }];
-          if ($scope.ishI1484) {
-            steps.splice(0, 0, initialStep);
-          }
-          tabs.splice(1, 0, {
-            name: 'serviceSetup',
-            required: true,
-            label: 'firstTimeWizard.callSettings',
-            description: 'firstTimeWizard.serviceSetupSub',
-            icon: 'icon-calls',
-            title: 'firstTimeWizard.unifiedCommunication',
-            controller: 'ServiceSetupCtrl as squaredUcSetup',
-            controllerAs: 'squaredUcSetup',
-            steps: steps,
-          });
+        var steps = [{
+          name: 'init',
+          template: 'modules/core/setupWizard/callSettings/serviceSetup.html',
+        }];
+        if ($scope.ishI1484) {
+          steps.splice(0, 0, initialStep);
         }
+        tabs.splice(1, 0, {
+          name: 'serviceSetup',
+          required: true,
+          label: 'firstTimeWizard.callSettings',
+          description: 'firstTimeWizard.serviceSetupSub',
+          icon: 'icon-calls',
+          title: 'firstTimeWizard.unifiedCommunication',
+          controllerAs: '$ctrl',
+          steps: steps,
+        });
       }
     }
 

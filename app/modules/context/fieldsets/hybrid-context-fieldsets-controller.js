@@ -91,7 +91,9 @@ require('../fields/_fields-list.scss');
         fieldset.lastUpdatedUI = moment(fieldset.lastUpdated).format('LL');
       }
 
-      fieldset.numOfFields = (fieldset.fields) ? fieldset.fields.length : 0;
+      // Find total number of fields and then subtract the inactive fields, to get the number of active fields.
+      var totalNumberOfFields = (fieldset.fields) ? fieldset.fields.length : 0;
+      fieldset.numOfFields = totalNumberOfFields - ((fieldset.inactiveFields) ? fieldset.inactiveFields.length : 0);
 
       var accessibleMap = {
         true: $translate.instant('context.dictionary.base'),

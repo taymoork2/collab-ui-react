@@ -75,10 +75,10 @@
       getSparkReportData(vm.reportType, viewType, userInfo).then(function (data) {
         vm.sparkMetrics.appData = {
           ticket: data.ticket,
-          appId: vm.reportView.appName,
+          appId: data.appName,
           node: data.host,
           qrp: data.qlik_reverse_proxy,
-          persistent: false,
+          persistent: data.isPersistent,
           vID: Authinfo.getOrgId(),
         };
         var QlikMashupChartsUrl = _.get(QlikService, 'getSparkReportAppfor' + viewType + 'Url')(vm.sparkMetrics.appData.qrp);

@@ -28,7 +28,7 @@ export class PagingGroupService {
     return this.pgRes.get({
       customerId: this.Authinfo.getOrgId(),
     }).$promise.then((response) => {
-      const pgs = _.map(_.get(response, 'pagingGroups', []));
+      const pgs = _.get<IPagingGroup[]>(response, 'pagingGroups', []);
       const promises: ng.IPromise<any>[] = [];
       _.forEach(pgs, (pg: any): void => {
         promises.push(this.PagingNumberService.getNumberExtension(pg.groupId).then(

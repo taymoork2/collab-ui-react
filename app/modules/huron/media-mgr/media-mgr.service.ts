@@ -22,12 +22,10 @@ export class MediaMgrService {
   ) {}
 
   public getMedia(): ng.IPromise<IMedia[]> {
-    return this.$http({
+    return this.$http<IMedia[]>({
       method: 'GET',
       url: `${this.HuronConfig.getMmsUrl()}/organizations/${this.Authinfo.getOrgId()}/media`,
-    }).then((response) => {
-      return response.data;
-    });
+    }).then(response => response.data as IMedia[]);
   }
 
   public uploadMedia(media: IMediaUpload): ng.IPromise<any> {

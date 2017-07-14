@@ -17,7 +17,7 @@
           <div class="typeahead-large typeahead-large__no-icon" ng-class="{error: $ctrl.form.locationName.$invalid && $ctrl.form.locationName.$touched}">
             <input class="form-control"
               name="locationName"
-              placeholder="Name the Location"
+              placeholder="{{$ctrl.namePlaceholder}}"
               required
               unique-location
               messages="$ctrl.validationMessages"
@@ -35,13 +35,13 @@
         <!-- Caller ID -->
         <div class="section" ng-class="$ctrl.animation" ng-if="$ctrl.getPageIndex() === 1">
           <div class="section__content" ng-class="$ctrl.animation" ng-if="$ctrl.getPageIndex() === 1">
-            <p translate="callerIdPanel.title"></p>
+            <h4 translate="callerIdPanel.title"></h4>
             <uc-company-caller-id
               is-location="true"
               site="$ctrl.locationDetail.site"
-              company-caller-id="$ctrl.locationDetail.companyCallerId"
+              company-caller-id="$ctrl.huronSettingsData.companyCallerId"
               external-number-options="$ctrl.settingsOptions.companyCallerIdOptions"
-              customer-name="$ctrl.locationDetail.customer.name"
+              customer-name="$ctrl.huronSettingsData.customer.name"
               on-number-filter="$ctrl.onCompanyCallerIdFilter(filter)"
               on-change-fn="$ctrl.onCompanyCallerIdChanged(companyCallerId)">
             </uc-company-caller-id>
@@ -151,7 +151,7 @@
               site="$ctrl.locationDetail.site"
               dial-plan-country-code="$ctrl.settingsOptions.dialPlan.countryCode"
               external-number-options="$ctrl.settingsOptions.companyVoicemailOptions"
-              company-voicemail-enabled="$ctrl.locationDetail.customer.hasVoicemailService"
+              company-voicemail-enabled="$ctrl.huronSettingsData.customer.hasVoicemailService"
               voicemail-to-email="$ctrl.locationDetail.voicemailToEmailSettings.voicemailToEmail"
               on-change-fn="$ctrl.onCompanyVoicemailChanged(voicemailPilotNumber, voicemailPilotNumberGenerated, companyVoicemailEnabled)"
               on-number-filter="$ctrl.onCompanyVoicemailFilter(filter)"

@@ -3056,14 +3056,6 @@
           .state('huronsettings', {
             url: '/services/call-settings',
             parent: 'hurondetails',
-            templateUrl: 'modules/huron/settings/settings.tpl.html',
-            controller: 'HuronSettingsCtrl',
-            controllerAs: 'settings',
-          })
-          // TODO (jlowery): rename the huronsettingsnew to huronsettings state when sparkCallTenDigitExt is removed.
-          .state('huronsettingsnew', {
-            url: '/services/call-settingsnew',
-            parent: 'hurondetails',
             template: '<uc-settings ftsw="false"></uc-settings>',
             resolve: {
               lazy: resolveLazyLoad(function (done) {
@@ -3425,11 +3417,12 @@
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<context-fieldset-modal existing-fieldset-ids="$resolve.existingFieldsetIds" existing-fieldset-data="$resolve.existingFieldsetData" callback="$resolve.callback" dismiss="$dismiss()" class="context-modal"></context-fieldset-modal>',
+                template: '<context-fieldset-modal existing-fieldset-ids="$resolve.existingFieldsetIds" existing-fieldset-data="$resolve.existingFieldsetData" in-use="$resolve.inUse" callback="$resolve.callback" dismiss="$dismiss()" class="context-modal"></context-fieldset-modal>',
               },
             },
             params: {
               existingFieldsetIds: [],
+              inUse: false,
               existingFieldsetData: {},
               callback: function () {},
             },
@@ -3439,6 +3432,9 @@
               },
               existingFieldsetData: /* @ngIngect */function ($stateParams) {
                 return $stateParams.existingFieldsetData;
+              },
+              inUse: /* @ngIngect */function ($stateParams) {
+                return $stateParams.inUse;
               },
               callback: /* @ngInject */ function ($stateParams) {
                 return $stateParams.callback;

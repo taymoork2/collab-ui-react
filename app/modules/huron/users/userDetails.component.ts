@@ -34,7 +34,7 @@ class UserDetails implements ng.IComponentController {
   }
 
   public getUserLocation(): void {
-    this.LocationsService.getLocationDetails('123').then(result => {
+    this.LocationsService.getLocation('123').then(result => {
       this.userLocation = result.name;
     });
   }
