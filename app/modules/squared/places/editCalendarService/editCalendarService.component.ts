@@ -159,6 +159,16 @@ class EditCalendarService implements ng.IComponentController {
     );
   }
 
+  public submitForm() {
+    if (this.hasNextStep()) {
+      if (!this.isNextDisabled()) {
+        this.next();
+      }
+    } else if (!this.isSaveDisabled()) {
+      this.save();
+    }
+  }
+
   public isSaveDisabled() {
     return this.isNextDisabled();
   }
