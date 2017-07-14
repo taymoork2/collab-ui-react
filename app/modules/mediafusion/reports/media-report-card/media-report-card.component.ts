@@ -10,6 +10,7 @@ export class MediaReportCard implements ng.IComponentOptions {
     chartOptions: '<',
     cardClass: '=',
     tooltipValue: '=',
+    dropdownPresent: '=',
   };
 }
 angular.module('Mediafusion').component('ucMediaReportCard', new MediaReportCard());

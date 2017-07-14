@@ -3,15 +3,16 @@
 }
 
 .flip .card {
-  position: relative;
-  z-index: 1;
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
   transition: 0.5s;
   outline: none;
 }
-
+.card-on-top {
+  position: relative;
+  z-index: 1;
+}
 .flip .card .face {
   width: 100%;
   height: 100%;
