@@ -26,11 +26,6 @@ require('./_setup-wizard.scss');
         shouldRemoveSSOSteps = true;
       }
 
-      var tabsBasedOnPendingLicensesPromise = SetupWizardService.getPendingLicenses().then(function () {
-        shouldShowMeetingsTab = SetupWizardService.hasPendingMeetingLicenses();
-        hasPendingCallLicenses = SetupWizardService.hasPendingCallLicenses();
-      });
-
       var hI1484Promise = FeatureToggleService.supports(FeatureToggleService.features.hI1484)
         .then(function (ishI1484) {
           $scope.ishI1484 = ishI1484;
@@ -55,6 +50,10 @@ require('./_setup-wizard.scss');
       ];
 
       if (SetupWizardService.hasPendingServiceOrder()) {
+        var tabsBasedOnPendingLicensesPromise = SetupWizardService.getPendingLicenses().then(function () {
+          shouldShowMeetingsTab = SetupWizardService.hasPendingMeetingLicenses();
+          hasPendingCallLicenses = SetupWizardService.hasPendingCallLicenses();
+        });
         promises.push(tabsBasedOnPendingLicensesPromise);
       }
 
