@@ -26,6 +26,7 @@ module.exports = {
   atlasMediaServiceMetricsMilestoneTwo: 'atlas-media-service-metrics-milestone-two',
   atlasMediaServiceVideo: 'atlas-media-service-video',
   atlasMediaServicePhaseTwo: 'atlas-media-service-phase-two',
+  atlasMediaServicePhaseTwoDotFive: 'atlas-media-service-phase-two-dot-five',
   atlasNewCiDataModel: 'atlas-new-ci-data-model',
   atlasNewRoomSystems: 'atlas-new-roomSystems',
   atlasNewUserExport: 'atlas-new-user-export',
