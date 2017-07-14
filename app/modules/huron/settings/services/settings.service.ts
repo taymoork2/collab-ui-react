@@ -491,6 +491,7 @@ export class HuronSettingsService {
       } else if (this.supportsAvrilVoicemailMailbox) { // only update Avril if needed
         if (!_.isEqual(this.huronSettingsDataCopy.site.routingPrefix, siteData.routingPrefix)
           || !_.isEqual(this.huronSettingsDataCopy.site.timeZone, siteData.timeZone)
+          || !_.isEqual(this.huronSettingsDataCopy.site.preferredLanguage, siteData.preferredLanguage)
           || !_.isEqual(this.huronSettingsDataCopy.site.extensionLength, siteData.extensionLength)
           || !_.isEqual(this.huronSettingsDataCopy.customer.hasVoicemailService, customerData.hasVoicemailService)
           || !_.isEqual(this.huronSettingsDataCopy.avrilFeatures, avrilFeatures)) {
