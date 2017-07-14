@@ -2296,7 +2296,8 @@
       "errorMessage": "Could not read cluster history. Error message: {{errorMessage}}",
       "windowTitle": "Cluster History for {{clusterName}}",
       "showHistory": "Show History",
-      "opensNewWindow": "Opens a new window where you can view the cluster history during the last 60 days."
+      "opensNewWindow": "Opens a new window where you can view the cluster history during the last 60 days.",
+      "urgentUpgrades": "Urgent upgrades"
     },
     "clusterListComponent": {
       "clusters-title-squared-fusion-cal": "Expressway Clusters",
