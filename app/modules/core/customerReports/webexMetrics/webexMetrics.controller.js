@@ -205,6 +205,10 @@
             persistent: data.isPersistent,
             vID: data.siteId,
           };
+          //TODO remove this 'if' segment, if QBS can handle this parameter
+          if (vm.webexMetrics.appData.persistent === 'false') {
+            vm.webexMetrics.appData.appId = vm.reportView.appName;
+          }
           var QlikMashupChartsUrl = _.get(QlikService, 'getWebExReportAppfor' + viewType + 'Url')(vm.webexMetrics.appData.qrp);
           vm.webexMetrics.appData.url = QlikMashupChartsUrl;
 

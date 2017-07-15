@@ -35,7 +35,7 @@
       if (Config.getEnv() === 'prod') {
         if (!isError) {
           var resultData = _.get(result, 'data');
-          var siteId = _.get(result, 'siteId');
+          var siteId = _.get(resultData, 'siteId');
           if (!siteId) {
             return callReportQBSBTS(reportType, viewType, data);
           } else {
