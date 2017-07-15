@@ -28,6 +28,7 @@
     'core.proPack',
     'core.trial',
     'core.utils',
+    'core.cache',
     'csDonut',
     'ct.ui.router.extras.previous',
     'ngAnimate',
