@@ -11,6 +11,7 @@ require('./_setup-wizard.scss');
     var shouldRemoveSSOSteps = false;
     var isSharedDevicesOnlyLicense = false;
     var shouldShowMeetingsTab = false;
+    var hasPendingCallLicenses = false;
     var supportsAtlasPMRonM2 = false;
     $scope.tabs = [];
     $scope.isTelstraCsbEnabled = false;
@@ -24,11 +25,6 @@ require('./_setup-wizard.scss');
       if (isFirstTimeSetup) {
         shouldRemoveSSOSteps = true;
       }
-
-      var meetingSettingsTabPromise = SetupWizardService.getPendingLicenses()
-        .then(function (response) {
-          shouldShowMeetingsTab = !_.isEmpty(response);
-        });
 
       var hI1484Promise = FeatureToggleService.supports(FeatureToggleService.features.hI1484)
         .then(function (ishI1484) {
@@ -47,12 +43,21 @@ require('./_setup-wizard.scss');
           supportsAtlasPMRonM2 = _supportsAtlasPMRonM2;
         });
 
-      return $q.all([
+      var promises = [
         adminOrgUsagePromise,
         atlasPMRonM2Promise,
-        meetingSettingsTabPromise,
         hI1484Promise,
-      ]);
+      ];
+
+      if (SetupWizardService.hasPendingServiceOrder()) {
+        var tabsBasedOnPendingLicensesPromise = SetupWizardService.getPendingLicenses().then(function () {
+          shouldShowMeetingsTab = SetupWizardService.hasPendingMeetingLicenses();
+          hasPendingCallLicenses = SetupWizardService.hasPendingCallLicenses();
+        });
+        promises.push(tabsBasedOnPendingLicensesPromise);
+      }
+
+      return $q.all(promises);
     }
 
     function init() {
@@ -213,7 +218,7 @@ require('./_setup-wizard.scss');
     function showCallSettings() {
       return _.some(Authinfo.getLicenses(), function (license) {
         return license.licenseType === Config.licenseTypes.COMMUNICATION || license.licenseType === Config.licenseTypes.SHARED_DEVICES;
-      });
+      }) || hasPendingCallLicenses;
     }
 
     function initCareTab(tabs) {

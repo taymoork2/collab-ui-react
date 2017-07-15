@@ -21,7 +21,7 @@ describe('Huron Functional: external-dial-with-pstn', () => {
   });
   it('should navigate to call settings page', () => {
     utils.click(navigation.callSettings);
-    navigation.expectDriverCurrentUrl('call-settingsnew');
+    navigation.expectDriverCurrentUrl('call-settings');
   });
 
   describe('External Dialing', () => {

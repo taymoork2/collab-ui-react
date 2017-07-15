@@ -126,7 +126,7 @@ describe('Huron Functional: e2e-customer-setup', () => {
     });
     it('should navigate to customer call settings page', () => {
       utils.click(customerSetup.services.call.callSettingsLink);
-      navigation.expectDriverCurrentUrl('services/call-settingsnew');
+      navigation.expectDriverCurrentUrl('services/call-settings');
       utils.waitForText(customerSetup.services.title, 'Call');
       utils.expectIsDisplayed(callSettings.regionalSettingsTitle);
       utils.expectIsDisplayed(callSettings.internalDialingTitle);

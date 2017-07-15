@@ -21,6 +21,7 @@ export class NumberModel {
   public block: boolean = false;
   public quantity: number = MIN_BLOCK_QUANTITY;
   public consecutive: boolean = false;
+  public stateAbbreviation: string;
   public isSingleResult: boolean = false;
   public paginateOptions: PaginateOptions = new PaginateOptions();
   public searchEnable: boolean = false;

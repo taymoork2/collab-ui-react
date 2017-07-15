@@ -12,7 +12,11 @@ require('./_show-read-only.scss');
         element.prepend('<div class="read-only-banner">' + $translate.instant('readOnlyModal.banner') + '</div>');
         var observer = new $window.MutationObserver(function () {
           var sidePanel = angular.element('div.side-panel');
-          sidePanel.addClass('side-panel-correction');
+          if (sidePanel.hasClass('side-panel-full-height')) {
+            sidePanel.addClass('side-panel-correction-full-height');
+          } else {
+            sidePanel.addClass('side-panel-correction');
+          }
         });
 
         observer.observe($window.document.body, {

@@ -47,7 +47,7 @@ class PstnNumberSearchCtrl implements ng.IComponentController {
   }
 
   //Bypass method to parent binding
-  public searchFn(value_: string, block_: boolean, quantity_: number, consecutive_: boolean): void {
+  public searchFn(value_: string, block_: boolean, quantity_: number, consecutive_: boolean, stateAbbreviation_: string): void {
     this.model.searchResultsModel = [];
     this.searchResultChange();
     this.search({
@@ -55,6 +55,7 @@ class PstnNumberSearchCtrl implements ng.IComponentController {
       block: block_,
       quantity: quantity_,
       consecutive: consecutive_,
+      stateAbbreviation: stateAbbreviation_,
     });
   }
 
