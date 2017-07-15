@@ -255,7 +255,7 @@
       prod: 'https://qlick.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_spark_v1',
     },
     SparkReportQBSforPartnerUrl: {
-      dev: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/partner_spark_v1',
+      dev: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/partner_spark_v1', //dfw-qlickbts
       cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/partner_spark_v1',
       integration: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/partner_spark_v1',
       prod: 'https://qlick.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/partner_spark_v1',

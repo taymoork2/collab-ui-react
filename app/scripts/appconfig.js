@@ -2317,9 +2317,22 @@
           .state('partnerreports', {
             parent: 'partner',
             url: '/reports',
+            template: '<div ui-view></div>',
+            controller: 'PartnerReportsSwitchCtrl',
+          })
+          .state('partnerreports.base', {
+            parent: 'partner',
+            url: '/base',
             templateUrl: 'modules/core/partnerReports/partnerReports.tpl.html',
             controller: 'PartnerReportCtrl',
             controllerAs: 'nav',
+          })
+          .state('partnerreports.spark', {
+            parent: 'partner',
+            url: '/spark',
+            templateUrl: 'modules/core/partnerReports/sparkReports/sparkReports.tpl.html',
+            controller: 'SparkReportsCtrl',
+            controllerAs: '$ctrl',
           })
           .state('partnercustomers', {
             parent: 'partner',
