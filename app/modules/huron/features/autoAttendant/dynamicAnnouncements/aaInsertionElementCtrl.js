@@ -6,7 +6,7 @@
     .controller('AAInsertionElementCtrl', AAInsertionElementCtrl);
 
   /* @ngInject */
-  function AAInsertionElementCtrl($scope, $modal, $translate, AAUiModelService, AACommonService, AADynaAnnounceService) {
+  function AAInsertionElementCtrl($rootScope, $scope, $modal, $translate, AAUiModelService, AACommonService, AADynaAnnounceService) {
     var vm = this;
 
     var ui;
@@ -94,6 +94,7 @@
           node.isDynamic = false;
           node.htmlModel = '';
           AACommonService.setSayMessageStatus(true);
+          $rootScope.$broadcast('CE Updated');
         }
       });
     }

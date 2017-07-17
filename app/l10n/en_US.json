@@ -3704,6 +3704,8 @@
     "decisionCallerAreaCode": "The Caller's Area Code",
     "decisionSessionVariable": "The Session Variable",
     "decisionMissingCustomVariable": "The selected variable is undefined in this call tree. Null values will result in negative results.",
+    "dynamicMissingCustomVariable": "The {{deletedSessionVariablesList}} is no longer available. As a result, this variable won't be used for Say Message.",
+    "dynamicMissingCustomVariables": "The {{deletedSessionVariablesList}} are no longer available. As a result, this variable won't be used for Say Message.",
     "callerReturned1Min": "1 Minute",
     "callerReturned5Mins": "5 Minutes",
     "callerReturned30Mins": "30 Minutes",
