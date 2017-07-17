@@ -24,6 +24,7 @@ class LineOverview implements ng.IComponentController {
   public deleteConfirmation: string;
   public deleteSharedLineMessage: string;
   public wide: boolean = true;
+  public isUserMohEnabled: boolean = false;
 
   // Directory Number properties
   public esnPrefix: string;
@@ -110,11 +111,13 @@ class LineOverview implements ng.IComponentController {
   }
 
   public initLineOptions(): void {
-    this.MediaOnHoldService.getCompanyMohOptions()
-    .then(mediaList => {
-      this.lineMediaOptions = mediaList;
-    })
-    .catch(error => this.Notification.errorResponse(error, 'serviceSetupModal.mohGetError'));
+    if (_.isEqual(this.consumerType, LineConsumerType.USERS)) {
+      this.MediaOnHoldService.getLineMohOptions()
+      .then(mediaList => {
+        this.lineMediaOptions = mediaList;
+      })
+      .catch(error => this.Notification.errorResponse(error, 'serviceSetupModal.mohGetOptionsError'));
+    }
   }
 
   public setDirectoryNumbers(internalNumber: string, externalNumber: string): void {
@@ -309,6 +312,7 @@ class LineOverview implements ng.IComponentController {
       }
       default: {
         this.consumerType = LineConsumerType.USERS;
+        this.isUserMohEnabled = true;
       }
     }
   }

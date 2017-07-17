@@ -5,24 +5,20 @@
     </div>
     <div class="section__content">
       <div class="sub-section">
-        <table>
-        <tr>
-          <td class="medium-6 warning-padding">
-            <cs-select
-              name="lineMohSelect"
-              ng-model="$ctrl.selected"
-              options="$ctrl.lineMohOptions"
-              on-change-fn="$ctrl.onLineMohChanged()"
-              filter="false"
-            ></cs-select>
-          </td>
-          <td>
+        <div class="medium-6 display-flex">
+          <cs-select
+            name="lineMohSelect"
+            ng-model="$ctrl.selected"
+            options="$ctrl.lineMohOptions"
+            on-change-fn="$ctrl.onLineMohChanged()"
+            filter="false"
+          ></cs-select>
+          </div>
+          <div class="display-flex">
           <span>
-            <a class="link-color" translate="mediaOnHoldPanel.mediaManager" ng-click="$ctrl.openMediaMgrModal()"></a>
+              <a class="warning-padding link-color" translate="mediaOnHoldPanel.mediaManager" ng-click="$ctrl.openMediaMgrModal()"></a>
           </span>
-          </td>
-        </tr>
-        </table>
+        </div>
       </div>
     </div>
   </div>
