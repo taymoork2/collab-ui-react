@@ -1,7 +1,8 @@
 <div ng-if="!nav.isIframeLoaded"
      id="webexMetricsIframeLoading"
      name="webexMetricsIframeLoading"
-     align="center">
+     align="center"
+     class="fullSize">
     <br/>
     <i ng-hide="nav.isNoData" class="icon icon-spinner icon-2x"></i>
     <div ng-show="nav.isNoData" translate="reportsPage.noData"></div>
@@ -9,12 +10,13 @@
 
 <div ng-show="nav.isIframeLoaded"
      id="iframeContainer"
-     name="iframeContainer">
+     name="iframeContainer"
+     class="fullSize">
     <iframe id="webexMetricsIframeContainer"
             name="webexMetricsIframeContainer"
             onLoad="iframeLoaded('#webexMetricsIframeContainer')"
             i-frame-resizable="iframeContainer"
-            ng-style="{'width': '100%', 'height': iframeHeight }"
+            class="fullSize"
             frameborder="0">
     </iframe>
 </div>
@@ -22,6 +24,7 @@
       name="iframeForm"
       action={{trustIframeUrl}}
       method="get"
+      hidden
       target="webexMetricsIframeContainer">
 
     <input id="appid"
