@@ -186,6 +186,7 @@ require('./_setup-wizard.scss');
         name: 'setup',
         template: 'modules/core/setupWizard/callSettings/serviceSetupInit.html',
       };
+
       if (showCallSettings()) {
         var steps = [{
           name: 'init',
@@ -216,9 +217,13 @@ require('./_setup-wizard.scss');
     }
 
     function showCallSettings() {
+      if (hasPendingCallLicenses) {
+        return true;
+      }
+
       return _.some(Authinfo.getLicenses(), function (license) {
         return license.licenseType === Config.licenseTypes.COMMUNICATION || license.licenseType === Config.licenseTypes.SHARED_DEVICES;
-      }) || hasPendingCallLicenses;
+      });
     }
 
     function initCareTab(tabs) {
