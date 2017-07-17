@@ -1163,9 +1163,10 @@
             },
           })
           .state('user-overview.userLocationDetails', {
-            template: '<user-location-details></user-location-details>',
+            template: '<user-location-details user-id="$resolve.userId"></user-location-details>',
             params: {
               reloadToggle: false,
+              userDetails: {},
             },
             data: {},
             resolve: {
@@ -1177,6 +1178,9 @@
                   done(require('modules/call/locations/user-location-details'));
                 }, 'user-location-details');
               }),
+              userId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentUser, 'id');
+              },
             },
           })
           .state('user-overview.csdmDevice', {
