@@ -1168,7 +1168,7 @@
             },
           })
           .state('user-overview.userLocationDetails', {
-            template: '<user-location-details user-id="$resolve.userId"></user-location-details>',
+            template: '<uc-user-location-details user-id="$resolve.userId"></uc-user-location-details>',
             params: {
               reloadToggle: false,
               userDetails: {},
@@ -1180,8 +1180,8 @@
               },
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/call/locations/user-location-details'));
-                }, 'user-location-details');
+                  done(require('modules/call/locations/locations-user-details'));
+                }, 'locations-user-details');
               }),
               userId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams.currentUser, 'id');
@@ -1973,7 +1973,7 @@
             },
           })
           .state('place-overview.placeLocationDetails', {
-            template: '<user-location-details></user-location-details>',
+            template: '<uc-user-location-details></uc-user-location-details>',
             params: {
               reloadToggle: false,
             },
@@ -1984,8 +1984,8 @@
               },
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/call/locations/user-location-details'));
-                }, 'user-location-details');
+                  done(require('modules/call/locations/locations-user-details'));
+                }, 'locations-user-details');
               }),
             },
           })
@@ -3130,10 +3130,10 @@
               }),
             },
           })
-          .state('calllocations', {
+          .state('call-locations', {
             url: '/services/call-locations',
             parent: 'hurondetails',
-            template: '<call-locations></call-locations>',
+            template: '<uc-call-locations></uc-call-locations>',
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
@@ -3142,16 +3142,38 @@
               }),
             },
           })
-          .state('callLocation', {
+          .state('call-locations-add', {
             url: '/services/call-locations/add',
             parent: 'hurondetails',
             template: '<uc-call-locations-wizard></uc-call-locations-wizard>',
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/call/locations/wizard/index'));
+                  done(require('modules/call/locations/locations-wizard/index'));
                 }, 'add-call-location');
               }),
+            },
+          })
+          .state('call-locations-edit', {
+            url: '/services/call-locations/edit',
+            parent: 'main',
+            template: '<uc-call-location uuid="$resolve.locationId" name="$resolve.name"></uc-call-location>',
+            params: {
+              currentLocation: {},
+              feature: null,
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/call/locations'));
+                }, 'edit-call-location');
+              }),
+              locationId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentLocation, 'uuid');
+              },
+              name: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentLocation, 'name');
+              },
             },
           })
           .state('huronrecords', {

@@ -1,4 +1,4 @@
-import { LocationsService } from 'modules/call/locations/locations.service';
+import { LocationsService } from 'modules/call/locations/shared';
 
 export class UniqueLocationDirective implements ng.IDirective {
   constructor(private $q: ng.IQService,
@@ -11,9 +11,19 @@ export class UniqueLocationDirective implements ng.IDirective {
   public require: string = 'ngModel';
   public link: ng.IDirectiveLinkFn = (scope, _elm, attrs, ngModelCtrl: ng.INgModelController) => {
     const messages = scope.$eval(attrs.messages);
-    ngModelCtrl.$asyncValidators.uniqueAsyncValidator = (_modelValue, viewValue) => {
+    ngModelCtrl.$asyncValidators.uniqueAsyncValidator = (modelValue) => {
+      // consider empty model valid
+      if (ngModelCtrl.$isEmpty(modelValue)) {
+        return this.$q.resolve();
+      }
+
+      // non-dirty element is valid
+      if (!ngModelCtrl.$dirty) {
+        return this.$q.resolve();
+      }
+
       return this.$q((resolve, reject) => {
-        this.validateField(viewValue).then((result) => {
+        this.validateField(modelValue).then((result) => {
           if (result.valid) {
             resolve();
           } else {
@@ -25,12 +35,12 @@ export class UniqueLocationDirective implements ng.IDirective {
     };
   }
 
-  public  validateField(viewValue: string): ng.IPromise<{valid, error?}> {
-    return this.LocationsService.hasLocation(viewValue).then((response) => {
+  public  validateField(modelValue: string): ng.IPromise<{valid, error?}> {
+    return this.LocationsService.hasLocation(modelValue).then((response) => {
       if (!response) {
         return { valid: true };
       }
-      return { valid: false, error: this.$translate.instant('locations.usedLocation') };
+      return { valid: false, error: 'locations.usedLocation' };
     });
   }
 

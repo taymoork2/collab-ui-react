@@ -1,0 +1,104 @@
+<cs-page-header
+  title-name="{{$ctrl.name}}"
+  back="true"
+  back-url="$ctrl.huronFeaturesUrl">
+</cs-page-header>
+<div class="location-content">
+  <div class="loading-container" ng-if="$ctrl.processing">
+    <i class="icon icon-spinner"></i>
+  </div>
+  <form novalidate class="cs-form content-container" name="$ctrl.form" role="form" ng-if="!$ctrl.processing">
+    <!--Location Details -->
+    <div class="cs-form__section">
+      <div class="section__info">
+        <div cs-sticky>
+          <h4 class="section__title" translate="locations.locationDetailTitle"></h4>
+          <h6 class="section__description" translate="locations.locationDetailDesc"></h6>
+        </div>
+      </div>
+      <div class="section__content">
+        <div class="sub-section">
+          <uc-call-location-name
+            name="$ctrl.callLocationSettingsData.location.name"
+            on-change-fn="$ctrl.onNameChanged(name)">
+          </uc-call-location-name>
+        </div>
+      </div>
+    </div>
+
+    <!--Regional Settings -->
+    <div class="cs-form__section">
+      <div class="section__info">
+        <div cs-sticky>
+          <h4 class="section__title" translate="locations.regionalSettingsTitle"></h4>
+          <h6 class="section__description" translate="locations.regionalSettingsDesc"></h6>
+        </div>
+      </div>
+      <div class="section__content">
+        <div class="sub-section">
+          <!--Regional Settings go here -->
+        </div>
+      </div>
+    </div>
+
+    <!--Internal Dialing -->
+    <div class="cs-form__section">
+      <div class="section__info">
+        <div cs-sticky>
+          <h4 class="section__title" translate="locations.internalDialingTitle"></h4>
+          <h6 class="section__description" translate="locations.internalDialingDesc"></h6>
+        </div>
+      </div>
+      <div class="section__content">
+        <div class="sub-section">
+          <!--Internal Dialing go here -->
+        </div>
+      </div>
+    </div>
+
+    <!--External Dialing -->
+    <div class="cs-form__section">
+      <div class="section__info">
+        <div cs-sticky>
+          <h4 class="section__title" translate="locations.externalDialingTitle"></h4>
+          <h6 class="section__description" translate="locations.externalDialingDesc"></h6>
+        </div>
+      </div>
+      <div class="section__content">
+        <div class="sub-section">
+          <!--External Dialing go here -->
+        </div>
+      </div>
+    </div>
+
+    <!--Dialing Resrictions -->
+    <div class="cs-form__section">
+      <div class="section__info">
+        <div cs-sticky>
+          <h4 class="section__title" translate="locations.dialingRestrictionsTitle"></h4>
+          <h6 class="section__description" translate="locations.dialingRestrictionsTitle"></h6>
+        </div>
+      </div>
+      <div class="section__content">
+        <div class="sub-section">
+          <!--Dialing Resrictions go here -->
+        </div>
+      </div>
+    </div>
+
+    <!--Emergency Services -->
+    <div class="cs-form__section">
+      <div class="section__info">
+        <div cs-sticky>
+          <h4 class="section__title" translate="locations.emergencyServicesTitle"></h4>
+          <h6 class="section__description" translate="locations.emergencyServicesDesc"></h6>
+        </div>
+      </div>
+      <div class="section__content">
+        <div class="sub-section">
+          <!--Emergency Services go here -->
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

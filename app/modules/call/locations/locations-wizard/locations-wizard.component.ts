@@ -1,5 +1,4 @@
-import { Location } from 'modules/call/locations/location';
-import { LocationsService } from 'modules/call/locations/locations.service';
+import { Location, LocationsService } from 'modules/call/locations/shared';
 
 import {
   PstnModel, PstnService, PstnCarrier,
@@ -16,7 +15,7 @@ import { Notification } from 'modules/core/notifications';
 
 export class LocationsWizardComponent {
   public controller = LocationsWizardController;
-  public templateUrl = 'modules/call/locations/wizard/locations-wizard.html';
+  public templateUrl = 'modules/call/locations/locations-wizard/locations-wizard.component.html';
   public bindings = {};
 }
 
@@ -276,14 +275,14 @@ class LocationsWizardController implements ng.IComponentController {
 
   private saveLocation() {
     this.LocationsService.createLocation(this.locationDetail)
-    .then(() => this.$state.go('calllocations'))
+    .then(() => this.$state.go('call-locations'))
     .catch((error) => this.Notification.errorResponse(error, 'locations.createFailed'));
     //TODO if ESA is valid, set the ESA
   }
 
   public cancelModal(): void {
     this.$modal.open({
-      templateUrl: 'modules/call/locations/wizard/locations-wizard-cancel-modal.html',
+      templateUrl: 'modules/call/locations/locations-wizard/locations-wizard-cancel-modal.html',
       type: 'dialog',
     });
   }

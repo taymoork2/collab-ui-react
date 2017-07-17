@@ -1,8 +1,12 @@
-import { LocationsWizardComponent } from './locations-wizard.component';
+import './locations-wizard.component.scss';
 
-const callLocations = 'call.locations';
+import { LocationsWizardComponent } from './locations-wizard.component';
+import callLocationsModule from 'modules/call/locations';
+
 export default angular.module('call.locations.wizard', [
-  callLocations,
+  require('scripts/app.templates'),
+  require('collab-ui-ng').default,
+  callLocationsModule,
 ])
 .component('ucCallLocationsWizard', new LocationsWizardComponent())
 .name;

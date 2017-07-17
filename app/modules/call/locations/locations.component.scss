@@ -3,8 +3,17 @@
 @import '~collab-ui/scss/tools/mixins/spacing-responsive';
 @import '~collab-ui/scss/tools/mixins/vendor-prefixes';
 @import '~collab-ui/scss/tools/placeholders/page-layout';
-@import './modals/copy/copy-location';
-@import './wizard/locations-wizard';
+
+.call-locations-edit-state {
+  @extend %page-background-white;
+}
+
+.location-content {
+  .loading-container {
+    font-size: 3rem;
+    text-align: center;
+  }
+}
 
 .locations-content {
   padding-bottom: rem-calc(16);
