@@ -1,5 +1,6 @@
 import './_timeline.scss';
 import * as d3 from 'd3';
+import * as moment from 'moment';
 
 class TimeLine implements ng.IComponentController {
 
@@ -19,6 +20,8 @@ class TimeLine implements ng.IComponentController {
       width: 960,
       height: 340,
       paddingRight: 25,
+      paddingLeft: 92.5,
+      paddingButtom: 40.5,
     };
     this.data = {
       xStep: 0,
@@ -54,9 +57,15 @@ class TimeLine implements ng.IComponentController {
 
     this.data.gridHorizontalLineNum = this.sourceData.lines.length + 2 > 12 ? this.sourceData.lines.length + 2 : 12;
     if (this.data.gridHorizontalLineNum > 12) {
-      this.option.height = (this.data.gridHorizontalLineNum * 21) + 40.5;
+      this.option.height = (this.data.gridHorizontalLineNum * 21) + this.option.paddingButtom;
     }
-    this.coordinate = { x: 202.5, y: this.option.height - 40.5, endX: this.option.width - this.option.paddingRight };
+
+    this.coordinate = {
+      x: this.option.paddingLeft,
+      y: this.option.height - this.option.paddingButtom,
+      endX: this.option.width - this.option.paddingRight,
+    };
+
     this.data.yStep = this.coordinate.y / this.data.gridHorizontalLineNum;
     this.data.xStep = (this.coordinate.endX - this.coordinate.x) / this.data.gridVerticalLineNum;
 
@@ -69,11 +78,12 @@ class TimeLine implements ng.IComponentController {
 
   private setDomain() {
     const duration = this.data.endTime - this.data.startTime;
-    const ruler: number = this.setRuler(duration) * 1000;
+    const ruler: number = this.setRuler(duration / 1000) * 1000;
     const tickNum = _.ceil(duration / ruler);
 
     this.data.ruler = ruler;
     this.data.ticks = this.setTicks(tickNum);
+
     const startTime = _.floor(this.data.startTime / ruler) * ruler;
     const endTime = startTime + (ruler * this.data.ticks);
     this.data.domain = [this.timestampToDate(startTime), this.timestampToDate(endTime)];
@@ -133,12 +143,13 @@ class TimeLine implements ng.IComponentController {
     const data = _.map(this.sourceData.lines, (item: any) => {
       const leaveTime = item.leaveTime || this.sourceData.overview.endTime;
       const joinTime = item.joinTime;
-      const end = this.time2line(this.timestampToDate(leaveTime)) - this.data.gridVerticalLineNum * 0.5;
+      const end = this.time2line(this.timestampToDate(leaveTime));
       const end_ = this.coordinate.endX - this.coordinate.x;
 
       return {
         text: item.jmtQuality,
-        userName: item.userName,
+        userName_ : item.userName,
+        userName: _.truncate(item.userName, { length: 15 }),
         end: end > end_ ? end_ : end,
         start: this.time2line(this.timestampToDate(joinTime)),
         lineColor: item.dataQuality ? this.colorArr[item.dataQuality - 1] : this.colorArr[3],
@@ -187,7 +198,7 @@ class TimeLine implements ng.IComponentController {
         .attr('x', x)
         .attr('y', y)
         .attr('class', 'showUser')
-        .attr('transform', `translate(${this.coordinate.x - 5} , 0)`)
+        .attr('transform', `translate(${this.coordinate.x - 10} , 0)`)
         .text(item.userName);
     });
   }

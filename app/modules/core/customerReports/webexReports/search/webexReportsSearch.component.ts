@@ -1,4 +1,5 @@
 import './_search.scss';
+import * as moment from 'moment';
 import { SearchService } from './searchService';
 import { Notification } from 'modules/core/notifications';
 
@@ -162,7 +163,7 @@ class WebexReportsSearch implements ng.IComponentController {
 
   private setGridOptions(): void {
     const columnDefs = [{
-      width: '25%',
+      width: '20%',
       sortable: true,
       cellTooltip: true,
       field: 'startTime',
@@ -174,16 +175,16 @@ class WebexReportsSearch implements ng.IComponentController {
       displayName: this.$translate.instant('webexReports.searchGridHeader.status'),
       cellTemplate: this.$templateCache.get('modules/core/customerReports/webexReports/search/webexMeetingStatus.html'),
     }, {
-      width: '28%',
       cellTooltip: true,
       field: 'meetingName',
       displayName: this.$translate.instant('webexReports.searchGridHeader.meetingName'),
     }, {
-      width: '20%',
+      width: '16%',
       cellTooltip: true,
       field: 'conferenceID',
       displayName: this.$translate.instant('webexReports.searchGridHeader.conferenceID'),
     }, {
+      width: '20%',
       field: 'endTime',
       cellTooltip: true,
       displayName: this.$translate.instant('webexReports.searchGridHeader.endTime'),

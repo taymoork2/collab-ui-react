@@ -653,7 +653,7 @@
     "webexMetrics": {
       "title": "WebEx",
       "metrics": "Metrics",
-      "search": "Search",
+      "diagnostics": "Diagnostics",
       "meetingUsage": "Meeting Usage",
       "joinMeetingTime": "Join Meeting Time",
       "webexReportInMashup": "CHP Reports",
@@ -693,8 +693,8 @@
     "meetingNumber": "Meeting Number",
     "scheduledFrom": "Scheduled From",
     "placeholder-date": "Choose a day",
-    "hostNameAndId":"Host Name / Host ID",
-    "siteIdAndName": "Site ID / Site Name",
+    "hostNameAndId":"Host Name/Host ID",
+    "siteIdAndName": "Site ID/Site Name",
     "search-info-title": "Search for a meeting",
     "placeholder-text": "Search email or meeting number",
     "searchError": "Enter the correct email or meeting number",
@@ -711,7 +711,7 @@
     "meetingFeatures": {
       "chat": "Chat",
       "poll": "Poll",
-      "flash": "FLASH",
+      "flash": "Flash",
       "appShare": "App Share",
       "docShare": "Doc Share",
       "fileShare": "File Share"

@@ -1,4 +1,5 @@
 import './_search.scss';
+import * as moment from 'moment';
 import { SearchService } from './searchService';
 import { Notification } from 'modules/core/notifications';
 
@@ -40,8 +41,8 @@ class WebexReportsMore implements ng.IComponentController {
         _.forEach(data.sessions, (item) => {
           item.duration = this.getDuration(item.duration);
           item.sessionType = this.sessionType(item.sessionType);
-          item.startTime = moment(item.startTime).format('h:mm:ss A');
-          item.endTime = item.endTime ? moment(item.endTime).format('h:mm:ss A') : '';
+          item.startTime = moment(item.startTime).utc().format('h:mm:ss A');
+          item.endTime = item.endTime ? moment(item.endTime).utc().format('h:mm:ss A') : '';
         });
         this.data = data;
         this.getParticipants();
