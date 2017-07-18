@@ -1553,8 +1553,6 @@ require('./_user-add.scss');
       var successCallback = function (response) {
         Log.info('User onboard request returned:', response.data);
         $rootScope.$broadcast('USER_LIST_UPDATED');
-        $scope.numAddedUsers = 0;
-        $scope.numUpdatedUsers = 0;
         _.forEach(response.data.userResponse, function (user) {
           var userResult = {
             email: user.email,
@@ -1756,6 +1754,8 @@ require('./_user-add.scss');
 
         entitleList = entitleList.concat(getExtensionEntitlements('add'));
 
+        $scope.numAddedUsers = 0;
+        $scope.numUpdatedUsers = 0;
         for (var i = 0; i < usersList.length; i += chunk) {
           tempUserArray = usersList.slice(i, i + chunk);
           Userservice.onboardUsers(tempUserArray, entitleList, licenseList)
