@@ -25,12 +25,18 @@ class LineOverview implements ng.IComponentController {
   public deleteSharedLineMessage: string;
   public wide: boolean = true;
   public isUserMohEnabled: boolean = false;
+  public showLineLabel: boolean = true;
 
   // Directory Number properties
   public esnPrefix: string;
   public internalNumbers: string[];
   public externalNumbers: string[];
   public showExtensions: boolean;
+
+  // Line label properties
+  public showApplyToAllSharedLines: boolean = false;
+  public applyToAllSharedLines: boolean = false;
+  public disableCheckBox: boolean;
 
   //SharedLine Properties
   public newSharedLineMembers: Member[] = [];
@@ -103,6 +109,10 @@ class LineOverview implements ng.IComponentController {
     .then(lineOverviewData => {
       this.lineOverviewData = lineOverviewData;
       this.userVoicemailEnabled = lineOverviewData.voicemailEnabled;
+      if (lineOverviewData.line.label != null) {
+        this.applyToAllSharedLines = lineOverviewData.line.label.appliesToAllSharedLines;
+        this.showApplyToAllSharedLines = this.setShowApplyToAllSharedLines();
+      }
       this.showActions = this.setShowActionsFlag(this.lineOverviewData.line);
       if (!this.lineOverviewData.line.uuid) { // new line, grab first available internal number
         this.lineOverviewData.line.internal = this.internalNumbers[0];
@@ -128,6 +138,7 @@ class LineOverview implements ng.IComponentController {
     this.lineOverviewData.line.internal = internalNumber;
     this.lineOverviewData.line.external = externalNumber;
     this.checkForChanges();
+    this.showLineLabel = false;
   }
 
   public refreshInternalNumbers(filter: string): void {
@@ -187,6 +198,13 @@ class LineOverview implements ng.IComponentController {
     }
   }
 
+  public setLineLabel(lineLabel: string, applyToAllSharedLines: boolean): void {
+    if (this.lineOverviewData.line.label != null) {
+      this.lineOverviewData.line.label.value = lineLabel;
+      this.lineOverviewData.line.label.appliesToAllSharedLines = applyToAllSharedLines;
+    }
+  }
+
   public deleteSharedLineMember(sharedLine: SharedLine): void {
     this.deleteSharedLineMessage = this.$translate.instant('sharedLinePanel.disassociateUser');
     this.$modal.open({
@@ -216,6 +234,11 @@ class LineOverview implements ng.IComponentController {
     } else {
       this.lineOverviewData = this.LineOverviewService.getOriginalConfig();
       this.newSharedLineMembers = [];
+      this.showLineLabel = true;
+      if (this.lineOverviewData.line.label != null) {
+        this.applyToAllSharedLines = this.lineOverviewData.line.label.appliesToAllSharedLines;
+      }
+      this.disableCheckBox = true;
       this.resetForm();
     }
   }
@@ -239,6 +262,7 @@ class LineOverview implements ng.IComponentController {
         this.lineOverviewData = lineOverviewData;
         this.newSharedLineMembers = [];
         this.showActions = this.setShowActionsFlag(lineOverviewData.line);
+        this.showApplyToAllSharedLines = this.setShowApplyToAllSharedLines();
         if (this.isCloudberryPlace()) {
           this.CsdmDataModelService.notifyDevicesInPlace(this.ownerId, {
             command: 'pstnChanged',
@@ -249,6 +273,7 @@ class LineOverview implements ng.IComponentController {
       })
       .finally( () => {
         this.saveInProcess = false;
+        this.showLineLabel = true;
         this.resetForm();
       });
   }
@@ -306,6 +331,10 @@ class LineOverview implements ng.IComponentController {
 
   private setShowActionsFlag(line: Line): boolean {
     return (!!line.uuid && !line.primary);
+  }
+
+  public setShowApplyToAllSharedLines(): boolean {
+    return this.lineOverviewData.sharedLines.length >= 1 || this.newSharedLineMembers.length >= 1;
   }
 
   private initConsumerType(): void {

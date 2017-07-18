@@ -4347,7 +4347,8 @@
   },
   "lineLabel": {
     "title": "Line Label",
-    "description": "This label will appear next to this line on devices."
+    "description": "This label will appear next to this line on devices.",
+    "applyToAllSharedDescription": "Apply this label to all shared line members."
   },
   "internationalDialingPanel": {
     "success": "International Dialing configuration saved successfully",

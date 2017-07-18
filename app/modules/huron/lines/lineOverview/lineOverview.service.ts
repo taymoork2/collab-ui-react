@@ -117,6 +117,17 @@ export class LineOverviewService {
       const promises: ng.IPromise<any>[] = [];
       let isLineUpdated: boolean = false;
       if (!_.isEqual(data.line, _.get(this, 'lineOverviewDataCopy.line'))) {
+        this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1485)
+          .then ((result) => {
+            if (result) {
+              // for line label, if unchanged not push anything
+              if (_.isEqual(data.line.label, _.get(this, 'lineOverviewDataCopy.line.label'))) {
+                data.line.label = null;
+              }
+            } else {
+              data.line.label = undefined;
+            }
+          });
         promises.push(this.updateLine(consumerType, ownerId, numberId, data.line));
         isLineUpdated = true;
       }

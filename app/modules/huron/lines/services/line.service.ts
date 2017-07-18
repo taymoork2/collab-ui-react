@@ -87,6 +87,7 @@ export class LineService {
       internal: data.internal,
       external: _.isUndefined(data.external) ? null : data.external,
       incomingCallMaximum: data.incomingCallMaximum,
+      label: _.isUndefined(data.label) ? undefined : undefined,
     }).$promise;
   }
 
