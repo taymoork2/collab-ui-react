@@ -1,10 +1,10 @@
 import { CallerIdComponent, CallerIdConfig, CallerIdOption } from './callerId.component';
 import { CallerIDService } from './callerId.service';
-import { ICallerID } from './callerId';
+import { CallerID, ICallerID } from './callerId';
 import lineService from 'modules/huron/lines/services';
 
 export { CallerIdConfig, CallerIdOption };
-export { ICallerID };
+export { CallerID, ICallerID };
 export * from './callerId.service';
 
 export default angular

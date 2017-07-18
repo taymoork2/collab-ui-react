@@ -9,20 +9,63 @@ describe('Component: custTimeLine', () => {
         endTime: 1497829527000,
         duration: '344',
       },
-      participants: [
+      lines: [
         {
           joinTime: 1497829303000,
           leaveTime: 1497829467000,
           userName: 'fn ln',
           platform: '0',
-        },
-        {
+        }, {
           joinTime: 1497829243000,
           leaveTime: 1497829407000,
           userName: 'fn ln',
           platform: '0',
-        },
-        {
+        }, {
+          joinTime: 1497829363000,
+          leaveTime: 1497829527000,
+          userName: 'fn ln',
+          platform: '0',
+        }, {
+          joinTime: 1497829303000,
+          leaveTime: 1497829467000,
+          userName: 'fn ln',
+          platform: '0',
+        }, {
+          joinTime: 1497829243000,
+          leaveTime: 1497829407000,
+          userName: 'fn ln',
+          platform: '0',
+        }, {
+          joinTime: 1497829363000,
+          leaveTime: 1497829527000,
+          userName: 'fn ln',
+          platform: '0',
+        }, {
+          joinTime: 1497829303000,
+          leaveTime: 1497829467000,
+          userName: 'fn ln',
+          platform: '0',
+        }, {
+          joinTime: 1497829243000,
+          leaveTime: 1497829407000,
+          userName: 'fn ln',
+          platform: '0',
+        }, {
+          joinTime: 1497829363000,
+          leaveTime: 1497829527000,
+          userName: 'fn ln',
+          platform: '0',
+        }, {
+          joinTime: 1497829303000,
+          leaveTime: 1497829467000,
+          userName: 'fn ln',
+          platform: '0',
+        }, {
+          joinTime: 1497829243000,
+          leaveTime: 1497829407000,
+          userName: 'fn ln',
+          platform: '0',
+        }, {
           joinTime: 1497829363000,
           leaveTime: 1497829527000,
           userName: 'fn ln',

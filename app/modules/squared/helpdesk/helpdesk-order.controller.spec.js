@@ -14,11 +14,11 @@ describe('Controller: HelpdeskOrderController', function () {
     $q = _$q_;
     Notification = _Notification_;
 
-    spyOn(HelpdeskService, 'getAccount').and.returnValue($.when(getJSONFixture('core/json/orders/accountResponse.json')));
-    spyOn(HelpdeskService, 'getEmailStatus').and.returnValue($.when(getJSONFixture('core/json/orders/emailStatus.json').items));
-    spyOn(HelpdeskService, 'getOrg').and.returnValue($.when(getJSONFixture('core/json/orders/orgResponse.json')));
-    spyOn(HelpdeskService, 'editAdminEmail').and.returnValue($.when({}));
-    spyOn(HelpdeskService, 'resendAdminEmail').and.returnValue($.when({}));
+    spyOn(HelpdeskService, 'getAccount').and.returnValue($q.resolve(getJSONFixture('core/json/orders/accountResponse.json')));
+    spyOn(HelpdeskService, 'getEmailStatus').and.returnValue($q.resolve(getJSONFixture('core/json/orders/emailStatus.json').items));
+    spyOn(HelpdeskService, 'getOrg').and.returnValue($q.resolve(getJSONFixture('core/json/orders/orgResponse.json')));
+    spyOn(HelpdeskService, 'editAdminEmail').and.returnValue($q.resolve({}));
+    spyOn(HelpdeskService, 'resendAdminEmail').and.returnValue($q.resolve({}));
     spyOn(Notification, 'errorResponse');
   }));
 
@@ -85,10 +85,10 @@ describe('Controller: HelpdeskOrderController', function () {
         HelpdeskService: HelpdeskService,
         $stateParams: $stateParams,
       });
+      $scope.$apply();
     });
 
     it('verify order info is correct for 2-tier order', function () {
-      $scope.$apply();
       expect(orderController.orderId).toBe('67892345');
       expect(orderController.account).toBeDefined();
       expect(orderController.orderUuid).toBe('9feb25f4-d581-42f9-a732-ccccbe3e2e92');
@@ -101,10 +101,11 @@ describe('Controller: HelpdeskOrderController', function () {
   describe('admin email update', function () {
     beforeEach(function () {
       $stateParams.id = '67891234';
-      spyOn(HelpdeskService, 'searchOrders').and.returnValue($.when(order1TierJson));
+      spyOn(HelpdeskService, 'searchOrders').and.returnValue($q.resolve(order1TierJson));
       orderController = $controller('HelpdeskOrderController', {
         $stateParams: $stateParams,
       });
+      $scope.$apply();
     });
 
     it('update customer admin email will update flag', function () {

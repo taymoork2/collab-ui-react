@@ -173,8 +173,8 @@
     GeminiUrl: {
       dev: 'https://hfccap2.qa.webex.com/pcs/api/v2/',
       cfe: 'https://hfccap2.qa.webex.com/pcs/api/v2/',
-      integration: 'https://hfccap2.qa.webex.com/pcs/api/v2/',
-      prod: 'https://ccaportal.webex.com/ccaportal/api/v2/',
+      integration: 'https://ccaportalbts.webex.com/pcs/api/v2/',
+      prod: 'https://ccaportal.webex.com/pcs/api/v2/',
     },
     GssUrl: {
       dev: 'https://statusbts.webex.com/status',

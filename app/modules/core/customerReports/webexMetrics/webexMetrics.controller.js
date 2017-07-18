@@ -7,6 +7,7 @@
 
   /* @ngInject */
   function WebExMetricsCtrl(
+    $log,
     $sce,
     $scope,
     $stateParams,
@@ -29,6 +30,11 @@
     vm.isNoData = false;
     vm.selectEnable = true;
     vm.reportType = 'WebEx';
+    vm.testSiteUrl = 'go.webex.com';
+    vm.env = {
+      int: 'integration',
+      prod: 'prod',
+    };
 
     vm.webexMetrics.views = [
       {
@@ -53,7 +59,7 @@
       },
       {
         id: '1',
-        label: 'reportsPage.webexMetrics.search',
+        label: 'reportsPage.webexMetrics.diagnostics',
         selected: false,
         filterType: vm.search,
         toggle: function () {
@@ -195,16 +201,23 @@
       if (!_.isFunction(getWebExReportData)) {
         return;
       }
-      getWebExReportData(vm.reportType, viewType, userInfo).then(function (data) {
+      $log.log('SiteUrl: ' + vm.webexSelected);
+      var QBSEnv = (vm.webexSelected === vm.testSiteUrl) ? vm.env.int : vm.env.prod;
+      $log.log('Call QBS env: ' + QBSEnv);
+      getWebExReportData(vm.reportType, viewType, userInfo, QBSEnv).then(function (data) {
         if (!_.isUndefined(data)) {
           vm.webexMetrics.appData = {
             ticket: data.ticket,
-            appId: vm.reportView.appName,
+            appId: data.appName,
             node: data.host,
             qrp: data.qlik_reverse_proxy,
             persistent: data.isPersistent,
             vID: data.siteId,
           };
+          //TODO remove this 'if' segment, if QBS can handle this parameter
+          if (vm.webexMetrics.appData.persistent === 'false') {
+            vm.webexMetrics.appData.appId = vm.reportView.appName;
+          }
           var QlikMashupChartsUrl = _.get(QlikService, 'getWebExReportAppfor' + viewType + 'Url')(vm.webexMetrics.appData.qrp);
           vm.webexMetrics.appData.url = QlikMashupChartsUrl;
 

@@ -1,19 +1,19 @@
-import { IPreferredLanugageOption } from './preferredLanugage.interfaces';
+import { IPreferredLanugageOption } from './preferredLanguage.interfaces';
 
 class PreferredLanguage implements ng.IComponentController {
   public hasSparkCall: boolean;
   public plIsLoaded: boolean = false;
   public prefLanguageSaveInProcess: boolean = false;
-  public preferredLanguage: any;
+  public preferredLanguage: IPreferredLanugageOption[];
   public preferredLanguageOptions: any[];
   public onPrefLanguageChange: boolean = false;
   public onChangeFn: Function;
   public nonePlaceholder: string;
   public description: string;
 
-  private options: IPreferredLanugageOption[] = [];
-  private optionSelected: IPreferredLanugageOption;
-  private noneOption: IPreferredLanugageOption;
+  public options: IPreferredLanugageOption[] = [];
+  public optionSelected: IPreferredLanugageOption;
+  public noneOption: IPreferredLanugageOption;
 
   /* @ngInject */
   constructor(

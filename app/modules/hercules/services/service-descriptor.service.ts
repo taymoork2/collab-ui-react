@@ -27,10 +27,8 @@ export class ServiceDescriptorService {
   }
 
   public getServiceStatus(serviceId: HybridServiceId, orgId?: string): ng.IPromise<IServiceStatus> {
-    return this.$http.get(`${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId || this.Authinfo.getOrgId()}/services/${serviceId}/status`)
-      .then(response => {
-        return response.data;
-      });
+    return this.$http.get<IServiceStatus>(`${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId || this.Authinfo.getOrgId()}/services/${serviceId}/status`)
+      .then(response => response.data as IServiceStatus);
   }
 
   public getServices(orgId?: string): ng.IPromise<IService[]> {

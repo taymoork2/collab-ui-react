@@ -1,8 +1,9 @@
 import './_search.scss';
+import * as moment from 'moment';
 import { SearchService } from './searchService';
 import { Notification } from 'modules/core/notifications';
 
-const DATERANGE = 7;
+const DATERANGE = 6;
 export interface IGridApiScope extends ng.IScope {
   gridApi?: uiGrid.IGridApi;
 }
@@ -20,6 +21,7 @@ class WebexReportsSearch implements ng.IComponentController {
   public isLoadingShow = false;
   public isDatePickerShow: boolean = false;
 
+  private flag: boolean = true;
   private today: string;
   private email: string;
   private meetingNumber: string;
@@ -70,7 +72,10 @@ class WebexReportsSearch implements ng.IComponentController {
     }
     if (moment(this.startDate).unix() > moment(this.endDate).unix()) {
       this.errMsg.datePicker = this.$translate.instant('webexReports.end-date-tooltip');
+      this.storeData.endDate = this.endDate;
+      this.storeData.startDate = this.startDate;
       this.gridData = [];
+      this.flag = false;
       return ;
     }
     this.errMsg.datePicker = '';
@@ -84,6 +89,8 @@ class WebexReportsSearch implements ng.IComponentController {
     this.startDate = moment().subtract('days', DATERANGE).format('YYYY-MM-DD');
 
     this.endDate = this.today;
+    this.storeData.endDate = this.endDate;
+    this.storeData.startDate = this.startDate;
     this.dateRange.start = {
       lastEnableDate: this.endDate,
       firstEnableDate: this.startDate,
@@ -92,9 +99,12 @@ class WebexReportsSearch implements ng.IComponentController {
   }
 
   private startSearch(): void {
-    const digitaReg = /^([\d]{8,10}|[\d\s]{10,12})$/;
-    const emailReg = /^([\w\d.-])+@([\w\d-])+\.([\w\d-]){2,}/;
+    const digitaReg = /^([\d]{8,10}|([\d]{1,4}[\s]?){3})$/;
+    const emailReg = /^[\w\d]([\w\d.-])+@([\w\d-])+\.([\w\d-]){2,}/;
+
+    this.flag = false;
     this.errMsg.search = '';
+    this.storeData.searchStr = this.searchStr;
     if (this.searchStr === '') {
       this.gridData = [];
       return ;
@@ -103,9 +113,14 @@ class WebexReportsSearch implements ng.IComponentController {
     if (!emailReg.test(this.searchStr) && !digitaReg.test(this.searchStr)) {
       this.errMsg.search = this.$translate.instant('webexReports.searchError');
       this.gridData = [];
-      return;
+      return ;
     }
 
+    if (moment(this.startDate).unix() > moment(this.endDate).unix()) {
+      return ;
+    }
+
+    this.flag = true;
     if (emailReg.test(this.searchStr)) {
       this.email = this.searchStr;
       this.meetingNumber = '';
@@ -115,14 +130,12 @@ class WebexReportsSearch implements ng.IComponentController {
       this.email = '';
       this.meetingNumber = this.searchStr;
     }
-    this.storeData.searchStr = this.searchStr;
     this.setGridData();
   }
 
   private setGridData(): void {
-    const endDate = this.isDatePickerShow ? this.endDate : '';
-    const startDate = this.isDatePickerShow ? this.startDate : '';
-
+    const endDate = this.isDatePickerShow ? moment(this.endDate + ' ' + moment().format('HH:mm:ss')).utc().format('YYYY-MM-DD') : '';
+    const startDate = this.isDatePickerShow ? moment(this.startDate + ' ' + moment().format('HH:mm:ss')).utc().format('YYYY-MM-DD') : '';
     const data = {
       endDate : endDate,
       email: this.email,
@@ -140,7 +153,7 @@ class WebexReportsSearch implements ng.IComponentController {
           item.endTime = item.endTime ?  moment(item.endTime).format('MMMM Do, YYYY h:mm:ss A') : '';
         });
         this.isLoadingShow = false;
-        this.gridData = res;
+        this.gridData = this.flag ? res : [];
       })
       .catch((err) => {
         this.Notification.errorResponse(err, 'errors.statusError', { status: err.status });
@@ -150,7 +163,7 @@ class WebexReportsSearch implements ng.IComponentController {
 
   private setGridOptions(): void {
     const columnDefs = [{
-      width: '25%',
+      width: '20%',
       sortable: true,
       cellTooltip: true,
       field: 'startTime',
@@ -162,16 +175,16 @@ class WebexReportsSearch implements ng.IComponentController {
       displayName: this.$translate.instant('webexReports.searchGridHeader.status'),
       cellTemplate: this.$templateCache.get('modules/core/customerReports/webexReports/search/webexMeetingStatus.html'),
     }, {
-      width: '28%',
       cellTooltip: true,
       field: 'meetingName',
       displayName: this.$translate.instant('webexReports.searchGridHeader.meetingName'),
     }, {
-      width: '20%',
+      width: '16%',
       cellTooltip: true,
       field: 'conferenceID',
       displayName: this.$translate.instant('webexReports.searchGridHeader.conferenceID'),
     }, {
+      width: '20%',
       field: 'endTime',
       cellTooltip: true,
       displayName: this.$translate.instant('webexReports.searchGridHeader.endTime'),

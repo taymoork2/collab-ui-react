@@ -10,6 +10,8 @@ require('./_setup-wizard.scss');
     var isFirstTimeSetup = _.get($state, 'current.data.firstTimeSetup', false);
     var shouldRemoveSSOSteps = false;
     var isSharedDevicesOnlyLicense = false;
+    var shouldShowMeetingsTab = false;
+    var hasPendingCallLicenses = false;
     var supportsAtlasPMRonM2 = false;
     $scope.tabs = [];
     $scope.isTelstraCsbEnabled = false;
@@ -23,10 +25,6 @@ require('./_setup-wizard.scss');
       if (isFirstTimeSetup) {
         shouldRemoveSSOSteps = true;
       }
-      var tenDigitExtPromise = FeatureToggleService.supports(FeatureToggleService.features.sparkCallTenDigitExt)
-        .then(function (sparkCallTenDigitExt) {
-          $scope.sparkCallTenDigitExtEnabled = sparkCallTenDigitExt;
-        });
 
       var hI1484Promise = FeatureToggleService.supports(FeatureToggleService.features.hI1484)
         .then(function (ishI1484) {
@@ -45,12 +43,21 @@ require('./_setup-wizard.scss');
           supportsAtlasPMRonM2 = _supportsAtlasPMRonM2;
         });
 
-      return $q.all([
+      var promises = [
         adminOrgUsagePromise,
         atlasPMRonM2Promise,
-        tenDigitExtPromise,
         hI1484Promise,
-      ]);
+      ];
+
+      if (SetupWizardService.hasPendingServiceOrder()) {
+        var tabsBasedOnPendingLicensesPromise = SetupWizardService.getPendingLicenses().then(function () {
+          shouldShowMeetingsTab = SetupWizardService.hasPendingMeetingLicenses();
+          hasPendingCallLicenses = SetupWizardService.hasPendingCallLicenses();
+        });
+        promises.push(tabsBasedOnPendingLicensesPromise);
+      }
+
+      return $q.all(promises);
     }
 
     function init() {
@@ -119,7 +126,6 @@ require('./_setup-wizard.scss');
     }
 
     function initMeetingSettingsTab(tabs) {
-      var userEmail = Authinfo.getUserName();
       var meetingTab = {
         name: 'meetingSettings',
         required: true,
@@ -147,7 +153,7 @@ require('./_setup-wizard.scss');
         }],
       };
 
-      if (showMeetingSettingsTab(userEmail)) {
+      if (shouldShowMeetingsTab) {
         if (!hasWebexMeetingTrial()) {
           _.remove(meetingTab.steps, { name: 'migrateTrial' });
         }
@@ -180,50 +186,26 @@ require('./_setup-wizard.scss');
         name: 'setup',
         template: 'modules/core/setupWizard/callSettings/serviceSetupInit.html',
       };
-      if (showCallSettings()) {
-        if ($scope.sparkCallTenDigitExtEnabled) {
-          var steps = [{
-            name: 'init',
-            template: 'modules/core/setupWizard/callSettings/serviceSetup.html',
-          }];
-          if ($scope.ishI1484) {
-            steps.splice(0, 0, initialStep);
-          }
-          tabs.splice(1, 0, {
-            name: 'serviceSetup',
-            required: true,
-            label: 'firstTimeWizard.callSettings',
-            description: 'firstTimeWizard.serviceSetupSub',
-            icon: 'icon-calls',
-            title: 'firstTimeWizard.unifiedCommunication',
-            controllerAs: '$ctrl',
-            steps: steps,
-          });
-        } else {
-          steps = [{
-            name: 'init',
-            template: 'modules/core/setupWizard/callSettings/serviceSetup.tpl.html',
-          }];
-          if ($scope.ishI1484) {
-            steps.splice(0, 0, initialStep);
-          }
-          tabs.splice(1, 0, {
-            name: 'serviceSetup',
-            required: true,
-            label: 'firstTimeWizard.callSettings',
-            description: 'firstTimeWizard.serviceSetupSub',
-            icon: 'icon-calls',
-            title: 'firstTimeWizard.unifiedCommunication',
-            controller: 'ServiceSetupCtrl as squaredUcSetup',
-            controllerAs: 'squaredUcSetup',
-            steps: steps,
-          });
-        }
-      }
-    }
 
-    function showMeetingSettingsTab(userEmail) {
-      return SetupWizardService.isOrderSimplificationToggled(userEmail);
+      if (showCallSettings()) {
+        var steps = [{
+          name: 'init',
+          template: 'modules/core/setupWizard/callSettings/serviceSetup.html',
+        }];
+        if ($scope.ishI1484) {
+          steps.splice(0, 0, initialStep);
+        }
+        tabs.splice(1, 0, {
+          name: 'serviceSetup',
+          required: true,
+          label: 'firstTimeWizard.callSettings',
+          description: 'firstTimeWizard.serviceSetupSub',
+          icon: 'icon-calls',
+          title: 'firstTimeWizard.unifiedCommunication',
+          controllerAs: '$ctrl',
+          steps: steps,
+        });
+      }
     }
 
     function hasWebexMeetingTrial() {
@@ -235,6 +217,10 @@ require('./_setup-wizard.scss');
     }
 
     function showCallSettings() {
+      if (hasPendingCallLicenses) {
+        return true;
+      }
+
       return _.some(Authinfo.getLicenses(), function (license) {
         return license.licenseType === Config.licenseTypes.COMMUNICATION || license.licenseType === Config.licenseTypes.SHARED_DEVICES;
       });
@@ -306,7 +292,7 @@ require('./_setup-wizard.scss');
           }],
         };
 
-        if (showMeetingSettingsTab(Authinfo.getUserName())) {
+        if (shouldShowMeetingsTab) {
           tab.title = 'firstTimeWizard.activateAndBeginBilling';
         }
         tabs.push(tab);

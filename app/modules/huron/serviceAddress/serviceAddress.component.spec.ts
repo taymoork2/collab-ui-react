@@ -68,7 +68,7 @@ describe('Directive: hrServiceAddress', function () {
     expect(element.text()).toContain('RICHARDSON, TX  75082');
   });
   it('should have search button hidden if hide-search is true', function () {
-    element = $compile('<hr-service-address address="myAddress" read-only="readOnly" ::hide-search="true"><hr-service-address/>')($scope);
+    element = $compile('<hr-service-address address="myAddress" read-only="readOnly" hide-search="true"><hr-service-address/>')($scope);
     $scope.$apply();
     expect(element.find(SEARCH_BUTTON).hasClass(HIDE)).toBe(true);
   });
@@ -80,7 +80,7 @@ describe('Directive: hrServiceAddress', function () {
   });
 
   it('should have search button enabled if hide-search is false', function () {
-    element = $compile('<hr-service-address address="myAddress" read-only="readOnly" ::hide-search="false"><hr-service-address/>')($scope);
+    element = $compile('<hr-service-address address="myAddress" read-only="readOnly" hide-search="false"><hr-service-address/>')($scope);
     $scope.$apply();
     expect(element.find(SEARCH_BUTTON).hasClass(HIDE)).toBe(false);
   });

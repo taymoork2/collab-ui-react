@@ -77,6 +77,7 @@ export class HybridServicesAuditLogService {
   constructor(
     private $http: ng.IHttpService,
     private $q: ng.IQService,
+    private $translate: ng.translate.ITranslateService,
     private Authinfo,
     private HybridServicesI18NService: HybridServicesI18NService,
     private HybridServicesUtilsService: HybridServicesUtilsService,
@@ -104,21 +105,16 @@ export class HybridServicesAuditLogService {
       .then((rawData: IRawHistory) => {
         const formattedData: IExpresswayClusterHistory = {
           earliestTimestampSearched: rawData.earliestTimestampSearched,
-          nextUrl: rawData.paging.next,
+          nextUrl: _.get(rawData, 'paging.next', ''),
           items: _.flatMap(rawData.items, (item: IClusterUpdatedItem) =>  this.buildFormattedExpresswayClusterItems(item)),
         };
         return formattedData;
       })
-      .then((formattedData) => {
-        return this.addUsernames(formattedData);
-      })
-      .then((formattedData) => {
-        return this.addResourceGroupNames(formattedData);
-      });
-
+      .then((formattedData) => this.addUsernames(formattedData))
+      .then((formattedData) => this.addResourceGroupNames(formattedData));
   }
 
-  public addResourceGroupNames(formattedData: IExpresswayClusterHistory): ng.IPromise<IExpresswayClusterHistory> {
+  private addResourceGroupNames(formattedData: IExpresswayClusterHistory): ng.IPromise<IExpresswayClusterHistory> {
     if (formattedData.items && _.find(formattedData.items, (item) => item.type === 'resourceGroup')) {
       return this.ResourceGroupService.getAll()
         .then((groups) => {
@@ -142,7 +138,7 @@ export class HybridServicesAuditLogService {
     }
   }
 
-  public addUsernames(formattedData: IExpresswayClusterHistory): ng.IPromise<IExpresswayClusterHistory> {
+  private addUsernames(formattedData: IExpresswayClusterHistory): ng.IPromise<IExpresswayClusterHistory> {
     const promises: ng.IPromise<any>[] = [];
     let allUserIds: string[] = [];
     if (formattedData.items) {
@@ -219,11 +215,13 @@ export class HybridServicesAuditLogService {
     if ((item.payload.upgradeSchedule || item.payload.oldUpgradeSchedule) && !_.isEqual(item.payload.upgradeSchedule, item.payload.oldUpgradeSchedule)) {
       let previousValue = '';
       let newValue = '';
+      const urgent = this.$translate.instant('hercules.clusterHistoryTable.urgentUpgrades');
+
       if (item.payload.oldUpgradeSchedule) {
-        previousValue = `${this.HybridServicesI18NService.formatTimeAndDate(item.payload.oldUpgradeSchedule)}, ${item.payload.oldUpgradeSchedule.scheduleTimeZone}`;
+        previousValue = `${this.HybridServicesI18NService.formatTimeAndDate(item.payload.oldUpgradeSchedule)}, ${item.payload.oldUpgradeSchedule.scheduleTimeZone}. ${urgent}: ${this.HybridServicesI18NService.labelForTime(item.payload.oldUpgradeSchedule.urgentScheduleTime)}`;
       }
       if (item.payload.upgradeSchedule) {
-        newValue = `${this.HybridServicesI18NService.formatTimeAndDate(item.payload.upgradeSchedule)}, ${item.payload.upgradeSchedule.scheduleTimeZone}`;
+        newValue = `${this.HybridServicesI18NService.formatTimeAndDate(item.payload.upgradeSchedule)}, ${item.payload.upgradeSchedule.scheduleTimeZone}. ${urgent}: ${this.HybridServicesI18NService.labelForTime(item.payload.upgradeSchedule.urgentScheduleTime)}`;
       }
       formattedItems.push(this.processClusterUpdateItem(item, 'upgradeSchedule', previousValue, newValue));
     }

@@ -33,7 +33,7 @@ interface ICanvas {
 interface IPDFMakeTable extends IPDFMakeBase {
   widths: (number | string)[];
   headerRows: number;
-  body: IPDFMakeContent[];
+  body: IPDFMakeContent[][];
 }
 
 interface IPDFMakeBase {

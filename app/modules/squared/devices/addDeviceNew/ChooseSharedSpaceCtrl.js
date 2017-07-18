@@ -8,13 +8,14 @@
     var vm = this;
     var wizardData = $stateParams.wizard.state().data;
     vm.title = wizardData.title;
-    vm.deviceType = wizardData.account.deviceType;
+    vm.initialDeviceType = vm.deviceType = wizardData.account.deviceType;
     vm.showPersonal = wizardData.showPersonal;
+    vm.multipleRoomDevices = wizardData.multipleRoomDevices;
     var minlength = 3;
     var maxlength = 64;
 
     vm.onlyNew = function () {
-      return wizardData.function == 'addPlace';
+      return wizardData.function === 'addPlace';
     };
 
     vm.isNewCollapsed = !vm.onlyNew();
@@ -29,19 +30,27 @@
 
     function loadList() {
       var filterFunction;
-      if (vm.showPersonal) {
+      if (vm.showPersonal && vm.multipleRoomDevices) {
+        filterFunction = function () {
+          return true;
+        };
+      } else if (vm.showPersonal && !vm.multipleRoomDevices) {
         filterFunction = function (place) {
-          return (_.isEmpty(place.devices) && place.type == 'cloudberry')
-            || place.type == 'huron';
+          return (_.isEmpty(place.devices) && place.type === 'cloudberry')
+            || place.type === 'huron';
         };
       } else {
-        if (vm.deviceType == 'cloudberry') {
+        if (vm.deviceType === 'cloudberry' && vm.multipleRoomDevices) {
           filterFunction = function (place) {
-            return _.isEmpty(place.devices) && place.type == 'cloudberry';
+            return place.type === 'cloudberry';
+          };
+        } else if (vm.deviceType === 'cloudberry' && !vm.multipleRoomDevices) {
+          filterFunction = function (place) {
+            return _.isEmpty(place.devices) && place.type === 'cloudberry';
           };
         } else {
           filterFunction = function (place) {
-            return place.type == 'huron';
+            return place.type === 'huron';
           };
         }
       }
@@ -92,8 +101,8 @@
     };
 
     vm.toggle = function () {
-      vm.isNewCollapsed = vm.radioSelect == 'existing';
-      vm.isExistingCollapsed = vm.radioSelect == 'create';
+      vm.isNewCollapsed = vm.radioSelect === 'existing';
+      vm.isExistingCollapsed = vm.radioSelect === 'create';
       vm.deviceName = undefined;
       vm.selected = undefined;
       vm.place = undefined;
@@ -121,7 +130,7 @@
         return;
       }
       var nextOption = vm.showPersonal ? '' : (vm.deviceType + '_');
-      if (wizardData.function == 'addPlace') {
+      if (wizardData.function === 'addPlace') {
         nextOption += 'create';
       } else {
         nextOption += (vm.radioSelect || 'existing');

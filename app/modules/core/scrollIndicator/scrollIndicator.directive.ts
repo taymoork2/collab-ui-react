@@ -48,7 +48,7 @@ export class ScrollIndicatorController {
     }, ScrollIndicatorController.MORE_CONTENT_CHECK_INTERVAL);
   }
 
-  public scrollToEnd(callback?: Function): void {
+  public scrollToEnd(callback?: () => void): void {
     this.$element.animate({
       scrollTop: this.$element[0].scrollHeight,
     }, { complete: callback });

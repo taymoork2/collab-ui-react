@@ -304,6 +304,7 @@ describe('UserListCtrl: Ctrl', function () {
       initController.apply(this);
       spyOn(this.$scope, 'getUserLicenses').and.returnValue(true);
       spyOn(this.$scope, 'isOnlyAdmin').and.returnValue(false);
+      spyOn(this.$scope, 'isOnlineBuyer').and.returnValue(false);
     });
 
     it('should return false if no user licenses', function () {
@@ -319,6 +320,11 @@ describe('UserListCtrl: Ctrl', function () {
     it('should return false if only admin is true', function () {
       this.$scope.isOnlyAdmin.and.returnValue(true);
       expect(this.$scope.isOnlyAdmin(this.user)).toBeTruthy();
+      expect(this.$scope.canShowUserDelete(this.user)).toBeFalsy();
+    });
+
+    it('should return false if online buyer is true', function () {
+      this.$scope.isOnlineBuyer.and.returnValue(true);
       expect(this.$scope.canShowUserDelete(this.user)).toBeFalsy();
     });
 

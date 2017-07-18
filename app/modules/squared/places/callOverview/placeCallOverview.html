@@ -13,8 +13,7 @@
     </section-title>
     <p>{{$ctrl.currentPlace.sipUrl}}</p>
   </cs-sp-section>
-  <uc-preferred-language
-    cr-feature-toggle feature-show="huron-l10n-user-locale-2"
+  <uc-preferred-language ng-if="!$ctrl.isprov3698"
     pl-is-loaded="$ctrl.plIsLoaded"
     has-spark-call="$ctrl.hasSparkCall"
     on-pref-language-change="$ctrl.onPrefLanguageChange"

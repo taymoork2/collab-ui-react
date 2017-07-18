@@ -387,6 +387,7 @@
     "generateActivationCodeText": "Generate an activation code to enable a new device for this user.",
     "generateActivationCodeTextPlace": "Generate an activation code to enable a new device for this place.",
     "generateActivationCodeDesc": "If you have lost your code, please generate a new activation code. ",
+    "multipleDevicesWarning": "The devices in this place are not designed to work together. Therefore, there may be interference issues.",
     "activationCodeTitle": "Activation Code",
     "expires": "Expires",
     "editServices": "Edit services",
@@ -457,7 +458,8 @@
     "gssTabDesc": "Global Service Status Management",
     "careTab": "Care",
     "careTabDesc": "Cloud Contact Center",
-    "editFeatureToggles": "Edit Feature Toggles"
+    "editFeatureToggles": "Edit Feature Toggles",
+    "managedByPartner": "Managed by {{partnerOrgName}}"
   },
   "index": {
     "welcome": "Welcome!",
@@ -557,6 +559,7 @@
     "all": "All",
     "engagement": "Engagement",
     "quality": "Quality",
+    "details": "Details",
     "noData": "No Data",
     "noCustomerData": "No Data Available",
     "timeSelected": "Selected Time Period: ",
@@ -601,6 +604,13 @@
     "customer": "Customer",
     "customers": "Customers",
     "customerSelect": "Select a customer",
+    "type": "Type",
+    "format": "Format",
+    "from": "From",
+    "to": "To",
+    "date": "Date",
+    "duration": "Duration",
+    "status": "Status", 
     "usageReports": {
       "usageReportTitle": "Room Devices",
       "pageTitle": "Reports",
@@ -651,7 +661,7 @@
     "webexMetrics": {
       "title": "WebEx",
       "metrics": "Metrics",
-      "search": "Search",
+      "diagnostics": "Diagnostics",
       "meetingUsage": "Meeting Usage",
       "joinMeetingTime": "Join Meeting Time",
       "webexReportInMashup": "CHP Reports",
@@ -662,16 +672,19 @@
     }
   },
   "webexReports": {
+    "to": "to",
     "end": "End",
     "audio": "Audio",
     "start": "Start",
+    "details": "Details",
     "created": "Created",
     "classic": "Classic",
     "quality": "Quality",
     "session": "Session",
+    "meeting": "Meeting",
     "session_": "SESSION",
     "endTime": "End Date",
-    "onGoing": "on going",
+    "onGoing": "On Going",
     "duration": "Duration",
     "features": "Features",
     "hostEmail": "Host Email",
@@ -679,7 +692,6 @@
     "startTime": "Start Date",
     "connection": "Connection",
     "engagement": "Engagement",
-    "createTime": "Create Time",
     "participant": "Participant",
     "sessionInfo": "Session Info",
     "meetingName": "Meeting Name",
@@ -688,15 +700,14 @@
     "participants_": "PARTICIPANTS",
     "meetingNumber": "Meeting Number",
     "scheduledFrom": "Scheduled From",
-    "placeholder-date": "Choose a Day",
-    "meetingDetails": "Meeting Details",
-    "hostNameAndId": "Host Name / Host ID",
-    "siteIdAndName": "Site ID / Site Name",
+    "placeholder-date": "Choose a day",
+    "hostNameAndId":"Host Name/Host ID",
+    "siteIdAndName": "Site ID/Site Name",
     "search-info-title": "Search for a meeting",
     "placeholder-text": "Search email or meeting number",
-    "searchError": "Please enter the correct email or meeting number",
+    "searchError": "Enter the correct email or meeting number",
     "search-info": "The meeting list will display when narrowed by search",
-    "end-date-tooltip": "The end date must not be greater than the start date",
+    "end-date-tooltip": "The start date must not be greater than the end date",
     "searchGridHeader": {
       "status": "Status",
       "endTime": "End Date",
@@ -708,8 +719,8 @@
     "meetingFeatures": {
       "chat": "Chat",
       "poll": "Poll",
-      "flash": "FLASH",
-      "appShare": "APP Share",
+      "flash": "Flash",
+      "appShare": "App Share",
       "docShare": "Doc Share",
       "fileShare": "File Share"
     },
@@ -743,13 +754,13 @@
       "sessionType_50": "NBR2",
       "sessionType_10": "Other",
       "sessionType_20": "MMP Audio",
-      "sessionType_21": "MMP Vudio",
+      "sessionType_21": "MMP Video",
       "sessionType_25": "Hybrid PSTN",
       "sessionType_12": "VOIP Session",
       "sessionType_0": "Agent Session",
       "sessionType_11": "Video Session",
       "sessionType_22": "Hybrid MMP VoIP",
-      "sessionType_4": "App share Session",
+      "sessionType_4": "App Share Session",
       "sessionType_5": "Teleagent Session",
       "sessionType_4005": "Other Teleconference AB",
       "sessionType_3005": "Other Teleconference NBR2"
@@ -1632,6 +1643,10 @@
     "externalNumberDescriptionText": "Select a number that users can call to check their voicemail from outside the company network.",
     "voicemailPrefixTitle": "Voicemail ID Prefix",
     "voicemailPrefixDesc": "Select a prefix to reserve for dialing mailboxes from a device. Extensions between {{number}}{{extensionLength0}} and {{number}}{{extensionLength9}} are not recommended for assignment.",
+    "vmUseTLS": "Use TLS",
+    "vmPinManagement": "Pin Management",
+    "vmPinHelp": "OTP will be shared over Spark in case of user voicemail toggle on/off and user account locked/expired.",
+    "vmEnableOTP": "Enable OTP (One-time Pin)",
     "dialing": "Dialing Preferences",
     "internalDialing": "Internal Dialing",
     "externalDialing": "External Dialing",
@@ -2294,7 +2309,8 @@
       "errorMessage": "Could not read cluster history. Error message: {{errorMessage}}",
       "windowTitle": "Cluster History for {{clusterName}}",
       "showHistory": "Show History",
-      "opensNewWindow": "Opens a new window where you can view the cluster history during the last 60 days."
+      "opensNewWindow": "Opens a new window where you can view the cluster history during the last 60 days.",
+      "urgentUpgrades": "Urgent upgrades"
     },
     "clusterListComponent": {
       "clusters-title-squared-fusion-cal": "Expressway Clusters",
@@ -3417,6 +3433,7 @@
     "needHelp": "Need help - ",
     "needHelpExplain": "Search the knowledge base.",
     "planReview": "Plan Review",
+    "pendingLicensesError": "There was an error in the call for pending licenses",
     "subscriptionId": "Subscription IDs",
     "subscriptionID": "Subscription ID: ",
     "spark": "Cisco Spark",
@@ -4187,6 +4204,7 @@
     "failedToFetchSiteLevelLanguage": "Failed to fetch site level language. Reason:",
     "userModule": "user",
     "placeModule": "place",
+    "placeDetails":"Place Details",
     "saveModal": {
       "title": "Save Settings",
       "message1": "Changing the language will cause all devices for this user to reboot and may take a few minutes.",
@@ -4602,7 +4620,7 @@
     "feature1": "Use existing PSTN provider",
     "feature2": "Import your phone numbers",
     "feature3": "Bridge the cloud & enterprise",
-    "feature4": "Self mananged E911"
+    "feature4": "Self managed E911"
   },
   "partnerHomePage": {
     "trialsHeading": "Trials",
@@ -5210,10 +5228,13 @@
       "existingOrNewPlace": "Assign to an existing place or a new place?",
       "existingOrNewPlaceDeskPhoneInstructions": "Select existing place if the previous code for this place has been lost or has expired. You can also add multiple desk phones to the same place - all phones in that place will then share the same calling configuration. For example, desk phones will share the same lines.",
       "existingOrNewPlaceCollaborationDeviceInstructions": "Select existing place if the previous code for this place has been lost or has expired.",
+      "existingOrNewPlaceMultipleDevicesInstructions": "Select existing place if the previous code for this place has been lost or has expired, or to have multiple devices in a place.",
+      "existingOrNewCloudberryPlaceMultipleDevicesInstructions": "Select existing place to activate a new device if the previous code for this place has been lost or has expired, or to have multiple devices in a place. If you put multiple devices in a place that are not designed to work together, it may create interference issues.",
       "existingPlace": "Existing Place",
       "whichPlace": "Which existing place will the device be assigned to?",
       "existingDeskPhonePlaceInstructions": "Select from the below places. Only desk phone places are shown since desk phones and room devices cannot share the same place.",
       "existingCollaborationDevicePlaceInstructions": "Only empty room device places are shown since there is a maximum of one room device in a place, and desk phones and room devices cannot share the same place.",
+      "existingRoomDevicePlaceMultipleRoomDeviceInstructions": "Note that if you put multiple devices in a place that are not designed to work together, it could create interference issues between them.",
       "existingPlaceInstructions": "A room device place can only contain one device, so existing room device places with an activated device will not be shown.",
       "selectPlace": "Search for a place",
       "newPlace": "New Place",
@@ -6474,6 +6495,7 @@
   "locations": {
     "locationName": "Location Name",
     "addText": "Add Location",
+    "namePlaceholder": "Name the Location",
     "copyTitle": "Copy Location",
     "copyDesc": "This location will use the customized setting from the location that you copied.",
     "deleteTitle": "Delete Location",
@@ -7301,6 +7323,7 @@
     "contact": "Contact Account Rep",
     "endDate": "Subscription end date: {{date}}",
     "enterpriseTrial": "Enterprise Trial {{number}}",
+    "enitireOrg": "Entire Organization",
     "expired": "Subscription Expired",
     "expires": "Expires {{date}}",
     "hybrid": "Hybrid Services",
@@ -7317,6 +7340,8 @@
     "onlineProductInstanceError": "Unable to retrieve product instance for trial {{trialId}}.  To purchase a paid subscription, contact your partner via email or use the purchase button on the trial banner to have one sent for you.",
     "onlinePurchase": "Purchased from Cisco Online Market Place",
     "onlineTrialUpgradeUrlError": "Unable to retrieve purchase url for trial {{trialId}}.  To purchase a paid subscription, contact your partner via email or use the purchase button on the trial banner to have one sent for you.",
+    "overage": "Overage",
+    "overageWarning": "Warning: You've assigned more licenses than you've purchased. Contact your partner to purchase more licenses today.",
     "premiumManagement": "Premium Management",
     "premiumTooltip": "Pro Pack is licensed per users and is automatically assigned to all active users in your organization.",
     "purchase": "Purchase",
@@ -7324,7 +7349,7 @@
     "signIn": "Sign-in to manage",
     "subscription": "Subscription ID: ",
     "subscriptionNum": "Subscription ID xxx{{number}}",
-    "usage": "Usage: ",
+    "usage": "Usage:",
     "upgrade": "Upgrade",
     "licenseTypes": {
       "MS": "Standard Team Spaces",
@@ -8873,5 +8898,11 @@
     "deleteMediaError": "An error occurred deleting media.",
     "cleanupMediaError": "An error occurred cleaning up a failed media upload.",
     "unsupportedTypeError": "File type selected for upload is not supported."
+  },
+  "multipleDevicesConfirm": {
+    "title": "About Devices in a Place",
+    "activationCodeExplanation": "An activation code can be used to activate a new device or reactivate an existing device.",
+    "multipleDevicesWarning": "Note that if you put multiple devices in a place that are not designed to work together, it could create interference issues between them.",
+    "okGotIt": "Ok, got it"
   }
 }

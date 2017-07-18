@@ -5,15 +5,14 @@ import { CallSettingsPage } from '../pages/callSettings.page';
 const callSettings = new CallSettingsPage();
 
 describe('Huron Functional: external-dial-with-pstn', () => {
-  const customer = huronCustomer('external-dial-with-pstn', null, null, true);
+  const customer = huronCustomer('external-dial-with-pstn', null, null, true, 3);
   beforeAll(done => {
     provisioner.provisionCustomerAndLogin(customer)
-      .then(done);
+            .then(done);
   });
 
   afterAll(done => {
-    provisioner.tearDownAtlasCustomer(customer.partner, customer.name)
-      .then(done);
+    provisioner.tearDownAtlasCustomer(customer.partner, customer.name).then(done);
   });
 
   it('should be on overview page of customer portal', () => {
@@ -22,7 +21,7 @@ describe('Huron Functional: external-dial-with-pstn', () => {
   });
   it('should navigate to call settings page', () => {
     utils.click(navigation.callSettings);
-    navigation.expectDriverCurrentUrl('call-settingsnew');
+    navigation.expectDriverCurrentUrl('call-settings');
   });
 
   describe('External Dialing', () => {
@@ -58,7 +57,6 @@ describe('Huron Functional: external-dial-with-pstn', () => {
           utils.expectIsDisplayed(callSettings.dialPlanWarningModalTitle);
         });
       });
-
       it('should save successfully', () => {
         utils.click(callSettings.dialPlanWarningYesBtn).then(() => {
           notifications.assertSuccess();
@@ -117,3 +115,4 @@ describe('Huron Functional: external-dial-with-pstn', () => {
     });
   });
 });
+

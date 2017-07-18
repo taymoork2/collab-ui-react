@@ -491,6 +491,7 @@ export class HuronSettingsService {
       } else if (this.supportsAvrilVoicemailMailbox) { // only update Avril if needed
         if (!_.isEqual(this.huronSettingsDataCopy.site.routingPrefix, siteData.routingPrefix)
           || !_.isEqual(this.huronSettingsDataCopy.site.timeZone, siteData.timeZone)
+          || !_.isEqual(this.huronSettingsDataCopy.site.preferredLanguage, siteData.preferredLanguage)
           || !_.isEqual(this.huronSettingsDataCopy.site.extensionLength, siteData.extensionLength)
           || !_.isEqual(this.huronSettingsDataCopy.customer.hasVoicemailService, customerData.hasVoicemailService)
           || !_.isEqual(this.huronSettingsDataCopy.avrilFeatures, avrilFeatures)) {
@@ -574,18 +575,18 @@ export class HuronSettingsService {
       return this.$q.resolve(new AvrilSite());
     } else {
       return this.AvrilService.getAvrilSite(site.uuid || '')
-      .catch(error => {
+      .catch((error): any => {
         if (error.status === 404) {
           return new AvrilSite();
         } else {
           this.errors.push(this.Notification.processErrorResponse(error, 'avril get error'));
-          return this.$q.reject();
+          return this.$q.reject(error);
         }
       });
     }
   }
 
-  private updateAvrilSite(site: ISite, avrilFeatures: IAvrilFeatures): ng.IPromise<void> {
+  private updateAvrilSite(site: ISite, avrilFeatures: IAvrilFeatures): ng.IPromise<string | void> {
     return this.AvrilService.updateAvrilSite(
       <IAvrilSite>{
         guid: site.uuid,

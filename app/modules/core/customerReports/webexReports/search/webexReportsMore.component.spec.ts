@@ -5,34 +5,44 @@ describe('Component: custWebexReportsMore', () => {
     this.overview = { status_ : 'In Proccess', meetingNumber: 12345678, meetingName: 'webexMeeting', conferenceID: 234234234 };
     this.meetingDetail = {
       overview: {
-        conferenceID: '65168195997140080',
+        duration: 1000,
         meetingName: 'test',
-        participantsSize: 1,
+        conferenceID: '65168195997140080',
       },
       sessions: [
         {
-          sessionType: '0',
-          startTime: '2017-06-19 07:40:43',
-          endTime: '2017-06-19 07:43:17',
           duration: '3',
+          sessionType: '0',
+          endTime: '2017-06-19 07:43:17',
+          startTime: '2017-06-19 07:40:43',
         }, {
-          sessionType: '1',
-          startTime: '2017-06-19 07:40:46',
-          endTime: '2017-06-19 07:43:27',
-          duration: '3000000',
+          duration: '30000',
+          sessionType: '2',
+          endTime: '2017-06-19 07:43:17',
+          startTime: '2017-06-19 07:40:43',
         },
       ],
       participants: [],
     };
+    this.participants = [{
+      joinTime: 1499389211000,
+      leaveTime: 1499399838000,
+      conferenceID: '66735067305608980',
+    }];
   });
 
   beforeEach(function () {
     this.initModules(testModule);
-    this.injectDependencies('$q', '$state', 'SearchService');
-    spyOn(this.SearchService, 'getMeetingDetail').and.returnValue(this.$q.resolve());
-    spyOn(this.SearchService, 'getStorage').and.returnValue(this.overview);
-
+    this.injectDependencies('$q', '$state', 'Notification', 'SearchService');
+    initSpies.apply(this);
   });
+
+  function initSpies() {
+    spyOn(this.Notification, 'errorResponse');
+    spyOn(this.SearchService, 'getStorage').and.returnValue(this.overview);
+    spyOn(this.SearchService, 'getParticipents').and.returnValue(this.$q.resolve());
+    spyOn(this.SearchService, 'getMeetingDetail').and.returnValue(this.$q.resolve());
+  }
 
   function initComponent() {
     this.$state.current.data = {};
@@ -40,9 +50,20 @@ describe('Component: custWebexReportsMore', () => {
     this.$scope.$apply();
   }
   it('Should show the correct data', function () {
+    this.SearchService.getParticipents.and.returnValue(this.$q.resolve(this.participants));
     this.SearchService.getMeetingDetail.and.returnValue(this.$q.resolve(this.meetingDetail));
 
     initComponent.call(this);
+    expect(this.controller.dataSet.lines.length).toBe(1);
     expect(this.controller.data.overview.meetingName).toEqual('test');
   });
+
+  it('should notify in message for non 200 http status', function() {
+    this.SearchService.getMeetingDetail.and.returnValue(this.$q.resolve(this.meetingDetail));
+    this.SearchService.getParticipents.and.returnValue(this.$q.reject({ status: 404 }));
+
+    initComponent.call(this);
+    expect(this.Notification.errorResponse).toHaveBeenCalled();
+  });
+
 });

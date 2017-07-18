@@ -107,15 +107,37 @@ describe('Component: fields sidepanel', function () {
       ctrl.inUse = false;
       expect(ctrl.isEditable()).toBe(false);
     });
-    it('should return false if in Use', function () {
+    it('should return true if in Use and not publically accessible', function () {
+      // NOTE: _some_ members of the field are editable
       ctrl.publiclyAccessible = false;
       ctrl.inUse = true;
-      expect(ctrl.isEditable()).toBe(false);
+      expect(ctrl.isEditable()).toBe(true);
     });
     it('should return true if not publically accssible and not in use', function () {
       ctrl.publiclyAccessible = false;
       ctrl.inUse = false;
       expect(ctrl.isEditable()).toBe(true);
+    });
+    it('should return true if not publically accssible and in use', function () {
+      ctrl.publiclyAccessible = false;
+      ctrl.inUse = true;
+      expect(ctrl.isEditable()).toBe(true);
+    });
+  });
+
+  describe('isDeletable', function () {
+    // iterate over combinations if publiclyAccessible and inUse
+    [
+      { publiclyAccessible: true, inUse: false, deletable: false },
+      { publiclyAccessible: false, inUse: false, deletable: true },
+      { publiclyAccessible: true, inUse: true, deletable: false },
+      { publiclyAccessible: true, inUse: true, deletable: false },
+    ].forEach(function (testParams) {
+      it('should return ' + testParams.deletable + ' if publiclyAccessible is ' + testParams.publiclyAccessible + ' and inUse is ' + testParams.inUse, function () {
+        ctrl.publiclyAccessible = testParams.publiclyAccessible;
+        ctrl.inUse = testParams.inUse;
+        expect(ctrl.isDeletable()).toBe(testParams.deletable);
+      });
     });
   });
 
@@ -212,6 +234,36 @@ describe('Component: fields sidepanel', function () {
       expect(button.tagName).toBe('BUTTON', 'expecting a button to be here');
       button = $(button);
       expect(button).toHaveClass('btn--delete', 'this is likely not the delete button');
+    });
+
+    describe('render in-use field', function () {
+      beforeEach(function () {
+        membershipReturnSpy.and.returnValue(this.$q.resolve(['A_FIELDSET']));
+        this.$scope.$apply();
+      });
+
+      it('should STILL have edit button', function () {
+        var sectionTitle = this.view.find('section-title');
+        // there are 2 of these, but only 1 visible at a time
+        expect(sectionTitle.length).toBe(2, 'incorrect number of section-title elements');
+        var editableSectionTitle = sectionTitle.first();
+        expect(editableSectionTitle).toExist();
+        var button = editableSectionTitle.find('.as-button');
+        expect(button).toExist('expecting a button here');
+        expect(button).toHaveText('common.edit', 'this is likely not the edit button');
+      });
+
+      it('should NOT have delete button', function () {
+        var containerDiv = this.view.find('cs-sp-container');
+        var section = containerDiv.find('cs-sp-section');
+        expect(containerDiv.length).toBe(1, 'wrong number of cs-sp-section elements. layout change?');
+        var siblings = section.siblings();
+        // for now, the delete button is the only sibling, and it doesn't exist if the field is in-use
+        if (siblings.length > 0) {
+          var deleteButtons = siblings.find('button').find('.btn--delete');
+          expect(deleteButtons.length).toBe(0, 'shouldn\'t have found a delete button');
+        }
+      });
     });
   });
 });

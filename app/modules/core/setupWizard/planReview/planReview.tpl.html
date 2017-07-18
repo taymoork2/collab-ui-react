@@ -148,6 +148,7 @@
                class="badge badge-warning" translate="firstTimeWizard.trial"></span>
               <span class="quantity" translate="firstTimeWizard.quantity"></span>
               <span class="quantity">{{service.license.volume}}</span>
+
             </div>
           </div>
         </div>
@@ -157,15 +158,13 @@
            translate="firstTimeWizard.startYourTrial"
            translate-values="{days: planReview.trial.trialPeriod}"></div>
         <div ng-class="{'column-paid' : !planReview.careServices.isNewTrial, 'column-trial' : planReview.careServices.isNewTrial}">
-          <div ng-if="planReview.careServices.services.length > 0" class="item-care-license">
-            <span translate="firstTimeWizard.care"></span>
-          </div>
           <div ng-repeat="service in planReview.careServices.services" class="item-paid"
              ng-show="multipleSubscriptions.showLicenses(service.license.billingServiceId, service.license.isTrial)">
             <div ng-if="service.license.isTrial || planReview.careServices.isNewTrial"
                class="badge badge-warning" translate="firstTimeWizard.trial"></div>
+               <div ng-if="multipleSubscriptions.showLicenses(service.license.billingServiceId, service.license.isTrial)" id="careLicenseText" class="item-care-license">{{planReview.getNamedLabel(service.license.offerName)}}</div>
             <div class="quantity">
-              <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
+              <span class="quantity-padding" translate="firstTimeWizard.quantity"></span> 
               <span>{{service.license.volume}}</span>
             </div>
           </div>

@@ -32,7 +32,6 @@
       },
     ];
     vm.reportView = vm.sparkMetrics.views[0];
-    vm.reportType = 'Spark';
 
     function generateWebexMetricsUrl() {
       ProPackService.getProPackPurchased().then(function (isPurchased) {
@@ -67,18 +66,18 @@
 
       var viewType = _.get(vm, 'reportView.view');
 
-      var getSparkReportData = _.get(QlikService, 'getReportQBSUrl');
+      var getSparkReportData = _.get(QlikService, 'getSparkReportQBSfor' + viewType + 'Url');
 
       if (!_.isFunction(getSparkReportData)) {
         return;
       }
-      getSparkReportData(vm.reportType, viewType, userInfo).then(function (data) {
+      getSparkReportData(userInfo).then(function (data) {
         vm.sparkMetrics.appData = {
           ticket: data.ticket,
-          appId: vm.reportView.appName,
+          appId: vm.reportView.appName, //TODO changes to data.appName, if QBS can handle this parameter
           node: data.host,
           qrp: data.qlik_reverse_proxy,
-          persistent: false,
+          persistent: false, //TODO changes to data.isPersistent, if QBS can handle this parameter
           vID: Authinfo.getOrgId(),
         };
         var QlikMashupChartsUrl = _.get(QlikService, 'getSparkReportAppfor' + viewType + 'Url')(vm.sparkMetrics.appData.qrp);

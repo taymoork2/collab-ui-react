@@ -1,5 +1,5 @@
 <cs-card class="flip large-3 medium-6 small-12 menu-card header-bar overview-card {{$ctrl.headercolor}} {{$ctrl.cardClass}}">
-  <div class="card" ng-class="{'flipped':isFlipped}">
+  <div class="card" ng-class="{'flipped':isFlipped, 'card-on-top': $ctrl.dropdownPresent === true}">
     <article class="face front" ng-class="{'no-display': isFlipped}">
       <header>
         <div class="metrics-header"> {{$ctrl.headername}} </div>

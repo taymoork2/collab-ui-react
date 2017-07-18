@@ -14,8 +14,10 @@ declare namespace csdm {
   }
 
   interface ICsdmDataModelService {
-    updateCloudberryPlace(objectToUpdate: IPlace, entitlements, directoryNumber,
-                          externalNumber, externalLinkedAccounts?: any[]): ng.IPromise<IPlace>;
+    updateCloudberryPlace(objectToUpdate: IPlace, {
+      entitlements, directoryNumber,
+      externalNumber, externalLinkedAccounts,
+    }: IUpdatePlaceParameters): ng.IPromise<IPlace>;
     createCmiPlace(name, entitlements, directoryNumber, externalNumber): ng.IPromise<IPlace>;
     createCsdmPlace(name, entitlements, directoryNumber, externalNumber, externalLinkedAccounts: IExternalLinkedAccount[]): ng.IPromise<IPlace>;
     createCodeForExisting(cisUuid: string): ng.IPromise<ICode>;
@@ -32,6 +34,14 @@ declare namespace csdm {
   export interface IExternalLinkedAccount {
     providerID: string;
     accountGUID: string;
+    status?: string;
     operation?: string;
+  }
+
+  export interface IUpdatePlaceParameters {
+    entitlements?: string[];
+    directoryNumber?: string;
+    externalNumber?: string;
+    externalLinkedAccounts: IExternalLinkedAccount[] | null;
   }
 }

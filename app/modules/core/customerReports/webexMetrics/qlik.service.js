@@ -8,7 +8,7 @@
     .name;
 
   /* @ngInject */
-  function QlikService($http, $injector, $q, Config, UrlConfig) {
+  function QlikService($http, $log, $injector, $q, Config, UrlConfig) {
     var service = {
       getWebExReportQBSforBaseUrl: getWebExReportQBSforBaseUrl,
       getWebExReportQBSforPremiumUrl: getWebExReportQBSforPremiumUrl,
@@ -32,22 +32,20 @@
     }
 
     function specifyReportQBS(isError, result, reportType, viewType, data) {
-      if (Config.getEnv() === 'prod') {
-        if (!isError) {
-          var resultData = _.get(result, 'data');
-          var siteId = _.get(result, 'siteId');
-          if (!siteId) {
-            return callReportQBSBTS(reportType, viewType, data);
-          } else {
-            return resultData;
-          }
-        } else {
+      $log.log('Atlas Env: ' + Config.getEnv());
+      if (!isError) {
+        var resultData = _.get(result, 'data');
+        var siteId = _.get(resultData, 'siteId');
+        $log.log('check the siteId');
+        if (!siteId) {
+          $log.log('turns to call bts');
           return callReportQBSBTS(reportType, viewType, data);
+        } else {
+          $log.log('siteId existed. ' + siteId);
+          return resultData;
         }
-      } else if (isError) {
-        return catchError(result);
       } else {
-        return result.data;
+        return callReportQBSBTS(reportType, viewType, data);
       }
     }
 

@@ -270,7 +270,7 @@ export class PstnWizardService {
     return this.swivelOrders;
   }
 
-  private updateCustomerCarrier(): ng.IPromise<boolean> {
+  private updateCustomerCarrier(): ng.IPromise<any> {
     return this.PstnService.updateCustomerCarrier(this.PstnModel.getCustomerId(), this.PstnModel.getProviderId())
       .then(() => this.PstnModel.setCarrierExists(true))
       .catch(response => {
@@ -588,7 +588,7 @@ export class PstnWizardService {
   }
 
   private getTokens(): JQuery {
-    return angular.element('#' + this.tokenfieldId).tokenfield('getTokens');
+    return (angular.element('#' + this.tokenfieldId) as any).tokenfield('getTokens');
   }
 
   private getNxxValue(model): string | null {
@@ -600,7 +600,7 @@ export class PstnWizardService {
     return null;
   }
 
-  public searchCarrierInventory(areaCode: string, block: boolean, quantity: number, consecutive: boolean, model: INumbersModel, isTrial: boolean) {
+  public searchCarrierInventory(areaCode: string, block: boolean, quantity: number, consecutive: boolean, stateAbbreviation: string, model: INumbersModel, isTrial: boolean) {
     if (areaCode) {
       model.pstn.showNoResult = false;
       areaCode = '' + areaCode;
@@ -610,6 +610,7 @@ export class PstnWizardService {
       model.pstn.block = block;
       model.pstn.quantity = quantity;
       model.pstn.consecutive = consecutive;
+      model.pstn.stateAbbreviation = stateAbbreviation;
       if (areaCode.length === MAX_VALID_CODE) {
         model.pstn.nxx = {
           code: areaCode.slice(MIN_VALID_CODE, areaCode.length),
@@ -625,6 +626,7 @@ export class PstnWizardService {
       npa: _.get(model, 'pstn.areaCode.code'),
       count: this.getCount(model),
       sequential: model.pstn.consecutive,
+      state: model.pstn.stateAbbreviation,
     };
 
     model.pstn.searchResults = [];

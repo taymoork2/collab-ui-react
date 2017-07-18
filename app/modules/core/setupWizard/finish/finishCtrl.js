@@ -5,7 +5,8 @@
     .controller('WizardFinishCtrl', WizardFinishCtrl);
 
   /* @ngInject */
-  function WizardFinishCtrl($q, $scope, $translate, Notification, SetupWizardService) {
+  function WizardFinishCtrl($q, $scope, $translate, Notification, SetupWizardService, TrialWebexService) {
+    $scope.hasPendingLicenses = SetupWizardService.hasPendingLicenses();
     $scope.sendEmailModel = false;
     $scope.initNext = function () {
       var deferred = $q.defer();
@@ -26,9 +27,26 @@
       return deferred.promise;
     };
 
-    // Currently we are differentiating trial migration orders for WebEx meeting sites setup by a prefix/suffix of 'ordersimp' in the users email.
-    $scope.isOrderSimplificationToggled = function () {
-      return SetupWizardService.isOrderSimplificationToggled();
-    };
+    init();
+
+    function init() {
+      pushBlankProvisioningCall();
+    }
+
+    function pushBlankProvisioningCall() {
+      if (!_.has(SetupWizardService.provisioningCallbacks, 'meetingSettings') && $scope.hasPendingLicenses) {
+        var emptyProvisioningCall = {
+          meetingSettings: (function () {
+            return TrialWebexService.provisionSubscriptionWithoutWebexSites().then(function () {
+              Notification.success('firstTimeWizard.webexProvisioningSuccess');
+            }).catch(function (response) {
+              Notification.errorWithTrackingId(response, 'firstTimeWizard.webexProvisioningError');
+            });
+          }),
+        };
+
+        SetupWizardService.addProvisioningCallbacks(emptyProvisioningCall);
+      }
+    }
   }
 })();

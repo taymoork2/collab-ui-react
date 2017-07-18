@@ -147,8 +147,8 @@ export class PrivateTrunkDestinationCtrl implements ng.IComponentController {
     return count < this.duplicateCountCheck;
   }
 
-  public uniqueDomainValidation(viewValue: string): ng.IPromise<boolean> {
-    const validateDefer = this.$q.defer();
+  public uniqueDomainValidation(viewValue: string): ng.IPromise<void> {
+    const validateDefer = this.$q.defer<void>();
     this.PrivateTrunkService.isValidUniqueSipDestination(viewValue)
     .then((res) => {
       if (res) {

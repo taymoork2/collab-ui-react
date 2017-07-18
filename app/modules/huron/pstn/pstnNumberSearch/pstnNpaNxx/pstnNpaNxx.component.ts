@@ -122,12 +122,20 @@ class PstnNpaNxxCtrl implements ng.IComponentController {
     return search;
   }
 
+  public getStateAbbreviation(): string {
+    if (this.area) {
+      this.model.stateAbbreviation = this.area.abbreviation;
+    }
+    return this.model.stateAbbreviation;
+  }
+
   public onSearch(): void {
     this.search({
       value: this.getSearchValue(),
       block: this.model.block,
       quantity: this.model.quantity,
       consecutive: this.model.consecutive,
+      stateAbbreviation: this.getStateAbbreviation(),
     });
   }
 }

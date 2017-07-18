@@ -37,20 +37,11 @@ class HuronDetailsHeaderComponentCtrl implements ng.IComponentController {
         state: 'huronfeatures',
       });
     }
-    this.FeatureToggleService.sparkCallTenDigitExtGetStatus()
-      .then(enabled => {
-        if (enabled) {
-          this.tabs.push({
-            title: 'huronDetails.settingsTitle',
-            state: 'huronsettingsnew',
-          });
-        } else {
-          this.tabs.push({
-            title: 'huronDetails.settingsTitle',
-            state: 'huronsettings',
-          });
-        }
-      });
+
+    this.tabs.push({
+      title: 'huronDetails.settingsTitle',
+      state: 'huronsettings',
+    });
   }
 
   private showFeatureTab(): boolean {

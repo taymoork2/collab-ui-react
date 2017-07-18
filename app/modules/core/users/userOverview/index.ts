@@ -12,7 +12,7 @@ const ngResourceModule = require('angular-resource');
 const onboardModule = require('modules/core/users/userAdd/onboard.module');
 
 import './_user-overview.scss';
-
+export * from './userOverview.service';
 export default angular
   .module('core.users.userOverview', [
     require('scripts/app.templates'),

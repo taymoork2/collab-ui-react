@@ -11,6 +11,20 @@
   @include vr-spacing(mv, 1.25);
   @include vr-spacing(p, 0);
 
+  .overage-warning {
+    @include vr-spacing(mh, 1);
+
+    .cs-alert-banner-text {
+      max-width: rem-calc(900);
+    }
+
+    .icon-warning {
+      color: $color-alerts-base;
+      font-size: vr-adjust(16);
+      top: rem-calc(2);
+    }
+  }
+
   .cs-card-layout {
     @include vr-spacing(mt, 1.25);
   }
@@ -154,7 +168,7 @@
   .subscriptions {
     @include vr-spacing(mt, 0);
     @include vr-spacing(mb, 1.25);
-    min-width: vr-adjust(1200);
+    min-width: vr-adjust(1000);
 
     .pro-pack-column,
     .subscription-column,
@@ -173,29 +187,35 @@
   }
 
   .pro-pack-card {
+    .card-title {
+      @include vr-spacing(mb, 1);
+    }
+
     .category-icon {
       font-size: vr-adjust(20);
-      position: absolute;
-      top: vr-adjust(26);
     }
 
     .category-icon,
     .premium-info {
-      @include vr-spacing(ml, 0.5);
       color: $gray-base;
+      top: vr-adjust(4);
     }
 
     .premium-info {
       font-size: vr-adjust(24);
-      position: absolute;
-      top: vr-adjust(46);
+    }
+  }
+
+  .pro-pack-card:last-of-type,
+  .subscriptions:last-of-type {
+    .category-data-section {
+      border-bottom: none;
     }
   }
 
   .pro-pack-card,
   .subscriptions {
     .card-title {
-      @include vr-spacing(mb, 1);
       @include vr-spacing(pl, 0);
       @include vr-spacing(pt, 0);
       color: $gray-dark-1;
@@ -256,10 +276,15 @@
       }
 
       .category-detail {
-        @include vr-spacing(mr, 8);
+        &.site-detail {
+          @include vr-spacing(ml, 8);
+        }
 
         span {
           color: $gray-base;
+          &.badge {
+            color: $white;
+          }
         }
       }
     }
@@ -289,7 +314,7 @@
       @include vr-spacing(pr, 0);
     }
 
-    .category-data-section {
+    .category-data-section.item-without-borders {
       width: 100%;
     }
 

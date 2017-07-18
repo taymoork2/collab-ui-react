@@ -101,7 +101,7 @@ export class CommonReportService {
     return this.getService(url, cancelPromise);
   }
 
-  public returnErrorCheck(error, message: string, returnItem: any): any {
+  public returnErrorCheck<T = any>(error, message: string, returnItem: T): T {
     if (error.status === 401 || error.status === 403) {
       this.Notification.errorWithTrackingId(error, 'reportsPage.unauthorizedError');
     } else if ((error.status !== 0) || (error.config.timeout.$$state.status === 0)) {

@@ -84,7 +84,7 @@ describe('Controller: WizardCtrl', function () {
     spyOn(Userservice, 'getUser').and.returnValue(getUserMe);
     spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue(getMyFeatureToggles);
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
-    spyOn(SetupWizardService, 'isOrderSimplificationToggled').and.returnValue(true);
+    spyOn(SetupWizardService, 'hasPendingLicenses').and.returnValue(true);
     spyOn(Authinfo, 'getLicenses').and.returnValue([{
       licenseType: 'COMMUNICATION',
     }]);

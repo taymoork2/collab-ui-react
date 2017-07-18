@@ -4,3 +4,9 @@ export interface ICallerID {
   customCallerIdName: string;
   customCallerIdNumber: string;
 }
+
+export class CallerID implements ICallerID {
+  public externalCallerIdType;
+  public customCallerIdName;
+  public customCallerIdNumber;
+}
