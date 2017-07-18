@@ -6,7 +6,7 @@
     .controller('NewCareFeatureModalCtrl', NewCareFeatureModalCtrl);
 
   /* @ngInject */
-  function NewCareFeatureModalCtrl($modalInstance, $scope, $state, Authinfo) {
+  function NewCareFeatureModalCtrl($modalInstance, $scope, $state, Authinfo, VirtualAssistantService) {
     var vm = $scope;
     vm.features = [];
     vm.hasCall = Authinfo.isSquaredUC();
@@ -24,6 +24,11 @@
       description: 'sunlightDetails.newFeatures.selectCHDesc',
       icons: ['icon-message'],
       disabled: false,
+      goToService: function goToService($state) {
+        $state.go('care.setupAssistant', {
+          type: 'chat',
+        });
+      },
     });
 
     serviceCards.push({ //careCallbackService
@@ -34,6 +39,11 @@
       description: vm.CallbackServiceDescription,
       icons: ['icon-calls'],
       disabled: !vm.hasCall,
+      goToService: function goToService($state) {
+        $state.go('care.setupAssistant', {
+          type: 'callback',
+        });
+      },
     });
 
     serviceCards.push({ //careChatCallbackService
@@ -44,18 +54,14 @@
       description: vm.ChatCallbackServiceDescription,
       icons: ['icon-message', 'icon-calls'],
       disabled: !vm.hasCall,
+      goToService: function goToService($state) {
+        $state.go('care.setupAssistant', {
+          type: 'chatPlusCallback',
+        });
+      },
     });
     if (vm.isVirtualAssistantEnabled) {
-      // sunlightDetails exists in en_US.json we may want virtualAssistant?
-      serviceCards.push({ //careVirtualAssistantService
-        id: 'Va',
-        type: 'virtualAssistant',
-        code: 'sunlightDetails.virtualAssistantCode',
-        label: 'sunlightDetails.newFeatures.virtualAssistantType',
-        description: 'sunlightDetails.newFeatures.selectVADesc',
-        icons: ['icon-bot-four'],
-        disabled: !vm.isVirtualAssistantEnabled,
-      });
+      serviceCards.push(VirtualAssistantService.serviceCard);
     }
 
     if (Authinfo.isCare()) {
@@ -69,9 +75,7 @@
     function ok(featureId) {
       vm.features.forEach(function (feature) {
         if (feature.id === featureId) {
-          $state.go('care.setupAssistant', {
-            type: feature.type,
-          });
+          feature.goToService($state);
         }
       });
       $modalInstance.close(featureId);

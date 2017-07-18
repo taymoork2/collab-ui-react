@@ -6759,8 +6759,6 @@
     "callbackTemplateCode": "Ca",
     "callbackMediaType": "Callback",
     "chatPlusCallbackMediaType": "Chat+Callback",
-    "virtualAssistantCode": "Va",
-    "virtualAssistantMediaType": "Virtual Assistants",
     "Ch" : "Chat",
     "Ca" : "Callback",
     "ChCa" : "Chat+Callback",
@@ -6772,11 +6770,9 @@
       "selectCHDesc": "This template gives your customers the ability to contact your agents via chat.",
       "selectCADesc": "This template gives your customers the ability to request a callback from your agents.",
       "selectCHCADesc": "This template gives your customers the option to contact your agents via chat or request a callback.",
-      "selectVADesc": "Create a virtual assistant who provides automated chat support and escalates issues as needed.",
       "chatType": "Chat",
       "callbackType": "Callback",
-      "chatPlusCallbackType": "Chat+Callback",
-      "virtualAssistantType": "Customer Virtual Assistant"
+      "chatPlusCallbackType": "Chat+Callback"
     },
     "settings": {
       "setUpCare": "Care",
@@ -6986,8 +6982,6 @@
     "editTitle_callback": "Edit Callback Template",
     "createTitle_chatPlusCallback": "Create Chat+Callback Template",
     "editTitle_chatPlusCallback": "Edit Chat+Callback Template",
-    "createTitle_virtualAssistant": "Create Customer Virtual Assistant",
-    "editTitle_virtualAssistant": "Edit Customer Virtual Assistant",
     "profile_chat": "Branding and Identity",
     "profile_callback": "Branding and Identity",
     "profile_chatPlusCallback": "Chat Branding and Identity",
@@ -7203,8 +7197,6 @@
     },
     "summary": "Summary",
     "summaryDesc": "You have configured the template. Click Finish to save the configuration and generate embed code so you can start using this template on your organization website.",
-    "summaryDesc_virtualAssistant": "You have configured your Customer Virtual Assistant. To use the assisted service feature in your organization's chat application, add your assistant to a Customer Support Template.",
-    "summaryDesc_virtualAssistant_cont": "Click Finish to save the configuration.",
     "editSummaryDesc": "You have edited the template. Click Finish to save the configuration so you can start using the new version of this template on your organization website.",
     "editCodeWarnMsg2Line1": "It can take up to 15 minutes for the template changes to be reflected.",
     "editCodeWarnMsg2Line2": "Open the template in a new browser tab after this time to view the changes.",
@@ -7242,7 +7234,77 @@
     },
     "embedCodeFor": "Embed Code for ",
     "embedCodeWarnMsg_callback": "It is important to verify all domains where you want to use callback template. You will not be able to embed callback template on unverified domains.",
-    "configureOrgLogoMsg": "Go to Settings page to modify your organization logo"
+    "configureOrgLogoMsg": "Go to Settings page to modify your organization logo",
+    "virtualAssistant": {
+      "featureText" : {
+        "virtualAssistantCode": "Va",
+        "virtualAssistantMediaType": "Virtual Assistants",
+        "selectVADesc": "Create a virtual assistant who provides automated chat support and escalates issues as needed.",
+        "virtualAssistantType": "Customer Virtual Assistant"
+      },
+      "createTitle": "Create Customer Virtual Assistant",
+      "editTitle": "Edit Customer Virtual Assistant",
+      "configOverview": {
+        "title": "Customer Virtual Assistant Configuration Requirements",
+        "desc": "Review the prerequisites for creating a Customer Virtual Assistant",
+        "box-title": "Create an API.AI agent before you create your Customer Virtual Assistant.",
+        "box-desc": "Build an automated agent in API.AI with a natural language dialogue. Your integrated Customer Virtual Assistant uses the built-in dialogue to interact with your customers and escalate a conversation to live agents as needed.",
+        "box-radio-one": "No, I don’t have a preconfigured API.AI agent",
+        "box-radio-one-desc1": "Go to ",
+        "box-radio-apiai": "API.AI",
+        "box-radio-one-desc2": " to create an agent. To get started, see the ",
+        "box-radio-apiai-doc": "API.AI documentation",
+        "box-radio-two": "Yes, I have a preconfigured API.AI agent and am ready to proceed",
+        "box-radio-two-desc": "Click the arrow to continue to integrate your API.AI agent with a Customer Virtual Assistant"
+      },
+      "dialogIntegration": {
+        "title": "Configure Dialogue Integration",
+        "desc": "Add a preconfigured Escalation Intent to complete your API.AI agent configuration",
+        "box-step-one": "Download preconfigured Escalation Intent JSON file.",
+        "box-step-one-desc": "An Escalation Intent allows your Customer Virtual Assistant to escalate a conversation to an agent.",
+        "box-step-two": "Upload Escalation Intent to API.AI Agent.",
+        "box-step-two-desc": "On your API.AI agent’s Intents page, click the vertical ellipsis (⋮) and choose Upload Intent. Upload the escalation.json file you downloaded.",
+        "box-step-three": "Customize Escalation Intent in API.AI.",
+        "box-step-three-desc": "On your API.AI agent’s Intents page, choose Escalation Intent. Modify the User Says fields to change the user expressions that trigger escalation. All user expressions must:",
+        "box-bullet-one": "Use template mode",
+        "box-bullet-two": "Contain a reference to @sys.any:Topic",
+        "box-step-three-desc-cont": "The @ symbol next to the user expression indicates the template mode. Click the symbol to toggle the mode. Do not modify the GetExpert action.",
+        "download-button-text": "Download Escalation Intent",
+        "learn-more-link": "Learn more",
+        "final-note": "about integrating Customer Virtual Assistants."
+      },
+      "accessToken": {
+        "title": "Complete Dialogue Integration",
+        "desc": "Complete your integration to enable the use of natural dialogue in your customer interactions",
+        "box-desc": "Each API.AI agent has a unique client access token. After completing your API.AI configuration, copy the client access token from the settings for your agent and enter it here to complete the integration.",
+        "input-label": "API.AI Client Access Token",
+        "validate-button-text": "Validate",
+        "max-length-error": "Client Access Token cannot be longer than 128 characters."
+      },
+      "name": {
+        "title": "Customer Virtual Assistant Name",
+        "desc": "Specify the name your customers see when they interact with your Customer Virtual Assistant",
+        "box-desc": "Choose a unique name for your Customer Virtual Assistant that is no longer than 50 characters.",
+        "input-label": "Enter Name",
+        "max-length-error": "Name cannot be longer than 50 characters."
+      },
+      "summary": {
+        "desc": "You have configured your Customer Virtual Assistant. To use the assisted service feature in your organization's chat application, add your assistant to a Customer Support Template.",
+        "edit-desc": "You have edited your Customer Virtual Assistant. Click Finish to save the configuration so you can start using the new version of this template on your organization website.",
+        "desc-cont": "Click Finish to save the configuration.",
+        "errorCreateTemplate": "Cannot save Customer Virtual Assistant. Try again."
+      },
+      "messages": {
+        "createSuccessText": "You have successfully created {{ featureName }}.",
+        "updateSuccessText": "You have successfully updated {{ featureName }}.",
+        "listConfigsFailureText": "Failed to list the Customer Virtual Assistants.",
+        "getConfigFailureText": "Failed to load the Customer Virtual Assistant.",
+        "deleteConfigFailureText": "Failed to delete the Customer Virtual Assistant.",
+        "createConfigFailureText": "Failed to save Customer Virtual Assistant.",
+        "updateConfigFailureText": "Failed to save Customer Virtual Assistant.",
+        "testAPIAITokenFailureText": "Invalid client access token. Your Dialogue Integration with {{ featureName }} is disabled. Update the Customer Virtual Assistant with a valid token from your API.AI agent settings."
+      }
+    }
   },
   "huronHuntGroup": {
     "modalTitle": "Hunt Group",
