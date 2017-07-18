@@ -135,7 +135,6 @@ describe('Validate Media Service Managemnt Page', function () {
         });
       });
       it('Should have the correct settings details displayed', function () {
-        utils.click(mediaservice.resourceTab);
         utils.click(mediaservice.settingsTab);
         utils.expectIsDisplayed(mediaservice.generalTitle);
         utils.expectIsDisplayed(mediaservice.deactivateServiceHeading);
