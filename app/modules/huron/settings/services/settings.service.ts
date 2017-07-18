@@ -230,7 +230,12 @@ export class HuronSettingsService {
     }
 
     if (!_.isEqual(data.companyMoh, this.huronSettingsDataCopy.companyMoh)) {
-      promises.push(this.updateCompanyMediaOnHold(data.companyMoh));
+      const GENERIC_MEDIA_ID = '98765432-DBC2-01BB-476B-CFAF98765432';
+      if (_.isEqual(data.companyMoh, GENERIC_MEDIA_ID)) {
+        promises.push(this.unassignCompanyMediaOnHold());
+      } else {
+        promises.push(this.updateCompanyMediaOnHold(data.companyMoh));
+      }
     }
 
     if (!_.isEqual(data.cosRestrictions, this.huronSettingsDataCopy.cosRestrictions)) {
@@ -312,6 +317,13 @@ export class HuronSettingsService {
 
   private updateCompanyMediaOnHold(mediaFileId: string): ng.IPromise<void> {
     return this.MediaOnHoldService.updateMediaOnHold(mediaFileId)
+      .catch(error => {
+        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohUpdateError'));
+      });
+  }
+
+  private unassignCompanyMediaOnHold(): ng.IPromise<void> {
+    return this.MediaOnHoldService.unassignMediaOnHold()
       .catch(error => {
         this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohUpdateError'));
       });

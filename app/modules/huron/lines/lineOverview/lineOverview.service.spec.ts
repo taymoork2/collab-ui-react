@@ -122,7 +122,7 @@ describe('Service: LineOverviewService', () => {
     });
     autoAnswerData.member = new AutoAnswerMember(_.get(autoAnswerRead, AutoAnswerConst.MEMBER));
     this.autoAnswer = autoAnswerData;
-    this.lineMoh = 'default-media';
+    this.lineMoh = '';
 
     this.callForward = new CallForward();
     this.lineOverview = new LineOverviewData();
@@ -217,7 +217,7 @@ describe('Service: LineOverviewService', () => {
       expect(this.CallerIDService.getCallerId).toHaveBeenCalled();
       expect(this.AutoAnswerService.getSupportedPhonesAndMember).toHaveBeenCalled();
       expect(this.LineOverviewService.cloneLineOverviewData).toHaveBeenCalled();
-      expect(this.MediaOnHoldService.getLineMedia).toHaveBeenCalled();
+      expect(this.MediaOnHoldService.getLineMedia).not.toHaveBeenCalled();
     });
 
     it('should return an exact copy of LineOverviewData when getOriginalConfig is called', function () {
@@ -304,10 +304,10 @@ describe('Service: LineOverviewService', () => {
       });
 
       it('should only update Line Moh when only lineMoh is changed', function () {
-        this.LineOverviewService.get(LineConsumerType.PLACES, '12345', '0000001');
+        this.LineOverviewService.get(LineConsumerType.USERS, '12345', '0000001');
         this.$rootScope.$digest();
         this.lineOverview.lineMoh = 'sample-test-media';
-        this.LineOverviewService.save(LineConsumerType.PLACES, '12345', '0000001', this.lineOverview, []);
+        this.LineOverviewService.save(LineConsumerType.USERS, '12345', '0000001', this.lineOverview, []);
         expect(this.LineService.updateLine).not.toHaveBeenCalled();
         expect(this.CallForwardService.updateCallForward).not.toHaveBeenCalled();
         expect(this.CallerIDService.updateCallerId).not.toHaveBeenCalled();
