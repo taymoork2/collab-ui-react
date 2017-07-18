@@ -22,6 +22,7 @@ describe('SetupWizardCtrl', function () {
     this.enabledFeatureToggles = [];
 
     spyOn(this.Authinfo, 'isCustomerAdmin').and.returnValue(true);
+    spyOn(this.Authinfo, 'getCustomerAdminEmail').and.returnValue('admin@admin.com');
     spyOn(this.Authinfo, 'isSetupDone').and.returnValue(false);
     spyOn(this.Authinfo, 'isCSB').and.returnValue(true);
     spyOn(this.Authinfo, 'isCare').and.returnValue(false);
@@ -29,6 +30,7 @@ describe('SetupWizardCtrl', function () {
     spyOn(this.SetupWizardService, 'hasPendingMeetingLicenses').and.returnValue(false);
     spyOn(this.SetupWizardService, 'hasPendingCallLicenses').and.returnValue(false);
     spyOn(this.SetupWizardService, 'hasPendingServiceOrder').and.returnValue(false);
+    spyOn(this.SetupWizardService, 'isCustomerPresent').and.returnValue(this.$q.resolve(true));
     spyOn(this.Authinfo, 'getLicenses').and.returnValue([{
       licenseType: 'SHARED_DEVICES',
     }]);

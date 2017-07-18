@@ -1,6 +1,7 @@
 import { HuronSettingsComponent } from './settings.component';
 import { SettingSetupInitComponent } from 'modules/huron/settings/init/settingSetupInit.component';
 import { SettingSetupInitService } from 'modules/huron/settings/init/settingSetupInitService';
+import { HuronCustomerCreateComponent } from 'modules/huron/settings/huronCustomerCreate/huronCustomerCreate.component';
 
 //module dependancy names
 import huronSettingsServiceModule from 'modules/huron/settings/services';
@@ -28,6 +29,7 @@ import externalTransferModule from 'modules/huron/settings/externalCallTransfer'
 import phoneNumberModule from 'modules/huron/phoneNumber';
 import featureToggleServiceModule from 'modules/core/featureToggle';
 import pstnAreaService from 'modules/huron/pstn/pstnAreaService';
+import trialRegionalSettings from 'modules/core/trials/regionalSettings';
 
 export default angular
   .module('huron.settings', [
@@ -62,8 +64,10 @@ export default angular
     huronSettingsServiceModule,
     featureToggleServiceModule,
     pstnAreaService,
+    trialRegionalSettings,
   ])
   .component('ucSettings', new HuronSettingsComponent())
   .component('ucSettingsInit', new SettingSetupInitComponent())
+  .component('ucHuronCustomerCreate', new HuronCustomerCreateComponent())
   .service('SettingSetupInitService', SettingSetupInitService)
   .name;

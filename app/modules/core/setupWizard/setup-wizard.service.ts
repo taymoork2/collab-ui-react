@@ -1,10 +1,13 @@
 import { IPendingOrderSubscription, IPendingLicense } from './meeting-settings/meeting-settings.interface';
 import { Notification } from 'modules/core/notifications';
+import { HuronCustomerService } from 'modules/huron/customer';
+import { HuronCompassService } from 'modules/huron/compass';
 
 export class SetupWizardService {
   public pendingMeetingLicenses: IPendingLicense[];
   public pendingLicenses: IPendingLicense[];
   public provisioningCallbacks = {};
+  public country = '';
 
   /* @ngInject */
   constructor(
@@ -16,6 +19,9 @@ export class SetupWizardService {
     private SessionStorage,
     private StorageKeys,
     private UrlConfig,
+    private Orgservice,
+    private HuronCompassService: HuronCompassService,
+    private HuronCustomerService: HuronCustomerService,
   ) { }
 
   public addProvisioningCallbacks(callObject: { [keys: string]: Function }) {
@@ -89,9 +95,62 @@ export class SetupWizardService {
     return this.$http.get(pendingLicensesUrl);
   }
 
+  public isCustomerPresent() {
+    const params = {
+      basicInfo: true,
+    };
+    const _this = this;
+    return this.Orgservice.getOrg(_.noop, this.Authinfo.getOrgId(), params).then(function (response) {
+      const org = _.get(response, 'data', null);
+      _this.country = _.get(org, 'countryCode');
+      if (_.get(org, 'orgSettings.sparkCallBaseDomain')) {
+        //check cmi in base domain for customer
+        return _this.findCustomerInDc(_.get(org, 'orgSettings.sparkCallBaseDomain'));
+      } else {
+        //check CI for country
+        if (_.get(org, 'countryCode')) {
+          if (_.get(org, 'countryCode') === 'GB') {
+            //check CMI in EC DC
+            return _this.findCustomerInDc('sparkc-eu.com');
+          } else {
+            //check CMI in NA DC
+            return _this.findCustomerInDc(this.HuronCompassService.defaultDomain());
+          }
+        } else {
+          //check CMI in NA DC
+          return _this.findCustomerInDc(this.HuronCompassService.defaultDomain());
+        }
+      }
+    }).catch(function () {
+      _.noop();
+    });
+  }
+
+  public getCustomerCountry() {
+    return this.country;
+  }
+
+  public findCustomerInDc(baseDomain) {
+    this.HuronCompassService.setCustomerBaseDomain(baseDomain);
+    return this.HuronCustomerService.getCustomer()
+      .then(() => true)
+      .catch(() => false);
+  }
+
+  public activateAndCheckCapacity(countryCode?) {
+    const url = `${this.UrlConfig.getAdminServiceUrl()}organizations/${this.Authinfo.getOrgId()}/setup/communication`;
+    const param = this.getActingSubscription();
+    return this.$http.patch(url, {
+      countryCode: countryCode ? countryCode : this.country,
+      subscriptionId: param,
+    });
+  }
+
 }
 
 export default angular
-  .module('core.setup-wizard-service', [])
+  .module('core.setup-wizard-service', [
+    require('modules/huron/customer').default,
+  ])
   .service('SetupWizardService', SetupWizardService)
   .name;

@@ -3,8 +3,9 @@ import { HuronCompassService } from 'modules/huron/compass/compass.service';
 
 export class TrialRegionalSettingsComponent implements ng.IComponentOptions {
   public controller = TrialRegionalSettingsCtrl;
-  public templateUrl = 'modules/core/trials/regionalSettings/trialRegionalSettings.html';
+  public templateUrl = 'modules/core/trials/regionalSettings/regionalSettings.html';
   public bindings = {
+    isFtsw: '<',
     callTrialEnabled: '<',
     defaultCountry: '<',
     onChangeFn: '&',
@@ -31,6 +32,7 @@ class TrialRegionalSettingsCtrl implements ng.IComponentController {
   private notApplicable: ICountry;
   private countryCode: any;
   public newTrial: boolean;
+  public isFtsw: boolean;
 
   /* @ngInject */
   constructor(
@@ -72,7 +74,9 @@ class TrialRegionalSettingsCtrl implements ng.IComponentController {
   }
 
   public $postLink(): void {
-    this.$element.addClass('cs-form__section');
+    if (!this.isFtsw) {
+      this.$element.addClass('cs-form__section');
+    }
   }
 
   set callTrialEnabled(value: boolean) {

@@ -3646,7 +3646,11 @@
     "callSettingSimpleDialing": "Simple Dialing",
     "callSettingSimpleDialingDesc": "Assign unique extensions to each user within your company.  Users can dial each other with their exension number.",
     "callSettingMultiDialing": "Multi-tier Dialing",
-    "callSettingMultiDialingDesc": "Divide your company into number blocks by selecting a routing prefix for each logical block.  Users in the same block can dial each other with extension numbers.  Between blocks users dial the routing prefix and extension number."
+    "callSettingMultiDialingDesc": "Divide your company into number blocks by selecting a routing prefix for each logical block.  Users in the same block can dial each other with extension numbers.  Between blocks users dial the routing prefix and extension number.",
+    "error": {
+      "overCapacity": "Capacity exceeded for data center, please contact Cisco T.A.C. for further assistance.",
+      "capacityFail": "Failed to activate and check capacity"
+    }
   },
   "reports": {
     "title": "Reports",
