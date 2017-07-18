@@ -129,6 +129,19 @@ describe('Controller: AACallerInputCtrl', function () {
     });
   });
 
+  describe('setOldCallerInputValue', function () {
+    it('should set old caller input value to a specified string', function () {
+      controller.setOldCallerInputValue('testDummyData');
+      expect(controller.oldCallerInputValue).toEqual('testDummyData');
+    });
+  });
+
+  describe('updateCIAction', function () {
+    it('should update Caller Input action', function () {
+      controller.updateCIAction();
+    });
+  });
+
   describe('addKeyAction', function () {
     it('should add a new keyAction object into inputActions array', function () {
       var headkey = '0';

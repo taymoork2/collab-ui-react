@@ -87,6 +87,29 @@
       });
     });
 
+    $scope.$on('CIVarNameChanged', function (event, oldCI) {
+      getSessionVarsAfterRemovingChangedValue(oldCI);
+
+      if (_.includes(vm.sessionVarOptions, vm.sessionVarOption)) {
+        setWarning(false);
+      } else {
+        setWarning(true);
+      }
+    });
+
+    function setWarning(flag) {
+      vm.isWarn = flag;
+    }
+
+    function getSessionVarsAfterRemovingChangedValue(oldCI) {
+      vm.sessionVarOptions = fromQuery.filter(function (value) {
+        return !_.isEqual(value, oldCI);
+      });
+      // add in any user entered SessionVars
+      // false === don't collect conditionals
+      vm.sessionVarOptions = _.concat(vm.sessionVarOptions, AACommonService.collectThisCeActionValue(vm.ui, true, false));
+    }
+
     function addLocalAndQueriedSessionVars() {
       // reset the displayed SessionVars to the original queried items
 
