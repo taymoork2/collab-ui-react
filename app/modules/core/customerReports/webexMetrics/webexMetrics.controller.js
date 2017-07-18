@@ -7,6 +7,7 @@
 
   /* @ngInject */
   function WebExMetricsCtrl(
+    $log,
     $sce,
     $scope,
     $stateParams,
@@ -29,6 +30,11 @@
     vm.isNoData = false;
     vm.selectEnable = true;
     vm.reportType = 'WebEx';
+    vm.testSiteUrl = 'go.webex.com';
+    vm.env = {
+      int: 'integration',
+      prod: 'prod',
+    };
 
     vm.webexMetrics.views = [
       {
@@ -195,7 +201,10 @@
       if (!_.isFunction(getWebExReportData)) {
         return;
       }
-      getWebExReportData(vm.reportType, viewType, userInfo).then(function (data) {
+      $log.log('SiteUrl: ' + vm.webexSelected);
+      var QBSEnv = (vm.webexSelected === vm.testSiteUrl) ? vm.env.int : vm.env.prod;
+      $log.log('Call QBS env: ' + QBSEnv);
+      getWebExReportData(vm.reportType, viewType, userInfo, QBSEnv).then(function (data) {
         if (!_.isUndefined(data)) {
           vm.webexMetrics.appData = {
             ticket: data.ticket,
