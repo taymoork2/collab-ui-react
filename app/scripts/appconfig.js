@@ -1163,9 +1163,10 @@
             },
           })
           .state('user-overview.userLocationDetails', {
-            template: '<user-location-details></user-location-details>',
+            template: '<user-location-details user-id="$resolve.userId"></user-location-details>',
             params: {
               reloadToggle: false,
+              userDetails: {},
             },
             data: {},
             resolve: {
@@ -1177,6 +1178,9 @@
                   done(require('modules/call/locations/user-location-details'));
                 }, 'user-location-details');
               }),
+              userId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentUser, 'id');
+              },
             },
           })
           .state('user-overview.csdmDevice', {
@@ -3399,18 +3403,22 @@
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<context-field-modal existing-field-ids="$resolve.existingFieldIds" callback="$resolve.callback" existing-field-data="$resolve.existingFieldData" dismiss="$dismiss()" has-context-expanded-types-toggle="$resolve.hasContextExpandedTypesToggle" class="context-modal"></context-field-modal>',
+                template: '<context-field-modal existing-field-ids="$resolve.existingFieldIds" callback="$resolve.callback" existing-field-data="$resolve.existingFieldData" in-use="$resolve.inUse" dismiss="$dismiss()" has-context-expanded-types-toggle="$resolve.hasContextExpandedTypesToggle" class="context-modal"></context-field-modal>',
               },
             },
             params: {
               existingFieldIds: [],
               existingFieldData: {},
+              inUse: false,
               callback: function () {},
               hasContextExpandedTypesToggle: false,
             },
             resolve: {
               existingFieldIds: /* @ngInject */ function ($stateParams) {
                 return $stateParams.existingFieldIds;
+              },
+              inUse: /* @ngInject */ function ($stateParams) {
+                return $stateParams.inUse;
               },
               existingFieldData: /* @ngInject */ function ($stateParams) {
                 return $stateParams.existingFieldData;

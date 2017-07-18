@@ -111,6 +111,7 @@ describe('Controller: Customer Reports Ctrl', function () {
       spyOn(this.DummySparkDataService, 'dummyDeviceData').and.callThrough();
 
       this.controller = this.$controller('SparkReportCtrl', {
+        $scope: this.$scope,
         $q: this.$q,
         CommonReportService: this.CommonReportService,
         SparkReportService: this.SparkReportService,
@@ -322,6 +323,7 @@ describe('Controller: Customer Reports Ctrl', function () {
       spyOn(this.DummySparkDataService, 'dummyDeviceData').and.callThrough();
 
       this.controller = this.$controller('SparkReportCtrl', {
+        $scope: this.$scope,
         $q: this.$q,
         CommonReportService: this.CommonReportService,
         SparkReportService: this.SparkReportService,

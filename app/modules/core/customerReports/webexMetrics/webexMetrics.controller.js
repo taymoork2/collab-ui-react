@@ -59,7 +59,7 @@
       },
       {
         id: '1',
-        label: 'reportsPage.webexMetrics.search',
+        label: 'reportsPage.webexMetrics.diagnostics',
         selected: false,
         filterType: vm.search,
         toggle: function () {

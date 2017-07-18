@@ -81,6 +81,9 @@ class FieldModalCtrl implements ng.IComponentController {
 
   public actionList: IActionItem[];
   public actionListCopy: IActionItem[] = [];
+
+  private inUse: boolean;
+
   /* @ngInject */
   constructor(
     private Analytics,
@@ -143,6 +146,7 @@ class FieldModalCtrl implements ng.IComponentController {
 
     // if data with an id isn't passed in, we are in create mode
     this.createMode = !Boolean(_.get(this.existingFieldData, 'id'));
+    this.inUse = this.inUse && !this.createMode; // just in case somebody passes in-use=true _and_ create-mode=true
 
     this.fieldData = this.createMode
       ? {
@@ -163,7 +167,6 @@ class FieldModalCtrl implements ng.IComponentController {
       // new data is entered by user
       : _.cloneDeep(this.existingFieldData);
 
-
     //copy the enum field options to the optionsList
     if (this.fieldData.dataTypeDefinition) {
       if (this.fieldData.dataTypeDefinition.enumerations) {
@@ -181,7 +184,6 @@ class FieldModalCtrl implements ng.IComponentController {
         this.existingFieldOptionsList = _.cloneDeep(this.optionsList);
       }
     }
-
 
     this.optionValidationMessages = {
       unique: this.$translate.instant('context.dictionary.fieldPage.optionUniqueError'),
@@ -242,7 +244,6 @@ class FieldModalCtrl implements ng.IComponentController {
       actionFunction: this.removeDefault.bind(this),
     });
   }
-
 
   public setAddEnumOptions() {
     const option = {
@@ -421,6 +422,7 @@ class FieldModalCtrl implements ng.IComponentController {
       }
     });
   }
+
   public saveOptionsList(form: ng.IFormController): void {
     if (this.reorderEnumOptions) {
       this.updateDataTypeDefinition(this.optionsListCopy);
@@ -572,6 +574,46 @@ class FieldModalCtrl implements ng.IComponentController {
       this.nonEmptyOptionCheckPassed);
   }
 
+  private fixEnumDataTypeDefinitionForSave(definition: IDataTypeDefinition) {
+
+    if (this.inUse) {
+      // it's in use, so we don't have to do anything special here
+      return;
+    }
+
+    const enumerations = definition.enumerations;
+
+    if (!enumerations) {
+      throw new Error('invalid dataTypeDefinition');
+    }
+
+    const inactiveEnumerations = definition.inactiveEnumerations;
+    if (!inactiveEnumerations) {
+      // nothing to see here
+      return;
+    }
+
+    // iterate over all inactive enums
+    _.forEach(inactiveEnumerations, inactive => {
+      // get this one's index in the array
+      const index = enumerations.indexOf(inactive);
+      // remove this one from all translations
+      const translations = definition.translations;
+
+      // iterate over all translation languages
+      _.forEach(_.keys(translations), language => {
+        const translationStrings = <string[]> translations[language];
+        if (translationStrings !== enumerations) { // en_US actually points to enumerations for now!
+          // remove the transation at this index. THIS WILL PROBABLY BREAK IF TRANSLATIONS AREN'T BEING MAINTAINED PROPERLY!
+          translationStrings.splice(index, 1);
+        }
+      });
+      // now remove all inactive from enumerations
+      enumerations.splice(index, 1);
+    });
+    definition.inactiveEnumerations = undefined;
+  }
+
   public fixDataForApi() {
     this.fieldData.dataType = this.dataTypeApiMap[this.fieldData.dataTypeUI];
     this.fieldData.classification = this.classificationApiMap[this.fieldData.classificationUI];
@@ -579,8 +621,16 @@ class FieldModalCtrl implements ng.IComponentController {
     if (this.fieldData.dataTypeUI !== this.$translate.instant('context.dictionary.dataTypes.enumString')) {
       this.fieldData.dataTypeDefinition = undefined;
       this.fieldData.defaultValue = undefined;
-    } else if (_.isEmpty(this.defaultOption)) {
-      this.fieldData.defaultValue = undefined;
+    } else {
+      if (_.isEmpty(this.defaultOption)) {
+        this.fieldData.defaultValue = undefined;
+      }
+
+      if (!this.fieldData.dataTypeDefinition || !this.fieldData.dataTypeDefinition.enumerations) {
+        throw new Error('invalid dataTypeDefinition');
+      }
+
+      this.fixEnumDataTypeDefinitionForSave(this.fieldData.dataTypeDefinition);
     }
 
     return this.fieldData;
@@ -594,7 +644,7 @@ class FieldModalCtrl implements ng.IComponentController {
 
   public uniqueIdValidation(viewValue: string) {
     const value = viewValue || '';
-    return this.existingFieldIds.indexOf(value) === -1;
+    return !this.createMode || this.existingFieldIds.indexOf(value) === -1;
   }
 
   public uniqueOptionValidation(optionValue: string) {
@@ -616,7 +666,6 @@ class FieldModalCtrl implements ng.IComponentController {
       }
     }
 
-
     this.uniqueOptionCheckPassed = index === -1;
     this.nonEmptyOptionCheckPassed = !_.isEmpty(value);
 
@@ -630,6 +679,10 @@ class FieldModalCtrl implements ng.IComponentController {
   public displaySingleSelectOptions() {
     return this.fieldData.dataTypeUI === this.$translate.instant('context.dictionary.dataTypes.enumString');
   }
+
+  public isDisabledWhenInUse() {
+    return !this.createMode && this.inUse;
+  }
 }
 
 export class FieldModalComponent implements ng.IComponentOptions {
@@ -641,6 +694,7 @@ export class FieldModalComponent implements ng.IComponentOptions {
     callback: '<',
     dismiss: '&',
     hasContextExpandedTypesToggle: '<',
+    inUse: '<',
   };
 }
 

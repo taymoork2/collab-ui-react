@@ -2,12 +2,15 @@ import { ILocation, ILocationListItem } from './location';
 
 interface ILocationResource extends ng.resource.IResourceClass<ng.resource.IResource<ILocation>> {}
 
+interface IUserLocationDetailResource extends ng.resource.IResourceClass<ng.resource.IResource<ILocation>> {}
+
 interface ILocationDetailResource extends ng.resource.IResourceClass<ng.resource.IResource<ILocationListItem>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
 }
 
 export class LocationsService {
   private locationListResource: ILocationResource;
+  private userLocationDetailResource: IUserLocationDetailResource;
   private locationDetailResource: ILocationDetailResource;
 
   private locationPickList: string[] = [
@@ -56,6 +59,7 @@ export class LocationsService {
     };
 
     this.locationListResource = <ILocationResource>this.$resource(`${this.HuronConfig.getCmiV2Url()}/customers/:customerId/locations`, {}, {});
+    this.userLocationDetailResource = <IUserLocationDetailResource>this.$resource(`${this.HuronConfig.getCmiV2Url()}/customers/:customerId/users/:userId`, {}, {});
     this.locationDetailResource = <ILocationDetailResource>this.$resource(`${this.HuronConfig.getCmiV2Url()}/customers/:customerId/locations/:locationId`, {},
       {
         update: updateAction,
@@ -81,6 +85,16 @@ export class LocationsService {
     }).$promise
     .then(location => {
       return _.pick(location, this.locationPickList);
+    });
+  }
+
+  public getUserLocation(userId: string): ng.IPromise<ILocation> {
+    return this.userLocationDetailResource.get({
+      customerId: this.Authinfo.getOrgId(),
+      userId,
+    }).$promise
+    .then(location => {
+      return _.get(location, 'location');
     });
   }
 

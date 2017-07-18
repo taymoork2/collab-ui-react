@@ -22,15 +22,24 @@ class CompanyVoicemailAvrilComponentCtrl implements ng.IComponentController {
   public attachmentPref: string;
   public voicemailToEmail: boolean = false;
   public missingDirectNumbersHelpText: string = '';
-
+  public useTLS: boolean = true;
+  public enableOTP: boolean = false;
+  public avrilI1558: boolean = false;
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
     private PhoneNumberService: PhoneNumberService,
     private ServiceSetup,
     private Authinfo,
+    private FeatureToggleService,
   ) {
     this.filterPlaceholder = this.$translate.instant('directoryNumberPanel.searchNumber');
+  }
+
+  public $onInit(): void {
+    this.FeatureToggleService.avrilI1558GetStatus().then((toggle) => {
+      this.avrilI1558 = toggle;
+    });
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
@@ -56,6 +65,7 @@ class CompanyVoicemailAvrilComponentCtrl implements ng.IComponentController {
       if (_.get<boolean>(features.currentValue, 'VM2E')) {
         this.voicemailToEmail = true;
         this.attachmentPref = VM_TO_EMAIL_WITH_ATTACH;
+        this.useTLS = _.get<boolean>(features.currentValue, 'VM2E_TLS');
       } else if (_.get<boolean>(features.currentValue, 'VM2E_PT')) {
         this.voicemailToEmail = true;
         this.attachmentPref = VM_TO_EMAIL_WITHOUT_ATTACH;
@@ -63,6 +73,7 @@ class CompanyVoicemailAvrilComponentCtrl implements ng.IComponentController {
         this.voicemailToEmail = false;
         this.attachmentPref = '';
       }
+      this.enableOTP = _.get<boolean>(features.currentValue, 'VMOTP');
     }
 
     if (site && site.currentValue) {
@@ -125,6 +136,16 @@ class CompanyVoicemailAvrilComponentCtrl implements ng.IComponentController {
     } else {
       this.onChange(null, null, value);
     }
+  }
+
+  public onUseTLS(): void {
+    this.features.VM2E_TLS = !this.features.VM2E_TLS;
+    this.onCompanyVoicemailChange(true);
+  }
+
+  public onEnableOTPChanged(): void {
+    this.features.VMOTP = !this.features.VMOTP;
+    this.onCompanyVoicemailChange(true);
   }
 
   public onChange(voicemailPilotNumber: string | null, voicemailPilotNumberGenerated: string | null, companyVoicemailEnabled: boolean): void {

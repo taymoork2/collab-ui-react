@@ -59,6 +59,7 @@
         <div class="row">
           <div class="small-6 medium-6 large-6">
             <cs-select
+              is-disabled="$ctrl.isDisabledWhenInUse()"
               ng-model="$ctrl.fieldData.dataTypeUI"
               options="$ctrl.dataTypeOptions"
               placeholder="$ctrl.dataTypePlaceholder">
@@ -87,8 +88,9 @@
                           translate="common.default"></span>
                   </div>
                   <div ng-if="$ctrl.showEditOptionIcons()">
-                    <a class="icon icon-edit options-spacing-edit" ng-click="$ctrl.setEdit(option, true)"></a>
-                    <a class="icon icon-trash" ng-click="$ctrl.deleteOption(option, forms.newFieldForm)"></a>
+                    <!-- if disabled due to being in-use, disable edit mode for this option, and also don't show the edit-icon (by not setting the icon-edit class... we still need to take up the space) -->
+                    <a ng-attr-id="{{'edit-option-' + option.index}}" ng-disabled="$ctrl.isDisabledWhenInUse()" ng-class="['icon', $ctrl.isDisabledWhenInUse() ? '' : 'icon-edit', 'options-spacing-edit']" ng-click="$ctrl.setEdit(option, true)"></a>
+                    <a ng-attr-id="{{'delete-option-' + option.index}}" class="icon icon-trash" ng-click="$ctrl.deleteOption(option, forms.newFieldForm)"></a>
                   </div>
                   <div ng-if="$ctrl.reorderEnumOptions">
                     <a class="icon icon-tables"></a>
@@ -173,6 +175,7 @@
         <div class="row">
           <div class="small-6 medium-6 large-6">
             <cs-select
+              is-disabled="$ctrl.isDisabledWhenInUse()"
               ng-model="$ctrl.fieldData.classificationUI"
               options="$ctrl.classificationOptions"
               on-change-fn="$ctrl.classificationOnChange()">
@@ -185,6 +188,7 @@
       <!-- SEARCHABLE -->
       <input
         cs-input
+        ng-disabled="$ctrl.isDisabledWhenInUse()"
         type="checkbox"
         ng-model="$ctrl.fieldData.searchable"
         id="fieldSearchable"

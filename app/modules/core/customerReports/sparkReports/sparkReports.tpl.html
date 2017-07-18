@@ -10,7 +10,7 @@
 </cs-page-sub-header>
 
 <!-- Main Content -->
-<div class="content-container">
+<div class="content-container" ng-if="!nav.displayDetails">
   <div class="row">
     <learn-more-banner location="reports"></learn-more-banner>
   </div>
@@ -24,4 +24,10 @@
       <report-card options="nav.metricsOptions" export-dropdown="nav.exportArrays.metrics" labels="nav.metricsLabels" show="nav.displayQuality" time="nav.timeSelected"></report-card>
     </cs-card-layout>
   </div>
+</div>
+<div class="detail-reports" ng-if="nav.displayDetails">
+<div class="detail-reports-content">
+<div class="gridStyle col-md-12" ui-grid="nav.gridOptions" ui-grid-infinite-scroll grid-spinner="nav.gridRefresh"></div>
+</div>
+</div>
 </div>
