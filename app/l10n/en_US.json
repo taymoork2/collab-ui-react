@@ -3435,6 +3435,8 @@
     "subscriptionID": "Subscription ID: ",
     "spark": "Cisco Spark",
     "sparkStub": "Set up Cisco Spark",
+    "switchToDefaultPlanView": "View the complete services in this subscription",
+    "switchToPendingPlanView": "Only show new services",
     "webex": "WebEx",
     "webexMsg": "Webex Conferencing",
     "webexStub": "Set up Webex",

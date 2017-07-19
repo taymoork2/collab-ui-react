@@ -70,6 +70,10 @@ export class SetupWizardService {
     return _.some(this.pendingLicenses, (license: IPendingLicense) => { return license.status === this.Config.licenseStatus.INITIALIZED && (_.includes([this.Config.licenseTypes.COMMUNICATION, this.Config.licenseTypes.SHARED_DEVICES], license.licenseType)); });
   }
 
+  public getPendingCallLicenses(): IPendingLicense[] {
+    return _.filter(this.pendingLicenses, (license: IPendingLicense) => { return license.status === this.Config.licenseStatus.INITIALIZED && (_.includes([this.Config.licenseTypes.COMMUNICATION, this.Config.licenseTypes.SHARED_DEVICES], license.licenseType)); });
+  }
+
   private getActingSubscription(): IPendingOrderSubscription {
     return _.find(this.Authinfo.getSubscriptions(), { externalSubscriptionId: this.getActingSubscriptionId() });
   }

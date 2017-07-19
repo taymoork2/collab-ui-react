@@ -6,7 +6,7 @@
     .controller('PlanReviewCtrl', PlanReviewCtrl);
 
   /* @ngInject */
-  function PlanReviewCtrl($translate, Authinfo, Config, TrialService, WebExUtilsFact) {
+  function PlanReviewCtrl($translate, Authinfo, Config, SetupWizardService, TrialService, WebExUtilsFact) {
     var vm = this;
     var classes = {
       userService: 'user-service-',
@@ -54,7 +54,24 @@
     vm._helpers = {
       maxServiceRows: maxServiceRows,
     };
+
     vm.isCareEnabled = false;
+
+    // TODO update this logic when Room, Message and Care licenses are implemented.
+    vm.pendingMeetingLicenses = SetupWizardService.getPendingMeetingLicenses() || [];
+    vm.pendingCallLicenses = SetupWizardService.getPendingCallLicenses() || [];
+    vm.hasPendingLicenses = (vm.pendingMeetingLicenses.length > 0) || (vm.pendingCallLicenses.length > 0);
+    if (vm.hasPendingLicenses) {
+      _.forEach([vm.pendingMeetingLicenses, vm.pendingCallLicenses], function (licenseArray) {
+        getPendingLicenseDisplayValues(licenseArray);
+      });
+    }
+    vm.showPendingView = vm.hasPendingLicenses;
+
+    // Toggles view between all licenses and new licenses. Defaults to true when user has new licenses.
+    vm.switchViews = function () {
+      vm.showPendingView = !vm.showPendingView;
+    };
 
     vm.getNamedLabel = function (label) {
       switch (label) {
@@ -96,6 +113,16 @@
     function maxServiceRows() {
       var confLength = _.get(vm.confServices, 'services.length', 0) + _.get(vm.cmrServices, 'services.length', 0);
       return _.max([confLength, vm.messagingServices.services.length, vm.commServices.services.length]);
+    }
+
+    function getPendingLicenseDisplayValues(licenses) {
+      _.forEach(licenses, function (license) {
+        var translatedNameString = 'subscriptions.licenseTypes.' + license.offerName;
+        license.displayName = $translate.instant(translatedNameString);
+        if (license.capacity) {
+          license.displayName += ' ' + license.capacity;
+        }
+      });
     }
 
     function init() {
