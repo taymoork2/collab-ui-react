@@ -1474,7 +1474,9 @@
     "careLicenseCallMissingText": "Call is mandatory for voice-based Care services. To enable Call,",
     "careLicenseMsgAndCallMissingText": "Message and Call are mandatory for Care services like chat and voice interaction respectively. To enable Message and Call,",
     "careLicenseLinkText": "contact your partner or Cisco sales.",
-    "proPackNotification": "Unleash the full power of the Spark Control Hub with Pro Pack."
+    "proPackNotification": "Unleash the full power of the Spark Control Hub with Pro Pack.",
+    "callServiceHighAvailability": "Hybrid Call Service is configured, but one or more clusters only has a single node running Call Connector. Your deployment does not meet the requirements for high availability.",
+    "callServiceHighAvailabilityLink": "Open Documentation"
   },
   "inviteModal": {
     "title": "Service Entitlement",

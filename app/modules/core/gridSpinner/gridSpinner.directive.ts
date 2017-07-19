@@ -3,15 +3,19 @@ interface IGridSpinnerAttributes extends ng.IAttributes {
   gridSpinner: any;
 }
 
+interface IScopeWithSpinner extends ng.IScope {
+  showSpinner?: boolean;
+}
+
 export class GridSpinnerDirective implements ng.IDirective {
   public restrict = 'A';
   public link: ng.IDirectiveLinkFn = (
-    $scope: ng.IScope,
+    $scope: IScopeWithSpinner,
     $element: ng.IAugmentedJQuery,
     $attr: IGridSpinnerAttributes,
   ) => {
 
-    const myScope = $scope.$new(true);
+    const myScope: IScopeWithSpinner = $scope.$new(true);
     const spinnerElement = this.$compile(
       `<div class="grid-spinner" ng-if="showSpinner">
         <i class='icon icon-spinner icon-2x'></i>
