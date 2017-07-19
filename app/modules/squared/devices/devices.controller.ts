@@ -7,6 +7,16 @@ import { FilteredDeviceViewDataSource } from './filtered-deviceview-datasource';
 import { DeviceMatcher } from './device-matcher';
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 
+interface ICustomScope extends ng.IScope {
+  gridApi: {
+    selection: {
+      on: {
+        rowSelectionChanged: Function,
+      },
+    },
+  };
+}
+
 export class DevicesController {
 
   public exporting: boolean;
@@ -51,7 +61,7 @@ export class DevicesController {
     $timeout: ng.ITimeoutService,
     CsdmDataModelService: ICsdmDataModelService,
     AccountOrgService,
-    $scope: ng.IScope,
+    $scope: ICustomScope,
     CsdmHuronOrgDeviceService,
     private Authinfo,
   ) {
