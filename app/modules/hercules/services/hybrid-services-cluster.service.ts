@@ -405,6 +405,29 @@ export class HybridServicesClusterService {
     });
   }
 
+  /* Caution: This function is written with Hybrid Call in mind, and reflects their definition of High Availability (HA).
+   * Before using it on other connectors, make sure to verify their HA definitions. Note that this function should not
+   * be used for c_cal, because they do not follow this HA definition.   */
+  public serviceHasHighAvailability(connectorType: ConnectorType, orgId?: string): ng.IPromise<boolean> {
+    return this.getAll(orgId)
+      .then((clusters) => {
+        return _.filter(clusters, (cluster) => {
+          return _.some(cluster.provisioning, (provisioning) => provisioning.connectorType === connectorType);
+        });
+      })
+      .then((clusters) => {
+        return _.map(clusters, (cluster) => {
+          return _.reduce(cluster.connectors, (sum, connector) => sum + Number(connector.connectorType === connectorType) , 0);
+        });
+      })
+      .then((connectorCounts) => {
+        if (connectorCounts.length === 0) {
+          return false;
+        }
+        return !_.some(connectorCounts, (connectorCount) => connectorCount < 2);
+      });
+  }
+
   private addUserCount(response): ng.IPromise<any> {
     if (response.groups.length === 0) {
       return response;
