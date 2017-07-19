@@ -9,8 +9,8 @@ export interface IVoicemailPilotNumber {
 }
 
 export class VoicemailPilotNumber implements IVoicemailPilotNumber {
-  public number: string | null;
-  public generated: boolean;
+  public number;
+  public generated;
 
   constructor(voicemailPilotNumber: IVoicemailPilotNumber = {
     number: null,
@@ -27,8 +27,8 @@ export interface IRegionCodeDialing {
 }
 
 export class RegionCodeDialing implements IRegionCodeDialing {
-  public regionCode: string | null;
-  public simplifiedNationalDialing: boolean;
+  public regionCode;
+  public simplifiedNationalDialing;
 
   constructor(regionalCodeDialing: IRegionCodeDialing = {
     regionCode: null,
@@ -51,14 +51,7 @@ export interface ILocationListItem extends IBaseLocation {
   placeCount: number;
 }
 
-export class LocationListItem implements ILocationListItem {
-  public uuid?: string;
-  public name: string;
-  public routingPrefix?: string;
-  public defaultLocation: boolean;
-  public userCount: number;
-  public placeCount: number;
-
+export class ILocationListItem implements ILocationListItem {
   constructor(locationListItem: ILocationListItem = {
     uuid: undefined,
     name: '',
@@ -90,22 +83,20 @@ export interface ILocation extends IBaseLocation {
 }
 
 export class Location implements ILocation {
-  public uuid?: string;
-  public name: string;
-  public routingPrefix?: string;
-  public defaultLocation: boolean;
-  public userCount: number;
-  public placeCount: number;
-  public timeZone: string;
-  public preferredLanguage?: string;
-  public tone: string;
-  public dateFormat: string;
-  public timeFormat: string;
-  public steeringDigit?: number;
-  public allowExternalTransfer: boolean;
-  public voicemailPilotNumber: IVoicemailPilotNumber;
-  public regionCodeDialing: IRegionCodeDialing;
-  public callerIdNumber?: string;
+  public uuid;
+  public name;
+  public timeZone;
+  public timeFormat;
+  public dateFormat;
+  public preferredLanguage;
+  public tone;
+  public routingPrefix;
+  public steeringDigit;
+  public defaultLocation;
+  public allowExternalTransfer;
+  public voicemailPilotNumber;
+  public regionCodeDialing;
+  public callerIdNumber;
 
   constructor (location: ILocation = {
     uuid: undefined,
