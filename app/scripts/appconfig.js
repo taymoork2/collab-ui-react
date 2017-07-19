@@ -3125,7 +3125,7 @@
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/huron/settings'));
+                  done(require('modules/call/settings'));
                 }, 'call-settings');
               }),
             },
@@ -3166,7 +3166,7 @@
             parent: 'modal',
             views: {
               'modal@': {
-                templateUrl: 'modules/huron/settings/bulkEnableVmModal/bulkEnableVmModal.html',
+                templateUrl: 'modules/call/settings/settings-bulk-enable-vm-modal/settings-bulk-enable-vm-modal.html',
               },
             },
           })
