@@ -1,64 +1,138 @@
+import { ProvisioningService } from './provisioning.service';
+import { IOrders } from './provisioning.interfaces';
+import { IOrder } from './provisioning.interfaces';
+import { Status } from './provisioning.service';
+import { DATE_FORMAT } from './provisioning.service';
+
+export interface IGridApiScope extends ng.IScope {
+  gridApi?: uiGrid.IGridApi;
+}
+
 export class ProvisioningController {
 
-  private results: any[];
-  private tabs: Object[];
+  public tabs = [{
+    title: 'provisioningConsole.tabs.pending',
+    state: 'provisioning.pending',
+  }, {
+    title: 'provisioningConsole.tabs.completed',
+    state: 'provisioning.completed',
+  }];
+  public isLoading: boolean = false;
+
   private timer: any;
-  private completedResults: any;
-  private pendingProgress: any;
-  private gridOptions: any;
+  public completedOrders: any;
+  public pendingOrders: any;
+  private gridOptions: { pending: uiGrid.IGridOptions, completed: uiGrid.IGridOptions };
+  private sharedColumDefs: uiGrid.IColumnDef[];
+  private static sharedGridOptions: uiGrid.IGridOptions = {
+    enableHorizontalScrollbar: 0,
+    rowHeight: 45,
+    enableRowHeaderSelection: false,
+    enableColumnMenus: false,
+    multiSelect: false,
+  };
 
   /* @ngInject */
   constructor(
-    private $scope: ng.IScope,
+    private $scope: IGridApiScope,
     private $state: ng.ui.IStateService,
     private $templateCache: ng.ITemplateCacheService,
+    private $q: ng.IQService,
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
-    private ProvisioningService) {
-    this.init();
-  }
+    private ProvisioningService: ProvisioningService) {
 
-  private init(): void {
-    /*
-    * Get order data from the api.
-    */
-    this.results = this.getOrderData();
-    /*
-    * Call the function that filters all the results by status.
-    */
-    this.getAndFilterResults();
+
+    this.sharedColumDefs = [{
+      field: 'webOrderID',
+      displayName: this.$translate.instant('provisioningConsole.orderNumber'),
+    }, {
+      field: 'customerName',
+      displayName: this.$translate.instant('provisioningConsole.customerName'),
+    }, {
+      field: 'adminEmail',
+      displayName: this.$translate.instant('provisioningConsole.customerMail'),
+    }, {
+      field: 'manualCode',
+      displayName: this.$translate.instant('provisioningConsole.manualCode'),
+      width: '7%',
+    },
+    {
+      field: 'siteUrl',
+      displayName: this.$translate.instant('provisioningConsole.siteUrl'),
+    },
+    {
+      field: 'orderReceived',
+      displayName: this.$translate.instant('provisioningConsole.orderReceived'),
+      cellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.provisioningCtrl.formatDate(row.entity.orderReceived)}} </div>',
+      type: 'date',
+    },
+    {
+      field: 'lastModified',
+      displayName: this.$translate.instant('provisioningConsole.lastModified'),
+      type: 'date',
+      cellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.provisioningCtrl.formatDate(row.entity.lastModified)}} </div>',
+    },
+    {
+      field: 'status',
+      displayName: this.$translate.instant('provisioningConsole.status'),
+    }];
 
     /*
     * Define the tabs for the header.
     */
     this.tabs = [{
-      title: this.$translate.instant('provisioningConsole.tabs.pending'),
+      title: 'provisioningConsole.tabs.pending',
       state: 'provisioning.pending',
     }, {
-      title: this.$translate.instant('provisioningConsole.tabs.completed'),
+      title: 'provisioningConsole.tabs.completed',
       state: 'provisioning.completed',
     }];
+
+    this.init();
   }
 
-  /*
-  * Open the side panel.
-  */
+  private init(): void {
+    this.isLoading = true;
+    this.gridOptions = this.getGridOptions();
+    this.getOrderData().then((results: IOrders) => {
+      this.setGridData(results);
+    })
+    .finally(() => {
+      this.isLoading = false;
+    });
+  }
+
+
   public showDetails(row) {
     this.$state.go('order-details', { order: row });
   }
 
   /*
   * Move an order between pending, in progress and completed.
+  * TODO: algendel - the logic of this function will change once back end is plalce
   */
-  public moveTo(order, category) {
-    this.results = this.ProvisioningService.updateOrderStatus(order, category);
-    this.getAndFilterResults();
+  public moveTo(order, newStatus: Status): void {
+    this.isLoading = true;
+    this.ProvisioningService.updateOrderStatus(order, newStatus).then((results) => {
+      if (results) {
+        order.status = newStatus;
+        if (newStatus === Status.completed) {
+          //moving from pending dataset to completed no reason to get results again - just modify existing datasets
+          const pendingIndex = _.findIndex(this.pendingOrders, { orderUUID: order.orderUUID, siteUrl: order.siteUrl });
+          if (pendingIndex > -1) {
+            this.completedOrders.push(this.pendingOrders.splice(pendingIndex, 1));
+          }
+        }
+      }
+    })
+      .finally(() => {
+        this.isLoading = false;
+      });
   }
 
   /*
   * Search for a specific order number.
-  * TODO: Hook this up to a Service (Sarah)
-  * TODO: Hook the service up to the backend (backend team)
   */
   public setCurrentSearch(searchStr) {
     if (this.timer) {
@@ -66,130 +140,85 @@ export class ProvisioningController {
       this.timer = 0;
     }
 
-    this.timer = this.$timeout( () => {
+    this.timer = this.$timeout(() => {
       if (searchStr.length >= 3 || searchStr === '') {
-        this.results = this.getOrderData(searchStr);
-        this.getAndFilterResults();
+        this.pendingOrders = [];
+        this.completedOrders = [];
+        this.isLoading = true;
+        this.getOrderData(searchStr).then((results: IOrders) => {
+          this.setGridData(results);
+        })
+          .finally(() => {
+            this.isLoading = false;
+          });
       }
     }, 500);
   }
 
-  /*
-  * Filter all the results and grid options by status.
-  */
-  private getAndFilterResults() {
-    const pendingResults = this.filterOrders(0);
-    const progressResults = this.filterOrders(1);
-    this.completedResults = this.filterOrders(2);
-    this.pendingProgress = _.union(pendingResults, progressResults);
-    this.gridOptions = this.getGridOptions();
+  private setGridData(orders: IOrders): void {
+    this.pendingOrders = orders.pending;
+    this.completedOrders = orders.completed;
+
   }
 
-  /*
-  * Only return results with a certain status code.
-  */
-  private filterOrders(status) {
-    return _.filter(this.results, function (res) {
-      return parseInt(res.statusCode, 10) === parseInt(status, 10);
-    });
-  }
-
-  /*
-  * Load templates from the template folder.
-  */
-  private getTemplate(tpl) {
+  private getTemplate(tpl): {} {
     return this.$templateCache.get('modules/squared/provisioning-console/templates/' + tpl + '.html');
   }
 
-  /*
-  * Get the data from the API.
-  * TODO: Hook the service up to the back-end (back-end team)
-  * TODO: If the actual API ends up returning differently formatted data, the back-end team might have to make slight changes to the front-end code to make it match.
-  */
-  public getOrderData(searchStr?: string) {
-    if (searchStr && searchStr.length > 0) {
-      return this.ProvisioningService.searchForOrders();
-    } else {
-      return this.ProvisioningService.getOrders();
-    }
+  public getOrderData(searchStr?: string): ng.IPromise<{ pending: IOrder[], completed: IOrder[] }> {
+    const orders = {
+      pending: this.ProvisioningService.getOrders(Status.pending),
+      completed: this.ProvisioningService.getOrders(Status.completed),
+    };
+    return this.$q.all(orders).then((results) => {
+      if (searchStr && searchStr.length > 0) {
+        results.completed = _.filter(results.completed, { webOrderID: searchStr });
+        results.pending = _.filter(results.pending, { webOrderID: searchStr });
+      }
+
+      return results;
+    });
   }
 
+  public formatDate(date): string {
+    return moment(date).format(DATE_FORMAT);
+  }
   /*
   * Get the options for the pending/in progress and completed table.
   */
-  private getGridOptions() {
-    return {
-      pending: {
-        data: this.pendingProgress,
-        enableHorizontalScrollbar: 0,
-        rowHeight: 45,
-        enableRowHeaderSelection: false,
-        enableColumnMenus: false,
-        multiSelect: false,
-        onRegisterApi: (gridApi) => {
-          this.$scope.gridApi = gridApi;
-          gridApi.selection.on.rowSelectionChanged(this.$scope, (row) => {
-            this.showDetails(row.entity);
-          });
-        },
-        columnDefs: [{
-          field: 'orderNumber',
-          displayName: this.$translate.instant('provisioningConsole.orderNumber'),
-        }, {
-          field: 'customerName',
-          displayName: this.$translate.instant('provisioningConsole.customerName'),
-        }, {
-          field: 'customerMail',
-          displayName: this.$translate.instant('provisioningConsole.customerMail'),
-        }, {
-          field: 'manualTask',
-          displayName: this.$translate.instant('provisioningConsole.manualTask'),
-        }, {
-          field: 'status',
-          displayName: this.$translate.instant('provisioningConsole.status'),
-        }, {
-          field: 'received',
-          displayName: this.$translate.instant('provisioningConsole.received'),
-        }, {
-          field: 'actions',
-          displayName: this.$translate.instant('provisioningConsole.actions.title'),
-          cellTemplate: this.getTemplate('actions'),
-        }],
-      },
-      completed: {
-        data: this.completedResults,
-        enableHorizontalScrollbar: 0,
-        rowHeight: 45,
-        enableRowHeaderSelection: false,
-        enableColumnMenus: false,
-        multiSelect: false,
-        onRegisterApi: (gridApi) => {
-          this.$scope.gridApi = gridApi;
-          gridApi.selection.on.rowSelectionChanged(this.$scope, (row) => {
-            this.showDetails(row.entity);
-          });
-        },
-        columnDefs: [{
-          field: 'orderNumber',
-          displayName: this.$translate.instant('provisioningConsole.orderNumber'),
-        }, {
-          field: 'customerName',
-          displayName: this.$translate.instant('provisioningConsole.customerName'),
-        }, {
-          field: 'customerMail',
-          displayName: this.$translate.instant('provisioningConsole.customerMail'),
-        }, {
-          field: 'manualTask',
-          displayName: this.$translate.instant('provisioningConsole.manualTask'),
-        }, {
-          field: 'status',
-          displayName: this.$translate.instant('provisioningConsole.status'),
-        }, {
-          field: 'completionDate',
-          displayName: this.$translate.instant('provisioningConsole.completed'),
-        }],
-      },
+  private getGridOptions(): { pending: uiGrid.IGridOptions, completed: uiGrid.IGridOptions } {
+    const customPendingFields = [{
+      field: 'actions',
+      displayName: this.$translate.instant('provisioningConsole.actions.title'),
+      cellTemplate: this.getTemplate('actions'),
+    }];
+
+    const result = {
+      pending: _.extend({}, ProvisioningController.sharedGridOptions),
+      completed: _.merge({}, ProvisioningController.sharedGridOptions),
     };
+
+    result.pending.data = 'provisioningCtrl.pendingOrders';
+    result.completed.data = 'provisioningCtrl.completedOrders';
+    result.pending.columnDefs = this.sharedColumDefs.concat(customPendingFields);
+    result.completed.columnDefs = _.filter(this.sharedColumDefs, (def) => {
+      return def.field !== 'orderReceived';
+    });
+
+    result.pending.onRegisterApi = (gridApi) => {
+      this.$scope.gridApi = gridApi;
+      gridApi.selection.on.rowSelectionChanged(this.$scope, (row) => {
+        this.showDetails(row.entity);
+      });
+    };
+    result.completed.onRegisterApi = (gridApi) => {
+      this.$scope.gridApi = gridApi;
+      gridApi.selection.on.rowSelectionChanged(this.$scope, (row) => {
+        this.showDetails(row.entity);
+      });
+    };
+    return result;
+
   }
 }
 

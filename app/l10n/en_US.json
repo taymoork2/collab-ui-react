@@ -1148,12 +1148,15 @@
     }
   },
   "provisioningConsole": {
-    "orderNumber": "Order Number",
-    "manualTask": "Manual Task Code",
+    "provisioningConsole": "Provisioning Console",
+    "orderNumber": "Order Number: {{orderNumber}}",
+    "manualCode": "Manual Code",
     "customerName": "Customer Name",
     "customerMail": "Customer Email",
     "status": "Status",
-    "received": "Request Received",
+    "orderReceived": "Order Received",
+    "lastModified": "Last Modified",
+    "siteUrl": "Site Url",
     "completed": "Completion Date",
     "actions": {
       "title": "Actions",

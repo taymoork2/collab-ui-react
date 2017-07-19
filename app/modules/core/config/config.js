@@ -433,7 +433,7 @@
         'services-overview',
       ],
       Application: ['organizations', 'organization-overview'],
-      Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org', 'helpdesklaunch', 'provisioning', 'provisioning.pending', 'provisioning.completed', 'order-details'],
+      Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org', 'helpdesklaunch', 'provisioning', 'order-details'],
       Compliance_User: ['ediscovery', 'ediscovery.search', 'ediscovery.reports'],
       Partner_Management: ['partnerManagement'],
     };

@@ -64,7 +64,7 @@ require('./_support.scss');
 
     function initializeShowLinks() {
       FeatureToggleService.atlasOrderProvisioningConsoleGetStatus().then(function (result) {
-        $scope.showOrderProvisioningConsole = !result;
+        $scope.showOrderProvisioningConsole = Authinfo.isOrderAdminUser() && result;
       });
       Userservice.getUser('me', function (user, status) {
         if (user.success) {

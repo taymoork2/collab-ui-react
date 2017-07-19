@@ -2,25 +2,23 @@
   <cs-sp-header>
     <div class="header-info">
       <div class="header-info-wrap">
-        <p>{{provisioningDetailsCtrl.dateInfo}}</p>
-        <div class="header-basic-info">
-          <div>
-            <p translate="provisioningConsole.orderNumber"></p>
-            <h3>{{provisioningDetailsCtrl.order.orderNumber}}</h3>
-          </div>
-          <div>
-            <p translate="provisioningConsole.manualTask"></p>
-            <h3 class="manual-task">{{provisioningDetailsCtrl.order.manualTask}}</h3>
-          </div>
-        </div>
+        <h3 translate="provisioningConsole.orderNumber" translate-values="{orderNumber: provisioningDetailsCtrl.order.webOrderID}"></h3>
+        <p>{{provisioningDetailsCtrl.dateInfo}}
+        </p>
       </div>
     </div>
   </cs-sp-header>
-
-
   <cs-sp-container>
     <cs-sp-section>
-      <h5 translate="provisioningConsole.details.customerInfo.title"></h5>
+      <div class="form-group">
+        <label class="col-sm-4 control-label" translate="provisioningConsole.manualCode"></label>
+        <div class="col-sm-8">
+          <p class="form-control-static">{{provisioningDetailsCtrl.order.manualCode}}</p>
+        </div>
+      </div>
+      <section-title title-key="provisioningConsole.details.customerInfo.title">
+      </section-title>
+
       <div class="form-group">
         <label class="col-sm-4 control-label" translate="provisioningConsole.customerName"></label>
         <div class="col-sm-8">
@@ -30,7 +28,7 @@
       <div class="form-group">
         <label class="col-sm-4 control-label" translate="provisioningConsole.customerMail"></label>
         <div class="col-sm-8">
-          <p class="form-control-static">{{provisioningDetailsCtrl.order.customerMail || '-'}}</p>
+          <p class="form-control-static">{{provisioningDetailsCtrl.order.adminEmail || '-'}}</p>
         </div>
       </div>
       <div class="form-group">
@@ -46,37 +44,25 @@
         </div>
       </div>
     </cs-sp-section>
-
-    <cs-sp-section ng-if="provisioningDetailsCtrl.order.site.length > 0">
-      <h5 translate="provisioningConsole.details.siteInfo.title"></h5>
-      <div class="row site-selector">
-        <div class="large-12">
-          <cs-select
-            ng-model="provisioningDetailsCtrl.selectedSite"
-            options="provisioningDetailsCtrl.order.site"
-            placeholder=""
-            labelfield="siteUrl"
-            valuefield="siteUrl"
-            nested="true"
-            icon="icon-chevron-down"
-            iconnested="icon-chevron-right"
-            on-change-fn="provisioningDetailsCtrl.changeSelectedSite()"
-            >
-          </cs-select>
-        </div>
+    <cs-sp-section ng-if="provisioningDetailsCtrl.order.siteUrl">
+      <section-title title-key="provisioningConsole.details.siteInfo.title"></section-title>
+      <div class="text-center" ng-show="provisioningDetailsCtrl.isLoading">
+          <i class="icon icon-spinner icon-2x"></i>
       </div>
       <div class="form-group">
         <label class="col-sm-4 control-label" translate="provisioningConsole.details.siteInfo.url"></label>
         <div class="col-sm-8">
-          <p class="form-control-static">{{provisioningDetailsCtrl.selectedSite.siteUrl || '-'}}</p>
+          <p class="form-control-static">{{provisioningDetailsCtrl.order.siteUrl || '-'}}</p>
         </div>
       </div>
+
       <div class="form-group">
         <label class="col-sm-4 control-label" translate="provisioningConsole.details.siteInfo.action"></label>
         <div class="col-sm-8">
           <p class="form-control-static">{{provisioningDetailsCtrl.selectedSite.action || '-'}}</p>
         </div>
       </div>
+      <!-- AG don't have these fields -->
       <div class="form-group">
         <label class="col-sm-4 control-label" translate="provisioningConsole.details.siteInfo.timezone"></label>
         <div class="col-sm-8">
@@ -101,228 +87,51 @@
           <p class="form-control-static">{{provisioningDetailsCtrl.selectedSite.primaryLanguage || '-'}}</p>
         </div>
       </div>
-
-      <!-- Audio -->
-      <div ng-if="provisioningDetailsCtrl.selectedAudioItems && provisioningDetailsCtrl.selectedAudioItems.length > 0">
-        <!-- <h5 class="services-title">Audio for {{provisioningDetailsCtrl.selectedSite.siteUrl}}</h5> -->
-        <h5 class="services-title">{{provisioningDetailsCtrl.audioTitle}}</h5>
-        <!-- Audio for {{provisioningDetailsCtrl.selectedSite.siteUrl}} -->
-        <div ng-repeat="audioItem in provisioningDetailsCtrl.selectedAudioItems" class="provisioning-services">
-          <h6 ng-if="provisioningDetailsCtrl.selectedAudioItems.length > 1">{{audioItem.productName}}</h6>
-          <div class="form-group">
-            <label class="col-sm-4 control-label" translate="provisioningConsole.details.audio.product"></label>
-            <div class="col-sm-8">
-              <p class="form-control-static">{{audioItem.productName || '-'}}</p>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-4 control-label" translate="provisioningConsole.details.audio.service"></label>
-            <div class="col-sm-8">
-              <p class="form-control-static">{{audioItem.serviceName || '-'}}</p>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-4 control-label" translate="provisioningConsole.details.audio.action"></label>
-            <div class="col-sm-8">
-              <p class="form-control-static">{{audioItem.action || '-'}}</p>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-4 control-label" translate="provisioningConsole.details.audio.broadcast"></label>
-            <div class="col-sm-8">
-              <p class="form-control-static">{{audioItem.audioBroadcast || '-'}}</p>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-4 control-label" translate="provisioningConsole.details.audio.callback"></label>
-            <div class="col-sm-8">
-              <p class="form-control-static">{{audioItem.callBack || '-'}}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Conferencing -->
-      <div ng-if="provisioningDetailsCtrl.selectedConferencingItems && provisioningDetailsCtrl.selectedConferencingItems.length > 0">
-        <h5 class="services-title">{{provisioningDetailsCtrl.conferencingTitle}}</h5>
-        <div ng-repeat="confItem in provisioningDetailsCtrl.selectedConferencingItems" class="provisioning-services">
-          <h6 ng-if="provisioningDetailsCtrl.selectedConferencingItems.length > 1">{{confItem.productName}}</h6>
-          <div class="form-group">
-            <label class="col-sm-4 control-label" translate="provisioningConsole.details.conferencing.product"></label>
-            <div class="col-sm-8">
-              <p class="form-control-static">{{confItem.productName || '-'}}</p>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-4 control-label" translate="provisioningConsole.details.conferencing.service"></label>
-            <div class="col-sm-8">
-              <p class="form-control-static">{{confItem.serviceName || '-'}}</p>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-4 control-label" translate="provisioningConsole.details.conferencing.action"></label>
-            <div class="col-sm-8">
-              <p class="form-control-static">{{confItem.action || '-'}}</p>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-4 control-label" translate="provisioningConsole.details.conferencing.attendeeCapacity"></label>
-            <div class="col-sm-8">
-              <p class="form-control-static">{{confItem.attendeeCapacity || '-'}}</p>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-4 control-label" translate="provisioningConsole.details.conferencing.attendeeOverage"></label>
-            <div class="col-sm-8">
-              <p class="form-control-static">{{confItem.attendeeOverage || '-'}}</p>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-4 control-label" translate="provisioningConsole.details.conferencing.licenseVolume"></label>
-            <div class="col-sm-8">
-              <p class="form-control-static">{{confItem.licenseVolume || '-'}}</p>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-4 control-label" translate="provisioningConsole.details.conferencing.licenseOverage"></label>
-            <div class="col-sm-8">
-              <p class="form-control-static">{{confItem.licenseOverage || '-'}}</p>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-4 control-label" translate="provisioningConsole.details.conferencing.licenseModel"></label>
-            <div class="col-sm-8">
-              <p class="form-control-static">{{confItem.licenseModel || '-'}}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Storage -->
-      <div ng-if="provisioningDetailsCtrl.selectedStorageItems && provisioningDetailsCtrl.selectedStorageItems.length > 0">
-        <h5 class="services-title">{{provisioningDetailsCtrl.storageTitle}}</h5>
-        <div ng-repeat="storageItem in provisioningDetailsCtrl.selectedStorageItems" class="provisioning-services">
-          <h6 ng-if="provisioningDetailsCtrl.selectedStorageItems.length > 1">{{storageItem.productName}}</h6>
-          <div class="form-group">
-            <label class="col-sm-4 control-label" translate="provisioningConsole.details.storage.product"></label>
-            <div class="col-sm-8">
-              <p class="form-control-static">{{storageItem.productName || '-'}}</p>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-4 control-label" translate="provisioningConsole.details.storage.service"></label>
-            <div class="col-sm-8">
-              <p class="form-control-static">{{storageItem.serviceName || '-'}}</p>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-4 control-label" translate="provisioningConsole.details.storage.storageCapacity"></label>
-            <div class="col-sm-8">
-              <p class="form-control-static">{{storageItem.storageCapacity || '-'}}</p>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-4 control-label" translate="provisioningConsole.details.storage.storageOverage"></label>
-            <div class="col-sm-8">
-              <p class="form-control-static">{{storageItem.storageOverage || '-'}}</p>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-4 control-label" translate="provisioningConsole.details.storage.action"></label>
-            <div class="col-sm-8">
-              <p class="form-control-static">{{storageItem.action || '-'}}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- CMR -->
-      <div ng-if="provisioningDetailsCtrl.selectedCmrItems && provisioningDetailsCtrl.selectedCmrItems.length > 0">
-        <h5 class="services-title">{{provisioningDetailsCtrl.cmrTitle}}</h5>
-        <div ng-repeat="cmrItem in provisioningDetailsCtrl.selectedCmrItems" class="provisioning-services">
-          <h6 ng-if="provisioningDetailsCtrl.selectedCmrItems.length > 1">{{cmrItem.productName}}</h6>
-          <div class="form-group">
-            <label class="col-sm-4 control-label" translate="provisioningConsole.details.cmr.product"></label>
-            <div class="col-sm-8">
-              <p class="form-control-static">{{cmrItem.productName || '-'}}</p>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-4 control-label" translate="provisioningConsole.details.cmr.service"></label>
-            <div class="col-sm-8">
-              <p class="form-control-static">{{cmrItem.serviceName || '-'}}</p>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-4 control-label" translate="provisioningConsole.details.cmr.cmrCapacity"></label>
-            <div class="col-sm-8">
-              <p class="form-control-static">{{cmrItem.cmrCapacity || '-'}}</p>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-4 control-label" translate="provisioningConsole.details.cmr.cmrLicense"></label>
-            <div class="col-sm-8">
-              <p class="form-control-static">{{cmrItem.cmrLicenseVolume || '-'}}</p>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-4 control-label" translate="provisioningConsole.details.cmr.action"></label>
-            <div class="col-sm-8">
-              <p class="form-control-static">{{cmrItem.action || '-'}}</p>
-            </div>
-          </div>
-        </div>
-      </div>
     </cs-sp-section>
-
-    <!-- When no sites are listed -->
-    <cs-sp-section ng-if="provisioningDetailsCtrl.order.site.length <= 0">
-      <p translate="provisioningConsole.details.noSites"></p>
-    </cs-sp-section>
-
-    <!-- When there are service items for unexisting sites: Audio -->
-    <cs-sp-section ng-if="provisioningDetailsCtrl.generalAudioItems && provisioningDetailsCtrl.generalAudioItems.length > 0">
-      <h5 translate="provisioningConsole.details.audio.general"></h5>
-      <div ng-repeat="audioItem in provisioningDetailsCtrl.generalAudioItems" class="provisioning-services">
-        <h6 ng-if="provisioningDetailsCtrl.generalAudioItems.length > 1">{{audioItem.productName}}</h6>
+    <!-- Audio -->
+    <cs-sp-section ng-if="provisioningDetailsCtrl.items.audio.serviceTypeItems.length > 0">
+      <section-title title-key="{{provisioningDetailsCtrl.items.audio.title}}"></section-title>
+      <!-- Audio for {{provisioningDetailsCtrl.selectedSite.siteUrl}} -->
+      <div ng-repeat="audioItem in provisioningDetailsCtrl.items.audio.serviceTypeItems" class="provisioning-services">
+        <h6 ng-if="provisioningDetailsCtrl.items.audio.serviceTypeItems.length > 1">{{audioItem.productName}}</h6>
         <div class="form-group">
           <label class="col-sm-4 control-label" translate="provisioningConsole.details.audio.product"></label>
           <div class="col-sm-8">
-            <p class="form-control-static">{{audioItem.productName}}</p>
+            <p class="form-control-static">{{audioItem.productName || '-'}}</p>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-4 control-label" translate="provisioningConsole.details.audio.service"></label>
           <div class="col-sm-8">
-            <p class="form-control-static">{{audioItem.serviceName}}</p>
+            <p class="form-control-static">{{audioItem.serviceName || '-'}}</p>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-4 control-label" translate="provisioningConsole.details.audio.action"></label>
           <div class="col-sm-8">
-            <p class="form-control-static">{{audioItem.action}}</p>
+            <p class="form-control-static">{{audioItem.action || '-'}}</p>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-4 control-label" translate="provisioningConsole.details.audio.broadcast"></label>
           <div class="col-sm-8">
-            <p class="form-control-static">{{audioItem.audioBroadcast}}</p>
+            <p class="form-control-static">{{audioItem.audioBroadcast || '-'}}</p>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-4 control-label" translate="provisioningConsole.details.audio.callback"></label>
           <div class="col-sm-8">
-            <p class="form-control-static">{{audioItem.callBack}}</p>
+            <p class="form-control-static">{{audioItem.callBack || '-'}}</p>
           </div>
         </div>
       </div>
     </cs-sp-section>
 
-    <!-- When there are service items for unexisting sites: Conferencing -->
-    <cs-sp-section ng-if="provisioningDetailsCtrl.generalConferencingItems && provisioningDetailsCtrl.generalConferencingItems.length > 0">
-      <h5 translate="provisioningConsole.details.conferencing.general"></h5>
-      <div ng-repeat="confItem in provisioningDetailsCtrl.generalConferencingItems" class="provisioning-services">
-        <h6 ng-if="provisioningDetailsCtrl.generalConferencingItems.length > 1">{{confItem.productName}}</h6>
+    <!-- Conferencing -->
+    <cs-sp-section ng-if="provisioningDetailsCtrl.items.conferencing.serviceTypeItems.length > 0">
+      <section-title title-key="{{provisioningDetailsCtrl.items.conferencing.title}}"></section-title>
+      <div ng-repeat="confItem in provisioningDetailsCtrl.items.conferencing.serviceTypeItems" class="provisioning-services">
+        <h6 ng-if="provisioningDetailsCtrl.items.conferencing.serviceTypeItems.length > 1">{{confItem.productName}}</h6>
         <div class="form-group">
           <label class="col-sm-4 control-label" translate="provisioningConsole.details.conferencing.product"></label>
           <div class="col-sm-8">
@@ -374,11 +183,11 @@
       </div>
     </cs-sp-section>
 
-    <!-- When there are service items for unexisting sites: Storage -->
-    <cs-sp-section ng-if="provisioningDetailsCtrl.generalStorageItems && provisioningDetailsCtrl.generalStorageItems.length > 0">
-      <h5 translate="provisioningConsole.details.storage.general"></h5>
-      <div ng-repeat="storageItem in provisioningDetailsCtrl.generalStorageItems" class="provisioning-services">
-        <h6  ng-if="provisioningDetailsCtrl.generalStorageItems.length > 1">{{storageItem.productName}}</h6>
+    <!-- Storage -->
+    <cs-sp-section ng-if="provisioningDetailsCtrl.items.storage.serviceTypeItems.length > 0">
+      <section-title title-key="{{provisioningDetailsCtrl.items.storage.title}}"></section-title>
+      <div ng-repeat="storageItem in provisioningDetailsCtrl.items.storage.serviceTypeItems" class="provisioning-services">
+        <h6 ng-if="provisioningDetailsCtrl.items.storage.serviceTypeItems.length > 1">{{storageItem.productName}}</h6>
         <div class="form-group">
           <label class="col-sm-4 control-label" translate="provisioningConsole.details.storage.product"></label>
           <div class="col-sm-8">
@@ -398,7 +207,7 @@
           </div>
         </div>
         <div class="form-group">
-          <label class="col-sm-4 control-label" translate="provisioningConsole.details.storage.storageOverage">Storage Overage</label>
+          <label class="col-sm-4 control-label" translate="provisioningConsole.details.storage.storageOverage"></label>
           <div class="col-sm-8">
             <p class="form-control-static">{{storageItem.storageOverage || '-'}}</p>
           </div>
@@ -411,12 +220,11 @@
         </div>
       </div>
     </cs-sp-section>
-
-    <!-- When there are service items for unexisting sites: CMR -->
-    <cs-sp-section ng-if="provisioningDetailsCtrl.generalCmrItems && provisioningDetailsCtrl.generalCmrItems.length > 0">
-      <h5 translate="provisioningConsole.details.cmr.general">CMR</h5>
-      <div ng-repeat="cmrItem in provisioningDetailsCtrl.generalCmrItems" class="provisioning-services">
-        <h6  ng-if="provisioningDetailsCtrl.generalCmrItems.length > 1">{{cmrItem.productName}}</h6>
+    <!-- CMR -->
+    <cs-sp-section ng-if="provisioningDetailsCtrl.items.cmr.serviceTypeItems.length > 0">
+      <section-title title-key="{{provisioningDetailsCtrl.items.cmr.title}}"></section-title>
+      <div ng-repeat="cmrItem in provisioningDetailsCtrl.items.cmr.serviceTypeItems" class="provisioning-services">
+        <h6 ng-if="provisioningDetailsCtrl.items.cmr.serviceTypeItems.length > 1">{{cmrItem.productName}}</h6>
         <div class="form-group">
           <label class="col-sm-4 control-label" translate="provisioningConsole.details.cmr.product"></label>
           <div class="col-sm-8">
@@ -436,7 +244,7 @@
           </div>
         </div>
         <div class="form-group">
-          <label class="col-sm-4 control-label" translate="provisioningConsole.details.cmr.cmrLicenseVolume"></label>
+          <label class="col-sm-4 control-label" translate="provisioningConsole.details.cmr.cmrLicense"></label>
           <div class="col-sm-8">
             <p class="form-control-static">{{cmrItem.cmrLicenseVolume || '-'}}</p>
           </div>

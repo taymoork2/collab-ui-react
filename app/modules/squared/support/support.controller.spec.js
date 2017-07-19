@@ -33,6 +33,7 @@ describe('Controller: SupportCtrl', function () {
     spyOn(Authinfo, 'isCisco').and.returnValue(false);
     spyOn(Config, 'isProd').and.returnValue(false);
     spyOn(FeatureToggleService, 'atlasOrderProvisioningConsoleGetStatus').and.returnValue($q.resolve(true));
+    spyOn(Authinfo, 'isOrderAdminUser').and.returnValue(true);
     $scope = $rootScope.$new();
     controller = $controller('SupportCtrl', {
       $scope: $scope,
@@ -66,84 +67,92 @@ describe('Controller: SupportCtrl', function () {
     $scope.initializeShowLinks();
     expect($scope.showPartnerManagementLink).toEqual(false);
   });
+
   describe('launch Order Provisioning Console', function () {
     beforeEach(function () {
       $httpBackend.whenGET('https://ciscospark.statuspage.io/index.json').respond(200, {});
       $httpBackend.whenGET('https://identity.webex.com/organization/scim/v1/Orgs/null?basicInfo=true').respond(200, {});
     });
-
-    it('should show the launch button if FT is set to true', function () {
-      Userservice.getUser.and.callFake(function (uid, callback) {
-        callback(currentUser, 200);
+    describe('if user has an OrderAdmin role', function () {
+      it('should show the launch button if FT is set to true', function () {
+        $scope.initializeShowLinks();
+        $scope.$apply();
+        expect($scope.showOrderProvisioningConsole).toBe(true);
       });
-      $scope.initializeShowLinks();
-      $scope.$apply();
-      expect($scope.showOrderProvisioningConsole).toEqual(true);
-    });
 
-    it('should NOT show the launch button if FT is set to false', function () {
-      FeatureToggleService.atlasOrderProvisioningConsoleGetStatus.and.returnValue($q.resolve(false));
-      $scope.initializeShowLinks();
-      $scope.$apply();
-      expect($scope.showOrderProvisioningConsole).toEqual(false);
-    });
-  });
-  it('should return cisdoDevRole true for user that has devsupport or devops role', function () {
-    var isSupportRole = $scope.isCiscoDevRole(roles);
-    expect(isSupportRole).toBe(true);
-  });
-
-  describe('getCallflowCharts', function () {
-    var windowUrl, expectedUrl;
-
-    beforeEach(function () {
-      windowUrl = null;
-      spyOn(WindowLocation, 'set').and.callFake(function (url) {
-        windowUrl = url;
+      it('should NOT show the launch button if FT is set to false', function () {
+        FeatureToggleService.atlasOrderProvisioningConsoleGetStatus.and.returnValue($q.resolve(false));
+        $scope.initializeShowLinks();
+        $scope.$apply();
+        expect($scope.showOrderProvisioningConsole).toBe(false);
       });
-      spyOn(Notification, 'notify');
-
-      // something is requiring these urls to succeed
-      $httpBackend.whenGET('https://ciscospark.statuspage.io/index.json').respond(200, {});
-      $httpBackend.whenGET('https://identity.webex.com/organization/scim/v1/Orgs/null?basicInfo=true').respond(200, {});
-
-      expectedUrl = UrlConfig.getCallflowServiceUrl() +
-        'callflow/logs' +
-        '?orgId=aa&userId=bb' +
-        '&logfileFullName=logfilename';
+    });
+    describe('if user does not have an OrderAdmin role', function () {
+      it('should NOT show the launch button if FT is set to true', function () {
+        Authinfo.isOrderAdminUser.and.returnValue(false);
+        $scope.initializeShowLinks();
+        $scope.$apply();
+        expect($scope.showOrderProvisioningConsole).toBe(false);
+      });
+    });
+    it('should return cisdoDevRole true for user that has devsupport or devops role', function () {
+      var isSupportRole = $scope.isCiscoDevRole(roles);
+      expect(isSupportRole).toBe(true);
     });
 
-    it('should change WindowLocation on success', function () {
-      var result = {
-        resultsUrl: 'http://sample.org',
-      };
+    describe('getCallflowCharts', function () {
+      var windowUrl, expectedUrl;
 
-      $httpBackend.expectGET(expectedUrl).respond(200, result);
+      beforeEach(function () {
+        windowUrl = null;
+        spyOn(WindowLocation, 'set').and.callFake(function (url) {
+          windowUrl = url;
+        });
+        spyOn(Notification, 'notify');
 
-      $scope.getCallflowCharts('aa', 'bb', '-NA-', '-NA-', 'logfilename', true);
+        // something is requiring these urls to succeed
+        $httpBackend.whenGET('https://ciscospark.statuspage.io/index.json').respond(200, {});
+        $httpBackend.whenGET('https://identity.webex.com/organization/scim/v1/Orgs/null?basicInfo=true').respond(200, {});
 
-      $httpBackend.flush();
+        expectedUrl = UrlConfig.getCallflowServiceUrl() +
+          'callflow/logs' +
+          '?orgId=aa&userId=bb' +
+          '&logfileFullName=logfilename';
+      });
 
-      expect(WindowLocation.set).toHaveBeenCalled();
-      expect(windowUrl).toEqual(result.resultsUrl);
-      expect(Notification.notify).not.toHaveBeenCalled();
+      it('should change WindowLocation on success', function () {
+        var result = {
+          resultsUrl: 'http://sample.org',
+        };
 
-      $httpBackend.verifyNoOutstandingExpectation();
-      $httpBackend.verifyNoOutstandingRequest();
-    });
+        $httpBackend.expectGET(expectedUrl).respond(200, result);
 
-    it('should notify on error', function () {
-      $httpBackend.expectGET(expectedUrl).respond(503, 'error');
+        $scope.getCallflowCharts('aa', 'bb', '-NA-', '-NA-', 'logfilename', true);
 
-      $scope.getCallflowCharts('aa', 'bb', '-NA-', '-NA-', 'logfilename', true);
+        $httpBackend.flush();
 
-      $httpBackend.flush();
+        expect(WindowLocation.set).toHaveBeenCalled();
+        expect(windowUrl).toEqual(result.resultsUrl);
+        expect(Notification.notify).not.toHaveBeenCalled();
 
-      expect(WindowLocation.set).not.toHaveBeenCalled();
-      expect(Notification.notify).toHaveBeenCalled();
+        $httpBackend.verifyNoOutstandingExpectation();
+        $httpBackend.verifyNoOutstandingRequest();
+      });
 
-      $httpBackend.verifyNoOutstandingExpectation();
-      $httpBackend.verifyNoOutstandingRequest();
+      it('should notify on error', function () {
+        $httpBackend.expectGET(expectedUrl).respond(503, 'error');
+
+        $scope.getCallflowCharts('aa', 'bb', '-NA-', '-NA-', 'logfilename', true);
+
+        $httpBackend.flush();
+
+        expect(WindowLocation.set).not.toHaveBeenCalled();
+        expect(Notification.notify).toHaveBeenCalled();
+
+        $httpBackend.verifyNoOutstandingExpectation();
+        $httpBackend.verifyNoOutstandingRequest();
+      });
     });
   });
 });
+

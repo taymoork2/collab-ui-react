@@ -1,5 +1,5 @@
-<div id="order-provisioning" class="">
-  <div class="">
+<div class="order-provisioning">
+  <div>
     <!-- General header (instead of using main.tpl) -->
     <cs-header navstyle="" headertitle="Cisco Collaboration Management" icon="icon-cisco-logo">
       <cs-header-left>
@@ -12,13 +12,23 @@
     <br>
 
     <!-- Page header (instead of using main.tpl) -->
-    <cs-page-header title-name="Provisioning Console" tabs="provisioningCtrl.tabs"></cs-page-header>
+    <cs-page-header title-name="provisioningConsole.provisioningConsole" tabs="provisioningCtrl.tabs"></cs-page-header>
 
     <!-- Wrapper for the search and table -->
     <div class="page-content-wrapper container-fluid" role="main">
       <div class="row full collapse">
         <div class="medium-12 columns content-view" ui-view>
+          <!-- Sub header with search -->
+          <cs-page-sub-header>
+            <cs-page-sub-header-left>
+              <cs-searchfilter placeholder-text="Order number" search-item-fn="provisioningCtrl.setCurrentSearch(searchStr)">
+              </cs-searchfilter>
+            </cs-page-sub-header-left>
+          </cs-page-sub-header>
           <div class="medium-12 columns content-view" ui-view="provisioningView">
+          </div>
+          <div class="text-center" ng-if="provisioningCtrl.isLoading">
+            <i class="icon icon-spinner icon-2x"></i>
           </div>
         </div>
       </div>
