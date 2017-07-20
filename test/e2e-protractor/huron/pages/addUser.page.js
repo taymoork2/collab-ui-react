@@ -31,9 +31,6 @@ export class AddUserPage {
       },
     };
     this.callSubMenu = element.all(by.css('[ui-sref="user-overview.communication"]')).get(2);
-    this.speedDial = {
-      title: element(by.cssContainingText('.section-title-row', 'Speed Dial Numbers')),
-    };
     this.dialingRestrictions = {
       nationaDialing: {
         title: element(by.cssContainingText('.section-title-row.ng-scope', 'National Dialing')),
