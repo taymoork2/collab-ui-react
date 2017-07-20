@@ -139,7 +139,7 @@ export class SetupWizardService {
 
   public activateAndCheckCapacity(countryCode?) {
     const url = `${this.UrlConfig.getAdminServiceUrl()}organizations/${this.Authinfo.getOrgId()}/setup/communication`;
-    const param = this.getActingSubscription();
+    const param = this.getActingSubscriptionId();
     return this.$http.patch(url, {
       countryCode: countryCode ? countryCode : this.country,
       subscriptionId: param,
@@ -151,6 +151,8 @@ export class SetupWizardService {
 export default angular
   .module('core.setup-wizard-service', [
     require('modules/huron/customer').default,
+    require('modules/core/notifications').default,
+    require('modules/huron/compass').default,
   ])
   .service('SetupWizardService', SetupWizardService)
   .name;
