@@ -1831,6 +1831,11 @@
                 templateUrl: 'modules/mediafusion/reports/media-reports-phase-two.html',
               },
             },
+            resolve: {
+              hasHmsTwoDotFiveFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServicePhaseTwoDotFive);
+              },
+            },
           })
           .state('reports.care', {
             url: '/care',

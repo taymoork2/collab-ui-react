@@ -81,6 +81,45 @@
     color: #FFFFFF;
   }
 }
+.client-type-filter {
+  width: rem-calc(160);
+  margin: 0 auto;
+  cursor: pointer;
+
+  .select-toggle,
+  .select-toggle:active,
+  .select-toggle:hover {
+    border: none;
+    color: rgb(92, 164, 229);
+    outline: none;
+    text-align: center;
+    cursor: pointer;
+    background-color: transparent !important;
+  }
+  .select-list .open > a:focus,
+  .select-list .open > a:hover {
+    border: none;
+    color: rgb(92, 164, 229);
+    outline: none;
+    text-align: center;
+    cursor: pointer;
+    background-color: transparent !important;
+  }
+  .select-toggle > i.icon {
+    color: rgb(92, 164, 229);
+    right: auto !important;
+  }
+  .select-options > .li > a,
+  .select-options > li > a {
+    color: #6A6B6C;
+    line-height: 10px;
+    font-size: 0.75rem;
+  }
+  .select-options .select-selected > a {
+    color: #FFFFFF;
+  }
+}
+
 .chartContainer {
   width: 100%;
   height: 140px;
