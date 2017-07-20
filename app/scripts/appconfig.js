@@ -272,6 +272,15 @@
             },
             abstract: true,
           })
+          .state('main-unauthenticated', {
+            parent: 'mainLazyLoad',
+            views: {
+              'main@': {
+                template: '<div ui-view=""></div>',
+              },
+            },
+            abstract: true,
+          })
           .state('main', {
             views: {
               'main@': {
@@ -606,13 +615,9 @@
           })
           .state('downloads', {
             url: '/downloads',
-            parent: 'mainLazyLoad',
-            views: {
-              'main@': {
-                templateUrl: 'modules/squared/views/downloads.html',
-                controller: 'DownloadsCtrl',
-              },
-            },
+            parent: 'main-unauthenticated',
+            templateUrl: 'modules/squared/views/downloads.html',
+            controller: 'DownloadsCtrl',
             authenticate: false,
           })
           .state('domainmanagement', {
@@ -758,7 +763,7 @@
             templateUrl: 'modules/squared/views/processorder.html',
             controller: 'ProcessorderCtrl',
             controllerAs: 'processOrder',
-            parent: 'main',
+            parent: 'main-unauthenticated',
             authenticate: false,
           })
           .state('overview', {
