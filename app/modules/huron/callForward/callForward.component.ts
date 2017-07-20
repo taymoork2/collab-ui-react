@@ -19,6 +19,7 @@ class CallForwardCtrl implements ng.IComponentController {
   public forwardState: string;
   public forwardExternalCallsDifferently: boolean = false;
   public forwardOptions: string[] = [];
+  public countryCode: string;
   public userVoicemailEnabled: boolean;
   public isPrimary: boolean;
   public ownerType: string;
@@ -36,6 +37,7 @@ class CallForwardCtrl implements ng.IComponentController {
  /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
+    private Orgservice,
   ) {
     this.customTranslations = {
       placeholderText: this.$translate.instant('callDestination.alternateCustomPlaceholder'),
@@ -46,6 +48,13 @@ class CallForwardCtrl implements ng.IComponentController {
       min: this.$translate.instant('callForwardPanel.ringDurationTimer.validation.error'),
       max: this.$translate.instant('callForwardPanel.ringDurationTimer.validation.error'),
     };
+    const params = {
+      basicInfo: true,
+      disableCache: true,
+    };
+    this.Orgservice.getOrg(_.noop, null, params).then(response => {
+      this.countryCode = response.data.countryCode;
+    });
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {

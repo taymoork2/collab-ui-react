@@ -39,6 +39,7 @@ class SpeedDialCtrl implements ng.IComponentController {
   public inputType: any;
   public callPickupEnabled: boolean = false;
   public form: ng.IFormController;
+  public countryCode: string;
 
   /* @ngInject */
   constructor(
@@ -52,7 +53,15 @@ class SpeedDialCtrl implements ng.IComponentController {
     private Authinfo,
     private FeatureMemberService,
     private BlfURIValidation,
+    private Orgservice,
   ) {
+    const params = {
+      basicInfo: true,
+      disableCache: true,
+    };
+    this.Orgservice.getOrg(_.noop, null, params).then(response => {
+      this.countryCode = response.data.countryCode;
+    });
     this.callDestInputs = inputs;
     this.firstReordering = true;
     this.editing = false;
