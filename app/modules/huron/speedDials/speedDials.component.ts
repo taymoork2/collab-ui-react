@@ -57,7 +57,6 @@ class SpeedDialCtrl implements ng.IComponentController {
   ) {
     const params = {
       basicInfo: true,
-      disableCache: true,
     };
     this.Orgservice.getOrg(_.noop, null, params).then(response => {
       this.countryCode = response.data.countryCode;
