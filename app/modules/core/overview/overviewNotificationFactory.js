@@ -6,7 +6,7 @@
     .factory('OverviewNotificationFactory', OverviewNotificationFactory);
 
   /* @ngInject */
-  function OverviewNotificationFactory(OverviewCrashLogNotification, OverviewSetupNotification, OverviewUrgentUpgradeNotification, OverviewCalendarNotification, OverviewGoogleCalendarNotification, OverviewCallConnectNotification, OverviewCallAwareNotification, OverviewCloudSipUriNotification, OverviewDevicesNotification, OverviewHybridMediaNotification, OverviewPMRNotification, OverviewDataSecurityNotification, OverviewPSTNToSNotification, OverviewCareLicenseNotification, OverviewPstnTermsOfServiceNotification, OverviewEsaDisclaimerNotification) {
+  function OverviewNotificationFactory(OverviewCrashLogNotification, OverviewSetupNotification, OverviewUrgentUpgradeNotification, OverviewCalendarNotification, OverviewGoogleCalendarNotification, OverviewCallConnectNotification, OverviewCallAwareNotification, OverviewCloudSipUriNotification, OverviewDevicesNotification, OverviewHybridMediaNotification, OverviewPMRNotification, OverviewDataSecurityNotification, OverviewPSTNToSNotification, OverviewCareLicenseNotification, OverviewPstnTermsOfServiceNotification, OverviewEsaDisclaimerNotification, CallServiceHighAvailability) {
     return {
       createCrashLogNotification: OverviewCrashLogNotification.createNotification,
       createSetupNotification: OverviewSetupNotification.createNotification,
@@ -24,6 +24,7 @@
       createCareLicenseNotification: OverviewCareLicenseNotification.createNotification,
       createPstnTermsOfServiceNotification: OverviewPstnTermsOfServiceNotification.createNotification,
       createEsaDisclaimerNotification: OverviewEsaDisclaimerNotification.createNotification,
+      createCallServiceHighAvailability: CallServiceHighAvailability.createNotification,
     };
   }
 })();

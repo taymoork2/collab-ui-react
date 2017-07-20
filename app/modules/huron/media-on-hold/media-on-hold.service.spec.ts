@@ -31,7 +31,11 @@ describe('Service: MediaOnHoldService', () => {
         .respond(this.mediaOnHoldResponse);
       this.GENERIC_MEDIA = <IOption> {
         label: 'Generic Media',
-        value: '1',
+        value: '98765432-DBC2-01BB-476B-CFAF98765432',
+      };
+      this.LINE_GENERIC_MEDIA = <IOption> {
+        label: 'Company MOH (filename1)',
+        value: '98765432-DBC2-01BB-476B-CFAF98765432',
       };
     });
 
@@ -55,6 +59,14 @@ describe('Service: MediaOnHoldService', () => {
         .then(response => {
           expect(response.length).toBe(4);
           expect(response).toContain(this.GENERIC_MEDIA);
+        });
+    });
+
+    it('getLineMediaOnHold should return Line level Media on Hold Options', function() {
+      this.MediaOnHoldService.getLineMohOptions()
+        .then(response => {
+          expect(response.length).toBe(4);
+          expect(response).toContain(this.LINE_GENERIC_MEDIA);
         });
     });
   });
@@ -102,6 +114,30 @@ describe('Service: MediaOnHoldService', () => {
       this.MediaOnHoldService.updateMediaOnHold(this.MEDIA_FILE_ID_2, this.LINE_NUM_UUID)
         .then(response => {
           expect(response.promptId).toEqual(this.PROMPT_ID);
+        });
+    });
+  });
+
+  describe('Unassigning Media on Hold File', function() {
+    beforeEach(function() {
+      this.$httpBackend.expectPOST(this.HuronConfig.getMmsUrl() + '/organizations/12345/mohPrompts')
+        .respond(200, {
+          promptId: '06691d80-01e7-4e05-b869-8fa680822c51',
+        });
+      this.PROMPT_ID = '06691d80-01e7-4e05-b869-8fa680822c51';
+    });
+
+    it('should perform Company level unassignment', function() {
+      this.MediaOnHoldService.unassignMediaOnHold()
+        .then(response => {
+          expect(response.promptId).toBe(this.PROMPT_ID);
+        });
+    });
+
+    it('should perform Line level unassignment', function() {
+      this.MediaOnHoldService.updateMediaOnHold('Line', this.LINE_NUM_UUID)
+        .then(response => {
+          expect(response.promptId).toBe(this.PROMPT_ID);
         });
     });
   });

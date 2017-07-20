@@ -26,8 +26,10 @@ describe('Component: companyVoicemailAvril', () => {
       'ServiceSetup',
       'FeatureToggleService',
       '$q',
+      'Authinfo',
     );
 
+    spyOn(this.Authinfo, 'isMessageEntitled').and.returnValue(true);
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
     spyOn(this.ServiceSetup, 'generateVoiceMailNumber').and.returnValue(GENERATED_VM_PILOT_NUMBER);
     spyOn(this.FeatureToggleService, 'avrilI1558GetStatus').and.returnValue(this.$q.resolve(true));
@@ -109,7 +111,7 @@ describe('Component: companyVoicemailAvril', () => {
         VM2E_PT: false,
         VM2S: false,
         VM2T: false,
-        VMOTP: false,
+        VMOTP: true,
         VM2E_TLS: true,
       });
       this.view.find(VOICEMAIL_TOGGLE).click();
@@ -133,7 +135,7 @@ describe('Component: companyVoicemailAvril', () => {
         VM2E_PT: false,
         VM2S: false,
         VM2T: false,
-        VMOTP: false,
+        VMOTP: true,
         VM2E_TLS: true,
       });
 
@@ -155,7 +157,7 @@ describe('Component: companyVoicemailAvril', () => {
         VM2E_PT: true,
         VM2S: false,
         VM2T: false,
-        VMOTP: false,
+        VMOTP: true,
         VM2E_TLS: true,
       });
 
@@ -176,7 +178,7 @@ describe('Component: companyVoicemailAvril', () => {
         VM2E_PT: false,
         VM2S: false,
         VM2T: false,
-        VMOTP: false,
+        VMOTP: true,
         VM2E_TLS: false,
       });
 
@@ -204,9 +206,9 @@ describe('Component: companyVoicemailAvril', () => {
     it('should call onChangeFn when enable OTP is checked', function() {
       this.view.find(VOICEMAIL_TOGGLE).click();
       expect(this.view).toContainElement(ENABLE_OTP_CHECKBOX);
-      expect(this.view.find(ENABLE_OTP_CHECKBOX)).not.toBeChecked();
-      this.view.find(ENABLE_OTP_CHECKBOX).click();
       expect(this.view.find(ENABLE_OTP_CHECKBOX)).toBeChecked();
+      this.view.find(ENABLE_OTP_CHECKBOX).click();
+      expect(this.view.find(ENABLE_OTP_CHECKBOX)).not.toBeChecked();
     });
   });
 

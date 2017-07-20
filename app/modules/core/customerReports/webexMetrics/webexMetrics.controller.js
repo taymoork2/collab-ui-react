@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function WebExMetricsCtrl(
-    $log,
     $sce,
     $scope,
     $stateParams,
@@ -30,7 +29,6 @@
     vm.isNoData = false;
     vm.selectEnable = true;
     vm.reportType = 'WebEx';
-    vm.testSiteUrl = 'go.webex.com';
     vm.env = {
       int: 'integration',
       prod: 'prod',
@@ -160,7 +158,6 @@
             var trainSiteNames = _.get(data, 'trainSiteNames', []);
             var linkedTrainSiteNames = _.get(data, 'linkedTrainSiteNames', []);
             trainSites = trainSiteNames.concat(linkedTrainSiteNames);
-
             generateWebexMetricsUrl(trainSites);
           }
         }
@@ -170,6 +167,7 @@
     function updateWebexMetrics() {
       var storageMetricsSiteUrl = LocalStorage.get('webexMetricsSiteUrl');
       var webexSelected = vm.webexSelected;
+      vm.isIframeLoaded = false;
 
       if (webexSelected !== storageMetricsSiteUrl) {
         LocalStorage.put('webexMetricsSiteUrl', webexSelected);
@@ -201,10 +199,7 @@
       if (!_.isFunction(getWebExReportData)) {
         return;
       }
-      $log.log('SiteUrl: ' + vm.webexSelected);
-      var QBSEnv = (vm.webexSelected === vm.testSiteUrl) ? vm.env.int : vm.env.prod;
-      $log.log('Call QBS env: ' + QBSEnv);
-      getWebExReportData(vm.reportType, viewType, userInfo, QBSEnv).then(function (data) {
+      getWebExReportData(vm.reportType, viewType, userInfo).then(function (data) {
         if (!_.isUndefined(data)) {
           vm.webexMetrics.appData = {
             ticket: data.ticket,

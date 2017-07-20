@@ -23,8 +23,9 @@ class CompanyVoicemailAvrilComponentCtrl implements ng.IComponentController {
   public voicemailToEmail: boolean = false;
   public missingDirectNumbersHelpText: string = '';
   public useTLS: boolean = true;
-  public enableOTP: boolean = false;
+  public enableOTP: boolean = true;
   public avrilI1558: boolean = false;
+  public isMessage: boolean = false;
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
@@ -40,6 +41,7 @@ class CompanyVoicemailAvrilComponentCtrl implements ng.IComponentController {
     this.FeatureToggleService.avrilI1558GetStatus().then((toggle) => {
       this.avrilI1558 = toggle;
     });
+    this.isMessage = this.Authinfo.isMessageEntitled();
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
@@ -65,13 +67,15 @@ class CompanyVoicemailAvrilComponentCtrl implements ng.IComponentController {
       if (_.get<boolean>(features.currentValue, 'VM2E')) {
         this.voicemailToEmail = true;
         this.attachmentPref = VM_TO_EMAIL_WITH_ATTACH;
-        this.useTLS = _.get<boolean>(features.currentValue, 'VM2E_TLS');
       } else if (_.get<boolean>(features.currentValue, 'VM2E_PT')) {
         this.voicemailToEmail = true;
         this.attachmentPref = VM_TO_EMAIL_WITHOUT_ATTACH;
       } else {
         this.voicemailToEmail = false;
         this.attachmentPref = '';
+      }
+      if (this.voicemailToEmail) {
+        this.useTLS = _.get<boolean>(features.currentValue, 'VM2E_TLS');
       }
       this.enableOTP = _.get<boolean>(features.currentValue, 'VMOTP');
     }
@@ -105,12 +109,16 @@ class CompanyVoicemailAvrilComponentCtrl implements ng.IComponentController {
       this.features.VM2E = true;
       this.features.VM2E_PT = false;
       this.attachmentPref = VM_TO_EMAIL_WITH_ATTACH;
+      this.features.VM2E_TLS = true;
+      this.useTLS = true;
     } else {
       this.features.VM2E = false;
       this.features.VM2E_PT = false;
       this.attachmentPref = '';
+      this.features.VM2E_TLS = false;
     }
-    this.onCompanyVoicemailChange(true);
+    this.features.VMOTP = this.isMessage ? this.enableOTP : false;
+    this.onCompanyVoicemailChange(true, false);
   }
 
   public onVoicemailToEmailPrefChanged(): void {
@@ -121,12 +129,15 @@ class CompanyVoicemailAvrilComponentCtrl implements ng.IComponentController {
       this.features.VM2E = false;
       this.features.VM2E_PT = true;
     }
-    this.onCompanyVoicemailChange(true);
+    this.onCompanyVoicemailChange(true, false);
   }
 
-  public onCompanyVoicemailChange(value: boolean): void {
+  public onCompanyVoicemailChange(value: boolean, setOTP: boolean = true): void {
     if (value) {
       let pilotNumber: string = '';
+      if (setOTP && this.isMessage) {
+        this.enableOTP = this.features.VMOTP = true;
+      }
       if (this.selectedNumber && this.selectedNumber.value) {
         this.onCompanyVoicemailNumberChanged();
       } else {
@@ -140,12 +151,12 @@ class CompanyVoicemailAvrilComponentCtrl implements ng.IComponentController {
 
   public onUseTLS(): void {
     this.features.VM2E_TLS = !this.features.VM2E_TLS;
-    this.onCompanyVoicemailChange(true);
+    this.onCompanyVoicemailChange(true, false);
   }
 
   public onEnableOTPChanged(): void {
     this.features.VMOTP = !this.features.VMOTP;
-    this.onCompanyVoicemailChange(true);
+    this.onCompanyVoicemailChange(true, false);
   }
 
   public onChange(voicemailPilotNumber: string | null, voicemailPilotNumberGenerated: string | null, companyVoicemailEnabled: boolean): void {

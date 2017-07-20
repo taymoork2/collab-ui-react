@@ -610,7 +610,7 @@
     "to": "To",
     "date": "Date",
     "duration": "Duration",
-    "status": "Status", 
+    "status": "Status",
     "usageReports": {
       "usageReportTitle": "Room Devices",
       "pageTitle": "Reports",
@@ -1474,7 +1474,9 @@
     "careLicenseCallMissingText": "Call is mandatory for voice-based Care services. To enable Call,",
     "careLicenseMsgAndCallMissingText": "Message and Call are mandatory for Care services like chat and voice interaction respectively. To enable Message and Call,",
     "careLicenseLinkText": "contact your partner or Cisco sales.",
-    "proPackNotification": "Unleash the full power of the Spark Control Hub with Pro Pack."
+    "proPackNotification": "Unleash the full power of the Spark Control Hub with Pro Pack.",
+    "callServiceHighAvailability": "Hybrid Call Service is configured, but one or more clusters only has a single node running Call Connector. Your deployment does not meet the requirements for high availability.",
+    "callServiceHighAvailabilityLink": "Open Documentation"
   },
   "inviteModal": {
     "title": "Service Entitlement",
@@ -1597,6 +1599,7 @@
     "siteUpdateError": "Failed to update site.",
     "mohLineError": "Failed to get Line Media On Hold Service.",
     "mohGetError": "Failed to get Company Media on Hold Service.",
+    "mohGetOptionsError": "Failed to get Company Media on Hold Options Service.",
     "mohUpdateError": "Failed to update Company Media On Hold File",
     "customerGetError": "Failed to get customer services.",
     "customerPutError": "Failed to update customer services.",
@@ -3639,7 +3642,11 @@
     "unableToUpdateResourceGroups": "Updating Hybrid Services Resource Groups failed",
     "ussUserPropsLoadFailed": "Unable to load the current user Hybrid Services Resource Group assignments. Resource group assignments in the CSV file will not be processed.",
     "fmsResourceGroupsLoadFailed": "Unable to load the Hybrid Services Resource Groups. Resource group assignments in the CSV file will not be processed.",
-    "mutuallyExclusiveCalendarEntitlements": "There are more than one Hybrid Calendar Service entitlement set. Please fix and try again."
+    "mutuallyExclusiveCalendarEntitlements": "There are more than one Hybrid Calendar Service entitlement set. Please fix and try again.",
+    "callSettingSimpleDialing": "Simple Dialing",
+    "callSettingSimpleDialingDesc": "Assign unique extensions to each user within your company.  Users can dial each other with their exension number.",
+    "callSettingMultiDialing": "Multi-tier Dialing",
+    "callSettingMultiDialingDesc": "Divide your company into number blocks by selecting a routing prefix for each logical block.  Users in the same block can dial each other with extension numbers.  Between blocks users dial the routing prefix and extension number."
   },
   "reports": {
     "title": "Reports",

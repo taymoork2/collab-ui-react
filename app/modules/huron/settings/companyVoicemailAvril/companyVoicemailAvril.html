@@ -79,7 +79,7 @@
           ng-change="$ctrl.onUseTLS()"
           cs-input-label="{{::'serviceSetupModal.vmUseTLS' | translate}}">
       </div>
-    <div ng-if="$ctrl.avrilI1558">
+    <div ng-if="$ctrl.avrilI1558 && $ctrl.isMessage">
       <label class="control-label" translate="serviceSetupModal.vmPinManagement"></label>
       <p class="description-block" translate="serviceSetupModal.vmPinHelp"></p>
       <input

@@ -11,6 +11,14 @@ interface IRect {
   right: number;
 }
 
+interface IScopeWithController extends ng.IScope {
+  $ctrl: {
+    indicatorElement?: {
+      insertAfter: Function,
+    },
+  };
+}
+
 export class ScrollIndicatorController {
 
   public static readonly MORE_CONTENT_CHECK_INTERVAL = 500;
@@ -68,7 +76,7 @@ export class ScrollIndicatorDirective implements ng.IDirective {
   public controller = ScrollIndicatorController;
   public controllerAs = '$ctrl';
   public link: ng.IDirectiveLinkFn = (
-    $scope: ng.IScope,
+    $scope: IScopeWithController,
     $element: ng.IAugmentedJQuery,
   ) => {
 

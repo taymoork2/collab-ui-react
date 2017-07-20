@@ -60,6 +60,7 @@
       </uc-auto-answer>
       <uc-media-on-hold
         cr-feature-toggle feature-show="huron-moh-enable"
+        ng-if="$ctrl.isUserMohEnabled"
         line-moh="$ctrl.lineOverviewData.lineMoh"
         line-moh-options="$ctrl.lineMediaOptions"
         on-change-fn="$ctrl.setLineMedia(lineMoh)">
