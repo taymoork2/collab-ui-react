@@ -3,7 +3,7 @@
 describe('Validate Media Service Managemnt Page', function () {
   describe('Listing Media Service Clusters on page load', function () {
     it('login as media super admin', function () {
-      login.login('media-super-admin');
+      login.login('media-fusion-admin');
     }, 120000);
 
     xdescribe('Mediaservice page : ', function () {
