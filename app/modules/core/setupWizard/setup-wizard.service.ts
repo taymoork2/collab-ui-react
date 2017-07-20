@@ -4,7 +4,6 @@ import { HuronCustomerService } from 'modules/huron/customer';
 import { HuronCompassService } from 'modules/huron/compass';
 
 export class SetupWizardService {
-  public pendingMeetingLicenses: IPendingLicense[];
   public pendingLicenses: IPendingLicense[];
   public provisioningCallbacks = {};
   public country = '';
@@ -63,6 +62,10 @@ export class SetupWizardService {
     return _.some(this.pendingLicenses, (license: IPendingLicense) => { return license.status === this.Config.licenseStatus.INITIALIZED && (_.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC], license.offerName)); });
   }
 
+  public getPendingMeetingLicenses(): IPendingLicense[] {
+    return _.filter(this.pendingLicenses, (license: IPendingLicense) => { return license.status === this.Config.licenseStatus.INITIALIZED && (_.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC], license.offerName)); });
+  }
+
   public hasPendingCallLicenses() {
     return _.some(this.pendingLicenses, (license: IPendingLicense) => { return license.status === this.Config.licenseStatus.INITIALIZED && (_.includes([this.Config.licenseTypes.COMMUNICATION, this.Config.licenseTypes.SHARED_DEVICES], license.licenseType)); });
   }
@@ -99,29 +102,29 @@ export class SetupWizardService {
     const params = {
       basicInfo: true,
     };
-    const _this = this;
-    return this.Orgservice.getOrg(_.noop, this.Authinfo.getOrgId(), params).then(function (response) {
+
+    return this.Orgservice.getOrg(_.noop, this.Authinfo.getOrgId(), params).then( (response) => {
       const org = _.get(response, 'data', null);
-      _this.country = _.get(org, 'countryCode');
+      this.country = _.get<string>(org, 'countryCode');
       if (_.get(org, 'orgSettings.sparkCallBaseDomain')) {
         //check cmi in base domain for customer
-        return _this.findCustomerInDc(_.get(org, 'orgSettings.sparkCallBaseDomain'));
+        return this.findCustomerInDc(_.get(org, 'orgSettings.sparkCallBaseDomain'));
       } else {
         //check CI for country
         if (_.get(org, 'countryCode')) {
           if (_.get(org, 'countryCode') === 'GB') {
             //check CMI in EC DC
-            return _this.findCustomerInDc('sparkc-eu.com');
+            return this.findCustomerInDc('sparkc-eu.com');
           } else {
             //check CMI in NA DC
-            return _this.findCustomerInDc(this.HuronCompassService.defaultDomain());
+            return this.findCustomerInDc(this.HuronCompassService.defaultDomain());
           }
         } else {
           //check CMI in NA DC
-          return _this.findCustomerInDc(this.HuronCompassService.defaultDomain());
+          return this.findCustomerInDc(this.HuronCompassService.defaultDomain());
         }
       }
-    }).catch(function () {
+    }).catch( () => {
       _.noop();
     });
   }
