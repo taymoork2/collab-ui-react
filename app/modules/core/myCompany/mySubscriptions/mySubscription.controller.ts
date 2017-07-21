@@ -79,9 +79,9 @@ export class MySubscriptionCtrl {
   ) {
     this.$q.all({
       isProPackEnabled: this.ProPackService.hasProPackEnabled(),
-      isProPackPurchased: this.ProPackService.getProPackPurchased(),
+      isProPackPurchased: this.ProPackService.hasProPackPurchased(),
     }).then((toggles: any): void => {
-      this.isProPackPurchased = toggles.isProPackEnabled && toggles.isProPackPurchased;
+      this.isProPackPurchased = toggles.isProPackPurchased;
       this.isProPackEnabled = toggles.isProPackEnabled;
     });
 

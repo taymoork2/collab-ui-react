@@ -2,6 +2,7 @@ export class ProPackService {
 
   /* @ngInject */
   constructor(
+    private Authinfo,
     private FeatureToggleService,
     private $q: ng.IQService,
     ) {}
@@ -12,7 +13,8 @@ export class ProPackService {
     });
   }
 
-  public getProPackPurchased(): ng.IPromise<boolean> {
+  // any calls to getProPackPurchased outside of the service should be calling hasProPackPurchased instead
+  private getProPackPurchased(): ng.IPromise<boolean> {
     return this.FeatureToggleService.atlasITProPackPurchasedGetStatus().then(result => {
       return result;
     });
@@ -25,7 +27,7 @@ export class ProPackService {
       proPackPurchased: this.getProPackPurchased(),
     };
     return this.$q.all(promises).then(result => {
-      return result.proPack && result.proPackPurchased;
+      return (result.proPack && result.proPackPurchased) || this.Authinfo.isPremium();
     });
   }
 
@@ -36,7 +38,7 @@ export class ProPackService {
       proPackPurchased: this.getProPackPurchased(),
     };
     return this.$q.all(promises).then(result => {
-      return !result.proPack || result.proPackPurchased;
+      return !result.proPack || result.proPackPurchased || this.Authinfo.isPremium();
     });
   }
 
@@ -47,7 +49,7 @@ export class ProPackService {
       proPackPurchased: this.getProPackPurchased(),
     };
     return this.$q.all(promises).then(result => {
-      return result.proPack && !result.proPackPurchased;
+      return result.proPack && !(result.proPackPurchased || this.Authinfo.isPremium());
     });
   }
 
