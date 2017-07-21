@@ -16,9 +16,11 @@ import { Notification } from 'modules/core/notifications';
 
 export class LocationsWizardComponent {
   public controller = LocationsWizardController;
-  public templateUrl = 'modules/call/locations/wizard/locationsWizard.html';
+  public templateUrl = 'modules/call/locations/wizard/locations-wizard.html';
   public bindings = {};
 }
+
+const PAGE_ESA: number = 6;
 
 class LocationsWizardController implements ng.IComponentController {
   public addressFound: boolean;
@@ -93,11 +95,9 @@ class LocationsWizardController implements ng.IComponentController {
     });
 
     //Use default site for now
-    this.HuronSettingsService.get('').then((huronSettingsData: HuronSettingsData) => {
-      this.huronSettingsData = huronSettingsData;
-    }).catch(response => {
-      this.Notification.errorResponse(response);
-    });
+    this.HuronSettingsService.get('')
+    .then(huronSettingsData => this.huronSettingsData = huronSettingsData)
+    .catch(response => this.Notification.errorResponse(response));
 
     this.$q.resolve(this.initSettingsComponent());
   }
@@ -225,8 +225,13 @@ class LocationsWizardController implements ng.IComponentController {
   }
 
   public nextButton(): any {
-    if (this.index === 6) {
-      return this.form && this.form.$valid && this.addressValidated;
+    if (this.index === PAGE_ESA) {
+      //You may change your ESA, but it is not required to create a location
+      if (this.form && this.form.$valid) {
+        //Must be valid if ESA is being set/changed
+        return this.addressValidated;
+      }
+      return true;
     }
     return this.form && this.form.$valid;
   }
@@ -270,16 +275,15 @@ class LocationsWizardController implements ng.IComponentController {
   }
 
   private saveLocation() {
-    this.LocationsService.createLocation(this.locationDetail).then(() => {
-      this.$state.go('calllocations');
-    }).catch((error) => {
-      this.Notification.errorResponse(error, 'locations.createFailed');
-    });
+    this.LocationsService.createLocation(this.locationDetail)
+    .then(() => this.$state.go('calllocations'))
+    .catch((error) => this.Notification.errorResponse(error, 'locations.createFailed'));
+    //TODO if ESA is valid, set the ESA
   }
 
   public cancelModal(): void {
     this.$modal.open({
-      templateUrl: 'modules/call/locations/wizard/locationsWizardCancelModal.html',
+      templateUrl: 'modules/call/locations/wizard/locations-wizard-cancel-modal.html',
       type: 'dialog',
     });
   }
