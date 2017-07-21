@@ -4,7 +4,8 @@ interface ICustomerResource extends ng.resource.IResourceClass<ng.resource.IReso
   update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
 }
 
-interface ICustomerVoiceResource extends ng.resource.IResourceClass<ng.resource.IResource<CustomerVoice>> {
+//TODO: Discuss resource
+interface ICustomerVoiceResource extends ng.resource.IResourceClass<ng.resource.IResource<any>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
 }
 
@@ -52,7 +53,18 @@ export class HuronCustomerService {
   public getVoiceCustomer(): ng.IPromise<CustomerVoice> {
     return this.customerVoiceResource.get({
       customerId: this.Authinfo.getOrgId(),
-    }).$promise;
+    }).$promise
+    .then((resource) => {
+      const customerVoice: CustomerVoice = new CustomerVoice();
+      customerVoice.uuid = resource.uuid;
+      customerVoice.name = resource.name;
+      customerVoice.regionCode = resource.regionCode;
+      customerVoice.dialPlan = resource.dialPlan;
+      customerVoice.dialPlanDetails = resource.dialPlanDetails;
+      customerVoice.routingPrefixLength = resource.routingPrefixLength ? parseInt(resource.routingPrefixLength, 10) : null;
+      customerVoice.extensionLength = resource.extensionLength ? parseInt(resource.extensionLength, 10) : null;
+      return customerVoice;
+    });
   }
 
   public updateVoiceCustomer(customer: CustomerVoice): ng.IPromise<void> {

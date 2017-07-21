@@ -41,7 +41,7 @@
 
 
     <div class="timeline">
-      <cust-time-line source-data="$ctrl.dataSet" ng-if="$ctrl.loadingMeetingline"></cust-time-line>
+      <cust-time-line source-data="$ctrl.dataSet" circle-color="$ctrl.circleColor" line-color="$ctrl.lineColor" ng-if="$ctrl.loadingMeetingline"></cust-time-line>
       <div ng-if="!$ctrl.loadingMeetingline">
         <i class="icon icon-spinner"></i>
       </div>

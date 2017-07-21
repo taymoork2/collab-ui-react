@@ -1,11 +1,20 @@
+import { L2SipService, ISipDestinationSteps, VerificationStep } from 'modules/hercules/services/l2sip-service';
+import { Notification } from 'modules/core/notifications';
+
 class VerifySipDestinationComponentCtrl implements ng.IComponentController {
 
+  public resultSet: VerificationStep[];
   public destinationUrl: string;
   private onDestinationSave: Function;
+  private onResultReady: Function;
+  private onTestStarted: Function;
+
+  public loading = false;
 
   /* @ngInject */
   constructor(
-    private $modal,
+    private L2SipService: L2SipService,
+    private Notification: Notification,
   ) {}
 
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
@@ -15,15 +24,28 @@ class VerifySipDestinationComponentCtrl implements ng.IComponentController {
     }
   }
 
-  public openVerificationModal(): void {
-    this.$modal.open({
-      resolve: {
-        destinationUrl: () => this.destinationUrl,
-      },
-      controller: 'VerifySipDestinationModalController',
-      controllerAs: 'vm',
-      templateUrl: 'modules/hercules/service-settings/verify-sip-destination/verify-sip-destination-modal.html',
-      type: 'full',
+  public runTests(): void {
+    this.loading = true;
+    this.onTestStarted();
+    this.L2SipService.verifySipDestination(this.destinationUrl, true)
+      .then((result: ISipDestinationSteps) => {
+        this.resultSet =  result.steps;
+        this.onResultReady({
+          succeeded: this.didTestSucceed(this.resultSet),
+          resultSet: this.resultSet,
+        });
+      })
+      .catch((error) => {
+        this.Notification.errorWithTrackingId(error, 'hercules.settings.verifySipDestination.testHadUnexpectedError');
+      })
+      .finally(() => {
+        this.loading = false;
+      });
+  }
+
+  private didTestSucceed(resultSet): boolean {
+    return !_.some(resultSet, (result: VerificationStep) => {
+      return result.severity === 'Error';
     });
   }
 
@@ -38,5 +60,7 @@ export class VerifySipDestinationComponent implements ng.IComponentOptions {
   public bindings = {
     destinationUrl: '<',
     onDestinationSave: '&',
+    onResultReady: '&',
+    onTestStarted: '&',
   };
 }

@@ -1,4 +1,6 @@
-import { Customer, Link, HuronCustomerService } from 'modules/huron/customer';
+import {
+  Customer, CustomerVoice, Link, HuronCustomerService,
+} from 'modules/huron/customer';
 import { ISite, HuronSiteService } from 'modules/huron/sites';
 import { IExtensionRange } from 'modules/huron/settings/extensionRange';
 import { Notification } from 'modules/core/notifications';
@@ -10,6 +12,7 @@ import { ExtensionLengthService } from './extensionLength.service';
 
 export class HuronSettingsData {
   public customer: CustomerSettings;
+  public customerVoice: CustomerVoice;
   public site: ISite;
   public companyMoh: string;
   public internalNumberRanges: IExtensionRange[];
@@ -129,6 +132,7 @@ export class HuronSettingsService {
       internalNumberRanges: this.getInternalNumberRanges().then(internalNumberRanges => huronSettingsData.internalNumberRanges = internalNumberRanges),
       cosRestrictions: this.getCosRestrictions().then(cosRestrictions => huronSettingsData.cosRestrictions = cosRestrictions),
       companyCallerId: this.getCompanyCallerId().then(companyCallerId => huronSettingsData.companyCallerId = companyCallerId),
+      voiceCustomer: this.getVoiceCustomer().then((customerVoice: CustomerVoice) => huronSettingsData.customerVoice = customerVoice),
     }).then(() => {
       this.rejectAndNotifyPossibleErrors();
       this.huronSettingsDataCopy = this.cloneSettingsData(huronSettingsData);
@@ -265,6 +269,17 @@ export class HuronSettingsService {
         this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.customerGetError'));
         return this.$q.reject();
       });
+  }
+
+  private getVoiceCustomer(): ng.IPromise<CustomerVoice> {
+    return this.HuronCustomerService.getVoiceCustomer()
+    .then((customerVoice: CustomerVoice) => {
+      return customerVoice;
+    })
+    .catch(error => {
+      this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.customerGetError'));
+      return this.$q.reject();
+    });
   }
 
   private getSite(_siteId?: string): ng.IPromise<ISite> {
