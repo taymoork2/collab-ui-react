@@ -27,7 +27,17 @@ export class SearchService {
   }
 
   public getParticipents(conferenceID) {
-    const url = `${this.url}meetings/${conferenceID}/participant`;
+    const url = `${this.url}meetings/${conferenceID}/participants`;
+    return this.$http.get(url).then(this.extractData);
+  }
+
+  public getJoinMeetingTime(conferenceID) {
+    const url = `${this.url}meetings/${conferenceID}/participants/join-meeting-time`;
+    return this.$http.get(url).then(this.extractData);
+  }
+
+  public getJoinMeetingQuality(conferenceID) {
+    const url = `${this.url}meetings/${conferenceID}/participants/join-meeting-quality`;
     return this.$http.get(url).then(this.extractData);
   }
 

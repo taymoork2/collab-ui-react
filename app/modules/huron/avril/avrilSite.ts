@@ -73,7 +73,7 @@ export class AvrilFeatures implements IAvrilFeatures {
     VM2E_PT: false,
     VM2S: false,
     VM2T: false,
-    VMOTP: false,
+    VMOTP: true,
     VM2E_TLS: true,
   }) {
     this.VM2E = obj.VM2E;

@@ -14,6 +14,7 @@
   /* @ngInject */
   function ReadonlyInterceptor($q, $injector, $log) {
     var allowedList = [
+      '/pcs/api/v2/',
       '/api/v1/metrics',
       '/api/v1/compliance/',
       '/api/v1/logs/',

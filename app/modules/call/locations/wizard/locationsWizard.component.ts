@@ -9,9 +9,9 @@ import {
 import {
   HuronSettingsOptionsService, HuronSettingsOptions,
   HuronSettingsService, HuronSettingsData,
-} from 'modules/huron/settings/services';
+} from 'modules/call/settings/shared';
 import { IOption } from 'modules/huron/dialing';
-import { CompanyNumber } from 'modules/huron/settings/companyCallerId';
+import { CompanyNumber } from 'modules/call/settings/settings-company-caller-id';
 import { Notification } from 'modules/core/notifications';
 
 export class LocationsWizardComponent {

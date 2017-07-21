@@ -31,31 +31,30 @@
       return $q.reject(error);
     }
 
-    function specifyReportQBS(isError, result, reportType, viewType, data) {
-      $log.log('Atlas Env: ' + Config.getEnv());
-      if (!isError) {
-        var resultData = _.get(result, 'data');
-        var siteId = _.get(resultData, 'siteId');
-        $log.log('check the siteId');
-        if (!siteId) {
-          $log.log('turns to call bts');
-          return callReportQBSBTS(reportType, viewType, data);
-        } else {
-          $log.log('siteId existed. ' + siteId);
-          return resultData;
-        }
-      } else {
+    function specifyReportQBS(isError, result, reportType, viewType, data, specifyEnv) {
+      var resultData = _.get(result, 'data', '');
+      var siteId = _.get(resultData, 'siteId', '');
+
+      if (Config.getEnv() === 'prod' && (_.get(specifyEnv, 'env', '') !== 'integration') && (isError || siteId === '')) {
+        $log.log('turns to call QBS BTS');
         return callReportQBSBTS(reportType, viewType, data);
+      }
+
+      if (isError) {
+        return catchError(result);
+      } else {
+        return extractData(result);
       }
     }
 
     function callReportQBSBTS(reportType, viewType, data) {
       var QlikService = $injector.get('QlikService');
-      var getQBSBTSData = _.get(QlikService, 'get' + reportType + 'ReportQBSfor' + viewType + 'Url');
+      var getQBSBTSData = _.get(QlikService, 'getReportQBSUrl');
+
       if (!_.isFunction(getQBSBTSData)) {
         return;
       }
-      return getQBSBTSData(data, 'integration');
+      return getQBSBTSData(reportType, viewType, data, 'integration');
     }
 
     function getReportQBSUrl(reportType, viewType, data, env) {
@@ -69,9 +68,9 @@
       }
       var url = getReportData(specifyEnv);
       return $http.post(url, data).then(function (response) {
-        return specifyReportQBS(false, response, reportType, viewType, data);
+        return specifyReportQBS(false, response, reportType, viewType, data, specifyEnv);
       }).catch(function (error) {
-        return specifyReportQBS(true, error, reportType, viewType, data);
+        return specifyReportQBS(true, error, reportType, viewType, data, specifyEnv);
       });
     }
 

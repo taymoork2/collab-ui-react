@@ -65,6 +65,8 @@ describe('OnboardCtrl: Ctrl', function () {
     this.mock.getConferenceServices = getJSONFixture('core/json/authInfo/confServices.json');
     this.mock.getConfCMRServicesDiffCases = getJSONFixture('core/json/authInfo/confCMRServicesDiffCases.json');
     this.mock.getLicensesUsage = getJSONFixture('core/json/organizations/usage.json');
+    this.mock.manualUsersListMoreThan10 = 'one+21@g.com, one+27@g.com, one+23@g.com, one+24@g.com, one+25@g.com, one+29@g.com, one+22@g.com, one+28@g.com, one+26@g.com, one+30@g.com, one+31@g.com, one+32@g.com';
+    this.mock.getUsrList = getJSONFixture('core/json/users/usrlist.controller.json');
 
     spyOn(this.CsvDownloadService, 'getCsv').and.callFake(function (type) {
       if (type === 'headers') {
@@ -107,22 +109,23 @@ describe('OnboardCtrl: Ctrl', function () {
     spyOn(this.Analytics, 'trackAddUsers').and.returnValue(this.$q.resolve({}));
   }
 
-  function onboardUsersResponse(statusCode, responseMessage) {
-    return {
+  function onboardUsersResponse(statusCode, responseMessage, numUsers) {
+    var returnResponse = {
       data: {
-        userResponse: [{
-          status: statusCode,
-          httpStatus: statusCode,
-          message: responseMessage,
-          email: 'blah@example.com',
-        }, {
-          status: statusCode,
-          httpStatus: statusCode,
-          message: responseMessage,
-          email: 'blah@example.com',
-        }],
+        userResponse: [],
       },
     };
+    var dataItem = {
+      status: statusCode,
+      httpStatus: statusCode,
+      message: responseMessage,
+      email: 'blah@example.com',
+    };
+
+    for (var i = 0; i < numUsers; i++) {
+      returnResponse.data.userResponse.push(dataItem);
+    }
+    return returnResponse;
   }
 
   beforeEach(init);
@@ -185,7 +188,7 @@ describe('OnboardCtrl: Ctrl', function () {
         expect(this.$scope.model.numMaxUsers).toEqual(2);
       });
       it('should report existing users', function () {
-        this.Userservice.onboardUsers.and.returnValue(this.$q.resolve(onboardUsersResponse(200)));
+        this.Userservice.onboardUsers.and.returnValue(this.$q.resolve(onboardUsersResponse(200, '', 2)));
         var promise = this.$scope.dirsyncProcessingNext();
         this.$scope.$apply();
         expect(promise).toBeResolved();
@@ -196,7 +199,7 @@ describe('OnboardCtrl: Ctrl', function () {
         expect(this.$scope.model.userErrorArray.length).toEqual(0);
       });
       it('should report error users', function () {
-        this.Userservice.onboardUsers.and.returnValue(this.$q.resolve(onboardUsersResponse(403)));
+        this.Userservice.onboardUsers.and.returnValue(this.$q.resolve(onboardUsersResponse(403, '', 2)));
         var promise = this.$scope.dirsyncProcessingNext();
         this.$scope.$apply();
         expect(promise).toBeResolved();
@@ -207,7 +210,7 @@ describe('OnboardCtrl: Ctrl', function () {
         expect(this.$scope.model.userErrorArray.length).toEqual(2);
       });
       it('should report error users when API fails', function () {
-        this.Userservice.onboardUsers.and.returnValue(this.$q.reject(onboardUsersResponse(500)));
+        this.Userservice.onboardUsers.and.returnValue(this.$q.reject(onboardUsersResponse(500, '', 2)));
         var promise = this.$scope.dirsyncProcessingNext();
         this.$scope.$apply();
         expect(promise).toBeResolved();
@@ -218,7 +221,7 @@ describe('OnboardCtrl: Ctrl', function () {
         expect(this.$scope.model.userErrorArray.length).toEqual(2);
       });
       it('should stop processing when cancelled', function () {
-        this.Userservice.onboardUsers.and.returnValue(this.$q.resolve(onboardUsersResponse(-1)));
+        this.Userservice.onboardUsers.and.returnValue(this.$q.resolve(onboardUsersResponse(-1, '', 2)));
         var promise = this.$scope.dirsyncProcessingNext();
         this.$scope.$apply();
         expect(promise).toBeResolved();
@@ -230,6 +233,36 @@ describe('OnboardCtrl: Ctrl', function () {
         this.$scope.cancelProcessCsv();
         this.$scope.$apply();
         expect(promise).toBeResolved();
+      });
+    });
+  });
+
+  describe('onboardUsers()', function () {
+    beforeEach(initController);
+
+    beforeEach(function () {
+      this.$scope.$dismiss = _.noop;
+      this.$scope.model.userList = this.mock.manualUsersListMoreThan10;
+      this.$scope.usrlist = this.mock.getUsrList;
+      this.$scope.$apply();
+      this.$timeout.flush();
+    });
+
+    describe('with a usrlist array that has 12 new users', function () {
+      it('should call Userservice.onboardUsers() and produce correct new users count', function () {
+        this.Userservice.onboardUsers.and.returnValue(this.$q.resolve(onboardUsersResponse(201, '', 6)));
+        this.$scope.onboardUsers(true);
+        this.$scope.$apply();
+        expect(this.$scope.numAddedUsers).toEqual(12);
+      });
+    });
+
+    describe('with a usrlist array that has 12 existing users', function () {
+      it('should call Userservice.onboardUsers() and produce correct new users count', function () {
+        this.Userservice.onboardUsers.and.returnValue(this.$q.resolve(onboardUsersResponse(200, '', 6)));
+        this.$scope.onboardUsers(true);
+        this.$scope.$apply();
+        expect(this.$scope.numUpdatedUsers).toEqual(12);
       });
     });
   });
@@ -675,7 +708,7 @@ describe('OnboardCtrl: Ctrl', function () {
 
     beforeEach(function () {
       this.$scope.$dismiss = _.noop;
-      this.Userservice.onboardUsers.and.returnValue(this.$q.resolve(onboardUsersResponse(200, '')));
+      this.Userservice.onboardUsers.and.returnValue(this.$q.resolve(onboardUsersResponse(200, '', 2)));
     });
 
     describe('with a current user', function () {

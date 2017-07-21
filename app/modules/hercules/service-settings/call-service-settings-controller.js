@@ -44,6 +44,7 @@
     };
     vm.isTestOrg = false;
     vm.nameChangeEnabled = false;
+    vm.sipDestinationTestSucceeded = undefined;
 
     FeatureToggleService.atlas2017NameChangeGetStatus().then(function (toggle) {
       vm.nameChangeEnabled = toggle;
@@ -152,8 +153,30 @@
     };
 
     /* Callback from the verify-sip-destination component  */
-    vm.onDestinationClear = function () {
-      vm.org.sipDomain = '';
+    vm.onResultReady = function (succeeded, resultSet) {
+      vm.sipDestinationTestSucceeded = succeeded;
+      vm.sipDestinationTestResultSet = resultSet;
+    };
+
+    /* Callback from the verify-sip-destination component  */
+    vm.onTestStarted = function () {
+      vm.sipDestinationTestSucceeded = undefined;
+    };
+
+    vm.warnSipDestination = function () {
+      return vm.sipDestinationTestSucceeded !== undefined && !vm.sipDestinationTestSucceeded;
+    };
+
+    vm.openSipTestResults = function () {
+      $modal.open({
+        resolve: {
+          resultSet: function () { return vm.sipDestinationTestResultSet; },
+        },
+        controller: 'VerifySipDestinationModalController',
+        controllerAs: 'vm',
+        templateUrl: 'modules/hercules/service-settings/verify-sip-destination/verify-sip-destination-modal.html',
+        type: 'full',
+      });
     };
   }
 }());
