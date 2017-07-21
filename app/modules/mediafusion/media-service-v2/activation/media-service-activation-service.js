@@ -81,7 +81,7 @@
       setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
         function success() {},
         function error(errorResponse) {
-          Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
+          Notification.error('mediaFusion.mediaMicroserviceFailure', {
             failureMessage: errorResponse.message,
           });
         });
@@ -124,7 +124,7 @@
             setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
               function success() {},
               function error(errorResponse) {
-                Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
+                Notification.error('mediaFusion.mediaMicroserviceFailure', {
                   failureMessage: errorResponse.message,
                 });
               });
@@ -132,7 +132,7 @@
             deleteUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
               function success() {},
               function error(errorResponse) {
-                Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
+                Notification.error('mediaFusion.mediaMicroserviceFailure', {
                   failureMessage: errorResponse.message,
                 });
               });
@@ -147,7 +147,14 @@
 
     var enableRhesosEntitlement = function () {
       var url = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/services/rhesos';
-      return $http.post(url);
+      return $http.post(url).then(
+        function success() {},
+        function error(errorResponse) {
+          Notification.error('mediaFusion.mediaNetworkFailure', {
+            failureMessage: errorResponse.message,
+          });
+        }
+      );
     };
 
     var enableCallServiceEntitlement = function () {
@@ -156,7 +163,14 @@
         roles: ['Spark_CallService'],
       };
       var url = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/services/spark';
-      return $http.post(url, payload);
+      return $http.post(url, payload).then(
+        function success() {},
+        function error(errorResponse) {
+          Notification.error('mediaFusion.mediaNetworkFailure', {
+            failureMessage: errorResponse.message,
+          });
+        }
+      );
     };
 
     var setOrgSettingsForDevOps = function () {
