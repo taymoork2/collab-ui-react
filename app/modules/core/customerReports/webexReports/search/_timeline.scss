@@ -22,7 +22,17 @@
     text-anchor: end;
   }
 
-  .gridLine {
+  .drawLine {
+    stroke: $gray-light-1;
+    stroke-width: 1;
+  }
+
+  .circleStart {
+    fill: $gray-light-1;
+  }
+
+  .gridHorizontalLine,
+  .gridVerticalLine {
     stroke: $gray-light-2;
     stroke-width: 0.5;
   }
