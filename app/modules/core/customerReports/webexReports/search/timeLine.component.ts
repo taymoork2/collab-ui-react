@@ -21,7 +21,7 @@ class TimeLine implements ng.IComponentController {
       height: 360,
       paddingRight: 25,
       paddingLeft: 92.5,
-      paddingButtom: 40.5,
+      paddingButtom: 50.5,
     };
     this.data = {
       xStep: 0,
@@ -55,14 +55,14 @@ class TimeLine implements ng.IComponentController {
   }
 
   private initParameters() {
-    this.colorArr = ['#43A942', '#E9691E', '#049FD9', '#AEAEAF'];
+    this.colorArr = ['#32c655', '#f0a309', '#e74a3e', '#AEAEAF'];
     this.option.width = this.$element.find('#svg').width();
     this.data.endTime = this.sourceData.overview.endTime;
     this.data.startTime = this.sourceData.overview.startTime;
 
     this.data.gridHorizontalLineNum = this.sourceData.lines.length + 2 > 12 ? this.sourceData.lines.length + 2 : 12;
     if (this.data.gridHorizontalLineNum > 12) {
-      this.option.height = (this.data.gridHorizontalLineNum * 27) + this.option.paddingButtom;
+      this.option.height = (this.data.gridHorizontalLineNum * 26) + this.option.paddingButtom;
     }
 
     this.coordinate = {
@@ -232,8 +232,12 @@ class TimeLine implements ng.IComponentController {
   private showTips() {
     let xStart = 0;
     const x = this.coordinate.x;
-    const y = this.coordinate.y + 1;
-    const colorG = this.svg.append('g').attr('class', 'showCircleTips');
+    const y = this.coordinate.y + 10;
+    const colorG = this.svg.append('g')
+      .attr('class', 'showTips')
+      .attr('transform', `translate(150 , 0)`)
+      .append('g')
+      .attr('class', 'circleTips');
     const tips = [
       { text: 'Good', color: this.colorArr[0] },
       { text: 'Fair', color: this.colorArr[1] },
@@ -241,37 +245,29 @@ class TimeLine implements ng.IComponentController {
       { text: 'N/A', color: this.colorArr[3] },
     ];
     colorG.append('text')
-      .attr('class', 'circleTips')
-      .attr('x', x)
-      .attr('y', y)
-      .attr('transform', `translate(${xStart} , 32)`)
+      .attr('transform', `translate(${xStart + x} , ${y + 32})`)
       .text('Join Meeting Time: ');
     xStart += 50;
 
     _.forEach(tips, function (val) {
       xStart += 70;
       colorG.append('circle')
-        .attr('cx', x)
-        .attr('cy', y)
         .attr('r', 5)
-        .attr('transform', `translate(${xStart} , 28)`)
+        .attr('transform', `translate(${xStart + x} , ${y + 28})`)
         .style('fill', val.color);
 
       colorG.append('text')
-        .attr('x', x)
-        .attr('y', y)
         .attr('font-size', '12px')
-        .attr('fill', val.color)
-        .attr('transform', `translate(${xStart + 10} , 32)`)
+        .attr('transform', `translate(${xStart + x + 10} , ${y + 32})`)
         .text(val.text);
     });
     this.lineMsgTips();
   }
 
   private lineMsgTips() {
-    const colorG = this.svg.append('g').attr('class', 'lineMsgTips');
+    const colorG = this.svg.select('.showTips').append('g').attr('class', 'lineTips');
     const x = this.coordinate.x;
-    const y = this.coordinate.y + 1;
+    const y = this.coordinate.y + 10;
     const tips = [
       { text: 'Good', color: this.colorArr[0] },
       { text: 'Bad', color: this.colorArr[1] },
@@ -289,10 +285,7 @@ class TimeLine implements ng.IComponentController {
       .interpolate('linear');
 
     colorG.append('text')
-      .attr('class', 'msgTips')
-      .attr('x', x)
-      .attr('y', y)
-      .attr('transform', `translate(${xStart} , 32)`)
+      .attr('transform', `translate(${xStart + x} , ${y + 32})`)
       .text('Meeting Quality: ');
     xStart += 30;
     _.forEach(tips, (val) => {
@@ -302,14 +295,11 @@ class TimeLine implements ng.IComponentController {
         .attr('stroke', val.color)
         .attr('stroke-width', 1)
         .attr('fill', val.color)
-        .attr('transform', `translate(${xStart} , 25)`);
+        .attr('transform', `translate(${xStart} , 23)`);
 
       colorG.append('text')
-        .attr('x', x)
-        .attr('y', y)
         .attr('font-size', '12px')
-        .attr('fill', val.color)
-        .attr('transform', `translate(${xStart + 35} , 32)`)
+        .attr('transform', `translate(${xStart + x + 35} , ${y + 32})`)
         .text(val.text);
     });
   }

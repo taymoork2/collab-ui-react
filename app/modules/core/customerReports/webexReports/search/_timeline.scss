@@ -10,14 +10,14 @@
   }
 
   .axis text {
-    stroke: $gray-light-2;
-    stroke-width: 0.5;
+    fill-opacity: 0.6;
+    stroke-width: 1;
     font-size: 11px;
   }
 
-  .showUser {
-    stroke: $gray-light-2;
-    stroke-width: 0.5;
+  .showUser text {
+    fill-opacity: 0.6;
+    stroke-width: 1;
     font-size: 12px;
     text-anchor: end;
   }
@@ -37,10 +37,11 @@
     stroke-width: 0.5;
   }
 
-  .showCircleTips .circleTips,
-  .lineMsgTips .msgTips {
-    stroke: $gray-light-2;
-    stroke-width: 0.5;
-    font-size: 12px;
+  .showTips {
+    text {
+      fill-opacity: 0.6;
+      stroke-width: 1;
+      font-size: 12px;
+    }
   }
 }
