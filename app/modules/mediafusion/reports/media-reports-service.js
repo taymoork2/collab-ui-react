@@ -368,9 +368,9 @@
     }
 
     function formatClientType(clientType) {
-      if (clientType === 'On-Premises') {
+      if (clientType === 1) {
         return 'onPrem';
-      } else if (clientType === 'Cloud') {
+      } else if (clientType === 2) {
         return 'cloud';
       } else {
         return 'all';

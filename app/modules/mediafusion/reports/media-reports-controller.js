@@ -154,7 +154,7 @@
       value: 2,
       label: $translate.instant('mediaFusion.metrics.cloudHeading'),
     }];
-    vm.clientTypeSelected = vm.clientTypeOptions[0].label;
+    vm.clientTypeSelected = vm.clientTypeOptions[0].value;
     vm.clientTypeOptions['tooltipModel'] = vm.clientTypeOptions[0];
 
     vm.clientTypeUpdateFromCard = clientTypeUpdateFromCard;
@@ -778,7 +778,7 @@
     }
 
     function clientTypeUpdateFromCard() {
-      vm.clientTypeSelected = vm.clientTypeOptions['tooltipModel'].label;
+      vm.clientTypeSelected = vm.clientTypeOptions['tooltipModel'].value;
       setClientTypeCard();
       setClientTypeData();
     }
