@@ -1558,7 +1558,7 @@
     "emergencyAddressDescription": "This is the default address that will be used for emergency services. This can be overridden by each User or Place.",
     "extension": "Extension",
     "extensionLength": "Extension Length",
-    "extensionLengthDescription": "Specify the total number of digits users must dial before placing an external call. All sites share the same extension length.",
+    "extensionLengthDescription": "Specify the total number of digits users must dial before placing an internal call.",
     "extensionLengthHelpText": "After being set, this value can only be changed if no extensions are assigned.",
     "extensionLengthServicesHelpText": "Enabled only when no extensions have been assigned.",
     "extensionLengthDisabledVM": "Enabled only when voicemail is disabled.",
