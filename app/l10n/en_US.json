@@ -3429,6 +3429,7 @@
     "sendEmailToCustomer": "Send email to customer notifying them that their services are ready",
     "needHelp": "Need help - ",
     "needHelpExplain": "Search the knowledge base.",
+    "newSubsOnly": "New services in your subscription",
     "planReview": "Plan Review",
     "pendingLicensesError": "There was an error in the call for pending licenses",
     "subscriptionId": "Subscription IDs",
