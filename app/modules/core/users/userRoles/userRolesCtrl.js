@@ -438,6 +438,7 @@ require('./_user-roles.scss');
         return Userservice.updateUserProfile($scope.currentUser.id, userData)
           .then(function (response) {
             $scope.currentUser = response.data;
+            $stateParams.currentUser = response.data;
           });
       }
     }
