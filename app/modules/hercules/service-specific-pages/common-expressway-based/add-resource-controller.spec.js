@@ -9,11 +9,9 @@ describe('Controller: AddResourceController', function () {
       '$scope',
       '$state',
       '$translate',
-      'FeatureToggleService',
       'FmsOrgSettings',
       'HybridServicesExtrasService',
       'HybridServicesClusterService',
-      'ProPackService',
       'ResourceGroupService'
     );
 
@@ -21,8 +19,6 @@ describe('Controller: AddResourceController', function () {
     this.clusterIdOfNewCluster = 'c6b4d8f1-6d34-465c-8d6d-b541058fc15e';
     this.newConnectorType = 'c_cal';
 
-    spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
-    spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(false));
     spyOn(this.HybridServicesExtrasService, 'addPreregisteredClusterToAllowList').and.returnValue(this.$q.resolve({}));
     spyOn(this.FmsOrgSettings, 'get').and.returnValue(this.$q.resolve({ expresswayClusterReleaseChannel: 'stable' }));
     spyOn(this.HybridServicesClusterService, 'provisionConnector').and.returnValue(this.$q.resolve({ id: this.clusterIdOfNewCluster }));
@@ -109,39 +105,6 @@ describe('Controller: AddResourceController', function () {
     it('should not create a warning if hostname is previously not used', function () {
       this.controller.hostname = 'neverUsedHostname.example.org';
       expect(this.controller.warning()).toBe(false);
-    });
-  });
-
-  // 2017 name change
-  describe('atlas2017NameChangeGetStatus & atlasProPackGetStatus - ', function () {
-    it('when toggles are false - nameChangeEnabled should be false and base localizedHostNameHelpText should be returned', function () {
-      expect(this.controller.nameChangeEnabled).toBeFalsy();
-      expect(this.controller.localizedHostNameHelpText).toEqual('hercules.addResourceDialog.nameHelptext');
-    });
-
-    it('when toggles are true - nameChangeEnabled should be true and localizedHostNameHelpText should be new or pro based on hasProPackPurchased', function () {
-      this.FeatureToggleService.atlas2017NameChangeGetStatus.and.returnValue(this.$q.resolve(true));
-      this.$translate.instant.calls.reset();
-      this.initController();
-      expect(this.controller.nameChangeEnabled).toBeTruthy();
-      expect(this.controller.localizedHostNameHelpText).toEqual('hercules.addResourceDialog.nameHelptextNew');
-      expect(this.$translate.instant.calls.allArgs()).toContain(['hercules.addResourceDialog.nameHelptextNew', {
-        appTitle: 'loginPage.titleNew',
-      }]);
-      expect(this.$translate.instant.calls.allArgs()).not.toContain(['hercules.addResourceDialog.nameHelptextNew', {
-        appTitle: 'loginPage.titlePro',
-      }]);
-
-      this.ProPackService.hasProPackPurchased.and.returnValue(this.$q.resolve(true));
-      this.$translate.instant.calls.reset();
-      this.initController();
-      expect(this.controller.localizedHostNameHelpText).toEqual('hercules.addResourceDialog.nameHelptextNew');
-      expect(this.$translate.instant.calls.allArgs()).not.toContain(['hercules.addResourceDialog.nameHelptextNew', {
-        appTitle: 'loginPage.titleNew',
-      }]);
-      expect(this.$translate.instant.calls.allArgs()).toContain(['hercules.addResourceDialog.nameHelptextNew', {
-        appTitle: 'loginPage.titlePro',
-      }]);
     });
   });
 });

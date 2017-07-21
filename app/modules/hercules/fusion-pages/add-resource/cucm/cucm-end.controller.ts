@@ -1,16 +1,9 @@
 export class CucmEndController {
-  public nameChangeEnabled: boolean = false;
-
   /* @ngInject */
   constructor(
     private $stateParams: ng.ui.IStateParamsService,
     private $window: ng.IWindowService,
-    private FeatureToggleService,
-  ) {
-    this.FeatureToggleService.atlas2017NameChangeGetStatus().then((toggle: boolean): void => {
-      this.nameChangeEnabled = toggle;
-    });
-  }
+  ) {}
 
   public next() {
     const hostname = this.$stateParams.wizard.state().data.cucm.hostname;
