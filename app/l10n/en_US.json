@@ -1723,6 +1723,10 @@
       "message2": "This change can take a few minutes to apply to the system and prevent users from placing calls at that time."
     }
   },
+  "mediaOnHold": {
+    "systemDefault": "System Default",
+    "companyMOHDefaultMedia" : "Company MOH (System Default)"
+  },
   "dirsyncModal": {
     "chooseSync": "Choose Sync",
     "chooseSyncDesc": "Do you want to manually enter users or synchronize users from Active Directory?",
