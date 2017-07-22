@@ -3055,7 +3055,9 @@
         "optionUniqueError": "This option already exists. Add a different option.",
         "optionsNumberErrorMessage": "Add two or more options.",
         "optionRequired": "This field is required.",
-        "options": "Options ({{count}})"
+        "optionsLabelWithCount": "Options ({{count}})",
+        "optionsLabel": "Options",
+        "optionsDetailLabel": "List of options in this single select field."
       },
       "fieldsetPage": {
         "fieldsetId": "Fieldset ID",
@@ -3066,7 +3068,7 @@
         "fieldsetIdPlaceholder": "For eg. sales.shoppingcart",
         "descriptionPlaceholder": "What is this fieldset for?",
         "createNew": "Create New Fieldset",
-        "addOrEditFields": "Search and Select fields you want in this fieldset.",
+        "addOrEditFields": "Search and select the fields for this fieldset in the order you wish them to appear in the application.",
         "searchFields": "Search Fields",
         "loadFailure": "Unable to retrieve fields.",
         "noFields": "No fields available",
