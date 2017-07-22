@@ -5,7 +5,7 @@
     .controller('PstnReviewCtrl', PstnReviewCtrl);
 
   /* @ngInject */
-  function PstnReviewCtrl($q, $translate, $state, PstnModel, PstnService, PstnServiceAddressService, Notification, Auth) {
+  function PstnReviewCtrl($q, $translate, $state, $stateParams, PstnModel, PstnService, PstnServiceAddressService, Notification, Auth) {
     var vm = this;
     var NUMBER_ORDER = require('modules/huron/pstn').NUMBER_ORDER;
     var BLOCK_ORDER = require('modules/huron/pstn').BLOCK_ORDER;
@@ -21,6 +21,7 @@
 
     vm.goToNumbers = goToNumbers;
     vm.placeOrder = placeOrder;
+    vm.refreshFn = refreshFn;
 
     vm.provider = PstnModel.getProvider();
 
@@ -202,6 +203,14 @@
       vm.placeOrderLoad = false;
     }
 
+    function refreshFn() {
+      if (_.isFunction($stateParams.refreshFn)) {
+        return $stateParams.refreshFn();
+      } else {
+        return $q.resolve(true);
+      }
+    }
+
     function placeOrder() {
       var promise = $q.resolve();
       startPlaceOrderLoad();
@@ -213,6 +222,7 @@
       promise
         .then(createSite)
         .then(createNumbers)
+        .then(refreshFn)
         .then(goToNextSteps)
         .finally(stopPlaceOrderLoad);
     }

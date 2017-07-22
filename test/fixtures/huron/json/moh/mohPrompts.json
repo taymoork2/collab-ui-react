@@ -1,0 +1,31 @@
+[{
+	"orgId": "12345",
+	"mediaId": "3fc66b22-649f-409d-982b-32cffabb74f3",
+	"variantId": "15e63b81-09b3-4172-b470-e2139f69e255",
+	"fileName": "filename1.scpf",
+	"displayName": "filename1",
+	"rhesosId": "998725e5-a8df-441a-b707-f00e7d7b6501",
+	"markForDelete": false,
+	"assignments": [{
+		"assignmentId": "12345",
+		"idType": "ORG_ID"
+	}]
+}, {
+	"orgId": "12345",
+	"mediaId": "2bc7a37e-78fd-4adf-9c33-de9a8e52d1a8",
+	"variantId": "9ba738a4-6297-402a-9d97-b331e741ec08",
+	"fileName": "filename2.scpf",
+	"displayName": "filename2",
+	"rhesosId": "9cdd6f7b-5814-4edb-9697-a015d7f32b3g",
+	"markForDelete": false,
+	"assignments": []
+}, {
+	"orgId": "12345",
+	"mediaId": "246c8179-fe86-4a97-88d6-8b1799156e3b",
+	"variantId": "03cc0424-4675-4abf-bccd-38b393fea93c",
+	"fileName": "filename3.scpf",
+	"displayName": "filename3",
+	"rhesosId": "f03276fe-3ffb-4e94-a3cb-8ef86752eecd",
+	"markForDelete": false,
+	"assignments": []
+}]

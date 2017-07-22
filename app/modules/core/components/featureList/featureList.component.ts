@@ -35,7 +35,7 @@ class FeatureListCtrl implements ng.IComponentController {
     );
   }
 
-  public $onChanges(changes: {[bindings: string]: ng.IChangesObject}) {
+  public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
     const { features } = changes;
     if (features && features.currentValue) {
       this.determineHasActionAvailable(features.currentValue);

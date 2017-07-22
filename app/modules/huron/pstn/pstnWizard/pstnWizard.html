@@ -46,34 +46,25 @@
         <cs-tab>
           <cs-tab-heading translate="pstnSetup.newNumbersTab"></cs-tab-heading>
           <p translate="pstnSetup.newNumbersTabDesc"></p>
-          <uc-pstn-selector
-            search="$ctrl.searchCarrierInventory(value, block, quantity, consecutive)"
-            search-results="$ctrl.model.pstn.searchResults"
-            show-advanced-order="$ctrl.model.pstn.showAdvancedOrder"
-            add-loading="$ctrl.model.pstn.addLoading"
-            add-disabled="$ctrl.model.pstn.addDisabled"
-            paginate-options="$ctrl.model.pstn.paginateOptions"
+          <uc-pstn-number-search
+            model="$ctrl.model.pstn"
+            search="$ctrl.searchCarrierInventory(value, block, quantity, consecutive, stateAbbreviation)"
             add-to-cart="$ctrl.addToCart(order_type, number_type, quantity, searchResultModel)"
-            simple="{{$ctrl.isTrial}}"
-            show-no-result="$ctrl.model.pstn.showNoResult"
+            country-code="$ctrl.countryCode"
           >
-          </uc-pstn-selector>
+          </uc-pstn-number-search>
         </cs-tab>
         <cs-tab ng-if="$ctrl.showTollFreeNumbers">
           <cs-tab-heading translate="pstnSetup.newTollFreeTab"></cs-tab-heading>
           <p>{{pstnNumbers.tollFreeTitle}}</p>
-          <uc-pstn-selector
+          <uc-pstn-number-search
+            model="$ctrl.model.tollFree"
             search="$ctrl.searchCarrierTollFreeInventory(value, block, quantity, consecutive)"
-            search-results="$ctrl.model.tollFree.searchResults"
-            show-advanced-order="$ctrl.model.tollFree.showAdvancedOrder"
-            add-loading="$ctrl.model.tollFree.addLoading"
-            add-disabled="$ctrl.model.tollFree.addDisabled"
-            paginate-options="$ctrl.model.tollFree.paginateOptions"
             add-to-cart="$ctrl.addToCart(order_type, number_type, quantity, searchResultModel)"
+            country-code="$ctrl.countryCode"
             number-type="TOLLFREE"
-            valid-search="$ctrl.model.tollFree.areaCodeOptions"
           >
-          </uc-pstn-selector>
+          </uc-pstn-number-search>
         </cs-tab>
         <cs-tab ng-if="$ctrl.showPortNumbers">
           <cs-tab-heading translate="pstnSetup.portNumbersTab"></cs-tab-heading>
@@ -178,7 +169,7 @@
           <div class="package-detail-label">
             <div translate="pstnSetup.pstnMethod"></div>
             <div class="detail-text" translate="pstnSetup.privatePstnTrunk" ></div>
-            <div translate="pstnSetup.numbers" translate-value-count="{{::$ctrl.swivelNumbers.length}}" translate-interpolation="messageformat"></div>
+            <div translate="pstnSetup.numbersTitle"></div>
             <div class="detail-text" translate="pstnSetup.importNumbersTitle" translate-value-count="{{::$ctrl.swivelNumbers.length}}" translate-interpolation="messageformat"></div>
           </div>
         </div>

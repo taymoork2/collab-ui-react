@@ -3,7 +3,6 @@ import LocationsService from './index';
 describe('Service: CallLocations', () => {
   const locationsList =  getJSONFixture('call/locations/locationsList.json');
 
-  //TODO: remove comments and use actual APIs when  API is availble for httpBackend
   beforeEach(function () {
     this.initModules(LocationsService);
     this.injectDependencies(
@@ -13,55 +12,47 @@ describe('Service: CallLocations', () => {
       'LocationsService',
     );
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('111');
-    this.LocationsService.getLocations();
+    this.LocationsService.getLocationList();
   });
 
-  //TODO: Remove Code after the APIs have been integrated
-  // afterEach(function () {
-  //   this.$httpBackend.verifyNoOutstandingExpectation();
-  //   this.$httpBackend.verifyNoOutstandingRequest();
-  // });
 
-  xit('should get locations', function() {
-    //this.$httpBackend.expectGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/locations').respond(200, locationsList);
-    this.LocationsService.getLocations().then(response => {
+  it('should get locations', function() {
+    this.LocationsService.getLocationList().then(response => {
       expect(response).toEqual(locationsList);
     });
-    //this.$httpBackend.flush();
   });
 
   it('should get a location', function() {
-    //this.$httpBackend.expectGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/locations/' + '123').respond(200, SUCCESS_DATA[0]);
-    this.LocationsService.getLocationDetails(locationsList[0].uuid).then(response => {
+    this.LocationsService.getLocation(locationsList[0].uuid).then(response => {
       expect(response).toEqual(locationsList[0]);
     });
-    //this.$httpBackend.flush();
   });
 
   it('should remove a location', function() {
-    //this.$httpBackend.expectDELETE(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/locations/' + '123').respond(204);
     this.LocationsService.deleteLocation(locationsList[0].uuid).then(response => {
       expect(response).toEqual(locationsList[0]);
     });
-    //this.$httpBackend.flush();
   });
 
   it('should create a new location', function() {
-    //this.$httpBackend.expectPOST(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/locations').respond(201);
     this.LocationsService.createLocation(locationsList[0]).then(response => {
       expect(response).toEqual(locationsList[0]);
     });
-    //this.$httpBackend.flush();
   });
 
-  //TODO: Remove x - enable test when we have working APIs
-  xit('should reject the promise on a failed response', function () {
+
+  it('should reject the promise on a failed response', function () {
     this.$httpBackend.expectGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/locations').respond(500);
-    this.LocationsService.getLocations().then(response => {
+    this.LocationsService.getLocationList().then(response => {
       expect(response.data).toBeUndefined();
       expect(response.status).toEqual(500);
     });
-    this.$httpBackend.flush();
+  });
+
+  it('should get a user location', function() {
+    this.LocationsService.getUserLocation(locationsList[0].uuid).then(response => {
+      expect(response).toEqual(locationsList[0]);
+    });
   });
 
   it('should return all locations if Empty search string ', function () {

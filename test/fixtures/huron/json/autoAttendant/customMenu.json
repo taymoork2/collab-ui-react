@@ -15,7 +15,9 @@
       "actions": [{
         "play": {
           "description": "Welcome prompt",
-          "url": "file1.avi"
+          "url": "file1.avi",
+          "voice": "Vanessa",
+          "deleteUrl": "file1.avi"
         }
       }, {
         "runCustomActions": {

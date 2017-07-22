@@ -1,0 +1,47 @@
+@import '~collab-ui/scss/settings/colors';
+
+#svg {
+  font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  .axis path,
+  .axis line {
+    fill: none;
+    stroke: $gray-light-2;
+    shape-rendering: crispEdges;
+  }
+
+  .axis text {
+    fill-opacity: 0.6;
+    stroke-width: 1;
+    font-size: 11px;
+  }
+
+  .showUser text {
+    fill-opacity: 0.6;
+    stroke-width: 1;
+    font-size: 12px;
+    text-anchor: end;
+  }
+
+  .drawLine {
+    stroke: $gray-light-1;
+    stroke-width: 1;
+  }
+
+  .circleStart {
+    fill: $gray-light-1;
+  }
+
+  .gridHorizontalLine,
+  .gridVerticalLine {
+    stroke: $gray-light-2;
+    stroke-width: 0.5;
+  }
+
+  .showTips {
+    text {
+      fill-opacity: 0.6;
+      stroke-width: 1;
+      font-size: 12px;
+    }
+  }
+}

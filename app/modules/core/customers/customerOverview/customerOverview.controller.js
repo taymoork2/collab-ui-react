@@ -125,6 +125,9 @@ require('./_customer-overview.scss');
     }
 
     function initTrialActions() {
+      if (vm.isOwnOrg()) {
+        return;
+      }
       if (PartnerService.canAdminTrial(vm.currentCustomer.licenseList)) {
         vm.trialActions.push({
           actionKey: 'customerPage.edit',

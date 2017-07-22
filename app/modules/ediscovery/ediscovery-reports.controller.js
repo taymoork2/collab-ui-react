@@ -1,14 +1,17 @@
 require('./ediscovery.scss');
+require('@ciscospark/internal-plugin-search');
 
 (function () {
   'use strict';
 
+  module.exports = EdiscoveryReportsController;
   /* @ngInject */
-  function EdiscoveryReportsController($interval, $scope, $state, $translate, $window, Analytics, EdiscoveryService, EdiscoveryNotificationService, FeatureToggleService, Notification, ReportUtilService, uiGridConstants) {
+  function EdiscoveryReportsController($interval, $scope, $state, $translate, $window, Analytics, Authinfo, EdiscoveryService, EdiscoveryNotificationService, FeatureToggleService, Notification, ReportUtilService, uiGridConstants) {
     $scope.$on('$viewContentLoaded', function () {
       $window.document.title = $translate.instant('ediscovery.browserTabHeaderTitle');
     });
     var vm = this;
+    var spark;
 
     vm.readingReports = true;
     vm.concat = false;
@@ -21,6 +24,9 @@ require('./ediscovery.scss');
     $scope.cancelReport = cancelReport;
     $scope.rerunReport = rerunReport;
     $scope.viewReport = viewReport;
+    $scope.getKeyTooltip = getKeyTooltip;
+    $scope.getKey = getKey;
+    $scope.isUserReportCreator = isUserReportCreator;
 
     $scope.reportHeader = '';
     $scope.ipAddressModel = null;
@@ -51,6 +57,7 @@ require('./ediscovery.scss');
     });
 
     vm.reports = [];
+    spark = EdiscoveryService.setupSpark();
 
     pollAvalonReport();
 
@@ -78,6 +85,9 @@ require('./ediscovery.scss');
         })
         .finally(function () {
           $scope.downloadingReportId = undefined;
+          if (report.encryptionKeyUrl) {
+            getKey(report);
+          }
         });
     }
 
@@ -210,9 +220,34 @@ require('./ediscovery.scss');
         report: report,
       });
     }
-  }
 
-  angular
-    .module('Ediscovery')
-    .controller('EdiscoveryReportsController', EdiscoveryReportsController);
+    //agendel 6/29/17: currently backend only displays the reports where this condition is true.
+    // leaving this code in since requrements are not certain
+    function isUserReportCreator(report) {
+      return Authinfo.getUserId() === report.createdByUserId;
+    }
+
+    //agendel 6/29/17: see note above. Given current backend the tooltip will never show
+    function getKeyTooltip(report) {
+      if (isUserReportCreator(report)) {
+        return '';
+      } else {
+        return report.createdByUserId;
+      }
+    }
+
+    function getKey(report) {
+      if (isUserReportCreator(report)) {
+        EdiscoveryService.getReportKey(report.encryptionKeyUrl, spark)
+        .then(function (key) {
+          $scope.reportName = report.displayName;
+          $scope.reportKey = key;
+          EdiscoveryService.openReportModal($scope, EdiscoveryService.modalTypes.PASSWORD);
+        })
+        .catch(function () {
+          Notification.error('ediscovery.encryption.unableGetPassword');
+        });
+      }
+    }
+  }
 }());

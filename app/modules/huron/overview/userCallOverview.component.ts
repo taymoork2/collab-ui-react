@@ -13,8 +13,8 @@ class UserCallOverviewCtrl implements ng.IComponentController {
   public customerVmEnabled: boolean = false;
   public userVmEnabled: boolean = false;
   public userServices: string[] = [];
-  private externalTransferFeatureToggle;
   public snrEnabled: boolean = false;
+  public wide: boolean = true;
 
   /* @ngInject */
   constructor(
@@ -26,7 +26,6 @@ class UserCallOverviewCtrl implements ng.IComponentController {
     private HuronVoicemailService: HuronVoicemailService,
     private HuronUserService: HuronUserService,
     private $q: ng.IQService,
-    private FeatureToggleService,
 
   ) {
     this.currentUser = this.$stateParams.currentUser;
@@ -49,14 +48,12 @@ class UserCallOverviewCtrl implements ng.IComponentController {
       1: this.HuronVoicemailService.isEnabledForCustomer(),
       2: this.HuronUserService.getUserServices(this.currentUser.id),
       3: this.HuronUserService.getRemoteDestinations(this.currentUser.id),
-      4: this.FeatureToggleService.supports(this.FeatureToggleService.features.hi1033),
     };
     this.$q.all(promises).then( data => {
       this.customerVmEnabled = data[1];
       this.userServices = data[2];
       const rd: UserRemoteDestination[] = data[3];
       this.snrEnabled = (!_.isEmpty(rd) && rd[0].enableMobileConnect === 'true');
-      this.externalTransferFeatureToggle = data[4];
     }).then(() => {
       this.userVmEnabled = this.HuronVoicemailService.isEnabledForUser(this.userServices);
       this.initFeatures();
@@ -92,7 +89,7 @@ class UserCallOverviewCtrl implements ng.IComponentController {
     };
     this.features.push(snrService);
 
-    let service: IFeature = {
+    const service: IFeature = {
       name: this.$translate.instant('telephonyPreview.speedDials'),
       state: 'speedDials',
       detail: undefined,
@@ -107,15 +104,14 @@ class UserCallOverviewCtrl implements ng.IComponentController {
       actionAvailable: true,
     };
     this.features.push(cosService);
-    if (this.externalTransferFeatureToggle) {
-      service = {
-        name: this.$translate.instant('telephonyPreview.externalTransfer'),
-        state: 'externaltransfer',
-        detail: undefined,
-        actionAvailable: true,
-      };
-      this.features.push(service);
-    }
+
+    const externalTransferService: IFeature = {
+      name: this.$translate.instant('telephonyPreview.externalTransfer'),
+      state: 'externaltransfer',
+      detail: undefined,
+      actionAvailable: true,
+    };
+    this.features.push(externalTransferService);
   }
 
   public clickFeature(feature: IFeature) {
@@ -125,7 +121,7 @@ class UserCallOverviewCtrl implements ng.IComponentController {
   }
 
   private initNumbers(): void {
-    this.LineService.getLineList(LineConsumerType.USERS, this.currentUser.id)
+    this.LineService.getLineList(LineConsumerType.USERS, this.currentUser.id, this.wide)
       .then(lines => this.directoryNumbers = lines);
   }
 }

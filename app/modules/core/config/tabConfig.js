@@ -106,8 +106,126 @@
       }],
   }];
 
+  var tabsAtlas2017NameChange = [{
+    tab: 'overviewTab',
+    icon: 'icon-home-active',
+    title: 'tabs.overviewTab',
+    state: 'overview',
+    link: '/overview',
+    iconClass: 'icon-outline',
+  }, {
+    tab: 'overviewTab',
+    icon: 'icon-home-active',
+    title: 'tabs.overviewTab',
+    state: 'partneroverview',
+    link: '/partner/overview',
+    iconClass: 'icon-outline',
+  }, {
+    tab: 'gssTab',
+    icon: 'icon-bell',
+    title: 'tabs.gssTab',
+    desc: 'tabs.gssTabDesc',
+    state: 'gss',
+    link: '/gss',
+  }, {
+    tab: 'customerTab',
+    icon: 'icon-user',
+    title: 'tabs.customerTab',
+    state: 'partnercustomers',
+    link: '/partner/customers',
+    iconClass: 'icon-outline',
+  }, {
+    tab: 'gemservicesTab',
+    icon: 'icon-cloud',
+    title: 'tabs.servicesTab',
+    state: 'gemOverview',
+    feature: 'gem-services-tab',
+    link: '/partner/services/overview',
+  }, {
+    tab: 'userTab',
+    icon: 'icon-people-active',
+    title: 'tabs.userTab',
+    state: 'users',
+    link: '/users',
+    iconClass: 'icon-outline',
+  }, {
+    tab: 'placeTab',
+    icon: 'icon-location-active',
+    title: 'tabs.placeTab',
+    state: 'places',
+    link: '/places',
+    iconClass: 'icon-outline',
+  }, {
+    tab: 'servicesTab',
+    icon: 'icon-cloud-active',
+    title: 'tabs.servicesTab',
+    state: 'services-overview',
+    link: 'services',
+    iconClass: 'icon-outline',
+  }, {
+    tab: 'deviceTab',
+    icon: 'icon-endpoint-active',
+    title: 'tabs.deviceTab',
+    state: 'devices',
+    link: '/devices',
+    iconClass: 'icon-outline',
+  }, {
+    tab: 'reportTab',
+    icon: 'icon-analysis-active',
+    title: 'tabs.reportTab',
+    state: 'reports',
+    link: '/reports',
+    iconClass: 'icon-outline',
+  }, {
+    tab: 'reportTab',
+    icon: 'icon-analysis-active',
+    title: 'tabs.reportTab',
+    state: 'partnerreports',
+    link: '/partner/reports',
+    iconClass: 'icon-outline',
+  }, {
+    tab: 'supportTab',
+    icon: 'icon-support',
+    title: 'tabs.supportTab',
+    link: '/support/status',
+    state: 'support.status',
+    iconClass: 'icon-outline',
+  }, {
+    tab: 'settingsTab',
+    icon: 'icon-settings-active',
+    title: 'tabs.settingsTab',
+    state: 'settings',
+    link: '/settings',
+    iconClass: 'icon-outline',
+  }, {
+    tab: 'organizationTab',
+    icon: 'icon-admin',
+    title: 'tabs.organizationTab',
+    state: 'organizations',
+    link: '/organizations',
+  }, {
+    // DEPRECATED - REPLACE WITH FEATURE TOGGLES - DO NOT ADD MORE PAGES UNDER developmentTab
+    tab: 'developmentTab',
+    icon: 'icon-tools-active',
+    title: 'tabs.developmentTab',
+    hideProd: true,
+    subPages: [
+      {
+        title: 'tabs.metricsDetailsTab',
+        //desc: 'tabs.metricsDetailsTabDesc',
+        state: 'media-service-v2',
+        link: '#mediaserviceV2',
+      }, {
+        title: 'tabs.editFeatureToggles',
+        state: 'edit-featuretoggles',
+        link: '#editfeaturetoggles',
+      }],
+    iconClass: 'icon-outline',
+  }];
+
   module.exports = angular
     .module('core.tabconfig', [])
     .value('tabConfig', tabs)
+    .value('tabConfigAtlas2017NameChange', tabsAtlas2017NameChange)
     .name;
 }());

@@ -409,4 +409,12 @@ describe('CsdmConverterSpec', function () {
       expect(place.url).toBe(url);
     });
   });
+
+  describe('upgrade channel', function () {
+    it('should not try to translate an undefined upgrade channel', function () {
+      var device = {};
+      expect(converter.convertCloudberryDevice(device).upgradeChannel.label).toBeUndefined();
+      expect(converter.convertCloudberryDevice(device).upgradeChannel.value).toBeUndefined();
+    });
+  });
 });

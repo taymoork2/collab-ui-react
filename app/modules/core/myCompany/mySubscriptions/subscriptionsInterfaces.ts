@@ -7,10 +7,10 @@ export interface ISubscription {
   name?: string;
   numSubscriptions: number;
   productInstanceId?: string;
+  proPack?: IOfferData;
   quantity?: number;
   subscriptionId?: string;
   upgradeTrialUrl?: string;
-  viewAll: boolean;
   endDate: string;
   badge: string;
 }

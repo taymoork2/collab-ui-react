@@ -27,10 +27,8 @@ export class ServiceDescriptorService {
   }
 
   public getServiceStatus(serviceId: HybridServiceId, orgId?: string): ng.IPromise<IServiceStatus> {
-    return this.$http.get(`${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId || this.Authinfo.getOrgId()}/services/${serviceId}/status`)
-      .then(response => {
-        return response.data;
-      });
+    return this.$http.get<IServiceStatus>(`${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId || this.Authinfo.getOrgId()}/services/${serviceId}/status`)
+      .then(response => response.data as IServiceStatus);
   }
 
   public getServices(orgId?: string): ng.IPromise<IService[]> {
@@ -85,7 +83,7 @@ export class ServiceDescriptorService {
     return this.Orgservice.setOrgSettings(this.Authinfo.getOrgId(), settings);
   }
 
-  public setOneButtonToPushIntervalMinutes(bgbIntervalMinutes: number): ng.IPromise<''> {
+  public setOneButtonToPushIntervalMinutes(bgbIntervalMinutes: number | null): ng.IPromise<''> {
     const settings = {
       bgbIntervalMinutes: bgbIntervalMinutes,
     };
@@ -106,7 +104,7 @@ export class ServiceDescriptorService {
       .then(this.extractData);
   }
 
-  public disableService(serviceId: HybridServiceId): ng.IPromise<''> {
+  public disableService = (serviceId: HybridServiceId): ng.IPromise<''> => {
     const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}/services/${serviceId}`;
     return this.$http.patch(url, { enabled: false })
       .then(this.extractData);

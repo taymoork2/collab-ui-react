@@ -11,15 +11,11 @@ class MakeDefaultLocationCtrl implements ng.IComponentController {
   constructor (
     private LocationsService: LocationsService,
     private Notification: Notification,
-  ) {
-
-  }
+  ) {}
 
   public makeDefaultLocation(): void {
     this.saveInProcess = true;
-    this.LocationsService.updateLocation(this.uuid, {
-      isDefault: true,
-    })
+    this.LocationsService.makeDefault(this.uuid)
     .then(() => this.close())
     .catch((error) => this.Notification.errorResponse(error))
     .finally(() => this.saveInProcess = false);
@@ -32,6 +28,6 @@ export class MakeDefaultLocationComponent implements ng.IComponentOptions {
   public bindings = {
     dismiss: '&',
     close: '&',
-    uuid: '=',
+    uuid: '@',
   };
 }

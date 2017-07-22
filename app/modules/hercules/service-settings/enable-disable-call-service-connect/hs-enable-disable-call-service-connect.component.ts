@@ -16,7 +16,7 @@ class HsEnableDisableCallServiceConnectComponentCtrl implements ng.IComponentCon
     private ServiceDescriptorService: ServiceDescriptorService,
   ) {}
 
-  public $onChanges(changes: {[bindings: string]: ng.IChangesObject}) {
+  public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
 
     const { serviceIsEnabled } = changes;
     if (serviceIsEnabled && serviceIsEnabled.currentValue) {

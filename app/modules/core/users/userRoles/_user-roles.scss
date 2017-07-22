@@ -94,9 +94,23 @@
     height: 100%;
   }
 }
+.reset-access-panel {
+  .btn.central {
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+  }
 
-.btn.central {
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
+  p.reset-access-segment-title {
+    span,
+    i {
+      vertical-align: middle;
+    }
+  }
+
+  p.reset-access-segment-description {
+    a {
+      margin-left: 2px;
+    }
+  }
 }

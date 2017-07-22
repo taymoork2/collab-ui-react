@@ -15,14 +15,14 @@ function webpackConfig(env) {
     // removes 'style-loader'
     const scssLoaders = _.tail(scssLoaderRule.use);
     const cssLoader = _.find(scssLoaders, {
-      loader: 'css-loader',
+      use: 'css-loader',
     });
     // minimize css for dist output
     _.set(cssLoader, 'options.minimize', true);
     // replace current loaders with ExtractTextPlugin
     scssLoaderRule.use = ExtractTextPlugin.extract({
       fallback: 'style-loader',
-      loader: scssLoaders,
+      use: scssLoaders,
     });
   }
   patchScssLoader(commonWebpackConfig);

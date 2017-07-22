@@ -2,17 +2,20 @@
   'use strict';
 
   angular
-    .module('Core')
+    .module('core.customer-reports')
     .controller('SparkMetricsCtrl', SparkMetricsCtrl);
 
   /* @ngInject */
-  function SparkMetricsCtrl($scope, Authinfo, Userservice,
+  function SparkMetricsCtrl(
     $sce,
+    $scope,
     $timeout,
     $window,
+    Authinfo,
     Notification,
+    ProPackService,
     QlikService,
-    ProPackService
+    Userservice
   ) {
     var vm = this;
 
@@ -31,16 +34,6 @@
     vm.reportView = vm.sparkMetrics.views[0];
 
     function generateWebexMetricsUrl() {
-      /*if (Authinfo.isPartner()) {
-        vm.reportView = vm.sparkMetrics.views[2];
-      } else {
-        ProPackService.getProPackPurchased().then(function (isPurchased) {
-          if (isPurchased) {
-            vm.reportView = vm.sparkMetrics.views[1];
-          }
-          loadMetricsReport();
-        });
-      }*/
       ProPackService.getProPackPurchased().then(function (isPurchased) {
         if (isPurchased) {
           vm.reportView = vm.sparkMetrics.views[1];
@@ -71,18 +64,24 @@
         email: Authinfo.getPrimaryEmail(),
       };
 
-      QlikService['getSparkReportQBSfor' + vm.reportView.view + 'Url'](userInfo).then(function (data) {
-        var QlikMashupChartsUrl = QlikService['getSparkReportAppfor' + vm.reportView.view + 'Url']();
+      var viewType = _.get(vm, 'reportView.view');
 
+      var getSparkReportData = _.get(QlikService, 'getSparkReportQBSfor' + viewType + 'Url');
+
+      if (!_.isFunction(getSparkReportData)) {
+        return;
+      }
+      getSparkReportData(userInfo).then(function (data) {
         vm.sparkMetrics.appData = {
           ticket: data.ticket,
-          appId: vm.reportView.appName,
+          appId: vm.reportView.appName, //TODO changes to data.appName, if QBS can handle this parameter
           node: data.host,
           qrp: data.qlik_reverse_proxy,
-          persistent: false,
-          vID: Authinfo.getOrgId(), //Authinfo.getOrgId(),
+          persistent: false, //TODO changes to data.isPersistent, if QBS can handle this parameter
+          vID: Authinfo.getOrgId(),
         };
-        vm.sparkMetrics.appData.url = QlikMashupChartsUrl.replace('QRP', vm.sparkMetrics.appData.qrp);
+        var QlikMashupChartsUrl = _.get(QlikService, 'getSparkReportAppfor' + viewType + 'Url')(vm.sparkMetrics.appData.qrp);
+        vm.sparkMetrics.appData.url = QlikMashupChartsUrl;
 
         updateIframe();
       })
@@ -101,7 +100,7 @@
       $scope.node = vm.sparkMetrics.appData.node;
       $scope.persistent = vm.sparkMetrics.appData.persistent;
       $scope.vID = vm.sparkMetrics.appData.vID;
-      $scope.QlikTicket = vm.sparkMetrics.appData.ticket;
+
       var parser = $window.document.createElement('a');
       parser.href = iframeUrl;
 
@@ -123,6 +122,6 @@
           vm.isIframeLoaded = true;
         });
       }
-    }; // iframeLoaded()
-  }//SparkMetricsCtrl
+    };
+  }
 })();

@@ -6,6 +6,8 @@
     WebexOrderStatusResource: WebexOrderStatusResource,
   };
 
+  var webexProvisioningData = {};
+
   /* @ngInject */
   function WebexOrderStatusResource($resource, Authinfo, UrlConfig) {
     return $resource(UrlConfig.getAdminServiceUrl() + 'organization/:orgId/trials/:trialId/provOrderStatus', {
@@ -15,7 +17,7 @@
   }
 
   /* @ngInject */
-  function TrialWebexService($http, $q, Config, UrlConfig, WebexOrderStatusResource, Notification) {
+  function TrialWebexService($http, $q, Config, UrlConfig, WebexOrderStatusResource, Notification, SetupWizardService) {
     var _trialData;
     var service = {
       getData: getData,
@@ -23,6 +25,9 @@
       validateSiteUrl: validateSiteUrl,
       getTrialStatus: getTrialStatus,
       provisionWebexSites: provisionWebexSites,
+      provisionSubscriptionWithoutWebexSites: provisionSubscriptionWithoutWebexSites,
+      setProvisioningWebexSitesData: setProvisioningWebexSitesData,
+      getProvisioningWebexSitesData: getProvisioningWebexSitesData,
     };
 
     return service;
@@ -87,9 +92,32 @@
       });
     }
 
-    function provisionWebexSites(payload, subscriptionId) {
+    function setProvisioningWebexSitesData(webexLicenses, subscriptionId) {
+      webexProvisioningData = { webexLicencesPayload: webexLicenses, subscriptionId: subscriptionId };
+    }
+
+    function getProvisioningWebexSitesData() {
+      return webexProvisioningData;
+    }
+
+    function provisionWebexSites() {
+      var payload = _.get(webexProvisioningData, 'webexLicencesPayload');
+      var subscriptionId = _.get(webexProvisioningData, 'subscriptionId');
+      return provisionSubscription(payload, subscriptionId);
+    }
+
+    function provisionSubscriptionWithoutWebexSites() {
+      var payload = {
+        provisionOrder: true,
+        serviceOrderUUID: SetupWizardService.getActingSubscriptionServiceOrderUUID(),
+      };
+      var subscriptionId = SetupWizardService.getInternalSubscriptionId();
+      return provisionSubscription(payload, subscriptionId);
+    }
+
+    function provisionSubscription(payload, subscriptionId) {
       if (!payload || !_.isString(subscriptionId)) {
-        return $q.reject('Invalid parameters passed to provision WebEx sites');
+        $q.reject('invlaid paramenters passed to provision subscription.');
       }
       var webexProvisioningUrl = UrlConfig.getAdminServiceUrl() + 'subscriptions/' + subscriptionId + '/provision';
 

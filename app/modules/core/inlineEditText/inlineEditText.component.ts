@@ -34,14 +34,14 @@ class InlineEditText implements ng.IComponentController {
   ) {}
 
   public $onInit(): void {
-    if (this.asyncValidators) {
+    if (this.asyncValidators && typeof this.modelOptions.debounce === 'object') {
       this.modelOptions.debounce.default = 250;
     }
 
     this.determineShowTextLink(this.isTextClickable);
   }
 
-  public $onChanges(changes: { isTextClickable: ng.IChangesObject }): void {
+  public $onChanges(changes: { isTextClickable: ng.IChangesObject<any> }): void {
     if (changes.isTextClickable) {
       this.determineShowTextLink(changes.isTextClickable.currentValue);
     }

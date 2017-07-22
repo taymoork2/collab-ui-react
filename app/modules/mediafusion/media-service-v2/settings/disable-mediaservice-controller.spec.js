@@ -5,7 +5,7 @@ describe('Controller: DisableMediaServiceController', function () {
   beforeEach(angular.mock.module('Mediafusion'));
   beforeEach(angular.mock.module('Hercules'));
 
-  var controller, MediaClusterServiceV2, $q, MediaServiceActivationV2, Notification, httpMock, ServiceDescriptorService;
+  var controller, MediaClusterServiceV2, HybridServicesClusterService, $q, MediaServiceActivationV2, Notification, httpMock, ServiceDescriptorService;
 
   // var serviceId = "squared-fusion-media";
   var modalInstance = {
@@ -20,12 +20,13 @@ describe('Controller: DisableMediaServiceController', function () {
     $provide.value('Authinfo', authInfo);
   }));
 
-  beforeEach(inject(function ($state, $controller, _$q_, $translate, _MediaServiceActivationV2_, _Notification_, _MediaClusterServiceV2_, _$httpBackend_, _ServiceDescriptorService_) {
+  beforeEach(inject(function ($state, $controller, _$q_, $translate, _MediaServiceActivationV2_, _Notification_, _MediaClusterServiceV2_, _HybridServicesClusterService_, _$httpBackend_, _ServiceDescriptorService_) {
     $q = _$q_;
     MediaServiceActivationV2 = _MediaServiceActivationV2_;
     ServiceDescriptorService = _ServiceDescriptorService_;
     Notification = _Notification_;
     MediaClusterServiceV2 = _MediaClusterServiceV2_;
+    HybridServicesClusterService = _HybridServicesClusterService_;
     spyOn($state, 'go');
     httpMock = _$httpBackend_;
     httpMock.when('GET', /^\w+.*/).respond({});
@@ -38,6 +39,7 @@ describe('Controller: DisableMediaServiceController', function () {
       MediaServiceActivationV2: MediaServiceActivationV2,
       Notification: Notification,
       MediaClusterServiceV2: MediaClusterServiceV2,
+      HybridServicesClusterService: HybridServicesClusterService,
     });
   }));
 
@@ -88,5 +90,23 @@ describe('Controller: DisableMediaServiceController', function () {
     expect(MediaClusterServiceV2.deleteClusterWithConnector).toHaveBeenCalled();
     expect(Notification.error).toHaveBeenCalled();
     expect(modalInstance.close).toHaveBeenCalled();
+  });
+
+  it('HybridServicesClusterService getAll should be called for getClusterList', function () {
+    var clusters = [{
+      id: 'a050fcc7-9ade-4790-a06d-cca596910421',
+      name: 'MFA_TEST2',
+      targetType: 'mf_mgmt',
+      connectors: [{
+        state: 'running',
+        hostname: 'doesnothavecalendar.example.org',
+      }],
+    }];
+    spyOn(HybridServicesClusterService, 'getAll').and.returnValue($q.resolve(
+        clusters
+      ));
+    controller.getClusterList();
+    httpMock.verifyNoOutstandingExpectation();
+    expect(HybridServicesClusterService.getAll).toHaveBeenCalled();
   });
 });

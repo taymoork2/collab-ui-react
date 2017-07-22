@@ -13,7 +13,8 @@ describe('SetupWizardCtrl', function () {
       'Authinfo',
       'FeatureToggleService',
       'Orgservice',
-      'DirSyncService'
+      'DirSyncService',
+      'SetupWizardService'
     );
 
     this.usageFixture = getJSONFixture('core/json/organizations/usage.json');
@@ -21,9 +22,15 @@ describe('SetupWizardCtrl', function () {
     this.enabledFeatureToggles = [];
 
     spyOn(this.Authinfo, 'isCustomerAdmin').and.returnValue(true);
+    spyOn(this.Authinfo, 'getCustomerAdminEmail').and.returnValue('admin@admin.com');
     spyOn(this.Authinfo, 'isSetupDone').and.returnValue(false);
     spyOn(this.Authinfo, 'isCSB').and.returnValue(true);
     spyOn(this.Authinfo, 'isCare').and.returnValue(false);
+    spyOn(this.SetupWizardService, 'getPendingLicenses').and.returnValue(this.$q.resolve());
+    spyOn(this.SetupWizardService, 'hasPendingMeetingLicenses').and.returnValue(false);
+    spyOn(this.SetupWizardService, 'hasPendingCallLicenses').and.returnValue(false);
+    spyOn(this.SetupWizardService, 'hasPendingServiceOrder').and.returnValue(false);
+    spyOn(this.SetupWizardService, 'isCustomerPresent').and.returnValue(this.$q.resolve(true));
     spyOn(this.Authinfo, 'getLicenses').and.returnValue([{
       licenseType: 'SHARED_DEVICES',
     }]);
@@ -93,7 +100,7 @@ describe('SetupWizardCtrl', function () {
   describe('When all toggles are false (and Authinfo.isSetupDone is false as well)', function () {
     beforeEach(initController);
 
-    it('the wizard should have 5 macro-level steps', function () {
+    it('the wizard should have 6 macro-level steps', function () {
       this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
     });
 
@@ -111,6 +118,28 @@ describe('SetupWizardCtrl', function () {
 
     it('finish should have a single substep', function () {
       this.expectSubStepOrder('finish', ['init']);
+    });
+  });
+
+  describe('When subscription does not have a pending service order', function () {
+    beforeEach(function () {
+      this.SetupWizardService.hasPendingServiceOrder.and.returnValue(false);
+      this.initController();
+    });
+
+    it('the setup wizard should not call getPendingLicenses API', function () {
+      expect(this.SetupWizardService.getPendingLicenses).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('When subscription has a pending service order', function () {
+    beforeEach(function () {
+      this.SetupWizardService.hasPendingServiceOrder.and.returnValue(true);
+      this.initController();
+    });
+
+    it('the setup wizard should call getPendingLicenses API', function () {
+      expect(this.SetupWizardService.getPendingLicenses).toHaveBeenCalled();
     });
   });
 
@@ -139,6 +168,73 @@ describe('SetupWizardCtrl', function () {
 
     it('serviceSetup should have a single substep', function () {
       this.expectSubStepOrder('serviceSetup', ['init']);
+    });
+  });
+
+  describe('When has pending COMMUNICATION licenses', function () {
+    beforeEach(function () {
+      this.SetupWizardService.hasPendingServiceOrder.and.returnValue(true);
+      this.SetupWizardService.hasPendingCallLicenses.and.returnValue(true);
+      this.SetupWizardService.hasPendingMeetingLicenses.and.returnValue(false);
+      this.initController();
+    });
+
+    it('the wizard should have 5 steps', function () {
+      this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
+    });
+
+    it('serviceSetup should have a single substep', function () {
+      this.expectSubStepOrder('serviceSetup', ['init']);
+    });
+  });
+
+  describe('When has active licenses and has pending COMMUNICATION licenses', function () {
+    beforeEach(function () {
+      this.SetupWizardService.hasPendingServiceOrder.and.returnValue(true);
+      this.SetupWizardService.hasPendingCallLicenses.and.returnValue(true);
+      this.SetupWizardService.hasPendingMeetingLicenses.and.returnValue(false);
+      this.Authinfo.getLicenses.and.returnValue([{
+        licenseType: 'STORAGE',
+      }]);
+      this.initController();
+    });
+
+    it('the wizard should have 5 steps', function () {
+      this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
+    });
+
+    it('serviceSetup should have a single substep', function () {
+      this.expectSubStepOrder('serviceSetup', ['init']);
+    });
+  });
+
+  describe('When does not have active COMMUNICATION licenses nor pending COMMUNICATION licenses', function () {
+    beforeEach(function () {
+      this.SetupWizardService.hasPendingServiceOrder.and.returnValue(false);
+      this.SetupWizardService.hasPendingCallLicenses.and.returnValue(false);
+      this.SetupWizardService.hasPendingMeetingLicenses.and.returnValue(false);
+      this.Authinfo.getLicenses.and.returnValue([{
+        licenseType: 'STORAGE',
+      }]);
+      this.initController();
+    });
+
+    it('the wizard should have 4 steps', function () {
+      this.expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'finish']);
+    });
+  });
+
+  describe('When has pending WEBEX (EE, MC, EC, TC, SC) licenses', function () {
+    beforeEach(function () {
+      this.SetupWizardService.hasPendingServiceOrder.and.returnValue(true);
+      this.SetupWizardService.hasPendingMeetingLicenses.and.returnValue(true);
+      this.SetupWizardService.hasPendingCallLicenses.and.returnValue(false);
+      this.Authinfo.getLicenses.and.returnValue([{}]);
+      this.initController();
+    });
+
+    it('the wizard should have 5 steps', function () {
+      this.expectStepOrder(['planReview', 'meetingSettings', 'messagingSetup', 'enterpriseSettings', 'finish']);
     });
   });
 
@@ -186,7 +282,7 @@ describe('SetupWizardCtrl', function () {
       this.initController();
     });
 
-    it('the wizard should have the 6 steps', function () {
+    it('the wizard should have the 7 steps', function () {
       this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'careSettings', 'finish']);
     });
   });
@@ -233,13 +329,18 @@ describe('SetupWizardCtrl', function () {
       this.FeatureToggleService.supports.and.returnValue(this.$q.resolve(true));
       spyOn(this.DirSyncService, 'isDirSyncEnabled').and.returnValue(true);
 
+      this.SetupWizardService.hasPendingServiceOrder.and.returnValue(true);
+      this.SetupWizardService.hasPendingMeetingLicenses.and.returnValue(true);
+      this.SetupWizardService.hasPendingCallLicenses.and.returnValue(true);
+
       this.initController();
     });
 
     it('the wizard should have a lot of settings', function () {
-      this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'careSettings']);
+      this.expectStepOrder(['planReview', 'serviceSetup', 'meetingSettings', 'messagingSetup', 'enterpriseSettings', 'careSettings']);
       this.expectSubStepOrder('planReview', ['init']);
       this.expectSubStepOrder('serviceSetup', ['setup', 'init']);
+      this.expectSubStepOrder('meetingSettings', ['siteSetup', 'licenseDistribution', 'summary']);
       this.expectSubStepOrder('messagingSetup', ['setup']);
       this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'enterprisePmrSetup', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
       this.expectSubStepOrder('careSettings', ['csonboard']);

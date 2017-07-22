@@ -1,9 +1,9 @@
 import { LocationsService } from 'modules/call/locations/locations.service';
-import { Notification } from 'modules/core/notifications';
+// import { Notification } from 'modules/core/notifications';
 
 class UserLocationDetailsCtrl implements ng.IComponentController {
   public locationName: string;
-
+  public userId: string;
   public selectedLocation: string;
   public locationOptions: string[] = [];
   public location: string;
@@ -15,7 +15,7 @@ class UserLocationDetailsCtrl implements ng.IComponentController {
   /* @ngInject */
   constructor(
     public LocationsService: LocationsService,
-    private Notification: Notification,
+    // private Notification: Notification,
   ) { }
 
   public $onInit(): void {
@@ -28,7 +28,7 @@ class UserLocationDetailsCtrl implements ng.IComponentController {
   }
 
   public loadLocations(): void {
-    this.LocationsService.getLocations().then(result => {
+    this.LocationsService.getLocationList().then(result => {
       this.locationOptions = [];
       const tempThis = this;
       _.forEach(result, function (result) {
@@ -38,7 +38,7 @@ class UserLocationDetailsCtrl implements ng.IComponentController {
   }
 
   public getUserLocation(): void {
-    this.LocationsService.getLocationDetails('123').then(result => {
+    this.LocationsService.getUserLocation(this.userId).then(result => {
       this.selectedLocation = result.name;
     });
   }
@@ -58,15 +58,15 @@ class UserLocationDetailsCtrl implements ng.IComponentController {
   }
 
   public save(): void {
-    this.saveInProcess = true;
-    this.LocationsService.updateLocation(this.uuid, {
-      name: this.locationName,
-    })
-    .catch(error => this.Notification.errorResponse(error))
-    .finally( () => {
-      this.saveInProcess = false;
-      this.reset();
-    });
+    // this.saveInProcess = true;
+    // this.LocationsService.updateLocation(this.uuid, {
+    //   name: this.locationName,
+    // })
+    // .catch(error => this.Notification.errorResponse(error))
+    // .finally( () => {
+    //   this.saveInProcess = false;
+    //   this.reset();
+    //});
   }
 }
 
@@ -76,5 +76,6 @@ export class UserLocationDetailsComponent implements ng.IComponentOptions {
   public bindings = {
     location: '<',
     locationOptions: '<',
+    userId: '<',
   };
 }

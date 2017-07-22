@@ -4,7 +4,7 @@ import {
   NXX_EMPTY, MIN_VALID_CODE, MAX_VALID_CODE, MAX_DID_QUANTITY,
   TOLLFREE_ORDERING_CAPABILITY, TOKEN_FIELD_ID, SWIVEL_ORDER, SWIVEL,
 } from '../pstn.const';
-import { INumbersModel } from './number.model';
+import { INumbersModel } from '../pstnNumberSearch/number.model';
 import { PstnService } from '../pstn.service';
 import {
   PstnModel, IOrder, IAuthCustomer, IAuthLicense,
@@ -270,7 +270,7 @@ export class PstnWizardService {
     return this.swivelOrders;
   }
 
-  private updateCustomerCarrier(): ng.IPromise<boolean> {
+  private updateCustomerCarrier(): ng.IPromise<any> {
     return this.PstnService.updateCustomerCarrier(this.PstnModel.getCustomerId(), this.PstnModel.getProviderId())
       .then(() => this.PstnModel.setCarrierExists(true))
       .catch(response => {
@@ -457,7 +457,7 @@ export class PstnWizardService {
     return x.substring(0, i);
   }
 
-  public addToCart(orderType: string, numberType: string, quantity: number, searchResultsModel: {}, orderCart, model: INumbersModel): ng.IPromise<IOrder[]> {
+  public addToCart(orderType: string, numberType: string, quantity: number, searchResultsModel: boolean[], orderCart, model: INumbersModel): ng.IPromise<IOrder[]> {
     this.orderCart = orderCart;
     if (quantity) {
       if (numberType === NUMTYPE_DID) {
@@ -588,7 +588,7 @@ export class PstnWizardService {
   }
 
   private getTokens(): JQuery {
-    return angular.element('#' + this.tokenfieldId).tokenfield('getTokens');
+    return (angular.element('#' + this.tokenfieldId) as any).tokenfield('getTokens');
   }
 
   private getNxxValue(model): string | null {
@@ -600,7 +600,7 @@ export class PstnWizardService {
     return null;
   }
 
-  public searchCarrierInventory(areaCode: string, block: boolean, quantity: number, consecutive: boolean, model: INumbersModel, isTrial: boolean) {
+  public searchCarrierInventory(areaCode: string, block: boolean, quantity: number, consecutive: boolean, stateAbbreviation: string, model: INumbersModel, isTrial: boolean) {
     if (areaCode) {
       model.pstn.showNoResult = false;
       areaCode = '' + areaCode;
@@ -610,6 +610,7 @@ export class PstnWizardService {
       model.pstn.block = block;
       model.pstn.quantity = quantity;
       model.pstn.consecutive = consecutive;
+      model.pstn.stateAbbreviation = stateAbbreviation;
       if (areaCode.length === MAX_VALID_CODE) {
         model.pstn.nxx = {
           code: areaCode.slice(MIN_VALID_CODE, areaCode.length),
@@ -625,10 +626,11 @@ export class PstnWizardService {
       npa: _.get(model, 'pstn.areaCode.code'),
       count: this.getCount(model),
       sequential: model.pstn.consecutive,
+      state: model.pstn.stateAbbreviation,
     };
 
     model.pstn.searchResults = [];
-    model.pstn.searchResultsModel = {};
+    model.pstn.searchResultsModel = [];
     model.pstn.paginateOptions.currentPage = 0;
     model.pstn.isSingleResult = this.isSingleResult(model);
 
@@ -699,7 +701,7 @@ export class PstnWizardService {
       count: model.tollFree.quantity === 1 ? undefined : model.tollFree.quantity,
     };
     model.tollFree.searchResults = [];
-    model.tollFree.searchResultsModel = {};
+    model.tollFree.searchResultsModel = [];
     model.tollFree.paginateOptions.currentPage = 0;
     if (!angular.isString(areaCode)) {
       model.tollFree.isSingleResult = model.tollFree.quantity === 1;

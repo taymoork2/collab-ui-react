@@ -1,6 +1,11 @@
 @import '~collab-ui/scss/settings/colors';
 @import '~collab-ui/scss/settings/page';
 
+.tooltip[popup-class="cs-datepicker-tooltip"] .c-nub {
+  text-align: center;
+  max-width: 212px;
+}
+
 .ediscovery-app-container {
   background-color: $brand-white;
   overflow-x: hidden; // Remove horizontal IE/Edge scrollbar
@@ -440,6 +445,28 @@
 
           .results-spacing {
             margin-top: 16px;
+          }
+
+          .search-results-key {
+            font-size: .875rem;
+            color: $gray-dark-3;
+          }
+
+          .copy {
+            a {
+              font-size: .875rem;
+            }
+
+            i {
+              color: $gray-light-1;
+              font-size: 1.5rem;
+              vertical-align: middle;
+              display: inline-block;
+            }
+          }
+
+          .copy:hover i {
+            color: $gray-base;
           }
         }
 

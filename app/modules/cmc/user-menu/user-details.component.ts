@@ -40,7 +40,7 @@ class CmcUserDetailsController implements ng.IComponentController {
     this.$state.go('user-overview.' + feature.state);
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const userChanges = changes['user'];
     this.$log.debug('userChanges', userChanges);
     if (userChanges) {

@@ -14,7 +14,7 @@ class HybridServicesClusterPageCtrl implements ng.IComponentController {
     private HybridServicesClusterService: HybridServicesClusterService,
   ) {}
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }) {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }) {
     const { clusterId } = changes;
     if (clusterId && clusterId.currentValue) {
       this.init(clusterId.currentValue);

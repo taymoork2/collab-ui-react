@@ -31,59 +31,10 @@
         }).$promise;
       },
 
-      getAvrilSite: function (siteUuid) {
-        return AvrilSiteUpdateService.get({
-          customerId: Authinfo.getOrgId(),
-          siteId: siteUuid,
-        }).$promise;
-      },
-
-      updateSite: function (siteUuid, site) {
-        return SiteService.update({
-          customerId: Authinfo.getOrgId(),
-          siteId: siteUuid,
-        }, site).$promise;
-      },
-
-      updateAvrilSite: function (siteUuid, features) {
-        return AvrilSiteUpdateService.update({
-          customerId: Authinfo.getOrgId(),
-          siteId: siteUuid,
-        }, features).$promise;
-      },
-
-      createAvrilSite: function (siteUuid, siteStrDigit, code, lang, timezone, extLength, voicemailPilotNumber) {
-        return AvrilSiteService.save({
-          customerId: Authinfo.getOrgId(),
-          guid: siteUuid,
-          siteCode: code,
-          siteSteeringDigit: siteStrDigit,
-          language: lang,
-          timeZone: timezone,
-          extensionLength: extLength,
-          pilotNumber: voicemailPilotNumber,
-        }).$promise;
-      },
-
       saveAutoAttendantSite: function (site) {
         return CeSiteService.save({
           customerId: Authinfo.getOrgId(),
         }, site).$promise;
-      },
-
-      getMediaOnHoldList: function () {
-        return MediaManagerService.get({
-          orgId: Authinfo.getOrgId(),
-        }).$promise;
-      },
-
-      setCompanyMediaOnHold: function (mediaId, assignmentInfo) {
-        return MediaManagerService.save({
-          orgId: Authinfo.getOrgId(),
-          mediaFileId: mediaId,
-          //TODO (yorao): Check during EFT. Assignments might not require sending empty array in the future with potential changes to Rhesos API. Remove empty array pass when chagnes are available.
-          assignments: assignmentInfo || [],
-        }).$promise;
       },
 
       loadExternalNumberPool: function (pattern) {
@@ -218,18 +169,7 @@
 
       getSiteLanguages: function () {
         return getAllLanguages().then(function (languages) {
-          return FeatureToggleService.supports(
-              FeatureToggleService.features.huronUserLocale2
-            ).then(function (isHuronUserLocale2Enabled) {
-              if (!isHuronUserLocale2Enabled) {
-                languages = _.filter(languages, function (tLanguage) {
-                  return (!tLanguage.featureToggle || tLanguage.featureToggle !== FeatureToggleService.features.huronUserLocale2);
-                });
-              }
-              return languages;
-            }).catch(function () {
-              return languages;
-            });
+          return filterFeatureToggleEnabledObjects(languages);
         });
       },
 
@@ -244,7 +184,7 @@
 
       getSiteCountries: function () {
         return SiteCountryService.query().$promise.then(function (countries) {
-          return filterFeatureToggleEnabledCountries(countries);
+          return filterFeatureToggleEnabledObjects(countries);
         });
       },
 
@@ -255,10 +195,6 @@
           });
         });
         return localizedCountries;
-      },
-
-      isOverlapping: function (x1, x2, y1, y2) {
-        return Math.max(x1, y1) <= Math.min(x2, y2);
       },
 
       listCosRestrictions: function () {
@@ -298,27 +234,27 @@
       },
     };
 
-    function filterFeatureToggleEnabledCountries(countries) {
+    function filterFeatureToggleEnabledObjects(objects) {
       var promises = {};
-      var ftSupportedCountries = [];
-      _.forEach(countries, function (country) {
-        if (country.featureToggle) {
-          promises[country.value] = checkFeatureToggleSupport(country.featureToggle);
+      var ftSupportedObjects = [];
+      _.forEach(objects, function (object) {
+        if (object.featureToggle) {
+          promises[object.value] = checkFeatureToggleSupport(object.featureToggle);
         } else {
-          ftSupportedCountries.push(country);
+          ftSupportedObjects.push(object);
         }
       });
-      if (_.isEmpty(promises)) { return ftSupportedCountries; }
+      if (_.isEmpty(promises)) { return ftSupportedObjects; }
       return $q.all(promises).then(function (data) {
         _.forEach(data, function (value, key) {
           if (value) {
-            ftSupportedCountries.push(_.find(countries, { value: key }));
+            ftSupportedObjects.push(_.find(objects, { value: key }));
           }
         });
-        return ftSupportedCountries;
+        return ftSupportedObjects;
       })
       .catch(function () {
-        return ftSupportedCountries;
+        return ftSupportedObjects;
       });
     }
 

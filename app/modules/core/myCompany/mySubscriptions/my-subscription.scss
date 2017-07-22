@@ -1,0 +1,355 @@
+@import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+
+.iframe-container {
+  display: inline;
+}
+
+.subscriptions-container {
+  @include vr-spacing(mh, 1);
+  @include vr-spacing(mv, 1.25);
+  @include vr-spacing(p, 0);
+
+  .overage-warning {
+    @include vr-spacing(mh, 1);
+
+    .cs-alert-banner-text {
+      max-width: rem-calc(900);
+    }
+
+    .icon-warning {
+      color: $color-alerts-base;
+      font-size: vr-adjust(16);
+      top: rem-calc(2);
+    }
+  }
+
+  .cs-card-layout {
+    @include vr-spacing(mt, 1.25);
+  }
+
+  .detail-view.subscription-expanded {
+    min-height: vr-adjust(96);
+  }
+
+  .detail-view {
+    .icon-container {
+      @include vr-spacing(mt, 1);
+      @include vr-spacing(ml, 0.75);
+      height: vr-adjust(32);
+      width: vr-adjust(32);
+      cursor: pointer;
+
+      .icon-right-arrow-contained {
+        @include vr-spacing(pl, 0.5);
+        position: relative;
+        top: 0.3rem;
+      }
+    }
+
+    .icon-container-down {
+      transform: rotate(90deg);
+    }
+
+    .subscription-header.pro-pack-view {
+      padding-top: rem-calc(1);
+      border-right: rem-calc(1) solid $gray-light-3;
+    }
+
+    .sub-name {
+      @include vr-spacing(mt, 1.25);
+      @include vr-spacing(ml, 1);
+      @include vr-spacing(mb, 1);
+      @include vr-spacing(pt, 0);
+
+      color: $gray-dark-1;
+      width: 50%;
+    }
+
+    .pro-pack-column {
+      @include vr-spacing(pb, 1.25);
+      @include vr-spacing(pt, 1);
+
+      border-left: none;
+      width: 40%;
+    }
+
+    .subscription-column {
+      @include vr-spacing(pv, 1);
+      border: none;
+
+      .detail {
+        width: 33%;
+      }
+    }
+
+    .pro-pack-column,
+    .subscription-column {
+      @include vr-spacing(ph, 1.25);
+
+      .detail {
+        @include vr-spacing(pv, 0.25);
+        color: $gray-base;
+
+        .icon-detail {
+          @include vr-spacing(pr, 0.75);
+
+          top: rem-calc(2);
+          cursor: default;
+        }
+
+        .icon-message {
+          top: vr-adjust(4);
+        }
+
+        .detail-break {
+          @include vr-spacing(pt, 0.5);
+
+          break-before: always;
+          page-break-before: always;
+
+          span {
+            color: $gray-light-1;
+          }
+        }
+
+        .match-icon {
+          @include vr-spacing(pl, 2);
+        }
+      }
+
+      .detail.tooltip-present:hover .icon-detail {
+        color: $color-primary-base;
+      }
+
+      .detail,
+      .detail-expanded {
+        line-height: vr-adjust(12);
+
+        span {
+          line-height: vr-adjust(12);
+        }
+      }
+
+      .detail .detail-break span.warning {
+        color: $color-negative-light;
+      }
+    }
+
+    .subscription-upgrade {
+      @include vr-spacing(ph, 1.5);
+      @include vr-spacing(pv, 0.75);
+
+      flex-direction: row-reverse;
+      align-items: center;
+
+      .license-quantity {
+        @include vr-spacing(pt, 0.5);
+        @include vr-spacing(pb, 0.25);
+      }
+
+      .subscription-id {
+        right: vr-adjust(24);
+        position: absolute;
+        top: vr-adjust(60);
+        text-align: right;
+        width: vr-adjust(500);
+      }
+
+      .upgrade-button {
+        width: vr-adjust(140);
+      }
+    }
+  }
+
+  .detail-view,
+  .pro-pack-card,
+  .subscriptions {
+    @include vr-spacing(mt, 0);
+    @include vr-spacing(mb, 1.25);
+    min-width: vr-adjust(1000);
+
+    .pro-pack-column,
+    .subscription-column,
+    .category-data-section,
+    .subscription-row,
+    .subscription-upgrade,
+    .license-item {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .category-row,
+    .subscription-header {
+      display: flex;
+    }
+  }
+
+  .pro-pack-card {
+    .card-title {
+      @include vr-spacing(mb, 1);
+    }
+
+    .category-icon {
+      font-size: vr-adjust(20);
+    }
+
+    .category-icon,
+    .premium-info {
+      color: $gray-base;
+      top: vr-adjust(4);
+    }
+
+    .premium-info {
+      font-size: vr-adjust(24);
+    }
+  }
+
+  .pro-pack-card:last-of-type,
+  .subscriptions:last-of-type {
+    .category-data-section {
+      border-bottom: none;
+    }
+  }
+
+  .pro-pack-card,
+  .subscriptions {
+    .card-title {
+      @include vr-spacing(pl, 0);
+      @include vr-spacing(pt, 0);
+      color: $gray-dark-1;
+      width: auto;
+    }
+
+    .category-data-section {
+      @include vr-spacing(p, 1.5);
+
+      border-bottom: rem-calc(1) solid $gray-light-3;
+      border-left: rem-calc(1) solid $gray-light-3;
+
+      .category-list {
+        @include vr-spacing(p, 0);
+        @include vr-spacing(m, 0);
+        color: $gray-base;
+
+        li {
+          list-style: inside;
+        }
+      }
+
+      .category-usage {
+        color: $gray-base;
+      }
+
+      .link {
+        color: $color-primary-base;
+      }
+
+      .audio-type {
+        font-size: 0.75rem;
+      }
+
+      .license-count-indicator {
+        position: relative;
+      }
+
+      .advanced-detail {
+        @include vr-spacing(ml, 0);
+      }
+
+      .category-description {
+        @include vr-spacing(ml, 1);
+        @include vr-spacing(mb, 1);
+
+        span.name {
+          color: $gray-dark-1;
+        }
+
+        span.warning {
+          color: $color-negative-light;
+        }
+      }
+
+      .license-detail {
+        color: $gray-dark-2;
+      }
+
+      .category-detail {
+        &.site-detail {
+          @include vr-spacing(ml, 8);
+        }
+
+        span {
+          color: $gray-base;
+          &.badge {
+            color: $white;
+          }
+        }
+      }
+    }
+
+    .category-data-section:last-of-type {
+      border-bottom: none;
+    }
+
+    .category-title {
+      @include vr-spacing(p, 1.5);
+      color: $gray-dark-1;
+
+      i,
+      span {
+        color: inherit;
+      }
+    }
+
+    header,
+    .row {
+      border-bottom: rem-calc(1) solid $gray-light-3;
+    }
+  }
+
+  .subscriptions {
+    .subscription-column {
+      @include vr-spacing(pr, 0);
+    }
+
+    .category-data-section.item-without-borders {
+      width: 100%;
+    }
+
+    .category-data-section.item-with-borders {
+      width: 50%;
+      display: block;
+      border-right: 0;
+      border-bottom: rem-calc(1) solid $gray-light-3;
+    }
+
+    .category-data-section.item-with-borders:nth-child(odd):nth-last-of-type(2),
+    .category-data-section.item-with-borders:last-of-type {
+      border-bottom: 0;
+    }
+
+    .category-data-section:last-of-type .category-description {
+      @include vr-spacing(mb, 0);
+    }
+
+    .online-subscription-id {
+      top: vr-adjust(90);
+    }
+
+    .subscription-badge {
+      height: 24px;
+    }
+  }
+}
+
+.subscription-tooltip {
+  .warning {
+    color: $color-negative-base;
+  }
+
+  .nub {
+    display: none;
+  }
+}

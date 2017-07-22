@@ -26,7 +26,7 @@ export class ScheduleInfoSectionComponentCtrl implements ng.IComponentController
 
   public $onInit() {}
 
-  public $onChanges(changes: {[bindings: string]: ng.IChangesObject}) {
+  public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
 
     const { cluster } = changes;
 

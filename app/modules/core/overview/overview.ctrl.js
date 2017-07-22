@@ -8,7 +8,7 @@ require('./_overview.scss');
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($rootScope, $state, $scope, Authinfo, CardUtils, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, SunlightReportService, TrialService, UrlConfig, PstnService, HybridServicesUtilsService) {
+  function OverviewCtrl($rootScope, $state, $scope, Authinfo, CardUtils, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, ProPackService, LearnMoreBannerService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, SunlightReportService, TrialService, UrlConfig, PstnService, HybridServicesUtilsService) {
     var vm = this;
 
     var PSTN_TOS_ACCEPT = require('modules/huron/pstn/pstnTermsOfService').PSTN_TOS_ACCEPT;
@@ -17,6 +17,8 @@ require('./_overview.scss');
     vm.isCSB = Authinfo.isCSB();
     vm.isDeviceManagement = Authinfo.isDeviceMgmt();
     vm.orgData = null;
+
+    var hybridCallHighAvailability = 'atlas.notification.squared-fusion-uc-high-availability.acknowledged';
 
     vm.cards = [
       OverviewCardFactory.createMessageCard(),
@@ -38,6 +40,16 @@ require('./_overview.scss');
     vm.ftEnterpriseTrunking = false;
 
     ////////////////////////////////
+
+    ProPackService.hasProPackEnabledAndNotPurchased().then(function (proPackToggle) {
+      if (proPackToggle) {
+        $scope.$watch(function () {
+          return LearnMoreBannerService.isElementVisible(LearnMoreBannerService.HEADER_LOCATION);
+        }, function (visible) {
+          vm.showLearnMoreNotification = !visible;
+        });
+      }
+    });
 
     var notificationOrder = [
       'alert',
@@ -81,6 +93,7 @@ require('./_overview.scss');
       .filter(Authinfo.isEntitled)
       .map(HybridServicesUtilsService.getAckFlagForHybridServiceId)
       .value();
+      hybridServiceNotificationFlags.push(hybridCallHighAvailability);
 
       HybridServicesFlagService
         .readFlags(hybridServiceNotificationFlags)
@@ -99,6 +112,19 @@ require('./_overview.scss');
                 vm.notifications.push(OverviewNotificationFactory.createHybridMediaNotification());
               } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.hds)) {
                 vm.notifications.push(OverviewNotificationFactory.createHybridDataSecurityNotification());
+              } else if (flag.name === hybridCallHighAvailability && Authinfo.isEntitled(Config.entitlements.fusion_uc)) {
+                HybridServicesClusterService.serviceIsSetUp('squared-fusion-uc')
+                  .then(function (isSetup) {
+                    if (isSetup) {
+                      return HybridServicesClusterService.serviceHasHighAvailability('c_ucmc')
+                        .then(function (serviceHasHA) {
+                          if (!serviceHasHA) {
+                            vm.notifications.push(OverviewNotificationFactory.createCallServiceHighAvailability());
+                            resizeNotifications();
+                          }
+                        });
+                    }
+                  });
               }
             }
           });

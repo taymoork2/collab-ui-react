@@ -84,7 +84,7 @@ class SharedMeetingsReportCtrl {
   }
 
   public isDownloadReady(): boolean {
-    return (!this.csvDownload || !_.isUndefined(this.csvHref)) && !this.csvError;
+    return (this.csvDownload || !_.isUndefined(this.csvHref)) && !this.csvError;
   }
 
   public updateReport(): void {

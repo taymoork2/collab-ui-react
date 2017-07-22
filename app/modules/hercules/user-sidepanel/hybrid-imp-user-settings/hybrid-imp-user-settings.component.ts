@@ -25,7 +25,7 @@ class HybridImpUserSettingsComponentCtrl implements ng.IComponentController {
     private USSService,
   ) { }
 
-  public $onChanges(changes: {[bindings: string]: ng.IChangesObject}) {
+  public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
     const { userId, userEmailAddress } = changes;
     if (userId && userId.currentValue) {
       this.userId = userId.currentValue;

@@ -17,13 +17,16 @@ class PlaceCallOverview implements ng.IComponentController {
   public plIsLoaded: boolean = false;
   public prefLanguageSaveInProcess: boolean = false;
   public onPrefLanguageChange: boolean = false;
-  private externalTransferFeatureToggle;
   // Data from services
   public placeCallOverviewData: PlaceCallOverviewData;
   public displayDescription: string;
+  public wide: boolean = true;
+
+  public isprov3698: boolean = false;
 
   /* @ngInject */
   constructor(
+    private $q: ng.IQService,
     private $scope: ng.IScope,
     private $state: ng.ui.IStateService,
     $stateParams: any,
@@ -31,8 +34,8 @@ class PlaceCallOverview implements ng.IComponentController {
     CsdmDataModelService: any,
     private LineService: LineService,
     private Notification: Notification,
-    private PlaceCallOverviewService: PlaceCallOverviewService,
     private FeatureToggleService,
+    private PlaceCallOverviewService: PlaceCallOverviewService,
   ) {
 
     this.displayPlace($stateParams.currentPlace);
@@ -54,6 +57,7 @@ class PlaceCallOverview implements ng.IComponentController {
       this.initPlaceCallOverviewData();
     }
     this.setDisplayDescription();
+    this.loadFeatureToggles();
   }
 
   private displayPlace(newPlace) {
@@ -99,22 +103,19 @@ class PlaceCallOverview implements ng.IComponentController {
       this.features.push(cosService);
     }
 
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.hi1033).then((enabled) => {
-      this.externalTransferFeatureToggle = enabled;
-      if (this.currentPlace.type === 'huron' && this.externalTransferFeatureToggle) {
-        const transferService: IFeature = {
-          name: this.$translate.instant('telephonyPreview.externalTransfer'),
-          state: 'externaltransfer',
-          detail: undefined,
-          actionAvailable: true,
-        };
-        this.features.push(transferService);
-      }
-    });
+    if (this.currentPlace.type === 'huron') {
+      const transferService: IFeature = {
+        name: this.$translate.instant('telephonyPreview.externalTransfer'),
+        state: 'externaltransfer',
+        detail: undefined,
+        actionAvailable: true,
+      };
+      this.features.push(transferService);
+    }
   }
 
   private initNumbers(): void {
-    this.LineService.getLineList(LineConsumerType.PLACES, this.currentPlace.cisUuid)
+    this.LineService.getLineList(LineConsumerType.PLACES, this.currentPlace.cisUuid, this.wide)
       .then(lines => this.directoryNumbers = lines);
   }
 
@@ -188,6 +189,12 @@ class PlaceCallOverview implements ng.IComponentController {
       currentPlace: this.currentPlace,
     });
     this.onCancelPreferredLanguage();
+  }
+
+  private loadFeatureToggles(): ng.IPromise<any> {
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.prov3698)
+      .then(result => this.isprov3698 = result);
+    return this.$q.resolve();
   }
 }
 

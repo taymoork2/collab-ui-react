@@ -207,7 +207,7 @@ describe('Component: sharedMeetingReport', function () {
       expect(this.controller.isRefresh()).toBeFalsy();
       expect(this.controller.isEmpty()).toBeTruthy();
       expect(this.controller.isSet()).toBeFalsy();
-      expect(this.controller.isDownloadReady()).toBeTruthy();
+      expect(this.controller.isDownloadReady()).toBeFalsy();
 
       expect(this.ReportPrintService.createExportMenu).not.toHaveBeenCalled();
       expect(this.SharedMeetingsReportService.getMaxConcurrentMeetingsData).toHaveBeenCalledTimes(1);

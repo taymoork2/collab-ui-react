@@ -6,14 +6,12 @@
     .controller('TrialPstnCtrl', TrialPstnCtrl);
 
   /* @ngInject */
-  function TrialPstnCtrl($scope, $timeout, $translate, Analytics, Authinfo, Notification, PstnModel, PstnService, PhoneNumberService, TrialPstnService, PstnAreaService, FeatureToggleService, $q) {
+  function TrialPstnCtrl($scope, $q, $timeout, $translate, Analytics, Authinfo, Notification, PstnModel, PstnService, PhoneNumberService, TrialPstnService, PstnAreaService, NumberModelFactory) {
     var vm = this;
 
     var NXX = 'nxx';
     var NXX_EMPTY = '--';
-    var MAX_CARRIER_CNT = 50;
     var pstnTokenLimit = 10;
-    var pageSize = 15;
     var SELECT = '';
     var MIN_VALID_CODE = 3;
     var MAX_VALID_CODE = 6;
@@ -25,8 +23,8 @@
     vm.SWIVEL = 'SWIVEL';
     vm.providerImplementation = vm.SWIVEL;
     vm.carrierCnt = 0;
-    vm.ftHuronSupportThinktel = false;
     vm.providerSelected = false;
+    vm.nsModel = NumberModelFactory.create();
 
     vm.getStateInventory = getStateInventory;
     vm.onAreaCodeChange = onAreaCodeChange;
@@ -35,33 +33,18 @@
     vm.checkForInvalidTokens = checkForInvalidTokens;
     vm.skip = skip;
     vm.disableNextButton = disableNextButton;
-    vm.getCarriers = getCarriers;
     vm.onProviderChange = onProviderChange;
     vm.onProviderReady = onProviderReady;
     vm.addToCart = addToCart;
     vm.removeOrder = removeOrder;
-    vm.maxSelection = pstnTokenLimit;
     vm.manualTokenChange = manualTokenChange;
     vm.changePstnProviderImplementation = changePstnProviderImplementation;
+    vm.isSwivel = isSwivel;
+
     vm.location = '';
     vm.errorMessages = {
       email: $translate.instant('common.invalidEmail'),
       required: $translate.instant('common.required'),
-    };
-    vm.paginateOptions = {
-      currentPage: 0,
-      pageSize: pageSize,
-      numberOfPages: function () {
-        return Math.ceil(vm.searchResults.length / this.pageSize);
-      },
-      previousPage: function () {
-        vm.searchResultsModel = {};
-        this.currentPage--;
-      },
-      nextPage: function () {
-        vm.searchResultsModel = {};
-        this.currentPage++;
-      },
     };
 
     vm.pstn = {
@@ -113,18 +96,6 @@
       _setupResellers();
 
       SELECT = $translate.instant('common.select');
-      var promises = {
-        huronSupportThinktel: FeatureToggleService.huronSupportThinktelGetStatus(),
-        huronFederatedSparkCall: FeatureToggleService.huronFederatedSparkCallGetStatus(),
-      };
-
-      $q.all(promises).then(function (results) {
-        vm.ftHuronSupportThinktel = results.huronSupportThinktel;
-        vm.ftHuronFederatedSparkCall = results.huronFederatedSparkCall;
-        if (!(vm.ftHuronSupportThinktel || vm.ftHuronFederatedSparkCall)) {
-          getCarriers();
-        }
-      });
 
       PstnAreaService.getCountryAreas(vm.trialData.details.countryCode).then(loadLocations);
 
@@ -148,6 +119,10 @@
           reinitTokens();
         }
       }, 100);
+    }
+
+    function isSwivel() {
+      return (vm.providerImplementation === vm.SWIVEL || vm.trialData.details.pstnProvider.apiImplementation === vm.SWIVEL);
     }
 
     function loadLocations(location) {
@@ -278,7 +253,7 @@
 
     function removeOrderFromCart(order) {
       _.pull(vm.trialData.details.pstnNumberInfo.numbers, order);
-      vm.maxSelection = 10 - vm.trialData.details.pstnNumberInfo.numbers.length;
+      vm.nsModel.maxSelection = 10 - vm.trialData.details.pstnNumberInfo.numbers.length;
     }
 
     function removeOrder(order) {
@@ -292,9 +267,9 @@
       _.forIn(searchResultsModel, function (value, _key) {
         if (value) {
           var key = _.parseInt(_key);
-          var searchResultsIndex = (vm.paginateOptions.currentPage * vm.paginateOptions.pageSize) + key;
-          if (searchResultsIndex < vm.searchResults.length && !vm.trialData.details.pstnNumberInfo.numbers.includes(vm.searchResults[searchResultsIndex])) {
-            var numbers = vm.searchResults[searchResultsIndex];
+          var searchResultsIndex = (vm.nsModel.paginateOptions.currentPage * vm.nsModel.paginateOptions.pageSize) + key;
+          if (searchResultsIndex < vm.nsModel.searchResults.length && !vm.trialData.details.pstnNumberInfo.numbers.includes(vm.nsModel.searchResults[searchResultsIndex])) {
+            var numbers = vm.nsModel.searchResults[searchResultsIndex];
             reservation = PstnService.reserveCarrierInventoryV2(PstnModel.getCustomerId(), PstnModel.getProviderId(), numbers, PstnModel.isCustomerExists());
             var promise = reservation
               .then(function (reservationData) {
@@ -321,18 +296,13 @@
       });
 
       $q.all(promises).finally(function () {
-        vm.addLoading = false;
-        // check if we need to decrement current page
-        if (vm.paginateOptions.currentPage >= vm.paginateOptions.numberOfPages()) {
-          vm.paginateOptions.currentPage--;
-        }
-        vm.maxSelection = 10 - vm.trialData.details.pstnNumberInfo.numbers.length;
-        vm.searchResults = [];
+        vm.nsModel.addLoading = false;
+        vm.nsModel.searchResults = [];
       });
     }
 
     function searchCarrierInventory(value) {
-      vm.paginateOptions.currentPage = 0;
+      vm.nsModel.paginateOptions.currentPage = 0;
       if (value) {
         vm.trialData.details.pstnNumberInfo.areaCode = {
           code: ('' + value).slice(0, MIN_VALID_CODE),
@@ -361,8 +331,8 @@
 
       PstnService.searchCarrierInventory(vm.trialData.details.pstnProvider.uuid, params)
         .then(function (numberRanges) {
-          vm.searchResults = _.flatten(numberRanges);
-          vm.showNoResult = vm.searchResults.length === 0;
+          vm.nsModel.searchResults = _.flatten(numberRanges);
+          vm.nsModel.showNoResult = vm.nsModel.searchResults.length === 0;
           if (!value) {
             for (var index = 0; index < pstnTokenLimit; index++) {
               vm.trialData.details.pstnNumberInfo.numbers.push(numberRanges[0][index]);
@@ -453,51 +423,6 @@
 
     function checkForInvalidTokens() {
       return vm.invalidCount <= 0;
-    }
-
-    function _listCarriers() {
-      PstnService.listResellerCarriers().then(function (carriers) {
-        if (_.isArray(carriers) && carriers.length > 0) {
-          _showCarriers(carriers);
-        } else {
-          PstnService.listDefaultCarriers().then(function (carriers) {
-            _showCarriers(carriers);
-          });
-        }
-      }).catch(function () {
-        PstnService.listDefaultCarriers().then(function (carriers) {
-          _showCarriers(carriers);
-        });
-      });
-    }
-
-    function getCarriers() {
-      if (!vm.trialData.reseller) {
-        $timeout(function () {
-          if (vm.carrierCnt < MAX_CARRIER_CNT) {
-            vm.carrierCnt++;
-            getCarriers();
-          }
-        }, 100);
-      } else {
-        _listCarriers();
-      }
-    }
-
-    function _showCarriers(carriers) {
-      _.forEach(carriers, function (carrier) {
-        carrier.displayName = (carrier.displayName || carrier.name);
-        if (_.get(carrier, 'offers', []).length > 0) {
-          carrier.name = carrier.offers[0] + '-' + carrier.displayName;
-        } else if (_.get(carrier, 'offers', []).length === 0) {
-          carrier.name = carrier.vendor + '-' + carrier.displayName;
-        }
-        vm.pstnProviderList.push(carrier);
-      });
-      if (vm.pstnProviderList.length === 1) {
-        vm.trialData.details.pstnProvider = vm.pstnProviderList[0];
-        vm.providerImplementation = vm.pstnProviderList[0].apiImplementation;
-      }
     }
 
     function manualTokenChange(tokens, invalidCount) {

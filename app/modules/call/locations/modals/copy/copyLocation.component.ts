@@ -20,9 +20,10 @@ class CopyLocationCtrl implements ng.IComponentController {
   };
 
   public $onInit() {
-    this.LocationsService.getLocationDetails(this.uuid).then((result) => {
+    this.LocationsService.getLocation(this.uuid).then((result) => {
       this.location = result;
       this.location.name = '';
+      this.location.defaultLocation = false;
     });
   }
 
@@ -41,6 +42,6 @@ export class CopyLocationComponent implements ng.IComponentOptions {
   public bindings = {
     dismiss: '&',
     close: '&',
-    uuid: '<',
+    uuid: '@',
   };
 }

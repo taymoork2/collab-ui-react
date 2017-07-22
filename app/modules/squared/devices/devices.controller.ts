@@ -7,6 +7,16 @@ import { FilteredDeviceViewDataSource } from './filtered-deviceview-datasource';
 import { DeviceMatcher } from './device-matcher';
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 
+interface ICustomScope extends ng.IScope {
+  gridApi: {
+    selection: {
+      on: {
+        rowSelectionChanged: Function,
+      },
+    },
+  };
+}
+
 export class DevicesController {
 
   public exporting: boolean;
@@ -19,6 +29,7 @@ export class DevicesController {
   private huronDeviceService: any;
   private currentDevice: IDevice;
   private showATA: boolean;
+  private csdmMultipleDevicesPerPlaceFeature: boolean;
   private csdmHybridCallFeature: boolean;
   private showPersonal: boolean;
   private csdmHybridCalendarFeature: boolean;
@@ -50,7 +61,7 @@ export class DevicesController {
     $timeout: ng.ITimeoutService,
     CsdmDataModelService: ICsdmDataModelService,
     AccountOrgService,
-    $scope: ng.IScope,
+    $scope: ICustomScope,
     CsdmHuronOrgDeviceService,
     private Authinfo,
   ) {
@@ -203,7 +214,10 @@ export class DevicesController {
         return service.id === 'squared-fusion-uc';
       }).some().value();
     });
-    this.$q.all([ataPromise, hybridPromise, personalPromise, placeCalendarPromise, anyCalendarEnabledPromise, getLoggedOnUserPromise]).finally(() => {
+    const multipleDevicesPerPlacePromise = this.FeatureToggleService.csdmMultipleDevicesPerPlaceGetStatus().then(feature => {
+      this.csdmMultipleDevicesPerPlaceFeature = feature;
+    });
+    this.$q.all([ataPromise, hybridPromise, personalPromise, placeCalendarPromise, anyCalendarEnabledPromise, getLoggedOnUserPromise, multipleDevicesPerPlacePromise]).finally(() => {
       this.addDeviceIsDisabled = false;
     });
 
@@ -262,6 +276,7 @@ export class DevicesController {
         function: 'addDevice',
         showATA: this.showATA,
         showPersonal: false,
+        multipleRoomDevices: this.csdmMultipleDevicesPerPlaceFeature,
         admin: this.adminUserDetails,
         csdmHybridCallFeature: this.csdmHybridCallFeature,
         csdmHybridCalendarFeature: this.csdmHybridCalendarFeature,
@@ -341,6 +356,7 @@ export class DevicesController {
         function: 'addDevice',
         showATA: this.showATA,
         showPersonal: true,
+        multipleRoomDevices: this.csdmMultipleDevicesPerPlaceFeature,
         admin: this.adminUserDetails,
         csdmHybridCallFeature: this.csdmHybridCallFeature,
         csdmHybridCalendarFeature: this.csdmHybridCalendarFeature,

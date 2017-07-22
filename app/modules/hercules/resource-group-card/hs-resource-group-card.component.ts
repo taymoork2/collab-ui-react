@@ -14,7 +14,7 @@ export class ResourceGroupCardController implements ng.IComponentController {
     private HybridServicesI18NService: HybridServicesI18NService,
   ) {}
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     if (changes.forceOpen) {
       this.showDetails = changes.forceOpen.currentValue;
     }

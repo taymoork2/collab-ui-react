@@ -7,14 +7,14 @@ class CallParkFallbackDestinationCtrl implements ng.IComponentController {
   public reversionType: string = 'parker';
   public showReversionLookup: boolean = false;
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const callParkChanges = changes['fallbackDestination'];
     if (callParkChanges && callParkChanges.currentValue) {
       this.processCallParkFallbackDestChanges(callParkChanges);
     }
   }
 
-  private processCallParkFallbackDestChanges(callParkChanges: ng.IChangesObject): void {
+  private processCallParkFallbackDestChanges(callParkChanges: ng.IChangesObject<any>): void {
     if (_.isNull(callParkChanges.currentValue.number) && _.isNull(callParkChanges.currentValue.numberUuid)) {
       this.reversionType = 'parker';
       this.showReversionLookup = false;

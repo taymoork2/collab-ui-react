@@ -5,7 +5,7 @@ export class CallLinesPage {
     this.pageTitleCall = element(by.cssContainingText('h2.page-header__title.ng-scope', 'Call'));
     this.callLinesHRef = element(by.css('a[href="#/services/call-lines"]'));
     this.callFeaturesHRef = element(by.css('a[href="#/services/call-features"]'));
-    this.callSettingsHRef = element(by.css('a[href="#/services/call-settingsnew"]'));
+    this.callSettingsHRef = element(by.css('a[href="#/services/call-settings"]'));
     this.orderHistory = element(by.css('span.order-history.ng-scope'));
     this.iconSearch = element(by.css('i.icon.icon-search'));
     this.internalExt = element(by.cssContainingText('.ui-grid-header-cell-label', 'Internal Extension'));

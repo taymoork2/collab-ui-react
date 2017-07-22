@@ -273,7 +273,9 @@
 
     <!-- regional settings -->
     <trial-regional-settings
-      ng-if="!trial.preset.call && (trial.roomSystemTrial.enabled || trial.callTrial.enabled)"
+      ng-if="trial.roomSystemTrial.enabled || trial.callTrial.enabled"
+      new-trial="trial.isNewTrial()"
+      is-ftsw="false"
       select-name="'defaultCountry'"
       call-trial-enabled="trial.callTrial.enabled"
       on-change-fn="trial.setDefaultCountry(country)"

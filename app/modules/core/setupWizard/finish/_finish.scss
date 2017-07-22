@@ -18,3 +18,14 @@
     font-size: 1rem;
   }
 }
+
+.activate-page {
+  &__section {
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
+
+  &__header {
+    font-weight: bold;
+  }
+}

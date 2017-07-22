@@ -10,6 +10,8 @@
     var vm = this;
     var uniqueCtrlIdentifier = 'numbersCtrl' + AACommonService.getUniqueId();
 
+    var prevNumbersQuery = undefined;
+
     vm.addNumber = addNumber;
     vm.loadNums = loadNums;
     vm.removeNumber = removeNumber;
@@ -17,14 +19,10 @@
     vm.deleteAAResource = deleteAAResource;
     vm.getExternalNumbers = getExternalNumbers;
     vm.getInternalNumbers = getInternalNumbers;
-    vm.addToAvailableNumberList = addToAvailableNumberList;
     vm.compareNumbersExternalThenInternal = compareNumbersExternalThenInternal;
     vm.warnOnAssignedNumberDiscrepancies = warnOnAssignedNumberDiscrepancies;
     // a mapping of numbers to their type (internal or external)
     vm.numberTypeList = {};
-
-    // a list of external numbers as they came from CMI
-    vm.externalNumberList = [];
 
     // available number list offered in GUI
     vm.availablePhoneNums = [];
@@ -58,6 +56,7 @@
         label: '',
         value: '',
       };
+      _.pull(vm.availablePhoneNums, phoneNum);
     }
 
     // Remove number, top-level method called by UI
@@ -75,6 +74,12 @@
         label: '',
         value: '',
       };
+
+      addToAvailableNumberList(telephoneNumberFilter(number), number);
+
+      vm.availablePhoneNums.sort(function (a, b) {
+        return compareNumbersExternalThenInternal(a.value, b.value);
+      });
     }
 
     // Save the AA Number Assignments in CMI
@@ -236,22 +241,34 @@
     }
 
     function loadNums(pattern) {
-      vm.availablePhoneNums = [];
-      getExternalNumbers(pattern).finally(function () {
-        getInternalNumbers(pattern);
-      });
-
-      /* make sure the mapping exists for already existing resource numbers, so it sorts correctly */
-
-      if (_.has(vm, 'ui.ceInfo.resources')) {
-        _.forEach(vm.ui.ceInfo.resources, function (r) {
-          if (PhoneNumberService.validateDID(r.number)) {
-            vm.numberTypeList[r.number] = AANumberAssignmentService.EXTERNAL_NUMBER;
-          } else {
-            vm.numberTypeList[r.number] = AANumberAssignmentService.DIRECTORY_NUMBER;
-          }
-        });
+      if (_.isEqual(pattern, prevNumbersQuery)) {
+        return;
       }
+      prevNumbersQuery = pattern;
+
+      // filter out parenthesis and hyphen, etc
+      pattern = _.replace(pattern, /\D/g, '');
+
+      vm.availablePhoneNums = [];
+      getExternalNumbers(pattern).then(function () {
+        return getInternalNumbers(pattern);
+      }).finally(function () {
+        /* make sure the mapping exists for already existing resource numbers, so it sorts correctly */
+
+        if (_.has(vm, 'ui.ceInfo.resources')) {
+          _.forEach(vm.ui.ceInfo.resources, function (r) {
+            if (PhoneNumberService.validateDID(r.number)) {
+              vm.numberTypeList[r.number] = AANumberAssignmentService.EXTERNAL_NUMBER;
+            } else {
+              vm.numberTypeList[r.number] = AANumberAssignmentService.DIRECTORY_NUMBER;
+            }
+            // remove from available numbers any numbers which might be in the CES record but are
+            // not assigned. There should be an error message when this happens.
+            var unassigned = _.find(vm.availablePhoneNums, { value: r.number });
+            _.pull(vm.availablePhoneNums, unassigned);
+          });
+        }
+      });
     }
 
     function getInternalNumbers(pattern) {
@@ -269,7 +286,6 @@
     }
 
     function getExternalNumbers(pattern) {
-      vm.externalNumberList = [];
       return TelephonyInfoService.loadExternalNumberPool(
         pattern,
         ExternalNumberPool.ALL_EXTERNAL_NUMBER_TYPES
@@ -279,15 +295,7 @@
             continue;
           }
 
-          var dn = {
-            id: extPool[i].uuid,
-            number: extPool[i].pattern,
-          };
-
-          // the externalNumberList will contain the info as it came from CMI
-          vm.externalNumberList.push(dn);
-
-          var number = _.replace(extPool[i].pattern, /\D/g, '');
+          var number = extPool[i].pattern;
 
           vm.numberTypeList[number] = AANumberAssignmentService.EXTERNAL_NUMBER;
 
@@ -345,6 +353,7 @@
       vm.aaModel.possibleNumberDiscrepancy = false;
 
       warnOnAssignedNumberDiscrepancies();
+      loadNums('');
     }
 
     activate();

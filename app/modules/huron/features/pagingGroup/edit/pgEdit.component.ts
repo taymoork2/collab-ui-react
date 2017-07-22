@@ -308,6 +308,7 @@ class PgEditComponentCtrl implements ng.IComponentController {
       } else {
         this.Notification.errorResponse(response, 'pagingGroup.InitiatorFetchFailure');
       }
+      return this.$q.reject(response);
     });
   }
 

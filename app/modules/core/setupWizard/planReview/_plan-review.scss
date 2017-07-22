@@ -28,6 +28,24 @@
   &.user-service-3.has-room-systems {
     min-height: 765px;
   }
+
+  .pending-header.column-header {
+    justify-content: left;
+    padding-bottom: 20px;
+
+    .icon {
+      padding-left: 1px;
+    }
+  }
+
+  .pending-details {
+    padding-left: 45px;
+    padding-bottom: 20px;
+  }
+
+  #new-services-header {
+    padding-bottom: 20px;
+  }
 }
 
 .wizard-trial-progress {

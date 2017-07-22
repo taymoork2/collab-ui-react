@@ -1,8 +1,8 @@
-import { LocationsWizardComponent } from './locationsWizard.component';
+import { LocationsWizardComponent } from './locations-wizard.component';
 
 const callLocations = 'call.locations';
 export default angular.module('call.locations.wizard', [
   callLocations,
 ])
-  .component('ucCallLocationsWizard', new LocationsWizardComponent())
-  .name;
+.component('ucCallLocationsWizard', new LocationsWizardComponent())
+.name;

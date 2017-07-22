@@ -272,6 +272,15 @@
             },
             abstract: true,
           })
+          .state('main-unauthenticated', {
+            parent: 'mainLazyLoad',
+            views: {
+              'main@': {
+                template: '<div ui-view=""></div>',
+              },
+            },
+            abstract: true,
+          })
           .state('main', {
             views: {
               'main@': {
@@ -297,7 +306,12 @@
           .state('sidepanel', {
             abstract: true,
             onExit: panelOnExit,
-            onEnter: panelOnEnter({ type: '' }),
+            resolve: {
+              atlas2017NameChangeFeatureToggled: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlas2017NameChange);
+              },
+            },
+            onEnter: panelOnEnter(),
           })
           .state('largepanel', {
             abstract: true,
@@ -308,7 +322,15 @@
         // Enter and Exit functions for panel(large or side)
         function panelOnEnter(options) {
           options = options || {};
-          return /* @ngInject */ function ($modal, $state, $previousState) {
+          return /* @ngInject */ function ($modal, $state, $previousState, atlas2017NameChangeFeatureToggled) {
+            if (atlas2017NameChangeFeatureToggled) {
+              if (!options.type) {
+                options.type = 'side-panel-full-height';
+              } else {
+                options.type += ' side-panel-full-height';
+              }
+            }
+
             if ($state.sidepanel) {
               $state.sidepanel.stopPreviousState = true;
             } else {
@@ -593,13 +615,9 @@
           })
           .state('downloads', {
             url: '/downloads',
-            parent: 'mainLazyLoad',
-            views: {
-              'main@': {
-                templateUrl: 'modules/squared/views/downloads.html',
-                controller: 'DownloadsCtrl',
-              },
-            },
+            parent: 'main-unauthenticated',
+            templateUrl: 'modules/squared/views/downloads.html',
+            controller: 'DownloadsCtrl',
             authenticate: false,
           })
           .state('domainmanagement', {
@@ -745,7 +763,7 @@
             templateUrl: 'modules/squared/views/processorder.html',
             controller: 'ProcessorderCtrl',
             controllerAs: 'processOrder',
-            parent: 'main',
+            parent: 'main-unauthenticated',
             authenticate: false,
           })
           .state('overview', {
@@ -1130,7 +1148,7 @@
             },
           })
           .state('user-overview.userDetails', {
-            template: '<uc-user-details-overview preferred-language-details="$resolve.preferredLanguageDetails"></uc-user-details-overview>',
+            template: '<uc-preferred-language-details preferred-language-feature="$resolve.preferredLanguageDetails"></uc-preferred-language-details>',
             params: {
               reloadToggle: false,
             },
@@ -1141,8 +1159,8 @@
               },
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/huron/users/userDetailsOverview'));
-                }, 'uc-user-details-overview');
+                  done(require('modules/huron/preferredLanguage/preferredLanguageDetails'));
+                }, 'uc-preferred-language-details');
               }),
               preferredLanguageDetails: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams, 'preferredLanguageDetails');
@@ -1150,9 +1168,10 @@
             },
           })
           .state('user-overview.userLocationDetails', {
-            template: '<user-location-details></user-location-details>',
+            template: '<user-location-details user-id="$resolve.userId"></user-location-details>',
             params: {
               reloadToggle: false,
+              userDetails: {},
             },
             data: {},
             resolve: {
@@ -1164,6 +1183,9 @@
                   done(require('modules/call/locations/user-location-details'));
                 }, 'user-location-details');
               }),
+              userId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentUser, 'id');
+              },
             },
           })
           .state('user-overview.csdmDevice', {
@@ -1748,7 +1770,6 @@
             controller: 'CustomerReportsHeaderCtrl',
             controllerAs: 'header',
             parent: 'main',
-            // abstract: true,
           })
           .state('reports.spark', {
             url: '/spark',
@@ -1815,6 +1836,11 @@
                 templateUrl: 'modules/mediafusion/reports/media-reports-phase-two.html',
               },
             },
+            resolve: {
+              hasHmsTwoDotFiveFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServicePhaseTwoDotFive);
+              },
+            },
           })
           .state('reports.care', {
             url: '/care',
@@ -1835,15 +1861,6 @@
                 templateUrl: 'modules/core/customerReports/deviceUsage/total.tpl.html',
               },
             },
-          })
-          // TODO, From UE Design, We should combine reports.webex_ with reports.webex, Next time we will do -- zoncao@cisco.com
-          .state('reports.webex_', {
-            url: '/webex_',
-            views: { tabContent: { template: '<cust-webex-reports></cust-webex-reports>' } },
-          })
-          .state('reports.webex_.search', {
-            url: '/reports/webex_/search',
-            template: '<cust-webex-reports-search></cust-webex-reports-search>',
           })
           .state('reports.webex', {
             url: '/webex',
@@ -1953,6 +1970,44 @@
             },
             data: {
               displayName: 'Overview',
+            },
+          })
+          .state('place-overview.placeLocationDetails', {
+            template: '<user-location-details></user-location-details>',
+            params: {
+              reloadToggle: false,
+            },
+            data: {},
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('place-overview.placeLocationDetails').data.displayName = $translate.instant('usersPreview.location');
+              },
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/call/locations/user-location-details'));
+                }, 'user-location-details');
+              }),
+            },
+          })
+          .state('place-overview.preferredLanguage', {
+            template: '<uc-preferred-language-details preferred-language-feature="$resolve.preferredLanguageFeature"></uc-preferred-language-details>',
+            params: {
+              reloadToggle: false,
+              preferredLanguageFeature: {},
+            },
+            data: {},
+            resolve: {
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('place-overview.preferredLanguage').data.displayName = $translate.instant('serviceSetupModal.preferredLanguage');
+              },
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/huron/preferredLanguage/preferredLanguageDetails'));
+                }, 'uc-preferred-language-details');
+              }),
+              preferredLanguageFeature: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams, 'preferredLanguageFeature');
+              },
             },
           })
           .state('place-overview.csdmDevice', {
@@ -2913,10 +2968,11 @@
               customerEmail: '',
               customerCommunicationLicenseIsTrial: '',
               customerRoomSystemsLicenseIsTrial: '',
+              refreshFn: function () {},
             },
             views: {
               'modal@': {
-                template: '<uc-pstn-paid-wizard class="modal-content" customer-id="$resolve.customerId" customer-communication-license-is-trial="$resolve.customerCommunicationLicenseIsTrial" customer-room-systems-license-is-trial="$resolve.customerRoomSystemsLicenseIsTrial" dismiss="$dismiss()" close="$close()"></uc-pstn-paid-wizard>',
+                template: '<uc-pstn-paid-wizard class="modal-content" customer-id="$resolve.customerId" customer-communication-license-is-trial="$resolve.customerCommunicationLicenseIsTrial" customer-room-systems-license-is-trial="$resolve.customerRoomSystemsLicenseIsTrial" dismiss="$dismiss()" close="$close()" refresh-fn="$resolve.refreshFn()"></uc-pstn-paid-wizard>',
                 resolve: {
                   modalInfo: function ($state) {
                     $state.params.modalClass = 'pstn-numbers';
@@ -2951,6 +3007,9 @@
                   });
                 }
               },
+              refreshFn: /* @ngInject */ function ($stateParams) {
+                return $stateParams.refreshFn;
+              },
             },
           })
           .state('pstnSetup', {
@@ -2961,6 +3020,7 @@
               customerEmail: {},
               customerCommunicationLicenseIsTrial: {},
               customerRoomSystemsLicenseIsTrial: {},
+              refreshFn: function () {},
             },
             views: {
               'modal@': {
@@ -3061,19 +3121,11 @@
           .state('huronsettings', {
             url: '/services/call-settings',
             parent: 'hurondetails',
-            templateUrl: 'modules/huron/settings/settings.tpl.html',
-            controller: 'HuronSettingsCtrl',
-            controllerAs: 'settings',
-          })
-          // TODO (jlowery): rename the huronsettingsnew to huronsettings state when sparkCallTenDigitExt is removed.
-          .state('huronsettingsnew', {
-            url: '/services/call-settingsnew',
-            parent: 'hurondetails',
             template: '<uc-settings ftsw="false"></uc-settings>',
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/huron/settings'));
+                  done(require('modules/call/settings'));
                 }, 'call-settings');
               }),
             },
@@ -3114,7 +3166,7 @@
             parent: 'modal',
             views: {
               'modal@': {
-                templateUrl: 'modules/huron/settings/bulkEnableVmModal/bulkEnableVmModal.html',
+                templateUrl: 'modules/call/settings/settings-bulk-enable-vm-modal/settings-bulk-enable-vm-modal.html',
               },
             },
           })
@@ -3361,18 +3413,22 @@
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<context-field-modal existing-field-ids="$resolve.existingFieldIds" callback="$resolve.callback" existing-field-data="$resolve.existingFieldData" dismiss="$dismiss()" has-context-expanded-types-toggle="$resolve.hasContextExpandedTypesToggle" class="context-modal"></context-field-modal>',
+                template: '<context-field-modal existing-field-ids="$resolve.existingFieldIds" callback="$resolve.callback" existing-field-data="$resolve.existingFieldData" in-use="$resolve.inUse" dismiss="$dismiss()" has-context-expanded-types-toggle="$resolve.hasContextExpandedTypesToggle" class="context-modal"></context-field-modal>',
               },
             },
             params: {
               existingFieldIds: [],
               existingFieldData: {},
+              inUse: false,
               callback: function () {},
               hasContextExpandedTypesToggle: false,
             },
             resolve: {
               existingFieldIds: /* @ngInject */ function ($stateParams) {
                 return $stateParams.existingFieldIds;
+              },
+              inUse: /* @ngInject */ function ($stateParams) {
+                return $stateParams.inUse;
               },
               existingFieldData: /* @ngInject */ function ($stateParams) {
                 return $stateParams.existingFieldData;
@@ -3430,11 +3486,12 @@
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<context-fieldset-modal existing-fieldset-ids="$resolve.existingFieldsetIds" existing-fieldset-data="$resolve.existingFieldsetData" callback="$resolve.callback" dismiss="$dismiss()" class="context-modal"></context-fieldset-modal>',
+                template: '<context-fieldset-modal existing-fieldset-ids="$resolve.existingFieldsetIds" existing-fieldset-data="$resolve.existingFieldsetData" in-use="$resolve.inUse" callback="$resolve.callback" dismiss="$dismiss()" class="context-modal"></context-fieldset-modal>',
               },
             },
             params: {
               existingFieldsetIds: [],
+              inUse: false,
               existingFieldsetData: {},
               callback: function () {},
             },
@@ -3444,6 +3501,9 @@
               },
               existingFieldsetData: /* @ngIngect */function ($stateParams) {
                 return $stateParams.existingFieldsetData;
+              },
+              inUse: /* @ngIngect */function ($stateParams) {
+                return $stateParams.inUse;
               },
               callback: /* @ngInject */ function ($stateParams) {
                 return $stateParams.callback;
@@ -4048,9 +4108,7 @@
             url: '/services/calendar/settings',
             views: {
               calendarServiceView: {
-                controllerAs: 'calendarSettings',
-                controller: 'CalendarSettingsController',
-                templateUrl: 'modules/hercules/service-settings/calendar-service-settings.html',
+                template: '<calendar-service-settings-page></calendar-service-settings-page>',
               },
             },
           })

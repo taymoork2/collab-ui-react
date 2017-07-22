@@ -1,6 +1,5 @@
-import { HuronCustomerService, Link } from 'modules/huron/customer';
+import { Customer, HuronCustomerService, Link } from 'modules/huron/customer';
 import { HuronUserService, UserV1, Voicemail } from 'modules/huron/users';
-import { CustomerSettings } from 'modules/huron/settings/services';
 
 interface IUserCommon {
   uuid: string;
@@ -46,7 +45,7 @@ export class HuronVoicemailService {
 
   public isEnabledForCustomer(): ng.IPromise<boolean> {
     let isEnabled = false;
-    return this.HuronCustomerService.getCustomer().then((customer: CustomerSettings) => {
+    return this.HuronCustomerService.getCustomer().then((customer: Customer) => {
       _.forEach(_.get<Link[]>(customer, 'links'), link => {
         if (link.rel === _.toLower(VOICEMAIL) || this.isFeatureEnabledAvril() && link.rel === _.toLower(AVRIL)) {
           isEnabled = true;

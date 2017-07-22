@@ -26,9 +26,9 @@ export class ConfirmDisableHybridServiceCtrl {
     }
     disable(this.serviceId)
       .then(() => {
-        this.Notification.success(this.$translate.instant('hercules.deactivateServiceComponent.serviceWasDeactivated', {
+        this.Notification.success('hercules.deactivateServiceComponent.serviceWasDeactivated', {
           serviceName: this.localizedServiceName,
-        }));
+        });
         this.$modalInstance.close();
       })
       .catch((error) => {

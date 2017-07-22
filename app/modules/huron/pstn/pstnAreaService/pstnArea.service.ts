@@ -8,6 +8,15 @@ export interface IArea {
   abbreviation: string;
 }
 
+export class Area implements IArea {
+  public name: string;
+  public abbreviation: string;
+  constructor(name: string, abbreviation: string) {
+    this.name = name;
+    this.abbreviation = abbreviation;
+  }
+}
+
 export interface IAreaData {
   zipName: string;
   typeName: string;

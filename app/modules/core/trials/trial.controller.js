@@ -589,6 +589,7 @@
       var checks = [
         hasEnabledAnyTrial(vm, vm.preset),
         vm.preset.context !== vm.contextTrial.enabled,
+        vm.preset.countryCode !== vm.details.country,
         vm.preset.roomSystems && (vm.preset.roomSystemsValue !== vm.roomSystemTrial.details.quantity),
         vm.preset.sparkBoard && (vm.preset.sparkBoardValue !== vm.sparkBoardTrial.details.quantity),
         vm.preset.care && (vm.preset.careLicenseValue !== vm.careTrial.details.quantity),
@@ -810,6 +811,7 @@
         careLicenseValue: _.get(findOffer(Config.offerTypes.care), 'licenseCount', 0),
         advanceCareLicenseValue: _.get(findOffer(Config.offerTypes.advanceCare), 'licenseCount', 0),
         context: false, // we don't know this yet, so default to false
+        countryCode: hasOfferType(Config.trials.call, Config.offerTypes.call) || hasOfferType(Config.offerTypes.roomSystems) ? TrialPstnService.getCountryCode() : '',
       };
     }
 
@@ -919,6 +921,9 @@
         _.set(initResults, 'details.licenseDuration', preset.licenseDuration);
         if (vm.pstnTrial.enabled) {
           _.set(initResults, 'preset.pstn', results.hasSetupPstn);
+        }
+        if (initResults.callTrial.enabled || initResults.roomSystemTrial.enabled) {
+          _.set(initResults, 'details.country', preset.countryCode);
         }
       }
       return initResults;

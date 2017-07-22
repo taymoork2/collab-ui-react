@@ -1,23 +1,27 @@
 'use strict';
 
+var ediscoveryModule = require('./ediscovery.module');
+
 var reportId = '123';
 var orgId = 'xyz';
 var roomId = 'abc';
 var sd = moment().format();
 var ed = moment().subtract(30, 'days').format();
 
-describe('Service: EdiscoveryService', function () {
-  beforeEach(angular.mock.module('Ediscovery'));
 
-  var Service, httpBackend, Authinfo, UrlConfig;
+describe('Service: EdiscoveryService', function () {
+  beforeEach(angular.mock.module(ediscoveryModule));
+
+  var Service, httpBackend, Authinfo, UrlConfig, $q, $rootScope;
   var argonautUrlBase, responseUrl, urlBase;
 
-  beforeEach(inject(function (_EdiscoveryService_, $httpBackend, _Authinfo_, _UrlConfig_) {
+  beforeEach(inject(function (_EdiscoveryService_, $httpBackend, _$q_, _$rootScope_, _Authinfo_, _UrlConfig_) {
     Service = _EdiscoveryService_;
     httpBackend = $httpBackend;
     UrlConfig = _UrlConfig_;
     Authinfo = _Authinfo_;
-
+    $q = _$q_;
+    $rootScope = _$rootScope_;
     argonautUrlBase = UrlConfig.getArgonautReportUrl();
     urlBase = UrlConfig.getAdminServiceUrl();
 
@@ -31,7 +35,7 @@ describe('Service: EdiscoveryService', function () {
   }));
 
   afterEach(function () {
-    Service = httpBackend = Authinfo = UrlConfig = argonautUrlBase = responseUrl = urlBase = null;
+    Service = httpBackend = Authinfo = UrlConfig = argonautUrlBase = responseUrl = urlBase = $q = null;
   });
 
   describe('Argonaut Service API', function () {
@@ -151,6 +155,85 @@ describe('Service: EdiscoveryService', function () {
     });
   });
 
+  describe('getReportKey', function () {
+    var testUrl = 'kms://cisco.com/keys/14eed485-c7e0-4e4b-970b-802c63da4058';
+    var goodResponse = {
+      jwk: {
+        toJSON: function () {
+          return {
+            k: '123',
+          };
+        },
+      },
+    };
+
+    var badResponse = {
+      jibberish: 'stuff',
+    };
+
+    function sparkSdkObject(isSuccess, response) {
+      var spark = {};
+      _.set(spark, 'internal.encryption.kms', {});
+      spark.internal.encryption.kms = {
+        fetchKey: function () {
+          var x = $q.defer();
+          var result = response;
+          if (isSuccess) {
+            x.resolve(result);
+          } else {
+            x.reject('reject reason');
+          }
+          return x.promise;
+        },
+      };
+      return spark;
+    }
+    it('should resolve with the key if the response is succesfull in expeced format', function () {
+      var spark = sparkSdkObject(true, goodResponse);
+      var key = null;
+      var error = null;
+      Service.getReportKey(testUrl, spark).then(function (result) {
+        key = result;
+      })
+      .catch(function (result) {
+        error = result;
+      });
+
+      $rootScope.$apply();
+      expect(key).toBe('123');
+      expect(error).toBe(null);
+    });
+
+    it('should reject with response if response is unexpected', function () {
+      var spark = sparkSdkObject(true, badResponse);
+      var key = null;
+      var error = null;
+      Service.getReportKey(testUrl, spark).then(function (result) {
+        key = result;
+      }).catch(function (result) {
+        error = result;
+      });
+
+      $rootScope.$apply();
+      expect(key).toBe(null);
+      expect(error).toEqual(badResponse);
+    });
+
+    it('should reject with an error if sdk rejects', function () {
+      var spark = sparkSdkObject(false, badResponse);
+      var key = null;
+      var error = null;
+      Service.getReportKey(null, spark).then(function (result) {
+        key = result;
+      }).catch(function (result) {
+        error = result;
+      });
+
+      $rootScope.$apply();
+      expect(key).toBe(null);
+      expect(error).toBe('reject reason');
+    });
+  });
   describe('Create Report API', function () {
     var createReportParams = {
       displayName: 'Test',

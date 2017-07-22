@@ -1,5 +1,5 @@
 import { IToolkitModalService } from 'modules/core/modal';
-import { ILocation } from 'modules/call/locations/location';
+import { ILocationListItem } from 'modules/call/locations/location';
 import { LocationsService } from 'modules/call/locations/locations.service';
 import { CardUtils } from 'modules/core/cards';
 const STATE_LOADING: string = 'STATE_LOADING';
@@ -8,8 +8,9 @@ const STATE_RELOAD: string = 'STATE_RELOAD';
 const STATE_NEW_LOCATION: string = 'STATE_NEW_LOCATION';
 
 class CallLocationsCtrl implements ng.IComponentController {
-  public locations: ILocation[] = [];
+  public locations: ILocationListItem[] = [];
   public pageState: string = STATE_LOADING;
+  public currentLocation: ILocationListItem;
 
   /* @ngInject */
   constructor(
@@ -22,8 +23,8 @@ class CallLocationsCtrl implements ng.IComponentController {
 
   }
   public $onInit(): void {
-    this.LocationsService.getLocations().then((result) => {
-      this.locations = result;
+    this.LocationsService.getLocationList().then((locations: ILocationListItem[]) => {
+      this.locations = locations;
       if (this.locations.length === 0) {
         this.pageState = STATE_NEW_LOCATION;
       } else {
@@ -45,7 +46,7 @@ class CallLocationsCtrl implements ng.IComponentController {
 
   /* This function does an in-page search for the string typed in search box*/
   public searchData(searchStr: string): void {
-    this.LocationsService.getLocations().then((result) => {
+    this.LocationsService.getLocationList().then((result) => {
       this.locations = this.LocationsService.filterCards(result, searchStr);
     });
     this.reInstantiateMasonry();
@@ -72,7 +73,8 @@ class CallLocationsCtrl implements ng.IComponentController {
   }
 
 
-  public deleteLocation(location): void {
+  public deleteLocation(location: ILocationListItem): void {
+    this.currentLocation = location;
     this.$modal.open({
       type: 'dialog',
       template: `<delete-location class="modal-content" uuid="${location.uuid}" user-count="${location.userCount}"  place-count="${location.placeCount}" name="${location.name}" style="margin:initial" dismiss="$dismiss()" close="$close()"></delete-location>`,

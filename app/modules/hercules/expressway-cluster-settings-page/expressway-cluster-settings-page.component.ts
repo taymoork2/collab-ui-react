@@ -38,7 +38,7 @@ class ExpresswayClusterSettingsPageCtrl implements ng.IComponentController {
     this.getCurrentResourceGroup = this.getCurrentResourceGroup.bind(this);
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }) {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }) {
     const { clusterId } = changes;
     if (clusterId && clusterId.currentValue) {
       this.loadCluster(clusterId.currentValue);
@@ -94,11 +94,17 @@ class ExpresswayClusterSettingsPageCtrl implements ng.IComponentController {
         .result.then(() => {
           this.ResourceGroupService.assign(this.cluster.id, '')
             .then(() => {
-              const willUpgrade = isUpgradingConnectors ? this.$translate.instant('hercules.expresswayClusterSettings.allConnectorsWillBeUpgraded') : '';
-              this.Notification.success(this.$translate.instant('hercules.expresswayClusterSettings.removeFromResourceGroupSuccess', {
-                ClusterName: this.cluster.name,
-                ResourceGroup: this.originalResourceGroup.groupName,
-              }) + ' ' + willUpgrade);
+              if (isUpgradingConnectors) {
+                this.Notification.success('hercules.expresswayClusterSettings.removeFromResourceGroupSuccessWithUpgrade', {
+                  ClusterName: this.cluster.name,
+                  ResourceGroup: this.originalResourceGroup.groupName,
+                });
+              } else {
+                this.Notification.success('hercules.expresswayClusterSettings.removeFromResourceGroupSuccess', {
+                  ClusterName: this.cluster.name,
+                  ResourceGroup: this.originalResourceGroup.groupName,
+                });
+              }
               this.originalResourceGroup = this.selectedResourceGroup;
               this.refreshClusterData(this.cluster.id);
             })
@@ -126,11 +132,17 @@ class ExpresswayClusterSettingsPageCtrl implements ng.IComponentController {
         .result.then(() => {
           this.ResourceGroupService.assign(this.cluster.id, this.selectedResourceGroup.value)
             .then(() => {
-              const willUpgrade = isUpgradingConnectors ? this.$translate.instant('hercules.expresswayClusterSettings.allConnectorsWillBeUpgraded') : '';
-              this.Notification.success(this.$translate.instant('hercules.expresswayClusterSettings.moveResourceGroupSuccess', {
-                ClusterName: this.cluster.name,
-                NewResourceGroup: this.selectedResourceGroup.groupName,
-              }) + ' ' + willUpgrade);
+              if (isUpgradingConnectors) {
+                this.Notification.success('hercules.expresswayClusterSettings.moveResourceGroupSuccessWithUpgrade', {
+                  ClusterName: this.cluster.name,
+                  NewResourceGroup: this.selectedResourceGroup.groupName,
+                });
+              } else {
+                this.Notification.success('hercules.expresswayClusterSettings.moveResourceGroupSuccess', {
+                  ClusterName: this.cluster.name,
+                  NewResourceGroup: this.selectedResourceGroup.groupName,
+                });
+              }
               this.originalResourceGroup = this.selectedResourceGroup;
               this.refreshClusterData(this.cluster.id);
             })

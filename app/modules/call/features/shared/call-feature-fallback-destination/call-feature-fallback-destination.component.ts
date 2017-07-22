@@ -31,7 +31,7 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
     private CallFeatureFallbackDestinationService: CallFeatureFallbackDestinationService,
   ) {}
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const { fallbackDestination, showReversionLookup, isAlternate } = changes;
     if (fallbackDestination && fallbackDestination.currentValue) {
       this.processCallFeatureFallbackDestChanges(fallbackDestination);
@@ -49,7 +49,7 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
     }
   }
 
-  private processCallFeatureFallbackDestChanges(fallbackDestinationChanges: ng.IChangesObject): void {
+  private processCallFeatureFallbackDestChanges(fallbackDestinationChanges: ng.IChangesObject<any>): void {
     if (_.isNull(fallbackDestinationChanges.currentValue.number) && _.isNull(fallbackDestinationChanges.currentValue.numberUuid)) {
       this.showMember = false;
       this.showReversionLookup = (this.fallbackDestination.number || this.fallbackDestination.numberUuid) ? false : true;

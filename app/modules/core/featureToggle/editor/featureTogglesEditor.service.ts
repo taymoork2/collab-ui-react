@@ -117,7 +117,7 @@ export class FeatureToggleEditorService {
   /**
    * Delete the named toggle
    */
-  public deleteToggle(userId: string, toggleId: string): ng.IPromise<IFeatureToggle> {
+  public deleteToggle(userId: string, toggleId: string): ng.IHttpPromise<IFeatureToggle> {
     const url = `${this.featuresUrl}/${userId}/developer/${toggleId}`;
     return this.$http.delete(url);
   }

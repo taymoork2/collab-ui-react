@@ -2,19 +2,17 @@ import { LocationsService } from 'modules/call/locations/locations.service';
 import { Notification } from 'modules/core/notifications';
 
 class DeleteLocationCtrl implements ng.IComponentController {
-  public placeCount: number;
-  public userCount: number;
   public saveInProcess: boolean;
-
-  public uuid: string;
   public close: Function;
+  public userCount: number;
+  public placeCount: number;
+  public uuid: string;
 
   /* @ngInject */
   constructor (
-      private LocationsService: LocationsService,
-      private Notification: Notification,
-  ) {
-  }
+    private LocationsService: LocationsService,
+    private Notification: Notification,
+  ) {}
 
   public deleteLocation() {
     this.saveInProcess = true;
@@ -34,12 +32,12 @@ export class DeleteLocationComponent implements ng.IComponentOptions {
   public controller = DeleteLocationCtrl;
   public templateUrl = 'modules/call/locations/modals/delete/deleteLocationModal.html';
   public bindings = {
-    dismiss: '&',
+    dismiss: '&', //used in HTML
+    name: '@', //used in HTML
     close: '&',
-    uuid: '<',
     userCount: '<',
     placeCount: '<',
-    name: '@',
+    uuid: '@',
   };
 }
 

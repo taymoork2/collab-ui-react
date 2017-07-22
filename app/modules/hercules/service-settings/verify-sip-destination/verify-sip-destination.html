@@ -1,8 +1,8 @@
-<button type="button"
+<button cs-btn
         class="btn"
-        ng-disabled="!$ctrl.destinationUrl"
-        ng-click="$ctrl.openVerificationModal()">
-  <span translate="common.verify"></span>
+        loading="$ctrl.loading"
+        ng-click="$ctrl.runTests()">
+  <span translate="common.test"></span>
 </button>
 <button type="button"
         class="btn btn--primary"

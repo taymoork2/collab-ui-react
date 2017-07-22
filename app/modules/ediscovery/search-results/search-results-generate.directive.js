@@ -1,9 +1,7 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Ediscovery')
-    .directive('searchResultsGenerate', searchResultsGenerate);
+  module.exports = searchResultsGenerate;
 
   function searchResultsGenerate() {
     var directive = {

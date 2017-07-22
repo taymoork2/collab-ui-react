@@ -9,7 +9,7 @@ class HsTestToolResultsTableComponentCtrl implements ng.IComponentController {
     private $translate: ng.translate.ITranslateService,
   ) {}
 
-  public $onChanges(changes: {[bindings: string]: ng.IChangesObject}) {
+  public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
     const { testResults } = changes;
     if (testResults && testResults.currentValue) {
       this.testResults = testResults.currentValue;

@@ -51,7 +51,7 @@ require('./_wizard.scss');
   /* @ngInject */
   function WizardCtrl($controller, $modal,
     $rootScope, $scope, $state, $stateParams, $timeout, $translate,
-    Authinfo, Config, PromiseHook, SessionStorage) {
+    Authinfo, Config, PromiseHook, SessionStorage, SetupWizardService) {
     var vm = this;
     vm.current = {};
 
@@ -97,6 +97,7 @@ require('./_wizard.scss');
     vm.isCurrentTab = isCurrentTab;
     vm.loadOverview = loadOverview;
     vm.showDoItLater = false;
+    vm.showDontActivate = false;
     vm.wizardNextLoad = false;
 
     vm.showSkipTabBtn = false;
@@ -138,6 +139,9 @@ require('./_wizard.scss');
       initCurrent();
       setNextText();
       vm.isNextDisabled = false;
+      if (hasPendingLicenses()) {
+        vm.showDontActivate = true;
+      }
     }
 
     function getSteps() {
@@ -385,11 +389,19 @@ require('./_wizard.scss');
       return true;
     }
 
+    function hasPendingLicenses() {
+      return SetupWizardService.hasPendingLicenses();
+    }
+
     function setNextText() {
       if ((isFirstTab() && isFirstTime() && !isCustomerPartner() && !isFromPartnerLaunch()) || (isFirstTab() && isFirstStep() && !isSingleTabSingleStep())) {
         vm.nextText = $translate.instant('firstTimeWizard.getStarted');
+      } else if (isFirstTime() && isLastTab() && isLastStep() && hasPendingLicenses()) {
+        vm.nextText = $translate.instant('common.activate');
       } else if (isFirstTime() && isLastTab() && isLastStep()) {
         vm.nextText = $translate.instant('common.finish');
+      } else if ((getTab().name === 'meetingSettings') && isLastStep()) {
+        vm.nextText = $translate.instant('common.next');
       } else if (isLastStep()) {
         vm.nextText = $translate.instant('common.save');
       } else {

@@ -28,7 +28,7 @@ class GmTdHeaderCtrl implements ng.IComponentController {
     }
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     if (changes.tdBaseInfo) {
       this.model = this.tdBaseInfo;
     }

@@ -1,112 +1,165 @@
-import { ILocation, Location } from 'modules/call/locations/location';
+import { ILocation, ILocationListItem } from './location';
 
-interface ILocationsResource extends ng.resource.IResourceClass<ng.resource.IResource<ILocation>> {
-  update: ng.resource.IResourceMethod<ng.resource.IResource<ILocation>>;
+interface ILocationResource extends ng.resource.IResourceClass<ng.resource.IResource<ILocation>> {}
+
+interface IUserLocationDetailResource extends ng.resource.IResourceClass<ng.resource.IResource<ILocation>> {}
+
+interface ILocationDetailResource extends ng.resource.IResourceClass<ng.resource.IResource<ILocationListItem>> {
+  update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
 }
 
 export class LocationsService {
-  private locationsService: ILocationsResource;
-  public locations: ILocation[] = [{
-    uuid: '123',
-    name: 'Home Office',
-    routingPrefix: '8100',
-    defaultLocation: true,
-    userCount: 10,
-    placeCount: 3,
-    url: 'http://something/123',
-  },
-  {
-    uuid: '456',
-    name: 'Desk Phone',
-    routingPrefix: '8100',
-    defaultLocation: false,
-    userCount: 10,
-    placeCount: 3,
-    url: 'http://something/456',
-  }];
+  private locationListResource: ILocationResource;
+  private userLocationDetailResource: IUserLocationDetailResource;
+  private locationDetailResource: ILocationDetailResource;
+
+  private locationPickList: string[] = [
+    'uuid',
+    'name',
+    'routingPrefix',
+    'defaultLocation',
+    'timeZone',
+    'preferredLanguage',
+    'tone',
+    'dateFormat',
+    'timeFormat',
+    'steeringDigit',
+    'siteSteeringDigit',
+    'allowExternalTransfer',
+    'voicemailPilotNumber',
+    'regionCodeDialing',
+    'callerIdNumber',
+  ];
+
+  private locationListItemPickList: string[] = [
+    'uuid',
+    'name',
+    'routingPrefix',
+    'defaultLocation',
+    'userCount',
+    'placeCount',
+  ];
+
   /* @ngInject */
-  constructor(private $q: ng.IQService,
-              private $resource: ng.resource.IResourceService,
-              private HuronConfig,
-             // private Authinfo,
+  constructor(
+    private $resource: ng.resource.IResourceService,
+    private HuronConfig,
+    private Authinfo,
   ) {
+
     const updateAction: ng.resource.IActionDescriptor = {
       method: 'PUT',
     };
-    this.locationsService = <ILocationsResource>this.$resource(`${this.HuronConfig.getCmiV2Url()}/customers/:customerId/locations/:locationId`, {},
+
+    const saveAction: ng.resource.IActionDescriptor = {
+      method: 'POST',
+      headers: {
+        'Access-Control-Expose-Headers': 'Location',
+      },
+    };
+
+    this.locationListResource = <ILocationResource>this.$resource(`${this.HuronConfig.getCmiV2Url()}/customers/:customerId/locations`, {}, {});
+    this.userLocationDetailResource = <IUserLocationDetailResource>this.$resource(`${this.HuronConfig.getCmiV2Url()}/customers/:customerId/users/:userId`, {}, {});
+    this.locationDetailResource = <ILocationDetailResource>this.$resource(`${this.HuronConfig.getCmiV2Url()}/customers/:customerId/locations/:locationId`, {},
       {
         update: updateAction,
+        save: saveAction,
       });
-
-  }
-  //TODO: remove comments and use actual APIs when  API is availble
-  public getLocations(): IPromise<Location[]> {
-    // return this.locationsService.query({
-    //   customerId: this.Authinfo.getOrgId(),
-    // }).$promise;
-    return this.$q.resolve(this.locations);
-    // return this.$q.reject();
   }
 
-  public filterCards(locations: ILocation[], filterText: string): ILocation[] {
+  public getLocationList(): IPromise<ILocationListItem[]> {
+    return this.locationListResource.get({
+      customerId: this.Authinfo.getOrgId(),
+      wide: true,
+    }).$promise.then(locations => {
+      return _.map(_.get<ILocationListItem[]>(locations, 'locations', []), location => {
+        return _.pick(location, this.locationListItemPickList);
+      });
+    });
+  }
+
+  public getLocation(locationId: string): ng.IPromise<ILocation> {
+    return this.locationDetailResource.get({
+      customerId: this.Authinfo.getOrgId(),
+      locationId,
+    }).$promise
+    .then(location => {
+      return _.pick(location, this.locationPickList);
+    });
+  }
+
+  public getUserLocation(userId: string): ng.IPromise<ILocation> {
+    return this.userLocationDetailResource.get({
+      customerId: this.Authinfo.getOrgId(),
+      userId,
+    }).$promise
+    .then(location => {
+      return _.get(location, 'location');
+    });
+  }
+
+  public createLocation(location: ILocation): ng.IPromise<string> {
+    const locationHeader: string = '';
+    return this.locationListResource.save({
+      customerId: this.Authinfo.getOrgId(),
+    }, {
+      name: location.name,
+      routingPrefix: location.routingPrefix,
+      defaultLocation: location.defaultLocation,
+      timeZone: location.timeZone,
+      preferredLanguage: location.preferredLanguage,
+      tone: location.tone,
+      dateFormat: location.dateFormat,
+      timeFormat: location.timeFormat,
+      steeringDigit: location.steeringDigit,
+      allowExternalTransfer: location.allowExternalTransfer,
+      voicemailPilotNumber: location.voicemailPilotNumber,
+      regionCodeDialing: location.regionCodeDialing,
+      callerIdNumber: location.callerIdNumber,
+    },
+    (_response, headers) => {
+      location = headers('Location');
+    }).$promise
+    .then(() => locationHeader);
+  }
+
+  public updateLocation(location: ILocation): ng.IPromise<void> {
+    return this.locationDetailResource.update({
+      customerId: this.Authinfo.getOrgId(),
+    }, location).$promise;
+  }
+
+  public deleteLocation(locationId: string): ng.IPromise<ILocationListItem> {
+    return this.locationDetailResource.delete({
+      customerId: this.Authinfo.getOrgId(),
+      locationId: locationId,
+    }, location).$promise;
+  }
+
+  public makeDefault(locationId: string): ng.IPromise<void> {
+    return this.locationDetailResource.update({
+      customerId: this.Authinfo.getOrgId(),
+      locationId: locationId,
+    }, {
+      defaultLocation: true,
+    }).$promise;
+  }
+
+  public filterCards(locations: ILocationListItem[], filterText: string): ILocationListItem[] {
     if (_.isEmpty(filterText)) {
       return locations;
     }
-    let filteredLocations: ILocation[] = [];
-    filteredLocations = _.filter(locations, function(someObject) {
-      return someObject.name.toLowerCase().indexOf(filterText.toLowerCase()) !== -1;
+    return _.filter(locations, filteredLocation => {
+      return filteredLocation.name.toLowerCase().indexOf(filterText.toLowerCase()) !== -1;
     });
-    return filteredLocations;
-  }
-
-  public getLocationDetails(locationId) {
-    // return this.locationsService.get({
-    //   customerId: this.Authinfo.getOrgId(),
-    //   locationId,
-    // }).$promise;
-    return this.$q.resolve({
-      uuid: locationId,
-      name: 'Home Office',
-      timezone: 'CST',
-      userCount: 0,
-      placeCount: 0,
-      preferredLanguage: 'USEnglish',
-    });
-  }
-
-  public createLocation(location): ng.IPromise<Location> {
-    // return this.locationsService.save({
-    //   customerId: this.Authinfo.getOrgId(),
-    // }, location).$promise;
-    this.locations.push(location);
-    return this.$q.resolve(location);
-  }
-
-  public deleteLocation(locationId): ng.IPromise<any> {
-    // return this.locationsService.delete({
-    //   customerId: this.Authinfo.getOrgId(),
-    //   locationId,
-    // }).$promise;
-    const index = _.findIndex(this.locations, location =>  location.uuid === locationId);
-
-    this.locations.splice(index, 1);
-    return this.$q.resolve(location);
   }
 
   public hasLocation(name: string): ng.IPromise<boolean> {
-    if (name === 'Home Office') {
-      return this.$q.resolve(true);
-    }
-    return this.$q.resolve(false);
-  }
-
-  public updateLocation(locationId: string, params: Object) {
-    // return this.locationsService.update({
-    //   locationId
-    // }, params).$promise;
-    return this.$q.resolve({
-      locationId,
-      params,
+    return this.locationListResource.get({
+      customerId: this.Authinfo.getOrgId(),
+      name: name,
+    }).$promise.then(locations => {
+      return _.get<ILocationListItem[]>(locations, 'locations', []).length > 0;
     });
   }
 }

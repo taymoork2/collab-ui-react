@@ -1,8 +1,8 @@
 'use strict';
 
+var ediscoveryModule = require('./ediscovery.module');
 describe('Controller: EdiscoveryReportsController', function () {
-  beforeEach(angular.mock.module('Ediscovery'));
-  beforeEach(angular.mock.module('Huron'));
+  beforeEach(angular.mock.module(ediscoveryModule));
 
   var $controller, $q, $scope, $translate, Analytics, Authinfo, controller, EdiscoveryService, FeatureToggleService, TrialService;
 

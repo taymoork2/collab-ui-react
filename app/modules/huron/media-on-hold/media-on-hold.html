@@ -1,0 +1,25 @@
+<div ng-form="mediaOnHold" class="cs-form">
+  <div class="cs-form__section moh-settings">
+    <div class="section__info">
+      <h4 class="section__title" translate="mediaOnHoldPanel.title"></h4>
+    </div>
+    <div class="section__content">
+      <div class="sub-section">
+        <div class="medium-6 display-flex">
+          <cs-select
+            name="lineMohSelect"
+            ng-model="$ctrl.selected"
+            options="$ctrl.lineMohOptions"
+            on-change-fn="$ctrl.onLineMohChanged()"
+            filter="false"
+          ></cs-select>
+          </div>
+          <div class="display-flex">
+          <span>
+              <a class="warning-padding link-color" translate="mediaOnHoldPanel.mediaManager" ng-click="$ctrl.openMediaMgrModal()"></a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

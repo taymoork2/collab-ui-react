@@ -39,6 +39,8 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
         play: {
           description: 'Welcome prompt',
           url: 'file1.avi',
+          voice: 'Vanessa',
+          deleteUrl: 'file1.avi',
         },
       }],
     }],
@@ -263,7 +265,6 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       };
       _ceRecord.callExperienceName = 'AA Custom';
       var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcome, 'openHours');
-
       // if this splice to removes actions after play .. should be length -1
       _welcomeMenu.entries.splice(1, _welcomeMenu.entries.length - 1);
 
@@ -272,7 +273,6 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       var customMenuSuccess = AutoAttendantCeMenuModelService.updateMenu(_ceRecord, 'openHours', _customMenu);
 
       expect(welcomeMenuSuccess).toBe(true);
-
       expect(customMenuSuccess).toBe(true);
       expect(angular.equals(_ceRecord, ceCustom)).toBe(true);
     });

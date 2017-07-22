@@ -34,7 +34,7 @@ class UserDetails implements ng.IComponentController {
   }
 
   public getUserLocation(): void {
-    this.LocationsService.getLocationDetails('123').then(result => {
+    this.LocationsService.getUserLocation(this.userDetails.id).then(result => {
       this.userLocation = result.name;
     });
   }
@@ -79,7 +79,7 @@ class UserDetails implements ng.IComponentController {
     this.dirsyncEnabled = _.some(details, 'dirsyncEnabled');
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const { details } = changes;
     if (details && details.currentValue && _.isArray(details.currentValue)) {
       const detailChanges = <IUserDetailsFeature[]> details.currentValue;

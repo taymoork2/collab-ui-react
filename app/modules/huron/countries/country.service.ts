@@ -32,9 +32,9 @@ export class HuronCountryService {
       .then(countries => {
         return _.map(countries, country => {
           return {
-            id: _.get(country, 'id'),
-            name: _.get(country, 'name'),
-            domain: _.get(country, 'domain'),
+            id: _.get<string>(country, 'id'),
+            name: _.get<string>(country, 'name'),
+            domain: _.get<string>(country, 'domain'),
           };
         });
       });

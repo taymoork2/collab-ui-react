@@ -35,7 +35,7 @@ class ServiceAddressCtrl implements ng.IComponentController {
     });
   }
 
-  public $onChanges(changes: {[bindings: string]: ng.IChangesObject}) {
+  public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
     const { address } = changes;
     if (address && (address.currentValue['state'] === '' || address.currentValue['state'] === undefined)) {
       this.locationModel = undefined;

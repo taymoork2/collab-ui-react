@@ -49,7 +49,7 @@ class HybridServicesResourceGroupSelectorCtrl implements ng.IComponentController
     this.connectorType = this.HybridServicesUtilsService.serviceId2ConnectorType(this.serviceId);
   }
 
-  public $onChanges(changes: {[bindings: string]: ng.IChangesObject}) {
+  public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
     const { userId, resourceGroupId, serviceId } = changes;
     if (userId && userId.currentValue) {
       this.userId = userId.currentValue;

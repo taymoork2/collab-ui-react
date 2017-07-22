@@ -1,12 +1,12 @@
 import { Notification } from 'modules/core/notifications/notification.service';
 import { IEmergencyAddress } from 'modules/squared/devices/emergencyServices/index';
-import { NumberModel, INumbersModel } from './number.model';
 import { PstnWizardService } from './pstnWizard.service';
 import { DirectInwardDialing } from './directInwardDialing';
 import { TokenMethods } from '../pstnSwivelNumbers';
 import { TOKEN_FIELD_ID } from '../pstn.const';
 import { PstnService } from '../pstn.service';
 import { PstnModel, IOrder } from '../pstn.model';
+import { NumberModel, INumbersModel } from '../pstnNumberSearch';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
 
 export class PstnWizardComponent implements ng.IComponentOptions {
@@ -15,6 +15,7 @@ export class PstnWizardComponent implements ng.IComponentOptions {
   public bindings = {
     dismiss: '&',
     close: '&',
+    refreshFn: '&',
     customerId: '<',
     customerName: '<',
     customerEmail: '<',
@@ -59,6 +60,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
   public enableCarriers: boolean;
   public blockByopNumberAddForPartnerAdmin: boolean;
   public close: Function;
+  public refreshFn: Function;
   public get provider() {
     return this.PstnModel.getProvider();
   }
@@ -286,6 +288,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
       case 6:
         this.placeOrderLoad = true;
         this.PstnWizardService.placeOrder().then(() => {
+          this.refreshFn();
           this.step = 7;
           this.placeOrderLoad = false;
         });
@@ -310,6 +313,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
       case 10:
         this.placeOrderLoad = true;
         this.PstnWizardService.finalizeImport().then(() => {
+          this.refreshFn();
           this.step = 11;
         })
         .finally(() => this.placeOrderLoad = false);
@@ -382,9 +386,9 @@ export class PstnWizardCtrl implements ng.IComponentController {
     }));
   }
 
-  public searchCarrierInventory(areaCode: string, block: boolean, quantity: number, consecutive: boolean): void {
+  public searchCarrierInventory(areaCode: string, block: boolean, quantity: number, consecutive: boolean, stateAbbreviation: string): void {
     this.loading = true;
-    this.PstnWizardService.searchCarrierInventory(areaCode, block, quantity, consecutive, this.model, this.isTrial).then(() => this.loading = false);
+    this.PstnWizardService.searchCarrierInventory(areaCode, block, quantity, consecutive, stateAbbreviation, this.model, this.isTrial).then(() => this.loading = false);
   }
 
   public searchCarrierTollFreeInventory(areaCode: string, block: boolean, quantity: number, consecutive: boolean): void {
@@ -392,7 +396,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
     this.PstnWizardService.searchCarrierTollFreeInventory(areaCode, block, quantity, consecutive, this.model).then(() => this.loading = false);
   }
 
-  public addToCart(orderType: string, numberType: string, quantity: number, searchResultsModel: {}): void {
+  public addToCart(orderType: string, numberType: string, quantity: number, searchResultsModel: boolean[]): void {
     this.model.pstn.addLoading = true;
     this.model.tollFree.addLoading = true;
     this.PstnWizardService.addToCart(orderType, numberType, quantity, searchResultsModel, this.orderCart, this.model).then(orderCart => {
@@ -411,7 +415,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
     this.validCount = 0;
     this.invalidCount = 0;
     this.did.clearList();
-    angular.element('#' + this.tokenfieldId).tokenfield('setTokens', tmpDids);
+    (angular.element('#' + this.tokenfieldId) as any).tokenfield('setTokens', tmpDids);
   }
 
   public getInvalidTokens(): JQuery {

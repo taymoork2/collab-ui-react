@@ -6,10 +6,10 @@ import { ServiceDescriptorService } from 'modules/hercules/services/service-desc
 export class ImpServiceContainerController extends ExpresswayContainerController {
 
   public tabs: any = [{
-    title: this.$translate.instant('common.resources'),
+    title: 'common.resources',
     state: 'imp-service.list',
   }, {
-    title: this.$translate.instant('common.settings'),
+    title: 'common.settings',
     state: 'imp-service.settings',
   }];
 
@@ -35,7 +35,6 @@ export class ImpServiceContainerController extends ExpresswayContainerController
     ClusterService: ClusterService,
     hasPartnerRegistrationFeatureToggle,
     Notification: Notification,
-    private $translate: ng.translate.ITranslateService,
     ServiceDescriptorService: ServiceDescriptorService,
     ServiceStateChecker,
     USSService,

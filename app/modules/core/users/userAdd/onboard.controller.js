@@ -633,19 +633,17 @@ require('./_user-add.scss');
     }
 
     function setCareService() {
-      if (hasLicense('CD')) {
+      var hasSyncKms = _.includes($scope.currentUser.roles, Config.backend_roles.spark_synckms);
+      var hasContextServiceEntitlement = _.includes($scope.currentUser.entitlements, Config.entitlements.context);
+      var hasSunlightDigital = _.includes($scope.currentUser.entitlements, Config.entitlements.care_digital);
+      var hasSunlightVoice = _.includes($scope.currentUser.entitlements, Config.entitlements.care_inbound_voice);
+      if (hasSyncKms && hasContextServiceEntitlement && hasSunlightDigital) {
         $scope.radioStates.initialCareRadioState = $scope.radioStates.careRadio = $scope.careRadioValue.K1;
-      } else if (hasLicense('CV')) {
+      } else if (hasSyncKms && hasContextServiceEntitlement && hasSunlightVoice) {
         $scope.radioStates.initialCareRadioState = $scope.radioStates.careRadio = $scope.careRadioValue.K2;
       } else {
         $scope.radioStates.initialCareRadioState = $scope.radioStates.careRadio = $scope.careRadioValue.NONE;
       }
-    }
-
-    function hasLicense(licensePrefix) {
-      return _.find($scope.currentUser.licenseID, function (userLicense) {
-        return (userLicense.substring(0, 2) === licensePrefix);
-      });
     }
 
     function shouldAddCallService() {
@@ -1555,8 +1553,6 @@ require('./_user-add.scss');
       var successCallback = function (response) {
         Log.info('User onboard request returned:', response.data);
         $rootScope.$broadcast('USER_LIST_UPDATED');
-        $scope.numAddedUsers = 0;
-        $scope.numUpdatedUsers = 0;
         _.forEach(response.data.userResponse, function (user) {
           var userResult = {
             email: user.email,
@@ -1758,6 +1754,8 @@ require('./_user-add.scss');
 
         entitleList = entitleList.concat(getExtensionEntitlements('add'));
 
+        $scope.numAddedUsers = 0;
+        $scope.numUpdatedUsers = 0;
         for (var i = 0; i < usersList.length; i += chunk) {
           tempUserArray = usersList.slice(i, i + chunk);
           Userservice.onboardUsers(tempUserArray, entitleList, licenseList)

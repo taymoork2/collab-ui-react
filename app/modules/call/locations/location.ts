@@ -1,139 +1,141 @@
+const DEFAULT_TIME_ZONE: string = 'America/Los_Angeles';
+const DEFAULT_TIME_FORMAT: string = '24-hour';
+const DEFAULT_DATE_FORMAT: string = 'M-D-Y';
+const DEFAULT_TONE: string = 'US';
+
 export interface IVoicemailPilotNumber {
-  number: string;
-  voicemailPilotNumberGenerated: boolean;
+  number: string | null;
+  generated: boolean;
 }
 
 export class VoicemailPilotNumber implements IVoicemailPilotNumber {
-  public number: string;
-  public voicemailPilotNumberGenerated: boolean;
+  public number: string | null;
+  public generated: boolean;
 
-  public setVoicemailPilotNumber(voicemailPilotNumber: IVoicemailPilotNumber): void {
+  constructor(voicemailPilotNumber: IVoicemailPilotNumber = {
+    number: null,
+    generated: false,
+  }) {
     this.number = voicemailPilotNumber.number;
-    this.voicemailPilotNumberGenerated = voicemailPilotNumber.voicemailPilotNumberGenerated;
+    this.generated = voicemailPilotNumber.generated;
   }
 }
 
-export interface IRegionalCodeDialing {
-  regionCode: string;
+export interface IRegionCodeDialing {
+  regionCode: string | null;
   simplifiedNationalDialing: boolean;
 }
 
-export class RegionalCodeDialing implements IRegionalCodeDialing {
-  public regionCode: string;
+export class RegionCodeDialing implements IRegionCodeDialing {
+  public regionCode: string | null;
   public simplifiedNationalDialing: boolean;
 
-  public setRegionalCodeDialing(regionalCodeDialing: IRegionalCodeDialing) {
+  constructor(regionalCodeDialing: IRegionCodeDialing = {
+    regionCode: null,
+    simplifiedNationalDialing: true,
+  }) {
     this.regionCode = regionalCodeDialing.regionCode;
     this.simplifiedNationalDialing = regionalCodeDialing.simplifiedNationalDialing;
   }
 }
 
-export interface ILocationDetail {
+interface IBaseLocation {
+  uuid?: string;
   name: string;
-  timeZone: string;
-  preferredLanguage: string;
-  tone: string;
-  dateFormat: string;
-  timeFormat: string;
-  routingPrefix: string;
-  steeringDigit: number;
+  routingPrefix?: string;
   defaultLocation: boolean;
-  allowExternalTransfer: boolean;
-  voicemailPilotNumber: IVoicemailPilotNumber;
-  regionCodeDialing: IRegionalCodeDialing;
-  callerIdNumber: string;
 }
 
-export class LocationDetail implements ILocationDetail {
-  public name: string;
-  public timeZone: string;
-  public preferredLanguage: string;
-  public tone: string;
-  public dateFormat: string;
-  public timeFormat: string;
-  public routingPrefix: string;
-  public steeringDigit: number;
-  public defaultLocation: boolean;
-  public allowExternalTransfer: boolean;
-  public voicemailPilotNumber: VoicemailPilotNumber;
-  public regionCodeDialing: RegionalCodeDialing;
-  public callerIdNumber: string;
-
-  public constructor () {
-    this.name = '';
-    this.timeZone = '';
-    this.preferredLanguage = '';
-    this.tone = '';
-    this.dateFormat = '';
-    this.timeFormat = '';
-    this.routingPrefix = '';
-    this.steeringDigit = 9;
-    this.defaultLocation = false;
-    this.allowExternalTransfer = false;
-    this.voicemailPilotNumber = new VoicemailPilotNumber();
-    this.regionCodeDialing = new RegionalCodeDialing();
-    this.callerIdNumber = '';
-  }
-
-  public setLocationDetail(locationDetail: ILocationDetail): void {
-    this.name = locationDetail.name;
-    this.timeZone = locationDetail.timeZone;
-    this.preferredLanguage = locationDetail.preferredLanguage;
-    this.tone = locationDetail.tone;
-    this.dateFormat = locationDetail.dateFormat;
-    this.timeFormat = locationDetail.timeFormat;
-    this.routingPrefix = locationDetail.routingPrefix;
-    this.steeringDigit = locationDetail.steeringDigit;
-    this.defaultLocation = locationDetail.defaultLocation;
-    this.allowExternalTransfer = locationDetail.allowExternalTransfer;
-    this.voicemailPilotNumber.setVoicemailPilotNumber(locationDetail.voicemailPilotNumber);
-    this.regionCodeDialing.setRegionalCodeDialing(locationDetail.regionCodeDialing);
-    this.callerIdNumber = locationDetail.callerIdNumber;
-  }
-}
-
-export interface ILocation {
-  uuid: string;
-  name: string;
-  routingPrefix: string;
-  defaultLocation: boolean;
+export interface ILocationListItem extends IBaseLocation {
   userCount: number;
   placeCount: number;
-  url: string;
 }
 
-export interface ILocationsGet {
-  locations: ILocation[];
-  url: string;
-  paging: string;
-}
-
-export class Location implements ILocation {
-  public uuid: string;
+export class LocationListItem implements ILocationListItem {
+  public uuid?: string;
   public name: string;
-  public routingPrefix: string;
+  public routingPrefix?: string;
   public defaultLocation: boolean;
   public userCount: number;
   public placeCount: number;
-  public url: string;
 
-  public constructor () {
-    this.uuid = '';
-    this.name = '';
-    this.routingPrefix = '';
-    this.defaultLocation = false;
-    this.userCount = 0;
-    this.placeCount = 0;
-    this.url = '';
+  constructor(locationListItem: ILocationListItem = {
+    uuid: undefined,
+    name: '',
+    routingPrefix: undefined,
+    defaultLocation: false,
+    userCount: 0,
+    placeCount: 0,
+  }) {
+    this.uuid = locationListItem.uuid;
+    this.name = locationListItem.name;
+    this.routingPrefix = locationListItem.routingPrefix;
+    this.defaultLocation = locationListItem.defaultLocation;
+    this.userCount = locationListItem.userCount;
+    this.placeCount = locationListItem.placeCount;
   }
+}
 
-  public setLocation(location: ILocation): void {
+export interface ILocation extends IBaseLocation {
+  timeZone: string;
+  preferredLanguage?: string;
+  tone: string;
+  dateFormat: string;
+  timeFormat: string;
+  steeringDigit?: number;
+  allowExternalTransfer: boolean;
+  voicemailPilotNumber: IVoicemailPilotNumber;
+  regionCodeDialing: IRegionCodeDialing;
+  callerIdNumber?: string;
+}
+
+export class Location implements ILocation {
+  public uuid?: string;
+  public name: string;
+  public routingPrefix?: string;
+  public defaultLocation: boolean;
+  public userCount: number;
+  public placeCount: number;
+  public timeZone: string;
+  public preferredLanguage?: string;
+  public tone: string;
+  public dateFormat: string;
+  public timeFormat: string;
+  public steeringDigit?: number;
+  public allowExternalTransfer: boolean;
+  public voicemailPilotNumber: IVoicemailPilotNumber;
+  public regionCodeDialing: IRegionCodeDialing;
+  public callerIdNumber?: string;
+
+  constructor (location: ILocation = {
+    uuid: undefined,
+    name: '',
+    timeZone: DEFAULT_TIME_ZONE,
+    timeFormat: DEFAULT_TIME_FORMAT,
+    dateFormat: DEFAULT_DATE_FORMAT,
+    preferredLanguage: undefined,
+    tone: DEFAULT_TONE,
+    routingPrefix: undefined,
+    steeringDigit: undefined,
+    defaultLocation: false,
+    allowExternalTransfer: false,
+    voicemailPilotNumber: new VoicemailPilotNumber(),
+    regionCodeDialing: new RegionCodeDialing(),
+    callerIdNumber: undefined,
+  }) {
     this.uuid = location.uuid;
     this.name = location.name;
+    this.timeZone = location.timeZone;
+    this.timeFormat = location.timeFormat;
+    this.dateFormat = location.dateFormat;
+    this.preferredLanguage = location.preferredLanguage;
+    this.tone = location.tone;
     this.routingPrefix = location.routingPrefix;
+    this.steeringDigit = location.steeringDigit;
     this.defaultLocation = location.defaultLocation;
-    this.userCount = location.userCount;
-    this.placeCount = location.placeCount;
-    this.url = location.url;
+    this.allowExternalTransfer = location.allowExternalTransfer;
+    this.voicemailPilotNumber = location.voicemailPilotNumber;
+    this.regionCodeDialing = location.regionCodeDialing;
+    this.callerIdNumber = location.callerIdNumber;
   }
 }

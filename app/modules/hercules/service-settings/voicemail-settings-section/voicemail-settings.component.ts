@@ -35,7 +35,7 @@ class HybridVoicemailCtrl implements ng.IComponentController {
       });
   }
 
-  public $onChanges(changes: {[bindings: string]: ng.IChangesObject}) {
+  public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
     const { isCallServiceConnectEnabled } = changes;
     if (!isCallServiceConnectEnabled.currentValue) {
       this.voicemailToggle = false;
