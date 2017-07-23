@@ -26,6 +26,7 @@ export class MeetingSettingsCtrl {
   /* @ngInject */
   constructor(
     public $scope,
+    public $log,
     private $translate: ng.translate.ITranslateService,
     private $rootScope: ng.IRootScopeService,
     private Authinfo,
@@ -203,8 +204,8 @@ export class MeetingSettingsCtrl {
       return license.offerName;
     });
 
-    this.distributedLicensesArray = _.map(centerDetails, (center) => {
-      return _.map(this.sitesArray, (site: IWebExSite) => {
+    this.distributedLicensesArray = _.map(this.sitesArray, (site: IWebExSite) => {
+      return _.map(centerDetails, (center) => {
         return {
           centerType: center,
           quantity: site.quantity,
