@@ -10,6 +10,7 @@
     var vm = this;
 
     var ui;
+    var actionEntry;
 
     vm.mainClickFn = mainClickFn;
     vm.variableOptions = [
@@ -37,7 +38,7 @@
     function mainClickFn() {
       var id = $scope.elementId;
       populateUiModel(id);
-      var dynaList = vm.menuEntry.dynamicList;
+      var dynaList = actionEntry.actions[0].dynamicList;
       _.forEach(dynaList, function (node) {
         var html = decodeURIComponent(node.htmlModel);
         if (html.search(id) >= 0) {
@@ -81,7 +82,7 @@
 
       var id = $scope.elementId;
       populateUiModel(id);
-      var dynaList = vm.menuEntry.dynamicList;
+      var dynaList = actionEntry.actions[0].dynamicList;
       _.forEach(dynaList, function (node) {
         var html = decodeURIComponent(node.htmlModel);
         if (html.search(id) >= 0) {
@@ -99,31 +100,46 @@
       });
     }
 
+    function populateUiModelFromMenuEntry(menuEntry, elementId) {
+      var action = _.get(menuEntry, 'actions[0]', '');
+      if (action) {
+        if (checkForElementId(menuEntry.actions[0].dynamicList, elementId)) {
+          actionEntry = menuEntry;
+          return true;
+        }
+      } else {
+        return _.some(menuEntry.headers, function (header) {
+          action = _.get(header, 'actions[0]', '');
+          if (action) {
+            if (checkForElementId(action.dynamicList, elementId)) {
+              actionEntry = header;
+              return true;
+            }
+          }
+          var entries = menuEntry.entries;
+          _.some(entries, function (entry) {
+            return populateUiModelFromMenuEntry(entry, elementId);
+          });
+        });
+      }
+      return false;
+    }
+
+    function checkForElementId(dynaList, elementId) {
+      return _.some(dynaList, function (node) {
+        var html = decodeURIComponent(node.htmlModel);
+        return (html.search(elementId) >= 0);
+      });
+    }
+
     function populateUiModel(elementId) {
-      var found = false;
       ui = AAUiModelService.getUiModel();
       //checking the menuEntry which contains dynamic element corresponding to elementId
       _.some(ui, function (uiMenu) {
         var menuEntries = uiMenu.entries;
         _.some(menuEntries, function (menuEntry) {
-          if (menuEntry.dynamicList) {
-            var dynaList = menuEntry.dynamicList;
-            _.some(dynaList, function (node) {
-              var html = decodeURIComponent(node.htmlModel);
-              if (html.search(elementId) >= 0) {
-                vm.menuEntry = menuEntry;
-                found = true;
-                return found;
-              }
-            });
-            if (found) {
-              return true;
-            }
-          }
+          return populateUiModelFromMenuEntry(menuEntry, elementId);
         });
-        if (found) {
-          return true;
-        }
       });
     }
 
