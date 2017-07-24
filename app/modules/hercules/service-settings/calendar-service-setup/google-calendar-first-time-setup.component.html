@@ -8,10 +8,8 @@
     </div>
   </div>
   <div ng-if="$ctrl.currentStep === 'authorization'" class="modal-step">
-    <h4 ng-if="!$ctrl.nameChangeEnabled" class="section__title" translate="hercules.gcalSetupModal.authorization.title"></h4>
-    <h4 ng-if="$ctrl.nameChangeEnabled" class="section__title" translate="hercules.gcalSetupModal.authorization.titleNew"></h4>
-    <p ng-if="!$ctrl.nameChangeEnabled" translate="hercules.gcalSetupModal.authorization.line1"></p>
-    <p ng-if="$ctrl.nameChangeEnabled" translate="hercules.gcalSetupModal.authorization.line1New"></p>
+    <h4 class="section__title" translate="hercules.gcalSetupModal.authorization.title"></h4>
+    <p translate="hercules.gcalSetupModal.authorization.line1"></p>
     <ol>
       <li translate="hercules.gcalSetupModal.authorization.item1"></li>
       <li translate="hercules.gcalSetupModal.authorization.item2"></li>

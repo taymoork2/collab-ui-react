@@ -7,7 +7,7 @@
 
 
   /* @ngInject */
-  function AddResourceController($modal, $modalInstance, $q, $state, $translate, $window, connectorType, FeatureToggleService, firstTimeSetup, FmsOrgSettings, HybridServicesClusterService, HybridServicesExtrasService, HybridServicesUtilsService, ProPackService, Notification, ResourceGroupService, serviceId) {
+  function AddResourceController($modal, $modalInstance, $state, $translate, $window, connectorType, firstTimeSetup, FmsOrgSettings, HybridServicesClusterService, HybridServicesExtrasService, HybridServicesUtilsService, Notification, ResourceGroupService, serviceId) {
     var vm = this;
     vm.connectors = [];
     vm.warning = warning;
@@ -46,20 +46,7 @@
     };
     vm.clustername = '';
 
-    vm.nameChangeEnabled = false;
-    $q.all({
-      nameChangeEnabled: FeatureToggleService.atlas2017NameChangeGetStatus(),
-      proPackEnabled: ProPackService.hasProPackPurchased(),
-    }).then(function (toggles) {
-      vm.nameChangeEnabled = toggles.nameChangeEnabled;
-      if (vm.nameChangeEnabled) {
-        vm.localizedHostNameHelpText = $translate.instant('hercules.addResourceDialog.nameHelptextNew', {
-          appTitle: toggles.proPackEnabled ? $translate.instant('loginPage.titlePro') : $translate.instant('loginPage.titleNew'),
-        });
-      } else {
-        vm.localizedHostNameHelpText = $translate.instant('hercules.addResourceDialog.nameHelptext');
-      }
-    });
+    vm.localizedHostNameHelpText = $translate.instant('hercules.addResourceDialog.nameHelptext');
 
     vm.localizedClusternameWatermark = $translate.instant('hercules.addResourceDialog.clusternameWatermark');
 
@@ -102,7 +89,7 @@
 
     function warning() {
       if (_.some(vm.connectors, function (connector) {
-        vm.warningMessage = vm.nameChangeEnabled ? $translate.instant('hercules.addResourceDialog.hostnameRegisteredNew') : $translate.instant('hercules.addResourceDialog.hostnameRegistered');
+        vm.warningMessage = $translate.instant('hercules.addResourceDialog.hostnameRegistered');
         return connector.toLowerCase() === vm.hostname.toLowerCase();
       })
         ) {
