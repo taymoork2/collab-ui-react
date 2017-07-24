@@ -61,12 +61,7 @@
     "name": "subscriptions.enterpriseTrial",
     "numSubscriptions": 1,
     "endDate": "",
-    "badge": "",
-    "bmmpAttr": {
-      "subscriptionId": "",
-      "productInstanceId": "",
-      "changeplanOverride": ""
-    }
+    "badge": ""
   }],
   "subscriptionsResponse": [{
     "licenses": [{
@@ -461,12 +456,7 @@
     "name": "subscriptions.subscriptionNum",
     "numSubscriptions": 1,
     "endDate": "",
-    "badge": "",
-    "bmmpAttr": {
-      "subscriptionId": "",
-      "productInstanceId": "",
-      "changeplanOverride": ""
-    }
+    "badge": ""
   }],
   "servicesResponse": [{
     "id": "squared-fusion-mgmt",
@@ -518,11 +508,6 @@
       "volume": 100,
       "id": "donutId01",
       "tooltip": "subscriptions.licenseTypes.MGMPRO<br>subscriptions.usage8/100"
-    },
-    "bmmpAttr": {
-      "subscriptionId": "",
-      "productInstanceId": "",
-      "changeplanOverride": ""
     }
   }]
 }
