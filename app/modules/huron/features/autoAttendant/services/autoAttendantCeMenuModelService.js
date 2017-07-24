@@ -1287,10 +1287,8 @@
               newActionArray[i][actionName].description = menuEntry.actions[0].description;
             }
             if (actionName === 'dynamic') {
-              var action = menuEntry.actions[0];
-              var voice = action.getVoice();
-              updateDynaListVoice(action.dynamicList, voice);
-              var dynamicOperations = action.dynamicList;
+              updateDynaListVoice(menuEntry.actions[0].dynamicList, menuEntry.actions[0].getVoice());
+              var dynamicOperations = menuEntry.actions[0].dynamicList;
               newActionArray[i].dynamic = {};
               newActionArray[i].dynamic.dynamicOperations = dynamicOperations;
             } else if (actionName === 'say') {
