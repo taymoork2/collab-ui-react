@@ -34,7 +34,7 @@ class InlineEditText implements ng.IComponentController {
   ) {}
 
   public $onInit(): void {
-    if (this.asyncValidators) {
+    if (this.asyncValidators && typeof this.modelOptions.debounce === 'object') {
       this.modelOptions.debounce.default = 250;
     }
 

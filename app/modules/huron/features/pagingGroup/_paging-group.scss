@@ -47,6 +47,12 @@
   }
 }
 
+.pg-save {
+  @include vr-spacing(pv, .5);
+  border-bottom: 1px solid $gray-light;
+  background-color: $white;
+}
+
 .pg-edit {
   height: calc(100vh - #{($top-bar-height + $page-header-height)}) !important;
   overflow-y: auto;

@@ -109,7 +109,7 @@ describe('Partner flow', function () {
 
       utils.click(partner.newTrialRow);
       utils.expectIsDisplayed(partner.previewPanel);
-      utils.expectIsEnabled(partner.launchCustomerPanelButton);
+      utils.waitUntilEnabled(partner.launchCustomerPanelButton);
       utils.click(partner.launchCustomerPanelButton);
       utils.switchToNewWindow().then(function () {
         // backend services are slow to check userauthinfo/accounts

@@ -42,3 +42,16 @@
     width: vr-adjust(125);
   }
 }
+.detail-reports {
+  @extend %content-subheader;
+  @extend %page-background-white;
+
+  .detail-reports-contents {
+    position: relative;
+  }
+
+  .ui-grid-row {
+    text-align: left;
+    top: rem-calc(30);
+  }
+}

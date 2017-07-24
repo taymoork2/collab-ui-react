@@ -1,5 +1,7 @@
 'use strict';
 
+var ediscoveryModule = require('./ediscovery.module');
+
 var reportId = '123';
 var orgId = 'xyz';
 var roomId = 'abc';
@@ -8,7 +10,7 @@ var ed = moment().subtract(30, 'days').format();
 
 
 describe('Service: EdiscoveryService', function () {
-  beforeEach(angular.mock.module('Ediscovery'));
+  beforeEach(angular.mock.module(ediscoveryModule));
 
   var Service, httpBackend, Authinfo, UrlConfig, $q, $rootScope;
   var argonautUrlBase, responseUrl, urlBase;

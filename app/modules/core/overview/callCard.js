@@ -6,7 +6,7 @@
     .factory('OverviewCallCard', OverviewCallCard);
 
   /* @ngInject */
-  function OverviewCallCard(OverviewHelper, Authinfo, FeatureToggleService) {
+  function OverviewCallCard(OverviewHelper, Authinfo) {
     return {
       createCard: function createCard() {
         var card = {};
@@ -23,15 +23,6 @@
         card.settingsUrl = '#/services/call-settings';
         card.helper = OverviewHelper;
         card.showHealth = true;
-
-        // TODO (jlowery): Remove when i751-10d-ext toggle is GA
-        FeatureToggleService.sparkCallTenDigitExtGetStatus().then(function (result) {
-          if (result) {
-            card.settingsUrl = '#/services/call-settingsnew';
-          } else {
-            card.settingsUrl = '#/services/call-settings';
-          }
-        });
 
         card.reportDataEventHandler = function (event, response) {
           if (!response.data.success) return;

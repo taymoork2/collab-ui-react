@@ -29,6 +29,10 @@
     vm.isNoData = false;
     vm.selectEnable = true;
     vm.reportType = 'WebEx';
+    vm.env = {
+      int: 'integration',
+      prod: 'prod',
+    };
 
     vm.webexMetrics.views = [
       {
@@ -53,7 +57,7 @@
       },
       {
         id: '1',
-        label: 'reportsPage.webexMetrics.search',
+        label: 'reportsPage.webexMetrics.diagnostics',
         selected: false,
         filterType: vm.search,
         toggle: function () {
@@ -154,7 +158,6 @@
             var trainSiteNames = _.get(data, 'trainSiteNames', []);
             var linkedTrainSiteNames = _.get(data, 'linkedTrainSiteNames', []);
             trainSites = trainSiteNames.concat(linkedTrainSiteNames);
-
             generateWebexMetricsUrl(trainSites);
           }
         }
@@ -164,6 +167,7 @@
     function updateWebexMetrics() {
       var storageMetricsSiteUrl = LocalStorage.get('webexMetricsSiteUrl');
       var webexSelected = vm.webexSelected;
+      vm.isIframeLoaded = false;
 
       if (webexSelected !== storageMetricsSiteUrl) {
         LocalStorage.put('webexMetricsSiteUrl', webexSelected);
@@ -199,12 +203,16 @@
         if (!_.isUndefined(data)) {
           vm.webexMetrics.appData = {
             ticket: data.ticket,
-            appId: vm.reportView.appName,
+            appId: data.appName,
             node: data.host,
             qrp: data.qlik_reverse_proxy,
             persistent: data.isPersistent,
             vID: data.siteId,
           };
+          //TODO remove this 'if' segment, if QBS can handle this parameter
+          if (vm.webexMetrics.appData.persistent === 'false') {
+            vm.webexMetrics.appData.appId = vm.reportView.appName;
+          }
           var QlikMashupChartsUrl = _.get(QlikService, 'getWebExReportAppfor' + viewType + 'Url')(vm.webexMetrics.appData.qrp);
           vm.webexMetrics.appData.url = QlikMashupChartsUrl;
 

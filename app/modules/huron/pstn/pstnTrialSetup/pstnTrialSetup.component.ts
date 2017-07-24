@@ -8,6 +8,39 @@ import { PstnModel } from '../pstn.model';
 import { NumberModel } from '../pstnNumberSearch';
 import { HuronCompassService } from 'modules/huron/compass/compass.service';
 
+interface ITrialData {
+  details: {
+    pstnProvider: {
+      uuid: string,
+      apiImplementation: string,
+    },
+    pstnNumberInfo: {
+      numbers: any,
+      areaCode: {
+        code: string,
+      },
+    },
+    emergAddr: {
+      streetAddress: string,
+      unit: string,
+      city: string,
+      state: string,
+      zip: string,
+      uuid: string,
+    },
+    numbers: string,
+    swivelNumbers: string[],
+  };
+  enabled: boolean;
+  skipped: boolean;
+}
+
+interface ICustomScope extends ng.IScope {
+  trialData?: ITrialData;
+  trial?: any;
+  $parent: ICustomScope;
+}
+
 export class PstnTrialSetupComponent implements ng.IComponentOptions {
   public controller = PstnTrialSetupCtrl;
   public templateUrl = 'modules/huron/pstn/pstnTrialSetup/pstnTrialSetup.html';
@@ -18,7 +51,7 @@ export class PstnTrialSetupComponent implements ng.IComponentOptions {
 
 export class PstnTrialSetupCtrl implements ng.IComponentController {
   public dismiss: Function;
-  public trialData: any;
+  public trialData: ITrialData;
   public providerImplementation: string;
   public providerSelected: boolean;
   public invalidCount = 0;
@@ -41,7 +74,7 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
               private PstnService: PstnService,
               private Notification: Notification,
               private $q: ng.IQService,
-              private $scope: ng.IScope,
+              private $scope: ICustomScope,
               private $timeout: ng.ITimeoutService,
               private Analytics,
               private PstnServiceAddressService,
@@ -103,11 +136,12 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
     this.invalidCount = 0;
   }
 
-  public searchCarrierInventory(value: string, block: boolean, quantity: number, consecutive: boolean): void {
+  public searchCarrierInventory(value: string, block: boolean, quantity: number, consecutive: boolean, stateAbbreviation: string): void {
     this.model.paginateOptions.currentPage = 0;
     this.model.block = block;
     this.model.quantity = quantity;
     this.model.consecutive = consecutive;
+    this.model.stateAbbreviation = stateAbbreviation;
     this.trialData.details.pstnNumberInfo.areaCode = {
       code: ('' + value).slice(0, MIN_VALID_CODE),
     };
@@ -117,6 +151,7 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
       npa: this.trialData.details.pstnNumberInfo.areaCode.code,
       count: MAX_DID_QUANTITY,
       sequential: false,
+      state: this.model.stateAbbreviation,
     };
 
     if (value.length === MAX_VALID_CODE) {

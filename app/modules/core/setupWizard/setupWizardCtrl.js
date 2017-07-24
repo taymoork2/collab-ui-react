@@ -6,14 +6,17 @@ require('./_setup-wizard.scss');
   angular.module('Core')
     .controller('SetupWizardCtrl', SetupWizardCtrl);
 
-  function SetupWizardCtrl($q, $scope, $state, $stateParams, Authinfo, Config, FeatureToggleService, Orgservice, SetupWizardService, Utils) {
+  function SetupWizardCtrl($q, $scope, $state, $stateParams, $timeout, Authinfo, Config, FeatureToggleService, Orgservice, SetupWizardService, Utils, Notification) {
     var isFirstTimeSetup = _.get($state, 'current.data.firstTimeSetup', false);
     var shouldRemoveSSOSteps = false;
     var isSharedDevicesOnlyLicense = false;
+    var shouldShowMeetingsTab = false;
+    var hasPendingCallLicenses = false;
     var supportsAtlasPMRonM2 = false;
     $scope.tabs = [];
     $scope.isTelstraCsbEnabled = false;
     $scope.isCSB = Authinfo.isCSB();
+    $scope.isCustomerPresent = SetupWizardService.isCustomerPresent();
 
     if (Authinfo.isCustomerAdmin()) {
       initToggles().finally(init);
@@ -23,10 +26,6 @@ require('./_setup-wizard.scss');
       if (isFirstTimeSetup) {
         shouldRemoveSSOSteps = true;
       }
-      var tenDigitExtPromise = FeatureToggleService.supports(FeatureToggleService.features.sparkCallTenDigitExt)
-        .then(function (sparkCallTenDigitExt) {
-          $scope.sparkCallTenDigitExtEnabled = sparkCallTenDigitExt;
-        });
 
       var hI1484Promise = FeatureToggleService.supports(FeatureToggleService.features.hI1484)
         .then(function (ishI1484) {
@@ -45,12 +44,21 @@ require('./_setup-wizard.scss');
           supportsAtlasPMRonM2 = _supportsAtlasPMRonM2;
         });
 
-      return $q.all([
+      var promises = [
         adminOrgUsagePromise,
         atlasPMRonM2Promise,
-        tenDigitExtPromise,
         hI1484Promise,
-      ]);
+      ];
+
+      if (SetupWizardService.hasPendingServiceOrder()) {
+        var tabsBasedOnPendingLicensesPromise = SetupWizardService.getPendingLicenses().then(function () {
+          shouldShowMeetingsTab = SetupWizardService.hasPendingMeetingLicenses();
+          hasPendingCallLicenses = SetupWizardService.hasPendingCallLicenses();
+        });
+        promises.push(tabsBasedOnPendingLicensesPromise);
+      }
+
+      return $q.all(promises);
     }
 
     function init() {
@@ -119,7 +127,6 @@ require('./_setup-wizard.scss');
     }
 
     function initMeetingSettingsTab(tabs) {
-      var userEmail = Authinfo.getUserName();
       var meetingTab = {
         name: 'meetingSettings',
         required: true,
@@ -147,7 +154,7 @@ require('./_setup-wizard.scss');
         }],
       };
 
-      if (showMeetingSettingsTab(userEmail)) {
+      if (shouldShowMeetingsTab) {
         if (!hasWebexMeetingTrial()) {
           _.remove(meetingTab.steps, { name: 'migrateTrial' });
         }
@@ -180,15 +187,44 @@ require('./_setup-wizard.scss');
         name: 'setup',
         template: 'modules/core/setupWizard/callSettings/serviceSetupInit.html',
       };
+
+      var pickCountry = {
+        name: 'callPickCountry',
+        template: 'modules/core/setupWizard/callSettings/serviceHuronCustomerCreate.html',
+      };
+
       if (showCallSettings()) {
-        if ($scope.sparkCallTenDigitExtEnabled) {
+        $q.resolve($scope.isCustomerPresent).then(function (customer) {
+          var isSimpOrder = Authinfo.getCustomerAdminEmail().indexOf('ordersimp') !== -1;
+
+          if (customer && isSimpOrder) {
+            SetupWizardService.activateAndCheckCapacity().catch(function (error) {
+              $timeout(function () {
+              //   $scope.$emit('wizardNextButtonDisable', true);
+              });
+              if (error.errorCode === 42003) {
+                //Error code from Drachma
+                Notification.errorWithTrackingId(error, 'firstTimeWizard.error.overCapacity');
+              } else {
+                Notification.errorWithTrackingId(error, 'firstTimeWizard.error.capacityFail');
+              }
+              $scope.$emit('wizardNextButtonDisable', true);
+            });
+          }
+
           var steps = [{
             name: 'init',
             template: 'modules/core/setupWizard/callSettings/serviceSetup.html',
           }];
+
           if ($scope.ishI1484) {
             steps.splice(0, 0, initialStep);
           }
+
+          if (!customer && isSimpOrder) {
+            steps.splice(0, 0, pickCountry);
+          }
+
           tabs.splice(1, 0, {
             name: 'serviceSetup',
             required: true,
@@ -199,31 +235,8 @@ require('./_setup-wizard.scss');
             controllerAs: '$ctrl',
             steps: steps,
           });
-        } else {
-          steps = [{
-            name: 'init',
-            template: 'modules/core/setupWizard/callSettings/serviceSetup.tpl.html',
-          }];
-          if ($scope.ishI1484) {
-            steps.splice(0, 0, initialStep);
-          }
-          tabs.splice(1, 0, {
-            name: 'serviceSetup',
-            required: true,
-            label: 'firstTimeWizard.callSettings',
-            description: 'firstTimeWizard.serviceSetupSub',
-            icon: 'icon-calls',
-            title: 'firstTimeWizard.unifiedCommunication',
-            controller: 'ServiceSetupCtrl as squaredUcSetup',
-            controllerAs: 'squaredUcSetup',
-            steps: steps,
-          });
-        }
+        });
       }
-    }
-
-    function showMeetingSettingsTab(userEmail) {
-      return SetupWizardService.isOrderSimplificationToggled(userEmail);
     }
 
     function hasWebexMeetingTrial() {
@@ -235,6 +248,10 @@ require('./_setup-wizard.scss');
     }
 
     function showCallSettings() {
+      if (hasPendingCallLicenses) {
+        return true;
+      }
+
       return _.some(Authinfo.getLicenses(), function (license) {
         return license.licenseType === Config.licenseTypes.COMMUNICATION || license.licenseType === Config.licenseTypes.SHARED_DEVICES;
       });
@@ -306,7 +323,7 @@ require('./_setup-wizard.scss');
           }],
         };
 
-        if (showMeetingSettingsTab(Authinfo.getUserName())) {
+        if (shouldShowMeetingsTab) {
           tab.title = 'firstTimeWizard.activateAndBeginBilling';
         }
         tabs.push(tab);

@@ -4,14 +4,14 @@
 //DO NOT use export KTEST__MODULAR=true, this module is not self-contrained
 
 describe('Controller: UserRolesCtrl', function () {
-  var controller, $q, $scope, $state, $rootScope, $stateParams, $translate, Auth, Config, Authinfo, Orgservice, $controller, Userservice, FeatureToggleService, Log, Notification, SessionStorage, EdiscoveryService;
+  var controller, $q, $scope, $state, $rootScope, $stateParams, $translate, Analytics, Auth, Config, Authinfo, Orgservice, $controller, Userservice, FeatureToggleService, Log, Notification, ProPackService, SessionStorage, EdiscoveryService;
   var fakeUserJSONFixture = getJSONFixture('core/json/sipTestFakeUser.json');
   var careUserJSONFixture = getJSONFixture('core/json/users/careTestFakeUser.json');
   var currentUser = fakeUserJSONFixture.fakeUser1;
 
   beforeEach(angular.mock.module('Core'));
 
-  beforeEach(inject(function (_$controller_, _$q_, _$rootScope_, _$state_, _$stateParams_, _$translate_, _Auth_, _Authinfo_, _Config_, _FeatureToggleService_, _Log_, _Notification_, _SessionStorage_) {
+  beforeEach(inject(function (_$controller_, _$q_, _$rootScope_, _$state_, _$stateParams_, _$translate_, _Analytics_, _Auth_, _Authinfo_, _Config_, _FeatureToggleService_, _Log_, _Notification_, _ProPackService_, _SessionStorage_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
@@ -22,11 +22,13 @@ describe('Controller: UserRolesCtrl', function () {
     $translate = _$translate_;
     Config = _Config_;
     $controller = _$controller_;
+    Analytics = _Analytics_;
     Auth = _Auth_;
     Authinfo = _Authinfo_;
     FeatureToggleService = _FeatureToggleService_;
     Log = _Log_;
     Notification = _Notification_;
+    ProPackService = _ProPackService_;
     SessionStorage = _SessionStorage_;
 
     Userservice = {
@@ -41,7 +43,7 @@ describe('Controller: UserRolesCtrl', function () {
     spyOn(Userservice, 'updateUserProfile').and.callFake(function () {
       return $q.resolve({ data: currentUser });
     });
-
+    spyOn(Analytics, 'trackPremiumEvent').and.returnValue($q.resolve({}));
     spyOn(Authinfo, 'getOrgId').and.returnValue('we23f24-4f3f4f-cc7af705-6583-32r3r23r');
     spyOn(Authinfo, 'getUserId').and.returnValue('cc7af705-6583-4f58-b0b6-ea75df64da7e');
 
@@ -56,6 +58,8 @@ describe('Controller: UserRolesCtrl', function () {
         return true;
       },
     });
+    spyOn(ProPackService, 'hasProPackEnabled').and.returnValue($q.resolve(true));
+    spyOn(ProPackService, 'hasProPackPurchased').and.returnValue($q.resolve(true));
     spyOn(Auth, 'revokeUserAuthTokens').and.callFake(function () {
       return $q.resolve();
     });
@@ -350,6 +354,23 @@ describe('Controller: UserRolesCtrl', function () {
 
           expect(Userservice.patchUserRoles).toHaveBeenCalled();
           expect(Userservice.updateUserProfile).toHaveBeenCalledWith(currentUser.id, expectedUserData);
+        });
+
+        it('should update $scope.currentUser and $stateParams.currentUser if patchUserProfile is called', function () {
+          expect($scope.formUserData.name.givenName).not.toEqual('Tester');
+          $scope.formUserData.name.givenName = 'Tester';
+          expectedUserData.name.givenName = 'Tester';
+          Userservice.updateUserProfile.and.callFake(function () {
+            return $q.resolve({ data: expectedUserData });
+          });
+
+          $scope.updateRoles();
+          $scope.$digest();
+
+          expect(Userservice.patchUserRoles).not.toHaveBeenCalled();
+          expect(Userservice.updateUserProfile).toHaveBeenCalledWith(currentUser.id, expectedUserData);
+          expect($scope.currentUser.name.givenName).toEqual('Tester');
+          expect($stateParams.currentUser.name.givenName).toEqual('Tester');
         });
 
         it('should call updateUserProfile with correct meta attributes', function () {

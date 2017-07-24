@@ -199,9 +199,9 @@ sq-places-page-overview,
     @include vr-spacing(pl, 1.5, 1px, false);
     @include vr-spacing(ml, 1.5, -1px, true);
 
-    width: 100%;
-    background-color: $gray-light-4;
-    border-bottom: none;
+    p {
+      flex: 1 1 auto;
+    }
   }
 
   .modify-button {
@@ -412,10 +412,11 @@ sq-places-page-overview,
 .errorBox {
   display: flex;
   align-items: flex-start;
+  margin-bottom: 8px;
 
   .icon {
     margin: 3px 8px 0 0;
-    color: #f5a623;
+    color: $color-attention-base;
   }
 }
 

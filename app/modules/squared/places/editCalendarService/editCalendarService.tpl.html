@@ -4,7 +4,7 @@
   <h3 class="modal-title" translate="{{editCalendarService.title}}"></h3>
 </div>
 <div class="modal-body">
-  <form name="placesEditCalServices" class="chooseServiceForm" onsubmit="$('#next-button').click()">
+  <form name="placesEditCalServices" class="chooseServiceForm" ng-submit="editCalendarService.submitForm()">
     <h4 translate="addDeviceWizard.editCalendarService.title"></h4>
         <div class="callServiceRow" ng-if="editCalendarService.getShowServiceOptions()">
           <div class="cs-radio-group calendarServiceControls">

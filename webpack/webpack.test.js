@@ -12,7 +12,7 @@ function webpackConfig(env) {
 
   const tsLoaderRule = _.find(commonWebpackConfig.module.rules, loaders.ts);
   const tsLoader = _.find(tsLoaderRule.use, {
-    loader: 'awesome-typescript-loader',
+    use: 'awesome-typescript-loader',
   });
   // TODO: karma stack trace is showing transpiled line reference instead of source
   // Inline source maps needed for code coverage and debugging

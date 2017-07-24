@@ -11,18 +11,19 @@ describe('Component: subscription row', function () {
       '$window',
       'Config',
       'FeatureToggleService',
+      'ProPackService',
       'SharedMeetingsReportService',
       'WebExUtilsFact',
     );
 
-
     this.offer = _.cloneDeep(getJSONFixture('core/json/myCompany/subscriptionData.json')).licensesFormatted[0].offers[0];
     this.DUMMY_URL = 'dummy';
 
-    spyOn(this.FeatureToggleService, 'atlasSharedMeetingsReportsGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.$translate, 'instant').and.callThrough();
-    spyOn(this.SharedMeetingsReportService, 'openModal');
     spyOn(this.$window, 'open');
+    spyOn(this.FeatureToggleService, 'atlasSharedMeetingsReportsGetStatus').and.returnValue(this.$q.resolve(true));
+    spyOn(this.ProPackService, 'hasProPackEnabled').and.returnValue(this.$q.resolve(true));
+    spyOn(this.SharedMeetingsReportService, 'openModal');
     spyOn(this.WebExUtilsFact, 'getSiteAdminUrl').and.returnValue(this.DUMMY_URL);
 
     this.initController = (): void => {
@@ -49,6 +50,13 @@ describe('Component: subscription row', function () {
 
   it('displayUsage should return the usage/volume string', function () {
     expect(this.controller.displayUsage(3)).toEqual('3/100');
+  });
+
+  it('getLicenseName should return license name or empty string', function () {
+    expect(this.controller.getLicenseName()).toEqual(`subscriptions.licenseTypes.${this.offer.offerName}`);
+
+    this.controller.offer.offerName = undefined;
+    expect(this.controller.getLicenseName()).toEqual('');
   });
 
   it('getWarning should return true/false depending on whether usage is smaller than voluem', function () {

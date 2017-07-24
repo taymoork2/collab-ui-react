@@ -67,7 +67,7 @@
     require('modules/core/myCompany/mySubscriptions').default,
     require('modules/core/cards').default,
     require('modules/core/customerReports/sparkReports').default,
-    require('modules/core/customerReports/webexReports').default,
+    require('modules/core/customerReports/webexReports/search').default,
     require('modules/core/partnerReports/commonReportServices').default,
     require('modules/core/partnerReports/reportCard').default,
     require('modules/core/partnerReports/reportFilter').default,
@@ -80,7 +80,7 @@
     require('modules/core/trials/emergencyServices').default,
     require('modules/core/settings').default,
     require('modules/huron/countries').default,
-    require('modules/huron/settings').default,
+    require('modules/call/settings').default,
     require('modules/huron/dialPlans').default,
     require('modules/core/domainManagement').default,
     require('modules/huron/features/featureLanding/hoverDelay.directive').default,
@@ -113,9 +113,10 @@
     'ngIcal',
     'huron.paging-group',
     'huron.call-pickup.setup-assistant',
-    'huron.bulk-enable-vm',
     'huron.TerminusServices',
     'huron.externalNumberService',
+    'huron.place-overview',
+    require('modules/call/settings/settings-bulk-enable-vm').default,
     require('modules/huron/lineSettings/callerIdService'),
     require('modules/huron/telephony/telephonyConfig'),
     require('modules/huron/telephony/cmiServices'),
@@ -154,11 +155,6 @@
   ]);
 
   angular.module('HDS', ['Core', 'Hercules']);
-
-  angular.module('Ediscovery', [
-    'Core',
-    require('modules/ediscovery/bytes_filter'),
-  ]);
 
   angular.module('Mediafusion', ['Core', 'Hercules', 'Squared']);
 
@@ -199,7 +195,7 @@
     'DigitalRiver',
     'Huron',
     'Hercules',
-    'Ediscovery',
+    require('modules/ediscovery/ediscovery.module'),
     'Mediafusion',
     'HDS',
     'WebExApp',

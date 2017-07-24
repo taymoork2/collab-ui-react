@@ -3,6 +3,7 @@ import { LineOverviewService } from './lineOverview.service';
 import lineService from 'modules/huron/lines/services';
 import directoryNumber from 'modules/huron/directoryNumber';
 import callForward from 'modules/huron/callForward';
+import mediaOnHold from 'modules/huron/media-on-hold';
 import simultaneousCalls from 'modules/huron/simultaneousCalls';
 import lineLabel from 'modules/huron/lineLabel';
 import callerId from 'modules/huron/callerId';
@@ -26,6 +27,7 @@ export default angular
     simultaneousCalls,
     lineService,
     callerId,
+    mediaOnHold,
     sharedLine,
     require('modules/core/config/config'),
     notifications,

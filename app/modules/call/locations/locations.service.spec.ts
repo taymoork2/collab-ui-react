@@ -12,18 +12,18 @@ describe('Service: CallLocations', () => {
       'LocationsService',
     );
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('111');
-    this.LocationsService.getLocations('123');
+    this.LocationsService.getLocationList();
   });
 
 
-  xit('should get locations', function() {
-    this.LocationsService.getLocations('123').then(response => {
+  it('should get locations', function() {
+    this.LocationsService.getLocationList().then(response => {
       expect(response).toEqual(locationsList);
     });
   });
 
   it('should get a location', function() {
-    this.LocationsService.getLocationDetails(locationsList[0].uuid).then(response => {
+    this.LocationsService.getLocation(locationsList[0].uuid).then(response => {
       expect(response).toEqual(locationsList[0]);
     });
   });
@@ -41,13 +41,18 @@ describe('Service: CallLocations', () => {
   });
 
 
-  xit('should reject the promise on a failed response', function () {
+  it('should reject the promise on a failed response', function () {
     this.$httpBackend.expectGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/locations').respond(500);
-    this.LocationsService.getLocations('123').then(response => {
+    this.LocationsService.getLocationList().then(response => {
       expect(response.data).toBeUndefined();
       expect(response.status).toEqual(500);
     });
-    this.$httpBackend.flush();
+  });
+
+  it('should get a user location', function() {
+    this.LocationsService.getUserLocation(locationsList[0].uuid).then(response => {
+      expect(response).toEqual(locationsList[0]);
+    });
   });
 
   it('should return all locations if Empty search string ', function () {

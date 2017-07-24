@@ -119,7 +119,7 @@ describe('Component: meetingSearch', () => {
   });
 
   it('should updata when change date', function () {
-    spyOn(this.$translate, 'instant').and.returnValue('The end date must not be greater than the start date');
+    spyOn(this.$translate, 'instant').and.returnValue('The start date must not be greater than the end date');
 
     this.SearchService.getMeetings.and.returnValue(this.$q.resolve(this.meetingSearch));
 
@@ -139,11 +139,13 @@ describe('Component: meetingSearch', () => {
     this.view.find(this.endDatePicker).next().find('.day.today').parent().prev().find('.day').change().click();
     expect(this.controller.gridData.length).toBe(2);
 
+    this.controller.errMsg = {};
     this.controller.endDate = '2017-06-01';
     this.controller.startDate = '2017-06-05';
     this.controller.onChangeDate();
-    expect(this.controller.errMsg.datePicker).toEqual('The end date must not be greater than the start date');
-
+    this.controller.searchStr = '355602502';
+    this.controller.startSearch();
+    expect(this.controller.errMsg.datePicker).toEqual('The start date must not be greater than the end date');
   });
 
   it('should notify in message for non 200 http status', function() {

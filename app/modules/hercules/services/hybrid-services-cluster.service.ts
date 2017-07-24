@@ -52,25 +52,25 @@ export class HybridServicesClusterService {
 
   public deleteMoratoria(clusterId: string, moratoriaId: string): ng.IPromise<''> {
     const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}/clusters/${clusterId}/upgradeSchedule/moratoria/${moratoriaId}`;
-    return this.$http.delete(url)
+    return this.$http.delete<''>(url)
       .then(this.extractDataFromResponse);
   }
 
   public deprovisionConnector(clusterId: string, connectorType: ConnectorType): ng.IPromise<''> {
     const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}/clusters/${clusterId}/provisioning/actions/remove/invoke?connectorType=${connectorType}`;
-    return this.$http.post(url, null)
+    return this.$http.post<''>(url, null)
       .then(this.extractDataFromResponse);
   }
 
   public deregisterCluster(clusterId: string): ng.IPromise<''> {
     const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}/actions/deregisterCluster/invoke?clusterId=${clusterId}`;
-    return this.$http.post(url, null)
+    return this.$http.post<''>(url, null)
       .then(this.extractDataFromResponse);
   }
 
   public deregisterEcpNode(connectorId: string): ng.IPromise<''> {
     const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}/actions/deregister/invoke?managementConnectorId=${connectorId}`;
-    return this.$http.post(url, null)
+    return this.$http.post<''>(url, null)
       .then(this.extractDataFromResponse);
   }
 
@@ -107,7 +107,7 @@ export class HybridServicesClusterService {
 
   public getHost(serial: string, orgId?: string): ng.IPromise<IHost> {
     const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId || this.Authinfo.getOrgId()}/hosts/${serial}`;
-    return this.$http.get(url)
+    return this.$http.get<IHost>(url)
       .then(this.extractDataFromResponse);
   }
 
@@ -167,13 +167,13 @@ export class HybridServicesClusterService {
 
   public postponeUpgradeSchedule(id: string, upgradeWindow: ITimeWindow): ng.IPromise<IMoratoria> {
     const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}/clusters/${id}/upgradeSchedule/moratoria`;
-    return this.$http.post(url, { timeWindow: upgradeWindow })
+    return this.$http.post<IMoratoria>(url, { timeWindow: upgradeWindow })
       .then(this.extractDataFromResponse);
   }
 
   public preregisterCluster(name: string, releaseChannel: string, targetType: ClusterTargetType): ng.IPromise<ICluster> {
     const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}/clusters`;
-    return this.$http.post(url, {
+    return this.$http.post<ICluster>(url, {
       name: name,
       releaseChannel: releaseChannel,
       targetType: targetType,
@@ -262,7 +262,7 @@ export class HybridServicesClusterService {
 
   public provisionConnector(clusterId: string, connectorType: ConnectorType): ng.IPromise<''> {
     const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}/clusters/${clusterId}/provisioning/actions/add/invoke?connectorType=${connectorType}`;
-    return this.$http.post(url, null)
+    return this.$http.post<''>(url, null)
       .then(this.extractDataFromResponse);
   }
 
@@ -310,19 +310,19 @@ export class HybridServicesClusterService {
 
   public setClusterInformation(clusterId: string, data: { name?: string; releaseChannel?: string; }): ng.IPromise<''> {
     const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}/clusters/${clusterId}`;
-    return this.$http.patch(url, data)
+    return this.$http.patch<''>(url, data)
       .then(this.extractDataFromResponse);
   }
 
   public setUpgradeSchedule(id: string, params: any): ng.IPromise<''> {
     const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}/clusters/${id}/upgradeSchedule`;
-    return this.$http.patch(url, params)
+    return this.$http.patch<''>(url, params)
       .then(this.extractDataFromResponse);
   }
 
   public updateHost(serial: string, params: any, orgId?: string): ng.IPromise<''> {
     const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId || this.Authinfo.getOrgId()}/hosts/${serial}`;
-    return this.$http.patch(url, params)
+    return this.$http.patch<''>(url, params)
       .then(this.extractDataFromResponse);
   }
 
@@ -405,6 +405,29 @@ export class HybridServicesClusterService {
     });
   }
 
+  /* Caution: This function is written with Hybrid Call in mind, and reflects their definition of High Availability (HA).
+   * Before using it on other connectors, make sure to verify their HA definitions. Note that this function should not
+   * be used for c_cal, because they do not follow this HA definition.   */
+  public serviceHasHighAvailability(connectorType: ConnectorType, orgId?: string): ng.IPromise<boolean> {
+    return this.getAll(orgId)
+      .then((clusters) => {
+        return _.filter(clusters, (cluster) => {
+          return _.some(cluster.provisioning, (provisioning) => provisioning.connectorType === connectorType);
+        });
+      })
+      .then((clusters) => {
+        return _.map(clusters, (cluster) => {
+          return _.reduce(cluster.connectors, (sum, connector) => sum + Number(connector.connectorType === connectorType) , 0);
+        });
+      })
+      .then((connectorCounts) => {
+        if (connectorCounts.length === 0) {
+          return false;
+        }
+        return !_.some(connectorCounts, (connectorCount) => connectorCount < 2);
+      });
+  }
+
   private addUserCount(response): ng.IPromise<any> {
     if (response.groups.length === 0) {
       return response;
@@ -463,7 +486,7 @@ export class HybridServicesClusterService {
     });
   }
 
-  private sortClusters(clusters: ICluster[]): ICluster[] {
+  private sortClusters<T extends ICluster>(clusters: T[]): T[] {
     // Could be any predicate, but at least make it consistent between 2 page refresh
     return _.sortBy(clusters, ['targetType', 'name']);
   }

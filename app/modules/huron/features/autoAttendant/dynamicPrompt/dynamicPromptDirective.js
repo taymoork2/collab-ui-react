@@ -113,15 +113,16 @@
     }
 
     function ensureEndingBr(element, scope) {
-      if (element.context.childNodes.length === 0) {
+      var elementContext = element[0];
+      if (elementContext.childNodes.length === 0) {
         addHtmlAtCaret(element, scope, getParentHtml(), CONSTANTS.lastElement);
-      } else if (element.context.childNodes.length === 1) {
-        if (!(element.context.childNodes[0].outerHTML === CONSTANTS.lastElement)) {
+      } else if (elementContext.childNodes.length === 1) {
+        if (!(elementContext.childNodes[0].outerHTML === CONSTANTS.lastElement)) {
           addHtmlAtCaret(element, scope, getParentHtml(), CONSTANTS.lastElement);
         }
-      } else if (element.context.childNodes[0].outerHTML === CONSTANTS.lastElement) {
-        element.context.removeChild(element.context.childNodes[0]);
-      } else if (element.context.childNodes[element.context.childNodes.length - 1].outerHTML !== CONSTANTS.lastElement) {
+      } else if (elementContext.childNodes[0].outerHTML === CONSTANTS.lastElement) {
+        elementContext.removeChild(elementContext.childNodes[0]);
+      } else if (elementContext.childNodes[elementContext.childNodes.length - 1].outerHTML !== CONSTANTS.lastElement) {
         addHtmlAtCaret(element, scope, getParentHtml(), CONSTANTS.lastElement);
       }
     }
@@ -144,7 +145,7 @@
     }
 
     function updateModelValues(parentElement, scope, node, modelValues) {
-      var modelValue = getModelValueBasedOnType(scope.dynamicTags, angular.element(node).context, node.nodeType);
+      var modelValue = getModelValueBasedOnType(scope.dynamicTags, angular.element(node)[0], node.nodeType);
       if (modelValue) {
         modelValues.push(modelValue);
       }
@@ -198,7 +199,7 @@
     }
 
     function recreateElementFromScope(element, scope, ngModel) {
-      var elementContext = element.context;
+      var elementContext = element[0];
       if (_.gt(elementContext.childNodes.length, 0)) {
         elementContext.removeChild(elementContext.childNodes[0]);
       }
@@ -237,7 +238,7 @@
       element.focus();
       if (typeof $window.getSelection != 'undefined' && typeof $window.document.createRange != 'undefined') {
         var range = $window.document.createRange();
-        range.selectNodeContents(element.context);
+        range.selectNodeContents(element[0]);
         range.collapse(false);
         var sel = $window.getSelection();
         sel.removeAllRanges();

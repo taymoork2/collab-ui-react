@@ -8,8 +8,13 @@ describe('Controller: AADecisionCtrl', function () {
   var AAUiModelService, AAModelService, AutoAttendantCeMenuModelService;
   var AASessionVariableService;
   var customVarJson = getJSONFixture('huron/json/autoAttendant/aaCustomVariables.json');
-
   var $rootScope, $scope;
+
+  var customSessionVarOptions = [
+    'account_no',
+    'cc_no',
+    'q_123',
+  ];
 
   var aaUiModel = {
     openHours: {},
@@ -491,6 +496,35 @@ describe('Controller: AADecisionCtrl', function () {
       $scope.$apply();
 
       expect(c.sessionVarOptions.length).toEqual(0);
+    });
+  });
+
+  describe('Input caller variable is changed', function () {
+    beforeEach(inject(function () {
+      spyOn(AASessionVariableService, 'getSessionVariables').and.returnValue(q.resolve(customSessionVarOptions));
+    }));
+    it('should test caller input field change with warning set to false as valid caller input entered', function () {
+      var c;
+      var broadcastArgument = 'callerInputOldValue';
+      c = controller('AADecisionCtrl', {
+        $scope: $scope,
+      });
+      $scope.$apply();
+      c.sessionVarOption = 'account_no';
+      $rootScope.$broadcast('CIVarNameChanged', broadcastArgument);
+      expect(c.isWarn).toEqual(false);
+    });
+
+    it('should test caller input field change with warning set to true as non existent caller input entered', function () {
+      var c;
+      var broadcastArgument = 'callerInputOldValue';
+      c = controller('AADecisionCtrl', {
+        $scope: $scope,
+      });
+      $scope.$apply();
+      c.sessionVarOption = 'non_existent_caller_input';
+      $rootScope.$broadcast('CIVarNameChanged', broadcastArgument);
+      expect(c.isWarn).toEqual(true);
     });
   });
 });

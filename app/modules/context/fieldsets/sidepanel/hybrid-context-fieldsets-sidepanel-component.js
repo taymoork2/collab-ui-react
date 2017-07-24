@@ -27,6 +27,7 @@ require('./_fieldsets-sidepanel.scss');
       actionFunction: function () {
         $state.go('context-fieldset-modal', {
           existingFieldsetData: vm.fieldset,
+          inUse: vm.inUse,
           callback: function (updatedFieldset) {
             vm.fieldset = vm.process(_.cloneDeep(updatedFieldset));
             vm.callback(updatedFieldset);
@@ -36,7 +37,10 @@ require('./_fieldsets-sidepanel.scss');
     }];
 
     vm._fixFieldsetData = function () {
-      vm.fields = vm.fieldset.fieldDefinitions;
+      // Filter inactive fields from the list of fields.
+      vm.fields = _.filter(vm.fieldset.fieldDefinitions, function (fieldDefinition) {
+        return !_.includes(vm.fieldset.inactiveFields, fieldDefinition.id);
+      });
       vm.lastUpdated = moment(vm.fieldset.lastUpdated).format('LL');
       if (!_.isEmpty(vm.fieldset.description)) {
         vm.hasDescription = true;
@@ -65,6 +69,10 @@ require('./_fieldsets-sidepanel.scss');
     };
 
     vm.isEditable = function () {
+      return (!vm.publiclyAccessible);
+    };
+
+    vm.isDeletable = function () {
       return (!vm.publiclyAccessible && !vm.inUse);
     };
 

@@ -72,6 +72,20 @@ describe('Service: searchService', () => {
     this.$httpBackend.flush();
   });
 
+  it('should get correct data when call getParticipents', function () {
+    const mockData = [{
+      joinTime: 1499389211000,
+      leaveTime: 1499399838000,
+      conferenceID: '66735067305608980',
+    }];
+    const url = `${this.UrlConfig.getGeminiUrl()}meetings/${this.conferenceID}/participants`;
+    this.$httpBackend.expectGET(url).respond(200, mockData);
+    this.SearchService.getParticipents(this.conferenceID).then((res) => {
+      expect(res[0].joinTime).toBeDefined();
+    });
+    this.$httpBackend.flush();
+  });
+
   it('should get correct data when call meeting status', function () {
     const status = this.SearchService.getStatus(2);
     expect(status).toEqual('Ended');

@@ -389,6 +389,66 @@ describe('EditServicesCtrl: Ctrl', function () {
         expect(wizardState.account.entitlements).toEqual(['something', 'squared-fusion-ec', 'squared-fusion-uc']);
         expect(wizardState.account.enableCalService).toEqual(true);
       });
+
+      it('selecting sparkCallConnect and disabling calendar should pass on all fields required by the next step including the two callConnect entitlements', function () {
+        state = function () {
+          return {
+            data: {
+              account: {
+                entitlements: ['something'],
+                externalLinkedAccounts: [
+                  { providerID: 'squared-fusion-cal', accountGUID: 'example0@example.com' },
+                  { providerID: 'squared-fusion-gcal', accountGUID: 'example1@example.com' },
+                  { providerID: 'squared-fusion-uc', accountGUID: 'example2@example.com' }],
+              },
+            },
+          };
+        };
+        $stateParams.wizard = {
+          state: state,
+          next: function () {
+          },
+        };
+        spyOn($stateParams.wizard, 'next');
+        initController();
+        controller.service = 'sparkCallConnect';
+        controller.enableCalService = false;
+        controller.next();
+        expect($stateParams.wizard.next).toHaveBeenCalled();
+        var wizardState = $stateParams.wizard.next.calls.mostRecent().args[0];
+        expect(wizardState.account.entitlements).toEqual(['something', 'squared-fusion-ec', 'squared-fusion-uc']);
+        expect(wizardState.account.enableCalService).toEqual(false);
+      });
+
+      it('deselecting sparkCallConnect and enabling calendar should pass on all fields required by the next step including the two callConnect entitlements', function () {
+        state = function () {
+          return {
+            data: {
+              account: {
+                entitlements: ['something'],
+                externalLinkedAccounts: [
+                  { providerID: 'squared-fusion-cal', accountGUID: 'example0@example.com' },
+                  { providerID: 'squared-fusion-gcal', accountGUID: 'example1@example.com' },
+                  { providerID: 'squared-fusion-uc', accountGUID: 'example2@example.com', operation: 'delete' }],
+              },
+            },
+          };
+        };
+        $stateParams.wizard = {
+          state: state,
+          next: function () {
+          },
+        };
+        spyOn($stateParams.wizard, 'next');
+        initController();
+        controller.service = 'sparkCall';
+        controller.enableCalService = true;
+        controller.next();
+        expect($stateParams.wizard.next).toHaveBeenCalled();
+        var wizardState = $stateParams.wizard.next.calls.mostRecent().args[0];
+        expect(wizardState.account.entitlements).toEqual(['something', 'ciscouc']);
+        expect(wizardState.account.enableCalService).toEqual(true);
+      });
     });
 
     describe('Save', function () {
@@ -440,7 +500,135 @@ describe('EditServicesCtrl: Ctrl', function () {
         controller.service = 'sparkOnly';
         controller.save();
         $scope.$digest();
-        expect(CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalledWith(place, ['something']);
+        expect(CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalledWith(place, {
+          entitlements: ['something'],
+          externalLinkedAccounts: null,
+        });
+        expect($scope.$dismiss).toHaveBeenCalled();
+        expect(Notification.success).toHaveBeenCalled();
+      });
+
+      it('should remove ext linked for cal and remove cal entitlement when calendar was deselected', function () {
+        $stateParams.wizard = {
+          state: function () {
+            return {
+              data: {
+                account: {
+                  cisUuid: deviceCisUuid,
+                  entitlements: ['squared-fusion-cal', 'squared-fusion-uc', 'squared-fusion-ec', 'something'],
+                  externalLinkedAccounts: [
+                    { providerID: 'squared-fusion-cal', accountGUID: 'example0@example.com' },
+                    { providerID: 'squared-fusion-gcal', accountGUID: 'example1@example.com' },
+                    { providerID: 'squared-fusion-uc', accountGUID: 'example2@example.com' },
+                  ],
+                },
+              },
+            };
+          },
+        };
+        var place = { cisUuid: deviceCisUuid };
+        CsdmDataModelService.getPlacesMap = function () {
+        };
+        spyOn(CsdmDataModelService, 'reloadPlace').and.returnValue($q.resolve(place));
+        CsdmDataModelService.updateCloudberryPlace = function () {
+        };
+        spyOn(CsdmDataModelService, 'updateCloudberryPlace').and.returnValue($q.resolve());
+        initController();
+        // controller.service = 'sparkCallConnect'; //it should be unchanged
+        controller.enableCalService = false;
+        controller.save();
+        $scope.$digest();
+        expect(CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalledWith(place, {
+          entitlements: ['something', 'squared-fusion-ec', 'squared-fusion-uc'],
+          externalLinkedAccounts: [
+            { providerID: 'squared-fusion-cal', accountGUID: 'example0@example.com', operation: 'delete' },
+            { providerID: 'squared-fusion-gcal', accountGUID: 'example1@example.com', operation: 'delete' },
+            // { providerID: 'squared-fusion-uc', accountGUID: 'example2@example.com' }],//should not resave this
+          ],
+        });
+        expect($scope.$dismiss).toHaveBeenCalled();
+        expect(Notification.success).toHaveBeenCalled();
+      });
+
+      it('should remove ext linked for call and remove call entitlement when callConnect was deselected', function () {
+        $stateParams.wizard = {
+          state: function () {
+            return {
+              data: {
+                account: {
+                  cisUuid: deviceCisUuid,
+                  entitlements: ['squared-fusion-cal', 'squared-fusion-uc', 'squared-fusion-ec', 'something'],
+                  externalLinkedAccounts: [
+                    { providerID: 'squared-fusion-cal', accountGUID: 'example0@example.com' },
+                    { providerID: 'squared-fusion-gcal', accountGUID: 'example1@example.com' },
+                    { providerID: 'squared-fusion-uc', accountGUID: 'example2@example.com' }],
+                },
+              },
+            };
+          },
+        };
+        var place = { cisUuid: deviceCisUuid };
+        CsdmDataModelService.getPlacesMap = function () {
+        };
+        spyOn(CsdmDataModelService, 'reloadPlace').and.returnValue($q.resolve(place));
+        CsdmDataModelService.updateCloudberryPlace = function () {
+        };
+        spyOn(CsdmDataModelService, 'updateCloudberryPlace').and.returnValue($q.resolve());
+        initController();
+        controller.service = 'sparkOnly';
+        // controller.enableCalService = true;  //it should be unchanged
+        controller.save();
+        $scope.$digest();
+        expect(CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalledWith(place, {
+          entitlements: ['something', 'squared-fusion-cal'],
+          externalLinkedAccounts: [
+            { providerID: 'squared-fusion-gcal', accountGUID: 'example1@example.com', operation: 'delete' }, //should be cleaned up
+            { providerID: 'squared-fusion-uc', accountGUID: 'example2@example.com', operation: 'delete' },
+            // { providerID: 'squared-fusion-cal', accountGUID: 'example0@example.com' }, //should not be resaved
+          ],
+        });
+        expect($scope.$dismiss).toHaveBeenCalled();
+        expect(Notification.success).toHaveBeenCalled();
+      });
+
+      it('should remove ext linked for call and calendar and remove call entitlement when callConnect was deselected', function () {
+        $stateParams.wizard = {
+          state: function () {
+            return {
+              data: {
+                account: {
+                  cisUuid: deviceCisUuid,
+                  entitlements: ['squared-fusion-uc', 'squared-fusion-ec', 'something'],
+                  externalLinkedAccounts: [
+                    { providerID: 'squared-fusion-cal', accountGUID: 'example0@example.com' },
+                    { providerID: 'squared-fusion-gcal', accountGUID: 'example1@example.com' },
+                    { providerID: 'special provider', accountGUID: '234052519823' },
+                    { providerID: 'squared-fusion-uc', accountGUID: 'example2@example.com' }],
+                },
+              },
+            };
+          },
+        };
+        var place = { cisUuid: deviceCisUuid };
+        CsdmDataModelService.getPlacesMap = function () {
+        };
+        spyOn(CsdmDataModelService, 'reloadPlace').and.returnValue($q.resolve(place));
+        CsdmDataModelService.updateCloudberryPlace = function () {
+        };
+        spyOn(CsdmDataModelService, 'updateCloudberryPlace').and.returnValue($q.resolve());
+        initController();
+        controller.service = 'sparkOnly';
+        // controller.enableCalService = true;  //it should be unchanged
+        controller.save();
+        $scope.$digest();
+        expect(CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalledWith(place, {
+          entitlements: ['something'],
+          externalLinkedAccounts: [
+            { providerID: 'squared-fusion-cal', accountGUID: 'example0@example.com', operation: 'delete' }, //should be cleaned up
+            { providerID: 'squared-fusion-gcal', accountGUID: 'example1@example.com', operation: 'delete' }, //should be cleaned up
+            // { providerID: 'special provider', accountGUID: '234052519823' }, //should be left intact, not deleted, eg not sent in as a delete.
+            { providerID: 'squared-fusion-uc', accountGUID: 'example2@example.com', operation: 'delete' }],
+        });
         expect($scope.$dismiss).toHaveBeenCalled();
         expect(Notification.success).toHaveBeenCalled();
       });

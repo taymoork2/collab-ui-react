@@ -1,7 +1,7 @@
 <div class="feature-list">
   <ul ng-if="::$ctrl.hasOnFeatureClick">
     <li class="feature" ng-repeat="feature in $ctrl.features track by $index">
-      <a ng-click="$ctrl.action(feature)" ng-class="{'no-services': !feature.actionAvailable}">
+      <a href ng-click="$ctrl.action(feature)" ng-class="{'no-services': !feature.actionAvailable}">
         <i class="feature-icon" ng-class="feature.icon"></i>
         <span class="feature-name">{{feature.name}}</span>
         <span

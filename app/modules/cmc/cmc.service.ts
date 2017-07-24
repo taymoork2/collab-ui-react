@@ -47,7 +47,7 @@ export class CmcService {
   // TODO: Find out when cmc settings should be unavailable...
   public allowCmcSettings(orgId: string): ng.IPromise<boolean> {
     // based on org entitlements ?
-    const deferred = this.$q.defer();
+    const deferred = this.$q.defer<boolean>();
     this.Orgservice.getOrg((data, success) => {
       this.$log.debug('data', data);
       if (success) {
@@ -72,8 +72,8 @@ export class CmcService {
       //let deferred: ng.IDeferred<any> = this.$q.defer();
       //this.requestTimeout(deferred);
       const url: string = this.cmcUrl + `/organizations/${orgId}/status`;
-      return this.$http.get(url, { timeout: this.requestTimeout() }).then((response) => {
-        return response.data;
+      return this.$http.get<ICmcOrgStatusResponse>(url, { timeout: this.requestTimeout() }).then((response) => {
+        return response.data as ICmcOrgStatusResponse;
       });
     } else {
       return this.CmcServiceMock.mockOrgStatus(orgId);

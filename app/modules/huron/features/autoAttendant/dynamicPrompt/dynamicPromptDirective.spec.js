@@ -39,7 +39,7 @@ describe('Directive: dynamicPromptDirective', function () {
       element = angular.element('<dynamic-prompt dynamic-tags="mock.dynamicTags" model-values="mock.modelValues" insert-element="insertElement" spellcheck="false"></dynamic-prompt>');
       $compile(element)($scope);
       $scope.$digest();
-      expect(element.attr(CONSTANTS.placeHolderDataDiv)).toEqual(undefined);
+      expect(element.attr(CONSTANTS.placeHolderDataDiv)).toBe(undefined);
     });
 
     it('should set up the basic dynamic prompt', function () {
@@ -49,15 +49,16 @@ describe('Directive: dynamicPromptDirective', function () {
       $scope.mock.modelValues = [];
       $scope.mock.dynamicTags = [];
       element = angular.element('<dynamic-prompt dynamic-tags="mock.dynamicTags" model-values="mock.modelValues" insert-element="insertElement" ng-model="mock.ngModel" spellcheck="false"></dynamic-prompt>');
+      $('body').append(element); // attach to DOM for range manipulation
       $compile(element)($scope);
       $scope.$digest();
-      expect(element.attr(CONSTANTS.contentEditable)).toEqual('true');
-      expect(element.attr('spellcheck')).toEqual('false');
-      expect(element.attr(CONSTANTS.placeHolderDataDiv)).toEqual('true');
+      expect(element.attr(CONSTANTS.contentEditable)).toBe('true');
+      expect(element.attr('spellcheck')).toBe('false');
+      expect(element.attr(CONSTANTS.placeHolderDataDiv)).toBe('true');
       expect(element.html()).toContain('br');
       expect(element.hasClass('dynamic-prompt')).toBe(true);
-      expect(element.text()).toEqual('');
-      expect($scope.mock.modelValues.length).toEqual(0);
+      expect(element.text()).toBe('');
+      expect($scope.mock.modelValues.length).toBe(0);
     });
 
     it('should set up the basic dynamic prompt without prepopulation', function () {
@@ -66,14 +67,38 @@ describe('Directive: dynamicPromptDirective', function () {
       $scope.mock.ngModel = {};
       $scope.mock.dynamicTags = [];
       element = angular.element('<dynamic-prompt dynamic-tags="mock.dynamicTags" model-values="mock.modelValues" insert-element="insertElement" ng-model="mock.ngModel" spellcheck="false"></dynamic-prompt>');
+      $('body').append(element); // attach to DOM for range manipulation
       $compile(element)($scope);
       $scope.$digest();
-      expect(element.attr(CONSTANTS.contentEditable)).toEqual('true');
-      expect(element.attr('spellcheck')).toEqual('false');
-      expect(element.attr(CONSTANTS.placeHolderDataDiv)).toEqual('true');
+      expect(element.attr(CONSTANTS.contentEditable)).toBe('true');
+      expect(element.attr('spellcheck')).toBe('false');
+      expect(element.attr(CONSTANTS.placeHolderDataDiv)).toBe('true');
       expect(element.html()).toContain('br');
       expect(element.hasClass('dynamic-prompt')).toBe(true);
-      expect(element.text()).toEqual('');
+      expect(element.text()).toBe('');
+      expect($scope.mock.modelValues.length).toBe(0);
+    });
+
+    it('should set up the basic dynamic prompt with modelValue data', function () {
+      $scope = $rootScope.$new();
+      $scope.mock = {};
+      $scope.mock.ngModel = {};
+      $scope.mock.modelValues = [{
+        html: 'test-value',
+        model: 'test-value',
+      }];
+      $scope.mock.dynamicTags = [];
+      element = angular.element('<dynamic-prompt dynamic-tags="mock.dynamicTags" model-values="mock.modelValues" insert-element="insertElement" ng-model="mock.ngModel" spellcheck="false"></dynamic-prompt>');
+      $('body').append(element); // attach to DOM for range manipulation
+      $compile(element)($scope);
+      $scope.$digest();
+      expect(element.attr(CONSTANTS.contentEditable)).toBe('true');
+      expect(element.attr('spellcheck')).toBe('false');
+      expect(element.attr(CONSTANTS.placeHolderDataDiv)).toBe(undefined);
+      expect(element.html()).toContain('br');
+      expect(element.hasClass('dynamic-prompt')).toBe(true);
+      expect(element.text()).toBe('test-value');
+      expect($scope.mock.modelValues.length).toBe(1);
     });
   });
 

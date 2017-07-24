@@ -18,7 +18,7 @@ export class CsdmDataModelService implements ICsdmDataModelService {
   private placesLoaded = false;
   private pollingGracePeriodActive = true;
 
-  private devicesFetchedDeferred: IDeferred<Map<string, IDevice>>;
+  private devicesFetchedDeferred;  // TODO: revisit using Map with polyfill support - this es5 stub is not really a Map and causes type errors
   private devicesFastFetchedDeferred;
   private placesMapReadyDeferred;
   private accountsFetchedDeferred: IDeferred<Map<string, IPlace>>;
@@ -273,7 +273,8 @@ export class CsdmDataModelService implements ICsdmDataModelService {
       });
   }
 
-  public updateCloudberryPlace(objectToUpdate, entitlements, directoryNumber, externalNumber, externalLinkedAccounts) {
+  public updateCloudberryPlace(objectToUpdate,
+                               { entitlements, directoryNumber, externalNumber, externalLinkedAccounts }) {
     const placeUrl = this.getPlaceUrl(objectToUpdate);
     return this.CsdmPlaceService.updatePlace(placeUrl, entitlements, directoryNumber, externalNumber, externalLinkedAccounts)
       .then((place) => {

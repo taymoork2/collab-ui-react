@@ -387,6 +387,7 @@
     "generateActivationCodeText": "Generate an activation code to enable a new device for this user.",
     "generateActivationCodeTextPlace": "Generate an activation code to enable a new device for this place.",
     "generateActivationCodeDesc": "If you have lost your code, please generate a new activation code. ",
+    "multipleDevicesWarning": "The devices in this place are not designed to work together. Therefore, there may be interference issues.",
     "activationCodeTitle": "Activation Code",
     "expires": "Expires",
     "editServices": "Edit services",
@@ -404,6 +405,7 @@
     "dirsyncToolTip": "Use DirSync to update the user's preferred language.",
     "rolesAndSecurity": "Roles and Security",
     "security": "Security",
+    "resetAccessTipForBasicPack": "To reset access for your users, contact your partner or Cisco account manager about Pro Pack.",
     "resetAccessSuccess": "{{name}}'s access reset successfully. Please allow a few hours to take effect.",
     "resetAccessFailure": "Unable to reset {{name}}'s access. Please try later.",
     "resetAccess": "Reset Access",
@@ -456,7 +458,8 @@
     "gssTabDesc": "Global Service Status Management",
     "careTab": "Care",
     "careTabDesc": "Cloud Contact Center",
-    "editFeatureToggles": "Edit Feature Toggles"
+    "editFeatureToggles": "Edit Feature Toggles",
+    "managedByPartner": "Managed by {{partnerOrgName}}"
   },
   "index": {
     "welcome": "Welcome!",
@@ -556,6 +559,7 @@
     "all": "All",
     "engagement": "Engagement",
     "quality": "Quality",
+    "details": "Details",
     "noData": "No Data",
     "noCustomerData": "No Data Available",
     "timeSelected": "Selected Time Period: ",
@@ -600,6 +604,13 @@
     "customer": "Customer",
     "customers": "Customers",
     "customerSelect": "Select a customer",
+    "type": "Type",
+    "format": "Format",
+    "from": "From",
+    "to": "To",
+    "date": "Date",
+    "duration": "Duration",
+    "status": "Status",
     "usageReports": {
       "usageReportTitle": "Room Devices",
       "pageTitle": "Reports",
@@ -650,7 +661,7 @@
     "webexMetrics": {
       "title": "WebEx",
       "metrics": "Metrics",
-      "search": "Search",
+      "diagnostics": "Diagnostics",
       "meetingUsage": "Meeting Usage",
       "joinMeetingTime": "Join Meeting Time",
       "webexReportInMashup": "CHP Reports",
@@ -661,16 +672,19 @@
     }
   },
   "webexReports": {
+    "to": "to",
     "end": "End",
     "audio": "Audio",
     "start": "Start",
+    "details": "Details",
     "created": "Created",
     "classic": "Classic",
     "quality": "Quality",
     "session": "Session",
+    "meeting": "Meeting",
     "session_": "SESSION",
     "endTime": "End Date",
-    "onGoing": "on going",
+    "onGoing": "On Going",
     "duration": "Duration",
     "features": "Features",
     "hostEmail": "Host Email",
@@ -678,7 +692,6 @@
     "startTime": "Start Date",
     "connection": "Connection",
     "engagement": "Engagement",
-    "createTime": "Create Time",
     "participant": "Participant",
     "sessionInfo": "Session Info",
     "meetingName": "Meeting Name",
@@ -687,15 +700,14 @@
     "participants_": "PARTICIPANTS",
     "meetingNumber": "Meeting Number",
     "scheduledFrom": "Scheduled From",
-    "placeholder-date": "Choose a Day",
-    "meetingDetails": "Meeting Details",
-    "hostNameAndId": "Host Name / Host ID",
-    "siteIdAndName": "Site ID / Site Name",
+    "placeholder-date": "Choose a day",
+    "hostNameAndId":"Host Name/Host ID",
+    "siteIdAndName": "Site ID/Site Name",
     "search-info-title": "Search for a meeting",
     "placeholder-text": "Search email or meeting number",
-    "searchError": "Please enter the correct email or meeting number",
+    "searchError": "Enter the correct email or meeting number",
     "search-info": "The meeting list will display when narrowed by search",
-    "end-date-tooltip": "The end date must not be greater than the start date",
+    "end-date-tooltip": "The start date must not be greater than the end date",
     "searchGridHeader": {
       "status": "Status",
       "endTime": "End Date",
@@ -707,8 +719,8 @@
     "meetingFeatures": {
       "chat": "Chat",
       "poll": "Poll",
-      "flash": "FLASH",
-      "appShare": "APP Share",
+      "flash": "Flash",
+      "appShare": "App Share",
       "docShare": "Doc Share",
       "fileShare": "File Share"
     },
@@ -742,13 +754,13 @@
       "sessionType_50": "NBR2",
       "sessionType_10": "Other",
       "sessionType_20": "MMP Audio",
-      "sessionType_21": "MMP Vudio",
+      "sessionType_21": "MMP Video",
       "sessionType_25": "Hybrid PSTN",
       "sessionType_12": "VOIP Session",
       "sessionType_0": "Agent Session",
       "sessionType_11": "Video Session",
       "sessionType_22": "Hybrid MMP VoIP",
-      "sessionType_4": "App share Session",
+      "sessionType_4": "App Share Session",
       "sessionType_5": "Teleagent Session",
       "sessionType_4005": "Other Teleconference AB",
       "sessionType_3005": "Other Teleconference NBR2"
@@ -1235,7 +1247,7 @@
   "common": {
     "actions": "Actions",
     "activate": "Activate",
-    "doNotActivate": "Don't Activate",
+    "doNotActivate": "Do not Activate",
     "add": "Add",
     "agree": "Agree",
     "alert": "Alert",
@@ -1275,6 +1287,7 @@
     "firstName": "First Name",
     "general": "General",
     "help": "Help",
+    "history": "History",
     "hideAllAdminUsers": "Hide administrators",
     "id": "ID",
     "incorrectFormat": "Incorrect format",
@@ -1461,7 +1474,9 @@
     "careLicenseCallMissingText": "Call is mandatory for voice-based Care services. To enable Call,",
     "careLicenseMsgAndCallMissingText": "Message and Call are mandatory for Care services like chat and voice interaction respectively. To enable Message and Call,",
     "careLicenseLinkText": "contact your partner or Cisco sales.",
-    "proPackNotification": "Unleash the full power of the Spark Control Hub with Pro Pack."
+    "proPackNotification": "Unleash the full power of the Spark Control Hub with Pro Pack.",
+    "callServiceHighAvailability": "Hybrid Call Service is configured, but one or more clusters only has a single node running Call Connector. Your deployment does not meet the requirements for high availability.",
+    "callServiceHighAvailabilityLink": "Open Documentation"
   },
   "inviteModal": {
     "title": "Service Entitlement",
@@ -1543,7 +1558,7 @@
     "emergencyAddressDescription": "This is the default address that will be used for emergency services. This can be overridden by each User or Place.",
     "extension": "Extension",
     "extensionLength": "Extension Length",
-    "extensionLengthDescription": "Specify the total number of digits users must dial before placing an external call. All sites share the same extension length.",
+    "extensionLengthDescription": "Specify the total number of digits users must dial before placing an internal call.",
     "extensionLengthHelpText": "After being set, this value can only be changed if no extensions are assigned.",
     "extensionLengthServicesHelpText": "Enabled only when no extensions have been assigned.",
     "extensionLengthDisabledVM": "Enabled only when voicemail is disabled.",
@@ -1582,7 +1597,9 @@
     "siteError": "Failed to create site.",
     "siteGetError": "Failed to retrieve site.",
     "siteUpdateError": "Failed to update site.",
+    "mohLineError": "Failed to get Line Media On Hold Service.",
     "mohGetError": "Failed to get Company Media on Hold Service.",
+    "mohGetOptionsError": "Failed to get Company Media on Hold Options Service.",
     "mohUpdateError": "Failed to update Company Media On Hold File",
     "customerGetError": "Failed to get customer services.",
     "customerPutError": "Failed to update customer services.",
@@ -1629,6 +1646,10 @@
     "externalNumberDescriptionText": "Select a number that users can call to check their voicemail from outside the company network.",
     "voicemailPrefixTitle": "Voicemail ID Prefix",
     "voicemailPrefixDesc": "Select a prefix to reserve for dialing mailboxes from a device. Extensions between {{number}}{{extensionLength0}} and {{number}}{{extensionLength9}} are not recommended for assignment.",
+    "vmUseTLS": "Use TLS",
+    "vmPinManagement": "Pin Management",
+    "vmPinHelp": "OTP will be shared over Spark in case of user voicemail toggle on/off and user account locked/expired.",
+    "vmEnableOTP": "Enable OTP (One-time Pin)",
     "dialing": "Dialing Preferences",
     "internalDialing": "Internal Dialing",
     "externalDialing": "External Dialing",
@@ -1991,7 +2012,6 @@
       }
     },
     "status": {
-      "unknown": "Status unknown",
       "not_configured": "Not configured",
       "installing": "Installing",
       "disabled": "Disabled",
@@ -2279,6 +2299,22 @@
       "connectWarning": "Are you sure? Remote device configuration will be removed and the service will be disabled for your users.",
       "deactivateCallServiceConnect": "Deactivate Call Service Connect"
     },
+    "clusterHistoryTable": {
+      "types": {
+        "nameChange": "Cluster Name",
+        "resourceGroup": "Resource Group",
+        "releaseChannel": "Release Channel",
+        "c_mgmtVersion": "Management Connector Target Version",
+        "c_calVersion": "Calendar Connector Target Version",
+        "c_ucmcVersion": "Call Connector Target Version",
+        "upgradeSchedule": "Upgrade Schedule"
+      },
+      "errorMessage": "Could not read cluster history. Error message: {{errorMessage}}",
+      "windowTitle": "Cluster History for {{clusterName}}",
+      "showHistory": "Show History",
+      "opensNewWindow": "Opens a new window where you can view the cluster history during the last 60 days.",
+      "urgentUpgrades": "Urgent upgrades"
+    },
     "clusterListComponent": {
       "clusters-title-squared-fusion-cal": "Expressway Clusters",
       "clusters-title-squared-fusion-uc": "Expressway Clusters",
@@ -2410,7 +2446,7 @@
         "help": "Visit <a href=\"{{helpLink}}\" target=\"_blank\">Help Central</a> for further information about {{localizedServiceName}}.",
         "downloadExpressway": "Download Cisco Expressway software from <a href=\"{{downloadLink}}\" target=\"_blank\">software.cisco.com</a>.",
         "downloadECP": "<a href=\"{{downloadLink}}\" target=\"_blank\">Download {{serviceName}} software</a>.",
-        "downloadDemoHybridMedia": "<a href=\"{{downloadLink}}\" target=\"_blank\">Download Full Software Image</a> (Full capacity and used for production deployment of Hybrid Media)<br> <a href=\"{{downloadDemoLink}}\" target=\"_blank\">Download Demo Software Image</a> (Limited capacity, lifespan, and lower CPU requirement for demo deployment of Hybrid Media)"
+        "downloadDemoHybridMedia": "<a href=\"{{downloadLink}}\" target=\"_blank\">Download Full Software Image</a><br> (Full capacity and used for production deployments of Hybrid Media)<br> <a href=\"{{downloadDemoLink}}\" target=\"_blank\">Download Demo Software Image</a> <br>(Limited capacity, lifespan of 90 days, and only used for demos of Hybrid Media)"
       },
       "call": {
         "domainVerification": "Domain Verification",
@@ -2438,21 +2474,17 @@
         "sipDomainHeading": "SIP Destination",
         "sipDomainButtonTooltip": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS. If your SRV record is \"_sips._tcp.sipmtls.example.com\", then enter \"sipmtls.example.com\" here.",
         "sipDomainPlaceholder": "Enter a SIP Destination",
-        "sipDomainExample": "For example: sipmtls.example.org",
         "certificateDeleteTooltip": "Delete Certificate",
         "noUploadedCertificate": "No certificates uploaded. Using the default trust list.",
         "uploadedCertificates": "Uploaded Certificates:"
       },
       "verifySipDestination": {
-        "contactCiscoSupport": "Please try again later, or contact your Cisco Support representative if the problem persists.",
-        "errorFromServer": "Could not verify SIP destination. The server returned the following error message:",
         "title": "Verify SIP Destination",
         "testResultsHeader": "Test Results",
-        "testResults": {
-          "successful": "Successful",
-          "issues": "Issues",
-          "failed": "Failed"
-        },
+        "testSucceeded": "Your SIP Destination is configured correctly.",
+        "testFailed": "Your SIP Destination is not configured correctly.",
+        "viewTestResults": "View test results",
+        "testHadUnexpectedError": "An unexpected error happened when verifying the SIP Destination. Try again later.",
         "types": {
           "Answered": "Answered",
           "CallerDoesntHaveEmail": "Caller Doesn't Have Email",
@@ -2482,9 +2514,7 @@
           "TestUsers": "Test Users",
           "UnexpectedError": "Unexpected Error",
           "UnexpectedException": "Unexpected Exception"
-        },
-        "saveAnyway": "Save Anyway",
-        "warningsOrErrors": "You may still save the SIP Destination, but Hybrid Call Service Connect might not function correctly."
+        }
       },
       "googleCalendar": {
         "title": "Google Calendar",
@@ -3394,16 +3424,20 @@
     "downloadSub": "Download CSV template",
     "advancedSub": "Synchronize users from Active Directory.",
     "activateAndBeginBilling": "Activate and Begin Billing",
-    "activateBillingDescription": "By clicking on the Activate button you are activating the subscription for your customer and they will be billed for all the services that have been purchased.",
-    "activateBillingWarning": "Do not proceed if you do not want your customer to be billed. If you click on the Don't Activate button below, your customer will not be billed, also all the information you entered into this service setup wizard will be discarded and you will have to set up services again from scratch.",
+    "activateBillingDescription": "By clicking the Activate button you are activating this subscription and billing will begin for all the services that have been purchased.",
+    "activateBillingWarning": "Do not proceed if you do not want billing to begin. If you click on the \"Do not Activate \" button below billing will not begin, also all the information you entered into this service setup wizard may be discarded and you may have to setup services again from the beginning.",
     "sendEmailToCustomer": "Send email to customer notifying them that their services are ready",
     "needHelp": "Need help - ",
     "needHelpExplain": "Search the knowledge base.",
+    "newSubsOnly": "New services in your subscription",
     "planReview": "Plan Review",
+    "pendingLicensesError": "There was an error in the call for pending licenses",
     "subscriptionId": "Subscription IDs",
     "subscriptionID": "Subscription ID: ",
     "spark": "Cisco Spark",
     "sparkStub": "Set up Cisco Spark",
+    "switchToDefaultPlanView": "View the complete services in this subscription",
+    "switchToPendingPlanView": "Only show new services",
     "webex": "WebEx",
     "webexMsg": "Webex Conferencing",
     "webexStub": "Set up Webex",
@@ -3424,6 +3458,9 @@
     "meetingSettingsDescription": "This step of Service SetUp will help you create one or more WebEx site names. A WebEx site name is the URL people will type into their web browser in order to join the meetings that you are hosting.",
     "meetingCenterLicensesRemaining": "Meeting Center Licenses Remaining",
     "enterpriseEditionLicensesRemaining": "Enterprise Edition Licenses Remaining",
+    "eventCenterLicensesRemaining": "Event Center Licenses Remaining",
+    "trainingCenterLicensesRemaining": "Training Center Licenses Remaining",
+    "supportCenterLicensesRemaining": "Support Center Licenses Remaining",
     "existingWebExTrialSites": "You have the following WebEx site that was part of your free trial, would you like to continue using it?",
     "setupSitesDescription": "Now it's time to choose the URL you will use for each site. This is the URL people will type into their browser in order to join a meeting that you host",
     "keepExistingWebexSites": "Keep your existing WebEx sites?",
@@ -3537,6 +3574,7 @@
     "manualTitle": "User Entry",
     "yourDomainTitle": "Your Domain",
     "installTitle": "Install Directory Connector",
+    "invalidCenterType": "Invalid Center Type",
     "syncStatus": "Sync Status",
     "domain": "Domain",
     "defaultPlaceholder": "Default",
@@ -3605,7 +3643,15 @@
     "unableToUpdateResourceGroups": "Updating Hybrid Services Resource Groups failed",
     "ussUserPropsLoadFailed": "Unable to load the current user Hybrid Services Resource Group assignments. Resource group assignments in the CSV file will not be processed.",
     "fmsResourceGroupsLoadFailed": "Unable to load the Hybrid Services Resource Groups. Resource group assignments in the CSV file will not be processed.",
-    "mutuallyExclusiveCalendarEntitlements": "There are more than one Hybrid Calendar Service entitlement set. Please fix and try again."
+    "mutuallyExclusiveCalendarEntitlements": "There are more than one Hybrid Calendar Service entitlement set. Please fix and try again.",
+    "callSettingSimpleDialing": "Simple Dialing",
+    "callSettingSimpleDialingDesc": "Assign unique extensions to each user within your company.  Users can dial each other with their exension number.",
+    "callSettingMultiDialing": "Multi-tier Dialing",
+    "callSettingMultiDialingDesc": "Divide your company into number blocks by selecting a routing prefix for each logical block.  Users in the same block can dial each other with extension numbers.  Between blocks users dial the routing prefix and extension number.",
+    "error": {
+      "overCapacity": "Capacity exceeded for data center, please contact Cisco T.A.C. for further assistance.",
+      "capacityFail": "Failed to activate and check capacity"
+    }
   },
   "reports": {
     "title": "Reports",
@@ -4172,6 +4218,7 @@
     "failedToFetchSiteLevelLanguage": "Failed to fetch site level language. Reason:",
     "userModule": "user",
     "placeModule": "place",
+    "placeDetails":"Place Details",
     "saveModal": {
       "title": "Save Settings",
       "message1": "Changing the language will cause all devices for this user to reboot and may take a few minutes.",
@@ -4587,7 +4634,7 @@
     "feature1": "Use existing PSTN provider",
     "feature2": "Import your phone numbers",
     "feature3": "Bridge the cloud & enterprise",
-    "feature4": "Self mananged E911"
+    "feature4": "Self managed E911"
   },
   "partnerHomePage": {
     "trialsHeading": "Trials",
@@ -5195,10 +5242,13 @@
       "existingOrNewPlace": "Assign to an existing place or a new place?",
       "existingOrNewPlaceDeskPhoneInstructions": "Select existing place if the previous code for this place has been lost or has expired. You can also add multiple desk phones to the same place - all phones in that place will then share the same calling configuration. For example, desk phones will share the same lines.",
       "existingOrNewPlaceCollaborationDeviceInstructions": "Select existing place if the previous code for this place has been lost or has expired.",
+      "existingOrNewPlaceMultipleDevicesInstructions": "Select existing place if the previous code for this place has been lost or has expired, or to have multiple devices in a place.",
+      "existingOrNewCloudberryPlaceMultipleDevicesInstructions": "Select existing place to activate a new device if the previous code for this place has been lost or has expired, or to have multiple devices in a place. If you put multiple devices in a place that are not designed to work together, it may create interference issues.",
       "existingPlace": "Existing Place",
       "whichPlace": "Which existing place will the device be assigned to?",
       "existingDeskPhonePlaceInstructions": "Select from the below places. Only desk phone places are shown since desk phones and room devices cannot share the same place.",
       "existingCollaborationDevicePlaceInstructions": "Only empty room device places are shown since there is a maximum of one room device in a place, and desk phones and room devices cannot share the same place.",
+      "existingRoomDevicePlaceMultipleRoomDeviceInstructions": "Note that if you put multiple devices in a place that are not designed to work together, it could create interference issues between them.",
       "existingPlaceInstructions": "A room device place can only contain one device, so existing room device places with an activated device will not be shown.",
       "selectPlace": "Search for a place",
       "newPlace": "New Place",
@@ -5535,6 +5585,8 @@
       "location": "Location",
       "totalCloud": "Cloud Calls",
       "clientTypeHeading": "Client Type Distribution",
+      "clientTypeHeadingOnPrem": "Client Type Distribution: On-Premises",
+      "clientTypeHeadingCloud": "Client Type Distribution: Cloud",
       "onPremisesHeading": "On-Premises",
       "cloudHeading": "Cloud",
       "hybridHeading": "Cloud and On-Premises",
@@ -5580,7 +5632,8 @@
       },
       "allOff": "All Off",
       "allOn": "All On",
-      "clusterPartiallyInService": "  Cluster Partially in Service"
+      "clusterPartiallyInService": "  Cluster Partially in Service",
+      "all": "All"
     },
     "deleteGroup": {
       "message": "Are you sure you want to delete {{groupName}} from Cisco Collaboration Cloud?",
@@ -5690,8 +5743,9 @@
       "firstStepNo4": "3. Proceed to register your Hybrid Media Node following the steps below.",
       "yesProceed": "Yes, I’m ready to register my Hybrid Media Node.",
       "noProceed": "No, I need to install and configure the software.",
-      "fullOva": "Download Full Software Image",
-      "demoOva": "Download Demo Software Image",
+      "fullOva": "Full capacity production deployment",
+      "demoOva": "Limited capacity 90 day demo",
+      "ovaHelpText": "Choose between the limited capacity demo software with 90 days lifespan or the full capacity software used for production deployment.",
       "fullOva-helpText": "(Full capacity and used for production deployment of Hybrid Media)",
       "demoOva-helpText": "(Limited capacity, lifespan, and lower CPU requirement for demo deployment of Hybrid Media)",
       "noProceed-helptext": "(Software will automatically download)",
@@ -6458,6 +6512,7 @@
   "locations": {
     "locationName": "Location Name",
     "addText": "Add Location",
+    "namePlaceholder": "Name the Location",
     "copyTitle": "Copy Location",
     "copyDesc": "This location will use the customized setting from the location that you copied.",
     "deleteTitle": "Delete Location",
@@ -7285,6 +7340,7 @@
     "contact": "Contact Account Rep",
     "endDate": "Subscription end date: {{date}}",
     "enterpriseTrial": "Enterprise Trial {{number}}",
+    "enitireOrg": "Entire Organization",
     "expired": "Subscription Expired",
     "expires": "Expires {{date}}",
     "hybrid": "Hybrid Services",
@@ -7301,6 +7357,8 @@
     "onlineProductInstanceError": "Unable to retrieve product instance for trial {{trialId}}.  To purchase a paid subscription, contact your partner via email or use the purchase button on the trial banner to have one sent for you.",
     "onlinePurchase": "Purchased from Cisco Online Market Place",
     "onlineTrialUpgradeUrlError": "Unable to retrieve purchase url for trial {{trialId}}.  To purchase a paid subscription, contact your partner via email or use the purchase button on the trial banner to have one sent for you.",
+    "overage": "Overage",
+    "overageWarning": "Warning: You've assigned more licenses than you've purchased. Contact your partner to purchase more licenses today.",
     "premiumManagement": "Premium Management",
     "premiumTooltip": "Pro Pack is licensed per users and is automatically assigned to all active users in your organization.",
     "purchase": "Purchase",
@@ -7308,7 +7366,7 @@
     "signIn": "Sign-in to manage",
     "subscription": "Subscription ID: ",
     "subscriptionNum": "Subscription ID xxx{{number}}",
-    "usage": "Usage: ",
+    "usage": "Usage:",
     "upgrade": "Upgrade",
     "licenseTypes": {
       "MS": "Standard Team Spaces",
@@ -8857,5 +8915,11 @@
     "deleteMediaError": "An error occurred deleting media.",
     "cleanupMediaError": "An error occurred cleaning up a failed media upload.",
     "unsupportedTypeError": "File type selected for upload is not supported."
+  },
+  "multipleDevicesConfirm": {
+    "title": "About Devices in a Place",
+    "activationCodeExplanation": "An activation code can be used to activate a new device or reactivate an existing device.",
+    "multipleDevicesWarning": "Note that if you put multiple devices in a place that are not designed to work together, it could create interference issues between them.",
+    "okGotIt": "Ok, got it"
   }
 }

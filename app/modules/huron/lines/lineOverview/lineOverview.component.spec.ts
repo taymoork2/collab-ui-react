@@ -49,6 +49,7 @@ describe('Component: lineOverview', () => {
       'LineOverviewService',
       'DirectoryNumberOptionsService',
       'CallerIDService',
+      'MediaOnHoldService',
       'FeatureToggleService',
       'Notification',
     );
@@ -58,6 +59,7 @@ describe('Component: lineOverview', () => {
     this.esnPrefix = esnPrefix;
     this.internalNumbers = internalNumbers;
     this.externalNumbers = externalNumbers;
+    this.lineMediaOptions = getJSONFixture('huron/json/settings/company-moh.json');
 
     this.$scope.ownerName = 'Bond James Bond';
     this.$scope.ownerId = '007';
@@ -78,10 +80,12 @@ describe('Component: lineOverview', () => {
 
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
 
+    spyOn(this.MediaOnHoldService, 'getLineMohOptions').and.returnValue(this.$q.resolve(this.lineMediaOptions));
+
     spyOn(this.Notification, 'errorResponse');
   });
 
-  function initComponent() {
+  function initComponentWithPlace() {
     this.compileComponent('ucLineOverview', {
       ownerType: 'place',
       ownerName: 'ownerName',
@@ -90,8 +94,17 @@ describe('Component: lineOverview', () => {
     });
   }
 
+  function initComponentWithUser() {
+    this.compileComponent('ucLineOverview', {
+      ownerType: 'users',
+      ownerName: 'ownerName',
+      ownerId: 'ownerId',
+      numberId: '0001',
+    });
+  }
+
   describe('existing line with primary = true', () => {
-    beforeEach(initComponent);
+    beforeEach(initComponentWithPlace);
     beforeEach(function () {
       this.$scope.numberId = this.existingLinePrimary.uuid;
       this.lineOverview = {
@@ -111,6 +124,7 @@ describe('Component: lineOverview', () => {
       expect(this.DirectoryNumberOptionsService.getInternalNumberOptions).toHaveBeenCalled();
       expect(this.LineOverviewService.getEsnPrefix).toHaveBeenCalled();
       expect(this.DirectoryNumberOptionsService.getExternalNumberOptions).toHaveBeenCalled();
+      expect(this.MediaOnHoldService.getLineMohOptions).not.toHaveBeenCalled();
       expect(this.view.find(LINE_LABEL_INPUT)).toExist();
       expect(this.view.find(LINE_LABEL_INPUT).val()).toEqual('someuser@some.com');
     });
@@ -134,7 +148,7 @@ describe('Component: lineOverview', () => {
   });
 
   describe('new line', () => {
-    beforeEach(initComponent);
+    beforeEach(initComponentWithPlace);
     beforeEach(function () {
       this.lineOverview = {
         line: new Line(),
@@ -176,7 +190,7 @@ describe('Component: lineOverview', () => {
   });
 
   describe('existing line -internal number pool load failure', () => {
-    beforeEach(initComponent);
+    beforeEach(initComponentWithPlace);
     beforeEach(function () {
       this.$scope.numberId = this.existingLinePrimary.uuid;
       this.lineOverview = {
@@ -192,11 +206,31 @@ describe('Component: lineOverview', () => {
 
     it('should initialize assigned number and notify failure for internal number pool', function () {
       expect(this.LineOverviewService.get).toHaveBeenCalled();
+      expect(this.MediaOnHoldService.getLineMohOptions).not.toHaveBeenCalled();
       expect(this.lineOverview.line.internal).toEqual('1234');
       expect(this.DirectoryNumberOptionsService.getInternalNumberOptions).toHaveBeenCalled();
       expect(this.LineOverviewService.getEsnPrefix).toHaveBeenCalled();
       expect(this.DirectoryNumberOptionsService.getExternalNumberOptions).toHaveBeenCalled();
       expect(this.Notification.errorResponse).toHaveBeenCalledWith('503', 'directoryNumberPanel.internalNumberPoolError');
+    });
+  });
+
+  describe('Media On Hold Options', () => {
+    beforeEach(initComponentWithUser);
+    beforeEach(function () {
+      this.$scope.numberId = this.existingLinePrimary.uuid;
+      this.lineOverview = {
+        line: this.existingLinePrimary,
+        callForward: new CallForward(),
+      };
+    });
+
+    it('should call LineMohOptions', function () {
+      this.getLineOverviewDataDefer.resolve(this.lineOverview);
+      this.$scope.$apply();
+
+      expect(this.LineOverviewService.get).toHaveBeenCalled();
+      expect(this.MediaOnHoldService.getLineMohOptions).toHaveBeenCalled();
     });
   });
 });

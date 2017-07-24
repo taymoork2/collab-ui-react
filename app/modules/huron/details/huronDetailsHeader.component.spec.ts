@@ -9,13 +9,11 @@ describe ('Component: huronDetailsHeader', () => {
     this.injectDependencies(
       '$scope',
       'Authinfo',
-      'FeatureToggleService',
       '$httpBackend',
       '$q',
     );
 
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('1');
-    spyOn(this.FeatureToggleService, 'sparkCallTenDigitExtGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.Authinfo, 'getLicenses');
 
     this.$httpBackend.whenGET('https://identity.webex.com/identity/scim/1/v1/Users/me').respond(200);

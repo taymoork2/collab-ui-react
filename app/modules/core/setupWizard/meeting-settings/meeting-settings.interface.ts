@@ -43,6 +43,7 @@ export interface IExistingTrialSites extends IWebExSite {
 
 export interface IWebexLicencesPayload {
   provisionOrder: boolean;
+  sendCustomerEmail: boolean;
   serviceOrderUUID: string | null;
   webexProvisioningParams?: IWebexProvisioningParams;
 }
@@ -67,4 +68,15 @@ export interface IPendingOrderSubscription {
   status?: string;
   subscriptionId?: string;
   trialDuration?: number;
+}
+
+export interface IPendingLicense {
+  licenseId: string;
+  offerName: string;
+  masterOfferName: string;
+  licenseType: string;
+  features: string[];
+  volume: number;
+  isTrial: boolean;
+  status: string;
 }

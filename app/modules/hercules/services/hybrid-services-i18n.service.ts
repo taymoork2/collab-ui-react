@@ -51,7 +51,7 @@ export class HybridServicesI18NService {
     return moment(timestamp).local().tz(timezone).format(format || 'LLL (z)');
   }
 
-  private labelForTime = (time: TimeOfDay): string => {
+  public labelForTime = (time: TimeOfDay): string => {
     const currentLanguage = this.$translate.use();
     if (currentLanguage === 'en_US') {
       return moment(time, 'HH:mm').format('hh:mm A');
@@ -62,7 +62,7 @@ export class HybridServicesI18NService {
 
   private labelForDay = (day: DayOfWeek): string => {
     return this.$translate.instant('weekDays.everyDay', {
-      day: this.$translate.instant(`weekDays.${day}`),
+      day: this.$translate.instant(`weekDays.${(day as string).toLowerCase()}`), // Hack, remove once FMS is standardized on using week days in lowercase
     });
   }
 }

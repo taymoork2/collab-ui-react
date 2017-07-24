@@ -24,7 +24,7 @@ describe('Huron Functional: call-settings', () => {
 
   it('should navigate to call settings page', () => {
     utils.click(navigation.callSettings);
-    navigation.expectDriverCurrentUrl('call-settingsnew');
+    navigation.expectDriverCurrentUrl('call-settings');
   });
 
   describe('Regional Settings', () => {

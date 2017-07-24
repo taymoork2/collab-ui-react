@@ -58,6 +58,13 @@
         on-change-fn="$ctrl.setAutoAnswer(phoneId, enabled, mode)"
         ng-if="!$ctrl.isCloudberryPlace()">
       </uc-auto-answer>
+      <uc-media-on-hold
+        cr-feature-toggle feature-show="huron-moh-enable"
+        ng-if="$ctrl.isUserMohEnabled"
+        line-moh="$ctrl.lineOverviewData.lineMoh"
+        line-moh-options="$ctrl.lineMediaOptions"
+        on-change-fn="$ctrl.setLineMedia(lineMoh)">
+      </uc-media-on-hold>
       <uc-shared-line
         shared-lines="$ctrl.lineOverviewData.sharedLines"
         new-shared-line-members="$ctrl.newSharedLineMembers"

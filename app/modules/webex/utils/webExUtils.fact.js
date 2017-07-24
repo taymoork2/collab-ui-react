@@ -79,13 +79,26 @@
       var isMCOnlineSite = false;
       var siteName = siteUrlParts[0];
 
-      if (4 == siteUrlPartsCount) {
+      if (4 <= siteUrlPartsCount) {
         var siteNameSuffix = siteUrlParts[1];
+        var validMCOnlineSuffixs = [
+          'my',
+          'mybts',
+          'mydev',
+          'mydmz',
+        ];
 
-        if ('my' == _.toLower(siteNameSuffix.slice(0, 2))) {
-          siteName = siteName + '.' + siteNameSuffix;
-          isMCOnlineSite = true;
-        }
+        validMCOnlineSuffixs.forEach(
+          function (validMCOnlineSuffix) {
+            if (
+              (!isMCOnlineSite) &&
+              (validMCOnlineSuffix == siteNameSuffix)
+            ) {
+              siteName = siteName + '.' + siteNameSuffix;
+              isMCOnlineSite = true;
+            }
+          }
+        );
       }
 
       if (isMCOnlineSite) {

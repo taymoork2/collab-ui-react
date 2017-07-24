@@ -106,11 +106,6 @@ export class ServicesOverviewCtrl {
         }
       });
 
-    this.FeatureToggleService.supports(FeatureToggleService.features.sparkCallTenDigitExt)
-      .then(supports => {
-        this.forwardEvent('sparkCallTenDigitExtFeatureToggleEventhandler', supports);
-      });
-
     this.FeatureToggleService.supports(FeatureToggleService.features.hI802)
       .then(supports => {
         this.forwardEvent('sparkCallCdrReportingFeatureToggleEventhandler', supports);

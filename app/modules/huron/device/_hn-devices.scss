@@ -163,3 +163,24 @@
     }
   }
 }
+
+.multiple-devices-warning {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 4px;
+
+  color: $color-attention-base;
+  .icon {
+    margin: 3px 8px 0 0;
+    font-size: 13px;
+  }
+  span {
+    font-size: 13px;
+  }
+}
+
+.modal-body {
+  .spacing-for-second-paragraph {
+    margin-bottom: 12px;
+  }
+}

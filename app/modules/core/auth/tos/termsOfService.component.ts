@@ -79,7 +79,7 @@ class TermsOfServiceCtrl implements ng.IComponentController {
     iframe.scroll(() => {
       this.scrollData.iframeHeight = _.ceil(this.$element.find('.tos-container').height());
       this.scrollData.curPos = _.ceil(this.getScrollY(iframeDoc));
-      this.scrollData.bodyHeight = _.floor(iframe.height());
+      this.scrollData.bodyHeight = _.floor(iframe.height() || 0);
       this.scrollData.bottomPos = _.ceil(this.scrollData.curPos + this.scrollData.iframeHeight);
 
       if (this.scrollData.bottomPos >= this.scrollData.bodyHeight) {

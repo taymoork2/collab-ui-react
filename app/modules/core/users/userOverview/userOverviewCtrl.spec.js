@@ -2,6 +2,13 @@
 
 var testModule = require('./index').default;
 
+var preferredLanguageDetails = {
+  selectedLanguageCode: 'en_US',
+  languageOptions: [],
+  currentUserId: '',
+  hasSparkCall: false,
+};
+
 describe('Controller: UserOverviewCtrl', function () {
   function init() {
     this.initModules(testModule, 'WebExApp', 'Sunlight', 'Huron');
@@ -61,6 +68,7 @@ describe('Controller: UserOverviewCtrl', function () {
         _this.$stateParams = {
           currentUser: response.user,
           entitlements: response.sqEntitlements,
+          preferredLanguageDetails: preferredLanguageDetails,
         };
       });
     this.$scope.$apply();

@@ -1,19 +1,19 @@
-// import any additional sassy css (scss) here
-@import '../settings/_settings';
 @import '../lines/_line-list';
 
 .save-section {
   position: absolute;
+  right: 0;
   display: flex;
   align-items: center;
   width: 100%;
-  padding: 5px 25px;
+  justify-content: flex-end;
+  @include vr-spacing(pv, 1.25);
+  @include vr-spacing(ph, 2);
   z-index: $zindex-popover;
-  border-bottom: 1px solid $gray-light;
-  background-color: $white;
+  background-color: $gray-light-4;
 
   p {
-    flex: 1;
+    @include vr-spacing(mr, 2);
   }
 
   button {

@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  module.exports = EdiscoveryNotificationService;
+
   /* @ngInject */
   function EdiscoveryNotificationService($window, $translate, $timeout) {
     var ReportNotification = $window.Notification;
@@ -35,7 +37,4 @@
       notificationsEnabled: notificationsEnabled,
     };
   }
-
-  angular.module('Ediscovery')
-    .service('EdiscoveryNotificationService', EdiscoveryNotificationService);
 }());

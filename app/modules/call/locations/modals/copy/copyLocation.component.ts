@@ -13,7 +13,6 @@ class CopyLocationCtrl implements ng.IComponentController {
     public LocationsService: LocationsService,
     private Notification: Notification,
     private $translate: ng.translate.ITranslateService,
-    private Authinfo,
   ) {}
 
   public validationMessages = {
@@ -21,15 +20,16 @@ class CopyLocationCtrl implements ng.IComponentController {
   };
 
   public $onInit() {
-    this.LocationsService.getLocationDetails(this.uuid).then((result) => {
+    this.LocationsService.getLocation(this.uuid).then((result) => {
       this.location = result;
       this.location.name = '';
+      this.location.defaultLocation = false;
     });
   }
 
   public save(): void {
     this.saveInProcess = true;
-    this.LocationsService.createLocation(this.Authinfo.getOrgId(), this.location).then(() => this.close())
+    this.LocationsService.createLocation(this.location).then(() => this.close())
     .catch(error => this.Notification.errorResponse(error, 'locations.copyFailed'))
     .finally(() => this.saveInProcess = false);
   }
@@ -42,6 +42,6 @@ export class CopyLocationComponent implements ng.IComponentOptions {
   public bindings = {
     dismiss: '&',
     close: '&',
-    uuid: '<',
+    uuid: '@',
   };
 }

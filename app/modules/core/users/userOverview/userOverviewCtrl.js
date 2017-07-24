@@ -9,6 +9,11 @@
     Notification, SunlightConfigService, Userservice, UserOverviewService) {
     var vm = this;
 
+    vm.savePreferredLanguage = savePreferredLanguage;
+    vm.prefLanguageSaveInProcess = false;
+    vm.checkForPreferredLanguageChanges = checkForPreferredLanguageChanges;
+    vm.preferredLanguage = '';
+
     vm.currentUser = $stateParams.currentUser;
     vm.entitlements = $stateParams.entitlements;
     vm.queryuserslist = $stateParams.queryuserslist;
@@ -156,6 +161,25 @@
       $state.go('user-overview.' + feature.state, { preferredLanguageDetails: preferredLanguageDetails });
     }
 
+    function savePreferredLanguage(prefLang) {
+      vm.prefLanguageSaveInProcess = true;
+      if (!vm.checkForPreferredLanguageChanges(prefLang)) {
+        UserOverviewService.updateUserPreferredLanguage(vm.currentUser.id, prefLang.value)
+          .then(function () {
+            preferredLanguageDetails.selectedLanguageCode = prefLang.value;
+            $state.go('user-overview');
+          })
+          .catch(function (error) {
+            Notification.errorResponse(error, 'preferredLanguage.failedToSaveChanges');
+          });
+      }
+    }
+
+    function checkForPreferredLanguageChanges(preferredLanguage) {
+      vm.preferredLanguageDetailsCopy = _.cloneDeep(preferredLanguageDetails.selectedLanguageCode);
+      return _.isEqual(preferredLanguage, vm.preferredLanguageDetailsCopy.selectedLanguageCode);
+    }
+
     function getDisplayableServices(serviceName) {
       var displayableServices = Authinfo.getServices();
       if (Authinfo.hasAccount()) {
@@ -300,7 +324,8 @@
       var formattedLanguage = ciLanguageCode ? UserOverviewService.formatLanguage(ciLanguageCode) : ciLanguageCode;
       UserOverviewService.getUserPreferredLanguage(formattedLanguage).then(function (userLanguageDetails) {
         preferredLanguageState.detail = !_.isEmpty(userLanguageDetails.language) ? _.get(userLanguageDetails.language, 'label') : formattedLanguage;
-        preferredLanguageDetails.languageOptions = !_.isEmpty(userLanguageDetails.translatedLanguages) ? _.get(userLanguageDetails, 'translatedLanguages') : [];
+        var languageOptions = !_.isEmpty(userLanguageDetails.translatedLanguages) ? _.get(userLanguageDetails, 'translatedLanguages') : [];
+        preferredLanguageDetails.languageOptions = _.sortBy(languageOptions, 'label');
       }).catch(function (error) {
         Notification.errorResponse(error, 'usersPreview.userPreferredLanguageError');
       });
@@ -310,6 +335,7 @@
       preferredLanguageDetails.selectedLanguageCode = formattedLanguage;
       preferredLanguageDetails.currentUserId = vm.currentUser.id;
       preferredLanguageDetails.hasSparkCall = vm.hasSparkCall;
+      preferredLanguageDetails.save = savePreferredLanguage;
       vm.userDetailList.push(preferredLanguageState);
     }
 

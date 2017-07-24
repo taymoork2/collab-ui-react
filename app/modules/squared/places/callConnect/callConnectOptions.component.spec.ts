@@ -1,9 +1,12 @@
 import callConnectOptions from './index';
+import IExternalLinkedAccount = csdm.IExternalLinkedAccount;
 // import { describe, it, beforeEach, afterEach } from 'selenium-webdriver/testing';
 
 describe('CallConnectOptions component:', () => {
   const FUSION_HYBRID_UC = 'squared-fusion-uc';
   const FUSION_HYBRID_EC = 'squared-fusion-ec';
+  const FUSION_CALENDAR = 'squared-fusion-cal';
+  const FUSION_GCALENDAR = 'squared-fusion-gcal';
   let test;
   beforeEach(function () {
     this.initModules(callConnectOptions, 'Core');
@@ -33,7 +36,10 @@ describe('CallConnectOptions component:', () => {
     test.$rootScope = undefined;
   });
 
-  const initCallConnect = (wFunction: string, enableCalService: boolean, cisUuid: string) => {
+  const initCallConnect = (wFunction: string,
+                           enableCalService: boolean, cisUuid: string,
+                           entitlements: string[] = ['webex-squared', FUSION_HYBRID_EC, FUSION_HYBRID_UC],
+                           extLinkAccts: IExternalLinkedAccount[] = []) => {
     state.stateParams = {
       wizard: {
         state: () => {
@@ -42,7 +48,8 @@ describe('CallConnectOptions component:', () => {
               account: {
                 cisUuid: cisUuid,
                 enableCalService: enableCalService,
-                entitlements: ['webex-squared', FUSION_HYBRID_EC, FUSION_HYBRID_UC],
+                entitlements: entitlements,
+                externalLinkedAccounts: extLinkAccts,
               },
               function: wFunction,
             },
@@ -118,6 +125,105 @@ describe('CallConnectOptions component:', () => {
   });
   describe('save ()', () => {
     const uid = '8AB6D09F5AD6D216015AEACB5D3C0005';
+    describe('when no existing calendar entitlements', () => {
+      beforeEach(() => {
+        initCallConnect('with editServices', false, uid,
+          ['webex-squared', FUSION_HYBRID_EC, FUSION_HYBRID_UC],
+          [
+            { providerID: FUSION_CALENDAR, accountGUID: 'calendar@example.com' },
+            { providerID: FUSION_GCALENDAR, accountGUID: 'calendar@example.com' },
+          ]);
+      });
+      it('should call CsdmDataModelService with correct entitlement and extLinkAccts with cleaned out call and calendar', () => {
+        spyOn(test.CsdmDataModelService, 'updateCloudberryPlace').and.returnValue(test.$q.resolve({}));
+        const place = { cisUuid: uid };
+        spyOn(test.CsdmDataModelService, 'reloadPlace').and.returnValue(test.$q.resolve(place));
+        spyOn(test.USSService, 'updateUserProps').and.returnValue(test.$q.resolve({}));
+
+        const mailId = 'mail@example.com';
+        state.controller.mailID = mailId;
+
+        state.controller.dismiss = () => {
+        };
+        state.controller.save();
+        test.$rootScope.$digest();
+        expect(test.CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalledWith(place, {
+          entitlements: ['webex-squared', FUSION_HYBRID_EC, FUSION_HYBRID_UC],
+          externalLinkedAccounts: [
+            { providerID: FUSION_CALENDAR, accountGUID: 'calendar@example.com', operation: 'delete' },
+            { providerID: FUSION_GCALENDAR, accountGUID: 'calendar@example.com', operation: 'delete' },
+            { providerID: FUSION_HYBRID_UC, accountGUID: mailId, status: 'unconfirmed-email' },
+          ],
+        });
+      });
+    });
+    describe('when there are existing calendar entitlements', () => {
+      beforeEach(() => {
+        initCallConnect('with editServices', false, uid,
+          ['webex-squared', FUSION_CALENDAR, FUSION_HYBRID_EC, FUSION_HYBRID_UC],
+          [
+            { providerID: FUSION_CALENDAR, accountGUID: 'calendar@example.com' },
+            { providerID: FUSION_GCALENDAR, accountGUID: 'calendar@example.com' },
+            { providerID: 'special provider', accountGUID: '234052519823' },
+          ],
+        );
+      });
+      it('should only clean the calendar of entitlements not present', () => {
+        spyOn(test.CsdmDataModelService, 'updateCloudberryPlace').and.returnValue(test.$q.resolve({}));
+        const place = { cisUuid: uid };
+        spyOn(test.CsdmDataModelService, 'reloadPlace').and.returnValue(test.$q.resolve(place));
+        spyOn(test.USSService, 'updateUserProps').and.returnValue(test.$q.resolve({}));
+
+        const mailId = 'mail@example.com';
+        state.controller.mailID = mailId;
+
+        state.controller.dismiss = () => {
+        };
+        state.controller.save();
+        test.$rootScope.$digest();
+        expect(test.CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalledWith(place, {
+          entitlements: ['webex-squared', FUSION_CALENDAR, FUSION_HYBRID_EC, FUSION_HYBRID_UC],
+          externalLinkedAccounts: [
+            { providerID: FUSION_GCALENDAR, accountGUID: 'calendar@example.com', operation: 'delete' },
+            // { providerID: FUSION_CALENDAR, accountGUID: mailId, status: 'unconfirmed-email' },  //this should not be re-saved
+            { providerID: FUSION_HYBRID_UC, accountGUID: mailId, status: 'unconfirmed-email' },
+            // { providerID: 'special provider', accountGUID: '234052519823' },  //this should be left intact.
+          ],
+        });
+      });
+    });
+    describe('when there are existing calendar entitlements but unselected calendar', () => {
+      beforeEach(() => {
+        initCallConnect('with editServices', false, uid,
+          ['webex-squared', FUSION_GCALENDAR, FUSION_HYBRID_EC, FUSION_HYBRID_UC],
+          [
+            { providerID: FUSION_CALENDAR, accountGUID: 'calendar@example.com' },
+            { providerID: FUSION_GCALENDAR, accountGUID: 'calendar@example.com' },
+          ],
+        );
+      });
+      it('should only clean the calendar of entitlments not present', () => {
+        spyOn(test.CsdmDataModelService, 'updateCloudberryPlace').and.returnValue(test.$q.resolve({}));
+        const place = { cisUuid: uid };
+        spyOn(test.CsdmDataModelService, 'reloadPlace').and.returnValue(test.$q.resolve(place));
+        spyOn(test.USSService, 'updateUserProps').and.returnValue(test.$q.resolve({}));
+
+        const mailId = 'mail@example.com';
+        state.controller.mailID = mailId;
+
+        state.controller.dismiss = () => {
+        };
+        state.controller.save();
+        test.$rootScope.$digest();
+        expect(test.CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalledWith(place, {
+          entitlements: ['webex-squared', FUSION_GCALENDAR, FUSION_HYBRID_EC, FUSION_HYBRID_UC],
+          externalLinkedAccounts: [
+            { providerID: FUSION_CALENDAR, accountGUID: 'calendar@example.com', operation: 'delete' },
+            { providerID: FUSION_HYBRID_UC, accountGUID: mailId, status: 'unconfirmed-email' },
+          ],
+        });
+      });
+    });
     beforeEach(() => {
       initCallConnect('with editServices', true, uid);
     });
@@ -134,22 +240,10 @@ describe('CallConnectOptions component:', () => {
       };
       state.controller.save();
       test.$rootScope.$digest();
-      const saveParams = test.CsdmDataModelService.updateCloudberryPlace.calls.mostRecent().args;
-      expect(saveParams[0]).toBe(place);
-
-      expect(saveParams[1]).toContain(FUSION_HYBRID_EC);
-      expect(saveParams[1]).toContain(FUSION_HYBRID_UC);
-      expect(saveParams[1]).not.toContain('ciscouc');
-
-      expect(saveParams[2]).toBe(null);
-      expect(saveParams[3]).toBe(null);
-
-      expect(saveParams[4]).toBeTruthy();
-      expect(saveParams[4].length).toBe(1);
-      expect(saveParams[4][0].providerID).toBe(FUSION_HYBRID_UC);
-      expect(saveParams[4][0].accountGUID).toBe(mailId);
-
-      expect(saveParams[5]).toBe(null);
+      expect(test.CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalledWith(place, {
+        entitlements: ['webex-squared', FUSION_HYBRID_EC, FUSION_HYBRID_UC],
+        externalLinkedAccounts: [{ providerID: FUSION_HYBRID_UC, accountGUID: mailId, status: 'unconfirmed-email' }],
+      });
     });
   });
   describe('next ()', () => {

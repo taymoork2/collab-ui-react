@@ -17,7 +17,7 @@
   }
 
   /* @ngInject */
-  function TrialWebexService($http, $q, Config, UrlConfig, WebexOrderStatusResource, Notification) {
+  function TrialWebexService($http, $q, Config, UrlConfig, WebexOrderStatusResource, Notification, SetupWizardService) {
     var _trialData;
     var service = {
       getData: getData,
@@ -25,6 +25,7 @@
       validateSiteUrl: validateSiteUrl,
       getTrialStatus: getTrialStatus,
       provisionWebexSites: provisionWebexSites,
+      provisionSubscriptionWithoutWebexSites: provisionSubscriptionWithoutWebexSites,
       setProvisioningWebexSitesData: setProvisioningWebexSitesData,
       getProvisioningWebexSitesData: getProvisioningWebexSitesData,
     };
@@ -102,6 +103,22 @@
     function provisionWebexSites() {
       var payload = _.get(webexProvisioningData, 'webexLicencesPayload');
       var subscriptionId = _.get(webexProvisioningData, 'subscriptionId');
+      return provisionSubscription(payload, subscriptionId);
+    }
+
+    function provisionSubscriptionWithoutWebexSites() {
+      var payload = {
+        provisionOrder: true,
+        serviceOrderUUID: SetupWizardService.getActingSubscriptionServiceOrderUUID(),
+      };
+      var subscriptionId = SetupWizardService.getInternalSubscriptionId();
+      return provisionSubscription(payload, subscriptionId);
+    }
+
+    function provisionSubscription(payload, subscriptionId) {
+      if (!payload || !_.isString(subscriptionId)) {
+        $q.reject('invlaid paramenters passed to provision subscription.');
+      }
       var webexProvisioningUrl = UrlConfig.getAdminServiceUrl() + 'subscriptions/' + subscriptionId + '/provision';
 
       return $http.post(webexProvisioningUrl, payload);

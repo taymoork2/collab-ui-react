@@ -8,7 +8,7 @@
 
 export class CurrentLanguageDirective implements ng.IDirective {
   constructor(
-    private $rootScope: ng.IRootElementService,
+    private $rootScope: ng.IRootScopeService,
     private $translate: ng.translate.ITranslateService,
   ) {
   }

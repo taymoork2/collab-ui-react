@@ -1,0 +1,759 @@
+{
+  "earliestTimestampSearched": "2017-05-12T00:00:00Z",
+  "items": [
+    {
+      "timestamp": "2017-07-10T16:49:19.325Z",
+      "context": {
+        "principalType": "PERSON",
+        "source": "external",
+        "principalId": "983761d5-3120-4747-9ab3-a3960ecdecc8",
+        "principalOrgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "trackingId": "ATLAS_e5223f66-a9cc-0246-6457-91587462b896_15",
+        "httpMethod": "POST",
+        "httpRequestURI": "/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b/provisioning/actions/update/invoke",
+        "httpQueryString": "connectorType=c_mgmt&forced=true"
+      },
+      "payload": {
+        "type": "ClusterUpdated",
+        "orgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "clusterId": "5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b",
+        "upgradingStartTime": "2017-07-10T16:49:19.319Z"
+      }
+    },
+    {
+      "timestamp": "2017-07-10T16:49:19.324Z",
+      "context": {
+        "principalType": "PERSON",
+        "source": "external",
+        "principalId": "983761d5-3120-4747-9ab3-a3960ecdecc8",
+        "principalOrgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "trackingId": "ATLAS_e5223f66-a9cc-0246-6457-91587462b896_15",
+        "httpMethod": "POST",
+        "httpRequestURI": "/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b/provisioning/actions/update/invoke",
+        "httpQueryString": "connectorType=c_mgmt&forced=true"
+      },
+      "payload": {
+        "type": "ClusterUpdated",
+        "orgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "clusterId": "5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b",
+        "softwarePackages": {
+          "c_mgmt": {
+            "type": "TlpSoftwarePackage",
+            "version": "8.8-1.0.321279",
+            "tlpUrl": "https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/ManagementConnectorBeta/20170707135316/c_mgmt.tlp"
+          }
+        },
+        "oldSoftwarePackages": {
+          "c_mgmt": {
+            "type": "TlpSoftwarePackage",
+            "version": "8.8-1.0.321263",
+            "tlpUrl": "https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/ManagementConnectorStable/20170607132557/c_mgmt.tlp"
+          }
+        }
+      }
+    },
+    {
+      "timestamp": "2017-07-10T16:49:16.606Z",
+      "context": {
+        "principalType": "PERSON",
+        "source": "external",
+        "principalId": "983761d5-3120-4747-9ab3-a3960ecdecc8",
+        "principalOrgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "trackingId": "ATLAS_e5223f66-a9cc-0246-6457-91587462b896_9",
+        "httpMethod": "POST",
+        "httpRequestURI": "/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b/provisioning/actions/update/invoke",
+        "httpQueryString": "connectorType=c_cal&forced=true"
+      },
+      "payload": {
+        "type": "ClusterUpdated",
+        "orgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "clusterId": "5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b",
+        "upgradingStartTime": "2017-07-10T16:49:16.601Z"
+      }
+    },
+    {
+      "timestamp": "2017-07-10T16:49:16.603Z",
+      "context": {
+        "principalType": "PERSON",
+        "source": "external",
+        "principalId": "983761d5-3120-4747-9ab3-a3960ecdecc8",
+        "principalOrgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "trackingId": "ATLAS_e5223f66-a9cc-0246-6457-91587462b896_9",
+        "httpMethod": "POST",
+        "httpRequestURI": "/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b/provisioning/actions/update/invoke",
+        "httpQueryString": "connectorType=c_cal&forced=true"
+      },
+      "payload": {
+        "type": "ClusterUpdated",
+        "orgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "clusterId": "5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b",
+        "softwarePackages": {
+          "c_cal": {
+            "type": "TlpSoftwarePackage",
+            "version": "8.8-1.0.4311",
+            "tlpUrl": "https://ce5bbbcdd1f79c27dff8-b12ead3d93f4e78096e4b7110bc1b1e2.ssl.cf5.rackcdn.com/CalendarConnectorIntegBeta/20170710161818/calendar-integration.tlp"
+          }
+        },
+        "oldSoftwarePackages": {
+          "c_cal": {
+            "type": "TlpSoftwarePackage",
+            "version": "8.8-1.0.4292",
+            "tlpUrl": "https://ce5bbbcdd1f79c27dff8-b12ead3d93f4e78096e4b7110bc1b1e2.ssl.cf5.rackcdn.com/CalendarConnectorIntegBeta/20170705103957/calendar-integration.tlp"
+          }
+        }
+      }
+    },
+    {
+      "timestamp": "2017-07-07T11:22:47.373Z",
+      "context": {
+        "principalType": "PERSON",
+        "source": "external",
+        "principalId": "983761d5-3120-4747-9ab3-a3960ecdecc8",
+        "principalOrgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "trackingId": "ATLAS_1c8a14b8-4077-0ed9-f516-8ec8869a2eb5_8",
+        "httpMethod": "PATCH",
+        "httpRequestURI": "/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b"
+      },
+      "payload": {
+        "type": "ClusterUpdated",
+        "orgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "clusterId": "5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b",
+        "name": "Vi er alle fra Vål'enga!",
+        "oldName": "Vi savner Susanna Evens!"
+      }
+    },
+    {
+      "timestamp": "2017-07-06T08:59:38.478Z",
+      "context": {
+        "principalType": "PERSON",
+        "source": "external",
+        "principalId": "983761d5-3120-4747-9ab3-a3960ecdecc8",
+        "principalOrgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "trackingId": "ATLAS_3b4f0ae3-e8c6-ea1c-4243-62a12a638f37_8",
+        "httpMethod": "POST",
+        "httpRequestURI": "/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b/provisioning/actions/remove/invoke",
+        "httpQueryString": "connectorType=c_ucmc"
+      },
+      "payload": {
+        "type": "ClusterUpdated",
+        "orgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "clusterId": "5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b",
+        "softwarePackages": {
+          "c_ucmc": null
+        },
+        "oldSoftwarePackages": {
+          "c_ucmc": {
+            "type": "TlpSoftwarePackage",
+            "version": "8.8-1.0.4326",
+            "tlpUrl": "https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CallConnectorBeta/20170628180816/call-connector-beta.tlp"
+          }
+        }
+      }
+    },
+    {
+      "timestamp": "2017-07-06T08:59:34.192Z",
+      "context": {
+        "principalType": "PERSON",
+        "source": "external",
+        "principalId": "983761d5-3120-4747-9ab3-a3960ecdecc8",
+        "principalOrgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "trackingId": "ATLAS_3b4f0ae3-e8c6-ea1c-4243-62a12a638f37_7",
+        "httpMethod": "PATCH",
+        "httpRequestURI": "/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b"
+      },
+      "payload": {
+        "type": "ClusterUpdated",
+        "orgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "clusterId": "5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b",
+        "name": "Vi savner Susanna Evens!",
+        "oldName": "Forza Italia!"
+      }
+    },
+    {
+      "timestamp": "2017-07-06T08:17:57.503Z",
+      "context": {
+        "principalType": "PERSON",
+        "source": "external",
+        "principalId": "5505f959-6d2f-4771-8f41-53b072335dbb",
+        "principalOrgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "trackingId": "ATLAS_310b5a0c-e645-c440-433b-9adc628419bb_9",
+        "httpMethod": "PATCH",
+        "httpRequestURI": "/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b/upgradeSchedule"
+      },
+      "payload": {
+        "type": "ClusterUpdated",
+        "orgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "clusterId": "5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b",
+        "upgradeSchedule": {
+          "type": "FmsClusterUpgradeSchedule",
+          "scheduleDays": [
+            "WEDNESDAY"
+          ],
+          "scheduleTime": "03:00:00",
+          "urgentScheduleTime": "03:00:00",
+          "scheduleTimeZone": "Europe/Oslo"
+        },
+        "oldUpgradeSchedule": {
+          "type": "FmsClusterUpgradeSchedule",
+          "scheduleDays": [
+            "WEDNESDAY"
+          ],
+          "scheduleTime": "03:00:00",
+          "urgentScheduleTime": "06:00:00",
+          "scheduleTimeZone": "Europe/Oslo"
+        }
+      }
+    },
+    {
+      "timestamp": "2017-07-06T08:17:54.120Z",
+      "context": {
+        "principalType": "PERSON",
+        "source": "external",
+        "principalId": "5505f959-6d2f-4771-8f41-53b072335dbb",
+        "principalOrgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "trackingId": "ATLAS_310b5a0c-e645-c440-433b-9adc628419bb_7",
+        "httpMethod": "PATCH",
+        "httpRequestURI": "/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b/upgradeSchedule"
+      },
+      "payload": {
+        "type": "ClusterUpdated",
+        "orgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "clusterId": "5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b",
+        "upgradeSchedule": {
+          "type": "FmsClusterUpgradeSchedule",
+          "scheduleDays": [
+            "WEDNESDAY"
+          ],
+          "scheduleTime": "03:00:00",
+          "urgentScheduleTime": "03:00:00",
+          "scheduleTimeZone": "Europe/Oslo"
+        },
+        "oldUpgradeSchedule": {
+          "type": "FmsClusterUpgradeSchedule",
+          "scheduleDays": [
+            "SUNDAY"
+          ],
+          "scheduleTime": "06:00:00",
+          "urgentScheduleTime": "03:00:00",
+          "scheduleTimeZone": "Europe/Amsterdam"
+        }
+      }
+    },
+    {
+      "timestamp": "2017-07-06T08:16:49.609Z",
+      "context": {
+        "principalType": "PERSON",
+        "source": "external",
+        "principalId": "5505f959-6d2f-4771-8f41-53b072335dbb",
+        "principalOrgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "trackingId": "ATLAS_3d530fa2-6754-c521-f1cd-5d5108dbf593_7",
+        "httpMethod": "POST",
+        "httpRequestURI": "/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b/provisioning/actions/add/invoke",
+        "httpQueryString": "connectorType=c_cal"
+      },
+      "payload": {
+        "type": "ClusterUpdated",
+        "orgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "clusterId": "5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b",
+        "softwarePackages": {
+          "c_cal": {
+            "type": "TlpSoftwarePackage",
+            "version": "8.8-1.0.4292",
+            "tlpUrl": "https://ce5bbbcdd1f79c27dff8-b12ead3d93f4e78096e4b7110bc1b1e2.ssl.cf5.rackcdn.com/CalendarConnectorIntegBeta/20170705103957/calendar-integration.tlp"
+          }
+        },
+        "oldSoftwarePackages": {
+          "c_cal": null
+        }
+      }
+    },
+    {
+      "timestamp": "2017-07-06T08:16:34.839Z",
+      "context": {
+        "principalType": "PERSON",
+        "source": "external",
+        "principalId": "5505f959-6d2f-4771-8f41-53b072335dbb",
+        "principalOrgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "trackingId": "ATLAS_e4dd63d9-3758-f872-fcc1-c39e83be8a15_17",
+        "httpMethod": "POST",
+        "httpRequestURI": "/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b/provisioning/actions/add/invoke",
+        "httpQueryString": "connectorType=c_ucmc"
+      },
+      "payload": {
+        "type": "ClusterUpdated",
+        "orgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "clusterId": "5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b",
+        "softwarePackages": {
+          "c_ucmc": {
+            "type": "TlpSoftwarePackage",
+            "version": "8.8-1.0.4326",
+            "tlpUrl": "https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CallConnectorBeta/20170628180816/call-connector-beta.tlp"
+          }
+        },
+        "oldSoftwarePackages": {
+          "c_ucmc": null
+        }
+      }
+    },
+    {
+      "timestamp": "2017-07-06T08:07:50.206Z",
+      "context": {
+        "principalType": "PERSON",
+        "source": "external",
+        "principalId": "983761d5-3120-4747-9ab3-a3960ecdecc8",
+        "principalOrgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "trackingId": "ATLAS_02495e7c-5561-246e-7596-b7725d479ebe_7",
+        "httpMethod": "POST",
+        "httpRequestURI": "/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b/provisioning/actions/remove/invoke",
+        "httpQueryString": "connectorType=c_cal"
+      },
+      "payload": {
+        "type": "ClusterUpdated",
+        "orgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "clusterId": "5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b",
+        "softwarePackages": {
+          "c_cal": null
+        },
+        "oldSoftwarePackages": {
+          "c_cal": {
+            "type": "TlpSoftwarePackage",
+            "version": "8.8-1.0.4292",
+            "tlpUrl": "https://ce5bbbcdd1f79c27dff8-b12ead3d93f4e78096e4b7110bc1b1e2.ssl.cf5.rackcdn.com/CalendarConnectorIntegStable/20170705104057/calendar-integration.tlp"
+          }
+        }
+      }
+    },
+    {
+      "timestamp": "2017-07-06T08:07:18.707Z",
+      "context": {
+        "principalType": "PERSON",
+        "source": "external",
+        "principalId": "983761d5-3120-4747-9ab3-a3960ecdecc8",
+        "principalOrgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "trackingId": "ATLAS_f8fef7ea-37d5-a11c-48c4-0c71f1810eea_7",
+        "httpMethod": "PATCH",
+        "httpRequestURI": "/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b"
+      },
+      "payload": {
+        "type": "ClusterUpdated",
+        "orgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "clusterId": "5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b",
+        "name": "\uD83C\uDDEE\uD83C\uDDF9 Forza Italia!",
+        "oldName": "Bananer er godt!"
+      }
+    },
+    {
+      "timestamp": "2017-07-05T13:10:01.891Z",
+      "context": {
+        "principalType": "PERSON",
+        "source": "external",
+        "principalId": "983761d5-3120-4747-9ab3-a3960ecdecc8",
+        "principalOrgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "trackingId": "ATLAS_5198e784-9b0e-1ca7-df92-158b529298c5_7",
+        "httpMethod": "POST",
+        "httpRequestURI": "/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b/provisioning/actions/remove/invoke",
+        "httpQueryString": "connectorType=c_ucmc"
+      },
+      "payload": {
+        "type": "ClusterUpdated",
+        "orgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "clusterId": "5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b",
+        "softwarePackages": {
+          "c_ucmc": null
+        },
+        "oldSoftwarePackages": {
+          "c_ucmc": {
+            "type": "TlpSoftwarePackage",
+            "version": "8.8-1.0.4177",
+            "tlpUrl": "https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CallConnectorStable/20170612174048/call-connector-stable.tlp"
+          }
+        }
+      }
+    },
+    {
+      "timestamp": "2017-07-05T13:09:32.102Z",
+      "context": {
+        "principalType": "PERSON",
+        "source": "external",
+        "principalId": "983761d5-3120-4747-9ab3-a3960ecdecc8",
+        "principalOrgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "trackingId": "ATLAS_af18ace5-52f4-b5d8-e4cb-5bdda21d060f_7",
+        "httpMethod": "PATCH",
+        "httpRequestURI": "/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b"
+      },
+      "payload": {
+        "type": "ClusterUpdated",
+        "orgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "clusterId": "5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b",
+        "releaseChannel": "beta",
+        "oldReleaseChannel": "stable",
+        "resourceGroupId": "e65fde3f-56f4-4a9e-a5ea-e9ad7812e792",
+        "oldResourceGroupId": "501cb7db-a7b2-43fa-bc03-c78f6918a45a"
+      }
+    },
+    {
+      "timestamp": "2017-07-05T13:09:07.977Z",
+      "context": {
+        "principalType": "PERSON",
+        "source": "external",
+        "principalId": "983761d5-3120-4747-9ab3-a3960ecdecc8",
+        "principalOrgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "trackingId": "ATLAS_dd3018eb-53a8-c0c0-4bbe-83fd0c10a438_7",
+        "httpMethod": "PATCH",
+        "httpRequestURI": "/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b"
+      },
+      "payload": {
+        "type": "ClusterUpdated",
+        "orgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "clusterId": "5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b",
+        "name": "Bananer er godt!",
+        "oldName": "UCTG Oslo Team 2"
+      }
+    },
+    {
+      "timestamp": "2017-07-05T13:08:34.799Z",
+      "context": {
+        "principalType": "PERSON",
+        "source": "external",
+        "principalId": "983761d5-3120-4747-9ab3-a3960ecdecc8",
+        "principalOrgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "trackingId": "ATLAS_162be21e-2f88-336f-4dff-4141fa2694ec_6",
+        "httpMethod": "POST",
+        "httpRequestURI": "/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b/provisioning/actions/update/invoke",
+        "httpQueryString": "connectorType=c_cal&forced=true"
+      },
+      "payload": {
+        "type": "ClusterUpdated",
+        "orgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "clusterId": "5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b",
+        "softwarePackages": {
+          "c_cal": {
+            "type": "TlpSoftwarePackage",
+            "version": "8.8-1.0.4292",
+            "tlpUrl": "https://ce5bbbcdd1f79c27dff8-b12ead3d93f4e78096e4b7110bc1b1e2.ssl.cf5.rackcdn.com/CalendarConnectorIntegStable/20170705104057/calendar-integration.tlp"
+          }
+        },
+        "oldSoftwarePackages": {
+          "c_cal": {
+            "type": "TlpSoftwarePackage",
+            "version": "8.8-1.0.4213",
+            "tlpUrl": "https://ce5bbbcdd1f79c27dff8-b12ead3d93f4e78096e4b7110bc1b1e2.ssl.cf5.rackcdn.com/CalendarConnectorIntegStable/20170606234949/calendar-integration.tlp"
+          }
+        }
+      }
+    },
+    {
+      "timestamp": "2017-07-05T13:08:34.798Z",
+      "context": {
+        "principalType": "PERSON",
+        "source": "external",
+        "principalId": "983761d5-3120-4747-9ab3-a3960ecdecc8",
+        "principalOrgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "trackingId": "ATLAS_162be21e-2f88-336f-4dff-4141fa2694ec_6",
+        "httpMethod": "POST",
+        "httpRequestURI": "/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b/provisioning/actions/update/invoke",
+        "httpQueryString": "connectorType=c_cal&forced=true"
+      },
+      "payload": {
+        "type": "ClusterUpdated",
+        "orgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "clusterId": "5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b",
+        "upgradingStartTime": "2017-07-05T13:08:34.795Z"
+      }
+    },
+    {
+      "timestamp": "2017-07-04T09:55:00.206Z",
+      "context": {
+        "principalType": "PERSON",
+        "source": "external",
+        "principalId": "983761d5-3120-4747-9ab3-a3960ecdecc8",
+        "principalOrgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "trackingId": "ATLAS_49c1c6e5-e949-efab-d280-90a613a23c58_11",
+        "httpMethod": "POST",
+        "httpRequestURI": "/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b/provisioning/actions/add/invoke",
+        "httpQueryString": "connectorType=c_ucmc"
+      },
+      "payload": {
+        "type": "ClusterUpdated",
+        "orgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "clusterId": "5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b",
+        "softwarePackages": {
+          "c_ucmc": {
+            "type": "TlpSoftwarePackage",
+            "version": "8.8-1.0.4177",
+            "tlpUrl": "https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CallConnectorStable/20170612174048/call-connector-stable.tlp"
+          }
+        },
+        "oldSoftwarePackages": {
+          "c_ucmc": null
+        }
+      }
+    },
+    {
+      "timestamp": "2017-07-03T14:12:46.062Z",
+      "context": {
+        "principalType": "PERSON",
+        "source": "external",
+        "principalId": "983761d5-3120-4747-9ab3-a3960ecdecc8",
+        "principalOrgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "trackingId": "ATLAS_140762a3-ea5c-7d53-2155-398ae44e03f2_12",
+        "httpMethod": "POST",
+        "httpRequestURI": "/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b/provisioning/actions/add/invoke",
+        "httpQueryString": "connectorType=c_ucmc"
+      },
+      "payload": {
+        "type": "ClusterUpdated",
+        "orgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "clusterId": "5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b",
+        "softwarePackages": {
+          "c_ucmc": {
+            "type": "TlpSoftwarePackage",
+            "version": "8.8-1.0.4177",
+            "tlpUrl": "https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CallConnectorStable/20170612174048/call-connector-stable.tlp"
+          }
+        },
+        "oldSoftwarePackages": {
+          "c_ucmc": null
+        }
+      }
+    },
+    {
+      "timestamp": "2017-07-03T13:40:37.225Z",
+      "context": {
+        "principalType": "PERSON",
+        "source": "external",
+        "principalId": "983761d5-3120-4747-9ab3-a3960ecdecc8",
+        "principalOrgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "trackingId": "ATLAS_78f2c106-0523-cbeb-f887-df7f1cd134d0_12",
+        "httpMethod": "POST",
+        "httpRequestURI": "/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b/provisioning/actions/add/invoke",
+        "httpQueryString": "connectorType=c_ucmc"
+      },
+      "payload": {
+        "type": "ClusterUpdated",
+        "orgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "clusterId": "5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b",
+        "softwarePackages": {
+          "c_ucmc": {
+            "type": "TlpSoftwarePackage",
+            "version": "8.8-1.0.4177",
+            "tlpUrl": "https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CallConnectorStable/20170612174048/call-connector-stable.tlp"
+          }
+        },
+        "oldSoftwarePackages": {
+          "c_ucmc": null
+        }
+      }
+    },
+    {
+      "timestamp": "2017-06-08T09:08:29.640Z",
+      "context": {
+        "principalType": "PERSON",
+        "source": "external",
+        "principalId": "983761d5-3120-4747-9ab3-a3960ecdecc8",
+        "principalOrgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "trackingId": "ATLAS_d78f42ea-6936-e03f-bd03-e816a986fd4c_3",
+        "httpMethod": "POST",
+        "httpRequestURI": "/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b/provisioning/actions/update/invoke",
+        "httpQueryString": "connectorType=c_cal&forced=true"
+      },
+      "payload": {
+        "type": "ClusterUpdated",
+        "orgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "clusterId": "5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b",
+        "softwarePackages": {
+          "c_cal": {
+            "type": "TlpSoftwarePackage",
+            "version": "8.8-1.0.4213",
+            "tlpUrl": "https://ce5bbbcdd1f79c27dff8-b12ead3d93f4e78096e4b7110bc1b1e2.ssl.cf5.rackcdn.com/CalendarConnectorIntegStable/20170606234949/calendar-integration.tlp"
+          }
+        },
+        "oldSoftwarePackages": {
+          "c_cal": {
+            "type": "TlpSoftwarePackage",
+            "version": "8.8-1.0.4110",
+            "tlpUrl": "https://ce5bbbcdd1f79c27dff8-b12ead3d93f4e78096e4b7110bc1b1e2.ssl.cf5.rackcdn.com/CalendarConnectorIntegStable/20170504180107/calendar-integration.tlp"
+          }
+        }
+      }
+    },
+    {
+      "timestamp": "2017-06-08T09:08:29.366Z",
+      "context": {
+        "principalType": "PERSON",
+        "source": "external",
+        "principalId": "983761d5-3120-4747-9ab3-a3960ecdecc8",
+        "principalOrgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "trackingId": "ATLAS_d78f42ea-6936-e03f-bd03-e816a986fd4c_3",
+        "httpMethod": "POST",
+        "httpRequestURI": "/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b/provisioning/actions/update/invoke",
+        "httpQueryString": "connectorType=c_cal&forced=true"
+      },
+      "payload": {
+        "type": "ClusterUpdated",
+        "orgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "clusterId": "5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b",
+        "upgradingStartTime": "2017-06-08T09:08:29.357Z"
+      }
+    },
+    {
+      "timestamp": "2017-06-08T09:08:29.305Z",
+      "context": {
+        "principalType": "PERSON",
+        "source": "external",
+        "principalId": "983761d5-3120-4747-9ab3-a3960ecdecc8",
+        "principalOrgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "trackingId": "ATLAS_d78f42ea-6936-e03f-bd03-e816a986fd4c_2",
+        "httpMethod": "POST",
+        "httpRequestURI": "/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b/provisioning/actions/update/invoke",
+        "httpQueryString": "connectorType=c_mgmt&forced=true"
+      },
+      "payload": {
+        "type": "ClusterUpdated",
+        "orgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "clusterId": "5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b",
+        "upgradingStartTime": "2017-06-08T09:08:29.287Z"
+      }
+    },
+    {
+      "timestamp": "2017-06-08T09:08:29.302Z",
+      "context": {
+        "principalType": "PERSON",
+        "source": "external",
+        "principalId": "983761d5-3120-4747-9ab3-a3960ecdecc8",
+        "principalOrgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "trackingId": "ATLAS_d78f42ea-6936-e03f-bd03-e816a986fd4c_2",
+        "httpMethod": "POST",
+        "httpRequestURI": "/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b/provisioning/actions/update/invoke",
+        "httpQueryString": "connectorType=c_mgmt&forced=true"
+      },
+      "payload": {
+        "type": "ClusterUpdated",
+        "orgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "clusterId": "5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b",
+        "softwarePackages": {
+          "c_mgmt": {
+            "type": "TlpSoftwarePackage",
+            "version": "8.8-1.0.321263",
+            "tlpUrl": "https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/ManagementConnectorStable/20170607132557/c_mgmt.tlp"
+          }
+        },
+        "oldSoftwarePackages": {
+          "c_mgmt": {
+            "type": "TlpSoftwarePackage",
+            "version": "8.8-1.0.321257",
+            "tlpUrl": "https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/ManagementConnectorStable/20170524103740/c_mgmt.tlp"
+          }
+        }
+      }
+    },
+    {
+      "timestamp": "2017-05-28T01:00:03.419Z",
+      "context": {
+        "principalType": "MACHINE",
+        "source": "external",
+        "principalId": "0f418c1b-517d-4ad9-8d46-aaed5697d0b5",
+        "principalOrgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "trackingId": "EXP_83ebc560-bdfd-4fcb-8daa-e0ee0E384C79",
+        "httpMethod": "POST",
+        "httpRequestURI": "/v1/connectors"
+      },
+      "payload": {
+        "type": "ClusterUpdated",
+        "orgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "clusterId": "5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b",
+        "softwarePackages": {
+          "c_mgmt": {
+            "type": "TlpSoftwarePackage",
+            "version": "8.8-1.0.321257",
+            "tlpUrl": "https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/ManagementConnectorStable/20170524103740/c_mgmt.tlp"
+          }
+        },
+        "oldSoftwarePackages": {
+          "c_mgmt": {
+            "type": "TlpSoftwarePackage",
+            "version": "8.8-1.0.321255",
+            "tlpUrl": "https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/ManagementConnectorStable/20170503084751/c_mgmt.tlp"
+          }
+        }
+      }
+    },
+    {
+      "timestamp": "2017-05-28T01:00:03.412Z",
+      "context": {
+        "principalType": "MACHINE",
+        "source": "external",
+        "principalId": "0f418c1b-517d-4ad9-8d46-aaed5697d0b5",
+        "principalOrgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "trackingId": "EXP_83ebc560-bdfd-4fcb-8daa-e0ee0E384C79",
+        "httpMethod": "POST",
+        "httpRequestURI": "/v1/connectors"
+      },
+      "payload": {
+        "type": "ClusterUpdated",
+        "orgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "clusterId": "5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b",
+        "upgradingStartTime": "2017-05-28T01:00:03.410Z"
+      }
+    },
+    {
+      "timestamp": "2017-05-22T14:09:24.730Z",
+      "context": {
+        "principalType": "PERSON",
+        "source": "external",
+        "principalId": "983761d5-3120-4747-9ab3-a3960ecdecc8",
+        "principalOrgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "trackingId": "ATLAS_430037ec-ca65-db09-a566-f8943162ae4c_10",
+        "httpMethod": "POST",
+        "httpRequestURI": "/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b/provisioning/actions/add/invoke",
+        "httpQueryString": "connectorType=c_ucmc"
+      },
+      "payload": {
+        "type": "ClusterUpdated",
+        "orgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "clusterId": "5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b",
+        "softwarePackages": {
+          "c_ucmc": {
+            "type": "TlpSoftwarePackage",
+            "version": "8.8-1.0.3689",
+            "tlpUrl": "https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CallConnectorStable/20170331195340/call-connector-stable.tlp"
+          }
+        },
+        "oldSoftwarePackages": {
+          "c_ucmc": null
+        }
+      }
+    },
+    {
+      "timestamp": "2017-05-22T14:04:18.552Z",
+      "context": {
+        "principalType": "PERSON",
+        "source": "external",
+        "principalId": "983761d5-3120-4747-9ab3-a3960ecdecc8",
+        "principalOrgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "trackingId": "ATLAS_422b7c84-72df-6794-a501-9e14c39597dc_8",
+        "httpMethod": "POST",
+        "httpRequestURI": "/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/clusters/5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b/provisioning/actions/remove/invoke",
+        "httpQueryString": "connectorType=c_ucmc"
+      },
+      "payload": {
+        "type": "ClusterUpdated",
+        "orgId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "clusterId": "5ba6e3b6-e283-4c7e-bb4b-2bf6ce846f5b",
+        "softwarePackages": {
+          "c_ucmc": null
+        },
+        "oldSoftwarePackages": {
+          "c_ucmc": {
+            "type": "TlpSoftwarePackage",
+            "version": "8.8-1.0.3689",
+            "tlpUrl": "https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CallConnectorStable/20170331195340/call-connector-stable.tlp"
+          }
+        }
+      }
+    }
+  ],
+  "paging": {
+    "next": "https://i.am.next.url"
+  }
+}
