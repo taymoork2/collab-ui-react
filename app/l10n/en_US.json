@@ -8920,15 +8920,44 @@
     "deletionPeriod": "Media will be permanently deleted after 30 days",
     "delete": "Delete",
     "edit": "Edit",
+    "saveButton": "Save",
+    "cancelButton": "Cancel",
     "deleteButton": "Delete All",
     "searchPlaceholder": "Search Media",
-    "uploadProcessing": "Upload Processing...",
+    "uploading": "Uploading...",
+    "uploadProcessing": "Processing...",
     "processingError": "Error processing media file.  Please try again.",
     "getMediaListError": "An error occurred obtaining the list of media.  Please try again.",
     "uploadMediaError": "An error occurred uploading media.  Please try again.",
     "deleteMediaError": "An error occurred deleting media.",
     "cleanupMediaError": "An error occurred cleaning up a failed media upload.",
-    "unsupportedTypeError": "File type selected for upload is not supported."
+    "unsupportedTypeError": "File type selected for upload is not supported.",
+    "cancelUploadError": "An error occurred cancelling a media upload.",
+    "displayName": {
+      "required": "Media name is required",
+      "tooShortError": "Media name must contain at least one characters.",
+      "tooLongError": "Media name can contain a maximum of 48 characters."
+    },
+    "description": {
+      "tooLongError": "Media description can contain a maximum of 512 characters."
+    },
+    "cancelUpload": {
+      "title": "Cancel Upload",
+      "message": "Are you sure you want to cancel the upload?",
+      "cancel": "Proceed with Upload",
+      "confirm": "Cancel Upload"
+    },
+    "deleteMedia": {
+      "title": "Permanantly Delete Media",
+      "message": "Note: Media file(s) recently deleted still might be in use by the system.",
+      "cancel": "Cancel",
+      "confirm": "Delete Media"
+    },
+    "deleteMediaNotAvailable": {
+      "title": "Delete Unavailable",
+      "message": "Delete isn't available for this media because it is currently assigned. Please un-assign and try again",
+      "confirm": "Close"
+    }
   },
   "multipleDevicesConfirm": {
     "title": "About Devices in a Place",

@@ -24,6 +24,15 @@ media-mgr {
     max-width: inherit;
   }
 
+  .cs-card.large {
+    width: 80%;
+    margin-top: 6rem;
+    border: 1px dashed $gray-light-1;
+    border-radius: 8px;
+    background-color: $gray-light-4;
+    align-self: center;
+  }
+
   .mb-nav {
     flex: 0 0 94px;
     flex-direction: column;
@@ -37,43 +46,7 @@ media-mgr {
     display: flex;
     padding-left: 0;
     padding-right: 0;
-    max-width: inherit;
-  }
-
-  .mb-panel-left {
-    flex: 5;
-    flex-direction: column;
-    display: flex;
-    border-left: $gray-light-2;
-    border-left-width: thin;
-    border-left-style: solid;
-    padding-left: 0;
-    padding-right: 0;
-  }
-
-  .mb-panel-right {
-    flex: 7;
-    flex-direction: column;
-    display: flex;
-    border-left: $gray-light-2;
-    border-left-width: thin;
-    border-left-style: solid;
-    padding-left: 0;
-    padding-right: 0;
-  }
-
-  .mb-panel-header {
-    display: flex;
-    justify-content: space-between;
-    font-family: 'CiscoSansTT Extra Light';
-    text-align: end;
-    margin: .5rem 1rem 1.5rem .5rem;
-  }
-
-  .mb-panel-body {
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
+    width: calc(100% - 94px);
   }
 
   .mb-panel {
@@ -88,38 +61,97 @@ media-mgr {
     overflow-y: auto;
   }
 
-  .mb-title-centered {
+  .mb-panel-left {
+    flex: 5;
+    flex-direction: column;
     display: flex;
-    justify-content: center;
-    font-family: 'CiscoSansTT Extra Light';
-    font-size: 26px;
-    color: $gray-dark-2;
-    margin-top: 2.5rem;
+    border-left: $gray-light-2;
+    border-left-width: thin;
+    border-left-style: solid;
+    padding-left: 0;
+    padding-right: 0;
+
+    .nowrap {
+      width: 252px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
   }
 
-  .mb-title-spaced {
+  .mb-panel-right {
+    flex: 7;
+    flex-direction: column;
+    display: flex;
+    border-left: $gray-light-2;
+    border-left-width: thin;
+    border-left-style: solid;
+    padding-left: 0;
+    padding-right: 0;
+
+    .mb-title {
+      margin-top: 0.5rem;
+    }
+
+    .mb-rows {
+      margin: 1rem 2.5rem;
+    }
+
+    .mb-panel-footer {
+      display: flex;
+      flex-direction: row;
+      margin: 1rem auto 2.25rem;
+      justify-content: flex-end;
+    }
+
+    .nowrap {
+      width: 360px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .mb-panel-header {
     display: flex;
     justify-content: space-between;
     font-family: 'CiscoSansTT Extra Light';
+    text-align: end;
+    margin: .5rem 1rem 1rem .5rem;
+  }
+
+  .mb-panel-body {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  .mb-panel-footer {
+    display: flex;
+    flex-direction: row;
+    margin: auto 1rem 2rem auto;
+  }
+
+  .mb-title {
+    font-family: 'CiscoSansTT Extra Light';
     font-size: 26px;
     color: $gray-dark-2;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
   }
 
   .mb-desc {
     font-family: 'CiscoSansTT Light';
     font-size: 14px;
     color: $gray-dark-1;
-    margin-top: 1.25rem;
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
+    word-break: break-word;
   }
 
   .row {
     &:hover { background: $gray-light-4; }
     &:focus { background: $gray-light-4; }
-  }
-
-  .active-row {
-    background: $gray-light-3;
+    .active { background: $gray-light-3; }
   }
 
   .mb-row-seperator {
@@ -127,19 +159,27 @@ media-mgr {
     margin-bottom: 0rem;
   }
 
-  .mb-rows-wide {
+  .mb-rows {
     margin: 1rem 1.25rem;
   }
 
-  .mb-rows-narrow {
-    margin: 1.5rem 2.25rem;
-    flex-grow: 1;
-  }
-
   .mb-row-content {
-    flex: 1 1 auto;
+    flex: 1;
     display: flex;
     justify-content: space-between;
+
+    input[name='displayName'] {
+      border: 0;
+      margin: 0;
+      padding: 0;
+      display: inline;
+      border-bottom: 1px solid $brand-primary;
+      border-radius: 0;
+      transition: initial;
+      font-size: 14px;
+      outline: none !important;
+      box-shadow: none !important;
+    }
   }
 
   .searchbox .searchinput {
@@ -167,20 +207,9 @@ media-mgr {
     justify-content: flex-start;
   }
 
-  .nowrap {
-    width: 250px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-
   .media-icon-alignment {
     text-align: right;
     vertical-align: middle;
-  }
-
-  .mb-br-button {
-    margin: auto 1rem 1rem auto;
   }
 
   .icon-msg-alignment {
@@ -207,10 +236,6 @@ media-mgr {
     color: $gray-light-1;
   }
 
-  .active-icon {
-    color: $color-primary-base;
-  }
-
   .icon-spinner {
     color: $color-primary-base;
     margin: 0;
@@ -225,28 +250,54 @@ media-mgr {
     color: $color-primary-base;
     text-align: right;
     margin: 0;
+    &:disabled {
+      color: $color-primary-lighter;
+      margin: 0;
+    }
   }
 
-  .icon-plus-disabled {
-    color: $color-primary-lighter;
-    margin: 0;
+  .active-icon {
+    color: $color-primary-base;
   }
 
-  .icon-exit {
-    float: right;
-    margin: 0;
+  .progressbar-label {
+    font-family: 'CiscoSansTT Light';
+    font-size: 14px;
+    color: $gray-dark-2;
   }
 
-  .progress-striped {
-    background: $gray-light-2;
+  .progressbar-progress {
+    font-family: 'CiscoSansTT Light';
+    font-size: 14px;
+    color: $gray-dark-2;
+  }
+
+  .progressbar-sublabel {
+    color: $gray-base;
   }
 
   .progress-bar {
-    margin: 10rem;
+    margin: 6rem;
+    .icon-exit {
+      align-self: center;
+      margin-left: 0.5rem;
+    }
+  }
+
+  .progressbar-icon-alignment {
+    display: flex;
+  }
+
+  .progressbar-content-alignment {
+    flex-grow: 1;
   }
 
   .centered {
     justify-content: center;
     align-items: center;
+  }
+
+  .btn {
+    height: 2.25rem;
   }
 }
