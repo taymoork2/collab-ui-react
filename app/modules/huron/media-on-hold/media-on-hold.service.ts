@@ -3,7 +3,7 @@ import { IOption } from 'modules/huron/dialing';
 
 interface IMediaOnHoldResource extends ng.resource.IResourceClass<ng.resource.IResource<IMediaOnHold>> {}
 
-const GENERIC_MEDIA_ID = '98765432-DBC2-01BB-476B-CFAF98765432';
+const GENERIC_MEDIA_ID: string = '98765432-DBC2-01BB-476B-CFAF98765432';
 
 export class MediaOnHoldService {
   private mediaOnHoldResource: IMediaOnHoldResource;
@@ -12,6 +12,7 @@ export class MediaOnHoldService {
   /* @ngInject */
   constructor(
     private $resource: ng.resource.IResourceService,
+    private $translate: ng.translate.ITranslateService,
     private Authinfo,
     private HuronConfig,
   ) {
@@ -62,7 +63,7 @@ export class MediaOnHoldService {
           };
         }), 'label');
         mediaOptions.push(<IOption>{
-          label: 'Generic Media',
+          label: this.$translate.instant('mediaOnHold.systemDefault'),
           value: GENERIC_MEDIA_ID,
         });
         return mediaOptions;
@@ -78,17 +79,24 @@ export class MediaOnHoldService {
             value: media.rhesosId,
           };
         }), 'label');
-        _.forEach(mediaList, media => {
-          if (media.assignments && _.some(media.assignments, ['idType', 'ORG_ID'])) {
+        if (!_.isEmpty(mediaList)) {
+          _.forEach(mediaList, media => {
+            if (media.assignments && _.some(media.assignments, ['idType', 'ORG_ID'])) {
+              mediaOptions.push(<IOption>{
+                label: `Company MOH (${media.displayName})`,
+                value: GENERIC_MEDIA_ID,
+              });
+            }
+          });
+          if (!_.isEqual(_.last(mediaOptions).value, GENERIC_MEDIA_ID)) {
             mediaOptions.push(<IOption>{
-              label: 'Company MOH (' + media.displayName + ')',
+              label: this.$translate.instant('mediaOnHold.companyMOHDefaultMedia'),
               value: GENERIC_MEDIA_ID,
             });
           }
-        });
-        if (!_.isEqual(_.last(mediaOptions).value, GENERIC_MEDIA_ID)) {
+        } else {
           mediaOptions.push(<IOption>{
-            label: 'Company MOH (Generic Media)',
+            label: this.$translate.instant('mediaOnHold.companyMOHDefaultMedia'),
             value: GENERIC_MEDIA_ID,
           });
         }
@@ -96,33 +104,12 @@ export class MediaOnHoldService {
       });
   }
 
-  public getLineMediaOnHold(lineId: string): ng.IPromise<IMediaOnHold[]> {
-    return this.lineMediaOnHoldResource.query({
-      orgId: this.Authinfo.getOrgId(),
-      lineId: lineId,
-    }).$promise
-    .then(mediaList => {
-      return _.map(mediaList, media => {
-        return <IMediaOnHold> {
-          orgId: _.get(media, 'orgId'),
-          mediaId: _.get(media, 'mediaId'),
-          variantId: _.get(media, 'variantId'),
-          fileName: _.get(media, 'fileName'),
-          displayName: _.get(media, 'displayName'),
-          rhesosId: _.get(media, 'rhesosId'),
-          markForDelete: _.get(media, 'markForDelete'),
-          assignments: _.get(media, 'assignments'),
-        };
-      });
-    });
-  }
-
   public getLineMedia(lineId: string): ng.IPromise<string> {
-    return this.getLineMediaOnHold(lineId)
+    return this.getMediaOnHold()
       .then(mediaList => {
         let mediaOnHold = GENERIC_MEDIA_ID;
         _.forEach(mediaList, media => {
-          if (media.assignments && _.find(media.assignments, ['idType', 'NUM_UUID'])) {
+          if (media.assignments && _.some(media.assignments, ['assignmentId', lineId])) {
             mediaOnHold = media.rhesosId;
           }
         });
@@ -136,6 +123,11 @@ export class MediaOnHoldService {
       saveAssignment.push({
         assignmentId: assignmentId,
         idType: 'NUM_UUID',
+      });
+    } else {
+      saveAssignment.push({
+        assignmentId: this.Authinfo.getOrgId(),
+        idType: 'ORG_ID',
       });
     }
     return this.mediaOnHoldResource.save({
