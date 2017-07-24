@@ -272,6 +272,15 @@
             },
             abstract: true,
           })
+          .state('main-unauthenticated', {
+            parent: 'mainLazyLoad',
+            views: {
+              'main@': {
+                template: '<div ui-view=""></div>',
+              },
+            },
+            abstract: true,
+          })
           .state('main', {
             views: {
               'main@': {
@@ -606,13 +615,9 @@
           })
           .state('downloads', {
             url: '/downloads',
-            parent: 'mainLazyLoad',
-            views: {
-              'main@': {
-                templateUrl: 'modules/squared/views/downloads.html',
-                controller: 'DownloadsCtrl',
-              },
-            },
+            parent: 'main-unauthenticated',
+            templateUrl: 'modules/squared/views/downloads.html',
+            controller: 'DownloadsCtrl',
             authenticate: false,
           })
           .state('domainmanagement', {
@@ -758,7 +763,7 @@
             templateUrl: 'modules/squared/views/processorder.html',
             controller: 'ProcessorderCtrl',
             controllerAs: 'processOrder',
-            parent: 'main',
+            parent: 'main-unauthenticated',
             authenticate: false,
           })
           .state('overview', {
@@ -1829,6 +1834,11 @@
                 controllerAs: 'nav',
                 controller: 'MediaReportsController',
                 templateUrl: 'modules/mediafusion/reports/media-reports-phase-two.html',
+              },
+            },
+            resolve: {
+              hasHmsTwoDotFiveFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServicePhaseTwoDotFive);
               },
             },
           })
@@ -3115,7 +3125,7 @@
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/huron/settings'));
+                  done(require('modules/call/settings'));
                 }, 'call-settings');
               }),
             },
@@ -3156,7 +3166,7 @@
             parent: 'modal',
             views: {
               'modal@': {
-                templateUrl: 'modules/huron/settings/bulkEnableVmModal/bulkEnableVmModal.html',
+                templateUrl: 'modules/call/settings/settings-bulk-enable-vm-modal/settings-bulk-enable-vm-modal.html',
               },
             },
           })

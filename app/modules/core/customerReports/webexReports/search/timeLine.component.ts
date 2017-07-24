@@ -18,10 +18,10 @@ class TimeLine implements ng.IComponentController {
   ) {
     this.option = {
       width: 960,
-      height: 340,
+      height: 360,
       paddingRight: 25,
       paddingLeft: 92.5,
-      paddingButtom: 40.5,
+      paddingButtom: 50.5,
     };
     this.data = {
       xStep: 0,
@@ -49,15 +49,20 @@ class TimeLine implements ng.IComponentController {
     this.showTips();
   }
 
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
+    const { lineColor, circleColor } = changes;
+    this.setColor(_.get(lineColor ? lineColor : circleColor, 'currentValue'));
+  }
+
   private initParameters() {
-    this.colorArr = ['#43A942', '#E9691E', '#049FD9', '#AEAEAF'];
+    this.colorArr = ['#32c655', '#f0a309', '#e74a3e', '#AEAEAF'];
     this.option.width = this.$element.find('#svg').width();
     this.data.endTime = this.sourceData.overview.endTime;
     this.data.startTime = this.sourceData.overview.startTime;
 
     this.data.gridHorizontalLineNum = this.sourceData.lines.length + 2 > 12 ? this.sourceData.lines.length + 2 : 12;
     if (this.data.gridHorizontalLineNum > 12) {
-      this.option.height = (this.data.gridHorizontalLineNum * 21) + this.option.paddingButtom;
+      this.option.height = (this.data.gridHorizontalLineNum * 26) + this.option.paddingButtom;
     }
 
     this.coordinate = {
@@ -68,7 +73,6 @@ class TimeLine implements ng.IComponentController {
 
     this.data.yStep = this.coordinate.y / this.data.gridHorizontalLineNum;
     this.data.xStep = (this.coordinate.endX - this.coordinate.x) / this.data.gridVerticalLineNum;
-
     this.setDomain();
     this.svg = d3.select('#svg')
       .append('svg:svg')
@@ -90,32 +94,42 @@ class TimeLine implements ng.IComponentController {
   }
 
   private drawGridHorizontalLine() {
+    const data: Number[] = [];
     const x = this.coordinate.x;
     let y = this.coordinate.y + this.data.yStep;
-
-    for (let i = 0; i < this.data.gridHorizontalLineNum + 1; i++) {
+    while (y > 0) {
       y  -= this.data.yStep;
-      this.svg.append('svg:line')
-        .attr('class', 'gridLine')
-        .attr('x1', x)
-        .attr('y1', y)
-        .attr('x2', this.coordinate.endX)
-        .attr('y2', y);
+      data.push(y);
     }
+    const g = this.svg.append('g').attr('class', 'gridHorizontalLine');
+    g.selectAll('gridHorizontalLine')
+      .data(data)
+      .enter()
+      .append('svg:line')
+      .attr('x1', x)
+      .attr('y1', val => val )
+      .attr('x2', this.coordinate.endX)
+      .attr('y2', val => val );
   }
 
   private drawGridVerticalLine() {
+    const data: Number[] = [];
     const y = this.coordinate.y;
     let x = this.coordinate.x - this.data.xStep;
-    for (let i = 0; i < this.data.gridVerticalLineNum + 1; i++) {
+    while ( x < this.coordinate.endX) {
       x += this.data.xStep;
-      this.svg.append('svg:line')
-        .attr('class', 'gridLine')
-        .attr('x1', x)
-        .attr('y1', 0)
-        .attr('x2', x)
-        .attr('y2', y);
+      data.push(x);
     }
+
+    const g = this.svg.append('g').attr('class', 'gridVerticalLine');
+    g.selectAll('gridVerticalLine')
+      .data(data)
+      .enter()
+      .append('svg:line')
+      .attr('x1', val => val)
+      .attr('y1', 0)
+      .attr('x2', val => val)
+      .attr('y2', y);
   }
 
   private axis() {
@@ -123,6 +137,7 @@ class TimeLine implements ng.IComponentController {
       .domain(this.data.domain)
       .range([0, this.coordinate.endX - this.coordinate.x]);
     this.time2line = timeRange;
+    this.setLine();
 
     const xAxis = d3.svg.axis()
       .scale(timeRange)
@@ -137,9 +152,7 @@ class TimeLine implements ng.IComponentController {
       .call(xAxis);
   }
 
-  private drawLine() {
-    let y = 0;
-    const x = this.coordinate.x;
+  private setLine() {
     const data = _.map(this.sourceData.lines, (item: any) => {
       const leaveTime = item.leaveTime || this.sourceData.overview.endTime;
       const joinTime = item.joinTime;
@@ -147,67 +160,84 @@ class TimeLine implements ng.IComponentController {
       const end_ = this.coordinate.endX - this.coordinate.x;
 
       return {
-        text: item.jmtQuality,
-        userName_ : item.userName,
-        userName: _.truncate(item.userName, { length: 15 }),
         end: end > end_ ? end_ : end,
+        userId: _.get(item, 'userId'),
+        guestId: _.get(item, 'guestId'),
+        joinTime: _.get(item, 'joinTime'),
+        userName_ : _.get(item, 'userName'),
+        userName: _.truncate(item.userName, { length: 14 }),
         start: this.time2line(this.timestampToDate(joinTime)),
-        lineColor: item.dataQuality ? this.colorArr[item.dataQuality - 1] : this.colorArr[3],
-        circleColor: item.jmtQuality ? this.colorArr[item.jmtQuality - 1] : this.colorArr[3],
       };
     });
-
     this.data.joinsLine = data;
-    _.forEach(data, (item) => {
-      y += this.data.yStep;
+  }
 
-      this.svg.append('svg:line')
-        .attr('x1', x + item.start)
-        .attr('y1', y)
-        .attr('x2', x + item.end)
-        .attr('y2', y)
-        .style('stroke', item.lineColor)
-        .style('stroke-width', 1);
+  private drawLine() {
+    let y = 0;
+    const x = this.coordinate.x;
+    const data = _.map(this.data.joinsLine, (item: any) => {
+      y += this.data.yStep;
+      return _.assignIn({}, item, { y: y });
     });
+    const g = this.svg.append('g').attr('class', 'drawLine');
+    g.selectAll('.drawLine')
+      .data(data)
+      .enter()
+      .append('svg:line')
+      .attr('x1', item => x + item.start)
+      .attr('y1', item => item.y)
+      .attr('x2', item => x + item.end)
+      .attr('y2', item => item.y)
+      .attr('id', item => `myLine${item.guestId}-${item.userId}-${item.joinTime}`);
 
     this.drawBadges();
   }
 
   private drawBadges() {
-    let x, y;
-    y = 0;
-    const badges = this.svg.append('g');
-    _.forEach(this.data.joinsLine, (item: any) => {
-      x = this.coordinate.x + item.start;
+    let y = 0;
+    const badges = this.svg.append('g').attr('class', 'circleStart');
+    const data = _.map(this.data.joinsLine, (item: any) => {
       y += this.coordinate.y / this.data.gridHorizontalLineNum;
-      badges.append('circle')
-        .attr('cx', x)
-        .attr('cy', y)
-        .attr('r', 5)
-        .style('fill', item.circleColor);
+      return _.assignIn({}, item, { x: this.coordinate.x + item.start, y: y });
     });
+
+    badges.selectAll('.circleStart')
+      .data(data)
+      .enter()
+      .append('circle')
+      .attr('r', 5)
+      .attr('cx', item => item.x )
+      .attr('cy', item => item.y )
+      .attr('id', item => `myCircle${item.guestId}-${item.userId}-${item.joinTime}`);
   }
 
   private showUser() {
     const x = 0;
     let y = 0;
-    const g = this.svg.append('g');
-    _.forEach(this.data.joinsLine, (item: any) => {
+    const g = this.svg.append('g').attr('class', 'showUser');
+    const data = _.map(this.data.joinsLine, (item: any) => {
       y += this.data.yStep;
-      g.append('text')
-        .attr('x', x)
-        .attr('y', y)
-        .attr('class', 'showUser')
-        .attr('transform', `translate(${this.coordinate.x - 10} , 0)`)
-        .text(item.userName);
+      return { x: x, y: y, userName: item.userName };
     });
+    g.selectAll('.showUser')
+      .data(data)
+      .enter()
+      .append('text')
+      .attr('x', item => item.x)
+      .attr('y', item => item.y)
+      .attr('transform', `translate(${this.coordinate.x - 10} , 0)`)
+      .text(item => item.userName);
   }
 
   private showTips() {
     let xStart = 0;
     const x = this.coordinate.x;
-    const y = this.coordinate.y + 1;
-    const colorG = this.svg.append('g').attr('class', 'showCircleTips');
+    const y = this.coordinate.y + 10;
+    const colorG = this.svg.append('g')
+      .attr('class', 'showTips')
+      .attr('transform', `translate(150 , 0)`)
+      .append('g')
+      .attr('class', 'circleTips');
     const tips = [
       { text: 'Good', color: this.colorArr[0] },
       { text: 'Fair', color: this.colorArr[1] },
@@ -215,37 +245,29 @@ class TimeLine implements ng.IComponentController {
       { text: 'N/A', color: this.colorArr[3] },
     ];
     colorG.append('text')
-      .attr('class', 'circleTips')
-      .attr('x', x)
-      .attr('y', y)
-      .attr('transform', `translate(${xStart} , 32)`)
+      .attr('transform', `translate(${xStart + x} , ${y + 32})`)
       .text('Join Meeting Time: ');
     xStart += 50;
 
     _.forEach(tips, function (val) {
       xStart += 70;
       colorG.append('circle')
-        .attr('cx', x)
-        .attr('cy', y)
         .attr('r', 5)
-        .attr('transform', `translate(${xStart} , 28)`)
+        .attr('transform', `translate(${xStart + x} , ${y + 28})`)
         .style('fill', val.color);
 
       colorG.append('text')
-        .attr('x', x)
-        .attr('y', y)
         .attr('font-size', '12px')
-        .attr('fill', val.color)
-        .attr('transform', `translate(${xStart + 10} , 32)`)
+        .attr('transform', `translate(${xStart + x + 10} , ${y + 32})`)
         .text(val.text);
     });
     this.lineMsgTips();
   }
 
   private lineMsgTips() {
-    const colorG = this.svg.append('g').attr('class', 'lineMsgTips');
+    const colorG = this.svg.select('.showTips').append('g').attr('class', 'lineTips');
     const x = this.coordinate.x;
-    const y = this.coordinate.y + 1;
+    const y = this.coordinate.y + 10;
     const tips = [
       { text: 'Good', color: this.colorArr[0] },
       { text: 'Bad', color: this.colorArr[1] },
@@ -263,10 +285,7 @@ class TimeLine implements ng.IComponentController {
       .interpolate('linear');
 
     colorG.append('text')
-      .attr('class', 'msgTips')
-      .attr('x', x)
-      .attr('y', y)
-      .attr('transform', `translate(${xStart} , 32)`)
+      .attr('transform', `translate(${xStart + x} , ${y + 32})`)
       .text('Meeting Quality: ');
     xStart += 30;
     _.forEach(tips, (val) => {
@@ -276,15 +295,39 @@ class TimeLine implements ng.IComponentController {
         .attr('stroke', val.color)
         .attr('stroke-width', 1)
         .attr('fill', val.color)
-        .attr('transform', `translate(${xStart} , 25)`);
+        .attr('transform', `translate(${xStart} , 23)`);
 
       colorG.append('text')
-        .attr('x', x)
-        .attr('y', y)
         .attr('font-size', '12px')
-        .attr('fill', val.color)
-        .attr('transform', `translate(${xStart + 35} , 32)`)
+        .attr('transform', `translate(${xStart + x + 35} , ${y + 32})`)
         .text(val.text);
+    });
+  }
+
+  private setColor(color) {
+    if (!color) {
+      return;
+    }
+    let key;
+    const colorObj = {};
+    _.forEach(color, (item) => {
+      key = `${item.guestId}-${item.userId}-${item.joinTime}`;
+      colorObj[key] = item;
+    });
+
+    _.forEach(this.data.joinsLine, (item) => {
+      key = `${_.get(item, 'guestId')}-${_.get(item, 'userId')}-${_.get(item, 'joinTime')}`;
+      if (!colorObj[key]) {
+        return true;
+      }
+
+      if (colorObj[key]['jmtQuality']) {
+        d3.selectAll(`#myLine${key}`).attr('stroke', this.colorArr[colorObj[key]['jmtQuality']]);
+      }
+
+      if (colorObj[key]['dataQuality']) {
+        d3.selectAll(`#myCircle${key}`).style('fill', this.colorArr[colorObj[key]['dataQuality']]);
+      }
     });
   }
 
@@ -322,6 +365,6 @@ class TimeLine implements ng.IComponentController {
 
 export class CustTimeLineComponent implements ng.IComponentOptions {
   public controller = TimeLine;
-  public bindings = { sourceData: '<' };
   public template = '<div id="svg"></div>';
+  public bindings = { sourceData: '<', lineColor: '<', circleColor: '<' };
 }

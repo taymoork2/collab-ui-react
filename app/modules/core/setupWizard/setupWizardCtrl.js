@@ -6,7 +6,7 @@ require('./_setup-wizard.scss');
   angular.module('Core')
     .controller('SetupWizardCtrl', SetupWizardCtrl);
 
-  function SetupWizardCtrl($q, $scope, $state, $stateParams, Authinfo, Config, FeatureToggleService, Orgservice, SetupWizardService, Utils) {
+  function SetupWizardCtrl($q, $scope, $state, $stateParams, $timeout, Authinfo, Config, FeatureToggleService, Orgservice, SetupWizardService, Utils, Notification) {
     var isFirstTimeSetup = _.get($state, 'current.data.firstTimeSetup', false);
     var shouldRemoveSSOSteps = false;
     var isSharedDevicesOnlyLicense = false;
@@ -16,6 +16,7 @@ require('./_setup-wizard.scss');
     $scope.tabs = [];
     $scope.isTelstraCsbEnabled = false;
     $scope.isCSB = Authinfo.isCSB();
+    $scope.isCustomerPresent = SetupWizardService.isCustomerPresent();
 
     if (Authinfo.isCustomerAdmin()) {
       initToggles().finally(init);
@@ -187,23 +188,53 @@ require('./_setup-wizard.scss');
         template: 'modules/core/setupWizard/callSettings/serviceSetupInit.html',
       };
 
+      var pickCountry = {
+        name: 'callPickCountry',
+        template: 'modules/core/setupWizard/callSettings/serviceHuronCustomerCreate.html',
+      };
+
       if (showCallSettings()) {
-        var steps = [{
-          name: 'init',
-          template: 'modules/core/setupWizard/callSettings/serviceSetup.html',
-        }];
-        if ($scope.ishI1484) {
-          steps.splice(0, 0, initialStep);
-        }
-        tabs.splice(1, 0, {
-          name: 'serviceSetup',
-          required: true,
-          label: 'firstTimeWizard.callSettings',
-          description: 'firstTimeWizard.serviceSetupSub',
-          icon: 'icon-calls',
-          title: 'firstTimeWizard.unifiedCommunication',
-          controllerAs: '$ctrl',
-          steps: steps,
+        $q.resolve($scope.isCustomerPresent).then(function (customer) {
+          var isSimpOrder = Authinfo.getCustomerAdminEmail().indexOf('ordersimp') !== -1;
+
+          if (customer && isSimpOrder) {
+            SetupWizardService.activateAndCheckCapacity().catch(function (error) {
+              $timeout(function () {
+              //   $scope.$emit('wizardNextButtonDisable', true);
+              });
+              if (error.errorCode === 42003) {
+                //Error code from Drachma
+                Notification.errorWithTrackingId(error, 'firstTimeWizard.error.overCapacity');
+              } else {
+                Notification.errorWithTrackingId(error, 'firstTimeWizard.error.capacityFail');
+              }
+              $scope.$emit('wizardNextButtonDisable', true);
+            });
+          }
+
+          var steps = [{
+            name: 'init',
+            template: 'modules/core/setupWizard/callSettings/serviceSetup.html',
+          }];
+
+          if ($scope.ishI1484) {
+            steps.splice(0, 0, initialStep);
+          }
+
+          if (!customer && isSimpOrder) {
+            steps.splice(0, 0, pickCountry);
+          }
+
+          tabs.splice(1, 0, {
+            name: 'serviceSetup',
+            required: true,
+            label: 'firstTimeWizard.callSettings',
+            description: 'firstTimeWizard.serviceSetupSub',
+            icon: 'icon-calls',
+            title: 'firstTimeWizard.unifiedCommunication',
+            controllerAs: '$ctrl',
+            steps: steps,
+          });
         });
       }
     }

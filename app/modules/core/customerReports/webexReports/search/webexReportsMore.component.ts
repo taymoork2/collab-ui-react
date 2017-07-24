@@ -8,6 +8,8 @@ class WebexReportsMore implements ng.IComponentController {
   public data: any;
   public dataSet: any;
   public loading = true;
+  public lineColor: any;
+  public circleColor: any;
   public conferenceID: Number;
   public loadingMeetingline = false;
 
@@ -54,10 +56,26 @@ class WebexReportsMore implements ng.IComponentController {
       .then((res) => {
         this.loadingMeetingline = true;
         this.dataSet = { overview: this.data.overview, lines: res };
+        this.getJoinMeetingTime();
+        this.getJoinMeetingQuality();
       })
       .catch((err) => {
         this.Notification.errorResponse(err, 'errors.statusError', { status: err.status });
         this.loadingMeetingline = false;
+      });
+  }
+
+  private getJoinMeetingTime() {
+    this.SearchService.getJoinMeetingTime(this.conferenceID)
+      .then((res) => {
+        this.circleColor = res;
+      });
+  }
+
+  private getJoinMeetingQuality() {
+    this.SearchService.getJoinMeetingQuality(this.conferenceID)
+      .then((res) => {
+        this.lineColor = res;
       });
   }
 

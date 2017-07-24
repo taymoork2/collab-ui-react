@@ -162,7 +162,7 @@ describe('Service: Media Reports Service', function () {
         expect(vm.Notification.errorWithTrackingId).toHaveBeenCalledTimes(1);
       });
 
-      vm.$httpBackend.flush();
+      vm.$httpBackend.verifyNoOutstandingRequest();
     });
   });
 

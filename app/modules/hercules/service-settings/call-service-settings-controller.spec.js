@@ -3,7 +3,7 @@
 describe('Controller: CallServiceSettingsController', function () {
   beforeEach(function () {
     this.initModules('Hercules', 'Squared');
-    this.injectDependencies('$controller', '$httpBackend', '$scope', '$q', 'Analytics', 'FeatureToggleService');
+    this.injectDependencies('$controller', '$httpBackend', '$modal', '$scope', '$q', 'Analytics', 'FeatureToggleService');
 
     spyOn(this.Analytics, 'trackHSNavigation');
     spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
@@ -43,5 +43,20 @@ describe('Controller: CallServiceSettingsController', function () {
     this.initController();
     this.$httpBackend.flush();
     expect(this.controller.nameChangeEnabled).toBeTruthy();
+  });
+
+  it('should open the correct modal window ', function () {
+    spyOn(this.$modal, 'open').and.callFake(function () {
+      return {
+        result: function () {},
+      };
+    });
+    this.controller.openSipTestResults();
+
+    expect(this.$modal.open).toHaveBeenCalledWith(jasmine.objectContaining({
+      controller: 'VerifySipDestinationModalController',
+      controllerAs: 'vm',
+      templateUrl: 'modules/hercules/service-settings/verify-sip-destination/verify-sip-destination-modal.html',
+    }));
   });
 });

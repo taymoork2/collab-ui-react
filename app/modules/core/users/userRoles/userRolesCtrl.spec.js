@@ -356,6 +356,23 @@ describe('Controller: UserRolesCtrl', function () {
           expect(Userservice.updateUserProfile).toHaveBeenCalledWith(currentUser.id, expectedUserData);
         });
 
+        it('should update $scope.currentUser and $stateParams.currentUser if patchUserProfile is called', function () {
+          expect($scope.formUserData.name.givenName).not.toEqual('Tester');
+          $scope.formUserData.name.givenName = 'Tester';
+          expectedUserData.name.givenName = 'Tester';
+          Userservice.updateUserProfile.and.callFake(function () {
+            return $q.resolve({ data: expectedUserData });
+          });
+
+          $scope.updateRoles();
+          $scope.$digest();
+
+          expect(Userservice.patchUserRoles).not.toHaveBeenCalled();
+          expect(Userservice.updateUserProfile).toHaveBeenCalledWith(currentUser.id, expectedUserData);
+          expect($scope.currentUser.name.givenName).toEqual('Tester');
+          expect($stateParams.currentUser.name.givenName).toEqual('Tester');
+        });
+
         it('should call updateUserProfile with correct meta attributes', function () {
           // test clearing givenName
           $scope.formUserData.name.givenName = '';
