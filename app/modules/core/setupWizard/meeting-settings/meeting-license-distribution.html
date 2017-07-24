@@ -16,8 +16,6 @@
         </cs-card>
       </div>
     </div>
-  </div>
-  <div ng-repeat="licenses in meetingCtrl.distributedLicensesArray">
     <div class="row">
       <div ng-repeat="site in licenses">
         <div ng-if="$first" class="col-md-3">{{site.siteUrl}}.webex.com</div>
@@ -28,9 +26,7 @@
         </div>
       </div>
     </div>
-  </div>
-  <div ng-repeat="licenses in meetingCtrl.distributedLicensesArray">
-    <div ng-if="$first" class="row element-spacing">
+    <div ng-if="$last" class="row element-spacing">
       <div ng-repeat="site in licenses">
         <div ng-if="$first" class="col-md-3" translate="common.total"></div>
         <div class="col-md-2 align-license-count-total">{{meetingCtrl.getLicensesAssignedTotal(site.centerType)}}</div>

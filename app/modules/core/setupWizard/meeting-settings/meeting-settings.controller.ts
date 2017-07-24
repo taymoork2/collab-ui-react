@@ -26,7 +26,6 @@ export class MeetingSettingsCtrl {
   /* @ngInject */
   constructor(
     public $scope,
-    public $log,
     private $translate: ng.translate.ITranslateService,
     private $rootScope: ng.IRootScopeService,
     private Authinfo,
