@@ -1,6 +1,5 @@
 import { IToolkitModalService } from 'modules/core/modal';
-import { ILocationListItem } from 'modules/call/locations/location';
-import { LocationsService } from 'modules/call/locations/locations.service';
+import { LocationsService, ILocationListItem } from 'modules/call/locations/shared';
 import { CardUtils } from 'modules/core/cards';
 const STATE_LOADING: string = 'STATE_LOADING';
 const STATE_SHOW_LOCATIONS: string = 'STATE_SHOW_LOCATIONS';
@@ -62,36 +61,41 @@ class CallLocationsCtrl implements ng.IComponentController {
     });
   }
 
-  public copyLocation(location): void {
+  public addLocation(): void {
+    this.$state.go('call-locations-add');
+  }
+
+  public copyLocation(location: ILocationListItem): void {
     this.$modal.open({
       type: 'small',
-      template: `<copy-location class="modal-content" uuid="${location.uuid}" style="margin:initial" dismiss="$dismiss()" close="$close()"></copy-location>`,
+      template: `<uc-copy-location class="modal-content" uuid="${location.uuid}" style="margin:initial" dismiss="$dismiss()" close="$close()"></uc-copy-location>`,
     }).result.then(() => {
       this.pageState = STATE_LOADING;
       this.$onInit();
     });
   }
 
+  public editLocation(location: ILocationListItem): void {
+    this.$state.go('call-locations-edit', {
+      currentLocation: location,
+    });
+  }
 
   public deleteLocation(location: ILocationListItem): void {
     this.currentLocation = location;
     this.$modal.open({
       type: 'dialog',
-      template: `<delete-location class="modal-content" uuid="${location.uuid}" user-count="${location.userCount}"  place-count="${location.placeCount}" name="${location.name}" style="margin:initial" dismiss="$dismiss()" close="$close()"></delete-location>`,
+      template: `<uc-delete-location class="modal-content" uuid="${location.uuid}" user-count="${location.userCount}"  place-count="${location.placeCount}" name="${location.name}" style="margin:initial" dismiss="$dismiss()" close="$close()"></uc-delete-location>`,
     }).result.then(() => {
       this.pageState = STATE_LOADING;
       this.$onInit();
     });
   }
 
-  public openModal() {
-    this.$state.go('callLocation');
-  }
-
   public makeDefaultLocation(location): void {
     this.$modal.open({
       type: 'dialog',
-      template: `<make-default-location class="modal-content" uuid="${location.uuid}" style="margin:initial" dismiss="$dismiss()" close="$close()"></make-default-location>`,
+      template: `<uc-make-default-location class="modal-content" uuid="${location.uuid}" style="margin:initial" dismiss="$dismiss()" close="$close()"></uc-make-default-location>`,
     }).result.then(() => {
       this.pageState = STATE_LOADING;
       this.$onInit();
@@ -106,6 +110,6 @@ class CallLocationsCtrl implements ng.IComponentController {
 
 export class CallLocationsComponent implements ng.IComponentOptions {
   public controller = CallLocationsCtrl;
-  public templateUrl = 'modules/call/locations/locations.html';
+  public templateUrl = 'modules/call/locations/locations.component.html';
   public bindings = {};
 }
