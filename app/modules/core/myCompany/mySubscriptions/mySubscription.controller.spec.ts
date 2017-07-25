@@ -14,11 +14,6 @@ describe('Controller: MySubscriptionCtrl', function () {
     name: productName,
     autoBilling: false,
   }];
-  const mockBmmpAttr = {
-    subscriptionId: onlineIntSubId,
-    productInstanceId: productInstanceId,
-    changeplanOverride: '',
-  };
 
   beforeEach(function () {
     this.initModules(subscriptionModule);
@@ -96,7 +91,6 @@ describe('Controller: MySubscriptionCtrl', function () {
     this.data.subscriptionsFormatted[0].quantity = 100;
     this.data.subscriptionsFormatted[0].endDate = 'subscriptions.expired';
     this.data.subscriptionsFormatted[0].badge = 'alert';
-    this.data.subscriptionsFormatted[0].bmmpAttr = mockBmmpAttr;
     this.startController();
 
     expect(this.controller.hybridServices).toEqual(this.data.servicesFormatted);
@@ -136,7 +130,6 @@ describe('Controller: MySubscriptionCtrl', function () {
     this.data.trialSubscriptionData[0].quantity = 100;
     this.data.trialSubscriptionData[0].endDate = 'subscriptions.expired';
     this.data.trialSubscriptionData[0].badge = 'alert';
-    this.data.trialSubscriptionData[0].bmmpAttr = mockBmmpAttr;
 
     this.startController();
 
