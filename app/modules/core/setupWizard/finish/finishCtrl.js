@@ -5,9 +5,13 @@
     .controller('WizardFinishCtrl', WizardFinishCtrl);
 
   /* @ngInject */
-  function WizardFinishCtrl($q, $scope, $translate, Notification, SetupWizardService, TrialWebexService) {
+  function WizardFinishCtrl($q, $scope, $translate, Authinfo, Notification, SetupWizardService, TrialWebexService) {
     $scope.hasPendingLicenses = SetupWizardService.hasPendingLicenses();
     $scope.sendEmailModel = false;
+    $scope.isCustomerLaunchedFromPartner = Authinfo.isCustomerLaunchedFromPartner();
+    $scope.setSendCustomerEmailFlag = function setSendCustomerEmailFlag() {
+      TrialWebexService.setProvisioningWebexSendCustomerEmailFlag($scope.sendEmailModel);
+    };
     $scope.initNext = function () {
       var deferred = $q.defer();
       if (!_.isUndefined($scope.wizard) && _.isFunction($scope.wizard.getRequiredTabs)) {

@@ -11,12 +11,13 @@
   <div class="activate-page__section">
     <p translate="firstTimeWizard.activateBillingWarning"></p>
   </div>
-  <div class="activate-page__section">
+  <div ng-if="isCustomerLaunchedFromPartner" class="activate-page__section">
     <input
       cs-input
       type="checkbox"
       ng-model="sendEmailModel"
       id="sendEmailToCustomer"
+      ng-change="setSendCustomerEmailFlag()"
       cs-input-label="{{::'firstTimeWizard.sendEmailToCustomer' | translate}}">
   </div>
 </div>
