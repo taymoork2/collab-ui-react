@@ -4343,6 +4343,16 @@
     "localDialing": "Local Dialing",
     "externalTransfer": "External Call Transfer/Conference"
   },
+  "primaryLine": {
+    "title": "Line selection for calls",
+    "description": "Choose the default behavior for devices when they go off hook",
+    "autoOption": "Auto - device automatically chooses an available line",
+    "primaryLineOption": "Always use primary line",
+    "autoLabel": "Auto",
+    "primaryLineLabel": "Primary Line",
+    "saveSuccess": "Line selection saved successfully",
+    "failedToSaveChanges": "Failed to save changes. Reason:"
+  },
   "preferredLanguage": {
     "title": "Preferred Language",
     "description": "Choose the preferred language for this {{module}}. This will override the default organization setting.",
