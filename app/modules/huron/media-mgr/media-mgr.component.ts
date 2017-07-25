@@ -25,12 +25,14 @@ export enum ModalView {
   Trash,
 }
 
-const STATE_PROCESSING = 'PROCESSING';
-const STATE_READY = 'READY';
-const STATE_DELETED = 'DELETED';
-const STATE_ERROR = 'ERROR';
+const STATE_PROCESSING: string  = 'PROCESSING';
+const STATE_READY: string = 'READY';
+const STATE_DELETED: string = 'DELETED';
+const STATE_ERROR: string = 'ERROR';
 
-const GET_MEDIA_INTERVAL = 6000;
+const GET_MEDIA_INTERVAL: number = 6000;
+
+const ERROR_DELETE_IN_USE: number = 106;
 
 export class MediaMgrCtrl implements ng.IComponentController {
 
@@ -141,6 +143,7 @@ export class MediaMgrCtrl implements ng.IComponentController {
         }
       }).finally(() => {
         this.mohUploadInProgress = false;
+        this.mohUploadCancelInProgress = false;
       });
   }
 
@@ -177,9 +180,9 @@ export class MediaMgrCtrl implements ng.IComponentController {
         this.setActiveMedia(undefined);
         return this.getMedia();
       }).catch(error => {
-        const mediaInUseError = true;  // Need to replace with error code check once API returns said error
-        if (mediaInUseError) {
+        if (error.data.error.key === ERROR_DELETE_IN_USE) {
           this.ModalService.open({
+            hideDismiss: true,
             title: this.$translate.instant('mediaMgrModal.deleteMediaNotAvailable.title'),
             message: this.$translate.instant('mediaMgrModal.deleteMediaNotAvailable.message'),
             close: this.$translate.instant('mediaMgrModal.deleteMediaNotAvailable.confirm'),
@@ -194,7 +197,6 @@ export class MediaMgrCtrl implements ng.IComponentController {
     const tsMinus24Hours = Math.round(new Date().getTime() / 1000) - (24 * 3600);
     if (mohFile.lastModifyTime.epochSecond > tsMinus24Hours) {
       return this.ModalService.open({
-        type: 'dialog',
         title: this.$translate.instant('mediaMgrModal.deleteMedia.title'),
         message: this.$translate.instant('mediaMgrModal.deleteMedia.message'),
         dismiss: this.$translate.instant('mediaMgrModal.deleteMedia.cancel'),
@@ -219,7 +221,6 @@ export class MediaMgrCtrl implements ng.IComponentController {
   public cancelUpload(): void {
     this.mohUploadCancelInProgress = true;
     this.ModalService.open({
-      type: 'dialog',
       title: this.$translate.instant('mediaMgrModal.cancelUpload.title'),
       message: this.$translate.instant('mediaMgrModal.cancelUpload.message'),
       dismiss: this.$translate.instant('mediaMgrModal.cancelUpload.cancel'),
@@ -238,7 +239,7 @@ export class MediaMgrCtrl implements ng.IComponentController {
               .catch(error => this.Notification.errorResponse(error, 'mediaMgrModal.cleanupMediaError'));
           }
         }).catch(error => this.Notification.errorResponse(error, 'mediaMgrModal.cancelUploadError'));
-    }).finally(() => this.mohUploadCancelInProgress = false);
+    }).catch(() => this.mohUploadCancelInProgress = false);
   }
 
   public deletePermAll(): void {
@@ -246,7 +247,6 @@ export class MediaMgrCtrl implements ng.IComponentController {
       const tsMinus24Hours = Math.round(new Date().getTime() / 1000) - (24 * 3600);
       return m.lastModifyTime.epochSecond > tsMinus24Hours; })) {
       return this.ModalService.open({
-        type: 'dialog',
         title: this.$translate.instant('mediaMgrModal.deleteMedia.title'),
         message: this.$translate.instant('mediaMgrModal.deleteMedia.message'),
         dismiss: this.$translate.instant('mediaMgrModal.deleteMedia.cancel'),
@@ -280,20 +280,17 @@ export class MediaMgrCtrl implements ng.IComponentController {
     return mohFile.filename;
   }
 
-  public closeMediaMgrModal() {
-    if (!this.mohUploadInProgress) {
-      return;
-    }
-    this.ModalService.open({
-      type: 'dialog',
-      title: this.$translate.instant('mediaMgrModal.exitMediaMgr.title'),
-      message: this.$translate.instant('mediaMgrModal.exitMediaMgr.message'),
-      dismiss: this.$translate.instant('mediaMgrModal.exitMediaMgr.cancel'),
-      close: this.$translate.instant('mediaMgrModal.exitMediaMgr.confirm'),
-      btnType: 'alert',
-    }).result.then(() => {
+  public getDuration(mohFile: IMedia): string {
+    const minutes = Math.floor(Number(mohFile.duration) / 60);
+    const seconds = Number(mohFile.duration) - minutes * 60;
 
-    });
+    const finalTime = _.padStart(minutes.toString(), 2, '') + ':' + _.padStart(seconds.toString(), 2, '0');
+    return finalTime;
+  }
+
+  public getDeleteTime(mohFile: IMedia): string {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(mohFile.lastModifyTime.epochSecond * 1000).toLocaleDateString('en-US', options);
   }
 }
 

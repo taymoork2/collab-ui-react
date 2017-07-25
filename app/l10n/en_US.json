@@ -8907,13 +8907,15 @@
     "searchPlaceholder": "Search Media",
     "uploading": "Uploading...",
     "uploadProcessing": "Processing...",
+    "deleted": "Deleted on",
     "processingError": "Error processing media file.  Please try again.",
-    "getMediaListError": "An error occurred obtaining the list of media.  Please try again.",
+    "getMediaListError": "An error occurred obtaining the list of media.  Please refresh to try again.",
     "uploadMediaError": "An error occurred uploading media.  Please try again.",
+    "restoreMediaError": "An error occurred restoring media.",
     "deleteMediaError": "An error occurred deleting media.",
     "cleanupMediaError": "An error occurred cleaning up a failed media upload.",
-    "unsupportedTypeError": "File type selected for upload is not supported.",
     "cancelUploadError": "An error occurred cancelling a media upload.",
+    "unsupportedTypeError": "File type selected for upload is not supported.",
     "displayName": {
       "required": "Media name is required",
       "tooShortError": "Media name must contain at least one characters.",
@@ -8936,7 +8938,7 @@
     },
     "deleteMediaNotAvailable": {
       "title": "Delete Unavailable",
-      "message": "Delete isn't available for this media because it is currently assigned. Please un-assign and try again",
+      "message": "Delete isn't available for this media because it is currently assigned. Please un-assign and try again.",
       "confirm": "Close"
     }
   },
