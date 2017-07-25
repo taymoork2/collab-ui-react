@@ -20,6 +20,7 @@ import { EnterprisePrivateTrunkService } from 'modules/hercules/services/enterpr
 import { IPrivateTrunkResource } from 'modules/hercules/private-trunk/private-trunk-services/private-trunk';
 import { ICluster } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
+import { Notification } from 'modules/core/notifications';
 
 export class ServicesOverviewCtrl {
 
@@ -42,7 +43,7 @@ export class ServicesOverviewCtrl {
     private PrivateTrunkPrereqService: PrivateTrunkPrereqService,
     private ProPackService: ProPackService,
     private HDSService,
-    private Notification,
+    private Notification: Notification,
 
   ) {
     this.cards = [
@@ -52,7 +53,7 @@ export class ServicesOverviewCtrl {
       new ServicesOverviewCareCard(this.Authinfo),
       new ServicesOverviewHybridServicesCard(this.Authinfo),
       new ServicesOverviewCmcCard(this.Authinfo),
-      new ServicesOverviewHybridAndGoogleCalendarCard(this.$state, this.$q, this.$modal, this.Authinfo, this.CloudConnectorService, this.HybridServicesClusterStatesService),
+      new ServicesOverviewHybridAndGoogleCalendarCard(this.$state, this.$q, this.$modal, this.Authinfo, this.CloudConnectorService, this.HybridServicesClusterStatesService, this.Notification),
       new ServicesOverviewHybridCalendarCard(this.Authinfo, this.HybridServicesClusterStatesService),
       new ServicesOverviewHybridCallCard(this.Authinfo, this.HybridServicesClusterStatesService),
       new ServicesOverviewHybridMediaCard(this.Authinfo, this.Config, this.HybridServicesClusterStatesService),
