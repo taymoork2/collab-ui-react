@@ -14,6 +14,11 @@ describe('Controller: MySubscriptionCtrl', function () {
     name: productName,
     autoBilling: false,
   }];
+  const mockBmmpAttr = {
+    subscriptionId: onlineIntSubId,
+    productInstanceId: productInstanceId,
+    changeplanOverride: '',
+  };
 
   beforeEach(function () {
     this.initModules(subscriptionModule);
@@ -41,7 +46,7 @@ describe('Controller: MySubscriptionCtrl', function () {
     spyOn(this.FeatureToggleService, 'atlasSharedMeetingsReportsGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.OnlineUpgradeService, 'getProductInstances').and.returnValue(this.$q.resolve(productInstanceResponse));
     spyOn(this.ProPackService, 'hasProPackEnabled').and.returnValue(this.$q.resolve(false));
-    spyOn(this.ProPackService, 'getProPackPurchased').and.returnValue(this.$q.resolve(false));
+    spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(false));
     spyOn(this.Authinfo, 'getUserId').and.returnValue('12345');
     spyOn(this.DigitalRiverService, 'getDigitalRiverToken');
     spyOn(this.DigitalRiverService, 'getDigitalRiverUpgradeTrialUrl').and.returnValue(this.$q.resolve({ data: trialUrlResponse }));
@@ -91,6 +96,7 @@ describe('Controller: MySubscriptionCtrl', function () {
     this.data.subscriptionsFormatted[0].quantity = 100;
     this.data.subscriptionsFormatted[0].endDate = 'subscriptions.expired';
     this.data.subscriptionsFormatted[0].badge = 'alert';
+    this.data.subscriptionsFormatted[0].bmmpAttr = mockBmmpAttr;
     this.startController();
 
     expect(this.controller.hybridServices).toEqual(this.data.servicesFormatted);
@@ -130,6 +136,7 @@ describe('Controller: MySubscriptionCtrl', function () {
     this.data.trialSubscriptionData[0].quantity = 100;
     this.data.trialSubscriptionData[0].endDate = 'subscriptions.expired';
     this.data.trialSubscriptionData[0].badge = 'alert';
+    this.data.trialSubscriptionData[0].bmmpAttr = mockBmmpAttr;
 
     this.startController();
 

@@ -473,8 +473,9 @@
         'externalNumberDelete',
         'pstnSetup',
         'pstnWizard',
-        'calllocations',
-        'callLocation',
+        'call-locations',
+        'call-locations-add',
+        'call-locations-edit',
       ],
       'squared-fusion-mgmt': [
         'expressway-cluster-sidepanel',

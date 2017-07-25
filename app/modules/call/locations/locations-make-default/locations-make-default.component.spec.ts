@@ -1,4 +1,4 @@
-import makeDefault from 'modules/call/locations/';
+import makeDefault from './index';
 
 describe('component: MakeDefaultLocationComponent', () => {
   beforeEach(function() {
@@ -12,7 +12,7 @@ describe('component: MakeDefaultLocationComponent', () => {
     this.$scope.close = jasmine.createSpy('close');
     spyOn(this.LocationsService, 'createLocation');
     spyOn(this.LocationsService, 'updateLocation').and.returnValue(this.$q.resolve());
-    this.compileComponent('makeDefaultLocation', {
+    this.compileComponent('ucMakeDefaultLocation', {
       close: 'close()',
     });
   });

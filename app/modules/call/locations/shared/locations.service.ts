@@ -159,7 +159,10 @@ export class LocationsService {
       customerId: this.Authinfo.getOrgId(),
       name: name,
     }).$promise.then(locations => {
-      return _.get<ILocationListItem[]>(locations, 'locations', []).length > 0;
+      const filterList = _.get<ILocationListItem[]>(locations, 'locations', []).filter((item) => {
+        return item.name === name;
+      });
+      return filterList.length > 0;
     });
   }
 }

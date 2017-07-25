@@ -5,7 +5,7 @@
     .controller('AAMessageTypeCtrl', AAMessageTypeCtrl);
 
   /* @ngInject */
-  function AAMessageTypeCtrl($scope, $translate, AADynaAnnounceService, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService/*, $window*/) {
+  function AAMessageTypeCtrl($scope, $translate, AADynaAnnounceService, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, AASessionVariableService, AAModelService/*, $window*/) {
     var vm = this;
     var conditional = 'conditional';
 
@@ -17,6 +17,13 @@
       VALUE: 'value',
       HEADER_TYPE: 'MENU_OPTION_ANNOUNCEMENT',
     };
+
+    var prePopulatedSessionVariablesList = [$translate.instant('autoAttendant.decisionNumberDialed'),
+      $translate.instant('autoAttendant.decisionCallerNumber'),
+      $translate.instant('autoAttendant.decisionCallerName'),
+      $translate.instant('autoAttendant.decisionCallerCountryCode'),
+      $translate.instant('autoAttendant.decisionCallerAreaCode'),
+      ''];
 
     var messageType = {
       ACTION: 1,
@@ -33,12 +40,16 @@
 
     var holdActionDesc;
     var holdActionValue;
+    var dependentCeSessionVariablesList = [];
+    var dynamicVariablesList = [];
 
     vm.menuEntry = {};
     vm.actionEntry = {};
+    vm.ui = {};
+    vm.availableSessionVariablesList = [];
+    vm.deletedSessionVariablesList = [];
 
     vm.messageInput = '';
-    vm.messageInputPlaceholder = $translate.instant('autoAttendant.sayMessagePlaceholder');
 
     vm.messageOption = {
       label: '',
@@ -61,15 +72,104 @@
     vm.setMessageOptions = setMessageOptions;
     vm.isDynamicToggle = isDynamicToggle;
     vm.dynamicTags = ['DYNAMIC-EXAMPLE'];
-    vm.dynamicValues = undefined;
+    vm.dynamicValues = [];
     vm.mediaState = {};
     vm.mediaState.uploadProgress = false;
+    vm.fullWarningMsg = fullWarningMsg;
+    vm.getWarning = getWarning;
+    vm.fullWarningMsgValue = false;
+    vm.deletedSessionVariablesListAlongWithWarning = '';
 
     vm.MAX_FILE_SIZE_IN_BYTES = 5 * 1024 * 1024;
 
     vm.addElement = '<aa-insertion-element element-text="DynamicText" read-as="ReadAs" element-id="Id" aa-schedule="' + $scope.schedule + '" aa-index="' + $scope.index + '"></aa-insertion-element>';
 
     //////////////////////////////////////////////////////
+
+    $scope.$on('CE Updated', function () {
+      getDynamicVariables();
+      refreshVarSelects();
+      if (_.isEmpty(vm.deletedSessionVariablesList)) {
+        vm.fullWarningMsgValue = false;
+      }
+    });
+
+    $scope.$on('CIVarNameChanged', function () {
+      getDynamicVariables();
+      refreshVarSelects();
+    });
+
+    function fullWarningMsg() {
+      vm.fullWarningMsgValue = !vm.fullWarningMsgValue;
+    }
+
+    function getWarning() {
+      if (!_.isEmpty(vm.deletedSessionVariablesList)) {
+        if (vm.deletedSessionVariablesList.length > 1) {
+          vm.deletedSessionVariablesListAlongWithWarning = $translate.instant('autoAttendant.dynamicMissingCustomVariables', { deletedSessionVariablesList: vm.deletedSessionVariablesList.toString() });
+        } else {
+          vm.deletedSessionVariablesListAlongWithWarning = $translate.instant('autoAttendant.dynamicMissingCustomVariable', { deletedSessionVariablesList: vm.deletedSessionVariablesList.toString() });
+        }
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    function addLocalAndQueriedSessionVars() {
+      // reset the displayed SessionVars to the original queried items
+      vm.availableSessionVariablesList = dependentCeSessionVariablesList;
+
+      vm.availableSessionVariablesList = _.concat(vm.availableSessionVariablesList, AACommonService.collectThisCeActionValue(vm.ui, true, false));
+      vm.availableSessionVariablesList = _.uniq(vm.availableSessionVariablesList).sort();
+    }
+
+    function refreshVarSelects() {
+      // reload the session variables.
+      addLocalAndQueriedSessionVars();
+      // resets possibly warning messages
+      updateIsWarnFlag();
+    }
+
+    function updateIsWarnFlag() {
+      vm.deletedSessionVariablesList = [];
+      if (!_.isEmpty(dynamicVariablesList)) {
+        _.forEach(dynamicVariablesList, function (variable) {
+          if (!_.includes(vm.availableSessionVariablesList, variable)) {
+            vm.deletedSessionVariablesList.push(variable);
+          }
+        });
+      }
+      vm.deletedSessionVariablesList = _.uniq(vm.deletedSessionVariablesList).sort();
+    }
+
+    function getSessionVariablesOfDependentCe() {
+      dependentCeSessionVariablesList = [];
+
+      return AASessionVariableService.getSessionVariablesOfDependentCeOnly(_.get(AAModelService.getAAModel(), 'aaRecordUUID')).then(function (data) {
+        if (!_.isUndefined(data) && data.length > 0) {
+          dependentCeSessionVariablesList = data;
+        }
+      }, function (response) {
+        if (response.status === 404) {
+          dependentCeSessionVariablesList = [];
+        }
+      });
+    }
+
+    function getDynamicVariables() {
+      dynamicVariablesList = [];
+      var dynamVarList = _.get(vm.menuEntry, 'dynamicList', _.get(vm.menuEntry, 'actions[0].dynamicList'));
+      if (!_.isUndefined(dynamVarList)) {
+        _.forEach(dynamVarList, function (entry) {
+          if (entry.isDynamic) {
+            if (!_.includes(prePopulatedSessionVariablesList, entry.say.value)) {
+              dynamicVariablesList.push(entry.say.value);
+            }
+          }
+        });
+      }
+    }
 
     $scope.$on('CE Saved', function () {
       holdActionDesc = '';
@@ -103,8 +203,7 @@
         if (action.name === vm.messageOptions[actionType.PLAY].action) {
           if (isDynamicToggle()) {
             action.name = 'dynamic';
-            vm.dynamicValues = [];
-            vm.menuEntry.dynamicList = [{
+            action.dynamicList = [{
               say: {
                 value: '',
                 voice: '',
@@ -135,11 +234,12 @@
     }
 
     function saveDynamicUi() {
+      var action = vm.actionEntry;
       var range = AADynaAnnounceService.getRange();
       finalList = [];
       var dynamicList = range.endContainer.ownerDocument.activeElement;
-      if (dynamicList.className.includes('dynamic-prompt') && !(dynamicList.id === 'messageType{{schedule + index + menuKeyIndex}}')) {
-        vm.menuEntry.dynamicList = createDynamicList(dynamicList);
+      if (canDynamicListUpdated(dynamicList, range)) {
+        action.dynamicList = createDynamicList(dynamicList);
         if (_.isEmpty(finalList)) {
           finalList.push({
             say: {
@@ -149,10 +249,14 @@
             isDynamic: false,
             htmlModel: '',
           });
-          vm.menuEntry.dynamicList = finalList;
+          action.dynamicList = finalList;
         }
         AACommonService.setSayMessageStatus(true);
       }
+    }
+
+    function canDynamicListUpdated(dynamicList, range) {
+      return dynamicList.className.includes('dynamic-prompt') && !(dynamicList.id === 'messageType{{schedule + index + menuKeyIndex + menuId}}') && range.collapsed == true;
     }
 
     function createDynamicList(dynamicList) {
@@ -231,6 +335,22 @@
           if (vm.actionEntry.value && !_.startsWith(vm.actionEntry.value, 'http')) {
             vm.messageOption = vm.messageOptions[actionType.SAY];
             vm.messageInput = vm.actionEntry.value;
+          } else if (_.has(vm.actionEntry, 'dynamicList')) {
+            _.forEach(vm.actionEntry.dynamicList, function (opt) {
+              var model;
+              if (!opt.isDynamic) {
+                model = {
+                  model: opt.say.value,
+                  html: opt.say.value,
+                };
+              } else {
+                model = {
+                  model: opt.say.value,
+                  html: decodeURIComponent(opt.htmlModel),
+                };
+              }
+              vm.dynamicValues.push(model);
+            });
           } else {
             vm.messageOption = vm.messageOptions[actionType.PLAY];
           }
@@ -239,9 +359,8 @@
           vm.messageInput = vm.actionEntry.value;
         }
       } else {
-        if (_.has(vm.menuEntry, 'dynamicList')) {
-          vm.dynamicValues = [];
-          _.forEach(vm.menuEntry.dynamicList, function (opt) {
+        if (_.has(vm.actionEntry, 'dynamicList')) {
+          _.forEach(vm.actionEntry.dynamicList, function (opt) {
             var model = {};
             if (!opt.isDynamic) {
               model = {
@@ -310,6 +429,7 @@
         case messageType.ACTION:
           {
             ui = AAUiModelService.getUiModel();
+            vm.ui = ui;
             uiMenu = ui[$scope.schedule];
             vm.menuEntry = uiMenu.entries[$scope.index];
             if ($scope.type) {
@@ -348,6 +468,10 @@
       setActionEntry();
 
       populateUiModel();
+      getSessionVariablesOfDependentCe().finally(function () {
+        getDynamicVariables();
+        refreshVarSelects();
+      });
     }
 
     activate();

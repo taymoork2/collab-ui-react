@@ -1,4 +1,4 @@
-import copyLocation from './../../index';
+import copyLocation from './index';
 
 describe('component: copyLocation', () => {
   beforeEach(function() {
@@ -12,7 +12,7 @@ describe('component: copyLocation', () => {
     this.$scope.close = jasmine.createSpy('close');
     spyOn(this.LocationsService, 'createLocation');
     this.LocationsService.createLocation.and.returnValue(this.$q.resolve());
-    this.compileComponent('copyLocation', {
+    this.compileComponent('ucCopyLocation', {
       close: 'close()',
     });
   });
@@ -35,7 +35,7 @@ describe('Failure for createLocation', () => {
      );
     spyOn(this.LocationsService, 'createLocation');
     spyOn(this.Notification, 'errorResponse');
-    this.compileComponent('copyLocation', {});
+    this.compileComponent('ucCopyLocation', {});
     this.LocationsService.createLocation.and.returnValue(this.$q.reject());
   });
   it('should throw an error', function() {

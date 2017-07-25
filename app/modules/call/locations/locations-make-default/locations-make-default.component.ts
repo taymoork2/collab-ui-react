@@ -1,4 +1,4 @@
-import { LocationsService } from 'modules/call/locations/locations.service';
+import { LocationsService } from 'modules/call/locations/shared';
 import { Notification } from 'modules/core/notifications';
 
 class MakeDefaultLocationCtrl implements ng.IComponentController {
@@ -24,7 +24,7 @@ class MakeDefaultLocationCtrl implements ng.IComponentController {
 
 export class MakeDefaultLocationComponent implements ng.IComponentOptions {
   public controller = MakeDefaultLocationCtrl;
-  public templateUrl = 'modules/call/locations/modals/makeDefault/makeDefaultModal.html';
+  public templateUrl = 'modules/call/locations/locations-make-default/locations-make-default.component.html';
   public bindings = {
     dismiss: '&',
     close: '&',

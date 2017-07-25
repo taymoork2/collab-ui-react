@@ -13,7 +13,6 @@ export class GoogleCalendarSecondTimeSetupCtrl implements ng.IComponentControlle
     scope: '',
     testAccount: this.Authinfo.getPrimaryEmail(),
   };
-  public nameChangeEnabled: boolean = false;
   public loading: boolean = true;
   public processing: boolean = false;
   public testAccountForm: ng.IFormController;
@@ -31,14 +30,9 @@ export class GoogleCalendarSecondTimeSetupCtrl implements ng.IComponentControlle
     private Authinfo,
     private CloudConnectorService: CloudConnectorService,
     private Notification: Notification,
-    private FeatureToggleService,
   ) { }
 
   public $onInit(): void {
-    this.FeatureToggleService.atlas2017NameChangeGetStatus().then((toggle: boolean): void => {
-      this.nameChangeEnabled = toggle;
-    });
-
     this.CloudConnectorService.getApiKey()
       .then((data) => {
         this.data.clientName = data.apiClientId;

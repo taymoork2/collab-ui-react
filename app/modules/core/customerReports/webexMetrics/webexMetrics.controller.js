@@ -140,7 +140,7 @@
       }
       vm.webexSelected = webexSelected;
 
-      ProPackService.getProPackPurchased().then(function (isPurchased) {
+      ProPackService.hasProPackPurchased().then(function (isPurchased) {
         if (isPurchased) {
           vm.reportView = vm.webexMetrics.views[1];
         }

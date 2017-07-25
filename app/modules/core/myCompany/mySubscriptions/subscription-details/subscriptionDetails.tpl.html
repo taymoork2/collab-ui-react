@@ -38,7 +38,7 @@
   <div class="license-quantity">
     <bmmp-subscription-upgrade-button ng-if="$ctrl.subscription.isOnline"
       class="btn btn--primary upgrade-button"
-      bmmp-attr="$ctrl.bmmpAttr"
+      bmmp-attr="$ctrl.subscription.bmmpAttr"
       widget-location="navigation-bar">
     </bmmp-subscription-upgrade-button>
     <div ng-if="!$ctrl.subscription.isOnline">
