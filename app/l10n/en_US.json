@@ -7905,7 +7905,8 @@
           "settings": "Settings"
         },
         "exchangeTitle": "Microsoft Exchange",
-        "googleTitle": "Google Calendar"
+        "googleTitle": "Google Calendar",
+        "error": "Could not retrieve Google Calendar status"
       },
       "hybridCall": {
         "title": "Hybrid Call",

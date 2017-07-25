@@ -245,5 +245,9 @@
     .btn--primary {
       width: calc(100% - 1rem);
     }
+
+    .btn.disabled {
+      width: calc(100% - 1rem);
+    }
   }
 }
