@@ -109,8 +109,6 @@ describe('Component: companyVoicemailAvril', () => {
       const avrilFeatures = new AvrilFeatures({
         VM2E: false,
         VM2E_PT: false,
-        VM2S: false,
-        VM2T: false,
         VMOTP: true,
         VM2E_TLS: true,
       });
@@ -133,8 +131,6 @@ describe('Component: companyVoicemailAvril', () => {
       const avrilFeatures = new AvrilFeatures({
         VM2E: true,
         VM2E_PT: false,
-        VM2S: false,
-        VM2T: false,
         VMOTP: true,
         VM2E_TLS: true,
       });
@@ -155,8 +151,6 @@ describe('Component: companyVoicemailAvril', () => {
       const avrilFeatures = new AvrilFeatures({
         VM2E: false,
         VM2E_PT: true,
-        VM2S: false,
-        VM2T: false,
         VMOTP: true,
         VM2E_TLS: true,
       });
@@ -176,8 +170,6 @@ describe('Component: companyVoicemailAvril', () => {
       const avrilFeatures = new AvrilFeatures({
         VM2E: true,
         VM2E_PT: false,
-        VM2S: false,
-        VM2T: false,
         VMOTP: true,
         VM2E_TLS: false,
       });
