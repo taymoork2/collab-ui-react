@@ -1,3 +1,5 @@
+@import '~collab-ui/scss/tools/placeholders/page-layout';
+
 .cs-setupassistant {
   .section {
     display: flex;
@@ -16,6 +18,9 @@
         margin-top: 1rem;
       }
     }
+  }
+  h4 {
+    margin-bottom: 1rem;
   }
 }
 

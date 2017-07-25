@@ -98,16 +98,17 @@ class LocationsWizardController implements ng.IComponentController {
     .then(huronSettingsData => this.huronSettingsData = huronSettingsData)
     .catch(response => this.Notification.errorResponse(response));
 
+    this.locationDetail = new Location();
     this.$q.resolve(this.initSettingsComponent());
   }
 
   private initSettingsComponent(): ng.IPromise<void> {
-    return this.HuronSettingsOptionsService.getOptions().then((options: HuronSettingsOptions) => {
+    return this.HuronSettingsOptionsService.getOptions()
+    .then((options: HuronSettingsOptions) => {
       this.settingsOptions = options;
-      this.locationDetail = new Location();
-    }).catch(response => {
+    })
+    .catch(response => {
       this.Notification.errorResponse(response);
-      this.locationDetail = new Location();
     });
   }
 
