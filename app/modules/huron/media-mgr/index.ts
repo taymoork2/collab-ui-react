@@ -1,6 +1,7 @@
 import { MediaMgrComponent } from './media-mgr.component';
 import { MediaMgrService } from './media-mgr.service';
 import notifications from 'modules/core/notifications';
+import modalServiceModule from 'modules/core/modal';
 
 import './media-mgr.scss';
 
@@ -15,6 +16,7 @@ export default angular
     require('modules/ediscovery/bytes_filter'),
     require('modules/core/scripts/services/authinfo'),
     require('modules/huron/telephony/telephonyConfig'),
+    modalServiceModule,
     notifications,
   ])
   .component('mediaMgr', new MediaMgrComponent())

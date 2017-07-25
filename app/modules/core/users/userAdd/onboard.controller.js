@@ -8,7 +8,7 @@ require('./_user-add.scss');
     .controller('OnboardCtrl', OnboardCtrl);
 
   /*@ngInject*/
-  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Analytics, Authinfo, Config, DialPlanService, Log, LogMetricsService, MessengerInteropService, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact, ServiceSetup, ExternalNumberPool, DirSyncService) {
+  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Analytics, Authinfo, Config, FeatureToggleService, DialPlanService, Log, LogMetricsService, MessengerInteropService, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, LocationsService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact, ServiceSetup, ExternalNumberPool, DirSyncService) {
     var vm = this;
 
     $scope.hasAccount = Authinfo.hasAccount();
@@ -19,6 +19,10 @@ require('./_user-add.scss');
     $scope.cmrLicensesForMetric = {};
     $scope.currentUserCount = 0;
 
+    $scope.locationOptions = [];
+    $scope.location = '';
+    $scope.selectedLocation = '';
+
     vm.maxUsersInManual = OnboardService.maxUsersInManual;
 
     $scope.searchStr = '';
@@ -27,6 +31,7 @@ require('./_user-add.scss');
     $scope.searchPlaceholder = $translate.instant('usersPage.convertUserSearch');
     $scope.manageUsers = $stateParams.manageUsers;
 
+    $scope.loadLocations = loadLocations;
     $scope.loadInternalNumberPool = loadInternalNumberPool;
     $scope.loadExternalNumberPool = loadExternalNumberPool;
     $scope.checkDnOverlapsSteeringDigit = checkDnOverlapsSteeringDigit;
@@ -174,6 +179,7 @@ require('./_user-add.scss');
     function initController() {
       $scope.currentUserCount = 1;
       setLicenseAvailability();
+      initToggles();
       checkSite();
       initResults();
     }
@@ -242,6 +248,20 @@ require('./_user-add.scss');
       }).catch(function (response) {
         $scope.internalNumberPool = [];
         Notification.errorResponse(response, 'directoryNumberPanel.internalNumberPoolError');
+      });
+    }
+
+    function loadLocations() {
+      return LocationsService.getLocationList().then(function (locationOptions) {
+        $scope.locationOptions = locationOptions;
+        _.forEach(locationOptions, function (result) {
+          if (result.defaultLocation == true) {
+            _.forEach($scope.usrlist, function (data) {
+              data.selectedLocation = { uuid: result.uuid, name: result.name };
+              $scope.selectedLocation = data.selectedLocation.name;
+            });
+          }
+        });
       });
     }
 
@@ -361,11 +381,19 @@ require('./_user-add.scss');
       if (shouldAddCallService()) {
         $scope.processing = true;
         activateDID();
+        loadLocations().finally(showLocationSelectColumn);
         $state.go('users.add.services.dn');
       } else {
         $scope.onboardUsers(true);
       }
     };
+
+    function initToggles() {
+      FeatureToggleService.supports(FeatureToggleService.features.hI1484)
+        .then(function (ishI1484) {
+          $scope.ishI1484 = ishI1484;
+        });
+    }
 
     $scope.editServicesSave = function () {
       for (var licenseId in $scope.cmrLicensesForMetric) {
@@ -894,6 +922,12 @@ require('./_user-add.scss');
       'ng-model="grid.appScope.noExtInPool" labelfield="grid.appScope.noExtInPool" is-disabled="true" > </cs-select>' +
       '<span class="error">{{\'usersPage.noExtensionInPool\' | translate }}</span> </div> ';
 
+    var locationTemplate = '<div>' +
+    '<cs-select name="location" ' +
+      'ng-model="row.entity.selectedLocation" options="grid.appScope.locationOptions" ' +
+      'labelfield="name" valuefield="uuid" required="true" filter="true"' +
+      '</div>';
+
     var externalExtensionTemplate = '<div ng-show="row.entity.didDnMapMsg === undefined"> ' +
       '<cs-select name="externalNumber" ' +
       'ng-model="row.entity.externalNumber" options="grid.appScope.externalNumberPool" ' +
@@ -997,6 +1031,12 @@ require('./_user-add.scss');
         cellTemplate: nameTemplate,
         width: '*',
       }, {
+        field: 'location',
+        displayName: $translate.instant('usersPreview.location'),
+        sortable: false,
+        cellTemplate: locationTemplate,
+        width: '*',
+      }, {
         field: 'externalNumber',
         displayName: $translate.instant('usersPage.directLineHeader'),
         sortable: false,
@@ -1014,6 +1054,13 @@ require('./_user-add.scss');
         width: '*',
       }],
     };
+
+    function showLocationSelectColumn() {
+      if (!$scope.ishI1484 || $scope.locationOptions.length <= 1) {
+        $scope.addDnGridOptions.columnDefs.splice(1, 1);
+      }
+    }
+
     $scope.collabRadio = 1;
 
     $scope.onboardUsers = onboardUsers;
@@ -1723,6 +1770,10 @@ require('./_user-add.scss');
           var userAndDnObj = $scope.usrlist.filter(function (user) {
             return (user.address == userItem.address);
           });
+
+          if ($scope.ishI1484 && $scope.locationOptions.length > 1) {
+            userItem.location = userAndDnObj[0].selectedLocation.name;
+          }
 
           if (userAndDnObj[0].assignedDn && userAndDnObj[0].assignedDn.pattern.length > 0) {
             userItem.internalExtension = userAndDnObj[0].assignedDn.pattern;

@@ -6,6 +6,8 @@ import { AtlasTrial, TrialOffer, Offers } from './atlas-trial';
 
 const testPartner = 'huron-ui-test-partner';
 const partnerEmail = 'huron.ui.test.partner';
+const now = Date.now();
+
 let offers = [];
 offers.push(new TrialOffer({
   id: Offers.OFFER_CALL,
@@ -23,7 +25,7 @@ export function huronCustomer(test, numberRange, users, pstn, pstnLines) {
     name: customerName,
     trial: new AtlasTrial({
       customerName: customerName,
-      customerEmail: `${partnerEmail}+${customerName}@gmail.com`,
+      customerEmail: `${partnerEmail}+${customerName}_${now}@gmail.com`,
       offers: offers,
     }),
     cmiCustomer: new CmiCustomer(),

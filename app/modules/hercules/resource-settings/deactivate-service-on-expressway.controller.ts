@@ -8,20 +8,14 @@ export class DeactivateServiceOnExpresswayModalController implements ng.ICompone
     private HybridServicesUtilsService,
     private HybridServicesClusterService,
     private Notification: Notification,
-    private FeatureToggleService,
     private serviceId,
     public clusterId,
     public clusterName,
-  ) {
-    this.FeatureToggleService.atlas2017NameChangeGetStatus().then((toggle: boolean): void => {
-      this.nameChangeEnabled = toggle;
-    });
-  }
+  ) {}
 
   public localizedConnectorName: string = this.$translate.instant('hercules.connectorNameFromConnectorType.' + this.serviceId);
   public localizedServiceName: string = this.$translate.instant('hercules.serviceNameFromConnectorType.' + this.serviceId);
   public loading: boolean = false;
-  public nameChangeEnabled: boolean;
 
   public deactivateService() {
     this.loading = true;

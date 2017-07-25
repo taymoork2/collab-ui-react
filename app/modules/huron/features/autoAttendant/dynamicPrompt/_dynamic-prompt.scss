@@ -17,6 +17,9 @@
     background-color: $white;
   }
 
+  .aa-blank-line {
+    @include vr-spacing(mt, 1);
+  }
   div.dynamic-prompt[data-placeholder]:not(:focus)[data-div-placeholder-content]::before {
     content: attr(data-placeholder);
     color: $gray-light-2;

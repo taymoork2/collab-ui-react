@@ -1,4 +1,4 @@
-import { LocationsService } from 'modules/call/locations/locations.service';
+import { LocationsService } from 'modules/call/locations/shared';
 // import { Notification } from 'modules/core/notifications';
 
 class UserLocationDetailsCtrl implements ng.IComponentController {
@@ -72,7 +72,7 @@ class UserLocationDetailsCtrl implements ng.IComponentController {
 
 export class UserLocationDetailsComponent implements ng.IComponentOptions {
   public controller = UserLocationDetailsCtrl;
-  public templateUrl = 'modules/call/locations/user-location-details/userLocationsDetails.html';
+  public templateUrl = 'modules/call/locations/locations-user-details/locations-user-details.component.html';
   public bindings = {
     location: '<',
     locationOptions: '<',

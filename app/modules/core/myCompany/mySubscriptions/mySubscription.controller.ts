@@ -17,7 +17,11 @@ export class MySubscriptionCtrl {
   public productInstanceFailed: boolean = false;
   public loading: boolean = false;
   public digitalRiverSubscriptionsUrl: string;
-  public bmmpAttr: IBmmpAttr;
+  public emptyBmmpAttr: IBmmpAttr = {
+    subscriptionId: '',
+    productInstanceId: '',
+    changeplanOverride: '',
+  };
   public licenseSummary: string;
   public oneOnlineSub: boolean = false;
   public showSingleSub: boolean = false;
@@ -64,7 +68,6 @@ export class MySubscriptionCtrl {
   /* @ngInject */
   constructor(
     private $q: ng.IQService,
-    private $rootScope: ng.IRootScopeService,
     private $translate: ng.translate.ITranslateService,
     private Authinfo,
     private Config,
@@ -79,9 +82,9 @@ export class MySubscriptionCtrl {
   ) {
     this.$q.all({
       isProPackEnabled: this.ProPackService.hasProPackEnabled(),
-      isProPackPurchased: this.ProPackService.getProPackPurchased(),
+      isProPackPurchased: this.ProPackService.hasProPackPurchased(),
     }).then((toggles: any): void => {
-      this.isProPackPurchased = toggles.isProPackEnabled && toggles.isProPackPurchased;
+      this.isProPackPurchased = toggles.isProPackPurchased;
       this.isProPackEnabled = toggles.isProPackEnabled;
     });
 
@@ -115,17 +118,6 @@ export class MySubscriptionCtrl {
       this.loading = false;
       this.Notification.errorWithTrackingId(error, 'subscriptions.loadError');
       return '';
-    });
-  }
-
-  private broadcastSingleSubscription(subscription: ISubscription, trialUrl?: string)  {
-    this.$rootScope.$broadcast('SUBSCRIPTION::upgradeData', {
-      isTrial: subscription.isTrial,
-      subId: subscription.internalSubscriptionId,
-      productInstanceId: subscription.productInstanceId,
-      changeplanOverride: subscription.changeplanOverride,
-      numSubscriptions: subscription.numSubscriptions,
-      upgradeTrialUrl: trialUrl,
     });
   }
 
@@ -205,6 +197,7 @@ export class MySubscriptionCtrl {
           numSubscriptions: subscriptions.length,
           endDate: '',
           badge: '',
+          bmmpAttr: this.emptyBmmpAttr,
         };
         if (subscription.subscriptionId && (subscription.subscriptionId !== 'unknown')) {
           newSubscription.subscriptionId = subscription.subscriptionId;
@@ -387,13 +380,12 @@ export class MySubscriptionCtrl {
       }
 
       if (subscription.internalSubscriptionId && subscription.productInstanceId) {
-        this.bmmpAttr = {
+        subscription.bmmpAttr = {
           subscriptionId: subscription.internalSubscriptionId,
           productInstanceId: subscription.productInstanceId,
           changeplanOverride: subscription.changeplanOverride,
         };
       }
-      this.broadcastSingleSubscription(subscription, undefined);
     });
   }
 
@@ -423,13 +415,12 @@ export class MySubscriptionCtrl {
       subscription.name = prodResponse.name;
 
       if (subscription.internalSubscriptionId && subscription.productInstanceId) {
-        this.bmmpAttr = {
+        subscription.bmmpAttr = {
           subscriptionId: subscription.internalSubscriptionId,
           productInstanceId: subscription.productInstanceId,
           changeplanOverride: '',
         };
       }
-      this.broadcastSingleSubscription(subscription, response);
     }
     subscription.upgradeTrialUrl = response;
   }

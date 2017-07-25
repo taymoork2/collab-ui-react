@@ -1,4 +1,4 @@
-import deleteLocation from './../../index';
+import deleteLocation from './index';
 
 describe('component: deleteLocation', () => {
   beforeEach(function() {
@@ -9,7 +9,7 @@ describe('component: deleteLocation', () => {
      );
     spyOn(this.LocationsService, 'deleteLocation');
     this.LocationsService.deleteLocation.and.returnValue(this.$q.resolve());
-    this.compileComponent('deleteLocation', {});
+    this.compileComponent('ucDeleteLocation', {});
   });
 
   it('should delete', function() {

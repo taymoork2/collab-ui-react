@@ -17,7 +17,7 @@
   //     id: String // uuid
   //     trigger: String // 'inComing', 'outGoing'
   //     type: String // 'directoryNumber'
-//     number: String // '<E164>', '<DN>'
+  //     number: String // '<E164>', '<DN>'
   //
   //
   // CeMenu
@@ -370,12 +370,24 @@
 
     function parseSayObject(menuEntry, inObject) {
       var action;
-      action = new Action('say', decodeUtf8(inObject.value));
-      if (!action.value) {
-        action.name = 'play';
+      if (isDynAnnounceToggle()) {
+        action = new Action('dynamic', '');
+        var dynaList = [{
+          say: {
+            value: decodeUtf8(inObject.value),
+            voice: '',
+          },
+          isDynamic: false,
+          htmlModel: '',
+        }];
+        action.dynamicList = dynaList;
+      } else {
+        action = new Action('say', decodeUtf8(inObject.value));
+        if (!action.value) {
+          action.name = 'play';
+        }
       }
       action.description = menuEntry.description;
-
       if (!_.isUndefined(inObject.voice)) {
         action.setVoice(inObject.voice);
       }
@@ -392,10 +404,22 @@
       for (var i = 0; i < objects.length; i++) {
         if (_.has(objects[i], 'say')) {
           parseSayObject(menuEntry, objects[i].say);
+        } else if (_.has(objects[i], 'dynamic')) {
+          parseDynamicObject(menuEntry, objects[i].dynamic.dynamicOperations);
         } else {
           parsePlayObject(menuEntry, objects[i].play);
         }
       }
+    }
+
+    function parseDynamicObject(menuEntry, inObject) {
+      var action;
+      action = new Action('dynamic', '');
+      action.dynamicList = inObject;
+      if (!_.isUndefined(inObject[0].say.voice)) {
+        action.setVoice(inObject[0].say.voice);
+      }
+      menuEntry.addAction(action);
     }
 
     function parsePlayObject(menuEntry, inObject) {
@@ -416,7 +440,6 @@
 
     function createAnnouncements(menuEntry) {
       var actions = menuEntry.actions;
-
       var newActionArray = [];
       for (var i = 0; i < actions.length; i++) {
         newActionArray[i] = {};
@@ -424,6 +447,11 @@
         if (actions[i].deleteUrl && _.startsWith(actions[i].getValue(), 'http')) {
           newActionArray[i].url = (actions[i].getValue() ? encodeUtf8(actions[i].getValue()) : '');
           newActionArray[i].deleteUrl = actions[i].deleteUrl;
+        } else if (actions[i].dynamicList) {
+          updateDynaListVoice(actions[i].dynamicList, actions[i].voice);
+          var dynamicOperations = actions[i].dynamicList;
+          newActionArray[i].dynamic = {};
+          newActionArray[i].dynamic.dynamicOperations = dynamicOperations;
         } else {
           newActionArray[i].value = (actions[i].getValue() ? encodeUtf8(actions[i].getValue()) : '');
         }
@@ -465,7 +493,7 @@
       if (!_.isUndefined(inAction.dynamic)) {
         action = new Action('dynamic', '');
         var dynamicList = inAction.dynamic.dynamicOperations;
-        menuEntry.dynamicList = dynamicList;
+        action.dynamicList = dynamicList;
         action.voice = dynamicList[0].say.voice;
         menuEntry.addAction(action);
       } else if (!_.isUndefined(inAction.play)) {
@@ -486,7 +514,7 @@
             isDynamic: false,
             htmlModel: '',
           }];
-          menuEntry.dynamicList = dynaList;
+          action.dynamicList = dynaList;
         } else {
           action = new Action('say', decodeUtf8(inAction.say.value));
           setDescription(action, inAction.say);
@@ -501,9 +529,7 @@
         menuEntry.addAction(action);
       } else if (!_.isUndefined(inAction.routeToExtension)) {
         action = new Action('routeToExtension', inAction.routeToExtension.destination);
-
         setDescription(action, inAction.routeToExtension);
-
         menuEntry.addAction(action);
       } else if (!_.isUndefined(inAction.routeToHuntGroup)) {
         action = new Action('routeToHuntGroup', inAction.routeToHuntGroup.id);
@@ -571,7 +597,22 @@
               action.deleteUrl = decodeUtf8(announcements[0].play.deleteUrl);
             } else {
               if (announcements.length > 0 && _.has(announcements[0], 'say')) {
-                action.value = decodeUtf8(announcements[0].say.value);
+                if (isDynAnnounceToggle()) {
+                  action = new Action('dynamic', '');
+                  var list = [{
+                    say: {
+                      value: decodeUtf8(announcements[0].say.value),
+                      voice: '',
+                    },
+                    isDynamic: false,
+                    htmlModel: '',
+                  }];
+                  action.dynamicList = list;
+                } else {
+                  action.value = decodeUtf8(announcements[0].say.value);
+                }
+              } else if (announcements.length > 0 && _.has(announcements[0], 'dynamic')) {
+                action.dynamicList = announcements[0].dynamic.dynamicOperations;
               }
             }
             action.voice = inAction.runActionsOnInput.voice;
@@ -1246,9 +1287,8 @@
               newActionArray[i][actionName].description = menuEntry.actions[0].description;
             }
             if (actionName === 'dynamic') {
-              var voice = menuEntry.actions[0].getVoice();
-              updateDynaListVoice(menuEntry.dynamicList, voice);
-              var dynamicOperations = menuEntry.dynamicList;
+              updateDynaListVoice(menuEntry.actions[0].dynamicList, menuEntry.actions[0].getVoice());
+              var dynamicOperations = menuEntry.actions[0].dynamicList;
               newActionArray[i].dynamic = {};
               newActionArray[i].dynamic.dynamicOperations = dynamicOperations;
             } else if (actionName === 'say') {
@@ -1415,7 +1455,12 @@
         var actionName = actions[i].getName();
         var val = actions[i].getValue();
         newActionArray[i][actionName] = {};
-        if (actionName === 'say') {
+        if (actionName === 'dynamic') {
+          updateDynaListVoice(actions[i].dynamicList, actions[i].voice);
+          var dynamicOperations = actions[i].dynamicList;
+          newActionArray[i].dynamic = {};
+          newActionArray[i].dynamic.dynamicOperations = dynamicOperations;
+        } else if (actionName === 'say') {
           newActionArray[i][actionName].value = encodeUtf8(val);
           newActionArray[i][actionName].voice = actions[i].voice;
         } else if (actionName === 'play') {
@@ -1490,7 +1535,6 @@
         var periodicAnnouncementActions = {};
         var periodicAnnouncement = {};
         var periodicAnnouncementValue = _.get(action.queueSettings.periodicAnnouncement.actions[0], 'value', '');
-
         if (!_.isEmpty(periodicAnnouncementValue) && _.startsWith(periodicAnnouncementValue, 'http')) {
           periodicAnnouncement = {
             play: {
@@ -1570,6 +1614,15 @@
               url: encodeUtf8(action.value),
             },
           };
+        } else if (_.has(action, 'dynamicList')) {
+          updateDynaListVoice(action.dynamicList, action.voice);
+          var dynamicOperations = action.dynamicList;
+          var dynamic = {
+            dynamicOperations: dynamicOperations,
+          };
+          announcements = {
+            dynamic: dynamic,
+          };
         } else {
           announcements = {
             say: {
@@ -1636,7 +1689,6 @@
       // create menuOptions section
       var newOptionArray = [];
       var menuEntry;
-
       for (var i = 0; i < aaMenu.entries.length; i++) {
         menuEntry = aaMenu.entries[i];
         // skip incomplete key/action definition
@@ -1690,6 +1742,10 @@
               voice: list[0].voice,
               url: list[0].url,
             },
+          }];
+        } else if (_.get(list, '[0].dynamic', undefined)) {
+          inputAction.prompts.announcements = [{
+            dynamic: list[0].dynamic,
           }];
         } else {
           inputAction.prompts.announcements = [{

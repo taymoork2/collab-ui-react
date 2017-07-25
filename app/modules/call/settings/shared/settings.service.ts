@@ -58,7 +58,7 @@ export interface IVoicemailToEmail {
 
 export class HuronSettingsService {
   private huronSettingsDataCopy: HuronSettingsData;
-  private errors: any[] = [];
+  private errors: string[] = [];
   private VOICE_ONLY = 'VOICE_ONLY';
   private DEMO_STANDARD = 'DEMO_STANDARD'; // Unity only
   private VOICE_VOICEMAIL = 'VOICE_VOICEMAIL'; // Avril Only

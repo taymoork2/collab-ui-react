@@ -1260,7 +1260,6 @@
     "begin": "Begin",
     "cancel": "Cancel",
     "ciscoCollaborationCloud": "Cisco Collaboration Cloud",
-    "ciscoCollaborationCloudNew": "Cisco Spark Control Cloud",
     "close": "Close",
     "cluster": "Cluster",
     "confirm": "Confirm",
@@ -1497,7 +1496,6 @@
     "testSSOSetupTitle": "Test SSO Setup",
     "enableSSOTitle": "Enable SSO",
     "importMetadataDesc": "Begin configuring the trust relationship between your identity provider (IdP) and the Cisco Collaboration Cloud by obtaining a trust metadata file from your IdP and uploading it here.",
-    "importMetadataDescNew": "Begin configuring the trust relationship between your identity provider (IdP) and the Cisco Spark Control Cloud by obtaining a trust metadata file from your IdP and uploading it here.",
     "importMetadataNote": "Note: By importing the metadata file, SSO will be turned <b>on</b>. If you are simply testing SSO, please remember to turn it off in the next screen.",
     "exportMetadataDesc1": "Download the following trust metadata file from the Cisco Collaboration service, and upload it into your identity provider (IdP) management interface.",
     "exportMetadataDesc1New": "Download the following trust metadata file from the Cisco Spark Control service, and upload it into your identity provider (IdP) management interface.",
@@ -1670,7 +1668,7 @@
       "title": "Routing Prefix",
       "radioReserve": "Reserve a prefix",
       "radioReserveDesc": "This prefix will be used as a compound number to connect with users on the cloud.",
-      "reserveDesc": "This prefix is used as a compound number. Users can dial it to connect with other users at this location..  All locations share the same routing prefix length.",
+      "reserveDesc": "This prefix is used as a compound number. Users can dial it to connect with other users at this location.  All locations share the same routing prefix length.",
       "exampleHelpText": "Example dialing: 8100-(extension)",
       "placeholder": "8100",
       "numericOnlyError": "Routing Prefix can only contain digits.",
@@ -1722,6 +1720,10 @@
       "message1": "Are you sure you want to change your dial plan settings?",
       "message2": "This change can take a few minutes to apply to the system and prevent users from placing calls at that time."
     }
+  },
+  "mediaOnHold": {
+    "systemDefault": "System Default",
+    "companyMOHDefaultMedia" : "Company MOH (System Default)"
   },
   "dirsyncModal": {
     "chooseSync": "Choose Sync",
@@ -1959,7 +1961,6 @@
       "connectorIsProvisioned": "The Expressway cluster {{ClusterName}} has been successfully provisioned with the following Hybrid Service:",
       "logInToConfigureThem": "{{ConnectorName}} will automatically be downloaded and installed on {{ClusterName}}, but you must <a href='https://{{hostname}}/fusionregistration' target='_blank'>log in to the Expressway</a> and configure and start {{ConnectorName}} to make it operational.",
       "youMayNowRegister": "You may now register {{hostname}} with Cisco Collaboration Cloud",
-      "youMayNowRegisterNew": "You may now register {{hostname}} with Cisco Spark Control Cloud",
       "registerResourceButton": "Go to Expressway",
       "cannotReadExpresswayList": "Failed to read list of existing Expressway clusters.",
       "confirmationDialogHeader": "Cancel Setup",
@@ -1976,7 +1977,6 @@
       "couldNotReadResourceGroups": "Could not read Resource Groups.",
       "CouldNotSaveResourceGroup": "Resource Group could not be saved. Continue with the registration process, and then try assigning a Resource Group again later.",
       "hostnameRegistered": "This FQDN belongs to an Expressway cluster that is already registered with Cisco Collaboration Cloud. It is not necessary to register it as a new resource if you want to add more services to it.",
-      "hostnameRegisteredNew": "This FQDN belongs to an Expressway cluster that is already registered with Cisco Spark Control Cloud. It is not necessary to register it as a new resource if you want to add more services to it.",
       "partnersCannotConfigureClusters": "You cannot add this resource. A customer administrator must perform this step."
     },
     "activateService": {
@@ -1997,7 +1997,6 @@
       "fromCluster": "from the Expressway cluster {{clusterName}}.",
       "wipeSettingsWarning": "This action will remove {{connectorName}} from {{clusterName}} and delete all of the connector's local settings.",
       "notDeregistered": "{{clusterName}} will not be deregistered from Cisco Collaboration Cloud, and the Expressway cluster can still be used for hosting Hybrid Services.",
-      "notDeregisteredNew": "{{clusterName}} will not be deregistered from Cisco Spark Control Cloud, and the Expressway cluster can still be used for hosting Hybrid Services.",
       "confirmButton": "Confirm Deactivation"
     },
     "clusters": {
@@ -2157,8 +2156,7 @@
       "squared-fusion-mgmt": "Management Service is the global configuration service for Calendar and Call Services. This page will be active after you activate one of these services."
     },
     "serviceHelpInfo": {
-      "servicePrivacyStatement": "Cisco Hybrid Service connectors collect and send certain information to the Cisco Collaboration Cloud about your Hybrid Service deployment. For more information <a href='http://www.cisco.com/web/siteassets/legal/spark_supp.html' target='_blank'>click here</a>.",
-      "servicePrivacyStatementNew": "Cisco Hybrid Service connectors collect and send certain information to the Cisco Spark Control Cloud about your Hybrid Service deployment. For more information <a href='http://www.cisco.com/web/siteassets/legal/spark_supp.html' target='_blank'>click here</a>."
+      "servicePrivacyStatement": "Cisco Hybrid Service connectors collect and send certain information to the Cisco Collaboration Cloud about your Hybrid Service deployment. For more information <a href='http://www.cisco.com/web/siteassets/legal/spark_supp.html' target='_blank'>click here</a>."
     },
     "errors": {
       "enableServiceEntitlementFailure": "Failed! Your organization is missing entitlements that are needed to add the {{serviceName}}. Contact your support representative to fix the issue.",
@@ -2274,18 +2272,14 @@
       "clusterNameCannotByEmpty": "Name cannot be empty.",
       "renameClusterDescription": "The name is for display purposes only.",
       "deregisterClusterExplanation": "Remove this {{clusterType}} cluster from Cisco Collaboration Cloud.",
-      "deregisterClusterExplanationNew": "Remove this {{clusterType}} cluster from Cisco Spark Control Cloud.",
       "deregisterSipDestinationExplanation": "Remove this SIP Destination from Cisco Collaboration Cloud. This step removes all related configuration.",
-      "deregisterSipDestinationExplanationNew": "Remove this SIP Destination from Cisco Spark Control Cloud. This step removes all related configuration.",
       "deregisterMediaClusterExplanation": "Click the \"Remove\" button to launch the Remove Cluster workflow.",
       "deregisterClusterExplanationBlocked": "It is not possible to deregister an Expressway until all its services have been deactivated.",
       "allServicesMustBeDeactivatedOnExpressway": "All services must be deactivated on an Expressway cluster before it can be removed.",
       "couldNotDeregisterCluster": "Could not deregister cluster.",
       "deregisterConfirmRemoval": "Confirm Removal",
       "deregisterConfirmationText": "You are about to deregister <strong>{{clusterName}}</strong> from Cisco Collaboration Cloud.",
-      "deregisterConfirmationTextNew": "You are about to deregister <strong>{{clusterName}}</strong> from Cisco Spark Control Cloud.",
-      "deregisterConfirmPopup": "{{clusterName}} was removed successfully from Cisco Collaboration Cloud.",
-      "deregisterConfirmPopupNew": "{{clusterName}} was removed successfully from Cisco Spark Control Cloud."
+      "deregisterConfirmPopup": "{{clusterName}} was removed successfully from Cisco Collaboration Cloud."
     },
     "deactivateServiceComponent": {
       "deactivateServiceLabel": "Deactivate {{serviceName}}",
@@ -2362,9 +2356,7 @@
       "error": "Couldn't fetch API key",
       "authorization": {
         "title": "Authorize Cisco Collaboration Cloud on your G Suite account",
-        "titleNew": "Authorize Cisco Spark Control Cloud on your G Suite account",
         "line1": "To enable Hybrid Calendar Service for you users, you must authorize Cisco Collaboration Cloud on your G Suite account.",
-        "line1New": "To enable Hybrid Calendar Service for you users, you must authorize Cisco Spark Control Cloud on your G Suite account.",
         "item1": "In a new tab, open your <a href=\"https://admin.google.com/AdminHome\" target=\"_blank\">G Suite account dashboard</a> and then go to Security.",
         "item2": "Click <strong>Show more</strong> and then <strong>Advanced settings</strong>.",
         "item3": "Click <strong>Manage API Client Access</strong>.",
@@ -2396,7 +2388,6 @@
       "modalTitle": "Update API Client access",
       "title": "Update Client name and Scope",
       "line1": "To update or restore your G suite access to Cisco Collaboration Cloud, follow the steps below.",
-      "line1New": "To update or restore your G suite access to Cisco Spark Control Cloud, follow the steps below.",
       "success": "Great! Google Calendar is correctly configured."
     },
     "settings": {
@@ -2541,8 +2532,7 @@
         "selectCalendarType": "Select Calendar type",
         "exchangeInfo": "Microsoft Exchange and Exchange Online (Office 365). Requires Expressway cluster.",
         "serviceInto": "Hybrid Calendar supports Exchange calendars via on-premises Expressway clusters and Google Calendar.",
-        "smallprint": "Cisco Hybrid Service connectors collect and send certain information to the Cisco Collaboration Cloud about your Hybrid Service deployment. For more information click <a href=\"https://example.org/\" target=\"_blank\">here</a>.",
-        "smallprintNew": "Cisco Hybrid Service connectors collect and send certain information to the Cisco Spark Control Cloud about your Hybrid Service deployment. For more information click <a href=\"https://example.org/\" target=\"_blank\">here</a>."
+        "smallprint": "Cisco Hybrid Service connectors collect and send certain information to the Cisco Collaboration Cloud about your Hybrid Service deployment. For more information click <a href=\"https://example.org/\" target=\"_blank\">here</a>."
       },
       "scheduleUpgrade": {
         "title": "Upgrade Schedule",
@@ -2698,7 +2688,6 @@
           },
           "end": {
             "line1": "You may now register the Expressway with Cisco Collaboration Cloud.",
-            "line1New": "You may now register the Expressway with Cisco Spark Control Cloud.",
             "line2": "Go to your Expressway to complete registration and configure the connector(s)."
           }
         },
@@ -2722,7 +2711,6 @@
           "enter-cluster-name": "Enter a name for the Cisco Unified Communications Manager cluster",
           "end": {
             "line1": "You may now register the Cisco Unified Communications Manager with Cisco Collaboration Cloud.",
-            "line1New": "You may now register the Cisco Unified Communications Manager with Cisco Spark Control Cloud.",
             "line2": "Go to your CUCM to complete the registration.",
             "finish": "Go to CUCM"
           }
@@ -2785,7 +2773,6 @@
       "renameGroupDescription": "Rename the resource group",
       "removeGroup": "Remove",
       "removeGroupDescription": "Remove the resource group from Cisco Collaboration Cloud",
-      "removeGroupDescriptionNew": "Remove the resource group from Cisco Spark Control Cloud",
       "groupNameCannotByEmpty": "Resource group name cannot be empty",
       "groupNameSaved": "Rename successful",
       "duplicateName": "A resource group with that name already exists. Please choose another name.",
@@ -3071,7 +3058,6 @@
       "cluster": "Create or select cluster",
       "hostname": "Enter FQDN or IP address",
       "grant-registration-success-part-1": "You may now register your Hybrid Data Security Node to the Cisco Collaboration Cloud.",
-      "grant-registration-success-part-1-new": "You may now register your Hybrid Data Security Node to the Cisco Spark Control Cloud.",
       "grant-registration-success-part-2": "Node IP Address/FQDN: {{hostname}}",
       "grant-registration-success-part-3": "Cluster: {{clustername}}",
       "grant-success-information": " <i class='icon icon-warning'></i> Go to your Hybrid Data Security Node within one hour to finish registration.<br>After one hour you will need to start the process again.",
@@ -3079,7 +3065,6 @@
       "text1": "Create a new or select an existing Hybrid Data Security Cluster where you want to add the Hybrid Data Security Node.",
       "text3": "Enter the",
       "text3part2": "or IP address of the Hybrid Data Security Node that you want to register with the Cisco Collaboration Cloud.",
-      "text3part2New": "or IP address of the Hybrid Data Security Node that you want to register with the Cisco Spark Control Cloud.",
       "serverOnline": "The Hybrid Data Security server that you are registering already exists and is online.",
       "serverOffline": "The Hybrid Data Security server that you are registering already exists and is offline. Deregister the existing server before you try again.",
       "firstStep": "Before you can register your Hybrid Data Security Node, you must install and configure the software on your new server.",
@@ -3750,6 +3735,8 @@
     "decisionCallerAreaCode": "The Caller's Area Code",
     "decisionSessionVariable": "The Session Variable",
     "decisionMissingCustomVariable": "The selected variable is undefined in this call tree. Null values will result in negative results.",
+    "dynamicMissingCustomVariable": "The {{deletedSessionVariablesList}} is no longer available. As a result, this variable won't be used for Say Message.",
+    "dynamicMissingCustomVariables": "The {{deletedSessionVariablesList}} are no longer available. As a result, this variable won't be used for Say Message.",
     "callerReturned1Min": "1 Minute",
     "callerReturned5Mins": "5 Minutes",
     "callerReturned30Mins": "30 Minutes",
@@ -5635,7 +5622,6 @@
     },
     "deleteGroup": {
       "message": "Are you sure you want to delete {{groupName}} from Cisco Collaboration Cloud?",
-      "messageNew": "Are you sure you want to delete {{groupName}} from Cisco Spark Control Cloud?",
       "errorHeader": "Unexpected Error",
       "errorMessage": "Unable delete {{groupName}}."
     },
@@ -5716,17 +5702,14 @@
       "cluster-placeholder": "Create or select cluster",
       "hostname-placeholder": "Enter FQDN or IP address",
       "grant-registration-success-header-old-cluster": "You can now register your Hybrid Media Node to the Cisco Collaboration Cloud. Node IP Address/FQDN: {{hostname}} Cluster: {{clustername}}",
-      "grant-registration-success-header-old-cluster-new": "You can now register your Hybrid Media Node to the Cisco Spark Control Cloud. Node IP Address/FQDN: {{hostname}} Cluster: {{clustername}}",
       "grant-success-information": "Go to your Hybrid Media Node within one hour to finish registration.",
       "next": "Next",
       "back": "Back",
       "titleV2": "Register Hybrid Media Node",
       "text1V2": "Create a new or select an existing Hybrid Media Cluster where you want to add the Hybrid Media Node.",
       "text2V2": "Enter the hostname or IP address of the Hybrid Media Node that you want to the Cisco Collaboration Cloud.",
-      "text2V2New": "Enter the hostname or IP address of the Hybrid Media Node that you want to the Cisco Spark Control Cloud.",
       "text3V1": "Enter the",
       "text3V3": "or IP address of the Hybrid Media Node that you want to register with the Cisco Collaboration Cloud.",
-      "text3V3New": "or IP address of the Hybrid Media Node that you want to register with the Cisco Spark Control Cloud.",
       "serverOnline": "The media server that you are registering already exists and is online.",
       "serverOffline": "The media server that you are registering already exists and is offline. Deregister the existing server before you try again.",
       "firstStep": "Before you can register your Hybrid Media Node, you must install and configure the software on your new server.",
@@ -6511,6 +6494,8 @@
     "locationName": "Location Name",
     "addText": "Add Location",
     "namePlaceholder": "Name the Location",
+    "usedLocation": "This location name is already used.",
+    "getFailed": "Failed to get location.",
     "copyTitle": "Copy Location",
     "copyDesc": "This location will use the customized setting from the location that you copied.",
     "deleteTitle": "Delete Location",
@@ -6528,7 +6513,19 @@
     "cancelHeader": "Cancel Location Creation",
     "cancelDialog": "Are you sure you wish to cancel location creation? This location will not be saved.",
     "locationDesc": "Give this location a name to identify it.",
-    "locationSelectDesc": "Choose the physical location where this user primarily works from."
+    "locationSelectDesc": "Choose the physical location where this user primarily works from.",
+    "locationDetailTitle": "Location Details",
+    "locationDetailDesc": "Locations let you group Cisco Spark Call settings together based on specific geography. Specify a name and caller ID for this location.",
+    "regionalSettingsTitle": "Regional Settings",
+    "regionalSettingsDesc": "Set time zone, date and time format, preferred language.",
+    "internalDialingTitle": "Internal Dialing",
+    "internalDialingDesc": "Define extensions and how to make internal calls.",
+    "externalDialingTitle": "External Dialing",
+    "externalDialingDesc": "Define how to call outside the company.",
+    "dialingRestrictionsTitle": "Dialing Restrictions",
+    "dialingRestrictionsDesc": "Restrict certain dialing features for the entire organization. You can override each setting for individual users.",
+    "emergencyServicesTitle": "Emergency Services",
+    "emergencyServicesDesc": "Set the call back numbers and addresses for this location."
   },
   "sunlightDetails": {
     "title": "Care",
@@ -8904,15 +8901,44 @@
     "deletionPeriod": "Media will be permanently deleted after 30 days",
     "delete": "Delete",
     "edit": "Edit",
+    "saveButton": "Save",
+    "cancelButton": "Cancel",
     "deleteButton": "Delete All",
     "searchPlaceholder": "Search Media",
-    "uploadProcessing": "Upload Processing...",
+    "uploading": "Uploading...",
+    "uploadProcessing": "Processing...",
     "processingError": "Error processing media file.  Please try again.",
     "getMediaListError": "An error occurred obtaining the list of media.  Please try again.",
     "uploadMediaError": "An error occurred uploading media.  Please try again.",
     "deleteMediaError": "An error occurred deleting media.",
     "cleanupMediaError": "An error occurred cleaning up a failed media upload.",
-    "unsupportedTypeError": "File type selected for upload is not supported."
+    "unsupportedTypeError": "File type selected for upload is not supported.",
+    "cancelUploadError": "An error occurred cancelling a media upload.",
+    "displayName": {
+      "required": "Media name is required",
+      "tooShortError": "Media name must contain at least one characters.",
+      "tooLongError": "Media name can contain a maximum of 48 characters."
+    },
+    "description": {
+      "tooLongError": "Media description can contain a maximum of 512 characters."
+    },
+    "cancelUpload": {
+      "title": "Cancel Upload",
+      "message": "Are you sure you want to cancel the upload?",
+      "cancel": "Proceed with Upload",
+      "confirm": "Cancel Upload"
+    },
+    "deleteMedia": {
+      "title": "Permanantly Delete Media",
+      "message": "Note: Media file(s) recently deleted still might be in use by the system.",
+      "cancel": "Cancel",
+      "confirm": "Delete Media"
+    },
+    "deleteMediaNotAvailable": {
+      "title": "Delete Unavailable",
+      "message": "Delete isn't available for this media because it is currently assigned. Please un-assign and try again",
+      "confirm": "Close"
+    }
   },
   "multipleDevicesConfirm": {
     "title": "About Devices in a Place",
