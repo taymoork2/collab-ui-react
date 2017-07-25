@@ -45,7 +45,7 @@ require('./_overview.scss');
     ProPackService.hasProPackEnabledAndNotPurchased().then(function (proPackToggle) {
       if (proPackToggle) {
         $scope.$watch(function () {
-          return LearnMoreBannerService.isElementVisible(LearnMoreBannerService.HEADER_LOCATION);
+          return LearnMoreBannerService.isElementVisible(LearnMoreBannerService.OVERVIEW_LOCATION);
         }, function (visible) {
           vm.showLearnMoreNotification = !visible;
         });
