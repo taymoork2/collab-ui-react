@@ -146,10 +146,8 @@ describe('Huron Functional: add-user', () => {
       });
       it('should show Add Speed Dial menu item', () => {
         utils.expectIsDisplayed(SpeedDialsPage.addSpeedDialAction);
-        utils.expectIsDisplayed(SpeedDialsPage.reorderSpeedDialAction);
       });
       it('should show Reorder menu item', () => {
-        utils.expectIsDisplayed(SpeedDialsPage.addSpeedDialAction);
         utils.expectIsDisplayed(SpeedDialsPage.reorderSpeedDialAction);
       });
 

@@ -9,6 +9,7 @@ import { PstnModel } from 'modules/huron/pstn/pstn.model';
 import { PstnCarrier } from 'modules/huron/pstn/pstnProviders/pstnCarrier';
 import { IAvrilFeatures } from 'modules/huron/avril';
 import { SettingSetupInitService } from 'modules/call/settings/settings-setup-init';
+import { SetupWizardService } from 'modules/core/setupWizard/setup-wizard.service';
 
 const API_IMPL_SWIVEL = 'SWIVEL';
 
@@ -61,6 +62,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
     private Orgservice,
     private FeatureToggleService,
     private SettingSetupInitService: SettingSetupInitService,
+    private SetupWizardService: SetupWizardService,
   ) { }
 
   public $onInit(): void {
@@ -133,9 +135,15 @@ class HuronSettingsCtrl implements ng.IComponentController {
     return this.$q.resolve();
   }
 
-  // This is the hook to call save from ftsw.
-  public initNext(): ng.IPromise<void> {
-    return this.saveHuronSettings();
+  public initNext(): ng.IPromise<void> | void {
+    // TODO: samwi - remove when super onboard goes GA
+    if (this.Authinfo.getCustomerAdminEmail().indexOf('ordersimp') !== -1) {
+      this.SetupWizardService.addProvisioningCallbacks({
+        call: this.saveHuronSettings.bind(this),
+      });
+    } else {
+      return this.saveHuronSettings();
+    }
   }
 
   public saveHuronSettings(): ng.IPromise<void> {

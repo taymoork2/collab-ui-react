@@ -50,7 +50,6 @@
     /* initial search variables page */
     vm.searchPlaceholder = $translate.instant('ediscovery.searchParameters.searchEmailPlaceholder');
     vm.searchHelpText = $translate.instant('ediscovery.searchParameters.searchEmailHelpText');
-    vm.messagesHelpText = $translate.instant('ediscovery.searchParameters.messagesHelpText');
     vm.searchByOptions = ['Email Address', 'Space ID'];
     vm.searchBySelected = '' || vm.searchByOptions[0];
     vm.searchModel = null;

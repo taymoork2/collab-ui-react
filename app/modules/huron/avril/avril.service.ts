@@ -1,4 +1,4 @@
-import { IAvrilSite } from 'modules/huron/avril';
+import { IAvrilSite, AvrilSite } from 'modules/huron/avril';
 
 interface IAvrilSiteResource extends ng.resource.IResourceClass<ng.resource.IResource<IAvrilSite>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
@@ -36,7 +36,10 @@ export class AvrilService {
     return this.avrilSiteResource.get({
       customerId: this.Authinfo.getOrgId(),
       siteId: uuid,
-    }).$promise;
+    }).$promise
+    .then(response => {
+      return new AvrilSite(response);
+    });
   }
 
   public createAvrilSite(avrilSite: IAvrilSite): ng.IPromise<string> {

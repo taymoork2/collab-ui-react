@@ -26,7 +26,7 @@
                 <form class="input-validation" novalidate>
                   <input class="cs-input" type="text" ng-model="ediscoverySearchCtrl.searchModel" autofocus="true"
                    ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)" placeholder="{{ediscoverySearchCtrl.searchPlaceholder}}">
-                   <p class="cs-input__help-text search-spacing" translate="{{ediscoverySearchCtrl.searchHelpText}}"></p>
+                   <p class="cs-input__help-text search-spacing">{{ediscoverySearchCtrl.searchHelpText}}</p>
                   <div class="cs-input__messages" ng-if="ediscoverySearchCtrl.limitError" role="alert">
                     <div translate="ediscovery.searchErrors.invalidLimit"></div>
                   </div>
@@ -57,7 +57,7 @@
             <span class="col-md-2" translate="common.to"></span>
             <div class="col-md-5 search-box">
             <cs-datepicker required  ng-model="ediscoverySearchCtrl.searchCriteria.endDate"
-              first-enabled-date="{{ediscoverySearchCtrl.lastEnabledDate}}"
+              first-enabled-date="{{ediscoverySearchCtrl.firstEnabledDate}}"
               last-enabled-date="{{ediscoverySearchCtrl.lastEnabledDate}}"
               disabled-tooltip-text="{{ediscoverySearchCtrl.getProPackTooltip()}}"
               view-format="YYYY-MM-DD">
@@ -86,7 +86,7 @@
                 <input class="cs-input" type="text" name="qInput" ng-model="ediscoverySearchCtrl.queryModel"
                 placeholder="{{'ediscovery.searchParameters.messagesPlaceholder' | translate}}"
                 ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)" ng-maxlength="200">
-                <p class="cs-input__help-text search-spacing" translate="{{ediscoverySearchCtrl.messagesHelpText}}"></p>
+                <p class="cs-input__help-text search-spacing" translate="ediscovery.searchParameters.messagesHelpText"></p>
                 <div class="cs-input__messages" ng-messages="qForm.qInput.$error" role="alert">
                   <div ng-message="maxlength" class="query-error-msg" translate="ediscovery.searchErrors.queryLimit"></div>
                 </div>
