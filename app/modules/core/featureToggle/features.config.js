@@ -201,7 +201,6 @@ module.exports = {
   csdmAtaReboot: 'csdm-ata-reboot',
   hI1484: 'h-i1484',
   hI1485: 'h-i1485',
-  prov3698: 'prov-3698',
   atlasRolesAndSecurity: 'atlas-roles-and-security',
   csdmMultipleDevicesPerPlace: 'csdm-multiple-devices-per-place',
   avrilI1558: 'avril-i1558',
