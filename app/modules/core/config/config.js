@@ -60,6 +60,10 @@
         webexUrl: '.webex.com',
       },
 
+      customerTypes: {
+        enterprise: 'Enterprise',
+      },
+
       entitlements: {
         huron: 'ciscouc',
         squared: 'webex-squared',
