@@ -91,6 +91,7 @@ describe('Controller: AAMessageTypeCtrl', function () {
                     },
                   }],
                   className: 'dynamic-prompt aa-message-height',
+                  id: 'messageTypeopenHours0',
                 },
               },
             },

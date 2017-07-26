@@ -44,6 +44,7 @@
       DYNAMIC: 2,
     };
 
+    var uniqueId;
     var holdActionDesc;
     var holdActionValue;
     var dependentCeSessionVariablesList = [];
@@ -56,6 +57,7 @@
     vm.deletedSessionVariablesList = [];
 
     vm.messageInput = '';
+    vm.messageInputPlaceholder = $translate.instant('autoAttendant.sayMessagePlaceholder');
 
     vm.messageOption = {
       label: '',
@@ -262,7 +264,7 @@
     }
 
     function canDynamicListUpdated(dynamicList, range) {
-      return dynamicList.className.includes('dynamic-prompt') && !(dynamicList.id === 'messageType{{schedule + index + menuKeyIndex + menuId}}') && range.collapsed == true;
+      return dynamicList.className.includes('dynamic-prompt') && range.collapsed === true && (_.isEqual(dynamicList.id, uniqueId));
     }
 
     function createDynamicList(dynamicList) {
@@ -344,7 +346,7 @@
           } else if (_.has(vm.actionEntry, 'dynamicList')) {
             _.forEach(vm.actionEntry.dynamicList, function (opt) {
               var model;
-              if (!opt.isDynamic) {
+              if (!opt.isDynamic && _.isEmpty(opt.htmlModel)) {
                 model = {
                   model: opt.say.value,
                   html: opt.say.value,
@@ -368,7 +370,7 @@
         if (_.has(vm.actionEntry, 'dynamicList')) {
           _.forEach(vm.actionEntry.dynamicList, function (opt) {
             var model = {};
-            if (!opt.isDynamic) {
+            if (!opt.isDynamic && _.isEmpty(opt.htmlModel)) {
               model = {
                 model: opt.say.value,
                 html: opt.say.value,
@@ -460,6 +462,12 @@
     }
 
     function activate() {
+      //type is undefined everywhere except route to cisco spark care
+      var type = _.isUndefined($scope.type) ? '' : $scope.type;
+      //menuKeyIndex and menuId are undefined for most of the places like caller input
+      var menuKeyIndex = _.isUndefined($scope.menuKeyIndex) ? '' : $scope.menuKeyIndex;
+      var menuId = _.isUndefined($scope.menuId) ? '' : $scope.menuId;
+      uniqueId = 'messageType' + $scope.schedule + $scope.index + menuKeyIndex + menuId + type;
       vm.uniqueCtrlIdentifer = AACommonService.makeKey($scope.schedule, AACommonService.getUniqueId());
       if ($scope.isMenuHeader) {
         vm.messageType = messageType.MENUHEADER;
