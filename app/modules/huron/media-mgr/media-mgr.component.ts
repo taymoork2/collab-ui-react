@@ -38,13 +38,14 @@ export class MediaMgrCtrl implements ng.IComponentController {
 
   public media: IMedia;
   public mohUpload: IMediaUpload = {} as IMediaUpload;
-
   public loading: boolean = false;
+  public dismiss: Function;
   public ModalView = ModalView;
   public activeModal: ModalView = ModalView.Media;
   public activeMedia?: IMedia;
-  public mohFileReadPercentComplete: number = 0;
+  public mohUploadWaitingToDismiss: boolean = false;
   public mohUploadCancelInProgress: boolean = false;
+  public mohUploadCancelled: boolean = false;
   public mohUploadInProgress: boolean = false;
   public mohUploadPercentComplete: number = 0;
   public mohEditInProgress: boolean = false;
@@ -66,6 +67,7 @@ export class MediaMgrCtrl implements ng.IComponentController {
     private MediaMgrService: MediaMgrService,
     private $translate: ng.translate.ITranslateService,
     private $timeout: ng.ITimeoutService,
+    private $q: ng.IQService,
     private ModalService,
   ) {}
 
@@ -138,12 +140,12 @@ export class MediaMgrCtrl implements ng.IComponentController {
     this.MediaMgrService.uploadMedia(this.mohUpload, uploadProgressCallback)
       .then(() => this.getMedia())
       .catch(error => {
-        if (!this.mohUploadCancelInProgress) {
+        if (!this.mohUploadCancelled) {
           this.Notification.errorResponse(error, 'mediaMgrModal.uploadMediaError');
         }
       }).finally(() => {
         this.mohUploadInProgress = false;
-        this.mohUploadCancelInProgress = false;
+        this.mohUploadCancelled = false;
       });
   }
 
@@ -218,28 +220,41 @@ export class MediaMgrCtrl implements ng.IComponentController {
     }
   }
 
-  public cancelUpload(): void {
+  public cancelUpload(): ng.IPromise<any> {
     this.mohUploadCancelInProgress = true;
-    this.ModalService.open({
+    return this.ModalService.open({
       title: this.$translate.instant('mediaMgrModal.cancelUpload.title'),
       message: this.$translate.instant('mediaMgrModal.cancelUpload.message'),
       dismiss: this.$translate.instant('mediaMgrModal.cancelUpload.cancel'),
       close: this.$translate.instant('mediaMgrModal.cancelUpload.confirm'),
       btnType: 'alert',
     }).result.then(() => {
-      this.MediaMgrService.cancelUpload()
-        .then(() => this.MediaMgrService.getMedia())
-        .then(media => {
+      return this.MediaMgrService.cancelUpload()
+        .then(() => {
+          this.mohUploadCancelled = true;
+          return this.MediaMgrService.getMedia();
+        }).then(media => {
           const myMedia: IMedia[] = media;
           const badMedia = _.find(myMedia, { filename: this.mohUpload.filename });
           if (!(_.isUndefined(badMedia) || _.isNull(badMedia))) {
-            this.MediaMgrService.deleteMedia(badMedia)
-              .then(() => this.MediaMgrService.deletePermMedia(badMedia))
-              .then(() => this.getMedia())
-              .catch(error => this.Notification.errorResponse(error, 'mediaMgrModal.cleanupMediaError'));
+            return this.cleanupMedia(badMedia);
           }
+          return this.$q.resolve();
         }).catch(error => this.Notification.errorResponse(error, 'mediaMgrModal.cancelUploadError'));
-    }).catch(() => this.mohUploadCancelInProgress = false);
+    }).catch(() => {
+      return this.$q.reject();
+    }).finally(() => {
+      this.mohUploadCancelInProgress = false;
+    });
+  }
+
+  public cleanupMedia(mohFile: IMedia): ng.IPromise<any> {
+    return this.MediaMgrService.deleteMedia(mohFile)
+      .then(() => this.MediaMgrService.deletePermMedia(mohFile))
+      .then(() => {
+        this.setActiveMedia(undefined);
+        return this.getMedia();
+      }).catch(error => this.Notification.errorResponse(error, 'mediaMgrModal.cleanupMediaError'));
   }
 
   public deletePermAll(): void {
@@ -291,6 +306,24 @@ export class MediaMgrCtrl implements ng.IComponentController {
   public getDeleteTime(mohFile: IMedia): string {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return new Date(mohFile.lastModifyTime.epochSecond * 1000).toLocaleDateString('en-US', options);
+  }
+
+  public closeMediaMgrModal(): void {
+    if (this.mohUploadInProgress) {
+      this.mohUploadWaitingToDismiss = true;
+      this.cancelUpload()
+        .then(() => this.dismiss())
+        .catch(() => this.mohUploadWaitingToDismiss = false);
+    } else {
+      this.dismiss();
+    }
+  }
+
+  public uploadActionInProgress(): boolean {
+    if (this.mohUploadInProgress || this.mohUploadCancelInProgress || this.mohUploadWaitingToDismiss) {
+      return true;
+    }
+    return false;
   }
 }
 
