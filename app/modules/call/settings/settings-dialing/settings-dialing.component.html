@@ -1,4 +1,4 @@
-<div ng-form="dialingForm">
+<div ng-form="dialingForm" class="settings-dialing">
   <h5 class="title-margin-bottom" translate="serviceSetupModal.dialing"></h5>
   <div class="cs-radio-group">
     <input
@@ -10,7 +10,7 @@
       ng-change="$ctrl.onDialingHabitChanged(value)">
       <label class="cs-radio" for="nationalDialing"><span translate="serviceSetupModal.notSimplifiedDialingTitle"></span></label>
       <p class="cs-input__help-text">{{$ctrl.exampleDialingWithOneString}}</p>
-      <div ng-if="$ctrl.supportsSimplifiedNationalDialing" class="cs-input-group cs-input-checkbox cs-checkbox-group indent-area-code">
+      <div ng-if="$ctrl.supportsSimplifiedNationalDialing" class="cs-input-group cs-input-checkbox cs-checkbox-group indent">
         <input
           type="checkbox"
           ng-model="$ctrl.useSimplifiedNationalDialing"

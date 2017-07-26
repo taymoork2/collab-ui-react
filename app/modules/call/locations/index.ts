@@ -10,6 +10,11 @@ import deleteLocationsModule from 'modules/call/locations/locations-delete';
 import makeDefaultLocationsModule from 'modules/call/locations/locations-make-default';
 import locationsServiceModule from 'modules/call/locations/shared';
 import locationNameModule from 'modules/call/locations/locations-name';
+import timeZoneModule from 'modules/call/shared/settings-time-zone';
+import preferredLangModule from 'modules/call/settings/settings-preferred-language';
+import defaultCountryModule from 'modules/call/settings/settings-default-country';
+import outboundDialDigitModule from 'modules/call/settings/settings-outbound-dial-digit';
+import locationCosModule from 'modules/call/locations/locations-cos';
 
 export default angular
   .module('call.locations', [
@@ -23,6 +28,11 @@ export default angular
     copyLocationsModule,
     makeDefaultLocationsModule,
     locationNameModule,
+    timeZoneModule,
+    preferredLangModule,
+    defaultCountryModule,
+    outboundDialDigitModule,
+    locationCosModule,
   ])
 
 .component('ucCallLocations', new CallLocationsComponent())

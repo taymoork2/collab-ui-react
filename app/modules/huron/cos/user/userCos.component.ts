@@ -61,8 +61,8 @@ class UserClassOfService implements ng.IComponentController {
   }
 
   private unifyRestrictions(cosRestrictions) {
-    const customerCos = _.get(cosRestrictions, 'customer', []);
-    let memberCos = [];
+    const customerCos = _.get<IRestriction[]>(cosRestrictions, 'customer', []);
+    let memberCos: IRestriction[] = [];
     const unifiedRestrictions: IRestriction[] = [];
 
     if (_.has(cosRestrictions, 'place')) {
@@ -72,8 +72,8 @@ class UserClassOfService implements ng.IComponentController {
     }
 
     //create union of two collections with user taking priority
-    _.forEach(customerCos, (customerRestriction: IRestriction) => {
-      const cos = _.find(memberCos, (memberRestriction: IRestriction) => {
+    _.forEach(customerCos, customerRestriction => {
+      const cos = _.find(memberCos, memberRestriction => {
         return memberRestriction.restriction === customerRestriction.restriction;
       });
 

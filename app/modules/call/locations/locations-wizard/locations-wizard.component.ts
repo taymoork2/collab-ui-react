@@ -138,7 +138,7 @@ class LocationsWizardController implements ng.IComponentController {
   }
 
   public onSteeringDigitChanged(steeringDigit: string): void {
-    this.locationDetail.steeringDigit = Number(steeringDigit);
+    this.locationDetail.steeringDigit = steeringDigit;
     this.setShowDialPlanChangedDialogFlag();
   }
 
