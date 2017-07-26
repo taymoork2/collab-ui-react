@@ -1,7 +1,7 @@
 <div class="fusion-cluster-settings">
   <email-notifications-section service-id="'squared-fusion-uc'"></email-notifications-section>
 
-  <setting-section setting="callServiceSettings.callServiceAware" class="needs-border-top">
+  <setting-section class="needs-border-top" setting="callServiceSettings.callServiceAware" class="needs-border-top">
     <div class="sub-section">
       <p class="sub-section__label" translate="hercules.serviceNames.squared-fusion-uc.full"></p>
       <p><span translate="hercules.settings.call.aware"></span><br></p>
@@ -150,9 +150,19 @@
       </button>
     </div>
   </setting-section>
-  <hybrid-voicemail-settings is-call-service-connect-enabled="callServiceSettings.squaredFusionEc"
-                             ng-if="callServiceSettings.hasVoicemailFeatureToggle">
+
+  <hybrid-voicemail-settings
+    is-call-service-connect-enabled="callServiceSettings.squaredFusionEc"
+    ng-if="callServiceSettings.hasVoicemailFeatureToggle">
   </hybrid-voicemail-settings>
-  <deactivate-section service-id="'squared-fusion-uc'"></deactivate-section>
-  <documentation-section service-id="'squared-fusion-uc'"></documentation-section>
+
+  <deactivate-section
+    class="needs-border-top"
+    service-id="'squared-fusion-uc'">
+  </deactivate-section>
+
+  <documentation-section
+    class="needs-border-top"
+    service-id="'squared-fusion-uc'">
+  </documentation-section>
 </div>
