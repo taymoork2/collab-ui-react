@@ -48,7 +48,6 @@ describe('Controller: MySubscriptionCtrl', function () {
     spyOn(this.ProPackService, 'hasProPackEnabled').and.returnValue(this.$q.resolve(false));
     spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(false));
     spyOn(this.Authinfo, 'getUserId').and.returnValue('12345');
-    spyOn(this.DigitalRiverService, 'getDigitalRiverToken');
     spyOn(this.DigitalRiverService, 'getDigitalRiverUpgradeTrialUrl').and.returnValue(this.$q.resolve({ data: trialUrlResponse }));
     spyOn(this.DigitalRiverService, 'getSubscriptionsUrl').and.returnValue(this.$q.resolve(drUrlResponse));
     spyOn(this.$rootScope, '$broadcast').and.callThrough();
@@ -122,7 +121,6 @@ describe('Controller: MySubscriptionCtrl', function () {
     expect(this.controller.subscriptionDetails).toEqual(this.data.subscriptionsFormatted);
 
     expect(this.controller.visibleSubscriptions).toBeTruthy();
-    expect(this.DigitalRiverService.getDigitalRiverToken).toHaveBeenCalled();
     expect(this.controller.licenseSummary).toEqual('subscriptions.licenseSummaryOnline');
     expect(this.$rootScope.$broadcast).toHaveBeenCalled();
   });
@@ -164,7 +162,6 @@ describe('Controller: MySubscriptionCtrl', function () {
     expect(this.controller.visibleSubscriptions).toBeTruthy();
     expect(this.$rootScope.$broadcast).toHaveBeenCalled();
     expect(this.controller.licenseSummary).toEqual(this.$translate.instant('subscriptions.licenseSummaryOnline'));
-    expect(this.DigitalRiverService.getDigitalRiverToken).toHaveBeenCalled();
   });
 
   describe('Tests for Shared Meeting Licenses : ', function () {

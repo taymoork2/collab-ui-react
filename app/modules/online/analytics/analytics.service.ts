@@ -1,6 +1,7 @@
 declare const _satellite;
 
 export class OnlineAnalyticsService {
+  public MY_COMPANY_BILLING = 'atlas-spark-myaccount-billing';
   public MY_COMPANY_INFO = 'atlas-spark-myaccount-info';
   public MY_COMPANY_ORDER_HISTORY = 'atlas-spark-myaccount-orderhistory';
   public MY_COMPANY_SUBSCRIPTIONS = 'atlas-spark-myaccount-subscriptions';
