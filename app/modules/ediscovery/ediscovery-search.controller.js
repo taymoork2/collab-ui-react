@@ -175,27 +175,12 @@
       return errors;
     }
 
-    function dateWarnings(end) {
-      var warnings = [];
-      if (end !== moment().endOf('day').format('YYYY-MM-DD') && !vm.proPackPurchased) {
-        warnings.push($translate.instant('ediscovery.dateError.InvalidEndDate'));
-      }
-      return warnings;
-    }
-
     function validateDate() {
       vm.dateValidationError = null;
-      vm.dateValidationWarning = null;
       var errors = dateErrors(getStartDate(), getEndDate());
-      var warnings = dateWarnings(getEndDate());
       if (errors.length > 0) {
         vm.dateValidationError = {
           errors: errors,
-        };
-        return false;
-      } else if (warnings.length > 0) {
-        vm.dateValidationWarning = {
-          warnings: warnings,
         };
         return false;
       } else {
@@ -553,7 +538,7 @@
     function searchButtonDisabled(_error) {
       var error = !_.isUndefined(_error) ? _error : false;
       var disable = !vm.searchCriteria.roomId || vm.searchCriteria.roomId === '' || vm.searchingForRoom === true;
-      return vm.ediscoveryToggle ? (error || vm.dateValidationError || vm.dateValidationWarning) : disable;
+      return vm.ediscoveryToggle ? (error || vm.dateValidationError) : disable;
     }
 
     function retrySearch() {
