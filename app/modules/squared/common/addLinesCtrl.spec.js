@@ -1,7 +1,7 @@
 'use strict';
 
 describe('AddLinesCtrl: Ctrl', function () {
-  var controller, $stateParams, $state, $scope, Notification, $q, CommonLineService, CsdmDataModelService, DialPlanService;
+  var controller, $stateParams, $state, $scope, Notification, $q, FeatureToggleService, CommonLineService, CsdmDataModelService, DialPlanService;
   var $controller;
   var $httpBackend;
   var internalNumbers;
@@ -16,7 +16,7 @@ describe('AddLinesCtrl: Ctrl', function () {
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module('Squared'));
 
-  beforeEach(inject(function (_$controller_, $rootScope, _$q_, _$state_, _$stateParams_, _Notification_, _CsdmDataModelService_, _CommonLineService_, _DialPlanService_, _$httpBackend_) {
+  beforeEach(inject(function (_$controller_, $rootScope, _$q_, _$state_, _$stateParams_, _Notification_, _FeatureToggleService_, _CsdmDataModelService_, _CommonLineService_, _DialPlanService_, _$httpBackend_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
@@ -24,6 +24,7 @@ describe('AddLinesCtrl: Ctrl', function () {
     $state = _$state_;
     $stateParams = _$stateParams_;
     Notification = _Notification_;
+    FeatureToggleService = _FeatureToggleService_;
     CommonLineService = _CommonLineService_;
     CsdmDataModelService = _CsdmDataModelService_;
     DialPlanService = _DialPlanService_;
@@ -77,6 +78,7 @@ describe('AddLinesCtrl: Ctrl', function () {
     sites = getJSONFixture('huron/json/settings/sites.json');
 
     spyOn(Notification, 'notify');
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve());
 
     spyOn(CommonLineService, 'getInternalNumberPool').and.returnValue(internalNumbers);
     spyOn(CommonLineService, 'loadInternalNumberPool').and.returnValue($q.resolve(internalNumbers));
@@ -140,11 +142,13 @@ describe('AddLinesCtrl: Ctrl', function () {
 
   describe('wizard functions', function () {
     var deviceCisUuid;
+    var locationUuid;
     var directoryNumber;
     var externalNumber;
     var entitlements;
     beforeEach(function () {
       deviceCisUuid = 'deviceId';
+      locationUuid = 'locationUuid';
       directoryNumber = 'directoryNumber';
       externalNumber = 'externalNumber';
       entitlements = ['something', 'else'];
@@ -272,6 +276,7 @@ describe('AddLinesCtrl: Ctrl', function () {
 
       it('passes on the selected numbers to CsdmDataModeService', function () {
         spyOn(controller, 'getSelectedNumbers').and.returnValue({
+          locationUuid: locationUuid,
           directoryNumber: directoryNumber,
           externalNumber: externalNumber,
         });
@@ -282,6 +287,7 @@ describe('AddLinesCtrl: Ctrl', function () {
         $scope.$apply();
         expect(CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalledWith(place, {
           entitlements: entitlements,
+          locationUuid: locationUuid,
           directoryNumber: directoryNumber,
           externalNumber: externalNumber,
         });
