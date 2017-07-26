@@ -3924,9 +3924,6 @@
               hasCucmSupportFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCucmSupport);
               },
-              hasPartnerRegistrationFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridPartnerRegistration);
-              },
             },
           })
           .state('add-resource.expressway', {
@@ -4107,9 +4104,6 @@
             parent: 'main',
             abstract: true,
             resolve: {
-              hasPartnerRegistrationFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridPartnerRegistration);
-              },
               hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
               },
@@ -4156,9 +4150,6 @@
             },
             parent: 'main',
             resolve: {
-              hasPartnerRegistrationFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridPartnerRegistration);
-              },
               hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
               },
@@ -4202,9 +4193,6 @@
             },
             parent: 'main',
             resolve: {
-              hasPartnerRegistrationFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridPartnerRegistration);
-              },
               clusterId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.clusterId;
               },

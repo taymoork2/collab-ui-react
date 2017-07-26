@@ -27,21 +27,17 @@ describe('Component: addHybridResourceButton ', () => {
     });
   }
 
-  function initController(isPartnerAdmin: boolean, hasPartnerRegistrationFeatureToggle: boolean) {
+  function initController(isPartnerAdmin: boolean) {
     ctrl = $componentController('addHybridResourceButton', {
       Authinfo: {
         isCustomerLaunchedFromPartner: () => isPartnerAdmin,
-      },
-      FeatureToggleService: {
-        supports: () => { return $q.resolve(hasPartnerRegistrationFeatureToggle); },
-        features: {},
       },
     });
     ctrl.allowPartnerRegistration = true;
   }
 
   it ('should launch the provided modal window when the user is a customer admin', () => {
-    initController(false, false);
+    initController(false );
     ctrl.$onInit();
     $rootScope.$apply();
     ctrl.modalWindowOptions = {
@@ -51,19 +47,8 @@ describe('Component: addHybridResourceButton ', () => {
     expect($modal.open).toHaveBeenCalledWith(jasmine.objectContaining(ctrl.modalWindowOptions));
   });
 
-  it ('should launch a different modal if the user is partner admin logged into a customer org', () => {
-    initController(true, false);
-    ctrl.$onInit();
-    $rootScope.$apply();
-    ctrl.openAddResourceModal();
-    expect($modal.open).toHaveBeenCalledWith(jasmine.objectContaining({
-      templateUrl: 'modules/hercules/service-specific-pages/components/add-resource/partnerAdminWarning.html',
-      type: 'dialog',
-    }));
-  });
-
-  it ('should launch the provided modal window if the user is partner admin logged into a customer org and has the feature toggle', () => {
-    initController(true, true);
+  it ('should launch the provided modal window if the user is partner admin logged into a customer org', () => {
+    initController(true );
     ctrl.$onInit();
     $rootScope.$apply();
     ctrl.modalWindowOptions = {
