@@ -293,6 +293,7 @@ export class MySubscriptionCtrl {
             } else {
               this.proPackData = _.cloneDeep(offer);
             }
+            this.setOverage(offer);
           }
         });
 

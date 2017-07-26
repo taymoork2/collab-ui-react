@@ -227,6 +227,7 @@
 
       border-bottom: rem-calc(1) solid $gray-light-3;
       border-left: rem-calc(1) solid $gray-light-3;
+      min-width: vr-adjust(275);
 
       .category-list {
         @include vr-spacing(p, 0);
