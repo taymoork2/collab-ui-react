@@ -201,7 +201,7 @@ describe('Validate Media Service Managemnt Page', function () {
       it('Should navigate to respective settings, when Cluster Settings is clicked', function () {
         utils.click(mediaservice.clusterSettingsLink);
         browser.sleep(3000);
-        expect(mediaservice.clusterSettingsPageHeader.getText()).toEqual(selectedClusterName + ' settings');
+        //expect(mediaservice.clusterSettingsPageHeader.getText()).toEqual(selectedClusterName + ' settings');
         utils.expectIsDisplayed(mediaservice.clusterUpgradeTitle);
         utils.expectIsDisplayed(mediaservice.clusterDeleteClusterTitle);
         utils.click(mediaservice.deleteClusterButton);
