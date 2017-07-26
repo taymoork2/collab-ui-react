@@ -63,8 +63,8 @@ describe('Controller: AADynamicAnnouncementsModalCtrl', function () {
 
       it('should validate controller creation', function () {
         expect(controller).toBeDefined();
-        expect(controller.variableOptions.length).toEqual(5);
-        expect(controller.readAsOptions.length).toEqual(4);
+        expect(controller.variableOptions.length).toBe(5);
+        expect(controller.readAsOptions.length).toBe(4);
       });
     });
 
@@ -84,16 +84,18 @@ describe('Controller: AADynamicAnnouncementsModalCtrl', function () {
 
       it('should validate controller creation', function () {
         expect(controller).toBeDefined();
-        expect(controller.variableOptions.length).toEqual(10);
-        expect(controller.readAsOptions.length).toEqual(4);
+        expect(controller.variableOptions.length).toBe(6);
+        expect(controller.readAsOptions.length).toBe(4);
       });
     });
     describe('with session variables plus added ui variables', function () {
       beforeEach(function () {
-        // tests for duplicate variables from query
-        customVarJson.push('account_no');
+        var var_names = _.clone(customVarJson[0].var_name);
 
-        spyOn(AASessionVariableService, 'getSessionVariables').and.returnValue(q.resolve(customVarJson));
+        // tests for duplicate variables from query
+        var_names.push('account_no');
+
+        spyOn(AASessionVariableService, 'getSessionVariables').and.returnValue(q.resolve(var_names));
         spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
         // test for duplicate variables at same time
         spyOn(AACommonService, 'collectThisCeActionValue').and.returnValue(['aaaaaa', 'zzzzzzz', 'aaaaaa', 'zzzzzzz']);
@@ -109,7 +111,7 @@ describe('Controller: AADynamicAnnouncementsModalCtrl', function () {
       it('should validate ui vars got added', function () {
         expect(controller).toBeDefined();
         // no dups
-        expect(controller.variableOptions.length).toEqual(12);
+        expect(controller.variableOptions.length).toBe(12);
       });
     });
 
@@ -144,23 +146,23 @@ describe('Controller: AADynamicAnnouncementsModalCtrl', function () {
       });
 
       it('should be false', function () {
-        expect(controller.isSaveEnabled()).toEqual(false);
+        expect(controller.isSaveEnabled()).toBe(false);
       });
 
       it('should be false', function () {
         controller.readAsSelection.label = true;
-        expect(controller.isSaveEnabled()).toEqual(false);
+        expect(controller.isSaveEnabled()).toBe(false);
       });
 
       it('should be false', function () {
         controller.variableSelection.label = true;
-        expect(controller.isSaveEnabled()).toEqual(true);
+        expect(controller.isSaveEnabled()).toBe(true);
       });
 
       it('should be true', function () {
         controller.variableSelection.label = true;
         controller.readAsSelection.label = true;
-        expect(controller.isSaveEnabled()).toEqual(true);
+        expect(controller.isSaveEnabled()).toBe(true);
       });
     });
   });
