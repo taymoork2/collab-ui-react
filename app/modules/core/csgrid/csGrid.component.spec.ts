@@ -33,7 +33,7 @@ describe('Component: csGrid', () => {
       enableColumnResizing: true,
       enableHorizontalScrollbar: 0,
       enableRowHeaderSelection: false,
-      enableRowSelection: false,
+      enableRowSelection: true,
       enableSorting: true,
       multiSelect: false,
     };

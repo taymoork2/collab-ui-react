@@ -73,17 +73,10 @@
     };
 
     this.configureGrid = function () {
-      // var funcName = "configureGrid()";
-      // var logMsg = "";
-      //$log.log(logMsg);
-
       // Start of grid set up
       _this.siteRows.gridOptions = {
-        //data: $scope.gridData,
         data: _this.siteRows.gridData,
-        multiSelect: false,
         enableRowSelection: false,
-        enableColumnMenus: false,
         rowHeight: 44,
         columnDefs: [],
       };
@@ -109,9 +102,6 @@
         cellTemplate: 'modules/core/siteList/siteActionsColumn.tpl.html',
         sortable: false,
       });
-
-      //$log.log(JSON.stringify(funcName + "\n" +
-      //JSON.stringify(siteRows.gridOptions)));
 
       _this.updateConferenceServices();
     }; //configureGrid
