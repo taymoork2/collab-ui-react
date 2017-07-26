@@ -1,0 +1,21 @@
+<div ng-form="$ctrl.form" ng-class="{error: $ctrl.form.name.$invalid && $ctrl.form.name.$touched}">
+  <input
+    cs-input
+    unique-location
+    messages="$ctrl.validationMessages"
+    type="text"
+    name="locationName"
+    ng-model="$ctrl.name"
+    cs-input-size="small-12"
+    placeholder="{{'locations.locationName' | translate}}"
+    focus-on
+    cs-input-label="{{'locations.locationName' | translate}}"
+    ng-model-options="{updateOn: 'default blur', debounce: { default: 500, blur: 0 } }"
+    ng-change="$ctrl.onNameChanged()"
+    required/>
+  <div class="cs-input__messages error" ng-messages="$ctrl.form.locationName.$error" role="alert">
+    <div ng-repeat="(key, value) in $ctrl.validationMessages" class="message">
+      <span ng-message="{{key}}">{{value}}</span>
+    </div>
+  </div>
+</div>

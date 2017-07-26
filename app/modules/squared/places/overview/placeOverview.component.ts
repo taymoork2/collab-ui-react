@@ -4,10 +4,8 @@ import IPlace = csdm.IPlace;
 import ICsdmDataModelService = csdm.ICsdmDataModelService;
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 import { PlaceCallOverviewService, PlaceCallOverviewData } from 'modules/squared/places/callOverview/placeCallOverview.service';
-import { LocationsService } from 'modules/call/locations/locations.service';
-import {
-  IPreferredLanguageFeature, PreferredLanguageFeature, IPreferredLanugageOption,
-} from 'modules/huron/preferredLanguage';
+import { LocationsService } from 'modules/call/locations/shared';
+import { IPreferredLanguageFeature, PreferredLanguageFeature, IPreferredLanugageOption } from 'modules/huron/preferredLanguage';
 import { Notification } from 'modules/core/notifications';
 
 interface IDevice {

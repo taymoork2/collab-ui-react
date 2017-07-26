@@ -1,66 +1,78 @@
 'use strict';
 
-xdescribe('Controller: Spark Metrics Ctrl', function () {
-  var controller, ITProPackService, QlikService, Userservice;
-
-  var testData = {
-    postResult: {
-      ticket: '0Ibh4usd9bERRzLR',
-      host: 'qlik-loader',
-      qlik_reverse_proxy: 'qlik-loader',
-      appname: 'basic_spark_v1__qvadmin@cisco.com',
-    },
-    postAppResult: '%s/custportal',
-  };
-
-  afterEach(function () {
-    controller = ITProPackService = QlikService = Userservice = undefined;
-  });
-
+describe('Controller: Spark Metrics Ctrl', function () {
   beforeEach(function () {
-    this.initModules('core.customer-reports');
-    this.injectDependencies('$controller',
-      '$scope',
+    this.initModules('core.customer-reports', 'Core');  // 'Core' included for Userservice
+    this.injectDependencies(
+      '$controller',
       '$q',
-      'ITProPackService');
+      '$sce',
+      '$scope',
+      '$timeout',
+      '$window',
+      'Authinfo',
+      'Notification',
+      'ProPackService',
+      'QlikService',
+      'Userservice'
+    );
 
-    spyOn(ITProPackService, 'getITProPackPurchased');
-    ITProPackService.getITProPackPurchased.and.returnValue(this.$q.resolve(true));
+    this.base = 'Base';
+    this.premium = 'Premium';
+    this.testData = 'qlik-loader/custportal';
 
-    QlikService = {
-      getSparkReportQBSforPremiumUrl: function () {
-        return {
-          data: testData.postResult,
-        };
-      },
-      getSparkReportAppforPremiumUrl: function () {
-        return testData.postAppResult;
-      },
-    };
-
-    Userservice = {
-      getUser: function (user) {
-        expect(user).toBe('me');
-      },
-    };
-
-    controller = this.$controller('SparkMetricsCtrl', {
-      $q: this.$q,
-      $scope: this.$scope,
-      ITProPackService: ITProPackService,
-      QlikService: QlikService,
-      Userservice: Userservice,
+    spyOn(this.Authinfo, 'setEmails');
+    spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(true));
+    spyOn(this.QlikService, 'getSparkReportQBSforPremiumUrl').and.callFake(function () {
+      return {
+        then: function (callback) {
+          callback({
+            data: {
+              ticket: '0Ibh4usd9bERRzLR',
+              host: 'qlik-loader',
+              qlik_reverse_proxy: 'qlik-loader',
+              appname: 'basic_spark_v1__qvadmin@cisco.com',
+            },
+          });
+        },
+      };
+    });
+    spyOn(this.QlikService, 'getSparkReportAppforPremiumUrl').and.returnValue(this.testData);
+    spyOn(this.Userservice, 'getUser').and.callFake(function (user, callback) {
+      expect(user).toBe('me');
+      callback({
+        success: true,
+        emails: ['fakeEmails@fakeEmails.com'],
+      });
     });
 
-    this.$scope.$apply();
+    this.initController = function () {
+      this.controller = this.$controller('SparkMetricsCtrl', {
+        $sce: this.$sce,
+        $scope: this.$scope,
+        $timeout: this.$timeout,
+        $window: this.$window,
+        Authinfo: this.Authinfo,
+        Notification: this.Notification,
+        ProPackService: this.ProPackService,
+        QlikService: this.QlikService,
+        Userservice: this.Userservice,
+      });
+      this.$scope.$apply();
+    };
+    this.initController();
   });
 
   it('should turn to premium view', function () {
-    expect(controller.reportView.view).toBe('Premium');
+    expect(this.controller.reportView.view).toBe(this.premium);
+
+    this.ProPackService.hasProPackPurchased.and.returnValue(this.$q.resolve(false));
+    this.initController();
+    expect(this.controller.reportView.view).toBe(this.base);
   });
 
   it('initial state, isIframeLoaded should be false, currentFilter should be metrics', function () {
-    expect(controller.sparkMetrics.appData.url).toBe('qlik-loader/custportal');
+    expect(this.controller.sparkMetrics.appData.url).toBe(this.testData);
   });
 });
 

@@ -1,4 +1,4 @@
-import { LocationsService } from 'modules/call/locations/locations.service';
+import { LocationsService } from 'modules/call/locations/shared';
 
 interface IUserDetailsFeature {
   detail?: string | undefined;

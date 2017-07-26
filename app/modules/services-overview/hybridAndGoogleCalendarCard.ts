@@ -3,12 +3,14 @@ import { IServiceStatus, filterAndGetCssStatus, filterAndGetTxtStatus, filterAnd
 import { ICardButton, ServicesOverviewCard } from './ServicesOverviewCard';
 import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 import { CloudConnectorService } from 'modules/hercules/services/calendar-cloud-connector.service';
+import { Notification } from 'modules/core/notifications';
 
 export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOverviewCard {
   private canDisplay: ng.IDeferred<boolean> = this.$q.defer();
   private googleStatus: ICardStatus;
 
   public googleActive: boolean = false;
+  public googleServerError: boolean = false;
 
   // We don't care about these methods this card,
   // but because of ServicesOverviewCard we need a minimal implementation
@@ -120,6 +122,13 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
             text: filterAndGetTxtStatus(servicesStatuses, serviceId),
             routerState: 'google-calendar-service.settings',
           };
+        })
+        .catch((error) => {
+          this.Notification.errorWithTrackingId(error, 'servicesOverview.cards.hybridCalendar.error');
+          this.googleActive = false;
+          this.googleServerError = true;
+        })
+        .finally(() => {
           this.canDisplay.resolve(true);
         });
     }
@@ -158,6 +167,7 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
     Authinfo,
     private CloudConnectorService: CloudConnectorService,
     private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
+    private Notification: Notification,
   ) {
     super({
       active: false,

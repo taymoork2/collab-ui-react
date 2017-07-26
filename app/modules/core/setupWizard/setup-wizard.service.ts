@@ -1,10 +1,12 @@
 import { IPendingOrderSubscription, IPendingLicense } from './meeting-settings/meeting-settings.interface';
 import { Notification } from 'modules/core/notifications';
+import { HuronCustomerService } from 'modules/huron/customer';
+import { HuronCompassService } from 'modules/huron/compass';
 
 export class SetupWizardService {
-  public pendingMeetingLicenses: IPendingLicense[];
   public pendingLicenses: IPendingLicense[];
   public provisioningCallbacks = {};
+  public country = '';
 
   /* @ngInject */
   constructor(
@@ -16,6 +18,9 @@ export class SetupWizardService {
     private SessionStorage,
     private StorageKeys,
     private UrlConfig,
+    private Orgservice,
+    private HuronCompassService: HuronCompassService,
+    private HuronCustomerService: HuronCustomerService,
   ) { }
 
   public addProvisioningCallbacks(callObject: { [keys: string]: Function }) {
@@ -57,8 +62,16 @@ export class SetupWizardService {
     return _.some(this.pendingLicenses, (license: IPendingLicense) => { return license.status === this.Config.licenseStatus.INITIALIZED && (_.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC], license.offerName)); });
   }
 
+  public getPendingMeetingLicenses(): IPendingLicense[] {
+    return _.filter(this.pendingLicenses, (license: IPendingLicense) => { return license.status === this.Config.licenseStatus.INITIALIZED && (_.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC], license.offerName)); });
+  }
+
   public hasPendingCallLicenses() {
     return _.some(this.pendingLicenses, (license: IPendingLicense) => { return license.status === this.Config.licenseStatus.INITIALIZED && (_.includes([this.Config.licenseTypes.COMMUNICATION, this.Config.licenseTypes.SHARED_DEVICES], license.licenseType)); });
+  }
+
+  public getPendingCallLicenses(): IPendingLicense[] {
+    return _.filter(this.pendingLicenses, (license: IPendingLicense) => { return license.status === this.Config.licenseStatus.INITIALIZED && (_.includes([this.Config.licenseTypes.COMMUNICATION, this.Config.licenseTypes.SHARED_DEVICES], license.licenseType)); });
   }
 
   private getActingSubscription(): IPendingOrderSubscription {
@@ -89,9 +102,64 @@ export class SetupWizardService {
     return this.$http.get(pendingLicensesUrl);
   }
 
+  public isCustomerPresent() {
+    const params = {
+      basicInfo: true,
+    };
+
+    return this.Orgservice.getOrg(_.noop, this.Authinfo.getOrgId(), params).then( (response) => {
+      const org = _.get(response, 'data', null);
+      this.country = _.get<string>(org, 'countryCode');
+      if (_.get(org, 'orgSettings.sparkCallBaseDomain')) {
+        //check cmi in base domain for customer
+        return this.findCustomerInDc(_.get(org, 'orgSettings.sparkCallBaseDomain'));
+      } else {
+        //check CI for country
+        if (_.get(org, 'countryCode')) {
+          if (_.get(org, 'countryCode') === 'GB') {
+            //check CMI in EC DC
+            return this.findCustomerInDc('sparkc-eu.com');
+          } else {
+            //check CMI in NA DC
+            return this.findCustomerInDc(this.HuronCompassService.defaultDomain());
+          }
+        } else {
+          //check CMI in NA DC
+          return this.findCustomerInDc(this.HuronCompassService.defaultDomain());
+        }
+      }
+    }).catch( () => {
+      _.noop();
+    });
+  }
+
+  public getCustomerCountry() {
+    return this.country;
+  }
+
+  public findCustomerInDc(baseDomain) {
+    this.HuronCompassService.setCustomerBaseDomain(baseDomain);
+    return this.HuronCustomerService.getCustomer()
+      .then(() => true)
+      .catch(() => false);
+  }
+
+  public activateAndCheckCapacity(countryCode?) {
+    const url = `${this.UrlConfig.getAdminServiceUrl()}organizations/${this.Authinfo.getOrgId()}/setup/communication`;
+    const param = this.getActingSubscriptionId();
+    return this.$http.patch(url, {
+      countryCode: countryCode ? countryCode : this.country,
+      subscriptionId: param,
+    });
+  }
+
 }
 
 export default angular
-  .module('core.setup-wizard-service', [])
+  .module('core.setup-wizard-service', [
+    require('modules/huron/customer').default,
+    require('modules/core/notifications').default,
+    require('modules/huron/compass').default,
+  ])
   .service('SetupWizardService', SetupWizardService)
   .name;

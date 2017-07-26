@@ -22,7 +22,7 @@ class HuronDetailsHeaderComponentCtrl implements ng.IComponentController {
         if (enabled) {
           this.tabs.splice(0, 0, {
             title: 'huronDetails.locationsTitle',
-            state: 'calllocations',
+            state: 'call-locations',
           });
         }
       });

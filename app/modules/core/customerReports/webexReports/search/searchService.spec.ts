@@ -78,7 +78,7 @@ describe('Service: searchService', () => {
       leaveTime: 1499399838000,
       conferenceID: '66735067305608980',
     }];
-    const url = `${this.UrlConfig.getGeminiUrl()}meetings/${this.conferenceID}/participant`;
+    const url = `${this.UrlConfig.getGeminiUrl()}meetings/${this.conferenceID}/participants`;
     this.$httpBackend.expectGET(url).respond(200, mockData);
     this.SearchService.getParticipents(this.conferenceID).then((res) => {
       expect(res[0].joinTime).toBeDefined();

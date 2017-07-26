@@ -203,14 +203,15 @@
       });
     }
 
-    function getClientTypeData(time) {
+    function getClientTypeData(time, clientType) {
       vm.clientTypeUrl = '/client_type_trend';
+      clientType = formatClientType(clientType);
 
       var returnData = {
         graphData: [],
         graphs: [],
       };
-      return $http.get(vm.urlBase + getQuerys(vm.clientTypeUrl, vm.allClusters, time)).then(function (response) {
+      return $http.get(vm.urlBase + getQuerys(vm.clientTypeUrl, vm.allClusters, time) + '&hostedAt=' + clientType).then(function (response) {
         if (!_.isUndefined(response) && !_.isUndefined(response.data) && !_.isUndefined(response.data.chartData) && _.isArray(response.data.chartData) && !_.isUndefined(response.data)) {
           returnData.graphData.push(response.data.chartData);
           return adjustLineGraphData(response.data.chartData, returnData, response.data.startTime, response.data.endTime, response.data.graphs);
@@ -309,10 +310,11 @@
       });
     }
 
-    function getClientTypeCardData(time) {
+    function getClientTypeCardData(time, clientType) {
       vm.total_calls = '/client_type_count';
+      clientType = formatClientType(clientType);
       var returnData = [];
-      return $http.get(vm.urlBase + getQuerys(vm.total_calls, vm.allClusters, time)).then(function (response) {
+      return $http.get(vm.urlBase + getQuerys(vm.total_calls, vm.allClusters, time) + '&hostedAt=' + clientType).then(function (response) {
         if (!_.isUndefined(response) && !_.isUndefined(response.data)) {
           return translateClientTypeData(response);
         } else {
@@ -362,6 +364,16 @@
       } else if ((error.status !== 0) || (error.config.timeout.$$state.status === 0)) {
         Notification.errorWithTrackingId(error, message);
         return returnItem;
+      }
+    }
+
+    function formatClientType(clientType) {
+      if (clientType === 1) {
+        return 'onPrem';
+      } else if (clientType === 2) {
+        return 'cloud';
+      } else {
+        return 'all';
       }
     }
 

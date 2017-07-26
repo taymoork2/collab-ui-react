@@ -3,43 +3,12 @@
 </div>
 <div class="modal-body verify-sip-destination-modal">
 
-  <div ng-if="vm.currentStep === 'loading'">
-    <span class="spinner-sip-destination--large">
-      <i class="icon icon-spinner"></i>
-    </span>
-  </div>
-
-  <div ng-if="vm.currentStep === 'error'">
-    <p translate="hercules.settings.verifySipDestination.errorFromServer"></p>
-    <ul>
-      <li>{{vm.error.data.message}}</li>
-      <li translate="common.trackingId" translate-values="{trackingId: vm.error.data.trackingId}"></li>
-    </ul>
-    <p translate="hercules.settings.verifySipDestination.contactCiscoSupport"></p>
-  </div>
-
-  <div ng-if="vm.currentStep === 'result'">
-
-    <div class="sip-verification-modal-section">
-      <h6 translate="hercules.settings.verifySipDestination.testResultsHeader"></h6>
-      <hs-sip-destination-test-results test-result-numbers="{successful: vm.getNumberOfSteps('Info'),
-                                                             issues: vm.getNumberOfSteps('Warn'),
-                                                             failed: vm.getNumberOfSteps('Error')}"></hs-sip-destination-test-results>
-
-      <p ng-if="vm.hasWarningOrError()" class="warning-message">
-        <i class="icon icon-error"></i>
-        <span translate="hercules.settings.verifySipDestination.warningsOrErrors"></span>
-      </p>
-    </div>
-
-    <hs-test-tool-results-table test-results="vm.result"></hs-test-tool-results-table>
-
-  </div>
+    <hs-test-tool-results-table test-results="vm.sanitizedResultSet"></hs-test-tool-results-table>
 
 </div>
 <div class="modal-footer">
   <button ng-click="$close()"
           class="btn"
-          translate="common.done"></button>
+          translate="common.close"></button>
 
 </div>

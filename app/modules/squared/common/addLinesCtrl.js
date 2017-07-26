@@ -52,7 +52,11 @@
       if (numbers.directoryNumber || numbers.externalNumber) {
         CsdmDataModelService.reloadPlace(wizardData.account.cisUuid).then(function (place) {
           if (place) {
-            CsdmDataModelService.updateCloudberryPlace(place, wizardData.account.entitlements, numbers.directoryNumber, numbers.externalNumber)
+            CsdmDataModelService.updateCloudberryPlace(place, {
+              entitlements: wizardData.account.entitlements,
+              directoryNumber: numbers.directoryNumber,
+              externalNumber: numbers.externalNumber,
+            })
               .then(function () {
                 $scope.$dismiss();
                 Notification.success('addDeviceWizard.assignPhoneNumber.linesSaved');

@@ -7,6 +7,7 @@ describe('Service: MediaOnHoldService', () => {
     this.injectDependencies(
       '$httpBackend',
       'Authinfo',
+      '$translate',
       'HuronConfig',
       'MediaOnHoldService',
     );
@@ -30,13 +31,10 @@ describe('Service: MediaOnHoldService', () => {
       this.$httpBackend.expectGET(this.HuronConfig.getMmsUrl() + '/organizations/12345/mohPrompts')
         .respond(this.mediaOnHoldResponse);
       this.GENERIC_MEDIA = <IOption> {
-        label: 'Generic Media',
+        label: 'System Default',
         value: '98765432-DBC2-01BB-476B-CFAF98765432',
       };
-      this.LINE_GENERIC_MEDIA = <IOption> {
-        label: 'Company MOH (filename1)',
-        value: '98765432-DBC2-01BB-476B-CFAF98765432',
-      };
+      spyOn(this.$translate, 'instant').and.returnValue('System Default');
     });
 
     it('getMediaOnHold gets a response', function() {
@@ -61,35 +59,31 @@ describe('Service: MediaOnHoldService', () => {
           expect(response).toContain(this.GENERIC_MEDIA);
         });
     });
-
-    it('getLineMediaOnHold should return Line level Media on Hold Options', function() {
-      this.MediaOnHoldService.getLineMohOptions()
-        .then(response => {
-          expect(response.length).toBe(4);
-          expect(response).toContain(this.LINE_GENERIC_MEDIA);
-        });
-    });
   });
 
   describe('Line Media on Hold', function() {
     beforeEach(function() {
-      this.lineMediaOnHoldResponse = getJSONFixture('huron/json/moh/lineMohPrompts.json');
-      this.$httpBackend.expectGET(this.HuronConfig.getMmsUrl() + '/organizations/12345/mohPrompts/lines/' + this.LINE_NUM_UUID)
+      this.lineMediaOnHoldResponse = getJSONFixture('huron/json/moh/mohPrompts.json');
+      this.$httpBackend.expectGET(this.HuronConfig.getMmsUrl() + '/organizations/12345/mohPrompts')
         .respond(this.lineMediaOnHoldResponse);
-    });
-
-    it('getLineMediaOnHold gets a response', function() {
-      this.MediaOnHoldService.getLineMediaOnHold(this.LINE_NUM_UUID)
-        .then(response => {
-          expect(response[0].rhesosId).toEqual(this.MEDIA_FILE_ID_1);
-          expect(response[1].displayName).toEqual(this.MEDIA_FILE_NAME_2);
-        });
+      this.LINE_GENERIC_MEDIA = <IOption> {
+        label: 'Company MOH (filename1)',
+        value: '98765432-DBC2-01BB-476B-CFAF98765432',
+      };
     });
 
     it('getLineMedia should return assigned Line Media', function() {
       this.MediaOnHoldService.getLineMedia(this.LINE_NUM_UUID)
         .then(response => {
           expect(response).toEqual(this.MEDIA_FILE_ID_3);
+        });
+    });
+
+    it('getLineMohOptions should return Line level Media on Hold Options', function() {
+      this.MediaOnHoldService.getLineMohOptions()
+        .then(response => {
+          expect(response.length).toBe(4);
+          expect(response).toContain(this.LINE_GENERIC_MEDIA);
         });
     });
   });

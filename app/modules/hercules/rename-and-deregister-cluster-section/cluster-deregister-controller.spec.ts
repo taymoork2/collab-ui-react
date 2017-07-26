@@ -1,9 +1,8 @@
 describe('ClusterDeregisterController', function () {
   beforeEach(function () {
     this.initModules('Hercules');
-    this.injectDependencies('$controller', '$q', '$scope', 'PrivateTrunkService', 'HybridServicesClusterService', 'FeatureToggleService');
+    this.injectDependencies('$controller', '$q', '$scope', 'PrivateTrunkService', 'HybridServicesClusterService');
 
-    spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.PrivateTrunkService, 'removePrivateTrunkResource').and.returnValue(this.$q.resolve({}));
     spyOn(this.HybridServicesClusterService, 'deregisterCluster').and.returnValue(this.$q.resolve({}));
     this.mockModal = { close: jasmine.createSpy('close') };
@@ -55,18 +54,6 @@ describe('ClusterDeregisterController', function () {
       expect(this.PrivateTrunkService.removePrivateTrunkResource).not.toHaveBeenCalled();
       expect(this.HybridServicesClusterService.deregisterCluster).toHaveBeenCalled();
       expect(this.mockModal.close).toHaveBeenCalled();
-    });
-  });
-
-  // 2017 name change
-  describe('atlas2017NameChangeGetStatus - ', function () {
-    it ('nameChangeEnabled should match what atlas2017NameChangeGetStatus returns', function () {
-      this.initController(this.baseToggle);
-      expect(this.controller.nameChangeEnabled).toBeFalsy();
-
-      this.FeatureToggleService.atlas2017NameChangeGetStatus.and.returnValue(this.$q.resolve(true));
-      this.initController(this.baseToggle);
-      expect(this.controller.nameChangeEnabled).toBeTruthy();
     });
   });
 });

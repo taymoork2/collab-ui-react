@@ -32,7 +32,7 @@ export class HybridServicesExtrasService {
     });
   }
 
-  public getAlarms(serviceId: HybridServiceId, orgId?: string): ng.IPromise<any> {
+  public getAlarms(serviceId: HybridServiceId, orgId?: string): ng.IPromise<IServiceAlarm[]> {
     const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId || this.Authinfo.getOrgId()}/alarms?serviceId=${serviceId}&sourceType=cloud`;
     return this.$http.get(url)
       .then(this.extractDataAndTranslateAlarms);

@@ -30,6 +30,16 @@ export class AddPlacesPage {
     this.prfrdLang = element(by.cssContainingText('.section-name', 'Preferred Language'));
     this.prfrdLangDd = element(by.css('.csSelect-container[name="languageSelect"]'));
     this.prfrdLangInst = element(by.css('.description-block', 'Configure preferred language'));
+    this.callOverview = {
+      main: element.all(by.css('[ui-sref="place-overview"]')).last(),
+      services: {
+        call: element(by.cssContainingText('.feature-name.ng-binding', 'Call')),
+      },
+      features: {
+        speedDials: element(by.cssContainingText('.feature-name.ng-binding', 'Speed Dials')),
+      },
+    };
+    this.callSubMenu = element.all(by.css('[ui-sref="place-overview.communication"]')).last();
     this.dirNumSct = element(by.cssContainingText('.section-name', 'Directory Numbers'));
     this.featuresSct = element(by.cssContainingText('.section-name', 'Features'));
     this.primaryClick = element(by.cssContainingText('.feature-status', 'Primary'));
