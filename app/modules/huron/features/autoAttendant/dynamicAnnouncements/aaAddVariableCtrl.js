@@ -55,18 +55,32 @@
 
     function modalClosed() {
       var dynamicList = range.endContainer.ownerDocument.activeElement;
+      var sourceQueue;
+      var queueAction;
       finalList = [];
       if (dynamicList.className.includes('dynamic-prompt')) {
         if (_.has(vm.menuEntry, 'actions[0]')) {
-          vm.menuEntry.actions[0].dynamicList = createDynamicList(dynamicList);
-        } else if ($scope.isMenuHeader == true) {
+          if ($scope.type) {
+            sourceQueue = vm.menuEntry.actions[0].queueSettings[$scope.type];
+            queueAction = sourceQueue.actions[0];
+            queueAction.dynamicList = createDynamicList(dynamicList);
+          } else {
+            vm.menuEntry.actions[0].dynamicList = createDynamicList(dynamicList);
+          }
+        } else if ($scope.isMenuHeader) {
           var header = _.get(vm.menuEntry, 'headers[0]', '');
           if (header) {
             header.actions[0].dynamicList = createDynamicList(dynamicList);
           }
         } else if ($scope.menuKeyIndex && $scope.menuKeyIndex > -1) {
-          vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
-          vm.menuEntry.entries[$scope.menuKeyIndex].actions[0].dynamicList = createDynamicList(dynamicList);
+          if ($scope.type) {
+            sourceQueue = vm.menuEntry.entries[$scope.menuKeyIndex];
+            queueAction = sourceQueue.actions[0].queueSettings[$scope.type];
+            queueAction.actions[0].dynamicList = createDynamicList(dynamicList);
+          } else {
+            vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
+            vm.menuEntry.entries[$scope.menuKeyIndex].actions[0].dynamicList = createDynamicList(dynamicList);
+          }
         } else if ($scope.menuId && (!$scope.menuKeyIndex || $scope.menuKeyIndex <= -1)) {
           vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
           var submenuHeader = _.get(vm.menuEntry, 'headers[0]', '');

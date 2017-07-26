@@ -44,6 +44,7 @@
       DYNAMIC: 2,
     };
 
+    var uniqueId;
     var holdActionDesc;
     var holdActionValue;
     var dependentCeSessionVariablesList = [];
@@ -56,6 +57,7 @@
     vm.deletedSessionVariablesList = [];
 
     vm.messageInput = '';
+    vm.messageInputPlaceholder = $translate.instant('autoAttendant.sayMessagePlaceholder');
 
     vm.messageOption = {
       label: '',
@@ -262,7 +264,7 @@
     }
 
     function canDynamicListUpdated(dynamicList, range) {
-      return dynamicList.className.includes('dynamic-prompt') && !(dynamicList.id === 'messageType{{schedule + index + menuKeyIndex + menuId}}') && range.collapsed == true;
+      return dynamicList.className.includes('dynamic-prompt') && range.collapsed == true && (_.isEqual(dynamicList.id, uniqueId));
     }
 
     function createDynamicList(dynamicList) {
@@ -460,6 +462,8 @@
     }
 
     function activate() {
+      var type = _.isUndefined($scope.type) ? '' : $scope.type;
+      uniqueId = 'messageType' + $scope.schedule + $scope.index + $scope.menuKeyIndex + $scope.menuId + type;
       vm.uniqueCtrlIdentifer = AACommonService.makeKey($scope.schedule, AACommonService.getUniqueId());
       if ($scope.isMenuHeader) {
         vm.messageType = messageType.MENUHEADER;
