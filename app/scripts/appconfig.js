@@ -4572,6 +4572,13 @@
             templateUrl: 'modules/sunlight/features/featureLanding/careFeatures.tpl.html',
             controller: 'CareFeaturesCtrl',
             controllerAs: 'careFeaturesCtrl',
+            resolve: {
+              collectFeatureToggles: /* @ngInject */ function (FeatureToggleService, $state) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasVirtualAssistantEnable).then(function (isEnabled) {
+                  $state.isVirtualAssistantEnabled = isEnabled;
+                });
+              },
+            },
           })
           .state('care.setupAssistant', {
             url: '/setupAssistant/:type',
