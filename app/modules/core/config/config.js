@@ -234,6 +234,7 @@
       },
 
       licenseTypes: {
+        AUDIO: 'AUDIO',
         MESSAGING: 'MESSAGING',
         CONFERENCING: 'CONFERENCING',
         COMMUNICATION: 'COMMUNICATION',

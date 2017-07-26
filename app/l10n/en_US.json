@@ -3413,7 +3413,7 @@
     "needHelp": "Need help - ",
     "needHelpExplain": "Search the knowledge base.",
     "newSubsOnly": "New services in your subscription",
-    "planReview": "Plan Review",
+    "planReview": "Subscription Review",
     "pendingLicensesError": "There was an error in the call for pending licenses",
     "subscriptionId": "Subscription IDs",
     "subscriptionID": "Subscription ID: ",
@@ -3424,6 +3424,7 @@
     "webex": "WebEx",
     "webexMsg": "Webex Conferencing",
     "webexStub": "Set up Webex",
+    "audioPackage": "Audio Package",
     "calling": "Calling",
     "callingMsg": "Cloud Calling",
     "message": "Message",
@@ -7387,7 +7388,14 @@
       "SB": "Cisco Spark Board",
       "CDC": "Chat and Callback",
       "CVC": "Chat, Callback and Inbound Call",
-      "MGMTPRO": "Pro Pack"
+      "MGMTPRO": "Pro Pack",
+      "WEBEX": "WebEx Audio",
+      "VoIPOnly": "VoIP Only",
+      "CCASP": "CCA-SP",
+      "TSP": "TSP",
+      "ST" : "WebEx Storage",
+      "STSPK": "Spark Storage",
+      "MSGR": "Messenger"
     }
   },
   "onlineUpgradeModal": {
