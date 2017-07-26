@@ -3218,8 +3218,7 @@
     "dateError": {
       "StartDateMustBeforeEndDate": "Start date must be before end date",
       "StartDateCannotBeInTheFuture": "Start date cannot be in the future",
-      "InvalidDateRange": "Invalid date range. Date range must not be greater than 90 days in the past.",
-      "InvalidEndDate": "The end date cannot be changed from the current date."
+      "InvalidDateRange": "Invalid date range. Date range must not be greater than 90 days in the past."
     },
     "reportStates": {
       "COMPLETED": "Completed",
