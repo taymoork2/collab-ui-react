@@ -371,11 +371,12 @@ export class MySubscriptionCtrl {
     subscription.productInstanceId = prodResponse.productInstanceId;
     subscription.name = prodResponse.name;
     const env: string = _.includes(prodResponse.name, 'Spark') ? 'spark' : 'webex';
-    // TODO Remove the changeplanOverride attribute in production once the
-    // e-commerce team is ready.
     this.getChangeSubURL(env).then((urlResponse) => {
+      // TODO Remove the changeplanOverride attribute once the e-commerce team is ready.
+      // Until then, use the changeplanOverride attribute only for non-test users in prod.
       subscription.changeplanOverride = '';
-      if (this.Config.isProd() && urlResponse) {
+      if (this.Config.isProd() && urlResponse &&
+          !_.startsWith(this.Authinfo.getPrimaryEmail(), 'collabctg')) {
         subscription.changeplanOverride = urlResponse;
       }
 
