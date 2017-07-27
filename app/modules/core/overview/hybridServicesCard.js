@@ -6,7 +6,7 @@
     .factory('OverviewHybridServicesCard', OverviewHybridServicesCard);
 
   /* @ngInject */
-  function OverviewHybridServicesCard($q, Authinfo, Config, FeatureToggleService, HybridServicesClusterService, CloudConnectorService) {
+  function OverviewHybridServicesCard($q, Authinfo, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, HybridServicesUtilsService, Notification) {
     return {
       createCard: function createCard() {
         var card = {};
@@ -29,29 +29,37 @@
               card.notEnabledText = 'overview.cards.hybrid.notEnabledText';
             }
 
-            return $q.all({
+            return HybridServicesUtilsService.allSettled({
               clusterList: HybridServicesClusterService.getAll(),
               gcalService: Authinfo.isEntitled(Config.entitlements.fusion_google_cal) ? CloudConnectorService.getService() : $q.resolve({}),
               featureToggles: featureToggles,
             });
           }).then(function (response) {
-            if (Authinfo.isEntitled(Config.entitlements.fusion_google_cal)) {
-              card.serviceList.push(response.gcalService);
+            if (response.gcalService.status === 'fulfilled') {
+              if (Authinfo.isEntitled(Config.entitlements.fusion_google_cal)) {
+                card.serviceList.push(response.gcalService.value);
+              }
+            } else {
+              Notification.errorWithTrackingId(response.gcalService.reason, 'overview.cards.hybrid.googleCalendarError');
             }
-            if (Authinfo.isEntitled(Config.entitlements.fusion_cal)) {
-              card.serviceList.push(HybridServicesClusterService.getStatusForService('squared-fusion-cal', response.clusterList));
-            }
-            if (Authinfo.isEntitled(Config.entitlements.fusion_uc)) {
-              card.serviceList.push(HybridServicesClusterService.getStatusForService('squared-fusion-uc', response.clusterList));
-            }
-            if (Authinfo.isEntitled(Config.entitlements.mediafusion)) {
-              card.serviceList.push(HybridServicesClusterService.getStatusForService('squared-fusion-media', response.clusterList));
-            }
-            if (Authinfo.isEntitled(Config.entitlements.hds)) {
-              card.serviceList.push(HybridServicesClusterService.getStatusForService('spark-hybrid-datasecurity', response.clusterList));
-            }
-            if (Authinfo.isEntitled(Config.entitlements.context)) {
-              card.serviceList.push(HybridServicesClusterService.getStatusForService('contact-center-context', response.clusterList));
+            if (response.clusterList.status === 'fulfilled') {
+              if (Authinfo.isEntitled(Config.entitlements.fusion_cal)) {
+                card.serviceList.push(HybridServicesClusterService.getStatusForService('squared-fusion-cal', response.clusterList.value));
+              }
+              if (Authinfo.isEntitled(Config.entitlements.fusion_uc)) {
+                card.serviceList.push(HybridServicesClusterService.getStatusForService('squared-fusion-uc', response.clusterList.value));
+              }
+              if (Authinfo.isEntitled(Config.entitlements.mediafusion)) {
+                card.serviceList.push(HybridServicesClusterService.getStatusForService('squared-fusion-media', response.clusterList.value));
+              }
+              if (Authinfo.isEntitled(Config.entitlements.hds)) {
+                card.serviceList.push(HybridServicesClusterService.getStatusForService('spark-hybrid-datasecurity', response.clusterList.value));
+              }
+              if (Authinfo.isEntitled(Config.entitlements.context)) {
+                card.serviceList.push(HybridServicesClusterService.getStatusForService('contact-center-context', response.clusterList.value));
+              }
+            } else {
+              Notification.errorWithTrackingId(response.clusterList.reason, 'overview.cards.hybrid.herculesError');
             }
             card.enabled = _.some(card.serviceList, function (service) {
               return service.setup;
