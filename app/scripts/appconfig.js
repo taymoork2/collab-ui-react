@@ -2005,6 +2005,14 @@
               },
             },
           })
+          .state('reports.webex-metrics.MEI', {
+            url: '/:siteUrl/MEI',
+            views: {
+              metricsContent: {
+                template: '<metrics-frame></metrics-frame>',
+              },
+            },
+          })
           .state('reports.webex-metrics.diagnostics', {
             url: '/diagnostics',
             views: {

@@ -255,10 +255,22 @@
       prod: 'https://qlick.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_spark_v1',
     },
     SparkReportQBSforPartnerUrl: {
-      dev: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/partner_spark_v1', //dfw-qlickbts
+      dev: 'https://qlik1-rl-lab.cisco.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/partner_spark_v1', //dfw-qlickbts
       cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/partner_spark_v1',
       integration: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/partner_spark_v1',
       prod: 'https://qlick.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/partner_spark_v1',
+    },
+    WebExReportQBSforMEIUrl: {
+      dev: 'https://qlik1-rl-lab.cisco.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/mei',
+      cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/mei',
+      integration: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/mei',
+      prod: 'https://qlick.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/mei',
+    },
+    SparkReportQBSforMEIUrl: {
+      dev: 'https://qlik1-rl-lab.cisco.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/mei',
+      cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/mei',
+      integration: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/mei',
+      prod: 'https://qlick.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/mei',
     },
     //for Qlik mashup application Server. Currently, it's https://sjc-ngxbts.webex.com
     //qlik_reverse_proxy is populated after an API response
@@ -298,6 +310,18 @@
       cfe: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/config',
       integration: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/config',
       prod: 'https://bot-services.produs1.ciscoccservice.com/bot-services/v1/config',
+    },
+    WebExReportAppforMEIUrl: {
+      dev: 'https://%s/custportal/extensions/MEI/MEI.html',
+      cfe: 'https://%s/custportal/extensions/MEI/MEI.html',
+      integration: 'https://%s/custportal/extensions/MEI/MEI.html',
+      prod: 'https://%s/custportal/extensions/MEI/MEI.html',
+    },
+    SparkReportAppforMEIUrl: {
+      dev: 'https://%s/custportal/extensions/MEI/MEI.html',
+      cfe: 'https://%s/custportal/extensions/MEI/MEI.html',
+      integration: 'https://%s/custportal/extensions/MEI/MEI.html',
+      prod: 'https://%s/custportal/extensions/MEI/MEI.html',
     },
     // urls same for all environments
 
