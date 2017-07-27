@@ -288,6 +288,9 @@
       }
       vm.services.push(confState);
 
+      if (UserOverviewService.userHasEntitlement(vm.currentUser, 'squared-fusion-uc')) {
+        commState.detail = $translate.instant('onboardModal.paidCommHybrid');
+      }
       if (UserOverviewService.userHasEntitlement(vm.currentUser, 'ciscouc')) {
         if (hasLicense('CO')) {
           commState.detail = $translate.instant('onboardModal.paidComm');
