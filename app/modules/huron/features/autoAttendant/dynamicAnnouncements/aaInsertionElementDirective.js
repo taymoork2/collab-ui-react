@@ -12,6 +12,7 @@
         textValue: '@elementText',
         readAs: '@readAs',
         elementId: '@elementId',
+        aaElementType: '@aaElementType',
       },
       controller: 'AAInsertionElementCtrl',
       controllerAs: 'aaInsertionElement',

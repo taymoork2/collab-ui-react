@@ -397,55 +397,55 @@
       switch (vm.messageType) {
         case messageType.MENUHEADER:
         case messageType.SUBMENU_HEADER:
-          {
-            vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
-            var actionHeader = getActionHeader(vm.menuEntry);
-            var action = getAction(actionHeader);
+        {
+          vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
+          var actionHeader = getActionHeader(vm.menuEntry);
+          var action = getAction(actionHeader);
 
-            if (action) {
-              vm.actionEntry = action;
-            }
-            break;
+          if (action) {
+            vm.actionEntry = action;
           }
+          break;
+        }
         case messageType.MENUKEY:
-          {
-            vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
-            if (vm.menuEntry.entries.length > $scope.menuKeyIndex && vm.menuEntry.entries[$scope.menuKeyIndex]) {
-              if ($scope.type) {
-                sourceQueue = vm.menuEntry.entries[$scope.menuKeyIndex];
-                queueAction = sourceQueue.actions[0];
-                sourceMenu = queueAction.queueSettings[$scope.type];
-                vm.actionEntry = getAction(sourceMenu);
-              } else {
-                var keyAction = getAction(vm.menuEntry.entries[$scope.menuKeyIndex]);
-                if (keyAction) {
-                  vm.actionEntry = keyAction;
-                }
-              }
-            }
-
-            break;
-          }
-        case messageType.ACTION:
-          {
-            ui = AAUiModelService.getUiModel();
-            vm.ui = ui;
-            uiMenu = ui[$scope.schedule];
-            vm.menuEntry = uiMenu.entries[$scope.index];
+        {
+          vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
+          if (vm.menuEntry.entries.length > $scope.menuKeyIndex && vm.menuEntry.entries[$scope.menuKeyIndex]) {
             if ($scope.type) {
-              queueAction = _.get(vm.menuEntry, 'actions[0]');
-
-              if (_.get(queueAction, 'name') === conditional) {
-                queueAction = queueAction.then;
-              }
-
+              sourceQueue = vm.menuEntry.entries[$scope.menuKeyIndex];
+              queueAction = sourceQueue.actions[0];
               sourceMenu = queueAction.queueSettings[$scope.type];
               vm.actionEntry = getAction(sourceMenu);
             } else {
-              vm.actionEntry = getAction(vm.menuEntry);
+              var keyAction = getAction(vm.menuEntry.entries[$scope.menuKeyIndex]);
+              if (keyAction) {
+                vm.actionEntry = keyAction;
+              }
             }
-            break;
           }
+
+          break;
+        }
+        case messageType.ACTION:
+        {
+          ui = AAUiModelService.getUiModel();
+            vm.ui = ui;
+          uiMenu = ui[$scope.schedule];
+          vm.menuEntry = uiMenu.entries[$scope.index];
+          if ($scope.type) {
+            queueAction = _.get(vm.menuEntry, 'actions[0]');
+
+            if (_.get(queueAction, 'name') === conditional) {
+              queueAction = queueAction.then;
+            }
+
+            sourceMenu = queueAction.queueSettings[$scope.type];
+            vm.actionEntry = getAction(sourceMenu);
+          } else {
+            vm.actionEntry = getAction(vm.menuEntry);
+          }
+          break;
+        }
       }
     }
 

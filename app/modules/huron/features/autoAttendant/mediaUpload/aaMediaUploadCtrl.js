@@ -419,25 +419,25 @@
       switch (sourceType) {
         case messageType.MENUHEADER:
         case messageType.SUBMENU_HEADER:
-          {
-            fromMenuHeader();
-            break;
-          }
+        {
+          fromMenuHeader();
+          break;
+        }
         case messageType.MENUKEY:
-          {
-            fromMenuKey();
-            break;
-          }
+        {
+          fromMenuKey();
+          break;
+        }
         case messageType.ROUTE_TO_QUEUE:
-          {
-            fromRouteToQueue();
-            break;
-          }
+        {
+          fromRouteToQueue();
+          break;
+        }
         case messageType.ACTION:
-          {
-            fromAction();
-            break;
-          }
+        {
+          fromAction();
+          break;
+        }
       }
     }
 

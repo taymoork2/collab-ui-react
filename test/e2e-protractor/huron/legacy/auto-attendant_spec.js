@@ -660,13 +660,11 @@ describe('Huron Auto Attendant', function () {
 
       // 5th menu option is REST API
       utils.click(autoattendant.newStepSelectRestApi);
-
       utils.expectIsDisplayed(autoattendant.restApi);
 
     });
 
     it('should click configureApi hyperlink and a modal is opened with components for rest api url and "' + deleteUtils.testAAName + '"', function () {
-
       // REST API
       autoattendant.scrollIntoView(autoattendant.restApi);
 
@@ -680,15 +678,17 @@ describe('Huron Auto Attendant', function () {
 
       // REST API
       utils.click(autoattendant.configureApiURL);
+      utils.wait(autoattendant.configureApiURL, 60000);
       utils.sendKeys(autoattendant.configureApiURL, "This is test URL");
 
       utils.click(autoattendant.restResponseDataBlock);
-      utils.sendKeys(autoattendant.restResponseDataBlock, "Test Response Block");
+      utils.wait(autoattendant.restResponseDataBlock, 20000);
 
       utils.click(autoattendant.sessionVar);
       utils.click(autoattendant.newSessionVar);
 
       utils.sendKeys(autoattendant.newVariableName, "123");
+
 
       utils.click(autoattendant.addVariableToSet);
 
@@ -704,6 +704,31 @@ describe('Huron Auto Attendant', function () {
 
       utils.expectIsDisplayed(autoattendant.restApiUrlLabel);
       utils.waitForText(autoattendant.restApiUrlLabel, "This is test URL");
+
+    });
+
+    it('should click configureApi hyperlink again and add dynamic text "' + deleteUtils.testAAName + '"', function () {
+
+      utils.click(autoattendant.configureApi);
+      utils.expectIsDisplayed(autoattendant.configureApiURL);
+      utils.expectIsDisplayed(autoattendant.sessionVar);
+      utils.expectIsDisplayed(autoattendant.addVariableToSet);
+
+      utils.expectIsDisplayed(autoattendant.addDynamicTextButton);
+      utils.click(autoattendant.addDynamicTextButton);
+
+      utils.wait(autoattendant.dynamicVariable1, 320000);
+      utils.click(autoattendant.dynamicVariable1);
+      utils.wait(autoattendant.dynamicVariable1, 320000);
+      utils.click(autoattendant.variable1);
+      utils.wait(autoattendant.dynamicVariable1, 320000);
+
+      utils.expectIsEnabled(autoattendant.dynamicModalOkButton);
+      utils.click(autoattendant.dynamicModalOkButton);
+      utils.wait(autoattendant.dynamicModalOkButton, 20000);
+
+      utils.expectIsEnabled(autoattendant.saveBtn);
+      utils.click(autoattendant.saveBtn);
 
     });
 

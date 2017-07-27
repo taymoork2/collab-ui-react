@@ -16,6 +16,7 @@
         isMenuHeader: '@aaMenuHeader',
         menuKeyIndex: '@aaKeyIndex',
         menuId: '@aaMenuId',
+        aaElementType: '@aaElementType',
       },
       controller: 'AAAddVariableCtrl',
       controllerAs: 'aaAddVariable',

@@ -57,6 +57,7 @@ describe('Controller: AADynamicAnnouncementsModalCtrl', function () {
           $modalInstance: modalFake,
           variableSelection: selection,
           readAsSelection: selection,
+          aaElementType: 'SayMessage',
         });
         $scope.$apply();
       });
@@ -78,6 +79,7 @@ describe('Controller: AADynamicAnnouncementsModalCtrl', function () {
           $modalInstance: modalFake,
           variableSelection: selection,
           readAsSelection: selection,
+          aaElementType: 'SayMessage',
         });
         $scope.$apply();
       });
@@ -88,6 +90,7 @@ describe('Controller: AADynamicAnnouncementsModalCtrl', function () {
         expect(controller.readAsOptions.length).toEqual(4);
       });
     });
+          aaElementType: 'SayMessage',
 
     describe('modal close', function () {
       beforeEach(function () {
@@ -97,6 +100,7 @@ describe('Controller: AADynamicAnnouncementsModalCtrl', function () {
           $modalInstance: modalFake,
           variableSelection: selection,
           readAsSelection: selection,
+          aaElementType: 'SayMessage',
         });
         $scope.$apply();
       });
@@ -115,28 +119,30 @@ describe('Controller: AADynamicAnnouncementsModalCtrl', function () {
           $modalInstance: modalFake,
           variableSelection: selection,
           readAsSelection: selection,
+          aaElementType: 'SayMessage',
         });
         $scope.$apply();
       });
 
-      it('should be false', function () {
-        expect(controller.isSaveEnabled()).toEqual(false);
+      it('should be false when variable not selected', function () {
+        expect(controller.isSaveEnabled()).toBe('');
       });
 
-      it('should be false', function () {
-        controller.readAsSelection.label = true;
-        expect(controller.isSaveEnabled()).toEqual(false);
+      it('should be false when variable is not selected but readAs option is selected', function () {
+        controller.readAsSelection.label = 'Number';
+        controller.variableSelection.label = '';
+        expect(controller.isSaveEnabled()).toBe('');
       });
 
-      it('should be false', function () {
-        controller.variableSelection.label = true;
-        expect(controller.isSaveEnabled()).toEqual(true);
+      it('should be true when variable is selected', function () {
+        controller.variableSelection.label = 'testVariable';
+        expect(controller.isSaveEnabled()).toBe('testVariable');
       });
 
-      it('should be true', function () {
-        controller.variableSelection.label = true;
-        controller.readAsSelection.label = true;
-        expect(controller.isSaveEnabled()).toEqual(true);
+      it('should be true when variable and readAs option is selected', function () {
+        controller.variableSelection.label = 'testVariable';
+        controller.readAsSelection.label = 'Number';
+        expect(controller.isSaveEnabled()).toBe('testVariable');
       });
     });
   });

@@ -1328,7 +1328,19 @@
             } else if (actionName === 'conditional') {
               newActionArray[i][actionName] = createConditional(menuEntry.actions[0]);
             } else if (actionName === 'doREST') {
-              newActionArray[i][actionName].url = menuEntry.actions[0].url;
+              var action = menuEntry.actions[0];
+              var dyn = {};
+              dyn.dynamic = {};
+              dyn.dynamic.dynamicOperations = action.dynamicList;
+
+              newActionArray[i][actionName].url = {
+                action: {
+                  concat: {
+                    actions: [],
+                  },
+                },
+              };
+              newActionArray[i][actionName].url.action.concat.actions[0] = dyn;
               newActionArray[i][actionName].method = menuEntry.actions[0].method;
               newActionArray[i][actionName].responseActions = createResponseBlock(menuEntry.actions[0]);
             }

@@ -313,8 +313,13 @@ var AutoAttendantPage = function () {
 
   this.restApi = element(by.css('div.aa-panel-body[name="REST API"]'));
   this.configureApi = element(by.id('configureApi'));
-  this.configureApiURL = element(by.id('configureApiUrl'));
+  this.configureApiURL = element(by.css('.dynamic-prompt'));
   this.addDynamicFeature = element(by.id('addDynamicFeature'));
+  this.addDynamicTextButton = element(by.css('.btn-primary'));
+  this.dynamicVariable1 = element(by.css('#variableSelect select[name="variableSelect"] + div span.select-toggle'));
+  this.variable1 = element(by.css('#variableSelect select[name="variableSelect"] + div div.dropdown-menu')).all(by.tagName('li')).last();
+
+  this.dynamicModalOkButton = element(by.css('.btn-primary'));
   this.sessionVar = element(by.id('sessionVar'));
   this.sessionVarAll = element.all(by.id('sessionVar'));
 

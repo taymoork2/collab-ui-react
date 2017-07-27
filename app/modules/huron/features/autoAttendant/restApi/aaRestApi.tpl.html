@@ -1,18 +1,21 @@
-<div>
-  <div class="aa-rest-api row">
-    <div class="large-2 medium-2 small-2 columns aa-rest-api-block">
+<div class=" aa-rest-api-url">
+  <div class="row">
+    <div class="large-2 medium-2 small-2 column">
       <label translate="autoAttendant.method"></label>
     </div>
-    <div class="large-10 medium-10 small-10 columns">
+    <div class="large-10 medium-10 small-10 column">
       <label>{{aaRestApiCtrl.method}}</label>
     </div>
   </div>
   <div class="row">
-    <div class="large-1 medium-1 small-1 columns aa-rest-api-block">
+    <div class="large-2 medium-2 small-2 column">
       <label translate="autoAttendant.url"></label>
     </div>
-    <div class="large-11 medium-11 small-11 columns">
-      <label class="aa-rest-api-url">{{aaRestApiCtrl.url}}</label>
+    <div class="large-10 medium-10 small-10 column aa-rest-api-block">
+      <span ng-repeat="dynamicValue in aaRestApiCtrl.dynamicValues">
+        <span class="aa-url aa-dynamic-var" ng-if="dynamicValue.isDynamic">{{dynamicValue.label}}</span>
+        <span class="aa-static-var" ng-if="!dynamicValue.isDynamic">{{dynamicValue.model}}</span>
+      </span>
     </div>
   </div>
   <div class="row">

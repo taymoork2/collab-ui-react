@@ -6,7 +6,7 @@
   .controller('AARestApiCtrl', AARestApiCtrl);
 
   /* @ngInject */
-  function AARestApiCtrl($modal, $scope, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService) {
+  function AARestApiCtrl($modal, $scope, AutoAttendantCeMenuModelService, AACommonService, AAUiModelService) {
     var vm = this;
 
     var doREST = 'doREST';
@@ -20,11 +20,48 @@
 
     /////////////////////
 
+    function checkVariableName(value) {
+      if (_.isEmpty(value) || !(AACommonService.getVarOption(value))) {
+        return value;
+      } else {
+        return AACommonService.getVarOption(value);
+      }
+    }
+
+    function decodedValue(evalValue) {
+      return decodeURIComponent(evalValue).trim();
+    }
+
     function openConfigureApiModal() {
       openModal().result.then(function () {
         vm.method = action.method;
-        vm.url = action.url;
-        if (!_.isEmpty(vm.method) && !_.isEmpty(vm.url)) {
+        vm.variables = action.variableSet;
+        if (!_.isEmpty(action)) {
+          if (_.has(action, 'dynamicList')) {
+            vm.dynamicValues = [];
+            _.forEach(action.dynamicList, function (opt) {
+              var model = {};
+              if (!opt.isDynamic) {
+                model = {
+                  model: decodedValue(_.get(opt.action.eval, 'value')),
+                  html: _.get(opt.action.eval, 'value'),
+                  isDynamic: false,
+                };
+              } else {
+                model = {
+                  model: _.get(opt.action.eval, 'value'),
+                  label: checkVariableName(_.get(opt.action.eval, 'value')),
+                  html: decodeURIComponent(opt.htmlModel),
+                  isDynamic: true,
+                };
+              }
+              if (!_.isEqual(opt.htmlModel, '%3Cbr%3E')) {
+                vm.dynamicValues.push(model);
+              }
+            });
+          }
+        }
+        if (!_.isEmpty(vm.method) && !_.isEmpty(vm.dynamicValues)) {
           AACommonService.setRestApiStatus(true);
           AACommonService.setIsValid(vm.uniqueCtrlIdentifer, true);
         }
@@ -56,8 +93,32 @@
     }
 
     function populateUiModel() {
+      if (_.isEmpty(action)) {
+        return;
+      }
+      if (!_.has(action, 'dynamicList')) {
+        return;
+      }
+      vm.dynamicValues = [];
+      _.forEach(action.dynamicList, function (opt) {
+        var model = {};
+        if (!opt.isDynamic) {
+          model = {
+            model: _.get(opt.action.eval, 'value'),
+            html: _.get(opt.action.eval, 'value'),
+            isDynamic: false,
+          };
+        } else {
+          model = {
+            model: _.get(opt.action.eval, 'value'),
+            label: checkVariableName(_.get(opt.action.eval, 'value')),
+            html: decodeURIComponent(opt.htmlModel),
+            isDynamic: true,
+          };
+        }
+        vm.dynamicValues.push(model);
+      });
       vm.method = action.method;
-      vm.url = action.url;
     }
 
     function activate() {
@@ -66,7 +127,7 @@
       vm.menuEntry = vm.uiMenu.entries[$scope.index];
       action = _.get(vm.menuEntry, 'actions[0]', '');
       vm.uniqueCtrlIdentifer = AACommonService.makeKey($scope.schedule, AACommonService.getUniqueId());
-      if (!action || action.getName() !== doREST) {
+      if (_.get(action, 'name', '') !== doREST) {
         action = AutoAttendantCeMenuModelService.newCeActionEntry(doREST, '');
         action.url = '';
         action.method = '';

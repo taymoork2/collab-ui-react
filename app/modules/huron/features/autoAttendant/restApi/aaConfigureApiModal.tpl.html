@@ -9,8 +9,20 @@
     </div>
     <div class="large-8 medium-8 small-12 columns">
       <div class="row">
-        <div class="large-11 medium-11 small-11 columns">
-          <textarea class="aa-message-textarea" id="configureApiUrl" ng-model="aaConfigureApiModal.url" cols="20" rows="7" maxlength="2000"></textarea>
+        <div  ng-if="aaConfigureApiModal.isDynamicToggle()" class="aa-dynamic-prompt aa-message-width aa-message-only-type large-11 medium-11 small-11 columns">
+          <dynamic-prompt class="small-12 columns dynamic-prompt aa-message-height" ng-model="aaConfigureApiModal.url" dynamic-tags="aaConfigureApiModal.dynamicTags" model-values="aaConfigureApiModal.dynamicValues" insert-element="insertElement" aa-keypress ng-change = "aaConfigureApiModal.saveDynamicUi()" id="configureApiUrl{{schedule + index}}" name="url" data-placeholder="{{:: aaConfigureApiModal.messageInputPlaceholder}}"></dynamic-prompt>
+        <div ng-if="aaConfigureApiModal.getWarning()">
+          <br></br>
+          <div class="columns small-12 aa-div-click" ng-click="aaConfigureApiModal.toggleFullWarningMsg()" ng-blur="aaConfigureApiModal.closeFullWarningMsg()"> 
+            <span class="ellipsis icon icon-warning warning aa-icon-font-size"></span>
+            <span class="aa-text-overflow" data-ng-bind="aaConfigureApiModal.deletedSessionVariablesListAlongWithWarning"></span>
+            <div ng-if = "aaConfigureApiModal.fullWarningMsgValue" class="aa-full-warning" data-ng-bind = "aaConfigureApiModal.deletedSessionVariablesListAlongWithWarning"></div>
+          </div>
+        </div>
+          <aa-add-variable dynamic-prompt-id="configureApiUrl{{schedule + index}}" aa-schedule="{{schedule}}" aa-index="index" dynamic-element-string="aaConfigureApiModal.addElement" aa-element-type="{{aaConfigureApiModal.aaElementType}}"></aa-add-variable>
+        </div>
+        <div ng-if="!aaConfigureApiModal.isDynamicToggle()" class="aa-message-only-type large-12 small-12 columns">
+          <textarea class="dynamic-prompt aa-message-type-textarea" aa-keypress ng-change="aaConfigureApiModal.saveDynamicUi()" ng-model="aaConfigureApiModal.url" type="text" id="configureApiUrl{{schedule + index}}" placeholder="{{ :: aaConfigureApiModal.messageInputPlaceholder }}" rows="4" maxlength="2000"></textarea>
         </div>
       </div>
     </div>
@@ -63,6 +75,6 @@
   </div>
 </div>
 <div class="modal-footer">
-  <button id="cancelBtn" class="btn" ng-click="$dismiss();">{{ :: 'common.cancel' | translate }}</button>
+  <button id="cancelBtn" class="btn" ng-click="aaConfigureApiModal.cancel()">{{ :: 'common.cancel' | translate }}</button>
   <button id="saveBtn" class="btn btn-primary" ng-click="aaConfigureApiModal.save()" ng-disabled="aaConfigureApiModal.isSaveDisabled();">{{ :: 'common.save' | translate }}</button>
 </div>

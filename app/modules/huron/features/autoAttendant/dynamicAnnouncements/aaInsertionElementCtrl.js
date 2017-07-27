@@ -6,7 +6,7 @@
     .controller('AAInsertionElementCtrl', AAInsertionElementCtrl);
 
   /* @ngInject */
-  function AAInsertionElementCtrl($rootScope, $scope, $modal, $translate, AAUiModelService, AACommonService, AADynaAnnounceService) {
+  function AAInsertionElementCtrl($modal, $rootScope, $scope, $translate, AACommonService, AADynaAnnounceService, AAUiModelService) {
     var vm = this;
 
     var ui;
@@ -35,6 +35,17 @@
 
     /////////////////////
 
+    function setResult(node, actionType, result, id) {
+      if (!_.isEqual(vm.elementText, result.variable.label) || !_.isEqual(vm.readAs, result.readAs.value)) {
+        vm.elementText = result.variable.label;
+        vm.readAs = result.readAs.value;
+        actionType.value = result.variable.value;
+        actionType.as = vm.readAs;
+        var ele = '<aa-insertion-element element-text="' + actionType.value + '" read-as="' + actionType.as + '" element-id="' + id + '" aa-element-type="' + $scope.aaElementType + '"></aa-insertion-element>';
+        node.htmlModel = encodeURIComponent(ele);
+      }
+    }
+
     function mainClickFn() {
       var id = $scope.elementId;
       populateUiModel(id);
@@ -42,18 +53,24 @@
       _.forEach(dynaList, function (node) {
         var html = decodeURIComponent(node.htmlModel);
         if (html.search(id) >= 0) {
-          openModal(node.say).result
-          .then(function (result) {
-            if (vm.elementText != result.variable.label || vm.readAs != result.readAs.value) {
-              vm.elementText = result.variable.label;
-              vm.readAs = result.readAs.value;
-              node.say.value = result.variable.value;
-              node.say.as = vm.readAs;
-              var ele = '<aa-insertion-element element-text="' + node.say.value + '" read-as="' + node.say.as + '" element-id="' + id + '"></aa-insertion-element>';
-              node.htmlModel = encodeURIComponent(ele);
-              AACommonService.setSayMessageStatus(true);
-            }
-          });
+          var actionType;
+          switch ($scope.aaElementType) {
+            case 'REST':
+              actionType = node.action.eval;
+              openModal(actionType).result
+                .then(function (result) {
+                  setResult(node, actionType, result, id);
+                });
+              break;
+
+            default:
+              actionType = node.say;
+              openModal(actionType).result
+                .then(function (result) {
+                  setResult(node, actionType, result, id);
+                  AACommonService.setSayMessageStatus(true);
+                });
+          }
         }
       });
     }
@@ -71,6 +88,9 @@
           readAsSelection: function () {
             return say.as;
           },
+          aaElementType: function () {
+            return $scope.aaElementType;
+          },
         },
         modalClass: 'aa-dynamic-announcements-modal',
       });
@@ -86,15 +106,26 @@
       _.forEach(dynaList, function (node) {
         var html = decodeURIComponent(node.htmlModel);
         if (html.search(id) >= 0) {
+          switch ($scope.aaElementType) {
+            case 'REST':
+              node.action = {
+                eval: {
+                  value: '',
+                },
+              };
+              break;
+
+            default:
+              node.say = {
+                value: '',
+                voice: '',
+              };
+              AACommonService.setSayMessageStatus(true);
+          }
           vm.elementText = '';
           vm.readAs = '';
-          node.say = {
-            value: '',
-            voice: '',
-          };
           node.isDynamic = false;
           node.htmlModel = '';
-          AACommonService.setSayMessageStatus(true);
           $rootScope.$broadcast('CE Updated');
         }
       });
