@@ -12,6 +12,7 @@ require('./_setup-wizard.scss');
     var isSharedDevicesOnlyLicense = false;
     var shouldShowMeetingsTab = false;
     var hasPendingCallLicenses = false;
+    var hasPendingLicenses = false;
     var supportsAtlasPMRonM2 = false;
     $scope.tabs = [];
     $scope.isTelstraCsbEnabled = false;
@@ -54,6 +55,7 @@ require('./_setup-wizard.scss');
         var tabsBasedOnPendingLicensesPromise = SetupWizardService.getPendingLicenses().then(function () {
           shouldShowMeetingsTab = SetupWizardService.hasPendingMeetingLicenses();
           hasPendingCallLicenses = SetupWizardService.hasPendingCallLicenses();
+          hasPendingLicenses = SetupWizardService.hasPendingLicenses();
         });
         promises.push(tabsBasedOnPendingLicensesPromise);
       }
@@ -310,20 +312,25 @@ require('./_setup-wizard.scss');
       if (!Authinfo.isSetupDone()) {
         var tab = {
           name: 'finish',
-          label: 'firstTimeWizard.finish',
+          label: 'firstTimeWizard.activateAndBeginBilling',
           description: 'firstTimeWizard.finishSub',
           icon: 'icon-check',
           title: 'firstTimeWizard.getStarted',
           controller: 'WizardFinishCtrl',
           steps: [{
-            name: 'init',
-            template: 'modules/core/setupWizard/finish/finish.tpl.html',
+            name: 'activate',
+            template: 'modules/core/setupWizard/finish/activate.html',
+          }, {
+            name: 'done',
+            template: 'modules/core/setupWizard/finish/finish.html',
           }],
         };
 
-        if (shouldShowMeetingsTab) {
-          tab.title = 'firstTimeWizard.activateAndBeginBilling';
+        if (!hasPendingLicenses) {
+          tab.label = 'firstTimeWizard.finish';
+          _.remove(tab.steps, { name: 'activate' });
         }
+
         tabs.push(tab);
       }
     }

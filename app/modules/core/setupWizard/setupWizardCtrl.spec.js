@@ -26,6 +26,7 @@ describe('SetupWizardCtrl', function () {
     spyOn(this.Authinfo, 'isCSB').and.returnValue(true);
     spyOn(this.Authinfo, 'isCare').and.returnValue(false);
     spyOn(this.SetupWizardService, 'getPendingLicenses').and.returnValue(this.$q.resolve());
+    spyOn(this.SetupWizardService, 'hasPendingLicenses').and.returnValue(true);
     spyOn(this.SetupWizardService, 'hasPendingMeetingLicenses').and.returnValue(false);
     spyOn(this.SetupWizardService, 'hasPendingCallLicenses').and.returnValue(false);
     spyOn(this.SetupWizardService, 'hasPendingServiceOrder').and.returnValue(false);
@@ -97,7 +98,10 @@ describe('SetupWizardCtrl', function () {
   }
 
   describe('When all toggles are false (and Authinfo.isSetupDone is false as well)', function () {
-    beforeEach(initController);
+    beforeEach(function () {
+      this.SetupWizardService.hasPendingLicenses.and.returnValue(false);
+      this.initController();
+    });
 
     it('the wizard should have 6 macro-level steps', function () {
       this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
@@ -115,8 +119,8 @@ describe('SetupWizardCtrl', function () {
       this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
     });
 
-    it('finish should have a single substep', function () {
-      this.expectSubStepOrder('finish', ['init']);
+    it('finish should have a substep', function () {
+      this.expectSubStepOrder('finish', ['done']);
     });
   });
 
