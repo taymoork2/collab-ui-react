@@ -91,6 +91,7 @@ describe('Controller: AAMessageTypeCtrl', function () {
                     },
                   }],
                   className: 'dynamic-prompt aa-message-height',
+                  id: 'messageTypeopenHours0',
                 },
               },
             },
@@ -229,6 +230,8 @@ describe('Controller: AAMessageTypeCtrl', function () {
         aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
         aaUiModel.openHours.addEntryAt(0, menuEntry);
 
+        $scope.menuId = '';
+        $scope.menuKeyIndex = '';
         // setup the options menu
         c = controller('AAMessageTypeCtrl', {
           $scope: $scope,

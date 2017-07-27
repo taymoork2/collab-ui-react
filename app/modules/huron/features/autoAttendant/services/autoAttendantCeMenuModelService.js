@@ -898,7 +898,7 @@
         periodicAnnouncements = parsedDescription.queuePeriodicAnnouncements[0];
         periodicAnnouncement = periodicAnnouncements.queuePeriodicAnnouncement;
         paInterval = periodicAnnouncements.queuePeriodicAnnouncementInterval;
-        if (isDynAnnounceToggle()) {
+        if (isDynAnnounceToggle() && paType === 'say') {
           action = new Action('dynamic', '');
           action.dynamicList = [{
             say: {
