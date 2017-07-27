@@ -24,7 +24,6 @@ require('./_partner-landing-trials.scss');
     $scope.getDaysAgo = getDaysAgo;
     $scope.ariaTrialLabel = ariaTrialLabel;
     $scope.ariaExpLabel = ariaExpLabel;
-    $scope.header = $translate.instant('overview.pageTitle');
 
     init();
 
