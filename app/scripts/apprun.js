@@ -91,6 +91,16 @@
           }, function () {
             Auth.redirectToLogin();
           });
+      } else if ($window.document.URL.indexOf('error') !== -1) {
+        params = getFromStandardGetParams($window.document.URL);
+        var error = params['error'];
+        if (error === 'unauthorized_client' || error === 'invalid_scope' || error === 'unsupported_response_type') {
+          $state.go('login');
+        } else if (error === 'access_denied') {
+          $state.go('unauthorized');
+        } else if (error === 'server_error' || error === 'temporarily_unavailable' || error === 'service_unavailable') {
+          $state.go('backend-temp-unavailable');
+        }
       } else {
         Log.debug('No access code data.');
       }
