@@ -6,13 +6,15 @@
     .service('CareFeatureList', CareFeatureList);
 
   /* @ngInject */
-  function CareFeatureList(Authinfo, ConfigTemplateService) {
+  function CareFeatureList(Authinfo, ConfigTemplateService, VirtualAssistantConfigService) {
     var service = {
       getChatTemplates: getChatTemplates,
       getCallbackTemplates: getCallbackTemplates,
       getChatPlusCallbackTemplates: getChatPlusCallbackTemplates,
+      getVirtualAssistantConfigs: getVirtualAssistantConfigs,
       getTemplate: getTemplate,
       formatTemplates: formatTemplates,
+      formatVirtualAssistant: formatVirtualAssistant,
       deleteTemplate: deleteTemplate,
       filterCards: filterCards,
     };
@@ -37,6 +39,12 @@
       return ConfigTemplateService.query({
         orgId: Authinfo.getOrgId(),
         mediaType: 'chatPlusCallback',
+      }).$promise;
+    }
+
+    function getVirtualAssistantConfigs() {
+      return VirtualAssistantConfigService.get({
+        orgId: Authinfo.getOrgId(),
       }).$promise;
     }
 
@@ -86,6 +94,21 @@
         tpl.color = feature.color;
         tpl.icons = feature.icons;
         return tpl;
+      });
+      return orderByCardName(formattedList);
+    }
+
+    function formatVirtualAssistant(list, feature) {
+      var formattedList = _.map(list.items, function (item) {
+        if (!item.name) {
+          item.name = item.id;
+        }
+        item.mediaType = 'virtualAssistant';
+        item.status = 'Not in use';
+        item.featureType = feature.name;
+        item.color = feature.color;
+        item.icons = feature.icons;
+        return item;
       });
       return orderByCardName(formattedList);
     }

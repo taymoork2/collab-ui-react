@@ -6597,6 +6597,7 @@
   },
   "sunlightDetails": {
     "title": "Care",
+    "status": "Status: ",
     "settingsTitle": "Settings",
     "featuresTitle": "Features",
     "sorryMessage": "Sorry, something went wrong ",
@@ -6607,7 +6608,11 @@
     "callbackMediaType": "Callback",
     "chatPlusCallbackMediaType": "Chat+Callback",
     "virtualAssistantCode": "Va",
-    "virtualAssistantMediaType": "VirtualAssistant",
+    "virtualAssistantMediaType": "Virtual Assistants",
+    "Ch" : "Chat",
+    "Ca" : "Callback",
+    "ChCa" : "Chat+Callback",
+    "Va" : "Custom Virtual Assistant",
     "newFeatures": {
       "newFeatureButtonText": "New",
       "newCareTemplateModalTitle": "Create New Care Template",
@@ -6805,6 +6810,7 @@
   "careChatTpl": {
     "editAction": "Edit",
     "deleteAction": "Delete",
+    "downloadAction": "Download",
     "deleteFeatureTextConfirmation": "Are you sure you want to delete the {{ featureName }} template?",
     "createSuccessText": "{{ featureName }} template has been created successfully.",
     "createTemplateFailureText": "Failed to create Care template.",

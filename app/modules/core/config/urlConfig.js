@@ -128,6 +128,12 @@
       integration: 'https://config.appstaging.ciscoccservice.com/config/v1',
       prod: 'https://config.produs1.ciscoccservice.com/config/v1',
     },
+    VirtualAssistantConfigServiceUrl: {
+      dev: 'http://localhost:8080/bot-services/v1/config',
+      cfe: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/config',
+      integration: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/config',
+      prod: 'https://bot-services.produs1.ciscoccservice.com/bot-services/v1/config',
+    },
     SunlightBubbleUrl: {
       dev: 'https://bubble.devus1.ciscoccservice.com',
       cfe: 'https://bubble.appstaging.ciscoccservice.com',
