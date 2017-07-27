@@ -337,11 +337,11 @@
       return false;
     }
 
-    function getCount() {
-      if (!vm.model.pstn.block) {
+    function getCount(modal) {
+      if (!modal.block) {
         return MAX_DID_QUANTITY;
       }
-      return (vm.model.pstn.quantity ? vm.model.pstn.quantity : MAX_DID_QUANTITY);
+      return (modal.quantity ? modal.quantity : MAX_DID_QUANTITY);
     }
 
     function getNxxValue() {
@@ -377,7 +377,7 @@
       var field = this;
       var params = {
         npa: vm.model.pstn.areaCode.code,
-        count: getCount(),
+        count: getCount(vm.model.pstn),
         sequential: vm.model.pstn.consecutive,
       };
       //add optional nxx parameter
@@ -444,7 +444,7 @@
       }
       var params = {
         npa: vm.model.tollFree.areaCode.code,
-        count: vm.model.tollFree.quantity === 1 ? undefined : vm.model.tollFree.quantity,
+        count: getCount(vm.model.tollFree),
       };
       vm.model.tollFree.searchResults = [];
       vm.model.tollFree.searchResultsModel = {};
