@@ -14,8 +14,18 @@
           <h3 translate="firstTimeWizard.meeting"></h3>
         </div>
       </div>
-      <div class="pending-details" ng-repeat="license in planReview.pendingMeetingLicenses track by license.id">
-        <!-- This string is translated in the controller -->
+      <div class="pending-details" ng-repeat="license in planReview.pendingMeetingLicenses">
+        <div ng-if="license.licenseType === 'AUDIO'"><span translate="firstTimeWizard.audioPackage"></span></div>
+        <div><span>{{ license.displayName }}</span></div>
+        <div ng-if="license.licenseType !== 'AUDIO'"><span translate="firstTimeWizard.namedLicense"></span></div>
+      </div>
+      <div class="row full flex-row" ng-if="planReview.pendingMessageLicenses.length > 0">
+        <div class="pending-header column-header">
+          <i class="icon icon-circle-message"></i>
+          <h3 translate="firstTimeWizard.message"></h3>
+        </div>
+      </div>
+      <div class="pending-details" ng-repeat="license in planReview.pendingMessageLicenses">
         <div><span>{{ license.displayName }}</span></div>
         <div><span translate="firstTimeWizard.namedLicense"></span></div>
       </div>
@@ -25,11 +35,11 @@
           <h3 translate="firstTimeWizard.call"></h3>
         </div>
       </div>
-      <div class="pending-details" ng-repeat="license in planReview.pendingCallLicenses track by license.id">
+      <div class="pending-details" ng-repeat="license in planReview.pendingCallLicenses">
         <div><span>{{ license.displayName }}</span></div>
         <div><span translate="firstTimeWizard.namedLicense"></span></div>
       </div>
-      <div>
+      <div ng-if="::planReview.hasExistingLicenses">
         <span><a href="javascript:void(0);" ng-click="planReview.switchViews()" translate="firstTimeWizard.switchToDefaultPlanView"></a></span>
       </div>
     </div>
@@ -236,7 +246,7 @@
           </div>
         </div>
       </div>
-       <div ng-if="planReview.hasPendingLicenses">
+       <div ng-if="::planReview.hasPendingLicenses">
         <span><a href="javascript:void(0);" ng-click="planReview.switchViews()" translate="firstTimeWizard.switchToPendingPlanView"></a></span>
       </div>
     </div>
