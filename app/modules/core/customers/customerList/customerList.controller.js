@@ -47,7 +47,6 @@ require('./_customer-list.scss');
     vm.isPastGracePeriod = isPastGracePeriod;
     vm.isPstnSetup = isPstnSetup;
     vm.exportCsv = exportCsv;
-    vm.header = $translate.instant('customerPage.title');
 
     vm.convertStatusToInt = convertStatusToInt;
 
