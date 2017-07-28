@@ -687,6 +687,26 @@ exports.clickLastBreadcrumb = function () {
   this.click(element.all(by.css('.side-panel-container')).last().all(by.css('li[ng-repeat="crumb in breadcrumbs"] a')).last());
 };
 
+exports.dragAndDrop = function (elem, target) {
+  this.expectIsDisplayed(elem);
+  this.expectIsDisplayed(target);
+  browser.actions().mouseMove(elem).perform();
+  this.highlightElement(elem);
+  browser.actions().mouseDown().mouseMove(target).perform();
+  this.highlightElement(target);
+  browser.actions().mouseUp().perform();
+}
+
+exports.highlightElement = function (elem) {
+  log('highlighting element:' + elem.locator());
+  return browser.driver.executeScript("arguments[0].setAttribute('style', arguments[1]);", elem.getWebElement(), 'color: Red; border: 2px solid red;')
+  .then(function () {
+    return elem;
+  }, function (error) {
+    console.log('Error occurred while highlighting element:' + error);
+  });
+};
+
 function switchToWindow(handleIndex) {
   return browser.wait(function () {
     return browser.getAllWindowHandles().then(function (handles) {

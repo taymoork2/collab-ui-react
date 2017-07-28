@@ -34,6 +34,7 @@ require('./_overview.scss');
     vm.pstnToSNotification = null;
     vm.esaDisclaimerNotification = null;
     vm.trialDaysLeft = undefined;
+    vm.isEnterpriseCustomer = isEnterpriseCustomer;
     vm.dismissNotification = dismissNotification;
     vm.notificationComparator = notificationComparator;
     vm.ftHuronPstn = false;
@@ -57,6 +58,10 @@ require('./_overview.scss');
       'info',
       'new',
     ];
+
+    function isEnterpriseCustomer() {
+      return Authinfo.isEnterpriseCustomer();
+    }
 
     // used to sort notifications in a specific order
     function notificationComparator(a, b) {

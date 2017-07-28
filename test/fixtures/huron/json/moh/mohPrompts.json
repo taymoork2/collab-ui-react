@@ -27,5 +27,8 @@
 	"displayName": "filename3",
 	"rhesosId": "f03276fe-3ffb-4e94-a3cb-8ef86752eecd",
 	"markForDelete": false,
-	"assignments": []
+	"assignments": [{
+		"assignmentId": "abcd-1234",
+		"idType": "NUM_UUID"
+	  }]
 }]

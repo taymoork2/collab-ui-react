@@ -223,17 +223,18 @@ Special stuff currently used for out own mail input field...
 }
 
 .hercules-sip-settings {
-  .tooltip-inner {
+  .c-nub {
     max-width: 300px;
     text-align: left;
   }
 
   .sip-domain-icon {
-    margin-left: 10px;
+    vertical-align: -2px;
   }
 }
 
 .hercules-sip-destination-table {
+  margin: 0;
 
   .btn {
     margin: 0 !important; // override .hercules .btn--primary

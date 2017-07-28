@@ -25,6 +25,7 @@ describe('ServicesOverviewHybridDataSecurityCard', () => {
   function initSpies() {
     spyOn(Authinfo, 'isFusionHDS').and.returnValue(false);
     spyOn(Authinfo, 'getRoles').and.returnValue([]);
+    spyOn(Authinfo, 'isEnterpriseCustomer').and.returnValue(false);
     spyOn(HDSService, 'enableHdsEntitlement').and.returnValue($q.resolve());
   }
 
@@ -52,6 +53,7 @@ describe('ServicesOverviewHybridDataSecurityCard', () => {
     });
 
     it('should be displayed if we have roles + entitlement', () => {
+      Authinfo.isEnterpriseCustomer.and.returnValue(true);
       Authinfo.isFusionHDS.and.returnValue(true);
       Authinfo.getRoles.and.returnValue([Config.roles.full_admin]);
       card = new ServicesOverviewHybridDataSecurityCard($state, Authinfo, Config, HDSService, HybridServicesClusterStatesService, Notification);
@@ -59,6 +61,7 @@ describe('ServicesOverviewHybridDataSecurityCard', () => {
     });
 
     it('should be displayed if we have roles + atlasHybridDataSecurityFT even without entitlements', () => {
+      Authinfo.isEnterpriseCustomer.and.returnValue(true);
       Authinfo.isFusionHDS.and.returnValue(false);
       Authinfo.getRoles.and.returnValue([Config.roles.full_admin]);
       card = new ServicesOverviewHybridDataSecurityCard($state, Authinfo, Config, HDSService, HybridServicesClusterStatesService, Notification);
@@ -67,6 +70,7 @@ describe('ServicesOverviewHybridDataSecurityCard', () => {
     });
 
     it('should be displayed if we have roles + entitlements even if atlasHybridDataSecurityFT is off', () => {
+      Authinfo.isEnterpriseCustomer.and.returnValue(true);
       Authinfo.isFusionHDS.and.returnValue(true);
       Authinfo.getRoles.and.returnValue([Config.roles.full_admin]);
       card = new ServicesOverviewHybridDataSecurityCard($state, Authinfo, Config, HDSService, HybridServicesClusterStatesService, Notification);

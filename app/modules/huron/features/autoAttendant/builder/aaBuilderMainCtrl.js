@@ -657,7 +657,7 @@
       // Define vm.ui.builder.ceInfo_name for editing purpose.
       vm.ui.builder.ceInfo_name = _.cloneDeep(vm.ui.ceInfo.name);
 
-      getTimeZoneOptions().then(getSystemTimeZone())
+      getTimeZoneOptions().then(getSystemTimeZone)
       .finally(function () {
         AutoAttendantCeMenuModelService.clearCeMenuMap();
         vm.aaModel = AAModelService.getAAModel();

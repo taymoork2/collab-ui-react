@@ -14,7 +14,6 @@ describe('Controller: ExpresswayServiceClusterController', function () {
     var calendarCluster = getJSONFixture('hercules/expressway-cluster-with-calendar.json');
     var managementCluster = getJSONFixture('hercules/expressway-clusters-with-management-upgrade.json');
 
-    spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.ClusterService, 'getCluster').and.returnValues(_.cloneDeep(calendarCluster), _.cloneDeep(managementCluster), _.cloneDeep(calendarCluster), _.cloneDeep(managementCluster));
 
     this.initController = function () {
@@ -49,17 +48,5 @@ describe('Controller: ExpresswayServiceClusterController', function () {
     this.initController();
     this.controller.softwareUpgrade.hasManagementUpgradeWarning = true;
     expect(this.controller.softwareUpgrade.showUpgradeWarning()).toBe(true);
-  });
-
-  // 2017 name change
-  it('should set localizedCCCName to base name depending on atlas2017NameChangeGetStatus', function () {
-    this.initController();
-    expect(this.controller.localizedCCCName).toEqual('common.ciscoCollaborationCloud');
-  });
-
-  it('should set localizedCCCName to new name depending on atlas2017NameChangeGetStatus', function () {
-    this.FeatureToggleService.atlas2017NameChangeGetStatus.and.returnValue(this.$q.resolve(true));
-    this.initController();
-    expect(this.controller.localizedCCCName).toEqual('common.ciscoCollaborationCloudNew');
   });
 });

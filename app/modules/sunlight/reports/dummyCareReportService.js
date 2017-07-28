@@ -68,6 +68,8 @@
       var avgCsatScores = 3.0;
       var numWorkingTasks = 20;
       var numPendingTasks = 15;
+      var tasksAccepted = 40;
+      var tasksMissed = 17;
       var flip = 2;
       var count = 1;
       range.by(interval, function (moment) {
@@ -82,6 +84,8 @@
           rangeStats.avgCsatScores = 0;
           rangeStats.numWorkingTasks = 0;
           rangeStats.numPendingTasks = 0;
+          rangeStats.tasksAccepted = 0;
+          rangeStats.tasksMissed = 0;
         } else {
           rangeStats.numTasksHandledState = handleCount;
           rangeStats.numTasksAbandonedState = abandonCount;
@@ -90,6 +94,8 @@
           rangeStats.avgCsatScores = avgCsatScores;
           rangeStats.numWorkingTasks = numWorkingTasks;
           rangeStats.numPendingTasks = numPendingTasks;
+          rangeStats.tasksAccepted = tasksAccepted;
+          rangeStats.tasksMissed = tasksMissed;
         }
         rangeStatsList.push(rangeStats);
         count = count + 1;
@@ -98,7 +104,8 @@
         numPendingTasks = numPendingTasks + (flip * 3) + (count % 3);
         handleCount = handleCount + changeValue + (flip * 2);
         abandonCount = abandonCount - (changeValue / 3);
-
+        tasksAccepted = tasksAccepted + (flip * 2) + (count % 8);
+        tasksMissed = tasksMissed + (flip * 2) + (count % 3);
         if (abandonCount < 0) {
           abandonCount = 0;
         }
@@ -116,6 +123,8 @@
       var avgTaskWaitTime = 5;
       var avgTaskCloseTime = 3;
       var avgCsatScores = 3.0;
+      var tasksAccepted = 40;
+      var tasksMissed = 17;
       range.by(interval, function (moment) {
         var formattedTime = formatter(moment, format);
         var rangeStats = {};
@@ -126,31 +135,45 @@
           rangeStats.avgTaskWaitTime = 0;
           rangeStats.avgTaskCloseTime = 0;
           rangeStats.avgCsatScores = 0;
+          rangeStats.tasksAccepted = 0;
+          rangeStats.tasksMissed = 0;
         } else {
           rangeStats.numTasksHandledState = handleCount;
           rangeStats.numTasksAbandonedState = abandonCount;
           rangeStats.avgTaskWaitTime = avgTaskWaitTime;
           rangeStats.avgTaskCloseTime = avgTaskCloseTime;
           rangeStats.avgCsatScores = avgCsatScores;
+          rangeStats.tasksAccepted = tasksAccepted;
+          rangeStats.tasksMissed = tasksMissed;
         }
         rangeStatsList.push(rangeStats);
         if (interval === 'w' || interval === 'd') {
           if (rangeStatsList.length == 1) {
             handleCount = 0;
             abandonCount = 0;
+            tasksAccepted = 0;
+            tasksMissed = 0;
           } else if (rangeStatsList.length == 2) {
             handleCount = 60;
             abandonCount = 10;
+            tasksAccepted = 30;
+            tasksMissed = 17;
           } else if (rangeStatsList.length == 6) {
             handleCount = 50;
             abandonCount = 5;
+            tasksAccepted = 45;
+            tasksMissed = 4;
           } else {
             handleCount = handleCount + changeValue;
             abandonCount = abandonCount - (changeValue / 3);
+            tasksAccepted = tasksAccepted + changeValue;
+            tasksMissed = tasksMissed - (abandonCount / 2);
           }
         } else {
           handleCount = handleCount + changeValue;
           abandonCount = abandonCount - (changeValue / 3);
+          tasksAccepted = tasksAccepted + changeValue;
+          tasksMissed = tasksMissed - (abandonCount / 2);
         }
         if (abandonCount < 0) {
           abandonCount = 0;

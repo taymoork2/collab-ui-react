@@ -100,7 +100,7 @@ export class MeetingSettingsCtrl {
     this.validateWebexSiteUrl(siteName).then((response) => {
       if (response.isValid && (response.errorCode === 'validSite')) {
         this.sitesArray.push(_.clone(this.siteModel));
-        this.constructSitesArray();
+        this.constructDistributedSitesArray();
         this.clearInputs();
       } else if (!response.isValid && (response.errorCode === 'invalidSite')) {
         this.showError(this.$translate.instant('firstTimeWizard.enteredSiteNotValid'));
@@ -114,6 +114,7 @@ export class MeetingSettingsCtrl {
 
   public removeSite(index: number): void {
     this.sitesArray.splice(index, 1);
+    this.constructDistributedSitesArray();
   }
 
   public sumOfWebExLicensesAssigned(siteArray) {
@@ -169,7 +170,7 @@ export class MeetingSettingsCtrl {
       });
     }
     this.sitesArray = _.uniq(this.sitesArray);
-    this.constructSitesArray();
+    this.constructDistributedSitesArray();
   }
 
   private getWebExMeetingsLicenseTypeDetails() {
@@ -198,13 +199,13 @@ export class MeetingSettingsCtrl {
     }
   }
 
-  private constructSitesArray(): void {
+  private constructDistributedSitesArray(): void {
     const centerDetails = _.map(this.SetupWizardService.getPendingMeetingLicenses(), (license: any) => {
       return license.offerName;
     });
 
-    this.distributedLicensesArray = _.map(centerDetails, (center) => {
-      return _.map(this.sitesArray, (site: IWebExSite) => {
+    this.distributedLicensesArray = _.map(this.sitesArray, (site: IWebExSite) => {
+      return _.map(centerDetails, (center) => {
         return {
           centerType: center,
           quantity: site.quantity,

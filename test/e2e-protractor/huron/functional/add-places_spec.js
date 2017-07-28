@@ -1,8 +1,10 @@
 import * as provisioner from '../../provisioner/provisioner';
 import { huronCustomer } from '../../provisioner/huron-customer-config';
 import { AddPlacesPage } from '../pages/addPlaces.page';
+import { CallSpeedDialsPage } from '../pages/callSpeedDials.page';
 
 const addPlaces = new AddPlacesPage();
+const SpeedDialsPage = new CallSpeedDialsPage();
 
 describe('Huron Functional: add-places', () => {
   const customer = huronCustomer('add-place');
@@ -120,7 +122,7 @@ describe('Huron Functional: add-places', () => {
     });
 
     describe('Verify setup', () => {
-      describe('Test Naboo setup', () => {
+      describe('Test Naboo (Spark + Spark Call place) setup', () => {
         it('should list newly added place by search', () =>{
           utils.click(addPlaces.searchPlaces);
           utils.sendKeys(addPlaces.searchBar, 'Naboo');
@@ -155,6 +157,167 @@ describe('Huron Functional: add-places', () => {
           it('should have a Features section', () => {
             utils.expectIsDisplayed(addPlaces.featuresSct);
           });
+          it('should have Speed Dials in the Features section', () => {
+            utils.expectIsDisplayed(addPlaces.callOverview.features.speedDials);
+          });
+
+          describe('Speed Dials action menu', () => {
+            afterAll(function () {
+              utils.click(addPlaces.callSubMenu);
+            });
+            it('should show Add Speed Dial menu item', () => {
+              // utils.click(addPlaces.overviewPg);
+              // utils.click(addPlaces.callClick);
+              utils.click(addPlaces.callOverview.features.speedDials);
+              utils.click(SpeedDialsPage.actionMenu);
+              utils.expectIsDisplayed(SpeedDialsPage.addSpeedDialAction);
+            });
+            it('should show Reorder menu item', () => {
+              utils.expectIsDisplayed(SpeedDialsPage.reorderSpeedDialAction);
+            });
+
+            describe('Add Speed Dial section', () => {
+              beforeAll(function () {
+                utils.click(SpeedDialsPage.addSpeedDialAction);
+              });
+              it('should show the Speed Dials title', () => {
+                utils.expectIsDisplayed(SpeedDialsPage.title);
+              });
+              it('should show Cancel button', () => {
+                utils.expectIsDisplayed(SpeedDialsPage.speedDialCancelButton);
+              });
+              it('should show disabled Save button', () => {
+                utils.expectIsDisplayed(SpeedDialsPage.speedDialSaveButton);
+                utils.expectIsDisabled(SpeedDialsPage.speedDialSaveButton);
+              });
+              it('should show Contact Name fields', () => {
+                utils.expectIsDisplayed(SpeedDialsPage.newSpeedDialContactNameLabel);
+                utils.expectIsDisplayed(SpeedDialsPage.newSpeedDialContactNameInput);
+              });
+              it('should show Destination fields', () => {
+                utils.expectIsDisplayed(SpeedDialsPage.newSpeedDialDestinationLabel);
+                utils.expectIsDisplayed(SpeedDialsPage.newSpeedDialDestinationDropdown);
+              });
+
+              describe('Cancel Button', () => {
+                it('should take user back to Speed Dial list', () => {
+                  utils.click(SpeedDialsPage.speedDialCancelButton);
+                  utils.expectIsNotDisplayed(SpeedDialsPage.newSpeedDialContactNameLabel);
+                  utils.expectIsDisplayed(SpeedDialsPage.actionMenu);
+                });
+              });
+
+              describe('Add new Speed Dial action', () => {
+                const SPEEDDIAL_DESTINATION_E164_NAME = 'Ann Anderson External E164';
+                const SPEEDDIAL_DESTINATION_E164_VALUE = '4695550000';
+                const SPEEDDIAL_DESTINATION_URI_NAME = 'Billy Bob URI Address';
+                const SPEEDDIAL_DESTINATION_URI_VALUE = 'billy.bob@uri.com';
+                const SPEEDDIAL_DESTINATION_CUSTOM_NAME = 'Curtis Carter Custom DN';
+                const SPEEDDIAL_DESTINATION_CUSTOM_VALUE = '5001';
+                const SPEEDDIAL_DESTINATION_TYPE_EXTERNAL = 'External';
+                const SPEEDDIAL_DESTINATION_TYPE_URI = 'URI Address';
+                const SPEEDDIAL_DESTINATION_TYPE_CUSTOM = 'Custom';
+                beforeEach(function () {
+                  utils.click(addPlaces.callOverview.main);
+                  utils.click(addPlaces.callOverview.services.call);
+                  utils.click(addPlaces.callOverview.features.speedDials);
+                  utils.click(SpeedDialsPage.actionMenu);
+                  utils.click(SpeedDialsPage.addSpeedDialAction);
+                  utils.expectIsDisplayed(SpeedDialsPage.newSpeedDialContactNameInput);
+                  utils.expectIsDisplayed(SpeedDialsPage.newSpeedDialDestinationDropdown);
+                });
+                afterEach(function () {
+                  utils.expectIsNotDisplayed(SpeedDialsPage.newSpeedDialContactNameLabel);
+                });
+                it('should be able to save a new external number speed dial', () => {
+                  utils.selectDropdown('.csSelect-container[name="CallDestTypeSelect"]', SPEEDDIAL_DESTINATION_TYPE_EXTERNAL);
+                  utils.sendKeys(SpeedDialsPage.newSpeedDialContactNameInput, SPEEDDIAL_DESTINATION_E164_NAME);
+                  utils.sendKeys(SpeedDialsPage.newSpeedDialDestinationInputPhone, SPEEDDIAL_DESTINATION_E164_VALUE);
+                  utils.click(SpeedDialsPage.speedDialSaveButton);
+                  utils.waitForText(SpeedDialsPage.speedDialLabels, SPEEDDIAL_DESTINATION_E164_NAME)
+                });
+                it('should be able to save a new uri speed dial', () => {
+                  utils.selectDropdown('.csSelect-container[name="CallDestTypeSelect"]', SPEEDDIAL_DESTINATION_TYPE_URI);
+                  utils.sendKeys(SpeedDialsPage.newSpeedDialContactNameInput, SPEEDDIAL_DESTINATION_URI_NAME);
+                  utils.sendKeys(SpeedDialsPage.newSpeedDialDestinationInputUri, SPEEDDIAL_DESTINATION_URI_VALUE);
+                  utils.click(SpeedDialsPage.speedDialSaveButton);
+                  utils.waitForText(SpeedDialsPage.speedDialLabels, SPEEDDIAL_DESTINATION_URI_NAME)
+                });
+                it('should be able to save a new internal number speed dial', () => {
+                  utils.selectDropdown('.csSelect-container[name="CallDestTypeSelect"]', SPEEDDIAL_DESTINATION_TYPE_CUSTOM);
+                  utils.sendKeys(SpeedDialsPage.newSpeedDialContactNameInput, SPEEDDIAL_DESTINATION_CUSTOM_NAME);
+                  utils.sendKeys(SpeedDialsPage.newSpeedDialDestinationInputCustom, SPEEDDIAL_DESTINATION_CUSTOM_VALUE);
+                  utils.click(SpeedDialsPage.speedDialSaveButton);
+                  utils.waitForText(SpeedDialsPage.speedDialLabels, SPEEDDIAL_DESTINATION_CUSTOM_NAME)
+                });
+              });
+
+              describe('Reorder Speed Dial action', () => {
+                beforeAll(function () {
+                  utils.click(addPlaces.callSubMenu);
+                  utils.click(addPlaces.callOverview.features.speedDials);
+                  utils.expectIsDisplayed(SpeedDialsPage.firstSpeedDialEntryLabel);
+                  utils.click(SpeedDialsPage.actionMenu);
+                  utils.expectIsDisplayed(SpeedDialsPage.reorderSpeedDialAction);
+                  utils.click(SpeedDialsPage.reorderSpeedDialAction);
+                });
+                it('should show the Speed Dials title', () => {
+                  utils.expectIsDisplayed(SpeedDialsPage.title);
+                });
+                it('should show Cancel button', () => {
+                  utils.expectIsDisplayed(SpeedDialsPage.speedDialCancelButton);
+                });
+                it('should show Save button', () => {
+                  utils.expectIsDisplayed(SpeedDialsPage.speedDialSaveButton);
+                });
+                it('should show draggable handle', () => {
+                  utils.expectCountToBeGreater(SpeedDialsPage.speedDialEntryDraggableHandles, 0);
+                });
+
+                describe('Draggable Handle', () => {
+                  it('should have two or more speed dials for this test', () => {
+                    utils.expectCountToBeGreater(SpeedDialsPage.speedDialEntries, 1);
+                  });
+                  // Unable to get Drag and Drop to work at this time.
+                  xit('should be able to move speed dial entry', () => {
+                    SpeedDialsPage.firstSpeedDialEntryLabel.getText().then(function (initialFirstSpeedDialName) {
+                      utils.dragAndDrop(SpeedDialsPage.speedDialEntries.first(), SpeedDialsPage.speedDialEntries.last());
+                      utils.expectNotText(SpeedDialsPage.firstSpeedDialEntryLabel, initialFirstSpeedDialName);
+                    });
+                  });
+                });
+                it('should be able to save reordered speed dials', () => {
+                  utils.click(SpeedDialsPage.speedDialSaveButton);
+                });
+                it('saving should take you back to the speed dials list', () => {
+                  utils.expectIsDisplayed(SpeedDialsPage.firstSpeedDialEntryLabel);
+                  utils.expectIsNotDisplayed(SpeedDialsPage.speedDialEntryDraggableHandles);
+                });
+              });
+
+              describe('Delete speed dials', () => {
+                beforeAll(function () {
+                  utils.click(addPlaces.callSubMenu);
+                  utils.click(addPlaces.callOverview.features.speedDials);
+                  utils.expectIsDisplayed(SpeedDialsPage.firstSpeedDialEntryLabel); // expect at least one existing speed dial entry
+                });
+                it('should see a list of speed dials that can be deleted', () => {
+                  utils.expectCountToBeGreater(SpeedDialsPage.speedDialEntries, 0);
+                  utils.expectIsDisplayed(SpeedDialsPage.firstSpeedDialEntryLabel);
+                  utils.expectIsDisplayed(SpeedDialsPage.firstSpeedDialDeleteButton);
+                });
+                it('should be able to remove an existing speed dial', () => {
+                  SpeedDialsPage.firstSpeedDialEntryLabel.getText().then(function (initialFirstSpeedDialName) {
+                    utils.click(SpeedDialsPage.firstSpeedDialDeleteButton);
+                    utils.expectIsDisplayed(SpeedDialsPage.speedDialDeleteConfirmationButton);
+                    utils.click(SpeedDialsPage.speedDialDeleteConfirmationButton);
+                    utils.expectNotText(SpeedDialsPage.firstSpeedDialEntryLabel, initialFirstSpeedDialName);
+                  });
+                });
+              });
+            });
+          });
+
           it('should click on Primary Directory Number', () => {
             utils.click(addPlaces.primaryClick);
           });
@@ -186,7 +349,7 @@ describe('Huron Functional: add-places', () => {
         });
       });
 
-      describe('Test Jedha setup', () => {
+      describe('Test Jedha (Spark-only place without PSTN service) setup', () => {
         it('should clear previous search and search for Jedha', () => {
           utils.click(addPlaces.clearSearchPlace);
           utils.sendKeys(addPlaces.searchBar, 'Jedha');
@@ -222,7 +385,7 @@ describe('Huron Functional: add-places', () => {
         });
       });
 
-      describe('Test Edau setup', () => {
+      describe('Test Eadu (Spark-only place with PSTN service) setup', () => {
         it('should clear previous search and search for Eadu', () => {
           utils.click(addPlaces.clearSearchPlace);
           utils.sendKeys(addPlaces.searchBar, 'Eadu');

@@ -28,7 +28,7 @@ export class ServicesOverviewCallCard extends ServicesOverviewCard {
     if (hasFeature) {
       this._buttons.splice(0, 0, {
         name: 'servicesOverview.cards.call.buttons.locations',
-        routerState: 'calllocations',
+        routerState: 'call-locations',
         buttonClass: 'btn-link',
       });
     }

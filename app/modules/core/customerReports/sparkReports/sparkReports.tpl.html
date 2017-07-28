@@ -5,7 +5,7 @@
   </cs-page-sub-header-left>
   <cs-page-sub-header-right class="medium-9">
     <report-slider selected="nav.timeSelected" options="nav.timeOptions" update-functions="nav.timeUpdates"></report-slider>
-    <button type="button" class="btn btn--primary download-page" translate="reportsPage.downloadPage" ng-click="nav.exportFullPage()"></button>
+    <button type="button" value="exportPDF" class="btn btn--primary download-page" translate="reportsPage.downloadPage" ng-click="nav.exportFullPage()"></button>
   </cs-page-sub-header-right>
 </cs-page-sub-header>
 
@@ -26,8 +26,8 @@
   </div>
 </div>
 <div class="detail-reports" ng-if="nav.displayDetails">
-<div class="detail-reports-content">
-<div class="gridStyle col-md-12" ui-grid="nav.gridOptions" ui-grid-infinite-scroll grid-spinner="nav.gridRefresh"></div>
-</div>
+  <div class="detail-reports-content">
+    <div class="gridStyle col-md-12" ui-grid="nav.gridOptions" ui-grid-infinite-scroll grid-spinner="nav.gridRefresh"></div>
+  </div>
 </div>
 </div>

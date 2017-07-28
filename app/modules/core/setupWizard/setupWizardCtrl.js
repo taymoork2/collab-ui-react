@@ -195,9 +195,7 @@ require('./_setup-wizard.scss');
 
       if (showCallSettings()) {
         $q.resolve($scope.isCustomerPresent).then(function (customer) {
-          var isSimpOrder = Authinfo.getCustomerAdminEmail().indexOf('ordersimp') !== -1;
-
-          if (customer && isSimpOrder) {
+          if (customer && hasPendingCallLicenses) {
             SetupWizardService.activateAndCheckCapacity().catch(function (error) {
               $timeout(function () {
               //   $scope.$emit('wizardNextButtonDisable', true);
@@ -221,7 +219,7 @@ require('./_setup-wizard.scss');
             steps.splice(0, 0, initialStep);
           }
 
-          if (!customer && isSimpOrder) {
+          if (!customer && hasPendingCallLicenses) {
             steps.splice(0, 0, pickCountry);
           }
 

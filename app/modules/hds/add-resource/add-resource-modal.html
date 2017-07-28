@@ -80,8 +80,7 @@
           <div class="columns medium-5">
             <p class="addResourceInlineBlock" translate="hds.add-resource-dialog.text3"/>
             <p class="addResourceFQDN" translate="hds.add-resource-dialog.yesInfo2"/>
-            <p ng-if="!hdsRedirectAddResourceController.nameChangeEnabled" class="addResourceInlineBlock" translate="hds.add-resource-dialog.text3part2"/>
-            <p ng-if="hdsRedirectAddResourceController.nameChangeEnabled" class="addResourceInlineBlock" translate="hds.add-resource-dialog.text3part2New"/>
+            <p class="addResourceInlineBlock" translate="hds.add-resource-dialog.text3part2"/>
           </div>
           <div class="columns medium-6 inputHostNameForm">
             <input class="cs-input" ng-model="hdsRedirectAddResourceController.hostName"
@@ -94,8 +93,7 @@
   </div>
   <div ng-show="hdsRedirectAddResourceController.currentState === hdsRedirectAddResourceController.states.REGISTER_NODE">
     <p>
-      <span ng-if="!hdsRedirectAddResourceController.nameChangeEnabled" translate="hds.add-resource-dialog.grant-registration-success-part-1"/>
-      <span ng-if="hdsRedirectAddResourceController.nameChangeEnabled" translate="hds.add-resource-dialog.grant-registration-success-part-1-new"/>
+      <span translate="hds.add-resource-dialog.grant-registration-success-part-1"/>
       <br>
       <span translate="hds.add-resource-dialog.grant-registration-success-part-2"
       translate-values="{hostname: hdsRedirectAddResourceController.hostName || ''}"/>

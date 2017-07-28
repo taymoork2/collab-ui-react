@@ -34,13 +34,9 @@
 
   <div class="sub-section">
     <h5 class="sub-section__label cap-long-names" translate="common.remove"></h5>
-    <p ng-if="!$ctrl.blockDeregistration() && $ctrl.serviceId !== 'squared-fusion-media' && $ctrl.serviceId !== 'ept' && !$ctrl.nameChangeEnabled"
+    <p ng-if="!$ctrl.blockDeregistration() && $ctrl.serviceId !== 'squared-fusion-media' && $ctrl.serviceId !== 'ept' "
        class="sub-section__description"
        translate="hercules.renameAndDeregisterComponent.deregisterClusterExplanation"
-       translate-values="{clusterType: $ctrl.clusterType}"></p>
-    <p ng-if="!$ctrl.blockDeregistration() && $ctrl.serviceId !== 'squared-fusion-media' && $ctrl.serviceId !== 'ept' && $ctrl.nameChangeEnabled"
-       class="sub-section__description"
-       translate="hercules.renameAndDeregisterComponent.deregisterClusterExplanationNew"
        translate-values="{clusterType: $ctrl.clusterType}"></p>
     <p ng-if="$ctrl.blockDeregistration() && $ctrl.serviceId !== 'squared-fusion-media' && $ctrl.serviceId !== 'ept'"
        class="sub-section__description"
@@ -48,12 +44,9 @@
     <p ng-if="$ctrl.serviceId === 'squared-fusion-media'"
        class="sub-section__description"
        translate="hercules.renameAndDeregisterComponent.deregisterMediaClusterExplanation"></p>
-    <p ng-if="$ctrl.serviceId === 'ept' && !$ctrl.nameChangeEnabled"
+    <p ng-if="$ctrl.serviceId === 'ept'"
        class="sub-section__description"
        translate="hercules.renameAndDeregisterComponent.deregisterSipDestinationExplanation"></p>
-    <p ng-if="$ctrl.serviceId === 'ept' && $ctrl.nameChangeEnabled"
-       class="sub-section__description"
-       translate="hercules.renameAndDeregisterComponent.deregisterSipDestinationExplanationNew"></p>
 
 
       <button type="button"

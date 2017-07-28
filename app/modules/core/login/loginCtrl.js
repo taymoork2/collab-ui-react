@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function LoginCtrl($location, $rootScope, $scope, $state, $stateParams, $translate, Auth, Authinfo, Config, Log, LocalStorage, LogMetricsService, PageParam, SessionStorage, StorageKeys, TokenService, Utils) {
+  function LoginCtrl($location, $rootScope, $scope, $state, $stateParams, $translate, Auth, Authinfo, Config, Log, LocalStorage, LogMetricsService, PageParam, SessionStorage, StorageKeys, TokenService, Utils, CacheWarmUpService) {
     var queryParams = SessionStorage.popObject(StorageKeys.REQUESTED_QUERY_PARAMS);
     var language = LocalStorage.get('language');
 
@@ -54,6 +54,8 @@
         reauthorize: $stateParams.reauthorize,
       })
         .then(function () {
+          CacheWarmUpService.warmUpCaches();
+
           if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {
             $state.go('firsttimewizard');
           } else {
