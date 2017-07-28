@@ -111,6 +111,10 @@
         context: 'CONTEXT',
       },
 
+      shallowValidationSourceTypes: {
+        serviceSetup: 'ATLAS_SERVICE_SETUP',
+      },
+
       // These can be used to access object properties for trials
       licenseObjectNames: [
         'messaging',

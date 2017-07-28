@@ -57,7 +57,7 @@
       return _trialData;
     }
 
-    function validateSiteUrl(siteUrl) {
+    function validateSiteUrl(siteUrl, source) {
       var validationUrl = UrlConfig.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke';
       var config = {
         method: 'POST',
@@ -73,6 +73,10 @@
           }],
         },
       };
+
+      if (_.isString(source)) {
+        _.set(config, 'data.source', source);
+      }
 
       return $http(config).then(function (response) {
         var data = _.get(response, 'data.properties[0]', {});

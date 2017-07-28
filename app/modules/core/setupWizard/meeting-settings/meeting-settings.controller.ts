@@ -235,7 +235,8 @@ export class MeetingSettingsCtrl {
   }
 
   private validateWebexSiteUrl(siteName): ng.IPromise<any> {
-    return this.TrialWebexService.validateSiteUrl(siteName);
+    const source = this.Config.shallowValidationSourceTypes.serviceSetup;
+    return this.TrialWebexService.validateSiteUrl(siteName, source);
   }
 
   private showError(msg) {
