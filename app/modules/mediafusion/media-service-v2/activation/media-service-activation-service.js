@@ -81,9 +81,7 @@
       setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
         function success() {},
         function error(errorResponse) {
-          Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
-            failureMessage: errorResponse.message,
-          });
+          Notification.errorWithTrackingId(errorResponse, 'mediaFusion.mediaMicroserviceFailure');
         });
     };
 
@@ -124,17 +122,13 @@
             setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
               function success() {},
               function error(errorResponse) {
-                Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
-                  failureMessage: errorResponse.message,
-                });
+                Notification.errorWithTrackingId(errorResponse, 'mediaFusion.mediaMicroserviceFailure');
               });
           } else {
             deleteUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
               function success() {},
               function error(errorResponse) {
-                Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
-                  failureMessage: errorResponse.message,
-                });
+                Notification.errorWithTrackingId(errorResponse, 'mediaFusion.mediaMicroserviceFailure');
               });
           }
         });
@@ -147,7 +141,12 @@
 
     var enableRhesosEntitlement = function () {
       var url = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/services/rhesos';
-      return $http.post(url);
+      return $http.post(url).then(
+        function success() {},
+        function error(errorResponse) {
+          Notification.errorWithTrackingId(errorResponse, 'mediaFusion.mediaNetworkFailure');
+        }
+      );
     };
 
     var enableCallServiceEntitlement = function () {
@@ -156,7 +155,12 @@
         roles: ['Spark_CallService'],
       };
       var url = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/services/spark';
-      return $http.post(url, payload);
+      return $http.post(url, payload).then(
+        function success() {},
+        function error(errorResponse) {
+          Notification.errorWithTrackingId(errorResponse, 'mediaFusion.mediaNetworkFailure');
+        }
+      );
     };
 
     var setOrgSettingsForDevOps = function () {
