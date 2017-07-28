@@ -147,10 +147,6 @@ describe('Huron Functional: add-places', () => {
           it('should land on Call Settings page', () => {
             utils.expectIsDisplayed(addPlaces.callStngsPg);
           });
-          it('should have Preferred Language section with dropdown', () => {
-            utils.expectIsDisplayed(addPlaces.prfrdLang);
-            utils.expectIsDisplayed(addPlaces.prfrdLangDd);
-          });
           it('should have Directory Numbers section', () => {
             utils.expectIsDisplayed(addPlaces.dirNumSct);
           });
@@ -374,10 +370,6 @@ describe('Huron Functional: add-places', () => {
           it('should land on Call Settings page', () => {
             utils.expectIsDisplayed(addPlaces.callStngsPg);
           });
-          it('should have Preferred Language section with configure instructions', () => {
-            utils.expectIsDisplayed(addPlaces.prfrdLang);
-            utils.expectIsDisplayed(addPlaces.prfrdLangInst);
-          });
           it('should exit side navigation and return to main Places page', () => {
             utils.click(addPlaces.sideNavClose);
             utils.expectIsDisplayed(addPlaces.overviewPg);
@@ -409,10 +401,6 @@ describe('Huron Functional: add-places', () => {
           });
           it('should land on Call Settings page', () => {
             utils.expectIsDisplayed(addPlaces.callStngsPg);
-          });
-          it('should have Preferred Language section with dropdown', () => {
-            utils.expectIsDisplayed(addPlaces.prfrdLang);
-            utils.expectIsDisplayed(addPlaces.prfrdLangDd);
           });
           it('should have Directory Numbers section', () => {
             utils.expectIsDisplayed(addPlaces.dirNumSct);

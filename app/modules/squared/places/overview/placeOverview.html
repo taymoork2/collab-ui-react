@@ -31,18 +31,18 @@
         on-show-device-detail-fn="$ctrl.showDeviceDetails(device)">
       </uc-device-list>
     </cs-sp-section>
-    <cs-sp-section ng-if="$ctrl.isprov3698 || $ctrl.ishI1484">
+    <cs-sp-section ng-if="($ctrl.showLocations() || $ctrl.showLanguage())">
       <section-title title-key="preferredLanguage.placeDetails"></section-title>
       <div class="feature-list">
         <ul>
-            <li class="feature" ng-if="$ctrl.ishI1484 && $ctrl.hasSparkCall">
+            <li class="feature" ng-if="$ctrl.showLocations()">
               <a ng-click="$ctrl.openPanel()">
                 <span class="feature-name" translate="usersPreview.location"></span>
                 <span class="feature-details feature-label">{{$ctrl.placeLocation}}</span>
                   <i class="feature-arrow"></i>
               </a>
             </li>
-            <li class="feature" ng-if="::!$ctrl.dirsyncEnabled">
+            <li class="feature" ng-if="$ctrl.showLanguage()">
               <a ng-if="$ctrl.preferredLanguage" ng-click="$ctrl.openPreferredLanguage()">
                 <span class="feature-name" translate="serviceSetupModal.preferredLanguage"></span>
                 <span class="feature-details feature-label">
@@ -51,7 +51,7 @@
                 <i class="feature-arrow"></i>
               </a>
               <span ng-if="!$ctrl.preferredLanguage" class="feature-name" translate="serviceSetupModal.preferredLanguage"></span>
-              <span ng-if="!$ctrl.preferredLanguage"class="feature-details feature-label">
+              <span ng-if="!$ctrl.preferredLanguage" class="feature-details feature-label">
                 {{'usersPreview.notConfigured' | translate}}
               </span>
             </li>
