@@ -10,6 +10,10 @@
     $scope.sendEmailModel = false;
     $scope.isCustomerLaunchedFromPartner = Authinfo.isCustomerLaunchedFromPartner();
     $scope.setSendCustomerEmailFlag = setSendCustomerEmailFlag;
+    $scope.orderDetails = {
+      subscriptionId: SetupWizardService.getActingSubscriptionId(),
+      orderId: SetupWizardService.getCurrentOrderNumber(),
+    };
     $scope.initNext = function () {
       var deferred = $q.defer();
       if (!_.isUndefined($scope.wizard) && _.isFunction($scope.wizard.getRequiredTabs)) {

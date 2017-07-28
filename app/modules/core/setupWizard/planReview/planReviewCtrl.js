@@ -121,7 +121,7 @@
       _.forEach(licenses, function (license) {
         var translatedNameString = 'subscriptions.licenseTypes.' + license.offerName;
         license.displayName = $translate.instant(translatedNameString);
-        if (license.capacity) {
+        if (license.capacity && license.offerName !== 'CF') {
           license.displayName += ' ' + license.capacity;
         }
       });
