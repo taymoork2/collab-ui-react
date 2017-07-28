@@ -5,7 +5,7 @@ interface IHeaderTab {
 
 class HuronDetailsHeaderComponentCtrl implements ng.IComponentController {
   public tabs: IHeaderTab[] = [];
-  public title: string = 'huronDetails.title';
+  public title: string = this.$translate.instant('huronDetails.title');
   public back: boolean = true;
   public backState: string = 'services-overview';
 
@@ -14,6 +14,7 @@ class HuronDetailsHeaderComponentCtrl implements ng.IComponentController {
     private Authinfo,
     private Config,
     private FeatureToggleService,
+    private $translate: ng.translate.ITranslateService,
   ) { }
 
   public $onInit(): void {
@@ -21,25 +22,25 @@ class HuronDetailsHeaderComponentCtrl implements ng.IComponentController {
       .then(enabled => {
         if (enabled) {
           this.tabs.splice(0, 0, {
-            title: 'huronDetails.locationsTitle',
+            title: this.$translate.instant('huronDetails.locationsTitle'),
             state: 'call-locations',
           });
         }
       });
     this.tabs.push({
-      title: 'huronDetails.linesTitle',
+      title: this.$translate.instant('huronDetails.linesTitle'),
       state: 'huronlines',
     });
 
     if (this.showFeatureTab()) {
       this.tabs.push({
-        title: 'huronDetails.featuresTitle',
+        title: this.$translate.instant('huronDetails.featuresTitle'),
         state: 'huronfeatures',
       });
     }
 
     this.tabs.push({
-      title: 'huronDetails.settingsTitle',
+      title: this.$translate.instant('huronDetails.settingsTitle'),
       state: 'huronsettings',
     });
   }
