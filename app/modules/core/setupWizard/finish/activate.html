@@ -1,9 +1,4 @@
-<div ng-if="!hasPendingLicenses" class="finish-page">
-  <i class="icon icon-circle-check" />
-  <h3 translate="firstTimeWizard.readyToGo"></h3>
-  <p translate="firstTimeWizard.finishDesc"></p>
-</div>
-<div ng-if="hasPendingLicenses" class="activate-page">
+<div class="activate-page">
   <div class="activate-page__section">
     <p class="activate-page__header" translate="firstTimeWizard.activateAndBeginBilling"></p>
     <p translate="firstTimeWizard.activateBillingDescription"></p>
@@ -11,12 +6,13 @@
   <div class="activate-page__section">
     <p translate="firstTimeWizard.activateBillingWarning"></p>
   </div>
-  <div class="activate-page__section">
+  <div ng-if="isCustomerLaunchedFromPartner" class="activate-page__section">
     <input
       cs-input
       type="checkbox"
       ng-model="sendEmailModel"
       id="sendEmailToCustomer"
+      ng-change="setSendCustomerEmailFlag()"
       cs-input-label="{{::'firstTimeWizard.sendEmailToCustomer' | translate}}">
   </div>
 </div>

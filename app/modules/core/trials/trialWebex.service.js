@@ -26,6 +26,7 @@
       getTrialStatus: getTrialStatus,
       provisionWebexSites: provisionWebexSites,
       provisionSubscriptionWithoutWebexSites: provisionSubscriptionWithoutWebexSites,
+      setProvisioningWebexSendCustomerEmailFlag: setProvisioningWebexSendCustomerEmailFlag,
       setProvisioningWebexSitesData: setProvisioningWebexSitesData,
       getProvisioningWebexSitesData: getProvisioningWebexSitesData,
     };
@@ -93,15 +94,27 @@
     }
 
     function setProvisioningWebexSitesData(webexLicenses, subscriptionId) {
-      webexProvisioningData = { webexLicencesPayload: webexLicenses, subscriptionId: subscriptionId };
+      _.set(webexProvisioningData, 'webexLicencesPayload', webexLicenses);
+      _.set(webexProvisioningData, 'subscriptionId', subscriptionId);
     }
 
     function getProvisioningWebexSitesData() {
       return webexProvisioningData;
     }
 
+    function setProvisioningWebexSendCustomerEmailFlag(flag) {
+      if (!_.isBoolean(flag)) {
+        return $q.reject('paramater passed is not a boolean');
+      }
+      _.set(webexProvisioningData, 'sendCustomerEmail', flag);
+    }
+
     function provisionWebexSites() {
       var payload = _.get(webexProvisioningData, 'webexLicencesPayload');
+      if (_.has(webexProvisioningData, 'sendCustomerEmail')) {
+        _.set(payload, 'sendCustomerEmail', webexProvisioningData.sendCustomerEmail);
+      }
+
       var subscriptionId = _.get(webexProvisioningData, 'subscriptionId');
       return provisionSubscription(payload, subscriptionId);
     }
@@ -111,6 +124,10 @@
         provisionOrder: true,
         serviceOrderUUID: SetupWizardService.getActingSubscriptionServiceOrderUUID(),
       };
+      if (_.has(webexProvisioningData, 'sendCustomerEmail')) {
+        _.set(payload, 'sendCustomerEmail', webexProvisioningData.sendCustomerEmail);
+      }
+
       var subscriptionId = SetupWizardService.getInternalSubscriptionId();
       return provisionSubscription(payload, subscriptionId);
     }
