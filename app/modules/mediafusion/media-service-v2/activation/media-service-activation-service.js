@@ -81,9 +81,7 @@
       setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
         function success() {},
         function error(errorResponse) {
-          Notification.error('mediaFusion.mediaMicroserviceFailure', {
-            failureMessage: errorResponse.message,
-          });
+          Notification.errorWithTrackingId(errorResponse, 'mediaFusion.mediaMicroserviceFailure');
         });
     };
 
@@ -124,17 +122,13 @@
             setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
               function success() {},
               function error(errorResponse) {
-                Notification.error('mediaFusion.mediaMicroserviceFailure', {
-                  failureMessage: errorResponse.message,
-                });
+                Notification.errorWithTrackingId(errorResponse, 'mediaFusion.mediaMicroserviceFailure');
               });
           } else {
             deleteUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
               function success() {},
               function error(errorResponse) {
-                Notification.error('mediaFusion.mediaMicroserviceFailure', {
-                  failureMessage: errorResponse.message,
-                });
+                Notification.errorWithTrackingId(errorResponse, 'mediaFusion.mediaMicroserviceFailure');
               });
           }
         });
@@ -150,9 +144,7 @@
       return $http.post(url).then(
         function success() {},
         function error(errorResponse) {
-          Notification.error('mediaFusion.mediaNetworkFailure', {
-            failureMessage: errorResponse.message,
-          });
+          Notification.errorWithTrackingId(errorResponse, 'mediaFusion.mediaNetworkFailure');
         }
       );
     };
@@ -166,9 +158,7 @@
       return $http.post(url, payload).then(
         function success() {},
         function error(errorResponse) {
-          Notification.error('mediaFusion.mediaNetworkFailure', {
-            failureMessage: errorResponse.message,
-          });
+          Notification.errorWithTrackingId(errorResponse, 'mediaFusion.mediaNetworkFailure');
         }
       );
     };
