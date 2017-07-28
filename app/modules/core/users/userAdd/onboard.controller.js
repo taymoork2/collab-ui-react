@@ -208,9 +208,10 @@ require('./_user-add.scss');
     //***********************************************************************************/
 
     function activateDID() {
-      $q.all([loadInternalNumberPool(), loadExternalNumberPool(), toggleShowExtensions(), loadPrimarySiteInfo()])
+      $q.all([loadInternalNumberPool(), loadExternalNumberPool(), loadLocations(), toggleShowExtensions(), loadPrimarySiteInfo()])
         .finally(function () {
           if ($scope.showExtensions === true) {
+            showLocationSelectColumn();
             assignDNForUserList();
             $scope.validateDnForUser();
           } else {
@@ -1267,6 +1268,9 @@ require('./_user-add.scss');
       // make sure we have any internal extension and direct line set up for the users
       _.forEach(users, function (user) {
         user.internalExtension = _.get(user, 'assignedDn.pattern');
+        if ($scope.ishI1484 && $scope.locationOptions.length > 1) {
+          user.location = _.get(user, 'selectedLocation.name');
+        }
         if (user.externalNumber && user.externalNumber.uuid && user.externalNumber.uuid !== 'none') {
           user.directLine = user.externalNumber.pattern;
         }
