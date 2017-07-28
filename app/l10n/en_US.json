@@ -330,6 +330,7 @@
     "paidCiscoSparkMeetings": "Cisco Spark 25 party Meetings",
     "paidAdvancedConferencing": "Advanced Meetings",
     "paidComm": "Call",
+    "paidCommHybrid": "Hybrid Call",
     "paidSparkCall": "Cisco Spark Call",
     "paidNone": "None",
     "paidCDC": "Chat and Callback",
@@ -5775,7 +5776,8 @@
       "meeting-duration-title": "Meeting Duration"
     },
     "mediaServiceActivationFailure": "Problems enabling the service",
-    "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion",
+    "mediaMicroserviceFailure": "Because of a service connection issue, Hybrid Media Service routing was not enabled for your organization. Open a case through admin.ciscospark.com if the issue persists.",
+    "mediaNetworkFailure": "Because of a network connection issue, Hybrid Media Service was not enabled for your organization. Open a case through admin.ciscospark.com if the issue persists.",
     "delete": "Delete",
     "cancel": "Cancel",
     "actionsHeader": "Actions",
