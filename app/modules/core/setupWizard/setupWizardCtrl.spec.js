@@ -22,7 +22,6 @@ describe('SetupWizardCtrl', function () {
     this.enabledFeatureToggles = [];
 
     spyOn(this.Authinfo, 'isCustomerAdmin').and.returnValue(true);
-    spyOn(this.Authinfo, 'getCustomerAdminEmail').and.returnValue('admin@admin.com');
     spyOn(this.Authinfo, 'isSetupDone').and.returnValue(false);
     spyOn(this.Authinfo, 'isCSB').and.returnValue(true);
     spyOn(this.Authinfo, 'isCare').and.returnValue(false);

@@ -120,7 +120,7 @@ describe('Partner flow', function () {
     }, LONG_TIMEOUT);
 
     it('should navigate first time wizard', function () {
-      utils.waitForText(wizard.mainviewTitle, 'Plan Review');
+      utils.waitForText(wizard.mainviewTitle, 'Subscription Review');
       utils.click(wizard.beginBtn);
       utils.click(wizard.saveBtn);
       utils.waitForText(wizard.mainviewTitle, 'Enterprise Settings');

@@ -90,12 +90,85 @@
               'createdTime', categoryAxis, valueAxes, exportReport, titles);
     }
 
+    function showTaskOfferedGraph(div, data, categoryAxisTitle, title, isToday) {
+      var chartConfig = getTaskOfferedGraphConfig(data, categoryAxisTitle, title, isToday);
+      return AmCharts.makeChart(div, chartConfig);
+    }
+
+    function showTaskOfferedDummy(div, data, categoryAxisTitle, title, isToday) {
+      var chartConfig = getTaskOfferedGraphConfig(data, categoryAxisTitle, title, isToday);
+
+      dummifyGraph(chartConfig);
+
+      return AmCharts.makeChart(div, chartConfig);
+    }
+
+    function getTaskOfferedGraphConfig(data, categoryAxisTitle, title, isToday) {
+      today = isToday;
+      var exportReport = CareReportsGraphService.getBaseVariable('export');
+      exportReport.enabled = true;
+
+      var titles = CareReportsGraphService.getBaseVariable('title');
+      if (!_.isUndefined(title)) {
+        titles[0].text = title;
+        titles[0].enabled = true;
+      }
+
+      var chartCursor = CareReportsGraphService.getBaseVariable('chartCursor');
+      chartCursor.cursorAlpha = 1;
+
+      var categoryAxis = CareReportsGraphService.getBaseVariable('axis');
+      categoryAxis.startOnAxis = true;
+      categoryAxis.title = categoryAxisTitle;
+
+      var legend = CareReportsGraphService.getBaseVariable('legend');
+      legend.equalWidths = !isToday;
+
+      var valueAxes = [CareReportsGraphService.getBaseVariable('axis')];
+      valueAxes[0].title = $translate.instant('careReportsPage.percentage');
+      valueAxes[0].stackType = '100%';
+
+      var percentMissedGraph = {
+        title: $translate.instant('careReportsPage.missed'),
+        lineColor: chartColors.alertsBase,
+        fillColors: chartColors.colorLightRedFill,
+        valueField: 'tasksMissed',
+        showBalloon: true,
+        balloonFunction: balloonTextForTaskOffered,
+      };
+
+      var percentAcceptedGraph = {
+        title: $translate.instant('careReportsPage.accepted'),
+        lineColor: chartColors.ctaBase,
+        valueField: 'tasksAccepted',
+      };
+
+      var graphsPartial = [percentAcceptedGraph, percentMissedGraph];
+      var graphs = _.map(graphsPartial, function (graph) {
+        return _.defaults(graph, CareReportsGraphService.getBaseVariable('graph'));
+      });
+
+      return CareReportsGraphService.buildChartConfig(data, legend, graphs, chartCursor,
+              'createdTime', categoryAxis, valueAxes, exportReport, titles);
+    }
+
     function balloonTextForTaskVolume(graphDataItem, graph) {
       var numTasksAbandonedState = _.get(graphDataItem, 'dataContext.numTasksAbandonedState', 0);
       var numTasksHandledState = _.get(graphDataItem, 'dataContext.numTasksHandledState', 0);
       var categoryRange = setCategoryRange(graph.categoryAxis.title, graphDataItem.category);
       var balloonText = '<span class="care-graph-text">' + $translate.instant('careReportsPage.abandoned') + ' ' + numTasksAbandonedState + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.handled') + ' ' + numTasksHandledState + '</span>';
 
+      return categoryRange + balloonText;
+    }
+
+    function balloonTextForTaskOffered(graphDataItem, graph) {
+      var tasksOffered = _.get(graphDataItem, 'dataContext.tasksOffered', 0);
+      var tasksMissed = _.get(graphDataItem, 'dataContext.tasksMissed', 0);
+      var tasksAccepted = _.get(graphDataItem, 'dataContext.tasksAccepted', 0);
+      var percentageTasksAccepted = tasksOffered > 0 ? Math.round((tasksAccepted / tasksOffered) * 100) : 0;
+      var percentageTasksMissed = tasksOffered > 0 ? Math.min(Math.round((tasksMissed / tasksOffered) * 100), 100) : 0;
+      var categoryRange = setCategoryRange(graph.categoryAxis.title, graphDataItem.category);
+      var balloonText = '<span class="care-graph-text">' + $translate.instant('careReportsPage.accepted') + ' ' + percentageTasksAccepted + '%' + '</span><br><span class="care-graph-text">' + $translate.instant('careReportsPage.missed') + ' ' + percentageTasksMissed + '%' + '</span>';
       return categoryRange + balloonText;
     }
 
@@ -359,6 +432,8 @@
     var service = {
       showTaskIncomingGraph: showTaskIncomingGraph,
       showTaskIncomingDummy: showTaskIncomingDummy,
+      showTaskOfferedGraph: showTaskOfferedGraph,
+      showTaskOfferedDummy: showTaskOfferedDummy,
       showTaskTimeGraph: showTaskTimeGraph,
       showTaskTimeDummy: showTaskTimeDummy,
       showAverageCsatGraph: showAverageCsatGraph,
@@ -366,6 +441,7 @@
       showTaskAggregateGraph: showTaskAggregateGraph,
       showTaskAggregateDummy: showTaskAggregateDummy,
       getTaskIncomingGraphConfig: getTaskIncomingGraphConfig,
+      getTaskOfferedGraphConfig: getTaskOfferedGraphConfig,
       getTaskTimeGraphConfig: getTaskTimeGraphConfig,
       getAverageCsatGraphConfig: getAverageCsatGraphConfig,
       getTaskAggregateGraphConfig: getTaskAggregateGraphConfig,

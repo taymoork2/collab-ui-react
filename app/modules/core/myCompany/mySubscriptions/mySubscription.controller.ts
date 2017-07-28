@@ -45,6 +45,8 @@ export class MySubscriptionCtrl {
   private readonly WEBEX_CLASS: string = 'icon-webex';
   private readonly CALL_CLASS: string = 'icon-calls';
   private readonly CARE_CLASS: string = 'icon-headset';
+  private readonly SPARK: string = 'spark';
+  private readonly WEBEX: string = 'webex';
 
   private readonly CARE: string = 'CARE';
   private readonly SUBSCRIPTION_TYPES = {
@@ -293,6 +295,7 @@ export class MySubscriptionCtrl {
             } else {
               this.proPackData = _.cloneDeep(offer);
             }
+            this.setOverage(offer);
           }
         });
 
@@ -370,13 +373,16 @@ export class MySubscriptionCtrl {
   private setBMMP(subscription: ISubscription, prodResponse: IProdInst): void {
     subscription.productInstanceId = prodResponse.productInstanceId;
     subscription.name = prodResponse.name;
-    const env: string = _.includes(prodResponse.name, 'Spark') ? 'spark' : 'webex';
-    // TODO Remove the changeplanOverride attribute in production once the
-    // e-commerce team is ready.
+    const env: string = _.includes(prodResponse.name, 'Spark') ? this.SPARK : this.WEBEX;
     this.getChangeSubURL(env).then((urlResponse) => {
       subscription.changeplanOverride = '';
-      if (this.Config.isProd() && urlResponse) {
-        subscription.changeplanOverride = urlResponse;
+      if (urlResponse) {
+        // TODO Once MC Online 3.1 goes live, only Spark subs should use changeplanOverride
+        // so the second expression of the "if" should be removed.
+        if (env === this.SPARK ||
+          (this.Config.isProd() && !_.startsWith(this.Authinfo.getPrimaryEmail(), 'collabctg'))) {
+          subscription.changeplanOverride = urlResponse;
+        }
       }
 
       if (subscription.internalSubscriptionId && subscription.productInstanceId) {

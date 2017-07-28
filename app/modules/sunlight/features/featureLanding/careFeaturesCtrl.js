@@ -8,6 +8,7 @@
   /* @ngInject */
   function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification) {
     var vm = this;
+    vm.isVirtualAssistantEnabled = $state.isVirtualAssistantEnabled;
     vm.init = init;
     var pageStates = {
       newFeature: 'NewFeature',

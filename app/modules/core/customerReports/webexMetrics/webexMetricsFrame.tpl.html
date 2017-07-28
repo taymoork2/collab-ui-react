@@ -27,26 +27,31 @@
       hidden
       target="webexMetricsIframeContainer">
 
+    <label for="appid"></label>
     <input id="appid"
            name="appid"
            type="hidden"
            value={{appId}} />
 
+    <label for="QlikTicket"></label>
     <input id="QlikTicket"
            name="QlikTicket"
            type="hidden"
            value={{QlikTicket}} />
 
+    <label for="persistent"></label>
     <input id="persistent"
            name="persistent"
            type="hidden"
            value={{persistent}} />
 
+    <label for="vID"></label>
     <input id="vID"
            name="vID"
            type="hidden"
            value={{vID}} />
 
+    <label for="node"></label>
     <input id="node"
            name="node"
            type="hidden"
@@ -54,6 +59,7 @@
 
     <button id="submitFormBtn"
             type="submit"
+            value="submit"
             hidden
             onclick="this.parentElement.submit();">
     </button>

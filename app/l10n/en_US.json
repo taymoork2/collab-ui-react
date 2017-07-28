@@ -330,6 +330,7 @@
     "paidCiscoSparkMeetings": "Cisco Spark 25 party Meetings",
     "paidAdvancedConferencing": "Advanced Meetings",
     "paidComm": "Call",
+    "paidCommHybrid": "Hybrid Call",
     "paidSparkCall": "Cisco Spark Call",
     "paidNone": "None",
     "paidCDC": "Chat and Callback",
@@ -797,9 +798,12 @@
   "careReportsPage": {
     "tasks": "Tasks",
     "handled": "Handled",
+    "accepted": "Accepted",
     "assigned": "In-Progress",
     "in-queue": "Waiting",
     "abandoned": "Abandoned",
+    "missed": "Ignored",
+    "percentage": "Percentage",
     "queueTime": "Wait Time",
     "avgQueueTime": "Avg Wait Time",
     "avgHandleTime": "Avg Handle Time",
@@ -958,6 +962,23 @@
     "drilldownErrorDescription": "This data is temporarily unavailable. Our servers are working to return it soon, please check back again shortly.",
     "drilldownEmptyDescription": "{{time}}, there have been no active users. To see user status and resend invitations to those still pending, visit the users tab.",
     "tasksHandled": "Handled",
+    "user": "User",
+    "drilldownSearchPlaceholder": "Search"
+  },
+  "taskOffered": {
+    "title": "Offered Tasks",
+    "description": "This report applies to tasks that have been offered via automated routing only. The graph depicts the percentage of accepted and ignored tasks against the total offered during a {{interval}}.",
+    "drilldownShow": "Show most active users",
+    "drilldownHide": "Hide most active users",
+    "drilldownTitle": "Most Active Users {{time}}",
+    "drilldownDescription": "{{time}}, these are the users who accepted most number of tasks offered to them. The table can be sorted by user’s name, or number of tasks offered, accepted and ignored.",
+    "drilldownErrorDescription": "This data is temporarily unavailable. Our servers are working to return it soon, please check back again shortly.",
+    "drilldownEmptyDescription": "{{time}}, there have been no active users. To see user status and resend invitations to those still pending, visit the users tab.",
+    "tasksOffered": "Offered",
+    "tasksHandled": "Handled",
+    "tasksAccepted": "Accepted",
+    "tasksMissed": "Ignored",
+    "percentHandled": "Handled",
     "user": "User",
     "drilldownSearchPlaceholder": "Search"
   },
@@ -3218,8 +3239,7 @@
     "dateError": {
       "StartDateMustBeforeEndDate": "Start date must be before end date",
       "StartDateCannotBeInTheFuture": "Start date cannot be in the future",
-      "InvalidDateRange": "Invalid date range. Date range must not be greater than 90 days in the past.",
-      "InvalidEndDate": "The end date cannot be changed from the current date."
+      "InvalidDateRange": "Invalid date range. Date range must not be greater than 90 days in the past."
     },
     "reportStates": {
       "COMPLETED": "Completed",
@@ -3414,7 +3434,7 @@
     "needHelp": "Need help - ",
     "needHelpExplain": "Search the knowledge base.",
     "newSubsOnly": "New services in your subscription",
-    "planReview": "Plan Review",
+    "planReview": "Subscription Review",
     "pendingLicensesError": "There was an error in the call for pending licenses",
     "subscriptionId": "Subscription IDs",
     "subscriptionID": "Subscription ID: ",
@@ -3425,6 +3445,7 @@
     "webex": "WebEx",
     "webexMsg": "Webex Conferencing",
     "webexStub": "Set up Webex",
+    "audioPackage": "Audio Package",
     "calling": "Calling",
     "callingMsg": "Cloud Calling",
     "message": "Message",
@@ -6537,6 +6558,8 @@
     "callbackTemplateCode": "Ca",
     "callbackMediaType": "Callback",
     "chatPlusCallbackMediaType": "Chat+Callback",
+    "virtualAssistantCode": "Va",
+    "virtualAssistantMediaType": "VirtualAssistant",
     "newFeatures": {
       "newFeatureButtonText": "New",
       "newCareTemplateModalTitle": "Create New Care Template",
@@ -6544,9 +6567,11 @@
       "selectCHDesc": "This template gives your customers the ability to contact your agents via chat.",
       "selectCADesc": "This template gives your customers the ability to request a callback from your agents.",
       "selectCHCADesc": "This template gives your customers the option to contact your agents via chat or request a callback.",
+      "selectVADesc": "Create a virtual assistant who provides automated chat support and escalates issues as needed.",
       "chatType": "Chat",
       "callbackType": "Callback",
-      "chatPlusCallbackType": "Chat+Callback"
+      "chatPlusCallbackType": "Chat+Callback",
+      "virtualAssistantType": "Customer Virtual Assistant"
     },
     "settings": {
       "setUpCare": "Care",
@@ -6744,7 +6769,9 @@
     "chatTemplate": "chat template",
     "chatTemplate_callback": "callback template",
     "namePlaceholder": "Name the Template",
+    "assistantNamePlaceholder": "Name the Assistant",
     "nameHint": "Enter a name for you to identify this template",
+    "assistantNameHint": "Enter the name your customers will see when interacting with the assistant",
     "createTitle_chat": "Create Chat Template",
     "editTitle_chat": "Edit Chat Template",
     "chatTemplate_chatPlusCallback": "chat+callback template",
@@ -6752,6 +6779,8 @@
     "editTitle_callback": "Edit Callback Template",
     "createTitle_chatPlusCallback": "Create Chat+Callback Template",
     "editTitle_chatPlusCallback": "Edit Chat+Callback Template",
+    "createTitle_virtualAssistant": "Create Customer Virtual Assistant",
+    "editTitle_virtualAssistant": "Edit Customer Virtual Assistant",
     "profile_chat": "Branding and Identity",
     "profile_callback": "Branding and Identity",
     "profile_chatPlusCallback": "Chat Branding and Identity",
@@ -6938,6 +6967,8 @@
     },
     "summary": "Summary",
     "summaryDesc": "You have configured the template. Click Finish to save the configuration and generate embed code so you can start using this template on your organization website.",
+    "summaryDesc_virtualAssistant": "You have configured your Customer Virtual Assistant. To use the assisted service feature in your organization's chat application, add your assistant to a Customer Support Template.",
+    "summaryDesc_virtualAssistant_cont": "Click Finish to save the configuration.",
     "editSummaryDesc": "You have edited the template. Click Finish to save the configuration so you can start using the new version of this template on your organization website.",
     "editCodeWarnMsg2Line1": "It can take up to 15 minutes for the template changes to be reflected.",
     "editCodeWarnMsg2Line2": "Open the template in a new browser tab after this time to view the changes.",
@@ -7211,6 +7242,8 @@
       },
       "hybrid": {
         "title": "Hybrid Services",
+        "googleCalendarError": "Could not reach the service for Google Calendar.",
+        "herculesError": "Could not reach the service for Cisco Spark Hybrid Services.",
         "notEnabledText": "Hybrid Services allows you to integrate your on-premises systems with the Cisco Collaboration Platform.",
         "notEnabledTextNew": "Hybrid Services allows you to integrate your on-premises systems with the Cisco Spark Control Platform.",
         "notEnabledActionText": "Learn More",
@@ -7376,7 +7409,14 @@
       "SB": "Cisco Spark Board",
       "CDC": "Chat and Callback",
       "CVC": "Chat, Callback and Inbound Call",
-      "MGMTPRO": "Pro Pack"
+      "MGMTPRO": "Pro Pack",
+      "WEBEX": "WebEx Audio",
+      "VoIPOnly": "VoIP Only",
+      "CCASP": "CCA-SP",
+      "TSP": "TSP",
+      "ST" : "WebEx Storage",
+      "STSPK": "Spark Storage",
+      "MSGR": "Messenger"
     }
   },
   "onlineUpgradeModal": {
@@ -8907,13 +8947,15 @@
     "searchPlaceholder": "Search Media",
     "uploading": "Uploading...",
     "uploadProcessing": "Processing...",
+    "deleted": "Deleted on",
     "processingError": "Error processing media file.  Please try again.",
-    "getMediaListError": "An error occurred obtaining the list of media.  Please try again.",
+    "getMediaListError": "An error occurred obtaining the list of media.  Please refresh to try again.",
     "uploadMediaError": "An error occurred uploading media.  Please try again.",
+    "restoreMediaError": "An error occurred restoring media.",
     "deleteMediaError": "An error occurred deleting media.",
     "cleanupMediaError": "An error occurred cleaning up a failed media upload.",
-    "unsupportedTypeError": "File type selected for upload is not supported.",
     "cancelUploadError": "An error occurred cancelling a media upload.",
+    "unsupportedTypeError": "File type selected for upload is not supported.",
     "displayName": {
       "required": "Media name is required",
       "tooShortError": "Media name must contain at least one characters.",
@@ -8936,7 +8978,7 @@
     },
     "deleteMediaNotAvailable": {
       "title": "Delete Unavailable",
-      "message": "Delete isn't available for this media because it is currently assigned. Please un-assign and try again",
+      "message": "Delete isn't available for this media because it is currently assigned. Please un-assign and try again.",
       "confirm": "Close"
     }
   },

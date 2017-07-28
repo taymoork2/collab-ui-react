@@ -10,6 +10,7 @@ describe('SettingsCtrl', function () {
     spyOn(this.Authinfo, 'isPartner').and.returnValue(false);
     spyOn(this.Authinfo, 'isCustomerAdmin').and.returnValue(false);
     spyOn(this.Authinfo, 'isDirectCustomer').and.returnValue(false);
+    spyOn(this.Authinfo, 'isEnterpriseCustomer').and.returnValue(false);
 
 
     spyOn(this.FeatureToggleService, 'atlasDataRetentionSettingsGetStatus').and.returnValue(this.$q.resolve(true));
@@ -53,6 +54,7 @@ describe('SettingsCtrl', function () {
 
   describe('for direct customer', function () {
     beforeEach(function () {
+      this.Authinfo.isEnterpriseCustomer.and.returnValue(true);
       this.Authinfo.isDirectCustomer.and.returnValue(true);
       initController.apply(this);
     });
@@ -76,6 +78,7 @@ describe('SettingsCtrl', function () {
     beforeEach(function () {
       this.Authinfo.isPartner.and.returnValue(false);
       this.Authinfo.isCustomerAdmin.and.returnValue(true);
+      this.Authinfo.isEnterpriseCustomer.and.returnValue(true);
     });
 
     describe('with allowCustomerLogos set to true', function () {

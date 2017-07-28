@@ -15,6 +15,7 @@
     vm.squaredFusionEcEntitled = Authinfo.isFusionEC();
     vm.localizedServiceName = $translate.instant('hercules.serviceNames.squared-fusion-uc');
     vm.localizedConnectorName = $translate.instant('hercules.connectorNames.squared-fusion-uc');
+
     if (vm.squaredFusionEcEntitled) {
       ServiceDescriptorService.isServiceEnabled('squared-fusion-ec')
         .then(function (response) {
@@ -27,7 +28,6 @@
           this.Notification.errorWithTrackingId(response, 'hercules.genericFailure');
         });
     }
-    vm.hasAtlasHybridCallDiagnosticTool = hasAtlasHybridCallDiagnosticTool;
     vm.hasVoicemailFeatureToggle = hasVoicemailFeatureToggle;
     vm.help = {
       title: 'common.help',
@@ -42,7 +42,7 @@
     vm.callServiceConnect = {
       title: 'hercules.serviceNames.squared-fusion-ec',
     };
-    vm.isTestOrg = false;
+    vm.showSIPTestTool = false;
     vm.nameChangeEnabled = false;
     vm.sipDestinationTestSucceeded = undefined;
 
@@ -52,7 +52,7 @@
 
     Orgservice.isTestOrg()
       .then(function (isTestOrg) {
-        vm.isTestOrg = isTestOrg;
+        vm.showSIPTestTool = isTestOrg || hasAtlasHybridCallDiagnosticTool;
       });
 
     Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CALL_SETTINGS);
@@ -87,12 +87,13 @@
 
       USSService.updateOrg(vm.org)
         .then(function () {
-          vm.savingSip = false;
           Notification.success('hercules.errors.sipDomainSaved');
         })
         .catch(function (error) {
-          vm.savingSip = false;
           Notification.errorWithTrackingId(error, 'hercules.errors.sipDomainInvalid');
+        })
+        .finally(function () {
+          vm.savingSip = false;
         });
     };
 
