@@ -330,6 +330,7 @@
     "paidCiscoSparkMeetings": "Cisco Spark 25 party Meetings",
     "paidAdvancedConferencing": "Advanced Meetings",
     "paidComm": "Call",
+    "paidCommHybrid": "Hybrid Call",
     "paidSparkCall": "Cisco Spark Call",
     "paidNone": "None",
     "paidCDC": "Chat and Callback",
