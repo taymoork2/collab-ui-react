@@ -7,6 +7,7 @@ describe('Service: MediaOnHoldService', () => {
     this.injectDependencies(
       '$httpBackend',
       'Authinfo',
+      '$translate',
       'HuronConfig',
       'MediaOnHoldService',
     );
@@ -30,9 +31,10 @@ describe('Service: MediaOnHoldService', () => {
       this.$httpBackend.expectGET(this.HuronConfig.getMmsUrl() + '/organizations/12345/mohPrompts')
         .respond(this.mediaOnHoldResponse);
       this.GENERIC_MEDIA = <IOption> {
-        label: 'Generic Media',
-        value: '1',
+        label: 'System Default',
+        value: '98765432-DBC2-01BB-476B-CFAF98765432',
       };
+      spyOn(this.$translate, 'instant').and.returnValue('System Default');
     });
 
     it('getMediaOnHold gets a response', function() {
@@ -61,23 +63,27 @@ describe('Service: MediaOnHoldService', () => {
 
   describe('Line Media on Hold', function() {
     beforeEach(function() {
-      this.lineMediaOnHoldResponse = getJSONFixture('huron/json/moh/lineMohPrompts.json');
-      this.$httpBackend.expectGET(this.HuronConfig.getMmsUrl() + '/organizations/12345/mohPrompts/lines/' + this.LINE_NUM_UUID)
+      this.lineMediaOnHoldResponse = getJSONFixture('huron/json/moh/mohPrompts.json');
+      this.$httpBackend.expectGET(this.HuronConfig.getMmsUrl() + '/organizations/12345/mohPrompts')
         .respond(this.lineMediaOnHoldResponse);
-    });
-
-    it('getLineMediaOnHold gets a response', function() {
-      this.MediaOnHoldService.getLineMediaOnHold(this.LINE_NUM_UUID)
-        .then(response => {
-          expect(response[0].rhesosId).toEqual(this.MEDIA_FILE_ID_1);
-          expect(response[1].displayName).toEqual(this.MEDIA_FILE_NAME_2);
-        });
+      this.LINE_GENERIC_MEDIA = <IOption> {
+        label: 'Company MOH (filename1)',
+        value: '98765432-DBC2-01BB-476B-CFAF98765432',
+      };
     });
 
     it('getLineMedia should return assigned Line Media', function() {
       this.MediaOnHoldService.getLineMedia(this.LINE_NUM_UUID)
         .then(response => {
           expect(response).toEqual(this.MEDIA_FILE_ID_3);
+        });
+    });
+
+    it('getLineMohOptions should return Line level Media on Hold Options', function() {
+      this.MediaOnHoldService.getLineMohOptions()
+        .then(response => {
+          expect(response.length).toBe(4);
+          expect(response).toContain(this.LINE_GENERIC_MEDIA);
         });
     });
   });
@@ -102,6 +108,30 @@ describe('Service: MediaOnHoldService', () => {
       this.MediaOnHoldService.updateMediaOnHold(this.MEDIA_FILE_ID_2, this.LINE_NUM_UUID)
         .then(response => {
           expect(response.promptId).toEqual(this.PROMPT_ID);
+        });
+    });
+  });
+
+  describe('Unassigning Media on Hold File', function() {
+    beforeEach(function() {
+      this.$httpBackend.expectPOST(this.HuronConfig.getMmsUrl() + '/organizations/12345/mohPrompts')
+        .respond(200, {
+          promptId: '06691d80-01e7-4e05-b869-8fa680822c51',
+        });
+      this.PROMPT_ID = '06691d80-01e7-4e05-b869-8fa680822c51';
+    });
+
+    it('should perform Company level unassignment', function() {
+      this.MediaOnHoldService.unassignMediaOnHold()
+        .then(response => {
+          expect(response.promptId).toBe(this.PROMPT_ID);
+        });
+    });
+
+    it('should perform Line level unassignment', function() {
+      this.MediaOnHoldService.updateMediaOnHold('Line', this.LINE_NUM_UUID)
+        .then(response => {
+          expect(response.promptId).toBe(this.PROMPT_ID);
         });
     });
   });

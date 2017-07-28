@@ -1,10 +1,10 @@
-import { Customer, CustomerVoice } from 'modules/huron/customer';
+import { IRCustomer, Customer, IRCustomerVoice, CustomerVoice } from 'modules/huron/customer';
 
-interface ICustomerResource extends ng.resource.IResourceClass<ng.resource.IResource<Customer>> {
+interface ICustomerResource extends ng.resource.IResourceClass<ng.resource.IResource<IRCustomer>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
 }
 
-interface ICustomerVoiceResource extends ng.resource.IResourceClass<ng.resource.IResource<CustomerVoice>> {
+interface ICustomerVoiceResource extends ng.resource.IResourceClass<ng.resource.IResource<IRCustomerVoice>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
 }
 
@@ -37,7 +37,7 @@ export class HuronCustomerService {
   public getCustomer(): ng.IPromise<Customer> {
     return this.customerResource.get({
       customerId: this.Authinfo.getOrgId(),
-    }).$promise;
+    }).$promise.then(response => new Customer(response));
   }
 
   public updateCustomer(customer: Customer): ng.IPromise<void> {
@@ -52,7 +52,7 @@ export class HuronCustomerService {
   public getVoiceCustomer(): ng.IPromise<CustomerVoice> {
     return this.customerVoiceResource.get({
       customerId: this.Authinfo.getOrgId(),
-    }).$promise;
+    }).$promise.then((response) => new CustomerVoice(response));
   }
 
   public updateVoiceCustomer(customer: CustomerVoice): ng.IPromise<void> {

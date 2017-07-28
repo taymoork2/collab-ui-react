@@ -1,7 +1,7 @@
 <div class="fusion-cluster-settings">
   <email-notifications-section service-id="'squared-fusion-uc'"></email-notifications-section>
 
-  <setting-section setting="callServiceSettings.callServiceAware" class="needs-border-top">
+  <setting-section class="needs-border-top" setting="callServiceSettings.callServiceAware" class="needs-border-top">
     <div class="sub-section">
       <p class="sub-section__label" translate="hercules.serviceNames.squared-fusion-uc.full"></p>
       <p><span translate="hercules.settings.call.aware"></span><br></p>
@@ -36,32 +36,51 @@
           </i>
         </p>
         <div class="row">
-          <div class="columns medium-12">
-            <form name="inputSipDestinationForm" ng-submit="callServiceSettings.updateSipDomain()" class="hercules-sip-destination-table">
-              <input ng-disabled="callServiceSettings.savingSip"
-                     placeholder="{{'hercules.settings.call.sipDomainPlaceholder' | translate}} "
-                     class="form-control" id="sipDomain"
-                     type="text"
-                     ng-model="callServiceSettings.org.sipDomain"
-                     required/>
-              <button type="button"
-                      ng-hide="callServiceSettings.hasAtlasHybridCallDiagnosticTool || callServiceSettings.isTestOrg"
-                      class="btn btn--primary"
-                      id="updateSipDomain"
-                      ng-click="callServiceSettings.updateSipDomain()"
-                      ng-disabled="inputSipDestinationForm.$invalid || callServiceSettings.savingSip">
-                <span translate="common.save"></span>
-              </button>
-              <verify-sip-destination ng-if="callServiceSettings.hasAtlasHybridCallDiagnosticTool || callServiceSettings.isTestOrg"
-                                      destination-url="callServiceSettings.org.sipDomain"
-                                      on-destination-save="callServiceSettings.onDestinationSave(warn)"
-                                      on-destination-clear="callServiceSettings.onDestinationClear()"></verify-sip-destination>
-              <span class=right ng-show="callServiceSettings.savingSip">
-                <i class="icon icon-spinner"/>
+          <form ng-if="!callServiceSettings.showSIPTestTool" name="inputSipDestinationForm" ng-submit="callServiceSettings.updateSipDomain()" class="hercules-sip-destination-table">
+            <input cs-input
+                   cs-input-group-size="medium-7"
+                   ng-disabled="callServiceSettings.savingSip"
+                   placeholder="{{'hercules.settings.call.sipDomainPlaceholder' | translate}} "
+                   ng-class="{ 'hercules-input-error': callServiceSettings.warnSipDestination() }"
+                   id="sipDomain"
+                   type="text"
+                   ng-model="callServiceSettings.org.sipDomain"
+                   required>
+            <button cs-btn
+                    loading="callServiceSettings.savingSip"
+                    type="button"
+                    class="btn btn--primary"
+                    id="updateSipDomain"
+                    ng-click="callServiceSettings.updateSipDomain()"
+                    ng-disabled="inputSipDestinationForm.$invalid || callServiceSettings.savingSip">
+              <span translate="common.save"></span>
+            </button>
+          </form>
+          <form ng-if="callServiceSettings.showSIPTestTool" name="inputSipDestinationForm" class="hercules-sip-destination-table">
+            <input cs-input
+                   cs-input-group-size="medium-7"
+                   ng-disabled="callServiceSettings.savingSip"
+                   placeholder="{{'hercules.settings.call.sipDomainPlaceholder' | translate}} "
+                   ng-class="{ 'hercules-input-error': callServiceSettings.warnSipDestination() }"
+                   id="sipDomain"
+                   type="text"
+                   ng-model="callServiceSettings.org.sipDomain"
+                   required>
+            <verify-sip-destination destination-url="callServiceSettings.org.sipDomain"
+                                    on-destination-save="callServiceSettings.onDestinationSave(warn)"
+                                    on-test-started="callServiceSettings.onTestStarted()"
+                                    on-result-ready="callServiceSettings.onResultReady(succeeded, resultSet)"></verify-sip-destination>
+              <div ng-show="callServiceSettings.sipDestinationTestSucceeded !== undefined" class="sip-destination-test-summary">
+                <i ng-if="callServiceSettings.sipDestinationTestSucceeded" class="icon icon-checkbox"></i>
+                <span ng-if="callServiceSettings.sipDestinationTestSucceeded" translate="hercules.settings.verifySipDestination.testSucceeded"></span>
+                <i ng-if="!callServiceSettings.sipDestinationTestSucceeded" class="icon icon-error"></i>
+                <span ng-if="!callServiceSettings.sipDestinationTestSucceeded" translate="hercules.settings.verifySipDestination.testFailed"></span>
+                <span><a ng-click="callServiceSettings.openSipTestResults()" translate="hercules.settings.verifySipDestination.viewTestResults"></a></span>
+              </div>
+              <span class="right" ng-if="callServiceSettings.savingSip">
+                <i class="icon icon-spinner"></i>
               </span>
-            </form>
-            <p><em><span translate="hercules.settings.call.sipDomainExample"></span></em></p>
-          </div>
+          </form>
         </div>
       </div>
     </div>
@@ -139,9 +158,19 @@
       </button>
     </div>
   </setting-section>
-  <hybrid-voicemail-settings is-call-service-connect-enabled="callServiceSettings.squaredFusionEc"
-                             ng-if="callServiceSettings.hasVoicemailFeatureToggle">
+
+  <hybrid-voicemail-settings
+    is-call-service-connect-enabled="callServiceSettings.squaredFusionEc"
+    ng-if="callServiceSettings.hasVoicemailFeatureToggle">
   </hybrid-voicemail-settings>
-  <deactivate-section service-id="'squared-fusion-uc'"></deactivate-section>
-  <documentation-section service-id="'squared-fusion-uc'"></documentation-section>
+
+  <deactivate-section
+    class="needs-border-top"
+    service-id="'squared-fusion-uc'">
+  </deactivate-section>
+
+  <documentation-section
+    class="needs-border-top"
+    service-id="'squared-fusion-uc'">
+  </documentation-section>
 </div>

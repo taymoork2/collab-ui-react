@@ -1,7 +1,7 @@
 import serviceModule from './hybrid-services-cluster.service';
 
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
-import { IExtendedClusterFusion } from 'modules/hercules/hybrid-services.types';
+import { ConnectorType, IConnector, IExtendedClusterFusion } from 'modules/hercules/hybrid-services.types';
 
 describe('Service: HybridServicesClusterService', function () {
   let $httpBackend: ng.IHttpBackendService, $q: ng.IQService, HybridServicesClusterService: HybridServicesClusterService, USSService;
@@ -422,6 +422,144 @@ describe('Service: HybridServicesClusterService', function () {
           expect(response.groups[3].name).toBe('🐷');
         });
     });
+  });
+
+  describe('serviceHasHighAvailability()', () => {
+
+    function createExpresswayCluster(connectorType: ConnectorType): IExtendedClusterFusion {
+      return {
+        connectors: [],
+        id: '',
+        name: '',
+        provisioning: [
+          {
+            connectorType: connectorType,
+            availablePackageIsUrgent: false,
+            availableVersion: '',
+            packageUrl: '',
+            provisionedVersion: '',
+            url: '',
+          },
+        ],
+        releaseChannel: '',
+        targetType: 'c_mgmt',
+        upgradeScheduleUrl: '',
+        upgradeSchedule: {
+          urgentScheduleTime: '15:00',
+          scheduleDays: ['sunday'],
+          scheduleTime: '15:00',
+          scheduleTimeZone: 'Pacific/Tahiti',
+          moratoria: [],
+          nextUpgradeWindow: {
+            startTime: '2016-08-08T01:00:02.507Z',
+            endTime: '2016-08-08T02:00:02.507Z',
+          },
+          url: '',
+        },
+        servicesStatuses: [],
+        url: '',
+      };
+    }
+
+    function createConnector(connectorType: ConnectorType): IConnector {
+      return {
+        connectorType: connectorType,
+        alarms: [],
+        clusterId: '',
+        clusterUrl: '',
+        createdAt: '',
+        hostSerial: '',
+        hostUrl: '',
+        hostname: '',
+        id: '',
+        maintenanceMode: 'off',
+        runningVersion: '',
+        state: 'running',
+        upgradeState: 'upgraded',
+        url: '',
+      };
+    }
+
+    it('should return false if there are no clusters in the org', () => {
+      const clusters = [];
+      $httpBackend.expectGET('http://elg.no/organizations/0FF1C3?fields=@wide').respond({
+        clusters: clusters,
+      });
+      HybridServicesClusterService.serviceHasHighAvailability('c_ucmc')
+        .then((hasHA) => {
+          expect(hasHA).toBe(false);
+        });
+      $httpBackend.flush();
+    });
+
+    it('should return false if there are expressways with other connector types, but none with this connector type', () => {
+      const clusters = [createExpresswayCluster('c_cal'), createExpresswayCluster('c_cal')];
+      clusters[0].connectors = [createConnector('c_cal'), createConnector('c_cal')];
+      clusters[1].connectors = [createConnector('c_cal'), createConnector('c_cal')];
+      $httpBackend.expectGET('http://elg.no/organizations/0FF1C3?fields=@wide').respond({
+        clusters: clusters,
+      });
+      HybridServicesClusterService.serviceHasHighAvailability('c_ucmc')
+        .then((hasHA) => {
+          expect(hasHA).toBe(false);
+        });
+      $httpBackend.flush();
+    });
+
+    it('should return false if there are clusters provisioned with the connector, but the connectors aren\'t actually installed', () => {
+      const clusters = [createExpresswayCluster('c_ucmc'), createExpresswayCluster('c_ucmc')];
+      $httpBackend.expectGET('http://elg.no/organizations/0FF1C3?fields=@wide').respond({
+        clusters: clusters,
+      });
+      HybridServicesClusterService.serviceHasHighAvailability('c_ucmc')
+        .then((hasHA) => {
+          expect(hasHA).toBe(false);
+        });
+      $httpBackend.flush();
+    });
+
+    it('should return true if there are two clusters having two connectors of the correct type', () => {
+      const clusters = [createExpresswayCluster('c_ucmc'), createExpresswayCluster('c_ucmc')];
+      clusters[0].connectors = [createConnector('c_ucmc'), createConnector('c_ucmc')];
+      clusters[1].connectors = [createConnector('c_ucmc'), createConnector('c_ucmc')];
+      $httpBackend.expectGET('http://elg.no/organizations/0FF1C3?fields=@wide').respond({
+        clusters: clusters,
+      });
+      HybridServicesClusterService.serviceHasHighAvailability('c_ucmc')
+        .then((hasHA) => {
+          expect(hasHA).toBe(true);
+        });
+      $httpBackend.flush();
+    });
+
+    it('should return false if there is one cluster having two connectors of the correct type, and one custers having only one connector', () => {
+      const clusters = [createExpresswayCluster('c_ucmc'), createExpresswayCluster('c_ucmc')];
+      clusters[0].connectors = [createConnector('c_ucmc'), createConnector('c_ucmc')];
+      clusters[1].connectors = [createConnector('c_ucmc')];
+      $httpBackend.expectGET('http://elg.no/organizations/0FF1C3?fields=@wide').respond({
+        clusters: clusters,
+      });
+      HybridServicesClusterService.serviceHasHighAvailability('c_ucmc')
+        .then((hasHA) => {
+          expect(hasHA).toBe(false);
+        });
+      $httpBackend.flush();
+    });
+
+    it('should not take the cluster\'s other connector types into account', () => {
+      const clusters = [createExpresswayCluster('c_ucmc'), createExpresswayCluster('c_ucmc')];
+      clusters[0].connectors = [createConnector('c_ucmc'), createConnector('c_ucmc')];
+      clusters[1].connectors = [createConnector('c_ucmc'), createConnector('c_cal')];
+      $httpBackend.expectGET('http://elg.no/organizations/0FF1C3?fields=@wide').respond({
+        clusters: clusters,
+      });
+      HybridServicesClusterService.serviceHasHighAvailability('c_ucmc')
+        .then((hasHA) => {
+          expect(hasHA).toBe(false);
+        });
+      $httpBackend.flush();
+    });
+
   });
 
 });

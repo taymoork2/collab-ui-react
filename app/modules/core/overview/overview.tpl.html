@@ -19,7 +19,7 @@
             </div>
           </section>
           <section class="monitoring-panel small-3 medium-12 column" ng-if="overview.notifications.length > 0">
-            <div class="notification-style" ng-if="overview.showLearnMoreNotification">
+            <div class="notification-style" ng-if="overview.showLearnMoreNotification && overview.isEnterpriseCustomer()">
               <span class="notification-spacing">
                 <span class="badge primary" translate="common.upgrade"></span>
                 <span class="text" translate="homePage.proPackNotification"></span>

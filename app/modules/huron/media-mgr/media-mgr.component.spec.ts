@@ -11,14 +11,13 @@ describe('Component: mediaMgrModal', () => {
   const NAV_TRASH = 'button.icon.icon-trash.icon-lg';
   const NAV_ACTIVE = 'active-icon';
   const MEDIA_CONTENT = '.mb-panel-left .mb-panel-body .row.collapse';
-  const MEDIA_ITEM = '.mb-row-content';
-  const MEDIA_SELECTED = '.mb-panel-right .mb-rows-narrow';
-  const TRASH_TITLE = '.mb-title-centered';
-  const TRASH_DESC = '.mb-desc.text-center';
-  const TRASH_CONTENT = '.mb-panel .row.collapse';
+  const MEDIA_ITEM = '.mb-rows';
+  const MEDIA_SELECTED = '.mb-panel-right';
+  const TRASH_TITLE = '.mb-panel .mb-title.text-center';
+  const TRASH_CONTENT = '.mb-panel .mb-panel-body .row.collapse';
   const TRASH_BUTTON = '.icon.icon-trash.icon-lg';
   const RESTORE_BUTTON = '.icon.icon-back.icon-lg';
-  const EMPTY_TRASH = 'button.btn.mb-br-button';
+  const EMPTY_TRASH = '.mb-panel button.btn';
   const SEARCH_FILTER = 'cs-searchfilter';
   const FILE_UPLOAD = 'i.icon.icon-plus.icon-2x';
   const DROPDOWN_OPTIONS = '.dropdown-menu li a';
@@ -51,9 +50,9 @@ describe('Component: mediaMgrModal', () => {
     spyOn(this.MediaMgrService, 'getMedia').and.returnValue(this.$q.resolve(mediaList));
     spyOn(this.MediaMgrService, 'uploadMedia').and.returnValue(this.$q.resolve());
     spyOn(this.MediaMgrService, 'deleteMedia').and.returnValue(this.$q.resolve());
-    spyOn(this.MediaMgrService, 'removeMedia').and.returnValue(this.$q.resolve());
+    spyOn(this.MediaMgrService, 'deletePermMedia').and.returnValue(this.$q.resolve());
     spyOn(this.MediaMgrService, 'restoreMedia').and.returnValue(this.$q.resolve());
-    spyOn(this.MediaMgrService, 'deleteAll').and.returnValue(this.$q.resolve());
+    spyOn(this.MediaMgrService, 'deletePermAll').and.returnValue(this.$q.resolve());
 
     this.compileComponent('mediaMgr', {
       close: 'close()',
@@ -133,42 +132,36 @@ describe('Component: mediaMgrModal', () => {
       const navButton = this.view.find(MODAL_NAV).find(NAV_TRASH);
       navButton.click();
     });
-    it('should have title and desc', function() {
+    it('should have title', function() {
       expect(this.view.find(TRASH_TITLE)).toExist();
-      expect(this.view.find(TRASH_DESC)).toExist();
     });
     it('when media is selected and deleted', function() {
-      spyOn(this.controller, 'removeMedia').and.callThrough();
+      spyOn(this.controller, 'deletePermMedia').and.callThrough();
       const trash = this.view.find(TRASH_CONTENT);
       trash.eq(0).find(TRASH_BUTTON).click();
-      expect(this.controller.removeMedia).toHaveBeenCalled();
-      expect(this.MediaMgrService.removeMedia).toHaveBeenCalled();
+      expect(this.controller.deletePermMedia).toHaveBeenCalled();
+      //expect(this.MediaMgrService.deletePermMedia).toHaveBeenCalled();
       expect(this.MediaMgrService.getMedia).toHaveBeenCalled();
     });
-    it('when media is selected and deleted', function() {
-      spyOn(this.controller, 'removeMedia').and.callThrough();
+    it('when media is selected and restored', function() {
       spyOn(this.controller, 'restoreMedia').and.callThrough();
       const trash = this.view.find(TRASH_CONTENT);
-      trash.eq(0).find(TRASH_BUTTON).click();
-      expect(this.controller.removeMedia).toHaveBeenCalled();
-      expect(this.MediaMgrService.removeMedia).toHaveBeenCalled();
-      expect(this.MediaMgrService.getMedia).toHaveBeenCalled();
-      trash.eq(1).find(RESTORE_BUTTON).click();
+      trash.eq(0).find(RESTORE_BUTTON).click();
       expect(this.controller.restoreMedia).toHaveBeenCalled();
       expect(this.MediaMgrService.restoreMedia).toHaveBeenCalled();
       expect(this.MediaMgrService.getMedia).toHaveBeenCalled();
     });
     it('when trash is emptied', function() {
-      spyOn(this.controller, 'deleteAll').and.callThrough();
-      const navButton = this.view.find(EMPTY_TRASH);
-      expect(navButton).not.toBeDisabled();
-      navButton.click();
-      expect(this.controller.deleteAll).toHaveBeenCalled();
-      expect(this.MediaMgrService.deleteAll).toHaveBeenCalled();
+      spyOn(this.controller, 'deletePermAll').and.callThrough();
+      const trashButton = this.view.find(EMPTY_TRASH);
+      expect(trashButton).not.toBeDisabled();
+      trashButton.click();
+      expect(this.controller.deletePermAll).toHaveBeenCalled();
+      //expect(this.MediaMgrService.deletePermAll).toHaveBeenCalled();
       expect(this.MediaMgrService.getMedia).toHaveBeenCalled();
       this.controller.mediaList = [];
       this.$scope.$apply();
-      expect(navButton).toBeDisabled();
+      expect(trashButton).toBeDisabled();
     });
   });
 });

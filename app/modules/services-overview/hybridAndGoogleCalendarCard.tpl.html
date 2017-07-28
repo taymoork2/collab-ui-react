@@ -41,7 +41,10 @@
         </div>
       </div>
       <div class="semi-card-footer">
-        <div ng-if="!card.googleActive">
+        <div ng-if="!card.googleActive && card.googleServerError">
+          <button class="btn disabled">{{::card.setupGoogleCalendarButton.name | translate}}</button>
+        </div>
+        <div ng-if="!card.googleActive && !card.googleServerError">
           <button ng-click="card.setupGoogleCalendarButton.onClick()" ng-class="card.setupGoogleCalendarButton.buttonClass">{{::card.setupGoogleCalendarButton.name | translate}}</button>
         </div>
         <a ng-if="card.showGoogleStatus()" class="status ellipsis" ui-sref="{{card.googleStatus.routerState}}">

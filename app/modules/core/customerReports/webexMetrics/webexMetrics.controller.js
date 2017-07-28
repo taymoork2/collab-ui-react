@@ -29,6 +29,10 @@
     vm.isNoData = false;
     vm.selectEnable = true;
     vm.reportType = 'WebEx';
+    vm.env = {
+      int: 'integration',
+      prod: 'prod',
+    };
 
     vm.webexMetrics.views = [
       {
@@ -136,7 +140,7 @@
       }
       vm.webexSelected = webexSelected;
 
-      ProPackService.getProPackPurchased().then(function (isPurchased) {
+      ProPackService.hasProPackPurchased().then(function (isPurchased) {
         if (isPurchased) {
           vm.reportView = vm.webexMetrics.views[1];
         }
@@ -154,7 +158,6 @@
             var trainSiteNames = _.get(data, 'trainSiteNames', []);
             var linkedTrainSiteNames = _.get(data, 'linkedTrainSiteNames', []);
             trainSites = trainSiteNames.concat(linkedTrainSiteNames);
-
             generateWebexMetricsUrl(trainSites);
           }
         }
@@ -164,6 +167,7 @@
     function updateWebexMetrics() {
       var storageMetricsSiteUrl = LocalStorage.get('webexMetricsSiteUrl');
       var webexSelected = vm.webexSelected;
+      vm.isIframeLoaded = false;
 
       if (webexSelected !== storageMetricsSiteUrl) {
         LocalStorage.put('webexMetricsSiteUrl', webexSelected);

@@ -600,6 +600,9 @@
 
         // Communications license or ciscouc entitlement
         if (_.startsWith(entitlementOrLicense.id, 'CO_') || entitlementOrLicense.entitlementName === 'ciscoUC') {
+          if (user.location) {
+            entitlementOrLicense.properties.location = user.location;
+          }
           if (user.internalExtension) {
             entitlementOrLicense.properties.internalExtension = user.internalExtension;
           }

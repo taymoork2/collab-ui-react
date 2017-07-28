@@ -1,6 +1,7 @@
 @import '~collab-ui/scss/settings/colors';
 
 verify-sip-destination {
+  margin-left: 10px;
   display: block;
 }
 
@@ -27,3 +28,6 @@ verify-sip-destination {
   }
 }
 
+.sip-destination-test-summary {
+  clear: both;
+}

@@ -37,7 +37,8 @@
 
     $scope.isIframeLoaded = false;
     $scope.siteSettingId = $stateParams.webexPageId;
-    $scope.siteSettingLabel = 'webexSiteSettingsLabels.settingPageLabel_' + $stateParams.webexPageId;
+    $scope.titleName = 'webexSiteSettingsLabels.settingPageLabel_' + $stateParams.webexPageId;
+    $scope.siteSettingLabel = $translate.instant($scope.titleName);
     $scope.siteSettingsBreadcrumbUiSref = 'site-list.site-settings({siteUrl:' + '"' + siteUrl + '"' + '})';
     $scope.siteSettingsBreadcrumbLabel = $translate.instant(
       'webexSiteSettingsLabels.siteSettingsIndexPageTitleFull', {
@@ -66,17 +67,18 @@
     $scope.locale = ('es_CO' == translateUse) ? 'es_MX' : translateUse;
 
     _this.logMsg = _this.funcName + '\n' +
-      'scope.siteSettingLabel=' + $scope.siteSettingLabel + '\n' +
       'scope.trustIframeUrl=' + $scope.trustIframeUrl + '\n' +
       'scope.adminEmail=' + $scope.adminEmail + '\n' +
       'scope.authToken=' + $scope.authToken + '\n' +
       'scope.locale=' + $scope.locale + '\n' +
       'scope.siteSettingsBreadcrumbUiSref=' + $scope.siteSettingsBreadcrumbUiSref + '\n' +
+      'scope.titleName=' + $scope.titleName + '\n' +
+      'scope.siteSettingLabel=' + $scope.siteSettingLabel + '\n' +
       'scope.siteSettingsBreadcrumbLabel=' + $scope.siteSettingsBreadcrumbLabel;
     Log.debug(_this.logMsg);
 
     $rootScope.lastSite = siteUrl;
-    $log.log('last site ' + $rootScope.lastSite);
+    Log.debug('last site ' + $rootScope.lastSite);
 
     var parser = $window.document.createElement('a');
     parser.href = iframeUrl;

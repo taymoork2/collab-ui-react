@@ -1,39 +1,16 @@
-import { L2SipService, ISipDestinationSteps, VerificationStep, Severity } from 'modules/hercules/services/l2sip-service';
-
-type CurrentStep = 'loading' | 'error' | 'result';
+import { VerificationStep } from 'modules/hercules/services/l2sip-service';
 
 class VerifySipDestinationModalController {
 
-  public result: VerificationStep[];
-  public error;
-
-  public currentStep: CurrentStep = 'loading';
+  public sanitizedResultSet: VerificationStep[];
 
   /* @ngInject */
   constructor(
-    private L2SipService: L2SipService,
-    public destinationUrl: string,
+    public resultSet: VerificationStep[],
   ) {
-    this.verifySipDestination();
-  }
-
-  public verifySipDestination(): void {
-    this.L2SipService.verifySipDestination(this.destinationUrl, true)
-      .then((result: ISipDestinationSteps) => {
-        this.result =  result.steps;
-        this.currentStep = 'result';
-      })
-      .catch((error) => {
-        this.error = error;
-        this.currentStep = 'error';
-      });
-  }
-
-  public getNumberOfSteps(level: Severity): number {
-    return _.chain(this.result)
-      .filter((step: VerificationStep) => step.severity === level)
-      .size()
-      .value();
+    this.sanitizedResultSet = _.filter(resultSet, (result) => {
+      return result.type !== 'ServerTestBegin' && result.type !== 'ServerTestEnd';
+    });
   }
 
 }

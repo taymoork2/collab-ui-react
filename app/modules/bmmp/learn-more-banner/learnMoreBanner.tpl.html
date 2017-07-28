@@ -1,4 +1,4 @@
-<div class="overview-bmmp-banner" ng-if="$ctrl.show() && $ctrl.isOverview()" ng-class="{ 'readonly': $ctrl.isReadOnly }">
+<div class="overview-bmmp-banner" ng-if="$ctrl.show() && $ctrl.isOverview() && $ctrl.isEnterpriseCustomer()" ng-class="{ 'readonly': $ctrl.isReadOnly }">
   <div class="cisco-bmmp-marketing-closeable-widget"
     data-application-page="overview"
     data-widget-location="top-bar"
@@ -6,7 +6,7 @@
     data-styled="true">
   </div>
 </div>
-<div class="reports-bmmp-banner" ng-if="$ctrl.show() && $ctrl.isReports()">
+<div class="reports-bmmp-banner" ng-if="$ctrl.show() && $ctrl.isReports() && $ctrl.isEnterpriseCustomer()">
   <div class="cisco-bmmp-marketing-closeable-widget"
     data-application-page="reports"
     data-close-handler="closeWidget();"

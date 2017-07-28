@@ -8,7 +8,7 @@
     .name;
 
   /* @ngInject */
-  function QlikService($http, $injector, $q, Config, UrlConfig) {
+  function QlikService($http, $log, $injector, $q, Config, UrlConfig) {
     var service = {
       getWebExReportQBSforBaseUrl: getWebExReportQBSforBaseUrl,
       getWebExReportQBSforPremiumUrl: getWebExReportQBSforPremiumUrl,
@@ -31,33 +31,30 @@
       return $q.reject(error);
     }
 
-    function specifyReportQBS(isError, result, reportType, viewType, data) {
-      if (Config.getEnv() === 'prod') {
-        if (!isError) {
-          var resultData = _.get(result, 'data');
-          var siteId = _.get(resultData, 'siteId');
-          if (!siteId) {
-            return callReportQBSBTS(reportType, viewType, data);
-          } else {
-            return resultData;
-          }
-        } else {
-          return callReportQBSBTS(reportType, viewType, data);
-        }
-      } else if (isError) {
+    function specifyReportQBS(isError, result, reportType, viewType, data, specifyEnv) {
+      var resultData = _.get(result, 'data', '');
+      var siteId = _.get(resultData, 'siteId', '');
+
+      if (Config.getEnv() === 'prod' && (_.get(specifyEnv, 'env', '') !== 'integration') && (isError || siteId === '')) {
+        $log.log('turns to call QBS BTS');
+        return callReportQBSBTS(reportType, viewType, data);
+      }
+
+      if (isError) {
         return catchError(result);
       } else {
-        return result.data;
+        return extractData(result);
       }
     }
 
     function callReportQBSBTS(reportType, viewType, data) {
       var QlikService = $injector.get('QlikService');
-      var getQBSBTSData = _.get(QlikService, 'get' + reportType + 'ReportQBSfor' + viewType + 'Url');
+      var getQBSBTSData = _.get(QlikService, 'getReportQBSUrl');
+
       if (!_.isFunction(getQBSBTSData)) {
         return;
       }
-      return getQBSBTSData(data, 'integration');
+      return getQBSBTSData(reportType, viewType, data, 'integration');
     }
 
     function getReportQBSUrl(reportType, viewType, data, env) {
@@ -71,9 +68,9 @@
       }
       var url = getReportData(specifyEnv);
       return $http.post(url, data).then(function (response) {
-        return specifyReportQBS(false, response, reportType, viewType, data);
+        return specifyReportQBS(false, response, reportType, viewType, data, specifyEnv);
       }).catch(function (error) {
-        return specifyReportQBS(true, error, reportType, viewType, data);
+        return specifyReportQBS(true, error, reportType, viewType, data, specifyEnv);
       });
     }
 

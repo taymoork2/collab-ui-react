@@ -280,7 +280,11 @@ describe('AddLinesCtrl: Ctrl', function () {
         spyOn(CsdmDataModelService, 'updateCloudberryPlace').and.returnValue($q.resolve());
         controller.save();
         $scope.$apply();
-        expect(CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalledWith(place, entitlements, directoryNumber, externalNumber);
+        expect(CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalledWith(place, {
+          entitlements: entitlements,
+          directoryNumber: directoryNumber,
+          externalNumber: externalNumber,
+        });
         expect(Notification.success).toHaveBeenCalled();
         expect($scope.$dismiss).toHaveBeenCalled();
       });

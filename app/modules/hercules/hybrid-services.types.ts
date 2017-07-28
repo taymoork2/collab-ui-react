@@ -199,7 +199,7 @@ export interface IAlarmReplacementValues {
 export interface IServiceAlarm {
   url: string;
   serviceId: HybridServiceId;
-  sourceId: 'uss' | 'ccc' | 'das';
+  sourceId: 'uss' | 'ccc' | 'das' | 'hcm';
   sourceType: 'connector' | 'cloud';
   alarmId: string;
   severity: ServiceAlarmSeverity;

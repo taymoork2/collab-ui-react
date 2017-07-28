@@ -1,6 +1,19 @@
 import { Notification } from 'modules/core/notifications';
 import { TelephonyDomainService } from '../telephonyDomain.service';
 
+interface INoteForm {
+  noteForm: {
+    $setPristine: Function;
+  };
+}
+
+export interface ICustomGmtNotesScope extends ng.IScope {
+  $$childTail: {
+    $$prevSibling: INoteForm,
+    $$childTail: INoteForm,
+  };
+}
+
 class GmTdNotesCtrl implements ng.IComponentController {
 
   public showNotesNum: number = 5;
@@ -21,7 +34,7 @@ class GmTdNotesCtrl implements ng.IComponentController {
     private Notification: Notification,
     private TelephonyDomainService: TelephonyDomainService,
     private $state: ng.ui.IStateService,
-    private $scope: ng.IScope,
+    private $scope: ICustomGmtNotesScope,
     private $translate: ng.translate.ITranslateService,
   ) {
     this.customerId = _.get(this.$stateParams, 'obj.customerId', '');

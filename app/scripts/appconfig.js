@@ -272,6 +272,15 @@
             },
             abstract: true,
           })
+          .state('main-unauthenticated', {
+            parent: 'mainLazyLoad',
+            views: {
+              'main@': {
+                template: '<div ui-view=""></div>',
+              },
+            },
+            abstract: true,
+          })
           .state('main', {
             views: {
               'main@': {
@@ -606,13 +615,9 @@
           })
           .state('downloads', {
             url: '/downloads',
-            parent: 'mainLazyLoad',
-            views: {
-              'main@': {
-                templateUrl: 'modules/squared/views/downloads.html',
-                controller: 'DownloadsCtrl',
-              },
-            },
+            parent: 'main-unauthenticated',
+            templateUrl: 'modules/squared/views/downloads.html',
+            controller: 'DownloadsCtrl',
             authenticate: false,
           })
           .state('domainmanagement', {
@@ -758,7 +763,7 @@
             templateUrl: 'modules/squared/views/processorder.html',
             controller: 'ProcessorderCtrl',
             controllerAs: 'processOrder',
-            parent: 'main',
+            parent: 'main-unauthenticated',
             authenticate: false,
           })
           .state('overview', {
@@ -1163,7 +1168,7 @@
             },
           })
           .state('user-overview.userLocationDetails', {
-            template: '<user-location-details user-id="$resolve.userId"></user-location-details>',
+            template: '<uc-user-location-details user-id="$resolve.userId"></uc-user-location-details>',
             params: {
               reloadToggle: false,
               userDetails: {},
@@ -1175,8 +1180,8 @@
               },
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/call/locations/user-location-details'));
-                }, 'user-location-details');
+                  done(require('modules/call/locations/locations-user-details'));
+                }, 'locations-user-details');
               }),
               userId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams.currentUser, 'id');
@@ -1831,6 +1836,11 @@
                 templateUrl: 'modules/mediafusion/reports/media-reports-phase-two.html',
               },
             },
+            resolve: {
+              hasHmsTwoDotFiveFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServicePhaseTwoDotFive);
+              },
+            },
           })
           .state('reports.care', {
             url: '/care',
@@ -1963,7 +1973,7 @@
             },
           })
           .state('place-overview.placeLocationDetails', {
-            template: '<user-location-details></user-location-details>',
+            template: '<uc-user-location-details></uc-user-location-details>',
             params: {
               reloadToggle: false,
             },
@@ -1974,8 +1984,8 @@
               },
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/call/locations/user-location-details'));
-                }, 'user-location-details');
+                  done(require('modules/call/locations/locations-user-details'));
+                }, 'locations-user-details');
               }),
             },
           })
@@ -3115,15 +3125,15 @@
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/huron/settings'));
+                  done(require('modules/call/settings'));
                 }, 'call-settings');
               }),
             },
           })
-          .state('calllocations', {
+          .state('call-locations', {
             url: '/services/call-locations',
             parent: 'hurondetails',
-            template: '<call-locations></call-locations>',
+            template: '<uc-call-locations></uc-call-locations>',
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
@@ -3132,16 +3142,38 @@
               }),
             },
           })
-          .state('callLocation', {
+          .state('call-locations-add', {
             url: '/services/call-locations/add',
             parent: 'hurondetails',
             template: '<uc-call-locations-wizard></uc-call-locations-wizard>',
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/call/locations/wizard/index'));
+                  done(require('modules/call/locations/locations-wizard/index'));
                 }, 'add-call-location');
               }),
+            },
+          })
+          .state('call-locations-edit', {
+            url: '/services/call-locations/edit',
+            parent: 'main',
+            template: '<uc-call-location uuid="$resolve.locationId" name="$resolve.name"></uc-call-location>',
+            params: {
+              currentLocation: {},
+              feature: null,
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/call/locations'));
+                }, 'edit-call-location');
+              }),
+              locationId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentLocation, 'uuid');
+              },
+              name: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentLocation, 'name');
+              },
             },
           })
           .state('huronrecords', {
@@ -3156,7 +3188,7 @@
             parent: 'modal',
             views: {
               'modal@': {
-                templateUrl: 'modules/huron/settings/bulkEnableVmModal/bulkEnableVmModal.html',
+                templateUrl: 'modules/call/settings/settings-bulk-enable-vm-modal/settings-bulk-enable-vm-modal.html',
               },
             },
           })
@@ -3403,18 +3435,22 @@
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<context-field-modal existing-field-ids="$resolve.existingFieldIds" callback="$resolve.callback" existing-field-data="$resolve.existingFieldData" dismiss="$dismiss()" has-context-expanded-types-toggle="$resolve.hasContextExpandedTypesToggle" class="context-modal"></context-field-modal>',
+                template: '<context-field-modal existing-field-ids="$resolve.existingFieldIds" callback="$resolve.callback" existing-field-data="$resolve.existingFieldData" in-use="$resolve.inUse" dismiss="$dismiss()" has-context-expanded-types-toggle="$resolve.hasContextExpandedTypesToggle" class="context-modal"></context-field-modal>',
               },
             },
             params: {
               existingFieldIds: [],
               existingFieldData: {},
+              inUse: false,
               callback: function () {},
               hasContextExpandedTypesToggle: false,
             },
             resolve: {
               existingFieldIds: /* @ngInject */ function ($stateParams) {
                 return $stateParams.existingFieldIds;
+              },
+              inUse: /* @ngInject */ function ($stateParams) {
+                return $stateParams.inUse;
               },
               existingFieldData: /* @ngInject */ function ($stateParams) {
                 return $stateParams.existingFieldData;
@@ -3888,9 +3924,6 @@
               hasCucmSupportFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCucmSupport);
               },
-              hasPartnerRegistrationFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridPartnerRegistration);
-              },
             },
           })
           .state('add-resource.expressway', {
@@ -4071,9 +4104,6 @@
             parent: 'main',
             abstract: true,
             resolve: {
-              hasPartnerRegistrationFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridPartnerRegistration);
-              },
               hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
               },
@@ -4120,9 +4150,6 @@
             },
             parent: 'main',
             resolve: {
-              hasPartnerRegistrationFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridPartnerRegistration);
-              },
               hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
               },
@@ -4166,9 +4193,6 @@
             },
             parent: 'main',
             resolve: {
-              hasPartnerRegistrationFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridPartnerRegistration);
-              },
               clusterId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.clusterId;
               },
@@ -4536,6 +4560,13 @@
             templateUrl: 'modules/sunlight/features/featureLanding/careFeatures.tpl.html',
             controller: 'CareFeaturesCtrl',
             controllerAs: 'careFeaturesCtrl',
+            resolve: {
+              collectFeatureToggles: /* @ngInject */ function (FeatureToggleService, $state) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasVirtualAssistantEnable).then(function (isEnabled) {
+                  $state.isVirtualAssistantEnabled = isEnabled;
+                });
+              },
+            },
           })
           .state('care.setupAssistant', {
             url: '/setupAssistant/:type',

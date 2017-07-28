@@ -34,7 +34,7 @@
     vm.reportView = vm.sparkMetrics.views[0];
 
     function generateWebexMetricsUrl() {
-      ProPackService.getProPackPurchased().then(function (isPurchased) {
+      ProPackService.hasProPackPurchased().then(function (isPurchased) {
         if (isPurchased) {
           vm.reportView = vm.sparkMetrics.views[1];
         }

@@ -161,8 +161,9 @@ class LaunchAdvancedSettingsController {
 
   private handleMessageEvent(event): void {
     const endpointOrigin = 'http://' + this.currentDevice.ip;
+    const redirectedEndpointOrigin = 'https://' + this.currentDevice.ip;
 
-    if (endpointOrigin === event.origin) {
+    if (endpointOrigin === event.origin || redirectedEndpointOrigin === event.origin) {
 
       const reportedId = String(_.get(event.data, 'id'));
 

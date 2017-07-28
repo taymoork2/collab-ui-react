@@ -77,6 +77,10 @@ class LearnMoreBannerCtrl {
   public isReports(): boolean {
     return this.location === this.LearnMoreBannerService.REPORTS_LOCATION;
   }
+
+  public isEnterpriseCustomer(): boolean {
+    return this.Authinfo.isEnterpriseCustomer();
+  }
 }
 
 export class LearnMoreBannerComponent implements ng.IComponentOptions {

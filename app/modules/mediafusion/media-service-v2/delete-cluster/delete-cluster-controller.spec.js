@@ -9,13 +9,11 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
       '$scope',
       '$state',
       'HybridServicesClusterService',
-      'MediaClusterServiceV2',
-      'FeatureToggleService');
+      'MediaClusterServiceV2');
 
     this.jsonData = getJSONFixture('mediafusion/json/delete-cluster.json');
     this.selectString = 'Select a cluster';
 
-    spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.HybridServicesClusterService, 'deregisterEcpNode').and.returnValue(this.$q.resolve({}));
     spyOn(this.MediaClusterServiceV2, 'get').and.returnValue({ then: _.noop });
     spyOn(this.MediaClusterServiceV2, 'getAll').and.returnValue({ then: _.noop });
@@ -161,19 +159,5 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
     this.controller.hosts = _.cloneDeep(this.jsonData.hosts);
     this.controller.canContinue();
     expect(this.controller.canContinue()).toBeTruthy();
-  });
-
-  // 2017 name change
-  describe('atlas2017NameChangeGetStatus - ', function () {
-    it('should use base name when toggle is false', function () {
-      this.$scope.$apply();
-      expect(this.controller.deleteAreYouSure).toEqual('mediaFusion.deleteGroup.message');
-    });
-
-    it('should use new name when toggle is true', function () {
-      this.FeatureToggleService.atlas2017NameChangeGetStatus.and.returnValue(this.$q.resolve(true));
-      this.initController();
-      expect(this.controller.deleteAreYouSure).toEqual('mediaFusion.deleteGroup.messageNew');
-    });
   });
 });

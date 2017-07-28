@@ -56,7 +56,7 @@ export class LineOverviewService {
       listCompanyNumbers: this.listCompanyNumbers(),
       getAutoAnswerSupportedDeviceAndMember: this.getAutoAnswerSupportedDeviceAndMember(consumerType, ownerId, numberId),
       getUserServices: this.HuronUserService.getUserServices(ownerId),
-      getLineMediaOnHold: this.getLineMediaOnHold(numberId),
+      getLineMediaOnHold: this.getLineMediaOnHold(consumerType, numberId),
     }).then(response => {
       if (this.errors.length > 0) {
         this.Notification.notify(this.errors, 'error');
@@ -153,8 +153,13 @@ export class LineOverviewService {
       }
 
       //update line media on hold
-      if (!_.isEqual(data.lineMoh, this.lineOverviewDataCopy.lineMoh)) {
-        promises.push(this.MediaOnHoldService.updateMediaOnHold(data.lineMoh, numberId));
+      if (!_.isEqual(data.lineMoh, this.lineOverviewDataCopy.lineMoh) && _.isEqual(consumerType, LineConsumerType.USERS)) {
+        const GENERIC_MEDIA_ID = '98765432-DBC2-01BB-476B-CFAF98765432';
+        if (_.isEqual(data.lineMoh, GENERIC_MEDIA_ID)) {
+          promises.push(this.MediaOnHoldService.unassignMediaOnHold('Line', numberId));
+        } else {
+          promises.push(this.MediaOnHoldService.updateMediaOnHold(data.lineMoh, numberId));
+        }
       }
 
       return this.$q.all(promises)
@@ -231,10 +236,10 @@ export class LineOverviewService {
       });
   }
 
-  private getLineMediaOnHold(numberId: string = ''): ng.IPromise<string> {
+  private getLineMediaOnHold(consumerType: LineConsumerType, numberId: string = ''): ng.IPromise<string> {
     return this.FeatureToggleService.supports(this.FeatureToggleService.features.huronMOHEnable)
       .then(supportsLineMoh => {
-        if (supportsLineMoh) {
+        if (supportsLineMoh && _.isEqual(consumerType, LineConsumerType.USERS)) {
           return this.MediaOnHoldService.getLineMedia(numberId);
         } else {
           return this.$q.resolve('');

@@ -18,6 +18,8 @@ require('./_overview.scss');
     vm.isDeviceManagement = Authinfo.isDeviceMgmt();
     vm.orgData = null;
 
+    var hybridCallHighAvailability = 'atlas.notification.squared-fusion-uc-high-availability.acknowledged';
+
     vm.cards = [
       OverviewCardFactory.createMessageCard(),
       OverviewCardFactory.createMeetingCard(),
@@ -32,6 +34,7 @@ require('./_overview.scss');
     vm.pstnToSNotification = null;
     vm.esaDisclaimerNotification = null;
     vm.trialDaysLeft = undefined;
+    vm.isEnterpriseCustomer = isEnterpriseCustomer;
     vm.dismissNotification = dismissNotification;
     vm.notificationComparator = notificationComparator;
     vm.ftHuronPstn = false;
@@ -55,6 +58,10 @@ require('./_overview.scss');
       'info',
       'new',
     ];
+
+    function isEnterpriseCustomer() {
+      return Authinfo.isEnterpriseCustomer();
+    }
 
     // used to sort notifications in a specific order
     function notificationComparator(a, b) {
@@ -91,6 +98,7 @@ require('./_overview.scss');
       .filter(Authinfo.isEntitled)
       .map(HybridServicesUtilsService.getAckFlagForHybridServiceId)
       .value();
+      hybridServiceNotificationFlags.push(hybridCallHighAvailability);
 
       HybridServicesFlagService
         .readFlags(hybridServiceNotificationFlags)
@@ -109,6 +117,19 @@ require('./_overview.scss');
                 vm.notifications.push(OverviewNotificationFactory.createHybridMediaNotification());
               } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.hds)) {
                 vm.notifications.push(OverviewNotificationFactory.createHybridDataSecurityNotification());
+              } else if (flag.name === hybridCallHighAvailability && Authinfo.isEntitled(Config.entitlements.fusion_uc)) {
+                HybridServicesClusterService.serviceIsSetUp('squared-fusion-uc')
+                  .then(function (isSetup) {
+                    if (isSetup) {
+                      return HybridServicesClusterService.serviceHasHighAvailability('c_ucmc')
+                        .then(function (serviceHasHA) {
+                          if (!serviceHasHA) {
+                            vm.notifications.push(OverviewNotificationFactory.createCallServiceHighAvailability());
+                            resizeNotifications();
+                          }
+                        });
+                    }
+                  });
               }
             }
           });

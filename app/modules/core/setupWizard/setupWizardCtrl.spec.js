@@ -29,6 +29,7 @@ describe('SetupWizardCtrl', function () {
     spyOn(this.SetupWizardService, 'hasPendingMeetingLicenses').and.returnValue(false);
     spyOn(this.SetupWizardService, 'hasPendingCallLicenses').and.returnValue(false);
     spyOn(this.SetupWizardService, 'hasPendingServiceOrder').and.returnValue(false);
+    spyOn(this.SetupWizardService, 'isCustomerPresent').and.returnValue(this.$q.resolve(true));
     spyOn(this.Authinfo, 'getLicenses').and.returnValue([{
       licenseType: 'SHARED_DEVICES',
     }]);
@@ -183,6 +184,42 @@ describe('SetupWizardCtrl', function () {
 
     it('serviceSetup should have a single substep', function () {
       this.expectSubStepOrder('serviceSetup', ['init']);
+    });
+  });
+
+  describe('When has active licenses and has pending COMMUNICATION licenses', function () {
+    beforeEach(function () {
+      this.SetupWizardService.hasPendingServiceOrder.and.returnValue(true);
+      this.SetupWizardService.hasPendingCallLicenses.and.returnValue(true);
+      this.SetupWizardService.hasPendingMeetingLicenses.and.returnValue(false);
+      this.Authinfo.getLicenses.and.returnValue([{
+        licenseType: 'STORAGE',
+      }]);
+      this.initController();
+    });
+
+    it('the wizard should have 5 steps', function () {
+      this.expectStepOrder(['planReview', 'serviceSetup', 'messagingSetup', 'enterpriseSettings', 'finish']);
+    });
+
+    it('serviceSetup should have a single substep', function () {
+      this.expectSubStepOrder('serviceSetup', ['init']);
+    });
+  });
+
+  describe('When does not have active COMMUNICATION licenses nor pending COMMUNICATION licenses', function () {
+    beforeEach(function () {
+      this.SetupWizardService.hasPendingServiceOrder.and.returnValue(false);
+      this.SetupWizardService.hasPendingCallLicenses.and.returnValue(false);
+      this.SetupWizardService.hasPendingMeetingLicenses.and.returnValue(false);
+      this.Authinfo.getLicenses.and.returnValue([{
+        licenseType: 'STORAGE',
+      }]);
+      this.initController();
+    });
+
+    it('the wizard should have 4 steps', function () {
+      this.expectStepOrder(['planReview', 'messagingSetup', 'enterpriseSettings', 'finish']);
     });
   });
 

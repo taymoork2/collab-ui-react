@@ -1,9 +1,8 @@
 describe('DeactivateServiceModalView', function () {
   beforeEach(function () {
     this.initModules('Hercules');
-    this.injectDependencies('$compile', '$controller', '$templateCache', '$scope', '$q', 'HybridServicesClusterService', 'FeatureToggleService');
+    this.injectDependencies('$compile', '$controller', '$templateCache', '$scope', '$q', 'HybridServicesClusterService');
 
-    spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.HybridServicesClusterService, 'deprovisionConnector').and.returnValue(this.$q.resolve({}));
 
     this.html = this.$templateCache.get('modules/hercules/resource-settings/deactivate-service-on-expressway-modal.html');
@@ -31,20 +30,5 @@ describe('DeactivateServiceModalView', function () {
     this.$scope.$apply();
     expect(this.controller.deactivateService).toHaveBeenCalledTimes(1);
     expect(this.mockModal.close).toHaveBeenCalledTimes(1);
-  });
-
-  // 2017 name change
-  it('should display base name when atlas2017NameChangeGetStatus returns false', function () {
-    this.initComponent();
-    expect(this.view.text()).toContain('hercules.deactivateServiceSingleCluster.notDeregistered');
-    expect(this.view.text()).not.toContain('hercules.deactivateServiceSingleCluster.notDeregisteredNew');
-    expect(this.controller.nameChangeEnabled).toBeFalsy();
-  });
-
-  it('should display new name when atlas2017NameChangeGetStatus returns true', function () {
-    this.FeatureToggleService.atlas2017NameChangeGetStatus.and.returnValue(this.$q.resolve(true));
-    this.initComponent();
-    expect(this.view.text()).toContain('hercules.deactivateServiceSingleCluster.notDeregisteredNew');
-    expect(this.controller.nameChangeEnabled).toBeTruthy();
   });
 });

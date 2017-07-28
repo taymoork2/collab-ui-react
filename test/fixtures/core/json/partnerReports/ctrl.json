@@ -2,6 +2,7 @@
   "ALL": "all",
   "ENGAGEMENT": "engagement",
   "QUALITY": "quality",
+  "DETAILS": "Details",
   "EMPTY": "empty",
   "ERROR": "error",
   "REFRESH": "refresh",
@@ -21,6 +22,10 @@
   }, {
     "id": "qualityReports",
     "label": "reportsPage.quality",
+    "selected": false
+  }, {
+    "id": "details",
+    "label": "reportsPage.details",
     "selected": false
   }],
   "activeUserOptions": {

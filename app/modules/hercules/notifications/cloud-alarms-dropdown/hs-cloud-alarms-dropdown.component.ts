@@ -1,37 +1,35 @@
 import { HybridServicesExtrasService } from 'modules/hercules/services/hybrid-services-extras.service';
-import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
-
-interface IAlarms {
-  severity: 'critical' | 'error' | 'warning' | 'alert';
-  title: string;
-  description: string;
-  key: string;
-}
+import { HybridServiceId, IServiceAlarm } from 'modules/hercules/hybrid-services.types';
 
 class HsCloudAlarmsDropdownComponentCtrl implements ng.IComponentController {
   private serviceId: HybridServiceId;
+  private poller: ng.IPromise<void> | undefined = undefined;
+  private pollingInterval = 30 * 1000;
 
   public open = false;
-  public alarms: IAlarms[] = [];
+  public alarms: IServiceAlarm[] = [];
 
   /* @ngInject */
   constructor(
     private $element: ng.IRootElementService,
     private $scope: ng.IScope,
+    private $timeout: ng.ITimeoutService,
     private $window: ng.IWindowService,
     private HybridServicesExtrasService: HybridServicesExtrasService,
-  ) {}
+  ) {
+    this.getAlarms = this.getAlarms.bind(this);
+  }
 
   public $onInit() {
     this.handleClick = this.handleClick.bind(this);
-    this.HybridServicesExtrasService.getAlarms(this.serviceId)
-      .then((alarms: IAlarms[]) => {
-        this.alarms = alarms;
-      });
+    this.getAlarms();
   }
 
   public $onDestroy() {
     this.$window.removeEventListener('click', this.handleClick);
+    if (this.poller) {
+      this.$timeout.cancel(this.poller);
+    }
   }
 
   public showDropdown() {
@@ -64,6 +62,16 @@ class HsCloudAlarmsDropdownComponentCtrl implements ng.IComponentController {
       this.hideDropdown();
       this.$scope.$apply();
     }
+  }
+
+  private getAlarms() {
+    this.HybridServicesExtrasService.getAlarms(this.serviceId)
+      .then((alarms) => {
+        this.alarms = alarms;
+      })
+      .finally(() => {
+        this.poller = this.$timeout(this.getAlarms, this.pollingInterval);
+      });
   }
 
   private isTargetOutsideComponent(target) {

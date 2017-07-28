@@ -58,13 +58,15 @@ export class SettingsCtrl {
 
     // if they are not a partner, provide everything else
     if (!this.Authinfo.isPartner()) {
-      this.initSecurity();
       this.authentication = new AuthenticationSetting();
       this.domains = new DomainsSetting();
       this.privacy = new PrivacySetting();
       this.sipDomain = new SipDomainSetting();
       this.dirsync = new DirSyncSetting();
-      this.initRetention();
+      if (this.Authinfo.isEnterpriseCustomer()) {
+        this.initSecurity();
+        this.initRetention();
+      }
 
     }
     //TODO temporary adding device branding
