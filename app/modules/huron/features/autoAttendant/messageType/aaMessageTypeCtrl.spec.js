@@ -595,5 +595,106 @@ describe('Controller: AAMessageTypeCtrl', function () {
 
       expect(c.actionEntry.name).toEqual('play');
     });
+
+    describe('varible warning', function () {
+      it('fullWarningMsg', function () {
+        var c;
+        menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        menuEntry.addAction(AutoAttendantCeMenuModelService.newCeActionEntry('say', 'value for say message'));
+
+        aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+        aaUiModel.openHours.addEntryAt(0, menuEntry);
+
+        // setup the options menu
+        c = controller('AAMessageTypeCtrl', {
+          $scope: $scope,
+        });
+        c.fullWarningMsg();
+        expect(c.fullWarningMsgValue).toBe(true);
+      });
+      it('getWarning returning true', function () {
+        var c;
+        menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        menuEntry.addAction(AutoAttendantCeMenuModelService.newCeActionEntry('say', 'value for say message'));
+
+        aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+        aaUiModel.openHours.addEntryAt(0, menuEntry);
+
+        // setup the options menu
+        c = controller('AAMessageTypeCtrl', {
+          $scope: $scope,
+        });
+        c.deletedSessionVariablesList = ['test', 'test2'];
+        c.getWarning();
+        spyOn(c, 'getWarning').and.returnValue(true);
+        expect(c.getWarning()).toBe(true);
+      });
+      it('getWarning returning false', function () {
+        var c;
+        menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        menuEntry.addAction(AutoAttendantCeMenuModelService.newCeActionEntry('say', 'value for say message'));
+
+        aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+        aaUiModel.openHours.addEntryAt(0, menuEntry);
+
+        // setup the options menu
+        c = controller('AAMessageTypeCtrl', {
+          $scope: $scope,
+        });
+        c.getWarning();
+        spyOn(c, 'getWarning').and.returnValue(false);
+        expect(c.getWarning()).toBe(false);
+      });
+      it('boradcast of CE Updated', function () {
+        var c;
+        menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        menuEntry.dynamicList = [{
+          say: {
+            value: 'testValue',
+            voice: '',
+            as: 'testValue',
+          },
+          isDynamic: true,
+        }];
+        menuEntry.addAction(AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', 'http://www.test.com'));
+        aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+        aaUiModel.openHours.addEntryAt(0, menuEntry);
+
+        // setup the options menu
+        c = controller('AAMessageTypeCtrl', {
+          $scope: $scope,
+        });
+        $scope.$apply();
+        c.deletedSessionVariablesList = [];
+        $rootScope.$broadcast('CE Updated');
+        c.getWarning();
+        expect(c.getWarning()).toBe(true);
+      });
+      it('boradcast of CIVarNameChanged', function () {
+        var c;
+        menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        menuEntry.dynamicList = [{
+          say: {
+            value: 'testValue',
+            voice: '',
+            as: 'testValue',
+          },
+          isDynamic: true,
+        }];
+        menuEntry.addAction(AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', 'http://www.test.com'));
+        aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+        aaUiModel.openHours.addEntryAt(0, menuEntry);
+
+        // setup the options menu
+        c = controller('AAMessageTypeCtrl', {
+          $scope: $scope,
+        });
+        $scope.$apply();
+        c.deletedSessionVariablesList = [];
+        $rootScope.$broadcast('CIVarNameChanged');
+        c.getWarning();
+        expect(c.getWarning()).toBe(true);
+      });
+    });
   });
 });
