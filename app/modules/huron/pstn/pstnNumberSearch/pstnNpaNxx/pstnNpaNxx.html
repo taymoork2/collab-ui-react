@@ -64,7 +64,7 @@
         ng-model="$ctrl.model.block"
         id="blockChk{{$ctrl.numberType}}"
         name="blockChk{{$ctrl.numberType}}"
-        ng-click="$ctrl.blockClick()"
+        ng-click="$ctrl.onBlockClick()"
         cs-input-label="{{::'pstnSetup.block' | translate}}">
 
       <i class="icon icon-info" tooltip="{{::'pstnSetup.advancedOrder.blockTooltip' | translate}}" tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="false" ></i>
@@ -90,8 +90,8 @@
           type="checkbox"
           ng-model="$ctrl.model.consecutive"
           ng-disabled="!$ctrl.model.block"
-          id="consecutiveChk"
-          name="consecutiveChk"
+          id="consecutiveChk{{$ctrl.numberType}}"
+          name="consecutiveChk{{$ctrl.numberType}}"
           cs-input-label="{{::'pstnSetup.consecutive' | translate}}">
       <i class="icon icon-info"
           tooltip="{{::'pstnSetup.advancedOrder.consecutiveTooltip' | translate}}"

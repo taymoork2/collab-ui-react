@@ -122,7 +122,9 @@ export class PstnWizardCtrl implements ng.IComponentController {
     this.PstnService.getCarrierTollFreeInventory(this.PstnModel.getProviderId())
       .then(response => {
         this.model.tollFree.areaCodeOptions = response.areaCodes;
-        const areaCodes = response.areaCodes.join(', ') + '.';
+        const areaCodes = response.areaCodes
+        .map(area => area.code)
+        .join(', ') + '.';
         this.tollFreeTitle = this.$translate.instant('pstnSetup.tollFreeTitle', { areaCodes: areaCodes });
         this.model.tollFree.areaCode = null;
       })
