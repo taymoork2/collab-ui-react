@@ -5,8 +5,8 @@
 <div class="modal-body">
   <div class="modal-container">
     <div class="mb-nav">
-      <button class="icon icon-music icon-lg" ng-class="{'active-icon' : $ctrl.isModalActive($ctrl.ModalView.Media)}" ng-click="$ctrl.setModal($ctrl.ModalView.Media)"></button>
-      <button class="icon icon-trash icon-lg" ng-class="{'active-icon' : $ctrl.isModalActive($ctrl.ModalView.Trash)}" ng-click="$ctrl.setModal($ctrl.ModalView.Trash)"></button>
+      <button class="icon icon-music icon-lg" ng-class="{'active' : $ctrl.isModalActive($ctrl.ModalView.Media)}" ng-click="$ctrl.setModal($ctrl.ModalView.Media)"></button>
+      <button class="icon icon-trash icon-lg" ng-class="{'active' : $ctrl.isModalActive($ctrl.ModalView.Trash)}" ng-click="$ctrl.setModal($ctrl.ModalView.Trash)"></button>
     </div>
     <div class="mb-container" ng-if="$ctrl.loading">
       <div class="mb-panel loading centered" ng-if="$ctrl.loading">
@@ -125,9 +125,8 @@
     </div>
     <div class="mb-container" ng-if="!$ctrl.loading && !$ctrl.uploadActionInProgress() && $ctrl.isModalActive($ctrl.ModalView.Trash)">
       <div class="mb-panel">
-        <div>
+        <div class="mb-panel-header">
           <div class="mb-title text-center">{{::"mediaMgrModal.deletedTitle" | translate}}</div>
-          <!-- <div class="mb-desc text-center">{{::"mediaMgrModal.deletionPeriod" | translate}}</div> -->
         </div>
         <hr class="mb-row-seperator" />
         <div class="mb-panel-body">
@@ -141,13 +140,14 @@
                 </div>
               </div>
               <div class="mb-row-content">
-                <div class="media-subtext text-left">{{::mohFile.filename}}</div>
+                <div class="media-subtext text-left">{{$ctrl.getDisplayText(mohFile)}}</div>
                 <div class="media-subtext text-right"><em>{{::"mediaMgrModal.deleted" | translate}} {{$ctrl.getDeleteTime(mohFile)}}</em></div>
               </div>
             </div>
           </div>
           <hr class="mb-row-seperator" ng-repeat-end />
         </div>
+        <hr class="mb-row-seperator" />
         <div class="mb-panel-footer">
           <button class="btn" type="submit" ng-disabled="!filteredMedia.length" ng-click="$ctrl.deletePermAll()">{{::"mediaMgrModal.deleteButton" | translate}}</button>
         </div>
