@@ -80,6 +80,7 @@ module.exports = {
   huronClassOfService: 'COS',
   huronInternationalDialingTrialOverride: 'huronInternationalDialingTrialOverride',
   huronMOHEnable: 'huron-moh-enable',
+  huronPhoneButtonLayout: 'h-i1238',
   huronPlaceMOHEnable: 'huron-place-moh-enable',
   iosActionBar: 'ios-action-bar',
   iosAecType: 'ios-aec-type',
