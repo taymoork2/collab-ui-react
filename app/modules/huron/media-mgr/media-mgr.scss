@@ -8,12 +8,14 @@ media-mgr {
   flex: 1 1 auto;
   flex-direction: column;
   display: flex;
+  min-height: 0;
 
   .reveal-modal.full & .modal-body {
     margin: 0;
     border: 0;
     padding: 0;
     max-width: none;
+    min-height: 0;
   }
 
   .reveal-modal.full & .modal-container {
@@ -22,6 +24,7 @@ media-mgr {
     display: flex;
     align-items: stretch;
     max-width: inherit;
+    min-height: 0;
   }
 
   .cs-card.large {
@@ -38,7 +41,30 @@ media-mgr {
     flex-direction: column;
     display: flex;
     align-items: center;
-    margin: 1rem 0rem;
+    margin: .5rem 0rem;
+
+    button:focus {
+      text-decoration: none;
+      outline: none;
+      order: none;
+      box-shadow: none;
+    }
+
+    .icon-music {
+      background: none;
+      margin: .5rem 0rem;
+      color: $gray-base;
+    }
+
+    .icon-trash {
+      background: none;
+      margin: .5rem 0rem;
+      color: $gray-base;
+    }
+
+    .active {
+      color: $color-primary-base;
+    }
   }
 
   .mb-container {
@@ -48,6 +74,7 @@ media-mgr {
     padding-left: 0;
     padding-right: 0;
     width: calc(100% - 94px);
+    min-height: 0;
   }
 
   .mb-panel {
@@ -60,6 +87,7 @@ media-mgr {
     padding-left: 0;
     padding-right: 0;
     overflow-y: auto;
+    min-height: 0;
   }
 
   .mb-panel-left {
@@ -71,6 +99,15 @@ media-mgr {
     border-left-style: solid;
     padding-left: 0;
     padding-right: 0;
+    min-height: 0;
+
+    .mb-panel-header {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'CiscoSansTT Extra Light';
+      text-align: end;
+      margin: .75rem .75rem .5rem .5rem;
+    }
 
     .nowrap {
       width: 252px;
@@ -89,9 +126,11 @@ media-mgr {
     border-left-style: solid;
     padding-left: 0;
     padding-right: 0;
+    min-height: 0;
 
     .mb-title {
       margin-top: 0.5rem;
+      margin-bottom: 1rem;
     }
 
     .mb-rows {
@@ -115,30 +154,28 @@ media-mgr {
 
   .mb-panel-header {
     display: flex;
-    justify-content: space-between;
-    font-family: 'CiscoSansTT Extra Light';
-    text-align: end;
-    margin: .5rem 1rem .5rem .5rem;
+    margin: 1.5rem auto 1.75rem;
+    justify-content: center;
   }
 
   .mb-panel-body {
     display: flex;
     flex-direction: column;
+    flex-grow: 1;
     overflow-y: auto;
   }
 
   .mb-panel-footer {
     display: flex;
     flex-direction: row;
-    margin: auto 1rem 2rem auto;
+    margin: 1.5rem 1rem 2.5rem auto;
+    justify-content: flex-end;
   }
 
   .mb-title {
     font-family: 'CiscoSansTT Extra Light';
     font-size: 26px;
     color: $gray-dark-2;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
   }
 
   .mb-desc {
@@ -189,6 +226,7 @@ media-mgr {
   }
 
   .searchfilter {
+    margin: 0;
     border: none;
     width: 100%;
   }
@@ -214,21 +252,15 @@ media-mgr {
     margin-left: 0.25rem;
   }
 
-  .icon-music {
-    background: none;
-    margin: 0;
-    color: $gray-base;
-  }
-
   .icon-trash {
     background: none;
-    margin: 0;
+    margin: 0 0 0 .5rem;
     color: $gray-light-1;
   }
 
   .icon-back {
     background: none;
-    margin: 0;
+    margin: 0 0 0 .5rem;
     color: $gray-light-1;
   }
 
@@ -250,10 +282,6 @@ media-mgr {
       color: $color-primary-lighter;
       margin: 0;
     }
-  }
-
-  .active-icon {
-    color: $color-primary-base;
   }
 
   .progressbar-label {
