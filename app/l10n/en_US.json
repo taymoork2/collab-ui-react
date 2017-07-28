@@ -2168,6 +2168,7 @@
       "spark-hybrid-datasecurity": "Hybrid Data Security",
       "squared-fusion-khaos": "Cisco Unified CM"
     },
+
     "serviceDescriptions": {
       "squared-fusion-uc": "Call Service Aware lets your users instantly share their desktops from their Cisco Spark clients while on a call. Call Service Connect lets your users answer calls to their work phones and to place calls to other work phones, on their Cisco Spark client.",
       "squared-fusion-cal": "Calendar Service helps your users to collaborate instantly. Just add @spark to create a Cisco Spark room. Add @webex to attach a WebEx link to your invitation.",
@@ -2497,6 +2498,23 @@
         "testFailed": "Your SIP Destination is not configured correctly.",
         "viewTestResults": "View test results",
         "testHadUnexpectedError": "An unexpected error happened when verifying the SIP Destination. Try again later.",
+        "DNSSRVLookup": "DNS SRV lookup",
+        "DNSHostnameLookup": "DNS hostname lookup",
+        "IPAddressLookup": "IP address lookup",
+        "dns": "DNS",
+        "fqdn": "FQDN",
+        "ip": "IP",
+        "notPerformed": "Not performed",
+        "successful": "Successful",
+        "failed": "Failed",
+        "testFor": "Test for {{target}}",
+        "tests": "Tests",
+        "result": "Result",
+        "details": "Details",
+        "connectingToIP": "Connecting to IP",
+        "socketTest": "Socket test",
+        "sslHandshake": "SSL Handshake",
+        "ping": "Ping",
         "types": {
           "Answered": "Answered",
           "CallerDoesntHaveEmail": "Caller Doesn't Have Email",
@@ -2526,6 +2544,19 @@
           "TestUsers": "Test Users",
           "UnexpectedError": "Unexpected Error",
           "UnexpectedException": "Unexpected Exception"
+        },
+        "fixes": {
+          "IOFailure": "TCP failure: TCP read/write failure: Please try again. If the error persists, check network connectivity, firewall configuration, and Mutual TLS configuration.",
+          "NoDNSHopsFound": "DNS Lookup failed. Check that a DNS or SRV record exists for your SIP Destination and that it resolves to one or more valid IP addresses.",
+          "PingFailed": "SIP ping failed.",
+          "SipDestinationNotFound": "SIP destination not found. Check the value that you entered under Services > Hybrid Call > Settings in admin.ciscospark.com.",
+          "SipException": "SIP exception: Ensure the Expressway SIP configuration is valid. If error persists, open a support ticket in admin.ciscospark.com",
+          "SocketConnectionFailure": "TCP Connection failure: Check network connectivity, connection speed, and/or firewall configuration.",
+          "SocketReadWriteFailure": "TCP read/write failure: Please try again. If the error persists, check network connectivity, firewall configuration, and Mutual TLS configuration.",
+          "SocketTimedOut": "Network and/or Mutual TLS connection timed out. Check network connectivity, connection speed, firewall configuration, and Mutual TLS configuration.",
+          "SSLHandshakeFailure": "Mutual TLS Error: Check Mutual TLS configuration in both Expressway and admin.ciscospark.com, and that Mutual TLS certificates are present and valid in both locations.",
+          "UnexpectedError": "Unexpected error. Please try again. If the error persists, open a support ticket in admin.ciscospark.com",
+          "UnexpectedException": "Unexpected error: Please try again. If the error persists, open a support ticket in admin.ciscospark.com"
         }
       },
       "googleCalendar": {
