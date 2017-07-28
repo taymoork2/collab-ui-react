@@ -154,6 +154,7 @@ describe('Component: lineOverview', () => {
         line: new Line(),
         callForward: new CallForward(),
       };
+      this.lineOverview.sharedLines = [];
       this.getInternalNumberOptionsDefer.resolve(this.internalNumbers);
       this.getLineOverviewDataDefer.resolve(this.lineOverview);
       this.getEsnPrefixDefer.resolve(this.esnPrefix);
