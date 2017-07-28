@@ -17,6 +17,7 @@
         </span>
         <img class="user-img" ng-if="helpdeskUserCtrl.user.photos" ng-src="{{helpdeskUserCtrl.user.photos[1].value}}"/>
         {{helpdeskUserCtrl.user.displayName}}
+        <img ng-if="helpdeskUserCtrl.hasProPackPurchased" src="images/ProPack_Badge_Primary_28x12.svg"/>
       </h3>
 
       <hr>

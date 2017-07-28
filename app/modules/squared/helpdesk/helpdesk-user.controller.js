@@ -42,6 +42,7 @@
     vm.openExtendedInformation = openExtendedInformation;
     vm.openHybridServicesModal = openHybridServicesModal;
     vm.supportsExtendedInformation = false;
+    vm.hasProPackPurchased = Authinfo.isPremium();
     vm.cardsAvailable = false;
     vm.hasEmailStatus = hasEmailStatus;
     vm.hasEmailProblem = hasEmailProblem;
