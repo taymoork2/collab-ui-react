@@ -25,7 +25,8 @@
     }
   }
 
-  .cs-card-layout {
+  .cs-card-layout,
+  .cs-card-layout.cs-card-block {
     @include vr-spacing(mt, 1.25);
   }
 
@@ -187,10 +188,6 @@
   }
 
   .pro-pack-card {
-    .card-title {
-      @include vr-spacing(mb, 1);
-    }
-
     .category-icon {
       font-size: vr-adjust(20);
     }
@@ -216,6 +213,7 @@
   .pro-pack-card,
   .subscriptions {
     .card-title {
+      @include vr-spacing(mb, 1);
       @include vr-spacing(pl, 0);
       @include vr-spacing(pt, 0);
       color: $gray-dark-1;
@@ -312,7 +310,7 @@
 
   .subscriptions {
     .subscription-column {
-      @include vr-spacing(pr, 0);
+      @include vr-spacing(ph, 0);
     }
 
     .category-data-section.item-without-borders {
