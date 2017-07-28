@@ -167,13 +167,13 @@
             handleCount = handleCount + changeValue;
             abandonCount = abandonCount - (changeValue / 3);
             tasksAccepted = tasksAccepted + changeValue;
-            tasksMissed = tasksMissed - (abandonCount / 2);
+            tasksMissed = tasksMissed - (tasksMissed / 2);
           }
         } else {
           handleCount = handleCount + changeValue;
           abandonCount = abandonCount - (changeValue / 3);
           tasksAccepted = tasksAccepted + changeValue;
-          tasksMissed = tasksMissed - (abandonCount / 2);
+          tasksMissed = tasksMissed - (tasksMissed / 2);
         }
         if (abandonCount < 0) {
           abandonCount = 0;
