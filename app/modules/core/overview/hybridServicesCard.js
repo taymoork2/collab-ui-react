@@ -22,6 +22,7 @@
         function init() {
           $q.all({
             nameChangeEnabled: FeatureToggleService.atlas2017NameChangeGetStatus(),
+            hybridImp: FeatureToggleService.atlasHybridImpGetStatus(),
           }).then(function (featureToggles) {
             if (featureToggles.nameChangeEnabled) {
               card.notEnabledText = 'overview.cards.hybrid.notEnabledTextNew';
@@ -48,6 +49,9 @@
               }
               if (Authinfo.isEntitled(Config.entitlements.fusion_uc)) {
                 card.serviceList.push(HybridServicesClusterService.getStatusForService('squared-fusion-uc', response.clusterList.value));
+              }
+              if (Authinfo.isEntitled(Config.entitlements.imp) && _.get(response, 'featureToggles.value.hybridImp')) {
+                card.serviceList.push(HybridServicesClusterService.getStatusForService('spark-hybrid-impinterop', response.clusterList.value));
               }
               if (Authinfo.isEntitled(Config.entitlements.mediafusion)) {
                 card.serviceList.push(HybridServicesClusterService.getStatusForService('squared-fusion-media', response.clusterList.value));
@@ -87,6 +91,8 @@
             return 'hds.list';
           } else if (serviceId === 'contact-center-context') {
             return 'context-resources';
+          } else if (serviceId === 'spark-hybrid-impinterop') {
+            return 'imp-service.list';
           }
         }
         return card;

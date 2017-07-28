@@ -160,6 +160,7 @@ export class ServicesOverviewCtrl {
           this.HybridServicesClusterService.getStatusForService('squared-fusion-mgmt', clusterList),
           this.HybridServicesClusterService.getStatusForService('squared-fusion-cal', clusterList),
           this.HybridServicesClusterService.getStatusForService('squared-fusion-uc', clusterList),
+          this.HybridServicesClusterService.getStatusForService('spark-hybrid-impinterop', clusterList),
           this.HybridServicesClusterService.getStatusForService('squared-fusion-media', clusterList),
           this.HybridServicesClusterService.getStatusForService('spark-hybrid-datasecurity', clusterList),
           this.HybridServicesClusterService.getStatusForService('contact-center-context', clusterList),
