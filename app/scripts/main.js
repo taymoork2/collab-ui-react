@@ -51,6 +51,7 @@
     'rzModule',
     'dragularModule',
     require('modules/bmmp/learn-more-banner').default,
+    require('modules/core/csgrid').default,
     require('modules/core/users/userOverview').default,
     require('modules/core/analytics'),
     require('modules/core/featureToggle').default,
