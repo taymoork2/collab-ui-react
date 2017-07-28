@@ -3,12 +3,12 @@ import { Notification } from 'modules/core/notifications';
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 
 export class CallServiceContainerController extends ExpresswayContainerController {
-
+  public header = this.$translate.instant('hercules.hybridServiceNames.squared-fusion-uc');
   public tabs: any = [{
-    title: 'common.resources',
+    title: this.$translate.instant('common.resources'),
     state: 'call-service.list',
   }, {
-    title: 'common.settings',
+    title: this.$translate.instant('common.settings'),
     state: 'call-service.settings',
   }];
 
@@ -32,6 +32,7 @@ export class CallServiceContainerController extends ExpresswayContainerControlle
     $scope: ng.IScope,
     $state: ng.ui.IStateService,
     private $stateParams: ng.ui.IStateParamsService,
+    private $translate: ng.translate.ITranslateService,
     ClusterService,
     hasNodesViewFeatureToggle,
     Notification: Notification,
