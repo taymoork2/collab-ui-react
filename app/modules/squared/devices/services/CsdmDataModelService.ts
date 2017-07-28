@@ -259,24 +259,24 @@ export class CsdmDataModelService implements ICsdmDataModelService {
     return this.placesUrl + device.cisUuid;
   }
 
-  public createCsdmPlace(name, entitlements, directoryNumber, externalNumber, externalLinkedAccounts): ng.IPromise<IPlace> {
-    return this.CsdmPlaceService.createCsdmPlace(name, entitlements, directoryNumber, externalNumber, externalLinkedAccounts)
+  public createCsdmPlace(name, entitlements, locationUuid, directoryNumber, externalNumber, externalLinkedAccounts): ng.IPromise<IPlace> {
+    return this.CsdmPlaceService.createCsdmPlace(name, entitlements, locationUuid, directoryNumber, externalNumber, externalLinkedAccounts)
       .then((place) => {
         return this.onCreatedPlace(place);
       });
   }
 
-  public createCmiPlace(name, entitlements, directoryNumber, externalNumber): ng.IPromise<IPlace> {
-    return this.CsdmPlaceService.createCmiPlace(name, entitlements, directoryNumber, externalNumber)
+  public createCmiPlace(name, entitlements, locationUuid, directoryNumber, externalNumber): ng.IPromise<IPlace> {
+    return this.CsdmPlaceService.createCmiPlace(name, entitlements, locationUuid, directoryNumber, externalNumber)
       .then((place) => {
         return this.onCreatedPlace(place);
       });
   }
 
   public updateCloudberryPlace(objectToUpdate,
-                               { entitlements, directoryNumber, externalNumber, externalLinkedAccounts }) {
+                               { entitlements, locationUuid, directoryNumber, externalNumber, externalLinkedAccounts }) {
     const placeUrl = this.getPlaceUrl(objectToUpdate);
-    return this.CsdmPlaceService.updatePlace(placeUrl, entitlements, directoryNumber, externalNumber, externalLinkedAccounts)
+    return this.CsdmPlaceService.updatePlace(placeUrl, entitlements, locationUuid, directoryNumber, externalNumber, externalLinkedAccounts)
       .then((place) => {
         this.addOrUpdatePlaceInDataModel(place);
         this.notifyListeners();

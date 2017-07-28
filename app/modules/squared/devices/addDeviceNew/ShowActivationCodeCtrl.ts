@@ -117,7 +117,7 @@ export class ShowActivationCodeCtrl extends WizardCtrl {
                 this.onCodeCreationFailure(err);
               });
         } else { // New place
-          this.createHuronPlace(this.account.name, this.wizardData.account.entitlements, this.wizardData.account.directoryNumber, this.wizardData.account.externalNumber)
+          this.createHuronPlace(this.account.name, this.wizardData.account.entitlements, this.wizardData.account.locationUuid, this.wizardData.account.directoryNumber, this.wizardData.account.externalNumber)
             .then((place) => {
               this.account.cisUuid = place.cisUuid;
               this.createCodeForHuronPlace(this.account.cisUuid)
@@ -150,6 +150,7 @@ export class ShowActivationCodeCtrl extends WizardCtrl {
           this.createCloudberryPlace(
             this.account.name,
             this.wizardData.account.entitlements,
+            this.wizardData.account.locationUuid,
             this.wizardData.account.directoryNumber,
             this.wizardData.account.externalNumber,
             this.ExtLinkHelperService.getExternalLinkedAccountForSave(
@@ -219,8 +220,8 @@ export class ShowActivationCodeCtrl extends WizardCtrl {
     this.isLoading = false;
   }
 
-  public createHuronPlace(name, entitlements, directoryNumber, externalNumber) {
-    return this.CsdmDataModelService.createCmiPlace(name, entitlements, directoryNumber, externalNumber);
+  public createHuronPlace(name, entitlements, locationUuid, directoryNumber, externalNumber) {
+    return this.CsdmDataModelService.createCmiPlace(name, entitlements, locationUuid, directoryNumber, externalNumber);
   }
 
   public createCodeForHuronPlace(cisUuid) {
@@ -239,8 +240,8 @@ export class ShowActivationCodeCtrl extends WizardCtrl {
       });
   }
 
-  public createCloudberryPlace(name, entitlements, directoryNumber, externalNumber, externalLinkedAccounts) {
-    return this.CsdmDataModelService.createCsdmPlace(name, entitlements, directoryNumber, externalNumber, externalLinkedAccounts);
+  public createCloudberryPlace(name, entitlements, locationUuid,  directoryNumber, externalNumber, externalLinkedAccounts) {
+    return this.CsdmDataModelService.createCsdmPlace(name, entitlements, locationUuid, directoryNumber, externalNumber, externalLinkedAccounts);
   }
 
   public createCodeForCloudberryAccount(cisUuid) {
