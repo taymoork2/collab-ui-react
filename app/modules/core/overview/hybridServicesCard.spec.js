@@ -19,6 +19,7 @@ describe('OverviewHybridServicesCard', function () {
     spyOn(this.Authinfo, 'isEntitled').and.returnValue(true);
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
+    spyOn(this.FeatureToggleService, 'atlasHybridImpGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.CloudConnectorService, 'getService').and.returnValue(this.$q.resolve({ serviceId: 'squared-fusion-gcal', setup: false, statusCss: 'default' }));
   });
 
