@@ -5,16 +5,16 @@
     .module('CareDetails')
     .controller('DetailsHeaderCtrl', DetailsHeaderCtrl);
 
-  function DetailsHeaderCtrl() {
+  function DetailsHeaderCtrl($translate) {
     var vm = this;
     vm.back = false;
 
     vm.tabs = [{
-      title: 'sunlightDetails.featuresTitle',
+      title: $translate.instant('sunlightDetails.featuresTitle'),
       state: 'care.Features',
     },
     {
-      title: 'sunlightDetails.settingsTitle',
+      title: $translate.instant('sunlightDetails.settingsTitle'),
       state: 'care.Settings',
     },
     ];
