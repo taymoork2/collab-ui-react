@@ -9,9 +9,7 @@
     $scope.hasPendingLicenses = SetupWizardService.hasPendingLicenses();
     $scope.sendEmailModel = false;
     $scope.isCustomerLaunchedFromPartner = Authinfo.isCustomerLaunchedFromPartner();
-    $scope.setSendCustomerEmailFlag = function setSendCustomerEmailFlag() {
-      TrialWebexService.setProvisioningWebexSendCustomerEmailFlag($scope.sendEmailModel);
-    };
+    $scope.setSendCustomerEmailFlag = setSendCustomerEmailFlag;
     $scope.initNext = function () {
       var deferred = $q.defer();
       if (!_.isUndefined($scope.wizard) && _.isFunction($scope.wizard.getRequiredTabs)) {
@@ -35,6 +33,13 @@
 
     function init() {
       pushBlankProvisioningCall();
+    }
+
+    function setSendCustomerEmailFlag(flag) {
+      if (!_.isBoolean(flag)) {
+        return $q.reject('A boolean must be passed.');
+      }
+      TrialWebexService.setProvisioningWebexSendCustomerEmailFlag(flag);
     }
 
     function pushBlankProvisioningCall() {

@@ -50,23 +50,23 @@ export class SetupWizardService {
     return _.get<string>(this.getActingSubscription(), 'pendingServiceOrderUUID', undefined);
   }
 
-  public hasPendingServiceOrder() {
+  public hasPendingServiceOrder(): boolean {
     return this.getActingSubscriptionServiceOrderUUID() !== undefined;
   }
 
-  public hasPendingLicenses() {
+  public hasPendingLicenses(): boolean {
     return !_.isEmpty(this.pendingLicenses);
   }
 
-  public hasPendingMeetingLicenses() {
-    return _.some(this.pendingLicenses, (license: IPendingLicense) => { return license.status === this.Config.licenseStatus.INITIALIZED && (_.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC], license.offerName)); });
+  public hasPendingMeetingLicenses(): boolean {
+    return _.some(this.pendingLicenses, (license: IPendingLicense) => { return license.status === this.Config.licenseStatus.INITIALIZED && (_.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC, this.Config.offerCodes.CMR], license.offerName)); });
   }
 
   public getPendingMeetingLicenses(): IPendingLicense[] {
-    return _.filter(this.pendingLicenses, (license: IPendingLicense) => { return license.status === this.Config.licenseStatus.INITIALIZED && (_.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC], license.offerName)); });
+    return _.filter(this.pendingLicenses, (license: IPendingLicense) => { return license.status === this.Config.licenseStatus.INITIALIZED && (_.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC, this.Config.offerCodes.CMR], license.offerName)); });
   }
 
-  public hasPendingCallLicenses() {
+  public hasPendingCallLicenses(): boolean {
     return _.some(this.pendingLicenses, (license: IPendingLicense) => { return license.status === this.Config.licenseStatus.INITIALIZED && (_.includes([this.Config.licenseTypes.COMMUNICATION, this.Config.licenseTypes.SHARED_DEVICES], license.licenseType)); });
   }
 
