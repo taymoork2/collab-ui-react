@@ -3,7 +3,7 @@
 
   .dynamic-prompt {
     border: 1px solid $gray-light-2;
-    @include vr-spacing(mb, 1);
+    @include vr-spacing(mb, 0.5);
     @include vr-spacing(pt, 0.75);
     @include vr-spacing(pb, 0.75);
     @include vr-spacing(pl, 0.75);
@@ -18,7 +18,7 @@
   }
 
   .aa-blank-line {
-    @include vr-spacing(mt, 1);
+    margin-bottom: 0.4rem;
   }
   div.dynamic-prompt[data-placeholder]:not(:focus)[data-div-placeholder-content]::before {
     content: attr(data-placeholder);
