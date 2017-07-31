@@ -68,11 +68,17 @@ class PlaceOverview implements ng.IComponentController {
     if (this.hasSparkCall) {
       this.initPlaceCallOverviewData();
       this.initActions();
+      this.getPlaceLocation();
     }
-    this.getPlaceLocation();
     this.fetchAsyncSettings();
     this.setDisplayDescription();
-    this.initPreferredLanguage();
+    if (this.showLanguage()) {
+      this.initPreferredLanguage();
+    }
+  }
+
+  public hasSquaredFusionUc(): boolean {
+    return this.hasEntitlement('squared-fusion-uc');
   }
 
   public initPlaceCallOverviewData(): void {
