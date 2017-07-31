@@ -259,7 +259,7 @@ require('./_user-add.scss');
           if (result.defaultLocation == true) {
             _.forEach($scope.usrlist, function (data) {
               data.selectedLocation = { uuid: result.uuid, name: result.name };
-              $scope.selectedLocation = data.selectedLocation.name;
+              $scope.selectedLocation = data.selectedLocation.uuid;
             });
           }
         });
@@ -1269,7 +1269,7 @@ require('./_user-add.scss');
       _.forEach(users, function (user) {
         user.internalExtension = _.get(user, 'assignedDn.pattern');
         if ($scope.ishI1484 && $scope.locationOptions.length > 1) {
-          user.location = _.get(user, 'selectedLocation.name');
+          user.location = _.get(user, 'selectedLocation.uuid');
         }
         if (user.externalNumber && user.externalNumber.uuid && user.externalNumber.uuid !== 'none') {
           user.directLine = user.externalNumber.pattern;
@@ -1776,7 +1776,7 @@ require('./_user-add.scss');
           });
 
           if ($scope.ishI1484 && $scope.locationOptions.length > 1) {
-            userItem.location = userAndDnObj[0].selectedLocation.name;
+            userItem.location = userAndDnObj[0].selectedLocation.uuid;
           }
 
           if (userAndDnObj[0].assignedDn && userAndDnObj[0].assignedDn.pattern.length > 0) {
