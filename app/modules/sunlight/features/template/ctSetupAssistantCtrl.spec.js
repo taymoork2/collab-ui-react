@@ -30,6 +30,10 @@ describe('Care Setup Assistant Ctrl', function () {
     };
   };
 
+  var getStringOfLength = function (length) {
+    return Array(length + 1).join('a');
+  };
+
   var dummyLogoUrl = 'https://www.example.com/logo.png';
 
   var failedData = {
@@ -77,7 +81,7 @@ describe('Care Setup Assistant Ctrl', function () {
     welcomeHeader: {
       attributes: [
         { name: 'header', value: 'Welcome to' },
-        { name: 'organization', value: Array(52).join('c') },
+        { name: 'organization', value: getStringOfLength(51) },
       ],
     },
     field1: {
@@ -89,7 +93,7 @@ describe('Care Setup Assistant Ctrl', function () {
     field2: {
       attributes: [
         { name: 'label', value: 'Email' },
-        { name: 'hintText', value: Array(52).join('d') },
+        { name: 'hintText', value: getStringOfLength(51) },
         { name: 'type', value: { id: 'email' } },
       ] },
     field3: {
@@ -301,7 +305,7 @@ describe('Care Setup Assistant Ctrl', function () {
     });
 
     it('next button should be disabled when name is more than 250 chars long', function () {
-      controller.template.name = Array(252).join('a');
+      controller.template.name = getStringOfLength(251);
       checkStateOfNavigationButtons(NAME_PAGE_INDEX, 'hidden', false);
     });
 
@@ -311,7 +315,7 @@ describe('Care Setup Assistant Ctrl', function () {
     });
 
     it('next button should be disabled when name has invalid character and length exceeds 250 chars', function () {
-      controller.template.name = Array(251).join('a') + '<';
+      controller.template.name = getStringOfLength(250) + '<';
       checkStateOfNavigationButtons(NAME_PAGE_INDEX, 'hidden', false);
     });
   });
@@ -331,7 +335,7 @@ describe('Care Setup Assistant Ctrl', function () {
     });
 
     it('next button should be disabled if feedback comment is longer than 50 characters', function () {
-      controller.template.configuration.pages.feedback.fields.comment.displayText = Array(52).join('a');
+      controller.template.configuration.pages.feedback.fields.comment.displayText = getStringOfLength(51);
       checkStateOfNavigationButtons(FEEDBACK_PAGE_INDEX, true, false);
     });
 
@@ -341,7 +345,7 @@ describe('Care Setup Assistant Ctrl', function () {
     });
 
     it('next button should be disabled if feedback query is longer than 250 characters', function () {
-      controller.template.configuration.pages.feedback.fields.feedbackQuery.displayText = Array(252).join('a');
+      controller.template.configuration.pages.feedback.fields.feedbackQuery.displayText = getStringOfLength(251);
       checkStateOfNavigationButtons(FEEDBACK_PAGE_INDEX, true, false);
     });
 
@@ -643,12 +647,12 @@ describe('Care Setup Assistant Ctrl', function () {
     });
 
     it('should disable the next button if promptTitle is more than 25 characters', function () {
-      controller.template.configuration.proactivePrompt.fields.promptTitle.displayText = Array(27).join('a');
+      controller.template.configuration.proactivePrompt.fields.promptTitle.displayText = getStringOfLength(26);
       checkStateOfNavigationButtons(PROACTIVE_PROMPT_PAGE_INDEX, true, false);
     });
 
     it('should disable the next button if promptMessage is more than 100 characters', function () {
-      controller.template.configuration.proactivePrompt.fields.promptMessage.message = Array(102).join('a');
+      controller.template.configuration.proactivePrompt.fields.promptMessage.message = getStringOfLength(101);
       checkStateOfNavigationButtons(PROACTIVE_PROMPT_PAGE_INDEX, true, false);
     });
 
@@ -695,7 +699,7 @@ describe('Care Setup Assistant Ctrl', function () {
   });
 
   describe('Proactive Prompt Page (when Org Name is > 50 characters', function () {
-    var LongOrgId = Array(52).join('a');
+    var LongOrgId = getStringOfLength(51);
     var spiedAuthinfos = {
       getOrgId: jasmine.createSpy('getOrgId').and.returnValue(OrgId),
       getOrgName: jasmine.createSpy('getOrgName').and.returnValue(LongOrgId),
@@ -823,7 +827,7 @@ describe('Care Setup Assistant Ctrl', function () {
     });
 
     it('should disable the right btn if off hours message is more than 250 characters', function () {
-      controller.template.configuration.pages.offHours.message = Array(252).join('a');
+      controller.template.configuration.pages.offHours.message = getStringOfLength(251);
       checkStateOfNavigationButtons(OFF_HOURS_PAGE_INDEX, true, false);
     });
 
@@ -1027,20 +1031,20 @@ describe('Care Setup Assistant Ctrl', function () {
       controller.template.configuration.chatStatusMessages.messages.chattingMessage.displayText = 'Chatting Message';
       checkStateOfNavigationButtons(CHAT_STATUS_MESSAGES_PAGE_INDEX, true, true);
     });
-    it('should have next button disabled if all the status messages are more than 25 characters', function () {
-      controller.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = Array(30).join('n');
-      controller.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText = Array(30).join('n');
-      controller.template.configuration.chatStatusMessages.messages.chattingMessage.displayText = Array(30).join('n');
+    it('should have next button disabled if all the status messages are more than 50 characters', function () {
+      controller.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = getStringOfLength(51);
+      controller.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText = getStringOfLength(51);
+      controller.template.configuration.chatStatusMessages.messages.chattingMessage.displayText = getStringOfLength(51);
       checkStateOfNavigationButtons(CHAT_STATUS_MESSAGES_PAGE_INDEX, true, false);
     });
     it('should have next button disabled if status message has invalid character', function () {
       controller.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = '<';
       checkStateOfNavigationButtons(CHAT_STATUS_MESSAGES_PAGE_INDEX, true, false);
     });
-    it('should have next button disabled if any of the status messages are more than 25 characters', function () {
+    it('should have next button disabled if any of the status messages are more than 50 characters', function () {
       controller.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = 'Waiting Message';
       controller.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText = 'Left Room Message';
-      controller.template.configuration.chatStatusMessages.messages.chattingMessage.displayText = Array(30).join('n');
+      controller.template.configuration.chatStatusMessages.messages.chattingMessage.displayText = getStringOfLength(51);
       checkStateOfNavigationButtons(CHAT_STATUS_MESSAGES_PAGE_INDEX, true, false);
     });
   });
@@ -1057,7 +1061,7 @@ describe('Care Setup Assistant Ctrl', function () {
     });
 
     it('next button should be disabled when unavailable msg is more than 250 characters', function () {
-      controller.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText = Array(252).join('a');
+      controller.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText = getStringOfLength(251);
       checkStateOfNavigationButtons(AGENT_UNAVAILABLE_PAGE_INDEX, true, false);
     });
 

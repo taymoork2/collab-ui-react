@@ -4593,6 +4593,13 @@
               template: null,
               isEditFeature: null,
             },
+            resolve: {
+              collectFeatureToggles: /* @ngInject */ function (FeatureToggleService, $state) {
+                return FeatureToggleService.supports(FeatureToggleService.features.chatAssistant).then(function (isEnabled) {
+                  $state.isChatAssistantEnabled = isEnabled;
+                });
+              },
+            },
           })
           .state('care.Features.DeleteFeature', {
             parent: 'modalDialog',
