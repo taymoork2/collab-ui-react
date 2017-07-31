@@ -88,6 +88,6 @@ describe('Component: custTimeLine', () => {
 
   it('Should draw timeline with svg', function () {
     initComponent.call(this);
-    expect(this.view.find('#svg')).toExist();
+    expect(this.view.find('.timelineSvg')).toExist();
   });
 });
