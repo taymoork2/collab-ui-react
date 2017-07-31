@@ -46,7 +46,6 @@ export class LocationsService {
       wide: true,
     }).$promise.then(locations => {
       return _.map(_.get<IRLocationListItem[]>(locations, 'locations', []), location => {
-        // return _.pick(location, this.locationListItemPickList);
         return new LocationListItem(location);
       });
     });

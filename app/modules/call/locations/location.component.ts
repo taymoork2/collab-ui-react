@@ -1,4 +1,5 @@
 import { CallLocationSettingsData, CallLocationSettingsService, LocationSettingsOptionsService, LocationSettingsOptions } from 'modules/call/locations/shared';
+import { InternalNumberRange } from 'modules/call/shared/internal-number-range';
 import { Notification } from 'modules/core/notifications';
 
 class CallLocationCtrl implements ng.IComponentController {
@@ -11,6 +12,7 @@ class CallLocationCtrl implements ng.IComponentController {
   public loading: boolean = false;
   public processing: boolean = false;
   public huronFeaturesUrl: string = 'call-locations';
+  public showRoutingPrefix: boolean = true;
 
   /* @ngInject */
   constructor(
@@ -34,7 +36,10 @@ class CallLocationCtrl implements ng.IComponentController {
     return this.LocationSettingsOptionsService.getOptions().then(locationOptions => this.locationSettingsOptions = locationOptions)
       .then(() => {
         this.CallLocationSettingsService.get(this.uuid)
-          .then(location => this.callLocationSettingsData = location)
+          .then(locationSettings => {
+            this.callLocationSettingsData = locationSettings;
+            this.showRoutingPrefix = this.setShowRoutingPrefix(locationSettings.customerVoice.routingPrefixLength);
+          })
           .catch(error => this.Notification.processErrorResponse(error, 'locations.getFailed'));
       });
   }
@@ -54,6 +59,7 @@ class CallLocationCtrl implements ng.IComponentController {
 
   public onNameChanged(name: string): void {
     this.callLocationSettingsData.location.name = name;
+    this.checkForChanges();
   }
 
   public onTimeZoneChanged(timeZone: string): void {
@@ -87,6 +93,16 @@ class CallLocationCtrl implements ng.IComponentController {
     this.checkForChanges();
   }
 
+  public onRoutingPrefixChanged(routingPrefix: string): void {
+    this.callLocationSettingsData.location.routingPrefix = routingPrefix;
+    this.checkForChanges();
+  }
+
+  public onExtensionRangeChanged(extensionRanges: InternalNumberRange[]): void {
+    this.callLocationSettingsData.internalNumberRanges = extensionRanges;
+    this.checkForChanges();
+  }
+
   public checkForChanges(): void {
     if (this.CallLocationSettingsService.matchesOriginalConfig(this.callLocationSettingsData)) {
       this.resetForm();
@@ -101,6 +117,14 @@ class CallLocationCtrl implements ng.IComponentController {
   private resetForm(): void {
     this.form.$setPristine();
     this.form.$setUntouched();
+  }
+
+  private setShowRoutingPrefix(routingPrefixLength: number | null): boolean {
+    if (_.isNull(routingPrefixLength) || routingPrefixLength === 0) {
+      return false;
+    } else {
+      return true;
+    }
   }
 }
 

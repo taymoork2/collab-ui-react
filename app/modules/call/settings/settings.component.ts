@@ -1,6 +1,6 @@
 import { HuronSettingsService, HuronSettingsOptionsService, HuronSettingsOptions, HuronSettingsData, IEmergencyNumberOption } from 'modules/call/settings/shared';
 import { Notification } from 'modules/core/notifications';
-import { IExtensionRange } from 'modules/call/settings/settings-extension-range';
+import { InternalNumberRange } from 'modules/call/shared/internal-number-range';
 import { CompanyNumber } from 'modules/call/settings/settings-company-caller-id';
 import { IOption } from 'modules/huron/dialing/dialing.service';
 import { EmergencyCallbackNumber } from 'modules/huron/sites';
@@ -263,7 +263,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
     this.checkForChanges();
   }
 
-  public onExtensionRangeChanged(extensionRanges: IExtensionRange[]): void {
+  public onExtensionRangeChanged(extensionRanges: InternalNumberRange[]): void {
     this.huronSettingsData.internalNumberRanges = extensionRanges;
     this.checkForChanges();
   }

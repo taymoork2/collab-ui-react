@@ -75,10 +75,17 @@
         </div>
       </div>
       <div class="section__content">
+        <div class="sub-section" ng-if="$ctrl.showRoutingPrefix">
+          <uc-location-routing-prefix
+            routing-prefix="$ctrl.callLocationSettingsData.location.routingPrefix"
+            on-change-fn="$ctrl.onRoutingPrefixChanged(routingPrefix)">
+          </uc-location-routing-prefix>
+        </div>
         <div class="sub-section">
           <uc-extension-range
             number-ranges="$ctrl.callLocationSettingsData.internalNumberRanges"
-            site="$ctrl.huronSettingsData.site"
+            extension-length="$ctrl.callLocationSettingsData.customerVoice.extensionLength"
+            steering-digit="$ctrl.callLocationSettingsData.location.steeringDigit"
             first-time-setup="false"
             on-change-fn="$ctrl.onExtensionRangeChanged(extensionRanges)">
           </uc-extension-range>
@@ -138,8 +145,8 @@
       </div>
     </div>
 
-    <!--Emergency Services -->
-    <div class="cs-form__section">
+    <!-- TODO: (jlowery) Emergency Services -->
+    <!-- <div class="cs-form__section">
       <div class="section__info">
         <div cs-sticky>
           <h4 class="section__title" translate="locations.emergencyServicesTitle"></h4>
@@ -148,9 +155,9 @@
       </div>
       <div class="section__content">
         <div class="sub-section">
-          <!--Emergency Services go here -->
+
         </div>
       </div>
-    </div>
+    </div> -->
   </form>
 </div>
