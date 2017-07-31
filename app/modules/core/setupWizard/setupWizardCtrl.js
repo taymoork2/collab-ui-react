@@ -66,6 +66,7 @@ require('./_setup-wizard.scss');
     function init() {
       var tabs = getInitTabs();
 
+      initPlanReviewTab(tabs);
       initEnterpriseSettingsTab(tabs);
       initMeetingSettingsTab(tabs);
       initCallSettingsTab(tabs);
@@ -80,17 +81,6 @@ require('./_setup-wizard.scss');
 
     function getInitTabs() {
       return [{
-        name: 'planReview',
-        label: 'firstTimeWizard.planReview',
-        description: 'firstTimeWizard.planReviewSub',
-        icon: 'icon-plan-review',
-        title: 'firstTimeWizard.planReview',
-        controller: 'PlanReviewCtrl as planReview',
-        steps: [{
-          name: 'init',
-          template: 'modules/core/setupWizard/planReview/planReview.tpl.html',
-        }],
-      }, {
         name: 'messagingSetup',
         label: 'firstTimeWizard.messageSettings',
         description: 'firstTimeWizard.messagingSetupSub',
@@ -126,6 +116,28 @@ require('./_setup-wizard.scss');
         }],
       },
       ];
+    }
+
+    function initPlanReviewTab(tabs) {
+      var tab = {
+        name: 'planReview',
+        label: 'firstTimeWizard.planReview',
+        description: 'firstTimeWizard.planReviewSub',
+        icon: 'icon-plan-review',
+        title: 'firstTimeWizard.planReview',
+        controller: 'PlanReviewCtrl as planReview',
+        steps: [{
+          name: 'init',
+          template: 'modules/core/setupWizard/planReview/planReview.tpl.html',
+        }],
+      };
+
+      if (SetupWizardService.hasPendingServiceOrder()) {
+        tab.label = 'firstTimeWizard.subscriptionReview';
+        tab.title = 'firstTimeWizard.subscriptionReview';
+      }
+
+      tabs.splice(0, 0, tab);
     }
 
     function initMeetingSettingsTab(tabs) {
