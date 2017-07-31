@@ -2,10 +2,10 @@ import { BmmpService } from 'modules/bmmp/bmmp.service';
 import { ProPackService } from 'modules/core/proPack/proPack.service';
 import { LearnMoreBannerService } from './learnMoreBanner.service';
 
-class LearnMoreBannerCtrl {
-  public location: string;
+abstract class LearnMoreAbstractBanner implements ng.IComponentController {
   public isReadOnly: boolean;
-  private isProPackEnabledNotPurchased: boolean;
+  protected isProPackEnabledNotPurchased: boolean;
+  protected location: string;
 
   // watches
   private stateWatchDeregister: Function;
@@ -15,12 +15,12 @@ class LearnMoreBannerCtrl {
   constructor(
     private $element: ng.IRootElementService,
     private $scope: ng.IScope,
-    private $state: ng.ui.IStateService,
+    protected $state: ng.ui.IStateService,
     private Analytics,
-    private Authinfo,
+    protected Authinfo,
     private BmmpService: BmmpService,
     private ProPackService: ProPackService,
-    private LearnMoreBannerService: LearnMoreBannerService,
+    protected LearnMoreBannerService: LearnMoreBannerService,
   ) { }
 
   public $onInit(): void {
@@ -61,32 +61,81 @@ class LearnMoreBannerCtrl {
     });
   }
 
+  public abstract show(): boolean;
+}
+
+class LearnMoreOverviewCtrl extends LearnMoreAbstractBanner {
+  /* @ngInject */
+  constructor(
+    $element: ng.IRootElementService,
+    $scope: ng.IScope,
+    $state: ng.ui.IStateService,
+    Analytics,
+    Authinfo,
+    BmmpService: BmmpService,
+    ProPackService: ProPackService,
+    LearnMoreBannerService: LearnMoreBannerService,
+  ) {
+    super($element, $scope, $state, Analytics, Authinfo, BmmpService, ProPackService, LearnMoreBannerService);
+  }
+
+  public $onInit(): void {
+    this.location = this.LearnMoreBannerService.OVERVIEW_LOCATION;
+    super.$onInit();
+  }
+
   public show(): boolean {
-    const name: string | undefined = this.$state.current.name;
-    if (name && name.indexOf(this.location) > -1) {
-      return this.isProPackEnabledNotPurchased;
-    } else {
-      return false;
-    }
-  }
-
-  public isOverview(): boolean {
-    return this.location === this.LearnMoreBannerService.HEADER_LOCATION;
-  }
-
-  public isReports(): boolean {
-    return this.location === this.LearnMoreBannerService.REPORTS_LOCATION;
-  }
-
-  public isEnterpriseCustomer(): boolean {
-    return this.Authinfo.isEnterpriseCustomer();
+    return (this.$state.current.name === this.location) && this.isProPackEnabledNotPurchased && this.Authinfo.isEnterpriseCustomer();
   }
 }
 
-export class LearnMoreBannerComponent implements ng.IComponentOptions {
-  public templateUrl = 'modules/bmmp/learn-more-banner/learnMoreBanner.tpl.html';
-  public controller = LearnMoreBannerCtrl;
-  public bindings = {
-    location: '@',
-  };
+class LearnMoreReportsCtrl extends LearnMoreAbstractBanner {
+  /* @ngInject */
+  constructor(
+    $element: ng.IRootElementService,
+    $scope: ng.IScope,
+    $state: ng.ui.IStateService,
+    Analytics,
+    Authinfo,
+    BmmpService: BmmpService,
+    ProPackService: ProPackService,
+    LearnMoreBannerService: LearnMoreBannerService,
+  ) {
+    super($element, $scope, $state, Analytics, Authinfo, BmmpService, ProPackService, LearnMoreBannerService);
+  }
+
+  public $onInit(): void {
+    this.location = this.LearnMoreBannerService.REPORTS_LOCATION;
+    super.$onInit();
+  }
+
+  public show(): boolean {
+    return (this.$state.current.name === 'reports.spark') && this.isProPackEnabledNotPurchased && this.Authinfo.isEnterpriseCustomer();
+  }
+}
+
+export class LearnMoreOverviewComponent implements ng.IComponentOptions {
+  public template = `<div class="overview-bmmp-banner" ng-if="$ctrl.show()" ng-class="{ 'readonly': $ctrl.isReadOnly }">
+    <div class="cisco-bmmp-marketing-closeable-widget"
+      data-application-page="overview"
+      data-widget-location="top-bar"
+      data-close-handler="closeWidget();"
+      data-styled="true">
+    </div>
+  </div>`;
+  public controller = LearnMoreOverviewCtrl;
+  public bindings = {};
+}
+
+export class LearnMoreReportsComponent implements ng.IComponentOptions {
+  public template = `<div class="reports-bmmp-banner" ng-if="$ctrl.show()">
+    <div class="cisco-bmmp-marketing-closeable-widget"
+      data-application-page="reports"
+      data-widget-location="top-bar"
+      data-close-handler="closeWidget();"
+      data-styled="true">
+    </div>
+  </div>`;
+  public controller = LearnMoreReportsCtrl;
+  public bindings = {};
 }
