@@ -190,7 +190,7 @@ class LaunchAdvancedSettingsController {
 
           //Post token to endpoint
           if (this.endpointWindow) {
-            this.endpointWindow.postMessage({ token: token }, endpointOrigin);
+            this.endpointWindow.postMessage({ token: token }, event.origin);
           }
         } else if (messageStatus === 'login-success') {
           //Stop the timer
