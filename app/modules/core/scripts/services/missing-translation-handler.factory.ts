@@ -1,11 +1,11 @@
 /* @ngInject */
 const missingTranslationHandler = ($log: ng.ILogService, Config) => {
   return (translationID: string) => {
-    if (Config.isProd() || Config.isIntegration()) {
+    if (!Config.isDev()) {
       return translationID;
     } else {
-      $log.error(`😥 Translation for ${translationID} doesn't exist`);
-      return `😥 No translation found for the key: ${translationID}`;
+      $log.error(`😖 Translation for ${translationID} doesn't exist`);
+      return `😖 No translation found for the key: ${translationID}`;
     }
   };
 };
