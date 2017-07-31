@@ -1,8 +1,8 @@
-import { Site } from 'modules/huron/sites';
 import { IExtensionRange } from 'modules/call/settings/settings-extension-range';
 
 class ExtensionRangeCtrl implements ng.IComponentController {
-  public site: Site;
+  public steeringDigit: string;
+  public extensionLength: string;
   public numberRanges: IExtensionRange[];
   public firstTimeSetup: boolean;
   public onChangeFn: Function;
@@ -74,8 +74,8 @@ class ExtensionRangeCtrl implements ng.IComponentController {
   }
 
   public steeringDigitOverlap(range: IExtensionRange) {
-    if (_.startsWith(range.beginNumber, this.site.steeringDigit) ||
-      _.startsWith(range.endNumber, this.site.steeringDigit)) {
+    if (_.startsWith(range.beginNumber, this.steeringDigit) ||
+      _.startsWith(range.endNumber, this.steeringDigit)) {
       return true;
     }
     return false;
@@ -98,7 +98,8 @@ export class ExtensionRangeComponent implements ng.IComponentOptions {
   public controller = ExtensionRangeCtrl;
   public templateUrl = 'modules/call/settings/settings-extension-range/settings-extension-range.component.html';
   public bindings = {
-    site: '<',
+    steeringDigit: '<',
+    extensionLength: '<',
     numberRanges: '<',
     firstTimeSetup: '<',
     onChangeFn: '&',
