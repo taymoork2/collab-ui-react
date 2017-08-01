@@ -77,13 +77,13 @@
       margin-left: 12px;
     }
 
-    .premium-customer {
-      font-size: vr-adjust(16);
-      top: vr-adjust(4);
+    .badge--premium {
+      min-width: 0;
     }
 
-    .premium-customer:hover {
-      color: $color-primary-base;
+    .badge--premium:hover {
+      background-color: $color-primary-base;
+      color: $brand-white;
     }
 
     .orgnotselected {
