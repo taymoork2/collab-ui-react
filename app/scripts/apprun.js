@@ -93,12 +93,12 @@
           });
       } else if ($window.document.URL.indexOf('error') !== -1) {
         params = getFromStandardGetParams($window.document.URL);
-        var error = params['error'];
-        if (error === 'unauthorized_client' || error === 'invalid_scope' || error === 'unsupported_response_type') {
+        var error = params.error;
+        if (error === Config.oauthError.unauthorizedClient || error === Config.oauthError.invliadScope || error === Config.oauthError.unsupportdResponseType) {
           $state.go('login');
-        } else if (error === 'access_denied') {
+        } else if (error === Config.oauthError.accessDenied) {
           $state.go('unauthorized');
-        } else if (error === 'server_error' || error === 'temporarily_unavailable' || error === 'service_unavailable') {
+        } else if (error === Config.oauthError.serverError || error === Config.oauthError.temporarilyUnavailable || error === Config.oauthError.serviceUnavailable) {
           $state.go('backend-temp-unavailable');
         }
       } else {
