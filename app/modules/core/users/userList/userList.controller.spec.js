@@ -15,6 +15,12 @@ describe('UserListCtrl: Ctrl', function () {
       CUSTOMER: 2,
     };
 
+    this.event = {
+      stopPropagation: jasmine.createSpy('stopPropagation'),
+    };
+    this.ENTER = 13;
+    this.SPACE = 32;
+
     this.photoUsers = _.clone(getJSONFixture('core/json/users/userlist.controller.json'));
     this.currentUser = _.clone(getJSONFixture('core/json/currentUser.json'));
     this.listUsers = _.clone(getJSONFixture('core/json/users/listUsers.json'));
@@ -32,7 +38,9 @@ describe('UserListCtrl: Ctrl', function () {
       success: true,
     };
 
+    spyOn(this.$state, 'go');
     spyOn(this.Notification, 'success');
+    spyOn(this.Notification, 'errorResponse');
     spyOn(this.Userservice, 'resendInvitation').and.returnValue(this.$q.resolve({}));
     spyOn(this.UserListService, 'listUsers').and.callFake(function (startIndex, count, sortBy, sortOrder, callback, searchStr, getAdmins) {
       var response;
@@ -193,6 +201,62 @@ describe('UserListCtrl: Ctrl', function () {
     });
   });
 
+  describe('handleDeleteUser', function () {
+    beforeEach(function () {
+      initController.apply(this);
+
+      this.user = {
+        userName: 'userName',
+        id: 'id',
+        meta: {
+          organizationID: 'organizationID',
+        },
+      };
+
+      this.userDetails = {
+        deleteUserOrgId: this.user.meta.organizationID,
+        deleteUserUuId: this.user.id,
+        deleteUsername: this.user.userName,
+      };
+
+      this.userDelete = 'users.delete';
+      this.selfDelete = 'users.deleteSelf';
+    });
+
+    it('should call keypressHandleDeleteUser and handleDeleteUser successfully when keypress event is enter', function () {
+      this.event.keyCode = this.ENTER;
+      this.controller.keypressHandleDeleteUser(this.event, this.user, true);
+      expect(this.event.stopPropagation).toHaveBeenCalled();
+      expect(this.$state.go).toHaveBeenCalledWith(this.selfDelete, this.userDetails);
+    });
+
+    it('should call keypressHandleDeleteUser and handleDeleteUser successfully when keypress event is space', function () {
+      this.event.keyCode = this.SPACE;
+      this.controller.keypressHandleDeleteUser(this.event, this.user, true);
+      expect(this.event.stopPropagation).toHaveBeenCalled();
+      expect(this.$state.go).toHaveBeenCalledWith(this.selfDelete, this.userDetails);
+    });
+
+    it('should call keypressHandleDeleteUser, but not handleDeleteUser, when keypress event is neither enter nor space', function () {
+      this.event.keyCode = 0;
+      this.controller.keypressHandleDeleteUser(this.event, this.user, true);
+      expect(this.event.stopPropagation).toHaveBeenCalled();
+      expect(this.$state.go).not.toHaveBeenCalled();
+    });
+
+    it('should call handleDeleteUser and call the delete self modal when self is true', function () {
+      this.controller.handleDeleteUser(this.event, this.user, true);
+      expect(this.event.stopPropagation).toHaveBeenCalled();
+      expect(this.$state.go).toHaveBeenCalledWith(this.selfDelete, this.userDetails);
+    });
+
+    it('should call handleDeleteUser and call the delete user modal when self is false', function () {
+      this.controller.handleDeleteUser(this.event, this.user, false);
+      expect(this.event.stopPropagation).toHaveBeenCalled();
+      expect(this.$state.go).toHaveBeenCalledWith(this.userDelete, this.userDetails);
+    });
+  });
+
   describe('resendInvitation', function () {
     beforeEach(function () {
       initController.apply(this);
@@ -205,10 +269,44 @@ describe('UserListCtrl: Ctrl', function () {
       this.entitlements = ['squared-call-initiation', 'spark', 'webex-squared'];
     });
 
-    it('should call resendInvitation successfully', function () {
-      this.controller.resendInvitation(this.userEmail, this.userName, this.uuid, this.userStatus, this.dirsyncEnabled, this.entitlements);
+    it('should call keypressResendInvitation and resendInvitation successfully when keypress event is enter', function () {
+      this.event.keyCode = this.ENTER;
+      this.controller.keypressResendInvitation(this.event, this.userEmail, this.userName, this.uuid, this.userStatus, this.dirsyncEnabled, this.entitlements);
       this.$scope.$apply();
       expect(this.Notification.success).toHaveBeenCalled();
+      expect(this.event.stopPropagation).toHaveBeenCalled();
+    });
+
+    it('should call keypressResendInvitation and resendInvitation successfully when keypress event is space', function () {
+      this.event.keyCode = this.SPACE;
+      this.controller.keypressResendInvitation(this.event, this.userEmail, this.userName, this.uuid, this.userStatus, this.dirsyncEnabled, this.entitlements);
+      this.$scope.$apply();
+      expect(this.Notification.success).toHaveBeenCalled();
+      expect(this.event.stopPropagation).toHaveBeenCalled();
+    });
+
+    it('should call keypressResendInvitation, but not resendInvitation, when keypress event is neither enter nor space', function () {
+      this.event.keyCode = 0;
+      this.controller.keypressResendInvitation(this.event, this.userEmail, this.userName, this.uuid, this.userStatus, this.dirsyncEnabled, this.entitlements);
+      this.$scope.$apply();
+      expect(this.Notification.success).not.toHaveBeenCalled();
+      expect(this.Notification.errorResponse).not.toHaveBeenCalled();
+      expect(this.event.stopPropagation).toHaveBeenCalled();
+    });
+
+    it('should call resendInvitation successfully', function () {
+      this.controller.resendInvitation(this.event, this.userEmail, this.userName, this.uuid, this.userStatus, this.dirsyncEnabled, this.entitlements);
+      this.$scope.$apply();
+      expect(this.Notification.success).toHaveBeenCalled();
+      expect(this.event.stopPropagation).toHaveBeenCalled();
+    });
+
+    it('should call resendInvitation error notification on failure', function () {
+      this.Userservice.resendInvitation.and.returnValue(this.$q.reject({}));
+      this.controller.resendInvitation(this.event, this.userEmail, this.userName, this.uuid, this.userStatus, this.dirsyncEnabled, this.entitlements);
+      this.$scope.$apply();
+      expect(this.Notification.errorResponse).toHaveBeenCalled();
+      expect(this.event.stopPropagation).toHaveBeenCalled();
     });
   });
 
