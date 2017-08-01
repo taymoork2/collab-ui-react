@@ -6901,7 +6901,7 @@
     "agentEnteredStatus": "Chatting with an Agent",
     "typeNewMsg": "Type your message and press enter.",
     "feedbackQuery": "Please rate your chat experience",
-    "feedbackQueryCall": "Please rate your previous callback experience",
+    "feedbackQueryCall": "Please rate your callback experience.",
     "ratingHintText": "Hint Text",
     "ratingComment": "Add comments",
     "submitFeedbackBtn": "Submit Feedback",
