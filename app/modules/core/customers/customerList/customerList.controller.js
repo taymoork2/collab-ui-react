@@ -9,7 +9,7 @@ require('./_customer-list.scss');
   /* @ngInject */
   function CustomerListCtrl($q, $scope, $state, $templateCache, $translate, $window,
     Analytics, Authinfo, Config, ExternalNumberService, FeatureToggleService, Log,
-    Notification, Orgservice, PartnerService, TrialService, uiGridSelectionService, HuronCompassService) {
+    Notification, Orgservice, PartnerService, TrialService, HuronCompassService) {
     var PREMIUM = 'premium';
     var STANDARD = 'standard';
 
@@ -172,13 +172,8 @@ require('./_customer-list.scss');
     };
 
     var nameTemplate = $templateCache.get('modules/core/customers/customerList/grid/nameColumn.tpl.html');
-    var licenseCountTemplate = $templateCache.get('modules/core/customers/customerList/grid/licenseCountColumn.tpl.html');
-    /*AG TODO:  temporarily hidden until we have data:
-    var totalUsersTemplate = $templateCache.get('modules/core/customers/customerList/grid/totalUsersColumn.tpl.html');*/
     var compactServiceTemplate = $templateCache.get('modules/core/customers/customerList/grid/compactServiceColumn.tpl.html');
     var accountStatusTemplate = $templateCache.get('modules/core/customers/customerList/grid/accountStatusColumn.tpl.html');
-    var newNoteTemplate = $templateCache.get('modules/core/customers/customerList/grid/newNoteColumn.tpl.html');
-
 
     // new column defs for the customer list redesign. These should stay once the feature is rolled out
     var customerNameField = {
@@ -212,7 +207,7 @@ require('./_customer-list.scss');
       field: 'totalLicenses',
       displayName: $translate.instant('customerPage.totalLicenses'),
       width: '16.5%',
-      cellTemplate: licenseCountTemplate,
+      cellTemplate: '<cs-grid-cell row="row" cell-function="grid.appScope.showCustomerDetails(row.entity)" cell-string="{{grid.appScope.getLicenseCountColumnText(row.entity)}}" center-text="true"></cs-grid-cell>',
       headerCellClass: 'align-center',
     };
     /* AG TODO:  once we have data for total users -- add back
@@ -220,14 +215,14 @@ require('./_customer-list.scss');
         field: 'totalUsers',
         displayName: $translate.instant('customerPage.active') + ' / ' + $translate.instant('customerPage.totalUsers'),
         width: '16%',
-        cellTemplate: totalUsersTemplate,
+        cellTemplate: '<cs-grid-cell row="row" cell-function="grid.appScope.showCustomerDetails(row.entity)" cell-string="{{grid.appScope.getUserCountColumnText(row.entity)}}" center-text="true"></cs-grid-cell>',
         headerCellClass: 'align-center',
         sortingAlgorithm: userSort
       };*/
     var notesField = {
       field: 'notes',
       displayName: $translate.instant('customerPage.notes'),
-      cellTemplate: newNoteTemplate,
+      cellTemplate: '<cs-grid-cell row="row" cell-function="grid.appScope.showCustomerDetails(row.entity)" cell-string="{{row.entity.notes.text}}"></cs-grid-cell>',
       sortingAlgorithm: notesSort,
     };
 
@@ -811,11 +806,7 @@ require('./_customer-list.scss');
       return isTrial ? 'trial' : 'active';
     }
 
-    function showCustomerDetails(customer, gridRow) {
-      if (!_.isUndefined(gridRow)) {
-        uiGridSelectionService.toggleRowSelection(vm.gridApi.grid, gridRow, null, false, true);
-      }
-
+    function showCustomerDetails(customer) {
       vm.currentTrial = customer;
       HuronCompassService.setIsCustomer(true);
       $state.go('customer-overview', {

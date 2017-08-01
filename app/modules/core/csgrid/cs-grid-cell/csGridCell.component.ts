@@ -1,7 +1,8 @@
 class CsGridCellCtrl {
   public cellFunction: Function;
   public cellString: string;
-  public row: any;
+  public centerText: boolean;
+  public row: uiGrid.IGridRow;
 
   /* @ngInject */
   constructor() {}
@@ -19,6 +20,7 @@ export class CsGridCellComponent implements ng.IComponentOptions {
   public bindings = {
     cellFunction: '&',
     cellString: '@',
+    centerText: '<',
     row: '<',
   };
 }
