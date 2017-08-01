@@ -123,7 +123,7 @@
               field: 'displayName',
               id: 'userName',
               displayName: $translate.instant('taskOffered.user'),
-              width: '46%',
+              width: '33%',
               sortable: true,
               sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
               cellClass: function (grid, row) {
@@ -134,18 +134,15 @@
               id: 'tasksOffered',
               displayName: $translate.instant('taskOffered.tasksOffered'),
               enableFiltering: false,
-              width: '18%',
+              width: '22%',
               sortable: true,
-              sort: {
-                direction: uiGridConstants.DESC,
-              },
               sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
             }, {
               field: 'tasksAccepted',
               id: 'tasksAccepted',
               displayName: $translate.instant('taskOffered.tasksAccepted'),
               enableFiltering: false,
-              width: '18%',
+              width: '23%',
               sortable: true,
               sort: {
                 direction: uiGridConstants.DESC,
@@ -156,11 +153,8 @@
               id: 'tasksMissed',
               displayName: $translate.instant('taskOffered.tasksMissed'),
               enableFiltering: false,
-              width: '18%',
+              width: '22%',
               sortable: true,
-              sort: {
-                direction: uiGridConstants.DESC,
-              },
               sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
             },
           ],
