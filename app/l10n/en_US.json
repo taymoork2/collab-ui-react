@@ -3470,6 +3470,7 @@
     "pendingLicensesError": "There was an error in the call for pending licenses",
     "subscriptionId": "Subscription IDs",
     "subscriptionID": "Subscription ID: ",
+    "orderNumber": "Order Number: ",
     "spark": "Cisco Spark",
     "sparkStub": "Set up Cisco Spark",
     "switchToDefaultPlanView": "View the complete services in this subscription",
