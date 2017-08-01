@@ -11,12 +11,10 @@
         <dynamic-prompt class="small-12 columns dynamic-prompt aa-message-height" dynamic-tags="aaMessageType.dynamicTags" model-values="aaMessageType.dynamicValues" insert-element="insertElement" aa-keypress ng-change = "aaMessageType.saveDynamicUi()" ng-model="aaMessageType.messageInput" id="messageType{{schedule + index + menuKeyIndex + menuId}}" name="messageInput" data-placeholder="{{:: aaMessageType.messageInputPlaceholder}}"></dynamic-prompt>
         <div ng-if="aaMessageType.getWarning()">
           <br></br>
-          <div class="columns small-1">
-            <i class="ellipsis icon icon-warning warning aa-icon-font-size"></i>
-          </div>
-          <div class="columns small-11 aa-padding" ng-click="aaMessageType.fullWarningMsg()" role="button">
-            <p class="aa-text-overflow" data-ng-bind = "aaMessageType.deletedSessionVariablesListAlongWithWarning" contentEditable="false"></p>
-            <div ng-if = "aaMessageType.fullWarningMsgValue" class="aa-full-warning" data-ng-bind = "aaMessageType.deletedSessionVariablesListAlongWithWarning" contentEditable="false"></div>
+          <div class="columns small-12 aa-div-click" ng-click="aaMessageType.togglefullWarningMsg()" ng-blur="aaMessageType.closeFullWarningMsg()"> 
+            <span class="ellipsis icon icon-warning warning aa-icon-font-size"></span>
+            <span class="aa-text-overflow" data-ng-bind="aaMessageType.deletedSessionVariablesListAlongWithWarning"></span>
+            <div ng-if = "aaMessageType.fullWarningMsgValue" class="aa-full-warning" data-ng-bind = "aaMessageType.deletedSessionVariablesListAlongWithWarning"></div>
           </div>
         </div>
         <aa-add-variable dynamic-prompt-id="messageType{{schedule + index + menuKeyIndex + menuId}}" aa-menu-id="{{menuId}}" aa-key-index="{{menuKeyIndex}}" aa-menu-header="{{isMenuHeader}}" aa-schedule="{{schedule}}" aa-index="index" dynamic-element-string="aaMessageType.addElement"></aa-add-variable>

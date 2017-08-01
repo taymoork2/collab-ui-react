@@ -27,6 +27,19 @@ var AutoAttendantPage = function () {
   this.periodicMediaUploadSelectOption = element(by.id('periodicAnnouncement')).element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
   this.periodicMediaUploadInput = element(by.id('periodicAnnouncement')).element(by.css('aa-message-type [name="mediaUploadSend"]'));
 
+  this.periodicDynamicButton = element(by.id('periodicAnnouncement')).element(by.css('aa-add-variable'));
+  this.initialMessageTypeSelect = element(by.id('initialAnnouncement')).element(by.css('aa-message-type [name="messageInput"]'));
+  this.initialSayMessageOption = element(by.id('initialAnnouncement')).element(by.css('select[name="messageSelect"] + div span.select-toggle'));
+  this.initialMediaUploadSelectOption = element(by.id('initialAnnouncement')).element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
+  this.initialSayMessageSelectOption = element(by.id('initialAnnouncement')).element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).last();
+  this.initialMediaUploadInput = element(by.id('initialAnnouncement')).element(by.css('aa-message-type [name="mediaUploadSend"]'));
+  this.initialDynamicButton = element(by.id('initialAnnouncement')).element(by.css('aa-add-variable'));
+  this.dynamicVariable = element(by.css('#variableSelect select[name="variableSelect"] + div span.select-toggle'));
+  this.variable = element(by.css('#variableSelect select[name="variableSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
+  this.readAs = element(by.css('#readAsSelect select[name="readAsSelect"] + div span.select-toggle'));
+  this.readAsVariable = element(by.css('#readAsSelect select[name="readAsSelect"] + div div.dropdown-menu')).all(by.tagName('li')).get(1);
+  this.okButton = element(by.css('.btn-primary'));
+  this.periodicSayMessageSelectOption = element(by.id('periodicAnnouncement')).element(by.css('select[name="messageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).last();
   this.periodicMin = element(by.linkText('0'));
   this.periodicMinOption = element(by.id('periodicMinId')).all(by.tagName('li'));
   this.periodicSec = element(by.linkText('45'));
