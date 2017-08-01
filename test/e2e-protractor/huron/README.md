@@ -94,3 +94,9 @@ fdescribe('only I will run', () => {...});
 ```
 npm run protractor-babel -- --provisionerKeepCustomer --specs ./test/e2e-protractor/huron/functional/call-settings_spec.js
 ```
+
+* By default, the provisioner will skip the first time setup wizard (ftsw).
+* If you need to test some functionality of the first time setup wizard, the constructor will take a true/false value. 
+* `True` will cause the provisioner to not skip the ftsw. Default is `false`. Example:
+* `const customer = huronCustomer('<test case>', null, null, null, null, true);`
+```
