@@ -1032,6 +1032,7 @@
     "success": "User successfully updated.",
     "rolesSuccess": "Successfully updated user's roles.",
     "error": "Update user failed.",
+    "patchError": "Patch user failed",
     "rolesError": "Error updating user's roles.",
     "displayNameEmptyError": "Display Name cannot be empty",
     "complianceError": "Error updating compliance entitlement"
