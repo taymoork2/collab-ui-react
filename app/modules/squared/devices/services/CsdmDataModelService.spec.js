@@ -175,7 +175,7 @@ describe('Service: CsdmDataModelService', function () {
       var codeToAddUrl = 'https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/codes/12121-code-to-add-21212';
 
       $httpBackend.expectPOST('https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/codes')
-        .respond({ url: codeToAddUrl, id: pWithoutDeviceUuid });  //api uses id
+        .respond({ url: codeToAddUrl, id: pWithoutDeviceUuid }); //api uses id
       var promiseExecuted, changeNotification;
 
       CsdmDataModelService.getDevicesMap().then(function (deviceMap) {

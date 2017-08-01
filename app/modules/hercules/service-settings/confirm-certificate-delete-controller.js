@@ -6,7 +6,7 @@
     .controller('ConfirmCertificateDeleteController', ConfirmCertificateDeleteController);
 
 
-/* @ngInject */
+  /* @ngInject */
   function ConfirmCertificateDeleteController(CertService, Notification, cert, $modalInstance) {
     var vm = this;
     vm.cert = cert;

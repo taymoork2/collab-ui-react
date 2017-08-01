@@ -182,7 +182,7 @@ describe('Service: Metrics Graph Service', function () {
     beforeEach(function () {
       spyOn(AmCharts, 'makeChart').and.returnValue({
         dataProvider: clusteravailabilityData,
-           //validateData: validateService.validate
+        //validateData: validateService.validate
       });
       availabilityChart = null;
       availabilityChart = MetricsGraphService.setAvailabilityGraph(clusteravailabilityData, availabilityChart, 'All');
@@ -191,12 +191,12 @@ describe('Service: Metrics Graph Service', function () {
     it('should have created a graph when setActiveUsersGraph is called the first time', function () {
       expect(AmCharts.makeChart).toHaveBeenCalled();
       expect(MetricsGraphService.createAvailabilityGraph).toHaveBeenCalled();
-       //expect(validateService.validate).not.toHaveBeenCalled();
+      //expect(validateService.validate).not.toHaveBeenCalled();
     });
 
     it('should update graph when setActiveUsersGraph is called a second time', function () {
       MetricsGraphService.setCallVolumeGraph(clusteravailabilityData, availabilityChart);
-       //expect(validateService.validate).toHaveBeenCalled();
+      //expect(validateService.validate).toHaveBeenCalled();
     });
   });
 });

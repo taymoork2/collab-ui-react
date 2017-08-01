@@ -100,7 +100,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       expect(success).toBe(true);
 
       //_.each(_.keys(_welcomeMenu), function (key) {
-        //expect(_.isEqual(welcomeMenu[key], ''));
+      //expect(_.isEqual(welcomeMenu[key], ''));
       //});
     });
   });
@@ -115,7 +115,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       expect(success).toBe(true);
 
       //_.each(_.keys(_welcomeMenu), function (key) {
-        //expect(_.isEqual(welcomeMenu[key], ''));
+      //expect(_.isEqual(welcomeMenu[key], ''));
       //});
     });
   });
@@ -126,10 +126,10 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcomeWithAnnouncements, 'openHours');
 
       //_.each(_.keys(_welcomeMenu), function (key) {
-        //expect(_.isEqual(_welcomeMenu[key], ceWelcomeWithAnnouncementsKeys[key])).toBe(true);
-        //expect(ceWelcomeWithAnnouncementsKeys[key]).toBe(true);
-        //expect(key).toBe(true);
-        //expect(_welcomeMenu[key]).toBe(true);
+      //expect(_.isEqual(_welcomeMenu[key], ceWelcomeWithAnnouncementsKeys[key])).toBe(true);
+      //expect(ceWelcomeWithAnnouncementsKeys[key]).toBe(true);
+      //expect(key).toBe(true);
+      //expect(_welcomeMenu[key]).toBe(true);
       //});
 
       expect(_.isEqual(_welcomeMenu['type'], ceWelcomeWithAnnouncementsKeys['type'])).toBe(true);
@@ -146,8 +146,8 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       //AutoAttendantCeMenuModelService.getWelcomeMenu(ceMenuWithDynaSay, 'openHours');
       var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceMenuWithDynaSay, 'openHours');
       //_.each(_.keys(_welcomeMenu), function (key) {
-        //expect(_.isEqual(_welcomeMenu[key], ''));
-        //expect(_welcomeMenu[key]).toBe(true);
+      //expect(_.isEqual(_welcomeMenu[key], ''));
+      //expect(_welcomeMenu[key]).toBe(true);
       //});
 
       expect(_.isEqual(_welcomeMenu['type'], ceWelcomeWithAnnouncementsKeys['type'])).toBe(true);
@@ -161,8 +161,8 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       //AutoAttendantCeMenuModelService.getWelcomeMenu(ceMenuWithAnnouncementsPlay, 'openHours');
       var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceMenuWithAnnouncementsPlay, 'openHours');
       //_.each(_.keys(_welcomeMenu), function (key) {
-        //expect(_.isEqual(_welcomeMenu[key], ''));
-        //expect(_welcomeMenu[key]).toBe(true);
+      //expect(_.isEqual(_welcomeMenu[key], ''));
+      //expect(_welcomeMenu[key]).toBe(true);
       //});
 
       expect(_.isEqual(_welcomeMenu['type'], ceWelcomeWithAnnouncementsKeys['type'])).toBe(true);

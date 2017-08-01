@@ -214,9 +214,9 @@
       return $http.get(url, {
         params: _.get(params, 'ci'),
       })
-      .catch(function (response) {
-        Notification.errorWithTrackingId(response, 'usersPage.loadError');
-      });
+        .catch(function (response) {
+          Notification.errorWithTrackingId(response, 'usersPage.loadError');
+        });
     }
 
     function listNonAdminUsers(params, searchStr) {

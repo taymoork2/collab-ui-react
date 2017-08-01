@@ -9,14 +9,14 @@
   function HDSSettingsController($modal, $q, $state, $translate, Analytics, Authinfo, Orgservice, HDSService, HybridServicesClusterService, Notification) {
     var vm = this;
     vm.lock = false;
-    vm.PRE_TRIAL = 'pre_trial';    // service status Trial/Production mode
+    vm.PRE_TRIAL = 'pre_trial'; // service status Trial/Production mode
     vm.TRIAL = 'trial';
     vm.PRODUCTION = 'production';
     vm.NA_MODE = 'na_mode';
     vm.trialUserGroupId = null;
     vm.trialDomain = '';
     vm.prodDomain = 'Spark Default KMS';
-    vm.numResourceNodes = 1;              // # of resource nodes, TODO: from backend when APIs ready
+    vm.numResourceNodes = 1; // # of resource nodes, TODO: from backend when APIs ready
     vm.numTrialUsers = 10;
     vm.recoverPreTrial = recoverPreTrial; // set to trial mode, TODO: remove this when at the very late stage of HDS dev
     vm.startTrial = startTrial;
@@ -173,26 +173,26 @@
     function setHDSDefaultForAltHDSServersGroup() {
       //For dirsync orgs retrieve default HDS group info by name
       HDSService.queryGroup(Authinfo.getOrgId(), vm.defaultHDSGroupName)
-                  .then(function (group) {
-                    vm.defaultHDSGroup = group.Resources[0];
-                    vm.trialUserGroupId = vm.defaultHDSGroup.id;
-                    //Assign group id to each server
-                    _.forEach(vm.altHdsServers, function (server) {
-                      server.groupId = vm.defaultHDSGroup.id;
-                    });
-                    var altHdsServersJson = {
-                      altHdsServers: vm.altHdsServers,
-                    };
-                    HDSService.setOrgAltHdsServersHds(Authinfo.getOrgId(), altHdsServersJson)
-                          .then(function () {
-                            vm.model.serviceMode = vm.PRE_TRIAL;
-                            getTrialUsersInfo();
-                          }).catch(function (error) {
-                            Notification.errorWithTrackingId(error, localizedHdsModeError);
-                          });
-                  }).catch(function (error) {
-                    Notification.error(localizedHdsModeError + error.statusText);
-                  });
+        .then(function (group) {
+          vm.defaultHDSGroup = group.Resources[0];
+          vm.trialUserGroupId = vm.defaultHDSGroup.id;
+          //Assign group id to each server
+          _.forEach(vm.altHdsServers, function (server) {
+            server.groupId = vm.defaultHDSGroup.id;
+          });
+          var altHdsServersJson = {
+            altHdsServers: vm.altHdsServers,
+          };
+          HDSService.setOrgAltHdsServersHds(Authinfo.getOrgId(), altHdsServersJson)
+            .then(function () {
+              vm.model.serviceMode = vm.PRE_TRIAL;
+              getTrialUsersInfo();
+            }).catch(function (error) {
+              Notification.errorWithTrackingId(error, localizedHdsModeError);
+            });
+        }).catch(function (error) {
+          Notification.error(localizedHdsModeError + error.statusText);
+        });
     }
 
     function groupAssigned() {
@@ -403,24 +403,24 @@
                 });
             } else {
               cleanTrialUserGroup()
-              .then(function () {
-                createTrialUserGroup()
-                  .then(function (newGroupID) {
-                    manageHdsServersInfo(newGroupID)
-                      .then(function () {
-                        Notification.success('hds.resources.settings.succeedDeactivateProductionMode');
-                      }).catch(function (error) {
-                        Notification.errorWithTrackingId(error, localizedHdsModeError);
-                      }).finally(function () {
-                        vm.lock = false;
-                      });
-                  }).catch(function (error) {
-                    throw error;
-                  });
-              }).catch(function (error) {
-                Notification.errorWithTrackingId(error, localizedHdsModeError);
-                vm.lock = false;
-              });
+                .then(function () {
+                  createTrialUserGroup()
+                    .then(function (newGroupID) {
+                      manageHdsServersInfo(newGroupID)
+                        .then(function () {
+                          Notification.success('hds.resources.settings.succeedDeactivateProductionMode');
+                        }).catch(function (error) {
+                          Notification.errorWithTrackingId(error, localizedHdsModeError);
+                        }).finally(function () {
+                          vm.lock = false;
+                        });
+                    }).catch(function (error) {
+                      throw error;
+                    });
+                }).catch(function (error) {
+                  Notification.errorWithTrackingId(error, localizedHdsModeError);
+                  vm.lock = false;
+                });
             }
           }).catch(function () {
             // user clicked Cancle Button, no need for a notification.

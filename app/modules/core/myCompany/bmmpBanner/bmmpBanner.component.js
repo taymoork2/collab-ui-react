@@ -37,12 +37,12 @@
     function initBmmpBanner(bmmpParams) {
       /* eslint-disable no-undef */
       bmmp.init(null,
-          null,
-          bmmpParams.userId,
-          bmmpParams.appName,
-          bmmpParams.locale,
-          null,
-          bmmpParams.apiBaseUrl);
+        null,
+        bmmpParams.userId,
+        bmmpParams.appName,
+        bmmpParams.locale,
+        null,
+        bmmpParams.apiBaseUrl);
     }
 
     function canShow() {

@@ -18,7 +18,7 @@ describe('Controller: MediafusionClusterSettingsController', function () {
 
     spyOn(this.HybridServicesClusterService, 'getAll').and.returnValue(this.$q.resolve());
     spyOn(this.MediaClusterServiceV2, 'getProperties')
-    .and.returnValue(this.$q.resolve(this.properties));
+      .and.returnValue(this.$q.resolve(this.properties));
     spyOn(this.MediaClusterServiceV2, 'setProperties').and.returnValue(this.$q.resolve());
 
     this.initController('MediafusionClusterSettingsController', {

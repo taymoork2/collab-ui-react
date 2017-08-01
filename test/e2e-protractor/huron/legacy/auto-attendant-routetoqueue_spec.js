@@ -160,7 +160,7 @@ describe('Huron Auto Attendant', function () {
     });
 
     it('should add another route to queue to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
-        // Main menu key 1 - route to queue
+      // Main menu key 1 - route to queue
       utils.scrollIntoView(autoattendant.repeatPlus);
 
       utils.click(autoattendant.repeatPlus);
@@ -177,7 +177,7 @@ describe('Huron Auto Attendant', function () {
     });
 
     it('should click queue setting hyperlink of route to queue to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
-        // it is for selecting the queue for route to queue option
+      // it is for selecting the queue for route to queue option
       utils.scrollIntoView(autoattendant.repeatPlus);
       utils.click(autoattendant.queueSetting);
       utils.click(autoattendant.queueMin);
@@ -196,7 +196,7 @@ describe('Huron Auto Attendant', function () {
     });
 
     it('should delete the queue', function () {
-        // Delete the queue
+      // Delete the queue
       var flow = browser.controlFlow();
       flow.execute(deleteUtils.deleteRouteToQueue);
     });
@@ -228,10 +228,10 @@ describe('Huron Auto Attendant', function () {
 
 
     it('should delete new AA named "' + deleteUtils.testAAName + '" on the landing page', function () {
-        // click delete X on the AA card for e2e test AA
+      // click delete X on the AA card for e2e test AA
       utils.click(autoattendant.testCardDelete);
 
-        // confirm dialog with e2e AA test name in it is there, then agree to delete
+      // confirm dialog with e2e AA test name in it is there, then agree to delete
       utils.expectText(autoattendant.deleteModalConfirmText, 'Are you sure you want to delete the ' + deleteUtils.testAAName + ' Auto Attendant?').then(function () {
         utils.click(autoattendant.deleteModalConfirmButton);
         autoattendant.assertDeleteSuccess(deleteUtils.testAAName);

@@ -80,19 +80,19 @@ describe('Service: Cotext Discovery factory', function () {
   it('should get error when HTTP response GET discovery Url fails', function () {
     this.$httpBackend.whenGET(contextDiscoveryUrl).respond(500, 'This is error data from http server');
     this.Discovery.getEndpointForService('dictionary')
-    .catch(function (errorResponse) {
-      expect(errorResponse.data).toBe('This is error data from http server');
-      expect(errorResponse.status).toBe(500);
-    });
+      .catch(function (errorResponse) {
+        expect(errorResponse.data).toBe('This is error data from http server');
+        expect(errorResponse.status).toBe(500);
+      });
     this.$httpBackend.flush();
   });
 
   it('should get error when response to get discovery Url does not contain discovery endpoint', function () {
     this.$httpBackend.whenGET(contextDiscoveryUrl).respond(200, badDiscoveryData, 'Error happened');
     this.Discovery.getEndpointForService('dictionary')
-    .catch(function (error) {
-      expect(error).toBe('Context Service Dictionary endpoint not found.');
-    });
+      .catch(function (error) {
+        expect(error).toBe('Context Service Dictionary endpoint not found.');
+      });
     this.$httpBackend.flush();
   });
 

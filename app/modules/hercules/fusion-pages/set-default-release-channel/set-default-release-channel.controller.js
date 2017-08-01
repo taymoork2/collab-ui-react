@@ -29,15 +29,15 @@
       return FmsOrgSettings.set({
         expresswayClusterReleaseChannel: channel,
       })
-      .then(_.partial(updateAllUnassignedClusters, channel))
-      .catch(function (error) {
-        Notification.errorWithTrackingId(error, 'hercules.fusion.defaultReleaseChannelModal.error');
-        return $q.reject(error);
-      })
-      .then($modalInstance.close)
-      .finally(function () {
-        saving = false;
-      });
+        .then(_.partial(updateAllUnassignedClusters, channel))
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.fusion.defaultReleaseChannelModal.error');
+          return $q.reject(error);
+        })
+        .then($modalInstance.close)
+        .finally(function () {
+          saving = false;
+        });
     }
 
     function updateAllUnassignedClusters(releaseChannel) {

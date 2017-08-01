@@ -208,9 +208,9 @@ var AutoAttendantPage = function () {
     .filter(function (el) {
       return el.isDisplayed();
     })
-  .first()
-  .all(by.css('div.aa-flex-row'))
-  .last();
+    .first()
+    .all(by.css('div.aa-flex-row'))
+    .last();
 
   this.newStepForm = element.all(by.css('div.aa-panel[name="newStepForm"]')).first();
   this.newStepDropDownActionSelectopenHours0 = element(by.id('actionSelectopenHours0'));
@@ -221,25 +221,25 @@ var AutoAttendantPage = function () {
 
   // first item is caller input
   this.newStepCallerInput = element.all(by.css('div.aa-panel[name="newStepForm"]'))
-      .filter(function (el) {
-        return el.isDisplayed();
-      })
-      .first()
-      .all(by.css('div.aa-flex-row'))
-      .last()
-      .all(by.tagName('li'))
-      .get(0)
+    .filter(function (el) {
+      return el.isDisplayed();
+    })
+    .first()
+    .all(by.css('div.aa-flex-row'))
+    .last()
+    .all(by.tagName('li'))
+    .get(0)
 
   // second item is caller input
   this.newStepDecision = element.all(by.css('div.aa-panel[name="newStepForm"]'))
-      .filter(function (el) {
-        return el.isDisplayed();
-      })
-      .first()
-      .all(by.css('div.aa-flex-row'))
-      .last()
-      .all(by.tagName('li'))
-      .get(1)
+    .filter(function (el) {
+      return el.isDisplayed();
+    })
+    .first()
+    .all(by.css('div.aa-flex-row'))
+    .last()
+    .all(by.tagName('li'))
+    .get(1)
 
   // third item in newStep dropdown: Dial By Extension
   this.newStepSelectDialByExt = element.all(by.css('div.aa-panel[name="newStepForm"]'))

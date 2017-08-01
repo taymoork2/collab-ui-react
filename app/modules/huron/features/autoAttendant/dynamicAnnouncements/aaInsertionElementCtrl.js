@@ -43,17 +43,17 @@
         var html = decodeURIComponent(node.htmlModel);
         if (html.search(id) >= 0) {
           openModal(node.say).result
-          .then(function (result) {
-            if (vm.elementText != result.variable.label || vm.readAs != result.readAs.value) {
-              vm.elementText = result.variable.label;
-              vm.readAs = result.readAs.value;
-              node.say.value = result.variable.value;
-              node.say.as = vm.readAs;
-              var ele = '<aa-insertion-element element-text="' + node.say.value + '" read-as="' + node.say.as + '" element-id="' + id + '"></aa-insertion-element>';
-              node.htmlModel = encodeURIComponent(ele);
-              AACommonService.setSayMessageStatus(true);
-            }
-          });
+            .then(function (result) {
+              if (vm.elementText != result.variable.label || vm.readAs != result.readAs.value) {
+                vm.elementText = result.variable.label;
+                vm.readAs = result.readAs.value;
+                node.say.value = result.variable.value;
+                node.say.as = vm.readAs;
+                var ele = '<aa-insertion-element element-text="' + node.say.value + '" read-as="' + node.say.as + '" element-id="' + id + '"></aa-insertion-element>';
+                node.htmlModel = encodeURIComponent(ele);
+                AACommonService.setSayMessageStatus(true);
+              }
+            });
         }
       });
     }

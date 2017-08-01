@@ -95,9 +95,9 @@ require('./_overview.scss');
         Config.entitlements.mediafusion,
         Config.entitlements.hds,
       ])
-      .filter(Authinfo.isEntitled)
-      .map(HybridServicesUtilsService.getAckFlagForHybridServiceId)
-      .value();
+        .filter(Authinfo.isEntitled)
+        .map(HybridServicesUtilsService.getAckFlagForHybridServiceId)
+        .value();
       hybridServiceNotificationFlags.push(hybridCallHighAvailability);
 
       HybridServicesFlagService
