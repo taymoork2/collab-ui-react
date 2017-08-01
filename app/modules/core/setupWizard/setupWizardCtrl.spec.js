@@ -144,6 +144,29 @@ describe('SetupWizardCtrl', function () {
     it('the setup wizard should call getPendingLicenses API', function () {
       expect(this.SetupWizardService.getPendingLicenses).toHaveBeenCalled();
     });
+
+    it('the setup wizard should call getPendingLicenses API', function () {
+      var tab = _.find(this.$scope.tabs, { name: 'planReview' });
+      expect(tab.label).toBe('firstTimeWizard.subscriptionReview');
+      expect(tab.title).toBe('firstTimeWizard.subscriptionReview');
+    });
+  });
+
+  describe('When subscription does not have a pending service order', function () {
+    beforeEach(function () {
+      this.SetupWizardService.hasPendingServiceOrder.and.returnValue(false);
+      this.initController();
+    });
+
+    it('the setup wizard should call getPendingLicenses API', function () {
+      expect(this.SetupWizardService.getPendingLicenses).not.toHaveBeenCalled();
+    });
+
+    it('the setup wizard should call getPendingLicenses API', function () {
+      var tab = _.find(this.$scope.tabs, { name: 'planReview' });
+      expect(tab.label).toBe('firstTimeWizard.planReview');
+      expect(tab.title).toBe('firstTimeWizard.planReview');
+    });
   });
 
   describe('When Authinfo.isSetupDone is true', function () {
