@@ -144,8 +144,8 @@
     "@types/angular" "*"
 
 "@types/angular@*", "@types/angular@~1.6":
-  version "1.6.27"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/@types/angular/-/angular-1.6.27.tgz#d18feb611e23fc85c3c98b1b5f76a7cece56de0d"
+  version "1.6.28"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/@types/angular/-/angular-1.6.28.tgz#e85d62c72c5fbd408b463cd2c9d24f75cc6bec98"
 
 "@types/google-libphonenumber@^7.4.10":
   version "7.4.11"
@@ -373,7 +373,7 @@ ampersand-version@^1.0.0, ampersand-version@^1.0.2:
     find-root "^0.1.1"
     through2 "^0.6.3"
 
-angular-animate@^1.5.0, angular-animate@^1.5.8, angular-animate@^1.6.4, angular-animate@~1.6.5:
+angular-animate@^1.5.0, angular-animate@^1.5.8, angular-animate@~1.6.5:
   version "1.6.5"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/angular-animate/-/angular-animate-1.6.5.tgz#3817c75880d05fc899a6c8d4b09d1cc62a71e93a"
 
@@ -397,7 +397,7 @@ angular-ical@~1.1.0:
   version "1.1.0"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/angular-ical/-/angular-ical-1.1.0.tgz#b3a34e889d547181f09d415a7b577a0708a63f1c"
 
-angular-messages@^1.5.0, angular-messages@^1.6.4, angular-messages@~1.6.5:
+angular-messages@^1.5.0, angular-messages@~1.6.5:
   version "1.6.5"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/angular-messages/-/angular-messages-1.6.5.tgz#cc8127c48dfc47e69fedd0b0eadd5a97d18983a8"
 
@@ -448,7 +448,7 @@ angular-ui-router@^0.3.1:
   dependencies:
     angular "^1.0.8"
 
-angular@>=1.2.0, "angular@>=1.2.26 <=1.6", "angular@>=1.4.0 || >=1.5.0", angular@^1.0.8, angular@^1.4.0, angular@^1.5.0, angular@^1.6.4, angular@~1.6.5:
+angular@>=1.2.0, "angular@>=1.2.26 <=1.6", "angular@>=1.4.0 || >=1.5.0", angular@^1.0.8, angular@^1.4.0, angular@^1.5.0, angular@~1.6.5:
   version "1.6.5"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/angular/-/angular-1.6.5.tgz#37f788eebec5ce2e3fa02b17bbcb2a231576a0d6"
 
@@ -1764,29 +1764,13 @@ collab-ui-formly@~2.0.3:
     api-check "~7.5.0"
     collab-ui-ng "*"
 
-collab-ui-ng@*:
-  version "4.8.2"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/collab-ui-ng/-/collab-ui-ng-4.8.2.tgz#a444194fe0fd86fa67e53b47be23de18e91b9259"
+collab-ui-ng@*, collab-ui-ng@~5.0.0:
+  version "5.0.0"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/collab-ui-ng/-/collab-ui-ng-5.0.0.tgz#1efd4150986a511e2761071323b87c7fc17a3991"
   dependencies:
     angular "^1.5.0"
     angular-animate "^1.5.0"
     angular-messages "^1.5.0"
-    angular-ui-grid "~3.0.7"
-    angular-ui-router "^0.3.1"
-    collab-ui-stickyfill "^1.1.5"
-    google-libphonenumber "^2.0.15"
-    imagesloaded "3.1.8"
-    jquery "2.1.1"
-    masonry-layout "^4.1.1"
-    moment "^2.10.6"
-
-collab-ui-ng@~4.7.0:
-  version "4.7.0"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/collab-ui-ng/-/collab-ui-ng-4.7.0.tgz#1b75165f987aced35b8f768f68824906ebe42424"
-  dependencies:
-    angular "^1.6.4"
-    angular-animate "^1.6.4"
-    angular-messages "^1.6.4"
     angular-ui-grid "~3.0.7"
     angular-ui-router "^0.3.1"
     collab-ui-stickyfill "^1.1.5"
@@ -2646,8 +2630,8 @@ ee-first@1.1.1:
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
 
 ejs@^2.5.6:
-  version "2.5.6"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/ejs/-/ejs-2.5.6.tgz#479636bfa3fe3b1debd52087f0acb204b4f19c88"
+  version "2.5.7"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/ejs/-/ejs-2.5.7.tgz#cc872c168880ae3c7189762fd5ffc00896c9518a"
 
 electron-to-chromium@^1.2.7, electron-to-chromium@^1.3.16:
   version "1.3.16"
@@ -3782,7 +3766,7 @@ global-prefix@^0.1.4:
     is-windows "^0.2.0"
     which "^1.2.12"
 
-global@^4.3.1:
+global@^4.3.1, global@^4.3.2:
   version "4.3.2"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/global/-/global-4.3.2.tgz#e76989268a6c74c38908b1305b10fc0e394e9d0f"
   dependencies:
@@ -4070,8 +4054,8 @@ html-tags@^2.0.0:
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/html-tags/-/html-tags-2.0.0.tgz#10b30a386085f43cede353cc8fa7cb0deeea668b"
 
 html-webpack-plugin@^2.21.0:
-  version "2.29.0"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/html-webpack-plugin/-/html-webpack-plugin-2.29.0.tgz#e987f421853d3b6938c8c4c8171842e5fd17af23"
+  version "2.30.1"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/html-webpack-plugin/-/html-webpack-plugin-2.30.1.tgz#7f9c421b7ea91ec460f56527d78df484ee7537d5"
   dependencies:
     bluebird "^3.4.7"
     html-minifier "^3.2.3"
@@ -4691,8 +4675,8 @@ js-untar@^0.1.4:
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/js-untar/-/js-untar-0.1.4.tgz#0418bf4fd8dba19e1045a5478b1ed9036ae5765d"
 
 js-yaml@3.x, js-yaml@^3.4.3, js-yaml@^3.5.1:
-  version "3.9.0"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/js-yaml/-/js-yaml-3.9.0.tgz#4ffbbf25c2ac963b8299dc74da7e3740de1c18ce"
+  version "3.9.1"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/js-yaml/-/js-yaml-3.9.1.tgz#08775cebdfdd359209f0d2acd383c8f86a6904a0"
   dependencies:
     argparse "^1.0.7"
     esprima "^4.0.0"
@@ -8061,8 +8045,8 @@ stylehacks@^2.3.2:
     write-file-stdout "0.0.2"
 
 stylelint-scss@^1.3.4:
-  version "1.5.1"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/stylelint-scss/-/stylelint-scss-1.5.1.tgz#a5aae203fc5aaaba484c7d1380f28560b6f33ac0"
+  version "1.5.2"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/stylelint-scss/-/stylelint-scss-1.5.2.tgz#98e0cbf21cb53f1f196f8b1831c41ff8036ac8b2"
   dependencies:
     lodash "^4.11.1"
     postcss-media-query-parser "^0.2.3"
@@ -8288,6 +8272,10 @@ time-stamp@^1.0.0:
   version "1.1.0"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/time-stamp/-/time-stamp-1.1.0.tgz#764a5a11af50561921b133f3b44e618687e0f5c3"
 
+time-stamp@^2.0.0:
+  version "2.0.0"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/time-stamp/-/time-stamp-2.0.0.tgz#95c6a44530e15ba8d6f4a3ecb8c3a3fac46da357"
+
 timed-out@^4.0.0:
   version "4.0.1"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/timed-out/-/timed-out-4.0.1.tgz#f32eacac5a175bea25d7fab565ab3ed8741ef56f"
@@ -8299,9 +8287,10 @@ timers-browserify@^1.4.2:
     process "~0.11.0"
 
 timers-browserify@^2.0.2:
-  version "2.0.2"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/timers-browserify/-/timers-browserify-2.0.2.tgz#ab4883cf597dcd50af211349a00fbca56ac86b86"
+  version "2.0.3"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/timers-browserify/-/timers-browserify-2.0.3.tgz#41fd0bdc926a5feedc33a17a8e1f7d491925f7fc"
   dependencies:
+    global "^4.3.2"
     setimmediate "^1.0.4"
 
 tiny-emitter@^1.0.0:
@@ -8564,8 +8553,8 @@ ua-parser-js@0.7.12:
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/ua-parser-js/-/ua-parser-js-0.7.12.tgz#04c81a99bdd5dc52263ea29d24c6bf8d4818a4bb"
 
 uglify-js@3.0.x:
-  version "3.0.26"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/uglify-js/-/uglify-js-3.0.26.tgz#ba279ca597b13fe6c62c2d87dd5188e57a7a3233"
+  version "3.0.27"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/uglify-js/-/uglify-js-3.0.27.tgz#a97db8c8ba6b9dba4e2f88d86aa9548fa6320034"
   dependencies:
     commander "~2.11.0"
     source-map "~0.5.1"
@@ -8831,13 +8820,14 @@ webpack-bundle-analyzer@^2.3.1:
     ws "^2.3.1"
 
 webpack-dev-middleware@^1.0.11, webpack-dev-middleware@^1.10.2, webpack-dev-middleware@^1.6.1:
-  version "1.11.0"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/webpack-dev-middleware/-/webpack-dev-middleware-1.11.0.tgz#09691d0973a30ad1f82ac73a12e2087f0a4754f9"
+  version "1.12.0"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/webpack-dev-middleware/-/webpack-dev-middleware-1.12.0.tgz#d34efefb2edda7e1d3b5dbe07289513219651709"
   dependencies:
     memory-fs "~0.4.1"
     mime "^1.3.4"
     path-is-absolute "^1.0.0"
     range-parser "^1.0.3"
+    time-stamp "^2.0.0"
 
 webpack-dev-server@^1.14.1:
   version "1.16.5"
@@ -8931,7 +8921,13 @@ which-module@^1.0.0:
   version "1.0.0"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/which-module/-/which-module-1.0.0.tgz#bba63ca861948994ff307736089e3b96026c2a4f"
 
-which@1, which@^1.1.1, which@^1.2.1, which@^1.2.12, which@^1.2.9, which@~1.2.10:
+which@1, which@^1.1.1, which@^1.2.1, which@^1.2.12, which@^1.2.9:
+  version "1.3.0"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/which/-/which-1.3.0.tgz#ff04bdfc010ee547d780bec38e1ac1c2777d253a"
+  dependencies:
+    isexe "^2.0.0"
+
+which@~1.2.10:
   version "1.2.14"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/which/-/which-1.2.14.tgz#9a87c4378f03e827cecaf1acdf56c736c01c14e5"
   dependencies:
