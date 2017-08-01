@@ -7,6 +7,7 @@ class WebexReportsMore implements ng.IComponentController {
 
   public data: any;
   public dataSet: any;
+  public timeZone: any;
   public loading = true;
   public lineColor: any;
   public circleColor: any;
@@ -22,6 +23,7 @@ class WebexReportsMore implements ng.IComponentController {
   ) {
     const wm: any = this.SearchService.getStorage('webexMeeting');
     this.conferenceID = wm.conferenceID;
+    this.timeZone = this.SearchService.getStorage('timeZone');
   }
 
   public $onInit() {
@@ -36,23 +38,28 @@ class WebexReportsMore implements ng.IComponentController {
         const data: any  = res;
         data.overview.duration = this.getDuration(data.overview.duration);
         data.overview.status_ = this.SearchService.getStatus(data.overview.status);
-        data.overview.startTime_ = moment(data.overview.startTime).utc().format('hh:mm');
-        data.overview.startDate = moment(data.overview.startTime).utc().format('MMMM Do, YYYY');
-        data.overview.endTime_ = data.overview.endTime ? moment(data.overview.endTime).utc().format('hh:mm') : '';
-        data.overview.endDate = data.overview.endTime ? moment(data.overview.endTime).utc().format('MMMM Do, YYYY') : '';
+        data.overview.startTime_ = this.timeFormat(data.overview.startTime, 'hh:mm');
+        data.overview.startDate = this.timeFormat(data.overview.startTime, 'MMMM Do, YYYY');
+        data.overview.endTime_ = data.overview.endTime ? this.timeFormat(data.overview.endTime, 'hh:mm') : '';
+        data.overview.endDate = data.overview.endTime ? this.timeFormat(data.overview.endTime, 'MMMM Do, YYYY') : '';
         _.forEach(data.sessions, (item) => {
           item.duration = this.getDuration(item.duration);
           item.sessionType = this.sessionType(item.sessionType);
-          item.startTime = moment(item.startTime).utc().format('h:mm:ss A');
-          item.endTime = item.endTime ? moment(item.endTime).utc().format('h:mm:ss A') : '';
+          item.startTime = this.timeFormat(item.startTime, 'h:mm:ss A');
+          item.endTime = item.endTime ? this.timeFormat(item.endTime, 'h:mm:ss A') : '';
         });
         this.data = data;
         this.getParticipants();
       });
   }
 
+  private timeFormat(time, format) {
+    const _time: any = moment(time).utc().format('YYYY-MM-DD HH:mm:ss');
+    return moment(_time).tz(this.timeZone).format(format);
+  }
+
   private getParticipants() {
-    this.SearchService.getParticipents(this.conferenceID)
+    this.SearchService.getParticipants(this.conferenceID)
       .then((res) => {
         this.loadingMeetingline = true;
         this.dataSet = { overview: this.data.overview, lines: res };
