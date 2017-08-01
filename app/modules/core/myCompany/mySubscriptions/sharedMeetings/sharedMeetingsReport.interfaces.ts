@@ -20,8 +20,14 @@ export interface ISharedMeetingCSV {
   StartTime: string;
   EndTime: string;
   ConfId: string;
-  Duration: number | string;
-  MeetingType: number | string;
-  HostId: number | string;
   HostName: string;
+  SiteName: string;
+}
+
+export interface IMaxConcurrentDataCSV {
+  SiteName: string;
+  Month: string;
+  From: string;
+  To: string;
+  ConcurrentMeetingsPeak: string;
 }

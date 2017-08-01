@@ -783,7 +783,7 @@
     "errorLoadingSharedMeetingDetails": "There was a problem loading the Shared Meetings Report details data.",
     "siteUrlError": "Site URL is undefined.  Cannot retrieve shared meetings report.",
     "csvPageError": "Unable to retrieve the detailed report for download.",
-    "downloadHref": "Download a <a href=\"{{href}}\" download=\"{{download}}\">detailed report</a> of shared meetings usage.",
+    "downloadHref": "Download a <a href=\"{{href}}\" download=\"{{download}}\">detailed report</a> of shared meetings usage or a <a href=\"{{href2}}\" download=\"{{download2}}\">monthly report</a> of peak concurrent usage per month.",
     "downloadClick": "Download a <a ng-click=\"{{onclick}}\">detailed report</a> of shared meetings usage.",
     "csvMeetingTopic": "Meeting Topic",
     "csvStartTime": "Start Time",
@@ -792,7 +792,12 @@
     "csvDuration": "Meeting Duration (Seconds)",
     "csvMeetingType": "Meeting Type",
     "csvHostId": "Host Id",
-    "csvHostName": "Host Name"
+    "csvUserName": "Username",
+    "csvSiteName": "Site",
+    "csvMonth": "Month",
+    "csvFrom": "From",
+    "csvTo": "To",
+    "csvConcurrentMeetingsPeak": "# of Peak concurrent meetings"
   },
   "careReportsPage": {
     "tasks": "Tasks",
