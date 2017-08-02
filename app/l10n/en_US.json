@@ -1575,7 +1575,7 @@
     "tfDescription": "Specify the Time Format for user devices.",
     "steeringDigit": "Outbound Dial Digit",
     "steeringDigitDescription": "Specify the number users must dial before placing an external call.",
-    "emergencyAddressDescription": "This is the default address that will be used for emergency services. This can be overridden by each User or Place.",
+    "emergencyAddressDescription": "This is the default address that will be used for emergency services. This can be overridden by each User or Place's device(s).",
     "extension": "Extension",
     "extensionLength": "Extension Length",
     "extensionLengthDescription": "Specify the total number of digits users must dial before placing an internal call.",
