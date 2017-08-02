@@ -1327,6 +1327,10 @@
       _.forEach(dynaList, function (opt) {
         if (_.has(opt, 'say')) {
           opt.say.voice = voice;
+          //this is for handling corner cases of some special characters for dynamic blocks
+          if (opt.isDynamic && (_.isEmpty(opt.say.value) || _.isEqual(opt.say.value.charCodeAt(0), 10))) {
+            opt.isDynamic = false;
+          }
         }
       });
     }
@@ -1592,9 +1596,9 @@
             },
           };
         } else {
-          if (isDynAnnounceToggle()) {
-            updateDynaListVoice(action.queueSettings.initialAnnouncement.actions[0].dynamicList, action.queueSettings.voice);
-            dynamicOperations = action.queueSettings.initialAnnouncement.actions[0].dynamicList;
+          if (isDynAnnounceToggle() && !_.isEmpty(action.description) && !_.isEqual(action.description.initialAnnouncementType, 'play')) {
+            dynamicOperations = _.get(action.queueSettings.initialAnnouncement.actions[0], 'dynamicList', '');
+            updateDynaListVoice(dynamicOperations, action.queueSettings.voice);
             //to cater the case when 'route to spark care' option is selected but modal remain closed
             if (_.isUndefined(dynamicOperations)) {
               dynamicOperations = dynaOpt;
@@ -1628,9 +1632,9 @@
             },
           };
         } else {
-          if (isDynAnnounceToggle()) {
-            updateDynaListVoice(action.queueSettings.periodicAnnouncement.actions[0].dynamicList, action.queueSettings.voice);
-            dynamicOperations = action.queueSettings.periodicAnnouncement.actions[0].dynamicList;
+          if (isDynAnnounceToggle() && !_.isEmpty(action.description) && !_.isEqual(action.description.periodicAnnouncementType, 'play')) {
+            dynamicOperations = _.get(action.queueSettings.periodicAnnouncement.actions[0], 'dynamicList', '');
+            updateDynaListVoice(dynamicOperations, action.queueSettings.voice);
             if (_.isUndefined(dynamicOperations)) {
               dynamicOperations = dynaOpt;
             }

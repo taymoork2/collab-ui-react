@@ -31,7 +31,6 @@ class PlaceOverview implements ng.IComponentController {
   private showDeviceSettings = false;
 
   public ishI1484: boolean = false;
-  public isprov3698: boolean = false;
 
   public placeLocation: string;
   public placeCallOverviewData: PlaceCallOverviewData;
@@ -69,12 +68,17 @@ class PlaceOverview implements ng.IComponentController {
     if (this.hasSparkCall) {
       this.initPlaceCallOverviewData();
       this.initActions();
+      this.getPlaceLocation();
     }
-    this.getPlaceLocation();
     this.fetchAsyncSettings();
     this.setDisplayDescription();
-    this.loadFeatureToggles();
-    this.initPreferredLanguage();
+    if (this.showLanguage()) {
+      this.initPreferredLanguage();
+    }
+  }
+
+  public hasSquaredFusionUc(): boolean {
+    return this.hasEntitlement('squared-fusion-uc');
   }
 
   public initPlaceCallOverviewData(): void {
@@ -120,14 +124,6 @@ class PlaceOverview implements ng.IComponentController {
     });
   }
 
-  private loadFeatureToggles(): ng.IPromise<any> {
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484)
-      .then(result => this.ishI1484 = result);
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.prov3698)
-      .then(result => this.isprov3698 = result);
-    return this.$q.resolve();
-  }
-
   public openPanel(): void {
     this.$state.go('place-overview.placeLocationDetails');
   }
@@ -147,7 +143,7 @@ class PlaceOverview implements ng.IComponentController {
   public savePreferredLanguage(prefLang): void {
     this.prefLanguageSaveInProcess = true;
     if (!this.PlaceCallOverviewService.checkForPreferredLanguageChanges(prefLang)) {
-      this.PlaceCallOverviewService.updateCmiPlacePreferredLanguage(this.currentPlace.cisUuid, prefLang.value)
+      this.PlaceCallOverviewService.updateCmiPlacePreferredLanguage(this.currentPlace.cisUuid, prefLang.value ? prefLang.value : null)
         .then(() => {
           this.preferredLanguageFeature.selectedLanguageCode = prefLang.value;
           this.$state.go('place-overview', { preferredLanguageFeature: this.preferredLanguageFeature }, { reload: true });
@@ -228,6 +224,8 @@ class PlaceOverview implements ng.IComponentController {
           }
         });
     }
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484)
+    .then(result => this.ishI1484 = result);
   }
 
   private fetchDetailsForLoggedInUser() {
@@ -393,6 +391,14 @@ class PlaceOverview implements ng.IComponentController {
     this.$state.go('addDeviceFlow.showActivationCode', {
       wizard: wizard,
     });
+  }
+
+  public showLocations(): boolean {
+    return (this.ishI1484 && this.hasSparkCall);
+  }
+
+  public showLanguage(): boolean {
+    return (this.currentPlace.type === 'huron');
   }
 }
 

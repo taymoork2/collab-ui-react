@@ -7,6 +7,7 @@ export class SetupWizardService {
   public pendingLicenses: IPendingLicense[];
   public provisioningCallbacks = {};
   public country = '';
+  public currentOrderNumber = '';
 
   /* @ngInject */
   constructor(
@@ -36,9 +37,9 @@ export class SetupWizardService {
     return this.$q.all(_.uniq(promises));
   }
 
-  private getActingSubscriptionId(): string {
+  public getActingSubscriptionId(): string {
     const subscriptionId = this.SessionStorage.get(this.StorageKeys.SUBSCRIPTION_ID);
-    return subscriptionId || _.get(this.Authinfo.getSubscriptions()[0], 'externalSubscriptionId');
+    return subscriptionId || _.get(this.Authinfo.getSubscriptions()[0], 'externalSubscriptionId', '');
   }
 
   public getInternalSubscriptionId(): string {
@@ -50,28 +51,40 @@ export class SetupWizardService {
     return _.get<string>(this.getActingSubscription(), 'pendingServiceOrderUUID', undefined);
   }
 
-  public hasPendingServiceOrder() {
+  public hasPendingServiceOrder(): boolean {
     return this.getActingSubscriptionServiceOrderUUID() !== undefined;
   }
 
-  public hasPendingLicenses() {
+  public hasPendingLicenses(): boolean {
     return !_.isEmpty(this.pendingLicenses);
   }
 
-  public hasPendingMeetingLicenses() {
-    return _.some(this.pendingLicenses, (license: IPendingLicense) => { return license.status === this.Config.licenseStatus.INITIALIZED && (_.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC], license.offerName)); });
+  public hasPendingMeetingLicenses(): boolean {
+    return _.some(this.pendingLicenses, (license: IPendingLicense) => { return license.status === this.Config.licenseStatus.INITIALIZED && (_.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC, this.Config.offerCodes.CF, this.Config.offerCodes.CMR], license.offerName)); });
   }
 
   public getPendingMeetingLicenses(): IPendingLicense[] {
-    return _.filter(this.pendingLicenses, (license: IPendingLicense) => { return license.status === this.Config.licenseStatus.INITIALIZED && (_.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC], license.offerName)); });
+    return _.filter(this.pendingLicenses, (license: IPendingLicense) => { return license.status === this.Config.licenseStatus.INITIALIZED && (_.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC, this.Config.offerCodes.CF, this.Config.offerCodes.CMR], license.offerName)); });
   }
 
-  public hasPendingCallLicenses() {
+  public hasPendingCallLicenses(): boolean {
     return _.some(this.pendingLicenses, (license: IPendingLicense) => { return license.status === this.Config.licenseStatus.INITIALIZED && (_.includes([this.Config.licenseTypes.COMMUNICATION, this.Config.licenseTypes.SHARED_DEVICES], license.licenseType)); });
   }
 
   public getPendingCallLicenses(): IPendingLicense[] {
     return _.filter(this.pendingLicenses, (license: IPendingLicense) => { return license.status === this.Config.licenseStatus.INITIALIZED && (_.includes([this.Config.licenseTypes.COMMUNICATION, this.Config.licenseTypes.SHARED_DEVICES], license.licenseType)); });
+  }
+
+  public getPendingAudioLicenses(): IPendingLicense[] {
+    return _.filter(this.pendingLicenses, (license: IPendingLicense) => { return license.status === this.Config.licenseStatus.INITIALIZED && license.licenseType === this.Config.licenseTypes.AUDIO; });
+  }
+
+  public getPendingMessageLicenses(): IPendingLicense[] {
+    return _.filter(this.pendingLicenses, (license: IPendingLicense) => { return license.status === this.Config.licenseStatus.INITIALIZED && license.offerName === this.Config.offerCodes.MS; });
+  }
+
+  public getCurrentOrderNumber() {
+    return this.currentOrderNumber;
   }
 
   private getActingSubscription(): IPendingOrderSubscription {
@@ -90,6 +103,7 @@ export class SetupWizardService {
   }
 
   private populatePendingLicenses(response) {
+    this.currentOrderNumber = _.get<string>(response, 'data.webOrderId', '');
     return this.pendingLicenses = _.get<IPendingLicense[]>(response, 'data.licenseFeatures', []);
   }
 

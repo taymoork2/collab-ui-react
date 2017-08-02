@@ -1,3 +1,5 @@
+import './settings-dialing.component.scss';
+
 import { DialingSetupComponent } from './settings-dialing.component';
 import { DialingAreaCodeValidator } from './settings-dialing-validate-area-code.directive';
 import phoneNumberModule from 'modules/huron/phoneNumber';

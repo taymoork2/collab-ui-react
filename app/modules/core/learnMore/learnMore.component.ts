@@ -5,13 +5,14 @@ export class LearnMoreCtrl {
 
   /* @ngInject */
   constructor(
+    private $window: ng.IWindowService,
     private Analytics,
   ) {}
 
   public clickLink(): void {
     if (_.isUndefined(this.isDisabled) || !this.isDisabled) {
       this.Analytics.trackPremiumEvent(this.Analytics.sections.PREMIUM.eventNames.LEARN_MORE, this.location);
-      // TODO: open learn more link in new window once URL is available
+      this.$window.open('http://www.cisco.com/go/pro-pack', '_blank');
     }
   }
 

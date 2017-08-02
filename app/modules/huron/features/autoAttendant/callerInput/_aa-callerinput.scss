@@ -109,7 +109,7 @@
 
   .aa-cnvt-digit {
     @include vr-spacing(mb, .5);
-    @include vr-spacing(mt, 1);
+    @include vr-spacing(mt, 0.3);
   }
 
   .aa-max-length-str {

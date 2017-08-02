@@ -67,7 +67,7 @@
           } else {
             vm.menuEntry.actions[0].dynamicList = createDynamicList(dynamicList);
           }
-        } else if ($scope.isMenuHeader) {
+        } else if ($scope.isMenuHeader === 'true') {
           var header = _.get(vm.menuEntry, 'headers[0]', '');
           if (header) {
             header.actions[0].dynamicList = createDynamicList(dynamicList);
@@ -79,7 +79,12 @@
             queueAction.actions[0].dynamicList = createDynamicList(dynamicList);
           } else {
             vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
-            vm.menuEntry.entries[$scope.menuKeyIndex].actions[0].dynamicList = createDynamicList(dynamicList);
+          var entry = vm.menuEntry.entries[$scope.menuKeyIndex].actions[0];
+          if ($scope.type) {
+            queueAction = entry.queueSettings[$scope.type];
+            queueAction.actions[0].dynamicList = createDynamicList(dynamicList);
+          } else {
+            entry.dynamicList = createDynamicList(dynamicList);
           }
         } else if ($scope.menuId && (!$scope.menuKeyIndex || $scope.menuKeyIndex <= -1)) {
           vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);

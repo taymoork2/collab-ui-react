@@ -5,6 +5,7 @@ declare namespace csdm {
   }
 
   interface IPlace extends IDevicePlaceCommon {
+    locationUuid?: string;
     externalNumber?: string;
     directoryNumber?: string;
     devices: {};
@@ -18,8 +19,8 @@ declare namespace csdm {
       entitlements, directoryNumber,
       externalNumber, externalLinkedAccounts,
     }: IUpdatePlaceParameters): ng.IPromise<IPlace>;
-    createCmiPlace(name, entitlements, directoryNumber, externalNumber): ng.IPromise<IPlace>;
-    createCsdmPlace(name, entitlements, directoryNumber, externalNumber, externalLinkedAccounts: IExternalLinkedAccount[]): ng.IPromise<IPlace>;
+    createCmiPlace(name, entitlements, locationUuid, directoryNumber, externalNumber): ng.IPromise<IPlace>;
+    createCsdmPlace(name, entitlements, locationUuid , directoryNumber, externalNumber, externalLinkedAccounts: IExternalLinkedAccount[]): ng.IPromise<IPlace>;
     createCodeForExisting(cisUuid: string): ng.IPromise<ICode>;
     reloadPlace(cisUuid: string): ng.IPromise<IPlace>;
     reloadItem<T extends IDevicePlaceCommon>(item: T): ng.IPromise<T>;

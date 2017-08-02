@@ -27,9 +27,6 @@ export class AddPlacesPage {
     this.clickLocation2 = element(by.cssContainingText('.ui-grid-cell-contents', 'Jedha'));
     this.clickLocation3 = element(by.cssContainingText('.ui-grid-cell-contents', 'Eadu'));
     this.callClick2 = element(by.cssContainingText('.feature-label', 'Cisco Spark only'));
-    this.prfrdLang = element(by.cssContainingText('.section-name', 'Preferred Language'));
-    this.prfrdLangDd = element(by.css('.csSelect-container[name="languageSelect"]'));
-    this.prfrdLangInst = element(by.css('.description-block', 'Configure preferred language'));
     this.callOverview = {
       main: element.all(by.css('[ui-sref="place-overview"]')).last(),
       services: {

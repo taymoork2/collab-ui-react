@@ -12,12 +12,13 @@
   <ul id="dropdown-menu" cs-dropdown-menu class="dropdown-menu" role="menu">
     <li ng-controller="SettingsMenuCtrl as langSettings" role="menuitem">
       <a class="select-lng-dropdown" aria-label="Language Selection">
+        <label for="languageSelector"></label>
         <select
-          id="languageSelector"
-          ng-options="item.label for item in langSettings.options track by item.value"
-          ng-model="langSettings.selected"
-          ng-change="langSettings.updateLanguage()"
-          onclick="event.stopPropagation();">
+                id="languageSelector"
+                ng-options="item.label for item in langSettings.options track by item.value"
+                ng-model="langSettings.selected"
+                ng-change="langSettings.updateLanguage()"
+                onclick="event.stopPropagation();">
         </select>
       </a>
     </li>
@@ -52,13 +53,14 @@
   <ul id="dropdown-menu" cs-dropdown-menu class="dropdown-menu" role="menu">
     <li ng-controller="SettingsMenuCtrl as langSettings" role="menuitem">
       <a class="select-lng-dropdown" aria-label="Language Selection">
+        <label for="languageAdminSelector"></label>
         <select
 
-          id="languageAdminSelector"
-          ng-options="item.label for item in langSettings.options track by item.value"
-          ng-model="langSettings.selected"
-          ng-change="langSettings.updateLanguage()"
-          onclick="event.stopPropagation();">
+                id="languageAdminSelector"
+                ng-options="item.label for item in langSettings.options track by item.value"
+                ng-model="langSettings.selected"
+                ng-change="langSettings.updateLanguage()"
+                onclick="event.stopPropagation();">
         </select>
       </a>
     </li>

@@ -1,5 +1,5 @@
 <div class="sq-places-page">
-  <cs-page-header title-name="tabs.placeTab"></cs-page-header>
+  <cs-page-header title-name="{{'tabs.placeTab' | translate}}"></cs-page-header>
   <cs-page-sub-header ng-hide="sc.filteredView.isInState(sc.filteredView.emptydatasource)">
     <cs-page-sub-header-left>
       <cs-searchfilter filters="sc.filteredView.getFilters()" search-item-fn="sc.filteredView.setCurrentSearch(searchStr)"
@@ -26,7 +26,7 @@
       </div>
     </div>
     <div ng-if="sc.filteredView.isInState(sc.filteredView.showresult)" id="roomsListPanel" class="row">
-      <div class="gridStyle" ui-grid="sc.gridOptions" ui-grid-selection></div>
+      <cs-grid grid-api="sc.gridApi" grid-options="sc.gridOptions" spinner="false"></cs-grid>
     </div>
     <div ng-if="sc.filteredView.isInState(sc.filteredView.emptysearchresult)">
       <div class="none_found">

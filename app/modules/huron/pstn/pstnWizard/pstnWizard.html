@@ -56,7 +56,7 @@
         </cs-tab>
         <cs-tab ng-if="$ctrl.showTollFreeNumbers">
           <cs-tab-heading translate="pstnSetup.newTollFreeTab"></cs-tab-heading>
-          <p>{{pstnNumbers.tollFreeTitle}}</p>
+          <p>{{$ctrl.tollFreeTitle}}</p>
           <uc-pstn-number-search
             model="$ctrl.model.tollFree"
             search="$ctrl.searchCarrierTollFreeInventory(value, block, quantity, consecutive)"

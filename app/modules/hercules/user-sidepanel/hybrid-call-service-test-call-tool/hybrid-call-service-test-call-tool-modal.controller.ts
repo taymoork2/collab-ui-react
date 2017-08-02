@@ -1,6 +1,6 @@
 import { Notification } from 'modules/core/notifications';
 import { HybridServiceUserSidepanelHelperService, IUserStatus as IUserFromCommonIdentityStatus } from 'modules/hercules/services/hybrid-services-user-sidepanel-helper.service';
-import { L2SipService, VerificationStep, ISipDestinationSteps, Severity } from 'modules/hercules/services/l2sip-service';
+import { L2SipService, VerificationStep, ISipDestinationSteps, StepSeverity } from 'modules/hercules/services/l2sip-service';
 
 interface IPhoto {
   value: string;
@@ -150,7 +150,7 @@ class HybridCallServiceTestToolModalController {
       });
   }
 
-  public getNumberOfSteps(level: Severity): number {
+  public getNumberOfSteps(level: StepSeverity): number {
     return _.chain(this.result)
       .filter((step: VerificationStep) => step.severity === level)
       .size()

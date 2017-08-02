@@ -5,9 +5,15 @@
     .controller('WizardFinishCtrl', WizardFinishCtrl);
 
   /* @ngInject */
-  function WizardFinishCtrl($q, $scope, $translate, Notification, SetupWizardService, TrialWebexService) {
+  function WizardFinishCtrl($q, $scope, $translate, Authinfo, Notification, SetupWizardService, TrialWebexService) {
     $scope.hasPendingLicenses = SetupWizardService.hasPendingLicenses();
     $scope.sendEmailModel = false;
+    $scope.isCustomerLaunchedFromPartner = Authinfo.isCustomerLaunchedFromPartner();
+    $scope.setSendCustomerEmailFlag = setSendCustomerEmailFlag;
+    $scope.orderDetails = {
+      subscriptionId: SetupWizardService.getActingSubscriptionId(),
+      orderId: SetupWizardService.getCurrentOrderNumber(),
+    };
     $scope.initNext = function () {
       var deferred = $q.defer();
       if (!_.isUndefined($scope.wizard) && _.isFunction($scope.wizard.getRequiredTabs)) {
@@ -31,6 +37,13 @@
 
     function init() {
       pushBlankProvisioningCall();
+    }
+
+    function setSendCustomerEmailFlag(flag) {
+      if (!_.isBoolean(flag)) {
+        return $q.reject('A boolean must be passed.');
+      }
+      TrialWebexService.setProvisioningWebexSendCustomerEmailFlag(flag);
     }
 
     function pushBlankProvisioningCall() {

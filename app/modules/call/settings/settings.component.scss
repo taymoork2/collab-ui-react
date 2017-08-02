@@ -152,23 +152,6 @@
       padding-top: .25rem !important;
     }
 
-    .cos-style {
-      .description-block {
-        @include vr-spacing(mt, 0);
-        @include vr-spacing(mb, 1);
-      }
-      .title-margin-bottom {
-        @include vr-spacing(mb, .75);
-      }
-      .switch-bottom-margin {
-        @include vr-spacing(mb, 1.75);
-      }
-
-      &:last-child .switch-bottom-margin {
-        @include vr-spacing(mb, 0);
-      }
-    }
-
     .cs-form__section:last-child {
       @include vr-spacing(pb, 5);
     }
@@ -183,10 +166,6 @@
 
   .save-popup-margin {
     margin-bottom: vr-adjust(60px);
-  }
-
-  .indent-area-code {
-    padding-left: vr-adjust(32px);
   }
 
   .cs-radio-group {

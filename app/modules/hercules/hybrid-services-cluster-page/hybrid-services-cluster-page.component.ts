@@ -12,6 +12,7 @@ class HybridServicesClusterPageCtrl implements ng.IComponentController {
     private $rootScope: ng.IRootScopeService,
     private $scope: ng.IScope,
     private HybridServicesClusterService: HybridServicesClusterService,
+    private $translate: ng.translate.ITranslateService,
   ) {}
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }) {
@@ -52,10 +53,10 @@ class HybridServicesClusterPageCtrl implements ng.IComponentController {
         // Don't show any tabs if the "Nodes" one is not available. Only the "Settings" tab would be weird
         if (this.hasNodesViewFeatureToggle) {
           this.tabs = [{
-            title: 'common.nodes',
+            title: this.$translate.instant('common.nodes'),
             state: `${route}-cluster.nodes`,
           }, {
-            title: 'common.settings',
+            title: this.$translate.instant('common.settings'),
             state: `${route}-cluster.settings`,
           }];
         }

@@ -28,6 +28,7 @@
     'core.proPack',
     'core.trial',
     'core.utils',
+    'core.cache',
     'csDonut',
     'ct.ui.router.extras.previous',
     'ngAnimate',
@@ -50,6 +51,7 @@
     'rzModule',
     'dragularModule',
     require('modules/bmmp/learn-more-banner').default,
+    require('modules/core/csgrid').default,
     require('modules/core/users/userOverview').default,
     require('modules/core/analytics'),
     require('modules/core/featureToggle').default,
@@ -150,6 +152,7 @@
     require('modules/hercules/services/hybrid-services-extras.service').default,
     require('modules/hercules/services/hybrid-services-i18n.service').default,
     require('modules/hercules/services/hybrid-services-utils.service').default,
+    require('modules/hercules/services/l2sip-service').default,
     require('modules/hercules/services/service-descriptor.service').default,
     require('modules/hercules/services/uss-service'),
   ]);

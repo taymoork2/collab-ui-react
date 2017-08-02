@@ -10,15 +10,16 @@ class CmcDetailsHeaderComponentCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
+    private $translate: ng.translate.ITranslateService,
   ) { }
 
   public $onInit(): void {
     this.tabs.push({
-      title: 'cmc.detailsPage.settings',
+      title: this.$translate.instant('cmc.detailsPage.settings'),
       state: 'cmc.settings',
     });
     this.tabs.push({
-      title: 'cmc.detailsPage.status',
+      title: this.$translate.instant('cmc.detailsPage.status'),
       state: 'cmc.status',
     });
   }

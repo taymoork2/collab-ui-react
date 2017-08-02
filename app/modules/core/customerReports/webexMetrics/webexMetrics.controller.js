@@ -95,29 +95,21 @@
       return self.indexOf(value) === index;
     }
 
-    function getUniqueWebexSiteUrls(siteUrls) {
-      var conferenceServices = Authinfo.getConferenceServicesWithoutSiteUrl() || [];
-      var linkedConferenceServices = Authinfo.getConferenceServicesWithLinkedSiteUrl() || [];
-      var webexSiteUrls = [];
-      webexSiteUrls = webexSiteUrls.concat(siteUrls);
-
-      conferenceServices.forEach(
-        function getWebExSiteUrl(conferenceService) {
-          webexSiteUrls.push(conferenceService.license.siteUrl);
-        }
-      );
-
-      linkedConferenceServices.forEach(
-        function getWebExSiteUrl(linkedConferenceService) {
-          webexSiteUrls.push(linkedConferenceService.license.linkedSiteUrl);
-        }
-      );
-
-      return webexSiteUrls.filter(onlyUnique);
+    function handleSiteForReadOnly(siteUrls) {
+      var sites = [];
+      _.each(siteUrls, function (site) {
+        sites.push(_.replace(site, /#.*$/g, ''));
+      });
+      return sites;
     }
 
-    function generateWebexMetricsUrl(siteUrls) {
-      var webexSiteUrls = getUniqueWebexSiteUrls(siteUrls);
+    function getUniqueWebexSiteUrls(siteUrls) {
+      return siteUrls.filter(onlyUnique);
+    }
+
+    function generateWebexMetricsUrl(trainSites) {
+      var webexSiteUrls = handleSiteForReadOnly(trainSites);
+      webexSiteUrls = getUniqueWebexSiteUrls(webexSiteUrls);
 
       vm.webexOptions = webexSiteUrls;
       promisChainDone();
@@ -155,9 +147,9 @@
           var trainSites = [];
           if (data.emails) {
             Authinfo.setEmails(data.emails);
-            var trainSiteNames = _.get(data, 'trainSiteNames', []);
+            var adminTrainSiteNames = _.get(data, 'adminTrainSiteNames', []);
             var linkedTrainSiteNames = _.get(data, 'linkedTrainSiteNames', []);
-            trainSites = trainSiteNames.concat(linkedTrainSiteNames);
+            trainSites = _.concat(adminTrainSiteNames, linkedTrainSiteNames);
             generateWebexMetricsUrl(trainSites);
           }
         }

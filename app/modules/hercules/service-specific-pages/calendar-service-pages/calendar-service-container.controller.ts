@@ -5,10 +5,10 @@ import { ServiceDescriptorService } from 'modules/hercules/services/service-desc
 export class CalendarServiceContainerController extends ExpresswayContainerController {
 
   public tabs: any = [{
-    title: 'common.resources',
+    title: this.$translate.instant('common.resources'),
     state: 'calendar-service.list',
   }, {
-    title: 'common.settings',
+    title: this.$translate.instant('common.settings'),
     state: 'calendar-service.settings',
   }];
 
@@ -32,6 +32,7 @@ export class CalendarServiceContainerController extends ExpresswayContainerContr
     $scope: ng.IScope,
     $state: ng.ui.IStateService,
     private $stateParams: ng.ui.IStateParamsService,
+    private $translate: ng.translate.ITranslateService,
     ClusterService,
     hasNodesViewFeatureToggle,
     Notification: Notification,

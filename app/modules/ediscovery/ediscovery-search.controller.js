@@ -4,7 +4,7 @@
 
   module.exports = EdiscoverySearchController;
   /* @ngInject */
-  function EdiscoverySearchController($q, $stateParams, $translate, $timeout, $scope, $window, Analytics, EdiscoveryService, EdiscoveryNotificationService,
+  function EdiscoverySearchController($q, $stateParams, $translate, $timeout, $scope, $window, Analytics, Authinfo, EdiscoveryService, EdiscoveryNotificationService,
     FeatureToggleService, ProPackService, Notification) {
     $scope.$on('$viewContentLoaded', function () {
       $window.document.title = $translate.instant('ediscovery.browserTabHeaderTitle');
@@ -202,7 +202,7 @@
 
     /* Search Page Functions */
     function showHover() {
-      return vm.proPackEnabled && !vm.proPackPurchased;
+      return vm.proPackEnabled && !vm.proPackPurchased && Authinfo.isEnterpriseCustomer();
     }
 
     function getProPackTooltip() {

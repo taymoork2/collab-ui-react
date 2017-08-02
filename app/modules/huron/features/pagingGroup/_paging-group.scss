@@ -48,9 +48,8 @@
 }
 
 .pg-save {
-  @include vr-spacing(pv, .5);
-  border-bottom: 1px solid $gray-light;
-  background-color: $white;
+  position: fixed;
+  bottom: 0;
 }
 
 .pg-edit {

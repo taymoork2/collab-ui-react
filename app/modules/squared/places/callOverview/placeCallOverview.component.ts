@@ -1,7 +1,6 @@
 import { LineService, LineConsumerType, Line, LINE_CHANGE } from 'modules/huron/lines/services';
 import { IActionItem } from 'modules/core/components/sectionTitle/sectionTitle.component';
 import { IFeature } from 'modules/core/components/featureList/featureList.component';
-import { Notification } from 'modules/core/notifications';
 import { PlaceCallOverviewService, PlaceCallOverviewData } from './placeCallOverview.service';
 
 class PlaceCallOverview implements ng.IComponentController {
@@ -22,19 +21,15 @@ class PlaceCallOverview implements ng.IComponentController {
   public displayDescription: string;
   public wide: boolean = true;
 
-  public isprov3698: boolean = false;
 
   /* @ngInject */
   constructor(
-    private $q: ng.IQService,
     private $scope: ng.IScope,
     private $state: ng.ui.IStateService,
     $stateParams: any,
     private $translate: ng.translate.ITranslateService,
     CsdmDataModelService: any,
     private LineService: LineService,
-    private Notification: Notification,
-    private FeatureToggleService,
     private PlaceCallOverviewService: PlaceCallOverviewService,
   ) {
 
@@ -54,22 +49,11 @@ class PlaceCallOverview implements ng.IComponentController {
       this.initActions();
       this.initFeatures();
       this.initNumbers();
-      this.initPlaceCallOverviewData();
     }
-    this.setDisplayDescription();
-    this.loadFeatureToggles();
   }
 
   private displayPlace(newPlace) {
     this.currentPlace = newPlace;
-  }
-
-  private setDisplayDescription() {
-    this.displayDescription = this.hasSparkCall ?
-        this.$translate.instant('preferredLanguage.description', {
-          module: this.$translate.instant('preferredLanguage.placeModule'),
-        }) :
-        this.$translate.instant('preferredLanguage.descriptionForCloudberryDevice');
   }
 
   private initActions(): void {
@@ -119,17 +103,6 @@ class PlaceCallOverview implements ng.IComponentController {
       .then(lines => this.directoryNumbers = lines);
   }
 
-  private initPlaceCallOverviewData(): void {
-    this.PlaceCallOverviewService.getPlaceCallOverviewData(this.currentPlace.cisUuid)
-        .then( placeCallOverviewData => {
-          this.placeCallOverviewData = placeCallOverviewData;
-          this.preferredLanguage = placeCallOverviewData.preferredLanguage;
-          this.preferredLanguageOptions = placeCallOverviewData.preferredLanguageOptions;
-        }).finally(() => {
-          this.plIsLoaded = true;
-        });
-  }
-
   public setPreferredLanguage(preferredLanguage: any): void {
     this.preferredLanguage = preferredLanguage;
     this.checkForChanges();
@@ -144,25 +117,6 @@ class PlaceCallOverview implements ng.IComponentController {
   private resetPreferredLanguageFlags(): void {
     this.prefLanguageSaveInProcess = false;
     this.onPrefLanguageChange = false;
-  }
-
-  public savePreferredLanguage(): void {
-    this.prefLanguageSaveInProcess = true;
-    if (!this.PlaceCallOverviewService.checkForPreferredLanguageChanges(this.preferredLanguage)) {
-      const prefLang = this.preferredLanguage.value ? this.preferredLanguage.value : null;
-      this.PlaceCallOverviewService.updateCmiPlacePreferredLanguage(this.currentPlace.cisUuid, prefLang)
-        .then(() => {
-          this.placeCallOverviewData.placesPreferredLanguage = prefLang;
-          this.placeCallOverviewData.preferredLanguage = this.preferredLanguage;
-          this.Notification.success('preferredLanguage.placesCallOverviewSaveSuccess');
-        })
-        .catch(error => {
-          this.Notification.errorResponse(error, 'preferredLanguage.failedToSaveChanges');
-        }).finally(() => {
-          this.resetPreferredLanguageFlags();
-          this.plIsLoaded = true;
-        });
-    }
   }
 
   public onCancelPreferredLanguage(): void {
@@ -189,12 +143,6 @@ class PlaceCallOverview implements ng.IComponentController {
       currentPlace: this.currentPlace,
     });
     this.onCancelPreferredLanguage();
-  }
-
-  private loadFeatureToggles(): ng.IPromise<any> {
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.prov3698)
-      .then(result => this.isprov3698 = result);
-    return this.$q.resolve();
   }
 }
 

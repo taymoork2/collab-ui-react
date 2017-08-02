@@ -104,12 +104,14 @@
       var action = _.get(menuEntry, 'actions[0]', '');
       if (action) {
         if (action.name == 'routeToQueue') {
-          if (_.includes(elementId, 'initialAnnouncement')) {
+          var hasInitialDynamicList = _.has(action.queueSettings.initialAnnouncement, 'actions[0].dynamicList');
+          var hasPeriodicDynamicList = _.has(action.queueSettings.periodicAnnouncement, 'actions[0].dynamicList');
+          if (hasInitialDynamicList && _.includes(elementId, 'initialAnnouncement')) {
             if (checkForElementId(action.queueSettings.initialAnnouncement.actions[0].dynamicList, elementId)) {
               actionEntry = action.queueSettings.initialAnnouncement;
               return true;
             }
-          } else if (_.includes(elementId, 'periodicAnnouncement')) {
+          } else if (hasPeriodicDynamicList && _.includes(elementId, 'periodicAnnouncement')) {
             if (checkForElementId(action.queueSettings.periodicAnnouncement.actions[0].dynamicList, elementId)) {
               actionEntry = action.queueSettings.periodicAnnouncement;
               return true;

@@ -54,8 +54,9 @@
     </div>
     <div class="row full service-setup service-setup-regional-settings bottom-margin">
       <uc-extension-range
+        steering-digit="$ctrl.huronSettingsData.site.steeringDigit"
+        extension-length="$ctrl.huronSettingsData.site.extensionLength"
         number-ranges="$ctrl.huronSettingsData.internalNumberRanges"
-        site="$ctrl.huronSettingsData.site"
         first-time-setup="$ctrl.ftsw"
         on-change-fn="$ctrl.onExtensionRangeChanged(extensionRanges)">
       </uc-extension-range>

@@ -12,6 +12,7 @@ require('./_setup-wizard.scss');
     var isSharedDevicesOnlyLicense = false;
     var shouldShowMeetingsTab = false;
     var hasPendingCallLicenses = false;
+    var hasPendingLicenses = false;
     var supportsAtlasPMRonM2 = false;
     $scope.tabs = [];
     $scope.isTelstraCsbEnabled = false;
@@ -54,6 +55,7 @@ require('./_setup-wizard.scss');
         var tabsBasedOnPendingLicensesPromise = SetupWizardService.getPendingLicenses().then(function () {
           shouldShowMeetingsTab = SetupWizardService.hasPendingMeetingLicenses();
           hasPendingCallLicenses = SetupWizardService.hasPendingCallLicenses();
+          hasPendingLicenses = SetupWizardService.hasPendingLicenses();
         });
         promises.push(tabsBasedOnPendingLicensesPromise);
       }
@@ -64,6 +66,7 @@ require('./_setup-wizard.scss');
     function init() {
       var tabs = getInitTabs();
 
+      initPlanReviewTab(tabs);
       initEnterpriseSettingsTab(tabs);
       initMeetingSettingsTab(tabs);
       initCallSettingsTab(tabs);
@@ -78,17 +81,6 @@ require('./_setup-wizard.scss');
 
     function getInitTabs() {
       return [{
-        name: 'planReview',
-        label: 'firstTimeWizard.planReview',
-        description: 'firstTimeWizard.planReviewSub',
-        icon: 'icon-plan-review',
-        title: 'firstTimeWizard.planReview',
-        controller: 'PlanReviewCtrl as planReview',
-        steps: [{
-          name: 'init',
-          template: 'modules/core/setupWizard/planReview/planReview.tpl.html',
-        }],
-      }, {
         name: 'messagingSetup',
         label: 'firstTimeWizard.messageSettings',
         description: 'firstTimeWizard.messagingSetupSub',
@@ -124,6 +116,28 @@ require('./_setup-wizard.scss');
         }],
       },
       ];
+    }
+
+    function initPlanReviewTab(tabs) {
+      var tab = {
+        name: 'planReview',
+        label: 'firstTimeWizard.planReview',
+        description: 'firstTimeWizard.planReviewSub',
+        icon: 'icon-plan-review',
+        title: 'firstTimeWizard.planReview',
+        controller: 'PlanReviewCtrl as planReview',
+        steps: [{
+          name: 'init',
+          template: 'modules/core/setupWizard/planReview/planReview.tpl.html',
+        }],
+      };
+
+      if (SetupWizardService.hasPendingServiceOrder()) {
+        tab.label = 'firstTimeWizard.subscriptionReview';
+        tab.title = 'firstTimeWizard.subscriptionReview';
+      }
+
+      tabs.splice(0, 0, tab);
     }
 
     function initMeetingSettingsTab(tabs) {
@@ -195,9 +209,7 @@ require('./_setup-wizard.scss');
 
       if (showCallSettings()) {
         $q.resolve($scope.isCustomerPresent).then(function (customer) {
-          var isSimpOrder = Authinfo.getCustomerAdminEmail().indexOf('ordersimp') !== -1;
-
-          if (customer && isSimpOrder) {
+          if (customer && hasPendingCallLicenses) {
             SetupWizardService.activateAndCheckCapacity().catch(function (error) {
               $timeout(function () {
               //   $scope.$emit('wizardNextButtonDisable', true);
@@ -221,7 +233,7 @@ require('./_setup-wizard.scss');
             steps.splice(0, 0, initialStep);
           }
 
-          if (!customer && isSimpOrder) {
+          if (!customer && hasPendingCallLicenses) {
             steps.splice(0, 0, pickCountry);
           }
 
@@ -312,20 +324,25 @@ require('./_setup-wizard.scss');
       if (!Authinfo.isSetupDone()) {
         var tab = {
           name: 'finish',
-          label: 'firstTimeWizard.finish',
+          label: 'firstTimeWizard.activateAndBeginBilling',
           description: 'firstTimeWizard.finishSub',
           icon: 'icon-check',
           title: 'firstTimeWizard.getStarted',
           controller: 'WizardFinishCtrl',
           steps: [{
-            name: 'init',
-            template: 'modules/core/setupWizard/finish/finish.tpl.html',
+            name: 'activate',
+            template: 'modules/core/setupWizard/finish/activate.html',
+          }, {
+            name: 'done',
+            template: 'modules/core/setupWizard/finish/finish.html',
           }],
         };
 
-        if (shouldShowMeetingsTab) {
-          tab.title = 'firstTimeWizard.activateAndBeginBilling';
+        if (!hasPendingLicenses) {
+          tab.label = 'firstTimeWizard.finish';
+          _.remove(tab.steps, { name: 'activate' });
         }
+
         tabs.push(tab);
       }
     }

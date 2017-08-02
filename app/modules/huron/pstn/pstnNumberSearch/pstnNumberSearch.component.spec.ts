@@ -1,7 +1,7 @@
 import pstnNumberSearchName from './index';
 import { NumberModel } from './number.model';
 import { NUMTYPE_DID } from '../pstn.const';
-import { CCODE_US, CCODE_CA } from '../pstnAreaService';
+import { CCODE_US, CCODE_CA, IAreaData } from '../pstnAreaService';
 
 describe('Component: PstnNumberSearchComponent', () => {
   const customer = getJSONFixture('huron/json/pstnSetup/customer.json');
@@ -9,6 +9,12 @@ describe('Component: PstnNumberSearchComponent', () => {
   const areas = getJSONFixture('../../app/modules/huron/pstn/pstnAreaService/states.json');
   const ADD_BUTTON = '.btn--people';
   const CHECKBOX = 'cs-checkbox label';
+
+  const areaData: IAreaData = {
+    zipName: '_zipName',
+    typeName: '_typeName',
+    areas: areas,
+  };
 
   beforeEach(function () {
     this.initModules(pstnNumberSearchName);
@@ -22,6 +28,7 @@ describe('Component: PstnNumberSearchComponent', () => {
     this.$scope.model = new NumberModel();
     this.$scope.search = jasmine.createSpy('search');
     this.$scope.addToCart = jasmine.createSpy('addToCart');
+    this.$scope.countryCode = CCODE_US;
   });
 
   function initComponent() {
@@ -39,7 +46,7 @@ describe('Component: PstnNumberSearchComponent', () => {
     this.PstnModel.setCustomerId(customer.uuid);
     this.PstnModel.setCustomerName(customer.name);
     this.PstnModel.setProvider(customerCarrierList[0]);
-    spyOn(this.PstnAreaService, 'getCountryAreas').and.returnValue(this.$q.resolve(areas));
+    spyOn(this.PstnAreaService, 'getCountryAreas').and.returnValue(this.$q.resolve(areaData));
   }
 
   describe('General CCODE_US -', function () {
@@ -55,7 +62,7 @@ describe('Component: PstnNumberSearchComponent', () => {
     });
 
     it('should show detailed search', function () {
-      expect(this.controller.detailSearchEnable).toEqual(true);
+      expect(this.controller.isDetailSearchEnabled()).toEqual(true);
     });
 
     it('should call parent\'s addToCart from onAddToCart method', function () {
@@ -74,7 +81,7 @@ describe('Component: PstnNumberSearchComponent', () => {
     beforeEach(initComponent);
 
     it('should show detailed search', function () {
-      expect(this.controller.detailSearchEnable).toEqual(true);
+      expect(this.controller.isDetailSearchEnabled()).toEqual(true);
     });
   });
 
@@ -86,7 +93,7 @@ describe('Component: PstnNumberSearchComponent', () => {
     beforeEach(initComponent);
 
     it('should NOT show detailed search', function () {
-      expect(this.controller.detailSearchEnable).toEqual(false);
+      expect(this.controller.isDetailSearchEnabled()).toEqual(false);
     });
   });
 

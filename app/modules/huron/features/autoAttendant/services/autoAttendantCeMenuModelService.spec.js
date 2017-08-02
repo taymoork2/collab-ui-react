@@ -15,9 +15,11 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
   var ceMenuFull;
   var wmenuWithAnnouncements;
   var ceWelcomeWithAnnouncements;
+  var ceWelcomeWithQueue;
   var ceMenuWithDynaSay;
   var ceMenuWithAnnouncementsPlay;
   var ceWelcomeWithAnnouncementsKeys;
+  var ceWelcomeMenuWithOldQueue;
 
   var ceWelcome2 = {
     callExperienceName: 'AA Welcome',
@@ -75,6 +77,8 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     welcomeMenu = wmenu.welcomeMenu;
     ceMenuFull = wmenu.ceMenuFull;
     wmenuWithAnnouncements = getJSONFixture('huron/json/autoAttendant/welcomeMenuWithAnnouncements.json');
+    ceWelcomeMenuWithOldQueue = getJSONFixture('huron/json/autoAttendant/ceWelcomeMenuWithOldQueueDef.json');
+    ceWelcomeWithQueue = ceWelcomeMenuWithOldQueue.ceWelcomeMenuWithOldQueueDef;
     ceWelcomeWithAnnouncements = wmenuWithAnnouncements.ceWelcome;
     ceWelcomeWithAnnouncementsKeys = wmenuWithAnnouncements.ceWelcomeWithAnnouncementsKeys;
     ceMenuWithDynaSay = wmenuWithAnnouncements.ceDynamicSay;
@@ -143,6 +147,35 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     });
   });
 
+  describe('getWelcomeMenu with oldQueueDef', function () {
+    it('should return welcomeMenu from parsing ceWelcome', function () {
+      var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcomeWithQueue, 'openHours');
+      _.each(_.keys(_welcomeMenu), function (key) {
+        expect(_.isEqual(welcomeMenu[key], _welcomeMenu[key]));
+      });
+    });
+  });
+
+  describe('getWelcomeMenu with oldQueueDef and dynamic toggle on', function () {
+    it('should return welcomeMenu from parsing ceWelcome', function () {
+      AutoAttendantCeMenuModelService.setDynAnnounceToggle(true);
+      var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcomeWithQueue, 'openHours');
+      _.each(_.keys(_welcomeMenu), function (key) {
+        expect(_.isEqual(welcomeMenu[key], _welcomeMenu[key]));
+      });
+    });
+  });
+
+  describe('getWelcomeMenu with dynamicAnnounce toggle on', function () {
+    it('should return welcomeMenu from parsing ceWelcome', function () {
+      AutoAttendantCeMenuModelService.setDynAnnounceToggle(true);
+      var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcome, 'openHours');
+      _.each(_.keys(_welcomeMenu), function (key) {
+        expect(_.isEqual(welcomeMenu[key], _welcomeMenu[key]));
+      });
+    });
+  });
+
   describe('getOptionMenu', function () {
     it('should return optionMenu from parsing ceOption', function () {
       var _optionMenu = AutoAttendantCeMenuModelService.getOptionMenu(ceOption, 'openHours');
@@ -152,8 +185,26 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     });
   });
 
+  describe('getOptionMenu with dynamicAnnounce toggle on', function () {
+    it('should return optionMenu from parsing ceOption', function () {
+      AutoAttendantCeMenuModelService.setDynAnnounceToggle(true);
+      var _optionMenu = AutoAttendantCeMenuModelService.getOptionMenu(ceOption, 'openHours');
+      _.each(_.keys(_optionMenu), function (key) {
+        expect(_.isEqual(optionMenu[key], _optionMenu[key]));
+      });
+    });
+  });
+
   describe('getCustomMenu', function () {
     it('should return customMenu from parsing ceCustom', function () {
+      var _customMenu = AutoAttendantCeMenuModelService.getCustomMenu(ceCustom, 'openHours');
+      expect(angular.equals(_customMenu, customMenu)).toBe(true);
+    });
+  });
+
+  describe('getCustomMenu with dynamicAnnounce toggle on', function () {
+    it('should return customMenu from parsing ceCustom', function () {
+      AutoAttendantCeMenuModelService.setDynAnnounceToggle(true);
       var _customMenu = AutoAttendantCeMenuModelService.getCustomMenu(ceCustom, 'openHours');
       expect(angular.equals(_customMenu, customMenu)).toBe(true);
     });

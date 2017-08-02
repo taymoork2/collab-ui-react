@@ -43,7 +43,7 @@ export interface IExistingTrialSites extends IWebExSite {
 
 export interface IWebexLicencesPayload {
   provisionOrder: boolean;
-  sendCustomerEmail: boolean;
+  sendCustomerEmail?: boolean;
   serviceOrderUUID: string | null;
   webexProvisioningParams?: IWebexProvisioningParams;
 }

@@ -3,10 +3,11 @@ import learnMore from './index';
 describe('Component: learnMore', function () {
   beforeEach(function () {
     this.initModules(learnMore);
-    this.injectDependencies('$componentController', '$scope', 'Analytics');
+    this.injectDependencies('$componentController', '$scope', '$window', 'Analytics');
 
     this.location = 'global-subheader';
     this.type = 'link';
+    spyOn(this.$window, 'open');
     spyOn(this.Analytics, 'trackPremiumEvent');
 
     this.initController = (): void => {
@@ -24,6 +25,7 @@ describe('Component: learnMore', function () {
     this.initController();
     this.controller.clickLink();
     expect(this.Analytics.trackPremiumEvent).toHaveBeenCalledWith(this.Analytics.sections.PREMIUM.eventNames.LEARN_MORE, this.location);
+    expect(this.$window.open).toHaveBeenCalledWith('http://www.cisco.com/go/pro-pack', '_blank');
   });
 
   describe('isButton: ', function () {

@@ -34,6 +34,7 @@ require('./_overview.scss');
     vm.pstnToSNotification = null;
     vm.esaDisclaimerNotification = null;
     vm.trialDaysLeft = undefined;
+    vm.isEnterpriseCustomer = isEnterpriseCustomer;
     vm.dismissNotification = dismissNotification;
     vm.notificationComparator = notificationComparator;
     vm.ftHuronPstn = false;
@@ -44,7 +45,7 @@ require('./_overview.scss');
     ProPackService.hasProPackEnabledAndNotPurchased().then(function (proPackToggle) {
       if (proPackToggle) {
         $scope.$watch(function () {
-          return LearnMoreBannerService.isElementVisible(LearnMoreBannerService.HEADER_LOCATION);
+          return LearnMoreBannerService.isElementVisible(LearnMoreBannerService.OVERVIEW_LOCATION);
         }, function (visible) {
           vm.showLearnMoreNotification = !visible;
         });
@@ -57,6 +58,10 @@ require('./_overview.scss');
       'info',
       'new',
     ];
+
+    function isEnterpriseCustomer() {
+      return Authinfo.isEnterpriseCustomer();
+    }
 
     // used to sort notifications in a specific order
     function notificationComparator(a, b) {

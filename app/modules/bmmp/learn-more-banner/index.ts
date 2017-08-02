@@ -1,4 +1,4 @@
-import { LearnMoreBannerComponent } from './learnMoreBanner.component';
+import { LearnMoreReportsComponent, LearnMoreOverviewComponent } from './learnMoreBanner.component';
 import { LearnMoreBannerService } from './learnMoreBanner.service';
 import BmmpModule from 'modules/bmmp';
 import ProPackModule from 'modules/core/proPack';
@@ -14,6 +14,7 @@ export default angular
     BmmpModule,
     ProPackModule,
   ])
-  .component('learnMoreBanner', new LearnMoreBannerComponent())
+  .component('learnMoreReportBanner', new LearnMoreReportsComponent())
+  .component('learnMoreOverviewBanner', new LearnMoreOverviewComponent())
   .service('LearnMoreBannerService', LearnMoreBannerService)
   .name;
