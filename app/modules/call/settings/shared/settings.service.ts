@@ -659,7 +659,7 @@ export class HuronSettingsService {
 
   private rejectAndNotifyPossibleErrors(): void | ng.IPromise<any> {
     if (this.errors.length > 0) {
-      this.Notification.notify(this.errors, 'error');
+      this.Notification.notify(this.errors);
       return this.$q.reject();
     }
   }

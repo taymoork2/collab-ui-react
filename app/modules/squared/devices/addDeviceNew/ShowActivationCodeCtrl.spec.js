@@ -720,11 +720,11 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
 
           it('should try to send email and notify error', function () {
             spyOn(CsdmEmailService, 'sendCloudberryEmail').and.returnValue($q.reject({}));
-            spyOn(Notification, 'notify').and.callThrough();
+            spyOn(Notification, 'errorResponse');
 
             controller.sendActivationCodeEmail();
             $scope.$digest();
-            expect(Notification.notify).toHaveBeenCalledTimes(1);
+            expect(Notification.errorResponse).toHaveBeenCalledTimes(1);
           });
         });
       });
@@ -784,11 +784,11 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
 
           it('should try to send email and notify error', function () {
             spyOn(CsdmEmailService, 'sendCloudberryEmail').and.returnValue($q.reject({}));
-            spyOn(Notification, 'notify').and.callThrough();
+            spyOn(Notification, 'errorResponse');
 
             controller.sendActivationCodeEmail();
             $scope.$digest();
-            expect(Notification.notify).toHaveBeenCalledTimes(1);
+            expect(Notification.errorResponse).toHaveBeenCalledTimes(1);
           });
         });
       });
@@ -856,11 +856,11 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
 
           it('should try to send email and notify error', function () {
             spyOn(CsdmEmailService, 'sendHuronEmail').and.returnValue($q.reject({}));
-            spyOn(Notification, 'notify').and.callThrough();
+            spyOn(Notification, 'errorResponse');
 
             controller.sendActivationCodeEmail();
             $scope.$digest();
-            expect(Notification.notify).toHaveBeenCalledTimes(1);
+            expect(Notification.errorResponse).toHaveBeenCalledTimes(1);
           });
         });
       });
@@ -898,11 +898,11 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
 
           it('should try to send email and notify error', function () {
             spyOn(CsdmEmailService, 'sendHuronEmail').and.returnValue($q.reject());
-            spyOn(Notification, 'notify').and.callThrough();
+            spyOn(Notification, 'errorResponse');
 
             controller.sendActivationCodeEmail();
             $scope.$digest();
-            expect(Notification.notify).toHaveBeenCalledTimes(1);
+            expect(Notification.errorResponse).toHaveBeenCalledTimes(1);
           });
         });
       });
@@ -947,11 +947,11 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
             spyOn(ActivationCodeEmailService, 'save').and.callFake(function (a, emailInfo, success, error) {
               error();
             });
-            spyOn(Notification, 'notify').and.callThrough();
+            spyOn(Notification, 'errorResponse');
 
             controller.sendActivationCodeEmail();
             $scope.$digest();
-            expect(Notification.notify).toHaveBeenCalled();
+            expect(Notification.errorResponse).toHaveBeenCalled();
           });
         });
       });
@@ -991,11 +991,11 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
 
           it('should try to send email and notify error', function () {
             spyOn(CsdmEmailService, 'sendPersonalEmail').and.returnValue($q.reject({}));
-            spyOn(Notification, 'notify').and.callThrough();
+            spyOn(Notification, 'errorResponse');
 
             controller.sendActivationCodeEmail();
             $scope.$digest();
-            expect(Notification.notify).toHaveBeenCalledTimes(1);
+            expect(Notification.errorResponse).toHaveBeenCalledTimes(1);
           });
         });
       });
@@ -1033,11 +1033,11 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
 
           it('should try to send email and notify error', function () {
             spyOn(CsdmEmailService, 'sendPersonalCloudberryEmail').and.returnValue($q.reject({}));
-            spyOn(Notification, 'notify').and.callThrough();
+            spyOn(Notification, 'errorResponse');
 
             controller.sendActivationCodeEmail();
             $scope.$digest();
-            expect(Notification.notify).toHaveBeenCalledTimes(1);
+            expect(Notification.errorResponse).toHaveBeenCalledTimes(1);
           });
         });
       });
