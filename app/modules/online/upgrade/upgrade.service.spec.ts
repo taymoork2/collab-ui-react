@@ -128,6 +128,12 @@ describe('Service: OnlineUpgradeService', () => {
           getFreemiumSubscription(),
         ]);
       });
+
+      it('with a single pending subscription', function () {
+        this.Authinfo.getSubscriptions.and.returnValue([
+          getPendingSubscription(),
+        ]);
+      });
     });
   });
 
@@ -194,21 +200,7 @@ describe('Service: OnlineUpgradeService', () => {
 
   describe('Upgrade Modal', () => {
     beforeEach(function () {
-      spyOn(this.OnlineUpgradeService, 'getSubscriptionId').and.returnValue('789');
-      this.$httpBackend.expectGET(this.UrlConfig.getAdminServiceUrl() + 'commerce/productinstances?ciUUID=null').respond(200, {
-        productGroups: [{
-          productInstance: [{
-            productInstanceId: '123',
-            description: 'WebEx',
-            baseProduct: true,
-            subscriptionInfo: {
-              subscriptionId: '789',
-            },
-          } ],
-        } ],
-      });
       this.OnlineUpgradeService.openUpgradeModal();
-      this.$httpBackend.flush();
     });
 
     it('openUpgradeModal() should open static modal', function () {
@@ -233,6 +225,9 @@ describe('Service: OnlineUpgradeService', () => {
       subscriptionId: '123',
       status: ACTIVE,
       endDate: moment().add(1, 'days'),
+      licenses: [{
+        masterOfferName: 'MC25',
+      }],
     };
   }
 
@@ -261,6 +256,16 @@ describe('Service: OnlineUpgradeService', () => {
       endDate: moment().add(1, 'days'),
       licenses: [{
         masterOfferName: 'MC_FREE',
+      }],
+    };
+  }
+
+  function getPendingSubscription() {
+    return {
+      subscriptionId: '123',
+      status: ACTIVE,
+      licenses: [{
+        masterOfferName: 'MC25',
       }],
     };
   }
