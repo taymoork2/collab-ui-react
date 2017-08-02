@@ -1,4 +1,6 @@
-import { IRLocation, Location, IRLocationListItem, LocationListItem } from './location';
+import { IRLocation, Location, IRLocationListItem, LocationListItem, IRLocationInternalNumberPoolList, LocationInternalNumberPoolList } from './location';
+
+interface ILocationInternalNumberPoolResource extends ng.resource.IResourceClass<IRLocationInternalNumberPoolList & ng.resource.IResource<IRLocationInternalNumberPoolList>> {}
 
 interface ILocationResource extends ng.resource.IResourceClass<ng.resource.IResource<IRLocationListItem>> {}
 
@@ -9,6 +11,7 @@ interface ILocationDetailResource extends ng.resource.IResourceClass<ng.resource
 }
 
 export class LocationsService {
+  private locationInternalNumberPoolResource: ILocationInternalNumberPoolResource;
   private locationListResource: ILocationResource;
   private userLocationDetailResource: IUserLocationDetailResource;
   private locationDetailResource: ILocationDetailResource;
@@ -35,11 +38,27 @@ export class LocationsService {
       {
         save: saveAction,
       });
+    this.locationInternalNumberPoolResource = this.$resource(`${this.HuronConfig.getCmiUrl()}/voice/customers/:customerId/locations/:locationId/internalnumberpools`, {}, {}) as ILocationInternalNumberPoolResource;
     this.userLocationDetailResource = <IUserLocationDetailResource>this.$resource(`${this.HuronConfig.getCmiV2Url()}/customers/:customerId/users/:userId`, {}, {});
     this.locationDetailResource = <ILocationDetailResource>this.$resource(`${this.HuronConfig.getCmiV2Url()}/customers/:customerId/locations/:locationId`, {},
       {
         update: updateAction,
       });
+  }
+
+  public getLocationInternalNumberPoolList(locationId, directorynumber, order, patternQuery, patternlimit): IPromise<LocationInternalNumberPoolList[]> {
+    return this.locationInternalNumberPoolResource.query({
+      customerId: this.Authinfo.getOrgId(),
+      locationId: locationId,
+      directorynumber,
+      order,
+      pattern: patternQuery,
+      limit: patternlimit,
+    }).$promise.then((response) => {
+      return _.map(response, location => {
+        return new LocationInternalNumberPoolList(location);
+      });
+    });
   }
 
   public getLocationList(): IPromise<LocationListItem[]> {
