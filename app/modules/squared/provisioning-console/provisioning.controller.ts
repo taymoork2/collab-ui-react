@@ -2,22 +2,18 @@ import { ProvisioningService } from './provisioning.service';
 import { IOrders } from './provisioning.interfaces';
 import { IOrder } from './provisioning.interfaces';
 import { Status } from './provisioning.service';
-import { DATE_FORMAT } from './provisioning.service';
-
-export interface IGridApiScope extends ng.IScope {
-  gridApi?: uiGrid.IGridApi;
-}
 
 export class ProvisioningController {
 
   public tabs = [{
-    title: 'provisioningConsole.tabs.pending',
+    title: this.$translate.instant('provisioningConsole.tabs.pending'),
     state: 'provisioning.pending',
   }, {
-    title: 'provisioningConsole.tabs.completed',
+    title: this.$translate.instant('provisioningConsole.tabs.completed'),
     state: 'provisioning.completed',
   }];
   public isLoading: boolean = false;
+  public gridApi: uiGrid.IGridApi;
 
   private timer: any;
   public completedOrders: any;
@@ -34,10 +30,11 @@ export class ProvisioningController {
 
   /* @ngInject */
   constructor(
-    private $scope: IGridApiScope,
+
     private $state: ng.ui.IStateService,
     private $templateCache: ng.ITemplateCacheService,
     private $q: ng.IQService,
+    private $scope: ng.IScope,
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
     private ProvisioningService: ProvisioningService) {
@@ -64,29 +61,14 @@ export class ProvisioningController {
     {
       field: 'orderReceived',
       displayName: this.$translate.instant('provisioningConsole.orderReceived'),
-      cellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.provisioningCtrl.formatDate(row.entity.orderReceived)}} </div>',
-      type: 'date',
     },
     {
       field: 'lastModified',
       displayName: this.$translate.instant('provisioningConsole.lastModified'),
-      type: 'date',
-      cellTemplate: '<div class="ui-grid-cell-contents"> {{grid.appScope.provisioningCtrl.formatDate(row.entity.lastModified)}} </div>',
     },
     {
       field: 'status',
       displayName: this.$translate.instant('provisioningConsole.status'),
-    }];
-
-    /*
-    * Define the tabs for the header.
-    */
-    this.tabs = [{
-      title: 'provisioningConsole.tabs.pending',
-      state: 'provisioning.pending',
-    }, {
-      title: 'provisioningConsole.tabs.completed',
-      state: 'provisioning.completed',
     }];
 
     this.init();
@@ -97,6 +79,10 @@ export class ProvisioningController {
     this.gridOptions = this.getGridOptions();
     this.getOrderData().then((results: IOrders) => {
       this.setGridData(results);
+    })
+    .catch(() => {
+      this.pendingOrders = [];
+      this.completedOrders = [];
     })
     .finally(() => {
       this.isLoading = false;
@@ -114,14 +100,14 @@ export class ProvisioningController {
   */
   public moveTo(order, newStatus: Status): void {
     this.isLoading = true;
-    this.ProvisioningService.updateOrderStatus(order, newStatus).then((results) => {
-      if (results) {
+    this.ProvisioningService.updateOrderStatus<{status: string}>(order, newStatus).then((result) => {
+      if (result) {
         order.status = newStatus;
-        if (newStatus === Status.completed) {
+        if (newStatus === Status.COMPLETED) {
           //moving from pending dataset to completed no reason to get results again - just modify existing datasets
-          const pendingIndex = _.findIndex(this.pendingOrders, { orderUUID: order.orderUUID, siteUrl: order.siteUrl });
-          if (pendingIndex > -1) {
-            this.completedOrders.push(this.pendingOrders.splice(pendingIndex, 1));
+          const completedOrder =  _.head(_.remove(this.pendingOrders, { orderUUID: order.orderUUID, siteUrl: order.siteUrl }));
+          if (completedOrder) {
+            this.completedOrders.push(completedOrder);
           }
         }
       }
@@ -156,8 +142,8 @@ export class ProvisioningController {
   }
 
   private setGridData(orders: IOrders): void {
-    this.pendingOrders = orders.pending;
-    this.completedOrders = orders.completed;
+    this.pendingOrders = this.gridOptions.pending.data = orders.pending;
+    this.completedOrders = this.gridOptions.completed.data = orders.completed;
 
   }
 
@@ -165,10 +151,10 @@ export class ProvisioningController {
     return this.$templateCache.get('modules/squared/provisioning-console/templates/' + tpl + '.html');
   }
 
-  public getOrderData(searchStr?: string): ng.IPromise<{ pending: IOrder[], completed: IOrder[] }> {
+  private getOrderData(searchStr?: string): ng.IPromise<{ pending: IOrder[], completed: IOrder[] }> {
     const orders = {
-      pending: this.ProvisioningService.getOrders(Status.pending),
-      completed: this.ProvisioningService.getOrders(Status.completed),
+      pending: this.ProvisioningService.getOrders(Status.PENDING),
+      completed: this.ProvisioningService.getOrders(Status.COMPLETED),
     };
     return this.$q.all(orders).then((results) => {
       if (searchStr && searchStr.length > 0) {
@@ -180,9 +166,6 @@ export class ProvisioningController {
     });
   }
 
-  public formatDate(date): string {
-    return moment(date).format(DATE_FORMAT);
-  }
   /*
   * Get the options for the pending/in progress and completed table.
   */
@@ -198,21 +181,21 @@ export class ProvisioningController {
       completed: _.merge({}, ProvisioningController.sharedGridOptions),
     };
 
-    result.pending.data = 'provisioningCtrl.pendingOrders';
-    result.completed.data = 'provisioningCtrl.completedOrders';
     result.pending.columnDefs = this.sharedColumDefs.concat(customPendingFields);
+    result.pending.appScopeProvider = this;
+    result.completed.appScopeProvider = this;
     result.completed.columnDefs = _.filter(this.sharedColumDefs, (def) => {
       return def.field !== 'orderReceived';
     });
 
     result.pending.onRegisterApi = (gridApi) => {
-      this.$scope.gridApi = gridApi;
+      this.gridApi = gridApi;
       gridApi.selection.on.rowSelectionChanged(this.$scope, (row) => {
         this.showDetails(row.entity);
       });
     };
     result.completed.onRegisterApi = (gridApi) => {
-      this.$scope.gridApi = gridApi;
+      this.gridApi = gridApi;
       gridApi.selection.on.rowSelectionChanged(this.$scope, (row) => {
         this.showDetails(row.entity);
       });

@@ -3,14 +3,12 @@
 import provisioningModule from './../index';
 
 describe('Controller: ProvisioningDetailsController', function () {
-  // TODO: algendel: write meaningful tests
-  const order_detail =  getJSONFixture('squared/json/order_detail.json');
-  const orders = getJSONFixture('core/json/orders/order.json');
+  const order_detail = getJSONFixture('squared/json/order_detail.json');
+  const orders = getJSONFixture('squared/json/orders.json');
   orders[0].siteUrl = 'atlastestlos071202a.webex.com';
-  beforeEach(angular.mock.module(provisioningModule));
+
   function initDependencySpies() {
     spyOn(this.ProvisioningService, 'getOrder').and.returnValue(this.$q.resolve(order_detail));
-
   }
 
   function init() {
@@ -23,37 +21,44 @@ describe('Controller: ProvisioningDetailsController', function () {
       '$stateParams',
       '$templateCache',
       '$timeout',
-      '$translate',
       'ProvisioningService');
-
     initDependencySpies.apply(this);
-    this.$stateParams.order = orders[0];
-    initController.apply(this);
   }
 
-  function initController(): void {
-    this.controller = this.$controller('ProvisioningDetailsController', {
-      $scope: this.$scope,
-      $timeout: this.$timeout,
-      $stateParams: this.$stateParams,
-      $q: this.$q,
-    });
-    this.$scope.$apply();
+  function initController(orderIndex): void {
+    const locals = {
+      controllerLocals: {
+        $stateParams: {
+          order: orders[orderIndex],
+        },
+      },
+    };
+    this.initController('ProvisioningDetailsController', locals);
   }
 
   beforeEach(init);
 
   describe('init controller', () => {
-    it('should exist', function () {
-      expect(this.controller).toBeDefined();
+
+    it('should set dateInfo to the \'orderReceived\' date for not completed orders', function () {
+      initController.call(this, 0);
+      const dateReceivedFormatted = moment(orders[0].orderReceived).format('M/d/YY h:mm a');
+      expect(this.controller.dateInfo).toEqual(dateReceivedFormatted);
+      expect(this.ProvisioningService.getOrder).toHaveBeenCalledWith(orders[0].orderUUID);
     });
-    it('getServiceItemsForSite should return an object with serviceItems arrays', function() {
+    it('should set dateInfo to the \'lastModified\' date for completed orders', function () {
+      initController.call(this, 4);
+      const dateModifiedFormatted = moment(orders[4].lastModified).format('M/d/YY h:mm a');
+      expect(this.controller.dateInfo).toEqual(dateModifiedFormatted);
+      expect(this.ProvisioningService.getOrder).toHaveBeenCalledWith(orders[4].orderUUID);
+    });
+    it('getServiceItemsForSite should return an object with serviceItems arrays', function () {
+      initController.call(this, 0);
       const result = this.controller.getServiceItemsForSite(order_detail.orderContent.serviceItems);
       expect(result.conferencing.length).toBe(2);
       expect(result.cmr.length).toBe(1);
       expect(result.audio.length).toBe(1);
       expect(result.storage.length).toBe(0);
     });
-
   });
 });

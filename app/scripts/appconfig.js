@@ -2810,6 +2810,7 @@
             },
             abstract: true,
             resolve: {
+              // TODO: agendel 8/1/2017  here to remove this and use mainLazyLoad
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
                   done(require('./main'));

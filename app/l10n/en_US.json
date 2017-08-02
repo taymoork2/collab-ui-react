@@ -1138,6 +1138,7 @@
         "editPartner": "Edit Partner Org",
         "viewEdiscovery": "View eDiscovery",
         "provisioningConsole": "Provisioning Console",
+        "viewProvisioningConsole": "View Provisioning Console",
         "hybridCallTestTool": {
           "heading": "Hybrid Call",
           "description": "Run a test between two Hybrid Call Service Connect users",

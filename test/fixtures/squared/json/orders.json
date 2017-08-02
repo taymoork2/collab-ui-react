@@ -1,6 +1,6 @@
 [{
-  "webOrderId": "3468364384638",
-  "orderUuid": "1d8dcfba-619e-11e7-9488-3468364384638",
+  "webOrderID": "3468364384638",
+  "orderUUID": "1d8dcfba-619e-11e7-9488-3468364384638",
   "siteUrl": "designitoslo.webex.com",
   "manualCode": "200",
   "status": "PENDING",
@@ -9,8 +9,8 @@
   "customerName": "Designit Oslo",
   "adminEmail": "osl-infrastructure@designit.com"
 }, {
-  "webOrderId": "8484478473871",
-  "orderUuid": "1d8dcfba-619e-11e7-9488-8484478473871",
+  "webOrderID": "8484478473871",
+  "orderUUID": "1d8dcfba-619e-11e7-9488-8484478473871",
   "siteUrl": "aar-infrastructure.webex.com",
   "manualCode": "300",
   "status": "PROGRESS",
@@ -19,8 +19,8 @@
   "customerName": "Designit Aarhus",
   "adminEmail": "aar-infrastructure@designit.com"
 }, {
-  "webOrderId": "4873483748373",
-  "orderUuid": "1d8dcfba-619e-11e7-9488-4873483748373",
+  "webOrderID": "4873483748373",
+  "orderUUID": "1d8dcfba-619e-11e7-9488-4873483748373",
   "siteUrl": "atlastestlos071202a.webex.com",
   "manualCode": "500",
   "status": "PENDING",
@@ -29,8 +29,8 @@
   "customerName": "Hastwo Services",
   "adminEmail": "atlastestlos@gmail.com"
 }, {
-  "webOrderId": "4873483748373",
-  "orderUuid": "1d8dcfba-619e-11e7-9488-4873483748373",
+  "webOrderID": "4873483748373",
+  "orderUUID": "1d8dcfba-619e-11e7-9488-4873483748373",
   "siteUrl": "atlastestlos071202.webex.com",
   "manualCode": "500",
   "status": "PENDING",
@@ -39,11 +39,11 @@
   "customerName": "Hasone Service",
   "adminEmail": "atlastestlos2@gmail.com"
 }, {
-  "webOrderId": "9348734666437",
-  "orderUuid": "1d8dcfba-619e-11e7-9488-9348734666437",
+  "webOrderID": "9348734666437",
+  "orderUUID": "1d8dcfba-619e-11e7-9488-9348734666437",
   "siteUrl": "random.webex.com",
   "manualCode": "200",
-  "status": "PROGRESS",
+  "status": "COMPLETED",
   "orderReceived": "2017-06-12 14:21:17.419",
   "lastModified": "2017-07-12 14:41:17.409",
   "customerName": "Random company",

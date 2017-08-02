@@ -1,5 +1,5 @@
 
-require('./_provisioning.scss');
+require('./provisioning.scss');
 
 import { ProvisioningService } from './provisioning.service';
 import { ProvisioningController } from './provisioning.controller';

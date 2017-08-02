@@ -3,8 +3,11 @@
     <div class="header-info">
       <div class="header-info-wrap">
         <h3 translate="provisioningConsole.orderNumber" translate-values="{orderNumber: provisioningDetailsCtrl.order.webOrderID}"></h3>
-        <p>{{provisioningDetailsCtrl.dateInfo}}
+        <p ng-if="provisioningDetailsCtrl.order.status === Status.COMPLETED" translate = "provisioningConsole.details.completed" translate-value="{orderDate: provisioningDetailsCtrl.dateInfo}" >
         </p>
+        <p ng-if="provisioningDetailsCtrl.order.status !== Status.COMPLETED" translate = "provisioningConsole.details.pending" translate-value="{orderDate: provisioningDetailsCtrl.dateInfo}" >
+        </p>
+
       </div>
     </div>
   </cs-sp-header>

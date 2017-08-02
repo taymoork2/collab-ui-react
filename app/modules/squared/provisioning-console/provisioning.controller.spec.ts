@@ -5,12 +5,16 @@ import { Status } from './provisioning.service';
 
 describe('Controller: ProvisioningController', function () {
 
-  // TODO: algendel - write meaningful tests
   const orders = getJSONFixture('squared/json/orders.json');
-
+  const orderParams = {
+    PENDING: _.filter(orders, { status: 'PENDING' }),
+    COMPLETED: _.filter(orders, { status: 'COMPLETED' }),
+  };
   beforeEach(angular.mock.module(provisioningModule));
+
+
   function initDependencySpies() {
-    spyOn(this.ProvisioningService, 'getOrders').and.returnValue(this.$q.resolve(orders));
+    spyOn(this.ProvisioningService, 'getOrders').and.callFake(function(param) { return orderParams[param]; });
     spyOn(this.ProvisioningService, 'updateOrderStatus').and.returnValue(this.$q.resolve(orders));
   }
 
@@ -30,31 +34,29 @@ describe('Controller: ProvisioningController', function () {
   }
 
   function initController(): void {
-    this.controller = this.$controller('ProvisioningController', {
-      $scope: this.$scope,
-      $timeout: this.$timeout,
-      $q: this.$q,
-    });
-    this.$scope.$apply();
+    this.initController('ProvisioningController', {});
   }
 
   beforeEach(init);
 
   describe('init controller', () => {
-    it('should exist', function () {
-      expect(this.controller).toBeDefined();
-      expect(this.controller.completedOrders.length).toBe(5);
+    it('should populate completed and pending orders', function () {
+      expect(this.controller.completedOrders.length).toBe(1);
+      expect(this.controller.pendingOrders.length).toBe(3);
     });
     it('moveTo should update the order status', function() {
-      const order = {
-        orderUUID: '123',
-        siteUrl: 'www.xxy.com',
-      };
+      const order = this.controller.pendingOrders[0];
 
-      expect(this.controller).toBeDefined();
-      this.controller.moveTo(order, Status.completed);
-      expect(this.ProvisioningService.updateOrderStatus).toHaveBeenCalled();
+      expect(this.controller.completedOrders.length).toBe(1);
+      expect(this.controller.pendingOrders.length).toBe(3);
+      expect(order.status).toEqual(Status.PENDING);
+      this.controller.moveTo(order, Status.COMPLETED);
+      this.$scope.$digest();
+      expect(this.ProvisioningService.updateOrderStatus).toHaveBeenCalledWith(order, Status.COMPLETED);
+      expect(order.status).toEqual(Status.COMPLETED);
+      expect(this.controller.completedOrders.length).toBe(2);
+      expect(this.controller.pendingOrders.length).toBe(2);
+
     });
-
   });
 });

@@ -5,20 +5,20 @@
   </button>
   <ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu" ng-class="">
     <li ng-if="row.entity.status === 'PENDING'">
-      <a  ng-click="$event.stopPropagation(); grid.appScope.provisioningCtrl.moveTo(row.entity, 'PROGRESS');">
+      <a  ng-click="$event.stopPropagation(); grid.appScope.moveTo(row.entity, 'PROGRESS');">
         <span>Mark as in progress</span>
       </a>
     </li>
 
     <li ng-if="row.entity.status === 'PROGRESS'">
-      <a ng-click="$event.stopPropagation(); grid.appScope.provisioningCtrl.moveTo(row.entity, 'PENDING');">
+      <a ng-click="$event.stopPropagation(); grid.appScope.moveTo(row.entity, 'PENDING');">
         <span>Mark as pending</span>
       </a>
     </li>
 
     <li>
-      <a ng-click="$event.stopPropagation(); grid.appScope.provisioningCtrl.moveTo(row.entity, 'COMPLETED');">
-        <span>Mark as completed</span>
+      <a ng-click="$event.stopPropagation(); grid.appScope.moveTo(row.entity, 'COMPLETED');">
+        <span>Mark as completed </span>
       </a>
     </li>
   </ul>

@@ -2,10 +2,22 @@ import { ProvisioningService } from './../provisioning.service';
 import { Status } from './../provisioning.service';
 import { DATE_FORMAT } from './../provisioning.service';
 
+export interface IServiceItem {
+  siteUrl: string;
+}
+
 export interface IDetailItem {
   itemType: string;
   title: string;
-  serviceTypeItems: any[];
+  serviceTypeItems: IServiceItem[];
+}
+
+export interface IServiceItemsSet {
+  audio?: IServiceItem[];
+  conferencing?: IServiceItem[];
+  storage?: IServiceItem[];
+  cmr?: IServiceItem[];
+
 }
 
 export class ProvisioningDetailsController {
@@ -23,11 +35,10 @@ export class ProvisioningDetailsController {
 
   };
 
-  private serviceItems: any;
+  private serviceItems: IServiceItemsSet;
 
   /* @ngInject */
   constructor(
-    private $translate: ng.translate.ITranslateService,
     private $stateParams,
     private ProvisioningService: ProvisioningService) {
     this.order = this.$stateParams.order;
@@ -49,23 +60,16 @@ export class ProvisioningDetailsController {
 
   private init(): void {
     this.isLoading = true;
-    const date = (this.order.status !== Status.completed) ? moment(this.order.orderReceived).format(DATE_FORMAT) :
+    this.dateInfo  = (this.order.status !== Status.COMPLETED) ? moment(this.order.orderReceived).format(DATE_FORMAT) :
       moment(this.order.lastModified).format(DATE_FORMAT);
-    if (this.order.status === Status.pending || this.order.status === Status.completed) {
-      this.dateInfo = this.$translate.instant('provisioningConsole.details.pending', {
-        orderDate: date,
-      });
-    } else if (this.order.status === Status.completed) {
-      this.dateInfo = this.$translate.instant('provisioningConsole.details.completed', {
-        orderDate: date,
-      });
-    }
-
     this.ProvisioningService.getOrder(this.order.orderUUID).then((orderDetail) => {
-      const orderContent = JSON.parse(orderDetail.orderContent || '');
-      this.selectedSite = _.find(orderContent.collabServiceInfoCommon.site, (site) => {
-        return site.siteUrl === this.order.siteUrl;
-      });
+      this.isLoading = false;
+      const orderContent = JSON.parse(orderDetail.orderContent || '{}');
+      if (_.has(orderContent , 'collabServiceInfoCommon.site')) {
+        this.selectedSite = _.find(orderContent.collabServiceInfoCommon.site, (site) => {
+          return site.siteUrl === this.order.siteUrl;
+        });
+      }
 
       this.serviceItems = this.getServiceItemsForSite(orderContent.serviceItems);
       if (this.serviceItems) {
@@ -75,14 +79,14 @@ export class ProvisioningDetailsController {
         this.items.cmr = this.makeItem('cmr');
       }
     })
-    .finally( () => {
-      this.isLoading = false;
-    });
+      .finally(() => {
+        this.isLoading = false;
+      });
   }
 
-  private getServiceItemsForType(serviceItems: any): any {
+  private getServiceItemsForType<T extends IServiceItem>(serviceItems: T[]): T[] {
     if (serviceItems) {
-      return _.filter(serviceItems, (item: any) => {
+      return _.filter(serviceItems, (item) => {
         return !item.siteUrl || item.siteUrl === this.order.siteUrl;
       });
     } else {
@@ -93,13 +97,8 @@ export class ProvisioningDetailsController {
   /*
    * Group service items by category and site.
    */
-  public getServiceItemsForSite(serviceItems) {
-    const result = {
-      audio: [],
-      conferencing: [],
-      storage: [],
-      cmr: [],
-    };
+  public getServiceItemsForSite(serviceItems): IServiceItemsSet {
+    const result: IServiceItemsSet = {};
     //If there are service items, group them.
     if (serviceItems) {
       result.audio = this.getServiceItemsForType(serviceItems.audio);

@@ -5,9 +5,9 @@ import { IOrderDetail } from './provisioning.interfaces';
 export const DATE_FORMAT = 'M/d/YY h:mm a';
 
 export enum Status {
-  pending = 'PENDING',
-  progress = 'PROGRESS',
-  completed = 'COMPLETED',
+  PENDING = 'PENDING',
+  PROGRESS = 'PROGRESS',
+  COMPLETED = 'COMPLETED',
 }
 
 export class ProvisioningService {
@@ -26,19 +26,26 @@ export class ProvisioningService {
     this.updateOrderUrl = `${adminServiceUrl}orders/`; //<orderUuid>/postProvisioning
   }
 
+  private formatDate(date): string {
+    return moment(date).format(DATE_FORMAT);
+  }
+
   public getOrders(status: Status): ng.IPromise<IOrder[]> {
-    return this.$http.get(this.getOrdersUrl + status).then((response) => {
-      return <IOrder[]>_.get(response, 'data.orderList');
+    return this.$http.get<IOrder[]>(this.getOrdersUrl + status).then((response) => {
+      return _.each(_.get(response, 'data.orderList'), (order) => {
+        order.orderReceived = this.formatDate( order.orderReceived);
+        order.lastModified = this.formatDate(order.lastModified);
+      });
     });
   }
 
   public getOrder(orderUuid: string): ng.IPromise<IOrderDetail> {
-    return this.$http.get(this.getOrderUrl + orderUuid).then((response) => {
-      return <IOrderDetail>_.get(response, 'data', {});
+    return this.$http.get<IOrderDetail>(this.getOrderUrl + orderUuid).then((response) => {
+      return _.get(response, 'data');
     });
   }
 
-  public updateOrderStatus(order: IOrder, newStatus: Status): ng.IPromise<{}> {
+  public updateOrderStatus<T>(order: IOrder, newStatus: Status): ng.IPromise<T> {
     const payload = {
       orderId: order.orderUUID,
       postProvisioningStatus: [
@@ -57,7 +64,9 @@ export class ProvisioningService {
       },
       data: payload,
     };
-    return this.$http(config);
+    return this.$http(config).then((response) => {
+      return _.get(response, 'data.postProvisioningStatus[0]');
+    });
   }
 }
 
