@@ -316,7 +316,7 @@ describe('Care admin should be able to', function () {
     utils.waitForText(careChatTemplateSetupPage.chatTemplateName, templateName);
     utils.click(careChatTemplateSetupPage.deleteEmbedCodeBtnOnCard);
     utils.click(careChatTemplateSetupPage.deleteChatTemplateonModal);
-    notifications.assertSuccess(templateName + ' template has been deleted successfully.');
+    notifications.assertSuccess(templateName + ' has been deleted successfully.');
     utils.click(utils.searchbox);
     utils.clear(utils.searchField);
     utils.sendKeys(utils.searchField, templateName);

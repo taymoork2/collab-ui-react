@@ -16,6 +16,7 @@
       formatTemplates: formatTemplates,
       formatVirtualAssistant: formatVirtualAssistant,
       deleteTemplate: deleteTemplate,
+      deleteVirtualAssistantConfig: deleteVirtualAssistantConfig,
       filterCards: filterCards,
     };
 
@@ -52,6 +53,13 @@
       return ConfigTemplateService.delete({
         orgId: Authinfo.getOrgId(),
         templateId: templateId,
+      }).$promise;
+    }
+
+    function deleteVirtualAssistantConfig(configId) {
+      return VirtualAssistantConfigService.delete({
+        orgId: Authinfo.getOrgId(),
+        configId: configId,
       }).$promise;
     }
 
@@ -93,6 +101,7 @@
         tpl.featureType = feature.name;
         tpl.color = feature.color;
         tpl.icons = feature.icons;
+        tpl.templateOrConfig = 'template';
         return tpl;
       });
       return orderByCardName(formattedList);
@@ -108,6 +117,8 @@
         item.featureType = feature.name;
         item.color = feature.color;
         item.icons = feature.icons;
+        item.templateId = item.id;
+        item.templateOrConfig = 'config';
         return item;
       });
       return orderByCardName(formattedList);
