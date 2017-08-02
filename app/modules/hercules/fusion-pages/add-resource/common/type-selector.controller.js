@@ -5,7 +5,7 @@
     .controller('TypeSelectorController', TypeSelectorController);
 
   /* @ngInject */
-  function TypeSelectorController($q, $stateParams, $translate, Authinfo, Config, HybridServicesClusterService, hasCucmSupportFeatureToggle, hasPartnerRegistrationFeatureToggle) {
+  function TypeSelectorController($q, $stateParams, $translate, Authinfo, Config, HybridServicesClusterService, hasCucmSupportFeatureToggle) {
     var vm = this;
     vm.UIstate = 'loading';
     vm.isEntitledTo = {
@@ -26,11 +26,6 @@
       })
       .keys()
       .value();
-
-    if (Authinfo.isCustomerLaunchedFromPartner() && !hasPartnerRegistrationFeatureToggle) {
-      vm.UIstate = 'isPartnerAdmin';
-      return;
-    }
 
     ///////////////
 
@@ -60,7 +55,7 @@
           cucmHelpText: $translate.instant('hercules.fusion.add-resource.type.cucm-description'),
         };
         // Only Expressway supports the partner registration
-        if (Authinfo.isCustomerLaunchedFromPartner() && hasPartnerRegistrationFeatureToggle) {
+        if (Authinfo.isCustomerLaunchedFromPartner()) {
           vm.hasSetup.mediafusion = false;
           vm.hasSetup.context = false;
           vm._translation.mediafusionHelpText = $translate.instant('hercules.fusion.add-resource.type.partner-registration-not-supported');

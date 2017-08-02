@@ -1,5 +1,5 @@
 <div class="overview-page">
-  <cs-page-header title-name="overview.pageTitle"></cs-page-header>
+  <cs-page-header title-name="{{'overview.pageTitle' | translate}}"></cs-page-header>
   <div class="cs-card-container multiple-layouts">
     <cs-card-layout class="three-fourths"  block-view="true">
       <cs-card class="medium menu-card overview-card" ng-class="card.cardClass" ng-repeat="card in overview.cards">
@@ -19,7 +19,7 @@
             </div>
           </section>
           <section class="monitoring-panel small-3 medium-12 column" ng-if="overview.notifications.length > 0">
-            <div class="notification-style" ng-if="overview.showLearnMoreNotification">
+            <div class="notification-style" ng-if="overview.showLearnMoreNotification && overview.isEnterpriseCustomer()">
               <span class="notification-spacing">
                 <span class="badge primary" translate="common.upgrade"></span>
                 <span class="text" translate="homePage.proPackNotification"></span>
@@ -33,7 +33,7 @@
                 <span class="badge {{notification.badgeType}}" translate="{{notification.badgeText}}"></span>
                 <span class="text" translate="{{notification.text}}" translate-values="{{notification.textValues}}" translate-compile></span>
                 <div>
-                  <a ng-if="notification.linkText.length > 0" ng-click="notification.link()" translate="{{notification.linkText}}"></a>
+                  <a href ng-if="notification.linkText.length > 0" ng-click="notification.link()" translate="{{notification.linkText}}"></a>
                 </div>
               </span>
               <button type="button" class="close" ng-if="notification.canDismiss" ng-click="overview.dismissNotification(notification)"></button>

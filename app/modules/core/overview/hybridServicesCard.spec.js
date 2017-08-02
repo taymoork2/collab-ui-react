@@ -19,6 +19,7 @@ describe('OverviewHybridServicesCard', function () {
     spyOn(this.Authinfo, 'isEntitled').and.returnValue(true);
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
+    spyOn(this.FeatureToggleService, 'atlasHybridImpGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.CloudConnectorService, 'getService').and.returnValue(this.$q.resolve({ serviceId: 'squared-fusion-gcal', setup: false, statusCss: 'default' }));
   });
 
@@ -81,6 +82,17 @@ describe('OverviewHybridServicesCard', function () {
 
     expect(card.enabled).toBe(true);
     expect(card.serviceList[0].setup).toBe(true);
+  });
+
+  it('should show the card even when the Google Calendar lookup fails, if at least one other service is set up in FMS', function () {
+    this.HybridServicesClusterService.getAll.and.returnValue(this.$q.resolve(_.cloneDeep(this.jsonData)));
+    this.CloudConnectorService.getService.and.returnValue(this.$q.reject({}));
+    spyOn(this.HybridServicesClusterService, 'getStatusForService').and.returnValue({
+      setup: true,
+    });
+    var card = this.OverviewHybridServicesCard.createCard();
+    this.$rootScope.$apply();
+    expect(card.enabled).toBe(true);
   });
 
   // 2017 name update

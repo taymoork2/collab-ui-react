@@ -14,6 +14,7 @@ export class PrivateTrunkOverviewCtrl implements ng.IComponentController {
   /* @ngInject */
   constructor (
     private $state: ng.ui.IStateService,
+    private $translate: ng.translate.ITranslateService,
   ) {
   }
 
@@ -24,10 +25,10 @@ export class PrivateTrunkOverviewCtrl implements ng.IComponentController {
     }
 
     this.tabs = [{
-      title: 'servicesOverview.cards.privateTrunk.buttons.resources',
+      title: this.$translate.instant('servicesOverview.cards.privateTrunk.buttons.resources'),
       state: 'private-trunk-overview.list',
     }, {
-      title: 'servicesOverview.cards.hybridCall.buttons.settings',
+      title: this.$translate.instant('servicesOverview.cards.hybridCall.buttons.settings'),
       state: 'private-trunk-overview.settings',
     }];
   }

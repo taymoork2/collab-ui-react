@@ -9,6 +9,7 @@ describe('Controller: EdiscoverySearchController', function () {
   function initDependencySpies() {
     spyOn(this.Analytics, 'trackEvent').and.returnValue(this.$q.resolve());
     spyOn(this.Analytics, 'trackEdiscoverySteps').and.returnValue(this.$q.resolve());
+    spyOn(this.Authinfo, 'isEnterpriseCustomer').and.returnValue(false);
     spyOn(this.FeatureToggleService, 'atlasEdiscoveryGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.FeatureToggleService, 'atlasEdiscoveryIPSettingGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(false));
@@ -17,7 +18,7 @@ describe('Controller: EdiscoverySearchController', function () {
 
   function init() {
     this.initModules(ediscoveryModule);
-    this.injectDependencies('$controller', '$q', '$scope', '$translate', 'Analytics', 'EdiscoveryNotificationService', 'EdiscoveryService', 'FeatureToggleService', 'Notification', 'ProPackService'
+    this.injectDependencies('$controller', '$q', '$scope', '$translate', 'Analytics', 'Authinfo', 'EdiscoveryNotificationService', 'EdiscoveryService', 'FeatureToggleService', 'Notification', 'ProPackService'
     );
     initDependencySpies.apply(this);
   }
@@ -27,6 +28,7 @@ describe('Controller: EdiscoverySearchController', function () {
       $scope: this.$scope,
       $translate: this.$translate,
       Analytics: this.Analytics,
+      Authinfo: this.Authinfo,
       EdiscoveryService: this.EdiscoveryService,
       EdiscoveryNotificationService: this.EdiscoveryNotificationService,
       FeatureToggleService: this.FeatureToggleService,

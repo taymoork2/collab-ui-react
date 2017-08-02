@@ -87,6 +87,11 @@ var auth = {
     pass: 'C1sc01234!',
     org: 'baab1ece-498c-452b-aea8-1a727413c818',
   },
+  'media-fusion-admin': {
+    user: 'mediafusion54@yahoo.com',
+    pass: 'Cisco!23',
+    org: '2c3c9f9e-73d9-4460-a668-047162ff1bac',
+  },
   'customer-support-admin': {
     user: 'admin@csreptestdom.collaborate.com',
     pass: 'P@ssword123',

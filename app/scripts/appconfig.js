@@ -2688,7 +2688,7 @@
           })
           .state('firsttimewizard', {
             parent: 'firsttimesplash',
-            template: '<cr-wizard tabs="tabs" finish="finish" is-first-time="true"></cr-wizard>',
+            template: '<cr-wizard activate="activate" tabs="tabs" finish="finish" is-first-time="true"></cr-wizard>',
             controller: 'SetupWizardCtrl',
             data: {
               firstTimeSetup: true,
@@ -3924,9 +3924,6 @@
               hasCucmSupportFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCucmSupport);
               },
-              hasPartnerRegistrationFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridPartnerRegistration);
-              },
             },
           })
           .state('add-resource.expressway', {
@@ -4107,9 +4104,6 @@
             parent: 'main',
             abstract: true,
             resolve: {
-              hasPartnerRegistrationFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridPartnerRegistration);
-              },
               hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
               },
@@ -4156,9 +4150,6 @@
             },
             parent: 'main',
             resolve: {
-              hasPartnerRegistrationFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridPartnerRegistration);
-              },
               hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
               },
@@ -4202,9 +4193,6 @@
             },
             parent: 'main',
             resolve: {
-              hasPartnerRegistrationFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridPartnerRegistration);
-              },
               clusterId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.clusterId;
               },
@@ -4572,6 +4560,13 @@
             templateUrl: 'modules/sunlight/features/featureLanding/careFeatures.tpl.html',
             controller: 'CareFeaturesCtrl',
             controllerAs: 'careFeaturesCtrl',
+            resolve: {
+              collectFeatureToggles: /* @ngInject */ function (FeatureToggleService, $state) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasVirtualAssistantEnable).then(function (isEnabled) {
+                  $state.isVirtualAssistantEnabled = isEnabled;
+                });
+              },
+            },
           })
           .state('care.setupAssistant', {
             url: '/setupAssistant/:type',

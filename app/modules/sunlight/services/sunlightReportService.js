@@ -23,6 +23,8 @@
       avgTaskWaitTime: 0,
       numCsatScores: 0,
       numPendingTasks: 0,
+      tasksOffered: 0,
+      tasksMissed: 0,
     };
 
     var emptyUserstats = {
@@ -31,6 +33,8 @@
       avgCsatScore: 0,
       handleTime: 0,
       numCsatScores: 0,
+      tasksOffered: 0,
+      tasksMissed: 0,
     };
 
     var service = {
@@ -374,6 +378,7 @@
           reducedForHour.avgTaskWaitTime = (reducedForHour.avgTaskWaitTime / convertInMinutes);
           reducedForHour.avgTaskCloseTime = (reducedForHour.avgTaskCloseTime / convertInMinutes);
           reducedForHour.avgCsatScores = roundTwoDecimalPlaces(reducedForHour.avgCsatScores);
+          reducedForHour.tasksAccepted = Math.max(reducedForHour.tasksOffered - reducedForHour.tasksMissed, 0);
         }
         downSampledStatsByHour.push(reducedForHour);
       });
@@ -391,6 +396,7 @@
         reducedForDay.avgTaskWaitTime = (reducedForDay.avgTaskWaitTime / convertInMinutes);
         reducedForDay.avgTaskCloseTime = (reducedForDay.avgTaskCloseTime / convertInMinutes);
         reducedForDay.avgCsatScores = roundTwoDecimalPlaces(reducedForDay.avgCsatScores);
+        reducedForDay.tasksAccepted = Math.max(reducedForDay.tasksOffered - reducedForDay.tasksMissed, 0);
         downSampledStatsByDay.push(reducedForDay);
       });
       return downSampledStatsByDay;
@@ -406,6 +412,7 @@
         reducedForWeek.avgTaskWaitTime = (reducedForWeek.avgTaskWaitTime / convertInMinutes);
         reducedForWeek.avgTaskCloseTime = (reducedForWeek.avgTaskCloseTime / convertInMinutes);
         reducedForWeek.avgCsatScores = roundTwoDecimalPlaces(reducedForWeek.avgCsatScores);
+        reducedForWeek.tasksAccepted = Math.max(reducedForWeek.tasksOffered - reducedForWeek.tasksMissed, 0);
         downSampledStatsByWeek.push(reducedForWeek);
       });
       return downSampledStatsByWeek;
@@ -421,6 +428,7 @@
         reducedForMonth.avgTaskWaitTime = (reducedForMonth.avgTaskWaitTime / convertInMinutes);
         reducedForMonth.avgTaskCloseTime = (reducedForMonth.avgTaskCloseTime / convertInMinutes);
         reducedForMonth.avgCsatScores = roundTwoDecimalPlaces(reducedForMonth.avgCsatScores);
+        reducedForMonth.tasksAccepted = Math.max(reducedForMonth.tasksOffered - reducedForMonth.tasksMissed, 0);
         downSampledStatsByMonth.push(reducedForMonth);
       });
       return downSampledStatsByMonth;
@@ -435,12 +443,17 @@
         var reducedForUserId = _.reduce(statsList, reduceUserStats, emptyUserstats);
         downSampledStatsByUserId.push(reducedForUserId);
       });
+      _.map(downSampledStatsByUserId, function (stats) {
+        stats.tasksAccepted = Math.max(stats.tasksOffered - stats.tasksMissed, 0);
+      });
       return downSampledStatsByUserId;
     }
 
     function reduceUserStats(stats1, stats2) {
       var resultStats = _.clone(stats2);
       resultStats.tasksHandled = stats1.tasksHandled + stats2.tasksHandled;
+      resultStats.tasksOffered = stats1.tasksOffered + stats2.tasksOffered;
+      resultStats.tasksMissed = stats1.tasksMissed + stats2.tasksMissed;
       resultStats.tasksAssigned = stats1.tasksAssigned + stats2.tasksAssigned;
       resultStats.numCsatScores = stats1.numCsatScores + stats2.numCsatScores;
       resultStats.handleTime = calculateAvgHandleTime(stats1, stats2);
@@ -493,6 +506,8 @@
       resultStats.avgTaskCloseTime = calculateCloseTime(stats1, stats2);
       resultStats.numTasksAbandonedState = stats1.numTasksAbandonedState + stats2.numTasksAbandonedState;
       resultStats.numTasksHandledState = stats1.numTasksHandledState + stats2.numTasksHandledState;
+      resultStats.tasksOffered = stats1.tasksOffered + stats2.tasksOffered;
+      resultStats.tasksMissed = stats1.tasksMissed + stats2.tasksMissed;
       resultStats.numCsatScores = stats1.numCsatScores + stats2.numCsatScores;
       resultStats.avgCsatScores = calculateOrgAverageCsat(stats1, stats2);
       return resultStats;

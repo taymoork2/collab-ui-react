@@ -97,9 +97,9 @@ require('./_wizard.scss');
     vm.isCurrentTab = isCurrentTab;
     vm.loadOverview = loadOverview;
     vm.showDoItLater = false;
-    vm.showDontActivate = false;
+    vm.showDoNotActivate = false;
+    vm.willNotActivate = false;
     vm.wizardNextLoad = false;
-
     vm.showSkipTabBtn = false;
 
     // If tabs change (feature support in SetupWizard) and a step is not defined, re-initialize
@@ -140,7 +140,7 @@ require('./_wizard.scss');
       setNextText();
       vm.isNextDisabled = false;
       if (hasPendingLicenses()) {
-        vm.showDontActivate = true;
+        vm.showDoNotActivate = true;
       }
     }
 
@@ -300,6 +300,17 @@ require('./_wizard.scss');
           } else {
             nextStepSuccessful();
           }
+        } else if (getTab().name === 'finish') {
+          if (getStep().name === 'activate' && _.isFunction($scope.activate)) {
+            if (vm.willNotActivate) {
+              nextStepSuccessful();
+            } else {
+              $scope.activate();
+              nextStepSuccessful();
+            }
+          } else {
+            nextStepSuccessful();
+          }
         } else {
           nextStepSuccessful();
         }
@@ -396,7 +407,7 @@ require('./_wizard.scss');
     function setNextText() {
       if ((isFirstTab() && isFirstTime() && !isCustomerPartner() && !isFromPartnerLaunch()) || (isFirstTab() && isFirstStep() && !isSingleTabSingleStep())) {
         vm.nextText = $translate.instant('firstTimeWizard.getStarted');
-      } else if (isFirstTime() && isLastTab() && isLastStep() && hasPendingLicenses()) {
+      } else if (isFirstTime() && isLastTab() && isFirstStep() && hasPendingLicenses()) {
         vm.nextText = $translate.instant('common.activate');
       } else if (isFirstTime() && isLastTab() && isLastStep()) {
         vm.nextText = $translate.instant('common.finish');
@@ -455,6 +466,7 @@ require('./_wizard.scss');
       controllerAs: 'wizard',
       restrict: 'AE',
       scope: {
+        activate: '=',
         tabs: '=',
         finish: '=',
         isFirstTime: '=',

@@ -58,11 +58,12 @@
     vm.isCareEnabled = false;
 
     // TODO update this logic when Room, Message and Care licenses are implemented.
-    vm.pendingMeetingLicenses = SetupWizardService.getPendingMeetingLicenses() || [];
-    vm.pendingCallLicenses = SetupWizardService.getPendingCallLicenses() || [];
-    vm.hasPendingLicenses = (vm.pendingMeetingLicenses.length > 0) || (vm.pendingCallLicenses.length > 0);
+    vm.pendingMeetingLicenses = SetupWizardService.getPendingMeetingLicenses().concat(SetupWizardService.getPendingAudioLicenses());
+    vm.pendingCallLicenses = SetupWizardService.getPendingCallLicenses();
+    vm.pendingMessageLicenses = SetupWizardService.getPendingMessageLicenses();
+    vm.hasPendingLicenses = vm.pendingMeetingLicenses.concat(vm.pendingCallLicenses, vm.pendingMessageLicenses).length > 0;
     if (vm.hasPendingLicenses) {
-      _.forEach([vm.pendingMeetingLicenses, vm.pendingCallLicenses], function (licenseArray) {
+      _.forEach([vm.pendingMeetingLicenses, vm.pendingCallLicenses, vm.pendingMessageLicenses], function (licenseArray) {
         getPendingLicenseDisplayValues(licenseArray);
       });
     }
@@ -73,6 +74,7 @@
       vm.showPendingView = !vm.showPendingView;
     };
 
+    vm.hasExistingLicenses = Authinfo.getLicenses().length;
     vm.getNamedLabel = function (label) {
       switch (label) {
         case Config.offerCodes.CDC:
@@ -119,7 +121,7 @@
       _.forEach(licenses, function (license) {
         var translatedNameString = 'subscriptions.licenseTypes.' + license.offerName;
         license.displayName = $translate.instant(translatedNameString);
-        if (license.capacity) {
+        if (license.capacity && license.offerName !== 'CF') {
           license.displayName += ' ' + license.capacity;
         }
       });

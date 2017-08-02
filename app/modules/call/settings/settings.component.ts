@@ -1,6 +1,6 @@
 import { HuronSettingsService, HuronSettingsOptionsService, HuronSettingsOptions, HuronSettingsData, IEmergencyNumberOption } from 'modules/call/settings/shared';
 import { Notification } from 'modules/core/notifications';
-import { IExtensionRange } from 'modules/call/settings/settings-extension-range';
+import { InternalNumberRange } from 'modules/call/shared/internal-number-range';
 import { CompanyNumber } from 'modules/call/settings/settings-company-caller-id';
 import { IOption } from 'modules/huron/dialing/dialing.service';
 import { EmergencyCallbackNumber } from 'modules/huron/sites';
@@ -42,6 +42,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
   public supportsAvrilVoicemail: boolean = false;
   public supportsAvrilVoicemailMailbox: boolean = false;
   public ishI1484: boolean;
+  public hasPendingCallLicenses: boolean = false;
 
   public huronSettingsData: HuronSettingsData;
 
@@ -68,9 +69,11 @@ class HuronSettingsCtrl implements ng.IComponentController {
   public $onInit(): void {
     this.loading = true;
 
+    this.hasPendingCallLicenses = this.SetupWizardService.hasPendingCallLicenses();
+
     this.showRegionAndVoicemail = this.Authinfo.getLicenses().filter(license => {
       return license.licenseType === this.Config.licenseTypes.COMMUNICATION;
-    }).length > 0;
+    }).length > 0 || this.hasPendingCallLicenses;
 
     const params = {
       basicInfo: true,
@@ -136,12 +139,12 @@ class HuronSettingsCtrl implements ng.IComponentController {
   }
 
   public initNext(): ng.IPromise<void> | void {
-    // TODO: samwi - remove when super onboard goes GA
-    if (this.Authinfo.getCustomerAdminEmail().indexOf('ordersimp') !== -1) {
+    if (this.hasPendingCallLicenses) {
       this.SetupWizardService.addProvisioningCallbacks({
         call: this.saveHuronSettings.bind(this),
       });
     } else {
+      // TODO: samwi - remove when super onboard goes GA
       return this.saveHuronSettings();
     }
   }
@@ -260,7 +263,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
     this.checkForChanges();
   }
 
-  public onExtensionRangeChanged(extensionRanges: IExtensionRange[]): void {
+  public onExtensionRangeChanged(extensionRanges: InternalNumberRange[]): void {
     this.huronSettingsData.internalNumberRanges = extensionRanges;
     this.checkForChanges();
   }

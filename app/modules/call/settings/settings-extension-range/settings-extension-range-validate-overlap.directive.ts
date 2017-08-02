@@ -1,4 +1,4 @@
-import { IExtensionRange } from 'modules/call/settings/settings-extension-range';
+import { InternalNumberRange } from 'modules/call/shared/internal-number-range';
 
 export class ExtensionRangeOverlapValidator implements ng.IDirective {
   public restrict: string = 'A';
@@ -19,7 +19,7 @@ export class ExtensionRangeOverlapValidator implements ng.IDirective {
       const beginNumber = _.toSafeInteger(_.get(scope, 'range.beginNumber'));
       const endNumber = _.toSafeInteger(modelValue);
 
-      const numberRanges = _.get<IExtensionRange[]>(scope.$parent, '$ctrl.numberRanges');
+      const numberRanges = _.get<InternalNumberRange[]>(scope.$parent, '$ctrl.numberRanges');
 
       _.forEach(numberRanges, range => {
         if (Math.max(beginNumber, _.toSafeInteger(range.beginNumber)) <= Math.min(endNumber, _.toSafeInteger(range.endNumber))) {

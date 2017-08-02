@@ -1,3 +1,5 @@
+import * as moment from 'moment';
+
 export class SearchService {
   private url;
   private data: any = {};
@@ -26,7 +28,7 @@ export class SearchService {
     return this.$http.get(url).then(this.extractData);
   }
 
-  public getParticipents(conferenceID) {
+  public getParticipants(conferenceID) {
     const url = `${this.url}meetings/${conferenceID}/participants`;
     return this.$http.get(url).then(this.extractData);
   }
@@ -57,5 +59,10 @@ export class SearchService {
 
   public getStorage(key) {
     return _.get(this.data, key);
+  }
+
+  public formateDate(date) {
+    const timeZone: any = this.getStorage('timeZone');
+    return date ? moment(date).tz(timeZone).format('MMMM Do, YYYY h:mm:ss A') : '';
   }
 }

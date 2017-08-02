@@ -114,7 +114,6 @@
     };
 
     var enforceLicenseCheck = vm.isUser && _.size(Authinfo.getLicenses()) > 0;
-    checkEntitlements(enforceLicenseCheck);
 
     function checkEntitlements(enforceLicenseCheck) {
       if (enforceLicenseCheck && !hasCaaSLicense()) {
@@ -155,7 +154,7 @@
                 }
               })
               .catch(function (error) {
-                Notification.errorWithTrackingId(error, 'hercules.settings.googleCalendar.couldNotReadGoogleCalendarStatus');
+                vm.googleCalendarError = error;
               });
           }
           if (vm.isEnabled) {

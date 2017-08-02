@@ -58,7 +58,13 @@ describe('Controller: PlanReviewCtrl', function () {
       offerName: 'CO',
       capacity: 200,
     }]);
-
+    spyOn(SetupWizardService, 'getPendingAudioLicenses').and.returnValue([{
+      offerName: 'WEBEX',
+    }]);
+    spyOn(SetupWizardService, 'getPendingMessageLicenses').and.returnValue([{
+      offerName: 'CF',
+      capacity: 200,
+    }]);
     controller = $controller('PlanReviewCtrl', {
       $scope: $scope,
     });
@@ -102,6 +108,14 @@ describe('Controller: PlanReviewCtrl', function () {
   describe('Pending Licenses View', function () {
     it('Should set the showPendingView toggle to true when subscription has pending licenses', function () {
       expect(controller.showPendingView).toBe(true);
+    });
+
+    it('Should concat meeting and audio licenses', function () {
+      expect(controller.pendingMeetingLicenses.length).toBe(2);
+    });
+
+    it('Should set the display value for the licenses', function () {
+      expect(controller.pendingMeetingLicenses[0].displayName).toBeDefined();
     });
   });
 

@@ -39,7 +39,6 @@
     .factory('SiteService', SiteService)
     .factory('AvrilSiteService', AvrilSiteService)
     .factory('AvrilSiteUpdateService', AvrilSiteUpdateService)
-    .factory('InternalNumberRangeService', InternalNumberRangeService)
     .factory('UserEndpointService', UserEndpointService)
     .factory('SipEndpointService', SipEndpointService)
     .factory('DirectoryNumberUserService', DirectoryNumberUserService)
@@ -365,21 +364,6 @@
       },
       get: {
         method: 'GET',
-      },
-    });
-  }
-
-  /* @ngInject */
-  function InternalNumberRangeService($resource, HuronConfig) {
-    return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/internalnumberranges/:internalNumberRangeId', {
-      customerId: '@customerId',
-      internalNumberRangeId: '@internalNumberRangeId',
-    }, {
-      save: {
-        method: 'POST',
-        headers: {
-          'Access-Control-Expose-Headers': 'Location',
-        },
       },
     });
   }

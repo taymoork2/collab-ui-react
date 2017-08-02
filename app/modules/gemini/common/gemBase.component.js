@@ -9,15 +9,15 @@
     });
 
   /* @ngInject */
-  function GemBaseCtrl($scope) {
+  function GemBaseCtrl($scope, $translate) {
     var vm = this;
     vm.$onInit = $onInit;
     vm.tabs = [{
       state: 'gem.base.tds',
-      title: 'gemini.tdTitle',
+      title: $translate.instant('gemini.tdTitle'),
     }, {
       state: 'gem.base.cbgs',
-      title: 'gemini.cbgs.title',
+      title: $translate.instant('gemini.cbgs.title'),
     }];
 
     function $onInit() {

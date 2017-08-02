@@ -48,7 +48,7 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
   }
 
   public hybridDataSecurityFeatureToggleEventHandler(hasFeature: boolean): void {
-    this.display = this.checkRoles() && (this.Authinfo.isFusionHDS() || hasFeature);
+    this.display = this.checkRoles() && (this.Authinfo.isFusionHDS() || hasFeature) && this.Authinfo.isEnterpriseCustomer();
     this.setLoading();
 
   }
@@ -86,7 +86,7 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
       infoText: 'servicesOverview.cards.hybridDataSecurity.tooltip',
       initEventsNumber: 2,
     }, HybridServicesClusterStatesService);
-    this.display = this.checkRoles() && this.Authinfo.isFusionHDS();
+    this.display = this.checkRoles() && this.Authinfo.isFusionHDS() && this.Authinfo.isEnterpriseCustomer();
     this.hasProPackPurchased = false;
     this.hasProPackEnabled = false;
     this.$state = $state;

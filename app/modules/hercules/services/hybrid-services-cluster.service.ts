@@ -369,7 +369,7 @@ export class HybridServicesClusterService {
           total: calConnectors.length,
         }, {
           serviceId: 'spark-hybrid-impinterop',
-          state: this.HybridServicesClusterStatesService.getMergedStateSeverity(calConnectors),
+          state: this.HybridServicesClusterStatesService.getMergedStateSeverity(impConnectors),
           total: impConnectors.length,
         }];
       } else if (cluster.targetType === 'mf_mgmt') {

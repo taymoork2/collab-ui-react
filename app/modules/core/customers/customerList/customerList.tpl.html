@@ -1,5 +1,5 @@
 <div class="customer-list">
-  <cs-page-header title-name="customerPage.title"></cs-page-header>
+  <cs-page-header title-name="{{'customerPage.title' | translate}}"></cs-page-header>
   <cs-page-sub-header>
     <cs-page-sub-header-left>
       <cs-searchfilter filters="filters" search-item-fn="customerList.filterList(searchStr)">
@@ -22,7 +22,5 @@
       <button id="addTrial" class="btn btn--people add-button" ng-if="!customerList.isCustomerPartner" ng-click="customerList.openAddTrialModal()" translate="customerPage.addTrial"></button>
     </cs-page-sub-header-right>
   </cs-page-sub-header>
-  <div id="customerListPanel" class="gridStyle" ui-grid="customerList.gridOptions"
-    ui-grid-selection ui-grid-infinite-scroll ui-grid-resize-columns ui-grid-move-columns
-    grid-spinner="customerList.showManagedOrgsRefresh"></div>
+  <cs-grid name="customerListPanel" grid-api="customerList.gridApi" grid-options="customerList.gridOptions" spinner="customerList.showManagedOrgsRefresh"></cs-grid>
 </div>

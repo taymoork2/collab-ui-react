@@ -24,6 +24,7 @@ import {
   IAvgRoomData,
   ICharts,
   IConversation,
+  IConversationPopulated,
   IConversationWrapper,
   IEndpointContainer,
   IEndpointData,
@@ -37,28 +38,8 @@ import {
 
 import { CardUtils } from 'modules/core/cards';
 
-interface IConversationPopulated {
-  files: boolean;
-  rooms: boolean;
-}
-
-interface ICdrDataParam {
-  calling_partyNumber: string;
-  called_partyNumber: string;
-}
-
-export interface ICdrData {
-  type: string;
-  format: string;
-  from: string;
-  to: string;
-  dataParam: ICdrDataParam;
-}
-
 export class SparkReportCtrl {
-
   public gridOptions: uiGrid.IGridOptions;
-  public gridData: ICdrData[]= [];
   public gridRefresh: boolean = true;
 
   /* @ngInject */
@@ -180,14 +161,14 @@ export class SparkReportCtrl {
   }
 
   public onInit(): void {
+    this.setGridOptions();
     this.onRefreshed();
     this.setGridData();
-    this.setGridOptions();
   }
 
   private onRefreshed(): void {
     const deregister = this.$rootScope.$on('refreshed', () => {
-      this.gridData = [];
+      this.gridOptions.data = [];
       this.gridRefresh = true;
     });
     this.$scope.$on('$destroy', deregister);
@@ -205,7 +186,7 @@ export class SparkReportCtrl {
         item.calltype = 'Voice';
         item.status = 'Sucessful';
       });
-      this.gridData =  dta;
+      this.gridOptions.data = dta;
       this.gridRefresh = false;
     });
   }
@@ -250,12 +231,7 @@ export class SparkReportCtrl {
 
     this.gridOptions = {
       rowHeight: 45,
-      data: 'nav.gridData',
-      multiSelect: false,
       columnDefs: columnDefs,
-      enableRowHeaderSelection: false,
-      enableColumnMenus: false,
-      enableHorizontalScrollbar: 0,
       infiniteScrollDown: true,
     };
   }

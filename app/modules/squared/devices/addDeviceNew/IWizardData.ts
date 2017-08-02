@@ -15,6 +15,7 @@ declare namespace csdm {
     enableCalService?: boolean;
     username?: string;
     entitlements?: string[];
+    locationUuid?: string;
     externalNumber?: string;
     directoryNumber?: string;
     ussProps: any;

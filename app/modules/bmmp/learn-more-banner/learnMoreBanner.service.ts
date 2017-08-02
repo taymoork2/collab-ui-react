@@ -8,7 +8,7 @@ export class LearnMoreBannerService {
   constructor() { }
 
   public readonly REPORTS_LOCATION: string = 'reports';
-  public readonly HEADER_LOCATION: string = 'overview';
+  public readonly OVERVIEW_LOCATION: string = 'overview';
   public readonly CLOSE_ELEMENTS: IBmmpLocations = {
     reports: '.reports-bmmp-banner .cisco-bmmp-marketing-closeable-widget .colR',
     overview: '.overview-bmmp-banner .cisco-bmmp-marketing-closeable-widget .colR',

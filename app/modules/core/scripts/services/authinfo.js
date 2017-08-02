@@ -266,6 +266,9 @@
       getCustomerAccounts: function () {
         return authData.customerAccounts;
       },
+      isEnterpriseCustomer: function () {
+        return _.some(authData.customerAccounts, { customerType: Config.customerTypes.enterprise });
+      },
       // FIXME: ATLAS-1402
       // IMPORTANT: 'username' can possibly reflect a user's display name, use 'getPrimaryEmail()'
       //   if needing the email value that the user logged in with

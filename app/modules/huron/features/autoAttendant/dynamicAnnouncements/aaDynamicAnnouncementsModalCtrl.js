@@ -6,7 +6,7 @@
     .controller('AADynamicAnnouncementsModalCtrl', AADynamicAnnouncementsModalCtrl);
 
   /* @ngInject */
-  function AADynamicAnnouncementsModalCtrl($modalInstance, $translate, AASessionVariableService, AAModelService, AACommonService, variableSelection, readAsSelection/*, aa_schedule, aa_index*/) {
+  function AADynamicAnnouncementsModalCtrl($modalInstance, $translate, AASessionVariableService, AAModelService, AAUiModelService, AACommonService, variableSelection, readAsSelection/*, aa_schedule, aa_index*/) {
     var vm = this;
 
     vm.selectPlaceholder = $translate.instant('common.select');
@@ -101,12 +101,21 @@
     }
 
     function setUpVariablesOptions(variableOptionsArray) {
+      var custonVariablesFromUiModel = [];
+
       _.forEach(variableOptionsArray, function (variableOptions) {
         _.forEach(variableOptions, function (variableOption) {
           vm.variableOptions.push(variableOption);
         });
       });
-      vm.variableOptions.sort(AACommonService.sortByProperty('label'));
+
+      custonVariablesFromUiModel = AACommonService.collectThisCeActionValue(AAUiModelService.getUiModel(), true, false);
+
+      _.forEach(custonVariablesFromUiModel, function (uiVar) {
+        vm.variableOptions = _.concat(vm.variableOptions, { label: uiVar, value: uiVar });
+      });
+
+      vm.variableOptions = _.uniqWith(vm.variableOptions, _.isEqual).sort(AACommonService.sortByProperty('label'));
     }
 
     function getSessionVariablesOptions() {

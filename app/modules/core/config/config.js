@@ -60,6 +60,10 @@
         webexUrl: '.webex.com',
       },
 
+      customerTypes: {
+        enterprise: 'Enterprise',
+      },
+
       entitlements: {
         huron: 'ciscouc',
         squared: 'webex-squared',
@@ -105,6 +109,10 @@
         care: 'CARE',
         advanceCare: 'CAREVOICE',
         context: 'CONTEXT',
+      },
+
+      shallowValidationSourceTypes: {
+        serviceSetup: 'ATLAS_SERVICE_SETUP',
       },
 
       // These can be used to access object properties for trials
@@ -234,6 +242,7 @@
       },
 
       licenseTypes: {
+        AUDIO: 'AUDIO',
         MESSAGING: 'MESSAGING',
         CONFERENCING: 'CONFERENCING',
         COMMUNICATION: 'COMMUNICATION',

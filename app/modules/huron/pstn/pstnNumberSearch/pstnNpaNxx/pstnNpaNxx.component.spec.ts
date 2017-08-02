@@ -3,6 +3,7 @@ import { NumberModel } from '../number.model';
 import {
   NUMTYPE_DID, MIN_BLOCK_QUANTITY, MAX_BLOCK_QUANTITY, NXX_EMPTY,
 } from '../../pstn.const';
+import { IAreaData } from '../../pstnAreaService';
 import { CCODE_US } from '../../pstnAreaService';
 
 describe('Component: PstnNpaNxxComponent', () => {
@@ -23,6 +24,12 @@ describe('Component: PstnNpaNxxComponent', () => {
     }, {
       code: '789',
     }],
+  };
+
+  const areaData: IAreaData = {
+    zipName: '_zipName',
+    typeName: '_typeName',
+    areas: areas,
   };
 
   const serviceAddress = {
@@ -48,7 +55,8 @@ describe('Component: PstnNpaNxxComponent', () => {
     this.$scope.model = new NumberModel();
     this.$scope.search = jasmine.createSpy('search');
     this.$scope.addToCart = jasmine.createSpy('addToCart');
-
+    this.$scope.numberType = NUMTYPE_DID;
+    this.$scope.countryCode = CCODE_US;
   });
 
   function initComponent() {
@@ -56,8 +64,8 @@ describe('Component: PstnNpaNxxComponent', () => {
       model: 'model',
       search: 'search(value)',
       addToCart: 'addToCart(searchResultModel)',
-      numberType: NUMTYPE_DID,
-      countryCode: CCODE_US,
+      numberType: 'numberType',
+      countryCode: 'countryCode',
     });
   }
 
@@ -68,7 +76,7 @@ describe('Component: PstnNpaNxxComponent', () => {
     this.PstnModel.setCountryCode(CCODE_US);
     this.PstnModel.setServiceAddress(serviceAddress);
     spyOn(this.PstnService, 'getCarrierInventory').and.returnValue(this.$q.resolve(inventory));
-    spyOn(this.PstnAreaService, 'getCountryAreas').and.returnValue(this.$q.resolve(areas));
+    spyOn(this.PstnAreaService, 'getCountryAreas').and.returnValue(this.$q.resolve(areaData));
     spyOn(this.Notification, 'errorResponse');
   }
 
