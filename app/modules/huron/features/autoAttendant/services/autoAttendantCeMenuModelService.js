@@ -17,7 +17,7 @@
   //     id: String // uuid
   //     trigger: String // 'inComing', 'outGoing'
   //     type: String // 'directoryNumber'
-//     number: String // '<E164>', '<DN>'
+  //     number: String // '<E164>', '<DN>'
   //
   //
   // CeMenu
