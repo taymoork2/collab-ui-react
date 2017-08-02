@@ -38,6 +38,7 @@ var AutoAttendantPage = function () {
   this.aaTitle = element(by.tagName('aa-builder-name-edit'));
   this.autoAttendantDevLink = element(by.css('a[href*="#/hurondetails/features"]'));
   this.newFeatureButton = element(by.css('.new-feature-button'));
+  this.callFeature = '#/services/call-features';
   this.featureTypeAA = element(by.css('.feature-icon-color-AA'));
   this.basicAA = element(by.css('.icon-Basic'));
   this.customAA = element(by.css('.icon-Custom'));
@@ -48,11 +49,8 @@ var AutoAttendantPage = function () {
   this.numberDropDownOptions = element(by.css(' .aa-selected-phones .select-options')).all(by.tagName('li'));
   this.saveButton = element.all(by.name('saveButton')).first();
   this.closeEditButton = element(by.id('close-panel'));
-  this.testCardName = element(by.css('p[title="' + deleteUtils.testAAName + '"]'));
-  this.testCardClick = this.testCardName.element(by.xpath('ancestor::article')).element(by.css('.card-body'));
   this.testImportCardName = element(by.css('p[title="' + deleteUtils.testAAImportName + '"]'));
   this.testImportCardName = element(by.css('p[title="' + deleteUtils.testAAImportName + '"]'));
-  this.testCardDelete = this.testCardName.element(by.xpath('ancestor::article')).element(by.css('.header-with-right-icon')).element(by.css('.card-icon-div')).element(by.css('.close'));
 
   this.testImportCardDelete = this.testImportCardName.element(by.xpath('ancestor::article')).element(by.css('.icon-trash'));
   this.aaCard = element(by.css('.card-body'));

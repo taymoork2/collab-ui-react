@@ -133,10 +133,11 @@ exports.deleteTestAA = function (bearer, aaUrl) {
 // bearer - token with access to our API
 // data - query results from our CES GET API
 exports.deleteTestAAs = function (bearer, data) {
+
   var test = [this.testAAName, this.testAAImportName];
+
   for (var i = 0; i < data.length; i++) {
     var AAsToDelete = [];
-
     if (data[i].callExperienceName === test[0] || data[i].callExperienceName === test[1]) {
       AAsToDelete.push(exports.deleteTestAA(bearer, data[i].callExperienceURL));
     }
@@ -181,8 +182,10 @@ exports.deleteRouteToQueue = function () {
 //
 // Used to cleanup AA created in the test
 exports.findAndDeleteTestAA = function () {
-  helper.getBearerToken('aa-admin')
+
+  return helper.getBearerToken('aa-admin')
     .then(function (bearer) {
+
       var options = {
         url: config.getAutoAttendantsUrl(helper.auth['aa-admin'].org),
         headers: {
