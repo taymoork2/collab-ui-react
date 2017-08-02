@@ -71,12 +71,7 @@
             header.actions[0].dynamicList = createDynamicList(dynamicList);
           }
         } else if ($scope.menuKeyIndex && $scope.menuKeyIndex > -1) {
-          if ($scope.type) {
-            sourceQueue = vm.menuEntry.entries[$scope.menuKeyIndex];
-            queueAction = sourceQueue.actions[0].queueSettings[$scope.type];
-            queueAction.actions[0].dynamicList = createDynamicList(dynamicList);
-          } else {
-            vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
+          vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
           var entry = vm.menuEntry.entries[$scope.menuKeyIndex].actions[0];
           if ($scope.type) {
             queueAction = entry.queueSettings[$scope.type];
