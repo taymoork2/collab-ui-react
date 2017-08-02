@@ -6596,7 +6596,9 @@
     "dialingRestrictionsTitle": "Dialing Restrictions",
     "dialingRestrictionsDesc": "Restrict certain dialing features for the entire organization. You can override each setting for individual users.",
     "emergencyServicesTitle": "Emergency Services",
-    "emergencyServicesDesc": "Set the call back numbers and addresses for this location."
+    "emergencyServicesDesc": "Set the call back numbers and addresses for this location.",
+    "voicemailInstruction": "Voicemail for your company is enabled with Voicemail to email not activated. This can be changed from the Call Settings page.",
+    "voicemailFilter": "Type number to filter"
   },
   "sunlightDetails": {
     "title": "Care",
