@@ -258,7 +258,7 @@
 
     function removeOrder(order) {
       PstnService.releaseCarrierInventoryV2(PstnModel.getCustomerId(), order.reservationId, order.data.numbers, PstnModel.isCustomerExists())
-          .then(_.partial(removeOrderFromCart, order));
+        .then(_.partial(removeOrderFromCart, order));
     }
 
     function addToCart(searchResultsModel) {

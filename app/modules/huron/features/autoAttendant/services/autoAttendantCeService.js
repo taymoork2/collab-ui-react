@@ -37,7 +37,7 @@
       return CeService.save({
         customerId: Authinfo.getOrgId(),
       },
-        ceDefinition
+      ceDefinition
       ).$promise;
     }
 
@@ -47,7 +47,7 @@
         customerId: Authinfo.getOrgId(),
         ceId: aCeId,
       },
-        ceDefinition
+      ceDefinition
       ).$promise;
     }
 

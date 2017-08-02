@@ -700,11 +700,11 @@ exports.dragAndDrop = function (elem, target) {
 exports.highlightElement = function (elem) {
   log('highlighting element:' + elem.locator());
   return browser.driver.executeScript("arguments[0].setAttribute('style', arguments[1]);", elem.getWebElement(), 'color: Red; border: 2px solid red;')
-  .then(function () {
-    return elem;
-  }, function (error) {
-    console.log('Error occurred while highlighting element:' + error);
-  });
+    .then(function () {
+      return elem;
+    }, function (error) {
+      console.log('Error occurred while highlighting element:' + error);
+    });
 };
 
 function switchToWindow(handleIndex) {

@@ -9,8 +9,8 @@
     require('modules/huron/phoneNumber').default,
     require('modules/huron/pstn/terminus.service').default,
   ])
-  .factory('ExternalNumberService', ExternalNumberService)
-  .name;
+    .factory('ExternalNumberService', ExternalNumberService)
+    .name;
 
   /* @ngInject */
   function ExternalNumberService($q, $translate, ExternalNumberPool, NumberSearchServiceV2, PstnService, PhoneNumberService, TerminusService) {
@@ -63,12 +63,12 @@
             filter,
             ExternalNumberPool.ASSIGNED_AND_UNASSIGNED_NUMBERS,
             externalNumberType)
-          .then(formatNumberLabels)
-          .then(function (numbers) {
-            unassignedNumbers = filterUnassigned(numbers);
-            assignedNumbers = filterAssigned(numbers);
-            allNumbers = pendingNumbers.concat(getNumbersWithoutPending(numbers));
-          });
+            .then(formatNumberLabels)
+            .then(function (numbers) {
+              unassignedNumbers = filterUnassigned(numbers);
+              assignedNumbers = filterAssigned(numbers);
+              allNumbers = pendingNumbers.concat(getNumbersWithoutPending(numbers));
+            });
         })
         .catch(function (response) {
           clearNumbers();
@@ -272,20 +272,20 @@
 
       if (_.isUndefined(_pstnCarrierId) || _pstnCarrierId === null) {
         return PstnService.getCustomerV2(customerId)
-        .then(function (response) {
-          _pstnCarrierId = _.get(response, 'pstnCarrierId');
-          if (_.isUndefined(_pstnCarrierId) || _pstnCarrierId === null) {
+          .then(function (response) {
+            _pstnCarrierId = _.get(response, 'pstnCarrierId');
+            if (_.isUndefined(_pstnCarrierId) || _pstnCarrierId === null) {
+              return null;
+            } else {
+              _.assign(_terminusDetail, { pstnCarrierId: _pstnCarrierId });
+              return TerminusService.carrier().get({
+                carrierId: _pstnCarrierId,
+              }).$promise;
+            }
+          })
+          .catch(function () {
             return null;
-          } else {
-            _.assign(_terminusDetail, { pstnCarrierId: _pstnCarrierId });
-            return TerminusService.carrier().get({
-              carrierId: _pstnCarrierId,
-            }).$promise;
-          }
-        })
-        .catch(function () {
-          return null;
-        });
+          });
       } else {
         return TerminusService.carrier().get({
           carrierId: _pstnCarrierId,

@@ -2,8 +2,8 @@
   'use strict';
 
   angular
-      .module('Sunlight')
-      .service('CareFeatureList', CareFeatureList);
+    .module('Sunlight')
+    .service('CareFeatureList', CareFeatureList);
 
   /* @ngInject */
   function CareFeatureList(Authinfo, ConfigTemplateService) {

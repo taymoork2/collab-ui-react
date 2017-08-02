@@ -9,7 +9,7 @@ require('./_resources.scss');
       templateUrl: 'modules/context/resources/hybrid-context-resources-header.html',
     });
 
-    /* @ngInject */
+  /* @ngInject */
   function ContextResourcesSubHeaderCtrl($state) {
     var vm = this;
 

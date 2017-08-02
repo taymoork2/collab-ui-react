@@ -53,10 +53,10 @@
       // TODO: clean up when backend fully in new format
       isNewDataFormat: false,
       isPwdSync: true,
-      isSparkEnt: true,  // false -- no spark
+      isSparkEnt: true, // false -- no spark
       isUsrDis: true,
       isUsrDel: true,
-      isUsrMin: false,   // true -- DirSync, read only as we don't change DirSync in messenger card
+      isUsrMin: false, // true -- DirSync, read only as we don't change DirSync in messenger card
     };
 
     var serviceUrl = UrlConfig.getMessengerServiceUrl() + '/orgs/' + Authinfo.getOrgId() + '/cisync/';

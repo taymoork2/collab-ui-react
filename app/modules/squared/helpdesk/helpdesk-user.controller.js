@@ -113,7 +113,6 @@
 
       // 'failed' email event with certain 'delivery-status.code' values can be better re-classified
       switch (_.get(emailEvent, 'delivery-status.code')) {
-
         // 605 => email has bounced
         case CODE_BOUNCED:
           return SUPPRESSED_STATE.BOUNCED;

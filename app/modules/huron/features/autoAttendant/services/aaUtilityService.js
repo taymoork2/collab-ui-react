@@ -49,18 +49,18 @@
     //add quotes around string values with quotes or commas
     function addQuotesAroundCommadQuotedValues(string) {
       return (
-              string
+        string
               &&
               (string.indexOf(',') > -1
               ||
               string.indexOf('"') > -1)
               //if has quote or comma,
-              ?
-              //add quotes around string
-              '"' + string.concat('"')
-              :
-              //otherwise return string
-              string
+          ?
+          //add quotes around string
+        '"' + string.concat('"')
+          :
+          //otherwise return string
+          string
       );
     }
 

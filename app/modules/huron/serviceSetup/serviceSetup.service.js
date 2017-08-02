@@ -209,9 +209,9 @@
         });
         return ftSupportedObjects;
       })
-      .catch(function () {
-        return ftSupportedObjects;
-      });
+        .catch(function () {
+          return ftSupportedObjects;
+        });
     }
 
     function checkFeatureToggleSupport(feature) {

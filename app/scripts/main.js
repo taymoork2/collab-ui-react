@@ -129,8 +129,8 @@
     require('modules/huron/media-mgr').default,
     require('modules/call/features').default,
   ])
-  .constant('ASTParser', require('acorn'))
-  .constant('ASTWalker', require('acorn/dist/walk'));
+    .constant('ASTParser', require('acorn'))
+    .constant('ASTWalker', require('acorn/dist/walk'));
 
   angular.module('Hercules', [
     'Core',

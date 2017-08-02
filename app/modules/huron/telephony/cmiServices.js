@@ -565,7 +565,7 @@
     return _.get(responseObj, '[0]', responseObj);
   }
 
-    /* @ngInject */
+  /* @ngInject */
   function PlacesService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/places/:placesId', {
       customerId: '@customerId',

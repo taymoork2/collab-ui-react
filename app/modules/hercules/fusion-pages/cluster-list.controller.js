@@ -310,7 +310,7 @@
         controllerAs: 'vm',
         templateUrl: 'modules/hercules/fusion-pages/add-resource-group/add-resource-group.html',
       }).result
-      .then(loadResources);
+        .then(loadResources);
     }
 
     function setDefaultReleaseChannel() {
@@ -325,7 +325,7 @@
           },
         },
       }).result
-      .then(loadResources);
+        .then(loadResources);
     }
   }
 })();

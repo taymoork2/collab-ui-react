@@ -200,7 +200,7 @@
       return deferred.promise;
     }
 
-// New get method for Huron Features Page
+    // New get method for Huron Features Page
     function getCeInfosList() {
       var aaModel = {};
       aaModel.ceInfos = [];
