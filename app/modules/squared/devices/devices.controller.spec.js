@@ -226,7 +226,7 @@ describe('Controller: DevicesCtrl', function () {
 
     it('starts export and shows progress dialog after acknowledged in initial dialog', function () {
       controller.startDeviceExport();
-      expect($modal.open).toHaveBeenCalled();  // initial dialog
+      expect($modal.open).toHaveBeenCalled(); // initial dialog
       fakeModal.close(); // user acks the export
       expect($modal.open).toHaveBeenCalled(); // progress dialog
       expect(DeviceExportService.exportDevices).toHaveBeenCalled();

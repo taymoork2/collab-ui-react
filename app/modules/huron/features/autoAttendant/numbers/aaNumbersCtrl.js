@@ -140,7 +140,7 @@
             if (!_.isUndefined(r)) {
               var index = _.indexOf(resources, r);
 
-                // if e164 number is already the 0th element, all done
+              // if e164 number is already the 0th element, all done
 
               if (index >= 1) {
                 resources.splice(0, 0, _.pullAt(resources, index)[0]);
@@ -150,14 +150,14 @@
             sortAssignedResources(resources);
             AACommonService.setCENumberStatus(true);
           },
-            function (response) {
-              AANotificationService.errorResponse(response, 'autoAttendant.errorAddCMI', {
-                phoneNumber: number,
-                statusText: response.statusText,
-              });
-
-              resources.pop();
+          function (response) {
+            AANotificationService.errorResponse(response, 'autoAttendant.errorAddCMI', {
+              phoneNumber: number,
+              statusText: response.statusText,
             });
+
+            resources.pop();
+          });
         },
         function (response) {
           AANotificationService.errorResponse(response, 'autoAttendant.errorAddCMI', {
@@ -168,9 +168,9 @@
 
           resources.pop();
         }).finally(function () {
-          // always leave the inValid state to off to allow button save if needed
-          AACommonService.setIsValid(uniqueCtrlIdentifier, true);
-        });
+        // always leave the inValid state to off to allow button save if needed
+        AACommonService.setIsValid(uniqueCtrlIdentifier, true);
+      });
     }
 
     // Delete the number to the CE Info resource list
@@ -187,8 +187,8 @@
       // Un-Assign the number in CMI by setting with resource removed
       saveAANumberAssignments(Authinfo.getOrgId(),
         vm.aaModel.aaRecordUUID, resources).then(function () {
-          AACommonService.setCENumberStatus(true);
-        }).catch(
+        AACommonService.setCENumberStatus(true);
+      }).catch(
         function (response) {
           /* Use AACommonService to thwart the saving when it is in this state. */
           AACommonService.setIsValid('errorRemoveCMI', false);

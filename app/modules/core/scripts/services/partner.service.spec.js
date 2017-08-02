@@ -516,7 +516,7 @@ describe('Partner Service -', function () {
         var data = PartnerService.parseLicensesAndOffers({
           offers: [{
             id: Config.offerTypes.roomSystems,
-//TODO the bug in the backend returns as example; three equal elements of the same offer type (same license count). this test with difference in count is to highlighth that it is the last element we are picking.
+            //TODO the bug in the backend returns as example; three equal elements of the same offer type (same license count). this test with difference in count is to highlighth that it is the last element we are picking.
             licenseCount: 8,
           }, {
             id: Config.offerTypes.roomSystems,
@@ -688,7 +688,7 @@ describe('Partner Service -', function () {
           }, {
             licenseType: Config.licenseTypes.COMMUNICATION,
           },
-            undefined,
+          undefined,
           ],
         }, true);
         expect(data.isSquaredUcOffer).toBe(true);

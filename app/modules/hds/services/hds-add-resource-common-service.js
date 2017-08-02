@@ -70,9 +70,9 @@
             vm.selectedClusterId = resp.id;
             return allowListHost(hostName, vm.selectedClusterId);
           })
-        .catch(function (error) {
-          Notification.errorWithTrackingId(error, 'hds.clusters.clusterCreationFailed', { enteredCluster: enteredCluster });
-        });
+          .catch(function (error) {
+            Notification.errorWithTrackingId(error, 'hds.clusters.clusterCreationFailed', { enteredCluster: enteredCluster });
+          });
       } else {
         vm.selectedClusterId = vm.clusterDetail.id;
         return allowListHost(hostName, vm.selectedClusterId);

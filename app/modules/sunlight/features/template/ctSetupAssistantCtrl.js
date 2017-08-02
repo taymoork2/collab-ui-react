@@ -1100,7 +1100,7 @@
     vm.isTypeDuplicate = false;
 
     var nonHeaderFieldNames = _.filter(_.keys(getCustomerInformationFormFields()),
-        function (name) { return (name !== 'welcomeHeader'); });
+      function (name) { return (name !== 'welcomeHeader'); });
 
     function getConfiguredTypes() {
       var typesConfigured = _.map(nonHeaderFieldNames, function (fieldName) {

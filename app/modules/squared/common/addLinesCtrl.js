@@ -38,29 +38,29 @@
 
     function loadLocations() {
       return FeatureToggleService.supports(FeatureToggleService.features.hI1484)
-      .then(function () {
-        return LocationsService.getLocationList().then(function (locationOptions) {
-          $scope.locationOptions = locationOptions;
-          _.forEach(locationOptions, function (result) {
-            if (result.defaultLocation == true) {
-              _.forEach($scope.entitylist, function (data) {
-                data.selectedLocation = { uuid: result.uuid, name: result.name };
-                $scope.selectedLocation = data.selectedLocation.name;
-              });
+        .then(function () {
+          return LocationsService.getLocationList().then(function (locationOptions) {
+            $scope.locationOptions = locationOptions;
+            _.forEach(locationOptions, function (result) {
+              if (result.defaultLocation == true) {
+                _.forEach($scope.entitylist, function (data) {
+                  data.selectedLocation = { uuid: result.uuid, name: result.name };
+                  $scope.selectedLocation = data.selectedLocation.name;
+                });
+              }
+            });
+            if ($scope.locationOptions.length > 1) {
+              vm.locationColumn = {
+                field: 'location',
+                displayName: $translate.instant('usersPreview.location'),
+                sortable: false,
+                cellTemplate: locationTemplate,
+                width: '*',
+              };
+              vm.addDnGridOptions.columnDefs.splice(1, 0, vm.locationColumn);
             }
           });
-          if ($scope.locationOptions.length > 1) {
-            vm.locationColumn = {
-              field: 'location',
-              displayName: $translate.instant('usersPreview.location'),
-              sortable: false,
-              cellTemplate: locationTemplate,
-              width: '*',
-            };
-            vm.addDnGridOptions.columnDefs.splice(1, 0, vm.locationColumn);
-          }
         });
-      });
     }
 
     vm.hasNextStep = function () {

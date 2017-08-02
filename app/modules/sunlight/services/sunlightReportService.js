@@ -78,19 +78,19 @@
         });
         return $q(function (resolve) {
           getCareUsers()
-              .then(function (ciCareUserData) {
-                var ciCareUsers = _.get(ciCareUserData, 'data.Resources');
-                var ciCareUserIds = _.map(ciCareUsers, function (ciUser) {
-                  return ciUser.id;
-                });
-
-                var ciNonCareUserIds = _.difference(reportedUserIds, ciCareUserIds);
-                if (ciNonCareUserIds.length > 0) {
-                  getNonCareUserDetails(ciNonCareUserIds, ciCareUsers, reportingUserData, resolve);
-                } else {
-                  resolve(mergeReportingAndUserData(reportingUserData, ciCareUsers));
-                }
+            .then(function (ciCareUserData) {
+              var ciCareUsers = _.get(ciCareUserData, 'data.Resources');
+              var ciCareUserIds = _.map(ciCareUsers, function (ciUser) {
+                return ciUser.id;
               });
+
+              var ciNonCareUserIds = _.difference(reportedUserIds, ciCareUserIds);
+              if (ciNonCareUserIds.length > 0) {
+                getNonCareUserDetails(ciNonCareUserIds, ciCareUsers, reportingUserData, resolve);
+              } else {
+                resolve(mergeReportingAndUserData(reportingUserData, ciCareUsers));
+              }
+            });
         });
       } else {
         return $q.resolve([]);
@@ -99,20 +99,20 @@
 
     function getNonCareUserDetails(ciNonCareUserIds, ciCareUsers, reportingUserData, resolve) {
       getNonCareCiUsers(ciNonCareUserIds)
-          .then(function (ciNonCareUsers) {
-            var userObjs = _.filter(_.map(ciNonCareUsers, function (user) {
-              if (user.data.Resources.length > 0) {
-                return user.data.Resources;
-              }
-            }), function (obj) {
-              return (obj !== undefined);
-            });
-
-            var totalUsers = _.concat(ciCareUsers, userObjs[0]);
-            resolve(mergeReportingAndUserData(reportingUserData, totalUsers));
-          }, function () {
-            resolve(mergeReportingAndUserData(reportingUserData, ciCareUsers, true));
+        .then(function (ciNonCareUsers) {
+          var userObjs = _.filter(_.map(ciNonCareUsers, function (user) {
+            if (user.data.Resources.length > 0) {
+              return user.data.Resources;
+            }
+          }), function (obj) {
+            return (obj !== undefined);
           });
+
+          var totalUsers = _.concat(ciCareUsers, userObjs[0]);
+          resolve(mergeReportingAndUserData(reportingUserData, totalUsers));
+        }, function () {
+          resolve(mergeReportingAndUserData(reportingUserData, ciCareUsers, true));
+        });
     }
 
     function getNonCareCiUsers(ciNonCareUserIds) {
@@ -241,19 +241,19 @@
           endTimeStamp = moment().add(1, 'hours').startOf('hour');
           config = getQueryConfig('fifteen_minutes', mediaType, startTimeStamp, endTimeStamp);
           dataPromise = getStats(reportName, config)
-          .then(function (response) {
-            if (reportName === 'all_user_stats') {
-              var reportingUserWithUserID = _.filter(response.data.data, function (userData) {
-                return userData.userId;
-              });
-              return downSampleByUserId(reportingUserWithUserID);
-            } else {
-              var localTimeData = downSampleByHour(response.data.data, isSnapshot);
-              return fillEmptyData(
-                (moment.range(startTimeStamp.add(1, 'hours').toDate(), endTimeStamp.toDate())),
-                'h', localTimeData, hourFormat, false);
-            }
-          });
+            .then(function (response) {
+              if (reportName === 'all_user_stats') {
+                var reportingUserWithUserID = _.filter(response.data.data, function (userData) {
+                  return userData.userId;
+                });
+                return downSampleByUserId(reportingUserWithUserID);
+              } else {
+                var localTimeData = downSampleByHour(response.data.data, isSnapshot);
+                return fillEmptyData(
+                  (moment.range(startTimeStamp.add(1, 'hours').toDate(), endTimeStamp.toDate())),
+                  'h', localTimeData, hourFormat, false);
+              }
+            });
           break;
 
         // yesterday
@@ -262,19 +262,19 @@
           endTimeStamp = moment().startOf('day');
           config = getQueryConfig('fifteen_minutes', mediaType, startTimeStamp, endTimeStamp);
           dataPromise = getStats(reportName, config)
-          .then(function (response) {
-            if (reportName === 'all_user_stats') {
-              var reportingUserWithUserID = _.filter(response.data.data, function (userData) {
-                return userData.userId;
-              });
-              return downSampleByUserId(reportingUserWithUserID);
-            } else {
-              var localTimeData = downSampleByHour(response.data.data);
-              return fillEmptyData(
-                (moment.range(startTimeStamp.add(1, 'hours').toDate(), endTimeStamp.toDate())),
-                'h', localTimeData, hourFormat, false);
-            }
-          });
+            .then(function (response) {
+              if (reportName === 'all_user_stats') {
+                var reportingUserWithUserID = _.filter(response.data.data, function (userData) {
+                  return userData.userId;
+                });
+                return downSampleByUserId(reportingUserWithUserID);
+              } else {
+                var localTimeData = downSampleByHour(response.data.data);
+                return fillEmptyData(
+                  (moment.range(startTimeStamp.add(1, 'hours').toDate(), endTimeStamp.toDate())),
+                  'h', localTimeData, hourFormat, false);
+              }
+            });
           break;
 
         // last week
@@ -283,18 +283,18 @@
           endTimeStamp = moment().startOf('day');
           config = getQueryConfig('hourly', mediaType, startTimeStamp, endTimeStamp);
           dataPromise = getStats(reportName, config)
-          .then(function (response) {
-            if (reportName === 'all_user_stats') {
-              var reportingUserWithUserID = _.filter(response.data.data, function (userData) {
-                return userData.userId;
-              });
-              return downSampleByUserId(reportingUserWithUserID);
-            } else {
-              var localTimeData = downSampleByDay(response.data.data);
-              return fillEmptyData((moment.range(startTimeStamp.toDate(), endTimeStamp.toDate())),
-              'd', localTimeData, dayFormat, true);
-            }
-          });
+            .then(function (response) {
+              if (reportName === 'all_user_stats') {
+                var reportingUserWithUserID = _.filter(response.data.data, function (userData) {
+                  return userData.userId;
+                });
+                return downSampleByUserId(reportingUserWithUserID);
+              } else {
+                var localTimeData = downSampleByDay(response.data.data);
+                return fillEmptyData((moment.range(startTimeStamp.toDate(), endTimeStamp.toDate())),
+                  'd', localTimeData, dayFormat, true);
+              }
+            });
           break;
 
         // last month
@@ -303,18 +303,18 @@
           startTimeStamp = moment(endTimeStamp).subtract(28, 'days').startOf('day');
           config = getQueryConfig('daily', mediaType, startTimeStamp, endTimeStamp);
           dataPromise = getStats(reportName, config)
-          .then(function (response) {
-            if (reportName === 'all_user_stats') {
-              var reportingUserWithUserID = _.filter(response.data.data, function (userData) {
-                return userData.userId;
-              });
-              return downSampleByUserId(reportingUserWithUserID);
-            } else {
-              var localTimeData = downSampleByWeek(response.data.data);
-              return fillEmptyData((moment.range(startTimeStamp.toDate(), endTimeStamp.toDate())),
-              'w', localTimeData, dayFormat, true);
-            }
-          });
+            .then(function (response) {
+              if (reportName === 'all_user_stats') {
+                var reportingUserWithUserID = _.filter(response.data.data, function (userData) {
+                  return userData.userId;
+                });
+                return downSampleByUserId(reportingUserWithUserID);
+              } else {
+                var localTimeData = downSampleByWeek(response.data.data);
+                return fillEmptyData((moment.range(startTimeStamp.toDate(), endTimeStamp.toDate())),
+                  'w', localTimeData, dayFormat, true);
+              }
+            });
           break;
 
         // last 3 month
@@ -323,18 +323,18 @@
           endTimeStamp = moment().startOf('day');
           config = getQueryConfig('daily', mediaType, startTimeStamp, endTimeStamp);
           dataPromise = getStats(reportName, config)
-          .then(function (response) {
-            if (reportName === 'all_user_stats') {
-              var reportingUserWithUserID = _.filter(response.data.data, function (userData) {
-                return userData.userId;
-              });
-              return downSampleByUserId(reportingUserWithUserID);
-            } else {
-              var localTimeData = downSampleByMonth(response.data.data);
-              return fillEmptyData((moment.range(startTimeStamp.toDate(), endTimeStamp.toDate())),
-                'M', localTimeData, monthFormat, false);
-            }
-          });
+            .then(function (response) {
+              if (reportName === 'all_user_stats') {
+                var reportingUserWithUserID = _.filter(response.data.data, function (userData) {
+                  return userData.userId;
+                });
+                return downSampleByUserId(reportingUserWithUserID);
+              } else {
+                var localTimeData = downSampleByMonth(response.data.data);
+                return fillEmptyData((moment.range(startTimeStamp.toDate(), endTimeStamp.toDate())),
+                  'M', localTimeData, monthFormat, false);
+              }
+            });
           break;
 
         default:

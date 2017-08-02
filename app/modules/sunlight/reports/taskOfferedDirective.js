@@ -2,8 +2,8 @@
   'use strict';
 
   angular
-  .module('Core')
-  .directive('ccTaskOffered', ccTaskOffered);
+    .module('Core')
+    .directive('ccTaskOffered', ccTaskOffered);
 
   function ccTaskOffered() {
     var directive = {

@@ -442,10 +442,10 @@
 
       if (_.get(trialServices, enabledProp)) {
         return _.chain(trialServices[trialType])
-        .get(devicesPath, [])
-        .filter(function (device) { return device.quantity > 0; })
-        .map(function (device) { return { model: device.model, qty: device.quantity }; })
-        .value();
+          .get(devicesPath, [])
+          .filter(function (device) { return device.quantity > 0; })
+          .map(function (device) { return { model: device.model, qty: device.quantity }; })
+          .value();
       } else {
         return [];
       }

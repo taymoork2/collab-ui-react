@@ -8,7 +8,7 @@ describe('Huron Functional: call-lines', () => {
   const customer = huronCustomer('call-lines');
   beforeAll(done => {
     provisioner.provisionCustomerAndLogin(customer)
-     .then(done);
+      .then(done);
   });
 
   afterAll(done => {

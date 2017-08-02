@@ -10,7 +10,7 @@ describe('Huron Functional: add-places', () => {
   const customer = huronCustomer('add-place');
   beforeAll(done => {
     provisioner.provisionCustomerAndLogin(customer)
-     .then(done);
+      .then(done);
   });
 
   afterAll(done => {

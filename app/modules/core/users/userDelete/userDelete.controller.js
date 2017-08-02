@@ -79,8 +79,8 @@ require('./_user-delete.scss');
 
       if (Authinfo.isCare()) {
         SunlightConfigService.deleteUser(userId)
-        .then(deleteFromCareSuccess)
-        .catch(deleteFromCareFailure);
+          .then(deleteFromCareSuccess)
+          .catch(deleteFromCareFailure);
       }
       $timeout(refreshUserList, 500);
     }

@@ -272,10 +272,10 @@ require('modules/core/reports/amcharts-export.scss');
               vm.availabilityStatus = vm.SET;
             }
           }, //when promise of clusterid to name is a reject this gets executed
-            function () {
-              setAvailabilityGraph(DummyMetricsReportService.dummyAvailabilityData(vm.timeSelected));
-              vm.availabilityStatus = vm.EMPTY;
-            });
+          function () {
+            setAvailabilityGraph(DummyMetricsReportService.dummyAvailabilityData(vm.timeSelected));
+            vm.availabilityStatus = vm.EMPTY;
+          });
         }
         resizeCards();
       });
@@ -301,7 +301,7 @@ require('modules/core/reports/amcharts-export.scss');
               setUtilizationGraph(response.graphData, vm.utilizationClusterName);
               vm.card = '';
               vm.utilizationStatus = vm.SET;
-            },  //when promise of clusterid to name is a reject this gets executed
+            }, //when promise of clusterid to name is a reject this gets executed
             function () {
               setUtilizationGraph(DummyMetricsReportService.dummyUtilizationData(vm.timeSelected), DummyMetricsReportService.dummyUtilizationGraph());
               vm.utilizationStatus = vm.EMPTY;

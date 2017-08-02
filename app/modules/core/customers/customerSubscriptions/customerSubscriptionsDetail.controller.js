@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('Core')
-  .controller('CustomerSubscriptionsDetailCtrl', CustomerSubscriptionsDetail);
+    .controller('CustomerSubscriptionsDetailCtrl', CustomerSubscriptionsDetail);
 
   function CustomerSubscriptionsDetail($stateParams, $q, $translate, Authinfo, Auth, CustomerAdministratorService, Notification, UserListService, Userservice, Utils) {
     var vm = this;
@@ -143,9 +143,9 @@
 
     function flattenAndJoin(targetArray, joiner) {
       return _.chain(targetArray)
-      .flatten()
-      .join(joiner)
-      .value();
+        .flatten()
+        .join(joiner)
+        .value();
     }
   }
 })();

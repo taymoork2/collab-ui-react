@@ -2,8 +2,8 @@
   'use strict';
 
   angular
-  .module('uc.autoattendant')
-  .controller('AACallerInputCtrl', AACallerInputCtrl);
+    .module('uc.autoattendant')
+    .controller('AACallerInputCtrl', AACallerInputCtrl);
 
   /* @ngInject */
 

@@ -11,7 +11,7 @@
         displayTitle: '<',
       },
     });
-    /* @ngInject */
+  /* @ngInject */
   function LeastUsedCtrl() {
     //var vm = this;
   }
