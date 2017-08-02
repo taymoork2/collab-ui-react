@@ -39,9 +39,6 @@
         <div><span>{{ license.displayName }}</span></div>
         <div><span translate="firstTimeWizard.namedLicense"></span></div>
       </div>
-      <div ng-if="::planReview.hasExistingLicenses">
-        <span><a href="javascript:void(0);" ng-click="planReview.switchViews()" translate="firstTimeWizard.switchToDefaultPlanView"></a></span>
-      </div>
     </div>
     <div ng-switch-when="false">
       <div class="row full flex-row">
@@ -245,9 +242,6 @@
             </div>
           </div>
         </div>
-      </div>
-       <div ng-if="::planReview.hasPendingLicenses">
-        <span><a href="javascript:void(0);" ng-click="planReview.switchViews()" translate="firstTimeWizard.switchToPendingPlanView"></a></span>
       </div>
     </div>
   </div>
