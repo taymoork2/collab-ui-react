@@ -110,6 +110,7 @@ require('../devices/_devices.scss');
         vm.gridOptions = {
           appScopeProvider: vm,
           rowHeight: 45,
+          enableRowSelection: true,
           onRegisterApi: function (gridApi) {
             vm.gridApi = gridApi;
             vm.gridApi.selection.on.rowSelectionChanged($scope, function (row) {

@@ -9,12 +9,9 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     .controller('UserListCtrl', UserListCtrl);
 
   /* @ngInject */
-  function UserListCtrl($q, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Auth, Config, FeatureToggleService,
+  function UserListCtrl($q, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Auth, Config, FeatureToggleService, GridCellService,
     Log, LogMetricsService, Notification, Orgservice, Userservice, UserListService, Utils, DirSyncService, UserOverviewService) {
     var vm = this;
-
-    var ENTER = 13;
-    var SPACE = 32;
 
     vm.$onInit = onInit;
     vm.configureGrid = configureGrid;
@@ -98,6 +95,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     vm.isValidThumbnail = Userservice.isValidThumbnail;
     vm.getUserPhoto = Userservice.getUserPhoto;
     vm.showUserDetails = showUserDetails;
+    vm.selectRow = selectRow;
 
     $scope.getUserList = getUserList;
     $scope.onManageUsers = onManageUsers;
@@ -428,7 +426,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     }
 
     function keypressHandleDeleteUser($event, user, isSelf) {
-      if ($event.keyCode === ENTER || $event.keyCode === SPACE) {
+      if ($event.keyCode === GridCellService.ENTER || $event.keyCode === GridCellService.SPACE) {
         vm.handleDeleteUser($event, user, isSelf);
       } else {
         $event.stopPropagation();
@@ -509,7 +507,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     }
 
     function keypressResendInvitation($event, userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {
-      if ($event.keyCode === ENTER || $event.keyCode === SPACE) {
+      if ($event.keyCode === GridCellService.ENTER || $event.keyCode === GridCellService.SPACE) {
         vm.resendInvitation($event, userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements);
       } else {
         $event.stopPropagation();
@@ -556,22 +554,22 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
         field: 'name.givenName',
         id: 'givenName',
         displayName: $translate.instant('usersPage.firstnameHeader'),
-        cellTemplate: '<cs-grid-cell row="row" cell-function="grid.appScope.showUserDetails(row.entity)" cell-string="{{row.entity.name.givenName}}"></cs-grid-cell>',
+        cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showUserDetails(row.entity)" cell-value="row.entity.name.givenName"></cs-grid-cell>',
       }, {
         field: 'name.familyName',
         id: 'familyName',
         displayName: $translate.instant('usersPage.lastnameHeader'),
-        cellTemplate: '<cs-grid-cell row="row" cell-function="grid.appScope.showUserDetails(row.entity)" cell-string="{{row.entity.name.familyName}}"></cs-grid-cell>',
+        cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showUserDetails(row.entity)" cell-value="row.entity.name.familyName"></cs-grid-cell>',
       }, {
         field: 'displayName',
         id: 'displayName',
         displayName: $translate.instant('usersPage.displayNameHeader'),
-        cellTemplate: '<cs-grid-cell row="row" cell-function="grid.appScope.showUserDetails(row.entity)" cell-string="{{row.entity.displayName}}"></cs-grid-cell>',
+        cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showUserDetails(row.entity)" cell-value="row.entity.displayName"></cs-grid-cell>',
       }, {
         field: 'userName',
         id: 'userName',
         displayName: $translate.instant('usersPage.emailHeader'),
-        cellTemplate: '<cs-grid-cell row="row" cell-function="grid.appScope.showUserDetails(row.entity)" cell-string="{{row.entity.userName}}"></cs-grid-cell>',
+        cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showUserDetails(row.entity)" cell-value="row.entity.userName"></cs-grid-cell>',
       }, {
         field: 'userStatus',
         id: 'userStatus',
@@ -609,6 +607,11 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
       };
 
       return deferred.promise;
+    }
+
+    function selectRow(grid, row) {
+      GridCellService.selectRow(grid, row);
+      vm.showUserDetails(row.entity);
     }
 
     function showUserDetails(user) {

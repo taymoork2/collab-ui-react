@@ -1,15 +1,23 @@
+import { GridCellService } from './gridCell.service';
+
 class CsGridCellCtrl {
-  public cellFunction: Function;
-  public cellString: string;
+  public cellClickFunction?: Function;
+  public cellIconCss: string;
+  public cellValue: string;
   public centerText: boolean;
+  public grid: uiGrid.IGridInstance;
   public row: uiGrid.IGridRow;
 
   /* @ngInject */
-  constructor() {}
+  constructor(
+    private GridCellService: GridCellService,
+  ) {}
 
-  public click(entity): void {
-    if (_.isFunction(this.cellFunction)) {
-      this.cellFunction(entity);
+  public click(): void {
+    this.GridCellService.selectRow(this.grid, this.row);
+
+    if (_.isFunction(this.cellClickFunction)) {
+      this.cellClickFunction(this.row.entity);
     }
   }
 }
@@ -18,9 +26,11 @@ export class CsGridCellComponent implements ng.IComponentOptions {
   public templateUrl = 'modules/core/csgrid/cs-grid-cell/csGridCell.tpl.html';
   public controller = CsGridCellCtrl;
   public bindings = {
-    cellFunction: '&',
-    cellString: '@',
+    cellClickFunction: '&',
+    cellIconCss: '@',
+    cellValue: '<',
     centerText: '<',
+    grid: '<',
     row: '<',
   };
 }

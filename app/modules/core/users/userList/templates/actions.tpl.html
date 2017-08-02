@@ -1,4 +1,4 @@
-<div class="grid-contents" ng-class="{'selected' : row.isSelected}" ng-click="grid.appScope.showUserDetails(row.entity)">
+<div class="grid-contents" ng-class="{'selected' : row.isSelected}" ng-click="grid.appScope.selectRow(grid, row)">
   <span cs-dropdown class="actions-menu" ng-if="grid.appScope.canShowActionsMenu(row.entity)">
     <button cs-dropdown-toggle id="actionsButton" class="btn--none dropdown-toggle icon icon-three-dots"
             ng-click="$event.stopPropagation();" ng-keydown="$event.stopPropagation();" ng-class="dropdown-toggle">

@@ -3,8 +3,24 @@
 describe('UserListCtrl: Ctrl', function () {
   function init() {
     this.initModules('Core', 'Huron', 'Sunlight');
-    this.injectDependencies('$rootScope', '$scope', '$state', '$controller', '$q', '$httpBackend', 'Userservice', 'UserListService',
-      'Orgservice', 'Authinfo', 'Auth', 'Config', 'Notification', 'FeatureToggleService', 'DirSyncService');
+    this.injectDependencies(
+      '$controller',
+      '$httpBackend',
+      '$q',
+      '$rootScope',
+      '$scope',
+      '$state',
+      'Auth',
+      'Authinfo',
+      'Config',
+      'DirSyncService',
+      'FeatureToggleService',
+      'GridCellService',
+      'Notification',
+      'Orgservice',
+      'UserListService',
+      'Userservice'
+    );
     initFixtures.apply(this);
     initDependencySpies.apply(this);
   }
@@ -18,8 +34,6 @@ describe('UserListCtrl: Ctrl', function () {
     this.event = {
       stopPropagation: jasmine.createSpy('stopPropagation'),
     };
-    this.ENTER = 13;
-    this.SPACE = 32;
 
     this.photoUsers = _.clone(getJSONFixture('core/json/users/userlist.controller.json'));
     this.currentUser = _.clone(getJSONFixture('core/json/currentUser.json'));
@@ -224,14 +238,14 @@ describe('UserListCtrl: Ctrl', function () {
     });
 
     it('should call keypressHandleDeleteUser and handleDeleteUser successfully when keypress event is enter', function () {
-      this.event.keyCode = this.ENTER;
+      this.event.keyCode = this.GridCellService.ENTER;
       this.controller.keypressHandleDeleteUser(this.event, this.user, true);
       expect(this.event.stopPropagation).toHaveBeenCalled();
       expect(this.$state.go).toHaveBeenCalledWith(this.selfDelete, this.userDetails);
     });
 
     it('should call keypressHandleDeleteUser and handleDeleteUser successfully when keypress event is space', function () {
-      this.event.keyCode = this.SPACE;
+      this.event.keyCode = this.GridCellService.SPACE;
       this.controller.keypressHandleDeleteUser(this.event, this.user, true);
       expect(this.event.stopPropagation).toHaveBeenCalled();
       expect(this.$state.go).toHaveBeenCalledWith(this.selfDelete, this.userDetails);
@@ -270,7 +284,7 @@ describe('UserListCtrl: Ctrl', function () {
     });
 
     it('should call keypressResendInvitation and resendInvitation successfully when keypress event is enter', function () {
-      this.event.keyCode = this.ENTER;
+      this.event.keyCode = this.GridCellService.ENTER;
       this.controller.keypressResendInvitation(this.event, this.userEmail, this.userName, this.uuid, this.userStatus, this.dirsyncEnabled, this.entitlements);
       this.$scope.$apply();
       expect(this.Notification.success).toHaveBeenCalled();
@@ -278,7 +292,7 @@ describe('UserListCtrl: Ctrl', function () {
     });
 
     it('should call keypressResendInvitation and resendInvitation successfully when keypress event is space', function () {
-      this.event.keyCode = this.SPACE;
+      this.event.keyCode = this.GridCellService.SPACE;
       this.controller.keypressResendInvitation(this.event, this.userEmail, this.userName, this.uuid, this.userStatus, this.dirsyncEnabled, this.entitlements);
       this.$scope.$apply();
       expect(this.Notification.success).toHaveBeenCalled();

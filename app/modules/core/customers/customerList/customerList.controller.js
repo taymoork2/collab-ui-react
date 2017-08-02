@@ -7,9 +7,7 @@ require('./_customer-list.scss');
     .controller('CustomerListCtrl', CustomerListCtrl);
 
   /* @ngInject */
-  function CustomerListCtrl($q, $scope, $state, $templateCache, $translate, $window,
-    Analytics, Authinfo, Config, ExternalNumberService, FeatureToggleService, Log,
-    Notification, Orgservice, PartnerService, TrialService, HuronCompassService) {
+  function CustomerListCtrl($q, $scope, $state, $templateCache, $translate, $window, Analytics, Authinfo, Config, ExternalNumberService, FeatureToggleService, GridCellService, HuronCompassService, Log, Notification, Orgservice, PartnerService, TrialService) {
     var PREMIUM = 'premium';
     var STANDARD = 'standard';
 
@@ -38,6 +36,7 @@ require('./_customer-list.scss');
     vm.isPartnerOrg = isPartnerOrg;
     vm.setTrial = setTrial;
     vm.showCustomerDetails = showCustomerDetails;
+    vm.selectRow = selectRow;
     vm.closeActionsDropdown = closeActionsDropdown;
     vm.addNumbers = addNumbers;
     vm.getLicenseCountColumnText = getLicenseCountColumnText;
@@ -207,7 +206,7 @@ require('./_customer-list.scss');
       field: 'totalLicenses',
       displayName: $translate.instant('customerPage.totalLicenses'),
       width: '16.5%',
-      cellTemplate: '<cs-grid-cell row="row" cell-function="grid.appScope.showCustomerDetails(row.entity)" cell-string="{{grid.appScope.getLicenseCountColumnText(row.entity)}}" center-text="true"></cs-grid-cell>',
+      cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showCustomerDetails(row.entity)" cell-value="grid.appScope.getLicenseCountColumnText(row.entity)" center-text="true"></cs-grid-cell>',
       headerCellClass: 'align-center',
     };
     /* AG TODO:  once we have data for total users -- add back
@@ -215,14 +214,14 @@ require('./_customer-list.scss');
         field: 'totalUsers',
         displayName: $translate.instant('customerPage.active') + ' / ' + $translate.instant('customerPage.totalUsers'),
         width: '16%',
-        cellTemplate: '<cs-grid-cell row="row" cell-function="grid.appScope.showCustomerDetails(row.entity)" cell-string="{{grid.appScope.getUserCountColumnText(row.entity)}}" center-text="true"></cs-grid-cell>',
+        cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showCustomerDetails(row.entity)" cell-value="grid.appScope.getUserCountColumnText(row.entity)" center-text="true"></cs-grid-cell>',
         headerCellClass: 'align-center',
         sortingAlgorithm: userSort
       };*/
     var notesField = {
       field: 'notes',
       displayName: $translate.instant('customerPage.notes'),
-      cellTemplate: '<cs-grid-cell row="row" cell-function="grid.appScope.showCustomerDetails(row.entity)" cell-string="{{row.entity.notes.text}}"></cs-grid-cell>',
+      cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showCustomerDetails(row.entity)" cell-value="row.entity.notes.text"></cs-grid-cell>',
       sortingAlgorithm: notesSort,
     };
 
@@ -804,6 +803,11 @@ require('./_customer-list.scss');
         return isLicenseTypeATrial(rowData, type);
       });
       return isTrial ? 'trial' : 'active';
+    }
+
+    function selectRow(grid, row) {
+      GridCellService.selectRow(grid, row);
+      vm.showCustomerDetails(row.entity);
     }
 
     function showCustomerDetails(customer) {
