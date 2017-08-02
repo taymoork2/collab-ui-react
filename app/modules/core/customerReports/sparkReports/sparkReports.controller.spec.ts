@@ -540,6 +540,32 @@ describe('Controller: Customer Reports Ctrl', function () {
       expect(this.controller.filterArray.length).toEqual(4);
     });
 
+    it('should have adjusted the startDate and endDate as time filter is Last 7 days', function() {
+      const sDate = moment().subtract('days', 7).format('YYYY-MM-DD');
+      const sTime = moment().subtract('days', 7).format('h:mm A');
+      const eDate = moment().format('YYYY-MM-DD');
+      const eTime = moment().format('h:mm A');
+      console.debug(this.controller.startDate);
+      expect(this.controller.startDate).toEqual(sDate);
+      expect(this.controller.endDate).toEqual(eDate);
+      expect(this.controller.startTime).toEqual(sTime);
+      expect(this.controller.endTime).toEqual(eTime);
+    });
+
+    it('should have adjusted the startDate and endDate on time filter Changes', function() {
+      this.controller.timeSelected = this.defaults.timeFilter[1];
+      this.controller.timeUpdates.update();
+      this.$timeout.flush();
+      const sDate = moment().subtract('weeks', 4).format('YYYY-MM-DD');
+      const sTime = moment().subtract('weeks', 4).format('h:mm A');
+      const eDate = moment().format('YYYY-MM-DD');
+      const eTime = moment().format('h:mm A');
+      expect(this.controller.startDate).toEqual(sDate);
+      expect(this.controller.endDate).toEqual(eDate);
+      expect(this.controller.startTime).toEqual(sTime);
+      expect(this.controller.endTime).toEqual(eTime);
+    });
+
     it('resetCards should alter the visible filterArray[x].toggle based on filters equals \'Details\'', function () {
       this.controller.filterArray[3].toggle(this.ctrlData.DETAILS);
       this.SparkReportService.getCDRReport.and.returnValue(this.$q.resolve(this.dummyCdrData));
