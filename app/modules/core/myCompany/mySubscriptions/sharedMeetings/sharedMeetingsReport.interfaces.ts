@@ -28,6 +28,18 @@ export interface IMaxConcurrentDataCSV {
   SiteName: string;
   Month: string;
   From: string;
-  To: string;
+  To: string | number;
   ConcurrentMeetingsPeak: string;
+}
+export interface IMeetings {
+  TimeBucketStart: string;
+  NumOfMtgs: number;
+}
+export interface IMonthlyMaxConcurrentData {
+  SiteName: string;
+  ReportType: string;
+  BucketLengthInMins: number;
+  StartMonth: string;
+  EndMonth: string;
+  MaxConcurrentMeetings: IMeetings[];
 }
