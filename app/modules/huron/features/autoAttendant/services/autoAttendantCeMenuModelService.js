@@ -598,6 +598,7 @@
             } else {
               if (announcements.length > 0 && _.has(announcements[0], 'say')) {
                 if (isDynAnnounceToggle()) {
+                  action = new Action('dynamic', '');
                   var list = [{
                     say: {
                       value: decodeUtf8(announcements[0].say.value),
