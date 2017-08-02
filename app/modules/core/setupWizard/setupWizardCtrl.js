@@ -151,6 +151,10 @@ require('./_setup-wizard.scss');
           template: 'modules/core/setupWizard/meeting-settings/meeting-license-distribution.html',
         },
         {
+          name: 'setPartnerAudio',
+          template: 'modules/core/setupWizard/meeting-settings/meeting-audio-partner.html',
+        },
+        {
           name: 'summary',
           template: 'modules/core/setupWizard/meeting-settings/meeting-summary.html',
         }],
@@ -160,7 +164,9 @@ require('./_setup-wizard.scss');
         if (!hasWebexMeetingTrial()) {
           _.remove(meetingTab.steps, { name: 'migrateTrial' });
         }
-
+        if (!SetupWizardService.hasTSPAudioPackage()) {
+          _.remove(meetingTab.steps, { name: 'setPartnerAudio' });
+        }
         tabs.splice(1, 0, meetingTab);
       }
     }

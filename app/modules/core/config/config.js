@@ -231,6 +231,7 @@
         CVC: 'CVC', // Care Voice Channel
         MSGR: 'MSGR', // WebEx Messenger (as of 2017-05-17, managed externally and not managed by Atlas)
         MGMTPRO: 'MGMTPRO', // IT Pro Pack
+        TSP: 'TSP', // Telephony Service Provider
       },
 
       licenseStatus: {
