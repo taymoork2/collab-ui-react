@@ -16,7 +16,6 @@
     CONSTANTS.idSelectorPrefix = '#';
 
     vm.dynamicAdd = dynamicAdd;
-
     vm.variableSelection = {
       label: '',
       value: '',
