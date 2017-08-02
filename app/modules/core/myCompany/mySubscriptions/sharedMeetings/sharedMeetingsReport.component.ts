@@ -245,18 +245,19 @@ class SharedMeetingsReportCtrl {
             ConcurrentMeetingsPeak: this.$translate.instant('sharedMeetingReports.csvConcurrentMeetingsPeak'),
           }];
 
-          for (const item of this.MaxConcurrentData.MaxConcurrentMeetings){
-            const dateLength = item.TimeBucketStart.length;
-            const startMonthYear = moment(item.TimeBucketStart.substring(0 , dateLength - 4)).format('MMM-YY');
-            concurrentData.push({
-              SiteName: siteName,
-              Month: startMonthYear,
-              From: this.dateFix(item.TimeBucketStart),
-              To: this.dateFix(item.TimeBucketStart , this.MaxConcurrentData.BucketLengthInMins),
-              ConcurrentMeetingsPeak: '' + item.NumOfMtgs,
+          if (this.MaxConcurrentData) {
+            _.forEach(this.MaxConcurrentData.MaxConcurrentMeetings, (item) => { // better name than item?
+              const dateLength = item.TimeBucketStart.length;
+              const startMonthYear = moment(item.TimeBucketStart.substring(0 , dateLength - 4)).format('MMM-YY');
+              concurrentData.push({
+                SiteName: siteName,
+                Month: startMonthYear,
+                From: this.dateFix(item.TimeBucketStart),
+                To: this.dateFix(item.TimeBucketStart , this.MaxConcurrentData.BucketLengthInMins),
+                ConcurrentMeetingsPeak: '' + item.NumOfMtgs,
+              });
             });
           }
-
           const csvData: string = ($ as any).csv.fromObjects(reformattedData, { headers: false });
           const csvMaxConcurrentData = ($ as any).csv.fromObjects(concurrentData, { headers: false });
 
