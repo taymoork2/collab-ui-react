@@ -27,7 +27,6 @@
       value: '',
     };
 
-
     /////////////////////
 
     function dynamicAdd(id, dynamicElement) {
