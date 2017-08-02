@@ -48,10 +48,10 @@
     var holdActionValue;
     var dependentCeSessionVariablesList = [];
     var dynamicVariablesList = [];
+    var ui;
 
     vm.menuEntry = {};
     vm.actionEntry = {};
-    vm.ui = {};
     vm.availableSessionVariablesList = [];
     vm.deletedSessionVariablesList = [];
 
@@ -125,8 +125,9 @@
     function addLocalAndQueriedSessionVars() {
       // reset the displayed SessionVars to the original queried items
       vm.availableSessionVariablesList = dependentCeSessionVariablesList;
+      ui = AAUiModelService.getUiModel();
 
-      vm.availableSessionVariablesList = _.concat(vm.availableSessionVariablesList, AACommonService.collectThisCeActionValue(vm.ui, true, false));
+      vm.availableSessionVariablesList = _.concat(vm.availableSessionVariablesList, AACommonService.collectThisCeActionValue(ui, true, false));
       vm.availableSessionVariablesList = _.uniq(vm.availableSessionVariablesList).sort();
     }
 
@@ -140,12 +141,11 @@
     function updateIsWarnFlag() {
       vm.deletedSessionVariablesList = [];
       if (!_.isEmpty(dynamicVariablesList)) {
-        _.forEach(dynamicVariablesList, function (variable) {
-          if (!_.includes(vm.availableSessionVariablesList, variable)) {
-            vm.deletedSessionVariablesList.push(variable);
-          }
-        });
-      }
+      _.forEach(dynamicVariablesList, function (variable) {
+        if (!_.includes(vm.availableSessionVariablesList, variable)) {
+          vm.deletedSessionVariablesList.push(JSON.stringify(variable));
+        }
+      });
       vm.deletedSessionVariablesList = _.uniq(vm.deletedSessionVariablesList).sort();
     }
 
@@ -165,7 +165,7 @@
 
     function getDynamicVariables() {
       dynamicVariablesList = [];
-      var dynamVarList = _.get(vm.menuEntry, 'dynamicList', _.get(vm.menuEntry, 'actions[0].dynamicList'));
+      var dynamVarList = _.get(vm.actionEntry, 'dynamicList', '');
       if (!_.isUndefined(dynamVarList)) {
         _.forEach(dynamVarList, function (entry) {
           if (entry.isDynamic) {
@@ -391,7 +391,6 @@
     }
 
     function setActionEntry() {
-      var ui;
       var uiMenu;
       var sourceQueue;
       var sourceMenu;
@@ -435,7 +434,6 @@
         case messageType.ACTION:
           {
             ui = AAUiModelService.getUiModel();
-            vm.ui = ui;
             uiMenu = ui[$scope.schedule];
             vm.menuEntry = uiMenu.entries[$scope.index];
             if ($scope.type) {

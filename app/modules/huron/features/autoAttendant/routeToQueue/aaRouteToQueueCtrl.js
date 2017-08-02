@@ -50,6 +50,98 @@
 
     /////////////////////
 
+    $scope.$on('CE Updated', function () {
+      getDynamicVariables();
+      refreshVarSelects();
+      if (_.isEmpty(vm.deletedSessionVariablesList)) {
+        vm.fullWarningMsgValue = false;
+      }
+    });
+
+    $scope.$on('CIVarNameChanged', function () {
+      getDynamicVariables();
+      refreshVarSelects();
+    });
+
+    function togglefullWarningMsg() {
+      vm.fullWarningMsgValue = !vm.fullWarningMsgValue;
+    }
+
+    function closeFullWarningMsg() {
+      vm.fullWarningMsgValue = false;
+    }
+
+    function getWarning() {
+      if (_.isEmpty(vm.deletedSessionVariablesList)) {
+        return false;
+      }
+      if (vm.deletedSessionVariablesList.length > 1) {
+        vm.deletedSessionVariablesListAlongWithWarning = $translate.instant('autoAttendant.dynamicMissingCustomVariables', { deletedSessionVariablesList: vm.deletedSessionVariablesList.toString() });
+      } else {
+        vm.deletedSessionVariablesListAlongWithWarning = $translate.instant('autoAttendant.dynamicMissingCustomVariable', { deletedSessionVariablesList: vm.deletedSessionVariablesList.toString() });
+      }
+      return true;
+    }
+
+    function addLocalAndQueriedSessionVars() {
+      // reset the displayed SessionVars to the original queried items
+      vm.availableSessionVariablesList = dependentCeSessionVariablesList;
+      vm.availableSessionVariablesList = _.concat(vm.availableSessionVariablesList, AACommonService.collectThisCeActionValue(vm.ui, true, false));
+      vm.availableSessionVariablesList = _.uniq(vm.availableSessionVariablesList).sort();
+    }
+
+    function refreshVarSelects() {
+      // reload the session variables.
+      addLocalAndQueriedSessionVars();
+      // resets possibly warning messages
+      updateIsWarnFlag();
+    }
+
+    function updateIsWarnFlag() {
+      vm.deletedSessionVariablesList = [];
+      if (_.isEmpty(dynamicVariablesList)) {
+        return;
+      }
+      _.forEach(dynamicVariablesList, function (variable) {
+        if (!_.includes(vm.availableSessionVariablesList, variable)) {
+          vm.deletedSessionVariablesList.push(JSON.stringify(variable));
+        }
+      });
+      vm.deletedSessionVariablesList = _.uniq(vm.deletedSessionVariablesList).sort();
+    }
+
+    function getSessionVariablesOfDependentCe() {
+      dependentCeSessionVariablesList = [];
+
+      return AASessionVariableService.getSessionVariablesOfDependentCeOnly(AAModelService.getAAModel().aaRecordUUID).then(function (data) {
+        if (!_.isUndefined(data) && data.length > 0) {
+          dependentCeSessionVariablesList = data;
+        }
+      });
+    }
+
+    function getDynamicVariables() {
+      dynamicVariablesList = [];
+      var initialDynamVarList = _.get(vm.menuEntry, 'actions[0].queueSettings.initialAnnouncement.actions[0].dynamicList');
+      var preodicDynamVarList = _.get(vm.menuEntry, 'actions[0].queueSettings.periodicAnnouncement.actions[0].dynamicList');
+      if (!_.isUndefined(initialDynamVarList)) {
+        _.forEach(initialDynamVarList, function (entry) {
+          if (entry.isDynamic) {
+            if (!_.includes(AACommonService.getprePopulatedSessionVariablesList(), entry.say.value)) {
+              dynamicVariablesList.push(entry.say.value);
+            }
+          }
+        });
+      } else if (!_.isUndefined(preodicDynamVarList)) {
+        _.forEach(preodicDynamVarList, function (entry) {
+          if (entry.isDynamic) {
+            if (!_.includes(AACommonService.getprePopulatedSessionVariablesList(), entry.say.value)) {
+              dynamicVariablesList.push(entry.say.value);
+            }
+          }
+        });
+      }
+    }
 
     function openQueueTreatmentModal() {
       // deep copy used to roll back from the modal changes

@@ -647,16 +647,18 @@ describe('Controller: AAMessageTypeCtrl', function () {
       });
       it('boradcast of CE Updated', function () {
         var c;
-        menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-        menuEntry.dynamicList = [{
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+        action.dynamicList = [{
           say: {
-            value: 'testValue',
+            value: 'dummy message',
             voice: '',
-            as: 'testValue',
           },
           isDynamic: true,
+          htmlModel: '',
         }];
-        menuEntry.addAction(AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', 'http://www.test.com'));
+        menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        menuEntry.addAction(action);
+
         aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
         aaUiModel.openHours.addEntryAt(0, menuEntry);
 
@@ -672,16 +674,18 @@ describe('Controller: AAMessageTypeCtrl', function () {
       });
       it('boradcast of CIVarNameChanged', function () {
         var c;
-        menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-        menuEntry.dynamicList = [{
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+        action.dynamicList = [{
           say: {
-            value: 'testValue',
+            value: 'dummy message',
             voice: '',
-            as: 'testValue',
           },
           isDynamic: true,
+          htmlModel: '',
         }];
-        menuEntry.addAction(AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', 'http://www.test.com'));
+        menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        menuEntry.addAction(action);
+
         aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
         aaUiModel.openHours.addEntryAt(0, menuEntry);
 
