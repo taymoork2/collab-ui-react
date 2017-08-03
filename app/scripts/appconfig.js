@@ -3493,6 +3493,21 @@
               },
             },
           })
+          .state('context-fields-sidepanel.options', {
+            template: '<context-field-sidepanel-options-list type-definition="$resolve.dataTypeDefinition" default-option="{{::$resolve.defaultOption}}"></context-field-sidepanel-options-list>',
+            params: {
+              dataTypeDefinition: {},
+              defaultOption: undefined,
+            },
+            resolve: {
+              dataTypeDefinition: /* @ngInject */ function ($stateParams) {
+                return $stateParams.dataTypeDefinition;
+              },
+              defaultOption: /* @ngInject */ function ($stateParams) {
+                return $stateParams.defaultOption;
+              },
+            },
+          })
           .state('context-fieldsets', {
             url: '/services/context/fieldsets',
             parent: 'context',

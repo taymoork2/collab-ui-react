@@ -1,5 +1,8 @@
 require('./_fields-sidepanel.scss');
 
+var DataTypeDefinition = require('../dataTypeDefinition');
+var EnumDataTypeUtils = DataTypeDefinition.EnumDataTypeUtils;
+
 (function () {
   'use strict';
 
@@ -79,6 +82,21 @@ require('./_fields-sidepanel.scss');
 
     vm.isDeletable = function () {
       return !vm.publiclyAccessible && !vm.inUse;
+    };
+
+    vm.isDataTypeWithOptions = function () {
+      return _.get(vm, 'field.dataTypeDefinition.type') === 'enum';
+    };
+
+    vm.getOptionSidepanelOptions = function () {
+      return {
+        dataTypeDefinition: _.get(vm, 'field.dataTypeDefinition'),
+        defaultOption: _.get(vm, 'field.defaultValue'),
+      };
+    };
+
+    vm.getOptionCount = function () {
+      return EnumDataTypeUtils.getActiveOptionsCount(vm.field.dataTypeDefinition);
     };
 
     vm.openDeleteConfirmDialog = function () {

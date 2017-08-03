@@ -178,11 +178,153 @@ describe('Component: fields sidepanel', function () {
     });
   });
 
+  describe('getOptionsCount', function () {
+    it('should return 0 for empty field', function () {
+      expect(ctrl.getOptionCount()).toBe(0);
+    });
+    it('should return 0 for non-single-select', function () {
+      ctrl.field = {
+        publiclyAccessibleUI: false,
+        translations: { english: 'First Name', french: 'Prénom' },
+        id: 'aaa_test',
+        lastUpdatedUI: '2017-01-26T18:42:42.124Z',
+        description: 'a description',
+        searchable: 'yes',
+        dataTypeUI: 'String',
+      };
+      expect(ctrl.getOptionCount()).toBe(0);
+    });
+    it('should return 0 for single-select with invalid dataTypeDefinition', function () {
+      ctrl.field = {
+        publiclyAccessibleUI: false,
+        translations: { english: 'First Name', french: 'Prénom' },
+        id: 'aaa_test',
+        lastUpdatedUI: '2017-01-26T18:42:42.124Z',
+        description: 'a description',
+        searchable: 'yes',
+        dataTypeUI: 'Single Select',
+      };
+      expect(ctrl.getOptionCount()).toBe(0);
+    });
+    it('should return 0 for single-select with undefined options', function () {
+      ctrl.field = {
+        publiclyAccessibleUI: false,
+        translations: { english: 'First Name', french: 'Prénom' },
+        id: 'aaa_test',
+        lastUpdatedUI: '2017-01-26T18:42:42.124Z',
+        description: 'a description',
+        searchable: 'yes',
+        dataTypeUI: 'Single Select',
+        dataTypeDefinition: {
+          type: 'enum',
+        },
+      };
+      expect(ctrl.getOptionCount()).toBe(0);
+    });
+    it('should return the correct number of options for single-select', function () {
+      ctrl.field = {
+        publiclyAccessibleUI: false,
+        translations: { english: 'First Name', french: 'Prénom' },
+        id: 'aaa_test',
+        lastUpdatedUI: '2017-01-26T18:42:42.124Z',
+        description: 'a description',
+        searchable: 'yes',
+        dataTypeUI: 'Single Select',
+        dataTypeDefinition: {
+          type: 'enum',
+          enumerations: ['1', '2', '3'],
+        },
+      };
+      expect(ctrl.getOptionCount()).toBe(3);
+    });
+  });
+
+  describe('isDataTypeWithOptions', function () {
+    var baseField = {
+      publiclyAccessibleUI: false,
+      translations: { english: 'First Name', french: 'Prénom' },
+      id: 'aaa_test',
+      lastUpdatedUI: '2017-01-26T18:42:42.124Z',
+      description: 'a description',
+      searchable: 'yes',
+      type: 'string',
+    };
+
+    var baseDataTypeDefinition;
+
+    beforeEach(function () {
+      ctrl.field = baseField;
+
+      baseDataTypeDefinition = {
+        enumerations: ['a', 'b'],
+      };
+    });
+
+    ['string', 'integer', 'arbitrary'].forEach(function (type) {
+      it('should return false for all types with no dataTypeDefinition: type=' + type, function () {
+        ctrl.field.type = type;
+        expect(ctrl.isDataTypeWithOptions()).toBe(false);
+      });
+    });
+
+    ['regex', 'arbitrary'].forEach(function (type) {
+      it('should return false for non-option dataTypeDefinitions: type=' + type, function () {
+        baseDataTypeDefinition.type = type;
+        ctrl.field.dataTypeDefinition = baseDataTypeDefinition;
+        expect(ctrl.isDataTypeWithOptions()).toBe(false);
+      });
+    });
+
+    describe('a proper enum', function () {
+      beforeEach(function () {
+        baseDataTypeDefinition.type = 'enum';
+        ctrl.field.dataTypeDefinition = baseDataTypeDefinition;
+      });
+
+      it('should return true when populated', function () {
+        expect(ctrl.isDataTypeWithOptions()).toBe(true);
+      });
+
+      it('should return true even when empty', function () {
+        ctrl.field.dataTypeDefinition.enumerations = [];
+        expect(ctrl.isDataTypeWithOptions()).toBe(true);
+      });
+
+      it('should return true even when undefined-empty', function () {
+        ctrl.field.dataTypeDefinition.enumerations = undefined;
+        expect(ctrl.isDataTypeWithOptions()).toBe(true);
+      });
+    });
+  });
+
+  describe('getOptionsSidepanelOptions', function () {
+    // just an arbitrary object, there's no validation here
+    var dataTypeDefinition = { a: 'a', b: 'b' };
+    beforeEach(function () {
+      ctrl.field.dataTypeDefinition = _.cloneDeep(dataTypeDefinition);
+    });
+
+    it('should return the expected object based on the field', function () {
+      ctrl.field.defaultValue = 'defaultValue';
+      expect(ctrl.getOptionSidepanelOptions()).toEqual({
+        dataTypeDefinition: dataTypeDefinition,
+        defaultOption: 'defaultValue',
+      });
+    });
+
+    it('should return the expected object based on the field with undefined defaultValue', function () {
+      expect(ctrl.getOptionSidepanelOptions()).toEqual({
+        dataTypeDefinition: dataTypeDefinition,
+        defaultOption: undefined,
+      });
+    });
+  });
+
   /**
    * These tests do not validate the full UI of the feature. Just enough to validate that the feature is <em>present</em>
    * in the UI.
    */
-  describe('field-edit feature is present', function () {
+  describe('compile/render component', function () {
     var field = {
       publiclyAccessibleUI: false,
       translations: { english: 'First Name', french: 'Prénom' },
@@ -263,6 +405,82 @@ describe('Component: fields sidepanel', function () {
           var deleteButtons = siblings.find('button').find('.btn--delete');
           expect(deleteButtons.length).toBe(0, 'shouldn\'t have found a delete button');
         }
+      });
+    });
+
+    describe('Options feature for Single Select', function () {
+      var fieldToUse;
+      beforeEach(function () {
+        fieldToUse = {
+          publiclyAccessibleUI: false,
+          translations: { english: 'First Name', french: 'Prénom' },
+          id: 'aaa_test',
+          lastUpdatedUI: '2017-01-26T18:42:42.124Z',
+          description: 'a description',
+          searchable: 'yes',
+          dataTypeUI: 'Single Select',
+          dataTypeDefinition: { type: 'enum' },
+        };
+        membershipReturnSpy.and.returnValue(this.$q.resolve([fieldToUse.id]));
+
+        this.getSectionContent = function () {
+          var sectionContent = this.view.find('div.section-content');
+          expect(sectionContent).toHaveLength(1);
+          return sectionContent;
+        };
+
+        this.getFeatures = function () {
+          return this.getSectionContent().find('div.feature');
+        };
+
+        this.getOptionsLabel = function () {
+          return this.getFeatures().find('span.feature-name:contains("context.dictionary.fieldPage.optionsLabel")');
+        };
+      });
+
+      it('should not show options for non-single-select', function () {
+        // compile the default field
+        this.$scope.$apply();
+        var features = this.getFeatures();
+        var featureNames = features.find('span.feature-name');
+        expect(featureNames).not.toHaveText('context.dictionary.fieldPage.optionsLabel');
+      });
+
+      it('should show options with "none" for single-select with no options', function () {
+        // update field to be an empty single select
+        this.$scope.field = fieldToUse;
+        this.$scope.$apply();
+        var optionsLabel = this.getOptionsLabel();
+        expect(optionsLabel).toHaveLength(1);
+        var siblings = optionsLabel.siblings();
+        expect(siblings).toHaveLength(1);
+        var status = siblings.first();
+        expect(status.is('span')).toBe(true, 'feature status should be a span');
+        expect(status).toHaveText('common.none');
+        expect(status).toHaveClass('feature-details');
+      });
+
+      it('should show options with the correct number for single-select', function () {
+        // update the field to be a populated single select
+        var enumerations = ['1', '2', '3'];
+        var expectedLength = enumerations.length;
+        fieldToUse.dataTypeDefinition.enumerations = enumerations;
+        this.$scope.field = fieldToUse;
+        this.$scope.$apply();
+        var features = this.getFeatures();
+        // search for expected "options" label
+        var options = features.find('span.feature-name:contains("context.dictionary.fieldPage.optionsLabel")');
+        expect(options).toHaveLength(1);
+        // make sure this is wrapped in an anchor
+        var parent = options.parent();
+        expect(parent.is('a')).toBe(true, 'parent must be an anchor element');
+        // make sure it has the count of items
+        var count = parent.find('span.feature-status');
+        expect(count).toHaveLength(1);
+        expect(count).toHaveText(expectedLength.toString());
+        // make sure it has the "feature arrow"
+        var arrow = parent.find('i.feature-arrow');
+        expect(arrow).toHaveLength(1);
       });
     });
   });
