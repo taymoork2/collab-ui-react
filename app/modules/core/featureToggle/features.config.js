@@ -198,7 +198,6 @@ module.exports = {
   hI802: 'h-i802',
   csdmPlaceGuiSettings: 'csdm-place-gui-settings',
   csdmAtaCpc: 'csdm-ata-cpc',
-  hi1487: 'h-i1487',
   csdmAtaReboot: 'csdm-ata-reboot',
   hI1484: 'h-i1484',
   hI1485: 'h-i1485',
