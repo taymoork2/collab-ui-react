@@ -82,13 +82,15 @@ export class SearchObject {
   public tokenizedQuery: { [key: string]: { searchField: string, query: string, active: boolean } };
   public aggregates?: string;
   public size?: number;
+  public from?: number;
 
   private constructor() {
   }
 
   public static initDefaults(object: SearchObject) {
     object.size = object.size || 20;
-    // object.query = object.query || '';
+    object.from = object.from || 0;
+    object.query = object.query || '';
     object.aggregates = object.aggregates ||
       _.join([
         Aggregate[Aggregate.product],
@@ -124,6 +126,14 @@ export class SearchObject {
       }, {})
       .value();
     return sobject;
+  }
+
+  public nextPage() {
+    if (!this.from) {
+      this.from = 0;
+    }
+    this.from += 20;
+    this.updateQuery();
   }
 
   public setTokenizedQuery(searchField: string, query: string, active: boolean) {

@@ -1,5 +1,5 @@
 <div class="devices-redux">
-  <cs-page-header title-name="spacesPage.title"></cs-page-header>
+  <cs-page-header title-name="{{'spacesPage.title' | translate}}"></cs-page-header>
   <div ng-if="!devices.anyDevicesOrCodesLoaded">
     <div style="padding: 100px; text-align: center;">
       <i class="icon icon-2x icon-spinner"/>
@@ -15,20 +15,12 @@
   <div ng-if="devices.anyDevicesOrCodesLoaded">
     <div class="devices-header">
       <div class="clearfix row">
-        <h1>
-          Devices
-          <a href ng-click="dctrl.exportToCsv()" class="pull-right hidden-sm hidden-xs"
-             style="padding-top: 20px; font-size: 1.5rem; padding-left: 40px;">
-            Export
-          </a>
-          <a
-            href
-            class="pull-right"
-            ng-click="dctrl.showAddDeviceDialog()"
-            style="padding-top: 20px; font-size: 1.5rem">
-            Add Device
-          </a>
-        </h1>
+        <button
+          class="btn btn--people add-button pull-right"
+          ng-click="devices.startAddDeviceFlow()"
+          ng-disabled="devices.addDeviceIsDisabled">
+          <span translate="spacesPage.addBtn"></span>
+        </button>
       </div>
       <device-search search="devices.search" search-object="devices.searchObject" search-changed="devices.searchChanged(search)" clear-search="devices.clearSearch()" search-result-changed="devices.searchResultChanged(result)"></device-search>
       <device-chart search-result="devices.searchResult" pie-chart-clicked="devices.addToSearch(searchField,query)"></device-chart>

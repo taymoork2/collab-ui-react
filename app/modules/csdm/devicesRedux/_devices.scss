@@ -4,6 +4,15 @@
 @import '~collab-ui/scss/tools/mixins/spacing-responsive';
 
 .devices-redux {
+  .ui-grid-cell:first-child,
+  .ui-grid-header-cell:first-child {
+    border-right: 0px;
+
+    .space_avatar {
+      margin: 4px 5px 4px 30px;
+      width: 35px;
+    }
+  }
   .clipboard-button {
     padding-left: 10px;
   }
@@ -14,9 +23,11 @@
     justify-content: space-between;
     border-bottom: solid $gray-darkest 1px;
     .clearfix {
+      flex-grow: 1;
       flex-basis: 100%;
     }
     .graphCarousel {
+      align-self: flex-end;
       position: relative;
       //background-color: #00cc66;
       height: 230px;
@@ -315,6 +326,8 @@
   .devices-search {
     min-width: 250px;
     max-width: 600px;
+    position: relative;
+    top: -2rem;
     form {
       display: flex;
       flex-wrap: wrap;
