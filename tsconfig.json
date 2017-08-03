@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "baseUrl": "./app",
-    "compileOnSave": false,
     "module": "commonjs",
     "noEmitOnError": true,
     "noUnusedLocals": true,

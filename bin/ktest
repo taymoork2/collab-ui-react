@@ -162,8 +162,8 @@ export npm_lifecycle_event=${npm_lifecycle_event:-test}
 
 # run 'karma' at the project root dir
 pushd "${WX2_ADMIN_WEB_CLIENT_HOME}" > /dev/null
-# set old generation heap limit to 2GB since we're currently hovering around the 1.4GB default
-karma_process="node --max-old-space-size=2560 ${WX2_ADMIN_WEB_CLIENT_HOME}/node_modules/karma/bin/karma start"
+# set old generation heap limit to 3GB
+karma_process="node --max-old-space-size=3072 ${WX2_ADMIN_WEB_CLIENT_HOME}/node_modules/karma/bin/karma start"
 
 set -x
 # shellcheck disable=SC2086

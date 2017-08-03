@@ -30,6 +30,7 @@ Adherence is mandatory. Please refactor non-compliant code.
 * **Code style is mandatory**. Style should be enforced through linting and code reviews.
   * [Javascript Style Guide](https://github.com/airbnb/javascript/tree/master/es5)
   * [Angular Style Guide](https://github.com/johnpapa/angular-styleguide/tree/master/a1)
+  * [CSS BEMS-style naming](http://getbem.com/naming/)
   * [Commit Guidelines](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/wiki/How-to-commit-changes)
 * **Build failure triage is mandatory**. When you push code that breaks the builds, you are responsible to investigate
   and triage this failure before attempting another push. More info on the [triage wiki](http://cs.co/atlas-triage).
@@ -148,13 +149,15 @@ See [git-terminology](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-c
     * Add `@WebExSquared/atlas-web-core-team` for core team members
     * *(Note: your PR may automatically be picked up by @atlas-ui-bot-gen, who will @mention other contributors when feasible)*
   * **Important:** *Please allow a reasonable time for a response before pushing your code.  Large commits will take longer to review.  Smaller commits can be reviewed quicker and make it easier for adjustments to the comments.*
-  * Respond to feedback and push new commits if necessary
+  * Respond to feedback requests and push changes as new commits
+  * `git push <fork> <local-branch>`
 
 ##### 7. Push to Gauntlet (build queue-ing tool) for validated merge (after approved review)
   * `git checkout master`
   * Your master branch should have no local commits. Reset your HEAD if need be with `git reset --hard HEAD`.
   * `git pull --rebase` to update your master branch with the latest from github
   * `git merge <local-branch>` (resolve conflicts if necessary)
+  * `git push -f <fork> master:<local-branch>` to update your fork's branch so your PR is properly reflected
   * `git push gauntlet master`
     * Use your CEC username and [internal password](https://sqbu-jenkins-01.cisco.com:8443/job/utilities/job/internal-utilities-password-changer/) (**:warning: it is not the same password as your CEC password :warning:**).
     * Consider putting your internal password into ~/.netrc

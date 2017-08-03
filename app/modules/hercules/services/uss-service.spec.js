@@ -325,7 +325,7 @@ describe('Service: USSService', function () {
           }],
         });
 
-      USSService.getStatusesForUserInOrg('123', '456')
+      USSService.getStatusesForUser('123', '456')
         .then(function (response) {
           expect(response.length).toBe(1);
         });

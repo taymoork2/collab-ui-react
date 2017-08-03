@@ -32,27 +32,29 @@ export class LineService {
       },
     };
 
-    this.lineService = <ILineResource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/:type/:typeId/numbers/:numberId', {},
+    this.lineService = <ILineResource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/:type/:typeId/numbers/:numberId', { wide: false },
       {
         update: updateAction,
         save: saveAction,
       });
   }
 
-  public getLine(type: LineConsumerType, typeId: string, numberId: string): ng.IPromise<Line> {
+  public getLine(type: LineConsumerType, typeId: string, numberId: string, wide?: boolean): ng.IPromise<Line> {
     return this.lineService.get({
       customerId: this.Authinfo.getOrgId(),
       type: type,
       typeId: typeId,
       numberId: numberId,
+      wide: wide,
     }).$promise;
   }
 
-  public getLineList(type: LineConsumerType, typeId: string): ng.IPromise<Line[]> {
+  public getLineList(type: LineConsumerType, typeId: string, wide?: boolean): ng.IPromise<Line[]> {
     return this.lineService.get({
       customerId: this.Authinfo.getOrgId(),
       type: type,
       typeId: typeId,
+      wide: wide,
     }).$promise
     .then(lineList => {
       return _.get<Line[]>(lineList, 'numbers', []);
@@ -85,6 +87,7 @@ export class LineService {
       internal: data.internal,
       external: _.isUndefined(data.external) ? null : data.external,
       incomingCallMaximum: data.incomingCallMaximum,
+      label: _.isUndefined(data.label) ? undefined : undefined,
     }).$promise;
   }
 

@@ -1,97 +1,134 @@
-export class Customer {
+export interface IRCustomer {
+  uuid: string;
+  name: string;
+  servicePackage: string;
+  links: Link[];
+}
+
+export interface ICustomer extends IRCustomer {}
+
+export class Customer implements ICustomer {
   public uuid: string;
   public name: string;
   public servicePackage: string;
   public links: Link[];
 
-  constructor(obj: {
-    uuid: string,
-    name: string,
-    servicePackage: string,
-    links: Link[],
+  constructor(customer: IRCustomer = {
+    uuid: '',
+    name: '',
+    servicePackage: '',
+    links: [],
   }) {
-    this.uuid = obj.uuid;
-    this.name = obj.name;
-    this.servicePackage = obj.servicePackage;
-    this.links = obj.links;
+    this.uuid = customer.uuid;
+    this.name = customer.name;
+    this.servicePackage = customer.servicePackage;
+    this.links = customer.links;
   }
 }
 
-export class Link {
-  public rel: string;
-  public href: string;
-
-  constructor(obj: {
-    rel: string,
-    href: string,
-  }) {
-    this.rel = obj.rel;
-    this.href = obj.href;
-  }
+export interface ICustomerVoiceBase {
+  uuid: string;
+  name: string;
+  regionCode: string;
+  dialPlan?: DialPlan | null;
+  dialPlanDetails: DialPlanDetails;
 }
 
-export class CustomerVoice {
+export interface IRCustomerVoice extends ICustomerVoiceBase {
+  routingPrefixLength: string | null;
+  extensionLength: string | null;
+}
+
+export interface ICustomerVoice extends ICustomerVoiceBase {
+  routingPrefixLength: number | null;
+  extensionLength: number | null;
+}
+
+export class CustomerVoice implements ICustomerVoice {
   public uuid: string;
   public name: string;
   public regionCode: string;
   public dialPlan?: DialPlan | null;
   public dialPlanDetails: DialPlanDetails;
-  public links: Link[];
+  public routingPrefixLength: number | null;
+  public extensionLength: number | null;
 
-  constructor(obj: {
-    uuid: string,
-    name: string,
-    regionCode: string,
-    dialPlan?: DialPlan | null,
-    dialPlanDetails: DialPlanDetails,
-    links: Link[],
+  //Default/Copy constructor
+  constructor(customerVoice: IRCustomerVoice = {
+    uuid: '',
+    name: '',
+    regionCode: '',
+    dialPlanDetails: new DialPlanDetails(),
+    routingPrefixLength: null,
+    extensionLength: null,
   }) {
-    this.uuid = obj.uuid;
-    this.name = obj.name;
-    this.regionCode = obj.regionCode;
-    this.links = obj.links;
-    this.dialPlan = obj.dialPlan;
-    this.dialPlanDetails = obj.dialPlanDetails;
+    this.uuid = customerVoice.uuid;
+    this.name = customerVoice.name;
+    this.regionCode = customerVoice.regionCode;
+    this.dialPlan = customerVoice.dialPlan;
+    this.dialPlanDetails = customerVoice.dialPlanDetails;
+    this.routingPrefixLength = customerVoice.routingPrefixLength ? parseInt(customerVoice.routingPrefixLength, 10) : null;
+    this.extensionLength = customerVoice.extensionLength ? parseInt(customerVoice.extensionLength, 10) : null;
   }
 }
 
-export class DialPlan {
+export interface ILink {
+  rel: string;
+  href: string;
+}
+
+export class Link implements ILink {
+  public rel: string;
+  public href: string;
+
+  constructor(link: Link) {
+    this.rel = link.rel;
+    this.href = link.href;
+  }
+}
+
+export interface IDialPlan {
+  uuid: string;
+  name: string;
+}
+
+export class DialPlan implements IDialPlan {
   public uuid: string;
   public name: string;
 
-  constructor(obj: {
-    uuid: string,
-    name: string,
-  }) {
-    this.uuid = obj.uuid;
-    this.name = obj.name;
+  constructor(dialPlan: DialPlan) {
+    this.uuid = dialPlan.uuid;
+    this.name = dialPlan.name;
   }
 }
 
-export class DialPlanDetails {
+export interface IDialPlanDetails {
+  countryCode?: string;
+  extensionGenerated?: string;
+  steeringDigitRequired?: string;
+  supportSiteCode?: string;
+  supportSiteSteeringDigit?: string;
+}
+
+export class DialPlanDetails implements IDialPlanDetails {
   public countryCode?: string;
   public extensionGenerated?: string;
   public steeringDigitRequired?: string;
   public supportSiteCode?: string;
   public supportSiteSteeringDigit?: string;
 
-  constructor (obj: {
-    countryCode?: string,
-    extensionGenerated?: string,
-    steeringDigitRequired?: string,
-    supportSiteCode?: string,
-    supportSiteSteeringDigit?: string,
-  } = {
+  //Default/Copy constructor
+  constructor (dialPlanDetails: IDialPlanDetails = {
     countryCode: '+1',
     extensionGenerated: 'false',
     steeringDigitRequired: 'true',
     supportSiteCode: 'true',
     supportSiteSteeringDigit: 'true',
   }) {
-    this.countryCode = obj.countryCode;
-    this.extensionGenerated = obj.extensionGenerated;
-    this.steeringDigitRequired = obj.steeringDigitRequired;
-    this.supportSiteCode = obj.supportSiteCode;
-    this.supportSiteSteeringDigit = obj.supportSiteSteeringDigit;
+    this.countryCode = dialPlanDetails.countryCode;
+    this.extensionGenerated = dialPlanDetails.extensionGenerated;
+    this.steeringDigitRequired = dialPlanDetails.steeringDigitRequired;
+    this.supportSiteCode = dialPlanDetails.supportSiteCode;
+    this.supportSiteSteeringDigit = dialPlanDetails.supportSiteSteeringDigit;
   }
 }

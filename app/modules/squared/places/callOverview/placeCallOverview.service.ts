@@ -68,7 +68,7 @@ export class PlaceCallOverviewService {
     return this.$q.all(promises).then( (data) => {
       if (this.errors.length > 0) {
         this.Notification.notify(this.errors, 'preferredLanguage.failedToFetchSiteLanguages');
-        return this.$q.reject();
+        return this.$q.reject() as atlas.QRejectWorkaround<PlaceCallOverviewData>;
       }
       const siteLevelPreferredLanguage = data[0];
       const languages = data[1];
@@ -107,8 +107,8 @@ export class PlaceCallOverviewService {
   private getDefaultPreferredLanguage(organizationLevelLanguage): any {
     const defaultPrefix: string = this.$translate.instant('preferredLanguage.organizationSettingLabel');
     const translatedLanguageLabel: string = organizationLevelLanguage ?
-                                        this.$translate.instant(organizationLevelLanguage) :
-                                        'languages.englishAmerican';
+                                        organizationLevelLanguage :
+      this.$translate.instant('languages.englishAmerican');
     const defaultLanguage = {
       label: defaultPrefix + translatedLanguageLabel,
       value: '',

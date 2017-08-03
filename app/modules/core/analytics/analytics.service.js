@@ -61,6 +61,7 @@
           BMMP_DISMISSAL: 'BMMP Banner dismissal',
           LEARN_MORE: 'Learn More option selected',
           PREMIUM_FILTER: 'Customer Overview Filtering',
+          RESET_ACCESS: 'Reset Access',
         },
         persistentProperties: null,
       },
@@ -441,10 +442,10 @@
 
       if (_.get(trialServices, enabledProp)) {
         return _.chain(trialServices[trialType])
-        .get(devicesPath, [])
-        .filter(function (device) { return device.quantity > 0; })
-        .map(function (device) { return { model: device.model, qty: device.quantity }; })
-        .value();
+          .get(devicesPath, [])
+          .filter(function (device) { return device.quantity > 0; })
+          .map(function (device) { return { model: device.model, qty: device.quantity }; })
+          .value();
       } else {
         return [];
       }

@@ -1,13 +1,13 @@
 import { ExpresswayContainerController } from '../common-expressway-based/expressway-common-container.controller';
 import { Notification } from 'modules/core/notifications';
+import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 
 export class CallServiceContainerController extends ExpresswayContainerController {
-
   public tabs: any = [{
-    title: 'common.resources',
+    title: this.$translate.instant('common.resources'),
     state: 'call-service.list',
   }, {
-    title: 'common.settings',
+    title: this.$translate.instant('common.settings'),
     state: 'call-service.settings',
   }];
 
@@ -31,25 +31,24 @@ export class CallServiceContainerController extends ExpresswayContainerControlle
     $scope: ng.IScope,
     $state: ng.ui.IStateService,
     private $stateParams: ng.ui.IStateParamsService,
-    Authinfo,
+    private $translate: ng.translate.ITranslateService,
     ClusterService,
-    hasPartnerRegistrationFeatureToggle,
     hasNodesViewFeatureToggle,
     Notification: Notification,
-    ServiceDescriptor,
+    ServiceDescriptorService: ServiceDescriptorService,
     ServiceStateChecker,
     USSService,
   ) {
-    super($modal, $scope, $state, Authinfo, ClusterService, hasPartnerRegistrationFeatureToggle, hasNodesViewFeatureToggle, Notification, ServiceDescriptor, ServiceStateChecker, USSService, ['squared-fusion-uc'], 'c_ucmc');
+    super($modal, $scope, $state, ClusterService, hasNodesViewFeatureToggle, Notification, ServiceDescriptorService, ServiceStateChecker, USSService, ['squared-fusion-uc'], 'c_ucmc');
     this.addConnectIfEnabled();
     this.clusterId = this.$stateParams['clusterId'];
-    if (this.$stateParams['backTo']) {
-      this.backState = this.$stateParams['backTo'];
+    if (this.$stateParams['backState']) {
+      this.backState = this.$stateParams['backState'];
     }
   }
 
   private addConnectIfEnabled() {
-    this.ServiceDescriptor.isServiceEnabled('squared-fusion-ec')
+    this.ServiceDescriptorService.isServiceEnabled('squared-fusion-ec')
       .then((enabled) => {
         if (enabled) {
           this.servicesId.push('squared-fusion-ec');

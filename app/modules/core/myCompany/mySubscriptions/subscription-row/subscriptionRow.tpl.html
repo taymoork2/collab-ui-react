@@ -1,0 +1,56 @@
+<div class="subscription-row" ng-if="$ctrl.wrapped">
+  <div class="license-count-indicator" ng-if="!$ctrl.offer.siteUrl || ($ctrl.offer.siteUrl && !$ctrl.isSharedMeetingsLicense())">
+    <cs-donut name="$ctrl.offer.id" hideusage="$ctrl.hideUsage()" value="$ctrl.offer.usage" max="$ctrl.offer.volume" ssize="48" class="text-center"></cs-donut>
+  </div>
+  <div class="category-description category-detail" ng-class="{ 'advanced-detail': $ctrl.isSharedMeetingsLicense() }">
+    <div>
+      <span class="name h5">{{::$ctrl.getLicenseName()}}</span>
+      <span ng-if="$ctrl.isProPackEnabled && ($ctrl.getWarning($ctrl.offer.usage) || $ctrl.getWarning($ctrl.offer.totalUsage))" class="badge alert" translate="subscriptions.overage"></span>
+    </div>
+    <div class="h6 link" ng-if="$ctrl.offer.siteUrl">{{::$ctrl.offer.siteUrl}}</div>
+    <div ng-if="subscription.siteUrl && !$ctrl.isSharedMeetingsLicense()">
+      <span class="name h6">{{::$ctrl.determineLicenseType()}}</span>
+    </div>
+    <!-- For CI sites -->
+    <div class="h6 category-usage" ng-if="!$ctrl.hideUsage() && !$ctrl.isSharedMeetingsLicense()">
+      <span translate="subscriptions.usage"></span>
+      <span ng-if="$ctrl.isUsage()" ng-class="{ 'warning': $ctrl.getWarning($ctrl.offer.usage) }">{{::$ctrl.displayUsage($ctrl.offer.usage)}}</span>
+      <span ng-if="$ctrl.isTotalUsage()" ng-class="{ 'warning': $ctrl.getWarning($ctrl.offer.totalUsage) }">{{::$ctrl.displayUsage($ctrl.offer.totalUsage)}}</span>
+    </div>
+
+    <!-- For non-CI sites -->
+    <div class="h6 category-usage" ng-if="$ctrl.hideUsage() && !$ctrl.isSharedMeetingsLicense()">
+      <span translate="common.quantity"></span>
+      <span>{{::$ctrl.offer.volume}}</span>
+    </div>
+    <div ng-if="$ctrl.hideUsage() && !$ctrl.isSharedMeetingsLicense()">
+      <a class="h6 link" translate="subscriptions.signIn" ng-click="$ctrl.nonCISignIn()"></a>
+    </div>
+  </div>
+  <div class="category-description category-detail site-detail" ng-if="$ctrl.isSharedMeetingsLicense() && $ctrl.isSharedMeetingsReportsEnabled">
+    <div class="h5 license-detail" ng-class="{ 'warning': $ctrl.getWarning($ctrl.offer.usage) }" translate="sharedMeetingReports.hostsSharingLicenses" translate-values="{ usage: $ctrl.offer.usage }"></div>
+    <div class="h5 license-detail" ng-class="{ 'warning': $ctrl.getWarning($ctrl.offer.totalUsage) }" translate="sharedMeetingReports.volumeOfLicenses" translate-values="{ volume: $ctrl.offer.volume }"></div>
+    <span class="h6" translate="sharedMeetingReports.title"></span>
+    <a class="name h6 link" ng-click="$ctrl.launchSharedMeetingsLicenseUsageReport()" translate="sharedMeetingReports.link"></a>
+  </div>
+  <div class="category-description category-detail  site-detail" ng-if="$ctrl.isSharedMeetingsLicense() && $ctrl.isSharedMeetingsReportsEnabled">
+    <span class="h5 license-detail" translate="sharedMeetingReports.availableSharedLicenses"></span>
+    <span class="h6">{{::$ctrl.offer.volume}}</span>
+  </div>
+</div>
+
+<div class="subscription-row"  ng-if="!$ctrl.wrapped">
+  <cs-donut ng-if="$ctrl.isUsage()" name="$ctrl.offer.id" value="$ctrl.offer.usage" max="$ctrl.offer.volume" ssize="48" class="text-center"></cs-donut>
+  <cs-donut ng-if="$ctrl.isTotalUsage()" name="$ctrl.offer.id" value="$ctrl.offer.totalUsage" max="$ctrl.offer.volume" ssize="48" class="text-center"></cs-donut>
+  <div class="category-description">
+    <div>
+      <span class="name h5">{{::$ctrl.getLicenseName()}}</span>
+      <span ng-if="$ctrl.isProPackEnabled && ($ctrl.getWarning($ctrl.offer.usage) || $ctrl.getWarning($ctrl.offer.totalUsage))" class="badge alert" translate="subscriptions.overage"></span>
+    </div>
+    <div class="h6 category-usage">
+      <span translate="subscriptions.usage"></span>
+      <span ng-if="$ctrl.isUsage()" ng-class="{ 'warning': $ctrl.getWarning($ctrl.offer.usage) }">{{::$ctrl.displayUsage($ctrl.offer.usage)}}</span>
+      <span ng-if="$ctrl.isTotalUsage()" ng-class="{ 'warning': $ctrl.getWarning($ctrl.offer.totalUsage) }">{{::$ctrl.displayUsage($ctrl.offer.totalUsage)}}</span>
+    </div>
+  </div>
+</div>

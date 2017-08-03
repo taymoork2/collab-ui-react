@@ -10,7 +10,7 @@ describe('EditCalendarService component:', () => {
       '$componentController',
       '$rootScope',
       '$httpBackend',
-      'ServiceDescriptor',
+      'ServiceDescriptorService',
       'CsdmDataModelService',
       'ResourceGroupService',
       'USSService',
@@ -36,7 +36,7 @@ describe('EditCalendarService component:', () => {
   describe('init ()', () => {
     describe('where gcal service is not enabled and exchange is enabled', () => {
       beforeEach(() => {
-        spyOn(test.ServiceDescriptor, 'getServices').and.returnValue(test.$q.resolve([{
+        spyOn(test.ServiceDescriptorService, 'getServices').and.returnValue(test.$q.resolve([{
           id: FUSION_GCAL_ENTITLEMENT,
           enabled: false,
         }, {
@@ -69,7 +69,7 @@ describe('EditCalendarService component:', () => {
     });
     describe('with gcal service enabled and exchange enabled', () => {
       beforeEach(() => {
-        spyOn(test.ServiceDescriptor, 'getServices').and.returnValue(test.$q.resolve([{
+        spyOn(test.ServiceDescriptorService, 'getServices').and.returnValue(test.$q.resolve([{
           id: FUSION_GCAL_ENTITLEMENT,
           enabled: true,
         }, {
@@ -103,7 +103,7 @@ describe('EditCalendarService component:', () => {
     });
     describe('with gcal service enabled and exchange disabled', () => {
       beforeEach(() => {
-        spyOn(test.ServiceDescriptor, 'getServices').and.returnValue(test.$q.resolve([{
+        spyOn(test.ServiceDescriptorService, 'getServices').and.returnValue(test.$q.resolve([{
           id: FUSION_GCAL_ENTITLEMENT,
           enabled: true,
         }, {
@@ -143,7 +143,7 @@ describe('EditCalendarService component:', () => {
 
     describe('with editServices as given wizard function', () => {
       beforeEach(() => {
-        spyOn(test.ServiceDescriptor, 'getServices').and.returnValue(test.$q.resolve([{
+        spyOn(test.ServiceDescriptorService, 'getServices').and.returnValue(test.$q.resolve([{
           id: FUSION_GCAL_ENTITLEMENT,
           enabled: true,
         }, {
@@ -171,7 +171,7 @@ describe('EditCalendarService component:', () => {
 
     describe('with normal add place function for wizard', () => {
       beforeEach(() => {
-        spyOn(test.ServiceDescriptor, 'getServices').and.returnValue(test.$q.resolve([{
+        spyOn(test.ServiceDescriptorService, 'getServices').and.returnValue(test.$q.resolve([{
           id: FUSION_GCAL_ENTITLEMENT,
           enabled: true,
         }, {
@@ -200,7 +200,7 @@ describe('EditCalendarService component:', () => {
 
   describe('next', () => {
     beforeEach(() => {
-      spyOn(test.ServiceDescriptor, 'getServices').and.returnValue(test.$q.resolve([{
+      spyOn(test.ServiceDescriptorService, 'getServices').and.returnValue(test.$q.resolve([{
         id: FUSION_GCAL_ENTITLEMENT,
         enabled: true,
       }, {
@@ -281,7 +281,7 @@ describe('EditCalendarService component:', () => {
   describe('save', () => {
     beforeEach(() => {
       const id = 'asvawoei0a';
-      spyOn(test.ServiceDescriptor, 'getServices').and.returnValue(test.$q.resolve([{
+      spyOn(test.ServiceDescriptorService, 'getServices').and.returnValue(test.$q.resolve([{
         id: FUSION_GCAL_ENTITLEMENT,
         enabled: true,
       }, {
@@ -320,16 +320,23 @@ describe('EditCalendarService component:', () => {
         state.controller.calService = FUSION_CAL_ENTITLEMENT;
         state.controller.emailOfMailbox = email;
         spyOn(test.CsdmDataModelService, 'updateCloudberryPlace').and.returnValue(test.$q.resolve());
-        spyOn(test.USSService, 'updateUserProps').and.returnValue(test.$q.resolve({}));
+        spyOn(test.USSService, 'updateBulkUserProps').and.returnValue(test.$q.resolve({}));
         state.controller.save();
         test.$rootScope.$digest();
 
         expect(test.CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalled();
-        const wizardState = test.CsdmDataModelService.updateCloudberryPlace.calls.mostRecent().args;
-
-        expect(wizardState[1]).toEqual(['webex-squared', 'spark', FUSION_CAL_ENTITLEMENT]);
-        expect(wizardState[4][0].accountGUID).toEqual(email);
-        expect(wizardState[4][0].providerID).toEqual(FUSION_CAL_ENTITLEMENT);
+        expect(jasmine).not.toBeUndefined();
+        expect(test.CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalledWith(jasmine.anything(),
+          {
+            entitlements: ['webex-squared', 'spark', FUSION_CAL_ENTITLEMENT],
+            externalNumber: undefined,
+            directoryNumber: undefined,
+            externalLinkedAccounts: [{
+              accountGUID: email,
+              providerID: FUSION_CAL_ENTITLEMENT,
+              status: 'unconfirmed-email',
+            }],
+          });
       });
     });
 
@@ -343,33 +350,40 @@ describe('EditCalendarService component:', () => {
         state.controller.calService = FUSION_GCAL_ENTITLEMENT;
         state.controller.emailOfMailbox = email;
         spyOn(test.CsdmDataModelService, 'updateCloudberryPlace').and.returnValue(test.$q.resolve());
-        spyOn(test.USSService, 'updateUserProps').and.returnValue(test.$q.resolve({}));
+        spyOn(test.USSService, 'updateBulkUserProps').and.returnValue(test.$q.resolve({}));
         state.controller.save();
         test.$rootScope.$digest();
 
         expect(test.CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalled();
-        const wizardState = test.CsdmDataModelService.updateCloudberryPlace.calls.mostRecent().args;
-        expect(wizardState[1]).toEqual(['webex-squared', 'spark', FUSION_GCAL_ENTITLEMENT]);
-        expect(wizardState[4][0].accountGUID).toEqual(email);
-        expect(wizardState[4][0].providerID).toEqual(FUSION_GCAL_ENTITLEMENT);
+        expect(test.CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalledWith(jasmine.anything(),
+          {
+            entitlements: ['webex-squared', 'spark', FUSION_GCAL_ENTITLEMENT],
+            externalNumber: undefined,
+            directoryNumber: undefined,
+            externalLinkedAccounts: [{
+              accountGUID: email,
+              providerID: FUSION_GCAL_ENTITLEMENT,
+              status: 'unconfirmed-email',
+            }],
+          });
+        it('save should be enabled', () => {
+          test.$rootScope.$digest();
+          state.controller.calService = FUSION_GCAL_ENTITLEMENT;
+          state.controller.emailOfMailbox = email;
+          expect(state.controller.isSaveDisabled()).toBeFalsy();
+        });
       });
-      it('save should be enabled', () => {
-        test.$rootScope.$digest();
-        state.controller.calService = FUSION_GCAL_ENTITLEMENT;
-        state.controller.emailOfMailbox = email;
-        expect(state.controller.isSaveDisabled()).toBeFalsy();
-      });
-    });
 
-    describe('with none selected', () => {
-      beforeEach(() => {
-        state.controller.calService = '';
-        state.controller.emailOfMailbox = 'test@example.com';
+      describe('with none selected', () => {
+        beforeEach(() => {
+          state.controller.calService = '';
+          state.controller.emailOfMailbox = 'test@example.com';
+        });
+        it('save should be disabled', () => {
+          expect(state.controller.isSaveDisabled()).toBeTruthy();
+        });
       });
-      it('save should be disabled', () => {
-        expect(state.controller.isSaveDisabled()).toBeTruthy();
-      });
-    });
 
+    });
   });
 });

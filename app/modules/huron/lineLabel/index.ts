@@ -1,5 +1,4 @@
 import { LineLabelComponent } from './lineLabel.component';
-import { LineLabelService } from './lineLabel.service';
 import FeatureToggleService from 'modules/core/featureToggle';
 
 export default angular
@@ -10,5 +9,4 @@ export default angular
     FeatureToggleService,
   ])
   .component('ucLineLabel', new LineLabelComponent())
-  .service('LineLabelService', LineLabelService)
   .name;

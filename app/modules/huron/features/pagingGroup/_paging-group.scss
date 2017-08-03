@@ -47,6 +47,11 @@
   }
 }
 
+.pg-save {
+  position: fixed;
+  bottom: 0;
+}
+
 .pg-edit {
   height: calc(100vh - #{($top-bar-height + $page-header-height)}) !important;
   overflow-y: auto;

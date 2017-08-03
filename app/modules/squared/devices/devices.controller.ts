@@ -5,9 +5,9 @@ import { Notification } from 'modules/core/notifications';
 import ICsdmDataModelService = csdm.ICsdmDataModelService;
 import { FilteredDeviceViewDataSource } from './filtered-deviceview-datasource';
 import { DeviceMatcher } from './device-matcher';
+import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 
 export class DevicesController {
-
   public exporting: boolean;
   public filteredView: FilteredView<IDevice>;
   public addDeviceIsDisabled: boolean = true;
@@ -18,6 +18,7 @@ export class DevicesController {
   private huronDeviceService: any;
   private currentDevice: IDevice;
   private showATA: boolean;
+  private csdmMultipleDevicesPerPlaceFeature: boolean;
   private csdmHybridCallFeature: boolean;
   private showPersonal: boolean;
   private csdmHybridCalendarFeature: boolean;
@@ -32,25 +33,28 @@ export class DevicesController {
     cisUuid: string;
     organizationId: string
   };
-  private gridOptions: any;
+  public gridOptions: uiGrid.IGridOptions;
+  public gridApi: uiGrid.IGridApi;
 
-  constructor(private $q: ng.IQService,
-              private $state,
-              private $translate: ng.translate.ITranslateService,
-              private $templateCache,
-              private Userservice,
-              private WizardFactory,
-              private FeatureToggleService,
-              private $modal: IToolkitModalService,
-              private Notification: Notification,
-              private DeviceExportService,
-              private ServiceDescriptor,
-              $timeout: ng.ITimeoutService,
-              CsdmDataModelService: ICsdmDataModelService,
-              AccountOrgService,
-              $scope: ng.IScope,
-              CsdmHuronOrgDeviceService,
-              private Authinfo) {
+  constructor(
+    private $q: ng.IQService,
+    private $state,
+    private $translate: ng.translate.ITranslateService,
+    private $templateCache,
+    private Userservice,
+    private WizardFactory,
+    private FeatureToggleService,
+    private $modal: IToolkitModalService,
+    private Notification: Notification,
+    private DeviceExportService,
+    private ServiceDescriptorService: ServiceDescriptorService,
+    $timeout: ng.ITimeoutService,
+    CsdmDataModelService: ICsdmDataModelService,
+    AccountOrgService,
+    $scope: ng.IScope,
+    CsdmHuronOrgDeviceService,
+    private Authinfo,
+  ) {
     this.fetchAsyncSettings();
     this.filteredView = new FilteredView<IDevice>(new FilteredDeviceViewDataSource(CsdmDataModelService, $q),
       new DeviceMatcher(),
@@ -59,15 +63,15 @@ export class DevicesController {
 
     CsdmDataModelService.subscribeToChanges($scope, () => {
       this.filteredView.refresh();
+      this.gridOptions.data = this.filteredView.getResult();
     });
 
-    CsdmDataModelService.devicePollerOn('data',
-      () => {
-        this.filteredView.refresh();
-      }, {
-        scope: $scope,
-      },
-    );
+    CsdmDataModelService.devicePollerOn('data', () => {
+      this.filteredView.refresh();
+      this.gridOptions.data = this.filteredView.getResult();
+    }, {
+      scope: $scope,
+    });
 
     this.filteredView.setFilters([{
       count: 0,
@@ -113,24 +117,18 @@ export class DevicesController {
       });
 
     this.gridOptions = {
-      data: 'sc.filteredView.getResult()',
-      enableHorizontalScrollbar: 0,
+      data: this.filteredView.getResult(),
       rowHeight: 45,
-      enableRowHeaderSelection: false,
-      enableColumnMenus: false,
-      multiSelect: false,
       onRegisterApi: (gridApi) => {
-        $scope.gridApi = gridApi;
-        gridApi.selection.on.rowSelectionChanged($scope, (row) => {
+        this.gridApi = gridApi;
+        this.gridApi.selection.on.rowSelectionChanged($scope, (row) => {
           this.showDeviceDetails(row.entity);
         });
       },
-
       columnDefs: [{
         field: 'photos',
         displayName: '',
         cellTemplate: this.getTemplate('_imageTpl'),
-        sortable: false,
         width: 70,
       }, {
         field: 'displayName',
@@ -145,7 +143,6 @@ export class DevicesController {
         field: 'state',
         displayName: $translate.instant('spacesPage.statusHeader'),
         cellTemplate: this.getTemplate('_statusTpl'),
-        sortable: true,
         sortingAlgorithm: DevicesController.sortStateFn,
         sort: {
           direction: 'asc',
@@ -187,20 +184,23 @@ export class DevicesController {
     });
     const getLoggedOnUserPromise = this.fetchDetailsForLoggedInUser();
     const personalPromise = this.FeatureToggleService.cloudberryPersonalModeGetStatus().then((showPersonal: boolean) => {
-      this.showPersonal = !showPersonal;
+      this.showPersonal = showPersonal;
     });
     const placeCalendarPromise = this.FeatureToggleService.csdmPlaceCalendarGetStatus().then((feature: boolean) => {
       this.csdmHybridCalendarFeature = feature;
     });
-    const anyCalendarEnabledPromise = this.ServiceDescriptor.getServices().then((services) => {
-      this.hybridCalendarEnabledOnOrg = _.chain(this.ServiceDescriptor.filterEnabledServices(services)).filter((service) => {
+    const anyCalendarEnabledPromise = this.ServiceDescriptorService.getServices().then((services) => {
+      this.hybridCalendarEnabledOnOrg = _.chain(this.ServiceDescriptorService.filterEnabledServices(services)).filter((service) => {
         return service.id === 'squared-fusion-gcal' || service.id === 'squared-fusion-cal';
       }).some().value();
-      this.hybridCallEnabledOnOrg = _.chain(this.ServiceDescriptor.filterEnabledServices(services)).filter((service) => {
+      this.hybridCallEnabledOnOrg = _.chain(this.ServiceDescriptorService.filterEnabledServices(services)).filter((service) => {
         return service.id === 'squared-fusion-uc';
       }).some().value();
     });
-    this.$q.all([ataPromise, hybridPromise, personalPromise, placeCalendarPromise, anyCalendarEnabledPromise, getLoggedOnUserPromise]).finally(() => {
+    const multipleDevicesPerPlacePromise = this.FeatureToggleService.csdmMultipleDevicesPerPlaceGetStatus().then(feature => {
+      this.csdmMultipleDevicesPerPlaceFeature = feature;
+    });
+    this.$q.all([ataPromise, hybridPromise, personalPromise, placeCalendarPromise, anyCalendarEnabledPromise, getLoggedOnUserPromise, multipleDevicesPerPlacePromise]).finally(() => {
       this.addDeviceIsDisabled = false;
     });
 
@@ -259,6 +259,7 @@ export class DevicesController {
         function: 'addDevice',
         showATA: this.showATA,
         showPersonal: false,
+        multipleRoomDevices: this.csdmMultipleDevicesPerPlaceFeature,
         admin: this.adminUserDetails,
         csdmHybridCallFeature: this.csdmHybridCallFeature,
         csdmHybridCalendarFeature: this.csdmHybridCalendarFeature,
@@ -338,6 +339,7 @@ export class DevicesController {
         function: 'addDevice',
         showATA: this.showATA,
         showPersonal: true,
+        multipleRoomDevices: this.csdmMultipleDevicesPerPlaceFeature,
         admin: this.adminUserDetails,
         csdmHybridCallFeature: this.csdmHybridCallFeature,
         csdmHybridCalendarFeature: this.csdmHybridCalendarFeature,

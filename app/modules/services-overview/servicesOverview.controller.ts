@@ -20,6 +20,7 @@ import { EnterprisePrivateTrunkService } from 'modules/hercules/services/enterpr
 import { IPrivateTrunkResource } from 'modules/hercules/private-trunk/private-trunk-services/private-trunk';
 import { ICluster } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
+import { Notification } from 'modules/core/notifications';
 
 export class ServicesOverviewCtrl {
 
@@ -42,7 +43,7 @@ export class ServicesOverviewCtrl {
     private PrivateTrunkPrereqService: PrivateTrunkPrereqService,
     private ProPackService: ProPackService,
     private HDSService,
-    private Notification,
+    private Notification: Notification,
 
   ) {
     this.cards = [
@@ -52,7 +53,7 @@ export class ServicesOverviewCtrl {
       new ServicesOverviewCareCard(this.Authinfo),
       new ServicesOverviewHybridServicesCard(this.Authinfo),
       new ServicesOverviewCmcCard(this.Authinfo),
-      new ServicesOverviewHybridAndGoogleCalendarCard(this.$state, this.$q, this.$modal, this.Authinfo, this.CloudConnectorService, this.HybridServicesClusterStatesService),
+      new ServicesOverviewHybridAndGoogleCalendarCard(this.$state, this.$q, this.$modal, this.Authinfo, this.CloudConnectorService, this.HybridServicesClusterStatesService, this.Notification),
       new ServicesOverviewHybridCalendarCard(this.Authinfo, this.HybridServicesClusterStatesService),
       new ServicesOverviewHybridCallCard(this.Authinfo, this.HybridServicesClusterStatesService),
       new ServicesOverviewHybridMediaCard(this.Authinfo, this.Config, this.HybridServicesClusterStatesService),
@@ -84,8 +85,8 @@ export class ServicesOverviewCtrl {
       });
 
     const PropackPromises = {
-      hasITProPackEnabled: this.ProPackService.hasProPackEnabled(),
-      hasITProPackPurchased: this.ProPackService.hasProPackPurchased(),
+      hasProPackEnabled: this.ProPackService.hasProPackEnabled(),
+      hasProPackPurchased: this.ProPackService.hasProPackPurchased(),
     };
     this.$q.all(PropackPromises).then(result => {
       this.forwardEvent('proPackEventHandler', result);
@@ -104,11 +105,6 @@ export class ServicesOverviewCtrl {
             this.forwardEvent('privateTrunkDomainEventHandler', response.length);
           });
         }
-      });
-
-    this.FeatureToggleService.supports(FeatureToggleService.features.sparkCallTenDigitExt)
-      .then(supports => {
-        this.forwardEvent('sparkCallTenDigitExtFeatureToggleEventhandler', supports);
       });
 
     this.FeatureToggleService.supports(FeatureToggleService.features.hI802)
@@ -164,6 +160,7 @@ export class ServicesOverviewCtrl {
           this.HybridServicesClusterService.getStatusForService('squared-fusion-mgmt', clusterList),
           this.HybridServicesClusterService.getStatusForService('squared-fusion-cal', clusterList),
           this.HybridServicesClusterService.getStatusForService('squared-fusion-uc', clusterList),
+          this.HybridServicesClusterService.getStatusForService('spark-hybrid-impinterop', clusterList),
           this.HybridServicesClusterService.getStatusForService('squared-fusion-media', clusterList),
           this.HybridServicesClusterService.getStatusForService('spark-hybrid-datasecurity', clusterList),
           this.HybridServicesClusterService.getStatusForService('contact-center-context', clusterList),

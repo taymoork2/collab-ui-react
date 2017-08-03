@@ -248,6 +248,7 @@
         customerEmail: Authinfo.getCustomerAdminEmail(),
         customerCommunicationLicenseIsTrial: Authinfo.getLicenseIsTrial('COMMUNICATION', 'ciscouc'),
         customerRoomSystemsLicenseIsTrial: Authinfo.getLicenseIsTrial('SHARED_DEVICES', false),
+        refreshFn: vm.getLineList,
       });
     }
 

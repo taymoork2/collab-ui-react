@@ -5,7 +5,7 @@ fi
 
 last_refreshed_file=".last-refreshed"
 manifest_checksums_file=".manifest-checksums"
-manifest_files="package.json config/tsd.json"
+manifest_files="package.json"
 dependency_dirs="./node_modules"
 project_root_env_var_name="WX2_ADMIN_WEB_CLIENT_HOME"
 

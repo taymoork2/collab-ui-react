@@ -32,6 +32,7 @@ export class PstnSwivelNumbersCtrl implements ng.IComponentController {
   public acknowledge: boolean;
   public invalidCount: number = 0;
   private i387FeatureToggle: boolean;
+  private hPstnFeatureToggle: boolean;
 
   /* @ngInject */
   constructor(private $timeout: ng.ITimeoutService,
@@ -59,6 +60,10 @@ export class PstnSwivelNumbersCtrl implements ng.IComponentController {
         const numberOfTokens = supported ? maxNumberOfByopTokens : maxNumberOfTokens;
         _.set(this.tokenoptions, tokenfieldlimit, numberOfTokens);
         this.i387FeatureToggle = supported;
+      });
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.huronPstn)
+      .then((supported) => {
+        this.hPstnFeatureToggle = supported;
       });
   }
 
@@ -156,10 +161,10 @@ export class PstnSwivelNumbersCtrl implements ng.IComponentController {
   }
 
   private getSwivelNumberTokens(): {value, label}[] {
-    return angular.element('#' + this.tokenfieldid).tokenfield('getTokens');
+    return (angular.element('#' + this.tokenfieldid) as any).tokenfield('getTokens');
   }
 
   private setSwivelNumberTokens(tokens): void {
-    angular.element('#' + this.tokenfieldid).tokenfield('setTokens', tokens);
+    (angular.element('#' + this.tokenfieldid) as any).tokenfield('setTokens', tokens);
   }
 }

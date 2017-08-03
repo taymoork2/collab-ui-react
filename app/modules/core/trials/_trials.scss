@@ -65,6 +65,18 @@
     }
   }
 
+  .esa-note {
+    align-self: center;
+    margin: 1rem auto 0;
+    width: 34rem;
+    text-align: left;
+  }
+
+  .esa-note-header {
+    font-size: rem-calc(22);
+    color: #4f5051;
+  }
+
   .section__description {
     color: $gray-base;
   }

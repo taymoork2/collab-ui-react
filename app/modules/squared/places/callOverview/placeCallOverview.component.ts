@@ -1,7 +1,6 @@
 import { LineService, LineConsumerType, Line, LINE_CHANGE } from 'modules/huron/lines/services';
 import { IActionItem } from 'modules/core/components/sectionTitle/sectionTitle.component';
 import { IFeature } from 'modules/core/components/featureList/featureList.component';
-import { Notification } from 'modules/core/notifications';
 import { PlaceCallOverviewService, PlaceCallOverviewData } from './placeCallOverview.service';
 
 class PlaceCallOverview implements ng.IComponentController {
@@ -17,10 +16,11 @@ class PlaceCallOverview implements ng.IComponentController {
   public plIsLoaded: boolean = false;
   public prefLanguageSaveInProcess: boolean = false;
   public onPrefLanguageChange: boolean = false;
-  private externalTransferFeatureToggle;
   // Data from services
   public placeCallOverviewData: PlaceCallOverviewData;
   public displayDescription: string;
+  public wide: boolean = true;
+
 
   /* @ngInject */
   constructor(
@@ -30,9 +30,7 @@ class PlaceCallOverview implements ng.IComponentController {
     private $translate: ng.translate.ITranslateService,
     CsdmDataModelService: any,
     private LineService: LineService,
-    private Notification: Notification,
     private PlaceCallOverviewService: PlaceCallOverviewService,
-    private FeatureToggleService,
   ) {
 
     this.displayPlace($stateParams.currentPlace);
@@ -51,21 +49,11 @@ class PlaceCallOverview implements ng.IComponentController {
       this.initActions();
       this.initFeatures();
       this.initNumbers();
-      this.initPlaceCallOverviewData();
     }
-    this.setDisplayDescription();
   }
 
   private displayPlace(newPlace) {
     this.currentPlace = newPlace;
-  }
-
-  private setDisplayDescription() {
-    this.displayDescription = this.hasSparkCall ?
-        this.$translate.instant('preferredLanguage.description', {
-          module: this.$translate.instant('preferredLanguage.placeModule'),
-        }) :
-        this.$translate.instant('preferredLanguage.descriptionForCloudberryDevice');
   }
 
   private initActions(): void {
@@ -99,34 +87,20 @@ class PlaceCallOverview implements ng.IComponentController {
       this.features.push(cosService);
     }
 
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.hi1033).then((enabled) => {
-      this.externalTransferFeatureToggle = enabled;
-      if (this.currentPlace.type === 'huron' && this.externalTransferFeatureToggle) {
-        const transferService: IFeature = {
-          name: this.$translate.instant('telephonyPreview.externalTransfer'),
-          state: 'externaltransfer',
-          detail: undefined,
-          actionAvailable: true,
-        };
-        this.features.push(transferService);
-      }
-    });
+    if (this.currentPlace.type === 'huron') {
+      const transferService: IFeature = {
+        name: this.$translate.instant('telephonyPreview.externalTransfer'),
+        state: 'externaltransfer',
+        detail: undefined,
+        actionAvailable: true,
+      };
+      this.features.push(transferService);
+    }
   }
 
   private initNumbers(): void {
-    this.LineService.getLineList(LineConsumerType.PLACES, this.currentPlace.cisUuid)
+    this.LineService.getLineList(LineConsumerType.PLACES, this.currentPlace.cisUuid, this.wide)
       .then(lines => this.directoryNumbers = lines);
-  }
-
-  private initPlaceCallOverviewData(): void {
-    this.PlaceCallOverviewService.getPlaceCallOverviewData(this.currentPlace.cisUuid)
-        .then( placeCallOverviewData => {
-          this.placeCallOverviewData = placeCallOverviewData;
-          this.preferredLanguage = placeCallOverviewData.preferredLanguage;
-          this.preferredLanguageOptions = placeCallOverviewData.preferredLanguageOptions;
-        }).finally(() => {
-          this.plIsLoaded = true;
-        });
   }
 
   public setPreferredLanguage(preferredLanguage: any): void {
@@ -143,25 +117,6 @@ class PlaceCallOverview implements ng.IComponentController {
   private resetPreferredLanguageFlags(): void {
     this.prefLanguageSaveInProcess = false;
     this.onPrefLanguageChange = false;
-  }
-
-  public savePreferredLanguage(): void {
-    this.prefLanguageSaveInProcess = true;
-    if (!this.PlaceCallOverviewService.checkForPreferredLanguageChanges(this.preferredLanguage)) {
-      const prefLang = this.preferredLanguage.value ? this.preferredLanguage.value : null;
-      this.PlaceCallOverviewService.updateCmiPlacePreferredLanguage(this.currentPlace.cisUuid, prefLang)
-        .then(() => {
-          this.placeCallOverviewData.placesPreferredLanguage = prefLang;
-          this.placeCallOverviewData.preferredLanguage = this.preferredLanguage;
-          this.Notification.success('preferredLanguage.placesCallOverviewSaveSuccess');
-        })
-        .catch(error => {
-          this.Notification.errorResponse(error, 'preferredLanguage.failedToSaveChanges');
-        }).finally(() => {
-          this.resetPreferredLanguageFlags();
-          this.plIsLoaded = true;
-        });
-    }
   }
 
   public onCancelPreferredLanguage(): void {

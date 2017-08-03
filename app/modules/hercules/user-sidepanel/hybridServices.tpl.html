@@ -24,6 +24,11 @@
       </li>
     </ul>
   </div>
+  <p ng-if="hybridServicesCtrl.googleCalendarError" class="cloud-extensions">
+    <i class="icon icon-error status-error"></i>
+    <span class="small" translate="hercules.settings.googleCalendar.couldNotReadGoogleCalendarStatus"></span>
+    <span ng-if="hybridServicesCtrl.googleCalendarError.config.headers.TrackingID" class="small" translate="common.trackingId" translate-values="{ trackingId: hybridServicesCtrl.googleCalendarError.config.headers.TrackingID }"></span>
+  </p>
 </cs-sp-section>
 
   <div class="feature-list cloud-extensions" ng-if="hybridServicesCtrl.isEnabled && hybridServicesCtrl.isPlace">

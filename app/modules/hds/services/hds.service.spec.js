@@ -58,7 +58,7 @@ describe('Service: HDSService', function () {
   });
 
   it('should queryUser use correct API', function () {
-    $httpBackend.expectGET('foo/Users?filter=username eq "john.doe@foo.com"').respond(200);
+    $httpBackend.expectGET('foo/Users?filter=username eq "john.doe%40foo.com"').respond(200);
     HDSService.queryUser('oid', 'john.doe@foo.com');
     $httpBackend.flush();
   });

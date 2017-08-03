@@ -60,6 +60,10 @@
         webexUrl: '.webex.com',
       },
 
+      customerTypes: {
+        enterprise: 'Enterprise',
+      },
+
       entitlements: {
         huron: 'ciscouc',
         squared: 'webex-squared',
@@ -74,6 +78,7 @@
         messenger_interop: 'messenger-interop',
         messenger: 'webex-messenger',
         care: 'cloud-contact-center',
+        care_digital: 'cloud-contact-center-digital',
         care_inbound_voice: 'cloud-contact-center-inbound-voice',
         context: 'contact-center-context',
         fusion_google_cal: 'squared-fusion-gcal',
@@ -104,6 +109,10 @@
         care: 'CARE',
         advanceCare: 'CAREVOICE',
         context: 'CONTEXT',
+      },
+
+      shallowValidationSourceTypes: {
+        serviceSetup: 'ATLAS_SERVICE_SETUP',
       },
 
       // These can be used to access object properties for trials
@@ -229,9 +238,11 @@
         ACTIVE: 'ACTIVE',
         CANCELLED: 'CANCELLED',
         SUSPENDED: 'SUSPENDED',
+        INITIALIZED: 'INITIALIZED',
       },
 
       licenseTypes: {
+        AUDIO: 'AUDIO',
         MESSAGING: 'MESSAGING',
         CONFERENCING: 'CONFERENCING',
         COMMUNICATION: 'COMMUNICATION',
@@ -384,6 +395,7 @@
         'overview',
         'profile',
         'reports',
+        'webexReportsPanel',
         'settings',
         'setupwizardmodal',
         'support',
@@ -470,8 +482,9 @@
         'externalNumberDelete',
         'pstnSetup',
         'pstnWizard',
-        'calllocations',
-        'callLocation',
+        'call-locations',
+        'call-locations-add',
+        'call-locations-edit',
       ],
       'squared-fusion-mgmt': [
         'expressway-cluster-sidepanel',

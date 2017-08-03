@@ -293,6 +293,8 @@
     var DIGITS_RAW = 3;
     var DIGITS_CHOICE = 4;
 
+    var dynAnnounceToggle = false;
+
     var service = {
       getWelcomeMenu: getWelcomeMenu,
       getCustomMenu: getCustomMenu,
@@ -310,6 +312,7 @@
       deleteCeMenuMap: deleteCeMenuMap,
       isCeMenu: isCeMenu,
       isCeMenuEntry: isCeMenuEntry,
+      setDynAnnounceToggle: setDynAnnounceToggle,
 
       newCeMenu: function () {
         return new CeMenu();
@@ -328,6 +331,14 @@
     return service;
 
     /////////////////////
+
+    function setDynAnnounceToggle(status) {
+      dynAnnounceToggle = status;
+    }
+
+    function isDynAnnounceToggle() {
+      return dynAnnounceToggle;
+    }
 
     function encodeUtf8(stringToEncode) {
       if (stringToEncode) {
@@ -359,12 +370,24 @@
 
     function parseSayObject(menuEntry, inObject) {
       var action;
-      action = new Action('say', decodeUtf8(inObject.value));
-      if (!action.value) {
-        action.name = 'play';
+      if (isDynAnnounceToggle()) {
+        action = new Action('dynamic', '');
+        var dynaList = [{
+          say: {
+            value: decodeUtf8(inObject.value),
+            voice: '',
+          },
+          isDynamic: false,
+          htmlModel: '',
+        }];
+        action.dynamicList = dynaList;
+      } else {
+        action = new Action('say', decodeUtf8(inObject.value));
+        if (!action.value) {
+          action.name = 'play';
+        }
       }
       action.description = menuEntry.description;
-
       if (!_.isUndefined(inObject.voice)) {
         action.setVoice(inObject.voice);
       }
@@ -375,6 +398,28 @@
       for (var i = 0; i < objects.length; i++) {
         parseSayObject(menuEntry, objects[i]);
       }
+    }
+
+    function parseAnnouncements(menuEntry, objects) {
+      for (var i = 0; i < objects.length; i++) {
+        if (_.has(objects[i], 'say')) {
+          parseSayObject(menuEntry, objects[i].say);
+        } else if (_.has(objects[i], 'dynamic')) {
+          parseDynamicObject(menuEntry, objects[i].dynamic.dynamicOperations);
+        } else {
+          parsePlayObject(menuEntry, objects[i].play);
+        }
+      }
+    }
+
+    function parseDynamicObject(menuEntry, inObject) {
+      var action;
+      action = new Action('dynamic', '');
+      action.dynamicList = inObject;
+      if (!_.isUndefined(inObject[0].say.voice)) {
+        action.setVoice(inObject[0].say.voice);
+      }
+      menuEntry.addAction(action);
     }
 
     function parsePlayObject(menuEntry, inObject) {
@@ -393,9 +438,8 @@
       });
     }
 
-    function createSayList(menuEntry) {
+    function createAnnouncements(menuEntry) {
       var actions = menuEntry.actions;
-
       var newActionArray = [];
       for (var i = 0; i < actions.length; i++) {
         newActionArray[i] = {};
@@ -403,6 +447,11 @@
         if (actions[i].deleteUrl && _.startsWith(actions[i].getValue(), 'http')) {
           newActionArray[i].url = (actions[i].getValue() ? encodeUtf8(actions[i].getValue()) : '');
           newActionArray[i].deleteUrl = actions[i].deleteUrl;
+        } else if (actions[i].dynamicList) {
+          updateDynaListVoice(actions[i].dynamicList, actions[i].voice);
+          var dynamicOperations = actions[i].dynamicList;
+          newActionArray[i].dynamic = {};
+          newActionArray[i].dynamic.dynamicOperations = dynamicOperations;
         } else {
           newActionArray[i].value = (actions[i].getValue() ? encodeUtf8(actions[i].getValue()) : '');
         }
@@ -444,7 +493,7 @@
       if (!_.isUndefined(inAction.dynamic)) {
         action = new Action('dynamic', '');
         var dynamicList = inAction.dynamic.dynamicOperations;
-        menuEntry.dynamicList = dynamicList;
+        action.dynamicList = dynamicList;
         action.voice = dynamicList[0].say.voice;
         menuEntry.addAction(action);
       } else if (!_.isUndefined(inAction.play)) {
@@ -454,8 +503,22 @@
         action.deleteUrl = decodeUtf8(inAction.play.deleteUrl);
         menuEntry.addAction(action);
       } else if (!_.isUndefined(inAction.say)) {
-        action = new Action('say', decodeUtf8(inAction.say.value));
-        setDescription(action, inAction.say);
+        //for backward compatibility of dynaAnnounce with say message
+        if (isDynAnnounceToggle()) {
+          action = new Action('dynamic', '');
+          var dynaList = [{
+            say: {
+              value: decodeUtf8(inAction.say.value),
+              voice: '',
+            },
+            isDynamic: false,
+            htmlModel: '',
+          }];
+          action.dynamicList = dynaList;
+        } else {
+          action = new Action('say', decodeUtf8(inAction.say.value));
+          setDescription(action, inAction.say);
+        }
         if (!_.isUndefined(inAction.say.voice)) {
           action.setVoice(inAction.say.voice);
         }
@@ -466,9 +529,7 @@
         menuEntry.addAction(action);
       } else if (!_.isUndefined(inAction.routeToExtension)) {
         action = new Action('routeToExtension', inAction.routeToExtension.destination);
-
         setDescription(action, inAction.routeToExtension);
-
         menuEntry.addAction(action);
       } else if (!_.isUndefined(inAction.routeToHuntGroup)) {
         action = new Action('routeToHuntGroup', inAction.routeToHuntGroup.id);
@@ -509,15 +570,48 @@
           // check if this dial-by-extension
           if (_.includes([DIGITS_DIAL_BY, DIGITS_RAW, DIGITS_CHOICE], action.inputType) &&
             (_.has(inAction, 'runActionsOnInput.prompts.sayList') ||
+            _.has(inAction, 'runActionsOnInput.prompts.announcements') ||
             _.has(inAction, 'runActionsOnInput.prompts.playList'))) {
-            var playList = inAction.runActionsOnInput.prompts.playList;
-            if (playList && playList.length > 0 && !_.isUndefined(playList[0].url)) {
-              action.url = decodeUtf8(inAction.runActionsOnInput.prompts.playList[0].url);
-              action.deleteUrl = decodeUtf8(inAction.runActionsOnInput.prompts.playList[0].deleteUrl);
+            var announcements = [];
+            var sayList = _.get(inAction.runActionsOnInput.prompts, 'sayList', '');
+            var playList = _.get(inAction.runActionsOnInput.prompts, 'playList', '');
+
+            if (sayList && sayList.length > 0) {
+              inAction.runActionsOnInput.prompts.announcements = [{
+                say: {
+                  value: sayList[0].value,
+                },
+              }];
+            } else if (playList && playList.length > 0) {
+              inAction.runActionsOnInput.prompts.announcements = [{
+                play: {
+                  deleteUrl: playList[0].deleteUrl,
+                  url: playList[0].url,
+                },
+              }];
+            }
+
+            announcements = inAction.runActionsOnInput.prompts.announcements;
+            if (announcements && announcements.length > 0 && !_.isUndefined(announcements[0].play)) {
+              action.url = decodeUtf8(announcements[0].play.url);
+              action.deleteUrl = decodeUtf8(announcements[0].play.deleteUrl);
             } else {
-              var sayList = inAction.runActionsOnInput.prompts.sayList;
-              if (sayList.length > 0 && _.has(sayList[0], 'value')) {
-                action.value = decodeUtf8(sayList[0].value);
+              if (announcements.length > 0 && _.has(announcements[0], 'say')) {
+                if (isDynAnnounceToggle()) {
+                  var list = [{
+                    say: {
+                      value: decodeUtf8(announcements[0].say.value),
+                      voice: '',
+                    },
+                    isDynamic: false,
+                    htmlModel: '',
+                  }];
+                  action.dynamicList = list;
+                } else {
+                  action.value = decodeUtf8(announcements[0].say.value);
+                }
+              } else if (announcements.length > 0 && _.has(announcements[0], 'dynamic')) {
+                action.dynamicList = announcements[0].dynamic.dynamicOperations;
               }
             }
             action.voice = inAction.runActionsOnInput.voice;
@@ -720,7 +814,44 @@
     */
     function constructCesIa(parsedDescription) {
       var iaType = parsedDescription.description.initialAnnouncementType;
-      var action = new Action(iaType, parsedDescription.queueInitialAnnouncement);
+      var action;
+      if (_.has(parsedDescription, 'queueInitialAnnouncement')) {
+        if (isDynAnnounceToggle()) {
+          action = new Action('dynamic', '');
+          action.dynamicList = [{
+            say: {
+              value: parsedDescription.queueInitialAnnouncement,
+              voice: '',
+            },
+            isDynamic: false,
+            htmlModel: '',
+          }];
+        } else {
+          action = new Action(iaType, parsedDescription.queueInitialAnnouncement);
+        }
+      } else {
+        var initialAnnouncementAction = parsedDescription.initialAnnouncement;
+        if (!_.isEqual(iaType, 'dynamic')) {
+          var initialAnnouncementObject = ((_.has(initialAnnouncementAction, 'say')) ? initialAnnouncementAction.say : initialAnnouncementAction.play);
+          if (isDynAnnounceToggle() && iaType === 'say') {
+            //for backward compatibility
+            action = new Action('dynamic', '');
+            action.dynamicList = [{
+              say: {
+                value: initialAnnouncementObject.value,
+                voice: '',
+              },
+              isDynamic: false,
+              htmlModel: '',
+            }];
+          } else {
+            action = new Action(iaType, initialAnnouncementObject.value);
+          }
+        } else {
+          action = new Action(iaType, '');
+          action.dynamicList = initialAnnouncementAction.dynamic.dynamicOperations;
+        }
+      }
       action.setDescription(parsedDescription.description.initialAnnouncementDescription);
       var initialAnnouncement = new CeMenuEntry();
       initialAnnouncement.addAction(action);
@@ -757,10 +888,56 @@
     */
     function constructCesPa(parsedDescription) {
       var paType = parsedDescription.description.periodicAnnouncementType;
-      var periodicAnnouncements = parsedDescription.queuePeriodicAnnouncements[0];
-      var periodicAnnouncement = periodicAnnouncements.queuePeriodicAnnouncement;
-      var paInterval = periodicAnnouncements.queuePeriodicAnnouncementInterval;
-      var action = new Action(paType, periodicAnnouncement);
+      var action;
+      var periodicAnnouncements;
+      var periodicAnnouncement;
+      var paInterval;
+
+      if (_.has(parsedDescription, 'queuePeriodicAnnouncements[0]')) {
+        periodicAnnouncements = parsedDescription.queuePeriodicAnnouncements[0];
+        periodicAnnouncement = periodicAnnouncements.queuePeriodicAnnouncement;
+        paInterval = periodicAnnouncements.queuePeriodicAnnouncementInterval;
+        if (isDynAnnounceToggle() && paType === 'say') {
+          action = new Action('dynamic', '');
+          action.dynamicList = [{
+            say: {
+              value: periodicAnnouncement,
+              voice: '',
+            },
+            isDynamic: false,
+            htmlModel: '',
+          }];
+        } else {
+          action = new Action(paType, periodicAnnouncement);
+        }
+      } else {
+        periodicAnnouncements = _.get(parsedDescription, 'periodicAnnouncementActions[0]', '');
+        periodicAnnouncement = periodicAnnouncements.periodicAnnouncement;
+        paInterval = periodicAnnouncement.periodicInterval;
+        var periodicMessage = periodicAnnouncement.periodicMessage;
+        if (!_.isEqual(paType, 'dynamic')) {
+          var periodicAnnouncementObject = (_.has(periodicMessage, 'say') ? periodicMessage.say : periodicMessage.play);
+          if (isDynAnnounceToggle() && paType === 'say') {
+            //for backward compatibility
+            action = new Action('dynamic', '');
+            action.dynamicList = [{
+              say: {
+                value: periodicAnnouncementObject.value,
+                voice: '',
+              },
+              isDynamic: false,
+              htmlModel: '',
+            }];
+          } else {
+            action = new Action(paType, periodicAnnouncementObject.value);
+          }
+        } else {
+          action = new Action(paType, '');
+          action.dynamicList = periodicMessage.dynamic.dynamicOperations;
+        }
+      }
+
+
       action.interval = paInterval;
       action.setDescription(parsedDescription.description.periodicAnnouncementDescription);
       periodicAnnouncement = new CeMenuEntry();
@@ -879,6 +1056,9 @@
           }
           if (!_.isUndefined(ceActionsOnInput.prompts.playList)) {
             parsePlayList(announcementMenuEntry, ceActionsOnInput.prompts.playList);
+          }
+          if (!_.isUndefined(ceActionsOnInput.prompts.announcements)) {
+            parseAnnouncements(announcementMenuEntry, ceActionsOnInput.prompts.announcements);
           }
         }
 
@@ -1146,6 +1326,10 @@
       _.forEach(dynaList, function (opt) {
         if (_.has(opt, 'say')) {
           opt.say.voice = voice;
+          //this is for handling corner cases of some special characters for dynamic blocks
+          if (opt.isDynamic && (_.isEmpty(opt.say.value) || _.isEqual(opt.say.value.charCodeAt(0), 10))) {
+            opt.isDynamic = false;
+          }
         }
       });
     }
@@ -1166,9 +1350,8 @@
               newActionArray[i][actionName].description = menuEntry.actions[0].description;
             }
             if (actionName === 'dynamic') {
-              var voice = menuEntry.actions[0].getVoice();
-              updateDynaListVoice(menuEntry.dynamicList, voice);
-              var dynamicOperations = menuEntry.dynamicList;
+              updateDynaListVoice(menuEntry.actions[0].dynamicList, menuEntry.actions[0].getVoice());
+              var dynamicOperations = menuEntry.actions[0].dynamicList;
               newActionArray[i].dynamic = {};
               newActionArray[i].dynamic.dynamicOperations = dynamicOperations;
             } else if (actionName === 'say') {
@@ -1335,7 +1518,12 @@
         var actionName = actions[i].getName();
         var val = actions[i].getValue();
         newActionArray[i][actionName] = {};
-        if (actionName === 'say') {
+        if (actionName === 'dynamic') {
+          updateDynaListVoice(actions[i].dynamicList, actions[i].voice);
+          var dynamicOperations = actions[i].dynamicList;
+          newActionArray[i].dynamic = {};
+          newActionArray[i].dynamic.dynamicOperations = dynamicOperations;
+        } else if (actionName === 'say') {
           newActionArray[i][actionName].value = encodeUtf8(val);
           newActionArray[i][actionName].voice = actions[i].voice;
         } else if (actionName === 'play') {
@@ -1381,22 +1569,94 @@
     * Method for route to queue prior to CES def
     */
     function populateRouteToQueue(action) {
+      var dynaOpt = [{
+        say: {
+          value: '',
+          voice: '',
+        },
+        isDynamic: false,
+        htmlModel: '',
+      }];
+      var dynamicOperations;
       var newAction = {};
       if (action) {
         newAction.id = action.value;
         newAction.language = action.queueSettings.language;
         newAction.voice = action.queueSettings.voice;
         newAction.queueMoH = action.queueSettings.musicOnHold.actions[0].getValue();
-        newAction.queueInitialAnnouncement = action.queueSettings.initialAnnouncement.actions[0].getValue();
-        var queuePeriodicAnnouncement = action.queueSettings.periodicAnnouncement.actions[0].getValue();
-        var queuePeriodicAnnouncementInterval = action.queueSettings.periodicAnnouncement.actions[0].interval;
-        var paAction = [];
-        var paActionArray = {
-          queuePeriodicAnnouncement: queuePeriodicAnnouncement,
-          queuePeriodicAnnouncementInterval: queuePeriodicAnnouncementInterval,
+
+        var initialAnnouncementValue = _.get(action.queueSettings.initialAnnouncement.actions[0], 'value', '');
+        if (!_.isEmpty(initialAnnouncementValue) && _.startsWith(initialAnnouncementValue, 'http')) {
+          newAction.initialAnnouncement = {
+            play: {
+              deleteUrl: initialAnnouncementValue,
+              url: initialAnnouncementValue,
+              voice: action.queueSettings.voice,
+            },
+          };
+        } else {
+          if (isDynAnnounceToggle() && !_.isEmpty(action.description) && !_.isEqual(action.description.initialAnnouncementType, 'play')) {
+            dynamicOperations = _.get(action.queueSettings.initialAnnouncement.actions[0], 'dynamicList', '');
+            updateDynaListVoice(dynamicOperations, action.queueSettings.voice);
+            //to cater the case when 'route to spark care' option is selected but modal remain closed
+            if (_.isUndefined(dynamicOperations)) {
+              dynamicOperations = dynaOpt;
+            }
+            newAction.initialAnnouncement = {
+              dynamic: {
+                dynamicOperations: dynamicOperations,
+              },
+            };
+          } else {
+            newAction.initialAnnouncement = {
+              say: {
+                value: initialAnnouncementValue,
+                voice: action.queueSettings.voice,
+              },
+            };
+          }
+        }
+
+        var periodicAnnouncementActionsArr = [];
+        var periodicAnnouncementActions = {};
+        var periodicAnnouncement = {};
+        var periodicAnnouncementValue = _.get(action.queueSettings.periodicAnnouncement.actions[0], 'value', '');
+
+        if (!_.isEmpty(periodicAnnouncementValue) && _.startsWith(periodicAnnouncementValue, 'http')) {
+          periodicAnnouncement = {
+            play: {
+              deleteUrl: periodicAnnouncementValue,
+              url: periodicAnnouncementValue,
+              voice: action.queueSettings.voice,
+            },
+          };
+        } else {
+          if (isDynAnnounceToggle() && !_.isEmpty(action.description) && !_.isEqual(action.description.periodicAnnouncementType, 'play')) {
+            dynamicOperations = _.get(action.queueSettings.periodicAnnouncement.actions[0], 'dynamicList', '');
+            updateDynaListVoice(dynamicOperations, action.queueSettings.voice);
+            if (_.isUndefined(dynamicOperations)) {
+              dynamicOperations = dynaOpt;
+            }
+            periodicAnnouncement = {
+              dynamic: {
+                dynamicOperations: dynamicOperations,
+              },
+            };
+          } else {
+            periodicAnnouncement = {
+              say: {
+                value: periodicAnnouncementValue,
+                voice: action.queueSettings.voice,
+              },
+            };
+          }
+        }
+        periodicAnnouncementActions.periodicAnnouncement = {
+          periodicMessage: periodicAnnouncement,
+          periodicInterval: _.get(action.queueSettings.periodicAnnouncement.actions[0], 'interval', ''),
         };
-        paAction.push(paActionArray);
-        newAction.queuePeriodicAnnouncements = paAction;
+        periodicAnnouncementActionsArr[0] = periodicAnnouncementActions;
+        newAction.periodicAnnouncementActions = periodicAnnouncementActionsArr;
         var queueMaxTimeValue = action.queueSettings.maxWaitTime;
 
         newAction.queueMaxTime = (queueMaxTimeValue.label);
@@ -1440,25 +1700,38 @@
     function populateRunActionsOnInput(action) {
       var newAction = {};
       var prompts = {};
-      var sayListArr = [];
-      var playListArr = [];
-      var playList = {};
-      var sayList = {};
+      var announcementsArr = [];
+      var announcements = {};
       var rawInputAction = {};
       var routeToExtension = {};
       var assignVar = {};
       if (!_.isUndefined(action.inputType)) {
         newAction.inputType = action.inputType;
         if (action.deleteUrl && _.startsWith(action.value, 'http')) {
-          playList.url = encodeUtf8(action.value);
-          playList.deleteUrl = encodeUtf8(action.deleteUrl);
-          playListArr[0] = playList;
-          prompts.playList = playListArr;
+          announcements = {
+            play: {
+              deleteUrl: encodeUtf8(action.deleteUrl),
+              url: encodeUtf8(action.value),
+            },
+          };
+        } else if (_.has(action, 'dynamicList')) {
+          updateDynaListVoice(action.dynamicList, action.voice);
+          var dynamicOperations = action.dynamicList;
+          var dynamic = {
+            dynamicOperations: dynamicOperations,
+          };
+          announcements = {
+            dynamic: dynamic,
+          };
         } else {
-          sayList.value = encodeUtf8(action.value);
-          sayListArr[0] = sayList;
-          prompts.sayList = sayListArr;
+          announcements = {
+            say: {
+              value: encodeUtf8(action.value),
+            },
+          };
         }
+        announcementsArr[0] = announcements;
+        prompts.announcements = announcementsArr;
         newAction.prompts = prompts;
         if (newAction.inputType == 2 && !_.isUndefined(action.value)) {
           newAction.description = action.description;
@@ -1516,7 +1789,6 @@
       // create menuOptions section
       var newOptionArray = [];
       var menuEntry;
-
       for (var i = 0; i < aaMenu.entries.length; i++) {
         menuEntry = aaMenu.entries[i];
         // skip incomplete key/action definition
@@ -1556,16 +1828,34 @@
       if (aaMenu.headers.length > 0) {
         menuEntry = aaMenu.headers[0];
         inputAction.prompts = {};
-        var list = createSayList(menuEntry);
+        inputAction.prompts.announcements = [];
+        var list = createAnnouncements(menuEntry);
+
         //the playList is valid once a valid
         //deleteUrl has been configured
         //else it will go to a sayList, blank or otherwise
         //which is used later to trigger play or say
-        if (_.get(list, '[0].deleteUrl', undefined)) {
-          inputAction.prompts.playList = list;
+        if (_.has(list, '[0].deleteUrl')) {
+          inputAction.prompts.announcements = [{
+            play: {
+              deleteUrl: list[0].deleteUrl,
+              voice: list[0].voice,
+              url: list[0].url,
+            },
+          }];
+        } else if (_.get(list, '[0].dynamic', undefined)) {
+          inputAction.prompts.announcements = [{
+            dynamic: list[0].dynamic,
+          }];
         } else {
-          inputAction.prompts.sayList = list;
+          inputAction.prompts.announcements = [{
+            say: {
+              value: list[0].value,
+              voice: list[0].voice,
+            },
+          }];
         }
+
         // say list moves the description from the action to
         // the menuEntry so it is saved here. DB complains otherwise
         inputAction.prompts.description = menuEntry.description;

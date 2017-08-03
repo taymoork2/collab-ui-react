@@ -11,6 +11,7 @@
     AAValidationService, AANumberAssignmentService, AANotificationService, Authinfo, AACommonService, AAUiScheduleService, AACalendarService,
     AATrackChangeService, AADependencyService, ServiceSetup, Analytics, AAMetricNameService, FeatureToggleService) {
     var vm = this;
+    vm.isWarn = false;
     vm.overlayTitle = $translate.instant('autoAttendant.builderTitle');
     vm.aaModel = {};
     vm.ui = {};
@@ -633,6 +634,7 @@
       AACommonService.setRouteSIPAddressToggle(featureToggles.hasRouteRoom);
       AACommonService.setRestApiToggle(featureToggles.hasRestApi);
       AACommonService.setDynAnnounceToggle(featureToggles.hasDynAnnounce);
+      AutoAttendantCeMenuModelService.setDynAnnounceToggle(featureToggles.hasDynAnnounce);
       AACommonService.setReturnedCallerToggle(featureToggles.hasReturnedCaller);
     }
 
@@ -655,14 +657,14 @@
       // Define vm.ui.builder.ceInfo_name for editing purpose.
       vm.ui.builder.ceInfo_name = _.cloneDeep(vm.ui.ceInfo.name);
 
-      getTimeZoneOptions().then(getSystemTimeZone())
-      .finally(function () {
-        AutoAttendantCeMenuModelService.clearCeMenuMap();
-        vm.aaModel = AAModelService.getAAModel();
-        vm.aaModel.aaRecord = undefined;
-        vm.selectAA(aaName);
-        setLoadingDone();
-      });
+      getTimeZoneOptions().then(getSystemTimeZone)
+        .finally(function () {
+          AutoAttendantCeMenuModelService.clearCeMenuMap();
+          vm.aaModel = AAModelService.getAAModel();
+          vm.aaModel.aaRecord = undefined;
+          vm.selectAA(aaName);
+          setLoadingDone();
+        });
     }
 
     function evalKeyPress($keyCode) {

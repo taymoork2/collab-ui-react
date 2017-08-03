@@ -22,34 +22,31 @@
     init();
 
     function fetchAsyncSettings() {
-      var ataPromise = FeatureToggleService.csdmATAGetStatus().then(function (result) {
+      FeatureToggleService.csdmATAGetStatus().then(function (result) {
         vm.showATA = result;
       });
-      var personalPromise = FeatureToggleService.cloudberryPersonalModeGetStatus().then(function (result) {
+      FeatureToggleService.cloudberryPersonalModeGetStatus().then(function (result) {
         vm.showPersonal = result;
         activate();
       });
-      $q.all([ataPromise, personalPromise, fetchDetailsForLoggedInUser()]).finally(function () {
-        vm.generateCodeIsDisabled = false;
-      });
+      fetchDetailsForLoggedInUser();
 
       $q.all([
         FeatureToggleService.csdmPlaceUpgradeChannelGetStatus(),
         FeatureToggleService.csdmPlaceGuiSettingsGetStatus(),
       ])
-      .then(function (features) {
-        if (features[1]) {
-          vm.showDeviceSettings = true;
-        } else if (features[0]) {
-          CsdmUpgradeChannelService.getUpgradeChannelsPromise().then(function (channels) {
-            vm.showDeviceSettings = channels.length > 1;
-          });
-        }
-      });
+        .then(function (features) {
+          if (features[1]) {
+            vm.showDeviceSettings = true;
+          } else if (features[0]) {
+            CsdmUpgradeChannelService.getUpgradeChannelsPromise().then(function (channels) {
+              vm.showDeviceSettings = channels.length > 1;
+            });
+          }
+        });
     }
 
     function fetchDetailsForLoggedInUser() {
-      var userDetailsDeferred = $q.defer();
       Userservice.getUser('me', function (data) {
         if (data.success) {
           vm.adminUserDetails = {
@@ -61,9 +58,7 @@
             organizationId: data.meta.organizationID,
           };
         }
-        userDetailsDeferred.resolve();
       });
-      return userDetailsDeferred.promise;
     }
 
     vm.isOrgEntitledToRoomSystem = function () {

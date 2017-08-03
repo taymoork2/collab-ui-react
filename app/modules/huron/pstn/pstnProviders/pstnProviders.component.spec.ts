@@ -29,6 +29,12 @@ describe('Component: PstnProvidersComponent', () => {
     expect(this.controller.show).toEqual(true);
   });
 
+  it('should initialize with no selected providers', function () {
+    this.controller.pstnCarriers.forEach( (pstnCarrier: PstnCarrier) => {
+      expect(pstnCarrier.selected).toEqual(false);
+    });
+  });
+
   it('should set a provider', function () {
     this.controller.onSetProvider(pstnCarriers[0]);
     expect(pstnCarriers[0].selected).toEqual(true);

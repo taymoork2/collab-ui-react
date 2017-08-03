@@ -11,6 +11,7 @@
 
     var service = {
       taskIncomingDrilldownProps: taskIncomingDrilldownProps,
+      taskOfferedDrilldownProps: taskOfferedDrilldownProps,
       taskTimeDrilldownProps: taskTimeDrilldownProps,
       avgCsatDrilldownProps: avgCsatDrilldownProps,
       broadcastRefresh: broadcastRefresh,
@@ -80,6 +81,89 @@
         },
         title: function () {
           return $translate.instant('taskIncoming.drilldownTitle', {
+            time: timeSelected().drilldownTitle,
+          });
+        },
+      };
+    }
+
+    function taskOfferedDrilldownProps(timeSelected) {
+      return {
+        broadcast: {
+          refresh: broadcastRefresh,
+          reset: broadcastReset,
+        },
+        description: function () {
+          return $translate.instant('taskOffered.drilldownDescription', {
+            time: timeSelected().drilldownDescription,
+          });
+        },
+        display: false,
+        hasData: true,
+        emptyDescription: function () {
+          return $translate.instant('taskOffered.drilldownEmptyDescription', {
+            time: timeSelected().drilldownDescription,
+          });
+        },
+        errorDescription: function () {
+          return $translate.instant('taskOffered.drilldownErrorDescription');
+        },
+        show: function () {
+          return $translate.instant('taskOffered.drilldownShow');
+        },
+        hide: function () {
+          return $translate.instant('taskOffered.drilldownHide');
+        },
+        search: true,
+        searchPlaceholder: $translate.instant('taskOffered.drilldownSearchPlaceholder'),
+        state: ReportConstants.SET,
+        table: {
+          columnDefs: [
+            {
+              field: 'displayName',
+              id: 'userName',
+              displayName: $translate.instant('taskOffered.user'),
+              width: '33%',
+              sortable: true,
+              sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
+              cellClass: function (grid, row) {
+                return getClassName(grid, row);
+              },
+            }, {
+              field: 'tasksOffered',
+              id: 'tasksOffered',
+              displayName: $translate.instant('taskOffered.tasksOffered'),
+              enableFiltering: false,
+              width: '22%',
+              sortable: true,
+              sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
+            }, {
+              field: 'tasksAccepted',
+              id: 'tasksAccepted',
+              displayName: $translate.instant('taskOffered.tasksAccepted'),
+              enableFiltering: false,
+              width: '23%',
+              sortable: true,
+              sort: {
+                direction: uiGridConstants.DESC,
+              },
+              sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
+            }, {
+              field: 'tasksMissed',
+              id: 'tasksMissed',
+              displayName: $translate.instant('taskOffered.tasksMissed'),
+              enableFiltering: false,
+              width: '22%',
+              sortable: true,
+              sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
+            },
+          ],
+          gridOptions: {
+            rowHeight: 42,
+          },
+        },
+        title: function () {
+          return $translate.instant('taskOffered.drilldownTitle', {
             time: timeSelected().drilldownTitle,
           });
         },

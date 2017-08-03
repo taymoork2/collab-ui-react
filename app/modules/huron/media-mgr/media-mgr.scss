@@ -8,12 +8,14 @@ media-mgr {
   flex: 1 1 auto;
   flex-direction: column;
   display: flex;
+  min-height: 0;
 
   .reveal-modal.full & .modal-body {
     margin: 0;
     border: 0;
     padding: 0;
     max-width: none;
+    min-height: 0;
   }
 
   .reveal-modal.full & .modal-container {
@@ -22,145 +24,226 @@ media-mgr {
     display: flex;
     align-items: stretch;
     max-width: inherit;
+    min-height: 0;
+  }
+
+  .cs-card.large {
+    width: 80%;
+    margin-top: 6rem;
+    border: 1px dashed $gray-light-1;
+    border-radius: 8px;
+    background-color: $gray-light-4;
+    align-self: center;
   }
 
   .mb-nav {
-    flex: 1;
+    flex: 0 0 94px;
     flex-direction: column;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    margin: .5rem 0rem;
+
+    button:focus {
+      text-decoration: none;
+      outline: none;
+      order: none;
+      box-shadow: none;
+    }
+
+    .icon-music {
+      background: none;
+      margin: .5rem 0rem;
+      color: $gray-base;
+    }
+
+    .icon-trash {
+      background: none;
+      margin: .5rem 0rem;
+      color: $gray-base;
+    }
+
+    .active {
+      color: $color-primary-base;
+    }
   }
 
   .mb-container {
-    flex: 9;
+    flex: 12;
     flex-direction: row;
     display: flex;
     padding-left: 0;
     padding-right: 0;
-    max-width: inherit;
-  }
-
-  .mb-panel-left {
-    flex: 4;
-    flex-direction: column;
-    display: flex;
-    border-left: gray;
-    border-left-width: thin;
-    border-left-style: solid;
-    padding-left: 0;
-    padding-right: 0;
-  }
-
-  .mb-panel-right {
-    flex: 6;
-    flex-direction: column;
-    display: flex;
-    border-left: gray;
-    border-left-width: thin;
-    border-left-style: solid;
-    padding-left: 0;
-    padding-right: 0;
-  }
-
-  .mb-panel-header {
-    display: flex;
-    justify-content: space-between;
-    font-family: CiscoSans-ExtraLight;
-    font-size: 26px;
-    text-align: end;
-    margin: 0.5rem;
-  }
-
-  .mb-panel-body {
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
+    width: calc(100% - 94px);
+    min-height: 0;
   }
 
   .mb-panel {
     flex: 1;
     flex-direction: column;
     display: flex;
-    border-left: gray;
+    border-left: $gray-light-2;
     border-left-width: thin;
     border-left-style: solid;
     padding-left: 0;
     padding-right: 0;
     overflow-y: auto;
+    min-height: 0;
+  }
+
+  .mb-panel-left {
+    flex: 5;
+    flex-direction: column;
+    display: flex;
+    border-left: $gray-light-2;
+    border-left-width: thin;
+    border-left-style: solid;
+    padding-left: 0;
+    padding-right: 0;
+    min-height: 0;
+
+    .mb-panel-header {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'CiscoSansTT Extra Light';
+      text-align: end;
+      margin: .75rem .75rem .5rem .5rem;
+    }
+
+    .nowrap {
+      width: 252px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .mb-panel-right {
+    flex: 7;
+    flex-direction: column;
+    display: flex;
+    border-left: $gray-light-2;
+    border-left-width: thin;
+    border-left-style: solid;
+    padding-left: 0;
+    padding-right: 0;
+    min-height: 0;
+
+    .mb-title {
+      margin-top: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .mb-rows {
+      margin: 1rem 2.5rem;
+    }
+
+    .mb-panel-footer {
+      display: flex;
+      flex-direction: row;
+      margin: 1rem auto 2.25rem;
+      justify-content: flex-end;
+    }
+
+    .nowrap {
+      width: 360px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .mb-panel-header {
+    display: flex;
+    margin: 1.5rem auto 1.75rem;
+    justify-content: center;
+  }
+
+  .mb-panel-body {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow-y: auto;
+  }
+
+  .mb-panel-footer {
+    display: flex;
+    flex-direction: row;
+    margin: 1.5rem 1rem 2.5rem auto;
+    justify-content: flex-end;
   }
 
   .mb-title {
-    font-family: CiscoSans-ExtraLight;
+    font-family: 'CiscoSansTT Extra Light';
     font-size: 26px;
-    text-align: center;
-    margin: 0.5rem;
+    color: $gray-dark-2;
   }
 
   .mb-desc {
-    font-family: CiscoSans-Light;
+    font-family: 'CiscoSansTT Light';
     font-size: 14px;
-    text-align: center;
+    color: $gray-dark-1;
+    margin-bottom: 1.5rem;
+    word-break: break-word;
   }
 
-  .mb-header {
-    display: flex;
-    justify-content: space-between;
-    font-family: CiscoSans-ExtraLight;
-    font-size: 26px;
-    text-align: end;
-    margin: 0.5rem;
+  .row {
+    &:hover { background: $gray-light-4; }
+    &:focus { background: $gray-light-4; }
+    .active { background: $gray-light-3; }
+  }
+
+  .mb-row-seperator {
+    margin-top: 0rem;
+    margin-bottom: 0rem;
+  }
+
+  .mb-rows {
+    margin: 1rem 1.25rem;
   }
 
   .mb-row-content {
-    flex: 1 1 auto;
+    flex: 1;
     display: flex;
     justify-content: space-between;
+
+    input[name='displayName'] {
+      border: 0;
+      margin: 0;
+      padding: 0;
+      display: inline;
+      border-bottom: 1px solid $brand-primary;
+      border-radius: 0;
+      transition: initial;
+      font-size: 14px;
+      outline: none !important;
+      box-shadow: none !important;
+    }
   }
 
   .searchbox .searchinput {
+    margin: 0;
     border: none;
   }
 
   .searchfilter {
+    margin: 0;
     border: none;
     width: 100%;
   }
 
   .media-text {
-    font-family: CiscoSans-Light;
+    font-family: 'CiscoSansTT Light';
     font-size: 14px;
-    color: $color-primary-base;
-    margin-top: 0.25rem;
-    margin-left: 0.25rem;
+    color: $gray-dark-2;
+    margin: 0;
   }
 
-  .media-info {
-    font-family: CiscoSans;
+  .media-subtext {
+    font-family: 'CiscoSansTT';
     font-size: 12px;
-    color: $gray-darkest;
-    text-align: right;
-    float: right;
-    margin-right: 0.25rem;
-  }
-
-  .media-progress-msg {
-    font-family: CiscoSans;
-    font-size: 12px;
-    text-align: left;
-    color: $gray-darkest;
-  }
-
-  .media-icon-alignment {
-    text-align: right;
-    vertical-align: middle;
-    margin-top: 0.25rem;
-    margin-right: 0.25rem;
-  }
-
-  .mb-br-button {
-    align-self: flex-end;
-    margin: 0.5rem;
+    color: $gray-light-1;
+    margin: 0;
+    justify-content: flex-start;
   }
 
   .icon-msg-alignment {
@@ -169,60 +252,76 @@ media-mgr {
     margin-left: 0.25rem;
   }
 
-  .icon-music {
-    background: none;
-    margin: 0.5rem;
-    color: $gray-base;
-    &:hover,
-    &:focus,
-    &:active { color: $color-primary-base; }
-  }
-
   .icon-trash {
     background: none;
-    margin: 0.5rem;
-    color: $gray-base;
-    &:hover,
-    &:focus,
-    &:active { color: $color-primary-base; }
+    margin: 0 0 0 .5rem;
+    color: $gray-light-1;
   }
 
-  .active-icon {
-    color: $color-primary-base;
+  .icon-back {
+    background: none;
+    margin: 0 0 0 .5rem;
+    color: $gray-light-1;
   }
 
   .icon-spinner {
     color: $color-primary-base;
+    margin: 0;
   }
 
   .icon-error {
     color: $color-negative-base;
+    margin: 0;
   }
 
   .icon-plus {
     color: $color-primary-base;
     text-align: right;
+    margin: 0;
+    &:disabled {
+      color: $color-primary-lighter;
+      margin: 0;
+    }
   }
 
-  .icon-plus-disabled {
-    color: $color-primary-lighter;
-    text-align: right;
+  .progressbar-label {
+    font-family: 'CiscoSansTT Light';
+    font-size: 14px;
+    color: $gray-dark-2;
   }
 
-  .icon-exit {
-    float: right;
+  .progressbar-progress {
+    font-family: 'CiscoSansTT Light';
+    font-size: 14px;
+    color: $gray-dark-2;
   }
 
-  .progress-striped {
-    background: $gray-light-2;
+  .progressbar-sublabel {
+    color: $gray-base;
   }
 
   .progress-bar {
-    margin: 10rem;
+    margin: 6rem;
+    .icon-exit {
+      align-self: center;
+      margin-left: 0.5rem;
+    }
+  }
+
+  .progressbar-icon-alignment {
+    display: flex;
+  }
+
+  .progressbar-content-alignment {
+    flex-grow: 1;
   }
 
   .centered {
     justify-content: center;
     align-items: center;
+  }
+
+  .btn {
+    height: 2.25rem;
   }
 }

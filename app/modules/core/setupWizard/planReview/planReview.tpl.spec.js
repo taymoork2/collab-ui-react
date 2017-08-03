@@ -89,7 +89,8 @@ describe('Template: planReview', function () {
       expect(view.find('#paidCare').length).toBe(1);
       expect(controller.careServices.isNewTrial).toEqual(false);
       expect(view.find('#careStartTrial').length).toBe(0);
-      expect(view.find('[translate="firstTimeWizard.care"]').length).toBe(2);
+      expect(view.find('[translate="firstTimeWizard.care"]').length).toBe(1);
+      // expect(view.find('#careLicenseText').length).toBe(1);
       expect(controller.careServices.services).toBeDefined();
       var careService = controller.careServices.services;
       expect(careService[0].license.volume).toBe(30);

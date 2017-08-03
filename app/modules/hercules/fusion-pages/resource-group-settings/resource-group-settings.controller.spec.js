@@ -7,12 +7,12 @@ describe('Controller: ResourceGroupSettingsController', function () {
       '$stateParams',
       'ResourceGroupService',
       'HybridServicesClusterService',
-      '$q',
-      'FeatureToggleService'
+      '$q'
     );
 
-    spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
-    spyOn(this.ResourceGroupService, 'get').and.returnValue(this.$q.resolve({ name: 'group_name' }));
+    this.group = { name: 'group_name' };
+
+    spyOn(this.ResourceGroupService, 'get').and.returnValue(this.$q.resolve(this.group));
     spyOn(this.HybridServicesClusterService, 'getAll').and.returnValue(this.$q.resolve([]));
     this.$stateParams.id = 'mock_id';
 
@@ -28,12 +28,10 @@ describe('Controller: ResourceGroupSettingsController', function () {
     this.initController();
   });
 
-  // 2017 name change
-  it('new name usage should depend on atlas2017NameChangeGetStatus', function () {
-    expect(this.controller.nameChangeEnabled).toBeFalsy();
-
-    this.FeatureToggleService.atlas2017NameChangeGetStatus.and.returnValue(this.$q.resolve(true));
-    this.initController();
-    expect(this.controller.nameChangeEnabled).toBeTruthy();
+  it('should init as expected', function () {
+    expect(this.controller.group).toEqual(this.group);
+    expect(this.controller.newGroupName).toEqual(this.group.name);
+    expect(this.controller.title).toEqual('hercules.resourceGroupSettings.pageTitle');
+    expect(this.controller.titleValues).toEqual = { groupName: this.group.name };
   });
 });

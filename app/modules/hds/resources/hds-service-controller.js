@@ -6,17 +6,17 @@
     .controller('HDSServiceController', HDSServiceController);
 
   /* @ngInject */
-  function HDSServiceController($modal, $state, $stateParams, Authinfo, HybridServicesClusterService) {
+  function HDSServiceController($modal, $state, $stateParams, $translate, Authinfo, HybridServicesClusterService) {
     var vm = this;
-    vm.backState = $stateParams.backTo || 'services-overview';
+    vm.backState = $stateParams.backState || 'services-overview';
     vm.pageTitle = 'hds.resources.page_title';
     vm.state = $state;
     vm.tabs = [
       {
-        title: 'common.resources',
+        title: $translate.instant('common.resources'),
         state: 'hds.list',
       }, {
-        title: 'common.settings',
+        title: $translate.instant('common.settings'),
         state: 'hds.settings',
       },
     ];

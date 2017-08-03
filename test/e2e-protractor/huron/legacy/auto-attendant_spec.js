@@ -138,6 +138,16 @@ describe('Huron Auto Attendant', function () {
       // say message
       utils.click(autoattendant.sayMessageInput);
       utils.sendKeys(autoattendant.sayMessageInput, "Welcome to the AA");
+      utils.click(autoattendant.sayMessageDynamicButton)
+      utils.click(autoattendant.dynamicVariable);
+      utils.wait(autoattendant.dynamicVariable, 120000);
+      utils.click(autoattendant.variable);
+      utils.wait(autoattendant.dynamicVariable, 120000);
+      utils.click(autoattendant.readAs);
+      utils.click(autoattendant.readAsVariable);
+      utils.click(autoattendant.okButton);
+      utils.wait(autoattendant.okButton, 1200);
+      
 
       // language
       autoattendant.scrollIntoView(autoattendant.sayMessageLanguage);
@@ -168,6 +178,15 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.phoneMenuSay);
       utils.click(autoattendant.phonesayMessageInput);
       utils.sendKeys(autoattendant.phonesayMessageInput, "Press a key at the menu");
+      utils.click(autoattendant.phoneMenuAddDynamicTextButton);
+      utils.click(autoattendant.dynamicVariable);
+      utils.wait(autoattendant.dynamicVariable, 120000);
+      utils.click(autoattendant.variable);
+      utils.wait(autoattendant.dynamicVariable, 120000);
+      utils.click(autoattendant.readAs);
+      utils.click(autoattendant.readAsVariable);
+      utils.click(autoattendant.okButton);
+      utils.wait(autoattendant.okButton, 1200);
       utils.expectIsEnabled(autoattendant.saveButton);
 
       // language and voice
@@ -439,6 +458,16 @@ describe('Huron Auto Attendant', function () {
       // say message
       utils.click(autoattendant.dialByMessageInput);
       utils.sendKeys(autoattendant.dialByMessageInput, "Enter the Extension");
+      utils.click(autoattendant.dialByExtensionDynamicButton);
+      utils.click(autoattendant.dynamicVariable);
+      utils.wait(autoattendant.dynamicVariable, 120000);
+      utils.click(autoattendant.variable);
+      utils.wait(autoattendant.dynamicVariable, 120000);
+      utils.click(autoattendant.readAs);
+      utils.click(autoattendant.readAsVariable);
+      utils.click(autoattendant.okButton);
+      utils.wait(autoattendant.okButton, 1200);
+      
 
       // language
       utils.click(autoattendant.dialByMessageLanguage);
@@ -501,6 +530,18 @@ describe('Huron Auto Attendant', function () {
         utils.wait(autoattendant.callerInputFirst, 120000);
         autoattendant.scrollIntoView(autoattendant.callerInputFirst);
         utils.sendKeys(autoattendant.callerInputNameVariable, "named Variable");
+        utils.click(autoattendant.callerInputMessageOptions);
+        utils.click(autoattendant.callerInputSayMessageOption);
+        //utils.sendKeys(autoattendant.callerMessageInput, "Extension");
+        utils.click(autoattendant.callerInputDynamicButton);
+        utils.click(autoattendant.dynamicVariable);
+        utils.wait(autoattendant.dynamicVariable, 120000);
+        utils.click(autoattendant.variable);
+        utils.wait(autoattendant.dynamicVariable, 120000);
+        utils.click(autoattendant.readAs);
+        utils.click(autoattendant.readAsVariable);
+        utils.click(autoattendant.okButton);
+        utils.wait(autoattendant.okButton, 1200);
         utils.click(autoattendant.callerInputGetDigits);
         autoattendant.scrollIntoView(autoattendant.callerInputFirst);
         utils.click(autoattendant.callerInputAddAction);

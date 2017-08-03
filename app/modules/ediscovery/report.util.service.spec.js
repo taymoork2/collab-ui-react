@@ -1,7 +1,9 @@
 'use strict';
 
+var ediscoveryModule = require('./ediscovery.module');
+
 describe('Service: ReportUtilService', function () {
-  beforeEach(angular.mock.module('Ediscovery'));
+  beforeEach(angular.mock.module(ediscoveryModule));
 
   var Service;
 

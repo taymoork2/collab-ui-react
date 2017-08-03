@@ -1,11 +1,25 @@
 import { PstnCarrier } from './pstnProviders/pstnCarrier';
 export interface IOrder {
-  reservationId?: string;
   orderType: string;
-  numberType: string;
   data: any;
+  reservationId?: string;
+  numberType?: string;
 }
 
+export interface IAuthLicense {
+  licenseId: string;
+  offerName: string;
+  licenseType: string;
+  features: string[];
+  isTrial: boolean;
+  trialId: string;
+  status: string;
+  partnerEmail: string;
+}
+
+export interface IAuthCustomer {
+  licenses: IAuthLicense[];
+}
 
 export class PstnModel {
   private customerId: string;
@@ -61,6 +75,11 @@ export class PstnModel {
     this.siteExists = false;
     this.carrierExists = false;
     this.carrierExists = false;
+    this.numbers = [];
+    this.orders = [];
+  }
+
+  public clearSwivelNumbers(): void {
     this.numbers = [];
     this.orders = [];
   }

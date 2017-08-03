@@ -2,12 +2,12 @@
   'use strict';
 
   angular
-  .module('uc.autoattendant')
-  .controller('AACallerInputCtrl', AACallerInputCtrl);
+    .module('uc.autoattendant')
+    .controller('AACallerInputCtrl', AACallerInputCtrl);
 
   /* @ngInject */
 
-  function AACallerInputCtrl($scope, $translate, CustomVariableService, AAModelService, AAUiModelService, AutoAttendantCeMenuModelService, AALanguageService, AACommonService) {
+  function AACallerInputCtrl($rootScope, $scope, $translate, CustomVariableService, AAModelService, AAUiModelService, AutoAttendantCeMenuModelService, AALanguageService, AACommonService) {
     var vm = this;
 
     var myId;
@@ -56,6 +56,7 @@
     vm.voiceOption = voiceOption;
     vm.voiceBackup = voiceOption;
     vm.voicePlaceholder = selectPlaceholder;
+
     vm.voiceOptions = [];
     vm.inputActions = [];
     vm.convertDigitState = false;
@@ -81,6 +82,9 @@
     };
 
     vm.isWarn = false;
+    vm.oldCallerInputValue = '';
+    vm.updateCIAction = updateCIAction;
+    vm.setOldCallerInputValue = setOldCallerInputValue;
 
     /////////////////////
     // the user has pressed the trash can icon for a key/action pair
@@ -297,6 +301,15 @@
             });
           });
         });
+    }
+
+    function updateCIAction() {
+      var broadcastArgument = vm.oldCallerInputValue;
+      $rootScope.$broadcast('CIVarNameChanged', broadcastArgument);
+    }
+
+    function setOldCallerInputValue(name) {
+      vm.oldCallerInputValue = name;
     }
 
     function activate() {

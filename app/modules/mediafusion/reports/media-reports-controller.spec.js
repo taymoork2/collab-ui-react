@@ -13,14 +13,14 @@ describe('Controller:MediaReportsController', function () {
   var clientTypeData = getJSONFixture('mediafusion/json/metrics-graph-report/clientTypeGraphData.json');
   var clientTypeCountData = getJSONFixture('mediafusion/json/metrics-graph-report/clientTypeCountData.json');
   var meetingLocationData = getJSONFixture('mediafusion/json/metrics-graph-report/meetingLocationGraphData.json');
-  var participantChangedata = { data:
-  {
-    orgId: '11111111-2222-3333-a444-111111111bac',
-    dataProvider: [{
-      name: 'participant_change',
-      value: 2,
-    }],
-  },
+  var participantChangedata = {
+    data: {
+      orgId: '11111111-2222-3333-a444-111111111bac',
+      dataProvider: [{
+        name: 'participant_change',
+        value: 2,
+      }],
+    },
   };
 
   var timeOptions = [{
@@ -106,6 +106,7 @@ describe('Controller:MediaReportsController', function () {
       $interval: $interval,
       Log: Log,
       Config: Config,
+      hasHmsTwoDotFiveFeatureToggle: false,
     });
   }));
   it('controller should be defined', function () {
@@ -216,7 +217,7 @@ describe('Controller:MediaReportsController', function () {
       expect(controller.cloudOverflow).toBe(30);
       expect(controller.total).toBe(50);
       expect(controller.second_card_value).toBe('30');
-      expect(controller.cardIndicator).toBe(2);
+      expect(controller.cardIndicator).toBe('+2');
     });
 
     it('setClientTypeCard should invoke getClienTypeCardData', function () {

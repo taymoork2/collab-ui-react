@@ -2,17 +2,17 @@
   'use strict';
 
   /* @ngInject */
-  function MediaServiceControllerV2($modal, $state, $stateParams, Authinfo, HybridServicesClusterService) {
+  function MediaServiceControllerV2($modal, $state, $stateParams, $translate, Authinfo, HybridServicesClusterService) {
     var vm = this;
-    vm.backState = $stateParams.backTo || 'services-overview';
+    vm.backState = $stateParams.backState || 'services-overview';
 
     // Added for cs-page-header
     vm.tabs = [
       {
-        title: 'common.resources',
+        title: $translate.instant('common.resources'),
         state: 'media-service-v2.list',
       }, {
-        title: 'common.settings',
+        title: $translate.instant('common.settings'),
         state: 'media-service-v2.settings',
       },
     ];

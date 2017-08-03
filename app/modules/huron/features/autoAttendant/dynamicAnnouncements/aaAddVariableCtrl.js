@@ -6,7 +6,7 @@
     .controller('AAAddVariableCtrl', AAAddVariableCtrl);
 
   /* @ngInject */
-  function AAAddVariableCtrl($scope, $modal, AADynaAnnounceService, AAUiModelService, AACommonService) {
+  function AAAddVariableCtrl($scope, $modal, AADynaAnnounceService, AAUiModelService, AACommonService, AutoAttendantCeMenuModelService) {
     var vm = this;
 
     var CONSTANTS = {};
@@ -16,7 +16,6 @@
     CONSTANTS.idSelectorPrefix = '#';
 
     vm.dynamicAdd = dynamicAdd;
-
     vm.variableSelection = {
       label: '',
       value: '',
@@ -26,7 +25,6 @@
       label: '',
       value: '',
     };
-
 
     /////////////////////
 
@@ -55,9 +53,39 @@
 
     function modalClosed() {
       var dynamicList = range.endContainer.ownerDocument.activeElement;
+      var sourceQueue;
+      var queueAction;
       finalList = [];
       if (dynamicList.className.includes('dynamic-prompt')) {
-        vm.menuEntry.dynamicList = createDynamicList(dynamicList);
+        if (_.has(vm.menuEntry, 'actions[0]')) {
+          if ($scope.type) {
+            sourceQueue = vm.menuEntry.actions[0].queueSettings[$scope.type];
+            queueAction = sourceQueue.actions[0];
+            queueAction.dynamicList = createDynamicList(dynamicList);
+          } else {
+            vm.menuEntry.actions[0].dynamicList = createDynamicList(dynamicList);
+          }
+        } else if ($scope.isMenuHeader === 'true') {
+          var header = _.get(vm.menuEntry, 'headers[0]', '');
+          if (header) {
+            header.actions[0].dynamicList = createDynamicList(dynamicList);
+          }
+        } else if ($scope.menuKeyIndex && $scope.menuKeyIndex > -1) {
+          vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
+          var entry = vm.menuEntry.entries[$scope.menuKeyIndex].actions[0];
+          if ($scope.type) {
+            queueAction = entry.queueSettings[$scope.type];
+            queueAction.actions[0].dynamicList = createDynamicList(dynamicList);
+          } else {
+            entry.dynamicList = createDynamicList(dynamicList);
+          }
+        } else if ($scope.menuId && (!$scope.menuKeyIndex || $scope.menuKeyIndex <= -1)) {
+          vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
+          var submenuHeader = _.get(vm.menuEntry, 'headers[0]', '');
+          if (submenuHeader) {
+            submenuHeader.actions[0].dynamicList = createDynamicList(dynamicList);
+          }
+        }
         AACommonService.setSayMessageStatus(true);
       }
     }

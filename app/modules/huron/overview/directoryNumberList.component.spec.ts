@@ -4,6 +4,7 @@ describe('Component: directoryNumberList', () => {
 
   describe('Line Display: numbers listed correctly', () => {
 
+    const LINE_LABEL = '.line-label';
     const directoryNumbers: Line[] = [
       {
         uuid: '6d3f07a6-f868-4ae7-990d-286ce033834d',
@@ -13,6 +14,10 @@ describe('Component: directoryNumberList', () => {
         incomingCallMaximum: 2,
         primary: true,
         shared: false,
+        label: {
+          value: 'someuser@some.com',
+          appliesToAllSharedLines: false,
+        },
       },
       {
         uuid: '35fb962b-824c-44f3-9e13-2ed171e69249',
@@ -22,12 +27,21 @@ describe('Component: directoryNumberList', () => {
         incomingCallMaximum: 8,
         primary: false,
         shared: false,
+        label: {
+          value: 'someuser2@some.com',
+          appliesToAllSharedLines: false,
+        },
       },
     ];
 
     beforeEach(function () {
       this.initModules('Huron');
-      this.injectDependencies('$scope');
+      this.injectDependencies(
+        '$scope',
+        '$q',
+        'FeatureToggleService',
+      );
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
       this.$scope.directoryNumbers = directoryNumbers;
       this.compileComponent('directoryNumberList', {
         directoryNumbers: 'directoryNumbers',
@@ -56,6 +70,10 @@ describe('Component: directoryNumberList', () => {
       expect(lastNumber).toContainText('5015');
       expect(lastNumber).toContainText('common.or 7100XXXX');
     });
+
+    it('should display line label - check the first line', function () {
+      expect(this.view.find(LINE_LABEL).get(0)).toContainText('someuser@some.com');
+    });
   });
 
   describe('Line Display: show more, less lines', () => {
@@ -69,6 +87,10 @@ describe('Component: directoryNumberList', () => {
         incomingCallMaximum: 2,
         primary: true,
         shared: false,
+        label: {
+          value: 'someuser@some.com',
+          appliesToAllSharedLines: false,
+        },
       },
       {
         uuid: '35fb962b-824c-44f3-9e13-2ed171e69249',
@@ -78,6 +100,10 @@ describe('Component: directoryNumberList', () => {
         incomingCallMaximum: 8,
         primary: false,
         shared: false,
+        label: {
+          value: 'someuser2@some.com',
+          appliesToAllSharedLines: false,
+        },
       },
       {
         uuid: '35fb962b-824c-44f3-9e13-2ed171e69248',
@@ -87,6 +113,10 @@ describe('Component: directoryNumberList', () => {
         incomingCallMaximum: 8,
         primary: false,
         shared: false,
+        label: {
+          value: 'someuser3@some.com',
+          appliesToAllSharedLines: false,
+        },
       },
       {
         uuid: '35fb962b-824c-44f3-9e13-2ed171e69247',
@@ -96,6 +126,10 @@ describe('Component: directoryNumberList', () => {
         incomingCallMaximum: 8,
         primary: false,
         shared: false,
+        label: {
+          value: 'someuser4@some.com',
+          appliesToAllSharedLines: false,
+        },
       },
       {
         uuid: '35fb962b-824c-44f3-9e13-2ed171e69246',
@@ -105,6 +139,10 @@ describe('Component: directoryNumberList', () => {
         incomingCallMaximum: 8,
         primary: false,
         shared: false,
+        label: {
+          value: 'someuser5@some.com',
+          appliesToAllSharedLines: false,
+        },
       },
       {
         uuid: '35fb962b-824c-44f3-9e13-2ed171e69245',
@@ -114,12 +152,21 @@ describe('Component: directoryNumberList', () => {
         incomingCallMaximum: 8,
         primary: false,
         shared: false,
+        label: {
+          value: 'someuser6@some.com',
+          appliesToAllSharedLines: false,
+        },
       },
     ];
 
     beforeEach(function () {
       this.initModules('Huron');
-      this.injectDependencies('$scope');
+      this.injectDependencies(
+        '$scope',
+        '$q',
+        'FeatureToggleService',
+      );
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
       this.$scope.directoryNumbers = directoryNumbers;
       this.compileComponent('directoryNumberList', {
         directoryNumbers: 'directoryNumbers',

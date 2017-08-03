@@ -14,7 +14,7 @@ var Navigation = function () {
   this.orgAddTab = element(by.css('#addOrganizations'));
   this.callRoutingTab = element(by.css('a[href="#callrouting"]'));
   this.autoAttendantPage = element(by.css('a[href="#/hurondetails/features"]'));
-  this.callSettings = element(by.css('a[href="#/services/call-settingsnew"]'));
+  this.callSettings = element(by.css('a[href="#/services/call-settings"]'));
   this.fusionTab = element(by.css('a[href="#fusion"]'));
   this.reportsTab = element(by.css('li.reportTab > a'));
   this.careReportsTab = element(by.cssContainingText('.nav-link', 'Care'));

@@ -1,4 +1,5 @@
 import pstnWizard from './index';
+import { IAuthLicense } from '../pstn.model';
 
 describe('Service: PstnWizardService', () => {
   const consecutiveOrder = {
@@ -65,10 +66,13 @@ describe('Service: PstnWizardService', () => {
   };
   const swivelOrder = ['+4697793400', '+18007164851'];
 
+  const customerAccount = getJSONFixture('huron/json/pstnSetup/customerAccount.json');
+
   beforeEach(function () {
     this.initModules(pstnWizard);
     this.injectDependencies(
       '$httpBackend',
+      'Auth',
       'Authinfo',
       'HuronConfig',
       'PstnWizardService',
@@ -79,6 +83,7 @@ describe('Service: PstnWizardService', () => {
       '$rootScope',
     );
 
+    spyOn(this.Auth, 'getCustomerAccount').and.returnValue(this.$q.resolve(customerAccount));
     installPromiseMatchers();
   });
 
@@ -127,6 +132,31 @@ describe('Service: PstnWizardService', () => {
 
     it('should format an advanced order with nxx', function () {
       expect(this.PstnWizardService.formatTelephoneNumber(advancedNxxOrder)).toEqual('(' + advancedNxxOrder.data.areaCode + ') ' + advancedNxxOrder.data.nxx + '-XXXX');
+    });
+  });
+
+  describe('blockByopNumberAddForPartnerAdmin', function() {
+
+    it('should not block number Add if admin is not partner', function() {
+      spyOn(this.Authinfo, 'isCustomerLaunchedFromPartner').and.returnValue(false);
+      spyOn(this.Authinfo, 'isPartner').and.returnValue(false);
+
+      const _blockByopNumberAddForPartnerAdmin = this.PstnWizardService.blockByopNumberAddForPartnerAdmin();
+      this.$rootScope.$digest();
+
+      expect(_blockByopNumberAddForPartnerAdmin).toBe(false);
+    });
+
+    it('should  block number Add if admin is partner', function() {
+      spyOn(this.Authinfo, 'isCustomerLaunchedFromPartner').and.returnValue(true);
+      spyOn(this.Authinfo, 'isPartner').and.returnValue(false);
+      spyOn(this.PstnModel, 'getProvider').and.returnValue(swivelProvider);
+      spyOn(this.PstnModel, 'isEsaSigned').and.returnValue(false);
+
+      const _blockByopNumberAddForPartnerAdmin = this.PstnWizardService.blockByopNumberAddForPartnerAdmin();
+      this.$rootScope.$digest();
+
+      expect(_blockByopNumberAddForPartnerAdmin).toBe(true);
     });
   });
 
@@ -252,7 +282,29 @@ describe('Service: PstnWizardService', () => {
       expect(this.PstnService.updateCustomerE911Signee).toHaveBeenCalled();
       expect(this.PstnService.orderNumbersV2Swivel).not.toHaveBeenCalled();
     });
+  });
 
+  describe('Trial Test', function () {
+    let licenses: IAuthLicense[];
+    beforeEach(function () {
+      licenses = _.cloneDeep<IAuthLicense[]>(customerAccount.data.customers[0].licenses);
+    });
+    it('should be a trial', function () {
+      expect(this.PstnWizardService.isTrialCallOrRoom(licenses)).toEqual(true);
+    });
+    it('should be a trial if no Call or Room is set', function () {
+      licenses = licenses.splice(0, 2);
+      expect(this.PstnWizardService.isTrialCallOrRoom(licenses)).toEqual(true);
+    });
+    it('should not be a trial with "isTrial" set to false', function () {
+      licenses[0].isTrial = false;
+      licenses[1].isTrial = false;
+      expect(this.PstnWizardService.isTrialCallOrRoom(licenses)).toEqual(false);
+    });
+    it('should not be a trial with only one "isTrial" set to false', function () {
+      licenses[1].isTrial = false;
+      expect(this.PstnWizardService.isTrialCallOrRoom(licenses)).toEqual(false);
+    });
   });
 
 });

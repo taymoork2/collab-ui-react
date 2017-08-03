@@ -1,5 +1,5 @@
 import esaDisclaimerModule from './index';
-import { ESA_DISCLAIMER_ACCEPT } from '../pstn.const';
+import { PSTN_ESA_DISCLAIMER_ACCEPT } from '../pstn.const';
 
 describe('Component: esaDisclaimerComponent', () => {
   const ORG_ID = '222-555-6543';
@@ -47,7 +47,7 @@ describe('Component: esaDisclaimerComponent', () => {
       const promise = this.controller.onAgreeClick();
 
       promise.then(() => {
-        expect(this.$rootScope.$broadcast).toHaveBeenCalledWith(ESA_DISCLAIMER_ACCEPT);
+        expect(this.$rootScope.$broadcast).toHaveBeenCalledWith(PSTN_ESA_DISCLAIMER_ACCEPT);
         expect(this.$scope.onDismiss).toHaveBeenCalled();
         expect(this.Notification.errorResponse).not.toHaveBeenCalled();
       });

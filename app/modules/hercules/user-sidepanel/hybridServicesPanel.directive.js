@@ -7,7 +7,7 @@
     .controller('hybridServicesPanelCtrl', hybridServicesPanelCtrl);
 
   /* @ngInject */
-  function hybridServicesPanelCtrl(Authinfo, OnboardService, ServiceDescriptor, CloudConnectorService, $q, $translate) {
+  function hybridServicesPanelCtrl(Authinfo, OnboardService, ServiceDescriptorService, CloudConnectorService, $q, $translate) {
     var vm = this;
     vm.isEnabled = false;
     vm.entitlements = [];
@@ -59,7 +59,7 @@
 
     function init() {
       $q.all({
-        servicesFromFms: ServiceDescriptor.getServices(),
+        servicesFromFms: ServiceDescriptorService.getServices(),
         gcalService: CloudConnectorService.getService(),
       }).then(function (response) {
         vm.services.calendarExchange = getServiceIfEnabled(response.servicesFromFms, 'squared-fusion-cal');

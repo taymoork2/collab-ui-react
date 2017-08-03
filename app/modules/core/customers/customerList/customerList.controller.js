@@ -238,13 +238,7 @@ require('./_customer-list.scss');
     vm.gridOptions = {
       //gridOptions.data is populated directly by the functions supplying the data.
       appScopeProvider: vm,
-      multiSelect: false,
       rowHeight: 56,
-      enableRowHeaderSelection: false,
-      enableRowSelection: false,
-      enableColumnMenus: false,
-      enableColumnResizing: true,
-      enableHorizontalScrollbar: 0,
       onRegisterApi: function (gridApi) {
         vm.gridApi = gridApi;
 
@@ -305,14 +299,14 @@ require('./_customer-list.scss');
       setNotesTextOrder();
       initColumns();
 
-      $q.all([
-        FeatureToggleService.atlasCareTrialsGetStatus(),
-        FeatureToggleService.atlasCareInboundTrialsGetStatus(),
-        FeatureToggleService.atlasITProPackGetStatus(),
-      ]).then(function (toggles) {
-        vm.isCareEnabled = toggles[0];
-        vm.isAdvanceCareEnabled = toggles[1];
-        vm.isProPackEnabled = toggles[2];
+      $q.all({
+        isCareEnabled: FeatureToggleService.atlasCareTrialsGetStatus(),
+        isAdvanceCareEnabled: FeatureToggleService.atlasCareInboundTrialsGetStatus(),
+        isProPackEnabled: FeatureToggleService.atlasITProPackGetStatus(),
+      }).then(function (toggles) {
+        vm.isCareEnabled = toggles.isCareEnabled;
+        vm.isAdvanceCareEnabled = toggles.isAdvanceCareEnabled;
+        vm.isProPackEnabled = toggles.isProPackEnabled;
 
         if (!vm.isProPackEnabled) {
           _.remove(vm.filter.options, { value: PREMIUM });
@@ -584,6 +578,19 @@ require('./_customer-list.scss');
             });
             myOrg[0].roomSystems = vm._helpers.updateServiceForOrg(myOrg[0].roomSystems, licenses, {
               licenseType: 'SHARED_DEVICES',
+              offerName: 'SD',
+            });
+            myOrg[0].sparkBoard = vm._helpers.updateServiceForOrg(myOrg[0].sparkBoard, licenses, {
+              licenseType: 'SHARED_DEVICES',
+              offerName: 'SB',
+            });
+            myOrg[0].care = vm._helpers.updateServiceForOrg(myOrg[0].care, licenses, {
+              licenseType: 'CARE',
+              offerName: 'CDC',
+            });
+            myOrg[0].advanceCare = vm._helpers.updateServiceForOrg(myOrg[0].advanceCare, licenses, {
+              licenseType: 'CAREVOICE',
+              offerName: 'CVC',
             });
             myOrg[0].conferencing = vm._helpers.updateServiceForOrg(myOrg[0].conferencing, licenses, {
               licenseType: 'CONFERENCING',

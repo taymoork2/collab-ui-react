@@ -14,6 +14,7 @@
   /* @ngInject */
   function ReadonlyInterceptor($q, $injector, $log) {
     var allowedList = [
+      '/pcs/api/v2/',
       '/api/v1/metrics',
       '/api/v1/compliance/',
       '/api/v1/logs/',
@@ -30,6 +31,8 @@
       '/channels',
       '/api/v1/internals/actions/invalidateUser/invoke',
       '/releaseChannels',
+      '/qlik-gtwy/api/v1/report/',
+      '/custportal/extensions/',
     ];
 
     var allowedState = [

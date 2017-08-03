@@ -3,14 +3,22 @@ import { HuronCompassService } from 'modules/huron/compass/compass.service';
 
 export class TrialRegionalSettingsComponent implements ng.IComponentOptions {
   public controller = TrialRegionalSettingsCtrl;
-  public templateUrl = 'modules/core/trials/regionalSettings/trialRegionalSettings.html';
+  public templateUrl = 'modules/core/trials/regionalSettings/regionalSettings.html';
   public bindings = {
+    isFtsw: '<',
     callTrialEnabled: '<',
     defaultCountry: '<',
     onChangeFn: '&',
     showError: '<',
     selectName: '@',
+    newTrial: '<',
   };
+}
+
+interface ICountry {
+  id: string;
+  name: string;
+  domain: string;
 }
 
 class TrialRegionalSettingsCtrl implements ng.IComponentController {
@@ -22,16 +30,18 @@ class TrialRegionalSettingsCtrl implements ng.IComponentController {
   public errorMessage: string;
   public selectName: string;
   private notApplicable: ICountry;
-  private ftHuronFederatedSparkCall: any;
+  private countryCode: any;
+  public newTrial: boolean;
+  public isFtsw: boolean;
 
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
     private $element: ng.IRootElementService,
     private HuronCountryService: HuronCountryService,
-    private FeatureToggleService,
     private $q: ng.IQService,
     private HuronCompassService: HuronCompassService,
+    private TrialPstnService,
   ) { }
 
   public $onInit(): void {
@@ -39,16 +49,23 @@ class TrialRegionalSettingsCtrl implements ng.IComponentController {
     this.errorMessage = this.$translate.instant('common.invalidRequired');
     const promises = {
       countryList: this.HuronCountryService.getCountryList(),
-      huronFederatedSparkCall: this.FeatureToggleService.supports('huron-federated-spark-call'),
+      countryCode: this.TrialPstnService.getCountryCode(),
     };
 
     this.$q.all(promises).then((data) => {
       this.countryList = data['countryList'];
-      this.ftHuronFederatedSparkCall = data['huronFederatedSparkCall'];
+      this.countryCode = data['countryCode'];
     }).then(() => {
-      this.countryList = this.filterCountryList(this.countryList);
+      if (!this.newTrial) {
+        const defaultCode = this.countryCode;
+        const selectedCountry = _.find(this.countryList, function (country: ICountry) {
+          return country.id === defaultCode;
+        });
+        if (selectedCountry) {
+          this.defaultCountry = selectedCountry;
+        }
+      }
     });
-
     this.notApplicable = {
       id: 'N/A',
       name: this.$translate.instant('serviceSetupModal.notApplicable'),
@@ -57,7 +74,9 @@ class TrialRegionalSettingsCtrl implements ng.IComponentController {
   }
 
   public $postLink(): void {
-    this.$element.addClass('cs-form__section');
+    if (!this.isFtsw) {
+      this.$element.addClass('cs-form__section');
+    }
   }
 
   set callTrialEnabled(value: boolean) {
@@ -67,17 +86,6 @@ class TrialRegionalSettingsCtrl implements ng.IComponentController {
       }
     } else if (!_.includes(this.countryList, this.notApplicable)) {
       this.countryList = _.unionWith(this.countryList, [this.notApplicable], _.isEqual);
-    }
-  }
-
-  private filterCountryList(countryList) {
-    if (this.ftHuronFederatedSparkCall) {
-      return countryList;
-    } else {
-      return _.filter(countryList, country => {
-        const countryId = _.get(country, 'id');
-        return _.includes(['US', 'CA', 'N/A'], countryId);
-      });
     }
   }
 
@@ -91,10 +99,4 @@ class TrialRegionalSettingsCtrl implements ng.IComponentController {
   public displayError(): boolean {
     return this.showError && _.isEmpty(this.defaultCountry);
   }
-}
-
-interface ICountry {
-  id: string;
-  name: string;
-  domain: string;
 }

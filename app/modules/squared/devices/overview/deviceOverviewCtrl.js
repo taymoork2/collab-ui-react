@@ -10,7 +10,7 @@
     FeedbackService, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal,
     ResetDeviceModal, channels, RemoteSupportModal, LaunchAdvancedSettingsModal, ServiceSetup, KemService,
     TerminusService, EmergencyServicesService, AtaDeviceModal, DeviceOverviewService,
-    FeatureToggleService, ConfirmAtaRebootModal) {
+    FeatureToggleService, ConfirmAtaRebootModal, PstnModel, PstnService) {
     var deviceOverview = this;
     var huronDeviceService = $stateParams.huronDeviceService;
     deviceOverview.linesAreLoaded = false;
@@ -20,17 +20,15 @@
     deviceOverview.selectedCountry = '';
     deviceOverview.hideE911Edit = true;
     deviceOverview.faxEnabled = false;
-    deviceOverview.t38FeatureToggle = false;
+    deviceOverview.showT38 = false;
     deviceOverview.cpcFeatureToggle = false;
     deviceOverview.disableAtaRebootSettings = true;
     deviceOverview.actionList = [{
       actionKey: 'common.edit',
       actionFunction: goToEmergencyServices,
     }];
+
     function init() {
-      FeatureToggleService.csdmT38GetStatus().then(function (response) {
-        deviceOverview.t38FeatureToggle = response;
-      });
       FeatureToggleService.csdmAtaCpcGetStatus().then(function (response) {
         deviceOverview.cpcFeatureToggle = response;
       });
@@ -41,12 +39,34 @@
 
       displayDevice($stateParams.currentDevice);
 
+      fetchT38Visibility();
+
       CsdmDataModelService.reloadItem($stateParams.currentDevice).then(function (updatedDevice) {
         displayDevice(updatedDevice);
       });
     }
 
     init();
+
+    function fetchT38Visibility() {
+      if (deviceOverview.currentDevice.isATA) {
+        FeatureToggleService.csdmT38GetStatus().then(function (t38Supported) {
+          if (t38Supported) {
+            if (!PstnModel.getProviderId()) {
+              PstnService.getCustomer(Authinfo.getOrgId()).then(function (customer) {
+                PstnService.getCarrierCapabilities(customer.pstnCarrierId).then(function (capabilities) {
+                  deviceOverview.showT38 = _.some(capabilities, { capability: 'T38' });
+                });
+              });
+            } else {
+              PstnService.getCarrierCapabilities(PstnModel.getProviderId()).then(function (capabilities) {
+                deviceOverview.showT38 = _.some(capabilities, { capability: 'T38' });
+              });
+            }
+          }
+        });
+      }
+    }
 
     function displayDevice(device) {
       var lastDevice = deviceOverview.currentDevice;
@@ -229,15 +249,15 @@
           t38FaxEnabled: deviceOverview.faxEnabled,
         };
         huronDeviceService.setSettingsForAta(deviceOverview.currentDevice, settings)
-        .then(function () {
-          Notification.success('ataSettings.savedT38');
-        })
-        .catch(function (error) {
-          Notification.errorResponse(error, 'deviceOverviewPage.failedToSaveChanges');
-        })
-        .finally(function () {
-          deviceOverview.updatingT38Settings = false;
-        });
+          .then(function () {
+            Notification.success('ataSettings.savedT38');
+          })
+          .catch(function (error) {
+            Notification.errorResponse(error, 'deviceOverviewPage.failedToSaveChanges');
+          })
+          .finally(function () {
+            deviceOverview.updatingT38Settings = false;
+          });
       }, 100);
     }
 

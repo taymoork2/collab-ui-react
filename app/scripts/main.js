@@ -19,6 +19,7 @@
     'core.localize',
     'core.logmetricsservice',
     'core.meeting-settings',
+    require('modules/core/setupWizard/setup-wizard.service').default,
     require('modules/core/notifications').default,
     require('modules/core/users/userAdd/onboard.module'),
     'core.pageparam',
@@ -27,6 +28,7 @@
     'core.proPack',
     'core.trial',
     'core.utils',
+    'core.cache',
     'csDonut',
     'ct.ui.router.extras.previous',
     'ngAnimate',
@@ -48,6 +50,8 @@
     'toaster',
     'rzModule',
     'dragularModule',
+    require('modules/bmmp/learn-more-banner').default,
+    require('modules/core/csgrid').default,
     require('modules/core/users/userOverview').default,
     require('modules/core/analytics'),
     require('modules/core/featureToggle').default,
@@ -65,9 +69,8 @@
     require('modules/core/myCompany/mySubscriptions').default,
     require('modules/core/cards').default,
     require('modules/core/customerReports/sparkReports').default,
-    require('modules/core/customerReports/webexReports').default,
+    require('modules/core/customerReports/webexReports/search').default,
     require('modules/core/partnerReports/commonReportServices').default,
-    require('modules/core/partnerReports/reportBMMPBanner').default,
     require('modules/core/partnerReports/reportCard').default,
     require('modules/core/partnerReports/reportFilter').default,
     require('modules/core/partnerReports/reportSlider').default,
@@ -79,11 +82,12 @@
     require('modules/core/trials/emergencyServices').default,
     require('modules/core/settings').default,
     require('modules/huron/countries').default,
-    require('modules/huron/settings').default,
+    require('modules/call/settings').default,
     require('modules/huron/dialPlans').default,
     require('modules/core/domainManagement').default,
     require('modules/huron/features/featureLanding/hoverDelay.directive').default,
     require('modules/core/validation').default,
+    require('modules/core/customerReports').default,
   ])
     .constant('CryptoJS', require('crypto-js'))
     .constant('addressparser', require('emailjs-addressparser'));
@@ -111,9 +115,10 @@
     'ngIcal',
     'huron.paging-group',
     'huron.call-pickup.setup-assistant',
-    'huron.bulk-enable-vm',
     'huron.TerminusServices',
     'huron.externalNumberService',
+    'huron.place-overview',
+    require('modules/call/settings/settings-bulk-enable-vm').default,
     require('modules/huron/lineSettings/callerIdService'),
     require('modules/huron/telephony/telephonyConfig'),
     require('modules/huron/telephony/cmiServices'),
@@ -124,8 +129,8 @@
     require('modules/huron/media-mgr').default,
     require('modules/call/features').default,
   ])
-  .constant('ASTParser', require('acorn'))
-  .constant('ASTWalker', require('acorn/dist/walk'));
+    .constant('ASTParser', require('acorn'))
+    .constant('ASTWalker', require('acorn/dist/walk'));
 
   angular.module('Hercules', [
     'Core',
@@ -147,13 +152,12 @@
     require('modules/hercules/services/hybrid-services-extras.service').default,
     require('modules/hercules/services/hybrid-services-i18n.service').default,
     require('modules/hercules/services/hybrid-services-utils.service').default,
-    require('modules/hercules/services/service-descriptor'),
-    require('modules/hercules/services/uss-service'),
+    require('modules/hercules/services/l2sip-service').default,
+    require('modules/hercules/services/service-descriptor.service').default,
+    require('modules/hercules/services/uss.service').default,
   ]);
 
   angular.module('HDS', ['Core', 'Hercules']);
-
-  angular.module('Ediscovery', ['Core']);
 
   angular.module('Mediafusion', ['Core', 'Hercules', 'Squared']);
 
@@ -194,7 +198,7 @@
     'DigitalRiver',
     'Huron',
     'Hercules',
-    'Ediscovery',
+    require('modules/ediscovery/ediscovery.module'),
     'Mediafusion',
     'HDS',
     'WebExApp',

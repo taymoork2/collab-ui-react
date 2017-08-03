@@ -1,0 +1,26 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$ctrl.dismiss()">
+    <span class="sr-only" translate="common.close"></span>
+  </button>
+  <h3 class="modal-title" translate="locations.copyTitle"></h3>
+</div>
+<div class="modal-body">
+  <div class="row">
+    <div class="columns medium-8">
+      <p translate="locations.copyDesc"></p>
+        <form name="$ctrl.form" novalidate role="form">
+          <uc-call-location-name
+            name="$ctrl.location.name"
+            on-change-fn="$ctrl.onNameChanged(name)">
+          </uc-call-location-name>
+        </form>
+    </div>
+  </div>
+
+</div>
+<div class="modal-footer">
+  <button class="btn"  id="cancelCopyLocation" ng-click="$ctrl.dismiss()" translate="common.cancel"></button>
+  <button cs-btn loading="$ctrl.saveInProcess" class="btn btn--primary" id="saveCopyLocation" ng-click="$ctrl.save()" ng-disabled="$ctrl.form.$invalid" >
+    <span translate="common.save"></span>
+  </button>
+</div>

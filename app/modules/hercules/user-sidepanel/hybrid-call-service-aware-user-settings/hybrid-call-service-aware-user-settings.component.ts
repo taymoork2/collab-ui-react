@@ -2,10 +2,11 @@ import { HybridServicesI18NService } from 'modules/hercules/services/hybrid-serv
 import { IUserDiscoveryInfo, UCCService } from 'modules/hercules/services/ucc-service';
 import { DomainManagementService } from 'modules/core/domainManagement/domainmanagement.service';
 import { UriVerificationService } from 'modules/hercules/services/uri-verification-service';
-import { HybridServiceUserSidepanelHelperService, IEntitlementNameAndState, IUserStatus } from 'modules/hercules/services/hybrid-services-user-sidepanel-helper.service';
+import { HybridServiceUserSidepanelHelperService, IEntitlementNameAndState } from 'modules/hercules/services/hybrid-services-user-sidepanel-helper.service';
 import { Notification } from 'modules/core/notifications/notification.service';
 import { ICluster, IConnector } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
+import { USSService, IUserStatusWithExtendedMessages } from 'modules/hercules/services/uss.service';
 
 class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController {
 
@@ -20,8 +21,9 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
   public userIsCurrentlyEntitled: boolean;
   public newEntitlementValue: boolean | undefined;
 
-  public userStatusAware: IUserStatus;
-  private userStatusConnect: IUserStatus;
+  public userStatusAware: IUserStatusWithExtendedMessages | undefined;
+  private userStatusConnect: IUserStatusWithExtendedMessages | undefined;
+  public lastStateChangeText: string = '';
 
   public homedCluster: ICluster;
   public homedConnector: IConnector;
@@ -42,7 +44,7 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
     private Notification: Notification,
     private UCCService: UCCService,
     private UriVerificationService: UriVerificationService,
-    private USSService,
+    private USSService: USSService,
   ) { }
 
   public $onInit() {
@@ -51,7 +53,7 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
     }
   }
 
-  public $onChanges(changes: {[bindings: string]: ng.IChangesObject}) {
+  public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
     const { userId, userEmailAddress,  entitlementUpdatedCallback } = changes;
     if (userId && userId.currentValue) {
       this.userId = userId.currentValue;
@@ -65,7 +67,7 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
     }
   }
 
-  private getDataFromUSS(userId: string) {
+  private getDataFromUSS(userId: string): ng.IPromise<void> {
     this.loadingPage = true;
     return this.HybridServiceUserSidepanelHelperService.getDataFromUSS(userId)
       .then(([userStatusAware, userStatusConnect]) => {
@@ -84,7 +86,7 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
         }
 
         if (this.userStatusAware && this.userStatusAware.lastStateChange) {
-          this.userStatusAware.lastStateChangeText = this.HybridServicesI18NService.getTimeSinceText(this.userStatusAware.lastStateChange);
+          this.lastStateChangeText = this.HybridServicesI18NService.getTimeSinceText(this.userStatusAware.lastStateChange);
         }
 
         if (this.userIsCurrentlyEntitled && this.userStatusAware) {
@@ -104,7 +106,7 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
     this.HybridServicesClusterService.get(clusterId)
       .then((cluster: ICluster) => {
         this.homedCluster = cluster;
-        this.homedConnector = _.find(cluster.connectors, { id: this.userStatusAware.connectorId });
+        this.homedConnector = _.find(cluster.connectors, { id: this.userStatusAware && this.userStatusAware.connectorId });
       });
   }
 

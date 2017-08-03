@@ -1,5 +1,9 @@
 <setting-section setting="$ctrl.clusterSection" class="needs-border-top">
 
+  <expressway-cluster-history-section cluster-id="$ctrl.clusterId"
+                                      cluster-name="$ctrl.cluster.name"
+                                      ng-if="$ctrl.atlasHybridAuditLogEnabled && $ctrl.serviceId === 'squared-fusion-cal'"></expressway-cluster-history-section>
+
   <div class="sub-section" ng-if="$ctrl.showRenameSection" id="renameSection">
     <h5 class="sub-section__label" translate="common.rename"></h5>
     <p ng-if="$ctrl.serviceId !== 'ept'"
@@ -30,13 +34,9 @@
 
   <div class="sub-section">
     <h5 class="sub-section__label cap-long-names" translate="common.remove"></h5>
-    <p ng-if="!$ctrl.blockDeregistration() && $ctrl.serviceId !== 'squared-fusion-media' && $ctrl.serviceId !== 'ept' && !$ctrl.nameChangeEnabled"
+    <p ng-if="!$ctrl.blockDeregistration() && $ctrl.serviceId !== 'squared-fusion-media' && $ctrl.serviceId !== 'ept' "
        class="sub-section__description"
        translate="hercules.renameAndDeregisterComponent.deregisterClusterExplanation"
-       translate-values="{clusterType: $ctrl.clusterType}"></p>
-    <p ng-if="!$ctrl.blockDeregistration() && $ctrl.serviceId !== 'squared-fusion-media' && $ctrl.serviceId !== 'ept' && $ctrl.nameChangeEnabled"
-       class="sub-section__description"
-       translate="hercules.renameAndDeregisterComponent.deregisterClusterExplanationNew"
        translate-values="{clusterType: $ctrl.clusterType}"></p>
     <p ng-if="$ctrl.blockDeregistration() && $ctrl.serviceId !== 'squared-fusion-media' && $ctrl.serviceId !== 'ept'"
        class="sub-section__description"
@@ -44,12 +44,9 @@
     <p ng-if="$ctrl.serviceId === 'squared-fusion-media'"
        class="sub-section__description"
        translate="hercules.renameAndDeregisterComponent.deregisterMediaClusterExplanation"></p>
-    <p ng-if="$ctrl.serviceId === 'ept' && !$ctrl.nameChangeEnabled"
+    <p ng-if="$ctrl.serviceId === 'ept'"
        class="sub-section__description"
        translate="hercules.renameAndDeregisterComponent.deregisterSipDestinationExplanation"></p>
-    <p ng-if="$ctrl.serviceId === 'ept' && $ctrl.nameChangeEnabled"
-       class="sub-section__description"
-       translate="hercules.renameAndDeregisterComponent.deregisterSipDestinationExplanationNew"></p>
 
 
       <button type="button"

@@ -6,7 +6,7 @@
     .service('HDSAddResourceCommonService', HDSAddResourceCommonService);
 
   /* @ngInject */
-  function HDSAddResourceCommonService($window, HybridServicesClusterService, HybridServicesExtrasService, Notification, ServiceDescriptor) {
+  function HDSAddResourceCommonService($window, HybridServicesClusterService, HybridServicesExtrasService, Notification, ServiceDescriptorService) {
     var vm = this;
     vm.clusters = null;
     vm.onlineNodeList = [];
@@ -70,9 +70,9 @@
             vm.selectedClusterId = resp.id;
             return allowListHost(hostName, vm.selectedClusterId);
           })
-        .catch(function (error) {
-          Notification.errorWithTrackingId(error, 'hds.clusters.clusterCreationFailed', { enteredCluster: enteredCluster });
-        });
+          .catch(function (error) {
+            Notification.errorWithTrackingId(error, 'hds.clusters.clusterCreationFailed', { enteredCluster: enteredCluster });
+          });
       } else {
         vm.selectedClusterId = vm.clusterDetail.id;
         return allowListHost(hostName, vm.selectedClusterId);
@@ -85,7 +85,7 @@
 
     function redirectPopUpAndClose(hostName, enteredCluster, firstTimeSetup) {
       if (firstTimeSetup) {
-        ServiceDescriptor.enableService('spark-hybrid-datasecurity');
+        ServiceDescriptorService.enableService('spark-hybrid-datasecurity');
       }
       vm.popup = $window.open('https://' + encodeURIComponent(hostName) + '/?clusterName=' + encodeURIComponent(enteredCluster) + '&clusterId=' + encodeURIComponent(vm.selectedClusterId));
     }

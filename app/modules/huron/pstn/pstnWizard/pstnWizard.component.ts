@@ -1,12 +1,12 @@
 import { Notification } from 'modules/core/notifications/notification.service';
 import { IEmergencyAddress } from 'modules/squared/devices/emergencyServices/index';
-import { NumberModel, INumbersModel } from './number.model';
 import { PstnWizardService } from './pstnWizard.service';
 import { DirectInwardDialing } from './directInwardDialing';
 import { TokenMethods } from '../pstnSwivelNumbers';
 import { TOKEN_FIELD_ID } from '../pstn.const';
 import { PstnService } from '../pstn.service';
 import { PstnModel, IOrder } from '../pstn.model';
+import { NumberModel, INumbersModel } from '../pstnNumberSearch';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
 
 export class PstnWizardComponent implements ng.IComponentOptions {
@@ -15,6 +15,7 @@ export class PstnWizardComponent implements ng.IComponentOptions {
   public bindings = {
     dismiss: '&',
     close: '&',
+    refreshFn: '&',
     customerId: '<',
     customerName: '<',
     customerEmail: '<',
@@ -57,7 +58,9 @@ export class PstnWizardCtrl implements ng.IComponentController {
   public showPortNumbers: boolean = false;
   public showTollFreeNumbers: boolean = false;
   public enableCarriers: boolean;
+  public blockByopNumberAddForPartnerAdmin: boolean;
   public close: Function;
+  public refreshFn: Function;
   public get provider() {
     return this.PstnModel.getProvider();
   }
@@ -65,7 +68,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
   public titles: {};
   public dismiss: Function;
   public prevStep: number = 1;
-
+  public loggedInPartnerPortal: boolean = false;
   private did: DirectInwardDialing = new DirectInwardDialing();
   private i387FeatureToggle: boolean;
 
@@ -119,7 +122,9 @@ export class PstnWizardCtrl implements ng.IComponentController {
     this.PstnService.getCarrierTollFreeInventory(this.PstnModel.getProviderId())
       .then(response => {
         this.model.tollFree.areaCodeOptions = response.areaCodes;
-        const areaCodes = response.areaCodes.join(', ') + '.';
+        const areaCodes = response.areaCodes
+        .map(area => area.code)
+        .join(', ') + '.';
         this.tollFreeTitle = this.$translate.instant('pstnSetup.tollFreeTitle', { areaCodes: areaCodes });
         this.model.tollFree.areaCode = null;
       })
@@ -173,8 +178,10 @@ export class PstnWizardCtrl implements ng.IComponentController {
   }
 
   public goToSwivelNumbers(): void {
+    this.loggedInPartnerPortal = this.PstnWizardService.isPartnerPortal();
     if (this.i387FeatureToggle) {
-      if (this.PstnModel.isEsaSigned()) {
+      this.blockByopNumberAddForPartnerAdmin = this.PstnWizardService.blockByopNumberAddForPartnerAdmin();
+      if (this.blockByopNumberAddForPartnerAdmin || this.PstnModel.isEsaSigned()) {
         this.step = 9;
       } else {
         this.step = 8;
@@ -226,12 +233,20 @@ export class PstnWizardCtrl implements ng.IComponentController {
       this.PstnModel.setEsaDisclaimerAgreed(false);
     } else if (this.i387FeatureToggle && this.isSwivel() && this.step === 9) {
       this.PstnModel.setEsaDisclaimerAgreed(false);
+      if (this.blockByopNumberAddForPartnerAdmin) {
+        this.step = 1;
+      }
     } else if (this.i387FeatureToggle && this.isSwivel() && this.step === 10) {
-      this.step = this.prevStep === 8 ? 8 : 9;
+      if (this.blockByopNumberAddForPartnerAdmin) {
+        this.step = 9;
+      } else {
+        this.step = this.prevStep === 8 ? 8 : 9;
+      }
       return;
     }else if (!this.isSwivel() && this.step === 6) {
       this.step -= 1;
     }
+
     if (this.step > 1) {
       this.step -= 1;
     }
@@ -275,6 +290,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
       case 6:
         this.placeOrderLoad = true;
         this.PstnWizardService.placeOrder().then(() => {
+          this.refreshFn();
           this.step = 7;
           this.placeOrderLoad = false;
         });
@@ -299,9 +315,10 @@ export class PstnWizardCtrl implements ng.IComponentController {
       case 10:
         this.placeOrderLoad = true;
         this.PstnWizardService.finalizeImport().then(() => {
+          this.refreshFn();
           this.step = 11;
-          this.placeOrderLoad = false;
-        });
+        })
+        .finally(() => this.placeOrderLoad = false);
         return;
       case 11:
         this.dismissModal();
@@ -318,6 +335,8 @@ export class PstnWizardCtrl implements ng.IComponentController {
         return this.isValid === false;
       case 5:
         return !this.emergencyAcknowledge;
+      case 9:
+        return this.blockByopNumberAddForPartnerAdmin || this.swivelNumbers.length === 0;
     }
     return false;
   }
@@ -334,7 +353,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
       case 8:
         return this.PstnModel.isCustomerExists();
       case 9:
-        return this.PstnModel.isEsaSigned();
+        return this.PstnModel.isEsaSigned() || (this.PstnModel.isCustomerExists() && this.blockByopNumberAddForPartnerAdmin);
       case 11:
         return true;
     }
@@ -369,9 +388,9 @@ export class PstnWizardCtrl implements ng.IComponentController {
     }));
   }
 
-  public searchCarrierInventory(areaCode: string, block: boolean, quantity: number, consecutive: boolean): void {
+  public searchCarrierInventory(areaCode: string, block: boolean, quantity: number, consecutive: boolean, stateAbbreviation: string): void {
     this.loading = true;
-    this.PstnWizardService.searchCarrierInventory(areaCode, block, quantity, consecutive, this.model, this.isTrial).then(() => this.loading = false);
+    this.PstnWizardService.searchCarrierInventory(areaCode, block, quantity, consecutive, stateAbbreviation, this.model, this.isTrial).then(() => this.loading = false);
   }
 
   public searchCarrierTollFreeInventory(areaCode: string, block: boolean, quantity: number, consecutive: boolean): void {
@@ -379,7 +398,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
     this.PstnWizardService.searchCarrierTollFreeInventory(areaCode, block, quantity, consecutive, this.model).then(() => this.loading = false);
   }
 
-  public addToCart(orderType: string, numberType: string, quantity: number, searchResultsModel: {}): void {
+  public addToCart(orderType: string, numberType: string, quantity: number, searchResultsModel: boolean[]): void {
     this.model.pstn.addLoading = true;
     this.model.tollFree.addLoading = true;
     this.PstnWizardService.addToCart(orderType, numberType, quantity, searchResultsModel, this.orderCart, this.model).then(orderCart => {
@@ -398,7 +417,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
     this.validCount = 0;
     this.invalidCount = 0;
     this.did.clearList();
-    angular.element('#' + this.tokenfieldId).tokenfield('setTokens', tmpDids);
+    (angular.element('#' + this.tokenfieldId) as any).tokenfield('setTokens', tmpDids);
   }
 
   public getInvalidTokens(): JQuery {
@@ -451,12 +470,40 @@ export class PstnWizardCtrl implements ng.IComponentController {
         return true;
       case 9:
         this.prevStep = this.step;
-        return !this.PstnModel.isEsaSigned();
+        return !this.PstnModel.isEsaSigned() || this.blockByopNumberAddForPartnerAdmin;
     }
     return false;
   }
 
-  public goToReview(): void {
+  public onSkip(): void {
+    switch (this.step) {
+      case 8:
+        if (this.PstnModel.isCustomerExists()) {
+          this.dismissModal();
+        }  else {
+          this.finalizeCustomerAndEsA();
+        }
+        break;
+      case 9:
+        if (this.PstnWizardService.isLoggedInAsPartner()) {
+          if (this.PstnModel.isCustomerExists()) {
+            this.dismissModal();
+          } else {
+            this.step = 10;
+          }
+        } else if (this.PstnWizardService.blockByopNumberAddForAllAdmin) {
+          this.finalizeCustomerAndEsA();
+        }
+        break;
+      default:
+        this.dismissModal();
+    }
+  }
+
+  public finalizeCustomerAndEsA(): void {
+    this.PstnModel.clearSwivelNumbers();
+    this.onSwivelChange([], 0);
+    this.PstnWizardService.setSwivelOrder([]);
     this.step = 10;
   }
 }

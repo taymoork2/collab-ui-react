@@ -2,16 +2,14 @@
 
 /* global jasmine, browser, _ */
 
-var HttpsProxyAgent = require("https-proxy-agent");
+var HttpsProxyAgent = require('https-proxy-agent');
 var fs = require('fs');
 var appConfig = require('./config/config');
 var hostnameConfig = require('./app/config/hostname.config');
 var processEnvUtil = require('./utils/processEnvUtil')();
 var args = require('yargs').argv;
 var _ = require('lodash');
-var FileDetector = require('./test/e2e-protractor/utils/file-detector');
-
-var gatingSuites = _.chain(appConfig.e2eSuites).omit('huron').values().value();
+var remote = require('selenium-webdriver/remote');
 
 // http proxy agent is required if the host running the 'e2e' task is behind a proxy (ex. a Jenkins slave)
 // - sauce executors are connected out to the world through the host's network
@@ -34,10 +32,11 @@ if (process.env.SAUCE__MAX_INSTANCES) {
 }
 
 exports.config = {
-  framework: "jasmine2",
+  framework: 'jasmine2',
 
   suites: _.extend({}, appConfig.e2eSuites, {
-    jenkins: gatingSuites,
+    jenkins: _.values(appConfig.e2eSuites),
+    huron: appConfig.functionalSuites.huron,
   }),
 
   sauceUser: process.env.SAUCE__USERNAME,
@@ -92,7 +91,7 @@ exports.config = {
 
     global.isSauce = !!(process.env.SAUCE__USERNAME && process.env.SAUCE__USERNAME.length > 0);
     if (global.isSauce) {
-      browser.setFileDetector(new FileDetector());
+      browser.setFileDetector(new remote.FileDetector());
     }
     global.isProductionBackend = !!args.productionBackend;
     global.log = new Logger();

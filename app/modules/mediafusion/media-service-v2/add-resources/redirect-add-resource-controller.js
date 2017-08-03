@@ -20,6 +20,7 @@
     vm.showDownloadableOption = firstTimeSetup;
     vm.closeSetupModal = closeSetupModal;
     vm.radio = 1;
+    vm.ovaType = 1;
     vm.noProceed = false;
     vm.yesProceed = yesProceed;
     vm.canGoNext = canGoNext;
@@ -61,11 +62,15 @@
     }
 
     function next() {
-      if (vm.radio == 0) {
+      if (vm.radio === '0') {
         vm.noProceed = true;
         vm.showDownloadableOption = false;
         vm.yesProceed = false;
-        $window.open('https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/Media-Fusion-Management-Connector/mfusion.ova');
+        if (vm.ovaType === '1') {
+          $window.open('https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/Media-Fusion-Management-Connector/mfusion.ova');
+        } else {
+          $window.open('https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/hybrid-media-demo/hybridmedia_demo.ova');
+        }
       } else if (vm.yesProceed) {
         if (!_.isUndefined(vm.selectedCluster) && vm.selectedCluster != '' && !_.isUndefined(vm.hostName)) {
           vm.enableRedirectToTarget = true;

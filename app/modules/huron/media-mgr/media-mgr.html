@@ -1,44 +1,44 @@
-<div id="mediaMgrTitle" class="modal-header">
-  <button type="button" class="close" ng-click="$ctrl.dismiss()"></button>
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$ctrl.closeMediaMgrModal()"></button>
   <h3 class="modal-title">{{::"mediaMgrModal.title" | translate }}</h3>
 </div>
-<div id="mediaMgrBody" class="modal-body">
+<div class="modal-body">
   <div class="modal-container">
-    <div id="mediaMgrNav" class="mb-nav">
-      <button id="mediaNav" class="icon icon-music icon-2x" ng-class="{'active-icon' : $ctrl.isModalActive($ctrl.ModalView.Media)}" ng-click="$ctrl.setModal($ctrl.ModalView.Media)"></button>
-      <button id="trashNav" class="icon icon-trash icon-2x" ng-class="{'active-icon' : $ctrl.isModalActive($ctrl.ModalView.Trash)}" ng-click="$ctrl.setModal($ctrl.ModalView.Trash)"></button>
+    <div class="mb-nav">
+      <button class="icon icon-music icon-lg" ng-class="{'active' : $ctrl.isModalActive($ctrl.ModalView.Media)}" ng-click="$ctrl.setModal($ctrl.ModalView.Media)"></button>
+      <button class="icon icon-trash icon-lg" ng-class="{'active' : $ctrl.isModalActive($ctrl.ModalView.Trash)}" ng-click="$ctrl.setModal($ctrl.ModalView.Trash)"></button>
     </div>
     <div class="mb-container" ng-if="$ctrl.loading">
       <div class="mb-panel loading centered" ng-if="$ctrl.loading">
-        <i class="icon icon-spinner icon-5x"></i>
+        <i class="icon icon-spinner icon-4x"></i>
       </div>
     </div>
-    <div class="mb-container" ng-if="$ctrl.mohUploadInProgress">
-      <div class="mb-panel centered" >
-        <cs-card class="full section-background">
-          <article>
-            <section>
-              <div class="progress-bar">
+    <div class="mb-container" ng-if="$ctrl.uploadActionInProgress()">
+      <div class="mb-panel">
+        <cs-card class="large section-background">
+          <div class="progress-bar">
+            <div class="progressbar-icon-alignment">
+              <div class="progressbar-content-alignment">
                 <div class="progressbar-info">
-                  <span class="progressbar-label">{{::"mediaMgrModal.uploadProcessing" | translate}}</span>
+                  <span class="progressbar-label">{{::"mediaMgrModal.uploading" | translate}}</span>
                   <span class="progressbar-progress">{{$ctrl.mohUploadPercentComplete}}%</span>
                 </div>
-                <progressbar class="progress-striped" animate="false" type="success" value="$ctrl.mohUploadPercentComplete"></progressbar>
-                <div class="progressbar-label"> {{$ctrl.mohUpload.filename}}</div>
+                <progressbar value="$ctrl.mohUploadPercentComplete"></progressbar>
+                <div class="progressbar-label progressbar-sublabel"> {{$ctrl.mohUpload.filename}}</div>
               </div>
-            </section>
-          </article>
+              <i class="icon icon-exit" ng-click="$ctrl.cancelUpload()"></i>
+            </div>
+          </div>
         </cs-card>
       </div>
     </div>
-    <div class="mb-container" ng-if="!$ctrl.loading && !$ctrl.mohUploadInProgress && $ctrl.isModalActive($ctrl.ModalView.Media)">
+    <div class="mb-container" ng-if="!$ctrl.loading && !$ctrl.uploadActionInProgress() && $ctrl.isModalActive($ctrl.ModalView.Media)">
       <div class="mb-panel-left">
         <div class="mb-panel-header">
           <cs-searchfilter search-item-fn="$ctrl.searchByString(searchStr)" placeholder-text="{{::'mediaMgrModal.searchPlaceholder' | translate}}"></cs-searchfilter>
           <label class="hotspot" for="upload">
-            <i id="fileUpload" class="icon icon-plus icon-2x" ng-class="{'icon-plus-disabled': $ctrl.mohUploadInProgress}"></i>
-            <input id="upload"
-              name="upload"
+            <i class="icon icon-plus icon-2x" ng-disabled="$ctrl.mohUploadInProgress"></i>
+            <input id="upload" name="upload"
               type="file"
               cr-file-read
               reading-strategy="arrayBuffer"
@@ -48,70 +48,109 @@
               file-name="$ctrl.mohUpload.filename"
               file-size="$ctrl.mohUpload.filesize"
               file-checksum="$ctrl.mohUpload.checksum"
-              file-type="video/mpeg, audio/mpeg, audio/mp3, video/mp4, audio/wav, audio/x-wav, audio/wave, audio/x-pn-wav"
-              file-suffix="mpeg, mpg, mp3, mp4, wav, scpf"
-              file-read-status="$ctrl.readMediaStatus(filename, filesize, percentComplete)"
+              file-type="video/mpeg, audio/mpeg, audio/mp3, video/mp4, audio/wav, audio/x-wav, audio/wave, audio/x-pn-wav, video/x-ms-wmv"
+              file-suffix="mpeg, mpg, mp3, mp4, wav, wmv, scpf, mov, ogg"
               file-read-success="$ctrl.uploadMedia(file, filename, filesize, checksum)"
-              file-type-error="$ctrl.handleFileTypeError()">
-            </input>
+              file-type-error="$ctrl.handleFileTypeError()"/>
           </label>
         </div>
-        <hr />
+        <hr class="mb-row-seperator" />
         <div class="mb-panel-body">
-          <div id="mediaContent" class="row collapse" ng-repeat-start="mohFile in $ctrl.mediaList | filter:$ctrl.searchStr | filter:{mediaState: '!Deleted'}">
-            <div id="mediaItem" class-"mb-rows" ng-click="$ctrl.setActiveMedia(mohFile)">
+          <div class="row collapse" ng-class="{'active' : $ctrl.isActiveMedia(mohFile)}" ng-click="$ctrl.setActiveMedia(mohFile)" ng-repeat-start="mohFile in $ctrl.mediaList | filter:$ctrl.searchStr | filter:{mediaState: '!Deleted'}">
+            <div class="mb-rows">
               <div class="mb-row-content">
-                <span class="media-text">{{::mohFile.displayName}}</span>
-                <span class="media-info" ng-if="$ctrl.isMohFileAvailable(mohFile.mediaState)">{{::mohFile.duration}}</span>
-                <i class="icon icon-exit" ng-if="$ctrl.isMohFileUnavailable(mohFile.mediaState)" ng-click="$ctrl.cleanupFailedUpload(mohFile)"></i>
+                <span class="media-text text-left nowrap">{{::mohFile.displayName}}</span>
+                <span class="media-text text-right" ng-if="$ctrl.isMohFileAvailable(mohFile.mediaState)">{{$ctrl.getDuration(mohFile)}}</span>
+                <i class="icon icon-exit text-right" ng-if="$ctrl.isMohFileUnavailable(mohFile.mediaState)" ng-click="$ctrl.cleanupMedia(mohFile)"></i>
               </div>
-              <div class="mb-row-content">
-                <div ng-if="$ctrl.isMohFileProcessing(mohFile.mediaState)">
+              <div class="mb-row-content" ng-if="$ctrl.isMohFileProcessing(mohFile.mediaState)">
+                <div>
                   <i class="icon icon-spinner icon-msg-alignment"></i>
-                  <span class="progress-msg">{{::"mediaMgrModal.uploadProcessing" | translate}}</span>
+                  <span class="media-subtext text-left">{{::"mediaMgrModal.uploadProcessing" | translate}}</span>
                 </div>
-                <div ng-if="$ctrl.isMohFileAvailable(mohFile.mediaState)">
-                  <span class="media-text">{{::mohFile.filename}}</span>
-                </div>
-                <div ng-if="$ctrl.isMohFileUnavailable(mohFile.mediaState)">
+              </div>
+              <div class="mb-row-content" ng-if="$ctrl.isMohFileAvailable(mohFile.mediaState)">
+                <span class="media-subtext text-left nowrap">{{$ctrl.getDisplayText(mohFile)}}</span>
+                <span class="media-subtext text-right">{{mohFile.size | bytesFilter: 1}}</span>
+              </div>
+              <div class="mb-row-content" ng-if="$ctrl.isMohFileUnavailable(mohFile.mediaState)">
+                <div>
                   <i class="icon icon-error icon-msg-alignment"></i>
-                  <span class="progress-msg">{{::"mediaMgrModal.processingError" | translate}}</span>
+                  <span class="media-subtext text-left">{{::"mediaMgrModal.processingError" | translate}}</span>
                 </div>
-                <div class="media-info" ng-if="!$ctrl.isMohFileUnavailable(mohFile.mediaState)">{{$ctrl.convertSize(mohFile.size)}}&nbspMB</div>
               </div>
             </div>
           </div>
-          <hr ng-repeat-end />
+          <hr class="mb-row-seperator" ng-repeat-end />
         </div>
       </div>
       <div class="mb-panel-right">
         <div ng-if="$ctrl.activeMedia">
-          <div id="mediaSelected" class="mb-header">
-            {{$ctrl.activeMedia.displayName}}
-            <i class="icon icon-trash icon-lg" ng-click="$ctrl.deleteMedia($ctrl.activeMedia)"></i>
+          <div class="mb-rows" ng-if="!$ctrl.mohEditInProgress">
+            <div class="mb-row-content">
+              <div class="mb-title text-left nowrap">{{$ctrl.activeMedia.displayName}}</div>
+              <span cs-dropdown class="mb-title actions-menu dropdown pull-right">
+                <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
+                  <i class="icon icon-more"></i>
+                </button>
+                <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
+                  <li><a ng-click="$ctrl.editMedia()"><span>{{::"mediaMgrModal.edit" | translate}}</span></a></li>
+                  <li><a ng-click="$ctrl.deleteMedia($ctrl.activeMedia)"><span>{{::"mediaMgrModal.delete" | translate}}</span></a></li>
+                </ul>
+              </span>
+            </div>
+            <div class="mb-row-content">
+              <div class="mb-desc text-left">{{$ctrl.activeMedia.description}}</div>
+            </div>
           </div>
-          <div class="mb-desc">{{$ctrl.activeMedia.description}}</div>
-        </div>
-      </div>
-    </div>
-    <div class="mb-container" ng-if="!$ctrl.loading && !$ctrl.mohUploadInProgress && $ctrl.isModalActive($ctrl.ModalView.Trash)">
-      <div class="mb-panel">
-        <div id="trashTitle" class="mb-title">{{::"mediaMgrModal.deletedTitle" | translate}}</div>
-        <div id="trashDesc" class="mb-desc">{{::"mediaMgrModal.deletionPeriod" | translate}}</div>
-        <hr />
-        <div id="trashContent" class="row collapse" ng-repeat-start="mohFile in $ctrl.mediaList | filter:search.mediaState='Deleted' as filteredMedia">
-          <div class="mb-row-content">
-            <div class="media-text">{{::mohFile.filename}}</div>
-            <div class="media-text">{{::mohFile.description}}</div>
-            <div class="media-icon-alignment">
-              <i class="icon icon-back icon-lg" ng-click="$ctrl.restoreMedia(mohFile)"></i>
-              <i class="icon icon-trash icon-lg" ng-click="$ctrl.removeMedia(mohFile)"></i>
-              <i class="icon icon-download icon-lg" ng-click="$ctrl.downloadMedia(mohFile)"></i>
+          <div class="mb-rows" ng-if="$ctrl.mohEditInProgress">
+            <form name="$ctrl.form" novalidate role="form">
+              <div class="mb-row-content">
+                <input cs-input type="text" name="displayName" placeholder="$ctrl.activeMedia.displayName" ng-model="$ctrl.activeMedia.displayName"
+                  cs-input-group-size="medium-12" cs-input-messages="$ctrl.displayNameMessages" ng-maxlength="48" ng-required="true">
+              </div>
+              <div class="mb-row-content">
+                <textarea cs-input type="text" name="description" rows="3" placeholder="{{ $ctrl.activeMedia.description || ' ' }}" ng-model="$ctrl.activeMedia.description"
+                  cs-input-group-size="medium-12" cs-input-messages="$ctrl.descriptionMessages" ng-maxlength="512" ng-required="false">
+                </textarea>
+              </div>
+            </form>
+            <div class="mb-panel-footer">
+              <button class="btn" type="submit" ng-click="$ctrl.cancelEditMedia($ctrl.activeMedia)">{{::"mediaMgrModal.cancelButton" | translate}}</button>
+              <button class="btn btn--primary" type="submit" ng-disabled="$ctrl.form.$invalid" ng-click="$ctrl.saveEditMedia($ctrl.activeMedia)">{{::"mediaMgrModal.saveButton" | translate}}</button>
             </div>
           </div>
         </div>
-        <hr ng-repeat-end />
-          <button id="emptyTrash" class="btn mb-br-button" type="submit" ng-disabled="!filteredMedia.length" ng-click="$ctrl.deleteAll()">{{::"mediaMgrModal.deleteButton" | translate}}</button>
+      </div>
+    </div>
+    <div class="mb-container" ng-if="!$ctrl.loading && !$ctrl.uploadActionInProgress() && $ctrl.isModalActive($ctrl.ModalView.Trash)">
+      <div class="mb-panel">
+        <div class="mb-panel-header">
+          <div class="mb-title text-center">{{::"mediaMgrModal.deletedTitle" | translate}}</div>
+        </div>
+        <hr class="mb-row-seperator" />
+        <div class="mb-panel-body">
+          <div class="row collapse" ng-repeat-start="mohFile in $ctrl.mediaList | filter:search.mediaState='Deleted' as filteredMedia">
+            <div class="mb-rows">
+              <div class="mb-row-content">
+                <div class="media-text text-left">{{::mohFile.displayName}}</div>
+                <div class="media-text text-right">
+                  <i class="icon icon-back icon-lg" ng-click="$ctrl.restoreMedia(mohFile)"></i>
+                  <i class="icon icon-trash icon-lg" ng-click="$ctrl.deletePermMedia(mohFile)"></i>
+                </div>
+              </div>
+              <div class="mb-row-content">
+                <div class="media-subtext text-left">{{$ctrl.getDisplayText(mohFile)}}</div>
+                <div class="media-subtext text-right"><em>{{::"mediaMgrModal.deleted" | translate}} {{$ctrl.getDeleteTime(mohFile)}}</em></div>
+              </div>
+            </div>
+          </div>
+          <hr class="mb-row-seperator" ng-repeat-end />
+        </div>
+        <hr class="mb-row-seperator" />
+        <div class="mb-panel-footer">
+          <button class="btn" type="submit" ng-disabled="!filteredMedia.length" ng-click="$ctrl.deletePermAll()">{{::"mediaMgrModal.deleteButton" | translate}}</button>
+        </div>
       </div>
     </div>
   </div>

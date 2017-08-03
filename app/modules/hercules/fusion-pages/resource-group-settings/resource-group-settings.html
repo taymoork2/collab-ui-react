@@ -1,6 +1,6 @@
 <div class="fusion-resource-group-settings">
 
-  <cs-page-header title-name="{{rgsCtrl.localizedTitle}}" back="true" back-url="rgsCtrl.backUrl"></cs-page-header>
+  <cs-page-header title-name="{{rgsCtrl.title | translate:rgsCtrl.titleValues}}" back="true" back-url="rgsCtrl.backUrl"></cs-page-header>
 
   <div class="cs-form" ng-if="rgsCtrl.group">
     <setting-section setting="rgsCtrl.clusters">
@@ -45,8 +45,7 @@
       </div>
 
       <h5 class="sub-section__label" translate="hercules.resourceGroupSettings.removeGroup"></h5>
-      <p ng-if="!rgsCtrl.nameChangeEnabled" class="sub-section__description" translate="hercules.resourceGroupSettings.removeGroupDescription"></p>
-      <p ng-if="rgsCtrl.nameChangeEnabled" class="sub-section__description" translate="hercules.resourceGroupSettings.removeGroupDescriptionNew"></p>
+      <p class="sub-section__description" translate="hercules.resourceGroupSettings.removeGroupDescription"></p>
       <div ng-if="!rgsCtrl.allowRemove">
         <button type="button" class="btn" disabled="disabled" translate="common.remove"></button>
         <p class="cap-long-names remove-warning" translate="hercules.resourceGroupSettings.removeGroupReq"></p>

@@ -10,7 +10,7 @@ require('./_user-csv.scss');
   /* @ngInject */
   function UserCsvCtrl($interval, $modal, $q, $rootScope, $scope, $state, $timeout, $translate, $previousState,
     Analytics, Authinfo, Config, CsvDownloadService, HuronCustomer, LogMetricsService, NAME_DELIMITER, OnboardService,
-    Notification, ServiceDescriptor, PhoneNumberService, UserCsvService, Userservice, ResourceGroupService, USSService, DirSyncService) {
+    Notification, ServiceDescriptorService, PhoneNumberService, UserCsvService, Userservice, ResourceGroupService, USSService, DirSyncService) {
     // variables
     var vm = this;
     vm.licenseUnavailable = false;
@@ -57,7 +57,7 @@ require('./_user-csv.scss');
     var isCalendarServiceEnabled = false;
     var isCalendarOrCallServiceEntitled = false;
 
-    ServiceDescriptor.getServices()
+    ServiceDescriptorService.getServices()
       .then(function (services) {
         _.forEach(services, function (service) {
           if (service.id === Config.entitlements.fusion_cal) {

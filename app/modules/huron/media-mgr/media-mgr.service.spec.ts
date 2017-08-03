@@ -1,6 +1,6 @@
 import mediaMgrModule from './index';
-import { IMedia } from 'modules/huron/media-mgr/media-mgr.component';
-import { IMediaUpload } from 'modules/huron/media-mgr/media-mgr.component';
+import { IMedia } from './media-mgr.component';
+import { IMediaUpload } from './media-mgr.component';
 
 describe('Service: mediaMgrService', () => {
   beforeEach(function() {
@@ -140,19 +140,19 @@ describe('Service: mediaMgrService', () => {
         });
     });
 
-    it('deleteMedia should delete all media', function () {
+    it('deletePermAll should permanently delete all media', function () {
       this.$httpBackend.expectDELETE(this.HuronConfig.getMmsUrl() + '/organizations/' + this.Authinfo.getOrgId() + '/media')
         .respond(204);
-      this.MediaMgrService.deleteAll()
+      this.MediaMgrService.deletePermAll()
         .then(response => {
           expect(response.status).toBe(204);
         });
     });
 
-    it('deleteMedia should permanently delete a media', function () {
+    it('deletePermMedia should permanently delete a media', function () {
       this.$httpBackend.expectDELETE(this.HuronConfig.getMmsUrl() + '/organizations/' + this.Authinfo.getOrgId() + '/media/abcd-4040?permanent=true')
         .respond(204);
-      this.MediaMgrService.removeMedia(this.deleteMedia)
+      this.MediaMgrService.deletePermMedia(this.deleteMedia)
         .then(response => {
           expect(response.status).toBe(204);
         });

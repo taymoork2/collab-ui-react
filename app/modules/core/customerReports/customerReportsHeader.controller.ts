@@ -3,68 +3,74 @@ class CustomerReportsHeaderCtrl {
   /* @ngInject */
   constructor(
     private $q: ng.IQService,
+    private $state,
     private Authinfo,
     private FeatureToggleService,
     private MediaServiceActivationV2,
-    private WebExApiGatewayService,
     private ProPackService,
+    private WebExApiGatewayService,
+    private $translate: ng.translate.ITranslateService,
   ) {
     if (Authinfo.isCare()) {
       this.headerTabs.push({
-        title: 'reportsPage.careTab',
+        title: this.$translate.instant('reportsPage.careTab'),
         state: 'reports.care',
       });
     }
     this.$q.all(this.promises).then((features: any): void => {
-      if (features.webexReports) { // TODO, From UE Design, We should combine reports.webex_ with reports.webex, Next time we will do -- zoncao@cisco.com
+      if (features.webexMetrics && features.proPackEnabled) {
         this.headerTabs.push({
-          title: 'customerPage.webex',
-          state: 'reports.webex_',
+          title: this.$translate.instant('reportsPage.sparkReports'),
+          state: 'reports.sparkMetrics',
+        });
+        this.headerTabs.push({
+          title: this.$translate.instant('reportsPage.webexMetrics.title'),
+          state: 'reports.webex-metrics',
+        });
+      } else {
+        this.headerTabs.push({
+          title: this.$translate.instant('reportsPage.sparkReports'),
+          state: 'reports.spark',
         });
       }
       if (features.isMfEnabled) {
         if (features.mf) {
           this.headerTabs.push({
-            title: 'mediaFusion.report.title',
+            title: this.$translate.instant('mediaFusion.report.title'),
             state: 'reports.media',
           });
         } else if (features.mfMilestoneTwo) {
           this.headerTabs.push({
-            title: 'mediaFusion.report.title',
+            title: this.$translate.instant('mediaFusion.report.title'),
             state: 'reports.mediaservice',
           });
         } else {
           this.headerTabs.push({
-            title: 'mediaFusion.report.title',
+            title: this.$translate.instant('mediaFusion.report.title'),
             state: 'reports.metrics',
           });
         }
       }
       this.headerTabs.push({
-        title: 'reportsPage.usageReports.usageReportTitle',
+        title: this.$translate.instant('reportsPage.usageReports.usageReportTitle'),
         state: 'reports.device-usage',
       });
-      if (features.webexMetrics) {
-        this.headerTabs.push({
-          title: 'reportsPage.webexMetrics.title',
-          state: 'reports.webex-metrics',
-        });
+      if (this.$state.current.name === 'reports') {
+        this.goToFirstReportsTab();
       }
     });
     this.checkWebex();
   }
 
-  public headerTabs = [{
-    title: 'reportsPage.sparkReports',
-    state: 'reports.spark',
-  }];
+  public headerTabs = new Array<any>();
 
   private webex: boolean = false;
   private promises: any = {
     mf: this.FeatureToggleService.atlasMediaServiceMetricsMilestoneOneGetStatus(),
     mfMilestoneTwo: this.FeatureToggleService.atlasMediaServiceMetricsMilestoneTwoGetStatus(),
     isMfEnabled: this.MediaServiceActivationV2.getMediaServiceState(),
-    webexMetrics: this.ProPackService.hasProPackEnabled(),
+    webexMetrics: this.FeatureToggleService.webexMetricsGetStatus(),
+    proPackEnabled: this.ProPackService.hasProPackEnabled(),
   };
 
   private checkWebex (): void {
@@ -75,7 +81,7 @@ class CustomerReportsHeaderCtrl {
         if (result.isAdminReportEnabled && result.isIframeSupported) {
           if (!this.webex) {
             this.headerTabs.push({
-              title: 'reportsPage.webex',
+              title: this.$translate.instant('reportsPage.webex'),
               state: 'reports.webex',
             });
             this.webex = true;
@@ -83,6 +89,11 @@ class CustomerReportsHeaderCtrl {
         }
       }).catch(_.noop);
     });
+  }
+
+  public goToFirstReportsTab(): void {
+    const firstTab = this.headerTabs[0];
+    this.$state.go(firstTab.state);
   }
 
   private getUniqueWebexSiteUrls() {

@@ -2,7 +2,7 @@
 
 describe('Controller: DevicesCtrl', function () {
   var $scope, $state, $controller, controller, $httpBackend, $timeout, $q;
-  var UrlConfig, AccountOrgService, Authinfo, FeatureToggleService, Userservice, ServiceDescriptor;
+  var UrlConfig, AccountOrgService, Authinfo, FeatureToggleService, Userservice, ServiceDescriptorService;
 
   beforeEach(angular.mock.module('Squared'));
   beforeEach(angular.mock.module('Huron'));
@@ -13,7 +13,7 @@ describe('Controller: DevicesCtrl', function () {
   beforeEach(initSpies);
   beforeEach(initController);
 
-  function dependencies($rootScope, _$state_, _$timeout_, _$controller_, _$httpBackend_, _$q_, _UrlConfig_, _AccountOrgService_, _Authinfo_, _FeatureToggleService_, _Userservice_, _ServiceDescriptor_) {
+  function dependencies($rootScope, _$state_, _$timeout_, _$controller_, _$httpBackend_, _$q_, _UrlConfig_, _AccountOrgService_, _Authinfo_, _FeatureToggleService_, _Userservice_, _ServiceDescriptorService_) {
     $scope = $rootScope.$new();
     $state = _$state_;
     $controller = _$controller_;
@@ -25,7 +25,7 @@ describe('Controller: DevicesCtrl', function () {
     Authinfo = _Authinfo_;
     FeatureToggleService = _FeatureToggleService_;
     Userservice = _Userservice_;
-    ServiceDescriptor = _ServiceDescriptor_;
+    ServiceDescriptorService = _ServiceDescriptorService_;
   }
 
   function initSpies() {
@@ -50,13 +50,14 @@ describe('Controller: DevicesCtrl', function () {
       then: _.noop,
     });
 
-    spyOn(ServiceDescriptor, 'getServices').and.returnValue($q.resolve([]));
+    spyOn(ServiceDescriptorService, 'getServices').and.returnValue($q.resolve([]));
 
     spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'atlasDeviceExportGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'csdmPlaceCalendarGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.resolve(true));
+    spyOn(FeatureToggleService, 'csdmMultipleDevicesPerPlaceGetStatus').and.returnValue($q.resolve(true));
   }
 
   function initController() {
@@ -101,11 +102,13 @@ describe('Controller: DevicesCtrl', function () {
     var isEntitledToRoomSystem;
     var showATA;
     var showPersonal;
+    var csdmMultipleDevicesPerPlaceFeature;
     beforeEach(function () {
       isEntitledToHuron = true;
       isEntitledToRoomSystem = true;
       showATA = true;
       showPersonal = true;
+      csdmMultipleDevicesPerPlaceFeature = true;
       userCisUuid = 'userCisUuid';
       email = 'email@address.com';
       orgId = 'orgId';
@@ -131,6 +134,7 @@ describe('Controller: DevicesCtrl', function () {
       };
       controller.showATA = showATA;
       controller.showPersonal = showPersonal;
+      controller.csdmMultipleDevicesPerPlaceFeature = csdmMultipleDevicesPerPlaceFeature;
       controller.startAddDeviceFlow();
       $scope.$apply();
     });
@@ -142,6 +146,7 @@ describe('Controller: DevicesCtrl', function () {
       expect(wizardState.function).toBe('addDevice');
       expect(wizardState.showATA).toBe(showATA);
       expect(wizardState.showPersonal).toBe(showPersonal);
+      expect(wizardState.multipleRoomDevices).toBe(csdmMultipleDevicesPerPlaceFeature);
       expect(wizardState.admin.firstName).toBe(adminFirstName);
       expect(wizardState.admin.lastName).toBe(adminLastName);
       expect(wizardState.admin.displayName).toBe(adminDisplayName);
@@ -221,7 +226,7 @@ describe('Controller: DevicesCtrl', function () {
 
     it('starts export and shows progress dialog after acknowledged in initial dialog', function () {
       controller.startDeviceExport();
-      expect($modal.open).toHaveBeenCalled();  // initial dialog
+      expect($modal.open).toHaveBeenCalled(); // initial dialog
       fakeModal.close(); // user acks the export
       expect($modal.open).toHaveBeenCalled(); // progress dialog
       expect(DeviceExportService.exportDevices).toHaveBeenCalled();

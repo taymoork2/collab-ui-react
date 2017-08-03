@@ -57,7 +57,7 @@ class CmcUserDetailsSettingsController implements ng.IComponentController {
   //      Are we sure that we handle things correctly when user changes
   //      while we're in the cmc settings page for the user.
   //      For example in the middle of a save dialog...
-  // public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  // public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
   //   let userChanges = changes['user'];
   //   this.$log.warn('user changed unexpectedly:', userChanges);
   //   if (userChanges) {

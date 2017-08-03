@@ -29,6 +29,9 @@ export class PstnProvidersCtrl implements ng.IComponentController {
     this.PstnProvidersService.getCarriers().then((pstnCarriers: PstnCarrier[]) => {
       if (_.isArray(pstnCarriers)) {
         this.pstnCarriers = pstnCarriers;
+        this.pstnCarriers.forEach( (pstnCarrier: PstnCarrier) => {
+          pstnCarrier.selected = false;
+        });
         this.show = true;
         this.onReadyFn();
       }

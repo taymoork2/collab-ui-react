@@ -1,6 +1,7 @@
 import { ExpresswayContainerController } from 'modules/hercules/service-specific-pages/common-expressway-based/expressway-common-container.controller';
 import { Notification } from 'modules/core/notifications';
 import { ClusterService } from 'modules/hercules/services/cluster-service';
+import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 
 export class ImpServiceContainerController extends ExpresswayContainerController {
 
@@ -29,17 +30,15 @@ export class ImpServiceContainerController extends ExpresswayContainerController
     $modal,
     $scope: ng.IScope,
     $state: ng.ui.IStateService,
-    public clusterId: string,
-    Authinfo,
-    ClusterService: ClusterService,
-    hasPartnerRegistrationFeatureToggle,
-    Notification: Notification,
     private $translate: ng.translate.ITranslateService,
-    ServiceDescriptor,
+    public clusterId: string,
+    ClusterService: ClusterService,
+    Notification: Notification,
+    ServiceDescriptorService: ServiceDescriptorService,
     ServiceStateChecker,
     USSService,
   ) {
-    super($modal, $scope, $state, Authinfo, ClusterService, hasPartnerRegistrationFeatureToggle, true, Notification, ServiceDescriptor, ServiceStateChecker, USSService, ['spark-hybrid-impinterop'], 'c_imp');
+    super($modal, $scope, $state, ClusterService, true, Notification, ServiceDescriptorService, ServiceStateChecker, USSService, ['spark-hybrid-impinterop'], 'c_imp');
   }
 
 }

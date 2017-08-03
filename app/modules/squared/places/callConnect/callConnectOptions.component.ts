@@ -1,16 +1,14 @@
 import IExternalLinkedAccount = csdm.IExternalLinkedAccount;
+import ICsdmDataModelService = csdm.ICsdmDataModelService;
+import { ExternalLinkedAccountHelperService } from '../../devices/services/external-acct-helper.service';
+import IWizardData = csdm.IWizardData;
+import { ResourceGroupService } from 'modules/hercules/services/resource-group.service';
+import { Notification } from 'modules/core/notifications';
+import { USSService } from 'modules/hercules/services/uss.service';
+
 export class CallConnectOptions implements ng.IComponentController {
   private dismiss: Function;
-  private wizardData: {
-    title: string,
-    account: {
-      cisUuid: string,
-      enableCalService: boolean,
-      entitlements: string[],
-      externalLinkedAccounts: IExternalLinkedAccount[],
-    },
-    function: string,
-  };
+  private wizardData: IWizardData;
   private static hybridCalluc = 'squared-fusion-uc';
   public mailID: string;
   public title: string;
@@ -39,7 +37,15 @@ export class CallConnectOptions implements ng.IComponentController {
   };
 
   /* @ngInject */
-  constructor(private $stateParams, private Notification, private CsdmDataModelService, private ResourceGroupService, private USSService, private $translate) {
+  constructor(
+    private $stateParams: ng.ui.IStateParamsService,
+    private $translate: ng.translate.ITranslateService,
+    private CsdmDataModelService: ICsdmDataModelService,
+    private ExtLinkHelperService: ExternalLinkedAccountHelperService,
+    private Notification: Notification,
+    private ResourceGroupService: ResourceGroupService,
+    private USSService: USSService,
+  ) {
   }
 
   public $onInit() {
@@ -48,7 +54,7 @@ export class CallConnectOptions implements ng.IComponentController {
     this.resourceGroup.init();
     this.title = this.wizardData.title;
 
-    const existingHybridCallLink: IExternalLinkedAccount = _.head(_.filter(this.wizardData.account.externalLinkedAccounts, (linkedAccount) => {
+    const existingHybridCallLink: IExternalLinkedAccount = _.head(_.filter(this.wizardData.account.externalLinkedAccounts || [], (linkedAccount) => {
       return linkedAccount && (linkedAccount.providerID === CallConnectOptions.hybridCalluc);
     }));
     if (existingHybridCallLink) {
@@ -96,7 +102,7 @@ export class CallConnectOptions implements ng.IComponentController {
     this.$stateParams.wizard.next(
       {
         account: {
-          externalHybridCallIdentifier: this.getExtLinkedAccount(),
+          externalHybridCallIdentifier: this.getNewExtLinkedAccount(),
           ussProps: this.getUssProps(),
         },
       },
@@ -104,23 +110,13 @@ export class CallConnectOptions implements ng.IComponentController {
 
   }
 
-  private getExtLinkedAccount(): IExternalLinkedAccount[] {
+  private getNewExtLinkedAccount(): IExternalLinkedAccount[] {
     const newExtLink = {
       providerID: CallConnectOptions.hybridCalluc,
       accountGUID: this.mailID,
       status: 'unconfirmed-email',
     };
-    const links: IExternalLinkedAccount[] = [];
-
-    _.map(_.filter(this.wizardData.account.externalLinkedAccounts, (linkedAccount) => {
-      return linkedAccount && (linkedAccount.providerID === CallConnectOptions.hybridCalluc);
-    }), (link) => {
-      link.operation = 'delete';
-      links.push(link);
-    });
-    links.push(newExtLink);
-
-    return links;
+    return [newExtLink];
   }
 
   public save() {
@@ -128,16 +124,18 @@ export class CallConnectOptions implements ng.IComponentController {
     this.CsdmDataModelService.reloadPlace(this.wizardData.account.cisUuid).then((place) => {
       if (place) {
         this.CsdmDataModelService.updateCloudberryPlace(
-          place,
-          this.wizardData.account.entitlements,
-          null,
-          null,
-          this.getExtLinkedAccount(),
-          null)
+          place, {
+            entitlements: this.wizardData.account.entitlements,
+            externalLinkedAccounts: this.ExtLinkHelperService.getExternalLinkedAccountForSave(
+              this.wizardData.account.externalLinkedAccounts,
+              this.getNewExtLinkedAccount(),
+              this.wizardData.account.entitlements || [],
+            ),
+          })
           .then(() => {
             const props = this.getUssProps();
             if (props) {
-              this.USSService.updateUserProps(props).then(() => {
+              this.USSService.updateBulkUserProps([props]).then(() => {
                 this.dismiss();
                 this.Notification.success('addDeviceWizard.editServices.servicesSaved');
               }, (error) => {

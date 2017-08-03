@@ -12,7 +12,7 @@
 
     <p>
       <i ng-class="vm.getIconClassForService() + ' icon-2x serviceicon'"></i>
-      <strong translate="{{vm.localizedServiceName}}" class="serviceicon"></strong>
+      <strong class="serviceicon">{{vm.localizedServiceName}}</strong>
     </p>
 
     <p>
@@ -20,8 +20,7 @@
       <span translate="hercules.addResourceDialog.setupScreenBodyLinks" translate-values="{ServiceName: vm.localizedServiceName}"></span>
     </p>
 
-    <div ng-if="!vm.nameChangeEnabled" class="small privacy" translate="hercules.serviceHelpInfo.servicePrivacyStatement"></div>
-    <div ng-if="vm.nameChangeEnabled" class="small privacy" translate="hercules.serviceHelpInfo.servicePrivacyStatementNew"></div>
+    <div class="small privacy" translate="hercules.serviceHelpInfo.servicePrivacyStatement"></div>
   </div>
 
   <h4 translate="hercules.addResourceDialog.subtitle" ng-show="vm.inChooseNewOrExistingScreen()"></h4>
@@ -152,10 +151,7 @@
   </div>
 
   <div ng-show="vm.preregistrationCompletedGoToExpressway">
-    <p>
-      <span ng-if="!vm.nameChangeEnabled" translate="hercules.addResourceDialog.youMayNowRegister" translate-values="{hostname: vm.clustername || ''}"></span>
-      <span ng-if="vm.nameChangeEnabled" translate="hercules.addResourceDialog.youMayNowRegisterNew" translate-values="{hostname: vm.clustername || ''}"></span>
-    </p>
+    <p><span translate="hercules.addResourceDialog.youMayNowRegister" translate-values="{hostname: vm.clustername || ''}"></span></p>
 
     <p>{{vm.localizedWillBeInstalledMessage}}</p>
 
@@ -172,7 +168,7 @@
 
     <p>
       <i ng-class="vm.getIconClassForService() + ' icon-2x serviceicon'"></i>
-      <strong translate="{{vm.localizedServiceName}}" class="serviceicon"></strong>
+      <strong class="serviceicon">{{vm.localizedServiceName}}</strong>
     </p>
 
     <p translate="hercules.addResourceDialog.logInToConfigureThem" translate-values="{ClusterName: vm.selectedCluster.label, hostname: vm.hostname, ConnectorName: vm.localizedConnectorName}"></p>

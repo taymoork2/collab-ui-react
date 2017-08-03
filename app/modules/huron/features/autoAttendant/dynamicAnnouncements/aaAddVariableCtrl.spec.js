@@ -72,13 +72,37 @@ describe('Controller: AAAddVariableCtrl', function () {
   });
 
   describe('dynamicAdd', function () {
+    var queueSettings = {};
+    var routeToQueue;
+    var fbAction;
+    var variableSelection = {
+      label: 'testVar',
+      value: 'testVal',
+    };
+    var readAsSelection = {
+      label: 'testRead',
+      value: 'testValRead',
+    };
+    var result = {
+      variable: variableSelection,
+      readAs: readAsSelection,
+    };
+    var dynamicElement;
+    var scopeElement;
+    var musicOnHold;
+    var initialAnnouncement;
+    var periodicAnnouncement;
+    var fallback;
+    var playAction;
+    var paAction;
+    var iaAction;
+
     beforeEach(function () {
       spyOn($modal, 'open').and.returnValue({
         result: modal.promise,
       });
     });
-    var dynamicElement;
-    var scopeElement;
+
     describe('with values ', function () {
       beforeEach(function () {
         scopeElement = {
@@ -93,7 +117,32 @@ describe('Controller: AAAddVariableCtrl', function () {
           focus: function () {},
         };
         var rangeGetter = function () {
-          return 'testRange';
+          var range = {
+            collapsed: true,
+            endContainer: {
+              ownerDocument: {
+                activeElement: {
+                  childNodes: [{
+                    nodeName: '#text',
+                    nodeValue: 'this is test say message',
+                  }, {
+                    nodeName: 'SPAN',
+                    parentElement: {
+                      attributes: [{
+                        value: 'Test Attribute',
+                      }, {
+                        value: 'NUMBER',
+                      }, {
+                        value: 'dummyId',
+                      }],
+                    },
+                  }],
+                  className: 'dynamic-prompt aa-message-height',
+                },
+              },
+            },
+          };
+          return range;
         };
         spyOn(angular, 'element').and.returnValue(dynamicElement);
         spyOn(dynamicElement, 'focus');
@@ -117,26 +166,145 @@ describe('Controller: AAAddVariableCtrl', function () {
         $scope.$apply();
       });
 
+      it('should create/update dynamicList in actions under menuEntry', function () {
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+        action.dynamicList = [];
+        menuEntry.addAction(action);
+        controller.dynamicAdd($scope.dynamicElement, $scope.elementId);
+        expect($modal.open).toHaveBeenCalled();
+        modal.resolve(result);
+        $scope.$apply();
+        expect(controller.menuEntry.actions[0].dynamicList.length).toEqual(2);
+        expect(controller.menuEntry.actions[0].dynamicList[0].say.value).toEqual('this is test say message');
+        expect(controller.menuEntry.actions[0].dynamicList[1].isDynamic).toEqual(true);
+      });
+
+      it('should be able to update/create dynamicList inside action for Menu Header', function () {
+        var action;
+        $scope.isMenuHeader = 'true';
+        action = (AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', ''));
+        action.dynamicList = [];
+        menuEntry.headers = [{
+          actions: [],
+        }];
+        menuEntry.headers[0].actions.push(action);
+        controller.dynamicAdd($scope.dynamicElement, $scope.elementId);
+        expect($modal.open).toHaveBeenCalled();
+        modal.resolve(result);
+        $scope.$apply();
+        expect(controller.menuEntry.headers[0].actions[0].dynamicList.length).toEqual(2);
+        expect(controller.menuEntry.headers[0].actions[0].dynamicList[0].say.value).toEqual('this is test say message');
+        expect(controller.menuEntry.headers[0].actions[0].dynamicList[1].isDynamic).toEqual(true);
+      });
+
+      it('should be able to update/create dynamicList inside initialAnnouncemnt action for QueueSettings from New Step', function () {
+        musicOnHold = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        initialAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        periodicAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        fallback = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        playAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
+        iaAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
+        paAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
+        fbAction = AutoAttendantCeMenuModelService.newCeActionEntry('disconnect', '');
+        routeToQueue = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', '');
+        musicOnHold.addAction(playAction);
+        initialAnnouncement.addAction(iaAction);
+        periodicAnnouncement.addAction(paAction);
+        fallback.addAction(fbAction);
+        queueSettings.musicOnHold = musicOnHold;
+        queueSettings.initialAnnouncement = initialAnnouncement;
+        queueSettings.periodicAnnouncement = periodicAnnouncement;
+        queueSettings.fallback = fallback;
+        routeToQueue.queueSettings = queueSettings;
+        menuEntry.addAction(routeToQueue);
+        $scope.type = 'initialAnnouncement';
+
+        controller.dynamicAdd($scope.dynamicElement, $scope.elementId);
+        expect($modal.open).toHaveBeenCalled();
+        modal.resolve(result);
+        $scope.$apply();
+        expect(controller.menuEntry.actions[0].queueSettings.initialAnnouncement.actions[0].dynamicList.length).toEqual(2);
+        expect(controller.menuEntry.actions[0].queueSettings.initialAnnouncement.actions[0].dynamicList[0].say.value).toEqual('this is test say message');
+        expect(controller.menuEntry.actions[0].queueSettings.initialAnnouncement.actions[0].dynamicList[1].isDynamic).toEqual(true);
+      });
+
+      it('should be able to update/create dynamicList inside periodicAnnouncement action for QueueSettings from New Step', function () {
+        musicOnHold = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        initialAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        periodicAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        fallback = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        playAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
+        iaAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
+        paAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
+        fbAction = AutoAttendantCeMenuModelService.newCeActionEntry('disconnect', '');
+        routeToQueue = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', '');
+        musicOnHold.addAction(playAction);
+        initialAnnouncement.addAction(iaAction);
+        periodicAnnouncement.addAction(paAction);
+        fallback.addAction(fbAction);
+        queueSettings.musicOnHold = musicOnHold;
+        queueSettings.initialAnnouncement = initialAnnouncement;
+        queueSettings.periodicAnnouncement = periodicAnnouncement;
+        queueSettings.fallback = fallback;
+        routeToQueue.queueSettings = queueSettings;
+        menuEntry.addAction(routeToQueue);
+        $scope.type = 'periodicAnnouncement';
+        controller.dynamicAdd($scope.dynamicElement, $scope.elementId);
+        expect($modal.open).toHaveBeenCalled();
+        modal.resolve(result);
+        $scope.$apply();
+        expect(controller.menuEntry.actions[0].queueSettings.periodicAnnouncement.actions[0].dynamicList.length).toEqual(2);
+        expect(controller.menuEntry.actions[0].queueSettings.periodicAnnouncement.actions[0].dynamicList[0].say.value).toEqual('this is test say message');
+        expect(controller.menuEntry.actions[0].queueSettings.periodicAnnouncement.actions[0].dynamicList[1].isDynamic).toEqual(true);
+      });
+
+      it('should be able to update/create dynamicList in action for Phone Menu type', function () {
+        var action;
+        $scope.menuId = '001';
+        $scope.menuKeyIndex = '0';
+        action = (AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', ''));
+        action.dynamicList = [];
+        menuEntry.entries = [{
+          actions: [],
+        }];
+        menuEntry.entries[0].actions.push(action);
+        spyOn(AutoAttendantCeMenuModelService, 'getCeMenu').and.returnValue(menuEntry);
+        controller.dynamicAdd($scope.dynamicElement, $scope.elementId);
+        expect($modal.open).toHaveBeenCalled();
+        modal.resolve(result);
+        $scope.$apply();
+        expect(controller.menuEntry.entries[0].actions[0].dynamicList.length).toEqual(2);
+        expect(controller.menuEntry.entries[0].actions[0].dynamicList[0].say.value).toEqual('this is test say message');
+        expect(controller.menuEntry.entries[0].actions[0].dynamicList[1].isDynamic).toEqual(true);
+      });
+
+      it('should be able to create/update dynamicList in action for Phone Menu type: sub menu', function () {
+        var action;
+        $scope.menuId = '1';
+        action = (AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', ''));
+        action.dynamicList = [];
+        menuEntry.headers = [{
+          actions: [],
+        }];
+        menuEntry.headers[0].actions.push(action);
+        spyOn(AutoAttendantCeMenuModelService, 'getCeMenu').and.returnValue(menuEntry);
+        controller.dynamicAdd($scope.dynamicElement, $scope.elementId);
+        expect($modal.open).toHaveBeenCalled();
+        modal.resolve(result);
+        $scope.$apply();
+        expect(controller.menuEntry.headers[0].actions[0].dynamicList.length).toEqual(2);
+        expect(controller.menuEntry.headers[0].actions[0].dynamicList[0].say.value).toEqual('this is test say message');
+        expect(controller.menuEntry.headers[0].actions[0].dynamicList[1].isDynamic).toEqual(true);
+      });
+
       it('should test the dynamicAdd', function () {
-        var variableSelection = {
-          label: 'testVar',
-          value: 'testVal',
-        };
-        var readAsSelection = {
-          label: 'testRead',
-          value: 'testValRead',
-        };
-        var result = {
-          variable: variableSelection,
-          readAs: readAsSelection,
-        };
         controller.dynamicAdd($scope.dynamicElement, $scope.elementId);
         expect($modal.open).toHaveBeenCalled();
         modal.resolve(result);
         $scope.$apply();
         expect(dynamicElement.scope).toHaveBeenCalled();
         expect(dynamicElement.focus).toHaveBeenCalled();
-        expect(scopeElement.insertElement).toHaveBeenCalledWith('test', 'testRange');
+        expect(scopeElement.insertElement).toHaveBeenCalled();
       });
 
       it('should not test the dynamicAdd', function () {

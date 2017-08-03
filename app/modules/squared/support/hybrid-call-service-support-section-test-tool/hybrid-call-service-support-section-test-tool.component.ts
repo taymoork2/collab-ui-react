@@ -1,4 +1,5 @@
 import { IToolkitModalService } from 'modules/core/modal/index';
+import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 
 class HybridCallServiceSupportSectionTestToolCtrl implements ng.IComponentController {
 
@@ -7,11 +8,11 @@ class HybridCallServiceSupportSectionTestToolCtrl implements ng.IComponentContro
   /* @ngInject */
   constructor(
     private $modal: IToolkitModalService,
-    private ServiceDescriptor,
+    private ServiceDescriptorService: ServiceDescriptorService,
   ) { }
 
   public $onInit() {
-    this.ServiceDescriptor.isServiceEnabled('squared-fusion-ec')
+    this.ServiceDescriptorService.isServiceEnabled('squared-fusion-ec')
       .then((isEnabled: boolean) => {
         this.callServiceConnectIsEnabled = isEnabled;
       });

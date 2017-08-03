@@ -1,4 +1,4 @@
-import { ESA_DISCLAIMER_ACCEPT } from '../pstn.const';
+import { PSTN_ESA_DISCLAIMER_ACCEPT } from '../pstn.const';
 import { Notification } from 'modules/core/notifications';
 
 export class EsaDisclaimerComponent implements ng.IComponentOptions {
@@ -28,7 +28,7 @@ export class EsaDisclaimerCtrl implements ng.IComponentController {
       customerId: this.Authinfo.getOrgId(),
     }, payload).$promise
     .then(() => {
-      this.$rootScope.$broadcast(ESA_DISCLAIMER_ACCEPT);
+      this.$rootScope.$broadcast(PSTN_ESA_DISCLAIMER_ACCEPT);
     }).catch(response => {
       this.Notification.errorResponse(response);
     }).finally(() => {

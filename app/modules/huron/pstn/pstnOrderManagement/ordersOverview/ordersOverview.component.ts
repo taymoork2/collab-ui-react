@@ -47,11 +47,7 @@ export class OrdersOverviewCtrl implements ng.IComponentController {
     const finalOrders: any[] = [];
     let orderIndex =  -1;
     _.forEach(this.ordersWithDuplicates, (order) => {
-      if (!this.isCarrierByopstn) {
-        orderIndex = _.findIndex(finalOrders, { carrierOrderId: order.carrierOrderId });
-      } else {
-        orderIndex = _.findIndex(finalOrders, { formattedDate: order.formattedDate });
-      }
+      orderIndex = _.findIndex(finalOrders, { carrierOrderId: order.carrierOrderId });
       if (orderIndex === -1) {
         finalOrders.push(order);
       } else {

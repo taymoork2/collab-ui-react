@@ -5,22 +5,15 @@ import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-s
 
 export class ClusterDeregisterController {
   public loading: boolean = false;
-  public nameChangeEnabled: boolean = false;
 
   /* @ngInject */
   constructor(
     private $modalInstance,
-    private $translate: ng.translate.ITranslateService,
     private cluster: ICluster,
     private HybridServicesClusterService: HybridServicesClusterService,
     private PrivateTrunkService: PrivateTrunkService,
     private Notification: Notification,
-    private FeatureToggleService,
-  ) {
-    this.FeatureToggleService.atlas2017NameChangeGetStatus().then((toggle: boolean): void => {
-      this.nameChangeEnabled = toggle;
-    });
-  }
+  ) {  }
 
   public deregister() {
     this.loading = true;
@@ -48,15 +41,9 @@ export class ClusterDeregisterController {
   }
 
   private callNotification(): void {
-    if (this.nameChangeEnabled) {
-      this.Notification.success(this.$translate.instant('hercules.renameAndDeregisterComponent.deregisterConfirmPopupNew', {
-        clusterName: this.cluster.name,
-      }));
-    } else {
-      this.Notification.success(this.$translate.instant('hercules.renameAndDeregisterComponent.deregisterConfirmPopup', {
-        clusterName: this.cluster.name,
-      }));
-    }
+    this.Notification.success('hercules.renameAndDeregisterComponent.deregisterConfirmPopup', {
+      clusterName: this.cluster.name,
+    });
   }
 }
 

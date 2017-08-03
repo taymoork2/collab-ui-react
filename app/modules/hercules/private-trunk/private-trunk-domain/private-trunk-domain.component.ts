@@ -45,7 +45,7 @@ export class PrivateTrunkDomainCtrl implements ng.IComponentController {
     }
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const { domains, domainSelected, isDomain } = changes;
     if ( !_.isUndefined(domainSelected) && _.isArray(domainSelected.currentValue) && domainSelected.currentValue.length) {
       this.setSelected(domainSelected);
@@ -73,11 +73,11 @@ export class PrivateTrunkDomainCtrl implements ng.IComponentController {
     return (temp !== undefined);
   }
 
-  public setDomainInfo(domain: ng.IChangesObject): void {
+  public setDomainInfo(domain: ng.IChangesObject<any>): void {
     this.domains = _.cloneDeep(domain.currentValue);
   }
 
-  public setSelected(domainSelected: ng.IChangesObject): void {
+  public setSelected(domainSelected: ng.IChangesObject<any>): void {
     if (!_.isUndefined(domainSelected) && domainSelected.currentValue) {
       this.domainSelected = _.cloneDeep(domainSelected.currentValue);
       this.selectPlaceHolder = this.domainSelected.length > 1 ? this.domainSelected.length + this.$translate.instant('servicesOverview.cards.privateTrunk.plural') : (this.domainSelected.length === 1 ) ? this.domainSelected.length + this.$translate.instant('servicesOverview.cards.privateTrunk.singular') : this.$translate.instant('servicesOverview.cards.privateTrunk.selectDomain');

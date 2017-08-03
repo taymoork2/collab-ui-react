@@ -30,7 +30,7 @@ export class HybridServicesI18NService {
     return this.$translate.instant(`hercules.fusion.add-resource-group.release-channel.${channel}`);
   }
 
-  public getTimeSinceText = (timestamp: number): string => {
+  public getTimeSinceText = (timestamp: number | string): string => {
     let timestampText = moment(timestamp).calendar(moment(), {
       sameElse: 'LL', // e.g. December 15, 2016
     });
@@ -43,7 +43,7 @@ export class HybridServicesI18NService {
     });
   }
 
-  public getLocalTimestamp = (timestamp: number, format?: string): string => {
+  public getLocalTimestamp = (timestamp: string, format?: string): string => {
     let timezone = jstz.determine().name();
     if (timezone === null || _.isUndefined(timezone)) {
       timezone = 'UTC';
@@ -51,7 +51,7 @@ export class HybridServicesI18NService {
     return moment(timestamp).local().tz(timezone).format(format || 'LLL (z)');
   }
 
-  private labelForTime = (time: TimeOfDay): string => {
+  public labelForTime = (time: TimeOfDay): string => {
     const currentLanguage = this.$translate.use();
     if (currentLanguage === 'en_US') {
       return moment(time, 'HH:mm').format('hh:mm A');
@@ -62,7 +62,7 @@ export class HybridServicesI18NService {
 
   private labelForDay = (day: DayOfWeek): string => {
     return this.$translate.instant('weekDays.everyDay', {
-      day: this.$translate.instant(`weekDays.${day}`),
+      day: this.$translate.instant(`weekDays.${(day as string).toLowerCase()}`), // Hack, remove once FMS is standardized on using week days in lowercase
     });
   }
 }

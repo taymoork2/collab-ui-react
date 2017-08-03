@@ -161,8 +161,9 @@ class LaunchAdvancedSettingsController {
 
   private handleMessageEvent(event): void {
     const endpointOrigin = 'http://' + this.currentDevice.ip;
+    const redirectedEndpointOrigin = 'https://' + this.currentDevice.ip;
 
-    if (endpointOrigin === event.origin) {
+    if (endpointOrigin === event.origin || redirectedEndpointOrigin === event.origin) {
 
       const reportedId = String(_.get(event.data, 'id'));
 
@@ -189,7 +190,7 @@ class LaunchAdvancedSettingsController {
 
           //Post token to endpoint
           if (this.endpointWindow) {
-            this.endpointWindow.postMessage({ token: token }, endpointOrigin);
+            this.endpointWindow.postMessage({ token: token }, event.origin);
           }
         } else if (messageStatus === 'login-success') {
           //Stop the timer

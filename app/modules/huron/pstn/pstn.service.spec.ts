@@ -1,5 +1,7 @@
 'use strict';
 
+import { SWIVEL } from './pstn.const';
+
 describe('Service: PstnService', function () {
 
   let suite: any = {};
@@ -110,6 +112,27 @@ describe('Service: PstnService', function () {
     numbers: onlyTollFreeNumbers,
     numberType: 'TOLLFREE',
     createdBy: 'PARTNER',
+  };
+
+  const numberSearchPayload: any = {
+    count: '100',
+    npa: '206',
+    numberType: 'DID',
+  };
+
+  const numberSearchPayloadWithSequential: any = {
+    count: '100',
+    npa: '206',
+    numberType: 'DID',
+    sequential: true,
+  };
+
+  const numberSearchPayloadWithState: any = {
+    count: '100',
+    npa: '206',
+    numberType: 'DID',
+    sequential: true,
+    state: 'WA',
   };
 
   // dependencies
@@ -373,6 +396,19 @@ describe('Service: PstnService', function () {
     this.$httpBackend.flush();
   });
 
+  it('should return byop customer esa disclaimer status', function () {
+    const byopCustomer = { pstnCarrierId: suite.carrierId };
+    const swivelCarrier = { apiImplementation: SWIVEL };
+
+    this.$httpBackend.expectGET(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId).respond(byopCustomer);
+    this.$httpBackend.expectGET(this.HuronConfig.getTerminusUrl() + '/carriers/' + suite.carrierId).respond(swivelCarrier);
+    const promise = this.PstnService.isSwivelCustomerAndEsaUnsigned(suite.customerId);
+    promise.then(function (result) {
+      expect(result).toBe(true);
+    });
+    this.$httpBackend.flush();
+  });
+
   describe('getCarrierTollFreeInventory', function () {
     it('should call GET on Terminus V2 carrier number count API and query for toll free numbers', function () {
       this.$httpBackend.expectGET(this.HuronConfig.getTerminusV2Url() + '/carriers/' + suite.carrierId + '/numbers/count?numberType=TOLLFREE').respond(200);
@@ -461,4 +497,25 @@ describe('Service: PstnService', function () {
       this.$httpBackend.flush();
     });
   });
+
+  describe('searchCarrierInventory', function () {
+    it('should call carriers/{id}/numbers on Terminus V2 with params matching payload', function () {
+      this.$httpBackend.expectGET(this.HuronConfig.getTerminusV2Url() + '/carriers/' + suite.customerId + '/numbers?count=100&npa=206&numberType=DID').respond(201);
+      this.PstnService.searchCarrierInventory(suite.customerId, numberSearchPayload);
+      this.$httpBackend.flush();
+    });
+
+    it('should call carriers/{id}/numbers on Terminus V2 with params matching payload, adding sequential', function () {
+      this.$httpBackend.expectGET(this.HuronConfig.getTerminusV2Url() + '/carriers/' + suite.customerId + '/numbers?count=100&npa=206&numberType=DID&sequential=true').respond(201);
+      this.PstnService.searchCarrierInventory(suite.customerId, numberSearchPayloadWithSequential);
+      this.$httpBackend.flush();
+    });
+
+    it('should call carriers/{id}/numbers on Terminus V2 with params matching payload, adding state', function () {
+      this.$httpBackend.expectGET(this.HuronConfig.getTerminusV2Url() + '/carriers/' + suite.customerId + '/numbers?count=100&npa=206&numberType=DID&sequential=true&state=WA').respond(201);
+      this.PstnService.searchCarrierInventory(suite.customerId, numberSearchPayloadWithState);
+      this.$httpBackend.flush();
+    });
+  });
+
 });

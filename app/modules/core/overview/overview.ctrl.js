@@ -8,19 +8,17 @@ require('./_overview.scss');
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($rootScope, $state, $scope, Authinfo, CardUtils, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, SunlightReportService, TrialService, UrlConfig, PstnService, HybridServicesUtilsService) {
+  function OverviewCtrl($rootScope, $state, $scope, Authinfo, CardUtils, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, ProPackService, LearnMoreBannerService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, SunlightReportService, TrialService, UrlConfig, PstnService, HybridServicesUtilsService) {
     var vm = this;
 
     var PSTN_TOS_ACCEPT = require('modules/huron/pstn/pstnTermsOfService').PSTN_TOS_ACCEPT;
-    var PSTN_ESA_DISCLAIMER_ACCEPT = require('modules/huron/pstn/pstn.const').ESA_DISCLAIMER_ACCEPT;
-    var SWIVEL = require('modules/huron/pstn/pstn.const').SWIVEL;
-    var BYOPSTN = require('modules/huron/pstn/pstn.const').BYOPSTN;
-    var PSTN_CARRIER_ID = require('modules/huron/pstn/pstn.const').PSTN_CARRIER_ID;
-    var E911_SIGNEE = require('modules/huron/pstn/pstn.const').E911_SIGNEE;
+    var PSTN_ESA_DISCLAIMER_ACCEPT = require('modules/huron/pstn/pstn.const').PSTN_ESA_DISCLAIMER_ACCEPT;
 
     vm.isCSB = Authinfo.isCSB();
     vm.isDeviceManagement = Authinfo.isDeviceMgmt();
     vm.orgData = null;
+
+    var hybridCallHighAvailability = 'atlas.notification.squared-fusion-uc-high-availability.acknowledged';
 
     vm.cards = [
       OverviewCardFactory.createMessageCard(),
@@ -36,11 +34,23 @@ require('./_overview.scss');
     vm.pstnToSNotification = null;
     vm.esaDisclaimerNotification = null;
     vm.trialDaysLeft = undefined;
+    vm.isEnterpriseCustomer = isEnterpriseCustomer;
     vm.dismissNotification = dismissNotification;
     vm.notificationComparator = notificationComparator;
     vm.ftHuronPstn = false;
+    vm.ftEnterpriseTrunking = false;
 
     ////////////////////////////////
+
+    ProPackService.hasProPackEnabledAndNotPurchased().then(function (proPackToggle) {
+      if (proPackToggle) {
+        $scope.$watch(function () {
+          return LearnMoreBannerService.isElementVisible(LearnMoreBannerService.OVERVIEW_LOCATION);
+        }, function (visible) {
+          vm.showLearnMoreNotification = !visible;
+        });
+      }
+    });
 
     var notificationOrder = [
       'alert',
@@ -48,6 +58,10 @@ require('./_overview.scss');
       'info',
       'new',
     ];
+
+    function isEnterpriseCustomer() {
+      return Authinfo.isEnterpriseCustomer();
+    }
 
     // used to sort notifications in a specific order
     function notificationComparator(a, b) {
@@ -81,9 +95,10 @@ require('./_overview.scss');
         Config.entitlements.mediafusion,
         Config.entitlements.hds,
       ])
-      .filter(Authinfo.isEntitled)
-      .map(HybridServicesUtilsService.getAckFlagForHybridServiceId)
-      .value();
+        .filter(Authinfo.isEntitled)
+        .map(HybridServicesUtilsService.getAckFlagForHybridServiceId)
+        .value();
+      hybridServiceNotificationFlags.push(hybridCallHighAvailability);
 
       HybridServicesFlagService
         .readFlags(hybridServiceNotificationFlags)
@@ -102,6 +117,19 @@ require('./_overview.scss');
                 vm.notifications.push(OverviewNotificationFactory.createHybridMediaNotification());
               } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.hds)) {
                 vm.notifications.push(OverviewNotificationFactory.createHybridDataSecurityNotification());
+              } else if (flag.name === hybridCallHighAvailability && Authinfo.isEntitled(Config.entitlements.fusion_uc)) {
+                HybridServicesClusterService.serviceIsSetUp('squared-fusion-uc')
+                  .then(function (isSetup) {
+                    if (isSetup) {
+                      return HybridServicesClusterService.serviceHasHighAvailability('c_ucmc')
+                        .then(function (serviceHasHA) {
+                          if (!serviceHasHA) {
+                            vm.notifications.push(OverviewNotificationFactory.createCallServiceHighAvailability());
+                            resizeNotifications();
+                          }
+                        });
+                    }
+                  });
               }
             }
           });
@@ -121,6 +149,8 @@ require('./_overview.scss');
           vm.orgData = data;
 
           getTOSStatus();
+          getEsaDisclaimerStatus();
+
           if (!data.orgSettings.sipCloudDomain) {
             vm.notifications.push(OverviewNotificationFactory.createCloudSipUriNotification());
           }
@@ -186,10 +216,9 @@ require('./_overview.scss');
       FeatureToggleService.supports(FeatureToggleService.features.huronPstn).then(function (result) {
         vm.ftHuronPstn = result;
 
-        FeatureToggleService.supports(FeatureToggleService.features.huronEnterprisePrivateTrunking).then(function (ftEnterpriseTrunkingResult) {
-          if (ftEnterpriseTrunkingResult && vm.ftHuronPstn) {
-            getEsaDisclaimerStatus();
-          }
+        FeatureToggleService.supports(FeatureToggleService.features.huronEnterprisePrivateTrunking).then(function (result) {
+          vm.ftEnterpriseTrunking = result;
+          getEsaDisclaimerStatus();
         });
       });
 
@@ -232,20 +261,15 @@ require('./_overview.scss');
     }
 
     function getEsaDisclaimerStatus() {
-      if (Authinfo.isCustomerLaunchedFromPartner()) {
+      if (Authinfo.isCustomerLaunchedFromPartner() || !vm.ftEnterpriseTrunking) {
         return;
       }
       if (vm.orgData !== null) {
-        PstnService.getCustomerV2(vm.orgData.id).then(function (customer) {
-          if (_.has(customer, PSTN_CARRIER_ID) && (!_.has(customer, E911_SIGNEE) || _.get(customer, E911_SIGNEE) === null)) {
-            var carriers = [{ uuid: customer.pstnCarrierId }];
-            PstnService.getCarrierDetails(carriers).then(function (carrier) {
-              if (carrier.length === 1 && carrier[0].apiImplementation === SWIVEL && carrier[0].vendor === BYOPSTN) {
-                vm.esaDisclaimerNotification = OverviewNotificationFactory.createEsaDisclaimerNotification();
-                vm.notifications.push(vm.esaDisclaimerNotification);
-                $scope.$on(PSTN_ESA_DISCLAIMER_ACCEPT, onPstnEsaDisclaimerAccept);
-              }
-            });
+        PstnService.isSwivelCustomerAndEsaUnsigned(vm.orgData.id).then(function (result) {
+          if (result) {
+            vm.esaDisclaimerNotification = OverviewNotificationFactory.createEsaDisclaimerNotification();
+            vm.notifications.push(vm.esaDisclaimerNotification);
+            $scope.$on(PSTN_ESA_DISCLAIMER_ACCEPT, onPstnEsaDisclaimerAccept);
           }
         });
       }

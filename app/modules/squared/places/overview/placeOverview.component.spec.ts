@@ -1,6 +1,6 @@
 describe('placeOverview component', () => {
   let Authinfo, FeatureToggleService, CsdmDataModelService, CsdmCodeService, WizardFactory, $httpBackend, UrlConfig,
-    $state, $scope, $q, Userservice, ServiceDescriptor;
+    $state, $scope, $q, Userservice, ServiceDescriptorService, PlaceCallOverviewService, LocationsService;
 
   let $stateParams;
   let $componentController;
@@ -21,7 +21,9 @@ describe('placeOverview component', () => {
                      _$componentController_,
                      _CsdmCodeService_,
                      _FeatureToggleService_,
-                     _ServiceDescriptor_,
+                     _ServiceDescriptorService_,
+                     _PlaceCallOverviewService_,
+                     _LocationsService_,
                      _Userservice_) => {
     $q = _$q_;
     Authinfo = _Authinfo_;
@@ -36,7 +38,9 @@ describe('placeOverview component', () => {
     CsdmCodeService = _CsdmCodeService_;
     FeatureToggleService = _FeatureToggleService_;
     Userservice = _Userservice_;
-    ServiceDescriptor = _ServiceDescriptor_;
+    ServiceDescriptorService = _ServiceDescriptorService_;
+    PlaceCallOverviewService = _PlaceCallOverviewService_;
+    LocationsService = _LocationsService_;
   }));
 
   const initController = (stateParams, scope, $state) => {
@@ -49,7 +53,7 @@ describe('placeOverview component', () => {
   };
 
   describe('on init', () => {
-    let showATA, showHybrid, currentDevice, deviceName, displayName, email, userCisUuid, placeCisUuid, orgId;
+    let showATA, showHybrid, currentDevice, deviceName, displayName, email, userCisUuid, placeCisUuid, orgId, PlaceCallOverviewData, siteLanguages, locationData;
     let adminFirstName, adminLastName, adminDisplayName, adminUserName, adminCisUuid, adminOrgId, goStateName,
       goStateData;
     beforeEach(() => {
@@ -72,12 +76,28 @@ describe('placeOverview component', () => {
         displayName: deviceName,
         cisUuid: placeCisUuid,
       };
+      PlaceCallOverviewData = {
+        siteLevelPreferredLanguage: 'en_US',
+        preferredLanguageOptions: ['de_DE', 'en_US'],
+        placesPreferredLanguage: 'de_DE',
+        defaultPreferredLanugage: 'de_DE',
+        preferredLanguage: 'de_DE',
+      };
+      siteLanguages = ['de_DE', 'en_US'];
+      locationData = [{
+        uuid: '123',
+        name: 'Home Office',
+        routingPrefix: '8100',
+        userCount: 10,
+        placeCount: 3,
+      }];
 
       spyOn(CsdmCodeService, 'createCodeForExisting').and.returnValue($q.resolve('0q9u09as09vu0a9sv'));
       spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.resolve(showATA));
       spyOn(FeatureToggleService, 'csdmPlaceUpgradeChannelGetStatus').and.returnValue($q.resolve({}));
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
       spyOn(FeatureToggleService, 'csdmPlaceGuiSettingsGetStatus').and.returnValue($q.resolve({}));
-      spyOn(ServiceDescriptor, 'getServices').and.returnValue($q.resolve([]));
+      spyOn(ServiceDescriptorService, 'getServices').and.returnValue($q.resolve([]));
       $httpBackend.whenGET(UrlConfig.getCsdmServiceUrl() + '/organization/' + orgId + '/upgradeChannels').respond(200);
       spyOn(Authinfo, 'getOrgId').and.returnValue(orgId);
       spyOn(Authinfo, 'getConferenceServicesWithoutSiteUrl').and.returnValue([]);
@@ -85,7 +105,9 @@ describe('placeOverview component', () => {
       Authinfo.displayName = displayName;
       spyOn(Authinfo, 'getUserId').and.returnValue(userCisUuid);
       spyOn(Authinfo, 'getPrimaryEmail').and.returnValue(email);
-
+      spyOn(PlaceCallOverviewService, 'getPlaceCallOverviewData').and.returnValue($q.resolve(PlaceCallOverviewData));
+      spyOn(PlaceCallOverviewService, 'getSiteLanguages').and.returnValue($q.resolve(siteLanguages));
+      spyOn(LocationsService, 'getLocation').and.returnValue($q.resolve(locationData));
       const currentUser: any = {
         success: true,
         roles: ['ciscouc.devops', 'ciscouc.devsupport'],
@@ -264,7 +286,7 @@ describe('placeOverview component', () => {
 
   describe('invoke editCloudberryServices', () => {
     let goStateName, goStateData;
-    let showATA, showHybrid, currentDevice, deviceName, displayName, email, userCisUuid, orgId, entitlements, placeUuid;
+    let showATA, showHybrid, currentDevice, deviceName, displayName, email, userCisUuid, orgId, entitlements, placeUuid, siteLanguages, locationData;
     beforeEach(() => {
       showATA = true;
       showHybrid = true;
@@ -278,11 +300,24 @@ describe('placeOverview component', () => {
       };
       entitlements = ['entitlement'];
       placeUuid = '9avs8y9q2v9aw98';
+      siteLanguages = ['de_DE', 'en_US'];
+      locationData = [{
+        uuid: '123',
+        name: 'Home Office',
+        routingPrefix: '8100',
+        userCount: 10,
+        placeCount: 3,
+      }];
 
       spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.resolve(showATA));
       spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.resolve(showHybrid));
       spyOn(FeatureToggleService, 'csdmPlaceCalendarGetStatus').and.returnValue($q.resolve({}));
-      spyOn(ServiceDescriptor, 'getServices').and.returnValue($q.resolve([]));
+      spyOn(ServiceDescriptorService, 'getServices').and.returnValue($q.resolve([]));
+      spyOn(PlaceCallOverviewService, 'getSiteLanguages').and.returnValue($q.resolve(siteLanguages));
+      spyOn(LocationsService, 'getLocation').and.returnValue($q.resolve(locationData));
+      $httpBackend.whenGET('https://cmi.huron-int.com/api/v1/voice/customers/sites').respond([]);
+      $httpBackend.whenGET('https://cmi.huron-int.com/api/v2/customers/places/9avs8y9q2v9aw98').respond([]);
+
       const currentUser: any = {
         success: true,
         roles: ['ciscouc.devops', 'ciscouc.devsupport'],

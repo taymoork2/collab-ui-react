@@ -20,6 +20,7 @@
       chat: 'chat',
       callback: 'callback',
       chatPlusCallback: 'chatPlusCallback',
+      virtualAssistant: 'virtualAssistant',
     };
     vm.cancelModal = cancelModal;
     vm.evalKeyPress = evalKeyPress;
@@ -840,6 +841,25 @@
       },
     };
 
+    var defaultVirtualAssistantTemplate = {
+      name: '',
+      configuration: {
+        mediaType: vm.mediaTypes.virtualAssistant,
+        mediaSpecificConfiguration: {
+          useOrgProfile: true,
+          displayText: vm.orgName,
+          orgLogoUrl: vm.logoUrl,
+          useAgentRealName: false,
+        },
+        pages: {
+          virtualAssistantName: { enabled: true },
+          virtualAssistantAvatar: { enabled: true },
+          virtualAssistantSummary: { enabled: true },
+        },
+      },
+    };
+
+
     vm.template = {};
 
     vm.getDefaultTemplate = function () {
@@ -847,6 +867,7 @@
         case vm.mediaTypes.chat: vm.template = defaultChatTemplate; break;
         case vm.mediaTypes.callback: vm.template = defaultCallBackTemplate; break;
         case vm.mediaTypes.chatPlusCallback: vm.template = defaultChatPlusCallBackTemplate; break;
+        case vm.mediaTypes.virtualAssistant: vm.template = defaultVirtualAssistantTemplate; break;
       }
     };
 
@@ -868,10 +889,12 @@
     //Use the existing template fields when editing the template
     if ($stateParams.isEditFeature) {
       vm.template = $stateParams.template;
-      // This will become dead once all the existing templates are saved with field4.
-      populateCustomerInformationField4();
-      populateFeedbackInformation();
-      populateProactivePromptInformation();
+      if (vm.template.configurationmediaType !== vm.mediaTypes.virtualAssistant) {
+        // This will become dead once all the existing templates are saved with field4.
+        populateCustomerInformationField4();
+        populateFeedbackInformation();
+        populateProactivePromptInformation();
+      }
     }
 
     function populateCustomerInformationField4() {
@@ -1003,6 +1026,10 @@
       return (vm.template.name !== '' && vm.validateNameLength() && vm.isInputValid(vm.template.name));
     };
 
+    vm.isAssistantNamePageValid = function () {
+      return (vm.template.name !== '' && vm.validateNameLength() && vm.isInputValid(vm.template.name));
+    };
+
     function isProfilePageValid() {
       if ((vm.selectedTemplateProfile === vm.profiles.org && vm.orgName !== '') || (vm.selectedTemplateProfile === vm.profiles.agent)) {
         setTemplateProfile();
@@ -1073,7 +1100,7 @@
     vm.isTypeDuplicate = false;
 
     var nonHeaderFieldNames = _.filter(_.keys(getCustomerInformationFormFields()),
-        function (name) { return (name !== 'welcomeHeader'); });
+      function (name) { return (name !== 'welcomeHeader'); });
 
     function getConfiguredTypes() {
       var typesConfigured = _.map(nonHeaderFieldNames, function (fieldName) {
@@ -1221,10 +1248,16 @@
       switch (vm.currentState) {
         case 'summary':
           return 'hidden';
+        case 'virtualAssistantSummary':
+          return 'hidden';
         case 'offHours':
           return isOffHoursPageValid();
         case 'name':
           return vm.isNamePageValid();
+        case 'virtualAssistantName':
+          return true;
+        case 'virtualAssistantAvatar':
+          return true;
         case 'proactivePrompt':
           return isProactivePromptPageValid();
         case 'customerInformation':
@@ -1536,6 +1569,9 @@
     }
 
     function getCustomerInformationFormFields() {
+      if (vm.selectedMediaType === vm.mediaTypes.virtualAssistant) {
+        return {};
+      }
       if (vm.selectedMediaType !== vm.mediaTypes.chatPlusCallback) {
         return vm.template.configuration.pages.customerInformation.fields;
       }

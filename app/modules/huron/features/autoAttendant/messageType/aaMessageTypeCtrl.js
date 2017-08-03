@@ -5,7 +5,7 @@
     .controller('AAMessageTypeCtrl', AAMessageTypeCtrl);
 
   /* @ngInject */
-  function AAMessageTypeCtrl($scope, $translate, AADynaAnnounceService, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService/*, $window*/) {
+  function AAMessageTypeCtrl($scope, $translate, AADynaAnnounceService, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, AASessionVariableService, AAModelService/*, $window*/) {
     var vm = this;
     var conditional = 'conditional';
 
@@ -17,6 +17,19 @@
       VALUE: 'value',
       HEADER_TYPE: 'MENU_OPTION_ANNOUNCEMENT',
     };
+
+    /* US282377:
+     * We have intentionally added the blank space in the following list.
+     * Because isDynamic flag gets true in case of BR or new lines
+     * and we are using this list to not show warning in case of pre-populated
+     * variables and BR or new lines in a say message.
+     */
+    var prePopulatedSessionVariablesList = ['Original-Called-Number',
+      'Original-Caller-Number',
+      'Original-Remote-Party-ID',
+      'Original-Caller-Country-Code',
+      'Original-Caller-Area-Code',
+      ''];
 
     var messageType = {
       ACTION: 1,
@@ -31,11 +44,17 @@
       DYNAMIC: 2,
     };
 
+    var uniqueId;
     var holdActionDesc;
     var holdActionValue;
+    var dependentCeSessionVariablesList = [];
+    var dynamicVariablesList = [];
 
     vm.menuEntry = {};
     vm.actionEntry = {};
+    vm.ui = {};
+    vm.availableSessionVariablesList = [];
+    vm.deletedSessionVariablesList = [];
 
     vm.messageInput = '';
     vm.messageInputPlaceholder = $translate.instant('autoAttendant.sayMessagePlaceholder');
@@ -61,15 +80,104 @@
     vm.setMessageOptions = setMessageOptions;
     vm.isDynamicToggle = isDynamicToggle;
     vm.dynamicTags = ['DYNAMIC-EXAMPLE'];
-    vm.dynamicValues = undefined;
+    vm.dynamicValues = [];
     vm.mediaState = {};
     vm.mediaState.uploadProgress = false;
+    vm.fullWarningMsg = fullWarningMsg;
+    vm.getWarning = getWarning;
+    vm.fullWarningMsgValue = false;
+    vm.deletedSessionVariablesListAlongWithWarning = '';
 
     vm.MAX_FILE_SIZE_IN_BYTES = 5 * 1024 * 1024;
 
     vm.addElement = '<aa-insertion-element element-text="DynamicText" read-as="ReadAs" element-id="Id" aa-schedule="' + $scope.schedule + '" aa-index="' + $scope.index + '"></aa-insertion-element>';
 
     //////////////////////////////////////////////////////
+
+    $scope.$on('CE Updated', function () {
+      getDynamicVariables();
+      refreshVarSelects();
+      if (_.isEmpty(vm.deletedSessionVariablesList)) {
+        vm.fullWarningMsgValue = false;
+      }
+    });
+
+    $scope.$on('CIVarNameChanged', function () {
+      getDynamicVariables();
+      refreshVarSelects();
+    });
+
+    function fullWarningMsg() {
+      vm.fullWarningMsgValue = !vm.fullWarningMsgValue;
+    }
+
+    function getWarning() {
+      if (!_.isEmpty(vm.deletedSessionVariablesList)) {
+        if (vm.deletedSessionVariablesList.length > 1) {
+          vm.deletedSessionVariablesListAlongWithWarning = $translate.instant('autoAttendant.dynamicMissingCustomVariables', { deletedSessionVariablesList: vm.deletedSessionVariablesList.toString() });
+        } else {
+          vm.deletedSessionVariablesListAlongWithWarning = $translate.instant('autoAttendant.dynamicMissingCustomVariable', { deletedSessionVariablesList: vm.deletedSessionVariablesList.toString() });
+        }
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    function addLocalAndQueriedSessionVars() {
+      // reset the displayed SessionVars to the original queried items
+      vm.availableSessionVariablesList = dependentCeSessionVariablesList;
+
+      vm.availableSessionVariablesList = _.concat(vm.availableSessionVariablesList, AACommonService.collectThisCeActionValue(vm.ui, true, false));
+      vm.availableSessionVariablesList = _.uniq(vm.availableSessionVariablesList).sort();
+    }
+
+    function refreshVarSelects() {
+      // reload the session variables.
+      addLocalAndQueriedSessionVars();
+      // resets possibly warning messages
+      updateIsWarnFlag();
+    }
+
+    function updateIsWarnFlag() {
+      vm.deletedSessionVariablesList = [];
+      if (!_.isEmpty(dynamicVariablesList)) {
+        _.forEach(dynamicVariablesList, function (variable) {
+          if (!_.includes(vm.availableSessionVariablesList, variable)) {
+            vm.deletedSessionVariablesList.push(variable);
+          }
+        });
+      }
+      vm.deletedSessionVariablesList = _.uniq(vm.deletedSessionVariablesList).sort();
+    }
+
+    function getSessionVariablesOfDependentCe() {
+      dependentCeSessionVariablesList = [];
+
+      return AASessionVariableService.getSessionVariablesOfDependentCeOnly(_.get(AAModelService.getAAModel(), 'aaRecordUUID')).then(function (data) {
+        if (!_.isUndefined(data) && data.length > 0) {
+          dependentCeSessionVariablesList = data;
+        }
+      }, function (response) {
+        if (response.status === 404) {
+          dependentCeSessionVariablesList = [];
+        }
+      });
+    }
+
+    function getDynamicVariables() {
+      dynamicVariablesList = [];
+      var dynamVarList = _.get(vm.menuEntry, 'dynamicList', _.get(vm.menuEntry, 'actions[0].dynamicList'));
+      if (!_.isUndefined(dynamVarList)) {
+        _.forEach(dynamVarList, function (entry) {
+          if (entry.isDynamic) {
+            if (!_.includes(prePopulatedSessionVariablesList, entry.say.value)) {
+              dynamicVariablesList.push(entry.say.value);
+            }
+          }
+        });
+      }
+    }
 
     $scope.$on('CE Saved', function () {
       holdActionDesc = '';
@@ -103,8 +211,7 @@
         if (action.name === vm.messageOptions[actionType.PLAY].action) {
           if (isDynamicToggle()) {
             action.name = 'dynamic';
-            vm.dynamicValues = [];
-            vm.menuEntry.dynamicList = [{
+            action.dynamicList = [{
               say: {
                 value: '',
                 voice: '',
@@ -135,11 +242,12 @@
     }
 
     function saveDynamicUi() {
+      var action = vm.actionEntry;
       var range = AADynaAnnounceService.getRange();
       finalList = [];
       var dynamicList = range.endContainer.ownerDocument.activeElement;
-      if (dynamicList.className.includes('dynamic-prompt') && !(dynamicList.id === 'messageType{{schedule + index + menuKeyIndex}}')) {
-        vm.menuEntry.dynamicList = createDynamicList(dynamicList);
+      if (canDynamicListUpdated(dynamicList, range)) {
+        action.dynamicList = createDynamicList(dynamicList);
         if (_.isEmpty(finalList)) {
           finalList.push({
             say: {
@@ -149,10 +257,14 @@
             isDynamic: false,
             htmlModel: '',
           });
-          vm.menuEntry.dynamicList = finalList;
+          action.dynamicList = finalList;
         }
         AACommonService.setSayMessageStatus(true);
       }
+    }
+
+    function canDynamicListUpdated(dynamicList, range) {
+      return dynamicList.className.includes('dynamic-prompt') && range.collapsed === true && (_.isEqual(dynamicList.id, uniqueId));
     }
 
     function createDynamicList(dynamicList) {
@@ -231,6 +343,22 @@
           if (vm.actionEntry.value && !_.startsWith(vm.actionEntry.value, 'http')) {
             vm.messageOption = vm.messageOptions[actionType.SAY];
             vm.messageInput = vm.actionEntry.value;
+          } else if (_.has(vm.actionEntry, 'dynamicList')) {
+            _.forEach(vm.actionEntry.dynamicList, function (opt) {
+              var model;
+              if (!opt.isDynamic && _.isEmpty(opt.htmlModel)) {
+                model = {
+                  model: opt.say.value,
+                  html: opt.say.value,
+                };
+              } else {
+                model = {
+                  model: opt.say.value,
+                  html: decodeURIComponent(opt.htmlModel),
+                };
+              }
+              vm.dynamicValues.push(model);
+            });
           } else {
             vm.messageOption = vm.messageOptions[actionType.PLAY];
           }
@@ -239,11 +367,10 @@
           vm.messageInput = vm.actionEntry.value;
         }
       } else {
-        if (_.has(vm.menuEntry, 'dynamicList')) {
-          vm.dynamicValues = [];
-          _.forEach(vm.menuEntry.dynamicList, function (opt) {
+        if (_.has(vm.actionEntry, 'dynamicList')) {
+          _.forEach(vm.actionEntry.dynamicList, function (opt) {
             var model = {};
-            if (!opt.isDynamic) {
+            if (!opt.isDynamic && _.isEmpty(opt.htmlModel)) {
               model = {
                 model: opt.say.value,
                 html: opt.say.value,
@@ -278,54 +405,55 @@
       switch (vm.messageType) {
         case messageType.MENUHEADER:
         case messageType.SUBMENU_HEADER:
-          {
-            vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
-            var actionHeader = getActionHeader(vm.menuEntry);
-            var action = getAction(actionHeader);
+        {
+          vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
+          var actionHeader = getActionHeader(vm.menuEntry);
+          var action = getAction(actionHeader);
 
-            if (action) {
-              vm.actionEntry = action;
-            }
-            break;
+          if (action) {
+            vm.actionEntry = action;
           }
+          break;
+        }
         case messageType.MENUKEY:
-          {
-            vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
-            if (vm.menuEntry.entries.length > $scope.menuKeyIndex && vm.menuEntry.entries[$scope.menuKeyIndex]) {
-              if ($scope.type) {
-                sourceQueue = vm.menuEntry.entries[$scope.menuKeyIndex];
-                queueAction = sourceQueue.actions[0];
-                sourceMenu = queueAction.queueSettings[$scope.type];
-                vm.actionEntry = getAction(sourceMenu);
-              } else {
-                var keyAction = getAction(vm.menuEntry.entries[$scope.menuKeyIndex]);
-                if (keyAction) {
-                  vm.actionEntry = keyAction;
-                }
-              }
-            }
-
-            break;
-          }
-        case messageType.ACTION:
-          {
-            ui = AAUiModelService.getUiModel();
-            uiMenu = ui[$scope.schedule];
-            vm.menuEntry = uiMenu.entries[$scope.index];
+        {
+          vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
+          if (vm.menuEntry.entries.length > $scope.menuKeyIndex && vm.menuEntry.entries[$scope.menuKeyIndex]) {
             if ($scope.type) {
-              queueAction = _.get(vm.menuEntry, 'actions[0]');
-
-              if (_.get(queueAction, 'name') === conditional) {
-                queueAction = queueAction.then;
-              }
-
+              sourceQueue = vm.menuEntry.entries[$scope.menuKeyIndex];
+              queueAction = sourceQueue.actions[0];
               sourceMenu = queueAction.queueSettings[$scope.type];
               vm.actionEntry = getAction(sourceMenu);
             } else {
-              vm.actionEntry = getAction(vm.menuEntry);
+              var keyAction = getAction(vm.menuEntry.entries[$scope.menuKeyIndex]);
+              if (keyAction) {
+                vm.actionEntry = keyAction;
+              }
             }
-            break;
           }
+
+          break;
+        }
+        case messageType.ACTION:
+        {
+          ui = AAUiModelService.getUiModel();
+          vm.ui = ui;
+          uiMenu = ui[$scope.schedule];
+          vm.menuEntry = uiMenu.entries[$scope.index];
+          if ($scope.type) {
+            queueAction = _.get(vm.menuEntry, 'actions[0]');
+
+            if (_.get(queueAction, 'name') === conditional) {
+              queueAction = queueAction.then;
+            }
+
+            sourceMenu = queueAction.queueSettings[$scope.type];
+            vm.actionEntry = getAction(sourceMenu);
+          } else {
+            vm.actionEntry = getAction(vm.menuEntry);
+          }
+          break;
+        }
       }
     }
 
@@ -334,6 +462,12 @@
     }
 
     function activate() {
+      //type is undefined everywhere except route to cisco spark care
+      var type = _.isUndefined($scope.type) ? '' : $scope.type;
+      //menuKeyIndex and menuId are undefined for most of the places like caller input
+      var menuKeyIndex = _.isUndefined($scope.menuKeyIndex) ? '' : $scope.menuKeyIndex;
+      var menuId = _.isUndefined($scope.menuId) ? '' : $scope.menuId;
+      uniqueId = 'messageType' + $scope.schedule + $scope.index + menuKeyIndex + menuId + type;
       vm.uniqueCtrlIdentifer = AACommonService.makeKey($scope.schedule, AACommonService.getUniqueId());
       if ($scope.isMenuHeader) {
         vm.messageType = messageType.MENUHEADER;
@@ -348,6 +482,10 @@
       setActionEntry();
 
       populateUiModel();
+      getSessionVariablesOfDependentCe().finally(function () {
+        getDynamicVariables();
+        refreshVarSelects();
+      });
     }
 
     activate();

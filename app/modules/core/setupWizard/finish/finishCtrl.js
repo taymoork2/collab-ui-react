@@ -5,7 +5,15 @@
     .controller('WizardFinishCtrl', WizardFinishCtrl);
 
   /* @ngInject */
-  function WizardFinishCtrl($scope, $q, $translate, Notification) {
+  function WizardFinishCtrl($q, $scope, $translate, Authinfo, Notification, SetupWizardService, TrialWebexService) {
+    $scope.hasPendingLicenses = SetupWizardService.hasPendingLicenses();
+    $scope.sendEmailModel = false;
+    $scope.isCustomerLaunchedFromPartner = Authinfo.isCustomerLaunchedFromPartner();
+    $scope.setSendCustomerEmailFlag = setSendCustomerEmailFlag;
+    $scope.orderDetails = {
+      subscriptionId: formatSubscriptionId(SetupWizardService.getActingSubscriptionId()),
+      orderId: SetupWizardService.getCurrentOrderNumber(),
+    };
     $scope.initNext = function () {
       var deferred = $q.defer();
       if (!_.isUndefined($scope.wizard) && _.isFunction($scope.wizard.getRequiredTabs)) {
@@ -24,5 +32,40 @@
       deferred.resolve();
       return deferred.promise;
     };
+
+    init();
+
+    function init() {
+      pushBlankProvisioningCall();
+    }
+
+    function setSendCustomerEmailFlag(flag) {
+      if (!_.isBoolean(flag)) {
+        return $q.reject('A boolean must be passed.');
+      }
+      TrialWebexService.setProvisioningWebexSendCustomerEmailFlag(flag);
+    }
+
+    function pushBlankProvisioningCall() {
+      if (!_.has(SetupWizardService.provisioningCallbacks, 'meetingSettings') && $scope.hasPendingLicenses) {
+        var emptyProvisioningCall = {
+          meetingSettings: (function () {
+            return TrialWebexService.provisionSubscriptionWithoutWebexSites().then(function () {
+              Notification.success('firstTimeWizard.webexProvisioningSuccess');
+            }).catch(function (response) {
+              Notification.errorWithTrackingId(response, 'firstTimeWizard.webexProvisioningError');
+            });
+          }),
+        };
+
+        SetupWizardService.addProvisioningCallbacks(emptyProvisioningCall);
+      }
+    }
+    function formatSubscriptionId(id) {
+      if (id.lastIndexOf('/') !== -1) {
+        return id.slice(0, id.lastIndexOf('/'));
+      }
+      return id;
+    }
   }
 })();

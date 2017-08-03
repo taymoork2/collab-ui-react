@@ -2,7 +2,7 @@ import { ServicesOverviewHybridAndGoogleCalendarCard } from './hybridAndGoogleCa
 
 describe('ServicesOverviewHybridCallCard', () => {
 
-  let $state, $q, $modal, $rootScope, Authinfo, CloudConnectorService, HybridServicesClusterStatesService;
+  let $state, $q, $modal, $rootScope, Authinfo, CloudConnectorService, HybridServicesClusterStatesService, Notification;
   let card: ServicesOverviewHybridAndGoogleCalendarCard;
 
   beforeEach(angular.mock.module('Core'));
@@ -10,7 +10,7 @@ describe('ServicesOverviewHybridCallCard', () => {
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies(_$state_, _$q_, _$modal_, _$rootScope_, _Authinfo_, _CloudConnectorService_, _HybridServicesClusterStatesService_) {
+  function dependencies(_$state_, _$q_, _$modal_, _$rootScope_, _Authinfo_, _CloudConnectorService_, _HybridServicesClusterStatesService_, _Notification_) {
     $state = _$state_;
     $q = _$q_;
     $modal = _$modal_;
@@ -18,16 +18,18 @@ describe('ServicesOverviewHybridCallCard', () => {
     Authinfo = _Authinfo_;
     CloudConnectorService = _CloudConnectorService_;
     HybridServicesClusterStatesService = _HybridServicesClusterStatesService_;
+    Notification = _Notification_;
   }
 
   function initSpies() {
     spyOn(Authinfo, 'isFusionCal');
     spyOn(Authinfo, 'isFusionGoogleCal');
+    spyOn(Notification, 'errorWithTrackingId');
     spyOn(CloudConnectorService, 'getService').and.returnValue($q.resolve({ setup: true }));
   }
 
   it('should have sane defaults', () => {
-    card = new ServicesOverviewHybridAndGoogleCalendarCard($state, $q, $modal, Authinfo, CloudConnectorService, HybridServicesClusterStatesService);
+    card = new ServicesOverviewHybridAndGoogleCalendarCard($state, $q, $modal, Authinfo, CloudConnectorService, HybridServicesClusterStatesService, Notification);
     expect(card.active).toBe(false);
     expect(card.googleActive).toBe(false);
     expect(card.loading).toBe(true);
@@ -38,33 +40,29 @@ describe('ServicesOverviewHybridCallCard', () => {
   it('should not be displayed if the user does not have the hybrid cal entitlement but has the hybrid google cal entitlement', () => {
     Authinfo.isFusionCal.and.returnValue(false);
     Authinfo.isFusionGoogleCal.and.returnValue(true);
-    card = new ServicesOverviewHybridAndGoogleCalendarCard($state, $q, $modal, Authinfo, CloudConnectorService, HybridServicesClusterStatesService);
-    // $rootScope.$apply();
+    card = new ServicesOverviewHybridAndGoogleCalendarCard($state, $q, $modal, Authinfo, CloudConnectorService, HybridServicesClusterStatesService, Notification);
     expect(card.display).toBe(false);
   });
 
   it('should be displayed if the user has the hybrid cal entitlement and the hybrid google cal entitlement', () => {
     Authinfo.isFusionCal.and.returnValue(true);
     Authinfo.isFusionGoogleCal.and.returnValue(true);
-    card = new ServicesOverviewHybridAndGoogleCalendarCard($state, $q, $modal, Authinfo, CloudConnectorService, HybridServicesClusterStatesService);
-    // $rootScope.$apply();
+    card = new ServicesOverviewHybridAndGoogleCalendarCard($state, $q, $modal, Authinfo, CloudConnectorService, HybridServicesClusterStatesService, Notification);
     expect(card.display).toBe(true);
   });
 
-  it('should not be displayed if the user does has neither the hybrid cal entitlement not the hybrid google cal entitlement and not the feature toggle', () => {
+  it('should not be displayed if the user does has neither the hybrid cal entitlement nor the hybrid google cal entitlement ', () => {
     Authinfo.isFusionCal.and.returnValue(false);
     Authinfo.isFusionGoogleCal.and.returnValue(false);
-    card = new ServicesOverviewHybridAndGoogleCalendarCard($state, $q, $modal, Authinfo, CloudConnectorService, HybridServicesClusterStatesService);
-    // $rootScope.$apply();
+    card = new ServicesOverviewHybridAndGoogleCalendarCard($state, $q, $modal, Authinfo, CloudConnectorService, HybridServicesClusterStatesService, Notification);
     expect(card.display).toBe(false);
   });
 
   it('should stay not active if services statuses do not say hybrid calendar is setup', () => {
     Authinfo.isFusionCal.and.returnValue(true);
     Authinfo.isFusionGoogleCal.and.returnValue(true);
-    card = new ServicesOverviewHybridAndGoogleCalendarCard($state, $q, $modal, Authinfo, CloudConnectorService, HybridServicesClusterStatesService);
+    card = new ServicesOverviewHybridAndGoogleCalendarCard($state, $q, $modal, Authinfo, CloudConnectorService, HybridServicesClusterStatesService, Notification);
     card.hybridStatusEventHandler([{ serviceId: 'squared-fusion-cal', setup: false, status: 'yolo' }]);
-    // card.googleCalendarFeatureToggleEventHandler(true);
     $rootScope.$apply();
     expect(card.active).toBe(false);
   });
@@ -72,9 +70,8 @@ describe('ServicesOverviewHybridCallCard', () => {
   it('should be active if services statuses say hybrid calendar is setup', () => {
     Authinfo.isFusionCal.and.returnValue(true);
     Authinfo.isFusionGoogleCal.and.returnValue(true);
-    card = new ServicesOverviewHybridAndGoogleCalendarCard($state, $q, $modal, Authinfo, CloudConnectorService, HybridServicesClusterStatesService);
+    card = new ServicesOverviewHybridAndGoogleCalendarCard($state, $q, $modal, Authinfo, CloudConnectorService, HybridServicesClusterStatesService, Notification);
     card.hybridStatusEventHandler([{ serviceId: 'squared-fusion-cal', setup: true, status: 'yolo' }]);
-    // card.googleCalendarFeatureToggleEventHandler(true);
     $rootScope.$apply();
     expect(card.active).toBe(true);
   });
@@ -83,9 +80,8 @@ describe('ServicesOverviewHybridCallCard', () => {
     Authinfo.isFusionCal.and.returnValue(true);
     Authinfo.isFusionGoogleCal.and.returnValue(true);
     CloudConnectorService.getService.and.returnValue($q.resolve({ setup: false }));
-    card = new ServicesOverviewHybridAndGoogleCalendarCard($state, $q, $modal, Authinfo, CloudConnectorService, HybridServicesClusterStatesService);
+    card = new ServicesOverviewHybridAndGoogleCalendarCard($state, $q, $modal, Authinfo, CloudConnectorService, HybridServicesClusterStatesService, Notification);
     card.hybridStatusEventHandler([]);
-    // card.googleCalendarFeatureToggleEventHandler(true);
     $rootScope.$apply();
     expect(card.googleActive).toBe(false);
   });
@@ -94,20 +90,30 @@ describe('ServicesOverviewHybridCallCard', () => {
     Authinfo.isFusionCal.and.returnValue(true);
     Authinfo.isFusionGoogleCal.and.returnValue(true);
     CloudConnectorService.getService.and.returnValue($q.resolve({ setup: true }));
-    card = new ServicesOverviewHybridAndGoogleCalendarCard($state, $q, $modal, Authinfo, CloudConnectorService, HybridServicesClusterStatesService);
+    card = new ServicesOverviewHybridAndGoogleCalendarCard($state, $q, $modal, Authinfo, CloudConnectorService, HybridServicesClusterStatesService, Notification);
     card.hybridStatusEventHandler([]);
-    // card.googleCalendarFeatureToggleEventHandler(true);
     $rootScope.$apply();
     expect(card.googleActive).toBe(true);
   });
 
-  it('should stop loading once it received the hybrid statuses event AND the feature toggle event', () => {
+  it('should stop loading once it received the hybrid statuses', () => {
     Authinfo.isFusionCal.and.returnValue(true);
     Authinfo.isFusionGoogleCal.and.returnValue(true);
-    card = new ServicesOverviewHybridAndGoogleCalendarCard($state, $q, $modal, Authinfo, CloudConnectorService, HybridServicesClusterStatesService);
+    card = new ServicesOverviewHybridAndGoogleCalendarCard($state, $q, $modal, Authinfo, CloudConnectorService, HybridServicesClusterStatesService, Notification);
     card.hybridStatusEventHandler([]);
-    // card.googleCalendarFeatureToggleEventHandler(true);
     $rootScope.$apply();
     expect(card.loading).toBe(false);
   });
+
+  it('should pop a notification and disable the button if something goes wrong in the CCC service', () => {
+    Authinfo.isFusionCal.and.returnValue(true);
+    Authinfo.isFusionGoogleCal.and.returnValue(true);
+    CloudConnectorService.getService.and.returnValue($q.reject());
+    card = new ServicesOverviewHybridAndGoogleCalendarCard($state, $q, $modal, Authinfo, CloudConnectorService, HybridServicesClusterStatesService, Notification);
+    card.hybridStatusEventHandler([]);
+    $rootScope.$apply();
+    expect(card.googleServerError).toBe(true);
+    expect(Notification.errorWithTrackingId).toHaveBeenCalledTimes(1);
+  });
+
 });

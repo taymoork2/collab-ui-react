@@ -1,3 +1,4 @@
+import { DigitalRiverService } from 'modules/online/digitalRiver/digitalRiver.service';
 import { Notification } from 'modules/core/notifications';
 import { IToolkitModalService, IToolkitModalServiceInstance } from 'modules/core/modal';
 
@@ -20,6 +21,8 @@ interface ISubscriptionResource extends ng.resource.IResourceClass<ng.resource.I
 
 const CANCELLED = 'CANCELLED';
 const CANCEL = 'CANCEL';
+const DOWNGRADE = 'DOWNGRADE';
+const FREE = 'FREE';
 
 export class OnlineUpgradeService {
   private subscriptionResource: ISubscriptionResource;
@@ -32,6 +35,7 @@ export class OnlineUpgradeService {
     private $resource: ng.resource.IResourceService,
     private $q: ng.IQService,
     private Authinfo,
+    private DigitalRiverService: DigitalRiverService,
     private Notification: Notification,
     private UrlConfig,
   ) {
@@ -45,6 +49,7 @@ export class OnlineUpgradeService {
 
   public openUpgradeModal(): void {
     this.dismissModal();
+    this.DigitalRiverService.getDigitalRiverToken();
     this.upgradeModal = this.$modal.open({
       template: '<online-upgrade-modal></online-upgrade-modal>',
       backdrop: 'static',
@@ -124,12 +129,15 @@ export class OnlineUpgradeService {
       subscriptionId: id,
     }, {
       action: CANCEL,
+      cancelType: DOWNGRADE,
     }).$promise;
   }
 
   private hasExpiredSubscriptions(): boolean {
     const subscriptions = this.Authinfo.getSubscriptions();
-    return !!subscriptions.length && _.every(subscriptions, subscription => this.isSubscriptionCancelledOrExpired(subscription));
+    return (!!subscriptions.length &&
+            _.every(subscriptions, subscription => this.isSubscriptionCancelledOrExpired(subscription))) ||
+           (subscriptions.length === 1 && this.isFreemiumSubscription(subscriptions[0]));
   }
 
   private isSubscriptionCancelledOrExpired(subscription): boolean {
@@ -138,6 +146,10 @@ export class OnlineUpgradeService {
 
   private isSubscriptionCancelled(subscription): boolean {
     return _.get<string>(subscription, 'status') === CANCELLED;
+  }
+
+  private isFreemiumSubscription(subscription): boolean {
+    return _.endsWith(_.get<string>(subscription, 'licenses[0].masterOfferName'), FREE);
   }
 
   private isSubscriptionExpired(subscription): boolean {

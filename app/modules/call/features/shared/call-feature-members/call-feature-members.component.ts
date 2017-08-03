@@ -40,14 +40,14 @@ class CallFeatureMembersCtrl implements ng.IComponentController {
     this.removeStr = this.$translate.instant(this.removeKey);
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const memberChanges = changes['members'];
     if (memberChanges && memberChanges.currentValue) {
       this.processMemberChanges(memberChanges);
     }
   }
 
-  private processMemberChanges(memberChanges: ng.IChangesObject): void {
+  private processMemberChanges(memberChanges: ng.IChangesObject<any>): void {
     this.reordering = false;
     this.displayedMembers = _.take<CallFeatureMember>(memberChanges.currentValue, CallFeatureMembersCtrl.DISPLAYED_MEMBER_SIZE);
   }

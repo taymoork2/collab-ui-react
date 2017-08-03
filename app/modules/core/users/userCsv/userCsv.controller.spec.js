@@ -13,7 +13,7 @@ describe('userCsv.controller', function () {
 
     this.injectDependencies('$controller', '$interval', '$modal', '$previousState', '$q', '$rootScope',
       '$scope', '$state', '$timeout', 'Analytics', 'Authinfo', 'CsvDownloadService', 'FeatureToggleService',
-      'HuronCustomer', 'Notification', 'Orgservice', 'ResourceGroupService', 'ServiceDescriptor', 'UserCsvService', 'Userservice', 'USSService', 'DirSyncService');
+      'HuronCustomer', 'Notification', 'Orgservice', 'ResourceGroupService', 'ServiceDescriptorService', 'UserCsvService', 'Userservice', 'USSService', 'DirSyncService');
 
     initFixtures.apply(this);
     initMocks.apply(this);
@@ -33,7 +33,7 @@ describe('userCsv.controller', function () {
     spyOn(this.DirSyncService, 'requiresRefresh').and.returnValue(false);
     spyOn(this.DirSyncService, 'refreshStatus').and.returnValue(this.$q.resolve());
 
-    spyOn(this.ServiceDescriptor, 'getServices').and.returnValue(this.$q.resolve(this.fusionServices));
+    spyOn(this.ServiceDescriptorService, 'getServices').and.returnValue(this.$q.resolve(this.fusionServices));
     spyOn(this.CsvDownloadService, 'getCsv').and.callFake(function (type) {
       if (type === 'headers') {
         return this.$q.resolve(_this.headers);

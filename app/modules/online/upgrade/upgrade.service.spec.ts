@@ -4,6 +4,7 @@ describe('Service: OnlineUpgradeService', () => {
   const ACTIVE = 'ACTIVE';
   const CANCELLED = 'CANCELLED';
   const CANCEL = 'CANCEL';
+  const DOWNGRADE = 'DOWNGRADE';
 
   beforeEach(function () {
     this.initModules(onlineUpgradeModule);
@@ -12,6 +13,7 @@ describe('Service: OnlineUpgradeService', () => {
       '$modal',
       '$q',
       'Authinfo',
+      'DigitalRiverService',
       'OnlineUpgradeService',
       'UrlConfig',
       'FeatureToggleService',
@@ -20,6 +22,7 @@ describe('Service: OnlineUpgradeService', () => {
     spyOn(this.Authinfo, 'isOnline');
     spyOn(this.Authinfo, 'getSubscriptions').and.returnValue([]);
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('123');
+    spyOn(this.DigitalRiverService, 'getDigitalRiverToken').and.returnValue(this.$q.resolve('abc+123'));
     spyOn(this.$modal, 'open').and.callThrough();
     spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
   });
@@ -119,6 +122,12 @@ describe('Service: OnlineUpgradeService', () => {
           getCancelledSubscription(),
         ]);
       });
+
+      it('with a single Freemium subscription', function () {
+        this.Authinfo.getSubscriptions.and.returnValue([
+          getFreemiumSubscription(),
+        ]);
+      });
     });
   });
 
@@ -137,6 +146,7 @@ describe('Service: OnlineUpgradeService', () => {
 
     const patchPayload = {
       action: CANCEL,
+      cancelType: DOWNGRADE,
     };
 
     it('cancelSubscriptions() should invoke PATCH for each subscription', function () {
@@ -242,5 +252,16 @@ describe('Service: OnlineUpgradeService', () => {
     return _.assign(getExpiredSubscription(), {
       gracePeriod: 7,
     });
+  }
+
+  function getFreemiumSubscription() {
+    return {
+      subscriptionId: '123',
+      status: ACTIVE,
+      endDate: moment().add(1, 'days'),
+      licenses: [{
+        masterOfferName: 'MC_FREE',
+      }],
+    };
   }
 });

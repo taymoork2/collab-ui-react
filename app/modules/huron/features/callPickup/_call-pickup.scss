@@ -18,6 +18,11 @@ $overlay-panel-height: 93px;
   }
 }
 
+.call-pickup-save {
+  position: fixed;
+  bottom: 0;
+}
+
 .call-pickup-edit .call-pickup-notification-form {
   input {
     width: 3.7rem;

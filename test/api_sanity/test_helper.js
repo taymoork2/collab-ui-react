@@ -87,6 +87,11 @@ var auth = {
     pass: 'C1sc01234!',
     org: 'baab1ece-498c-452b-aea8-1a727413c818',
   },
+  'media-fusion-admin': {
+    user: 'mediafusion54@yahoo.com',
+    pass: 'Cisco!23',
+    org: '2c3c9f9e-73d9-4460-a668-047162ff1bac',
+  },
   'customer-support-admin': {
     user: 'admin@csreptestdom.collaborate.com',
     pass: 'P@ssword123',
@@ -131,7 +136,7 @@ var auth = {
   },
   'contactcenter-admin': {
     user: 'sunlight-atlas-test-admn@outlook.com',
-    pass: 'C1sco123=',
+    pass: 'C1sco123!',
     org: '36de4632-ccb9-4edf-8124-b74ce6943285',
   },
   'aa-admin': {

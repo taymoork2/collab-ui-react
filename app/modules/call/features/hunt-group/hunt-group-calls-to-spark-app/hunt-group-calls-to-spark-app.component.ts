@@ -4,7 +4,7 @@ class HuntGroupCallsToSparkAppCtrl implements ng.IComponentController {
   public destinationRule: string;
   public isToggleDisabled: boolean = false;
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const { destinationRule } = changes;
     if (destinationRule && destinationRule.currentValue) {
       this.destinationRule = destinationRule.currentValue;

@@ -9,10 +9,13 @@ declare namespace csdm {
     title: string;
   }
   interface IAccountData extends ICIdentity {
-    externalHybridCallIdentifier?: IExternalLinkedAccount;
-    externalCalendarIdentifier?: IExternalLinkedAccount;
+    externalHybridCallIdentifier?: IExternalLinkedAccount[];
+    externalCalendarIdentifier?: IExternalLinkedAccount[];
+    externalLinkedAccounts?: IExternalLinkedAccount[];
+    enableCalService?: boolean;
     username?: string;
     entitlements?: string[];
+    locationUuid?: string;
     externalNumber?: string;
     directoryNumber?: string;
     ussProps: any;

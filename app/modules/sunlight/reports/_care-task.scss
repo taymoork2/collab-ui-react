@@ -59,9 +59,24 @@
   .ui-grid-cell:first-child {
     border-right: rem-calc(1) solid $gray-light-2;
     border-left: rem-calc(1) solid $gray-light-2;
+    text-align: left;
   }
 
-  .ui-grid-header-cell:last-child,
+  .ui-grid-header-cell {
+    text-align: center;
+    border-right: rem-calc(1) solid $gray-light-2;
+  }
+
+  .ui-grid-cell {
+    text-align: center;
+    border-right: rem-calc(1) solid $gray-light-2;
+  }
+
+  .ui-grid-header-cell:last-child {
+    text-align: center;
+    border-right: rem-calc(1) solid $gray-light-2;
+  }
+
   .ui-grid-cell:last-child {
     text-align: center;
     border-right: rem-calc(1) solid $gray-light-2;

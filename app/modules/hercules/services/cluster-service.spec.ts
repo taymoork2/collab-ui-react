@@ -771,6 +771,7 @@ describe('ClusterService', () => {
       id: _.uniqueId('org_'),
       resourceGroups: [],
       url: '',
+      servicesUrl: '',
     };
   }
 

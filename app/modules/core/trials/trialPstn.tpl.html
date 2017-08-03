@@ -13,35 +13,15 @@
   <form id="callTrialForm" class="trial-modal" name="trialForm" novalidate>
 
     <!-- provider selection -->
-    <div ng-if="!(pstnTrial.ftHuronSupportThinktel || pstnTrial.ftHuronFederatedSparkCall)">
-      <div class="cs-form__section">
-        <div class="section__info">
-          <h4 class="section__title" translate="trialModal.pstn.pstnProvider"></h4>
-        </div>
-        <div class="section__content">
-          <div class="medium-12">
-            <cs-select
-              ng-model="pstnTrial.trialData.details.pstnProvider"
-              options="pstnTrial.pstnProviderList"
-              name="trialPstnProviderList"
-              onChange="pstnTrial.changePstnProviderImplementation()"
-              labelfield="name">
-            </cs-select>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div ng-if="pstnTrial.ftHuronSupportThinktel || pstnTrial.ftHuronFederatedSparkCall">
-      <uc-pstn-providers
-        on-change-fn="pstnTrial.onProviderChange(true)"
-        on-ready-fn="pstnTrial.onProviderReady()">
-      </uc-pstn-providers>
-      <hr>
-    </div>
+    <uc-pstn-providers
+      on-change-fn="pstnTrial.onProviderChange(true)"
+      on-ready-fn="pstnTrial.onProviderReady()">
+    </uc-pstn-providers>
+    <hr>
 
     <div ng-if="pstnTrial.providerSelected">
       <!-- manual number entry -->
-      <div class="cs-form__section" ng-show="pstnTrial.providerImplementation === pstnTrial.SWIVEL || pstnTrial.trialData.details.pstnProvider.apiImplementation === pstnTrial.SWIVEL">
+      <div class="cs-form__section" ng-show="pstnTrial.isSwivel()">
         <div class="section__info">
           <h4 class="section__title" translate="trialModal.pstn.phoneNumbers"></h4>
           <h6 class="section__description" translate="trialModal.pstn.pleaseAdd"></h6>
@@ -52,79 +32,40 @@
             <h6 translate="trialModal.pstn.numbers"></h6>
           </div>
           <div class="did-input">
-            <cs-token-field tokens="pstnTrial.manualUnsavedTokens" tokenfieldid="pstnTrial.manualTokenFieldId" tokenoptions="pstnTrial.manualTokenOptions" tokenmethods="pstnTrial.manualTokenMethods"></cs-token-field>
+            <cs-token-field
+              tokens="pstnTrial.manualUnsavedTokens"
+              tokenfieldid="pstnTrial.manualTokenFieldId"
+              tokenoptions="pstnTrial.manualTokenOptions"
+              tokenmethods="pstnTrial.manualTokenMethods">
+            </cs-token-field>
           </div>
         </div>
       </div>
 
       <!-- legal info -->
-      <div class="cs-form__section" ng-hide="pstnTrial.providerImplementation === pstnTrial.SWIVEL || pstnTrial.trialData.details.pstnProvider.apiImplementation === pstnTrial.SWIVEL">
+      <div class="cs-form__section" ng-hide="pstnTrial.isSwivel()">
         <div class="section__info">
             <h4 class="section__title" translate="trialModal.pstn.contract"></h4>
             <h6 class="section__description" translate="trialModal.pstn.popover"></h6>
         </div>
         <div class="section__content">
-          <formly-form ng-if="!pstnTrial.ftHuronFederatedSparkCall" class="collapse-both" model="pstnTrial.contractInfo" fields="pstnTrial.contractInfoFields" class="columns indent">
-            </formly-form>
-          <input
-            cs-input
-            type="text"
-            id="trial--pstn--companyName"
-            name="trialPstnCompanyName"
-            ng-model="pstnTrial.trialData.details.pstnContractInfo.companyName"
-            cs-input-group-size="medium-12"
-            cs-input-label="{{:: 'trialModal.pstn.company' | translate}}"
-            cs-input-messages="pstnTrial.errorMessages"
-            ng-required="true">
-          <input
-            cs-input
-            type="text"
-            id="trial--pstn--firstName"
-            name="trialPstnFirstName"
-            ng-model="pstnTrial.trialData.details.pstnContractInfo.firstName"
-            cs-input-group-size="medium-12"
-            cs-input-label="{{:: 'trialModal.pstn.firstName' | translate}}"
-            cs-input-messages="pstnTrial.errorMessages"
-            ng-required="true">
-          <input
-            cs-input
-            type="text"
-            id="trial--pstn--lastName"
-            name="trialPstnLastName"
-            ng-model="pstnTrial.trialData.details.pstnContractInfo.lastName"
-            cs-input-group-size="medium-12"
-            cs-input-label="{{:: 'trialModal.pstn.lastName' | translate}}"
-            cs-input-messages="pstnTrial.errorMessages"
-            ng-required="true">
-          <input
-            cs-input
-            type="email"
-            id="trial--pstn--emailAddress"
-            name="trialPstnEmailAddress"
-            ng-model="pstnTrial.trialData.details.pstnContactInfo.EmailAddress"
-            cs-input-group-size="medium-12"
-            cs-input-label="{{:: 'trialModal.pstn.email' | translate}}"
-            cs-input-messages="pstnTrial.errorMessages"
-            ng-required="true">
-
-          <uc-pstn-contact-info ng-if="pstnTrial.ftHuronFederatedSparkCall" contact="pstnTrial.trialData.details.pstnContractInfo"></uc-pstn-contact-info>
+          <uc-pstn-contact-info contact="pstnTrial.trialData.details.pstnContractInfo">
+          </uc-pstn-contact-info>
         </div>
       </div>
 
-      <div class="cs-form__section flex-container pstn-selector-container" ng-if="!(!pstnTrial.ftHuronFederatedSparkCall || pstnTrial.providerImplementation === pstnTrial.SWIVEL || pstnTrial.trialData.details.pstnProvider.apiImplementation === pstnTrial.SWIVEL)">
+      <div class="cs-form__section flex-container pstn-selector-container" ng-if="!pstnTrial.isSwivel()">
         <div class="flex-2">
           <h4 translate="trialModal.pstn.phoneNumbers"></h4>
           <h6 class="section__description" translate="pstnSetup.newNumbersTabDesc"></h6>
-          <uc-pstn-selector
-           search="pstnTrial.searchCarrierInventory(value)"
-           search-results="pstnTrial.searchResults"
-           paginate-options="pstnTrial.paginateOptions"
-           add-to-cart="pstnTrial.addToCart(searchResultModel)"
-           simple="true"
-           max-selection="pstnTrial.maxSelection"
-           error-message="{{'pstnSetup.errors.phoneNumbers' | translate}}"
-           show-no-result="pstnTrial.showNoResult">
-          </uc-pstn-selector>
+          <uc-pstn-number-search
+            model="pstnTrial.nsModel"
+            search="pstnTrial.searchCarrierInventory(value)"
+            add-to-cart="pstnTrial.addToCart(searchResultModel)"
+            country-code="pstnTrial.trialData.details.countryCode"
+            error-message="{{'pstnSetup.errors.phoneNumbers' | translate}}"
+          >
+          </uc-pstn-number-search>
         </div>
         <div class="flex-1">
           <div class="provider-flex center"><h1 class="h5" translate="pstnSetup.numberCart"></h1><h1 class="h4"><span class="badge badge--round info">{{pstnTrial.trialData.details.pstnNumberInfo.numbers.length}}</span></h1></div>
@@ -134,75 +75,6 @@
               <button type="button" class="close" ng-click="pstnTrial.removeOrder(order)"><span class="sr-only" translate="common.delete"></span></button>
             </li>
           </ul>
-        </div>
-      </div>
-
-      <!-- provider numbers -->
-      <div class="cs-form__section" ng-hide="pstnTrial.ftHuronFederatedSparkCall || pstnTrial.providerImplementation === pstnTrial.SWIVEL || pstnTrial.trialData.details.pstnProvider.apiImplementation === pstnTrial.SWIVEL">
-        <div class="section__info">
-          <h4 translate="trialModal.pstn.phoneNumbers"></h4>
-          <h6 class="section__description" translate="trialModal.pstn.pleaseAdd10"></h6>
-        </div>
-        <div class="section__content">
-          <form id="pstnNumberSearch">
-            <div class="row collapse-both">
-              <div class="medium-6 columns state-dropdown">
-                <p>{{pstnTrial.location}}</p>
-                <cs-select
-                  ng-model="pstnTrial.trialData.details.pstnNumberInfo.state"
-                  options="pstnTrial.pstn.stateOptions"
-                  labelfield="name"
-                  valuefield="abbreviation"
-                  placeholder="::'common.select' | translate"
-                  input-placeholder=""
-                  required="true"
-                  filter="true"
-                  refresh-data-fn="sel.getoptions(filter)"
-                  on-change-fn="pstnTrial.getStateInventory()">
-                </cs-select>
-              </div>
-              <div class="medium-3 columns">
-                <p translate="pstnSetup.areaCode"></p>
-                <cs-select
-                  ng-model="pstnTrial.trialData.details.pstnNumberInfo.areaCode"
-                  is-disabled="!pstnTrial.pstn.areaCodeEnable"
-                  options="pstnTrial.pstn.areaCodeOptions"
-                  labelfield="code"
-                  valuefield="code"
-                  placeholder="::'common.select' | translate"
-                  input-placeholder=""
-                  required="true"
-                  filter="true"
-                  refresh-data-fn="sel.getoptions(filter)"
-                  on-change-fn="pstnTrial.onAreaCodeChange()">
-                </cs-select>
-              </div>
-              <div class="medium-3 columns">
-                <p translate="pstnSetup.nxx"></p>
-                <cs-select
-                  ng-model="pstnTrial.trialData.details.pstnNumberInfo.nxx"
-                  is-disabled="!pstnTrial.pstn.nxxEnable"
-                  options="pstnTrial.pstn.nxxOptions"
-                  labelfield="code"
-                  valuefield="code"
-                  placeholder="::'common.optional' | translate"
-                  input-placeholder=""
-                  filter="true"
-                  refresh-data-fn="sel.getoptions(filter)"
-                  on-change-fn="pstnTrial.onNxxChange()">
-                </cs-select>
-            </div>
-            </div>
-          </form>
-          <h6 translate="trialModal.pstn.numbers"></h6>
-          <div class="did-input">
-            <cs-token-field
-              tokens="pstnTrial.unsavedTokens"
-              tokenfieldid="pstnTrial.tokenFieldId"
-              tokenoptions="pstnTrial.tokenOptions"
-              tokenmethods="pstnTrial.tokenMethods">
-            </cs-token-field>
-          </div>
         </div>
       </div>
     </div>

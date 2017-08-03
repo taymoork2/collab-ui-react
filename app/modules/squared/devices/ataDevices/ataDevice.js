@@ -91,7 +91,7 @@
           huronDeviceService.setSettingsForAta(ata.device, settings).then(function () {
             ata.isLoading = false;
             $modalInstance.close();
-            Notification.success('ataSettings.saved');
+            Notification.success(ata.ataRebootWarningToggle ? 'ataSettings.savedReboot' : 'ataSettings.saved');
           });
         };
       }

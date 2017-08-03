@@ -125,6 +125,9 @@ require('./_customer-overview.scss');
     }
 
     function initTrialActions() {
+      if (vm.isOwnOrg()) {
+        return;
+      }
       if (PartnerService.canAdminTrial(vm.currentCustomer.licenseList)) {
         vm.trialActions.push({
           actionKey: 'customerPage.edit',
@@ -244,14 +247,14 @@ require('./_customer-overview.scss');
           return $q.all(updateUsersList);
         });
       })
-      .then(vm._helpers.openCustomerPortal)
-      .catch(function (response) {
-        Notification.errorWithTrackingId(response, 'customerPage.launchCustomerPortalError');
-        return response;
-      })
-      .finally(function () {
-        vm.loadingCustomerPortal = false;
-      });
+        .then(vm._helpers.openCustomerPortal)
+        .catch(function (response) {
+          Notification.errorWithTrackingId(response, 'customerPage.launchCustomerPortalError');
+          return response;
+        })
+        .finally(function () {
+          vm.loadingCustomerPortal = false;
+        });
     }
 
     function canUpdateLicensesForSelf() {

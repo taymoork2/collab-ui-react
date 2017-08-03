@@ -6,7 +6,6 @@ export class CmcUserService {
   /* @ngInject */
   constructor(
     private $log: ng.ILogService,
-    //private $q: ng.IQService,
     private Authinfo,
     private Config,
     private UrlConfig,
@@ -15,9 +14,8 @@ export class CmcUserService {
   ) {
   }
 
-  // TODO: Poor mans user status information is prelminary.
   // TODO: Should be replaced when CMC or related connectors report CMC relevant info to USS.
-  public getUsersWithCmcButMissingAware(limit: number, nextUrl?: string): ng.IPromise<ICmcUserStatusInfoResponse> {
+  public getUsersWithCmcAndDetectMissingAware(limit: number, nextUrl?: string): ng.IPromise<ICmcUserStatusInfoResponse> {
     return this.getUsersWithEntitlement(this.Config.entitlements.cmc, limit, nextUrl)
       .then((cmcResult: ICmcUserStatusInfoResponse ) => {
 

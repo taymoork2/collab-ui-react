@@ -8,7 +8,7 @@ require('../devices/_devices.scss');
     .controller('PlacesCtrl',
 
       /* @ngInject */
-      function ($q, $scope, $state, $templateCache, $translate, CsdmFilteredViewFactory, CsdmDataModelService, Userservice, Authinfo, WizardFactory, RemPlaceModal, FeatureToggleService, ServiceDescriptor) {
+      function ($q, $scope, $state, $templateCache, $translate, CsdmFilteredViewFactory, CsdmDataModelService, Userservice, Authinfo, WizardFactory, RemPlaceModal, FeatureToggleService, ServiceDescriptorService) {
         var vm = this;
 
         vm.data = [];
@@ -37,7 +37,10 @@ require('../devices/_devices.scss');
 
           vm.filteredView.isSearchOnly.then(function () {
             CsdmDataModelService.subscribeToChanges($scope, vm.filteredView.refresh.bind(vm.filteredView));
+            vm.gridOptions.data = vm.filteredView.getResult();
           });
+
+          vm.gridOptions.data = vm.filteredView.getResult();
         }
 
         function fetchAsyncSettings() {
@@ -50,11 +53,11 @@ require('../devices/_devices.scss');
           var placeCalendarPromise = FeatureToggleService.csdmPlaceCalendarGetStatus().then(function (feature) {
             vm.csdmHybridCalendarFeature = feature;
           });
-          var anyCalendarEnabledPromise = ServiceDescriptor.getServices().then(function (services) {
-            vm.hybridCalendarEnabledOnOrg = _.chain(ServiceDescriptor.filterEnabledServices(services)).filter(function (service) {
+          var anyCalendarEnabledPromise = ServiceDescriptorService.getServices().then(function (services) {
+            vm.hybridCalendarEnabledOnOrg = _.chain(ServiceDescriptorService.filterEnabledServices(services)).filter(function (service) {
               return service.id === 'squared-fusion-gcal' || service.id === 'squared-fusion-cal';
             }).some().value();
-            vm.hybridCallEnabledOnOrg = _.chain(ServiceDescriptor.filterEnabledServices(services)).filter(function (service) {
+            vm.hybridCallEnabledOnOrg = _.chain(ServiceDescriptorService.filterEnabledServices(services)).filter(function (service) {
               return service.id === 'squared-fusion-uc';
             }).some().value();
           });
@@ -87,10 +90,10 @@ require('../devices/_devices.scss');
 
         vm.isOrgEntitledToHuron = function () {
           return _.filter(
-              Authinfo.getLicenses(),
-              function (l) {
-                return l.licenseType === 'COMMUNICATION';
-              }).length > 0;
+            Authinfo.getLicenses(),
+            function (l) {
+              return l.licenseType === 'COMMUNICATION';
+            }).length > 0;
         };
 
         vm.numDevices = function (place) {
@@ -105,19 +108,13 @@ require('../devices/_devices.scss');
         };
 
         vm.gridOptions = {
-          data: 'sc.filteredView.getResult()',
           rowHeight: 45,
-          enableHorizontalScrollbar: 0,
-          enableRowHeaderSelection: false,
-          enableColumnMenus: false,
-          multiSelect: false,
           onRegisterApi: function (gridApi) {
-            $scope.gridApi = gridApi;
-            gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+            vm.gridApi = gridApi;
+            vm.gridApi.selection.on.rowSelectionChanged($scope, function (row) {
               vm.showPlaceDetails(row.entity);
             });
           },
-
           columnDefs: [{
             field: 'photos',
             displayName: '',

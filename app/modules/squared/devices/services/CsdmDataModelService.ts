@@ -18,7 +18,7 @@ export class CsdmDataModelService implements ICsdmDataModelService {
   private placesLoaded = false;
   private pollingGracePeriodActive = true;
 
-  private devicesFetchedDeferred: IDeferred<Map<string, IDevice>>;
+  private devicesFetchedDeferred;  // TODO: revisit using Map with polyfill support - this es5 stub is not really a Map and causes type errors
   private devicesFastFetchedDeferred;
   private placesMapReadyDeferred;
   private accountsFetchedDeferred: IDeferred<Map<string, IPlace>>;
@@ -55,7 +55,7 @@ export class CsdmDataModelService implements ICsdmDataModelService {
           return this.$q.resolve(false);
         })
         .catch((err) => {
-          return this.$q.resolve(err !== null && err.status === 502);
+          return this.$q.resolve(err !== null && (err.status === 502 || err.status === 412));
         });
     }
 
@@ -259,23 +259,24 @@ export class CsdmDataModelService implements ICsdmDataModelService {
     return this.placesUrl + device.cisUuid;
   }
 
-  public createCsdmPlace(name, entitlements, directoryNumber, externalNumber, externalLinkedAccounts): ng.IPromise<IPlace> {
-    return this.CsdmPlaceService.createCsdmPlace(name, entitlements, directoryNumber, externalNumber, externalLinkedAccounts)
+  public createCsdmPlace(name, entitlements, locationUuid, directoryNumber, externalNumber, externalLinkedAccounts): ng.IPromise<IPlace> {
+    return this.CsdmPlaceService.createCsdmPlace(name, entitlements, locationUuid, directoryNumber, externalNumber, externalLinkedAccounts)
       .then((place) => {
         return this.onCreatedPlace(place);
       });
   }
 
-  public createCmiPlace(name, entitlements, directoryNumber, externalNumber): ng.IPromise<IPlace> {
-    return this.CsdmPlaceService.createCmiPlace(name, entitlements, directoryNumber, externalNumber)
+  public createCmiPlace(name, entitlements, locationUuid, directoryNumber, externalNumber): ng.IPromise<IPlace> {
+    return this.CsdmPlaceService.createCmiPlace(name, entitlements, locationUuid, directoryNumber, externalNumber)
       .then((place) => {
         return this.onCreatedPlace(place);
       });
   }
 
-  public updateCloudberryPlace(objectToUpdate, entitlements, directoryNumber, externalNumber, externalLinkedAccounts) {
+  public updateCloudberryPlace(objectToUpdate,
+                               { entitlements, locationUuid, directoryNumber, externalNumber, externalLinkedAccounts }) {
     const placeUrl = this.getPlaceUrl(objectToUpdate);
-    return this.CsdmPlaceService.updatePlace(placeUrl, entitlements, directoryNumber, externalNumber, externalLinkedAccounts)
+    return this.CsdmPlaceService.updatePlace(placeUrl, entitlements, locationUuid, directoryNumber, externalNumber, externalLinkedAccounts)
       .then((place) => {
         this.addOrUpdatePlaceInDataModel(place);
         this.notifyListeners();

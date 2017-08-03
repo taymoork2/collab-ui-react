@@ -63,6 +63,10 @@
 }
 
 .pstn-provider-card {
+  section {
+    margin: 0;
+  }
+
   footer {
     display: flex;
     justify-content: center;
@@ -88,12 +92,29 @@
   }
 
   .icon-check {
-    font-size: 24px;
+    font-size: 20px;
+    padding-right: 4px;
     color: $brand-success;
   }
 
   .feature-text {
-    font-size: 18px;
+    font-size: 14px;
+    line-height: 24px;
+  }
+
+  .footnote {
+    display: flex;
+    padding-top: 20px;
+    padding-bottom: 6px;
+  }
+
+  .icon-info {
+    padding-right: 12px;
+    line-height: 24px;
+  }
+
+  .footnote-text {
+    font-size: 12px;
     line-height: 24px;
   }
 }
@@ -252,7 +273,7 @@
   .tooltip {
     top: rem(-44px);
 
-    .tooltip-inner {
+    .c-nub {
       min-width: rem(150px);
     }
   }
@@ -304,6 +325,20 @@
 }
 
 .pstn-review {
+  &.swivel-pstn-review {
+    justify-content: center;
+    .icon-circle-call {
+      color: $brand-info;
+    }
+
+    .title {
+      color: $gray-base;
+      line-height: 1.33;
+      font-weight: 200;
+      font-size: 2.25rem;
+    }
+  }
+
   .review-container {
     display: flex;
     flex-direction: column;
@@ -376,6 +411,10 @@
       margin-right: 50px;
     }
   }
+}
+
+.swivel-pstn-next-steps {
+  margin: auto;
 }
 
 .pstn-next-steps {

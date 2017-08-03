@@ -91,16 +91,16 @@
             Log.debug('Care setup status is not Success: ', result);
         }
       })
-      .catch(function (result) {
-        if (result.status !== 404) {
-          Log.debug('Fetching Care setup status failed: ', result);
-          if (vm.errorCount++ >= pollErrorCount) {
-            vm.state = vm.status.UNKNOWN;
-            Notification.errorWithTrackingId(result, 'firstTimeWizard.careSettingsFetchFailed');
-            stopPolling();
+        .catch(function (result) {
+          if (result.status !== 404) {
+            Log.debug('Fetching Care setup status failed: ', result);
+            if (vm.errorCount++ >= pollErrorCount) {
+              vm.state = vm.status.UNKNOWN;
+              Notification.errorWithTrackingId(result, 'firstTimeWizard.careSettingsFetchFailed');
+              stopPolling();
+            }
           }
-        }
-      });
+        });
     }
 
     function processTimeout(pollerResult) {
@@ -156,13 +156,13 @@
             vm.state = vm.NOT_ONBOARDED;
         }
       })
-      .catch(function (result) {
-        if (result.status === 404) {
-          vm.state = vm.NOT_ONBOARDED;
-        } else {
-          Log.debug('Fetching Care setup status, on load, failed: ', result);
-        }
-      });
+        .catch(function (result) {
+          if (result.status === 404) {
+            vm.state = vm.NOT_ONBOARDED;
+          } else {
+            Log.debug('Fetching Care setup status, on load, failed: ', result);
+          }
+        });
     }
 
     init();

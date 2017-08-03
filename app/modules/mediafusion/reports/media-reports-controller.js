@@ -5,7 +5,7 @@
     .module('Mediafusion')
     .controller('MediaReportsController', MediaReportsController);
   /* @ngInject */
-  function MediaReportsController($q, $scope, $translate, $interval, $timeout, MediaClusterServiceV2, UtilizationResourceGraphService, MeetingLocationAdoptionGraphService, ParticipantDistributionResourceGraphService, NumberOfParticipantGraphService, MediaReportsService, Notification, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService, ClientTypeAdoptionGraphService, AdoptionCardService) {
+  function MediaReportsController($q, $scope, $translate, $interval, $timeout, MediaClusterServiceV2, UtilizationResourceGraphService, MeetingLocationAdoptionGraphService, ParticipantDistributionResourceGraphService, NumberOfParticipantGraphService, MediaReportsService, Notification, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService, ClientTypeAdoptionGraphService, AdoptionCardService, hasHmsTwoDotFiveFeatureToggle) {
     var vm = this;
     var interval = null;
     var deferred = $q.defer();
@@ -143,6 +143,25 @@
     vm.cardIndicator = 0;
     vm.clusterUnavailablityFlag = false;
 
+
+    vm.clientTypeOptions = [{
+      value: 0,
+      label: $translate.instant('mediaFusion.metrics.all'),
+    }, {
+      value: 1,
+      label: $translate.instant('mediaFusion.metrics.onPremisesHeading'),
+    }, {
+      value: 2,
+      label: $translate.instant('mediaFusion.metrics.cloudHeading'),
+    }];
+    vm.clientTypeSelected = vm.clientTypeOptions[0].value;
+    vm.clientTypeOptions['tooltipModel'] = vm.clientTypeOptions[0];
+
+    vm.clientTypeUpdateFromCard = clientTypeUpdateFromCard;
+    vm.clientTypeText = vm.clientTypeSelected.label;
+    vm.clientTypeOptions['tooltipClickHandler'] = clientTypeUpdateFromCard;
+
+    vm.hasHmsTwoDotFiveFeatureToggle = hasHmsTwoDotFiveFeatureToggle;
     setRefreshInterval();
     getCluster();
     timeUpdate();
@@ -365,6 +384,9 @@
           return undefined;
         } else {
           vm.cardIndicator = response.data.dataProvider[0].value;
+          if (vm.cardIndicator > 0) {
+            vm.cardIndicator = '+' + vm.cardIndicator;
+          }
         }
       });
     }
@@ -401,7 +423,7 @@
     }
 
     function setClientTypeCard() {
-      MediaReportsService.getClientTypeCardData(vm.timeSelected).then(function (response) {
+      MediaReportsService.getClientTypeCardData(vm.timeSelected, vm.clientTypeSelected).then(function (response) {
         if (response === vm.ABORT) {
           return undefined;
         } else if (_.isUndefined(response.data) || response.data.dataProvider.length === 0) {
@@ -508,7 +530,7 @@
     }
 
     function setClientTypeData() {
-      MediaReportsService.getClientTypeData(vm.timeSelected).then(function (response) {
+      MediaReportsService.getClientTypeData(vm.timeSelected, vm.clientTypeSelected).then(function (response) {
         if (_.isUndefined(response.graphData) || _.isUndefined(response.graphs) || response.graphData.length === 0 || response.graphs.length === 0) {
           setDummyClientType();
         } else {
@@ -753,6 +775,12 @@
           }
         }
       });
+    }
+
+    function clientTypeUpdateFromCard() {
+      vm.clientTypeSelected = vm.clientTypeOptions['tooltipModel'].value;
+      setClientTypeCard();
+      setClientTypeData();
     }
   }
 })();

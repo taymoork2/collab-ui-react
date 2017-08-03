@@ -8,16 +8,11 @@
       <span class="h4" translate="pstnSetup.manualAdd"></span>
       <span class="h4">{{::pstnSwivelNumbers.provider.title}}</span>
     </div>
-    <div class="did-input" ng-if="!pstnSwivelNumbers.ftHuronFederatedSparkCall">
-      <cs-token-field tokens="pstnSwivelNumbers.swivelNumbers" tokenfieldid="pstnSwivelNumbers.tokenfieldid" tokenplaceholder="pstnSwivelNumbers.tokenplaceholder" tokenoptions="pstnSwivelNumbers.tokenoptions" tokenmethods="pstnSwivelNumbers.tokenmethods"></cs-token-field>
-      <p class="modal-note" translate="didManageModal.didFormatHelpText" translate-values="{examples: pstnSwivelNumbers.getExampleNumbers}"/></p>
-      <cs-checkbox ckid="swivelEmergencyAcknowledge" ng-model="pstnSwivelNumbers.emergencyAcknowledge" label="{{::'pstnSetup.emergencyAcknowledge' | translate}}"></cs-checkbox>
-    </div>
     <uc-pstn-swivel-numbers
-      ng-if="pstnSwivelNumbers.ftHuronFederatedSparkCall"
       numbers="pstnSwivelNumbers.swivelNumbers"
       on-change="pstnSwivelNumbers.onChange(numbers, invalidCount)"
-      on-acknowledge="pstnSwivelNumbers.onAcknowledge(value)"></uc-pstn-swivel-numbers>
+      on-acknowledge="pstnSwivelNumbers.onAcknowledge(value)">
+    </uc-pstn-swivel-numbers>
   </div>
   <div class="modal-footer">
     <div class="buttons">

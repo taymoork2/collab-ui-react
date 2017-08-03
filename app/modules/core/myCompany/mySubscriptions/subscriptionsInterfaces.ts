@@ -1,3 +1,5 @@
+import { IBmmpAttr } from 'modules/online/upgrade/upgrade.service';
+
 export interface ISubscription {
   changeplanOverride?: any;
   internalSubscriptionId?: string;
@@ -7,11 +9,13 @@ export interface ISubscription {
   name?: string;
   numSubscriptions: number;
   productInstanceId?: string;
+  proPack?: IOfferData;
   quantity?: number;
   subscriptionId?: string;
   upgradeTrialUrl?: string;
-  viewAll: boolean;
   endDate: string;
+  badge: string;
+  bmmpAttr: IBmmpAttr;
 }
 
 export interface ISubscriptionCategory {

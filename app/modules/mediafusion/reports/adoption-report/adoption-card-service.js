@@ -130,7 +130,10 @@
     function formatClientTypePieData(data) {
       var totalValue = 0;
       var newData = [];
-      var desktopList = [$translate.instant('mediaFusion.metrics.clientType.desktop')];
+      var desktopList = [$translate.instant('mediaFusion.metrics.clientType.desktop'),
+        $translate.instant('mediaFusion.metrics.clientType.mac'),
+        $translate.instant('mediaFusion.metrics.clientType.windowsDesk'),
+      ];
       var desktopPercentage = 0;
       var desktopValue = 0;
       var mobileList = [$translate.instant('mediaFusion.metrics.clientType.android'),

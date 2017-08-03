@@ -5,7 +5,7 @@ describe('Controller: SipDomainSettingController', function () {
   beforeEach(function () {
     this.initModules(testModule);
     this.injectDependencies('$controller', '$modal', '$rootScope', '$scope', '$timeout', '$translate', '$q', '$window', 'Config',
-      'FeatureToggleService', 'Notification', 'Orgservice', 'ServiceDescriptor', 'SparkDomainManagementService', 'UrlConfig');
+      'FeatureToggleService', 'Notification', 'Orgservice', 'ServiceDescriptorService', 'SparkDomainManagementService', 'UrlConfig');
 
     this.orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
     this.domainSuffix = '.ciscospark.com';
@@ -78,7 +78,7 @@ describe('Controller: SipDomainSettingController', function () {
       callback(this.orgServiceJSONFixture.getOrg, 200);
     });
 
-    spyOn(this.ServiceDescriptor, 'isServiceEnabled').and.returnValue(this.$q.resolve(true));
+    spyOn(this.ServiceDescriptorService, 'isServiceEnabled').and.returnValue(this.$q.resolve(true));
 
     this.initController = (): void => {
       this.controller = this.$controller(SipDomainSettingController, {
@@ -487,7 +487,7 @@ describe('Controller: SipDomainSettingController', function () {
       });
 
       it('should only call toggleSipForm', function () {
-        this.ServiceDescriptor.isServiceEnabled.and.returnValue(this.$q.resolve(false));
+        this.ServiceDescriptorService.isServiceEnabled.and.returnValue(this.$q.resolve(false));
         spyOn(this.$modal, 'open');
         this.initController();
         spyOn(this.controller, 'toggleSipForm').and.callThrough();

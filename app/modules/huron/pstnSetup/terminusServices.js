@@ -161,7 +161,7 @@
     });
   }
 
-    /* @ngInject */
+  /* @ngInject */
   function TerminusV2LookupE911Service($resource, HuronConfig) {
     return LazyResource($resource, function () {
       return HuronConfig.getTerminusV2Url() + '/carriers/:carrierId/e911/lookup';

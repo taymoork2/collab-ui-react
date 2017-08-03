@@ -223,30 +223,43 @@ Special stuff currently used for out own mail input field...
 }
 
 .hercules-sip-settings {
-  .tooltip-inner {
+  .c-nub {
     max-width: 300px;
     text-align: left;
   }
 
   .sip-domain-icon {
-    margin-left: 10px;
+    vertical-align: -2px;
   }
 }
 
 .hercules-sip-destination-table {
-  display: flex;
-
-  .form-control {
-    flex: 1 0 auto;
-    // the following override default value for .form-control
-    margin-right: 10px;
-    margin-bottom: 0;
-    width: auto;
-  }
+  margin: 0;
 
   .btn {
     margin: 0 !important; // override .hercules .btn--primary
     flex: 0 0 auto;
+  }
+
+  .btn:first-of-type {
+    margin-left: 10px !important;
+  }
+
+  .icon-error {
+    color: $color-alerts-base;
+  }
+
+  .icon-checkbox {
+    color: $color-cta-base;
+  }
+
+  .hercules-input-error {
+    background-color: $color-red-light !important;
+    border-color: $color-red-base !important;
+  }
+
+  .cs-input-group {
+    margin-bottom: 0;
   }
 }
 

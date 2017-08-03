@@ -31,14 +31,14 @@ class CallParkNumberCtrl implements ng.IComponentController {
     private CallParkService: CallParkService,
   ) {}
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject }): void {
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const { range } = changes;
     if (range && range.currentValue) {
       this.processCallParkNumberChanges(range);
     }
   }
 
-  private processCallParkNumberChanges(callParkChanges: ng.IChangesObject): void {
+  private processCallParkNumberChanges(callParkChanges: ng.IChangesObject<any>): void {
     if (_.isEqual(callParkChanges.currentValue.startRange, callParkChanges.currentValue.endRange) && callParkChanges.currentValue.startRange !== '') {
       this.rangeType = RangeType.SINGLE;
       this.singleNumber = callParkChanges.currentValue.startRange;

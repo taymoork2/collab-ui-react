@@ -9,7 +9,7 @@
 </script>
 
 <div class="save-section pg-save" ng-if="$ctrl.formChanged">
-  <p>{{:: 'pagingGroup.saveLabel' | translate}}</p>
+  <p>{{:: 'common.saveLabel' | translate}}</p>
   <button ng-click="$ctrl.onCancel()">{{:: 'common.cancel' | translate}}</button>
   <button class="btn btn--primary" cs-btn loading="$ctrl.saveInProgress" ng-click="$ctrl.saveForm()" ng-disabled="$ctrl.showDisableSave()">{{:: 'common.save' | translate}}
   </button>
@@ -49,7 +49,7 @@
       <div class="section__content">
         <div class="pg-search-add">
           <input id="paging-group-member" type="text" ng-click="$ctrl.resetFilter()" ng-model="$ctrl.memberName"class="cs-input"
-            typeahead="mem as $ctrl.getDisplayNameInDropdown(mem) for mem in $ctrl.fetchMembers($viewValue) | limitTo:10" typeahead-template-url="userTemplate.html"
+            typeahead="mem as $ctrl.getDisplayNameInDropdown(mem) for mem in $ctrl.fetchMembers('MEMBER') | limitTo:10" typeahead-template-url="userTemplate.html"
             typeahead-on-select="$ctrl.selectMembers($item)" placeholder="{{:: 'common.selectMembers' | translate}}"
             typeahead-min-length="3" typeahead-wait-ms="300">
           <div class="search-member">

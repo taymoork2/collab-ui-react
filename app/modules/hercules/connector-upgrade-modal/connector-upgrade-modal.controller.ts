@@ -14,15 +14,14 @@ interface IUpgrade {
 
 export class ConnectorUpgradeController {
   public upgrading = false;
-  public upgrades: IUpgrade[];
+  public upgradeInfo: IUpgrade;
 
   /* @ngInject */
   constructor(
-    private $q: ng.IQService,
     private $modalInstance,
     private $translate: ng.translate.ITranslateService,
     private cluster: ICluster,
-    private connectorTypes: ConnectorType[],
+    private connectorType: ConnectorType,
     private ClusterService: ClusterService,
     private HybridServicesExtrasService: HybridServicesExtrasService,
     private Notification: Notification,
@@ -32,7 +31,7 @@ export class ConnectorUpgradeController {
 
   public upgrade() {
     this.upgrading = true;
-    this.$q.all(_.map(this.connectorTypes, (connectorType) => this.ClusterService.upgradeSoftware(this.cluster.id, connectorType)))
+    this.ClusterService.upgradeSoftware(this.cluster.id, this.connectorType)
       .then(() => {
         this.$modalInstance.close();
       })
@@ -45,23 +44,18 @@ export class ConnectorUpgradeController {
   }
 
   private init(): void {
-    const promises = _.map(this.connectorTypes, (connectorType) => {
-      return this.HybridServicesExtrasService.getReleaseNotes(this.cluster.releaseChannel, connectorType);
-    });
-    this.$q.all(promises)
+    this.HybridServicesExtrasService.getReleaseNotes(this.cluster.releaseChannel, this.connectorType)
       .then((releaseNotes) => {
-        this.upgrades = _.map(this.connectorTypes, (connectorType, i) => {
-          const availableVersion = _.find(this.cluster.provisioning, { connectorType: connectorType }).availableVersion;
-          const urlParts = URL.parse(releaseNotes[i]);
-          const releaseNotesUrl = urlParts.hostname !== null ? urlParts.href : '';
-          return {
-            connectorType: connectorType,
-            connectorName: this.$translate.instant(`hercules.connectorNameFromConnectorType.${connectorType}`),
-            availableVersion: availableVersion,
-            releaseNotes: releaseNotes[i],
-            releaseNotesUrl: releaseNotesUrl,
-          };
-        });
+        const availableVersion = _.find(this.cluster.provisioning, { connectorType: this.connectorType }).availableVersion;
+        const urlParts = URL.parse(releaseNotes);
+        const releaseNotesUrl = urlParts.hostname !== null ? urlParts.href : '';
+        this.upgradeInfo = {
+          connectorType: this.connectorType,
+          connectorName: this.$translate.instant(`hercules.shortConnectorNameFromConnectorType.${this.connectorType}`),
+          availableVersion: availableVersion,
+          releaseNotes: releaseNotes,
+          releaseNotesUrl: releaseNotesUrl,
+        };
       })
       .catch((error) => {
         this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
@@ -74,7 +68,7 @@ export default angular
     require('angular-translate'),
     require('modules/core/notifications').default,
     require('modules/hercules/services/hybrid-services-extras.service').default,
-    require('modules/hercules/services/uss-service'),
+    require('modules/hercules/services/uss.service').default,
   ])
   .controller('ConnectorUpgradeController', ConnectorUpgradeController)
   .name;

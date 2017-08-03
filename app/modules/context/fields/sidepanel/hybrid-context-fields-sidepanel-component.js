@@ -21,7 +21,6 @@ require('./_fields-sidepanel.scss');
     vm.fetchFailure = false;
     vm.fetchInProgress = false;
     vm.searchable = true;
-    vm.lastUpdated = $filter('date')(vm.field.lastUpdated, $translate.instant('context.dictionary.fieldPage.dateFormat'));
     vm.publiclyAccessible = false; //indicate whether the field is base or custom field
     vm.inUse = true;
     vm.inUseTooltipMessage = $translate.instant('context.dictionary.fieldPage.inUseTooltip');
@@ -30,6 +29,7 @@ require('./_fields-sidepanel.scss');
       actionFunction: function () {
         $state.go('context-field-modal', {
           existingFieldData: vm.field,
+          inUse: vm.inUse,
           callback: function (updatedField) {
             vm.field = vm.process(_.cloneDeep(updatedField));
             vm.callback(updatedField);
@@ -74,7 +74,11 @@ require('./_fields-sidepanel.scss');
     };
 
     vm.isEditable = function () {
-      return (!vm.publiclyAccessible && !vm.inUse);
+      return !vm.publiclyAccessible;
+    };
+
+    vm.isDeletable = function () {
+      return !vm.publiclyAccessible && !vm.inUse;
     };
 
     vm.openDeleteConfirmDialog = function () {

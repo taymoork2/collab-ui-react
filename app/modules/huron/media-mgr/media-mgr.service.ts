@@ -1,5 +1,5 @@
-import { IMedia } from 'modules/huron/media-mgr/media-mgr.component';
-import { IMediaUpload } from 'modules/huron/media-mgr/media-mgr.component';
+import { IMedia } from './media-mgr.component';
+import { IMediaUpload } from './media-mgr.component';
 
 interface IUploadMetaDataResponse {
   createTime: string;
@@ -13,30 +13,31 @@ interface IUploadMetaDataResponse {
 
 export class MediaMgrService {
 
+  public upload: ng.angularFileUpload.IUploadPromise<any>;
+
   /* @ngInject */
   constructor(
     private Authinfo,
     private HuronConfig,
     private Upload: ng.angularFileUpload.IUploadService,
     private $http: ng.IHttpService,
+    private $q: ng.IQService,
   ) {}
 
   public getMedia(): ng.IPromise<IMedia[]> {
-    return this.$http({
+    return this.$http<IMedia[]>({
       method: 'GET',
       url: `${this.HuronConfig.getMmsUrl()}/organizations/${this.Authinfo.getOrgId()}/media`,
-    }).then((response) => {
-      return response.data;
-    });
+    }).then(response => response.data as IMedia[]);
   }
 
-  public uploadMedia(media: IMediaUpload): ng.IPromise<any> {
+  public uploadMedia(media: IMediaUpload, uploadProgressCallback: (number) => void): ng.IPromise<any> {
     let mediaId = '';
     return this.getUploadUrl(media)
       .then((response) => {
         const data = <IUploadMetaDataResponse> response.data;
         mediaId = data.mediaId;
-        return this.uploadToUrl(media.file, data.uploadUrl);
+        return this.uploadToUrl(media.file, data.uploadUrl, uploadProgressCallback);
       }).then(() => {
         return this.transcodeMedia(mediaId, media.checksum);
       });
@@ -55,7 +56,7 @@ export class MediaMgrService {
     return this.$http(urlReq);
   }
 
-  private uploadToUrl(file: File, url: string): ng.angularFileUpload.IUploadPromise<any> {
+  private uploadToUrl(file: File, url: string, uploadProgressCallback: (number) => void): ng.angularFileUpload.IUploadPromise<any> {
     const uploadReq: ng.IRequestConfig = {
       method: 'PUT',
       url: url,
@@ -64,7 +65,19 @@ export class MediaMgrService {
       },
       data: file,
     };
-    return this.Upload.http(uploadReq);
+    this.upload = this.Upload.http(uploadReq);
+    this.upload.catch((response) => response.data);
+    return this.upload
+      .progress((event) => {
+        uploadProgressCallback(Math.round(event.loaded / event.total * 100));
+      });
+  }
+
+  public cancelUpload(): ng.IPromise<any> {
+    if (this.upload) {
+      this.upload.abort();
+    }
+    return this.$q.resolve();
   }
 
   private transcodeMedia(mediaId: string, checkSum: string): ng.IPromise<any> {
@@ -81,6 +94,29 @@ export class MediaMgrService {
     return this.$http(transcodeReq);
   }
 
+  public editMedia(media: IMedia): ng.IPromise<any> {
+    const editReq: ng.IRequestConfig = {
+      method: 'PUT',
+      url: `${this.HuronConfig.getMmsUrl()}/organizations/${this.Authinfo.getOrgId()}/media/${media.mediaId}`,
+      data: {
+        displayName: media.displayName,
+        description: media.description,
+      },
+    };
+    return this.$http(editReq);
+  }
+
+  public restoreMedia(media: IMedia): ng.IPromise<any> {
+    const deleteReq: ng.IRequestConfig = {
+      method: 'PUT',
+      url: `${this.HuronConfig.getMmsUrl()}/organizations/${this.Authinfo.getOrgId()}/media/${media.mediaId}`,
+      data: {
+        action: 'UNDELETE',
+      },
+    };
+    return this.$http(deleteReq);
+  }
+
   public deleteMedia(media: IMedia): ng.IPromise<any> {
     const deleteReq: ng.IRequestConfig = {
       method: 'DELETE',
@@ -89,7 +125,7 @@ export class MediaMgrService {
     return this.$http(deleteReq);
   }
 
-  public deleteAll(): ng.IPromise<any> {
+  public deletePermAll(): ng.IPromise<any> {
     const deleteReq: ng.IRequestConfig = {
       method: 'DELETE',
       url: `${this.HuronConfig.getMmsUrl()}/organizations/${this.Authinfo.getOrgId()}/media`,
@@ -97,7 +133,7 @@ export class MediaMgrService {
     return this.$http(deleteReq);
   }
 
-  public removeMedia(media: IMedia): ng.IPromise<any> {
+  public deletePermMedia(media: IMedia): ng.IPromise<any> {
     const deleteReq: ng.IRequestConfig = {
       method: 'DELETE',
       url: `${this.HuronConfig.getMmsUrl()}/organizations/${this.Authinfo.getOrgId()}/media/${media.mediaId}?permanent=true`,

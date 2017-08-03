@@ -201,53 +201,6 @@ describe('Service: AAValidationService', function () {
       expect(AANotificationService.error).not.toHaveBeenCalled();
     });
 
-    it('should report No input values validation', function () {
-      var valid;
-      var entry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-
-      var actionEntry = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
-
-      actionEntry.inputType = 4;
-      actionEntry.variableName = 'my variable name';
-      entry.addAction(actionEntry);
-
-      ui.openHours.addEntryAt(0, entry);
-
-      valid = AAValidationService.isValidCES(ui);
-
-      expect(valid).toEqual(false);
-
-      expect(AANotificationService.error.calls.argsFor(0)).toEqual(['autoAttendant.callerInputMenuErrorNoInputValuesEntered', {
-        schedule: 'autoAttendant.scheduleOpen',
-        at: 1,
-      }]);
-    });
-    it('should report no input values entered validation', function () {
-      var valid;
-      var entry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-
-      var actionEntry = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
-
-      actionEntry.inputType = 4;
-      actionEntry.variableName = 'my variable name';
-      actionEntry.inputActions = [];
-      actionEntry.inputActions.push(new KeyAction());
-      actionEntry.inputActions.push(new KeyAction());
-      actionEntry.inputActions.push(new KeyAction());
-
-      entry.addAction(actionEntry);
-
-      ui.openHours.addEntryAt(0, entry);
-
-      valid = AAValidationService.isValidCES(ui);
-
-      expect(valid).toEqual(false);
-
-      expect(AANotificationService.error.calls.argsFor(0)).toEqual(['autoAttendant.callerInputMenuErrorNoInputValuesEntered', {
-        schedule: 'autoAttendant.scheduleOpen',
-        at: 1,
-      }]);
-    });
     it('should report No errors when at least one input value is entered', function () {
       var goodKey = new KeyAction();
 

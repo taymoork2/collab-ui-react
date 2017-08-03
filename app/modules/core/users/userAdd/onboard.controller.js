@@ -8,7 +8,7 @@ require('./_user-add.scss');
     .controller('OnboardCtrl', OnboardCtrl);
 
   /*@ngInject*/
-  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Analytics, Authinfo, Config, DialPlanService, Log, LogMetricsService, MessengerInteropService, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact, ServiceSetup, ExternalNumberPool, DirSyncService) {
+  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Analytics, Authinfo, Config, FeatureToggleService, DialPlanService, Log, LogMetricsService, MessengerInteropService, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, LocationsService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact, ServiceSetup, ExternalNumberPool, DirSyncService) {
     var vm = this;
 
     $scope.hasAccount = Authinfo.hasAccount();
@@ -19,6 +19,10 @@ require('./_user-add.scss');
     $scope.cmrLicensesForMetric = {};
     $scope.currentUserCount = 0;
 
+    $scope.locationOptions = [];
+    $scope.location = '';
+    $scope.selectedLocation = '';
+
     vm.maxUsersInManual = OnboardService.maxUsersInManual;
 
     $scope.searchStr = '';
@@ -27,6 +31,7 @@ require('./_user-add.scss');
     $scope.searchPlaceholder = $translate.instant('usersPage.convertUserSearch');
     $scope.manageUsers = $stateParams.manageUsers;
 
+    $scope.loadLocations = loadLocations;
     $scope.loadInternalNumberPool = loadInternalNumberPool;
     $scope.loadExternalNumberPool = loadExternalNumberPool;
     $scope.checkDnOverlapsSteeringDigit = checkDnOverlapsSteeringDigit;
@@ -174,6 +179,7 @@ require('./_user-add.scss');
     function initController() {
       $scope.currentUserCount = 1;
       setLicenseAvailability();
+      initToggles();
       checkSite();
       initResults();
     }
@@ -202,9 +208,10 @@ require('./_user-add.scss');
     //***********************************************************************************/
 
     function activateDID() {
-      $q.all([loadInternalNumberPool(), loadExternalNumberPool(), toggleShowExtensions(), loadPrimarySiteInfo()])
+      $q.all([loadInternalNumberPool(), loadExternalNumberPool(), loadLocations(), toggleShowExtensions(), loadPrimarySiteInfo()])
         .finally(function () {
           if ($scope.showExtensions === true) {
+            showLocationSelectColumn();
             assignDNForUserList();
             $scope.validateDnForUser();
           } else {
@@ -242,6 +249,20 @@ require('./_user-add.scss');
       }).catch(function (response) {
         $scope.internalNumberPool = [];
         Notification.errorResponse(response, 'directoryNumberPanel.internalNumberPoolError');
+      });
+    }
+
+    function loadLocations() {
+      return LocationsService.getLocationList().then(function (locationOptions) {
+        $scope.locationOptions = locationOptions;
+        _.forEach(locationOptions, function (result) {
+          if (result.defaultLocation == true) {
+            _.forEach($scope.usrlist, function (data) {
+              data.selectedLocation = { uuid: result.uuid, name: result.name };
+              $scope.selectedLocation = data.selectedLocation.uuid;
+            });
+          }
+        });
       });
     }
 
@@ -361,11 +382,19 @@ require('./_user-add.scss');
       if (shouldAddCallService()) {
         $scope.processing = true;
         activateDID();
+        loadLocations().finally(showLocationSelectColumn);
         $state.go('users.add.services.dn');
       } else {
         $scope.onboardUsers(true);
       }
     };
+
+    function initToggles() {
+      FeatureToggleService.supports(FeatureToggleService.features.hI1484)
+        .then(function (ishI1484) {
+          $scope.ishI1484 = ishI1484;
+        });
+    }
 
     $scope.editServicesSave = function () {
       for (var licenseId in $scope.cmrLicensesForMetric) {
@@ -633,19 +662,17 @@ require('./_user-add.scss');
     }
 
     function setCareService() {
-      if (hasLicense('CD')) {
+      var hasSyncKms = _.includes($scope.currentUser.roles, Config.backend_roles.spark_synckms);
+      var hasContextServiceEntitlement = _.includes($scope.currentUser.entitlements, Config.entitlements.context);
+      var hasSunlightDigital = _.includes($scope.currentUser.entitlements, Config.entitlements.care_digital);
+      var hasSunlightVoice = _.includes($scope.currentUser.entitlements, Config.entitlements.care_inbound_voice);
+      if (hasSyncKms && hasContextServiceEntitlement && hasSunlightDigital) {
         $scope.radioStates.initialCareRadioState = $scope.radioStates.careRadio = $scope.careRadioValue.K1;
-      } else if (hasLicense('CV')) {
+      } else if (hasSyncKms && hasContextServiceEntitlement && hasSunlightVoice) {
         $scope.radioStates.initialCareRadioState = $scope.radioStates.careRadio = $scope.careRadioValue.K2;
       } else {
         $scope.radioStates.initialCareRadioState = $scope.radioStates.careRadio = $scope.careRadioValue.NONE;
       }
-    }
-
-    function hasLicense(licensePrefix) {
-      return _.find($scope.currentUser.licenseID, function (userLicense) {
-        return (userLicense.substring(0, 2) === licensePrefix);
-      });
     }
 
     function shouldAddCallService() {
@@ -687,11 +714,11 @@ require('./_user-add.scss');
       $scope.advancedLicenses = [];
 
       var formatLicense = function (site) {
-        var confMatches = _.filter(confFeatures, {
-          siteUrl: site,
+        var confMatches = _.filter(confFeatures, function (o) {
+          return _.toUpper(o.siteUrl) === _.toUpper(site);
         });
-        var cmrMatches = _.filter(cmrFeatures, {
-          siteUrl: site,
+        var cmrMatches = _.filter(cmrFeatures, function (o) {
+          return _.toUpper(o.siteUrl) === _.toUpper(site);
         });
         var isCISiteFlag = WebExUtilsFact.isCIEnabledSite(site);
         return {
@@ -896,6 +923,12 @@ require('./_user-add.scss');
       'ng-model="grid.appScope.noExtInPool" labelfield="grid.appScope.noExtInPool" is-disabled="true" > </cs-select>' +
       '<span class="error">{{\'usersPage.noExtensionInPool\' | translate }}</span> </div> ';
 
+    var locationTemplate = '<div>' +
+    '<cs-select name="location" ' +
+      'ng-model="row.entity.selectedLocation" options="grid.appScope.locationOptions" ' +
+      'labelfield="name" valuefield="uuid" required="true" filter="true"' +
+      '</div>';
+
     var externalExtensionTemplate = '<div ng-show="row.entity.didDnMapMsg === undefined"> ' +
       '<cs-select name="externalNumber" ' +
       'ng-model="row.entity.externalNumber" options="grid.appScope.externalNumberPool" ' +
@@ -999,6 +1032,12 @@ require('./_user-add.scss');
         cellTemplate: nameTemplate,
         width: '*',
       }, {
+        field: 'location',
+        displayName: $translate.instant('usersPreview.location'),
+        sortable: false,
+        cellTemplate: locationTemplate,
+        width: '*',
+      }, {
         field: 'externalNumber',
         displayName: $translate.instant('usersPage.directLineHeader'),
         sortable: false,
@@ -1016,6 +1055,13 @@ require('./_user-add.scss');
         width: '*',
       }],
     };
+
+    function showLocationSelectColumn() {
+      if (!$scope.ishI1484 || $scope.locationOptions.length <= 1) {
+        $scope.addDnGridOptions.columnDefs.splice(1, 1);
+      }
+    }
+
     $scope.collabRadio = 1;
 
     $scope.onboardUsers = onboardUsers;
@@ -1222,6 +1268,9 @@ require('./_user-add.scss');
       // make sure we have any internal extension and direct line set up for the users
       _.forEach(users, function (user) {
         user.internalExtension = _.get(user, 'assignedDn.pattern');
+        if ($scope.ishI1484 && $scope.locationOptions.length > 1) {
+          user.location = _.get(user, 'selectedLocation.uuid');
+        }
         if (user.externalNumber && user.externalNumber.uuid && user.externalNumber.uuid !== 'none') {
           user.directLine = user.externalNumber.pattern;
         }
@@ -1555,8 +1604,6 @@ require('./_user-add.scss');
       var successCallback = function (response) {
         Log.info('User onboard request returned:', response.data);
         $rootScope.$broadcast('USER_LIST_UPDATED');
-        $scope.numAddedUsers = 0;
-        $scope.numUpdatedUsers = 0;
         _.forEach(response.data.userResponse, function (user) {
           var userResult = {
             email: user.email,
@@ -1728,6 +1775,10 @@ require('./_user-add.scss');
             return (user.address == userItem.address);
           });
 
+          if ($scope.ishI1484 && $scope.locationOptions.length > 1) {
+            userItem.location = userAndDnObj[0].selectedLocation.uuid;
+          }
+
           if (userAndDnObj[0].assignedDn && userAndDnObj[0].assignedDn.pattern.length > 0) {
             userItem.internalExtension = userAndDnObj[0].assignedDn.pattern;
           }
@@ -1758,6 +1809,8 @@ require('./_user-add.scss');
 
         entitleList = entitleList.concat(getExtensionEntitlements('add'));
 
+        $scope.numAddedUsers = 0;
+        $scope.numUpdatedUsers = 0;
         for (var i = 0; i < usersList.length; i += chunk) {
           tempUserArray = usersList.slice(i, i + chunk);
           Userservice.onboardUsers(tempUserArray, entitleList, licenseList)

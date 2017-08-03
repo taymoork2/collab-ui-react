@@ -21,8 +21,15 @@
 
     vm.getHelpText = getHelpText;
     vm.sendMetrics = sendMetrics;
+    vm.checkEvents = checkEvents;
 
     /////////////////////
+    function checkEvents($event) {
+      if ($event.keyCode == 27) {
+        /* Don't propagate Esc when help button is focused*/
+        $event.stopPropagation();
+      }
+    }
 
     function getHelpText() {
       var helpText = '';

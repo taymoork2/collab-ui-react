@@ -6,11 +6,16 @@
 <div class="modal-body device-wizard choose-shared">
   <div ng-hide="choosePlace.onlyNew()">
     <h4 translate="addDeviceWizard.chooseSharedSpace.existingOrNewPlace"></h4>
-    <p class="wizardDescription" ng-show="choosePlace.deviceType === 'huron'" translate="addDeviceWizard.chooseSharedSpace.existingOrNewPlaceDeskPhoneInstructions"></p>
-    <p class="wizardDescription" ng-hide="choosePlace.deviceType === 'huron'">
+    <p class="wizardDescription" ng-show="choosePlace.initialDeviceType === 'huron'" translate="addDeviceWizard.chooseSharedSpace.existingOrNewPlaceDeskPhoneInstructions"></p>
+    <p class="wizardDescription" ng-show="choosePlace.initialDeviceType !== 'huron' && !choosePlace.multipleRoomDevices">
       <span translate="placesPage.placesDefinition"></span>
       <span translate="addDeviceWizard.chooseSharedSpace.existingOrNewPlaceCollaborationDeviceInstructions"></span>
     </p>
+    <p class="wizardDescription" ng-show="choosePlace.initialDeviceType === 'cloudberry' && choosePlace.multipleRoomDevices">
+      <span translate="placesPage.placesDefinition"></span>
+      <span translate="addDeviceWizard.chooseSharedSpace.existingOrNewPlaceMultipleDevicesInstructions"></span>
+    </p>
+    <p class="wizardDescription" ng-show="!choosePlace.initialDeviceType && choosePlace.multipleRoomDevices" translate="addDeviceWizard.chooseSharedSpace.existingOrNewCloudberryPlaceMultipleDevicesInstructions">
     <div class="typeChoice">
       <div class="typeButtonWrapper typeButtonWrapperLeft">
           <div class="typeButton typeButtonLeft"
@@ -48,9 +53,11 @@
       <h4 translate="addDeviceWizard.chooseSharedSpace.whichPlace"></h4>
       <p ng-show="choosePlace.deviceType === 'huron' && !choosePlace.showPersonal"
          translate="addDeviceWizard.chooseSharedSpace.existingDeskPhonePlaceInstructions"></p>
-      <p ng-show="choosePlace.deviceType !== 'huron' && !choosePlace.showPersonal"
+      <p ng-show="choosePlace.deviceType !== 'huron' && !choosePlace.showPersonal && !choosePlace.multipleRoomDevices"
          translate="addDeviceWizard.chooseSharedSpace.existingCollaborationDevicePlaceInstructions"></p>
-      <p ng-show="choosePlace.showPersonal" translate="addDeviceWizard.chooseSharedSpace.existingPlaceInstructions"></p>
+      <p ng-show="choosePlace.deviceType !== 'huron' && !choosePlace.showPersonal && choosePlace.multipleRoomDevices"
+         translate="addDeviceWizard.chooseSharedSpace.existingRoomDevicePlaceMultipleRoomDeviceInstructions"></p>
+      <p ng-show="choosePlace.showPersonal && !choosePlace.multipleRoomDevices" translate="addDeviceWizard.chooseSharedSpace.existingPlaceInstructions"></p>
       <div>
         <span class="searchInputField">
           <input type="text"

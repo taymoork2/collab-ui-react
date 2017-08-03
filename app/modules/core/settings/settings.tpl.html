@@ -1,6 +1,6 @@
 <div class="settings">
 
-  <cs-page-header title-name="globalSettings.pageTitle"></cs-page-header>
+  <cs-page-header title-name="{{'globalSettings.pageTitle' | translate}}"></cs-page-header>
 
   <div class="cs-form">
     <setting-section setting="settingsCtrl.security" ng-if="settingsCtrl.security">
@@ -29,6 +29,10 @@
 
     <setting-section setting="settingsCtrl.branding" ng-if="settingsCtrl.branding">
       <branding-setting></branding-setting>
+    </setting-section>
+
+    <setting-section setting="settingsCtrl.deviceBranding" ng-if="settingsCtrl.deviceBranding">
+      <device-branding-setting></device-branding-setting>
     </setting-section>
 
     <setting-section setting="settingsCtrl.support" ng-if="settingsCtrl.support">

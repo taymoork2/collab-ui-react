@@ -131,6 +131,10 @@
         offers: _getOffers(data),
       };
 
+      if (_hasCallOrRoomOffer(trialData.offers)) {
+        trialData['country'] = TrialPstnService.getCountryCode();
+      }
+
       var editTrialUrl = trialsUrl + '/' + trialId;
 
       function logEditTrialMetric(status) {
@@ -287,7 +291,7 @@
           }
           var licenseCount =
             (trial.type === Config.trials.roomSystems || trial.type === Config.offerTypes.care || trial.type === Config.offerTypes.advanceCare || trial.type === Config.offerTypes.sparkBoard) ?
-            trial.details.quantity : data.details.licenseCount;
+              trial.details.quantity : data.details.licenseCount;
           return {
             id: trial.type,
             licenseCount: licenseCount,
@@ -422,6 +426,12 @@
         params: params,
       };
       return result;
+    }
+
+    function _hasCallOrRoomOffer(offers) {
+      return _.find(offers, function (offer) {
+        return offer.id === 'CALL' || offer.id === 'ROOMSYSTEMS';
+      });
     }
   }
 })();

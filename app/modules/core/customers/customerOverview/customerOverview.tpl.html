@@ -26,11 +26,12 @@
         <span ng-if="customerOverview.isOrgSetup===null" translate="customerPage.launchButton"></span>
       </button>
       <a ng-if="customerOverview.isOwnOrg()" ui-sref="login({partnerOrgId: customerOverview.partnerOrgId})" target="_blank">
-        <button id="launchPartner" class="btn btn--people" translate="customerPage.myOrgButton">
+        <!-- the button is removed from tab order to remove redundancy with the <a> -->
+        <button id="launchPartner" class="btn btn--people" translate="customerPage.myOrgButton" tabindex="-1">
         </button>
       </a>
     </cs-sp-section>
-    <cs-sp-section ng-if="!customerOverview.currentCustomer.trialId">
+    <cs-sp-section ng-if="!customerOverview.currentCustomer.trialId && customerOverview.trialActions.length > 0">
       <section-title
         title-key="customerPage.trial"
         action-list="customerOverview.trialActions" as-button="true">
@@ -77,7 +78,7 @@
       <div class="feature-list">
         <ul>
           <li class="feature">
-            <a ui-sref="customer-overview.customerSubscriptions">
+            <a href ui-sref="customer-overview.customerSubscriptions">
               <span class="feature-name" translate="customerPage.orderRequest"></span>
               <span class="feature-status"></span>
               <i class="feature-arrow"></i>

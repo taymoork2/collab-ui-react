@@ -1,10 +1,13 @@
 import { Notification } from 'modules/core/notifications';
-import { NUMBER_ORDER, PORT_ORDER, BLOCK_ORDER, NXX, NUMTYPE_DID, NUMTYPE_TOLLFREE, NXX_EMPTY, MIN_VALID_CODE, MAX_VALID_CODE, MAX_DID_QUANTITY, TOLLFREE_ORDERING_CAPABILITY, TOKEN_FIELD_ID, SWIVEL_ORDER } from '../pstn.const';
-import { INumbersModel } from './number.model';
+import {
+  NUMBER_ORDER, PORT_ORDER, BLOCK_ORDER, NXX, NUMTYPE_DID, NUMTYPE_TOLLFREE,
+  NXX_EMPTY, MIN_VALID_CODE, MAX_VALID_CODE, MAX_DID_QUANTITY,
+  TOLLFREE_ORDERING_CAPABILITY, TOKEN_FIELD_ID, SWIVEL_ORDER, SWIVEL,
+} from '../pstn.const';
+import { INumbersModel } from '../pstnNumberSearch/number.model';
 import { PstnService } from '../pstn.service';
 import {
-  PstnModel,
-  IOrder,
+  PstnModel, IOrder, IAuthCustomer, IAuthLicense,
 } from '../pstn.model';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
 
@@ -43,6 +46,8 @@ export class PstnWizardService {
     private PhoneNumberService: PhoneNumberService,
     private Orgservice,
     private FeatureToggleService,
+    private Authinfo,
+    private Auth,
   ) {
     this.PORTING_NUMBERS = this.$translate.instant('pstnSetup.portNumbersLabel');
     this.STEP_TITLE = {
@@ -101,7 +106,7 @@ export class PstnWizardService {
   }
 
   public isSwivel(): boolean {
-    return this.provider.apiImplementation === 'SWIVEL';
+    return this.provider.apiImplementation === SWIVEL;
   }
 
   //PSTN check to verify if the Partner is registered with the Terminus service as a carrier reseller
@@ -265,7 +270,7 @@ export class PstnWizardService {
     return this.swivelOrders;
   }
 
-  private updateCustomerCarrier(): ng.IPromise<boolean> {
+  private updateCustomerCarrier(): ng.IPromise<any> {
     return this.PstnService.updateCustomerCarrier(this.PstnModel.getCustomerId(), this.PstnModel.getProviderId())
       .then(() => this.PstnModel.setCarrierExists(true))
       .catch(response => {
@@ -275,17 +280,24 @@ export class PstnWizardService {
   }
 
   private createCustomerV2(): ng.IPromise<boolean> {
-    return this.PstnService.createCustomerV2(
-      this.PstnModel.getCustomerId(),
-      this.PstnModel.getCustomerName(),
-      this.PstnModel.getCustomerFirstName(),
-      this.PstnModel.getCustomerLastName(),
-      this.PstnModel.getCustomerEmail(),
-      this.PstnModel.getProviderId(),
-      this.PstnModel.getIsTrial(),
-    ).catch(response => {
-      this.Notification.errorResponse(response, 'pstnSetup.customerCreateError');
-      return this.$q.reject(response);
+    return this.Auth.getCustomerAccount(this.PstnModel.getCustomerId()).then((org) => {
+      let isTrial: boolean = true;
+      const customer: IAuthCustomer = _.get<IAuthCustomer>(org, 'data.customers[0]');
+      if (customer) {
+        isTrial = this.isTrialCallOrRoom(customer.licenses);
+      }
+      return this.PstnService.createCustomerV2(
+        this.PstnModel.getCustomerId(),
+        this.PstnModel.getCustomerName(),
+        this.PstnModel.getCustomerFirstName(),
+        this.PstnModel.getCustomerLastName(),
+        this.PstnModel.getCustomerEmail(),
+        this.PstnModel.getProviderId(),
+        isTrial,
+      ).catch(function (response) {
+        this.Notification.errorResponse(response, 'PstnModel.customerCreateError');
+        return this.$q.reject(response);
+      });
     });
   }
 
@@ -445,7 +457,7 @@ export class PstnWizardService {
     return x.substring(0, i);
   }
 
-  public addToCart(orderType: string, numberType: string, quantity: number, searchResultsModel: {}, orderCart, model: INumbersModel): ng.IPromise<IOrder[]> {
+  public addToCart(orderType: string, numberType: string, quantity: number, searchResultsModel: boolean[], orderCart, model: INumbersModel): ng.IPromise<IOrder[]> {
     this.orderCart = orderCart;
     if (quantity) {
       if (numberType === NUMTYPE_DID) {
@@ -576,7 +588,7 @@ export class PstnWizardService {
   }
 
   private getTokens(): JQuery {
-    return angular.element('#' + this.tokenfieldId).tokenfield('getTokens');
+    return (angular.element('#' + this.tokenfieldId) as any).tokenfield('getTokens');
   }
 
   private getNxxValue(model): string | null {
@@ -588,7 +600,7 @@ export class PstnWizardService {
     return null;
   }
 
-  public searchCarrierInventory(areaCode: string, block: boolean, quantity: number, consecutive: boolean, model: INumbersModel, isTrial: boolean) {
+  public searchCarrierInventory(areaCode: string, block: boolean, quantity: number, consecutive: boolean, stateAbbreviation: string, model: INumbersModel, isTrial: boolean) {
     if (areaCode) {
       model.pstn.showNoResult = false;
       areaCode = '' + areaCode;
@@ -598,6 +610,7 @@ export class PstnWizardService {
       model.pstn.block = block;
       model.pstn.quantity = quantity;
       model.pstn.consecutive = consecutive;
+      model.pstn.stateAbbreviation = stateAbbreviation;
       if (areaCode.length === MAX_VALID_CODE) {
         model.pstn.nxx = {
           code: areaCode.slice(MIN_VALID_CODE, areaCode.length),
@@ -611,12 +624,13 @@ export class PstnWizardService {
     model.pstn.showAdvancedOrder = false;
     const params = {
       npa: _.get(model, 'pstn.areaCode.code'),
-      count: this.getCount(model),
+      count: this.getCount(model.pstn),
       sequential: model.pstn.consecutive,
+      state: model.pstn.stateAbbreviation,
     };
 
     model.pstn.searchResults = [];
-    model.pstn.searchResultsModel = {};
+    model.pstn.searchResultsModel = [];
     model.pstn.paginateOptions.currentPage = 0;
     model.pstn.isSingleResult = this.isSingleResult(model);
 
@@ -662,10 +676,10 @@ export class PstnWizardService {
   }
 
   public getCount(model): number {
-    if (!model.pstn.block) {
+    if (!model.block) {
       return MAX_DID_QUANTITY;
     }
-    return (model.pstn.quantity ? model.pstn.quantity : MAX_DID_QUANTITY);
+    return (model.quantity ? model.quantity : MAX_DID_QUANTITY);
   }
 
   public searchCarrierTollFreeInventory(areaCode: string, block: boolean, quantity: number, consecutive: boolean, model) {
@@ -684,10 +698,11 @@ export class PstnWizardService {
     }
     const params = {
       npa: _.get(model, 'tollFree.areaCode.code'),
-      count: model.tollFree.quantity === 1 ? undefined : model.tollFree.quantity,
+      count: this.getCount(model.tollFree),
+      sequential: model.tollFree.consecutive,
     };
     model.tollFree.searchResults = [];
-    model.tollFree.searchResultsModel = {};
+    model.tollFree.searchResultsModel = [];
     model.tollFree.paginateOptions.currentPage = 0;
     if (!angular.isString(areaCode)) {
       model.tollFree.isSingleResult = model.tollFree.quantity === 1;
@@ -725,5 +740,32 @@ export class PstnWizardService {
     } else {
       return this.PstnService.releaseCarrierInventoryV2(this.PstnModel.getCustomerId(), order.reservationId, order.data.numbers, this.PstnModel.isCustomerExists());
     }
+  }
+
+  public blockByopNumberAddForPartnerAdmin(): boolean {
+    if (!this.Authinfo.isCustomerLaunchedFromPartner() && !this.Authinfo.isPartner()) {
+      return false;
+    }
+    return this.blockByopNumberAddForAllAdmin();
+  }
+
+  public blockByopNumberAddForAllAdmin(): boolean {
+    return (this.isSwivel() && !this.PstnModel.isEsaSigned());
+  }
+
+  public isPartnerPortal(): boolean {
+    return this.Authinfo.isPartner();
+  }
+
+  public isLoggedInAsPartner(): boolean {
+    return (this.Authinfo.isCustomerLaunchedFromPartner() || this.Authinfo.isPartner());
+  }
+
+  public isTrialCallOrRoom(licenses: IAuthLicense[]): boolean {
+    const paidLicense: IAuthLicense = _.find(licenses, (license: IAuthLicense) => {
+      return (license.licenseType === 'COMMUNICATION' && !license.isTrial) || (license.licenseType === 'SHARED_DEVICES' && !license.isTrial);
+    });
+    //if no paid licenses then it's a trial
+    return _.isUndefined(paidLicense);
   }
 }

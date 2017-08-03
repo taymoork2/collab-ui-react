@@ -6,14 +6,18 @@ require('./_setup-wizard.scss');
   angular.module('Core')
     .controller('SetupWizardCtrl', SetupWizardCtrl);
 
-  function SetupWizardCtrl($q, $scope, $state, $stateParams, Authinfo, Config, FeatureToggleService, Orgservice, Utils) {
+  function SetupWizardCtrl($q, $scope, $state, $stateParams, $timeout, Authinfo, Config, FeatureToggleService, Orgservice, SetupWizardService, Utils, Notification) {
     var isFirstTimeSetup = _.get($state, 'current.data.firstTimeSetup', false);
     var shouldRemoveSSOSteps = false;
     var isSharedDevicesOnlyLicense = false;
+    var shouldShowMeetingsTab = false;
+    var hasPendingCallLicenses = false;
+    var hasPendingLicenses = false;
     var supportsAtlasPMRonM2 = false;
     $scope.tabs = [];
     $scope.isTelstraCsbEnabled = false;
     $scope.isCSB = Authinfo.isCSB();
+    $scope.isCustomerPresent = SetupWizardService.isCustomerPresent();
 
     if (Authinfo.isCustomerAdmin()) {
       initToggles().finally(init);
@@ -23,10 +27,6 @@ require('./_setup-wizard.scss');
       if (isFirstTimeSetup) {
         shouldRemoveSSOSteps = true;
       }
-      var tenDigitExtPromise = FeatureToggleService.supports(FeatureToggleService.features.sparkCallTenDigitExt)
-        .then(function (sparkCallTenDigitExt) {
-          $scope.sparkCallTenDigitExtEnabled = sparkCallTenDigitExt;
-        });
 
       var hI1484Promise = FeatureToggleService.supports(FeatureToggleService.features.hI1484)
         .then(function (ishI1484) {
@@ -45,23 +45,32 @@ require('./_setup-wizard.scss');
           supportsAtlasPMRonM2 = _supportsAtlasPMRonM2;
         });
 
-      return $q.all([
+      var promises = [
         adminOrgUsagePromise,
         atlasPMRonM2Promise,
-        tenDigitExtPromise,
         hI1484Promise,
-      ]);
+      ];
+
+      if (SetupWizardService.hasPendingServiceOrder()) {
+        var tabsBasedOnPendingLicensesPromise = SetupWizardService.getPendingLicenses().then(function () {
+          shouldShowMeetingsTab = SetupWizardService.hasPendingMeetingLicenses();
+          hasPendingCallLicenses = SetupWizardService.hasPendingCallLicenses();
+          hasPendingLicenses = SetupWizardService.hasPendingLicenses();
+        });
+        promises.push(tabsBasedOnPendingLicensesPromise);
+      }
+
+      return $q.all(promises);
     }
 
     function init() {
       var tabs = getInitTabs();
 
+      initPlanReviewTab(tabs);
       initEnterpriseSettingsTab(tabs);
       initMeetingSettingsTab(tabs);
       initCallSettingsTab(tabs);
       initCareTab(tabs);
-
-      initSharedDeviceOnly(tabs);
       initAtlasPMRonM2(tabs);
       initFinishTab(tabs);
       removeTabsWithEmptySteps(tabs);
@@ -70,28 +79,6 @@ require('./_setup-wizard.scss');
 
     function getInitTabs() {
       return [{
-        name: 'planReview',
-        label: 'firstTimeWizard.planReview',
-        description: 'firstTimeWizard.planReviewSub',
-        icon: 'icon-plan-review',
-        title: 'firstTimeWizard.planReview',
-        controller: 'PlanReviewCtrl as planReview',
-        steps: [{
-          name: 'init',
-          template: 'modules/core/setupWizard/planReview/planReview.tpl.html',
-        }],
-      }, {
-        name: 'messagingSetup',
-        label: 'firstTimeWizard.messageSettings',
-        description: 'firstTimeWizard.messagingSetupSub',
-        icon: 'icon-convo',
-        title: 'firstTimeWizard.messagingSetup',
-        controller: 'MessagingSetupCtrl as msgSetup',
-        steps: [{
-          name: 'setup',
-          template: 'modules/core/setupWizard/messageSettings/messagingSetup.tpl.html',
-        }],
-      }, {
         name: 'enterpriseSettings',
         label: 'firstTimeWizard.enterpriseSettings',
         description: 'firstTimeWizard.enterpriseSettingsSub',
@@ -118,24 +105,29 @@ require('./_setup-wizard.scss');
       ];
     }
 
+    function initPlanReviewTab(tabs) {
+      var tab = {
+        name: 'planReview',
+        label: 'firstTimeWizard.planReview',
+        description: 'firstTimeWizard.planReviewSub',
+        icon: 'icon-plan-review',
+        title: 'firstTimeWizard.planReview',
+        controller: 'PlanReviewCtrl as planReview',
+        steps: [{
+          name: 'init',
+          template: 'modules/core/setupWizard/planReview/planReview.tpl.html',
+        }],
+      };
+
+      if (SetupWizardService.hasPendingServiceOrder()) {
+        tab.label = 'firstTimeWizard.subscriptionReview';
+        tab.title = 'firstTimeWizard.subscriptionReview';
+      }
+
+      tabs.splice(0, 0, tab);
+    }
+
     function initMeetingSettingsTab(tabs) {
-      var userEmail = Authinfo.getUserName();
-      var trialFlowSteps = [{
-        name: 'migrateTrial',
-        template: 'modules/core/setupWizard/meeting-settings/meeting-migrate-trial.html',
-      },
-      {
-        name: 'siteSetup',
-        template: 'modules/core/setupWizard/meeting-settings/meeting-site-setup.html',
-      },
-      {
-        name: 'licenseDistribution',
-        template: 'modules/core/setupWizard/meeting-settings/meeting-license-distribution.html',
-      },
-      {
-        name: 'summary',
-        template: 'modules/core/setupWizard/meeting-settings/meeting-summary.html',
-      }];
       var meetingTab = {
         name: 'meetingSettings',
         required: true,
@@ -146,18 +138,28 @@ require('./_setup-wizard.scss');
         controller: 'MeetingSettingsCtrl as meetingCtrl',
         controllerAs: 'meetingCtrl',
         steps: [{
-          name: 'init',
-          template: 'modules/core/setupWizard/meeting-settings/meeting-init.html',
+          name: 'migrateTrial',
+          template: 'modules/core/setupWizard/meeting-settings/meeting-migrate-trial.html',
+        },
+        {
+          name: 'siteSetup',
+          template: 'modules/core/setupWizard/meeting-settings/meeting-site-setup.html',
+        },
+        {
+          name: 'licenseDistribution',
+          template: 'modules/core/setupWizard/meeting-settings/meeting-license-distribution.html',
+        },
+        {
+          name: 'summary',
+          template: 'modules/core/setupWizard/meeting-settings/meeting-summary.html',
         }],
       };
 
-      if (showMeetingSettingsTab(userEmail)) {
-        if (hasWebexMeetingTrial()) {
-          _.remove(meetingTab.steps, { name: 'init' });
-        } else if (isDirectOrderWithoutTrial()) {
+      if (shouldShowMeetingsTab) {
+        if (!hasWebexMeetingTrial()) {
           _.remove(meetingTab.steps, { name: 'migrateTrial' });
         }
-        meetingTab.steps = meetingTab.steps.concat(trialFlowSteps);
+
         tabs.splice(1, 0, meetingTab);
       }
     }
@@ -186,15 +188,42 @@ require('./_setup-wizard.scss');
         name: 'setup',
         template: 'modules/core/setupWizard/callSettings/serviceSetupInit.html',
       };
+
+      var pickCountry = {
+        name: 'callPickCountry',
+        template: 'modules/core/setupWizard/callSettings/serviceHuronCustomerCreate.html',
+      };
+
       if (showCallSettings()) {
-        if ($scope.sparkCallTenDigitExtEnabled) {
+        $q.resolve($scope.isCustomerPresent).then(function (customer) {
+          if (customer && hasPendingCallLicenses) {
+            SetupWizardService.activateAndCheckCapacity().catch(function (error) {
+              $timeout(function () {
+                //   $scope.$emit('wizardNextButtonDisable', true);
+              });
+              if (error.errorCode === 42003) {
+                //Error code from Drachma
+                Notification.errorWithTrackingId(error, 'firstTimeWizard.error.overCapacity');
+              } else {
+                Notification.errorWithTrackingId(error, 'firstTimeWizard.error.capacityFail');
+              }
+              $scope.$emit('wizardNextButtonDisable', true);
+            });
+          }
+
           var steps = [{
             name: 'init',
             template: 'modules/core/setupWizard/callSettings/serviceSetup.html',
           }];
+
           if ($scope.ishI1484) {
             steps.splice(0, 0, initialStep);
           }
+
+          if (!customer && hasPendingCallLicenses) {
+            steps.splice(0, 0, pickCountry);
+          }
+
           tabs.splice(1, 0, {
             name: 'serviceSetup',
             required: true,
@@ -205,36 +234,8 @@ require('./_setup-wizard.scss');
             controllerAs: '$ctrl',
             steps: steps,
           });
-        } else {
-          steps = [{
-            name: 'init',
-            template: 'modules/core/setupWizard/callSettings/serviceSetup.tpl.html',
-          }];
-          if ($scope.ishI1484) {
-            steps.splice(0, 0, initialStep);
-          }
-          tabs.splice(1, 0, {
-            name: 'serviceSetup',
-            required: true,
-            label: 'firstTimeWizard.callSettings',
-            description: 'firstTimeWizard.serviceSetupSub',
-            icon: 'icon-calls',
-            title: 'firstTimeWizard.unifiedCommunication',
-            controller: 'ServiceSetupCtrl as squaredUcSetup',
-            controllerAs: 'squaredUcSetup',
-            steps: steps,
-          });
-        }
+        });
       }
-    }
-
-    function showMeetingSettingsTab(userEmail) {
-      if (_.isEmpty(userEmail)) {
-        return false;
-      }
-
-      // Currently we are deferentiating trial migration orders for WebEx meeting sites setup by a prefix/suffix of 'ordersimp' in the users email.
-      return _.toLower(userEmail.split('+')[1]) === 'ordersimp@gmail.com' || _.toLower(userEmail.split('+')[0]) === 'ordersimp' || _.toLower(userEmail.split('-')[0]) === 'ordersimp';
     }
 
     function hasWebexMeetingTrial() {
@@ -245,11 +246,11 @@ require('./_setup-wizard.scss');
       });
     }
 
-    function isDirectOrderWithoutTrial() {
-      return !hasWebexMeetingTrial();
-    }
-
     function showCallSettings() {
+      if (hasPendingCallLicenses) {
+        return true;
+      }
+
       return _.some(Authinfo.getLicenses(), function (license) {
         return license.licenseType === Config.licenseTypes.COMMUNICATION || license.licenseType === Config.licenseTypes.SHARED_DEVICES;
       });
@@ -282,15 +283,6 @@ require('./_setup-wizard.scss');
       }
     }
 
-
-    function initSharedDeviceOnly(tabs) {
-      if (isSharedDevicesOnlyLicense) {
-        _.remove(tabs, function (tab) {
-          return tab.name === 'messagingSetup';
-        });
-      }
-    }
-
     function initAtlasPMRonM2(tabs) {
       if (supportsAtlasPMRonM2) {
         var step = {
@@ -308,18 +300,28 @@ require('./_setup-wizard.scss');
 
     function initFinishTab(tabs) {
       if (!Authinfo.isSetupDone()) {
-        tabs.push({
+        var tab = {
           name: 'finish',
-          label: 'firstTimeWizard.finish',
+          label: 'firstTimeWizard.activateAndBeginBilling',
           description: 'firstTimeWizard.finishSub',
           icon: 'icon-check',
           title: 'firstTimeWizard.getStarted',
           controller: 'WizardFinishCtrl',
           steps: [{
-            name: 'init',
-            template: 'modules/core/setupWizard/finish/finish.tpl.html',
+            name: 'activate',
+            template: 'modules/core/setupWizard/finish/activate.html',
+          }, {
+            name: 'done',
+            template: 'modules/core/setupWizard/finish/finish.html',
           }],
-        });
+        };
+
+        if (!hasPendingLicenses) {
+          tab.label = 'firstTimeWizard.finish';
+          _.remove(tab.steps, { name: 'activate' });
+        }
+
+        tabs.push(tab);
       }
     }
 

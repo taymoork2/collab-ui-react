@@ -1,4 +1,5 @@
 import { Notification } from 'modules/core/notifications/notification.service';
+import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 
 class HsEnableDisableCallServiceConnectComponentCtrl implements ng.IComponentController {
 
@@ -12,10 +13,10 @@ class HsEnableDisableCallServiceConnectComponentCtrl implements ng.IComponentCon
   constructor(
     private $modal,
     private Notification: Notification,
-    private ServiceDescriptor,
+    private ServiceDescriptorService: ServiceDescriptorService,
   ) {}
 
-  public $onChanges(changes: {[bindings: string]: ng.IChangesObject}) {
+  public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
 
     const { serviceIsEnabled } = changes;
     if (serviceIsEnabled && serviceIsEnabled.currentValue) {
@@ -33,7 +34,7 @@ class HsEnableDisableCallServiceConnectComponentCtrl implements ng.IComponentCon
 
   private confirmEnable(): void {
     this.saving = true;
-    this.ServiceDescriptor.enableService('squared-fusion-ec')
+    this.ServiceDescriptorService.enableService('squared-fusion-ec')
       .then(() => {
         this.Notification.success('hercules.notifications.connect.connectEnabled');
         this.onCallServiceConnectEnabled();
@@ -55,7 +56,7 @@ class HsEnableDisableCallServiceConnectComponentCtrl implements ng.IComponentCon
     })
       .result
       .then(() => {
-        this.ServiceDescriptor.disableService('squared-fusion-ec')
+        this.ServiceDescriptorService.disableService('squared-fusion-ec')
           .then(() => {
             this.Notification.success('hercules.notifications.connect.connectDisabled');
             this.onCallServiceConnectDisabled();

@@ -49,6 +49,7 @@ class PagingInitiatorCtrl implements ng.IComponentController {
 
       }, (response) => {
       this.Notification.errorResponse(response, 'pagingGroup.initiatorFetchFailure');
+      return this.$q.reject(response);
     });
   }
 

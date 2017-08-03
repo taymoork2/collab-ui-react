@@ -31,6 +31,7 @@ export class HybridServicesUtilsService {
 
   /* @ngInject */
   constructor(
+    private $q: ng.IQService,
   ) {}
 
   public connectorType2ServicesId(connectorType: ConnectorType): HybridServiceId[] {
@@ -131,6 +132,50 @@ export class HybridServicesUtilsService {
   public getAckFlagForHybridServiceId(entitlement: HybridServiceId): string {
     return `fms.services.${entitlement}.acknowledged`;
   }
+
+  /* $q does not provide a function like Q.allSettled.
+     Our own version is adapted from http://www.codeducky.org/q-allsettled-for-angular-promises/ */
+  public allSettled = (promises: ng.IPromise<any>[]) => {
+    const deferred = this.$q.defer();
+    let counter = 0;
+    const results = _.isArray(promises) ? [] : {};
+
+    _.forEach(promises, (promise: ng.IPromise<any>, key: string) => {
+      counter++;
+      this.$q.resolve(promise)
+        .then((value) => {
+          if (results.hasOwnProperty(key)) {
+            return;
+          }
+          results[key] = {
+            status: 'fulfilled',
+            value: value,
+          };
+          if (!(--counter)) {
+            deferred.resolve(results);
+          }
+        })
+        .catch((reason) => {
+          if (results.hasOwnProperty(key)) {
+            return;
+          }
+          results[key] = {
+            status: 'rejected',
+            reason: reason,
+          };
+          if (!(--counter)) {
+            deferred.resolve(results);
+          }
+        });
+    });
+
+    if (counter === 0) {
+      deferred.resolve(results);
+    }
+
+    return deferred.promise;
+  }
+
 }
 
 export default angular

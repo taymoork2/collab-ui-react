@@ -2,8 +2,8 @@
   'use strict';
 
   angular
-  .module('uc.autoattendant')
-  .controller('AARestApiCtrl', AARestApiCtrl);
+    .module('uc.autoattendant')
+    .controller('AARestApiCtrl', AARestApiCtrl);
 
   /* @ngInject */
   function AARestApiCtrl($modal, $scope, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService) {

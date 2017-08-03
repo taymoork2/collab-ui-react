@@ -11,12 +11,13 @@ class MyCompanyPageCtrl {
   /* @ngInject */
   constructor(
     private Authinfo,
+    private $translate: ng.translate.ITranslateService,
   ) {
     this._tabs = [{
-      title: 'my-company.subscription',
+      title: this.$translate.instant('my-company.subscription'),
       state: 'my-company.subscriptions',
     }, {
-      title: 'my-company.info',
+      title: this.$translate.instant('my-company.info'),
       state: 'my-company.info',
     }];
 
@@ -24,7 +25,7 @@ class MyCompanyPageCtrl {
     const result = _.some(customers, { customerType: 'Online' });
     if (result) {
       this._tabs.push({
-        title: 'my-company.order',
+        title: this.$translate.instant('my-company.order'),
         state: 'my-company.orders',
       });
     }

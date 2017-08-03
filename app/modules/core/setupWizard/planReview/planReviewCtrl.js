@@ -6,7 +6,7 @@
     .controller('PlanReviewCtrl', PlanReviewCtrl);
 
   /* @ngInject */
-  function PlanReviewCtrl($translate, Authinfo, Config, TrialService, WebExUtilsFact) {
+  function PlanReviewCtrl($translate, Authinfo, Config, SetupWizardService, TrialService, WebExUtilsFact) {
     var vm = this;
     var classes = {
       userService: 'user-service-',
@@ -54,7 +54,32 @@
     vm._helpers = {
       maxServiceRows: maxServiceRows,
     };
+
     vm.isCareEnabled = false;
+
+    // TODO update this logic when Room, Message and Care licenses are implemented.
+    vm.pendingMeetingLicenses = SetupWizardService.getPendingMeetingLicenses().concat(SetupWizardService.getPendingAudioLicenses());
+    vm.pendingCallLicenses = SetupWizardService.getPendingCallLicenses();
+    vm.pendingMessageLicenses = SetupWizardService.getPendingMessageLicenses();
+    vm.hasPendingLicenses = vm.pendingMeetingLicenses.concat(vm.pendingCallLicenses, vm.pendingMessageLicenses).length > 0;
+    if (vm.hasPendingLicenses) {
+      _.forEach([vm.pendingMeetingLicenses, vm.pendingCallLicenses, vm.pendingMessageLicenses], function (licenseArray) {
+        getPendingLicenseDisplayValues(licenseArray);
+      });
+    }
+    vm.showPendingView = vm.hasPendingLicenses;
+
+    vm.hasExistingLicenses = Authinfo.getLicenses().length;
+    vm.getNamedLabel = function (label) {
+      switch (label) {
+        case Config.offerCodes.CDC:
+          return $translate.instant('onboardModal.paidCDC');
+        case Config.offerCodes.CVC:
+          return $translate.instant('onboardModal.paidCVC');
+        default:
+          return '';
+      }
+    };
 
     //TODO this function has to be removed when atlas-care-trials feature is removed
     vm.getGridColumnClassName = function () {
@@ -85,6 +110,16 @@
     function maxServiceRows() {
       var confLength = _.get(vm.confServices, 'services.length', 0) + _.get(vm.cmrServices, 'services.length', 0);
       return _.max([confLength, vm.messagingServices.services.length, vm.commServices.services.length]);
+    }
+
+    function getPendingLicenseDisplayValues(licenses) {
+      _.forEach(licenses, function (license) {
+        var translatedNameString = 'subscriptions.licenseTypes.' + license.offerName;
+        license.displayName = $translate.instant(translatedNameString);
+        if (license.capacity && license.offerName !== 'CF') {
+          license.displayName += ' ' + license.capacity;
+        }
+      });
     }
 
     function init() {

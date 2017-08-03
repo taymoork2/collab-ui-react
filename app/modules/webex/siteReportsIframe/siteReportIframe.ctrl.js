@@ -39,7 +39,8 @@
     $scope.siteUrl = siteUrl;
     $scope.indexPageSref = 'reports.webex({siteUrl:"' + siteUrl + '"})';
     $scope.reportPageId = $stateParams.reportPageId;
-    $scope.reportPageTitle = $translate.instant('webexReportsPageTitles.' + $scope.reportPageId);
+    $scope.titleName = 'webexReportsPageTitles.' + $scope.reportPageId;
+    $scope.reportPageTitle = $translate.instant($scope.titleName);
     $scope.reportPageIframeUrl = iframeUrlOrig;
 
     var siteName = WebExUtilsFact.getSiteName(siteUrl);

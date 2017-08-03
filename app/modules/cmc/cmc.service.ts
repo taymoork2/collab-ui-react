@@ -2,15 +2,15 @@ import { ICmcUserData, ICmcOrgStatusResponse, ICmcUserStatusResponse, ICmcUser, 
 
 export class CmcService {
 
-  //private cmcUrl: string = 'http://localhost:8082/cmc-controller-service-server/api/v1';
+  // TODO: Replace by proper entries in urlconfig !
   private cmcUrl: string = 'https://cmc-controller.intb1.ciscospark.com/api/v1';
-  private useMock: boolean = false;
+
+  private useMock: boolean = false; // Only set to true for testing
 
   private timeout: number = 5000; // ms
 
   /* @ngInject */
   constructor(
-    private $log: ng.ILogService,
     private $q: ng.IQService,
     private Orgservice,
     private Config,
@@ -34,7 +34,6 @@ export class CmcService {
   }
 
   public getUserData(user: ICmcUser): ICmcUserData {
-    this.$log.info('Getting data for user=', user);
     const entitled = this.hasCmcEntitlement(user);
     const mobileNumber = this.extractMobileNumber(user);
     return <ICmcUserData> {
@@ -46,19 +45,16 @@ export class CmcService {
   // TODO: Find out when cmc settings should be unavailable...
   public allowCmcSettings(orgId: string): ng.IPromise<boolean> {
     // based on org entitlements ?
-    const deferred = this.$q.defer();
+    const deferred = this.$q.defer<boolean>();
     this.Orgservice.getOrg((data, success) => {
-      this.$log.debug('data', data);
       if (success) {
         if (data.success) {
           deferred.resolve(this.hasCmcService(data.services));
-          this.$log.debug('org data:', data);
         } else {
           deferred.reject(data);
         }
       } else {
         deferred.resolve(false);
-        this.$log.debug('data', data);
       }
     }, orgId, {
       basicInfo: true,
@@ -66,14 +62,13 @@ export class CmcService {
     return deferred.promise;
   }
 
-  // TODO Adapt to cmc status call
   public preCheckOrg(orgId: string): ng.IPromise<ICmcOrgStatusResponse> {
     if (!this.useMock) {
       //let deferred: ng.IDeferred<any> = this.$q.defer();
       //this.requestTimeout(deferred);
       const url: string = this.cmcUrl + `/organizations/${orgId}/status`;
-      return this.$http.get(url, { timeout: this.requestTimeout() }).then((response) => {
-        return response.data;
+      return this.$http.get<ICmcOrgStatusResponse>(url, { timeout: this.requestTimeout() }).then((response) => {
+        return response.data as ICmcOrgStatusResponse;
       });
     } else {
       return this.CmcServiceMock.mockOrgStatus(orgId);
@@ -88,10 +83,7 @@ export class CmcService {
     return deferred.promise;
   }
 
-  // TODO Preliminary poor mans user precheck
-  //      which only checks call aware entitlement.
-  //      It's wrapped in a promise to make it easier
-  //      to replace by CI or CMC requests
+  // TODO Change this preliminary poor mans user precheck
   public preCheckUser(user: ICmcUser): ng.IPromise<ICmcUserStatusResponse> {
     const status: string = this.hasCallAwareEntitlement(user) ? 'ok' : 'error';
     const issues: ICmcIssue[] = [];
@@ -140,7 +132,6 @@ export class CmcService {
     if (!entitle) {
       url += '?removeEntitlement=true';
     }
-    this.$log.info('Updating cmc entitlement using url:', url);
     return this.$http.post(url, {});
   }
 
@@ -170,8 +161,6 @@ export class CmcService {
     };
 
     const scimUrl = this.UrlConfig.getScimUrl(user.meta.organizationID) + '/' + user.id;
-    this.$log.info('Updating user', user);
-    this.$log.info('User data', userMobileData);
     return this.$http({
       method: 'PATCH',
       url: scimUrl,
