@@ -2714,7 +2714,7 @@
           })
           .state('firsttimewizard', {
             parent: 'firsttimesplash',
-            template: '<cr-wizard provision="provision" tabs="tabs" finish="finish" is-first-time="true"></cr-wizard>',
+            template: '<cr-wizard tabs="tabs" finish="finish" is-first-time="true"></cr-wizard>',
             controller: 'SetupWizardCtrl',
             data: {
               firstTimeSetup: true,

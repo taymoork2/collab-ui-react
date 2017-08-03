@@ -5,7 +5,7 @@
     .controller('WizardFinishCtrl', WizardFinishCtrl);
 
   /* @ngInject */
-  function WizardFinishCtrl($q, $rootScope, $scope, $translate, Authinfo, Notification, SetupWizardService, TrialWebexService) {
+  function WizardFinishCtrl($q, $scope, $translate, Authinfo, Notification, SetupWizardService, TrialWebexService) {
     $scope.hasPendingLicenses = SetupWizardService.hasPendingLicenses();
     $scope.sendEmailModel = false;
     $scope.doNotProvision = false;
@@ -34,16 +34,24 @@
       return deferred.promise;
     };
 
+    // wizard PromiseHook
+    $scope.provisionNext = function () {
+      if (SetupWizardService.getWillNotProvision()) {
+        $scope.doNotProvision = true;
+      } else {
+        $scope.doNotProvision = false;
+        return provision();
+      }
+    };
+
     init();
 
     function init() {
       pushBlankProvisioningCall();
-      $rootScope.$on('do-not-provision-event', function () {
-        $scope.doNotProvision = true;
-      });
-      $rootScope.$on('provision-event', function () {
-        $scope.doNotProvision = false;
-      });
+    }
+
+    function provision() {
+      return SetupWizardService.processCallbacks();
     }
 
     function setSendCustomerEmailFlag(flag) {
