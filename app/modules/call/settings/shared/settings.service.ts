@@ -200,7 +200,7 @@ export class HuronSettingsService {
     }
   }
 
-  public saveExtensionLengthIncrease(newExtensionLength: string, extensionPrefix: string): ng.IPromise<any> {
+  public saveExtensionLengthIncrease(newExtensionLength: number | null, extensionPrefix: number | null): ng.IPromise<any> {
     return this.ExtensionLengthService.saveExtensionLength(newExtensionLength, extensionPrefix)
       .then(() => {
         if (this.huronSettingsDataCopy.customer.hasVoicemailService && !this.supportsAvrilVoicemailMailbox) {
@@ -497,7 +497,7 @@ export class HuronSettingsService {
             if (!_.isEqual(this.huronSettingsDataCopy.site.routingPrefix, siteData.routingPrefix)
               || !_.isEqual(this.huronSettingsDataCopy.site.extensionLength, siteData.extensionLength)
               || !_.isEqual(this.huronSettingsDataCopy.customer.hasVoicemailService, customerData.hasVoicemailService)) {
-              const vmaddress = this.deriveVoicemailAddress(siteData.routingPrefix || '', siteData.extensionLength, '');
+              const vmaddress = this.deriveVoicemailAddress(siteData.routingPrefix || '', Number(siteData.extensionLength), null);
               promises.push(this.updateVoicemailAddress(userTemplate.objectId, vmaddress));
             }
             if (!_.isEqual(this.huronSettingsDataCopy.site.timeZone, siteData.timeZone)
@@ -578,8 +578,8 @@ export class HuronSettingsService {
       });
   }
 
-  private deriveVoicemailAddress(routingPrefix: string, extensionLength: string, extensionPrefix: string): string {
-    return [routingPrefix, extensionLength, extensionPrefix].join('-');
+  private deriveVoicemailAddress(routingPrefix: string, extensionLength: number | null, extensionPrefix: number | null): string {
+    return [routingPrefix, _.toString(extensionLength), _.toString(extensionPrefix)].join('-');
   }
 
   private saveAutoAttendantSite(site: ISite): ng.IPromise<void> {

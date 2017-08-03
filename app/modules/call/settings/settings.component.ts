@@ -8,7 +8,6 @@ import { PstnService } from 'modules/huron/pstn/pstn.service';
 import { PstnModel } from 'modules/huron/pstn/pstn.model';
 import { PstnCarrier } from 'modules/huron/pstn/pstnProviders/pstnCarrier';
 import { IAvrilFeatures } from 'modules/huron/avril';
-import { SettingSetupInitService } from 'modules/call/settings/settings-setup-init';
 import { SetupWizardService } from 'modules/core/setupWizard/setup-wizard.service';
 
 const API_IMPL_SWIVEL = 'SWIVEL';
@@ -41,7 +40,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
   public showVoiceMailDisableDialog: boolean = false;
   public supportsAvrilVoicemail: boolean = false;
   public supportsAvrilVoicemailMailbox: boolean = false;
-  public ishI1484: boolean;
+  public hI1484: boolean;
   public hasPendingCallLicenses: boolean = false;
 
   public huronSettingsData: HuronSettingsData;
@@ -62,7 +61,6 @@ class HuronSettingsCtrl implements ng.IComponentController {
     private Config,
     private Orgservice,
     private FeatureToggleService,
-    private SettingSetupInitService: SettingSetupInitService,
     private SetupWizardService: SetupWizardService,
   ) { }
 
@@ -114,10 +112,6 @@ class HuronSettingsCtrl implements ng.IComponentController {
     }
   }
 
-  public isMultiSelected() {
-    return this.SettingSetupInitService.getSelected() === 2;
-  }
-
   private initSettingsComponent(): ng.IPromise<any> {
     return this.HuronSettingsOptionsService.getOptions().then(options => this.settingsOptions = options)
     .then(() => {
@@ -133,12 +127,12 @@ class HuronSettingsCtrl implements ng.IComponentController {
       .then(result => this.supportsAvrilVoicemailMailbox = result);
 
     this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484)
-      .then(result => this.ishI1484 = result);
+      .then(result => this.hI1484 = result);
 
     return this.$q.resolve();
   }
 
-  public initNext(): ng.IPromise<void> | void {
+  public setupCallSiteNext(): ng.IPromise<void> | void {
     if (this.hasPendingCallLicenses) {
       this.SetupWizardService.addProvisioningCallbacks({
         call: this.saveHuronSettings.bind(this),

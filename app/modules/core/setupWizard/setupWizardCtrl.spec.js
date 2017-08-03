@@ -189,7 +189,7 @@ describe('SetupWizardCtrl', function () {
     });
 
     it('serviceSetup should have a single substep', function () {
-      this.expectSubStepOrder('serviceSetup', ['init']);
+      this.expectSubStepOrder('serviceSetup', ['setupCallSite']);
     });
   });
 
@@ -206,7 +206,7 @@ describe('SetupWizardCtrl', function () {
     });
 
     it('serviceSetup should have a single substep', function () {
-      this.expectSubStepOrder('serviceSetup', ['init']);
+      this.expectSubStepOrder('serviceSetup', ['setupCallSite']);
     });
   });
 
@@ -226,7 +226,7 @@ describe('SetupWizardCtrl', function () {
     });
 
     it('serviceSetup should have a single substep', function () {
-      this.expectSubStepOrder('serviceSetup', ['init']);
+      this.expectSubStepOrder('serviceSetup', ['setupCallSite']);
     });
   });
 
@@ -361,7 +361,7 @@ describe('SetupWizardCtrl', function () {
     it('the wizard should have a lot of settings', function () {
       this.expectStepOrder(['planReview', 'serviceSetup', 'meetingSettings', 'enterpriseSettings', 'careSettings']);
       this.expectSubStepOrder('planReview', ['init']);
-      this.expectSubStepOrder('serviceSetup', ['setup', 'init']);
+      this.expectSubStepOrder('serviceSetup', ['pickCallLocationType', 'setupCallLocation']);
       this.expectSubStepOrder('meetingSettings', ['siteSetup', 'licenseDistribution', 'summary']);
       this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'enterprisePmrSetup', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
       this.expectSubStepOrder('careSettings', ['csonboard']);

@@ -14,6 +14,7 @@ require('./_setup-wizard.scss');
     var hasPendingCallLicenses = false;
     var hasPendingLicenses = false;
     var supportsAtlasPMRonM2 = false;
+    var supportsHI1484 = false;
     $scope.tabs = [];
     $scope.isTelstraCsbEnabled = false;
     $scope.isCSB = Authinfo.isCSB();
@@ -29,8 +30,8 @@ require('./_setup-wizard.scss');
       }
 
       var hI1484Promise = FeatureToggleService.supports(FeatureToggleService.features.hI1484)
-        .then(function (ishI1484) {
-          $scope.ishI1484 = ishI1484;
+        .then(function (_supportsHI1484) {
+          supportsHI1484 = _supportsHI1484;
         });
 
       var adminOrgUsagePromise = Orgservice.getAdminOrgUsage()
@@ -184,14 +185,24 @@ require('./_setup-wizard.scss');
     }
 
     function initCallSettingsTab(tabs) {
-      var initialStep = {
-        name: 'setup',
-        template: 'modules/core/setupWizard/callSettings/serviceSetupInit.html',
-      };
-
       var pickCountry = {
         name: 'callPickCountry',
         template: 'modules/core/setupWizard/callSettings/serviceHuronCustomerCreate.html',
+      };
+
+      var pickLocationType = {
+        name: 'pickCallLocationType',
+        template: 'modules/core/setupWizard/callSettings/serviceSetupInit.html',
+      };
+
+      var setupLocation = {
+        name: 'setupCallLocation',
+        template: 'modules/core/setupWizard/callSettings/locationSetup.html',
+      };
+
+      var setupSite = {
+        name: 'setupCallSite',
+        template: 'modules/core/setupWizard/callSettings/serviceSetup.html',
       };
 
       if (showCallSettings()) {
@@ -211,17 +222,17 @@ require('./_setup-wizard.scss');
             });
           }
 
-          var steps = [{
-            name: 'init',
-            template: 'modules/core/setupWizard/callSettings/serviceSetup.html',
-          }];
-
-          if ($scope.ishI1484) {
-            steps.splice(0, 0, initialStep);
-          }
+          var steps = [];
 
           if (!customer && hasPendingCallLicenses) {
-            steps.splice(0, 0, pickCountry);
+            steps.push(pickCountry);
+          }
+
+          if (supportsHI1484) {
+            steps.push(pickLocationType);
+            steps.push(setupLocation);
+          } else {
+            steps.push(setupSite);
           }
 
           tabs.splice(1, 0, {

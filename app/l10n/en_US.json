@@ -6550,6 +6550,7 @@
     "getCustomerFailed": "Failed to get customer.",
     "updateFailed": "Failed to update location.",
     "updateLocationCosFailed": "Failed to update dialing restrictions.",
+    "updateExtensionLengthFailed": "Failed to save extension length.",
     "saveSuccess": "Location settings saved successfully.",
     "copyTitle": "Copy Location",
     "copyDesc": "This location will use the customized setting from the location that you copied.",
