@@ -6,6 +6,7 @@ class DeviceList implements ng.IComponentController {
   private _groupedDevices: { displayName: string, devices?: any, matches: (device) => {} }[] = [];
   private currentOffset = {};
   private pageSize = 20;
+  private huronDeviceService: any;
 
   public deviceProps = {
     product: 'Product',
@@ -19,8 +20,12 @@ class DeviceList implements ng.IComponentController {
   };
 
   /* @ngInject */
-  constructor() {
-
+  constructor(private $state,
+              private $http,
+              private CsdmConverter,
+              CsdmHuronOrgDeviceService,
+              Authinfo) {
+    this.huronDeviceService = CsdmHuronOrgDeviceService.create(Authinfo.getOrgId());
   }
 
   public $onInit(): void {
@@ -77,7 +82,7 @@ class DeviceList implements ng.IComponentController {
     const devicesAndCodesArr = _(this.devices)
       .extend(this.devices)
       .filter(this.filterOnSearchQuery.bind(this))
-      .groupBy('cisUuid')
+      .groupBy('url')
       .map(createRooms)
       .flatten()
       .sortBy(this.displayNameSorter.bind(this))
@@ -194,9 +199,15 @@ class DeviceList implements ng.IComponentController {
   public showAddDeviceDialog() {
     // this.AddDeviceModal.open(); //TODO no adding avail
   }
-
   public expandDevice(device) {
-    device = device;
+    this.$http.get(device.url).then((res) => {
+      const realDevice = (device.productFamily === 'Huron') ? this.CsdmConverter.convertHuronDevice(res.data) :
+        this.CsdmConverter.convertCloudberryDevice(res.data);
+      this.$state.go('device-overview', {
+        currentDevice: realDevice,
+        huronDeviceService: this.huronDeviceService,
+      });
+    });
     // this.$state.go('devices-redux.details', {
     //   device: device,
     // });
