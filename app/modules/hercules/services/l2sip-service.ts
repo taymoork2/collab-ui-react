@@ -186,7 +186,7 @@ export class L2SipService {
       },
       tests: [],
     };
-    const firstStep = steps.shift() as FirstStep;
+    const firstStep = _.head(steps) as FirstStep;
     if (firstStep.type === 'DNSSvrFound') {
       result.type = 'dnssrv';
       result.meta.dns = firstStep.Srv;
