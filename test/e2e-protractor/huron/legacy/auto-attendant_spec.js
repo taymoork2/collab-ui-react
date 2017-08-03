@@ -40,6 +40,7 @@ describe('Huron Auto Attendant', function () {
 
       // click new feature
       utils.click(autoattendant.newFeatureButton);
+      browser.driver.sleep(1000);
 
       // select AA
       utils.wait(autoattendant.featureTypeAA, 20000);
@@ -139,6 +140,7 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.sayMessageInput);
       utils.sendKeys(autoattendant.sayMessageInput, "Welcome to the AA");
       utils.click(autoattendant.sayMessageDynamicButton)
+      utils.wait(autoattendant.dynamicVariable, 320000);
       utils.click(autoattendant.dynamicVariable);
       utils.wait(autoattendant.dynamicVariable, 120000);
       utils.click(autoattendant.variable);
@@ -179,6 +181,7 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.phonesayMessageInput);
       utils.sendKeys(autoattendant.phonesayMessageInput, "Press a key at the menu");
       utils.click(autoattendant.phoneMenuAddDynamicTextButton);
+      utils.wait(autoattendant.dynamicVariable, 120000);
       utils.click(autoattendant.dynamicVariable);
       utils.wait(autoattendant.dynamicVariable, 120000);
       utils.click(autoattendant.variable);
@@ -459,6 +462,7 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.dialByMessageInput);
       utils.sendKeys(autoattendant.dialByMessageInput, "Enter the Extension");
       utils.click(autoattendant.dialByExtensionDynamicButton);
+      utils.wait(autoattendant.dynamicVariable, 120000);
       utils.click(autoattendant.dynamicVariable);
       utils.wait(autoattendant.dynamicVariable, 120000);
       utils.click(autoattendant.variable);
@@ -534,6 +538,7 @@ describe('Huron Auto Attendant', function () {
         utils.click(autoattendant.callerInputSayMessageOption);
         //utils.sendKeys(autoattendant.callerMessageInput, "Extension");
         utils.click(autoattendant.callerInputDynamicButton);
+        utils.wait(autoattendant.dynamicVariable, 120000);
         utils.click(autoattendant.dynamicVariable);
         utils.wait(autoattendant.dynamicVariable, 120000);
         utils.click(autoattendant.variable);
@@ -762,7 +767,7 @@ describe('Huron Auto Attendant', function () {
 
       utils.click(autoattendant.testCardClick);
 
-      utils.wait(autoattendant.addAANumbers, 20000);
+      utils.wait(autoattendant.addAANumbers, 50000);
 
       utils.expectIsDisplayed(autoattendant.addAANumbers);
       autoattendant.scrollIntoView(autoattendant.sayMessageAll.first());
