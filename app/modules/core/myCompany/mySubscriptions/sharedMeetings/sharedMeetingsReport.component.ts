@@ -19,7 +19,7 @@ class SharedMeetingsReportCtrl {
   private readonly THREE_MONTHS: number = 2;
   private readonly SIX_MONTHS: number = 5;
   private readonly DATE_FORMAT: string = 'MMM \'YY';
-  private MaxConcurrentData: IMonthlyMaxConcurrentData;
+  private maxConcurrentData: IMonthlyMaxConcurrentData;
   /* @ngInject */
   constructor(
     private $timeout: ng.ITimeoutService,
@@ -41,8 +41,8 @@ class SharedMeetingsReportCtrl {
 
   // CSV Download
   public csvDownload: boolean = false;
-  public csvHref?: string[];
-  public csvHref2?: string[];
+  public csvHref?: string;
+  public csvHref2?: string;
   public csvFilename?: string;
   public csvFilename2?: string;
   public csvError: boolean = false;
@@ -111,7 +111,7 @@ class SharedMeetingsReportCtrl {
       .then((response: any): void => {
         const data: any = _.get(response, 'data', undefined);
         const sharedMeetingData: ISharedMeetingData[] = this.compileSharedMeetingData(data);
-        this.MaxConcurrentData = data;
+        this.maxConcurrentData = data;
         this.state = this.ReportConstants.EMPTY;
         if (sharedMeetingData.length > 0) {
           this.chart = this.SharedMeetingsReportService.setChartData(sharedMeetingData, this.chart, this.timeSelected);
@@ -190,17 +190,17 @@ class SharedMeetingsReportCtrl {
 
     this.chart = this.SharedMeetingsReportService.setChartData(dummyData, this.chart, this.timeSelected);
   }
-  public dateFix(dateString: string , optionalMins: number = 0): string {
+  private dateFix(dateString: string , optionalMins: number = 0): string {
     const time = dateString.substring(dateString.length, dateString.length - 4);
     const tempDate = dateString.split(time)[0];
     const fulldate = moment(tempDate).format('YYYY/MM/DD') + ' ' + moment(time).add(optionalMins, 'm').format('HH:mm');
     return fulldate;
   }
 
-  public makeCSV(csvArray: any[]): void {
-    if (csvArray[0] && csvArray[1]) {
-      this.csvHref = csvArray[0];
-      this.csvHref2 = csvArray[1];
+  private makeCSV(csvLink1: string | undefined, csvLink2: string | undefined): void {
+    if (csvLink1 && csvLink2) {
+      this.csvHref = csvLink1;
+      this.csvHref2 = csvLink2;
       this.csvFilename = this.SharedMeetingsReportService.FILENAMES[0];
       this.csvFilename2 = this.SharedMeetingsReportService.FILENAMES[1];
     } else {
@@ -223,20 +223,19 @@ class SharedMeetingsReportCtrl {
             SiteName: this.$translate.instant('sharedMeetingReports.csvSiteName'),
           });
 
-          const reformattedData: ISharedMeetingCSV[] = [];
+          const reformattedData: any[] = [];
           reformattedData.push(data[0]);
           data.shift();
-          for (const item of data){
+          _.forEach(data, (meeting) => {
             reformattedData.push({
-              MeetingTopic: item.MeetingTopic,
-              StartTime: item.StartTime,
-              EndTime: item.EndTime,
-              ConfId:  item.ConfId,
-              HostName: item.HostName,
+              MeetingTopic: meeting.MeetingTopic,
+              StartTime: meeting.StartTime,
+              EndTime: meeting.EndTime,
+              ConfId:  meeting.ConfId,
+              HostName: meeting.HostName,
               SiteName: siteName,
             });
-          }
-
+          });
           const concurrentData: IMaxConcurrentDataCSV[] = [{
             SiteName : reformattedData[0].SiteName,
             Month : this.$translate.instant('sharedMeetingReports.csvMonth'),
@@ -245,26 +244,27 @@ class SharedMeetingsReportCtrl {
             ConcurrentMeetingsPeak: this.$translate.instant('sharedMeetingReports.csvConcurrentMeetingsPeak'),
           }];
 
-          if (this.MaxConcurrentData) {
-            _.forEach(this.MaxConcurrentData.MaxConcurrentMeetings, (item) => { // better name than item?
-              const dateLength = item.TimeBucketStart.length;
-              const startMonthYear = moment(item.TimeBucketStart.substring(0 , dateLength - 4)).format('MMM-YY');
+          if (this.maxConcurrentData) {
+            _.forEach(this.maxConcurrentData.MaxConcurrentMeetings, (meeting) => {
+              const dateLength = meeting.TimeBucketStart.length;
+              const startMonthYear = moment(meeting.TimeBucketStart.substring(0 , dateLength - 4)).format('MMM-YY');
               concurrentData.push({
                 SiteName: siteName,
                 Month: startMonthYear,
-                From: this.dateFix(item.TimeBucketStart),
-                To: this.dateFix(item.TimeBucketStart , this.MaxConcurrentData.BucketLengthInMins),
-                ConcurrentMeetingsPeak: '' + item.NumOfMtgs,
+                From: this.dateFix(meeting.TimeBucketStart),
+                To: this.dateFix(meeting.TimeBucketStart , this.maxConcurrentData.BucketLengthInMins),
+                ConcurrentMeetingsPeak: String(meeting.NumOfMtgs),
               });
             });
           }
+
           const csvData: string = ($ as any).csv.fromObjects(reformattedData, { headers: false });
           const csvMaxConcurrentData = ($ as any).csv.fromObjects(concurrentData, { headers: false });
 
-          this.makeCSV([
-            this.SharedMeetingsReportService.getDownloadCSV(csvData),
-            this.SharedMeetingsReportService.getDownloadCSV(csvMaxConcurrentData),
-          ]);
+          this.makeCSV(
+              this.SharedMeetingsReportService.getDownloadCSV(csvData),
+              this.SharedMeetingsReportService.getDownloadCSV(csvMaxConcurrentData),
+            );
 
         } else {
           this.Notification.error('sharedMeetingReports.errorLoadingSharedMeetingDetails');
