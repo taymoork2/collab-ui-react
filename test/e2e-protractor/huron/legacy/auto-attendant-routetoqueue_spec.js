@@ -17,7 +17,7 @@ describe('Huron Auto Attendant', function () {
     it('should navigate to AA landing page', function () {
       // First ensure the test AA and queue is deleted (in case last test run failed for example)
       var flow = protractor.promise.controlFlow();
-      var result = flow.execute(deleteUtils.findAndDeleteTestAA);
+      flow.execute(deleteUtils.findAndDeleteTestAA);
     }, 120000);
 
     it('should create a new auto attendant named "' + deleteUtils.testAAName + '"', function () {
@@ -112,65 +112,63 @@ describe('Huron Auto Attendant', function () {
     });
 
     it('should click queue setting hyperlink and set and play periodic message and add dynamic text to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
-    	// it is for selecting the queue for route to queue option
-    	utils.scrollIntoView(autoattendant.repeatPlus);
-    	var absolutePath = utils.resolvePath(autoattendant.mediaFileToUpload);
-    	utils.scrollIntoView(autoattendant.repeatPlus);
-    	utils.click(autoattendant.queueSetting);
-    	utils.scrollIntoView(autoattendant.repeatPlus);
-    	// select say message
-        utils.click(autoattendant.periodicSayMessageOption);
-        utils.click(autoattendant.periodicSayMessageSelectOption);
-        utils.click(autoattendant.periodicMessageTypeSelect);
-        utils.sendKeys(autoattendant.periodicMessageTypeSelect, 'Welcome to Queue Settings Periodic Message');
+      // it is for selecting the queue for route to queue option
+      utils.scrollIntoView(autoattendant.repeatPlus);
+      utils.scrollIntoView(autoattendant.repeatPlus);
+      utils.click(autoattendant.queueSetting);
+      utils.scrollIntoView(autoattendant.repeatPlus);
+      // select say message
+      utils.click(autoattendant.periodicSayMessageOption);
+      utils.click(autoattendant.periodicSayMessageSelectOption);
+      utils.click(autoattendant.periodicMessageTypeSelect);
+      utils.sendKeys(autoattendant.periodicMessageTypeSelect, 'Welcome to Queue Settings Periodic Message');
 
-        utils.click(autoattendant.periodicDynamicButton);
-        utils.wait(autoattendant.dynamicVariable, 120000);
-        utils.click(autoattendant.dynamicVariable);
-        utils.wait(autoattendant.dynamicVariable, 120000);
-        utils.click(autoattendant.variable);
-        utils.wait(autoattendant.dynamicVariable, 120000);
-        utils.click(autoattendant.readAs);
-        utils.click(autoattendant.readAsVariable);
-        utils.click(autoattendant.okButton);
-        utils.wait(autoattendant.okButton, 1200);
+      utils.click(autoattendant.periodicDynamicButton);
+      utils.wait(autoattendant.dynamicVariable, 120000);
+      utils.click(autoattendant.dynamicVariable);
+      utils.wait(autoattendant.dynamicVariable, 120000);
+      utils.click(autoattendant.variable);
+      utils.wait(autoattendant.dynamicVariable, 120000);
+      utils.click(autoattendant.readAs);
+      utils.click(autoattendant.readAsVariable);
+      utils.click(autoattendant.okButton);
+      utils.wait(autoattendant.okButton, 1200);
 
-        utils.wait(autoattendant.okQueueTreatment, 12000);
-        utils.click(autoattendant.okQueueTreatment);
-        utils.click(autoattendant.saveButton);
-        autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
-      });
-    
+      utils.wait(autoattendant.okQueueTreatment, 12000);
+      utils.click(autoattendant.okQueueTreatment);
+      utils.click(autoattendant.saveButton);
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
+    });
+
     it('should click queue setting hyperlink and set and play initial message and add dynamic text to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
-        // it is for selecting the queue for route to queue option
-        utils.scrollIntoView(autoattendant.repeatPlus);
-        var absolutePath = utils.resolvePath(autoattendant.mediaFileToUpload);
-        utils.scrollIntoView(autoattendant.repeatPlus);
-        utils.click(autoattendant.queueSetting);
-        utils.scrollIntoView(autoattendant.repeatPlus);
+      // it is for selecting the queue for route to queue option
+      utils.scrollIntoView(autoattendant.repeatPlus);
+      utils.scrollIntoView(autoattendant.repeatPlus);
+      utils.click(autoattendant.queueSetting);
+      utils.scrollIntoView(autoattendant.repeatPlus);
 
-        // select say message
-        utils.click(autoattendant.initialSayMessageOption);
-        utils.click(autoattendant.initialSayMessageSelectOption);
-        utils.click(autoattendant.initialMessageTypeSelect);
-        utils.sendKeys(autoattendant.initialMessageTypeSelect, 'Welcome to Queue Settings Initial Message');
+      // select say message
+      utils.click(autoattendant.initialSayMessageOption);
+      utils.click(autoattendant.initialSayMessageSelectOption);
+      utils.click(autoattendant.initialMessageTypeSelect);
+      utils.sendKeys(autoattendant.initialMessageTypeSelect, 'Welcome to Queue Settings Initial Message');
 
-        utils.click(autoattendant.initialDynamicButton);
-        utils.wait(autoattendant.dynamicVariable, 120000);
-        utils.click(autoattendant.dynamicVariable);
-        utils.wait(autoattendant.dynamicVariable, 120000);
-        utils.click(autoattendant.variable);
-        utils.wait(autoattendant.dynamicVariable, 120000);
-        utils.click(autoattendant.readAs);
-        utils.click(autoattendant.readAsVariable);
-        utils.click(autoattendant.okButton);
-        utils.wait(autoattendant.okButton, 1200);
+      utils.click(autoattendant.initialDynamicButton);
+      utils.wait(autoattendant.dynamicVariable, 120000);
+      utils.click(autoattendant.dynamicVariable);
+      utils.wait(autoattendant.dynamicVariable, 120000);
+      utils.click(autoattendant.variable);
+      utils.wait(autoattendant.dynamicVariable, 120000);
+      utils.click(autoattendant.readAs);
+      utils.click(autoattendant.readAsVariable);
+      utils.click(autoattendant.okButton);
+      utils.wait(autoattendant.okButton, 1200);
 
-        utils.wait(autoattendant.okQueueTreatment, 12000);
-        utils.click(autoattendant.okQueueTreatment);
-        utils.click(autoattendant.saveButton);
-        autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
-      });
+      utils.wait(autoattendant.okQueueTreatment, 12000);
+      utils.click(autoattendant.okQueueTreatment);
+      utils.click(autoattendant.saveButton);
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
+    });
 
     it('should click queue setting hyperlink and set and play periodic message and upload media to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
       // it is for selecting the queue for route to queue option
