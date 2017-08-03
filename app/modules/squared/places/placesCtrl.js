@@ -108,6 +108,7 @@ require('../devices/_devices.scss');
         };
 
         vm.gridOptions = {
+          appScopeProvider: vm,
           rowHeight: 45,
           onRegisterApi: function (gridApi) {
             vm.gridApi = gridApi;
