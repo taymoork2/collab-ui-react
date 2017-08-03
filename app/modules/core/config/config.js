@@ -58,11 +58,11 @@
 
       oauthError: {
         unauthorizedClient: 'unauthorized_client',
-        invliadScope: 'invalid_scope',
-        unsupportdResponseType: 'unsupported_response_type',
+        invalidScope: 'invalid_scope',
+        unsupportedResponseType: 'unsupported_response_type',
         accessDenied: 'access_denied',
         serverError: 'server_error',
-        temportarilyUnavailable: 'temporarily_unavailable',
+        temporarilyUnavailable: 'temporarily_unavailable',
         serviceUnavailable: 'service_unavailable', //Customized state, not in OAuth Spec.
       },
 

@@ -94,7 +94,7 @@
       } else if ($window.document.URL.indexOf('error') !== -1) {
         params = getFromStandardGetParams($window.document.URL);
         var error = params.error;
-        if (error === Config.oauthError.unauthorizedClient || error === Config.oauthError.invliadScope || error === Config.oauthError.unsupportdResponseType) {
+        if (error === Config.oauthError.unauthorizedClient || error === Config.oauthError.invalidScope || error === Config.oauthError.unsupportedResponseType) {
           $state.go('login');
         } else if (error === Config.oauthError.accessDenied) {
           $state.go('unauthorized');
