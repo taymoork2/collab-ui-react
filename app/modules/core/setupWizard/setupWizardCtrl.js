@@ -53,7 +53,7 @@ require('./_setup-wizard.scss');
 
       if (SetupWizardService.hasPendingServiceOrder()) {
         var tabsBasedOnPendingLicensesPromise = SetupWizardService.getPendingLicenses().then(function () {
-          shouldShowMeetingsTab = SetupWizardService.hasPendingMeetingLicenses();
+          shouldShowMeetingsTab = SetupWizardService.hasPendingWebExMeetingLicenses();
           hasPendingCallLicenses = SetupWizardService.hasPendingCallLicenses();
           hasPendingLicenses = SetupWizardService.hasPendingLicenses();
         });
