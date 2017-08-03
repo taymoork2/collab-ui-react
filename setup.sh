@@ -42,16 +42,6 @@ if [ -n "$1" ]; then
     esac
 fi
 
-# Check if rvm is installed, otherwise install it
-# rvm --version > /dev/null 2>&1
-# RVM_RET=$?
-# if [ $RVM_RET -ne 0 ]; then
-#     echo "RVM not found, installing:"
-#     \curl -sSL https://get.rvm.io | bash -s stable --ruby
-# else
-#     echo "RVM is already installed"
-# fi
-
 # Check if brew is installed, otherwise install it
 if [ "`uname`" = "Darwin" ]; then
   brew --version > /dev/null 2>&1
@@ -88,16 +78,6 @@ fi
 
 # check for and install GNU Parallel as-appropriate
 install_parallel_as_needed || exit 1
-
-# # Check for cleanup script and run
-# ls -al ./cleanUpManagedOrgs.sh > /dev/null 2>&1
-# CLEANUP_RET=$?
-# if [ $CLEANUP_RET -ne 0 ]; then
-#   echo "cleanup script not found, ignoring cleanup..."
-# else
-#   echo "cleanup script found, running cleanup"
-#   ./cleanUpManagedOrgs.sh
-# fi
 
 time_start=$(date +"%s")
 
