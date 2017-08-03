@@ -37,6 +37,10 @@ var Wizard = function () {
   this.sipDomain = element(by.css('.sip-domain-input'));
   this.sipURLExample = element(by.css('.url-examples-style'));
   this.saveCheckbox = element(by.css('label[for="confirmSaveCheckBox"]'));
+  this.titleBanner = element.all(by.css('[translate="firstTimeWizard.planReview"]')).last();
+  this.callBanner = element(by.css('[translate="firstTimeWizard.unifiedCommunication"]'));
+  this.timeZoneDropdown = element(by.css('.csSelect-container[name="timeZone"]'));
+  this.preferredLanguageDropdown = element(by.css('.csSelect-container[name="preferredLanguage"]'));
 
   this.clickPlanReview = function () {
     utils.click(this.reviewTab);
