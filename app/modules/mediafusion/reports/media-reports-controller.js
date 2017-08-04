@@ -374,7 +374,7 @@
         vm.onpremTooltip = checkForTooltip(vm.onpremShort) ? vm.onprem : '';
         vm.cloudOverflowTooltip = checkForTooltip(vm.second_card_value) ? vm.cloudOverflow : '';
 
-        var overflow = (vm.cloudOverflow == vm.noData) ? 0 : vm.cloudOverflow;
+        var overflow = (vm.cloudOverflow === vm.noData) ? 0 : vm.cloudOverflow;
         vm.overflowPercentage = (overflow / vm.totalcloudcalls) * 100;
         vm.overflowPercentage = _.round(vm.overflowPercentage, 1);
         setOverflowIndicator();
