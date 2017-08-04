@@ -87,6 +87,10 @@ export class SetupWizardService {
     return this.currentOrderNumber;
   }
 
+  public hasTSPAudioPackage() {
+    return _.some(this.pendingLicenses, { offerName: this.Config.offerCodes.TSP });
+  }
+
   private getActingSubscription(): IPendingOrderSubscription {
     return _.find(this.Authinfo.getSubscriptions(), { externalSubscriptionId: this.getActingSubscriptionId() });
   }
@@ -167,6 +171,12 @@ export class SetupWizardService {
     });
   }
 
+  public getTSPPartners() {
+    const url = `${this.UrlConfig.getAdminServiceUrl()}partners/tsp`;
+    return this.$http.get(url).then((response) => {
+      return _.get(response, 'data.tspPartnerList', []);
+    });
+  }
 }
 
 export default angular

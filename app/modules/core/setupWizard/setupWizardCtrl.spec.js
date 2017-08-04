@@ -368,6 +368,19 @@ describe('SetupWizardCtrl', function () {
     });
   });
 
+  describe('When there is a TSP audio license present', function () {
+    beforeEach(function () {
+      this.SetupWizardService.hasPendingServiceOrder.and.returnValue(true);
+      this.SetupWizardService.hasPendingWebExMeetingLicenses.and.returnValue(true);
+      spyOn(this.SetupWizardService, 'hasTSPAudioPackage').and.returnValue(true);
+      this.initController();
+    });
+
+    it('displays the set TSP partner view during meeting setup', function () {
+      this.expectSubStepOrder('meetingSettings', ['siteSetup', 'licenseDistribution', 'setPartnerAudio', 'summary']);
+    });
+  });
+
   it('will filter tabs if onlyShowSingleTab is true', function () {
     this.$controller('SetupWizardCtrl', {
       $scope: this.$scope,
