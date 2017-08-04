@@ -193,7 +193,7 @@
             ng-if="$ctrl.locationSettingsOptions.dialPlan.supportsSimplifiedNationalDialing || $ctrl.locationSettingsOptions.dialPlan.supportsLocalDialing">
             <uc-dialing-setup
               steering-digit="$ctrl.callLocationSettingsData.location.steeringDigit"
-              use-simplified-national-dialing="$ctrl.callLocationSettingsData.location.regionCodeDialing.useSimplifiedNationalDialing"
+              use-simplified-national-dialing="$ctrl.callLocationSettingsData.location.regionCodeDialing.simplifiedNationalDialing"
               supports-simplified-national-dialing="$ctrl.locationSettingsOptions.dialPlan.supportsSimplifiedNationalDialing"
               supports-local-dialing="$ctrl.locationSettingsOptions.dialPlan.supportsLocalDialing"
               region-code="$ctrl.callLocationSettingsData.location.regionCodeDialing.regionCode"
