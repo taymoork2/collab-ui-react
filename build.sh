@@ -56,41 +56,29 @@ function phase_1 {
         tar --keep-newer-files -xf "$BUILD_DEPS_ARCHIVE"
     fi
 
+    # checksums still good, just restore and early out
     # shellcheck disable=SC2154
     echo "[INFO] Inspecting checksums of $manifest_files from last successful build... "
     # shellcheck disable=SC2154
-    checksums_ok=$(is_checksums_ok "$manifest_checksums_file" && echo "true" || echo "false")
-    echo "[INFO] checksums_ok: $checksums_ok"
-    if [ "$checksums_ok" = "true" ]; then
-        echo "[INFO] Install manifests haven't changed and not yet time to refresh, restore soft " \
-            "dependencies..."
-        ./setup.sh --restore
-    else
-        # we want to fresh install npm dependencies
-        echo "[INFO] Running 'setup'..."
-        ./setup.sh
-
-        # setup succeeded
-        # shellcheck disable=SC2181
-        if [ $? -eq 0 ]; then
-            # - regenerate .manifest-checksums
-            echo "[INFO] Generating new manifest checksums file..."
-            mk_checksum_file "$manifest_checksums_file" "$manifest_files"
-
-            # archive dependencies
-            echo "[INFO] Generating new build deps archive for later re-use..."
-            tar -cpf "$BUILD_DEPS_ARCHIVE" \
-                "$manifest_checksums_file" \
-                .cache/npm-deps-for-*.tar.gz
-
-        # setup failed
-        else
-            # setup was triggered because one of the manifest files changed
-            if [ "$checksums_ok" = "false" ]; then
-                exit 1
-            fi
-        fi
+    if is_checksums_ok "$manifest_checksums_file"; then
+        echo "[INFO] Install manifests haven't changed, restore dependencies (keeping all newer files)..."
+        ./setup.sh --restore-soft || exit $?  # <= use 'exit' for errors (ie. terminate the script)
+        return 0                              # <= use 'return' to early out of this function
     fi
+
+    # otherwise fresh install npm dependencies
+    echo "[INFO] Running 'setup'..."
+    ./setup.sh || exit 1
+
+    # regenerate .manifest-checksums
+    echo "[INFO] Generating new manifest checksums file..."
+    mk_checksum_file "$manifest_checksums_file" "$manifest_files"
+
+    # archive dependencies
+    echo "[INFO] Generating new build deps archive for later re-use..."
+    tar -cpf "$BUILD_DEPS_ARCHIVE" \
+        "$manifest_checksums_file" \
+        .cache/npm-deps-for-*.tar.gz
 
     # print top-level node module versions
     npm ls --depth=1
