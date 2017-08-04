@@ -5666,7 +5666,8 @@
       "allOff": "All Off",
       "allOn": "All On",
       "clusterPartiallyInService": "  Cluster Partially in Service",
-      "all": "All"
+      "all": "All",
+      "inThe": "in the"
     },
     "deleteGroup": {
       "message": "Are you sure you want to delete {{groupName}} from Cisco Collaboration Cloud?",

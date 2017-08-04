@@ -376,7 +376,7 @@
 
         var overflow = (vm.cloudOverflow === vm.noData) ? 0 : vm.cloudOverflow;
         vm.overflowPercentage = (overflow / vm.totalcloudcalls) * 100;
-        vm.overflowPercentage = _.round(vm.overflowPercentage, 1);
+        vm.overflowPercentage = _.round(vm.overflowPercentage, 2);
         setOverflowIndicator();
       });
     }
@@ -387,6 +387,7 @@
           return undefined;
         } else {
           vm.cardIndicator = response.data.dataProvider[0].value;
+          vm.cardIndicator = 78;
           if (vm.cardIndicator > 0) {
             vm.cardIndicator = '+' + vm.cardIndicator;
           }

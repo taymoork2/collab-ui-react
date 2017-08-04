@@ -18,7 +18,7 @@
             <i class='icon media-scroll-icon icon-presentation' ng-class="{'no-display': $ctrl.headername != $ctrl.parentcntrl.availabilityCardHeading || !$ctrl.value}" scroll-on-click></i>
           </div>
           <span class="overflow-updown-text" ng-class="{'no-display': $ctrl.parentcntrl.cardIndicator === 0 || $ctrl.headername !== $ctrl.parentcntrl.second_card_heading}">
-            {{$ctrl.parentcntrl.cardIndicator}}<span> in the </span>{{$ctrl.parentcntrl.timeSelected.label}}
+            {{$ctrl.parentcntrl.cardIndicator}}<span><span translate='mediaFusion.metrics.inThe'></span></span>{{$ctrl.parentcntrl.timeSelected.label}}
           </span>
           <div class="spinner-position" ng-if="!$ctrl.value && $ctrl.value !== 0">
             <i class='icon icon-spinner icon-2x'></i>
