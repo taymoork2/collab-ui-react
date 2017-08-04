@@ -41,6 +41,10 @@ var Wizard = function () {
   this.callBanner = element(by.css('[translate="firstTimeWizard.unifiedCommunication"]'));
   this.timeZoneDropdown = element(by.css('.csSelect-container[name="timeZone"]'));
   this.preferredLanguageDropdown = element(by.css('.csSelect-container[name="preferredLanguage"]'));
+  this.extensionLengthWarning = element.all(by.css('[ng-message="minlength"]')).first();
+  this.extensionLengthTrash = element.all(by.css('.icon-trash')).first();
+  this.extensionLengthPrefixInput = element(by.id('beginRange0'));
+  this.extensionLengthSuffixInput = element(by.id('endRange0'));
 
   this.clickPlanReview = function () {
     utils.click(this.reviewTab);
@@ -64,3 +68,4 @@ var Wizard = function () {
 };
 
 module.exports = Wizard;
+
