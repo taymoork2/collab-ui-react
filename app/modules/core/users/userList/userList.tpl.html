@@ -21,7 +21,7 @@
 
   </cs-page-sub-header>
   <div class="user-list__content">
-    <cs-grid grid-api="gridApi" grid-options="gridOptions" spinner="gridRefresh"></cs-grid>
+    <cs-grid grid-api="gridApi" grid-options="gridOptions" spinner="gridRefresh" state="users.list" state-change-function="deselectRow()"></cs-grid>
     <div class="too-many-users" ng-if="activeFilter === 'all' && tooManyUsers">
       <div class="too-many-users__content">
         <p class="h2" translate="usersPage.searchUser"></p>
