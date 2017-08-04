@@ -22,6 +22,7 @@ export default angular
     require('angular-translate'),
     require('modules/huron/telephony/cmiServices'),
     require('modules/core/scripts/services/authinfo'),
+    'call.shared.call-destination-translate',
     memberService,
     featureMemberService,
     numberService,
