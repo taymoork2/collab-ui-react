@@ -78,10 +78,10 @@ function phase_1 {
     echo "[INFO] Generating new build deps archive for later re-use..."
     tar -cpf "$BUILD_DEPS_ARCHIVE" \
         "$manifest_checksums_file" \
-        .cache/npm-deps-for-*.tar.gz
+        ./.cache/npm-deps-for-*.tar.gz
 
-    # print top-level node module versions
-    npm ls --depth=1
+    # dump top-level node module versions for build record
+    yarn list --depth=1 > ./.cache/yarn-list-log
 }
 
 
