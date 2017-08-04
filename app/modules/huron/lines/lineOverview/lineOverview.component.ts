@@ -124,7 +124,7 @@ class LineOverview implements ng.IComponentController {
   public initLineOptions(): void {
     this.FeatureToggleService.supports(this.FeatureToggleService.features.huronMOHEnable)
       .then(supportsMoh => {
-        if (supportsMoh && _.isEqual(this.consumerType, LineConsumerType.USERS)) {
+        if (supportsMoh && (_.isEqual(this.consumerType, LineConsumerType.USERS) || _.isEqual(this.consumerType, LineConsumerType.PLACES))) {
           this.MediaOnHoldService.getLineMohOptions()
           .then(mediaList => {
             this.lineMediaOptions = mediaList;
@@ -341,6 +341,7 @@ class LineOverview implements ng.IComponentController {
     switch (this.ownerType) {
       case 'place': {
         this.consumerType = LineConsumerType.PLACES;
+        this.isUserMohEnabled = true;
         break;
       }
       default: {
