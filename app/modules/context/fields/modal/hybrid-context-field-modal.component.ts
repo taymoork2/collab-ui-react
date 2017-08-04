@@ -508,7 +508,7 @@ class FieldModalCtrl implements ng.IComponentController {
   }
 
   public isSingleSelectCheckPassed(): boolean {
-    if (this.fieldData.dataTypeUI === this.$translate.instant('context.dictionary.dataTypes.enumString')) {
+    if (this.hasContextExpandedTypesToggle && this.fieldData.dataTypeUI === this.$translate.instant('context.dictionary.dataTypes.enumString')) {
       return this.isMinimumOptionsSet() && this.uniqueOptionCheckPassed && this.nonEmptyOptionCheckPassed && this.isNotInSingleSelectEditingMode();
     }
     return true;
@@ -671,7 +671,7 @@ class FieldModalCtrl implements ng.IComponentController {
   }
 
   public displaySingleSelectOptions() {
-    return this.fieldData.dataTypeUI === this.$translate.instant('context.dictionary.dataTypes.enumString');
+    return this.hasContextExpandedTypesToggle && this.fieldData.dataTypeUI === this.$translate.instant('context.dictionary.dataTypes.enumString');
   }
 
   public isDisabledWhenInUse() {

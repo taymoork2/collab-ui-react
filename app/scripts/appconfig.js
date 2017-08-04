@@ -3530,7 +3530,7 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                template: '<context-fields-sidepanel field="$resolve.field" process="$resolve.process" callback="$resolve.callback"></context-fields-sidepanel>',
+                template: '<context-fields-sidepanel field="$resolve.field" process="$resolve.process" callback="$resolve.callback" has-context-expanded-types-toggle="$resolve.hasContextExpandedTypesToggle"></context-fields-sidepanel>',
               },
               'header@context-fields-sidepanel': {
                 templateUrl: 'modules/context/fields/sidepanel/hybrid-context-fields-sidepanel-header.html',
@@ -3543,6 +3543,7 @@
               field: {},
               process: function () {},
               callback: function () {},
+              hasContextExpandedTypesToggle: false,
             },
             resolve: {
               field: /* @ngInject */ function ($stateParams) {
@@ -3553,6 +3554,9 @@
               },
               callback: /* @ngInject */ function ($stateParams) {
                 return $stateParams.callback;
+              },
+              hasContextExpandedTypesToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasContextExpandedTypes);
               },
             },
           })

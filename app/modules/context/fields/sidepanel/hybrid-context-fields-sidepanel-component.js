@@ -14,12 +14,14 @@ var EnumDataTypeUtils = DataTypeDefinition.EnumDataTypeUtils;
         field: '<',
         process: '<',
         callback: '<',
+        hasContextExpandedTypesToggle: '<',
       },
     });
 
   /* @ngInject */
   function ContextFieldsSidepanelCtrl(Analytics, ContextFieldsService, ContextFieldsetsService, Notification, $filter, ModalService, $state, $translate) {
     var vm = this;
+    vm.dateFormat = 'LL';
     vm.associatedFieldsets = [];
     vm.fetchFailure = false;
     vm.fetchInProgress = false;
@@ -85,7 +87,7 @@ var EnumDataTypeUtils = DataTypeDefinition.EnumDataTypeUtils;
     };
 
     vm.isDataTypeWithOptions = function () {
-      return _.get(vm, 'field.dataTypeDefinition.type') === 'enum';
+      return vm.hasContextExpandedTypesToggle ? _.get(vm, 'field.dataTypeDefinition.type') === 'enum' : false;
     };
 
     vm.getOptionSidepanelOptions = function () {
