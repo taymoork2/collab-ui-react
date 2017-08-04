@@ -516,6 +516,7 @@ describe('Controller: Customer Reports Ctrl', function () {
       });
     });
   });
+
   describe('FeatureToggleService returns true for I802', function () {
     beforeEach(function () {
       spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
@@ -530,6 +531,7 @@ describe('Controller: Customer Reports Ctrl', function () {
       });
       this.$scope.$apply();
     });
+
     it('should have details tab present', function() {
       expect(this.controller.ALL).toEqual(this.ctrlData.ALL);
       expect(this.controller.ENGAGEMENT).toEqual(this.ctrlData.ENGAGEMENT);
@@ -537,6 +539,7 @@ describe('Controller: Customer Reports Ctrl', function () {
       expect(this.controller.DETAILS).toEqual(this.ctrlData.DETAILS);
       expect(this.controller.filterArray.length).toEqual(4);
     });
+
     it('resetCards should alter the visible filterArray[x].toggle based on filters equals \'Details\'', function () {
       this.controller.filterArray[3].toggle(this.ctrlData.DETAILS);
       this.SparkReportService.getCDRReport.and.returnValue(this.$q.resolve(this.dummyCdrData));
@@ -544,13 +547,15 @@ describe('Controller: Customer Reports Ctrl', function () {
       expect(this.controller.displayDetails).toBeTruthy();
       expect(this.controller.gridOptions).toBeDefined();
     });
-    it('should gridData have data loaded', function() {
+
+    it('should gridOptions.data have data loaded', function() {
       this.controller.filterArray[3].toggle(this.ctrlData.DETAILS);
       this.SparkReportService.getCDRReport.and.returnValue(this.$q.resolve(this.dummyCdrData));
       this.$scope.$apply();
-      expect(this.controller.gridData.length).toEqual(5);
+      expect(this.controller.gridOptions.data.length).toEqual(5);
     });
   });
+
   describe('FeatureToggleService returns false for I802', function () {
     beforeEach(function () {
       spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
@@ -565,15 +570,16 @@ describe('Controller: Customer Reports Ctrl', function () {
       });
       this.$scope.$apply();
     });
+
     it('should not have details tab present', function() {
       expect(this.controller.filterArray.length).toEqual(3);
       expect(this.controller.displayDetails).toBeFalsy();
     });
-    it('gridData should not have data loaded', function() {
+
+    it('gridOptions.data should not have data loaded', function() {
       this.SparkReportService.getCDRReport.and.returnValue(this.$q.resolve(this.dummyCdrData));
       this.$scope.$apply();
       expect(this.controller.gridOptions).toBeUndefined();
-      expect(this.controller.gridData.length).toEqual(0);
     });
   });
 });

@@ -35,7 +35,7 @@ module.exports = csp({
       'https://qlik-loader',
       'https://10.29.42.18:4244',
       'https://10.29.42.18',
-      'https://*.webex.com',  //Qlik sense sites used for Spark/WebEx Metrics
+      'https://*.webex.com', //Qlik sense sites used for Spark/WebEx Metrics
       'https://*.webex.com:4244',
       'https://*.webex.com:4248',
     ],

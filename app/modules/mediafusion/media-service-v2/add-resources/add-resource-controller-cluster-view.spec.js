@@ -12,7 +12,7 @@ describe('AddResourceControllerClusterViewV2', function () {
       'AddResourceCommonServiceV2',
       'FeatureToggleService',
       'ProPackService'
-      );
+    );
 
     this.jsonData = getJSONFixture('mediafusion/json/delete-cluster.json');
     spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
@@ -22,7 +22,9 @@ describe('AddResourceControllerClusterViewV2', function () {
     spyOn(this.AddResourceCommonServiceV2, 'updateClusterLists').and.returnValue(this.$q.resolve({}));
     spyOn(this.$window, 'open');
 
-    this.$state.modal = { close: _.noop };
+    this.$state.modal = {
+      close: _.noop,
+    };
     this.$state.params = {
       wizard: {},
       firstTimeSetup: false,
@@ -88,7 +90,7 @@ describe('AddResourceControllerClusterViewV2', function () {
   });
 
   it('controller.noProceed should be true for next()', function () {
-    this.controller.radio = 0;
+    this.controller.radio = '0';
     this.controller.noProceed = false;
     this.controller.next();
     expect(this.controller.noProceed).toBe(true);

@@ -46,8 +46,8 @@
                   translate="hercules.activationStatus.{{$ctrl.getStatus($ctrl.userStatusAware)}}"></span>
 
             <span class="cloud-extension-label last-state-change-timestamp"
-                  ng-if="$ctrl.userIsCurrentlyEntitled && $ctrl.userStatusAware && $ctrl.userStatusAware.lastStateChangeText">
-            {{$ctrl.userStatusAware.lastStateChangeText}}
+                  ng-if="$ctrl.userIsCurrentlyEntitled && $ctrl.userStatusAware && $ctrl.lastStateChangeText">
+            {{$ctrl.lastStateChangeText}}
             </span>
 
             <span class="cloud-extension-label status-off"

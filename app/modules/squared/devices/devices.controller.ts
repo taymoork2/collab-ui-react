@@ -7,18 +7,7 @@ import { FilteredDeviceViewDataSource } from './filtered-deviceview-datasource';
 import { DeviceMatcher } from './device-matcher';
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 
-interface ICustomScope extends ng.IScope {
-  gridApi: {
-    selection: {
-      on: {
-        rowSelectionChanged: Function,
-      },
-    },
-  };
-}
-
 export class DevicesController {
-
   public exporting: boolean;
   public filteredView: FilteredView<IDevice>;
   public addDeviceIsDisabled: boolean = true;
@@ -44,7 +33,8 @@ export class DevicesController {
     cisUuid: string;
     organizationId: string
   };
-  private gridOptions: any;
+  public gridOptions: uiGrid.IGridOptions;
+  public gridApi: uiGrid.IGridApi;
 
   constructor(
     private $q: ng.IQService,
@@ -61,7 +51,7 @@ export class DevicesController {
     $timeout: ng.ITimeoutService,
     CsdmDataModelService: ICsdmDataModelService,
     AccountOrgService,
-    $scope: ICustomScope,
+    $scope: ng.IScope,
     CsdmHuronOrgDeviceService,
     private Authinfo,
   ) {
@@ -73,15 +63,15 @@ export class DevicesController {
 
     CsdmDataModelService.subscribeToChanges($scope, () => {
       this.filteredView.refresh();
+      this.gridOptions.data = this.filteredView.getResult();
     });
 
-    CsdmDataModelService.devicePollerOn('data',
-      () => {
-        this.filteredView.refresh();
-      }, {
-        scope: $scope,
-      },
-    );
+    CsdmDataModelService.devicePollerOn('data', () => {
+      this.filteredView.refresh();
+      this.gridOptions.data = this.filteredView.getResult();
+    }, {
+      scope: $scope,
+    });
 
     this.filteredView.setFilters([{
       count: 0,
@@ -127,24 +117,18 @@ export class DevicesController {
       });
 
     this.gridOptions = {
-      data: 'sc.filteredView.getResult()',
-      enableHorizontalScrollbar: 0,
+      data: this.filteredView.getResult(),
       rowHeight: 45,
-      enableRowHeaderSelection: false,
-      enableColumnMenus: false,
-      multiSelect: false,
       onRegisterApi: (gridApi) => {
-        $scope.gridApi = gridApi;
-        gridApi.selection.on.rowSelectionChanged($scope, (row) => {
+        this.gridApi = gridApi;
+        this.gridApi.selection.on.rowSelectionChanged($scope, (row) => {
           this.showDeviceDetails(row.entity);
         });
       },
-
       columnDefs: [{
         field: 'photos',
         displayName: '',
         cellTemplate: this.getTemplate('_imageTpl'),
-        sortable: false,
         width: 70,
       }, {
         field: 'displayName',
@@ -159,7 +143,6 @@ export class DevicesController {
         field: 'state',
         displayName: $translate.instant('spacesPage.statusHeader'),
         cellTemplate: this.getTemplate('_statusTpl'),
-        sortable: true,
         sortingAlgorithm: DevicesController.sortStateFn,
         sort: {
           direction: 'asc',

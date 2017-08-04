@@ -9,7 +9,7 @@ describe('Huron Functional: call-features', () => {
 
   beforeAll(done => {
     provisioner.provisionCustomerAndLogin(customer)
-     .then(done);
+      .then(done);
   });
 
   afterAll(done => {

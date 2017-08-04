@@ -2,8 +2,8 @@
   'use strict';
 
   angular
-      .module('Core')
-      .factory('OverviewCrashLogNotification', OverviewCrashLogNotification);
+    .module('Core')
+    .factory('OverviewCrashLogNotification', OverviewCrashLogNotification);
 
   /* @ngInject */
   function OverviewCrashLogNotification($state, Orgservice, Authinfo) {

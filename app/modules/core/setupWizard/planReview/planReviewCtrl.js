@@ -69,11 +69,6 @@
     }
     vm.showPendingView = vm.hasPendingLicenses;
 
-    // Toggles view between all licenses and new licenses. Defaults to true when user has new licenses.
-    vm.switchViews = function () {
-      vm.showPendingView = !vm.showPendingView;
-    };
-
     vm.hasExistingLicenses = Authinfo.getLicenses().length;
     vm.getNamedLabel = function (label) {
       switch (label) {
@@ -121,7 +116,7 @@
       _.forEach(licenses, function (license) {
         var translatedNameString = 'subscriptions.licenseTypes.' + license.offerName;
         license.displayName = $translate.instant(translatedNameString);
-        if (license.capacity) {
+        if (license.capacity && license.offerName !== 'CF') {
           license.displayName += ' ' + license.capacity;
         }
       });

@@ -60,7 +60,7 @@ describe('Component: meetingSearch', () => {
     this.$scope.$apply();
   }
 
-  it('should show the correct data for the grid when search with enter keyup', function () {
+  xit('should show the correct data for the grid when search with enter keyup', function () {
     const $event = { type: 'keyup', keyCode: 13, which: 13 };
 
     this.SearchService.getMeetings.and.returnValue(this.$q.resolve(this.meetingSearch));
@@ -73,7 +73,7 @@ describe('Component: meetingSearch', () => {
     expect(this.controller.storeData.searchStr).toEqual('355602502');
   });
 
-  it('should show the correct data for the grid when search with email and then trigger blur event', function () {
+  xit('should show the correct data for the grid when search with email and then trigger blur event', function () {
     this.$timeout.flush();
     this.SearchService.getMeetings.and.returnValue(this.$q.resolve(this.meetingSearch));
 
@@ -101,7 +101,7 @@ describe('Component: meetingSearch', () => {
 
   });
 
-  it('should show the tooltip  when search with  emepty data then trigger blur event', function () {
+  xit('should show the tooltip  when search with  emepty data then trigger blur event', function () {
     this.SearchService.getMeetings.and.returnValue(this.$q.resolve(this.meetingSearch));
 
     initComponent.call(this);
@@ -109,7 +109,7 @@ describe('Component: meetingSearch', () => {
     expect(this.controller.gridData.length).toEqual(0);
   });
 
-  it('should show the empty data for the grid when search with incorrect email or incorrect meeting number then trigger blur event', function () {
+  xit('should show the empty data for the grid when search with incorrect email or incorrect meeting number then trigger blur event', function () {
     spyOn(this.$translate, 'instant').and.returnValue('Please enter the correct email or meeting number');
 
     initComponent.call(this);
@@ -118,7 +118,7 @@ describe('Component: meetingSearch', () => {
     expect(this.controller.errMsg.search).toEqual('Please enter the correct email or meeting number');
   });
 
-  it('should updata when change date', function () {
+  xit('should updata when change date', function () {
     spyOn(this.$translate, 'instant').and.returnValue('The start date must not be greater than the end date');
 
     this.SearchService.getMeetings.and.returnValue(this.$q.resolve(this.meetingSearch));
@@ -148,7 +148,7 @@ describe('Component: meetingSearch', () => {
     expect(this.controller.errMsg.datePicker).toEqual('The start date must not be greater than the end date');
   });
 
-  it('should notify in message for non 200 http status', function() {
+  xit('should notify in message for non 200 http status', function() {
     this.SearchService.getMeetings.and.returnValue(this.$q.reject({ status: 404 }));
 
     initComponent.call(this);

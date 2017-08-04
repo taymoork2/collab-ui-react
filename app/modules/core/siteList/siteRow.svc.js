@@ -63,7 +63,7 @@
 
           if (null != siteRow.csvPollIntervalObj) {
             // logMsg = funcName + "\n" +
-              // "siteUrl=" + siteRow.license.siteUrl;
+            // "siteUrl=" + siteRow.license.siteUrl;
             // $log.log(logMsg);
 
             $interval.cancel(siteRow.csvPollIntervalObj);

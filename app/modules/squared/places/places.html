@@ -26,7 +26,7 @@
       </div>
     </div>
     <div ng-if="sc.filteredView.isInState(sc.filteredView.showresult)" id="roomsListPanel" class="row">
-      <div class="gridStyle" ui-grid="sc.gridOptions" ui-grid-selection></div>
+      <cs-grid grid-api="sc.gridApi" grid-options="sc.gridOptions" spinner="false"></cs-grid>
     </div>
     <div ng-if="sc.filteredView.isInState(sc.filteredView.emptysearchresult)">
       <div class="none_found">

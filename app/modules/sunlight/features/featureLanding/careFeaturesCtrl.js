@@ -2,8 +2,8 @@
   'use strict';
 
   angular
-      .module('Sunlight')
-      .controller('CareFeaturesCtrl', CareFeaturesCtrl);
+    .module('Sunlight')
+    .controller('CareFeaturesCtrl', CareFeaturesCtrl);
 
   /* @ngInject */
   function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification) {

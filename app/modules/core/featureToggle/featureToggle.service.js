@@ -162,16 +162,16 @@
             cache: true,
           }).then(function (response) {
             return getFeatureForUser(_.get(response, 'data.id'), feature)
-            .then(function (result) {
-              if (!result) {
-                return getHuronTogglesForCustomer(feature);
-              } else {
-                return result;
-              }
-            }).then(function (toggleValue) {
-              toggles[feature] = toggleValue;
-              resolve(toggleValue);
-            });
+              .then(function (result) {
+                if (!result) {
+                  return getHuronTogglesForCustomer(feature);
+                } else {
+                  return result;
+                }
+              }).then(function (toggleValue) {
+                toggles[feature] = toggleValue;
+                resolve(toggleValue);
+              });
           }).catch(function () {
             return false;
           });

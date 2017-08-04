@@ -13,6 +13,7 @@ import serviceSetupModule from 'modules/huron/serviceSetup';
 import avrilServiceModule from 'modules/huron/avril';
 import terminusServiceName from 'modules/huron/pstn/terminus.service';
 import mediaOnHoldModule from 'modules/huron/media-on-hold';
+import internalNumberRangeServiceModule from 'modules/call/shared/internal-number-range';
 
 export default angular
   .module('huron.settings.services', [
@@ -24,6 +25,7 @@ export default angular
     avrilServiceModule,
     terminusServiceName,
     mediaOnHoldModule,
+    internalNumberRangeServiceModule,
   ])
   .service('HuronSettingsService', HuronSettingsService)
   .service('HuronSettingsOptionsService', HuronSettingsOptionsService)

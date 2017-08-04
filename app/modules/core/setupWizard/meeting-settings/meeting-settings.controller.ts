@@ -1,5 +1,6 @@
 import './_meeting-settings.scss';
-import { IWebExSite, ISiteNameError, IConferenceService, IExistingTrialSites, IWebexLicencesPayload } from './meeting-settings.interface';
+import { IWebExSite, ISiteNameError, IConferenceService, IExistingTrialSites, IWebexLicencesPayload, IPendingLicense } from './meeting-settings.interface';
+import { SetupWizardService } from '../setup-wizard.service';
 
 export class MeetingSettingsCtrl {
   public siteModel: IWebExSite = {
@@ -33,7 +34,7 @@ export class MeetingSettingsCtrl {
     private Notification,
     private TrialTimeZoneService,
     private TrialWebexService,
-    private SetupWizardService,
+    private SetupWizardService: SetupWizardService,
   ) {
     this.init();
   }
@@ -150,12 +151,9 @@ export class MeetingSettingsCtrl {
 
   public enableOrDisableNext() {
     let licensesRemaining = 0;
-    const centerDetails = _.map(this.SetupWizardService.getPendingMeetingLicenses(), (license: any) => {
-      return license.offerName;
-    });
 
-    _.forEach(centerDetails, (center) => {
-      licensesRemaining += this.calculateLicensesRemaining(center);
+    _.forEach(this.centerDetails, (center) => {
+      licensesRemaining += this.calculateLicensesRemaining(center.centerType);
     });
 
     _.set(this.$scope.wizard, 'isNextDisabled', licensesRemaining !== 0);
@@ -174,7 +172,11 @@ export class MeetingSettingsCtrl {
   }
 
   private getWebExMeetingsLicenseTypeDetails() {
-    return _.map(this.SetupWizardService.getPendingMeetingLicenses(), (license: any) => {
+    const meetingCenterLicenses = _.reject(this.SetupWizardService.getPendingMeetingLicenses(), (license: IPendingLicense) => {
+      return license.offerName === 'CF' || license.offerName === 'CMR';
+    });
+
+    return _.map(meetingCenterLicenses, (license: IPendingLicense) => {
       return {
         centerType: license.offerName,
         volume: license.volume,
@@ -200,14 +202,10 @@ export class MeetingSettingsCtrl {
   }
 
   private constructDistributedSitesArray(): void {
-    const centerDetails = _.map(this.SetupWizardService.getPendingMeetingLicenses(), (license: any) => {
-      return license.offerName;
-    });
-
     this.distributedLicensesArray = _.map(this.sitesArray, (site: IWebExSite) => {
-      return _.map(centerDetails, (center) => {
+      return _.map(this.centerDetails, (center) => {
         return {
-          centerType: center,
+          centerType: center.centerType,
           quantity: site.quantity,
           siteUrl: site.siteUrl,
           timezone: site.timezone,
@@ -219,7 +217,7 @@ export class MeetingSettingsCtrl {
   private findExistingWebexTrialSites(): void {
     const conferencingServices = _.filter(this.Authinfo.getConferenceServices(), { license: { isTrial: true } });
     const existingTrials = _.find(conferencingServices, (service: IConferenceService) => {
-      return service.license.offerName === this.Config.offerCodes.EE || service.license.offerName === this.Config.offerCodes.MC;
+      return _.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC, this.Config.offerCodes.CMR], service.license.offerName);
     });
 
     _.forEach(existingTrials, (trial) => {

@@ -9,8 +9,10 @@
     $scope.hasPendingLicenses = SetupWizardService.hasPendingLicenses();
     $scope.sendEmailModel = false;
     $scope.isCustomerLaunchedFromPartner = Authinfo.isCustomerLaunchedFromPartner();
-    $scope.setSendCustomerEmailFlag = function setSendCustomerEmailFlag() {
-      TrialWebexService.setProvisioningWebexSendCustomerEmailFlag($scope.sendEmailModel);
+    $scope.setSendCustomerEmailFlag = setSendCustomerEmailFlag;
+    $scope.orderDetails = {
+      subscriptionId: formatSubscriptionId(SetupWizardService.getActingSubscriptionId()),
+      orderId: SetupWizardService.getCurrentOrderNumber(),
     };
     $scope.initNext = function () {
       var deferred = $q.defer();
@@ -37,6 +39,13 @@
       pushBlankProvisioningCall();
     }
 
+    function setSendCustomerEmailFlag(flag) {
+      if (!_.isBoolean(flag)) {
+        return $q.reject('A boolean must be passed.');
+      }
+      TrialWebexService.setProvisioningWebexSendCustomerEmailFlag(flag);
+    }
+
     function pushBlankProvisioningCall() {
       if (!_.has(SetupWizardService.provisioningCallbacks, 'meetingSettings') && $scope.hasPendingLicenses) {
         var emptyProvisioningCall = {
@@ -51,6 +60,12 @@
 
         SetupWizardService.addProvisioningCallbacks(emptyProvisioningCall);
       }
+    }
+    function formatSubscriptionId(id) {
+      if (id.lastIndexOf('/') !== -1) {
+        return id.slice(0, id.lastIndexOf('/'));
+      }
+      return id;
     }
   }
 })();

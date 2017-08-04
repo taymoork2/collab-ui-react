@@ -635,13 +635,13 @@
         }
       },
         //on 'fail', cancel was clicked and $dismiss will trigger this response
-        function () {
-          //let Analytics know the property type of 'cancel'
-          var type = 'cancel';
-          Analytics.trackEvent(AAMetricNameService.IMPORT_SCHEDULE_FEATURE, {
-            type: type,
-          });
+      function () {
+        //let Analytics know the property type of 'cancel'
+        var type = 'cancel';
+        Analytics.trackEvent(AAMetricNameService.IMPORT_SCHEDULE_FEATURE, {
+          type: type,
         });
+      });
     }
 
     function activate() {

@@ -23,7 +23,7 @@ describe('Huron Functional: e2e-customer-setup', () => {
   beforeAll(done => {
     provisioner.tearDownAtlasCustomer(testPartner, CUSTOMER_NAME);
     provisioner.loginPartner(testPartner)
-    .then(done);
+      .then(done);
   });
   afterAll(done => {
     provisioner.tearDownAtlasCustomer(testPartner, CUSTOMER_NAME).then(done);

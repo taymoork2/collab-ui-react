@@ -44,6 +44,7 @@
       DYNAMIC: 2,
     };
 
+    var uniqueId;
     var holdActionDesc;
     var holdActionValue;
     var dependentCeSessionVariablesList = [];
@@ -56,6 +57,7 @@
     vm.deletedSessionVariablesList = [];
 
     vm.messageInput = '';
+    vm.messageInputPlaceholder = $translate.instant('autoAttendant.sayMessagePlaceholder');
 
     vm.messageOption = {
       label: '',
@@ -262,7 +264,7 @@
     }
 
     function canDynamicListUpdated(dynamicList, range) {
-      return dynamicList.className.includes('dynamic-prompt') && !(dynamicList.id === 'messageType{{schedule + index + menuKeyIndex + menuId}}') && range.collapsed == true;
+      return dynamicList.className.includes('dynamic-prompt') && range.collapsed === true && (_.isEqual(dynamicList.id, uniqueId));
     }
 
     function createDynamicList(dynamicList) {
@@ -344,7 +346,7 @@
           } else if (_.has(vm.actionEntry, 'dynamicList')) {
             _.forEach(vm.actionEntry.dynamicList, function (opt) {
               var model;
-              if (!opt.isDynamic) {
+              if (!opt.isDynamic && _.isEmpty(opt.htmlModel)) {
                 model = {
                   model: opt.say.value,
                   html: opt.say.value,
@@ -368,7 +370,7 @@
         if (_.has(vm.actionEntry, 'dynamicList')) {
           _.forEach(vm.actionEntry.dynamicList, function (opt) {
             var model = {};
-            if (!opt.isDynamic) {
+            if (!opt.isDynamic && _.isEmpty(opt.htmlModel)) {
               model = {
                 model: opt.say.value,
                 html: opt.say.value,
@@ -403,55 +405,55 @@
       switch (vm.messageType) {
         case messageType.MENUHEADER:
         case messageType.SUBMENU_HEADER:
-          {
-            vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
-            var actionHeader = getActionHeader(vm.menuEntry);
-            var action = getAction(actionHeader);
+        {
+          vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
+          var actionHeader = getActionHeader(vm.menuEntry);
+          var action = getAction(actionHeader);
 
-            if (action) {
-              vm.actionEntry = action;
-            }
-            break;
+          if (action) {
+            vm.actionEntry = action;
           }
+          break;
+        }
         case messageType.MENUKEY:
-          {
-            vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
-            if (vm.menuEntry.entries.length > $scope.menuKeyIndex && vm.menuEntry.entries[$scope.menuKeyIndex]) {
-              if ($scope.type) {
-                sourceQueue = vm.menuEntry.entries[$scope.menuKeyIndex];
-                queueAction = sourceQueue.actions[0];
-                sourceMenu = queueAction.queueSettings[$scope.type];
-                vm.actionEntry = getAction(sourceMenu);
-              } else {
-                var keyAction = getAction(vm.menuEntry.entries[$scope.menuKeyIndex]);
-                if (keyAction) {
-                  vm.actionEntry = keyAction;
-                }
-              }
-            }
-
-            break;
-          }
-        case messageType.ACTION:
-          {
-            ui = AAUiModelService.getUiModel();
-            vm.ui = ui;
-            uiMenu = ui[$scope.schedule];
-            vm.menuEntry = uiMenu.entries[$scope.index];
+        {
+          vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
+          if (vm.menuEntry.entries.length > $scope.menuKeyIndex && vm.menuEntry.entries[$scope.menuKeyIndex]) {
             if ($scope.type) {
-              queueAction = _.get(vm.menuEntry, 'actions[0]');
-
-              if (_.get(queueAction, 'name') === conditional) {
-                queueAction = queueAction.then;
-              }
-
+              sourceQueue = vm.menuEntry.entries[$scope.menuKeyIndex];
+              queueAction = sourceQueue.actions[0];
               sourceMenu = queueAction.queueSettings[$scope.type];
               vm.actionEntry = getAction(sourceMenu);
             } else {
-              vm.actionEntry = getAction(vm.menuEntry);
+              var keyAction = getAction(vm.menuEntry.entries[$scope.menuKeyIndex]);
+              if (keyAction) {
+                vm.actionEntry = keyAction;
+              }
             }
-            break;
           }
+
+          break;
+        }
+        case messageType.ACTION:
+        {
+          ui = AAUiModelService.getUiModel();
+          vm.ui = ui;
+          uiMenu = ui[$scope.schedule];
+          vm.menuEntry = uiMenu.entries[$scope.index];
+          if ($scope.type) {
+            queueAction = _.get(vm.menuEntry, 'actions[0]');
+
+            if (_.get(queueAction, 'name') === conditional) {
+              queueAction = queueAction.then;
+            }
+
+            sourceMenu = queueAction.queueSettings[$scope.type];
+            vm.actionEntry = getAction(sourceMenu);
+          } else {
+            vm.actionEntry = getAction(vm.menuEntry);
+          }
+          break;
+        }
       }
     }
 
@@ -460,6 +462,12 @@
     }
 
     function activate() {
+      //type is undefined everywhere except route to cisco spark care
+      var type = _.isUndefined($scope.type) ? '' : $scope.type;
+      //menuKeyIndex and menuId are undefined for most of the places like caller input
+      var menuKeyIndex = _.isUndefined($scope.menuKeyIndex) ? '' : $scope.menuKeyIndex;
+      var menuId = _.isUndefined($scope.menuId) ? '' : $scope.menuId;
+      uniqueId = 'messageType' + $scope.schedule + $scope.index + menuKeyIndex + menuId + type;
       vm.uniqueCtrlIdentifer = AACommonService.makeKey($scope.schedule, AACommonService.getUniqueId());
       if ($scope.isMenuHeader) {
         vm.messageType = messageType.MENUHEADER;

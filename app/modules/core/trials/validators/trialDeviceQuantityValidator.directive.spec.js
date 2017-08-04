@@ -23,7 +23,7 @@ describe('Validator: DeviceQuantityValidator:', function () {
       '$httpBackend'
     );
 
-     //spies
+    //spies
     this.$httpBackend
       .when('GET', 'https://identity.webex.com/identity/scim/null/v1/Users/me')
       .respond({});

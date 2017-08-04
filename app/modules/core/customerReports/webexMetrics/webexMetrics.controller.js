@@ -69,7 +69,7 @@
     var deregister = $scope.$on('selectEnable', function (data) {
       vm.selectEnable = data.defaultPrevented;
     });
-    $scope.$on('$destroy', deregister);  // -- by zoncao@cisco.com for site select
+    $scope.$on('$destroy', deregister); // -- by zoncao@cisco.com for site select
 
     vm.updateWebexMetrics = updateWebexMetrics;
 
@@ -211,9 +211,9 @@
           loadUrlAndIframe(QlikMashupChartsUrl);
         }
       })
-      .catch(function (error) {
-        Notification.errorWithTrackingId(error, 'common.error');
-      });
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'common.error');
+        });
     }
 
     function updateIframe() {

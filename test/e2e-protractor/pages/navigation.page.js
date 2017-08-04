@@ -6,6 +6,7 @@ var Navigation = function () {
   this.body = element(by.tagName('body'));
 
   this.tabs = element(by.css('cs-left-nav'));
+  this.ftswSidePanel = element(by.css('cr-wizard-nav'));
   this.tabCount = element.all(by.repeater('page in pages'));
   this.homeTab = element(by.css('li.overviewTab > a'));
   this.usersTab = element(by.css('li.userTab > a'));

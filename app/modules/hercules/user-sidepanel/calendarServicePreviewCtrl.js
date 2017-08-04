@@ -271,7 +271,7 @@
     $scope.setResourceGroupOnUser = function (resourceGroupId) {
       $scope.resourceGroup.saving = true;
       var props = { userId: $scope.currentUser.id, resourceGroups: { 'squared-fusion-cal': resourceGroupId } };
-      USSService.updateUserProps(props).then(function () {
+      USSService.updateBulkUserProps([props]).then(function () {
         $scope.resourceGroup.current = $scope.resourceGroup.selected;
         $scope.setShouldShowButtons();
         $scope.resourceGroup.cannotFindResouceGroup = false;
