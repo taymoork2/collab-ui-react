@@ -376,7 +376,7 @@
 
         var overflow = (vm.cloudOverflow == vm.noData) ? 0 : vm.cloudOverflow;
         vm.overflowPercentage = (overflow / vm.totalcloudcalls) * 100;
-        vm.overflowPercentage = _.round(vm.overflowPercentage);
+        vm.overflowPercentage = _.round(vm.overflowPercentage, 1);
         setOverflowIndicator();
       });
     }
