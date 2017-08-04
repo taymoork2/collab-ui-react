@@ -421,9 +421,9 @@ require('./helpdesk.scss');
         case 'user':
           vm.currentSearch.userLimit += vm.searchResultsPageSize;
           HelpdeskService.findAndResolveOrgsForUserResults(
-          vm.currentSearch.userSearchResults,
-          vm.currentSearch.orgFilter,
-          vm.currentSearch.userLimit);
+            vm.currentSearch.userSearchResults,
+            vm.currentSearch.orgFilter,
+            vm.currentSearch.userLimit);
           break;
         case 'org':
           vm.currentSearch.orgLimit += vm.searchResultsPageSize;
@@ -498,7 +498,7 @@ require('./helpdesk.scss');
 
         case S:
           var orgLink = JSON.parse(activeElement.find('a')[0]['name']);
-        // TODO: Avoid throwing console error when element not found !
+          // TODO: Avoid throwing console error when element not found !
           if (orgLink) {
             initSearchWithOrgFilter(orgLink);
           }

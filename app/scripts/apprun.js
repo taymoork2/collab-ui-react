@@ -43,18 +43,18 @@
             $state.go('unauthorized');
           } else {
             TOSService.hasAcceptedTOS()
-                .then(function (acceptedTOS) {
-                  if (OnlineUpgradeService.shouldForceUpgrade()) {
-                    e.preventDefault();
-                    OnlineUpgradeService.openUpgradeModal();
-                  } else if (!acceptedTOS) {
-                    e.preventDefault();
-                    TOSService.openTOSModal();
-                  } else if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin() && to.name !== 'firsttimewizard') {
-                    e.preventDefault();
-                    $state.go('firsttimewizard');
-                  }
-                });
+              .then(function (acceptedTOS) {
+                if (OnlineUpgradeService.shouldForceUpgrade()) {
+                  e.preventDefault();
+                  OnlineUpgradeService.openUpgradeModal();
+                } else if (!acceptedTOS) {
+                  e.preventDefault();
+                  TOSService.openTOSModal();
+                } else if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin() && to.name !== 'firsttimewizard') {
+                  e.preventDefault();
+                  $state.go('firsttimewizard');
+                }
+              });
           }
         } else {
           e.preventDefault();
@@ -112,7 +112,7 @@
         Auth.redirectToLogin();
       }
     },
-      Config.tokenTimers.refreshDelay
+    Config.tokenTimers.refreshDelay
     );
 
     $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {

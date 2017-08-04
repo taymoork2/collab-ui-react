@@ -393,7 +393,12 @@ require('./_user-roles.scss');
         if (!_.isEqual(roles, $scope.initialRoles)) {
           return Userservice.patchUserRoles($scope.currentUser.userName, $scope.currentUser.displayName, roles)
             .then(function (response) {
-              $scope.currentUser.roles = response.data.userResponse[0].roles;
+              var userResponse = _.get(response, 'data.userResponse[0]');
+              if (userResponse.httpStatus !== 200 || userResponse.status !== 200) {
+                Notification.errorResponse(response, 'profilePage.patchError');
+              } else {
+                $scope.currentUser.roles = userResponse.roles;
+              }
             });
         }
       }

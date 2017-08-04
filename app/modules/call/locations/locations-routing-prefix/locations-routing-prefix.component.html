@@ -1,0 +1,19 @@
+<div ng-form="routingPrefixForm">
+  <label class="control-label" translate="serviceSetupModal.routingPrefix.title"></label>
+    <div class="row">
+      <input
+        cs-input
+        type="text"
+        id="dialingPrefix"
+        name="dialingPrefix"
+        placeholder="8100"
+        ng-pattern="/^[0-9]*$/"
+        ng-maxlength="7"
+        ng-minlength="1"
+        ng-model="$ctrl.routingPrefix"
+        ng-change="$ctrl.onRoutingPrefixChanged()"
+        cs-input-messages="$ctrl.messages"
+        cs-input-group-size="medium-5"
+        cs-input-help-text="{{::'serviceSetupModal.routingPrefix.exampleHelpText'|translate}}">
+    </div>
+</div>

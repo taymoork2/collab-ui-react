@@ -692,7 +692,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
             activationCode: activationCode,
             expiryTime: expiryTime,
           }));
-          spyOn(USSService, 'updateUserProps').and.returnValue($q.resolve({}));
+          spyOn(USSService, 'updateBulkUserProps').and.returnValue($q.resolve({}));
           initController();
           $scope.$digest();
         });

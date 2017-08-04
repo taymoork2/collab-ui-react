@@ -84,6 +84,24 @@ describe('Controller: MySubscriptionCtrl', function () {
     expect(this.$rootScope.$broadcast).toHaveBeenCalled();
   });
 
+  it('should skip initializing subscriptions with messenger license', function () {
+    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.data.multiSubsOneWithMessengerLicense));
+    // two subscriptions present:
+    // - one with messaging license (offerName: 'MS')
+    // - one with messenger license (offerName: 'MSGR')
+    const responseSubscriptions = this.data.multiSubsOneWithMessengerLicense;
+    expect(responseSubscriptions.length).toBe(2);
+    expect(_.get(responseSubscriptions, '[0].subscriptionId')).toBe('fake-sub-id-0');
+    expect(_.get(responseSubscriptions, '[1].subscriptionId')).toBe('fake-sub-id-1');
+
+    this.startController();
+
+    // the one with (offerName: 'MSGR') is skipped
+    const controllerSubDetails = this.controller.subscriptionDetails;
+    expect(controllerSubDetails.length).toBe(1);
+    expect(_.get(controllerSubDetails, '[0].subscriptionId')).toBe('fake-sub-id-1');
+  });
+
   it('should initialize with expected data for online orgs', function () {
     this.data.subscriptionsResponse[0].internalSubscriptionId = onlineIntSubId;
     this.data.subscriptionsResponse[0].endDate = 'subEndDate';

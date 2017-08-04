@@ -363,169 +363,169 @@ describe('Controller: TrialCtrl:', function () {
       describe('hasEnabledAdvanceCareTrial', function () {
         it('should expect an object with a boolean property named "enabled" as its first arg,' +
           'and an object with a boolean property named "care" as its second arg',
-          function () {
-            var hasEnabledAdvanceCareTrial = helpers.hasEnabledAdvanceCareTrial;
-            expect(hasEnabledAdvanceCareTrial({
-              enabled: true,
-            }, {
-              advanceCare: false,
-            })).toBe(true);
+        function () {
+          var hasEnabledAdvanceCareTrial = helpers.hasEnabledAdvanceCareTrial;
+          expect(hasEnabledAdvanceCareTrial({
+            enabled: true,
+          }, {
+            advanceCare: false,
+          })).toBe(true);
 
-            expect(hasEnabledAdvanceCareTrial({
-              enabled: true,
-            }, {
-              advanceCare: true,
-            })).toBe(false);
+          expect(hasEnabledAdvanceCareTrial({
+            enabled: true,
+          }, {
+            advanceCare: true,
+          })).toBe(false);
 
-            expect(hasEnabledAdvanceCareTrial({
-              enabled: false,
-            }, {
-              advanceCare: false,
-            })).toBe(false);
+          expect(hasEnabledAdvanceCareTrial({
+            enabled: false,
+          }, {
+            advanceCare: false,
+          })).toBe(false);
 
-            expect(hasEnabledAdvanceCareTrial({
-              enabled: false,
-            }, {
-              advanceCare: true,
-            })).toBe(false);
-          });
+          expect(hasEnabledAdvanceCareTrial({
+            enabled: false,
+          }, {
+            advanceCare: true,
+          })).toBe(false);
+        });
       });
 
       describe('hasEnabledCareTrial', function () {
         it('should expect an object with a boolean property named "enabled" as its first arg,' +
           'and an object with a boolean property named "advanceCare" as its second arg',
-          function () {
-            var hasEnabledCareTrial = helpers.hasEnabledCareTrial;
-            expect(hasEnabledCareTrial({
-              enabled: true,
-            }, {
-              care: false,
-            })).toBe(true);
+        function () {
+          var hasEnabledCareTrial = helpers.hasEnabledCareTrial;
+          expect(hasEnabledCareTrial({
+            enabled: true,
+          }, {
+            care: false,
+          })).toBe(true);
 
-            expect(hasEnabledCareTrial({
-              enabled: true,
-            }, {
-              care: true,
-            })).toBe(false);
+          expect(hasEnabledCareTrial({
+            enabled: true,
+          }, {
+            care: true,
+          })).toBe(false);
 
-            expect(hasEnabledCareTrial({
-              enabled: false,
-            }, {
-              care: false,
-            })).toBe(false);
+          expect(hasEnabledCareTrial({
+            enabled: false,
+          }, {
+            care: false,
+          })).toBe(false);
 
-            expect(hasEnabledCareTrial({
-              enabled: false,
-            }, {
-              care: true,
-            })).toBe(false);
-          });
+          expect(hasEnabledCareTrial({
+            enabled: false,
+          }, {
+            care: true,
+          })).toBe(false);
+        });
       });
 
       describe('hasEnabledAnyTrial', function () {
         describe('expects two args: an object with properties of "messageTrial", "meetingTrial", ' +
           '"callTrial", "roomSystemTrial", "careTrial" as its first, and an object with properties' +
           'of "message", "meeting", "call", "roomSystems" and "care" as its second',
-          function () {
-            var _vm, _preset;
+        function () {
+          var _vm, _preset;
 
-            beforeEach(function () {
-              _vm = {
-                messageTrial: {
-                  enabled: false,
-                },
-                meetingTrial: {
-                  enabled: false,
-                },
-                callTrial: {
-                  enabled: false,
-                },
-                roomSystemTrial: {
-                  enabled: false,
-                },
-                sparkBoardTrial: {
-                  enabled: false,
-                },
-                careTrial: {
-                  enabled: false,
-                },
-                advanceCareTrial: {
-                  enabled: false,
-                },
-              };
-              _preset = {
-                message: false,
-                meeting: false,
-                call: false,
-                roomSystems: false,
-                care: false,
-                advanceCare: false,
-              };
-            });
-
-            it('should return true if the "messageTrial.enabled" sub-property on the first arg is true, ' +
-              'and the "message" property on the second arg is false',
-              function () {
-                var hasEnabledAnyTrial = helpers.hasEnabledAnyTrial;
-                _vm.messageTrial.enabled = true;
-                _preset.message = false;
-                expect(hasEnabledAnyTrial(_vm, _preset)).toBe(true);
-              });
-
-            it('should return true if the "meetingTrial.enabled" sub-property on the first arg is true, ' +
-              'and the "meeting" property on the second arg is false',
-              function () {
-                var hasEnabledAnyTrial = helpers.hasEnabledAnyTrial;
-                _vm.meetingTrial.enabled = true;
-                _preset.meeting = false;
-                expect(hasEnabledAnyTrial(_vm, _preset)).toBe(true);
-              });
-
-            it('should return true if the "callTrial.enabled" sub-property on the first arg is true, ' +
-              'and the "call" property on the second arg is false',
-              function () {
-                var hasEnabledAnyTrial = helpers.hasEnabledAnyTrial;
-                _vm.callTrial.enabled = true;
-                _preset.call = false;
-                expect(hasEnabledAnyTrial(_vm, _preset)).toBe(true);
-              });
-
-            it('should return true if the "roomSystemTrial.enabled" sub-property on the first arg is true, ' +
-              'and the "roomSystems" property on the second arg is false',
-              function () {
-                var hasEnabledAnyTrial = helpers.hasEnabledAnyTrial;
-                _vm.roomSystemTrial.enabled = true;
-                _preset.roomSystems = false;
-                expect(hasEnabledAnyTrial(_vm, _preset)).toBe(true);
-              });
-
-            it('should return true if the "sparkBoardTrial.enabled" sub-property on the first arg is true, ' +
-              'and the "roomSystems" property on the second arg is false',
-              function () {
-                var hasEnabledAnyTrial = helpers.hasEnabledAnyTrial;
-                _vm.sparkBoardTrial.enabled = true;
-                _preset.sparkBoard = false;
-                expect(hasEnabledAnyTrial(_vm, _preset)).toBe(true);
-              });
-
-            it('should return true if the "careTrial.enabled" sub-property on the first arg is true, ' +
-              'and the "care" property on the second arg is false',
-              function () {
-                var hasEnabledAnyTrial = helpers.hasEnabledAnyTrial;
-                _vm.careTrial.enabled = true;
-                _preset.care = false;
-                expect(hasEnabledAnyTrial(_vm, _preset)).toBe(true);
-              });
-
-            it('should return true if the "advanceCareTrial.enabled" sub-property on the first arg is true, ' +
-              'and the "advanceCare" property on the second arg is false',
-              function () {
-                var hasEnabledAnyTrial = helpers.hasEnabledAnyTrial;
-                _vm.advanceCareTrial.enabled = true;
-                _preset.advanceCare = false;
-                expect(hasEnabledAnyTrial(_vm, _preset)).toBe(true);
-              });
+          beforeEach(function () {
+            _vm = {
+              messageTrial: {
+                enabled: false,
+              },
+              meetingTrial: {
+                enabled: false,
+              },
+              callTrial: {
+                enabled: false,
+              },
+              roomSystemTrial: {
+                enabled: false,
+              },
+              sparkBoardTrial: {
+                enabled: false,
+              },
+              careTrial: {
+                enabled: false,
+              },
+              advanceCareTrial: {
+                enabled: false,
+              },
+            };
+            _preset = {
+              message: false,
+              meeting: false,
+              call: false,
+              roomSystems: false,
+              care: false,
+              advanceCare: false,
+            };
           });
+
+          it('should return true if the "messageTrial.enabled" sub-property on the first arg is true, ' +
+              'and the "message" property on the second arg is false',
+          function () {
+            var hasEnabledAnyTrial = helpers.hasEnabledAnyTrial;
+            _vm.messageTrial.enabled = true;
+            _preset.message = false;
+            expect(hasEnabledAnyTrial(_vm, _preset)).toBe(true);
+          });
+
+          it('should return true if the "meetingTrial.enabled" sub-property on the first arg is true, ' +
+              'and the "meeting" property on the second arg is false',
+          function () {
+            var hasEnabledAnyTrial = helpers.hasEnabledAnyTrial;
+            _vm.meetingTrial.enabled = true;
+            _preset.meeting = false;
+            expect(hasEnabledAnyTrial(_vm, _preset)).toBe(true);
+          });
+
+          it('should return true if the "callTrial.enabled" sub-property on the first arg is true, ' +
+              'and the "call" property on the second arg is false',
+          function () {
+            var hasEnabledAnyTrial = helpers.hasEnabledAnyTrial;
+            _vm.callTrial.enabled = true;
+            _preset.call = false;
+            expect(hasEnabledAnyTrial(_vm, _preset)).toBe(true);
+          });
+
+          it('should return true if the "roomSystemTrial.enabled" sub-property on the first arg is true, ' +
+              'and the "roomSystems" property on the second arg is false',
+          function () {
+            var hasEnabledAnyTrial = helpers.hasEnabledAnyTrial;
+            _vm.roomSystemTrial.enabled = true;
+            _preset.roomSystems = false;
+            expect(hasEnabledAnyTrial(_vm, _preset)).toBe(true);
+          });
+
+          it('should return true if the "sparkBoardTrial.enabled" sub-property on the first arg is true, ' +
+              'and the "roomSystems" property on the second arg is false',
+          function () {
+            var hasEnabledAnyTrial = helpers.hasEnabledAnyTrial;
+            _vm.sparkBoardTrial.enabled = true;
+            _preset.sparkBoard = false;
+            expect(hasEnabledAnyTrial(_vm, _preset)).toBe(true);
+          });
+
+          it('should return true if the "careTrial.enabled" sub-property on the first arg is true, ' +
+              'and the "care" property on the second arg is false',
+          function () {
+            var hasEnabledAnyTrial = helpers.hasEnabledAnyTrial;
+            _vm.careTrial.enabled = true;
+            _preset.care = false;
+            expect(hasEnabledAnyTrial(_vm, _preset)).toBe(true);
+          });
+
+          it('should return true if the "advanceCareTrial.enabled" sub-property on the first arg is true, ' +
+              'and the "advanceCare" property on the second arg is false',
+          function () {
+            var hasEnabledAnyTrial = helpers.hasEnabledAnyTrial;
+            _vm.advanceCareTrial.enabled = true;
+            _preset.advanceCare = false;
+            expect(hasEnabledAnyTrial(_vm, _preset)).toBe(true);
+          });
+        });
       });
 
       describe('helper functions for Care:', function () {

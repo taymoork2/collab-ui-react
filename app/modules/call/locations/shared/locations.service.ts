@@ -31,12 +31,14 @@ export class LocationsService {
       },
     };
 
-    this.locationListResource = <ILocationResource>this.$resource(`${this.HuronConfig.getCmiV2Url()}/customers/:customerId/locations`, {}, {});
+    this.locationListResource = <ILocationResource>this.$resource(`${this.HuronConfig.getCmiV2Url()}/customers/:customerId/locations`, {},
+      {
+        save: saveAction,
+      });
     this.userLocationDetailResource = <IUserLocationDetailResource>this.$resource(`${this.HuronConfig.getCmiV2Url()}/customers/:customerId/users/:userId`, {}, {});
     this.locationDetailResource = <ILocationDetailResource>this.$resource(`${this.HuronConfig.getCmiV2Url()}/customers/:customerId/locations/:locationId`, {},
       {
         update: updateAction,
-        save: saveAction,
       });
   }
 
@@ -46,7 +48,6 @@ export class LocationsService {
       wide: true,
     }).$promise.then(locations => {
       return _.map(_.get<IRLocationListItem[]>(locations, 'locations', []), location => {
-        // return _.pick(location, this.locationListItemPickList);
         return new LocationListItem(location);
       });
     });
@@ -69,7 +70,7 @@ export class LocationsService {
   }
 
   public createLocation(location: Location): ng.IPromise<string> {
-    const locationHeader: string = '';
+    let locationHeader: string;
     return this.locationListResource.save({
       customerId: this.Authinfo.getOrgId(),
     }, {
@@ -88,7 +89,7 @@ export class LocationsService {
       callerIdNumber: location.callerIdNumber,
     },
     (_response, headers) => {
-      location = headers('Location');
+      locationHeader = headers('Location');
     }).$promise
     .then(() => locationHeader);
   }

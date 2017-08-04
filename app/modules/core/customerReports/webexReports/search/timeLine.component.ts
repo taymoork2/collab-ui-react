@@ -1,6 +1,7 @@
 import './_timeline.scss';
 import * as d3 from 'd3';
 import * as moment from 'moment';
+import { SearchService } from './searchService';
 
 class TimeLine implements ng.IComponentController {
 
@@ -16,6 +17,7 @@ class TimeLine implements ng.IComponentController {
 
   /* @ngInject */
   public constructor(
+    private SearchService: SearchService,
     private $element: ng.IRootElementService,
   ) {
     this.data = {
@@ -221,10 +223,10 @@ class TimeLine implements ng.IComponentController {
       d3.select(`#${id}`)
         .on('mouseover', () => {
           this.tip.classed('Tooltip-bottom', true);
-          const template = `<p>User name: ${item.userName}</p>
+          const template = `<p>User Name: ${item.userName}</p>
           <p>Platform: ${item.platform ? platform[item.platform] : 'N/A'}</p>
-          <p>Join Meeting Time: ${item.jmtQuality ? item.jmtQuality : 'N/A'}</p>
-          <p>Meeting Quality: ${item.dataQuality ? item.dataQuality : 'N/A'}</p>`;
+          <p>Join Meeting Time: ${item.joinMeetingTime ? item.joinMeetingTime : 'N/A'}</p>
+          <p>Meeting Quality: ${item.latency ? item.latency : 'N/A'}</p>`;
           this.tip.html(template);
           const tipWidth = this.tip.style('width').replace('px', '');
           const tipHeight = this.tip.style('height').replace('px', '');
@@ -333,14 +335,13 @@ class TimeLine implements ng.IComponentController {
 
       if (colorObj[key]['jmtQuality']) {
         const qa = _.parseInt(colorObj[key]['jmtQuality']) - 1;
-        item.jmtQuality = this.tips[qa].text;
+        item.joinMeetingTime = colorObj[key].joinMeetingTime + ' Seconds';
         d3.select(`#myDot${key}`).style('fill', this.colorArr[qa]);
-
       }
 
       if (colorObj[key]['dataQuality']) {
         const qa = _.parseInt(colorObj[key]['dataQuality']) - 1;
-        item.dataQuality = this.tips[qa].text;
+        item.latency = colorObj[key].latency + ' Seconds';
         d3.select(`#myLine${key}`).attr('stroke', this.colorArr[qa]);
       }
     });
@@ -361,7 +362,9 @@ class TimeLine implements ng.IComponentController {
   }
 
   private timestampToDate(timestamp): Date {
-    const dateStr = moment(timestamp).utc().format('YYYY-MM-DD HH:mm:ss');
+    const timeZone: any = this.SearchService.getStorage('timeZone');
+    const utcTime = moment(timestamp).utc().format('YYYY-MM-DD HH:mm:ss');
+    const dateStr = moment(utcTime).tz(timeZone).format('YYYY-MM-DD HH:mm:ss');
     return moment(dateStr).toDate();
   }
 

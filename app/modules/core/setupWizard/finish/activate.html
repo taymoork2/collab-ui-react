@@ -1,3 +1,11 @@
+<div class="order-and-subscription-numbers">
+  <div ng-if="hasPendingLicenses">
+    <span translate="firstTimeWizard.orderNumber"></span><span>{{orderDetails.orderId}}</span>
+  </div>
+  <div>
+    <span translate="firstTimeWizard.subscriptionID"></span><span>{{orderDetails.subscriptionId}}</span>
+  </div>
+</div>
 <div class="activate-page">
   <div class="activate-page__section">
     <p class="activate-page__header" translate="firstTimeWizard.activateAndBeginBilling"></p>

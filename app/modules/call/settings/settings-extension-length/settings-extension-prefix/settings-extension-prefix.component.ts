@@ -30,7 +30,7 @@ class ExtensionPrefixCtrl implements ng.IComponentController {
 
   public save(): void {
     this.processing = true;
-    this.HuronSettingsService.saveExtensionLengthIncrease(this.newExtensionLength, this.extensionPrefix)
+    this.HuronSettingsService.saveExtensionLengthIncrease(Number(this.newExtensionLength), Number(this.extensionPrefix))
       .then(() => {
         this.Notification.success('serviceSetupModal.extensionLengthSaveSuccess');
         this.close();

@@ -2630,8 +2630,8 @@
             resolve: {
               data: /* @ngInject */ function ($state, $stateParams) {
                 $state.get('customerPstnOrdersOverview.orderDetail').data.displayName = $stateParams.vendor === 'BYOPSTN' ?
-                                                                                        $stateParams.currentOrder.formattedDate :
-                                                                                        $stateParams.currentOrder.carrierOrderId;
+                  $stateParams.currentOrder.formattedDate :
+                  $stateParams.currentOrder.carrierOrderId;
               },
               lazy: resolveLazyLoad(function (done) {
                 require(['modules/huron/pstn/pstnOrderManagement/orderDetail'], done);
@@ -2659,8 +2659,8 @@
             resolve: {
               data: /* @ngInject */ function ($state, $translate, $stateParams) {
                 $state.get('customer-overview.orderDetail').data.displayName = $stateParams.isCarrierByopstn ?
-                                                                                        $stateParams.currentOrder.formattedDate :
-                                                                                        $stateParams.currentOrder.carrierOrderId;
+                  $stateParams.currentOrder.formattedDate :
+                  $stateParams.currentOrder.carrierOrderId;
               },
               lazy: resolveLazyLoad(function (done) {
                 require(['modules/huron/pstn/pstnOrderManagement/orderDetail'], done);
@@ -3490,6 +3490,21 @@
               },
               callback: /* @ngInject */ function ($stateParams) {
                 return $stateParams.callback;
+              },
+            },
+          })
+          .state('context-fields-sidepanel.options', {
+            template: '<context-field-sidepanel-options-list type-definition="$resolve.dataTypeDefinition" default-option="{{::$resolve.defaultOption}}"></context-field-sidepanel-options-list>',
+            params: {
+              dataTypeDefinition: {},
+              defaultOption: undefined,
+            },
+            resolve: {
+              dataTypeDefinition: /* @ngInject */ function ($stateParams) {
+                return $stateParams.dataTypeDefinition;
+              },
+              defaultOption: /* @ngInject */ function ($stateParams) {
+                return $stateParams.defaultOption;
               },
             },
           })

@@ -61,11 +61,11 @@
       };
       MediaClusterServiceV2
         .setProperties($stateParams.id, vm.payLoad)
-          .then(function () {
-            Notification.success('mediaFusion.sipconfiguration.success');
-          }, function (err) {
-            Notification.errorWithTrackingId(err, 'hercules.genericFailure');
-          });
+        .then(function () {
+          Notification.success('mediaFusion.sipconfiguration.success');
+        }, function (err) {
+          Notification.errorWithTrackingId(err, 'hercules.genericFailure');
+        });
     }
   }
 })();

@@ -1,10 +1,10 @@
 import { SearchService } from './searchService';
+import { CustTimeLineComponent } from './timeLine.component';
+import { CustTimeZoneComponent } from './timeZone.component';
 import notifications from 'modules/core/notifications/index';
 import { CustWebexReportsMoreComponent } from './webexReportsMore.component';
 import { CustWebexReportsPanelComponent } from './webexReportsPanel.component';
 import { CustWebexReportsSearchComponent } from './webexReportsSearch.component';
-
-import { CustTimeLineComponent } from './timeLine.component';
 
 export default angular
   .module('reports.webex.search', [
@@ -15,6 +15,7 @@ export default angular
   ])
   .service('SearchService', SearchService)
   .component('custTimeLine', new CustTimeLineComponent())
+  .component('custTimeZone', new CustTimeZoneComponent())
   .component('custWebexReportsMore', new CustWebexReportsMoreComponent())
   .component('custWebexReportsPanel', new CustWebexReportsPanelComponent())
   .component('custWebexReportsSearch', new CustWebexReportsSearchComponent())

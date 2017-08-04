@@ -2,7 +2,7 @@
 
 describe('Controller: Spark Metrics Ctrl', function () {
   beforeEach(function () {
-    this.initModules('core.customer-reports', 'Core');  // 'Core' included for Userservice
+    this.initModules('core.customer-reports', 'Core'); // 'Core' included for Userservice
     this.injectDependencies(
       '$controller',
       '$q',

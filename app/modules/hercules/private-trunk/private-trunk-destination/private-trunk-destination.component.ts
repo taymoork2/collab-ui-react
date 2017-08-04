@@ -1,7 +1,7 @@
 import { PrivateTrunkPrereqService } from 'modules/hercules/private-trunk/private-trunk-prereq/private-trunk-prereq.service';
 import { PrivateTrunkResource, Destination } from 'modules/hercules/private-trunk/private-trunk-setup/private-trunk-setup';
 import { PrivateTrunkService } from 'modules/hercules/private-trunk/private-trunk-services';
-import { USSService } from 'modules/hercules/services/uss-service';
+import { USSService } from 'modules/hercules/services/uss.service';
 
 export interface IDestination {
   address: string;

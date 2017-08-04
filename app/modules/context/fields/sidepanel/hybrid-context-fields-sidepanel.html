@@ -58,6 +58,22 @@
           <span class="feature-details">{{$ctrl.field.dataTypeUI}}</span>
         </div>
 
+        <!-- options list -->
+        <div ng-if="$ctrl.isDataTypeWithOptions()" class="feature">
+          <!-- shown if there are options -->
+          <a
+            ng-if="$ctrl.getOptionCount() > 0"
+            ui-sref="context-fields-sidepanel.options($ctrl.getOptionSidepanelOptions())"
+          >
+            <span class="feature-name field-label" translate="context.dictionary.fieldPage.optionsLabel"></span>
+            <span class="feature-status">{{$ctrl.getOptionCount()}}</span>
+            <i class="feature-arrow"></i>
+          </a>
+          <!-- shown if there are no options -->
+          <span class="feature-name field-label" ng-if="$ctrl.getOptionCount() === 0" translate="context.dictionary.fieldPage.optionsLabel"></span>
+          <span class="feature-details" ng-if="$ctrl.getOptionCount() === 0" translate="common.none"></span>
+        </div>
+
         <div class="feature">
           <span class="feature-name" translate="context.dictionary.fieldPage.classification"></span>
           <span class="feature-details">{{$ctrl.field.classificationUI}}</span>

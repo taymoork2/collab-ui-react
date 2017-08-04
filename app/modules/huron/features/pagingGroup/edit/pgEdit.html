@@ -9,7 +9,7 @@
 </script>
 
 <div class="save-section pg-save" ng-if="$ctrl.formChanged">
-  <p>{{:: 'pagingGroup.saveLabel' | translate}}</p>
+  <p>{{:: 'common.saveLabel' | translate}}</p>
   <button ng-click="$ctrl.onCancel()">{{:: 'common.cancel' | translate}}</button>
   <button class="btn btn--primary" cs-btn loading="$ctrl.saveInProgress" ng-click="$ctrl.saveForm()" ng-disabled="$ctrl.showDisableSave()">{{:: 'common.save' | translate}}
   </button>

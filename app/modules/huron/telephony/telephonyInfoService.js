@@ -348,30 +348,30 @@
       }];
 
       return ExternalNumberPool.getExternalNumbers(
-          Authinfo.getOrgId(),
-          pattern,
-          ExternalNumberPool.UNASSIGNED_NUMBERS,
+        Authinfo.getOrgId(),
+        pattern,
+        ExternalNumberPool.UNASSIGNED_NUMBERS,
 
         // Defaults to loading regular DID numbers only, if numberType is not specified.
         // Toll-Free numbers should only be available for Auto Attendant and Hunt Groups.
-          numberType || ExternalNumberPool.FIXED_LINE_OR_MOBILE
-        ).then(function (extPool) {
-          _.forEach(extPool, function (externalNumber) {
-            externalNumberPool.push({
-              uuid: externalNumber.uuid,
-              pattern: externalNumber.pattern,
-            });
+        numberType || ExternalNumberPool.FIXED_LINE_OR_MOBILE
+      ).then(function (extPool) {
+        _.forEach(extPool, function (externalNumber) {
+          externalNumberPool.push({
+            uuid: externalNumber.uuid,
+            pattern: externalNumber.pattern,
           });
-
-          // Adds currently assigned number to the list of selectable external numbers
-          if (telephonyInfo.alternateDirectoryNumber.uuid !== 'none') {
-            externalNumberPool.push(telephonyInfo.alternateDirectoryNumber);
-          }
-          return _.cloneDeep(externalNumberPool);
-        }).catch(function (response) {
-          externalNumberPool = [];
-          return $q.reject(response);
         });
+
+        // Adds currently assigned number to the list of selectable external numbers
+        if (telephonyInfo.alternateDirectoryNumber.uuid !== 'none') {
+          externalNumberPool.push(telephonyInfo.alternateDirectoryNumber);
+        }
+        return _.cloneDeep(externalNumberPool);
+      }).catch(function (response) {
+        externalNumberPool = [];
+        return $q.reject(response);
+      });
     }
 
     function loadExtPoolWithMapping(count, numberType) {

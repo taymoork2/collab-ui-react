@@ -58,12 +58,12 @@
 
     function getClusterList() {
       HybridServicesClusterService.getAll()
-      .then(function (clusters) {
-        vm.clusters = _.filter(clusters, {
-          targetType: 'mf_mgmt',
+        .then(function (clusters) {
+          vm.clusters = _.filter(clusters, {
+            targetType: 'mf_mgmt',
+          });
+          deferred.resolve(vm.clusters);
         });
-        deferred.resolve(vm.clusters);
-      });
       return deferred.promise;
     }
 

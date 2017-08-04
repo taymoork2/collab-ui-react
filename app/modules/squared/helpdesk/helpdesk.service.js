@@ -506,7 +506,7 @@
       if (useMock()) {
         return deferredResolve(HelpdeskMockData.userStatuses);
       }
-      return USSService.getStatusesForUserInOrg(userId, orgId);
+      return USSService.getStatusesForUser(userId, orgId);
     }
 
     function deferredResolve(resolved) {

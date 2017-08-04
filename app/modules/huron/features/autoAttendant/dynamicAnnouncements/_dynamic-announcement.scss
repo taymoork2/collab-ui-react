@@ -1,5 +1,8 @@
 .aa-cancel-span {
   @include vr-spacing(pr, 0);
+  position: absolute;
+  right: 0.25rem;
+  top: 0rem;
 }
 
 .aa-insertion-element.aa-insertion-element {
@@ -13,9 +16,10 @@
   border-radius: 3px;
   border: 1px solid;
   border-color: $brand-primary;
+  position: relative;
 
-  .insertion-element {
-    @include vr-spacing(pr, 0);
+  .insertion-element.insertion-element {
+    padding-right: 1.5rem;
     color: $white;
     font-weight: bold;
     font-size: 1rem;

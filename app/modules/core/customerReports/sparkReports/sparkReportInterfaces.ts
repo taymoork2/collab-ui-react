@@ -59,6 +59,11 @@ export interface IConversation extends IGraphBase {
   groupRooms: number;
 }
 
+export interface IConversationPopulated {
+  files: boolean;
+  rooms: boolean;
+}
+
 export interface IConversationWrapper {
   array: IConversation[];
   hasRooms: boolean;

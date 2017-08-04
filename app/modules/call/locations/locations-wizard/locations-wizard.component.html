@@ -102,17 +102,11 @@
               </uc-routing-prefix>
             </div>
             <div class="sub-section">
-              <uc-extension-length
-                first-time-setup="true"
-                extension-length="$ctrl.huronSettingsData.customerVoice.routingPrefixLength"
-                on-change-fn="$ctrl.onExtensionLengthChanged(extensionLength)">
-              </uc-extension-length>
-            </div>
-            <div class="sub-section">
               <uc-extension-range
-                number-ranges="$ctrl.locationDetail.internalNumberRanges"
-                site="$ctrl.locationDetail"
-                first-time-setup="$ctrl.ftsw"
+                steering-digit="$ctrl.locationDetail.steeringDigit"
+                extension-length="$ctrl.huronSettingsData.customerVoice.extensionLength"
+                number-ranges="$ctrl.huronSettingsData.internalNumberRanges"
+                first-time-setup="false"
                 on-change-fn="$ctrl.onExtensionRangeChanged(extensionRanges)">
               </uc-extension-range>
             </div>
@@ -166,7 +160,7 @@
         <!-- Address Validating -->
         <div class="section" ng-class="$ctrl.animation" ng-if="$ctrl.getPageIndex() === 6">
           <div class="section__content">
-            <h4 translate="locations.emergencyServicesTitle"></h4>
+            <h4 class="left-indent" translate="locations.emergencyServicesTitle"></h4>
             <div ng-if="!$ctrl.addressValidating && $ctrl.addressValidated !== true">
               <hr-service-address
                 address="$ctrl.address"

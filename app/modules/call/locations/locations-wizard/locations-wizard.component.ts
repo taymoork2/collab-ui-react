@@ -22,6 +22,7 @@ export class LocationsWizardComponent {
 const PAGE_ESA: number = 6;
 
 class LocationsWizardController implements ng.IComponentController {
+  public ftsw: boolean = false; //Used for child components
   public addressFound: boolean;
   public form: ng.IFormController;
   public siteId: string;
@@ -48,6 +49,7 @@ class LocationsWizardController implements ng.IComponentController {
   public voicemailToEmail: boolean = false;  //TODO: KPC What is this for?
 
   private lastIndex = 6;
+
   /* @ngInject */
   constructor(private $timeout: ng.ITimeoutService,
               private $element: ng.IRootElementService,
@@ -95,7 +97,10 @@ class LocationsWizardController implements ng.IComponentController {
 
     //Use default site for now
     this.HuronSettingsService.get('')
-    .then(huronSettingsData => this.huronSettingsData = huronSettingsData)
+    .then((huronSettingsData: HuronSettingsData) => {
+      this.huronSettingsData = huronSettingsData;
+      this.locationDetail.preferredLanguage = this.huronSettingsData.site.preferredLanguage;
+    })
     .catch(response => this.Notification.errorResponse(response));
 
     this.locationDetail = new Location();
@@ -110,6 +115,13 @@ class LocationsWizardController implements ng.IComponentController {
     .catch(response => {
       this.Notification.errorResponse(response);
     });
+  }
+
+  public isExtensionLengthSet() {
+    if (_.isNumber(this.huronSettingsData.customerVoice.extensionLength)) {
+      return true;
+    }
+    return false;
   }
 
   public onTimeZoneChanged(timeZone) {
@@ -274,7 +286,7 @@ class LocationsWizardController implements ng.IComponentController {
     }
   }
 
-  private saveLocation() {
+  private saveLocation(): void {
     this.LocationsService.createLocation(this.locationDetail)
     .then(() => this.$state.go('call-locations'))
     .catch((error) => this.Notification.errorResponse(error, 'locations.createFailed'));

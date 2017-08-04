@@ -448,12 +448,12 @@
             EdiscoveryNotificationService.notify(report);
             vm.isReportComplete = true;
           })
-          .catch(function () {
-            Notification.error('ediscovery.encryption.unableGetPassword');
-          })
-          .finally(function () {
-            vm.isReportComplete = true;
-          });
+            .catch(function () {
+              Notification.error('ediscovery.encryption.unableGetPassword');
+            })
+            .finally(function () {
+              vm.isReportComplete = true;
+            });
         }
       });
     }

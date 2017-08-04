@@ -2,8 +2,8 @@
   'use strict';
 
   angular
-  .module('uc.autoattendant')
-  .controller('AADecisionCtrl', AADecisionCtrl);
+    .module('uc.autoattendant')
+    .controller('AADecisionCtrl', AADecisionCtrl);
 
   /* @ngInject */
   function AADecisionCtrl($scope, $translate /*, QueueHelperService*/, AACommonService, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AASessionVariableService) {

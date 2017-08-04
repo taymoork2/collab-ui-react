@@ -103,8 +103,8 @@ describe('Controller: DisableMediaServiceController', function () {
       }],
     }];
     spyOn(HybridServicesClusterService, 'getAll').and.returnValue($q.resolve(
-        clusters
-      ));
+      clusters
+    ));
     controller.getClusterList();
     httpMock.verifyNoOutstandingExpectation();
     expect(HybridServicesClusterService.getAll).toHaveBeenCalled();

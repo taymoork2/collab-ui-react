@@ -152,27 +152,27 @@ exports.deleteTestAAs = function (bearer, data) {
 
 exports.deleteRouteToQueue = function () {
   helper.getBearerToken('aa-admin')
-   .then(function (bearer) {
-     var options = {
-       method: 'delete',
-       url: config.getAutoAttendantQueueUrl(helper.auth['aa-admin'].org),
-       headers: {
-         'Content-Type': 'application/json',
-         'Authorization': 'Bearer ' + bearer,
-       },
-     };
+    .then(function (bearer) {
+      var options = {
+        method: 'delete',
+        url: config.getAutoAttendantQueueUrl(helper.auth['aa-admin'].org),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + bearer,
+        },
+      };
 
-     return utils.sendRequest(options)
-     .then(function () {
-       return 200;
-     })
+      return utils.sendRequest(options)
+        .then(function () {
+          return 200;
+        })
         .catch(function (response) {
-     // Ignore 404 errors, otherwise reject with error
+          // Ignore 404 errors, otherwise reject with error
           if (_.get(response, 'statusCode') !== 404) {
             return Promise.reject(response);
           }
         });
-   });
+    });
 };
 
 
