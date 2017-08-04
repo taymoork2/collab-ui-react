@@ -60,16 +60,8 @@ function phase_1 {
     echo "[INFO] Inspecting checksums of $manifest_files from last successful build... "
     # shellcheck disable=SC2154
     checksums_ok=$(is_checksums_ok "$manifest_checksums_file" && echo "true" || echo "false")
-
-    echo "[INFO] Checking if it is time to refresh..."
-    min_refresh_period=$(( 60 * 60 * 24 ))  # 24 hours
-    # shellcheck disable=SC2154
-    time_to_refresh=$(is_time_to_refresh $min_refresh_period "$last_refreshed_file" \
-        && echo "true" || echo "false")
-
     echo "[INFO] checksums_ok: $checksums_ok"
-    echo "[INFO] time_to_refresh: $time_to_refresh"
-    if [ "$checksums_ok" = "true" ] && [ "$time_to_refresh" = "false" ]; then
+    if [ "$checksums_ok" = "true" ]; then
         echo "[INFO] Install manifests haven't changed and not yet time to refresh, restore soft " \
             "dependencies..."
         ./setup.sh --restore
@@ -85,14 +77,9 @@ function phase_1 {
             echo "[INFO] Generating new manifest checksums file..."
             mk_checksum_file "$manifest_checksums_file" "$manifest_files"
 
-            # - regenerate .last-refreshed
-            echo "[INFO] Generating new last-refreshed file..."
-            mk_last_refreshed_file "$last_refreshed_file"
-
             # archive dependencies
             echo "[INFO] Generating new build deps archive for later re-use..."
             tar -cpf "$BUILD_DEPS_ARCHIVE" \
-                "$last_refreshed_file" \
                 "$manifest_checksums_file" \
                 .cache/npm-deps-for-*.tar.gz
 
@@ -100,17 +87,6 @@ function phase_1 {
         else
             # setup was triggered because one of the manifest files changed
             if [ "$checksums_ok" = "false" ]; then
-                exit 1
-            fi
-
-            # setup was triggered only because refresh window has expired
-            if [ "$time_to_refresh" = "true" ]; then
-                echo "[INFO] 'setup.sh' failed, but was triggered only because the refresh window " \
-                    "expired, falling back to recent successfully built dependencies..."
-                # re-use deps from previous successful build (if possible)
-                ./setup.sh --restore
-            else
-                # refresh window hasn't expired
                 exit 1
             fi
         fi
