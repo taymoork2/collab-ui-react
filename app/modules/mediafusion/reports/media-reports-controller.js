@@ -387,7 +387,6 @@
           return undefined;
         } else {
           vm.cardIndicator = response.data.dataProvider[0].value;
-          vm.cardIndicator = 78;
           if (vm.cardIndicator > 0) {
             vm.cardIndicator = '+' + vm.cardIndicator;
           }
