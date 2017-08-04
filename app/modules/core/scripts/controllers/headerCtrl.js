@@ -12,6 +12,7 @@
     vm.showOrgName = showOrgName;
     vm.showUserDropDown = showUserDropDown;
     vm.showMyCompany = showMyCompany;
+    vm.isEnterpriseCustomer = Authinfo.isEnterpriseCustomer();
     init();
 
     function init() {

@@ -189,7 +189,8 @@
 
   .pro-pack-card {
     .category-icon {
-      font-size: vr-adjust(20);
+      color: $color-blue-base !important;
+      top: 0 !important;
     }
 
     .category-icon,

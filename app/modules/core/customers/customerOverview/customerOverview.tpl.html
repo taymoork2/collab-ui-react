@@ -4,6 +4,7 @@
       <div class="header-info-wrap">
         <div class="header-title">
           <span>{{customerOverview.currentCustomer.customerName}}</span>
+            <span ng-if="customerOverview.currentCustomer.isPremium && customerOverview.isProPackEnabled" class="badge badge--outline primary premium" translate="common.pro"></span>
         </div>
       </div>
     </div>
@@ -13,11 +14,7 @@
       <cs-sp-buttons ng-show="customerOverview.form.$dirty || CustomerOverview.saved">
         <button class="btn btn--primary" ng-click="customerOverview.saveLogoSettings()" type="submit" translate="common.save"></button>
         <button ng-click="customerOverview.reset()" translate="common.cancel"></button>
-      </cs-sp-buttons>
-      <div class="premium" ng-if="customerOverview.currentCustomer.isPremium && customerOverview.isProPackEnabled">
-        <i class="icon icon-certified premium-customer-icon"></i>
-        <div class="premium-customer" translate="customerPage.premiumCustomer"></div>
-      </div>
+      </cs-sp-buttons> 
       <button cs-btn loading="customerOverview.loadingCustomerPortal" id="launchCustomer" ng-if="!customerOverview.isOwnOrg()" class="btn btn--people"
         ng-disabled="!customerOverview.currentCustomer.isAllowedToManage && !customerOverview.isPartnerAdmin"
         ng-click="customerOverview.launchCustomerPortal()">

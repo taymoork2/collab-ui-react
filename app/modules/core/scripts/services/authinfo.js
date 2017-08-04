@@ -267,7 +267,9 @@
         return authData.customerAccounts;
       },
       isEnterpriseCustomer: function () {
-        return _.some(authData.customerAccounts, { customerType: Config.customerTypes.enterprise });
+        var customerType = _.some(authData.customerAccounts, { customerType: Config.customerTypes.enterprise });
+        var commerceRelation = _.some(authData.customerAccounts, { commerceRelation: Config.commerceRelation.partner });
+        return customerType || commerceRelation;
       },
       // FIXME: ATLAS-1402
       // IMPORTANT: 'username' can possibly reflect a user's display name, use 'getPrimaryEmail()'
