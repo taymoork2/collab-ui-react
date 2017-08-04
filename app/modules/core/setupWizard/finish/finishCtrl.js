@@ -5,9 +5,10 @@
     .controller('WizardFinishCtrl', WizardFinishCtrl);
 
   /* @ngInject */
-  function WizardFinishCtrl($q, $scope, $translate, Authinfo, Notification, SetupWizardService, TrialWebexService) {
+  function WizardFinishCtrl($q, $rootScope, $scope, $translate, Authinfo, Notification, SetupWizardService, TrialWebexService) {
     $scope.hasPendingLicenses = SetupWizardService.hasPendingLicenses();
     $scope.sendEmailModel = false;
+    $scope.doNotProvision = false;
     $scope.isCustomerLaunchedFromPartner = Authinfo.isCustomerLaunchedFromPartner();
     $scope.setSendCustomerEmailFlag = setSendCustomerEmailFlag;
     $scope.orderDetails = {
@@ -37,6 +38,12 @@
 
     function init() {
       pushBlankProvisioningCall();
+      $rootScope.$on('do-not-provision-event', function () {
+        $scope.doNotProvision = true;
+      });
+      $rootScope.$on('provision-event', function () {
+        $scope.doNotProvision = false;
+      });
     }
 
     function setSendCustomerEmailFlag(flag) {
