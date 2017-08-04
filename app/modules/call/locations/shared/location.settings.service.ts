@@ -1,9 +1,11 @@
 import { Location, LocationsService } from 'modules/call/locations/shared';
 import { MediaOnHoldService } from 'modules/huron/media-on-hold';
+import { CustomerSettings } from 'modules/call/settings/shared/customer-settings';
 import { LocationCosService, LocationCos } from 'modules/call/shared/cos';
 import { InternalNumberRange, InternalNumberRangeService } from 'modules/call/shared/internal-number-range';
-import { CustomerVoice, HuronCustomerService } from 'modules/huron/customer';
+import { Customer, CustomerVoice, HuronCustomerService, ServicePackage } from 'modules/huron/customer';
 import { ExtensionLengthService } from 'modules/call/settings/shared/extension-length.service';
+import { AvrilService, AvrilCustomer } from 'modules/huron/avril';
 import { Notification } from 'modules/core/notifications';
 
 export class CallLocationSettingsData {
@@ -11,7 +13,9 @@ export class CallLocationSettingsData {
   public mediaId: string;
   public internalNumberRanges: InternalNumberRange[];
   public cosRestrictions: LocationCos;
+  public customer: CustomerSettings;
   public customerVoice: CustomerVoice;
+  public avrilCustomer: AvrilCustomer;
 }
 
 export class CallLocationSettingsService {
@@ -30,6 +34,7 @@ export class CallLocationSettingsService {
     private $q: ng.IQService,
     private ExtensionLengthService: ExtensionLengthService,
     private FeatureToggleService,
+    private AvrilService: AvrilService,
   ) {
     // Location Media On Hold Support
     this.FeatureToggleService.supports(FeatureToggleService.features.huronMOHEnable)
@@ -44,7 +49,10 @@ export class CallLocationSettingsService {
       internalNumberRanges: this.getInternalNumberRanges(locationId).then(internalNumberRanges => callLocationSettingsData.internalNumberRanges = internalNumberRanges),
       cosRestrictions: this.getCosRestrictions(locationId).then(cosRestrictions => callLocationSettingsData.cosRestrictions = cosRestrictions),
       customerVoice: this.getCustomerVoice().then(customerVoice => callLocationSettingsData.customerVoice = customerVoice),
-    }).then(() => {
+      customer: this.getCustomer().then(customer => callLocationSettingsData.customer = customer),
+    })
+    .then(() => this.getAvrilCustomer(callLocationSettingsData.customer.hasVoicemailService).then(avrilCustomer => callLocationSettingsData.avrilCustomer = avrilCustomer))
+    .then(() => {
       this.callLocationSettingsDataCopy = this.cloneSettingsData(callLocationSettingsData);
       return callLocationSettingsData;
     });
@@ -54,6 +62,7 @@ export class CallLocationSettingsService {
     if (!data.location.uuid) {
       return this.createLocation(data.location)
         .then(locationId => data.location.uuid = locationId)
+        .then(() => this.saveCustomerServicePackage(data.customer))
         .then(() => this.saveExtensionLength(data.customerVoice.extensionLength, null))
         .then(() => this.$q.all(this.createParallelRequests(data, true)))
         .then(() => this.get(data.location.uuid || ''));
@@ -143,6 +152,49 @@ export class CallLocationSettingsService {
       .catch(error => {
         this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohUpdateError'));
       });
+  }
+  private getCustomer(): ng.IPromise<CustomerSettings> {
+    return this.HuronCustomerService.getCustomer()
+      .then(customer => {
+        let hasVoicemailService = false;
+        let hasVoiceService = false;
+        _.forEach(customer.links, (service) => {
+          if (service.rel === 'avril') {
+            hasVoicemailService = true;
+          } else if (service.rel === 'voice') {
+            hasVoiceService = true;
+          }
+        });
+        return new CustomerSettings({
+          uuid: customer.uuid,
+          name: customer.name,
+          servicePackage: customer.servicePackage,
+          links: customer.links,
+          hasVoiceService: hasVoiceService,
+          hasVoicemailService: hasVoicemailService,
+        });
+      }).catch(error => {
+        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.customerGetError'));
+        return this.rejectAndNotifyPossibleErrors();
+      });
+  }
+
+  private saveCustomerServicePackage(customerData: CustomerSettings): ng.IPromise<void> {
+    if (!_.isEqual(customerData, this.callLocationSettingsDataCopy.customer)) {
+      const customer = new Customer();
+      if (customerData.hasVoicemailService) {
+        _.set(customer, 'servicePackage', ServicePackage.VOICE_VOICEMAIL);
+      } else {
+        _.set(customer, 'servicePackage', ServicePackage.VOICE_ONLY);
+      }
+      return this.HuronCustomerService.updateCustomer(customer)
+        .catch(error => {
+          this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.voicemailUpdateError'));
+          return this.rejectAndNotifyPossibleErrors();
+        });
+    } else {
+      return this.$q.resolve();
+    }
   }
 
   private getCosRestrictions(locationId: string): ng.IPromise<LocationCos> {
@@ -245,6 +297,18 @@ export class CallLocationSettingsService {
         });
     } else {
       return this.$q.resolve();
+    }
+  }
+
+  private getAvrilCustomer(hasVoicemailService: boolean): ng.IPromise<AvrilCustomer> {
+    if (hasVoicemailService) {
+      return this.AvrilService.getAvrilCustomer()
+      .catch(error => {
+        this.errors.push(this.Notification.processErrorResponse(error, 'huronSettings.avrilCustomerGetError'));
+        return this.rejectAndNotifyPossibleErrors();
+      });
+    } else {
+      return this.$q.resolve(new AvrilCustomer());
     }
   }
 

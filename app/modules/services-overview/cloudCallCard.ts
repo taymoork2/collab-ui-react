@@ -31,6 +31,17 @@ export class ServicesOverviewCallCard extends ServicesOverviewCard {
         routerState: 'call-locations',
         buttonClass: 'btn-link',
       });
+
+      const routeToLocationSettings = {
+        name: 'servicesOverview.cards.call.buttons.settings',
+        routerState: 'huronsettingslocation',
+        buttonClass: 'btn-link',
+      };
+      const match = _.find(this._buttons, { name: 'servicesOverview.cards.call.buttons.settings' });
+      if (match) {
+        const index = _.indexOf(this._buttons, match);
+        this._buttons.splice(index, 1, routeToLocationSettings);
+      }
     }
   }
 

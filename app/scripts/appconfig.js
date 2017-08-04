@@ -3231,6 +3231,18 @@
               }),
             },
           })
+          .state('huronsettingslocation', {
+            url: '/services/call-settings-location',
+            parent: 'hurondetails',
+            template: '<uc-call-settings></uc-call-settings>',
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/call/settings'));
+                }, 'call-settings-location');
+              }),
+            },
+          })
           .state('call-locations', {
             url: '/services/call-locations',
             parent: 'hurondetails',

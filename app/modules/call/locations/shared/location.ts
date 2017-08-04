@@ -138,7 +138,7 @@ interface IBaseLocationDetails extends IBaseLocation {
   dateFormat: string;
   timeFormat: string;
   allowExternalTransfer: boolean;
-  voicemailPilotNumber: IVoicemailPilotNumber;
+  voicemailPilotNumber: IVoicemailPilotNumber | null;
   regionCodeDialing: IRegionCodeDialing;
   callerId: ILocationCallerId | null;
 }
@@ -165,7 +165,7 @@ export class Location implements ILocation {
   public timeFormat: string;
   public steeringDigit: string;
   public allowExternalTransfer: boolean;
-  public voicemailPilotNumber: IVoicemailPilotNumber;
+  public voicemailPilotNumber: IVoicemailPilotNumber | null;
   public regionCodeDialing: IRegionCodeDialing;
   public callerId: ILocationCallerId | null;
 
@@ -181,7 +181,7 @@ export class Location implements ILocation {
     steeringDigit: null,
     defaultLocation: false,
     allowExternalTransfer: false,
-    voicemailPilotNumber: new VoicemailPilotNumber(),
+    voicemailPilotNumber: null,
     regionCodeDialing: new RegionCodeDialing(),
     callerId: null,
   }) {

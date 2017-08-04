@@ -1,6 +1,6 @@
 import {
   Location, LocationsService, LocationCallerId,
-  HIDDEN,
+  HIDDEN, VoicemailPilotNumber,
 } from '../shared';
 
 import {
@@ -37,7 +37,6 @@ class LocationsWizardController implements ng.IComponentController {
   public showDialPlanChangedDialog: boolean;
   public showVoiceMailDisableDialog: boolean;
   public address = {};
-  public voicemailEnable: boolean = false;
   public addressValidated: boolean = false;
   public addressValidating: boolean = false;
   public validationMessages = {
@@ -158,15 +157,8 @@ class LocationsWizardController implements ng.IComponentController {
     this.setShowDialPlanChangedDialogFlag();
   }
 
-  public onLocationVoicemailChanged(externalAccess: boolean, externalNumber: string): void {
-    this.voicemailEnable = externalAccess;
-    if (this.voicemailEnable && _.isString(externalNumber) && externalNumber.length > 0) {
-      this.locationDetail.voicemailPilotNumber.number = externalNumber;
-      this.locationDetail.voicemailPilotNumber.generated = true;
-    } else {
-      this.locationDetail.voicemailPilotNumber.number = null;
-      this.locationDetail.voicemailPilotNumber.generated = false;
-    }
+  public onLocationVoicemailChanged(voicemailPilotNumber: VoicemailPilotNumber): void {
+    this.locationDetail.voicemailPilotNumber = voicemailPilotNumber;
   }
 
   public onVoicemailFilter(filter: string): ng.IPromise<IOption[]> {

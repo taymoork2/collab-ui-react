@@ -70,6 +70,13 @@
           on-change-fn="$ctrl.onSteeringDigitChanged(steeringDigit)">
         </uc-outbound-dial-digit>
       </div>
+      <div class="row full service-setup bottom-margin">
+        <uc-location-company-voicemail
+          ftsw="true"
+          company-voicemail-enabled="$ctrl.callLocationSettingsData.customer.hasVoicemailService"
+          on-change-fn="$ctrl.onCompanyVoicemailChanged(voicemailPilotNumber, voicemailPilotNumberGenerated, companyVoicemailEnabled)">
+        </uc-location-company-voicemail>
+      </div>
     </div>
   </form>
   <!-- FTSW LOCATION ENDS -->
@@ -219,8 +226,7 @@
               on-change-fn="$ctrl.onSteeringDigitChanged(steeringDigit)">
             </uc-outbound-dial-digit>
           </div>
-          <div
-            class="sub-section"
+          <div class="sub-section"
             ng-if="$ctrl.locationSettingsOptions.dialPlan.supportsSimplifiedNationalDialing || $ctrl.locationSettingsOptions.dialPlan.supportsLocalDialing">
             <uc-dialing-setup
               steering-digit="$ctrl.callLocationSettingsData.location.steeringDigit"
@@ -231,6 +237,25 @@
               is-terminus-customer="$ctrl.isTerminusCustomer"
               on-change-fn="$ctrl.onRegionCodeChanged(regionCode, useSimplifiedNationalDialing)">
             </uc-dialing-setup>
+          </div>
+          <div class="sub-section">
+            <uc-location-voicemail
+              ng-if="$ctrl.callLocationSettingsData.customer.hasVoicemailService"
+              display-label="true"
+              dial-plan-country-code="$ctrl.locationSettingsOptions.dialPlan.countryCode"
+              voicemail-pilot-number="$ctrl.callLocationSettingsData.location.voicemailPilotNumber"
+              voicemail-to-email-enabled="$ctrl.callLocationSettingsData.avrilCustomer.features.VM2E_Attachment"
+              external-number-options="$ctrl.locationSettingsOptions.companyVoicemailOptions"
+              number-filter-fn="$ctrl.onNumberFilter(filter)"
+              change-fn="$ctrl.onLocationVoicemailChanged(voicemailPilotNumber)">
+            </uc-location-voicemail>
+          </div>
+          <div class="sub-section">
+            <uc-ext-transfer-org
+              location="true"
+              allow-external-transfer="$ctrl.callLocationSettingsData.location.allowExternalTransfer"
+              on-change-fn="$ctrl.onExtTransferChanged(allowExternalTransfer)">
+            </uc-ext-transfer-org>
           </div>
         </div>
       </div>

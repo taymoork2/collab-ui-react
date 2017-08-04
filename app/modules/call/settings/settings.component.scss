@@ -7,6 +7,10 @@
   @extend %page-background-white;
 }
 
+.huronsettingslocation-state {
+  @extend %page-background-white;
+}
+
 .huron-settings {
   @extend %content-header;
 
@@ -49,10 +53,6 @@
 
     .service-address-buttons {
       margin-top: 1rem;
-    }
-
-    .control-label {
-      color: $gray-dark-4;
     }
 
     .description-block,
