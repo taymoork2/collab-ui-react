@@ -58,6 +58,7 @@
     function populateUiModel() {
       vm.method = action.method;
       vm.url = action.url;
+      vm.variables = action.variableSet;
     }
 
     function activate() {
@@ -70,6 +71,7 @@
         action = AutoAttendantCeMenuModelService.newCeActionEntry(doREST, '');
         action.url = '';
         action.method = '';
+        action.variables = [];
         vm.menuEntry.addAction(action);
         AACommonService.setRestApiStatus(false);
         AACommonService.setIsValid(vm.uniqueCtrlIdentifer, false);

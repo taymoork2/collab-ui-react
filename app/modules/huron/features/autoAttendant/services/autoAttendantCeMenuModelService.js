@@ -285,9 +285,9 @@
 
 
   /* @ngInject */
-  function AutoAttendantCeMenuModelService(AAUtilityService, $translate) {
+  function AutoAttendantCeMenuModelService($translate, AARestModelService, AAUtilityService) {
     // cannot use aaCommon's defined variables because of circular dependency.
-    // aaCommonService shou not have this service, need to refactor it out.
+    // aaCommonService should not have this service, need to refactor it out.
 
     var DIGITS_DIAL_BY = 2;
     var DIGITS_RAW = 3;
@@ -486,6 +486,12 @@
       return action;
     }
 
+    function updateActionFromRestBlock(action, restBlock) {
+      action.method = restBlock.method;
+      action.url = restBlock.url;
+      action.variableSet = parseResponseBlock(restBlock);
+    }
+
     function parseAction(menuEntry, inAction) {
       //read from db
       var action;
@@ -657,10 +663,10 @@
         }
         menuEntry.addAction(action);
       } else if (!_.isUndefined(inAction.doREST)) {
-        action = new Action('doREST', '');
-        action.url = inAction.doREST.url;
-        action.method = inAction.doREST.method;
-        action.variableSet = parseResponseBlock(inAction.doREST);
+        action = new Action('doREST', inAction.doREST.id);
+        var restBlocks = AARestModelService.getRestBlocks();
+        var restBlock = restBlocks[action.value];
+        updateActionFromRestBlock(action, restBlock);
         menuEntry.addAction(action);
       } else if (inAction.conditional) {
         var exp;
@@ -1334,8 +1340,13 @@
       });
     }
 
+    function getRestVariableSet(varSet) {
+      return (_.has(varSet, 'newVariableValue')) ? varSet.newVariableValue : varSet.variableName;
+    }
+
     function createWelcomeMenu(aaMenu) {
       var newActionArray = [];
+      var uiRestBlocks = AARestModelService.getUiRestBlocks();
       for (var i = 0; i < aaMenu.entries.length; i++) {
         var menuEntry = aaMenu.entries[i];
         newActionArray[i] = {};
@@ -1391,13 +1402,23 @@
             } else if (actionName === 'conditional') {
               newActionArray[i][actionName] = createConditional(menuEntry.actions[0]);
             } else if (actionName === 'doREST') {
-              newActionArray[i][actionName].url = menuEntry.actions[0].url;
-              newActionArray[i][actionName].method = menuEntry.actions[0].method;
-              newActionArray[i][actionName].responseActions = createResponseBlock(menuEntry.actions[0]);
+              var restBlockId = menuEntry.actions[0].value;
+              if (_.isEmpty(restBlockId)) {
+                restBlockId = AARestModelService.getRestTempId();
+              }
+              newActionArray[i][actionName].varList = _.map(menuEntry.actions[0].variableSet, getRestVariableSet);
+              newActionArray[i][actionName].id = restBlockId;
+              var overrideProps = {
+                url: menuEntry.actions[0].url,
+                method: menuEntry.actions[0].method,
+                responseActions: createResponseBlock(menuEntry.actions[0]),
+              };
+              _.set(uiRestBlocks, restBlockId, overrideProps);
             }
           }
         }
       }
+      AARestModelService.setUiRestBlocks(uiRestBlocks);
       return newActionArray;
     }
 
@@ -1423,9 +1444,9 @@
       return responseActions;
     }
 
-    function parseResponseBlock(inAction) {
+    function parseResponseBlock(action) {
       var variableSet = [];
-      _.forEach(inAction.responseActions, function (responseAction) {
+      _.forEach(action.responseActions, function (responseAction) {
         var varSetItem = {};
         varSetItem.value = responseAction.assignVar.value;
         varSetItem.variableName = responseAction.assignVar.variableName;
@@ -1548,6 +1569,8 @@
           newActionArray[i][actionName].url = val;
         } else if (actionName === 'routeToQueue') {
           newActionArray[i][actionName] = populateRouteToQueue(actions[i]);
+        } else if (actionName === 'doREST') {
+          newActionArray[i][actionName].id = val;
         } else if (actionName === 'disconnect') {
           if (val && val !== 'none') {
             newActionArray[i][actionName].treatment = val;
