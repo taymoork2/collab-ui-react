@@ -7,9 +7,22 @@
 
 
   /* @ngInject */
-  function AARouteToQueueCtrl($rootScope, $scope, $translate, $modal, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, AANotificationService, AALanguageService) {
+  function AARouteToQueueCtrl($rootScope, $scope, $translate, $modal, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, AANotificationService, AALanguageService, AASessionVariableService, AAModelService) {
     var vm = this;
     var conditional = 'conditional';
+
+    var dependentCeSessionVariablesList = [];
+    var dynamicVariablesList = [];
+
+    vm.togglefullWarningMsg = togglefullWarningMsg;
+    vm.closeFullWarningMsg = closeFullWarningMsg;
+    vm.getWarning = getWarning;
+    vm.fullWarningMsgValue = false;
+    vm.deletedSessionVariablesListAlongWithWarning = '';
+    vm.ui = {};
+    vm.availableSessionVariablesList = [];
+    vm.deletedSessionVariablesList = [];
+    vm.varMissingWarning = $translate.instant('autoAttendant.dynamicMissingCustomVariable');
 
     vm.hideQueues = true;
     vm.queueSelected = {
@@ -50,6 +63,98 @@
 
     /////////////////////
 
+    $scope.$on('CE Updated', function () {
+      getDynamicVariables();
+      refreshVarSelects();
+      if (_.isEmpty(vm.deletedSessionVariablesList)) {
+        vm.fullWarningMsgValue = false;
+      }
+    });
+
+    $scope.$on('CIVarNameChanged', function () {
+      getDynamicVariables();
+      refreshVarSelects();
+    });
+
+    function togglefullWarningMsg() {
+      vm.fullWarningMsgValue = !vm.fullWarningMsgValue;
+    }
+
+    function closeFullWarningMsg() {
+      vm.fullWarningMsgValue = false;
+    }
+
+    function getWarning() {
+      if (_.isEmpty(vm.deletedSessionVariablesList)) {
+        return false;
+      }
+      if (vm.deletedSessionVariablesList.length > 1) {
+        vm.deletedSessionVariablesListAlongWithWarning = $translate.instant('autoAttendant.dynamicMissingCustomVariables', { deletedSessionVariablesList: vm.deletedSessionVariablesList.toString() });
+      } else {
+        vm.deletedSessionVariablesListAlongWithWarning = $translate.instant('autoAttendant.dynamicMissingCustomVariable', { deletedSessionVariablesList: vm.deletedSessionVariablesList.toString() });
+      }
+      return true;
+    }
+
+    function addLocalAndQueriedSessionVars() {
+      // reset the displayed SessionVars to the original queried items
+      vm.availableSessionVariablesList = dependentCeSessionVariablesList;
+      vm.availableSessionVariablesList = _.concat(vm.availableSessionVariablesList, AACommonService.collectThisCeActionValue(vm.ui, true, false));
+      vm.availableSessionVariablesList = _.uniq(vm.availableSessionVariablesList).sort();
+    }
+
+    function refreshVarSelects() {
+      // reload the session variables.
+      addLocalAndQueriedSessionVars();
+      // resets possibly warning messages
+      updateIsWarnFlag();
+    }
+
+    function updateIsWarnFlag() {
+      vm.deletedSessionVariablesList = [];
+      if (_.isEmpty(dynamicVariablesList)) {
+        return;
+      }
+      _.forEach(dynamicVariablesList, function (variable) {
+        if (!_.includes(vm.availableSessionVariablesList, variable)) {
+          vm.deletedSessionVariablesList.push(variable);
+        }
+      });
+      vm.deletedSessionVariablesList = _.uniq(vm.deletedSessionVariablesList).sort();
+    }
+
+    function getSessionVariablesOfDependentCe() {
+      dependentCeSessionVariablesList = [];
+
+      return AASessionVariableService.getSessionVariablesOfDependentCeOnly(AAModelService.getAAModel().aaRecordUUID).then(function (data) {
+        if (!_.isUndefined(data) && data.length > 0) {
+          dependentCeSessionVariablesList = data;
+        }
+      });
+    }
+
+    function getDynamicVariables() {
+      dynamicVariablesList = [];
+      var initialDynamVarList = _.get(vm.menuEntry, 'actions[0].queueSettings.initialAnnouncement.actions[0].dynamicList');
+      var preodicDynamVarList = _.get(vm.menuEntry, 'actions[0].queueSettings.periodicAnnouncement.actions[0].dynamicList');
+      if (!_.isUndefined(initialDynamVarList)) {
+        _.forEach(initialDynamVarList, function (entry) {
+          if (entry.isDynamic) {
+            if (!_.includes(AACommonService.getprePopulatedSessionVariablesList(), entry.say.value)) {
+              dynamicVariablesList.push(entry.say.value);
+            }
+          }
+        });
+      } else if (!_.isUndefined(preodicDynamVarList)) {
+        _.forEach(preodicDynamVarList, function (entry) {
+          if (entry.isDynamic) {
+            if (!_.includes(AACommonService.getprePopulatedSessionVariablesList(), entry.say.value)) {
+              dynamicVariablesList.push(entry.say.value);
+            }
+          }
+        });
+      }
+    }
 
     function openQueueTreatmentModal() {
       // deep copy used to roll back from the modal changes
@@ -232,13 +337,13 @@
     }
 
     function activate() {
-      var ui = AAUiModelService.getUiModel();
+      vm.ui = AAUiModelService.getUiModel();
 
       if ($scope.fromDecision) {
         var conditionalAction;
         fromDecision = true;
 
-        vm.uiMenu = ui[$scope.schedule];
+        vm.uiMenu = vm.ui[$scope.schedule];
         vm.menuEntry = vm.uiMenu.entries[$scope.index];
         conditionalAction = _.get(vm.menuEntry, 'actions[0]', '');
         if (!conditionalAction || conditionalAction.getName() !== conditional) {
@@ -260,7 +365,7 @@
         activateQueueSettings(vm.menuEntry);
       } else {
         if ($scope.fromRouteCall) {
-          vm.uiMenu = ui[$scope.schedule];
+          vm.uiMenu = vm.ui[$scope.schedule];
           vm.menuEntry = vm.uiMenu.entries[$scope.index];
           fromRouteCall = true;
 
@@ -279,6 +384,7 @@
           vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
           if ($scope.keyIndex < vm.menuEntry.entries.length) {
             vm.menuKeyEntry = vm.menuEntry.entries[$scope.keyIndex];
+            vm.menuEntry = vm.menuKeyEntry;
           } else {
             vm.menuKeyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
             var action = AutoAttendantCeMenuModelService.newCeActionEntry(rtQueue, '');
@@ -292,6 +398,10 @@
       }
 
       populateUiModel();
+      getSessionVariablesOfDependentCe().finally(function () {
+        getDynamicVariables();
+        refreshVarSelects();
+      });
     }
     activate();
   }
