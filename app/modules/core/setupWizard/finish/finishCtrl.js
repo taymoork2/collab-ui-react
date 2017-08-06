@@ -11,8 +11,8 @@
     $scope.isCustomerLaunchedFromPartner = Authinfo.isCustomerLaunchedFromPartner();
     $scope.setSendCustomerEmailFlag = setSendCustomerEmailFlag;
     $scope.orderDetails = {
-      subscriptionId: formatSubscriptionId(SetupWizardService.getActingSubscriptionId()),
-      orderId: SetupWizardService.getCurrentOrderNumber(),
+      orderId: formatWebOrderId(SetupWizardService.getCurrentOrderNumber()),
+      subscriptionId: SetupWizardService.getActingSubscriptionId(),
     };
     $scope.initNext = function () {
       var deferred = $q.defer();
@@ -61,7 +61,7 @@
         SetupWizardService.addProvisioningCallbacks(emptyProvisioningCall);
       }
     }
-    function formatSubscriptionId(id) {
+    function formatWebOrderId(id) {
       if (id.lastIndexOf('/') !== -1) {
         return id.slice(0, id.lastIndexOf('/'));
       }

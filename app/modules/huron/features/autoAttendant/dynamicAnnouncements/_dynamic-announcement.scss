@@ -5,11 +5,11 @@
   top: 0rem;
 }
 
-.aa-insertion-element {
+.aa-insertion-element.aa-insertion-element {
   background-color: $brand-primary;
-  @include vr-spacing(ml, 0.5);
-  @include vr-spacing(mr, 0.5);
-  @include vr-spacing(mb, 0.5);
+  @include vr-spacing(ml, 0);
+  @include vr-spacing(mr, 0);
+  @include vr-spacing(mb, 0);
   @include vr-spacing(pr, 0.3);
   white-space: normal;
   display: inline-block;
