@@ -106,6 +106,17 @@
               on-change-fn="$ctrl.onNameChanged(name)">
             </uc-call-location-name>
           </div>
+          <div class="sub-section">
+            <uc-location-caller-id
+              caller-id="$ctrl.callLocationSettingsData.location.callerId"
+              show-label="true"
+              region-code="$ctrl.callLocationSettingsData.customerVoice.regionCode"
+              external-number-options="$ctrl.locationSettingsOptions.locationCallerIdOptions"
+              voicemail-pilot-number="$ctrl.callLocationSettingsData.location.voicemailPilotNumber"
+              company-name="$ctrl.callLocationSettingsData.customerVoice.name"
+              on-change-fn="$ctrl.onCallerIdChanged(callerId)">
+            </uc-location-caller-id>
+          </div>
         </div>
       </div>
 

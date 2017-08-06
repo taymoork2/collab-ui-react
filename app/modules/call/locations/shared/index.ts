@@ -1,11 +1,10 @@
 import { LocationsService } from './locations.service';
 import { CallLocationSettingsData, CallLocationSettingsService } from './location.settings.service';
 import { LocationSettingsOptionsService, LocationSettingsOptions } from './location-options.service';
-import { ILocation, Location, ILocationListItem } from './location';
 import { UniqueLocationDirective } from 'modules/call/locations/shared/locations-name-unique.directive';
 import locationCosServiceModule from 'modules/call/shared/cos';
 
-export { ILocation, Location, ILocationListItem };
+export * from './location';
 export { LocationsService };
 export { CallLocationSettingsService, CallLocationSettingsData };
 export { LocationSettingsOptions, LocationSettingsOptionsService };
