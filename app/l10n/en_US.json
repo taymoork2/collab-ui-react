@@ -560,7 +560,7 @@
     "all": "All",
     "engagement": "Engagement",
     "quality": "Quality",
-    "details": "Details",
+    "details": "Call Detail Record",
     "noData": "No Data",
     "noCustomerData": "No Data Available",
     "timeSelected": "Selected Time Period: ",
@@ -612,6 +612,14 @@
     "date": "Date",
     "duration": "Duration",
     "status": "Status",
+    "placeholder": {
+      "searchbox": "Search by User",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "startTime": "Start Time",
+      "endTime": "End Time",
+      "to": "to"
+    },
     "usageReports": {
       "usageReportTitle": "Room Devices",
       "pageTitle": "Reports",
