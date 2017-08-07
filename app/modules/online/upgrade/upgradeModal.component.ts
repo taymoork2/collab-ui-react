@@ -24,10 +24,6 @@ class OnlineUpgrade {
   ) {}
 
   public $onInit(): void {
-    this.FeatureToggleService.atlas2017NameChangeGetStatus().then((toggle: boolean): void => {
-      this.nameChangeEnabled = toggle;
-    });
-
     if (this.OnlineUpgradeService.isPending()) {
       this.bodyText = this.$translate.instant('onlineUpgradeModal.pendingBody');
       this.titleText = this.$translate.instant('onlineUpgradeModal.pendingTitle');
@@ -37,10 +33,8 @@ class OnlineUpgrade {
       this.showBmmpButton = true;
     } else {
       this.titleText = this.$translate.instant('onlineUpgradeModal.expiredTitle');
-      this.bodyText = this.nameChangeEnabled ? this.$translate.instant('onlineUpgradeModal.bodyNew') :
-        this.$translate.instant('onlineUpgradeModal.body');
-      this.cancelBodyText = this.nameChangeEnabled ? this.$translate.instant('onlineUpgradeModal.cancelBodyNew') :
-        this.$translate.instant('onlineUpgradeModal.cancelBody');
+      this.bodyText = this.$translate.instant('onlineUpgradeModal.body');
+      this.cancelBodyText = this.$translate.instant('onlineUpgradeModal.cancelBody');
       this.showBmmpButton = true;
       this.showCancelButton = !this.OnlineUpgradeService.hasCancelledSubscriptions();
     }

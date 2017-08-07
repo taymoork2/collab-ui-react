@@ -7469,10 +7469,8 @@
   },
   "onlineUpgradeModal": {
     "expiredTitle": "Account Expired",
-    "body": "Your admin account has been suspended because your subscription has lapsed. To regain access to the Cloud Collaboration Management portal you can buy a subscription.",
-    "bodyNew": "Your admin account has been suspended because your subscription has lapsed. To regain access to the Cisco Spark Control Hub you can buy a subscription.",
-    "cancelBody": "Alternately, you can use the free version which does not come with the Cloud Collaboration Management portal.",
-    "cancelBodyNew": "Alternately, you can use the free version which does not come with the Cisco Spark Control Hub.",
+    "body": "Your admin account has been suspended because your subscription has lapsed. If you’d like to see metrics and analytics, assign user licenses and more, you’ll need to upgrade to a paid plan.",
+    "cancelBody": "Alternately, you can use the free version which does not come with access to admin tools",
     "freemiumTitle": "You have a free account",
     "freemiumBody": "Your free account doesn’t come with admin tools. If you’d like to see metrics and analytics, assign user licenses and more, you’ll need to upgrade to a paid plan.",
     "cancelButton": "Use Free Version",
