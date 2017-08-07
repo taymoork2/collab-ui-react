@@ -37,8 +37,7 @@ class WebexReportsSearch implements ng.IComponentController {
     private $translate: ng.translate.ITranslateService,
   ) {
     this.gridData = [];
-    this.timeZone = moment.tz.guess();
-    this.SearchService.setStorage('timeZone', this.timeZone);
+    this.timeZone = this.SearchService.getGuess('');
     this.errMsg = { search: '', datePicker: '' };
   }
 
@@ -86,8 +85,8 @@ class WebexReportsSearch implements ng.IComponentController {
     this.timeZone = tz;
     this.SearchService.setStorage('timeZone', this.timeZone);
     _.forEach(this.gridData, (item) => {
-      item.endTime_ = this.SearchService.formateDate(item.endTime);
-      item.startTime_ = this.SearchService.formateDate(item.startTime);
+      item.endTime_ = this.SearchService.utcDateByTimezone(item.endTime);
+      item.startTime_ = this.SearchService.utcDateByTimezone(item.startTime);
     });
   }
 
@@ -152,8 +151,8 @@ class WebexReportsSearch implements ng.IComponentController {
       .then((res) => {
         _.forEach(res, (item) => {
           item.status_ = this.SearchService.getStatus(item.status);
-          item.endTime_ = this.SearchService.formateDate(item.endTime) ;
-          item.startTime_ = this.SearchService.formateDate(item.startTime);
+          item.endTime_ = this.SearchService.utcDateByTimezone(item.endTime) ;
+          item.startTime_ = this.SearchService.utcDateByTimezone(item.startTime);
         });
         this.isLoadingShow = false;
         this.gridData = this.flag ? res : [];

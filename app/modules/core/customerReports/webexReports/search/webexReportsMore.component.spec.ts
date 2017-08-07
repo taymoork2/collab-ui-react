@@ -32,6 +32,16 @@ describe('Component: custWebexReportsMore', () => {
       leaveTime: 1499399838000,
       conferenceID: '66735067305608980',
     }];
+
+    this.getJoinMeetingTime = [{
+      userId: '52887',
+      userName: '"cisqsite07 admin"',
+    }];
+
+    this.getJoinMeetingQuality = [{
+      userId: '52887',
+      userName: '"cisqsite07 admin"',
+    }];
   });
 
   beforeEach(function () {
@@ -42,9 +52,12 @@ describe('Component: custWebexReportsMore', () => {
 
   function initSpies() {
     spyOn(this.Notification, 'errorResponse');
+    spyOn(this.SearchService, 'getOffset').and.returnValue('+08:00');
     spyOn(this.SearchService, 'getStorage').and.returnValue(this.overview);
     spyOn(this.SearchService, 'getParticipants').and.returnValue(this.$q.resolve());
     spyOn(this.SearchService, 'getMeetingDetail').and.returnValue(this.$q.resolve());
+    spyOn(this.SearchService, 'getJoinMeetingTime').and.returnValue(this.$q.resolve());
+    spyOn(this.SearchService, 'getJoinMeetingQuality').and.returnValue(this.$q.resolve());
   }
 
   function initComponent() {
@@ -52,18 +65,25 @@ describe('Component: custWebexReportsMore', () => {
     this.compileComponent('custWebexReportsMore', {});
     this.$scope.$apply();
   }
-  xit('Should show the correct data', function () {
+
+  it('Should show the correct detail data', function () {
     this.SearchService.getParticipants.and.returnValue(this.$q.resolve(this.participants));
     this.SearchService.getMeetingDetail.and.returnValue(this.$q.resolve(this.meetingDetail));
+    this.SearchService.getJoinMeetingTime.and.returnValue(this.$q.resolve(this.getJoinMeetingTime));
+    this.SearchService.getJoinMeetingQuality.and.returnValue(this.$q.resolve(this.getJoinMeetingQuality));
 
     initComponent.call(this);
-    expect(this.controller.dataSet.lines.length).toBe(1);
-    expect(this.controller.data.overview.meetingName).toEqual('test');
+
+    expect(this.controller.loading).toEqual(false);
+    expect(this.controller.loadingMeetingline).toEqual(true);
+
+    expect(this.controller.lineColor[0].userId).toEqual('52887');
+    expect(this.controller.circleColor[0].userId).toEqual('52887');
   });
 
-  xit('should notify in message for non 200 http status', function() {
-    this.SearchService.getMeetingDetail.and.returnValue(this.$q.resolve(this.meetingDetail));
+  it('should notify in message for non 200 http status', function() {
     this.SearchService.getParticipants.and.returnValue(this.$q.reject({ status: 404 }));
+    this.SearchService.getMeetingDetail.and.returnValue(this.$q.resolve(this.meetingDetail));
 
     initComponent.call(this);
     expect(this.Notification.errorResponse).toHaveBeenCalled();
