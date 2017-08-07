@@ -7469,16 +7469,16 @@
     }
   },
   "onlineUpgradeModal": {
-    "title": "Account Expired",
-    "body": "Your admin account has been suspended because your subscription has lapsed. To regain access to the Cloud Collaboration Management portal you can buy a subscription.",
-    "bodyNew": "Your admin account has been suspended because your subscription has lapsed. To regain access to the Cisco Spark Control Hub you can buy a subscription.",
-    "cancelBody": "Alternately you can use the free version which does not come with the Cloud Collaboration Management portal.",
-    "cancelBodyNew": "Alternately you can use the free version which does not come with the Cisco Spark Control Hub.",
-    "freemiumBody": "Your admin account has been suspended because your subscription has lapsed. To regain access to the Cloud Collaboration Management portal you will need to buy a subscription.",
-    "freemiumBodyNew": "Your admin account has been suspended because your subscription has lapsed. To regain access to the Cisco Spark Control Hub you will need to buy a subscription.",
+    "expiredTitle": "Account Expired",
+    "body": "Your admin account has been suspended because your subscription has lapsed. If you’d like to see metrics and analytics, assign user licenses and more, you’ll need to upgrade to a paid plan.",
+    "cancelBody": "Alternately, you can use the free version which does not come with access to admin tools",
+    "freemiumTitle": "You have a free account",
+    "freemiumBody": "Your free account doesn’t come with admin tools. If you’d like to see metrics and analytics, assign user licenses and more, you’ll need to upgrade to a paid plan.",
     "cancelButton": "Use Free Version",
     "cancelError": "An error has occurred while canceling your subscription.",
-    "cancelSuccess": "You now have a free account."
+    "cancelSuccess": "You now have a free account.",
+    "pendingTitle": "Setup Required",
+    "pendingBody": "Your WebEx service has not been set up. Please click the Get Started link in the email you received in order to finish setting up WebEx. The subject line of the email is 'Setup Your Cisco WebEx Service.'"
   },
   "myCompanyOrders": {
     "numberHeader": "Order Number",

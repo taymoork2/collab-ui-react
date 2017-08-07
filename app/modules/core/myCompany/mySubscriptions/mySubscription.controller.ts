@@ -384,7 +384,7 @@ export class MySubscriptionCtrl {
     this.getChangeSubURL(env).then((urlResponse) => {
       subscription.changeplanOverride = '';
       if (urlResponse) {
-        // TODO Once MC Online 3.1 goes live, only Spark subs should use changeplanOverride
+        // TODO GW Once MC Online 3.1 goes live, only Spark subs should use changeplanOverride
         // so the second expression of the "if" should be removed.
         if (env === this.SPARK ||
           (this.Config.isProd() && !_.startsWith(this.Authinfo.getPrimaryEmail(), 'collabctg'))) {
