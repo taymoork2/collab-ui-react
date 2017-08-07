@@ -71,6 +71,16 @@
     uuid "^3.0.1"
     ws "^1.1.4"
 
+"@ciscospark/internal-plugin-metrics@1.1.6":
+  version "1.1.6"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/@ciscospark/internal-plugin-metrics/-/internal-plugin-metrics-1.1.6.tgz#3f8f952778504c7af020e6035e8928294c557241"
+  dependencies:
+    "@ciscospark/common" "1.1.6"
+    "@ciscospark/internal-plugin-wdm" "1.1.6"
+    "@ciscospark/spark-core" "1.1.6"
+    babel-runtime "^6.23.0"
+    envify "^3.4.1"
+
 "@ciscospark/internal-plugin-search@1.1.6":
   version "1.1.6"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/@ciscospark/internal-plugin-search/-/internal-plugin-search-1.1.6.tgz#56915b30cd78f38850e706f019690edbdee214bd"
@@ -91,6 +101,16 @@
     "@ciscospark/spark-core" "1.1.6"
     ampersand-collection "^2.0.0"
     ampersand-state "^5.0.2"
+    babel-runtime "^6.23.0"
+    envify "^3.4.1"
+    lodash "^4.17.4"
+
+"@ciscospark/plugin-logger@1.1.6":
+  version "1.1.6"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/@ciscospark/plugin-logger/-/plugin-logger-1.1.6.tgz#f8873fbfa1fa708fae1b09ebee58c665f59aa077"
+  dependencies:
+    "@ciscospark/common" "1.1.6"
+    "@ciscospark/spark-core" "1.1.6"
     babel-runtime "^6.23.0"
     envify "^3.4.1"
     lodash "^4.17.4"
