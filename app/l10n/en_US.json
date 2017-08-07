@@ -6612,7 +6612,7 @@
     "Ch" : "Chat",
     "Ca" : "Callback",
     "ChCa" : "Chat+Callback",
-    "Va" : "Custom Virtual Assistant",
+    "Va" : "Customer Virtual Assistant",
     "newFeatures": {
       "newFeatureButtonText": "New",
       "newCareTemplateModalTitle": "Create New Care Template",
