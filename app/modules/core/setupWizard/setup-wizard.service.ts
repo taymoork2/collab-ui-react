@@ -141,6 +141,20 @@ export class SetupWizardService {
     return this.$http.get(pendingLicensesUrl);
   }
 
+  public getOrderAndSubId() {
+    return {
+      orderId: this.formatWebOrderId(),
+      subscriptionId: this.getActingSubscriptionId(),
+    };
+  }
+
+  private formatWebOrderId() {
+    if (this.currentOrderNumber.lastIndexOf('/') !== -1) {
+      return this.currentOrderNumber.slice(0, this.currentOrderNumber.lastIndexOf('/'));
+    }
+    return this.currentOrderNumber;
+  }
+
   public isCustomerPresent() {
     const params = {
       basicInfo: true,
