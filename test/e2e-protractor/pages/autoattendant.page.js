@@ -336,16 +336,23 @@ var AutoAttendantPage = function () {
   this.configureApiURL = element(by.id('configureApiUrl'));
   this.addDynamicFeature = element(by.id('addDynamicFeature'));
   this.sessionVar = element(by.id('sessionVar'));
+  this.sessionVar1 = element.all(by.id('sessionVar')).get(1);
   this.sessionVarAll = element.all(by.id('sessionVar'));
 
   this.newSessionVar = this.sessionVar.element(by.css('div.dropdown-menu')).all(by.tagName('li')).last();
+  this.newSessionVar1 = this.sessionVar1.element(by.css('div.dropdown-menu')).all(by.tagName('li')).last();
   this.addVariableToSet = element(by.id('addVariableToSet'));
   this.newVariableName = element(by.name('newVariableName'));
+  this.newVariableName1 = element.all(by.name('newVariableName')).get(1);
+
   this.saveBtn = element(by.id('saveBtn'));
   this.restApiUrlLabel = element(by.css('.aa-rest-api-url'));
+  this.restApiVariableLabel1 = element.all(by.css('.aa-rest-api-variables')).get(0);
+  this.restApiVariableLabel2 = element.all(by.css('.aa-rest-api-variables')).get(1);
   this.restResponseDataBlock = element(by.name('response'));
+  this.restResponseDataBlock1 = element.all(by.name('response')).get(1);
 
-  this.restApiTrash = element.all(by.css('.aa-trash-icon')).get(1);
+  this.restApiTrash = element.all(by.css('.aa-trash-icon')).get(2);
 
   this.routeCall = element(by.css('div.aa-panel-body[name="Route Call"]'));
   this.routeCallChoose = this.routeCall.element(by.css('div.dropdown'));
