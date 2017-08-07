@@ -104,5 +104,8 @@ else
 fi
 
 # - make a tar archive of the npm deps, and rm older versions
+echo "[INFO] Generating backup archive of npm dependencies..."
 mk_npm_deps_tar
 rm_all_but_last 1 .cache/npm-deps-for-*.tar.gz
+
+echo "[INFO] Done ($(basename $0))"
