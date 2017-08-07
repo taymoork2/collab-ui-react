@@ -252,4 +252,26 @@
   .ct-agent-name-options {
     outline: none;
   }
+
+  .cs-input__help-text {
+    @include vr-spacing(pt, 0);
+    font-family: "CiscoSansTT Light";
+    font-size: 12px;
+  }
+
+  .org-setting-info {
+    position: absolute;
+    bottom: 10px;
+    color: $color-primary-base;
+
+    .icon {
+      bottom: -3px;
+    }
+
+    .setting-info {
+      font-size: 10px;
+      letter-spacing: 0;
+      line-height: 16px;
+    }
+  }
 }
