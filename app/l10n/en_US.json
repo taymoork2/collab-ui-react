@@ -4063,7 +4063,8 @@
     "AACustom": "Custom",
     "AACustomDesc": "Create a custom Auto Attendant.",
     "AABusinessHours": "Business Hours",
-    "AABusinessHoursDesc": "Simple open/closed schedule with custom actions."
+    "AABusinessHoursDesc": "Simple open/closed schedule with custom actions.",
+    "variables": "Variables:"
   },
   "callPark": {
     "code": "CP",
