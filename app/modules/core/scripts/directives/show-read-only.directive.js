@@ -23,6 +23,10 @@ require('./_show-read-only.scss');
           childList: true,
           subtree: true,
         });
+
+        scope.$on('$destroy', function () {
+          observer.disconnect();
+        });
       }
     }
 
