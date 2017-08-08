@@ -6889,7 +6889,7 @@
     "offHoursWarningMessage": "Please Enter Off Hours Message",
     "offHoursDayWarningMessage": "Please Select a Day",
     "chatStringsDesc": "These strings appear in the UI based on different scenarios",
-    "chatStatusMessagesDesc": "Configure status messages which your customer sees during the chat",
+    "chatStatusMessagesDesc": "Configure the status message to display in the customer chat window",
     "cancelHeader": "Cancel",
     "ctCreation": "Creation",
     "ctEditing": "Editing",
@@ -6970,6 +6970,10 @@
     "typeReason": "Reason",
     "categoryHintText": "Add category options like Queries, Billing...",
     "categoryWarningText": "Add at least one category option.",
+    "helpTextWaiting": "Customers see this while waiting for an agent to respond to their message.",
+    "helpTextWaitingVirtualAssistant": "If you are using a Customer Virtual Assistant, this message indicates transition from automated support to human interaction.",
+    "helpTextChatting": "Customers see this if they minimize the chat window during an ongoing interaction.",
+    "helpTextLeaveRoom": "Customers see this when an agent exits the chat and ends the interaction.",
     "ctValidation": {
       "errorChar250": "Character length cannot be more than 250.",
       "errorChar50": "Character length cannot be more than 50.",
@@ -7024,7 +7028,7 @@
       "customerInformationCallback": {
         "title_chatPlusCallback": "Customer Information for Callback",
         "desc_chatPlusCallback": "This is the screen a customer fills in to request a callback from an agent"
-      }
+      }      
     },
     "summary": "Summary",
     "summaryDesc": "You have configured the template. Click Finish to save the configuration and generate embed code so you can start using this template on your organization website.",
