@@ -48,10 +48,12 @@ describe('Controller: MeetingSettingsCtrl', () => {
     it('should call validateWebexSiteUrl() and expect the site to be added to the sitesArray', function () {
       this.controller.siteModel.siteUrl = 'testSiteHere';
       this.controller.siteModel.timeZone = 'someTimeZoneHere';
+      spyOn(this.SetupWizardService, 'getPendingAudioLicenses').and.returnValue([{ offerName: 'TSP' }]);
       this.controller.onClickValidate();
       this.$scope.$apply();
       expect(this.controller.validateWebexSiteUrl).toHaveBeenCalledWith(this.siteModel.siteUrl.concat('.webex.com'));
       expect(this.controller.sitesArray.length).toBe(1);
+      expect(this.sitesArray[0].audioPackageDisplay).toBe('TSP Audio');
       expect(this.controller.disableValidateButton).toBe(false);
     });
   });
@@ -70,6 +72,17 @@ describe('Controller: MeetingSettingsCtrl', () => {
 
       expect(this.controller.sitesArray.length).toBe(0);
       expect(this.controller.error.isError).toBe(true);
+    });
+  });
+
+  describe('when licenses include a TSP Audio package', function () {
+    beforeEach(function () {
+      spyOn(this.SetupWizardService, 'hasTSPAudioPackage').and.returnValue(true);
+      spyOn(this.SetupWizardService, 'getTSPPartners').and.returnValue(this.$q.resolve(['abc', 'def']));
+      this.initController();
+    });
+    it('fetches the TSP partners', function () {
+      expect(this.SetupWizardService.getTSPPartners).toHaveBeenCalled();
     });
   });
 });

@@ -17,7 +17,7 @@
         </span>
         <img class="user-img" ng-if="helpdeskUserCtrl.user.photos" ng-src="{{helpdeskUserCtrl.user.photos[1].value}}"/>
         {{helpdeskUserCtrl.user.displayName}}
-        <span ng-if="helpdeskUserCtrl.isPremiumUser" class="badge badge--outline primary" translate="helpdesk.pro"></span>
+        <span ng-if="helpdeskUserCtrl.isEnterpriseCustomer" class="badge badge--outline primary" translate="common.pro"></span>
       </h3>
 
       <hr>

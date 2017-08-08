@@ -18,19 +18,6 @@
       HEADER_TYPE: 'MENU_OPTION_ANNOUNCEMENT',
     };
 
-    /* US282377:
-     * We have intentionally added the blank space in the following list.
-     * Because isDynamic flag gets true in case of BR or new lines
-     * and we are using this list to not show warning in case of pre-populated
-     * variables and BR or new lines in a say message.
-     */
-    var prePopulatedSessionVariablesList = ['Original-Called-Number',
-      'Original-Caller-Number',
-      'Original-Remote-Party-ID',
-      'Original-Caller-Country-Code',
-      'Original-Caller-Area-Code',
-      ''];
-
     var messageType = {
       ACTION: 1,
       MENUHEADER: 2,
@@ -84,7 +71,8 @@
     vm.dynamicValues = [];
     vm.mediaState = {};
     vm.mediaState.uploadProgress = false;
-    vm.fullWarningMsg = fullWarningMsg;
+    vm.togglefullWarningMsg = togglefullWarningMsg;
+    vm.closeFullWarningMsg = closeFullWarningMsg;
     vm.getWarning = getWarning;
     vm.fullWarningMsgValue = false;
     vm.deletedSessionVariablesListAlongWithWarning = '';
@@ -108,21 +96,23 @@
       refreshVarSelects();
     });
 
-    function fullWarningMsg() {
+    function togglefullWarningMsg() {
       vm.fullWarningMsgValue = !vm.fullWarningMsgValue;
+    }
+    function closeFullWarningMsg() {
+      vm.fullWarningMsgValue = false;
     }
 
     function getWarning() {
-      if (!_.isEmpty(vm.deletedSessionVariablesList)) {
-        if (vm.deletedSessionVariablesList.length > 1) {
-          vm.deletedSessionVariablesListAlongWithWarning = $translate.instant('autoAttendant.dynamicMissingCustomVariables', { deletedSessionVariablesList: vm.deletedSessionVariablesList.toString() });
-        } else {
-          vm.deletedSessionVariablesListAlongWithWarning = $translate.instant('autoAttendant.dynamicMissingCustomVariable', { deletedSessionVariablesList: vm.deletedSessionVariablesList.toString() });
-        }
-        return true;
-      } else {
+      if (_.isEmpty(vm.deletedSessionVariablesList)) {
         return false;
       }
+      if (vm.deletedSessionVariablesList.length > 1) {
+        vm.deletedSessionVariablesListAlongWithWarning = $translate.instant('autoAttendant.dynamicMissingCustomVariables', { deletedSessionVariablesList: vm.deletedSessionVariablesList.toString() });
+      } else {
+        vm.deletedSessionVariablesListAlongWithWarning = $translate.instant('autoAttendant.dynamicMissingCustomVariable', { deletedSessionVariablesList: vm.deletedSessionVariablesList.toString() });
+      }
+      return true;
     }
 
     function addLocalAndQueriedSessionVars() {
@@ -142,13 +132,14 @@
 
     function updateIsWarnFlag() {
       vm.deletedSessionVariablesList = [];
-      if (!_.isEmpty(dynamicVariablesList)) {
-        _.forEach(dynamicVariablesList, function (variable) {
-          if (!_.includes(vm.availableSessionVariablesList, variable)) {
-            vm.deletedSessionVariablesList.push(variable);
-          }
-        });
+      if (_.isEmpty(dynamicVariablesList)) {
+        return;
       }
+      _.forEach(dynamicVariablesList, function (variable) {
+        if (!_.includes(vm.availableSessionVariablesList, variable)) {
+          vm.deletedSessionVariablesList.push(variable);
+        }
+      });
       vm.deletedSessionVariablesList = _.uniq(vm.deletedSessionVariablesList).sort();
     }
 
@@ -159,10 +150,6 @@
         if (!_.isUndefined(data) && data.length > 0) {
           dependentCeSessionVariablesList = data;
         }
-      }, function (response) {
-        if (response.status === 404) {
-          dependentCeSessionVariablesList = [];
-        }
       });
     }
 
@@ -172,7 +159,7 @@
       if (!_.isUndefined(dynamVarList)) {
         _.forEach(dynamVarList, function (entry) {
           if (entry.isDynamic) {
-            if (!_.includes(prePopulatedSessionVariablesList, entry.say.value)) {
+            if (!_.includes(AACommonService.getprePopulatedSessionVariablesList(), entry.say.value)) {
               dynamicVariablesList.push(entry.say.value);
             }
           }

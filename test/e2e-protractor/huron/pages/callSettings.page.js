@@ -13,18 +13,18 @@ export class CallSettingsPage {
     this.extensionPrefixTitle = element(by.cssContainingText('.modal-title', 'Choose Prefix'));
     this.extensionPrefixInput = element(by.id('extensionPrefix'));
     this.extensionPrefixSaveButton = element(by.css('.modal-footer .btn-primary'));
-    this.regionalSettingsTitle = element(by.cssContainingText('.section__title.ng-scope', 'Regional Settings'));
-    this.internalDialingTitle = element(by.cssContainingText('.section__title.ng-scope', 'Internal Dialing'));
-    this.externalDialingTitle = element(by.cssContainingText('.section__title.ng-scope', 'External Dialing'));
-    this.dialingRestrictionsTitle = element(by.cssContainingText('.section__title.ng-scope', 'Dialing Restrictions'));
-    this.companyCallerIdTitle = element(by.cssContainingText('.section__title.ng-scope', 'Company Caller ID'));
-    this.companyVoicemailTitle = element(by.cssContainingText('.section__title.ng-scope', 'Company Voicemail'));
+    this.regionalSettingsTitle = element(by.cssContainingText('.section__title', 'Regional Settings'));
+    this.internalDialingTitle = element(by.cssContainingText('.section__title', 'Internal Dialing'));
+    this.externalDialingTitle = element(by.cssContainingText('.section__title', 'External Dialing'));
+    this.dialingRestrictionsTitle = element(by.cssContainingText('.section__title', 'Dialing Restrictions'));
+    this.companyCallerIdTitle = element(by.cssContainingText('.section__title', 'Company Caller ID'));
+    this.companyVoicemailTitle = element(by.cssContainingText('.section__title', 'Company Voicemail'));
     // External Dialing Section
     this.dialWarning = element(by.cssContainingText('.text-wrap', 'First digit of Voicemail Access Prefix'));
-    this.dialOneRadio = element(by.css('#nationalDialing.ng-not-empty'));
+    this.dialOneRadio = element(by.css('#nationalDialing'));
     this.dialOneChkBx = element(by.css('label[for="requireOneToDial"]'));
-    this.dialChkbxEmpty = element(by.css('#requireOneToDial.ng-empty'));
-    this.dialChkbxNotEmpty = element(by.css('#requireOneToDial.ng-not-empty'));
+    this.dialChkbxEmpty = element(by.css('#requireOneToDial'));
+    this.dialChkbxNotEmpty = element(by.css('#requireOneToDial'));
     this.pstnWarning = element(by.cssContainingText('.icon-warning', 'To use local dialing, you must setup your PSTN service'));
     this.simplifiedLocalRadio = element(by.css('.cs-radio[for="localDialing"]'));
     this.areaCode = element(by.css('input#areacode-input'));

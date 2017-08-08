@@ -353,12 +353,21 @@ describe('UrlConfigSpec', function () {
     });
   });
 
-  it('should return correct customer care url', function () {
+  it('should return correct Sunlight Config Service url', function () {
     whenCalling('getSunlightConfigServiceUrl').expectUrlToBe({
       dev: 'https://config.devus1.ciscoccservice.com/config/v1',
       cfe: 'https://config.appstaging.ciscoccservice.com/config/v1',
       integration: 'https://config.appstaging.ciscoccservice.com/config/v1',
       prod: 'https://config.produs1.ciscoccservice.com/config/v1',
+    });
+  });
+
+  it('should return correct Virtual Assistant Config Service url', function () {
+    whenCalling('getVirtualAssistantConfigServiceUrl').expectUrlToBe({
+      dev: 'http://localhost:8080/bot-services/v1/config',
+      cfe: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/config',
+      integration: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/config',
+      prod: 'https://bot-services.produs1.ciscoccservice.com/bot-services/v1/config',
     });
   });
 

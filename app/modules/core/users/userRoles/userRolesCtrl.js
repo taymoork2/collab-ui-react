@@ -32,7 +32,7 @@ require('./_user-roles.scss');
     $scope.helpdeskOnCheckedHandler = helpdeskOnCheckedHandler;
     $scope.partnerManagementOnCheckedHandler = partnerManagementOnCheckedHandler;
     $scope.resetFormData = resetFormData;
-    $scope.isEnterpriseCustomer = isEnterpriseCustomer;
+    $scope.isEnterpriseCustomer = Authinfo.isEnterpriseCustomer();
     $scope.enableReadonlyAdminOption = false;
     $scope.enableRolesAndSecurityOption = false;
     $scope.showUserDetailSection = true;
@@ -221,10 +221,6 @@ require('./_user-roles.scss');
           $scope.rolesEdit.form.partialAdmin.$setValidity('noSelection', true);
         }
       }
-    }
-
-    function isEnterpriseCustomer() {
-      return Authinfo.isEnterpriseCustomer();
     }
 
     function updateRoles() {

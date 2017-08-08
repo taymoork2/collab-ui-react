@@ -23,6 +23,9 @@ export class MeetingSettingsCtrl {
   public actingSubscriptionId = '';
   public distributedLicensesArray: IWebExSite[][];
   public centerDetails = this.getWebExMeetingsLicenseTypeDetails();
+  public tspPartnerOptions = [];
+  public audioPartnerName = null;
+  public dropdownPlaceholder = this.$translate.instant('common.select');
 
   /* @ngInject */
   constructor(
@@ -61,6 +64,9 @@ export class MeetingSettingsCtrl {
         },
       });
     });
+    if (this.SetupWizardService.hasTSPAudioPackage()) {
+      this.populateTSPPartnerOptions();
+    }
   }
 
   public onInputChange() {
@@ -79,6 +85,30 @@ export class MeetingSettingsCtrl {
     });
 
     this.sitesArray = sitesArray;
+  }
+
+  private updateSitesLicenseCount() {
+    const sourceArray = _.flatten(this.distributedLicensesArray);
+    _.forEach(this.sitesArray, (site) => {
+      const matchingSite = _.find(sourceArray, { siteUrl: site.siteUrl });
+      if (matchingSite) {
+        site.quantity = matchingSite.quantity;
+      }
+    });
+  }
+
+  private updateSitesAudioPackageDisplay() {
+    const audioPackage = this.SetupWizardService.getPendingAudioLicenses();
+    if (audioPackage && audioPackage[0]) {
+      let audioPackageDisplay = 'subscriptions.licenseTypes.' + audioPackage[0].offerName;
+      audioPackageDisplay = this.$translate.instant(audioPackageDisplay);
+      if (this.audioPartnerName) {
+        audioPackageDisplay += this.$translate.instant('firstTimeWizard.providedBy') + this.audioPartnerName;
+      }
+      _.forEach(this.sitesArray, (site) => {
+        site.audioPackageDisplay = audioPackageDisplay;
+      });
+    }
   }
 
   private findTimezoneObject(timezoneId) {
@@ -154,9 +184,20 @@ export class MeetingSettingsCtrl {
 
     _.forEach(this.centerDetails, (center) => {
       licensesRemaining += this.calculateLicensesRemaining(center.centerType);
+      if (licensesRemaining === 0) {
+        this.updateSitesLicenseCount();
+        this.updateSitesAudioPackageDisplay();
+      }
     });
 
     _.set(this.$scope.wizard, 'isNextDisabled', licensesRemaining !== 0);
+  }
+
+  public setNextDisableStatus(status) {
+    _.set(this.$scope.wizard, 'isNextDisabled', status);
+    if (this.audioPartnerName) {
+      this.updateSitesAudioPackageDisplay();
+    }
   }
 
   public addOrRemoveExistingWebExSite(site) {
@@ -181,6 +222,12 @@ export class MeetingSettingsCtrl {
         centerType: license.offerName,
         volume: license.volume,
       };
+    });
+  }
+
+  private populateTSPPartnerOptions() {
+    this.SetupWizardService.getTSPPartners().then((partners) => {
+      this.tspPartnerOptions = partners;
     });
   }
 
@@ -275,7 +322,7 @@ export class MeetingSettingsCtrl {
 
     _.set(webexLicensesPayload, 'webexProvisioningParams', {
       webexSiteDetailsList: webexSiteDetailsList,
-      audioPartnerName: null,
+      audioPartnerName: this.audioPartnerName,
     });
 
     return webexLicensesPayload;

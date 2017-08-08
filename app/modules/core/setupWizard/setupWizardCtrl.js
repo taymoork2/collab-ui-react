@@ -151,6 +151,10 @@ require('./_setup-wizard.scss');
           template: 'modules/core/setupWizard/meeting-settings/meeting-license-distribution.html',
         },
         {
+          name: 'setPartnerAudio',
+          template: 'modules/core/setupWizard/meeting-settings/meeting-audio-partner.html',
+        },
+        {
           name: 'summary',
           template: 'modules/core/setupWizard/meeting-settings/meeting-summary.html',
         }],
@@ -160,7 +164,9 @@ require('./_setup-wizard.scss');
         if (!hasWebexMeetingTrial()) {
           _.remove(meetingTab.steps, { name: 'migrateTrial' });
         }
-
+        if (!SetupWizardService.hasTSPAudioPackage()) {
+          _.remove(meetingTab.steps, { name: 'setPartnerAudio' });
+        }
         tabs.splice(1, 0, meetingTab);
       }
     }
@@ -313,14 +319,14 @@ require('./_setup-wizard.scss');
       if (!Authinfo.isSetupDone()) {
         var tab = {
           name: 'finish',
-          label: 'firstTimeWizard.activateAndBeginBilling',
+          label: 'firstTimeWizard.provisionAndBeginBilling',
           description: 'firstTimeWizard.finishSub',
           icon: 'icon-check',
-          title: 'firstTimeWizard.getStarted',
+          title: 'firstTimeWizard.provisionAndBeginBilling',
           controller: 'WizardFinishCtrl',
           steps: [{
-            name: 'activate',
-            template: 'modules/core/setupWizard/finish/activate.html',
+            name: 'provision',
+            template: 'modules/core/setupWizard/finish/provision.html',
           }, {
             name: 'done',
             template: 'modules/core/setupWizard/finish/finish.html',
@@ -329,7 +335,8 @@ require('./_setup-wizard.scss');
 
         if (!hasPendingLicenses) {
           tab.label = 'firstTimeWizard.finish';
-          _.remove(tab.steps, { name: 'activate' });
+          tab.title = 'firstTimeWizard.getStarted';
+          _.remove(tab.steps, { name: 'provision' });
         }
 
         tabs.push(tab);
