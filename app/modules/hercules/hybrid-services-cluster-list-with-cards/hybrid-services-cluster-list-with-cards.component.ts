@@ -188,7 +188,7 @@ class HybridServicesClusterListWithCardsCtrl implements ng.IComponentController 
       type: 'small',
       controller: 'SetDefaultReleaseChannelController',
       controllerAs: 'vm',
-      templateUrl: 'modules/hercules/fusion-pages/set-default-release-channel/set-default-release-channel.html',
+      templateUrl: 'modules/hercules/hybrid-services-cluster-list-with-cards/set-default-release-channel.html',
       resolve: {
         unassignedClusters: ()  => this.groupsCache[0].unassigned,
       },

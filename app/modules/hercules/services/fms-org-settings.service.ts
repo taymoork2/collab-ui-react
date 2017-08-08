@@ -28,6 +28,6 @@ export class FmsOrgSettings {
 }
 
 export default angular
-  .module('Hercules')
+  .module('hercules.fms-org-settings', [])
   .service('FmsOrgSettings', FmsOrgSettings)
   .name;
