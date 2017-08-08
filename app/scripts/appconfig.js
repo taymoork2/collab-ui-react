@@ -67,7 +67,9 @@
           // inspired by https://github.com/angular-ui/ui-router/issues/600
           // unit tests $digest not settling due to $location url changes
           var $window = $injector.get('$window');
-          if ($window.document.URL.indexOf('error') === -1) {
+          var Utils = $injector.get('Utils');
+          var oauthCodeParams = Utils.getFromStandardGetParams($window.document.URL);
+          if (!_.has(oauthCodeParams, 'error')) {
             var $state = $injector.get('$state');
             $state.go('login');
           }
