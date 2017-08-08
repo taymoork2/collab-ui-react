@@ -145,7 +145,8 @@
             }
           }
         });
-      } else if (!_.isUndefined(preodicDynamVarList)) {
+      }
+      if (!_.isUndefined(preodicDynamVarList)) {
         _.forEach(preodicDynamVarList, function (entry) {
           if (entry.isDynamic) {
             if (!_.includes(AACommonService.getprePopulatedSessionVariablesList(), entry.say.value)) {
