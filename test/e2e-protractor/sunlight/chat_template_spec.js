@@ -157,10 +157,8 @@ describe('Care admin should be able to', function () {
 
 
   function validateContentsOfProfilePage() {
-    validateTitleAndDesc('Branding and Identity', 'Configure how you want the organization and user profile to be represented for your company');
-    utils.expectIsReadOnly(careChatTemplateSetupPage.OrgName);
+    validateTitleAndDesc('Branding and Identity', 'Configure how your company or your agent is visually represented');
     utils.click(careChatTemplateSetupPage.agentProfile);
-    utils.expectIsDisplayed(careChatTemplateSetupPage.agentDisplayImage);
     utils.click(careChatTemplateSetupPage.agentNameRadio);
     utils.waitForText(careChatTemplateSetupPage.agentNamePreview, 'Agent');
     utils.click(careChatTemplateSetupPage.agentAliasRadio);
@@ -290,7 +288,7 @@ describe('Care admin should be able to', function () {
   }
 
   function validateContentsOfChatStatusMessagesPage() {
-    validateTitleAndDesc('Status Messages', 'Configure status messages which your customer sees during the chat');
+    validateTitleAndDesc('Status Messages', 'Configure the status message to display in the customer chat window');
     validateChatStatusMessagesDefaultPage();
     validateChatStatusMessagesChange();
   }

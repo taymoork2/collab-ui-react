@@ -11,6 +11,8 @@
       "givenName": "fname1",
       "familyName": "lname1"
     },
+    "status": 200,
+    "httpStatus": 200,
     "entitlements": ["squared-room-moderation", "squared-call-initiation", "spark", "webex-squared", "squared-syncup"],
     "id": "271f9c9b-0e6c-46ac-8660-f31f4a14b376",
     "meta": {
@@ -46,6 +48,8 @@
       "givenName": "fname1",
       "familyName": "lname1"
     },
+    "status": 200,
+    "httpStatus": 200,
     "entitlements": ["squared-room-moderation", "squared-call-initiation", "spark", "webex-squared", "squared-syncup"],
     "id": "271f9c9b-0e6c-46ac-8660-f31f4a14b376",
     "meta": {
@@ -80,6 +84,8 @@
       "givenName": "fname1",
       "familyName": "lname1"
     },
+    "status": 200,
+    "httpStatus": 200,
     "entitlements": ["squared-room-moderation", "squared-call-initiation", "spark", "webex-squared", "squared-syncup"],
     "id": "271f9c9b-0e6c-46ac-8660-f31f4a14b376",
     "meta": {
@@ -111,6 +117,8 @@
       "givenName": "fname1",
       "familyName": "lname1"
     },
+    "status": 200,
+    "httpStatus": 200,
     "entitlements": ["squared-room-moderation", "squared-call-initiation", "spark", "webex-squared", "squared-syncup"],
     "id": "271f9c9b-0e6c-46ac-8660-f31f4a14b376",
     "meta": {

@@ -42,77 +42,70 @@ if [ -n "$1" ]; then
     esac
 fi
 
-# Check if rvm is installed, otherwise install it
-# rvm --version > /dev/null 2>&1
-# RVM_RET=$?
-# if [ $RVM_RET -ne 0 ]; then
-#     echo "RVM not found, installing:"
-#     \curl -sSL https://get.rvm.io | bash -s stable --ruby
-# else
-#     echo "RVM is already installed"
-# fi
-
-# Check if brew is installed, otherwise install it
-if [ "`uname`" = "Darwin" ]; then
-  brew --version > /dev/null 2>&1
-  BREW_RET=$?
-  if [ $BREW_RET -ne 0 ]; then
-      echo "BREW not found, installing:"
-      ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-  else
-      echo "BREW is already installed"
-  fi
-fi
-
-# Check and install npm
-npm --version > /dev/null 2>&1
-NPM_RET=$?
-if [ $NPM_RET -ne 0 ]; then
-    echo "npm not found, installing:"
-    if [ "`uname`" = "Darwin" ]; then
-      brew install npm
-    else
-      echo "Please install npm (for CentOS, see: http://serverfault.com/questions/299288/how-do-you-install-node-js-on-centos )."
+# install brew as-needed
+if [ "$(uname)" = "Darwin" ]; then
+    if ! is_installed "brew"; then
+        echo "\`brew\` not found, installing:"
+        ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     fi
-else
-    echo "NPM is already installed"
 fi
 
-# Remove component directories
+# TODO: replace this with check for nvm
+# install npm as-needed
+if ! is_installed "npm"; then
+    echo "[INFO] \`npm\` not found, installing:"
+    if [ "$(uname)" = "Darwin" ]; then
+        brew install npm
+    else
+        echo "Please install npm (for CentOS, see: http://serverfault.com/questions/299288/how-do-you-install-node-js-on-centos )."
+    fi
+fi
+
+# remove component directories
 if [ $quick = "false" ]; then
-  echo "Removing component directories..."
-  # remove deprecated bower_components to clean up workspace
-  rm -rf bower_components
-  rm -rf node_modules
+    echo "[INFO] Removing component directories..."
+    # remove deprecated bower_components to clean up workspace
+    rm -rf bower_components
+    rm -rf node_modules
 fi
 
 # check for and install GNU Parallel as-appropriate
 install_parallel_as_needed || exit 1
 
-# # Check for cleanup script and run
-# ls -al ./cleanUpManagedOrgs.sh > /dev/null 2>&1
-# CLEANUP_RET=$?
-# if [ $CLEANUP_RET -ne 0 ]; then
-#   echo "cleanup script not found, ignoring cleanup..."
-# else
-#   echo "cleanup script found, running cleanup"
-#   ./cleanUpManagedOrgs.sh
-# fi
+function npm_install {
+    local time_start
+    local time_npm
+    local npm_install_options
+    local npm_duration
+    time_start=$(date +"%s")
 
-time_start=$(date +"%s")
+    if [ "${NPM__VERBOSE}" = "true" ]; then
+        npm_install_options="--loglevel=verbose"
+    fi
+    npm install "${npm_install_options}"
 
-# Install dependecies
-echo "Install all dependencies..."
-if [ "${NPM__VERBOSE}" = "true" ]; then
-  npm_install_options="--loglevel=verbose"
+    time_npm=$(date +"%s")
+    npm_duration=$(($time_npm-$time_start))
+    echo "npm completed after $(($npm_duration / 60)) minutes and $(($npm_duration % 60)) seconds."
+    return $?
+}
+
+function yarn_install {
+    yarn
+    return $?
+}
+
+# install npm deps
+echo "[INFO] Install npm dependencies..."
+if is_installed "yarn"; then
+    yarn_install || exit $?
+else
+    npm_install || exit $?
 fi
-npm install "${npm_install_options}" || exit $?
 
-# npm install succeeded
 # - make a tar archive of the npm deps, and rm older versions
+echo "[INFO] Generating backup archive of npm dependencies..."
 mk_npm_deps_tar
 rm_all_but_last 1 .cache/npm-deps-for-*.tar.gz
 
-time_npm=$(date +"%s")
-npm_duration=$(($time_npm-$time_start))
-echo "npm completed after $(($npm_duration / 60)) minutes and $(($npm_duration % 60)) seconds."
+echo "[INFO] Done ($(basename $0))"

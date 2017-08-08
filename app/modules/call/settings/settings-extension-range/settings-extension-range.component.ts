@@ -1,9 +1,9 @@
-import { IExtensionRange } from 'modules/call/settings/settings-extension-range';
+import { InternalNumberRange } from 'modules/call/shared/internal-number-range';
 
 class ExtensionRangeCtrl implements ng.IComponentController {
-  public steeringDigit: string;
   public extensionLength: string;
-  public numberRanges: IExtensionRange[];
+  public steeringDigit: string;
+  public numberRanges: InternalNumberRange[];
   public firstTimeSetup: boolean;
   public onChangeFn: Function;
   public extensionRangeForm: ng.IFormController;
@@ -73,7 +73,7 @@ class ExtensionRangeCtrl implements ng.IComponentController {
     this.onExtensionRangeChange();
   }
 
-  public steeringDigitOverlap(range: IExtensionRange) {
+  public steeringDigitOverlap(range: InternalNumberRange) {
     if (_.startsWith(range.beginNumber, this.steeringDigit) ||
       _.startsWith(range.endNumber, this.steeringDigit)) {
       return true;
@@ -88,7 +88,7 @@ class ExtensionRangeCtrl implements ng.IComponentController {
     return true;
   }
 
-  public isDisabled(numberRange: IExtensionRange): boolean {
+  public isDisabled(numberRange: InternalNumberRange): boolean {
     return !_.isEmpty(numberRange.uuid);
   }
 

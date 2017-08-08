@@ -4,9 +4,6 @@
 
 <form name="$ctrl.form" novalidate  ng-if="!$ctrl.loading">
   <div class="container-fluid service-setup-container">
-    <div ng-if="$ctrl.ishI1484">
-      <input type="text" cs-input ng-model="$ctrl.locationName" required cs-input-label="{{'locations.locationName' | translate}}">
-    </div>
     <!-- regional settings -->
     <div ng-if="$ctrl.showRegionAndVoicemail" class="row full service-setup service-setup-regional-settings bottom-margin">
       <uc-time-zone
@@ -34,16 +31,11 @@
 
     <!-- internal dialing section -->
     <h4 class="title-margin-bottom"translate="serviceSetupModal.internalDialing"></h4>
-    <div ng-if="!$ctrl.ishI1484" class="row full service-setup service-setup-regional-settings bottom-margin">
+    <div class="row full service-setup service-setup-regional-settings bottom-margin">
       <uc-routing-prefix
         routing-prefix="$ctrl.huronSettingsData.site.routingPrefix"
         on-change-fn="$ctrl.onRoutingPrefixChanged(routingPrefix)">
       </uc-routing-prefix>
-    </div>
-    <div class="service-setup" ng-if="$ctrl.ishI1484 && $ctrl.isMultiSelected()">
-      <label translate="serviceSetupModal.routingPrefix.title"></label>
-      <p translate="serviceSetupModal.routingPrefix.reserveDesc"></p>
-      <input type="text" cs-input ng-model="$ctrl.routingPrefix" placeholder="{{'serviceSetupModal.routingPrefix.placeholder' | translate}}" required cs-input-help-text="{{'serviceSetupModal.routingPrefix.exampleHelpText' | translate}}">
     </div>
     <div class="row full service-setup service-setup-regional-settings bottom-margin">
       <uc-extension-length

@@ -20,6 +20,7 @@ describe('Controller: Finish - Activate and Start Billing', function () {
     spyOn(this.SetupWizardService, 'provisioningCallbacks').and.returnValue({});
     spyOn(this.SetupWizardService, 'addProvisioningCallbacks').and.callThrough();
     spyOn(this.TrialWebexService, 'setProvisioningWebexSendCustomerEmailFlag').and.callThrough();
+    spyOn(this.SetupWizardService, 'getCurrentOrderNumber').and.returnValue('abc/def/ghi/12345');
 
     installPromiseMatchers();
 
@@ -58,6 +59,16 @@ describe('Controller: Finish - Activate and Start Billing', function () {
     it('should call TrialWebexService.setProvisioningWebexSendCustomerEmailFlag', function () {
       this.$scope.setSendCustomerEmailFlag(true);
       expect(this.TrialWebexService.setProvisioningWebexSendCustomerEmailFlag).toHaveBeenCalled();
+    });
+  });
+
+  describe('test order details data', function () {
+    beforeEach(function () {
+      this.initController();
+    });
+
+    it('should format the web order id string', function () {
+      expect(this.$scope.orderDetails.orderId).toBe('abc/def/ghi');
     });
   });
 });

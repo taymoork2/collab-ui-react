@@ -2,7 +2,6 @@ import './locations.component.scss';
 
 import { CallLocationsComponent } from './locations.component';
 import { CallLocationComponent } from './location.component';
-import { UniqueLocationDirective } from 'modules/call/locations/locations-unique.directive';
 
 import notifications from 'modules/core/notifications';
 import copyLocationsModule from 'modules/call/locations/locations-copy';
@@ -15,6 +14,9 @@ import preferredLangModule from 'modules/call/settings/settings-preferred-langua
 import defaultCountryModule from 'modules/call/settings/settings-default-country';
 import outboundDialDigitModule from 'modules/call/settings/settings-outbound-dial-digit';
 import locationCosModule from 'modules/call/locations/locations-cos';
+import internalRangeServiceModule from 'modules/call/shared/internal-number-range';
+import routingPrefixModule from 'modules/call/locations/locations-routing-prefix';
+import locationVoicemailModule from 'modules/call/locations/locations-voicemail-avril';
 
 export default angular
   .module('call.locations', [
@@ -33,9 +35,10 @@ export default angular
     defaultCountryModule,
     outboundDialDigitModule,
     locationCosModule,
+    internalRangeServiceModule,
+    routingPrefixModule,
+    locationVoicemailModule,
   ])
-
 .component('ucCallLocations', new CallLocationsComponent())
 .component('ucCallLocation', new CallLocationComponent())
-.directive('uniqueLocation', UniqueLocationDirective.factory)
 .name;

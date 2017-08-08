@@ -2,15 +2,7 @@ import { ConnectorType, HybridServiceId } from 'modules/hercules/hybrid-services
 import { ResourceGroupService, IResourceGroupOptionPair } from 'modules/hercules/services/resource-group.service';
 import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
 import { Notification } from 'modules/core/notifications/notification.service';
-
-interface IUserProps {
-  resourceGroups: {
-    'squared-fusion-cal': string,
-    'squared-fusion-uc': string,
-    'squared-fusion-ec': string,
-    'spark-hybrid-impinterop': string,
-  };
-}
+import { USSService } from 'modules/hercules/services/uss.service';
 
 class HybridServicesResourceGroupSelectorCtrl implements ng.IComponentController {
 
@@ -38,7 +30,7 @@ class HybridServicesResourceGroupSelectorCtrl implements ng.IComponentController
     private $translate: ng.translate.ITranslateService,
     private Notification: Notification,
     private HybridServicesUtilsService: HybridServicesUtilsService,
-    private USSService,
+    private USSService: USSService,
     private ResourceGroupService: ResourceGroupService,
   ) {
     this.localizedConnectorName =  this.$translate.instant('hercules.connectorNames.' + this.serviceId);
@@ -82,7 +74,7 @@ class HybridServicesResourceGroupSelectorCtrl implements ng.IComponentController
             this.setSelectedResourceGroup(this.resourceGroupId);
           } else {
             this.USSService.getUserProps(this.userId)
-              .then((props: IUserProps) => {
+              .then((props) => {
                 if (props.resourceGroups && props.resourceGroups[this.serviceId]) {
                   this.setSelectedResourceGroup(props.resourceGroups[this.serviceId]);
                 } else {
@@ -128,7 +120,7 @@ class HybridServicesResourceGroupSelectorCtrl implements ng.IComponentController
       resourceGroups: {},
     };
     props.resourceGroups[this.serviceId] = resourceGroupId;
-    this.USSService.updateUserProps(props)
+    this.USSService.updateBulkUserProps([props])
       .then(() => {
         this.currentResourceGroup = this.selectedResourceGroup;
         this.setShouldShowButtons();

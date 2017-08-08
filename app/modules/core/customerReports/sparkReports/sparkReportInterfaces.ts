@@ -106,3 +106,12 @@ export interface IMinMax {
   min: number;
   max: number;
 }
+
+export interface IPlaceHolder {
+  searchbox: string;
+  startDate: string;
+  endDate: string;
+  startTime: string;
+  endTime: string;
+  to: string;
+}

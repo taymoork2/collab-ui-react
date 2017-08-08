@@ -8,7 +8,7 @@ describe('Huron Functional: external-dial-with-pstn', () => {
   const customer = huronCustomer('external-dial-with-pstn', null, null, true, 3);
   beforeAll(done => {
     provisioner.provisionCustomerAndLogin(customer)
-            .then(done);
+      .then(done);
   });
 
   afterAll(done => {

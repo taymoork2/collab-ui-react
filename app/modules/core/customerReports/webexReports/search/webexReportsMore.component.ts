@@ -38,31 +38,32 @@ class WebexReportsMore implements ng.IComponentController {
         const data: any  = res;
         data.overview.duration = this.getDuration(data.overview.duration);
         data.overview.status_ = this.SearchService.getStatus(data.overview.status);
-        data.overview.startTime_ = this.timeFormat(data.overview.startTime, 'hh:mm');
-        data.overview.startDate = this.timeFormat(data.overview.startTime, 'MMMM Do, YYYY');
-        data.overview.endTime_ = data.overview.endTime ? this.timeFormat(data.overview.endTime, 'hh:mm') : '';
-        data.overview.endDate = data.overview.endTime ? this.timeFormat(data.overview.endTime, 'MMMM Do, YYYY') : '';
+        data.overview.startTime_ = this.timestampToDate(data.overview.startTime, 'hh:mm');
+        data.overview.startDate = this.timestampToDate(data.overview.startTime, 'MMMM Do, YYYY');
+        data.overview.endTime_ = data.overview.endTime ? this.timestampToDate(data.overview.endTime, 'hh:mm') : '';
+        data.overview.endDate = data.overview.endTime ? this.timestampToDate(data.overview.endTime, 'MMMM Do, YYYY') : '';
         _.forEach(data.sessions, (item) => {
           item.duration = this.getDuration(item.duration);
           item.sessionType = this.sessionType(item.sessionType);
-          item.startTime = this.timeFormat(item.startTime, 'h:mm:ss A');
-          item.endTime = item.endTime ? this.timeFormat(item.endTime, 'h:mm:ss A') : '';
+          item.startTime = this.timestampToDate(item.startTime, 'h:mm:ss A');
+          item.endTime = item.endTime ? this.timestampToDate(item.endTime, 'h:mm:ss A') : '';
         });
         this.data = data;
         this.getParticipants();
       });
   }
 
-  private timeFormat(time, format) {
-    const _time: any = moment(time).utc().format('YYYY-MM-DD HH:mm:ss');
-    return moment(_time).tz(this.timeZone).format(format);
+  private timestampToDate(timestamp, formate): string {
+    const offset = this.SearchService.getOffset(this.timeZone);
+    const utcTime = moment(timestamp).utc().format('YYYY-MM-DD HH:mm:ss');
+    return moment.utc(utcTime).utcOffset(offset).format(formate);
   }
 
   private getParticipants() {
     this.SearchService.getParticipants(this.conferenceID)
       .then((res) => {
         this.loadingMeetingline = true;
-        this.dataSet = { overview: this.data.overview, lines: res };
+        this.dataSet = { overview: this.data.overview, lines: res, offset: this.SearchService.getOffset(this.timeZone) };
         this.getJoinMeetingTime();
         this.getJoinMeetingQuality();
       })

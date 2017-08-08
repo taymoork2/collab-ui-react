@@ -291,7 +291,7 @@
           }
           var licenseCount =
             (trial.type === Config.trials.roomSystems || trial.type === Config.offerTypes.care || trial.type === Config.offerTypes.advanceCare || trial.type === Config.offerTypes.sparkBoard) ?
-            trial.details.quantity : data.details.licenseCount;
+              trial.details.quantity : data.details.licenseCount;
           return {
             id: trial.type,
             licenseCount: licenseCount,

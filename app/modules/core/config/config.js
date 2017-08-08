@@ -60,6 +60,10 @@
         webexUrl: '.webex.com',
       },
 
+      commerceRelation: {
+        partner: 'Partner',
+      },
+
       customerTypes: {
         enterprise: 'Enterprise',
       },
@@ -231,6 +235,7 @@
         CVC: 'CVC', // Care Voice Channel
         MSGR: 'MSGR', // WebEx Messenger (as of 2017-05-17, managed externally and not managed by Atlas)
         MGMTPRO: 'MGMTPRO', // IT Pro Pack
+        TSP: 'TSP', // Telephony Service Provider
       },
 
       licenseStatus: {
@@ -428,7 +433,7 @@
         'services-overview',
       ],
       Application: ['organizations', 'organization-overview'],
-      Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org', 'helpdesklaunch'],
+      Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org', 'helpdesklaunch', 'provisioning', 'order-details'],
       Compliance_User: ['ediscovery', 'ediscovery.search', 'ediscovery.reports'],
       Partner_Management: ['partnerManagement'],
     };

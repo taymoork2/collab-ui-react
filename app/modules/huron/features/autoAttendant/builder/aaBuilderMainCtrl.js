@@ -658,13 +658,13 @@
       vm.ui.builder.ceInfo_name = _.cloneDeep(vm.ui.ceInfo.name);
 
       getTimeZoneOptions().then(getSystemTimeZone)
-      .finally(function () {
-        AutoAttendantCeMenuModelService.clearCeMenuMap();
-        vm.aaModel = AAModelService.getAAModel();
-        vm.aaModel.aaRecord = undefined;
-        vm.selectAA(aaName);
-        setLoadingDone();
-      });
+        .finally(function () {
+          AutoAttendantCeMenuModelService.clearCeMenuMap();
+          vm.aaModel = AAModelService.getAAModel();
+          vm.aaModel.aaRecord = undefined;
+          vm.selectAA(aaName);
+          setLoadingDone();
+        });
     }
 
     function evalKeyPress($keyCode) {

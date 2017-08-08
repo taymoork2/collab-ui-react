@@ -800,9 +800,9 @@
         var name = _.chain(conferenceServices).sortBy('order').map(function (o) {
           return o.name;
         })
-        .uniq()
-        .value()
-        .join(', ');
+          .uniq()
+          .value()
+          .join(', ');
         var licenseQty = conferenceServices[0].qty;
         var hasWebex = _.some(conferenceServices, { isWebex: true });
         trialServices.push({ name: name, sub: conferenceServices, qty: licenseQty, icon: 'icon-circle-group', order: 1, hasWebex: hasWebex });

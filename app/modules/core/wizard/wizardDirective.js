@@ -97,8 +97,8 @@ require('./_wizard.scss');
     vm.isCurrentTab = isCurrentTab;
     vm.loadOverview = loadOverview;
     vm.showDoItLater = false;
-    vm.showDoNotActivate = false;
-    vm.willNotActivate = false;
+    vm.showDoNotProvision = false;
+    vm.willNotProvision = false;
     vm.wizardNextLoad = false;
     vm.showSkipTabBtn = false;
 
@@ -140,7 +140,7 @@ require('./_wizard.scss');
       setNextText();
       vm.isNextDisabled = false;
       if (hasPendingLicenses()) {
-        vm.showDoNotActivate = true;
+        vm.showDoNotProvision = true;
       }
     }
 
@@ -301,12 +301,15 @@ require('./_wizard.scss');
             nextStepSuccessful();
           }
         } else if (getTab().name === 'finish') {
-          if (getStep().name === 'activate' && _.isFunction($scope.activate)) {
-            if (vm.willNotActivate) {
+          if (getStep().name === 'provision' && _.isFunction($scope.provision)) {
+            if (vm.willNotProvision) {
+              $rootScope.$broadcast('do-not-provision-event');
               nextStepSuccessful();
             } else {
-              $scope.activate();
-              nextStepSuccessful();
+              $scope.provision().then(function () {
+                $rootScope.$broadcast('provision-event');
+                nextStepSuccessful();
+              });
             }
           } else {
             nextStepSuccessful();
@@ -408,7 +411,7 @@ require('./_wizard.scss');
       if ((isFirstTab() && isFirstTime() && !isCustomerPartner() && !isFromPartnerLaunch()) || (isFirstTab() && isFirstStep() && !isSingleTabSingleStep())) {
         vm.nextText = $translate.instant('firstTimeWizard.getStarted');
       } else if (isFirstTime() && isLastTab() && isFirstStep() && hasPendingLicenses()) {
-        vm.nextText = $translate.instant('common.activate');
+        vm.nextText = $translate.instant('common.provision');
       } else if (isFirstTime() && isLastTab() && isLastStep()) {
         vm.nextText = $translate.instant('common.finish');
       } else if ((getTab().name === 'meetingSettings') && isLastStep()) {
@@ -466,7 +469,7 @@ require('./_wizard.scss');
       controllerAs: 'wizard',
       restrict: 'AE',
       scope: {
-        activate: '=',
+        provision: '=',
         tabs: '=',
         finish: '=',
         isFirstTime: '=',

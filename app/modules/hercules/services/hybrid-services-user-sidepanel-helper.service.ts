@@ -1,15 +1,5 @@
-import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
-
-export interface IUserStatus {
-  connectorId?: string;
-  serviceId: HybridServiceId;
-  clusterId?: string;
-  entitled: boolean;
-  lastStateChange: number;
-  lastStateChangeText: string;
-  state?: any;
-  resourceGroupId?: string;
-}
+import { USSService, IUserStatusWithExtendedMessages } from 'modules/hercules/services/uss.service';
+// import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
 
 export interface IEntitlementNameAndState {
   entitlementName: 'squaredFusionUC' | 'squaredFusionEC' | 'sparkHybridImpInterop';
@@ -20,15 +10,15 @@ export class HybridServiceUserSidepanelHelperService {
 
   /* @ngInject */
   constructor(
-    private USSService,
+    private USSService: USSService,
     private Userservice,
   ) {}
 
-  public getDataFromUSS(userId: string): ng.IPromise<IUserStatus[]> {
+  public getDataFromUSS(userId: string): ng.IPromise<(IUserStatusWithExtendedMessages|undefined)[]> {
     return this.USSService.getStatusesForUser(userId)
-      .then((statuses: IUserStatus[]) => {
-        const userStatusAware: IUserStatus = _.find(statuses, { serviceId: 'squared-fusion-uc' });
-        const userStatusConnect: IUserStatus = _.find(statuses, { serviceId: 'squared-fusion-ec' });
+      .then((statuses) => {
+        const userStatusAware = _.find(statuses, { serviceId: 'squared-fusion-uc' });
+        const userStatusConnect = _.find(statuses, { serviceId: 'squared-fusion-ec' });
         return [userStatusAware, userStatusConnect];
       });
   }
@@ -43,12 +33,15 @@ export class HybridServiceUserSidepanelHelperService {
           if (reply.data && reply.data.userResponse && reply.data.userResponse[0] && reply.data.userResponse[0].message) {
             throw new Error(reply.data.userResponse[0].message);
           } else {
+            // TODO: translate
             throw new Error('Could not update entitlements.');
           }
         }
         return userId;
       })
-      .then(this.USSService.refreshEntitlementsForUser);
+      .then((userId) => {
+        return this.USSService.refreshEntitlementsForUser(userId);
+      });
   }
 
 

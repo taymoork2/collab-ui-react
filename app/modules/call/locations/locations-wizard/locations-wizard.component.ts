@@ -35,7 +35,8 @@ class LocationsWizardController implements ng.IComponentController {
   public showDialPlanChangedDialog: boolean;
   public showVoiceMailDisableDialog: boolean;
   public address = {};
-  public companyVoicemailOptions;
+  public locationVoicemailOptions;
+  public voicemailEnable: boolean = false;
   public addressValidated: boolean = false;
   public addressValidating: boolean = false;
   public validationMessages = {
@@ -172,10 +173,20 @@ class LocationsWizardController implements ng.IComponentController {
     }
   }
 
-  public onCompanyVoicemailChanged(number: string, generated: boolean, enabled: boolean): void {
-    this.showVoiceMailDisableDialog = enabled;
-    this.locationDetail.voicemailPilotNumber.number = number;
-    this.locationDetail.voicemailPilotNumber.generated = generated;
+  public onLocationVoicemailChanged(externalAccess: boolean, externalNumber: string): void {
+    this.voicemailEnable = externalAccess;
+    if (this.voicemailEnable && _.isString(externalNumber) && externalNumber.length > 0) {
+      this.locationDetail.voicemailPilotNumber.number = externalNumber;
+      this.locationDetail.voicemailPilotNumber.generated = true;
+    } else {
+      this.locationDetail.voicemailPilotNumber.number = null;
+      this.locationDetail.voicemailPilotNumber.generated = false;
+    }
+  }
+
+  public onVoicemailFilter(filter: string): ng.IPromise<IOption[]> {
+    return this.HuronSettingsOptionsService.loadCompanyVoicemailNumbers(filter)
+      .then(numbers => this.settingsOptions.companyVoicemailOptions = numbers);
   }
 
   public onVoicemailToEmailChanged(voicemailToEmail: boolean) {
@@ -190,11 +201,6 @@ class LocationsWizardController implements ng.IComponentController {
         delete this.locationDetail.callerIdNumber;
       }
     }
-  }
-
-  public onCompanyVoicemailFilter(filter: string): ng.IPromise<IOption[]> {
-    return this.HuronSettingsOptionsService.loadCompanyVoicemailNumbers(filter)
-      .then(numbers => this.settingsOptions.companyVoicemailOptions = numbers);
   }
 
   public validateAddress() {

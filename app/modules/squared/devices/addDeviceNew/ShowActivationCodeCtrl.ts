@@ -253,7 +253,7 @@ export class ShowActivationCodeCtrl extends WizardCtrl {
       return this.$q.resolve({});
     }
     ussProps.userId = cisUuid;
-    return this.USSService.updateUserProps(ussProps).then((s) => {
+    return this.USSService.updateBulkUserProps([ussProps]).then((s) => {
       return s;
     }, (e) => {
       this.Notification.errorResponse(e, 'addDeviceWizard.showActivationCode.failedResourceGroup');

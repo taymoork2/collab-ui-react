@@ -35,9 +35,9 @@
       return ServiceSetup.listSites().then(function () {
         if (ServiceSetup.sites.length !== 0) {
           return ServiceSetup.getSite(ServiceSetup.sites[0].uuid)
-          .then(function (site) {
-            return _.get(site, 'country');
-          });
+            .then(function (site) {
+              return _.get(site, 'country');
+            });
         }
       });
     }

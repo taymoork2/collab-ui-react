@@ -44,6 +44,7 @@ describe('Huron Auto Attendant', function () {
 
       // click new feature
       utils.click(autoattendant.newFeatureButton);
+      browser.driver.sleep(1000);
 
       // select AA
       utils.wait(autoattendant.featureTypeAA, 20000);
@@ -142,6 +143,17 @@ describe('Huron Auto Attendant', function () {
       // say message
       utils.click(autoattendant.sayMessageInput);
       utils.sendKeys(autoattendant.sayMessageInput, "Welcome to the AA");
+      utils.click(autoattendant.sayMessageDynamicButton)
+      utils.wait(autoattendant.dynamicVariable, 320000);
+      utils.click(autoattendant.dynamicVariable);
+      utils.wait(autoattendant.dynamicVariable, 120000);
+      utils.click(autoattendant.variable);
+      utils.wait(autoattendant.dynamicVariable, 120000);
+      utils.click(autoattendant.readAs);
+      utils.click(autoattendant.readAsVariable);
+      utils.click(autoattendant.okButton);
+      utils.wait(autoattendant.okButton, 1200);
+      
 
       // language
       autoattendant.scrollIntoView(autoattendant.sayMessageLanguage);
@@ -172,6 +184,16 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.phoneMenuSay);
       utils.click(autoattendant.phonesayMessageInput);
       utils.sendKeys(autoattendant.phonesayMessageInput, "Press a key at the menu");
+      utils.click(autoattendant.phoneMenuAddDynamicTextButton);
+      utils.wait(autoattendant.dynamicVariable, 120000);
+      utils.click(autoattendant.dynamicVariable);
+      utils.wait(autoattendant.dynamicVariable, 120000);
+      utils.click(autoattendant.variable);
+      utils.wait(autoattendant.dynamicVariable, 120000);
+      utils.click(autoattendant.readAs);
+      utils.click(autoattendant.readAsVariable);
+      utils.click(autoattendant.okButton);
+      utils.wait(autoattendant.okButton, 1200);
       utils.expectIsEnabled(autoattendant.saveButton);
 
       // language and voice
@@ -443,6 +465,17 @@ describe('Huron Auto Attendant', function () {
       // say message
       utils.click(autoattendant.dialByMessageInput);
       utils.sendKeys(autoattendant.dialByMessageInput, "Enter the Extension");
+      utils.click(autoattendant.dialByExtensionDynamicButton);
+      utils.wait(autoattendant.dynamicVariable, 120000);
+      utils.click(autoattendant.dynamicVariable);
+      utils.wait(autoattendant.dynamicVariable, 120000);
+      utils.click(autoattendant.variable);
+      utils.wait(autoattendant.dynamicVariable, 120000);
+      utils.click(autoattendant.readAs);
+      utils.click(autoattendant.readAsVariable);
+      utils.click(autoattendant.okButton);
+      utils.wait(autoattendant.okButton, 1200);
+      
 
       // language
       utils.click(autoattendant.dialByMessageLanguage);
@@ -505,6 +538,19 @@ describe('Huron Auto Attendant', function () {
         utils.wait(autoattendant.callerInputFirst, 120000);
         autoattendant.scrollIntoView(autoattendant.callerInputFirst);
         utils.sendKeys(autoattendant.callerInputNameVariable, "named Variable");
+        utils.click(autoattendant.callerInputMessageOptions);
+        utils.click(autoattendant.callerInputSayMessageOption);
+        //utils.sendKeys(autoattendant.callerMessageInput, "Extension");
+        utils.click(autoattendant.callerInputDynamicButton);
+        utils.wait(autoattendant.dynamicVariable, 120000);
+        utils.click(autoattendant.dynamicVariable);
+        utils.wait(autoattendant.dynamicVariable, 120000);
+        utils.click(autoattendant.variable);
+        utils.wait(autoattendant.dynamicVariable, 120000);
+        utils.click(autoattendant.readAs);
+        utils.click(autoattendant.readAsVariable);
+        utils.click(autoattendant.okButton);
+        utils.wait(autoattendant.okButton, 1200);
         utils.click(autoattendant.callerInputGetDigits);
         autoattendant.scrollIntoView(autoattendant.callerInputFirst);
         utils.click(autoattendant.callerInputAddAction);
@@ -684,19 +730,30 @@ describe('Huron Auto Attendant', function () {
 
       // REST API
       utils.click(autoattendant.configureApiURL);
+      utils.wait(autoattendant.configureApiURL, 20000);
       utils.sendKeys(autoattendant.configureApiURL, "This is test URL");
 
       utils.click(autoattendant.restResponseDataBlock);
-      utils.sendKeys(autoattendant.restResponseDataBlock, "Test Response Block");
+      utils.sendKeys(autoattendant.restResponseDataBlock, "Test Response Block 1");
 
       utils.click(autoattendant.sessionVar);
       utils.click(autoattendant.newSessionVar);
 
-      utils.sendKeys(autoattendant.newVariableName, "123");
+      utils.sendKeys(autoattendant.newVariableName, "Test Variable 1");
+      utils.click(autoattendant.addVariableToSet);
+
+
+      utils.click(autoattendant.restResponseDataBlock1);
+      
+      utils.sendKeys(autoattendant.restResponseDataBlock1, "Test Response Block2");
+      utils.click(autoattendant.sessionVar1);
+      utils.click(autoattendant.newSessionVar1);
+
+      utils.sendKeys(autoattendant.newVariableName1, "Test Variable 2");
 
       utils.click(autoattendant.addVariableToSet);
 
-      utils.expectCount(autoattendant.sessionVarAll, 2);
+      utils.expectCount(autoattendant.sessionVarAll, 3);
 
       utils.expectIsDisabled(autoattendant.saveBtn);
 
@@ -708,6 +765,10 @@ describe('Huron Auto Attendant', function () {
 
       utils.expectIsDisplayed(autoattendant.restApiUrlLabel);
       utils.waitForText(autoattendant.restApiUrlLabel, "This is test URL");
+      utils.expectIsDisplayed(autoattendant.restApiVariableLabel1);
+      utils.waitForText(autoattendant.restApiVariableLabel1, "Test Variable 1");
+      utils.expectIsDisplayed(autoattendant.restApiVariableLabel2);
+      utils.waitForText(autoattendant.restApiVariableLabel2, "Test Variable 2");
 
     });
 
@@ -757,7 +818,6 @@ describe('Huron Auto Attendant', function () {
       });
 
     }, 120000);
-
   });
 
 });

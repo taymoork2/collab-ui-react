@@ -2,12 +2,12 @@ module.exports = function (context) {
   var allowedIdentifiers = [
   // Jasmine
     'describe', 'xdescribe', 'it', 'xit', 'beforeEach', 'afterEach', 'done', 'beforeAll', 'afterAll',
-  // utils
+    // utils
     'utils', 'deleteUtils', 'createUtils', 'deleteTrialUtils', 'helper',
-  // page objects
+    // page objects
     'notifications', 'landing', 'login', 'enterEmailAddrPage', 'createAccountPage', 'navigation', 'users', 'reports', 'support', 'roles', 'partner', 'wizard', 'invite', 'activate',
     'callrouting', 'autoattendant', 'servicesetup', 'telephony', 'huronFeatures', 'huntGroup', 'mediaservice', 'careLandingPage', 'careChatTemplateSetupPage',
-  // Others
+    // Others
     'Math', '_',
   ];
 

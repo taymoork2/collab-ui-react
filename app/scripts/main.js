@@ -83,6 +83,7 @@
     require('modules/core/settings').default,
     require('modules/huron/countries').default,
     require('modules/call/settings').default,
+    require('modules/call/locations').default,
     require('modules/huron/dialPlans').default,
     require('modules/core/domainManagement').default,
     require('modules/huron/features/featureLanding/hoverDelay.directive').default,
@@ -100,6 +101,7 @@
     'Sunlight',
     require('modules/squared/devices/services/CsdmPoller'),
     require('modules/squared/partner-management').default,
+    require('modules/squared/provisioning-console').default,
   ]);
 
   angular.module('DigitalRiver', ['Core']);
@@ -129,8 +131,8 @@
     require('modules/huron/media-mgr').default,
     require('modules/call/features').default,
   ])
-  .constant('ASTParser', require('acorn'))
-  .constant('ASTWalker', require('acorn/dist/walk'));
+    .constant('ASTParser', require('acorn'))
+    .constant('ASTWalker', require('acorn/dist/walk'));
 
   angular.module('Hercules', [
     'Core',
@@ -154,7 +156,7 @@
     require('modules/hercules/services/hybrid-services-utils.service').default,
     require('modules/hercules/services/l2sip-service').default,
     require('modules/hercules/services/service-descriptor.service').default,
-    require('modules/hercules/services/uss-service'),
+    require('modules/hercules/services/uss.service').default,
   ]);
 
   angular.module('HDS', ['Core', 'Hercules']);

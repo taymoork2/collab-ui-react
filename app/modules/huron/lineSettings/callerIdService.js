@@ -149,8 +149,8 @@
             display: userName,
             label: lineTextLabel,
           };
-          // Only update on primary line and all primary lines where there's no primary user.
-          if (userDn.isPrimary || !userDn.hasSharedPrimary) {
+          // Only update on primary line.
+          if (userDn.isPrimary) {
             // Update alerting name on DN
             promise = DirectoryNumber.updateDirectoryNumber(userDn.uuid, {
               alertingName: userName,
@@ -200,19 +200,19 @@
           };
           userDnList.push(userLine);
 
-            // Get all the users of the line to decide if this line is a shared line
+          // Get all the users of the line to decide if this line is a shared line
           promise = DirectoryNumberUserService.query({
             customerId: Authinfo.getOrgId(),
             directoryNumberId: userLine.uuid,
           }).$promise
-              .then(function (dnUserInfo) {
-                dnUserInfo.forEach(function (dnUser) {
-                  this.sharedUsers.push(dnUser.user);
-                  if (dnUser.dnUsage === 'Primary') {
-                    this.hasSharedPrimary = true;
-                  }
-                }.bind(this));
-              }.bind(userLine));
+            .then(function (dnUserInfo) {
+              dnUserInfo.forEach(function (dnUser) {
+                this.sharedUsers.push(dnUser.user);
+                if (dnUser.dnUsage === 'Primary') {
+                  this.hasSharedPrimary = true;
+                }
+              }.bind(this));
+            }.bind(userLine));
           promises.push(promise);
         });
         return $q.all(promises);

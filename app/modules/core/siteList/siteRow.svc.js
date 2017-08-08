@@ -63,7 +63,7 @@
 
           if (null != siteRow.csvPollIntervalObj) {
             // logMsg = funcName + "\n" +
-              // "siteUrl=" + siteRow.license.siteUrl;
+            // "siteUrl=" + siteRow.license.siteUrl;
             // $log.log(logMsg);
 
             $interval.cancel(siteRow.csvPollIntervalObj);
@@ -76,7 +76,6 @@
       // Start of grid set up
       _this.siteRows.gridOptions = {
         data: _this.siteRows.gridData,
-        enableRowSelection: false,
         rowHeight: 44,
         columnDefs: [],
       };

@@ -130,10 +130,10 @@
       return $q.all(formattedResources).then(function (value) {
         return value;
       },
-        function (response) {
-          // if any promise fails, we want to fail (with the details) so further promises don't execute (save fails)
-          return $q.reject(response);
-        });
+      function (response) {
+        // if any promise fails, we want to fail (with the details) so further promises don't execute (save fails)
+        return $q.reject(response);
+      });
     }
 
     // endsWith works on the browsers (ECMA6), but not phantomjs, so here is an implemenation
@@ -259,10 +259,10 @@
             failedResources: [],
           };
         },
-          function (response) {
-            // failure
-            return $q.reject(response);
-          }
+        function (response) {
+          // failure
+          return $q.reject(response);
+        }
 
         );
       } else {

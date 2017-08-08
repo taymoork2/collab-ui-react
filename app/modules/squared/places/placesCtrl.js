@@ -90,10 +90,10 @@ require('../devices/_devices.scss');
 
         vm.isOrgEntitledToHuron = function () {
           return _.filter(
-              Authinfo.getLicenses(),
-              function (l) {
-                return l.licenseType === 'COMMUNICATION';
-              }).length > 0;
+            Authinfo.getLicenses(),
+            function (l) {
+              return l.licenseType === 'COMMUNICATION';
+            }).length > 0;
         };
 
         vm.numDevices = function (place) {
@@ -108,7 +108,9 @@ require('../devices/_devices.scss');
         };
 
         vm.gridOptions = {
+          appScopeProvider: vm,
           rowHeight: 45,
+          enableRowSelection: true,
           onRegisterApi: function (gridApi) {
             vm.gridApi = gridApi;
             vm.gridApi.selection.on.rowSelectionChanged($scope, function (row) {

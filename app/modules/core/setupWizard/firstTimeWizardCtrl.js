@@ -17,7 +17,7 @@
       });
     };
 
-    $scope.activate = function () {
+    $scope.provision = function () {
       return SetupWizardService.processCallbacks();
     };
 

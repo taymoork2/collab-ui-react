@@ -1,4 +1,4 @@
-import * as moment from 'moment';
+import { SearchService } from './searchService';
 
 class TimeZone implements ng.IComponentController {
   public timeZone: string;
@@ -9,6 +9,7 @@ class TimeZone implements ng.IComponentController {
 
   /* @ngInject */
   public constructor(
+    private SearchService: SearchService,
     private $translate: ng.translate.ITranslateService,
   ) {
     this.selectPlaceholder = this.$translate.instant('trialModal.meeting.timeZonePlaceholder');
@@ -20,7 +21,7 @@ class TimeZone implements ng.IComponentController {
   }
 
   public onChangeTz(tz): void {
-    const reg = /\s([\w\d\/\-_]{2,})\s--/;
+    const reg = /\(GMT\s[+-01]{2}\d:[\d]{2}\)\s([\w\d\/\-_]{2,})/;
     if (!reg.test(tz)) {
       return;
     }
@@ -30,23 +31,17 @@ class TimeZone implements ng.IComponentController {
   }
 
   private setSelected(): void {
-    if (this.timeZone) {
-      this.selected = this.formateTz(this.timeZone);
-      return;
-    }
-
-    this.selected = moment.tz.guess();
+    this.selected = this.timeZone ? this.formateTz(this.timeZone) : this.SearchService.getGuess('');
   }
 
   private getOptions(): void {
-    const tzs = moment.tz.names();
+    const tzs = this.SearchService.getNames('');
     this.options = _.map(tzs, item => this.formateTz(item));
   }
 
   private formateTz(tz): string {
-    const offset = moment().tz(tz).format('Z');
-    const abbr = moment().tz(tz).format('z');
-    return `(GMT ${offset}) ${tz} -- ${abbr}`;
+    const offset = this.SearchService.getOffset(tz);
+    return `(GMT ${offset}) ${tz}`;
   }
 }
 

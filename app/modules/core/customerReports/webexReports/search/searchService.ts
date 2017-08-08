@@ -1,5 +1,3 @@
-import * as moment from 'moment';
-
 export class SearchService {
   private url;
   private data: any = {};
@@ -61,8 +59,24 @@ export class SearchService {
     return _.get(this.data, key);
   }
 
-  public formateDate(date) {
-    const timeZone: any = this.getStorage('timeZone');
-    return date ? moment(date).tz(timeZone).format('MMMM Do, YYYY h:mm:ss A') : '';
+  public utcDateByTimezone(date) {
+
+    const tz = this.getStorage('timeZone');
+    const timeZone: any = tz ? tz : moment.tz.guess();
+    const offset = this.getOffset(timeZone);
+    return moment.utc(date).utcOffset(offset).format('MMMM Do, YYYY h:mm:ss A');
+  }
+
+  public getOffset(timeZone) {
+    const tz = timeZone ? timeZone : moment.tz.guess();
+    return timeZone === 'ut18' ? '' : moment().tz(tz).format('Z');
+  }
+
+  public getGuess(tz) {
+    return tz ? '' : moment.tz.guess();
+  }
+
+  public getNames(tz) {
+    return tz ? '' : moment.tz.names();
   }
 }

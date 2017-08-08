@@ -196,7 +196,7 @@ describe('Service: ServiceStateChecker', function () {
         id: 'squared-fusion-ec',
         enabled: true,
       }]
-   ));
+    ));
 
     ServiceStateChecker.checkState('squared-fusion-uc');
     $rootScope.$digest();

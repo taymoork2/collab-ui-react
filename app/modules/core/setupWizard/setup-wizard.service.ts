@@ -59,8 +59,8 @@ export class SetupWizardService {
     return !_.isEmpty(this.pendingLicenses);
   }
 
-  public hasPendingMeetingLicenses(): boolean {
-    return _.some(this.pendingLicenses, (license: IPendingLicense) => { return license.status === this.Config.licenseStatus.INITIALIZED && (_.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC, this.Config.offerCodes.CF, this.Config.offerCodes.CMR], license.offerName)); });
+  public hasPendingWebExMeetingLicenses(): boolean {
+    return _.some(this.pendingLicenses, (license: IPendingLicense) => { return license.status === this.Config.licenseStatus.INITIALIZED && (_.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC], license.offerName)); });
   }
 
   public getPendingMeetingLicenses(): IPendingLicense[] {
@@ -85,6 +85,10 @@ export class SetupWizardService {
 
   public getCurrentOrderNumber() {
     return this.currentOrderNumber;
+  }
+
+  public hasTSPAudioPackage() {
+    return _.some(this.pendingLicenses, { offerName: this.Config.offerCodes.TSP });
   }
 
   private getActingSubscription(): IPendingOrderSubscription {
@@ -167,6 +171,12 @@ export class SetupWizardService {
     });
   }
 
+  public getTSPPartners() {
+    const url = `${this.UrlConfig.getAdminServiceUrl()}partners/tsp`;
+    return this.$http.get(url).then((response) => {
+      return _.get(response, 'data.tspPartnerList', []);
+    });
+  }
 }
 
 export default angular

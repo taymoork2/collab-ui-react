@@ -46,7 +46,7 @@
     vm.getTitle = getTitle;
     vm.isCategoryWarningRequired = isCategoryWarningRequired;
     vm.getCardConfig = getCardConfig;
-
+    vm.chatAssistantEnabled = $state.isChatAssistantEnabled;
     // Setup Assistant pages with index
     vm.states = {};
 
@@ -69,6 +69,20 @@
       org: $translate.instant('careChatTpl.org'),
       agent: $translate.instant('careChatTpl.agent'),
     };
+
+    vm.profileList = [
+      {
+        Header: $translate.instant('careChatTpl.org'),
+        Label: $translate.instant('careChatTpl.profile_org_info'),
+        Value: vm.profiles.org,
+      },
+      {
+        Header: $translate.instant('careChatTpl.agent'),
+        Label: $translate.instant('careChatTpl.profile_agent_info'),
+        Value: vm.profiles.agent,
+      },
+    ];
+
     vm.selectedTemplateProfile = vm.profiles.org;
     vm.agentNames = {
       displayName: $translate.instant('careChatTpl.agentDisplayName'),
@@ -1089,9 +1103,9 @@
 
     function isStatusMessagesPageValid() {
       var chatStatusMessagesObj = vm.template.configuration.chatStatusMessages.messages;
-      return isValidField(chatStatusMessagesObj.waitingMessage.displayText, vm.lengthConstants.singleLineMaxCharLimit25)
-      && isValidField(chatStatusMessagesObj.leaveRoomMessage.displayText, vm.lengthConstants.singleLineMaxCharLimit25)
-      && isValidField(chatStatusMessagesObj.chattingMessage.displayText, vm.lengthConstants.singleLineMaxCharLimit25)
+      return isValidField(chatStatusMessagesObj.waitingMessage.displayText, vm.lengthConstants.singleLineMaxCharLimit50)
+      && isValidField(chatStatusMessagesObj.leaveRoomMessage.displayText, vm.lengthConstants.singleLineMaxCharLimit50)
+      && isValidField(chatStatusMessagesObj.chattingMessage.displayText, vm.lengthConstants.singleLineMaxCharLimit50)
       && vm.isInputValid(chatStatusMessagesObj.waitingMessage.displayText)
       && vm.isInputValid(chatStatusMessagesObj.leaveRoomMessage.displayText)
       && vm.isInputValid(chatStatusMessagesObj.chattingMessage.displayText);
@@ -1100,7 +1114,7 @@
     vm.isTypeDuplicate = false;
 
     var nonHeaderFieldNames = _.filter(_.keys(getCustomerInformationFormFields()),
-        function (name) { return (name !== 'welcomeHeader'); });
+      function (name) { return (name !== 'welcomeHeader'); });
 
     function getConfiguredTypes() {
       var typesConfigured = _.map(nonHeaderFieldNames, function (fieldName) {
@@ -1454,6 +1468,14 @@
         vm.agentNamePreview = $translate.instant('careChatTpl.agentNamePreview');
       }
     }
+
+    vm.profileSettingInfo = function () {
+      if (vm.selectedTemplateProfile === vm.profiles.agent) {
+        return $translate.instant('careChatTpl.agentSettingInfo');
+      } else {
+        return $translate.instant('careChatTpl.orgSettingInfo');
+      }
+    };
 
     function submitChatTemplate() {
       DomainManagementService.syncDomainsWithCare();
