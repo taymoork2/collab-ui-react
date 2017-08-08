@@ -2849,8 +2849,6 @@
             views: {
               provisioningView: {
                 templateUrl: 'modules/squared/provisioning-console/completed/provisioning-completed.html',
-                controller: 'ProvisioningController',
-                controllerAs: 'provisioningCtrl',
               },
             },
           })
