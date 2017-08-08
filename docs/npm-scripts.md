@@ -119,6 +119,10 @@ eg. `npm start -- --noopen` passes the `--noopen` argument to our `start` task
 
 * Updates webdriver and runs protractor
 
+### `npm run protractor -- --specs <tests>`
+
+* Updates webdriver and runs protractor on tests in specified files
+
 ### `npm run serve`
 
 * Bundles the application as webpack middleware and serves the dev application

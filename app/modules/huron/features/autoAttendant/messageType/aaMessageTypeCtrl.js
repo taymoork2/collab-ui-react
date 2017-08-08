@@ -37,6 +37,7 @@
     var dependentCeSessionVariablesList = [];
     var dynamicVariablesList = [];
     var ui;
+    var holdDynaList = [];
 
     vm.menuEntry = {};
     vm.actionEntry = {};
@@ -191,22 +192,37 @@
       holdActionValue = saveValue;
       holdActionDesc = saveDesc;
 
+      //for holding dynamicList in case of retrieval needed when toggle b/w say and play
+      if (isDynamicToggle() && vm.messageOption.value === vm.messageOptions[actionType.PLAY].value) {
+        vm.dynamicValues = [];
+        holdDynaList = action.dynamicList;
+        if (_.isUndefined(action.dynamicList)) {
+          holdDynaList = [{
+            say: {
+              value: '',
+              voice: '',
+            },
+            isDynamic: false,
+            htmlModel: '',
+          }];
+        }
+      }
       // name could be say, play or runActionsOnInput
       // make sure it is say or play but don't touch runActions
+
+      //just to update dynamicList in case on runActions
+      if (isDynamicToggle() && action.name === 'runActionsOnInput' && vm.messageOption.value === vm.messageOptions[actionType.SAY].value) {
+        action.dynamicList = holdDynaList;
+        createDynamicValues(action);
+      }
 
       if (vm.messageOption.value === vm.messageOptions[actionType.SAY].value) {
         action.description = '';
         if (action.name === vm.messageOptions[actionType.PLAY].action) {
           if (isDynamicToggle()) {
             action.name = 'dynamic';
-            action.dynamicList = [{
-              say: {
-                value: '',
-                voice: '',
-              },
-              isDynamic: false,
-              htmlModel: '',
-            }];
+            action.dynamicList = holdDynaList;
+            createDynamicValues(action);
           } else {
             action.name = vm.messageOptions[actionType.SAY].action;
           }
@@ -217,7 +233,26 @@
         if (action.name === vm.messageOptions[actionType.SAY].action || action.name === 'dynamic') {
           action.name = vm.messageOptions[actionType.PLAY].action;
         }
+        delete action.dynamicList;
       }
+    }
+
+    function createDynamicValues(action) {
+      _.forEach(action.dynamicList, function (opt) {
+        var model = {};
+        if (!opt.isDynamic && _.isEmpty(opt.htmlModel)) {
+          model = {
+            model: opt.say.value,
+            html: opt.say.value,
+          };
+        } else {
+          model = {
+            model: opt.say.value,
+            html: decodeURIComponent(opt.htmlModel),
+          };
+        }
+        vm.dynamicValues.push(model);
+      });
     }
 
     function saveUiModel() {
@@ -332,21 +367,7 @@
             vm.messageOption = vm.messageOptions[actionType.SAY];
             vm.messageInput = vm.actionEntry.value;
           } else if (_.has(vm.actionEntry, 'dynamicList')) {
-            _.forEach(vm.actionEntry.dynamicList, function (opt) {
-              var model;
-              if (!opt.isDynamic && _.isEmpty(opt.htmlModel)) {
-                model = {
-                  model: opt.say.value,
-                  html: opt.say.value,
-                };
-              } else {
-                model = {
-                  model: opt.say.value,
-                  html: decodeURIComponent(opt.htmlModel),
-                };
-              }
-              vm.dynamicValues.push(model);
-            });
+            createDynamicValues(vm.actionEntry);
           } else {
             vm.messageOption = vm.messageOptions[actionType.PLAY];
           }
@@ -356,21 +377,7 @@
         }
       } else {
         if (_.has(vm.actionEntry, 'dynamicList')) {
-          _.forEach(vm.actionEntry.dynamicList, function (opt) {
-            var model = {};
-            if (!opt.isDynamic && _.isEmpty(opt.htmlModel)) {
-              model = {
-                model: opt.say.value,
-                html: opt.say.value,
-              };
-            } else {
-              model = {
-                model: opt.say.value,
-                html: decodeURIComponent(opt.htmlModel),
-              };
-            }
-            vm.dynamicValues.push(model);
-          });
+          createDynamicValues(vm.actionEntry);
         } else if (_.has(vm, 'actionEntry.name')) {
           vm.messageOption = vm.messageOptions[_.get(actionType, vm.actionEntry.name.toUpperCase())];
           if (vm.actionEntry.name.toLowerCase() === vm.messageOptions[actionType.SAY].action) {
