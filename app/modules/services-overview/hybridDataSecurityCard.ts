@@ -13,7 +13,7 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
 
   private learnMoreButton: ICardButton = {
     name: 'servicesOverview.genericButtons.learnMore',
-    externalLink: 'http://www.cisco.com',
+    externalLink: 'http://www.cisco.com/go/hybrid-data-security',
     buttonClass: 'btn btn--primary',
   };
 

@@ -71,6 +71,7 @@ describe('Controller: OverviewCtrl', function () {
     }]));
 
     spyOn(this.ProPackService, 'hasProPackEnabledAndNotPurchased').and.returnValue(this.$q.resolve(false));
+    spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'atlasPMRonM2GetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
     spyOn(this.LearnMoreBannerService, 'isElementVisible').and.returnValue(true);
@@ -337,6 +338,10 @@ describe('Controller: OverviewCtrl', function () {
   });
 
   describe('Premium Pro Pack Notification - showLearnMoreNotification', function () {
+    beforeEach(function () {
+      spyOn(this.Authinfo, 'isEnterpriseCustomer').and.returnValue(true);
+    });
+
     it('should default to false', function () {
       this.initController();
       expect(this.controller.showLearnMoreNotification).toBeFalsy();
