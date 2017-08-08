@@ -45,6 +45,7 @@ var Wizard = function () {
   this.extensionLengthTrash = element.all(by.css('.icon-trash')).first();
   this.extensionLengthPrefixInput = element(by.id('beginRange0'));
   this.extensionLengthSuffixInput = element(by.id('endRange0'));
+  this.dialOneRadio = element(by.css('.cs-radio[for="nationalDialing"]'));
 
   this.clickPlanReview = function () {
     utils.click(this.reviewTab);

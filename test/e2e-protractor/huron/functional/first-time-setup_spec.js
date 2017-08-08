@@ -7,7 +7,7 @@ const callSettings = new CallSettingsPage();
 /* global LONG_TIMEOUT */
 
 describe('Huron Functional: first-time-setup', () => {
-  const customer = huronCustomer('first-time-setup', null, null, null, null, true);
+  const customer = huronCustomer('first-time-setup', null, null, true, 3, true);
 
   beforeAll(done => {
     provisioner.provisionCustomerAndLogin(customer, false).then(done);
@@ -92,6 +92,50 @@ describe('Huron Functional: first-time-setup', () => {
             utils.expectIsEnabled(wizard.beginBtn);
           });
         });
+      });
+    });
+  });
+  describe('External Dialing', () => {
+    describe('Outbound Dial Digit', () => {
+      it('should show a warning when selecting a number for dialing out that matches first digit of internal prefix range', () => {
+        utils.selectDropdown('.csSelect-container[name="steeringDigit"]', '3');
+        utils.expectIsDisplayed(callSettings.dialWarning);
+      });
+      it('should enable save button', () => {
+        utils.expectIsEnabled(wizard.beginBtn);
+      });
+      it('should cause warning to go away when selecting a number that does not match first digit of interal prefix range', () => {
+        utils.selectDropdown('.csSelect-container[name="steeringDigit"]', '4');
+        utils.expectIsNotDisplayed(callSettings.dialWarning);
+      });
+      it('should enable save button', () => {
+        utils.expectIsEnabled(wizard.beginBtn);
+      });
+    });
+
+    describe('Dialing Preferences', () => {
+      it('should default to first option', () => {
+        utils.expectIsDisplayed(wizard.dialOneRadio);
+      });
+      it('should default to requiring user to dial 1 before area code--checkbox is empty ', () => {
+        utils.scrollIntoView(callSettings.dialOneChkBx);
+        expect(utils.getCheckboxVal(callSettings.dialOneChkBx)).toBeFalsy();
+      });
+      it('should allow user to click box to not require user to dial 1 before area code', () => {
+        utils.setCheckboxIfDisplayed(callSettings.dialOneChkBx, true, 1000);
+      });
+      it('should enable save button', () => {
+        utils.expectIsEnabled(wizard.beginBtn);
+      });
+      it('should not have a warning requiring PSTN to be set up', () => {
+        utils.expectIsNotDisplayed(callSettings.pstnWarning);
+      });
+      it('should allow user to select simplified local dialing and input an area code', () => {
+        utils.click(callSettings.simplifiedLocalRadio);
+        utils.sendKeys(callSettings.areaCode, '919');
+      });
+      it('should enable save button', () => {
+        utils.expectIsEnabled(wizard.beginBtn);
       });
     });
   });
