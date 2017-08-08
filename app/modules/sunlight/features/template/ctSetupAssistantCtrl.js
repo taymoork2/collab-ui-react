@@ -29,6 +29,7 @@
     vm.nextPage = nextPage;
     vm.previousPage = previousPage;
     vm.nextButton = nextButton;
+    vm.getLocalizedOrgOrAgentInfo = getLocalizedOrgOrAgentInfo;
     vm.previousButton = previousButton;
     vm.getPageIndex = getPageIndex;
     vm.setAgentProfile = setAgentProfile;
@@ -70,18 +71,44 @@
       agent: $translate.instant('careChatTpl.agent'),
     };
 
-    vm.profileList = [
-      {
-        Header: $translate.instant('careChatTpl.org'),
-        Label: $translate.instant('careChatTpl.profile_org_info'),
-        Value: vm.profiles.org,
-      },
-      {
-        Header: $translate.instant('careChatTpl.agent'),
-        Label: $translate.instant('careChatTpl.profile_agent_info'),
-        Value: vm.profiles.agent,
-      },
-    ];
+    vm.cvaMessage = {
+      orgHeader: $translate.instant('careChatTpl.org'),
+      orgInfo: $translate.instant('careChatTpl.profile_org_info_cva'),
+      agentHeader: $translate.instant('careChatTpl.agent_cva'),
+      agentInfo: $translate.instant('careChatTpl.profile_agent_info_cva'),
+    };
+
+    vm.nonCVAMessage = {
+      orgHeader: $translate.instant('careChatTpl.org'),
+      agentHeader: $translate.instant('careChatTpl.agent'),
+      orgInfo: $translate.instant('careChatTpl.profile_org_info'),
+      agentInfo: $translate.instant('careChatTpl.profile_agent_info'),
+    };
+
+    function getLocalizedOrgOrAgentInfo(msgType) {
+      var isVCAEnabled = vm.template.configuration.virtualAssistant ? vm.template.configuration.virtualAssistant.enabled : false;
+      if (isVCAEnabled) {
+        return vm.cvaMessage[msgType];
+      } else {
+        return vm.nonCVAMessage[msgType];
+      }
+    }
+
+    function getProfileList() {
+      vm.profileList = [
+        {
+          header: getLocalizedOrgOrAgentInfo('orgHeader'),
+          label: getLocalizedOrgOrAgentInfo('orgInfo'),
+          value: vm.profiles.org,
+        },
+        {
+          header: getLocalizedOrgOrAgentInfo('agentHeader'),
+          label: getLocalizedOrgOrAgentInfo('agentInfo'),
+          value: vm.profiles.agent,
+        },
+      ];
+    }
+
 
     vm.selectedTemplateProfile = vm.profiles.org;
     vm.agentNames = {
@@ -89,7 +116,7 @@
       alias: $translate.instant('careChatTpl.agentAlias'),
     };
     vm.selectedAgentProfile = vm.agentNames.displayName;
-    vm.agentNamePreview = $translate.instant('careChatTpl.agentAliasPreview');
+    vm.agentNamePreview = $translate.instant('careChatTpl.agentNamePreview');
     vm.logoFile = '';
     vm.logoUploaded = false;
     vm.logoUrl = undefined;
@@ -260,6 +287,11 @@
             },
           },
         },
+
+        virtualAssistant: {
+          enabled: false,
+        },
+
         pages: {
           customerInformation: {
             enabled: true,
@@ -1311,6 +1343,9 @@
       var nextPage = vm.template.configuration.pages[vm.states[next]];
       if (vm.states[next] === 'proactivePrompt') {
         nextPage = vm.template.configuration[vm.states[next]];
+      }
+      if (vm.states[next] === 'profile') {
+        getProfileList();
       }
 
       if (nextPage && !nextPage.enabled) {

@@ -160,9 +160,9 @@ describe('Care admin should be able to', function () {
     validateTitleAndDesc('Branding and Identity', 'Configure how your company or your agent is visually represented');
     utils.click(careChatTemplateSetupPage.agentProfile);
     utils.click(careChatTemplateSetupPage.agentNameRadio);
-    utils.waitForText(careChatTemplateSetupPage.agentNamePreview, 'Agent');
+    utils.waitForText(careChatTemplateSetupPage.agentNamePreview, 'Agent display name');
     utils.click(careChatTemplateSetupPage.agentAliasRadio);
-    utils.waitForText(careChatTemplateSetupPage.agentNamePreview, 'Alias');
+    utils.waitForText(careChatTemplateSetupPage.agentNamePreview, 'Agent alias');
     utils.expectIsDisplayed(careChatTemplateSetupPage.agentPreviewIcon);
     utils.expectIsDisplayed(careChatTemplateSetupPage.previewMinimizeIcon);
     utils.expectIsDisplayed(careChatTemplateSetupPage.previewCloseIcon);

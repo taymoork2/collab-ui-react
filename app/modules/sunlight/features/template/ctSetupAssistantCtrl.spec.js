@@ -428,6 +428,20 @@ describe('Care Setup Assistant Ctrl', function () {
       controller.selectedTemplateProfile = controller.profiles.agent;
       expect(controller.profileSettingInfo()).toEqual('careChatTpl.agentSettingInfo');
     });
+
+    it('should set profile setting info message based on cva is selected or not', function () {
+      resolveLogoPromise();
+      controller.template.configuration.virtualAssistant.enabled = false;
+      expect(controller.getLocalizedOrgOrAgentInfo('orgHeader')).toEqual('careChatTpl.org');
+      expect(controller.getLocalizedOrgOrAgentInfo('agentHeader')).toEqual('careChatTpl.agent');
+      expect(controller.getLocalizedOrgOrAgentInfo('orgInfo')).toEqual('careChatTpl.profile_org_info');
+      expect(controller.getLocalizedOrgOrAgentInfo('agentInfo')).toEqual('careChatTpl.profile_agent_info');
+      controller.template.configuration.virtualAssistant.enabled = true;
+      expect(controller.getLocalizedOrgOrAgentInfo('orgHeader')).toEqual('careChatTpl.org');
+      expect(controller.getLocalizedOrgOrAgentInfo('agentHeader')).toEqual('careChatTpl.agent_cva');
+      expect(controller.getLocalizedOrgOrAgentInfo('orgInfo')).toEqual('careChatTpl.profile_org_info_cva');
+      expect(controller.getLocalizedOrgOrAgentInfo('agentInfo')).toEqual('careChatTpl.profile_agent_info_cva');
+    });
   });
 
   describe('Overview Page', function () {

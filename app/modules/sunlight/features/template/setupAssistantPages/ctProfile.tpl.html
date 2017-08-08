@@ -23,7 +23,7 @@
                 {{careSetupAssistant.getAttributeParam('value', 'organization', 'welcomeHeader')}}
               </div>
               <div class="h5 profile-name" ng-if="careSetupAssistant.selectedTemplateProfile === careSetupAssistant.profiles.agent">
-                <div>{{careSetupAssistant.agentNamePreview | translate}}</div>
+                <div>{{careSetupAssistant.agentNamePreview}}</div>
               </div>
               <div class="right actions">
                 <i class="icon icon-minus"></i>
@@ -58,10 +58,10 @@
                         cs-input
                         type="radio"
                         ng-model="careSetupAssistant.selectedTemplateProfile"
-                        id="{{profile.Header}}"
-                        value="{{profile.Value}}"
-                        cs-input-label="{{profile.Header}}"
-                        cs-input-help-text="{{profile.Label}}">
+                        id="{{profile.header}}"
+                        value="{{profile.value}}"
+                        cs-input-label="{{profile.header}}"
+                        cs-input-help-text="{{profile.label}}">
 
 
 
