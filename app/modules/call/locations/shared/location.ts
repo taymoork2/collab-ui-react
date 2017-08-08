@@ -1,3 +1,5 @@
+export const HIDDEN: string = 'hidden';
+
 const DEFAULT_TIME_ZONE: string = 'America/Los_Angeles';
 const DEFAULT_TIME_FORMAT: string = '24-hour';
 const DEFAULT_DATE_FORMAT: string = 'M-D-Y';
