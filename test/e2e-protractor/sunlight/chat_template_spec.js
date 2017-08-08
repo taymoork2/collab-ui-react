@@ -288,7 +288,7 @@ describe('Care admin should be able to', function () {
   }
 
   function validateContentsOfChatStatusMessagesPage() {
-    validateTitleAndDesc('Status Messages', 'Configure status messages which your customer sees during the chat');
+    validateTitleAndDesc('Status Messages', 'Configure the status message to display in the customer chat window');
     validateChatStatusMessagesDefaultPage();
     validateChatStatusMessagesChange();
   }

@@ -47,7 +47,7 @@
     vm.getTitle = getTitle;
     vm.isCategoryWarningRequired = isCategoryWarningRequired;
     vm.getCardConfig = getCardConfig;
-
+    vm.chatAssistantEnabled = $state.isChatAssistantEnabled;
     // Setup Assistant pages with index
     vm.states = {};
 
@@ -1135,9 +1135,9 @@
 
     function isStatusMessagesPageValid() {
       var chatStatusMessagesObj = vm.template.configuration.chatStatusMessages.messages;
-      return isValidField(chatStatusMessagesObj.waitingMessage.displayText, vm.lengthConstants.singleLineMaxCharLimit25)
-      && isValidField(chatStatusMessagesObj.leaveRoomMessage.displayText, vm.lengthConstants.singleLineMaxCharLimit25)
-      && isValidField(chatStatusMessagesObj.chattingMessage.displayText, vm.lengthConstants.singleLineMaxCharLimit25)
+      return isValidField(chatStatusMessagesObj.waitingMessage.displayText, vm.lengthConstants.singleLineMaxCharLimit50)
+      && isValidField(chatStatusMessagesObj.leaveRoomMessage.displayText, vm.lengthConstants.singleLineMaxCharLimit50)
+      && isValidField(chatStatusMessagesObj.chattingMessage.displayText, vm.lengthConstants.singleLineMaxCharLimit50)
       && vm.isInputValid(chatStatusMessagesObj.waitingMessage.displayText)
       && vm.isInputValid(chatStatusMessagesObj.leaveRoomMessage.displayText)
       && vm.isInputValid(chatStatusMessagesObj.chattingMessage.displayText);
