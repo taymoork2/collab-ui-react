@@ -370,7 +370,7 @@
 
     function parseSayObject(menuEntry, inObject) {
       var action;
-      if (isDynAnnounceToggle()) {
+      if (isDynAnnounceToggle() && decodeUtf8(inObject.value)) {
         action = new Action('dynamic', '');
         var dynaList = [{
           say: {
@@ -597,7 +597,8 @@
               action.deleteUrl = decodeUtf8(announcements[0].play.deleteUrl);
             } else {
               if (announcements.length > 0 && _.has(announcements[0], 'say')) {
-                if (isDynAnnounceToggle()) {
+                //second check is needed to maintain the upload in case of no file uploaded but upload file is selected
+                if (isDynAnnounceToggle() && decodeUtf8(announcements[0].say.value)) {
                   var list = [{
                     say: {
                       value: decodeUtf8(announcements[0].say.value),
