@@ -1,7 +1,5 @@
 'use strict';
 
-/* eslint angular/interval-service: 0 */
-
 describe('Directive: ShowReadOnly', function () {
   var compile, scope, directiveElem, Authinfo, translate;
 
@@ -38,33 +36,13 @@ describe('Directive: ShowReadOnly', function () {
     expect(divElement.text()).toEqual(translate.instant('readOnlyModal.banner'));
   });
 
-  it('should css correct the side-panel', function (done) {
-    var observableTriggered = false;
-    var sidePanel = angular.element('<div class="side-panel"></div>');
-    $('body').append(sidePanel);
-    var observableInterval = setInterval(function () {
-      observableTriggered = sidePanel.hasClass('side-panel-correction');
-      if (observableTriggered) {
-        clearInterval(observableInterval);
-        expect(sidePanel).toHaveClass('side-panel-correction');
-        sidePanel.remove();
-        done();
-      }
-    }, 100);
-  });
+  it('should add .is-read-only-admin to body element when active', function () {
+    var body = angular.element('body');
+    expect(body).toHaveClass('is-read-only-admin');
 
-  it('should css correct the side-panel-full-height', function (done) {
-    var observableTriggered = false;
-    var sidePanel = angular.element('<div class="side-panel side-panel-full-height"></div>');
-    $('body').append(sidePanel);
-    var observableInterval = setInterval(function () {
-      observableTriggered = sidePanel.hasClass('side-panel-correction-full-height');
-      if (observableTriggered) {
-        clearInterval(observableInterval);
-        expect(sidePanel).toHaveClass('side-panel-correction-full-height');
-        sidePanel.remove();
-        done();
-      }
-    }, 100);
+    directiveElem.remove();
+    directiveElem = undefined;
+
+    expect(body).not.toHaveClass('is-read-only-admin');
   });
 });
