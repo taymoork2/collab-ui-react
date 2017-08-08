@@ -251,6 +251,7 @@
         return regex.test(string);
       },
 
+      // TODO: update this function to apply idiomatic style, and add unit-tests
       getFromStandardGetParams: function (url) {
         var result = {};
         var cleanUrlA = url.split('?');
@@ -265,6 +266,7 @@
         return result;
       },
 
+      // TODO: update this function to apply idiomatic style, and add unit-tests
       getFromGetParams: function (url) {
         var result = {};
         var cleanUrlA = url.split('#');
