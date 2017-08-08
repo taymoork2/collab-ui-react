@@ -66,6 +66,7 @@
 
       customerTypes: {
         enterprise: 'Enterprise',
+        pending: 'Pending',
       },
 
       entitlements: {
