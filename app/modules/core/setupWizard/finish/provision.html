@@ -6,15 +6,15 @@
     <p><span translate="firstTimeWizard.subscriptionID"></span><span>{{orderDetails.subscriptionId}}</span></p>
   </div>
 </div>
-<div class="activate-page">
-  <div class="activate-page__section">
-    <p class="activate-page__header" translate="firstTimeWizard.activateAndBeginBilling"></p>
-    <p translate="firstTimeWizard.activateBillingDescription"></p>
+<div class="provision-page">
+  <div class="provision-page__section">
+    <p class="provision-page__header" translate="firstTimeWizard.provisionAndBeginBilling"></p>
+    <p translate="firstTimeWizard.provisionBillingDescription"></p>
   </div>
-  <div class="activate-page__section">
-    <p translate="firstTimeWizard.activateBillingWarning"></p>
+  <div class="provision-page__section">
+    <p translate="firstTimeWizard.provisionBillingWarning"></p>
   </div>
-  <div ng-if="isCustomerLaunchedFromPartner" class="activate-page__section">
+  <div ng-if="isCustomerLaunchedFromPartner" class="provision-page__section">
     <input
       cs-input
       type="checkbox"

@@ -29,7 +29,7 @@ describe('Component: upgradeModal', () => {
       '$scope',
       '$state',
       'Auth',
-      'FeatureToggleService',
+      'Authinfo',
       'Notification',
       'OnlineUpgradeService',
     );
@@ -37,7 +37,6 @@ describe('Component: upgradeModal', () => {
     spyOn(this.$state, 'go');
     spyOn(this.Auth, 'logout');
     spyOn(this.Notification, 'success');
-    spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.OnlineUpgradeService, 'getSubscriptionId').and.returnValue(subscriptionId);
     spyOn(this.OnlineUpgradeService, 'cancelSubscriptions').and.returnValue(this.$q.resolve());
     spyOn(this.OnlineUpgradeService, 'dismissModal');
@@ -46,6 +45,8 @@ describe('Component: upgradeModal', () => {
   describe('With a product subscriptions', () => {
     beforeEach(function () {
       spyOn(this.OnlineUpgradeService, 'getProductInstances').and.returnValue(this.$q.resolve(productInstanceResponse));
+      spyOn(this.OnlineUpgradeService, 'isPending').and.returnValue(false);
+      spyOn(this.OnlineUpgradeService, 'isFreemium').and.returnValue(false);
       this.compileComponent('onlineUpgradeModal');
       this.$scope.$apply();
     });
@@ -87,6 +88,8 @@ describe('Component: upgradeModal', () => {
 
   describe('With a freemium subscription', () => {
     beforeEach(function () {
+      spyOn(this.OnlineUpgradeService, 'isPending').and.returnValue(false);
+      spyOn(this.OnlineUpgradeService, 'isFreemium').and.returnValue(true);
       spyOn(this.OnlineUpgradeService, 'getProductInstances').and.returnValue(this.$q.resolve(freemiumInstanceResponse));
       this.compileComponent('onlineUpgradeModal');
       this.$scope.$apply();
@@ -106,24 +109,21 @@ describe('Component: upgradeModal', () => {
     });
   });
 
-  // 2017 name change
-  describe('atlas2017NameChangeGetStatus - ', function () {
+  describe('With a pending subscription', () => {
     beforeEach(function () {
-      spyOn(this.OnlineUpgradeService, 'getProductInstances').and.returnValue(this.$q.resolve(productInstanceResponse));
+      spyOn(this.OnlineUpgradeService, 'isPending').and.returnValue(true);
+      spyOn(this.OnlineUpgradeService, 'isFreemium').and.returnValue(false);
       this.compileComponent('onlineUpgradeModal');
       this.$scope.$apply();
     });
 
-    it('should have base name when toggle is false', function () {
-      expect(this.view.text()).toContain('onlineUpgradeModal.cancelBody');
-      expect(this.view.text()).not.toContain('onlineUpgradeModal.cancelBodyNew');
+    it('should not have a Cancel button', function () {
+      expect(this.view.find(CANCEL_BUTTON)).not.toExist();
     });
 
-    it('should have the new name when toggle is true', function () {
-      this.FeatureToggleService.atlas2017NameChangeGetStatus.and.returnValue(this.$q.resolve(true));
-      this.compileComponent('onlineUpgradeModal');
-      this.$scope.$apply();
-      expect(this.view.text()).toContain('onlineUpgradeModal.cancelBodyNew');
+    it('should not have a Buy button', function () {
+      expect(this.view.find(BUY_BUTTON)).not.toExist();
     });
   });
+
 });

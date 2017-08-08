@@ -6,39 +6,50 @@ class OnlineUpgrade {
   public subscriptionId: string;
   public cancelLoading: boolean = false;
   public showCancelButton: boolean = false;
+  public showBmmpButton: boolean = false;
+  public bodyText: string = '';
+  public cancelBodyText: string = '';
+  public titleText: string = '';
   public nameChangeEnabled: boolean;
   public bmmpAttr: IBmmpAttr;
 
   /* @ngInject */
   constructor(
     private $state: ng.ui.IStateService,
+    private $translate: ng.translate.ITranslateService,
     private Auth,
     private Authinfo,
     private Notification: Notification,
     private OnlineUpgradeService: OnlineUpgradeService,
-    private FeatureToggleService,
   ) {}
 
   public $onInit(): void {
-    this.FeatureToggleService.atlas2017NameChangeGetStatus().then((toggle: boolean): void => {
-      this.nameChangeEnabled = toggle;
-    });
-
-    this.OnlineUpgradeService.getProductInstances(this.Authinfo.getUserId()).then((productInstances: IProdInst[]) => {
-      const productInstance = _.find(productInstances, (instance: any) => {
-        return instance.subscriptionId === this.OnlineUpgradeService.getSubscriptionId();
+    if (this.OnlineUpgradeService.isPending()) {
+      this.bodyText = this.$translate.instant('onlineUpgradeModal.pendingBody');
+      this.titleText = this.$translate.instant('onlineUpgradeModal.pendingTitle');
+    } else if (this.OnlineUpgradeService.isFreemium()) {
+      this.titleText = this.$translate.instant('onlineUpgradeModal.freemiumTitle');
+      this.bodyText = this.$translate.instant('onlineUpgradeModal.freemiumBody');
+      this.showBmmpButton = true;
+    } else {
+      this.titleText = this.$translate.instant('onlineUpgradeModal.expiredTitle');
+      this.bodyText = this.$translate.instant('onlineUpgradeModal.body');
+      this.cancelBodyText = this.$translate.instant('onlineUpgradeModal.cancelBody');
+      this.showBmmpButton = true;
+      this.showCancelButton = !this.OnlineUpgradeService.hasCancelledSubscriptions();
+    }
+    if (this.showBmmpButton) {
+      this.OnlineUpgradeService.getProductInstances(this.Authinfo.getUserId()).then((productInstances: IProdInst[]) => {
+        const productInstance = _.find(productInstances, (instance: any) => {
+          return instance.subscriptionId === this.OnlineUpgradeService.getSubscriptionId();
+        });
+        this.bmmpAttr = {
+          subscriptionId: productInstance.subscriptionId,
+          productInstanceId: productInstance.productInstanceId,
+          changeplanOverride: '',
+        };
       });
-
-      const isFreemium = _.includes(productInstance.name, 'Free');
-
-      this.bmmpAttr = {
-        subscriptionId: productInstance.subscriptionId,
-        productInstanceId: productInstance.productInstanceId,
-        changeplanOverride: '',
-      };
-
-      this.showCancelButton = !isFreemium && !this.OnlineUpgradeService.hasCancelledSubscriptions();
-    });
+    }
   }
 
   public cancel(): void {

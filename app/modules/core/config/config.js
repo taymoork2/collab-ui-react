@@ -60,6 +60,10 @@
         webexUrl: '.webex.com',
       },
 
+      commerceRelation: {
+        partner: 'Partner',
+      },
+
       customerTypes: {
         enterprise: 'Enterprise',
       },

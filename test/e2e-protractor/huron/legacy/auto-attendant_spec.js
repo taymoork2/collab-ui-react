@@ -726,19 +726,30 @@ describe('Huron Auto Attendant', function () {
 
       // REST API
       utils.click(autoattendant.configureApiURL);
+      utils.wait(autoattendant.configureApiURL, 20000);
       utils.sendKeys(autoattendant.configureApiURL, "This is test URL");
 
       utils.click(autoattendant.restResponseDataBlock);
-      utils.sendKeys(autoattendant.restResponseDataBlock, "Test Response Block");
+      utils.sendKeys(autoattendant.restResponseDataBlock, "Test Response Block 1");
 
       utils.click(autoattendant.sessionVar);
       utils.click(autoattendant.newSessionVar);
 
-      utils.sendKeys(autoattendant.newVariableName, "123");
+      utils.sendKeys(autoattendant.newVariableName, "Test Variable 1");
+      utils.click(autoattendant.addVariableToSet);
+
+
+      utils.click(autoattendant.restResponseDataBlock1);
+      
+      utils.sendKeys(autoattendant.restResponseDataBlock1, "Test Response Block2");
+      utils.click(autoattendant.sessionVar1);
+      utils.click(autoattendant.newSessionVar1);
+
+      utils.sendKeys(autoattendant.newVariableName1, "Test Variable 2");
 
       utils.click(autoattendant.addVariableToSet);
 
-      utils.expectCount(autoattendant.sessionVarAll, 2);
+      utils.expectCount(autoattendant.sessionVarAll, 3);
 
       utils.expectIsDisabled(autoattendant.saveBtn);
 
@@ -750,6 +761,10 @@ describe('Huron Auto Attendant', function () {
 
       utils.expectIsDisplayed(autoattendant.restApiUrlLabel);
       utils.waitForText(autoattendant.restApiUrlLabel, "This is test URL");
+      utils.expectIsDisplayed(autoattendant.restApiVariableLabel1);
+      utils.waitForText(autoattendant.restApiVariableLabel1, "Test Variable 1");
+      utils.expectIsDisplayed(autoattendant.restApiVariableLabel2);
+      utils.waitForText(autoattendant.restApiVariableLabel2, "Test Variable 2");
 
     });
 
@@ -803,7 +818,6 @@ describe('Huron Auto Attendant', function () {
       });
 
     }, 120000);
-
   });
 
 });

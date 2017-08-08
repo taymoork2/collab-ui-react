@@ -8,11 +8,9 @@ describe('Component: csGrid', () => {
       '$q',
       '$scope',
       '$timeout',
+      'GridCellService',
       'uiGridConstants',
     );
-
-    this.ENTER = 13;
-    this.SPACE = 32;
 
     this.getGridApi = (direction?: string) => {
       return {
@@ -33,7 +31,7 @@ describe('Component: csGrid', () => {
       enableColumnResizing: true,
       enableHorizontalScrollbar: 0,
       enableRowHeaderSelection: false,
-      enableRowSelection: true,
+      enableRowSelection: false,
       enableSorting: true,
       multiSelect: false,
     };
@@ -72,7 +70,7 @@ describe('Component: csGrid', () => {
 
   it('should initialize with keyboard shortcuts added when gridAPI is provided', function () {
     this.gridApi = this.getGridApi(this.uiGridConstants.DESC);
-    this.keyCode = this.ENTER;
+    this.keyCode = this.GridCellService.ENTER;
     this.spinner = true;
     this.gridOptions.onRegisterApi = jasmine.any(Function);
     const allOptions = _.defaults(this.gridOptions, this.defaultGridOptions);
@@ -89,7 +87,7 @@ describe('Component: csGrid', () => {
 
   it('should initialize with keyboard shortcuts added when gridAPI is not provided', function () {
     const gridApi = this.getGridApi(this.uiGridConstants.ASC);
-    this.keyCode = this.ENTER;
+    this.keyCode = this.GridCellService.ENTER;
     this.spinner = true;
     this.initController();
     this.controller.gridOptions.onRegisterApi(gridApi);
@@ -106,7 +104,7 @@ describe('Component: csGrid', () => {
 
   it('should not create sorting shortcuts when sorting is false', function () {
     const gridApi = this.getGridApi();
-    this.keyCode = this.ENTER;
+    this.keyCode = this.GridCellService.ENTER;
     this.spinner = true;
     this.gridOptions.enableSorting = false;
 

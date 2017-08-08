@@ -37,23 +37,24 @@ export class DevicesController {
   public gridApi: uiGrid.IGridApi;
 
   constructor(
+    private $modal: IToolkitModalService,
     private $q: ng.IQService,
     private $state,
     private $translate: ng.translate.ITranslateService,
     private $templateCache,
+    private Authinfo,
+    private DeviceExportService,
+    private FeatureToggleService,
+    private GridCellService,
+    private Notification: Notification,
+    private ServiceDescriptorService: ServiceDescriptorService,
     private Userservice,
     private WizardFactory,
-    private FeatureToggleService,
-    private $modal: IToolkitModalService,
-    private Notification: Notification,
-    private DeviceExportService,
-    private ServiceDescriptorService: ServiceDescriptorService,
-    $timeout: ng.ITimeoutService,
-    CsdmDataModelService: ICsdmDataModelService,
-    AccountOrgService,
     $scope: ng.IScope,
+    $timeout: ng.ITimeoutService,
+    AccountOrgService,
+    CsdmDataModelService: ICsdmDataModelService,
     CsdmHuronOrgDeviceService,
-    private Authinfo,
   ) {
     this.fetchAsyncSettings();
     this.filteredView = new FilteredView<IDevice>(new FilteredDeviceViewDataSource(CsdmDataModelService, $q),
@@ -118,12 +119,18 @@ export class DevicesController {
 
     this.gridOptions = {
       data: this.filteredView.getResult(),
+      appScopeProvider: {
+        selectRow: (grid: uiGrid.IGridInstance, row: uiGrid.IGridRow): void => {
+          this.GridCellService.selectRow(grid, row);
+          this.showDeviceDetails(row.entity);
+        },
+        showDeviceDetails: (device: IDevice): void => {
+          this.showDeviceDetails(device);
+        },
+      },
       rowHeight: 45,
       onRegisterApi: (gridApi) => {
         this.gridApi = gridApi;
-        this.gridApi.selection.on.rowSelectionChanged($scope, (row) => {
-          this.showDeviceDetails(row.entity);
-        });
       },
       columnDefs: [{
         field: 'photos',
@@ -139,10 +146,11 @@ export class DevicesController {
           priority: 1,
         },
         sortCellFiltered: true,
+        cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showDeviceDetails(row.entity)" cell-value="row.entity.displayName"></cs-grid-cell>',
       }, {
         field: 'state',
         displayName: $translate.instant('spacesPage.statusHeader'),
-        cellTemplate: this.getTemplate('_statusTpl'),
+        cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showDeviceDetails(row.entity)" cell-icon-css="icon-circle status-indicator {{row.entity.cssColorClass}}" cell-value="row.entity.state.readableState"></cs-grid-cell>',
         sortingAlgorithm: DevicesController.sortStateFn,
         sort: {
           direction: 'asc',
@@ -227,14 +235,6 @@ export class DevicesController {
     return userDetailsDeferred.promise;
   }
 
-  private showDeviceDetails(device: IDevice) {
-    this.currentDevice = device;
-    this.$state.go('device-overview', {
-      currentDevice: device,
-      huronDeviceService: this.huronDeviceService,
-    });
-  }
-
   public startAddDeviceFlow() {
     const wizard = this.WizardFactory.create(this.showPersonal ? this.wizardWithPersonal() : this.wizardWithoutPersonal());
     this.$state.go(wizard.state().currentStateName, {
@@ -251,6 +251,14 @@ export class DevicesController {
         function (l: any) {
           return l.licenseType === 'COMMUNICATION';
         }).length > 0;
+  }
+
+  private showDeviceDetails(device: IDevice) {
+    this.currentDevice = device;
+    this.$state.go('device-overview', {
+      currentDevice: device,
+      huronDeviceService: this.huronDeviceService,
+    });
   }
 
   private wizardWithoutPersonal() {

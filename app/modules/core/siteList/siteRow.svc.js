@@ -76,7 +76,6 @@
       // Start of grid set up
       _this.siteRows.gridOptions = {
         data: _this.siteRows.gridData,
-        enableRowSelection: false,
         rowHeight: 44,
         columnDefs: [],
       };
