@@ -1,12 +1,11 @@
-'use strict';
+import serviceModule from 'modules/hercules/services/uss.service';
 
 describe('Service: USSService', function () {
-  beforeEach(angular.mock.module('Squared')); // because we use CsdmPoller
-  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module(serviceModule));
 
-  var $httpBackend, Authinfo, CsdmHubFactory, USSService, hubOn, $translate, HybridServicesI18NService;
-  var rootPath = 'https://uss-intb.ciscospark.com/uss/api/v1/';
-  var translations = {};
+  let $httpBackend, Authinfo, CsdmHubFactory, USSService, hubOn, $translate, HybridServicesI18NService;
+  const rootPath = 'https://uss-intb.ciscospark.com/uss/api/v1/';
+  const translations = {};
 
   beforeEach(angular.mock.module(function ($provide) {
     hubOn = jasmine.createSpy('hubOn');
@@ -19,6 +18,7 @@ describe('Service: USSService', function () {
     });
     $provide.value('CsdmHubFactory', CsdmHubFactory);
   }));
+
   beforeEach(inject(function (_$httpBackend_, _USSService_, _Authinfo_, _$translate_, _HybridServicesI18NService_) {
     Authinfo = _Authinfo_;
     Authinfo.getOrgId = jasmine.createSpy('getOrgId').and.returnValue('456');
@@ -34,7 +34,7 @@ describe('Service: USSService', function () {
 
   it('should fetch and return data from the correct backend', function () {
     $httpBackend
-      .when('GET', rootPath + 'orgs/456/userStatuses?includeMessages=true&entitled=true&userId=123')
+      .when('GET', `${rootPath}orgs/456/userStatuses?includeMessages=true&entitled=true&userId=123`)
       .respond({
         userStatuses: [{
           userId: '123',
@@ -66,7 +66,7 @@ describe('Service: USSService', function () {
       translations['hercules.userStatusMessages.c_cal.error.title'] = 'Replaced error title';
       translations['hercules.userStatusMessages.c_cal.error.description'] = 'Replaced error description';
       $httpBackend
-        .when('GET', rootPath + 'orgs/456/userStatuses?includeMessages=true&entitled=true&userId=123')
+        .when('GET', `${rootPath}orgs/456/userStatuses?includeMessages=true&entitled=true&userId=123`)
         .respond({
           userStatuses: [{
             userId: '123',
@@ -105,7 +105,7 @@ describe('Service: USSService', function () {
       USSService.getStatusesForUser('123')
         .then(function (statuses) {
           expect(statuses.length).toBe(1);
-          var status = statuses[0];
+          const status = statuses[0];
           expect(status.state).toBe('error');
           expect(status.serviceId).toBe('squared-fusion-cal');
           expect(status.messages.length).toBe(2);
@@ -122,7 +122,7 @@ describe('Service: USSService', function () {
 
     it('should return error status if unable to fetch data from backend', function () {
       $httpBackend
-        .when('GET', rootPath + 'orgs/456/userStatuses?includeMessages=true&entitled=true&userId=123')
+        .when('GET', `${rootPath}orgs/456/userStatuses?includeMessages=true&entitled=true&userId=123`)
         .respond(500);
 
       USSService.getStatusesForUser('123')
@@ -136,7 +136,7 @@ describe('Service: USSService', function () {
   describe('decorateWithStatus', function () {
     describe('when not entitled', function () {
       it('error state is not entitled', function () {
-        var status = USSService.decorateWithStatus({
+        const status = USSService.decorateWithStatus({
           entitled: false,
           state: 'error',
         });
@@ -144,7 +144,7 @@ describe('Service: USSService', function () {
       });
 
       it('deactivated state is not entitled', function () {
-        var status = USSService.decorateWithStatus({
+        const status = USSService.decorateWithStatus({
           entitled: false,
           state: 'deactivated',
         });
@@ -152,7 +152,7 @@ describe('Service: USSService', function () {
       });
 
       it('notActivated state is not entitled', function () {
-        var status = USSService.decorateWithStatus({
+        const status = USSService.decorateWithStatus({
           entitled: false,
           state: 'notActivated',
         });
@@ -160,7 +160,7 @@ describe('Service: USSService', function () {
       });
 
       it('activated state is pending deactivation', function () {
-        var status = USSService.decorateWithStatus({
+        const status = USSService.decorateWithStatus({
           entitled: false,
           state: 'activated',
         });
@@ -168,7 +168,7 @@ describe('Service: USSService', function () {
       });
 
       it('other state is unknown', function () {
-        var status = USSService.decorateWithStatus({
+        const status = USSService.decorateWithStatus({
           entitled: true,
           state: 'other',
         });
@@ -178,7 +178,7 @@ describe('Service: USSService', function () {
 
     describe('when entitled', function () {
       it('deactivated state is pending activation', function () {
-        var status = USSService.decorateWithStatus({
+        const status = USSService.decorateWithStatus({
           entitled: true,
           state: 'deactivated',
         });
@@ -186,7 +186,7 @@ describe('Service: USSService', function () {
       });
 
       it('notActivated state is pending activation', function () {
-        var status = USSService.decorateWithStatus({
+        const status = USSService.decorateWithStatus({
           entitled: true,
           state: 'notActivated',
         });
@@ -194,7 +194,7 @@ describe('Service: USSService', function () {
       });
 
       it('activated state is activated', function () {
-        var status = USSService.decorateWithStatus({
+        const status = USSService.decorateWithStatus({
           entitled: true,
           state: 'activated',
         });
@@ -202,7 +202,7 @@ describe('Service: USSService', function () {
       });
 
       it('error state is error', function () {
-        var status = USSService.decorateWithStatus({
+        const status = USSService.decorateWithStatus({
           entitled: true,
           state: 'error',
         });
@@ -210,7 +210,7 @@ describe('Service: USSService', function () {
       });
 
       it('other state is unknown', function () {
-        var status = USSService.decorateWithStatus({
+        const status = USSService.decorateWithStatus({
           entitled: true,
           state: 'other',
         });
@@ -222,7 +222,7 @@ describe('Service: USSService', function () {
   describe('getOrg', function () {
     it('should work', function () {
       $httpBackend
-        .when('GET', rootPath + 'orgs/456')
+        .when('GET', `${rootPath}orgs/456`)
         .respond({
           id: '456',
           sipDomain: '',
@@ -239,7 +239,7 @@ describe('Service: USSService', function () {
   describe('updateOrg', function () {
     it('should work', function () {
       $httpBackend
-        .when('PATCH', rootPath + 'orgs/456', {
+        .when('PATCH', `${rootPath}orgs/456`, {
           id: '456',
           sipDomain: 'whatever',
         })
@@ -261,7 +261,7 @@ describe('Service: USSService', function () {
 
   describe('getStatusesSummary', function () {
     it('should be empty by default', function () {
-      var statuses = USSService.getStatusesSummary();
+      const statuses = USSService.getStatusesSummary();
       expect(statuses).toEqual([]);
     });
 
@@ -272,7 +272,7 @@ describe('Service: USSService', function () {
   describe('getStatuses', function () {
     it('should work', function () {
       $httpBackend
-        .when('GET', rootPath + 'orgs/456/userStatuses?includeMessages=true&serviceId=squared-fusion-cal&limit=10000&entitled=true')
+        .when('GET', `${rootPath}orgs/456/userStatuses?includeMessages=true&serviceId=squared-fusion-cal&limit=10000&entitled=true`)
         .respond({
           userStatuses: [{
             userId: '123',
@@ -295,7 +295,7 @@ describe('Service: USSService', function () {
           }],
         });
 
-      USSService.getAllStatuses('squared-fusion-cal', null)
+      USSService.getAllStatuses('squared-fusion-cal')
         .then(function (userStatuses) {
           expect(userStatuses.length).toEqual(2);
         });
@@ -314,7 +314,7 @@ describe('Service: USSService', function () {
   describe('getStatusesForUserInOrg', function () {
     it('should return statuses for a given user in org', function () {
       $httpBackend
-        .when('GET', rootPath + 'orgs/456/userStatuses?includeMessages=true&entitled=true&userId=123')
+        .when('GET', `${rootPath}orgs/456/userStatuses?includeMessages=true&entitled=true&userId=123`)
         .respond({
           userStatuses: [{
             userId: '123',
@@ -336,7 +336,7 @@ describe('Service: USSService', function () {
   describe('getUserProps', function () {
     it('should return props for a given user in org', function () {
       $httpBackend
-        .when('GET', rootPath + 'orgs/456/userProps/123')
+        .when('GET', `${rootPath}orgs/456/userProps/123`)
         .respond({ userId: '123', resourceGroups: {} });
 
       USSService.getUserProps('123', '456')

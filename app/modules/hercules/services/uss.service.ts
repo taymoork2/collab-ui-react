@@ -81,7 +81,6 @@ interface IJournalEntry {
 interface IUSSOrg {
   id: string;
   sipDomain: string;
-  lastSyncTime: string;
 }
 
 interface IUserStatusesResponse {
@@ -172,7 +171,7 @@ export class USSService {
     });
   }
 
-  public getAllStatuses(serviceId: HybridServiceId, state: UserStatus): ng.IPromise<IUserStatusWithExtendedMessages[]> {
+  public getAllStatuses(serviceId: HybridServiceId, state?: UserStatus): ng.IPromise<IUserStatusWithExtendedMessages[]> {
     return this.recursivelyReadStatuses(`${this.USSUrl}/orgs/${this.Authinfo.getOrgId()}/userStatuses?includeMessages=true&${this.statusesParameterRequestString(serviceId, state, 10000)}`)
       .then(this.extractAndTweakUserStatuses);
   }
@@ -388,7 +387,6 @@ export default angular
     require('modules/core/config/urlConfig'),
     require('modules/core/scripts/services/authinfo'),
     require('modules/hercules/services/hybrid-services-i18n.service').default,
-    require('modules/hercules/services/hybrid-services-utils.service').default,
     require('modules/squared/devices/services/CsdmPoller'),
   ])
   .service('USSService', USSService)
