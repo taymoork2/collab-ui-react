@@ -122,7 +122,6 @@ export function customerNumbersPSTN(number) {
 
 export function numberPSTN(prevNumber) {
   var date = Date.now();
-  console.log(date);
   // If created at same millisecond as previous
   if (date <= prevNumber) {
     date = ++prevNumber;
@@ -132,6 +131,7 @@ export function numberPSTN(prevNumber) {
   // get last 10 digits from date and format into PSTN number
   date = date.toString();
   date = ('+1919' + date.substr(date.length - 7));
+  console.log('Added Phone Number: ' + date);
   return [date, prevNumber];
 }
 
