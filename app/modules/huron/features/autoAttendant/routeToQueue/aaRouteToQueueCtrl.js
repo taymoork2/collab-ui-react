@@ -117,7 +117,7 @@
       }
       _.forEach(dynamicVariablesList, function (variable) {
         if (!_.includes(vm.availableSessionVariablesList, variable)) {
-          vm.deletedSessionVariablesList.push(variable);
+          vm.deletedSessionVariablesList.push(JSON.stringify(variable));
         }
       });
       vm.deletedSessionVariablesList = _.uniq(vm.deletedSessionVariablesList).sort();
