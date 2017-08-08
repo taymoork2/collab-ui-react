@@ -164,6 +164,16 @@
           }
         });
       }
+      var queueDynamVarList = _.get(vm.actionEntry, 'dynamicList');
+      if (!_.isUndefined(queueDynamVarList)) {
+        _.forEach(queueDynamVarList, function (entry) {
+          if (entry.isDynamic) {
+            if (!_.includes(AACommonService.getprePopulatedSessionVariablesList(), entry.say.value)) {
+              dynamicVariablesList.push(entry.say.value);
+            }
+          }
+        });
+      }
     }
 
     $scope.$on('CE Saved', function () {
