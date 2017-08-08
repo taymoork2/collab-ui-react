@@ -30,6 +30,7 @@ module.exports = {
   atlasNewRoomSystems: 'atlas-new-roomSystems',
   atlasNewUserExport: 'atlas-new-user-export',
   atlasNurturingEmails: 'atlas-nurturing-emails',
+  atlasOrderProvisioningConsole: 'atlas-order-provisioning-console',
   atlasPartnerManagement: 'atlas-partner-management',
   atlasPinSettings: 'atlas-pin-settings',
   atlasPMRonM2: 'atlas-pmr-on-m2',

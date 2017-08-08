@@ -34,6 +34,12 @@
           </a>
         </div>
 
+        <div ng-if="showOrderProvisioningConsole">
+          <br>
+          <h5 translate="supportPage.cards.tools.provisioningConsole"></h5>
+            <button id="toolsCardHelpdeskButton" ng-click="gotoProvisioningConsole()" class="btn btn--people btn--medium" translate="supportPage.cards.tools.viewProvisioningConsole"></button>
+        </div>
+
         <div ng-if="showEdiscoveryLink()">
           <br>
           <h5 translate="supportPage.cards.tools.ediscovery"></h5>

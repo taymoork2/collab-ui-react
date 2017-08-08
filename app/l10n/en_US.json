@@ -1137,12 +1137,95 @@
         "viewPartnerManagement": "Create New Partner Org",
         "editPartner": "Edit Partner Org",
         "viewEdiscovery": "View eDiscovery",
+        "provisioningConsole": "Provisioning Console",
+        "viewProvisioningConsole": "View Provisioning Console",
         "hybridCallTestTool": {
           "heading": "Hybrid Call",
           "description": "Run a test between two Hybrid Call Service Connect users",
           "button": "Test Call",
           "notEnabled": "Hybrid Call Service Connect is not enabled."
         }
+      }
+    }
+  },
+  "provisioningConsole": {
+    "provisioningConsole": "Provisioning Console",
+    "orderNumber": "Order Number: {{orderNumber}}",
+    "manualCode": "Manual Code",
+    "customerName": "Customer Name",
+    "customerMail": "Customer Email",
+    "status": "Status",
+    "orderReceived": "Order Received",
+    "lastModified": "Last Modified",
+    "siteUrl": "Site Url",
+    "completed": "Completion Date",
+    "actions": {
+      "title": "Actions",
+      "progress": "Mark as in progress",
+      "completed": "Mark as completed",
+      "pending": "Mark as pending"
+    },
+    "tabs": {
+      "pending": "Pending",
+      "completed": "Completed"
+    },
+    "details": {
+      "noSites": "This order doesn't have any sites listed",
+      "completed": "Order completed on {{orderDate}}",
+      "pending": "Request received on {{orderDate}}",
+      "customerInfo": {
+        "title": "Customer Information",
+        "partnerName": "Partner Name",
+        "partnerMail": "Partner Email"
+      },
+      "siteInfo": {
+        "title": "Site Information",
+        "url": "Site url",
+        "action": "Action",
+        "timezone": "Timezone",
+        "country": "Country",
+        "handling": "Special Handling Required",
+        "language": "Primary Language"
+      },
+      "audio": {
+        "title": "Audio for {{site}}",
+        "general": "Audio",
+        "product": "Product Name",
+        "service": "Service Name",
+        "action": "Action",
+        "broadcast": "Audio Broadcast",
+        "callback": "Callback"
+      },
+      "conferencing": {
+        "title": "Audio for {{site}}",
+        "general": "Conferencing",
+        "product": "Product Name",
+        "service": "Service Name",
+        "action": "Action",
+        "attendeeCapacity": "Attendee Capacity",
+        "attendeeOverage": "Attendee Overage",
+        "licenseVolume": "License Volume",
+        "licenseOverage": "License Overage",
+        "licenseModel": "License Model"
+      },
+      "storage": {
+        "title": "Storage for {{site}}",
+        "general": "Storage",
+        "product": "Product Name",
+        "service": "Service Name",
+        "action": "Action",
+        "storageCapacity": "Storage Capacity",
+        "storageOverage": "Storage Overage"
+      },
+      "cmr": {
+        "title": "CMR for {{site}}",
+        "general": "CMR",
+        "product": "Product Name",
+        "service": "Service Name",
+        "action": "Action",
+        "cmrCapacity": "CMR Capacity",
+        "cmrLicense": "CMR License Volume",
+        "cmrOverage": "CMR Overage"
       }
     }
   },
