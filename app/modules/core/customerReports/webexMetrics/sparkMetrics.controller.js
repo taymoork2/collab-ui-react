@@ -85,9 +85,9 @@
 
         updateIframe();
       })
-      .catch(function (error) {
-        Notification.errorWithTrackingId(error, 'common.error');
-      });
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'common.error');
+        });
     }
 
     function updateIframe() {

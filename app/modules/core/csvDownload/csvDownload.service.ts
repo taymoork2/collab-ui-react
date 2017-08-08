@@ -9,10 +9,6 @@ interface IReportDownloadReference {
   length: number;
 }
 
-interface IQServiceNewer extends ng.IQService {
-  race<TAll>(promises: ng.IPromise<TAll>[]): ng.IPromise<TAll[]>;
-}
-
 export class CsvDownloadTypes {
   public static readonly TYPE_TEMPLATE = 'template';
   public static readonly TYPE_USER = 'user';
@@ -44,7 +40,7 @@ export class CsvDownloadService {
   constructor(
     private $window: IWindowService,
     private $http: ng.IHttpService,
-    private $q: IQServiceNewer,
+    private $q: ng.IQService,
     private $rootScope: ng.IRootScopeService,
     private $timeout: ng.ITimeoutService,
     private Authinfo,

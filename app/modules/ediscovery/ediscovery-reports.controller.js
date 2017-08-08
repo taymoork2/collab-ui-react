@@ -239,14 +239,14 @@ require('@ciscospark/internal-plugin-search');
     function getKey(report) {
       if (isUserReportCreator(report)) {
         EdiscoveryService.getReportKey(report.encryptionKeyUrl, spark)
-        .then(function (key) {
-          $scope.reportName = report.displayName;
-          $scope.reportKey = key;
-          EdiscoveryService.openReportModal($scope, EdiscoveryService.modalTypes.PASSWORD);
-        })
-        .catch(function () {
-          Notification.error('ediscovery.encryption.unableGetPassword');
-        });
+          .then(function (key) {
+            $scope.reportName = report.displayName;
+            $scope.reportKey = key;
+            EdiscoveryService.openReportModal($scope, EdiscoveryService.modalTypes.PASSWORD);
+          })
+          .catch(function () {
+            Notification.error('ediscovery.encryption.unableGetPassword');
+          });
       }
     }
   }

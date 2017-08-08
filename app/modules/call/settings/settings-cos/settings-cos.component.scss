@@ -1,0 +1,18 @@
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+
+.cos-style {
+  .description-block {
+    @include vr-spacing(mt, 0);
+    @include vr-spacing(mb, 1);
+  }
+  .title-margin-bottom {
+    @include vr-spacing(mb, .75);
+  }
+  .switch-bottom-margin {
+    @include vr-spacing(mb, 1.75);
+  }
+
+  &:last-child .switch-bottom-margin {
+    @include vr-spacing(mb, 0);
+  }
+}

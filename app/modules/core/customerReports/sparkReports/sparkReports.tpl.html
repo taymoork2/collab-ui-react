@@ -12,9 +12,6 @@
 <!-- Main Content -->
 <div class="content-container" ng-if="!nav.displayDetails">
   <div class="row">
-    <learn-more-banner location="reports"></learn-more-banner>
-  </div>
-  <div class="row">
     <cs-card-layout>
       <report-card options="nav.avgRoomOptions" export-dropdown="nav.exportArrays.rooms" show="nav.displayEngagement" time="nav.timeSelected"></report-card>
       <report-card options="nav.activeOptions" export-dropdown="nav.exportArrays.active" secondary-options="nav.secondaryActiveOptions" dropdown="nav.activeDropdown" show="nav.displayEngagement" time="nav.timeSelected" resize-page="nav.resizeMostActive()"></report-card>
@@ -26,8 +23,18 @@
   </div>
 </div>
 <div class="detail-reports" ng-if="nav.displayDetails">
+  <cs-page-sub-header>
+    <cs-page-sub-header-left>
+      <cs-searchfilter search-item-fn="filterList(searchStr)" placeholder-text="{{nav.placeHolder.searchbox}}">
+      </cs-searchfilter>
+      <cs-datepicker required id="startDate" ng-model="nav.startDate" placeholder="{{'reportsPage.placeHolder.startDate' | translate}}" view-format="YYYY-MM-DD"></cs-datepicker>
+      <input cs-timepicker ng-required="true" type="text" id="startTime" ng-model="nav.startTime" placeholder="{{nav.placeHolder.startTime}}" />
+      <span class="data-span">{{nav.placeHolder.to}}</span>
+      <cs-datepicker required id="endDate" ng-model="nav.endDate" placeholder="{{'reportsPage.placeHolder.endDate' | translate}}" view-format="YYYY-MM-DD"></cs-datepicker>
+      <input cs-timepicker ng-required="true" type="text" id="endTime" ng-model="nav.endTime" placeholder="{{nav.placeHolder.endTime}}" />
+    </cs-page-sub-header-left>
+  </cs-page-sub-header>
   <div class="detail-reports-content">
-    <div class="gridStyle col-md-12" ui-grid="nav.gridOptions" ui-grid-infinite-scroll grid-spinner="nav.gridRefresh"></div>
+    <cs-grid grid-options="nav.gridOptions" spinner="nav.gridRefresh"></cs-grid>
   </div>
-</div>
 </div>

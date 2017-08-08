@@ -32,7 +32,7 @@ require('./_user-roles.scss');
     $scope.helpdeskOnCheckedHandler = helpdeskOnCheckedHandler;
     $scope.partnerManagementOnCheckedHandler = partnerManagementOnCheckedHandler;
     $scope.resetFormData = resetFormData;
-    $scope.isEnterpriseCustomer = isEnterpriseCustomer;
+    $scope.isEnterpriseCustomer = Authinfo.isEnterpriseCustomer();
     $scope.enableReadonlyAdminOption = false;
     $scope.enableRolesAndSecurityOption = false;
     $scope.showUserDetailSection = true;
@@ -223,10 +223,6 @@ require('./_user-roles.scss');
       }
     }
 
-    function isEnterpriseCustomer() {
-      return Authinfo.isEnterpriseCustomer();
-    }
-
     function updateRoles() {
       if ($scope.showComplianceRole && $scope.rolesObj.complianceValue !== isEntitledToCompliance()) {
         $scope.updatingUser = true;
@@ -393,7 +389,12 @@ require('./_user-roles.scss');
         if (!_.isEqual(roles, $scope.initialRoles)) {
           return Userservice.patchUserRoles($scope.currentUser.userName, $scope.currentUser.displayName, roles)
             .then(function (response) {
-              $scope.currentUser.roles = response.data.userResponse[0].roles;
+              var userResponse = _.get(response, 'data.userResponse[0]');
+              if (userResponse.httpStatus !== 200 || userResponse.status !== 200) {
+                Notification.errorResponse(response, 'profilePage.patchError');
+              } else {
+                $scope.currentUser.roles = userResponse.roles;
+              }
             });
         }
       }

@@ -43,9 +43,9 @@
         .then(function () {
           listPhoneNumbers();
           ExternalNumberService.getCarrierInfo(vm.currentCustomer.customerOrgId)
-          .then(function (response) {
-            vm.apiImplementation = _.get(response, 'apiImplementation');
-          });
+            .then(function (response) {
+              vm.apiImplementation = _.get(response, 'apiImplementation');
+            });
         });
     }
 

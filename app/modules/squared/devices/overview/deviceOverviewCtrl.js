@@ -249,15 +249,15 @@
           t38FaxEnabled: deviceOverview.faxEnabled,
         };
         huronDeviceService.setSettingsForAta(deviceOverview.currentDevice, settings)
-        .then(function () {
-          Notification.success('ataSettings.savedT38');
-        })
-        .catch(function (error) {
-          Notification.errorResponse(error, 'deviceOverviewPage.failedToSaveChanges');
-        })
-        .finally(function () {
-          deviceOverview.updatingT38Settings = false;
-        });
+          .then(function () {
+            Notification.success('ataSettings.savedT38');
+          })
+          .catch(function (error) {
+            Notification.errorResponse(error, 'deviceOverviewPage.failedToSaveChanges');
+          })
+          .finally(function () {
+            deviceOverview.updatingT38Settings = false;
+          });
       }, 100);
     }
 

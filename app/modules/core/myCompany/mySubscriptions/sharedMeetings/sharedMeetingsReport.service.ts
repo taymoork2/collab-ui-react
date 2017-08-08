@@ -8,7 +8,7 @@ interface IWindowService extends ng.IWindowService {
 }
 
 export class SharedMeetingsReportService {
-  public readonly FILENAME: string = 'shared_meeting.csv';
+  public readonly FILENAMES: string[] = ['shared_meeting.csv', 'concurrent_meetings.csv'];
   private readonly CHART_DIV: string = 'sharedMeetingsChart';
   private readonly ONE_MONTH: number = 1;
   private meetingModal: IToolkitModalServiceInstance |  undefined;
@@ -71,7 +71,7 @@ export class SharedMeetingsReportService {
 
   public downloadInternetExplorer(): void {
     if (_.get(this.$window, 'navigator.msSaveOrOpenBlob', false)) {
-      this.$window.navigator.msSaveOrOpenBlob(this.blob, this.FILENAME);
+      this.$window.navigator.msSaveOrOpenBlob(this.blob, this.FILENAMES[0]);
     }
   }
 

@@ -107,8 +107,8 @@ export class PlaceCallOverviewService {
   private getDefaultPreferredLanguage(organizationLevelLanguage): any {
     const defaultPrefix: string = this.$translate.instant('preferredLanguage.organizationSettingLabel');
     const translatedLanguageLabel: string = organizationLevelLanguage ?
-                                        this.$translate.instant(organizationLevelLanguage) :
-                                        'languages.englishAmerican';
+                                        organizationLevelLanguage :
+      this.$translate.instant('languages.englishAmerican');
     const defaultLanguage = {
       label: defaultPrefix + translatedLanguageLabel,
       value: '',

@@ -101,9 +101,9 @@
     };
 
     if (extensionEntitlements.every(
-        function (extensionEntitlement) {
-          return !Authinfo.isEntitled(extensionEntitlement);
-        })) {
+      function (extensionEntitlement) {
+        return !Authinfo.isEntitled(extensionEntitlement);
+      })) {
       return;
     }
 

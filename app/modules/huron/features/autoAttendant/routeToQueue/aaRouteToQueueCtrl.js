@@ -7,9 +7,22 @@
 
 
   /* @ngInject */
-  function AARouteToQueueCtrl($rootScope, $scope, $translate, $modal, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, AANotificationService, AALanguageService) {
+  function AARouteToQueueCtrl($rootScope, $scope, $translate, $modal, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, AANotificationService, AALanguageService, AASessionVariableService, AAModelService) {
     var vm = this;
     var conditional = 'conditional';
+
+    var dependentCeSessionVariablesList = [];
+    var dynamicVariablesList = [];
+
+    vm.togglefullWarningMsg = togglefullWarningMsg;
+    vm.closeFullWarningMsg = closeFullWarningMsg;
+    vm.getWarning = getWarning;
+    vm.fullWarningMsgValue = false;
+    vm.deletedSessionVariablesListAlongWithWarning = '';
+    vm.ui = {};
+    vm.availableSessionVariablesList = [];
+    vm.deletedSessionVariablesList = [];
+    vm.varMissingWarning = $translate.instant('autoAttendant.dynamicMissingCustomVariable');
 
     vm.hideQueues = true;
     vm.queueSelected = {
@@ -324,13 +337,13 @@
     }
 
     function activate() {
-      var ui = AAUiModelService.getUiModel();
+      vm.ui = AAUiModelService.getUiModel();
 
       if ($scope.fromDecision) {
         var conditionalAction;
         fromDecision = true;
 
-        vm.uiMenu = ui[$scope.schedule];
+        vm.uiMenu = vm.ui[$scope.schedule];
         vm.menuEntry = vm.uiMenu.entries[$scope.index];
         conditionalAction = _.get(vm.menuEntry, 'actions[0]', '');
         if (!conditionalAction || conditionalAction.getName() !== conditional) {
@@ -352,7 +365,7 @@
         activateQueueSettings(vm.menuEntry);
       } else {
         if ($scope.fromRouteCall) {
-          vm.uiMenu = ui[$scope.schedule];
+          vm.uiMenu = vm.ui[$scope.schedule];
           vm.menuEntry = vm.uiMenu.entries[$scope.index];
           fromRouteCall = true;
 
@@ -371,6 +384,7 @@
           vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
           if ($scope.keyIndex < vm.menuEntry.entries.length) {
             vm.menuKeyEntry = vm.menuEntry.entries[$scope.keyIndex];
+            vm.menuEntry = vm.menuKeyEntry;
           } else {
             vm.menuKeyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
             var action = AutoAttendantCeMenuModelService.newCeActionEntry(rtQueue, '');
@@ -384,6 +398,10 @@
       }
 
       populateUiModel();
+      getSessionVariablesOfDependentCe().finally(function () {
+        getDynamicVariables();
+        refreshVarSelects();
+      });
     }
     activate();
   }

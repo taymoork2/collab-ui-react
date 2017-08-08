@@ -2,7 +2,7 @@
 
 describe('Controller: WebEx Metrics Ctrl', function () {
   beforeEach(function () {
-    this.initModules('Core', 'core.customer-reports');  // 'Core' included for Userservice
+    this.initModules('Core', 'core.customer-reports'); // 'Core' included for Userservice
     this.injectDependencies(
       '$controller',
       '$q',

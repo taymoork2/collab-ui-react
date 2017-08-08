@@ -120,9 +120,8 @@ describe('Partner flow', function () {
     }, LONG_TIMEOUT);
 
     it('should navigate first time wizard', function () {
-      utils.waitForText(wizard.mainviewTitle, 'Subscription Review');
+      utils.waitForText(wizard.mainviewTitle, 'Plan Review');
       utils.click(wizard.beginBtn);
-      utils.click(wizard.saveBtn);
       utils.waitForText(wizard.mainviewTitle, 'Enterprise Settings');
       // click "Save" instead of "Next" because there are no SSO steps
       // goes to last tab because there is no Add Users

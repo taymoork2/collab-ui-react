@@ -1,5 +1,6 @@
 import './_meeting-settings.scss';
-import { IWebExSite, ISiteNameError, IConferenceService, IExistingTrialSites, IWebexLicencesPayload } from './meeting-settings.interface';
+import { IWebExSite, ISiteNameError, IConferenceService, IExistingTrialSites, IWebexLicencesPayload, IPendingLicense } from './meeting-settings.interface';
+import { SetupWizardService } from '../setup-wizard.service';
 
 export class MeetingSettingsCtrl {
   public siteModel: IWebExSite = {
@@ -22,6 +23,9 @@ export class MeetingSettingsCtrl {
   public actingSubscriptionId = '';
   public distributedLicensesArray: IWebExSite[][];
   public centerDetails = this.getWebExMeetingsLicenseTypeDetails();
+  public tspPartnerOptions = [];
+  public audioPartnerName = null;
+  public dropdownPlaceholder = this.$translate.instant('common.select');
 
   /* @ngInject */
   constructor(
@@ -33,7 +37,7 @@ export class MeetingSettingsCtrl {
     private Notification,
     private TrialTimeZoneService,
     private TrialWebexService,
-    private SetupWizardService,
+    private SetupWizardService: SetupWizardService,
   ) {
     this.init();
   }
@@ -60,6 +64,9 @@ export class MeetingSettingsCtrl {
         },
       });
     });
+    if (this.SetupWizardService.hasTSPAudioPackage()) {
+      this.populateTSPPartnerOptions();
+    }
   }
 
   public onInputChange() {
@@ -78,6 +85,30 @@ export class MeetingSettingsCtrl {
     });
 
     this.sitesArray = sitesArray;
+  }
+
+  private updateSitesLicenseCount() {
+    const sourceArray = _.flatten(this.distributedLicensesArray);
+    _.forEach(this.sitesArray, (site) => {
+      const matchingSite = _.find(sourceArray, { siteUrl: site.siteUrl });
+      if (matchingSite) {
+        site.quantity = matchingSite.quantity;
+      }
+    });
+  }
+
+  private updateSitesAudioPackageDisplay() {
+    const audioPackage = this.SetupWizardService.getPendingAudioLicenses();
+    if (audioPackage && audioPackage[0]) {
+      let audioPackageDisplay = 'subscriptions.licenseTypes.' + audioPackage[0].offerName;
+      audioPackageDisplay = this.$translate.instant(audioPackageDisplay);
+      if (this.audioPartnerName) {
+        audioPackageDisplay += this.$translate.instant('firstTimeWizard.providedBy') + this.audioPartnerName;
+      }
+      _.forEach(this.sitesArray, (site) => {
+        site.audioPackageDisplay = audioPackageDisplay;
+      });
+    }
   }
 
   private findTimezoneObject(timezoneId) {
@@ -150,15 +181,23 @@ export class MeetingSettingsCtrl {
 
   public enableOrDisableNext() {
     let licensesRemaining = 0;
-    const centerDetails = _.map(this.SetupWizardService.getPendingMeetingLicenses(), (license: any) => {
-      return license.offerName;
-    });
 
-    _.forEach(centerDetails, (center) => {
-      licensesRemaining += this.calculateLicensesRemaining(center);
+    _.forEach(this.centerDetails, (center) => {
+      licensesRemaining += this.calculateLicensesRemaining(center.centerType);
+      if (licensesRemaining === 0) {
+        this.updateSitesLicenseCount();
+        this.updateSitesAudioPackageDisplay();
+      }
     });
 
     _.set(this.$scope.wizard, 'isNextDisabled', licensesRemaining !== 0);
+  }
+
+  public setNextDisableStatus(status) {
+    _.set(this.$scope.wizard, 'isNextDisabled', status);
+    if (this.audioPartnerName) {
+      this.updateSitesAudioPackageDisplay();
+    }
   }
 
   public addOrRemoveExistingWebExSite(site) {
@@ -174,11 +213,21 @@ export class MeetingSettingsCtrl {
   }
 
   private getWebExMeetingsLicenseTypeDetails() {
-    return _.map(this.SetupWizardService.getPendingMeetingLicenses(), (license: any) => {
+    const meetingCenterLicenses = _.reject(this.SetupWizardService.getPendingMeetingLicenses(), (license: IPendingLicense) => {
+      return license.offerName === 'CF' || license.offerName === 'CMR';
+    });
+
+    return _.map(meetingCenterLicenses, (license: IPendingLicense) => {
       return {
         centerType: license.offerName,
         volume: license.volume,
       };
+    });
+  }
+
+  private populateTSPPartnerOptions() {
+    this.SetupWizardService.getTSPPartners().then((partners) => {
+      this.tspPartnerOptions = partners;
     });
   }
 
@@ -200,14 +249,10 @@ export class MeetingSettingsCtrl {
   }
 
   private constructDistributedSitesArray(): void {
-    const centerDetails = _.map(this.SetupWizardService.getPendingMeetingLicenses(), (license: any) => {
-      return license.offerName;
-    });
-
     this.distributedLicensesArray = _.map(this.sitesArray, (site: IWebExSite) => {
-      return _.map(centerDetails, (center) => {
+      return _.map(this.centerDetails, (center) => {
         return {
-          centerType: center,
+          centerType: center.centerType,
           quantity: site.quantity,
           siteUrl: site.siteUrl,
           timezone: site.timezone,
@@ -219,7 +264,7 @@ export class MeetingSettingsCtrl {
   private findExistingWebexTrialSites(): void {
     const conferencingServices = _.filter(this.Authinfo.getConferenceServices(), { license: { isTrial: true } });
     const existingTrials = _.find(conferencingServices, (service: IConferenceService) => {
-      return service.license.offerName === this.Config.offerCodes.EE || service.license.offerName === this.Config.offerCodes.MC;
+      return _.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC, this.Config.offerCodes.CMR], service.license.offerName);
     });
 
     _.forEach(existingTrials, (trial) => {
@@ -277,7 +322,7 @@ export class MeetingSettingsCtrl {
 
     _.set(webexLicensesPayload, 'webexProvisioningParams', {
       webexSiteDetailsList: webexSiteDetailsList,
-      audioPartnerName: null,
+      audioPartnerName: this.audioPartnerName,
     });
 
     return webexLicensesPayload;

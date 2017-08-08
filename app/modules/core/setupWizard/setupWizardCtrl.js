@@ -14,6 +14,7 @@ require('./_setup-wizard.scss');
     var hasPendingCallLicenses = false;
     var hasPendingLicenses = false;
     var supportsAtlasPMRonM2 = false;
+    var supportsHI1484 = false;
     $scope.tabs = [];
     $scope.isTelstraCsbEnabled = false;
     $scope.isCSB = Authinfo.isCSB();
@@ -29,8 +30,8 @@ require('./_setup-wizard.scss');
       }
 
       var hI1484Promise = FeatureToggleService.supports(FeatureToggleService.features.hI1484)
-        .then(function (ishI1484) {
-          $scope.ishI1484 = ishI1484;
+        .then(function (_supportsHI1484) {
+          supportsHI1484 = _supportsHI1484;
         });
 
       var adminOrgUsagePromise = Orgservice.getAdminOrgUsage()
@@ -53,7 +54,7 @@ require('./_setup-wizard.scss');
 
       if (SetupWizardService.hasPendingServiceOrder()) {
         var tabsBasedOnPendingLicensesPromise = SetupWizardService.getPendingLicenses().then(function () {
-          shouldShowMeetingsTab = SetupWizardService.hasPendingMeetingLicenses();
+          shouldShowMeetingsTab = SetupWizardService.hasPendingWebExMeetingLicenses();
           hasPendingCallLicenses = SetupWizardService.hasPendingCallLicenses();
           hasPendingLicenses = SetupWizardService.hasPendingLicenses();
         });
@@ -66,12 +67,11 @@ require('./_setup-wizard.scss');
     function init() {
       var tabs = getInitTabs();
 
+      initPlanReviewTab(tabs);
       initEnterpriseSettingsTab(tabs);
       initMeetingSettingsTab(tabs);
       initCallSettingsTab(tabs);
       initCareTab(tabs);
-
-      initSharedDeviceOnly(tabs);
       initAtlasPMRonM2(tabs);
       initFinishTab(tabs);
       removeTabsWithEmptySteps(tabs);
@@ -80,28 +80,6 @@ require('./_setup-wizard.scss');
 
     function getInitTabs() {
       return [{
-        name: 'planReview',
-        label: 'firstTimeWizard.planReview',
-        description: 'firstTimeWizard.planReviewSub',
-        icon: 'icon-plan-review',
-        title: 'firstTimeWizard.planReview',
-        controller: 'PlanReviewCtrl as planReview',
-        steps: [{
-          name: 'init',
-          template: 'modules/core/setupWizard/planReview/planReview.tpl.html',
-        }],
-      }, {
-        name: 'messagingSetup',
-        label: 'firstTimeWizard.messageSettings',
-        description: 'firstTimeWizard.messagingSetupSub',
-        icon: 'icon-convo',
-        title: 'firstTimeWizard.messagingSetup',
-        controller: 'MessagingSetupCtrl as msgSetup',
-        steps: [{
-          name: 'setup',
-          template: 'modules/core/setupWizard/messageSettings/messagingSetup.tpl.html',
-        }],
-      }, {
         name: 'enterpriseSettings',
         label: 'firstTimeWizard.enterpriseSettings',
         description: 'firstTimeWizard.enterpriseSettingsSub',
@@ -128,6 +106,28 @@ require('./_setup-wizard.scss');
       ];
     }
 
+    function initPlanReviewTab(tabs) {
+      var tab = {
+        name: 'planReview',
+        label: 'firstTimeWizard.planReview',
+        description: 'firstTimeWizard.planReviewSub',
+        icon: 'icon-plan-review',
+        title: 'firstTimeWizard.planReview',
+        controller: 'PlanReviewCtrl as planReview',
+        steps: [{
+          name: 'init',
+          template: 'modules/core/setupWizard/planReview/planReview.tpl.html',
+        }],
+      };
+
+      if (SetupWizardService.hasPendingServiceOrder()) {
+        tab.label = 'firstTimeWizard.subscriptionReview';
+        tab.title = 'firstTimeWizard.subscriptionReview';
+      }
+
+      tabs.splice(0, 0, tab);
+    }
+
     function initMeetingSettingsTab(tabs) {
       var meetingTab = {
         name: 'meetingSettings',
@@ -151,6 +151,10 @@ require('./_setup-wizard.scss');
           template: 'modules/core/setupWizard/meeting-settings/meeting-license-distribution.html',
         },
         {
+          name: 'setPartnerAudio',
+          template: 'modules/core/setupWizard/meeting-settings/meeting-audio-partner.html',
+        },
+        {
           name: 'summary',
           template: 'modules/core/setupWizard/meeting-settings/meeting-summary.html',
         }],
@@ -160,7 +164,9 @@ require('./_setup-wizard.scss');
         if (!hasWebexMeetingTrial()) {
           _.remove(meetingTab.steps, { name: 'migrateTrial' });
         }
-
+        if (!SetupWizardService.hasTSPAudioPackage()) {
+          _.remove(meetingTab.steps, { name: 'setPartnerAudio' });
+        }
         tabs.splice(1, 0, meetingTab);
       }
     }
@@ -185,14 +191,24 @@ require('./_setup-wizard.scss');
     }
 
     function initCallSettingsTab(tabs) {
-      var initialStep = {
-        name: 'setup',
-        template: 'modules/core/setupWizard/callSettings/serviceSetupInit.html',
-      };
-
       var pickCountry = {
         name: 'callPickCountry',
         template: 'modules/core/setupWizard/callSettings/serviceHuronCustomerCreate.html',
+      };
+
+      var pickLocationType = {
+        name: 'pickCallLocationType',
+        template: 'modules/core/setupWizard/callSettings/serviceSetupInit.html',
+      };
+
+      var setupLocation = {
+        name: 'setupCallLocation',
+        template: 'modules/core/setupWizard/callSettings/locationSetup.html',
+      };
+
+      var setupSite = {
+        name: 'setupCallSite',
+        template: 'modules/core/setupWizard/callSettings/serviceSetup.html',
       };
 
       if (showCallSettings()) {
@@ -200,7 +216,7 @@ require('./_setup-wizard.scss');
           if (customer && hasPendingCallLicenses) {
             SetupWizardService.activateAndCheckCapacity().catch(function (error) {
               $timeout(function () {
-              //   $scope.$emit('wizardNextButtonDisable', true);
+                //   $scope.$emit('wizardNextButtonDisable', true);
               });
               if (error.errorCode === 42003) {
                 //Error code from Drachma
@@ -212,17 +228,17 @@ require('./_setup-wizard.scss');
             });
           }
 
-          var steps = [{
-            name: 'init',
-            template: 'modules/core/setupWizard/callSettings/serviceSetup.html',
-          }];
-
-          if ($scope.ishI1484) {
-            steps.splice(0, 0, initialStep);
-          }
+          var steps = [];
 
           if (!customer && hasPendingCallLicenses) {
-            steps.splice(0, 0, pickCountry);
+            steps.push(pickCountry);
+          }
+
+          if (supportsHI1484) {
+            steps.push(pickLocationType);
+            steps.push(setupLocation);
+          } else {
+            steps.push(setupSite);
           }
 
           tabs.splice(1, 0, {
@@ -284,15 +300,6 @@ require('./_setup-wizard.scss');
       }
     }
 
-
-    function initSharedDeviceOnly(tabs) {
-      if (isSharedDevicesOnlyLicense) {
-        _.remove(tabs, function (tab) {
-          return tab.name === 'messagingSetup';
-        });
-      }
-    }
-
     function initAtlasPMRonM2(tabs) {
       if (supportsAtlasPMRonM2) {
         var step = {
@@ -312,14 +319,14 @@ require('./_setup-wizard.scss');
       if (!Authinfo.isSetupDone()) {
         var tab = {
           name: 'finish',
-          label: 'firstTimeWizard.activateAndBeginBilling',
+          label: 'firstTimeWizard.provisionAndBeginBilling',
           description: 'firstTimeWizard.finishSub',
           icon: 'icon-check',
-          title: 'firstTimeWizard.getStarted',
+          title: 'firstTimeWizard.provisionAndBeginBilling',
           controller: 'WizardFinishCtrl',
           steps: [{
-            name: 'activate',
-            template: 'modules/core/setupWizard/finish/activate.html',
+            name: 'provision',
+            template: 'modules/core/setupWizard/finish/provision.html',
           }, {
             name: 'done',
             template: 'modules/core/setupWizard/finish/finish.html',
@@ -328,7 +335,8 @@ require('./_setup-wizard.scss');
 
         if (!hasPendingLicenses) {
           tab.label = 'firstTimeWizard.finish';
-          _.remove(tab.steps, { name: 'activate' });
+          tab.title = 'firstTimeWizard.getStarted';
+          _.remove(tab.steps, { name: 'provision' });
         }
 
         tabs.push(tab);

@@ -6,6 +6,7 @@ var Navigation = function () {
   this.body = element(by.tagName('body'));
 
   this.tabs = element(by.css('cs-left-nav'));
+  this.ftswSidePanel = element(by.css('cr-wizard-nav'));
   this.tabCount = element.all(by.repeater('page in pages'));
   this.homeTab = element(by.css('li.overviewTab > a'));
   this.usersTab = element(by.css('li.userTab > a'));
@@ -318,10 +319,16 @@ var Navigation = function () {
 
   this.launchSupportPage = function () {
     browser.getAllWindowHandles().then(function (handles) {
-      browser.switchTo().window(handles[1]).then(function () {
-        expect(browser.getCurrentUrl()).toMatch(navigation.partnerSupportUrl);
+      browser.switchTo().window(handles[1]);
+
+      browser.wait(function () {
+        return browser.getCurrentUrl().then(function (currentUrl) {
+          return currentUrl === navigation.partnerSupportUrl;
+        });
       });
+
       browser.close();
+
       // switch back to the main window
       browser.switchTo().window(handles[0]);
     });

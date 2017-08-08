@@ -2,8 +2,8 @@
   'use strict';
 
   angular
-      .module('Sunlight')
-      .controller('CareFeaturesCtrl', CareFeaturesCtrl);
+    .module('Sunlight')
+    .controller('CareFeaturesCtrl', CareFeaturesCtrl);
 
   /* @ngInject */
   function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification) {
@@ -68,11 +68,23 @@
       formatter: CareFeatureList.formatTemplates,
       i18n: 'careChatTpl.chatTemplate',
       isEmpty: false,
-      color: 'cta',
+      color: 'people',
       icons: ['icon-message', 'icon-phone'],
       data: [],
     }];
 
+    if (vm.isVirtualAssistantEnabled) {
+      vm.features.push({
+        name: 'Va',
+        getFeature: CareFeatureList.getVirtualAssistantConfigs,
+        formatter: CareFeatureList.formatVirtualAssistant,
+        i18n: 'careChatTpl.chatTemplate',
+        isEmpty: false,
+        color: 'cta',
+        icons: ['icon-bot-four'],
+        data: [],
+      });
+    }
     vm.filters = [{
       name: $translate.instant('common.all'),
       filterValue: 'all',
@@ -86,6 +98,13 @@
       name: $translate.instant('sunlightDetails.chatPlusCallbackMediaType'),
       filterValue: 'chatPlusCallback',
     }];
+
+    if (vm.isVirtualAssistantEnabled) {
+      vm.filters.push({
+        name: $translate.instant('sunlightDetails.virtualAssistantMediaType'),
+        filterValue: 'virtualAssistant',
+      });
+    }
 
     init();
 
@@ -189,7 +208,8 @@
       reInstantiateMasonry();
     }
 
-    vm.editCareFeature = function (feature) {
+    vm.editCareFeature = function (feature, $event) {
+      $event.stopImmediatePropagation();
       CareFeatureList.getTemplate(feature.templateId).then(function (template) {
         $state.go('care.setupAssistant', {
           isEditFeature: true,
@@ -199,7 +219,9 @@
       });
     };
 
-    function deleteCareFeature(feature) {
+    function deleteCareFeature(feature, $event) {
+      $event.preventDefault();
+      $event.stopImmediatePropagation();
       featureToBeDeleted = feature;
       $state.go('care.Features.DeleteFeature', {
         deleteFeatureName: feature.name,
@@ -208,7 +230,9 @@
       });
     }
 
-    function openEmbedCodeModal(feature) {
+    function openEmbedCodeModal(feature, $event) {
+      $event.preventDefault();
+      $event.stopImmediatePropagation();
       CTService.openEmbedCodeModal(feature.templateId, feature.name);
     }
 

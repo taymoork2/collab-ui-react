@@ -2,18 +2,18 @@
   'use strict';
 
   angular
-        .module('Sunlight')
-        .controller('NewCareFeatureModalCtrl', NewCareFeatureModalCtrl);
+    .module('Sunlight')
+    .controller('NewCareFeatureModalCtrl', NewCareFeatureModalCtrl);
 
-    /* @ngInject */
+  /* @ngInject */
   function NewCareFeatureModalCtrl($modalInstance, $scope, $state, Authinfo) {
     var vm = $scope;
     vm.features = [];
     vm.hasCall = Authinfo.isSquaredUC();
     vm.CallbackServiceDescription = vm.hasCall ? 'sunlightDetails.newFeatures.selectCADesc'
-                                                : 'sunlightDetails.featuresNotYetConfiguredPage.CallLicenseMissing';
+      : 'sunlightDetails.featuresNotYetConfiguredPage.CallLicenseMissing';
     vm.ChatCallbackServiceDescription = vm.hasCall ? 'sunlightDetails.newFeatures.selectCHCADesc'
-                                                : 'sunlightDetails.featuresNotYetConfiguredPage.CallLicenseMissing';
+      : 'sunlightDetails.featuresNotYetConfiguredPage.CallLicenseMissing';
     vm.isVirtualAssistantEnabled = $state.isVirtualAssistantEnabled;
     var serviceCards = [];
     serviceCards.push({ //careChatService

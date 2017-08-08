@@ -87,7 +87,7 @@
       });
 
       return CareReportsGraphService.buildChartConfig(data, legend, graphs, chartCursor,
-              'createdTime', categoryAxis, valueAxes, exportReport, titles);
+        'createdTime', categoryAxis, valueAxes, exportReport, titles);
     }
 
     function showTaskOfferedGraph(div, data, categoryAxisTitle, title, isToday) {
@@ -149,7 +149,7 @@
       });
 
       return CareReportsGraphService.buildChartConfig(data, legend, graphs, chartCursor,
-              'createdTime', categoryAxis, valueAxes, exportReport, titles);
+        'createdTime', categoryAxis, valueAxes, exportReport, titles);
     }
 
     function balloonTextForTaskVolume(graphDataItem, graph) {
@@ -300,7 +300,7 @@
       });
 
       return CareReportsGraphService.buildChartConfig(data, legend, graphs, chartCursor,
-              'createdTime', categoryAxis, valueAxes, exportReport, titles);
+        'createdTime', categoryAxis, valueAxes, exportReport, titles);
     }
 
     function showTaskAggregateGraph(div, data, categoryAxisTitle, title) {
@@ -369,7 +369,7 @@
       });
 
       return CareReportsGraphService.buildChartConfig(data, legend, graphs, chartCursor,
-              'createdTime', categoryAxis, valueAxes, exportReport, titles);
+        'createdTime', categoryAxis, valueAxes, exportReport, titles);
     }
 
     function showAverageCsatGraph(div, data, categoryAxisTitle, title) {
@@ -426,7 +426,7 @@
       });
 
       return CareReportsGraphService.buildChartConfig(data, legend, graphs, chartCursor,
-              'createdTime', categoryAxis, valueAxes, exportReport, titles);
+        'createdTime', categoryAxis, valueAxes, exportReport, titles);
     }
 
     var service = {

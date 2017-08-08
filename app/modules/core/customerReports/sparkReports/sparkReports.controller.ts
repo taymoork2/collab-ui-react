@@ -24,6 +24,7 @@ import {
   IAvgRoomData,
   ICharts,
   IConversation,
+  IConversationPopulated,
   IConversationWrapper,
   IEndpointContainer,
   IEndpointData,
@@ -33,32 +34,13 @@ import {
   IMetricsData,
   IMetricsLabel,
   IMinMax,
+  IPlaceHolder,
 } from './sparkReportInterfaces';
 
 import { CardUtils } from 'modules/core/cards';
 
-interface IConversationPopulated {
-  files: boolean;
-  rooms: boolean;
-}
-
-interface ICdrDataParam {
-  calling_partyNumber: string;
-  called_partyNumber: string;
-}
-
-export interface ICdrData {
-  type: string;
-  format: string;
-  from: string;
-  to: string;
-  dataParam: ICdrDataParam;
-}
-
 export class SparkReportCtrl {
-
   public gridOptions: uiGrid.IGridOptions;
-  public gridData: ICdrData[]= [];
   public gridRefresh: boolean = true;
 
   /* @ngInject */
@@ -177,17 +159,27 @@ export class SparkReportCtrl {
         }
       }, 30);
     });
+    this.initDatePicker();
+  }
+
+  private initDatePicker(): void {
+    if (this.timeSelected.value === this.ReportConstants.WEEK_FILTER.value) {
+      this.startDate = moment().subtract('days', 7).format('YYYY-MM-DD');
+      this.endDate =  moment().format('YYYY-MM-DD');
+      this.startTime = moment().subtract('days', 7).format('h:mm A');
+      this.endTime = moment().format('h:mm A');
+    }
   }
 
   public onInit(): void {
+    this.setGridOptions();
     this.onRefreshed();
     this.setGridData();
-    this.setGridOptions();
   }
 
   private onRefreshed(): void {
     const deregister = this.$rootScope.$on('refreshed', () => {
-      this.gridData = [];
+      this.gridOptions.data = [];
       this.gridRefresh = true;
     });
     this.$scope.$on('$destroy', deregister);
@@ -205,7 +197,7 @@ export class SparkReportCtrl {
         item.calltype = 'Voice';
         item.status = 'Sucessful';
       });
-      this.gridData =  dta;
+      this.gridOptions.data = dta;
       this.gridRefresh = false;
     });
   }
@@ -250,12 +242,7 @@ export class SparkReportCtrl {
 
     this.gridOptions = {
       rowHeight: 45,
-      data: 'nav.gridData',
-      multiSelect: false,
       columnDefs: columnDefs,
-      enableRowHeaderSelection: false,
-      enableColumnMenus: false,
-      enableHorizontalScrollbar: 0,
       infiniteScrollDown: true,
     };
   }
@@ -286,6 +273,20 @@ export class SparkReportCtrl {
     });
   }
 
+  //Call details reports header controls
+  public placeHolder: IPlaceHolder = {
+    searchbox: this.$translate.instant('reportsPage.placeholder.searchbox'),
+    startDate: this.$translate.instant('reportsPage.placeholder.startDate'),
+    endDate: this.$translate.instant('reportsPage.placeholder.endDate'),
+    startTime: this.$translate.instant('reportsPage.placeHolder.startTime'),
+    endTime: this.$translate.instant('reportsPage.placeholder.endTime'),
+    to: this.$translate.instant('reportsPage.placeholder.to'),
+  };
+  public startDate: string = moment().format('YYYY-MM-DD');
+  public startTime: string = moment().format('h:mm a');
+  public endDate: string = moment().format('YYYY-MM-DD');
+  public endTime: string = '10:00 PM';
+
   // report display filter controls
   public readonly ALL: string = this.ReportConstants.ALL;
   public readonly ENGAGEMENT: string = this.ReportConstants.ENGAGEMENT;
@@ -314,10 +315,30 @@ export class SparkReportCtrl {
           this.sliderUpdate(this.timeSelected.min, this.timeSelected.max);
         } else {
           this.timeUpdate();
+          this.dateChangeHandler();
         }
       });
     },
   };
+
+  private dateChangeHandler(): void {
+    if (this.timeSelected.value === this.ReportConstants.MONTH_FILTER.value) {
+      this.startDate = moment().subtract('weeks', 4).format('YYYY-MM-DD');
+      this.endDate = moment().format('YYYY-MM-DD');
+      this.startTime = moment().subtract('weeks', 4).format('h:mm A');
+      this.endTime = moment().format('h:mm A');
+    } else if (this.timeSelected.value === this.ReportConstants.THREE_MONTH_FILTER.value) {
+      this.startDate = moment().subtract('months', 3).format('YYYY-MM-DD');
+      this.endDate = moment().format('YYYY-MM-DD');
+      this.startTime = moment().subtract('months', 3).format('h:mm A');
+      this.endTime = moment().format('h:mm A');
+    } else if (this.timeSelected.value === this.ReportConstants.WEEK_FILTER.value) {
+      this.startDate = moment().subtract('days', 7).format('YYYY-MM-DD');
+      this.endDate = moment().format('YYYY-MM-DD');
+      this.startTime = moment().subtract('days', 7).format('h:mm A');
+      this.endTime = moment().format('h:mm A');
+    }
+  }
 
   private sliderUpdate(min: number, max: number): void {
     this.minMax.min = min;

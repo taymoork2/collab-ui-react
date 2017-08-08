@@ -75,9 +75,9 @@ describe(' sunlightReportService', function () {
         return [200, ciUserStats];
       });
     $httpBackend.whenGET(/.*filter=id.*/g)
-        .respond(function () {
-          return [200, ciNonCareUserStats];
-        });
+      .respond(function () {
+        return [200, ciNonCareUserStats];
+      });
   }));
 
   beforeEach(inject(function ($rootScope, $q) {

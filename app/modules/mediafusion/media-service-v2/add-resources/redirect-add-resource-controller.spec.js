@@ -69,7 +69,7 @@ describe('RedirectAddResourceControllerV2', function () {
     expect(controller.enableRedirectToTarget).toBe(true);
   });
   it('controller.noProceed should be true for next()', function () {
-    controller.radio = 0;
+    controller.radio = '0';
     controller.noProceed = false;
     controller.next();
     expect(controller.noProceed).toBe(true);

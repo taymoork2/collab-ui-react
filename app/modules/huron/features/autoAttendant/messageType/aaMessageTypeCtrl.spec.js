@@ -91,6 +91,7 @@ describe('Controller: AAMessageTypeCtrl', function () {
                     },
                   }],
                   className: 'dynamic-prompt aa-message-height',
+                  id: 'messageTypeopenHours0',
                 },
               },
             },
@@ -228,7 +229,6 @@ describe('Controller: AAMessageTypeCtrl', function () {
 
         aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
         aaUiModel.openHours.addEntryAt(0, menuEntry);
-
         // setup the options menu
         c = controller('AAMessageTypeCtrl', {
           $scope: $scope,
@@ -597,7 +597,7 @@ describe('Controller: AAMessageTypeCtrl', function () {
     });
 
     describe('varible warning', function () {
-      it('fullWarningMsg', function () {
+      it('togglefullWarningMsg', function () {
         var c;
         menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
         menuEntry.addAction(AutoAttendantCeMenuModelService.newCeActionEntry('say', 'value for say message'));
@@ -609,7 +609,7 @@ describe('Controller: AAMessageTypeCtrl', function () {
         c = controller('AAMessageTypeCtrl', {
           $scope: $scope,
         });
-        c.fullWarningMsg();
+        c.togglefullWarningMsg();
         expect(c.fullWarningMsgValue).toBe(true);
       });
       it('getWarning returning true', function () {

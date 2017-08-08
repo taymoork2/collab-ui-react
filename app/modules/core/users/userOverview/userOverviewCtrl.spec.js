@@ -359,4 +359,100 @@ describe('Controller: UserOverviewCtrl', function () {
       expect(callState.actionAvailable).toBeTruthy();
     });
   });
+
+  describe('When the user is a care user', function () {
+    var careUser;
+    beforeEach(function () {
+      careUser = _.cloneDeep(getJSONFixture('core/json/currentUser.json'));
+      careUser.roles = [];
+    });
+
+    afterEach(function () {
+      careUser = undefined;
+      this.$stateParams = this.orginalStateParams;
+    });
+
+    it('user has CDC license and CDC entitlements', function () {
+      careUser.entitlements.push('contact-center-context');
+      careUser.roles.push('spark.synckms');
+      careUser.entitlements.push('cloud-contact-center');
+      careUser.entitlements.push('cloud-contact-center-digital');
+      careUser.licenseID = [
+        'CDC_xyz123',
+      ];
+
+      initController.apply(this, [careUser]);
+      var contactCenterState = _.find(this.controller.services, { state: 'contactCenter' });
+      expect(contactCenterState.detail).toBe('onboardModal.paidContactCenter');
+    });
+
+    it('user has CVC licnese and CVC entitlements', function () {
+      careUser.entitlements.push('contact-center-context');
+      careUser.roles.push('spark.synckms');
+      careUser.entitlements.push('cloud-contact-center');
+      careUser.entitlements.push('cloud-contact-center-inbound-voice');
+      careUser.licenseID = [
+        'CVC_xyz123',
+      ];
+
+      initController.apply(this, [careUser]);
+      var contactCenterState = _.find(this.controller.services, { state: 'contactCenter' });
+      expect(contactCenterState.detail).toBe('onboardModal.paidContactCenterVoice');
+    });
+
+    it('user has CDC and CVC license , but only CDC entitlements', function () {
+      careUser.entitlements.push('contact-center-context');
+      careUser.roles.push('spark.synckms');
+      careUser.entitlements.push('cloud-contact-center');
+      careUser.entitlements.push('cloud-contact-center-digital');
+      careUser.licenseID = [
+        'CVC_xyz123',
+        'CDC_xyx123',
+      ];
+
+      initController.apply(this, [careUser]);
+      var contactCenterState = _.find(this.controller.services, { state: 'contactCenter' });
+      expect(contactCenterState.detail).toBe('onboardModal.paidContactCenter');
+    });
+
+    it('user has CDC and CVC liencees , but only CVC entitlements', function () {
+      careUser.entitlements.push('contact-center-context');
+      careUser.roles.push('spark.synckms');
+      careUser.entitlements.push('cloud-contact-center');
+      careUser.entitlements.push('cloud-contact-center-inbound-voice');
+      careUser.licenseID = [
+        'CVC_xyz123',
+        'CDC_xyx123',
+      ];
+
+      initController.apply(this, [careUser]);
+      var contactCenterState = _.find(this.controller.services, { state: 'contactCenter' });
+      expect(contactCenterState.detail).toBe('onboardModal.paidContactCenterVoice');
+    });
+
+    it('user has no licnese, but cdc and cvc entitlements', function () {
+      careUser.entitlements.push('contact-center-context');
+      careUser.roles.push('spark.synckms');
+      careUser.entitlements.push('cloud-contact-center');
+      careUser.entitlements.push('cloud-contact-center-digital');
+      careUser.licenseID = [];
+
+      initController.apply(this, [careUser]);
+      var contactCenterState = _.find(this.controller.services, { state: 'contactCenter' });
+      expect(contactCenterState).toBe(undefined);
+    });
+
+    it('user has CDC and CVC licenses, bus has no entitlements', function () {
+      careUser.entitlements.push('contact-center-context');
+      careUser.roles.push('spark.synckms');
+      careUser.licenseID = [
+        'CVC_xyz123',
+        'CDC_xyx123',
+      ];
+
+      initController.apply(this, [careUser]);
+      var contactCenterState = _.find(this.controller.services, { state: 'contactCenter' });
+      expect(contactCenterState).toBe(undefined);
+    });
+  });
 });

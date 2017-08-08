@@ -11,7 +11,7 @@ import preferredLanguageModule from 'modules/call/settings/settings-preferred-la
 import extensionRangeModule from 'modules/call/settings/settings-extension-range';
 import extensionLengthModule from 'modules/call/settings/settings-extension-length';
 import routingPrefixModule from 'modules/call/settings/settings-routing-prefix';
-import timeZoneModule from 'modules/call/settings/settings-time-zone';
+import timeZoneModule from 'modules/call/shared/settings-time-zone';
 import outboundDialDigitModule from 'modules/call/settings/settings-outbound-dial-digit';
 import companyVoicemailModule from 'modules/call/settings/settings-company-voicemail';
 import companyVoicemailAvrilModule from 'modules/call/settings/settings-company-voicemail-avril';

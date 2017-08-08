@@ -65,9 +65,9 @@
               .then(function () {
                 Notification.success('hercules.settings.voicemail.disableDescription');
               })
-            .catch(function (response) {
-              Notification.errorWithTrackingId(response, 'hercules.voicemail.voicemailDisableError');
-            });
+              .catch(function (response) {
+                Notification.errorWithTrackingId(response, 'hercules.voicemail.voicemailDisableError');
+              });
           }
         });
     };

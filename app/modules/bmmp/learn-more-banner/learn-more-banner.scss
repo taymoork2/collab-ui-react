@@ -1,3 +1,13 @@
+.name-change .reports-bmmp-banner,
+.name-change .overview-bmmp-banner {
+  top: auto;
+
+  &.readonly {
+    top: 3.25rem;
+  }
+}
+
+.reports-bmmp-banner,
 .overview-bmmp-banner {
   position: relative;
   top: 3.25rem;
@@ -5,12 +15,6 @@
   &.readonly {
     top: 6rem;
   }
-  div.colR img {
-    top: 0;
-    position: absolute;
-  }
-}
-.reports-bmmp-banner {
   div.colR img {
     top: 0;
     position: absolute;

@@ -3,6 +3,7 @@ export interface IWebExSite {
   timezone?: string | object;
   centerType: string;
   quantity?: number;
+  audioPackageDisplay?: string;
 }
 
 export interface IWebexSiteDetail {

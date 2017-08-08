@@ -25,8 +25,8 @@ exports.createRouteToQueue = function () {
       };
 
       return utils.sendRequest(options)
-      .then(function () {
-        return 200;
-      });
+        .then(function () {
+          return 200;
+        });
     });
 };

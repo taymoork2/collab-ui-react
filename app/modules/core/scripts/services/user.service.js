@@ -221,9 +221,9 @@
         url: scimUrl,
         data: userData,
       })
-      .then(function (response) {
-        return response;
-      });
+        .then(function (response) {
+          return response;
+        });
     }
 
     function inviteUsers(usersDataArray, entitlements, forceResend, callback) {
@@ -523,13 +523,13 @@
           var sunlightUserData = _helpers.createUserData();
           // Get user to check for roles and entitlements
           getUserAsPromise(userId)
-          .then(function (ciUserData) {
-            if (ciUserData.status === 200) {
-              var checkCesRole = licenseUpdateRequired(userLicenses, Config.offerCodes.CVC, 'ADD') &&
+            .then(function (ciUserData) {
+              if (ciUserData.status === 200) {
+                var checkCesRole = licenseUpdateRequired(userLicenses, Config.offerCodes.CVC, 'ADD') &&
               licenseUpdateRequired(userLicenses, Config.offerCodes.CO, 'ADD');
-              checkRolesAndOnboardSunlightUser(userId, ciUserData, sunlightUserData, checkCesRole);
-            }
-          });
+                checkRolesAndOnboardSunlightUser(userId, ciUserData, sunlightUserData, checkCesRole);
+              }
+            });
         }
       });
     }

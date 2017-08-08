@@ -124,13 +124,13 @@ require('./_support.scss');
     };
 
     $scope.tabs = [{
-      title: 'supportPage.tabs.status',
+      title: $translate.instant('supportPage.tabs.status'),
       state: 'support.status',
     }];
 
     if (Authinfo.isInDelegatedAdministrationOrg() && !Authinfo.isHelpDeskAndComplianceUserOnly()) {
       $scope.tabs.push({
-        title: 'supportPage.tabs.logs',
+        title: $translate.instant('supportPage.tabs.logs'),
         state: 'support.logs',
       });
     }

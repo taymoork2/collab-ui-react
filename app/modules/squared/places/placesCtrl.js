@@ -37,7 +37,10 @@ require('../devices/_devices.scss');
 
           vm.filteredView.isSearchOnly.then(function () {
             CsdmDataModelService.subscribeToChanges($scope, vm.filteredView.refresh.bind(vm.filteredView));
+            vm.gridOptions.data = vm.filteredView.getResult();
           });
+
+          vm.gridOptions.data = vm.filteredView.getResult();
         }
 
         function fetchAsyncSettings() {
@@ -87,10 +90,10 @@ require('../devices/_devices.scss');
 
         vm.isOrgEntitledToHuron = function () {
           return _.filter(
-              Authinfo.getLicenses(),
-              function (l) {
-                return l.licenseType === 'COMMUNICATION';
-              }).length > 0;
+            Authinfo.getLicenses(),
+            function (l) {
+              return l.licenseType === 'COMMUNICATION';
+            }).length > 0;
         };
 
         vm.numDevices = function (place) {
@@ -105,19 +108,15 @@ require('../devices/_devices.scss');
         };
 
         vm.gridOptions = {
-          data: 'sc.filteredView.getResult()',
+          appScopeProvider: vm,
           rowHeight: 45,
-          enableHorizontalScrollbar: 0,
-          enableRowHeaderSelection: false,
-          enableColumnMenus: false,
-          multiSelect: false,
+          enableRowSelection: true,
           onRegisterApi: function (gridApi) {
-            $scope.gridApi = gridApi;
-            gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+            vm.gridApi = gridApi;
+            vm.gridApi.selection.on.rowSelectionChanged($scope, function (row) {
               vm.showPlaceDetails(row.entity);
             });
           },
-
           columnDefs: [{
             field: 'photos',
             displayName: '',
