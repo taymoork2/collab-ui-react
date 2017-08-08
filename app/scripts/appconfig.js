@@ -66,8 +66,13 @@
         $urlRouterProvider.otherwise(function ($injector) {
           // inspired by https://github.com/angular-ui/ui-router/issues/600
           // unit tests $digest not settling due to $location url changes
-          var $state = $injector.get('$state');
-          $state.go('login');
+          var $window = $injector.get('$window');
+          var Utils = $injector.get('Utils');
+          var oauthCodeParams = Utils.getFromStandardGetParams($window.document.URL);
+          if (!_.has(oauthCodeParams, 'error')) {
+            var $state = $injector.get('$state');
+            $state.go('login');
+          }
         });
         $stateProvider
           .state('modal', {
@@ -203,6 +208,14 @@
                 templateUrl: 'modules/core/stateRedirect/loginError.tpl.html',
                 controller: 'StateRedirectCtrl',
                 controllerAs: 'stateRedirect',
+              },
+            },
+            authenticate: false,
+          })
+          .state('backend-temp-unavailable', {
+            views: {
+              'main@': {
+                templateUrl: 'modules/core/stateRedirect/backendTempUnavailable.tpl.html',
               },
             },
             authenticate: false,
