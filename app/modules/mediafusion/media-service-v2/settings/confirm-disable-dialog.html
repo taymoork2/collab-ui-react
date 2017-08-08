@@ -8,7 +8,7 @@
   <div class="spinner-position media-modal-spinner" ng-show="disableServiceDialog.isLoading === false">
     <i class='icon icon-spinner icon-2x media-modal-position'></i>
   </div>
-  <span ng-if="disableServiceDialog.step === '1'">
+  <span class="media-model-align" ng-if="disableServiceDialog.step === '1'">
     <p>
       <span ng-show="disableServiceDialog.isLoading === true" translate="mediaFusion.deactivate.deregister"></span>
       <div class="media-cluster-list" ng-repeat="ecp in disableServiceDialog.clusterNames">
@@ -30,7 +30,7 @@
     </p>
   </span>
 
-  <span ng-if="disableServiceDialog.step === '2'">
+  <span class="media-model-align" ng-if="disableServiceDialog.step === '2'">
     <p>
       <span translate="mediaFusion.deactivate.areYou"></span><br>
       <span translate="mediaFusion.deactivate.future"></span>
