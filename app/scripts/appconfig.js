@@ -3433,9 +3433,7 @@
           })
           .state('cluster-list', {
             url: '/services/clusters',
-            templateUrl: 'modules/hercules/fusion-pages/cluster-list.html',
-            controller: 'FusionClusterListController',
-            controllerAs: 'resourceList',
+            template: '<hybrid-services-cluster-list-with-cards has-cucm-support-feature-toggle="$resolve.hasCucmSupportFeatureToggle" has-enterprise-private-trunking-feature-toggle="$resolve.hasEnterprisePrivateTrunkingFeatureToggle"></hybrid-services-cluster-list-with-cards>',
             parent: 'main',
             resolve: {
               hasCucmSupportFeatureToggle: /* @ngInject */ function (FeatureToggleService) {

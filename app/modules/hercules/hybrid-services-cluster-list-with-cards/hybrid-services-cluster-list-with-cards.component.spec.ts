@@ -1,16 +1,15 @@
-'use strict';
+import clusterListCardModule from './index';
 
-describe('Controller: FusionClusterListController', function () {
-  var controller, $controller, $q, $rootScope, Analytics, Authinfo, EnterprisePrivateTrunkService, HybridServicesClusterService, Notification, ResourceGroupService;
+describe('Component: HybridServicesClusterListWithCardsComponent', function () {
+  let controller, $componentController, $q, $rootScope, Analytics, Authinfo, EnterprisePrivateTrunkService, HybridServicesClusterService, Notification, ResourceGroupService;
 
-  beforeEach(angular.mock.module('Squared'));
-  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module(clusterListCardModule));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies(_$rootScope_, _$controller_, _$q_, _Analytics_, _Authinfo_, _EnterprisePrivateTrunkService_, _HybridServicesClusterService_, _Notification_, _ResourceGroupService_) {
+  function dependencies(_$rootScope_, _$componentController_, _$q_, _Analytics_, _Authinfo_, _EnterprisePrivateTrunkService_, _HybridServicesClusterService_, _Notification_, _ResourceGroupService_) {
     $rootScope = _$rootScope_;
-    $controller = _$controller_;
+    $componentController = _$componentController_;
     $q = _$q_;
     Analytics = _Analytics_;
     Authinfo = _Authinfo_;
@@ -21,7 +20,7 @@ describe('Controller: FusionClusterListController', function () {
   }
 
   function initSpies() {
-    spyOn(HybridServicesClusterService, 'getAll');
+    // spyOn(HybridServicesClusterService, 'getAll');
     spyOn(HybridServicesClusterService, 'getResourceGroups').and.returnValue($q.resolve({
       groups: {},
     }));
@@ -33,15 +32,16 @@ describe('Controller: FusionClusterListController', function () {
   }
 
   function initController(hasEnterprisePrivateTrunkingFeatureToggle) {
-    controller = $controller('FusionClusterListController', {
+    controller = $componentController('hybridServicesClusterListWithCards', {}, {
       hasCucmSupportFeatureToggle: true,
       hasEnterprisePrivateTrunkingFeatureToggle: hasEnterprisePrivateTrunkingFeatureToggle,
     });
+    controller.$onInit();
   }
 
   describe('init', function () {
     beforeEach(function () {
-      HybridServicesClusterService.getAll.and.returnValue($q.resolve());
+      // HybridServicesClusterService.getAll.and.returnValue($q.resolve());
       initController(false);
     });
 
@@ -65,7 +65,7 @@ describe('Controller: FusionClusterListController', function () {
       expect(Notification.errorWithTrackingId).toHaveBeenCalled();
     });
 
-    it('should update filters and displayed clusters', function () {
+    fit('should update filters and displayed clusters', function () {
       HybridServicesClusterService.getResourceGroups.and.returnValue($q.resolve({ unassigned: [{
         targetType: 'c_mgmt',
         connectors: [{
@@ -100,6 +100,7 @@ describe('Controller: FusionClusterListController', function () {
         }],
       }] }));
       initController(false);
+      window.console.log('controller.filters', controller.filters);
       expect(controller.filters[0].count).toBe(0);
       expect(controller.filters[1].count).toBe(0);
       expect(controller.filters[2].count).toBe(0);
@@ -117,7 +118,7 @@ describe('Controller: FusionClusterListController', function () {
     });
   });
 
-  describe('Private Trunking ', function () {
+  describe('Private Trunking', function () {
     beforeEach(function () {
       EnterprisePrivateTrunkService.fetch.and.returnValue($q.resolve([
         {
@@ -145,7 +146,7 @@ describe('Controller: FusionClusterListController', function () {
 
     it('should format data from EnterprisePrivateTrunkService so that it is on the FMS cluster format', function () {
       initController(true);
-      controller._loadSipDestinations();
+      controller.loadSipDestinations();
       $rootScope.$apply();
       expect(controller.displayedGroups[5].unassigned).toEqual(jasmine.objectContaining([
         {
@@ -209,7 +210,7 @@ describe('Controller: FusionClusterListController', function () {
 
     it('should not get private trunk data if you are not feature toggled', function () {
       initController(false);
-      controller._loadSipDestinations();
+      controller.loadSipDestinations();
       $rootScope.$apply();
       expect(EnterprisePrivateTrunkService.fetch).not.toHaveBeenCalled();
     });

@@ -93,6 +93,7 @@ export class EnterprisePrivateTrunkService {
   }
 
 }
-angular
-  .module('Hercules')
-  .service('EnterprisePrivateTrunkService', EnterprisePrivateTrunkService);
+export default angular
+  .module('hercules.enterprise-private-trunk-service', [])
+  .service('EnterprisePrivateTrunkService', EnterprisePrivateTrunkService)
+  .name;
