@@ -14,5 +14,6 @@ export default angular
   .service('SunlightConfigService', SunlightConfigService)
   .service('SunlightReportService', SunlightReportService)
   .factory('ConfigTemplateService', ConfigServices.ConfigTemplateService)
+  .factory('VirtualAssistantConfigService', ConfigServices.VirtualAssistantConfigService)
   .factory('ConfigUserService', ConfigServices.ConfigUserService)
   .name;

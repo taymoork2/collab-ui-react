@@ -138,7 +138,7 @@ describe('CallConnectOptions component:', () => {
         spyOn(test.CsdmDataModelService, 'updateCloudberryPlace').and.returnValue(test.$q.resolve({}));
         const place = { cisUuid: uid };
         spyOn(test.CsdmDataModelService, 'reloadPlace').and.returnValue(test.$q.resolve(place));
-        spyOn(test.USSService, 'updateUserProps').and.returnValue(test.$q.resolve({}));
+        spyOn(test.USSService, 'updateBulkUserProps').and.returnValue(test.$q.resolve({}));
 
         const mailId = 'mail@example.com';
         state.controller.mailID = mailId;
@@ -172,7 +172,7 @@ describe('CallConnectOptions component:', () => {
         spyOn(test.CsdmDataModelService, 'updateCloudberryPlace').and.returnValue(test.$q.resolve({}));
         const place = { cisUuid: uid };
         spyOn(test.CsdmDataModelService, 'reloadPlace').and.returnValue(test.$q.resolve(place));
-        spyOn(test.USSService, 'updateUserProps').and.returnValue(test.$q.resolve({}));
+        spyOn(test.USSService, 'updateBulkUserProps').and.returnValue(test.$q.resolve({}));
 
         const mailId = 'mail@example.com';
         state.controller.mailID = mailId;
@@ -206,7 +206,7 @@ describe('CallConnectOptions component:', () => {
         spyOn(test.CsdmDataModelService, 'updateCloudberryPlace').and.returnValue(test.$q.resolve({}));
         const place = { cisUuid: uid };
         spyOn(test.CsdmDataModelService, 'reloadPlace').and.returnValue(test.$q.resolve(place));
-        spyOn(test.USSService, 'updateUserProps').and.returnValue(test.$q.resolve({}));
+        spyOn(test.USSService, 'updateBulkUserProps').and.returnValue(test.$q.resolve({}));
 
         const mailId = 'mail@example.com';
         state.controller.mailID = mailId;
@@ -231,7 +231,7 @@ describe('CallConnectOptions component:', () => {
       spyOn(test.CsdmDataModelService, 'updateCloudberryPlace').and.returnValue(test.$q.resolve({}));
       const place = { cisUuid: uid };
       spyOn(test.CsdmDataModelService, 'reloadPlace').and.returnValue(test.$q.resolve(place));
-      spyOn(test.USSService, 'updateUserProps').and.returnValue(test.$q.resolve({}));
+      spyOn(test.USSService, 'updateBulkUserProps').and.returnValue(test.$q.resolve({}));
 
       const mailId = 'mail@example.com';
       state.controller.mailID = mailId;

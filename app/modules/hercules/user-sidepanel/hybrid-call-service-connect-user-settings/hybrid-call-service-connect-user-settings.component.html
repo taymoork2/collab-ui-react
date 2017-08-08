@@ -48,8 +48,8 @@
                   translate="hercules.activationStatus.{{$ctrl.getStatus($ctrl.userStatusConnect)}}"></span>
 
           <span class="cloud-extension-label last-state-change-timestamp"
-                ng-if="$ctrl.userIsCurrentlyEntitled && $ctrl.userStatusConnect && $ctrl.userStatusConnect.lastStateChangeText">
-            {{$ctrl.userStatusConnect.lastStateChangeText}}
+                ng-if="$ctrl.userIsCurrentlyEntitled && $ctrl.userStatusConnect && $ctrl.lastStateChangeText">
+            {{$ctrl.lastStateChangeText}}
             </span>
 
           <span class="cloud-extension-label status-off"

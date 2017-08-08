@@ -4,6 +4,92 @@ const DEFAULT_DATE_FORMAT: string = 'M-D-Y';
 const DEFAULT_TONE: string = 'US';
 const NULL: string = 'null';
 
+export interface IRLocationInternalNumberPoolList {
+  pattern: string;
+  directoryNumber: IDirectoryNumber;
+  range: IRange;
+  uuid?: string;
+}
+
+export interface ILocationInternalNumberPoolList extends IRLocationInternalNumberPoolList {}
+
+export class LocationInternalNumberPoolList implements ILocationInternalNumberPoolList {
+  public pattern: string;
+  public directoryNumber: IDirectoryNumber;
+  public range: IRange;
+  public uuid?: string;
+
+  constructor(locationInternalNumberPoolList: IRLocationInternalNumberPoolList = {
+    pattern: '',
+    directoryNumber: new DirectoryNumber(),
+    range: new Range(),
+    uuid: undefined,
+  }) {
+    this.pattern = locationInternalNumberPoolList.pattern;
+    this.directoryNumber = locationInternalNumberPoolList.directoryNumber;
+    this.range = locationInternalNumberPoolList.range;
+    this.uuid = locationInternalNumberPoolList.uuid;
+  }
+}
+
+export interface IDirectoryNumber {
+  uuid: string;
+  pattern: string;
+}
+
+export class DirectoryNumber implements IDirectoryNumber {
+  public uuid: string;
+  public pattern: string;
+
+  constructor(directoryNumber: IDirectoryNumber = {
+    uuid: '',
+    pattern: '',
+  }) {
+    this.uuid = directoryNumber.uuid;
+    this.pattern = directoryNumber.pattern;
+  }
+}
+
+export interface IRange {
+  uuid?: string;
+  name: string;
+  customer: ICustomer;
+}
+
+export class Range implements IRange {
+  public uuid?: string;
+  public name: string;
+  public customer: ICustomer;
+
+  constructor(range: IRange = {
+    uuid: undefined,
+    name: '',
+    customer: new Customer(),
+  }) {
+    this.uuid = range.uuid;
+    this.name = range.name;
+    this.customer = range.customer;
+  }
+}
+
+export interface ICustomer {
+  uuid: string;
+  name: string;
+}
+
+export class Customer implements ICustomer {
+  public uuid: string;
+  public name: string;
+
+  constructor(customer: ICustomer = {
+    uuid: '',
+    name: '',
+  }) {
+    this.uuid = customer.uuid;
+    this.name = customer.name;
+  }
+}
+
 interface IBaseLocation {
   uuid?: string;
   name: string;

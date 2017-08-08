@@ -69,6 +69,20 @@
       org: $translate.instant('careChatTpl.org'),
       agent: $translate.instant('careChatTpl.agent'),
     };
+
+    vm.profileList = [
+      {
+        Header: $translate.instant('careChatTpl.org'),
+        Label: $translate.instant('careChatTpl.profile_org_info'),
+        Value: vm.profiles.org,
+      },
+      {
+        Header: $translate.instant('careChatTpl.agent'),
+        Label: $translate.instant('careChatTpl.profile_agent_info'),
+        Value: vm.profiles.agent,
+      },
+    ];
+
     vm.selectedTemplateProfile = vm.profiles.org;
     vm.agentNames = {
       displayName: $translate.instant('careChatTpl.agentDisplayName'),
@@ -1454,6 +1468,14 @@
         vm.agentNamePreview = $translate.instant('careChatTpl.agentNamePreview');
       }
     }
+
+    vm.profileSettingInfo = function () {
+      if (vm.selectedTemplateProfile === vm.profiles.agent) {
+        return $translate.instant('careChatTpl.agentSettingInfo');
+      } else {
+        return $translate.instant('careChatTpl.orgSettingInfo');
+      }
+    };
 
     function submitChatTemplate() {
       DomainManagementService.syncDomainsWithCare();

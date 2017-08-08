@@ -27,7 +27,7 @@ describe('SetupWizardCtrl', function () {
     spyOn(this.Authinfo, 'isCare').and.returnValue(false);
     spyOn(this.SetupWizardService, 'getPendingLicenses').and.returnValue(this.$q.resolve());
     spyOn(this.SetupWizardService, 'hasPendingLicenses').and.returnValue(true);
-    spyOn(this.SetupWizardService, 'hasPendingMeetingLicenses').and.returnValue(false);
+    spyOn(this.SetupWizardService, 'hasPendingWebExMeetingLicenses').and.returnValue(false);
     spyOn(this.SetupWizardService, 'hasPendingCallLicenses').and.returnValue(false);
     spyOn(this.SetupWizardService, 'hasPendingServiceOrder').and.returnValue(false);
     spyOn(this.SetupWizardService, 'isCustomerPresent').and.returnValue(this.$q.resolve(true));
@@ -189,7 +189,7 @@ describe('SetupWizardCtrl', function () {
     });
 
     it('serviceSetup should have a single substep', function () {
-      this.expectSubStepOrder('serviceSetup', ['init']);
+      this.expectSubStepOrder('serviceSetup', ['setupCallSite']);
     });
   });
 
@@ -197,7 +197,7 @@ describe('SetupWizardCtrl', function () {
     beforeEach(function () {
       this.SetupWizardService.hasPendingServiceOrder.and.returnValue(true);
       this.SetupWizardService.hasPendingCallLicenses.and.returnValue(true);
-      this.SetupWizardService.hasPendingMeetingLicenses.and.returnValue(false);
+      this.SetupWizardService.hasPendingWebExMeetingLicenses.and.returnValue(false);
       this.initController();
     });
 
@@ -206,7 +206,7 @@ describe('SetupWizardCtrl', function () {
     });
 
     it('serviceSetup should have a single substep', function () {
-      this.expectSubStepOrder('serviceSetup', ['init']);
+      this.expectSubStepOrder('serviceSetup', ['setupCallSite']);
     });
   });
 
@@ -214,7 +214,7 @@ describe('SetupWizardCtrl', function () {
     beforeEach(function () {
       this.SetupWizardService.hasPendingServiceOrder.and.returnValue(true);
       this.SetupWizardService.hasPendingCallLicenses.and.returnValue(true);
-      this.SetupWizardService.hasPendingMeetingLicenses.and.returnValue(false);
+      this.SetupWizardService.hasPendingWebExMeetingLicenses.and.returnValue(false);
       this.Authinfo.getLicenses.and.returnValue([{
         licenseType: 'STORAGE',
       }]);
@@ -226,7 +226,7 @@ describe('SetupWizardCtrl', function () {
     });
 
     it('serviceSetup should have a single substep', function () {
-      this.expectSubStepOrder('serviceSetup', ['init']);
+      this.expectSubStepOrder('serviceSetup', ['setupCallSite']);
     });
   });
 
@@ -234,7 +234,7 @@ describe('SetupWizardCtrl', function () {
     beforeEach(function () {
       this.SetupWizardService.hasPendingServiceOrder.and.returnValue(false);
       this.SetupWizardService.hasPendingCallLicenses.and.returnValue(false);
-      this.SetupWizardService.hasPendingMeetingLicenses.and.returnValue(false);
+      this.SetupWizardService.hasPendingWebExMeetingLicenses.and.returnValue(false);
       this.Authinfo.getLicenses.and.returnValue([{
         licenseType: 'STORAGE',
       }]);
@@ -249,7 +249,7 @@ describe('SetupWizardCtrl', function () {
   describe('When has pending WEBEX (EE, MC, EC, TC, SC) licenses', function () {
     beforeEach(function () {
       this.SetupWizardService.hasPendingServiceOrder.and.returnValue(true);
-      this.SetupWizardService.hasPendingMeetingLicenses.and.returnValue(true);
+      this.SetupWizardService.hasPendingWebExMeetingLicenses.and.returnValue(true);
       this.SetupWizardService.hasPendingCallLicenses.and.returnValue(false);
       this.Authinfo.getLicenses.and.returnValue([{}]);
       this.initController();
@@ -352,7 +352,7 @@ describe('SetupWizardCtrl', function () {
       spyOn(this.DirSyncService, 'isDirSyncEnabled').and.returnValue(true);
 
       this.SetupWizardService.hasPendingServiceOrder.and.returnValue(true);
-      this.SetupWizardService.hasPendingMeetingLicenses.and.returnValue(true);
+      this.SetupWizardService.hasPendingWebExMeetingLicenses.and.returnValue(true);
       this.SetupWizardService.hasPendingCallLicenses.and.returnValue(true);
 
       this.initController();
@@ -361,10 +361,23 @@ describe('SetupWizardCtrl', function () {
     it('the wizard should have a lot of settings', function () {
       this.expectStepOrder(['planReview', 'serviceSetup', 'meetingSettings', 'enterpriseSettings', 'careSettings']);
       this.expectSubStepOrder('planReview', ['init']);
-      this.expectSubStepOrder('serviceSetup', ['setup', 'init']);
+      this.expectSubStepOrder('serviceSetup', ['pickCallLocationType', 'setupCallLocation']);
       this.expectSubStepOrder('meetingSettings', ['siteSetup', 'licenseDistribution', 'summary']);
       this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'enterprisePmrSetup', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
       this.expectSubStepOrder('careSettings', ['csonboard']);
+    });
+  });
+
+  describe('When there is a TSP audio license present', function () {
+    beforeEach(function () {
+      this.SetupWizardService.hasPendingServiceOrder.and.returnValue(true);
+      this.SetupWizardService.hasPendingWebExMeetingLicenses.and.returnValue(true);
+      spyOn(this.SetupWizardService, 'hasTSPAudioPackage').and.returnValue(true);
+      this.initController();
+    });
+
+    it('displays the set TSP partner view during meeting setup', function () {
+      this.expectSubStepOrder('meetingSettings', ['siteSetup', 'licenseDistribution', 'setPartnerAudio', 'summary']);
     });
   });
 

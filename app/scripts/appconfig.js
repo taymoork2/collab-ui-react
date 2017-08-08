@@ -2688,7 +2688,7 @@
           })
           .state('firsttimewizard', {
             parent: 'firsttimesplash',
-            template: '<cr-wizard activate="activate" tabs="tabs" finish="finish" is-first-time="true"></cr-wizard>',
+            template: '<cr-wizard provision="provision" tabs="tabs" finish="finish" is-first-time="true"></cr-wizard>',
             controller: 'SetupWizardCtrl',
             data: {
               firstTimeSetup: true,
@@ -3490,6 +3490,21 @@
               },
               callback: /* @ngInject */ function ($stateParams) {
                 return $stateParams.callback;
+              },
+            },
+          })
+          .state('context-fields-sidepanel.options', {
+            template: '<context-field-sidepanel-options-list type-definition="$resolve.dataTypeDefinition" default-option="{{::$resolve.defaultOption}}"></context-field-sidepanel-options-list>',
+            params: {
+              dataTypeDefinition: {},
+              defaultOption: undefined,
+            },
+            resolve: {
+              dataTypeDefinition: /* @ngInject */ function ($stateParams) {
+                return $stateParams.dataTypeDefinition;
+              },
+              defaultOption: /* @ngInject */ function ($stateParams) {
+                return $stateParams.defaultOption;
               },
             },
           })

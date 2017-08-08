@@ -103,7 +103,7 @@
     function populateUiModelFromMenuEntry(menuEntry, elementId) {
       var action = _.get(menuEntry, 'actions[0]', '');
       if (action) {
-        if (action.name == 'routeToQueue') {
+        if (action.name === 'routeToQueue') {
           var hasInitialDynamicList = _.has(action.queueSettings.initialAnnouncement, 'actions[0].dynamicList');
           var hasPeriodicDynamicList = _.has(action.queueSettings.periodicAnnouncement, 'actions[0].dynamicList');
           if (hasInitialDynamicList && _.includes(elementId, 'initialAnnouncement')) {

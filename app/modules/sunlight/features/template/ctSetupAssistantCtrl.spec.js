@@ -420,6 +420,14 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.logoFile).toEqual('');
       expect(controller.logoUploaded).toBeFalsy();
     });
+
+    it('should set profile setting info message based on selected profile', function () {
+      resolveLogoPromise();
+      controller.selectedTemplateProfile = controller.profiles.org;
+      expect(controller.profileSettingInfo()).toEqual('careChatTpl.orgSettingInfo');
+      controller.selectedTemplateProfile = controller.profiles.agent;
+      expect(controller.profileSettingInfo()).toEqual('careChatTpl.agentSettingInfo');
+    });
   });
 
   describe('Overview Page', function () {
