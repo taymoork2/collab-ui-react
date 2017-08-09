@@ -1,5 +1,6 @@
 import { CallLocationSettingsData, CallLocationSettingsService, LocationSettingsOptionsService, LocationSettingsOptions } from 'modules/call/locations/shared';
 import { InternalNumberRange } from 'modules/call/shared/internal-number-range';
+import { LocationCallerId } from 'modules/call/locations/shared';
 import { PstnService } from 'modules/huron/pstn';
 import { SettingSetupInitService } from 'modules/call/settings/settings-setup-init';
 import { Notification } from 'modules/core/notifications';
@@ -135,6 +136,11 @@ class CallLocationCtrl implements ng.IComponentController {
 
   public onExtensionRangeChanged(extensionRanges: InternalNumberRange[]): void {
     this.callLocationSettingsData.internalNumberRanges = extensionRanges;
+    this.checkForChanges();
+  }
+
+  public onCallerIdChanged(callerId: LocationCallerId): void {
+    this.callLocationSettingsData.location.callerId = callerId;
     this.checkForChanges();
   }
 
