@@ -4,6 +4,7 @@
     {{::card.name | translate}}
     <i ng-if= "card.infoIcon && !card.infoText" class="icon info-icon {{::card.infoIcon}}"></i>
     <i ng-if= "card.infoIcon && card.infoText" class="icon info-icon has-tooltip {{::card.infoIcon}}"  tooltip="{{::card.infoText| translate}}" tooltip-placement="bottom-right"></i>
+    <span ng-if="card.showProBadge" class="badge badge--outline primary badge--premium" tooltip="{{::card.infoText| translate}}" tooltip-placement="right" translate="common.pro"></span>
   </h4>
 </header>
 <section ng-if="card.loading">
