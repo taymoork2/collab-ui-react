@@ -10,6 +10,7 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
 
   private hasProPackPurchased: boolean;
   private hasProPackEnabled: boolean;
+  public showProBadge: boolean;
 
   private learnMoreButton: ICardButton = {
     name: 'servicesOverview.genericButtons.learnMore',
@@ -37,6 +38,7 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
     if (this.treatAsPurchased()) {
       return (this.active) ? this.buttons : [this.setupButton];
     } else {
+      this.showProBadge = true;
       return [this.learnMoreButton];
     }
   }
@@ -82,13 +84,13 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
       name: 'servicesOverview.cards.hybridDataSecurity.title',
       routerState: 'hds.list',
       service: 'spark-hybrid-datasecurity',
-      infoIcon: 'icon-certified',
       infoText: 'servicesOverview.cards.hybridDataSecurity.tooltip',
       initEventsNumber: 2,
     }, HybridServicesClusterStatesService);
     this.display = this.checkRoles() && this.Authinfo.isFusionHDS() && this.Authinfo.isEnterpriseCustomer();
     this.hasProPackPurchased = false;
     this.hasProPackEnabled = false;
+    this.showProBadge = false;
     this.$state = $state;
     this.Notification = Notification;
     this.HDSService = HDSService;

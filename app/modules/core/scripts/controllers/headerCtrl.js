@@ -12,7 +12,7 @@
     vm.showOrgName = showOrgName;
     vm.showUserDropDown = showUserDropDown;
     vm.showMyCompany = showMyCompany;
-    vm.isEnterpriseCustomer = Authinfo.isEnterpriseCustomer();
+    vm.showProBadge = showProBadge;
     init();
 
     function init() {
@@ -44,6 +44,10 @@
 
     function showMyCompany() {
       return Utils.isAdminPage() && !(Authinfo.isPartnerAdmin() || Authinfo.isPartnerSalesAdmin());
+    }
+
+    function showProBadge() {
+      return Authinfo.isEnterpriseCustomer() && Authinfo.isPremium();
     }
 
     function getAdminTabs() {

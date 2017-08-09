@@ -8145,7 +8145,7 @@
       "hybridDataSecurity": {
         "title": "Hybrid Data Security",
         "description": "Manage your encryption keys and other security services on-premises.",
-        "tooltip": "This premium feature is available with the Pro Pack. Contact your partner to learn more.",
+        "tooltip": "This feature is available with Pro Pack. Contact your partner to learn more.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
