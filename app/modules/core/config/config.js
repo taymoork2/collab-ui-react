@@ -56,6 +56,16 @@
       idleTabTimeout: 1200000, //20 mins
       idleTabKeepAliveEvent: 'IDLE_TIMEOUT_KEEP_ALIVE',
 
+      oauthError: {
+        unauthorizedClient: 'unauthorized_client',
+        invalidScope: 'invalid_scope',
+        unsupportedResponseType: 'unsupported_response_type',
+        accessDenied: 'access_denied',
+        serverError: 'server_error',
+        temporarilyUnavailable: 'temporarily_unavailable',
+        serviceUnavailable: 'service_unavailable', //Customized state, not in OAuth Spec.
+      },
+
       siteDomainUrl: {
         webexUrl: '.webex.com',
       },
@@ -66,6 +76,7 @@
 
       customerTypes: {
         enterprise: 'Enterprise',
+        pending: 'Pending',
       },
 
       entitlements: {

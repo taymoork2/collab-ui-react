@@ -138,7 +138,7 @@ interface IBaseLocationDetails extends IBaseLocation {
   allowExternalTransfer: boolean;
   voicemailPilotNumber: IVoicemailPilotNumber;
   regionCodeDialing: IRegionCodeDialing;
-  callerIdNumber?: string;
+  callerId: ILocationCallerId | null;
 }
 
 export interface IRLocation extends IBaseLocationDetails {
@@ -165,7 +165,7 @@ export class Location implements ILocation {
   public allowExternalTransfer: boolean;
   public voicemailPilotNumber: IVoicemailPilotNumber;
   public regionCodeDialing: IRegionCodeDialing;
-  public callerIdNumber?: string;
+  public callerId: ILocationCallerId | null;
 
   constructor (location: IRLocation = {
     uuid: undefined,
@@ -181,7 +181,7 @@ export class Location implements ILocation {
     allowExternalTransfer: false,
     voicemailPilotNumber: new VoicemailPilotNumber(),
     regionCodeDialing: new RegionCodeDialing(),
-    callerIdNumber: undefined,
+    callerId: null,
   }) {
     this.uuid = location.uuid;
     this.name = location.name;
@@ -196,7 +196,7 @@ export class Location implements ILocation {
     this.allowExternalTransfer = location.allowExternalTransfer;
     this.voicemailPilotNumber = location.voicemailPilotNumber;
     this.regionCodeDialing = location.regionCodeDialing;
-    this.callerIdNumber = location.callerIdNumber;
+    this.callerId = location.callerId;
   }
 }
 
@@ -233,5 +233,23 @@ export class RegionCodeDialing implements IRegionCodeDialing {
   }) {
     this.regionCode = regionalCodeDialing.regionCode;
     this.simplifiedNationalDialing = regionalCodeDialing.simplifiedNationalDialing;
+  }
+}
+
+export interface ILocationCallerId {
+  name: string | null;
+  number: string | null;
+}
+
+export class LocationCallerId implements ILocationCallerId {
+  public name: string | null;
+  public number: string | null;
+
+  constructor(locationCallerId: ILocationCallerId = {
+    name: null,
+    number: null,
+  }) {
+    this.name = locationCallerId.name;
+    this.number = locationCallerId.number;
   }
 }

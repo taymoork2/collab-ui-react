@@ -251,6 +251,39 @@
         return regex.test(string);
       },
 
+      // TODO: update this function to apply idiomatic style, and add unit-tests
+      getFromStandardGetParams: function (url) {
+        var result = {};
+        var cleanUrlA = url.split('?');
+        if (cleanUrlA.length >= 2) {
+          var cleanUrl = cleanUrlA[1];
+          var params = cleanUrl.split('&');
+          for (var i = 0; i < params.length; i++) {
+            var param = params[i];
+            result[param.split('=')[0]] = param.split('=')[1];
+          }
+        }
+        return result;
+      },
+
+      // TODO: update this function to apply idiomatic style, and add unit-tests
+      getFromGetParams: function (url) {
+        var result = {};
+        var cleanUrlA = url.split('#');
+        if (cleanUrlA.length >= 2) {
+          var cleanUrl = cleanUrlA[1];
+          for (var i = 2; i < cleanUrlA.length; i++) {
+            cleanUrl += '#' + cleanUrlA[i];
+          }
+          var params = cleanUrl.split('&');
+          for (i = 0; i < params.length; i++) {
+            var param = params[i];
+            result[param.split('=')[0]] = param.split('=')[1];
+          }
+        }
+        return result;
+      },
+
       getSqEntitlements: function (user) {
         var entitlements = {};
         if (_.isArray($rootScope.services)) {

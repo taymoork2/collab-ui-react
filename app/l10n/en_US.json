@@ -1913,6 +1913,10 @@
     "title": "Server Maintenance",
     "text": "We are currently undergoing routine maintenance. Please check back later."
   },
+  "backendTempUnavailablePage": {
+    "title": "Service Unavailable",
+    "text": "The authorization service is currently unavailable. Please check back later."
+  },
   "errors": {
     "status401": "Authorization failed. Server unable to process authorization token. You will automatically be logged out in a few seconds.",
     "status403": "Authorization failed. You do not have administrator priviledges. You will automatically be logged out in a few seconds.",
@@ -5764,7 +5768,8 @@
       "allOff": "All Off",
       "allOn": "All On",
       "clusterPartiallyInService": "  Cluster Partially in Service",
-      "all": "All"
+      "all": "All",
+      "inThe": "in the"
     },
     "deleteGroup": {
       "message": "Are you sure you want to delete {{groupName}} from Cisco Collaboration Cloud?",
@@ -6168,6 +6173,7 @@
     "recordings_storage_usage": "Storage Usage",
     "recording_usage": "Recording Usage",
     "inactive_user": "Inactive Users",
+    "audit_log": "Site Configuration Audit Log",
     "training_usage": "Training Usage",
     "registration": "Registration",
     "recording": "Recordings",
@@ -6215,6 +6221,7 @@
     "recording_usage": "Recording Usage",
     "storage_utilization": "Storage Usage",
     "inactive_user": "Inactive Users",
+    "audit_log": "Site Configuration Audit Log",
     "event_center_overview": "Event Overview",
     "event_center_scheduled_events": "Scheduled Events",
     "event_center_held_events": "Held Events",
@@ -6650,6 +6657,9 @@
     "updateLocationCosFailed": "Failed to update dialing restrictions.",
     "updateExtensionLengthFailed": "Failed to save extension length.",
     "saveSuccess": "Location settings saved successfully.",
+    "locationCallerId": "Location Caller ID",
+    "callerIdName": "Caller ID Name",
+    "callerIdNumber": "Caller ID Number",
     "copyTitle": "Copy Location",
     "copyDesc": "This location will use the customized setting from the location that you copied.",
     "deleteTitle": "Delete Location",
@@ -6949,12 +6959,15 @@
     "profileDesc": "Configure how your company or your agent is visually represented",
     "profile_org_info": "Use a single profile to represent all agents in your organization.",
     "profile_agent_info": "Use unique profiles to represent the different agents in your organization.",
+    "profile_org_info_cva": "Use a single profile to represent the Customer Virtual Assistant and all agents in your organization.",
+    "profile_agent_info_cva": "Use unique profiles for your Customer Virtual Assistant and agents that change during a chat. ",
     "overviewDesc_chat": "Toggle cards to customize what screens you want your customer to see when requesting a chat from customer care",
     "overviewDesc_callback": "Toggle cards to customize what screens you want your customer to see when requesting a callback from customer care",
     "overviewDesc_chatPlusCallback": "Toggle cards to customize what screens you want your customer to see when requesting a chat or callback from customer care",
     "customerInfoDesc_chat": "This is the screen a customer fills in to start chat with an agent",
     "customerInfoDesc_callback": "This is the screen a customer fills in to request a callback from an agent",
     "customerInfoToggleTooltipMessage": "This screen is required for this template and cannot be disabled.",
+    "virtualAssistantToggleTooltipMessage": "Configure a Customer Virtual Assistant from the Features page before you enable this. You can also configure your assistant and enable this feature at a later time.",
     "feedbackDesc": "This screen is used to collect feedback from a customer after the chat ends",
     "callFeedbackDesc": "This screen is used to collect feedback from a customer after the call ends",
     "agentUnavailableDesc": "This screen is shown to a customer when no agent is available to assist",
@@ -7023,13 +7036,14 @@
     "hintText": "Hint Text",
     "type": "Type",
     "defaultRightCardText": "Select a field in the Preview to change its attributes",
-    "profileSelector": "Profile",
+    "profileSelector": "Profile Type",
     "org": "Organization",
-    "agent": "Agent",
-    "agentDisplayName": "Show agent's Display Name",
-    "agentAlias": "Show agent's Alias",
-    "agentNamePreview": "Agent",
-    "agentAliasPreview": "Alias",
+    "agent": "Agents",
+    "agent_cva": "Customer Virtual Assistant and Agents",
+    "agentDisplayName": "Show agent’s display name",
+    "agentAlias": "Show agent’s alias",
+    "agentNamePreview": "Agent display name",
+    "agentAliasPreview": "Agent alias",
     "image": "Image",
     "displayText": "Display Text",
     "orgSettingInfo": "You can change the organization logo on the Settings page.",
@@ -7078,6 +7092,12 @@
         "title_callback": "Customer Information",
         "desc_chat": "This is the screen a customer fills in to start chat with an agent",
         "desc_callback": "This is the screen a customer fills in to request a callback from an agent"
+      },
+      "virtualAssistant": {
+        "title_chat": "Customer Virtual Assistant",
+        "desc_chat": "Enable a virtual assistant to provide automated support and agent escalations",
+        "title_chatPlusCallback": "Customer Virtual Assistant",
+        "desc_chatPlusCallback": "Enable a virtual assistant to provide automated support and agent escalations"
       },
       "agentUnavailable": {
         "title_chat": "Agent Unavailable",
@@ -7136,10 +7156,10 @@
     "waitingMessage": "Waiting for an Agent...",
     "enterRoom": "Entered the Room",
     "enterRoomMessage": "Agent has entered the chat room",
-    "leaveRoom": "Left the Room",
+    "leaveRoom": "Left the Chat",
     "leaveRoomMessage": "Agent has left the chat",
     "chatting": "Chatting",
-    "chattingMessage": "Chatting with an Agent",
+    "chattingMessage": "Chat in progress...",
     "downloadEmbedCode": "Download Embed Code",
     "embed-code": {
       "no-verified-domains": {

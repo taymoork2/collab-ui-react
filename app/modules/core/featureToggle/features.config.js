@@ -4,6 +4,7 @@ module.exports = {
   atlasCareTrials: 'atlas-care-trials',
   atlasCareInboundTrials: 'atlas-care-inbound-trials',
   atlasCareProactiveChatTrials: 'atlas-care-proactiveChat-trials',
+  atlasCareChatAssistant: 'care-chat-assistant',
   atlasCareAutomatedRouteTrials: 'care-automated-routing',
   atlasContextServiceTrials: 'atlas-context-service-trials',
   atlasContextExpandedTypes: 'atlas-context-expanded-types',
@@ -205,5 +206,4 @@ module.exports = {
   atlasRolesAndSecurity: 'atlas-roles-and-security',
   csdmMultipleDevicesPerPlace: 'csdm-multiple-devices-per-place',
   avrilI1558: 'avril-i1558',
-  chatAssistant: 'care-chat-assistant',
 };

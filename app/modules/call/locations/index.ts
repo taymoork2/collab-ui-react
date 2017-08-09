@@ -17,6 +17,7 @@ import locationCosModule from 'modules/call/locations/locations-cos';
 import internalRangeServiceModule from 'modules/call/shared/internal-number-range';
 import routingPrefixModule from 'modules/call/locations/locations-routing-prefix';
 import locationVoicemailModule from 'modules/call/locations/locations-voicemail-avril';
+import locationCallerIdModule from 'modules/call/locations/locations-caller-id';
 
 export default angular
   .module('call.locations', [
@@ -38,6 +39,7 @@ export default angular
     internalRangeServiceModule,
     routingPrefixModule,
     locationVoicemailModule,
+    locationCallerIdModule,
   ])
 .component('ucCallLocations', new CallLocationsComponent())
 .component('ucCallLocation', new CallLocationComponent())

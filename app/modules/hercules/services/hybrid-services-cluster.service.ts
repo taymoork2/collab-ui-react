@@ -21,7 +21,7 @@ interface IResourceGroup {
   releaseChannel: string;
 }
 
-interface IResourceGroups {
+export interface IResourceGroups {
   groups: IResourceGroup[];
   unassigned: IExtendedClusterFusion[];
 }

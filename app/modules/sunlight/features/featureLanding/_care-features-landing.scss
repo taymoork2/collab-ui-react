@@ -20,6 +20,19 @@
     color: $gray-light-1;
   }
 
+  .cs-card.hoverable {
+    article {
+      &.hover,
+      &:focus {
+        .embed-code-txt,
+        .card-icons-inline,
+        .icon-download {
+          color: $color-white;
+        }
+      }
+    }
+  }
+
   .card-footer {
     width: 100%;
     display: flex;
@@ -43,11 +56,6 @@
       top: -2px;
 
       @include vr-spacing(ml, 0.5);
-
-      &:hover,
-      &:focus {
-        color: $color-primary;
-      }
     }
   }
 
