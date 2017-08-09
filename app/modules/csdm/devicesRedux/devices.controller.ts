@@ -1,6 +1,9 @@
 import { SearchObject, SearchResult } from '../services/csdmSearch.service';
+import { SearchInteraction } from './deviceSearch.component';
 export class DevicesCtrl {
   public anyDevicesOrCodesLoaded = true; //TODO remove
+  public searchMinimized = false;
+  public searchInteraction = new SearchInteraction();
   private _searchString: string = '';
   private _searchResult: SearchResult;
   private _searchObject: SearchObject;
@@ -33,8 +36,8 @@ export class DevicesCtrl {
 
   }
 
-  public addToSearch() {
-
+  public addToSearch(field: string, query: string) {
+    this.searchInteraction.addToSearch(field, query);
   }
 
   public searchChanged(search: SearchObject) {

@@ -3,17 +3,17 @@ import {
 } from '../services/csdmSearch.service';
 import { Device } from '../services/deviceSearchConverter';
 
-export class DeviceSearch implements ng.IComponentController {
-
+export class DeviceSearch implements ng.IComponentController, ISearchHandler {
   public searchField: string;
   private currentSearchObject: SearchObject;
   public currentBullet: Bullet;
-  public searchObject: SearchObject;
   private inputActive: boolean;
 
   //bindings
   private searchResultChanged: (e: { result?: SearchResult }) => {};
   private searchChanged: (e: { search: SearchObject }) => {};
+  public searchObject: SearchObject;
+  private searchInteraction: SearchInteraction;
   public search: string;
   public searchResult: Device[];
 
@@ -29,10 +29,16 @@ export class DeviceSearch implements ng.IComponentController {
 
   public $onInit(): void {
     this.performSearch(SearchObject.create(''));
+    this.searchInteraction.receiver = this;
   }
 
   private updateSearchResult(result?: SearchResult) {
     this.searchResultChanged({ result: result });
+  }
+
+  public addToSearch(field: string, query: string) {
+    this.currentSearchObject.setTokenizedQuery(field, query, false);
+    this.searchChanged2();
   }
 
   public setCurrentSearch(search: string) {
@@ -148,11 +154,24 @@ class Bullet {
     return (this.searchField || 'any') === (field || 'any');
   }
 }
+interface ISearchHandler {
+  addToSearch(field: string, query: string);
+}
+export class SearchInteraction implements ISearchHandler {
+  public receiver: ISearchHandler;
+
+  public addToSearch(field: string, query: string) {
+    if (this.receiver) {
+      this.receiver.addToSearch(field, query);
+    }
+  }
+}
 
 export class DeviceSearchComponent implements ng.IComponentOptions {
   public controller = DeviceSearch;
   public bindings = {
     search: '=',
+    searchInteraction: '<',
     searchResultChanged: '&',
     searchObject: '=',
     searchChanged: '&',

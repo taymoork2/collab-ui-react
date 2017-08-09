@@ -10,7 +10,7 @@ class Chart implements ng.IComponentController {
   public chartTitle: string;
 
   //bindings:
-  public pieChartClicked: (bucketName: string, bucketItem: string) => {};
+  public pieChartClicked: (e: { searchField: string, query: string }) => {};
   public searchResult?: SearchResult;
 
   /* @ngInject */
@@ -79,7 +79,7 @@ class Chart implements ng.IComponentController {
         method: (e) => {
           if (data) {
             // const search = data.bucketName + ':' + e.dataItem.title;
-            this.pieChartClicked(data.bucketName, e.dataItem.title);
+            this.pieChartClicked({ searchField: data.bucketName, query: e.dataItem.title });
             // this.currentBullet.text = (this.currentBullet.text ? this.currentBullet.text + ',' : '') + search;
             // // this.search = (this.search ? this.search + ',' : '') + search;
             // this.searchChanged2();

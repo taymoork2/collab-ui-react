@@ -16,16 +16,21 @@
   .clipboard-button {
     padding-left: 10px;
   }
-
+  .minimized {
+    height: 72px !important;
+  }
   .devices-header {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    border-bottom: solid $gray-darkest 1px;
-    height: 300px;
+    //border-bottom: solid $gray-darkest 1px;
+    height: 305px;
     .clearfix {
       flex-grow: 1;
       flex-basis: 50%;
+      button {
+        z-index: 1;
+      }
     }
     .chart-header {
       flex-basis: 100%;
@@ -75,9 +80,9 @@
       display: flex;
       flex-basis: 100%;
       justify-content: center;
-      font-size: 2rem;
+      font-size: 2.5rem;
       i {
-        line-height: 0.8;
+        line-height: 0.5;
       }
     }
   }
@@ -280,7 +285,9 @@
     }
   }
   .result-pane {
-    padding-top: 20px;
+    div .gridStyle {
+      height: calc(100vh - (50px + (1px * 2) + 80px + 66px) - 200px);
+    }
 
     strong {
       padding: 20px 0 30px;
