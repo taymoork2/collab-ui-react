@@ -1,6 +1,7 @@
 import { SnrService } from './snr.service';
 import { SingleNumberReach } from './snr';
 import { HuronCustomerService } from 'modules/huron/customer/customer.service';
+import { CallDestinationTranslateService, ICallDestinationTranslate } from 'modules/call/shared/call-destination-translate';
 
 interface ITranslationMessages {
   placeholderText: string;
@@ -31,6 +32,7 @@ class SnrCtrl implements ng.IComponentController {
   private snrEnabled: boolean = false;
   private form: ng.IFormController;
   private customTranslations: ITranslationMessages;
+  private inputTranslations: ICallDestinationTranslate;
   private snrId: string = '';
 
   /* @ngInject */
@@ -38,6 +40,7 @@ class SnrCtrl implements ng.IComponentController {
     private $translate: ng.translate.ITranslateService,
     private HuronCustomerService: HuronCustomerService,
     private SnrService: SnrService,
+    private CallDestinationTranslateService: CallDestinationTranslateService,
     private $modal,
     private Notification,
     private $scope: ng.IScope,
@@ -50,6 +53,7 @@ class SnrCtrl implements ng.IComponentController {
       placeholderText: this.$translate.instant('callDestination.alternateCustomPlaceholder'),
       helpText: this.$translate.instant('callDestination.alternateCustomHelpText'),
     };
+    this.inputTranslations = this.CallDestinationTranslateService.getCallDestinationTranslate();
     this.init();
   }
 

@@ -13,6 +13,7 @@ export default angular
     require('angular-resource'),
     require('modules/core/scripts/services/authinfo'),
     require('modules/huron/telephony/telephonyConfig'),
+    'call.shared.call-destination-translate',
     featureToggleModule,
   ])
   .component('ucCallForward', new CallForwardComponent())
