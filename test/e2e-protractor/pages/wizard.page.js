@@ -46,6 +46,10 @@ var Wizard = function () {
   this.extensionLengthPrefixInput = element(by.id('beginRange0'));
   this.extensionLengthSuffixInput = element(by.id('endRange0'));
   this.dialOneRadio = element(by.css('.cs-radio[for="nationalDialing"]'));
+  this.companyVoicemailToggle = element(by.css('label[for="companyVoicemailToggle"]'));
+  this.scrollToBottomButton = element(by.css('.icon-right-arrow-contain'));
+  this.voicemailDropdown = element.all(by.binding('csSelect.getLabel(csSelect.selected)')).last();
+  this.voicemailDropdownSelect = element.all(by.css('li[ng-class="csSelect.style(option)"]')).last();
 
   this.clickPlanReview = function () {
     utils.click(this.reviewTab);
