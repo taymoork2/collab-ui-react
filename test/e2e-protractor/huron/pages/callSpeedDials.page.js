@@ -11,7 +11,7 @@ export class CallSpeedDialsPage {
     this.newSpeedDialDestinationInputCustom = element(by.css('[id="customNumberInput"]'));
     this.newSpeedDialDestinationInputPhone = element(by.css('[ng-model="$ctrl.phoneNumber"]'));
     this.newSpeedDialDestinationInputUri = element(by.css('[id="uriAddressInput"]'));
-    this.newSpeedDialDestinationLabel = element(by.css('[translate="callDestination.numberFormat"]'));
+    this.newSpeedDialDestinationLabel = element(by.cssContainingText('h6', 'Number Format'));
     this.reorderSpeedDialAction = element(by.cssContainingText('[ng-click="action.actionFunction()"]', 'Reorder'));
     this.speedDialCancelButton = element(by.cssContainingText('[ng-click="$ctrl.reset()"]', 'Cancel'));
     this.speedDialSaveButton = element(by.cssContainingText('[ng-click="$ctrl.save()"]', 'Save'));
