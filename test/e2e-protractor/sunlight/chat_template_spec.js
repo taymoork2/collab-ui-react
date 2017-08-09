@@ -160,16 +160,16 @@ describe('Care admin should be able to', function () {
     validateTitleAndDesc('Branding and Identity', 'Configure how your company or your agent is visually represented');
     utils.click(careChatTemplateSetupPage.agentProfile);
     utils.click(careChatTemplateSetupPage.agentNameRadio);
-    utils.waitForText(careChatTemplateSetupPage.agentNamePreview, 'Agent');
+    utils.waitForText(careChatTemplateSetupPage.agentNamePreview, 'Agent display name');
     utils.click(careChatTemplateSetupPage.agentAliasRadio);
-    utils.waitForText(careChatTemplateSetupPage.agentNamePreview, 'Alias');
+    utils.waitForText(careChatTemplateSetupPage.agentNamePreview, 'Agent alias');
     utils.expectIsDisplayed(careChatTemplateSetupPage.agentPreviewIcon);
     utils.expectIsDisplayed(careChatTemplateSetupPage.previewMinimizeIcon);
     utils.expectIsDisplayed(careChatTemplateSetupPage.previewCloseIcon);
   }
 
   function validateContentsOfOverviewPage() {
-    var OVERVIEW_CARD_COUNT = 5;
+    var OVERVIEW_CARD_COUNT = 6;
     validateOverviewTitleAndDesc('Template Overview', 'Toggle cards to customize what screens you want your customer to see when requesting a chat from customer care');
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfoEnabledCard);
     utils.click(careChatTemplateSetupPage.customerInfoToggle);
@@ -288,7 +288,7 @@ describe('Care admin should be able to', function () {
   }
 
   function validateContentsOfChatStatusMessagesPage() {
-    validateTitleAndDesc('Status Messages', 'Configure status messages which your customer sees during the chat');
+    validateTitleAndDesc('Status Messages', 'Configure the status message to display in the customer chat window');
     validateChatStatusMessagesDefaultPage();
     validateChatStatusMessagesChange();
   }
@@ -325,7 +325,7 @@ describe('Care admin should be able to', function () {
 
   function validateChatStatusMessagesDefaultPage() {
     utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(0), 'Waiting for an Agent...');
-    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(1), 'Chatting with an Agent');
+    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(1), 'Chat in progress...');
     utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(2), 'Agent has left the chat');
   }
 

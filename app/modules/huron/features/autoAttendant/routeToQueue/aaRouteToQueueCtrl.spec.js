@@ -475,8 +475,16 @@ describe('Controller: AARouteToQueueCtrl', function () {
         var controller = $controller('AARouteToQueueCtrl', {
           $scope: $scope,
         });
+        controller.deletedSessionVariablesList = {};
         controller.getWarning();
         expect(controller.getWarning()).toBe(false);
+      });
+      it('calling closeFullWarningMsg', function () {
+        var controller = $controller('AARouteToQueueCtrl', {
+          $scope: $scope,
+        });
+        controller.closeFullWarningMsg();
+        expect(controller.fullWarningMsgValue).toBe(false);
       });
       it('broadcast of CE Updated', function () {
         var actionEntry = AutoAttendantCeMenuModelService.newCeActionEntry('Test Queue', 'c16a6027-caef-4429-b3af-9d61ddc7964b');
@@ -506,6 +514,70 @@ describe('Controller: AARouteToQueueCtrl', function () {
         $scope.$apply();
         controller.deletedSessionVariablesList = ['test', ''];
         $rootScope.$broadcast('CE Updated');
+        expect(controller.fullWarningMsgValue).toBe(false);
+      });
+      it('broadcast of CIVarNameChanged for initialAnnouncement ', function () {
+        var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        var ele = '<aa-insertion-element element-text="testValue" read-as="testReadValue" element-id="1011"></aa-insertion-element>';
+        var initialAnnouncement = 'initialAnnouncement';
+        var queueSettings = {};
+        AutoAttendantCeMenuModelService.clearCeMenuMap();
+        $scope.fromRouteCall = true;
+        var routeToQueue = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', '');
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', '');
+        action.dynamicList = [{
+          say: {
+            value: 'test',
+            voice: '',
+            as: 'test',
+          },
+          isDynamic: true,
+          htmlModel: encodeURIComponent(ele),
+        }];
+        initialAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        initialAnnouncement.addAction(action);
+        queueSettings.initialAnnouncement = initialAnnouncement;
+        routeToQueue.queueSettings = queueSettings;
+        menuEntry.addAction(routeToQueue);
+        aaUiModel[schedule].addEntryAt(index, menuEntry);
+        var controller = $controller('AARouteToQueueCtrl', {
+          $scope: $scope,
+        });
+        $scope.$apply();
+        controller.deletedSessionVariablesList = ['test', ''];
+        $rootScope.$broadcast('CIVarNameChanged');
+        expect(controller.fullWarningMsgValue).toBe(false);
+      });
+      it('broadcast of CIVarNameChanged for initialAnnouncement ', function () {
+        var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        var ele = '<aa-insertion-element element-text="testValue" read-as="testReadValue" element-id="1011"></aa-insertion-element>';
+        var periodicAnnouncement = 'periodicAnnouncement';
+        var queueSettings = {};
+        AutoAttendantCeMenuModelService.clearCeMenuMap();
+        $scope.fromRouteCall = true;
+        var routeToQueue = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', '');
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', '');
+        action.dynamicList = [{
+          say: {
+            value: 'test',
+            voice: '',
+            as: 'test',
+          },
+          isDynamic: true,
+          htmlModel: encodeURIComponent(ele),
+        }];
+        periodicAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        periodicAnnouncement.addAction(action);
+        queueSettings.periodicAnnouncement = periodicAnnouncement;
+        routeToQueue.queueSettings = queueSettings;
+        menuEntry.addAction(routeToQueue);
+        aaUiModel[schedule].addEntryAt(index, menuEntry);
+        var controller = $controller('AARouteToQueueCtrl', {
+          $scope: $scope,
+        });
+        $scope.$apply();
+        controller.deletedSessionVariablesList = ['test', ''];
+        $rootScope.$broadcast('CIVarNameChanged');
         expect(controller.fullWarningMsgValue).toBe(false);
       });
     });

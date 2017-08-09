@@ -1137,12 +1137,95 @@
         "viewPartnerManagement": "Create New Partner Org",
         "editPartner": "Edit Partner Org",
         "viewEdiscovery": "View eDiscovery",
+        "provisioningConsole": "Provisioning Console",
+        "viewProvisioningConsole": "View Provisioning Console",
         "hybridCallTestTool": {
           "heading": "Hybrid Call",
           "description": "Run a test between two Hybrid Call Service Connect users",
           "button": "Test Call",
           "notEnabled": "Hybrid Call Service Connect is not enabled."
         }
+      }
+    }
+  },
+  "provisioningConsole": {
+    "provisioningConsole": "Provisioning Console",
+    "orderNumber": "Order Number: {{orderNumber}}",
+    "manualCode": "Manual Code",
+    "customerName": "Customer Name",
+    "customerMail": "Customer Email",
+    "status": "Status",
+    "orderReceived": "Order Received",
+    "lastModified": "Last Modified",
+    "siteUrl": "Site Url",
+    "completed": "Completion Date",
+    "actions": {
+      "title": "Actions",
+      "progress": "Mark as in progress",
+      "completed": "Mark as completed",
+      "pending": "Mark as pending"
+    },
+    "tabs": {
+      "pending": "Pending",
+      "completed": "Completed"
+    },
+    "details": {
+      "noSites": "This order doesn't have any sites listed",
+      "completed": "Order completed on {{orderDate}}",
+      "pending": "Request received on {{orderDate}}",
+      "customerInfo": {
+        "title": "Customer Information",
+        "partnerName": "Partner Name",
+        "partnerMail": "Partner Email"
+      },
+      "siteInfo": {
+        "title": "Site Information",
+        "url": "Site url",
+        "action": "Action",
+        "timezone": "Timezone",
+        "country": "Country",
+        "handling": "Special Handling Required",
+        "language": "Primary Language"
+      },
+      "audio": {
+        "title": "Audio for {{site}}",
+        "general": "Audio",
+        "product": "Product Name",
+        "service": "Service Name",
+        "action": "Action",
+        "broadcast": "Audio Broadcast",
+        "callback": "Callback"
+      },
+      "conferencing": {
+        "title": "Audio for {{site}}",
+        "general": "Conferencing",
+        "product": "Product Name",
+        "service": "Service Name",
+        "action": "Action",
+        "attendeeCapacity": "Attendee Capacity",
+        "attendeeOverage": "Attendee Overage",
+        "licenseVolume": "License Volume",
+        "licenseOverage": "License Overage",
+        "licenseModel": "License Model"
+      },
+      "storage": {
+        "title": "Storage for {{site}}",
+        "general": "Storage",
+        "product": "Product Name",
+        "service": "Service Name",
+        "action": "Action",
+        "storageCapacity": "Storage Capacity",
+        "storageOverage": "Storage Overage"
+      },
+      "cmr": {
+        "title": "CMR for {{site}}",
+        "general": "CMR",
+        "product": "Product Name",
+        "service": "Service Name",
+        "action": "Action",
+        "cmrCapacity": "CMR Capacity",
+        "cmrLicense": "CMR License Volume",
+        "cmrOverage": "CMR Overage"
       }
     }
   },
@@ -1829,6 +1912,10 @@
   "serverMaintenancePage": {
     "title": "Server Maintenance",
     "text": "We are currently undergoing routine maintenance. Please check back later."
+  },
+  "backendTempUnavailablePage": {
+    "title": "Service Unavailable",
+    "text": "The authorization service is currently unavailable. Please check back later."
   },
   "errors": {
     "status401": "Authorization failed. Server unable to process authorization token. You will automatically be logged out in a few seconds.",
@@ -3798,8 +3885,8 @@
     "decisionCallerAreaCode": "The Caller's Area Code",
     "decisionSessionVariable": "The Session Variable",
     "decisionMissingCustomVariable": "The selected variable is undefined in this call tree. Null values will result in negative results.",
-    "dynamicMissingCustomVariable": "The {{deletedSessionVariablesList}} is no longer available. As a result, this variable won't be used for Say Message.",
-    "dynamicMissingCustomVariables": "The {{deletedSessionVariablesList}} are no longer available. As a result, this variable won't be used for Say Message.",
+    "dynamicMissingCustomVariable": "The {{deletedSessionVariablesList}} variable is no longer available. As a result, this variable won't be used for Say Message.",
+    "dynamicMissingCustomVariables": "The {{deletedSessionVariablesList}} variables are no longer available. As a result, these variables won't be used for Say Message.",
     "callerReturned1Min": "1 Minute",
     "callerReturned5Mins": "5 Minutes",
     "callerReturned30Mins": "30 Minutes",
@@ -6086,6 +6173,7 @@
     "recordings_storage_usage": "Storage Usage",
     "recording_usage": "Recording Usage",
     "inactive_user": "Inactive Users",
+    "audit_log": "Site Configuration Audit Log",
     "training_usage": "Training Usage",
     "registration": "Registration",
     "recording": "Recordings",
@@ -6133,6 +6221,7 @@
     "recording_usage": "Recording Usage",
     "storage_utilization": "Storage Usage",
     "inactive_user": "Inactive Users",
+    "audit_log": "Site Configuration Audit Log",
     "event_center_overview": "Event Overview",
     "event_center_scheduled_events": "Scheduled Events",
     "event_center_held_events": "Held Events",
@@ -6568,6 +6657,9 @@
     "updateLocationCosFailed": "Failed to update dialing restrictions.",
     "updateExtensionLengthFailed": "Failed to save extension length.",
     "saveSuccess": "Location settings saved successfully.",
+    "locationCallerId": "Location Caller ID",
+    "callerIdName": "Caller ID Name",
+    "callerIdNumber": "Caller ID Number",
     "copyTitle": "Copy Location",
     "copyDesc": "This location will use the customized setting from the location that you copied.",
     "deleteTitle": "Delete Location",
@@ -6597,7 +6689,9 @@
     "dialingRestrictionsTitle": "Dialing Restrictions",
     "dialingRestrictionsDesc": "Restrict certain dialing features for the entire organization. You can override each setting for individual users.",
     "emergencyServicesTitle": "Emergency Services",
-    "emergencyServicesDesc": "Set the call back numbers and addresses for this location."
+    "emergencyServicesDesc": "Set the call back numbers and addresses for this location.",
+    "voicemailInstruction": "Voicemail for your company is enabled with Voicemail to email not activated. This can be changed from the Call Settings page.",
+    "voicemailFilter": "Type number to filter"
   },
   "sunlightDetails": {
     "title": "Care",
@@ -6865,12 +6959,15 @@
     "profileDesc": "Configure how your company or your agent is visually represented",
     "profile_org_info": "Use a single profile to represent all agents in your organization.",
     "profile_agent_info": "Use unique profiles to represent the different agents in your organization.",
+    "profile_org_info_cva": "Use a single profile to represent the Customer Virtual Assistant and all agents in your organization.",
+    "profile_agent_info_cva": "Use unique profiles for your Customer Virtual Assistant and agents that change during a chat. ",
     "overviewDesc_chat": "Toggle cards to customize what screens you want your customer to see when requesting a chat from customer care",
     "overviewDesc_callback": "Toggle cards to customize what screens you want your customer to see when requesting a callback from customer care",
     "overviewDesc_chatPlusCallback": "Toggle cards to customize what screens you want your customer to see when requesting a chat or callback from customer care",
     "customerInfoDesc_chat": "This is the screen a customer fills in to start chat with an agent",
     "customerInfoDesc_callback": "This is the screen a customer fills in to request a callback from an agent",
     "customerInfoToggleTooltipMessage": "This screen is required for this template and cannot be disabled.",
+    "virtualAssistantToggleTooltipMessage": "Configure a Customer Virtual Assistant from the Features page before you enable this. You can also configure your assistant and enable this feature at a later time.",
     "feedbackDesc": "This screen is used to collect feedback from a customer after the chat ends",
     "callFeedbackDesc": "This screen is used to collect feedback from a customer after the call ends",
     "agentUnavailableDesc": "This screen is shown to a customer when no agent is available to assist",
@@ -6890,7 +6987,7 @@
     "offHoursWarningMessage": "Please Enter Off Hours Message",
     "offHoursDayWarningMessage": "Please Select a Day",
     "chatStringsDesc": "These strings appear in the UI based on different scenarios",
-    "chatStatusMessagesDesc": "Configure status messages which your customer sees during the chat",
+    "chatStatusMessagesDesc": "Configure the status message to display in the customer chat window",
     "cancelHeader": "Cancel",
     "ctCreation": "Creation",
     "ctEditing": "Editing",
@@ -6939,13 +7036,14 @@
     "hintText": "Hint Text",
     "type": "Type",
     "defaultRightCardText": "Select a field in the Preview to change its attributes",
-    "profileSelector": "Profile",
+    "profileSelector": "Profile Type",
     "org": "Organization",
-    "agent": "Agent",
-    "agentDisplayName": "Show agent's Display Name",
-    "agentAlias": "Show agent's Alias",
-    "agentNamePreview": "Agent",
-    "agentAliasPreview": "Alias",
+    "agent": "Agents",
+    "agent_cva": "Customer Virtual Assistant and Agents",
+    "agentDisplayName": "Show agent’s display name",
+    "agentAlias": "Show agent’s alias",
+    "agentNamePreview": "Agent display name",
+    "agentAliasPreview": "Agent alias",
     "image": "Image",
     "displayText": "Display Text",
     "orgSettingInfo": "You can change the organization logo on the Settings page.",
@@ -6971,6 +7069,10 @@
     "typeReason": "Reason",
     "categoryHintText": "Add category options like Queries, Billing...",
     "categoryWarningText": "Add at least one category option.",
+    "helpTextWaiting": "Customers see this while waiting for an agent to respond to their message.",
+    "helpTextWaitingVirtualAssistant": "If you are using a Customer Virtual Assistant, this message indicates transition from automated support to human interaction.",
+    "helpTextChatting": "Customers see this if they minimize the chat window during an ongoing interaction.",
+    "helpTextLeaveRoom": "Customers see this when an agent exits the chat and ends the interaction.",
     "ctValidation": {
       "errorChar250": "Character length cannot be more than 250.",
       "errorChar50": "Character length cannot be more than 50.",
@@ -6990,6 +7092,12 @@
         "title_callback": "Customer Information",
         "desc_chat": "This is the screen a customer fills in to start chat with an agent",
         "desc_callback": "This is the screen a customer fills in to request a callback from an agent"
+      },
+      "virtualAssistant": {
+        "title_chat": "Customer Virtual Assistant",
+        "desc_chat": "Enable a virtual assistant to provide automated support and agent escalations",
+        "title_chatPlusCallback": "Customer Virtual Assistant",
+        "desc_chatPlusCallback": "Enable a virtual assistant to provide automated support and agent escalations"
       },
       "agentUnavailable": {
         "title_chat": "Agent Unavailable",
@@ -7025,7 +7133,7 @@
       "customerInformationCallback": {
         "title_chatPlusCallback": "Customer Information for Callback",
         "desc_chatPlusCallback": "This is the screen a customer fills in to request a callback from an agent"
-      }
+      }      
     },
     "summary": "Summary",
     "summaryDesc": "You have configured the template. Click Finish to save the configuration and generate embed code so you can start using this template on your organization website.",
@@ -7048,10 +7156,10 @@
     "waitingMessage": "Waiting for an Agent...",
     "enterRoom": "Entered the Room",
     "enterRoomMessage": "Agent has entered the chat room",
-    "leaveRoom": "Left the Room",
+    "leaveRoom": "Left the Chat",
     "leaveRoomMessage": "Agent has left the chat",
     "chatting": "Chatting",
-    "chattingMessage": "Chatting with an Agent",
+    "chattingMessage": "Chat in progress...",
     "downloadEmbedCode": "Download Embed Code",
     "embed-code": {
       "no-verified-domains": {

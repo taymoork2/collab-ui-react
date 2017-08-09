@@ -1,6 +1,6 @@
 'use strict';
 
-describe('First Time Wizard', function () {
+xdescribe('First Time Wizard', function () {
   it('should login as an admin user into the SSO test-org', function () {
     login.loginThroughGui(helper.auth['sso-e2e-test-org-mailsac'].user, helper.auth['sso-e2e-test-org-mailsac'].pass, '#/overview');
   });
