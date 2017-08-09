@@ -16,6 +16,7 @@ export default angular
     require('modules/core/scripts/services/authinfo'),
     require('modules/huron/telephony/telephonyConfig'),
     require('modules/huron/telephony/cmiServices'),
+    'call.shared.call-destination-translate',
     lineService,
   ])
   .component('ucCallerId', new CallerIdComponent())

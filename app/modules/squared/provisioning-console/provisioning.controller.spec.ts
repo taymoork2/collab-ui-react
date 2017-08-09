@@ -10,12 +10,11 @@ describe('Controller: ProvisioningController', function () {
     PENDING: _.filter(orders, { status: 'PENDING' }),
     COMPLETED: _.filter(orders, { status: 'COMPLETED' }),
   };
-  beforeEach(angular.mock.module(provisioningModule));
-
 
   function initDependencySpies() {
     spyOn(this.ProvisioningService, 'getOrders').and.callFake(function(param) { return orderParams[param]; });
     spyOn(this.ProvisioningService, 'updateOrderStatus').and.returnValue(this.$q.resolve(orders));
+    spyOn(this.Notification, 'errorResponse');
   }
 
   function init() {
@@ -28,6 +27,7 @@ describe('Controller: ProvisioningController', function () {
       '$templateCache',
       '$timeout',
       '$translate',
+      'Notification',
       'ProvisioningService');
     initDependencySpies.apply(this);
     initController.apply(this);
@@ -57,6 +57,15 @@ describe('Controller: ProvisioningController', function () {
       expect(this.controller.completedOrders.length).toBe(2);
       expect(this.controller.pendingOrders.length).toBe(2);
 
+    });
+  });
+  describe('failure handling', () => {
+    it ('should set pending and completed orders to an empty array and display notification if getOrders returns error', function() {
+      this.ProvisioningService.getOrders.and.returnValue(this.$q.reject( { error: 'error' } ));
+      initController.apply(this);
+      expect(this.Notification.errorResponse).toHaveBeenCalled();
+      expect(this.controller.completedOrders.length).toBe(0);
+      expect(this.controller.pendingOrders.length).toBe(0);
     });
   });
 });

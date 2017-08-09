@@ -100,6 +100,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     $scope.getUserList = getUserList;
     $scope.onManageUsers = onManageUsers;
     $scope.sortDirection = sortDirection;
+    $scope.deselectRow = deselectRow;
 
     ////////////////
     var eventListeners = [];
@@ -131,16 +132,6 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
           $state.go('users.add');
         }
       }, 0);
-
-      // if the side panel is closing unselect the user
-      eventListeners.push($rootScope.$on('$stateChangeSuccess', function () {
-        if ($state.includes('users.list')) {
-          $scope.currentUser = null;
-          if ($scope.gridApi && $scope.gridApi.selection) {
-            $scope.gridApi.selection.clearSelectedRows();
-          }
-        }
-      }));
 
       // list users when we have authinfo data back, or new users have been added/activated
       $scope.$on('AuthinfoUpdated', function () {
@@ -607,6 +598,10 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
       };
 
       return deferred.promise;
+    }
+
+    function deselectRow() {
+      $scope.currentUser = null;
     }
 
     function selectRow(grid, row) {

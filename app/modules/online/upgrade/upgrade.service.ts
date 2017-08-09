@@ -134,9 +134,9 @@ export class OnlineUpgradeService {
   private hasExpiredSubscriptions(): boolean {
     const subscriptions = this.Authinfo.getSubscriptions();
     return (!!subscriptions.length &&
+            (_.every(subscriptions, subscription => this.isSubscriptionCancelledOrExpired(subscription) ||
             (subscriptions.length === 1 && this.isFreemiumSubscription(subscriptions[0]) ||
-            (subscriptions.length === 1 && this.isPendingSubscription(subscriptions[0])) ||
-            _.every(subscriptions, subscription => this.isSubscriptionCancelledOrExpired(subscription))));
+            (subscriptions.length === 1 && this.isPendingSubscription(subscriptions[0]))))));
   }
 
   public isFreemium(): boolean {
@@ -169,11 +169,12 @@ export class OnlineUpgradeService {
   }
 
   private isSubscriptionExpired(subscription): boolean {
-    const currentDate = new Date();
     const subscriptionEndDate = _.get<string>(subscription, 'endDate');
+    if (!subscriptionEndDate) {
+      return false;
+    }
+    const currentDate = new Date();
     const gracePeriod = _.get<number>(subscription, 'gracePeriod', 0);
-
-    return !subscriptionEndDate
-      || (currentDate > new Date(moment(subscriptionEndDate).add(gracePeriod, 'days').toString()));
+    return currentDate > new Date(moment(subscriptionEndDate).add(gracePeriod, 'days').toString());
   }
 }
