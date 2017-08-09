@@ -42,11 +42,12 @@
     align-items: flex-end;
 
     @include vr-spacing(ph, 1);
-    @include vr-spacing(pt, 3.5);
+    @include vr-spacing(pt, 1.5);
     @include vr-spacing(pb, 0.5);
     @include vr-spacing(pl, 1.5);
 
     .embed-code-txt {
+      @include vr-spacing(pt, 1.5);
       color: $gray-base;
     }
 
