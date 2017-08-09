@@ -139,7 +139,8 @@
           //function for sorting based on which piece of data the row has
           _.forEach($scope.gridData, function (row) {
             row.displayField = function () {
-              return (this.userId ? this.userId : $translate.instant('linesPage.unassignedLines')) + (this.status ? ' - ' + this.status : '');
+              var displayName = formatUserName(this.firstName, this.lastName, this.userId);
+              return (!_.isEmpty(displayName) ? displayName : $translate.instant('linesPage.unassignedLines')) + (this.status ? ' - ' + this.status : '');
             };
           });
           vm.gridRefresh = false;
@@ -151,6 +152,16 @@
           vm.gridRefresh = false;
         });
     } // End of function getLineList
+
+    function formatUserName(first, last, userId) {
+      var userName = userId;
+      var firstName = first || '';
+      var lastName = last || '';
+      if ((firstName.length > 0) || (lastName.length > 0)) {
+        userName = _.trim(firstName + ' ' + lastName);
+      }
+      return userName;
+    }
 
     var gridRowHeight = 44;
 
