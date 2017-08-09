@@ -60,7 +60,9 @@ export class SearchService {
   }
 
   public utcDateByTimezone(date) {
-
+    if (!date) {
+      return '';
+    }
     const tz = this.getStorage('timeZone');
     const timeZone: any = tz ? tz : moment.tz.guess();
     const offset = this.getOffset(timeZone);

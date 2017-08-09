@@ -117,7 +117,7 @@
       }
       _.forEach(dynamicVariablesList, function (variable) {
         if (!_.includes(vm.availableSessionVariablesList, variable)) {
-          vm.deletedSessionVariablesList.push(variable);
+          vm.deletedSessionVariablesList.push(JSON.stringify(variable));
         }
       });
       vm.deletedSessionVariablesList = _.uniq(vm.deletedSessionVariablesList).sort();
@@ -145,7 +145,8 @@
             }
           }
         });
-      } else if (!_.isUndefined(preodicDynamVarList)) {
+      }
+      if (!_.isUndefined(preodicDynamVarList)) {
         _.forEach(preodicDynamVarList, function (entry) {
           if (entry.isDynamic) {
             if (!_.includes(AACommonService.getprePopulatedSessionVariablesList(), entry.say.value)) {

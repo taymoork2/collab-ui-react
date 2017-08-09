@@ -299,6 +299,12 @@
       integration: 'https://%s/custportal/extensions/spark-report-partner/spark-report-partner.html',
       prod: 'https://%s/custportal/extensions/spark-report-partner/spark-report-partner.html',
     },
+    BotServicesConfigUrl: {
+      dev: 'https://bot-services.produs1.ciscoccservice.com/bot-services/v1/',
+      cfe: 'https://bot-services.produs1.ciscoccservice.com/bot-services/v1/',
+      integration: 'https://bot-services.produs1.ciscoccservice.com/bot-services/v1/',
+      prod: 'https://bot-services.produs1.ciscoccservice.com/bot-services/v1/',
+    },
     // urls same for all environments
 
     ProdAdminServiceUrl: 'https://atlas-a.wbx2.com/admin/api/v1/',

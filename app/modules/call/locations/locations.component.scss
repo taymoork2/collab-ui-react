@@ -24,6 +24,10 @@
   }
 }
 
+.indent-left {
+  padding-left: vr-adjust(32px);
+}
+
 .locations-content {
   padding-bottom: rem-calc(16);
   article {

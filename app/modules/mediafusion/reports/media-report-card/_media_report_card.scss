@@ -5,10 +5,17 @@
   color: #F34743;
 }
 .indicator-icon {
-  font-size: 4rem;
-  padding-top: 15px;
-  margin-left: -25px;
+  font-size: 2rem;
+  padding-top: 35px;
+  margin-left: -10px;
   position: absolute;
+}
+.overflow-updown-text {
+  position: absolute;
+  bottom: 70px;
+  left: 0;
+  right: 0;
+  color: #343537;
 }
 .vis-hidden {
   visibility: hidden;
@@ -41,7 +48,9 @@
   text-align: center;
 }
 .cardTooltipClass {
-  font-size: 4rem;
+  font-size: 62px;
+  font-weight: 200;
+  font-family: 'CiscoSans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 .sneak-peek-filter {

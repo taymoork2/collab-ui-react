@@ -105,7 +105,7 @@ export class LocationsService {
       allowExternalTransfer: location.allowExternalTransfer,
       voicemailPilotNumber: location.voicemailPilotNumber,
       regionCodeDialing: location.regionCodeDialing,
-      callerIdNumber: location.callerIdNumber,
+      callerId: location.callerId,
     },
     (_response, headers) => {
       locationHeader = headers('Location');
@@ -130,7 +130,7 @@ export class LocationsService {
       allowExternalTransfer: location.allowExternalTransfer,
       voicemailPilotNumber: location.voicemailPilotNumber,
       regionCodeDialing: location.regionCodeDialing,
-      callerIdNumber: location.callerIdNumber,
+      callerId: location.callerId,
     }).$promise;
   }
 
