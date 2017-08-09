@@ -135,8 +135,13 @@
 
     function getDynamicVariables() {
       dynamicVariablesList = [];
-      var initialDynamVarList = _.get(vm.menuEntry, 'actions[0].queueSettings.initialAnnouncement.actions[0].dynamicList');
-      var preodicDynamVarList = _.get(vm.menuEntry, 'actions[0].queueSettings.periodicAnnouncement.actions[0].dynamicList');
+      if (fromRouteCall || fromDecision) {
+        var initialDynamVarList = _.get(vm.menuEntry, 'actions[0].queueSettings.initialAnnouncement.actions[0].dynamicList');
+        var preodicDynamVarList = _.get(vm.menuEntry, 'actions[0].queueSettings.periodicAnnouncement.actions[0].dynamicList');
+      } else {
+        initialDynamVarList = _.get(vm.menuKeyEntry, 'actions[0].queueSettings.initialAnnouncement.actions[0].dynamicList');
+        preodicDynamVarList = _.get(vm.menuKeyEntry, 'actions[0].queueSettings.periodicAnnouncement.actions[0].dynamicList');
+      }
       if (!_.isUndefined(initialDynamVarList)) {
         _.forEach(initialDynamVarList, function (entry) {
           if (entry.isDynamic) {
@@ -385,7 +390,6 @@
           vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
           if ($scope.keyIndex < vm.menuEntry.entries.length) {
             vm.menuKeyEntry = vm.menuEntry.entries[$scope.keyIndex];
-            vm.menuEntry = vm.menuKeyEntry;
           } else {
             vm.menuKeyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
             var action = AutoAttendantCeMenuModelService.newCeActionEntry(rtQueue, '');
