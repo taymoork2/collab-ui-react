@@ -13,7 +13,8 @@
   </div>
 
   <div ng-if="devices.anyDevicesOrCodesLoaded">
-    <div class="devices-header">
+    <div class="page-sub-header devices-header">
+      <device-search search="devices.search" search-object="devices.searchObject" search-changed="devices.searchChanged(search)" clear-search="devices.clearSearch()" search-result-changed="devices.searchResultChanged(result)"></device-search>
       <div class="clearfix row">
         <button
           class="btn btn--people add-button pull-right"
@@ -22,8 +23,7 @@
           <span translate="spacesPage.addBtn"></span>
         </button>
       </div>
-      <device-search search="devices.search" search-object="devices.searchObject" search-changed="devices.searchChanged(search)" clear-search="devices.clearSearch()" search-result-changed="devices.searchResultChanged(result)"></device-search>
-      <device-chart search-result="devices.searchResult" pie-chart-clicked="devices.addToSearch(searchField,query)"></device-chart>
+      <device-chart class="chart-header" search-result="devices.searchResult" pie-chart-clicked="devices.addToSearch(searchField,query)"></device-chart>
       <div class="bottom"><i class="icon icon-arrow-up "></i> </div>
     </div>
     <device-list devices="devices.searchResult.hits.hits" search-object="devices.searchObject"></device-list>

@@ -35,6 +35,11 @@ export class DeviceSearch implements ng.IComponentController {
     this.searchResultChanged({ result: result });
   }
 
+  public setCurrentSearch(search: string) {
+    this.currentSearchObject = SearchObject.create(search);
+    this.searchChanged2();
+  }
+
   public searchChanged2() {
     // const prev = (this.search || '');
     // const searchField = (this.searchField || '');

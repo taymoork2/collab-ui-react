@@ -22,11 +22,16 @@
     flex-wrap: wrap;
     justify-content: space-between;
     border-bottom: solid $gray-darkest 1px;
+    height: 300px;
     .clearfix {
       flex-grow: 1;
+      flex-basis: 50%;
+    }
+    .chart-header {
       flex-basis: 100%;
     }
     .graphCarousel {
+      float: right;
       align-self: flex-end;
       position: relative;
       //background-color: #00cc66;
@@ -196,22 +201,22 @@
     padding-bottom: 20px;
   }
 
-  button {
-    border: 0;
-    cursor: pointer;
-    color: $link-color;
-    background: transparent;
-  }
-  button[disabled],
-  button[disabled]:hover {
-    color: #ccc;
-    cursor: default;
-    background: transparent;
-  }
-  button:hover {
-    color: #049fd9;
-    background: transparent;
-  }
+  //button {
+  //  border: 0;
+  //  cursor: pointer;
+  //  color: $link-color;
+  //  background: transparent;
+  //}
+  //button[disabled],
+  //button[disabled]:hover {
+  //  color: #ccc;
+  //  cursor: default;
+  //  background: transparent;
+  //}
+  //button:hover {
+  //  color: #049fd9;
+  //  background: transparent;
+  //}
 
   strong,
   strong span {
