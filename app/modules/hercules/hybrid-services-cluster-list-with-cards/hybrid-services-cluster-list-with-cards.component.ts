@@ -62,10 +62,6 @@ class HybridServicesClusterListWithCardsCtrl implements ng.IComponentController 
   public $onInit() {
     this.Analytics.trackHSNavigation(this.Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CLUSTER_LIST);
     this.loadResources();
-
-    window.console.log('this.showCucmClusters', this.showCucmClusters);
-    window.console.log('this.hasCucmSupportFeatureToggle', this.hasCucmSupportFeatureToggle);
-    window.console.log('this.hasEnterprisePrivateTrunkingFeatureToggle', this.hasEnterprisePrivateTrunkingFeatureToggle);
   }
 
   public addResource(): void {
@@ -132,9 +128,10 @@ class HybridServicesClusterListWithCardsCtrl implements ng.IComponentController 
       type: 'full',
       controller: 'AddResourceGroupController',
       controllerAs: 'vm',
-      templateUrl: 'modules/hercules/fusion-pages/add-resource-group/add-resource-group.html',
-    }).result
-      .then(this.loadResources);
+      templateUrl: 'modules/hercules/hybrid-services-cluster-list-with-cards/add-resource-group.html',
+    })
+    .result
+    .then(this.loadResources);
   }
 
   public setFilter(filter: IFilter): void {
@@ -190,10 +187,11 @@ class HybridServicesClusterListWithCardsCtrl implements ng.IComponentController 
       controllerAs: 'vm',
       templateUrl: 'modules/hercules/hybrid-services-cluster-list-with-cards/set-default-release-channel.html',
       resolve: {
-        unassignedClusters: ()  => this.groupsCache[0].unassigned,
+        unassignedClusters: () => this.groupsCache[0].unassigned,
       },
-    }).result
-      .then(this.loadResources);
+    })
+    .result
+    .then(this.loadResources);
   }
 
   private formatDataForTheUI(response: IResourceGroups): IGroupCache[] {

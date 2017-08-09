@@ -1,5 +1,6 @@
 import { HybridServicesClusterListWithCardsComponent } from './hybrid-services-cluster-list-with-cards.component';
 import { SetDefaultReleaseChannelController } from './set-default-release-channel.controller';
+import { AddResourceGroupController } from './add-resource-group.controller';
 
 export default angular
   .module('hercules.hybrid-services-cluster-list-with-cards', [
@@ -19,4 +20,5 @@ export default angular
   ])
   .component('hybridServicesClusterListWithCards', new HybridServicesClusterListWithCardsComponent())
   .controller('SetDefaultReleaseChannelController', SetDefaultReleaseChannelController)
+  .controller('AddResourceGroupController', AddResourceGroupController)
   .name;

@@ -18,6 +18,7 @@ export class SetDefaultReleaseChannelController {
     value: 'stable',
   }];
 
+  /* @ngInject */
   constructor(
     private $q: ng.IQService,
     private $modalInstance: ng.ui.bootstrap.IModalInstanceService,
@@ -89,4 +90,3 @@ export class SetDefaultReleaseChannelController {
       });
   }
 }
-
