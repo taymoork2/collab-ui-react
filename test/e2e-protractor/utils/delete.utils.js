@@ -133,7 +133,6 @@ exports.deleteTestAA = function (bearer, aaUrl) {
 // bearer - token with access to our API
 // data - query results from our CES GET API
 exports.deleteTestAAs = function (bearer, data) {
-
   var test = [this.testAAName, this.testAAImportName];
 
   for (var i = 0; i < data.length; i++) {
@@ -142,7 +141,6 @@ exports.deleteTestAAs = function (bearer, data) {
       AAsToDelete.push(exports.deleteTestAA(bearer, data[i].callExperienceURL));
     }
   }
-
   return Promise.all(AAsToDelete);
 };
 
@@ -182,10 +180,8 @@ exports.deleteRouteToQueue = function () {
 //
 // Used to cleanup AA created in the test
 exports.findAndDeleteTestAA = function () {
-
   return helper.getBearerToken('aa-admin')
     .then(function (bearer) {
-
       var options = {
         url: config.getAutoAttendantsUrl(helper.auth['aa-admin'].org),
         headers: {

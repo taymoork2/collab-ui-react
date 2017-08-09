@@ -5,7 +5,7 @@
 
 describe('Huron Auto Attendant', function () {
   var remote = require('selenium-webdriver/remote');
-  deleteUtils.testAAName = deleteUtils.testAAName + "_" + Date.now();
+  deleteUtils.testAAName = deleteUtils.testAAName + '_' + Date.now();
 
   var testAAName = element(by.css('p[title="' + deleteUtils.testAAName + '"]'));
   var testCardClick = testAAName.element(by.xpath('ancestor::article')).element(by.css('.card-body'));
