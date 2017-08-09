@@ -63,14 +63,14 @@ describe('Component: meetingSearch', () => {
     spyOn(this.SearchService, 'utcDateByTimezone').and.callFake(utdDateByTimezone);
   }
 
-  function initComponent() {
-    this.compileComponent('custWebexReportsSearch');
-    this.$scope.$apply();
-  }
-
   function utdDateByTimezone(date) {
     const offset = '+08:00';
     return moment.utc(date).utcOffset(offset).format('MMMM Do, YYYY h:mm:ss A');
+  }
+
+  function initComponent() {
+    this.compileComponent('custWebexReportsSearch');
+    this.$scope.$apply();
   }
 
   it('should show the correct data for the grid when search with enter keyup', function () {
