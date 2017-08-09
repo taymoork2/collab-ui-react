@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Care Setup Assistant Ctrl', function () {
-  var controller, $scope, $modal, $q, CTService, getLogoDeferred, getTogglePromise, getLogoUrlDeferred, SunlightConfigService, FeatureToggleService, $state, $stateParams, LogMetricsService;
+  var controller, $scope, $modal, $q, CTService, getLogoDeferred, getTogglePromise, getLogoUrlDeferred, SunlightConfigService, $state, $stateParams, LogMetricsService;
   var Notification, $translate, _scomUrl, $httpBackend;
 
   var escapeKey = 27;
@@ -170,7 +170,7 @@ describe('Care Setup Assistant Ctrl', function () {
   var defaultTimings = businessHours.defaultTimings;
 
   afterEach(function () {
-    controller = $scope = $modal = $q = CTService = getLogoDeferred = getTogglePromise = getLogoUrlDeferred = FeatureToggleService = SunlightConfigService = $state = $stateParams = LogMetricsService = undefined;
+    controller = $scope = $modal = $q = CTService = getLogoDeferred = getTogglePromise = getLogoUrlDeferred = SunlightConfigService = $state = $stateParams = LogMetricsService = undefined;
     Notification = $translate = undefined;
   });
 
@@ -184,15 +184,14 @@ describe('Care Setup Assistant Ctrl', function () {
     $provide.value('Authinfo', spiedAuthinfo);
   }));
 
-  var intializeCtrl = function (template, isEditFeature) {
-    return function (_$rootScope_, $controller, _$modal_, _$q_, _$translate_, _FeatureToggleService_,
+  var intializeCtrl = function (mediaType, template, isEditFeature, isCareProactiveChatTrialsFt, isCareAssistantFt) {
+    return function (_$rootScope_, $controller, _$modal_, _$q_, _$translate_,
       _$window_, _CTService_, _SunlightConfigService_, _$state_, _Notification_, _$stateParams_, _LogMetricsService_, UrlConfig, _$httpBackend_) {
       $scope = _$rootScope_.$new();
       $modal = _$modal_;
       $q = _$q_;
       $translate = _$translate_;
       CTService = _CTService_;
-      FeatureToggleService = _FeatureToggleService_;
       SunlightConfigService = _SunlightConfigService_;
       $state = _$state_;
       Notification = _Notification_;
@@ -207,7 +206,6 @@ describe('Care Setup Assistant Ctrl', function () {
       getLogoDeferred = $q.defer();
       getLogoUrlDeferred = $q.defer();
       getTogglePromise = $q.defer();
-      spyOn(FeatureToggleService, 'atlasCareProactiveChatTrialsGetStatus').and.returnValue(getTogglePromise.promise);
       spyOn($modal, 'open');
       spyOn(CTService, 'getLogo').and.returnValue(getLogoDeferred.promise);
       spyOn(CTService, 'getLogoUrl').and.returnValue(getLogoUrlDeferred.promise);
@@ -215,10 +213,12 @@ describe('Care Setup Assistant Ctrl', function () {
       spyOn(Notification, 'errorWithTrackingId');
       spyOn(LogMetricsService, 'logMetrics').and.callFake(function () {});
       spyOn(SunlightConfigService, 'updateChatConfig');
+      $state['isCareProactiveChatTrialsEnabled'] = isCareProactiveChatTrialsFt || true;
+      $state['isCareAssistantEnabled'] = isCareAssistantFt || false;
       $stateParams = {
         template: template || undefined,
         isEditFeature: isEditFeature || false,
-        type: 'chat',
+        type: mediaType || 'chat',
       };
       controller = $controller('CareSetupAssistantCtrl', {
         $scope: $scope,
@@ -244,7 +244,7 @@ describe('Care Setup Assistant Ctrl', function () {
   }
 
   function resolveTogglePromise() {
-    getTogglePromise.resolve(true);
+    getTogglePromise.resolve([true, true]);
     $scope.$apply();
   }
 
@@ -457,12 +457,13 @@ describe('Care Setup Assistant Ctrl', function () {
       checkStateOfNavigationButtons(OVERVIEW_PAGE_INDEX, true, true);
     });
 
-    it('should initialize all cards as enabled except proactive prompt ', function () {
+    it('should initialize all cards as enabled except proactive prompt and virtual assistant', function () {
       expect(controller.template.configuration.proactivePrompt.enabled).toBe(false);
       expect(controller.template.configuration.pages.customerInformation.enabled).toBe(true);
       expect(controller.template.configuration.pages.agentUnavailable.enabled).toBe(true);
       expect(controller.template.configuration.pages.offHours.enabled).toBe(true);
       expect(controller.template.configuration.pages.feedback.enabled).toBe(true);
+      expect(controller.template.configuration.virtualAssistant.enabled).toBe(false);
     });
   });
 
@@ -646,7 +647,6 @@ describe('Care Setup Assistant Ctrl', function () {
   describe('Proactive Prompt Page', function () {
     beforeEach(inject(intializeCtrl()));
     beforeEach(function () {
-      resolveTogglePromise();
       controller.template.configuration.proactivePrompt.enabled = true;
       controller.currentState = controller.states[PROACTIVE_PROMPT_PAGE_INDEX]; // set proactive prompt view
     });
@@ -712,7 +712,7 @@ describe('Care Setup Assistant Ctrl', function () {
     });
   });
 
-  describe('Proactive Prompt Page (when Org Name is > 50 characters', function () {
+  describe('Proactive Prompt Page when Org Name is > 50 characters', function () {
     var LongOrgId = getStringOfLength(51);
     var spiedAuthinfos = {
       getOrgId: jasmine.createSpy('getOrgId').and.returnValue(OrgId),
@@ -730,7 +730,7 @@ describe('Care Setup Assistant Ctrl', function () {
   });
 
   describe('Proactive Prompt Data for existing templates', function () {
-    beforeEach(inject(intializeCtrl(existingTemplateData, true)));
+    beforeEach(inject(intializeCtrl('chat', existingTemplateData, true)));
     beforeEach(function () {
       resolveTogglePromise();
     });
@@ -1091,12 +1091,7 @@ describe('Care Setup Assistant Ctrl', function () {
   });
 
   describe('For callback media', function () {
-    beforeEach(inject(intializeCtrl()));
-    beforeEach(function () {
-      controller.selectedMediaType = 'callback';
-      resolveTogglePromise();
-      controller.getDefaultTemplate();
-    });
+    beforeEach(inject(intializeCtrl('callback')));
 
     it('the page order should be as expected', function () {
       expect(controller.states).toEqual([
@@ -1131,12 +1126,7 @@ describe('Care Setup Assistant Ctrl', function () {
   });
 
   describe('For chat plus callback selected media type', function () {
-    beforeEach(inject(intializeCtrl()));
-    beforeEach(function () {
-      controller.selectedMediaType = 'chatPlusCallback';
-      resolveTogglePromise();
-      controller.getDefaultTemplate();
-    });
+    beforeEach(inject(intializeCtrl('chatPlusCallback', undefined, false, false, true)));
 
     it('the page order should be as expected', function () {
       expect(controller.states).toEqual([
@@ -1159,6 +1149,7 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.overviewCards).toEqual([
         { name: 'proactivePrompt', mediaIcons: ['icon-message'] },
         { name: 'customerInformationChat', mediaIcons: ['icon-message'] },
+        { name: 'virtualAssistant', mediaIcons: ['icon-message'] },
         { name: 'agentUnavailable', mediaIcons: ['icon-message'] },
         { name: 'feedback', mediaIcons: ['icon-message'] },
         { name: 'customerInformationCallback', mediaIcons: ['icon-phone'] },
@@ -1171,8 +1162,9 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.template.configuration.mediaType).toEqual('chatPlusCallback');
     });
 
-    it('should initialize all cards as enabled except proactive prompt ', function () {
+    it('should initialize all cards as enabled except proactive prompt and virtual assistant', function () {
       expect(controller.template.configuration.proactivePrompt.enabled).toBe(false);
+      expect(controller.template.configuration.virtualAssistant.enabled).toBe(false);
       expect(controller.template.configuration.pages.customerInformationChat.enabled).toBe(true);
       expect(controller.template.configuration.pages.customerInformationCallback.enabled).toBe(true);
       expect(controller.template.configuration.pages.agentUnavailable.enabled).toBe(true);

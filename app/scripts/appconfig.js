@@ -4661,10 +4661,17 @@
               isEditFeature: null,
             },
             resolve: {
-              collectFeatureToggles: /* @ngInject */ function (FeatureToggleService, $state) {
-                return FeatureToggleService.supports(FeatureToggleService.features.chatAssistant).then(function (isEnabled) {
-                  $state.isChatAssistantEnabled = isEnabled;
-                });
+              isCareProactiveChatTrialsEnabled: /* @ngInject */ function (FeatureToggleService, $state) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasCareProactiveChatTrials)
+                  .then(function (isEnabled) {
+                    $state.isCareProactiveChatTrialsEnabled = isEnabled;
+                  });
+              },
+              isCareAssistantEnabled: /* @ngInject */ function (FeatureToggleService, $state) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasCareChatAssistant)
+                  .then(function (isEnabled) {
+                    $state.isCareAssistantEnabled = isEnabled;
+                  });
               },
             },
           })
