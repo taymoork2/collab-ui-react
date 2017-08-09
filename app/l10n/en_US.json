@@ -7148,10 +7148,10 @@
     "waitingMessage": "Waiting for an Agent...",
     "enterRoom": "Entered the Room",
     "enterRoomMessage": "Agent has entered the chat room",
-    "leaveRoom": "Left the Room",
+    "leaveRoom": "Left the Chat",
     "leaveRoomMessage": "Agent has left the chat",
     "chatting": "Chatting",
-    "chattingMessage": "Chatting with an Agent",
+    "chattingMessage": "Chat in progress...",
     "downloadEmbedCode": "Download Embed Code",
     "embed-code": {
       "no-verified-domains": {
