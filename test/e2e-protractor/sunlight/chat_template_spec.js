@@ -169,7 +169,7 @@ describe('Care admin should be able to', function () {
   }
 
   function validateContentsOfOverviewPage() {
-    var OVERVIEW_CARD_COUNT = 5;
+    var OVERVIEW_CARD_COUNT = 6;
     validateOverviewTitleAndDesc('Template Overview', 'Toggle cards to customize what screens you want your customer to see when requesting a chat from customer care');
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfoEnabledCard);
     utils.click(careChatTemplateSetupPage.customerInfoToggle);
