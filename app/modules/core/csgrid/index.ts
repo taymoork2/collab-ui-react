@@ -1,6 +1,7 @@
 import { CsGridComponent } from './csGrid.component';
 import { CsGridCellComponent } from './cs-grid-cell/csGridCell.component';
 import { GridCellService } from './cs-grid-cell/gridCell.service';
+import './cs-grid.scss';
 import './cs-grid-cell/cs-grid-cell.scss';
 
 // TODO: migrate to the toolkit (tech debt item)
