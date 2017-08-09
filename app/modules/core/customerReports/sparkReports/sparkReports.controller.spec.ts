@@ -45,6 +45,7 @@ describe('Controller: Customer Reports Ctrl', function () {
     this.activeOptions.description = 'activeUsers.customerPortalDescription';
     this.secondaryActiveOptions = _.cloneDeep(this.ctrlData.activeUserSecondaryOptions);
     this.secondaryActiveOptions.description = 'activeUsers.customerMostActiveDescription';
+    this.secondaryActiveOptions.missingUsersErrorDescription = 'activeUsers.missingUsersError';
     this.secondaryActiveOptions.search = true;
     this.secondaryActiveOptions.sortOptions = _.cloneDeep(this.activeData.sortOptions);
     this.secondaryActiveOptions.table.headers = _.cloneDeep(this.activeData.headers);

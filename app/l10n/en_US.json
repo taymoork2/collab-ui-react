@@ -893,6 +893,7 @@
     "customerMostActiveDescription": "During the last {{time}}, these are the most active users.  The table can be sorted by the user name, total calls, or spark messages and searched based on the user name.",
     "noActiveUsers": "During the last {{time}}, there have been no active users.  To see user status and resend invitations to those still pending, visit the ",
     "errorActiveUsers": "This data is temporarily unavailable.  Our servers are working to return it soon, please check back again shortly.",
+    "missingUsersError": "Some user data could not be retrieved. For assistance, click your username on the top right and submit feedback to contact support.",
     "usersTab": "users tab.",
     "customMessage": "The Most Active Users table is unavailable for the six month and full year time periods, or when the custom date selector is active."
   },

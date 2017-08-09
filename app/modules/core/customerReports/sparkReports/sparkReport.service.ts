@@ -118,22 +118,32 @@ export class SparkReportService {
     const deferred: ng.IDeferred<IActiveTableBase[]> = this.$q.defer();
     const returnArray: IActiveTableBase[] = [];
     const options: ITypeQuery = this.CommonReportService.getTypeOptions(filter, 'mostActive');
+
     this.CommonReportService.getCustomerActiveUserData(options, this.mostActiveDeferred).then((response: any): void => {
       const responseData: any = _.get(response, 'data.data');
+      let hasError = false;
+
       if (responseData) {
         _.forEach(responseData, (item: any): void => {
           const details: any = _.get(item, 'details', undefined);
-          if (details) {
+          if (details && details.userName) {
             returnArray.push({
               numCalls: _.toInteger(details.sparkCalls) + _.toInteger(item.details.sparkUcCalls),
               totalActivity: _.toInteger(details.totalActivity),
               sparkMessages: _.toInteger(details.sparkMessages),
               userName: details.userName,
             });
+          } else {
+            hasError = true;
           }
         });
       }
-      deferred.resolve(returnArray);
+
+      if (hasError) {
+        deferred.reject(returnArray);
+      } else {
+        deferred.resolve(returnArray);
+      }
     }).catch((error: any): void => {
       deferred.reject(this.CommonReportService.returnErrorCheck(error, 'activeUsers.mostActiveError', returnArray));
     });
