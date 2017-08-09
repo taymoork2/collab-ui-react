@@ -325,7 +325,7 @@ describe('Care admin should be able to', function () {
 
   function validateChatStatusMessagesDefaultPage() {
     utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(0), 'Waiting for an Agent...');
-    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(1), 'Chatting with an Agent');
+    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(1), 'Chat in progress...');
     utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(2), 'Agent has left the chat');
   }
 
