@@ -6966,6 +6966,7 @@
     "customerInfoDesc_chat": "This is the screen a customer fills in to start chat with an agent",
     "customerInfoDesc_callback": "This is the screen a customer fills in to request a callback from an agent",
     "customerInfoToggleTooltipMessage": "This screen is required for this template and cannot be disabled.",
+    "virtualAssistantToggleTooltipMessage": "Configure a Customer Virtual Assistant from the Features page before you enable this. You can also configure your assistant and enable this feature at a later time.",
     "feedbackDesc": "This screen is used to collect feedback from a customer after the chat ends",
     "callFeedbackDesc": "This screen is used to collect feedback from a customer after the call ends",
     "agentUnavailableDesc": "This screen is shown to a customer when no agent is available to assist",
@@ -7090,6 +7091,12 @@
         "title_callback": "Customer Information",
         "desc_chat": "This is the screen a customer fills in to start chat with an agent",
         "desc_callback": "This is the screen a customer fills in to request a callback from an agent"
+      },
+      "virtualAssistant": {
+        "title_chat": "Customer Virtual Assistant",
+        "desc_chat": "Enable a virtual assistant to provide automated support and agent escalations",
+        "title_chatPlusCallback": "Customer Virtual Assistant",
+        "desc_chatPlusCallback": "Enable a virtual assistant to provide automated support and agent escalations"
       },
       "agentUnavailable": {
         "title_chat": "Agent Unavailable",
