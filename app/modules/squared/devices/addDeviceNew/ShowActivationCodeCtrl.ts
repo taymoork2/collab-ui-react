@@ -5,6 +5,7 @@ import * as jstz from 'jstimezonedetect';
 import IDeferred = angular.IDeferred;
 import ICsdmDataModelService = csdm.ICsdmDataModelService;
 import { ExternalLinkedAccountHelperService } from '../services/external-acct-helper.service';
+import { IWindowService } from 'angular';
 
 export class ShowActivationCodeCtrl extends WizardCtrl {
   private account: IAccountData;
@@ -39,7 +40,8 @@ export class ShowActivationCodeCtrl extends WizardCtrl {
               private Notification,
               private CsdmEmailService: CsdmEmailService,
               private USSService,
-              private ExtLinkHelperService: ExternalLinkedAccountHelperService) {
+              private ExtLinkHelperService: ExternalLinkedAccountHelperService,
+              private $window: IWindowService) {
     super($q, $stateParams);
 
     this.showATA = this.wizardData.showATA;
@@ -282,6 +284,7 @@ export class ShowActivationCodeCtrl extends WizardCtrl {
 
   public activateEmail() {
     this.showEmail = true;
+    this.$stateParams.wizard.scrollToBottom(this.$window);
   }
 
   public getExpiresOn() {
