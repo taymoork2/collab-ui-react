@@ -1,4 +1,5 @@
 import { IMergedStateSeverity } from 'modules/hercules/services/hybrid-services-cluster-states.service';
+import { IAllowedRegistrationHost } from 'modules/hercules/services/hybrid-services-extras.service';
 
 export type ClusterTargetType = 'c_mgmt' | 'mf_mgmt' | 'hds_app' | 'ucm_mgmt' | 'cs_mgmt' | 'ept' | 'unknown';
 export type ConnectorAlarmSeverity = 'critical' | 'error' | 'warning' | 'alert';
@@ -61,6 +62,13 @@ export interface IExtendedCluster extends ICluster {
 
 // HybridServicesClusterService
 export interface IExtendedClusterFusion extends ICluster {
+  connectors: IExtendedConnector[];
+  extendedProperties: {
+    allowedRedirectTarget?: IAllowedRegistrationHost;
+    isEmptyExpresswayCluster: boolean;
+    registrationTimedOut?: boolean;
+    // move servicesStatuses here
+  };
   servicesStatuses: IExtendedClusterServiceStatus[];
 }
 
@@ -164,7 +172,10 @@ export interface IConnectorStatus {
 }
 
 export interface IExtendedConnector extends IConnector {
-  extendedState: ExtendedConnectorState;
+  extendedProperties: {
+    alarms: string; //  'none' | 'warning' | 'error';
+    alarmsBadgeCss: string; // duplicate of AlarmCSSClass
+  };
 }
 
 export interface IHostAggregate {

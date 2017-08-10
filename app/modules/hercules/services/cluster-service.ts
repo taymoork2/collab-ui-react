@@ -52,7 +52,7 @@ export class ClusterService {
       .get<IFMSOrganization>(`${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}?fields=@wide`)
       .then(this.extractDataFromResponse)
       .then((org: IFMSOrganization) => {
-        // only keep clusters that have a targetType (just to be on the safe side)
+        // only keep clusters that have a known targetType (just to be on the safe side)
         return _.filter<ICluster>(org.clusters, cluster => {
           return cluster.targetType !== 'unknown';
         });
@@ -174,27 +174,21 @@ export class ClusterService {
     return response.data;
   }
 
-  private findExtendedState(connector: IConnector): ExtendedConnectorState {
-    if (connector.alarms.length === 0) {
-      return connector.state;
-    }
-    return _.some(connector.alarms, alarm => {
-      return alarm.severity === 'critical' || alarm.severity === 'error';
-    }) ? 'has_error_alarms' : 'has_warning_alarms';
-  }
-
   private addExtendedState(connector: IConnector): IExtendedConnector {
     const result = _.extend({}, connector, {
-      extendedState: this.findExtendedState(connector),
+      extendedProperties: { // hack
+        alarms: 'none',
+        alarmsBadgeCss: '',
+      },
     });
     return result;
   }
 
   private getMostSevereRunningState(previous: IStateSeverity, connector: IExtendedConnector): IStateSeverity {
-    const severity = this.HybridServicesClusterStatesService.getSeverity(connector, 'extendedState');
+    const severity = this.HybridServicesClusterStatesService.getSeverity(connector, 'state');
     if (severity.severity > previous.stateSeverityValue) {
       return {
-        state: connector.extendedState,
+        state: connector.state,
         stateSeverity: severity.label,
         stateSeverityValue: severity.severity,
       };

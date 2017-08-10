@@ -1,12 +1,12 @@
-<cs-sp-section ng-if="$ctrl.cluster.allowedRedirectTarget">
+<cs-sp-section ng-if="$ctrl.cluster.extendedProperties.allowedRedirectTarget">
   <div class="section-title-row section-name" translate="hercules.registration.heading"></div>
   <p translate="hercules.fusion.list.complete-registration"></p>
   <div>
     <button class="btn" ng-click="$ctrl.openDeleteConfirm($ctrl.cluster)" translate="common.remove"></button>
-    <button class="btn btn--primary" ng-click="$ctrl.goToExpressway($ctrl.cluster.allowedRedirectTarget.hostname)" translate="hercules.fusion.list.go-to-expressway"></button>
+    <button class="btn btn--primary" ng-click="$ctrl.goToExpressway($ctrl.cluster.extendedProperties.allowedRedirectTarget.hostname)" translate="hercules.fusion.list.go-to-expressway"></button>
   </div>
 </cs-sp-section>
-<cs-sp-section ng-if="!$ctrl.cluster.allowedRedirectTarget">
+<cs-sp-section ng-if="!$ctrl.cluster.extendedProperties.allowedRedirectTarget">
   <div class="section-title-row section-name" translate="hercules.registration.heading"></div>
   <p translate="hercules.fusion.list.registration-timeout-extended"></p>
   <div>

@@ -314,7 +314,7 @@ describe('ClusterService', () => {
       }));
     });
 
-    it('should merge all alarms and override the state with "has_warning_alarms" if there are warning alarms', () => {
+    it('should merge all alarms and override if there are warning alarms', () => {
       const response = org([
         cluster([
           connector('c_mgmt', {
@@ -340,36 +340,6 @@ describe('ClusterService', () => {
       const originalCluster = response.clusters[0];
       const managementCluster = clusterCache.c_mgmt[originalCluster.id];
       expect(managementCluster.aggregates.alarms.length).toBe(3);
-      expect(managementCluster.aggregates.state).toBe('has_warning_alarms');
-    });
-
-    it('should merge all alarms and override the state with "has_warning_alarms" if there are warning alarms', () => {
-      const response = org([
-        cluster([
-          connector('c_mgmt', {
-            alarms: 2,
-            alarmsSeverity: 'error',
-          }),
-          connector('c_mgmt', {
-            alarms: 1,
-            alarmsSeverity: 'critical',
-            hostname: 'host2.example.com',
-          }),
-        ]),
-      ]);
-      $httpBackend
-        .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
-        .respond(response);
-
-      const callback = jasmine.createSpy('callback');
-      ClusterService.fetch().then(callback);
-      $httpBackend.flush();
-
-      const clusterCache = callback.calls.mostRecent().args[0];
-      const originalCluster = response.clusters[0];
-      const managementCluster = clusterCache.c_mgmt[originalCluster.id];
-      expect(managementCluster.aggregates.alarms.length).toBe(3);
-      expect(managementCluster.aggregates.state).toBe('has_error_alarms');
     });
 
     it('should merge running states', () => {

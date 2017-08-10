@@ -100,7 +100,6 @@ describe('Component: HybridServicesClusterListWithCardsComponent', function () {
         }],
       }] }));
       initController(false);
-      window.console.log('controller.filters', controller.filters);
       expect(controller.filters[0].count).toBe(0);
       expect(controller.filters[1].count).toBe(0);
       expect(controller.filters[2].count).toBe(0);

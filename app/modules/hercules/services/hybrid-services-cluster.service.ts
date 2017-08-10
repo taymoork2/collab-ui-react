@@ -1,7 +1,6 @@
 // This service should obsolete ClusterService during 2017
-import { Notification } from 'modules/core/notifications';
 import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
-import { ICluster, ConnectorType, HybridServiceId, IFMSOrganization, ITimeWindow, ClusterTargetType, IExtendedClusterFusion, StatusIndicatorCSSClass, IExtendedClusterServiceStatus, IMoratoria, IHost } from 'modules/hercules/hybrid-services.types';
+import { ICluster, ConnectorType, HybridServiceId, IFMSOrganization, ITimeWindow, ClusterTargetType, IExtendedClusterFusion, StatusIndicatorCSSClass, IExtendedClusterServiceStatus, IMoratoria, IHost, IConnector, ConnectorAlarmSeverity, IExtendedConnector } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 import { HybridServicesExtrasService, IAllowedRegistrationHost } from 'modules/hercules/services/hybrid-services-extras.service';
 import { USSService } from 'modules/hercules/services/uss.service';
@@ -38,16 +37,16 @@ export class HybridServicesClusterService {
     private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
     private HybridServicesUtilsService: HybridServicesUtilsService,
     private HybridServicesExtrasService: HybridServicesExtrasService,
-    private Notification: Notification,
     private UrlConfig,
     private USSService: USSService,
   ) {
+    this.addExtendedPropertiesToClusters = this.addExtendedPropertiesToClusters.bind(this);
     this.addServicesStatuses = this.addServicesStatuses.bind(this);
     this.addUserCount = this.addUserCount.bind(this);
     this.extractClustersFromResponse = this.extractClustersFromResponse.bind(this);
     this.extractDataFromResponse = this.extractDataFromResponse.bind(this);
+    this.filterClustersWithBadContextConnectors = this.filterClustersWithBadContextConnectors.bind(this);
     this.filterUnknownClusters = this.filterUnknownClusters.bind(this);
-    this.filterBadContextConnectors = this.filterBadContextConnectors.bind(this);
     this.sortClusters = this.sortClusters.bind(this);
   }
 
@@ -77,12 +76,25 @@ export class HybridServicesClusterService {
 
   public get(clusterId: string, orgId?: string): ng.IPromise<IExtendedClusterFusion> {
     const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId || this.Authinfo.getOrgId()}/clusters/${clusterId}?fields=@wide`;
-    return this.$http.get(url)
+    return this.$http.get<ICluster>(url)
       .then(this.extractDataFromResponse)
-      .then((cluster: ICluster) => {
-        let clusters = this.filterBadContextConnectors([cluster]);
-        clusters = this.addExtendedStateToConnectors(clusters);
+      .then((cluster) => {
+        let clusters = this.filterClustersWithBadContextConnectors([cluster]);
+        clusters = _.map(clusters, cluster => {
+          return {
+            ...cluster,
+            connectors: _.map(cluster.connectors, connector => {
+              return this.addExtendedPropertiesToConnector(connector);
+            }),
+          };
+        });
         return clusters[0];
+      })
+      .then((cluster) => {
+        return this.addExtendedPropertiesToClusters([cluster])
+          .then((clusters) => {
+            return clusters[0];
+          });
       })
       .then((cluster) => {
         const clusters = this.addServicesStatuses([cluster]);
@@ -95,7 +107,18 @@ export class HybridServicesClusterService {
     return this.$http.get<IFMSOrganization>(url)
       .then(this.extractClustersFromResponse)
       .then(this.filterUnknownClusters)
-      .then(this.filterBadContextConnectors)
+      .then(this.filterClustersWithBadContextConnectors)
+      .then(this.addExtendedPropertiesToClusters)
+      .then((clusters) => {
+        return _.map(clusters, cluster => {
+          return {
+            ...cluster,
+            connectors: _.map(cluster.connectors, connector => {
+              return this.addExtendedPropertiesToConnector(connector);
+            }),
+          };
+        });
+      })
       .then(this.addServicesStatuses)
       .then(this.sortClusters);
   }
@@ -118,14 +141,21 @@ export class HybridServicesClusterService {
       .then(this.extractDataFromResponse)
       .then((org) => {
         org.clusters = this.filterUnknownClusters(org.clusters);
-        org.clusters = this.filterBadContextConnectors(org.clusters);
-        org.clusters = this.addExtendedStateToConnectors(org.clusters);
+        org.clusters = this.filterClustersWithBadContextConnectors(org.clusters);
+        org.clusters = _.map(org.clusters, cluster => {
+          return {
+            ...cluster,
+            connectors: _.map(cluster.connectors, connector => {
+              return this.addExtendedPropertiesToConnector(connector);
+            }),
+          };
+        });
         org.clusters = this.addServicesStatuses(org.clusters);
         return org;
       })
       // addInfoToEmptyExpresswayClusters
       .then((org) => {
-        return this.setClusterAllowListInfoForExpressway(org.clusters)
+        return this.addExtendedPropertiesToClusters(org.clusters)
           .then((clusters) => {
             org.clusters = clusters;
             return org;
@@ -274,39 +304,39 @@ export class HybridServicesClusterService {
       });
   }
 
-  public setClusterAllowListInfoForExpressway(clusters: ICluster[]): ng.IPromise<any> {
-    return this.$q.all(
-      _.chain(clusters)
-        .map((cluster: any) => {
-          if (cluster.targetType === 'c_mgmt' && _.size(cluster.connectors) === 0) {
-            const extraProperties = { isEmptyExpresswayCluster: true };
-            return _.merge({}, cluster, extraProperties);
-          } else {
-            return cluster;
-          }
-        })
-        .map((cluster: any) => {
-          if (cluster.isEmptyExpresswayCluster) {
-            return this.HybridServicesExtrasService.getPreregisteredClusterAllowList(cluster.id)
-              .then((allowList: IAllowedRegistrationHost[]) => {
-                const extraProperties = {};
-                extraProperties['allowedRedirectTarget'] = allowList[0];
-                // The `if (cluster.aggregates)` is there to indicate this method is used to 'augment' the cluster array
-                // from hybrid-service-cluster-list#updateClusters(), not from getResourceGroups() in this very file.
-                if (cluster.aggregates && !cluster.allowedRedirectTarget) {
-                  extraProperties['aggregates'] = { state: 'registrationTimeout' };
-                }
-                return _.merge({}, cluster, extraProperties);
-              });
-          } else {
-            return this.$q.resolve(cluster);
-          }
-        })
-        .value(),
-    )
-    .catch((error) => {
-      this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
-    });
+  public addExtendedPropertiesToClusters(clusters: ICluster[]): ng.IPromise<IExtendedClusterFusion[]> {
+    const promises = _.chain(clusters)
+      .map((cluster) => {
+        return {
+          ...cluster,
+          extendedProperties: {
+            isEmptyExpresswayCluster: cluster.targetType === 'c_mgmt' && _.size(cluster.connectors) === 0,
+          },
+        };
+      })
+      .map((cluster: IExtendedClusterFusion) => {
+        if (cluster.extendedProperties.isEmptyExpresswayCluster) {
+          return this.HybridServicesExtrasService.getPreregisteredClusterAllowList(cluster.id)
+            .then((allowList: IAllowedRegistrationHost[]) => {
+              const extendedProperties = {
+                allowedRedirectTarget: allowList[0],
+                isEmptyExpresswayCluster: cluster.extendedProperties.isEmptyExpresswayCluster,
+                registrationTimedOut: _.isUndefined(allowList[0]),
+              };
+              // The `if (cluster.aggregates)` is there to indicate this method is used to 'augment' the cluster array
+              // from hybrid-service-cluster-list#updateClusters(), not from getResourceGroups() in this very file.
+              // TODO: handle registrationTimeout in new UI
+              // if (cluster.aggregates && !cluster.extendedProperties.allowedRedirectTarget) {
+              //   extraProperties['aggregates'] = { state: 'registrationTimeout' };
+              // }
+              return _.merge({}, cluster, { extendedProperties });
+            });
+        } else {
+          return this.$q.resolve(cluster);
+        }
+      })
+      .value();
+    return this.$q.all(promises);
   }
 
   public setClusterInformation(clusterId: string, data: { name?: string; releaseChannel?: string; }): ng.IPromise<''> {
@@ -329,24 +359,25 @@ export class HybridServicesClusterService {
 
   // PRIVATE
 
-  private addExtendedStateToConnectors(clusters: ICluster[]): any {
-    return _.map(clusters, (cluster) => {
-      cluster.connectors = _.map(cluster.connectors, (connector) => {
-        let extendedState = '';
-        if (connector.alarms.length === 0) {
-          extendedState = connector.state;
-        } else {
-          extendedState = _.some(connector.alarms, (alarm) => {
-            return alarm.severity === 'critical' || alarm.severity === 'error';
-          }) ? 'has_error_alarms' : 'has_warning_alarms';
-        }
-        return _.extend({}, connector, {
-          state: extendedState, // hack for the node view
-          extendedState: extendedState,
-        });
-      });
-      return cluster;
-    });
+  /**
+   * Take the connector data straigth from the API and adds a property named
+   * `extendedProperties` containing `alarms` and `alarmsBadgeCss`. They represent
+   * an overview of the alarms we can find on the connector.
+   * @param {connector} IConnector
+   * @return {IExtendedConnector}
+   */
+  private addExtendedPropertiesToConnector(connector: IConnector): IExtendedConnector {
+    let alarms: 'none' | 'warning' | 'error' = 'none'; // type duplicate of what's inside hybrid-services.types.ts
+    if (connector.alarms.length > 0) {
+      alarms = _.some(connector.alarms, (alarm) => alarm.severity === 'critical' || alarm.severity === 'error') ? 'error' : 'warning';
+    }
+    return {
+      ...connector,
+      extendedProperties: {
+        alarms: alarms,
+        alarmsBadgeCss: this.HybridServicesClusterStatesService.getAlarmSeverityCssClass(alarms as ConnectorAlarmSeverity),
+      },
+    };
   }
 
   private addServicesStatuses(clusters: ICluster[]): IExtendedClusterFusion[] {
@@ -437,7 +468,7 @@ export class HybridServicesClusterService {
       .then((summary) => {
         return {
           groups: _.map(response.groups, (group: any) => {
-            const countForGroup = _.find(summary.userCountByResourceGroup, (count: any) => {
+            const countForGroup = _.find(summary.userCountByResourceGroup, (count) => {
               return count.resourceGroupId === group.id;
             });
             group.numberOfUsers = countForGroup ? countForGroup.numberOfUsers : 0;
@@ -478,7 +509,7 @@ export class HybridServicesClusterService {
    * @param clusters
    * @returns ICluster[] clusters
    */
-  private filterBadContextConnectors(clusters: ICluster[]): ICluster[] {
+  private filterClustersWithBadContextConnectors(clusters: ICluster[]): ICluster[] {
     return _.map(clusters, cluster => {
       if (cluster.targetType === 'cs_mgmt') {
         cluster.connectors = _.filter(cluster.connectors, connector => connector.runningVersion !== HybridServicesClusterService.CONTEXT_CONNECTOR_OLD_VERSION);
@@ -499,7 +530,6 @@ export default angular
     require('modules/hercules/services/hybrid-services-cluster-states.service').default,
     require('modules/hercules/services/hybrid-services-utils.service').default,
     require('modules/hercules/services/hybrid-services-extras.service').default,
-    require('modules/core/notifications').default,
     require('modules/core/config/urlConfig'),
     require('modules/hercules/services/uss.service').default,
   ])

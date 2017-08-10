@@ -107,7 +107,7 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
       return;
     }
     if (this.serviceId === 'squared-fusion-cal' || this.serviceId === 'squared-fusion-uc' || this.serviceId === 'spark-hybrid-impinterop') {
-      this.HybridServicesClusterService.setClusterAllowListInfoForExpressway(this.ClusterService.getClustersByConnectorType(this.connectorType))
+      this.HybridServicesClusterService.addExtendedPropertiesToClusters(this.ClusterService.getClustersByConnectorType(this.connectorType))
         .then((clusters) => {
           this.clusterList = this.calculateMaintenanceModeLabel(clusters);
         })

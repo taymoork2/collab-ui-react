@@ -1,10 +1,14 @@
-import serviceModule from './hybrid-services-cluster.service';
+import serviceModule, { HybridServicesClusterService } from './hybrid-services-cluster.service';
 
-import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
-import { ConnectorType, IConnector, IExtendedClusterFusion } from 'modules/hercules/hybrid-services.types';
+// import { ConnectorType, IConnector, IExtendedClusterFusion } from 'modules/hercules/hybrid-services.types';
+import { IExtendedClusterFusion, ConnectorType, IExtendedConnector } from 'modules/hercules/hybrid-services.types';
+import { USSService } from 'modules/hercules/services/uss.service';
 
 describe('Service: HybridServicesClusterService', function () {
-  let $httpBackend: ng.IHttpBackendService, $q: ng.IQService, HybridServicesClusterService: HybridServicesClusterService, USSService;
+  let $httpBackend: ng.IHttpBackendService;
+  let $q: ng.IQService;
+  let HybridServicesClusterService: HybridServicesClusterService;
+  let USSService: USSService;
 
   beforeEach(angular.mock.module(serviceModule));
   beforeEach(angular.mock.module(mockDependencies));
@@ -15,7 +19,12 @@ describe('Service: HybridServicesClusterService', function () {
     $q = _$q_;
     HybridServicesClusterService = _HybridServicesClusterService_;
     USSService = _USSService_;
-    spyOn(USSService, 'getUserPropsSummary').and.returnValue($q.resolve({ numberOfUsers: 0 }));
+    spyOn(USSService, 'getUserPropsSummary').and.returnValue($q.resolve({
+      userCountByResourceGroup: [{
+        numberOfUsers: 12,
+        resourceGroupId: '2c2bdd6d-8149-4090-bbb6-fd87edd5416f',
+      }],
+    }));
   }
 
   function mockDependencies($provide) {
@@ -31,6 +40,85 @@ describe('Service: HybridServicesClusterService', function () {
     $provide.value('UrlConfig', UrlConfig);
   }
 
+  describe('get()', function () {
+    afterEach(verifyHttpBackend);
+
+    function verifyHttpBackend() {
+      $httpBackend.verifyNoOutstandingExpectation();
+      $httpBackend.verifyNoOutstandingRequest();
+    }
+
+    it('should call FMS to get a cluster', function () {
+      $httpBackend
+        .expectGET('http://elg.no/organizations/0FF1C3/clusters/clusterId?fields=@wide')
+        .respond(200, {
+          connectors: [],
+        });
+      HybridServicesClusterService.get('clusterId');
+      $httpBackend.flush();
+    });
+
+    it('should filter clusters with bad context connectors', function () {
+      $httpBackend
+        .expectGET('http://elg.no/organizations/0FF1C3/clusters/clusterId?fields=@wide')
+        .respond(200, {
+          targetType: 'cs_mgmt',
+          connectors: [{
+            alarms: [],
+            runningVersion: '2.0.1-10131',
+          }, {
+            alarms: [],
+            runningVersion: '12',
+          }],
+        });
+      HybridServicesClusterService.get('clusterId')
+        .then((cluster) => {
+          expect(cluster.connectors.length).toBe(1);
+        })
+        .catch(fail);
+      $httpBackend.flush();
+    });
+
+    it('should add extended properties to connectors', function () {
+      $httpBackend
+        .expectGET('http://elg.no/organizations/0FF1C3/clusters/clusterId?fields=@wide')
+        .respond(200, {
+          targetType: 'c_mgmt',
+          connectors: [{
+            alarms: [],
+          }, {
+            alarms: [{
+              severity: 'critical',
+            }],
+          }],
+        });
+      HybridServicesClusterService.get('clusterId')
+        .then((cluster) => {
+          expect(cluster.connectors[0].extendedProperties).toExist();
+          expect(cluster.connectors[0].extendedProperties.alarms).toBe('none');
+          expect(cluster.connectors[1].extendedProperties.alarms).toBe('error');
+        })
+        .catch(fail);
+      $httpBackend.flush();
+    });
+
+    it('should add services statuses to clusters', function () {
+      $httpBackend
+        .expectGET('http://elg.no/organizations/0FF1C3/clusters/clusterId?fields=@wide')
+        .respond(200, {
+          id: '89f3fc3a-3498-11e6-8de3-005056b111e6',
+          targetType: 'c_mgmt',
+        });
+      $httpBackend.expectGET('http://elg.no/organizations/0FF1C3/clusters/89f3fc3a-3498-11e6-8de3-005056b111e6/allowedRegistrationHosts').respond(204, { items: [] });
+      HybridServicesClusterService.get('clusterId')
+        .then((cluster) => {
+          expect(cluster.servicesStatuses).toExist();
+        })
+        .catch(fail);
+      $httpBackend.flush();
+    });
+  });
+
   describe('getAll()', function () {
 
     afterEach(function () {
@@ -44,39 +132,15 @@ describe('Service: HybridServicesClusterService', function () {
       $httpBackend.flush();
     });
 
-    // state (fused, defused, etc.) will soon be removed from the API reponse!
-    // the API will only return fused clusters
-    it('should not crash if clusters do not have a state', function () {
-      $httpBackend
-        .expectGET('http://elg.no/organizations/0FF1C3?fields=@wide')
-        .respond({
-          clusters: [{
-            connectors: [],
-          }, {
-            connectors: [],
-          }],
-        });
-      HybridServicesClusterService.getAll()
-        .then(function (clusters) {
-          expect(clusters.length).toBe(2);
-        })
-        .catch(function () {
-          expect('reject called').toBeFalsy();
-        });
-      $httpBackend.flush();
-    });
-
     it('should handle no data in response', function () {
       $httpBackend
         .expectGET('http://elg.no/organizations/0FF1C3?fields=@wide')
         .respond('');
       HybridServicesClusterService.getAll()
-        .then(function (clusters) {
+        .then((clusters) => {
           expect(clusters.length).toBe(0);
         })
-        .catch(function () {
-          expect('reject called').toBeFalsy();
-        });
+        .catch(fail);
       $httpBackend.flush();
     });
 
@@ -85,20 +149,69 @@ describe('Service: HybridServicesClusterService', function () {
         .expectGET('http://elg.no/organizations/0FF1C3?fields=@wide')
         .respond({
           clusters: [{
+            id: '89f3fc3a-3498-11e6-8de3-005056b111e6',
             targetType: 'unknown',
             connectors: [],
           }, {
+            id: '89f3fc3a-3498-11e6-8de3-005056b111e7',
             targetType: 'c_mgmt',
             connectors: [],
           }],
         });
+      $httpBackend.expectGET('http://elg.no/organizations/0FF1C3/clusters/89f3fc3a-3498-11e6-8de3-005056b111e7/allowedRegistrationHosts').respond(204, { items: [] });
       HybridServicesClusterService.getAll()
-        .then(function (clusters) {
+        .then((clusters) => {
           expect(clusters.length).toBe(1);
         })
-        .catch(function () {
-          expect('reject called').toBeFalsy();
+        .catch(fail);
+      $httpBackend.flush();
+    });
+
+    it('should filter clusters with bad context connectors', function () {
+      $httpBackend
+        .expectGET('http://elg.no/organizations/0FF1C3?fields=@wide')
+        .respond(200, {
+          clusters: [{
+            targetType: 'cs_mgmt',
+            connectors: [{
+              alarms: [],
+              runningVersion: '2.0.1-10131',
+            }, {
+              alarms: [],
+              runningVersion: '12',
+            }],
+          }],
         });
+      HybridServicesClusterService.getAll()
+        .then((clusters) => {
+          expect(clusters[0].connectors.length).toBe(1);
+        })
+        .catch(fail);
+      $httpBackend.flush();
+    });
+
+    it('should add extended properties to connectors', function () {
+      $httpBackend
+        .expectGET('http://elg.no/organizations/0FF1C3?fields=@wide')
+        .respond(200, {
+          clusters: [{
+            targetType: 'c_mgmt',
+            connectors: [{
+              alarms: [],
+            }, {
+              alarms: [{
+                severity: 'critical',
+              }],
+            }],
+          }],
+        });
+      HybridServicesClusterService.getAll()
+        .then((clusters) => {
+          expect(clusters[0].connectors[0].extendedProperties).toExist();
+          expect(clusters[0].connectors[0].extendedProperties.alarms).toBe('none');
+          expect(clusters[0].connectors[1].extendedProperties.alarms).toBe('error');
+        })
+        .catch(fail);
       $httpBackend.flush();
     });
 
@@ -137,10 +250,83 @@ describe('Service: HybridServicesClusterService', function () {
           expect(clusters[0].servicesStatuses[2].total).toBe(0);
           expect(clusters[1].servicesStatuses[0].total).toBe(1);
         })
-        .catch(function () {
-          expect('reject called').toBeFalsy();
-        });
+        .catch(fail);
       $httpBackend.flush();
+    });
+
+    it('should sort clusters by targetType and then name', function () {
+      jasmine.getJSONFixtures().clearCache(); // See https://github.com/velesin/jasmine-jquery/issues/239
+      const org = getJSONFixture('hercules/org-with-resource-groups.json');
+      $httpBackend.expectGET('http://elg.no/organizations/0FF1C3?fields=@wide').respond(200, org);
+      $httpBackend.expectGET('http://elg.no/organizations/0FF1C3/clusters/89f3fc3a-3498-11e6-8de3-005056b111e6/allowedRegistrationHosts').respond(204, { items: [] });
+      HybridServicesClusterService.getAll()
+        .then((clusters) => {
+          expect(clusters.length).toBe(4);
+          expect(clusters[0].name).toBe('Augusta National Golf Club'); // c_mgmt, ordered
+          expect(clusters[3].name).toBe('Cisco Oppsal'); // last one if mf_mgmt
+        })
+        .catch(fail);
+      $httpBackend.flush();
+    });
+  });
+
+  describe('getResourceGroups()', function () {
+    beforeEach(function () {
+      jasmine.getJSONFixtures().clearCache(); // See https://github.com/velesin/jasmine-jquery/issues/239
+      const org = getJSONFixture('hercules/org-with-resource-groups.json');
+      $httpBackend.expectGET('http://elg.no/organizations/0FF1C3?fields=@wide').respond(org);
+      // The "Oslo Øst & Skinke" cluster has no connectors, so the code will look for ongoing registrations by looking
+      // up the allowedRegistrationHosts for it.
+      $httpBackend.expectGET('http://elg.no/organizations/0FF1C3/clusters/89f3fc3a-3498-11e6-8de3-005056b111e6/allowedRegistrationHosts').respond(204, { items: [] });
+    });
+
+    afterEach(function () {
+      $httpBackend.flush();
+      $httpBackend.verifyNoOutstandingExpectation();
+      $httpBackend.verifyNoOutstandingRequest();
+    });
+
+    xit('should filter out clusters with targetType unknown', function () { /* TODO */ });
+    xit('should filter clusters with bad context connectors', function () { /* TODO */ });
+    xit('should add extended properties to connectors', function () { /* TODO */ });
+    xit('should add servicesStatuses property to each cluster', function () { /* TODO */ });
+
+    it('should add extended properties to clusters', function () {
+      HybridServicesClusterService.getResourceGroups()
+        .then((response) => {
+          expect(response.groups[0].clusters[0].extendedProperties.isEmptyExpresswayCluster).toBe(true);
+          expect(response.unassigned[0].extendedProperties.isEmptyExpresswayCluster).toBe(false);
+        })
+        .catch(fail);
+    });
+
+    it('should add user count', function () {
+      HybridServicesClusterService.getResourceGroups()
+        .then((response) => {
+          expect(response.groups[0].numberOfUsers).toBe(12);
+        })
+        .catch(fail);
+    });
+
+    it('should extract unassigned clusters and sort them by name', function () {
+      HybridServicesClusterService.getResourceGroups()
+        .then((response) => {
+          expect(response.unassigned.length).toBe(3);
+          expect(response.unassigned[0].name).toBe('Augusta National Golf Club');
+          expect(response.unassigned[2].name).toBe('Cisco Oppsal');
+        })
+        .catch(fail);
+    });
+
+    it('should extract resource groups and put clusters inside, sorted by name', function () {
+      HybridServicesClusterService.getResourceGroups()
+        .then((response) => {
+          expect(response.groups.length).toBe(4);
+          expect(response.groups[0].name).toBe('ACE');
+          expect(response.groups[0].clusters.length).toBe(1);
+          expect(response.groups[3].name).toBe('🐷');
+        })
+        .catch(fail);
     });
   });
 
@@ -174,26 +360,6 @@ describe('Service: HybridServicesClusterService', function () {
       HybridServicesClusterService.deprovisionConnector('clusterId', 'c_cal');
     });
 
-  });
-
-  describe('get()', function () {
-
-    afterEach(verifyHttpBackend);
-
-    function verifyHttpBackend() {
-      $httpBackend.flush();
-      $httpBackend.verifyNoOutstandingExpectation();
-      $httpBackend.verifyNoOutstandingRequest();
-    }
-
-    it('should call FMS to get a cluster', function () {
-      $httpBackend
-        .expectGET('http://elg.no/organizations/0FF1C3/clusters/clusterId?fields=@wide')
-        .respond(200, {
-          connectors: [],
-        });
-      HybridServicesClusterService.get('clusterId');
-    });
   });
 
   describe('processClustersToAggregateStatusForService()', function () {
@@ -388,42 +554,6 @@ describe('Service: HybridServicesClusterService', function () {
 
   });
 
-  describe('getResourceGroups()', function () {
-    beforeEach(function () {
-      jasmine.getJSONFixtures().clearCache(); // See https://github.com/velesin/jasmine-jquery/issues/239
-      const org = getJSONFixture('hercules/org-with-resource-groups.json');
-      $httpBackend.expectGET('http://elg.no/organizations/0FF1C3?fields=@wide').respond(org);
-      // The "Oslo Øst & Skinke" cluster has no connectors, so the code will look for ongoing registrations by looking
-      // up the allowedRegistrationHosts for it.
-      $httpBackend.expectGET('http://elg.no/organizations/0FF1C3/clusters/89f3fc3a-3498-11e6-8de3-005056b111e6/allowedRegistrationHosts').respond(204, { items: [] });
-    });
-
-    afterEach(function () {
-      $httpBackend.flush();
-      $httpBackend.verifyNoOutstandingExpectation();
-      $httpBackend.verifyNoOutstandingRequest();
-    });
-
-    it('extract unassigned clusters and sort them by name', function () {
-      HybridServicesClusterService.getResourceGroups()
-        .then(function (response: any) {
-          expect(response.unassigned.length).toBe(3);
-          expect(response.unassigned[0].name).toBe('Augusta National Golf Club');
-          expect(response.unassigned[2].name).toBe('Cisco Oppsal');
-        });
-    });
-
-    it('extract resource groups and put clusters inside, sorted by name', function () {
-      HybridServicesClusterService.getResourceGroups()
-        .then(function (response: any) {
-          expect(response.groups.length).toBe(4);
-          expect(response.groups[0].name).toBe('ACE');
-          expect(response.groups[0].clusters.length).toBe(1);
-          expect(response.groups[3].name).toBe('🐷');
-        });
-    });
-  });
-
   describe('serviceHasHighAvailability()', () => {
 
     function createExpresswayCluster(connectorType: ConnectorType): IExtendedClusterFusion {
@@ -431,6 +561,9 @@ describe('Service: HybridServicesClusterService', function () {
         connectors: [],
         id: '',
         name: '',
+        extendedProperties: {
+          isEmptyExpresswayCluster: true,
+        },
         provisioning: [
           {
             connectorType: connectorType,
@@ -461,13 +594,17 @@ describe('Service: HybridServicesClusterService', function () {
       };
     }
 
-    function createConnector(connectorType: ConnectorType): IConnector {
+    function createConnector(connectorType: ConnectorType): IExtendedConnector {
       return {
         connectorType: connectorType,
         alarms: [],
         clusterId: '',
         clusterUrl: '',
         createdAt: '',
+        extendedProperties: {
+          alarms: '',
+          alarmsBadgeCss: '',
+        },
         hostSerial: '',
         hostUrl: '',
         hostname: '',
@@ -561,5 +698,4 @@ describe('Service: HybridServicesClusterService', function () {
     });
 
   });
-
 });
