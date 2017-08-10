@@ -336,6 +336,14 @@ sq-places-page-overview,
     max-width: 580px;
   }
 
+  .scrollSpace {
+    height: 130px;
+
+    @media print {
+      height: 0;
+    }
+  }
+
   .typeChoice {
     display: flex;
 
