@@ -232,6 +232,10 @@ class ReportCardCtrl {
     this.resize();
   }
 
+  public secondaryTableHasRows(): boolean {
+    return this.secondaryOptions.table.data.length > 0;
+  }
+
   public secondaryIsEmpty(): boolean {
     return this.secondaryOptions.state === this.ReportConstants.EMPTY;
   }
@@ -258,6 +262,10 @@ class ReportCardCtrl {
         this.reverse = sortOptions[selected].direction;
       }
     }
+  }
+
+  public showTable(): boolean {
+    return this.secondaryIsSet() || (this.secondaryIsError() && this.secondaryTableHasRows());
   }
 
   public pageBackward(): void {
