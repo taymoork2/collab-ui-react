@@ -2,6 +2,7 @@ import { ProvisioningService } from './provisioning.service';
 import { IOrders } from './provisioning.interfaces';
 import { IOrder } from './provisioning.interfaces';
 import { Status } from './provisioning.service';
+import { Notification } from 'modules/core/notifications';
 
 export class ProvisioningController {
 
@@ -21,11 +22,8 @@ export class ProvisioningController {
   private gridOptions: { pending: uiGrid.IGridOptions, completed: uiGrid.IGridOptions };
   private sharedColumDefs: uiGrid.IColumnDef[];
   private static sharedGridOptions: uiGrid.IGridOptions = {
-    enableHorizontalScrollbar: 0,
     rowHeight: 45,
-    enableRowHeaderSelection: false,
-    enableColumnMenus: false,
-    multiSelect: false,
+    enableRowSelection: true,
   };
 
   /* @ngInject */
@@ -37,7 +35,8 @@ export class ProvisioningController {
     private $scope: ng.IScope,
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
-    private ProvisioningService: ProvisioningService) {
+    private ProvisioningService: ProvisioningService,
+    private Notification: Notification) {
 
 
     this.sharedColumDefs = [{
@@ -80,9 +79,10 @@ export class ProvisioningController {
     this.getOrderData().then((results: IOrders) => {
       this.setGridData(results);
     })
-    .catch(() => {
+    .catch((error) => {
       this.pendingOrders = [];
       this.completedOrders = [];
+      this.Notification.errorResponse(error);
     })
     .finally(() => {
       this.isLoading = false;
@@ -96,11 +96,11 @@ export class ProvisioningController {
 
   /*
   * Move an order between pending, in progress and completed.
-  * TODO: algendel - the logic of this function will change once back end is plalce
   */
   public moveTo(order, newStatus: Status): void {
     this.isLoading = true;
-    this.ProvisioningService.updateOrderStatus<{status: string}>(order, newStatus).then((result) => {
+    this.ProvisioningService.updateOrderStatus<{status: string}>(order, newStatus)
+    .then((result) => {
       if (result) {
         order.status = newStatus;
         if (newStatus === Status.COMPLETED) {
@@ -112,9 +112,12 @@ export class ProvisioningController {
         }
       }
     })
-      .finally(() => {
-        this.isLoading = false;
-      });
+    .catch((error) => {
+      this.Notification.errorResponse(error);
+    })
+    .finally(() => {
+      this.isLoading = false;
+    });
   }
 
   /*
@@ -134,9 +137,12 @@ export class ProvisioningController {
         this.getOrderData(searchStr).then((results: IOrders) => {
           this.setGridData(results);
         })
-          .finally(() => {
-            this.isLoading = false;
-          });
+        .catch((error) => {
+          this.Notification.errorResponse(error);
+        })
+        .finally(() => {
+          this.isLoading = false;
+        });
       }
     }, 500);
   }
@@ -161,7 +167,6 @@ export class ProvisioningController {
         results.completed = _.filter(results.completed, { webOrderID: searchStr });
         results.pending = _.filter(results.pending, { webOrderID: searchStr });
       }
-
       return results;
     });
   }
@@ -190,13 +195,13 @@ export class ProvisioningController {
 
     result.pending.onRegisterApi = (gridApi) => {
       this.gridApi = gridApi;
-      gridApi.selection.on.rowSelectionChanged(this.$scope, (row) => {
+      this.gridApi.selection.on.rowSelectionChanged(this.$scope, (row) => {
         this.showDetails(row.entity);
       });
     };
     result.completed.onRegisterApi = (gridApi) => {
       this.gridApi = gridApi;
-      gridApi.selection.on.rowSelectionChanged(this.$scope, (row) => {
+      this.gridApi.selection.on.rowSelectionChanged(this.$scope, (row) => {
         this.showDetails(row.entity);
       });
     };

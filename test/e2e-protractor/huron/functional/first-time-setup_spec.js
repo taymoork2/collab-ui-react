@@ -139,5 +139,39 @@ describe('Huron Functional: first-time-setup', () => {
       });
     });
   });
+  describe('Voicemail settings', () => {
+    it('should default to not having External Voicemail Access', () => {
+      utils.scrollIntoView(wizard.companyVoicemailToggle);
+      expect(utils.getCheckboxVal(wizard.companyVoicemailToggle)).toBeFalsy();
+    });
+    it('should enable voicemail toggle', () => {
+      utils.setCheckboxIfDisplayed(wizard.companyVoicemailToggle, true, 1000);
+    });
+    it('should have two blank checkbox options', () => {
+      expect(utils.getCheckboxVal(callSettings.externalVoicemailCheckBox)).toBeFalsy();
+      expect(utils.getCheckboxVal(callSettings.voicemailToEmailCheckBox)).toBeFalsy();
+    });
+    it('should check External Voicemail Access box', () => {
+      utils.click(wizard.scrollToBottomButton);
+      utils.setCheckboxIfDisplayed(callSettings.externalVoicemailCheckBox, true, 1000);
+    });
+    it('should display a dropdown to select a phone number for external voicemail access when activated', () => {
+      utils.click(wizard.voicemailDropdown);
+      utils.click(wizard.voicemailDropdownSelect);
+    });
+    it('should disable External Voicemail Access when box is unchecked', () => {
+      utils.setCheckboxIfDisplayed(callSettings.externalVoicemailCheckBox, false, 1000);
+      expect(utils.getCheckboxVal(callSettings.externalVoicemailCheckBox)).toBeFalsy();
+    });
+    it('should default to not having Voicemail to Email', () => {
+      expect(utils.getCheckboxVal(callSettings.voicemailToEmailCheckBox)).toBeFalsy();
+    });
+    it('should allow Voicemail to Email when box is checked', () => {
+      utils.setCheckboxIfDisplayed(callSettings.voicemailToEmailCheckBox, true, 1000);
+    });
+    it('should enable save button', () => {
+      utils.expectIsEnabled(wizard.beginBtn);
+    });
+  });
 });
 

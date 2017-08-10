@@ -26,10 +26,11 @@
   font-size: 1.0625rem;
 }
 
-.side-panel.side-panel-correction {
-  top: 97px;
-}
-
-.side-panel.side-panel-correction-full-height {
-  top: 44px;
+.is-read-only-admin {
+  .side-panel {
+    top: 97px;
+    &.side-panel-full-height {
+      top: 44px;
+    }
+  }
 }

@@ -41,6 +41,14 @@ describe('sunlightServices', function () {
       this.$httpBackend.flush();
       expect(promise).toBeResolved();
     });
+
+    it('should support delete', function () {
+      var url = new RegExp('.*/organization/' + TEST_ORG_ID + '/botconfig/1');
+      this.$httpBackend.expectDELETE(url).respond(200);
+      var promise = this.VirtualAssistantConfigService.delete({ orgId: TEST_ORG_ID, configId: '1' }).$promise;
+      this.$httpBackend.flush();
+      expect(promise).toBeResolved();
+    });
   });
 
   describe('ConfigUserService', function () {

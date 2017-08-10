@@ -20,8 +20,13 @@
   /* @ngInject */
   function VirtualAssistantConfigService($resource, UrlConfig) {
     var baseUrl = UrlConfig.getVirtualAssistantConfigServiceUrl();
-    return $resource(baseUrl + '/organization/:orgId/botconfig', {
+    return $resource(baseUrl + '/organization/:orgId/botconfig/:configId', {
       orgId: '@orgId',
+      configId: '@configId',
+    }, {
+      delete: {
+        method: 'DELETE',
+      },
     });
   }
 

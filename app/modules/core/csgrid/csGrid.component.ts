@@ -5,10 +5,15 @@ class CsGridCtrl {
   public gridApi: uiGrid.IGridApi;
   public name: string;
   public spinner: boolean;
+  public state?: string;
+  public stateChangeFunction?: Function;
 
   /* @ngInject */
   constructor(
     private $element: ng.IRootElementService,
+    private $rootScope: ng.IRootScopeService,
+    private $scope: ng.IScope,
+    private $state: ng.ui.IStateService,
     private $timeout: ng.ITimeoutService,
     private GridCellService: GridCellService,
     private uiGridConstants: uiGrid.IUiGridConstants,
@@ -37,6 +42,19 @@ class CsGridCtrl {
       this.$timeout((): void => {
         this.setSortableHeaders();
       });
+    }
+
+    if (this.state) {
+      const stateChangeEvent = this.$rootScope.$on('$stateChangeSuccess', (): void => {
+        if (this.state && this.$state.includes(this.state)) {
+          if (this.stateChangeFunction) {
+            this.stateChangeFunction();
+          }
+
+          this.gridApi.selection.clearSelectedRows();
+        }
+      });
+      this.$scope.$on('$destroy', stateChangeEvent);
     }
   }
 
@@ -74,5 +92,7 @@ export class CsGridComponent implements ng.IComponentOptions {
     gridOptions: '=',
     name: '@',
     spinner: '<',
+    state: '@',
+    stateChangeFunction: '&',
   };
 }

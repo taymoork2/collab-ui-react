@@ -1,4 +1,5 @@
 import { IOption } from './../dialing/dialing.service';
+import { CallDestinationTranslateService, ICallDestinationTranslate } from 'modules/call/shared/call-destination-translate';
 
 const callerIdInputs = ['external'];
 
@@ -14,6 +15,7 @@ class CallerId implements ng.IComponentController {
   private customOption: CallerIdOption;
   private directLineOption: CallerIdOption;
   private blockOption: CallerIdOption;
+  private inputTranslations: ICallDestinationTranslate;
   private companyIdPattern: string;
   private companyNumberPattern: string;
   private listApiSuccess: boolean = false;
@@ -42,8 +44,10 @@ class CallerId implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
+    private CallDestinationTranslateService: CallDestinationTranslateService,
   ) {
     this.initCallerId();
+    this.inputTranslations = this.CallDestinationTranslateService.getCallDestinationTranslate();
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }) {

@@ -4,6 +4,7 @@ import { NumberService } from 'modules/huron/numbers';
 import { Line } from 'modules/huron/lines/services/line';
 import { FeatureMemberService } from 'modules/huron/features/services';
 import { HuronVoicemailService } from 'modules/huron/voicemail';
+import { CallDestinationTranslateService, ICallDestinationTranslate } from 'modules/call/shared/call-destination-translate';
 
 class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
   public fallbackDestination: FallbackDestination;
@@ -22,6 +23,8 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
   public isAlternate: boolean;
   public index: string = '';
 
+  private inputTranslations: ICallDestinationTranslate;
+
   /* @ngInject */
   constructor(
     private MemberService: MemberService,
@@ -29,7 +32,10 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
     private HuronVoicemailService: HuronVoicemailService,
     private FeatureMemberService: FeatureMemberService,
     private CallFeatureFallbackDestinationService: CallFeatureFallbackDestinationService,
-  ) {}
+    private CallDestinationTranslateService: CallDestinationTranslateService,
+  ) {
+    this.inputTranslations = this.CallDestinationTranslateService.getCallDestinationTranslate();
+  }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const { fallbackDestination, showReversionLookup, isAlternate } = changes;
