@@ -18,22 +18,22 @@ export class AddPlacesPage {
     this.searchPlaces = element(by.css('i.icon-search'));
     this.clearSearchPlace = element(by.css('i.icon-exit-outline'));
     this.searchBar = element(by.id('searchFilter'));
-    this.clickLocation = element(by.cssContainingText('.ui-grid-cell-contents', 'Naboo'));
-    this.overviewPg = element.all(by.cssContainingText('.ng-binding', 'Overview')).first();
+    this.clickLocation = element(by.cssContainingText('.ui-grid-canvas .ui-grid-cell-contents', 'Naboo'));
+    this.overviewPg = element.all(by.cssContainingText('.breadcrumbs .current span', 'Overview')).first();
     this.servicesSctn = element(by.cssContainingText('.section-name', 'Services'));
     this.devicesSctn = element(by.cssContainingText('.section-name', 'Devices'));
     this.callClick = element(by.cssContainingText('.feature-label', 'Cisco Spark + Cisco Spark Call'));
-    this.callStngsPg = element.all(by.cssContainingText('.ng-binding', 'Call')).first();
-    this.clickLocation2 = element(by.cssContainingText('.ui-grid-cell-contents', 'Jedha'));
-    this.clickLocation3 = element(by.cssContainingText('.ui-grid-cell-contents', 'Eadu'));
+    this.callStngsPg = element.all(by.cssContainingText('.breadcrumbs .current span', 'Call')).first();
+    this.clickLocation2 = element(by.cssContainingText('.ui-grid-canvas .ui-grid-cell-contents', 'Jedha'));
+    this.clickLocation3 = element(by.cssContainingText('.ui-grid-canvas .ui-grid-cell-contents', 'Eadu'));
     this.callClick2 = element(by.cssContainingText('.feature-label', 'Cisco Spark only'));
     this.callOverview = {
       main: element.all(by.css('[ui-sref="place-overview"]')).last(),
       services: {
-        call: element(by.cssContainingText('.feature-name.ng-binding', 'Call')),
+        call: element(by.cssContainingText('.feature-name', 'Call')),
       },
       features: {
-        speedDials: element(by.cssContainingText('.feature-name.ng-binding', 'Speed Dials')),
+        speedDials: element(by.cssContainingText('.feature-name', 'Speed Dials')),
       },
     };
     this.callSubMenu = element.all(by.css('[ui-sref="place-overview.communication"]')).last();

@@ -51,7 +51,7 @@ export class ReportConstants {
   public readonly ALL = 'all';
   public readonly ENGAGEMENT = 'engagement';
   public readonly QUALITY = 'quality';
-  public readonly DETAILS = 'Details';
+  public readonly DETAILS = 'details';
 
   // Report Filtering All/Engagement/quality
   public filterArray: IFilterObject[] = [{

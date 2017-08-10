@@ -2,6 +2,7 @@
   <div ng-controller="HeaderCtrl as headerCtrl">
     <cs-header ng-if="headerCtrl.headerTitle" navstyle="{{headerCtrl.navStyle}}" headertitle="{{headerCtrl.headerTitle}}" icon="{{headerCtrl.icon}}" show-read-only role="banner">
       <cs-header-left>
+        <span ng-if="headerCtrl.showProBadge()" class="badge badge--outline primary pro-badge" translate="common.pro"></span>
         <div class="top-bar-orgname" ng-controller="UserInfoController" ng-if="headerCtrl.showOrgName()">
           <div class="top-bar-title" title="{{orgname}}">{{orgname}}</div>
         </div>

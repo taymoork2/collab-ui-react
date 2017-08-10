@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Care Setup Assistant Ctrl', function () {
-  var controller, $scope, $modal, $q, CTService, getLogoDeferred, getTogglePromise, getLogoUrlDeferred, SunlightConfigService, FeatureToggleService, $state, $stateParams, LogMetricsService;
+  var controller, $scope, $modal, $q, CTService, getLogoDeferred, getTogglePromise, getLogoUrlDeferred, SunlightConfigService, $state, $stateParams, LogMetricsService;
   var Notification, $translate, _scomUrl, $httpBackend;
 
   var escapeKey = 27;
@@ -28,6 +28,10 @@ describe('Care Setup Assistant Ctrl', function () {
     return {
       data: data,
     };
+  };
+
+  var getStringOfLength = function (length) {
+    return Array(length + 1).join('a');
   };
 
   var dummyLogoUrl = 'https://www.example.com/logo.png';
@@ -77,7 +81,7 @@ describe('Care Setup Assistant Ctrl', function () {
     welcomeHeader: {
       attributes: [
         { name: 'header', value: 'Welcome to' },
-        { name: 'organization', value: Array(52).join('c') },
+        { name: 'organization', value: getStringOfLength(51) },
       ],
     },
     field1: {
@@ -89,7 +93,7 @@ describe('Care Setup Assistant Ctrl', function () {
     field2: {
       attributes: [
         { name: 'label', value: 'Email' },
-        { name: 'hintText', value: Array(52).join('d') },
+        { name: 'hintText', value: getStringOfLength(51) },
         { name: 'type', value: { id: 'email' } },
       ] },
     field3: {
@@ -166,7 +170,7 @@ describe('Care Setup Assistant Ctrl', function () {
   var defaultTimings = businessHours.defaultTimings;
 
   afterEach(function () {
-    controller = $scope = $modal = $q = CTService = getLogoDeferred = getTogglePromise = getLogoUrlDeferred = FeatureToggleService = SunlightConfigService = $state = $stateParams = LogMetricsService = undefined;
+    controller = $scope = $modal = $q = CTService = getLogoDeferred = getTogglePromise = getLogoUrlDeferred = SunlightConfigService = $state = $stateParams = LogMetricsService = undefined;
     Notification = $translate = undefined;
   });
 
@@ -180,15 +184,14 @@ describe('Care Setup Assistant Ctrl', function () {
     $provide.value('Authinfo', spiedAuthinfo);
   }));
 
-  var intializeCtrl = function (template, isEditFeature) {
-    return function (_$rootScope_, $controller, _$modal_, _$q_, _$translate_, _FeatureToggleService_,
+  var intializeCtrl = function (mediaType, template, isEditFeature, isCareProactiveChatTrialsFt, isCareAssistantFt) {
+    return function (_$rootScope_, $controller, _$modal_, _$q_, _$translate_,
       _$window_, _CTService_, _SunlightConfigService_, _$state_, _Notification_, _$stateParams_, _LogMetricsService_, UrlConfig, _$httpBackend_) {
       $scope = _$rootScope_.$new();
       $modal = _$modal_;
       $q = _$q_;
       $translate = _$translate_;
       CTService = _CTService_;
-      FeatureToggleService = _FeatureToggleService_;
       SunlightConfigService = _SunlightConfigService_;
       $state = _$state_;
       Notification = _Notification_;
@@ -203,7 +206,6 @@ describe('Care Setup Assistant Ctrl', function () {
       getLogoDeferred = $q.defer();
       getLogoUrlDeferred = $q.defer();
       getTogglePromise = $q.defer();
-      spyOn(FeatureToggleService, 'atlasCareProactiveChatTrialsGetStatus').and.returnValue(getTogglePromise.promise);
       spyOn($modal, 'open');
       spyOn(CTService, 'getLogo').and.returnValue(getLogoDeferred.promise);
       spyOn(CTService, 'getLogoUrl').and.returnValue(getLogoUrlDeferred.promise);
@@ -211,10 +213,12 @@ describe('Care Setup Assistant Ctrl', function () {
       spyOn(Notification, 'errorWithTrackingId');
       spyOn(LogMetricsService, 'logMetrics').and.callFake(function () {});
       spyOn(SunlightConfigService, 'updateChatConfig');
+      $state['isCareProactiveChatTrialsEnabled'] = isCareProactiveChatTrialsFt || true;
+      $state['isCareAssistantEnabled'] = isCareAssistantFt || false;
       $stateParams = {
         template: template || undefined,
         isEditFeature: isEditFeature || false,
-        type: 'chat',
+        type: mediaType || 'chat',
       };
       controller = $controller('CareSetupAssistantCtrl', {
         $scope: $scope,
@@ -240,7 +244,7 @@ describe('Care Setup Assistant Ctrl', function () {
   }
 
   function resolveTogglePromise() {
-    getTogglePromise.resolve(true);
+    getTogglePromise.resolve([true, true]);
     $scope.$apply();
   }
 
@@ -301,7 +305,7 @@ describe('Care Setup Assistant Ctrl', function () {
     });
 
     it('next button should be disabled when name is more than 250 chars long', function () {
-      controller.template.name = Array(252).join('a');
+      controller.template.name = getStringOfLength(251);
       checkStateOfNavigationButtons(NAME_PAGE_INDEX, 'hidden', false);
     });
 
@@ -311,7 +315,7 @@ describe('Care Setup Assistant Ctrl', function () {
     });
 
     it('next button should be disabled when name has invalid character and length exceeds 250 chars', function () {
-      controller.template.name = Array(251).join('a') + '<';
+      controller.template.name = getStringOfLength(250) + '<';
       checkStateOfNavigationButtons(NAME_PAGE_INDEX, 'hidden', false);
     });
   });
@@ -331,7 +335,7 @@ describe('Care Setup Assistant Ctrl', function () {
     });
 
     it('next button should be disabled if feedback comment is longer than 50 characters', function () {
-      controller.template.configuration.pages.feedback.fields.comment.displayText = Array(52).join('a');
+      controller.template.configuration.pages.feedback.fields.comment.displayText = getStringOfLength(51);
       checkStateOfNavigationButtons(FEEDBACK_PAGE_INDEX, true, false);
     });
 
@@ -341,7 +345,7 @@ describe('Care Setup Assistant Ctrl', function () {
     });
 
     it('next button should be disabled if feedback query is longer than 250 characters', function () {
-      controller.template.configuration.pages.feedback.fields.feedbackQuery.displayText = Array(252).join('a');
+      controller.template.configuration.pages.feedback.fields.feedbackQuery.displayText = getStringOfLength(251);
       checkStateOfNavigationButtons(FEEDBACK_PAGE_INDEX, true, false);
     });
 
@@ -420,6 +424,28 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.logoFile).toEqual('');
       expect(controller.logoUploaded).toBeFalsy();
     });
+
+    it('should set profile setting info message based on selected profile', function () {
+      resolveLogoPromise();
+      controller.selectedTemplateProfile = controller.profiles.org;
+      expect(controller.profileSettingInfo()).toEqual('careChatTpl.orgSettingInfo');
+      controller.selectedTemplateProfile = controller.profiles.agent;
+      expect(controller.profileSettingInfo()).toEqual('careChatTpl.agentSettingInfo');
+    });
+
+    it('should set profile setting info message based on cva is selected or not', function () {
+      resolveLogoPromise();
+      controller.template.configuration.virtualAssistant.enabled = false;
+      expect(controller.getLocalizedOrgOrAgentInfo('orgHeader')).toEqual('careChatTpl.org');
+      expect(controller.getLocalizedOrgOrAgentInfo('agentHeader')).toEqual('careChatTpl.agent');
+      expect(controller.getLocalizedOrgOrAgentInfo('orgInfo')).toEqual('careChatTpl.profile_org_info');
+      expect(controller.getLocalizedOrgOrAgentInfo('agentInfo')).toEqual('careChatTpl.profile_agent_info');
+      controller.template.configuration.virtualAssistant.enabled = true;
+      expect(controller.getLocalizedOrgOrAgentInfo('orgHeader')).toEqual('careChatTpl.org');
+      expect(controller.getLocalizedOrgOrAgentInfo('agentHeader')).toEqual('careChatTpl.agent_cva');
+      expect(controller.getLocalizedOrgOrAgentInfo('orgInfo')).toEqual('careChatTpl.profile_org_info_cva');
+      expect(controller.getLocalizedOrgOrAgentInfo('agentInfo')).toEqual('careChatTpl.profile_agent_info_cva');
+    });
   });
 
   describe('Overview Page', function () {
@@ -431,12 +457,13 @@ describe('Care Setup Assistant Ctrl', function () {
       checkStateOfNavigationButtons(OVERVIEW_PAGE_INDEX, true, true);
     });
 
-    it('should initialize all cards as enabled except proactive prompt ', function () {
+    it('should initialize all cards as enabled except proactive prompt and virtual assistant', function () {
       expect(controller.template.configuration.proactivePrompt.enabled).toBe(false);
       expect(controller.template.configuration.pages.customerInformation.enabled).toBe(true);
       expect(controller.template.configuration.pages.agentUnavailable.enabled).toBe(true);
       expect(controller.template.configuration.pages.offHours.enabled).toBe(true);
       expect(controller.template.configuration.pages.feedback.enabled).toBe(true);
+      expect(controller.template.configuration.virtualAssistant.enabled).toBe(false);
     });
   });
 
@@ -620,7 +647,6 @@ describe('Care Setup Assistant Ctrl', function () {
   describe('Proactive Prompt Page', function () {
     beforeEach(inject(intializeCtrl()));
     beforeEach(function () {
-      resolveTogglePromise();
       controller.template.configuration.proactivePrompt.enabled = true;
       controller.currentState = controller.states[PROACTIVE_PROMPT_PAGE_INDEX]; // set proactive prompt view
     });
@@ -635,12 +661,12 @@ describe('Care Setup Assistant Ctrl', function () {
     });
 
     it('should disable the next button if promptTitle is more than 25 characters', function () {
-      controller.template.configuration.proactivePrompt.fields.promptTitle.displayText = Array(27).join('a');
+      controller.template.configuration.proactivePrompt.fields.promptTitle.displayText = getStringOfLength(26);
       checkStateOfNavigationButtons(PROACTIVE_PROMPT_PAGE_INDEX, true, false);
     });
 
     it('should disable the next button if promptMessage is more than 100 characters', function () {
-      controller.template.configuration.proactivePrompt.fields.promptMessage.message = Array(102).join('a');
+      controller.template.configuration.proactivePrompt.fields.promptMessage.message = getStringOfLength(101);
       checkStateOfNavigationButtons(PROACTIVE_PROMPT_PAGE_INDEX, true, false);
     });
 
@@ -686,8 +712,8 @@ describe('Care Setup Assistant Ctrl', function () {
     });
   });
 
-  describe('Proactive Prompt Page (when Org Name is > 50 characters', function () {
-    var LongOrgId = Array(52).join('a');
+  describe('Proactive Prompt Page when Org Name is > 50 characters', function () {
+    var LongOrgId = getStringOfLength(51);
     var spiedAuthinfos = {
       getOrgId: jasmine.createSpy('getOrgId').and.returnValue(OrgId),
       getOrgName: jasmine.createSpy('getOrgName').and.returnValue(LongOrgId),
@@ -704,7 +730,7 @@ describe('Care Setup Assistant Ctrl', function () {
   });
 
   describe('Proactive Prompt Data for existing templates', function () {
-    beforeEach(inject(intializeCtrl(existingTemplateData, true)));
+    beforeEach(inject(intializeCtrl('chat', existingTemplateData, true)));
     beforeEach(function () {
       resolveTogglePromise();
     });
@@ -815,7 +841,7 @@ describe('Care Setup Assistant Ctrl', function () {
     });
 
     it('should disable the right btn if off hours message is more than 250 characters', function () {
-      controller.template.configuration.pages.offHours.message = Array(252).join('a');
+      controller.template.configuration.pages.offHours.message = getStringOfLength(251);
       checkStateOfNavigationButtons(OFF_HOURS_PAGE_INDEX, true, false);
     });
 
@@ -1019,20 +1045,20 @@ describe('Care Setup Assistant Ctrl', function () {
       controller.template.configuration.chatStatusMessages.messages.chattingMessage.displayText = 'Chatting Message';
       checkStateOfNavigationButtons(CHAT_STATUS_MESSAGES_PAGE_INDEX, true, true);
     });
-    it('should have next button disabled if all the status messages are more than 25 characters', function () {
-      controller.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = Array(30).join('n');
-      controller.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText = Array(30).join('n');
-      controller.template.configuration.chatStatusMessages.messages.chattingMessage.displayText = Array(30).join('n');
+    it('should have next button disabled if all the status messages are more than 50 characters', function () {
+      controller.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = getStringOfLength(51);
+      controller.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText = getStringOfLength(51);
+      controller.template.configuration.chatStatusMessages.messages.chattingMessage.displayText = getStringOfLength(51);
       checkStateOfNavigationButtons(CHAT_STATUS_MESSAGES_PAGE_INDEX, true, false);
     });
     it('should have next button disabled if status message has invalid character', function () {
       controller.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = '<';
       checkStateOfNavigationButtons(CHAT_STATUS_MESSAGES_PAGE_INDEX, true, false);
     });
-    it('should have next button disabled if any of the status messages are more than 25 characters', function () {
+    it('should have next button disabled if any of the status messages are more than 50 characters', function () {
       controller.template.configuration.chatStatusMessages.messages.waitingMessage.displayText = 'Waiting Message';
       controller.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText = 'Left Room Message';
-      controller.template.configuration.chatStatusMessages.messages.chattingMessage.displayText = Array(30).join('n');
+      controller.template.configuration.chatStatusMessages.messages.chattingMessage.displayText = getStringOfLength(51);
       checkStateOfNavigationButtons(CHAT_STATUS_MESSAGES_PAGE_INDEX, true, false);
     });
   });
@@ -1049,7 +1075,7 @@ describe('Care Setup Assistant Ctrl', function () {
     });
 
     it('next button should be disabled when unavailable msg is more than 250 characters', function () {
-      controller.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText = Array(252).join('a');
+      controller.template.configuration.pages.agentUnavailable.fields.agentUnavailableMessage.displayText = getStringOfLength(251);
       checkStateOfNavigationButtons(AGENT_UNAVAILABLE_PAGE_INDEX, true, false);
     });
 
@@ -1065,12 +1091,7 @@ describe('Care Setup Assistant Ctrl', function () {
   });
 
   describe('For callback media', function () {
-    beforeEach(inject(intializeCtrl()));
-    beforeEach(function () {
-      controller.selectedMediaType = 'callback';
-      resolveTogglePromise();
-      controller.getDefaultTemplate();
-    });
+    beforeEach(inject(intializeCtrl('callback')));
 
     it('the page order should be as expected', function () {
       expect(controller.states).toEqual([
@@ -1105,12 +1126,7 @@ describe('Care Setup Assistant Ctrl', function () {
   });
 
   describe('For chat plus callback selected media type', function () {
-    beforeEach(inject(intializeCtrl()));
-    beforeEach(function () {
-      controller.selectedMediaType = 'chatPlusCallback';
-      resolveTogglePromise();
-      controller.getDefaultTemplate();
-    });
+    beforeEach(inject(intializeCtrl('chatPlusCallback', undefined, false, false, true)));
 
     it('the page order should be as expected', function () {
       expect(controller.states).toEqual([
@@ -1133,6 +1149,7 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.overviewCards).toEqual([
         { name: 'proactivePrompt', mediaIcons: ['icon-message'] },
         { name: 'customerInformationChat', mediaIcons: ['icon-message'] },
+        { name: 'virtualAssistant', mediaIcons: ['icon-message'] },
         { name: 'agentUnavailable', mediaIcons: ['icon-message'] },
         { name: 'feedback', mediaIcons: ['icon-message'] },
         { name: 'customerInformationCallback', mediaIcons: ['icon-phone'] },
@@ -1145,8 +1162,9 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.template.configuration.mediaType).toEqual('chatPlusCallback');
     });
 
-    it('should initialize all cards as enabled except proactive prompt ', function () {
+    it('should initialize all cards as enabled except proactive prompt and virtual assistant', function () {
       expect(controller.template.configuration.proactivePrompt.enabled).toBe(false);
+      expect(controller.template.configuration.virtualAssistant.enabled).toBe(false);
       expect(controller.template.configuration.pages.customerInformationChat.enabled).toBe(true);
       expect(controller.template.configuration.pages.customerInformationCallback.enabled).toBe(true);
       expect(controller.template.configuration.pages.agentUnavailable.enabled).toBe(true);

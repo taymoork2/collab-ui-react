@@ -193,7 +193,7 @@ describe('Service: LineOverviewService', () => {
     installPromiseMatchers();
   });
 
-  describe('get exising line', () => {
+  describe('get existing line', () => {
     beforeEach(function () {
       this.getLineDefer.resolve(this.line);
       this.getCallForwardDefer.resolve(this.callForward);
@@ -217,7 +217,7 @@ describe('Service: LineOverviewService', () => {
       expect(this.CallerIDService.getCallerId).toHaveBeenCalled();
       expect(this.AutoAnswerService.getSupportedPhonesAndMember).toHaveBeenCalled();
       expect(this.LineOverviewService.cloneLineOverviewData).toHaveBeenCalled();
-      expect(this.MediaOnHoldService.getLineMedia).not.toHaveBeenCalled();
+      expect(this.MediaOnHoldService.getLineMedia).toHaveBeenCalled();
     });
 
     it('should return an exact copy of LineOverviewData when getOriginalConfig is called', function () {

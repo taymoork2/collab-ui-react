@@ -19,10 +19,12 @@ interface ISubscriptionResource extends ng.resource.IResourceClass<ng.resource.I
   patch: ng.resource.IResourceMethod<any>;
 }
 
+let isFreemiumFlag = false;
+let isPendingFlag = false;
 const CANCELLED = 'CANCELLED';
 const CANCEL = 'CANCEL';
 const DOWNGRADE = 'DOWNGRADE';
-const FREE = 'FREE';
+const FREE_SKU = 'FREE';
 
 export class OnlineUpgradeService {
   private subscriptionResource: ISubscriptionResource;
@@ -111,10 +113,6 @@ export class OnlineUpgradeService {
     return prodInst;
   }
 
-  public getSubscription(subId): ng.IPromise<any> {
-    return this.$http.get<any>(this.UrlConfig.getAdminServiceUrl() + 'subscriptions/' + subId);
-  }
-
   public shouldForceUpgrade(): boolean {
     return this.Authinfo.isOnline() && this.hasExpiredSubscriptions();
   }
@@ -136,8 +134,17 @@ export class OnlineUpgradeService {
   private hasExpiredSubscriptions(): boolean {
     const subscriptions = this.Authinfo.getSubscriptions();
     return (!!subscriptions.length &&
-            _.every(subscriptions, subscription => this.isSubscriptionCancelledOrExpired(subscription))) ||
-           (subscriptions.length === 1 && this.isFreemiumSubscription(subscriptions[0]));
+            (_.every(subscriptions, subscription => this.isSubscriptionCancelledOrExpired(subscription) ||
+            (subscriptions.length === 1 && this.isFreemiumSubscription(subscriptions[0]) ||
+            (subscriptions.length === 1 && this.isPendingSubscription(subscriptions[0]))))));
+  }
+
+  public isFreemium(): boolean {
+    return isFreemiumFlag;
+  }
+
+  public isPending(): boolean {
+    return isPendingFlag;
   }
 
   private isSubscriptionCancelledOrExpired(subscription): boolean {
@@ -149,15 +156,25 @@ export class OnlineUpgradeService {
   }
 
   private isFreemiumSubscription(subscription): boolean {
-    return _.endsWith(_.get<string>(subscription, 'licenses[0].masterOfferName'), FREE);
+    isFreemiumFlag = _.endsWith(_.get<string>(subscription, 'licenses[0].masterOfferName'), FREE_SKU);
+    return isFreemiumFlag;
+  }
+
+  private isPendingSubscription(subscription): boolean {
+    isPendingFlag = false;
+    if (_.isEmpty(subscription.licenses) || _.isNil(_.get(subscription, 'endDate'))) {
+      isPendingFlag = true;
+    }
+    return isPendingFlag;
   }
 
   private isSubscriptionExpired(subscription): boolean {
-    const currentDate = new Date();
     const subscriptionEndDate = _.get<string>(subscription, 'endDate');
+    if (!subscriptionEndDate) {
+      return false;
+    }
+    const currentDate = new Date();
     const gracePeriod = _.get<number>(subscription, 'gracePeriod', 0);
-
-    return !subscriptionEndDate
-      || (currentDate > new Date(moment(subscriptionEndDate).add(gracePeriod, 'days').toString()));
+    return currentDate > new Date(moment(subscriptionEndDate).add(gracePeriod, 'days').toString());
   }
 }

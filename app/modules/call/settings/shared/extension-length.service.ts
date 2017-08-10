@@ -17,12 +17,12 @@ export class ExtensionLengthService {
     this.extensionLengthResource = <IExtensionLengthResource>this.$resource(this.HuronConfig.getCmiUrl() + '/voice/customers/:customerId/extensionlengths', {}, {});
   }
 
-  public saveExtensionLength(length: string, prefix: string): ng.IPromise<IExtensionLength> {
+  public saveExtensionLength(length: number | null, prefix: number | null): ng.IPromise<IExtensionLength> {
     return this.extensionLengthResource.save({
       customerId: this.Authinfo.getOrgId(),
     }, <IExtensionLength>{
-      length: _.toString(length),
-      prefix: _.toString(prefix),
+      length: _.isNull(length) ? null : _.toString(length),
+      prefix: _.isNull(prefix) ? null : _.toString(prefix),
     }).$promise;
   }
 

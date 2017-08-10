@@ -22,8 +22,8 @@
   }
 
   .cs-card {
-    width: rem-calc(400px);
-    height: rem-calc(338px);
+    width: rem-calc(575px);
+    height: rem-calc(467.8px);
 
     @include vr-spacing(mt, 5);
   }
@@ -114,9 +114,26 @@
 
   .ct-attribute-row {
     width: 100%;
+    @include vr-spacing(mt, 1);
   }
 
   .margin-0 {
     @include vr-spacing(m, 0);
+  }
+
+  .chat-status-help-text {
+    color: $gray-base;
+    letter-spacing: 0;
+    line-height: 16px;
+  }
+
+  .chat-status-waiting-help-text {
+    line-height: 16px;
+    text-align: justify;
+  }
+
+  .cs-input-group {
+    @include vr-spacing(mb, 0.25);
+    @include vr-spacing(mt, 0.5);
   }
 }

@@ -1,4 +1,5 @@
 import testModule from './index';
+import * as moment from 'moment';
 
 describe('Component: meetingSearch', () => {
   beforeAll(function () {
@@ -7,11 +8,15 @@ describe('Component: meetingSearch', () => {
         conferenceID: 50190706068695610,
         status: 2,
         meetingName: 'mcmeeting_20161017075425',
+        endTime_: '2017-08-09 10:30:33',
+        StartTime_: '2017-08-07 10:30:33',
       },
       {
         conferenceID: 1011112787,
         status: 1,
         meetingName: 'zhan xuguangs Webex Meeting',
+        endTime_: '2017-08-09 10:30:33',
+        StartTime_: '2017-08-07 10:30:33',
       },
     ];
     this.item = {
@@ -46,13 +51,21 @@ describe('Component: meetingSearch', () => {
     this.injectDependencies('$q', '$state', '$timeout', '$translate', 'SearchService', 'Notification');
 
     initSpies.apply(this);
+
   });
 
   function initSpies() {
     spyOn(this.$state, 'go');
     spyOn(this.Notification, 'errorResponse');
     spyOn(this.SearchService, 'setStorage').and.returnValue({});
+    spyOn(this.SearchService, 'getGuess').and.returnValue('Asia/Shanghai');
     spyOn(this.SearchService, 'getMeetings').and.returnValue(this.$q.resolve());
+    spyOn(this.SearchService, 'utcDateByTimezone').and.callFake(utdDateByTimezone);
+  }
+
+  function utdDateByTimezone(date) {
+    const offset = '+08:00';
+    return moment.utc(date).utcOffset(offset).format('MMMM Do, YYYY h:mm:ss A');
   }
 
   function initComponent() {
@@ -60,12 +73,11 @@ describe('Component: meetingSearch', () => {
     this.$scope.$apply();
   }
 
-  xit('should show the correct data for the grid when search with enter keyup', function () {
+  it('should show the correct data for the grid when search with enter keyup', function () {
     const $event = { type: 'keyup', keyCode: 13, which: 13 };
 
     this.SearchService.getMeetings.and.returnValue(this.$q.resolve(this.meetingSearch));
     initComponent.call(this);
-
     this.view.find(this.input).val('355602502').change().triggerHandler($event);
     expect(this.controller.gridData.length).toBe(2);
 
@@ -73,7 +85,7 @@ describe('Component: meetingSearch', () => {
     expect(this.controller.storeData.searchStr).toEqual('355602502');
   });
 
-  xit('should show the correct data for the grid when search with email and then trigger blur event', function () {
+  it('should show the correct data for the grid when search with email and then trigger blur event', function () {
     this.$timeout.flush();
     this.SearchService.getMeetings.and.returnValue(this.$q.resolve(this.meetingSearch));
 
@@ -101,14 +113,6 @@ describe('Component: meetingSearch', () => {
 
   });
 
-  xit('should show the tooltip  when search with  emepty data then trigger blur event', function () {
-    this.SearchService.getMeetings.and.returnValue(this.$q.resolve(this.meetingSearch));
-
-    initComponent.call(this);
-    this.view.find(this.input).val('').change().triggerHandler('blur');
-    expect(this.controller.gridData.length).toEqual(0);
-  });
-
   xit('should show the empty data for the grid when search with incorrect email or incorrect meeting number then trigger blur event', function () {
     spyOn(this.$translate, 'instant').and.returnValue('Please enter the correct email or meeting number');
 
@@ -118,7 +122,7 @@ describe('Component: meetingSearch', () => {
     expect(this.controller.errMsg.search).toEqual('Please enter the correct email or meeting number');
   });
 
-  xit('should updata when change date', function () {
+  it('should updata when change date', function () {
     spyOn(this.$translate, 'instant').and.returnValue('The start date must not be greater than the end date');
 
     this.SearchService.getMeetings.and.returnValue(this.$q.resolve(this.meetingSearch));
@@ -148,7 +152,7 @@ describe('Component: meetingSearch', () => {
     expect(this.controller.errMsg.datePicker).toEqual('The start date must not be greater than the end date');
   });
 
-  xit('should notify in message for non 200 http status', function() {
+  it('should notify in message for non 200 http status', function() {
     this.SearchService.getMeetings.and.returnValue(this.$q.reject({ status: 404 }));
 
     initComponent.call(this);
@@ -160,5 +164,12 @@ describe('Component: meetingSearch', () => {
     initComponent.call(this);
     this.controller.showDetail(this.item);
     expect(this.$state.go).toHaveBeenCalled();
+  });
+
+  it('should change timeZone: onChangeTz', function () {
+    initComponent.call(this);
+    this.controller.gridData = this.meetingSearch;
+    this.controller.onChangeTz('Asia/Shanghai');
+    expect(this.controller.gridData[0].startTime_).toBeDefined();
   });
 });

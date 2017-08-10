@@ -1,4 +1,4 @@
-import { Location, LocationsService } from 'modules/call/locations/shared';
+import { Location, LocationsService, LocationCallerId } from 'modules/call/locations/shared';
 
 import {
   PstnModel, PstnService, PstnCarrier,
@@ -10,7 +10,6 @@ import {
   HuronSettingsService, HuronSettingsData,
 } from 'modules/call/settings/shared';
 import { IOption } from 'modules/huron/dialing';
-import { CompanyNumber } from 'modules/call/settings/settings-company-caller-id';
 import { Notification } from 'modules/core/notifications';
 
 export class LocationsWizardComponent {
@@ -35,7 +34,8 @@ class LocationsWizardController implements ng.IComponentController {
   public showDialPlanChangedDialog: boolean;
   public showVoiceMailDisableDialog: boolean;
   public address = {};
-  public companyVoicemailOptions;
+  public locationVoicemailOptions;
+  public voicemailEnable: boolean = false;
   public addressValidated: boolean = false;
   public addressValidating: boolean = false;
   public validationMessages = {
@@ -172,29 +172,28 @@ class LocationsWizardController implements ng.IComponentController {
     }
   }
 
-  public onCompanyVoicemailChanged(number: string, generated: boolean, enabled: boolean): void {
-    this.showVoiceMailDisableDialog = enabled;
-    this.locationDetail.voicemailPilotNumber.number = number;
-    this.locationDetail.voicemailPilotNumber.generated = generated;
+  public onLocationVoicemailChanged(externalAccess: boolean, externalNumber: string): void {
+    this.voicemailEnable = externalAccess;
+    if (this.voicemailEnable && _.isString(externalNumber) && externalNumber.length > 0) {
+      this.locationDetail.voicemailPilotNumber.number = externalNumber;
+      this.locationDetail.voicemailPilotNumber.generated = true;
+    } else {
+      this.locationDetail.voicemailPilotNumber.number = null;
+      this.locationDetail.voicemailPilotNumber.generated = false;
+    }
+  }
+
+  public onVoicemailFilter(filter: string): ng.IPromise<IOption[]> {
+    return this.HuronSettingsOptionsService.loadCompanyVoicemailNumbers(filter)
+      .then(numbers => this.settingsOptions.companyVoicemailOptions = numbers);
   }
 
   public onVoicemailToEmailChanged(voicemailToEmail: boolean) {
     this.voicemailToEmail = voicemailToEmail;
   }
 
-  public onCompanyCallerIdChanged(companyNumber: CompanyNumber): void {
-    if (companyNumber) {
-      this.locationDetail.callerIdNumber = companyNumber.pattern;
-    } else {
-      if (this.locationDetail.callerIdNumber) {
-        delete this.locationDetail.callerIdNumber;
-      }
-    }
-  }
-
-  public onCompanyVoicemailFilter(filter: string): ng.IPromise<IOption[]> {
-    return this.HuronSettingsOptionsService.loadCompanyVoicemailNumbers(filter)
-      .then(numbers => this.settingsOptions.companyVoicemailOptions = numbers);
+  public onCallerIdChanged(callerId: LocationCallerId): void {
+    this.locationDetail.callerId = callerId;
   }
 
   public validateAddress() {

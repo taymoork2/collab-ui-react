@@ -8,7 +8,7 @@ require('../devices/_devices.scss');
     .controller('PlacesCtrl',
 
       /* @ngInject */
-      function ($q, $scope, $state, $templateCache, $translate, CsdmFilteredViewFactory, CsdmDataModelService, Userservice, Authinfo, WizardFactory, RemPlaceModal, FeatureToggleService, ServiceDescriptorService) {
+      function ($q, $scope, $state, $templateCache, $translate, CsdmFilteredViewFactory, CsdmDataModelService, Userservice, Authinfo, WizardFactory, RemPlaceModal, FeatureToggleService, ServiceDescriptorService, GridCellService) {
         var vm = this;
 
         vm.data = [];
@@ -107,19 +107,18 @@ require('../devices/_devices.scss');
           });
         };
 
+        vm.selectRow = function (grid, row) {
+          GridCellService.selectRow(grid, row);
+          vm.showPlaceDetails(row.entity);
+        };
+
         vm.gridOptions = {
           appScopeProvider: vm,
           rowHeight: 45,
-          onRegisterApi: function (gridApi) {
-            vm.gridApi = gridApi;
-            vm.gridApi.selection.on.rowSelectionChanged($scope, function (row) {
-              vm.showPlaceDetails(row.entity);
-            });
-          },
           columnDefs: [{
             field: 'photos',
             displayName: '',
-            cellTemplate: getTemplate('_imageTpl'),
+            cellTemplate: getTemplate('image.tpl'),
             sortable: false,
             width: 70,
           }, {
@@ -131,20 +130,22 @@ require('../devices/_devices.scss');
               priority: 1,
             },
             sortCellFiltered: true,
+            cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showPlaceDetails(row.entity)" cell-value="row.entity.displayName"></cs-grid-cell>',
           }, {
             field: 'readableType',
             displayName: $translate.instant('placesPage.typeHeader'),
             sortable: true,
+            cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showPlaceDetails(row.entity)" cell-value="row.entity.readableType"></cs-grid-cell>',
           }, {
             field: 'devices',
             displayName: $translate.instant('placesPage.deviceHeader'),
-            cellTemplate: getTemplate('_devicesTpl'),
             sortable: true,
             sortingAlgorithm: sortNoDevicesFn,
+            cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showPlaceDetails(row.entity)" cell-value="grid.appScope.numDevices(row.entity)"></cs-grid-cell>',
           }, {
             field: 'action',
             displayName: $translate.instant('placesPage.actionHeader'),
-            cellTemplate: getTemplate('_actionsTpl'),
+            cellTemplate: getTemplate('actions.tpl'),
             sortable: false,
           }],
         };
@@ -217,10 +218,17 @@ require('../devices/_devices.scss');
           });
         };
 
+        vm.keyboardDeletePlace = function ($event, place) {
+          if ($event.keyCode === GridCellService.ENTER || $event.keyCode === GridCellService.SPACE) {
+            vm.deletePlace($event, place);
+          } else {
+            $event.stopPropagation();
+          }
+        };
+
         vm.deletePlace = function ($event, place) {
           $event.stopPropagation();
-          RemPlaceModal
-            .open(place);
+          RemPlaceModal.open(place);
         };
 
         function getTemplate(name) {

@@ -97,7 +97,6 @@ export class CompanyCallerIdComponent implements ng.IComponentOptions {
   public controller = CompanyCallerId;
   public templateUrl = 'modules/call/settings/settings-company-caller-id/settings-company-caller-id.component.html';
   public bindings = {
-    isLocation: '<',
     site: '<',
     customerName: '<',
     companyCallerId: '<',

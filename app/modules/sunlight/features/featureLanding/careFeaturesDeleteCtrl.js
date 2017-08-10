@@ -13,10 +13,19 @@
     vm.featureId = $stateParams.deleteFeatureId;
     vm.featureName = $stateParams.deleteFeatureName;
     vm.featureType = $stateParams.deleteFeatureType;
+    vm.confirmationText = 'careChatTpl.deleteFeatureTextConfirmation';
+
+    if (vm.featureType === 'Va') {
+      vm.confirmationText = 'careChatTpl.deleteVaFeatureTextConfirmation';
+    }
 
     function deleteFeature() {
       vm.deleteBtnDisabled = true;
-      CareFeatureList.deleteTemplate(vm.featureId).then(function () {
+      var deleteFunc = CareFeatureList.deleteTemplate;
+      if (vm.featureType === 'Va') {
+        deleteFunc = CareFeatureList.deleteVirtualAssistantConfig;
+      }
+      deleteFunc(vm.featureId).then(function () {
         deleteSuccess();
       }, function (response) {
         deleteError(response);
@@ -49,7 +58,8 @@
       if (_.isFunction($scope.$dismiss)) {
         $scope.$dismiss();
       }
-      Log.warn('Failed to delete template with name: ' + vm.featureName + ' and id:' + vm.featureId);
+
+      Log.warn('Failed to delete name: ' + vm.featureName + ' and id:' + vm.featureId);
 
       var error = $translate.instant('careChatTpl.deleteFailedText', {
         featureName: vm.featureName,

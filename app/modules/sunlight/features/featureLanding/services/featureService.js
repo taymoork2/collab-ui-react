@@ -6,14 +6,17 @@
     .service('CareFeatureList', CareFeatureList);
 
   /* @ngInject */
-  function CareFeatureList(Authinfo, ConfigTemplateService) {
+  function CareFeatureList(Authinfo, ConfigTemplateService, VirtualAssistantConfigService) {
     var service = {
       getChatTemplates: getChatTemplates,
       getCallbackTemplates: getCallbackTemplates,
       getChatPlusCallbackTemplates: getChatPlusCallbackTemplates,
+      getVirtualAssistantConfigs: getVirtualAssistantConfigs,
       getTemplate: getTemplate,
       formatTemplates: formatTemplates,
+      formatVirtualAssistant: formatVirtualAssistant,
       deleteTemplate: deleteTemplate,
+      deleteVirtualAssistantConfig: deleteVirtualAssistantConfig,
       filterCards: filterCards,
     };
 
@@ -40,10 +43,23 @@
       }).$promise;
     }
 
+    function getVirtualAssistantConfigs() {
+      return VirtualAssistantConfigService.get({
+        orgId: Authinfo.getOrgId(),
+      }).$promise;
+    }
+
     function deleteTemplate(templateId) {
       return ConfigTemplateService.delete({
         orgId: Authinfo.getOrgId(),
         templateId: templateId,
+      }).$promise;
+    }
+
+    function deleteVirtualAssistantConfig(configId) {
+      return VirtualAssistantConfigService.delete({
+        orgId: Authinfo.getOrgId(),
+        configId: configId,
       }).$promise;
     }
 
@@ -85,7 +101,25 @@
         tpl.featureType = feature.name;
         tpl.color = feature.color;
         tpl.icons = feature.icons;
+        tpl.templateOrConfig = 'template';
         return tpl;
+      });
+      return orderByCardName(formattedList);
+    }
+
+    function formatVirtualAssistant(list, feature) {
+      var formattedList = _.map(list.items, function (item) {
+        if (!item.name) {
+          item.name = item.id;
+        }
+        item.mediaType = 'virtualAssistant';
+        item.status = 'Not in use';
+        item.featureType = feature.name;
+        item.color = feature.color;
+        item.icons = feature.icons;
+        item.templateId = item.id;
+        item.templateOrConfig = 'config';
+        return item;
       });
       return orderByCardName(formattedList);
     }

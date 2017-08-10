@@ -10,6 +10,9 @@
   align-items: center;
 
   .cs-card {
+    .ct-card-disabled {
+      background: $gray-light-4;
+    }
     justify-content: center;
   }
 }

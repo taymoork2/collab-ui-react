@@ -13,6 +13,7 @@
     <div class="typeChoice">
       <div class="typeButtonWrapper typeButtonWrapperLeft">
         <div class="typeButton"
+             id="huronTypeButton"
              ng-class="{'typeButtonClicked':chooseDeviceType.selectedDeviceType === 'huron'}"
              ng-click="chooseDeviceType.huron()"
              ng-dblclick="chooseDeviceType.next()">
@@ -30,6 +31,7 @@
       </div>
       <div class="typeButtonWrapper">
         <div class="typeButton"
+             id="cloudberryTypeButton"
              ng-class="{'typeButtonClicked':chooseDeviceType.selectedDeviceType === 'cloudberry'}"
              ng-click="chooseDeviceType.cloudberry()"
              ng-dblclick="chooseDeviceType.next()">

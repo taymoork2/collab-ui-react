@@ -340,7 +340,7 @@ describe('Huron Functional: add-places', () => {
           });
           it('should exit side navigation and return to main Places page', () => {
             utils.click(addPlaces.sideNavClose);
-            utils.expectIsDisplayed(addPlaces.overviewPg);
+            utils.expectIsNotDisplayed(addPlaces.overviewPg);
           });
         });
       });
@@ -372,7 +372,7 @@ describe('Huron Functional: add-places', () => {
           });
           it('should exit side navigation and return to main Places page', () => {
             utils.click(addPlaces.sideNavClose);
-            utils.expectIsDisplayed(addPlaces.overviewPg);
+            utils.expectIsNotDisplayed(addPlaces.overviewPg);
           });
         });
       });
@@ -422,7 +422,7 @@ describe('Huron Functional: add-places', () => {
           });
           it('should exit side navigation and return to main Places page', () => {
             utils.click(addPlaces.sideNavClose);
-            utils.expectIsDisplayed(addPlaces.overviewPg);
+            utils.expectIsNotDisplayed(addPlaces.overviewPg);
           });
         });
       });

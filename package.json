@@ -4,7 +4,7 @@
   "version": "1.1.4",
   "description": "",
   "author": "Cisco Systems, Inc.",
-  "license": "Copyright 2013-2016 Cisco Systems, Inc.",
+  "license": "Copyright 2013-2017 Cisco Systems, Inc.",
   "homepage": "https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client",
   "repository": {
     "type": "git",
@@ -82,7 +82,7 @@
     "collab-amcharts": "~3.19.4",
     "collab-ui": "~4.6.1",
     "collab-ui-formly": "~2.0.3",
-    "collab-ui-ng": "~5.0.0",
+    "collab-ui-ng": "~6.0.0",
     "collab-ui-stickyfill": "~1.1.5",
     "crypto-js": "^3.1.8",
     "d3": "~3.5.5",
