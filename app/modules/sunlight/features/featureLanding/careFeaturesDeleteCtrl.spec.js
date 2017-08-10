@@ -97,7 +97,9 @@ describe('Care Feature Delete Ctrl', function () {
     deferred.reject(failureResponse);
     $scope.$apply();
     $timeout.flush();
-    expect(Notification.errorWithTrackingId).toHaveBeenCalledWith(failureResponse, jasmine.any(String));
+    expect(Notification.errorWithTrackingId).toHaveBeenCalledWith(failureResponse, jasmine.any(String), {
+      featureName: $stateParams.deleteFeatureName,
+    });
   });
 
   it('should broadcast CARE_FEATURE_DELETED event when VA config is deleted successfully', function () {
@@ -126,6 +128,8 @@ describe('Care Feature Delete Ctrl', function () {
     vaDeferred.reject(failureResponse);
     $scope.$apply();
     $timeout.flush();
-    expect(Notification.errorWithTrackingId).toHaveBeenCalledWith(failureResponse, jasmine.any(String));
+    expect(Notification.errorWithTrackingId).toHaveBeenCalledWith(failureResponse, jasmine.any(String), {
+      featureName: vaStateParams.deleteFeatureName,
+    });
   });
 });
