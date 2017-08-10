@@ -15,6 +15,7 @@
     require('modules/core/modal').default,
     'core.body',
     'core.chartColors',
+    require('modules/core/controlHub').default,
     require('modules/core/l10n').default,
     'core.localize',
     'core.logmetricsservice',
