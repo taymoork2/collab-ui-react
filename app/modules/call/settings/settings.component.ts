@@ -350,8 +350,10 @@ class HuronSettingsCtrl implements ng.IComponentController {
   private resetForm(): void {
     this.showDialPlanChangedDialog = false;
     this.showVoiceMailDisableDialog = false;
-    this.form.$setPristine();
-    this.form.$setUntouched();
+    if (this.form) {
+      this.form.$setPristine();
+      this.form.$setUntouched();
+    }
   }
 
   private setShowDialPlanChangedDialogFlag(): void {
