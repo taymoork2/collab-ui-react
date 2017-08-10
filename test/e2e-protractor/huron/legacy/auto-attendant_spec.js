@@ -14,29 +14,33 @@
 
 describe('Huron Auto Attendant', function () {
   var remote = require('selenium-webdriver/remote');
+  var testAAName;
+  var testCardClick;
+  var testCardClose;
 
   beforeAll(function () {
 
+    deleteUtils.testAAName = deleteUtils.testAAName + "_" + Date.now();
+
+    testAAName = element(by.css('p[title="' + deleteUtils.testAAName + '"]'));
+    testCardClick = testAAName.element(by.xpath('ancestor::article')).element(by.css('.card-body'));
+    testCardClose = testAAName.element(by.xpath('ancestor::article')).element(by.css('.header-with-right-icon')).element(by.css('.card-icon-div')).element(by.css('.close'));
+
     browser.setFileDetector(new remote.FileDetector());
 
-    login.login('aa-admin', '#/services/call-features');
-
+    login.login('aa-admin', autoattendant.callFeature);
+ 
   }, 120000);
+  
+  afterAll(function () {
+    var flow = protractor.promise.controlFlow();
+    return flow.execute(deleteUtils.findAndDeleteTestAA);
+  });
 
   describe('Create and Delete AA', function () {
 
     // TEST CASES
-    it('should navigate to AA landing page', function () {
-
-      // First ensure the test AA is deleted (in case last test run failed for example)
-      var flow = protractor.promise.controlFlow();
-      var result = flow.execute(deleteUtils.findAndDeleteTestAA);
-
-      // and navigate to the landing page
-
-    }, 120000);
-
-    it('should create a new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+    it('should navigate to AA landing page and create AA', function () {
 
       // click new feature
       utils.click(autoattendant.newFeatureButton);
@@ -776,13 +780,12 @@ describe('Huron Auto Attendant', function () {
     }, 120000);
 
     it('should find new AA named "' + deleteUtils.testAAName + '" on the landing page', function () {
-      utils.wait(autoattendant.testCardName, 20000);
+      utils.wait(testAAName);
 
-      utils.expectIsEnabled(autoattendant.testCardName);
+      utils.expectIsEnabled(testAAName);
 
-      utils.click(autoattendant.testCardClick);
-
-      utils.wait(autoattendant.addAANumbers, 50000);
+      utils.click(testCardClick);
+      utils.wait(autoattendant.addAANumbers, 20000);
 
       utils.expectIsDisplayed(autoattendant.addAANumbers);
       autoattendant.scrollIntoView(autoattendant.sayMessageAll.first());
@@ -805,11 +808,8 @@ describe('Huron Auto Attendant', function () {
     }, 120000);
 
     it('should delete new AA named "' + deleteUtils.testAAName + '" on the landing page', function () {
-
       // click delete X on the AA card for e2e test AA
-      utils.expectIsEnabled(autoattendant.testCardName);
-
-      utils.click(autoattendant.testCardDelete);
+      utils.click(testCardClose);
 
       // confirm dialog with e2e AA test name in it is there, then agree to delete
       utils.expectText(autoattendant.deleteModalConfirmText, 'Are you sure you want to delete the ' + deleteUtils.testAAName + ' Auto Attendant?').then(function () {
