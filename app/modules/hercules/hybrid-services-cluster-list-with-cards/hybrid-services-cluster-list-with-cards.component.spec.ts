@@ -65,7 +65,7 @@ describe('Component: HybridServicesClusterListWithCardsComponent', function () {
       expect(Notification.errorWithTrackingId).toHaveBeenCalled();
     });
 
-    fit('should update filters and displayed clusters', function () {
+    it('should update filters and displayed clusters', function () {
       HybridServicesClusterService.getResourceGroups.and.returnValue($q.resolve({ unassigned: [{
         targetType: 'c_mgmt',
         connectors: [{
