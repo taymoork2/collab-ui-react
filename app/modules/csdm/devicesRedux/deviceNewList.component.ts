@@ -5,6 +5,7 @@ class DeviceNewList implements ng.IComponentController {
   private huronDeviceService: any;
   public gridOptions;
   public gridApi: uiGrid.IGridApi;
+  public loadingMore = false;
   /* @ngInject */
   constructor(private $state,
               private $q: ng.IQService,
@@ -21,8 +22,6 @@ class DeviceNewList implements ng.IComponentController {
       data: 'lctrl.getResult()',
       infiniteScrollRowsFromEnd: 5,
       infiniteScrollDown: true,
-      showGridFooter: true,
-      gridFooterTemplate: this.getTemplate('_footerTpl'),
       enableHorizontalScrollbar: 0,
       rowHeight: 45,
       enableRowHeaderSelection: false,
@@ -39,16 +38,18 @@ class DeviceNewList implements ng.IComponentController {
             this.searchObject = SearchObject.create('');
           }
           this.searchObject.nextPage();
+          this.loadingMore = true;
           this.CsdmSearchService.search(this.searchObject).then((response) => {
             if (response && response.data) {
               this.devices.push.apply(this.devices, response.data.hits.hits);
               promise.resolve();
             }
           }).catch(() => {
-              promise.reject();
-            }).finally(() => {
-              gridApi.infiniteScroll.dataLoaded();
-            });
+            promise.reject();
+          }).finally(() => {
+            gridApi.infiniteScroll.dataLoaded();
+            this.loadingMore = false;
+          });
         });
       },
       columnDefs: [{
@@ -84,6 +85,7 @@ class DeviceNewList implements ng.IComponentController {
 
   public $onInit(): void {
   }
+
   public $onChanges() {
   }
 
