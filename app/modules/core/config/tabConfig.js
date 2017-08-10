@@ -106,7 +106,7 @@
       }],
   }];
 
-  var tabsAtlas2017NameChange = [{
+  var tabsControlHub = [{
     tab: 'overviewTab',
     icon: 'icon-home-active',
     title: 'tabs.overviewTab',
@@ -129,7 +129,7 @@
     link: '/gss',
   }, {
     tab: 'customerTab',
-    icon: 'icon-user',
+    icon: 'icon-people-active',
     title: 'tabs.customerTab',
     state: 'partnercustomers',
     link: '/partner/customers',
@@ -226,6 +226,6 @@
   module.exports = angular
     .module('core.tabconfig', [])
     .value('tabConfig', tabs)
-    .value('tabConfigAtlas2017NameChange', tabsAtlas2017NameChange)
+    .value('tabConfigControlHub', tabsControlHub)
     .name;
 }());

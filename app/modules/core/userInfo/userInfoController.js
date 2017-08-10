@@ -5,7 +5,7 @@
     .controller('UserInfoController', UserInfoController);
 
   /* @ngInject */
-  function UserInfoController($scope, $state, $timeout, $translate, $window, Authinfo, Auth, Config, FeedbackService, Log, Notification, Userservice, Utils, WebExUtilsFact) {
+  function UserInfoController($scope, $state, $timeout, $translate, $window, Authinfo, Auth, Config, FeedbackService, Log, Notification, Userservice, Utils, WebExUtilsFact, ControlHubService) {
     var getAuthinfoData = function () {
       $scope.username = Authinfo.getUserName();
       $scope.orgname = Authinfo.getOrgName();
@@ -95,5 +95,7 @@
     });
 
     $scope.supportUrl = (Authinfo.isPartnerAdmin() || Authinfo.isPartnerSalesAdmin()) ? Config.partnerSupportUrl : Config.supportUrl;
+
+    $scope.collapsed = ControlHubService.getCollapsed();
   }
 })();
