@@ -38,6 +38,13 @@ export class MeetingSettingsCtrl {
     min: this.$translate.instant('firstTimeWizard.meetingSettingsError.invalidLicense'),
     step: this.$translate.instant('firstTimeWizard.meetingSettingsError.invalidLicense'),
   };
+  public showTransferCodeInput: boolean = false;
+  public hasTrialSites: boolean = false;
+  public transferSiteDetails = {
+    siteUrl: '',
+    transferCode: '',
+  };
+  private nextButtonDisabledStatus = false;
 
   /* @ngInject */
   constructor(
@@ -67,10 +74,56 @@ export class MeetingSettingsCtrl {
     if (!_.isEmpty(webexSitesData)) {
       this.updateSitesArray(_.get(webexSitesData, 'webexLicencesPayload.webexProvisioningParams.webexSiteDetailsList'));
     }
+    const validateTransferCodeSitePair = this.$rootScope.$on('wizard-meeting-settings-migrate-site-event', (): void => {
+      if (_.isEmpty(this.transferSiteDetails.siteUrl) && _.isEmpty(this.transferSiteDetails.transferCode)) {
+        this.nextButtonDisabledStatus = false;
+        this.$rootScope.$emit('wizard-meeting-settings-transfer-code-validated');
+        return;
+      }
+      if (!(_.endsWith(this.transferSiteDetails.siteUrl, '.webex.com'))) {
+        this.transferSiteDetails.siteUrl += this.Config.siteDomainUrl.webexUrl;
+      }
+      this.SetupWizardService.validateTransferCode(this.transferSiteDetails).then((response) => {
+        const status = _.get(response, 'data.status');
+        if (!status || status !== 'INVALID') {
+          this.transferSiteDetails = {
+            siteUrl: '',
+            transferCode: '',
+          };
+          // if transferred sites have already been added and the back button clicked, strip old sites.
+          if (!_.isEmpty(this.sitesArray)) {
+            this.stripTransferredSitesFromSitesArray();
+          }
+          const transferredSitesArray = _.get(response, 'data.siteList');
+          _.forEach(transferredSitesArray, (site) => {
+            if (!(_.some(this.sitesArray, { siteUrl: site.siteUrl }))) {
+              const transferredSiteModel = _.clone(this.siteModel);
+              transferredSiteModel.siteUrl = site.siteUrl;
+              transferredSiteModel.timezone = this.findTimezoneObject(site.timezone);
+              transferredSiteModel.isTransferSite = true;
+              this.sitesArray.push(transferredSiteModel);
+            }
+          });
+          this.constructDistributedSitesArray();
+          return this.$rootScope.$emit('wizard-meeting-settings-transfer-code-validated');
+        } else {
+          this.nextButtonDisabledStatus = true;
+          _.set(this.$scope.wizard, 'isNextDisabled', true);
+          this.showError(this.$translate.instant('firstTimeWizard.transferCodeInvalidError'));
+        }
+      }).catch((response) => {
+        this.Notification.errorWithTrackingId(response, 'firstTimeWizard.webexProvisioningError');
+      });
+    });
+    this.$scope.$on('$destroy', () => {
+      validateTransferCodeSitePair();
+    });
 
     if (this.SetupWizardService.hasTSPAudioPackage()) {
       this.populateTSPPartnerOptions();
     }
+    this.hasTrialSites = this.SetupWizardService.hasWebexMeetingTrial();
+
   }
 
   public onInputChange() {
@@ -116,15 +169,26 @@ export class MeetingSettingsCtrl {
   private updateSitesArray(sites) {
     const sitesArray = _.map(sites, (site: any) => {
       const timezone = this.findTimezoneObject(site.timezone);
-      return {
+      const siteObj = {
         quantity: _.parseInt(site.quantity),
         siteUrl: site.siteUrl.replace(this.Config.siteDomainUrl.webexUrl, ''),
         timezone: timezone,
         centerType: site.centerType,
+        isTransferSite: site.isTransferSite,
       };
+      if (!site.isTransferSite) {
+        delete siteObj.isTransferSite;
+      }
+      return siteObj;
     });
 
     this.sitesArray = sitesArray;
+  }
+
+  private stripTransferredSitesFromSitesArray () {
+    this.sitesArray = _.filter(this.sitesArray, (site) => {
+      return _.isUndefined(site.isTransferSite);
+    });
   }
 
   private updateSitesLicenseCount() {
@@ -251,6 +315,23 @@ export class MeetingSettingsCtrl {
     }
   }
 
+  public checkValidTransferData () {
+    this.clearError();
+    let invalid = false;
+    if (this.showTransferCodeInput) {
+      const siteUrlEmpty = _.isEmpty(this.transferSiteDetails.siteUrl);
+      const transferCodeEmpty = _.isEmpty(this.transferSiteDetails.transferCode);
+      if ((siteUrlEmpty && !transferCodeEmpty) || (transferCodeEmpty && !siteUrlEmpty)) {
+        invalid = true;
+      }
+    }
+
+    if (invalid !== this.nextButtonDisabledStatus) {
+      this.nextButtonDisabledStatus = invalid;
+      _.set(this.$scope.wizard, 'isNextDisabled', invalid);
+    }
+  }
+
   public setNextDisableStatus(status) {
     _.set(this.$scope.wizard, 'isNextDisabled', status);
     if (this.audioPartnerName) {
@@ -309,12 +390,17 @@ export class MeetingSettingsCtrl {
   private constructDistributedSitesArray(): void {
     this.distributedLicensesArray = _.map(this.sitesArray, (site: IWebExSite) => {
       return _.map(this.centerDetails, (center) => {
-        return {
+        const siteObject = {
           centerType: center.centerType,
           quantity: site.quantity,
           siteUrl: site.siteUrl,
           timezone: site.timezone,
+          isTransferSite: site.isTransferSite,
         };
+        if (!site.isTransferSite) {
+          delete siteObject.isTransferSite;
+        }
+        return siteObject;
       });
     });
   }
@@ -374,6 +460,9 @@ export class MeetingSettingsCtrl {
         centerType: site.centerType,
         quantity: _.get<number>(site, 'quantity'),
       };
+      if (site.isTransferSite) {
+        webexSiteDetail.isTransferSite = true;
+      }
 
       webexSiteDetailsList.push(webexSiteDetail);
     });
@@ -383,9 +472,11 @@ export class MeetingSettingsCtrl {
       audioPartnerName: this.audioPartnerName,
     });
 
+    if (!_.isEmpty(this.transferSiteDetails.transferCode)) {
+      _.set(webexLicensesPayload, 'webexProvisioningParams.transferCode', this.transferSiteDetails.transferCode);
+    }
     return webexLicensesPayload;
   }
-
 }
 
 angular

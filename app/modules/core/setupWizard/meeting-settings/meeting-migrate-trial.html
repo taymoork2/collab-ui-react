@@ -1,16 +1,61 @@
 <div class="meeting-settings">
-  <h4 class="element-spacing" translate="firstTimeWizard.keepExistingWebexSites"></h4>
-  <p class="element-spacing" translate="firstTimeWizard.existingWebExTrialSites"></p>
-  <div class="keep-existing-trials element-spacing" ng-repeat="site in meetingCtrl.existingSites">
-    <p class="existing-sites">{{site.name}}.webex.com</p>
+  <p translate="firstTimeWizard.meetingSettingsDescription"></p>
+  <div ng-if="!meetingCtrl.hasTrialSites">
+    <h4 class="element-spacing" translate="firstTimeWizard.haveExistingWebExSite"></h4>
+    <p class="element-spacing" translate="firstTimeWizard.existingWebExSiteDescription"></p>
+  </div>
+  <div ng-if="meetingCtrl.hasTrialSites" >
+    <h4 class="element-spacing" translate="firstTimeWizard.keepExistingWebexSites"></h4>
+    <p class="element-spacing" translate="firstTimeWizard.existingWebExTrialSites"></p>
+    <div class="keep-existing-trials element-spacing" ng-repeat="site in meetingCtrl.existingSites">
+      <p class="existing-sites">{{site.siteUrl}}<span translate="firstTimeWizard.pmrSiteURLDomain"></span></p>
+      <input
+        cs-input
+        type="checkbox"
+        id="existing-trial{{$index}}"
+        name="existing-trial{{$index}}"
+        ng-model="site.keepExistingSite"
+        ng-init="meetingCtrl.addOrRemoveExistingWebExSite(site)"
+        ng-change="meetingCtrl.addOrRemoveExistingWebExSite(site)"
+        cs-input-label="{{::'firstTimeWizard.yesKeepSite' | translate}}">
+    </div>
+  </div>
+  <div>
     <input
       cs-input
       type="checkbox"
-      id="existing-trial{{$index}}"
-      name="existing-trial{{$index}}"
-      ng-model="site.keepExistingSite"
-      ng-init="meetingCtrl.addOrRemoveExistingWebExSite(site)"
-      ng-change="meetingCtrl.addOrRemoveExistingWebExSite(site)"
-      cs-input-label="{{::'firstTimeWizard.yesKeepSite' | translate}}">
+      id="has-transfer-code"
+      name="has-transfer-code"
+      ng-change="meetingCtrl.checkValidTransferData()"
+      ng-model="meetingCtrl.showTransferCodeInput"
+      cs-input-label="{{::'firstTimeWizard.hasTransferCode' | translate}}">
+  </div>
+  <div ng-if="meetingCtrl.showTransferCodeInput">
+    <div class="col-lg-12">
+      <div class="cs-input-group" ng-class="{'error': meetingCtrl.error.isError}">
+        <label class="cs-input__label" translate="firstTimeWizard.transferCode"></label>
+        <input
+          cs-input
+          type="text"
+          cs-input-size="medium-4"
+          ng-change="meetingCtrl.checkValidTransferData()"
+          ng-model="meetingCtrl.transferSiteDetails.transferCode">
+      </div>
+    </div>
+    <div class="col-lg-12">
+      <div class="cs-input-group" ng-class="{'error': meetingCtrl.error.isError}">
+        <label class="cs-input__label" translate="firstTimeWizard.siteName"></label>
+        <input
+          cs-input
+          type="text"
+          cs-input-size="medium-4"
+          cs-input-secondary-label="{{::'firstTimeWizard.pmrSiteURLDomain' | translate}}"
+          ng-change="meetingCtrl.checkValidTransferData()"
+          ng-model="meetingCtrl.transferSiteDetails.siteUrl">
+        <div class="cs-input__messages error-msg-spacing" role="alert" ng-if="meetingCtrl.error.isError">
+          <div class="message">{{meetingCtrl.error.errorMsg}}</div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

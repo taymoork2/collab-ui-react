@@ -296,6 +296,12 @@ require('./_wizard.scss');
           } else {
             nextStepSuccessful();
           }
+        } else if (getTab().name === 'meetingSettings') {
+          if (getStep().name === 'migrateTrial') {
+            $rootScope.$emit('wizard-meeting-settings-migrate-site-event');
+          } else {
+            nextStepSuccessful();
+          }
         } else {
           nextStepSuccessful();
         }
@@ -307,7 +313,17 @@ require('./_wizard.scss');
     var enterpriseSipSaveDeregister = $rootScope.$on('wizard-enterprise-sip-save', function () {
       nextStepSuccessful();
     });
-    $scope.$on('$destroy', enterpriseSipSaveDeregister);
+
+    var transferCodeValidatedDeregister = $rootScope.$on('wizard-meeting-settings-transfer-code-validated', function () {
+      if (getStep().name === 'migrateTrial') {
+        nextStepSuccessful();
+      }
+    });
+
+    $scope.$on('$destroy', function () {
+      enterpriseSipSaveDeregister();
+      transferCodeValidatedDeregister();
+    });
 
     function nextStepSuccessful() {
       var steps = getSteps();

@@ -198,6 +198,20 @@ export class SetupWizardService {
       return _.get(response, 'data.tspPartnerList', []);
     });
   }
+
+  public hasWebexMeetingTrial() {
+    const conferencingServices = _.filter(this.Authinfo.getConferenceServices(), { license: { isTrial: true } });
+
+    return _.some(conferencingServices, function (service) {
+      return _.get(service, 'license.offerName') === this.Config.offerCodes.MC || _.get(service, 'license.offerName') === this.Config.offerCodes.EE;
+    });
+  }
+
+  public validateTransferCode(payload) {
+    const orderUuid = this.getActingSubscriptionServiceOrderUUID();
+    const url = `${this.UrlConfig.getAdminServiceUrl()}orders/${orderUuid}/transferCode/verify`;
+    return this.$http.post(url, payload);
+  }
 }
 
 export default angular

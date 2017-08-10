@@ -161,9 +161,6 @@ require('./_setup-wizard.scss');
       };
 
       if (shouldShowMeetingsTab) {
-        if (!hasWebexMeetingTrial()) {
-          _.remove(meetingTab.steps, { name: 'migrateTrial' });
-        }
         if (!SetupWizardService.hasTSPAudioPackage()) {
           _.remove(meetingTab.steps, { name: 'setPartnerAudio' });
         }
@@ -253,14 +250,6 @@ require('./_setup-wizard.scss');
           });
         });
       }
-    }
-
-    function hasWebexMeetingTrial() {
-      var conferencingServices = _.filter(Authinfo.getConferenceServices(), { license: { isTrial: true } });
-
-      return _.some(conferencingServices, function (service) {
-        return _.get(service, 'license.offerName') === Config.offerCodes.MC || _.get(service, 'license.offerName') === Config.offerCodes.EE;
-      });
     }
 
     function showCallSettings() {

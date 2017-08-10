@@ -11,10 +11,10 @@
         <i class="icon icon-check verified-check"></i>
       </div>
       <div class="col-lg-5">
-        <b><div>{{site.siteUrl}}.webex.com</div></b>
+        <b><div>{{site.siteUrl}}<span translate="firstTimeWizard.pmrSiteURLDomain"></span></div></b>
         <div ng-if="site.timezone" class="time-zone" translate-values="{label: site.timezone.label}" translate="firstTimeWizard.timeZoneSetTo"></div>
       </div>
-      <div class="col-lg-1">
+      <div class="col-lg-1" ng-if="!(site.isTransferSite || site.keepExistingSite)">
         <i class="icon icon-delete delete-site" ng-click="meetingCtrl.removeSite($index)"></i>
       </div>
     </div>

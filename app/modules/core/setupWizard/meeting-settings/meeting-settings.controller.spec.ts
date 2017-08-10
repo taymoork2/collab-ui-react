@@ -85,4 +85,71 @@ describe('Controller: MeetingSettingsCtrl', () => {
       expect(this.SetupWizardService.getTSPPartners).toHaveBeenCalled();
     });
   });
+
+  describe('when a webex site is being transferred', function () {
+    const transferCodeResponse = {
+      data: {
+        siteList: [{
+          siteUrl: 'mytransferredsite.webex.com',
+          timezone: '4',
+        } ],
+      },
+    };
+    beforeEach(function () {
+      spyOn(this.SetupWizardService, 'validateTransferCode').and.returnValue(this.$q.resolve(transferCodeResponse));
+      this.initController();
+      this.controller.showTransferCodeInput = true;
+      this.controller.centerDetails = [{ centerType: 'EE' }];
+      this.controller.transferSiteDetails = {
+        siteUrl: 'mywebexsite',
+        transferCode: '12345678',
+      };
+      this.$scope.$apply();
+      this.$rootScope.$broadcast('wizard-meeting-settings-migrate-site-event');
+      this.$scope.$digest();
+    });
+    it('validates and processes the transfer code', function () {
+      expect(this.SetupWizardService.validateTransferCode).toHaveBeenCalledWith({
+        siteUrl: 'mywebexsite.webex.com',
+        transferCode: '12345678',
+      });
+      expect(this.controller.sitesArray.length).toBe(1);
+      expect(this.controller.distributedLicensesArray[0].length).toBe(1);
+      expect(this.controller.distributedLicensesArray[0][0].isTransferSite).toBe(true);
+    });
+  });
+
+  describe('when a second transfer code is used', function () {
+    const transferCodeResponse = {
+      data: {
+        siteList: [{
+          siteUrl: 'mySecondTransferredsite.webex.com',
+          timezone: '4',
+        } ],
+      },
+    };
+    beforeEach(function () {
+      spyOn(this.SetupWizardService, 'validateTransferCode').and.returnValue(this.$q.resolve(transferCodeResponse));
+      this.initController();
+      this.controller.showTransferCodeInput = true;
+      this.controller.centerDetails = [{ centerType: 'EE' }];
+      this.controller.transferSiteDetails = {
+        siteUrl: 'mywebexsite',
+        transferCode: '12345678',
+      };
+      this.controller.sitesArray = [
+        {
+          siteUrl: 'myFirstTransferredSite.webex.com',
+          isTransferSite: true,
+        },
+      ];
+      this.$scope.$apply();
+      this.$rootScope.$broadcast('wizard-meeting-settings-migrate-site-event');
+      this.$scope.$digest();
+    });
+    it('replaces the earlier transferred site with the new one', function () {
+      expect(this.controller.sitesArray.length).toBe(1);
+      expect(this.controller.distributedLicensesArray[0][0].siteUrl).toBe('mySecondTransferredsite.webex.com');
+    });
+  });
 });
