@@ -1,16 +1,21 @@
+import { GridCellService } from './cs-grid-cell/gridCell.service';
+
 class CsGridCtrl {
   public gridOptions: uiGrid.IGridOptions;
   public gridApi: uiGrid.IGridApi;
   public name: string;
   public spinner: boolean;
-
-  private readonly ENTER: number = 13;
-  private readonly SPACE: number = 32;
+  public state?: string;
+  public stateChangeFunction?: Function;
 
   /* @ngInject */
   constructor(
     private $element: ng.IRootElementService,
+    private $rootScope: ng.IRootScopeService,
+    private $scope: ng.IScope,
+    private $state: ng.ui.IStateService,
     private $timeout: ng.ITimeoutService,
+    private GridCellService: GridCellService,
     private uiGridConstants: uiGrid.IUiGridConstants,
   ) {}
 
@@ -20,7 +25,7 @@ class CsGridCtrl {
       enableColumnResizing: true,
       enableHorizontalScrollbar: 0,
       enableRowHeaderSelection: false,
-      enableRowSelection: true,
+      enableRowSelection: false,
       enableSorting: true,
       multiSelect: false,
     };
@@ -38,6 +43,19 @@ class CsGridCtrl {
         this.setSortableHeaders();
       });
     }
+
+    if (this.state) {
+      const stateChangeEvent = this.$rootScope.$on('$stateChangeSuccess', (): void => {
+        if (this.state && this.$state.includes(this.state)) {
+          if (this.stateChangeFunction) {
+            this.stateChangeFunction();
+          }
+
+          this.gridApi.selection.clearSelectedRows();
+        }
+      });
+      this.$scope.$on('$destroy', stateChangeEvent);
+    }
   }
 
   private setSortableHeaders(): void {
@@ -46,7 +64,7 @@ class CsGridCtrl {
         const column = _.get(this.gridApi, `grid.columns[${index}]`, undefined);
         const columnDirection = _.get(column, 'sort.direction', undefined);
 
-        if (this.gridApi && column && (event.keyCode === this.ENTER || event.keyCode === this.SPACE)) {
+        if (this.gridApi && column && (event.keyCode === this.GridCellService.ENTER || event.keyCode === this.GridCellService.SPACE)) {
           if (columnDirection === this.uiGridConstants.ASC) {
             this.gridApi.grid.sortColumn(column, this.uiGridConstants.DESC).then((): void => {
               this.gridApi.grid.notifyDataChange(this.uiGridConstants.dataChange.ALL);
@@ -74,5 +92,7 @@ export class CsGridComponent implements ng.IComponentOptions {
     gridOptions: '=',
     name: '@',
     spinner: '<',
+    state: '@',
+    stateChangeFunction: '&',
   };
 }

@@ -1,8 +1,10 @@
 (function () {
   'use strict';
 
+  var TimingKey = require('../metrics').TimingKey;
+
   /* @ngInject */
-  function LoginCtrl($location, $rootScope, $scope, $state, $stateParams, $translate, Auth, Authinfo, Config, Log, LocalStorage, LogMetricsService, PageParam, SessionStorage, StorageKeys, TokenService, Utils, CacheWarmUpService) {
+  function LoginCtrl($location, $rootScope, $scope, $state, $stateParams, $translate, Auth, Authinfo, Config, Log, LocalStorage, LogMetricsService, MetricsService, PageParam, SessionStorage, StorageKeys, TokenService, Utils, CacheWarmUpService) {
     var queryParams = SessionStorage.popObject(StorageKeys.REQUESTED_QUERY_PARAMS);
     var language = LocalStorage.get('language');
 
@@ -90,10 +92,12 @@
               LogMetricsService.logMetrics('Customer logged in', LogMetricsService.getEventType('customerLogin'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
             }
             $rootScope.$emit('LOGIN');
-            $state.go(state, params);
+            return $state.go(state, params);
           }
         }).catch(function () {
-          $state.go('login-error');
+          return $state.go('login-error');
+        }).finally(function () {
+          MetricsService.stopTimer(TimingKey.LOGIN_DURATION);
         });
     };
 

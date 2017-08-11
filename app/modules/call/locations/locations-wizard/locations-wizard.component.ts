@@ -1,4 +1,4 @@
-import { Location, LocationsService } from 'modules/call/locations/shared';
+import { Location, LocationsService, LocationCallerId } from 'modules/call/locations/shared';
 
 import {
   PstnModel, PstnService, PstnCarrier,
@@ -10,7 +10,6 @@ import {
   HuronSettingsService, HuronSettingsData,
 } from 'modules/call/settings/shared';
 import { IOption } from 'modules/huron/dialing';
-import { CompanyNumber } from 'modules/call/settings/settings-company-caller-id';
 import { Notification } from 'modules/core/notifications';
 
 export class LocationsWizardComponent {
@@ -22,6 +21,7 @@ export class LocationsWizardComponent {
 const PAGE_ESA: number = 6;
 
 class LocationsWizardController implements ng.IComponentController {
+  public ftsw: boolean = false; //Used for child components
   public addressFound: boolean;
   public form: ng.IFormController;
   public siteId: string;
@@ -34,7 +34,8 @@ class LocationsWizardController implements ng.IComponentController {
   public showDialPlanChangedDialog: boolean;
   public showVoiceMailDisableDialog: boolean;
   public address = {};
-  public companyVoicemailOptions;
+  public locationVoicemailOptions;
+  public voicemailEnable: boolean = false;
   public addressValidated: boolean = false;
   public addressValidating: boolean = false;
   public validationMessages = {
@@ -48,6 +49,7 @@ class LocationsWizardController implements ng.IComponentController {
   public voicemailToEmail: boolean = false;  //TODO: KPC What is this for?
 
   private lastIndex = 6;
+
   /* @ngInject */
   constructor(private $timeout: ng.ITimeoutService,
               private $element: ng.IRootElementService,
@@ -95,7 +97,10 @@ class LocationsWizardController implements ng.IComponentController {
 
     //Use default site for now
     this.HuronSettingsService.get('')
-    .then(huronSettingsData => this.huronSettingsData = huronSettingsData)
+    .then((huronSettingsData: HuronSettingsData) => {
+      this.huronSettingsData = huronSettingsData;
+      this.locationDetail.preferredLanguage = this.huronSettingsData.site.preferredLanguage;
+    })
     .catch(response => this.Notification.errorResponse(response));
 
     this.locationDetail = new Location();
@@ -110,6 +115,13 @@ class LocationsWizardController implements ng.IComponentController {
     .catch(response => {
       this.Notification.errorResponse(response);
     });
+  }
+
+  public isExtensionLengthSet() {
+    if (_.isNumber(this.huronSettingsData.customerVoice.extensionLength)) {
+      return true;
+    }
+    return false;
   }
 
   public onTimeZoneChanged(timeZone) {
@@ -160,29 +172,28 @@ class LocationsWizardController implements ng.IComponentController {
     }
   }
 
-  public onCompanyVoicemailChanged(number: string, generated: boolean, enabled: boolean): void {
-    this.showVoiceMailDisableDialog = enabled;
-    this.locationDetail.voicemailPilotNumber.number = number;
-    this.locationDetail.voicemailPilotNumber.generated = generated;
+  public onLocationVoicemailChanged(externalAccess: boolean, externalNumber: string): void {
+    this.voicemailEnable = externalAccess;
+    if (this.voicemailEnable && _.isString(externalNumber) && externalNumber.length > 0) {
+      this.locationDetail.voicemailPilotNumber.number = externalNumber;
+      this.locationDetail.voicemailPilotNumber.generated = true;
+    } else {
+      this.locationDetail.voicemailPilotNumber.number = null;
+      this.locationDetail.voicemailPilotNumber.generated = false;
+    }
+  }
+
+  public onVoicemailFilter(filter: string): ng.IPromise<IOption[]> {
+    return this.HuronSettingsOptionsService.loadCompanyVoicemailNumbers(filter)
+      .then(numbers => this.settingsOptions.companyVoicemailOptions = numbers);
   }
 
   public onVoicemailToEmailChanged(voicemailToEmail: boolean) {
     this.voicemailToEmail = voicemailToEmail;
   }
 
-  public onCompanyCallerIdChanged(companyNumber: CompanyNumber): void {
-    if (companyNumber) {
-      this.locationDetail.callerIdNumber = companyNumber.pattern;
-    } else {
-      if (this.locationDetail.callerIdNumber) {
-        delete this.locationDetail.callerIdNumber;
-      }
-    }
-  }
-
-  public onCompanyVoicemailFilter(filter: string): ng.IPromise<IOption[]> {
-    return this.HuronSettingsOptionsService.loadCompanyVoicemailNumbers(filter)
-      .then(numbers => this.settingsOptions.companyVoicemailOptions = numbers);
+  public onCallerIdChanged(callerId: LocationCallerId): void {
+    this.locationDetail.callerId = callerId;
   }
 
   public validateAddress() {
@@ -274,7 +285,7 @@ class LocationsWizardController implements ng.IComponentController {
     }
   }
 
-  private saveLocation() {
+  private saveLocation(): void {
     this.LocationsService.createLocation(this.locationDetail)
     .then(() => this.$state.go('call-locations'))
     .catch((error) => this.Notification.errorResponse(error, 'locations.createFailed'));

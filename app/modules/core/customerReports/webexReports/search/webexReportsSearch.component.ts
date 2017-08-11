@@ -13,6 +13,7 @@ class WebexReportsSearch implements ng.IComponentController {
   public data: any;
   public gridOptions: {};
   public endDate: string;
+  public timeZone: string;
   public startDate: string;
   public searchStr: string;
   public errMsg: any = {};
@@ -36,10 +37,12 @@ class WebexReportsSearch implements ng.IComponentController {
     private $translate: ng.translate.ITranslateService,
   ) {
     this.gridData = [];
+    this.timeZone = this.SearchService.getGuess('');
     this.errMsg = { search: '', datePicker: '' };
   }
 
   public $onInit(): void {
+
     this.initDateRange();
     this.setGridOptions();
     this.$scope.$emit('selectEnable', false);
@@ -66,22 +69,25 @@ class WebexReportsSearch implements ng.IComponentController {
       lastEnableDate: this.endDate,
       firstEnableDate: this.startDate,
     };
-    this.errMsg.datePicker = '';
     if (this.startDate === this.storeData.startDate && this.endDate === this.storeData.endDate) {
-      return ;
-    }
-    if (moment(this.startDate).unix() > moment(this.endDate).unix()) {
-      this.errMsg.datePicker = this.$translate.instant('webexReports.end-date-tooltip');
-      this.storeData.endDate = this.endDate;
-      this.storeData.startDate = this.startDate;
-      this.gridData = [];
-      this.flag = false;
       return ;
     }
     this.errMsg.datePicker = '';
     this.storeData.endDate = this.endDate;
     this.storeData.startDate = this.startDate;
+    if (moment(this.startDate).unix() > moment(this.endDate).unix()) {
+      this.errMsg.datePicker = this.$translate.instant('webexReports.end-date-tooltip');
+    }
     this.startSearch();
+  }
+
+  public onChangeTz(tz: string): void {
+    this.timeZone = tz;
+    this.SearchService.setStorage('timeZone', this.timeZone);
+    _.forEach(this.gridData, (item) => {
+      item.endTime_ = this.SearchService.utcDateByTimezone(item.endTime);
+      item.startTime_ = this.SearchService.utcDateByTimezone(item.startTime);
+    });
   }
 
   private initDateRange() {
@@ -103,16 +109,12 @@ class WebexReportsSearch implements ng.IComponentController {
     const emailReg = /^[\w\d]([\w\d.-])+@([\w\d-])+\.([\w\d-]){2,}/;
 
     this.flag = false;
+    this.gridData = [];
     this.errMsg.search = '';
     this.storeData.searchStr = this.searchStr;
-    if (this.searchStr === '') {
-      this.gridData = [];
-      return ;
-    }
 
-    if (!emailReg.test(this.searchStr) && !digitaReg.test(this.searchStr)) {
+    if ((!emailReg.test(this.searchStr) && !digitaReg.test(this.searchStr)) || this.searchStr === '') {
       this.errMsg.search = this.$translate.instant('webexReports.searchError');
-      this.gridData = [];
       return ;
     }
 
@@ -149,8 +151,8 @@ class WebexReportsSearch implements ng.IComponentController {
       .then((res) => {
         _.forEach(res, (item) => {
           item.status_ = this.SearchService.getStatus(item.status);
-          item.startTime = moment(item.startTime).format('MMMM Do, YYYY h:mm:ss A');
-          item.endTime = item.endTime ?  moment(item.endTime).format('MMMM Do, YYYY h:mm:ss A') : '';
+          item.endTime_ = this.SearchService.utcDateByTimezone(item.endTime) ;
+          item.startTime_ = this.SearchService.utcDateByTimezone(item.startTime);
         });
         this.isLoadingShow = false;
         this.gridData = this.flag ? res : [];
@@ -166,7 +168,7 @@ class WebexReportsSearch implements ng.IComponentController {
       width: '20%',
       sortable: true,
       cellTooltip: true,
-      field: 'startTime',
+      field: 'startTime_',
       displayName: this.$translate.instant('webexReports.searchGridHeader.startTime'),
     }, {
       width: '12%',
@@ -185,7 +187,7 @@ class WebexReportsSearch implements ng.IComponentController {
       displayName: this.$translate.instant('webexReports.searchGridHeader.conferenceID'),
     }, {
       width: '20%',
-      field: 'endTime',
+      field: 'endTime_',
       cellTooltip: true,
       displayName: this.$translate.instant('webexReports.searchGridHeader.endTime'),
     }];

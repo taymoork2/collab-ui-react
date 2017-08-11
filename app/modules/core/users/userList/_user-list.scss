@@ -11,6 +11,10 @@
     position: relative;
   }
 
+  .grid-contents {
+    height: inherit;
+  }
+
   .ui-grid-cell:first-child,
   .ui-grid-header-cell:first-child {
     border-right: 0;

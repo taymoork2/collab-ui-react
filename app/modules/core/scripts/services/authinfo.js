@@ -267,7 +267,10 @@
         return authData.customerAccounts;
       },
       isEnterpriseCustomer: function () {
-        return _.some(authData.customerAccounts, { customerType: Config.customerTypes.enterprise });
+        var isEnterpriseCustomerType = _.some(authData.customerAccounts, { customerType: Config.customerTypes.enterprise });
+        var isPendingCustomerType = _.some(authData.customerAccounts, { customerType: Config.customerTypes.pending });
+        var isPartnerCommerceRelation = _.some(authData.customerAccounts, { commerceRelation: Config.commerceRelation.partner });
+        return isEnterpriseCustomerType || isPendingCustomerType || isPartnerCommerceRelation;
       },
       // FIXME: ATLAS-1402
       // IMPORTANT: 'username' can possibly reflect a user's display name, use 'getPrimaryEmail()'

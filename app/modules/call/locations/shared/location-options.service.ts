@@ -1,11 +1,14 @@
 import { IOption } from 'modules/huron/dialing/dialing.service';
 import { IDialPlan, DialPlanService } from 'modules/huron/dialPlans';
+import { NumberService, NumberType } from 'modules/huron/numbers';
+import { PhoneNumberService } from 'modules/huron/phoneNumber';
 
 export class LocationSettingsOptions {
   public preferredLanguageOptions: IOption[];
   public timeZoneOptions: IOption[];
   public defaultToneOptions: IOption[];
   public dialPlan: IDialPlan;
+  public locationCallerIdOptions: IOption[];
 }
 
 export class LocationSettingsOptionsService {
@@ -14,6 +17,8 @@ export class LocationSettingsOptionsService {
   constructor(
      private $q: ng.IQService,
      private DialPlanService: DialPlanService,
+     private NumberService: NumberService,
+     private PhoneNumberService: PhoneNumberService,
      private ServiceSetup,
   ) { }
 
@@ -24,6 +29,7 @@ export class LocationSettingsOptionsService {
       preferredLanguageOptions: this.loadPreferredLanguageOptions().then(preferredLanguageOptions => locationOptions.preferredLanguageOptions = preferredLanguageOptions),
       defaultToneOptions: this.loadDefaultToneOptions().then(defaultToneOptions => locationOptions.defaultToneOptions = defaultToneOptions),
       dialPlan: this.loadDialPlan().then(dialPlan => locationOptions.dialPlan = dialPlan),
+      locationCallerIdOptions: this.loadLocationCallerIdNumbers(undefined).then(callerIdNumbers => locationOptions.locationCallerIdOptions = callerIdNumbers),
     }).then(() => {
       return locationOptions;
     });
@@ -51,5 +57,17 @@ export class LocationSettingsOptionsService {
 
   private loadDialPlan(): ng.IPromise<IDialPlan> {
     return this.DialPlanService.getDialPlan();
+  }
+
+  public loadLocationCallerIdNumbers(filter: string | undefined): ng.IPromise<IOption[]> {
+    return this.NumberService.getNumberList(filter, NumberType.EXTERNAL)
+      .then(externalNumbers => {
+        return _.map(externalNumbers, externalNumber => {
+          return <IOption> {
+            value: externalNumber.number,
+            label: this.PhoneNumberService.getNationalFormat(externalNumber.number),
+          };
+        });
+      });
   }
 }

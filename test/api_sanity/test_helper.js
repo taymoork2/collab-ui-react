@@ -24,7 +24,7 @@ var auth = {
   },
   'partner-reports': {
     user: 'admin@sparkucreports-testpartner.com',
-    pass: 'Cisco123!',
+    pass: 'P@ssword123',
     org: 'd71b4d69-721a-41b1-ae4b-6e0305eab12b',
   },
   'partner-sales-user': {

@@ -8,7 +8,7 @@
   /* @ngInject */
 
   function TelephonyInfoService($rootScope, $q, $translate, Authinfo, RemoteDestinationService,
-    UserServiceCommon, UserDirectoryNumberService, InternalNumberPoolService, ExternalNumberPool,
+    UserServiceCommon, UserDirectoryNumberService, LocationsService, InternalNumberPoolService, ExternalNumberPool,
     ServiceSetup, DirectoryNumberUserService, DirectoryNumber, HuronCustomer, InternationalDialing) {
     var broadcastEvent = 'telephonyInfoUpdated';
 
@@ -64,6 +64,7 @@
       getTelephonyUserInfo: getTelephonyUserInfo,
       getInternalNumberPool: getInternalNumberPool,
       loadInternalNumberPool: loadInternalNumberPool,
+      loadLocationInternalNumberPool: loadLocationInternalNumberPool,
       getExternalNumberPool: getExternalNumberPool,
       loadExternalNumberPool: loadExternalNumberPool,
       loadExtPoolWithMapping: loadExtPoolWithMapping,
@@ -308,6 +309,28 @@
       return _.cloneDeep(internalNumberPool);
     }
 
+    function loadLocationInternalNumberPool(pattern, limit, locationId) {
+      var intNumPool = [];
+      var patternQuery = pattern ? '%' + pattern + '%' : undefined;
+      var patternlimit = limit || undefined;
+      var directorynumber = '';
+      return LocationsService.getLocationInternalNumberPoolList(locationId, directorynumber, 'pattern', patternQuery, patternlimit)
+        .then(function (intPool) {
+          for (var i = 0; i < intPool.length; i++) {
+            var dn = {
+              uuid: intPool[i].uuid,
+              pattern: intPool[i].pattern,
+            };
+            intNumPool.push(dn);
+          }
+          internalNumberPool = intNumPool;
+          return _.cloneDeep(internalNumberPool);
+        }).catch(function (response) {
+          internalNumberPool = [];
+          return $q.reject(response);
+        });
+    }
+
     function loadInternalNumberPool(pattern, limit) {
       var intNumPool = [];
       var patternQuery = pattern ? '%' + pattern + '%' : undefined;
@@ -348,30 +371,30 @@
       }];
 
       return ExternalNumberPool.getExternalNumbers(
-          Authinfo.getOrgId(),
-          pattern,
-          ExternalNumberPool.UNASSIGNED_NUMBERS,
+        Authinfo.getOrgId(),
+        pattern,
+        ExternalNumberPool.UNASSIGNED_NUMBERS,
 
         // Defaults to loading regular DID numbers only, if numberType is not specified.
         // Toll-Free numbers should only be available for Auto Attendant and Hunt Groups.
-          numberType || ExternalNumberPool.FIXED_LINE_OR_MOBILE
-        ).then(function (extPool) {
-          _.forEach(extPool, function (externalNumber) {
-            externalNumberPool.push({
-              uuid: externalNumber.uuid,
-              pattern: externalNumber.pattern,
-            });
+        numberType || ExternalNumberPool.FIXED_LINE_OR_MOBILE
+      ).then(function (extPool) {
+        _.forEach(extPool, function (externalNumber) {
+          externalNumberPool.push({
+            uuid: externalNumber.uuid,
+            pattern: externalNumber.pattern,
           });
-
-          // Adds currently assigned number to the list of selectable external numbers
-          if (telephonyInfo.alternateDirectoryNumber.uuid !== 'none') {
-            externalNumberPool.push(telephonyInfo.alternateDirectoryNumber);
-          }
-          return _.cloneDeep(externalNumberPool);
-        }).catch(function (response) {
-          externalNumberPool = [];
-          return $q.reject(response);
         });
+
+        // Adds currently assigned number to the list of selectable external numbers
+        if (telephonyInfo.alternateDirectoryNumber.uuid !== 'none') {
+          externalNumberPool.push(telephonyInfo.alternateDirectoryNumber);
+        }
+        return _.cloneDeep(externalNumberPool);
+      }).catch(function (response) {
+        externalNumberPool = [];
+        return $q.reject(response);
+      });
     }
 
     function loadExtPoolWithMapping(count, numberType) {

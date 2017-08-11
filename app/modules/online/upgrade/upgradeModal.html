@@ -1,17 +1,9 @@
 <div class="modal-header">
-  <h3 class="modal-title" translate="onlineUpgradeModal.title"></h3>
+  <h3 class="modal-title">{{$ctrl.titleText}}</h3>
 </div>
-<div class="modal-body">
-  <div ng-if="$ctrl.showCancelButton">
-    <span ng-if="!$ctrl.nameChangeEnabled" translate="onlineUpgradeModal.body"></span>
-    <span ng-if="$ctrl.nameChangeEnabled" translate="onlineUpgradeModal.bodyNew"></span>
-    <span ng-if="!$ctrl.nameChangeEnabled" translate="onlineUpgradeModal.cancelBody"></span>
-    <span ng-if="$ctrl.nameChangeEnabled" translate="onlineUpgradeModal.cancelBodyNew"></span>
-  </div>
-  <div ng-if="!$ctrl.showCancelButton">
-    <span ng-if="!$ctrl.nameChangeEnabled" translate="onlineUpgradeModal.freemiumBody"></span>
-    <span ng-if="$ctrl.nameChangeEnabled" translate="onlineUpgradeModal.freemiumBodyNew"></span>
-  </div>
+<div class="online-upgrade-modal-body modal-body">
+    <span>{{$ctrl.bodyText}}</span>
+    <span>{{$ctrl.cancelBodyText}}</span>
 </div>
 <div class="online-upgrade-modal">
   <button
@@ -23,6 +15,7 @@
     <span translate="onlineUpgradeModal.cancelButton"></span>
   </button>
   <bmmp-subscription-upgrade-button
+    ng-if="$ctrl.showBmmpButton"
     class="btn btn--primary"
     ng-click="$ctrl.logout()"
     show-loading="true"

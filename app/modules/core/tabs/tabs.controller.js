@@ -5,16 +5,13 @@
     .controller('TabsCtrl', TabsCtrl);
 
   /* @ngInject */
-  function TabsCtrl($rootScope, $scope, $translate, $location, $q, Utils, Authinfo, Config, FeatureToggleService, tabConfig, tabConfigAtlas2017NameChange) {
+  function TabsCtrl($rootScope, $scope, $translate, $location, $q, Utils, Authinfo, Config, FeatureToggleService, tabConfig, ControlHubService) {
     var vm = this;
     vm.features = [];
     vm.tabs = [];
-    vm.isShowAtlas2017NameChange = false;
-    vm.image = '/images/control-hub-logo.svg';
-    vm.isCollapsed = {
-      value: false,
-      image: '/images/spark-logo.svg',
-    };
+    vm.controlHubEnabled = false;
+    vm.image = null;
+    vm.collapsed = null;
 
     initTabs();
 
@@ -74,8 +71,10 @@
     }
 
     function initTabs() {
-      FeatureToggleService.atlas2017NameChangeGetStatus().then(function (result) {
-        vm.isShowAtlas2017NameChange = result;
+      ControlHubService.getControlHubEnabled().then(function (result) {
+        vm.image = ControlHubService.getImage();
+        vm.collapsed = ControlHubService.getCollapsed();
+        vm.controlHubEnabled = result;
         vm.unfilteredTabs = initializeTabs();
         vm.features = getUpdatedFeatureTogglesFromTabs(vm.unfilteredTabs, vm.features);
         getFeatureToggles(vm.features);
@@ -84,7 +83,7 @@
     }
 
     function initializeTabs() {
-      var tabs = _.cloneDeep(vm.isShowAtlas2017NameChange ? tabConfigAtlas2017NameChange : tabConfig);
+      var tabs = _.cloneDeep(vm.controlHubEnabled ? ControlHubService.getTabs() : tabConfig);
       return _.chain(tabs)
         .filter(function (tab) {
           // Remove subPages whose parent tab is hideProd or states that aren't allowed
@@ -111,7 +110,7 @@
     function isAllowedTab(tab) {
       // partner settings moved to new location under FeatureToggleService.atlas2017NameChange
       // once feature toggle removed, updated Config to restrict 'settings' in partner view
-      if (tab.state === 'settings' && Authinfo.isPartner() && vm.isShowAtlas2017NameChange) {
+      if (tab.state === 'settings' && Authinfo.isPartner() && vm.controlHubEnabled) {
         return false;
       }
 

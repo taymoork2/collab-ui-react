@@ -5,4 +5,11 @@
 <div>
   <br>
   <a translate="autoAttendant.queueSettings" id="queueSetting" ng-click="aaRouteToQueue.openQueueTreatmentModal()"></a>
+  <div ng-if="aaRouteToQueue.getWarning()">
+    <div class="columns small-12 aa-div-click" ng-click="aaRouteToQueue.togglefullWarningMsg()" ng-blur="aaRouteToQueue.closeFullWarningMsg()"> 
+      <span class="ellipsis icon icon-warning warning aa-icon-font-size"></span>
+      <span class="aa-text-overflow" data-ng-bind="aaRouteToQueue.deletedSessionVariablesListAlongWithWarning"></span>
+      <div ng-if = "aaRouteToQueue.fullWarningMsgValue" class="aa-full-warning" data-ng-bind = "aaRouteToQueue.deletedSessionVariablesListAlongWithWarning"></div>
+    </div>
+  </div>
 </div>

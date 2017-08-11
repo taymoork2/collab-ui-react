@@ -247,14 +247,14 @@ require('./_customer-overview.scss');
           return $q.all(updateUsersList);
         });
       })
-      .then(vm._helpers.openCustomerPortal)
-      .catch(function (response) {
-        Notification.errorWithTrackingId(response, 'customerPage.launchCustomerPortalError');
-        return response;
-      })
-      .finally(function () {
-        vm.loadingCustomerPortal = false;
-      });
+        .then(vm._helpers.openCustomerPortal)
+        .catch(function (response) {
+          Notification.errorWithTrackingId(response, 'customerPage.launchCustomerPortalError');
+          return response;
+        })
+        .finally(function () {
+          vm.loadingCustomerPortal = false;
+        });
     }
 
     function canUpdateLicensesForSelf() {

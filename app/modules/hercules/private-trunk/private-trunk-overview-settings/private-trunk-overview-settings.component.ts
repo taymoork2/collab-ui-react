@@ -72,7 +72,7 @@ export class PrivateTrunkOverviewSettingsCtrl implements ng.IComponentController
 
   public updatePrivateTrunk(): void {
     this.PrivateTrunkService.setPrivateTrunk(this.selectedVerifiedDomains)
-      .catch(error => this.Notification.notify(error, 'servicesOverview.cards.privateTrunk.error.privateTrunkError'));
+      .catch(error => this.Notification.errorResponse(error, 'servicesOverview.cards.privateTrunk.error.privateTrunkError'));
   }
 
   public uploadFile(file: File): void {

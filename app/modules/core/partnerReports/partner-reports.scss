@@ -1,0 +1,15 @@
+@import '~collab-ui/scss/settings/core';
+@import '~collab-ui/scss/settings/page';
+
+.partner-spark-reports {
+  &.content-container {
+    overflow: hidden !important;
+    padding: 0 !important;
+    height: calc(100vh - (#{$top-bar-height} + (#{$top-bar-border-width} * 2) + #{$page-header-height})) !important;
+  }
+  .full-size,
+  .full-size__iframe {
+    height: 100%;
+    width: 100%;
+  }
+}

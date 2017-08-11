@@ -15,6 +15,7 @@
     require('modules/core/modal').default,
     'core.body',
     'core.chartColors',
+    require('modules/core/controlHub').default,
     require('modules/core/l10n').default,
     'core.localize',
     'core.logmetricsservice',
@@ -83,11 +84,13 @@
     require('modules/core/settings').default,
     require('modules/huron/countries').default,
     require('modules/call/settings').default,
+    require('modules/call/locations').default,
     require('modules/huron/dialPlans').default,
     require('modules/core/domainManagement').default,
     require('modules/huron/features/featureLanding/hoverDelay.directive').default,
     require('modules/core/validation').default,
     require('modules/core/customerReports').default,
+    require('modules/core/partnerReports').default,
   ])
     .constant('CryptoJS', require('crypto-js'))
     .constant('addressparser', require('emailjs-addressparser'));
@@ -100,6 +103,7 @@
     'Sunlight',
     require('modules/squared/devices/services/CsdmPoller'),
     require('modules/squared/partner-management').default,
+    require('modules/squared/provisioning-console').default,
   ]);
 
   angular.module('DigitalRiver', ['Core']);
@@ -129,8 +133,8 @@
     require('modules/huron/media-mgr').default,
     require('modules/call/features').default,
   ])
-  .constant('ASTParser', require('acorn'))
-  .constant('ASTWalker', require('acorn/dist/walk'));
+    .constant('ASTParser', require('acorn'))
+    .constant('ASTWalker', require('acorn/dist/walk'));
 
   angular.module('Hercules', [
     'Core',
@@ -140,20 +144,25 @@
     require('modules/hercules/cluster-card').default,
     require('modules/hercules/connector-upgrade-modal/connector-upgrade-modal.controller').default,
     require('modules/hercules/google-calendar-settings/google-calendar-config-section/google-calendar-second-time-setup').default,
+    require('modules/hercules/hybrid-services-cluster-list-with-cards').default,
     require('modules/hercules/hybrid-services-nodes-page').default,
     require('modules/hercules/private-trunk/private-trunk-overview-settings').default,
     require('modules/hercules/private-trunk/private-trunk-setup').default,
     require('modules/hercules/resource-group-card').default,
     require('modules/hercules/service-settings/calendar-service-setup').default,
     require('modules/hercules/services/cluster-service').default,
+    require('modules/hercules/services/enterprise-private-trunk-service').default,
     require('modules/hercules/services/excel-service').default,
+    require('modules/hercules/services/fms-org-settings.service').default,
     require('modules/hercules/services/hybrid-services-cluster-states.service').default,
     require('modules/hercules/services/hybrid-services-cluster.service').default,
     require('modules/hercules/services/hybrid-services-extras.service').default,
     require('modules/hercules/services/hybrid-services-i18n.service').default,
     require('modules/hercules/services/hybrid-services-utils.service').default,
+    require('modules/hercules/services/l2sip-service').default,
+    require('modules/hercules/services/resource-group.service').default,
     require('modules/hercules/services/service-descriptor.service').default,
-    require('modules/hercules/services/uss-service'),
+    require('modules/hercules/services/uss.service').default,
   ]);
 
   angular.module('HDS', ['Core', 'Hercules']);

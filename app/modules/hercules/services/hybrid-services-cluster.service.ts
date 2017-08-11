@@ -4,6 +4,7 @@ import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-ser
 import { ICluster, ConnectorType, HybridServiceId, IFMSOrganization, ITimeWindow, ClusterTargetType, IExtendedClusterFusion, StatusIndicatorCSSClass, IExtendedClusterServiceStatus, IMoratoria, IHost } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 import { HybridServicesExtrasService, IAllowedRegistrationHost } from 'modules/hercules/services/hybrid-services-extras.service';
+import { USSService } from 'modules/hercules/services/uss.service';
 
 interface IOtherServiceStatus {
   serviceId: HybridServiceId;
@@ -20,7 +21,7 @@ interface IResourceGroup {
   releaseChannel: string;
 }
 
-interface IResourceGroups {
+export interface IResourceGroups {
   groups: IResourceGroup[];
   unassigned: IExtendedClusterFusion[];
 }
@@ -39,7 +40,7 @@ export class HybridServicesClusterService {
     private HybridServicesExtrasService: HybridServicesExtrasService,
     private Notification: Notification,
     private UrlConfig,
-    private USSService,
+    private USSService: USSService,
   ) {
     this.addServicesStatuses = this.addServicesStatuses.bind(this);
     this.addUserCount = this.addUserCount.bind(this);
@@ -500,7 +501,7 @@ export default angular
     require('modules/hercules/services/hybrid-services-extras.service').default,
     require('modules/core/notifications').default,
     require('modules/core/config/urlConfig'),
-    require('modules/hercules/services/uss-service'),
+    require('modules/hercules/services/uss.service').default,
   ])
   .service('HybridServicesClusterService', HybridServicesClusterService)
   .name;

@@ -228,7 +228,7 @@ require('./_fields-list.scss');
       }
 
       vm.gridOptions = {
-       // data: [], // is populated directly by the functions supplying the data.
+        // data: [], // is populated directly by the functions supplying the data.
         multiSelect: false,
         rowHeight: 44,
         enableColumnResize: true,

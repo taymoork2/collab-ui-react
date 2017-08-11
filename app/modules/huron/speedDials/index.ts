@@ -12,6 +12,7 @@ export default angular
     require('angular-translate'),
     require('modules/core/scripts/services/authinfo'),
     require('modules/huron/telephony/cmiServices'),
+    'call.shared.call-destination-translate',
     'dragularModule',
     'Core',
     notifications,

@@ -6,7 +6,7 @@
   /* @ngInject */
   function UserOverviewCtrl($scope, $state, $stateParams, $translate, $window, $q,
     Authinfo, Config, DirSyncService, FeatureToggleService, MessengerInteropService,
-    Notification, SunlightConfigService, Userservice, UserOverviewService) {
+    Notification, Userservice, UserOverviewService) {
     var vm = this;
 
     vm.savePreferredLanguage = savePreferredLanguage;
@@ -291,6 +291,7 @@
       if (UserOverviewService.userHasEntitlement(vm.currentUser, 'squared-fusion-uc')) {
         commState.detail = $translate.instant('onboardModal.paidCommHybrid');
       }
+
       if (UserOverviewService.userHasEntitlement(vm.currentUser, 'ciscouc')) {
         if (hasLicense('CO')) {
           commState.detail = $translate.instant('onboardModal.paidComm');
@@ -300,22 +301,21 @@
       }
       vm.services.push(commState);
 
-      if (UserOverviewService.userHasEntitlement(vm.currentUser, 'cloud-contact-center')) {
-        if (hasLicense('CDC') || hasLicense('CVC')) {
-          SunlightConfigService.getUserInfo(vm.currentUser.id)
-            .then(function () {
-              var hasSyncKms = _.includes(vm.currentUser.roles, Config.backend_roles.spark_synckms);
-              var hasCiscoucCES = _.includes(vm.currentUser.roles, Config.backend_roles.ciscouc_ces);
-              var hasContextServiceEntitlement = _.includes(vm.currentUser.entitlements, Config.entitlements.context);
-              if ((hasSyncKms && hasContextServiceEntitlement) || hasCiscoucCES) {
-                if (hasLicense('CDC')) {
-                  contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
-                } else if (hasLicense('CVC')) {
-                  contactCenterState.detail = $translate.instant('onboardModal.paidContactCenterVoice');
-                }
-                vm.services.push(contactCenterState);
-              }
-            });
+      if (UserOverviewService.userHasEntitlement(vm.currentUser, Config.entitlements.care)) {
+        var hasDigitalCareEntitlement = _.includes(vm.currentUser.entitlements, Config.entitlements.care_digital);
+        var hasInboundVoiceEntitlement = _.includes(vm.currentUser.entitlements, Config.entitlements.care_inbound_voice);
+
+        var hasSyncKms = _.includes(vm.currentUser.roles, Config.backend_roles.spark_synckms);
+        var hasContextServiceEntitlement = _.includes(vm.currentUser.entitlements, Config.entitlements.context);
+        var isCvcLicensed = hasInboundVoiceEntitlement && hasLicense('CVC') && hasSyncKms && hasContextServiceEntitlement;
+        var isCdcLicensed = hasDigitalCareEntitlement && hasLicense('CDC') && hasSyncKms && hasContextServiceEntitlement;
+
+        if (isCvcLicensed) {
+          contactCenterState.detail = $translate.instant('onboardModal.paidContactCenterVoice');
+          vm.services.push(contactCenterState);
+        } else if (isCdcLicensed) {
+          contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
+          vm.services.push(contactCenterState);
         }
       }
     }

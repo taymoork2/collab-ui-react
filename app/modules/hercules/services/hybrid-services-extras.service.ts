@@ -63,7 +63,7 @@ export class HybridServicesExtrasService {
 
   private convertToTranslateReplacements(alarmReplacementValues: IAlarmReplacementValues[]) {
     return _.reduce(alarmReplacementValues, (translateReplacements, replacementValue) => {
-      translateReplacements[replacementValue.key] = replacementValue.type === 'timestamp' ? this.HybridServicesI18NService.getLocalTimestamp(Number(replacementValue.value)) : replacementValue.value;
+      translateReplacements[replacementValue.key] = replacementValue.type === 'timestamp' ? this.HybridServicesI18NService.getLocalTimestamp(replacementValue.value) : replacementValue.value;
       return translateReplacements;
     }, {});
   }

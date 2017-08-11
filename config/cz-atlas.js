@@ -179,7 +179,7 @@ function buildCommit(answers) {
   }
 
   function parseNewLines(a) {
-/* Looking at Angular JS changelog format, multiple blank lines are allowed
+    /* Looking at Angular JS changelog format, multiple blank lines are allowed
     var b;
     while ( (b = a.replace(/\|\|/g, '|')) !== a ) {
       a = b;

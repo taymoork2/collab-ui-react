@@ -46,12 +46,14 @@ class TimeLine implements ng.IComponentController {
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const { lineColor, circleColor } = changes;
-    this.setColor(_.get(lineColor ? lineColor : circleColor, 'currentValue'));
+    const color = lineColor ? lineColor : circleColor;
+    this.setColor(_.get(color, 'currentValue'));
   }
 
   private initParameters(): void {
+    const width = this.$element.find('.timelineSvg').width();
     this.colorArr = ['#32c655', '#f0a309', '#e74a3e', '#AEAEAF'];
-    this.option.width = this.$element.find('.timelineSvg').width();
+    this.option.width = width ? width : this.option.width;
     this.data.endTime = this.sourceData.overview.endTime;
     this.data.startTime = this.sourceData.overview.startTime;
     this.data.gridHorizontalLineNum = this.sourceData.lines.length + 2 > 12 ? this.sourceData.lines.length + 2 : 12;
@@ -221,10 +223,11 @@ class TimeLine implements ng.IComponentController {
       d3.select(`#${id}`)
         .on('mouseover', () => {
           this.tip.classed('Tooltip-bottom', true);
-          const template = `<p>User name: ${item.userName}</p>
+          const template = `<p>User Name: ${item.userName}</p>
           <p>Platform: ${item.platform ? platform[item.platform] : 'N/A'}</p>
-          <p>Join Meeting Time: ${item.jmtQuality ? item.jmtQuality : 'N/A'}</p>
-          <p>Meeting Quality: ${item.dataQuality ? item.dataQuality : 'N/A'}</p>`;
+          <p>Join Meeting Time: ${item.joinMeetingTime ? item.joinMeetingTime : 'N/A'}</p>
+          <p>Latency: ${item.latency ? item.latency : 'N/A'}</p>
+          <p>PacketLoss: ${item.PacketLoss ? item.PacketLoss : 'N/A'}</p>`;
           this.tip.html(template);
           const tipWidth = this.tip.style('width').replace('px', '');
           const tipHeight = this.tip.style('height').replace('px', '');
@@ -324,7 +327,6 @@ class TimeLine implements ng.IComponentController {
       key = `${item.guestId}-${item.userId}-${item.joinTime}`;
       colorObj[key] = item;
     });
-
     _.forEach(this.data.joinsLine, (item) => {
       key = `${item.guestId}-${item.userId}-${item.joinTime}`;
       if (!colorObj[key]) {
@@ -333,14 +335,14 @@ class TimeLine implements ng.IComponentController {
 
       if (colorObj[key]['jmtQuality']) {
         const qa = _.parseInt(colorObj[key]['jmtQuality']) - 1;
-        item.jmtQuality = this.tips[qa].text;
+        item.joinMeetingTime = colorObj[key].joinMeetingTime + 's';
         d3.select(`#myDot${key}`).style('fill', this.colorArr[qa]);
-
       }
 
       if (colorObj[key]['dataQuality']) {
         const qa = _.parseInt(colorObj[key]['dataQuality']) - 1;
-        item.dataQuality = this.tips[qa].text;
+        item.latency = colorObj[key].latency + 's';
+        item.PacketLoss = colorObj[key].PacketLoss ? colorObj[key].PacketLoss * 100 + '%' : null;
         d3.select(`#myLine${key}`).attr('stroke', this.colorArr[qa]);
       }
     });
@@ -361,7 +363,9 @@ class TimeLine implements ng.IComponentController {
   }
 
   private timestampToDate(timestamp): Date {
-    const dateStr = moment(timestamp).utc().format('YYYY-MM-DD HH:mm:ss');
+    const offset = this.sourceData.offset ? this.sourceData.offset : '+00:00';
+    const utcTime = moment(timestamp).utc().format('YYYY-MM-DD HH:mm:ss');
+    const dateStr = moment.utc(utcTime).utcOffset(offset).format('YYYY-MM-DD HH:mm:ss');
     return moment(dateStr).toDate();
   }
 

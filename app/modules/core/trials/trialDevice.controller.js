@@ -109,7 +109,7 @@
     };
 
     if (_.has($stateParams, 'details.details.shippingInformation.country')) {
-        // nothing was supplied to us and we have something from the backend
+      // nothing was supplied to us and we have something from the backend
       _trialDeviceData.shippingInfo = $stateParams.details.details.shippingInformation;
     }
 
@@ -184,12 +184,12 @@
     ////////////////
     function getCountriesForSelectedDevices() {
       var selectedDevices = _.chain(_.union(_trialRoomSystemData.details.roomSystems, _trialCallData.details.phones))
-      .filter(function (device) {
-        return device.quantity > 0 && device.enabled === true;
-      })
-      .map(function (device) {
-        return device.model;
-      }).value();
+        .filter(function (device) {
+          return device.quantity > 0 && device.enabled === true;
+        })
+        .map(function (device) {
+          return device.model;
+        }).value();
       return TrialDeviceService.getCountries(selectedDevices, _shipCountryListReplacement);
     }
 

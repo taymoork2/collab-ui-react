@@ -36,15 +36,15 @@
         <div class="section" ng-class="$ctrl.animation" ng-if="$ctrl.getPageIndex() === 1">
           <div class="section__content" ng-class="$ctrl.animation" ng-if="$ctrl.getPageIndex() === 1">
             <h4 translate="callerIdPanel.title"></h4>
-            <uc-company-caller-id
-              is-location="true"
-              site="$ctrl.locationDetail.site"
-              company-caller-id="$ctrl.huronSettingsData.companyCallerId"
+            <uc-location-caller-id
+              caller-id="$ctrl.locationDetail.callerId"
+              show-label="false"
+              region-code="$ctrl.huronSettingsData.customerVoice.regionCode"
               external-number-options="$ctrl.settingsOptions.companyCallerIdOptions"
-              customer-name="$ctrl.huronSettingsData.customer.name"
-              on-number-filter="$ctrl.onCompanyCallerIdFilter(filter)"
-              on-change-fn="$ctrl.onCompanyCallerIdChanged(companyCallerId)">
-            </uc-company-caller-id>
+              voicemail-pilot-number="$ctrl.locationDetail.voicemailPilotNumber"
+              company-name="$ctrl.huronSettingsData.customerVoice.customerVoice.name"
+              on-change-fn="$ctrl.onCallerIdChanged(callerId)">
+            </uc-location-caller-id>
           </div>
         </div>
 
@@ -102,17 +102,11 @@
               </uc-routing-prefix>
             </div>
             <div class="sub-section">
-              <uc-extension-length
-                first-time-setup="true"
-                extension-length="$ctrl.huronSettingsData.customerVoice.routingPrefixLength"
-                on-change-fn="$ctrl.onExtensionLengthChanged(extensionLength)">
-              </uc-extension-length>
-            </div>
-            <div class="sub-section">
               <uc-extension-range
-                number-ranges="$ctrl.locationDetail.internalNumberRanges"
-                site="$ctrl.locationDetail"
-                first-time-setup="$ctrl.ftsw"
+                steering-digit="$ctrl.locationDetail.steeringDigit"
+                extension-length="$ctrl.huronSettingsData.customerVoice.extensionLength"
+                number-ranges="$ctrl.huronSettingsData.internalNumberRanges"
+                first-time-setup="false"
                 on-change-fn="$ctrl.onExtensionRangeChanged(extensionRanges)">
               </uc-extension-range>
             </div>
@@ -150,23 +144,21 @@
         <!-- Voicemail -->
         <div class="section" ng-class="$ctrl.animation" ng-if="$ctrl.getPageIndex() === 5">
           <div class="section__content">
-            <uc-company-voicemail
-              site="$ctrl.locationDetail.site"
-              dial-plan-country-code="$ctrl.settingsOptions.dialPlan.countryCode"
+            <h4 translate="voicemailPanel.title"></h4>
+            <uc-location-voicemail-avril
+              external-access="$ctrl.voicemailEnable"
+              external-number="$ctrl.locationDetail.voicemailPilotNumber.number"
               external-number-options="$ctrl.settingsOptions.companyVoicemailOptions"
-              company-voicemail-enabled="$ctrl.huronSettingsData.customer.hasVoicemailService"
-              voicemail-to-email="$ctrl.locationDetail.voicemailToEmailSettings.voicemailToEmail"
-              on-change-fn="$ctrl.onCompanyVoicemailChanged(voicemailPilotNumber, voicemailPilotNumberGenerated, companyVoicemailEnabled)"
-              on-number-filter="$ctrl.onCompanyVoicemailFilter(filter)"
-              on-voicemail-to-email-changed-fn="$ctrl.onVoicemailToEmailChanged(voicemailToEmail)">
-            </uc-company-voicemail>
+              change-fn="$ctrl.onLocationVoicemailChanged(externalAccess, externalNumber)"
+              number-filter-fn="onVoicemailFilter(filter)">
+            </uc-location-voicemail-avril>
           </div>
         </div>
 
         <!-- Address Validating -->
         <div class="section" ng-class="$ctrl.animation" ng-if="$ctrl.getPageIndex() === 6">
           <div class="section__content">
-            <h4 translate="locations.emergencyServicesTitle"></h4>
+            <h4 class="left-indent" translate="locations.emergencyServicesTitle"></h4>
             <div ng-if="!$ctrl.addressValidating && $ctrl.addressValidated !== true">
               <hr-service-address
                 address="$ctrl.address"

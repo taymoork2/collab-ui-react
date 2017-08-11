@@ -85,9 +85,9 @@
 
         updateIframe();
       })
-      .catch(function (error) {
-        Notification.errorWithTrackingId(error, 'common.error');
-      });
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'common.error');
+        });
     }
 
     function updateIframe() {
@@ -116,6 +116,12 @@
     $window.iframeLoaded = function (iframeId) {
       var currScope = angular.element(iframeId).scope();
       var phase = currScope.$$phase;
+      var rec = angular.element(iframeId);
+      rec.ready(function () {
+        var token = $window.sessionStorage.getItem('accessToken');
+        var orgID = Authinfo.getOrgId();
+        rec[0].contentWindow.postMessage(token + ',' + orgID, '*');
+      });
 
       if (!phase) {
         currScope.$apply(function () {

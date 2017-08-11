@@ -18,6 +18,14 @@
     position: fixed;
     bottom: 0;
   }
+
+  .control-label {
+    color: $gray-dark-4;
+  }
+}
+
+.indent-left {
+  padding-left: vr-adjust(32px);
 }
 
 .locations-content {

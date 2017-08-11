@@ -89,22 +89,22 @@ describe('Controller: Care Local Settings', function () {
 
     it('should call updateChatConfig, if already onboarded and orgName is empty', function () {
       $httpBackend.expectGET(sunlightChatConfigUrl)
-      .respond(200, {
-        csOnboardingStatus: controller.status.SUCCESS,
-        appOnboardStatus: controller.status.SUCCESS,
-        orgName: '',
-      });
+        .respond(200, {
+          csOnboardingStatus: controller.status.SUCCESS,
+          appOnboardStatus: controller.status.SUCCESS,
+          orgName: '',
+        });
       $httpBackend.flush();
       expect(sunlightConfigService.updateChatConfig).toHaveBeenCalled();
     });
 
     it('should not call updateChatConfig, if already onboarded and orgName is present', function () {
       $httpBackend.expectGET(sunlightChatConfigUrl)
-      .respond(200, {
-        csOnboardingStatus: controller.status.SUCCESS,
-        appOnboardStatus: controller.status.SUCCESS,
-        orgName: 'fake org name',
-      });
+        .respond(200, {
+          csOnboardingStatus: controller.status.SUCCESS,
+          appOnboardStatus: controller.status.SUCCESS,
+          orgName: 'fake org name',
+        });
       $httpBackend.flush();
       expect(sunlightConfigService.updateChatConfig).not.toHaveBeenCalled();
     });
@@ -131,10 +131,10 @@ describe('Controller: Care Local Settings', function () {
       controller.onboardToCare();
       $scope.$apply();
       $httpBackend.expectGET(sunlightChatConfigUrl)
-      .respond(200, {
-        csOnboardingStatus: controller.status.SUCCESS,
-        appOnboardStatus: controller.status.SUCCESS,
-      });
+        .respond(200, {
+          csOnboardingStatus: controller.status.SUCCESS,
+          appOnboardStatus: controller.status.SUCCESS,
+        });
       $interval.flush(10001);
       $httpBackend.flush();
       expect(controller.state).toBe(controller.ONBOARDED);
@@ -350,27 +350,27 @@ describe('Care Settings - Routing Toggling', function () {
     $provide.value('Authinfo', spiedAuthinfo);
   }));
   beforeEach(
-      inject(function ($controller, _$rootScope_, _$httpBackend_, _Notification_, _SunlightConfigService_, _$interval_, UrlConfig, $q, _FeatureToggleService_) {
-        sunlightConfigService = _SunlightConfigService_;
-        $httpBackend = _$httpBackend_;
-        Notification = _Notification_;
-        q = $q;
-        $scope = _$rootScope_.$new();
-        $interval = _$interval_;
-        $intervalSpy = jasmine.createSpy('$interval', $interval).and.callThrough();
-        FeatureToggleService = _FeatureToggleService_;
-        spyOn(FeatureToggleService, 'atlasCareAutomatedRouteTrialsGetStatus').and.returnValue($q.resolve(true));
-        orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
-        sunlightChatConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + orgId + '/chat';
-        controller = $controller('CareLocalSettingsCtrl', {
-          $scope: $scope,
-          $interval: $intervalSpy,
-          Notification: Notification,
-        });
-        $scope.routingSelector = { dirty: false,
-          $setPristine: function () { },
-          $setUntouched: function () { } };
-      })
+    inject(function ($controller, _$rootScope_, _$httpBackend_, _Notification_, _SunlightConfigService_, _$interval_, UrlConfig, $q, _FeatureToggleService_) {
+      sunlightConfigService = _SunlightConfigService_;
+      $httpBackend = _$httpBackend_;
+      Notification = _Notification_;
+      q = $q;
+      $scope = _$rootScope_.$new();
+      $interval = _$interval_;
+      $intervalSpy = jasmine.createSpy('$interval', $interval).and.callThrough();
+      FeatureToggleService = _FeatureToggleService_;
+      spyOn(FeatureToggleService, 'atlasCareAutomatedRouteTrialsGetStatus').and.returnValue($q.resolve(true));
+      orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
+      sunlightChatConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + orgId + '/chat';
+      controller = $controller('CareLocalSettingsCtrl', {
+        $scope: $scope,
+        $interval: $intervalSpy,
+        Notification: Notification,
+      });
+      $scope.routingSelector = { dirty: false,
+        $setPristine: function () { },
+        $setUntouched: function () { } };
+    })
   );
   it('should show Pick Routing as selected.', function () {
     spyOn(sunlightConfigService, 'updateChatConfig').and.callFake(function () {

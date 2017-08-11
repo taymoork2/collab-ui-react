@@ -240,11 +240,11 @@
 
       vm.isSaving = true;
       return $q.all(promises)
-      .then(updateSettingsCopy)
-      .catch(resetSettings)
-      .finally(function () {
-        vm.isSaving = false;
-      });
+        .then(updateSettingsCopy)
+        .catch(resetSettings)
+        .finally(function () {
+          vm.isSaving = false;
+        });
     }
 
     function updateSettingsCopy() {

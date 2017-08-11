@@ -43,17 +43,17 @@
         var html = decodeURIComponent(node.htmlModel);
         if (html.search(id) >= 0) {
           openModal(node.say).result
-          .then(function (result) {
-            if (vm.elementText != result.variable.label || vm.readAs != result.readAs.value) {
-              vm.elementText = result.variable.label;
-              vm.readAs = result.readAs.value;
-              node.say.value = result.variable.value;
-              node.say.as = vm.readAs;
-              var ele = '<aa-insertion-element element-text="' + node.say.value + '" read-as="' + node.say.as + '" element-id="' + id + '"></aa-insertion-element>';
-              node.htmlModel = encodeURIComponent(ele);
-              AACommonService.setSayMessageStatus(true);
-            }
-          });
+            .then(function (result) {
+              if (vm.elementText != result.variable.label || vm.readAs != result.readAs.value) {
+                vm.elementText = result.variable.label;
+                vm.readAs = result.readAs.value;
+                node.say.value = result.variable.value;
+                node.say.as = vm.readAs;
+                var ele = '<aa-insertion-element element-text="' + node.say.value + '" read-as="' + node.say.as + '" element-id="' + id + '"></aa-insertion-element>';
+                node.htmlModel = encodeURIComponent(ele);
+                AACommonService.setSayMessageStatus(true);
+              }
+            });
         }
       });
     }
@@ -103,9 +103,25 @@
     function populateUiModelFromMenuEntry(menuEntry, elementId) {
       var action = _.get(menuEntry, 'actions[0]', '');
       if (action) {
-        if (checkForElementId(menuEntry.actions[0].dynamicList, elementId)) {
-          actionEntry = menuEntry;
-          return true;
+        if (action.name === 'routeToQueue') {
+          var hasInitialDynamicList = _.has(action.queueSettings.initialAnnouncement, 'actions[0].dynamicList');
+          var hasPeriodicDynamicList = _.has(action.queueSettings.periodicAnnouncement, 'actions[0].dynamicList');
+          if (hasInitialDynamicList && _.includes(elementId, 'initialAnnouncement')) {
+            if (checkForElementId(action.queueSettings.initialAnnouncement.actions[0].dynamicList, elementId)) {
+              actionEntry = action.queueSettings.initialAnnouncement;
+              return true;
+            }
+          } else if (hasPeriodicDynamicList && _.includes(elementId, 'periodicAnnouncement')) {
+            if (checkForElementId(action.queueSettings.periodicAnnouncement.actions[0].dynamicList, elementId)) {
+              actionEntry = action.queueSettings.periodicAnnouncement;
+              return true;
+            }
+          }
+        } else {
+          if (checkForElementId(menuEntry.actions[0].dynamicList, elementId)) {
+            actionEntry = menuEntry;
+            return true;
+          }
         }
       } else {
         return _.some(menuEntry.headers, function (header) {

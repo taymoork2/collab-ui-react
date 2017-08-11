@@ -12,6 +12,7 @@ export default angular
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
+    'call.shared.call-destination-translate',
     customerServiceModule,
     notifications,
     phoneNumberModule,

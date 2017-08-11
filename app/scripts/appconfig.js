@@ -66,8 +66,13 @@
         $urlRouterProvider.otherwise(function ($injector) {
           // inspired by https://github.com/angular-ui/ui-router/issues/600
           // unit tests $digest not settling due to $location url changes
-          var $state = $injector.get('$state');
-          $state.go('login');
+          var $window = $injector.get('$window');
+          var Utils = $injector.get('Utils');
+          var oauthCodeParams = Utils.getFromStandardGetParams($window.document.URL);
+          if (!_.has(oauthCodeParams, 'error')) {
+            var $state = $injector.get('$state');
+            $state.go('login');
+          }
         });
         $stateProvider
           .state('modal', {
@@ -203,6 +208,14 @@
                 templateUrl: 'modules/core/stateRedirect/loginError.tpl.html',
                 controller: 'StateRedirectCtrl',
                 controllerAs: 'stateRedirect',
+              },
+            },
+            authenticate: false,
+          })
+          .state('backend-temp-unavailable', {
+            views: {
+              'main@': {
+                templateUrl: 'modules/core/stateRedirect/backendTempUnavailable.tpl.html',
               },
             },
             authenticate: false,
@@ -2350,9 +2363,22 @@
           .state('partnerreports', {
             parent: 'partner',
             url: '/reports',
+            template: '<div ui-view></div>',
+            controller: 'PartnerReportsSwitchCtrl',
+          })
+          .state('partnerreports.base', {
+            parent: 'partner',
+            url: '/base',
             templateUrl: 'modules/core/partnerReports/partnerReports.tpl.html',
             controller: 'PartnerReportCtrl',
             controllerAs: 'nav',
+          })
+          .state('partnerreports.spark', {
+            parent: 'partner',
+            url: '/spark',
+            templateUrl: 'modules/core/partnerReports/sparkReports/sparkReports.tpl.html',
+            controller: 'SparkReportsCtrl',
+            controllerAs: '$ctrl',
           })
           .state('partnercustomers', {
             parent: 'partner',
@@ -2653,8 +2679,8 @@
             resolve: {
               data: /* @ngInject */ function ($state, $stateParams) {
                 $state.get('customerPstnOrdersOverview.orderDetail').data.displayName = $stateParams.vendor === 'BYOPSTN' ?
-                                                                                        $stateParams.currentOrder.formattedDate :
-                                                                                        $stateParams.currentOrder.carrierOrderId;
+                  $stateParams.currentOrder.formattedDate :
+                  $stateParams.currentOrder.carrierOrderId;
               },
               lazy: resolveLazyLoad(function (done) {
                 require(['modules/huron/pstn/pstnOrderManagement/orderDetail'], done);
@@ -2682,8 +2708,8 @@
             resolve: {
               data: /* @ngInject */ function ($state, $translate, $stateParams) {
                 $state.get('customer-overview.orderDetail').data.displayName = $stateParams.isCarrierByopstn ?
-                                                                                        $stateParams.currentOrder.formattedDate :
-                                                                                        $stateParams.currentOrder.carrierOrderId;
+                  $stateParams.currentOrder.formattedDate :
+                  $stateParams.currentOrder.carrierOrderId;
               },
               lazy: resolveLazyLoad(function (done) {
                 require(['modules/huron/pstn/pstnOrderManagement/orderDetail'], done);
@@ -2711,7 +2737,7 @@
           })
           .state('firsttimewizard', {
             parent: 'firsttimesplash',
-            template: '<cr-wizard activate="activate" tabs="tabs" finish="finish" is-first-time="true"></cr-wizard>',
+            template: '<cr-wizard provision="provision" tabs="tabs" finish="finish" is-first-time="true"></cr-wizard>',
             controller: 'SetupWizardCtrl',
             data: {
               firstTimeSetup: true,
@@ -2821,6 +2847,58 @@
               device: null,
               id: null,
               orgId: null,
+            },
+          })
+          .state('provisioning-main', {
+            views: {
+              'main@': {
+                controller: 'ProvisioningController',
+                controllerAs: 'provisioningCtrl',
+                templateUrl: 'modules/squared/provisioning-console/provisioning.html',
+              },
+            },
+            abstract: true,
+            resolve: {
+              // TODO: agendel 8/1/2017  here to remove this and use mainLazyLoad
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('./main'));
+                }, 'modules');
+              }),
+            },
+            sticky: true,
+          })
+          .state('provisioning', {
+            url: '/provisioning',
+            parent: 'provisioning-main',
+          })
+          .state('provisioning.pending', {
+            url: '/pending',
+            views: {
+              provisioningView: {
+                templateUrl: 'modules/squared/provisioning-console/pending/provisioning-pending.html',
+              },
+            },
+          })
+          .state('provisioning.completed', {
+            url: '/completed',
+            views: {
+              provisioningView: {
+                templateUrl: 'modules/squared/provisioning-console/completed/provisioning-completed.html',
+              },
+            },
+          })
+          .state('order-details', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                controller: 'ProvisioningDetailsController',
+                controllerAs: 'provisioningDetailsCtrl',
+                templateUrl: 'modules/squared/provisioning-console/overview/provisioning-details.html',
+              },
+            },
+            params: {
+              order: {},
             },
           });
 
@@ -3389,9 +3467,7 @@
           })
           .state('cluster-list', {
             url: '/services/clusters',
-            templateUrl: 'modules/hercules/fusion-pages/cluster-list.html',
-            controller: 'FusionClusterListController',
-            controllerAs: 'resourceList',
+            template: '<hybrid-services-cluster-list-with-cards has-cucm-support-feature-toggle="$resolve.hasCucmSupportFeatureToggle" has-enterprise-private-trunking-feature-toggle="$resolve.hasEnterprisePrivateTrunkingFeatureToggle"></hybrid-services-cluster-list-with-cards>',
             parent: 'main',
             resolve: {
               hasCucmSupportFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
@@ -3513,6 +3589,21 @@
               },
               callback: /* @ngInject */ function ($stateParams) {
                 return $stateParams.callback;
+              },
+            },
+          })
+          .state('context-fields-sidepanel.options', {
+            template: '<context-field-sidepanel-options-list type-definition="$resolve.dataTypeDefinition" default-option="{{::$resolve.defaultOption}}"></context-field-sidepanel-options-list>',
+            params: {
+              dataTypeDefinition: {},
+              defaultOption: undefined,
+            },
+            resolve: {
+              dataTypeDefinition: /* @ngInject */ function ($stateParams) {
+                return $stateParams.dataTypeDefinition;
+              },
+              defaultOption: /* @ngInject */ function ($stateParams) {
+                return $stateParams.defaultOption;
               },
             },
           })
@@ -4600,6 +4691,20 @@
             params: {
               template: null,
               isEditFeature: null,
+            },
+            resolve: {
+              isCareProactiveChatTrialsEnabled: /* @ngInject */ function (FeatureToggleService, $state) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasCareProactiveChatTrials)
+                  .then(function (isEnabled) {
+                    $state.isCareProactiveChatTrialsEnabled = isEnabled;
+                  });
+              },
+              isCareAssistantEnabled: /* @ngInject */ function (FeatureToggleService, $state) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasCareChatAssistant)
+                  .then(function (isEnabled) {
+                    $state.isCareAssistantEnabled = isEnabled;
+                  });
+              },
             },
           })
           .state('care.Features.DeleteFeature', {

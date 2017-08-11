@@ -321,10 +321,10 @@ describe('DeviceUsageService', function () {
       $httpBackend
         .when('GET', devicesRequest)
         .respond([
-            { displayName: 'two', id: '2222', whatever: 'whatever' },
-            { displayName: 'four', id: '4444', whatever: 'whatever' },
-            { displayName: 'three', id: '3333', whatever: 'whatever' },
-            { displayName: 'one', id: '1111', whatever: 'whatever' },
+          { displayName: 'two', id: '2222', whatever: 'whatever' },
+          { displayName: 'four', id: '4444', whatever: 'whatever' },
+          { displayName: 'three', id: '3333', whatever: 'whatever' },
+          { displayName: 'one', id: '1111', whatever: 'whatever' },
         ]);
 
       var result;

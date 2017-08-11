@@ -129,6 +129,6 @@ export class ResourceGroupService {
 }
 
 export default angular
-  .module('Hercules')
+  .module('hercules.resource-group-service', [])
   .service('ResourceGroupService', ResourceGroupService)
   .name;

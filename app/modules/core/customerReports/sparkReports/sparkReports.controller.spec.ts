@@ -45,6 +45,7 @@ describe('Controller: Customer Reports Ctrl', function () {
     this.activeOptions.description = 'activeUsers.customerPortalDescription';
     this.secondaryActiveOptions = _.cloneDeep(this.ctrlData.activeUserSecondaryOptions);
     this.secondaryActiveOptions.description = 'activeUsers.customerMostActiveDescription';
+    this.secondaryActiveOptions.missingUsersErrorDescription = 'activeUsers.missingUsersError';
     this.secondaryActiveOptions.search = true;
     this.secondaryActiveOptions.sortOptions = _.cloneDeep(this.activeData.sortOptions);
     this.secondaryActiveOptions.table.headers = _.cloneDeep(this.activeData.headers);
@@ -516,6 +517,7 @@ describe('Controller: Customer Reports Ctrl', function () {
       });
     });
   });
+
   describe('FeatureToggleService returns true for I802', function () {
     beforeEach(function () {
       spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
@@ -530,6 +532,7 @@ describe('Controller: Customer Reports Ctrl', function () {
       });
       this.$scope.$apply();
     });
+
     it('should have details tab present', function() {
       expect(this.controller.ALL).toEqual(this.ctrlData.ALL);
       expect(this.controller.ENGAGEMENT).toEqual(this.ctrlData.ENGAGEMENT);
@@ -537,6 +540,33 @@ describe('Controller: Customer Reports Ctrl', function () {
       expect(this.controller.DETAILS).toEqual(this.ctrlData.DETAILS);
       expect(this.controller.filterArray.length).toEqual(4);
     });
+
+    it('should have adjusted the startDate and endDate as time filter is Last 7 days', function() {
+      const sDate = moment().subtract('days', 7).format('YYYY-MM-DD');
+      const sTime = moment().subtract('days', 7).format('h:mm A');
+      const eDate = moment().format('YYYY-MM-DD');
+      const eTime = moment().format('h:mm A');
+      console.debug(this.controller.startDate);
+      expect(this.controller.startDate).toEqual(sDate);
+      expect(this.controller.endDate).toEqual(eDate);
+      expect(this.controller.startTime).toEqual(sTime);
+      expect(this.controller.endTime).toEqual(eTime);
+    });
+
+    it('should have adjusted the startDate and endDate on time filter Changes', function() {
+      this.controller.timeSelected = this.defaults.timeFilter[1];
+      this.controller.timeUpdates.update();
+      this.$timeout.flush();
+      const sDate = moment().subtract('weeks', 4).format('YYYY-MM-DD');
+      const sTime = moment().subtract('weeks', 4).format('h:mm A');
+      const eDate = moment().format('YYYY-MM-DD');
+      const eTime = moment().format('h:mm A');
+      expect(this.controller.startDate).toEqual(sDate);
+      expect(this.controller.endDate).toEqual(eDate);
+      expect(this.controller.startTime).toEqual(sTime);
+      expect(this.controller.endTime).toEqual(eTime);
+    });
+
     it('resetCards should alter the visible filterArray[x].toggle based on filters equals \'Details\'', function () {
       this.controller.filterArray[3].toggle(this.ctrlData.DETAILS);
       this.SparkReportService.getCDRReport.and.returnValue(this.$q.resolve(this.dummyCdrData));
@@ -544,13 +574,15 @@ describe('Controller: Customer Reports Ctrl', function () {
       expect(this.controller.displayDetails).toBeTruthy();
       expect(this.controller.gridOptions).toBeDefined();
     });
-    it('should gridData have data loaded', function() {
+
+    it('should gridOptions.data have data loaded', function() {
       this.controller.filterArray[3].toggle(this.ctrlData.DETAILS);
       this.SparkReportService.getCDRReport.and.returnValue(this.$q.resolve(this.dummyCdrData));
       this.$scope.$apply();
-      expect(this.controller.gridData.length).toEqual(5);
+      expect(this.controller.gridOptions.data.length).toEqual(5);
     });
   });
+
   describe('FeatureToggleService returns false for I802', function () {
     beforeEach(function () {
       spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
@@ -565,15 +597,16 @@ describe('Controller: Customer Reports Ctrl', function () {
       });
       this.$scope.$apply();
     });
+
     it('should not have details tab present', function() {
       expect(this.controller.filterArray.length).toEqual(3);
       expect(this.controller.displayDetails).toBeFalsy();
     });
-    it('gridData should not have data loaded', function() {
+
+    it('gridOptions.data should not have data loaded', function() {
       this.SparkReportService.getCDRReport.and.returnValue(this.$q.resolve(this.dummyCdrData));
       this.$scope.$apply();
       expect(this.controller.gridOptions).toBeUndefined();
-      expect(this.controller.gridData.length).toEqual(0);
     });
   });
 });

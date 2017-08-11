@@ -68,7 +68,7 @@
     });
     var $stateChangeStart = $rootScope.$on('$stateChangeStart', onStateChangeStart);
     var $stateChangeSuccess = $rootScope.$on('$stateChangeSuccess', onStateChangeSuccess);
-    $scope.$on('$destroy', onDestory);  // -- by zoncao@cisco.com for site select
+    $scope.$on('$destroy', onDestory);
 
     vm.$state = $state;
     vm.goMetricsState = goMetricsState;
@@ -198,9 +198,9 @@
           loadUrlAndIframe(QlikMashupChartsUrl);
         }
       })
-      .catch(function (error) {
-        Notification.errorWithTrackingId(error, 'common.error');
-      });
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'common.error');
+        });
     }
 
     function updateIframe() {

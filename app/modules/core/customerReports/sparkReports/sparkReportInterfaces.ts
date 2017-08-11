@@ -59,6 +59,11 @@ export interface IConversation extends IGraphBase {
   groupRooms: number;
 }
 
+export interface IConversationPopulated {
+  files: boolean;
+  rooms: boolean;
+}
+
 export interface IConversationWrapper {
   array: IConversation[];
   hasRooms: boolean;
@@ -100,4 +105,13 @@ export interface IMediaData extends IMediaQualityData {
 export interface IMinMax {
   min: number;
   max: number;
+}
+
+export interface IPlaceHolder {
+  searchbox: string;
+  startDate: string;
+  endDate: string;
+  startTime: string;
+  endTime: string;
+  to: string;
 }

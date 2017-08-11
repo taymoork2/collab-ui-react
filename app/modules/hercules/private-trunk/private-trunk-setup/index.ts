@@ -14,7 +14,7 @@ export default angular
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
-    require('modules/hercules/services/uss-service'),
+    require('modules/hercules/services/uss.service').default,
     require('modules/hercules/services/cert-service').default,
     require('modules/hercules/services/certificate-formatter-service').default,
     privateTrunkPrereq,

@@ -1,0 +1,4 @@
+<div class="ui-grid-cell-contents" ng-class="{'selected' : $ctrl.row.isSelected, 'center-text': $ctrl.centerText}" ng-click="$ctrl.click()">
+  <i ng-if="$ctrl.cellIconCss" class="icon {{$ctrl.cellIconCss}}"></i>
+  <span ng-if="$ctrl.cellValue">{{$ctrl.cellValue}}</span>
+</div>

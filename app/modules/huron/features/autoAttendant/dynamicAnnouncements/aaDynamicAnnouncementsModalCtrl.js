@@ -141,7 +141,7 @@
       return getSessionVariablesOptions()
         .then(handleSessionVariablesOptions.bind(null, variablesOptions)
         //add multiple thens for various types of variables, from scope or elsewhere
-      );
+        );
     }
 
     function init() {
@@ -152,7 +152,7 @@
           setUpVariablesOptions(variablesOptions);
           activate();
         }
-      );
+        );
     }
 
     init();

@@ -1,7 +1,7 @@
 import { SpeedDialService, ISpeedDial } from './speedDial.service';
 import { IActionItem } from 'modules/core/components/sectionTitle/sectionTitle.component';
 import { Notification } from 'modules/core/notifications';
-
+import { CallDestinationTranslateService, ICallDestinationTranslate } from 'modules/call/shared/call-destination-translate';
 interface IValidationMessages {
   required: string;
   pattern: string;
@@ -28,6 +28,7 @@ class SpeedDialCtrl implements ng.IComponentController {
   private labelMessages: IValidationMessages;
   private numberMessages: IValidationMessages;
   private customTranslations: ITranslationMessages;
+  private inputTranslations: ICallDestinationTranslate;
   private actionList: IActionItem[];
   private actionListCopy: IActionItem[] = [];
   private callDestInputs: string[];
@@ -48,6 +49,7 @@ class SpeedDialCtrl implements ng.IComponentController {
     private dragularService,
     private Notification: Notification,
     private SpeedDialService: SpeedDialService,
+    private CallDestinationTranslateService: CallDestinationTranslateService,
     private $timeout: ng.ITimeoutService,
     private BlfInternalExtValidation,
     private Authinfo,
@@ -97,6 +99,7 @@ class SpeedDialCtrl implements ng.IComponentController {
       actionFunction: this.setReorder.bind(this),
     });
     this.actionList = _.cloneDeep(this.actionListCopy);
+    this.inputTranslations = this.CallDestinationTranslateService.getCallDestinationTranslate();
   }
 
   public extensionOwned(number: string): void {

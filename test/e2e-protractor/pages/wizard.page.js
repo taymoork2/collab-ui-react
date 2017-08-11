@@ -37,6 +37,19 @@ var Wizard = function () {
   this.sipDomain = element(by.css('.sip-domain-input'));
   this.sipURLExample = element(by.css('.url-examples-style'));
   this.saveCheckbox = element(by.css('label[for="confirmSaveCheckBox"]'));
+  this.titleBanner = element.all(by.css('[translate="firstTimeWizard.planReview"]')).last();
+  this.callBanner = element(by.css('[translate="firstTimeWizard.unifiedCommunication"]'));
+  this.timeZoneDropdown = element(by.css('.csSelect-container[name="timeZone"]'));
+  this.preferredLanguageDropdown = element(by.css('.csSelect-container[name="preferredLanguage"]'));
+  this.extensionLengthWarning = element.all(by.css('[ng-message="minlength"]')).first();
+  this.extensionLengthTrash = element.all(by.css('.icon-trash')).first();
+  this.extensionLengthPrefixInput = element(by.id('beginRange0'));
+  this.extensionLengthSuffixInput = element(by.id('endRange0'));
+  this.dialOneRadio = element(by.css('.cs-radio[for="nationalDialing"]'));
+  this.companyVoicemailToggle = element(by.css('label[for="companyVoicemailToggle"]'));
+  this.scrollToBottomButton = element(by.css('.icon-right-arrow-contain'));
+  this.voicemailDropdown = element.all(by.binding('csSelect.getLabel(csSelect.selected)')).last();
+  this.voicemailDropdownSelect = element.all(by.css('li[ng-class="csSelect.style(option)"]')).last();
 
   this.clickPlanReview = function () {
     utils.click(this.reviewTab);
@@ -60,3 +73,4 @@ var Wizard = function () {
 };
 
 module.exports = Wizard;
+

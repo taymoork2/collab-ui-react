@@ -5,23 +5,26 @@
     .controller('HeaderCtrl', HeaderCtrl);
 
   /* @ngInject */
-  function HeaderCtrl($q, $translate, Authinfo, FeatureToggleService, ProPackService, Utils, Orgservice) {
+  function HeaderCtrl($q, $translate, Authinfo, ProPackService, Utils, Orgservice, ControlHubService) {
     var vm = this;
     vm.partnerInfo = null;
     vm.adminTabs = [];
     vm.showOrgName = showOrgName;
     vm.showUserDropDown = showUserDropDown;
     vm.showMyCompany = showMyCompany;
+    vm.showProBadge = showProBadge;
     init();
 
     function init() {
       vm.icon = 'icon-cisco-logo';
       $q.all({
         proPackEnabled: ProPackService.hasProPackPurchased(),
-        nameChangeEnabled: FeatureToggleService.atlas2017NameChangeGetStatus(),
+        nameChangeEnabled: ControlHubService.getControlHubEnabled(),
       }).then(function (toggles) {
         if (toggles.proPackEnabled && toggles.nameChangeEnabled) {
           vm.headerTitle = $translate.instant('loginPage.titlePro');
+          getAdminTabs();
+          getPartnerInfo();
         } else if (toggles.nameChangeEnabled) {
           vm.headerTitle = $translate.instant('loginPage.titleNew');
           getAdminTabs();
@@ -45,6 +48,10 @@
       return Utils.isAdminPage() && !(Authinfo.isPartnerAdmin() || Authinfo.isPartnerSalesAdmin());
     }
 
+    function showProBadge() {
+      return Authinfo.isEnterpriseCustomer() && Authinfo.isPremium();
+    }
+
     function getAdminTabs() {
       if (showMyCompany()) {
         vm.adminTabs = [{
@@ -53,7 +60,7 @@
           link: '/my-company',
           iconClass: 'icon-outline',
         }];
-      } else if (showOrgName) {
+      } else if (showOrgName()) {
         vm.adminTabs = [{
           icon: 'icon-settings-active',
           title: Authinfo.getOrgName(),

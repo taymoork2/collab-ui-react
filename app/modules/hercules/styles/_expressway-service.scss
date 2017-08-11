@@ -257,6 +257,10 @@ Special stuff currently used for out own mail input field...
     background-color: $color-red-light !important;
     border-color: $color-red-base !important;
   }
+
+  .cs-input-group {
+    margin-bottom: 0;
+  }
 }
 
 .hercules-update-warning-text {
