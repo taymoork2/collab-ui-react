@@ -6615,6 +6615,7 @@
     "Online": "Online",
     "OnlineWithIssues": "Online, With Issues",
     "Offline": "Offline",
+    "OfflineExpired": "Deactivated",
     "Unknown": "Unknown",
     "WithDevices": "With Devices",
     "upgradeChannels": {

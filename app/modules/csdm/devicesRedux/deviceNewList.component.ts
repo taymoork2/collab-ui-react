@@ -1,4 +1,5 @@
 import { CsdmSearchService, SearchObject } from '../services/csdmSearch.service';
+import { IGridApi } from 'ui-grid';
 class DeviceNewList implements ng.IComponentController {
   public searchObject: SearchObject;
   public devices;
@@ -22,12 +23,13 @@ class DeviceNewList implements ng.IComponentController {
       data: 'lctrl.getResult()',
       infiniteScrollRowsFromEnd: 5,
       infiniteScrollDown: true,
+      useExternalSorting: true,
       enableHorizontalScrollbar: 0,
       rowHeight: 45,
       enableRowHeaderSelection: false,
       enableColumnMenus: false,
       multiSelect: false,
-      onRegisterApi: (gridApi) => {
+      onRegisterApi: (gridApi: IGridApiWithInfiniteScroll) => {
         this.gridApi = gridApi;
         gridApi.selection.on.rowSelectionChanged(this.$scope, (row) => {
           this.expandDevice(row.entity);
@@ -50,6 +52,10 @@ class DeviceNewList implements ng.IComponentController {
             gridApi.infiniteScroll.dataLoaded();
             this.loadingMore = false;
           });
+        });
+        gridApi.core.on.sortChanged($scope, (grid, sortColumns) => {
+          grid = grid;
+          sortColumns = sortColumns;
         });
       },
       columnDefs: [{
@@ -94,7 +100,7 @@ class DeviceNewList implements ng.IComponentController {
   }
 
   private getTemplate(name) {
-    return this.$templateCache.get('modules/squared/devices/templates/' + name + '.html');
+    return this.$templateCache.get('modules/csdm/templates/' + name + '.html');
   }
 
   public expandDevice(device) {
@@ -107,6 +113,9 @@ class DeviceNewList implements ng.IComponentController {
       });
     });
   }
+}
+interface IGridApiWithInfiniteScroll extends IGridApi {
+  infiniteScroll: any;
 }
 
 export class DeviceNewListComponent implements ng.IComponentOptions {

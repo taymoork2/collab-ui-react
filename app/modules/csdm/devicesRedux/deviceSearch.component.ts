@@ -123,15 +123,18 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
         name: this.$translate.instant('common.all'),
         filterValue: 'all',
       }, {
-        count: this.getDocCount(searchResult, 'connectionStatus', 'issues'),
+        count: this.getDocCount(searchResult, 'connectionStatus', 'connected_with_issues'),
         name: this.$translate.instant('CsdmStatus.OnlineWithIssues'),
         filterValue: 'connectionStatus:CONNECTED_WITH_ISSUES',
       }, {
         count: this.getDocCount(searchResult, 'connectionStatus', 'offline')
-        + this.getDocCount(searchResult, 'connectionStatus', 'disconnected')
-        + this.getDocCount(searchResult, 'connectionStatus', 'offline_expired'),
+        + this.getDocCount(searchResult, 'connectionStatus', 'disconnected'),
         name: this.$translate.instant('CsdmStatus.Offline'),
-        filterValue: 'connectionStatus:OFFLINE',
+        filterValue: 'connectionStatus:DISCONNECTED',
+      }, {
+        count: this.getDocCount(searchResult, 'connectionStatus', 'offline_expired'),
+        name: this.$translate.instant('CsdmStatus.OfflineExpired'),
+        filterValue: 'connectionStatus:OFFLINE_EXPIRED',
       }, {
         count: this.getDocCount(searchResult, 'connectionStatus', 'connected'),
         name: this.$translate.instant('CsdmStatus.Online'),

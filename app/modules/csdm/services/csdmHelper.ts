@@ -150,6 +150,10 @@ export class DeviceHelper {
           priority: '1',
         };
       case 'OFFLINE_EXPIRED':
+        return {
+          readableState: this.t('CsdmStatus.OfflineExpired'),
+          priority: '2',
+        };
       case 'DISCONNECTED':
       case 'UNKNOWN':
 
