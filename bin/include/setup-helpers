@@ -17,7 +17,7 @@ function unset_setup_helpers {
 
 # test if given arg is defined for the current shell
 function is_installed {
-    type $1 >/dev/null 2>&1
+    command -v $1 >/dev/null 2>&1
     return $?
 }
 
@@ -35,7 +35,7 @@ function install_parallel_as_needed {
             sudo apt-get update                    # Ubuntu (as of 14.04)
             sudo apt-get install -y parallel
         else
-            >&2 echo "Error: package manager on this OS is not supported."
+            >&2 echo "[ERROR] ${FUNCNAME[0]} package manager on this OS is not supported."
             return 1
         fi
     fi
@@ -175,7 +175,7 @@ function get_top_dir {
     top_dir=`pwd`
     cd $cwd
     if [ "${top_dir}" = "/" ]; then
-        >&2 echo "Error: traversed to '/' while trying to find top-level dir"
+        >&2 echo "[ERROR] traversed to '/' while trying to find top-level dir"
         return 1
     fi
     echo $top_dir
