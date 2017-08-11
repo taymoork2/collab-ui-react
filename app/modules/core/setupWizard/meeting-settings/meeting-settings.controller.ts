@@ -188,6 +188,11 @@ export class MeetingSettingsCtrl {
     return (licenseVolume - this.sumOfWebExLicensesAssigned(siteArray));
   }
 
+  public getMinForSiteType(siteUrl) {
+    const total = _.sumBy(_.filter(_.flatten(this.distributedLicensesArray), { siteUrl: siteUrl }), 'quantity');
+    return (total === 0) ? 1 : 0;
+  }
+
   public getLicensesAssignedTotal(centerType) {
     const siteArray = _.filter(_.flatten(this.distributedLicensesArray), { centerType: centerType });
 
