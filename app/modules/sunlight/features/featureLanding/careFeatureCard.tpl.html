@@ -22,9 +22,8 @@
           <div class="embed-code-txt h6 left">
             <p><span translate="sunlightDetails.status" ng-if="careFeature.featureType === 'Va'"></span>{{careFeature.status}}</p>
           </div>
-          <div class="right" ng-if="careFeature.featureType !== 'Va'">
-            <a class="icon icon-download" ng-click="careFeaturesCtrl.openEmbedCodeModal((careFeature), $event)">
-              <span class="sr-only" translate="careChatTpl.downloadAction"></span></a>
+          <div class="right icon icon-download" ng-if="careFeature.featureType !== 'Va'" ng-click="careFeaturesCtrl.openEmbedCodeModal((careFeature), $event)">
+              <span class="sr-only" translate="careChatTpl.downloadAction"></span>
           </div>
         </footer>
       </article>
