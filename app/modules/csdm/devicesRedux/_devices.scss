@@ -19,7 +19,7 @@
     padding-left: 10px;
   }
   .minimized {
-    height: 72px !important;
+    height: 65px !important;
   }
   .devices-header {
     display: flex;
@@ -29,7 +29,6 @@
     height: 305px;
     .clearfix {
       flex-grow: 1;
-      flex-basis: 50%;
       button {
         z-index: 1;
       }
@@ -287,10 +286,10 @@
   }
   .result-pane {
     .gridStyle {
-      height: calc(100vh - (#{$top-bar-height} + (#{$top-bar-border-width} * 2) + #{$page-header-height} + 72px));
+      height: calc(100vh - (#{$top-bar-height} + (#{$top-bar-border-width} * 2) + #{$page-header-height} + 65px));
     }
     .grid-container {
-      height: calc(100vh - (#{$top-bar-height} + (#{$top-bar-border-width} * 2) + #{$page-header-height} + 72px + 45px));
+      height: calc(100vh - (#{$top-bar-height} + (#{$top-bar-border-width} * 2) + #{$page-header-height} + 65px + 45px));
     }
     .ui-grid-footer-cell {
       padding: 0 20px;

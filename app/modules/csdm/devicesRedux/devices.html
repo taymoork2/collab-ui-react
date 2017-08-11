@@ -26,13 +26,13 @@
           <span translate="spacesPage.addBtn"></span>
         </button>
       </div>
-      <device-chart ng-hide="devices.searchMinimized" class="chart-header" search-result="devices.searchResult"
-                    pie-chart-clicked="devices.addToSearch(searchField,query)"></device-chart>
-      <div class="bottom">
-        <i class="icon"
-           ng-click="devices.searchMinimized = !devices.searchMinimized"
-           ng-class="{'icon-chevron-up': !devices.searchMinimized, 'icon-chevron-down': devices.searchMinimized}"></i>
-      </div>
+      <!--<device-chart ng-hide="devices.searchMinimized" class="chart-header" search-result="devices.searchResult"-->
+                    <!--pie-chart-clicked="devices.addToSearch(searchField,query)"></device-chart>-->
+      <!--<div class="bottom">-->
+        <!--<i class="icon"-->
+           <!--ng-click="devices.searchMinimized = !devices.searchMinimized"-->
+           <!--ng-class="{'icon-chevron-up': !devices.searchMinimized, 'icon-chevron-down': devices.searchMinimized}"></i>-->
+      <!--</div>-->
     </div>
     <device-list devices="devices.searchResult.hits.hits" search-object="devices.searchObject"></device-list>
     <div class="devices-content">

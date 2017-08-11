@@ -4,7 +4,9 @@ import {
 import { Device } from '../services/deviceSearchConverter';
 
 export class DeviceSearch implements ng.IComponentController, ISearchHandler {
-  public searchField: string;
+  public searchField = '';
+  public searchFilters;
+  private _currentFilterValue = '';
   private currentSearchObject: SearchObject;
   public currentBullet: Bullet;
   private inputActive: boolean;
@@ -18,9 +20,10 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
   public searchResult: Device[];
 
   /* @ngInject */
-  constructor(private CsdmSearchService: CsdmSearchService) {
+  constructor(private CsdmSearchService: CsdmSearchService, private $translate) {
     this.currentSearchObject = SearchObject.create('');
     this.currentBullet = new Bullet(this.currentSearchObject);
+    this.updateSearchFilters();
   }
 
   get searching(): boolean {
@@ -34,6 +37,9 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
 
   private updateSearchResult(result?: SearchResult) {
     this.searchResultChanged({ result: result });
+    if (!this._currentFilterValue) {
+      this.updateSearchFilters(result);
+    }
   }
 
   public addToSearch(field: string, query: string) {
@@ -42,7 +48,15 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
   }
 
   public setCurrentSearch(search: string) {
-    this.currentSearchObject = SearchObject.create(search);
+    this.searchField = (search || '').trim().replace(/\s+/g, ' AND ');
+    this.currentSearchObject = SearchObject.create(this.searchField + (this.searchField ? ' AND ' : '') + this._currentFilterValue);
+    this.searchChanged2();
+  }
+
+  public setCurrentFilterValue(value: string) {
+    value = value === 'all' ? '' : value;
+    this._currentFilterValue = value;
+    this.currentSearchObject = SearchObject.create(this.searchField + (this.searchField ? ' AND ' : '') + this._currentFilterValue);
     this.searchChanged2();
   }
 
@@ -60,6 +74,10 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
     this.performSearch(search); //TODO avoid at now
     // this.searchObject = search;
     this.searchChanged({ search: search });
+
+    if (this._currentFilterValue) {
+      this.performFilterUpdateSearch();
+    }
   }
 
   private performSearch(search: SearchObject) {
@@ -69,6 +87,16 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
         return;
       }
       this.updateSearchResult();
+    });
+  }
+
+  private performFilterUpdateSearch() {
+    this.CsdmSearchService.search(SearchObject.create(this.searchField)).then(response => {
+      if (response && response.data) {
+        this.updateSearchFilters(response.data);
+        return;
+      }
+      this.updateSearchFilters();
     });
   }
 
@@ -87,6 +115,37 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
   //     .map((v,k)=>{return {}})
   //   _.filter(this.currentSearchObject.tokenizedQuery, (__, k) => this.currentBullet.isCurrentField(k || ''));
   // }
+
+  private updateSearchFilters(searchResult?: SearchResult) {
+    this.searchFilters = [
+      {
+        count: searchResult && searchResult.hits.total || 0,
+        name: this.$translate.instant('common.all'),
+        filterValue: 'all',
+      }, {
+        count: this.getDocCount(searchResult, 'connectionStatus', 'issues'),
+        name: this.$translate.instant('CsdmStatus.OnlineWithIssues'),
+        filterValue: 'connectionStatus:CONNECTED_WITH_ISSUES',
+      }, {
+        count: this.getDocCount(searchResult, 'connectionStatus', 'offline')
+        + this.getDocCount(searchResult, 'connectionStatus', 'disconnected')
+        + this.getDocCount(searchResult, 'connectionStatus', 'offline_expired'),
+        name: this.$translate.instant('CsdmStatus.Offline'),
+        filterValue: 'connectionStatus:OFFLINE',
+      }, {
+        count: this.getDocCount(searchResult, 'connectionStatus', 'connected'),
+        name: this.$translate.instant('CsdmStatus.Online'),
+        filterValue: 'connectionStatus:"CONNECTED"',
+      }];
+  }
+
+  private getDocCount(searchResult: SearchResult | undefined, aggregation: string, bucketName: string) {
+    const buckets = searchResult
+      && searchResult.aggregations[aggregation]
+      && searchResult.aggregations[aggregation].buckets;
+    const bucket = _.find(buckets || [], { key: bucketName });
+    return bucket && bucket.docCount || 0;
+  }
 }
 
 class Bullet {

@@ -3,7 +3,7 @@ import { SearchInteraction } from './deviceSearch.component';
 export class DevicesCtrl {
 
   public anyDevicesOrCodesLoaded = true; //TODO remove
-  public searchMinimized = false;
+  public searchMinimized = true;
   public searchInteraction = new SearchInteraction();
   private _searchString: string = '';
   private _searchResult: SearchResult;
