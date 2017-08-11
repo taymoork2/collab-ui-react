@@ -42,13 +42,13 @@ describe('Controller: ProvisioningDetailsController', function () {
 
     it('should set dateInfo to the \'orderReceived\' date for not completed orders', function () {
       initController.call(this, 0);
-      const dateReceivedFormatted = moment(orders[0].orderReceived).format('M/d/YY h:mm a');
+      const dateReceivedFormatted = orders[0].orderReceived;
       expect(this.controller.dateInfo).toEqual(dateReceivedFormatted);
       expect(this.ProvisioningService.getOrder).toHaveBeenCalledWith(orders[0].orderUUID);
     });
     it('should set dateInfo to the \'lastModified\' date for completed orders', function () {
       initController.call(this, 4);
-      const dateModifiedFormatted = moment(orders[4].lastModified).format('M/d/YY h:mm a');
+      const dateModifiedFormatted = orders[4].lastModified;
       expect(this.controller.dateInfo).toEqual(dateModifiedFormatted);
       expect(this.ProvisioningService.getOrder).toHaveBeenCalledWith(orders[4].orderUUID);
     });

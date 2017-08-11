@@ -80,11 +80,19 @@ describe('Controller: SupportCtrl', function () {
         expect($scope.showOrderProvisioningConsole).toBe(true);
       });
 
-      it('should NOT show the launch button if FT is set to false', function () {
+      it('should NOT show the launch button if FT is set to false and we are in prod. mode', function () {
         FeatureToggleService.atlasOrderProvisioningConsoleGetStatus.and.returnValue($q.resolve(false));
+        Config.isProd.and.returnValue(true);
         $scope.initializeShowLinks();
         $scope.$apply();
         expect($scope.showOrderProvisioningConsole).toBe(false);
+      });
+      it('should show the launch button if FT is set to false and we are NOT in prod. mode', function () {
+        FeatureToggleService.atlasOrderProvisioningConsoleGetStatus.and.returnValue($q.resolve(false));
+        Config.isProd.and.returnValue(false);
+        $scope.initializeShowLinks();
+        $scope.$apply();
+        expect($scope.showOrderProvisioningConsole).toBe(true);
       });
     });
     describe('if user does not have an OrderAdmin role', function () {

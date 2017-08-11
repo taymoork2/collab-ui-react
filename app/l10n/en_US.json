@@ -1172,8 +1172,8 @@
     },
     "details": {
       "noSites": "This order doesn't have any sites listed",
-      "completed": "Order completed on {{orderDate}}",
-      "pending": "Request received on {{orderDate}}",
+      "completed": "Order completed: {{orderDate}}",
+      "pending": "Request received: {{orderDate}}",
       "customerInfo": {
         "title": "Customer Information",
         "partnerName": "Partner Name",
@@ -1195,7 +1195,8 @@
         "service": "Service Name",
         "action": "Action",
         "broadcast": "Audio Broadcast",
-        "callback": "Callback"
+        "callback": "Callback",
+        "ccaspPartnerName": "CCA-SP Partner Name"
       },
       "conferencing": {
         "title": "Audio for {{site}}",
@@ -7137,7 +7138,7 @@
       "customerInformationCallback": {
         "title_chatPlusCallback": "Customer Information for Callback",
         "desc_chatPlusCallback": "This is the screen a customer fills in to request a callback from an agent"
-      }      
+      }
     },
     "summary": "Summary",
     "summaryDesc": "You have configured the template. Click Finish to save the configuration and generate embed code so you can start using this template on your organization website.",
