@@ -3097,7 +3097,9 @@
         "double": "Decimal",
         "integer": "Number",
         "string": "Short Text",
-        "enumString": "Single Select"
+        "enumString": "Single Select",
+        "list<string>": "List",
+        "unknownDataType": "Unknown Type"
       },
       "status": "Status",
       "inUse": "In Use",
@@ -3170,7 +3172,7 @@
         "fieldsetIdPlaceholder": "For eg. sales.shoppingcart",
         "descriptionPlaceholder": "What is this fieldset for?",
         "createNew": "Create New Fieldset",
-        "addOrEditFields": "Search and select the fields for this fieldset in the order you wish them to appear in the application.",
+        "addOrEditFields": "Search and select the fields for this fieldset in the order you want them to appear in the application.",
         "searchFields": "Search Fields",
         "loadFailure": "Unable to retrieve fields.",
         "noFields": "No fields available",
