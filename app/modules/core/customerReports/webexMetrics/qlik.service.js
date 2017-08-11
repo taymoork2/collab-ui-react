@@ -18,6 +18,8 @@
       getSparkReportQBSforPremiumUrl: getSparkReportQBSforPremiumUrl,
       getSparkReportAppforBaseUrl: getSparkReportAppforBaseUrl,
       getSparkReportAppforPremiumUrl: getSparkReportAppforPremiumUrl,
+      getSparkReportQBSforPartnerUrl: getSparkReportQBSforPartnerUrl,
+      getSparkReportAppforPartnerUrl: getSparkReportAppforPartnerUrl,
       getReportQBSUrl: getReportQBSUrl,
     };
 
@@ -108,6 +110,15 @@
 
     function getSparkReportAppforPremiumUrl(qrp) {
       return UrlConfig.getSparkReportAppforPremiumUrl(qrp);
+    }
+
+    function getSparkReportQBSforPartnerUrl(data) {
+      var url = UrlConfig.getSparkReportQBSforPartnerUrl();
+      return $http.post(url, data).then(extractData).catch(catchError);
+    }
+
+    function getSparkReportAppforPartnerUrl(qrp) {
+      return UrlConfig.getSparkReportAppforPartnerUrl(qrp);
     }
   }
 }());
