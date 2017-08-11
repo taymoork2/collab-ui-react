@@ -94,6 +94,10 @@
   }
 }
 
+header > p > span.badge {
+  @include vr-spacing(pt, 1);
+}
+
 .no-features {
   display: flex;
   flex: 1;

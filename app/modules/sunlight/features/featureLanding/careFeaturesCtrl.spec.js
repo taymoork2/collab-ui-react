@@ -174,28 +174,12 @@ describe('Care Feature Ctrl should ', function () {
     expect(controller.pageState).toEqual('NewFeature');
   });
 
-  it('should filter a list of Chat templates', function () {
+  it('should filter a list of Customer Support Templates', function () {
     getAllTemplatesDeferred();
     $scope.$apply();
-    controller.setFilter('chat');
-    expect(controller.filteredListOfFeatures.length).toEqual(3);
+    controller.setFilter('customerSupport');
+    expect(controller.filteredListOfFeatures.length).toEqual(9);
     expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Dev Template');
-  });
-
-  it('should filter a list of Callback templates', function () {
-    getAllTemplatesDeferred();
-    $scope.$apply();
-    controller.setFilter('callback');
-    expect(controller.filteredListOfFeatures.length).toEqual(3);
-    expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Callback Dev Template');
-  });
-
-  it('should filter a list of Chat+Callback templates', function () {
-    getAllTemplatesDeferred();
-    $scope.$apply();
-    controller.setFilter('chatPlusCallback');
-    expect(controller.filteredListOfFeatures.length).toEqual(3);
-    expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Chat+Callback Dev Template');
   });
 
   it('should filter a list of Virtual Assistant templates', function () {
@@ -250,31 +234,13 @@ describe('Care Feature Ctrl should ', function () {
     expect(controller.filteredListOfFeatures[3].name).toEqual('Virtual Assistant Dev Config');
   });
 
-  it('should filter the searched data from the list of Chat templates only', function () {
+  it('should filter the searched data from the list of Customer Support Templates only', function () {
     getAllTemplatesDeferred();
     $scope.$apply();
     controller.searchData('Dev');
-    controller.setFilter('chat');
-    expect(controller.filteredListOfFeatures.length).toEqual(1);
+    controller.setFilter('customerSupport');
+    expect(controller.filteredListOfFeatures.length).toEqual(3);
     expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Dev Template');
-  });
-
-  it('should filter the searched data from the list of Callback templates only', function () {
-    getAllTemplatesDeferred();
-    $scope.$apply();
-    controller.searchData('Dev');
-    controller.setFilter('callback');
-    expect(controller.filteredListOfFeatures.length).toEqual(1);
-    expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Callback Dev Template');
-  });
-
-  it('should filter the searched data from the list of Chat+Callback templates only', function () {
-    getAllTemplatesDeferred();
-    $scope.$apply();
-    controller.searchData('Dev');
-    controller.setFilter('chatPlusCallback');
-    expect(controller.filteredListOfFeatures.length).toEqual(1);
-    expect(controller.filteredListOfFeatures[0].name).toEqual('Sunlight Chat+Callback Dev Template');
   });
 
   it('should filter the searched data from the list of Virtual Assistant templates only', function () {

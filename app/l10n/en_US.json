@@ -1500,7 +1500,8 @@
     "validate": "Validate",
     "voice": "Voice",
     "warning": "Warning",
-    "yes": "Yes"
+    "yes": "Yes",
+    "customerSupportTemplates": "Customer Support Templates"
   },
   "notifications": {
     "success": "Success notifications",
