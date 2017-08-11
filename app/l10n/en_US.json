@@ -663,6 +663,8 @@
       "title": "WebEx",
       "metrics": "Metrics",
       "diagnostics": "Diagnostics",
+      "classic": "Classic",
+      "webexClassic": "WebEx Classic",
       "meetingUsage": "Meeting Usage",
       "joinMeetingTime": "Join Meeting Time",
       "webexReportInMashup": "CHP Reports",

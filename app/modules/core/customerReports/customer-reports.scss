@@ -1,6 +1,5 @@
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/tools/functions/core';
-@import '~collab-ui/scss/tools/placeholders/page-layout';
+@import '../../../../node_modules/collab-ui/scss/settings/core';
+@import '../../../../node_modules/collab-ui/scss/settings/page';
 
 .metricsContent {
   overflow: hidden !important;
