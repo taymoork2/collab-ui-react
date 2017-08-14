@@ -29,6 +29,7 @@ class WebexReportsSearch implements ng.IComponentController {
 
   /* @ngInject */
   public constructor(
+    private Analytics,
     private $scope: IGridApiScope,
     private Notification: Notification,
     private $state: ng.ui.IStateService,
@@ -42,7 +43,7 @@ class WebexReportsSearch implements ng.IComponentController {
   }
 
   public $onInit(): void {
-
+    this.Analytics.trackEvent(this.SearchService.featureName, {});
     this.initDateRange();
     this.setGridOptions();
     this.$scope.$emit('selectEnable', false);
