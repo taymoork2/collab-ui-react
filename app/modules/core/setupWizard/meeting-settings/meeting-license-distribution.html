@@ -1,5 +1,6 @@
+<div ng-form="meetingCtrl.meetingSettingsForm">
 <div class="meeting-settings">
-  <div ng-init="meetingCtrl.enableOrDisableNext()" class="distribute-licenses-heading">
+  <div ng-init="meetingCtrl.enableOrDisableNext(meetingCtrl.steps.SITES_LICENSES)" class="distribute-licenses-heading">
     <h4 translate="firstTimeWizard.distributeYourWebExLicenses"></h4>
   </div>
   <div ng-repeat="licenses in meetingCtrl.distributedLicensesArray">
@@ -10,7 +11,7 @@
           <article>
             <section class="row">
               <p class="col-md-7">{{meetingCtrl.offerCodeToCenterTypeString(site.centerType)}}</p>
-              <p class="col-md-5 count align-license-count">{{meetingCtrl.getLicensesRemaining(site.centerType)}}</p>
+              <p class="col-md-5 count align-license-count" ng-class="{'error': (meetingCtrl.getLicensesRemaining(site.centerType) < 0)}">{{meetingCtrl.getLicensesRemaining(site.centerType)}}</p>
             </section>
           </article>
         </cs-card>
@@ -19,18 +20,24 @@
     <div class="row">
       <div ng-repeat="site in licenses">
         <div ng-if="$first" class="col-md-3">{{site.siteUrl}}.webex.com</div>
-        <div class="col-md-2">
-          <input cs-input class="align-license-count" type="text" id="site-license-count-{{site.siteUrl}}-{{$index}}" cs-input-size="medium-12"
-            placeholder="{{::'firstTimeWizard.enterNumberOfLicenses' | translate}}" ng-change="meetingCtrl.enableOrDisableNext()"
+        <div class="col-md-2" >
+          <input cs-input class="align-license-count" type="number" step="1"
+            required ng-min="meetingCtrl.getMinForSiteType(site.siteUrl)"  ng-model-options="{ allowInvalid: 'true' }"
+            name="siteLicenseCount{{site.siteUrl}}{{$index}}"
+            id="site-license-count-{{site.siteUrl}}-{{$index}}" cs-input-size="medium-12"
+            placeholder="{{::'firstTimeWizard.enterNumberOfLicenses' | translate}}"
+            ng-change="meetingCtrl.enableOrDisableNext(meetingCtrl.steps.SITES_LICENSES)"
+            cs-input-messages="meetingCtrl.licenseDistributionErrors"
             ng-model="site.quantity">
-        </div>
+          </div>
       </div>
     </div>
     <div ng-if="$last" class="row element-spacing">
       <div ng-repeat="site in licenses">
         <div ng-if="$first" class="col-md-3" translate="common.total"></div>
-        <div class="col-md-2 align-license-count-total">{{meetingCtrl.getLicensesAssignedTotal(site.centerType)}}</div>
+        <div class="col-md-2 align-license-count-total" ng-class="{'error': (meetingCtrl.getLicensesRemaining(site.centerType) < 0)}">{{meetingCtrl.getLicensesAssignedTotal(site.centerType)}}</div>
       </div>
     </div>
   </div>
 </div>
+</form>

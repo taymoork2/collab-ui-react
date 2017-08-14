@@ -1,4 +1,4 @@
-<div class="meeting-settings">
+<div class="meeting-settings" ng-init="meetingCtrl.enableOrDisableNext(meetingCtrl.steps.SITES_SETUP)" >
   <h4 translate="firstTimeWizard.setupYourSites"></h4>
   <div class="element-spacing">
     <p ng-if="meetingCtrl.sitesArray.length === 0" translate="firstTimeWizard.meetingSettingsDescription"></p>
