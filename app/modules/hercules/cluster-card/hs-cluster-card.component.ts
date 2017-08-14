@@ -49,23 +49,9 @@ export class ClusterCardController implements ng.IComponentController {
     this.$window.open(`https://${encodeURIComponent(hostname)}/fusionregistration`);
   }
 
-  public hasAlarms(cluster: IExtendedClusterFusion): boolean {
-    return _.some(cluster.connectors, (connector) => connector.alarms.length > 0);
-  }
-
   public hasServices(): boolean {
-    return _.some(this.cluster.servicesStatuses, (serviceStatus) => {
+    return _.some(this.cluster.extendedProperties.servicesStatuses, (serviceStatus) => {
       return serviceStatus.serviceId !== 'squared-fusion-mgmt' && serviceStatus.total > 0;
-    });
-  }
-
-  public hasUpgradeAvailable(cluster: IExtendedClusterFusion): boolean {
-    return _.some(cluster.provisioning, (provisioning) => {
-      return _.some(cluster.connectors, (connector) => {
-        return provisioning.connectorType === connector.connectorType &&
-               connector.upgradeState === 'upgraded' &&
-               provisioning.availableVersion && connector.runningVersion !== provisioning.availableVersion;
-      });
     });
   }
 
@@ -73,12 +59,6 @@ export class ClusterCardController implements ng.IComponentController {
     // these target types don't have setting/nodes,
     // so hide the links in the footer
     return _.includes(['cs_mgmt'], cluster.targetType);
-  }
-
-  public isInMaintenance(cluster: IExtendedClusterFusion): boolean {
-    return _.some(cluster.connectors, (connector) => {
-      return connector.maintenanceMode === 'on';
-    });
   }
 
   public openDeleteConfirm(cluster: IExtendedClusterFusion): void {

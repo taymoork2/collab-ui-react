@@ -4,10 +4,9 @@ import { AddResourceGroupController } from './add-resource-group.controller';
 
 export default angular
   .module('hercules.hybrid-services-cluster-list-with-cards', [
-    'Squared', // because of WizardFactory and CsdmCacheUpdater (from EnterprisePrivateTrunkService)
-    require('scripts/app.templates'),
-    require('collab-ui-ng').default,
+    'Squared',
     require('angular-translate'),
+    require('collab-ui-ng').default,
     require('modules/core/analytics'),
     require('modules/core/config/config'),
     require('modules/core/notifications').default,
@@ -17,6 +16,7 @@ export default angular
     require('modules/hercules/services/hybrid-services-cluster-states.service').default,
     require('modules/hercules/services/hybrid-services-cluster.service').default,
     require('modules/hercules/services/resource-group.service').default,
+    require('scripts/app.templates'),
   ])
   .component('hybridServicesClusterListWithCards', new HybridServicesClusterListWithCardsComponent())
   .controller('SetDefaultReleaseChannelController', SetDefaultReleaseChannelController)

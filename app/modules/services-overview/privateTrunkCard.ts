@@ -4,7 +4,7 @@ import { ICardButton, CardType } from './ServicesOverviewCard';
 import { IPrivateTrunkResource } from 'modules/hercules/private-trunk/private-trunk-services/private-trunk';
 
 export class ServicesOverviewPrivateTrunkCard extends ServicesOverviewHybridCard {
-  public getShowMoreButton(): ICardButton | undefined {
+  public getShowMoreButton(): undefined {
     return undefined;
   }
   private hasDomain: boolean;
@@ -75,7 +75,7 @@ export class ServicesOverviewPrivateTrunkCard extends ServicesOverviewHybridCard
   /* @ngInject */
   public constructor(
     private PrivateTrunkPrereqService,
-    HybridServicesClusterStatesService ) {
+  ) {
     super({
       name: 'servicesOverview.cards.privateTrunk.title',
       description: 'servicesOverview.cards.privateTrunk.description',
@@ -83,9 +83,9 @@ export class ServicesOverviewPrivateTrunkCard extends ServicesOverviewHybridCard
       cardType: CardType.hybrid,
       display : true,
       routerState: 'private-trunk-overview',
-      service: 'ept',
+      serviceId: 'ept',
       template: 'modules/services-overview/privateTrunkCard.html',
-    }, HybridServicesClusterStatesService);
+    });
     this.hasDomain = false;
   }
 }

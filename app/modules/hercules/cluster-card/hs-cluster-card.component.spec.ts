@@ -25,31 +25,33 @@ describe('Component: hsClusterCard', function () {
         hostSerial: '0BA28333',
       }],
       targetType: 'c_mgmt',
-      servicesStatuses: [{
-        serviceId: 'squared-fusion-mgmt',
-        state: {
-          name: 'offline',
-          severity: 3,
-          label: 'error',
-        },
-        total: 1,
-      }, {
-        serviceId: 'squared-fusion-uc',
-        state: {
-          name: 'not_installed',
-          severity: 1,
-          label: 'unknown',
-        },
-        total: 0,
-      }, {
-        serviceId: 'squared-fusion-cal',
-        state: {
-          name: 'offline',
-          severity: 3,
-          label: 'error',
-        },
-        total: 1,
-      }],
+      extendedProperties: {
+        servicesStatuses: [{
+          serviceId: 'squared-fusion-mgmt',
+          state: {
+            name: 'offline',
+            severity: 3,
+            label: 'error',
+          },
+          total: 1,
+        }, {
+          serviceId: 'squared-fusion-uc',
+          state: {
+            name: 'not_installed',
+            severity: 1,
+            label: 'unknown',
+          },
+          total: 0,
+        }, {
+          serviceId: 'squared-fusion-cal',
+          state: {
+            name: 'offline',
+            severity: 3,
+            label: 'error',
+          },
+          total: 1,
+        }],
+      },
     };
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
     this.compileComponent('hsClusterCard', { cluster: 'clusterMock' });
@@ -110,6 +112,7 @@ describe('Component: hsClusterCard', function () {
       });
     });
   });
+
   // ControllerHdsCluster is covering tests for HDS cluster types
   describe('ControllerHdsCluster', function () {
     let $componentController;
@@ -125,15 +128,17 @@ describe('Component: hsClusterCard', function () {
         hostSerial: '2e2dc646db1e4',
       }],
       targetType: 'hds_app',
-      servicesStatuses: [{
-        serviceId: 'spark-hybrid-datasecurity',
-        state: {
-          name: 'running',
-          severity: 1,
-          label: 'unknown',
-        },
-        total: 1,
-      }],
+      extendedProperties: {
+        servicesStatuses: [{
+          serviceId: 'spark-hybrid-datasecurity',
+          state: {
+            name: 'running',
+            severity: 1,
+            label: 'unknown',
+          },
+          total: 1,
+        }],
+      },
     };
 
     beforeEach(inject(function ($injector) {

@@ -14,12 +14,11 @@ import { ServicesOverviewHybridDataSecurityCard } from './hybridDataSecurityCard
 import { ServicesOverviewHybridContextCard } from './hybridContextCard';
 import { ServicesOverviewPrivateTrunkCard } from './privateTrunkCard';
 import { PrivateTrunkPrereqService } from 'modules/hercules/private-trunk/private-trunk-prereq';
-import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 import { ProPackService }  from 'modules/core/proPack/proPack.service';
 import { EnterprisePrivateTrunkService } from 'modules/hercules/services/enterprise-private-trunk-service';
 import { IPrivateTrunkResource } from 'modules/hercules/private-trunk/private-trunk-services/private-trunk';
 import { ICluster } from 'modules/hercules/hybrid-services.types';
-import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
+import { HybridServicesClusterService, IServiceStatusWithSetup } from 'modules/hercules/services/hybrid-services-cluster.service';
 import { Notification } from 'modules/core/notifications';
 
 export class ServicesOverviewCtrl {
@@ -39,7 +38,6 @@ export class ServicesOverviewCtrl {
     private EnterprisePrivateTrunkService: EnterprisePrivateTrunkService,
     private FeatureToggleService,
     private HybridServicesClusterService: HybridServicesClusterService,
-    private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
     private PrivateTrunkPrereqService: PrivateTrunkPrereqService,
     private ProPackService: ProPackService,
     private HDSService,
@@ -53,14 +51,14 @@ export class ServicesOverviewCtrl {
       new ServicesOverviewCareCard(this.Authinfo),
       new ServicesOverviewHybridServicesCard(this.Authinfo),
       new ServicesOverviewCmcCard(this.Authinfo),
-      new ServicesOverviewHybridAndGoogleCalendarCard(this.$state, this.$q, this.$modal, this.Authinfo, this.CloudConnectorService, this.HybridServicesClusterStatesService, this.Notification),
-      new ServicesOverviewHybridCalendarCard(this.Authinfo, this.HybridServicesClusterStatesService),
-      new ServicesOverviewHybridCallCard(this.Authinfo, this.HybridServicesClusterStatesService),
-      new ServicesOverviewHybridMediaCard(this.Authinfo, this.Config, this.HybridServicesClusterStatesService),
-      new ServicesOverviewHybridDataSecurityCard(this.$state, this.Authinfo, this.Config, this.HDSService, this.HybridServicesClusterStatesService, this.Notification),
-      new ServicesOverviewHybridContextCard(this.Authinfo, this.HybridServicesClusterStatesService),
-      new ServicesOverviewPrivateTrunkCard( this.PrivateTrunkPrereqService, this.HybridServicesClusterStatesService),
-      new ServicesOverviewImpCard(this.Authinfo, this.HybridServicesClusterStatesService),
+      new ServicesOverviewHybridAndGoogleCalendarCard(this.$state, this.$q, this.$modal, this.Authinfo, this.CloudConnectorService, this.Notification),
+      new ServicesOverviewHybridCalendarCard(this.Authinfo),
+      new ServicesOverviewHybridCallCard(this.Authinfo),
+      new ServicesOverviewHybridMediaCard(this.Authinfo, this.Config),
+      new ServicesOverviewHybridDataSecurityCard(this.$state, this.Authinfo, this.Config, this.HDSService, this.Notification),
+      new ServicesOverviewHybridContextCard(this.Authinfo),
+      new ServicesOverviewPrivateTrunkCard( this.PrivateTrunkPrereqService),
+      new ServicesOverviewImpCard(this.Authinfo),
     ];
 
     this.loadWebexSiteList();
@@ -156,7 +154,7 @@ export class ServicesOverviewCtrl {
   private loadHybridServicesStatuses() {
     this.HybridServicesClusterService.getAll()
       .then((clusterList) => {
-        const servicesStatuses: any[] = [
+        const servicesStatuses: IServiceStatusWithSetup[] = [
           this.HybridServicesClusterService.getStatusForService('squared-fusion-mgmt', clusterList),
           this.HybridServicesClusterService.getStatusForService('squared-fusion-cal', clusterList),
           this.HybridServicesClusterService.getStatusForService('squared-fusion-uc', clusterList),
