@@ -1,9 +1,5 @@
 <div class="subscriptions-container">
   <cr-trial-notice-banner ng-if="mcpSub.hasEnterpriseTrial || mcpSub.trialUrlFailed"></cr-trial-notice-banner>
-  <cs-alert-banner class="overage-warning" ng-if="mcpSub.overage && mcpSub.isProPackEnabled" type="danger">
-    <span class="icon icon-warning"></span>
-    <span translate="subscriptions.overageWarning"></span>
-  </cs-alert-banner>
   <cs-card-layout block-view="true">
     <cs-card class="full detail-view" ng-repeat="subscription in mcpSub.subscriptionDetails" ng-if="mcpSub.subscriptionDetails.length > 1" ng-class="{ 'subscription-expanded': subscription.viewAll }">
       <article><section>
