@@ -41,7 +41,9 @@ export class MeetingSettingsCtrl {
 
   /* @ngInject */
   constructor(
+    private $q: ng.IQService,
     public $scope,
+    private $stateParams,
     private $translate: ng.translate.ITranslateService,
     private $rootScope: ng.IRootScopeService,
     private Authinfo,
@@ -66,19 +68,6 @@ export class MeetingSettingsCtrl {
       this.updateSitesArray(_.get(webexSitesData, 'webexLicencesPayload.webexProvisioningParams.webexSiteDetailsList'));
     }
 
-    this.$rootScope.$on('wizard-meeting-settings-setup-save-event', (): void => {
-      const webexLicenses: IWebexLicencesPayload = this.constructWebexLicensesPayload();
-      this.TrialWebexService.setProvisioningWebexSitesData(webexLicenses, this.SetupWizardService.getInternalSubscriptionId());
-      this.SetupWizardService.addProvisioningCallbacks({
-        meetingSettings: () => {
-          return this.TrialWebexService.provisionWebexSites().then(() => {
-            this.Notification.success('firstTimeWizard.webexProvisioningSuccess');
-          }).catch((response) => {
-            this.Notification.errorWithTrackingId(response, 'firstTimeWizard.webexProvisioningError');
-          });
-        },
-      });
-    });
     if (this.SetupWizardService.hasTSPAudioPackage()) {
       this.populateTSPPartnerOptions();
     }
@@ -86,6 +75,42 @@ export class MeetingSettingsCtrl {
 
   public onInputChange() {
     this.clearError();
+  }
+
+  private pushProvisioningCallIntoQueue(): void {
+    const webexLicenses: IWebexLicencesPayload = this.constructWebexLicensesPayload();
+    this.TrialWebexService.setProvisioningWebexSitesData(webexLicenses, this.SetupWizardService.getInternalSubscriptionId());
+    this.SetupWizardService.addProvisioningCallbacks({
+      meetingSettings: () => {
+        return this.TrialWebexService.provisionWebexSites().then(() => {
+          this.Notification.success('firstTimeWizard.webexProvisioningSuccess');
+        }).catch((response) => {
+          this.Notification.errorWithTrackingId(response, 'firstTimeWizard.webexProvisioningError');
+        });
+      },
+    });
+  }
+
+  private callProvisioning(): ng.IPromise<any> {
+    const webexLicenses: IWebexLicencesPayload = this.constructWebexLicensesPayload();
+    this.TrialWebexService.setProvisioningWebexSitesData(webexLicenses, this.SetupWizardService.getInternalSubscriptionId());
+    return this.TrialWebexService.provisionWebexSites().then(() => {
+      this.Notification.success('firstTimeWizard.webexProvisioningSuccess');
+      this.$rootScope.$emit('meeting-settings-services-setup-successful');
+    }).catch((response) => {
+      this.Notification.errorWithTrackingId(response, 'firstTimeWizard.webexProvisioningError');
+    });
+  }
+
+  // wizard PromiseHook
+  public summaryNext(): ng.IPromise<any> {
+    if (this.$stateParams.onlyShowSingleTab) {
+      // Call provisioning directly from the meeting-settings modal on overview page
+      return this.callProvisioning();
+    }
+
+    this.pushProvisioningCallIntoQueue();
+    return this.$q.resolve();
   }
 
   private updateSitesArray(sites) {

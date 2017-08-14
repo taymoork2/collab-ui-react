@@ -8,6 +8,7 @@ export class SetupWizardService {
   public provisioningCallbacks = {};
   public country = '';
   public currentOrderNumber = '';
+  public willNotProvision: boolean = false;
 
   /* @ngInject */
   constructor(
@@ -34,7 +35,7 @@ export class SetupWizardService {
       return this.$q.resolve(callback());
     });
 
-    return this.$q.all(_.uniq(promises));
+    return this.$q.all(promises);
   }
 
   public getActingSubscriptionId(): string {
@@ -49,6 +50,26 @@ export class SetupWizardService {
 
   public getActingSubscriptionServiceOrderUUID(): string {
     return _.get<string>(this.getActingSubscription(), 'pendingServiceOrderUUID', undefined);
+  }
+
+  public getPendingOrderStatusDetails(pendingServiceOrderUUID) {
+    if (!_.isString(pendingServiceOrderUUID)) {
+      return this.$q.reject('No valid pendingServiceOrderUUID passed');
+    }
+
+    const pendingServiceOrderUrl = `${this.UrlConfig.getAdminServiceUrl()}orders/${pendingServiceOrderUUID}`;
+
+    return this.$http.get(pendingServiceOrderUrl).then((response) => {
+      return _.get(response, 'data.productProvStatus');
+    });
+  }
+
+  public getWillNotProvision(): boolean {
+    return this.willNotProvision;
+  }
+
+  public setWillNotProvision(flag: boolean): void {
+    this.willNotProvision = flag;
   }
 
   public hasPendingServiceOrder(): boolean {

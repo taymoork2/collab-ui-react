@@ -8,7 +8,7 @@ require('./_overview.scss');
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($q, $rootScope, $state, $scope, Authinfo, CardUtils, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, ProPackService, LearnMoreBannerService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, SunlightReportService, TrialService, UrlConfig, PstnService, HybridServicesUtilsService) {
+  function OverviewCtrl($q, $rootScope, $state, $scope, Authinfo, CardUtils, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, ProPackService, LearnMoreBannerService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, SetupWizardService, SunlightReportService, TrialService, UrlConfig, PstnService, HybridServicesUtilsService) {
     var vm = this;
 
     var PSTN_TOS_ACCEPT = require('modules/huron/pstn/pstnTermsOfService').PSTN_TOS_ACCEPT;
@@ -24,7 +24,7 @@ require('./_overview.scss');
 
     vm.cards = [
       OverviewCardFactory.createMessageCard(),
-      OverviewCardFactory.createMeetingCard(),
+      OverviewCardFactory.createMeetingCard($scope),
       OverviewCardFactory.createCallCard(),
       OverviewCardFactory.createCareCard(),
       OverviewCardFactory.createRoomSystemsCard(),
@@ -339,6 +339,14 @@ require('./_overview.scss');
     }
 
     forwardEvent('licenseEventHandler', Authinfo.getLicenses());
+
+    if (SetupWizardService.hasPendingServiceOrder()) {
+      var pendingServiceOrderUUID = SetupWizardService.getActingSubscriptionServiceOrderUUID();
+
+      SetupWizardService.getPendingOrderStatusDetails(pendingServiceOrderUUID).then(function (productProvStatus) {
+        forwardEvent('provisioningEventHandler', productProvStatus);
+      });
+    }
 
     vm.statusPageUrl = UrlConfig.getStatusPageUrl();
 

@@ -7402,7 +7402,10 @@
       },
       "meeting": {
         "title": "Meeting",
-        "notEnabledText": "Join up to 25 colleagues in a Team Space Sync-up or many more in a WebEx Meeting Center."
+        "notEnabledText": "Join up to 25 colleagues in a Team Space Sync-up or many more in a WebEx Meeting Center.",
+        "serviceProvisioning":"Meeting service is being provisioned and will be available soon.",
+        "meetingsNotSetUp": "Meeting service not set up",
+        "setupMeetingService": "Set up Meeting Service"
       },
       "call": {
         "title": "Call",

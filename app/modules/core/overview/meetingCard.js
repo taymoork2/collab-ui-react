@@ -6,12 +6,12 @@
     .factory('OverviewMeetingCard', OverviewMeetingCard);
 
   /* @ngInject */
-  function OverviewMeetingCard(OverviewHelper, Authinfo) {
+  function OverviewMeetingCard($state, $rootScope, OverviewHelper, Authinfo) {
     return {
-      createCard: function createCard() {
+      createCard: function createCard($scope) {
         var card = {};
         card.isCSB = Authinfo.isCSB();
-        card.template = 'modules/core/overview/genericCard.tpl.html';
+        card.template = 'modules/core/overview/meetingCard.tpl.html';
         card.icon = 'icon-circle-group';
         card.desc = 'overview.cards.meeting.desc';
         card.name = 'overview.cards.meeting.title';
@@ -23,6 +23,8 @@
         card.settingsUrl = '';
         card.helper = OverviewHelper;
         card.showHealth = true;
+        card.isProvisioning = false;
+        card.needsWebExSetup = false;
 
         card.healthStatusUpdatedHandler = function messageHealthEventHandler(data) {
           _.each(data.components, function (component) {
@@ -58,10 +60,34 @@
           }
         };
 
+        card.provisioningEventHandler = function (productProvStatus) {
+          if (_.some(productProvStatus, { status: 'PENDING_PARM', productName: 'WX' })) {
+            card.needsWebExSetup = true;
+          } else if (_.some(productProvStatus, { status: 'PROVISIONING', productName: 'WX' })) {
+            card.isProvisioning = true;
+          }
+        };
+
+        var meetingServicesSetupSuccessDeregister = $rootScope.$on('meeting-settings-services-setup-successful', function () {
+          card.needsWebExSetup = false;
+          card.isProvisioning = true;
+        });
+
+        $scope.$on('$destroy', meetingServicesSetupSuccessDeregister);
+
         card.orgEventHandler = function (data) {
           if (data.success && data.isTestOrg && card.allLicenses && card.allLicenses.length === 0) {
             card.enabled = true; //If we are a test org and allLicenses is empty, enable the card.
           }
+        };
+
+        card.showMeetingSettings = function () {
+          $state.go('setupwizardmodal', {
+            currentTab: 'meetingSettings',
+            currentStep: 'migrate',
+            onlyShowSingleTab: true,
+            showStandardModal: true,
+          });
         };
 
         function filterLicenses(licenses) {
