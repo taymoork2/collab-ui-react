@@ -8,6 +8,7 @@ require('./_user-roles.scss');
   /* @ngInject */
   function UserRolesCtrl($q, $rootScope, $scope, $state, $stateParams, $translate, Analytics, Auth, Authinfo, Config, EdiscoveryService, FeatureToggleService, Log, Notification, Orgservice, ProPackService, SessionStorage, Userservice) {
     var COMPLIANCE = 'compliance';
+    var SPARK_COMPLIANCE = 'spark-compliance';
     $scope.currentUser = $stateParams.currentUser;
     $scope.sipAddr = '';
     $scope.dirsyncEnabled = false;
@@ -478,7 +479,7 @@ require('./_user-roles.scss');
     }
 
     function isEntitledToCompliance() {
-      return $scope.currentUser && _.includes($scope.currentUser.entitlements, COMPLIANCE);
+      return $scope.currentUser && (_.includes($scope.currentUser.entitlements, COMPLIANCE) || _.includes($scope.currentUser.entitlements, SPARK_COMPLIANCE));
     }
 
     function setComplianceEntitlement(compliant) {
