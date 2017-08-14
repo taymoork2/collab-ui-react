@@ -456,17 +456,18 @@ export class MeetingSettingsCtrl {
 
     const distributedLicenses = _.flatten(this.distributedLicensesArray);
     _.forEach(distributedLicenses, (site) => {
-      const webexSiteDetail: IWebExSite = {
-        siteUrl: site.siteUrl + this.Config.siteDomainUrl.webexUrl,
-        timezone: _.get<string>(site, 'timezone.timeZoneId'),
-        centerType: site.centerType,
-        quantity: _.get<number>(site, 'quantity'),
-      };
-      if (site.isTransferSite) {
-        webexSiteDetail.isTransferSite = true;
+      if (_.get(site, 'quantity', 0) > 0) {
+        const webexSiteDetail: IWebExSite = {
+          siteUrl: site.siteUrl + this.Config.siteDomainUrl.webexUrl,
+          timezone: _.get<string>(site, 'timezone.timeZoneId'),
+          centerType: site.centerType,
+          quantity: _.get<number>(site, 'quantity'),
+        };
+        if (site.isTransferSite) {
+          webexSiteDetail.isTransferSite = true;
+        }
+        webexSiteDetailsList.push(webexSiteDetail);
       }
-
-      webexSiteDetailsList.push(webexSiteDetail);
     });
 
     _.set(webexLicensesPayload, 'webexProvisioningParams', {
