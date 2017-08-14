@@ -285,6 +285,7 @@
     }
   }
   .result-pane {
+    width: 100%;
     .gridStyle {
       height: calc(100vh - (#{$top-bar-height} + (#{$top-bar-border-width} * 2) + #{$page-header-height} + 65px));
     }
@@ -296,13 +297,13 @@
     }
 
     .loadmore {
-      position: fixed;
-      bottom: 0px;
+      position: absolute;
+      bottom: 0;
       text-align: center;
-      width: 100%;
+      width: inherit;
       background: linear-gradient(rgba(255, 255, 255, 0), white, white);
       i {
-        margin: 40px;
+        margin: 50px 32px 5px 0;
       }
     }
 

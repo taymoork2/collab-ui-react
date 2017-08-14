@@ -34,7 +34,7 @@
            <!--ng-class="{'icon-chevron-up': !devices.searchMinimized, 'icon-chevron-down': devices.searchMinimized}"></i>-->
       <!--</div>-->
     </div>
-    <device-list devices="devices.searchResult.hits.hits" search-object="devices.searchObject"></device-list>
+    <device-list search-hits="devices.searchResult.hits" search-object="devices.searchObject" sort-order-changed="devices.sortOrderChanged(field,order)"></device-list>
     <div class="devices-content">
       <div class="row">
         <div class="large-12 columns" ui-view="leftPanel"></div>

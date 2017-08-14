@@ -40,8 +40,13 @@ export enum SearchFields {product, software, ip, serial, mac, displayName, any, 
 
 export class SearchResult {
   public aggregations: Aggregations;
-  public hits: { hits: Device[], total: number };
+  public hits: SearchHits;
 }
+export class SearchHits {
+  public hits: Device[];
+  public total: number;
+}
+
 export class Aggregations {
   [key: string]: Aggregation
 }
@@ -83,6 +88,8 @@ export class SearchObject {
   public aggregates?: string;
   public size?: number;
   public from?: number;
+  public sortField: string;
+  public sortOrder: string;
 
   private constructor() {
   }
@@ -157,5 +164,11 @@ export class SearchObject {
   public removeToken(searchField: string) {
     delete this.tokenizedQuery[searchField];
     this.updateQuery();
+  }
+
+  public setSortOrder(field: string, order: string) {
+    this.sortField = field;
+    this.sortOrder = order;
+    this.from = 0;
   }
 }

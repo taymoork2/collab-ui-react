@@ -48,13 +48,13 @@ export class DevicesCtrl {
     return this._searchObject;
   }
 
-  set search(value: string) {
-    this._searchString = value;
-  }
-
-  get search() {
-    return this._searchString;
-  }
+  // set search(value: string) {
+  //   this._searchString = value;
+  // }
+  //
+  // get search() {
+  //   return this._searchString;
+  // }
 
   public $onInit(): void {
 
@@ -62,6 +62,10 @@ export class DevicesCtrl {
 
   public addToSearch(field: string, query: string) {
     this.searchInteraction.addToSearch(field, query);
+  }
+
+  public sortOrderChanged(field, order) {
+    this.searchInteraction.setSortOrder(field, order);
   }
 
   public searchChanged(search: SearchObject) {
@@ -115,6 +119,7 @@ export class DevicesCtrl {
       this.deviceExportFeature = result;
     });
   }
+
   private isOrgEntitledToRoomSystem() {
     return this.Authinfo.isDeviceMgmt();
   }

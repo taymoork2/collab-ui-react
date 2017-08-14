@@ -1,18 +1,22 @@
-import { CsdmSearchService, SearchObject } from '../services/csdmSearch.service';
+import { CsdmSearchService, SearchHits, SearchObject } from '../services/csdmSearch.service';
 import { IGridApi } from 'ui-grid';
+import { CsdmConverter } from '../../squared/devices/services/CsdmConverter';
 class DeviceNewList implements ng.IComponentController {
-  public searchObject: SearchObject;
-  public devices;
+
   private huronDeviceService: any;
   public gridOptions;
   public gridApi: uiGrid.IGridApi;
   public loadingMore = false;
+
+  //bindings
+  public searchObject: SearchObject;
+  public searchHits: SearchHits;
+  public sortOrderChanged: (e?: { field: string, order: string }) => {};
   /* @ngInject */
   constructor(private $state,
-              private $q: ng.IQService,
               private $http,
               private CsdmSearchService: CsdmSearchService,
-              private CsdmConverter,
+              private CsdmConverter: CsdmConverter,
               private $templateCache,
               private $translate,
               CsdmHuronOrgDeviceService,
@@ -35,27 +39,33 @@ class DeviceNewList implements ng.IComponentController {
           this.expandDevice(row.entity);
         });
         gridApi.infiniteScroll.on.needLoadMoreData(this.$scope, () => {
-          const promise = this.$q.defer();
           if (!this.searchObject) {
             this.searchObject = SearchObject.create('');
           }
           this.searchObject.nextPage();
-          this.loadingMore = true;
-          this.CsdmSearchService.search(this.searchObject).then((response) => {
-            if (response && response.data) {
-              this.devices.push.apply(this.devices, response.data.hits.hits);
-              promise.resolve();
-            }
-          }).catch(() => {
-            promise.reject();
-          }).finally(() => {
-            gridApi.infiniteScroll.dataLoaded();
-            this.loadingMore = false;
-          });
+          if ((this.searchObject.from || 0) < (this.searchHits && this.searchHits.total || 0)) {
+            this.loadingMore = true;
+            this.CsdmSearchService.search(this.searchObject).then((response) => {
+              if (response && response.data) {
+                this.searchHits.hits.push.apply(this.searchHits.hits, response.data.hits.hits);
+              }
+            }).finally(() => {
+              gridApi.infiniteScroll.dataLoaded();
+              this.loadingMore = false;
+            });
+          }
         });
         gridApi.core.on.sortChanged($scope, (grid, sortColumns) => {
           grid = grid;
-          sortColumns = sortColumns;
+          const sortColumn = _.first(sortColumns);
+          if (sortColumn) {
+            this.sortOrderChanged({
+              field: sortColumn.field || '',
+              order: sortColumn.sort && sortColumn.sort.direction || 'asc',
+            });
+            return;
+          }
+          this.sortOrderChanged({ field: '', order: '' });
         });
       },
       columnDefs: [{
@@ -96,7 +106,7 @@ class DeviceNewList implements ng.IComponentController {
   }
 
   public getResult() {
-    return this.devices;
+    return this.searchHits && this.searchHits.hits;
   }
 
   private getTemplate(name) {
@@ -121,8 +131,9 @@ interface IGridApiWithInfiniteScroll extends IGridApi {
 export class DeviceNewListComponent implements ng.IComponentOptions {
   public controller = DeviceNewList;
   public bindings = {
-    devices: '<',
+    searchHits: '<',
     searchObject: '<',
+    sortOrderChanged: '&',
   };
   public controllerAs = 'lctrl';
   public templateUrl = 'modules/csdm/devicesRedux/newList.html';

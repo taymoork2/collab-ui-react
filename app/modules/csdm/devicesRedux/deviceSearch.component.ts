@@ -47,10 +47,18 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
     this.searchChanged2();
   }
 
-  public setCurrentSearch(search: string) {
-    this.searchField = (search || '').trim().replace(/\s+/g, ' AND ');
-    this.currentSearchObject = SearchObject.create(this.searchField + (this.searchField ? ' AND ' : '') + this._currentFilterValue);
+  public setSortOrder(field: string, order: string) {
+    this.currentSearchObject.setSortOrder(field, order);
     this.searchChanged2();
+  }
+
+  public setCurrentSearch(search: string) {
+    const newSearch = (search || '').trim().replace(/\s+/g, ' AND ');
+    if (newSearch !== this.searchField) {
+      this.searchField = newSearch;
+      this.currentSearchObject = SearchObject.create(this.searchField + (this.searchField ? ' AND ' : '') + this._currentFilterValue);
+      this.searchChanged2();
+    }
   }
 
   public setCurrentFilterValue(value: string) {
@@ -216,8 +224,9 @@ class Bullet {
     return (this.searchField || 'any') === (field || 'any');
   }
 }
-interface ISearchHandler {
+export interface ISearchHandler {
   addToSearch(field: string, query: string);
+  setSortOrder(field?: string, order?: string);
 }
 export class SearchInteraction implements ISearchHandler {
   public receiver: ISearchHandler;
@@ -225,6 +234,12 @@ export class SearchInteraction implements ISearchHandler {
   public addToSearch(field: string, query: string) {
     if (this.receiver) {
       this.receiver.addToSearch(field, query);
+    }
+  }
+
+  public setSortOrder(field: string, order: string) {
+    if (this.receiver) {
+      this.receiver.setSortOrder(field, order);
     }
   }
 }
