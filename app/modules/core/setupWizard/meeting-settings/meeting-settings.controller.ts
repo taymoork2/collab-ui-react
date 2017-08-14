@@ -309,7 +309,9 @@ export class MeetingSettingsCtrl {
         break;
       }
       case Steps.SITES_SETUP: {
-        _.set(this.$scope.wizard, 'isNextDisabled', this.sitesArray.length === 0);
+        if (_.get(this.$scope.wizard, 'current.step.name') === 'siteSetup') {
+          _.set(this.$scope.wizard, 'isNextDisabled', this.sitesArray.length === 0);
+        }
         break;
       }
     }
