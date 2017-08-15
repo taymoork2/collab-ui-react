@@ -11,6 +11,8 @@
 # - the logic to properly acquire and filter the correct PIDs became involved enough to warrant
 #   moving into its own script here
 
+export WX2_ADMIN_WEB_CLIENT_HOME="${WX2_ADMIN_WEB_CLIENT_HOME:-$(pwd)}"
+
 if [ -z "$WX2_ADMIN_WEB_CLIENT_HOME" ]; then
     >&2 echo "Error: WX2_ADMIN_WEB_CLIENT_HOME is not set, please export this environment variable first."
     exit 1
