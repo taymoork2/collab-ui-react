@@ -21,7 +21,7 @@ export class MeetingSettingsCtrl {
     errorMsg: '',
   };
 
-  public meetingSettingsForm: ng.IFormController;
+  public licenseDistributionForm: ng.IFormController;
   public existingSites: IExistingTrialSites[] = [];
   public disableValidateButton: boolean = false;
   public selectTimeZonePlaceholder = this.$translate.instant('firstTimeWizard.selectTimeZonePlaceholder');
@@ -219,7 +219,7 @@ export class MeetingSettingsCtrl {
     return _.find(this.timeZoneOptions, { timeZoneId: timezoneId });
   }
 
-  public onClickValidate(): void {
+  public validateMeetingSite(): void {
     this.disableValidateButton = true;
     if (_.isEmpty(this.siteModel.siteUrl)) {
       this.showError(this.$translate.instant('firstTimeWizard.meetingSettingsError.pleaseEnterSiteName'));
@@ -305,7 +305,7 @@ export class MeetingSettingsCtrl {
             this.updateSitesAudioPackageDisplay();
           }
         });
-        _.set(this.$scope.wizard, 'isNextDisabled', licensesRemaining !== 0);
+        _.set(this.$scope.wizard, 'isNextDisabled', licensesRemaining !== 0 || this.licenseDistributionForm.$invalid);
         break;
       }
       case Steps.SITES_SETUP: {

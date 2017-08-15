@@ -49,7 +49,7 @@ describe('Controller: MeetingSettingsCtrl', () => {
       this.controller.siteModel.siteUrl = 'testSiteHere';
       this.controller.siteModel.timeZone = 'someTimeZoneHere';
       spyOn(this.SetupWizardService, 'getPendingAudioLicenses').and.returnValue([{ offerName: 'TSP' }]);
-      this.controller.onClickValidate();
+      this.controller.validateMeetingSite();
       this.$scope.$apply();
       expect(this.controller.validateWebexSiteUrl).toHaveBeenCalledWith(this.siteModel.siteUrl.concat('.webex.com'));
       expect(this.controller.sitesArray.length).toBe(1);
@@ -67,7 +67,7 @@ describe('Controller: MeetingSettingsCtrl', () => {
     it('should call validateWebexSiteUrl() and expect showError to be called', function () {
       this.controller.siteModel.siteUrl = 'testSiteHere';
       this.controller.siteModel.timeZone = 'someTimeZoneHere';
-      this.controller.onClickValidate();
+      this.controller.validateMeetingSite();
       this.$scope.$apply();
 
       expect(this.controller.sitesArray.length).toBe(0);
