@@ -19,7 +19,7 @@
           name="applyToAllSharedLinesBox"
           ng-model="$ctrl.applyToAllSharedLines"
           cs-input-label="{{'lineLabel.applyToAllSharedDescription'|translate}}"
-          ng-disabled="true">
+          ng-change="$ctrl.onLineLabelChange()">
         </div> 
     </div>
   </div>
