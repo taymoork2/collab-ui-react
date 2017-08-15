@@ -4457,7 +4457,9 @@
     "customName": "Custom Name",
     "customNumber": "Custom Number",
     "customNumberValidation": "Field can contain digits 0 to 9 and +. For example: +15556667777.",
-    "saveConfirmation": "Do you want to save your changes?"
+    "saveConfirmation": "Do you want to save your changes?",
+    "invalidNameError": "Custom Name is invalid. Characters from the set [ \" % < > [ ] & | { } ] are not allowed."
+
   },
   "autoAnswerPanel": {
     "title": "Auto Answer",
