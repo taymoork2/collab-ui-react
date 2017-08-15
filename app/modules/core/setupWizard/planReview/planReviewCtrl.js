@@ -54,6 +54,7 @@
     vm._helpers = {
       maxServiceRows: maxServiceRows,
     };
+    vm.orderDetails = SetupWizardService.getOrderAndSubId();
 
     vm.isCareEnabled = false;
 
