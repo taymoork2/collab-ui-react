@@ -238,6 +238,10 @@
     };
 
     function onStateChangeStart(event, toState, toParams, fromState) {
+      if (fromState.name === 'reports.webex-metrics.metrics' && !vm.isIframeLoaded) {
+        event.preventDefault();
+        return;
+      }
       var isSubState = fromState.name.indexOf('reports.webex-metrics.') === 0;
 
       if (isSubState && toState.name === 'reports.webex-metrics') {
