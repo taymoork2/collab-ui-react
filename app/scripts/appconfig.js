@@ -1163,7 +1163,11 @@
             },
           })
           .state('user-overview.communication', {
-            template: '<user-call-overview></user-call-overview>',
+            views: {
+              'container@user-overview': {
+                template: '<user-call-overview></user-call-overview>',
+              },
+            },
             params: {
               reloadToggle: false,
             },
@@ -1179,7 +1183,11 @@
             },
           })
           .state('user-overview.userDetails', {
-            template: '<uc-preferred-language-details preferred-language-feature="$resolve.preferredLanguageDetails"></uc-preferred-language-details>',
+            views: {
+              'container@user-overview': {
+                template: '<uc-preferred-language-details preferred-language-feature="$resolve.preferredLanguageDetails"></uc-preferred-language-details>',
+              },
+            },
             params: {
               reloadToggle: false,
             },
@@ -1199,7 +1207,11 @@
             },
           })
           .state('user-overview.userLocationDetails', {
-            template: '<uc-user-location-details user-id="$resolve.userId" userLocation="$resolve.userLocation"></uc-user-location-details>',
+            views: {
+              'container@user-overview': {
+                template: '<uc-user-location-details user-id="$resolve.userId" userLocation="$resolve.userLocation"></uc-user-location-details>',
+              },
+            },
             params: {
               reloadToggle: false,
               userDetails: {},
@@ -1225,7 +1237,7 @@
           })
           .state('user-overview.csdmDevice', {
             views: {
-              '': {
+              'container@user-overview': {
                 controller: 'DeviceOverviewCtrl',
                 controllerAs: 'deviceOverview',
                 templateUrl: 'modules/squared/devices/overview/deviceOverview.tpl.html',
@@ -1246,7 +1258,7 @@
           })
           .state('user-overview.csdmDevice.emergencyServices', {
             views: {
-              '': {
+              'container@user-overview': {
                 template: '<uc-emergency-services></uc-emergency-services>',
               },
             },
@@ -1264,7 +1276,11 @@
             },
           })
           .state('user-overview.communication.voicemail', {
-            template: '<uc-voicemail  owner-id="$resolve.ownerId"  ></uc-voicemail>',
+            views: {
+              'container@user-overview': {
+                template: '<uc-voicemail  owner-id="$resolve.ownerId"  ></uc-voicemail>',
+              },
+            },
             params: {
               watcher: null,
               selected: null,
@@ -1284,7 +1300,11 @@
             },
           })
           .state('user-overview.communication.snr', {
-            template: '<uc-snr owner-id="$resolve.ownerId" ></uc-snr>',
+            views: {
+              'container@user-overview': {
+                template: '<uc-snr owner-id="$resolve.ownerId" ></uc-snr>',
+              },
+            },
             data: {
               displayName: 'Single Number Reach',
             },
@@ -1303,7 +1323,11 @@
             },
           })
           .state('user-overview.communication.speedDials', {
-            template: '<uc-speed-dial owner-type="users" owner-id="$resolve.ownerId"></uc-speed-dial>',
+            views: {
+              'container@user-overview': {
+                template: '<uc-speed-dial owner-type="users" owner-id="$resolve.ownerId"></uc-speed-dial>',
+              },
+            },
             data: {
               displayName: 'Speed Dials',
             },
@@ -1319,7 +1343,11 @@
             },
           })
           .state('user-overview.communication.cos', {
-            template: '<uc-user-cos-form member-type="users" member-id="$resolve.ownerId"></uc-user-cos-form>',
+            views: {
+              'container@user-overview': {
+                template: '<uc-user-cos-form member-type="users" member-id="$resolve.ownerId"></uc-user-cos-form>',
+              },
+            },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
@@ -1335,7 +1363,11 @@
             },
           })
           .state('user-overview.communication.externaltransfer', {
-            template: '<uc-external-transfer member-type="users" member-id="$resolve.ownerId"></uc-external-transfer>',
+            views: {
+              'container@user-overview': {
+                template: '<uc-external-transfer member-type="users" member-id="$resolve.ownerId"></uc-external-transfer>',
+              },
+            },
             params: {
               watcher: null,
               selected: null,
@@ -1355,7 +1387,11 @@
             },
           })
           .state('user-overview.communication.internationalDialing', {
-            template: '<uc-dialing  watcher="$resolve.watcher" selected="$resolve.selected" title="internationalDialingPanel.title"></uc-dialing>',
+            views: {
+              'container@user-overview': {
+                template: '<uc-dialing  watcher="$resolve.watcher" selected="$resolve.selected" title="internationalDialingPanel.title"></uc-dialing>',
+              },
+            },
             params: {
               watcher: null,
               selected: null,
@@ -1373,7 +1409,11 @@
             },
           })
           .state('user-overview.communication.local', {
-            template: '<uc-dialing  watcher="$resolve.watcher" selected="$resolve.selected" title="telephonyPreview.localDialing"></uc-dialing>',
+            views: {
+              'container@user-overview': {
+                template: '<uc-dialing  watcher="$resolve.watcher" selected="$resolve.selected" title="telephonyPreview.localDialing"></uc-dialing>',
+              },
+            },
             params: {
               watcher: null,
               selected: null,
@@ -1417,7 +1457,11 @@
             },
           })
           .state('user-overview.communication.line-overview', {
-            template: '<uc-line-overview owner-type="user" owner-name="$resolve.ownerName" owner-id="$resolve.ownerId" number-id="$resolve.numberId"></uc-line-overview>',
+            views: {
+              'container@user-overview': {
+                template: '<uc-line-overview owner-type="user" owner-name="$resolve.ownerName" owner-id="$resolve.ownerId" number-id="$resolve.numberId"></uc-line-overview>',
+              },
+            },
             params: {
               numberId: '',
             },
@@ -1442,9 +1486,13 @@
             },
           })
           .state('user-overview.messaging', {
-            templateUrl: 'modules/core/users/userOverview/messaging-preview/messaging-preview.html',
-            controller: 'MessagingPreviewCtrl',
-            controllerAs: '$ctrl',
+            views: {
+              'container@user-overview': {
+                templateUrl: 'modules/core/users/userOverview/messaging-preview/messaging-preview.html',
+                controller: 'MessagingPreviewCtrl',
+                controllerAs: '$ctrl',
+              },
+            },
             data: {
               displayName: 'Message',
             },
@@ -1453,7 +1501,11 @@
             },
           })
           .state('user-overview.hybrid-services-spark-hybrid-impinterop', {
-            template: '<hybrid-imp-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName"></hybrid-imp-user-settings>',
+            views: {
+              'container@user-overview': {
+                template: '<hybrid-imp-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName"></hybrid-imp-user-settings>',
+              },
+            },
             data: {
               displayName: 'Hybrid IM & Presence',
             },
@@ -1471,8 +1523,12 @@
             },
           })
           .state('user-overview.hybrid-services-squared-fusion-cal', {
-            templateUrl: 'modules/hercules/user-sidepanel/calendarServicePreview.tpl.html',
-            controller: 'CalendarServicePreviewCtrl',
+            views: {
+              'container@user-overview': {
+                templateUrl: 'modules/hercules/user-sidepanel/calendarServicePreview.tpl.html',
+                controller: 'CalendarServicePreviewCtrl',
+              },
+            },
             data: {
               displayName: 'Calendar Service',
             },
@@ -1482,7 +1538,11 @@
             },
           })
           .state('user-overview.hybrid-services-squared-fusion-cal.history', {
-            template: '<user-status-history service-id="\'squared-fusion-cal\'"></user-status-history>',
+            views: {
+              'container@user-overview': {
+                template: '<user-status-history service-id="\'squared-fusion-cal\'"></user-status-history>',
+              },
+            },
             data: {
               displayName: 'Status History',
             },
@@ -1491,8 +1551,12 @@
             },
           })
           .state('user-overview.hybrid-services-squared-fusion-gcal', {
-            templateUrl: 'modules/hercules/user-sidepanel/calendarServicePreview.tpl.html',
-            controller: 'CalendarServicePreviewCtrl',
+            views: {
+              'container@user-overview': {
+                templateUrl: 'modules/hercules/user-sidepanel/calendarServicePreview.tpl.html',
+                controller: 'CalendarServicePreviewCtrl',
+              },
+            },
             data: {
               displayName: 'Calendar Service',
             },
@@ -1502,7 +1566,11 @@
             },
           })
           .state('user-overview.hybrid-services-squared-fusion-gcal.history', {
-            template: '<user-status-history service-id="\'squared-fusion-gcal\'"></user-status-history>',
+            views: {
+              'container@user-overview': {
+                template: '<user-status-history service-id="\'squared-fusion-gcal\'"></user-status-history>',
+              },
+            },
             data: {
               displayName: 'Status History',
             },
@@ -1525,7 +1593,11 @@
             },
           })
           .state('user-overview.hybrid-services-squared-fusion-uc.aware-settings', {
-            template: '<hybrid-call-service-aware-user-settings user-id="$resolve.userId" user-email-address="$resolve.userEmailAddress" entitlement-updated-callback="$resolve.onEntitlementChange(options)"></hybrid-call-service-aware-user-settings>',
+            views: {
+              'container@user-overview': {
+                template: '<hybrid-call-service-aware-user-settings user-id="$resolve.userId" user-email-address="$resolve.userEmailAddress" entitlement-updated-callback="$resolve.onEntitlementChange(options)"></hybrid-call-service-aware-user-settings>',
+              },
+            },
             data: {
               displayName: 'Aware',
             },
@@ -1547,7 +1619,11 @@
             },
           })
           .state('user-overview.hybrid-services-squared-fusion-uc.aware-settings.uc-history', {
-            template: '<user-status-history service-id="\'squared-fusion-uc\'"></user-status-history>',
+            views: {
+              'container@user-overview': {
+                template: '<user-status-history service-id="\'squared-fusion-uc\'"></user-status-history>',
+              },
+            },
             data: {
               displayName: 'Status History',
             },
@@ -1556,7 +1632,11 @@
             },
           })
           .state('user-overview.hybrid-services-squared-fusion-uc.connect-settings', {
-            template: '<hybrid-call-service-connect-user-settings user-id="$resolve.userId" user-email-address="$resolve.userEmailAddress" entitlement-updated-callback="$resolve.onEntitlementChange(options)"  voicemail-feature-toggled="$resolve.voicemailFeatureToggled" user-test-tool-feature-toggled="$resolve.userTestToolFeatureToggled"></hybrid-call-service-connect-user-settings>',
+            views: {
+              'container@user-overview': {
+                template: '<hybrid-call-service-connect-user-settings user-id="$resolve.userId" user-email-address="$resolve.userEmailAddress" entitlement-updated-callback="$resolve.onEntitlementChange(options)"  voicemail-feature-toggled="$resolve.voicemailFeatureToggled" user-test-tool-feature-toggled="$resolve.userTestToolFeatureToggled"></hybrid-call-service-connect-user-settings>',
+              },
+            },
             data: {
               displayName: 'Connect',
             },
@@ -1584,7 +1664,11 @@
             },
           })
           .state('user-overview.hybrid-services-squared-fusion-uc.connect-settings.ec-history', {
-            template: '<user-status-history service-id="\'squared-fusion-ec\'"></user-status-history>',
+            views: {
+              'container@user-overview': {
+                template: '<user-status-history service-id="\'squared-fusion-ec\'"></user-status-history>',
+              },
+            },
             data: {
               displayName: 'Status History',
             },
@@ -1593,9 +1677,13 @@
             },
           })
           .state('user-overview.conferencing', {
-            templateUrl: 'modules/core/users/userOverview/conferencePreview.tpl.html',
-            controller: 'ConferencePreviewCtrl',
-            controllerAs: 'confPreview',
+            views: {
+              'container@user-overview': {
+                templateUrl: 'modules/core/users/userOverview/conferencePreview.tpl.html',
+                controller: 'ConferencePreviewCtrl',
+                controllerAs: 'confPreview',
+              },
+            },
             data: {
               displayName: 'Meeting',
             },
@@ -1604,8 +1692,12 @@
             },
           })
           .state('user-overview.conferencing.webex', {
-            templateUrl: 'modules/webex/userSettings/userSettings.tpl.html',
-            controller: 'WebExUserSettingsCtrl',
+            views: {
+              'container@user-overview': {
+                templateUrl: 'modules/webex/userSettings/userSettings.tpl.html',
+                controller: 'WebExUserSettingsCtrl',
+              },
+            },
             data: {
               displayName: 'Session Enablement',
             },
@@ -1615,8 +1707,12 @@
             },
           })
           .state('user-overview.conferencing.webex.webex2', {
-            templateUrl: 'modules/webex/userSettings/userSettings2.tpl.html',
-            controller: 'WebExUserSettings2Ctrl',
+            views: {
+              'container@user-overview': {
+                templateUrl: 'modules/webex/userSettings/userSettings2.tpl.html',
+                controller: 'WebExUserSettings2Ctrl',
+              },
+            },
             data: {
               displayName: 'Privileges',
             },
@@ -1626,9 +1722,13 @@
             },
           })
           .state('user-overview.contactCenter', {
-            templateUrl: 'modules/sunlight/users/userOverview/sunlightUserOverview.tpl.html',
-            controller: 'SunlightUserOverviewCtrl',
-            controllerAs: 'SunlightUserOverview',
+            views: {
+              'container@user-overview': {
+                templateUrl: 'modules/sunlight/users/userOverview/sunlightUserOverview.tpl.html',
+                controller: 'SunlightUserOverviewCtrl',
+                controllerAs: 'SunlightUserOverview',
+              },
+            },
             data: {
               displayName: 'Care',
             },
@@ -1637,8 +1737,12 @@
             },
           })
           .state('user-overview.user-profile', {
-            templateUrl: 'modules/core/users/userRoles/userRoles.tpl.html',
-            controller: 'UserRolesCtrl',
+            views: {
+              'container@user-overview': {
+                controller: 'UserRolesCtrl',
+                templateUrl: 'modules/core/users/userRoles/userRoles.tpl.html',
+              },
+            },
             resolve: {
               data: /* @ngInject */ function ($state, $translate, FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasRolesAndSecurity).then(function (enabled) {
@@ -1652,8 +1756,12 @@
             },
           })
           .state('user-overview.roles-and-security', {
-            templateUrl: 'modules/core/users/userRoles/userRoles.tpl.html',
-            controller: 'UserRolesCtrl',
+            views: {
+              'container@user-overview': {
+                controller: 'UserRolesCtrl',
+                templateUrl: 'modules/core/users/userRoles/userRoles.tpl.html',
+              },
+            },
             data: {
             },
             resolve: {
@@ -1663,7 +1771,11 @@
             },
           })
           .state('user-overview.cmc', {
-            template: '<cmc-user-details-settings user="$resolve.user" ng-if="$resolve.hasCmcFeatureToggle"></cmc-user-details-settings>',
+            views: {
+              'container@user-overview': {
+                template: '<cmc-user-details-settings user="$resolve.user" ng-if="$resolve.hasCmcFeatureToggle"></cmc-user-details-settings>',
+              },
+            },
             params: {
               service: 'CMC',
             },
