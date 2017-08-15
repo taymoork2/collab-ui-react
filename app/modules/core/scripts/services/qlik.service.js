@@ -3,7 +3,7 @@
 
   // module.exports = QlikService;
   module.exports = angular
-    .module('core.customer-reports')
+    .module('Core')
     .service('QlikService', QlikService)
     .name;
 
