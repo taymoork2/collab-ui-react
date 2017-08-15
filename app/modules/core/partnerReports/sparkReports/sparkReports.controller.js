@@ -25,6 +25,7 @@
     $sce,
     $timeout,
     $window,
+    Analytics,
     Authinfo,
     Notification,
     QlikService,
@@ -44,6 +45,7 @@
         });
         loadSparkReports();
       });
+      Analytics.trackReportsEvent(Analytics.sections.REPORTS.eventNames.PARTNER_SPARK_REPORT);
     }
 
     function loadSparkReports() {

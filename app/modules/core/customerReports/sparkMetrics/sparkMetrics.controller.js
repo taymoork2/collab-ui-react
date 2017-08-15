@@ -13,6 +13,7 @@
     $scope,
     $timeout,
     $window,
+    Analytics,
     Authinfo,
     Notification,
     ProPackService,
@@ -34,6 +35,9 @@
       },
     ];
     vm.reportView = vm.sparkMetrics.views[0];
+    vm.init = init;
+
+    init();
 
     function generateWebexMetricsUrl() {
       ProPackService.hasProPackPurchased().then(function (isPurchased) {
@@ -44,9 +48,7 @@
       });
     }
 
-    if (!_.isUndefined(Authinfo.getPrimaryEmail())) {
-      generateWebexMetricsUrl();
-    } else {
+    function init() {
       Userservice.getUser(
         'me',
         function (data) {
@@ -58,6 +60,7 @@
           }
         }
       );
+      Analytics.trackReportsEvent(Analytics.sections.REPORTS.eventNames.CUST_SPARK_REPORT);
     }
 
     function loadMetricsReport() {

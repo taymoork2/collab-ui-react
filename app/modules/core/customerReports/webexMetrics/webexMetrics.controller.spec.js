@@ -12,6 +12,7 @@ describe('Controller: WebEx Metrics Ctrl', function () {
       '$timeout',
       '$window',
       '$rootScope',
+      'Analytics',
       'Authinfo',
       'LocalStorage',
       'Notification',
@@ -19,7 +20,7 @@ describe('Controller: WebEx Metrics Ctrl', function () {
       'QlikService',
       'Userservice'
     );
-
+    spyOn(this.Analytics, 'trackReportsEvent');
     spyOn(this.Authinfo, 'setEmails');
     spyOn(this.Authinfo, 'getConferenceServicesWithoutSiteUrl').and.returnValue([]);
     spyOn(this.Authinfo, 'getConferenceServicesWithLinkedSiteUrl').and.returnValue([]);
@@ -45,6 +46,7 @@ describe('Controller: WebEx Metrics Ctrl', function () {
         $window: this.$window,
         $rootScope: this.$rootScope,
         $state: $state,
+        Analytics: this.Analytics,
         Authinfo: this.Authinfo,
         LocalStorage: this.LocalStorage,
         Notification: this.Notification,
@@ -55,6 +57,10 @@ describe('Controller: WebEx Metrics Ctrl', function () {
       this.$scope.$apply();
     };
     this.initController();
+  });
+
+  it('should call Analytics.trackReportsEvent during init', function () {
+    expect(this.Analytics.trackReportsEvent).toHaveBeenCalledWith(this.Analytics.sections.REPORTS.eventNames.CUST_WEBEX_REPORT);
   });
 
   it('premium settings should be controlled by ProPackService or Authinfo.isPremium', function () {

@@ -15,6 +15,7 @@
     $window,
     $rootScope,
     $state,
+    Analytics,
     Authinfo,
     LocalStorage,
     Notification,
@@ -73,12 +74,15 @@
     $scope.$on('$destroy', onDestory);
 
     vm.$state = $state;
+    vm.init = init;
     vm.goMetricsState = goMetricsState;
     vm.loadMetricsReport = loadMetricsReport;
     vm.onStateChangeStart = onStateChangeStart;
     vm.onStateChangeSuccess = onStateChangeSuccess;
     vm.updateWebexMetrics = updateWebexMetrics;
     vm.updateIframe = updateIframe;
+
+    init();
 
     function messageHandle(event) {
       if (event.data === 'unfreeze') {
@@ -139,21 +143,24 @@
       });
     }
 
-    Userservice.getUser(
-      'me',
-      function (data) {
-        if (data.success) {
-          var trainSites = [];
-          if (data.emails) {
-            Authinfo.setEmails(data.emails);
-            var adminTrainSiteNames = _.get(data, 'adminTrainSiteNames', []);
-            var linkedTrainSiteNames = _.get(data, 'linkedTrainSiteNames', []);
-            trainSites = _.concat(adminTrainSiteNames, linkedTrainSiteNames);
-            generateWebexMetricsUrl(trainSites);
+    function init() {
+      Userservice.getUser(
+        'me',
+        function (data) {
+          if (data.success) {
+            var trainSites = [];
+            if (data.emails) {
+              Authinfo.setEmails(data.emails);
+              var adminTrainSiteNames = _.get(data, 'adminTrainSiteNames', []);
+              var linkedTrainSiteNames = _.get(data, 'linkedTrainSiteNames', []);
+              trainSites = _.concat(adminTrainSiteNames, linkedTrainSiteNames);
+              generateWebexMetricsUrl(trainSites);
+            }
           }
         }
-      }
-    );
+      );
+      Analytics.trackReportsEvent(Analytics.sections.REPORTS.eventNames.CUST_WEBEX_REPORT);
+    }
 
     function updateWebexMetrics() {
       var storageMetricsSiteUrl = LocalStorage.get('webexMetricsSiteUrl');
