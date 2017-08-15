@@ -93,6 +93,11 @@ class CallLocationCtrl implements ng.IComponentController {
     this.checkForChanges();
   }
 
+  public onMoHChanged(locationMediaId: string): void {
+    this.callLocationSettingsData.mediaId = locationMediaId;
+    this.checkForChanges();
+  }
+
   public onTimeZoneChanged(timeZone: string): void {
     this.callLocationSettingsData.location.timeZone = timeZone;
     this.checkForChanges();

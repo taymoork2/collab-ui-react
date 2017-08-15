@@ -2,8 +2,10 @@ import { IOption } from 'modules/huron/dialing/dialing.service';
 import { IDialPlan, DialPlanService } from 'modules/huron/dialPlans';
 import { NumberService, NumberType } from 'modules/huron/numbers';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
+import { MediaOnHoldService } from 'modules/huron/media-on-hold';
 
 export class LocationSettingsOptions {
+  public mediaOnHoldOptions: IOption[];
   public preferredLanguageOptions: IOption[];
   public timeZoneOptions: IOption[];
   public defaultToneOptions: IOption[];
@@ -16,15 +18,18 @@ export class LocationSettingsOptionsService {
   /* @ngInject */
   constructor(
      private $q: ng.IQService,
+     private MediaOnHoldService: MediaOnHoldService,
      private DialPlanService: DialPlanService,
      private NumberService: NumberService,
      private PhoneNumberService: PhoneNumberService,
      private ServiceSetup,
+     private FeatureToggleService,
   ) { }
 
   public getOptions(): ng.IPromise<LocationSettingsOptions> {
     const locationOptions = new LocationSettingsOptions();
     return this.$q.all({
+      mediaOnHoldOptions: this.loadMoHOptions().then(mediaOnHoldOptions => locationOptions.mediaOnHoldOptions = mediaOnHoldOptions),
       timeZoneOptions: this.loadTimeZoneOptions().then(timeZoneOptions => locationOptions.timeZoneOptions = timeZoneOptions),
       preferredLanguageOptions: this.loadPreferredLanguageOptions().then(preferredLanguageOptions => locationOptions.preferredLanguageOptions = preferredLanguageOptions),
       defaultToneOptions: this.loadDefaultToneOptions().then(defaultToneOptions => locationOptions.defaultToneOptions = defaultToneOptions),
@@ -33,6 +38,15 @@ export class LocationSettingsOptionsService {
     }).then(() => {
       return locationOptions;
     });
+  }
+
+  public loadMoHOptions(): ng.IPromise<IOption[]> {
+    return this.FeatureToggleService.supports(this.FeatureToggleService.features.huronMOHEnable)
+      .then(supportsMoh => {
+        if (supportsMoh) {
+          return this.MediaOnHoldService.getLocationMohOptions();
+        }
+      });
   }
 
   private loadTimeZoneOptions(): ng.IPromise<IOption[]> {

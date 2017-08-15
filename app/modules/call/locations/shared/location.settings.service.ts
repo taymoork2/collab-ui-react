@@ -1,4 +1,5 @@
 import { Location, LocationsService } from 'modules/call/locations/shared';
+import { MediaOnHoldService } from 'modules/huron/media-on-hold';
 import { LocationCosService, LocationCos } from 'modules/call/shared/cos';
 import { InternalNumberRange, InternalNumberRangeService } from 'modules/call/shared/internal-number-range';
 import { CustomerVoice, HuronCustomerService } from 'modules/huron/customer';
@@ -7,6 +8,7 @@ import { Notification } from 'modules/core/notifications';
 
 export class CallLocationSettingsData {
   public location: Location;
+  public mediaId: string;
   public internalNumberRanges: InternalNumberRange[];
   public cosRestrictions: LocationCos;
   public customerVoice: CustomerVoice;
@@ -15,22 +17,30 @@ export class CallLocationSettingsData {
 export class CallLocationSettingsService {
   private callLocationSettingsDataCopy: CallLocationSettingsData;
   private errors: string[] = [];
+  private supportsLocationMoh: boolean = false;
 
   /* @ngInject */
   constructor(
     private LocationsService: LocationsService,
+    private MediaOnHoldService: MediaOnHoldService,
     private LocationCosService: LocationCosService,
     private InternalNumberRangeService: InternalNumberRangeService,
     private HuronCustomerService: HuronCustomerService,
     private Notification: Notification,
     private $q: ng.IQService,
     private ExtensionLengthService: ExtensionLengthService,
-  ) {}
+    private FeatureToggleService,
+  ) {
+    // Location Media On Hold Support
+    this.FeatureToggleService.supports(FeatureToggleService.features.huronMOHEnable)
+      .then(result => this.supportsLocationMoh = result);
+  }
 
   public get(locationId: string): ng.IPromise<CallLocationSettingsData> {
     const callLocationSettingsData = new CallLocationSettingsData();
     return this.$q.all({
       location: this.getLocation(locationId).then(location => callLocationSettingsData.location = location),
+      mediaId: this.getLocationMedia(locationId).then(mediaId => callLocationSettingsData.mediaId = mediaId),
       internalNumberRanges: this.getInternalNumberRanges(locationId).then(internalNumberRanges => callLocationSettingsData.internalNumberRanges = internalNumberRanges),
       cosRestrictions: this.getCosRestrictions(locationId).then(cosRestrictions => callLocationSettingsData.cosRestrictions = cosRestrictions),
       customerVoice: this.getCustomerVoice().then(customerVoice => callLocationSettingsData.customerVoice = customerVoice),
@@ -90,6 +100,16 @@ export class CallLocationSettingsService {
 
   private createParallelRequests(data: CallLocationSettingsData, ftsw: boolean): ng.IPromise<any>[] {
     const promises: ng.IPromise<any>[] = [];
+
+    if (this.supportsLocationMoh && !_.isEqual(data.mediaId, this.callLocationSettingsDataCopy.mediaId)) {
+      const GENERIC_MEDIA_ID = '98765432-DBC2-01BB-476B-CFAF98765432';
+      if (_.isEqual(data.mediaId, GENERIC_MEDIA_ID)) {
+        promises.push(this.unassignMediaOnHold(data.location.uuid));
+      } else {
+        promises.push(this.updateMediaOnHold(data.mediaId, data.location.uuid));
+      }
+    }
+
     if (!_.isEqual(data.internalNumberRanges, this.callLocationSettingsDataCopy.internalNumberRanges)) {
       promises.push(...this.updateInternalNumberRanges(data.location.uuid || '', data.internalNumberRanges));
     }
@@ -98,6 +118,31 @@ export class CallLocationSettingsService {
       promises.push(this.saveCosRestrictions(data.location.uuid || '', data.cosRestrictions));
     }
     return promises;
+  }
+
+  private getLocationMedia(locationId: string): ng.IPromise<string> {
+    if (this.supportsLocationMoh) {
+      return this.MediaOnHoldService.getLocationMedia(locationId)
+      .catch(error => {
+        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohGetError'));
+        return this.rejectAndNotifyPossibleErrors();
+      });
+    }
+    return this.$q.resolve('');
+  }
+
+  private updateMediaOnHold(mediaId: string, locationId?: string): ng.IPromise<void> {
+    return this.MediaOnHoldService.updateMediaOnHold(mediaId, 'Location', locationId)
+      .catch(error => {
+        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohUpdateError'));
+      });
+  }
+
+  private unassignMediaOnHold(locationId?: string): ng.IPromise<void> {
+    return this.MediaOnHoldService.unassignMediaOnHold('Location', locationId)
+      .catch(error => {
+        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohUpdateError'));
+      });
   }
 
   private getCosRestrictions(locationId: string): ng.IPromise<LocationCos> {

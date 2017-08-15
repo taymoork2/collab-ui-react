@@ -433,8 +433,6 @@
     "developmentTab": "Development",
     "organizationTab": "Manage Organizations",
     "organizationTabDesc": "Manage Organization Details, View Assigned Services, And Access Tools.",
-    "mediaOnHoldTab": "Media On Hold",
-    "mediaOnHoldTabDesc": "Media On Hold Development Example",
     "metricsDetailsTab": "Media Service V2 Page",
     "metricsDetailsTabDesc": "Metrics Management",
     "thresholdDetailsTab": "Threshold",
@@ -1721,10 +1719,6 @@
     "siteError": "Failed to create site.",
     "siteGetError": "Failed to retrieve site.",
     "siteUpdateError": "Failed to update site.",
-    "mohLineError": "Failed to get Line Media On Hold Service.",
-    "mohGetError": "Failed to get Company Media on Hold Service.",
-    "mohGetOptionsError": "Failed to get Company Media on Hold Options Service.",
-    "mohUpdateError": "Failed to update Company Media On Hold File",
     "customerGetError": "Failed to get customer services.",
     "customerPutError": "Failed to update customer services.",
     "customerDialPlanDetailsGetError": "Failed to get customer dial plan details.",
@@ -1749,8 +1743,9 @@
     "fieldValidationFailed": "Errors exist on the page.  Please correct and try again.",
     "singleNumberRangeError": "Extension Ranges cannot begin and end with the same number.",
     "mapCompanyVoicemailToExternalNumberError": "Existing company voicemail number was not found in list of company direct lines.",
-    "mediaOnHold": "Company Media on Hold",
+    "mohTitle": "Company Media on Hold",
     "mohDesc": "Set the default media to be played at the company level.",
+    "mohSelectLabel": "Media Selection",
     "voicemailToEmailLabel": "Voicemail to Email",
     "EmailNotificationAttached": "Email Notification with Attachment",
     "EmailNotificationWithoutAttached": "Email Notification without Attachment",
@@ -1849,8 +1844,12 @@
     }
   },
   "mediaOnHold": {
-    "systemDefault": "System Default",
-    "companyMOHDefaultMedia" : "Company MOH (System Default)"
+    "systemDefaultMedia": "System Default",
+    "companyDefaultMedia": "Company MOH",
+    "locationDefaultMedia": "Location MOH",
+    "mohGetError": "Failed to get Media on Hold Service.",
+    "mohGetOptionsError": "Failed to get Media on Hold options.",
+    "mohUpdateError": "Failed to update Media on Hold configuration."
   },
   "dirsyncModal": {
     "chooseSync": "Choose Sync",
@@ -4437,7 +4436,9 @@
     "ringDurationTimer.validation.error": "Must be a number between 1 and 300"
   },
   "mediaOnHoldPanel": {
-    "title": "Media on Hold",
+    "mohTitle": "Media on Hold",
+    "mohDesc": "Set the default media to be played for this line.",
+    "mohSelectLabel": "Media Selection",
     "mediaManager": "Media Manager"
   },
   "multipleCalls": {
@@ -6699,6 +6700,9 @@
     "locationSelectDesc": "Choose the physical location where this user primarily works from.",
     "locationDetailTitle": "Location Details",
     "locationDetailDesc": "Locations let you group Cisco Spark Call settings together based on specific geography. Specify a name and caller ID for this location.",
+    "mohTitle": "Location Media on Hold",
+    "mohDesc": "Set the default media to be played for this location.",
+    "mohSelectLabel": "Media Selection",
     "regionalSettingsTitle": "Regional Settings",
     "regionalSettingsDesc": "Set time zone, date and time format, preferred language.",
     "internalDialingTitle": "Internal Dialing",
