@@ -9,16 +9,31 @@ const partnerEmail = isProductionBackend ? 'huron.ui.test.partner+production_' :
 const now = Date.now();
 
 let offers = [];
-offers.push(new TrialOffer({
-  id: Offers.OFFER_CALL,
-  licenseCount: 100,
-}));
-offers.push(new TrialOffer({
-  id: Offers.OFFER_ROOM_SYSTEMS,
-  licenseCount: 5,
-}));
 
-export function huronCustomer(test, numberRange, users, pstn, pstnLines, doFtsw) {
+export function huronCustomer(test, numberRange, users, pstn, pstnLines, doFtsw, selectedOffer) {
+  switch (selectedOffer) {
+    case 'CALL':
+      offers.push(new TrialOffer({
+        id: Offers.OFFER_CALL,
+        licenseCount: 100,
+      }));
+      break;
+    case 'ROOMSYSTEMS':
+      offers.push(new TrialOffer({
+        id: Offers.OFFER_ROOM_SYSTEMS,
+        licenseCount: 5,
+      }));
+      break;
+    default:
+      offers.push(new TrialOffer({
+        id: Offers.OFFER_CALL,
+        licenseCount: 100,
+      }));
+      offers.push(new TrialOffer({
+        id: Offers.OFFER_ROOM_SYSTEMS,
+        licenseCount: 5,
+      }));
+  }
   const customerName = `${os.userInfo().username}_${test}`;
   const customer = {
     partner: testPartner,

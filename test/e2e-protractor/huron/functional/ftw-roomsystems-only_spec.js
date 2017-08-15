@@ -7,7 +7,7 @@ const callSettings = new CallSettingsPage();
 /* global LONG_TIMEOUT */
 
 describe('Huron Functional: first-time-setup', () => {
-  const customer = huronCustomer('first-time-setup', null, null, true, 3, true);
+  const customer = huronCustomer('ftw-roomsystems-only', null, null, true, 3, true, 'ROOMSYSTEMS');
 
   beforeAll(done => {
     provisioner.provisionCustomerAndLogin(customer, false).then(done);
@@ -19,6 +19,9 @@ describe('Huron Functional: first-time-setup', () => {
   it('should navigate to First Time Setup Wizard', () => {
     utils.expectIsDisplayed(wizard.titleBanner);
   });
+  it('should not have "Start your new 90-day trial" banner showing', () => {
+    utils.expectIsNotDisplayed(wizard.planReviewCallTrial);
+  });
   it('should navigate to Call Settings setup page', () => {
     utils.click(wizard.beginBtn);
     utils.expectIsDisplayed(wizard.callBanner);
@@ -26,19 +29,11 @@ describe('Huron Functional: first-time-setup', () => {
 
   describe('Call Settings', () => {
     describe('Time Zone and Preferred Language', () => {
-      const newPreferredLanguage = 'English (United Kingdom)';
-      const oldPreferredLanguage = 'English (United States)';
-      const newTimeZone = 'America/New York';
-      it('should change Time Zone to America/New York', () => {
-        utils.expectIsDisplayed(wizard.timeZoneDropdown);
-        utils.selectDropdown('.csSelect-container[name="timeZone"]', newTimeZone);
+      it('should not show a time zone dropdown', () => {
+        utils.expectIsNotDisplayed(wizard.timeZoneDropdown);
       });
-      it('should be able to select English (United Kingdom) from dropdown', () => {
-        utils.expectIsDisplayed(wizard.preferredLanguageDropdown);
-        utils.selectDropdown('.csSelect-container[name="preferredLanguage"]', newPreferredLanguage);
-      });
-      it('should be able to select English (United States) from dropdown', () => {
-        utils.selectDropdown('.csSelect-container[name="preferredLanguage"]', oldPreferredLanguage);
+      it('should not show a language dropdown', () => {
+        utils.expectIsNotDisplayed(wizard.preferredLanguageDropdown);
       });
     });
   });
