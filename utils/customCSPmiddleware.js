@@ -88,6 +88,7 @@ module.exports = csp({
       'https://10.224.166.46:8443',
       'http://rpbtqlkhsn002.webex.com:8080',
       'https://rpbtqlkhsn006.webex.com',
+      'https://api.api.ai', // Virtual Assistant testing api.ai token
     ],
     fontSrc: [
       '\'self\'',
