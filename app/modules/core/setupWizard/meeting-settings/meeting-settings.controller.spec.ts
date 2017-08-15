@@ -16,7 +16,6 @@ describe('Controller: MeetingSettingsCtrl', () => {
 
     spyOn(this.TrialTimeZoneService, 'getTimeZones').and.returnValue(this.$q.resolve({}));
     spyOn(this.TrialWebexService, 'validateSiteUrl').and.returnValue(this.$q.resolve({ isValid: true, errorCode: 'validSite' }));
-    spyOn(this.Authinfo, 'getConferenceServices').and.returnValue(this.$q.resolve(getJSONFixture('core/json/authInfo/confServices.json')));
     spyOn(this.SetupWizardService, 'getPendingAudioLicenses').and.returnValue([{ offerName: 'TSP' }]);
   });
 

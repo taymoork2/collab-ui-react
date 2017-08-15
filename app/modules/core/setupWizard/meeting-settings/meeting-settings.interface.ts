@@ -5,6 +5,7 @@ export interface IWebExSite {
   quantity?: number;
   audioPackageDisplay?: string;
   isTransferSite?: boolean;
+  keepExistingSite?: boolean;
 }
 
 export interface IWebexSiteDetail {

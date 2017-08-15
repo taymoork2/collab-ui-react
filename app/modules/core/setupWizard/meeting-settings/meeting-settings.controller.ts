@@ -11,7 +11,7 @@ export class MeetingSettingsCtrl {
   public siteModel: IWebExSite = {
     siteUrl: '',
     timezone: '',
-    centerType: 'EE',
+    centerType: '',
     quantity: 1,
   };
 
@@ -23,6 +23,7 @@ export class MeetingSettingsCtrl {
 
   public licenseDistributionForm: ng.IFormController;
   public existingSites: IExistingTrialSites[] = [];
+  public existingWebexSites: IWebExSite[] = [];
   public disableValidateButton: boolean = false;
   public selectTimeZonePlaceholder = this.$translate.instant('firstTimeWizard.selectTimeZonePlaceholder');
   public timeZoneOptions = this.TrialTimeZoneService.getTimeZones();
@@ -68,6 +69,7 @@ export class MeetingSettingsCtrl {
       this.enableOrDisableNext(Steps.SITES_SETUP);
     });
     this.findExistingWebexTrialSites();
+    this.findExistingWebexSites();
 
     // If user clicked back after setting WebEx sites in the meeting-settings tab, we want to preserve the entered sites
     const webexSitesData = this.TrialWebexService.getProvisioningWebexSitesData();
@@ -139,6 +141,7 @@ export class MeetingSettingsCtrl {
           this.Notification.success('firstTimeWizard.webexProvisioningSuccess');
         }).catch((response) => {
           this.Notification.errorWithTrackingId(response, 'firstTimeWizard.webexProvisioningError');
+          return this.$q.reject();
         });
       },
     });
@@ -152,6 +155,7 @@ export class MeetingSettingsCtrl {
       this.$rootScope.$emit('meeting-settings-services-setup-successful');
     }).catch((response) => {
       this.Notification.errorWithTrackingId(response, 'firstTimeWizard.webexProvisioningError');
+      return this.$q.reject();
     });
   }
 
@@ -185,7 +189,7 @@ export class MeetingSettingsCtrl {
     this.sitesArray = sitesArray;
   }
 
-  private stripTransferredSitesFromSitesArray () {
+  private stripTransferredSitesFromSitesArray() {
     this.sitesArray = _.filter(this.sitesArray, (site) => {
       return _.isUndefined(site.isTransferSite);
     });
@@ -317,7 +321,7 @@ export class MeetingSettingsCtrl {
     }
   }
 
-  public checkValidTransferData () {
+  public checkValidTransferData() {
     this.clearError();
     let invalid = false;
     if (this.showTransferCodeInput) {
@@ -392,7 +396,7 @@ export class MeetingSettingsCtrl {
   private constructDistributedSitesArray(): void {
     this.distributedLicensesArray = _.map(this.sitesArray, (site: IWebExSite) => {
       return _.map(this.centerDetails, (center) => {
-        const siteObject = {
+        const siteObject: IWebExSite = {
           centerType: center.centerType,
           quantity: site.quantity,
           siteUrl: site.siteUrl,
@@ -405,12 +409,25 @@ export class MeetingSettingsCtrl {
         return siteObject;
       });
     });
+
+    this.mergeExistingWebexSites();
+  }
+
+  private mergeExistingWebexSites(): void {
+    _.forEach(this.distributedLicensesArray, (sitesArray) => {
+      _.forEach(this.existingWebexSites, (siteObj) => {
+        const site = _.find(sitesArray, { siteUrl: siteObj.siteUrl, centerType: siteObj.centerType });
+        if (_.has(site, 'quantity')) {
+          site.quantity = siteObj.quantity;
+        }
+      });
+    });
   }
 
   public findExistingWebexTrialSites(): void {
     const conferencingServices = _.filter(this.Authinfo.getConferenceServices(), { license: { isTrial: true } });
     const existingTrials = _.find(conferencingServices, (service: IConferenceService) => {
-      return _.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC, this.Config.offerCodes.CMR], service.license.offerName);
+      return _.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC], service.license.offerName);
     });
 
     _.forEach(existingTrials, (trial) => {
@@ -423,6 +440,35 @@ export class MeetingSettingsCtrl {
         });
       }
     });
+  }
+
+  public findExistingWebexSites(): void {
+    const existingConferenceServices = _.filter(this.Authinfo.getConferenceServices(), (service: IConferenceService) => {
+      return _.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC], service.license.offerName);
+    });
+
+    // Create an array of existing sites
+    this.existingWebexSites = _.map(existingConferenceServices, (service: IConferenceService) => {
+      return {
+        siteUrl: _.replace(_.get<string>(service, 'license.siteUrl'), this.Config.siteDomainUrl.webexUrl, ''),
+        quantity: service.license.volume,
+        centerType: service.license.offerName,
+      };
+    });
+
+    // Push unique sites to sitesArray
+    this.sitesArray = this.sitesArray.concat(_.map(_.uniqBy(this.existingWebexSites, 'siteUrl'), (site) => {
+      return {
+        siteUrl: _.replace(_.get<string>(site, 'siteUrl'), this.Config.siteDomainUrl.webexUrl, ''),
+        quantity: 1,
+        centerType: '',
+        keepExistingSite: true,
+      };
+    }));
+
+    if (!_.isEmpty(this.sitesArray)) {
+      this.constructDistributedSitesArray();
+    }
   }
 
   private validateWebexSiteUrl(siteName): ng.IPromise<any> {
