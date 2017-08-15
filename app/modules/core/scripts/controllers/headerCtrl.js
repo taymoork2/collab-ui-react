@@ -62,10 +62,8 @@
         }];
       } else if (showOrgName()) {
         vm.adminTabs = [{
-          icon: 'icon-settings-active',
+          tab: 'admin-orgname-only',
           title: Authinfo.getOrgName(),
-          link: '/settings',
-          iconClass: 'icon-outline',
         }];
       }
     }
