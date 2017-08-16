@@ -62,6 +62,7 @@
             $state.go('firsttimewizard');
           } else {
             var state = 'overview';
+            Authinfo.setCustomerView(true);
             var params;
             if (PageParam.getRoute()) {
               state = PageParam.getRoute();
@@ -72,6 +73,7 @@
               Log.debug('Sending "partner logged in" metrics');
               LogMetricsService.logMetrics('Partner logged in', LogMetricsService.getEventType('partnerLogin'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
               state = 'partneroverview';
+              Authinfo.setCustomerView(false);
             } else if (Authinfo.isSupportUser()) {
               state = 'support.status';
             } else if (!$stateParams.customerOrgId && Authinfo.isHelpDeskUserOnly()) {
@@ -82,6 +84,7 @@
               state = 'support.status';
             } else if (Authinfo.isPartnerUser()) {
               state = 'partnercustomers.list';
+              Authinfo.setCustomerView(false);
             } else if (Authinfo.isTechSupport()) {
               state = 'gss';
             }

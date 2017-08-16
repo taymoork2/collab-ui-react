@@ -45,7 +45,7 @@
     }
 
     function showMyCompany() {
-      return Utils.isAdminPage() && !(Authinfo.isPartnerAdmin() || Authinfo.isPartnerSalesAdmin());
+      return Utils.isAdminPage() && Authinfo.isCustomerAdmin() && Authinfo.isCustomerView();
     }
 
     function showProBadge() {
