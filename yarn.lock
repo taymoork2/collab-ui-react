@@ -152,8 +152,8 @@
     "@types/angular" "*"
 
 "@types/angular-ui-bootstrap@~0.13.43":
-  version "0.13.43"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/@types/angular-ui-bootstrap/-/angular-ui-bootstrap-0.13.43.tgz#99a09fb9aa722afbb157fd74b7b021595184c287"
+  version "0.13.44"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/@types/angular-ui-bootstrap/-/angular-ui-bootstrap-0.13.44.tgz#dedc80a8e8badc12ef87a8e5f0ebef625939ec47"
   dependencies:
     "@types/angular" "*"
 
@@ -1217,8 +1217,8 @@ babel-types@^6.19.0, babel-types@^6.24.1, babel-types@^6.25.0:
     to-fast-properties "^1.0.1"
 
 babylon@^6.0.0, babylon@^6.17.2:
-  version "6.17.4"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/babylon/-/babylon-6.17.4.tgz#3e8b7402b88d22c3423e137a1577883b15ff869a"
+  version "6.18.0"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/babylon/-/babylon-6.18.0.tgz#af2f3b88fa6f5c1e4c634d1a0f8eac4f55b395e3"
 
 backo2@1.0.2:
   version "1.0.2"
@@ -9123,8 +9123,8 @@ xmlbuilder@8.2.2:
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/xmlbuilder/-/xmlbuilder-8.2.2.tgz#69248673410b4ba42e1a6136551d2922335aa773"
 
 xmlbuilder@>=1.0.0:
-  version "9.0.1"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/xmlbuilder/-/xmlbuilder-9.0.1.tgz#91cd70897755363eba57c12ddeeab4a341a61f65"
+  version "9.0.3"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/xmlbuilder/-/xmlbuilder-9.0.3.tgz#2b975dd9f6c7ccac84bb5d316d948f72b06ffacf"
 
 xmldom@^0.1.22:
   version "0.1.27"
