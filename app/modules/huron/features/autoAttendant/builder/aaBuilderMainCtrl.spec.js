@@ -64,6 +64,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     $state = _$state_;
     $rootScope = _$rootScope_;
     $modalStack = _$modalStack_;
+
     $q = _$q_;
     $compile = _$compile_;
     $scope = $rootScope.$new();
@@ -149,7 +150,7 @@ describe('Controller: AABuilderMainCtrl', function () {
   });
 
   describe('getTimeZoneOptions', function () {
-    it('should retreive the the list of system timezone options', function () {
+    it('should retrieve the the list of system timezone options', function () {
       controller.ui.timeZoneOptions = undefined;
       controller.getTimeZoneOptions();
       $scope.$apply();
@@ -158,7 +159,18 @@ describe('Controller: AABuilderMainCtrl', function () {
   });
 
   describe('getSystemTimeZone', function () {
-    it('should retreive the system timezone', function () {
+    it('should retrieve the system timezone', function () {
+      controller.ui.systemTimeZone = undefined;
+      controller.getSystemTimeZone();
+      $scope.$apply();
+      expect(angular.equals(controller.ui.systemTimeZone, translatedTimeZone[0])).toBe(true);
+    });
+  });
+  describe('getSystemTimeZone - multi site', function () {
+    it('should retrieve the system timezone', function () {
+      // As of this JIRA - AUTOATTN-1257
+      sysModel.site.timeZone = null;
+
       controller.ui.systemTimeZone = undefined;
       controller.getSystemTimeZone();
       $scope.$apply();
