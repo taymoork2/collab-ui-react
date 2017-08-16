@@ -66,6 +66,8 @@
       <uc-media-on-hold
         cr-feature-toggle feature-show="huron-moh-enable"
         ng-if="$ctrl.isUserMohEnabled"
+        panel-title="$ctrl.panelTitle"
+        panel-desc="$ctrl.panelDesc"
         line-moh="$ctrl.lineOverviewData.lineMoh"
         line-moh-options="$ctrl.lineMediaOptions"
         on-change-fn="$ctrl.setLineMedia(lineMoh)">

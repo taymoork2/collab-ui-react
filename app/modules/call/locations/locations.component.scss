@@ -22,6 +22,15 @@
   .control-label {
     color: $gray-dark-4;
   }
+
+  .display-flex {
+    display: flex;
+    align-items: center;
+  }
+
+  .warning-padding {
+    padding-left: 16px;
+  }
 }
 
 .indent-left {

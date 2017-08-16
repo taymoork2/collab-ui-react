@@ -122,7 +122,8 @@
     }
 
     .display-flex {
-      display: inline-flex;
+      display: flex;
+      align-items: center;
     }
 
     .service-setup-extension-length,

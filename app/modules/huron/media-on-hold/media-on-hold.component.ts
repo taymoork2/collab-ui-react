@@ -4,6 +4,8 @@ class MediaOnHoldCtrl implements ng.IComponentController {
   public lineMoh: string;
   public selected: IOption;
   public lineMohOptions: IOption[];
+  public panelTitle: string;
+  public panelDesc: string;
   public onChangeFn: Function;
   public mediaMgrModal;
 
@@ -43,6 +45,8 @@ export class MediaOnHoldComponent implements ng.IComponentOptions {
   public bindings = {
     lineMoh: '<',
     lineMohOptions: '<',
+    panelTitle: '<',
+    panelDesc: '<',
     onChangeFn: '&',
   };
 }
