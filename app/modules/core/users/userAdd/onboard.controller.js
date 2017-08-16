@@ -245,10 +245,14 @@ require('./_user-add.scss');
       }
     }
 
-    function loadLocationInternalNumberPool(pattern, locationUuid) {
+    function loadLocationInternalNumberPool(pattern, locationUuid, userEntity) {
       return TelephonyInfoService.loadLocationInternalNumberPool(pattern, $scope.PATTERN_LIMIT, locationUuid)
         .then(function (internalNumberPool) {
           $scope.internalNumberPool = internalNumberPool;
+          if (userEntity) {
+            userEntity.assignedDn.pattern = internalNumberPool[0].pattern;
+          }
+          return $scope.internalNumberPool;
         }).catch(function (response) {
           $scope.internalNumberPool = [];
           Notification.errorResponse(response, 'directoryNumberPanel.internalNumberPoolError');
@@ -373,6 +377,10 @@ require('./_user-add.scss');
       for (var i = 0; i < $scope.usrlist.length - 1; i++) {
         for (var j = i + 1; j < $scope.usrlist.length; j++) {
           if (!_.isUndefined($scope.usrlist[i].assignedDn) && !_.isUndefined($scope.usrlist[j].assignedDn) && ($scope.usrlist[i].assignedDn.uuid !== 'none') && ($scope.usrlist[i].assignedDn.pattern === $scope.usrlist[j].assignedDn.pattern)) {
+            //same extension across different locations are allowed to be set
+            if ($scope.ishI1484 && $scope.usrlist[i].selectedLocation.uuid !== $scope.usrlist[j].selectedLocation.uuid) {
+              break;
+            }
             didDnDupe.dnDupe = true;
           }
           if (!_.isUndefined($scope.usrlist[i].externalNumber) && !_.isUndefined($scope.usrlist[j].externalNumber) && ($scope.usrlist[i].externalNumber.uuid !== 'none') && ($scope.usrlist[i].externalNumber.pattern === $scope.usrlist[j].externalNumber.pattern)) {
@@ -462,8 +470,7 @@ require('./_user-add.scss');
     // Synchronize the DIDs and DNs on the Assign Numbers page when selections change
     function syncGridDidDn(rowEntity, modifiedFieldName) {
       if (modifiedFieldName === 'location') {
-        $scope.locationUuid = rowEntity.selectedLocation.uuid;
-        loadLocationInternalNumberPool(null, $scope.locationUuid);
+        populateExtensions(rowEntity);
       }
       if ($scope.showExtensions === false) {
         var dnLength = rowEntity.assignedDn.pattern.length;
@@ -487,6 +494,33 @@ require('./_user-add.scss');
         }
       }
     }
+
+    function populateExtensions(rowEntity) {
+      var selectedLocationColumn = rowEntity.selectedLocation.uuid;
+      return loadLocationInternalNumberPool(null, selectedLocationColumn)
+        .then(function (internalNumberPool) {
+          //Array to maintain the index positions of numbers already present on the grid
+          var copyArray = new Array(internalNumberPool.length);
+          _.forEach($scope.usrlist, function (user, userIndex) {
+            if ($scope.usrlist[userIndex].selectedLocation.uuid === selectedLocationColumn) {
+              _.forEach(internalNumberPool, function (internalNumber, index) {
+                if (internalNumberPool[index].pattern == $scope.usrlist[userIndex].assignedDn.pattern) {
+                  //if the number is present on the grid, then set its index position to 1 on the copyArray
+                  copyArray[index] = 1;
+                }
+              });
+            }
+          });
+          for (var i = 0; i < copyArray.length; i++) {
+            //pick the first number which is not already on the grid, in copy array, the element is not 1, and that index from the internalNumberPool
+            if (copyArray[i] !== 1) {
+              rowEntity.assignedDn.pattern = internalNumberPool[i].pattern;
+              break;
+            }
+          }
+        });
+    }
+
 
     /****************************** Did to Dn Mapping END *******************************/
     //***
