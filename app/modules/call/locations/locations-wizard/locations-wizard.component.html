@@ -155,27 +155,11 @@
           <div class="section__content cs-form__section location-create-step">
             <div class="section__content">
               <h4 class="step-title" translate="locations.emergencyServicesTitle"></h4>
-              <div ng-if="!$ctrl.addressValidating && $ctrl.addressValidated !== true">
-                <hr-service-address
-                  address="$ctrl.address"
-                  hide-search="true"
-                  hide-address="true"
-                  class="columns row full large-form"
-                  read-only="$ctrl.readOnly">
-                </hr-service-address>
-                <button class="btn btn--primary" ng-disabled="$ctrl.form.$invalid" ng-click="$ctrl.validateAddress()">Validate</button>
-              </div>
-              <div>
-                <div class="text-center" ng-show="$ctrl.addressValidating">
-                  <i class="icon icon-spinner icon-2x text-center"></i>
-                </div>
-                <div ng-if="$ctrl.addressValidated === true">
-                  <h6 translate="trialModal.pstn.addrFound"></h6>
-                  <h5>{{$ctrl.address.streetAddress}} {{$ctrl.address.unit}}</h5>
-                  <h5>{{$ctrl.address.city}}, {{$ctrl.address.state}}, {{$ctrl.address.zip}}</h5>
-                  <a href="" class="primary" ng-click="$ctrl.resetAddr()" translate="trialModal.pstn.addrRetry"></a>
-                </div>
-              </div>
+              <uc-call-emergency-services
+                address="$ctrl.callLocationSettingsData.address"
+                is-pstn-setup="$ctrl.PstnModel.isCustomerExists()"
+                allow-ecn-setup="false">
+              </uc-call-emergency-services>
             </div>
           </div>
         </div>

@@ -1520,6 +1520,7 @@
     "select": "Select",
     "selectLanguage": "Select a language",
     "selectLocation": "Select a Location",
+    "selectNumber": "Select a number",
     "service": "Service",
     "settings": "Settings",
     "showAllAdminUsers": "Show all {{numUsers}} administrators",
@@ -5358,7 +5359,8 @@
     "description": "In the case of an emergency, local emergency response crew would use this address to locate the caller.",
     "savePrompt": "Save this address?",
     "saveSuccess": "Emergency Service Address updated successfully.",
-    "saveError": "Error occurred updating Emergency Service Address."
+    "saveError": "Error occurred updating Emergency Service Address.",
+    "getError": "Error occurred retrieving Emergency Service Address."
   },
   "settingsServiceNumber": {
     "label": "Emergency Service Number",
@@ -5366,7 +5368,13 @@
     "savePrompt": "Save this number?",
     "saveSuccess": "Emergency Service Number updated successfully.",
     "saveError": "Error occurred updating Emergency Service Number.",
+    "getError": "Error occurred retrieving Emergency Service Number.",
     "warning": "Please select a number assigned to a user or Cisco Spark Call feature"
+  },
+  "emergencyServices": {
+    "warnNoExternNumber": "Before you can add an Emergency Callback Number to this location you need to add a user or place with an external number.",
+    "warnNoPstn": "Once you have PSTN set up, you will need to add Emergency Service information to locations",
+    "locationUnknown": "Unknown location - ID missing"
   },
   "didManageModal": {
     "buttonText": "Add Numbers",

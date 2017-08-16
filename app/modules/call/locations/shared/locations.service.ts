@@ -1,6 +1,17 @@
-import { IRLocation, Location, IRLocationListItem, LocationListItem, IRLocationInternalNumberPoolList, LocationInternalNumberPoolList } from './location';
+import {
+  IRLocation, Location, IRLocationListItem, LocationListItem,
+  IRLocationInternalNumberPoolList, LocationInternalNumberPoolList,
+} from './location';
+
+import {
+  IRCallPhoneNumberData, IRCallPhoneNumber, CallPhoneNumber,
+  IREmergencyNumberData, EmergencyNumber,
+} from 'modules/huron/phoneNumber';
 
 interface ILocationResource extends ng.resource.IResourceClass<ng.resource.IResource<IRLocationListItem>> {}
+interface ILocationDetailResource extends ng.resource.IResourceClass<ng.resource.IResource<IRLocation>> {
+  update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
+}
 
 interface IUserLocationDetailResource extends ng.resource.IResourceClass<ng.resource.IResource<IRLocation>> {}
 
@@ -8,11 +19,13 @@ interface IUserMoveLocationResource extends ng.resource.IResourceClass<ng.resour
   update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
 }
 
-interface ILocationDetailResource extends ng.resource.IResourceClass<ng.resource.IResource<IRLocation>> {
+interface ILocationInternalNumberPoolResource extends ng.resource.IResourceClass<IRLocationInternalNumberPoolList & ng.resource.IResource<IRLocationInternalNumberPoolList>> {}
+
+
+interface INumberResource extends ng.resource.IResourceClass<ng.resource.IResource<IRCallPhoneNumberData>> {}
+interface IREmergencyNumberResource extends ng.resource.IResourceClass<ng.resource.IResource<IREmergencyNumberData>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
 }
-
-interface ILocationInternalNumberPoolResource extends ng.resource.IResourceClass<IRLocationInternalNumberPoolList & ng.resource.IResource<IRLocationInternalNumberPoolList>> {}
 
 export class LocationsService {
   private locationListResource: ILocationResource;
@@ -21,6 +34,8 @@ export class LocationsService {
   private locationDetailResource: ILocationDetailResource;
   private locationInternalNumberPoolResource: ILocationInternalNumberPoolResource;
   private defaultLocation: LocationListItem | undefined = undefined;
+  private numberResource: INumberResource;
+  private emergencyNumberResource: IREmergencyNumberResource;
 
   /* @ngInject */
   constructor(
@@ -54,6 +69,13 @@ export class LocationsService {
     this.locationDetailResource = <ILocationDetailResource>this.$resource(`${this.HuronConfig.getCmiV2Url()}/customers/:customerId/locations/:locationId`, {},
       {
         update: updateAction,
+      });
+
+    this.numberResource = <INumberResource> this.$resource(`${this.HuronConfig.getCmiV2Url()}/customers/:customerId/numbers/:numberId`, {}, {});
+    this.emergencyNumberResource = <IREmergencyNumberResource> this.$resource(`${this.HuronConfig.getCmiV2Url()}/customers/:customerId/locations/:locationId/emergencynumbers/:emergencyNumberId`, {},
+      {
+        update: updateAction,
+        save: saveAction,
       });
   }
 
@@ -240,4 +262,71 @@ export class LocationsService {
       });
     });
   }
+
+  public getEmergencyCallbackNumbersOptions(): ng.IPromise<CallPhoneNumber[]> {
+    return this.numberResource.get({
+      customerId: this.Authinfo.getOrgId(),
+      type: 'external',
+      assigned: true,
+      deprecated: false,
+    })
+    .$promise
+    .then((rNumberData: IRCallPhoneNumberData) => {
+      const numbers: CallPhoneNumber[] = [];
+      if (_.isArray(rNumberData.numbers)) {
+        rNumberData.numbers.forEach((rPhoneNumber: IRCallPhoneNumber) => {
+          numbers.push(new CallPhoneNumber(rPhoneNumber));
+        });
+      }
+      return numbers;
+    });
+  }
+
+  public getEmergencyCallbackNumber(locationId: string): ng.IPromise<EmergencyNumber> {
+    return this.emergencyNumberResource.get({
+      customerId: this.Authinfo.getOrgId(),
+      locationId: locationId,
+    })
+    .$promise
+    .then((rEmergencyNumberData: IREmergencyNumberData) => {
+      if (_.isArray(rEmergencyNumberData.emergencyNumbers) && rEmergencyNumberData.emergencyNumbers.length > 0) {
+        return new EmergencyNumber(rEmergencyNumberData.emergencyNumbers[0]);
+      }
+      return new EmergencyNumber();
+    });
+  }
+
+  public createEmergencyCallbackNumber(locationId: string, emergencyNumber: EmergencyNumber): ng.IPromise<string> {
+    let location: string;
+    return this.emergencyNumberResource.save({
+      customerId: this.Authinfo.getOrgId(),
+      locationId: locationId,
+    },
+    emergencyNumber.getREmergencyNumber(),
+    (_response, headers) => {
+      location = headers('Location');
+    })
+    .$promise
+    .then(() => location);
+  }
+
+  public updateEmergencyCallbackNumber(locationId: string, emergencyNumber: EmergencyNumber): ng.IPromise<void> {
+    return this.emergencyNumberResource.update({
+      customerId: this.Authinfo.getOrgId(),
+      locationId: locationId,
+      emergencyNumberId: emergencyNumber.uuid,
+    }, emergencyNumber.getREmergencyNumber())
+    .$promise;
+  }
+
+  public deletEmergencyCallbackNumber(locationId: string, emergencyNumber: EmergencyNumber): ng.IPromise<void> {
+    return this.emergencyNumberResource.delete({
+      customerId: this.Authinfo.getOrgId(),
+      locationId: locationId,
+      emergencyNumberId: emergencyNumber.uuid,
+    })
+    .$promise
+    .then(() => {});
+  }
+
 }
