@@ -32,7 +32,7 @@
     <li id="videoTutorial-btn" ng-if="isPartner || isPartnerSales" role="menuitem">
       <a id="videoTutorial-lnk" href="" ng-click="openVideo()" translate="index.videoTutorial"></a>
     </li>
-    <li id="logout-btn" ng-if="loggedIn && !isCustomerLaunchedFromPartner" role="menuitem">
+    <li id="logout-btn" ng-if="loggedIn" role="menuitem">
       <a href="" ng-click="logout()" translate="index.logout"></a>
     </li>
   </ul>
@@ -75,7 +75,7 @@
     <li id="videoTutorial-btn" ng-if="isPartner || isPartnerSales" role="menuitem">
       <a id="videoTutorial-lnk" href="" ng-click="openVideo()" translate="index.videoTutorial"></a>
     </li>
-    <li id="logout-btn" ng-if="loggedIn && !isCustomerLaunchedFromPartner" role="menuitem">
+    <li id="logout-btn" ng-if="loggedIn" role="menuitem">
       <a href="" ng-click="logout()" translate="index.logout"></a>
     </li>
   </ul>
