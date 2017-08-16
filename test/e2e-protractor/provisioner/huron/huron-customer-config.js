@@ -2,7 +2,7 @@ import * as os from 'os';
 import { CmiCustomer } from './cmi-customer';
 import { CmiSite } from './cmi-site';
 import { CmiNumberRange } from './cmi-number-range';
-import { AtlasTrial, TrialOffer, Offers } from './atlas-trial';
+import { AtlasTrial, TrialOffer, Offers } from '../atlas-trial';
 
 const testPartner = isProductionBackend ? 'huron-ui-test-partner-prod' : 'huron-ui-test-partner';
 const partnerEmail = isProductionBackend ? 'huron.ui.test.partner+production_' : 'huron.ui.test.partner+';

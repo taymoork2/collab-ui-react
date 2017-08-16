@@ -1,4 +1,4 @@
-import * as provisionerHelper from './provisioner.helper';
+import * as provisionerHelper from '../provisioner.helper';
 
 export function createCmiCustomer(token, customer) {
   const options = {

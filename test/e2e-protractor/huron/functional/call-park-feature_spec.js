@@ -1,5 +1,5 @@
 import * as provisioner from '../../provisioner/provisioner';
-import { huronCustomer } from '../../provisioner/huron-customer-config';
+import { huronCustomer } from '../../provisioner/huron/huron-customer-config';
 import { CallFeaturesPage } from '../pages/callFeatures.page';
 import { CallParkFeaturePage } from '../pages/callParkFeature.page';
 import { AddUserPage } from '../pages/addUser.page';
@@ -56,7 +56,7 @@ describe('Huron Functional: add-call-park', () => {
       utils.sendKeys(manageUsersPage.manual.emailAddress.addUsersField, `${os.userInfo().username}_add-callpark_2_${now}@gmail.com`);
       utils.sendKeys(manageUsersPage.manual.emailAddress.addUsersField, protractor.Key.ENTER);
     });
-    
+
     it('should add user 3', () => {
       utils.sendKeys(manageUsersPage.manual.emailAddress.addUsersField, `${os.userInfo().username}_add-callpark_3_${now}@gmail.com`);
       utils.sendKeys(manageUsersPage.manual.emailAddress.addUsersField, protractor.Key.ENTER);
@@ -247,7 +247,7 @@ describe('Huron Functional: add-call-park', () => {
       utils.click(callParkFeature.startNumber);
       utils.sendKeys(callParkFeature.startNumber, '310');
       browser.driver.sleep(1000);
-      utils.sendKeys(callParkFeature.startNumber, protractor.Key.ENTER); 
+      utils.sendKeys(callParkFeature.startNumber, protractor.Key.ENTER);
     });
 
     it('should click the next arrow', () => {
@@ -259,7 +259,7 @@ describe('Huron Functional: add-call-park', () => {
     it('should start selecting members', () => {
       utils.sendKeys(callParkFeature.inputMember, `${os.userInfo().username}`);
       browser.driver.sleep(1000);
-      utils.sendKeys(callParkFeature.inputMember, protractor.Key.ENTER); 
+      utils.sendKeys(callParkFeature.inputMember, protractor.Key.ENTER);
     });
 
     it('should check left panel', () => {

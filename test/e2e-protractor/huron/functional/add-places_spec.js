@@ -1,5 +1,5 @@
 import * as provisioner from '../../provisioner/provisioner';
-import { huronCustomer } from '../../provisioner/huron-customer-config';
+import { huronCustomer } from '../../provisioner/huron/huron-customer-config';
 import { AddPlacesPage } from '../pages/addPlaces.page';
 import { CallSpeedDialsPage } from '../pages/callSpeedDials.page';
 
