@@ -1,7 +1,7 @@
 export class SearchService {
   private url;
   private data: any = {};
-  public featureName: string = 'Diagnostic';
+  public featureName: string = 'report.webex.diagnostic';
   /* @ngInject */
   constructor(
     private UrlConfig,
