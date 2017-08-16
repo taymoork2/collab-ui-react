@@ -1,4 +1,4 @@
-export class AddPlacesPage {
+export class CallPlacesPage {
   constructor() {
     this.placesTab = element(by.css('i.icon-location'));
     this.addNewPlace = element.all(by.css('button.add-button')).first();
@@ -33,6 +33,7 @@ export class AddPlacesPage {
         call: element(by.cssContainingText('.feature-name', 'Call')),
       },
       features: {
+        title: element(by.css('[translate="telephonyPreview.features"]')),
         speedDials: element(by.cssContainingText('.feature-name', 'Speed Dials')),
       },
     };

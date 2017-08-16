@@ -8,8 +8,6 @@ const testPartner = isProductionBackend ? 'huron-ui-test-partner-prod' : 'huron-
 const partnerEmail = isProductionBackend ? 'huron.ui.test.partner+production_' : 'huron.ui.test.partner+';
 const now = Date.now();
 
-
-
 let offers = [];
 offers.push(new TrialOffer({
   id: Offers.OFFER_CALL,
@@ -43,4 +41,3 @@ export function huronCustomer(test, numberRange, users, pstn, pstnLines, doFtsw)
   };
   return customer;
 }
-

@@ -13,7 +13,7 @@ describe('Huron Functional: add-user', () => {
   const customer = huronCustomer('add-user');
   const USER_EMAIL = `huron.ui.test.partner+${customer.name}_${now}@gmail.com`;
   const USER_FIRST_NAME = 'Darth';
-  const USER_LAST_NAME = 'Vador';
+  const USER_LAST_NAME = 'Vader';
 
   beforeAll(done => {
     provisioner.provisionCustomerAndLogin(customer)
@@ -31,16 +31,16 @@ describe('Huron Functional: add-user', () => {
     utils.click(navigation.usersTab);
     navigation.expectDriverCurrentUrl('users');
   });
-  it('should navigate to Manage Users page and "Manually add or modify users" radio button is selected', () => {
-    utils.click(manageUsersPage.buttons.manageUsers);
-    utils.waitForText(manageUsersPage.select.title, 'Add or Modify Users');
-    utils.expectIsDisplayed(manageUsersPage.select.radio.orgManual);
-  });
 
   describe('Add user flow', () => {
+    it('should navigate to Manage Users page and "Manually add or modify users" radio button is selected', () => {
+      utils.click(manageUsersPage.buttons.manageUsers);
+      utils.waitForText(manageUsersPage.select.title, 'Add or Modify Users');
+      utils.expectIsDisplayed(manageUsersPage.select.radio.orgManual);
+    });
     it('should navigate to manually add user with "email" or "Names and email" when hit "Next"', () => {
       utils.click(manageUsersPage.buttons.next);
-      utils.expectIsDisplayed(manageUsersPage.manual.emailAddress.CallUsersField, LONG_TIMEOUT);
+      utils.expectIsDisplayed(manageUsersPage.manual.emailAddress.addUsersField, LONG_TIMEOUT);
       utils.expectIsDisplayed(manageUsersPage.manual.radio.emailAddress);
     });
     it('Should contain valid input fields on selecting names and email', () => {

@@ -17,9 +17,9 @@ describe('Huron Functional: e2e-customer-setup', () => {
   const testPartner = 'huron-ui-test-partner';
   const CUSTOMER_NAME = `${os.userInfo().username}_e2e-customer-setup`;
   const CUSTOMER_EMAIL = `huron.ui.test.partner+${CUSTOMER_NAME}@gmail.com`;
-  const USER_EMAIL = `huron.ui.test.partner+${CUSTOMER_NAME}_darthvador_${now}@gmail.com`;
+  const USER_EMAIL = `huron.ui.test.partner+${CUSTOMER_NAME}_darthvader_${now}@gmail.com`;
   const USER_FIRST_NAME = 'Darth';
-  const USER_LAST_NAME = 'Vador';
+  const USER_LAST_NAME = 'Vader';
   var partnerWindow;
 
   beforeAll(done => {

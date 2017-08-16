@@ -10,7 +10,7 @@ describe('Huron Functional: user-features', () => {
   const customer = huronCustomer('user-line-settings');
   const USER_EMAIL = `huron.ui.test.partner+${customer.name}_${now}@gmail.com`;
   const USER_FIRST_NAME = 'Darth';
-  const USER_LAST_NAME = 'Vador';
+  const USER_LAST_NAME = 'Vader';
 
   beforeAll(done => {
     provisioner.provisionCustomerAndLogin(customer)
