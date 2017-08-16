@@ -72,7 +72,7 @@
               Log.debug('Sending "partner logged in" metrics');
               LogMetricsService.logMetrics('Partner logged in', LogMetricsService.getEventType('partnerLogin'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
               state = 'partneroverview';
-              Authinfo.setCustomerView(false);
+              Authinfo.setCustomerView(true);
             } else if (Authinfo.isSupportUser()) {
               state = 'support.status';
             } else if (!$stateParams.customerOrgId && Authinfo.isHelpDeskUserOnly()) {

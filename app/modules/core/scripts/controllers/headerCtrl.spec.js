@@ -35,7 +35,6 @@ describe('Controller: HeaderCtrl', function () {
       });
 
       it('should show my company page button', function () {
-        debugger;
         expect(this.controller.showMyCompany()).toBe(true);
       });
 
