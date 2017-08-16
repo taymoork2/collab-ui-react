@@ -2,12 +2,12 @@ import * as provisioner from '../../provisioner/provisioner';
 import { huronCustomer } from '../../provisioner/huron/huron-customer-config';
 import { CallFeaturesPage } from '../pages/callFeatures.page';
 import { AddHuntGroupPage } from '../pages/addHuntGroup.page';
-import { AddUserPage } from '../pages/addUser.page';
+import { CallUserPage } from '../pages/callUser.page';
 import * as os from 'os';
 
 const callFeatures = new CallFeaturesPage();
 const addHuntGroup = new AddHuntGroupPage();
-const addUser = new AddUserPage();
+const addUser = new CallUserPage();
 const now = Date.now();
 
 /* globals LONG_TIMEOUT, manageUsersPage, navigation, users, telephony */

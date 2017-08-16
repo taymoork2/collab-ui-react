@@ -2,22 +2,24 @@ import * as provisioner from '../../provisioner/provisioner';
 import { CustomerSetupPage } from '../pages/customerSetup.page';
 import * as os from 'os';
 import { CallSettingsPage } from '../pages/callSettings.page';
-import { AddUserPage } from '../pages/addUser.page';
+import { CallUserPage } from '../pages/callUser.page';
 import { AddPlacesPage } from '../pages/addPlaces.page';
 
 const addPlaces = new AddPlacesPage();
-const AddUser = new AddUserPage();
+const AddUser = new CallUserPage();
 const callSettings = new CallSettingsPage();
 const customerSetup = new CustomerSetupPage();
+const now = Date.now();
+
 /* globals partner, navigation, utils, LONG_TIMEOUT, wizard,manageUsersPage*/
 
 describe('Huron Functional: e2e-customer-setup', () => {
   const testPartner = 'huron-ui-test-partner';
   const CUSTOMER_NAME = `${os.userInfo().username}_e2e-customer-setup`;
   const CUSTOMER_EMAIL = `huron.ui.test.partner+${CUSTOMER_NAME}@gmail.com`;
-  const USER_EMAIL = `huron.ui.test.partner+${CUSTOMER_NAME}_captainphasma@gmail.com`;
-  const USER_FIRST_NAME = 'Captain';
-  const USER_LAST_NAME = 'Phasma';
+  const USER_EMAIL = `huron.ui.test.partner+${CUSTOMER_NAME}_darthvador_${now}@gmail.com`;
+  const USER_FIRST_NAME = 'Darth';
+  const USER_LAST_NAME = 'Vador';
   var partnerWindow;
 
   beforeAll(done => {

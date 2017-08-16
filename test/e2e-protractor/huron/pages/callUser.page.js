@@ -1,4 +1,4 @@
-export class AddUserPage {
+export class CallUserPage {
   constructor() {
     this.modalDialog = {
       title: element(by.css('.modal-title')),
