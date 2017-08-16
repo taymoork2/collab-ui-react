@@ -7,6 +7,7 @@
 
   /* @ngInject */
   function SparkMetricsCtrl(
+    $rootScope,
     $sce,
     $scope,
     $timeout,
@@ -129,5 +130,17 @@
         });
       }
     };
+
+    vm.onStateChangeStart = function (event) {
+      if (!vm.isIframeLoaded) {
+        event.preventDefault();
+      }
+    };
+
+    var stateChangeStart = $rootScope.$on('$stateChangeStart', vm.onStateChangeStart);
+
+    $scope.$on('$destory', function () {
+      stateChangeStart();
+    });
   }
 })();

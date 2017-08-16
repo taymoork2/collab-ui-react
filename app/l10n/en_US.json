@@ -556,6 +556,8 @@
     "title": "MANAGE TEMPLATES"
   },
   "reportsPage": {
+    "loadingData": "Loading Data",
+    "loadingDescription": "For best results, allow reports to finish loading.",
     "pageTitle": "Reports",
     "all": "All",
     "engagement": "Engagement",
