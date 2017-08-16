@@ -139,7 +139,7 @@ describe('Controller: MeetingSettingsCtrl', () => {
       };
       this.controller.sitesArray = [
         {
-          siteUrl: 'myFirstTransferredSite.webex.com',
+          siteUrl: 'myFirstTransferredSite',
           isTransferSite: true,
         },
       ];
@@ -149,7 +149,7 @@ describe('Controller: MeetingSettingsCtrl', () => {
     });
     it('replaces the earlier transferred site with the new one', function () {
       expect(this.controller.sitesArray.length).toBe(1);
-      expect(this.controller.distributedLicensesArray[0][0].siteUrl).toBe('mySecondTransferredsite.webex.com');
+      expect(this.controller.distributedLicensesArray[0][0].siteUrl).toBe('mySecondTransferredsite');
     });
   });
 });
