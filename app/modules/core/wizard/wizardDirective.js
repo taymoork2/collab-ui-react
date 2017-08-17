@@ -98,7 +98,10 @@ require('./_wizard.scss');
     vm.loadOverview = loadOverview;
     vm.showDoItLater = false;
     vm.showDoNotProvision = false;
-    vm.willNotProvision = false;
+    vm.willNotProvision = willNotProvision;
+    vm.doNotProvisionAndProceedNext = doNotProvisionAndProceedNext;
+    vm.proceedNext = proceedNext;
+    vm.isSingleTab = isSingleTab;
     vm.wizardNextLoad = false;
     vm.showSkipTabBtn = false;
 
@@ -294,23 +297,8 @@ require('./_wizard.scss');
             nextStepSuccessful();
           }
         } else if (getTab().name === 'meetingSettings') {
-          if (getStep().name === 'summary') {
-            $rootScope.$broadcast('wizard-meeting-settings-setup-save-event');
-            nextStepSuccessful();
-          } else {
-            nextStepSuccessful();
-          }
-        } else if (getTab().name === 'finish') {
-          if (getStep().name === 'provision' && _.isFunction($scope.provision)) {
-            if (vm.willNotProvision) {
-              $rootScope.$broadcast('do-not-provision-event');
-              nextStepSuccessful();
-            } else {
-              $scope.provision().then(function () {
-                $rootScope.$broadcast('provision-event');
-                nextStepSuccessful();
-              });
-            }
+          if (getStep().name === 'migrateTrial') {
+            $rootScope.$emit('wizard-meeting-settings-migrate-site-event');
           } else {
             nextStepSuccessful();
           }
@@ -325,7 +313,17 @@ require('./_wizard.scss');
     var enterpriseSipSaveDeregister = $rootScope.$on('wizard-enterprise-sip-save', function () {
       nextStepSuccessful();
     });
-    $scope.$on('$destroy', enterpriseSipSaveDeregister);
+
+    var transferCodeValidatedDeregister = $rootScope.$on('wizard-meeting-settings-transfer-code-validated', function () {
+      if (getStep().name === 'migrateTrial') {
+        nextStepSuccessful();
+      }
+    });
+
+    $scope.$on('$destroy', function () {
+      enterpriseSipSaveDeregister();
+      transferCodeValidatedDeregister();
+    });
 
     function nextStepSuccessful() {
       var steps = getSteps();
@@ -361,6 +359,23 @@ require('./_wizard.scss');
       });
     }
 
+    function doNotProvisionAndProceedNext() {
+      SetupWizardService.setWillNotProvision(true);
+      nextStep();
+    }
+
+    function proceedNext() {
+      if (SetupWizardService.getWillNotProvision()) {
+        SetupWizardService.setWillNotProvision(false);
+      }
+
+      nextStep();
+    }
+
+    function willNotProvision() {
+      return SetupWizardService.getWillNotProvision();
+    }
+
     function isCustomerPartner() {
       return Authinfo.hasRole('CUSTOMER_PARTNER');
     }
@@ -389,6 +404,10 @@ require('./_wizard.scss');
 
     function isSingleTabSingleStep() {
       return vm.onlyShowSingleTab && vm.numberOfSteps === 1;
+    }
+
+    function isSingleTab() {
+      return vm.onlyShowSingleTab;
     }
 
     function isFirstTime() {
@@ -469,7 +488,6 @@ require('./_wizard.scss');
       controllerAs: 'wizard',
       restrict: 'AE',
       scope: {
-        provision: '=',
         tabs: '=',
         finish: '=',
         isFirstTime: '=',

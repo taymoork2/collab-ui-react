@@ -1800,7 +1800,7 @@
               tabContent: {
                 controllerAs: 'nav',
                 controller: 'SparkMetricsCtrl',
-                templateUrl: 'modules/core/customerReports/webexMetrics/sparkMetrics.tpl.html',
+                templateUrl: 'modules/core/customerReports/sparkMetrics/sparkMetrics.tpl.html',
               },
             },
           })
@@ -1815,7 +1815,7 @@
             },
           })
           .state('reports.webex-metrics', {
-            url: '/webexMetrics/:siteUrl',
+            url: '/webexMetrics',
             views: {
               tabContent: {
                 controllerAs: 'nav',
@@ -1823,11 +1823,34 @@
                 templateUrl: 'modules/core/customerReports/webexMetrics/webexMetrics.tpl.html',
               },
             },
-            params: {
-              siteUrl: {
-                squash: true,
-                value: '',
+          })
+          .state('reports.webex-metrics.metrics', {
+            url: '/:siteUrl/metrics',
+            views: {
+              metricsContent: {
+                templateUrl: 'modules/core/customerReports/webexMetrics/metrics/metricsFrame.tpl.html',
               },
+            },
+          })
+          .state('reports.webex-metrics.diagnostics', {
+            url: '/diagnostics',
+            views: {
+              metricsContent: {
+                template: '<cust-webex-reports-search></cust-webex-reports-search>',
+              },
+            },
+          })
+          .state('reports.webex-metrics.classic', {
+            url: '/classic',
+            views: {
+              metricsContent: {
+                controllerAs: 'nav',
+                controller: 'WebexReportsCtrl',
+                templateUrl: 'modules/core/customerReports/webexReports/webexReports.tpl.html',
+              },
+            },
+            params: {
+              siteUrl: null,
             },
           })
           .state('reports.media', {
@@ -2714,7 +2737,7 @@
           })
           .state('firsttimewizard', {
             parent: 'firsttimesplash',
-            template: '<cr-wizard provision="provision" tabs="tabs" finish="finish" is-first-time="true"></cr-wizard>',
+            template: '<cr-wizard tabs="tabs" finish="finish" is-first-time="true"></cr-wizard>',
             controller: 'SetupWizardCtrl',
             data: {
               firstTimeSetup: true,
@@ -3205,6 +3228,18 @@
                 require.ensure([], function () {
                   done(require('modules/call/settings'));
                 }, 'call-settings');
+              }),
+            },
+          })
+          .state('huronsettingslocation', {
+            url: '/services/call-settings-location',
+            parent: 'hurondetails',
+            template: '<uc-call-settings></uc-call-settings>',
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/call/settings'));
+                }, 'call-settings-location');
               }),
             },
           })

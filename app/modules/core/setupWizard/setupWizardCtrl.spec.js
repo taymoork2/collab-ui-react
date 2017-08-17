@@ -362,7 +362,7 @@ describe('SetupWizardCtrl', function () {
       this.expectStepOrder(['planReview', 'serviceSetup', 'meetingSettings', 'enterpriseSettings', 'careSettings']);
       this.expectSubStepOrder('planReview', ['init']);
       this.expectSubStepOrder('serviceSetup', ['pickCallLocationType', 'setupCallLocation']);
-      this.expectSubStepOrder('meetingSettings', ['siteSetup', 'licenseDistribution', 'summary']);
+      this.expectSubStepOrder('meetingSettings', ['migrateTrial', 'siteSetup', 'licenseDistribution', 'summary']);
       this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'enterprisePmrSetup', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
       this.expectSubStepOrder('careSettings', ['csonboard']);
     });
@@ -377,7 +377,7 @@ describe('SetupWizardCtrl', function () {
     });
 
     it('displays the set TSP partner view during meeting setup', function () {
-      this.expectSubStepOrder('meetingSettings', ['siteSetup', 'licenseDistribution', 'setPartnerAudio', 'summary']);
+      this.expectSubStepOrder('meetingSettings', ['migrateTrial', 'siteSetup', 'licenseDistribution', 'setPartnerAudio', 'summary']);
     });
   });
 

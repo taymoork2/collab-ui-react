@@ -2,8 +2,10 @@
 
 .moh-settings {
   position: relative;
+
   .display-flex {
-    display: inline-flex;
+    display: flex;
+    align-items: center;
   }
   .warning-padding {
     padding: 16px;

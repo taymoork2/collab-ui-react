@@ -1,10 +1,12 @@
 import { HuronSettingsService } from './settings.service';
 import { HuronSettingsOptionsService } from './settings-options.service';
 import { ExtensionLengthService } from './extension-length.service';
+import { CallSettingsService, CallSettingsData } from './settings-location.service';
 
 export * from './settings.service';
 export * from './settings-options.service';
 export * from './extension-length.service';
+export { CallSettingsService, CallSettingsData };
 export const E911_ADDRESS_PENDING: string = 'PENDING';
 
 import siteServiceModule from 'modules/huron/sites';
@@ -30,4 +32,5 @@ export default angular
   .service('HuronSettingsService', HuronSettingsService)
   .service('HuronSettingsOptionsService', HuronSettingsOptionsService)
   .service('ExtensionLengthService', ExtensionLengthService)
+  .service('CallSettingsService', CallSettingsService)
   .name;

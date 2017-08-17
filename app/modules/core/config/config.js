@@ -480,7 +480,7 @@
         'huronnewfeature',
         'huronsettings',
         'huronrecords',
-        'huronsettingsnew',
+        'huronsettingslocation',
         'huntgroupedit',
         'intercomgroups',
         'mediaonhold',

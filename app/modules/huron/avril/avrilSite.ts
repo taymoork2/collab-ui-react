@@ -5,10 +5,10 @@ export interface IAvrilSite {
   pilotNumber: string;
   siteSteeringDigit: string;
   timeZone: string;
-  features: IAvrilFeatures;
+  features: IAvrilSiteFeatures;
 }
 
-export interface IAvrilFeatures {
+export interface IAvrilSiteFeatures {
   VM2E: boolean;
   VM2E_PT: boolean;
   VMOTP: boolean;
@@ -22,7 +22,7 @@ export class AvrilSite implements IAvrilSite {
   public pilotNumber: string;
   public siteSteeringDigit: string;
   public timeZone: string;
-  public features: IAvrilFeatures;
+  public features: IAvrilSiteFeatures;
 
   constructor(obj: IAvrilSite  = {
     guid: '',
@@ -31,7 +31,7 @@ export class AvrilSite implements IAvrilSite {
     pilotNumber: '',
     siteSteeringDigit: '',
     timeZone: '',
-    features: new AvrilFeatures(),
+    features: new AvrilSiteFeatures(),
   }) {
     this.guid = obj.guid;
     this.extensionLength = obj.extensionLength;
@@ -39,17 +39,17 @@ export class AvrilSite implements IAvrilSite {
     this.pilotNumber = obj.pilotNumber;
     this.siteSteeringDigit = obj.siteSteeringDigit;
     this.timeZone = obj.timeZone;
-    this.features = new AvrilFeatures(obj.features);
+    this.features = new AvrilSiteFeatures(obj.features);
   }
 }
 
-export class AvrilFeatures implements IAvrilFeatures {
+export class AvrilSiteFeatures implements IAvrilSiteFeatures {
   public VM2E: boolean;
   public VM2E_PT: boolean;
   public VMOTP: boolean;
   public VM2E_TLS: boolean;
 
-  constructor(obj: IAvrilFeatures  = {
+  constructor(obj: IAvrilSiteFeatures  = {
     VM2E: false,
     VM2E_PT: false,
     VMOTP: true,

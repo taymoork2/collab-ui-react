@@ -11,6 +11,7 @@ export default angular
     notifications,
     require('angular-translate'),
     require('collab-ui-ng').default,
+    require('modules/core/analytics'),
     require('modules/core/config/urlConfig'),
   ])
   .service('SearchService', SearchService)

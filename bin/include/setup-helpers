@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # early out if this file has already been sourced
 if type unset_setup_helpers >/dev/null 2>&1; then
     return

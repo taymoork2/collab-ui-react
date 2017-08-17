@@ -30,8 +30,8 @@ describe('Controller: HeaderCtrl', function () {
 
     describe('and is customer admin', function () {
       beforeEach(function () {
-        spyOn(this.Authinfo, 'isPartnerAdmin').and.returnValue(false);
-        spyOn(this.Authinfo, 'isPartnerSalesAdmin').and.returnValue(false);
+        spyOn(this.Authinfo, 'isCustomerAdmin').and.returnValue(true);
+        spyOn(this.Authinfo, 'isCustomerView').and.returnValue(true);
       });
 
       it('should show my company page button', function () {

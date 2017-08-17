@@ -6,7 +6,7 @@
     .factory('OverviewCallCard', OverviewCallCard);
 
   /* @ngInject */
-  function OverviewCallCard(OverviewHelper, Authinfo) {
+  function OverviewCallCard(OverviewHelper, Authinfo, FeatureToggleService) {
     return {
       createCard: function createCard() {
         var card = {};
@@ -23,6 +23,15 @@
         card.settingsUrl = '#/services/call-settings';
         card.helper = OverviewHelper;
         card.showHealth = true;
+
+        FeatureToggleService.supports(FeatureToggleService.features.hI1484)
+          .then(function (supported) {
+            if (supported) {
+              card.settingsUrl = '#/services/call-settings-location';
+            } else {
+              card.settingsUrl = '#/services/call-settings';
+            }
+          });
 
         card.reportDataEventHandler = function (event, response) {
           if (!response.data.success) return;

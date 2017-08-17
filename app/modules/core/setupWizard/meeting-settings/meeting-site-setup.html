@@ -1,4 +1,4 @@
-<div class="meeting-settings">
+<div class="meeting-settings" ng-init="meetingCtrl.enableOrDisableNext(meetingCtrl.steps.SITES_SETUP)" >
   <h4 translate="firstTimeWizard.setupYourSites"></h4>
   <div class="element-spacing">
     <p ng-if="meetingCtrl.sitesArray.length === 0" translate="firstTimeWizard.meetingSettingsDescription"></p>
@@ -11,10 +11,10 @@
         <i class="icon icon-check verified-check"></i>
       </div>
       <div class="col-lg-5">
-        <b><div>{{site.siteUrl}}.webex.com</div></b>
+        <b><div>{{site.siteUrl}}<span translate="firstTimeWizard.pmrSiteURLDomain"></span></div></b>
         <div ng-if="site.timezone" class="time-zone" translate-values="{label: site.timezone.label}" translate="firstTimeWizard.timeZoneSetTo"></div>
       </div>
-      <div class="col-lg-1">
+      <div class="col-lg-1" ng-if="!(site.isTransferSite || site.keepExistingSite)">
         <i class="icon icon-delete delete-site" ng-click="meetingCtrl.removeSite($index)"></i>
       </div>
     </div>
@@ -54,7 +54,7 @@
         </cs-select>
       </div>
       <div class="col-lg-4">
-        <button ng-click="meetingCtrl.onClickValidate()" class="btn--cta" translate="common.validate" ng-disabled="meetingCtrl.disableValidateButton"></button>
+        <button ng-click="meetingCtrl.validateMeetingSite()" class="btn--cta" translate="common.validate" ng-disabled="meetingCtrl.disableValidateButton"></button>
       </div>
     </div>
   </div>

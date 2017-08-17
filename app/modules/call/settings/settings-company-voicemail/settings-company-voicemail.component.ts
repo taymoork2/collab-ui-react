@@ -2,7 +2,7 @@ import { Site } from 'modules/huron/sites';
 import { IOption } from 'modules/huron/dialing/dialing.service';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
 
-class ComapnyVoicemailCtrl implements ng.IComponentController {
+class CompanyVoicemailCtrl implements ng.IComponentController {
   public site: Site;
   public selectedNumber: IOption;
   public companyVoicemailEnabled: boolean;
@@ -118,7 +118,7 @@ class ComapnyVoicemailCtrl implements ng.IComponentController {
 }
 
 export class CompanyVoicemailComponent implements ng.IComponentOptions {
-  public controller = ComapnyVoicemailCtrl;
+  public controller = CompanyVoicemailCtrl;
   public templateUrl = 'modules/call/settings/settings-company-voicemail/settings-company-voicemail.component.html';
   public bindings = {
     site: '<',

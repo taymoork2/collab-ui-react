@@ -15,10 +15,11 @@ export class ProvisioningController {
   }];
   public isLoading: boolean = false;
   public gridApi: uiGrid.IGridApi;
-
-  private timer: any;
+  public status = Status;
   public completedOrders: any;
   public pendingOrders: any;
+
+  private timer: any;
   private gridOptions: { pending: uiGrid.IGridOptions, completed: uiGrid.IGridOptions };
   private sharedColumDefs: uiGrid.IColumnDef[];
   private static sharedGridOptions: uiGrid.IGridOptions = {

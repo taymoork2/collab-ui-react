@@ -35,6 +35,7 @@
     "postinstall": "npm run ts-spec-delete && npm run typings",
     "posttest": "npm run coverage-report",
     "preinstall": "node ./utils/semver-check.js",
+    "prestart": "yarn 2>/dev/null || npm install",
     "pretest": "rimraf ./test/coverage",
     "protractor": "npm run webdriver && node ./protractor/e2e",
     "protractor-babel": "npm run webdriver && babel-node ./protractor/e2e",

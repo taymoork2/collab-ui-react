@@ -1,4 +1,4 @@
-import * as provisionerHelper from './provisioner.helper';
+import * as provisionerHelper from '../provisioner.helper';
 
 export function createPstnCustomer(token, customer) {
   const options = {

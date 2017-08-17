@@ -2,12 +2,24 @@
 import { IOrder } from './provisioning.interfaces';
 import { IOrderDetail } from './provisioning.interfaces';
 
-export const DATE_FORMAT = 'M/d/YY h:mm a';
+export const DATE_FORMAT = 'M/D/YY h:mm a';
 
 export enum Status {
   PENDING = 'PENDING',
-  PROGRESS = 'PROGRESS',
+  PROGRESS = 'IN_PROGRESS',
   COMPLETED = 'COMPLETED',
+}
+
+export enum ManualCode {
+  'Not Used' = 100,
+  'Transfer; Modify of non-CI WebEx site' = 200,
+  'TSP to WEBEX Audio' = 300,
+  'WEBEX to TSP Audio' = 400,
+  'Manual Branding needed' = 500,
+  'CCASP Audio Setup, Modify, Cancel, Suspend/Resume, or Audio Change' = 600,
+  'CCASP to WEBEX Audio/VoIPOnly' = 700,
+  'WEBEX Audio/VoIPOnly to CCASP' = 800,
+  'Messenger' = 1000,
 }
 
 export class ProvisioningService {
@@ -33,7 +45,7 @@ export class ProvisioningService {
   public getOrders(status: Status): ng.IPromise<IOrder[]> {
     return this.$http.get<IOrder[]>(this.getOrdersUrl + status).then((response) => {
       return _.each(_.get(response, 'data.orderList'), (order) => {
-        order.orderReceived = this.formatDate( order.orderReceived);
+        order.orderReceived = this.formatDate(order.orderReceived);
         order.lastModified = this.formatDate(order.lastModified);
       });
     });

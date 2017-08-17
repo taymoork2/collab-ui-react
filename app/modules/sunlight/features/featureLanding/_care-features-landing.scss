@@ -51,7 +51,7 @@
       color: $gray-base;
     }
 
-    a {
+    .icon-download {
       font-size: rem-calc(24);
       color: $gray-light-1;
       top: -2px;
@@ -92,6 +92,10 @@
   .tooltip-wrapper-div {
     display: inline-block;
   }
+}
+
+header > p > span.badge {
+  @include vr-spacing(pt, 1);
 }
 
 .no-features {

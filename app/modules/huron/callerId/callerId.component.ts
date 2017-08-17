@@ -21,6 +21,9 @@ class CallerId implements ng.IComponentController {
   private listApiSuccess: boolean = false;
   private firstTime: boolean = true;
   private callerIdInputs: string[];
+  public errorMessage: { pattern: string };
+  public validator: { pattern: Function };
+
   private static readonly BLOCK_CALLERID_TYPE = {
     name: 'Blocked Outbound Caller ID',
     key: 'EXT_CALLER_ID_BLOCKED_CALLER_ID',
@@ -120,6 +123,12 @@ class CallerId implements ng.IComponentController {
     this.blockOption = new CallerIdOption(CallerId.BLOCK_CALLERID_TYPE.name, new CallerIdConfig('', this.$translate.instant('callerIdPanel.blockedCallerIdDescription'), '', CallerId.BLOCK_CALLERID_TYPE.key));
     this.options.push(this.blockOption);
     this.callerIdInputs = callerIdInputs;
+    this.validator = {
+      pattern: this.invalidCharactersValidation,
+    };
+    this.errorMessage = {
+      pattern: this.$translate.instant('callerIdPanel.invalidNameError'),
+    };
   }
 
   private updateCompanyNumberOptions(companyNumbers) {
@@ -217,6 +226,11 @@ class CallerId implements ng.IComponentController {
     this.customCallerIdNumber = number;
     this.onChange();
   }
+
+  public invalidCharactersValidation(viewValue: string): boolean {
+    const regex = new RegExp(/^[^\]"%<>[&|{}]{1,30}$/g);
+    return regex.test(viewValue);
+  }
 }
 
 export class CallerIdConfig {
@@ -242,6 +256,7 @@ export class CallerIdOption {
     this.value = callerIdConfig;
   }
 }
+
 
 export class CallerIdComponent implements ng.IComponentOptions {
   public controller = CallerId;

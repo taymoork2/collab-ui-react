@@ -1,13 +1,13 @@
 import * as provisionerHelper from './provisioner.helper';
 import * as atlasHelper from './provisioner.helper.atlas';
-import * as cmiHelper from './provisioner.helper.cmi';
+import * as cmiHelper from './huron/provisioner.helper.cmi';
 import * as helper from '../../api_sanity/test_helper';
 import * as _ from 'lodash';
 import * as Promise from 'promise';
-import { PstnCustomer } from './terminus-customers';
-import { PstnCustomerE911Signee } from './terminus-customers-customer-e911';
-import { PstnNumbersOrders } from './terminus-numbers-orders';
-import * as pstnHelper from './provisioner.helper.pstn';
+import { PstnCustomer } from './huron/terminus-customers';
+import { PstnCustomerE911Signee } from './huron/terminus-customers-customer-e911';
+import { PstnNumbersOrders } from './huron/terminus-numbers-orders';
+import * as pstnHelper from './huron/provisioner.helper.pstn';
 
 /* global LONG_TIMEOUT */
 

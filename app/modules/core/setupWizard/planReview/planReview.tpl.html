@@ -7,6 +7,14 @@
     <multiple-subscriptions ng-switch-when="false" ></multiple-subscriptions>
     <!-- Show new subscriptions details on load if there are any -->
     <div ng-switch-when="true">
+      <div class="order-and-subscription-numbers">
+        <div>
+          <p><span translate="firstTimeWizard.orderNumber"></span><span>{{planReview.orderDetails.orderId}}</span></p>
+        </div>
+        <div>
+          <p><span translate="firstTimeWizard.subscriptionID"></span><span>{{planReview.orderDetails.subscriptionId}}</span></p>
+        </div>
+      </div>
       <h3 id="new-services-header" translate="firstTimeWizard.newSubsOnly"></h3>
       <div class="row full flex-row" ng-if="planReview.pendingMeetingLicenses.length > 0">
         <div class="pending-header column-header">

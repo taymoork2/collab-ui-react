@@ -4,6 +4,7 @@ export interface IWebExSite {
   centerType: string;
   quantity?: number;
   audioPackageDisplay?: string;
+  isTransferSite?: boolean;
 }
 
 export interface IWebexSiteDetail {

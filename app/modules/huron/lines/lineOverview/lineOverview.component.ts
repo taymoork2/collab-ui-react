@@ -26,6 +26,8 @@ class LineOverview implements ng.IComponentController {
   public wide: boolean = true;
   public isUserMohEnabled: boolean = false;
   public showLineLabel: boolean = true;
+  public panelTitle: string = this.$translate.instant('mediaOnHoldPanel.mohTitle');
+  public panelDesc: string = this.$translate.instant('mediaOnHoldPanel.mohDesc');
 
   // Directory Number properties
   public esnPrefix: string;

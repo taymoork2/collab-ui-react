@@ -8,6 +8,7 @@ export class SetupWizardService {
   public provisioningCallbacks = {};
   public country = '';
   public currentOrderNumber = '';
+  public willNotProvision: boolean = false;
 
   /* @ngInject */
   constructor(
@@ -34,7 +35,7 @@ export class SetupWizardService {
       return this.$q.resolve(callback());
     });
 
-    return this.$q.all(_.uniq(promises));
+    return this.$q.all(promises);
   }
 
   public getActingSubscriptionId(): string {
@@ -49,6 +50,26 @@ export class SetupWizardService {
 
   public getActingSubscriptionServiceOrderUUID(): string {
     return _.get<string>(this.getActingSubscription(), 'pendingServiceOrderUUID', undefined);
+  }
+
+  public getPendingOrderStatusDetails(pendingServiceOrderUUID) {
+    if (!_.isString(pendingServiceOrderUUID)) {
+      return this.$q.reject('No valid pendingServiceOrderUUID passed');
+    }
+
+    const pendingServiceOrderUrl = `${this.UrlConfig.getAdminServiceUrl()}orders/${pendingServiceOrderUUID}`;
+
+    return this.$http.get(pendingServiceOrderUrl).then((response) => {
+      return _.get(response, 'data.productProvStatus');
+    });
+  }
+
+  public getWillNotProvision(): boolean {
+    return this.willNotProvision;
+  }
+
+  public setWillNotProvision(flag: boolean): void {
+    this.willNotProvision = flag;
   }
 
   public hasPendingServiceOrder(): boolean {
@@ -120,6 +141,20 @@ export class SetupWizardService {
     return this.$http.get(pendingLicensesUrl);
   }
 
+  public getOrderAndSubId() {
+    return {
+      orderId: this.formatWebOrderId(),
+      subscriptionId: this.getActingSubscriptionId(),
+    };
+  }
+
+  private formatWebOrderId() {
+    if (this.currentOrderNumber.lastIndexOf('/') !== -1) {
+      return this.currentOrderNumber.slice(0, this.currentOrderNumber.lastIndexOf('/'));
+    }
+    return this.currentOrderNumber;
+  }
+
   public isCustomerPresent() {
     const params = {
       basicInfo: true,
@@ -176,6 +211,20 @@ export class SetupWizardService {
     return this.$http.get(url).then((response) => {
       return _.get(response, 'data.tspPartnerList', []);
     });
+  }
+
+  public hasWebexMeetingTrial() {
+    const conferencingServices = _.filter(this.Authinfo.getConferenceServices(), { license: { isTrial: true } });
+
+    return _.some(conferencingServices, function (service) {
+      return _.get(service, 'license.offerName') === this.Config.offerCodes.MC || _.get(service, 'license.offerName') === this.Config.offerCodes.EE;
+    });
+  }
+
+  public validateTransferCode(payload) {
+    const orderUuid = this.getActingSubscriptionServiceOrderUUID();
+    const url = `${this.UrlConfig.getAdminServiceUrl()}orders/${orderUuid}/transferCode/verify`;
+    return this.$http.post(url, payload);
   }
 }
 

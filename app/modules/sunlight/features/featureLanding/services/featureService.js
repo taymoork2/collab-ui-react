@@ -7,6 +7,11 @@
 
   /* @ngInject */
   function CareFeatureList(Authinfo, ConfigTemplateService, VirtualAssistantConfigService) {
+    var filterConstants = {
+      customerSupport: 'customerSupport',
+      virtualAssistant: 'virtualAssistant',
+      all: 'all',
+    };
     var service = {
       getChatTemplates: getChatTemplates,
       getCallbackTemplates: getCallbackTemplates,
@@ -18,6 +23,7 @@
       deleteTemplate: deleteTemplate,
       deleteVirtualAssistantConfig: deleteVirtualAssistantConfig,
       filterCards: filterCards,
+      filterConstants: filterConstants,
     };
 
     return service;
@@ -81,8 +87,19 @@
       var filterStringProperties = [
         'name',
       ];
+
       var filteredList = _.filter(list, function (feature) {
-        if (feature.mediaType !== filterValue && filterValue !== 'all') {
+        if (filterValue === filterConstants.customerSupport && feature.mediaType === filterConstants.virtualAssistant) {
+          //if the filter selected is support virtual assistant templates should not be displayed
+          return false;
+        }
+        if (filterValue === filterConstants.virtualAssistant && feature.mediaType !== filterConstants.virtualAssistant) {
+          //if the virtual assistant filter is selected only virtual assistant templates should be displayed
+          return false;
+        }
+        if (filterValue !== filterConstants.customerSupport && filterValue !== filterConstants.virtualAssistant
+          && filterValue !== filterConstants.all) {
+          //if the filter value is not any of the valid values templates should not be displayed
           return false;
         }
         if (_.isEmpty(filterText)) {

@@ -210,8 +210,8 @@ require('./_user-add.scss');
     function activateDID() {
       $q.all([loadExternalNumberPool(), loadLocations(), toggleShowExtensions(), loadPrimarySiteInfo()])
         .finally(function () {
+          showLocationSelectColumn();
           if ($scope.showExtensions === true) {
-            showLocationSelectColumn();
             assignDNForUserList();
             $scope.validateDnForUser();
           } else {
@@ -277,11 +277,12 @@ require('./_user-add.scss');
                 });
               }
             });
-            showLocationSelectColumn();
-            loadLocationInternalNumberPool(null, $scope.selectedLocation);
+          })
+          .then(function () {
+            return loadLocationInternalNumberPool(null, $scope.selectedLocation);
           });
       } else {
-        loadInternalNumberPool();
+        return loadInternalNumberPool();
       }
     }
 
@@ -1055,12 +1056,6 @@ require('./_user-add.scss');
         cellTemplate: nameTemplate,
         width: '*',
       }, {
-        field: 'location',
-        displayName: $translate.instant('usersPreview.location'),
-        sortable: false,
-        cellTemplate: locationTemplate,
-        width: '*',
-      }, {
         field: 'externalNumber',
         displayName: $translate.instant('usersPage.directLineHeader'),
         sortable: false,
@@ -1080,8 +1075,15 @@ require('./_user-add.scss');
     };
 
     function showLocationSelectColumn() {
-      if (!$scope.ishI1484 || $scope.locationOptions.length <= 1) {
-        $scope.addDnGridOptions.columnDefs.splice(1, 1);
+      if ($scope.locationOptions.length > 1) {
+        vm.locationColumn = {
+          field: 'location',
+          displayName: $translate.instant('usersPreview.location'),
+          sortable: false,
+          cellTemplate: locationTemplate,
+          width: '*',
+        };
+        $scope.addDnGridOptions.columnDefs.splice(1, 0, vm.locationColumn);
       }
     }
 

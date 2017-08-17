@@ -163,14 +163,14 @@ export class LineOverviewService {
         }
       }
 
-      //update line media on hold
+      // update line media on hold
       if (!_.isEqual(data.lineMoh, this.lineOverviewDataCopy.lineMoh) &&
          (_.isEqual(consumerType, LineConsumerType.USERS) || _.isEqual(consumerType, LineConsumerType.PLACES))) {
         const GENERIC_MEDIA_ID = '98765432-DBC2-01BB-476B-CFAF98765432';
         if (_.isEqual(data.lineMoh, GENERIC_MEDIA_ID)) {
           promises.push(this.MediaOnHoldService.unassignMediaOnHold('Line', numberId));
         } else {
-          promises.push(this.MediaOnHoldService.updateMediaOnHold(data.lineMoh, numberId));
+          promises.push(this.MediaOnHoldService.updateMediaOnHold(data.lineMoh, 'Line', numberId));
         }
       }
 
@@ -258,7 +258,7 @@ export class LineOverviewService {
         }
       })
       .catch(error => {
-        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohLineError'));
+        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohGetError'));
       });
   }
 

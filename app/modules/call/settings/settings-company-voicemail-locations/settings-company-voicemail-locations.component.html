@@ -1,0 +1,62 @@
+<div ng-form="companyVoicemailForm">
+  <label class="sub-section__label" translate="serviceSetupModal.companyVoicemail"></label>
+  <p class="description-block" translate="serviceSetupModal.companyVoicemailDesc"></p>
+  <cs-toggle-switch
+    ng-model="$ctrl.companyVoicemailEnabled"
+    toggle-id="companyVoicemailToggle"
+    name="companyVoicemailToggle"
+    size="small"
+    cs-change="$ctrl.onCompanyVoicemailChange(toggleValue)">
+  </cs-toggle-switch>
+  <div ng-if="$ctrl.companyVoicemailEnabled && !$ctrl.ftsw" class="cs-checkbox-group settings-voicemail-attachment">
+    <input
+      cs-input
+      type="checkbox"
+      ng-model="$ctrl.voicemailToEmail"
+      id="voicemailToEmail"
+      name="voicemailToEmail"
+      ng-change="$ctrl.onVoicemailToEmailChanged(value)"
+      cs-input-label="{{::'serviceSetupModal.voicemailToEmailLabel' | translate}}">
+      <div class="indent cs-radio-group" ng-if="$ctrl.voicemailToEmail">
+        <input
+          cs-input
+          type="radio"
+          id="withAttachment"
+          name="withAttachmentRadio"
+          value="withAttachment"
+          ng-model="$ctrl.attachmentPref"
+          ng-change="$ctrl.onVoicemailToEmailPrefChanged()"
+          cs-input-label="{{:: 'serviceSetupModal.EmailNotificationAttached' | translate}}"
+          cs-input-help-text="{{::'serviceSetupModal.voicemailToEmailHelpText' | translate}}">
+        <input
+          cs-input
+          type="radio"
+          id="withoutAttachment"
+          name="withoutAttachmentRadio"
+          value="withoutAttachment"
+          ng-model="$ctrl.attachmentPref"
+          ng-change="$ctrl.onVoicemailToEmailPrefChanged()"
+          cs-input-label="{{:: 'serviceSetupModal.EmailNotificationWithoutAttached' | translate}}">
+        <input ng-if="$ctrl.avrilI1558"
+          cs-input
+          type="checkbox"
+          ng-model="$ctrl.useTLS"
+          id="useTLS"
+          name="useTLS"
+          ng-change="$ctrl.onUseTLS()"
+          cs-input-label="{{::'serviceSetupModal.vmUseTLS' | translate}}">
+      </div>
+    <div ng-if="$ctrl.avrilI1558 && $ctrl.isMessage">
+      <label class="control-label" translate="serviceSetupModal.vmPinManagement"></label>
+      <p class="description-block" translate="serviceSetupModal.vmPinHelp"></p>
+      <input
+        cs-input
+        type="checkbox"
+        ng-model="$ctrl.enableOTP"
+        id="enableOTP"
+        name="enableOTP"
+        ng-change="$ctrl.onEnableOTPChanged()"
+        cs-input-label="{{::'serviceSetupModal.vmEnableOTP' | translate}}">
+    </div>
+  </div>
+</div>

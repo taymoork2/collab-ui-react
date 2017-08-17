@@ -433,8 +433,6 @@
     "developmentTab": "Development",
     "organizationTab": "Manage Organizations",
     "organizationTabDesc": "Manage Organization Details, View Assigned Services, And Access Tools.",
-    "mediaOnHoldTab": "Media On Hold",
-    "mediaOnHoldTabDesc": "Media On Hold Development Example",
     "metricsDetailsTab": "Media Service V2 Page",
     "metricsDetailsTabDesc": "Metrics Management",
     "thresholdDetailsTab": "Threshold",
@@ -556,6 +554,8 @@
     "title": "MANAGE TEMPLATES"
   },
   "reportsPage": {
+    "loadingData": "Loading Data",
+    "loadingDescription": "For best results, allow reports to finish loading.",
     "pageTitle": "Reports",
     "all": "All",
     "engagement": "Engagement",
@@ -671,6 +671,8 @@
       "title": "WebEx",
       "metrics": "Metrics",
       "diagnostics": "Diagnostics",
+      "classic": "Classic",
+      "webexClassic": "WebEx Classic",
       "meetingUsage": "Meeting Usage",
       "joinMeetingTime": "Join Meeting Time",
       "webexReportInMashup": "CHP Reports",
@@ -1172,8 +1174,8 @@
     },
     "details": {
       "noSites": "This order doesn't have any sites listed",
-      "completed": "Order completed on {{orderDate}}",
-      "pending": "Request received on {{orderDate}}",
+      "completed": "Order completed: {{orderDate}}",
+      "pending": "Request received: {{orderDate}}",
       "customerInfo": {
         "title": "Customer Information",
         "partnerName": "Partner Name",
@@ -1195,7 +1197,8 @@
         "service": "Service Name",
         "action": "Action",
         "broadcast": "Audio Broadcast",
-        "callback": "Callback"
+        "callback": "Callback",
+        "ccaspPartnerName": "CCA-SP Partner Name"
       },
       "conferencing": {
         "title": "Audio for {{site}}",
@@ -1497,7 +1500,8 @@
     "validate": "Validate",
     "voice": "Voice",
     "warning": "Warning",
-    "yes": "Yes"
+    "yes": "Yes",
+    "customerSupportTemplates": "Customer Support Templates"
   },
   "notifications": {
     "success": "Success notifications",
@@ -1704,6 +1708,8 @@
     "internalNumberRangeDescription": "Specify range of internal numbers. Length must be {{length}} digits.",
     "extensionError": "Extension not valid: ",
     "companyVoicemail": "Company Voicemail",
+    "companyVoicemailDesc": "Turn on voicemail for the company.  External dial in numbers are set on locations.",
+    "voicemail": "Voicemail",
     "vmAccessNumber": "Voicemail Access Number",
     "vmDeliveryMethods": "Delivery Methods",
     "vmDeliveryMethodsHelpText": "Customize the voicemail delivery options for your organization. Aside from phone delivery, you can let users retrieve voicemails attachments in Cisco Spark, email or both. Downloaded voicemail attachments are not secure.",
@@ -1716,10 +1722,6 @@
     "siteError": "Failed to create site.",
     "siteGetError": "Failed to retrieve site.",
     "siteUpdateError": "Failed to update site.",
-    "mohLineError": "Failed to get Line Media On Hold Service.",
-    "mohGetError": "Failed to get Company Media on Hold Service.",
-    "mohGetOptionsError": "Failed to get Company Media on Hold Options Service.",
-    "mohUpdateError": "Failed to update Company Media On Hold File",
     "customerGetError": "Failed to get customer services.",
     "customerPutError": "Failed to update customer services.",
     "customerDialPlanDetailsGetError": "Failed to get customer dial plan details.",
@@ -1744,8 +1746,9 @@
     "fieldValidationFailed": "Errors exist on the page.  Please correct and try again.",
     "singleNumberRangeError": "Extension Ranges cannot begin and end with the same number.",
     "mapCompanyVoicemailToExternalNumberError": "Existing company voicemail number was not found in list of company direct lines.",
-    "mediaOnHold": "Company Media on Hold",
+    "mohTitle": "Company Media on Hold",
     "mohDesc": "Set the default media to be played at the company level.",
+    "mohSelectLabel": "Media Selection",
     "voicemailToEmailLabel": "Voicemail to Email",
     "EmailNotificationAttached": "Email Notification with Attachment",
     "EmailNotificationWithoutAttached": "Email Notification without Attachment",
@@ -1824,6 +1827,7 @@
       "error": "Dialing Restrictions failed to update"
     },
     "error": {
+      "getSettings": "Error getting Call Settings.",
       "siteSteering": "First digit of Voicemail Access Prefix conflicts with the selected Outbound Dial Digit.",
       "outboundDialDigit": "Outbound Dial Digit conflicts with the first digit of the Voicemail Access Prefix.",
       "autoAttendantPost": "Failed to save Auto Attendant Site information.",
@@ -1844,8 +1848,12 @@
     }
   },
   "mediaOnHold": {
-    "systemDefault": "System Default",
-    "companyMOHDefaultMedia" : "Company MOH (System Default)"
+    "systemDefaultMedia": "System Default",
+    "companyDefaultMedia": "Company MOH",
+    "locationDefaultMedia": "Location MOH",
+    "mohGetError": "Failed to get Media on Hold Service.",
+    "mohGetOptionsError": "Failed to get Media on Hold options.",
+    "mohUpdateError": "Failed to update Media on Hold configuration."
   },
   "dirsyncModal": {
     "chooseSync": "Choose Sync",
@@ -3601,6 +3609,11 @@
     "webexSites": "Do you have any existing WebEx sites?",
     "webexProvisioningError": "An error occured while provisioning.",
     "webexProvisioningSuccess": "Your services are being provisioned.",
+    "hasTransferCode": "I have a transfer code to migrate an existing WebEx site.",
+    "transferCodeInvalidError": "The transfer code and site name do not match. Please enter a valid site name and transfer code combination.",
+    "haveExistingWebExSite": "Do you have an existing WebEx site?",
+    "existingWebExSiteDescription": "If you have an existing WebEx site that you want to migrate you can enter a transfer code. Do you have a transfer code?",
+    "transferCode": "Transfer Code",
     "yesKeepSite": "Yes, keep this site",
     "addAnotherSite": "Add another site",
     "meetingSettings": "Meeting Settings",
@@ -3617,14 +3630,18 @@
     "keepExistingWebexSites": "Keep your existing WebEx sites?",
     "selectTimeZonePlaceholder": "Select Time Zone",
     "enterSiteNamePlaceholder": "Enter a site name here",
-    "enteredSiteNotValid": "The entered site is not valid. Please try another site.",
     "enterNumberOfLicenses": "Enter number of licenses here",
     "timeZoneSetTo": "Time zone set to {{label}}",
     "licenseCountEquals": "License count = {{quantity}}",
-    "pleaseEnterSiteName": "Please enter a site name",
     "distributeYourWebExLicenses": "Distribute your licenses between sites",
     "webExServiceWillBeSetup": "Your WebEx service will be setup with the following parameters.",
-    "pleaseSelectTimeZone": "Please select a Time Zone",
+    "meetingSettingsError": {
+      "pleaseSelectTimeZone": "Please select a Time Zone",
+      "duplicateSite": "This site already exists",
+      "invalidLicense": "License number should be an integer greater than 0",
+      "pleaseEnterSiteName": "Please enter a site name",
+      "enteredSiteNotValid": "The entered site is not valid. Please try another site."
+    },
     "siteName": "Site Name",
     "theseWillBeYourWebExSites": "These will be your {{siteCount}} WebEx sites",
     "thisWillBeYourWebExSite": "This will be your WebEx site",
@@ -3782,8 +3799,8 @@
     "ussUserPropsLoadFailed": "Unable to load the current user Hybrid Services Resource Group assignments. Resource group assignments in the CSV file will not be processed.",
     "fmsResourceGroupsLoadFailed": "Unable to load the Hybrid Services Resource Groups. Resource group assignments in the CSV file will not be processed.",
     "mutuallyExclusiveCalendarEntitlements": "There are more than one Hybrid Calendar Service entitlement set. Please fix and try again.",
-    "callSettingSimpleDialing": "Simple Dialing",
-    "callSettingSimpleDialingDesc": "Assign unique extensions to each user within your company.  Users can dial each other with their exension number.",
+    "callSettingBasicDialing": "Basic Dialing",
+    "callSettingBasicDialingDesc": "Assign unique extensions to each user within your company.  Users can dial each other with their exension number.",
     "callSettingMultiDialing": "Multi-tier Dialing",
     "callSettingMultiDialingDesc": "Divide your company into number blocks by selecting a routing prefix for each logical block.  Users in the same block can dial each other with extension numbers.  Between blocks users dial the routing prefix and extension number.",
     "error": {
@@ -4423,7 +4440,9 @@
     "ringDurationTimer.validation.error": "Must be a number between 1 and 300"
   },
   "mediaOnHoldPanel": {
-    "title": "Media on Hold",
+    "mohTitle": "Media on Hold",
+    "mohDesc": "Set the default media to be played for this line.",
+    "mohSelectLabel": "Media Selection",
     "mediaManager": "Media Manager"
   },
   "multipleCalls": {
@@ -4445,7 +4464,9 @@
     "customName": "Custom Name",
     "customNumber": "Custom Number",
     "customNumberValidation": "Field can contain digits 0 to 9 and +. For example: +15556667777.",
-    "saveConfirmation": "Do you want to save your changes?"
+    "saveConfirmation": "Do you want to save your changes?",
+    "invalidNameError": "Custom Name is invalid. Characters from the set [ \" % < > [ ] & | { } ] are not allowed."
+
   },
   "autoAnswerPanel": {
     "title": "Auto Answer",
@@ -5192,12 +5213,14 @@
   "companyCallerId": {
     "companyCallerId": "Company Caller ID",
     "companyCallerIdDesc": "Specify the default outbound Caller ID. Exceptions can be made at the individual user's settings.",
+    "companyCallerIdLocationDesc": "Specify the default outbound Caller ID. Exceptions can be made for each location and at the individual user's settings.",
     "callerIdName": "Caller ID Name",
     "callerIdNumber": "Caller ID Number"
   },
   "externalTransfer": {
     "title": "External Call Transfer/Conference",
-    "desc": "Choose whether users are allowed to execute call transfers and conferences. This setting affects the entire organization, but you can override this setting for individual users afterward."
+    "desc": "Choose whether users are allowed to execute call transfers and conferences. This setting affects the entire organization, but you can override this setting for individual users afterward.",
+    "descLocation": "Choose whether users are allowed to execute call transfers and conferences. This setting affects the entire location, but you can override this setting for individual users in this location afterward."
   },
   "internationalDialing": {
     "internationalDialing": "International Dialing",
@@ -5209,7 +5232,9 @@
     "internationalDialingSaveError": "International Dialing failed to save.",
     "disableCompanyVoicemailTitle": "Disable Company Voicemail",
     "disableCompanyVoicemailMessage": "Disabling company voicemail will permanently remove all of the company's voicemail settings and all messages. Are you sure you want to disable the company voicemail?",
-    "e911Unavailable": "The number you have selected is currently unavailable due to the Emergency Service Address associated with it is processing. Check back later."
+    "e911Unavailable": "The number you have selected is currently unavailable due to the Emergency Service Address associated with it is processing. Check back later.",
+    "avrilCustomerGetError": "Unable to get customer record from voicemail.",
+    "avrilCustomerSaveError": "Error saving customer voicemail settings"
   },
   "bulkEnableVm": {
     "enableCompanyVoicemail": "Turning On Company Voicemail",
@@ -6673,8 +6698,9 @@
     "makeDefault": "Make Default",
     "copyLocation": "Duplicate",
     "reload": "Reload",
+    "routingPrefix": "Routing Prefix: {{prefix}}",
     "makeDefaultTitle": "Make Default",
-    "makeDefaultDesc": "Are you sure you want to make this location default?  It will be the defualt location for new users or places.",
+    "makeDefaultDesc": "Are you sure you want to make this location default?  It will be the default location for new users or places.",
     "createLocation": "Create Location",
     "createFailed": "Failed to create Location",
     "cancelHeader": "Cancel Location Creation",
@@ -6683,6 +6709,9 @@
     "locationSelectDesc": "Choose the physical location where this user primarily works from.",
     "locationDetailTitle": "Location Details",
     "locationDetailDesc": "Locations let you group Cisco Spark Call settings together based on specific geography. Specify a name and caller ID for this location.",
+    "mohTitle": "Location Media on Hold",
+    "mohDesc": "Set the default media to be played for this location.",
+    "mohSelectLabel": "Media Selection",
     "regionalSettingsTitle": "Regional Settings",
     "regionalSettingsDesc": "Set time zone, date and time format, preferred language.",
     "internalDialingTitle": "Internal Dialing",
@@ -6693,7 +6722,9 @@
     "dialingRestrictionsDesc": "Restrict certain dialing features for the entire organization. You can override each setting for individual users.",
     "emergencyServicesTitle": "Emergency Services",
     "emergencyServicesDesc": "Set the call back numbers and addresses for this location.",
-    "voicemailInstruction": "Voicemail for your company is enabled with Voicemail to email not activated. This can be changed from the Call Settings page.",
+    "voicemailInstructionEnabled": "Voicemail for your company is enabled with Voicemail to Email activated.",
+    "voicemailInstructionDisabled": "Voicemail for your company is enabled with Voicemail to Email not activated.",
+    "voicemailInstruction": "This can be changed from the Company Call Settings page.",
     "voicemailFilter": "Type number to filter"
   },
   "sunlightDetails": {
@@ -7137,7 +7168,7 @@
       "customerInformationCallback": {
         "title_chatPlusCallback": "Customer Information for Callback",
         "desc_chatPlusCallback": "This is the screen a customer fills in to request a callback from an agent"
-      }      
+      }
     },
     "summary": "Summary",
     "summaryDesc": "You have configured the template. Click Finish to save the configuration and generate embed code so you can start using this template on your organization website.",
@@ -7397,7 +7428,10 @@
       },
       "meeting": {
         "title": "Meeting",
-        "notEnabledText": "Join up to 25 colleagues in a Team Space Sync-up or many more in a WebEx Meeting Center."
+        "notEnabledText": "Join up to 25 colleagues in a Team Space Sync-up or many more in a WebEx Meeting Center.",
+        "serviceProvisioning":"Meeting service is being provisioned and will be available soon.",
+        "meetingsNotSetUp": "Meeting service not set up",
+        "setupMeetingService": "Set up Meeting Service"
       },
       "call": {
         "title": "Call",
@@ -7419,7 +7453,7 @@
         "googleCalendarError": "Could not reach the service for Google Calendar.",
         "herculesError": "Could not reach the service for Cisco Spark Hybrid Services.",
         "notEnabledText": "Hybrid Services allows you to integrate your on-premises systems with the Cisco Collaboration Platform.",
-        "notEnabledTextNew": "Hybrid Services allows you to integrate your on-premises systems with the Cisco Spark Control Platform.",
+        "notEnabledTextNew": "Hybrid Services allows you to integrate your on-premises systems with the Cisco Spark Platform.",
         "notEnabledActionText": "Learn More",
         "serviceHeader": "Status",
         "services": {
@@ -7667,7 +7701,7 @@
   "helpdesk": {
     "browserTabHeaderTitle": "Help Desk Support",
     "navHeaderTitle": "Cloud Collaboration Help Desk",
-    "navHeaderTitleNew": "Cisco Spark Control Help Desk",
+    "navHeaderTitleNew": "Cisco Spark Control Hub Help Desk",
     "helpdesk": "Help Desk",
     "searchHeading": "Help Desk Support",
     "users": "Users",
@@ -8217,7 +8251,7 @@
         "radioSelect2": "I don’t want to use a verified domain for Private Trunking",
         "destinationTitle": "Add SIP Destination",
         "destination": "Enter the SIP destination of the on-premises Expressway-E that you want to use for Private Trunking",
-        "destinationHelp": "Enter an SRV domain, domain:port that resolves to your Expressway-E for mutual TLS. If your SRV record is \"_sips._tcp.sipmtls.example.com\", then enter \"sipmtls.example.com\" here.",
+        "destinationHelp": "Enter an SRV domain, FQDN:port that resolves to your Expressway-E for mutual TLS. If your SRV record is \"_sips._tcp.sipmtls.example.com\", then enter \"sipmtls.example.com\" here.",
         "sipLabel": "Sip destination",
         "sip": "Enter Sip destination",
         "displayLabel": "Display name",
