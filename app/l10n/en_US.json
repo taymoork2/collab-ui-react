@@ -1802,7 +1802,9 @@
       "placeholder": "8100",
       "numericOnlyError": "Routing Prefix can only contain digits.",
       "tooShortError": "Routing Prefix must contain at least one digit.",
-      "tooLongError": "Routing Prefix can contain a maximum of seven digits."
+      "tooShortErrorParam": "Routing Prefix must contain at least {{length}} digit(s).",
+      "tooLongError": "Routing Prefix can contain a maximum of seven digits.",
+      "required": "Routing Prefix is required."
     },
     "externalTransfer": {
       "title": "External Call Transfer/Conference",
@@ -6738,6 +6740,7 @@
     "copyLocation": "Duplicate",
     "reload": "Reload",
     "routingPrefix": "Routing Prefix: {{prefix}}",
+    "routingPrefixDesc": "This prefix will be used as a compound number to connect with users at this location.  Length must be {{length}} digits.",
     "makeDefaultTitle": "Make Default",
     "makeDefaultDesc": "Are you sure you want to make this location default?  It will be the default location for new users or places.",
     "createLocation": "Create Location",

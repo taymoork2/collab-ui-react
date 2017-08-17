@@ -5,6 +5,8 @@ class ExtensionRangeCtrl implements ng.IComponentController {
   public steeringDigit: string;
   public numberRanges: InternalNumberRange[];
   public firstTimeSetup: boolean;
+  public isCreateLocation: boolean;
+  public isRoutingPrefixValid: boolean;
   public onChangeFn: Function;
   public extensionRangeForm: ng.IFormController;
   public messages: any = {};
@@ -81,15 +83,21 @@ class ExtensionRangeCtrl implements ng.IComponentController {
     return false;
   }
 
-  public showTrashCan(): boolean {
-    if (this.numberRanges.length === 1) {
+  public showTrashCan(numberRange: InternalNumberRange): boolean {
+    if (this.isCreateLocation && !_.isEmpty(numberRange.uuid)) {
+      return false;
+    } else if (this.numberRanges.length === 1) {
       return false;
     }
     return true;
   }
 
   public isDisabled(numberRange: InternalNumberRange): boolean {
-    return !_.isEmpty(numberRange.uuid);
+    if (this.isCreateLocation) {
+      return !!this.isRoutingPrefixValid && !_.isEmpty(numberRange.uuid);
+    } else {
+      return !_.isEmpty(numberRange.uuid);
+    }
   }
 
 }
@@ -102,6 +110,8 @@ export class ExtensionRangeComponent implements ng.IComponentOptions {
     extensionLength: '<',
     numberRanges: '<',
     firstTimeSetup: '<',
+    isCreateLocation: '<',
+    isRoutingPrefixValid: '<',
     onChangeFn: '&',
   };
 }

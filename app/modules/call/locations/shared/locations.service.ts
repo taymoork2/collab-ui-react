@@ -1,7 +1,5 @@
 import { IRLocation, Location, IRLocationListItem, LocationListItem, IRLocationInternalNumberPoolList, LocationInternalNumberPoolList } from './location';
 
-interface ILocationInternalNumberPoolResource extends ng.resource.IResourceClass<IRLocationInternalNumberPoolList & ng.resource.IResource<IRLocationInternalNumberPoolList>> {}
-
 interface ILocationResource extends ng.resource.IResourceClass<ng.resource.IResource<IRLocationListItem>> {}
 
 interface IUserLocationDetailResource extends ng.resource.IResourceClass<ng.resource.IResource<IRLocation>> {}
@@ -14,12 +12,15 @@ interface ILocationDetailResource extends ng.resource.IResourceClass<ng.resource
   update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
 }
 
+interface ILocationInternalNumberPoolResource extends ng.resource.IResourceClass<IRLocationInternalNumberPoolList & ng.resource.IResource<IRLocationInternalNumberPoolList>> {}
+
 export class LocationsService {
-  private locationInternalNumberPoolResource: ILocationInternalNumberPoolResource;
   private locationListResource: ILocationResource;
   private userLocationDetailResource: IUserLocationDetailResource;
   private userMoveLocationResource: IUserMoveLocationResource;
   private locationDetailResource: ILocationDetailResource;
+  private locationInternalNumberPoolResource: ILocationInternalNumberPoolResource;
+  private defaultLocation: LocationListItem | undefined = undefined;
 
   /* @ngInject */
   constructor(
@@ -56,25 +57,21 @@ export class LocationsService {
       });
   }
 
-  public getLocationInternalNumberPoolList(locationId, directorynumber, order, patternQuery, patternlimit): IPromise<LocationInternalNumberPoolList[]> {
-    return this.locationInternalNumberPoolResource.query({
-      customerId: this.Authinfo.getOrgId(),
-      locationId: locationId,
-      directorynumber,
-      order,
-      pattern: patternQuery,
-      limit: patternlimit,
-    }).$promise.then((response) => {
-      return _.map(response, location => {
-        return new LocationInternalNumberPoolList(location);
-      });
-    });
-  }
-
   public getLocationList(): IPromise<LocationListItem[]> {
     return this.locationListResource.get({
       customerId: this.Authinfo.getOrgId(),
       wide: true,
+    }).$promise.then(locations => {
+      return _.map(_.get<IRLocationListItem[]>(locations, 'locations', []), location => {
+        return new LocationListItem(location);
+      });
+    });
+  }
+
+  public getLocationsByRoutingPrefix(routingPrefix: string): IPromise<LocationListItem[]> {
+    return this.locationListResource.get({
+      customerId: this.Authinfo.getOrgId(),
+      routingprefix: routingPrefix,
     }).$promise.then(locations => {
       return _.map(_.get<IRLocationListItem[]>(locations, 'locations', []), location => {
         return new LocationListItem(location);
@@ -167,13 +164,26 @@ export class LocationsService {
     }, location).$promise;
   }
 
+  public getDefaultLocation() {
+    if (!this.defaultLocation) {
+      return this.getLocationList().then(locationList => {
+        this.defaultLocation = locationList[0];
+        return this.defaultLocation;
+      });
+    } else {
+      return this.$q.resolve(this.defaultLocation);
+    }
+  }
+
   public makeDefault(locationId: string): ng.IPromise<void> {
     return this.locationDetailResource.update({
       customerId: this.Authinfo.getOrgId(),
       locationId: locationId,
     }, {
       defaultLocation: true,
-    }).$promise;
+    }).$promise.then(() => {
+      this.getDefaultLocation();
+    });
   }
 
   public filterCards(locations: LocationListItem[], filterText: string): LocationListItem[] {
@@ -194,6 +204,21 @@ export class LocationsService {
         return item.name === name;
       });
       return filterList.length > 0;
+    });
+  }
+
+  public getLocationInternalNumberPoolList(locationId, directorynumber, order, patternQuery, patternlimit): IPromise<LocationInternalNumberPoolList[]> {
+    return this.locationInternalNumberPoolResource.query({
+      customerId: this.Authinfo.getOrgId(),
+      locationId: locationId,
+      directorynumber,
+      order,
+      pattern: patternQuery,
+      limit: patternlimit,
+    }).$promise.then((response) => {
+      return _.map(response, location => {
+        return new LocationInternalNumberPoolList(location);
+      });
     });
   }
 }

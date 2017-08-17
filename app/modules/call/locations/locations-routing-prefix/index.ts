@@ -6,6 +6,7 @@ export default angular
   .module('call.locations.locations-routing-prefix', [
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
+    require('angular-translate'),
   ])
   .component('ucLocationRoutingPrefix', new LocationsRoutingPrefixComponent())
   .name;

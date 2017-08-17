@@ -1,5 +1,12 @@
 @import '~collab-ui/scss/tools/placeholders/page-layout';
 
+.overlay-panel__content {
+  .wizard-loading-spinner {
+    font-size: 3rem;
+    text-align: center;
+  }
+}
+
 .cs-setupassistant {
   .section {
     display: flex;
