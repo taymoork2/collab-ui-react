@@ -7,6 +7,7 @@
 
   /* @ngInject */
   function WebExMetricsCtrl(
+    $log,
     $sce,
     $scope,
     $stateParams,
@@ -68,6 +69,7 @@
     });
     var $stateChangeStart = $rootScope.$on('$stateChangeStart', onStateChangeStart);
     var $stateChangeSuccess = $rootScope.$on('$stateChangeSuccess', onStateChangeSuccess);
+    $window.addEventListener('message', messageHandle, true);
     $scope.$on('$destroy', onDestory);
 
     vm.$state = $state;
@@ -77,6 +79,16 @@
     vm.onStateChangeSuccess = onStateChangeSuccess;
     vm.updateWebexMetrics = updateWebexMetrics;
     vm.updateIframe = updateIframe;
+
+    function messageHandle(event) {
+      if (event.data === 'unfreeze') {
+        $log.log('Unfreeze message received.');
+        var currScope = angular.element('#webexMetricsIframeContainer').scope();
+        currScope.$apply(function () {
+          vm.isIframeLoaded = true;
+        });
+      }
+    }
 
     function onlyUnique(value, index, self) {
       return self.indexOf(value) === index;
@@ -227,14 +239,7 @@
     }
 
     $window.iframeLoaded = function (iframeId) {
-      var currScope = angular.element(iframeId).scope();
-      var phase = currScope.$$phase;
-
-      if (!phase) {
-        currScope.$apply(function () {
-          vm.isIframeLoaded = true;
-        });
-      }
+      $log.log('Iframe loaded ' + iframeId);
     };
 
     function onStateChangeStart(event, toState, toParams, fromState) {
@@ -273,6 +278,7 @@
       selectEnable();
       $stateChangeStart();
       $stateChangeSuccess();
+      $window.removeEventListener('message', messageHandle, true);
     }
   }
 })();
