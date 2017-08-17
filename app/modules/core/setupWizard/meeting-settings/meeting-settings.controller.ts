@@ -21,7 +21,9 @@ export class MeetingSettingsCtrl {
     errorMsg: '',
   };
 
+
   public licenseDistributionForm: ng.IFormController;
+  public ccaspForm: ng.IFormController;
   public existingSites: IExistingTrialSites[] = [];
   public existingWebexSites: IWebExSite[] = [];
   public disableValidateButton: boolean = false;
@@ -46,6 +48,12 @@ export class MeetingSettingsCtrl {
     transferCode: '',
   };
   private nextButtonDisabledStatus = false;
+  public ccasp = {
+    partnerOptions: [],
+    partnerNameSelected: null,
+    subscriptionId: '',
+    isError: false,
+  };
 
   /* @ngInject */
   constructor(
@@ -124,8 +132,12 @@ export class MeetingSettingsCtrl {
     if (this.SetupWizardService.hasTSPAudioPackage()) {
       this.populateTSPPartnerOptions();
     }
+
     this.hasTrialSites = this.SetupWizardService.hasWebexMeetingTrial();
 
+    if (this.SetupWizardService.hasCCASPPackage()) {
+      this.populateCCASPPartnerOptions();
+    }
   }
 
   public onInputChange() {
@@ -376,6 +388,33 @@ export class MeetingSettingsCtrl {
     });
   }
 
+  private populateCCASPPartnerOptions() {
+    this.SetupWizardService.getCCASPPartners().then((partners) => {
+      this.ccasp.partnerOptions = partners;
+    });
+  }
+
+  private ccaspSetInvalid(isInvalid) {
+    this.setNextDisableStatus(isInvalid);
+    this.ccasp.isError = isInvalid;
+
+  }
+  public ccaspValidate() {
+    if (!(this.ccasp.partnerNameSelected && this.ccasp.subscriptionId)) {
+      this.ccaspSetInvalid(true);
+    }
+    this.SetupWizardService.validateCCASPPartner(this.ccasp.partnerNameSelected || '', this.ccasp.subscriptionId)
+      .then((isValid) => {
+        this.ccaspSetInvalid(!isValid);
+        if (isValid) {
+          this.audioPartnerName = this.ccasp.partnerNameSelected || null;
+        }
+      })
+      .catch(() => {
+        this.ccaspSetInvalid(true);
+      });
+  }
+
   public offerCodeToCenterTypeString(offerCode: string) {
     switch (offerCode) {
       case this.Config.offerCodes.EE:
@@ -520,6 +559,11 @@ export class MeetingSettingsCtrl {
       webexSiteDetailsList: webexSiteDetailsList,
       audioPartnerName: this.audioPartnerName,
     });
+    if (!_.isEmpty(this.ccasp.subscriptionId)) {
+      _.set(webexLicensesPayload, 'webexProvisioningParams', {
+        ccaspSubscriptionId: this.ccasp.subscriptionId,
+      });
+    }
 
     if (!_.isEmpty(this.transferSiteDetails.transferCode)) {
       _.set(webexLicensesPayload, 'webexProvisioningParams.transferCode', this.transferSiteDetails.transferCode);

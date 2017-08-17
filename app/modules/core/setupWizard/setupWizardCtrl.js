@@ -155,6 +155,10 @@ require('./_setup-wizard.scss');
           template: 'modules/core/setupWizard/meeting-settings/meeting-audio-partner.html',
         },
         {
+          name: 'setCCASP',
+          template: 'modules/core/setupWizard/meeting-settings/meeting-ccasp.html',
+        },
+        {
           name: 'summary',
           template: 'modules/core/setupWizard/meeting-settings/meeting-summary.html',
         }],
@@ -163,6 +167,9 @@ require('./_setup-wizard.scss');
       if (shouldShowMeetingsTab) {
         if (!SetupWizardService.hasTSPAudioPackage()) {
           _.remove(meetingTab.steps, { name: 'setPartnerAudio' });
+        }
+        if (!SetupWizardService.hasCCASPPackage()) {
+          _.remove(meetingTab.steps, { name: 'setCCASP' });
         }
         tabs.splice(1, 0, meetingTab);
       }

@@ -381,6 +381,25 @@ describe('SetupWizardCtrl', function () {
     });
   });
 
+  describe('CCASP license handling', function () {
+    beforeEach(function () {
+      this.SetupWizardService.hasPendingServiceOrder.and.returnValue(true);
+      this.SetupWizardService.hasPendingWebExMeetingLicenses.and.returnValue(true);
+    });
+
+    it('displays the CCASP tab when CCASP Audio license is present', function () {
+      spyOn(this.SetupWizardService, 'hasCCASPPackage').and.returnValue(true);
+      this.initController();
+      this.expectSubStepOrder('meetingSettings', ['migrateTrial', 'siteSetup', 'licenseDistribution', 'setCCASP', 'summary']);
+    });
+
+    it('does NOT display the set CCASP tab when CCASP Audio license is NOT present', function () {
+      spyOn(this.SetupWizardService, 'hasCCASPPackage').and.returnValue(false);
+      this.initController();
+      this.expectSubStepOrder('meetingSettings', ['migrateTrial', 'siteSetup', 'licenseDistribution', 'summary']);
+    });
+  });
+
   it('will filter tabs if onlyShowSingleTab is true', function () {
     this.$controller('SetupWizardCtrl', {
       $scope: this.$scope,

@@ -64,5 +64,15 @@
 
   .error {
     color: $brand-danger;
+    .message {
+      font-size: .8rem;
+    }
+  }
+
+  .ccasp-partner__confirmation {
+    .verified-check {
+      vertical-align: middle;
+      padding-right: .5rem;
+    }
   }
 }

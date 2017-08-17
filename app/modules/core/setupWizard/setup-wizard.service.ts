@@ -112,6 +112,10 @@ export class SetupWizardService {
     return _.some(this.pendingLicenses, { offerName: this.Config.offerCodes.TSP });
   }
 
+  public hasCCASPPackage() {
+    return _.some(this.pendingLicenses, { offerName: this.Config.offerCodes.CCASP });
+  }
+
   private getActingSubscription(): IPendingOrderSubscription {
     return _.find(this.Authinfo.getSubscriptions(), { externalSubscriptionId: this.getActingSubscriptionId() });
   }
@@ -160,7 +164,7 @@ export class SetupWizardService {
       basicInfo: true,
     };
 
-    return this.Orgservice.getOrg(_.noop, this.Authinfo.getOrgId(), params).then( (response) => {
+    return this.Orgservice.getOrg(_.noop, this.Authinfo.getOrgId(), params).then((response) => {
       const org = _.get(response, 'data', null);
       this.country = _.get<string>(org, 'countryCode');
       if (_.get(org, 'orgSettings.sparkCallBaseDomain')) {
@@ -181,7 +185,7 @@ export class SetupWizardService {
           return this.findCustomerInDc(this.HuronCompassService.defaultDomain());
         }
       }
-    }).catch( () => {
+    }).catch(() => {
       _.noop();
     });
   }
@@ -226,6 +230,36 @@ export class SetupWizardService {
     const url = `${this.UrlConfig.getAdminServiceUrl()}orders/${orderUuid}/transferCode/verify`;
     return this.$http.post(url, payload);
   }
+
+  public getCCASPPartners() {
+    const url = `${this.UrlConfig.getAdminServiceUrl()}partners/ccasp`;
+    return this.$http.get(url).then((response) => {
+      return _.sortBy(_.get(response, 'data.ccaspPartnerList', []));
+    });
+  }
+
+  public validateCCASPPartner(subscriptionId: string, partnerName: string): ng.IPromise<boolean> {
+    const payload = {
+      ccaspSubscriptionId: subscriptionId,
+      ccaspPartnerName: partnerName,
+    };
+
+    const orderUuid = this.getActingSubscriptionServiceOrderUUID();
+    enum validationResult  {
+      SUCCESS = 'VALID',
+      FAILURE = 'INVALID',
+    }
+    const config = {
+      method: 'POST',
+      url: `${this.UrlConfig.getAdminServiceUrl()}orders/${orderUuid}/ccasp/verify`,
+      data: payload,
+    };
+    return this.$http(config).then((response) => {
+      return (response.data === validationResult.SUCCESS && response.status === 200);
+    })
+    .catch(() => { return false; });
+  }
+
 }
 
 export default angular

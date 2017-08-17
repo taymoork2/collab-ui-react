@@ -147,4 +147,37 @@ describe('Controller: MeetingSettingsCtrl', () => {
       expect(this.controller.distributedLicensesArray[0][0].siteUrl).toBe('mySecondTransferredsite');
     });
   });
+
+  describe('when licenses include CCASP', function () {
+    beforeEach(function () {
+      spyOn(this.SetupWizardService, 'hasCCASPPackage').and.returnValue(true);
+      spyOn(this.SetupWizardService, 'getCCASPPartners').and.returnValue(this.$q.resolve(['partner1', 'partner2']));
+      initController.apply(this);
+      spyOn(this.controller, 'setNextDisableStatus').and.callThrough();
+      this.controller.ccasp.partnerNameSelected = 'bob';
+      this.controller.ccasp.subscriptionId = '123';
+    });
+    it('gets the list of ccaspPartners', function () {
+      expect(this.SetupWizardService.getCCASPPartners).toHaveBeenCalled();
+      expect(this.controller.ccasp.partnerOptions.length).toBe(2);
+    });
+    it('validates correctly', function() {
+      expect(this.controller.audioPartnerName).toBe(null);
+      spyOn(this.SetupWizardService, 'validateCCASPPartner').and.returnValue(this.$q.resolve(true));
+      this.controller.ccaspValidate();
+      this.$scope.$digest();
+      expect(this.controller.audioPartnerName).toBe('bob');
+      expect(this.controller.setNextDisableStatus).toHaveBeenCalledWith(false);
+      expect(this.controller.ccasp.isError).toEqual(false);
+    });
+    it('validates incorrectly', function() {
+      expect(this.controller.audioPartnerName).toBe(null);
+      spyOn(this.SetupWizardService, 'validateCCASPPartner').and.returnValue(this.$q.resolve(false));
+      this.controller.ccaspValidate();
+      this.$scope.$digest();
+      expect(this.controller.audioPartnerName).toBe(null);
+      expect(this.controller.setNextDisableStatus).toHaveBeenCalledWith(true);
+      this.controller.ccasp.isError = true;
+    });
+  });
 });

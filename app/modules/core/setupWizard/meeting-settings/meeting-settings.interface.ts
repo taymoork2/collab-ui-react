@@ -83,3 +83,8 @@ export interface IPendingLicense {
   isTrial: boolean;
   status: string;
 }
+
+export interface ICCASPInfo {
+  partnerName: string;
+  subscriptionId: string;
+}
