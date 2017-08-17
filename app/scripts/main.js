@@ -104,7 +104,6 @@
     'Sunlight',
     require('modules/squared/devices/services/CsdmCacheUpdater'),
     require('modules/squared/devices/services/CsdmPoller'),
-    require('modules/squared/devices/services/CsdmCacheUpdater'),
     require('modules/squared/partner-management').default,
     require('modules/squared/provisioning-console').default,
   ]);
