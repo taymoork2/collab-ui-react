@@ -1,6 +1,6 @@
 import * as provisioner from '../../../provisioner/provisioner';
 import { huronCustomer } from '../../../provisioner/huron/huron-customer-config';
-import { CallPlacesPage } from '../../pages/CallPlaces.page';
+import { CallPlacesPage } from '../../pages/callPlaces.page';
 
 const CallPlaces = new CallPlacesPage();
 
