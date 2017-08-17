@@ -77,8 +77,8 @@ class PlaceOverview implements ng.IComponentController {
     }
   }
 
-  public hasSquaredFusionUc(): boolean {
-    return this.hasEntitlement('squared-fusion-uc');
+  public hasHybridEntitlements(): boolean {
+    return this.hasEntitlement('squared-fusion-uc') || this.hasEntitlement('squared-fusion-cal') || this.hasEntitlement('squared-fusion-gcal');
   }
 
   public initPlaceCallOverviewData(): void {
