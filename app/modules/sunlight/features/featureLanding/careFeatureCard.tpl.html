@@ -12,7 +12,7 @@
             </div>
           </div>
           <p><span class="badge badge--outline" ng-if="careFeature.featureType === 'Va'">{{:: ('sunlightDetails.' + careFeature.featureType) | translate}}</span>
-          <span class="badge badge--outline" translate="common.customerSupportTemplates" ng-if="careFeature.featureType !== 'Va'"></span>
+          <span class="badge badge--outline" translate="common.customerSupportTemplate" ng-if="careFeature.featureType !== 'Va'"></span>
           </p>
           <div class="card-icons-inline" ng-if="careFeature.featureType !== 'Va'">
               <span ng-repeat="icon in careFeature.icons">

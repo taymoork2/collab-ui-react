@@ -1502,7 +1502,8 @@
     "voice": "Voice",
     "warning": "Warning",
     "yes": "Yes",
-    "customerSupportTemplates": "Customer Support Templates"
+    "customerSupportTemplates": "Customer Support Templates",
+    "customerSupportTemplate": "Customer Support Template"
   },
   "notifications": {
     "success": "Success notifications",
