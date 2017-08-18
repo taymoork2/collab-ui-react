@@ -11,14 +11,11 @@
 
     vm.savePreferredLanguage = savePreferredLanguage;
     vm.prefLanguageSaveInProcess = false;
-    vm.checkForPreferredLanguageChanges = checkForPreferredLanguageChanges;
     vm.preferredLanguage = '';
-
     vm.currentUser = $stateParams.currentUser;
     vm.entitlements = $stateParams.entitlements;
     vm.queryuserslist = $stateParams.queryuserslist;
     vm.orgInfo = $stateParams.orgInfo;
-
     vm.services = [];
     vm.userDetailList = [];
     vm.showGenerateOtpLink = false;
@@ -163,21 +160,14 @@
 
     function savePreferredLanguage(prefLang) {
       vm.prefLanguageSaveInProcess = true;
-      if (!vm.checkForPreferredLanguageChanges(prefLang)) {
-        UserOverviewService.updateUserPreferredLanguage(vm.currentUser.id, prefLang.value)
-          .then(function () {
-            preferredLanguageDetails.selectedLanguageCode = prefLang.value;
-            $state.go('user-overview');
-          })
-          .catch(function (error) {
-            Notification.errorResponse(error, 'preferredLanguage.failedToSaveChanges');
-          });
-      }
-    }
-
-    function checkForPreferredLanguageChanges(preferredLanguage) {
-      vm.preferredLanguageDetailsCopy = _.cloneDeep(preferredLanguageDetails.selectedLanguageCode);
-      return _.isEqual(preferredLanguage, vm.preferredLanguageDetailsCopy.selectedLanguageCode);
+      UserOverviewService.updateUserPreferredLanguage(vm.currentUser.id, prefLang.value)
+        .then(function () {
+          preferredLanguageDetails.selectedLanguageCode = prefLang.value;
+          $state.go('user-overview');
+        })
+        .catch(function (error) {
+          Notification.errorResponse(error, 'preferredLanguage.failedToSaveChanges');
+        });
     }
 
     function getDisplayableServices(serviceName) {

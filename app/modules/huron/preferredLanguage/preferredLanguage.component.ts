@@ -2,7 +2,7 @@ import { IPreferredLanugageOption } from './preferredLanguage.interfaces';
 
 class PreferredLanguage implements ng.IComponentController {
   public hasSparkCall: boolean;
-  public plIsLoaded: boolean = false;
+  public plIsLoaded: boolean;
   public prefLanguageSaveInProcess: boolean = false;
   public preferredLanguage: IPreferredLanugageOption[];
   public preferredLanguageOptions: any[];
