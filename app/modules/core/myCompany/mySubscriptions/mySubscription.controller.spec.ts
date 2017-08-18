@@ -104,8 +104,8 @@ describe('Controller: MySubscriptionCtrl', function () {
 
   it('should initialize with expected data for online orgs', function () {
     this.data.subscriptionsResponse[0].internalSubscriptionId = onlineIntSubId;
-    this.data.subscriptionsResponse[0].endDate = 'subEndDate';
     spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.data.subscriptionsResponse));
+    spyOn(this.Authinfo, 'getSubscriptions').and.returnValue(this.data.subscriptionsAuthinfo);
     this.data.subscriptionsFormatted[0].isOnline = true;
     this.data.subscriptionsFormatted[0].productInstanceId = productInstanceId;
     this.data.subscriptionsFormatted[0].name = productName;
@@ -144,8 +144,8 @@ describe('Controller: MySubscriptionCtrl', function () {
 
   it('should initialize with expected data for online trial orgs', function () {
     this.data.subscriptionsTrialResponse[0].internalSubscriptionId = onlineIntSubId;
-    this.data.subscriptionsTrialResponse[0].endDate = 'subEndDate';
     spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.data.subscriptionsTrialResponse));
+    spyOn(this.Authinfo, 'getSubscriptions').and.returnValue(this.data.subscriptionsAuthinfo);
     this.data.trialSubscriptionData[0].isOnline = true;
     this.data.trialSubscriptionData[0].upgradeTrialUrl = trialUrlResponse;
     this.data.trialSubscriptionData[0].productInstanceId = productInstanceId;

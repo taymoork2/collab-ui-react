@@ -206,6 +206,8 @@ export class MySubscriptionCtrl implements ng.IController {
         return _.some(licenses, license => this.Authinfo.isExternallyManagedLicense(license));
       });
 
+      const authinfoSubscriptions = this.Authinfo.getSubscriptions();
+
       _.forEach(subscriptions, (subscription: any, subIndex: number): void => {
         const newSubscription: ISubscription = {
           licenses: [],
@@ -225,9 +227,14 @@ export class MySubscriptionCtrl implements ng.IController {
             newSubscription.isOnline = true;
           }
         }
-        if (subscription.endDate) {
+
+        const matchingSubscription = _.find(authinfoSubscriptions, {
+          subscriptionId: subscription.internalSubscriptionId,
+        });
+        const matchingSubscriptionEndDate = _.get<string>(matchingSubscription, 'endDate', '');
+        if (matchingSubscriptionEndDate) {
           const currentDate = new Date();
-          const subscriptionEndDate = new Date(subscription.endDate);
+          const subscriptionEndDate = new Date(matchingSubscriptionEndDate);
           const timeDiff = subscriptionEndDate.getTime() - currentDate.getTime();
           const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
