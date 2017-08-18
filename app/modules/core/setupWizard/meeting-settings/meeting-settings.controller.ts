@@ -397,13 +397,15 @@ export class MeetingSettingsCtrl {
   private ccaspSetInvalid(isInvalid) {
     this.setNextDisableStatus(isInvalid);
     this.ccasp.isError = isInvalid;
+    this.disableValidateButton = false;
 
   }
   public ccaspValidate() {
+    this.disableValidateButton = true;
     if (!(this.ccasp.partnerNameSelected && this.ccasp.subscriptionId)) {
       this.ccaspSetInvalid(true);
     }
-    this.SetupWizardService.validateCCASPPartner(this.ccasp.partnerNameSelected || '', this.ccasp.subscriptionId)
+    this.SetupWizardService.validateCCASPPartner(this.ccasp.subscriptionId, this.ccasp.partnerNameSelected || '')
       .then((isValid) => {
         this.ccaspSetInvalid(!isValid);
         if (isValid) {
@@ -560,9 +562,7 @@ export class MeetingSettingsCtrl {
       audioPartnerName: this.audioPartnerName,
     });
     if (!_.isEmpty(this.ccasp.subscriptionId)) {
-      _.set(webexLicensesPayload, 'webexProvisioningParams', {
-        ccaspSubscriptionId: this.ccasp.subscriptionId,
-      });
+      _.set(webexLicensesPayload, 'webexProvisioningParams.ccaspSubscriptionId', this.ccasp.subscriptionId);
     }
 
     if (!_.isEmpty(this.transferSiteDetails.transferCode)) {

@@ -15,7 +15,7 @@
   <div class="col-md-4">
     <button ng-click="meetingCtrl.ccaspValidate()"
       class="btn--cta"
-      ng-disabled="!(meetingCtrl.ccasp.subscriptionId && meetingCtrl.ccasp.partnerNameSelected)"
+      ng-disabled="!(meetingCtrl.ccasp.subscriptionId && meetingCtrl.ccasp.partnerNameSelected) || meetingCtrl.disableValidateButton"
       translate="common.validate"></button>
   </div>
 
