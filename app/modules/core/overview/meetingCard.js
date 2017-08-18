@@ -30,6 +30,7 @@
           _.each(data.components, function (component) {
             if (component.id === card.helper.statusIds.SparkCall) {
               card.healthStatus = card.helper.mapStatus(card.healthStatus, component.status);
+              card.healthStatusAria = card.helper.mapStatusAria(card.healthStatus, component.status);
             }
           });
         };
