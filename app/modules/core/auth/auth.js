@@ -35,7 +35,6 @@
       verifyOauthState: verifyOauthState,
       getAuthorizationUrl: getAuthorizationUrl,
       getAuthorizationUrlList: getAuthorizationUrlList,
-      isOnlineOrg: isOnlineOrg,
       revokeUserAuthTokens: revokeUserAuthTokens,
     };
 
@@ -79,25 +78,6 @@
         .then(replaceOrTweakServices)
         .then(injectMessengerService)
         .then(initializeAuthinfo);
-    }
-
-    var onlineOrg;
-
-    function isOnlineOrg() {
-      return $q(function (resolve) {
-        if (_.isNil(onlineOrg)) {
-          getCustomerAccount(Authinfo.getOrgId()).then(function (res) {
-            if (res.data.customers && !_.isEmpty(res.data.customers) && res.data.customers[0].customerType) {
-              onlineOrg = res.data.customers[0].customerType === 'Online';
-              resolve(onlineOrg);
-            } else {
-              resolve(false);
-            }
-          });
-        } else {
-          resolve(onlineOrg);
-        }
-      });
     }
 
     function getCustomerAccount(orgId) {
