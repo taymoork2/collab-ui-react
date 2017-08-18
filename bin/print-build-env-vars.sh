@@ -5,6 +5,7 @@ if [ -z "${WX2_ADMIN_WEB_CLIENT_HOME}" ]; then
     exit 1
 fi
 
+# shellcheck disable=SC1090
 source "${WX2_ADMIN_WEB_CLIENT_HOME}/bin/include/env-var-helpers"
 
 function ex_usage {
@@ -24,5 +25,5 @@ if [[ "$1" == "--help" \
     exit 1
 fi
 
-print_build_env_vars_for "$1"
+inj_build_env_vars_for "$1"
 exit $?
