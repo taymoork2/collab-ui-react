@@ -1198,8 +1198,8 @@
         "action": "Action",
         "broadcast": "Audio Broadcast",
         "callback": "Callback",
-        "ccaspPartnerName": "CCA-SP Partner Name"
-
+        "ccaspPartnerName": "CCA-SP Partner Name",
+        "ccaspSubscriptionId": "CCA-SP Subscription ID"
       },
       "conferencing": {
         "title": "Audio for {{site}}",
