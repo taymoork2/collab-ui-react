@@ -10,6 +10,7 @@ module.exports = {
   atlasContextExpandedTypes: 'atlas-context-expanded-types',
   atlasDarling: 'atlas-darling',
   atlasBlockExternalCommunicationSettings: 'atlas-block-external-communication-settings',
+  atlasFileSharingControlSettings: 'atlas-file-sharing-control-settings',
   atlasDataRetentionSettings: 'atlas-data-retention-settings',
   atlasDevicesAdvancedSettings: 'atlas-devices-advanced-settings',
   atlasDeviceExport: 'atlas-device-export',
