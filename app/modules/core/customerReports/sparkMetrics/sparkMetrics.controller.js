@@ -7,6 +7,7 @@
 
   /* @ngInject */
   function SparkMetricsCtrl(
+    $log,
     $rootScope,
     $sce,
     $scope,
@@ -114,21 +115,25 @@
       );
     }
 
+    function messageHandle(event) {
+      var iframeEle = angular.element('#webexMetricsIframeContainer');
+      var currScope = iframeEle.scope();
+
+      if (event.data === 'unfreeze') {
+        $log.log('Unfreeze message received.');
+        currScope.$apply(function () {
+          vm.isIframeLoaded = true;
+        });
+      }
+    }
+
     $window.iframeLoaded = function (iframeId) {
-      var currScope = angular.element(iframeId).scope();
-      var phase = currScope.$$phase;
       var rec = angular.element(iframeId);
       rec.ready(function () {
         var token = $window.sessionStorage.getItem('accessToken');
         var orgID = Authinfo.getOrgId();
         rec[0].contentWindow.postMessage(token + ',' + orgID, '*');
       });
-
-      if (!phase) {
-        currScope.$apply(function () {
-          vm.isIframeLoaded = true;
-        });
-      }
     };
 
     vm.onStateChangeStart = function (event) {
@@ -137,10 +142,12 @@
       }
     };
 
+    $window.addEventListener('message', messageHandle, true);
     var stateChangeStart = $rootScope.$on('$stateChangeStart', vm.onStateChangeStart);
 
     $scope.$on('$destory', function () {
       stateChangeStart();
+      $window.removeEventListener('message', messageHandle, true);
     });
   }
 })();
