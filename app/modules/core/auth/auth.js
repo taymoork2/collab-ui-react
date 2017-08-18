@@ -6,13 +6,13 @@
       require('angular-translate'),
       require('angular-ui-router'),
       require('angular-sanitize'),
+      require('modules/core/account').default,
       require('modules/core/auth/token.service'),
       require('modules/core/config/oauthConfig'),
       require('modules/core/config/urlConfig'),
       require('modules/core/scripts/services/authinfo'),
       require('modules/core/scripts/services/log'),
       require('modules/core/scripts/services/utils'),
-      require('modules/core/window').default,
       require('modules/core/storage').default,
       require('modules/huron/compass').default,
     ])
@@ -20,7 +20,7 @@
     .name;
 
   /* @ngInject */
-  function Auth($http, $injector, $q, $sanitize, $translate, $window, Authinfo, HuronCompassService, Log, OAuthConfig, SessionStorage, TokenService, UrlConfig, Utils, WindowLocation) {
+  function Auth($http, $injector, $q, $sanitize, $translate, $window, AccountService, Authinfo, HuronCompassService, Log, OAuthConfig, SessionStorage, TokenService, UrlConfig, Utils, WindowLocation) {
     var service = {
       logout: logout,
       logoutAndRedirectTo: logoutAndRedirectTo,
@@ -80,6 +80,7 @@
         .then(initializeAuthinfo);
     }
 
+    // TODO: remove this function and refactor others to use cached AccountService
     function getCustomerAccount(orgId) {
       if (!orgId || orgId === '') {
         return $q.reject('An Organization Id must be passed');
@@ -298,11 +299,9 @@
     function initializeAuthinfo(authData) {
       Authinfo.initialize(authData);
       if (Authinfo.isAdmin() || Authinfo.isReadOnlyAdmin()) {
-        return getCustomerAccount(Authinfo.getOrgId())
-          .then(function (res) {
-            Authinfo.updateAccountInfo(res.data);
-            return authData;
-          });
+        return AccountService.updateAuthinfoAccount().then(function () {
+          return authData;
+        });
       } else {
         return authData;
       }
