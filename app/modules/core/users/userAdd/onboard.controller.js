@@ -127,7 +127,7 @@ require('./_user-add.scss');
     function setLicenseAvailability() {
       return Orgservice.getLicensesUsage()
         .then(function (result) {
-          $scope.licenses = result[0].licenses;
+          $scope.licenses = _.get(result, '[0].licenses', []);
           _.forEach($scope.licenses, function (license) {
             switch (license.licenseType) {
               case Config.licenseTypes.MESSAGING:

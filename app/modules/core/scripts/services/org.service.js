@@ -1,6 +1,7 @@
 (function () {
   'use strict';
 
+  var angularCacheModule = require('angular-cache');
   var angularResourceModule = require('angular-resource');
   var angularTranslateModule = require('angular-translate');
   var authModule = require('modules/core/auth/auth');
@@ -12,6 +13,7 @@
 
   module.exports = angular
     .module('core.org', [
+      angularCacheModule,
       angularResourceModule,
       angularTranslateModule,
       authModule,
@@ -25,12 +27,14 @@
     .name;
 
   /* @ngInject */
-  function Orgservice($http, $q, $resource, $translate, Auth, Authinfo, Log, UrlConfig, Utils, HuronCompassService) {
+  function Orgservice($http, $q, $resource, $translate, Auth, Authinfo, CacheFactory, Log, UrlConfig, Utils, HuronCompassService) {
     var service = {
       getOrg: getOrg,
       getAdminOrg: getAdminOrg,
       getAdminOrgAsPromise: getAdminOrgAsPromise,
       getAdminOrgUsage: getAdminOrgUsage,
+      clearOrgUsageCache: clearOrgUsageCache,
+      updateOrgUsageCacheAge: updateOrgUsageCacheAge,
       getValidLicenses: getValidLicenses,
       getLicensesUsage: getLicensesUsage,
       getUnlicensedUsers: getUnlicensedUsers,
@@ -53,6 +57,15 @@
     var savedOrgSettingsCache = [];
     var isTestOrgCache = {};
     var domainCache = {};
+
+    var orgUsageCacheKey = 'orgServiceOrgUsageCache';
+    var orgUsageCache = CacheFactory.get(orgUsageCacheKey);
+    if (!orgUsageCache) {
+      orgUsageCache = new CacheFactory(orgUsageCacheKey, {
+        maxAge: 30 * 1000, // 30s
+        deleteOnExpire: 'passive',
+      });
+    }
 
     return service;
 
@@ -154,15 +167,24 @@
         });
     }
 
-    function getAdminOrgUsage(oid, useCache) {
-      var cache = _.isUndefined(useCache) ? true : useCache;
+    function getAdminOrgUsage(oid) {
       var orgId = oid || Authinfo.getOrgId();
       var adminUrl = UrlConfig.getAdminServiceUrl() + 'customers/' + orgId + '/usage';
-      return $http.get(adminUrl, { cache: cache });
+      return $http.get(adminUrl, { cache: orgUsageCache });
     }
 
-    function getLicensesUsage(useCache) {
-      return getAdminOrgUsage(undefined, useCache)
+    function clearOrgUsageCache(oid) {
+      var orgId = oid || Authinfo.getOrgId();
+      var usageUrl = UrlConfig.getAdminServiceUrl() + 'customers/' + orgId + '/usage';
+      orgUsageCache.remove(usageUrl);
+    }
+
+    function updateOrgUsageCacheAge(ageInSeconds) {
+      orgUsageCache.setMaxAge(ageInSeconds * 1000);
+    }
+
+    function getLicensesUsage() {
+      return getAdminOrgUsage()
         .then(function (response) {
           var usageLicenses = response.data || [];
           var statusLicenses = Authinfo.getLicenses();
