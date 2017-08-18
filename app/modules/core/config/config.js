@@ -270,6 +270,12 @@
         ADVANCE_CARE: 'ADVANCE_CARE',
       },
 
+      setupTypes: {
+        transfer: 'TRANSFER',
+        trialConvert: 'TRIALCONVERT',
+        legacy: 'LEGACY',
+      },
+
       messageErrors: {
         userExistsError: '400081',
         userPatchError: '400084',

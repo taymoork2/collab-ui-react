@@ -110,7 +110,7 @@ describe('Controller: MeetingSettingsCtrl', () => {
       });
       expect(this.controller.sitesArray.length).toBe(1);
       expect(this.controller.distributedLicensesArray[0].length).toBe(1);
-      expect(this.controller.distributedLicensesArray[0][0].isTransferSite).toBe(true);
+      expect(this.controller.distributedLicensesArray[0][0].setupType).toBe('TRANSFER');
     });
   });
 
@@ -135,7 +135,7 @@ describe('Controller: MeetingSettingsCtrl', () => {
       this.controller.sitesArray = [
         {
           siteUrl: 'myFirstTransferredSite',
-          isTransferSite: true,
+          setupType: 'TRANSFER',
         },
       ];
       this.$scope.$apply();

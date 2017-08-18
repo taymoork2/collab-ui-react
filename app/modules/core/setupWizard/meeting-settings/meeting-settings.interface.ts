@@ -4,7 +4,7 @@ export interface IWebExSite {
   centerType: string;
   quantity?: number;
   audioPackageDisplay?: string;
-  isTransferSite?: boolean;
+  setupType?: string;
   keepExistingSite?: boolean;
 }
 

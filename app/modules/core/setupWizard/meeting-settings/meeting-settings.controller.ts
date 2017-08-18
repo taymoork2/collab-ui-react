@@ -87,6 +87,7 @@ export class MeetingSettingsCtrl {
     const validateTransferCodeSitePair = this.$rootScope.$on('wizard-meeting-settings-migrate-site-event', (): void => {
       if (_.isEmpty(this.transferSiteDetails.siteUrl) && _.isEmpty(this.transferSiteDetails.transferCode)) {
         this.nextButtonDisabledStatus = false;
+        this.stripTransferredSitesFromSitesArray();
         this.$rootScope.$emit('wizard-meeting-settings-transfer-code-validated');
         return;
       }
@@ -96,10 +97,6 @@ export class MeetingSettingsCtrl {
       this.SetupWizardService.validateTransferCode(this.transferSiteDetails).then((response) => {
         const status = _.get(response, 'data.status');
         if (!status || status !== 'INVALID') {
-          this.transferSiteDetails = {
-            siteUrl: '',
-            transferCode: '',
-          };
           // if transferred sites have already been added and the back button clicked, strip old sites.
           if (!_.isEmpty(this.sitesArray)) {
             this.stripTransferredSitesFromSitesArray();
@@ -110,7 +107,7 @@ export class MeetingSettingsCtrl {
               const transferredSiteModel = _.clone(this.siteModel);
               transferredSiteModel.siteUrl = site.siteUrl.replace(this.Config.siteDomainUrl.webexUrl, ''),
               transferredSiteModel.timezone = this.findTimezoneObject(site.timezone);
-              transferredSiteModel.isTransferSite = true;
+              transferredSiteModel.setupType = this.Config.setupTypes.transfer;
               this.sitesArray.push(transferredSiteModel);
             }
           });
@@ -190,10 +187,10 @@ export class MeetingSettingsCtrl {
         siteUrl: site.siteUrl.replace(this.Config.siteDomainUrl.webexUrl, ''),
         timezone: timezone,
         centerType: site.centerType,
-        isTransferSite: site.isTransferSite,
+        setupType: site.setupType,
       };
-      if (!site.isTransferSite) {
-        delete siteObj.isTransferSite;
+      if (!site.setupType) {
+        delete siteObj.setupType;
       }
       return siteObj;
     });
@@ -203,7 +200,7 @@ export class MeetingSettingsCtrl {
 
   private stripTransferredSitesFromSitesArray() {
     this.sitesArray = _.filter(this.sitesArray, (site) => {
-      return _.isUndefined(site.isTransferSite);
+      return _.isUndefined(site.setupType);
     });
   }
 
@@ -442,10 +439,10 @@ export class MeetingSettingsCtrl {
           quantity: site.quantity,
           siteUrl: site.siteUrl,
           timezone: site.timezone,
-          isTransferSite: site.isTransferSite,
+          setupType: site.setupType,
         };
-        if (!site.isTransferSite) {
-          delete siteObject.isTransferSite;
+        if (!site.setupType) {
+          delete siteObject.setupType;
         }
         return siteObject;
       });
@@ -550,8 +547,8 @@ export class MeetingSettingsCtrl {
           centerType: site.centerType,
           quantity: _.get<number>(site, 'quantity'),
         };
-        if (site.isTransferSite) {
-          webexSiteDetail.isTransferSite = true;
+        if (site.setupType) {
+          webexSiteDetail.setupType = site.setupType;
         }
         webexSiteDetailsList.push(webexSiteDetail);
       }
