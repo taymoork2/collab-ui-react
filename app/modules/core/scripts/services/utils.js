@@ -114,22 +114,8 @@
       },
     };
 
-    var getDeepKeyValues = function (obj, key) {
-      if (_.has(obj, key)) {
-        return [obj[key]];
-      }
-      var res = [];
-      _.forEach(obj, function (val) {
-        if (_.isObject(val) && (val = getDeepKeyValues(val, key)).length) {
-          res.push.apply(res, val);
-        }
-      });
-      return res;
-    };
-
     var service = {
       Base64: Base64,
-      getDeepKeyValues: getDeepKeyValues,
 
       sprintf: function (template, params) {
         var values = _.clone(params);
