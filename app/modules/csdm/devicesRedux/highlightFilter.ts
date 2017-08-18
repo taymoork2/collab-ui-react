@@ -1,4 +1,5 @@
-import { SearchFields, SearchObject } from '../services/csdmSearch.service';
+import { SearchFields, SearchObject } from '../services/search/searchObject';
+
 export function highlightFilter() {
   return function (input, searchObject: SearchObject, field: string) {
     const seachField = searchObject

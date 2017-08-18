@@ -1,5 +1,6 @@
-import { SearchObject, SearchResult } from '../services/csdmSearch.service';
 import { SearchInteraction } from './deviceSearch.component';
+import { SearchObject } from '../services/search/searchObject';
+import { SearchResult } from '../services/search/searchResult';
 export class DevicesCtrl {
 
   public anyDevicesOrCodesLoaded = true; //TODO remove

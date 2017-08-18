@@ -1,6 +1,8 @@
-import { CsdmSearchService, SearchHits, SearchObject } from '../services/csdmSearch.service';
 import { IGridApi } from 'ui-grid';
 import { CsdmConverter } from '../../squared/devices/services/CsdmConverter';
+import { SearchObject } from '../services/search/searchObject';
+import { SearchHits } from '../services/search/searchResult';
+import { CsdmSearchService } from '../services/csdmSearch.service';
 class DeviceNewList implements ng.IComponentController {
 
   private huronDeviceService: any;

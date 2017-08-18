@@ -1,5 +1,5 @@
-import { SearchFields, SearchObject } from '../services/csdmSearch.service';
 import { IOnChangesObject } from 'angular';
+import { SearchFields, SearchObject } from '../services/search/searchObject';
 class DeviceList implements ng.IComponentController {
   public searchObject: SearchObject;
   public devices;

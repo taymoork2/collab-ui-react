@@ -1,7 +1,7 @@
-import {
-  CsdmSearchService, SearchFields, SearchObject, SearchResult,
-} from '../services/csdmSearch.service';
 import { Device } from '../services/deviceSearchConverter';
+import { SearchFields, SearchObject } from '../services/search/searchObject';
+import { SearchResult } from '../services/search/searchResult';
+import { CsdmSearchService } from '../services/csdmSearch.service';
 
 export class DeviceSearch implements ng.IComponentController, ISearchHandler {
   public searchField = '';
@@ -53,10 +53,10 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
   }
 
   public setCurrentSearch(search: string) {
-    const newSearch = (search || '').trim().replace(/\s+/g, ' AND ');
+    const newSearch = (search || '').trim();
     if (newSearch !== this.searchField) {
       this.searchField = newSearch;
-      this.currentSearchObject = SearchObject.create(this.searchField + (this.searchField ? ' AND ' : '') + this._currentFilterValue);
+      this.currentSearchObject = this.createSearchObject(this.searchField, this._currentFilterValue);
       this.searchChanged2();
     }
   }
@@ -64,8 +64,18 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
   public setCurrentFilterValue(value: string) {
     value = value === 'all' ? '' : value;
     this._currentFilterValue = value;
-    this.currentSearchObject = SearchObject.create(this.searchField + (this.searchField ? ' AND ' : '') + this._currentFilterValue);
+    this.currentSearchObject = this.createSearchObject(this.searchField, this._currentFilterValue);
     this.searchChanged2();
+  }
+
+  public createSearchObject(searchField: string, currentFilterValue: string): SearchObject {
+    if (currentFilterValue) {
+      if (searchField) {
+        return SearchObject.create('(' + searchField + ') AND ' + currentFilterValue);
+      }
+      return SearchObject.create(currentFilterValue);
+    }
+    return SearchObject.create(searchField);
   }
 
   public searchChanged2() {
@@ -133,20 +143,20 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
       }, {
         count: this.getDocCount(searchResult, 'connectionStatus', 'connected_with_issues'),
         name: this.$translate.instant('CsdmStatus.OnlineWithIssues'),
-        filterValue: 'connectionStatus:CONNECTED_WITH_ISSUES',
+        filterValue: 'connectionStatus=CONNECTED_WITH_ISSUES',
       }, {
         count: this.getDocCount(searchResult, 'connectionStatus', 'offline')
         + this.getDocCount(searchResult, 'connectionStatus', 'disconnected'),
         name: this.$translate.instant('CsdmStatus.Offline'),
-        filterValue: 'connectionStatus:DISCONNECTED',
+        filterValue: 'connectionStatus=DISCONNECTED',
       }, {
         count: this.getDocCount(searchResult, 'connectionStatus', 'offline_expired'),
         name: this.$translate.instant('CsdmStatus.OfflineExpired'),
-        filterValue: 'connectionStatus:OFFLINE_EXPIRED',
+        filterValue: 'connectionStatus=OFFLINE_EXPIRED',
       }, {
         count: this.getDocCount(searchResult, 'connectionStatus', 'connected'),
         name: this.$translate.instant('CsdmStatus.Online'),
-        filterValue: 'connectionStatus:"CONNECTED"',
+        filterValue: 'connectionStatus="CONNECTED"',
       }];
   }
 
@@ -224,10 +234,13 @@ class Bullet {
     return (this.searchField || 'any') === (field || 'any');
   }
 }
+
 export interface ISearchHandler {
   addToSearch(field: string, query: string);
+
   setSortOrder(field?: string, order?: string);
 }
+
 export class SearchInteraction implements ISearchHandler {
   public receiver: ISearchHandler;
 

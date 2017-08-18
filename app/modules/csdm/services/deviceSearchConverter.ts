@@ -1,8 +1,10 @@
-import { SearchResult } from './csdmSearch.service';
 import IHttpPromiseCallbackArg = angular.IHttpPromiseCallbackArg;
 import { DeviceHelper, HuronDeviceHelper } from './csdmHelper';
+import { SearchResult } from './search/searchResult';
+
 export class DeviceSearchConverter {
   private deviceHelper: DeviceHelper;
+
   /* @ngInject */
   constructor($translate) {
     this.deviceHelper = new DeviceHelper($translate);

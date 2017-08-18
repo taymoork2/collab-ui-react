@@ -1,6 +1,6 @@
-import { Aggregation, BucketData, NamedAggregation, SearchResult } from '../services/csdmSearch.service';
 import { List } from 'lodash';
 import { IOnChangesObject } from 'angular';
+import { Aggregation, BucketData, NamedAggregation, SearchResult } from '../services/search/searchResult';
 
 class Chart implements ng.IComponentController {
   private currentAggregations: NamedAggregation[] = [];
