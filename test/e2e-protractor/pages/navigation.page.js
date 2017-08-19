@@ -64,6 +64,7 @@ var Navigation = function () {
   this.messaging = element(by.cssContainingText('.settings-menu .dropdown-menu a', 'Message'));
   this.enterpriseSettings = element(by.cssContainingText('.settings-menu .dropdown-menu a', 'Enterprise Settings'));
   this.userInfo = element(by.css('.user-info'));
+  this.userInfoDropDownMenu = element(by.css('.user-info .dropdown-menu.visible'));
   this.launchPartnerButton = element(by.css('#launch-partner-btn a'));
 
   this.partnerSupportUrl = 'https://help.webex.com/community/cisco-cloud-collab-mgmt-partners';
