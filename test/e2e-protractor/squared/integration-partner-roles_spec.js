@@ -44,12 +44,19 @@ describe('Org Entitlement flow', function () {
     utils.expectIsDisplayed(roles.sipAddressesInput);
   });
 
-  it('should edit last name and display name, roles & save', function () {
+  it('should edit last name and display name and save', function () {
     roles.setLastName(newLastName);
     roles.setDisplayName(newDisplayName);
+    utils.click(roles.saveButton);
+    notifications.assertSuccess('User successfully updated.');
+  });
+
+  it('should edit roles and save', function () {
+    utils.click(users.closeSidePanel);
+    utils.clickUser(testUser);
+    utils.click(users.rolesAndSecurityMenuOption);
     utils.click(roles.salesAdmin);
     utils.click(roles.saveButton);
-
     notifications.assertSuccess('User successfully updated.');
   });
 
@@ -57,7 +64,6 @@ describe('Org Entitlement flow', function () {
     utils.click(roles.fullAdmin);
     utils.click(roles.noAdmin);
     utils.click(roles.saveButton);
-
     notifications.assertSuccess('User successfully updated.');
   });
 
