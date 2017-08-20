@@ -31,6 +31,7 @@ class CustomerReportsHeaderCtrl {
           title: this.$translate.instant('reportsPage.sparkReports'),
           state: 'reports.spark',
         });
+        this.checkWebex();
       }
       if (features.isMfEnabled) {
         if (features.mf) {
@@ -56,9 +57,6 @@ class CustomerReportsHeaderCtrl {
       });
       if (this.$state.current.name === 'reports') {
         this.goToFirstReportsTab();
-      }
-      if (!features.webexMetrics && !features.proPackEnabled) {
-        this.checkWebex();
       }
     });
   }
