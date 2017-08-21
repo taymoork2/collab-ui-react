@@ -295,6 +295,7 @@
             states.push('proactivePrompt');
           }
           states.push('customerInformation');
+          states.push('virtualAssistant');
           states.push('agentUnavailable');
           states.push('offHours');
           states.push('feedback');
@@ -317,6 +318,7 @@
             states.push('proactivePrompt');
           }
           states.push('customerInformationChat');
+          states.push('virtualAssistant');
           states.push('agentUnavailable');
           states.push('feedback');
           states.push('profile');
