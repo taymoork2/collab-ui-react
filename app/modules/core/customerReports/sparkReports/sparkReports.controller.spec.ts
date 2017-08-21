@@ -546,7 +546,6 @@ describe('Controller: Customer Reports Ctrl', function () {
       const sTime = moment().subtract('days', 7).format('h:mm A');
       const eDate = moment().format('YYYY-MM-DD');
       const eTime = moment().format('h:mm A');
-      console.debug(this.controller.startDate);
       expect(this.controller.startDate).toEqual(sDate);
       expect(this.controller.endDate).toEqual(eDate);
       expect(this.controller.startTime).toEqual(sTime);

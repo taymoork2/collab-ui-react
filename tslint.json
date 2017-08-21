@@ -27,6 +27,7 @@
       true,
       "assert",
       "count",
+      "debug",
       "dir",
       "dirxml",
       "error",

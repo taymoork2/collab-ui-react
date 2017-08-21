@@ -155,7 +155,7 @@ describe('Component: HybridServicesClusterListWithCardsComponent', function () {
       ]));
     });
 
-    fit('should format data from EnterprisePrivateTrunkService so that it is on the FMS cluster format', function () {
+    it('should format data from EnterprisePrivateTrunkService so that it is on the FMS cluster format', function () {
       initController(true);
       controller.loadSipDestinations();
       $rootScope.$apply();
