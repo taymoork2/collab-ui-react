@@ -396,12 +396,17 @@ export class MeetingSettingsCtrl {
     this.setNextDisableStatus(isInvalid);
     this.ccasp.isError = isInvalid;
     this.disableValidateButton = false;
+  }
 
+  public ccaspResetValidation() {
+    this.setNextDisableStatus(true);
+    this.audioPartnerName = null;
   }
   public ccaspValidate() {
     this.disableValidateButton = true;
+    this.setNextDisableStatus(true);
     if (!(this.ccasp.partnerNameSelected && this.ccasp.subscriptionId)) {
-      this.ccaspSetInvalid(true);
+      return false;
     }
     this.SetupWizardService.validateCCASPPartner(this.ccasp.subscriptionId, this.ccasp.partnerNameSelected || '')
       .then((isValid) => {
@@ -413,6 +418,11 @@ export class MeetingSettingsCtrl {
       .catch(() => {
         this.ccaspSetInvalid(true);
       });
+  }
+  public ccaspSetNextDisabled() {
+    if (!this.audioPartnerName || ! this.ccasp.subscriptionId) {
+      this.setNextDisableStatus(true);
+    }
   }
 
   public offerCodeToCenterTypeString(offerCode: string) {
