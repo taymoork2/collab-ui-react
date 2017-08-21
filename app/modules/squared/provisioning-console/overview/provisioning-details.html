@@ -109,11 +109,17 @@
             <p class="form-control-static">{{audioItem.serviceName || '-'}}</p>
           </div>
         </div>
-        <div class="form-group" ng-if="audioItem.serviceName === 'CCA-SP'">
+        <div class="form-group" ng-if="audioItem.serviceName === 'CCASP'">
           <label class="col-sm-4 control-label" translate="provisioningConsole.details.audio.ccaspPartnerName"></label>
           <div class="col-sm-8">
             <p class="form-control-static">{{audioItem.ccaspPartnerName || '-'}}</p>
           </div>
+          <div class="row"/>
+        <label class="col-sm-4 control-label" translate="provisioningConsole.details.audio.ccaspSubscriptionId"></label>
+          <div class="col-sm-8">
+            <p class="form-control-static">{{audioItem.ccaAggregationSubId || '-'}}</p>
+          </div>
+
         </div>
         <div class="form-group">
           <label class="col-sm-4 control-label" translate="provisioningConsole.details.audio.action"></label>
