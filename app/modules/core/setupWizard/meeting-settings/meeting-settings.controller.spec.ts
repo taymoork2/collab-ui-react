@@ -100,7 +100,7 @@ describe('Controller: MeetingSettingsCtrl', () => {
         transferCode: '12345678',
       };
       this.$scope.$apply();
-      this.$rootScope.$broadcast('wizard-meeting-settings-migrate-site-event');
+      this.controller.migrateTrialNext();
       this.$scope.$digest();
     });
     it('validates and processes the transfer code', function () {
@@ -139,7 +139,7 @@ describe('Controller: MeetingSettingsCtrl', () => {
         },
       ];
       this.$scope.$apply();
-      this.$rootScope.$broadcast('wizard-meeting-settings-migrate-site-event');
+      this.controller.migrateTrialNext();
       this.$scope.$digest();
     });
     it('replaces the earlier transferred site with the new one', function () {
