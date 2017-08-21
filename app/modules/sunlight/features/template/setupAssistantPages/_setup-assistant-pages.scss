@@ -15,15 +15,14 @@ $ct-desc-height: 32px;
 
 .ct-title {
   display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
+  flex-flow: row nowrap;
   justify-content: center;
   align-items: center;
   color: $gray-dark-2;
 }
 
 .ct-title-overview {
-  font-family: $brand-font-thin;
+  font-family: $brand-font-thin
 }
 
 .ct-title-icon {
