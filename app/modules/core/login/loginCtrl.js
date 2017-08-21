@@ -27,6 +27,10 @@
       SessionStorage.put('partnerOrgId', $stateParams.partnerOrgId);
     }
 
+    if ($stateParams.subscriptionId) {
+      SessionStorage.put('subscriptionId', $stateParams.subscriptionId);
+    }
+
     // If the tab has logged out and we are logged into another tab
     // we want to allow the tab to get auth tokens from another logged in tab
     if (SessionStorage.get('logout')) {

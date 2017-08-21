@@ -40,7 +40,11 @@ export class SetupWizardService {
 
   public getActingSubscriptionId(): string {
     const subscriptionId = this.SessionStorage.get(this.StorageKeys.SUBSCRIPTION_ID);
-    return subscriptionId || _.get(this.Authinfo.getSubscriptions()[0], 'externalSubscriptionId', '');
+    const pendingSubscription = _.find(this.Authinfo.getSubscriptions(), (sub: IPendingOrderSubscription) => {
+      return _.has(sub, 'pendingServiceOrderUUID');
+    });
+
+    return subscriptionId || _.get(pendingSubscription, 'externalSubscriptionId', '');
   }
 
   public getInternalSubscriptionId(): string {
