@@ -1,6 +1,6 @@
 'use strict';
 
-/*global TIMEOUT*/
+/*global TIMEOUT, ANIMATION_DURATION_MS*/
 
 var Navigation = function () {
   this.body = element(by.tagName('body'));
@@ -247,6 +247,7 @@ var Navigation = function () {
 
   this.logout = function () {
     utils.click(this.userInfoButton);
+    browser.sleep(ANIMATION_DURATION_MS);
     utils.click(this.logoutButton);
     this.expectDriverCurrentUrl('/login', 'idbroker.webex.com');
     browser.get('data:,');
