@@ -67,6 +67,7 @@ describe('OnboardCtrl: Ctrl', function () {
     this.mock.getLicensesUsage = getJSONFixture('core/json/organizations/usage.json');
     this.mock.manualUsersListMoreThan10 = 'one+21@g.com, one+27@g.com, one+23@g.com, one+24@g.com, one+25@g.com, one+29@g.com, one+22@g.com, one+28@g.com, one+26@g.com, one+30@g.com, one+31@g.com, one+32@g.com';
     this.mock.getUsrList = getJSONFixture('core/json/users/usrlist.controller.json');
+    this.mock.getCommunicationServices = getJSONFixture('core/json/authInfo/commServices.json');
 
     spyOn(this.CsvDownloadService, 'getCsv').and.callFake(function (type) {
       if (type === 'headers') {
@@ -279,10 +280,10 @@ describe('OnboardCtrl: Ctrl', function () {
     });
     it('Should calculate the license availabilities correctly', function () {
       expect(this.$scope.messagingLicenseAvailability).toEqual(0);
-      expect(this.$scope.communicationLicenseAvailability).toEqual(3);
       expect(this.$scope.conferencingLicenseAvailability).toEqual(1);
     });
   });
+
   describe('License redirect modal', function () {
     beforeEach(initController);
     beforeEach(function () {
@@ -292,9 +293,42 @@ describe('OnboardCtrl: Ctrl', function () {
       this.$scope.checkLicenseAvailability('MESSAGING', true);
       expect(this.$scope.licenseCheckModal).toHaveBeenCalled();
     });
-    it('should not launch modal when sufficient licenses are available', function () {
-      this.$scope.checkLicenseAvailability('COMMUNICATION', false);
-      expect(this.$scope.licenseCheckModal).not.toHaveBeenCalled();
+  });
+
+  describe('disableCommCheckbox()', function () {
+    beforeEach(initController);
+    it('should return true if the communication licenseId is not the same as the selected one', function () {
+      this.$scope.currentUserEnablesCall = true;
+      this.$scope.selectedCommFeature = {
+        license: {
+          licenseId: 'CO_12345',
+        },
+      };
+      var currentCommFeature = {
+        license: {
+          licenseId: 'CO_6789',
+        },
+      };
+      var result = this.$scope.disableCommCheckbox(currentCommFeature);
+      this.$scope.$apply();
+      expect(result).toBeTruthy();
+    });
+
+    it('should return false if the communication licenseId is not same as the selected one', function () {
+      this.$scope.currentUserEnablesCall = true;
+      this.$scope.selectedCommFeature = {
+        license: {
+          licenseId: 'CO_12345',
+        },
+      };
+      var currentCommFeature = {
+        license: {
+          licenseId: 'CO_12345',
+        },
+      };
+      var result = this.$scope.disableCommCheckbox(currentCommFeature);
+      this.$scope.$apply();
+      expect(result).toBeFalsy();
     });
   });
 
@@ -471,7 +505,7 @@ describe('OnboardCtrl: Ctrl', function () {
         },
         userName: 'dntodid1@gmail.com',
       }];
-      this.$scope.radioStates.commRadio = 'true';
+      this.$scope.currentUserEnablesCall = true;
       this.$scope.internalNumberPool = this.mock.internalNumbers;
       this.$scope.externalNumberPool = this.mock.externalNumberPool;
       this.$scope.$apply();
@@ -551,6 +585,122 @@ describe('OnboardCtrl: Ctrl', function () {
     });
   });
 
+  describe('With assigning call licenses', function () {
+    describe('Check when there is no ciscouc assigned at all', function () {
+      beforeEach(function () {
+        this.$stateParams.currentUser = {
+          licenseID: [],
+          entitlements: [],
+        };
+      });
+      beforeEach(initController);
+
+      it('should initialized currentUserEnablesCall to false', function () {
+        expect(this.$scope.currentUserEnablesCall).toBeFalsy();
+      });
+    });
+
+    describe('Check when there is an existing ciscouc license', function () {
+      beforeEach(function () {
+        this.$stateParams.currentUser = {
+          licenseID: ['CO_3cd433a5-c140-4ee5-bfb8'],
+          entitlements: ['ciscouc'],
+        };
+      });
+      beforeEach(initController);
+
+      it('should initialized currentUserEnablesCall to true', function () {
+        expect(this.$scope.currentUserEnablesCall).toBeTruthy();
+      });
+    });
+
+    describe('Check if licenses get assigned correctly when adding a license', function () {
+      beforeEach(function () {
+        spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
+        spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
+        spyOn(this.Authinfo, 'getCommunicationServices').and.returnValue(this.mock.getCommunicationServices.multipleLicenses);
+        this.$stateParams.currentUser = {
+          licenseID: [],
+          entitlements: [],
+        };
+      });
+      beforeEach(initController);
+
+      it('should initialized commFeatures to have 3 elements', function () {
+        expect(this.$scope.communicationFeatures.length).toEqual(3);
+      });
+
+      it('should set the correct usage to the communication licenses', function () {
+        var index = _.findIndex(this.$scope.communicationFeatures, function (commFeature) {
+          return commFeature.license.licenseId === 'CO_3cd433a5-c140-4ee5-bfb8';
+        });
+        expect(this.$scope.communicationFeatures[index].license.usage).toEqual(2);
+      });
+
+      it('should call getAccountLicenses correctly to add a communication license', function () {
+        this.$scope.currentUserEnablesCall = true;
+        this.$scope.selectedCommFeature = this.mock.getCommunicationServices.multipleLicenses[1];
+        var licenseFeatures = this.$scope.getAccountLicenses();
+        this.$scope.$apply();
+        expect(licenseFeatures.length).toEqual(1);
+        expect(licenseFeatures[0].id).toBe('CO_cb9b68a9-ee2d-4896-bc8d-0f4dd830b47d');
+        expect(licenseFeatures[0].idOperation).toBe('ADD');
+      });
+    });
+
+    describe('Check if licenses get assigned correctly when deleting a license', function () {
+      beforeEach(function () {
+        spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
+        spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
+        spyOn(this.Authinfo, 'getCommunicationServices').and.returnValue(this.mock.getCommunicationServices.multipleLicenses);
+        this.$stateParams.currentUser = {
+          licenseID: ['CO_3cd433a5-c140-4ee5-bfb8'],
+          entitlements: ['ciscouc'],
+        };
+      });
+      beforeEach(initController);
+
+      it('should set the data to the current communication license', function () {
+        expect(this.$scope.currentUserCommFeature.license.licenseId).toEqual('CO_3cd433a5-c140-4ee5-bfb8');
+        expect(this.$scope.selectedCommFeature.license.licenseId).toEqual('CO_3cd433a5-c140-4ee5-bfb8');
+        expect(this.$scope.selectedCommFeature.commRadio).toBeTruthy();
+      });
+
+      it('should call getAccountLicenses correctly to remove the license', function () {
+        this.$scope.currentUserEnablesCall = false;
+        var licenseFeatures = this.$scope.getAccountLicenses('patch');
+        this.$scope.$apply();
+        expect(licenseFeatures.length).toEqual(1);
+        expect(licenseFeatures[0].id).toBe('CO_3cd433a5-c140-4ee5-bfb8');
+        expect(licenseFeatures[0].idOperation).toBe('REMOVE');
+      });
+    });
+
+    describe('Check if licenses get assigned correctly when swapping licenses', function () {
+      beforeEach(function () {
+        spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
+        spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
+        spyOn(this.Authinfo, 'getCommunicationServices').and.returnValue(this.mock.getCommunicationServices.multipleLicenses);
+        this.$stateParams.currentUser = {
+          licenseID: ['CO_3cd433a5-c140-4ee5-bfb8'],
+          entitlements: ['ciscouc'],
+        };
+      });
+      beforeEach(initController);
+
+      it('should call getAccountLicenses correctly to move/swap the licenses', function () {
+        this.$scope.selectedCommFeature = this.mock.getCommunicationServices.multipleLicenses[1];
+        var licenseFeatures = this.$scope.getAccountLicenses();
+        this.$scope.$apply();
+        expect(licenseFeatures.length).toEqual(2);
+        expect(licenseFeatures[0].id).toBe('CO_3cd433a5-c140-4ee5-bfb8');
+        expect(licenseFeatures[0].idOperation).toBe('REMOVE');
+        expect(licenseFeatures[1].id).toBe('CO_cb9b68a9-ee2d-4896-bc8d-0f4dd830b47d');
+        expect(licenseFeatures[1].idOperation).toBe('ADD');
+      });
+    });
+  });
+
   describe('filterList', function () {
     beforeEach(initController);
     it('a proper query should call out to organizationService', function () {
@@ -570,17 +720,17 @@ describe('OnboardCtrl: Ctrl', function () {
         afterEach(expectShouldAddCallService);
 
         it('if both commRadio and ciscoUC are enabled', function () {
-          this.$scope.radioStates.commRadio = true;
+          this.$scope.currentUserEnablesCall = true;
           this.$scope.entitlements.ciscoUC = true;
         });
 
         it('if commRadio is enabled', function () {
-          this.$scope.radioStates.commRadio = true;
+          this.$scope.currentUserEnablesCall = true;
           this.$scope.entitlements.ciscoUC = false;
         });
 
         it('if ciscoUC is enabled', function () {
-          this.$scope.radioStates.commRadio = false;
+          this.$scope.currentUserEnablesCall = false;
           this.$scope.entitlements.ciscoUC = true;
         });
       });
@@ -589,7 +739,7 @@ describe('OnboardCtrl: Ctrl', function () {
         afterEach(expectShouldNotAddCallService);
 
         it('if neither commRadio or ciscoUC is enabled', function () {
-          this.$scope.radioStates.commRadio = false;
+          this.$scope.currentUserEnablesCall = false;
           this.$scope.entitlements.ciscoUC = false;
         });
       });
@@ -601,22 +751,22 @@ describe('OnboardCtrl: Ctrl', function () {
       afterEach(expectShouldNotAddCallService);
 
       it('if both commRadio and ciscoUC are enabled', function () {
-        this.$scope.radioStates.commRadio = true;
+        this.$scope.currentUserEnablesCall = true;
         this.$scope.entitlements.ciscoUC = true;
       });
 
       it('if commRadio is enabled', function () {
-        this.$scope.radioStates.commRadio = true;
+        this.$scope.currentUserEnablesCall = true;
         this.$scope.entitlements.ciscoUC = false;
       });
 
       it('if ciscoUC is enabled', function () {
-        this.$scope.radioStates.commRadio = false;
+        this.$scope.currentUserEnablesCall = false;
         this.$scope.entitlements.ciscoUC = true;
       });
 
       it('if neither commRadio or ciscoUC is enabled', function () {
-        this.$scope.radioStates.commRadio = false;
+        this.$scope.currentUserEnablesCall = false;
         this.$scope.entitlements.ciscoUC = false;
       });
     });
@@ -1386,7 +1536,7 @@ describe('OnboardCtrl: Ctrl', function () {
   });
 
   function initUserShouldAddCall() {
-    this.$scope.radioStates.commRadio = true;
+    this.$scope.currentUserEnablesCall = true;
     this.$scope.$apply();
   }
 
