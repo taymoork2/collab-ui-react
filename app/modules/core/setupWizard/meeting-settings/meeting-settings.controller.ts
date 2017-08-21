@@ -84,47 +84,6 @@ export class MeetingSettingsCtrl {
     if (!_.isEmpty(webexSitesData)) {
       this.updateSitesArray(_.get(webexSitesData, 'webexLicencesPayload.webexProvisioningParams.webexSiteDetailsList'));
     }
-    const validateTransferCodeSitePair = this.$rootScope.$on('wizard-meeting-settings-migrate-site-event', (): void => {
-      if (_.isEmpty(this.transferSiteDetails.siteUrl) && _.isEmpty(this.transferSiteDetails.transferCode)) {
-        this.nextButtonDisabledStatus = false;
-        this.stripTransferredSitesFromSitesArray();
-        this.$rootScope.$emit('wizard-meeting-settings-transfer-code-validated');
-        return;
-      }
-      if (!(_.endsWith(this.transferSiteDetails.siteUrl, '.webex.com'))) {
-        this.transferSiteDetails.siteUrl += this.Config.siteDomainUrl.webexUrl;
-      }
-      this.SetupWizardService.validateTransferCode(this.transferSiteDetails).then((response) => {
-        const status = _.get(response, 'data.status');
-        if (!status || status !== 'INVALID') {
-          // if transferred sites have already been added and the back button clicked, strip old sites.
-          if (!_.isEmpty(this.sitesArray)) {
-            this.stripTransferredSitesFromSitesArray();
-          }
-          const transferredSitesArray = _.get(response, 'data.siteList');
-          _.forEach(transferredSitesArray, (site) => {
-            if (!(_.some(this.sitesArray, { siteUrl: site.siteUrl }))) {
-              const transferredSiteModel = _.clone(this.siteModel);
-              transferredSiteModel.siteUrl = site.siteUrl.replace(this.Config.siteDomainUrl.webexUrl, ''),
-              transferredSiteModel.timezone = this.findTimezoneObject(site.timezone);
-              transferredSiteModel.setupType = this.Config.setupTypes.transfer;
-              this.sitesArray.push(transferredSiteModel);
-            }
-          });
-          this.constructDistributedSitesArray();
-          return this.$rootScope.$emit('wizard-meeting-settings-transfer-code-validated');
-        } else {
-          this.nextButtonDisabledStatus = true;
-          _.set(this.$scope.wizard, 'isNextDisabled', true);
-          this.showError(this.$translate.instant('firstTimeWizard.transferCodeInvalidError'));
-        }
-      }).catch((response) => {
-        this.Notification.errorWithTrackingId(response, 'firstTimeWizard.webexProvisioningError');
-      });
-    });
-    this.$scope.$on('$destroy', () => {
-      validateTransferCodeSitePair();
-    });
 
     if (this.SetupWizardService.hasTSPAudioPackage()) {
       this.populateTSPPartnerOptions();
@@ -177,6 +136,48 @@ export class MeetingSettingsCtrl {
 
     this.pushProvisioningCallIntoQueue();
     return this.$q.resolve();
+  }
+
+  public migrateTrialNext(): ng.IPromise<any> {
+    if (_.isEmpty(this.transferSiteDetails.siteUrl) && _.isEmpty(this.transferSiteDetails.transferCode)) {
+      this.nextButtonDisabledStatus = false;
+      this.stripTransferredSitesFromSitesArray();
+      return this.$q.resolve();
+    }
+    if (!(_.endsWith(this.transferSiteDetails.siteUrl, '.webex.com'))) {
+      this.transferSiteDetails.siteUrl += this.Config.siteDomainUrl.webexUrl;
+    }
+    return this.SetupWizardService.validateTransferCode(this.transferSiteDetails).then((response) => {
+      const status = _.get(response, 'data.status');
+      if (!status || status !== 'INVALID') {
+        // if transferred sites have already been added and the back button clicked, strip old sites.
+        if (!_.isEmpty(this.sitesArray)) {
+          this.stripTransferredSitesFromSitesArray();
+        }
+        const transferredSitesArray = _.get(response, 'data.siteList');
+        _.forEach(transferredSitesArray, (site) => {
+          if (!(_.some(this.sitesArray, { siteUrl: site.siteUrl }))) {
+            const transferredSiteModel = _.clone(this.siteModel);
+            transferredSiteModel.siteUrl = site.siteUrl.replace(this.Config.siteDomainUrl.webexUrl, ''),
+            transferredSiteModel.timezone = this.findTimezoneObject(site.timezone);
+            transferredSiteModel.setupType = this.Config.setupTypes.transfer;
+            this.sitesArray.push(transferredSiteModel);
+          }
+        });
+        this.constructDistributedSitesArray();
+        return this.$q.resolve();
+      } else {
+        this.nextButtonDisabledStatus = true;
+        _.set(this.$scope.wizard, 'isNextDisabled', true);
+        this.showError(this.$translate.instant('firstTimeWizard.transferCodeInvalidError'));
+        return this.$q.reject();
+      }
+    }).catch((response) => {
+      if (response) {
+        this.Notification.errorWithTrackingId(response, 'firstTimeWizard.transferCodeError');
+      }
+      return this.$q.reject();
+    });
   }
 
   private updateSitesArray(sites) {
