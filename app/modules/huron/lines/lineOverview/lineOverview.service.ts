@@ -116,21 +116,6 @@ export class LineOverviewService {
     } else { // update
       const promises: ng.IPromise<any>[] = [];
       let isLineUpdated: boolean = false;
-      if (!_.isEqual(data.line, _.get(this, 'lineOverviewDataCopy.line'))) {
-        this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1485)
-          .then ((result) => {
-            if (result) {
-              // for line label, if unchanged not push anything
-              if (_.isEqual(data.line.label, _.get(this, 'lineOverviewDataCopy.line.label'))) {
-                data.line.label = null;
-              }
-            } else {
-              data.line.label = undefined;
-            }
-          });
-        promises.push(this.updateLine(consumerType, ownerId, numberId, data.line));
-        isLineUpdated = true;
-      }
 
       if (!_.isEqual(data.callForward, this.lineOverviewDataCopy.callForward)) {
         promises.push(this.updateCallForward(consumerType, ownerId, numberId, data.callForward));
@@ -176,7 +161,18 @@ export class LineOverviewService {
 
       return this.$q.all(promises)
         .then(() => this.rejectAndNotifyPossibleErrors())
-        .then<any>(() => {
+        .then(() => {
+          // update line needs to come after shared line updates
+          if (!_.isEqual(data.line, _.get(this, 'lineOverviewDataCopy.line'))) {
+            // if nothing changed in line label fields, do not send anything to backend
+            if (_.isEqual(data.line.label, _.get(this, 'lineOverviewDataCopy.line.label'))) {
+              data.line.label = null;
+            }
+            isLineUpdated = true;
+            return this.updateLine(consumerType, ownerId, numberId, data.line);
+          }
+        })
+        .then(() => {
           if (!_.isEqual(data.callerId, this.lineOverviewDataCopy.callerId)) {
             return this.updateCallerId(consumerType, ownerId, numberId, data.callerId);
           }

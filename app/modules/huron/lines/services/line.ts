@@ -22,7 +22,7 @@ export class Line {
   public external: string | null | undefined;
   public siteToSite: string;
   public incomingCallMaximum: number;
-  public label: LineLabel | null | undefined;
+  public label: LineLabel | null;
 
   constructor(obj: {
     uuid?: string,
@@ -32,7 +32,7 @@ export class Line {
     external?: string | null,
     siteToSite: string,
     incomingCallMaximum: number,
-    label: LineLabel | null | undefined,
+    label: LineLabel | null,
   } = {
     uuid: undefined,
     primary: false,
