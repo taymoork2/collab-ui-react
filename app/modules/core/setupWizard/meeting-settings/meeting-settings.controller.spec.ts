@@ -118,10 +118,8 @@ describe('Controller: MeetingSettingsCtrl', () => {
       initController.apply(this);
       this.controller.showTransferCodeInput = true;
       this.controller.centerDetails = [{ centerType: 'EE' }];
-      this.controller.transferSiteDetails = {
-        siteUrl: 'mywebexsite',
-        transferCode: '12345678',
-      };
+      this.controller.transferSiteUrl = 'mywebexsite';
+      this.controller.transferSiteCode = '12345678';
       this.$scope.$apply();
       this.controller.migrateTrialNext();
       this.$scope.$digest();
@@ -151,10 +149,8 @@ describe('Controller: MeetingSettingsCtrl', () => {
       initController.apply(this);
       this.controller.showTransferCodeInput = true;
       this.controller.centerDetails = [{ centerType: 'EE' }];
-      this.controller.transferSiteDetails = {
-        siteUrl: 'mywebexsite',
-        transferCode: '12345678',
-      };
+      this.controller.transferSiteUrl = 'mywebexsite';
+      this.controller.transferSiteCode = '12345678';
       this.controller.sitesArray = [
         {
           siteUrl: 'myFirstTransferredSite',
