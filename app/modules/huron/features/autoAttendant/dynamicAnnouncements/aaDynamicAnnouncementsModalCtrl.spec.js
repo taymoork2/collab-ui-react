@@ -106,6 +106,7 @@ describe('Controller: AADynamicAnnouncementsModalCtrl', function () {
           $modalInstance: modalFake,
           variableSelection: selection,
           readAsSelection: selection,
+          aaElementType: 'SayMessage',
         });
         $scope.$apply();
       });
@@ -116,7 +117,6 @@ describe('Controller: AADynamicAnnouncementsModalCtrl', function () {
         expect(controller.variableOptions.length).toBe(12);
       });
     });
-          aaElementType: 'SayMessage',
 
     describe('modal close', function () {
       beforeEach(function () {

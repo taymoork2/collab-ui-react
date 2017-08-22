@@ -17,7 +17,7 @@
             <div ng-if = "aaMessageType.fullWarningMsgValue" class="aa-full-warning" data-ng-bind = "aaMessageType.deletedSessionVariablesListAlongWithWarning"></div>
           </div>
         </div>
-        <aa-add-variable dynamic-prompt-id="messageType{{schedule + index + menuKeyIndex + menuId}}" aa-menu-id="{{menuId}}" aa-key-index="{{menuKeyIndex}}" aa-menu-header="{{isMenuHeader}}" aa-element-type="SayMessage" aa-schedule="{{schedule}}" aa-index="index" dynamic-element-string="aaMessageType.addElement"></aa-add-variable>
+        <aa-add-variable aa-announcement-type="{{type}}" dynamic-prompt-id="messageType{{schedule + index + menuKeyIndex + menuId + type}}" aa-menu-id="{{menuId}}" aa-key-index="{{menuKeyIndex}}" aa-menu-header="{{isMenuHeader}}" aa-element-type="SayMessage" aa-schedule="{{schedule}}" aa-index="index" dynamic-element-string="aaMessageType.addElement"></aa-add-variable>
       </div>
       <div ng-if="!aaMessageType.isDynamicToggle()" class="aa-message-only-type large-12 small-12 columns">
         <textarea class="aa-message-type-textarea" aa-keypress ng-change="aaMessageType.saveUiModel()" ng-model="aaMessageType.messageInput" type="text" id="messageType{{ schedule + index + menuKeyIndex }}" name="messageInput" placeholder="{{ :: aaMessageType.messageInputPlaceholder }}" rows="4" maxlength="2000"></textarea>

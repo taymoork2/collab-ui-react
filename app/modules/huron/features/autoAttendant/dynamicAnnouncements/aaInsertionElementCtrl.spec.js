@@ -292,10 +292,6 @@ describe('Controller: AAInsertionElementCtrl', function () {
       controller.closeClickFn();
       expect(controller.elementText).toBe('');
       expect(controller.readAs).toBe('');
-      expect(controller.elementText).toBe('');
-      expect(controller.readAs).toBe('');
-      expect(controller.elementText).toBe('');
-      expect(controller.readAs).toBe('');
     });
 
     it('should clear out elementText and readAs upon calling of closeClickFn from initial announcement queueSettings', function () {
@@ -332,8 +328,8 @@ describe('Controller: AAInsertionElementCtrl', function () {
       $scope.type = 'initialAnnouncement';
 
       controller.closeClickFn();
-      expect(controller.elementText).toEqual('');
-      expect(controller.readAs).toEqual('');
+      expect(controller.elementText).toBe('');
+      expect(controller.readAs).toBe('');
     });
 
     it('should clear out elementText and readAs upon calling of closeClickFn from periodic announcement queueSettings', function () {
@@ -369,8 +365,8 @@ describe('Controller: AAInsertionElementCtrl', function () {
       $scope.elementId = 'periodicAnnouncementTest';
       $scope.type = 'periodicAnnouncement';
       controller.closeClickFn();
-      expect(controller.elementText).toEqual('');
-      expect(controller.readAs).toEqual('');
+      expect(controller.elementText).toBe('');
+      expect(controller.readAs).toBe('');
     });
   });
 });

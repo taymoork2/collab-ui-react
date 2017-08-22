@@ -733,6 +733,7 @@ describe('Huron Auto Attendant', function () {
 
       utils.click(autoattendant.restResponseDataBlock);
       utils.wait(autoattendant.restResponseDataBlock, 20000);
+      utils.sendKeys(autoattendant.restResponseDataBlock, "Test Response Block 1");
 
       utils.click(autoattendant.sessionVar);
       utils.click(autoattendant.newSessionVar);
