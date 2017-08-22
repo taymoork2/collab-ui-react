@@ -1,6 +1,6 @@
 <div ng-form="meetingCtrl.licenseDistributionForm">
 <div class="meeting-settings">
-  <div ng-init="meetingCtrl.enableOrDisableNext(meetingCtrl.steps.SITES_LICENSES)" class="distribute-licenses-heading">
+  <div ng-init="meetingCtrl.initLicenseDistributionStep()" class="distribute-licenses-heading">
     <h4 translate="firstTimeWizard.distributeYourWebExLicenses"></h4>
   </div>
   <div ng-repeat="licenses in meetingCtrl.distributedLicensesArray">

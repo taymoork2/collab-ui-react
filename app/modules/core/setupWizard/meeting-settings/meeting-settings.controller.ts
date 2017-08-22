@@ -253,7 +253,6 @@ export class MeetingSettingsCtrl {
     this.validateWebexSiteUrl(siteName).then((response) => {
       if (response.isValid && (response.errorCode === 'validSite')) {
         this.sitesArray.push(_.clone(this.siteModel));
-        this.constructDistributedSitesArray();
         this.clearInputs();
       } else {
         if (response.errorCode === 'duplicateSite') {
@@ -272,7 +271,6 @@ export class MeetingSettingsCtrl {
 
   public removeSite(index: number): void {
     this.sitesArray.splice(index, 1);
-    this.constructDistributedSitesArray();
   }
 
   public sumOfWebExLicensesAssigned(siteArray) {
@@ -364,7 +362,6 @@ export class MeetingSettingsCtrl {
       });
     }
     this.sitesArray = _.uniq(this.sitesArray);
-    this.constructDistributedSitesArray();
   }
 
   private getWebExMeetingsLicenseTypeDetails() {
@@ -442,6 +439,11 @@ export class MeetingSettingsCtrl {
     }
   }
 
+  public initLicenseDistributionStep(): void {
+    this.constructDistributedSitesArray();
+    this.enableOrDisableNext(this.steps.SITES_LICENSES);
+  }
+
   private constructDistributedSitesArray(): void {
     this.distributedLicensesArray = _.map(this.sitesArray, (site: IWebExSite) => {
       return _.map(this.centerDetails, (center) => {
@@ -514,10 +516,6 @@ export class MeetingSettingsCtrl {
         keepExistingSite: true,
       };
     }));
-
-    if (!_.isEmpty(this.sitesArray)) {
-      this.constructDistributedSitesArray();
-    }
   }
 
   private validateWebexSiteUrl(siteName): ng.IPromise<any> {
