@@ -6,7 +6,7 @@ require('./_site-list.scss');
   angular
     .module('Core')
     .controller('WebExSiteRowCtrl', WebExSiteRowCtrl);
-    //TokenService, WebExUtilsFact,
+  //TokenService, WebExUtilsFact,
 
   /*@ngInject*/
   function WebExSiteRowCtrl($scope, $sce, $state, $timeout, TokenService, WebExUtilsFact, WebExSiteRowService) {

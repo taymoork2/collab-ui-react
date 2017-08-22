@@ -2,8 +2,8 @@
   'use strict';
 
   angular
-  .module('uc.autoattendant')
-  .controller('AASayMessageCtrl', AASayMessageCtrl);
+    .module('uc.autoattendant')
+    .controller('AASayMessageCtrl', AASayMessageCtrl);
 
   /* @ngInject */
   function AASayMessageCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AALanguageService, AACommonService) {

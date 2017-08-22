@@ -1,6 +1,7 @@
 import './settings.component.scss';
 
 import { HuronSettingsComponent } from './settings.component';
+import { CallSettingsComponent } from './settings-location.component';
 
 //module dependancy names
 import huronSettingsServiceModule from 'modules/call/settings/shared';
@@ -11,10 +12,11 @@ import preferredLanguageModule from 'modules/call/settings/settings-preferred-la
 import extensionRangeModule from 'modules/call/settings/settings-extension-range';
 import extensionLengthModule from 'modules/call/settings/settings-extension-length';
 import routingPrefixModule from 'modules/call/settings/settings-routing-prefix';
-import timeZoneModule from 'modules/call/settings/settings-time-zone';
+import timeZoneModule from 'modules/call/shared/settings-time-zone';
 import outboundDialDigitModule from 'modules/call/settings/settings-outbound-dial-digit';
 import companyVoicemailModule from 'modules/call/settings/settings-company-voicemail';
 import companyVoicemailAvrilModule from 'modules/call/settings/settings-company-voicemail-avril';
+import companyVoicemailLocationModule from 'modules/call/settings/settings-company-voicemail-locations';
 import dialingModule from 'modules/call/settings/settings-dialing';
 import timeFormatModule from 'modules/call/settings/settings-time-format';
 import dateFormatModule from 'modules/call/settings/settings-date-format';
@@ -51,6 +53,7 @@ export default angular
     outboundDialDigitModule,
     companyVoicemailModule,
     companyVoicemailAvrilModule,
+    companyVoicemailLocationModule,
     dialingModule,
     timeFormatModule,
     dateFormatModule,
@@ -70,4 +73,5 @@ export default angular
     trialRegionalSettings,
   ])
   .component('ucSettings', new HuronSettingsComponent())
+  .component('ucCallSettings', new CallSettingsComponent())
   .name;

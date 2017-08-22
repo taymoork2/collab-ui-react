@@ -14,10 +14,6 @@
         action-list="$ctrl.actionList"
         show-actions="$ctrl.showActions">
       </section-title>
-      <uc-line-label     
-        line-label="$ctrl.lineOverviewData.line.label.value"
-        ng-if="$ctrl.lineOverviewData.line.uuid">
-      </uc-line-label>
       <uc-directory-number
         show-internal-extensions="$ctrl.showExtensions"
         esn-prefix="$ctrl.esnPrefix"
@@ -44,6 +40,14 @@
         ng-if="!$ctrl.isCloudberryPlace()"
         on-change-fn="$ctrl.setSimultaneousCalls(incomingCallMaximum)">
       </uc-simultaneous-calls>
+      <uc-line-label     
+        line-label="$ctrl.lineOverviewData.line.label.value"
+        apply-to-all-shared-lines="$ctrl.applyToAllSharedLines"
+        ng-hide="!$ctrl.showLineLabel"     
+        ng-if="$ctrl.lineOverviewData.line.uuid"
+        show-apply-to-all-shared-lines="$ctrl.showApplyToAllSharedLines"
+        on-change-fn="$ctrl.setLineLabel(lineLabel, applyToAllSharedLines)">
+      </uc-line-label>      
       <uc-caller-id
         caller-id-options="$ctrl.callerIdOptions"
         custom-caller-id-name="$ctrl.lineOverviewData.callerId.customCallerIdName"
@@ -61,6 +65,8 @@
       <uc-media-on-hold
         cr-feature-toggle feature-show="huron-moh-enable"
         ng-if="$ctrl.isUserMohEnabled"
+        panel-title="$ctrl.panelTitle"
+        panel-desc="$ctrl.panelDesc"
         line-moh="$ctrl.lineOverviewData.lineMoh"
         line-moh-options="$ctrl.lineMediaOptions"
         on-change-fn="$ctrl.setLineMedia(lineMoh)">

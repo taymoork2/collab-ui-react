@@ -124,7 +124,7 @@ describe('Component: lineOverview', () => {
       expect(this.DirectoryNumberOptionsService.getInternalNumberOptions).toHaveBeenCalled();
       expect(this.LineOverviewService.getEsnPrefix).toHaveBeenCalled();
       expect(this.DirectoryNumberOptionsService.getExternalNumberOptions).toHaveBeenCalled();
-      expect(this.MediaOnHoldService.getLineMohOptions).not.toHaveBeenCalled();
+      expect(this.MediaOnHoldService.getLineMohOptions).toHaveBeenCalled();
       expect(this.view.find(LINE_LABEL_INPUT)).toExist();
       expect(this.view.find(LINE_LABEL_INPUT).val()).toEqual('someuser@some.com');
     });
@@ -154,6 +154,7 @@ describe('Component: lineOverview', () => {
         line: new Line(),
         callForward: new CallForward(),
       };
+      this.lineOverview.sharedLines = [];
       this.getInternalNumberOptionsDefer.resolve(this.internalNumbers);
       this.getLineOverviewDataDefer.resolve(this.lineOverview);
       this.getEsnPrefixDefer.resolve(this.esnPrefix);
@@ -206,7 +207,7 @@ describe('Component: lineOverview', () => {
 
     it('should initialize assigned number and notify failure for internal number pool', function () {
       expect(this.LineOverviewService.get).toHaveBeenCalled();
-      expect(this.MediaOnHoldService.getLineMohOptions).not.toHaveBeenCalled();
+      expect(this.MediaOnHoldService.getLineMohOptions).toHaveBeenCalled();
       expect(this.lineOverview.line.internal).toEqual('1234');
       expect(this.DirectoryNumberOptionsService.getInternalNumberOptions).toHaveBeenCalled();
       expect(this.LineOverviewService.getEsnPrefix).toHaveBeenCalled();

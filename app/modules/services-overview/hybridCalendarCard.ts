@@ -1,6 +1,5 @@
 import { ICardButton, CardType } from './ServicesOverviewCard';
 import { ServicesOverviewHybridCard } from './ServicesOverviewHybridCard';
-import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 
 export class ServicesOverviewHybridCalendarCard extends ServicesOverviewHybridCard {
   public getShowMoreButton(): ICardButton | undefined {
@@ -33,7 +32,6 @@ export class ServicesOverviewHybridCalendarCard extends ServicesOverviewHybridCa
   /* @ngInject */
   public constructor(
     Authinfo,
-    HybridServicesClusterStatesService: HybridServicesClusterStatesService,
   ) {
     super({
       active: false,
@@ -42,8 +40,8 @@ export class ServicesOverviewHybridCalendarCard extends ServicesOverviewHybridCa
       description: 'servicesOverview.cards.hybridCalendar.description',
       name: 'servicesOverview.cards.hybridCalendar.title',
       routerState: 'calendar-service.list',
-      service: 'squared-fusion-cal',
-    }, HybridServicesClusterStatesService);
+      serviceId: 'squared-fusion-cal',
+    });
     this.display = Authinfo.isFusionCal() && !Authinfo.isFusionGoogleCal();
   }
 }

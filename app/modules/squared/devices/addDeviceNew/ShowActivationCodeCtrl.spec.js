@@ -441,6 +441,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
     var deviceOrgId;
     var activationCode;
     var expiryTime;
+    var locationUuid;
     var directoryNumber;
     var externalNumber;
     var userEmail;
@@ -449,6 +450,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
     var cloudberryExistingPlace;
     var cloudberryNewPlaceWithoutCalendar;
     var huronNewPlace;
+    var huronNewPlaceWithLocation;
     var huronExistingPlace;
     var huronExistingUser;
     var noTypeExistingUserEntitled;
@@ -566,6 +568,29 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
           };
         },
       };
+      huronNewPlaceWithLocation = {
+        state: function () {
+          return {
+            data: {
+              account: {
+                deviceType: 'huron',
+                type: 'shared',
+                name: deviceName,
+                organizationId: deviceOrgId,
+                entitlements: entitlements,
+                locationUuid: 'TestLocation',
+                directoryNumber: directoryNumber,
+                externalNumber: externalNumber,
+              },
+              recipient: {
+                organizationId: userOrgId,
+                cisUuid: userCisUuid,
+                email: userEmail,
+              },
+            },
+          };
+        },
+      };
       huronExistingPlace = {
         state: function () {
           return {
@@ -667,13 +692,13 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
             activationCode: activationCode,
             expiryTime: expiryTime,
           }));
-          spyOn(USSService, 'updateUserProps').and.returnValue($q.resolve({}));
+          spyOn(USSService, 'updateBulkUserProps').and.returnValue($q.resolve({}));
           initController();
           $scope.$digest();
         });
 
         it('creates a new place and otp', function () {
-          expect(CsdmDataModelService.createCsdmPlace).toHaveBeenCalledWith(deviceName, entitlements, directoryNumber, externalNumber, externalIdentifiers);
+          expect(CsdmDataModelService.createCsdmPlace).toHaveBeenCalledWith(deviceName, entitlements, locationUuid, directoryNumber, externalNumber, externalIdentifiers);
           expect(CsdmDataModelService.createCodeForExisting).toHaveBeenCalledWith(cisUuid);
           expect(controller.qrCode).toBeTruthy();
           expect(controller.activationCode).toBe(activationCode);
@@ -695,11 +720,11 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
 
           it('should try to send email and notify error', function () {
             spyOn(CsdmEmailService, 'sendCloudberryEmail').and.returnValue($q.reject({}));
-            spyOn(Notification, 'notify').and.callThrough();
+            spyOn(Notification, 'errorResponse');
 
             controller.sendActivationCodeEmail();
             $scope.$digest();
-            expect(Notification.notify).toHaveBeenCalledTimes(1);
+            expect(Notification.errorResponse).toHaveBeenCalledTimes(1);
           });
         });
       });
@@ -717,7 +742,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
         });
 
         it('creates a new place and otp', function () {
-          expect(CsdmDataModelService.createCsdmPlace).toHaveBeenCalledWith(deviceName, entitlements, directoryNumber, externalNumber, null);
+          expect(CsdmDataModelService.createCsdmPlace).toHaveBeenCalledWith(deviceName, entitlements, locationUuid, directoryNumber, externalNumber, null);
           expect(CsdmDataModelService.createCodeForExisting).toHaveBeenCalledWith(cisUuid);
           expect(controller.qrCode).toBeTruthy();
           expect(controller.activationCode).toBe(activationCode);
@@ -759,12 +784,33 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
 
           it('should try to send email and notify error', function () {
             spyOn(CsdmEmailService, 'sendCloudberryEmail').and.returnValue($q.reject({}));
-            spyOn(Notification, 'notify').and.callThrough();
+            spyOn(Notification, 'errorResponse');
 
             controller.sendActivationCodeEmail();
             $scope.$digest();
-            expect(Notification.notify).toHaveBeenCalledTimes(1);
+            expect(Notification.errorResponse).toHaveBeenCalledTimes(1);
           });
+        });
+      });
+    });
+
+    describe('of type huron with locationUuid', function () {
+      describe('with new place', function () {
+        beforeEach(function () {
+          stateParams.wizard = huronNewPlaceWithLocation;
+
+          spyOn(CsdmDataModelService, 'createCmiPlace').and.returnValue($q.resolve(huronNewPlaceWithLocation));
+          spyOn(CsdmHuronPlaceService, 'createOtp').and.returnValue($q.resolve({
+            activationCode: activationCode,
+            expiryTime: expiryTime,
+          }));
+          initController();
+          $scope.$digest();
+        });
+
+        it('creates a new place with Location', function () {
+          var validLocation = 'TestLocation';
+          expect(CsdmDataModelService.createCmiPlace).toHaveBeenCalledWith(deviceName, entitlements, validLocation, directoryNumber, externalNumber);
         });
       });
     });
@@ -787,7 +833,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
 
 
         it('creates a new place and otp', function () {
-          expect(CsdmDataModelService.createCmiPlace).toHaveBeenCalledWith(deviceName, entitlements, directoryNumber, externalNumber);
+          expect(CsdmDataModelService.createCmiPlace).toHaveBeenCalledWith(deviceName, entitlements, locationUuid, directoryNumber, externalNumber);
           expect(CsdmHuronPlaceService.createOtp).toHaveBeenCalledWith(cisUuid);
           expect(controller.qrCode).toBeTruthy();
           expect(controller.activationCode).toBe(activationCode);
@@ -810,11 +856,11 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
 
           it('should try to send email and notify error', function () {
             spyOn(CsdmEmailService, 'sendHuronEmail').and.returnValue($q.reject({}));
-            spyOn(Notification, 'notify').and.callThrough();
+            spyOn(Notification, 'errorResponse');
 
             controller.sendActivationCodeEmail();
             $scope.$digest();
-            expect(Notification.notify).toHaveBeenCalledTimes(1);
+            expect(Notification.errorResponse).toHaveBeenCalledTimes(1);
           });
         });
       });
@@ -852,11 +898,11 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
 
           it('should try to send email and notify error', function () {
             spyOn(CsdmEmailService, 'sendHuronEmail').and.returnValue($q.reject());
-            spyOn(Notification, 'notify').and.callThrough();
+            spyOn(Notification, 'errorResponse');
 
             controller.sendActivationCodeEmail();
             $scope.$digest();
-            expect(Notification.notify).toHaveBeenCalledTimes(1);
+            expect(Notification.errorResponse).toHaveBeenCalledTimes(1);
           });
         });
       });
@@ -901,11 +947,11 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
             spyOn(ActivationCodeEmailService, 'save').and.callFake(function (a, emailInfo, success, error) {
               error();
             });
-            spyOn(Notification, 'notify').and.callThrough();
+            spyOn(Notification, 'errorResponse');
 
             controller.sendActivationCodeEmail();
             $scope.$digest();
-            expect(Notification.notify).toHaveBeenCalled();
+            expect(Notification.errorResponse).toHaveBeenCalled();
           });
         });
       });
@@ -945,11 +991,11 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
 
           it('should try to send email and notify error', function () {
             spyOn(CsdmEmailService, 'sendPersonalEmail').and.returnValue($q.reject({}));
-            spyOn(Notification, 'notify').and.callThrough();
+            spyOn(Notification, 'errorResponse');
 
             controller.sendActivationCodeEmail();
             $scope.$digest();
-            expect(Notification.notify).toHaveBeenCalledTimes(1);
+            expect(Notification.errorResponse).toHaveBeenCalledTimes(1);
           });
         });
       });
@@ -987,11 +1033,11 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
 
           it('should try to send email and notify error', function () {
             spyOn(CsdmEmailService, 'sendPersonalCloudberryEmail').and.returnValue($q.reject({}));
-            spyOn(Notification, 'notify').and.callThrough();
+            spyOn(Notification, 'errorResponse');
 
             controller.sendActivationCodeEmail();
             $scope.$digest();
-            expect(Notification.notify).toHaveBeenCalledTimes(1);
+            expect(Notification.errorResponse).toHaveBeenCalledTimes(1);
           });
         });
       });

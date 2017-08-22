@@ -141,7 +141,7 @@ class ExtensionLengthCtrl implements ng.IComponentController {
   private openExtensionPrefixModal(): ng.IPromise<any> {
     return this.$modal.open({
       type: 'small',
-      template: '<uc-extension-prefix-modal class="ucExtensionPrefixModal" new-extension-length="' + this.extensionLength + '" old-extension-length="' + this.originalExtLength + '" dismiss="$dismiss()" close="$close()"></uc-extension-prefix-modal>',
+      template: `<uc-extension-prefix-modal class="ucExtensionPrefixModal" new-extension-length="${this.extensionLength}" old-extension-length="${this.originalExtLength}" dismiss="$dismiss()" close="$close()"></uc-extension-prefix-modal>`,
     }).result;
   }
 

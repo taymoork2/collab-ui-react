@@ -1,11 +1,13 @@
+import { ITimeoutService, IWindowService } from 'angular';
+
 (function () {
   'use strict';
 
   angular.module('Squared').service('WizardFactory', WizardFactory);
   /* @ngInject */
-  function WizardFactory($state) {
+  function WizardFactory($state, $timeout) {
     function create(state) {
-      return new Wizard($state, state);
+      return new Wizard($state, state, $timeout);
     }
 
     return {
@@ -16,7 +18,7 @@
 
 class Wizard {
 
-  constructor($state, private wizardState) {
+  constructor($state, private wizardState, private $timeout: ITimeoutService) {
     //TODO: remove this when refactored all to using newNext and newBack
     this.next = this.newNext.bind(this, $state);
     this.back = this.newBack.bind(this, $state);
@@ -44,6 +46,13 @@ class Wizard {
     $state.go(nav, {
       wizard: this,
     });
+  }
+
+  public scrollToBottom(window: IWindowService) {
+    this.$timeout(() => {
+      const modalBody = window.document.getElementsByClassName('modal-body')[0];
+      modalBody.scrollTop = modalBody.scrollHeight;
+    }, 200);
   }
 
   public state() {

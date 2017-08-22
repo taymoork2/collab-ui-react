@@ -34,6 +34,7 @@
         conferenceServicesWithoutSiteUrl: null,
         customerAccounts: [],
         customerType: null,
+        customerView: true,
         emails: null,
         entitleUserEnabled: null,
         hasAccount: false,
@@ -266,6 +267,12 @@
       getCustomerAccounts: function () {
         return authData.customerAccounts;
       },
+      isEnterpriseCustomer: function () {
+        var isEnterpriseCustomerType = _.some(authData.customerAccounts, { customerType: Config.customerTypes.enterprise });
+        var isPendingCustomerType = _.some(authData.customerAccounts, { customerType: Config.customerTypes.pending });
+        var isPartnerCommerceRelation = _.some(authData.customerAccounts, { commerceRelation: Config.commerceRelation.partner });
+        return isEnterpriseCustomerType || isPendingCustomerType || isPartnerCommerceRelation;
+      },
       // FIXME: ATLAS-1402
       // IMPORTANT: 'username' can possibly reflect a user's display name, use 'getPrimaryEmail()'
       //   if needing the email value that the user logged in with
@@ -410,6 +417,12 @@
       },
       isPending: function () {
         return _.eq(authData.customerType, 'Pending');
+      },
+      isCustomerView: function () {
+        return authData.customerView;
+      },
+      setCustomerView: function (bool) {
+        authData.customerView = bool;
       },
       isCSB: function () {
         return (_.eq(authData.customerType, 'CSB'));

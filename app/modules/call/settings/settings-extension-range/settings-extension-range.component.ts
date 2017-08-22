@@ -1,9 +1,9 @@
-import { Site } from 'modules/huron/sites';
-import { IExtensionRange } from 'modules/call/settings/settings-extension-range';
+import { InternalNumberRange } from 'modules/call/shared/internal-number-range';
 
 class ExtensionRangeCtrl implements ng.IComponentController {
-  public site: Site;
-  public numberRanges: IExtensionRange[];
+  public extensionLength: string;
+  public steeringDigit: string;
+  public numberRanges: InternalNumberRange[];
   public firstTimeSetup: boolean;
   public onChangeFn: Function;
   public extensionRangeForm: ng.IFormController;
@@ -73,9 +73,9 @@ class ExtensionRangeCtrl implements ng.IComponentController {
     this.onExtensionRangeChange();
   }
 
-  public steeringDigitOverlap(range: IExtensionRange) {
-    if (_.startsWith(range.beginNumber, this.site.steeringDigit) ||
-      _.startsWith(range.endNumber, this.site.steeringDigit)) {
+  public steeringDigitOverlap(range: InternalNumberRange) {
+    if (_.startsWith(range.beginNumber, this.steeringDigit) ||
+      _.startsWith(range.endNumber, this.steeringDigit)) {
       return true;
     }
     return false;
@@ -88,7 +88,7 @@ class ExtensionRangeCtrl implements ng.IComponentController {
     return true;
   }
 
-  public isDisabled(numberRange: IExtensionRange): boolean {
+  public isDisabled(numberRange: InternalNumberRange): boolean {
     return !_.isEmpty(numberRange.uuid);
   }
 
@@ -98,7 +98,8 @@ export class ExtensionRangeComponent implements ng.IComponentOptions {
   public controller = ExtensionRangeCtrl;
   public templateUrl = 'modules/call/settings/settings-extension-range/settings-extension-range.component.html';
   public bindings = {
-    site: '<',
+    steeringDigit: '<',
+    extensionLength: '<',
     numberRanges: '<',
     firstTimeSetup: '<',
     onChangeFn: '&',

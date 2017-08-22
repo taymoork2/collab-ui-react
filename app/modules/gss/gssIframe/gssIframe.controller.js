@@ -100,16 +100,16 @@
 
     function init() {
       vm.headerTabs = [{
-        title: 'gss.dashboard',
+        title: $translate.instant('gss.dashboard'),
         state: 'gss.dashboard',
       }, {
-        title: 'gss.services',
+        title: $translate.instant('gss.services'),
         state: 'gss.services',
       }, {
-        title: 'gss.components',
+        title: $translate.instant('gss.components'),
         state: 'gss.components',
       }, {
-        title: 'gss.incidents',
+        title: $translate.instant('gss.incidents'),
         state: 'gss.incidents',
       }];
 

@@ -8,11 +8,13 @@ require('./_overview.scss');
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($rootScope, $state, $scope, Authinfo, CardUtils, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, ProPackService, LearnMoreBannerService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, SunlightReportService, TrialService, UrlConfig, PstnService, HybridServicesUtilsService) {
+  function OverviewCtrl($q, $rootScope, $state, $scope, Authinfo, CardUtils, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, ProPackService, LearnMoreBannerService, Log, Notification, Orgservice, OverviewCardFactory, OverviewNotificationFactory, ReportsService, HybridServicesFlagService, SetupWizardService, SunlightReportService, TrialService, UrlConfig, PstnService, HybridServicesUtilsService) {
     var vm = this;
 
     var PSTN_TOS_ACCEPT = require('modules/huron/pstn/pstnTermsOfService').PSTN_TOS_ACCEPT;
     var PSTN_ESA_DISCLAIMER_ACCEPT = require('modules/huron/pstn/pstn.const').PSTN_ESA_DISCLAIMER_ACCEPT;
+
+    var proPackPurchased = false;
 
     vm.isCSB = Authinfo.isCSB();
     vm.isDeviceManagement = Authinfo.isDeviceMgmt();
@@ -22,7 +24,7 @@ require('./_overview.scss');
 
     vm.cards = [
       OverviewCardFactory.createMessageCard(),
-      OverviewCardFactory.createMeetingCard(),
+      OverviewCardFactory.createMeetingCard($scope),
       OverviewCardFactory.createCallCard(),
       OverviewCardFactory.createCareCard(),
       OverviewCardFactory.createRoomSystemsCard(),
@@ -34,6 +36,7 @@ require('./_overview.scss');
     vm.pstnToSNotification = null;
     vm.esaDisclaimerNotification = null;
     vm.trialDaysLeft = undefined;
+    vm.isEnterpriseCustomer = isEnterpriseCustomer;
     vm.dismissNotification = dismissNotification;
     vm.notificationComparator = notificationComparator;
     vm.ftHuronPstn = false;
@@ -41,14 +44,21 @@ require('./_overview.scss');
 
     ////////////////////////////////
 
-    ProPackService.hasProPackEnabledAndNotPurchased().then(function (proPackToggle) {
-      if (proPackToggle) {
+    $q.all({
+      enabledNotPurchased: ProPackService.hasProPackEnabledAndNotPurchased(),
+      purchased: ProPackService.hasProPackPurchased(),
+    }).then(function (proPackToggle) {
+      proPackPurchased = proPackToggle.purchased;
+
+      if (proPackToggle.enabledNotPurchased && isEnterpriseCustomer()) {
         $scope.$watch(function () {
-          return LearnMoreBannerService.isElementVisible(LearnMoreBannerService.HEADER_LOCATION);
+          return LearnMoreBannerService.isElementVisible(LearnMoreBannerService.OVERVIEW_LOCATION);
         }, function (visible) {
           vm.showLearnMoreNotification = !visible;
         });
       }
+
+      init();
     });
 
     var notificationOrder = [
@@ -57,6 +67,10 @@ require('./_overview.scss');
       'info',
       'new',
     ];
+
+    function isEnterpriseCustomer() {
+      return Authinfo.isEnterpriseCustomer();
+    }
 
     // used to sort notifications in a specific order
     function notificationComparator(a, b) {
@@ -90,9 +104,9 @@ require('./_overview.scss');
         Config.entitlements.mediafusion,
         Config.entitlements.hds,
       ])
-      .filter(Authinfo.isEntitled)
-      .map(HybridServicesUtilsService.getAckFlagForHybridServiceId)
-      .value();
+        .filter(Authinfo.isEntitled)
+        .map(HybridServicesUtilsService.getAckFlagForHybridServiceId)
+        .value();
       hybridServiceNotificationFlags.push(hybridCallHighAvailability);
 
       HybridServicesFlagService
@@ -110,7 +124,7 @@ require('./_overview.scss');
                 vm.notifications.push(OverviewNotificationFactory.createCallConnectNotification());
               } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.mediafusion)) {
                 vm.notifications.push(OverviewNotificationFactory.createHybridMediaNotification());
-              } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.hds)) {
+              } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.hds) && proPackPurchased) {
                 vm.notifications.push(OverviewNotificationFactory.createHybridDataSecurityNotification());
               } else if (flag.name === hybridCallHighAvailability && Authinfo.isEntitled(Config.entitlements.fusion_uc)) {
                 HybridServicesClusterService.serviceIsSetUp('squared-fusion-uc')
@@ -326,6 +340,14 @@ require('./_overview.scss');
 
     forwardEvent('licenseEventHandler', Authinfo.getLicenses());
 
+    if (SetupWizardService.hasPendingServiceOrder()) {
+      var pendingServiceOrderUUID = SetupWizardService.getActingSubscriptionServiceOrderUUID();
+
+      SetupWizardService.getPendingOrderStatusDetails(pendingServiceOrderUUID).then(function (productProvStatus) {
+        forwardEvent('provisioningEventHandler', productProvStatus);
+      });
+    }
+
     vm.statusPageUrl = UrlConfig.getStatusPageUrl();
 
     _.each(['oneOnOneCallsLoaded', 'groupCallsLoaded', 'conversationsLoaded', 'activeRoomsLoaded', 'incomingChatTasksLoaded'], function (eventType) {
@@ -345,8 +367,6 @@ require('./_overview.scss');
     Orgservice.getUnlicensedUsers(_.partial(forwardEvent, 'unlicensedUsersHandler'));
 
     ReportsService.healthMonitor(_.partial(forwardEvent, 'healthStatusUpdatedHandler'));
-
-    init();
 
     $scope.$on('DISMISS_SIP_NOTIFICATION', function () {
       vm.notifications = _.reject(vm.notifications, {

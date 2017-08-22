@@ -35,6 +35,18 @@
       'Original-Caller-Area-Code': $translate.instant('autoAttendant.decisionCallerAreaCode'),
     };
 
+    /* We have intentionally added the blank space in the following list.
+     * Because isDynamic flag gets true in case of BR or new lines
+     * and we are using this list to not show warning in case of pre-populated
+     * variables and BR or new lines in a say message.*/
+
+    var prePopulatedSessionVariablesList = ['Original-Called-Number',
+      'Original-Caller-Number',
+      'Original-Remote-Party-ID',
+      'Original-Caller-Country-Code',
+      'Original-Caller-Area-Code',
+      ''];
+
     var service = {
       isFormDirty: isFormDirty,
       setSayMessageStatus: setSayMessageStatus,
@@ -72,12 +84,17 @@
       DIGITS_DIAL_BY: 2,
       DIGITS_RAW: 3,
       DIGITS_CHOICE: 4,
+      getprePopulatedSessionVariablesList: getprePopulatedSessionVariablesList,
       getVarOption: getVarOption,
     };
 
     return service;
 
     /////////////////////
+
+    function getprePopulatedSessionVariablesList() {
+      return prePopulatedSessionVariablesList;
+    }
 
     function getVarOption(value) {
       return varOptions[value];

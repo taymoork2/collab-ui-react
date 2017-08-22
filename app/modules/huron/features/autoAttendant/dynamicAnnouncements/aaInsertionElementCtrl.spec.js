@@ -154,6 +154,17 @@ describe('Controller: AAInsertionElementCtrl', function () {
   });
 
   describe('closeClickFn', function () {
+    var musicOnHold;
+    var initialAnnouncement;
+    var periodicAnnouncement;
+    var fallback;
+    var playAction;
+    var paAction;
+    var iaAction;
+    var queueSettings = {};
+    var routeToQueue;
+    var fbAction;
+
     beforeEach(function () {
       var scopeElement = {
         insertElement: function (string) {
@@ -199,7 +210,7 @@ describe('Controller: AAInsertionElementCtrl', function () {
         },
       });
       $scope.dynamicElement = 'test';
-      $scope.elementId = 'test';
+      $scope.elementId = '1011';
     });
     it('should clear out elementText and readAs upon calling of closeClickFn from say Message', function () {
       action = AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', '');
@@ -285,6 +296,81 @@ describe('Controller: AAInsertionElementCtrl', function () {
       expect(controller.readAs).toBe('');
       expect(controller.elementText).toBe('');
       expect(controller.readAs).toBe('');
+    });
+
+    it('should clear out elementText and readAs upon calling of closeClickFn from initial announcement queueSettings', function () {
+      var ele1 = '<aa-insertion-element element-text="testValue" read-as="testReadValue" element-id="initialAnnouncementTest"></aa-insertion-element>';
+      musicOnHold = AutoAttendantCeMenuModelService.newCeMenuEntry();
+      initialAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
+      periodicAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
+      fallback = AutoAttendantCeMenuModelService.newCeMenuEntry();
+      playAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
+      iaAction = AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', '');
+      iaAction.dynamicList = [{
+        say: {
+          value: 'testValue',
+          voice: '',
+          as: 'testValue',
+        },
+        isDynamic: true,
+        htmlModel: encodeURIComponent(ele1),
+      }];
+      paAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
+      fbAction = AutoAttendantCeMenuModelService.newCeActionEntry('disconnect', '');
+      routeToQueue = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', '');
+      musicOnHold.addAction(playAction);
+      initialAnnouncement.addAction(iaAction);
+      periodicAnnouncement.addAction(paAction);
+      fallback.addAction(fbAction);
+      queueSettings.musicOnHold = musicOnHold;
+      queueSettings.initialAnnouncement = initialAnnouncement;
+      queueSettings.periodicAnnouncement = periodicAnnouncement;
+      queueSettings.fallback = fallback;
+      routeToQueue.queueSettings = queueSettings;
+      menuEntry.addAction(routeToQueue);
+      $scope.elementId = 'initialAnnouncementTest';
+      $scope.type = 'initialAnnouncement';
+
+      controller.closeClickFn();
+      expect(controller.elementText).toEqual('');
+      expect(controller.readAs).toEqual('');
+    });
+
+    it('should clear out elementText and readAs upon calling of closeClickFn from periodic announcement queueSettings', function () {
+      var ele1 = '<aa-insertion-element element-text="testValue" read-as="testReadValue" element-id="periodicAnnouncementTest"></aa-insertion-element>';
+      musicOnHold = AutoAttendantCeMenuModelService.newCeMenuEntry();
+      initialAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
+      periodicAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
+      fallback = AutoAttendantCeMenuModelService.newCeMenuEntry();
+      playAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
+      iaAction = AutoAttendantCeMenuModelService.newCeActionEntry('play', '');
+      paAction = AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', '');
+      paAction.dynamicList = [{
+        say: {
+          value: 'testValue',
+          voice: '',
+          as: 'testValue',
+        },
+        isDynamic: true,
+        htmlModel: encodeURIComponent(ele1),
+      }];
+      fbAction = AutoAttendantCeMenuModelService.newCeActionEntry('disconnect', '');
+      routeToQueue = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', '');
+      musicOnHold.addAction(playAction);
+      initialAnnouncement.addAction(iaAction);
+      periodicAnnouncement.addAction(paAction);
+      fallback.addAction(fbAction);
+      queueSettings.musicOnHold = musicOnHold;
+      queueSettings.initialAnnouncement = initialAnnouncement;
+      queueSettings.periodicAnnouncement = periodicAnnouncement;
+      queueSettings.fallback = fallback;
+      routeToQueue.queueSettings = queueSettings;
+      menuEntry.addAction(routeToQueue);
+      $scope.elementId = 'periodicAnnouncementTest';
+      $scope.type = 'periodicAnnouncement';
+      controller.closeClickFn();
+      expect(controller.elementText).toEqual('');
+      expect(controller.readAs).toEqual('');
     });
   });
 });

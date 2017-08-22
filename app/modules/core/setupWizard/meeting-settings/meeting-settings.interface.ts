@@ -3,6 +3,9 @@ export interface IWebExSite {
   timezone?: string | object;
   centerType: string;
   quantity?: number;
+  audioPackageDisplay?: string;
+  setupType?: string;
+  keepExistingSite?: boolean;
 }
 
 export interface IWebexSiteDetail {
@@ -43,7 +46,7 @@ export interface IExistingTrialSites extends IWebExSite {
 
 export interface IWebexLicencesPayload {
   provisionOrder: boolean;
-  sendCustomerEmail: boolean;
+  sendCustomerEmail?: boolean;
   serviceOrderUUID: string | null;
   webexProvisioningParams?: IWebexProvisioningParams;
 }
@@ -79,4 +82,9 @@ export interface IPendingLicense {
   volume: number;
   isTrial: boolean;
   status: string;
+}
+
+export interface ICCASPInfo {
+  partnerName: string;
+  subscriptionId: string;
 }

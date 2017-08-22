@@ -1,13 +1,15 @@
 'use strict';
 
-/*global TIMEOUT*/
+/*global TIMEOUT, ANIMATION_DURATION_MS*/
 
 var Navigation = function () {
   this.body = element(by.tagName('body'));
 
-  this.tabs = element(by.css('cs-left-nav'));
+  this.tabs = element(by.css('cui-sidenav-admin'));
+  this.ftswSidePanel = element(by.css('cr-wizard-nav'));
   this.tabCount = element.all(by.repeater('page in pages'));
   this.homeTab = element(by.css('li.overviewTab > a'));
+  this.placesTab = element(by.css('li.placeTab > a'))
   this.usersTab = element(by.css('li.userTab > a'));
   this.accountTab = element(by.css('li.accountTab > a'));
   this.orgTab = element(by.css('a[href="#organizations"]'));
@@ -63,6 +65,7 @@ var Navigation = function () {
   this.messaging = element(by.cssContainingText('.settings-menu .dropdown-menu a', 'Message'));
   this.enterpriseSettings = element(by.cssContainingText('.settings-menu .dropdown-menu a', 'Enterprise Settings'));
   this.userInfo = element(by.css('.user-info'));
+  this.userInfoDropDownMenu = element(by.css('.user-info .dropdown-menu.visible'));
   this.launchPartnerButton = element(by.css('#launch-partner-btn a'));
 
   this.partnerSupportUrl = 'https://help.webex.com/community/cisco-cloud-collab-mgmt-partners';
@@ -244,6 +247,7 @@ var Navigation = function () {
 
   this.logout = function () {
     utils.click(this.userInfoButton);
+    browser.sleep(ANIMATION_DURATION_MS);
     utils.click(this.logoutButton);
     this.expectDriverCurrentUrl('/login', 'idbroker.webex.com');
     browser.get('data:,');
@@ -318,10 +322,16 @@ var Navigation = function () {
 
   this.launchSupportPage = function () {
     browser.getAllWindowHandles().then(function (handles) {
-      browser.switchTo().window(handles[1]).then(function () {
-        expect(browser.getCurrentUrl()).toMatch(navigation.partnerSupportUrl);
+      browser.switchTo().window(handles[1]);
+
+      browser.wait(function () {
+        return browser.getCurrentUrl().then(function (currentUrl) {
+          return currentUrl === navigation.partnerSupportUrl;
+        });
       });
+
       browser.close();
+
       // switch back to the main window
       browser.switchTo().window(handles[0]);
     });

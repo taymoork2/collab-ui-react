@@ -72,7 +72,7 @@
             <button class="btn btn--link cancel-button pull-right" ng-click="$ctrl.cancelOptionsList()" translate="common.cancel"></button>
           </div>
 
-          <section-title title-key="context.dictionary.fieldPage.options" title-key-values="{count: {{$ctrl.optionsListCopy.length}}}" action-list="$ctrl.actionList"></section-title>
+          <section-title title-key="context.dictionary.fieldPage.optionsLabelWithCount" title-key-values="{count: {{$ctrl.optionsListCopy.length}}}" action-list="$ctrl.actionList"></section-title>
 
           <div translate="context.dictionary.fieldPage.optionsNumberErrorMessage" class="cs-input__help-text" ng-class="{ 'error-text': !$ctrl.isMinimumOptionsSet() }" />
 

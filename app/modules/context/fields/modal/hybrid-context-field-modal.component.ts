@@ -1,6 +1,7 @@
 import { Notification } from 'modules/core/notifications';
 import { ContextFieldsService } from 'modules/context/services/context-fields-service';
 import { IActionItem } from '../../../core/components/sectionTitle/sectionTitle.component';
+import IDataTypeDefinition, { ITranslationDictionary } from 'modules/context/fields/dataTypeDefinition';
 
 interface IFieldData {
   id: string;
@@ -16,13 +17,6 @@ interface IFieldData {
   lastUpdated?: string;
   publiclyAccessibleUI: string;
   publiclyAccessible: Boolean;
-}
-
-interface IDataTypeDefinition {
-  type: string;
-  enumerations?: string[];
-  translations?: any;
-  inactiveEnumerations?: string[];
 }
 
 interface IOption {
@@ -514,7 +508,7 @@ class FieldModalCtrl implements ng.IComponentController {
   }
 
   public isSingleSelectCheckPassed(): boolean {
-    if (this.fieldData.dataTypeUI === this.$translate.instant('context.dictionary.dataTypes.enumString')) {
+    if (this.hasContextExpandedTypesToggle && this.fieldData.dataTypeUI === this.$translate.instant('context.dictionary.dataTypes.enumString')) {
       return this.isMinimumOptionsSet() && this.uniqueOptionCheckPassed && this.nonEmptyOptionCheckPassed && this.isNotInSingleSelectEditingMode();
     }
     return true;
@@ -598,11 +592,11 @@ class FieldModalCtrl implements ng.IComponentController {
       // get this one's index in the array
       const index = enumerations.indexOf(inactive);
       // remove this one from all translations
-      const translations = definition.translations;
+      const translations: ITranslationDictionary = _.get(definition, 'translations', {});
 
       // iterate over all translation languages
       _.forEach(_.keys(translations), language => {
-        const translationStrings = <string[]> translations[language];
+        const translationStrings = translations[language];
         if (translationStrings !== enumerations) { // en_US actually points to enumerations for now!
           // remove the transation at this index. THIS WILL PROBABLY BREAK IF TRANSLATIONS AREN'T BEING MAINTAINED PROPERLY!
           translationStrings.splice(index, 1);
@@ -677,7 +671,7 @@ class FieldModalCtrl implements ng.IComponentController {
   }
 
   public displaySingleSelectOptions() {
-    return this.fieldData.dataTypeUI === this.$translate.instant('context.dictionary.dataTypes.enumString');
+    return this.hasContextExpandedTypesToggle && this.fieldData.dataTypeUI === this.$translate.instant('context.dictionary.dataTypes.enumString');
   }
 
   public isDisabledWhenInUse() {

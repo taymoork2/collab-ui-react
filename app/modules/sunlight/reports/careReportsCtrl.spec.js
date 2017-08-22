@@ -124,9 +124,11 @@ describe('Controller: Care Reports Controller', function () {
     it('should show Today and Task Incoming, Task Aggregate and Average Csat graphs on Init', function () {
       $timeout(function () {
         expect(CareReportsService.showTaskIncomingDummy.calls.argsFor(0)[0]).toEqual('taskIncomingdiv');
+        expect(CareReportsService.showTaskIncomingDummy.calls.argsFor(0)[0]).toEqual('taskOffereddiv');
         expect(CareReportsService.showAverageCsatDummy.calls.argsFor(0)[0]).toEqual('averageCsatDiv');
         expect(CareReportsService.showTaskAggregateDummy.calls.argsFor(0)[0]).toEqual('taskAggregateDiv');
         expect(CareReportsService.showTaskIncomingGraph.calls.argsFor(0)[0]).toEqual('taskIncomingdiv');
+        expect(CareReportsService.showTaskOfferedGraph.calls.argsFor(0)[0]).toEqual('taskOffereddiv');
         expect(CareReportsService.showAverageCsatGraph.calls.argsFor(0)[0]).toEqual('averageCsatDiv');
         expect(CareReportsService.showTaskAggregateGraph.calls.argsFor(0)[0]).toEqual('taskAggregateDiv');
         expect(CareReportsService.showTaskTimeDummy).not.toHaveBeenCalled();
@@ -140,9 +142,11 @@ describe('Controller: Care Reports Controller', function () {
       var title = moment().format('MMM D');
       $timeout(function () {
         expect(CareReportsService.showTaskIncomingDummy.calls.argsFor(0)[3]).toBeUndefined();
+        expect(CareReportsService.showTaskOfferedDummy.calls.argsFor(0)[3]).toBeUndefined();
         expect(CareReportsService.showAverageCsatDummy.calls.argsFor(0)[3]).toBeUndefined();
         expect(CareReportsService.showTaskAggregateDummy.calls.argsFor(0)[3]).toBeUndefined();
         expect(CareReportsService.showTaskIncomingGraph.calls.argsFor(0)[3]).toEqual(title);
+        expect(CareReportsService.showTaskOfferedGraph.calls.argsFor(0)[3]).toEqual(title);
         expect(CareReportsService.showAverageCsatGraph.calls.argsFor(0)[3]).toEqual(title);
         expect(CareReportsService.showTaskAggregateGraph.calls.argsFor(0)[3]).toEqual(title);
       }, 100);
@@ -154,9 +158,11 @@ describe('Controller: Care Reports Controller', function () {
       var title = (moment().subtract(1, 'days').format('MMM D'));
       $timeout(function () {
         expect(CareReportsService.showTaskIncomingDummy.calls.argsFor(0)[3]).toBeUndefined();
+        expect(CareReportsService.showTaskOfferedDummy.calls.argsFor(0)[3]).toBeUndefined();
         expect(CareReportsService.showAverageCsatDummy.calls.argsFor(0)[3]).toBeUndefined();
         expect(CareReportsService.showTaskAggregateDummy.calls.argsFor(0)[3]).toBeUndefined();
         expect(CareReportsService.showTaskIncomingGraph.calls.argsFor(0)[3]).toEqual(title);
+        expect(CareReportsService.showTaskOfferedGraph.calls.argsFor(0)[3]).toEqual(title);
         expect(CareReportsService.showAverageCsatGraph.calls.argsFor(0)[3]).toEqual(title);
         expect(CareReportsService.showTaskAggregateGraph.calls.argsFor(0)[3]).toEqual(title);
       }, 100);
@@ -168,9 +174,11 @@ describe('Controller: Care Reports Controller', function () {
       controller.filtersUpdate();
       $timeout(function () {
         expect(CareReportsService.showTaskIncomingDummy.calls.argsFor(0)[3]).toBeUndefined();
+        expect(CareReportsService.showTaskOfferedDummy.calls.argsFor(0)[3]).toBeUndefined();
         expect(CareReportsService.showAverageCsatDummy.calls.argsFor(0)[3]).toBeUndefined();
         expect(CareReportsService.showTaskAggregateDummy.calls.argsFor(0)[3]).toBeUndefined();
         expect(CareReportsService.showTaskIncomingGraph.calls.argsFor(0)[3]).toBeUndefined();
+        expect(CareReportsService.showTaskOfferedGraph.calls.argsFor(0)[3]).toBeUndefined();
         expect(CareReportsService.showAverageCsatGraph.calls.argsFor(0)[3]).toBeUndefined();
         expect(CareReportsService.showTaskAggregateGraph.calls.argsFor(0)[3]).toBeUndefined();
       }, 100);
@@ -189,9 +197,11 @@ describe('Controller: Care Reports Controller', function () {
 
       $timeout(function () {
         expect(CareReportsService.showTaskIncomingDummy.calls.argsFor(0)[0]).toEqual('taskIncomingdiv');
+        expect(CareReportsService.showTaskOfferedDummy.calls.argsFor(0)[0]).toEqual('taskOffereddiv');
         expect(CareReportsService.showTaskTimeDummy.calls.argsFor(0)[0]).toEqual('taskTimeDiv');
         expect(CareReportsService.showAverageCsatDummy.calls.argsFor(0)[0]).toEqual('averageCsatDiv');
         expect(CareReportsService.showTaskIncomingGraph.calls.argsFor(0)[0]).toEqual('taskIncomingdiv');
+        expect(CareReportsService.showTaskOfferedGraph.calls.argsFor(0)[0]).toEqual('taskOffereddiv');
         expect(CareReportsService.showTaskTimeGraph.calls.argsFor(0)[0]).toEqual('taskTimeDiv');
         expect(CareReportsService.showAverageCsatGraph.calls.argsFor(0)[0]).toEqual('averageCsatDiv');
         expect(CareReportsService.showTaskAggregateDummy).not.toHaveBeenCalled();
@@ -357,6 +367,7 @@ describe('Controller: Care Reports Controller', function () {
       controller.filtersUpdate().catch(function () {
         expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Customer Satisfaction' });
         expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Task Time Measure' });
+        expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Offered Tasks' });
         expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Total Completed Tasks' });
       }).finally(done());
     });
@@ -369,6 +380,7 @@ describe('Controller: Care Reports Controller', function () {
       controller.filtersUpdate().catch(function () {
         expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Customer Satisfaction' });
         expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Aggregated Tasks' });
+        expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Offered Tasks' });
         expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Total Completed Tasks' });
       }).finally(done());
     });

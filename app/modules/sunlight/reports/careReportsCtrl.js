@@ -14,6 +14,7 @@
     vm.tableDataStatus = EMPTY;
     vm.snapshotDataStatus = REFRESH;
     vm.taskIncomingDescription = '';
+    vm.taskOfferedDescription = '';
     vm.taskTimeDescription = '';
     vm.averageCsatDescription = '';
 
@@ -62,6 +63,8 @@
     }
 
     vm.taskIncomingDrilldownProps = DrillDownReportProps.taskIncomingDrilldownProps(timeSelected);
+
+    vm.taskOfferedDrilldownProps = DrillDownReportProps.taskOfferedDrilldownProps(timeSelected);
 
     vm.avgCsatDrilldownProps = DrillDownReportProps.avgCsatDrilldownProps(timeSelected);
 
@@ -151,6 +154,12 @@
         taskStatus: vm.timeSelected.taskStatus,
       });
 
+      vm.taskOfferedDescription = $translate.instant('taskOffered.description', {
+        time: vm.timeSelected.description,
+        interval: vm.timeSelected.intervalTxt,
+        taskStatus: vm.timeSelected.taskStatus,
+      });
+
       vm.taskTimeDescription = $translate.instant('taskTime.description', {
         time: vm.timeSelected.description,
         interval: vm.timeSelected.intervalTxt,
@@ -176,6 +185,7 @@
           } else {
             vm.dataStatus = SET;
             CareReportsService.showTaskIncomingGraph('taskIncomingdiv', data, categoryAxisTitle, title, isToday);
+            CareReportsService.showTaskOfferedGraph('taskOffereddiv', data, categoryAxisTitle, title, isToday);
             CareReportsService.showTaskTimeGraph('taskTimeDiv', data, categoryAxisTitle, title, isToday);
             CareReportsService.showAverageCsatGraph('averageCsatDiv', data, categoryAxisTitle, title, isToday);
             resizeCards();
@@ -186,6 +196,7 @@
           if (!isToday) {
             Notification.errorResponse(data, $translate.instant('careReportsPage.taskDataGetError', { dataType: 'Task Time Measure' }));
           }
+          Notification.errorResponse(data, $translate.instant('careReportsPage.taskDataGetError', { dataType: 'Offered Tasks' }));
           Notification.errorResponse(data, $translate.instant('careReportsPage.taskDataGetError', { dataType: 'Total Completed Tasks' }));
         });
     }
@@ -222,6 +233,7 @@
       var categoryAxisTitle = vm.timeSelected.categoryAxisTitle;
       var isToday = (vm.timeSelected.value === 0);
       CareReportsService.showTaskIncomingDummy('taskIncomingdiv', dummyData, categoryAxisTitle, dummyTitle, isToday);
+      CareReportsService.showTaskOfferedDummy('taskOffereddiv', dummyData, categoryAxisTitle, dummyTitle, isToday);
       CareReportsService.showTaskTimeDummy('taskTimeDiv', dummyData, categoryAxisTitle, dummyTitle);
       CareReportsService.showAverageCsatDummy('averageCsatDiv', dummyData, categoryAxisTitle, dummyTitle);
       CareReportsService.showTaskAggregateDummy('taskAggregateDiv', dummyData, categoryAxisTitle, dummyTitle);

@@ -7,18 +7,7 @@ import { FilteredDeviceViewDataSource } from './filtered-deviceview-datasource';
 import { DeviceMatcher } from './device-matcher';
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 
-interface ICustomScope extends ng.IScope {
-  gridApi: {
-    selection: {
-      on: {
-        rowSelectionChanged: Function,
-      },
-    },
-  };
-}
-
 export class DevicesController {
-
   public exporting: boolean;
   public filteredView: FilteredView<IDevice>;
   public addDeviceIsDisabled: boolean = true;
@@ -44,26 +33,28 @@ export class DevicesController {
     cisUuid: string;
     organizationId: string
   };
-  private gridOptions: any;
+  public gridOptions: uiGrid.IGridOptions;
+  public gridApi: uiGrid.IGridApi;
 
   constructor(
+    private $modal: IToolkitModalService,
     private $q: ng.IQService,
     private $state,
     private $translate: ng.translate.ITranslateService,
     private $templateCache,
+    private Authinfo,
+    private DeviceExportService,
+    private FeatureToggleService,
+    private GridCellService,
+    private Notification: Notification,
+    private ServiceDescriptorService: ServiceDescriptorService,
     private Userservice,
     private WizardFactory,
-    private FeatureToggleService,
-    private $modal: IToolkitModalService,
-    private Notification: Notification,
-    private DeviceExportService,
-    private ServiceDescriptorService: ServiceDescriptorService,
+    $scope: ng.IScope,
     $timeout: ng.ITimeoutService,
-    CsdmDataModelService: ICsdmDataModelService,
     AccountOrgService,
-    $scope: ICustomScope,
+    CsdmDataModelService: ICsdmDataModelService,
     CsdmHuronOrgDeviceService,
-    private Authinfo,
   ) {
     this.fetchAsyncSettings();
     this.filteredView = new FilteredView<IDevice>(new FilteredDeviceViewDataSource(CsdmDataModelService, $q),
@@ -73,15 +64,15 @@ export class DevicesController {
 
     CsdmDataModelService.subscribeToChanges($scope, () => {
       this.filteredView.refresh();
+      this.gridOptions.data = this.filteredView.getResult();
     });
 
-    CsdmDataModelService.devicePollerOn('data',
-      () => {
-        this.filteredView.refresh();
-      }, {
-        scope: $scope,
-      },
-    );
+    CsdmDataModelService.devicePollerOn('data', () => {
+      this.filteredView.refresh();
+      this.gridOptions.data = this.filteredView.getResult();
+    }, {
+      scope: $scope,
+    });
 
     this.filteredView.setFilters([{
       count: 0,
@@ -127,24 +118,24 @@ export class DevicesController {
       });
 
     this.gridOptions = {
-      data: 'sc.filteredView.getResult()',
-      enableHorizontalScrollbar: 0,
-      rowHeight: 45,
-      enableRowHeaderSelection: false,
-      enableColumnMenus: false,
-      multiSelect: false,
-      onRegisterApi: (gridApi) => {
-        $scope.gridApi = gridApi;
-        gridApi.selection.on.rowSelectionChanged($scope, (row) => {
+      data: this.filteredView.getResult(),
+      appScopeProvider: {
+        selectRow: (grid: uiGrid.IGridInstance, row: uiGrid.IGridRow): void => {
+          this.GridCellService.selectRow(grid, row);
           this.showDeviceDetails(row.entity);
-        });
+        },
+        showDeviceDetails: (device: IDevice): void => {
+          this.showDeviceDetails(device);
+        },
       },
-
+      rowHeight: 45,
+      onRegisterApi: (gridApi) => {
+        this.gridApi = gridApi;
+      },
       columnDefs: [{
         field: 'photos',
         displayName: '',
         cellTemplate: this.getTemplate('_imageTpl'),
-        sortable: false,
         width: 70,
       }, {
         field: 'displayName',
@@ -155,11 +146,11 @@ export class DevicesController {
           priority: 1,
         },
         sortCellFiltered: true,
+        cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showDeviceDetails(row.entity)" cell-value="row.entity.displayName"></cs-grid-cell>',
       }, {
         field: 'state',
         displayName: $translate.instant('spacesPage.statusHeader'),
-        cellTemplate: this.getTemplate('_statusTpl'),
-        sortable: true,
+        cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showDeviceDetails(row.entity)" cell-icon-css="icon-circle status-indicator {{row.entity.cssColorClass}}" cell-value="row.entity.state.readableState"></cs-grid-cell>',
         sortingAlgorithm: DevicesController.sortStateFn,
         sort: {
           direction: 'asc',
@@ -244,14 +235,6 @@ export class DevicesController {
     return userDetailsDeferred.promise;
   }
 
-  private showDeviceDetails(device: IDevice) {
-    this.currentDevice = device;
-    this.$state.go('device-overview', {
-      currentDevice: device,
-      huronDeviceService: this.huronDeviceService,
-    });
-  }
-
   public startAddDeviceFlow() {
     const wizard = this.WizardFactory.create(this.showPersonal ? this.wizardWithPersonal() : this.wizardWithoutPersonal());
     this.$state.go(wizard.state().currentStateName, {
@@ -268,6 +251,14 @@ export class DevicesController {
         function (l: any) {
           return l.licenseType === 'COMMUNICATION';
         }).length > 0;
+  }
+
+  private showDeviceDetails(device: IDevice) {
+    this.currentDevice = device;
+    this.$state.go('device-overview', {
+      currentDevice: device,
+      huronDeviceService: this.huronDeviceService,
+    });
   }
 
   private wizardWithoutPersonal() {

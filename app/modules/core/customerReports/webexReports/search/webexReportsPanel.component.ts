@@ -21,7 +21,7 @@ class WebexReportsPanel implements ng.IComponentController {
       meetingName: wm.meetingName,
       meetingType: wm.meetingType,
       meetingNumber: wm.meetingNumber,
-      date: moment(wm.conferenceDate).format('MMMM D, YYYY'),
+      date: this.SearchService.utcDateByTimezone(wm.conferenceDate),
     };
     this.conferenceID = wm.conferenceID;
   }
@@ -40,10 +40,9 @@ class WebexReportsPanel implements ng.IComponentController {
       .then((res) => {
         this.loading = false;
         const data: any  = res;
-
-        data.session.startTime_ = moment(data.session.startTime).format('MMM Do, YYYY h:mm:ss A');
-        data.session.createTime_ = moment(data.session.createTime).format('MMM Do, YYYY h:mm:ss A');
-        data.session.endTime_ = data.session.endTime ? moment(data.session.endTime).format('MMM Do, YYYY h:mm:ss A') : '';
+        data.session.startTime_ = this.SearchService.utcDateByTimezone(data.session.startTime);
+        data.session.createTime_ = this.SearchService.utcDateByTimezone(data.session.createTime);
+        data.session.endTime_ = data.session.endTime ? this.SearchService.utcDateByTimezone(data.session.endTime) : '';
 
         data.features_ = _.map(data.features, (val: string, key: string) => {
           const val_ = val ? 'yes' : 'no';

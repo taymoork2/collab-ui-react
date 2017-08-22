@@ -4,7 +4,7 @@
   angular.module('Squared')
     .controller('AddLinesCtrl', AddLinesCtrl);
   /* @ngInject */
-  function AddLinesCtrl($stateParams, $scope, Notification, $translate, $q, CommonLineService, CsdmDataModelService, DialPlanService) {
+  function AddLinesCtrl($stateParams, $scope, Notification, $translate, $q, CommonLineService, CsdmDataModelService, DialPlanService, FeatureToggleService, LocationsService) {
     var vm = this;
     var wizardData = $stateParams.wizard.state().data;
     vm.title = wizardData.title;
@@ -25,12 +25,54 @@
     vm.isLoading = false;
     vm.isDisabled = true;
 
+    vm.loadLocations = loadLocations;
+    $scope.locationOptions = [];
+    $scope.selectedLocation = '';
+    $scope.locationUuid = '';
+
     $scope.returnInternalNumberlist = CommonLineService.returnInternalNumberList;
     $scope.returnExternalNumberList = CommonLineService.returnExternalNumberList;
     $scope.getInternalNumberPool = CommonLineService.getInternalNumberPool;
     $scope.getExternalNumberPool = CommonLineService.getExternalNumberPool;
     $scope.syncGridDidDn = syncGridDidDn;
     $scope.checkDnOverlapsSteeringDigit = CommonLineService.checkDnOverlapsSteeringDigit;
+
+    function loadLocations() {
+      return FeatureToggleService.supports(FeatureToggleService.features.hI1484)
+        .then(function (supported) {
+          if (supported) {
+            return LocationsService.getLocationList()
+              .then(function (locationOptions) {
+                $scope.locationOptions = locationOptions;
+                _.forEach(locationOptions, function (result) {
+                  if (result.defaultLocation == true) {
+                    _.forEach($scope.entitylist, function (data) {
+                      data.selectedLocation = { uuid: result.uuid, name: result.name };
+                      $scope.selectedLocation = data.selectedLocation.name;
+                      $scope.locationUuid = data.selectedLocation.uuid;
+                    });
+                  }
+                });
+
+                if ($scope.locationOptions.length > 1) {
+                  vm.locationColumn = {
+                    field: 'location',
+                    displayName: $translate.instant('usersPreview.location'),
+                    sortable: false,
+                    cellTemplate: locationTemplate,
+                    width: '*',
+                  };
+                  vm.addDnGridOptions.columnDefs.splice(1, 0, vm.locationColumn);
+                }
+              })
+              .then(function () {
+                return CommonLineService.loadLocationInternalNumberPool(null, $scope.locationUuid);
+              });
+          } else {
+            return CommonLineService.loadInternalNumberPool();
+          }
+        });
+    }
 
     vm.hasNextStep = function () {
       return wizardData.function !== 'editServices' || wizardData.account.enableCalService;
@@ -42,6 +84,7 @@
         account: {
           directoryNumber: numbers.directoryNumber,
           externalNumber: numbers.externalNumber,
+          locationUuid: numbers.locationUuid,
         },
       }, wizardData.account.enableCalService ? 'calendar' : 'next');
     };
@@ -49,10 +92,15 @@
     vm.save = function () {
       vm.isLoading = true;
       var numbers = vm.getSelectedNumbers();
-      if (numbers.directoryNumber || numbers.externalNumber) {
+      if (numbers.directoryNumber || numbers.externalNumber || numbers.locationUuid) {
         CsdmDataModelService.reloadPlace(wizardData.account.cisUuid).then(function (place) {
           if (place) {
-            CsdmDataModelService.updateCloudberryPlace(place, wizardData.account.entitlements, numbers.directoryNumber, numbers.externalNumber)
+            CsdmDataModelService.updateCloudberryPlace(place, {
+              entitlements: wizardData.account.entitlements,
+              locationUuid: numbers.locationUuid,
+              directoryNumber: numbers.directoryNumber,
+              externalNumber: numbers.externalNumber,
+            })
               .then(function () {
                 $scope.$dismiss();
                 Notification.success('addDeviceWizard.assignPhoneNumber.linesSaved');
@@ -76,6 +124,11 @@
 
     vm.getSelectedNumbers = function () {
       var entity = $scope.entitylist[0];
+      if (FeatureToggleService.supports(FeatureToggleService.features.hI1484)) {
+        if (entity.selectedLocation && $scope.locationOptions.length > 1) {
+          $scope.locationUuid = entity.selectedLocation.uuid;
+        }
+      }
       var directoryNumber;
       if (entity.assignedDn) {
         directoryNumber = entity.assignedDn.pattern;
@@ -87,6 +140,7 @@
       return {
         directoryNumber: directoryNumber,
         externalNumber: externalNumber,
+        locationUuid: $scope.locationUuid,
       };
     };
 
@@ -95,7 +149,7 @@
     };
 
     function activateDID() {
-      $q.all([CommonLineService.loadInternalNumberPool(), CommonLineService.loadExternalNumberPool(), CommonLineService.loadPrimarySiteInfo(), toggleShowExtensions()])
+      $q.all([CommonLineService.loadExternalNumberPool(), CommonLineService.loadPrimarySiteInfo(), toggleShowExtensions(), loadLocations()])
         .finally(function () {
           $scope.externalNumber = _.head(CommonLineService.getExternalNumberPool());
           $scope.telephonyInfo = CommonLineService.getTelephonyInfo();
@@ -172,8 +226,12 @@
     }
 
     function syncGridDidDn(rowEntity, modifiedFieldName) {
+      if (modifiedFieldName === 'location') {
+        populateExtensions(rowEntity);
+      }
       if (vm.showExtensions === false) {
         var dnLength = rowEntity.assignedDn.pattern.length;
+
         // if the internalNumber was changed, find a matching DID and set the externalNumber to match
         if (modifiedFieldName === 'internalNumber') {
           var matchingDid = _.find(CommonLineService.getExternalNumberPool(), function (extNum) {
@@ -195,13 +253,21 @@
       }
     }
 
+    function populateExtensions(rowEntity) {
+      var selectedLocationColumn = rowEntity.selectedLocation.uuid;
+      return CommonLineService.loadLocationInternalNumberPool(null, selectedLocationColumn)
+        .then(function (internalNumberPool) {
+          rowEntity.assignedDn.pattern = internalNumberPool[0].pattern;
+        });
+    }
+
     $scope.noExtInPool = $translate.instant('usersPage.notApplicable');
     $scope.noExternalNum = $translate.instant('usersPage.notApplicable');
 
     var internalExtensionTemplate = '<div ng-show="row.entity.assignedDn !== undefined"> ' +
       '<cs-select name="internalNumber" ' +
       'ng-model="row.entity.assignedDn" options="grid.appScope.getInternalNumberPool()" ' +
-      'refresh-data-fn="grid.appScope.returnInternalNumberlist(filter)" wait-time="0" ' +
+      'refresh-data-fn="grid.appScope.returnInternalNumberlist(filter , row.entity.selectedLocation.uuid)" wait-time="0" ' +
       'placeholder="placeholder" input-placeholder="inputPlaceholder" ' +
       'on-change-fn="grid.appScope.syncGridDidDn(row.entity, \'internalNumber\')"' +
       'labelfield="pattern" valuefield="uuid" required="true" filter="true"' +
@@ -212,6 +278,13 @@
       '<span class="error">{{\'usersPage.noExtensionInPool\' | translate }}</span> </div> ';
 
     var nameTemplate = CommonLineService.getNameTemplate();
+
+    var locationTemplate = '<div>' +
+      '<cs-select name="location" ' +
+      'ng-model="row.entity.selectedLocation" options="grid.appScope.locationOptions" ' +
+      'labelfield="name" valuefield="uuid" required="true" filter="true"' +
+      'on-change-fn="grid.appScope.syncGridDidDn(row.entity, \'location\')"' +
+      '</div>';
 
     var externalExtensionTemplate = '<div ng-show="row.entity.didDnMapMsg === undefined"> ' +
       '<cs-select name="externalNumber" ' +
@@ -260,7 +333,8 @@
         sortable: false,
         cellTemplate: nameTemplate,
         width: '*',
-      }, {
+      },
+      {
         field: 'externalNumber',
         displayName: $translate.instant('usersPage.directLineHeader'),
         sortable: false,

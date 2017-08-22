@@ -32,7 +32,7 @@ export class HybridServicesExtrasService {
     });
   }
 
-  public getAlarms(serviceId: HybridServiceId, orgId?: string): ng.IPromise<any> {
+  public getAlarms(serviceId: HybridServiceId, orgId?: string): ng.IPromise<IServiceAlarm[]> {
     const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId || this.Authinfo.getOrgId()}/alarms?serviceId=${serviceId}&sourceType=cloud`;
     return this.$http.get(url)
       .then(this.extractDataAndTranslateAlarms);
@@ -63,7 +63,7 @@ export class HybridServicesExtrasService {
 
   private convertToTranslateReplacements(alarmReplacementValues: IAlarmReplacementValues[]) {
     return _.reduce(alarmReplacementValues, (translateReplacements, replacementValue) => {
-      translateReplacements[replacementValue.key] = replacementValue.type === 'timestamp' ? this.HybridServicesI18NService.getLocalTimestamp(Number(replacementValue.value)) : replacementValue.value;
+      translateReplacements[replacementValue.key] = replacementValue.type === 'timestamp' ? this.HybridServicesI18NService.getLocalTimestamp(replacementValue.value) : replacementValue.value;
       return translateReplacements;
     }, {});
   }

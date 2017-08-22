@@ -241,13 +241,13 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
           this.currentStepIndex++;
         }
         if (this.privateTrunkAddError || !this.resourceAddSuccess) {
-          this.Notification.notify(this.errors, 'error');
+          this.Notification.notify(this.errors);
           this.cleanupOnError();
           this.PrivateTrunkPrereqService.dismissModal();
         } else if (this.errors.length) {
           //At least one resouce has been added and one or more resource addition failed.
           //This is success path, but do notify errors.
-          this.Notification.notify(this.errors, 'error');
+          this.Notification.notify(this.errors);
         }
       });
     } else {
@@ -256,7 +256,7 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
         if (this.resourceAddSuccess) {
           this.Notification.success('servicesOverview.cards.privateTrunk.success.resource');
         } else {
-          this.Notification.notify(this.errors, 'error');
+          this.Notification.notify(this.errors);
         }
         this.$state.go('private-trunk-overview.list');
         this.dismiss();

@@ -1,6 +1,5 @@
 import { ServicesOverviewHybridCard } from './ServicesOverviewHybridCard';
 import { ICardButton, CardType } from './ServicesOverviewCard';
-import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 import { HDSService } from 'modules/hds/services/hds.service';
 
 export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybridCard {
@@ -10,10 +9,11 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
 
   private hasProPackPurchased: boolean;
   private hasProPackEnabled: boolean;
+  public showProBadge: boolean;
 
   private learnMoreButton: ICardButton = {
     name: 'servicesOverview.genericButtons.learnMore',
-    externalLink: 'http://www.cisco.com',
+    externalLink: 'http://www.cisco.com/go/hybrid-data-security',
     buttonClass: 'btn btn--primary',
   };
 
@@ -37,6 +37,7 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
     if (this.treatAsPurchased()) {
       return (this.active) ? this.buttons : [this.setupButton];
     } else {
+      this.showProBadge = true;
       return [this.learnMoreButton];
     }
   }
@@ -48,7 +49,7 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
   }
 
   public hybridDataSecurityFeatureToggleEventHandler(hasFeature: boolean): void {
-    this.display = this.checkRoles() && (this.Authinfo.isFusionHDS() || hasFeature);
+    this.display = this.checkRoles() && (this.Authinfo.isFusionHDS() || hasFeature) && this.Authinfo.isEnterpriseCustomer();
     this.setLoading();
 
   }
@@ -70,7 +71,6 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
     private Authinfo,
     private Config,
     private HDSService: HDSService,
-    HybridServicesClusterStatesService: HybridServicesClusterStatesService,
     private Notification,
   ) {
     super({
@@ -81,14 +81,14 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
       display : false,
       name: 'servicesOverview.cards.hybridDataSecurity.title',
       routerState: 'hds.list',
-      service: 'spark-hybrid-datasecurity',
-      infoIcon: 'icon-certified',
+      serviceId: 'spark-hybrid-datasecurity',
       infoText: 'servicesOverview.cards.hybridDataSecurity.tooltip',
       initEventsNumber: 2,
-    }, HybridServicesClusterStatesService);
-    this.display = this.checkRoles() && this.Authinfo.isFusionHDS();
+    });
+    this.display = this.checkRoles() && this.Authinfo.isFusionHDS() && this.Authinfo.isEnterpriseCustomer();
     this.hasProPackPurchased = false;
     this.hasProPackEnabled = false;
+    this.showProBadge = false;
     this.$state = $state;
     this.Notification = Notification;
     this.HDSService = HDSService;

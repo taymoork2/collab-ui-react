@@ -92,7 +92,7 @@
         vm.warningMessage = $translate.instant('hercules.addResourceDialog.hostnameRegistered');
         return connector.toLowerCase() === vm.hostname.toLowerCase();
       })
-        ) {
+      ) {
         return true;
       }
       return false;
@@ -171,8 +171,8 @@
         _.forEach(cluster.connectorsHostname, function (connector) {
           if (connector.connectorType === 'c_mgmt') {
             vm.connectors.push(
-                    connector.hostname
-                  );
+              connector.hostname
+            );
           }
         });
       });

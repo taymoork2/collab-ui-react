@@ -16,7 +16,7 @@
     class="cs-form__section">
       <div class="section__info">
         <div cs-sticky>
-          <h4 class="section__title" translate="serviceSetupModal.mediaOnHold"></h4>
+          <h4 class="section__title" translate="serviceSetupModal.mohTitle"></h4>
           <h6 class="section__description" translate="serviceSetupModal.mohDesc"></h6>
         </div>
       </div>
@@ -107,8 +107,9 @@
         </div>
         <div class="sub-section">
           <uc-extension-range
+            steering-digit="$ctrl.huronSettingsData.site.steeringDigit"
+            extension-length="$ctrl.huronSettingsData.site.extensionLength"
             number-ranges="$ctrl.huronSettingsData.internalNumberRanges"
-            site="$ctrl.huronSettingsData.site"
             first-time-setup="$ctrl.ftsw"
             on-change-fn="$ctrl.onExtensionRangeChanged(extensionRanges)">
           </uc-extension-range>
@@ -206,6 +207,7 @@
       </div>
       <div class="section__content">
         <uc-ext-transfer-org
+          location="false"
           on-change-fn="$ctrl.onExtTransferChanged(allowExternalTransfer)"
           allow-external-transfer="$ctrl.huronSettingsData.site.allowExternalTransfer">
         </uc-ext-transfer-org>

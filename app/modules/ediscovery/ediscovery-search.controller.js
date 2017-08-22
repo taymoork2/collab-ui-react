@@ -4,7 +4,7 @@
 
   module.exports = EdiscoverySearchController;
   /* @ngInject */
-  function EdiscoverySearchController($q, $stateParams, $translate, $timeout, $scope, $window, Analytics, EdiscoveryService, EdiscoveryNotificationService,
+  function EdiscoverySearchController($q, $stateParams, $translate, $timeout, $scope, $window, Analytics, Authinfo, EdiscoveryService, EdiscoveryNotificationService,
     FeatureToggleService, ProPackService, Notification) {
     $scope.$on('$viewContentLoaded', function () {
       $window.document.title = $translate.instant('ediscovery.browserTabHeaderTitle');
@@ -50,7 +50,6 @@
     /* initial search variables page */
     vm.searchPlaceholder = $translate.instant('ediscovery.searchParameters.searchEmailPlaceholder');
     vm.searchHelpText = $translate.instant('ediscovery.searchParameters.searchEmailHelpText');
-    vm.messagesHelpText = $translate.instant('ediscovery.searchParameters.messagesHelpText');
     vm.searchByOptions = ['Email Address', 'Space ID'];
     vm.searchBySelected = '' || vm.searchByOptions[0];
     vm.searchModel = null;
@@ -176,27 +175,12 @@
       return errors;
     }
 
-    function dateWarnings(end) {
-      var warnings = [];
-      if (end !== moment().endOf('day').format('YYYY-MM-DD') && !vm.proPackPurchased) {
-        warnings.push($translate.instant('ediscovery.dateError.InvalidEndDate'));
-      }
-      return warnings;
-    }
-
     function validateDate() {
       vm.dateValidationError = null;
-      vm.dateValidationWarning = null;
       var errors = dateErrors(getStartDate(), getEndDate());
-      var warnings = dateWarnings(getEndDate());
       if (errors.length > 0) {
         vm.dateValidationError = {
           errors: errors,
-        };
-        return false;
-      } else if (warnings.length > 0) {
-        vm.dateValidationWarning = {
-          warnings: warnings,
         };
         return false;
       } else {
@@ -218,7 +202,7 @@
 
     /* Search Page Functions */
     function showHover() {
-      return vm.proPackEnabled && !vm.proPackPurchased;
+      return vm.proPackEnabled && !vm.proPackPurchased && Authinfo.isEnterpriseCustomer();
     }
 
     function getProPackTooltip() {
@@ -464,12 +448,12 @@
             EdiscoveryNotificationService.notify(report);
             vm.isReportComplete = true;
           })
-          .catch(function () {
-            Notification.error('ediscovery.encryption.unableGetPassword');
-          })
-          .finally(function () {
-            vm.isReportComplete = true;
-          });
+            .catch(function () {
+              Notification.error('ediscovery.encryption.unableGetPassword');
+            })
+            .finally(function () {
+              vm.isReportComplete = true;
+            });
         }
       });
     }
@@ -554,7 +538,7 @@
     function searchButtonDisabled(_error) {
       var error = !_.isUndefined(_error) ? _error : false;
       var disable = !vm.searchCriteria.roomId || vm.searchCriteria.roomId === '' || vm.searchingForRoom === true;
-      return vm.ediscoveryToggle ? (error || vm.dateValidationError || vm.dateValidationWarning) : disable;
+      return vm.ediscoveryToggle ? (error || vm.dateValidationError) : disable;
     }
 
     function retrySearch() {

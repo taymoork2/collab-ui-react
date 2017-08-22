@@ -1,5 +1,6 @@
 import hybridCallServiceConnectUserSettings from './index';
-import { IUserStatus } from 'modules/hercules/services/hybrid-services-user-sidepanel-helper.service';
+// import { IUserStatus } from 'modules/hercules/services/hybrid-services-user-sidepanel-helper.service';
+type IUserStatus = any;
 
 describe('hybridCallServiceConnectUserSettings', () => {
 

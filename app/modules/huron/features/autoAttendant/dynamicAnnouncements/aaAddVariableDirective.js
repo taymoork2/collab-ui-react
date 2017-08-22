@@ -17,6 +17,7 @@
         menuKeyIndex: '@aaKeyIndex',
         menuId: '@aaMenuId',
         aaElementType: '@aaElementType',
+        type: '@aaAnnouncementType',
       },
       controller: 'AAAddVariableCtrl',
       controllerAs: 'aaAddVariable',

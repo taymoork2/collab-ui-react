@@ -12,6 +12,10 @@
     @include vr-spacing(pl, 1.25);
   }
 
+  .report-filter {
+    width: 380px;
+  }
+
   .cs-card-layout {
     @include vr-spacing(mb, 1);
   }
@@ -53,5 +57,40 @@
   .ui-grid-row {
     text-align: left;
     top: rem-calc(30);
+  }
+
+  .cs-timepicker-container {
+    width: 100px;
+    height: 36px;
+    padding-left: 12px;
+  }
+
+  #startTime,
+  #endTime {
+    width: 100px;
+  }
+
+  .cs-datepicker,
+  #startDate,
+  #endDate {
+    width: 183px;
+  }
+
+  .data-span {
+    padding-left: 20px;
+    padding-right: 6px;
+  }
+
+  .cs-datepicker-normal {
+    width: 183px;
+  }
+
+  .searchfilter {
+    padding-right: 20px;
+  }
+
+  .searchbox,
+  .searchinput {
+    width: 240px;
   }
 }

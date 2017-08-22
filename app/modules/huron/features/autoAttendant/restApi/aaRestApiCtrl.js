@@ -2,8 +2,8 @@
   'use strict';
 
   angular
-  .module('uc.autoattendant')
-  .controller('AARestApiCtrl', AARestApiCtrl);
+    .module('uc.autoattendant')
+    .controller('AARestApiCtrl', AARestApiCtrl);
 
   /* @ngInject */
   function AARestApiCtrl($modal, $scope, AutoAttendantCeMenuModelService, AACommonService, AAUiModelService) {
@@ -11,6 +11,7 @@
 
     var doREST = 'doREST';
     var action;
+    vm.variables = [];
 
     vm.method = '';
     vm.url = '';

@@ -4,7 +4,7 @@
   module.exports = ServiceSetup;
 
   /* @ngInject */
-  function ServiceSetup($filter, $q, $translate, Authinfo, AvrilSiteService, AvrilSiteUpdateService, CeSiteService, CustomerCommonService, CustomerCosRestrictionServiceV2, DateFormatService, ExternalNumberPool, FeatureToggleService, InternalNumberRangeService, MediaManagerService, SiteCountryService, SiteLanguageService, SiteService, TimeFormatService, TimeZoneService, VoicemailService, VoicemailTimezoneService) {
+  function ServiceSetup($filter, $q, $translate, Authinfo, AvrilSiteService, AvrilSiteUpdateService, CeSiteService, CustomerCommonService, CustomerCosRestrictionServiceV2, DateFormatService, ExternalNumberPool, FeatureToggleService, MediaManagerService, SiteCountryService, SiteLanguageService, SiteService, TimeFormatService, TimeZoneService, VoicemailService, VoicemailTimezoneService) {
     return {
       internalNumberRanges: [],
       sites: [],
@@ -97,50 +97,6 @@
         return CustomerCommonService.update({
           customerId: Authinfo.getOrgId(),
         }, customer).$promise;
-      },
-
-      createInternalNumberRange: function (internalNumberRange) {
-        if (_.isUndefined(internalNumberRange.uuid)) {
-          internalNumberRange.name = internalNumberRange.description = internalNumberRange.beginNumber + ' - ' + internalNumberRange.endNumber;
-          internalNumberRange.patternUsage = 'Device';
-          return InternalNumberRangeService.save({
-            customerId: Authinfo.getOrgId(),
-          }, internalNumberRange, function (data, headers) {
-            internalNumberRange.uuid = headers('location').split('/').pop();
-          }).$promise;
-        } else {
-          return $q.resolve();
-        }
-      },
-
-      updateInternalNumberRange: function (internalNumberRange) {
-        if (!_.isUndefined(internalNumberRange.uuid)) {
-          internalNumberRange.name = internalNumberRange.description = internalNumberRange.beginNumber + ' - ' + internalNumberRange.endNumber;
-          internalNumberRange.patternUsage = 'Device';
-          return InternalNumberRangeService.save({
-            customerId: Authinfo.getOrgId(),
-            internalNumberRangeId: internalNumberRange.uuid,
-          }, internalNumberRange, function (data, headers) {
-            internalNumberRange.uuid = headers('location').split('/').pop();
-          }).$promise;
-        } else {
-          return $q.resolve();
-        }
-      },
-
-      deleteInternalNumberRange: function (internalNumberRange) {
-        return InternalNumberRangeService.delete({
-          customerId: Authinfo.getOrgId(),
-          internalNumberRangeId: internalNumberRange.uuid,
-        }).$promise;
-      },
-
-      listInternalNumberRanges: function () {
-        return InternalNumberRangeService.query({
-          customerId: Authinfo.getOrgId(),
-        }, _.bind(function (internalNumberRanges) {
-          this.internalNumberRanges = internalNumberRanges;
-        }, this)).$promise;
       },
 
       getDateFormats: function () {
@@ -253,9 +209,9 @@
         });
         return ftSupportedObjects;
       })
-      .catch(function () {
-        return ftSupportedObjects;
-      });
+        .catch(function () {
+          return ftSupportedObjects;
+        });
     }
 
     function checkFeatureToggleSupport(feature) {

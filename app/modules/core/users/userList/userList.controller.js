@@ -9,7 +9,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     .controller('UserListCtrl', UserListCtrl);
 
   /* @ngInject */
-  function UserListCtrl($q, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Auth, Config, FeatureToggleService,
+  function UserListCtrl($q, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Auth, Config, FeatureToggleService, GridCellService,
     Log, LogMetricsService, Notification, Orgservice, Userservice, UserListService, Utils, DirSyncService, UserOverviewService) {
     var vm = this;
 
@@ -43,7 +43,6 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
       by: 'name',
       order: 'ascending',
     };
-    $scope.userName = Authinfo.getUserName();
     $scope.placeholder = {
       name: $translate.instant('usersPage.all'),
       filterValue: '',
@@ -78,22 +77,30 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     $scope.isHuronEnabled = isHuronEnabled;
     $scope.isOnlyAdmin = isOnlyAdmin;
     $scope.isOnlineBuyer = isOnlineBuyer;
-    $scope.resendInvitation = resendInvitation;
     $scope.setDeactivateUser = setDeactivateUser;
     $scope.setDeactivateSelf = setDeactivateSelf;
-    $scope.showUserDetails = showUserDetails;
     $scope.getUserLicenses = getUserLicenses;
-    $scope.canShowUserDelete = canShowUserDelete;
-    $scope.canShowResendInvite = canShowResendInvite;
-    $scope.canShowActionsMenu = canShowActionsMenu;
-    $scope.handleDeleteUser = handleDeleteUser;
-    $scope.getUserPhoto = Userservice.getUserPhoto;
-    $scope.firstOfType = firstOfType;
-    $scope.isValidThumbnail = Userservice.isValidThumbnail;
+
+    // graph appScope data and functions
+    vm.userName = Authinfo.getUserName();
+    vm.isHuronUser = Userservice.isHuronUser;
+    vm.canShowActionsMenu = canShowActionsMenu;
+    vm.keypressResendInvitation = keypressResendInvitation;
+    vm.resendInvitation = resendInvitation;
+    vm.canShowUserDelete = canShowUserDelete;
+    vm.canShowResendInvite = canShowResendInvite;
+    vm.keypressHandleDeleteUser = keypressHandleDeleteUser;
+    vm.handleDeleteUser = handleDeleteUser;
+    vm.firstOfType = firstOfType;
+    vm.isValidThumbnail = Userservice.isValidThumbnail;
+    vm.getUserPhoto = Userservice.getUserPhoto;
+    vm.showUserDetails = showUserDetails;
+    vm.selectRow = selectRow;
 
     $scope.getUserList = getUserList;
     $scope.onManageUsers = onManageUsers;
     $scope.sortDirection = sortDirection;
+    $scope.deselectRow = deselectRow;
 
     ////////////////
     var eventListeners = [];
@@ -125,16 +132,6 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
           $state.go('users.add');
         }
       }, 0);
-
-      // if the side panel is closing unselect the user
-      eventListeners.push($rootScope.$on('$stateChangeSuccess', function () {
-        if ($state.includes('users.list')) {
-          $scope.currentUser = null;
-          if ($scope.gridApi && $scope.gridApi.selection) {
-            $scope.gridApi.selection.clearSelectedRows();
-          }
-        }
-      }));
 
       // list users when we have authinfo data back, or new users have been added/activated
       $scope.$on('AuthinfoUpdated', function () {
@@ -403,7 +400,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
 
     function canShowActionsMenu(user) {
       return (user.userStatus === 'pending' || !$scope.dirsyncEnabled) &&
-        ($scope.canShowResendInvite(user) || $scope.canShowUserDelete(user));
+        (vm.canShowResendInvite(user) || vm.canShowUserDelete(user));
     }
 
     function canShowUserDelete(user) {
@@ -419,6 +416,14 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
         !$scope.isOnlineBuyer(user);
     }
 
+    function keypressHandleDeleteUser($event, user, isSelf) {
+      if ($event.keyCode === GridCellService.ENTER || $event.keyCode === GridCellService.SPACE) {
+        vm.handleDeleteUser($event, user, isSelf);
+      } else {
+        $event.stopPropagation();
+      }
+    }
+
     function handleDeleteUser($event, user, isSelf) {
       $event.stopPropagation();
       if (isSelf) {
@@ -431,11 +436,11 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     function setFilter(filter) {
       $scope.activeFilter = filter || 'all';
       if (filter === 'administrators') {
-        $scope.gridData = $scope.userList.adminUsers;
+        $scope.gridOptions.data = $scope.userList.adminUsers;
       } else if (filter === 'partners') {
-        $scope.gridData = $scope.userList.partnerUsers;
+        $scope.gridOptions.data = $scope.userList.partnerUsers;
       } else {
-        $scope.gridData = $scope.userList.allUsers;
+        $scope.gridOptions.data = $scope.userList.allUsers;
       }
     }
 
@@ -492,7 +497,16 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
       return (user.userStatus === 'pending' || user.userStatus === 'error' || isHuronUser) && !$scope.isCSB;
     }
 
-    function resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {
+    function keypressResendInvitation($event, userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {
+      if ($event.keyCode === GridCellService.ENTER || $event.keyCode === GridCellService.SPACE) {
+        vm.resendInvitation($event, userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements);
+      } else {
+        $event.stopPropagation();
+      }
+    }
+
+    function resendInvitation($event, userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {
+      $event.stopPropagation();
       Userservice.resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements)
         .then(function () {
           Notification.success('usersPage.emailSuccess');
@@ -522,59 +536,45 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     function configureGrid() {
       var deferred = $q.defer();
 
-      var photoCellTemplate = '<img ng-if="grid.appScope.isValidThumbnail(row.entity)" class="user-img" ng-src="{{grid.appScope.getUserPhoto(row.entity)}}"/>' +
-        '<span ng-if="!grid.appScope.isValidThumbnail(row.entity)" class="user-img">' +
-        '<i class="icon icon-user"></i>' +
-        '</span>';
-
-      var columnDefs = [
-        {
-          field: 'photos',
-          displayName: '',
-          sortable: false,
-          cellTemplate: photoCellTemplate,
-          width: 70,
-        }, {
-          field: 'name.givenName',
-          id: 'givenName',
-          displayName: $translate.instant('usersPage.firstnameHeader'),
-          sortable: true,
-        }, {
-          field: 'name.familyName',
-          id: 'familyName',
-          displayName: $translate.instant('usersPage.lastnameHeader'),
-          sortable: true,
-        }, {
-          field: 'displayName',
-          id: 'displayName',
-          displayName: $translate.instant('usersPage.displayNameHeader'),
-          sortable: true,
-        }, {
-          field: 'userName',
-          id: 'userName',
-          displayName: $translate.instant('usersPage.emailHeader'),
-          sortable: true,
-        }, {
-          field: 'userStatus',
-          id: 'userStatus',
-          cellFilter: 'userListFilter',
-          sortable: false,
-          cellTemplate: getTemplate('status.tpl'),
-          displayName: $translate.instant('usersPage.status'),
-        }, {
-          field: 'action',
-          displayName: $translate.instant('usersPage.actionHeader'),
-          sortable: false,
-          cellTemplate: getTemplate('actions.tpl'),
-        },
-      ];
+      var columnDefs = [{
+        field: 'photos',
+        displayName: '',
+        cellTemplate: getTemplate('photoCell.tpl'),
+        width: 70,
+      }, {
+        field: 'name.givenName',
+        id: 'givenName',
+        displayName: $translate.instant('usersPage.firstnameHeader'),
+        cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showUserDetails(row.entity)" cell-value="row.entity.name.givenName"></cs-grid-cell>',
+      }, {
+        field: 'name.familyName',
+        id: 'familyName',
+        displayName: $translate.instant('usersPage.lastnameHeader'),
+        cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showUserDetails(row.entity)" cell-value="row.entity.name.familyName"></cs-grid-cell>',
+      }, {
+        field: 'displayName',
+        id: 'displayName',
+        displayName: $translate.instant('usersPage.displayNameHeader'),
+        cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showUserDetails(row.entity)" cell-value="row.entity.displayName"></cs-grid-cell>',
+      }, {
+        field: 'userName',
+        id: 'userName',
+        displayName: $translate.instant('usersPage.emailHeader'),
+        cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showUserDetails(row.entity)" cell-value="row.entity.userName"></cs-grid-cell>',
+      }, {
+        field: 'userStatus',
+        id: 'userStatus',
+        cellFilter: 'userListFilter',
+        displayName: $translate.instant('usersPage.status'),
+        cellTemplate: getTemplate('status.tpl'),
+      }, {
+        field: 'action',
+        displayName: $translate.instant('usersPage.actionHeader'),
+        cellTemplate: getTemplate('actions.tpl'),
+      }];
 
       function onRegisterApi(gridApi) {
         $scope.gridApi = gridApi;
-
-        gridApi.selection.on.rowSelectionChanged($scope, function (row) {
-          $scope.showUserDetails(row.entity);
-        });
 
         gridApi.infiniteScroll.on.needLoadMoreData($scope, function () {
           // only load more data if we are allowed to
@@ -590,13 +590,8 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
       }
 
       $scope.gridOptions = {
-        data: 'gridData',
-        multiSelect: false,
+        appScopeProvider: vm,
         rowHeight: 45,
-        enableRowHeaderSelection: false,
-        enableColumnResize: true,
-        enableColumnMenus: false,
-        enableHorizontalScrollbar: 0,
         infiniteScrollDown: true,
         onRegisterApi: onRegisterApi,
         columnDefs: columnDefs,
@@ -605,12 +600,21 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
       return deferred.promise;
     }
 
+    function deselectRow() {
+      $scope.currentUser = null;
+    }
+
+    function selectRow(grid, row) {
+      GridCellService.selectRow(grid, row);
+      vm.showUserDetails(row.entity);
+    }
+
     function showUserDetails(user) {
       //Service profile
       $scope.entitlements = Utils.getSqEntitlements(user);
       $scope.currentUser = user;
       $scope.roles = user.roles;
-      $scope.queryuserslist = $scope.gridData;
+      $scope.queryuserslist = $scope.gridOptions.data;
       $state.go('user-overview', {
         queryuserslist: $scope.queryuserslist,
         currentUserId: $scope.currentUser.id,
@@ -621,7 +625,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     // necessary because chrome and firefox prioritize :last-of-type, :first-of-type, and :only-of-type differently when applying css
     // should mark the first 2 users as 'first' to prevent the menu from disappearing under the grid titles
     function firstOfType(row) {
-      return _.eq(_.get(row, 'entity.id'), _.get($scope.gridData, '[0].id')) || _.eq(_.get(row, 'entity.id'), _.get($scope.gridData, '[1].id'));
+      return _.eq(_.get(row, 'entity.id'), _.get($scope.gridOptions.data, '[0].id')) || _.eq(_.get(row, 'entity.id'), _.get($scope.gridOptions.data, '[1].id'));
     }
 
     function sortDirection(scope, sortColumns) {

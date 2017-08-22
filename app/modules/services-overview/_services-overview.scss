@@ -74,6 +74,15 @@
               color: $color-primary-base;
             }
           }
+
+          .badge--premium {
+            vertical-align: middle;
+
+            &:hover {
+              background-color: $color-primary-base;
+              color: $brand-white;
+            }
+          }
         }
 
         h4.size-1 {
@@ -243,6 +252,10 @@
     }
 
     .btn--primary {
+      width: calc(100% - 1rem);
+    }
+
+    .btn.disabled {
       width: calc(100% - 1rem);
     }
   }

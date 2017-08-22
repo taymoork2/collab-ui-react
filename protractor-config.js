@@ -21,6 +21,7 @@ var LONG_TIMEOUT = 1000 * 60 * 2;
 var VERY_LONG_TIMEOUT = 1000 * 60 * 5;
 var E2E_FAIL_RETRY = appConfig.e2eFailRetry;
 var NEWLINE = '\n';
+var ANIMATION_DURATION_MS = 300;
 
 var maxInstances;
 if (process.env.SAUCE__MAX_INSTANCES) {
@@ -103,6 +104,7 @@ exports.config = {
 
     global.TIMEOUT = TIMEOUT;
     global.LONG_TIMEOUT = LONG_TIMEOUT;
+    global.ANIMATION_DURATION_MS = ANIMATION_DURATION_MS;
 
     global.getE2eRunCounter = processEnvUtil.getE2eRunCounter;
     global.getE2eRunCounterMax = processEnvUtil.getE2eRunCounterMax;

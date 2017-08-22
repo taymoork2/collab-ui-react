@@ -60,4 +60,14 @@ describe('Chat Template Service', function () {
       expect(angular.equals(url, logoUrl)).toBeTruthy();
     });
   });
+
+  it('should return getOverviewPageCards length as 5, if isVirtualChatAssistantEnabled is true', function () {
+    var result = CTService.getOverviewPageCards('chat', false, true);
+    expect(result.length).toBe(5);
+  });
+
+  it('should return getOverviewPageCards length as 5, if isVirtualChatAssistantEnabled is false', function () {
+    var result = CTService.getOverviewPageCards('chat', false, false);
+    expect(result.length).toBe(4);
+  });
 });

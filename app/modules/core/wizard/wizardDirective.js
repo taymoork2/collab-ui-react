@@ -97,9 +97,12 @@ require('./_wizard.scss');
     vm.isCurrentTab = isCurrentTab;
     vm.loadOverview = loadOverview;
     vm.showDoItLater = false;
-    vm.showDontActivate = false;
+    vm.showDoNotProvision = false;
+    vm.willNotProvision = willNotProvision;
+    vm.doNotProvisionAndProceedNext = doNotProvisionAndProceedNext;
+    vm.proceedNext = proceedNext;
+    vm.isSingleTab = isSingleTab;
     vm.wizardNextLoad = false;
-
     vm.showSkipTabBtn = false;
 
     // If tabs change (feature support in SetupWizard) and a step is not defined, re-initialize
@@ -140,7 +143,7 @@ require('./_wizard.scss');
       setNextText();
       vm.isNextDisabled = false;
       if (hasPendingLicenses()) {
-        vm.showDontActivate = true;
+        vm.showDoNotProvision = true;
       }
     }
 
@@ -293,13 +296,6 @@ require('./_wizard.scss');
           } else {
             nextStepSuccessful();
           }
-        } else if (getTab().name === 'meetingSettings') {
-          if (getStep().name === 'summary') {
-            $rootScope.$broadcast('wizard-meeting-settings-setup-save-event');
-            nextStepSuccessful();
-          } else {
-            nextStepSuccessful();
-          }
         } else {
           nextStepSuccessful();
         }
@@ -311,7 +307,10 @@ require('./_wizard.scss');
     var enterpriseSipSaveDeregister = $rootScope.$on('wizard-enterprise-sip-save', function () {
       nextStepSuccessful();
     });
-    $scope.$on('$destroy', enterpriseSipSaveDeregister);
+
+    $scope.$on('$destroy', function () {
+      enterpriseSipSaveDeregister();
+    });
 
     function nextStepSuccessful() {
       var steps = getSteps();
@@ -347,6 +346,23 @@ require('./_wizard.scss');
       });
     }
 
+    function doNotProvisionAndProceedNext() {
+      SetupWizardService.setWillNotProvision(true);
+      nextStep();
+    }
+
+    function proceedNext() {
+      if (SetupWizardService.getWillNotProvision()) {
+        SetupWizardService.setWillNotProvision(false);
+      }
+
+      nextStep();
+    }
+
+    function willNotProvision() {
+      return SetupWizardService.getWillNotProvision();
+    }
+
     function isCustomerPartner() {
       return Authinfo.hasRole('CUSTOMER_PARTNER');
     }
@@ -377,6 +393,10 @@ require('./_wizard.scss');
       return vm.onlyShowSingleTab && vm.numberOfSteps === 1;
     }
 
+    function isSingleTab() {
+      return vm.onlyShowSingleTab;
+    }
+
     function isFirstTime() {
       return $scope.isFirstTime;
     }
@@ -396,8 +416,8 @@ require('./_wizard.scss');
     function setNextText() {
       if ((isFirstTab() && isFirstTime() && !isCustomerPartner() && !isFromPartnerLaunch()) || (isFirstTab() && isFirstStep() && !isSingleTabSingleStep())) {
         vm.nextText = $translate.instant('firstTimeWizard.getStarted');
-      } else if (isFirstTime() && isLastTab() && isLastStep() && hasPendingLicenses()) {
-        vm.nextText = $translate.instant('common.activate');
+      } else if (isFirstTime() && isLastTab() && isFirstStep() && hasPendingLicenses()) {
+        vm.nextText = $translate.instant('common.provision');
       } else if (isFirstTime() && isLastTab() && isLastStep()) {
         vm.nextText = $translate.instant('common.finish');
       } else if ((getTab().name === 'meetingSettings') && isLastStep()) {

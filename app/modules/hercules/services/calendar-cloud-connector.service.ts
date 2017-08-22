@@ -1,16 +1,17 @@
 import { IToolkitModalService } from 'modules/core/modal';
-import { HybridServiceId, StatusIndicatorCSSClass } from 'modules/hercules/hybrid-services.types';
+import { HybridServiceId, ServiceStatusCSSClass } from 'modules/hercules/hybrid-services.types';
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
+import { HighLevelStatusForService } from 'modules/hercules/services/hybrid-services-cluster.service';
 
 interface IService {
   aclAdminAccount?: string;
   apiClientId?: string;
   errorCode: ProvisioningResult;
   provisioned: boolean;
-  serviceId: string;
+  serviceId: HybridServiceId;
   setup: boolean;
-  status: string;
-  statusCss: string;
+  status: HighLevelStatusForService;
+  cssClass: ServiceStatusCSSClass;
 }
 
 interface IConfig {
@@ -128,7 +129,7 @@ export class CloudConnectorService {
         // Align this with the HybridServicesClusterService.getServiceStatus() to make the UI handling simpler
         service.serviceId = this.serviceId;
         service.setup = service.provisioned;
-        service.statusCss = this.getStatusCss(service);
+        service.cssClass = this.getStatusCss(service);
         service.status = this.translateStatus(service);
         return service;
       });
@@ -152,7 +153,7 @@ export class CloudConnectorService {
     return `hercules.settings.googleCalendar.provisioningResults.${ProvisioningResult[provisioningResultCode]}`;
   }
 
-  private getStatusCss(service: IService): StatusIndicatorCSSClass {
+  private getStatusCss(service: IService): ServiceStatusCSSClass {
     if (!service || !service.provisioned || !service.status) {
       return 'disabled';
     }
@@ -168,19 +169,18 @@ export class CloudConnectorService {
     }
   }
 
-  private translateStatus(service: IService): 'setupNotComplete' | 'operational' | 'outage' | 'impaired' | 'unknown' {
+  private translateStatus(service: IService): HighLevelStatusForService {
     if (!service || !service.provisioned || !service.status) {
       return 'setupNotComplete';
     }
     switch (service.status.toLowerCase()) {
       case 'ok':
         return 'operational';
+      default:
       case 'error':
         return 'outage';
       case 'warn':
         return 'impaired';
-      default:
-        return 'unknown';
     }
   }
 }

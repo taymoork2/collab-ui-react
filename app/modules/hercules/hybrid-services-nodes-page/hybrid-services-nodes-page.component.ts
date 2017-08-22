@@ -1,8 +1,7 @@
 import { Notification } from 'modules/core/notifications';
 import { IToolkitModalService } from 'modules/core/modal';
-import { IConnectorAlarm, ICluster, ConnectorMaintenanceMode, ConnectorType, IHost, IConnector, ClusterTargetType, IConnectorProvisioning, ConnectorState } from 'modules/hercules/hybrid-services.types';
+import { IConnectorAlarm, ICluster, ConnectorMaintenanceMode, ConnectorType, IHost, ClusterTargetType, ConnectorState, IExtendedClusterFusion, IConnectorExtendedProperties } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
-import { HybridServicesClusterStatesService, IMergedStateSeverity } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 
 interface ISimplifiedConnector {
@@ -13,8 +12,7 @@ interface ISimplifiedConnector {
   maintenanceMode: ConnectorMaintenanceMode;
   originalState: ConnectorState;
   service: string;
-  status: IMergedStateSeverity;
-  statusName: string;
+  extendedProperties: IConnectorExtendedProperties;
   upgradeState: string;
   version: string;
 }
@@ -38,7 +36,7 @@ interface IData {
 class HybridServicesNodesPageCtrl implements ng.IComponentController {
   private REFRESH_INTERVAL = 30 * 1000;
   private refreshTimeout: ng.IPromise<void> | null = null;
-  private clusterCache: ICluster;
+  private clusterCache: IExtendedClusterFusion;
   public connectorTypesWithUpgrade: ConnectorType[] = [];
   public nextUpgradeStartTime = '';
   public data: IData;
@@ -55,7 +53,6 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
     private $translate: ng.translate.ITranslateService,
     private $state: ng.ui.IStateService,
     private HybridServicesClusterService: HybridServicesClusterService,
-    private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
     private HybridServicesUtilsService: HybridServicesUtilsService,
     private ModalService,
     private Notification: Notification,
@@ -80,7 +77,7 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
     return this.HybridServicesUtilsService.hybridConnectorsComparator(a.value, b.value);
   }
 
-  public openSidepanel(connector: ISimplifiedConnector) {
+  public openSidepanel(connector: ISimplifiedConnector): void {
     this.openedConnector = connector;
     this.$state.go('hybrid-services-connector-sidepanel', {
       connector: connector,
@@ -208,7 +205,7 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
       this.refreshing = true;
     }
     return this.HybridServicesClusterService.get(id)
-      .then((cluster: ICluster) => {
+      .then((cluster) => {
         this.clusterCache = cluster;
         return this.getSerials(cluster);
       })
@@ -260,20 +257,7 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
     });
   }
 
-  private processData(cluster: ICluster, nodes: IHost[]): IData {
-    function hasUpgradeAvailable(provisioning: IConnectorProvisioning[], connector: IConnector): boolean {
-      const provisioningType = _.find(provisioning, { connectorType: connector.connectorType });
-      if (provisioningType) {
-        // Upgrade available if:
-        // - has the right type
-        // - is not currently upgrading
-        // - version is different from the available version
-        return provisioningType.connectorType === connector.connectorType &&
-          connector.upgradeState === 'upgraded' &&
-          !_.isUndefined(provisioningType.availableVersion) && connector.runningVersion !== provisioningType.availableVersion;
-      }
-      return false;
-    }
+  private processData(cluster: IExtendedClusterFusion, nodes: IHost[]): IData {
     const result: IData = {
       id: cluster.id,
       name: cluster.name,
@@ -285,17 +269,15 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
           const connectors = _.chain(cluster.connectors)
             .filter({ hostSerial: node.serial })
             .map(connector => {
-              const mergedStatus = this.HybridServicesClusterStatesService.getMergedStateSeverity([connector]);
               const simplifiedConnector: ISimplifiedConnector = {
                 alarms: connector.alarms,
                 connectorType: connector.connectorType,
-                hasUpgradeAvailable: hasUpgradeAvailable(cluster.provisioning, connector),
+                hasUpgradeAvailable: connector.extendedProperties.hasUpgradeAvailable,
                 id: connector.id,
-                maintenanceMode: this.getMaintenanceModeForConnector(connector),
+                maintenanceMode: connector.extendedProperties.maintenanceMode,
                 originalState: connector.state,
                 service: this.$translate.instant(`hercules.shortConnectorNameFromConnectorType.${connector.connectorType}`),
-                status: mergedStatus,
-                statusName: this.$translate.instant(`hercules.status.${mergedStatus.name}`),
+                extendedProperties: connector.extendedProperties,
                 upgradeState: connector.upgradeState,
                 version: connector.runningVersion,
               };
@@ -322,21 +304,6 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
       .uniq()
       .value();
     return result;
-  }
-
-  private getMaintenanceModeForConnector(connector: IConnector): ConnectorMaintenanceMode {
-    // `connector.maintenanceMode` should reflect the status it should be in (maps `maintenanceMode` on the node)
-    // `connector.connectorStatus.maintenanceMode` is the latest mode received via an heartbeat
-    const fromHeartbeat = _.get<IConnector, ConnectorMaintenanceMode>(connector, 'connectorStatus.maintenanceMode');
-    if (connector.maintenanceMode === 'off') {
-      return 'off';
-    } else if (connector.maintenanceMode === 'on' && _.includes(['stopped', 'disabled', 'offline'], connector.state)) {
-      return 'on';
-    } else if (connector.maintenanceMode === 'on' && fromHeartbeat === 'off') {
-      return 'pending';
-    } else {
-      return fromHeartbeat;
-    }
   }
 }
 

@@ -56,8 +56,27 @@
       idleTabTimeout: 1200000, //20 mins
       idleTabKeepAliveEvent: 'IDLE_TIMEOUT_KEEP_ALIVE',
 
+      oauthError: {
+        unauthorizedClient: 'unauthorized_client',
+        invalidScope: 'invalid_scope',
+        unsupportedResponseType: 'unsupported_response_type',
+        accessDenied: 'access_denied',
+        serverError: 'server_error',
+        temporarilyUnavailable: 'temporarily_unavailable',
+        serviceUnavailable: 'service_unavailable', //Customized state, not in OAuth Spec.
+      },
+
       siteDomainUrl: {
         webexUrl: '.webex.com',
+      },
+
+      commerceRelation: {
+        partner: 'Partner',
+      },
+
+      customerTypes: {
+        enterprise: 'Enterprise',
+        pending: 'Pending',
       },
 
       entitlements: {
@@ -105,6 +124,10 @@
         care: 'CARE',
         advanceCare: 'CAREVOICE',
         context: 'CONTEXT',
+      },
+
+      shallowValidationSourceTypes: {
+        serviceSetup: 'ATLAS_SERVICE_SETUP',
       },
 
       // These can be used to access object properties for trials
@@ -223,6 +246,8 @@
         CVC: 'CVC', // Care Voice Channel
         MSGR: 'MSGR', // WebEx Messenger (as of 2017-05-17, managed externally and not managed by Atlas)
         MGMTPRO: 'MGMTPRO', // IT Pro Pack
+        TSP: 'TSP', // Telephony Service Provider
+        CCASP: 'CCASP', //Cloud Connected Audio - Service Partners
       },
 
       licenseStatus: {
@@ -234,6 +259,7 @@
       },
 
       licenseTypes: {
+        AUDIO: 'AUDIO',
         MESSAGING: 'MESSAGING',
         CONFERENCING: 'CONFERENCING',
         COMMUNICATION: 'COMMUNICATION',
@@ -242,6 +268,12 @@
         CMR: 'CMR',
         CARE: 'CARE',
         ADVANCE_CARE: 'ADVANCE_CARE',
+      },
+
+      setupTypes: {
+        transfer: 'TRANSFER',
+        trialConvert: 'TRIALCONVERT',
+        legacy: 'LEGACY',
       },
 
       messageErrors: {
@@ -419,7 +451,7 @@
         'services-overview',
       ],
       Application: ['organizations', 'organization-overview'],
-      Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org', 'helpdesklaunch'],
+      Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org', 'helpdesklaunch', 'provisioning', 'order-details'],
       Compliance_User: ['ediscovery', 'ediscovery.search', 'ediscovery.reports'],
       Partner_Management: ['partnerManagement'],
     };
@@ -455,7 +487,7 @@
         'huronnewfeature',
         'huronsettings',
         'huronrecords',
-        'huronsettingsnew',
+        'huronsettingslocation',
         'huntgroupedit',
         'intercomgroups',
         'mediaonhold',

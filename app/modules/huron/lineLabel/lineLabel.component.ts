@@ -1,6 +1,9 @@
 class LineLabel implements ng.IComponentController {
   public lineLabelToggle: boolean;
   public lineLabel: string;
+  public applyToAllSharedLines: boolean;
+  public onChangeFn: Function;
+  public showApplyToAllSharedLines: boolean;
 
   /* @ngInject */
   constructor(
@@ -12,6 +15,18 @@ class LineLabel implements ng.IComponentController {
       .then((result) => {
         this.lineLabelToggle = result;
       });
+    this.applyToAllSharedLines = false;
+  }
+
+  public onLineLabelChange(): void {
+    this.change(this.lineLabel, this.applyToAllSharedLines);
+  }
+
+  private change(lineLabel: string, applyToAllSharedLines: boolean): void {
+    this.onChangeFn({
+      lineLabel: lineLabel,
+      applyToAllSharedLines: applyToAllSharedLines,
+    });
   }
 }
 
@@ -19,6 +34,9 @@ export class LineLabelComponent implements ng.IComponentOptions {
   public controller = LineLabel;
   public templateUrl = 'modules/huron/lineLabel/lineLabel.html';
   public bindings = {
+    onChangeFn: '&',
     lineLabel: '<',
+    showApplyToAllSharedLines: '<',
+    applyToAllSharedLines: '=',
   };
 }

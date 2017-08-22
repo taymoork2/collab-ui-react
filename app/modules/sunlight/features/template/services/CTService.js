@@ -245,7 +245,7 @@
       };
     }
 
-    function getOverviewPageCards(mediaType, isProactiveFlagEnabled) {
+    function getOverviewPageCards(mediaType, isProactiveFlagEnabled, isVirtualChatAssistantEnabled) {
       var cards = [];
       switch (mediaType) {
         case 'chat':
@@ -253,6 +253,9 @@
             cards.push({ name: 'proactivePrompt', mediaIcons: [] });
           }
           cards.push({ name: 'customerInformation', mediaIcons: [] });
+          if (isVirtualChatAssistantEnabled) {
+            cards.push({ name: 'virtualAssistant', mediaIcons: [] });
+          }
           cards.push({ name: 'agentUnavailable', mediaIcons: [] });
           cards.push({ name: 'offHours', mediaIcons: [] });
           cards.push({ name: 'feedback', mediaIcons: [] });
@@ -267,6 +270,9 @@
             cards.push({ name: 'proactivePrompt', mediaIcons: ['icon-message'] });
           }
           cards.push({ name: 'customerInformationChat', mediaIcons: ['icon-message'] });
+          if (isVirtualChatAssistantEnabled) {
+            cards.push({ name: 'virtualAssistant', mediaIcons: ['icon-message'] });
+          }
           cards.push({ name: 'agentUnavailable', mediaIcons: ['icon-message'] });
           cards.push({ name: 'feedback', mediaIcons: ['icon-message'] });
           cards.push({ name: 'customerInformationCallback', mediaIcons: ['icon-phone'] });
@@ -319,6 +325,11 @@
           states.push('feedbackCallback');
           states.push('offHours');
           states.push('summary');
+          break;
+        case 'virtualAssistant':
+          states.push('virtualAssistantName');
+          states.push('virtualAssistantAvatar');
+          states.push('virtualAssistantSummary');
           break;
         default:
           return states;

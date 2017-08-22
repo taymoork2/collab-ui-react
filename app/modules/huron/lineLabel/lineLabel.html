@@ -10,7 +10,17 @@
         id="lineLabel" 
         name="lineLabel" 
         ng-model="$ctrl.lineLabel" 
-        maxlength="30">
+        maxlength="30"
+        ng-change="$ctrl.onLineLabelChange()">
+       <div class="apply_to_all" ng-if="$ctrl.showApplyToAllSharedLines">
+        <input
+          cs-input type="checkbox"
+          id="applyToAllSharedLinesBox"
+          name="applyToAllSharedLinesBox"
+          ng-model="$ctrl.applyToAllSharedLines"
+          cs-input-label="{{'lineLabel.applyToAllSharedDescription'|translate}}"
+          ng-change="$ctrl.onLineLabelChange()">
+        </div> 
     </div>
   </div>
 </div>

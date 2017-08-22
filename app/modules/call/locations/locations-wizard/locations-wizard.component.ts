@@ -1,8 +1,11 @@
-import { Location, LocationsService } from 'modules/call/locations/shared';
+import {
+  Location, LocationsService, LocationCallerId,
+  HIDDEN, VoicemailPilotNumber,
+} from '../shared';
 
 import {
   PstnModel, PstnService, PstnCarrier,
-  SWIVEL,
+  SWIVEL, PstnAddressService, Address,
 } from 'modules/huron/pstn';
 
 import {
@@ -10,7 +13,6 @@ import {
   HuronSettingsService, HuronSettingsData,
 } from 'modules/call/settings/shared';
 import { IOption } from 'modules/huron/dialing';
-import { CompanyNumber } from 'modules/call/settings/settings-company-caller-id';
 import { Notification } from 'modules/core/notifications';
 
 export class LocationsWizardComponent {
@@ -22,6 +24,7 @@ export class LocationsWizardComponent {
 const PAGE_ESA: number = 6;
 
 class LocationsWizardController implements ng.IComponentController {
+  public ftsw: boolean = false; //Used for child components
   public addressFound: boolean;
   public form: ng.IFormController;
   public siteId: string;
@@ -33,8 +36,8 @@ class LocationsWizardController implements ng.IComponentController {
   public showEmergencyServiceAddress: boolean;
   public showDialPlanChangedDialog: boolean;
   public showVoiceMailDisableDialog: boolean;
-  public address = {};
-  public companyVoicemailOptions;
+  public address: Address = new Address();
+  public voicemailEnable: boolean = false;
   public addressValidated: boolean = false;
   public addressValidating: boolean = false;
   public validationMessages = {
@@ -42,14 +45,15 @@ class LocationsWizardController implements ng.IComponentController {
   };
   public namePlaceholder: string;
   public huronSettingsData: HuronSettingsData;
-
   public locationDetail: Location;
   public defaultCountry: string = 'US'; //TODO: KPC What is this for?
   public voicemailToEmail: boolean = false;  //TODO: KPC What is this for?
 
   private lastIndex = 6;
+
   /* @ngInject */
-  constructor(private $timeout: ng.ITimeoutService,
+  constructor(private $q: ng.IQService,
+              private $timeout: ng.ITimeoutService,
               private $element: ng.IRootElementService,
               private $state: ng.ui.IStateService,
               private $translate: ng.translate.ITranslateService,
@@ -59,11 +63,10 @@ class LocationsWizardController implements ng.IComponentController {
               private Orgservice,
               private PstnModel: PstnModel,
               private PstnService: PstnService,
-              private $q: ng.IQService,
               private HuronSettingsOptionsService: HuronSettingsOptionsService,
               private HuronSettingsService: HuronSettingsService,
               private LocationsService: LocationsService,
-              private PstnServiceAddressService,
+              private PstnAddressService: PstnAddressService,
               private Notification: Notification) {
     this.namePlaceholder = this.$translate.instant('locations.namePlaceholder');
   }
@@ -73,11 +76,11 @@ class LocationsWizardController implements ng.IComponentController {
       return license.licenseType === this.Config.licenseTypes.COMMUNICATION;
     }).length > 0;
 
-    this.Orgservice.getOrg(data => {
+    this.Orgservice.getOrg(_.noop, null, { basicInfo: true }).then( data => {
       if (data.countryCode) {
         this.PstnModel.setCountryCode(data.countryCode);
       }
-    }, null, { basicInfo: true });
+    });
 
     this.PstnService.getCustomer(this.Authinfo.getOrgId()).then(() => {
       this.PstnModel.setCustomerId(this.Authinfo.getOrgId());
@@ -95,23 +98,27 @@ class LocationsWizardController implements ng.IComponentController {
 
     //Use default site for now
     this.HuronSettingsService.get('')
-    .then(huronSettingsData => this.huronSettingsData = huronSettingsData)
+    .then((huronSettingsData: HuronSettingsData) => {
+      this.huronSettingsData = huronSettingsData;
+      this.locationDetail.preferredLanguage = this.huronSettingsData.site.preferredLanguage;
+    })
     .catch(response => this.Notification.errorResponse(response));
 
+    this.locationDetail = new Location();
     this.$q.resolve(this.initSettingsComponent());
   }
 
   private initSettingsComponent(): ng.IPromise<void> {
-    return this.HuronSettingsOptionsService.getOptions().then((options: HuronSettingsOptions) => {
+    return this.HuronSettingsOptionsService.getOptions()
+    .then((options: HuronSettingsOptions) => {
       this.settingsOptions = options;
-      this.locationDetail = new Location();
-    }).catch(response => {
+    })
+    .catch(response => {
       this.Notification.errorResponse(response);
-      this.locationDetail = new Location();
     });
   }
 
-  public onTimeZoneChanged(timeZone) {
+  public onTimeZoneChanged(timeZone: string) {
     this.locationDetail.timeZone = timeZone;
   }
 
@@ -137,14 +144,27 @@ class LocationsWizardController implements ng.IComponentController {
   }
 
   public onSteeringDigitChanged(steeringDigit: string): void {
-    this.locationDetail.steeringDigit = Number(steeringDigit);
+    this.locationDetail.steeringDigit = steeringDigit;
     this.setShowDialPlanChangedDialogFlag();
+  }
+
+  public onCallerIdChanged(callerId: LocationCallerId): void {
+    this.locationDetail.callerId = callerId;
   }
 
   public onRegionCodeChanged(regionCode: string, useSimplifiedNationalDialing: boolean): void {
     this.locationDetail.regionCodeDialing.regionCode = regionCode;
     this.locationDetail.regionCodeDialing.simplifiedNationalDialing = useSimplifiedNationalDialing;
     this.setShowDialPlanChangedDialogFlag();
+  }
+
+  public onLocationVoicemailChanged(voicemailPilotNumber: VoicemailPilotNumber): void {
+    this.locationDetail.voicemailPilotNumber = voicemailPilotNumber;
+  }
+
+  public onVoicemailFilter(filter: string): ng.IPromise<IOption[]> {
+    return this.HuronSettingsOptionsService.loadCompanyVoicemailNumbers(filter)
+      .then(numbers => this.settingsOptions.companyVoicemailOptions = numbers);
   }
 
   private setShowDialPlanChangedDialogFlag(): void {
@@ -159,35 +179,10 @@ class LocationsWizardController implements ng.IComponentController {
     }
   }
 
-  public onCompanyVoicemailChanged(number: string, generated: boolean, enabled: boolean): void {
-    this.showVoiceMailDisableDialog = enabled;
-    this.locationDetail.voicemailPilotNumber.number = number;
-    this.locationDetail.voicemailPilotNumber.generated = generated;
-  }
-
-  public onVoicemailToEmailChanged(voicemailToEmail: boolean) {
-    this.voicemailToEmail = voicemailToEmail;
-  }
-
-  public onCompanyCallerIdChanged(companyNumber: CompanyNumber): void {
-    if (companyNumber) {
-      this.locationDetail.callerIdNumber = companyNumber.pattern;
-    } else {
-      if (this.locationDetail.callerIdNumber) {
-        delete this.locationDetail.callerIdNumber;
-      }
-    }
-  }
-
-  public onCompanyVoicemailFilter(filter: string): ng.IPromise<IOption[]> {
-    return this.HuronSettingsOptionsService.loadCompanyVoicemailNumbers(filter)
-      .then(numbers => this.settingsOptions.companyVoicemailOptions = numbers);
-  }
-
   public validateAddress() {
     this.addressValidating = true;
-    this.PstnServiceAddressService.lookupAddressV2(this.address, this.PstnModel.getProviderId())
-      .then(address => {
+    this.PstnAddressService.lookup(this.PstnModel.getProviderId(), this.address)
+      .then((address: Address) => {
         if (address) {
           this.address = address;
           this.addressValidated = true;
@@ -203,7 +198,7 @@ class LocationsWizardController implements ng.IComponentController {
   }
 
   public resetAddr() {
-    this.address = {};
+    this.address = new Address();
     this.addressValidated = false;
     this.addressFound = false;
   }
@@ -218,7 +213,7 @@ class LocationsWizardController implements ng.IComponentController {
 
   public previousButton(): any {
     if (this.index === 0) {
-      return 'hidden';
+      return HIDDEN;
     }
     return true;
   }
@@ -273,11 +268,10 @@ class LocationsWizardController implements ng.IComponentController {
     }
   }
 
-  private saveLocation() {
+  private saveLocation(): void {
     this.LocationsService.createLocation(this.locationDetail)
     .then(() => this.$state.go('call-locations'))
     .catch((error) => this.Notification.errorResponse(error, 'locations.createFailed'));
-    //TODO if ESA is valid, set the ESA
   }
 
   public cancelModal(): void {

@@ -71,6 +71,7 @@ export interface ISecondaryReport {
   display: boolean;
   emptyDescription: string;
   errorDescription: string;
+  missingUsersErrorDescription?: string;
   search: boolean;
   state: string;
   sortOptions: IReportSortOption[];

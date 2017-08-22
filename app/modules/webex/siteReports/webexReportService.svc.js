@@ -23,6 +23,7 @@
       'recording_usage',
       'storage_utilization',
       'inactive_user',
+      'audit_log',
     ];
 
     var event_center_pageids = ['event_center_overview',
@@ -59,6 +60,7 @@
       recording_usage: 'recording_storage_usage',
       storage_utilization: 'storage_utilization_by_user',
       inactive_user: 'inactive_user',
+      audit_log: 'audit_log',
       event_center_overview: 'ec_report_summary',
       event_center_scheduled_events: 'ec_scheduled_events',
       event_center_held_events: 'ec_held_events',

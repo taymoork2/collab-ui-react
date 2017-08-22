@@ -23,18 +23,22 @@
           <div ng-switch-when="true">
             <span class="feature">
               <span class="feature-name" translate="context.dictionary.status"></span>
-              <span class="feature-details">
+              <span class="feature-details"
+                tooltip-class="context-tooltip" tooltip="{{$ctrl.inUseTooltipMessage}}" tooltip-placement="bottom"
+              >
                 <i class="icon icon-circle status-indicator success"></i>
-                <span class="context-status-block" tooltip-class="context-tooltip" tooltip="{{$ctrl.inUseTooltipMessage}}" tooltip-placement="bottom" translate="context.dictionary.inUse"></span>
+                <span class="context-status-block" translate="context.dictionary.inUse"></span>
               </span>
             </span>
           </div>
           <div ng-switch-when="false">
             <span class="feature">
               <span class="feature-name" translate="context.dictionary.status"></span>
-              <span class="feature-details">
+              <span class="feature-details"
+                tooltip-class="context-tooltip" tooltip="{{$ctrl.inUseTooltipMessage}}" tooltip-placement="bottom"
+              >
                 <i class="icon icon-circle status-indicator"></i>
-                <span class="context-status-block" tooltip-class="context-tooltip" tooltip="{{$ctrl.inUseTooltipMessage}}" tooltip-placement="bottom" translate="context.dictionary.notInUse"></span>
+                <span class="context-status-block" translate="context.dictionary.notInUse"></span>
               </span>
             </span>
           </div>
@@ -50,7 +54,7 @@
 
         <div class="feature">
           <span class="feature-name"  translate="context.dictionary.dateUpdated"></span>
-          <span class="feature-details" ng-if="$ctrl.lastUpdated">{{$ctrl.fieldset.lastUpdatedUI}}</span>
+          <span class="feature-details" ng-if="$ctrl.lastUpdated">{{$ctrl.fieldset.lastUpdated | momentDate : $ctrl.dateFormat }}</span>
           <span class="feature-details" ng-if="!$ctrl.lastUpdated" translate="context.dictionary.unavailable"></span>
         </div>
 

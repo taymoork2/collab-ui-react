@@ -1,13 +1,13 @@
 import * as provisionerHelper from './provisioner.helper';
 import * as atlasHelper from './provisioner.helper.atlas';
-import * as cmiHelper from './provisioner.helper.cmi';
+import * as cmiHelper from './huron/provisioner.helper.cmi';
 import * as helper from '../../api_sanity/test_helper';
 import * as _ from 'lodash';
 import * as Promise from 'promise';
-import { PstnCustomer } from './terminus-customers';
-import { PstnCustomerE911Signee } from './terminus-customers-customer-e911';
-import { PstnNumbersOrders } from './terminus-numbers-orders';
-import * as pstnHelper from './provisioner.helper.pstn';
+import { PstnCustomer } from './huron/terminus-customers';
+import { PstnCustomerE911Signee } from './huron/terminus-customers-customer-e911';
+import { PstnNumbersOrders } from './huron/terminus-numbers-orders';
+import * as pstnHelper from './huron/provisioner.helper.pstn';
 
 /* global LONG_TIMEOUT */
 
@@ -31,7 +31,7 @@ export function provisionAtlasCustomer(partnerName, trial) {
     });
 }
 
-export function provisionCmiCustomer(partnerName, customer, site, numberRange) {
+export function provisionCmiCustomer(partnerName, customer, site, numberRange, setupWiz) {
   return provisionerHelper.getToken(partnerName)
     .then(token => {
       console.log(`Creating customer ${customer.name} in CMI...`);
@@ -47,8 +47,12 @@ export function provisionCmiCustomer(partnerName, customer, site, numberRange) {
           return cmiHelper.createNumberRange(token, customer.uuid, numberRange);
         })
         .then(() => {
-          console.log('Number Range successfully created in CMI!');
-          return provisionerHelper.flipFtswFlag(token, customer.uuid);
+          if (!setupWiz) {
+            console.log('Number Range successfully created in CMI!');
+            return provisionerHelper.flipFtswFlag(token, customer.uuid);
+          } else {
+            return Promise.resolve();
+          }
         });
     });
 }
@@ -60,10 +64,10 @@ export function provisionCustomerAndLogin(customer) {
       if (atlasCustomer && customer.cmiCustomer) {
         customer.cmiCustomer.uuid = atlasCustomer.customerOrgId;
         customer.cmiCustomer.name = atlasCustomer.customerName;
-        return this.provisionCmiCustomer(customer.partner, customer.cmiCustomer, customer.cmiSite, customer.numberRange)
+        return this.provisionCmiCustomer(customer.partner, customer.cmiCustomer, customer.cmiSite, customer.numberRange, customer.doFtsw)
           .then(() => setupPSTN(customer))
           .then(() => loginPartner(customer.partner))
-          .then(() => switchToCustomerWindow(customer.name));
+          .then(() => switchToCustomerWindow(customer.name, customer.doFtsw));
       } else {
         return loginPartner(customer.partner)
           .then(() => switchToCustomerWindow(customer.name));
@@ -118,7 +122,6 @@ export function customerNumbersPSTN(number) {
 
 export function numberPSTN(prevNumber) {
   var date = Date.now();
-  console.log(date);
   // If created at same millisecond as previous
   if (date <= prevNumber) {
     date = ++prevNumber;
@@ -128,6 +131,7 @@ export function numberPSTN(prevNumber) {
   // get last 10 digits from date and format into PSTN number
   date = date.toString();
   date = ('+1919' + date.substr(date.length - 7));
+  console.log('Added Phone Number: ' + date);
   return [date, prevNumber];
 }
 
@@ -171,11 +175,15 @@ export function loginPartner(partnerEmail) {
   return login.login(partnerEmail, '#/partner/customers');
 }
 
-function switchToCustomerWindow(customerName) {
+function switchToCustomerWindow(customerName, doFtsw) {
   utils.click(element(by.cssContainingText('.ui-grid-cell', customerName)));
   utils.click(partner.launchCustomerPanelButton);
   return utils.switchToNewWindow().then(() => {
-    return utils.wait(navigation.tabs, LONG_TIMEOUT);
+    if (!doFtsw) {
+      return utils.wait(navigation.tabs, LONG_TIMEOUT);
+    } else {
+      return utils.wait(navigation.ftswSidePanel, LONG_TIMEOUT);
+    }
   });
 }
 

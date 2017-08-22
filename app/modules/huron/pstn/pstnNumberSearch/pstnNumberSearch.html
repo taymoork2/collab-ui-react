@@ -1,4 +1,4 @@
-<uc-pstn-npa-nxx  ng-if="$ctrl.detailSearchEnable"
+<uc-pstn-npa-nxx  ng-if="$ctrl.isDetailSearchEnabled()"
   model="$ctrl.model"
   search="$ctrl.searchFn(value, block, quantity, consecutive, stateAbbreviation)"
   simple="$ctrl.isTrial"
@@ -6,7 +6,7 @@
   country-code="$ctrl.countryCode"
 >
 </uc-pstn-npa-nxx>
-<uc-pstn-selector ng-if="!$ctrl.detailSearchEnable"
+<uc-pstn-selector ng-if="!$ctrl.isDetailSearchEnabled()"
   model="$ctrl.model"
   search="$ctrl.searchFn(value, block, quantity, consecutive)"
   simple="$ctrl.isTrial"

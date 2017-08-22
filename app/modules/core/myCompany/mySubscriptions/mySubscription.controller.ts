@@ -7,7 +7,9 @@ import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-ser
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 import { ProPackService } from 'modules/core/proPack/proPack.service';
 
-export class MySubscriptionCtrl {
+export class MySubscriptionCtrl implements ng.IController {
+  private readonly HEADER_BROADCAST = 'TOGGLE_HEADER_BANNER';
+
   public hybridServices: string[] = [];
   public licenseCategory: ISubscriptionCategory[] = [];
   public subscriptionDetails: ISubscription[] = [];
@@ -28,12 +30,12 @@ export class MySubscriptionCtrl {
   public isSharedMeetingsLicense: boolean = false;
   public isProPackPurchased: boolean = false;
   public isProPackEnabled: boolean = false;
-  public overage: boolean = false;
 
   public proPackData: IOfferData;
   public proPackList: string[] = ['subscriptions.hybridDataSecurity', 'subscriptions.advancedReporting', 'subscriptions.complianceFunctionality'];
   public premiumTooltip: string = this.$translate.instant('subscriptions.premiumTooltip');
 
+  private overage: boolean = false;
   private readonly BASE_CATEGORY: ISubscriptionCategory = {
     offers: [],
     offerWrapper: [],
@@ -45,6 +47,8 @@ export class MySubscriptionCtrl {
   private readonly WEBEX_CLASS: string = 'icon-webex';
   private readonly CALL_CLASS: string = 'icon-calls';
   private readonly CARE_CLASS: string = 'icon-headset';
+  private readonly SPARK: string = 'spark';
+  private readonly WEBEX: string = 'webex';
 
   private readonly CARE: string = 'CARE';
   private readonly SUBSCRIPTION_TYPES = {
@@ -68,6 +72,8 @@ export class MySubscriptionCtrl {
   /* @ngInject */
   constructor(
     private $q: ng.IQService,
+    private $rootScope: ng.IRootScopeService,
+    private $scope: ng.IScope,
     private $translate: ng.translate.ITranslateService,
     private Authinfo,
     private Config,
@@ -86,17 +92,21 @@ export class MySubscriptionCtrl {
     }).then((toggles: any): void => {
       this.isProPackPurchased = toggles.isProPackPurchased;
       this.isProPackEnabled = toggles.isProPackEnabled;
+
+      _.forEach(this.SUBSCRIPTION_TYPES, (_value, key: string): void => {
+        const category: ISubscriptionCategory = _.cloneDeep(this.BASE_CATEGORY);
+        category.label = $translate.instant('subscriptions.' + key);
+
+        this.licenseCategory.push(category);
+      });
+
+      this.hybridServicesRetrieval();
+      this.subscriptionRetrieval();
     });
 
-    _.forEach(this.SUBSCRIPTION_TYPES, (_value, key: string): void => {
-      const category: ISubscriptionCategory = _.cloneDeep(this.BASE_CATEGORY);
-      category.label = $translate.instant('subscriptions.' + key);
-
-      this.licenseCategory.push(category);
+    this.$scope.$on('$destroy', (): void => {
+      this.$rootScope.$emit(this.HEADER_BROADCAST);
     });
-
-    this.hybridServicesRetrieval();
-    this.subscriptionRetrieval();
   }
 
   public showCategory(category: ISubscriptionCategory): boolean {
@@ -189,6 +199,13 @@ export class MySubscriptionCtrl {
 
   private subscriptionRetrieval(): void {
     this.Orgservice.getLicensesUsage(false).then((subscriptions: any[]): void => {
+      // filter out subscriptions with a license with an offerName that is 'MSGR'
+      // - as of 2017-07-24, 'Authinfo.isExternallyManagedLicense()' is sufficient for checking this
+      subscriptions = _.reject(subscriptions, (subscription) => {
+        const licenses = _.get(subscription, 'licenses');
+        return _.some(licenses, license => this.Authinfo.isExternallyManagedLicense(license));
+      });
+
       _.forEach(subscriptions, (subscription: any, subIndex: number): void => {
         const newSubscription: ISubscription = {
           licenses: [],
@@ -293,6 +310,7 @@ export class MySubscriptionCtrl {
             } else {
               this.proPackData = _.cloneDeep(offer);
             }
+            this.setOverage(offer);
           }
         });
 
@@ -364,18 +382,18 @@ export class MySubscriptionCtrl {
           this.showSingleSub = true;
         }
       });
+
+      this.setOverageWarning();
     });
   }
 
   private setBMMP(subscription: ISubscription, prodResponse: IProdInst): void {
     subscription.productInstanceId = prodResponse.productInstanceId;
     subscription.name = prodResponse.name;
-    const env: string = _.includes(prodResponse.name, 'Spark') ? 'spark' : 'webex';
-    // TODO Remove the changeplanOverride attribute in production once the
-    // e-commerce team is ready.
+    const env: string = _.includes(prodResponse.name, 'Spark') ? this.SPARK : this.WEBEX;
     this.getChangeSubURL(env).then((urlResponse) => {
       subscription.changeplanOverride = '';
-      if (this.Config.isProd() && urlResponse) {
+      if (urlResponse && env === this.SPARK) {
         subscription.changeplanOverride = urlResponse;
       }
 
@@ -479,5 +497,16 @@ export class MySubscriptionCtrl {
     }
 
     return offer;
+  }
+
+  private setOverageWarning(): void {
+    if (this.overage && this.isProPackEnabled) {
+      this.$rootScope.$emit(this.HEADER_BROADCAST, {
+        iconCss: 'icon-warning',
+        translation: 'subscriptions.overageWarning',
+        type: 'danger',
+        visible: true,
+      });
+    }
   }
 }

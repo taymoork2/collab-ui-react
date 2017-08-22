@@ -66,6 +66,7 @@ export class MediaMgrService {
       data: file,
     };
     this.upload = this.Upload.http(uploadReq);
+    this.upload.catch((response) => response.data);
     return this.upload
       .progress((event) => {
         uploadProgressCallback(Math.round(event.loaded / event.total * 100));

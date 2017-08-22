@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('uc.autoattendant')
-  .controller('AAMediaUploadCtrl', AAMediaUploadCtrl);
+    .controller('AAMediaUploadCtrl', AAMediaUploadCtrl);
 
   /* @ngInject */
   function AAMediaUploadCtrl($scope, $translate, Upload, ModalService, AANotificationService, AACommonService, AAMediaUploadService, AAUiModelService, AutoAttendantCeMenuModelService, Analytics, CryptoJS, Authinfo, AAMetricNameService) {

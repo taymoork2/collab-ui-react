@@ -13,7 +13,8 @@
   </div>
   <div class="section__content">
     <div class="sub-section" ng-if="$ctrl.setting.subsectionLabel">
-      <h5 class="sub-section__label" translate="{{$ctrl.setting.subsectionLabel}}"></h5>
+      <h5 class="sub-section__label" ng-class="{'subheader': $ctrl.setting.badge && $ctrl.setting.tooltipText}" translate="{{$ctrl.setting.subsectionLabel}}"></h5>
+      <span ng-if="$ctrl.setting.badge && $ctrl.setting.tooltipText" class="badge primary badge--premium" ng-class="$ctrl.setting.badge" tooltip="{{::$ctrl.setting.tooltipText | translate}}" tooltip-append-to-body="true" tooltip-placement="right" translate="common.pro"></span>
       <p class="sub-section__description" ng-if="$ctrl.setting.subsectionDescription" translate="{{$ctrl.setting.subsectionDescription}}"></p>
     </div>
     <div class="setting" ng-transclude=""></div>

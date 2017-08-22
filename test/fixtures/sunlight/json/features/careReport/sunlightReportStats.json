@@ -14,7 +14,9 @@
       "avgTaskCloseTime": 100,
       "avgTaskWaitTime": 100,
       "numCsatScores": 200,
-      "numPendingTasks": 10
+      "numPendingTasks": 10,
+      "tasksOffered": 20,
+      "tasksMissed": 7
     }, {
       "mediaType": "chat",
       "numTasksAssignedState": 4,
@@ -29,7 +31,9 @@
       "avgTaskCloseTime": 67463,
       "avgTaskWaitTime": 15405,
       "numCsatScores": 100,
-      "numPendingTasks": 0
+      "numPendingTasks": 0,
+      "tasksOffered": 15,
+      "tasksMissed": 4
     }],
     "metadata": {
       "jobName": "org_stats_15min",
@@ -82,7 +86,9 @@
       "avgTaskCloseTime": 100,
       "avgTaskWaitTime": 100,
       "numCsatScores": 200,
-      "numPendingTasks": 10
+      "numPendingTasks": 10,
+      "tasksOffered": 20,
+      "tasksMissed": 7
     }, {
       "mediaType": "chat",
       "numTasksAssignedState": 1,
@@ -97,7 +103,9 @@
       "avgTaskCloseTime": 16912,
       "avgTaskWaitTime": 19434,
       "numCsatScores": 0,
-      "numPendingTasks": 0
+      "numPendingTasks": 0,
+      "tasksOffered": 30,
+      "tasksMissed": 19
     }, {
       "mediaType": "chat",
       "numTasksAssignedState": 1,
@@ -112,7 +120,9 @@
       "avgTaskCloseTime": 17417,
       "avgTaskWaitTime": 19263,
       "numCsatScores": 0,
-      "numPendingTasks": 0
+      "numPendingTasks": 0,
+      "tasksOffered": 70,
+      "tasksMissed": 47
     }],
     "metadata": {
       "jobName": "org_stats_hourly",
@@ -134,7 +144,9 @@
       "avgTaskCloseTime": 100,
       "avgTaskWaitTime": 100,
       "numCsatScores": 200,
-      "numPendingTasks": 10
+      "numPendingTasks": 10,
+      "tasksOffered": 19,
+      "tasksMissed": 17
     }, {
       "mediaType": "chat",
       "numTasksAssignedState": 4,
@@ -149,7 +161,9 @@
       "avgTaskCloseTime": 100,
       "avgTaskWaitTime": 100,
       "numCsatScores": 200,
-      "numPendingTasks": 10
+      "numPendingTasks": 10,
+      "tasksOffered": 43,
+      "tasksMissed": 23
     }],
     "metadata": {
       "jobName": "org_stats_daily",
@@ -171,7 +185,9 @@
       "avgTaskCloseTime": 100,
       "avgTaskWaitTime": 100,
       "numCsatScores": 200,
-      "numPendingTasks": 10
+      "numPendingTasks": 10,
+      "tasksOffered": 28,
+      "tasksMissed": 9
     }, {
       "mediaType": "chat",
       "numTasksAssignedState": 4,
@@ -186,7 +202,9 @@
       "avgTaskCloseTime": 100,
       "avgTaskWaitTime": 100,
       "numCsatScores": 200,
-      "numPendingTasks": 10
+      "numPendingTasks": 10,
+      "tasksOffered": 34,
+      "tasksMissed": 23
     }],
     "metadata": {
       "jobName": "org_stats_weekly",
@@ -229,6 +247,8 @@
       "handleTime":0,
       "mediaType":"chat",
       "numCsatScores":0,
+      "tasksOffered": 5,
+      "tasksMissed": 7,
       "orgId":"b1de2d84-c9b1-485b-9698-b35e95c6107f",
       "userId":"7d1d3d8c-3a9c-4317-a567-db678d24b24f"
     }, {
@@ -239,6 +259,8 @@
       "handleTime":0,
       "mediaType":"chat",
       "numCsatScores":0,
+      "tasksOffered": 15,
+      "tasksMissed": 17,
       "orgId":"b1de2d84-c9b1-485b-9698-b35e95c6107f",
       "userId":"7d1d3d8c-3a9c-4317-a567-db678d24b24f"
     }, {
@@ -249,6 +271,8 @@
       "handleTime":27887,
       "mediaType":"chat",
       "numCsatScores":3,
+      "tasksOffered": 25,
+      "tasksMissed": 20,
       "orgId":"b1de2d84-c9b1-485b-9698-b35e95c6107f",
       "userId":"3c3dd56c-67c3-4054-8d07-b090945e00b3"
     }, {
@@ -259,6 +283,8 @@
       "handleTime":0,
       "mediaType":"chat",
       "numCsatScores":1,
+      "tasksOffered": 14,
+      "tasksMissed": 9,
       "orgId":"b1de2d84-c9b1-485b-9698-b35e95c6107f",
       "userId":"459d78ae-d720-4ad8-8e94-f88cf403aade"
     }, {
@@ -269,6 +295,8 @@
       "handleTime":0,
       "mediaType":"chat",
       "numCsatScores":1,
+      "tasksOffered": 15,
+      "tasksMissed": 7,
       "orgId":"b1de2d84-c9b1-485b-9698-b35e95c6107f",
       "userId":"77cacfcd-f089-418b-b70e-8406f6e67911"
     }, {
@@ -279,6 +307,8 @@
       "handleTime":0,
       "mediaType":"chat",
       "numCsatScores":0,
+      "tasksOffered": 9,
+      "tasksMissed": 5,
       "orgId":"b1de2d84-c9b1-485b-9698-b35e95c6107f",
       "userId":"459d78ae-d720-4ad8-8e94-f88cf403aade"
     }, {
@@ -289,6 +319,8 @@
       "handleTime":481947,
       "mediaType":"chat",
       "numCsatScores":3,
+      "tasksOffered": 29,
+      "tasksMissed": 29,
       "orgId":"b1de2d84-c9b1-485b-9698-b35e95c6107f",
       "userId":"459d78ae-d720-4ad8-8e94-f88cf403aade"
     }, {
@@ -299,6 +331,8 @@
       "handleTime":295342,
       "mediaType":"chat",
       "numCsatScores":0,
+      "tasksOffered": 20,
+      "tasksMissed": 7,
       "orgId":"b1de2d84-c9b1-485b-9698-b35e95c6107f",
       "userId":"459d78ae-d720-4ad8-8e94-f88cf403aade"
     }, {
@@ -309,6 +343,8 @@
       "handleTime":0,
       "mediaType":"chat",
       "numCsatScores":1,
+      "tasksOffered": 8,
+      "tasksMissed": 3,
       "orgId":"b1de2d84-c9b1-485b-9698-b35e95c6107f",
       "userId":"459d78ae-d720-4ad8-8e94-f88cf403aade"
     }, {
@@ -319,6 +355,8 @@
       "handleTime":0,
       "mediaType":"chat",
       "numCsatScores":1,
+      "tasksOffered": 7,
+      "tasksMissed": 7,
       "orgId":"b1de2d84-c9b1-485b-9698-b35e95c6107f",
       "userId":"00000000-d720-4ad8-8e94-f88cf403aade"
     }, {
@@ -329,6 +367,8 @@
       "handleTime":2,
       "mediaType":"chat",
       "numCsatScores":2,
+      "tasksOffered": 8,
+      "tasksMissed": 2,
       "orgId":"b1de2d84-c9b1-485b-9698-b35e95c6107f",
       "userId":"00000001-d720-4ad8-8e94-f88cf403aade"
     }, {
@@ -339,6 +379,8 @@
       "handleTime":2,
       "mediaType":"chat",
       "numCsatScores":2,
+      "tasksOffered": 20,
+      "tasksMissed": 3,
       "orgId":"b1de2d84-c9b1-485b-9698-b35e95c6107f",
       "userId":"00000002-d720-4ad8-8e94-f88cf403aade"
     }],
@@ -356,6 +398,8 @@
       "handleTime":0,
       "mediaType":"chat",
       "numCsatScores":1,
+      "tasksOffered": 50,
+      "tasksMissed": 7,
       "orgId":"b1de2d84-c9b1-485b-9698-b35e95c6107f",
       "userId":"7d1d3d8c-3a9c-4317-a567-db678d24b24f"
     }, {
@@ -366,6 +410,8 @@
       "handleTime":481947,
       "mediaType":"chat",
       "numCsatScores":3,
+      "tasksOffered": 25,
+      "tasksMissed": 7,
       "orgId":"b1de2d84-c9b1-485b-9698-b35e95c6107f",
       "userId":"459d78ae-d720-4ad8-8e94-f88cf403aade"
     }, {
@@ -376,6 +422,8 @@
       "handleTime":0,
       "mediaType":"chat",
       "numCsatScores":1,
+      "tasksOffered": 40,
+      "tasksMissed": 7,
       "orgId":"b1de2d84-c9b1-485b-9698-b35e95c6107f",
       "userId":"459d78ae-d720-4ad8-8e94-f88cf403aade"
     }],

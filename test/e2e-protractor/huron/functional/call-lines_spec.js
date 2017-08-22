@@ -1,5 +1,5 @@
 import * as provisioner from '../../provisioner/provisioner';
-import { huronCustomer } from '../../provisioner/huron-customer-config';
+import { huronCustomer } from '../../provisioner/huron/huron-customer-config';
 import { CallLinesPage } from '../pages/callLines.page';
 
 const callLines = new CallLinesPage();
@@ -8,7 +8,7 @@ describe('Huron Functional: call-lines', () => {
   const customer = huronCustomer('call-lines');
   beforeAll(done => {
     provisioner.provisionCustomerAndLogin(customer)
-     .then(done);
+      .then(done);
   });
 
   afterAll(done => {

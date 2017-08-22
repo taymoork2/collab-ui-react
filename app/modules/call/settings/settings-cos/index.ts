@@ -1,3 +1,5 @@
+import './settings-cos.component.scss';
+
 import { ClassOfServiceComponent } from './settings-cos.component';
 import FeatureToggleService from 'modules/core/featureToggle';
 

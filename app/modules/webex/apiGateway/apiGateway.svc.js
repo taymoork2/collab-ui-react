@@ -127,12 +127,12 @@
 
                 case WebExApiGatewayConstsService.csvJobStatus.statusCompleted:
                   successResult.status = (
-                response.failedRecords === 0
-              ) ? WebExApiGatewayConstsService.csvStates.importCompletedNoErr : WebExApiGatewayConstsService.csvStates.importCompletedWithErr;
+                    response.failedRecords === 0
+                  ) ? WebExApiGatewayConstsService.csvStates.importCompletedNoErr : WebExApiGatewayConstsService.csvStates.importCompletedWithErr;
                   break;
 
                 default:
-              // TODO: handle error
+                  // TODO: handle error
                   break;
               }
 
@@ -148,12 +148,12 @@
 
                 case WebExApiGatewayConstsService.csvJobStatus.statusCompleted:
                   successResult.status = (
-                response.failedRecords === 0
-              ) ? WebExApiGatewayConstsService.csvStates.exportCompletedNoErr : WebExApiGatewayConstsService.csvStates.exportCompletedWithErr;
+                    response.failedRecords === 0
+                  ) ? WebExApiGatewayConstsService.csvStates.exportCompletedNoErr : WebExApiGatewayConstsService.csvStates.exportCompletedWithErr;
                   break;
 
                 default:
-              // TODO: handle error
+                  // TODO: handle error
                   break;
               }
 

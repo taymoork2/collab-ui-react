@@ -140,7 +140,7 @@
             if (!_.isUndefined(r)) {
               var index = _.indexOf(resources, r);
 
-                // if e164 number is already the 0th element, all done
+              // if e164 number is already the 0th element, all done
 
               if (index >= 1) {
                 resources.splice(0, 0, _.pullAt(resources, index)[0]);

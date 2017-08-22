@@ -193,7 +193,7 @@ describe('Service: LineOverviewService', () => {
     installPromiseMatchers();
   });
 
-  describe('get exising line', () => {
+  describe('get existing line', () => {
     beforeEach(function () {
       this.getLineDefer.resolve(this.line);
       this.getCallForwardDefer.resolve(this.callForward);
@@ -217,7 +217,7 @@ describe('Service: LineOverviewService', () => {
       expect(this.CallerIDService.getCallerId).toHaveBeenCalled();
       expect(this.AutoAnswerService.getSupportedPhonesAndMember).toHaveBeenCalled();
       expect(this.LineOverviewService.cloneLineOverviewData).toHaveBeenCalled();
-      expect(this.MediaOnHoldService.getLineMedia).not.toHaveBeenCalled();
+      expect(this.MediaOnHoldService.getLineMedia).toHaveBeenCalled();
     });
 
     it('should return an exact copy of LineOverviewData when getOriginalConfig is called', function () {
@@ -250,15 +250,19 @@ describe('Service: LineOverviewService', () => {
         this.getLineMohDefer.resolve(_.cloneDeep(this.lineMoh));
       });
       it('should only update line when only line is changed', function () {
-        this.LineOverviewService.get(LineConsumerType.PLACES, '12345', '0000001');
-        this.$rootScope.$digest();
-        this.lineOverview.line.external = '+9725551212';
-        this.LineOverviewService.save(LineConsumerType.PLACES, '12345', '0000001', this.lineOverview, []);
-        expect(this.LineService.updateLine).toHaveBeenCalled();
-        expect(this.CallForwardService.updateCallForward).not.toHaveBeenCalled();
-        expect(this.CallerIDService.updateCallerId).not.toHaveBeenCalled();
-        expect(this.AutoAnswerService.updateAutoAnswer).not.toHaveBeenCalled();
-        expect(this.MediaOnHoldService.updateMediaOnHold).not.toHaveBeenCalled();
+        const promise = this.LineOverviewService.get(LineConsumerType.PLACES, '12345', '0000001');
+        promise.then((_lineOverviewData) => {
+          _lineOverviewData.line.internal = '+9725551212';
+          const promise2 = this.LineOverviewService.save(LineConsumerType.PLACES, '12345', '0000001', _lineOverviewData, []);
+          promise2.then(() => {
+            expect(this.LineService.updateLine).toHaveBeenCalled();
+            expect(this.CallForwardService.updateCallForward).not.toHaveBeenCalled();
+            expect(this.CallerIDService.updateCallerId).not.toHaveBeenCalled();
+            expect(this.AutoAnswerService.updateAutoAnswer).not.toHaveBeenCalled();
+            expect(this.MediaOnHoldService.updateMediaOnHold).not.toHaveBeenCalled();
+          });
+        });
+        expect(promise).toBeResolved();
       });
 
       it('should only update callForward when only callForward is changed', function () {

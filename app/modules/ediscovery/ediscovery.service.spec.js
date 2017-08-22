@@ -195,9 +195,9 @@ describe('Service: EdiscoveryService', function () {
       Service.getReportKey(testUrl, spark).then(function (result) {
         key = result;
       })
-      .catch(function (result) {
-        error = result;
-      });
+        .catch(function (result) {
+          error = result;
+        });
 
       $rootScope.$apply();
       expect(key).toBe('123');

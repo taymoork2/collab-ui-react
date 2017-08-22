@@ -18,6 +18,19 @@
   }
 
   /* @ngInject */
+  function VirtualAssistantConfigService($resource, UrlConfig) {
+    var baseUrl = UrlConfig.getVirtualAssistantConfigServiceUrl();
+    return $resource(baseUrl + '/organization/:orgId/botconfig/:configId', {
+      orgId: '@orgId',
+      configId: '@configId',
+    }, {
+      delete: {
+        method: 'DELETE',
+      },
+    });
+  }
+
+  /* @ngInject */
   function ConfigUserService($resource, UrlConfig) {
     var baseUrl = UrlConfig.getSunlightConfigServiceUrl();
     return $resource(baseUrl + '/user:userId', {
@@ -30,5 +43,6 @@
   }
 
   module.exports.ConfigTemplateService = ConfigTemplateService;
+  module.exports.VirtualAssistantConfigService = VirtualAssistantConfigService;
   module.exports.ConfigUserService = ConfigUserService;
 })();

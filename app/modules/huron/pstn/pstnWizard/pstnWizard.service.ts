@@ -238,7 +238,7 @@ export class PstnWizardService {
     return this.$q.all(promises).then(() => {
       if (errors.length > 0) {
         errors.splice(0, 0, this.$translate.instant('pstnSetup.orderNumbersError'));
-        this.Notification.notify(errors, 'error');
+        this.Notification.notify(errors);
       }
     });
   }
@@ -624,7 +624,7 @@ export class PstnWizardService {
     model.pstn.showAdvancedOrder = false;
     const params = {
       npa: _.get(model, 'pstn.areaCode.code'),
-      count: this.getCount(model),
+      count: this.getCount(model.pstn),
       sequential: model.pstn.consecutive,
       state: model.pstn.stateAbbreviation,
     };
@@ -676,10 +676,10 @@ export class PstnWizardService {
   }
 
   public getCount(model): number {
-    if (!model.pstn.block) {
+    if (!model.block) {
       return MAX_DID_QUANTITY;
     }
-    return (model.pstn.quantity ? model.pstn.quantity : MAX_DID_QUANTITY);
+    return (model.quantity ? model.quantity : MAX_DID_QUANTITY);
   }
 
   public searchCarrierTollFreeInventory(areaCode: string, block: boolean, quantity: number, consecutive: boolean, model) {
@@ -698,7 +698,8 @@ export class PstnWizardService {
     }
     const params = {
       npa: _.get(model, 'tollFree.areaCode.code'),
-      count: model.tollFree.quantity === 1 ? undefined : model.tollFree.quantity,
+      count: this.getCount(model.tollFree),
+      sequential: model.tollFree.consecutive,
     };
     model.tollFree.searchResults = [];
     model.tollFree.searchResultsModel = [];

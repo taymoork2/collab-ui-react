@@ -6,7 +6,7 @@
     .factory('OverviewCallCard', OverviewCallCard);
 
   /* @ngInject */
-  function OverviewCallCard(OverviewHelper, Authinfo) {
+  function OverviewCallCard(OverviewHelper, Authinfo, FeatureToggleService) {
     return {
       createCard: function createCard() {
         var card = {};
@@ -24,6 +24,15 @@
         card.helper = OverviewHelper;
         card.showHealth = true;
 
+        FeatureToggleService.supports(FeatureToggleService.features.hI1484)
+          .then(function (supported) {
+            if (supported) {
+              card.settingsUrl = '#/services/call-settings-location';
+            } else {
+              card.settingsUrl = '#/services/call-settings';
+            }
+          });
+
         card.reportDataEventHandler = function (event, response) {
           if (!response.data.success) return;
           if (event.name == 'oneOnOneCallsLoaded' && response.data.spanType == 'month' && response.data.intervalCount >= 2) {
@@ -36,6 +45,7 @@
           _.each(data.components, function (component) {
             if (component.id === card.helper.statusIds.SparkCall) {
               card.healthStatus = card.helper.mapStatus(card.healthStatus, component.status);
+              card.healthStatusAria = card.helper.mapStatusAria(card.healthStatus, component.status);
             }
           });
         };

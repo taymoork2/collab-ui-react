@@ -1,5 +1,8 @@
 require('./_fields-sidepanel.scss');
 
+var DataTypeDefinition = require('../dataTypeDefinition');
+var EnumDataTypeUtils = DataTypeDefinition.EnumDataTypeUtils;
+
 (function () {
   'use strict';
 
@@ -11,12 +14,14 @@ require('./_fields-sidepanel.scss');
         field: '<',
         process: '<',
         callback: '<',
+        hasContextExpandedTypesToggle: '<',
       },
     });
 
   /* @ngInject */
   function ContextFieldsSidepanelCtrl(Analytics, ContextFieldsService, ContextFieldsetsService, Notification, $filter, ModalService, $state, $translate) {
     var vm = this;
+    vm.dateFormat = 'LL';
     vm.associatedFieldsets = [];
     vm.fetchFailure = false;
     vm.fetchInProgress = false;
@@ -79,6 +84,21 @@ require('./_fields-sidepanel.scss');
 
     vm.isDeletable = function () {
       return !vm.publiclyAccessible && !vm.inUse;
+    };
+
+    vm.isDataTypeWithOptions = function () {
+      return vm.hasContextExpandedTypesToggle ? _.get(vm, 'field.dataTypeDefinition.type') === 'enum' : false;
+    };
+
+    vm.getOptionSidepanelOptions = function () {
+      return {
+        dataTypeDefinition: _.get(vm, 'field.dataTypeDefinition'),
+        defaultOption: _.get(vm, 'field.defaultValue'),
+      };
+    };
+
+    vm.getOptionCount = function () {
+      return EnumDataTypeUtils.getActiveOptionsCount(vm.field.dataTypeDefinition);
     };
 
     vm.openDeleteConfirmDialog = function () {
