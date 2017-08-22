@@ -37,9 +37,20 @@
           ng-disabled="!vm.hasSetup.calendar"
           ng-keypress="vm.handleKeypress($event)"
           cs-input-label="{{vm._translation.calendar}}">
+        <input
+          cs-input
+          type="checkbox"
+          ng-model="vm.selectedServices.imp"
+          name="calendar"
+          id="service_imp"
+          ng-show="vm.isEntitledTo.imp && vm.hasImpSupportFeatureToggle"
+          ng-disabled="!vm.hasSetup.imp"
+          ng-keypress="vm.handleKeypress($event)"
+          cs-input-label="{{vm._translation.imp}}">
       </div>
     </form>
-    <h4 translate="hercules.fusion.add-resource.expressway.services.add-more-later"></h4>
+    <h4 translate="hercules.fusion.add-resource.expressway.services.add-more-later" ng-hide="vm.hasImpSupportFeatureToggle"></h4>
+    <h4 translate="hercules.fusion.add-resource.expressway.services.add-more-later-with-imp" ng-show="vm.hasImpSupportFeatureToggle"></h4>
   </div>
 </div>
 <div class="modal-footer">
