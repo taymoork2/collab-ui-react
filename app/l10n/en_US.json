@@ -104,7 +104,6 @@
     "status": "Status",
     "pending": "Invite Pending",
     "error": "Invitation email error",
-    "all": "All",
     "administrators": "Administrators",
     "inviteUsers": "Add Users",
     "manageUsers": "Manage Users",
@@ -171,7 +170,8 @@
     "careAddUserRoleError": "Error adding roles to user.",
     "careDeleteCESRoleError": "Error deleting CES role from user",
     "loadError": "An error while loading the users list.",
-    "ciscoSparkJabberInteropTooltip": "Enable messaging between Cisco Spark and Jabber. Provide access for Jabber users to Cisco Spark spaces. Changes can take up to 24 hours."
+    "ciscoSparkJabberInteropTooltip": "Enable messaging between Cisco Spark and Jabber. Provide access for Jabber users to Cisco Spark spaces. Changes can take up to 24 hours.",
+    "userImage": "User Image"
   },
   "userManage": {
     "org": {
@@ -557,7 +557,6 @@
     "loadingData": "Loading Data",
     "loadingDescription": "For best results, allow reports to finish loading.",
     "pageTitle": "Reports",
-    "all": "All",
     "engagement": "Engagement",
     "quality": "Quality",
     "details": "Call Detail Record",
