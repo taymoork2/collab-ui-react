@@ -317,6 +317,7 @@ export class MeetingSettingsCtrl {
             this.updateSitesAudioPackageDisplay();
           }
         });
+        _.each(this.licenseDistributionForm.$$controls, (control) => { control.$validate(); });
         _.set(this.$scope.wizard, 'isNextDisabled', licensesRemaining !== 0 || this.licenseDistributionForm.$invalid);
         break;
       }
