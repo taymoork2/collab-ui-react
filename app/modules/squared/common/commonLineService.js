@@ -86,6 +86,7 @@
     function loadLocationInternalNumberPool(pattern, locationId) {
       return TelephonyInfoService.loadLocationInternalNumberPool(pattern, PATTERN_LIMIT, locationId).then(function (internalPool) {
         internalNumberPool = internalPool;
+        return _.cloneDeep(internalNumberPool);
       }).catch(function (response) {
         internalNumberPool = [];
         Notification.errorResponse(response, 'directoryNumberPanel.internalNumberPoolError');

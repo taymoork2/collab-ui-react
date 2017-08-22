@@ -1,5 +1,5 @@
 import * as provisioner from '../../provisioner/provisioner';
-import { huronCustomer } from '../../provisioner/huron-customer-config';
+import { huronCustomer } from '../../provisioner/huron/huron-customer-config';
 import { CallFeaturesPage } from '../pages/callFeatures.page';
 
 const callFeatures = new CallFeaturesPage();

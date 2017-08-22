@@ -155,17 +155,21 @@ require('./_setup-wizard.scss');
           template: 'modules/core/setupWizard/meeting-settings/meeting-audio-partner.html',
         },
         {
+          name: 'setCCASP',
+          template: 'modules/core/setupWizard/meeting-settings/meeting-ccasp.html',
+        },
+        {
           name: 'summary',
           template: 'modules/core/setupWizard/meeting-settings/meeting-summary.html',
         }],
       };
 
       if (shouldShowMeetingsTab) {
-        if (!hasWebexMeetingTrial()) {
-          _.remove(meetingTab.steps, { name: 'migrateTrial' });
-        }
         if (!SetupWizardService.hasTSPAudioPackage()) {
           _.remove(meetingTab.steps, { name: 'setPartnerAudio' });
+        }
+        if (!SetupWizardService.hasCCASPPackage()) {
+          _.remove(meetingTab.steps, { name: 'setCCASP' });
         }
         tabs.splice(1, 0, meetingTab);
       }
@@ -253,14 +257,6 @@ require('./_setup-wizard.scss');
           });
         });
       }
-    }
-
-    function hasWebexMeetingTrial() {
-      var conferencingServices = _.filter(Authinfo.getConferenceServices(), { license: { isTrial: true } });
-
-      return _.some(conferencingServices, function (service) {
-        return _.get(service, 'license.offerName') === Config.offerCodes.MC || _.get(service, 'license.offerName') === Config.offerCodes.EE;
-      });
     }
 
     function showCallSettings() {

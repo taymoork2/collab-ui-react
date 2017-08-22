@@ -5,16 +5,13 @@
     .controller('WizardFinishCtrl', WizardFinishCtrl);
 
   /* @ngInject */
-  function WizardFinishCtrl($q, $rootScope, $scope, $translate, Authinfo, Notification, SetupWizardService, TrialWebexService) {
+  function WizardFinishCtrl($q, $scope, $translate, Authinfo, Notification, SetupWizardService, TrialWebexService) {
     $scope.hasPendingLicenses = SetupWizardService.hasPendingLicenses();
     $scope.sendEmailModel = false;
     $scope.doNotProvision = false;
     $scope.isCustomerLaunchedFromPartner = Authinfo.isCustomerLaunchedFromPartner();
     $scope.setSendCustomerEmailFlag = setSendCustomerEmailFlag;
-    $scope.orderDetails = {
-      orderId: formatWebOrderId(SetupWizardService.getCurrentOrderNumber()),
-      subscriptionId: SetupWizardService.getActingSubscriptionId(),
-    };
+    $scope.orderDetails = SetupWizardService.getOrderAndSubId();
     $scope.initNext = function () {
       var deferred = $q.defer();
       if (!_.isUndefined($scope.wizard) && _.isFunction($scope.wizard.getRequiredTabs)) {
@@ -34,16 +31,24 @@
       return deferred.promise;
     };
 
+    // wizard PromiseHook
+    $scope.provisionNext = function () {
+      if (SetupWizardService.getWillNotProvision()) {
+        $scope.doNotProvision = true;
+      } else {
+        $scope.doNotProvision = false;
+        return provision();
+      }
+    };
+
     init();
 
     function init() {
       pushBlankProvisioningCall();
-      $rootScope.$on('do-not-provision-event', function () {
-        $scope.doNotProvision = true;
-      });
-      $rootScope.$on('provision-event', function () {
-        $scope.doNotProvision = false;
-      });
+    }
+
+    function provision() {
+      return SetupWizardService.processCallbacks();
     }
 
     function setSendCustomerEmailFlag(flag) {
@@ -67,12 +72,6 @@
 
         SetupWizardService.addProvisioningCallbacks(emptyProvisioningCall);
       }
-    }
-    function formatWebOrderId(id) {
-      if (id.lastIndexOf('/') !== -1) {
-        return id.slice(0, id.lastIndexOf('/'));
-      }
-      return id;
     }
   }
 })();

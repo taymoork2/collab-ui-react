@@ -278,7 +278,7 @@ export class SparkReportCtrl {
     searchbox: this.$translate.instant('reportsPage.placeholder.searchbox'),
     startDate: this.$translate.instant('reportsPage.placeholder.startDate'),
     endDate: this.$translate.instant('reportsPage.placeholder.endDate'),
-    startTime: this.$translate.instant('reportsPage.placeHolder.startTime'),
+    startTime: this.$translate.instant('reportsPage.placeholder.startTime'),
     endTime: this.$translate.instant('reportsPage.placeholder.endTime'),
     to: this.$translate.instant('reportsPage.placeholder.to'),
   };
@@ -392,6 +392,7 @@ export class SparkReportCtrl {
     display: true,
     emptyDescription: 'activeUsers.noActiveUsers',
     errorDescription: 'activeUsers.errorActiveUsers',
+    missingUsersErrorDescription: 'activeUsers.missingUsersError',
     search: true,
     state: this.ReportConstants.REFRESH,
     sortOptions: [{
@@ -464,7 +465,10 @@ export class SparkReportCtrl {
       }
       this.secondaryActiveOptions.table.data = response;
       this.$rootScope.$broadcast(this.secondaryActiveOptions.broadcast);
-    }, (): void => {
+    }).catch((response?: IActiveTableBase[]): void => {
+      if (response) {
+        this.secondaryActiveOptions.table.data = response;
+      }
       this.secondaryActiveOptions.state = this.ReportConstants.ERROR;
     });
   }

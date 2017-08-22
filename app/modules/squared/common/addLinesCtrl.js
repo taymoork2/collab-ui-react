@@ -41,29 +41,33 @@
       return FeatureToggleService.supports(FeatureToggleService.features.hI1484)
         .then(function (supported) {
           if (supported) {
-            return LocationsService.getLocationList().then(function (locationOptions) {
-              $scope.locationOptions = locationOptions;
-              _.forEach(locationOptions, function (result) {
-                if (result.defaultLocation == true) {
-                  _.forEach($scope.entitylist, function (data) {
-                    data.selectedLocation = { uuid: result.uuid, name: result.name };
-                    $scope.selectedLocation = data.selectedLocation.name;
-                    $scope.locationUuid = data.selectedLocation.uuid;
-                  });
+            return LocationsService.getLocationList()
+              .then(function (locationOptions) {
+                $scope.locationOptions = locationOptions;
+                _.forEach(locationOptions, function (result) {
+                  if (result.defaultLocation == true) {
+                    _.forEach($scope.entitylist, function (data) {
+                      data.selectedLocation = { uuid: result.uuid, name: result.name };
+                      $scope.selectedLocation = data.selectedLocation.name;
+                      $scope.locationUuid = data.selectedLocation.uuid;
+                    });
+                  }
+                });
+
+                if ($scope.locationOptions.length > 1) {
+                  vm.locationColumn = {
+                    field: 'location',
+                    displayName: $translate.instant('usersPreview.location'),
+                    sortable: false,
+                    cellTemplate: locationTemplate,
+                    width: '*',
+                  };
+                  vm.addDnGridOptions.columnDefs.splice(1, 0, vm.locationColumn);
                 }
+              })
+              .then(function () {
+                return CommonLineService.loadLocationInternalNumberPool(null, $scope.locationUuid);
               });
-              CommonLineService.loadLocationInternalNumberPool(null, $scope.locationUuid);
-              if ($scope.locationOptions.length > 1) {
-                vm.locationColumn = {
-                  field: 'location',
-                  displayName: $translate.instant('usersPreview.location'),
-                  sortable: false,
-                  cellTemplate: locationTemplate,
-                  width: '*',
-                };
-                vm.addDnGridOptions.columnDefs.splice(1, 0, vm.locationColumn);
-              }
-            });
           } else {
             return CommonLineService.loadInternalNumberPool();
           }
@@ -223,8 +227,7 @@
 
     function syncGridDidDn(rowEntity, modifiedFieldName) {
       if (modifiedFieldName === 'location') {
-        $scope.locationUuid = rowEntity.selectedLocation.uuid;
-        CommonLineService.loadLocationInternalNumberPool(null, $scope.locationUuid);
+        populateExtensions(rowEntity);
       }
       if (vm.showExtensions === false) {
         var dnLength = rowEntity.assignedDn.pattern.length;
@@ -248,6 +251,14 @@
           }
         }
       }
+    }
+
+    function populateExtensions(rowEntity) {
+      var selectedLocationColumn = rowEntity.selectedLocation.uuid;
+      return CommonLineService.loadLocationInternalNumberPool(null, selectedLocationColumn)
+        .then(function (internalNumberPool) {
+          rowEntity.assignedDn.pattern = internalNumberPool[0].pattern;
+        });
     }
 
     $scope.noExtInPool = $translate.instant('usersPage.notApplicable');

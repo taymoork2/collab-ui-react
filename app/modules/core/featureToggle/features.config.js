@@ -9,6 +9,8 @@ module.exports = {
   atlasContextServiceTrials: 'atlas-context-service-trials',
   atlasContextExpandedTypes: 'atlas-context-expanded-types',
   atlasDarling: 'atlas-darling',
+  atlasBlockExternalCommunicationSettings: 'atlas-block-external-communication-settings',
+  atlasFileSharingControlSettings: 'atlas-file-sharing-control-settings',
   atlasDataRetentionSettings: 'atlas-data-retention-settings',
   atlasDevicesAdvancedSettings: 'atlas-devices-advanced-settings',
   atlasDeviceExport: 'atlas-device-export',
@@ -201,7 +203,7 @@ module.exports = {
   csdmPlaceGuiSettings: 'csdm-place-gui-settings',
   csdmAtaCpc: 'csdm-ata-cpc',
   csdmAtaReboot: 'csdm-ata-reboot',
-  hI1484: 'h-i1484',
+  hI1484: 'h-i1484', //Multi-Location Support
   hI1485: 'h-i1485',
   atlasRolesAndSecurity: 'atlas-roles-and-security',
   csdmMultipleDevicesPerPlace: 'csdm-multiple-devices-per-place',

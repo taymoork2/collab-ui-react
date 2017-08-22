@@ -1,6 +1,6 @@
 import { ProvisioningService } from './../provisioning.service';
 import { Status } from './../provisioning.service';
-import { DATE_FORMAT } from './../provisioning.service';
+import { ManualCode } from './../provisioning.service';
 
 export interface IServiceItem {
   siteUrl: string;
@@ -17,8 +17,8 @@ export interface IServiceItemsSet {
   conferencing?: IServiceItem[];
   storage?: IServiceItem[];
   cmr?: IServiceItem[];
-
 }
+
 
 export class ProvisioningDetailsController {
 
@@ -26,6 +26,8 @@ export class ProvisioningDetailsController {
   public selectedSite: any;
   public dateInfo: string = '';
   public isLoading: boolean = false;
+  public status = Status;
+  public manualCode = ManualCode;
 
   public items: {
     audio?: IDetailItem,
@@ -60,8 +62,7 @@ export class ProvisioningDetailsController {
 
   private init(): void {
     this.isLoading = true;
-    this.dateInfo  = (this.order.status !== Status.COMPLETED) ? moment(this.order.orderReceived).format(DATE_FORMAT) :
-      moment(this.order.lastModified).format(DATE_FORMAT);
+    this.dateInfo  = (this.order.status !== Status.COMPLETED) ? this.order.orderReceived : this.order.lastModified;
     this.ProvisioningService.getOrder(this.order.orderUUID).then((orderDetail) => {
       this.isLoading = false;
       const orderContent = JSON.parse(orderDetail.orderContent || '{}');

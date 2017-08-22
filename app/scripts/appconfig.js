@@ -124,7 +124,7 @@
           })
           .state('login', {
             parent: 'loginLazyLoad',
-            url: '/login?bmmp_env&email&customerOrgId&partnerOrgId',
+            url: '/login?bmmp_env&email&customerOrgId&partnerOrgId&subscriptionId',
             views: {
               'main@': {
                 template: '<login/>',
@@ -1800,7 +1800,7 @@
               tabContent: {
                 controllerAs: 'nav',
                 controller: 'SparkMetricsCtrl',
-                templateUrl: 'modules/core/customerReports/webexMetrics/sparkMetrics.tpl.html',
+                templateUrl: 'modules/core/customerReports/sparkMetrics/sparkMetrics.tpl.html',
               },
             },
           })
@@ -1815,7 +1815,7 @@
             },
           })
           .state('reports.webex-metrics', {
-            url: '/webexMetrics/:siteUrl',
+            url: '/webexMetrics',
             views: {
               tabContent: {
                 controllerAs: 'nav',
@@ -1823,11 +1823,34 @@
                 templateUrl: 'modules/core/customerReports/webexMetrics/webexMetrics.tpl.html',
               },
             },
-            params: {
-              siteUrl: {
-                squash: true,
-                value: '',
+          })
+          .state('reports.webex-metrics.metrics', {
+            url: '/:siteUrl/metrics',
+            views: {
+              metricsContent: {
+                templateUrl: 'modules/core/customerReports/webexMetrics/metrics/metricsFrame.tpl.html',
               },
+            },
+          })
+          .state('reports.webex-metrics.diagnostics', {
+            url: '/diagnostics',
+            views: {
+              metricsContent: {
+                template: '<cust-webex-reports-search></cust-webex-reports-search>',
+              },
+            },
+          })
+          .state('reports.webex-metrics.classic', {
+            url: '/classic',
+            views: {
+              metricsContent: {
+                controllerAs: 'nav',
+                controller: 'WebexReportsCtrl',
+                templateUrl: 'modules/core/customerReports/webexReports/webexReports.tpl.html',
+              },
+            },
+            params: {
+              siteUrl: null,
             },
           })
           .state('reports.media', {
@@ -2340,9 +2363,22 @@
           .state('partnerreports', {
             parent: 'partner',
             url: '/reports',
+            template: '<div ui-view></div>',
+            controller: 'PartnerReportsSwitchCtrl',
+          })
+          .state('partnerreports.base', {
+            parent: 'partner',
+            url: '/base',
             templateUrl: 'modules/core/partnerReports/partnerReports.tpl.html',
             controller: 'PartnerReportCtrl',
             controllerAs: 'nav',
+          })
+          .state('partnerreports.spark', {
+            parent: 'partner',
+            url: '/spark',
+            templateUrl: 'modules/core/partnerReports/sparkReports/sparkReports.tpl.html',
+            controller: 'SparkReportsCtrl',
+            controllerAs: '$ctrl',
           })
           .state('partnercustomers', {
             parent: 'partner',
@@ -2701,7 +2737,7 @@
           })
           .state('firsttimewizard', {
             parent: 'firsttimesplash',
-            template: '<cr-wizard provision="provision" tabs="tabs" finish="finish" is-first-time="true"></cr-wizard>',
+            template: '<cr-wizard tabs="tabs" finish="finish" is-first-time="true"></cr-wizard>',
             controller: 'SetupWizardCtrl',
             data: {
               firstTimeSetup: true,
@@ -3195,6 +3231,18 @@
               }),
             },
           })
+          .state('huronsettingslocation', {
+            url: '/services/call-settings-location',
+            parent: 'hurondetails',
+            template: '<uc-call-settings></uc-call-settings>',
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/call/settings'));
+                }, 'call-settings-location');
+              }),
+            },
+          })
           .state('call-locations', {
             url: '/services/call-locations',
             parent: 'hurondetails',
@@ -3530,7 +3578,7 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                template: '<context-fields-sidepanel field="$resolve.field" process="$resolve.process" callback="$resolve.callback"></context-fields-sidepanel>',
+                template: '<context-fields-sidepanel field="$resolve.field" process="$resolve.process" callback="$resolve.callback" has-context-expanded-types-toggle="$resolve.hasContextExpandedTypesToggle"></context-fields-sidepanel>',
               },
               'header@context-fields-sidepanel': {
                 templateUrl: 'modules/context/fields/sidepanel/hybrid-context-fields-sidepanel-header.html',
@@ -3543,6 +3591,7 @@
               field: {},
               process: function () {},
               callback: function () {},
+              hasContextExpandedTypesToggle: false,
             },
             resolve: {
               field: /* @ngInject */ function ($stateParams) {
@@ -3553,6 +3602,9 @@
               },
               callback: /* @ngInject */ function ($stateParams) {
                 return $stateParams.callback;
+              },
+              hasContextExpandedTypesToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasContextExpandedTypes);
               },
             },
           })

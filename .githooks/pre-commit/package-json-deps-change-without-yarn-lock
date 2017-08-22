@@ -1,0 +1,53 @@
+#!/bin/bash
+
+proj_root_dir="$PWD"
+
+function print_staged_modified_files {
+    git diff --cached --name-status | awk '$1 == "M" { print $2; }'
+}
+
+function is_package_json_staged_modified {
+    print_staged_modified_files | grep -q ^package.json$
+}
+
+function is_yarn_lock_staged_modified {
+    print_staged_modified_files | grep -q ^yarn.lock$
+}
+
+function print_package_json_from_HEAD {
+    git show HEAD:package.json
+}
+
+function is_npm_deps_equal {
+    # compare 'dependencies' and 'devDependencies' from HEAD and staged versions of 'package.json'
+    node "${proj_root_dir}/utils/json-obj-equals.js" "$1" "$2" "dependencies" "devDependencies"
+    return $?
+}
+
+# early-out if 'package.json' not staged
+if ! is_package_json_staged_modified; then
+    exit 0
+fi
+
+# otherwise get 'package.json' from HEAD
+staged_pkg_json="${proj_root_dir}/package.json"
+head_pkg_json="${proj_root_dir}/.cache/HEAD-package.json"
+print_package_json_from_HEAD > "${head_pkg_json}"
+
+# check for changes in npm dependencies, early-out if no changes
+if is_npm_deps_equal "$staged_pkg_json" "$head_pkg_json"; then
+    rm "$head_pkg_json"
+    exit 0
+fi
+
+rm "$head_pkg_json"
+
+# npm deps have changed
+if ! is_yarn_lock_staged_modified; then
+    2>&1 echo "[ERROR] npm dependency changes in 'package.json' require an updated 'yarn.lock' file."
+    2>&1 echo ""
+    2>&1 echo "  (TIP: next time, use \`yarn add [--dev] <dep>@<new-semver>\` to update BOTH files in one step)"
+    2>&1 echo ""
+    2>&1 echo "Please run \`yarn upgrade <dep>\` to update your 'yarn.lock' file and add it before re-running \`git commit\`."
+    exit 1
+fi

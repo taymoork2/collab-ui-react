@@ -61,4 +61,19 @@
   .adjust-card-margin {
     margin-left: -7px;
   }
+
+  .error {
+    color: $brand-danger;
+    .message {
+      font-size: .8rem;
+    }
+  }
+
+  .ccasp-partner__confirmation {
+    margin-left: 0;
+    .verified-check {
+      vertical-align: middle;
+      padding-right: .5rem;
+    }
+  }
 }

@@ -1,70 +1,61 @@
 import { ICardParams, ServicesOverviewCard } from './ServicesOverviewCard';
+import { IServiceStatusWithSetup } from 'modules/hercules/services/hybrid-services-cluster.service';
+import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
 
 export interface IHybridCardParams extends ICardParams {
-  service: string;
+  serviceId: HybridServiceId;
   routerState: string;
   initEventsNumber?: number;
 }
 
-export interface IServiceStatus {
-  serviceId: string;
-  status: string;
-  setup: boolean;
+export function filterAndGetCssStatus(services: IServiceStatusWithSetup[], serviceId: HybridServiceId): string | undefined {
+  const service = _.find(services, (service) => service.serviceId === serviceId);
+  return service && service.cssClass || undefined;
 }
 
-const IserviceStatusToTxt = {
-  operational: 'servicesOverview.cardStatus.operational',
-  impaired: 'servicesOverview.cardStatus.impaired',
-  outage: 'servicesOverview.cardStatus.outage',
-  unknown: 'servicesOverview.cardStatus.unknown',
-  setupNotComplete: 'servicesOverview.cardStatus.setupNotComplete',
-};
-
-export function filterAndGetCssStatus(HybridServicesClusterStatesService, services: IServiceStatus[], serviceId: string): string | undefined {
+export function filterAndGetTxtStatus(services: IServiceStatusWithSetup[], serviceId: HybridServiceId): string | undefined {
+  const IServiceStatusToTxt = {
+    operational: 'servicesOverview.cardStatus.operational',
+    impaired: 'servicesOverview.cardStatus.impaired',
+    outage: 'servicesOverview.cardStatus.outage',
+    unknown: 'servicesOverview.cardStatus.unknown',
+    setupNotComplete: 'servicesOverview.cardStatus.setupNotComplete',
+  };
   const service = _.find(services, (service) => service.serviceId === serviceId);
   if (service) {
-    return HybridServicesClusterStatesService.getStatusIndicatorCSSClass(service.status);
+    return IServiceStatusToTxt[service.status] || IServiceStatusToTxt['unknown'];
   }
   return undefined;
 }
 
-export function filterAndGetTxtStatus(services: IServiceStatus[], serviceId: string): string | undefined {
-  const service = _.find(services, (service) => service.serviceId === serviceId);
-  if (service) {
-    return IserviceStatusToTxt[service.status] || IserviceStatusToTxt['unknown'];
-  }
-  return undefined;
-}
-
-export function filterAndGetEnabledService(statuses: IServiceStatus[], serviceId: string): boolean {
+export function filterAndGetEnabledService(statuses: IServiceStatusWithSetup[], serviceId: HybridServiceId): boolean {
   const service = _.find(statuses, (service) => service.serviceId === serviceId);
   return service && service.setup;
 }
 
 export abstract class ServicesOverviewHybridCard extends ServicesOverviewCard {
-  private service: string;
+  private serviceId: HybridServiceId;
   private routerState: string;
   protected initEventsNumber = 0;
 
   public constructor(
     params: IHybridCardParams,
-    private HybridServicesClusterStatesService,
   ) {
     super(params);
-    this.service = params.service;
+    this.serviceId = params.serviceId;
     this.routerState = params.routerState;
     if (params.initEventsNumber) {
       this.initEventsNumber = params.initEventsNumber;
     }
   }
 
-  public hybridStatusEventHandler(servicesStatuses: IServiceStatus[]): void {
+  public hybridStatusEventHandler(servicesStatuses: IServiceStatusWithSetup[]): void {
     this.status = {
-      status: filterAndGetCssStatus(this.HybridServicesClusterStatesService, servicesStatuses, this.service),
-      text: filterAndGetTxtStatus(servicesStatuses, this.service),
+      status: filterAndGetCssStatus(servicesStatuses, this.serviceId),
+      text: filterAndGetTxtStatus(servicesStatuses, this.serviceId),
       routerState: this.routerState,
     };
-    this.active = filterAndGetEnabledService(servicesStatuses, this.service);
+    this.active = filterAndGetEnabledService(servicesStatuses, this.serviceId);
     this.setupMode = !this.active;
     this.setLoading();
   }

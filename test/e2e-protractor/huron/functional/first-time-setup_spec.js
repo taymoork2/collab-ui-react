@@ -1,5 +1,5 @@
 import * as provisioner from '../../provisioner/provisioner';
-import { huronCustomer } from '../../provisioner/huron-customer-config';
+import { huronCustomer } from '../../provisioner/huron/huron-customer-config';
 import { CallSettingsPage } from '../pages/callSettings.page';
 
 const callSettings = new CallSettingsPage();
@@ -56,6 +56,7 @@ describe('Huron Functional: first-time-setup', () => {
         utils.expectIsEnabled(wizard.beginBtn);
       });
     });
+
     describe('Extension Length', () => {
       const BEGIN_RANGE = '400';
       const END_RANGE = '499';
@@ -72,6 +73,7 @@ describe('Huron Functional: first-time-setup', () => {
           utils.expectIsEnabled(wizard.beginBtn);
         });
       });
+
       describe('increase extension length', () => {
         const PREFIX_INPUT = '3000';
         const SUFFIX_INPUT = '3099';
@@ -95,6 +97,7 @@ describe('Huron Functional: first-time-setup', () => {
       });
     });
   });
+
   describe('External Dialing', () => {
     describe('Outbound Dial Digit', () => {
       it('should show a warning when selecting a number for dialing out that matches first digit of internal prefix range', () => {
@@ -139,6 +142,7 @@ describe('Huron Functional: first-time-setup', () => {
       });
     });
   });
+
   describe('Voicemail settings', () => {
     it('should default to not having External Voicemail Access', () => {
       utils.scrollIntoView(wizard.companyVoicemailToggle);
@@ -174,4 +178,3 @@ describe('Huron Functional: first-time-setup', () => {
     });
   });
 });
-

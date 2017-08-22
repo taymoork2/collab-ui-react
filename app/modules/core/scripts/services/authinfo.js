@@ -34,6 +34,7 @@
         conferenceServicesWithoutSiteUrl: null,
         customerAccounts: [],
         customerType: null,
+        customerView: true,
         emails: null,
         entitleUserEnabled: null,
         hasAccount: false,
@@ -416,6 +417,12 @@
       },
       isPending: function () {
         return _.eq(authData.customerType, 'Pending');
+      },
+      isCustomerView: function () {
+        return authData.customerView;
+      },
+      setCustomerView: function (bool) {
+        authData.customerView = bool;
       },
       isCSB: function () {
         return (_.eq(authData.customerType, 'CSB'));

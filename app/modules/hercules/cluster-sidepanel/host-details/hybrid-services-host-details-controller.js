@@ -6,7 +6,7 @@
     .controller('HybridServicesHostDetailsController', HybridServicesHostDetailsController);
 
   /* @ngInject */
-  function HybridServicesHostDetailsController($modal, $rootScope, $scope, $state, $stateParams, $translate, ClusterService, HybridServicesClusterStatesService, hasNodesViewFeatureToggle) {
+  function HybridServicesHostDetailsController($modal, $rootScope, $scope, $state, $stateParams, $translate, ClusterService, hasNodesViewFeatureToggle) {
     var cluster;
     var vm = this;
     var type = $stateParams.specificType || $stateParams.connectorType;
@@ -17,8 +17,6 @@
     vm.showDeregisterHostDialog = showDeregisterHostDialog;
     vm.showNodeLink = showNodeLink;
     vm.showReassignHostDialog = showReassignHostDialog;
-
-    vm.getSeverity = HybridServicesClusterStatesService.getSeverity;
 
     $state.current.data.displayName = localizedConnectorName;
     $rootScope.$broadcast('displayNameUpdated');

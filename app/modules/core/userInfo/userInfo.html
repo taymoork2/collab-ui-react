@@ -12,14 +12,15 @@
   <ul id="dropdown-menu" cs-dropdown-menu class="dropdown-menu" role="menu">
     <li ng-controller="SettingsMenuCtrl as langSettings" role="menuitem">
       <a class="select-lng-dropdown" aria-label="Language Selection">
-        <label for="languageSelector"></label>
         <select
-                id="languageSelector"
-                ng-options="item.label for item in langSettings.options track by item.value"
-                ng-model="langSettings.selected"
-                ng-change="langSettings.updateLanguage()"
-                onclick="event.stopPropagation();">
+          id="languageSelector"
+          ng-options="item.label for item in langSettings.options track by item.value"
+          ng-model="langSettings.selected"
+          ng-change="langSettings.updateLanguage()"
+          aria-labelledby="languageSelectorLabel"
+          onclick="event.stopPropagation();">
         </select>
+        <span id="languageSelectorLabel" class="sr-only" translate="common.selectLanguage" aria-hidden="true"></span>
       </a>
     </li>
     <li id="feedback-btn" role="menuitem">
@@ -31,7 +32,7 @@
     <li id="videoTutorial-btn" ng-if="isPartner || isPartnerSales" role="menuitem">
       <a id="videoTutorial-lnk" href="" ng-click="openVideo()" translate="index.videoTutorial"></a>
     </li>
-    <li id="logout-btn" ng-if="loggedIn && !isCustomerLaunchedFromPartner" role="menuitem">
+    <li id="logout-btn" ng-if="loggedIn" role="menuitem">
       <a href="" ng-click="logout()" translate="index.logout"></a>
     </li>
   </ul>
@@ -53,15 +54,16 @@
   <ul id="dropdown-menu" cs-dropdown-menu class="dropdown-menu" role="menu">
     <li ng-controller="SettingsMenuCtrl as langSettings" role="menuitem">
       <a class="select-lng-dropdown" aria-label="Language Selection">
-        <label for="languageAdminSelector"></label>
         <select
 
-                id="languageAdminSelector"
-                ng-options="item.label for item in langSettings.options track by item.value"
-                ng-model="langSettings.selected"
-                ng-change="langSettings.updateLanguage()"
-                onclick="event.stopPropagation();">
+          id="languageAdminSelector"
+          ng-options="item.label for item in langSettings.options track by item.value"
+          ng-model="langSettings.selected"
+          ng-change="langSettings.updateLanguage()"
+          aria-labelledby="languageSelectorLabel"
+          onclick="event.stopPropagation();">
         </select>
+        <span id="languageSelectorLabel" class="sr-only" translate="common.selectLanguage" aria-hidden="true"></span>
       </a>
     </li>
     <li id="feedback-btn" role="menuitem">
@@ -73,7 +75,7 @@
     <li id="videoTutorial-btn" ng-if="isPartner || isPartnerSales" role="menuitem">
       <a id="videoTutorial-lnk" href="" ng-click="openVideo()" translate="index.videoTutorial"></a>
     </li>
-    <li id="logout-btn" ng-if="loggedIn && !isCustomerLaunchedFromPartner" role="menuitem">
+    <li id="logout-btn" ng-if="loggedIn" role="menuitem">
       <a href="" ng-click="logout()" translate="index.logout"></a>
     </li>
   </ul>

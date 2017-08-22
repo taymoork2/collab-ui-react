@@ -15,6 +15,7 @@
     require('modules/core/modal').default,
     'core.body',
     'core.chartColors',
+    require('modules/core/controlHub').default,
     require('modules/core/l10n').default,
     'core.localize',
     'core.logmetricsservice',
@@ -51,6 +52,7 @@
     'rzModule',
     'dragularModule',
     require('modules/bmmp/learn-more-banner').default,
+    require('modules/core/banner').default,
     require('modules/core/csgrid').default,
     require('modules/core/users/userOverview').default,
     require('modules/core/analytics'),
@@ -89,6 +91,7 @@
     require('modules/huron/features/featureLanding/hoverDelay.directive').default,
     require('modules/core/validation').default,
     require('modules/core/customerReports').default,
+    require('modules/core/partnerReports').default,
   ])
     .constant('CryptoJS', require('crypto-js'))
     .constant('addressparser', require('emailjs-addressparser'));
@@ -99,6 +102,7 @@
     'Hercules',
     'Huron',
     'Sunlight',
+    require('modules/squared/devices/services/CsdmCacheUpdater'),
     require('modules/squared/devices/services/CsdmPoller'),
     require('modules/squared/partner-management').default,
     require('modules/squared/provisioning-console').default,

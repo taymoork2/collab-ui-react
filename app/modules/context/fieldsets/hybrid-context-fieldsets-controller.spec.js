@@ -301,7 +301,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         ],
         refUrl: '/dictionary/fieldset/v1/id/strMatchInLastUpdated',
         id: 'strMatchInLastUpdated',
-        lastUpdatedUI: '2017-02-15T19:37:36.998Z',
+        lastUpdated: '2017-02-15T19:37:36.998Z',
         numOfFields: '4',
       },
       {
@@ -324,7 +324,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         ],
         refUrl: '/dictionary/fieldset/v1/id/fieldset5',
         id: 'fieldset5',
-        lastUpdatedUI: '2017-02-10T19:37:36.998Z',
+        lastUpdated: '2017-02-10T19:37:36.998Z',
         numOfFields: '2',
       },
       {
@@ -347,7 +347,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         ],
         refUrl: '/dictionary/fieldset/v1/id/notThisfieldset',
         id: 'notThisfieldset',
-        lastUpdatedUI: '2017-02-10T19:37:36.998Z',
+        lastUpdated: '2017-02-10T19:37:36.998Z',
         numOfFields: '2',
       },
       {
@@ -365,7 +365,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         ],
         refUrl: '/dictionary/fieldset/v1/id/strMatchInDescription',
         id: 'strMatchInDescription',
-        lastUpdatedUI: '2017-02-10T19:37:36.998Z',
+        lastUpdated: '2017-02-10T19:37:36.998Z',
         numOfFields: '1',
       },
       {
@@ -403,7 +403,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         ],
         refUrl: '/dictionary/fieldset/v1/id/strMatchViaNumFields',
         id: 'strMatchViaNumFields',
-        lastUpdatedUI: '2017-02-12T19:37:36.998Z',
+        lastUpdated: '2017-02-12T19:37:36.998Z',
         numOfFields: '5',
       }];
 
@@ -452,13 +452,13 @@ describe('HybridContextFieldsetsCtrl', function () {
             lastUpdated: '2017-01-23T16:48:50.021Z',
           },
         ],
-        refUrl: '/dictionary/fieldset/v1/id/First',
-        id: 'First',
-        lastUpdatedUI: '2017-02-15T19:37:36.998Z',
+        refUrl: '/dictionary/fieldset/v1/id/August',
+        id: 'August',
+        lastUpdated: '2017-02-15T19:37:36.998Z',
       },
       {
         orgId: 'd06308f8-c24f-4281-8b6f-03f672d34231',
-        description: 'fiRsT 2 fields in this fieldset',
+        description: 'auGuST - first 2 fields in this fieldset',
         fields: [
           'AAA_TEST_FIELD',
           'Agent_ID',
@@ -476,19 +476,19 @@ describe('HybridContextFieldsetsCtrl', function () {
         ],
         refUrl: '/dictionary/fieldset/v1/id/strMatchInDescription',
         id: 'strMatchInDescription',
-        lastUpdatedUI: '2017-02-10T19:37:36.998Z',
+        lastUpdated: '2017-02-10T19:37:36.998Z',
       },
       {
         orgId: 'd06308f8-c24f-4281-8b6f-03f672d34231',
         description: '2 fields in this fieldset',
         fields: [
-          'FIRST',
+          'AUGUST',
           'Agent_ID',
         ],
         publiclyAccessibleUI: 'false',
         fieldDefinitions: [
           {
-            id: 'FIRST',
+            id: 'AUGUST',
             lastUpdated: '2017-02-02T17:12:33.167Z',
           },
           {
@@ -498,7 +498,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         ],
         refUrl: '/dictionary/fieldset/v1/id/notThisfieldset',
         id: 'notThisfieldset',
-        lastUpdatedUI: '2017-02-10T19:37:36.998Z',
+        lastUpdated: '2017-02-10T19:37:36.998Z',
       },
       {
         orgId: 'd06308f8-c24f-4281-8b6f-03f672d34231',
@@ -515,18 +515,18 @@ describe('HybridContextFieldsetsCtrl', function () {
         ],
         refUrl: '/dictionary/fieldset/v1/id/strMatchInLastUpdated',
         id: 'strMatchInLastUpdated',
-        lastUpdatedUI: 'first in date',
+        lastUpdated: '2017-08-23T16:48:50.021Z',
       },
       {
-        otherKey1: 'First',
-        otherKey2: 'first',
-        otherKey3: 'anyOtherFirst',
+        otherKey1: 'August',
+        otherKey2: 'august',
+        otherKey3: 'anyOtherAugust',
       }];
 
-      controller.filterBySearchStr(fieldsetList, 'first')
+      controller.filterBySearchStr(fieldsetList, 'august')
         .then(function (filteredList) {
           expect(filteredList.length).toBe(3);
-          expect(filteredList[0].id).toEqual('First');
+          expect(filteredList[0].id).toEqual('August');
           expect(filteredList[1].id).toEqual('strMatchInDescription');
           expect(filteredList[2].id).toEqual('strMatchInLastUpdated');
           done();
@@ -630,7 +630,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         ],
         refUrl: '/dictionary/fieldset/v1/id/shouldNotMatch',
         id: 'shouldNotMatch',
-        lastUpdated: 'first in date',
+        lastUpdated: '2017-01-23T16:48:50.021Z',
       },
       {
         otherKey1: 'aaa-test',

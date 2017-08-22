@@ -3,28 +3,30 @@
 /*eslint-disable */
 
 describe('Huron Auto Attendant', function () {
+  var testAAName;
+  var testCardClick;
+  var testCardClose;
 
   beforeAll(function () {
+    deleteUtils.testAAName = deleteUtils.testAAName + "_" + Date.now();
 
-    login.login('aa-admin', '#/hurondetails/features');
+    testAAName = element(by.css('p[title="' + deleteUtils.testAAName + '"]'));
+    testCardClick = testAAName.element(by.xpath('ancestor::article')).element(by.css('.card-body'));
+    testCardClose = testAAName.element(by.xpath('ancestor::article')).element(by.css('.header-with-right-icon')).element(by.css('.card-icon-div')).element(by.css('.close'));
+
+    login.login('aa-admin', autoattendant.callFeature);
 
   }, 120000);
+
+  afterAll(function () {
+    var flow = protractor.promise.controlFlow();
+    return flow.execute(deleteUtils.findAndDeleteTestAA);
+  });
 
   describe('Create and Delete AA', function () {
 
     // TEST CASES
-    it('should navigate to AA landing page', function () {
-
-      // First ensure the test AA is deleted (in case last test run failed for example)
-      var flow = protractor.promise.controlFlow();
-      var result = flow.execute(deleteUtils.findAndDeleteTestAA);
-
-      // and navigate to the landing page
-      navigation.clickAutoAttendant();
-
-    }, 120000);
-
-    it('should create a new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+    it('should navigate to AA landing page and create AA', function () {
 
       // click new feature
       utils.click(autoattendant.newFeatureButton);
@@ -61,34 +63,6 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsDisplayed(autoattendant.closedHoursEndCall);
 
     }, 60000);
-
-    it('should add a single phone number to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
-
-      autoattendant.scrollIntoView(autoattendant.lanesWrapper);
-      utils.wait(autoattendant.addAANumbers, 12000);
-      utils.click(autoattendant.numberDropDownArrow);
-
-      // we are going to arbitrarily select the last one
-      utils.click(autoattendant.numberDropDownOptions.last());
-
-      // save and assert we see successful save message and save is disabled
-      utils.click(autoattendant.saveButton);
-      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
-      utils.expectIsDisabled(autoattendant.saveButton);
-
-    }, 60000);
-
-    it('should delete a phone number from the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
-
-      utils.click(autoattendant.numberIconClose);
-
-      // save and assert we see successful save message and save is disabled
-      utils.click(autoattendant.saveButton);
-      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
-      utils.expectIsDisabled(autoattendant.saveButton);
-
-    }, 60000);
-
     it('should create a 8am to 5pm, Monday to Friday open hours schedule', function () {
 
       autoattendant.scrollIntoView(autoattendant.schedule);
@@ -106,7 +80,7 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.modalcancel);
 
     }, 60000);
-
+/*
     it('should add a second phone number to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
       autoattendant.scrollIntoView(autoattendant.lanesWrapper);
@@ -121,7 +95,7 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsDisabled(autoattendant.saveButton);
 
     }, 60000);
-
+*/
     it('should close AA edit and return to landing page', function () {
 
       utils.click(autoattendant.closeEditButton);
@@ -130,14 +104,14 @@ describe('Huron Auto Attendant', function () {
 
     it('should find new AA named "' + deleteUtils.testAAName + '" on the landing page', function () {
 
-      utils.expectIsEnabled(autoattendant.testCardName);
+      utils.expectIsEnabled(testAAName);
 
     });
 
     it('should delete new AA named "' + deleteUtils.testAAName + '" on the landing page', function () {
 
       // click delete X on the AA card for e2e test AA
-      utils.click(autoattendant.testCardDelete);
+      utils.click(testCardClose);
 
       // confirm dialog with e2e AA test name in it is there, then agree to delete
       utils.expectText(autoattendant.deleteModalConfirmText, 'Are you sure you want to delete the ' + deleteUtils.testAAName + ' Auto Attendant?').then(function () {

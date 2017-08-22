@@ -28,6 +28,17 @@
     $scope.canShowActionsMenu = canShowActionsMenu;
     $scope.canShowExternalNumberDelete = canShowExternalNumberDelete;
     $scope.deleteExternalNumber = deleteExternalNumber;
+    $scope.initToggles = initToggles;
+
+    function initToggles() {
+      return FeatureToggleService.supports(FeatureToggleService.features.hI1484)
+        .then(function (supported) {
+          vm.ishI1484 = supported;
+          if (!supported) {
+            vm.gridOptions.columnDefs.splice(2, 1);
+          }
+        });
+    }
 
     vm.sort = {
       by: 'userid',
@@ -124,7 +135,7 @@
       vm.currentLine = null;
 
       // Get "unassigned" internal and external lines
-      LineListService.getLineList(startIndex, Config.usersperpage, vm.sort.by, vm.sort.order, vm.searchStr, vm.activeFilter, $scope.gridData)
+      LineListService.getLineList(startIndex, Config.usersperpage, vm.sort.by, vm.sort.order, vm.searchStr, vm.activeFilter, $scope.gridData, vm.ishI1484)
         .then(function (response) {
           $timeout(function () {
             vm.load = true;
@@ -203,6 +214,14 @@
         headerCellClass: 'externalNumberHeader',
         width: '20%',
       }, {
+        //TODO: (egandhi): replace with Lcation column once API is available
+        field: 'firstName',
+        displayName: $translate.instant('usersPreview.location'),
+        sortable: true,
+        cellClass: 'anyColumn',
+        headerCellClass: 'anyHeader',
+        width: '*',
+      }, {
         field: 'displayField()',
         displayName: $translate.instant('linesPage.assignedTo'),
         cellTemplate: getTemplate('_tooltipTpl'),
@@ -263,7 +282,6 @@
       });
     }
 
-
-    getLineList();
+    initToggles().finally(getLineList);
   }
 })();

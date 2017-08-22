@@ -1,9 +1,9 @@
 import { ICardStatus, CardType } from './ServicesOverviewCard';
-import { IServiceStatus, filterAndGetCssStatus, filterAndGetTxtStatus, filterAndGetEnabledService } from './ServicesOverviewHybridCard';
+import { filterAndGetCssStatus, filterAndGetTxtStatus, filterAndGetEnabledService } from './ServicesOverviewHybridCard';
 import { ICardButton, ServicesOverviewCard } from './ServicesOverviewCard';
-import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 import { CloudConnectorService } from 'modules/hercules/services/calendar-cloud-connector.service';
 import { Notification } from 'modules/core/notifications';
+import { IServiceStatusWithSetup } from 'modules/hercules/services/hybrid-services-cluster.service';
 
 export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOverviewCard {
   private canDisplay: ng.IDeferred<boolean> = this.$q.defer();
@@ -114,11 +114,11 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
       // We only get the status for Hybrid Calendar that way
       this.CloudConnectorService.getService()
         .then(servicesStatus => {
-          const servicesStatuses = [servicesStatus] as IServiceStatus[];
+          const servicesStatuses = [servicesStatus] as IServiceStatusWithSetup[];
           // .googleActive conveys the same meaning as .active for Hybrid Calendar
-          this.googleActive = servicesStatus.setup as boolean;
+          this.googleActive = servicesStatus.setup;
           this.googleStatus = {
-            status: filterAndGetCssStatus(this.HybridServicesClusterStatesService, servicesStatuses, serviceId),
+            status: filterAndGetCssStatus(servicesStatuses, serviceId),
             text: filterAndGetTxtStatus(servicesStatuses, serviceId),
             routerState: 'google-calendar-service.settings',
           };
@@ -135,12 +135,12 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
   }
 
   // Contains data for Hybrid Services, not Google Calendar
-  public hybridStatusEventHandler(servicesStatuses: IServiceStatus[]) {
+  public hybridStatusEventHandler(servicesStatuses: IServiceStatusWithSetup[]) {
     const service = 'squared-fusion-cal';
     // No need to do any work if we can't display the card
     this.canDisplay.promise.then(() => {
       this.status = {
-        status: filterAndGetCssStatus(this.HybridServicesClusterStatesService, servicesStatuses, service),
+        status: filterAndGetCssStatus(servicesStatuses, service),
         text: filterAndGetTxtStatus(servicesStatuses, service),
         routerState: 'calendar-service.list',
       };
@@ -166,7 +166,6 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
     private $modal,
     Authinfo,
     private CloudConnectorService: CloudConnectorService,
-    private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
     private Notification: Notification,
   ) {
     super({

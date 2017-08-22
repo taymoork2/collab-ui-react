@@ -65,6 +65,10 @@ describe('Controller: PlanReviewCtrl', function () {
       offerName: 'CF',
       capacity: 200,
     }]);
+    spyOn(SetupWizardService, 'getOrderAndSubId').and.returnValue({
+      orderId: 'abc123',
+      subscriptionId: 'def456',
+    });
     controller = $controller('PlanReviewCtrl', {
       $scope: $scope,
     });

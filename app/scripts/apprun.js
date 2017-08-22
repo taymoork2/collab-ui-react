@@ -4,9 +4,9 @@
   module.exports = wx2AdminWebClientApp;
 
   /* @ngInject */
-  function wx2AdminWebClientApp($animate, $interval, $location, $rootScope, $state, $translate, $window, Auth, Authinfo, Config,
-    HealthService, IdleTimeoutService, Localize, Log, LogMetricsService, OnlineUpgradeService, PreviousState, SessionStorage,
-    StorageKeys, TokenService, TrackingId, Utils, TOSService) {
+  function wx2AdminWebClientApp($animate, $document, $interval, $location, $rootScope, $state, $timeout, $translate, $window, Auth, Authinfo, Config,
+    HealthService, IdleTimeoutService, Localize, Log, LogMetricsService, MetricsService, OnlineUpgradeService, PreviousState, SessionStorage,
+    StorageKeys, TokenService, TrackingId, Utils, TOSService, WindowService) {
     //Expose the localize service globally.
     $rootScope.Localize = Localize;
     $rootScope.Utils = Utils;
@@ -15,6 +15,15 @@
     var LOGIN_STATE = 'login';
 
     setNewRelicRouteName(LOGIN_STATE);
+
+    function timeoutReportLoadingMetrics() {
+      $timeout(MetricsService.reportLoadingMetrics.bind(MetricsService));
+    }
+    if ($document.readyState === 'complete') {
+      MetricsService.reportLoadingMetrics();
+    } else {
+      WindowService.registerEventListener('load', timeoutReportLoadingMetrics);
+    }
 
     $rootScope.typeOfExport = {
       USER: 1,

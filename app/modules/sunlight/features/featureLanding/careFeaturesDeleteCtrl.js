@@ -6,7 +6,7 @@
     .controller('CareFeaturesDeleteCtrl', CareFeaturesDeleteCtrl);
 
   /* @ngInject */
-  function CareFeaturesDeleteCtrl($rootScope, $scope, $stateParams, $timeout, $translate, CardUtils, CareFeatureList, Log, Notification) {
+  function CareFeaturesDeleteCtrl($rootScope, $scope, $stateParams, $timeout, CardUtils, CareFeatureList, Log, Notification) {
     var vm = this;
     vm.deleteFeature = deleteFeature;
     vm.deleteBtnDisabled = false;
@@ -61,10 +61,7 @@
 
       Log.warn('Failed to delete name: ' + vm.featureName + ' and id:' + vm.featureId);
 
-      var error = $translate.instant('careChatTpl.deleteFailedText', {
-        featureName: vm.featureName,
-      });
-      Notification.errorWithTrackingId(response, error);
+      Notification.errorWithTrackingId(response, 'careChatTpl.deleteFailedText', { featureName: vm.featureName });
     }
   }
 })();

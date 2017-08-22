@@ -1,8 +1,10 @@
 (function () {
   'use strict';
 
+  var TimingKey = require('../metrics').TimingKey;
+
   /* @ngInject */
-  function LoginCtrl($location, $rootScope, $scope, $state, $stateParams, $translate, Auth, Authinfo, Config, Log, LocalStorage, LogMetricsService, PageParam, SessionStorage, StorageKeys, TokenService, Utils, CacheWarmUpService) {
+  function LoginCtrl($location, $rootScope, $scope, $state, $stateParams, $translate, Auth, Authinfo, Config, Log, LocalStorage, LogMetricsService, MetricsService, PageParam, SessionStorage, StorageKeys, TokenService, Utils, CacheWarmUpService) {
     var queryParams = SessionStorage.popObject(StorageKeys.REQUESTED_QUERY_PARAMS);
     var language = LocalStorage.get('language');
 
@@ -23,6 +25,10 @@
       SessionStorage.put('customerOrgId', $stateParams.customerOrgId);
     } else if ($stateParams.partnerOrgId) {
       SessionStorage.put('partnerOrgId', $stateParams.partnerOrgId);
+    }
+
+    if ($stateParams.subscriptionId) {
+      SessionStorage.put('subscriptionId', $stateParams.subscriptionId);
     }
 
     // If the tab has logged out and we are logged into another tab
@@ -60,6 +66,7 @@
             $state.go('firsttimewizard');
           } else {
             var state = 'overview';
+            Authinfo.setCustomerView(true);
             var params;
             if (PageParam.getRoute()) {
               state = PageParam.getRoute();
@@ -70,6 +77,7 @@
               Log.debug('Sending "partner logged in" metrics');
               LogMetricsService.logMetrics('Partner logged in', LogMetricsService.getEventType('partnerLogin'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
               state = 'partneroverview';
+              Authinfo.setCustomerView(false);
             } else if (Authinfo.isSupportUser()) {
               state = 'support.status';
             } else if (!$stateParams.customerOrgId && Authinfo.isHelpDeskUserOnly()) {
@@ -80,6 +88,7 @@
               state = 'support.status';
             } else if (Authinfo.isPartnerUser()) {
               state = 'partnercustomers.list';
+              Authinfo.setCustomerView(false);
             } else if (Authinfo.isTechSupport()) {
               state = 'gss';
             }
@@ -90,10 +99,12 @@
               LogMetricsService.logMetrics('Customer logged in', LogMetricsService.getEventType('customerLogin'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
             }
             $rootScope.$emit('LOGIN');
-            $state.go(state, params);
+            return $state.go(state, params);
           }
         }).catch(function () {
-          $state.go('login-error');
+          return $state.go('login-error');
+        }).finally(function () {
+          MetricsService.stopTimer(TimingKey.LOGIN_DURATION);
         });
     };
 

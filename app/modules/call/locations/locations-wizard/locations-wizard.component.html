@@ -36,15 +36,17 @@
         <div class="section" ng-class="$ctrl.animation" ng-if="$ctrl.getPageIndex() === 1">
           <div class="section__content" ng-class="$ctrl.animation" ng-if="$ctrl.getPageIndex() === 1">
             <h4 translate="callerIdPanel.title"></h4>
-            <uc-location-caller-id
-              caller-id="$ctrl.locationDetail.callerId"
-              show-label="false"
-              region-code="$ctrl.huronSettingsData.customerVoice.regionCode"
-              external-number-options="$ctrl.settingsOptions.companyCallerIdOptions"
-              voicemail-pilot-number="$ctrl.locationDetail.voicemailPilotNumber"
-              company-name="$ctrl.huronSettingsData.customerVoice.customerVoice.name"
-              on-change-fn="$ctrl.onCallerIdChanged(callerId)">
-            </uc-location-caller-id>
+            <div class="sub-section">
+              <uc-location-caller-id
+                caller-id="$ctrl.locationDetail.callerId"
+                show-label="false"
+                region-code="$ctrl.huronSettingsData.customerVoice.regionCode"
+                external-number-options="$ctrl.settingsOptions.companyCallerIdOptions"
+                voicemail-pilot-number="$ctrl.locationDetail.voicemailPilotNumber"
+                company-name="$ctrl.huronSettingsData.customerVoice.name"
+                on-change-fn="$ctrl.onCallerIdChanged(callerId)">
+              </uc-location-caller-id>
+            </div>
           </div>
         </div>
 
@@ -145,13 +147,14 @@
         <div class="section" ng-class="$ctrl.animation" ng-if="$ctrl.getPageIndex() === 5">
           <div class="section__content">
             <h4 translate="voicemailPanel.title"></h4>
-            <uc-location-voicemail-avril
-              external-access="$ctrl.voicemailEnable"
-              external-number="$ctrl.locationDetail.voicemailPilotNumber.number"
+            <uc-location-voicemail
+              display-label="false"
+              dial-plan-country-code="$ctrl.settingsOptions.dialPlan.countryCode"
+              voicemail-pilot-number="$ctrl.locationDetail.voicemailPilotNumber"
               external-number-options="$ctrl.settingsOptions.companyVoicemailOptions"
-              change-fn="$ctrl.onLocationVoicemailChanged(externalAccess, externalNumber)"
-              number-filter-fn="onVoicemailFilter(filter)">
-            </uc-location-voicemail-avril>
+              change-fn="$ctrl.onLocationVoicemailChanged(voicemailPilotNumber)"
+              number-filter-fn="$ctrl.onVoicemailFilter(filter)">
+            </uc-location-voicemail>
           </div>
         </div>
 

@@ -7,11 +7,15 @@
 
   /* @ngInject */
   function WebExMetricsCtrl(
+    $log,
     $sce,
     $scope,
     $stateParams,
     $timeout,
     $window,
+    $rootScope,
+    $state,
+    Analytics,
     Authinfo,
     LocalStorage,
     Notification,
@@ -23,6 +27,7 @@
 
     vm.metrics = 'metrics';
     vm.search = 'search';
+    vm.classic = 'classic';
     vm.webexOptions = [];
     vm.webexSelected = null;
     vm.webexMetrics = {};
@@ -47,49 +52,47 @@
     vm.reportView = vm.webexMetrics.views[0];
     vm.metricsOptions = [
       {
-        id: '0',
-        label: 'reportsPage.webexMetrics.metrics',
-        selected: true,
-        filterType: vm.metrics,
-        toggle: function () {
-          resetIframe(vm.metrics);
-        },
+        title: 'reportsPage.webexMetrics.metrics',
+        state: 'reports.webex-metrics.metrics',
       },
       {
-        id: '1',
-        label: 'reportsPage.webexMetrics.diagnostics',
-        selected: false,
-        filterType: vm.search,
-        toggle: function () {
-          resetIframe(vm.search);
-        },
+        title: 'reportsPage.webexMetrics.diagnostics',
+        state: 'reports.webex-metrics.diagnostics',
+      },
+      {
+        title: 'reportsPage.webexMetrics.classic',
+        state: 'reports.webex-metrics.classic',
       },
     ];
 
-    var deregister = $scope.$on('selectEnable', function (data) {
+    var selectEnable = $scope.$on('selectEnable', function (data) {
       vm.selectEnable = data.defaultPrevented;
     });
-    $scope.$on('$destroy', deregister); // -- by zoncao@cisco.com for site select
+    var $stateChangeStart = $rootScope.$on('$stateChangeStart', onStateChangeStart);
+    var $stateChangeSuccess = $rootScope.$on('$stateChangeSuccess', onStateChangeSuccess);
+    $window.addEventListener('message', messageHandle, true);
+    $scope.$on('$destroy', onDestory);
 
+    vm.$state = $state;
+    vm.init = init;
+    vm.goMetricsState = goMetricsState;
+    vm.loadMetricsReport = loadMetricsReport;
+    vm.onStateChangeStart = onStateChangeStart;
+    vm.onStateChangeSuccess = onStateChangeSuccess;
     vm.updateWebexMetrics = updateWebexMetrics;
+    vm.updateIframe = updateIframe;
 
-    function resetIframe(filter) {
-      if (vm.currentFilter.filterType !== filter) {
-        vm.currentFilter = _.find(vm.metricsOptions, function (metrics) {
-          return metrics.filterType === filter;
+    init();
+
+    function messageHandle(event) {
+      if (event.data === 'unfreeze') {
+        $log.log('Unfreeze message received.');
+        var currScope = angular.element('#webexMetricsIframeContainer').scope();
+        currScope.$apply(function () {
+          vm.isIframeLoaded = true;
         });
       }
-
-      if (filter === 'search') {
-        return false;
-      } else {
-        vm.selectEnable = true;
-      }
-
-      updateIframe();
     }
-
-    vm.currentFilter = vm.metricsOptions[0];
 
     function onlyUnique(value, index, self) {
       return self.indexOf(value) === index;
@@ -131,7 +134,7 @@
         webexSelected = vm.webexOptions[0];
       }
       vm.webexSelected = webexSelected;
-
+      $timeout(goMetricsState);
       ProPackService.hasProPackPurchased().then(function (isPurchased) {
         if (isPurchased) {
           vm.reportView = vm.webexMetrics.views[1];
@@ -140,21 +143,24 @@
       });
     }
 
-    Userservice.getUser(
-      'me',
-      function (data) {
-        if (data.success) {
-          var trainSites = [];
-          if (data.emails) {
-            Authinfo.setEmails(data.emails);
-            var adminTrainSiteNames = _.get(data, 'adminTrainSiteNames', []);
-            var linkedTrainSiteNames = _.get(data, 'linkedTrainSiteNames', []);
-            trainSites = _.concat(adminTrainSiteNames, linkedTrainSiteNames);
-            generateWebexMetricsUrl(trainSites);
+    function init() {
+      Userservice.getUser(
+        'me',
+        function (data) {
+          if (data.success) {
+            var trainSites = [];
+            if (data.emails) {
+              Authinfo.setEmails(data.emails);
+              var adminTrainSiteNames = _.get(data, 'adminTrainSiteNames', []);
+              var linkedTrainSiteNames = _.get(data, 'linkedTrainSiteNames', []);
+              trainSites = _.concat(adminTrainSiteNames, linkedTrainSiteNames);
+              generateWebexMetricsUrl(trainSites);
+            }
           }
         }
-      }
-    );
+      );
+      Analytics.trackReportsEvent(Analytics.sections.REPORTS.eventNames.CUST_WEBEX_REPORT);
+    }
 
     function updateWebexMetrics() {
       var storageMetricsSiteUrl = LocalStorage.get('webexMetricsSiteUrl');
@@ -167,7 +173,7 @@
 
       if (!_.isNull(vm.webexSelected)) {
         vm.isNoData = false;
-        loadMetricsReport();
+        vm.loadMetricsReport();
       } else {
         vm.isNoData = true;
       }
@@ -240,14 +246,46 @@
     }
 
     $window.iframeLoaded = function (iframeId) {
-      var currScope = angular.element(iframeId).scope();
-      var phase = currScope.$$phase;
-
-      if (!phase) {
-        currScope.$apply(function () {
-          vm.isIframeLoaded = true;
-        });
-      }
+      $log.log('Iframe loaded ' + iframeId);
     };
+
+    function onStateChangeStart(event, toState, toParams, fromState) {
+      if (fromState.name === 'reports.webex-metrics.metrics' && !vm.isIframeLoaded) {
+        event.preventDefault();
+        return;
+      }
+      var isSubState = fromState.name.indexOf('reports.webex-metrics.') === 0;
+
+      if (isSubState && toState.name === 'reports.webex-metrics') {
+        event.preventDefault();
+      }
+      if (isSubState) {
+        toParams.siteUrl = vm.webexSelected;
+      }
+    }
+
+    function onStateChangeSuccess(event, toState, toParams, fromState) {
+      if (toState.name === 'reports.webex-metrics.metrics') {
+        vm.selectEnable = true;
+        if (fromState.name.indexOf('reports.webex-metrics.') === 0) {
+          vm.loadMetricsReport();
+        }
+      } else if (toState.name === 'reports.webex-metrics.classic') {
+        vm.selectEnable = false;
+      }
+    }
+
+    function goMetricsState() {
+      if ($state.current.name === 'reports.webex-metrics') {
+        $state.go('reports.webex-metrics.metrics');
+      }
+    }
+
+    function onDestory() {
+      selectEnable();
+      $stateChangeStart();
+      $stateChangeSuccess();
+      $window.removeEventListener('message', messageHandle, true);
+    }
   }
 })();

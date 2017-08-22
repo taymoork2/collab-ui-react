@@ -4,6 +4,8 @@ export interface IWebExSite {
   centerType: string;
   quantity?: number;
   audioPackageDisplay?: string;
+  setupType?: string;
+  keepExistingSite?: boolean;
 }
 
 export interface IWebexSiteDetail {
@@ -80,4 +82,9 @@ export interface IPendingLicense {
   volume: number;
   isTrial: boolean;
   status: string;
+}
+
+export interface ICCASPInfo {
+  partnerName: string;
+  subscriptionId: string;
 }

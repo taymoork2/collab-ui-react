@@ -88,8 +88,9 @@
           431397: 'duplicateSite',
         };
         var isValid = (data.isValid === 'true');
+        var doesNotExist = (data.isExist !== 'true');
         return {
-          isValid: isValid && data.errorCode === '0',
+          isValid: isValid && data.errorCode === '0' && doesNotExist,
           errorCode: errorCodes[data.errorCode] || 'invalidSite',
         };
       }).catch(function (response) {

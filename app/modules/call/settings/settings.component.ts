@@ -7,7 +7,7 @@ import { EmergencyCallbackNumber } from 'modules/huron/sites';
 import { PstnService } from 'modules/huron/pstn/pstn.service';
 import { PstnModel } from 'modules/huron/pstn/pstn.model';
 import { PstnCarrier } from 'modules/huron/pstn/pstnProviders/pstnCarrier';
-import { IAvrilFeatures } from 'modules/huron/avril';
+import { IAvrilSiteFeatures } from 'modules/huron/avril';
 import { SetupWizardService } from 'modules/core/setupWizard/setup-wizard.service';
 
 const API_IMPL_SWIVEL = 'SWIVEL';
@@ -282,7 +282,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
     this.checkForChanges();
   }
 
-  public onCompanyVoicemailAvrilChanged(voicemailPilotNumber: string, voicemailPilotNumberGenerated: boolean, companyVoicemailEnabled: boolean, features: IAvrilFeatures) {
+  public onCompanyVoicemailAvrilChanged(voicemailPilotNumber: string, voicemailPilotNumberGenerated: boolean, companyVoicemailEnabled: boolean, features: IAvrilSiteFeatures) {
     _.set(this.huronSettingsData.customer, 'hasVoicemailService', companyVoicemailEnabled);
     if (!companyVoicemailEnabled) {
       this.huronSettingsData.site.disableVoicemail = true;
@@ -350,8 +350,10 @@ class HuronSettingsCtrl implements ng.IComponentController {
   private resetForm(): void {
     this.showDialPlanChangedDialog = false;
     this.showVoiceMailDisableDialog = false;
-    this.form.$setPristine();
-    this.form.$setUntouched();
+    if (this.form) {
+      this.form.$setPristine();
+      this.form.$setUntouched();
+    }
   }
 
   private setShowDialPlanChangedDialogFlag(): void {

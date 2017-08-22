@@ -2,13 +2,16 @@ import { IOption } from 'modules/huron/dialing/dialing.service';
 import { IDialPlan, DialPlanService } from 'modules/huron/dialPlans';
 import { NumberService, NumberType } from 'modules/huron/numbers';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
+import { MediaOnHoldService } from 'modules/huron/media-on-hold';
 
 export class LocationSettingsOptions {
+  public mediaOnHoldOptions: IOption[];
   public preferredLanguageOptions: IOption[];
   public timeZoneOptions: IOption[];
   public defaultToneOptions: IOption[];
   public dialPlan: IDialPlan;
   public locationCallerIdOptions: IOption[];
+  public companyVoicemailOptions: IOption[];
 }
 
 export class LocationSettingsOptionsService {
@@ -16,23 +19,36 @@ export class LocationSettingsOptionsService {
   /* @ngInject */
   constructor(
      private $q: ng.IQService,
+     private MediaOnHoldService: MediaOnHoldService,
      private DialPlanService: DialPlanService,
      private NumberService: NumberService,
      private PhoneNumberService: PhoneNumberService,
      private ServiceSetup,
+     private FeatureToggleService,
   ) { }
 
   public getOptions(): ng.IPromise<LocationSettingsOptions> {
     const locationOptions = new LocationSettingsOptions();
     return this.$q.all({
+      mediaOnHoldOptions: this.loadMoHOptions().then(mediaOnHoldOptions => locationOptions.mediaOnHoldOptions = mediaOnHoldOptions),
       timeZoneOptions: this.loadTimeZoneOptions().then(timeZoneOptions => locationOptions.timeZoneOptions = timeZoneOptions),
       preferredLanguageOptions: this.loadPreferredLanguageOptions().then(preferredLanguageOptions => locationOptions.preferredLanguageOptions = preferredLanguageOptions),
       defaultToneOptions: this.loadDefaultToneOptions().then(defaultToneOptions => locationOptions.defaultToneOptions = defaultToneOptions),
       dialPlan: this.loadDialPlan().then(dialPlan => locationOptions.dialPlan = dialPlan),
       locationCallerIdOptions: this.loadLocationCallerIdNumbers(undefined).then(callerIdNumbers => locationOptions.locationCallerIdOptions = callerIdNumbers),
+      companyVoicemailOptions: this.loadCompanyVoicemailNumbers(undefined).then(companyVoicemailNumbers => locationOptions.companyVoicemailOptions = companyVoicemailNumbers),
     }).then(() => {
       return locationOptions;
     });
+  }
+
+  public loadMoHOptions(): ng.IPromise<IOption[]> {
+    return this.FeatureToggleService.supports(this.FeatureToggleService.features.huronMOHEnable)
+      .then(supportsMoh => {
+        if (supportsMoh) {
+          return this.MediaOnHoldService.getLocationMohOptions();
+        }
+      });
   }
 
   private loadTimeZoneOptions(): ng.IPromise<IOption[]> {
@@ -61,6 +77,18 @@ export class LocationSettingsOptionsService {
 
   public loadLocationCallerIdNumbers(filter: string | undefined): ng.IPromise<IOption[]> {
     return this.NumberService.getNumberList(filter, NumberType.EXTERNAL)
+      .then(externalNumbers => {
+        return _.map(externalNumbers, externalNumber => {
+          return <IOption> {
+            value: externalNumber.number,
+            label: this.PhoneNumberService.getNationalFormat(externalNumber.number),
+          };
+        });
+      });
+  }
+
+  public loadCompanyVoicemailNumbers(filter: string | undefined): ng.IPromise<IOption[]> {
+    return this.NumberService.getNumberList(filter, NumberType.EXTERNAL, false)
       .then(externalNumbers => {
         return _.map(externalNumbers, externalNumber => {
           return <IOption> {

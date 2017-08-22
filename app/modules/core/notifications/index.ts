@@ -1,6 +1,7 @@
 import { BindUnsafeHtml } from './bindUnsafeHtml.directive';
 import { Notification } from './notification.service';
 import { ToasterConfig } from './toaster.config';
+import metricsModule from 'modules/core/metrics';
 import windowModule from 'modules/core/window';
 
 export { Notification };
@@ -12,6 +13,7 @@ export default angular
     require('angular-translate'),
     require('modules/core/config/config'),
     require('modules/core/scripts/services/log'),
+    metricsModule,
     windowModule,
   ])
     .config(ToasterConfig)

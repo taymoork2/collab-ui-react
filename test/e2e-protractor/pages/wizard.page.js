@@ -1,6 +1,8 @@
 'use strict';
 
 var Wizard = function () {
+  var TRIAL_TEXT = 'Start your new 90-day trial';
+
   this.wizard = element(by.css('.wizard'));
   this.mainView = element(by.css('.wizard-main'));
   this.leftNav = element(by.css('.wizard-nav'));
@@ -50,7 +52,10 @@ var Wizard = function () {
   this.scrollToBottomButton = element(by.css('.icon-right-arrow-contain'));
   this.voicemailDropdown = element.all(by.binding('csSelect.getLabel(csSelect.selected)')).last();
   this.voicemailDropdownSelect = element.all(by.css('li[ng-class="csSelect.style(option)"]')).last();
-
+  this.planReviewMessagesTrial = element(by.cssContainingText('div[ng-if="planReview.messagingServices.isNewTrial"]', TRIAL_TEXT));
+  this.planReviewMeetingsTrial = element(by.cssContainingText('div[ng-if="planReview.confServices.isNewTrial"]', TRIAL_TEXT));
+  this.planReviewCallTrial = element(by.cssContainingText('div[ng-if="planReview.commServices.isNewTrial"]', TRIAL_TEXT));
+  
   this.clickPlanReview = function () {
     utils.click(this.reviewTab);
   };

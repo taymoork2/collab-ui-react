@@ -238,7 +238,7 @@ export class PstnWizardService {
     return this.$q.all(promises).then(() => {
       if (errors.length > 0) {
         errors.splice(0, 0, this.$translate.instant('pstnSetup.orderNumbersError'));
-        this.Notification.notify(errors, 'error');
+        this.Notification.notify(errors);
       }
     });
   }

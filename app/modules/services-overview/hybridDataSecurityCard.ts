@@ -1,6 +1,5 @@
 import { ServicesOverviewHybridCard } from './ServicesOverviewHybridCard';
 import { ICardButton, CardType } from './ServicesOverviewCard';
-import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 import { HDSService } from 'modules/hds/services/hds.service';
 
 export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybridCard {
@@ -72,7 +71,6 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
     private Authinfo,
     private Config,
     private HDSService: HDSService,
-    HybridServicesClusterStatesService: HybridServicesClusterStatesService,
     private Notification,
   ) {
     super({
@@ -83,10 +81,10 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
       display : false,
       name: 'servicesOverview.cards.hybridDataSecurity.title',
       routerState: 'hds.list',
-      service: 'spark-hybrid-datasecurity',
+      serviceId: 'spark-hybrid-datasecurity',
       infoText: 'servicesOverview.cards.hybridDataSecurity.tooltip',
       initEventsNumber: 2,
-    }, HybridServicesClusterStatesService);
+    });
     this.display = this.checkRoles() && this.Authinfo.isFusionHDS() && this.Authinfo.isEnterpriseCustomer();
     this.hasProPackPurchased = false;
     this.hasProPackEnabled = false;

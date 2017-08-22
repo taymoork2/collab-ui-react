@@ -70,6 +70,13 @@
           on-change-fn="$ctrl.onSteeringDigitChanged(steeringDigit)">
         </uc-outbound-dial-digit>
       </div>
+      <div class="row full service-setup bottom-margin">
+        <uc-location-company-voicemail
+          ftsw="true"
+          company-voicemail-enabled="$ctrl.callLocationSettingsData.customer.hasVoicemailService"
+          on-change-fn="$ctrl.onCompanyVoicemailChanged(voicemailPilotNumber, voicemailPilotNumberGenerated, companyVoicemailEnabled)">
+        </uc-location-company-voicemail>
+      </div>
     </div>
   </form>
   <!-- FTSW LOCATION ENDS -->
@@ -91,6 +98,7 @@
         <button ng-click="$ctrl.onCancel()" translate="common.cancel"></button>
         <button class="btn btn--primary" cs-btn loading="$ctrl.processing" ng-click="$ctrl.saveLocation()" ng-disabled="$ctrl.form.$invalid"><span translate="common.save"></span></button>
       </div>
+
       <!--Location Details -->
       <div class="cs-form__section">
         <div class="section__info">
@@ -116,6 +124,25 @@
               company-name="$ctrl.callLocationSettingsData.customerVoice.name"
               on-change-fn="$ctrl.onCallerIdChanged(callerId)">
             </uc-location-caller-id>
+          </div>
+        </div>
+      </div>
+
+      <!-- Media on Hold Settings -->
+      <div cr-feature-toggle feature-show="huron-moh-enable" class="cs-form__section">
+        <div class="section__info">
+          <div cs-sticky>
+            <h4 class="section__title" translate="locations.mohTitle"></h4>
+            <h6 class="section__description" translate="locations.mohDesc"></h6>
+          </div>
+        </div>
+        <div class="section__content">
+          <div class="sub-section">
+            <uc-company-media-on-hold
+              company-moh="$ctrl.callLocationSettingsData.mediaId"
+              company-moh-options="$ctrl.locationSettingsOptions.mediaOnHoldOptions"
+              on-change-fn="$ctrl.onMoHChanged(companyMoh)">
+            </uc-company-media-on-hold>
           </div>
         </div>
       </div>
@@ -199,8 +226,7 @@
               on-change-fn="$ctrl.onSteeringDigitChanged(steeringDigit)">
             </uc-outbound-dial-digit>
           </div>
-          <div
-            class="sub-section"
+          <div class="sub-section"
             ng-if="$ctrl.locationSettingsOptions.dialPlan.supportsSimplifiedNationalDialing || $ctrl.locationSettingsOptions.dialPlan.supportsLocalDialing">
             <uc-dialing-setup
               steering-digit="$ctrl.callLocationSettingsData.location.steeringDigit"
@@ -211,6 +237,25 @@
               is-terminus-customer="$ctrl.isTerminusCustomer"
               on-change-fn="$ctrl.onRegionCodeChanged(regionCode, useSimplifiedNationalDialing)">
             </uc-dialing-setup>
+          </div>
+          <div class="sub-section">
+            <uc-location-voicemail
+              ng-if="$ctrl.callLocationSettingsData.customer.hasVoicemailService"
+              display-label="true"
+              dial-plan-country-code="$ctrl.locationSettingsOptions.dialPlan.countryCode"
+              voicemail-pilot-number="$ctrl.callLocationSettingsData.location.voicemailPilotNumber"
+              voicemail-to-email-enabled="$ctrl.callLocationSettingsData.avrilCustomer.features.VM2E_Attachment"
+              external-number-options="$ctrl.locationSettingsOptions.companyVoicemailOptions"
+              number-filter-fn="$ctrl.onNumberFilter(filter)"
+              change-fn="$ctrl.onLocationVoicemailChanged(voicemailPilotNumber)">
+            </uc-location-voicemail>
+          </div>
+          <div class="sub-section">
+            <uc-ext-transfer-org
+              location="true"
+              allow-external-transfer="$ctrl.callLocationSettingsData.location.allowExternalTransfer"
+              on-change-fn="$ctrl.onExtTransferChanged(allowExternalTransfer)">
+            </uc-ext-transfer-org>
           </div>
         </div>
       </div>

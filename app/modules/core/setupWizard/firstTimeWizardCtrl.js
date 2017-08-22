@@ -17,10 +17,6 @@
       });
     };
 
-    $scope.provision = function () {
-      return SetupWizardService.processCallbacks();
-    };
-
     function serviceSetupWizardComplete() {
       if (SetupWizardService.hasPendingLicenses()) {
         return updateAccountInfo();

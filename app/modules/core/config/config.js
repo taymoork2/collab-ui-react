@@ -247,6 +247,7 @@
         MSGR: 'MSGR', // WebEx Messenger (as of 2017-05-17, managed externally and not managed by Atlas)
         MGMTPRO: 'MGMTPRO', // IT Pro Pack
         TSP: 'TSP', // Telephony Service Provider
+        CCASP: 'CCASP', //Cloud Connected Audio - Service Partners
       },
 
       licenseStatus: {
@@ -267,6 +268,12 @@
         CMR: 'CMR',
         CARE: 'CARE',
         ADVANCE_CARE: 'ADVANCE_CARE',
+      },
+
+      setupTypes: {
+        transfer: 'TRANSFER',
+        trialConvert: 'TRIALCONVERT',
+        legacy: 'LEGACY',
       },
 
       messageErrors: {
@@ -480,7 +487,7 @@
         'huronnewfeature',
         'huronsettings',
         'huronrecords',
-        'huronsettingsnew',
+        'huronsettingslocation',
         'huntgroupedit',
         'intercomgroups',
         'mediaonhold',

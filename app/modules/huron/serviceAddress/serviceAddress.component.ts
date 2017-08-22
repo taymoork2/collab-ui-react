@@ -1,7 +1,25 @@
 import {
   PstnAreaService,
   IAreaData,
+  IArea,
+  Address,
 } from 'modules/huron/pstn';
+
+export class HRServiceAddressComponent implements ng.IComponentOptions {
+  public controller = ServiceAddressCtrl;
+  public templateUrl = 'modules/huron/serviceAddress/serviceAddress.html';
+  public bindings = {
+    address: '<',
+    readOnly: '<',
+    hideSearch: '<',  //Show or Hide the validate button
+    formName: '<',
+    addressValidate: '&',  //Must provide if showing the validate button
+    modify: '&',
+    hideAddress: '<',
+    countryCode: '<',
+  };
+}
+
 
 class ServiceAddressCtrl implements ng.IComponentController {
   public stateOptions;
@@ -9,8 +27,8 @@ class ServiceAddressCtrl implements ng.IComponentController {
   public countryCode: string;
   public stateLabel: string;
   public zipLabel: string;
-  public locationModel;
-  public address;
+  public locationModel?: IArea;
+  public address: Address;
 
   /* @ngInject */
   constructor(
@@ -43,27 +61,14 @@ class ServiceAddressCtrl implements ng.IComponentController {
   }
 
   public onLocationSelect () {
-    this.address.state = this.locationModel.abbreviation;
+    if (this.locationModel) {
+      this.address.state = this.locationModel.abbreviation;
+    }
   }
 
   public onModify = function () {
     this.locationModel = undefined;
     this.modify();
-  };
-}
-
-export class HRServiceAddressComponent implements ng.IComponentOptions {
-  public controller = ServiceAddressCtrl;
-  public templateUrl = 'modules/huron/serviceAddress/serviceAddress.html';
-  public bindings = {
-    address: '<',
-    readOnly: '<',
-    hideSearch: '<',
-    formName: '<',
-    addressValidate: '&',
-    modify: '&',
-    hideAddress: '<',
-    countryCode: '<',
   };
 }
 
@@ -99,6 +104,6 @@ export function isolateForm() {
       },
     };
     _.assign(formCtrl, isolatedFormCtrl);
-
   }
+
 }

@@ -17,6 +17,7 @@ require('./_fieldsets-sidepanel.scss');
   /* @ngInject */
   function ContextFieldsetsSidepanelCtrl(Analytics, ContextFieldsetsService, Notification, ModalService, $state, $translate) {
     var vm = this;
+    vm.dateFormat = 'LL';
     vm.inUse = true;
     vm.inUseTooltipMessage = $translate.instant('context.dictionary.fieldsetPage.notInUseTooltip');
     vm.hasDescription = false;

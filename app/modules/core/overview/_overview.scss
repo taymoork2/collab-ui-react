@@ -90,6 +90,21 @@
         padding: 0;
       }
     }
+
+    .warning-specs {
+      color: $color-yellow-base;
+      font-size: 28px;
+    }
+
+    .priority-specs {
+      color: $color-primary-base;
+      font-size: 28px;
+    }
+
+    .meetings-detail-spacing {
+      margin-top: 12px;
+      margin-bottom: 20px;
+    }
   }
 
   .hybrid-card {

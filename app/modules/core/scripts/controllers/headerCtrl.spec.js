@@ -6,12 +6,12 @@ describe('Controller: HeaderCtrl', function () {
       '$q',
       '$scope',
       'Authinfo',
-      'FeatureToggleService',
       'ProPackService',
-      'Utils'
+      'Utils',
+      'ControlHubService'
     );
 
-    spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
+    spyOn(this.ControlHubService, 'getControlHubEnabled').and.returnValue(this.$q.resolve(false));
     spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(false));
 
     this.initController = function () {
@@ -30,8 +30,8 @@ describe('Controller: HeaderCtrl', function () {
 
     describe('and is customer admin', function () {
       beforeEach(function () {
-        spyOn(this.Authinfo, 'isPartnerAdmin').and.returnValue(false);
-        spyOn(this.Authinfo, 'isPartnerSalesAdmin').and.returnValue(false);
+        spyOn(this.Authinfo, 'isCustomerAdmin').and.returnValue(true);
+        spyOn(this.Authinfo, 'isCustomerView').and.returnValue(true);
       });
 
       it('should show my company page button', function () {
@@ -88,14 +88,14 @@ describe('Controller: HeaderCtrl', function () {
       expect(this.controller.headerTitle).toEqual('loginPage.title');
     });
 
-    it('should set headerTitle to loginPage.titleNew when atlas2017NameChangeGetStatus is true', function () {
-      this.FeatureToggleService.atlas2017NameChangeGetStatus.and.returnValue(this.$q.resolve(true));
+    it('should set headerTitle to loginPage.titleNew when getControlHubEnabled is true', function () {
+      this.ControlHubService.getControlHubEnabled.and.returnValue(this.$q.resolve(true));
       this.initController();
       expect(this.controller.headerTitle).toEqual('loginPage.titleNew');
     });
 
-    it('should set headerTitle to loginPage.titlePro when atlas2017NameChangeGetStatus and hasProPackPurchased is true', function () {
-      this.FeatureToggleService.atlas2017NameChangeGetStatus.and.returnValue(this.$q.resolve(true));
+    it('should set headerTitle to loginPage.titlePro when getControlHubEnabled and hasProPackPurchased is true', function () {
+      this.ControlHubService.getControlHubEnabled.and.returnValue(this.$q.resolve(true));
       this.ProPackService.hasProPackPurchased.and.returnValue(this.$q.resolve(true));
       this.initController();
       expect(this.controller.headerTitle).toEqual('loginPage.titlePro');

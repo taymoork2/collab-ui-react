@@ -1,4 +1,3 @@
-import ILogService = angular.ILogService;
 class CustomerReportsHeaderCtrl {
   /* @ngInject */
   constructor(
@@ -11,7 +10,7 @@ class CustomerReportsHeaderCtrl {
     private WebExApiGatewayService,
     private $translate: ng.translate.ITranslateService,
   ) {
-    if (Authinfo.isCare()) {
+    if (this.Authinfo.isCare()) {
       this.headerTabs.push({
         title: this.$translate.instant('reportsPage.careTab'),
         state: 'reports.care',
@@ -32,6 +31,7 @@ class CustomerReportsHeaderCtrl {
           title: this.$translate.instant('reportsPage.sparkReports'),
           state: 'reports.spark',
         });
+        this.checkWebex();
       }
       if (features.isMfEnabled) {
         if (features.mf) {
@@ -59,12 +59,10 @@ class CustomerReportsHeaderCtrl {
         this.goToFirstReportsTab();
       }
     });
-    this.checkWebex();
   }
 
-  public headerTabs = new Array<any>();
-
   private webex: boolean = false;
+  public headerTabs = new Array<any>();
   private promises: any = {
     mf: this.FeatureToggleService.atlasMediaServiceMetricsMilestoneOneGetStatus(),
     mfMilestoneTwo: this.FeatureToggleService.atlasMediaServiceMetricsMilestoneTwoGetStatus(),
@@ -90,12 +88,10 @@ class CustomerReportsHeaderCtrl {
       }).catch(_.noop);
     });
   }
-
   public goToFirstReportsTab(): void {
     const firstTab = this.headerTabs[0];
     this.$state.go(firstTab.state);
   }
-
   private getUniqueWebexSiteUrls() {
     const conferenceServices: any[] = this.Authinfo.getConferenceServicesWithoutSiteUrl() || [];
     const webexSiteUrls: any[] = [];

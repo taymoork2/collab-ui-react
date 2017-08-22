@@ -1,10 +1,14 @@
+import { MetricsService, OperationalKey } from 'modules/core/metrics';
 import { WindowService } from 'modules/core/window';
 
+enum NotificationType {
+  ERROR = 'error',
+  SUCCESS = 'success',
+  WARNING = 'warning',
+}
+
 export class Notification {
-  private static readonly SUCCESS = 'success';
-  private static readonly WARNING = 'warning';
-  private static readonly ERROR = 'error';
-  private static readonly TYPES = [Notification.SUCCESS, Notification.WARNING, Notification.ERROR];
+  public readonly type = NotificationType;
   private static readonly MESSAGES = 'messages';
   private static readonly HTML_MESSAGES = 'htmlMessages';
   private static readonly NO_TIMEOUT = 0;
@@ -25,6 +29,7 @@ export class Notification {
     private $log: ng.ILogService,
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
+    private MetricsService: MetricsService,
     private WindowService: WindowService,
     private Config,
     private toaster,
@@ -34,21 +39,21 @@ export class Notification {
   }
 
   public success(messageKey: string, messageParams?: Object, titleKey?: string, allowHtml: boolean = false): void {
-    this.notify(this.$translate.instant(messageKey, messageParams), Notification.SUCCESS, this.getTitle(titleKey), allowHtml);
+    this.notify(this.$translate.instant(messageKey, messageParams), NotificationType.SUCCESS, this.getTitle(titleKey), allowHtml);
   }
 
   public warning(messageKey: string, messageParams?: Object, titleKey?: string, allowHtml: boolean = false): void {
-    this.notify(this.$translate.instant(messageKey, messageParams), Notification.WARNING, this.getTitle(titleKey), allowHtml);
+    this.notify(this.$translate.instant(messageKey, messageParams), NotificationType.WARNING, this.getTitle(titleKey), allowHtml);
   }
 
   public error(messageKey: string, messageParams?: Object, titleKey?: string, allowHtml: boolean = false): void {
-    this.notify(this.$translate.instant(messageKey, messageParams), Notification.ERROR, this.getTitle(titleKey), allowHtml);
+    this.notify(this.$translate.instant(messageKey, messageParams), NotificationType.ERROR, this.getTitle(titleKey), allowHtml);
   }
 
   public errorWithTrackingId(response: ng.IHttpPromiseCallbackArg<any>, errorKey?: string, errorParams?: Object): void {
     let errorMsg = this.getErrorMessage(errorKey, errorParams);
     errorMsg = this.addResponseMessage(errorMsg, response, false);
-    this.notifyErrorResponse(errorMsg, response);
+    this.notifyHttpErrorResponse(errorMsg, response);
   }
 
   public processErrorResponse(response: ng.IHttpPromiseCallbackArg<any>, errorKey?: string, errorParams?: Object): string {
@@ -58,16 +63,37 @@ export class Notification {
 
   public errorResponse(response: ng.IHttpPromiseCallbackArg<any>, errorKey?: string, errorParams?: Object): void {
     const errorMsg = this.processErrorResponse(response, errorKey, errorParams);
-    this.notifyErrorResponse(errorMsg, response);
+    this.notifyHttpErrorResponse(errorMsg, response);
   }
 
-  private notifyErrorResponse(errorMsg: string, response: ng.IHttpPromiseCallbackArg<any>): void {
+  private notifyHttpErrorResponse(errorMsg: string, response: ng.IHttpPromiseCallbackArg<any>): void {
     if (!this.isCancelledResponse(response)) {
-      this.notify(errorMsg, Notification.ERROR);
+      this.popToast({
+        notifications: errorMsg,
+        type: NotificationType.ERROR,
+        allowHtml: false,
+        httpStatus: _.get(response, 'status'),
+      });
     }
   }
 
-  public notify(notifications: string[] | string, type: string = Notification.ERROR, title?: string, allowHtml: boolean = false): void {
+  public notify(notifications: string[] | string, type: NotificationType = NotificationType.ERROR, title?: string, allowHtml: boolean = false): void {
+    this.popToast({
+      notifications,
+      type,
+      title,
+      allowHtml,
+    });
+  }
+
+  private popToast(options: {
+    notifications: string[] | string,
+    type: NotificationType,
+    title?: string,
+    allowHtml: boolean,
+    httpStatus?: number,
+  }): void {
+    const { notifications, type, title, allowHtml, httpStatus } = options;
     if (this.preventToasters) {
       this.$log.warn('Deliberately prevented a notification:', notifications);
       return;
@@ -75,29 +101,34 @@ export class Notification {
     if (!notifications) {
       return;
     }
-    if (_.isString(notifications)) {
-      notifications = [notifications];
-    }
-    if (!notifications.length) {
+    const notificationMessages = _.isString(notifications) ? [notifications] : notifications;
+    if (!notificationMessages.length) {
       return;
     }
     const closeHtml = `<button type="button" class="close toast-close-button"><span class="sr-only">${this.$translate.instant('common.close')}</span></button>`;
     const directiveData = {};
-    _.set(directiveData, allowHtml ? Notification.HTML_MESSAGES : Notification.MESSAGES , notifications);
+    _.set(directiveData, allowHtml ? Notification.HTML_MESSAGES : Notification.MESSAGES , notificationMessages);
+
+    const notificationType = _.includes(_.values(NotificationType), type) ? type : NotificationType.ERROR;
+
+    this.MetricsService.trackOperationalMetric(OperationalKey.NOTIFICATION, {
+      action_type: notificationType,
+      http_status: _.isUndefined(httpStatus) ? undefined : _.toString(httpStatus),
+    });
 
     this.toaster.pop({
       title: title,
-      type: _.includes(Notification.TYPES, type) ? type : Notification.ERROR,
+      type: notificationType,
       body: 'cr-bind-unsafe-html',
       bodyOutputType: 'directive',
       directiveData: directiveData,
-      timeout: type === Notification.SUCCESS ? this.successTimeout : this.failureTimeout,
+      timeout: type === NotificationType.SUCCESS ? this.successTimeout : this.failureTimeout,
       closeHtml: closeHtml,
     });
   }
 
   public notifyReadOnly(): void {
-    this.notify(this.$translate.instant('readOnlyMessages.notAllowed'), Notification.WARNING);
+    this.notify(this.$translate.instant('readOnlyMessages.notAllowed'), NotificationType.WARNING);
     this.preventToasters = true;
     this.$timeout(() => this.preventToasters = false, 1000);
   }

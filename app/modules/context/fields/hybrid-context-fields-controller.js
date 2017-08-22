@@ -1,4 +1,6 @@
 require('./_fields-list.scss');
+var momentFilter = require('../filters/momentFilter').Moment;
+
 (function () {
   'use strict';
 
@@ -9,7 +11,8 @@ require('./_fields-list.scss');
     .controller('HybridContextFieldsCtrl', HybridContextFieldsCtrl);
 
   /* @ngInject */
-  function HybridContextFieldsCtrl($scope, $rootScope, $state, $translate, Log, LogMetricsService, $q, ContextFieldsService, Notification, PropertyService, Authinfo) {
+  function HybridContextFieldsCtrl($scope, $rootScope, $state, $translate, Log, LogMetricsService, $q, ContextFieldsService, Notification, PropertyService, Authinfo, FieldUtils) {
+    var dateTimeFormatString = 'LL';
     var vm = this;
     var eventListeners = [];
 
@@ -97,14 +100,6 @@ require('./_fields-list.scss');
         PII: $translate.instant('context.dictionary.fieldPage.piiEncrypted'),
       };
 
-      var dataTypeApiMap = {
-        boolean: $translate.instant('context.dictionary.dataTypes.boolean'),
-        date: $translate.instant('context.dictionary.dataTypes.date'),
-        double: $translate.instant('context.dictionary.dataTypes.double'),
-        integer: $translate.instant('context.dictionary.dataTypes.integer'),
-        string: $translate.instant('context.dictionary.dataTypes.string'),
-      };
-
       // searchable is a string, so even "false" is truthy. if searchable has a value already, get boolean value
       // default to true if not provided
       if (_.isString(field.searchable)) {
@@ -116,20 +111,9 @@ require('./_fields-list.scss');
       }
       field.searchableUI = searchableMap[field.searchable] || $translate.instant('common.yes');
 
-      if (field.dataType) {
-        field.dataTypeUI = dataTypeApiMap[field.dataType.trim()];
-
-        //for custom type
-        if (field.dataTypeDefinition && field.dataTypeDefinition.type === 'enum') {
-          field.dataTypeUI = $translate.instant('context.dictionary.dataTypes.enumString');
-        }
-      }
+      field.dataTypeUI = FieldUtils.getDataType(field);
 
       field.classificationUI = classificationMap[field.classification] || $translate.instant('context.dictionary.fieldPage.unencrypted');
-
-      if (field.lastUpdated) {
-        field.lastUpdatedUI = moment(field.lastUpdated).format('LL');
-      }
 
       var accessibleMap = {
         true: $translate.instant('context.dictionary.base'),
@@ -261,8 +245,10 @@ require('./_fields-list.scss');
           displayName: $translate.instant('context.dictionary.access'),
           maxWidth: 200,
         }, {
-          field: 'lastUpdatedUI',
+          field: 'lastUpdated',
           displayName: $translate.instant('context.dictionary.dateUpdated'),
+          type: 'date',
+          cellFilter: momentFilter.getDateFilter(dateTimeFormatString),
           maxWidth: 300,
         }],
       };
@@ -288,9 +274,22 @@ require('./_fields-list.scss');
 
       var lowerStr = str.toLowerCase();
       var containSearchString = function (field) {
-        var propertiesToCheck = ['id', 'description', 'dataTypeUI', 'searchableUI', 'classificationUI', 'lastUpdatedUI', 'publiclyAccessibleUI'];
+        var propertiesToCheck = ['id', 'description', 'dataTypeUI', 'searchableUI', 'classificationUI', 'lastUpdated', 'publiclyAccessibleUI'];
         return _.some(propertiesToCheck, function (property) {
-          var value = _.get(field, property, '').toLowerCase();
+          var value = field[property];
+          if (value === undefined) {
+            return false;
+          }
+
+          if (property === 'lastUpdated') {
+            value = value.trim();
+            if (value === '') {
+              // can't match against empty string because that will create a date based on "now"
+              return false;
+            }
+            value = moment(value).format(dateTimeFormatString).toLowerCase();
+          }
+          value = value.toLowerCase();
           return _.includes(value, lowerStr);
         });
       };

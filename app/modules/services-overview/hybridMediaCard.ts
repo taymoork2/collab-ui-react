@@ -1,6 +1,5 @@
 import { ServicesOverviewHybridCard } from './ServicesOverviewHybridCard';
 import { ICardButton, CardType } from './ServicesOverviewCard';
-import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 
 export class ServicesOverviewHybridMediaCard extends ServicesOverviewHybridCard {
   public getShowMoreButton(): ICardButton | undefined {
@@ -40,7 +39,6 @@ export class ServicesOverviewHybridMediaCard extends ServicesOverviewHybridCard 
   public constructor(
     private Authinfo,
     private Config,
-    HybridServicesClusterStatesService: HybridServicesClusterStatesService,
   ) {
     super({
       active: false,
@@ -50,8 +48,8 @@ export class ServicesOverviewHybridMediaCard extends ServicesOverviewHybridCard 
       display : false,
       name: 'servicesOverview.cards.hybridMedia.title',
       routerState: 'media-service-v2.list',
-      service: 'squared-fusion-media',
-    }, HybridServicesClusterStatesService);
+      serviceId: 'squared-fusion-media',
+    });
     this.hybridMediaRoleCheckEventHandler();
   }
 }

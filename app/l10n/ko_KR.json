@@ -1,6 +1,8 @@
 {
   "loginPage": {
     "title": "클라우드 협업 관리",
+    "titleNew": "Cisco Spark 제어 허브",
+    "titlePro": "Cisco Spark 제어 허브 Pro",
     "login": "로그인",
     "loading": "로드 중",
     "license": "Cisco Spark 서비스를 사용함으로써 귀하는 서비스 약관 및 개인정보 보호정책에 동의합니다.",
@@ -63,7 +65,7 @@
     "lastnameHeader": "성",
     "displayNameHeader": "표시명",
     "emailHeader": "이메일",
-    "sipDomain": "Spark SIP 주소",
+    "sipDomain": "Cisco Spark SIP 주소",
     "actionHeader": "작업",
     "invite": "초대 보내기",
     "addedHeader": "추가됨",
@@ -119,7 +121,7 @@
     "yes": "예",
     "resend": "초대장 다시 보내기",
     "resendActivation": "활성화 다시 보내기",
-    "deleteUserSuccess": "사용자 {{email}} 님을 성공적으로 삭제했습니다. 일부의 경우, 사용자가 Spark 회의실에서 제거될 때까지 최대 24시간이 걸릴 수도 있습니다",
+    "deleteUserSuccess": "사용자 {{email}} 님을 성공적으로 삭제했습니다. 일부의 경우, 사용자가 Cisco Spark 회의실에서 제거될 때까지 최대 24시간이 걸릴 수도 있습니다.",
     "deleteUserError": "사용자 삭제 오류.",
     "deleteCareUserSuccess": "케어에서 사용자 {{email}} 성공적으로 삭제됨",
     "deleteCareUserFailure": "케어에서 사용자 {{email}} 삭제 오류.",
@@ -132,7 +134,7 @@
     "messageError": "메시지: {{message}}",
     "userListError": "사용자 목록 검색 오류. 페이지를 다시 로드하십시오.",
     "hybridServicesError": "일부 사용자에 대해 이 작업을 실행할 수 없습니다. 하이브리드 서비스는 라이센스가 있는 사용자가 사용할 수 있습니다. 사용자에 대한 라이센스를 확인한 후 다시 시도하십시오.",
-    "hybridServicesComboError": "지원하지 않는 서비스의 조합(통화 서비스 및 Spark 통화)을 선택했습니다. 한 개를 제거하고 다시 시도하십시오.",
+    "hybridServicesComboError": "지원하지 않는 서비스의 조합(통화 서비스 및 Cisco Spark 통화)을 선택했습니다. 한 개를 제거하고 다시 시도하십시오.",
     "licenseServicesError": "사용자를 위해 사용할 수 있는 라이센스가 부족함",
     "searchUser": "사용자 검색",
     "tooManyUsers": "1000명 이상의 사용자가 있기 때문에 사용자 목록이 표시되지 않습니다.",
@@ -169,7 +171,7 @@
     "careAddUserRoleError": "사용자에게 역할 추가 오류.",
     "careDeleteCESRoleError": "사용자로부터 CES 역할 삭제 오류",
     "loadError": "사용자 목록을 로드하는 동안 오류가 발생했습니다.",
-    "ciscoSparkJabberInteropTooltip": "Cisco Spark와 Jabber 간의 메시징을 활성화하십시오. Jabber 사용자에게 Cisco Spark 스페이스로의 액세스를 제공합니다. 변경 사항이 적용될 때까지 최대 24시간이 소요될 수 있습니다."
+    "ciscoSparkJabberInteropTooltip": "Cisco Spark와 Jabber 간의 메시징을 활성화하십시오. Jabber 사용자에게 Cisco Spark 스페이스로의 액세스 권한을 제공합니다. 변경 사항이 적용될 때까지 최대 24시간이 소요될 수 있습니다."
   },
   "userManage": {
     "org": {
@@ -284,7 +286,7 @@
   },
   "onboardModal": {
     "ciscoSparkJabberInterop": "Cisco Spark / Jabber 상호 운용성",
-    "spark": "Spark",
+    "spark": "Cisco Spark",
     "webex": "WebEx",
     "calling": "전화 중",
     "onboardUsers": "사용자 추가",
@@ -328,6 +330,7 @@
     "paidCiscoSparkMeetings": "Cisco Spark 25명 미팅",
     "paidAdvancedConferencing": "고급 미팅",
     "paidComm": "통화",
+    "paidCommHybrid": "하이브리드 통화",
     "paidSparkCall": "Cisco Spark 통화",
     "paidNone": "없음",
     "paidCDC": "채팅 및 수신",
@@ -361,7 +364,7 @@
       "404": "존재하지 않습니다",
       "408": "님은 사용 자격이 없는 것 같습니다. 응답을 기다리는 동안 시간이 초과되었습니다. 사용자의 자격을 확인하려면 나중에 다시 확인하십시오.",
       "409": "자격이 이전에 업데이트됨",
-      "400094": "하이브리드 서비스에 통화 서비스가 이미 활성화되어 있습니다. 한 명의 사용자에 대해 통화 서비스 및 Spark 통화를 모두 활성화하는 작업은 지원되지 않습니다. Spark 통화를 활성화하려면 이 사용자에 대한 통화 서비스를 비활성화하고 다시 시도하십시오.",
+      "400094": "하이브리드 서비스에 통화 서비스가 이미 활성화되어 있습니다. 한 명의 사용자에 대해 통화 서비스 및 Cisco Spark 통화를 모두 활성화하는 작업은 지원되지 않습니다. Cisco Spark 통화를 활성화하려면 이 사용자에 대한 통화 서비스를 비활성화하고 다시 시도하십시오.",
       "deleteUserDnFallbackError": "자격을 업데이트하지 못함. 헌트 그룹에 대해 사용자의 디렉토리 번호가 대비 대상으로 사용됩니다.",
       "other": "자격 없음. 상태: {{status}}"
     },
@@ -385,21 +388,31 @@
     "generateActivationCodeText": "이 사용자를 위해 새 장치를 활성화하려면 활성화 코드를 생성하십시오.",
     "generateActivationCodeTextPlace": "이 장소를 위해 새 장치를 활성화하려면 활성화 코드를 생성하십시오.",
     "generateActivationCodeDesc": "코드를 잃어버린 경우, 새로운 활성화 코드를 생성하십시오. ",
+    "multipleDevicesWarning": "이 장소에 있는 장치는 함께 작동하도록 설계되지 않았습니다. 따라서 충돌 문제가 있을 수 있습니다.",
     "activationCodeTitle": "활성화 코드",
     "expires": "만료됨",
     "editServices": "서비스 편집",
     "editServiceTitle": "{{name}} 님을 위한 서비스 활성화됨",
     "siteUris": "WebEx 사이트",
     "pmrTitle": "개인 미팅 룸",
-    "webex": "Webex",
-    "spark": "Spark",
+    "webex": "WebEx",
+    "spark": "Cisco Spark",
     "calling": "전화 중",
     "enabledBetaFeatures": "베타 기능 활성화됨",
     "otpShareButton": "공유",
     "userDetails": "사용자 세부 사항",
     "userPreferredLanguageError": "사용자가 선호하는 언어를 페치하지 못함. 이유:",
     "notConfigured": "구성되지 않음",
-    "dirsyncToolTip": "사용자가 선호하는 언어를 업데이트하려면 DirSync를 사용하십시오."
+    "dirsyncToolTip": "사용자가 선호하는 언어를 업데이트하려면 DirSync를 사용하십시오.",
+    "rolesAndSecurity": "역할 및 보안",
+    "security": "보안",
+    "resetAccessTipForBasicPack": "사용자에 대한 액세스를 재설정하려면 Pro Pack에 대해 파트너 또는 Cisco 계정 관리자에게 문의하십시오.",
+    "resetAccessSuccess": "{{name}} 님의 액세스가 성공적으로 재설정되었습니다. 적용될 때까지 몇 시간 동안 기다려 주십시오.",
+    "resetAccessFailure": "{{name}} 님의 액세스를 재설정할 수 없습니다. 나중에 다시 시도하십시오.",
+    "resetAccess": "액세스 재설정",
+    "learnMore": "자세한 내용.",
+    "resetAccessDetail": "데스크탑, 웹 및 모바일 장치에서 Cisco Spark 앱에 대한 사용자 액세스 토큰을 취소하십시오. 이 작업은 캐시된 콘텐츠를 삭제하고 사용자에게 다시 로그인하도록 안내합니다.",
+    "location": "위치"
   },
   "tabs": {
     "overviewTab": "개요",
@@ -413,7 +426,7 @@
     "logsTabDesc": "사용자 로그 보기",
     "cdrTab": "CDR 통화 흐름",
     "cdrLogsTabDesc": "CDR 통화 흐름 보기",
-    "billingTab": "주문 프로비저닝",
+    "billingTab": "주문 구축",
     "billingTabDesc": "엔지니어링 지원/작업",
     "accountTab": "계정",
     "settingsTab": "설정",
@@ -423,7 +436,7 @@
     "mediaOnHoldTab": "대기 중 미디어",
     "mediaOnHoldTabDesc": "대기 중 미디어 개발 예제",
     "metricsDetailsTab": "미디어 서비스 V2 페이지",
-    "metricsDetailsTabDesc": "Metrics 관리",
+    "metricsDetailsTabDesc": "메트릭 관리",
     "thresholdDetailsTab": "임계값",
     "thresholdDetailsTabDesc": "임계값 관리",
     "meetingDetailsTab": "미팅",
@@ -446,7 +459,8 @@
     "gssTabDesc": "글로벌 서비스 상태 관리",
     "careTab": "케어",
     "careTabDesc": "클라우드 연락처 센터",
-    "editFeatureToggles": "기능 토글 편집"
+    "editFeatureToggles": "기능 토글 편집",
+    "managedByPartner": "{{partnerOrgName}}에서 관리함"
   },
   "index": {
     "welcome": "환영합니다!",
@@ -454,7 +468,9 @@
     "support": "도움말",
     "logout": "로그아웃",
     "appTitle": "클라우드 협업 관리",
-    "genericTitle": "Spark",
+    "newAppTitle": "Cisco Spark 제어 허브",
+    "proAppTitle": "Cisco Spark 제어 허브 Pro",
+    "genericTitle": "Cisco Spark",
     "search": "이름 또는 이메일로 사용자 검색",
     "greeting": "안녕하세요, {{name}} 님!",
     "launchPartner": "내 조직 관리",
@@ -467,10 +483,10 @@
   "downloadPage": {
     "thank": "Cisco Spark에 등록해 주셔서 감사합니다.",
     "account": "이제 귀하의 계정 {{email}}이 활성화되었습니다.",
-    "install": "이 링크에 따라 Spark를 설치하십시오.",
+    "install": "이 링크를 따라 Cisco Spark를 설치하십시오",
     "link": ".",
-    "using": "Spark를 사용하십시오",
-    "squared": "Spark.",
+    "using": "다음을 사용하기 시작하십시오.",
+    "squared": "Cisco Spark.",
     "active": "계정 활동 중"
   },
   "invitePage": {
@@ -504,7 +520,7 @@
     "customerAdminEmail": "관리자 이메일",
     "partnerAdminEmail": "파트너 관리 이메일",
     "collab": "표준 그룹 회의실 + 25명 단체 미팅",
-    "squaredUC": "고급 Spark 통화",
+    "squaredUC": "고급 Cisco Spark 통화",
     "duration": "평가판 지속 기간 (일)",
     "ninetyDays": "90",
     "search": "검색",
@@ -544,6 +560,7 @@
     "all": "모두",
     "engagement": "참여",
     "quality": "품질",
+    "details": "통화 세부 기록",
     "noData": "데이터 없음",
     "noCustomerData": "사용할 수 있는 데이터 없음",
     "timeSelected": "선택된 시간 기간: ",
@@ -570,9 +587,9 @@
     "customerLoadError": "고객 목록을 로딩하는 중 오류가 발생했습니다.",
     "unauthorizedError": "사용자는 고객 보고서에 액세스하도록 인증되지 않았습니다.",
     "conversationError": "회의실 및 파일 데이터를 로드하는 동안 오류가 발생했습니다.",
-    "webex": "WebEx 보고서",
+    "webex": "WebEx Classic",
     "devReports": "개발 고객 보고서",
-    "sparkReports": "Spark 보고서",
+    "sparkReports": "Cisco Spark 보고서",
     "downloadOptions": "다운로드 옵션",
     "careTab": "케어",
     "careTabDesc": "클라우드 연락처 센터",
@@ -588,6 +605,21 @@
     "customer": "고객",
     "customers": "고객",
     "customerSelect": "고객 선택",
+    "type": "유형",
+    "format": "형식",
+    "from": "보내는 사람",
+    "to": "받는 사람",
+    "date": "날짜",
+    "duration": "지속 시간",
+    "status": "상태",
+    "placeholder": {
+      "searchbox": "사용자로 검색",
+      "startDate": "시작 날짜",
+      "endDate": "종료 날짜",
+      "startTime": "시작 시간",
+      "endTime": "종료 시간",
+      "to": "-"
+    },
     "usageReports": {
       "usageReportTitle": "회의실 장치",
       "pageTitle": "보고서",
@@ -618,11 +650,12 @@
       "nameNotFoundFor": "다음 항목에 대한 이름을 찾을 수 없음",
       "nameNotResolvedFor": "다음 항목에 대한 이름을 확인하지 못함",
       "timeoutWhenTryingToResolveNameFor": "다음 항목에 대한 이름을 확인하려고 할 때 시간 초과",
+      "timeoutWhenFetchingMetrics": "선택된 모델에 대한 메트릭을 불러오려고 할 때 시간 초과",
       "selectModelsToFilterOn": "필터링할 모델을 선택하십시오.",
       "deviceOptions": {
         "all": "모두",
-        "roomSystems": "DX, MX 및 SX 장치",
-        "sparkBoard": "Spark Board"
+        "roomSystems": "Cisco Spark 회의실 키트, DX, MX 및 SX series",
+        "sparkBoard": "Cisco Spark Board"
       },
       "export": {
         "deviceUsageExportTitle": "장치 사용 속성을 CSV로 내보내기",
@@ -635,14 +668,111 @@
       }
     },
     "webexMetrics": {
-      "title": "WebEx 메트릭",
+      "title": "WebEx",
+      "metrics": "메트릭",
+      "diagnostics": "진단",
       "meetingUsage": "미팅 사용량",
       "joinMeetingTime": "미팅 참여 시간",
       "webexReportInMashup": "CHP 보고서",
       "webexReportInQlikApp": "Qlik 앱",
-      "sparkReportInMashup": "Spark 보고서",
+      "sparkReportInMashup": "Cisco Spark 보고서",
       "webexReportWithTicket": "CHP 보고서 로그인",
-      "sparkReportWithTicket": "Spark 보고서 로그인"
+      "sparkReportWithTicket": "Cisco Spark 보고서 로그인"
+    }
+  },
+  "webexReports": {
+    "to": "-",
+    "end": "종료",
+    "audio": "오디오",
+    "start": "시작",
+    "details": "세부 정보",
+    "created": "작성됨",
+    "classic": "Classic",
+    "quality": "품질",
+    "session": "세션",
+    "meeting": "미팅",
+    "session_": "세션",
+    "endTime": "종료 날짜",
+    "onGoing": "진행 중",
+    "duration": "지속 시간",
+    "features": "기능",
+    "hostEmail": "호스트 이메일",
+    "startFrom": "시작 시간",
+    "startTime": "시작 날짜",
+    "connection": "연결",
+    "engagement": "참여",
+    "participant": "참가자",
+    "sessionInfo": "세션 정보",
+    "meetingName": "미팅 이름",
+    "meetingType": "미팅 유형",
+    "participants": "참가자",
+    "participants_": "참가자",
+    "meetingNumber": "미팅 번호",
+    "scheduledFrom": "예약된 시작 시간",
+    "placeholder-date": "요일 선택",
+    "hostNameAndId":"호스트 이름/호스트 ID",
+    "siteIdAndName": "사이트 ID/사이트명",
+    "search-info-title": "미팅 검색",
+    "placeholder-text": "이메일 또는 미팅 번호 검색",
+    "searchError": "올바른 이메일 또는 미팅 번호를 입력하십시오.",
+    "search-info": "검색별로 세분화할 때 미팅 목록이 표시됩니다.",
+    "end-date-tooltip": "시작 날짜는 종료 날짜보다 이전이어야 합니다.",
+    "searchGridHeader": {
+      "status": "상태",
+      "endTime": "종료 날짜",
+      "conferenceDate": "날짜",
+      "startTime": "시작 날짜",
+      "meetingName": "미팅 이름",
+      "conferenceID": "회의 ID"
+    },
+    "meetingFeatures": {
+      "chat": "채팅",
+      "poll": "설문조사",
+      "flash": "플래시",
+      "appShare": "앱 공유",
+      "docShare": "문서 공유",
+      "fileShare": "파일 공유"
+    },
+    "meetingStatus": {
+      "ended": "종료됨",
+      "inProcess": "처리 중"
+    },
+    "connectionFields": {
+      "voIP": "VoIP",
+      "nbr2": "NBR2",
+      "video": "비디오",
+      "mmpVoIP": "MMP VoIP",
+      "cmrCloud": "CMR 클라우드",
+      "mmpVideo": "MMP 비디오",
+      "cmrHybrid": "CMR 하이브리드",
+      "hybridVoIP": "하이브리드 VoIP",
+      "nbr2W3Party": "NBR2 W3 주체",
+      "hybridMmpVoIP": "하이브리드 MMP VoIP",
+      "audioBroadcast": "오디오 브로드캐스트",
+      "hybridTelephony": "하이브리드 텔레포니",
+      "regularTelephony": "일반 텔레포니",
+      "cmrCloudPersonal": "CMR 클라우드 개인",
+      "cmrCloudScheduled": "CMR 클라우드 예약됨",
+      "personalMeetingRoom": "개인 미팅 룸",
+      "audioBroadcastW3Party": "오디오 브로드캐스트 W3 주체",
+      "audioBroadcast4Mobile": "오디오 브로드캐스트 (모바일)"
+    },
+    "sessionType": {
+      "sessionType_18": "SSR",
+      "sessionType_1": "채팅",
+      "sessionType_50": "NBR2",
+      "sessionType_10": "기타",
+      "sessionType_20": "MMP 오디오",
+      "sessionType_21": "MMP 비디오",
+      "sessionType_25": "하이브리드 PSTN",
+      "sessionType_12": "VOIP 세션",
+      "sessionType_0": "에이전트 세션",
+      "sessionType_11": "비디오 세션",
+      "sessionType_22": "하이브리드 MMP VoIP",
+      "sessionType_4": "앱 공유 세션",
+      "sessionType_5": "전화 에이전트 세션",
+      "sessionType_4005": "기타 다자간 전화회의 AB",
+      "sessionType_3005": "기타 다자간 전화회의 NBR2"
     }
   },
   "sharedMeetingReports": {
@@ -654,7 +784,7 @@
     "sharedMeetingReport": "공유된 미팅 보고서",
     "sharedMeetingUsage": "공유된 미팅 사용",
     "sharedMeetingDescription": "이 그래프는 개월당 동시 미팅의 수를 표시합니다.",
-    "sharedMeetingNote": "참고: 동시 Spark 미팅은 아직 이 보고서에 포함되지 않았으며, 곧 추가될 예정입니다.",
+    "sharedMeetingNote": "참고: 동시 Cisco Spark 미팅은 아직 이 보고서에 포함되지 않았으며, 곧 추가될 예정입니다.",
     "concurrentMeetingsTitle": "주최된 최대 동시 미팅의 실제 수",
     "concurrentMeetings": "동시 미팅",
     "maxMeetingsTitle": "허용된 동시 미팅의 최대 수",
@@ -662,7 +792,7 @@
     "errorLoadingSharedMeetingDetails": "공유된 미팅 보고서 세부 사항 데이터를 로드하는 동안 문제가 발생했습니다.",
     "siteUrlError": "사이트 URL이 정의되지 않았습니다. 공유된 미팅 보고서를 검색할 수 없습니다.",
     "csvPageError": "다운로드하기 위한 자세한 보고서를 검색할 수 없음.",
-    "downloadHref": "공유된 미팅 사용의 <a href=\"{{href}}\" download=\"{{download}}\">자세한 보고서</a>를 다운로드하십시오.",
+    "downloadHref": "공유된 미팅 사용의 <a href=\"{{href}}\" download=\"{{download}}\">자세한 보고서</a> 또는 매월 최대 동시 사용에 대한 <a href=\"{{href2}}\" download=\"{{download2}}\">월별 보고서</a>를 다운로드하십시오.",
     "downloadClick": "공유된 미팅 사용의 <a ng-click=\"{{onclick}}\">자세한 보고서</a>를 다운로드하십시오.",
     "csvMeetingTopic": "미팅 주제",
     "csvStartTime": "시작 시간",
@@ -671,14 +801,22 @@
     "csvDuration": "미팅 지속 시간(초)",
     "csvMeetingType": "미팅 유형",
     "csvHostId": "호스트 Id",
-    "csvHostName": "호스트 이름"
+    "csvUserName": "사용자이름",
+    "csvSiteName": "사이트",
+    "csvMonth": "개월",
+    "csvFrom": "보내는 사람",
+    "csvTo": "받는 사람",
+    "csvConcurrentMeetingsPeak": "최대 동시 미팅의 수"
   },
   "careReportsPage": {
     "tasks": "작업",
     "handled": "처리됨",
+    "accepted": "수락됨",
     "assigned": "진행 중",
     "in-queue": "대기 중",
     "abandoned": "중단됨",
+    "missed": "무시함",
+    "percentage": "백분율",
     "queueTime": "대기 시간",
     "avgQueueTime": "평균 대기 시간",
     "avgHandleTime": "평균 처리 시간",
@@ -721,7 +859,7 @@
     "threeMonthsTaskStatus": "처리됨 및 중단됨",
     "threeMonthsInterval": "특정 월",
     "threeMonthsDrilldownTitle": "지난 세 달에",
-    "threeMonthsDrilldownDescription": "세 달 중에",
+    "threeMonthsDrilldownDescription": "지난 세 달 중에",
     "media_type_all": "모든 작업",
     "media_type_chat": "채팅",
     "media_type_callback": "수신",
@@ -745,7 +883,7 @@
     "mostActiveUsers": "{{time}} 중 가장 활동적인 사용자",
     "registeredUsers": "등록한 사용자",
     "squaredActivity": "총 활동",
-    "sparkMessages": "Spark 메시지",
+    "sparkMessages": "Cisco Spark Messages",
     "user": "사용자",
     "users": "사용자",
     "search": "검색",
@@ -760,13 +898,13 @@
   },
   "avgRooms": {
     "avgRooms": "총 회의실",
-    "avgRoomsDescription": "해당 그래프는 {{time}} 기간 동안 메시지 및/또는 파일 공유에 사용된 Spark 회의실의 총 수를 나타냅니다. 그룹 회의실 및 1:1 회의실의 총 수 및 사용자 당 평균 회의실 수에 대한 세부 정보를 확인하려면 열 위로 마우스를 올려 보십시오.",
+    "avgRoomsDescription": "해당 그래프는 {{time}} 기간 동안 메시지 및/또는 파일 공유에 사용된 Cisco Spark 회의실의 총수를 나타냅니다. 그룹 회의실 및 1:1 회의실의 총수 및 사용자당 평균 회의실 수에 대한 세부 정보를 확인하려면 열 위로 마우스를 올려 보십시오.",
     "groupError": "그룹 회의실 데이터를 로드하는 동안 오류가 발생했습니다.",
     "oneToOneError": "1:1 회의실 데이터를 로드하는 동안 오류가 발생했습니다.",
-    "avgError": "사용자 당 평균 회의실 데이터를 로드하는 동안 오류가 발생했습니다.",
+    "avgError": "사용자당 평균 회의실 데이터를 로드하는 동안 오류가 발생했습니다.",
     "group": "총 그룹 회의실",
     "oneToOne": "총 1:1 회의실",
-    "avgTotal": "사용자 당 평균 회의실"
+    "avgTotal": "사용자당 평균 회의실"
   },
   "filesShared": {
     "filesShared": "파일 공유됨",
@@ -829,14 +967,31 @@
   },
   "taskIncoming": {
     "title": "총 완료된 작업",
-    "description": "해당 그래프는 {{time}} 중 완료된 작업의 총 수를 표시합니다. {{interval}} 기간 동안 {{taskStatus}} 작업의 세부 사항에 대해서는 표 영역으로 마우스를 올리십시오.",
+    "description": "해당 그래프는 {{time}} 중 완료된 작업의 총수를 표시합니다. {{interval}} 기간 동안 {{taskStatus}} 작업의 세부 사항에 대해서는 표 영역으로 마우스를 올리십시오.",
     "drilldownShow": "가장 활동적인 사용자 보이기",
     "drilldownHide": "가장 활동적인 사용자 숨기기",
     "drilldownTitle": "{{time}} 가장 활동적인 사용자",
-    "drilldownDescription": "{{time}}, 이는 가장 활동적인 사용자입니다. 해당 표는 사용자의 이름 또는 처리된 작업의 총 수별로 정렬할 수 있습니다.",
+    "drilldownDescription": "{{time}}, 이는 가장 활동적인 사용자입니다. 해당 표는 사용자의 이름 또는 처리된 작업의 총수별로 정렬할 수 있습니다.",
     "drilldownErrorDescription": "이 데이터를 일시적으로 사용할 수 없습니다. 서버에서 반환하기 위해 작업하고 있습니다. 나중에 다시 확인하십시오.",
     "drilldownEmptyDescription": "{{time}}, 활동 중인 사용자가 없습니다. 사용자 상태를 확인하고 아직 보류 중인 사용자에게 초대장을 다시 보내려면 사용자 탭을 방문하십시오.",
     "tasksHandled": "처리됨",
+    "user": "사용자",
+    "drilldownSearchPlaceholder": "검색"
+  },
+  "taskOffered": {
+    "title": "할당된 작업",
+    "description": "이 표는 자동화된 라우팅 {{time}}을(를) 통해 할당된 총 작업과 관련하여 수락된 작업 및 무시된 작업을 표시합니다. 수락된 작업 및 무시된 작업의 세부 사항을 확인하려면 영역으로 마우스를 올리십시오.",
+    "drilldownShow": "가장 활동적인 사용자 보이기",
+    "drilldownHide": "가장 활동적인 사용자 숨기기",
+    "drilldownTitle": "{{time}} 가장 활동적인 사용자",
+    "drilldownDescription": "{{time}}, 이는 할당된 작업 중 가장 많은 작업을 수락한 사용자입니다. 해당 표는 사용자의 이름 또는 할당된 작업, 수락된 작업 및 무시된 작업 수에 따라 정렬할 수 있습니다.",
+    "drilldownErrorDescription": "이 데이터를 일시적으로 사용할 수 없습니다. 서버에서 반환하기 위해 작업하고 있습니다. 나중에 다시 확인하십시오.",
+    "drilldownEmptyDescription": "{{time}}, 활동 중인 사용자가 없습니다. 사용자 상태를 확인하고 아직 보류 중인 사용자에게 초대장을 다시 보내려면 사용자 탭을 방문하십시오.",
+    "tasksOffered": "할당됨",
+    "tasksHandled": "처리됨",
+    "tasksAccepted": "수락됨",
+    "tasksMissed": "무시함",
+    "percentHandled": "처리됨",
     "user": "사용자",
     "drilldownSearchPlaceholder": "검색"
   },
@@ -890,6 +1045,7 @@
     "success": "사용자 성공적으로 업데이트됨.",
     "rolesSuccess": "사용자의 역할을 성공적으로 업데이트함.",
     "error": "사용자 업데이트 실패함.",
+    "patchError": "사용자 패치 실패함",
     "rolesError": "사용자의 역할 업데이트 오류.",
     "displayNameEmptyError": "표시명은 비워둘 수 없습니다",
     "complianceError": "준수 자격 업데이트 오류"
@@ -956,14 +1112,14 @@
     "readOnlyAccessNotEnabled": "헬프 데스크 읽기 전용에 액세스할 수 없습니다. 계정 설정에서 이 옵션을 변경할 수 있습니다.",
     "downloadLogFailed": "로그를 다운로드할 수 없음",
     "callflowResultsFailed": "로그파일과 관련된 통화 흐름 결과를 다운로드할 수 없음",
-    "status": "Spark 상태",
+    "status": "Cisco Spark 상태",
     "tabs": {
       "status": "상태",
       "logs": "로그",
-      "orderProvisioning": "주문 프로비저닝"
+      "orderProvisioning": "주문 구축"
     },
     "cards": {
-      "sparkStatus": "Spark 상태",
+      "sparkStatus": "Cisco Spark 상태",
       "helpDesk": "헬프 데스크 지원",
       "supportResources": "지원 리소스",
       "tools": {
@@ -974,13 +1130,13 @@
         "cdrLogs": "CDR 통화 흐름",
         "viewCdrCallFlow": "CDR 통화 흐름 보기",
         "viewCdrCallFlowDesc": "새로운 탭에서 도구 열기",
-        "ediscovery": "활동 보고서",
-        "launchEdicoveryDesc": "새 탭에서 활동 보고서 대시보드 열기",
+        "ediscovery": "eDiscovery 검색 및 추출",
+        "launchEdicoveryDesc": "조직에 대한 규정 준수 데이터를 검색하고 추출하십시오.",
         "partnerManagement": "파트너 계정 관리",
         "viewPartnerManagementDesc": "아래 작업을 수행하면 새 탭이 열립니다.",
         "viewPartnerManagement": "새 파트너 조직 만들기",
         "editPartner": "파트너 조직 편집",
-        "viewEdiscovery": "활동 보고서 보기",
+        "viewEdiscovery": "eDiscovery 보기",
         "hybridCallTestTool": {
           "heading": "하이브리드 통화",
           "description": "두 명의 하이브리드 통화 서비스 연결 사용자 간의 테스트 실행",
@@ -999,9 +1155,9 @@
     "reset": "재설정",
     "userLabel": "사용자 ID",
     "callingNumber": "전화하는 번호",
-    "calledNumber": "전화받는 번호",
+    "calledNumber": "전화 받는 번호",
     "callingParty": "전화하는 사용자",
-    "calledParty": "전화받는 사용자",
+    "calledParty": "전화 받는 사용자",
     "startTime": "시작 시간",
     "endTime": "종료 시간",
     "timeExample": "hh:mm:ss AM/PM",
@@ -1021,9 +1177,9 @@
     "callingDeviceName": "전화하는 장치 이름",
     "callingPartyNumber": "전화하는 사용자 번호",
     "callingCause": "전화하는 이유",
-    "calledDeviceName": "전화받는 장치 이름",
-    "calledPartyNumber": "전화받는 사용자 번호",
-    "calledCause": "전화받는 이유",
+    "calledDeviceName": "전화 받는 장치 이름",
+    "calledPartyNumber": "전화 받는 사용자 번호",
+    "calledCause": "전화 받는 이유",
     "duration": "지속 시간",
     "callsSubtitle": "통화 목록",
     "sessionIds": "세션 ID",
@@ -1038,7 +1194,7 @@
     "required": "이 필드는 필수입니다.",
     "userDataError": "해당 사용자 ID에 대한 데이터를 검색하지 못함. 사용자의 ID를 확인하고 다시 시도하십시오. 또는 UUID를 사용하십시오.",
     "userUuidError": "사용자 ID 또는 36 문자의 UUID를 입력하십시오.",
-    "userUuidMatchError": "전화하는 사용자와 전화받는 사용자의 사용자 ID 또는 UUID는 일치하지 않아야 합니다.",
+    "userUuidMatchError": "전화하는 사용자와 전화 받는 사용자의 사용자 ID 또는 UUID는 일치하지 않아야 합니다.",
     "invalidStartDate": "시작 날짜는 종료 날짜와 동일하거나 이전이어야 합니다.",
     "invalidEndDate": "종료 날짜는 시작 날짜와 동일하거나 이후이어야 합니다.",
     "invalidFutureDate": "이후 날짜일 수 없습니다.",
@@ -1046,8 +1202,8 @@
     "invalidTime": "hh:mm:ss AM/PM' 형식을 따르십시오. 'AM/PM'이 생략된 경우, 24-시간 양식을 사용할 것으로 간주됩니다.",
     "invalidTimeTwo": "종료 시간은 시작 시간과 동일하거나 그 이전일 수 없습니다.",
     "phoneNumberError": "숫자 [0-9]를 사용하여 유효한 전화 번호를 입력하십시오.",
-    "phoneNumberErrorTwo": "전화하는 사용자 번호 및 전화받는 사용자 번호는 일치하지 않아야 합니다.",
-    "deviceNameError": "전화하는 사용자 장치 및 전화받는 사용자 장치는 일치하지 않아야 합니다.",
+    "phoneNumberErrorTwo": "전화하는 사용자 번호 및 전화 받는 사용자 번호는 일치하지 않아야 합니다.",
+    "deviceNameError": "전화하는 사용자 장치 및 전화 받는 사용자 장치는 일치하지 않아야 합니다.",
     "hitSizeError": "일치하는 크기 요청은 1부터 50 사이이어야 합니다.",
     "invalidNumber": "숫자 [0-9]를 사용하여 유효한 일치 크기를 입력하십시오.",
     "advancedCDR": "고급 CDR 보고서",
@@ -1058,7 +1214,7 @@
     "cdrSave": "통화 저장",
     "element": "구성 요소",
     "value": "값",
-    "sparkCall": "(Spark 통화)",
+    "sparkCall": "(Cisco Spark 통화)",
     "callingCustomer": "전화하는 고객"
   },
   "cdrLadderDiagram": {
@@ -1088,11 +1244,11 @@
     "500Error": "진단 서비스에서 내부 오류가 발생했습니다.",
     "502And503Error": "진단 서비스를 일시적으로 사용할 수 없습니다. 잠시 후에 다시 시도하십시오.",
     "huronNodes": "Huron 노드",
-    "sparkNodes": "Spark 노드",
-    "enabledSparkNodes": "Spark 노드 활성화됨"
+    "sparkNodes": "Cisco Spark 노드",
+    "enabledSparkNodes": "활성화된 Cisco Spark 노드"
   },
   "billingPage": {
-    "title": "주문 프로비저닝",
+    "title": "주문 구축",
     "sendCustomer": "고객 이메일 재발송",
     "sendPartner": "파트너 이메일 재발송",
     "orderId": "주문 ID",
@@ -1125,7 +1281,8 @@
   },
   "common": {
     "actions": "작업",
-    "activate": "활성화",
+    "provision": "구축",
+    "doNotProvision": "구축하지 않기",
     "add": "추가",
     "agree": "동의함",
     "alert": "경고",
@@ -1142,6 +1299,7 @@
     "cluster": "클러스터",
     "confirm": "확인",
     "continue": "계속",
+    "copyToClipboard": "클립보드에 복사",
     "create": "만들기",
     "dateRange": "날짜 범위",
     "deactivate": "비활성화",
@@ -1163,11 +1321,13 @@
     "firstName": "이름",
     "general": "일반",
     "help": "도움말",
+    "history": "히스토리",
     "hideAllAdminUsers": "관리자 숨기기",
     "id": "ID",
     "incorrectFormat": "올바르지 않은 형식",
     "info": "정보",
     "invalidEmail": "이는 올바른 이메일 주소가 아닙니다.",
+    "invalidFormat": "유효하지 않은 형식",
     "invalidMax": "최대 값은 {{max}}입니다.",
     "invalidMaxLength": "문자 길이는 {{max}}보다 길 수 없습니다.",
     "invalidMinLength": "문자 길이는 {{min}}보다 짧을 수 없습니다.",
@@ -1185,6 +1345,7 @@
     "memberCount": "{{count}} 멤버",
     "modal": "모달",
     "modify": "수정",
+    "name": "이름",
     "new": "새로 만들기",
     "next": "다음",
     "no": "아니요",
@@ -1204,6 +1365,7 @@
     "pending": "보류 중",
     "play": "재생",
     "postpone": "연기",
+    "pro": "Pro",
     "proceed": "진행",
     "quantity": "양",
     "releaseChannel": "릴리즈 채널",
@@ -1216,6 +1378,7 @@
     "result": "결과",
     "retry": "다시 시도",
     "save": "저장",
+    "skip": "건너뛰기",
     "saveLabel": "변경 내용을 저장하시겠습니까?",
     "search": "검색",
     "searchMembers": "멤버 검색",
@@ -1242,6 +1405,7 @@
     "unassigned": "지정되지 않음",
     "unknown": "알려지지 않음",
     "update": "업데이트",
+    "upgrade": "업그레이드",
     "upload": "업로드",
     "user": "사용자",
     "users": "사용자",
@@ -1320,13 +1484,13 @@
     "lastUpdated": "마지막 동기화",
     "notifications": "알림",
     "todo": "실행할 작업",
-    "setUpYourTrial": "평가판을 시작하려면 고급 Spark 통화를 설정하십시오.",
+    "setUpYourTrial": "평가판을 시작하려면 고급 Cisco Spark 통화를 설정하십시오.",
     "beginTrial": "평가판 시작",
     "status": "상태",
-    "spark": "Spark",
+    "spark": "Cisco Spark",
     "sso": "싱글 사인온 (SSO)",
     "goSetupCloudSipUri": "이 구성을 마치려면 여기로 이동",
-    "setupCloudSipUriMessage": "귀사의 Spark SIP 주소가 정의되지 않았습니다. 일부 통화 기능이 올바르게 작동하도록 하려면 이 값이 필요합니다.",
+    "setupCloudSipUriMessage": "조직의 Cisco Spark SIP 주소가 정의되지 않았습니다. 일부 통화 기능이 올바르게 작동하게 하려면 이 값이 필요합니다.",
     "dirsync": "디렉토리 동기화",
     "setUpCalendarService": "캘린더 서비스를 사용할 수 있습니다. 미팅 룸 세부 사항을 자동으로 추가하려면 미팅 초대장에서 @spark 및 @webex를 사용하십시오.",
     "setUpGoogleCalendarService": "하이브리드 캘린더(Google)를 사용할 수 있습니다. 미팅 룸 세부 사항을 자동으로 추가하려면 Google 캘린더 미팅 초대장에서 @spark 및 @webex를 사용하십시오.",
@@ -1345,7 +1509,10 @@
     "careLicenseMsgMissingText": "케어 서비스에 대해 메시지는 필수 항목입니다. 메시지를 활성화하려면,",
     "careLicenseCallMissingText": "음성 기반 케어 서비스에 대해 통화는 필수 항목입니다. 통화를 활성화하려면,",
     "careLicenseMsgAndCallMissingText": "채팅 및 음성 상호 작용 등 케어 서비스에 대해 메시지 및 통화는 필수 항목입니다. 메시지 및 통화를 활성화하려면,",
-    "careLicenseLinkText": "파트너 또는 Cisco 영업부로 연락하십시오."
+    "careLicenseLinkText": "파트너 또는 Cisco 영업부로 연락하십시오.",
+    "proPackNotification": "Pro Pack으로 Spark 제어 허브의 모든 기능을 사용하십시오.",
+    "callServiceHighAvailability": "하이브리드 통화 서비스가 구성되었지만, 한 개 이상의 클러스터에 통화 커넥터를 실행하는 싱글 노드만 있습니다. 귀하의 배포는 고가용성을 위한 요구 사항을 충족하지 않습니다.",
+    "callServiceHighAvailabilityLink": "문서 열기"
   },
   "inviteModal": {
     "title": "서비스 자격",
@@ -1368,6 +1535,7 @@
     "importMetadataDesc": "IdP에서 신뢰할 수 있는 메타데이터 파일을 확보하고 여기에 업로드하여 ID 제공자(IdP)와 Cisco Collaboration Cloud(Cisco 협업 클라우드) 사이에 신뢰할 수 있는 관계를 구성하기 시작하십시오.",
     "importMetadataNote": "참고: 메타데이터 파일을 가져오기하면 SSO가 <b>켜집니다</b>. 단순히 SSO를 테스트하고 있는 경우엔 다음 화면에서 SSO를 끄십시오.",
     "exportMetadataDesc1": "Cisco 협업 서비스에서 다음 신뢰할 수 있는 메타데이터 파일을 다운로드하고 ID 제공자(IdP) 관리 인터페이스로 업로드하십시오.",
+    "exportMetadataDesc1New": "Cisco Spark 제어 서비스에서 다음 신뢰할 수 있는 메타데이터 파일을 다운로드하고 ID 제공자(IdP) 관리 인터페이스로 업로드하십시오.",
     "exportMetadataDesc2": "IdP에 파일 업로드를 마친 후 이 화면으로 돌아와 다음을 누릅니다.",
     "testSSOSetupDesc": "SSO 구성을 테스트하려면 아래의 버튼을 누르십시오. 테스트는 새로운 브라우저 창에서 열립니다. 유효한 SSO 자격 증명을 입력하고 성공적으로 로그인할 수 있는지 확인하십시오.",
     "testSSOSetupDesc2": "테스트가 성공적이면 아래의 싱글 사인온을 활성화합니다. 그렇지 않으면 싱글 사인온을 비활성화하거나 이전 단계로 돌아갑니다.",
@@ -1399,13 +1567,13 @@
     "ssoNotEnabledStatus": "싱글 사인온 활성화되지 않음",
     "ssoModifyWarning": "SSO 활성화됨. 설정을 변경하면 연결이 무효화될 수도 있습니다.",
     "idpOverwriteWarning": "실행하시겠습니까? 현재 싱글 사인온이 활성화되어 있습니다. 새로운 메타데이터 파일을 가져오기하면 기존의 구성을 무효화하게 됩니다. 진행하는 경우, 이전의 SSO 구성으로 복원할 수 없습니다. 계속하시겠습니까?",
-    "disableSSOByRadioWarning": "실행하시겠습니까? 기존의 SSO 구성이 비활성화됩니다. 이제 Spark에서 모든 사용자는 빌트-인 인증을 사용하게 되며, 시작 또는 비밀번호 재설정과 관련하여 지원이 필요할 수도 있습니다. 이 선택은 실행 취소할 수 없으나, 기업 설정에서 다시 SSO를 활성화할 수 있습니다. 계속하시겠습니까? ",
+    "disableSSOByRadioWarning": "실행하시겠습니까? 기존의 SSO 구성이 비활성화됩니다. 이제 Cisco Spark에서 모든 사용자는 내장된 인증을 사용하게 되며, 시작 또는 비밀번호 재설정과 관련하여 지원이 필요할 수도 있습니다. 이 선택은 실행 취소할 수 없으나, 기업 설정에서 다시 SSO를 활성화할 수 있습니다. 계속하시겠습니까? ",
     "ssoDisableSuccessNotification": "SSO 비활성화됨. 이제 사용자 인증 구성은 간단한 빌트-인 아이덴티티 서비스를 사용합니다."
   },
   "serviceSetupModal": {
     "regionalSettings": "지역 설정",
     "preferredLanguage": "선호하는 언어",
-    "preferredLanguageDescription": "Spark 통화 서비스에 대해 사용할 언어를 지정하십시오. 선호하는 언어는 새로운 사용자에게만 적용됩니다.",
+    "preferredLanguageDescription": "Cisco Spark 통화 서비스에 대해 사용할 언어를 지정하십시오. 선호하는 언어는 새로운 사용자에게만 적용됩니다.",
     "preferredLanguagePlaceholder": "언어 선택",
     "defaultCountry": "기본 국가",
     "defaultTones": "기본 벨소리",
@@ -1413,6 +1581,7 @@
     "defaultCountryPlaceholder": "국가 선택",
     "notApplicable": "해당되지 않음",
     "timeZone": "시간대",
+    "timeZonePlaceholder": "시간대 선택",
     "searchTimeZone": "시간대 검색...",
     "tzDescription": "예약 기반 통화 라우팅에 사용할 시간대를 지정하십시오. 예를 들어, 이 시간대는 업무 시간 및 휴일 스케줄에 기반한 통화 라우트에 적용됩니다.",
     "dateFormat": "날짜 형식",
@@ -1421,14 +1590,15 @@
     "tfDescription": "사용자 장치에 대한 시간 형식을 지정하십시오.",
     "steeringDigit": "아웃바운드 다이얼 숫자",
     "steeringDigitDescription": "외부 전화를 걸기 전에 사용자가 다이얼해야 하는 번호를 지정하십시오.",
-    "emergencyAddressDescription": "이는 긴급 서비스에 대해 사용될 기본 주소입니다. 이는 각 사용자 또는 장소로 다시 정의될 수 있습니다.",
+    "emergencyAddressDescription": "이는 긴급 서비스에 대해 사용될 기본 주소입니다. 이는 각 사용자 또는 장소의 장치로 다시 정의될 수 있습니다.",
     "extension": "내선",
     "extensionLength": "내선 번호 길이",
-    "extensionLengthDescription": "외부 전화를 걸기 전에 사용자가 다이얼해야 하는 총 숫자의 수를 지정하십시오. 모든 사이트에서 동일한 내선 길이를 공유합니다.",
+    "extensionLengthDescription": "내부 전화를 걸기 전에 사용자가 다이얼해야 하는 총 번호의 수를 지정하십시오.",
     "extensionLengthHelpText": "설정된 후에 이 값은 지정된 내선 번호가 없는 경우에만 변경할 수 있습니다.",
     "extensionLengthServicesHelpText": "지정된 내선 번호가 없는 경우에만 활성화됩니다.",
+    "extensionLengthDisabledVM": "보이스메일이 비활성화된 경우에만 활성화됩니다.",
     "extensionLengthSingleOptionHelpText": "지정된 내선 번호가 없는 경우에만 옵션 {{minExtLength}}을(를) 사용할 수 있습니다.",
-    "extensionLengthRangeOptionHelpText": "지정된 내선 번호가 없는 경우에만 {{extLengthMinusOne}}을 통한 옵션 {{minExtLength}}을(를) 사용할 수 있습니다.",
+    "extensionLengthRangeOptionHelpText": "지정된 내선 번호가 없는 경우에만 {{extLengthMinusOne}}부터 {{minExtLength}}의 옵션을 사용할 수 있습니다.",
     "saveCallSettingsExtensionLengthAllowed": "내선 번호의 길이를 지정하면 모든 사용자의 자동 전화 교환, 헌트 그룹 및 통화 자격을 제거하는 경우에만 이 값을 변경할 수 있습니다. 통화 자격을 제거하면 모든 사용자에 대한 모든 통화 서비스 데이터를 삭제합니다. (예: 단축 번호 및 보이스메일 메시지)",
     "choosePrefixTitle": "프리픽스 선택",
     "extensionPrefixDescription": "더 긴 내선 길이를 선택했습니다. 전화 번호에 매핑되지 않은 내선의 앞에 추가할 숫자를 지정하십시오.",
@@ -1462,6 +1632,10 @@
     "siteError": "사이트를 만들지 못했습니다.",
     "siteGetError": "사이트를 검색하지 못했습니다.",
     "siteUpdateError": "사이트를 업데이트하지 못했습니다.",
+    "mohLineError": "라인 대기 중 미디어 서비스를 불러오지 못했습니다.",
+    "mohGetError": "회사 대기 중 미디어 서비스를 불러오지 못했습니다.",
+    "mohGetOptionsError": "회사 대기 중 미디어 옵션 서비스를 불러오지 못했습니다.",
+    "mohUpdateError": "회사 대기 중 미디어 파일을 업데이트하지 못했습니다.",
     "customerGetError": "고객 서비스를 불러오지 못했습니다.",
     "customerPutError": "고객 서비스를 업데이트하지 못했습니다.",
     "customerDialPlanDetailsGetError": "고객 다이얼 플랜 세부 정보를 얻지 못했습니다.",
@@ -1472,6 +1646,7 @@
     "voicemailNoDirectNumbersError": "경고: 외부 보이스메일 액세스를 켜려면 지정되지 않은 직통 라인이 있어야 합니다.",
     "timezoneUpdateError": "회사 시간대를 업데이트하지 못했습니다.",
     "extensionDeleteSuccess": "내선 {{extension}}을 성공적으로 삭제했습니다.",
+    "extensionGetError": "내선 범위를 불러오지 못했습니다.",
     "extensionDeleteError": "내선 {{extension}}을 삭제하지 못했습니다.",
     "extensionAddError": "내선 {{extension}}을 만들지 못했습니다.",
     "extensionUpdateError": "내선 {{extension}}을 업데이트하지 못했습니다.",
@@ -1486,13 +1661,14 @@
     "singleNumberRangeError": "내선 범위는 동일한 번호로 시작, 종료될 수 없습니다.",
     "mapCompanyVoicemailToExternalNumberError": "회사 직통 라인의 목록에서 기존의 회사 보이스메일 번호를 찾을 수 없습니다.",
     "mediaOnHold": "회사 대기 중 미디어",
+    "mohDesc": "회사 수준에서 표시될 기본 미디어를 설정하십시오.",
     "voicemailToEmailLabel": "이메일로 보이스메일",
     "EmailNotificationAttached": "첨부 파일이 포함된 이메일 알림",
     "EmailNotificationWithoutAttached": "첨부 파일이 포함되지 않은 이메일 알림",
     "voicemailToPhoneLabel": "전화로 보이스메일",
     "phoneVoicemailAddedCostText": "이 번호를 사용하면 사용료가 발생합니다.",
-    "voicemailToSparkLabel": "Spark로 보이스메일",
-    "voicemailToSparkAndPhoneLabel": "Spark 및 전화로 보이스메일",
+    "voicemailToSparkLabel": "Cisco Spark로 보이스메일",
+    "voicemailToSparkAndPhoneLabel": "Cisco Spark 및 전화로 보이스메일",
     "messageWaitingIndicatorText": "메시지 대기 표시기(MWI)는 사용자가 전화에서 보이스메일에 액세스할 때까지 계속 깜박입니다.",
     "voicemailToEmailHelpText": "경고: 이메일을 통해 발송된 보이스메일 첨부 파일은 안전하지 않습니다.",
     "voicemailToEmailAttachmentText": "이메일을 통해 발송된 보이스메일 첨부 파일은 안전하지 않습니다.",
@@ -1506,6 +1682,10 @@
     "externalNumberDescriptionText": "회사 네트워크 외부에서 보이스메일을 확인하기 위해 사용자가 전화할 수 있는 번호를 선택하십시오.",
     "voicemailPrefixTitle": "보이스메일 ID 프리픽스",
     "voicemailPrefixDesc": "장치에서 메일박스로 다이얼하기 위해 예약할 프리픽스를 선택하십시오. {number}}{{extensionLength0}}부터 {{number}}{{extensionLength9}} 사이의 내선은 지정할 숫자로 권장하지 않습니다.",
+    "vmUseTLS": "TLS 사용",
+    "vmPinManagement": "PIN 관리",
+    "vmPinHelp": "사용자 보이스메일이 설정/설정 해제된 경우 및 사용자 계정이 잠겼거나 만료된 경우에 Spark를 통해 OTP가 공유됩니다.",
+    "vmEnableOTP": "OTP(One-time Pin) 활성화",
     "dialing": "전화하기 기본 설정",
     "internalDialing": "내부 전화하기",
     "externalDialing": "외부 전화하기",
@@ -1526,7 +1706,9 @@
       "title": "라우팅 프리픽스",
       "radioReserve": "프리픽스 예약",
       "radioReserveDesc": "이 프리픽스는 클라우드에서 사용자와 연결하기 위한 복합적인 번호로 사용됩니다.",
+      "reserveDesc": "이 프리픽스는 복합적인 번호로 사용됩니다. 사용자는 이 위치에서 다른 사용자와 연결하기 위해 해당 프리픽스로 다이얼할 수 있습니다. 모든 위치는 동일한 라우팅 프리픽스 길이를 공유합니다.",
       "exampleHelpText": "전화하기 예제: 8100-(내선)",
+      "placeholder": "8100",
       "numericOnlyError": "라우팅 프리픽스는 숫자만 포함할 수 있습니다.",
       "tooShortError": "라우팅 프리픽스는 최소한 한 개의 숫자를 포함해야 합니다.",
       "tooLongError": "라우팅 프리픽스는 최대 7개의 숫자를 포함할 수 있습니다."
@@ -1538,7 +1720,7 @@
       "alwaysAllow": "항상 허용",
       "orgSetting": "조직 설정 ({{state}})",
       "success": "외부 통화 전송/회의 설정이 성공적으로 저장됨.",
-      "error": "외부 통화 전송/회의 설정을 업데이트하지 못함"
+      "error": "외부 통화 전송/회의 설정을 업데이트하지 못함."
     },
     "cos": {
       "title": "전화하기 제한 사항",
@@ -1548,7 +1730,7 @@
       "mobileTitle": "모바일 전화하기",
       "mobileDesc": "사용자가 모바일 번호로 다이얼할 수 있도록 할지 선택합니다.",
       "internationalTitle": "국제 전화하기",
-      "internationalDesc": "사용자가 국제 번호로 다이얼할 수 있도록 할지 선택합니다. 기본값으로 Spark 통화 사용자 및 장소에 이 설정이 적용됩니다.",
+      "internationalDesc": "사용자가 국제 번호로 전화할 수 있도록 할지 선택합니다. 기본값으로 Cisco Spark 통화 사용자 및 장소에 이 설정이 적용됩니다.",
       "premiumTitle": "프리미엄 전화하기",
       "premiumDesc": "사용자가 다이얼 아웃에 대해 요금이 부과되는 번호로 다이얼할 수 있도록 허용할지 선택합니다. 여기에는 {{premiumNumbers}}(으)로 시작되는 번호도 포함됩니다.",
       "neverAllow": "허용하지 않기",
@@ -1562,6 +1744,7 @@
       "outboundDialDigit": "아웃바운드 다이얼 숫자가 보이스메일 액세스 프리픽스의 첫 번째 숫자와 충돌합니다.",
       "autoAttendantPost": "자동 전화 교환 사이트 정보를 저장하지 못함.",
       "updateVoicemailPostalCode": "보이스메일 우편 번호를 업데이트하지 못함.",
+      "updateVoicemailAddress": "보이스메일 주소를 업데이트하지 못함",
       "updateCustomerVoice": "고객 음성 플랜을 업데이트하지 못함."
     },
     "warning": {
@@ -1575,6 +1758,10 @@
       "message1": "다이얼 플랜 설정을 변경하시겠습니까?",
       "message2": "이 변경 사항은 시스템에 적용될 때까지 몇 분 정도 소요되며, 해당 기간 동안 사용자가 전화를 걸지 못하도록 합니다."
     }
+  },
+  "mediaOnHold": {
+    "systemDefault": "시스템 기본값",
+    "companyMOHDefaultMedia" : "회사 MOH (시스템 기본값)"
   },
   "dirsyncModal": {
     "chooseSync": "동기화 선택",
@@ -1782,7 +1969,7 @@
       "report": "사용자 상태 보고서",
       "add-resource-button": "리소스 추가",
       "add-resource-button-information": "Expressways의 등록 및 구성을 시작하려면 \"리소스 추가\"를 클릭하십시오.",
-      "setupCloudSipUriHeader": "Spark SIP 주소 정의"
+      "setupCloudSipUriHeader": "Cisco Spark SIP 주소 정의"
     },
     "deleteClusterNodeDialog": {
       "confirmationDialogHeader": "노드 제거 확인",
@@ -1804,6 +1991,7 @@
       "selectClusterPlaceholderNoneFound": "사용 가능한 클러스터를 찾을 수 없음",
       "enterDisplayName": "Expressway 클러스터에 대한 이름 입력",
       "nameHelptext": "클라우드 협업 관리에서 클러스터 이름은 표시의 목적으로 사용됩니다.",
+      "nameHelptextNew": "{{appTitle}}에서 클러스터 이름은 표시의 목적으로만 사용됩니다.",
       "clusternameWatermark": "클러스터 이름 입력…",
       "cannotCreateCluster": "클러스터를 만들지 못함. 나중에 다시 시도하십시오.",
       "cannotProvisionConnector": "{{ConnectorName}}을(를) 구축하지 못함. 나중에 다시 시도하십시오.",
@@ -1861,7 +2049,6 @@
       }
     },
     "status": {
-      "unknown": "상태 알려지지 않음",
       "not_configured": "구성되지 않음",
       "installing": "설치 중",
       "disabled": "비활성화됨",
@@ -1998,16 +2185,17 @@
       "spark-hybrid-datasecurity": "하이브리드 데이터 보안",
       "squared-fusion-khaos": "Cisco Unified CM"
     },
+
     "serviceDescriptions": {
       "squared-fusion-uc": "통화 서비스 인식은 사용자가 통화를 하는 동안 Cisco Spark 클라이언트에서 데스크탑을 즉시 공유할 수 있도록 합니다. 통화 서비스 연결은 사용자가 Cisco Spark 클라이언트에서 업무 전화로 걸려오는 전화에 응답하고, 다른 사용자의 업무 전화로 전화할 수 있도록 합니다.",
-      "squared-fusion-cal": "캘린더 서비스는 사용자가 즉시 협업할 수 있도록 합니다. Spark 회의실을 만들려면 @spark만 추가하면 됩니다. 초대장에 WebEx 링크를 첨부하려면 @webex를 추가합니다.",
+      "squared-fusion-cal": "캘린더 서비스는 사용자가 즉시 협업할 수 있도록 합니다. Cisco Spark 회의실을 만들려면 @spark만 추가하면 됩니다. 초대장에 WebEx 링크를 첨부하려면 @webex를 추가합니다.",
       "squared-fusion-media": "",
       "contact-center-context": "",
       "squared-fusion-ec": "",
       "squared-fusion-mgmt": "관리 서비스는 캘린더 및 통화 서비스에 대한 글로벌 구성 서비스입니다. 이 페이지는 해당 서비스 중 하나를 활성화하면 사용할 수 있게 됩니다."
     },
     "serviceHelpInfo": {
-      "servicePrivacyStatement": "Cisco 하이브리드 서비스 커넥터는 하이브리드 서비스 배포에 대한 특정 정보를 수집하고 Cisco 협업 클라우드로 보냅니다. 자세한 정보는 <a href='http://www.cisco.com/web/siteassets/legal/spark_supp.html' target='_blank'>여기를 클릭</a>하십시오."
+      "servicePrivacyStatement": "하이브리드 서비스 커넥터는 하이브리드 서비스 배포에 대한 특정 정보를 수집하고 Cisco 협업 클라우드로 보냅니다. 하이브리드 서비스 마이크로서비스도 업그레이드, 재시작 등의 명령을 커넥터로 발송하여 최고의 서비스를 수신할 수 있도록 합니다. 자세한 정보는 <a href='http://www.cisco.com/web/siteassets/legal/spark_supp.html' target='_blank'>여기를 클릭</a>하십시오."
     },
     "errors": {
       "enableServiceEntitlementFailure": "실패! 귀하의 조직은 {{serviceName}}을(를) 추가하기 위해 필요한 자격이 없는 것 같습니다. 이 문제를 해결하려면 지원 담당자에게 연락하십시오.",
@@ -2085,14 +2273,13 @@
     },
     "connectorUpgrade": {
       "title": "커넥터 업그레이드",
-      "text": "이 클러스터에서 다음 노드를 업데이트하려고 합니다.",
-      "XtoY": "{{name}}에서 {{version}}(으)로",
+      "text": "{{name}} 커넥터를 {{version}}(으)로 업데이트하려고 합니다.",
       "releaseNotes": "릴리즈 노트",
       "releaseNotesLink": "새 탭에서 열기",
       "upgradeNow": "지금 업그레이드"
     },
     "expresswayClusterSettings": {
-      "pageTitle": "{{clusterName}} 설정",
+      "pageTitle": "{{clusterName}}",
       "upgradeScheduleHeader": "업그레이드",
       "upgradeScheduleSubHeader": "업그레이드 스케줄",
       "resourceGroupsHeader": "리소스 그룹",
@@ -2102,11 +2289,12 @@
       "removeFromResourceGroupDialogParagraph": "{{ClusterName}}이(가) \"{{CurrentResourceGroup}}\"에서 제거됩니다.",
       "removeFromResourceGroupDialogConnectorsList": "다음 업그레이드 기간에 다음 커넥터는 \"안정\"으로 업그레이드됩니다. ",
       "removeFromResourceGroupSuccess": "{{ClusterName}}이(가) \"{{ResourceGroup}}\"에서 제거되었습니다.",
-      "allConnectorsWillBeUpgraded": "다음 예약된 업그레이드 중에 모든 커넥터가 업그레이드됩니다.",
+      "removeFromResourceGroupSuccessWithUpgrade": "{{ClusterName}}이(가) \"{{ResourceGroup}}\"에서 제거되었습니다. 다음 예약된 업그레이드 중에 모든 커넥터가 업그레이드됩니다.",
       "moveResourceGroupDialogHeader": "리소스 그룹 지정",
       "moveResourceGroupDialogParagraph": "{{ClusterName}}이(가) \"{{NewResourceGroup}}\"(으)로 이동됩니다.",
       "moveResourceGroupDialogConnectorsList": "다음 업그레이드 기간에 다음 커넥터가 업그레이드됩니다. ",
       "moveResourceGroupSuccess": "{{ClusterName}}이(가) \"{{NewResourceGroup}}\"(으)로 지정되었습니다.",
+      "moveResourceGroupSuccessWithUpgrade": "{{ClusterName}}이(가) \"{{NewResourceGroup}}\"(으)로 지정되었습니다. 다음 예약된 업그레이드 중에 모든 커넥터가 업그레이드됩니다.",
       "deactivateServicesHeader": "서비스 비활성화",
       "deactivateServicesParagraph": "이 클러스터에서 서비스와 관련된 기능을 제거하려면 {{ServiceName}}을(를) 비활성화하십시오.",
       "deactivateServicesSubHeader": "{{service}} 비활성화",
@@ -2143,6 +2331,22 @@
       "serviceWasDeactivated": "{{serviceName}}을(를) 성공적으로 비활성화했습니다.",
       "connectWarning": "실행하시겠습니까? 원격 장치 구성이 제거되고 사용자에 대한 서비스가 비활성화됩니다.",
       "deactivateCallServiceConnect": "통화 서비스 연결 비활성화"
+    },
+    "clusterHistoryTable": {
+      "types": {
+        "nameChange": "클러스터 이름",
+        "resourceGroup": "리소스 그룹",
+        "releaseChannel": "릴리즈 채널",
+        "c_mgmtVersion": "관리 커넥터 대상 버전",
+        "c_calVersion": "캘린더 커넥터 대상 버전",
+        "c_ucmcVersion": "통화 커넥터 대상 버전",
+        "upgradeSchedule": "업그레이드 스케줄"
+      },
+      "errorMessage": "클러스터 히스토리를 읽지 못함. 오류 메시지: {{errorMessage}}",
+      "windowTitle": "{{clusterName}}에 대한 클러스터 히스토리",
+      "showHistory": "히스토리 표시",
+      "opensNewWindow": "지난 60일 동안의 클러스터 히스토리를 확인할 수 있는 새로운 창이 열립니다.",
+      "urgentUpgrades": "긴급 업그레이드"
     },
     "clusterListComponent": {
       "clusters-title-squared-fusion-cal": "Expressway 클러스터",
@@ -2193,7 +2397,7 @@
         "title": "G Suite 계정에서 Cisco 협업 클라우드 인증",
         "line1": "사용자에 대해 하이브리드 캘린더 서비스를 활성화하려면 G Suite 계정에서 Cisco 협업 클라우드를 인증해야 합니다.",
         "item1": "새로운 탭에서 <a href=\"https://admin.google.com/AdminHome\" target=\"_blank\">G Suite 계정 대시보드</a>를 연 후 보안으로 이동합니다.",
-        "item2": "<strong>추가 보이기</strong>를 클릭한 후 <strong>고급 설정</strong>을 클릭합니다.",
+        "item2": "<strong>자세히 표시</strong>를 클릭한 후 <strong>고급 설정</strong>을 클릭합니다.",
         "item3": "<strong>API 클라이언트 액세스 관리</strong>를 클릭합니다.",
         "item4": "클라이언트 이름 및 범위를 클립보드로 복사합니다.",
         "item5": "G Suite 계정 대시보드로 이동하고 클라이언트 이름 및 범위를 붙여넣습니다.",
@@ -2246,7 +2450,7 @@
       "defaultWebExSiteOrgLevelSavingSuccess": "조직 수준에 대한 기본 WebEx 사이트가 성공적으로 저장되었습니다.",
       "defaultWebExSiteOrgLevelSavingError": "조직 수준에 대한 기본 WebEx 사이트에 변경 내용을 저장하지 못했습니다. 나중에 다시 시도하십시오.",
       "oneButtonToPushIntervalHeading": "미리 참여 시간",
-      "oneButtonToPushInterval": "미팅 시작 전에 Spark 장치 및 클라이언트에 \"참여\" 버튼이 나타납니다. 미팅 시작 몇 시간/분 전에 이 버튼을 표시할지 선택하십시오. 설정되지 않은 경우 기본값은 5분입니다.",
+      "oneButtonToPushInterval": "미팅 시작 전에 Cisco Spark 장치 및 클라이언트에 \"참여\" 버튼이 나타납니다. 미팅 시작 몇 시간/분 전에 이 버튼을 표시할지 선택하십시오. 설정되지 않은 경우 기본값은 5분입니다.",
       "oneButtonToPushIntervalSecondaryLabel": "분 (미팅 시작 전)",
       "oneButtonToPushIntervalMinutesSavingSuccess": "미리 참여 시간이 성공적으로 저장되었습니다.",
       "oneButtonToPushIntervalMinutesSavingError": "미리 참여 시간에 변경 사항을 저장하지 못함. 나중에 다시 시도하십시오.",
@@ -2267,18 +2471,22 @@
       },
       "documentation": {
         "heading": "문서 및 소프트웨어",
+        "headingDoc": "문서",
+        "headingSoftware": "소프트웨어",
         "help": "{{localizedServiceName}}에 대한 추가 정보는 <a href=\"{{helpLink}}\" target=\"_blank\">도움말 센터</a>를 방문하십시오.",
         "downloadExpressway": "<a href=\"{{downloadLink}}\" target=\"_blank\">software.cisco.com</a>에서 Cisco Expressway 소프트웨어를 다운로드하십시오.",
-        "downloadECP": "<a href=\"{{downloadLink}}\" target=\"_blank\">{{serviceName}} 소프트웨어를 다운로드하십시오</a>."
+        "downloadECP": "<a href=\"{{downloadLink}}\" target=\"_blank\">{{serviceName}} 소프트웨어를 다운로드하십시오</a>.",
+        "downloadDemoHybridMedia": "<a href=\"{{downloadLink}}\" target=\"_blank\">전체 소프트웨어 이미지 다운로드</a><br> (전체 기능 및 하이브리드 미디어의 프로덕션 배포에 대해 사용됨)<br> <a href=\"{{downloadDemoLink}}\" target=\"_blank\">데모 소프트웨어 이미지 다운로드</a> <br>(제한된 기능, 90일간의 수명 및 하이브리드 미디어의 데모에 대해서만 사용됨)"
       },
       "call": {
-        "domainVerification": "도메인 확인",
+        "domainVerification": "도메인 인증",
         "aware": "사용자는 사무실 전화로 통화하는 중에 Cisco Spark 앱에서 콘텐츠를 공유하고 앱에서 통화 히스토리를 확인할 수 있습니다.",
         "connectSettingsHeading": "연결 설정",
         "connectSettings": "Connect 기능에 대해 설정이 필요합니다.",
         "connect": "사용자의 걸려오는 전화는 사무실 전화와 Cisco Spark 앱에서 울립니다. 사용자는 전화 또는 앱에서 동료들에게 전화할 수도 있습니다.",
         "certificatesHeading": "암호화된 SIP 통화에 대한 인증서",
         "certificates": "Cisco 협업의 기본 신뢰 목록에서 제공하는 인증서를 사용하거나 자신의 인증서를 직접 업로드하십시오. 자신의 인증서를 사용하는 경우, 호스트이름이 인증된 도메인에 있는지 확인하십시오. 도움말은 <a href=\"http://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">여기를 클릭하십시오.</a>",
+        "certificatesNew": "Cisco Spark 제어의 기본 신뢰 목록에서 제공하는 인증서를 사용하거나 자신의 인증서를 직접 업로드하십시오. 자신의 인증서를 사용하는 경우, 호스트이름이 인증된 도메인에 있는지 확인하십시오. 도움말은 <a href=\"http://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">여기를 클릭하십시오.</a>",
         "certificatesCannotRead": "인증서 목록을 읽지 못함.",
         "certificatesCannotDelete": "인증서를 삭제하지 못함. 나중에 다시 시도하십시오.",
         "certificatesEmailAddress": "이메일 주소",
@@ -2296,21 +2504,34 @@
         "sipDomainHeading": "SIP 대상",
         "sipDomainButtonTooltip": "상호 TLS에 대해 Expressway-E를 확인하는 SRV 도메인(hostname:port 또는 IP address:port)을 입력하십시오. SRV 기록이 \"_sips._tcp.sipmtls.example.com\"인 경우엔 여기에 \"sipmtls.example.com\"을 입력합니다.",
         "sipDomainPlaceholder": "SIP 대상 입력",
-        "sipDomainExample": "예: sipmtls.example.org",
         "certificateDeleteTooltip": "인증서 삭제",
         "noUploadedCertificate": "업로드된 인증서 없음. 기본 신뢰 목록을 사용하고 있습니다.",
         "uploadedCertificates": "업로드된 인증서:"
       },
       "verifySipDestination": {
-        "contactCiscoSupport": "나중에 다시 시도하거나, 문제가 지속되면 Cisco 지원 담당자에게 문의하십시오.",
-        "errorFromServer": "SIP 대상을 확인하지 못함. 서버에서 다음 오류 메시지를 반환했습니다.",
         "title": "SIP 대상 확인",
         "testResultsHeader": "테스트 결과",
-        "testResults": {
-          "successful": "성공",
-          "issues": "문제",
-          "failed": "실패함"
-        },
+        "testSucceeded": "SIP 대상이 올바르게 구성되었습니다.",
+        "testFailed": "SIP 대상이 올바르게 구성되지 않았습니다.",
+        "viewTestResults": "테스트 결과 보기",
+        "testHadUnexpectedError": "SIP 대상을 확인할 때 예기치 않은 오류가 발생했습니다. 나중에 다시 시도하십시오.",
+        "DNSSRVLookup": "DNS SRV 조회",
+        "DNSHostnameLookup": "DNS 호스트이름 조회",
+        "IPAddressLookup": "IP 주소 조회",
+        "dns": "DNS",
+        "fqdn": "FQDN",
+        "ip": "IP",
+        "notPerformed": "실행되지 않음",
+        "successful": "성공",
+        "failed": "실패함",
+        "testFor": "{{target}}에 대한 테스트",
+        "tests": "테스트",
+        "result": "결과",
+        "details": "세부 정보",
+        "connectingToIP": "IP에 연결 중",
+        "socketTest": "소켓 테스트",
+        "sslHandshake": "SSL 핸드셰이크",
+        "ping": "핑",
         "types": {
           "Answered": "응답함",
           "CallerDoesntHaveEmail": "발신자에게 이메일 없음",
@@ -2341,8 +2562,19 @@
           "UnexpectedError": "예기치 않은 오류",
           "UnexpectedException": "예기치 않은 예외"
         },
-        "saveAnyway": "그래도 저장",
-        "warningsOrErrors": "여전히 SIP 대상을 저장할 수는 있지만, 하이브리드 통화 서비스 연결이 올바르게 작동하지 않을 수도 있습니다."
+        "fixes": {
+          "IOFailure": "TCP 실패: TCP 읽기/쓰기 실패: 다시 시도하십시오. 오류가 지속되면 네트워크 연결, 방화벽 구성 및 상호 TLS 구성을 확인하십시오.",
+          "NoDNSHopsFound": "DNS 조회 실패함. DNS 또는 SRV 레코드가 귀하의 SIP 대상에 존재하며 한 개 이상의 유효한 IP 주소를 인식하는지 확인하십시오.",
+          "PingFailed": "SIP 핑 실패함.",
+          "SipDestinationNotFound": "SIP 대상 발견되지 않음. admin.ciscospark.com에서 서비스 &gt; 하이브리드 통화 &gt; 설정 아래에 입력한 값을 확인하십시오.",
+          "SipException": "SIP 예외: Expressway SIP 구성이 유효한지 확인하십시오. 오류가 지속되면 admin.ciscospark.com에서 지원 요청을 제출합니다.",
+          "SocketConnectionFailure": "TCP 연결 실패: 네트워크 연결, 연결 속도 및/또는 방화벽 구성을 확인하십시오.",
+          "SocketReadWriteFailure": "TCP 읽기/쓰기 실패: 다시 시도하십시오. 오류가 지속되면 네트워크 연결, 방화벽 구성 및 상호 TLS 구성을 확인하십시오.",
+          "SocketTimedOut": "네트워크 및/또는 상호 TLS 연결 시간 초과됨. 네트워크 연결, 연결 속도, 방화벽 구성 및 상호 TLS 구성을 확인하십시오.",
+          "SSLHandshakeFailure": "상호 TLS 오류: Expressway 및 admin.ciscospark.com 모두에서 상호 TLS 구성을 확인하고, 해당 상호 TLS 인증서가 두 위치 모두에 존재하며 유효한지 확인하십시오.",
+          "UnexpectedError": "예기치 않은 오류. 다시 시도하십시오. 오류가 지속되면 admin.ciscospark.com에서 지원 요청을 제출합니다.",
+          "UnexpectedException": "예기치 않은 오류: 다시 시도하십시오. 오류가 지속되면 admin.ciscospark.com에서 지원 요청을 제출합니다."
+        }
       },
       "googleCalendar": {
         "title": "Google 캘린더",
@@ -2368,8 +2600,7 @@
         "hybridCalendarSetUp": "하이브리드 캘린더 설정",
         "selectCalendarType": "캘린더 유형 선택",
         "exchangeInfo": "Microsoft Exchange 및 Exchange Online (Office 365). Expressway 클러스터가 필요함.",
-        "serviceInto": "하이브리드 캘린더는 온-프레미스 Expressway 클러스터를 통한 Exchange 캘린더 및 Google 캘린더를 지원합니다.",
-        "smallprint": "Cisco 하이브리드 서비스 커넥터는 하이브리드 서비스 배포에 대한 특정 정보를 수집하고 Cisco 협업 클라우드로 보냅니다. 자세한 정보는 <a href=\"https://www.cisco.com/go/hybrid-services-calendar\" target=\"_blank\">여기</a>를 클릭하십시오."
+        "serviceInto": "하이브리드 캘린더는 온-프레미스 Expressway 클러스터를 통한 Exchange 캘린더 및 Google 캘린더를 지원합니다."
       },
       "scheduleUpgrade": {
         "title": "업그레이드 스케줄",
@@ -2377,8 +2608,7 @@
         "defaultWarning": "기본 스케줄 확인",
         "postponeLabel": "다음 사용 가능한 업그레이드에 대해 예약된 시작 시간:",
         "postponeAction": "연기",
-        "postponeModalTitle": "업그레이드 연기",
-        "postponeModalText": "예약된 업그레이드를 다음 시작 시간으로 연기하시겠습니까? 다음:"
+        "postponeSuccess": "업그레이드가 연기되었습니다. 다음 업그레이드는 {{datetime}}에 시작하도록 예약되었습니다."
       },
       "emergencyUpgrade": {
         "expressway": {
@@ -2497,6 +2727,7 @@
         "go-to-expressway": "Expressway로 이동",
         "upgrade": "업그레이드 사용 가능",
         "upgrading": "업그레이드 설치 중",
+        "pending": "보류 중인 업그레이드",
         "alarms": "경보",
         "maintenance": "유지관리",
         "pendingMaintenance": "보류 중인 유지관리"
@@ -2675,25 +2906,27 @@
       "version": "버전",
       "noNodes": "노드를 찾을 수 없음",
       "loadingError": "클러스터 데이터를 로드하지 못함",
-      "viewList": "목록 보기",
+      "viewList": "노드 목록 열기",
+      "viewListDescription": "경보를 확인하고 업그레이드를 설치하려면 노드 목록을 여십시오.",
       "enableMaintenanceMode": "유지관리 모드를 활성화하십시오.",
       "disableMaintenanceMode": "유지관리 모드를 비활성화하십시오.",
       "goToNode": "노드로 이동",
       "moveNode": "노드 이동",
       "deregisterNode": "노드 등록 해제",
       "pendingTooltip": "보류 중 시작 날짜: {{date}}. 유지관리 모드가 요청되었습니다. 노드가 준비될 때까지 기다려 주십시오.",
+      "maintenanceModeTooltip": "유지관리 모드를 사용하여 이 노드에 있는 커넥터를 중지하고 이메일 경보 알림을 중지하십시오.",
       "enableMaintenanceModeModal": {
         "title": "유지관리 모드를 활성화하십시오.",
         "message": "<p>통화 활동이 종료되거나 2시간이 초과되면 하이브리드 미디어 노드는 유지관리 모드로 지정됩니다. 진행하기 전에 노드가 \"보류 중인 유지관리\"에서 \"유지관리\"로 지정될 때까지 기다려 주십시오.</p><p>유지관리 모드에서 노드에 대해 발송된 경보 알림이 없습니다.</p>",
-        "expresswayMessage": "<p>Expressway 노드는 유지관리 모드로 지정될 때까지 \"유지관리 보류 중\"을 표시합니다. 이 노드에서 커넥터에 지정된 모든 사용자는 사용 가능한 다른 노드로 다시 지정됩니다. 사용할 수 있는 다른 노드가 없는 경우, 해당 사용자의 서비스 연결이 끊김을 숙지하십시오.</p><p>유지관리 모드에서 노드에 대해 발송된 경보 알림이 없습니다.</p>"
+        "expresswayMessage": "<p>Expressway 노드는 유지관리 모드로 지정될 때까지 \"유지관리 보류 중\"을 표시합니다. 이 노드에서 커넥터에 지정된 모든 사용자는 사용 가능한 다른 노드로 다시 지정됩니다. 사용할 수 있는 다른 노드가 없는 경우, 해당 사용자의 서비스 연결이 끊김을 숙지하십시오.</p><p>노드가 유지관리 모드로 지정된 동안 발송된 이메일 알림이 없습니다.</p>"
       },
       "disableMaintenanceModeModal": {
         "title": "유지관리 모드를 비활성화하십시오.",
         "message": "이 노드에 대한 유지관리 모드를 비활성화하시겠습니까?"
       },
-      "alertBannerNumber": "{count, plural, other{업그레이드}} 사용 가능.",
-      "alertBannerTime": "해당 업그레이드는 {{date}}에 적용될 예정입니다.",
-      "alertBannerLink": "<a ng-click=\"{{onclick}}\">지금 설치</a>?"
+      "alertBannerNumber": "{count, plural, other{커넥터에 대해 사용할 수 있는 업그레이드!}}",
+      "alertBannerTime": "{count, plural, other{이는}} {date}에 적용될 예정입니다.",
+      "alertBannerLink": "<a ng-click=\"{{onclick}}\">지금 {{service}} 커넥터를 업그레이드하십시오</a>."
     },
     "hybridServicesConnectorSidepanel": {
       "alarmDetails": "경보 세부 사항"
@@ -2713,17 +2946,17 @@
     "userMenu": {
       "crossServices": "크로스 서비스",
       "mobile": "모바일",
-      "statusOk": "Spark 모바일 수렴",
+      "statusOk": "모바일 수렴",
       "statusNok": "오류"
     },
     "userSettings": {
-      "title": "Spark 모바일 수렴",
+      "title": "모바일 수렴",
       "mobileNumber": "모바일 번호",
       "enabled": "활성화됨",
       "status": "상태"
     },
     "detailsPage": {
-      "title": "Cmc",
+      "title": "모바일",
       "settings": "설정",
       "status": "상태"
     },
@@ -2731,7 +2964,7 @@
       "invalidInput": "활성화될 때 항상 유효한 모바일 번호 제공"
     },
     "settingsPage": {
-      "title": "Spark 모바일 수렴",
+      "title": "모바일 수렴",
       "description": "현재 데이터는 읽기 전용입니다. 구성에 대해서는 Cisco 전문가에게 문의하십시오.",
       "mobileProvider": {
         "title": "모바일 연산자",
@@ -2745,8 +2978,17 @@
     "statusPage": {
       "listingFirstActiveUsers": "첫 번째 {{noOfActiveUsers}} 활동 중인 사용자 나열하기",
       "callServiceAwareNotEntitled": "통화 인식에 대한 제목 없음",
-      "sparkMobileConvergence": "Spark 모바일 수렴",
-      "serviceStatus": "서비스 상태"
+      "sparkMobileConvergence": "모바일 수렴",
+      "subHeading": "사용자 상태 보고서",
+      "status": {
+        "active": "활동"
+      },
+      "table": {
+        "username": "사용자 이름",
+        "mobileNumber": "모바일 번호",
+        "serviceStatus": "서비스 상태",
+        "lastUpdated": "마지막 업데이트됨"
+      }
     }
   },
   "context": {
@@ -2766,7 +3008,8 @@
         "date": "날짜 시간",
         "double": "소수",
         "integer": "번호",
-        "string": "주관식"
+        "string": "주관식",
+        "enumString": "단답형 객관식"
       },
       "status": "상태",
       "inUse": "사용 중",
@@ -2815,7 +3058,20 @@
         "deleteField": "필드 삭제",
         "deleteConfirmationText": "이 필드를 삭제하시겠습니까?",
         "limitReached": "최대 필드에 도달함.",
-        "fieldLimitReadFailed": "필드 제한을 검색할 수 없음. 브라우저를 새로 고치고 다시 시도하십시오."
+        "fieldLimitReadFailed": "필드 제한을 검색할 수 없음. 브라우저를 새로 고치고 다시 시도하십시오.",
+        "enumOptionPlaceholder": "옵션 추가",
+        "enumOptionsReorder": "재정렬",
+        "enumOptionsSetDefault": "기본값 설정",
+        "enumOptionsRemoveDefault": "기본값 제거",
+        "enumOptionsAdd": "추가",
+        "deleteOptionConfirmationHeader": "옵션 삭제",
+        "deleteOptionConfirmation": "이 옵션을 삭제하시겠습니까?",
+        "optionUniqueError": "이 옵션은 이미 존재합니다. 다른 옵션을 추가하십시오.",
+        "optionsNumberErrorMessage": "두 개 이상의 옵션을 추가하십시오.",
+        "optionRequired": "이 필드는 필수입니다.",
+        "optionsLabelWithCount": "옵션 ({{count}})",
+        "optionsLabel": "옵션",
+        "optionsDetailLabel": "이 단답형 객관식 필드에 있는 옵션의 목록."
       },
       "fieldsetPage": {
         "fieldsetId": "필드 집합 ID",
@@ -2826,7 +3082,7 @@
         "fieldsetIdPlaceholder": "예: sales.shoppingcart",
         "descriptionPlaceholder": "이 필드 집합의 목적은 무엇입니까?",
         "createNew": "새 필드 집합 만들기",
-        "addOrEditFields": "이 필드 집합에서 원하는 필드를 검색하고 선택하십시오.",
+        "addOrEditFields": "응용프로그램에서 표시할 이 필드 집합에 대한 필드를 검색하고 선택하십시오.",
         "searchFields": "필드 검색",
         "loadFailure": "필드를 검색할 수 없음.",
         "noFields": "사용할 수 있는 필드 없음",
@@ -2886,6 +3142,7 @@
       "noProceed": "아니요. 소프트웨어를 설치하고 구성해야 합니다.",
       "noProceed-helptext": "(소프트웨어는 자동으로 다운로드됨)",
       "noInfo": "서버에 소프트웨어를 설치하고 구성한 후 Cisco 클라우드 협업 관리로 돌아가서 하이브리드 데이터 보안 노드를 등록하십시오.",
+      "noInfoNew": "서버에 소프트웨어를 설치하고 구성한 후 Cisco {{appTitle}}(으)로 돌아가서 하이브리드 데이터 보안 노드를 등록하십시오.",
       "noRetryInfo": "자동으로 소프트웨어가 다운로드되지 않았습니까? <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/HybridDataSecurityProduction/hds.ova'>다시 시도하십시오.</a>",
       "noDesc1": "중요한 정보 및 단계별 설치 안내에 대해서는 ",
       "noDesc2": "하이브리드 데이터 보안 배포 안내서를 참조하십시오.",
@@ -2947,11 +3204,17 @@
       "settings": {
         "servicestatusTitle": "서비스 상태",
         "servicePreTrialModeTitle": "평가판 시작",
-        "serviceNodeDesc": "하이브리드 데이터 보안 서비스에 {{nodes}}개의 등록된 노드가 있습니다.<br/>최소한 두 개의 노드가 필요합니다. 3~5개를 권장합니다.<br/>다른 노드를 추가하려면 <a ng-click=\"{{onclick}}\">리소스 추가</a> 흐름을 사용하십시오. 평가판을 시작하면 사용자 상태 보고서를 다운로드하여 누가 평가판을 사용하고 있는지 빠르게 확인할 수 있습니다.",
+        "serviceNodeDescHeader0": "하이브리드 데이터 보안을 사용할 준비가 거의 다 되었습니다. 여기에 필요한 리소스를 추가하고 평가판을 시작한 후에 일부 사용자를 추가하십시오.",
+        "serviceNodeDescHeader": "사용자를 추가하고 하이브리드 데이터 보안의 사용을 시작하십시오.",
+        "registeredNodes": "등록된 노드",
+        "suggestedNodeNumber": "(3-5개 제안됨) ",
+        "addResource": "리소스 추가",
         "serviceDomainDesc": "평가판 도메인: {{trial}}<br/>프로덕션 도메인: {{prod}}",
-        "serviceUserDesc": "현재 하이브리드 데이터 보안 서비스의 평가판에 {{users}}명의 사용자가 있습니다. 평가판에 <br/><a ng-click=\"{{onclick}}\">사용자를 추가</a>하거나 평가판 사용자를 <a ng-click=\"{{onclick1}}\">확인하고 편집</a>하십시오.",
-        "serviceUser0Desc": "현재 하이브리드 데이터 보안 서비스의 평가판에 {{users}}명의 사용자가 있습니다. 평가판에 <br/><a ng-click=\"{{onclick}}\">사용자를 추가</a>하십시오.",
-        "serviceUserDirsyncDesc": "현재 하이브리드 데이터 보안 서비스의 평가판에 {{users}}명의 사용자가 있습니다. 평가판에 대한 <br/><a ng-click=\"{{onclick}}\">사용자를 확인</a>하십시오.",
+        "users": "사용자",
+        "or": "또는",
+        "addUsers": "사용자 추가",
+        "viewUsers": "사용자 보기",
+        "editUsers": "사용자 보기 및 편집",
         "serviceProdMoveDesc": "평가판을 성공적으로 사용하고 만족하면 프로덕션으로 이동할 수 있습니다. 이 작업은 조직에서 모든 사용자에 대해 하이브리드 데이터 보안을 활동 중으로 지정합니다. 서비스를 비활성화하고 데이터에 대한 사용자 액세스 권한을 유실하지 않은 경우 평가판 모드로 돌아갈 수 없습니다.",
         "serviceTrialModeTitle": "평가판 모드",
         "serviceTrialModeDesc": "평가판 시작됨: Month DD, YYYY, HH:MM PM",
@@ -2970,11 +3233,11 @@
         "succeedDeactivateTrialMode": "평가판 모드 비활성화 성공함",
         "deavtivateTrialModeDesc": "하이브리드 데이터 보안 서비스를 비활성화하면 암호화 키 관리 및 기타 보안 관련된 기능을 클라우드로 이동합니다. 비활성화할 경우 기존 데이터에 대한 사용자 액세스 권한이 영향을 받습니다.",
         "hdsModeGetError": "HDS 모드를 확보하지 못함: ",
-        "selectGroupDesc" : "이 조직에 대한 디렉토리 동기화가 활성화되었습니다. Active Directory 그룹 {{defaultGroup}}에 있는 사용자는 평가판의 일원이 됩니다.",
+        "selectGroupDesc": "이 조직에 대한 디렉토리 동기화가 활성화되었습니다. Active Directory 그룹 {{defaultGroup}}에 있는 사용자는 평가판의 일원이 됩니다.",
         "selectGroupError": "이 조직에 대한 디렉토리 동기화는 활성화되었지만 Active Directory에서 그룹 이름 {{defaultGroup}}을(를) 찾을 수 없습니다. 평가판을 시작하려면 AD에 이 그룹을 만들고 동기화를 실행하십시오.",
         "noGroupError": "HDS 평가판을 시작하려면 조직에 사용자를 추가할 평가판 그룹이 있어야 합니다. 문제가 있는 것 같습니다. 그룹을 찾을 수 없습니다. HDS 설치 도구(기존의 ISO 구성 파일 사용)를 다시 실행해 보거나 Cisco 지원에게 연락하여 지원을 받으십시오.",
-        "groupSizeLimitExceeded" : "평가판 그룹 {{defaultGroup}}에 250명보다 많은 사용자가 있습니다. 평가판을 시작하려면 AD의 그룹에서 일부 사용자를 제거하고 동기화를 실행하십시오.",
-        "groupSizeLimitExceededinTrail" : "평가판 그룹 {{defaultGroup}}에 250명보다 많은 사용자가 있습니다. 일부 사용자에 대한 키 암호화 라우팅이 올바르게 작동하지 않을 수도 있습니다. AD의 그룹에서 일부 사용자를 제거하고 동기화를 실행하십시오."
+        "groupSizeLimitExceeded": "평가판 그룹 {{defaultGroup}}에 250명보다 많은 사용자가 있습니다. 평가판을 시작하려면 AD의 그룹에서 일부 사용자를 제거하고 동기화를 실행하십시오.",
+        "groupSizeLimitExceededinTrail": "평가판 그룹 {{defaultGroup}}에 250명보다 많은 사용자가 있습니다. 일부 사용자에 대한 키 암호화 라우팅이 올바르게 작동하지 않을 수도 있습니다. AD의 그룹에서 일부 사용자를 제거하고 동기화를 실행하십시오."
       },
       "addTrialUsers": {
         "modalTitle": "평가판 모드에 사용자 추가",
@@ -3017,8 +3280,8 @@
     }
   },
   "ediscovery": {
-    "browserTabHeaderTitle": "Cisco Spark 활동 보고서",
-    "heading": "Cisco Spark 스페이스 활동 검색",
+    "browserTabHeaderTitle": "eDiscovery 검색 및 추출",
+    "heading": "규정 준수 데이터 검색",
     "subheading": "특정 사용자 또는 스페이스를 검색하려면 선택하십시오. 콤마로 구분하여 한 개 이상의 항목을 추가합니다.",
     "searchTip": "스페이스 ID로 데이터 검색",
     "unableToDownloadFile": "파일을 다운로드할 수 없음",
@@ -3026,8 +3289,7 @@
     "dateError": {
       "StartDateMustBeforeEndDate": "시작 날짜는 종료 날짜 이전이어야 합니다",
       "StartDateCannotBeInTheFuture": "시작 날짜는 미래일 수 없습니다",
-      "InvalidDateRange": "유효하지 않은 날짜 범위. 날짜 범위는 과거 90일보다 이전이면 안 됩니다.",
-      "InvalidEndDate": "종료 날짜는 현재 날짜에서 변경될 수 없습니다."
+      "InvalidDateRange": "유효하지 않은 날짜 범위. 날짜 범위는 과거 90일보다 이전이면 안 됩니다."
     },
     "reportStates": {
       "COMPLETED": "완료됨",
@@ -3051,6 +3313,13 @@
       "noMatchesFound": "일치하는 항목을 찾을 수 없음",
       "requestFailed": "요청 실패함: 추적 ID {{trackingId}}"
     },
+    "encryption": {
+      "instructions": "보고서를 다운로드한 후에 이 비밀번호를 사용하여 .zip 파일을 여십시오. 또한 보고서 목록에서 열쇠 아이콘을 클릭하여 비밀번호에 액세스할 수도 있습니다.",
+      "instructionsShort": "보고서를 다운로드한 후에 이 비밀번호를 사용하여 .zip 파일을 여십시오.",
+      "passwordFor": "{{reportName}}에 대한 비밀번호",
+      "tooltipContact": "이 보고서에 액세스하려면 {{name}} 님에게 연락하십시오.",
+      "unableGetPassword": "비밀번호를 얻을 수 없음"
+    },
     "searchParameters": {
       "search": "검색",
       "searchPlaceholder": "이메일 주소",
@@ -3062,7 +3331,7 @@
       "messagesPlaceholder": "콤마로 구분된 값 입력",
       "messagesHelpText": "예: project, manager",
       "noMatchesFound": "일치하는 항목을 찾을 수 없음",
-      "dateRangeTooltip": "90일 이상의 보고서를 생성하려면 IT Pro 패키지에 대해 관리자에게 문의하십시오."
+      "dateRangeTooltip": "90일 이상의 보고서를 생성하려면 Pro Pack에 대해 관리자에게 문의하십시오."
     },
     "searchResults": {
       "backToSearch": "검색으로 돌아가기",
@@ -3180,9 +3449,10 @@
     "skipAndFinish": "오류 건너뛰기 및 마침",
     "csvInvalidRow": "행에 올바르지 않은 열의 숫자가 포함됩니다. 행에 6개의 열을 포함하도록 확인하고 다시 시도하십시오.",
     "csvRequiredEmail": "\"사용자 ID/이메일\" 필드는 필수입니다. 유효한 이메일 주소를 제공하고 다시 시도하십시오.",
-    "csvDuplicateEmail": "중복되는 이메일 주소로 인해 건너 뛰기함.",
+    "invalidEmailAddress": "올바르지 않은 이메일 주소",
+    "csvDuplicateEmail": "CSV 파일에 있는 중복된 이메일 주소로 인해 이 이메일을 건너뛰었습니다.",
     "bulkInvalidDID": "\"직통 라인\" 필드에 유효하지 않은 번호가 포함되어 있습니다. 수정하고 다시 시도하십시오.",
-    "tooManyActiveMessageLicenses": "한 개 이상의 \"Spark Message\" 라이센스가 활성화되어 있습니다. 수정하고 다시 시도하십시오.",
+    "tooManyActiveMessageLicenses": "한 개 이상의 \"Cisco Spark Message\" 라이센스가 활성화되어 있습니다. 수정하고 다시 시도하십시오.",
     "csvWrongLicenseFormat": "라이센스 필드에 올바르지 않은 데이터가 포함되어 있습니다. 수정하고 다시 시도하십시오.",
     "processBulkResponseError": "응답을 읽는 동안 오류가 발생했습니다. 다시 시도하십시오.",
     "processBulkError": "사용자를 처리하는 동안 알 수 없는 오류가 발생했습니다. 다시 시도하십시오.",
@@ -3207,17 +3477,31 @@
     "uploadSub": "한 번에 최대 {{maxUsers}}명의 사용자를 추가할 수 있는 최선의 방법입니다.",
     "downloadSub": "CSV 템플릿 다운로드",
     "advancedSub": "Active Directory에서 사용자 동기화.",
+    "provisionAndBeginBilling": "구축 및 요금 청구 시작",
+    "provisionBillingDescription": "구축 버튼을 클릭하면 이 가입을 활성화하고, 구입한 모든 서비스에 대한 요금이 청구되기 시작합니다.",
+    "provisionBillingWarning": "요금 청구가 시작되지 않도록 하려면 진행하지 마십시오. 아래의 \"구축하지 않기\" 버튼을 클릭하면 요금 청구가 시작되지 않습니다. 또한, 이 서비스 설치 마법사에 입력한 모든 정보는 무시되고 처음부터 다시 서비스를 설정해야 할 수도 있습니다.",
+    "servicesNotProvisioned": "서비스가 구축되지 않음",
+    "electedNotToProvision": "서비스를 구축하지 않도록 선택했습니다. 서비스를 설정할 준비가 되면 이 설치 마법사를 다시 실행해야 합니다.",
+    "getBack": "이 마법사로 돌아가려면 https://admin.ciscospark.com으로 이동하거나, 이미 수신한 구축 이메일에서 설정 링크를 클릭하십시오.",
+    "sendEmailToCustomer": "고객에게 서비스가 준비되었음을 알리는 이메일 보내기",
     "needHelp": "도움이 필요하십니까 - ",
     "needHelpExplain": "기술 자료를 검색하십시오.",
+    "newSubsOnly": "가입에 있는 새로운 서비스",
     "planReview": "계획 재확인",
+    "subscriptionReview": "가입 리뷰",
+    "pendingLicensesError": "보류 중인 라이센스에 대해 통화에 오류가 있습니다.",
     "subscriptionId": "가입 ID",
-    "spark": "Spark",
-    "sparkStub": "Spark 설정",
+    "subscriptionID": "가입 ID: ",
+    "orderNumber": "주문 번호: ",
+    "spark": "Cisco Spark",
+    "sparkStub": "Cisco Spark 설정",
     "webex": "WebEx",
-    "webexMsg": "Webex 회의",
-    "webexStub": "Webex 설정",
+    "webexMsg": "WebEx 회의",
+    "webexStub": "WebEx 설정",
+    "audioPackage": "오디오 패키지",
+    "providedBy": " 제공자: ",
     "calling": "전화 중",
-    "callingMsg": "Cloud 전화 중",
+    "callingMsg": "클라우드 발신",
     "message": "메시지",
     "ciscoSparkMessaging": "Cisco Spark Messaging",
     "meeting": "미팅",
@@ -3225,25 +3509,32 @@
     "setupWebexMeetingSites": "WebEx 미팅 사이트 설정",
     "setupYourSites": "사이트 설정",
     "webexSites": "기존의 WebEx 사이트가 있습니까?",
+    "webexProvisioningError": "구축하는 동안 오류가 발생했습니다.",
+    "webexProvisioningSuccess": "서비스가 구축되고 있습니다.",
     "yesKeepSite": "예. 이 사이트 유지",
     "addAnotherSite": "다른 사이트 추가",
     "meetingSettings": "미팅 설정",
     "meetingSettingsDescription": "서비스 설정의 이 단계에서는 한 개 이상의 WebEx 사이트 이름을 만드는 작업을 지원합니다. WebEx 사이트 이름은 귀하가 호스트하고 있는 미팅에 참여하기 위해 사용자가 웹 브라우저에 입력하는 URL입니다.",
-    "meetingCenterLicensesRemaining":"Meeting Center 라이센스 남음",
+    "meetingCenterLicensesRemaining": "Meeting Center 라이센스 남음",
+    "enterpriseEditionLicensesRemaining": "기업판 라이센스 남음",
+    "eventCenterLicensesRemaining": "Event Center 라이센스 남음",
+    "trainingCenterLicensesRemaining": "Training Center 라이센스 남음",
+    "supportCenterLicensesRemaining": "Support Center 라이센스 남음",
+    "tspPartnerRequired": "오디오 플랜에 대해 TSP를 구입했습니다. 이 서비스를 제공하려면 파트너가 필요합니다.",
+    "chooseTSPPartner": "TSP 파트너 선택",
     "existingWebExTrialSites": "무료 평가판의 일부인 다음 WebEx 사이트가 있습니다. 계속 사용하시겠습니까?",
     "setupSitesDescription": "이제 각 사이트에 대해 사용할 URL을 선택할 시간입니다. 이는 귀하가 호스트하는 미팅에 참여하기 위해 사용자가 브라우저에 입력하는 URL입니다.",
     "keepExistingWebexSites": "기존의 WebEx 사이트를 유지하시겠습니까?",
     "selectTimeZonePlaceholder": "시간대 선택",
     "enterSiteNamePlaceholder": "여기에 사이트 이름을 입력하십시오.",
     "enteredSiteNotValid": "입력된 사이트는 유효하지 않습니다. 다른 사이트를 시도하십시오.",
-    "enterNumberOfLicenses":"여기에 라이센스의 수를 입력하십시오.",
+    "enterNumberOfLicenses": "여기에 라이센스의 수를 입력하십시오.",
     "timeZoneSetTo": "{{label}}(으)로 설정된 시간대",
-    "licenseCountEquals": "라이센스 수 = {{licenseCount}}",
+    "licenseCountEquals": "라이센스 수 = {{quantity}}",
     "pleaseEnterSiteName": "사이트 이름을 입력하십시오.",
     "distributeYourWebExLicenses": "사이트 간에 라이센스 분배",
     "webExServiceWillBeSetup": "WebEx 서비스는 다음 파라미터로 설정될 예정입니다.",
-    "provisioningNotice": "숙지할 부분: 아래의 저장 버튼을 누르면 프로비저닝이 시작되고 WebEx 설정을 추가적으로 변경할 수 없게 됩니다.",
-    "pleaseSelectTimeZone":"시간대를 선택하십시오.",
+    "pleaseSelectTimeZone": "시간대를 선택하십시오.",
     "siteName": "사이트 이름",
     "theseWillBeYourWebExSites": "이는 귀하의 {{siteCount}} WebEx 사이트가 됩니다.",
     "thisWillBeYourWebExSite": "이는 귀하의 WebEx 사이트가 됩니다.",
@@ -3253,7 +3544,7 @@
     "namedLicense": "지정된 사용자 라이센스",
     "namedLicenseTooltip": "지정된 각 사용자 라이센스는 1명의 사용자에게 미팅 호스트 자격을 허용합니다. 지정된 사용자는 무제한 미팅을 주최할 수 있습니다.",
     "sharedLicenses": "공유된 미팅 라이센스",
-    "sharedLicenseTooltip": "공유된 각 미팅 라이센스는 최대 250명의 사용자에게 미팅 호스트 자격을 허용합니다. 공유된 미팅 호스트는 무제한 미팅을 주최할 수 있지만, 공유된 미팅 라이센스 당 1개보다 많은 동시 미팅을 주최할 수 없습니다.",
+    "sharedLicenseTooltip": "공유된 각 미팅 라이센스는 최대 250명의 사용자에게 미팅 호스트 자격을 허용합니다. 공유된 미팅 호스트는 무제한 미팅을 주최할 수 있지만, 공유된 미팅 라이센스당 1개보다 많은 동시 미팅을 주최할 수 없습니다.",
     "namedLicenses": "지정된 사용자 라이센스",
     "careTooltip": "모든 케어 사용자에게는 전제 조건으로 Cisco Spark 메시지 라이센스가 필요합니다. 또한 음성 기반 상호 작용을 위해 Cisco Spark 통화 라이센스도 필요합니다.",
     "partnerProvidedAudio": "파트너가 제공한 오디오",
@@ -3262,7 +3553,7 @@
     "call": "통화",
     "care": "케어",
     "roomSystems": "회의실 장치",
-    "sparkRoomSystem": "Spark 회의실 장치",
+    "sparkRoomSystem": "Cisco Spark 회의실 장치",
     "freeMsg": "무료 메시지",
     "freeMtg": "3명 무료 미팅",
     "freeCall": "무료 통화",
@@ -3275,25 +3566,25 @@
     "setPersonalMeetingRoomInputFieldErrorMessage": "이 사이트 URL은 사용할 수 없습니다. 다른 URL을 시도하십시오.",
     "setPersonalMeetingRoomSuccessMessage": "개인 미팅 룸 사이트 URL을 성공적으로 설정함",
     "personalMeetingRoomServiceErrorMessage": "개인 미팅 룸 서비스 오류",
-    "setSipDomainLink": "Spark SIP 주소란 무엇입니까?",
+    "setSipDomainLink": "Cisco Spark SIP 주소란 무엇입니까?",
     "setSipDomainMsg": "하위 도메인 입력",
-    "setSipDomainTitle": "Spark SIP 주소",
-    "saveSipDomainTitle": "Spark SIP 주소 저장",
+    "setSipDomainTitle": "Cisco Spark SIP 주소",
+    "saveSipDomainTitle": "Cisco Spark SIP 주소 저장",
     "setSipDomainCompNames": "{count, plural, other{다음 하위 도메인}}이 예약될 예정입니다.",
     "setSipDomainAsssignedNames": "{count, plural, other{다음 하위 도메인}}이 예약되었습니다.",
     "setSipDomainCheckAvailability": "가용성 확인",
     "setSipDomainPlaceholder": "하위 도메인 입력",
     "setSipDomainErrorMessage": "사용할 수 없음. 다른 이름을 시도하십시오.",
     "setSipDomainErrorMessageInvalidDomain": "유효하지 않은 도메인. 다른 이름을 시도하십시오",
-    "setSipDomainSuccessMessage": "Spark SIP 주소가 성공적으로 저장되었습니다",
+    "setSipDomainSuccessMessage": "Cisco Spark SIP 주소가 성공적으로 저장되었습니다.",
     "setSipDomainConfirmText": "이는 나중에 변경할 수 없는 일회성 설정임을 이해합니다.",
-    "sparkDomainManagementServiceErrorMessage": "Spark 도메인 관리 서비스에 연결하지 못함",
-    "currentSubdomainDescription": "귀사의 Spark SIP {count, plural, other{주소}}에 대해 현재 {count, plural, other{아래의 하위 도메인}}이 사용되고 있습니다.",
+    "sparkDomainManagementServiceErrorMessage": "Cisco Spark 도메인 관리 서비스에 연결하지 못함",
+    "currentSubdomainDescription": "귀사의 Cisco Spark SIP {count, plural, other{주소}}에 대해 현재 {count, plural, other{아래의 하위 도메인}}이 사용되고 있습니다.",
     "subdomainChangesDescription": "하위 도메인 변경 사항이 완료될 때까지 최대 8시간이 소요될 수 있습니다.",
     "subdomainDescription": "귀사를 식별하는 하위 도메인을 선택하십시오. 하위 도메인은 {count, plural, other{Spark SIP 주소}}를 만드는 데 사용됩니다.",
-    "updateSubdomainMessage": "하위 도메인 변경 사항이 완료될 때까지 최대 8시간이 소요될 수 있습니다. 변경 사항이 적용되면 사용자는 더 이상 이전 Spark SIP 주소를 사용하여 전화를 걸 수 없게 됩니다.",
+    "updateSubdomainMessage": "하위 도메인 변경 사항이 완료될 때까지 최대 8시간이 소요될 수 있습니다. 변경 사항이 적용되면 사용자는 더 이상 이전 Cisco Spark SIP 주소를 사용하여 전화를 걸 수 없게 됩니다.",
     "subdomainUpdateConfirmation": "업무 시간 외에 이 단계를 실행할 것을 권장합니다. 변경 사항을 저장하시겠습니까?",
-    "editCSCPartThree": "그래도 Spark SIP 주소를 편집하시겠습니까?",
+    "editCSCPartThree": "그래도 Cisco Spark SIP 주소를 편집하시겠습니까?",
     "enterSubdomain": "하위 도메인 입력",
     "subdomainInvalid": "유효하지 않은 하위 도메인명.",
     "longSubdomain": "하위 도메인이 너무 깁니다. 40자 미만의 하위 도메인을 입력하십시오.",
@@ -3301,7 +3592,7 @@
     "reservedSubdomains": "예약된 하위 도메인",
     "subdomain401And403Error": "사용자는 하위 도메인을 수정할 권한이 없습니다.",
     "subdomainSaveError": "새로운 하위 도메인을 저장하는 동안 오류가 발생했습니다. 가용성을 다시 확인하고 다시 시도하십시오.",
-    "subdomainSaveSuccess": "Spark SIP 주소를 성공적으로 업데이트했습니다.",
+    "subdomainSaveSuccess": "Cisco Spark SIP 주소를 성공적으로 업데이트했습니다.",
     "editSubdomain": "하위 도메인 편집",
     "messageSettings": "메시지 설정",
     "callSettings": "통화 설정",
@@ -3344,6 +3635,7 @@
     "manualTitle": "사용자 입력",
     "yourDomainTitle": "귀하의 도메인",
     "installTitle": "디렉토리 커넥터 설치",
+    "invalidCenterType": "유효하지 않은 센터 유형",
     "syncStatus": "동기화 상태",
     "domain": "도메인",
     "defaultPlaceholder": "기본값",
@@ -3356,8 +3648,8 @@
     "results": "결과",
     "syncNotConfigured": "디렉토리 동기화가 활성화되어 있지 않습니다. 설정 지시 사항은 이전 단계를 참조하십시오.",
     "syncAgreementText": "사용자가 동기화 동의",
-    "cloudSipSuccess": "클라우드 Spark SIP 주소에 성공적으로 추가됨.",
-    "cloudSipError": "클라우드 Spark SIP 주소에 추가하지 못함.",
+    "cloudSipSuccess": "클라우드 Cisco Spark SIP 주소를 성공적으로 추가함.",
+    "cloudSipError": "클라우드 Cisco Spark SIP 주소를 추가하지 못함.",
     "messengerRetentionSuccess": "유지 기간 설정 성공적으로 추가됨.",
     "messengerRetentionError": "유지 기간 설정 추가하지 못함.",
     "messengerRetentionEditSuccess": "유지 기간 설정 성공적으로 변경됨.",
@@ -3368,13 +3660,6 @@
     "messengerEnableWebexError": "Webex Messenger 통합 활성화하지 못함.",
     "messengerDisableWebexSuccess": "Webex Messenger 통합 성공적으로 비활성화됨.",
     "messengerDisableWebexError": "Webex Messenger 통합 비활성화하지 못함.",
-    "messengerSetupTitle": "Webex Messenger 통합",
-    "messengerSetupDesc": "Webex Messenger (Jabber) 사용자는 조직에서 Spark 사용자에게 메시지를 보낼 수 있습니다.",
-    "messengerSetupLabel": "Webex Messenger 통합 활성화",
-    "dataRetentionTitle": "데이터 유지 (조직 삭제 후)",
-    "dataRetentionDesc": "시스템에서 사용자(또는 평가판)를 삭제하면 시스템은 얼마나 오랫동안 사용자의 그룹 스페이스를 유지합니까?",
-    "dataShareTitle": "Cisco 파트너에게 발송된 사용 데이터",
-    "dataShareLabel": "한층 향상된 파트너 지원을 활성화하기 위해 Cisco 파트너와 서비스 품질 및 참여 데이터를 공유합니다.",
     "appSecurity": "앱 보안",
     "appSecurityLabel": "사용자는 보호되는 장치에서만 Cisco Spark 앱을 실행할 수 있습니다",
     "setupSSOSub": "싱글 사인온",
@@ -3395,12 +3680,6 @@
     "trial": "평가판 {{number}}",
     "startYourTrial": "새로운 {{days}}일 평가판을 시작하십시오.",
     "trialDaysRemaining": "현재 평가판 사용 기간 {{days}}일 남았습니다.",
-    "messagingSetupPlaceholder": "유지 시간 선택",
-    "messagingSetupDataRetentionOption1": "즉시 삭제",
-    "messagingSetupDataRetentionOption2": "30일",
-    "messagingSetupDataRetentionOption3": "60일",
-    "messagingSetupDataRetentionOption4": "90일",
-    "messagingSetupDataRetentionOption5": "영원히 보관",
     "assignDnAndDirectLines": "번호 지정",
     "assignDnAndDirectlineDesc": "사용자에게 지정될 내선 및 다이렉트 라인을 확인하십시오. 아래의 [내선과 다이렉트 라인 맵] 링크를 눌러 사용자 내선과 일치하는 다이렉트 라인의 마지막 4자리 숫자를 사용하도록 선택할 수도 있습니다.",
     "mapPhoneNumberWithExt": "내선과 전화 번호 매핑",
@@ -3412,7 +3691,15 @@
     "unableToUpdateResourceGroups": "하이브리드 서비스 리소스 그룹을 업데이트하지 못함",
     "ussUserPropsLoadFailed": "현재 사용자 하이브리드 서비스 리소스 그룹 지정을 로드할 수 없음. CSV 파일에 있는 리소스 그룹 지정은 처리되지 않습니다.",
     "fmsResourceGroupsLoadFailed": "하이브리드 서비스 리소스 그룹을 로드할 수 없음. CSV 파일에 있는 리소스 그룹 지정은 처리되지 않습니다.",
-    "mutuallyExclusiveCalendarEntitlements": "한 개 이상의 하이브리드 캘린더 서비스 권한이 설정되었습니다. 수정하고 다시 시도하십시오."
+    "mutuallyExclusiveCalendarEntitlements": "한 개 이상의 하이브리드 캘린더 서비스 권한이 설정되었습니다. 수정하고 다시 시도하십시오.",
+    "callSettingSimpleDialing": "간단한 전화하기",
+    "callSettingSimpleDialingDesc": "귀사 내에서 각 사용자에게 고유한 내선 번호를 지정하십시오. 사용자는 내선 번호를 사용하여 서로에게 전화할 수 있습니다.",
+    "callSettingMultiDialing": "다중 계층 전화하기",
+    "callSettingMultiDialingDesc": "각 논리 집합에 대한 라우팅 프리픽스를 선택하여 귀사를 번호 집합으로 나누십시오. 동일한 집합에 있는 사용자는 내선 번호를 사용하여 서로에게 전화할 수 있습니다. 사용자는 집합 간에 라우팅 프리픽스 및 내선 번호로 전화합니다.",
+    "error": {
+      "overCapacity": "데이터 센터에 대해 초과된 기능은 Cisco T.A.C.에 연락하여 지원을 받으십시오.",
+      "capacityFail": "기능 활성화 및 확인 실패함"
+    }
   },
   "reports": {
     "title": "보고서",
@@ -3492,7 +3779,7 @@
     "callerInputLabel": "이름",
     "callerInputNamePlaceHolder": "이름 변수",
     "callerNameInputHelpText": "변수의 이름이 제공됨",
-    "callerInputMaxLength": "최대값보다 적은 문자열에 대해 종결자로 사용된 #",
+    "callerInputMaxLength": "발신자는 최대 길이보다 짧은 번호에 대해 # 기호를 마지막 숫자로 사용할 수 있습니다.",
     "actionPhoneMenu": "전화 메뉴",
     "actionPhoneMenuHint": "발신자의 입력에 기반하여 메시지를 재생하고 작업을 실행합니다.",
     "actionDecision": "결정",
@@ -3511,10 +3798,12 @@
     "decisionCallerAreaCode": "발신자의 지역 번호",
     "decisionSessionVariable": "세션 변수",
     "decisionMissingCustomVariable": "선택된 변수는 이 호출 트리에서 정의되지 않았습니다. Null 값은 음성 결과로 이어집니다.",
+    "dynamicMissingCustomVariable": "{{deletedSessionVariablesList}}은(는) 더 이상 사용할 수 없습니다. 결과적으로, 이 변수는 세이 메시지에 대해 사용되지 않습니다.",
+    "dynamicMissingCustomVariables": "{{deletedSessionVariablesList}}은(는) 더 이상 사용할 수 없습니다. 결과적으로, 이 변수는 세이 메시지에 대해 사용되지 않습니다.",
     "callerReturned1Min": "1분",
     "callerReturned5Mins": "5분",
     "callerReturned30Mins": "30분",
-    "callerReturned1Hour": "1 시간",
+    "callerReturned1Hour": "1시간",
     "callerReturnedOneDay": "1일",
     "callerReturnedOneWeek": "1주",
     "callerReturnedOneMonth": "1개월",
@@ -3526,6 +3815,7 @@
     "sessionVariableInfo": "여기에 한 개 이상의 값을 입력하십시오. 입력값이 여러 개이면 콤마로 구분합니다. 예: 스페인어, 프랑스어",
     "actionRouteCall": "통화 라우트",
     "actionRouteCallHint": "헌트 그룹, 자동 전화 교환 또는 내선 등 대상으로 통화를 라우트합니다.",
+    "routeToPhoneNumberHelp": "통화를 외부 번호로 라우트하려면 귀사의 발신자 ID를 구성해야 합니다.",
     "actionDialByExtensionHint": "발신자에게 내선을 안내하고 통화를 라우트합니다.",
     "actionDialByExtensionHelp": "발신자가 내선으로 다이얼할 수 있도록 안내하기 위한 메시지를 입력합니다. 이 구절에 대한 언어 및 음성을 선택하십시오.",
     "actionEndCall": "연결 끊기",
@@ -3566,7 +3856,7 @@
     "phoneMenuRouteVM": "보이스메일로 라우트",
     "phoneMenuRouteAA": "자동 전화 교환으로 라우트",
     "phoneMenuGoBack": "뒤로 이동",
-    "phoneMenuRouteQueue": "Spark 케어로 라우트",
+    "phoneMenuRouteQueue": "Cisco Spark 케어로 라우트",
     "phoneMenuRouteToSipEndpoint": "SIP 엔드포인트로 라우트",
     "phoneMenuListening": "다음 사용자 입력 내용을 듣는 동안",
     "phoneMenuRepeatOnce": "한 번",
@@ -3610,7 +3900,7 @@
     "addNumberMsg": "이 자동 전화 교환은 다음 번호로 걸려오는 모든 전화에 응답합니다. 번호는 언제든지 추가하거나 제거할 수 있습니다.",
     "numberInfoPopover": "여기에 번호를 입력하지 않으셔도 괜찮습니다. 통화는 다른 자동 전화 교환을 통해서 연결될 수도 있습니다.",
     "routeCallPopover": "통화가 라우트될 방법을 선택하십시오.",
-    "selectPlaceHolder": "검색 또는 선택",
+    "selectPlaceholder": "검색 또는 선택",
     "selectVariablePlaceholder": "변수 선택",
     "validSip": "유효한 SIP 주소 입력",
     "routeToSipInputShort": "입력값이 유효한 SIP URI가 되기에 너무 짧습니다. 예: 'sip:x-x-xxx-xxxx@voip-provider.eg.net'",
@@ -3777,7 +4067,8 @@
     "AACustom": "사용자 정의",
     "AACustomDesc": "사용자 정의 자동 전화 교환 만들기.",
     "AABusinessHours": "업무 시간",
-    "AABusinessHoursDesc": "기본 오픈/종료 스케줄과 사용자 정의 작업."
+    "AABusinessHoursDesc": "기본 오픈/종료 스케줄과 사용자 정의 작업.",
+    "variables": "변수:"
   },
   "callPark": {
     "code": "CP",
@@ -3857,7 +4148,6 @@
     "memberLabel": "전화 받기 멤버",
     "successUpdate": "{{callPickupName}}' 전화 받기가 성공적으로 업데이트되었습니다.",
     "errorUpdate": "{{callPickupName}}' 전화 받기를 업데이트하지 못함",
-    "saveLabel": "변경 내용을 저장하시겠습니까?",
     "title": "전화 받기",
     "code": "PI",
     "modalDescription": "전화 받기 기능은 사용자가 사용자 그룹 내에서 걸려오는 전화를 받을 수 있도록 합니다.",
@@ -3939,7 +4229,6 @@
     "allMembers": "모든 호출 그룹 멤버",
     "custom": "사용자 정의",
     "addInitiatorPlaceholder": "시작자 추가",
-    "saveLabel": "변경 내용을 저장하시겠습니까?",
     "successUpdate": "{{pagingGroupName}}' 호출 그룹이 성공적으로 업데이트되었습니다",
     "successSave": "{{pagingGroupName}}' 호출 그룹이 성공적으로 생성되었습니다",
     "errorUpdate": "호출 그룹을 업데이트하지 못함: '{{message}}'",
@@ -3958,8 +4247,8 @@
     "speedDials": "단축 번호",
     "internationalDialing": "국제 전화하기",
     "maxLines": "25개의 라인 제한에 도달했습니다. 추가 라인을 구축하기 전에 이 사용자의 라인을 제거하십시오.",
-    "showMore": "추가 보이기",
-    "showLess": "요약 보이기",
+    "showMore": "자세히 표시",
+    "showLess": "간단히 표시",
     "localDialing": "로컬 전화하기",
     "externalTransfer": "외부 통화 전송/회의"
   },
@@ -3976,6 +4265,7 @@
     "failedToFetchSiteLevelLanguage": "사이트 수준의 언어를 페치하지 못함. 이유:",
     "userModule": "사용자",
     "placeModule": "장소",
+    "placeDetails":"장소 세부 사항",
     "saveModal": {
       "title": "설정 저장",
       "message1": "언어를 변경하면 이 사용자에 대한 모든 장치를 재부팅해야 하며, 시간이 걸릴 수도 있습니다.",
@@ -4118,6 +4408,11 @@
     "limitSpeedDialsReach": "125개의 단축 번호 입력값 제한에 도달했습니다.",
     "blfPickup": "{{username}} 님은 내선 {{extension}}에 대해 걸려오는 전화를 확인하고 받을 수 있습니다. {{extension}}"
   },
+  "lineLabel": {
+    "title": "라인 레이블",
+    "description": "이 레이블은 장치에서 이 라인 옆에 나타납니다.",
+    "applyToAllSharedDescription": "공유된 모든 라인 멤버에게 이 레이블을 적용하십시오."
+  },
   "internationalDialingPanel": {
     "success": "국제 전화하기 구성이 성공적으로 저장됨",
     "error": "국제 전화하기 구성 실패함. ",
@@ -4157,7 +4452,6 @@
   },
   "pstnOrderOverview": {
     "cancelled": "취소됨",
-    "pstnOrders": "PSTN 주문",
     "successful": "성공",
     "inProgress": "진행 중",
     "advanceOrder": "다음 번호",
@@ -4190,8 +4484,13 @@
   },
   "pstnSetup": {
     "setupPstn": "PSTN 설정",
+    "pstnMethod": "PSTN 방법",
+    "finalizePstn": "PSTN 완료",
+    "importNumbers": "번호 가져오기",
+    "privatePstnTrunk": "비공개 PSTN 트렁크",
     "setupService": "PSTN 서비스 설정",
     "setupNumbers": "PSTN 번호 설정",
+    "addPhoneNumbers": "전화 번호 추가",
     "placeOrder": "주문하기",
     "orderBlock": "주문 차단 번호",
     "newNumbersTab": "표준 번호",
@@ -4217,10 +4516,12 @@
     "consecutive": "연속",
     "block": "차단",
     "reviewAndOrder": "재확인 및 주문하기",
+    "reviewSummary": "요약 재확인",
     "package": "패키지",
     "adding": "추가하기",
     "numbersTitle": "번호",
     "numbers": "{count, plural, other{# 번호}}",
+    "importNumbersTitle": "{count, plural, other{# 번호}} 가져오기",
     "newNumbers": "{{count}} 새 번호",
     "portNumbers": "{{count}} 포트",
     "thankYou": "감사합니다",
@@ -4229,8 +4530,10 @@
     "nextStepPrompt1": "고객은 고객에게 이메일로 발송될 PSTN 계약서에 서명해야 합니다.",
     "nextStepPrompt2": "고객은 고객에게 이메일로 발송될 PSTN 승인서에 서명해야 합니다.",
     "OrderSubmitted": "고객의 주문이 제출되었습니다.",
+    "privatePstnFinalized": "‘비공개 PSTN 트렁크’ 선택이 완료되었습니다.",
+    "privatePstnNumbersImported": "‘비공개 PSTN 트렁크’ {count, plural, other{번호}} 가져오기함.",
     "checkOrderStatus": "주문 상태 확인",
-    "launchPortal": "Spark 서비스 설정",
+    "launchPortal": "Cisco Spark 서비스 설정",
     "carrierListError": "이 고객의 통신 회사 목록을 검색하지 못함.",
     "listSiteError": "이 고객의 사이트 목록을 검색하지 못함.",
     "orderNumbersPrompt": "진행할 번호를 추가해야 합니다.",
@@ -4245,6 +4548,7 @@
     "customerCreateError": "해당 통신 회사로 고객을 만들지 못함.",
     "customerUpdateError": "해당 통신 회사로 고객을 업데이트하지 못함.",
     "siteCreateError": "서비스 주소를 만들지 못함.",
+    "esaSignatureFailed": "ESA 주의문 수락을 저장하지 못함.",
     "searchResults": "검색 결과",
     "noSearchResults": "검색 결과 없음",
     "emergencyAcknowledge": "고객은 엔터프라이즈 등급 IP 텔레포니 네트워크에서 긴급 번호로 전화하는 작업이 작동하지 않을 수도 있음을 이해합니다.",
@@ -4314,6 +4618,23 @@
       "agreeInstructions": "동의'를 클릭하면 약관 및 조건을 읽었으며 이를 준수함에 동의합니다.",
       "agreeInstructionsCanadaThinkTel": "동의'를 클릭하면 특히 약관 및 조건의 부록 1에서 설명하고 있는 ThinkTel VoIP 9-1-1 긴급 다이얼링 서비스에 대한 제한 사항을 포함하여 모든 약관 및 조건을 읽고, 이해했으며, 수락하고, 준수할 것에 동의하는 것입니다.",
       "viewTos": "서비스 약관 보기"
+    },
+    "esaDisclaimer": {
+      "title": "긴급 서비스 주소 주의문",
+      "paragraph1of7": "중요한 필독 사항: Cisco Spark 서비스를 활성화하기 전에 잘못 구성되었거나 적합하지 않게 구성되면 긴급 전화 또는 서비스 파견이 올바르게 라우트되지 않거나 현저히 지연될 수 있습니다.",
+      "paragraph2of7": "Cisco Spark로 포트한 기존의 PSTN 번호가 해당 PSTN 번호에 연계된 사용자에 대해 올바른 긴급 서비스 주소 및 위치로 매핑되도록 하려면 다음 세 단계를 따라야 합니다.",
+      "paragraph3of7": "1) 해당 PSTN 번호와 연계된 주소가 사용자의 주소와 일치하는지 확인하고 업데이트합니다.",
+      "paragraph4of7": "2) 기존의 온 프레미스 IP PBX가 사용자의 위치에 설정된 올바른 PSTN 트렁크 위치로 긴급 전화를 보낼 수 있도록 구축합니다.",
+      "paragraph5of7": "3) 이동 통신 사업자와 작업하여 해당 사업자와 긴급 통화 대응 센터(PSAP: Public Safety Answering Point)가 각 긴급 서비스 번호(ESN)와 연계된 올바른 주소를 갖고 있는지 확인합니다.",
+      "paragraph6of7": "이 세 단계를 따르지 않으면 올바르지 않은 위치로 파견 및/또는 목숨이 위태로운 상황을 포함하여 긴급한 상황에 처한 사용자에게 현저히 늦게 파견되는 결과로 이어질 수도 있습니다.",
+      "paragraph7of7": "\"동의\"를 클릭하면 약관 및 조건을 읽었으며 이를 준수함에 동의합니다.",
+      "notificationText": "전화 번호를 추가하려면 긴급 서비스 주소 주의문을 수락하십시오.",
+      "notificationTextLink": "주의문 참조"
+    },
+    "addByopNumberBlocked": {
+      "title": "전화 번호 추가하기 차단됨",
+      "messageMain": "전화 번호를 추가하려면 고객이 긴급 서비스 주소 주의문을 수락해야 합니다. 고객은 개요 페이지에 있는 알림 목록에서 주의문을 수락할 수 있습니다.",
+      "messageSkip": "이 단계를 건너뛰고 나중에 전화 번호 추가."
     }
   },
   "pstnContractInformation": {
@@ -4325,20 +4646,24 @@
     "emailAddress": "서명인의 이메일 주소"
   },
   "intelepeerFeatures": {
-    "feature1": "미국 50개 주 + 캐나다 무제한 인바운드/아웃바운드 통화",
-    "feature2": "통신 회사 포트/전송 수수료 포함됨",
-    "feature3": "E911 포함됨",
-    "feature4": "세금 및 수수료 포함된 가격"
+    "feature1": "미국 48개 주에서 서비스 사용 가능",
+    "feature2": "미국 50개 주 및 캐나다 무제한 통화",
+    "feature3": "통신 회사 포트/전송 수수료 포함됨",
+    "feature4": "E911 포함됨",
+    "feature5": "세금 및 수수료 포함된 가격",
+    "note": "PSTN 통화에 활성화된 각 Spark 라이센스에 대해 원 보이스 서비스 번들(One Voice Services Bundle)이 필요합니다."
   },
   "tataFeatures": {
     "feature1": "사용자당 1 DID",
-    "feature2": "미국 50개 주에서 발신/수신",
-    "feature3": "번호 포트/전송에 대한 비용 없음",
-    "feature4": "발신자 ID 이름 전달 및 등록",
-    "feature5": "E911"
+    "feature2": "미국 48개 주에서 서비스 가용성",
+    "feature3": "미국 50개 주 통화 포함",
+    "feature4": "번호 포트/전송에 대한 비용 없음",
+    "feature5": "발신자 ID 이름 전달 및 등록",
+    "feature6": "E911",
+    "note": "PSTN 통화의 각 Spark 라이센스에 대해 원 글로벌 SIP 연결(One Global SIP Connect) 번들이 필요합니다."
   },
   "thinktelFeatures": {
-    "feature1": "사용자 당 전화 번호 1개",
+    "feature1": "사용자당 전화 번호 1개",
     "feature2": "모든 시/도에서 서비스 사용 가능",
     "feature3": "로컬 및 캐나다/미국 장거리 발신",
     "feature4": "번호 포트/전송 수수료 포함됨",
@@ -4352,6 +4677,12 @@
     "feature4": "디렉토리 목록",
     "feature5": "E911",
     "feature6": "설정 비용 없음"
+  },
+  "byopstnFeatures": {
+    "feature1": "기존의 PSTN 공급자 사용",
+    "feature2": "전화 번호 가져오기",
+    "feature3": "클라우드 및 기업 브리지",
+    "feature4": "셀프 관리 E911"
   },
   "partnerHomePage": {
     "trialsHeading": "평가판",
@@ -4388,7 +4719,7 @@
     "trialServices": "평가판 서비스",
     "activeServices": "활동 중인 서비스",
     "nonTrialServices": "비 평가판 서비스",
-    "sparkRoomSystem": "Spark 회의실 장치",
+    "sparkRoomSystem": "Cisco Spark 회의실 장치",
     "trialButton": "평가판 고객 추가",
     "dialogTitle": "평가판 시작",
     "customerName": "회사명",
@@ -4418,7 +4749,7 @@
     "defaultCountry": "기본 국가",
     "defaultCountryDesc": "사용자 장치에서 올바른 발신음을 설정하려면 국가를 지정하십시오.",
     "defaultCountryPlaceholder": "국가 선택",
-    "pstnCountry": "통화 서비스(PSTN 포함)가 프로비저닝될 국가를 선택하십시오.",
+    "pstnCountry": "통화 서비스(PSTN 포함)가 구축될 국가를 선택하십시오.",
     "aria": {
       "daysLeft": "평가판 {count, plural, other{#일}} 남음",
       "userTotals": "{{users}} / {{licenses}} 라이센스 사용됨",
@@ -4455,13 +4786,13 @@
       "deviceTrialLimitReachedA": "조직에서 {{number}}의 동시 제한에 도달했습니다.",
       "deviceTrialLimitReachedB": "기존의 평가판으로 변환하면 다른 장치 평가판을 추가할 수 있습니다.",
       "activeDeviceTrial": "활동 장치 평가판",
-      "activeDeviceTrialTip": "배송된 장치에서 진행중인 평가판",
+      "activeDeviceTrialTip": "배송된 장치에서 진행 중인 평가판",
       "deviceTrialLimitHelp": "이 제한에 대한 문의 사항은 파트너 헬프 데스크로 연락하십시오. 다음: webexpartnerhelp@cisco.com 또는 1-800-553-6387",
-      "deviceTrialTip": "배송된 장치에서 진행중인 평가판",
+      "deviceTrialTip": "배송된 장치에서 진행 중인 평가판",
       "deviceTrialUnavailable": "시스템에서 일시적으로 장치를 추가할 수 없습니다. 나중에 시도하십시오.",
       "selectDevicesHeader": "장치 선택",
       "deviceLimitDescription": "최대 총 {{max}}개의 장치를 선택하십시오",
-      "meetingRoomCamera": "Spark 회의실 장치 <span class='small-hint'>(최대 {{max}}개의 장치 혼합)</span>",
+      "meetingRoomCamera": "Cisco Spark 회의실 장치 <span class='small-hint'>(최대 {{max}}개의 장치 혼합)</span>",
       "deskPhones": "개인 및 공유된 데스크 폰 <span class='small-hint'>(최대 {{max}}개의 장치 혼합)</span>",
       "sx10": "SX10",
       "dx80": "DX80",
@@ -4474,7 +4805,7 @@
       "invalidQuantity": "수량은 {{min}} - {{max}} 사이이어야 합니다",
       "invalidQuantityMx300": "수량은 {{qty}}이어야 합니다",
       "invalidTotalQuantity": "전체 주문에 {{min}} - {{max}}개 장치가 있어야 합니다",
-      "invalidRoomSystemsQuantity": "{{max}}개의 Spark 회의실 장치로 제한됨",
+      "invalidRoomSystemsQuantity": "{{max}}개의 Cisco Spark 회의실 장치로 제한됨",
       "invalidPhonesQuantity": "{{max}}개의 개인 및 공유 데스크 폰으로 제한됨",
       "shippingInfo": "배송 정보",
       "recipient": "장치는 어디로 배달됩니까?",
@@ -4503,6 +4834,9 @@
       "provider": "제공자",
       "serviceProvider": "서비스 공급자를 선택하십시오",
       "phoneNumbers": "전화 번호",
+      "esaAcceptanceHeader": " 전화 번호 추가하기 차단됨",
+      "esaAcceptance1": "전화 번호를 추가하려면 고객이 긴급 서비스 주소 주의문을 수락해야 합니다. 고객은 개요 페이지에 있는 알림 목록에서 주의문을 수락할 수 있습니다.",
+      "esaAcceptance2": "다음 단계로 진행하고 나중에 전화 번호를 추가하십시오.",
       "pleaseAdd": "고객을 위해 전화 번호를 추가하십시오",
       "pleaseAdd10": "고객을 위해 최대 10개의 전화 번호를 추가하십시오",
       "pleaseAdd5": "고객을 위해 최대 5개의 전화 번호를 추가하십시오",
@@ -4562,7 +4896,7 @@
   },
   "trials": {
     "collab": "표준 그룹 회의실 + 25명 단체 미팅",
-    "squaredUC": "고급 Spark 통화",
+    "squaredUC": "고급 Cisco Spark 통화",
     "licenses": "라이센스",
     "licenseQuantity": "라이센스 수",
     "licenseCount": "라이센스 수",
@@ -4580,9 +4914,9 @@
     "supportedLocationsCertification": "이 고객은 Cisco Spark에 대해 <a href=\"https://support.ciscospark.com/customer/portal/articles/1940194-where-is-cisco-spark-available\" target=\"_blank\">지원되는 위치</a>에 있음을 인증합니다.",
     "supportedLocationWarning": "이 고객은 Cisco Spark에 대해 지원되는 위치에 있음을 인증하려면 위의 박스를 체크하십시오.",
     "context": "Cisco Unified Contact Center에 대해 컨텍스트 서비스를 활성화하십시오.",
-    "roomSystem": "DX, MX 또는 SX 시스템",
+    "roomSystem": "Cisco Spark 회의실 키트, DX, MX 및 SX series",
     "sparkBoardSystem": "Cisco Spark Board",
-    "roomSysUsOnly": "Spark 회의실 장치 (현재 미국 전용)",
+    "roomSysUsOnly": "Cisco Spark 회의실 장치 (현재 미국 전용)",
     "expireWarningMsg": "귀하의 평가판은 {{numDaysLeft}}일 내에 종료됩니다.",
     "expiredMsg": "평가판이 만료되었습니다.",
     "requestPurchaseMsg": "Cisco Spark를 구입하시겠습니까?",
@@ -4683,8 +5017,8 @@
     "allowCustomerLogo": "{{customer}} 님의 고객 로고 활성화",
     "myOrganization": "내 조직",
     "meetingParty": "25명 미팅",
-    "roomSystem": "DX, MX 또는 SX",
-    "sparkBoard": "Spark Board",
+    "roomSystem": "Cisco Spark 회의실 키트, DX, MX 및 SX series",
+    "sparkBoard": "Cisco Spark Board",
     "branding": "고객 브랜딩",
     "MS": "메시지",
     "CF": "미팅",
@@ -4697,7 +5031,7 @@
     "EE": "WebEx 기업판",
     "CO": "통화",
     "ST": "스토리지",
-    "SD": "Spark 회의실 장치",
+    "SD": "Cisco Spark 회의실 장치",
     "deleteOrgTitle": "고객 삭제",
     "deleteOrgConfirmMsg": "고객 '{{orgName}}'을(를) 영구적으로 삭제하시겠습니까?",
     "deleteOrg": "고객 삭제",
@@ -4773,11 +5107,11 @@
   },
   "externalTransfer": {
     "title": "외부 통화 전송/회의",
-    "desc": "외부 사용자가 외부 통화 전송 및 회의를 실행할 수 있도록 할지 선택합니다. 이 설정은 전체 조직에 적용됩니다. 나중에 개별 사용자에 대해 이 설정을 다시 정의할 수 있습니다."
+    "desc": "사용자가 통화 전송 및 회의를 실행할 수 있도록 할지 선택합니다. 이 설정은 전체 조직에 적용됩니다. 나중에 개별 사용자에 대해 이 설정을 다시 정의할 수 있습니다."
   },
   "internationalDialing": {
     "internationalDialing": "국제 전화하기",
-    "internationalDialingPlacesDesc": "기본값으로 Spark 통화 사용자 및 장소에 이 설정이 적용됩니다. 개별 사용자의 설정 또는 장소의 설정에서 예외를 지정할 수 있습니다."
+    "internationalDialingPlacesDesc": "기본값으로 Cisco Spark 통화 사용자 및 장소에 이 설정이 적용됩니다. 개별 사용자의 설정 또는 장소의 설정에서 예외를 지정할 수 있습니다."
   },
   "huronSettings": {
     "saveSuccess": "설정이 성공적으로 저장됨.",
@@ -4814,7 +5148,7 @@
     "savePrompt": "이 번호를 저장하시겠습니까?",
     "saveSuccess": "긴급 서비스 번호를 성공적으로 업데이트함.",
     "saveError": "긴급 서비스 번호를 업데이트할 때 오류가 발생함.",
-    "warning": "사용자 또는 Spark 통화 기능에 지정된 번호를 선택하십시오."
+    "warning": "사용자 또는 Cisco Spark 통화 기능에 지정된 번호를 선택하십시오."
   },
   "didManageModal": {
     "buttonText": "번호 추가",
@@ -4900,6 +5234,7 @@
     "input": "입력 오디오 수준",
     "output": "출력 오디오 수준",
     "saved": "설정이 저장되었습니다. 변경 사항을 적용하려면 장치를 재부팅해야 합니다.",
+    "savedReboot": "설정이 저장되었습니다. 지금 장치가 재부팅됩니다.",
     "t38Warning": "경고: T.38 팩스는 암호화되지 않습니다.",
     "t38Label": "T.38 팩스 프로토콜",
     "savedT38": "T.38 설정 업데이트됨",
@@ -4926,7 +5261,7 @@
       "deskPhoneExamplesExtra": "예: 8845, 8865, 8800 또는 아날로그 전화 어댑터 포트",
       "deskPhoneLicenseWarning": "먼저 조직에서 Cisco Spark 통화 라이센스를 구입해야 합니다. 자세한 정보는 파트너 또는 Cisco 세일즈 담당자에게 문의하십시오.",
       "roomSystem": "회의실 장치",
-      "roomSystemExamplesExpanded": "Cisco Spark Board, DX, MX 및 SX series",
+      "roomSystemExamplesExpanded": "예: Cisco Spark Board, Room Kit, DX, MX 또는 SX series",
       "roomSystemLicenseWarning": "먼저 조직에서 Cisco Spark 회의실 장치 라이센스를 구입해야 합니다. 자세한 정보는 파트너 또는 Cisco 세일즈 담당자에게 문의하십시오."
     },
     "chooseAccountType": {
@@ -4955,10 +5290,13 @@
       "existingOrNewPlace": "기존의 장소 또는 새로운 장소에 지정?",
       "existingOrNewPlaceDeskPhoneInstructions": "이 장소에 대한 이전 코드가 없어졌거나 만료된 경우엔 기존의 장소를 선택하십시오. 또한 동일한 장소에 다수의 데스크 폰을 추가할 수도 있습니다. 해당 장소에 있는 모든 전화는 동일한 통화 구성을 공유하게 됩니다. 예를 들어, 데스크 폰은 동일한 라인을 공유합니다.",
       "existingOrNewPlaceCollaborationDeviceInstructions": "이 장소에 대한 이전 코드가 없어졌거나 만료된 경우엔 기존의 장소를 선택하십시오.",
+      "existingOrNewPlaceMultipleDevicesInstructions": "이 장소에 대한 이전 코드가 없어졌거나 만료된 경우 또는 한 장소에 여러 장치를 지정하려면 기존의 장소를 선택하십시오.",
+      "existingOrNewCloudberryPlaceMultipleDevicesInstructions": "이 장소에 대한 이전 코드가 없어졌거나 만료된 경우 또는 한 장소에 여러 장치를 지정하려면 새로운 장치를 활성화할 기존의 장소를 선택하십시오. 함께 작동하도록 설계되지 않은 장소에 여러 장치를 지정하면 충돌 문제를 일으킬 수도 있습니다.",
       "existingPlace": "기존의 장소",
       "whichPlace": "어떤 기존의 장소에 장치가 지정됩니까?",
       "existingDeskPhonePlaceInstructions": "아래 장소에서 선택하십시오. 데스크 폰과 회의실 장치에서 동일한 장소를 공유할 수 없기 때문에 데스크 폰 장소만 표시됩니다.",
       "existingCollaborationDevicePlaceInstructions": "한 장소에 최대 한 개의 회의실 장치가 있을 수 있기 때문에 비어 있는 회의실 장치 장소만 표시됩니다. 데스크 폰 및 회의실 장치는 동일한 장소를 공유할 수 없습니다.",
+      "existingRoomDevicePlaceMultipleRoomDeviceInstructions": "참고: 함께 작동하도록 설계되지 않은 장소에 여러 장치를 지정하면 장치 간에 충돌 문제를 일으킬 수 있습니다.",
       "existingPlaceInstructions": "회의실 장치 장소에는 한 개의 장치만 포함할 수 있기 때문에 활성화된 장치가 포함된 기존의 회의실 장치 장소는 표시되지 않습니다.",
       "selectPlace": "장소 검색",
       "newPlace": "새 장소",
@@ -5038,7 +5376,7 @@
     "send": "보내기",
     "to": "받는 사람",
     "subject": "제목",
-    "subjectContent": "Spark UC 장치 활성화",
+    "subjectContent": "Cisco Spark UC 장치 활성화",
     "message": "메시지",
     "expires": "만료: {{date}}",
     "expiration": "(남은 기간: {{timeLeft}})",
@@ -5050,7 +5388,7 @@
     "clipboardSuccess": "클립보드에 활성화 코드가 복사되었습니다.",
     "clipboardErrorTitle": "클립보드로 복사되지 않음",
     "clipboardError": "클립보드에 활성화 코드를 복사하지 못함.",
-    "generateErrorNotFound": "이 Spark 통화 사용자의 라이센스를 해제하고 다시 부여하십시오. 문제가 지속되면 고객 지원에게 문의하십시오.",
+    "generateErrorNotFound": "이 Cisco Spark 통화 사용자의 라이센스를 해제하고 다시 부여하십시오. 문제가 지속되면 고객 지원에게 문의하십시오.",
     "generateError": "활성화 코드를 생성할 수 없음. 다시 시도하십시오."
   },
   "devicesClipboard": {
@@ -5065,7 +5403,7 @@
     "lastName": "성",
     "emailAddress": "이메일 주소",
     "administratorRoles": "관리자 역할",
-    "cloudOpDescription": "또한 이 사용자는 클라우드 운영 관리자로 활성화될 수도 있습니다. 이 역할에는 이 포털에서 Spark 시스템을 확인하고 운영할 수 있는 특별한 권한이 포함됩니다.",
+    "cloudOpDescription": "또한 이 사용자는 클라우드 운영 관리자로 활성화될 수도 있습니다. 이 역할에는 이 포털에서 Cisco Spark 시스템을 확인하고 운영할 수 있는 특별한 권한이 포함됩니다.",
     "cloudOpAdmin": "클라우드 운영 관리자",
     "fullAdmin": "전체 관리자 권한",
     "readonlyAdmin": "읽기 전용 관리자 권한",
@@ -5295,10 +5633,12 @@
       "location": "위치",
       "totalCloud": "클라우드 통화",
       "clientTypeHeading": "클라이언트 유형 분배",
+      "clientTypeHeadingOnPrem": "클라이언트 유형 분배: 온 프레미스",
+      "clientTypeHeadingCloud": "클라이언트 유형 분배: 클라우드",
       "onPremisesHeading": "온 프레미스",
       "cloudHeading": "클라우드",
       "hybridHeading": "클라우드 및 온-프레미스",
-      "othersHeading": "기타 개",
+      "othersHeading": "기타",
       "callsBallon": "통화:",
       "clientType": {
         "android": "Android",
@@ -5308,13 +5648,15 @@
         "iphone": "iPhone",
         "jabber": "Jabber",
         "sip": "SIP",
-        "board": "Spark Board",
+        "board": "Cisco Spark Board",
         "test": "테스트",
         "tp": "Tele Presence",
         "uc": "UC",
         "unknown": "알려지지 않음",
         "windows": "Windows 모바일",
-        "total": "총"
+        "total": "총",
+        "mac": "MAC",
+        "windowsDesk": "Windows"
       },
       "mobile": "모바일",
       "cardDescription": {
@@ -5331,14 +5673,15 @@
         "callActivityDesc": "조직 간 통화 활동 트렌드의 보기를 제공하여 온-프레미스 및 클라우드에서 호스트된 통화를 표시합니다. 클라우드로 오버플로우된 통화는 클라우드 통화 그래프에서 점으로 표시됩니다. 점으로 마우스를 올리면 해당 인스턴스에서 클라우드로 오버플로우된 통화의 수를 표시합니다.",
         "calldistributionOrgDesc": "조직에서 다른 온-프레미스 클러스터 간에 통화가 분배되는 방법의 보기를 제공합니다. 이 정보는 관리자가 조직의 클러스터 용량을 계획할 때 유용합니다. 특정 온-프레미스 클러스터에서 호스트할 수 없는 통화는 다른 온-프레미스 클러스터로 리디렉트됩니다. 해당 통화는 그래프에서 점으로 표시됩니다. 점으로 마우스를 올리면 특정 클러스터에서 리디렉트된 통화의 수를 표시합니다.",
         "calldistributionClusterDesc": "특정 클러스터에서 통화 활동 트렌드의 보기를 제공합니다. 이 정보는 관리자가 조직의 클러스터 용량을 계획할 때 유용합니다. 이 특정 클러스터에서 호스트할 수 없는 통화는 다른 온-프레미스 클러스터로 리디렉트됩니다. 해당 통화는 그래프에서 점으로 표시됩니다. 점으로 마우스를 올리면 해당 인스턴스에서 이 특정 클러스터에서 리디렉트된 통화의 수를 표시합니다.",
-        "clusterInServiceOrgDesc": "선택한 시간에 대해 통화를 호스트하기 위해 사용할 수 있는 클러스터의 백분율. 클러스터 가용성 그래프에서 클러스터의 부분을 클릭하여 사용 가능한 노드 그래프를 직접 탐색합니다.<br>녹색: 모든 노드가 사용 가능 상태인 클러스터.<br>노란색: 1개 이상의 노드가 사용 불가능 상태인 클러스터.<br>빨간색: 사용할 수 있는 노드가 없는 클러스터.",
-        "clusterInServiceClusterDesc": "선택한 시간에 대해 통화를 호스트하기 위해 사용할 수 있는 노드의 백분율.<br>녹색: 노드 사용 가능.<br>빨간색: 노드 사용 불가능.",
+        "clusterInServiceOrgDesc": "선택한 시간에 대해 통화를 호스트하기 위해 사용할 수 있는 클러스터의 수. 클러스터 가용성 그래프에서 클러스터의 부분을 클릭하여 사용 가능한 노드 그래프를 직접 탐색합니다.<br>녹색: 모든 노드가 사용 가능 상태인 클러스터.<br>노란색: 1개 이상의 노드가 사용 불가능 상태인 클러스터.<br>빨간색: 사용할 수 있는 노드가 없는 클러스터.<br>회색: 데이터를 사용할 수 없음.",
+        "clusterInServiceClusterDesc": "선택한 시간에 대해 통화를 호스트하기 위해 사용할 수 있는 노드의 수.<br>녹색: 노드 사용 가능.<br>빨간색: 노드 사용 불가능.<br>회색: 데이터를 사용할 수 없음.",
         "meetHostTypeDesc": "통화가 호스트된 장소에 기반하여 조직에서 미팅의 수에 대한 트렌드를 제공함",
         "clientTypeDesc": "조직에서 사용된 다양한 유형의 클라이언트에 대한 사용 트렌드를 제공함"
       },
       "allOff": "모두 끄기",
       "allOn": "모두 켜기",
-      "clusterPartiallyInService":" 클러스터 부분적으로 사용 가능"
+      "clusterPartiallyInService": " 클러스터 부분적으로 사용 가능",
+      "all": "모두"
     },
     "deleteGroup": {
       "message": "{{groupName}} 그룹을 Cisco 협업 클라우드에서 삭제하시겠습니까?",
@@ -5444,9 +5787,16 @@
       "firstStepNo4": "3. 아래의 단계에 따라 하이브리드 미디어 노드 등록 과정을 진행합니다.",
       "yesProceed": "예. 내 하이브리드 미디어 노드를 등록할 준비가 되었습니다.",
       "noProceed": "아니요. 소프트웨어를 설치하고 구성해야 합니다.",
+      "fullOva": "전체 기능 프로덕션 배포",
+      "demoOva": "제한된 기능 90일 데모",
+      "ovaHelpText": "90일 수명의 제한된 기능 데모 소프트웨어 또는 프로덕션 배포에 사용되는 전체 기능 소프트웨어 중에서 선택하십시오.",
+      "fullOva-helpText": "(전체 기능 및 하이브리드 미디어의 프로덕션 배포에 대해 사용됨)",
+      "demoOva-helpText": "(하이브리드 미디어의 데모 배포에 대해 제한된 기능, 수명 및 낮은 CPU 요구 사항)",
       "noProceed-helptext": "(소프트웨어는 자동으로 다운로드됨)",
       "noInfo": "서버에 소프트웨어를 설치하고 구성한 후 Cisco Cloud Collaboration Management(Cisco 클라우드 협업 관리)로 돌아가서 하이브리드 미디어 노드를 등록하십시오.",
+      "noInfoNew": "서버에 소프트웨어를 설치하고 구성한 후 {{appTitle}}(으)로 돌아가서 하이브리드 미디어 노드를 등록하십시오.",
       "noRetryInfo": "자동으로 소프트웨어가 다운로드되지 않았습니까? <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/Media-Fusion-Management-Connector/mfusion.ova'>다시 시도하십시오.</a>",
+      "noRetryDemoInfo": "자동으로 소프트웨어가 다운로드되지 않았습니까? <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/hybrid-media-demo/hybridmedia_demo.ova'>다시 시도하십시오.</a>",
       "noDesc1": "설치 및 구성에 대한 자세한 내용은 방문: ",
       "noDesc2": "도움말 센터.",
       "noDesc3": "설치 및 구성이 완료되면 Cloud Collaboration Management(클라우드 협업 관리)로 돌아간 후 하이브리드 미디어 노드를 등록하십시오.",
@@ -5469,7 +5819,8 @@
       "meeting-duration-title": "미팅 지속 시간"
     },
     "mediaServiceActivationFailure": "서비스 활성화 문제",
-    "mediaAgentOrgMappingFailure": "Orpheus (MediaFusion) 활성화 문제",
+    "mediaMicroserviceFailure": "서비스 연결 문제 때문에 조직에 대해 하이브리드 미디어 서비스 라우팅이 활성화되지 않았습니다. 문제가 지속되면 admin.ciscospark.com을 통해 지원을 요청하십시오.",
+    "mediaNetworkFailure": "네트워크 연결 문제 때문에 조직에 대해 하이브리드 미디어 서비스가 활성화되지 않았습니다. 문제가 지속되면 admin.ciscospark.com을 통해 지원을 요청하십시오.",
     "delete": "삭제",
     "cancel": "취소",
     "actionsHeader": "작업",
@@ -5823,7 +6174,7 @@
     "messagingSubtitle": "표준 그룹 스페이스",
     "messagingDesc": "콘텐츠 스토리지가 포함된 그룹 스페이스를 사용하여 조직 내/외부의 사용자와 어느 장치에서든 쉽게 협업할 수 있습니다.",
     "communicationTitle": "통화",
-    "communicationSubtitle": "고급 Spark 통화",
+    "communicationSubtitle": "고급 Cisco Spark 통화",
     "communicationDesc": "기본 외부 통화 및 통화 라우팅 기능이 조직에 대해 활성화되었습니다.",
     "conferencingTitle": "미팅",
     "conferencingSubtitle": "Meeting Center",
@@ -5841,7 +6192,7 @@
     "CMR": "WebEx 협업 미팅 룸",
     "CO": "통화",
     "ST": "스토리지",
-    "SD": "Spark 회의실 장치"
+    "SD": "Cisco Spark 회의실 장치"
   },
   "partnerProfile": {
     "link": "파트너 프로필",
@@ -5858,7 +6209,7 @@
     "useCiscoLogo": "Cisco Spark 로고 사용",
     "logoPlaceholder": "여기로 로고를 드래그하고 드롭하십시오",
     "chooseFile": "파일 선택",
-    "supportInfo": "사용자를 위해 지원을 제공하는 경우, 아래에 지원 정보를 입력하십시오. 이 정보는 Spark 응용프로그램의 지원 메뉴에 표시됩니다.",
+    "supportInfo": "사용자를 위해 지원을 제공하는 경우, 아래에 지원 정보를 입력하십시오. 이 정보는 Cisco Spark 응용프로그램의 지원 메뉴에 표시됩니다.",
     "supportOptions": "Cisco 지원 옵션",
     "yourSupportOptions": "귀하의 지원 옵션",
     "urlFaq": "도움말 사이트 및 FAQ용 URL",
@@ -5868,6 +6219,7 @@
     "helpFaq": "도움말 사이트",
     "matchingTix": "문제점 보고서 일치시키기",
     "matchingDescr": "Cloud Collaboration Management(클라우드 협업 관리) 도구에 업로드된 로그와 문제점 보고서를 일치시키기 위해 URL에 문자열 “%%logID%%”(따옴표 생략)를 입력할 수 있습니다. 이는 사용자가 제출한 각 문제점 보고서에 대해 실제 logID로 대체됩니다. 예: http://www.example.com/reportproblem?yourLogIDParameter=%%logID%%. 이는 선택 사항이며, 문제점 보고서 티켓 시스템 내에서 특별한 구성을 요구할 수도 있습니다.",
+    "matchingDescrNew": "{{appTitle}} 도구에 업로드된 로그와 문제점 보고서를 일치시키기 위해 URL에 문자열 “%%logID%%”(따옴표 생략)을 입력할 수 있습니다. 이는 사용자가 제출한 각 문제점 보고서에 대해 실제 logID로 대체됩니다. 예: http://www.example.com/reportproblem?yourLogIDParameter=%%logID%%. 이는 선택 사항이며, 문제점 보고서 티켓 시스템 내에서 특별한 구성을 요구할 수도 있습니다.",
     "forExample": "예: http://www.acme.com/reportproblem?id=%%logID%%",
     "brandingTitle": "브랜딩 사용자 정의",
     "supportTitle": "지원 설정",
@@ -5904,7 +6256,7 @@
     "partnerAdmin": "파트너 관리자",
     "brandingInfo": "Cisco Spark에 추가로 자신의 브랜드를 표시하려면 아래에 로고를 업로드하십시오.",
     "usePartnerLogo": "{{partner}}이(가) 사용하고 있는 동일한 로고 사용",
-    "supportInfo": "사용자를 위해 지원을 제공하는 경우, 아래에 지원 파라미터를 입력하십시오. 해당 파라미터는 Spark 응용프로그램의 지원 옵션 아래에 표시됩니다.",
+    "supportInfo": "사용자를 위해 지원을 제공하는 경우, 아래에 지원 파라미터를 입력하십시오. 해당 파라미터는 Cisco Spark 응용프로그램의 지원 옵션 아래에 표시됩니다.",
     "supportAccessTitle": "지원 액세스",
     "supportAccessInfo": "이 설정은 Cisco 고객 지원에게 관리 응용프로그램으로의 읽기 전용 액세스를 부여합니다. 조직의 세부 사항을 변경하는 작업은 허용되지 않습니다.",
     "supportAccessCheckbox": "Cisco 고객 지원에게 관리 응용프로그램으로의 읽기 전용 액세스를 허용합니다."
@@ -5924,8 +6276,7 @@
     "companyLogo": "{{name}} 로고",
     "brandingExampleIntro": "업로드하면 로고의 크기는 자동으로 조절되고 다음 예제에 표시된 것처럼 나타납니다.",
     "uploadLogo": "로고 업로드",
-    "logoOnAbout": "{{name}} 예제 로고 - Spark 정보 탭에 표시.",
-    "logoOnSupprt": "{{name}} 예제 로고 - Spark 고객 지원 탭에 표시.",
+    "logoOnAbout": "{{name}} 예제 로고 - Cisco Spark 정보 탭에 표시.",
     "logoOnWebEx": "{{name}} 예제 로고 - WebEx 사이트에 표시.",
     "partner": "파트너",
     "customer": "고객",
@@ -5978,7 +6329,7 @@
     "info": "상태",
     "wait": "귀하를 리디렉트하는 동안 잠시 기다리십시오",
     "modalTitle": "PSTN 발신 서비스의 위치",
-    "modalDesc": "Spark 통화 서비스를 위한 주요 전화가 위치할 국가를 입력하십시오.",
+    "modalDesc": "Cisco Spark 통화 서비스를 위한 주요 전화가 위치할 국가를 입력하십시오.",
     "countrySelectLabel": "PSTN 서비스가 위치하는 국가를 입력하십시오.",
     "countrySelectPlaceholder": "국가 선택"
   },
@@ -6203,8 +6554,53 @@
       "emptyAliasErrorMessage": "사용자 별칭은 비어있을 수 없습니다."
     }
   },
+  "locations": {
+    "locationName": "위치 이름",
+    "addText": "위치 추가",
+    "namePlaceholder": "위치 이름 지정",
+    "usedLocation": "이 위치 이름은 이미 사용되고 있습니다.",
+    "getFailed": "위치를 가져오지 못함.",
+    "getLocationCosFailed": "위치에 대한 전화하기 제한 사항을 가져오지 못함.",
+    "getLocationNumberRangesFailed:": "내부 번호 범위를 불러오지 못함.",
+    "getCustomerFailed": "고객을 불러오지 못함.",
+    "updateFailed": "위치를 업데이트하지 못함.",
+    "updateLocationCosFailed": "전화하기 제한 사항을 업데이트하지 못함.",
+    "updateExtensionLengthFailed": "내선 길이를 저장하지 못함.",
+    "saveSuccess": "위치 설정이 성공적으로 저장됨.",
+    "copyTitle": "위치 복사",
+    "copyDesc": "이 위치는 복사한 위치에서 사용자 정의한 설정을 사용합니다.",
+    "deleteTitle": "위치 삭제",
+    "deleteDesc": "위치 {{locationName}}을(를) 삭제하시겠습니까?",
+    "cannotDeleteDesc": "이 위치에는 아직도 사용자 및 장소가 있으며 삭제할 수 없습니다.",
+    "deleteButton": "확인, 삭제",
+    "deleteFailed": "위치를 삭제하지 못함",
+    "makeDefault": "기본값으로 지정",
+    "copyLocation": "중복",
+    "reload": "다시 로드",
+    "makeDefaultTitle": "기본값으로 지정",
+    "makeDefaultDesc": "이 위치를 기본값으로 지정하시겠습니까? 이는 새로운 사용자 또는 장소에 대해 기본 위치로 지정됩니다.",
+    "createLocation": "위치 만들기",
+    "createFailed": "위치를 만들지 못함",
+    "cancelHeader": "위치 만들기 취소",
+    "cancelDialog": "위치 만들기를 취소하시겠습니까? 이 위치는 저장되지 않습니다.",
+    "locationDesc": "이 위치에 이름을 지정하여 식별하십시오.",
+    "locationSelectDesc": "이 사용자가 주로 작업하는 물리적 장소를 선택하십시오.",
+    "locationDetailTitle": "위치 세부 사항",
+    "locationDetailDesc": "위치를 사용하여 특정 지리적인 장소에 따라 Cisco Spark 통화 설정을 함께 그룹화할 수 있습니다. 이 위치에 대한 이름 및 발신자 ID를 지정하십시오.",
+    "regionalSettingsTitle": "지역 설정",
+    "regionalSettingsDesc": "시간대, 날짜 및 시간 형식, 원하는 언어를 설정합니다.",
+    "internalDialingTitle": "내부 전화하기",
+    "internalDialingDesc": "내선 및 내부 통화를 실행하는 방법을 정의합니다.",
+    "externalDialingTitle": "외부 전화하기",
+    "externalDialingDesc": "회사 외부로 전화하는 방법을 정의합니다.",
+    "dialingRestrictionsTitle": "전화하기 제한 사항",
+    "dialingRestrictionsDesc": "전체 조직에 대한 특정 다이얼링 기능을 제한합니다. 개별 사용자에 대한 각 설정을 다시 정의할 수 있습니다.",
+    "emergencyServicesTitle": "긴급 서비스",
+    "emergencyServicesDesc": "이 위치에 대한 수신 번호 및 주소를 설정합니다."
+  },
   "sunlightDetails": {
     "title": "케어",
+    "status": "상태: ",
     "settingsTitle": "설정",
     "featuresTitle": "기능",
     "sorryMessage": "죄송합니다. 문제가 있는 것 같습니다 ",
@@ -6214,6 +6610,12 @@
     "callbackTemplateCode": "Ca",
     "callbackMediaType": "수신",
     "chatPlusCallbackMediaType": "채팅+수신",
+    "virtualAssistantCode": "Va",
+    "virtualAssistantMediaType": "가상 도우미",
+    "Ch" : "채팅",
+    "Ca" : "수신",
+    "ChCa" : "채팅+수신",
+    "Va" : "고객 가상 도우미",
     "newFeatures": {
       "newFeatureButtonText": "새로 만들기",
       "newCareTemplateModalTitle": "새 케어 템플릿 만들기",
@@ -6221,9 +6623,11 @@
       "selectCHDesc": "이 템플릿은 고객에게 채팅을 통해 에이전트와 연락할 수 있는 기능을 제공합니다.",
       "selectCADesc": "이 템플릿은 고객에게 에이전트로부터의 수신을 요청할 수 있는 기능을 제공합니다.",
       "selectCHCADesc": "이 템플릿은 고객에게 채팅을 통해 에이전트와 연락하거나 수신을 요청할 수 있는 옵션을 제공합니다.",
+      "selectVADesc": "자동화된 채팅 지원을 제공하고, 필요에 따라 문제를 에스컬레이션하는 가상 도우미를 만드십시오.",
       "chatType": "채팅",
       "callbackType": "수신",
-      "chatPlusCallbackType": "채팅+수신"
+      "chatPlusCallbackType": "채팅+수신",
+      "virtualAssistantType": "고객 가상 도우미"
     },
     "settings": {
       "setUpCare": "케어",
@@ -6270,7 +6674,8 @@
     "title": "통화",
     "linesTitle": "번호",
     "settingsTitle": "설정",
-    "featuresTitle": "기능"
+    "featuresTitle": "기능",
+    "locationsTitle": "위치"
   },
   "huronFeatureDetails": {
     "members": " 멤버",
@@ -6308,7 +6713,7 @@
     "bigOrgSearchText": "1000개 이상의 장소가 있기 때문에 장소 목록이 표시되지 않습니다.",
     "actionHeader": "작업",
     "servicesHeader": "서비스",
-    "sparkCall": "Cisco Spark + Spark 통화",
+    "sparkCall": "Cisco Spark + Cisco Spark 통화",
     "sparkOnly": "Cisco Spark 전용",
     "sparkCallConnect": "Cisco Spark + 전화 걸기",
     "placeAdd": "장소 추가",
@@ -6363,8 +6768,8 @@
     "authRedirectHeading": "Messenger 사용자를 공통 ID 로그인 플로우로 재이동",
     "authRedirectTooltip": "활성화된 경우, 사용자는 공통 ID에 로그인합니다. 비활성화된 경우, 사용자는 Messenger에 로그인합니다.",
     "pwdSyncHeading": "Messenger로부터 비밀번호 동기화",
-    "pwdSyncTooltip": "활성화된 경우, Jabber 클라이언트 또는 OrgAdmin을 통해 변경되는 사용자 비밀번호는 Spark 계정을 통해 동기화됩니다. 비활성화된 경우, Jabber 클라이언트 또는 OrgAdmin을 통해 변경되는 사용자 비밀번호는 Messenger에 유지됩니다.",
-    "sparkEntHeading": "Messenger 사용자를 위해 무료 Spark 활성화",
+    "pwdSyncTooltip": "활성화된 경우, Jabber 클라이언트 또는 OrgAdmin을 통해 변경되는 사용자 비밀번호는 Cisco Spark 계정으로 동기화됩니다. 비활성화된 경우, Jabber 클라이언트 또는 OrgAdmin을 통해 변경되는 사용자 비밀번호는 Messenger에 유지됩니다.",
+    "sparkEntHeading": "Messenger 사용자를 위해 무료 Cisco Spark 활성화",
     "sparkEntTooltip": "활성화된 경우, Messenger 조직에 있는 모든 사용자에게 무료 Spark로의 액세스가 부여됩니다. 비활성화된 경우, 관리자만 무료 Spark에 액세스할 수 있게 됩니다.",
     "usrDisHeading": "Messenger 사용자를 비활성화하면 Cisco Spark에 반영됩니다",
     "usrDisTooltip": "활성화된 경우, OrgAdmin에서 비활성화된 사용자는 Spark에서 비활성화됩니다. 비활성화된 경우, OrgAdmin에서 사용자를 비활성화하면 Spark에서 사용자를 비활성화하지 않습니다.",
@@ -6403,11 +6808,12 @@
     "syncStatusHeading": "Messenger에서 사용자 동기화",
     "syncStatusTooltip": "조직 관리에 추가된 Jabber Messenger 사용자는 공통 ID로 동기화됩니다.",
     "dirsyncStatusHeading": "공통 ID 디렉토리 동기화",
-    "dirsyncStatusTooltip": "Spark 플랫폼 기능에 액세스하려면 WebEx Messenger 사용자는 공통 ID 서비스로 동기화되어야 합니다."
+    "dirsyncStatusTooltip": "Cisco Spark 플랫폼 기능에 액세스하려면 WebEx Messenger 사용자는 Common Identity 서비스로 동기화되어야 합니다."
   },
   "careChatTpl": {
     "editAction": "편집",
     "deleteAction": "삭제",
+    "downloadAction": "다운로드",
     "deleteFeatureTextConfirmation": "{{ featureName }} 템플릿을 삭제하시겠습니까?",
     "createSuccessText": "{{ featureName }} 템플릿이 성공적으로 생성되었습니다.",
     "createTemplateFailureText": "케어 템플릿을 만들지 못함.",
@@ -6420,7 +6826,9 @@
     "chatTemplate": "채팅 템플릿",
     "chatTemplate_callback": "수신 템플릿",
     "namePlaceholder": "템플릿 이름 지정",
+    "assistantNamePlaceholder": "도우미 이름 지정",
     "nameHint": "본인이 이 템플릿을 식별하기 위한 이름을 입력하십시오.",
+    "assistantNameHint": "도우미와 교류할 때 고객에게 표시되는 이름을 입력하십시오.",
     "createTitle_chat": "채팅 템플릿 만들기",
     "editTitle_chat": "채팅 템플릿 편집",
     "chatTemplate_chatPlusCallback": "채팅+수신 템플릿",
@@ -6428,6 +6836,8 @@
     "editTitle_callback": "수신 템플릿 편집",
     "createTitle_chatPlusCallback": "채팅+수신 템플릿 만들기",
     "editTitle_chatPlusCallback": "채팅+수신 템플릿 편집",
+    "createTitle_virtualAssistant": "고객 가상 도우미 만들기",
+    "editTitle_virtualAssistant": "고객 가상 도우미 편집",
     "profile_chat": "브랜딩 및 아이덴티티",
     "profile_callback": "브랜딩 및 아이덴티티",
     "profile_chatPlusCallback": "채팅 브랜딩 및 아이덴티티",
@@ -6451,7 +6861,9 @@
     "proactivePrompt_chat": "자동 관리 프롬프트",
     "proactivePrompt_chatPlusCallback": "자동 관리 프롬프트",
     "embedCode": "코드 삽입",
-    "profileDesc": "귀사에 대해 조직 및 사용자 프로필이 표시될 방법을 구성",
+    "profileDesc": "귀사 또는 에이전트가 시각적으로 표시되는 방법을 구성합니다.",
+    "profile_org_info": "한 개의 프로필을 사용하여 조직에 있는 모든 에이전트에게 표시합니다.",
+    "profile_agent_info": "고유한 프로필을 사용하여 조직에 있는 다른 에이전트에게 표시합니다.",
     "overviewDesc_chat": "고객 케어에서 채팅을 요청할 때 고객이 어떤 화면을 볼 수 있도록 할지 사용자 정의하기 위해 카드를 토글",
     "overviewDesc_callback": "고객 케어에서 수신을 요청할 때 고객이 어떤 화면을 볼 수 있도록 할지 사용자 정의하기 위해 카드를 토글",
     "overviewDesc_chatPlusCallback": "고객 케어에서 채팅 또는 수신을 요청할 때 고객이 어떤 화면을 볼 수 있도록 할지 사용자 정의하기 위해 카드를 토글",
@@ -6493,7 +6905,7 @@
     "windowTitleLabel": "창 제목",
     "promptTimeLabel": "시간 선택",
     "promptTimeOption1": "30초",
-    "promptTimeOption2": "1 분",
+    "promptTimeOption2": "1분",
     "promptTimeOption3": "3분",
     "promptTimeOption4": "5분",
     "defaultPromptMessage": "귀하에게 보다 나은 서비스를 제공할 수 있도록 저희 솔루션 전문가와 채팅하십시오.",
@@ -6535,6 +6947,8 @@
     "agentAliasPreview": "별칭",
     "image": "이미지",
     "displayText": "텍스트 표시",
+    "orgSettingInfo": "설정 페이지에서 조직 로고를 변경할 수 있습니다.",
+    "agentSettingInfo": "미리 보기에 표시되는 기본 에이전트 아바타는 변경할 수 없습니다.",
     "agentMsg": "안녕하세요! MFI 키와 관련된 도움이 필요합니다.",
     "agentMsgTime": "10:10 AM",
     "customerMsg": "네. 제가 도와 드리겠습니다.",
@@ -6542,7 +6956,7 @@
     "agentEnteredStatus": "에이전트와 채팅 중",
     "typeNewMsg": "메시지를 입력하고 Enter를 누르십시오.",
     "feedbackQuery": "귀하의 채팅 경험을 평가해 주십시오",
-    "feedbackQueryCall": "이전 수신 경험을 평가해 주십시오.",
+    "feedbackQueryCall": "귀하의 수신 경험을 평가해 주십시오.",
     "ratingHintText": "힌트 텍스트",
     "ratingComment": "코멘트 추가",
     "submitFeedbackBtn": "피드백 제출",
@@ -6614,6 +7028,8 @@
     },
     "summary": "요약",
     "summaryDesc": "템플릿을 구성했습니다. 구성을 저장하고 삽입 코드를 생성하려면 마침을 클릭하십시오. 그러면 조직 웹사이트에서 이 템플릿을 사용하기 시작할 수 있습니다.",
+    "summaryDesc_virtualAssistant": "고객 가상 도우미를 구성했습니다. 조직의 채팅 응용프로그램에서 지원되는 서비스 기능을 사용하려면 도우미를 고객 지원 템플릿에 추가하십시오.",
+    "summaryDesc_virtualAssistant_cont": "마침을 클릭하여 구성을 저장합니다.",
     "editSummaryDesc": "템플릿을 편집했습니다. 마침을 클릭하여 구성을 저장하면 조직 웹사이트에서 이 템플릿의 새로운 버전을 사용하기 시작할 수 있습니다.",
     "editCodeWarnMsg2Line1": "템플릿 변경 사항이 적용될 때까지 최대 15분이 소요될 수 있습니다.",
     "editCodeWarnMsg2Line2": "변경 사항을 확인하려면 이 시간이 지난 후에 새로운 브라우저 탭에서 템플릿을 여십시오.",
@@ -6757,13 +7173,13 @@
     "cancelDialog": "헌트 그룹 작성을 취소하시겠습니까? 이 헌트 그룹은 저장되지 않습니다.",
     "confirmButton": "만들기 취소",
     "continueButton": "만들기 계속",
-    "callsToSparkAppTitle": "Spark 앱으로의 헌트 그룹 통화",
-    "callsToSparkAppLabel": "헌트 그룹 통화를 멤버의 Spark 앱으로 동시에 보내기",
+    "callsToSparkAppTitle": "Cisco Spark 앱으로 헌트 그룹 통화",
+    "callsToSparkAppLabel": "헌트 그룹 통화를 멤버의 Cisco Spark 앱으로 동시에 보내기",
     "memberFetchFailure": "멤버를 가져올 수 없음.",
     "huntGroupFetchFailure": "{{huntGroupName}}' 헌트 그룹 세부 사항을 페치하지 못함.",
     "invalidMember": "최소한 한 명의 멤버를 선택하십시오",
     "invalidFallback": "번호를 선택하거나 새로운 유효한 번호를 입력하십시오",
-    "error" : {
+    "error": {
       "required": "이 필드는 필수입니다",
       "minRingSecs": "가장 짧은 벨소리 지속 시간은 {{secs}}초입니다.",
       "maxRingSecs": "가장 긴 벨소리 지속 시간은 {{secs}}초입니다."
@@ -6771,7 +7187,7 @@
   },
   "digitalRiver": {
     "enterEmailAddr": {
-      "startTrial": "Spark 평가판을 시작하려면 계정을 만들어야 합니다.",
+      "startTrial": "Cisco Spark 평가판을 시작하려면 계정을 만들어야 합니다.",
       "enterEmail": "계정 이메일 주소를 입력하십시오",
       "emailPlaceholder": "이메일 주소 입력",
       "validation": {
@@ -6804,18 +7220,18 @@
       "submitError": "주문을 제출하는 동안 오류가 발생했습니다."
     },
     "drOnboardQuestion": {
-      "adminQuestionLabel": "다음 사용자 '{{email}}'이(가) Spark 서비스를 관리할 예정입니까?"
+      "adminQuestionLabel": "다음 사용자 '{{email}}' 님이 Cisco Spark 서비스를 관리할 예정입니까?"
     },
     "drConfirmAdminOrg": {
       "useDifferentName": "다른 이름 사용",
       "companyAndOrg1": "귀하의 이메일 주소는 다음 조직과 일치합니다. 다음:",
-      "companyAndOrg2": "Spark 서비스를 이 조직에 지정하시겠습니까?"
+      "companyAndOrg2": "Cisco Spark 서비스를 이 조직에 지정하시겠습니까?"
     },
     "drOnboardEnterAdminEmail": {
-      "adminEmailLabel": "Spark 서비스를 관리할 사용자의 이메일 주소를 입력하십시오"
+      "adminEmailLabel": "Cisco Spark 서비스를 관리할 사용자의 이메일 주소를 입력하십시오."
     },
     "orgName": {
-      "orgNameLabel": "조직의 이름을 입력하십시오. 귀하는 관리자로 설정되고, 조직에 다른 사용자 추가, Spark 서비스 관리 등의 작업을 할 수 있습니다.",
+      "orgNameLabel": "조직의 이름을 입력하십시오. 귀하는 관리자로 설정되고, 조직에 다른 사용자 추가, Cisco Spark 서비스 관리 등의 작업을 할 수 있습니다.",
       "enterOrgName": "회사명 입력",
       "missingOrgName": "회사명이 없습니다."
     },
@@ -6826,7 +7242,7 @@
       "choice1b": "관리 권한이 지정되면 환영 이메일에서 버튼을 다시 클릭하거나 <Screen 15> 페이지로 이동하여 절차를 다시 시작할 수 있습니다.",
       "choice2": "내가 구입한 서비스를 이 조직의 관리자가 관리할 수 있도록 허용",
       "choice3a": "서비스를 관리할 새로운 조직 만들기",
-      "choice3b": "참고: 이 옵션을 선택하는 경우, 방금 구입한 Spark 라이센스를 현재 조직에 있는 다른 상대방에게 지정할 수 없습니다."
+      "choice3b": "참고: 이 옵션을 선택하는 경우, 방금 구입한 Cisco Spark 라이센스를 현재 조직에 있는 다른 상대방에게 지정할 수 없습니다."
     },
     "validation": {
       "missingSKU": "주문에 SKU가 없습니다.",
@@ -6876,24 +7292,28 @@
       },
       "care": {
         "title": "케어",
-        "notEnabledText": "Spark 케어 서비스를 사용하여 고객과 협업하십시오. 구성 마법사를 사용하여 케어 인터페이스를 사용자 정의하십시오."
+        "notEnabledText": "Cisco Spark 케어 서비스를 사용하여 고객과 협업하십시오. 구성 마법사를 사용하여 케어 인터페이스를 사용자 정의하십시오."
       },
       "roomSystem": {
         "title": "회의실 장치",
         "currentTitle": "이번 주 온라인",
         "previousTitle": "지난주:",
         "enableDevices": "장치 활성화",
-        "notEnabledText": "미팅 룸 장치가 Spark 앱과 원활하게 통합되었습니다."
+        "notEnabledText": "미팅 룸 장치가 Cisco Spark 앱과 원활하게 통합되었습니다."
       },
       "hybrid": {
         "title": "하이브리드 서비스",
+        "googleCalendarError": "Google 캘린더의 서비스에 연결하지 못했습니다.",
+        "herculesError": "Cisco Spark 하이브리드 서비스의 서비스에 연결하지 못했습니다.",
         "notEnabledText": "하이브리드 서비스는 온-프레미스 시스템을 Cisco 협업 플랫폼에 통합할 수 있도록 합니다.",
+        "notEnabledTextNew": "하이브리드 서비스는 온-프레미스 시스템을 Cisco Spark 제어 플랫폼에 통합할 수 있도록 합니다.",
         "notEnabledActionText": "자세한 내용",
         "serviceHeader": "상태",
         "services": {
           "squared-fusion-cal": "캘린더 (Exchange)",
           "squared-fusion-gcal": "캘린더 (Google)",
           "squared-fusion-uc": "통화",
+          "spark-hybrid-impinterop": "IM 및 참석",
           "squared-fusion-mgmt": "관리",
           "squared-fusion-media": "미디어",
           "spark-hybrid-datasecurity": "데이터 보안",
@@ -6916,7 +7336,7 @@
       "subsectionLabel": "브랜딩"
     },
     "sipDomain": {
-      "title": "Spark SIP 주소",
+      "title": "Cisco Spark SIP 주소",
       "subsectionLabel": "SIP 도메인 프리픽스",
       "subsectionDescription": "SIP가 활성화된 장치에서 사용자에게 전화할 때 사용자의 주소에 사용될 SIP 도메인 프리픽스를 지정하십시오. 예를 들어, 다음 주소에서: example.call.ciscospark.com, \"example\"이 귀하께서 정의하는 프리픽스입니다."
     },
@@ -6929,7 +7349,7 @@
     },
     "retention": {
       "title": "유지",
-      "subsectionLabel": "Spark 메시지 데이터",
+      "subsectionLabel": "Cisco Spark Message 데이터",
       "subsectionDescription": "누적된 사용자 데이터가 지원되지 않고 시스템에서 제거되기 전의 시간 값을 설정하십시오. 사용자당 <br/> 총 5GB 스토리지 제한이 있습니다. 제한에 도달하면 오래된 데이터가 먼저 제거됩니다.",
       "retentionOption": "지난 {{number}}개월",
       "indefiniteRetentionOption": "무기한으로",
@@ -6937,9 +7357,9 @@
       "defaultRetentionOption": "기본 유지 시간",
       "customRetentionOption": "1부터 120개월 사이의 사용자 정의 유지 기간",
       "customRetentionMonths": "개월",
-      "proPackInfoCopy": "조직에 대한 유지 시간을 설정하려면 IT Pro 패키지에 대해 파트너 관리자에게 문의하십시오.",
+      "proPackInfoCopy": "조직에 대한 유지 시간을 설정하려면 Pro Pack에 대해 파트너 관리자에게 문의하십시오.",
       "modalTitle": "유지 시간 업데이트",
-      "modalBody1": "Spark 메시지에 대한 유지 시간을 보다 짧은 기간으로 업데이트하시겠습니가?",
+      "modalBody1": "Cisco Spark Message에 대한 유지 시간을 보다 짧은 기간으로 업데이트하시겠습니까?",
       "modalBody2": "새로운 기간보다 오래된 모든 추가 데이터는 삭제됩니다.",
       "notificationSuccess": "설정이 성공적으로 업데이트됨.",
       "notificationFailure": "유지 기간 설정 변경하지 못함."
@@ -6958,7 +7378,7 @@
     },
     "security": {
       "title": "보안",
-      "subsectionLabel": "Spark 클라이언트 보안",
+      "subsectionLabel": "Cisco Spark 클라이언트 보안",
       "proPackInfoCopy": "이 프리미엄 기능은 Pro Pack에서 사용할 수 있습니다. 자세한 내용에 대해서는 파트너에게 문의하십시오.",
       "description": "사용자는 잠금 화면으로 보호되는 모바일 장치에서만 Cisco Spark 앱을 실행할 수 있습니다."
     },
@@ -7000,55 +7420,78 @@
     "order": "주문 히스토리"
   },
   "subscriptions": {
-    "licenseSummary": "라이센스 요약",
-    "licenseSummaryOnline": "{{name}}에 대한 라이센스 요약",
-    "message": "메시지",
-    "meeting": "미팅",
+    "activeUsers": "활동 중인 사용자",
+    "advancedReporting": "고급 보고",
     "call": "통화",
     "care": "케어",
-    "room": "회의실 장치",
+    "changePlan": "플랜 변경",
+    "complianceFunctionality": "규정 준수 기능",
+    "contact": "계정 담당자에게 연락",
+    "endDate": "가입 종료 날짜: {{date}}",
+    "enterpriseTrial": "기업 평가판 {{number}}",
+    "enitireOrg": "전체 조직",
+    "expired": "가입 만료됨",
+    "expires": "만료일: {{date}}",
     "hybrid": "하이브리드 서비스",
+    "hybridDataSecurity": "하이브리드 데이터 보안",
+    "less": "정보 숨김",
+    "licenses": "라이센스:",
+    "licenseSummary": "라이센스 요약",
+    "licenseSummaryOnline": "{{name}}에 대한 라이센스 요약",
+    "licenseUsageReport": "라이센스 사용 보고서",
+    "loadError": "가입을 로드하는 동안 오류가 발생했습니다.",
+    "message": "메시지",
+    "meeting": "미팅",
+    "numberedName": "기업 가입 {{number}}",
+    "onlineProductInstanceError": "평가판 {{trialId}}에 대한 제품 인스턴스를 검색할 수 없음. 유료 가입을 구입하려면 이메일을 통해 파트너에게 문의하거나 평가판 배너에서 구입 버튼을 사용하여 발송되도록 하십시오.",
+    "onlinePurchase": "Cisco 온라인 마켓 플레이스에서 구입됨",
+    "onlineTrialUpgradeUrlError": "평가판 {{trialId}}에 대한 구입 url을 검색할 수 없음. 유료 가입을 구입하려면 이메일을 통해 파트너에게 문의하거나 평가판 배너에서 구입 버튼을 사용하여 발송되도록 하십시오.",
+    "overage": "초과",
+    "overageWarning": "경고: 구입한 수보다 많은 라이센스를 지정했습니다. 오늘 추가 라이센스를 구입하려면 파트너에게 문의하십시오.",
+    "premiumManagement": "프리미엄 관리",
+    "premiumTooltip": "Pro Pack은 사용자당 라이센스가 부여되고 조직에 있는 모든 활동 중인 사용자에게 자동으로 할당됩니다.",
+    "purchase": "구입",
+    "room": "회의실 장치",
+    "signIn": "관리하려면 로그인하십시오",
     "subscription": "가입 ID: ",
     "subscriptionNum": "가입 ID xxx{{number}}",
-    "numberedName": "기업 가입 {{number}}",
-    "enterpriseTrial": "기업 평가판 {{number}}",
-    "usage": "사용: ",
-    "licenses": "라이센스: ",
-    "licenseUsageReport": "라이센스 사용 보고서",
-    "more": "명",
-    "less": "정보 숨김",
-    "quantity": "양: ",
+    "usage": "사용:",
     "upgrade": "업그레이드",
-    "purchase": "구입",
-    "changePlan": "플랜 변경",
-    "signIn": "관리하려면 로그인하십시오",
-    "contact": "계정 담당자에게 연락",
-    "onlineTrialUpgradeUrlError": "평가판 {{trialId}}에 대한 구입 url을 검색할 수 없음. 유료 가입을 구입하려면 이메일을 통해 파트너에게 문의하거나 평가판 배너에서 구입 버튼을 사용하여 발송되도록 하십시오.",
-    "onlineProductInstanceError": "평가판 {{trialId}}에 대한 제품 인스턴스를 검색할 수 없음. 유료 가입을 구입하려면 이메일을 통해 파트너에게 문의하거나 평가판 배너에서 구입 버튼을 사용하여 발송되도록 하십시오.",
-    "loadError": "가입을 로드하는 동안 오류가 발생했습니다.",
     "licenseTypes": {
       "MS": "표준 그룹 스페이스",
-      "CF": "Spark 25명 미팅",
+      "CF": "Cisco Spark 25명 미팅",
       "MC": "WebEx Meeting Center",
       "SC": "WebEx Support Center",
       "TC": "WebEx Training Center",
       "EC": "WebEx Event Center",
       "EE": "Webex 기업판",
       "CMR": "WebEx 협업 미팅 룸",
-      "CO": "Spark 통화",
-      "SD": "DX, MX 또는 SX 시스템",
-      "SB": "Spark Board",
+      "CO": "Cisco Spark 통화",
+      "SD": "Cisco Spark 회의실 키트, DX, MX 및 SX series",
+      "SB": "Cisco Spark Board",
       "CDC": "채팅 및 수신",
-      "CVC": "채팅, 수신 및 인바운드 전화"
+      "CVC": "채팅, 수신 및 인바운드 전화",
+      "MGMTPRO": "Pro Pack",
+      "WEBEX": "WebEx 오디오",
+      "VoIPOnly": "VoIP만",
+      "CCASP": "CCA-SP",
+      "TSP": "TSP 오디오",
+      "ST" : "WebEx 스토리지",
+      "STSPK": "Spark 스토리지",
+      "MSGR": "메신저"
     }
   },
   "onlineUpgradeModal": {
-    "title": "계정 만료됨",
-    "body": "귀하의 가입이 폐지되었기 때문에 관리 계정이 중단되었습니다. Cloud Collaboration Management(클라우드 협업 관리) 포털로 다시 액세스하기 위해 가입을 구입할 수 있습니다.",
-    "cancelBody": "또는 Cloud Collaboration Management(클라우드 협업 관리) 포털이 포함되지 않은 무료 Cisco Spark 버전을 사용할 수 있습니다.",
-    "cancelButton": "무료 Cisco Spark 사용",
+    "expiredTitle": "계정 만료됨",
+    "body": "귀하의 가입이 폐지되었기 때문에 관리 계정이 중단되었습니다. 메트릭 및 분석 확인, 사용자 라이센스 지정 등의 작업을 실행하려면 유료 플랜으로 업그레이드해야 합니다.",
+    "cancelBody": "또는 무료 버전을 사용할 수도 있습니다(관리 도구에 액세스할 수 없음).",
+    "freemiumTitle": "무료 계정이 주어졌습니다.",
+    "freemiumBody": "무료 계정에는 관리 도구가 포함되지 않습니다. 메트릭 및 분석 확인, 사용자 라이센스 지정 등의 작업을 실행하려면 유료 플랜으로 업그레이드해야 합니다.",
+    "cancelButton": "무료 버전 사용",
     "cancelError": "가입을 취소하는 동안 오류가 발생했습니다.",
-    "cancelSuccess": "이제 무료 Cisco Spark 계정이 주어졌습니다."
+    "cancelSuccess": "이제 무료 계정이 주어졌습니다.",
+    "pendingTitle": "설정 필수",
+    "pendingBody": "WebEx 서비스가 설정되지 않았습니다. WebEx 설정을 마치려면 수신한 이메일에서 시작하기 링크를 클릭하십시오. 해당 이메일의 제목줄은 'Cisco WebEx 서비스 설정'입니다."
   },
   "myCompanyOrders": {
     "numberHeader": "주문 번호",
@@ -7079,12 +7522,12 @@
     "id_full_admin": "전체 관리",
     "id_readonly_admin": "읽기 전용 관리",
     "user": "사용자",
-    "ciscouc.devops": "Spark 통화 개발",
-    "ciscouc.devsupport": "Spark 통화 개발 지원",
+    "ciscouc.devops": "Cisco Spark 통화 개발",
+    "ciscouc.devsupport": "Cisco Spark 통화 개발 지원",
     "compliance": "준수 관리자",
     "complianceTooltip": "활동 보고서에 액세스",
-    "ciscouc.phonelogaccess": "Spark 통화 전화 로그 액세스",
-    "ciscouc.phonesupport": "Spark 통화 전화 지원"
+    "ciscouc.phonelogaccess": "Cisco Spark 통화 전화 로그 액세스",
+    "ciscouc.phonesupport": "Cisco Spark 통화 전화 지원"
   },
   "atlasRoles": {
     "Full_Admin": "전체 관리",
@@ -7111,6 +7554,7 @@
   "helpdesk": {
     "browserTabHeaderTitle": "헬프 데스크 지원",
     "navHeaderTitle": "클라우드 협업 헬프 데스크",
+    "navHeaderTitleNew": "Cisco Spark 제어 헬프 데스크",
     "helpdesk": "헬프 데스크",
     "searchHeading": "헬프 데스크 지원",
     "users": "사용자",
@@ -7119,7 +7563,7 @@
     "userDetails": "사용자 세부 사항",
     "orders": "주문",
     "orderDetails": "주문 세부 사항",
-    "badUserSearchInput": "단어 당 최소한 세 개의 문자를 입력하십시오. 이름 또는 이메일로 검색하려면 두 단어를 입력하십시오. 예: John Doe 또는 john.doe.",
+    "badUserSearchInput": "단어당 최소한 세 개의 문자를 입력하십시오. 이름 또는 이메일로 검색하려면 두 단어를 입력하십시오. 예: John Doe 또는 john.doe.",
     "tooManySearchResults": "너무 많은 결과가 검색되었습니다. 검색 기준을 세분화하십시오.",
     "unexpectedError": "예기치 않은 오류 발생함",
     "cancelled": "검색이 취소되었습니다",
@@ -7158,20 +7602,20 @@
     "claimedDomain": "클레임한 도메인",
     "hybridServices": "하이브리드 서비스",
     "entitlements": {
-      "webex-squared": "무료 Spark 메시지",
+      "webex-squared": "무료 Cisco Spark Messaging",
       "squared-syncup.paid": "25명 단체 미팅",
-      "squared-syncup.free": "무료 3명 Spark 미팅",
+      "squared-syncup.free": "무료 3명 Cisco Spark Meetings",
       "squared-room-moderation.paid": "표준 그룹 스페이스",
-      "squared-room-moderation.free": "무료 Spark 메시지",
-      "ciscouc.paid": "고급 Spark 통화",
-      "ciscouc.free": "무료 1:1 Spark 통화",
+      "squared-room-moderation.free": "무료 Cisco Spark Messaging",
+      "ciscouc.paid": "고급 Cisco Spark 통화",
+      "ciscouc.free": "무료 1:1 Cisco Spark 통화",
       "meetings": "WebEx Meetings (WebEx 11)",
       "cloud-contact-center-digital": "채팅 및 수신",
       "cloud-contact-center-inbound-voice": "채팅, 수신 및 인바운드 전화"
     },
     "lastLog": "마지막 로그",
-    "lastClientLog": "마지막 Spark 클라이언트 로그",
-    "lastCareLog": "마지막 Spark 케어 로그:",
+    "lastClientLog": "마지막 Cisco Spark 클라이언트 로그",
+    "lastCareLog": "마지막 Cisco Spark 케어 로그:",
     "noLog": "사용 가능한 로그 없음",
     "userStatuses": {
       "active": "활동",
@@ -7205,11 +7649,11 @@
       "EE": "기업판 {{capacity}}",
       "SC": "Support Center {{capacity}}",
       "EC": "Event Center {{capacity}}",
-      "CO": "고급 Spark 통화",
+      "CO": "고급 Cisco Spark 통화",
       "CMR": "협업 미팅 룸",
       "ST": "스토리지",
-      "SD": "DX, MX 또는 SX 시스템",
-      "SB": "Spark Board",
+      "SD": "Cisco Spark 회의실 키트, DX, MX 및 SX series",
+      "SB": "Cisco Spark Board",
       "linkedSite": "레거시 WebEx 라이센스",
       "CDC": "채팅 및 수신",
       "CVC": "채팅, 수신 및 인바운드 전화"
@@ -7235,8 +7679,8 @@
       "search-criterias-title": "검색 기준",
       "search-criterias-users": "<strong>사용자</strong>: 이메일, 이름 (이름, 성), 전화 번호 및 표시명 (최소한 세 개의 문자가 포함된 두 단어 필수)",
       "search-criterias-customers": "<strong>고객</strong>: 표시명 (최소한 세 개의 문자 필수)",
-      "search-criterias-devices": "<strong>장치</strong>: Spark 통화 장치: SEP 번호 또는 전화 번호. Spark 회의실 장치: 표시명, 시리얼 또는 MAC 주소.",
-      "search-criterias-note": "참고: Spark 시스템 또는 장치를 검색하려면 먼저 고객을 선택해야 합니다.",
+      "search-criterias-devices": "<strong>장치</strong>: Cisco Spark 통화 장치: SEP 번호 또는 전화 번호. Spark 회의실 장치: 표시명, 시리얼 또는 MAC 주소.",
+      "search-criterias-note": "참고: Cisco Spark 시스템 또는 장치를 검색하려면 먼저 고객을 선택해야 합니다.",
       "narrow-title": "고객 선택",
       "narrow-info": "한 명의 고객으로 검색을 세분화하려면 기본 검색 도구 페이지에서 시작하고 표시명으로 해당 고객을 검색하십시오. 그 후 고객의 검색 결과 카드에서 <i class='icon icon-search'></i>를 클릭합니다.",
       "referTo": "참조:",
@@ -7257,19 +7701,17 @@
     "resend": "초대 다시 보내기",
     "resendSuccess": "초대장이 성공적으로 재발송됨.",
     "sendCode": "코드 보내기",
-    "more": "명",
-    "less": "정보 숨김",
     "usage": "{{usage}} / {{volume}} 사용 중",
     "numbers": "번호",
-    "noDeviceEntitlements": "장치 검색을 실행할 수 없음. 해당 고객은 Cloudberry 또는 Spark 통화의 사용 자격이 없습니다.",
+    "noDeviceEntitlements": "장치 검색을 실행할 수 없음. 해당 고객은 Cloudberry 또는 Cisco Spark 통화의 사용 자격이 없습니다.",
     "noDeviceEntitlementsCustomerOrg": "장치 검색을 실행할 수 없음.",
     "applyOrgFilterPleaseWait": "필터 적용 중. 잠시 기다려 주십시오...",
     "noMoreResults": "최대 결과 제한에 도달했습니다. 다른 검색을 시도하십시오.",
-    "huronNotActivated": "Spark 통화 장치를 검색할 수 없음. 이 고객에 대한 음성 서비스가 활성화되어 있지 않습니다.",
+    "huronNotActivated": "Cisco Spark 통화 장치를 검색할 수 없음. 이 고객에 대한 음성 서비스가 활성화되어 있지 않습니다.",
     "primary": "기본",
     "shared": "공유함",
     "primaryShared": "기본 공유됨",
-    "sparkStatus": "Spark 상태",
+    "sparkStatus": "Cisco Spark 상태",
     "searchHelp": "도움말 검색",
     "deviceNotFound": "이 장치는 더 이상 존재하지 않습니다. 삭제되었을 수도 있습니다.",
     "customerPortalViewHeading": "고객 포털 보기",
@@ -7289,7 +7731,7 @@
     "customerInfo": "고객 정보",
     "webOrderId": "웹 주문 번호",
     "subscriptionId": "가입 ID",
-    "orderProvision": "주문 프로비저닝됨",
+    "orderProvision": "주문 구축됨",
     "accountActivate": "계정 활성화됨",
     "companyName": "회사명",
     "adminEmail": "관리 이메일",
@@ -7299,7 +7741,7 @@
     "partnerEmail": "파트너 이메일",
     "resendAdminEmail": "재전송",
     "editAdminEmail": "편집",
-    "resendTooltip": "서비스 프로비저닝 이메일 다시 보내기.",
+    "resendTooltip": "서비스 구축 이메일 다시 보내기.",
     "resendMailSuccess": "환영 이메일이 성공적으로 발송되었습니다.",
     "resendMailFailure": "환영 이메일을 다시 보내지 못함.",
     "editAdminEmailSuccess": "관리 이메일이 성공적으로 업데이트되었습니다.",
@@ -7346,6 +7788,8 @@
   "partnerManagement": {
     "browserTabHeaderTitle": "파트너 관리",
     "navHeaderTitle": "클라우드 협업 관리",
+    "navHeaderTitleNew": "Cisco Spark 제어 허브",
+    "navHeaderTitlePro": "Cisco Spark 제어 허브 Pro",
     "back": "뒤로",
     "next": "다음",
     "startOver": "처음부터 시작",
@@ -7421,9 +7865,9 @@
   },
   "activation": {
     "verificationComplete": "인증 완료",
-    "returnToApp": "모바일 장치에서 Spark로 돌아간 후 등록을 완료하십시오.",
+    "returnToApp": "모바일 장치에서 Cisco Spark로 돌아간 후 등록을 완료하십시오.",
     "codeExpired": "활성화 코드 만료됨",
-    "requestNewCode": "{{deviceName}}에 대해 {{userEmail}}으로 발송된 Spark 활성화 코드가 만료되었습니다! 새로운 코드를 요청하려면 아래를 클릭하십시오.",
+    "requestNewCode": "{{deviceName}}에 대해 {{userEmail}}(으)로 발송된 Cisco Spark 활성화 코드가 만료되었습니다! 새로운 코드를 요청하려면 아래를 클릭하십시오.",
     "sendCodeLink": "새로운 활성화 코드 보내기",
     "newCodeSent": "확인 코드 발송됨",
     "useLatestCode": "새로운 코드가 {{userEmail}}으로 발송되었습니다",
@@ -7454,7 +7898,7 @@
       "remove": "제거",
       "description": "다음 도메인을 제거하려고 합니다. 다음:",
       "preventLockoutError": "자신의 도메인을 제거하면 로그인할 수 없게 됩니다.",
-      "warning": "이 도메인을 사용하는 사용자는 차단되고, 로그인하거나 Spark 서비스를 사용할 수 없게 됩니다. 이 도메인에 소속된 새로운 사용자는 추가할 수 없습니다."
+      "warning": "이 도메인을 사용하는 사용자는 차단되고, 로그인하거나 Cisco Spark 서비스를 사용할 수 없게 됩니다. 이 도메인에 소속된 새로운 사용자는 추가할 수 없습니다."
     },
     "unclaim": {
       "header": "도메인 클레임 릴리즈",
@@ -7466,7 +7910,7 @@
       "header": "도메인 확인",
       "verifyThis": "확인하기 전에",
       "beforeVerify": "해당 도메인을 소유하고 있음을 증명하기 위해 이 DNS 인증 토큰을 복사하여 TXT 기록 섹션에 붙여넣어야 합니다. 다음:",
-      "warning": "모든 도메인을 확인하는 것은 중요합니다. 확인된 도메인에 소속되지 않은 사용자는 즉시 차단됩니다. 해당 사용자는 로그인하거나 Spark 서비스를 사용할 수 없게 됩니다. 또한 확인되지 않은 도메인을 사용하는 새로운 사용자는 추가할 수 없습니다.",
+      "warning": "모든 도메인을 확인하는 것은 중요합니다. 확인된 도메인에 소속되지 않은 사용자는 즉시 차단됩니다. 해당 사용자는 로그인하거나 Cisco Spark 서비스를 사용할 수 없게 됩니다. 또한 확인되지 않은 도메인을 사용하는 새로운 사용자는 추가할 수 없습니다.",
       "verify": "인증",
       "learn": "<a href='https://help.webex.com/docs/DOC-4860' target='_blank' ng-click='{{click}}'>DNS 인증 토큰을 입력하는 방법에 대해서 알아보십시오</a>."
     },
@@ -7528,6 +7972,7 @@
         "title": "통화",
         "description": "조직에 대한 Unified Communications 및 기본 통화 구성.",
         "buttons": {
+          "locations": "위치",
           "numbers": "번호",
           "features": "기능",
           "settings": "설정",
@@ -7561,7 +8006,8 @@
           "settings": "설정"
         },
         "exchangeTitle": "Microsoft Exchange",
-        "googleTitle": "Google 캘린더"
+        "googleTitle": "Google 캘린더",
+        "error": "Google 캘린더 상태를 검색하지 못함"
       },
       "hybridCall": {
         "title": "하이브리드 통화",
@@ -7590,7 +8036,7 @@
       "hybridDataSecurity": {
         "title": "하이브리드 데이터 보안",
         "description": "암호화 키 및 기타 보안 서비스 온-프레미스를 관리하십시오.",
-        "tooltip": "이 프리미엄 기능은 IT Pro 팩에서 사용할 수 있습니다. 자세한 내용에 대해서는 파트너에게 문의하십시오.",
+        "tooltip": "이 프리미엄 기능은 Pro Pack에서 사용할 수 있습니다. 자세한 내용에 대해서는 파트너에게 문의하십시오.",
         "buttons": {
           "resources": "리소스",
           "settings": "설정"
@@ -7641,10 +8087,11 @@
         "aVerifiedDomain": "은(는) 확인된 도메인입니다.",
         "domainDesc": "비공개 트렁크에 대해 사용할 도메인을 선택하십시오. 설정을 클릭하고 도메인 섹션으로 이동하여 도메인을 추가하고 확인합니다.",
         "basicConnectivity": "클라우드 및 온-프레미스 간 기본 연결",
-        "certificateHelp": "Spark 통화 인증 기관은 Expresssway-E 신뢰 스토어에 있습니다. 참조: ",
+        "certificateHelp": "Cisco Spark 통화 인증 기관은 Expresssway-E 신뢰 스토어에 있습니다. 참조: ",
         "help": "<a href=\"{{href}}\" target=\"_blank\">도움말</a>.",
         "dNSzoneHelp": "클라우드로부터의 인바운드 연결을 수락하기 위해 Expressway-E에 DNS 영역이 만들어졌습니다. 참조: ",
         "defaultTrustHelp": "Cisco 협업의 기본 신뢰 목록에서 제공하는 인증서를 사용하거나 자신의 인증서를 직접 업로드하십시오. 자신의 인증서를 사용하는 경우, 호스트 이름이 인증된 도메인에 있는지 확인하십시오. 참조: ",
+        "defaultTrustHelpNew": "Cisco Spark 제어 허브의 기본 신뢰 목록에서 제공하는 인증서를 사용하거나 자신의 인증서를 직접 업로드하십시오. 자신의 인증서를 사용하는 경우, 호스트 이름이 인증된 도메인에 있는지 확인하십시오. 참조: ",
         "fullService": "전체 서비스: 인바운드 및 아웃바운드 통화",
         "allZonesHelp": "모든 영역 및 규칙은 Expressway-E에 설정되어야 합니다. 참조: ",
         "routingHelp": "CUCM에 올바른 라우팅이 구성되어야 합니다. 참조: ",
@@ -7667,7 +8114,9 @@
         "addSipDestination": "SIP 대상 추가",
         "certificateTitle": "인증서",
         "certificateDescription": "Cisco 협업 기본 신뢰 목록에서 제공하는 인증서를 사용하거나 자신의 인증서를 업로드하도록 선택하십시오.",
+        "certificateDescriptionNew": "Cisco Spark 제어 허브의 기본 신뢰 목록에서 제공하는 인증서를 사용하거나 자신의 인증서를 업로드하도록 선택하십시오.",
         "certDesc": "<a href=\"{{href}}\" target=\"_blank\">Cisco 협업 기본 신뢰 목록에서 제공하는 인증서를 사용하거나</a>",
+        "certDescNew": "<a href=\"{{href}}\" target=\"_blank\">Cisco Spark 제어 허브 기본 신뢰 목록에서 제공하는 인증서를 사용하거나</a>",
         "upload": "자신의 인증서를 업로드하십시오. 자신의 인증서를 사용하는 경우, 호스트이름이 인증된 도메인에 있는지 확인하십시오.",
         "click": ". 도움말은 <a href=\"{{href}}\" target=\"_blank\">여기를 클릭</a>하십시오.",
         "certificateDefault": "기본 Cisco 인증서",
@@ -7675,6 +8124,7 @@
         "inactiveHelp": "자신의 인증서를 업로드하는 경우 기본 신뢰 목록은 무시됩니다. ",
         "restore": "기본 인증서를 복원하십시오.",
         "certificateDefaultList": "Cisco 협업 기본 신뢰 목록",
+        "certificateDefaultListNew": "Cisco Spark 제어 허브 기본 신뢰 목록",
         "certificateCustom": "자신의 인증서 업로드",
         "view": "보기",
         "dragAndDropKeyFileHere": "여기로 인증서 파일을 드래그하고 드롭하거나 ",
@@ -7688,7 +8138,7 @@
         "setupCompete": "설정 완료",
         "great": "좋습니다! Cisco Spark 조직에 대한 비공개 트렁크를 구성했습니다.",
         "callSelection": "통화 선택 사항",
-        "interSite": "온 프레미스 엔드포인트와 Spark 통화 엔드포인트 간 내부 사이트 다이얼링.",
+        "interSite": "온 프레미스 엔드포인트와 Cisco Spark 통화 엔드포인트 간 내부 사이트 다이얼링.",
         "pstn": "온 프레미스 PSTN 연결을 사용하고 있을 때 PSTN 인바운드 및 아웃바운드는 이 트렁크를 통해 실행됩니다.•",
         "pstnConnectivity": "PSTN 연결",
         "routing": "기업 비공개 트렁트를 통해 클라우드에서 프레미스로 라우팅하는 작업은 귀하가 선택한 확인된 도메인을 통해 실행됩니다.",
@@ -7697,7 +8147,7 @@
       },
       "cmc": {
         "title": "모바일",
-        "description": "Spark 모바일 수렴은 Cisco 전문가가 설정합니다. 변경 사항에 대해서는 Cisco 전문가에게 문의하십시오.",
+        "description": "모바일 수렴은 Cisco 장치에서 모든 모바일 전화로 전화할 수 있는 서비스입니다. 해당 서비스는 Cisco 전문가가 설정합니다. 변경 사항에 대해서는 Cisco 전문가에게 문의하십시오.",
         "buttons": {
           "settings": "설정",
           "status": "상태"
@@ -7797,7 +8247,7 @@
         },
         "import": {
           "invalidFileType": "유효하지 않은 파일 유형. .csv 파일을 선택하십시오.",
-          "resultTitle" : {
+          "resultTitle": {
             "importComplete": "가져오기 완료됨"
           },
           "resultMsg": {
@@ -7944,7 +8394,7 @@
           "A": "승인됨",
           "R": "거절됨",
           "F": "Finish_edit",
-          "P": "프로비저닝됨"
+          "P": "구축됨"
         }
       },
       "request": {
@@ -7978,7 +8428,7 @@
         "history": "히스토리"
       },
       "by": "작성인:",
-      "showMore": "추가 보이기"
+      "showMore": "자세히 표시"
     }
   },
   "timeZones": {
@@ -8537,7 +8987,7 @@
     "bot": "보트",
     "lyra_space": "회의실 장치 장소",
     "robot": "로보트",
-    "spark_integration": "Spark 통합",
+    "spark_integration": "Cisco Spark 통합",
     "room": "데스크 폰 장소"
   },
   "deviceSettings": {
@@ -8551,14 +9001,53 @@
     "title": "미디어 관리자",
     "deletedTitle": "최근 삭제된 미디어",
     "deletionPeriod": "미디어는 30일 이후에 영구적으로 삭제됩니다.",
+    "delete": "삭제",
+    "edit": "편집",
+    "saveButton": "저장",
+    "cancelButton": "취소",
     "deleteButton": "모두 삭제",
     "searchPlaceholder": "미디어 검색",
-    "uploadProcessing": "업로드 처리 중...",
-    "procressingError": "미디어 파일 처리 오류. 이 파일을 다시 업로드하십시오.",
-    "getMediaListError": "미디어의 목록을 불러오는 동안 오류가 발생했습니다. 다시 시도하십시오.",
+    "uploading": "업로드 중...",
+    "uploadProcessing": "처리 중...",
+    "deleted": "삭제됨:",
+    "processingError": "미디어 파일 처리 오류. 다시 시도하십시오.",
+    "getMediaListError": "미디어의 목록을 불러오는 동안 오류가 발생했습니다. 다시 시도하려면 새로 고치십시오.",
     "uploadMediaError": "미디어를 업로드하는 동안 오류가 발생했습니다. 다시 시도하십시오.",
+    "restoreMediaError": "미디어를 복원하는 동안 오류가 발생했습니다.",
     "deleteMediaError": "미디어를 삭제하는 동안 오류가 발생했습니다.",
     "cleanupMediaError": "업로드에 실패한 미디어를 정리하는 동안 오류가 발생했습니다.",
-    "unsupportedTypeError": "업로드를 위해 선택한 파일 유형이 지원되지 않습니다."
+    "cancelUploadError": "미디어 업로드를 취소하는 동안 오류가 발생했습니다.",
+    "unsupportedTypeError": "업로드를 위해 선택한 파일 유형이 지원되지 않습니다.",
+    "displayName": {
+      "required": "미디어 이름은 필수입니다.",
+      "tooShortError": "미디어 이름에는 최소한 한 개의 문자를 포함해야 합니다.",
+      "tooLongError": "미디어 이름은 최대 48자까지 포함할 수 있습니다."
+    },
+    "description": {
+      "tooLongError": "미디어 설명은 최대 512자까지 포함할 수 있습니다."
+    },
+    "cancelUpload": {
+      "title": "업로드 취소",
+      "message": "해당 업로드를 취소하시겠습니까?",
+      "cancel": "업로드 진행",
+      "confirm": "업로드 취소"
+    },
+    "deleteMedia": {
+      "title": "영구적으로 미디어 삭제",
+      "message": "참고: 최근에 삭제된 미디어 파일이 시스템에서 여전히 사용될 수도 있습니다.",
+      "cancel": "취소",
+      "confirm": "미디어 삭제"
+    },
+    "deleteMediaNotAvailable": {
+      "title": "삭제할 수 없음",
+      "message": "이 미디어는 현재 지정되었기 때문에 삭제할 수 없습니다. 지정 해제하고 다시 시도하십시오.",
+      "confirm": "닫기"
+    }
+  },
+  "multipleDevicesConfirm": {
+    "title": "장소에 있는 장치 정보",
+    "activationCodeExplanation": "활성화 코드를 사용하여 새로운 장치를 활성화하거나 기존의 장치를 다시 활성화할 수 있습니다.",
+    "multipleDevicesWarning": "참고: 함께 작동하도록 설계되지 않은 장소에 여러 장치를 지정하면 장치 간에 충돌 문제를 일으킬 수 있습니다.",
+    "okGotIt": "예, 알겠습니다."
   }
 }

@@ -42,7 +42,7 @@
     vm.openExtendedInformation = openExtendedInformation;
     vm.openHybridServicesModal = openHybridServicesModal;
     vm.supportsExtendedInformation = false;
-    vm.isEnterpriseCustomer = Authinfo.isEnterpriseCustomer();
+    vm.isProPackCustomer = false;
     vm.cardsAvailable = false;
     vm.hasEmailStatus = hasEmailStatus;
     vm.hasEmailProblem = hasEmailProblem;
@@ -53,6 +53,10 @@
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasHelpDeskExt).then(function (result) {
       vm.supportsExtendedInformation = result;
+    });
+
+    FeatureToggleService.getFeatureForUser(vm.userId, FeatureToggleService.features.atlasITProPackPurchased).then(function (result) {
+      vm.isProPackCustomer = result;
     });
 
     HelpdeskService.getUser(vm.orgId, vm.userId)

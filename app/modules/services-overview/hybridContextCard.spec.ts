@@ -1,9 +1,8 @@
 import { ServicesOverviewHybridContextCard } from './hybridContextCard';
-import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 
 describe('ServicesOverviewHybridContextCard', () => {
 
-  let HybridServicesClusterStatesService: HybridServicesClusterStatesService, card: ServicesOverviewHybridContextCard;
+  let card: ServicesOverviewHybridContextCard;
   let Authinfo;
 
   beforeEach(angular.mock.module('Core'));
@@ -16,11 +15,10 @@ describe('ServicesOverviewHybridContextCard', () => {
 
   function dependencies(_Authinfo_, _HybridServicesClusterStatesService_) {
     Authinfo = _Authinfo_;
-    HybridServicesClusterStatesService = _HybridServicesClusterStatesService_;
   }
 
   it('should have sane defaults', () => {
-    card = new ServicesOverviewHybridContextCard(Authinfo, HybridServicesClusterStatesService);
+    card = new ServicesOverviewHybridContextCard(Authinfo);
     expect(Authinfo.isContactCenterContext).toHaveBeenCalled();
     expect(card.active).toBe(false);
     expect(card.display).toBe(false);
@@ -29,30 +27,30 @@ describe('ServicesOverviewHybridContextCard', () => {
 
   it('should be displayed if the context feature is authorized', () => {
     Authinfo.isContactCenterContext.and.returnValue(true);
-    card = new ServicesOverviewHybridContextCard(Authinfo, HybridServicesClusterStatesService);
+    card = new ServicesOverviewHybridContextCard(Authinfo);
     expect(Authinfo.isContactCenterContext).toHaveBeenCalled();
     expect(card.display).toBe(true);
   });
 
   it('should stay not active if services statuses do not say it is setup', () => {
     Authinfo.isContactCenterContext.and.returnValue(true);
-    card = new ServicesOverviewHybridContextCard(Authinfo, HybridServicesClusterStatesService);
+    card = new ServicesOverviewHybridContextCard(Authinfo);
     expect(Authinfo.isContactCenterContext).toHaveBeenCalled();
-    card.hybridStatusEventHandler([{ serviceId: 'contact-center-context', setup: false, status: 'yolo' }]);
+    card.hybridStatusEventHandler([{ serviceId: 'contact-center-context', setup: false, status: 'outage', cssClass: 'danger' }]);
     expect(card.active).toBe(false);
   });
 
   it('should be active if services statuses say it is setup', () => {
     Authinfo.isContactCenterContext.and.returnValue(true);
-    card = new ServicesOverviewHybridContextCard(Authinfo, HybridServicesClusterStatesService);
+    card = new ServicesOverviewHybridContextCard(Authinfo);
     expect(Authinfo.isContactCenterContext).toHaveBeenCalled();
-    card.hybridStatusEventHandler([{ serviceId: 'contact-center-context', setup: true, status: 'yolo' }]);
+    card.hybridStatusEventHandler([{ serviceId: 'contact-center-context', setup: true, status: 'operational', cssClass: 'success' }]);
     expect(card.active).toBe(true);
   });
 
   it('should stop loading once hybridStatusEventHandler is called', () => {
     Authinfo.isContactCenterContext.and.returnValue(true);
-    card = new ServicesOverviewHybridContextCard(Authinfo, HybridServicesClusterStatesService);
+    card = new ServicesOverviewHybridContextCard(Authinfo);
     expect(Authinfo.isContactCenterContext).toHaveBeenCalled();
     expect(card.loading).toBe(true);
     card.hybridStatusEventHandler([]);
