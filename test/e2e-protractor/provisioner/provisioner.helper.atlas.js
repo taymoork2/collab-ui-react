@@ -43,7 +43,7 @@ export function findAtlasCustomer(token, orgId, customerName) {
 export function getAtlasOrg(token, orgId) {
   const options = {
     method: 'GET',
-    uri: `${config.getAdminServiceUrl()}organizations/${orgId}`,
+    uri: `${config.getAdminServiceUrl()}organizations/${orgId}?disableCache=true&basicInfo=true`,
     headers: {
       Authorization: `Bearer  ${token}`,
     },
@@ -51,3 +51,17 @@ export function getAtlasOrg(token, orgId) {
   };
   return provisionerHelper.makeRequest(options);
 }
+
+export function createAtlasUser(token, orgId, userList) {
+  const options = {
+    method: 'POST',
+    uri: `${config.getAdminServiceUrl()}organization/${orgId}/users/onboard`,
+    headers: {
+      Authorization: `Bearer  ${token}`,
+    },
+    body: userList,
+    json: true,
+  };
+  console.log('Start to create Users!');
+  return provisionerHelper.makeRequest(options);
+};
