@@ -24,6 +24,8 @@
       getOrgSettings: getOrgSettings,
       getAppSecurity: getAppSecurity,
       setAppSecurity: setAppSecurity,
+      getBlockExternalCommunication: getBlockExternalCommunication,
+      setBlockExternalCommunication: setBlockExternalCommunication,
     };
 
     return service;
@@ -146,6 +148,29 @@
 
       return $http.put(url, {
         clientSecurityPolicy: appSecurityStatus,
+      });
+    }
+
+    // Get block external communication from the blockExternalCommunications API(boolean)
+    function getBlockExternalCommunication(org) {
+      if (!org || org === '') {
+        return $q.reject('A Valid organization ID must be Entered');
+      }
+      var url = getDeviceSettingsUrl(org) + '/blockExternalCommunications';
+
+      return $http.get(url);
+    }
+
+    // Sets block external communication to blockExternalCommunications API
+    function setBlockExternalCommunication(org, blockExternalCommunication) {
+      if (!org || org === '') {
+        return $q.reject('A Valid organization ID must be Entered');
+      }
+
+      var url = getDeviceSettingsUrl(org) + '/blockExternalCommunications';
+
+      return $http.put(url, {
+        blockExternalCommunications: blockExternalCommunication,
       });
     }
   }
