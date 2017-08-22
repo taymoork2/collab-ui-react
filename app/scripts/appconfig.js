@@ -1854,9 +1854,13 @@
             },
           })
           .state('organization-overview.features', {
-            templateUrl: 'modules/core/organizations/organizationFeatures/organizationFeatures.tpl.html',
-            controller: 'OrganizationFeaturesCtrl',
-            controllerAs: 'features',
+            views: {
+              'container@organization-overview': {
+                templateUrl: 'modules/core/organizations/organizationFeatures/organizationFeatures.tpl.html',
+                controller: 'OrganizationFeaturesCtrl',
+                controllerAs: 'features',
+              },
+            },
             params: {
               reloadToggle: false,
             },
@@ -1865,9 +1869,13 @@
             },
           })
           .state('organization-overview.add.addNumbers', {
-            templateUrl: 'modules/core/organizations/organizationAdd/addNumbers.tpl.html',
-            controller: 'DidAddCtrl',
-            controllerAs: 'didAdd',
+            views: {
+              'container@organization-overview': {
+                templateUrl: 'modules/core/organizations/organizationAdd/addNumbers.tpl.html',
+                controller: 'DidAddCtrl',
+                controllerAs: 'didAdd',
+              },
+            },
             params: {
               currentTrial: {},
               currentOrg: {},
@@ -1933,7 +1941,11 @@
             },
           })
           .state('webexReportsPanel.more', {
-            template: '<cust-webex-reports-more></cust-webex-reports-more>',
+            views: {
+              'container@webexReportsPanel': {
+                template: '<cust-webex-reports-more></cust-webex-reports-more>',
+              },
+            },
             onEnter: SidePanelLargeOpen,
             onExit: SidePanelLargeClose,
           })
