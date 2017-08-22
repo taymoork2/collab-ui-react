@@ -208,9 +208,11 @@ export class MeetingSettingsCtrl {
   private updateSitesLicenseCount() {
     const sourceArray = _.flatten(this.distributedLicensesArray);
     _.forEach(this.sitesArray, (site) => {
-      const matchingSite = _.find(sourceArray, { siteUrl: site.siteUrl });
-      if (matchingSite) {
-        site.quantity = matchingSite.quantity;
+      const matchingSite = _.filter(sourceArray, { siteUrl: site.siteUrl });
+      if (matchingSite.length) {
+        site.quantity = _.sumBy(matchingSite, 'quantity');
+      } else {
+        site.quantity = 0;
       }
     });
   }
@@ -444,7 +446,7 @@ export class MeetingSettingsCtrl {
     this.enableOrDisableNext(this.steps.SITES_LICENSES);
   }
 
-  private constructDistributedSitesArray(): void {
+  public constructDistributedSitesArray(): void {
     this.distributedLicensesArray = _.map(this.sitesArray, (site: IWebExSite) => {
       return _.map(this.centerDetails, (center) => {
         const siteObject: IWebExSite = {
