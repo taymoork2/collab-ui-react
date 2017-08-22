@@ -24,7 +24,7 @@
     <cs-alert-banner ng-if="$ctrl.isShowCancelSubmission" type="warning">{{::'gemini.cbgs.submissionMsg' | translate}} <a ng-click="$ctrl.onCancelSubmission()">{{::'gemini.cbgs.cancelSubmissionLink' | translate}}</a></cs-alert-banner>
     <cs-alert-banner ng-if="$ctrl.isShowReject" type="danger">{{::'gemini.cbgs.rejectSubmissionMsg' | translate}}</cs-alert-banner>
 
-    <div ui-view="container">
+    <div ui-view="side-panel-container">
       <cs-sp-container class="gemini-side-panel">
         <cs-sp-section>
           <div class="row">

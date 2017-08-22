@@ -1164,7 +1164,7 @@
           })
           .state('user-overview.communication', {
             views: {
-              'container@user-overview': {
+              'side-panel-container@user-overview': {
                 template: '<user-call-overview></user-call-overview>',
               },
             },
@@ -1184,7 +1184,7 @@
           })
           .state('user-overview.userDetails', {
             views: {
-              'container@user-overview': {
+              'side-panel-container@user-overview': {
                 template: '<uc-preferred-language-details preferred-language-feature="$resolve.preferredLanguageDetails"></uc-preferred-language-details>',
               },
             },
@@ -1208,7 +1208,7 @@
           })
           .state('user-overview.userLocationDetails', {
             views: {
-              'container@user-overview': {
+              'side-panel-container@user-overview': {
                 template: '<uc-user-location-details user-id="$resolve.userId" userLocation="$resolve.userLocation"></uc-user-location-details>',
               },
             },
@@ -1237,7 +1237,7 @@
           })
           .state('user-overview.csdmDevice', {
             views: {
-              'container@user-overview': {
+              'side-panel-container@user-overview': {
                 controller: 'DeviceOverviewCtrl',
                 controllerAs: 'deviceOverview',
                 templateUrl: 'modules/squared/devices/overview/deviceOverview.tpl.html',
@@ -1258,7 +1258,7 @@
           })
           .state('user-overview.csdmDevice.emergencyServices', {
             views: {
-              'container@user-overview': {
+              'side-panel-container@user-overview': {
                 template: '<uc-emergency-services></uc-emergency-services>',
               },
             },
@@ -1277,7 +1277,7 @@
           })
           .state('user-overview.communication.voicemail', {
             views: {
-              'container@user-overview': {
+              'side-panel-container@user-overview': {
                 template: '<uc-voicemail  owner-id="$resolve.ownerId"  ></uc-voicemail>',
               },
             },
@@ -1301,7 +1301,7 @@
           })
           .state('user-overview.communication.snr', {
             views: {
-              'container@user-overview': {
+              'side-panel-container@user-overview': {
                 template: '<uc-snr owner-id="$resolve.ownerId" ></uc-snr>',
               },
             },
@@ -1324,7 +1324,7 @@
           })
           .state('user-overview.communication.speedDials', {
             views: {
-              'container@user-overview': {
+              'side-panel-container@user-overview': {
                 template: '<uc-speed-dial owner-type="users" owner-id="$resolve.ownerId"></uc-speed-dial>',
               },
             },
@@ -1344,7 +1344,7 @@
           })
           .state('user-overview.communication.cos', {
             views: {
-              'container@user-overview': {
+              'side-panel-container@user-overview': {
                 template: '<uc-user-cos-form member-type="users" member-id="$resolve.ownerId"></uc-user-cos-form>',
               },
             },
@@ -1364,7 +1364,7 @@
           })
           .state('user-overview.communication.externaltransfer', {
             views: {
-              'container@user-overview': {
+              'side-panel-container@user-overview': {
                 template: '<uc-external-transfer member-type="users" member-id="$resolve.ownerId"></uc-external-transfer>',
               },
             },
@@ -1388,7 +1388,7 @@
           })
           .state('user-overview.communication.internationalDialing', {
             views: {
-              'container@user-overview': {
+              'side-panel-container@user-overview': {
                 template: '<uc-dialing  watcher="$resolve.watcher" selected="$resolve.selected" title="internationalDialingPanel.title"></uc-dialing>',
               },
             },
@@ -1410,7 +1410,7 @@
           })
           .state('user-overview.communication.local', {
             views: {
-              'container@user-overview': {
+              'side-panel-container@user-overview': {
                 template: '<uc-dialing  watcher="$resolve.watcher" selected="$resolve.selected" title="telephonyPreview.localDialing"></uc-dialing>',
               },
             },
@@ -1458,7 +1458,7 @@
           })
           .state('user-overview.communication.line-overview', {
             views: {
-              'container@user-overview': {
+              'side-panel-container@user-overview': {
                 template: '<uc-line-overview owner-type="user" owner-name="$resolve.ownerName" owner-id="$resolve.ownerId" number-id="$resolve.numberId"></uc-line-overview>',
               },
             },
@@ -1487,7 +1487,7 @@
           })
           .state('user-overview.messaging', {
             views: {
-              'container@user-overview': {
+              'side-panel-container@user-overview': {
                 templateUrl: 'modules/core/users/userOverview/messaging-preview/messaging-preview.html',
                 controller: 'MessagingPreviewCtrl',
                 controllerAs: '$ctrl',
@@ -1502,7 +1502,7 @@
           })
           .state('user-overview.hybrid-services-spark-hybrid-impinterop', {
             views: {
-              'container@user-overview': {
+              'side-panel-container@user-overview': {
                 template: '<hybrid-imp-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName"></hybrid-imp-user-settings>',
               },
             },
@@ -1524,7 +1524,7 @@
           })
           .state('user-overview.hybrid-services-squared-fusion-cal', {
             views: {
-              'container@user-overview': {
+              'side-panel-container@user-overview': {
                 templateUrl: 'modules/hercules/user-sidepanel/calendarServicePreview.tpl.html',
                 controller: 'CalendarServicePreviewCtrl',
               },
@@ -1539,7 +1539,7 @@
           })
           .state('user-overview.hybrid-services-squared-fusion-cal.history', {
             views: {
-              'container@user-overview': {
+              'side-panel-container@user-overview': {
                 template: '<user-status-history service-id="\'squared-fusion-cal\'"></user-status-history>',
               },
             },
@@ -1552,7 +1552,7 @@
           })
           .state('user-overview.hybrid-services-squared-fusion-gcal', {
             views: {
-              'container@user-overview': {
+              'side-panel-container@user-overview': {
                 templateUrl: 'modules/hercules/user-sidepanel/calendarServicePreview.tpl.html',
                 controller: 'CalendarServicePreviewCtrl',
               },
@@ -1567,7 +1567,7 @@
           })
           .state('user-overview.hybrid-services-squared-fusion-gcal.history', {
             views: {
-              'container@user-overview': {
+              'side-panel-container@user-overview': {
                 template: '<user-status-history service-id="\'squared-fusion-gcal\'"></user-status-history>',
               },
             },
@@ -1594,7 +1594,7 @@
           })
           .state('user-overview.hybrid-services-squared-fusion-uc.aware-settings', {
             views: {
-              'container@user-overview': {
+              'side-panel-container@user-overview': {
                 template: '<hybrid-call-service-aware-user-settings user-id="$resolve.userId" user-email-address="$resolve.userEmailAddress" entitlement-updated-callback="$resolve.onEntitlementChange(options)"></hybrid-call-service-aware-user-settings>',
               },
             },
@@ -1620,7 +1620,7 @@
           })
           .state('user-overview.hybrid-services-squared-fusion-uc.aware-settings.uc-history', {
             views: {
-              'container@user-overview': {
+              'side-panel-container@user-overview': {
                 template: '<user-status-history service-id="\'squared-fusion-uc\'"></user-status-history>',
               },
             },
@@ -1633,7 +1633,7 @@
           })
           .state('user-overview.hybrid-services-squared-fusion-uc.connect-settings', {
             views: {
-              'container@user-overview': {
+              'side-panel-container@user-overview': {
                 template: '<hybrid-call-service-connect-user-settings user-id="$resolve.userId" user-email-address="$resolve.userEmailAddress" entitlement-updated-callback="$resolve.onEntitlementChange(options)"  voicemail-feature-toggled="$resolve.voicemailFeatureToggled" user-test-tool-feature-toggled="$resolve.userTestToolFeatureToggled"></hybrid-call-service-connect-user-settings>',
               },
             },
@@ -1665,7 +1665,7 @@
           })
           .state('user-overview.hybrid-services-squared-fusion-uc.connect-settings.ec-history', {
             views: {
-              'container@user-overview': {
+              'side-panel-container@user-overview': {
                 template: '<user-status-history service-id="\'squared-fusion-ec\'"></user-status-history>',
               },
             },
@@ -1678,7 +1678,7 @@
           })
           .state('user-overview.conferencing', {
             views: {
-              'container@user-overview': {
+              'side-panel-container@user-overview': {
                 templateUrl: 'modules/core/users/userOverview/conferencePreview.tpl.html',
                 controller: 'ConferencePreviewCtrl',
                 controllerAs: 'confPreview',
@@ -1693,7 +1693,7 @@
           })
           .state('user-overview.conferencing.webex', {
             views: {
-              'container@user-overview': {
+              'side-panel-container@user-overview': {
                 templateUrl: 'modules/webex/userSettings/userSettings.tpl.html',
                 controller: 'WebExUserSettingsCtrl',
               },
@@ -1708,7 +1708,7 @@
           })
           .state('user-overview.conferencing.webex.webex2', {
             views: {
-              'container@user-overview': {
+              'side-panel-container@user-overview': {
                 templateUrl: 'modules/webex/userSettings/userSettings2.tpl.html',
                 controller: 'WebExUserSettings2Ctrl',
               },
@@ -1723,7 +1723,7 @@
           })
           .state('user-overview.contactCenter', {
             views: {
-              'container@user-overview': {
+              'side-panel-container@user-overview': {
                 templateUrl: 'modules/sunlight/users/userOverview/sunlightUserOverview.tpl.html',
                 controller: 'SunlightUserOverviewCtrl',
                 controllerAs: 'SunlightUserOverview',
@@ -1738,7 +1738,7 @@
           })
           .state('user-overview.user-profile', {
             views: {
-              'container@user-overview': {
+              'side-panel-container@user-overview': {
                 controller: 'UserRolesCtrl',
                 templateUrl: 'modules/core/users/userRoles/userRoles.tpl.html',
               },
@@ -1757,7 +1757,7 @@
           })
           .state('user-overview.roles-and-security', {
             views: {
-              'container@user-overview': {
+              'side-panel-container@user-overview': {
                 controller: 'UserRolesCtrl',
                 templateUrl: 'modules/core/users/userRoles/userRoles.tpl.html',
               },
@@ -1772,7 +1772,7 @@
           })
           .state('user-overview.cmc', {
             views: {
-              'container@user-overview': {
+              'side-panel-container@user-overview': {
                 template: '<cmc-user-details-settings user="$resolve.user" ng-if="$resolve.hasCmcFeatureToggle"></cmc-user-details-settings>',
               },
             },
@@ -1855,7 +1855,7 @@
           })
           .state('organization-overview.features', {
             views: {
-              'container@organization-overview': {
+              'side-panel-container@organization-overview': {
                 templateUrl: 'modules/core/organizations/organizationFeatures/organizationFeatures.tpl.html',
                 controller: 'OrganizationFeaturesCtrl',
                 controllerAs: 'features',
@@ -1870,7 +1870,7 @@
           })
           .state('organization-overview.add.addNumbers', {
             views: {
-              'container@organization-overview': {
+              'side-panel-container@organization-overview': {
                 templateUrl: 'modules/core/organizations/organizationAdd/addNumbers.tpl.html',
                 controller: 'DidAddCtrl',
                 controllerAs: 'didAdd',
@@ -1942,7 +1942,7 @@
           })
           .state('webexReportsPanel.more', {
             views: {
-              'container@webexReportsPanel': {
+              'side-panel-container@webexReportsPanel': {
                 template: '<cust-webex-reports-more></cust-webex-reports-more>',
               },
             },
@@ -2182,7 +2182,7 @@
           })
           .state('place-overview.placeLocationDetails', {
             views: {
-              'container@place-overview': {
+              'side-panel-container@place-overview': {
                 template: '<uc-user-location-details user-id="$resolve.userId"></uc-user-location-details>',
               },
             },
@@ -2208,7 +2208,7 @@
           })
           .state('place-overview.preferredLanguage', {
             views: {
-              'container@place-overview': {
+              'side-panel-container@place-overview': {
                 template: '<uc-preferred-language-details preferred-language-feature="$resolve.preferredLanguageFeature"></uc-preferred-language-details>',
               },
             },
@@ -2233,7 +2233,7 @@
           })
           .state('place-overview.csdmDevice', {
             views: {
-              'container@place-overview': {
+              'side-panel-container@place-overview': {
                 controller: 'DeviceOverviewCtrl',
                 controllerAs: 'deviceOverview',
                 templateUrl: 'modules/squared/devices/overview/deviceOverview.tpl.html',
@@ -2254,7 +2254,7 @@
           })
           .state('place-overview.csdmDevice.emergencyServices', {
             views: {
-              'container@place-overview': {
+              'side-panel-container@place-overview': {
                 template: '<uc-emergency-services></uc-emergency-services>',
               },
             },
@@ -2273,7 +2273,7 @@
           })
           .state('place-overview.communication', {
             views: {
-              'container@place-overview': {
+              'side-panel-container@place-overview': {
                 template: '<place-call-overview></place-call-overview>',
               },
             },
@@ -2293,7 +2293,7 @@
           })
           .state('place-overview.communication.speedDials', {
             views: {
-              'container@place-overview': {
+              'side-panel-container@place-overview': {
                 template: '<uc-speed-dial owner-type="places" owner-id="$resolve.ownerId"></uc-speed-dial>',
               },
             },
@@ -2313,7 +2313,7 @@
           })
           .state('place-overview.communication.cos', {
             views: {
-              'container@place-overview': {
+              'side-panel-container@place-overview': {
                 template: '<uc-user-cos-form member-type="places" member-id="$resolve.ownerId"></uc-user-cos-form>',
               },
             },
@@ -2333,7 +2333,7 @@
           })
           .state('place-overview.communication.internationalDialing', {
             views: {
-              'container@place-overview': {
+              'side-panel-container@place-overview': {
                 template: '<uc-dialing  watcher="$resolve.watcher" selected="$resolve.selected" title="internationalDialingPanel.title"></uc-dialing>',
               },
             },
@@ -2355,7 +2355,7 @@
           })
           .state('place-overview.communication.local', {
             views: {
-              'container@place-overview': {
+              'side-panel-container@place-overview': {
                 template: '<uc-dialing  watcher="$resolve.watcher" selected="$resolve.selected" title="telephonyPreview.localDialing"></uc-dialing>',
               },
             },
@@ -2377,7 +2377,7 @@
           })
           .state('place-overview.communication.line-overview', {
             views: {
-              'container@place-overview': {
+              'side-panel-container@place-overview': {
                 template: '<uc-line-overview owner-type="place" owner-name="$resolve.ownerName" owner-id="$resolve.ownerId" owner-place-type="$resolve.ownerPlaceType" number-id="$resolve.numberId"></uc-line-overview>',
               },
             },
@@ -2409,7 +2409,7 @@
           })
           .state('place-overview.communication.externaltransfer', {
             views: {
-              'container@place-overview': {
+              'side-panel-container@place-overview': {
                 template: '<uc-external-transfer member-type="places" member-id="$resolve.ownerId"></uc-external-transfer>',
               },
             },
@@ -2455,7 +2455,7 @@
           })
           .state('place-overview.hybrid-services-squared-fusion-cal', {
             views: {
-              'container@place-overview': {
+              'side-panel-container@place-overview': {
                 templateUrl: 'modules/hercules/user-sidepanel/calendarServicePreview.tpl.html',
                 controller: 'CalendarServicePreviewCtrl',
               },
@@ -2473,7 +2473,7 @@
           })
           .state('place-overview.hybrid-services-squared-fusion-cal.history', {
             views: {
-              'container@place-overview': {
+              'side-panel-container@place-overview': {
                 template: '<user-status-history service-id="\'squared-fusion-cal\'"></user-status-history>',
               },
             },
@@ -2486,7 +2486,7 @@
           })
           .state('place-overview.hybrid-services-squared-fusion-gcal', {
             views: {
-              'container@place-overview': {
+              'side-panel-container@place-overview': {
                 templateUrl: 'modules/hercules/user-sidepanel/calendarServicePreview.tpl.html',
                 controller: 'CalendarServicePreviewCtrl',
               },
@@ -2503,7 +2503,7 @@
           })
           .state('place-overview.hybrid-services-squared-fusion-gcal.history', {
             views: {
-              'container@place-overview': {
+              'side-panel-container@place-overview': {
                 template: '<user-status-history service-id="\'squared-fusion-gcal\'"></user-status-history>',
               },
             },
@@ -2516,7 +2516,7 @@
           })
           .state('place-overview.hybrid-services-squared-fusion-uc', {
             views: {
-              'container@place-overview': {
+              'side-panel-container@place-overview': {
                 templateUrl: 'modules/hercules/user-sidepanel/hybrid-call-service-place-settings/callServicePlaceSettings.template.html',
                 controller: 'CallServicePlaceSettingsCtrl',
               },
@@ -2533,7 +2533,7 @@
           })
           .state('place-overview.hybrid-services-squared-fusion-uc.uc-history', {
             views: {
-              'container@place-overview': {
+              'side-panel-container@place-overview': {
                 template: '<user-status-history service-id="\'squared-fusion-uc\'"></user-status-history>',
               },
             },
@@ -2707,14 +2707,14 @@
           .state('gmTdDetails.sites', {
             params: { data: {} },
             views: {
-              'container@gmTdDetails': {
+              'side-panel-container@gmTdDetails': {
                 template: '<gm-td-sites></gm-td-sites>',
               },
             },
           })
           .state('gmTdDetails.notes', {
             views: {
-              'container@gmTdDetails': {
+              'side-panel-container@gmTdDetails': {
                 template: '<gm-td-notes></gm-td-notes>',
               },
             },
@@ -2731,7 +2731,7 @@
           })
           .state('gmTdDetails.gmTdNumbers', {
             views: {
-              'container@gmTdDetails': {
+              'side-panel-container@gmTdDetails': {
                 template: '<gm-td-numbers></gm-td-numbers>',
               },
             },
@@ -2746,7 +2746,7 @@
           })
           .state('gemCbgDetails.sites', {
             views: {
-              'container@gemCbgDetails': {
+              'side-panel-container@gemCbgDetails': {
                 template: '<cbg-sites></cbg-sites>',
               },
             },
@@ -2754,7 +2754,7 @@
           })
           .state('gemCbgDetails.editCountry', {
             views: {
-              'container@gemCbgDetails': {
+              'side-panel-container@gemCbgDetails': {
                 template: '<cbg-edit-country></cbg-edit-country>',
               },
             },
@@ -2762,7 +2762,7 @@
           })
           .state('gemCbgDetails.notes', {
             views: {
-              'container@gemCbgDetails': {
+              'side-panel-container@gemCbgDetails': {
                 template: '<cbg-notes></cbg-notes>',
               },
             },
@@ -2823,7 +2823,7 @@
           })
           .state('customer-overview.customerAdministrators', {
             views: {
-              'container@customer-overview': {
+              'side-panel-container@customer-overview': {
                 controller: 'CustomerAdministratorDetailCtrl',
                 controllerAs: 'customerAdmin',
                 templateUrl: 'modules/core/customers/customerAdministrators/customerAdministratorDetail.tpl.html',
@@ -2838,7 +2838,7 @@
           })
           .state('customer-overview.customerSubscriptions', {
             views: {
-              'container@customer-overview': {
+              'side-panel-container@customer-overview': {
                 controller: 'CustomerSubscriptionsDetailCtrl',
                 controllerAs: '$ctrl',
                 templateUrl: 'modules/core/customers/customerSubscriptions/customerSubscriptionsDetail.tpl.html',
@@ -2857,7 +2857,7 @@
             },
             data: {},
             views: {
-              'container@customer-overview': {
+              'side-panel-container@customer-overview': {
                 template: '<uc-orders-overview is-partner="true" current-customer="$resolve.currentCustomer"></uc-orders-overview>',
               },
             },
@@ -2875,7 +2875,7 @@
           })
           .state('customer-overview.meetingDetail', {
             views: {
-              'container@customer-overview': {
+              'side-panel-container@customer-overview': {
                 controller: 'MeetingDetailCtrl',
                 controllerAs: 'meetingDetail',
                 templateUrl: 'modules/core/customers/customerOverview/meetingDetail.tpl.html',
@@ -2893,7 +2893,7 @@
           })
           .state('customer-overview.sharedDeviceDetail', {
             views: {
-              'container@customer-overview': {
+              'side-panel-container@customer-overview': {
                 controller: 'SharedDeviceDetailCtrl',
                 controllerAs: 'sharedDeviceDetail',
                 templateUrl: 'modules/core/customers/customerOverview/sharedDeviceDetail.tpl.html',
@@ -2911,7 +2911,7 @@
           })
           .state('customer-overview.careLicenseDetail', {
             views: {
-              'container@customer-overview': {
+              'side-panel-container@customer-overview': {
                 controller: 'CareLicenseDetailCtrl',
                 controllerAs: 'careLicenseDetail',
                 templateUrl: 'modules/core/customers/customerOverview/careLicenseDetail.tpl.html',
@@ -2929,7 +2929,7 @@
           })
           .state('customer-overview.externalNumbers', {
             views: {
-              'container@customer-overview': {
+              'side-panel-container@customer-overview': {
                 controller: 'ExternalNumberDetailCtrl',
                 controllerAs: 'externalNumbers',
                 templateUrl: 'modules/huron/externalNumbers/externalNumberDetail.tpl.html',
@@ -2944,7 +2944,7 @@
           })
           .state('customer-overview.domainDetail', {
             views: {
-              'container@customer-overview': {
+              'side-panel-container@customer-overview': {
                 controller: 'DomainDetailCtrl',
                 controllerAs: 'domainDetail',
                 templateUrl: 'modules/core/customers/customerOverview/domainDetail.tpl.html',
@@ -2994,7 +2994,11 @@
               isCarrierByopstn: {},
             },
             data: {},
-            template: '<uc-order-detail current-customer= "$resolve.currentCustomer" current-order="$resolve.currentOrder" is-carrier-byopstn= "$resolve.isCarrierByopstn"></uc-order-detail>',
+            views: {
+              'side-panel-container@customerPstnOrdersOverview': {
+                template: '<uc-order-detail current-customer= "$resolve.currentCustomer" current-order="$resolve.currentOrder" is-carrier-byopstn= "$resolve.isCarrierByopstn"></uc-order-detail>',
+              },
+            },
             resolve: {
               data: /* @ngInject */ function ($state, $stateParams) {
                 $state.get('customerPstnOrdersOverview.orderDetail').data.displayName = $stateParams.vendor === 'BYOPSTN' ?
@@ -3017,7 +3021,7 @@
           })
           .state('customer-overview.orderDetail', {
             views: {
-              'container@customer-overview': {
+              'side-panel-container@customer-overview': {
                 template: '<uc-order-detail current-customer= "$resolve.currentCustomer" current-order="$resolve.currentOrder", is-carrier-byopstn= "$resolve.isCarrierByopstn"></uc-order-detail>',
               },
             },
@@ -3939,7 +3943,11 @@
             },
           })
           .state('context-fields-sidepanel.options', {
-            template: '<context-field-sidepanel-options-list type-definition="$resolve.dataTypeDefinition" default-option="{{::$resolve.defaultOption}}"></context-field-sidepanel-options-list>',
+            views: {
+              'side-panel-container@context-fields-sidepanel': {
+                template: '<context-field-sidepanel-options-list type-definition="$resolve.dataTypeDefinition" default-option="{{::$resolve.defaultOption}}"></context-field-sidepanel-options-list>',
+              },
+            },
             params: {
               dataTypeDefinition: {},
               defaultOption: undefined,
@@ -4023,9 +4031,13 @@
             },
           })
           .state('context-fieldsets-sidepanel.fields', {
-            templateUrl: 'modules/context/fieldsets/sidepanel/fieldList/hybrid-context-fieldsets-field-list.html',
-            controller: 'ContextFieldsetsSidepanelFieldListCtrl',
-            controllerAs: 'contextFieldsetsSidepanelFieldListCtrl',
+            views: {
+              'side-panel-container@context-fieldsets-sidepanel': {
+                templateUrl: 'modules/context/fieldsets/sidepanel/fieldList/hybrid-context-fieldsets-field-list.html',
+                controller: 'ContextFieldsetsSidepanelFieldListCtrl',
+                controllerAs: 'contextFieldsetsSidepanelFieldListCtrl',
+              },
+            },
             data: {
               displayName: 'Fields',
             },
@@ -4120,9 +4132,13 @@
             },
           })
           .state('context-cluster-sidepanel.host-details', {
-            templateUrl: 'modules/hercules/cluster-sidepanel/host-details/host-details.html',
-            controller: 'HybridServicesHostDetailsController',
-            controllerAs: 'hostDetailsCtrl',
+            views: {
+              'side-panel-container@context-cluster-sidepanel': {
+                templateUrl: 'modules/hercules/cluster-sidepanel/host-details/host-details.html',
+                controller: 'HybridServicesHostDetailsController',
+                controllerAs: 'hostDetailsCtrl',
+              },
+            },
             data: {
               displayName: 'Node',
             },
@@ -4181,7 +4197,11 @@
             },
           })
           .state('hybrid-services-connector-sidepanel.alarm-details', {
-            template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
+            views: {
+              'side-panel-container@hybrid-services-connector-sidepanel': {
+                template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
+              },
+            },
             // If data not present, $state.current.data.displayName can't be changed
             data: {},
             params: {
@@ -4262,9 +4282,13 @@
             },
           })
           .state('hds-cluster-details.host-details', {
-            templateUrl: 'modules/hercules/cluster-sidepanel/host-details/host-details.html',
-            controller: 'HybridServicesHostDetailsController',
-            controllerAs: 'hostDetailsCtrl',
+            views: {
+              'side-panel-container@hds-cluster-details': {
+                templateUrl: 'modules/hercules/cluster-sidepanel/host-details/host-details.html',
+                controller: 'HybridServicesHostDetailsController',
+                controllerAs: 'hostDetailsCtrl',
+              },
+            },
             data: {
               displayName: 'Node',
             },
@@ -4279,7 +4303,11 @@
             },
           })
           .state('hds-cluster-details.alarm-details', {
-            template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
+            views: {
+              'side-panel-container@hds-cluster-details': {
+                template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
+              },
+            },
             // If data not present, $state.current.data.displayName can't be changed
             data: {},
             params: {
@@ -4721,7 +4749,11 @@
             },
           })
           .state('private-trunk-sidepanel.alarm-details', {
-            template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
+            views: {
+              'side-panel-container@private-trunk-sidepanel': {
+                template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
+              },
+            },
             // If data not present, $state.current.data.displayName can't be changed
             data: {},
             params: {
@@ -4762,9 +4794,13 @@
             },
           })
           .state('expressway-cluster-sidepanel.host-details', {
-            templateUrl: 'modules/hercules/cluster-sidepanel/host-details/host-details.html',
-            controller: 'HybridServicesHostDetailsController',
-            controllerAs: 'hostDetailsCtrl',
+            views: {
+              'side-panel-container@expressway-cluster-sidepanel': {
+                templateUrl: 'modules/hercules/cluster-sidepanel/host-details/host-details.html',
+                controller: 'HybridServicesHostDetailsController',
+                controllerAs: 'hostDetailsCtrl',
+              },
+            },
             // If data not present, $state.current.data.displayName can't be changed
             data: {},
             params: {
@@ -4781,7 +4817,11 @@
             },
           })
           .state('expressway-cluster-sidepanel.alarm-details', {
-            template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
+            views: {
+              'side-panel-container@expressway-cluster-sidepanel': {
+                template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
+              },
+            },
             // If data not present, $state.current.data.displayName can't be changed
             data: {},
             params: {
@@ -4831,9 +4871,13 @@
             },
           })
           .state('media-cluster-details.host-details', {
-            templateUrl: 'modules/hercules/cluster-sidepanel/host-details/host-details.html',
-            controller: 'HybridServicesHostDetailsController',
-            controllerAs: 'hostDetailsCtrl',
+            views: {
+              'side-panel-container@media-cluster-details': {
+                templateUrl: 'modules/hercules/cluster-sidepanel/host-details/host-details.html',
+                controller: 'HybridServicesHostDetailsController',
+                controllerAs: 'hostDetailsCtrl',
+              },
+            },
             data: {
               displayName: 'Node',
             },
@@ -4848,7 +4892,11 @@
             },
           })
           .state('media-cluster-details.alarm-details', {
-            template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
+            views: {
+              'side-panel-container@media-cluster-details': {
+                template: '<alarm-details-sidepanel alarm="$resolve.alarm"></alarm-details-sidepanel>',
+              },
+            },
             // If data not present, $state.current.data.displayName can't be changed
             data: {},
             params: {
