@@ -2726,9 +2726,13 @@
             },
           })
           .state('customer-overview.customerAdministrators', {
-            controller: 'CustomerAdministratorDetailCtrl',
-            controllerAs: 'customerAdmin',
-            templateUrl: 'modules/core/customers/customerAdministrators/customerAdministratorDetail.tpl.html',
+            views: {
+              'container@customer-overview': {
+                controller: 'CustomerAdministratorDetailCtrl',
+                controllerAs: 'customerAdmin',
+                templateUrl: 'modules/core/customers/customerAdministrators/customerAdministratorDetail.tpl.html',
+              },
+            },
             resolve: {
               data: /* @ngInject */ function ($state, $translate) {
                 $state.get('customer-overview.customerAdministrators').data.displayName = $translate.instant('customerPage.administrators');
@@ -2737,9 +2741,13 @@
             data: {},
           })
           .state('customer-overview.customerSubscriptions', {
-            controller: 'CustomerSubscriptionsDetailCtrl',
-            controllerAs: '$ctrl',
-            templateUrl: 'modules/core/customers/customerSubscriptions/customerSubscriptionsDetail.tpl.html',
+            views: {
+              'container@customer-overview': {
+                controller: 'CustomerSubscriptionsDetailCtrl',
+                controllerAs: '$ctrl',
+                templateUrl: 'modules/core/customers/customerSubscriptions/customerSubscriptionsDetail.tpl.html',
+              },
+            },
             resolve: {
               data: /* @ngInject */ function ($state, $translate) {
                 $state.get('customer-overview.customerSubscriptions').data.displayName = $translate.instant('customerPage.orderRequest');
@@ -2752,7 +2760,11 @@
               isCarrierByopstn: {},
             },
             data: {},
-            template: '<uc-orders-overview is-partner="true" current-customer="$resolve.currentCustomer"></uc-orders-overview>',
+            views: {
+              'container@customer-overview': {
+                template: '<uc-orders-overview is-partner="true" current-customer="$resolve.currentCustomer"></uc-orders-overview>',
+              },
+            },
             resolve: {
               data: /* @ngInject */ function ($state, $translate) {
                 $state.get('customer-overview.ordersOverview').data.displayName = $translate.instant('customerPage.pstnOrders');
@@ -2766,9 +2778,13 @@
             },
           })
           .state('customer-overview.meetingDetail', {
-            controller: 'MeetingDetailCtrl',
-            controllerAs: 'meetingDetail',
-            templateUrl: 'modules/core/customers/customerOverview/meetingDetail.tpl.html',
+            views: {
+              'container@customer-overview': {
+                controller: 'MeetingDetailCtrl',
+                controllerAs: 'meetingDetail',
+                templateUrl: 'modules/core/customers/customerOverview/meetingDetail.tpl.html',
+              },
+            },
             resolve: {
               data: /* @ngInject */ function ($state, $translate) {
                 $state.get('customer-overview.meetingDetail').data.displayName = $translate.instant('customerPage.meetingLicenses');
@@ -2780,9 +2796,13 @@
             },
           })
           .state('customer-overview.sharedDeviceDetail', {
-            controller: 'SharedDeviceDetailCtrl',
-            controllerAs: 'sharedDeviceDetail',
-            templateUrl: 'modules/core/customers/customerOverview/sharedDeviceDetail.tpl.html',
+            views: {
+              'container@customer-overview': {
+                controller: 'SharedDeviceDetailCtrl',
+                controllerAs: 'sharedDeviceDetail',
+                templateUrl: 'modules/core/customers/customerOverview/sharedDeviceDetail.tpl.html',
+              },
+            },
             resolve: {
               data: /* @ngInject */ function ($state, $translate) {
                 $state.get('customer-overview.sharedDeviceDetail').data.displayName = $translate.instant('customerPage.sharedDeviceLicenses');
@@ -2794,9 +2814,13 @@
             },
           })
           .state('customer-overview.careLicenseDetail', {
-            controller: 'CareLicenseDetailCtrl',
-            controllerAs: 'careLicenseDetail',
-            templateUrl: 'modules/core/customers/customerOverview/careLicenseDetail.tpl.html',
+            views: {
+              'container@customer-overview': {
+                controller: 'CareLicenseDetailCtrl',
+                controllerAs: 'careLicenseDetail',
+                templateUrl: 'modules/core/customers/customerOverview/careLicenseDetail.tpl.html',
+              },
+            },
             resolve: {
               data: /* @ngInject */ function ($state, $translate) {
                 $state.get('customer-overview.careLicenseDetail').data.displayName = $translate.instant('customerPage.careLicenses');
@@ -2808,9 +2832,13 @@
             },
           })
           .state('customer-overview.externalNumbers', {
-            controller: 'ExternalNumberDetailCtrl',
-            controllerAs: 'externalNumbers',
-            templateUrl: 'modules/huron/externalNumbers/externalNumberDetail.tpl.html',
+            views: {
+              'container@customer-overview': {
+                controller: 'ExternalNumberDetailCtrl',
+                controllerAs: 'externalNumbers',
+                templateUrl: 'modules/huron/externalNumbers/externalNumberDetail.tpl.html',
+              },
+            },
             resolve: {
               data: /* @ngInject */ function ($state, $translate) {
                 $state.get('customer-overview.externalNumbers').data.displayName = $translate.instant('customerPage.phoneNumbers');
@@ -2819,9 +2847,13 @@
             data: {},
           })
           .state('customer-overview.domainDetail', {
-            controller: 'DomainDetailCtrl',
-            controllerAs: 'domainDetail',
-            templateUrl: 'modules/core/customers/customerOverview/domainDetail.tpl.html',
+            views: {
+              'container@customer-overview': {
+                controller: 'DomainDetailCtrl',
+                controllerAs: 'domainDetail',
+                templateUrl: 'modules/core/customers/customerOverview/domainDetail.tpl.html',
+              },
+            },
             resolve: {
               data: /*ngInject */ function ($state, $translate) {
                 $state.get('customer-overview.domainDetail').data.displayName = $translate.instant('customerPage.domains');
@@ -2888,6 +2920,11 @@
             },
           })
           .state('customer-overview.orderDetail', {
+            views: {
+              'container@customer-overview': {
+                template: '<uc-order-detail current-customer= "$resolve.currentCustomer" current-order="$resolve.currentOrder", is-carrier-byopstn= "$resolve.isCarrierByopstn"></uc-order-detail>',
+              },
+            },
             parent: 'customer-overview.ordersOverview',
             params: {
               currentCustomer: {},
@@ -2895,7 +2932,6 @@
               isCarrierByopstn: {},
             },
             data: {},
-            template: '<uc-order-detail current-customer= "$resolve.currentCustomer" current-order="$resolve.currentOrder", is-carrier-byopstn= "$resolve.isCarrierByopstn"></uc-order-detail>',
             resolve: {
               data: /* @ngInject */ function ($state, $translate, $stateParams) {
                 $state.get('customer-overview.orderDetail').data.displayName = $stateParams.isCarrierByopstn ?
