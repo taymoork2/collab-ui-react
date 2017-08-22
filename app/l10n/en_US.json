@@ -712,7 +712,7 @@
     "meetingNumber": "Meeting Number",
     "scheduledFrom": "Scheduled From",
     "placeholder-date": "Choose a day",
-    "hostNameAndId":"Host Name/Host ID",
+    "hostNameAndId": "Host Name/Host ID",
     "siteIdAndName": "Site ID/Site Name",
     "search-info-title": "Search for a meeting",
     "placeholder-text": "Search email or meeting number",
@@ -4369,7 +4369,7 @@
     "failedToFetchSiteLevelLanguage": "Failed to fetch site level language. Reason:",
     "userModule": "user",
     "placeModule": "place",
-    "placeDetails":"Place Details",
+    "placeDetails": "Place Details",
     "saveModal": {
       "title": "Save Settings",
       "message1": "Changing the language will cause all devices for this user to reboot and may take a few minutes.",
@@ -5635,6 +5635,12 @@
       "placeholder": "Enter the SIP trunk address...",
       "example": "Example: sips://203.0.113.0:5062"
     },
+    "trustedSip": {
+      "success": "Trusted SIP source(s) saved successfully.",
+      "title": "Trusted SIP sources",
+      "description": "Enter the ip addresses of the SIP sources from where SIP calls will be accepted.",
+      "placeholder": "Enter the trusted SIP sources..."
+    },
     "videoQuality": {
       "title": "Video Quality",
       "description": "Enable 1080P HD video for all participants hosted on on-premises media nodes.",
@@ -6731,10 +6737,10 @@
     "chatPlusCallbackMediaType": "Chat+Callback",
     "virtualAssistantCode": "Va",
     "virtualAssistantMediaType": "Virtual Assistants",
-    "Ch" : "Chat",
-    "Ca" : "Callback",
-    "ChCa" : "Chat+Callback",
-    "Va" : "Customer Virtual Assistant",
+    "Ch": "Chat",
+    "Ca": "Callback",
+    "ChCa": "Chat+Callback",
+    "Va": "Customer Virtual Assistant",
     "newFeatures": {
       "newFeatureButtonText": "New",
       "newCareTemplateModalTitle": "Create New Care Template",
@@ -7419,7 +7425,7 @@
       "meeting": {
         "title": "Meeting",
         "notEnabledText": "Join up to 25 colleagues in a Team Space Sync-up or many more in a WebEx Meeting Center.",
-        "serviceProvisioning":"Meeting service is being provisioned and will be available soon.",
+        "serviceProvisioning": "Meeting service is being provisioned and will be available soon.",
         "meetingsNotSetUp": "Meeting service not set up",
         "setupMeetingService": "Set up Meeting Service"
       },
@@ -7613,7 +7619,7 @@
       "VoIPOnly": "VoIP Only",
       "CCASP": "CCA-SP",
       "TSP": "TSP Audio",
-      "ST" : "WebEx Storage",
+      "ST": "WebEx Storage",
       "STSPK": "Spark Storage",
       "MSGR": "Messenger"
     }

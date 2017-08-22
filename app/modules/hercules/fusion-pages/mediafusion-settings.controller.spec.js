@@ -24,12 +24,18 @@ describe('Controller: MediafusionClusterSettingsController', function () {
     this.initController('MediafusionClusterSettingsController', {
       controllerLocals: {
         hasMFFeatureToggle: true,
+        hasMFSIPFeatureToggle: true,
       },
     });
   });
 
   it('check if saveSipTrunk is called', function () {
     this.controller.saveSipTrunk();
+    expect(this.MediaClusterServiceV2.setProperties).toHaveBeenCalled();
+  });
+
+  it('check if saveTrustedSip is called', function () {
+    this.controller.saveTrustedSip();
     expect(this.MediaClusterServiceV2.setProperties).toHaveBeenCalled();
   });
 });

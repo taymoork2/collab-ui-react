@@ -329,7 +329,9 @@
           .state('largepanel', {
             abstract: true,
             onExit: panelOnExit,
-            onEnter: panelOnEnter({ type: 'large' }),
+            onEnter: panelOnEnter({
+              type: 'large',
+            }),
           });
 
         // Enter and Exit functions for panel(large or side)
@@ -357,11 +359,11 @@
               template: template,
               // TODO(pajeter): remove inline template when cs-modal is updated
               windowTemplate: '<div modal-render="{{$isRendered}}" tabindex="-1" role="dialog" class="sidepanel-modal"' +
-              'modal-animation-class="fade"' +
-              'modal-in-class="in"' +
-              'ng-style="{\'z-index\': 1051, display: \'block\', visibility: \'visible\'}">' +
-              '<div class="modal-content" modal-transclude></div>' +
-              ' </div>',
+                'modal-animation-class="fade"' +
+                'modal-in-class="in"' +
+                'ng-style="{\'z-index\': 1051, display: \'block\', visibility: \'visible\'}">' +
+                '<div class="modal-content" modal-transclude></div>' +
+                ' </div>',
               backdrop: false,
               keyboard: false,
             });
@@ -945,7 +947,7 @@
           .state('users.manage.picker', {
             controller: 'UserManageModalPickerController',
             template: '<div class="center-spinner">' +
-                '<i class="icon icon-spinner icon-2x"></i></div>',
+              '<i class="icon icon-spinner icon-2x"></i></div>',
           })
           .state('users.manage', {
             abstract: true,
@@ -1606,8 +1608,7 @@
           .state('user-overview.roles-and-security', {
             templateUrl: 'modules/core/users/userRoles/userRoles.tpl.html',
             controller: 'UserRolesCtrl',
-            data: {
-            },
+            data: {},
             resolve: {
               data: /* @ngInject */ function ($state, $translate) {
                 _.set($state.get('user-overview.roles-and-security'), 'data.displayName', $translate.instant('usersPreview.rolesAndSecurity'));
@@ -1768,8 +1769,12 @@
             data: {},
             parent: 'sidepanel',
             views: {
-              'sidepanel@': { template: '<cust-webex-reports-panel></cust-webex-reports-panel>' },
-              'header@webexReportsPanel': { templateUrl: 'modules/core/customerReports/webexReports/search/webexReportsPanelHeader.html' },
+              'sidepanel@': {
+                template: '<cust-webex-reports-panel></cust-webex-reports-panel>',
+              },
+              'header@webexReportsPanel': {
+                templateUrl: 'modules/core/customerReports/webexReports/search/webexReportsPanelHeader.html',
+              },
             },
           })
           .state('webexReportsPanel.more', {
@@ -2434,28 +2439,44 @@
           })
           .state('gmTdDetails', {
             data: {},
-            params: { info: {} },
+            params: {
+              info: {},
+            },
             parent: 'sidepanel',
             views: {
-              'sidepanel@': { template: '<gm-td-details></gm-td-details>' },
-              'header@gmTdDetails': { templateUrl: 'modules/gemini/telephonyDomain/details/gmTdDetailsHeader.tpl.html' },
+              'sidepanel@': {
+                template: '<gm-td-details></gm-td-details>',
+              },
+              'header@gmTdDetails': {
+                templateUrl: 'modules/gemini/telephonyDomain/details/gmTdDetailsHeader.tpl.html',
+              },
             },
           })
           .state('gmTdDetails.sites', {
-            params: { data: {} },
+            params: {
+              data: {},
+            },
             template: '<gm-td-sites></gm-td-sites>',
           })
           .state('gmTdDetails.notes', {
             template: '<gm-td-notes></gm-td-notes>',
-            params: { obj: {} },
+            params: {
+              obj: {},
+            },
           })
           .state('gmTdNumbersRequest', {
             data: {},
-            params: { info: {} },
+            params: {
+              info: {},
+            },
             parent: 'largepanel',
             views: {
-              'sidepanel@': { template: '<gm-td-numbers></gm-td-numbers>' },
-              'header@gmTdNumbersRequest': { templateUrl: 'modules/gemini/telephonyDomain/details/gmTdDetailsHeader.tpl.html' },
+              'sidepanel@': {
+                template: '<gm-td-numbers></gm-td-numbers>',
+              },
+              'header@gmTdNumbersRequest': {
+                templateUrl: 'modules/gemini/telephonyDomain/details/gmTdDetailsHeader.tpl.html',
+              },
             },
           })
           .state('gmTdDetails.gmTdNumbers', {
@@ -2466,20 +2487,32 @@
           .state('gemCbgDetails', {
             data: {},
             parent: 'sidepanel',
-            params: { info: {} },
-            views: { 'sidepanel@': { template: '<cbg-details></cbg-details>' } },
+            params: {
+              info: {},
+            },
+            views: {
+              'sidepanel@': {
+                template: '<cbg-details></cbg-details>',
+              },
+            },
           })
           .state('gemCbgDetails.sites', {
             template: '<cbg-sites></cbg-sites>',
-            params: { obj: {} },
+            params: {
+              obj: {},
+            },
           })
           .state('gemCbgDetails.editCountry', {
             template: '<cbg-edit-country></cbg-edit-country>',
-            params: { obj: {} },
+            params: {
+              obj: {},
+            },
           })
           .state('gemCbgDetails.notes', {
             template: '<cbg-notes></cbg-notes>',
-            params: { obj: {} },
+            params: {
+              obj: {},
+            },
           })
           .state('partnercustomers.list', {
             url: '/customers',
@@ -3639,10 +3672,10 @@
               existingFieldsetIds: /* @ngInject */ function ($stateParams) {
                 return $stateParams.existingFieldsetIds;
               },
-              existingFieldsetData: /* @ngIngect */function ($stateParams) {
+              existingFieldsetData: /* @ngIngect */ function ($stateParams) {
                 return $stateParams.existingFieldsetData;
               },
-              inUse: /* @ngIngect */function ($stateParams) {
+              inUse: /* @ngIngect */ function ($stateParams) {
                 return $stateParams.inUse;
               },
               callback: /* @ngInject */ function ($stateParams) {
@@ -3997,6 +4030,9 @@
             resolve: {
               hasMFFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServicePhaseTwo);
+              },
+              hasMFSIPFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceTrustedSIP);
               },
             },
           })
@@ -4453,7 +4489,7 @@
 
         $stateProvider
 
-        //V2 API changes
+          //V2 API changes
           .state('media-cluster-details', {
             parent: 'sidepanel',
             views: {
