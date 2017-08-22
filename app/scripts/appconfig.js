@@ -2181,7 +2181,11 @@
             },
           })
           .state('place-overview.placeLocationDetails', {
-            template: '<uc-user-location-details user-id="$resolve.userId"></uc-user-location-details>',
+            views: {
+              'container@place-overview': {
+                template: '<uc-user-location-details user-id="$resolve.userId"></uc-user-location-details>',
+              },
+            },
             params: {
               reloadToggle: false,
               userDetails: {},
@@ -2203,7 +2207,11 @@
             },
           })
           .state('place-overview.preferredLanguage', {
-            template: '<uc-preferred-language-details preferred-language-feature="$resolve.preferredLanguageFeature"></uc-preferred-language-details>',
+            views: {
+              'container@place-overview': {
+                template: '<uc-preferred-language-details preferred-language-feature="$resolve.preferredLanguageFeature"></uc-preferred-language-details>',
+              },
+            },
             params: {
               reloadToggle: false,
               preferredLanguageFeature: {},
@@ -2225,7 +2233,7 @@
           })
           .state('place-overview.csdmDevice', {
             views: {
-              '': {
+              'container@place-overview': {
                 controller: 'DeviceOverviewCtrl',
                 controllerAs: 'deviceOverview',
                 templateUrl: 'modules/squared/devices/overview/deviceOverview.tpl.html',
@@ -2246,7 +2254,7 @@
           })
           .state('place-overview.csdmDevice.emergencyServices', {
             views: {
-              '': {
+              'container@place-overview': {
                 template: '<uc-emergency-services></uc-emergency-services>',
               },
             },
@@ -2264,7 +2272,11 @@
             },
           })
           .state('place-overview.communication', {
-            template: '<place-call-overview></place-call-overview>',
+            views: {
+              'container@place-overview': {
+                template: '<place-call-overview></place-call-overview>',
+              },
+            },
             params: {
               reloadToggle: false,
             },
@@ -2280,7 +2292,11 @@
             },
           })
           .state('place-overview.communication.speedDials', {
-            template: '<uc-speed-dial owner-type="places" owner-id="$resolve.ownerId"></uc-speed-dial>',
+            views: {
+              'container@place-overview': {
+                template: '<uc-speed-dial owner-type="places" owner-id="$resolve.ownerId"></uc-speed-dial>',
+              },
+            },
             data: {
               displayName: 'Speed Dials',
             },
@@ -2296,7 +2312,11 @@
             },
           })
           .state('place-overview.communication.cos', {
-            template: '<uc-user-cos-form member-type="places" member-id="$resolve.ownerId"></uc-user-cos-form>',
+            views: {
+              'container@place-overview': {
+                template: '<uc-user-cos-form member-type="places" member-id="$resolve.ownerId"></uc-user-cos-form>',
+              },
+            },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
@@ -2312,7 +2332,11 @@
             },
           })
           .state('place-overview.communication.internationalDialing', {
-            template: '<uc-dialing  watcher="$resolve.watcher" selected="$resolve.selected" title="internationalDialingPanel.title"></uc-dialing>',
+            views: {
+              'container@place-overview': {
+                template: '<uc-dialing  watcher="$resolve.watcher" selected="$resolve.selected" title="internationalDialingPanel.title"></uc-dialing>',
+              },
+            },
             params: {
               watcher: null,
               selected: null,
@@ -2330,7 +2354,11 @@
             },
           })
           .state('place-overview.communication.local', {
-            template: '<uc-dialing  watcher="$resolve.watcher" selected="$resolve.selected" title="telephonyPreview.localDialing"></uc-dialing>',
+            views: {
+              'container@place-overview': {
+                template: '<uc-dialing  watcher="$resolve.watcher" selected="$resolve.selected" title="telephonyPreview.localDialing"></uc-dialing>',
+              },
+            },
             params: {
               watcher: null,
               selected: null,
@@ -2348,7 +2376,11 @@
             },
           })
           .state('place-overview.communication.line-overview', {
-            template: '<uc-line-overview owner-type="place" owner-name="$resolve.ownerName" owner-id="$resolve.ownerId" owner-place-type="$resolve.ownerPlaceType" number-id="$resolve.numberId"></uc-line-overview>',
+            views: {
+              'container@place-overview': {
+                template: '<uc-line-overview owner-type="place" owner-name="$resolve.ownerName" owner-id="$resolve.ownerId" owner-place-type="$resolve.ownerPlaceType" number-id="$resolve.numberId"></uc-line-overview>',
+              },
+            },
             params: {
               numberId: '',
             },
@@ -2376,7 +2408,11 @@
             },
           })
           .state('place-overview.communication.externaltransfer', {
-            template: '<uc-external-transfer member-type="places" member-id="$resolve.ownerId"></uc-external-transfer>',
+            views: {
+              'container@place-overview': {
+                template: '<uc-external-transfer member-type="places" member-id="$resolve.ownerId"></uc-external-transfer>',
+              },
+            },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
@@ -2418,8 +2454,12 @@
             },
           })
           .state('place-overview.hybrid-services-squared-fusion-cal', {
-            templateUrl: 'modules/hercules/user-sidepanel/calendarServicePreview.tpl.html',
-            controller: 'CalendarServicePreviewCtrl',
+            views: {
+              'container@place-overview': {
+                templateUrl: 'modules/hercules/user-sidepanel/calendarServicePreview.tpl.html',
+                controller: 'CalendarServicePreviewCtrl',
+              },
+            },
             data: {
               displayName: 'Calendar Service',
             },
@@ -2432,7 +2472,11 @@
             },
           })
           .state('place-overview.hybrid-services-squared-fusion-cal.history', {
-            template: '<user-status-history service-id="\'squared-fusion-cal\'"></user-status-history>',
+            views: {
+              'container@place-overview': {
+                template: '<user-status-history service-id="\'squared-fusion-cal\'"></user-status-history>',
+              },
+            },
             data: {
               displayName: 'Status History',
             },
@@ -2441,8 +2485,12 @@
             },
           })
           .state('place-overview.hybrid-services-squared-fusion-gcal', {
-            templateUrl: 'modules/hercules/user-sidepanel/calendarServicePreview.tpl.html',
-            controller: 'CalendarServicePreviewCtrl',
+            views: {
+              'container@place-overview': {
+                templateUrl: 'modules/hercules/user-sidepanel/calendarServicePreview.tpl.html',
+                controller: 'CalendarServicePreviewCtrl',
+              },
+            },
             data: {
               displayName: 'Calendar Service',
             },
@@ -2454,7 +2502,11 @@
             },
           })
           .state('place-overview.hybrid-services-squared-fusion-gcal.history', {
-            template: '<user-status-history service-id="\'squared-fusion-gcal\'"></user-status-history>',
+            views: {
+              'container@place-overview': {
+                template: '<user-status-history service-id="\'squared-fusion-gcal\'"></user-status-history>',
+              },
+            },
             data: {
               displayName: 'Status History',
             },
@@ -2463,8 +2515,12 @@
             },
           })
           .state('place-overview.hybrid-services-squared-fusion-uc', {
-            templateUrl: 'modules/hercules/user-sidepanel/hybrid-call-service-place-settings/callServicePlaceSettings.template.html',
-            controller: 'CallServicePlaceSettingsCtrl',
+            views: {
+              'container@place-overview': {
+                templateUrl: 'modules/hercules/user-sidepanel/hybrid-call-service-place-settings/callServicePlaceSettings.template.html',
+                controller: 'CallServicePlaceSettingsCtrl',
+              },
+            },
             data: {
               displayName: 'Call Service',
             },
@@ -2476,7 +2532,11 @@
             },
           })
           .state('place-overview.hybrid-services-squared-fusion-uc.uc-history', {
-            template: '<user-status-history service-id="\'squared-fusion-uc\'"></user-status-history>',
+            views: {
+              'container@place-overview': {
+                template: '<user-status-history service-id="\'squared-fusion-uc\'"></user-status-history>',
+              },
+            },
             data: {
               displayName: 'Aware Status History',
             },
@@ -2646,10 +2706,18 @@
           })
           .state('gmTdDetails.sites', {
             params: { data: {} },
-            template: '<gm-td-sites></gm-td-sites>',
+            views: {
+              'container@gmTdDetails': {
+                template: '<gm-td-sites></gm-td-sites>',
+              },
+            },
           })
           .state('gmTdDetails.notes', {
-            template: '<gm-td-notes></gm-td-notes>',
+            views: {
+              'container@gmTdDetails': {
+                template: '<gm-td-notes></gm-td-notes>',
+              },
+            },
             params: { obj: {} },
           })
           .state('gmTdNumbersRequest', {
@@ -2662,7 +2730,11 @@
             },
           })
           .state('gmTdDetails.gmTdNumbers', {
-            template: '<gm-td-numbers></gm-td-numbers>',
+            views: {
+              'container@gmTdDetails': {
+                template: '<gm-td-numbers></gm-td-numbers>',
+              },
+            },
             onEnter: SidePanelLargeOpen,
             onExit: SidePanelLargeClose,
           })
@@ -2673,15 +2745,27 @@
             views: { 'sidepanel@': { template: '<cbg-details></cbg-details>' } },
           })
           .state('gemCbgDetails.sites', {
-            template: '<cbg-sites></cbg-sites>',
+            views: {
+              'container@gemCbgDetails': {
+                template: '<cbg-sites></cbg-sites>',
+              },
+            },
             params: { obj: {} },
           })
           .state('gemCbgDetails.editCountry', {
-            template: '<cbg-edit-country></cbg-edit-country>',
+            views: {
+              'container@gemCbgDetails': {
+                template: '<cbg-edit-country></cbg-edit-country>',
+              },
+            },
             params: { obj: {} },
           })
           .state('gemCbgDetails.notes', {
-            template: '<cbg-notes></cbg-notes>',
+            views: {
+              'container@gemCbgDetails': {
+                template: '<cbg-notes></cbg-notes>',
+              },
+            },
             params: { obj: {} },
           })
           .state('partnercustomers.list', {
