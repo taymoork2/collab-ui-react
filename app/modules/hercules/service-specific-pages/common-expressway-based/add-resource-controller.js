@@ -31,10 +31,6 @@
     vm.localizedAddNewExpressway = $translate.instant('hercules.addResourceDialog.registerNewExpressway');
     vm.localizedAddNewExpresswayHelp = $translate.instant('hercules.addResourceDialog.registerNewExpresswayHelp');
     vm.localizedAddToExistingExpressway = $translate.instant('hercules.addResourceDialog.addToExistingExpressway');
-    vm.localizedWillBeInstalledMessage = $translate.instant('hercules.addResourceDialog.willBeInstalled', {
-      ConnectorName: vm.localizedConnectorName,
-      ServiceName: vm.localizedServiceName,
-    });
     vm.localizedExpresswaysName = $translate.instant('hercules.addResourceDialog.selectClusterPlaceholder');
     vm.localizedCannotProvionError = $translate.instant('hercules.addResourceDialog.cannotProvisionConnector', {
       ConnectorName: vm.localizedConnectorName,

@@ -2380,7 +2380,6 @@
       "upgradeNow": "Upgrade Now"
     },
     "expresswayClusterSettings": {
-      "pageTitle": "{{clusterName}}",
       "upgradeScheduleHeader": "Upgrade",
       "upgradeScheduleSubHeader": "Upgrade Schedule",
       "resourceGroupsHeader": "Resource Group",
@@ -2839,6 +2838,7 @@
           "error": "Error fetching the different cluster types.",
           "title": "What type of resource do you want to add?",
           "expressway-description": "Can run Hybrid Call Service or Hybrid Calendar Service",
+          "expressway-description-with-imp": "Can run Hybrid Call Service, Hybrid Calendar Service, or Hybrid IM & Presence",
           "expressway-not-setup": "Expressway not set up",
           "mediafusion-description": "Can run Hybrid Media Service",
           "mediafusion-not-setup": "Media Service not set up",
@@ -2853,7 +2853,9 @@
             "title": "Choose services that you want the Expressway to manage:",
             "call-not-setup": "Hybrid Call Service not set up",
             "calendar-not-setup": "Hybrid Calendar Service not set up",
-            "add-more-later": "You can add more services later by clicking Add Resource in the Call or Calendar page."
+            "imp-not-setup": "Hybrid IM & Presence Service not set up",
+            "add-more-later": "You can add more services later by clicking Add Resource in the Call or Calendar page.",
+            "add-more-later-with-imp": "You can add more services later by clicking Add Resource in the Call, Calendar, or IM & Presence page."
           },
           "end": {
             "line1": "You may now register the Expressway with Cisco Collaboration Cloud.",
