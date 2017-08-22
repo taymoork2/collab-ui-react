@@ -446,6 +446,41 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.getLocalizedOrgOrAgentInfo('orgInfo')).toEqual('careChatTpl.profile_org_info_cva');
       expect(controller.getLocalizedOrgOrAgentInfo('agentInfo')).toEqual('careChatTpl.profile_agent_info_cva');
     });
+
+    it('should display bot icon when virtual assistant toggle is enabled and Customer Virtual Assistant and Agents is selected', function () {
+      controller.isCVAEnabled = true;
+      controller.selectedAvater = 'bot';
+      controller.selectedTemplateProfile = controller.profiles.agent;
+      expect(controller.displaySelectedProfileAttribute()).toEqual('bot');
+    });
+
+    it('should display agent icon when virtual assistant toggle is disabled and agents profile is selected', function () {
+      controller.isCVAEnabled = false;
+      controller.selectedAvater = 'agent';
+      controller.selectedTemplateProfile = controller.profiles.agent;
+      expect(controller.displaySelectedProfileAttribute()).toEqual('agent');
+    });
+
+    it('should display org icon when virtual assistant toggle is enabled and org profile is selected', function () {
+      controller.isCVAEnabled = true;
+      controller.selectedTemplateProfile = controller.profiles.org;
+      expect(controller.displaySelectedProfileAttribute()).toEqual('org');
+    });
+
+    it('should display virtual assistant or agent tooltip message when mouseover on icons', function () {
+      expect(controller.brandingPageTooltipText('bot')).toEqual('careChatTpl.botProfileTooltip');
+      expect(controller.brandingPageTooltipText('agent')).toEqual('careChatTpl.agentProfileTooltip');
+    });
+
+    it('should display virtual assistant name if configured', function () {
+      controller.template.configuration.virtualAssistant.config = {};
+      controller.template.configuration.virtualAssistant.config.name = 'testBot';
+      expect(controller.careVirtualAssistantName()).toEqual('testBot');
+    });
+
+    it('should display default virtual assistant name if not configured', function () {
+      expect(controller.careVirtualAssistantName()).toEqual('careChatTpl.default_cva_name');
+    });
   });
 
   describe('Overview Page', function () {

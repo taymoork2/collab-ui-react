@@ -54,6 +54,22 @@
     vm.overviewPageTooltipText = overviewPageTooltipText;
     vm.isOverviewCardConfigurable = isOverviewCardConfigurable;
     vm.hasConfiguredVirtualAssistantServices = false;
+    vm.brandingPageTooltipText = brandingPageTooltipText;
+    vm.careVirtualAssistantName = careVirtualAssistantName;
+
+    //chat assistant utils
+    vm.isAgentProfileWithCVA = function () {
+      return vm.isCVAEnabled && (vm.selectedTemplateProfile === vm.profiles.agent);
+    };
+
+    function careVirtualAssistantName() {
+      if (vm.template.configuration.virtualAssistant.config) {
+        return vm.template.configuration.virtualAssistant.config.name;
+      } else {
+        return $translate.instant('careChatTpl.default_cva_name');
+      }
+    }
+
     // Setup Assistant pages with index
     vm.states = {};
 
@@ -93,13 +109,25 @@
       agentInfo: $translate.instant('careChatTpl.profile_agent_info'),
     };
 
+    function brandingPageTooltipText(profileType) {
+      if (profileType === 'bot') {
+        return $translate.instant('careChatTpl.botProfileTooltip');
+      } else {
+        return $translate.instant('careChatTpl.agentProfileTooltip');
+      }
+    }
+
     function getLocalizedOrgOrAgentInfo(msgType) {
-      var isVCAEnabled = vm.template.configuration.virtualAssistant ? vm.template.configuration.virtualAssistant.enabled : false;
-      if (isVCAEnabled) {
+      vm.isCVAEnabled = vm.template.configuration.virtualAssistant ? vm.template.configuration.virtualAssistant.enabled : false;
+      if (vm.isCVAEnabled) {
         return vm.cvaMessage[msgType];
       } else {
         return vm.nonCVAMessage[msgType];
       }
+    }
+
+    function setAvaterInBrandingPage() {
+      vm.selectedAvater = vm.isCVAEnabled ? 'bot' : 'agent';
     }
 
     function getProfileList() {
@@ -251,13 +279,14 @@
       var config = $stateParams.template.configuration;
       vm.selectedMediaType = config.mediaType;
       if (config.mediaType) {
-        if (config.mediaType === vm.mediaTypes.chat) {
+        if (config.mediaType === vm.mediaTypes.chat || config.mediaType === vm.mediaTypes.chatPlusCallback) {
           vm.selectedTemplateProfile = config.mediaSpecificConfiguration.useOrgProfile ?
             vm.profiles.org : vm.profiles.agent;
           vm.selectedAgentProfile = config.mediaSpecificConfiguration.useAgentRealName ?
             vm.agentNames.displayName : vm.agentNames.alias;
           vm.orgName = config.mediaSpecificConfiguration.displayText;
           vm.logoUrl = config.mediaSpecificConfiguration.orgLogoUrl;
+          setAgentProfile();
         }
         vm.timings.startTime.label = config.pages.offHours.schedule.timings.startTime;
         vm.timings.endTime.label = config.pages.offHours.schedule.timings.endTime;
@@ -1368,6 +1397,7 @@
       }
       if (vm.states[next] === 'profile') {
         getProfileList();
+        setAvaterInBrandingPage();
       }
 
       if (nextPage && !nextPage.enabled) {
@@ -1531,6 +1561,17 @@
         return $translate.instant('careChatTpl.agentSettingInfo');
       } else {
         return $translate.instant('careChatTpl.orgSettingInfo');
+      }
+    };
+    vm.toggleBotAgentSelection = function (selectedToggle) {
+      vm.selectedAvater = selectedToggle;
+    };
+
+    vm.displaySelectedProfileAttribute = function () {
+      if (vm.isCVAEnabled) {
+        return vm.selectedTemplateProfile === vm.profiles.org ? 'org' : vm.selectedAvater;
+      } else {
+        return vm.selectedTemplateProfile === vm.profiles.org ? 'org' : 'agent';
       }
     };
 
