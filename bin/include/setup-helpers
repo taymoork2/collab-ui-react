@@ -20,25 +20,28 @@ function is_installed {
     return $?
 }
 
-# install GNU Parallel for known used OS's
-function install_parallel_as_needed {
-    set -x
-    if ! is_installed "parallel"; then
-        if is_installed "brew"; then
-            brew install parallel                  # Mac (as of Yosemite)
-        elif is_installed "dnf"; then
-            sudo dnf install -y parallel           # Fedora (as of F23)
-        elif is_installed "yum"; then
-            sudo yum install -y parallel           # CentOS (as of CentOS 7)
-        elif is_installed "apt-get"; then
-            sudo apt-get update                    # Ubuntu (as of 14.04)
-            sudo apt-get install -y parallel
-        else
-            >&2 echo "[ERROR] ${FUNCNAME[0]} package manager on this OS is not supported."
-            return 1
-        fi
+# install GNU parallel for known used OS's
+function install_gnu_parallel {
+    # Mac (as of Yosemite)
+    if is_installed "brew"; then
+        brew install parallel
+        return $?
+    # Fedora (as of F23)
+    elif is_installed "dnf"; then
+        sudo dnf install -y parallel
+        return $?
+    # CentOS (as of CentOS 7)
+    elif is_installed "yum"; then
+        sudo yum install -y parallel
+        return $?
+    # Ubuntu (as of 14.04)
+    elif is_installed "apt-get"; then
+        sudo apt-get update
+        sudo apt-get install -y parallel
+        return $?
     fi
-    set +x
+    >&2 echo "[ERROR] ${FUNCNAME[0]} package manager on this OS is not supported."
+    return 1
 }
 
 # quietly validate checksums
