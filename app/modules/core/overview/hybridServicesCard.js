@@ -6,7 +6,7 @@
     .factory('OverviewHybridServicesCard', OverviewHybridServicesCard);
 
   /* @ngInject */
-  function OverviewHybridServicesCard($q, Authinfo, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, HybridServicesUtilsService, Notification) {
+  function OverviewHybridServicesCard($q, Authinfo, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, HybridServicesExtrasService, HybridServicesUtilsService, Notification, USSService) {
     return {
       createCard: function createCard() {
         var card = {};
@@ -63,7 +63,20 @@
                 card.serviceList.push(HybridServicesClusterService.getStatusForService('contact-center-context', response.clusterList.value));
               }
             } else {
-              Notification.errorWithTrackingId(response.clusterList.reason, 'overview.cards.hybrid.herculesError');
+              if (_.get(response, 'clusterList.reason.status') === 403) {
+                $q.all([
+                  // Partner user most likely is out of sync in FMS/USS cache after the trial was added in the Atlas backend
+                  // To remedy, invalidate the user cache
+                  USSService.notifyReadOnlyLaunch(),
+                  HybridServicesExtrasService.notifyReadOnlyLaunch(),
+                ])
+                  .then(function () {
+                    // We have invalidated the cache, lets init again
+                    init();
+                  });
+              } else {
+                Notification.errorWithTrackingId(response.clusterList.reason, 'overview.cards.hybrid.herculesError');
+              }
             }
             card.enabled = _.some(card.serviceList, function (service) {
               return service.setup;
