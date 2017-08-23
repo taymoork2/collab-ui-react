@@ -3,6 +3,7 @@
 
   var pageDirectiveNames = [
     'ctName',
+    'ctVirtualAssistant',
     'ctProfile',
     'ctOverview',
     'ctProactivePrompt',

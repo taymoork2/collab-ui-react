@@ -307,7 +307,7 @@
       enabled: false,
       config: {
         id: '',
-        name: 'VirtualAssistant',
+        name: '',
       },
       welcomeMessage: $translate.instant('careChatTpl.virtualAssistantWelcomeMessage'),
     };
@@ -974,7 +974,9 @@
       populateCustomerInformationField4();
       populateFeedbackInformation();
       populateProactivePromptInformation();
-      populateVirtualAssistantInfo();
+      if (vm.template.configuration.mediaType !== vm.mediaTypes.callback) {
+        populateVirtualAssistantInfo();
+      }
     }
 
     function populateCustomerInformationField4() {
@@ -1054,8 +1056,9 @@
     }
 
     function populateVirtualAssistantInfo() {
-      vm.selectedVA =
-        vm.template.configuration.virtualAssistant ? vm.template.configuration.virtualAssistant.config : defaultVirtualAssistantConfig.config;
+      vm.template.configuration.virtualAssistant = vm.template.configuration.virtualAssistant || defaultVirtualAssistantConfig;
+
+      vm.selectedVA = vm.template.configuration.virtualAssistant.config;
 
       vm.template.configuration.virtualAssistant.config =
         vm.template.configuration.virtualAssistant.config ? vm.template.configuration.virtualAssistant.config : defaultVirtualAssistantConfig.config;
@@ -1063,6 +1066,7 @@
       vm.template.configuration.virtualAssistant.welcomeMessage =
         vm.template.configuration.virtualAssistant.welcomeMessage ? vm.template.configuration.virtualAssistant.welcomeMessage : defaultVirtualAssistantConfig.welcomeMessage;
     }
+
     function cancelModal() {
       var modelText = $stateParams.isEditFeature ? {
         bodyMessage: $translate.instant('careChatTpl.ctEditBody'),
@@ -1670,7 +1674,7 @@
         VirtualAssistantService.listConfigs().then(function (result) {
           vm.configuredVirtualAssistantServices = result.items;
           //if the virtual assistant list has only one VA available. use it by default.
-          if (vm.configuredVirtualAssistantServices.length === 1) {
+          if (vm.configuredVirtualAssistantServices.length === 1 && !vm.isEditFeature && vm.template.configuration.mediaType !== vm.mediaTypes.callback) {
             var data = vm.configuredVirtualAssistantServices[0];
             vm.selectedVA = vm.selectedVA || {};
             vm.selectedVA.id = data.id;
