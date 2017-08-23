@@ -7,7 +7,6 @@ fi
 
 manifest_checksums_file=".manifest-checksums"
 manifest_files="package.json yarn.lock"
-dependency_dirs="./node_modules"
 project_root_env_var_name="WX2_ADMIN_WEB_CLIENT_HOME"
 
 # reset function (use this when needing to re-source this file)
@@ -63,26 +62,12 @@ function mk_checksum_file {
     done
 }
 
-# checks existence of a list of dirs
-function dirs_exist {
-    if [ $# -eq 0 ]; then
-        local dirs_list=${dependency_dirs}
-    else
-        local dirs_list="$*"
-    fi
-    for dir in $dirs_list; do
-        if [ ! -d $dir ]; then
-            return 1
-        fi
-    done
-    return 0
-}
-
 function set_local_npm_path {
     export PATH="$PATH:./node_modules/.bin"
     echo '[[ "$PATH" == *"./node_modules/.bin"* ]] || export PATH="$PATH:./node_modules/.bin"' >> ~/`get_bash_conf_file`
 }
 
+# TODO: rm this after confirming no longer needed
 function set_global_npm_path {
     export PATH="$PATH:/usr/local/bin"
     echo '[[ "$PATH" == *"/usr/local/bin"* ]] || export PATH="$PATH:/usr/local/bin"' >> ~/`get_bash_conf_file`
@@ -131,13 +116,6 @@ function mk_deps_tar {
     shift 2
     local files_to_archive=$@
     tar -czf "${cache_dir}/${archive_basename}" ${files_to_archive}
-}
-
-function mk_workspace_tar {
-    tmp_dir=`mktemp -d -t atlas-web.XXXXX`
-    git clone --depth 1 file://${WX2_ADMIN_WEB_CLIENT_HOME} $tmp_dir
-    tar -czf workspace.tar.gz -C $tmp_dir .
-    rm -rf $tmp_dir
 }
 
 function restore_latest_deps {
