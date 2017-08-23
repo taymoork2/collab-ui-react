@@ -331,16 +331,17 @@
             onExit: panelOnExit,
             onEnter: panelOnEnter({ type: 'large' }),
           });
-
         // Enter and Exit functions for panel(large or side)
         function panelOnEnter(options) {
           options = options || {};
           return /* @ngInject */ function ($modal, $state, $previousState, atlas2017NameChangeFeatureToggled) {
-            if (atlas2017NameChangeFeatureToggled) {
-              if (!options.type) {
-                options.type = 'side-panel-full-height';
-              } else {
-                options.type += ' side-panel-full-height';
+            if (_.get($state.data, 'sidepanel', '') !== 'not-full') {
+              if (atlas2017NameChangeFeatureToggled) {
+                if (!options.type) {
+                  options.type = 'side-panel-full-height';
+                } else {
+                  options.type += ' side-panel-full-height';
+                }
               }
             }
 
@@ -2952,6 +2953,9 @@
           })
           .state('provisioning.pending', {
             url: '/pending',
+            data: {
+              sidepanel: 'not-full',
+            },
             views: {
               provisioningView: {
                 templateUrl: 'modules/squared/provisioning-console/pending/provisioning-pending.html',
@@ -2960,6 +2964,9 @@
           })
           .state('provisioning.completed', {
             url: '/completed',
+            data: {
+              sidepanel: 'not-full',
+            },
             views: {
               provisioningView: {
                 templateUrl: 'modules/squared/provisioning-console/completed/provisioning-completed.html',
@@ -2968,6 +2975,9 @@
           })
           .state('order-details', {
             parent: 'sidepanel',
+            data: {
+              sidepanel: 'not-full',
+            },
             views: {
               'sidepanel@': {
                 controller: 'ProvisioningDetailsController',
