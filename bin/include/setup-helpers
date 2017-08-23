@@ -16,7 +16,7 @@ function unset_setup_helpers {
 
 # test if given arg is defined for the current shell
 function is_installed {
-    command -v $1 >/dev/null 2>&1
+    command -v "$1" >/dev/null 2>&1
     return $?
 }
 
@@ -44,7 +44,7 @@ function install_parallel_as_needed {
 # quietly validate checksums
 function is_checksums_ok {
     local checksum_file=${1:-$manifest_checksums_file}
-    shasum -c $checksum_file > /dev/null && return 0 || return 1
+    shasum -c "$checksum_file" > /dev/null && return 0 || return 1
 }
 
 # generate a new checksum file
@@ -56,27 +56,30 @@ function mk_checksum_file {
     else
         local files_list=$*
     fi
-    > $checksum_file
+    > "$checksum_file"
     for f in $files_list; do
-        shasum $f >> $checksum_file
+        shasum "$f" >> "$checksum_file"
     done
 }
 
 function set_local_npm_path {
     export PATH="$PATH:./node_modules/.bin"
-    echo '[[ "$PATH" == *"./node_modules/.bin"* ]] || export PATH="$PATH:./node_modules/.bin"' >> ~/`get_bash_conf_file`
+    # shellcheck disable=SC2016
+    echo '[[ "$PATH" == *"./node_modules/.bin"* ]] || export PATH="$PATH:./node_modules/.bin"' >> "$HOME/$(get_bash_conf_file)"
 }
 
 # TODO: rm this after confirming no longer needed
 function set_global_npm_path {
     export PATH="$PATH:/usr/local/bin"
-    echo '[[ "$PATH" == *"/usr/local/bin"* ]] || export PATH="$PATH:/usr/local/bin"' >> ~/`get_bash_conf_file`
+    # shellcheck disable=SC2016
+    echo '[[ "$PATH" == *"/usr/local/bin"* ]] || export PATH="$PATH:/usr/local/bin"' >> "$HOME/$(get_bash_conf_file)"
 }
 
 function set_atlas_web_bin_path {
     local atlas_web_bin_path="$1"
     export PATH="$PATH:${atlas_web_bin_path}"
-    echo '[[ "$PATH" == *"'${atlas_web_bin_path}'"* ]] || export PATH="$PATH:'${atlas_web_bin_path}'"' >> ~/`get_bash_conf_file`
+    # shellcheck disable=SC2016
+    echo '[[ "$PATH" == *"'"${atlas_web_bin_path}"'"* ]] || export PATH="$PATH:'"${atlas_web_bin_path}"'"' >> "$HOME/$(get_bash_conf_file)"
 }
 
 # clean up all files, but leave most recently modified <num_to_leave> files
@@ -85,15 +88,22 @@ function rm_all_but_last {
     local count=${1} && shift
 
     # early out if glob pattern matches no files
-    ls $@ >/dev/null 2>/dev/null
-    if [ $? -ne 0 ]; then
-        return 1
-    fi
-    echo $@ | xargs ls -t | awk "NR>${count}" | sed -e 's/.*/"&"/g' | xargs rm -f
+    ls "$@" >/dev/null 2>/dev/null || return 1
+
+    # - list files from args (globs will have been expanded)
+    # - trim out the first ${count} items
+    # - wrap each remaining item in double-quotes
+    # - pass to 'rm -f'
+    # shellcheck disable=SC2012
+    ls -1t "$@" \
+        | tail -n +"$((count + 1))" \
+        | sed -e 's/.*/"&"/g' \
+        | xargs rm -f
 }
 
 function get_most_recent {
-    ls -1tr $@ 2>/dev/null | tail -1
+    # shellcheck disable=SC2012
+    ls -1tr "$@" 2>/dev/null | tail -1
 }
 
 function get_head_commit_id {
@@ -101,10 +111,11 @@ function get_head_commit_id {
 }
 
 function mk_npm_deps_tar {
-    cd ${WX2_ADMIN_WEB_CLIENT_HOME}
-    local target_files="package.json node_modules"
-    local commit_id="${1:-`get_head_commit_id`}"
-    mk_deps_tar "npm-deps" "${commit_id}" ${target_files}
+    cd "${WX2_ADMIN_WEB_CLIENT_HOME}" || return 1
+    local target_files=( "package.json" "node_modules" )
+    local commit_id="${1:-$(get_head_commit_id)}"
+    mk_deps_tar "npm-deps" "${commit_id}" "${target_files[@]}"
+    # shellcheck disable=SC2164
     cd ~-
 }
 
@@ -114,20 +125,21 @@ function mk_deps_tar {
     local commit_id="${2}"
     archive_basename="${archive_basename}-for-${commit_id}.tar.gz"
     shift 2
-    local files_to_archive=$@
-    tar -czf "${cache_dir}/${archive_basename}" ${files_to_archive}
+    local files_to_archive=( "$@" )
+    tar -czf "${cache_dir}/${archive_basename}" "${files_to_archive[@]}"
 }
 
 function restore_latest_deps {
     get_top_dir >/dev/null || return 1
-    top_dir="`get_top_dir`"
-    last_npm_deps_tar="`get_most_recent ${top_dir}/.cache/npm-deps-for-*`"
-    tar_opts="$@"
+    top_dir="$(get_top_dir)"
+    # shellcheck disable=SC2086
+    last_npm_deps_tar="$(get_most_recent ${top_dir}/.cache/npm-deps-for-*)"
+    tar_opts="$*"
 
     if [ -n "${last_npm_deps_tar}" ]; then
         set -x
         rm -rf ./node_modules
-        tar ${tar_opts} -xzf ${last_npm_deps_tar}
+        tar "${tar_opts}" -xzf "${last_npm_deps_tar}"
         set +x
     else
         # no built deps exist
@@ -137,7 +149,7 @@ function restore_latest_deps {
 
 # define and export project root dir, and add it to bash config
 function get_bash_conf_file {
-    if [ "`uname`" = "Darwin" ]; then
+    if [ "$(uname)" = "Darwin" ]; then
         echo ".bash_profile"
     else
         echo ".bashrc"
@@ -145,36 +157,38 @@ function get_bash_conf_file {
 }
 
 function get_top_dir {
-    local cwd=`pwd`
+    local cwd
+    cwd="$(pwd)"
     # get project top-level dir (look for 'fabfile.py')
-    while [ ! -r fabfile.py -a "`pwd`" != "/" ]; do
+    while [ ! -r fabfile.py ] && [ "$(pwd)" != "/" ]; do
       cd ..
     done
-    top_dir=`pwd`
-    cd $cwd
-    if [ "${top_dir}" = "/" ]; then
+    top_dir=$(pwd)
+    cd "$cwd" || return 1
+    if [ "$top_dir" = "/" ]; then
         >&2 echo "[ERROR] traversed to '/' while trying to find top-level dir"
         return 1
     fi
-    echo $top_dir
+    echo "$top_dir"
 }
 
 function export_project_root_env_var {
-    local bash_conf_file="$HOME/`get_bash_conf_file`"
+    local bash_conf_file
+    bash_conf_file="$HOME/$(get_bash_conf_file)"
     local entry_line_prefix="^export ${project_root_env_var_name}="
     local entry_line=
     local top_dir=
 
     get_top_dir >/dev/null || return 1
 
-    top_dir="`get_top_dir`"
+    top_dir="$(get_top_dir)"
     entry_line="export $project_root_env_var_name=$top_dir"
 
-    if grep -q "${entry_line_prefix}" ${bash_conf_file}; then
-        sed -i -E "s,${entry_line_prefix}.*,${entry_line}," ${bash_conf_file}
+    if grep -q "$entry_line_prefix" "$bash_conf_file"; then
+        sed -i -E "s,${entry_line_prefix}.*,${entry_line}," "$bash_conf_file"
     else
-        echo "" >> ${bash_conf_file}
-        echo "${entry_line}" >> ${bash_conf_file}
+        echo "" >> "$bash_conf_file"
+        echo "${entry_line}" >> "$bash_conf_file"
     fi
     eval "$entry_line"
 }
@@ -183,13 +197,16 @@ function export_project_root_env_var {
 export_project_root_env_var
 
 # Check NPM local path
+# shellcheck disable=SC2015
 [[ "$PATH" == *"./node_modules/.bin"* ]] && echo "Local NPM path is set" || set_local_npm_path
 
 # Check NPM global path
+# shellcheck disable=SC2015
 [[ "$PATH" == *"/usr/local/bin"* ]] && echo "Global NPM path is set" || set_global_npm_path
 
 # Check Atlas web path
-atlas_web_bin_path="`get_top_dir`/bin"
+atlas_web_bin_path="$(get_top_dir)/bin"
+# shellcheck disable=SC2015
 [[ "$PATH" == *"${atlas_web_bin_path}"* ]] && echo "Atlas web project bin path is set" || set_atlas_web_bin_path "${atlas_web_bin_path}"
 
 # setup .cache subdir
