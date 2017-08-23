@@ -185,6 +185,12 @@ export class CloudConnectorService {
   }
 }
 
-angular
-  .module('Hercules')
-  .service('CloudConnectorService', CloudConnectorService);
+export default angular
+  .module('hercules.cloud-connector', [
+    require('collab-ui-ng').default,
+    require('modules/core/scripts/services/authinfo'),
+    require('modules/hercules/services/service-descriptor.service').default,
+    require('modules/core/config/urlConfig'),
+  ])
+  .service('CloudConnectorService', CloudConnectorService)
+  .name;

@@ -3487,9 +3487,7 @@
         $stateProvider
           .state('services-overview', {
             url: '/services',
-            templateUrl: 'modules/services-overview/services-overview.html',
-            controller: 'ServicesOverviewCtrl',
-            controllerAs: 'servicesOverviewCtrl',
+            template: '<services-overview></services-overview>',
             parent: 'main',
           })
           .state('cluster-list', {
