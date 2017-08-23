@@ -24,6 +24,11 @@ export function huronCustomer(test, numberRange, users, pstn, pstnLines, doFtsw,
         licenseCount: 5,
       }));
       break;
+    case 'NONE':
+      offers.push(new TrialOffer({
+        id: Offers.OFFER_MESSAGE,
+      }));
+      break;
     default:
       offers.push(new TrialOffer({
         id: Offers.OFFER_CALL,
