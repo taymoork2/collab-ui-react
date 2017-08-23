@@ -67,8 +67,8 @@
                 $q.all([
                   // Partner user most likely is out of sync in FMS/USS cache after the trial was added in the Atlas backend
                   // To remedy, invalidate the user cache
-                  USSService.notifyReadOnlyLaunch(),
-                  HybridServicesExtrasService.notifyReadOnlyLaunch(),
+                  USSService.invalidateHybridUserCache(),
+                  HybridServicesExtrasService.invalidateHybridUserCache(),
                 ])
                   .then(function () {
                     // We have invalidated the cache, lets init again
