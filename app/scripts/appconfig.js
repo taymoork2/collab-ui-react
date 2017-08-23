@@ -798,6 +798,11 @@
             onEnter: /* @ngInject */ function (OnlineAnalyticsService) {
               OnlineAnalyticsService.track(OnlineAnalyticsService.MY_COMPANY_SUBSCRIPTIONS);
             },
+            resolve: {
+              account: /* @ngInject */ function (AccountService) {
+                return AccountService.updateAuthinfoAccount();
+              },
+            },
             views: {
               tabContent: {
                 controllerAs: 'mcpSub',
@@ -950,6 +955,11 @@
           .state('users.manage', {
             abstract: true,
             parent: 'modal',
+            resolve: {
+              account: /* @ngInject */ function (AccountService) {
+                return AccountService.updateAuthinfoAccount();
+              },
+            },
             views: {
               'modal@': {
                 controller: 'UserManageModalController',
@@ -1077,6 +1087,11 @@
           })
           .state('editService', {
             parent: 'modal',
+            resolve: {
+              account: /* @ngInject */ function (AccountService) {
+                return AccountService.updateAuthinfoAccount();
+              },
+            },
             views: {
               'modal@': {
                 controller: 'OnboardCtrl',
@@ -4054,6 +4069,9 @@
               hasCucmSupportFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCucmSupport);
               },
+              hasImpSupportFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridImp);
+              },
             },
           })
           .state('add-resource.expressway', {
@@ -4070,6 +4088,11 @@
             },
             params: {
               wizard: null,
+            },
+            resolve: {
+              hasImpSupportFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridImp);
+              },
             },
           })
           .state('add-resource.expressway.hostname', {

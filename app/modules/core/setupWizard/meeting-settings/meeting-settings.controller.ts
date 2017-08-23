@@ -208,9 +208,11 @@ export class MeetingSettingsCtrl {
   private updateSitesLicenseCount() {
     const sourceArray = _.flatten(this.distributedLicensesArray);
     _.forEach(this.sitesArray, (site) => {
-      const matchingSite = _.find(sourceArray, { siteUrl: site.siteUrl });
-      if (matchingSite) {
-        site.quantity = matchingSite.quantity;
+      const matchingSite = _.filter(sourceArray, { siteUrl: site.siteUrl });
+      if (matchingSite.length) {
+        site.quantity = _.sumBy(matchingSite, 'quantity');
+      } else {
+        site.quantity = 0;
       }
     });
   }
@@ -253,7 +255,6 @@ export class MeetingSettingsCtrl {
     this.validateWebexSiteUrl(siteName).then((response) => {
       if (response.isValid && (response.errorCode === 'validSite')) {
         this.sitesArray.push(_.clone(this.siteModel));
-        this.constructDistributedSitesArray();
         this.clearInputs();
       } else {
         if (response.errorCode === 'duplicateSite') {
@@ -272,7 +273,6 @@ export class MeetingSettingsCtrl {
 
   public removeSite(index: number): void {
     this.sitesArray.splice(index, 1);
-    this.constructDistributedSitesArray();
   }
 
   public sumOfWebExLicensesAssigned(siteArray) {
@@ -319,6 +319,7 @@ export class MeetingSettingsCtrl {
             this.updateSitesAudioPackageDisplay();
           }
         });
+        _.each(this.licenseDistributionForm.$$controls, (control) => { control.$validate(); });
         _.set(this.$scope.wizard, 'isNextDisabled', licensesRemaining !== 0 || this.licenseDistributionForm.$invalid);
         break;
       }
@@ -364,7 +365,6 @@ export class MeetingSettingsCtrl {
       });
     }
     this.sitesArray = _.uniq(this.sitesArray);
-    this.constructDistributedSitesArray();
   }
 
   private getWebExMeetingsLicenseTypeDetails() {
@@ -396,12 +396,17 @@ export class MeetingSettingsCtrl {
     this.setNextDisableStatus(isInvalid);
     this.ccasp.isError = isInvalid;
     this.disableValidateButton = false;
+  }
 
+  public ccaspResetValidation() {
+    this.setNextDisableStatus(true);
+    this.audioPartnerName = null;
   }
   public ccaspValidate() {
     this.disableValidateButton = true;
+    this.setNextDisableStatus(true);
     if (!(this.ccasp.partnerNameSelected && this.ccasp.subscriptionId)) {
-      this.ccaspSetInvalid(true);
+      return false;
     }
     this.SetupWizardService.validateCCASPPartner(this.ccasp.subscriptionId, this.ccasp.partnerNameSelected || '')
       .then((isValid) => {
@@ -413,6 +418,11 @@ export class MeetingSettingsCtrl {
       .catch(() => {
         this.ccaspSetInvalid(true);
       });
+  }
+  public ccaspSetNextDisabled() {
+    if (!this.audioPartnerName || ! this.ccasp.subscriptionId) {
+      this.setNextDisableStatus(true);
+    }
   }
 
   public offerCodeToCenterTypeString(offerCode: string) {
@@ -432,7 +442,12 @@ export class MeetingSettingsCtrl {
     }
   }
 
-  private constructDistributedSitesArray(): void {
+  public initLicenseDistributionStep(): void {
+    this.constructDistributedSitesArray();
+    this.enableOrDisableNext(this.steps.SITES_LICENSES);
+  }
+
+  public constructDistributedSitesArray(): void {
     this.distributedLicensesArray = _.map(this.sitesArray, (site: IWebExSite) => {
       return _.map(this.centerDetails, (center) => {
         const siteObject: IWebExSite = {
@@ -504,10 +519,6 @@ export class MeetingSettingsCtrl {
         keepExistingSite: true,
       };
     }));
-
-    if (!_.isEmpty(this.sitesArray)) {
-      this.constructDistributedSitesArray();
-    }
   }
 
   private validateWebexSiteUrl(siteName): ng.IPromise<any> {

@@ -17,6 +17,7 @@ describe('Controller: MeetingSettingsCtrl', () => {
     spyOn(this.TrialTimeZoneService, 'getTimeZones').and.returnValue(this.$q.resolve({}));
     spyOn(this.TrialWebexService, 'validateSiteUrl').and.returnValue(this.$q.resolve({ isValid: true, errorCode: 'validSite' }));
     spyOn(this.SetupWizardService, 'getPendingAudioLicenses').and.returnValue([{ offerName: 'TSP' }]);
+    spyOn(this.SetupWizardService, 'validateCCASPPartner').and.returnValue(this.$q.resolve(true));
   });
 
   function initController(): void {
@@ -34,12 +35,12 @@ describe('Controller: MeetingSettingsCtrl', () => {
 
   });
 
-  describe('upon click of the Validate button ', function () {
+  describe('upon click of the Validate button in site setup', function () {
     beforeEach(function () {
       initController.apply(this);
     });
 
-    it('should call validateWebexSiteUrl() and expect the site to be added to the sitesArray', function () {
+    it('should call validateWebexSiteUrl() and if VALID add the site the sitesArray', function () {
       const siteUrl = 'testSiteHere';
       this.controller.siteModel.siteUrl = siteUrl;
       this.controller.siteModel.timezone = 'someTimeZoneHere';
@@ -51,15 +52,9 @@ describe('Controller: MeetingSettingsCtrl', () => {
       expect(this.controller.sitesArray.length).toBe(1);
       expect(this.controller.disableValidateButton).toBe(false);
     });
-  });
 
-  describe('upon click of the Validate button test the error condition: ', function () {
-    beforeEach(function () {
+    it('should call validateWebexSiteUrl() and if INVALID showError to be called and site not to be added', function () {
       this.TrialWebexService.validateSiteUrl.and.returnValue(this.$q.resolve({ isValid: false, errorCode: 'invalidSite' }));
-      initController.apply(this);
-    });
-
-    it('should call validateWebexSiteUrl() and expect showError to be called', function () {
       this.controller.siteModel.siteUrl = 'testSiteHere';
       this.controller.siteModel.timeZone = 'someTimeZoneHere';
       this.controller.validateMeetingSite();
@@ -70,6 +65,34 @@ describe('Controller: MeetingSettingsCtrl', () => {
     });
   });
 
+  describe('License distribution', function () {
+    beforeEach(function () {
+      initController.apply(this);
+    });
+    it('should calculate license quantity for sites correctly', function () {
+      initController.apply(this);
+      const sitesArray = [
+        { quantity: 1, siteUrl: 'site1' },
+        { quantity: 5, siteUrl: 'site2' },
+      ];
+      const distributedLicensesArray = [[
+        { centerType: 'EC', quantity: 3, siteUrl: 'site1' },
+        { centerType: 'MC', quantity: 1, siteUrl: 'site1' },
+        { centerType: 'TC', quantity: 4, siteUrl: 'site1' }],
+        [
+        { centerType: 'EC', quantity: 1, siteUrl: 'site2' },
+        { centerType: 'MC', quantity: 1, siteUrl: 'site2' },
+        { centerType: 'TC', quantity: 0, siteUrl: 'site2' }],
+      ];
+      this.controller.sitesArray = _.clone(sitesArray);
+      this.controller.distributedLicensesArray = _.clone(distributedLicensesArray);
+      this.controller.updateSitesLicenseCount();
+      this.$scope.$apply();
+
+      expect(this.controller.sitesArray[0].quantity).toEqual(8);
+      expect(this.controller.sitesArray[1].quantity).toEqual(2);
+    });
+  });
   describe('when licenses include a TSP Audio package', function () {
     beforeEach(function () {
       spyOn(this.SetupWizardService, 'hasTSPAudioPackage').and.returnValue(true);
@@ -87,7 +110,7 @@ describe('Controller: MeetingSettingsCtrl', () => {
         siteList: [{
           siteUrl: 'mytransferredsite.webex.com',
           timezone: '4',
-        } ],
+        }],
       },
     };
     beforeEach(function () {
@@ -120,7 +143,7 @@ describe('Controller: MeetingSettingsCtrl', () => {
         siteList: [{
           siteUrl: 'mySecondTransferredsite.webex.com',
           timezone: '4',
-        } ],
+        }],
       },
     };
     beforeEach(function () {
@@ -161,18 +184,18 @@ describe('Controller: MeetingSettingsCtrl', () => {
       expect(this.SetupWizardService.getCCASPPartners).toHaveBeenCalled();
       expect(this.controller.ccasp.partnerOptions.length).toBe(2);
     });
-    it('validates correctly', function() {
+    it('validates correctly', function () {
       expect(this.controller.audioPartnerName).toBe(null);
-      spyOn(this.SetupWizardService, 'validateCCASPPartner').and.returnValue(this.$q.resolve(true));
+
       this.controller.ccaspValidate();
       this.$scope.$digest();
       expect(this.controller.audioPartnerName).toBe('bob');
       expect(this.controller.setNextDisableStatus).toHaveBeenCalledWith(false);
       expect(this.controller.ccasp.isError).toEqual(false);
     });
-    it('validates incorrectly', function() {
+    it('validates incorrectly', function () {
       expect(this.controller.audioPartnerName).toBe(null);
-      spyOn(this.SetupWizardService, 'validateCCASPPartner').and.returnValue(this.$q.resolve(false));
+      this.SetupWizardService.validateCCASPPartner.and.returnValue(this.$q.resolve(false));
       this.controller.ccaspValidate();
       this.$scope.$digest();
       expect(this.controller.audioPartnerName).toBe(null);

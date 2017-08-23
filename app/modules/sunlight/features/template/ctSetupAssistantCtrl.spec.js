@@ -2,19 +2,19 @@
 
 describe('Care Setup Assistant Ctrl', function () {
   var controller, $scope, $modal, $q, CTService, getLogoDeferred, getTogglePromise, getLogoUrlDeferred, SunlightConfigService, $state, $stateParams, LogMetricsService;
-  var Notification, $translate, _scomUrl, $httpBackend;
+  var Notification, $translate, _scomUrl, $httpBackend, VirtualAssistantService;
 
   var escapeKey = 27;
   var templateName = 'Atlas UT Template';
   var NAME_PAGE_INDEX = 0;
   var OVERVIEW_PAGE_INDEX = 1;
   var PROACTIVE_PROMPT_PAGE_INDEX = 2;
-  var AGENT_UNAVAILABLE_PAGE_INDEX = 4;
-  var OFF_HOURS_PAGE_INDEX = 5;
-  var FEEDBACK_PAGE_INDEX = 6;
-  var PROFILE_PAGE_INDEX = 7;
-  var CHAT_STATUS_MESSAGES_PAGE_INDEX = 8;
-  var EMBED_CODE_PAGE_INDEX = 9;
+  var AGENT_UNAVAILABLE_PAGE_INDEX = 5;
+  var OFF_HOURS_PAGE_INDEX = 6;
+  var FEEDBACK_PAGE_INDEX = 7;
+  var PROFILE_PAGE_INDEX = 8;
+  var CHAT_STATUS_MESSAGES_PAGE_INDEX = 9;
+  var EMBED_CODE_PAGE_INDEX = 10;
   var OrgName = 'Test-Org-Name';
   var OrgId = 'Test-Org-Id';
   var businessHours = getJSONFixture('sunlight/json/features/chatTemplateCreation/businessHoursSchedule.json');
@@ -135,6 +135,14 @@ describe('Care Setup Assistant Ctrl', function () {
     name: 'abcd',
     configuration: {
       mediaType: 'chat',
+      virtualAssistant: {
+        enabled: false,
+        config: {
+          id: '',
+          name: 'VirtualAssistant',
+        },
+        welcomeMessage: 'welcomeMessage',
+      },
       mediaSpecificConfiguration: {
         useOrgProfile: true,
         displayText: 'testOrg',
@@ -171,7 +179,7 @@ describe('Care Setup Assistant Ctrl', function () {
 
   afterEach(function () {
     controller = $scope = $modal = $q = CTService = getLogoDeferred = getTogglePromise = getLogoUrlDeferred = SunlightConfigService = $state = $stateParams = LogMetricsService = undefined;
-    Notification = $translate = undefined;
+    Notification = $translate = VirtualAssistantService = undefined;
   });
 
   afterAll(function () {
@@ -186,11 +194,12 @@ describe('Care Setup Assistant Ctrl', function () {
 
   var intializeCtrl = function (mediaType, template, isEditFeature, isCareProactiveChatTrialsFt, isCareAssistantFt) {
     return function (_$rootScope_, $controller, _$modal_, _$q_, _$translate_,
-      _$window_, _CTService_, _SunlightConfigService_, _$state_, _Notification_, _$stateParams_, _LogMetricsService_, UrlConfig, _$httpBackend_) {
+      _$window_, _VirtualAssistantService_, _CTService_, _SunlightConfigService_, _$state_, _Notification_, _$stateParams_, _LogMetricsService_, UrlConfig, _$httpBackend_) {
       $scope = _$rootScope_.$new();
       $modal = _$modal_;
       $q = _$q_;
       $translate = _$translate_;
+      VirtualAssistantService = _VirtualAssistantService_;
       CTService = _CTService_;
       SunlightConfigService = _SunlightConfigService_;
       $state = _$state_;
@@ -209,12 +218,33 @@ describe('Care Setup Assistant Ctrl', function () {
       spyOn($modal, 'open');
       spyOn(CTService, 'getLogo').and.returnValue(getLogoDeferred.promise);
       spyOn(CTService, 'getLogoUrl').and.returnValue(getLogoUrlDeferred.promise);
+      spyOn(VirtualAssistantService, 'getConfiguredVirtualAssistantServices').and.callFake(function () {
+        var defered = $q.defer();
+        var result = {
+          status: 200,
+          statusText: 'OK',
+          data: {
+            items: [
+              {
+                name: 'cva',
+                id: 'id1',
+                type: 'APIAI',
+                config: {
+                  token: 'token',
+                },
+              },
+            ],
+          },
+        };
+        defered.resolve(result);
+        return defered.promise;
+      });
       spyOn(Notification, 'success');
       spyOn(Notification, 'errorWithTrackingId');
       spyOn(LogMetricsService, 'logMetrics').and.callFake(function () {});
       spyOn(SunlightConfigService, 'updateChatConfig');
       $state['isCareProactiveChatTrialsEnabled'] = isCareProactiveChatTrialsFt || true;
-      $state['isCareAssistantEnabled'] = isCareAssistantFt || false;
+      $state['isCareAssistantEnabled'] = isCareAssistantFt || true;
       $stateParams = {
         template: template || undefined,
         isEditFeature: isEditFeature || false,
@@ -445,6 +475,41 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.getLocalizedOrgOrAgentInfo('agentHeader')).toEqual('careChatTpl.agent_cva');
       expect(controller.getLocalizedOrgOrAgentInfo('orgInfo')).toEqual('careChatTpl.profile_org_info_cva');
       expect(controller.getLocalizedOrgOrAgentInfo('agentInfo')).toEqual('careChatTpl.profile_agent_info_cva');
+    });
+
+    it('should display bot icon when virtual assistant toggle is enabled and Customer Virtual Assistant and Agents is selected', function () {
+      controller.isCVAEnabled = true;
+      controller.selectedAvater = 'bot';
+      controller.selectedTemplateProfile = controller.profiles.agent;
+      expect(controller.displaySelectedProfileAttribute()).toEqual('bot');
+    });
+
+    it('should display agent icon when virtual assistant toggle is disabled and agents profile is selected', function () {
+      controller.isCVAEnabled = false;
+      controller.selectedAvater = 'agent';
+      controller.selectedTemplateProfile = controller.profiles.agent;
+      expect(controller.displaySelectedProfileAttribute()).toEqual('agent');
+    });
+
+    it('should display org icon when virtual assistant toggle is enabled and org profile is selected', function () {
+      controller.isCVAEnabled = true;
+      controller.selectedTemplateProfile = controller.profiles.org;
+      expect(controller.displaySelectedProfileAttribute()).toEqual('org');
+    });
+
+    it('should display virtual assistant or agent tooltip message when mouseover on icons', function () {
+      expect(controller.brandingPageTooltipText('bot')).toEqual('careChatTpl.botProfileTooltip');
+      expect(controller.brandingPageTooltipText('agent')).toEqual('careChatTpl.agentProfileTooltip');
+    });
+
+    it('should display virtual assistant name if configured', function () {
+      controller.template.configuration.virtualAssistant.config = {};
+      controller.template.configuration.virtualAssistant.config.name = 'testBot';
+      expect(controller.careVirtualAssistantName()).toEqual('testBot');
+    });
+
+    it('should display default virtual assistant name if not configured', function () {
+      expect(controller.careVirtualAssistantName()).toEqual('cva');
     });
   });
 
@@ -794,6 +859,40 @@ describe('Care Setup Assistant Ctrl', function () {
     });
   });
 
+  describe('VirtualAssistantPage', function () {
+    beforeEach(inject(intializeCtrl()));
+
+    it('should update template when user select an item form VA list', function () {
+      controller.selectedVirtualAssiatnt = {
+        name: 'testVa',
+        id: 'testId',
+      };
+      controller.vaSelectionCommit();
+      expect(controller.template.configuration.virtualAssistant.config.id).toEqual(controller.selectedVA.id);
+      expect(controller.template.configuration.virtualAssistant.config.name).toEqual(controller.selectedVA.name);
+    });
+
+    it('should not allow to navigate next page if No VA is selected in the page', function () {
+      controller.currentState = 'virtualAssistant';
+      controller.template.configuration.virtualAssistant.config.id = '';
+      expect(controller.nextButton()).toEqual(false);
+
+      controller.template.configuration.virtualAssistant.config.id = 'something';
+      expect(controller.nextButton()).toEqual(true);
+    });
+
+    it('should not allow to navigate next page if welcomeMessage validation failed', function () {
+      controller.currentState = 'virtualAssistant';
+
+      controller.template.configuration.virtualAssistant.config.id = 'something';
+      controller.template.configuration.virtualAssistant.welcomeMessage = getStringOfLength(51);
+      expect(controller.nextButton()).toEqual(false);
+
+      controller.template.configuration.virtualAssistant.welcomeMessage = getStringOfLength(50);
+      expect(controller.nextButton()).toEqual(true);
+    });
+  });
+
   describe('Off Hours Page', function () {
     beforeEach(inject(intializeCtrl()));
     beforeEach(function () {
@@ -1134,6 +1233,7 @@ describe('Care Setup Assistant Ctrl', function () {
         'overview',
         'proactivePrompt',
         'customerInformationChat',
+        'virtualAssistant',
         'agentUnavailable',
         'feedback',
         'profile',

@@ -6,7 +6,7 @@ require('./_setup-wizard.scss');
   angular.module('Core')
     .controller('SetupWizardCtrl', SetupWizardCtrl);
 
-  function SetupWizardCtrl($q, $scope, $state, $stateParams, $timeout, Authinfo, Config, FeatureToggleService, Orgservice, SetupWizardService, Utils, Notification) {
+  function SetupWizardCtrl($q, $scope, $state, $stateParams, $timeout, Authinfo, Config, FeatureToggleService, Orgservice, SetupWizardService, Notification) {
     var isFirstTimeSetup = _.get($state, 'current.data.firstTimeSetup', false);
     var shouldRemoveSSOSteps = false;
     var isSharedDevicesOnlyLicense = false;
@@ -36,8 +36,9 @@ require('./_setup-wizard.scss');
 
       var adminOrgUsagePromise = Orgservice.getAdminOrgUsage()
         .then(function (subscriptions) {
-          var licenseTypes = Utils.getDeepKeyValues(subscriptions, 'licenseType');
-          isSharedDevicesOnlyLicense = _.without(licenseTypes, Config.licenseTypes.SHARED_DEVICES).length === 0;
+          var licenses = _.flatMap(subscriptions, 'licenses');
+          var uniqueLicenseTypes = _.uniq(_.map(licenses, 'licenseType'));
+          isSharedDevicesOnlyLicense = _.without(uniqueLicenseTypes, Config.licenseTypes.SHARED_DEVICES).length === 0;
         })
         .catch(_.noop);
 

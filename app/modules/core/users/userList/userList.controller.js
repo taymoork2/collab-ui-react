@@ -9,7 +9,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     .controller('UserListCtrl', UserListCtrl);
 
   /* @ngInject */
-  function UserListCtrl($q, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Auth, Config, FeatureToggleService, GridCellService,
+  function UserListCtrl($q, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Config, FeatureToggleService, GridCellService,
     Log, LogMetricsService, Notification, Orgservice, Userservice, UserListService, Utils, DirSyncService, UserOverviewService) {
     var vm = this;
 
@@ -109,7 +109,6 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
       var promises = {
         atlasEmailStatus: FeatureToggleService.atlasEmailStatusGetStatus(),
         configureGrid: vm.configureGrid(),
-        isOnlineOrg: Auth.isOnlineOrg(),
       };
 
       $q.all(promises).then(function (results) {
