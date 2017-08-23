@@ -226,7 +226,7 @@ class TimeLine implements ng.IComponentController {
           const template = `<p>User Name: ${item.userName}</p>
           <p>Platform: ${item.platform ? platform[item.platform] : 'N/A'}</p>
           <p>Join Meeting Time: ${item.joinMeetingTime ? item.joinMeetingTime : 'N/A'}</p>
-          <p>Latency: ${item.latency ? item.latency : 'N/A'}</p>
+          <p>Latency: ${item.latency ? _.round(item.latency, 1) : 'N/A'}</p>
           <p>PacketLoss: ${item.PacketLoss ? item.PacketLoss : 'N/A'}</p>`;
           this.tip.html(template);
           const tipWidth = this.tip.style('width').replace('px', '');
