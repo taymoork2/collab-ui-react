@@ -1,27 +1,148 @@
-'use strict';
+import testModule from './setup-wizard.service';
 
 describe('Service: SetupWizard Service', function () {
-
-  const order = getJSONFixture('core/json/orders/pendingOrder.json');
-
-  function init() {
-    this.initModules('Core');
-    this.injectDependencies('$httpBackend', '$q', 'SetupWizardService', 'UrlConfig');
+  beforeEach(function init() {
+    this.initModules(testModule);
+    this.injectDependencies(
+      '$httpBackend',
+      '$q',
+      'Authinfo',
+      'SessionStorage',
+      'SetupWizardService',
+      'UrlConfig',
+    );
     this.adminServiceUrl = this.UrlConfig.getAdminServiceUrl();
-  }
 
-  beforeEach(init);
+    this.order = getJSONFixture('core/json/orders/pendingOrder.json');
+    this.authinfoPendingSubscriptions = getJSONFixture('core/json/setupWizard/authinfoPendingSubscriptions.json');
+    this.pendingSubscriptionResponses = getJSONFixture('core/json/setupWizard/pendingSubscriptionResponses.json');
+    this.pendingSubscriptions = getJSONFixture('core/json/setupWizard/pendingSubscriptions.json');
+    this.pendingSubscriptionOptions = getJSONFixture('core/json/setupWizard/pendingSubscriptionOptions.json');
+
+    spyOn(this.Authinfo, 'getSubscriptions').and.returnValue(this.authinfoPendingSubscriptions);
+  });
+
   afterEach(function () {
     this.$httpBackend.verifyNoOutstandingExpectation();
     this.$httpBackend.verifyNoOutstandingRequest();
   });
 
+  describe('populatePendingSubscriptions()', () => {
+    describe('with multiple subscriptions', () => {
+      beforeEach(function () {
+        this.$httpBackend.expectGET(`${this.UrlConfig.getAdminServiceUrl()}subscriptions/pending?externalSubscriptionId=Sub-os090944`).respond(200, this.pendingSubscriptionResponses['Sub-os090944']);
+        this.$httpBackend.expectGET(`${this.UrlConfig.getAdminServiceUrl()}subscriptions/pending?externalSubscriptionId=Sub-os090945`).respond(200, this.pendingSubscriptionResponses['Sub-os090945']);
+
+        this.SetupWizardService.populatePendingSubscriptions();
+        this.$httpBackend.flush();
+      });
+
+      it('should populate the service\'s pendingSubscriptions', function () {
+        expect(this.SetupWizardService.pendingSubscriptions).toEqual(this.pendingSubscriptions);
+      });
+
+      it('should have pending subscription options', function () {
+        expect(this.SetupWizardService.hasPendingSubscriptionOptions()).toBe(true);
+        expect(this.SetupWizardService.getPendingSubscriptionOptions()).toEqual(this.pendingSubscriptionOptions);
+      });
+
+      it('setting the acting subscription option should provide acting subscription information', function () {
+        expect(this.SetupWizardService.getActingOrderId()).toBeUndefined();
+        expect(this.SetupWizardService.getActingSubscriptionId()).toBeUndefined();
+        expect(this.SetupWizardService.getInternalSubscriptionId()).toBeUndefined();
+        expect(this.SetupWizardService.getActingSubscriptionServiceOrderUUID()).toBeUndefined();
+        expect(this.SetupWizardService.hasPendingServiceOrder()).toBe(false);
+
+        const onChangeSpy = jasmine.createSpy('subscriptionChangeSpy');
+        this.SetupWizardService.onActingSubscriptionChange(onChangeSpy);
+        this.SetupWizardService.setActingSubscriptionOption(this.pendingSubscriptionOptions[0]);
+
+        expect(onChangeSpy).toHaveBeenCalled();
+        expect(this.SetupWizardService.getActingOrderId()).toBe('wo-os090944');
+        expect(this.SetupWizardService.getActingSubscriptionId()).toBe('Sub-os090944');
+        expect(this.SetupWizardService.getInternalSubscriptionId()).toBe('d98a5a59-4f37-4b2e-acd0-81b7a1f13558');
+        expect(this.SetupWizardService.getActingSubscriptionServiceOrderUUID()).toBe('56f28ee2-ce5d-4b10-8077-4a170fcb1493');
+        expect(this.SetupWizardService.hasPendingServiceOrder()).toBe(true);
+      });
+    });
+
+    describe('with multiple subscriptions and a specific requested subscription', () => {
+      beforeEach(function () {
+        this.$httpBackend.expectGET(`${this.UrlConfig.getAdminServiceUrl()}subscriptions/pending?externalSubscriptionId=Sub-os090944`).respond(200, this.pendingSubscriptionResponses['Sub-os090944']);
+        this.Authinfo.getSubscriptions.and.returnValue(this.authinfoPendingSubscriptions);
+        spyOn(this.SessionStorage, 'get').and.returnValue('Sub-os090944');
+
+        this.SetupWizardService.populatePendingSubscriptions();
+        this.$httpBackend.flush();
+      });
+
+      it('should populate the service\'s pendingSubscriptions', function () {
+        expect(this.SetupWizardService.pendingSubscriptions).toEqual(this.pendingSubscriptions.slice(0, 1));
+      });
+
+      it('should not have pending subscription options', function () {
+        expect(this.SetupWizardService.hasPendingSubscriptionOptions()).toBe(false);
+      });
+
+      it('should already have found the requested acting pending subscription', function () {
+        expect(this.SetupWizardService.getActingOrderId()).toBe('wo-os090944');
+        expect(this.SetupWizardService.getActingSubscriptionId()).toBe('Sub-os090944');
+        expect(this.SetupWizardService.getInternalSubscriptionId()).toBe('d98a5a59-4f37-4b2e-acd0-81b7a1f13558');
+        expect(this.SetupWizardService.getActingSubscriptionServiceOrderUUID()).toBe('56f28ee2-ce5d-4b10-8077-4a170fcb1493');
+        expect(this.SetupWizardService.hasPendingServiceOrder()).toBe(true);
+      });
+    });
+
+    describe('with single subscription', () => {
+      beforeEach(function () {
+        this.$httpBackend.expectGET(`${this.UrlConfig.getAdminServiceUrl()}subscriptions/pending?externalSubscriptionId=Sub-os090944`).respond(200, this.pendingSubscriptionResponses['Sub-os090944']);
+        this.Authinfo.getSubscriptions.and.returnValue(this.authinfoPendingSubscriptions.slice(0, 1));
+
+        this.SetupWizardService.populatePendingSubscriptions();
+        this.$httpBackend.flush();
+      });
+
+      it('should populate the service\'s pendingSubscriptions', function () {
+        expect(this.SetupWizardService.pendingSubscriptions).toEqual(this.pendingSubscriptions.slice(0, 1));
+      });
+
+      it('should not have pending subscription options', function () {
+        expect(this.SetupWizardService.hasPendingSubscriptionOptions()).toBe(false);
+      });
+
+      it('should already have defaulted the acting pending subscription', function () {
+        expect(this.SetupWizardService.getActingOrderId()).toBe('wo-os090944');
+        expect(this.SetupWizardService.getActingSubscriptionId()).toBe('Sub-os090944');
+        expect(this.SetupWizardService.getInternalSubscriptionId()).toBe('d98a5a59-4f37-4b2e-acd0-81b7a1f13558');
+        expect(this.SetupWizardService.getActingSubscriptionServiceOrderUUID()).toBe('56f28ee2-ce5d-4b10-8077-4a170fcb1493');
+        expect(this.SetupWizardService.hasPendingServiceOrder()).toBe(true);
+      });
+    });
+
+    describe('with no subscriptions', () => {
+      beforeEach(function () {
+        this.Authinfo.getSubscriptions.and.returnValue([]);
+
+        this.SetupWizardService.populatePendingSubscriptions();
+        expect(this.$httpBackend.flush).toThrow();
+      });
+
+      it('should have no pendingSubscriptions', function () {
+        expect(this.SetupWizardService.pendingSubscriptions).toEqual([]);
+        expect(this.SetupWizardService.hasPendingServiceOrder()).toBe(false);
+        expect(this.SetupWizardService.hasPendingSubscriptionOptions()).toBe(false);
+      });
+    });
+  });
+
   describe('hasCCASPPackage()', function () {
     it('should identify CCASP order', function () {
-      this.SetupWizardService.pendingLicenses = order.licenseFeatures;
+      this.SetupWizardService.actingSubscription = {
+        pendingLicenses: this.order.licenseFeatures,
+      };
       let result = this.SetupWizardService.hasCCASPPackage();
       expect(result).toBe(true);
-      _.remove(this.SetupWizardService.pendingLicenses, { offerName: 'CCASP' });
+      _.remove(this.SetupWizardService.actingSubscription.pendingLicenses, { offerName: 'CCASP' });
       result = this.SetupWizardService.hasCCASPPackage();
       expect(result).toBe(false);
     });

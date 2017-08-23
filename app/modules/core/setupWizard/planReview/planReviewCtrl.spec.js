@@ -50,6 +50,7 @@ describe('Controller: PlanReviewCtrl', function () {
         return false;
       }
     });
+    spyOn(SetupWizardService, 'hasPendingServiceOrder').and.returnValue(true);
     spyOn(SetupWizardService, 'getPendingMeetingLicenses').and.returnValue([{
       offerName: 'MC',
       capacity: 200,

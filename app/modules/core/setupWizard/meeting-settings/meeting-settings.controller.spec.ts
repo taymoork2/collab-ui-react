@@ -20,7 +20,8 @@ describe('Controller: MeetingSettingsCtrl', () => {
     spyOn(this.TrialTimeZoneService, 'getTimeZones').and.returnValue(this.$q.resolve({}));
     spyOn(this.TrialWebexService, 'validateSiteUrl').and.returnValue(this.$q.resolve({ isValid: true, errorCode: 'validSite' }));
     spyOn(this.SetupWizardService, 'getPendingAudioLicenses').and.returnValue([{ offerName: 'TSP' }]);
-    spyOn(this.SetupWizardService, 'getActingSubscription').and.returnValue(actingSubscription);
+    // is this being used? the data format wasn't even right before
+    spyOn(this.SetupWizardService, 'getActingSubscriptionLicenses').and.returnValue(actingSubscription[0].licenses);
     spyOn(this.SetupWizardService, 'validateCCASPPartner').and.returnValue(this.$q.resolve(true));
     spyOn(this.SetupWizardService, 'hasCCASPPackage').and.returnValue(true);
     spyOn(this.SetupWizardService, 'getCCASPPartners').and.returnValue(this.$q.resolve(['partner1', 'partner2']));
@@ -37,7 +38,7 @@ describe('Controller: MeetingSettingsCtrl', () => {
     });
 
     xit('should find existing WebEx licenses on acting subscription and push them to sitesArray', function () {
-      expect(this.SetupWizardService.getActingSubscription).toHaveBeenCalled();
+      expect(this.SetupWizardService.getActingSubscriptionLicenses).toHaveBeenCalled();
       const hasSiteUrlFromActiveLicense = _.some(this.controller.sitesArray, { siteUrl: 'frankSinatraTest.dmz' });
       expect(hasSiteUrlFromActiveLicense).toBe(true);
       expect(this.controller.sitesArray).toBe(false);

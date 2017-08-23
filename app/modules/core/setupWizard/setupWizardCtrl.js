@@ -21,6 +21,7 @@ require('./_setup-wizard.scss');
     $scope.isCustomerPresent = SetupWizardService.isCustomerPresent();
 
     if (Authinfo.isCustomerAdmin()) {
+      SetupWizardService.onActingSubscriptionChange(init);
       initToggles().finally(init);
     }
 
@@ -47,25 +48,19 @@ require('./_setup-wizard.scss');
           supportsAtlasPMRonM2 = _supportsAtlasPMRonM2;
         });
 
+      var pendingSubscriptionsPromise = SetupWizardService.populatePendingSubscriptions();
+
       var promises = [
         adminOrgUsagePromise,
         atlasPMRonM2Promise,
         hI1484Promise,
+        pendingSubscriptionsPromise,
       ];
-
-      if (SetupWizardService.hasPendingServiceOrder()) {
-        var tabsBasedOnPendingLicensesPromise = SetupWizardService.getPendingLicenses().then(function () {
-          shouldShowMeetingsTab = SetupWizardService.hasPendingWebExMeetingLicenses();
-          hasPendingCallLicenses = SetupWizardService.hasPendingCallLicenses();
-          hasPendingLicenses = SetupWizardService.hasPendingLicenses();
-        });
-        promises.push(tabsBasedOnPendingLicensesPromise);
-      }
-
       return $q.all(promises);
     }
 
     function init() {
+      getPendingSubscriptionFlags();
       var tabs = getInitTabs();
 
       initPlanReviewTab(tabs);
@@ -77,6 +72,12 @@ require('./_setup-wizard.scss');
       initFinishTab(tabs);
       removeTabsWithEmptySteps(tabs);
       $scope.tabs = filterTabsByStateParams(tabs);
+    }
+
+    function getPendingSubscriptionFlags() {
+      shouldShowMeetingsTab = SetupWizardService.hasPendingWebExMeetingLicenses();
+      hasPendingCallLicenses = SetupWizardService.hasPendingCallLicenses();
+      hasPendingLicenses = SetupWizardService.hasPendingLicenses();
     }
 
     function getInitTabs() {
@@ -121,7 +122,16 @@ require('./_setup-wizard.scss');
         }],
       };
 
-      if (SetupWizardService.hasPendingServiceOrder()) {
+      if (SetupWizardService.hasPendingSubscriptionOptions()) {
+        var step = {
+          name: 'select-subscription',
+          template: 'modules/core/setupWizard/planReview/select-subscription.html',
+          title: 'firstTimeWizard.selectSubscriptionTitle',
+        };
+        tab.steps.splice(0, 0, step);
+      }
+
+      if (SetupWizardService.hasPendingServiceOrder() || SetupWizardService.hasPendingSubscriptionOptions()) {
         tab.label = 'firstTimeWizard.subscriptionReview';
         tab.title = 'firstTimeWizard.subscriptionReview';
       }

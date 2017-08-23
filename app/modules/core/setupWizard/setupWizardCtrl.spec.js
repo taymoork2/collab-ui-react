@@ -25,7 +25,7 @@ describe('SetupWizardCtrl', function () {
     spyOn(this.Authinfo, 'isSetupDone').and.returnValue(false);
     spyOn(this.Authinfo, 'isCSB').and.returnValue(true);
     spyOn(this.Authinfo, 'isCare').and.returnValue(false);
-    spyOn(this.SetupWizardService, 'getPendingLicenses').and.returnValue(this.$q.resolve());
+    spyOn(this.SetupWizardService, 'populatePendingSubscriptions').and.returnValue(this.$q.resolve());
     spyOn(this.SetupWizardService, 'hasPendingLicenses').and.returnValue(true);
     spyOn(this.SetupWizardService, 'hasPendingWebExMeetingLicenses').and.returnValue(false);
     spyOn(this.SetupWizardService, 'hasPendingCallLicenses').and.returnValue(false);
@@ -120,28 +120,17 @@ describe('SetupWizardCtrl', function () {
     });
   });
 
-  describe('When subscription does not have a pending service order', function () {
-    beforeEach(function () {
-      this.SetupWizardService.hasPendingServiceOrder.and.returnValue(false);
-      this.initController();
-    });
-
-    it('the setup wizard should not call getPendingLicenses API', function () {
-      expect(this.SetupWizardService.getPendingLicenses).not.toHaveBeenCalled();
-    });
-  });
-
   describe('When subscription has a pending service order', function () {
     beforeEach(function () {
       this.SetupWizardService.hasPendingServiceOrder.and.returnValue(true);
       this.initController();
     });
 
-    it('the setup wizard should call getPendingLicenses API', function () {
-      expect(this.SetupWizardService.getPendingLicenses).toHaveBeenCalled();
+    it('the setup wizard should call populatePendingSubscriptions API', function () {
+      expect(this.SetupWizardService.populatePendingSubscriptions).toHaveBeenCalled();
     });
 
-    it('the setup wizard should call getPendingLicenses API', function () {
+    it('the setup wizard should change the title of the tab', function () {
       var tab = _.find(this.$scope.tabs, { name: 'planReview' });
       expect(tab.label).toBe('firstTimeWizard.subscriptionReview');
       expect(tab.title).toBe('firstTimeWizard.subscriptionReview');
@@ -154,11 +143,11 @@ describe('SetupWizardCtrl', function () {
       this.initController();
     });
 
-    it('the setup wizard should call getPendingLicenses API', function () {
-      expect(this.SetupWizardService.getPendingLicenses).not.toHaveBeenCalled();
+    it('the setup wizard should still call populatePendingSubscriptions API', function () {
+      expect(this.SetupWizardService.populatePendingSubscriptions).toHaveBeenCalled();
     });
 
-    it('the setup wizard should call getPendingLicenses API', function () {
+    it('the setup wizard should not change the title of the tab', function () {
       var tab = _.find(this.$scope.tabs, { name: 'planReview' });
       expect(tab.label).toBe('firstTimeWizard.planReview');
       expect(tab.title).toBe('firstTimeWizard.planReview');
