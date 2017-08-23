@@ -7,7 +7,6 @@ export class ExternalCommunicationSetting extends ProPackSettingSection {
   /* @ngInject */
   public constructor(proPackPurchased: boolean) {
     super('externalCommunication', proPackPurchased);
-    //this.subsectionDescription = '';
   }
 }
 

@@ -8,7 +8,6 @@ export default angular.module('core.settings.externalCommunication', [
   require('angular-cache'),
   require('scripts/app.templates'),
   require('collab-ui-ng').default,
-  //require('modules/core/scripts/services/externalCommunication.service'),
   require('modules/core/scripts/services/accountorgservice'),
   require('modules/core/scripts/services/authinfo'),
   ProPack,

@@ -4,6 +4,6 @@
     type="checkbox"
     id="blockExternalCommunication"
     ng-model="externalCommunicationCtrl.isBlockExternalCommunication"
-    cs-input-label="{{'globalSettings.externalCommunication.description'|translate}}"
+    cs-input-label="{{::'globalSettings.externalCommunication.description'|translate}}"
     ng-disabled="!externalCommunicationCtrl.isBlockExternalCommunicationSettingLoaded || !externalCommunicationCtrl.isProPackPurchased">
 </div>

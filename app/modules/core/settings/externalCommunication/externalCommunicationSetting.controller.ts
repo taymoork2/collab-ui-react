@@ -1,11 +1,11 @@
 
-interface IGetBlockExternalCommunicationResponse {
+/*interface IGetBlockExternalCommunicationResponse {
   blockExternalCommunications: boolean;
-}
+}*/
 
 export class ExternalCommunicationSettingController {
 
-  private _isBlockExternalCommunication: boolean;
+  private _isBlockExternalCommunication: boolean = false;
   public isBlockExternalCommunicationSettingLoaded: boolean = false;
   public isProPackPurchased: boolean = false;
 
@@ -23,6 +23,11 @@ export class ExternalCommunicationSettingController {
     this.loadSetting();
   }
 
+  /*public $onInit() {
+    this.orgId = this.Authinfo.getOrgId();
+    this.loadSetting();
+  }*/
+
   private loadSetting() {
     const promises = {
       blockExternalCommunication: this.AccountOrgService.getBlockExternalCommunication(this.orgId),
@@ -36,18 +41,16 @@ export class ExternalCommunicationSettingController {
       });
   }
 
-  private blockExternalCommunicationSettingLoaded(response: ng.IHttpPromiseCallbackArg<IGetBlockExternalCommunicationResponse>) {
-    if (_.has(response, 'data.blockExternalCommunications')) {
-      this._isBlockExternalCommunication = _.get<boolean>(response, 'data.blockExternalCommunications');
-      this.isBlockExternalCommunicationSettingLoaded = true;
-    }
+  private blockExternalCommunicationSettingLoaded(blockExternalCommunication: boolean) {
+    this._isBlockExternalCommunication = blockExternalCommunication;
+    this.isBlockExternalCommunicationSettingLoaded = true;
   }
 
-  get isBlockExternalCommunication(): boolean {
+  public get isBlockExternalCommunication(): boolean {
     return this._isBlockExternalCommunication;
   }
 
-  set isBlockExternalCommunication(value: boolean) {
+  public set isBlockExternalCommunication(value: boolean) {
     this._isBlockExternalCommunication = value;
     this.updateBlockExternalCommunicationSetting();
   }

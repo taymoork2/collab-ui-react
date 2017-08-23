@@ -87,8 +87,8 @@ describe('Service : AccountOrgService', function () {
         return [200, data];
       });
 
-      AccountOrgService.getBlockExternalCommunication(authInfo.getOrgId()).then(function (response) {
-        expect(response.data.blockExternalCommunications).toBe(true);
+      AccountOrgService.getBlockExternalCommunication(authInfo.getOrgId()).then(function (blockExternalCommunication) {
+        expect(blockExternalCommunication).toBe(true);
       });
       $httpBackend.flush();
     });

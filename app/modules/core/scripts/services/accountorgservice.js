@@ -158,7 +158,9 @@
       }
       var url = getDeviceSettingsUrl(org) + '/blockExternalCommunications';
 
-      return $http.get(url);
+      return $http.get(url).then(function (response) {
+        return _.get(response, 'data.blockExternalCommunications', false);
+      });
     }
 
     // Sets block external communication to blockExternalCommunications API
