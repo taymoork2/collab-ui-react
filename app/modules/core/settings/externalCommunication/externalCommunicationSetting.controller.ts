@@ -14,14 +14,12 @@ export class ExternalCommunicationSettingController {
     private ProPackService,
     private Notification,
   ) {
+  }
+
+  public $onInit() {
     this.orgId = this.Authinfo.getOrgId();
     this.loadSetting();
   }
-
-  /*public $onInit() {
-    this.orgId = this.Authinfo.getOrgId();
-    this.loadSetting();
-  }*/
 
   private loadSetting() {
     const promises = {

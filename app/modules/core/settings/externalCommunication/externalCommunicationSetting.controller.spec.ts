@@ -31,6 +31,7 @@ describe('Controller: ExternalCommunicationSettingController', () => {
     controller = $controller(ExternalCommunicationSettingController, {
       $scope: $scope,
     });
+    controller.$onInit();
     $scope.$apply();
   }
 
