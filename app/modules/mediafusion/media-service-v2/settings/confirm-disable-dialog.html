@@ -10,7 +10,7 @@
   </div>
   <span class="media-model-align" ng-if="disableServiceDialog.step === '1'">
     <p>
-      <span ng-show="disableServiceDialog.isLoading === true" translate="mediaFusion.deactivate.deregister"></span>
+      <span ng-show="disableServiceDialog.isLoading === true" translate="mediaFusion.deactivate.deregister_cluster_list"></span>
       <div class="media-cluster-list" ng-repeat="ecp in disableServiceDialog.clusterNames">
         {{ecp}}</br>
       </div>
@@ -22,7 +22,7 @@
           <div class="cs-input-group cs-input-checkbox" ng-show="disableServiceDialog.isLoading === true">
             <input type="checkbox" id="individualcheckbox" ng-model="disableServiceDialog.checkboxModel">
             <label for="individualcheckbox">
-              <span translate="mediaFusion.deactivate.ready"></span>
+              <span class="checkbox_text_align" translate="mediaFusion.deactivate.confirmation_check"></span>
             </label>
           </div>
         </div>
@@ -32,23 +32,19 @@
 
   <span class="media-model-align" ng-if="disableServiceDialog.step === '2'">
     <p>
-      <span translate="mediaFusion.deactivate.areYou"></span><br>
-      <span translate="mediaFusion.deactivate.future"></span>
+      <span translate="mediaFusion.deactivate.success"></span><br>
     </p>
     <br>
     <p>
-      <span translate="mediaFusion.deactivate.complete"></span>
+      <span translate="mediaFusion.deactivate.future"></span>
     </p>
   </span>
-
 </div>
 
 <div class="modal-footer">
-  <div class="modal-footer-padding">
-    <span class="stick-left">{{'mediaFusion.deactivate.step' | translate}} {{disableServiceDialog.step}} {{'mediaFusion.deactivate.of' | translate}}</span>
-  </div>
-  <button ng-click="disableServiceDialog.cancel()" class="btn ">{{'common.cancel' | translate}}</button>
-  <button ng-click="disableServiceDialog.continue()" ng-show="disableServiceDialog.step === '1'" ng-disabled="!disableServiceDialog.checkboxModel" class="btn btn--primary pull-right">{{'common.continue' | translate}}</button>
-  <button ng-click="disableServiceDialog.deactivate()" ng-show="disableServiceDialog.step === '2'"  class="btn btn--primary pull-right">{{'mediaFusion.deactivate.button-deactivate' | translate}}</button>
+  <button ng-click="disableServiceDialog.cancel()" ng-show="disableServiceDialog.step === '1'" class="btn ">{{'common.cancel' | translate}}</button>
+  <button ng-click="disableServiceDialog.deactivate()" ng-show="disableServiceDialog.step === '1'" ng-disabled ="!disableServiceDialog.checkboxModel" class="btn btn--alert pull-right">{{'mediaFusion.deactivate.button_deactivate' | translate}}</button>
+
+  <button ng-click="disableServiceDialog.done()" ng-show="disableServiceDialog.step === '2'" class="btn btn--primary pull-right">{{'common.done' | translate}}</button>
 </div>
 
