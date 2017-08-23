@@ -3783,6 +3783,8 @@
     "messengerRetentionEditError": "Failed to change retention period setting.",
     "messengerAppSecuritySuccess": "Successfully changed Device Security setting.",
     "messengerAppsecurityError": "Failed to change Device Security setting.",
+    "messengerExternalCommunicationSuccess": "Successfully changed External Communication setting.",
+    "messengerExternalCommunicationError": "Failed to change External Communication setting.",
     "messengerEnableWebexSuccess": "Successfully enabled Webex Messenger Integration.",
     "messengerEnableWebexError": "Failed to enable Webex Messenger Integration.",
     "messengerDisableWebexSuccess": "Successfully disabled Webex Messenger Integration.",
@@ -7621,6 +7623,12 @@
       "subsectionLabel": "Cisco Spark Client Security",
       "proPackInfoCopy": "This premium feature is available with Pro Pack. Contact your partner to learn more.",
       "description": "Users can only launch the Cisco Spark app on mobile devices protected with lock screens."
+    },
+    "externalCommunication": {
+      "title": "External Communication",
+      "subsectionLabel": "Messaging",
+      "subsectionDescription": "Secure your organization's data by blocking external messaging.",
+      "description": "Block your users from inviting external contacts to Cisco Spark spaces and prevent your users from joining external Cisco Spark spaces."
     },
     "support": {
       "title": "Support",
