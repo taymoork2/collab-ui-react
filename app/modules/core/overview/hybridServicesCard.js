@@ -19,7 +19,7 @@
         card.notEnabledActionText = 'overview.cards.hybrid.notEnabledActionText';
         card.serviceList = [];
 
-        function init() {
+        function init(hasInvalidated) {
           $q.all({
             nameChangeEnabled: FeatureToggleService.atlas2017NameChangeGetStatus(),
             hybridImp: FeatureToggleService.atlasHybridImpGetStatus(),
@@ -63,7 +63,7 @@
                 card.serviceList.push(HybridServicesClusterService.getStatusForService('contact-center-context', response.clusterList.value));
               }
             } else {
-              if (_.get(response, 'clusterList.reason.status') === 403) {
+              if (_.get(response, 'clusterList.reason.status') === 403 && !hasInvalidated) {
                 $q.all([
                   // Partner user most likely is out of sync in FMS/USS cache after the trial was added in the Atlas backend
                   // To remedy, invalidate the user cache
@@ -72,7 +72,7 @@
                 ])
                   .then(function () {
                     // We have invalidated the cache, lets init again
-                    init();
+                    init(true);
                   });
               } else {
                 Notification.errorWithTrackingId(response.clusterList.reason, 'overview.cards.hybrid.herculesError');
@@ -89,7 +89,7 @@
             }
           });
         }
-        init();
+        init(false);
 
         function getUIStateLink(serviceId) {
           if (serviceId === 'squared-fusion-uc') {
