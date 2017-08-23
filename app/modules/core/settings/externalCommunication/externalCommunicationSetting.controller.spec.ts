@@ -34,7 +34,7 @@ describe('Controller: ExternalCommunicationSettingController', () => {
     $scope.$apply();
   }
 
-  describe('contructor()', () => {
+  describe('constructor()', () => {
 
     describe('when getBlockExternalCommunication fail', () => {
       beforeEach(initGetBlockExternalCommunicationReject());
@@ -68,9 +68,11 @@ describe('Controller: ExternalCommunicationSettingController', () => {
   });
 
   describe('updateBlockExternalCommunicationSetting', () => {
-    beforeEach(initGetBlockExternalCommunicationWithResult(false));
-    beforeEach(initGetBlockExternalCommunication);
-    beforeEach(initController);
+    beforeEach(function() {
+      initGetBlockExternalCommunicationWithResult(false);
+      initGetBlockExternalCommunication();
+      initController();
+    });
 
     it('should call AccountOrgService to save the value true', () => {
       controller.isBlockExternalCommunication = true;

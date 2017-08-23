@@ -1,8 +1,3 @@
-
-/*interface IGetBlockExternalCommunicationResponse {
-  blockExternalCommunications: boolean;
-}*/
-
 export class ExternalCommunicationSettingController {
 
   private _isBlockExternalCommunication: boolean = false;
