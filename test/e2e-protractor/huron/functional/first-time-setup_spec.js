@@ -19,6 +19,9 @@ describe('Huron Functional: first-time-setup', () => {
   it('should navigate to First Time Setup Wizard', () => {
     utils.expectIsDisplayed(wizard.titleBanner);
   });
+  it('should have "Start your new 90-day trial" banner showing for call', () => {
+    utils.expectIsDisplayed(wizard.planReviewCallTrial);
+  });
   it('should navigate to Call Settings setup page', () => {
     utils.click(wizard.beginBtn);
     utils.expectIsDisplayed(wizard.callBanner);

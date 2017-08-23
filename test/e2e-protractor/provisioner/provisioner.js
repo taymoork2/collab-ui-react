@@ -61,7 +61,11 @@ export function provisionCmiCustomer(partnerName, customer, site, numberRange, s
 export function provisionCustomerAndLogin(customer) {
   return this.provisionAtlasCustomer(customer.partner, customer.trial)
     .then(atlasCustomer => {
-      if (atlasCustomer && customer.cmiCustomer) {
+      if (atlasCustomer.offers[0].id == 'MESSAGE') {
+        console.log('No offers selected, proceeding without CMI setup!');
+        return loginPartner(customer.partner)
+          .then(() => switchToCustomerWindow(customer.name, customer.doFtsw));
+      } else if (atlasCustomer && customer.cmiCustomer) {
         customer.cmiCustomer.uuid = atlasCustomer.customerOrgId;
         customer.cmiCustomer.name = atlasCustomer.customerName;
         return this.provisionCmiCustomer(customer.partner, customer.cmiCustomer, customer.cmiSite, customer.numberRange, customer.doFtsw)

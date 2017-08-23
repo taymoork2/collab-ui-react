@@ -1,6 +1,7 @@
 export const Offers = {
   OFFER_CALL: 'CALL',
   OFFER_ROOM_SYSTEMS: 'ROOMSYSTEMS',
+  OFFER_MESSAGE: 'MESSAGE',
 };
 
 export class AtlasTrial {
