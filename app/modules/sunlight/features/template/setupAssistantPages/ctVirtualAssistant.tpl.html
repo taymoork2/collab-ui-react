@@ -10,7 +10,7 @@
           <article class="profile-preview ct-article">
             <header>
               <div class="img">
-                <i class="icon bot icon-bot-four icon-lg"></i>
+                <i class="icon bot icon-bot-four icon-2x"></i>
               </div>
               <div class="h5 profile-name" ng-bind="careSetupAssistant.template.configuration.virtualAssistant.config.name"></div>
               <div class="right actions">
@@ -39,7 +39,7 @@
             <section ct-attribute-right-section ct-flex-topleft>
               <div class="h4 subheader-text" translate="careChatTpl.virtualAssistantSelector"></div>
 
-              <div>
+              <div class="row ct-attribute-row">
                 <cs-select
                         name="virtualAssistantSelect"
                         ng-model="careSetupAssistant.selectedVA"
@@ -54,11 +54,11 @@
               </div>
 
               <div class="h4 subheader-text" translate="careChatTpl.virtualAssistantWelcomeMessageLabel"></div>
-              <div>
+              <div class="row ct-attribute-row">
                 <input
                         cs-input
                         name="virtualAssistantWelcomeText"
-                        class="h5 inputField ct-attribute-field-textbox large-12"
+                        class="h5 inputField ct-attribute-field-textbox large-11"
                         ng-model="careSetupAssistant.template.configuration.virtualAssistant.welcomeMessage"
                         cs-input-messages="careSetupAssistant.singleLineValidationMessage50"
                         ng-maxlength="careSetupAssistant.lengthConstants.singleLineMaxCharLimit50"

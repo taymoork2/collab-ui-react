@@ -1707,6 +1707,7 @@
           //if the virtual assistant list has only one VA available. use it by default.
           if (vm.configuredVirtualAssistantServices.length === 1) {
             var data = vm.configuredVirtualAssistantServices[0];
+            vm.selectedVA = vm.selectedVA || {};
             vm.selectedVA.id = data.id;
             vm.selectedVA.name = data.name;
 
