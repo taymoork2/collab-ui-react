@@ -27,7 +27,10 @@ export interface IConferenceService {
 }
 
 export interface IConferenceLicense {
+  billingServiceId: string;
+  capacity: number;
   features: string[];
+  siteId?: string;
   isTrial: boolean;
   trialId: string;
   licenseId: string;

@@ -1,5 +1,5 @@
 import './_meeting-settings.scss';
-import { IWebExSite, ISiteNameError, IConferenceService, IExistingTrialSites, IWebexLicencesPayload, IPendingLicense } from './meeting-settings.interface';
+import { IWebExSite, ISiteNameError, IConferenceService, IExistingTrialSites, IWebexLicencesPayload, IPendingLicense, IConferenceLicense } from './meeting-settings.interface';
 import { SetupWizardService } from '../setup-wizard.service';
 
 export enum Steps {
@@ -498,17 +498,18 @@ export class MeetingSettingsCtrl {
     });
   }
 
+  // In the case of modify orders, the order will apply to an active subscription.
+  // If we have WebEx licenses, we need pull those siteUrls and include them in the provision context
   public findExistingWebexSites(): void {
-    const existingConferenceServices = _.filter(this.Authinfo.getConferenceServices(), (service: IConferenceService) => {
-      return _.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC], service.license.offerName);
-    });
+    const actingSubscriptionLicenses = _.get<IConferenceLicense[]>(this.SetupWizardService.getActingSubscription(), 'licenses', []);
+    const existingConferenceServicesInActingSubscripton = _.filter(actingSubscriptionLicenses, (license: IConferenceLicense) => _.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC], license.offerName));
 
     // Create an array of existing sites
-    this.existingWebexSites = _.map(existingConferenceServices, (service: IConferenceService) => {
+    this.existingWebexSites = _.map(existingConferenceServicesInActingSubscripton, (license) => {
       return {
-        siteUrl: _.replace(_.get<string>(service, 'license.siteUrl'), this.Config.siteDomainUrl.webexUrl, ''),
-        quantity: service.license.volume,
-        centerType: service.license.offerName,
+        siteUrl: _.replace(_.get<string>(license, 'siteUrl'), this.Config.siteDomainUrl.webexUrl, ''),
+        quantity: license.volume,
+        centerType: license.offerName,
       };
     });
 
