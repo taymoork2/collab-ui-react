@@ -3660,7 +3660,8 @@
       "duplicateSite": "This site already exists",
       "invalidLicense": "License number should be an integer greater than 0",
       "pleaseEnterSiteName": "Please enter a site name",
-      "enteredSiteNotValid": "The entered site is not valid. Please try another site."
+      "enteredSiteNotValid": "The entered site is not valid. Please try another site.",
+      "totalSiteLicenseNumber": "Site <b>{{ siteUrl }}</b> should have license number > 0"
     },
     "siteName": "Site Name",
     "theseWillBeYourWebExSites": "These will be your {{siteCount}} WebEx sites",
