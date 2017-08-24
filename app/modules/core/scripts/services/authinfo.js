@@ -147,11 +147,12 @@
           } else if (_.has(account, 'licenses')) {
             licenses = _.get(account, 'licenses', []);
           }
-          // Store licenses before filtering
-          authData.licenses = licenses;
 
           _.forEach(licenses, function (license) {
             var service = null;
+
+            // Store license before filtering
+            authData.licenses.push(license);
 
             // Do not store invalid licenses in service buckets
             if (license.status === Config.licenseStatus.CANCELLED || license.status === Config.licenseStatus.SUSPENDED) {
