@@ -1,4 +1,5 @@
 import './_meeting-settings.scss';
+import { Config } from 'modules/core/config/config';
 import { IWebExSite, ISiteNameError, IConferenceService, IExistingTrialSites, IWebexLicencesPayload, IPendingLicense, IConferenceLicense } from './meeting-settings.interface';
 import { SetupWizardService } from '../setup-wizard.service';
 
@@ -61,7 +62,7 @@ export class MeetingSettingsCtrl {
     private $translate: ng.translate.ITranslateService,
     private $rootScope: ng.IRootScopeService,
     private Authinfo,
-    private Config,
+    private Config: Config,
     private Notification,
     private TrialTimeZoneService,
     private TrialWebexService,

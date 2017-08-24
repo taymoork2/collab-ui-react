@@ -1,3 +1,5 @@
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+
 .ct-virtual-assistant {
   align-items: center;
 
@@ -29,7 +31,7 @@
 
   .ct-attribute-field-textbox {
     @include placeholder {
-      line-height: rem-calc(12px);
+      line-height: rem-calc(12);
     }
 
     font-family: 'CiscoSansTT Light';
@@ -221,8 +223,8 @@
     color: $color-primary-base;
     bottom: 0.5rem;
     left: 0.25rem;
-    @include vr-spacing(pl, 0.25rem);
-    @include vr-spacing(pr, 0.25rem);
+    @include vr-spacing(pl, 0.25);
+    @include vr-spacing(pr, 0.25);
 
     .icon {
       bottom: -3px;

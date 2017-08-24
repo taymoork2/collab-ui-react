@@ -1,5 +1,6 @@
 import { IUser, UserPreferencesService, IMeService } from 'modules/core/auth/user/index';
 import { IToolkitModalService, IToolkitModalServiceInstance } from 'modules/core/modal';
+import { Config } from 'modules/core/config/config';
 
 //////////////////////////
 
@@ -16,7 +17,7 @@ export class TOSService {
     private MeService: IMeService,
     private UserPreferencesService: UserPreferencesService,
     private $q: ng.IQService,
-    private Config,
+    private Config: Config,
   ) {
   }
 

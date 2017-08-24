@@ -1,3 +1,4 @@
+import { Config } from 'modules/core/config/config';
 
 /* A User */
 export interface IUser {
@@ -102,7 +103,6 @@ class ServiceInvitations implements IServiceInvitations {
   }) {
     _.extend(this, obj);
   }
-
 }
 
 interface IInvitationResource extends ng.resource.IResourceClass<ng.resource.IResource<IInvitation>> {
@@ -123,7 +123,7 @@ export class UserOverviewService {
     private $resource: ng.resource.IResourceService,
     private $q: ng.IQService,
     private WebExUtilsFact,
-    private Config,
+    private Config: Config,
     private SunlightConfigService,
     private ServiceSetup,
     private Userservice,

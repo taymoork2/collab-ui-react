@@ -3,6 +3,8 @@ import '@ciscospark/internal-plugin-metrics';
 import '@ciscospark/plugin-logger';
 import Spark from '@ciscospark/spark-core';
 
+import { Config } from 'modules/core/config/config';
+
 import {
   DiagnosticKey,
   OperationalKey,
@@ -49,7 +51,7 @@ export class MetricsService {
     private $timeout: ng.ITimeoutService,
     private $window: ng.IWindowService,
     private Auth,
-    private Config,
+    private Config: Config,
     private TokenService,
   ) {}
 

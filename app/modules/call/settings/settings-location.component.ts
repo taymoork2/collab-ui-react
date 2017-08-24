@@ -1,4 +1,5 @@
 import { CallSettingsService, CallSettingsData } from 'modules/call/settings/shared';
+import { Config } from 'modules/core/config/config';
 import { HuronSettingsOptionsService, HuronSettingsOptions } from 'modules/call/settings/shared';
 import { CompanyNumber } from 'modules/call/settings/settings-company-caller-id';
 import { IAvrilCustomerFeatures } from 'modules/huron/avril';
@@ -25,7 +26,7 @@ class CallSettingsCtrl implements ng.IComponentController {
     private $translate: ng.translate.ITranslateService,
     private $state: ng.ui.IStateService,
     private Authinfo,
-    private Config,
+    private Config: Config,
     private ModalService,
     private Notification: Notification,
   ) { }

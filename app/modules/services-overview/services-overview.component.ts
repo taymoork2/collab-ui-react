@@ -14,6 +14,7 @@ import { ServicesOverviewHybridDataSecurityCard } from './hybrid/hybrid-data-sec
 import { ServicesOverviewHybridContextCard } from './hybrid/hybrid-context-card';
 import { ServicesOverviewPrivateTrunkCard } from './hybrid/private-trunk-card';
 
+import { Config } from 'modules/core/config/config';
 import { CloudConnectorService } from 'modules/hercules/services/calendar-cloud-connector.service';
 import { EnterprisePrivateTrunkService } from 'modules/hercules/services/enterprise-private-trunk-service';
 import { HybridServicesClusterService, IServiceStatusWithSetup } from 'modules/hercules/services/hybrid-services-cluster.service';
@@ -37,7 +38,7 @@ export class ServicesOverviewController implements ng.IComponentController {
     private Auth,
     private Authinfo,
     private CloudConnectorService: CloudConnectorService,
-    private Config,
+    private Config: Config,
     private EnterprisePrivateTrunkService: EnterprisePrivateTrunkService,
     private FeatureToggleService,
     private HybridServicesClusterService: HybridServicesClusterService,

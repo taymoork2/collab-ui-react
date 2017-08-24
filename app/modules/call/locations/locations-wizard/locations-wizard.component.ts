@@ -12,6 +12,7 @@ import {
   HuronSettingsOptionsService, HuronSettingsOptions,
   HuronSettingsService, HuronSettingsData,
 } from 'modules/call/settings/shared';
+import { Config } from 'modules/core/config/config';
 import { IOption } from 'modules/huron/dialing';
 import { Notification } from 'modules/core/notifications';
 
@@ -59,7 +60,7 @@ class LocationsWizardController implements ng.IComponentController {
               private $translate: ng.translate.ITranslateService,
               private $modal,
               private Authinfo,
-              private Config,
+              private Config: Config,
               private Orgservice,
               private PstnModel: PstnModel,
               private PstnService: PstnService,

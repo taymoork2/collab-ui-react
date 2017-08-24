@@ -1,5 +1,6 @@
 import { ServicesOverviewHybridCard } from './services-overview-hybrid-card';
 import { ICardButton, CardType } from '../shared/services-overview-card';
+import { Config } from 'modules/core/config/config';
 
 export class ServicesOverviewHybridMediaCard extends ServicesOverviewHybridCard {
   public getShowMoreButton(): ICardButton | undefined {
@@ -38,7 +39,7 @@ export class ServicesOverviewHybridMediaCard extends ServicesOverviewHybridCard 
   /* @ngInject */
   public constructor(
     private Authinfo,
-    private Config,
+    private Config: Config,
   ) {
     super({
       active: false,
