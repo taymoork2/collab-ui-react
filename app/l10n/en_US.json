@@ -7515,6 +7515,7 @@
     "externalCommunication": {
       "title": "External Communication",
       "subsectionLabel": "Messaging",
+      "proPackInfoCopy": "To set a retention time for your org, contact your partner admin about Pro Pack.",
       "subsectionDescription": "Secure your organization's data by blocking external messaging.",
       "description": "Block your users from inviting external contacts to Cisco Spark spaces and prevent your users from joining external Cisco Spark spaces."
     },
