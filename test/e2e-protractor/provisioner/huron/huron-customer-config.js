@@ -10,7 +10,7 @@ const now = Date.now();
 
 let offers = [];
 
-export function huronCustomer(test, numberRange, users, pstn, pstnLines, doFtsw, selectedOffer) {
+export function huronCustomer(test, numberRange, users, pstn, pstnLines, doFtsw, selectedOffer, doHuntGroup) {
   switch (selectedOffer) {
     case 'CALL':
       offers.push(new TrialOffer({
@@ -58,6 +58,7 @@ export function huronCustomer(test, numberRange, users, pstn, pstnLines, doFtsw,
     pstn: pstn || undefined,
     pstnLines: pstnLines || 3,
     doFtsw: doFtsw || false,
+    doHuntGroup: doHuntGroup || false,
   };
   return customer;
 }
