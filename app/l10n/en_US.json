@@ -5891,7 +5891,6 @@
       "deregister_cluster_list": "Deregister following clusters:",
       "ready": "I'm ready to deregister these clusters.",
       "confirmation_check": "By deactivating Hybrid Media Service, I understand that the above clusters will be deregistered and all further meetings will be hosted  in the cloud and that this action cannot be undone.",
-      "button-deactivate": "Deactivate Service",
       "button_deactivate": "Deactivate",
       "success": "Your Hybrid Media Services was deactivated successfully.",
       "error": "Error in deregistering clusters. Please try again after sometime.",
