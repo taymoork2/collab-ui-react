@@ -1,5 +1,4 @@
-import { IPagingGroup, IMemberData, INumberData, IInitiatorData, IMemberWithPicture, PLACE, USER, PUBLIC, CUSTOM } from 'modules/huron/features/pagingGroup/pagingGroup';
-import { PagingGroupService } from 'modules/huron/features/pagingGroup/pagingGroup.service';
+import { IPagingGroup, IMemberData, INumberData, IInitiatorData, IMemberWithPicture, PagingGroupService, PLACE, USER, PUBLIC, CUSTOM } from 'modules/call/features/paging-group/shared';
 import { USER_REAL_USER } from 'modules/huron/members';
 import { IToolkitModalService } from 'modules/core/modal';
 
@@ -240,7 +239,7 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
 
   public cancelModal(): void {
     this.$modal.open({
-      templateUrl: 'modules/huron/features/pagingGroup/pgSetupAssistant/pgCancelModal.tpl.html',
+      templateUrl: 'modules/call/features/paging-group/paging-group-setup-assistant/paging-group-cancel-modal.html',
       type: 'dialog',
     });
   }
@@ -248,5 +247,5 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
 
 export class PgSetupAssistantComponent implements ng.IComponentOptions {
   public controller = PgSetupAssistantCtrl;
-  public templateUrl = 'modules/huron/features/pagingGroup/pgSetupAssistant/pgSetupAssistant.html';
+  public templateUrl = 'modules/call/features/paging-group/paging-group-setup-assistant/paging-group-setup-assistant.component.html';
 }

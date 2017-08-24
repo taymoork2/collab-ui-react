@@ -1,6 +1,6 @@
 import { FeatureMemberService } from 'modules/huron/features/services';
 import { Member, USER_REAL_USER, USER_PLACE } from 'modules/huron/members';
-import { IMemberWithPicture, CUSTOM } from 'modules/huron/features/pagingGroup';
+import { IMemberWithPicture, CUSTOM } from 'modules/call/features/paging-group/shared';
 
 class PagingInitiatorCtrl implements ng.IComponentController {
   public initiatorType: string;
@@ -127,7 +127,7 @@ class PagingInitiatorCtrl implements ng.IComponentController {
 
 export class PgInitiatorComponent implements ng.IComponentOptions {
   public controller = PagingInitiatorCtrl;
-  public templateUrl = 'modules/huron/features/pagingGroup/pgSetupAssistant/pgInitiator/pgInitiator.html';
+  public templateUrl = 'modules/call/features/paging-group/paging-group-setup-assistant/paging-group-initiator/paging-group-initiator.component.html';
   public bindings = {
     onUpdate: '&',
     initiatorType: '<',

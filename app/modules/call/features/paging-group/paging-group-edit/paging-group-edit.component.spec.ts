@@ -1,3 +1,5 @@
+import pagingGroupEditModule from './index';
+
 describe('Component: pgEdit', () => {
 
   const NUMBER_SELECT = '.csSelect-container[labelfield="extension"]';
@@ -123,7 +125,7 @@ describe('Component: pgEdit', () => {
   };
 
   beforeEach(function () {
-    this.initModules('huron.paging-group.edit');
+    this.initModules(pagingGroupEditModule);
     this.injectDependencies(
       '$q',
       '$scope',

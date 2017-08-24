@@ -1,4 +1,5 @@
-import { INumberData } from 'modules/huron/features/pagingGroup/pagingGroup';
+import serviceModule from './index';
+import { INumberData } from 'modules/call/features/paging-group/shared';
 
 describe('Component: pgNumber service', () => {
 
@@ -26,7 +27,7 @@ describe('Component: pgNumber service', () => {
   };
 
   beforeEach(function () {
-    this.initModules('huron.paging-group.number');
+    this.initModules(serviceModule);
     this.injectDependencies(
       '$httpBackend',
       '$q',

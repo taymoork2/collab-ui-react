@@ -1,3 +1,5 @@
+import pagingGroupSetupAssistantModule from './index';
+
 describe('Component: pgSetupAssistant', () => {
 
   const saveFailureResp = getJSONFixture('huron/json/features/pagingGroup/errorResponse.json');
@@ -7,7 +9,7 @@ describe('Component: pgSetupAssistant', () => {
   const members = getJSONFixture('huron/json/features/pagingGroup/membersList2.json');
 
   beforeEach(function () {
-    this.initModules('huron.paging-group.setup-assistant');
+    this.initModules(pagingGroupSetupAssistantModule);
     this.injectDependencies(
       '$timeout',
       '$modal',
@@ -401,7 +403,7 @@ describe('Component: pgSetupAssistant', () => {
     it('should call the modal', function () {
       this.controller.cancelModal();
       expect(this.$modal.open).toHaveBeenCalledWith({
-        templateUrl: 'modules/huron/features/pagingGroup/pgSetupAssistant/pgCancelModal.tpl.html',
+        templateUrl: 'modules/call/features/paging-group/paging-group-setup-assistant/paging-group-cancel-modal.html',
         type: 'dialog',
       });
     });

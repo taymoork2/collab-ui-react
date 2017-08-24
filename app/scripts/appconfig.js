@@ -3791,7 +3791,7 @@
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/huron/features/pagingGroup/pgSetupAssistant'));
+                  done(require('modules/call/features/paging-group/paging-group-setup-assistant'));
                 }, 'call-paging');
               }),
             },
@@ -3803,7 +3803,7 @@
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/huron/features/pagingGroup/edit'));
+                  done(require('modules/call/features/paging-group/paging-group-edit'));
                 }, 'call-paging');
               }),
               pgId: /* @ngInject */ function pgId($stateParams) {

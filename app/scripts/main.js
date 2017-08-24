@@ -120,7 +120,6 @@
     'uc.cdrlogsupport',
     'uc.autoattendant',
     'ngIcal',
-    'huron.paging-group',
     'huron.call-pickup.setup-assistant',
     'huron.TerminusServices',
     'huron.externalNumberService',
@@ -135,6 +134,7 @@
     require('modules/huron/lines/deleteExternalNumber').default,
     require('modules/huron/media-mgr').default,
     require('modules/call/features').default,
+    require('modules/call/features/paging-group/shared').default,
   ])
     .constant('ASTParser', require('acorn'))
     .constant('ASTWalker', require('acorn/dist/walk'));
