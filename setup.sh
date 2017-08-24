@@ -52,15 +52,25 @@ if [ "$(uname)" = "Darwin" ]; then
     fi
 fi
 
-# install nvm + node 6 as-needed
+# install nvm as-needed
 if ! is_installed "nvm"; then
     echo "[INFO] \`nvm\` not found, installing:"
     curl -o- "https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh" | bash
+fi
 
+# install nodejs as-needed
+if ! is_installed "node"; then
+    echo "[INFO] \`node\` not found, installing:"
     # because 'nvm' is installed as a bash function, need to source it in before using it
     # shellcheck disable=SC1090
     source "$HOME/$(get_bash_conf_file)"
     nvm install 6
+fi
+
+# install yarn as-needed
+if ! is_installed "yarn"; then
+    echo "[INFO] \`yarn\` not found, installing:"
+    install_yarn || exit 1
 fi
 
 # remove component directories
@@ -77,36 +87,9 @@ if ! is_installed "parallel"; then
     install_gnu_parallel || exit 1
 fi
 
-function install_npm_deps_via_npm {
-    local time_start
-    local time_npm
-    local npm_install_options
-    local npm_duration
-    time_start=$(date +"%s")
-
-    if [ "${NPM__VERBOSE}" = "true" ]; then
-        npm_install_options="--loglevel=verbose"
-    fi
-    npm install "${npm_install_options}"
-
-    time_npm=$(date +"%s")
-    npm_duration=$((time_npm - time_start))
-    echo "npm completed after $((npm_duration / 60)) minutes and $((npm_duration % 60)) seconds."
-    return $?
-}
-
-function install_npm_deps_via_yarn {
-    yarn
-    return $?
-}
-
 # install npm deps
 echo "[INFO] Install npm dependencies..."
-if is_installed "yarn"; then
-    install_npm_deps_via_yarn || exit $?
-else
-    install_npm_deps_via_npm || exit $?
-fi
+yarn
 
 # - make a tar archive of the npm deps, and rm older versions
 echo "[INFO] Generating backup archive of npm dependencies..."

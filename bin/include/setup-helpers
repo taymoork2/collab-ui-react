@@ -44,6 +44,44 @@ function install_gnu_parallel {
     return 1
 }
 
+# install 'yarn' for known used OS's ('nvm' is assumed installed already)
+# - see: https://yarnpkg.com/lang/en/docs/install
+function install_yarn {
+    # Mac (as of Yosemite)
+    if is_installed "brew"; then
+        brew install yarn --without-node
+        return $?
+
+    elif is_installed "dnf" || is_installed "yum"; then
+        sudo wget "https://dl.yarnpkg.com/rpm/yarn.repo" -O "/etc/yum.repos.d/yarn.repo"
+        # Fedora (as of F23)
+        if is_installed "dnf"; then
+            sudo dnf install -y yarn
+            return $?
+        # CentOS (as of CentOS 7)
+        elif is_installed "yum"; then
+            # workaround (as of 2017-08-15):
+            # - see: https://bugs.centos.org/view.php?id=13669&nbn=1
+            # - install rpm 'http-parser-2.7.1-3.el7.x86_64.rpm' from koji until EPEL team fixes the next 'nodejs-6.11.*' rpm
+            sudo rpm -Uvh "https://kojipkgs.fedoraproject.org//packages/http-parser/2.7.1/3.el7/x86_64/http-parser-2.7.1-3.el7.x86_64.rpm"
+            sudo yum install -y yarn
+            return $?
+        fi
+
+    # Ubuntu (as of 14.04)
+    elif is_installed "apt-get"; then
+        curl -sS "https://dl.yarnpkg.com/debian/pubkey.gpg" | sudo apt-key add -
+        echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee "/etc/apt/sources.list.d/yarn.list"
+        sudo apt-get update
+        sudo apt-get install -y yarn
+        return $?
+    fi
+
+    >&2 echo "[ERROR] ${FUNCNAME[0]} failed."
+    >&2 echo "- for alternate install instructions, see: https://yarnpkg.com/lang/en/docs/install/"
+    return 1
+}
+
 # quietly validate checksums
 function is_checksums_ok {
     local checksum_file=${1:-$manifest_checksums_file}
