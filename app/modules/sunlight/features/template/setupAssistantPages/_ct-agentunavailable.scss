@@ -27,8 +27,7 @@
 
   .unavailable-preview {
     display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
+    flex-flow: column nowrap;
     align-items: center;
 
     @include vr-spacing(mt, 5);
@@ -40,8 +39,7 @@
     .unavailable {
       display: flex;
       text-align: center;
-      flex-direction: column;
-      flex-wrap: nowrap;
+      flex-flow: column nowrap;
       width: 80%;
       color: $alert-color;
 

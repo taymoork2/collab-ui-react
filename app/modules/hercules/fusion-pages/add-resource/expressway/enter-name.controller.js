@@ -46,6 +46,9 @@
           if (data.selectedServices.calendar) {
             promises.push(HybridServicesClusterService.provisionConnector(vm.clusterId, 'c_cal'));
           }
+          if (data.selectedServices.imp) {
+            promises.push(HybridServicesClusterService.provisionConnector(vm.clusterId, 'c_imp'));
+          }
           return $q.all(promises);
         })
         .then(function () {

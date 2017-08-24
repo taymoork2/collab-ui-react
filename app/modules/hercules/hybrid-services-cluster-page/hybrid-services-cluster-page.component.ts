@@ -3,7 +3,6 @@ import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-s
 class HybridServicesClusterPageCtrl implements ng.IComponentController {
   public tabs: { title: string, state: string }[] = [];
   public title: string;
-  public titleValues: object;
   public backUrl: string = 'cluster-list';
   public hasNodesViewFeatureToggle: boolean;
 
@@ -23,10 +22,7 @@ class HybridServicesClusterPageCtrl implements ng.IComponentController {
   }
 
   private updateName(name: string): void {
-    this.title = 'hercules.expresswayClusterSettings.pageTitle';
-    this.titleValues = {
-      clusterName: name,
-    };
+    this.title = name;
   }
 
   private init(id) {

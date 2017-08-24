@@ -50,6 +50,6 @@ export class CsdmCacheUpdater {
 }
 
 module.exports = angular
-  .module('Squared')
+  .module('squared.csdmCacheUpdater', [])
   .service('CsdmCacheUpdater', CsdmCacheUpdater)
   .name;

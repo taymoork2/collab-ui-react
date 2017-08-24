@@ -5,7 +5,7 @@
     .controller('FirstTimeWizardCtrl', FirstTimeWizardCtrl);
 
   /* @ngInject */
-  function FirstTimeWizardCtrl($q, $scope, $state, $translate, Auth, Authinfo, Orgservice, SetupWizardService) {
+  function FirstTimeWizardCtrl($q, $scope, $state, $translate, AccountService, Authinfo, Orgservice, SetupWizardService) {
     $scope.greeting = $translate.instant('index.greeting', {
       name: Authinfo.getUserName(),
     });
@@ -18,7 +18,9 @@
     };
 
     function serviceSetupWizardComplete() {
+      AccountService.clearCache();
       if (SetupWizardService.hasPendingLicenses()) {
+        AccountService.updateCacheAge(5);
         return updateAccountInfo();
       } else {
         return Orgservice.setSetupDone().then(function () {
@@ -29,10 +31,7 @@
 
     function updateAccountInfo() {
       if (Authinfo.isAdmin()) {
-        return Auth.getCustomerAccount(Authinfo.getOrgId())
-          .then(function (response) {
-            Authinfo.updateAccountInfo(response.data, response.status);
-          });
+        return AccountService.updateAuthinfoAccount();
       } else {
         return $q.resolve();
       }

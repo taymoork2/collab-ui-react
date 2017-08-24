@@ -62,6 +62,7 @@
   angular.module('wx2AdminWebClientApp', [
     require('./app.templates'),
     require('modules/core/scripts/controllers/bodyCtrl'),
+    require('modules/core/account').default,
     require('modules/core/analytics'),
     require('modules/core/auth/auth'),
     require('modules/core/auth/tos').default,

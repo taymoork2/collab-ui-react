@@ -50,7 +50,6 @@ require('./_user-add.scss');
     $scope.processing = false;
     $scope.PATTERN_LIMIT = 50;
     $scope.messagingLicenseAvailability = 0;
-    $scope.communicationsLicenseAvailability = 0;
     $scope.conferencingLicenseAvailability = 0;
     $scope.dirSyncConnectorDownload = 'https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/DirectoryConnector.zip';
 
@@ -107,6 +106,8 @@ require('./_user-add.scss');
     $scope.shouldAddCallService = shouldAddCallService;
     $scope.cancelModal = cancelModal;
     var currentUserHasCall = false;
+    $scope.currentUserEnablesCall = false;
+    $scope.currentUserCommFeature = $scope.selectedCommFeature = null;
 
     $scope.isCareAndCDCEnabled = Authinfo.isCareAndCDC();
     $scope.isCareAndCVCEnabled = Authinfo.isCareVoiceAndCVC();
@@ -127,14 +128,11 @@ require('./_user-add.scss');
     function setLicenseAvailability() {
       return Orgservice.getLicensesUsage()
         .then(function (result) {
-          $scope.licenses = result[0].licenses;
+          $scope.licenses = _.get(result, '[0].licenses', []);
           _.forEach($scope.licenses, function (license) {
             switch (license.licenseType) {
               case Config.licenseTypes.MESSAGING:
                 $scope.messagingLicenseAvailability = license.volume - license.usage;
-                break;
-              case Config.licenseTypes.COMMUNICATION:
-                $scope.communicationLicenseAvailability = license.volume - license.usage;
                 break;
               case Config.licenseTypes.CONFERENCING:
                 $scope.conferencingLicenseAvailability = license.volume - license.usage;
@@ -154,6 +152,30 @@ require('./_user-add.scss');
       if ($scope[licenseNamePrefix + 'LicenseAvailability'] < $scope.currentUserCount) {
         $scope.licenseCheckModal();
       }
+    };
+
+    $scope.checkCommLicenseAvailability = function (licenseModel, commFeature) {
+      if (!commFeature) {
+        return;
+      }
+      if (licenseModel) {
+        $scope.currentUserEnablesCall = true;
+        $scope.selectedCommFeature = commFeature;
+      } else {
+        $scope.currentUserEnablesCall = false;
+        $scope.selectedCommFeature = null;
+        return;
+      }
+      var availableLicenses = commFeature.license.volume - commFeature.license.usage;
+      if (availableLicenses < $scope.currentUserCount) {
+        $scope.licenseCheckModal();
+      }
+    };
+
+    $scope.disableCommCheckbox = function (commFeature) {
+      return $scope.currentUserEnablesCall
+        && $scope.selectedCommFeature
+        && commFeature.license.licenseId !== $scope.selectedCommFeature.license.licenseId;
     };
 
     $scope.licenseCheckModal = function () {
@@ -274,7 +296,7 @@ require('./_user-add.scss');
           .then(function (locationOptions) {
             $scope.locationOptions = locationOptions;
             _.forEach(locationOptions, function (result) {
-              if (result.defaultLocation == true) {
+              if (result.defaultLocation === true) {
                 _.forEach($scope.usrlist, function (data) {
                   data.selectedLocation = { uuid: result.uuid, name: result.name };
                   $scope.selectedLocation = data.selectedLocation.uuid;
@@ -504,7 +526,7 @@ require('./_user-add.scss');
           _.forEach($scope.usrlist, function (user, userIndex) {
             if ($scope.usrlist[userIndex].selectedLocation.uuid === selectedLocationColumn) {
               _.forEach(internalNumberPool, function (internalNumber, index) {
-                if (internalNumberPool[index].pattern == $scope.usrlist[userIndex].assignedDn.pattern) {
+                if (internalNumberPool[index].pattern === $scope.usrlist[userIndex].assignedDn.pattern) {
                   //if the number is present on the grid, then set its index position to 1 on the copyArray
                   copyArray[index] = 1;
                 }
@@ -697,15 +719,15 @@ require('./_user-add.scss');
     }
 
     if (userEnts) {
-      for (var x = 0; x < userEnts.length; x++) {
-        if (userEnts[x] === 'ciscouc') {
-          $scope.radioStates.commRadio = true;
-          currentUserHasCall = true;
-        } else if (userEnts[x] === 'squared-room-moderation') {
-          $scope.radioStates.msgRadio = true;
-        } else if (userEnts[x] === 'cloud-contact-center') {
-          setCareService();
-        }
+      if (userEnts.indexOf('ciscouc') > -1) {
+        currentUserHasCall = true;
+        $scope.currentUserEnablesCall = true;
+      }
+      if (userEnts.indexOf('squared-room-moderation') > -1) {
+        $scope.radioStates.msgRadio = true;
+      }
+      if (userEnts.indexOf('cloud-contact-center') > -1) {
+        setCareService();
       }
     }
 
@@ -733,7 +755,7 @@ require('./_user-add.scss');
     }
 
     function shouldAddCallService() {
-      return !currentUserHasCall && ($scope.radioStates.commRadio || $scope.entitlements.ciscoUC);
+      return !currentUserHasCall && ($scope.currentUserEnablesCall || $scope.entitlements.ciscoUC);
     }
 
     function createFeatures(obj) {
@@ -938,6 +960,36 @@ require('./_user-add.scss');
       }
       if (services.communication) {
         $scope.communicationFeatures = $scope.communicationFeatures.concat(services.communication);
+        // Set the Spark Call checkbox and usage
+        var commLicenseID = '';
+        if (currentUserHasCall) {
+          commLicenseID = _.find(userLicenseIds, function (license) {
+            return _.startsWith(license, 'CO_');
+          });
+        }
+        Orgservice.getLicensesUsage()
+          .then(function (licenseUsages) {
+            _.forEach($scope.communicationFeatures, function (commFeature) {
+              // Set current communication license checkbox
+              if (!_.isUndefined(commFeature.license.licenseId) &&
+                commFeature.license.licenseId === commLicenseID) {
+                commFeature.commRadio = true;
+                $scope.currentUserCommFeature = $scope.selectedCommFeature = commFeature;
+              } else {
+                commFeature.commRadio = false;
+              }
+              // Set communication license usage
+              commFeature.license.usage = 0;
+              _.forEach(licenseUsages, function (licenseUsage) {
+                var index = _.findIndex(licenseUsage.licenses, function (license) {
+                  return license.licenseId === commFeature.license.licenseId;
+                });
+                if (index >= 0) {
+                  commFeature.license.usage = licenseUsage.licenses[index].usage;
+                }
+              });
+            });
+          });
       }
       if (services.care) {
         $scope.careFeatures = $scope.careFeatures.concat(services.care);
@@ -1004,7 +1056,7 @@ require('./_user-add.scss');
     $scope.noExternalNum = $translate.instant('usersPage.notApplicable');
 
     $scope.$watch('model.userList', function (newVal, oldVal) {
-      if (newVal != oldVal) {
+      if (newVal !== oldVal) {
         $scope.usrlist = addressparser.parse($scope.model.userList);
       }
     });
@@ -1025,8 +1077,8 @@ require('./_user-add.scss');
       }
     }, true);
 
-    $scope.$watch('radioStates.commRadio', function (newVal, oldVal) {
-      if (newVal != oldVal) {
+    $scope.$watch('currentUserEnablesCall', function (newVal, oldVal) {
+      if (newVal !== oldVal) {
         // Store value of checkbox in service (cast to bool)
         OnboardService.huronCallEntitlement = !!newVal;
 
@@ -1218,13 +1270,26 @@ require('./_user-add.scss');
           }
         }
 
-        // Communication: straightforward license, for now
-        var commIndex = $scope.radioStates.commRadio ? 1 : 0;
-        var selCommService = $scope.communicationFeatures[commIndex];
-        if ('licenseId' in selCommService.license) {
-          licenseList.push(new LicenseFeature(selCommService.license.licenseId, true));
-        } else if ((action === 'patch') && ($scope.communicationFeatures.length > 1) && ('licenseId' in $scope.communicationFeatures[1].license)) {
-          licenseList.push(new LicenseFeature($scope.communicationFeatures[1].license.licenseId, false));
+        // Communication
+        if (currentUserHasCall) { // has existing communication license
+          if ($scope.currentUserEnablesCall) { // has selected a communication license
+            // check if the license is the same, if not, do the move
+            if ($scope.currentUserCommFeature.license.licenseId !== $scope.selectedCommFeature.license.licenseId) {
+              // move license
+              licenseList.push(new LicenseFeature($scope.currentUserCommFeature.license.licenseId, false));
+              licenseList.push(new LicenseFeature($scope.selectedCommFeature.license.licenseId, true));
+            }
+          } else {
+            // delete license
+            if (action === 'patch') {
+              licenseList.push(new LicenseFeature($scope.currentUserCommFeature.license.licenseId, false));
+            }
+          }
+        } else { // no existing communication license
+          if ($scope.currentUserEnablesCall) {
+            // add new license (may select trial)
+            licenseList.push(new LicenseFeature($scope.selectedCommFeature.license.licenseId, true));
+          }
         }
 
         // BEGIN: Care License provisioning for users
@@ -1831,7 +1896,7 @@ require('./_user-add.scss');
 
         _.each(usersList, function (userItem) {
           var userAndDnObj = $scope.usrlist.filter(function (user) {
-            return (user.address == userItem.address);
+            return (user.address === userItem.address);
           });
 
           if ($scope.ishI1484 && $scope.locationOptions.length > 1) {

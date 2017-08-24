@@ -1,10 +1,12 @@
 import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
+import { ITrunkStatus } from 'modules/hercules/services/enterprise-private-trunk-service';
 
 interface IServiceStatus {
   alarmsUrl: string;
   id: HybridServiceId;
-  state: string; //  "unknown"
+  state: string; //  'operational' | ?
   url: string;
+  resources?: ITrunkStatus[]; // ok?
 }
 
 interface IService {

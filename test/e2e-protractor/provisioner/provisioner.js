@@ -61,10 +61,15 @@ export function provisionCmiCustomer(partnerName, customer, site, numberRange, s
 export function provisionCustomerAndLogin(customer) {
   return this.provisionAtlasCustomer(customer.partner, customer.trial)
     .then(atlasCustomer => {
-      if (atlasCustomer && customer.cmiCustomer) {
+      if (atlasCustomer.offers[0].id == 'MESSAGE') {
+        console.log('No offers selected, proceeding without CMI setup!');
+        return loginPartner(customer.partner)
+          .then(() => switchToCustomerWindow(customer.name, customer.doFtsw));
+      } else if (atlasCustomer && customer.cmiCustomer) {
         customer.cmiCustomer.uuid = atlasCustomer.customerOrgId;
         customer.cmiCustomer.name = atlasCustomer.customerName;
         return this.provisionCmiCustomer(customer.partner, customer.cmiCustomer, customer.cmiSite, customer.numberRange, customer.doFtsw)
+          .then(() => provisionUsers(customer))
           .then(() => setupPSTN(customer))
           .then(() => loginPartner(customer.partner))
           .then(() => switchToCustomerWindow(customer.name, customer.doFtsw));
@@ -185,5 +190,44 @@ function switchToCustomerWindow(customerName, doFtsw) {
       return utils.wait(navigation.ftswSidePanel, LONG_TIMEOUT);
     }
   });
+}
+
+export function provisionUsers(customer) {
+  if (customer.users) {
+    console.log(`Need to provision ${customer.users} users for ${customer.name}!`);
+    return provisionerHelper.getToken(customer.partner)
+      .then(token => {
+        console.log('Got token for provisionUsers!');
+        return atlasHelper.getAtlasOrg(token, customer.cmiCustomer.uuid)
+          .then((response) => {
+            const licenseArray = _.get(response, 'licenses', undefined);
+            const licenseCom = _.find(licenseArray, ['licenseType', 'COMMUNICATION']);
+            console.log('Got communication type of license for provisionUsers!');
+            let internalExt = 351;
+            let userList = [];
+            for (var i = 0; i < customer.users; i++) {
+              internalExt = internalExt + i;
+              const userObj = {
+                email: `${customer.name}_${i}@gmail.com`,
+                userEntitlements: null,
+                licenses: [{
+                  id: `${licenseCom.licenseId}`,
+                  OperationId: 'ADD',
+                  properties: { internalExtension: `${internalExt}` },
+                },
+                ],
+              }
+              userList.push(userObj);
+            }
+
+            let finalList = { users: userList }
+
+            return atlasHelper.createAtlasUser(token, customer.cmiCustomer.uuid, finalList)
+              .then(() => {
+                console.log(`Successfully added users for ${customer.name}!`);
+              });
+          });
+      });
+  }
 }
 

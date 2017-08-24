@@ -124,7 +124,7 @@
           })
           .state('login', {
             parent: 'loginLazyLoad',
-            url: '/login?bmmp_env&email&customerOrgId&partnerOrgId',
+            url: '/login?bmmp_env&email&customerOrgId&partnerOrgId&subscriptionId',
             views: {
               'main@': {
                 template: '<login/>',
@@ -798,6 +798,11 @@
             onEnter: /* @ngInject */ function (OnlineAnalyticsService) {
               OnlineAnalyticsService.track(OnlineAnalyticsService.MY_COMPANY_SUBSCRIPTIONS);
             },
+            resolve: {
+              account: /* @ngInject */ function (AccountService) {
+                return AccountService.updateAuthinfoAccount();
+              },
+            },
             views: {
               tabContent: {
                 controllerAs: 'mcpSub',
@@ -950,6 +955,11 @@
           .state('users.manage', {
             abstract: true,
             parent: 'modal',
+            resolve: {
+              account: /* @ngInject */ function (AccountService) {
+                return AccountService.updateAuthinfoAccount();
+              },
+            },
             views: {
               'modal@': {
                 controller: 'UserManageModalController',
@@ -1077,6 +1087,11 @@
           })
           .state('editService', {
             parent: 'modal',
+            resolve: {
+              account: /* @ngInject */ function (AccountService) {
+                return AccountService.updateAuthinfoAccount();
+              },
+            },
             views: {
               'modal@': {
                 controller: 'OnboardCtrl',
@@ -3472,9 +3487,7 @@
         $stateProvider
           .state('services-overview', {
             url: '/services',
-            templateUrl: 'modules/services-overview/services-overview.html',
-            controller: 'ServicesOverviewCtrl',
-            controllerAs: 'servicesOverviewCtrl',
+            template: '<services-overview></services-overview>',
             parent: 'main',
           })
           .state('cluster-list', {
@@ -4054,6 +4067,9 @@
               hasCucmSupportFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCucmSupport);
               },
+              hasImpSupportFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridImp);
+              },
             },
           })
           .state('add-resource.expressway', {
@@ -4070,6 +4086,11 @@
             },
             params: {
               wizard: null,
+            },
+            resolve: {
+              hasImpSupportFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridImp);
+              },
             },
           })
           .state('add-resource.expressway.hostname', {
@@ -4653,91 +4674,8 @@
             controllerAs: 'sync',
           });
 
-        $stateProvider
-          .state('care', {
-            parent: 'main',
-            abstract: true,
-          })
-          .state('care.DetailsBase', {
-            parent: 'main',
-            abstract: true,
-            templateUrl: 'modules/sunlight/details/details.tpl.html',
-          })
-          .state('care.Details', {
-            url: '/services/careDetails',
-            parent: 'care.DetailsBase',
-            views: {
-              header: {
-                templateUrl: 'modules/sunlight/details/detailsHeader.tpl.html',
-                controller: 'DetailsHeaderCtrl',
-                controllerAs: 'header',
-              },
-              main: {
-                template: '<div ui-view></div>',
-              },
-            },
-          })
-          .state('care.Settings', {
-            url: '/settings',
-            parent: 'care.Details',
-            templateUrl: 'modules/sunlight/settings/careSettings.tpl.html',
-            controller: 'CareLocalSettingsCtrl',
-            controllerAs: 'localCareSettings',
-          })
-          .state('care.Features', {
-            url: '/features',
-            parent: 'care.Details',
-            templateUrl: 'modules/sunlight/features/featureLanding/careFeatures.tpl.html',
-            controller: 'CareFeaturesCtrl',
-            controllerAs: 'careFeaturesCtrl',
-            resolve: {
-              collectFeatureToggles: /* @ngInject */ function (FeatureToggleService, $state) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasVirtualAssistantEnable).then(function (isEnabled) {
-                  $state.isVirtualAssistantEnabled = isEnabled;
-                });
-              },
-            },
-          })
-          .state('care.setupAssistant', {
-            url: '/setupAssistant/:type',
-            parent: 'care.Details',
-            templateUrl: 'modules/sunlight/features/template/ctSetupAssistant.tpl.html',
-            controller: 'CareSetupAssistantCtrl',
-            controllerAs: 'careSetupAssistant',
-            params: {
-              template: null,
-              isEditFeature: null,
-            },
-            resolve: {
-              isCareProactiveChatTrialsEnabled: /* @ngInject */ function (FeatureToggleService, $state) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasCareProactiveChatTrials)
-                  .then(function (isEnabled) {
-                    $state.isCareProactiveChatTrialsEnabled = isEnabled;
-                  });
-              },
-              isCareAssistantEnabled: /* @ngInject */ function (FeatureToggleService, $state) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasCareChatAssistant)
-                  .then(function (isEnabled) {
-                    $state.isCareAssistantEnabled = isEnabled;
-                  });
-              },
-            },
-          })
-          .state('care.Features.DeleteFeature', {
-            parent: 'modalDialog',
-            views: {
-              'modal@': {
-                controller: 'CareFeaturesDeleteCtrl',
-                controllerAs: 'careFeaturesDeleteCtrl',
-                templateUrl: 'modules/sunlight/features/featureLanding/careFeaturesDeleteModal.tpl.html',
-              },
-            },
-            params: {
-              deleteFeatureName: null,
-              deleteFeatureId: null,
-              deleteFeatureType: null,
-            },
-          });
+        // Spark Care: set state provider elements
+        require('./care.appconfig').configureStateProvider($stateProvider);
 
         $stateProvider
           .state('gss', {
