@@ -287,23 +287,29 @@
   .result-pane {
     width: 100%;
     .gridStyle {
-      height: calc(100vh - ( #{$page-header-height} + 65px));
+      height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height}));
     }
     .grid-container {
-      height: calc(100vh - (#{$page-header-height} + 65px + 45px));
+      height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height} + 48rem));
     }
     .ui-grid-footer-cell {
       padding: 0 20px;
     }
 
-    .loadmore {
-      position: fixed;
-      bottom: 0;
-      text-align: center;
+    .loadmorecontainer {
+      position: relative;
       width: inherit;
-      background: linear-gradient(rgba(255, 255, 255, 0), white, white);
-      i {
-        margin: 50px 32px 5px 0;
+      height: 0px;
+      .loadmore {
+        position: relative;
+        height: 100px;
+        bottom: 100px;
+        text-align: center;
+
+        background: linear-gradient(rgba(255, 255, 255, 0), white, white);
+        i {
+          margin: 50px 32px 5px 0;
+        }
       }
     }
 

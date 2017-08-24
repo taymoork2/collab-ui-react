@@ -162,6 +162,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
 
   private getDocCount(searchResult: SearchResult | undefined, aggregation: string, bucketName: string) {
     const buckets = searchResult
+      && searchResult.aggregations
       && searchResult.aggregations[aggregation]
       && searchResult.aggregations[aggregation].buckets;
     const bucket = _.find(buckets || [], { key: bucketName });
