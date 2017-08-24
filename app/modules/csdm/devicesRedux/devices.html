@@ -26,22 +26,7 @@
           <span translate="spacesPage.addBtn"></span>
         </button>
       </div>
-      <!--<device-chart ng-hide="devices.searchMinimized" class="chart-header" search-result="devices.searchResult"-->
-                    <!--pie-chart-clicked="devices.addToSearch(searchField,query)"></device-chart>-->
-      <!--<div class="bottom">-->
-        <!--<i class="icon"-->
-           <!--ng-click="devices.searchMinimized = !devices.searchMinimized"-->
-           <!--ng-class="{'icon-chevron-up': !devices.searchMinimized, 'icon-chevron-down': devices.searchMinimized}"></i>-->
-      <!--</div>-->
     </div>
     <device-list search-hits="devices.searchResult.hits" search-object="devices.searchObject" sort-order-changed="devices.sortOrderChanged(field,order)"></device-list>
-    <div class="devices-content">
-      <div class="row">
-        <div class="large-12 columns" ui-view="leftPanel"></div>
-      </div>
-      <div class="row">
-        <div class="large-6 columns" ui-view="rightPanel"></div>
-      </div>
-    </div>
   </div>
 </div>

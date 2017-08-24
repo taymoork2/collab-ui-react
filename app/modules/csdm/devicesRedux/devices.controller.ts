@@ -1,6 +1,8 @@
 import { SearchInteraction } from './deviceSearch.component';
 import { SearchObject } from '../services/search/searchObject';
 import { SearchResult } from '../services/search/searchResult';
+require('./_devices.scss');
+
 export class DevicesCtrl {
 
   public anyDevicesOrCodesLoaded = true; //TODO remove

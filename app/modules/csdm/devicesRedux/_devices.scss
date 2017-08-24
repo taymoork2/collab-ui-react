@@ -287,17 +287,17 @@
   .result-pane {
     width: 100%;
     .gridStyle {
-      height: calc(100vh - (#{$top-bar-height} + (#{$top-bar-border-width} * 2) + #{$page-header-height} + 65px));
+      height: calc(100vh - ( #{$page-header-height} + 65px));
     }
     .grid-container {
-      height: calc(100vh - (#{$top-bar-height} + (#{$top-bar-border-width} * 2) + #{$page-header-height} + 65px + 45px));
+      height: calc(100vh - (#{$page-header-height} + 65px + 45px));
     }
     .ui-grid-footer-cell {
       padding: 0 20px;
     }
 
     .loadmore {
-      position: absolute;
+      position: fixed;
       bottom: 0;
       text-align: center;
       width: inherit;

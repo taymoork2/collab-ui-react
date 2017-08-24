@@ -1,23 +1,6 @@
 <div class="result-pane">
-  <div ng-repeat="group in lctrl.groupedDevices">
-    <div ng-if="group.devices">
-      <!--<strong>{{group.displayName}}</strong>-->
-      <cs-card-layout class="small-block-grid-1 medium-block-grid-2 large-block-grid-3">
-        <cs-card class="small"
-                 ng-class="card.cardClass"
-                 ng-click="lctrl.expandDevice(device)"
-                 ng-repeat="device in group.devices | limitTo : lctrl.offsetForGroup(group) : 0">
-          <article ng-include="'modules/csdm/devicesRedux/deviceCard.html'"></article>
-        </cs-card>
-      </cs-card-layout>
-      <div
-        class="pager"
-        ng-if="lctrl.hasMore(group)">
-        <a
-          href ng-click="lctrl.increaseOffsetForGroup(group)">
-          Load more...
-        </a>
-      </div>
-    </div>
+  <div class="gridStyle" ui-grid="lctrl.gridOptions" ui-grid-selection ui-grid-infinite-scroll></div>
+  <div class="loadmore" ng-show="lctrl.loadingMore">
+    <i class="icon icon-2x icon-spinner"/>
   </div>
 </div>
