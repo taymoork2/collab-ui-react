@@ -128,12 +128,6 @@
       integration: 'https://config.appstaging.ciscoccservice.com/config/v1',
       prod: 'https://config.produs1.ciscoccservice.com/config/v1',
     },
-    VirtualAssistantConfigServiceUrl: {
-      dev: 'http://localhost:8080/bot-services/v1/config',
-      cfe: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/config',
-      integration: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/config',
-      prod: 'https://bot-services.produs1.ciscoccservice.com/bot-services/v1/config',
-    },
     SunlightBubbleUrl: {
       dev: 'https://bubble.devus1.ciscoccservice.com',
       cfe: 'https://bubble.appstaging.ciscoccservice.com',
@@ -299,11 +293,11 @@
       integration: 'https://%s/custportal/extensions/spark-report-partner/spark-report-partner.html',
       prod: 'https://%s/custportal/extensions/spark-report-partner/spark-report-partner.html',
     },
-    BotServicesConfigUrl: {
-      dev: 'https://bot-services.produs1.ciscoccservice.com/bot-services/v1/',
-      cfe: 'https://bot-services.produs1.ciscoccservice.com/bot-services/v1/',
-      integration: 'https://bot-services.produs1.ciscoccservice.com/bot-services/v1/',
-      prod: 'https://bot-services.produs1.ciscoccservice.com/bot-services/v1/',
+    VirtualAssistantConfigServiceUrl: {
+      dev: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/config',
+      cfe: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/config',
+      integration: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/config',
+      prod: 'https://bot-services.produs1.ciscoccservice.com/bot-services/v1/config',
     },
     // urls same for all environments
 

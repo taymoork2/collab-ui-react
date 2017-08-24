@@ -12,6 +12,8 @@
 
   function CareSetupAssistantCtrl($modal, $scope, $state, $stateParams, $timeout, $translate, $window, Authinfo, VirtualAssistantService, CTService, DomainManagementService, LogMetricsService, Notification, SunlightConfigService) {
     var vm = this;
+    $scope.controller = vm; // used by ctCancelModal to not be tied to 1 controller.
+
     vm.selectedMediaType = $stateParams.type;
     vm.isCareAssistantEnabled = $state.isCareAssistantEnabled;
     vm.isCareProactiveChatTrialsEnabled = $state.isCareProactiveChatTrialsEnabled;
@@ -22,7 +24,6 @@
       chat: 'chat',
       callback: 'callback',
       chatPlusCallback: 'chatPlusCallback',
-      virtualAssistant: 'virtualAssistant',
     };
     vm.cancelModal = cancelModal;
     vm.evalKeyPress = evalKeyPress;
@@ -306,7 +307,7 @@
       enabled: false,
       config: {
         id: '',
-        name: 'VirtualAssistant',
+        name: '',
       },
       welcomeMessage: $translate.instant('careChatTpl.virtualAssistantWelcomeMessage'),
     };
@@ -941,25 +942,6 @@
       },
     };
 
-    var defaultVirtualAssistantTemplate = {
-      name: '',
-      configuration: {
-        mediaType: vm.mediaTypes.virtualAssistant,
-        mediaSpecificConfiguration: {
-          useOrgProfile: true,
-          displayText: vm.orgName,
-          orgLogoUrl: vm.logoUrl,
-          useAgentRealName: false,
-        },
-        pages: {
-          virtualAssistantName: { enabled: true },
-          virtualAssistantAvatar: { enabled: true },
-          virtualAssistantSummary: { enabled: true },
-        },
-      },
-    };
-
-
     vm.template = {};
 
     vm.getDefaultTemplate = function () {
@@ -967,7 +949,6 @@
         case vm.mediaTypes.chat: vm.template = defaultChatTemplate; break;
         case vm.mediaTypes.callback: vm.template = defaultCallBackTemplate; break;
         case vm.mediaTypes.chatPlusCallback: vm.template = defaultChatPlusCallBackTemplate; break;
-        case vm.mediaTypes.virtualAssistant: vm.template = defaultVirtualAssistantTemplate; break;
       }
     };
 
@@ -989,14 +970,12 @@
     //Use the existing template fields when editing the template
     if ($stateParams.isEditFeature) {
       vm.template = $stateParams.template;
-      if (vm.template.configuration.mediaType !== vm.mediaTypes.virtualAssistant) {
-        // This will become dead once all the existing templates are saved with field4.
-        populateCustomerInformationField4();
-        populateFeedbackInformation();
-        populateProactivePromptInformation();
-        if (vm.template.configuration.mediaType !== vm.mediaTypes.callback) {
-          populateVirtualAssistantInfo();
-        }
+      // This will become dead once all the existing templates are saved with field4.
+      populateCustomerInformationField4();
+      populateFeedbackInformation();
+      populateProactivePromptInformation();
+      if (vm.template.configuration.mediaType !== vm.mediaTypes.callback) {
+        populateVirtualAssistantInfo();
       }
     }
 
@@ -1077,8 +1056,9 @@
     }
 
     function populateVirtualAssistantInfo() {
-      vm.selectedVA =
-        vm.template.configuration.virtualAssistant ? vm.template.configuration.virtualAssistant.config : defaultVirtualAssistantConfig.config;
+      vm.template.configuration.virtualAssistant = vm.template.configuration.virtualAssistant || defaultVirtualAssistantConfig;
+
+      vm.selectedVA = vm.template.configuration.virtualAssistant.config;
 
       vm.template.configuration.virtualAssistant.config =
         vm.template.configuration.virtualAssistant.config ? vm.template.configuration.virtualAssistant.config : defaultVirtualAssistantConfig.config;
@@ -1137,10 +1117,6 @@
     };
 
     vm.isNamePageValid = function () {
-      return (vm.template.name !== '' && vm.validateNameLength() && vm.isInputValid(vm.template.name));
-    };
-
-    vm.isAssistantNamePageValid = function () {
       return (vm.template.name !== '' && vm.validateNameLength() && vm.isInputValid(vm.template.name));
     };
 
@@ -1367,16 +1343,10 @@
       switch (vm.currentState) {
         case 'summary':
           return 'hidden';
-        case 'virtualAssistantSummary':
-          return 'hidden';
         case 'offHours':
           return isOffHoursPageValid();
         case 'name':
           return vm.isNamePageValid();
-        case 'virtualAssistantName':
-          return true;
-        case 'virtualAssistantAvatar':
-          return true;
         case 'proactivePrompt':
           return isProactivePromptPageValid();
         case 'customerInformation':
@@ -1701,11 +1671,10 @@
       });
 
       if (vm.isCareAssistantEnabled) {
-        VirtualAssistantService.getConfiguredVirtualAssistantServices().then(function (result) {
-          vm.configuredVirtualAssistantServices = result.data.items;
-
+        VirtualAssistantService.listConfigs().then(function (result) {
+          vm.configuredVirtualAssistantServices = result.items;
           //if the virtual assistant list has only one VA available. use it by default.
-          if (vm.configuredVirtualAssistantServices.length === 1) {
+          if (vm.configuredVirtualAssistantServices.length === 1 && !vm.isEditFeature && vm.template.configuration.mediaType !== vm.mediaTypes.callback) {
             var data = vm.configuredVirtualAssistantServices[0];
             vm.selectedVA = vm.selectedVA || {};
             vm.selectedVA.id = data.id;
@@ -1713,7 +1682,6 @@
 
             vm.vaSelectionCommit();
           }
-
           vm.hasConfiguredVirtualAssistantServices = (vm.configuredVirtualAssistantServices.length > 0);
         }).catch(function (error) {
           vm.configuredVirtualAssistantServices = [];
@@ -1731,9 +1699,6 @@
     }
 
     function getCustomerInformationFormFields() {
-      if (vm.selectedMediaType === vm.mediaTypes.virtualAssistant) {
-        return {};
-      }
       if (vm.selectedMediaType !== vm.mediaTypes.chatPlusCallback) {
         return vm.template.configuration.pages.customerInformation.fields;
       }

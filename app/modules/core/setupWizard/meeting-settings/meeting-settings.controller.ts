@@ -43,10 +43,8 @@ export class MeetingSettingsCtrl {
   };
   public showTransferCodeInput: boolean = false;
   public hasTrialSites: boolean = false;
-  public transferSiteDetails = {
-    siteUrl: '',
-    transferCode: '',
-  };
+  public transferSiteUrl = '';
+  public transferSiteCode = '';
   private nextButtonDisabledStatus = false;
   public ccasp = {
     partnerOptions: [],
@@ -139,15 +137,19 @@ export class MeetingSettingsCtrl {
   }
 
   public migrateTrialNext(): ng.IPromise<any> {
-    if (_.isEmpty(this.transferSiteDetails.siteUrl) && _.isEmpty(this.transferSiteDetails.transferCode)) {
+    if (_.isEmpty(this.transferSiteUrl) && _.isEmpty(this.transferSiteCode)) {
       this.nextButtonDisabledStatus = false;
       this.stripTransferredSitesFromSitesArray();
       return this.$q.resolve();
     }
-    if (!(_.endsWith(this.transferSiteDetails.siteUrl, '.webex.com'))) {
-      this.transferSiteDetails.siteUrl += this.Config.siteDomainUrl.webexUrl;
+    const transferSiteDetails = {
+      siteUrl: this.transferSiteUrl,
+      transferCode: this.transferSiteCode,
+    };
+    if (!(_.endsWith(transferSiteDetails.siteUrl, '.webex.com'))) {
+      transferSiteDetails.siteUrl += this.Config.siteDomainUrl.webexUrl;
     }
-    return this.SetupWizardService.validateTransferCode(this.transferSiteDetails).then((response) => {
+    return this.SetupWizardService.validateTransferCode(transferSiteDetails).then((response) => {
       const status = _.get(response, 'data.status');
       if (!status || status !== 'INVALID') {
         // if transferred sites have already been added and the back button clicked, strip old sites.
@@ -336,8 +338,8 @@ export class MeetingSettingsCtrl {
     this.clearError();
     let invalid = false;
     if (this.showTransferCodeInput) {
-      const siteUrlEmpty = _.isEmpty(this.transferSiteDetails.siteUrl);
-      const transferCodeEmpty = _.isEmpty(this.transferSiteDetails.transferCode);
+      const siteUrlEmpty = _.isEmpty(this.transferSiteUrl);
+      const transferCodeEmpty = _.isEmpty(this.transferSiteCode);
       if ((siteUrlEmpty && !transferCodeEmpty) || (transferCodeEmpty && !siteUrlEmpty)) {
         invalid = true;
       }
@@ -574,8 +576,8 @@ export class MeetingSettingsCtrl {
       _.set(webexLicensesPayload, 'webexProvisioningParams.ccaspSubscriptionId', this.ccasp.subscriptionId);
     }
 
-    if (!_.isEmpty(this.transferSiteDetails.transferCode)) {
-      _.set(webexLicensesPayload, 'webexProvisioningParams.transferCode', this.transferSiteDetails.transferCode);
+    if (!_.isEmpty(this.transferSiteCode)) {
+      _.set(webexLicensesPayload, 'webexProvisioningParams.transferCode', this.transferSiteCode);
     }
     return webexLicensesPayload;
   }

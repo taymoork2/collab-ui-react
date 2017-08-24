@@ -328,11 +328,6 @@
           states.push('offHours');
           states.push('summary');
           break;
-        case 'virtualAssistant':
-          states.push('virtualAssistantName');
-          states.push('virtualAssistantAvatar');
-          states.push('virtualAssistantSummary');
-          break;
         default:
           return states;
       }

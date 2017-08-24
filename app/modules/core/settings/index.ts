@@ -10,6 +10,7 @@ import dirSyncModule from './dirsync';
 import privacySectionModule from './privacySection';
 import retentionModule from './retention';
 import securityModule from './security';
+import externalCommunicationModule from './externalCommunication';
 import sipDomainModule from './sipDomain';
 import supportSectionModule from './supportSection';
 
@@ -25,6 +26,7 @@ export default angular.module('core.settings', [
   privacySectionModule,
   retentionModule,
   securityModule,
+  externalCommunicationModule,
   domainsModule,
   sipDomainModule,
   supportSectionModule,

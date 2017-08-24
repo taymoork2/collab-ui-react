@@ -218,23 +218,19 @@ describe('Care Setup Assistant Ctrl', function () {
       spyOn($modal, 'open');
       spyOn(CTService, 'getLogo').and.returnValue(getLogoDeferred.promise);
       spyOn(CTService, 'getLogoUrl').and.returnValue(getLogoUrlDeferred.promise);
-      spyOn(VirtualAssistantService, 'getConfiguredVirtualAssistantServices').and.callFake(function () {
+      spyOn(VirtualAssistantService, 'listConfigs').and.callFake(function () {
         var defered = $q.defer();
         var result = {
-          status: 200,
-          statusText: 'OK',
-          data: {
-            items: [
-              {
-                name: 'cva',
-                id: 'id1',
-                type: 'APIAI',
-                config: {
-                  token: 'token',
-                },
+          items: [
+            {
+              name: 'cva',
+              id: 'id1',
+              type: 'APIAI',
+              config: {
+                token: 'token',
               },
-            ],
-          },
+            },
+          ],
         };
         defered.resolve(result);
         return defered.promise;
