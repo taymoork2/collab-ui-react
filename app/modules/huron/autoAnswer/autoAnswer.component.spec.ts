@@ -6,6 +6,7 @@ describe('Component: autoAnswer', () => {
   const AUTO_ANSWER_TITLE = '#autoAnswerTitle';
   const AUTO_ANSWER_DESCRIPTION = '#autoAnswerDescription';
   const AUTO_ANSWER_ENABLED_TOGGLE = '#enableAutoAnswer';
+  const AUTO_ANSWER_DISABLED_TOGGLE = 'input#enableAutoAnswer[type="checkbox"]:disabled';
   const AUTO_ANSWER_PHONE_SELECT = '#autoAnswerPhoneSelection';
   const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
   const AUTO_ANSWER_MODE_SPEAKER_RADIO = '#autoAnswerSpeaker';
@@ -126,12 +127,12 @@ describe('Component: autoAnswer', () => {
     });
   });
 
-  it('should disble toggle and display warning msg when there is no supported phones', function() {
+  it('should disable toggle and display warning msg when there is no supported phones', function() {
     this.$scope.autoAnswer = new AutoAnswer();
     this.$scope.$apply();
 
     expect(this.view.find(AUTO_ANSWER_TITLE)).toExist();
-    expect(this.view.find(AUTO_ANSWER_ENABLED_TOGGLE)).toBeDisabled();
+    expect(this.view.find(AUTO_ANSWER_DISABLED_TOGGLE)).toExist();
     expect(this.view.find(AUTO_ANSWER_DESCRIPTION)).toExist();
     expect(this.view.find(AUTO_ANSWER_PHONE_SELECT)).not.toExist();
     expect(this.view.find(AUTO_ANSWER_MODE_SPEAKER_RADIO)).not.toExist();
