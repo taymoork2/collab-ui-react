@@ -6,7 +6,7 @@ require('./_setup-wizard.scss');
   angular.module('Core')
     .controller('SetupWizardCtrl', SetupWizardCtrl);
 
-  function SetupWizardCtrl($q, $scope, $state, $stateParams, $timeout, Authinfo, Config, FeatureToggleService, Orgservice, SetupWizardService, Notification) {
+  function SetupWizardCtrl($q, $scope, $state, $stateParams, $timeout, Authinfo, Config, FeatureToggleService, Orgservice, SessionStorage, SetupWizardService, StorageKeys, Notification) {
     var isFirstTimeSetup = _.get($state, 'current.data.firstTimeSetup', false);
     var shouldRemoveSSOSteps = false;
     var isSharedDevicesOnlyLicense = false;
@@ -19,6 +19,13 @@ require('./_setup-wizard.scss');
     $scope.isTelstraCsbEnabled = false;
     $scope.isCSB = Authinfo.isCSB();
     $scope.isCustomerPresent = SetupWizardService.isCustomerPresent();
+
+    // If a partner cross-launches into a customer through the Order Processing flow
+    // with a subscriptionId of an active subscription, we navigate the user to overview
+    if (isFirstTimeSetup && SetupWizardService.isProvisionedSubscription(SessionStorage.get(StorageKeys.SUBSCRIPTION_ID))) {
+      Authinfo.setSetupDone(true);
+      return $state.go('overview');
+    }
 
     if (Authinfo.isCustomerAdmin()) {
       SetupWizardService.onActingSubscriptionChange(init);

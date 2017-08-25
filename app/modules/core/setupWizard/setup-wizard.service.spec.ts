@@ -15,6 +15,7 @@ describe('Service: SetupWizard Service', function () {
 
     this.order = getJSONFixture('core/json/orders/pendingOrder.json');
     this.authinfoPendingSubscriptions = getJSONFixture('core/json/setupWizard/authinfoPendingSubscriptions.json');
+    this.authinfoActiveSubscriptions = getJSONFixture('core/json/customerSubscriptions/getSubscriptionsData.json');
     this.pendingSubscriptionResponses = getJSONFixture('core/json/setupWizard/pendingSubscriptionResponses.json');
     this.pendingSubscriptions = getJSONFixture('core/json/setupWizard/pendingSubscriptions.json');
     this.pendingSubscriptionOptions = getJSONFixture('core/json/setupWizard/pendingSubscriptionOptions.json');
@@ -169,6 +170,7 @@ describe('Service: SetupWizard Service', function () {
       });
       this.$httpBackend.flush();
     });
+
     it('should return TRUE if \'VALID\' is returned from the API call and status is 200', function () {
       spyOn(this.SetupWizardService, 'getActingSubscriptionServiceOrderUUID').and.returnValue('123');
       const verifyUrl = `${this.UrlConfig.getAdminServiceUrl()}orders/123/ccasp/verify`;
@@ -178,6 +180,7 @@ describe('Service: SetupWizard Service', function () {
       });
       this.$httpBackend.flush();
     });
+
     it('should return FALSE if status is 400 regardless of the data returned', function () {
       spyOn(this.SetupWizardService, 'getActingSubscriptionServiceOrderUUID').and.returnValue('123');
       const verifyUrl = `${this.UrlConfig.getAdminServiceUrl()}orders/123/ccasp/verify`;
@@ -188,5 +191,18 @@ describe('Service: SetupWizard Service', function () {
       this.$httpBackend.flush();
     });
   });
-});
 
+  describe('When isProvisionedSubscription is called ', function () {
+    it('with a subscriptionId referencing an ACTIVE subscription, isProvisionedSubscription should return boolean true', function () {
+      this.Authinfo.getSubscriptions.and.returnValue(this.authinfoActiveSubscriptions);
+      expect(this.SetupWizardService.isProvisionedSubscription('Sub-os090825')).toBe(true);
+    });
+
+    it('with a subscriptionId referencing a subscription that is not ACTIVE, isProvisionedSubscription should return boolean false', function () {
+      const activeSubscriptions = _.clone(this.authinfoActiveSubscriptions);
+      activeSubscriptions[1].status = 'PENDING';
+      this.Authinfo.getSubscriptions.and.returnValue(this.activeSubscriptions);
+      expect(this.SetupWizardService.isProvisionedSubscription('Sub-os090835')).toBe(false);
+    });
+  });
+});

@@ -39,6 +39,15 @@ export class SetupWizardService {
     private HuronCustomerService: HuronCustomerService,
   ) { }
 
+  public isProvisionedSubscription(subscriptionId): boolean {
+    if (!_.isString(subscriptionId)) {
+      return false;
+    }
+    const subscription = _.find(this.Authinfo.getSubscriptions(), { externalSubscriptionId: subscriptionId });
+
+    return _.get(subscription, 'status') === this.Config.subscriptionStatus.ACTIVE;
+  }
+
   public addProvisioningCallbacks(callObject: { [keys: string]: Function }) {
     _.assign(this.provisioningCallbacks, callObject);
   }

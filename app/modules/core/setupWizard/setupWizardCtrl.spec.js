@@ -23,14 +23,17 @@ describe('SetupWizardCtrl', function () {
 
     spyOn(this.Authinfo, 'isCustomerAdmin').and.returnValue(true);
     spyOn(this.Authinfo, 'isSetupDone').and.returnValue(false);
+    spyOn(this.Authinfo, 'setSetupDone').and.callThrough();
     spyOn(this.Authinfo, 'isCSB').and.returnValue(true);
     spyOn(this.Authinfo, 'isCare').and.returnValue(false);
+    spyOn(this.$state, 'go');
     spyOn(this.SetupWizardService, 'populatePendingSubscriptions').and.returnValue(this.$q.resolve());
     spyOn(this.SetupWizardService, 'hasPendingLicenses').and.returnValue(true);
     spyOn(this.SetupWizardService, 'hasPendingWebExMeetingLicenses').and.returnValue(false);
     spyOn(this.SetupWizardService, 'hasPendingCallLicenses').and.returnValue(false);
     spyOn(this.SetupWizardService, 'hasPendingServiceOrder').and.returnValue(false);
     spyOn(this.SetupWizardService, 'isCustomerPresent').and.returnValue(this.$q.resolve(true));
+    spyOn(this.SetupWizardService, 'isProvisionedSubscription').and.returnValue(false);
     spyOn(this.Authinfo, 'getLicenses').and.returnValue([{
       licenseType: 'SHARED_DEVICES',
     }]);
@@ -151,6 +154,31 @@ describe('SetupWizardCtrl', function () {
       var tab = _.find(this.$scope.tabs, { name: 'planReview' });
       expect(tab.label).toBe('firstTimeWizard.planReview');
       expect(tab.title).toBe('firstTimeWizard.planReview');
+    });
+  });
+
+  describe('When SessionStorage has a subscriptionId ', function () {
+    beforeEach(function () {
+      _.set(this.$state, 'current.data.firstTimeSetup', true);
+      this.SetupWizardService.isProvisionedSubscription.and.returnValue(false);
+      this.initController();
+    });
+
+    it('of a subscription that is not active, the user should not be navigated to the customer overview view', function () {
+      expect(this.$state.go).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('When SessionStorage has a subscriptionId ', function () {
+    beforeEach(function () {
+      _.set(this.$state, 'current.data.firstTimeSetup', true);
+      this.SetupWizardService.isProvisionedSubscription.and.returnValue(true);
+      this.initController();
+    });
+
+    it('of an active subscription, the user should be navigated to the customer overview view', function () {
+      expect(this.Authinfo.setSetupDone).toHaveBeenCalledWith(true);
+      expect(this.$state.go).toHaveBeenCalledWith('overview');
     });
   });
 
