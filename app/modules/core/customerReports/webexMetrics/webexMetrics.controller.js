@@ -17,6 +17,7 @@
     $state,
     Analytics,
     Authinfo,
+    LoadingTimeout,
     LocalStorage,
     Notification,
     ProPackService,
@@ -83,16 +84,6 @@
     vm.updateIframe = updateIframe;
 
     init();
-
-    function messageHandle(event) {
-      if (event.data === 'unfreeze') {
-        $log.log('Unfreeze message received.');
-        var currScope = angular.element('#webexMetricsIframeContainer').scope();
-        currScope.$apply(function () {
-          vm.isIframeLoaded = true;
-        });
-      }
-    }
 
     function onlyUnique(value, index, self) {
       return self.indexOf(value) === index;
@@ -218,6 +209,7 @@
         }
       })
         .catch(function (error) {
+          unfreezeState(true);
           Notification.errorWithTrackingId(error, 'common.error');
         });
     }
@@ -240,8 +232,33 @@
         function loadIframe() {
           var submitFormBtn = $window.document.getElementById('submitFormBtn');
           submitFormBtn.click();
+          startLoadReport();
         }, // loadIframe()
         0
+      );
+    }
+
+    function messageHandle(event) {
+      if (event.data === 'unfreeze') {
+        $log.log('Unfreeze message received.');
+        unfreezeState(true);
+        $timeout.cancel(vm.startLoadReportTimer);
+      }
+    }
+
+    function unfreezeState(isLoaded) {
+      var iframeEle = angular.element('#webexMetricsIframeContainer');
+      var currScope = iframeEle.scope();
+
+      currScope.$apply(function () {
+        vm.isIframeLoaded = isLoaded;
+      });
+    }
+
+    function startLoadReport() {
+      vm.startLoadReportTimer = $timeout(
+        unfreezeState(true),
+        LoadingTimeout
       );
     }
 
