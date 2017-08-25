@@ -7628,6 +7628,7 @@
     "externalCommunication": {
       "title": "External Communication",
       "subsectionLabel": "Messaging",
+      "proPackInfoCopy": "This premium feature is available with Pro Pack. Contact your partner to learn more.",
       "subsectionDescription": "Secure your organization's data by blocking external messaging.",
       "description": "Block your users from inviting external contacts to Cisco Spark spaces and prevent your users from joining external Cisco Spark spaces."
     },
