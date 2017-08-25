@@ -1,0 +1,27 @@
+#!/bin/bash
+
+target_head="$1"
+changed_files="$(git diff-tree --no-commit-id --name-only -r "$target_head" HEAD)"
+
+function file_has_changed {
+    local test_file="$1"
+    [ -z "$test_file" ] && return 1
+    echo "$changed_files" | grep -q "$test_file"
+    return $?
+}
+
+function diff_changed_file {
+    local changed_file="$1"
+    [ -z "$changed_file" ] && return 1
+    git diff HEAD "$target_head" "$changed_file"
+}
+
+function print_notice_banner {
+    echo ""
+    echo "********************** ATTENTION **********************"
+    echo ""
+    cat "$@"
+    echo ""
+    echo "*******************************************************"
+    echo ""
+}
