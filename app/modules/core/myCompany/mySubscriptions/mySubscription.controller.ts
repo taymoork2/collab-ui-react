@@ -18,7 +18,6 @@ export class MySubscriptionCtrl implements ng.IController {
   public trialUrlFailed: boolean = false;
   public productInstanceFailed: boolean = false;
   public loading: boolean = false;
-  public digitalRiverSubscriptionsUrl: string;
   public emptyBmmpAttr: IBmmpAttr = {
     subscriptionId: '',
     productInstanceId: '',
@@ -121,8 +120,8 @@ export class MySubscriptionCtrl implements ng.IController {
     return _.isNumber(usage);
   }
 
-  private getChangeSubURL(env: string): ng.IPromise<string> {
-    return this.DigitalRiverService.getSubscriptionsUrl(env).then((subscriptionsUrl: string): string => {
+  private getChangeSubURL(): ng.IPromise<string> {
+    return this.DigitalRiverService.getSubscriptionsUrl().then((subscriptionsUrl: string): string => {
       return subscriptionsUrl;
     }).catch((error: any): string => {
       this.loading = false;
@@ -345,11 +344,6 @@ export class MySubscriptionCtrl implements ng.IController {
         this.oneOnlineSub = true;
       }
 
-      if (_.find(this.subscriptionDetails, 'isOnline')) {
-        // create cookie for Digital River
-        this.DigitalRiverService.getDigitalRiverToken();
-      }
-
       let enterpriseSubs = 1;
       let enterpriseTrials = 1;
       this.OnlineUpgradeService.getProductInstances(this.Authinfo.getUserId()).then((instances) => {
@@ -398,7 +392,7 @@ export class MySubscriptionCtrl implements ng.IController {
     subscription.productInstanceId = prodResponse.productInstanceId;
     subscription.name = prodResponse.name;
     const env: string = _.includes(prodResponse.name, 'Spark') ? this.SPARK : this.WEBEX;
-    this.getChangeSubURL(env).then((urlResponse) => {
+    this.getChangeSubURL().then((urlResponse) => {
       subscription.changeplanOverride = '';
       if (urlResponse && env === this.SPARK) {
         subscription.changeplanOverride = urlResponse;
