@@ -139,7 +139,7 @@
       var dynamVarList = _.get(vm.menuEntry, 'actions[0].dynamicList', '');
       _.forEach(dynamVarList, function (entry) {
         if (entry.isDynamic) {
-          if (!_.includes(AACommonService.getprePopulatedSessionVariablesList(), entry.action.eval.value)) {
+          if (!_.includes(AACommonService.getprePopulatedSessionVariablesList(), (_.get(entry, 'action.eval.value', '')))) {
             dynamicVariablesList.push(entry.action.eval.value);
           }
         }
@@ -170,17 +170,6 @@
       var dynamicList = range.endContainer.ownerDocument.activeElement;
       if (dynamicList.className.includes('dynamic-prompt') && !(_.isEqual(dynamicList.id, 'configureApiUrl{{schedule + index}}'))) {
         vm.menuEntry.actions[0].dynamicList = createDynamicList(dynamicList, []);
-        if (_.isEmpty(_.get(vm.menuEntry, 'actions[0].dynamicList'))) {
-          vm.menuEntry.actions[0].dynamicList.push({
-            action: {
-              eval: {
-                value: '',
-              },
-            },
-            isDynamic: false,
-            htmlModel: '',
-          });
-        }
       }
     }
 
@@ -199,44 +188,47 @@
 
     function createDynamicList(dynamicList, finalDynamicList) {
       var opt;
-      if (!vm.isDynamicToggle()) {
+      if (_.isEmpty(dynamicList)) {
+        opt = createAction('', false, '');
+        finalDynamicList.push(opt);
+      } else if (!vm.isDynamicToggle()) {
         opt = createAction(dynamicList.value, false, '');
         finalDynamicList.push(opt);
-        return finalDynamicList;
+      } else {
+        _.forEach(dynamicList.childNodes, function (node) {
+          if ((_.isEqual(node.nodeName, 'AA-INSERTION-ELEMENT') && node.childNodes.length > 0) || node.nodeName === 'DIV') {
+            return createDynamicList(node, finalDynamicList);
+          }
+          switch (node.nodeName) {
+            case 'BR':
+              opt = createAction('', true, encodeURIComponent('<br>'));
+              break;
+
+            case '#text':
+              opt = createAction(node.nodeValue, false, '');
+              break;
+
+            case 'SPAN':
+            case 'AA-INSERTION-ELEMENT':
+              var attributes;
+              if (_.isEqual(node.nodeName, 'SPAN')) {
+                attributes = node.parentElement.attributes;
+              } else {
+                attributes = node.attributes;
+              }
+              var ele = '<aa-insertion-element element-text="' + attributes[0].value + '" read-as="' + attributes[1].value + '" element-id="' + attributes[2].value + '" aa-element-type="' + vm.aaElementType + '"></aa-insertion-element>';
+              opt = createAction(attributes[0].value, true, encodeURIComponent(ele));
+          }
+
+          if (!opt.isDynamic && !_.isEmpty(_.get(opt.action.eval, 'value').trim())) {
+            var encodedValue = encodeURIComponent(_.get(opt.action.eval, 'value').trim());
+            opt = createAction(encodedValue, false, '');
+            finalDynamicList.push(opt);
+          } else if (opt.isDynamic) {
+            finalDynamicList.push(opt);
+          }
+        });
       }
-      _.forEach(dynamicList.childNodes, function (node) {
-        if ((_.isEqual(node.nodeName, 'AA-INSERTION-ELEMENT') && node.childNodes.length > 0) || node.nodeName === 'DIV') {
-          return createDynamicList(node, finalDynamicList);
-        }
-        switch (node.nodeName) {
-          case 'BR':
-            opt = createAction('', true, encodeURIComponent('<br>'));
-            break;
-
-          case '#text':
-            opt = createAction(node.nodeValue, false, '');
-            break;
-
-          case 'SPAN':
-          case 'AA-INSERTION-ELEMENT':
-            var attributes;
-            if (_.isEqual(node.nodeName, 'SPAN')) {
-              attributes = node.parentElement.attributes;
-            } else {
-              attributes = node.attributes;
-            }
-            var ele = '<aa-insertion-element element-text="' + attributes[0].value + '" read-as="' + attributes[1].value + '" element-id="' + attributes[2].value + '" aa-element-type="' + vm.aaElementType + '"></aa-insertion-element>';
-            opt = createAction(attributes[0].value, true, encodeURIComponent(ele));
-        }
-
-        if (!opt.isDynamic && !_.isEmpty(_.get(opt.action.eval, 'value').trim())) {
-          var encodedValue = encodeURIComponent(_.get(opt.action.eval, 'value').trim());
-          opt = createAction(encodedValue, false, '');
-          finalDynamicList.push(opt);
-        } else if (opt.isDynamic) {
-          finalDynamicList.push(opt);
-        }
-      });
       return finalDynamicList;
     }
 
@@ -315,7 +307,7 @@
           lastSavedDynList = _.get(vm.menuEntry, 'actions[0].dynamicList');
           vm.dynamicValues = [];
           _.forEach(action.dynamicList, function (opt) {
-            var model = {};
+            var model;
             if (!opt.isDynamic) {
               model = {
                 model: decodedValue(_.get(opt.action.eval, 'value')),

@@ -4,7 +4,7 @@
 </div>
 <div class="modal-body">
   <div class="row">
-    <div class="small-12 columns aa-message-select-list" ng:class="{true: 'large-6', false: 'large 12'}[aaDynamicAnnouncementsModalCtrl.isReadAsVisible]">
+    <div class="small-12 columns aa-message-select-list" ng-class="{true: 'large-6', false: 'large 12'}[aaDynamicAnnouncementsModalCtrl.isReadAsVisible]">
       <label for="variableSelect" translate="autoAttendant.variable"></label>
       <cs-select id="variableSelect" name="variableSelect" ng-model="aaDynamicAnnouncementsModalCtrl.variableSelection" options="aaDynamicAnnouncementsModalCtrl.variableOptions" icon="icon-chevron-down" labelfield="label" valuefield="value" placeholder="aaDynamicAnnouncementsModalCtrl.selectPlaceholder">
       </cs-select>
