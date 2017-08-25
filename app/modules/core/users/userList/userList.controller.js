@@ -44,7 +44,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
       order: 'ascending',
     };
     $scope.placeholder = {
-      name: $translate.instant('usersPage.all'),
+      name: $translate.instant('common.all'),
       filterValue: '',
       count: 0,
     };
@@ -94,6 +94,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     vm.firstOfType = firstOfType;
     vm.isValidThumbnail = Userservice.isValidThumbnail;
     vm.getUserPhoto = Userservice.getUserPhoto;
+    vm.getImageAria = getImageAria;
     vm.showUserDetails = showUserDetails;
     vm.selectRow = selectRow;
 
@@ -539,6 +540,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
         field: 'photos',
         displayName: '',
         cellTemplate: getTemplate('photoCell.tpl'),
+        headerCellTemplate: '<div class="ui-grid-cell-contents" aria-label="{{:: \'usersPage.userImage\' | translate}}" tabindex="0"></div>',
         width: 70,
       }, {
         field: 'name.givenName',
@@ -601,6 +603,10 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
 
     function deselectRow() {
       $scope.currentUser = null;
+    }
+
+    function getImageAria(user) {
+      return user.displayName + ' ' + $translate.instant('usersPage.userImage');
     }
 
     function selectRow(grid, row) {
