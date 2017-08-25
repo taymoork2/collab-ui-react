@@ -11,8 +11,8 @@
       <i class='icon icon-spinner icon-2x'></i>
     </div>
     <ul class="list-group">
-      <li id="ordersList" class="feature" ng-repeat="order in filteredOrders = ($ctrl.orders | filter:$ctrl.filter | orderBy:'-sortDate')">  
-        <a ui-sref="{{$ctrl.isPartner ? 'customer-overview.orderDetail({currentOrder: order, isCarrierByopstn: $ctrl.isCarrierByopstn})' : 'customerPstnOrdersOverview.orderDetail({currentOrder: order, currentCustomer: $ctrl.currentCustomer, isCarrierByopstn: $ctrl.isCarrierByopstn})'}}">
+      <li id="ordersList" class="feature" ng-repeat="order in filteredOrders = ($ctrl.orders | filter:$ctrl.filter | orderBy:'-sortDate')">
+        <a href ui-sref="{{$ctrl.isPartner ? 'customer-overview.orderDetail({currentOrder: order, isCarrierByopstn: $ctrl.isCarrierByopstn})' : 'customerPstnOrdersOverview.orderDetail({currentOrder: order, currentCustomer: $ctrl.currentCustomer, isCarrierByopstn: $ctrl.isCarrierByopstn})'}}">
           <span  ng-switch="$ctrl.isCarrierByopstn" class="feature-name">
             <span id="orderName" ng-switch-when="false" translate="pstnOrderDetail.orderNumber" translate-values="{orderId: order.carrierOrderId}"></span>
             <span id="orderDate" ng-switch-when="true">{{order.formattedDate}}</span>
