@@ -16,7 +16,7 @@
       previous-fn="$ctrl.previousPage()"
       next-fn="$ctrl.nextPage()">
 
-      <form novalidate class="assistant-form" name="$ctrl.form" role="form">
+      <form novalidate class="cs-form create-location" name="$ctrl.form" role="form">
         <!-- Location Name -->
         <div ng-if="$ctrl.getPageIndex() === 0"  ng-class="$ctrl.animation">
           <div class="typeahead-large typeahead-large__no-icon" ng-class="{error: $ctrl.form.locationName.$invalid && $ctrl.form.locationName.$dirty}">
@@ -39,70 +39,62 @@
         </div>
 
         <!-- Caller ID -->
-        <div class="cs-form__section" ng-class="$ctrl.animation" ng-if="$ctrl.getPageIndex() === 1">
-          <div class="section__content" ng-class="$ctrl.animation" ng-if="$ctrl.getPageIndex() === 1">
-            <h4 translate="callerIdPanel.title"></h4>
-            <div class="sub-section">
-              <uc-location-caller-id
-                caller-id="$ctrl.callLocationSettingsData.location.callerId"
-                show-label="false"
-                region-code="$ctrl.callLocationSettingsData.customerVoice.regionCode"
-                external-number-options="$ctrl.locationSettingsOptions.companyCallerIdOptions"
-                voicemail-pilot-number="$ctrl.callLocationSettingsData.location.voicemailPilotNumber"
-                company-name="$ctrl.callLocationSettingsData.customerVoice.name"
-                on-change-fn="$ctrl.onCallerIdChanged(callerId)">
-              </uc-location-caller-id>
+        <div ng-class="$ctrl.animation" ng-if="$ctrl.getPageIndex() === 1">
+          <div class="cs-form__section typeahead-large with-feature-title">
+            <div class="section__content">
+              <h4 class="feature-title" translate="callerIdPanel.title"></h4>
+              <div class="feature-desc">Specify the default outbound Caller ID. Exceptions can be made for each location and at the individual user's settings.</div>
+              <div class="sub-section">
+                <uc-location-caller-id
+                  caller-id="$ctrl.callLocationSettingsData.location.callerId"
+                  show-label="false"
+                  region-code="$ctrl.callLocationSettingsData.customerVoice.regionCode"
+                  external-number-options="$ctrl.locationSettingsOptions.companyCallerIdOptions"
+                  voicemail-pilot-number="$ctrl.callLocationSettingsData.location.voicemailPilotNumber"
+                  company-name="$ctrl.callLocationSettingsData.customerVoice.name"
+                  on-change-fn="$ctrl.onCallerIdChanged(callerId)">
+                </uc-location-caller-id>
+              </div>
             </div>
           </div>
         </div>
 
         <!-- Time Zone & Preferred Language -->
-        <div class="cs-form__section" ng-class="$ctrl.animation" ng-if="$ctrl.getPageIndex() === 2">
-          <div class="section__content">
-            <h4 translate="serviceSetupModal.regionalSettings"></h4>
-            <div class="sub-section">
-              <uc-time-zone
-                time-zone="$ctrl.callLocationSettingsData.location.timeZone"
-                time-zone-options="$ctrl.locationSettingsOptions.timeZoneOptions"
-                on-change-fn="$ctrl.onTimeZoneChanged(timeZone)">
-              </uc-time-zone>
-            </div>
-            <div class="sub-section" ng-if="$ctrl.callDateTimeFormat">
-              <uc-date-format
-                date-format="$ctrl.callLocationSettingsData.location.dateFormat"
-                date-format-options="$ctrl.locationSettingsOptions.dateFormatOptions"
-                on-change-fn="$ctrl.onDateFormatChanged(dateFormat)">
-              </uc-date-format>
-            </div>
-            <div class="sub-section" ng-if="$ctrl.callDateTimeFormat">
-              <uc-time-format
-                time-format="$ctrl.callLocationSettingsData.location.timeFormat"
-                time-format-options="$ctrl.locationSettingsOptions.timeFormatOptions"
-                on-change-fn="$ctrl.onTimeFormatChanged(timeFormat)">
-              </uc-time-format>
-            </div>
-            <div class="sub-section service-setup service-setup-regional-settings">
-              <uc-settings-preferred-language
-                preferred-language="$ctrl.callLocationSettingsData.location.preferredLanguage"
-                preferred-language-options="$ctrl.locationSettingsOptions.preferredLanguageOptions"
-                on-change-fn="$ctrl.onPreferredLanguageChanged(preferredLanguage)">
-              </uc-settings-preferred-language>
-            </div>
-            <div class="sub-section service-setup service-setup-regional-settings"
-              cr-feature-toggle feature-show="h-regional-tones">
-              <uc-default-country
-                default-country="$ctrl.callLocationSettingsData.location.tone"
-                default-country-options="$ctrl.locationSettingsOptions.defaultCountryOptions"
-                on-change-fn="$ctrl.onDefaultCountryChanged(defaultCountry)">
-              </uc-default-country>
+        <div ng-class="$ctrl.animation" ng-if="$ctrl.getPageIndex() === 2">
+          <div class="cs-form__section typeahead-large with-feature-title">
+            <div class="section__content">
+            <h4 class="feature-title" translate="serviceSetupModal.regionalSettings"></h4>
+              <div class="sub-section">
+                <uc-time-zone
+                  time-zone="$ctrl.callLocationSettingsData.location.timeZone"
+                  time-zone-options="$ctrl.locationSettingsOptions.timeZoneOptions"
+                  on-change-fn="$ctrl.onTimeZoneChanged(timeZone)">
+                </uc-time-zone>
+              </div>
+              <div class="sub-section service-setup service-setup-regional-settings">
+                <uc-settings-preferred-language
+                  preferred-language="$ctrl.callLocationSettingsData.location.preferredLanguage"
+                  preferred-language-options="$ctrl.locationSettingsOptions.preferredLanguageOptions"
+                  on-change-fn="$ctrl.onPreferredLanguageChanged(preferredLanguage)">
+                </uc-settings-preferred-language>
+              </div>
+              <div class="sub-section service-setup service-setup-regional-settings"
+                cr-feature-toggle feature-show="h-regional-tones">
+                <uc-default-country
+                  default-country="$ctrl.callLocationSettingsData.location.tone"
+                  default-country-options="$ctrl.locationSettingsOptions.defaultCountryOptions"
+                  on-change-fn="$ctrl.onDefaultCountryChanged(defaultCountry)">
+                </uc-default-country>
+              </div>
             </div>
           </div>
         </div>
 
         <!--Extentions and Routing Prefix-->
-        <div class="cs-form__section" ng-class="$ctrl.animation" ng-if="$ctrl.getPageIndex() === 3">
-          <div class="section__content">
-            <h4 translate="serviceSetupModal.internalDialing"></h4>
+        <div ng-class="$ctrl.animation" ng-if="$ctrl.getPageIndex() === 3">
+          <div class="section__content cs-form__section typeahead-large with-feature-title">
+            <div class="feature-title" translate="locations.internalDialingTitle"></div>
+            <div class="feature-desc" translate="locations.internalDialingDesc"></div>
             <div class="sub-section" ng-if="$ctrl.showRoutingPrefix">
               <uc-location-routing-prefix
                 routing-prefix="$ctrl.callLocationSettingsData.location.routingPrefix"
@@ -125,9 +117,10 @@
         </div>
 
         <!-- Steering Digit -->
-        <div class="cs-form__section" ng-class="$ctrl.animation" ng-if="$ctrl.getPageIndex() === 4">
-          <div class="section__content">
-            <h4 translate="serviceSetupModal.externalDialing"></h4>
+        <div ng-class="$ctrl.animation" ng-if="$ctrl.getPageIndex() === 4">
+          <div class="section__content cs-form__section typeahead-large with-feature-title">
+            <div class="feature-title" translate="locations.externalDialingTitle"></div>
+            <div class="feature-desc" translate="locations.externalDialingDesc"></div>
             <div class="sub-section">
               <uc-outbound-dial-digit
                 steering-digit="$ctrl.callLocationSettingsData.location.steeringDigit"
