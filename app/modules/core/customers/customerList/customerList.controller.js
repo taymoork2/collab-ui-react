@@ -796,12 +796,15 @@ require('./_customer-list.scss');
     }
 
     function getAccountStatus(rowData) {
-      if (rowData.daysLeft <= 0 || _.get(rowData, 'licenseList', []).length === 0) {
-        return 'expired';
-      }
       var isTrial = _.some(Config.licenseObjectNames, function (type) {
         return isLicenseTypeATrial(rowData, type);
       });
+
+      if (isTrial) {
+        if (rowData.daysLeft <= 0) {
+          return 'expired';
+        }
+      }
       return isTrial ? 'trial' : 'active';
     }
 
