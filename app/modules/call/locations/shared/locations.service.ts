@@ -6,6 +6,10 @@ interface ILocationResource extends ng.resource.IResourceClass<ng.resource.IReso
 
 interface IUserLocationDetailResource extends ng.resource.IResourceClass<ng.resource.IResource<IRLocation>> {}
 
+interface IUserMoveLocationResource extends ng.resource.IResourceClass<ng.resource.IResource<IRLocation>> {
+  update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
+}
+
 interface ILocationDetailResource extends ng.resource.IResourceClass<ng.resource.IResource<IRLocation>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
 }
@@ -14,10 +18,12 @@ export class LocationsService {
   private locationInternalNumberPoolResource: ILocationInternalNumberPoolResource;
   private locationListResource: ILocationResource;
   private userLocationDetailResource: IUserLocationDetailResource;
+  private userMoveLocationResource: IUserMoveLocationResource;
   private locationDetailResource: ILocationDetailResource;
 
   /* @ngInject */
   constructor(
+    private $q: ng.IQService,
     private $resource: ng.resource.IResourceService,
     private HuronConfig,
     private Authinfo,
@@ -39,6 +45,10 @@ export class LocationsService {
         save: saveAction,
       });
     this.locationInternalNumberPoolResource = this.$resource(`${this.HuronConfig.getCmiUrl()}/voice/customers/:customerId/locations/:locationId/internalnumberpools`, {}, {}) as ILocationInternalNumberPoolResource;
+    this.userMoveLocationResource = <IUserMoveLocationResource>this.$resource(`${this.HuronConfig.getCmiV2Url()}/customers/:customerId/users/:userId/move/locations`, {},
+      {
+        update: updateAction,
+      });
     this.userLocationDetailResource = <IUserLocationDetailResource>this.$resource(`${this.HuronConfig.getCmiV2Url()}/customers/:customerId/users/:userId`, {}, {});
     this.locationDetailResource = <ILocationDetailResource>this.$resource(`${this.HuronConfig.getCmiV2Url()}/customers/:customerId/locations/:locationId`, {},
       {
@@ -132,6 +142,22 @@ export class LocationsService {
       regionCodeDialing: location.regionCodeDialing,
       callerId: location.callerId,
     }).$promise;
+  }
+
+  public updateUserLocation(userId: string, locationId: string | undefined, validateFlag: boolean): ng.IPromise<void> {
+    return this.userMoveLocationResource.update({
+      customerId: this.Authinfo.getOrgId(),
+      userId,
+    }, {
+      locationUuid: locationId,
+      validate: validateFlag,
+    }).$promise.then(() => {
+      if ( validateFlag === true) {
+        return this.updateUserLocation(userId, locationId, false);
+      } else {
+        return this.$q.resolve();
+      }
+    });
   }
 
   public deleteLocation(locationId: string): ng.IPromise<IRLocation> {

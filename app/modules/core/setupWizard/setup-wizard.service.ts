@@ -124,7 +124,7 @@ export class SetupWizardService {
     return _.some(this.pendingLicenses, { offerName: this.Config.offerCodes.CCASP });
   }
 
-  private getActingSubscription(): IPendingOrderSubscription {
+  public getActingSubscription(): IPendingOrderSubscription {
     return _.find(this.Authinfo.getSubscriptions(), { externalSubscriptionId: this.getActingSubscriptionId() });
   }
 

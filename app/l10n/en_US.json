@@ -744,18 +744,18 @@
       "nbr2": "NBR2",
       "video": "Video",
       "mmpVoIP": "MMP VoIP",
-      "cmrCloud": "CMR Cloud",
       "mmpVideo": "MMP Video",
-      "cmrHybrid": "CMR Hybrid",
       "hybridVoIP": "Hybrid VoIP",
+      "cmrCloud": "MV Video Cloud",
+      "cmrHybrid": "MV Video Hybrid",
       "nbr2W3Party": "NBR2 W3 Party",
       "hybridMmpVoIP": "Hybrid MMP VoIP",
       "audioBroadcast": "Audio Broadcast",
       "hybridTelephony": "Hybrid Telephony",
       "regularTelephony": "Regular Telephony",
-      "cmrCloudPersonal": "CMR Cloud Personal",
-      "cmrCloudScheduled": "CMR Cloud Scheduled",
+      "cmrCloudPersonal": "MV Video Cloud Personal",
       "personalMeetingRoom": "Personal Meeting Room",
+      "cmrCloudScheduled": "MV Video Cloud Scheduled",
       "audioBroadcastW3Party": "Audio Broadcast W3 Party",
       "audioBroadcast4Mobile": "Audio Broadcast for Mobile"
     },
@@ -3660,7 +3660,8 @@
       "duplicateSite": "This site already exists",
       "invalidLicense": "License number should be an integer greater than 0",
       "pleaseEnterSiteName": "Please enter a site name",
-      "enteredSiteNotValid": "The entered site is not valid. Please try another site."
+      "enteredSiteNotValid": "The entered site is not valid. Please try another site.",
+      "totalSiteLicenseNumber": "Site <b>{{ siteUrl }}</b> should have license number > 0"
     },
     "siteName": "Site Name",
     "theseWillBeYourWebExSites": "These will be your {{siteCount}} WebEx sites",
@@ -4380,6 +4381,16 @@
     "showLess": "Show less",
     "localDialing": "Local Dialing",
     "externalTransfer": "External Call Transfer/Conference"
+  },
+  "primaryLine": {
+    "title": "Line selection for calls",
+    "description": "Choose the default behavior for devices when they go off hook",
+    "autoOption": "Auto - device automatically chooses an available line",
+    "primaryLineOption": "Always use primary line",
+    "autoLabel": "Auto",
+    "primaryLineLabel": "Primary Line",
+    "saveSuccess": "Line selection saved successfully",
+    "failedToSaveChanges": "Failed to save changes. Reason:"
   },
   "preferredLanguage": {
     "title": "Preferred Language",
@@ -6733,6 +6744,7 @@
     "locationSelectDesc": "Choose the physical location where this user primarily works from.",
     "locationDetailTitle": "Location Details",
     "locationDetailDesc": "Locations let you group Cisco Spark Call settings together based on specific geography. Specify a name and caller ID for this location.",
+    "userLocMoveErrorDesc": "This user's extension does not exist at this location. Before you move this user, you must create a range that contains the extension in the new location.",
     "mohTitle": "Location Media on Hold",
     "mohDesc": "Set the default media to be played for this location.",
     "mohSelectLabel": "Media Selection",
@@ -7629,6 +7641,7 @@
     "externalCommunication": {
       "title": "External Communication",
       "subsectionLabel": "Messaging",
+      "proPackInfoCopy": "This premium feature is available with Pro Pack. Contact your partner to learn more.",
       "subsectionDescription": "Secure your organization's data by blocking external messaging.",
       "description": "Block your users from inviting external contacts to Cisco Spark spaces and prevent your users from joining external Cisco Spark spaces."
     },

@@ -331,16 +331,17 @@
             onExit: panelOnExit,
             onEnter: panelOnEnter({ type: 'large' }),
           });
-
         // Enter and Exit functions for panel(large or side)
         function panelOnEnter(options) {
           options = options || {};
           return /* @ngInject */ function ($modal, $state, $previousState, atlas2017NameChangeFeatureToggled) {
-            if (atlas2017NameChangeFeatureToggled) {
-              if (!options.type) {
-                options.type = 'side-panel-full-height';
-              } else {
-                options.type += ' side-panel-full-height';
+            if (_.get($state.data, 'sidepanel', '') !== 'not-full') {
+              if (atlas2017NameChangeFeatureToggled) {
+                if (!options.type) {
+                  options.type = 'side-panel-full-height';
+                } else {
+                  options.type += ' side-panel-full-height';
+                }
               }
             }
 
@@ -1154,6 +1155,8 @@
               currentUserId: '',
               orgInfo: {},
               preferredLanguageDetails: {},
+              userLocation: {},
+              memberType: '',
             },
             data: {
               displayName: 'Overview',
@@ -1196,10 +1199,11 @@
             },
           })
           .state('user-overview.userLocationDetails', {
-            template: '<uc-user-location-details user-id="$resolve.userId"></uc-user-location-details>',
+            template: '<uc-user-location-details user-id="$resolve.userId" userLocation="$resolve.userLocation"></uc-user-location-details>',
             params: {
               reloadToggle: false,
               userDetails: {},
+              userLocation: {},
             },
             data: {},
             resolve: {
@@ -1213,6 +1217,9 @@
               }),
               userId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams.currentUser, 'id');
+              },
+              userLocation: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.userLocation, 'userLocation');
               },
             },
           })
@@ -1380,6 +1387,32 @@
               },
               selected: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams, 'selected');
+              },
+            },
+          })
+          .state('user-overview.communication.primaryLine', {
+            template: '<uc-primary-line owner-id="$resolve.ownerId" line-selection="$resolve.lineSelection"></uc-primary-line>',
+            params: {
+              ownerId: null,
+              lineSelection: {},
+            },
+            data: {
+              displayName: 'Line selection for calls',
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/huron/primaryLine'));
+                }, 'uc-primary-line');
+              }),
+              ownerId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentUser, 'id');
+              },
+              lineSelection: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams, 'lineSelection', {});
+              },
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('user-overview.communication.primaryLine').data.displayName = $translate.instant('primaryLine.title');
               },
             },
           })
@@ -2024,9 +2057,11 @@
             },
           })
           .state('place-overview.placeLocationDetails', {
-            template: '<uc-user-location-details></uc-user-location-details>',
+            template: '<uc-user-location-details user-id="$resolve.userId"></uc-user-location-details>',
             params: {
               reloadToggle: false,
+              userDetails: {},
+              memberType: '',
             },
             data: {},
             resolve: {
@@ -2038,6 +2073,9 @@
                   done(require('modules/call/locations/locations-user-details'));
                 }, 'locations-user-details');
               }),
+              userId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentPlace, 'cisUuid');
+              },
             },
           })
           .state('place-overview.preferredLanguage', {
@@ -2226,6 +2264,32 @@
               },
               data: /* @ngInject */ function ($state, $translate) {
                 $state.get('place-overview.communication.externaltransfer').data.displayName = $translate.instant('serviceSetupModal.externalTransfer.title');
+              },
+            },
+          })
+          .state('place-overview.communication.primaryLine', {
+            template: '<uc-primary-line owner-id="$resolve.placeId" line-selection="$resolve.lineSelection"></uc-primary-line>',
+            params: {
+              placeId: null,
+              lineSelection: {},
+            },
+            data: {
+              displayName: 'Line selection for calls',
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/huron/primaryLine'));
+                }, 'uc-primary-line');
+              }),
+              placeId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentPlace, 'cisUuid');
+              },
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('place-overview.communication.primaryLine').data.displayName = $translate.instant('primaryLine.title');
+              },
+              lineSelection: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams, 'lineSelection');
               },
             },
           })
@@ -2889,6 +2953,9 @@
           })
           .state('provisioning.pending', {
             url: '/pending',
+            data: {
+              sidepanel: 'not-full',
+            },
             views: {
               provisioningView: {
                 templateUrl: 'modules/squared/provisioning-console/pending/provisioning-pending.html',
@@ -2897,6 +2964,9 @@
           })
           .state('provisioning.completed', {
             url: '/completed',
+            data: {
+              sidepanel: 'not-full',
+            },
             views: {
               provisioningView: {
                 templateUrl: 'modules/squared/provisioning-console/completed/provisioning-completed.html',
@@ -2905,6 +2975,9 @@
           })
           .state('order-details', {
             parent: 'sidepanel',
+            data: {
+              sidepanel: 'not-full',
+            },
             views: {
               'sidepanel@': {
                 controller: 'ProvisioningDetailsController',
