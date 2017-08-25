@@ -1154,6 +1154,8 @@
               currentUserId: '',
               orgInfo: {},
               preferredLanguageDetails: {},
+              userLocation: {},
+              memberType: '',
             },
             data: {
               displayName: 'Overview',
@@ -1196,10 +1198,11 @@
             },
           })
           .state('user-overview.userLocationDetails', {
-            template: '<uc-user-location-details user-id="$resolve.userId"></uc-user-location-details>',
+            template: '<uc-user-location-details user-id="$resolve.userId" userLocation="$resolve.userLocation"></uc-user-location-details>',
             params: {
               reloadToggle: false,
               userDetails: {},
+              userLocation: {},
             },
             data: {},
             resolve: {
@@ -1213,6 +1216,9 @@
               }),
               userId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams.currentUser, 'id');
+              },
+              userLocation: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.userLocation, 'userLocation');
               },
             },
           })
@@ -2024,9 +2030,11 @@
             },
           })
           .state('place-overview.placeLocationDetails', {
-            template: '<uc-user-location-details></uc-user-location-details>',
+            template: '<uc-user-location-details user-id="$resolve.userId"></uc-user-location-details>',
             params: {
               reloadToggle: false,
+              userDetails: {},
+              memberType: '',
             },
             data: {},
             resolve: {
@@ -2038,6 +2046,9 @@
                   done(require('modules/call/locations/locations-user-details'));
                 }, 'locations-user-details');
               }),
+              userId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentPlace, 'cisUuid');
+              },
             },
           })
           .state('place-overview.preferredLanguage', {

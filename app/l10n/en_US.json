@@ -6731,6 +6731,7 @@
     "locationSelectDesc": "Choose the physical location where this user primarily works from.",
     "locationDetailTitle": "Location Details",
     "locationDetailDesc": "Locations let you group Cisco Spark Call settings together based on specific geography. Specify a name and caller ID for this location.",
+    "userLocMoveErrorDesc": "This user's extension does not exist at this location. Before you move this user, you must create a range that contains the extension in the new location.",
     "mohTitle": "Location Media on Hold",
     "mohDesc": "Set the default media to be played for this location.",
     "mohSelectLabel": "Media Selection",
