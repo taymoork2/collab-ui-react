@@ -3660,7 +3660,7 @@
     "meetingSettingsError": {
       "pleaseSelectTimeZone": "Please select a Time Zone",
       "duplicateSite": "This site already exists",
-      "invalidLicense": "License number should be an integer greater than 0",
+      "invalidLicense": "License number should be a non-negative integer",
       "pleaseEnterSiteName": "Please enter a site name",
       "enteredSiteNotValid": "The entered site is not valid. Please try another site.",
       "totalSiteLicenseNumber": "Site <b>{{ siteUrl }}</b> should have license number > 0"

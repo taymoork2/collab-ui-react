@@ -81,7 +81,10 @@ export class MeetingSettingsCtrl {
     // If user clicked back after setting WebEx sites in the meeting-settings tab, we want to preserve the entered sites
     const webexSitesData = this.TrialWebexService.getProvisioningWebexSitesData();
     if (!_.isEmpty(webexSitesData)) {
-      this.updateSitesArray(_.get(webexSitesData, 'webexLicencesPayload.webexProvisioningParams.webexSiteDetailsList'));
+      const sitesLicensesData = _.get(webexSitesData, 'webexLicencesPayload.webexProvisioningParams.webexSiteDetailsList');
+      this.updateSitesArray(sitesLicensesData);
+      this.constructDistributedSitesArray();
+      this.updateDistributedSitesArray(sitesLicensesData);
     }
 
     if (this.SetupWizardService.hasTSPAudioPackage()) {
@@ -183,21 +186,22 @@ export class MeetingSettingsCtrl {
     });
   }
 
-  private updateSitesArray(sites) {
-    const sitesArray = _.map(sites, (site: any) => {
-      const timezone = this.findTimezoneObject(site.timezone);
-      const siteObj = {
-        quantity: _.parseInt(site.quantity),
-        siteUrl: site.siteUrl.replace(this.Config.siteDomainUrl.webexUrl, ''),
-        timezone: timezone,
-        centerType: site.centerType,
-        setupType: site.setupType,
-      };
-      if (!site.setupType) {
-        delete siteObj.setupType;
-      }
-      return siteObj;
+  private updateDistributedSitesArray(sitesLicensesData) {
+    const licenseDistribution = _.flatten(sitesLicensesData);
+    _.forEach(this.distributedLicensesArray, (siteGroup) => {
+      siteGroup = _.map(siteGroup, (site) => {
+        site.quantity = _.get(_.find(licenseDistribution, { siteUrl: site.siteUrl + this.Config.siteDomainUrl.webexUrl, centerType: site.centerType }), 'quantity', 0);
+        return site;
+      });
     });
+  }
+
+  private updateSitesArray(sites) {
+    const sitesArray = _.chain(sites).uniqBy('siteUrl').map((site: any) => {
+      const timezone = this.findTimezoneObject(site.timezone);
+      const siteUrl =  site.siteUrl.replace(this.Config.siteDomainUrl.webexUrl, '');
+      return this.createSite('', 0, siteUrl, timezone, site.setupType);
+    }).value();
 
     this.sitesArray = sitesArray;
   }
@@ -287,20 +291,25 @@ export class MeetingSettingsCtrl {
     }
   }
 
+  /* TODO: algendel - refactor IWebExSite into a class */
+  private createSite( centerType: string, quantity: number , siteUrl: string, timezone: string | object | undefined, setupType: string | undefined): IWebExSite  {
+    const siteObject: IWebExSite = {
+      centerType: centerType,
+      quantity: quantity,
+      siteUrl: siteUrl,
+      timezone: timezone,
+      setupType: setupType,
+    };
+    if (!setupType) {
+      delete siteObject.setupType;
+    }
+    return siteObject;
+  }
+
   public addSiteToDistributedArray(site) {
     if (!_.isEmpty(this.distributedLicensesArray)) {
       const newSite = _.map(this.centerDetails, (center) => {
-        const siteObject: IWebExSite = {
-          centerType: center.centerType,
-          quantity: site.quantity,
-          siteUrl: site.siteUrl,
-          timezone: site.timezone,
-          setupType: site.setupType,
-        };
-        if (!site.setupType) {
-          delete siteObject.setupType;
-        }
-        return siteObject;
+        return this.createSite(center.centerType, site.quantity, site.siteUrl, site.timezone, site.setupType);
       });
       this.distributedLicensesArray.push(newSite);
     }
@@ -502,17 +511,7 @@ export class MeetingSettingsCtrl {
     if (_.isEmpty(this.distributedLicensesArray)) {
       this.distributedLicensesArray = _.map(this.sitesArray, (site: IWebExSite) => {
         return _.map(this.centerDetails, (center) => {
-          const siteObject: IWebExSite = {
-            centerType: center.centerType,
-            quantity: site.quantity,
-            siteUrl: site.siteUrl,
-            timezone: site.timezone,
-            setupType: site.setupType,
-          };
-          if (!site.setupType) {
-            delete siteObject.setupType;
-          }
-          return siteObject;
+          return this.createSite(center.centerType, site.quantity || 0, site.siteUrl, site.timezone, site.setupType);
         });
       });
       this.mergeExistingWebexSites();
@@ -606,15 +605,8 @@ export class MeetingSettingsCtrl {
     const distributedLicenses = _.flatten(this.distributedLicensesArray);
     _.forEach(distributedLicenses, (site) => {
       if (_.get(site, 'quantity', 0) > 0) {
-        const webexSiteDetail: IWebExSite = {
-          siteUrl: site.siteUrl + this.Config.siteDomainUrl.webexUrl,
-          timezone: _.get<string>(site, 'timezone.timeZoneId'),
-          centerType: site.centerType,
-          quantity: _.get<number>(site, 'quantity'),
-        };
-        if (site.setupType) {
-          webexSiteDetail.setupType = site.setupType;
-        }
+        const  siteUrl = site.siteUrl + this.Config.siteDomainUrl.webexUrl;
+        const webexSiteDetail = this.createSite(site.centerType, _.get<number>(site, 'quantity', 0), siteUrl, _.get<string>(site, 'timezone.timeZoneId'), site.setupType );
         webexSiteDetailsList.push(webexSiteDetail);
       }
     });
