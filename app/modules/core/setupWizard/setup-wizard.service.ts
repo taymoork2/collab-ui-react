@@ -228,9 +228,7 @@ export class SetupWizardService {
   public hasWebexMeetingTrial() {
     const conferencingServices = _.filter(this.Authinfo.getConferenceServices(), { license: { isTrial: true } });
 
-    return _.some(conferencingServices, function (service) {
-      return _.get(service, 'license.offerName') === this.Config.offerCodes.MC || _.get(service, 'license.offerName') === this.Config.offerCodes.EE;
-    });
+    return _.some(conferencingServices, service => _.get(service, 'license.offerName') === this.Config.offerCodes.MC || _.get(service, 'license.offerName') === this.Config.offerCodes.EE);
   }
 
   public validateTransferCode(payload) {

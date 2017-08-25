@@ -84,6 +84,7 @@ require('./_wizard.scss');
 
     vm.isFirstTab = isFirstTab;
     vm.isLastTab = isLastTab;
+    vm.isMeetingSetupTabOnly = isMeetingSetupTabOnly;
     vm.isFirstStep = isFirstStep;
     vm.isLastStep = isLastStep;
     vm.isFirstTime = isFirstTime;
@@ -378,6 +379,11 @@ require('./_wizard.scss');
     function isLastTab() {
       var tabs = getTabs();
       return tabs.indexOf(getTab()) === tabs.length - 1;
+    }
+
+    function isMeetingSetupTabOnly() {
+      var tabs = getTabs();
+      return tabs.length === 1 && tabs[0].name === 'meetingSettings';
     }
 
     function isFirstStep() {
