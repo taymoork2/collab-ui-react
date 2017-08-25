@@ -10,12 +10,12 @@
 * Use test utils in your expect statements, don't reinvent the wheel.
 ## Running Tests
 * Locally
-  * To run the tests locally in development, you must start Atlas locally via `npm start`, then from another terminal window execute the protractor tests.
+  * To run the tests locally in development, you must start Atlas locally via `yarn start`, then from another terminal window execute the protractor tests.
 * Running a Single .spec File
   * To run a single test you can pass the --specs parameter:
-`npm run protractor-babel -- --specs <path to spec file>`
+`yarn protractor-babel -- --specs <path to spec file>`
 ```
-npm run protractor-babel -- --specs ./test/e2e-protractor/huron/functional/call-settings_spec.js
+yarn protractor-babel -- --specs ./test/e2e-protractor/huron/functional/call-settings_spec.js
 ```
 * Running with yarn:
 `yarn protractor-babel -- --specs ./test/e2e-protractor/huron/functional/call-settings_spec.js`
@@ -25,12 +25,12 @@ npm run protractor-babel -- --specs ./test/e2e-protractor/huron/functional/call-
 export SAUCE__MAX_INSTANCES="2"
 export SAUCE__USERNAME="atlas-web-limited"
 export SAUCE__ACCESS_KEY="b99c8bc7-4a28-4d87-8cd8-eba7c688d48c"
-npm run protractor-babel -- --specs ./test/e2e-protractor/huron/functional/<test name>.js --sauce --int
+yarn protractor-babel -- --specs ./test/e2e-protractor/huron/functional/<test name>.js --sauce --int
 ```
 
 * Ruuning all files in a given directory change directory to huron and apply the cmd.
 ```
-npm run protractor-babel -- --suite huron --sauce --int
+yarn protractor-babel -- --suite huron --sauce --int
 ```
 
 * The VS code debug launch config is  as follows for running a given sepc file in debugger mode
@@ -95,7 +95,7 @@ fdescribe('only I will run', () => {...});
 ```
 * To not have the provisioner delete your customer when done, use the `--provisionerKeepCustomer` flag when running protractor:
 ```
-npm run protractor-babel -- --provisionerKeepCustomer --specs ./test/e2e-protractor/huron/functional/call-settings_spec.js
+yarn protractor-babel -- --provisionerKeepCustomer --specs ./test/e2e-protractor/huron/functional/call-settings_spec.js
 ```
 
 * Currently, the list of variables are as follows:
