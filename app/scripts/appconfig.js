@@ -1389,6 +1389,32 @@
               },
             },
           })
+          .state('user-overview.communication.primaryLine', {
+            template: '<uc-primary-line owner-id="$resolve.ownerId" line-selection="$resolve.lineSelection"></uc-primary-line>',
+            params: {
+              ownerId: null,
+              lineSelection: {},
+            },
+            data: {
+              displayName: 'Line selection for calls',
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/huron/primaryLine'));
+                }, 'uc-primary-line');
+              }),
+              ownerId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentUser, 'id');
+              },
+              lineSelection: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams, 'lineSelection', {});
+              },
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('user-overview.communication.primaryLine').data.displayName = $translate.instant('primaryLine.title');
+              },
+            },
+          })
           .state('user-overview.communication.line-overview', {
             template: '<uc-line-overview owner-type="user" owner-name="$resolve.ownerName" owner-id="$resolve.ownerId" number-id="$resolve.numberId"></uc-line-overview>',
             params: {
@@ -2237,6 +2263,32 @@
               },
               data: /* @ngInject */ function ($state, $translate) {
                 $state.get('place-overview.communication.externaltransfer').data.displayName = $translate.instant('serviceSetupModal.externalTransfer.title');
+              },
+            },
+          })
+          .state('place-overview.communication.primaryLine', {
+            template: '<uc-primary-line owner-id="$resolve.placeId" line-selection="$resolve.lineSelection"></uc-primary-line>',
+            params: {
+              placeId: null,
+              lineSelection: {},
+            },
+            data: {
+              displayName: 'Line selection for calls',
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/huron/primaryLine'));
+                }, 'uc-primary-line');
+              }),
+              placeId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentPlace, 'cisUuid');
+              },
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('place-overview.communication.primaryLine').data.displayName = $translate.instant('primaryLine.title');
+              },
+              lineSelection: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams, 'lineSelection');
               },
             },
           })
