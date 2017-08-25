@@ -55,7 +55,7 @@ var Wizard = function () {
   this.planReviewMessagesTrial = element(by.cssContainingText('div[ng-if="planReview.messagingServices.isNewTrial"]', TRIAL_TEXT));
   this.planReviewMeetingsTrial = element(by.cssContainingText('div[ng-if="planReview.confServices.isNewTrial"]', TRIAL_TEXT));
   this.planReviewCallTrial = element(by.cssContainingText('div[ng-if="planReview.commServices.isNewTrial"]', TRIAL_TEXT));
-  
+
   this.clickPlanReview = function () {
     utils.click(this.reviewTab);
   };

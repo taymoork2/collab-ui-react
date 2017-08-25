@@ -6,20 +6,18 @@
     .service('CareFeatureList', CareFeatureList);
 
   /* @ngInject */
-  function CareFeatureList(Authinfo, ConfigTemplateService, VirtualAssistantConfigService) {
+  function CareFeatureList(Authinfo, ConfigTemplateService, VirtualAssistantService) {
     var filterConstants = {
       customerSupport: 'customerSupport',
-      virtualAssistant: 'virtualAssistant',
+      virtualAssistant: VirtualAssistantService.serviceCard.type,
       all: 'all',
     };
     var service = {
       getChatTemplates: getChatTemplates,
       getCallbackTemplates: getCallbackTemplates,
       getChatPlusCallbackTemplates: getChatPlusCallbackTemplates,
-      getVirtualAssistantConfigs: getVirtualAssistantConfigs,
       getTemplate: getTemplate,
       formatTemplates: formatTemplates,
-      formatVirtualAssistant: formatVirtualAssistant,
       deleteTemplate: deleteTemplate,
       deleteVirtualAssistantConfig: deleteVirtualAssistantConfig,
       filterCards: filterCards,
@@ -49,12 +47,6 @@
       }).$promise;
     }
 
-    function getVirtualAssistantConfigs() {
-      return VirtualAssistantConfigService.get({
-        orgId: Authinfo.getOrgId(),
-      }).$promise;
-    }
-
     function deleteTemplate(templateId) {
       return ConfigTemplateService.delete({
         orgId: Authinfo.getOrgId(),
@@ -63,10 +55,7 @@
     }
 
     function deleteVirtualAssistantConfig(configId) {
-      return VirtualAssistantConfigService.delete({
-        orgId: Authinfo.getOrgId(),
-        configId: configId,
-      }).$promise;
+      return VirtualAssistantService.delete(configId, Authinfo.getOrgId()).$promise;
     }
 
     function getTemplate(templateId) {
@@ -120,23 +109,6 @@
         tpl.icons = feature.icons;
         tpl.templateOrConfig = 'template';
         return tpl;
-      });
-      return orderByCardName(formattedList);
-    }
-
-    function formatVirtualAssistant(list, feature) {
-      var formattedList = _.map(list.items, function (item) {
-        if (!item.name) {
-          item.name = item.id;
-        }
-        item.mediaType = 'virtualAssistant';
-        item.status = 'Not in use';
-        item.featureType = feature.name;
-        item.color = feature.color;
-        item.icons = feature.icons;
-        item.templateId = item.id;
-        item.templateOrConfig = 'config';
-        return item;
       });
       return orderByCardName(formattedList);
     }

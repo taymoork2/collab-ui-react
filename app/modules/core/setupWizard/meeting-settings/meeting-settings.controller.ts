@@ -1,5 +1,5 @@
 import './_meeting-settings.scss';
-import { IWebExSite, ISiteNameError, IConferenceService, IExistingTrialSites, IWebexLicencesPayload, IPendingLicense } from './meeting-settings.interface';
+import { IWebExSite, ISiteNameError, IConferenceService, IExistingTrialSites, IWebexLicencesPayload, IPendingLicense, IConferenceLicense } from './meeting-settings.interface';
 import { SetupWizardService } from '../setup-wizard.service';
 
 export enum Steps {
@@ -12,7 +12,7 @@ export class MeetingSettingsCtrl {
     siteUrl: '',
     timezone: '',
     centerType: '',
-    quantity: 1,
+    quantity: 0,
   };
 
   public steps = Steps;
@@ -43,10 +43,8 @@ export class MeetingSettingsCtrl {
   };
   public showTransferCodeInput: boolean = false;
   public hasTrialSites: boolean = false;
-  public transferSiteDetails = {
-    siteUrl: '',
-    transferCode: '',
-  };
+  public transferSiteUrl = '';
+  public transferSiteCode = '';
   private nextButtonDisabledStatus = false;
   public ccasp = {
     partnerOptions: [],
@@ -139,15 +137,19 @@ export class MeetingSettingsCtrl {
   }
 
   public migrateTrialNext(): ng.IPromise<any> {
-    if (_.isEmpty(this.transferSiteDetails.siteUrl) && _.isEmpty(this.transferSiteDetails.transferCode)) {
+    if (_.isEmpty(this.transferSiteUrl) && _.isEmpty(this.transferSiteCode)) {
       this.nextButtonDisabledStatus = false;
       this.stripTransferredSitesFromSitesArray();
       return this.$q.resolve();
     }
-    if (!(_.endsWith(this.transferSiteDetails.siteUrl, '.webex.com'))) {
-      this.transferSiteDetails.siteUrl += this.Config.siteDomainUrl.webexUrl;
+    const transferSiteDetails = {
+      siteUrl: this.transferSiteUrl,
+      transferCode: this.transferSiteCode,
+    };
+    if (!(_.endsWith(transferSiteDetails.siteUrl, '.webex.com'))) {
+      transferSiteDetails.siteUrl += this.Config.siteDomainUrl.webexUrl;
     }
-    return this.SetupWizardService.validateTransferCode(this.transferSiteDetails).then((response) => {
+    return this.SetupWizardService.validateTransferCode(transferSiteDetails).then((response) => {
       const status = _.get(response, 'data.status');
       if (!status || status !== 'INVALID') {
         // if transferred sites have already been added and the back button clicked, strip old sites.
@@ -255,6 +257,7 @@ export class MeetingSettingsCtrl {
     this.validateWebexSiteUrl(siteName).then((response) => {
       if (response.isValid && (response.errorCode === 'validSite')) {
         this.sitesArray.push(_.clone(this.siteModel));
+        this.addSiteToDistributedArray(_.clone(this.siteModel));
         this.clearInputs();
       } else {
         if (response.errorCode === 'duplicateSite') {
@@ -271,7 +274,39 @@ export class MeetingSettingsCtrl {
     });
   }
 
+  public removeFromDistributedLicensesArray(site) {
+    if (!_.isEmpty(this.distributedLicensesArray)) {
+      let i = -1;
+      _.forEach(this.distributedLicensesArray, (siteGroup, index) => {
+        if (_.find(siteGroup, { siteUrl: site.siteUrl })) {
+          i = index;
+        }
+      });
+      this.distributedLicensesArray.splice(i, 1);
+    }
+  }
+
+  public addSiteToDistributedArray(site) {
+    if (!_.isEmpty(this.distributedLicensesArray)) {
+      const newSite = _.map(this.centerDetails, (center) => {
+        const siteObject: IWebExSite = {
+          centerType: center.centerType,
+          quantity: site.quantity,
+          siteUrl: site.siteUrl,
+          timezone: site.timezone,
+          setupType: site.setupType,
+        };
+        if (!site.setupType) {
+          delete siteObject.setupType;
+        }
+        return siteObject;
+      });
+      this.distributedLicensesArray.push(newSite);
+    }
+  }
+
   public removeSite(index: number): void {
+    this.removeFromDistributedLicensesArray(this.sitesArray[index]);
     this.sitesArray.splice(index, 1);
   }
 
@@ -291,9 +326,10 @@ export class MeetingSettingsCtrl {
     return (licenseVolume - this.sumOfWebExLicensesAssigned(siteArray));
   }
 
-  public getMinForSiteType(siteUrl) {
+
+  public getLicensesForSite(siteUrl) {
     const total = _.sumBy(_.filter(_.flatten(this.distributedLicensesArray), { siteUrl: siteUrl }), 'quantity');
-    return (total === 0) ? 1 : 0;
+    return total;
   }
 
   public getLicensesAssignedTotal(centerType) {
@@ -308,19 +344,32 @@ export class MeetingSettingsCtrl {
     return licensesRemaining;
   }
 
+  private hasSitesWithoutLicensesAssigned() {
+    let result = false;
+    _.each(this.sitesArray, (site) => {
+      if (this.getLicensesForSite(site.siteUrl) === 0) {
+        result = true;
+      }
+    });
+    return result;
+  }
+
   public enableOrDisableNext(step: Steps) {
     switch (step) {
       case Steps.SITES_LICENSES: {
         let licensesRemaining = 0;
         _.forEach(this.centerDetails, (center) => {
           licensesRemaining += this.calculateLicensesRemaining(center.centerType);
-          if (licensesRemaining === 0) {
-            this.updateSitesLicenseCount();
-            this.updateSitesAudioPackageDisplay();
-          }
         });
+
+        const sitesWithoutLicenses = this.hasSitesWithoutLicensesAssigned();
         _.each(this.licenseDistributionForm.$$controls, (control) => { control.$validate(); });
-        _.set(this.$scope.wizard, 'isNextDisabled', licensesRemaining !== 0 || this.licenseDistributionForm.$invalid);
+        const invalidData = this.licenseDistributionForm.$invalid || licensesRemaining !== 0 || sitesWithoutLicenses;
+        if (!invalidData) {
+          this.updateSitesLicenseCount();
+          this.updateSitesAudioPackageDisplay();
+        }
+        _.set(this.$scope.wizard, 'isNextDisabled', invalidData);
         break;
       }
       case Steps.SITES_SETUP: {
@@ -336,8 +385,8 @@ export class MeetingSettingsCtrl {
     this.clearError();
     let invalid = false;
     if (this.showTransferCodeInput) {
-      const siteUrlEmpty = _.isEmpty(this.transferSiteDetails.siteUrl);
-      const transferCodeEmpty = _.isEmpty(this.transferSiteDetails.transferCode);
+      const siteUrlEmpty = _.isEmpty(this.transferSiteUrl);
+      const transferCodeEmpty = _.isEmpty(this.transferSiteCode);
       if ((siteUrlEmpty && !transferCodeEmpty) || (transferCodeEmpty && !siteUrlEmpty)) {
         invalid = true;
       }
@@ -420,7 +469,7 @@ export class MeetingSettingsCtrl {
       });
   }
   public ccaspSetNextDisabled() {
-    if (!this.audioPartnerName || ! this.ccasp.subscriptionId) {
+    if (!this.audioPartnerName || !this.ccasp.subscriptionId) {
       this.setNextDisableStatus(true);
     }
   }
@@ -448,23 +497,25 @@ export class MeetingSettingsCtrl {
   }
 
   public constructDistributedSitesArray(): void {
-    this.distributedLicensesArray = _.map(this.sitesArray, (site: IWebExSite) => {
-      return _.map(this.centerDetails, (center) => {
-        const siteObject: IWebExSite = {
-          centerType: center.centerType,
-          quantity: site.quantity,
-          siteUrl: site.siteUrl,
-          timezone: site.timezone,
-          setupType: site.setupType,
-        };
-        if (!site.setupType) {
-          delete siteObject.setupType;
-        }
-        return siteObject;
+    //if it doesn't exit build
+    if (_.isEmpty(this.distributedLicensesArray)) {
+      this.distributedLicensesArray = _.map(this.sitesArray, (site: IWebExSite) => {
+        return _.map(this.centerDetails, (center) => {
+          const siteObject: IWebExSite = {
+            centerType: center.centerType,
+            quantity: site.quantity,
+            siteUrl: site.siteUrl,
+            timezone: site.timezone,
+            setupType: site.setupType,
+          };
+          if (!site.setupType) {
+            delete siteObject.setupType;
+          }
+          return siteObject;
+        });
       });
-    });
-
-    this.mergeExistingWebexSites();
+      this.mergeExistingWebexSites();
+    }
   }
 
   private mergeExistingWebexSites(): void {
@@ -496,17 +547,18 @@ export class MeetingSettingsCtrl {
     });
   }
 
+  // In the case of modify orders, the order will apply to an active subscription.
+  // If we have WebEx licenses, we need pull those siteUrls and include them in the provision context
   public findExistingWebexSites(): void {
-    const existingConferenceServices = _.filter(this.Authinfo.getConferenceServices(), (service: IConferenceService) => {
-      return _.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC], service.license.offerName);
-    });
+    const actingSubscriptionLicenses = _.get<IConferenceLicense[]>(this.SetupWizardService.getActingSubscription(), 'licenses', []);
+    const existingConferenceServicesInActingSubscripton = _.filter(actingSubscriptionLicenses, (license: IConferenceLicense) => _.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC], license.offerName));
 
     // Create an array of existing sites
-    this.existingWebexSites = _.map(existingConferenceServices, (service: IConferenceService) => {
+    this.existingWebexSites = _.map(existingConferenceServicesInActingSubscripton, (license) => {
       return {
-        siteUrl: _.replace(_.get<string>(service, 'license.siteUrl'), this.Config.siteDomainUrl.webexUrl, ''),
-        quantity: service.license.volume,
-        centerType: service.license.offerName,
+        siteUrl: _.replace(_.get<string>(license, 'siteUrl'), this.Config.siteDomainUrl.webexUrl, ''),
+        quantity: license.volume,
+        centerType: license.offerName,
       };
     });
 
@@ -574,8 +626,8 @@ export class MeetingSettingsCtrl {
       _.set(webexLicensesPayload, 'webexProvisioningParams.ccaspSubscriptionId', this.ccasp.subscriptionId);
     }
 
-    if (!_.isEmpty(this.transferSiteDetails.transferCode)) {
-      _.set(webexLicensesPayload, 'webexProvisioningParams.transferCode', this.transferSiteDetails.transferCode);
+    if (!_.isEmpty(this.transferSiteCode)) {
+      _.set(webexLicensesPayload, 'webexProvisioningParams.transferCode', this.transferSiteCode);
     }
     return webexLicensesPayload;
   }

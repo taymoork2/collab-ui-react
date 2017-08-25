@@ -364,7 +364,7 @@ describe('UrlConfigSpec', function () {
 
   it('should return correct Virtual Assistant Config Service url', function () {
     whenCalling('getVirtualAssistantConfigServiceUrl').expectUrlToBe({
-      dev: 'http://localhost:8080/bot-services/v1/config',
+      dev: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/config',
       cfe: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/config',
       integration: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/config',
       prod: 'https://bot-services.produs1.ciscoccservice.com/bot-services/v1/config',

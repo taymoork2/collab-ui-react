@@ -20,6 +20,9 @@ import locationVoicemailModule from 'modules/call/locations/locations-voicemail'
 import locationCallerIdModule from 'modules/call/locations/locations-caller-id';
 import externalCallTransferModule from 'modules/call/settings/settings-external-call-transfer';
 
+export * from './shared';
+export * from './locations-user-details';
+
 export default angular
   .module('call.locations', [
     require('modules/core/cards').default,

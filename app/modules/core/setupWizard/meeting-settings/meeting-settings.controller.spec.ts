@@ -1,4 +1,7 @@
 describe('Controller: MeetingSettingsCtrl', () => {
+  const transferCodeResponse = getJSONFixture('core/json/orders/transferCodeResponse.json');
+  const actingSubscription = getJSONFixture('core/json/customerSubscriptions/getSubscriptionsData.json');
+
   beforeEach(function () {
     this.initModules('Core');
     this.injectDependencies(
@@ -17,7 +20,11 @@ describe('Controller: MeetingSettingsCtrl', () => {
     spyOn(this.TrialTimeZoneService, 'getTimeZones').and.returnValue(this.$q.resolve({}));
     spyOn(this.TrialWebexService, 'validateSiteUrl').and.returnValue(this.$q.resolve({ isValid: true, errorCode: 'validSite' }));
     spyOn(this.SetupWizardService, 'getPendingAudioLicenses').and.returnValue([{ offerName: 'TSP' }]);
+    spyOn(this.SetupWizardService, 'getActingSubscription').and.returnValue(actingSubscription);
     spyOn(this.SetupWizardService, 'validateCCASPPartner').and.returnValue(this.$q.resolve(true));
+    spyOn(this.SetupWizardService, 'hasCCASPPackage').and.returnValue(true);
+    spyOn(this.SetupWizardService, 'getCCASPPartners').and.returnValue(this.$q.resolve(['partner1', 'partner2']));
+    spyOn(this.SetupWizardService, 'validateTransferCode').and.returnValue(this.$q.resolve(transferCodeResponse));
   });
 
   function initController(): void {
@@ -28,11 +35,13 @@ describe('Controller: MeetingSettingsCtrl', () => {
     beforeEach(function () {
       initController.apply(this);
     });
-    //TODO: write different initialization test
-    xit('should call findExistingWebexTrialSites()', function () {
-      expect(this.controller.findExistingWebexTrialSites).toHaveBeenCalled();
-    });
 
+    xit('should find existing WebEx licenses on acting subscription and push them to sitesArray', function () {
+      expect(this.SetupWizardService.getActingSubscription).toHaveBeenCalled();
+      const hasSiteUrlFromActiveLicense = _.some(this.controller.sitesArray, { siteUrl: 'frankSinatraTest.dmz' });
+      expect(hasSiteUrlFromActiveLicense).toBe(true);
+      expect(this.controller.sitesArray).toBe(false);
+    });
   });
 
   describe('upon click of the Validate button in site setup', function () {
@@ -75,12 +84,11 @@ describe('Controller: MeetingSettingsCtrl', () => {
         { quantity: 1, siteUrl: 'site1' },
         { quantity: 5, siteUrl: 'site2' },
       ];
-      const distributedLicensesArray = [[
-        { centerType: 'EC', quantity: 3, siteUrl: 'site1' },
+      const distributedLicensesArray = [
+        [{ centerType: 'EC', quantity: 3, siteUrl: 'site1' },
         { centerType: 'MC', quantity: 1, siteUrl: 'site1' },
         { centerType: 'TC', quantity: 4, siteUrl: 'site1' }],
-        [
-        { centerType: 'EC', quantity: 1, siteUrl: 'site2' },
+        [{ centerType: 'EC', quantity: 1, siteUrl: 'site2' },
         { centerType: 'MC', quantity: 1, siteUrl: 'site2' },
         { centerType: 'TC', quantity: 0, siteUrl: 'site2' }],
       ];
@@ -105,23 +113,12 @@ describe('Controller: MeetingSettingsCtrl', () => {
   });
 
   describe('when a webex site is being transferred', function () {
-    const transferCodeResponse = {
-      data: {
-        siteList: [{
-          siteUrl: 'mytransferredsite.webex.com',
-          timezone: '4',
-        }],
-      },
-    };
     beforeEach(function () {
-      spyOn(this.SetupWizardService, 'validateTransferCode').and.returnValue(this.$q.resolve(transferCodeResponse));
       initController.apply(this);
       this.controller.showTransferCodeInput = true;
       this.controller.centerDetails = [{ centerType: 'EE' }];
-      this.controller.transferSiteDetails = {
-        siteUrl: 'mywebexsite',
-        transferCode: '12345678',
-      };
+      this.controller.transferSiteUrl = 'mywebexsite';
+      this.controller.transferSiteCode = '12345678';
       this.$scope.$apply();
       this.controller.migrateTrialNext();
       this.$scope.$digest();
@@ -138,23 +135,14 @@ describe('Controller: MeetingSettingsCtrl', () => {
   });
 
   describe('when a second transfer code is used', function () {
-    const transferCodeResponse = {
-      data: {
-        siteList: [{
-          siteUrl: 'mySecondTransferredsite.webex.com',
-          timezone: '4',
-        }],
-      },
-    };
+    _.set(transferCodeResponse, 'data.siteList[0].siteUrl', 'mySecondTransferredsite.webex.com');
     beforeEach(function () {
-      spyOn(this.SetupWizardService, 'validateTransferCode').and.returnValue(this.$q.resolve(transferCodeResponse));
+      this.SetupWizardService.validateTransferCode.and.returnValue(this.$q.resolve(transferCodeResponse));
       initController.apply(this);
       this.controller.showTransferCodeInput = true;
       this.controller.centerDetails = [{ centerType: 'EE' }];
-      this.controller.transferSiteDetails = {
-        siteUrl: 'mywebexsite',
-        transferCode: '12345678',
-      };
+      this.controller.transferSiteUrl = 'mywebexsite';
+      this.controller.transferSiteCode = '12345678';
       this.controller.sitesArray = [
         {
           siteUrl: 'myFirstTransferredSite',
@@ -173,8 +161,6 @@ describe('Controller: MeetingSettingsCtrl', () => {
 
   describe('when licenses include CCASP', function () {
     beforeEach(function () {
-      spyOn(this.SetupWizardService, 'hasCCASPPackage').and.returnValue(true);
-      spyOn(this.SetupWizardService, 'getCCASPPartners').and.returnValue(this.$q.resolve(['partner1', 'partner2']));
       initController.apply(this);
       spyOn(this.controller, 'setNextDisableStatus').and.callThrough();
       this.controller.ccasp.partnerNameSelected = 'bob';
@@ -186,7 +172,6 @@ describe('Controller: MeetingSettingsCtrl', () => {
     });
     it('validates correctly', function () {
       expect(this.controller.audioPartnerName).toBe(null);
-
       this.controller.ccaspValidate();
       this.$scope.$digest();
       expect(this.controller.audioPartnerName).toBe('bob');

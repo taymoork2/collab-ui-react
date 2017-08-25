@@ -45,7 +45,7 @@
     }
 
     function showMyCompany() {
-      return Utils.isAdminPage() && Authinfo.isCustomerAdmin() && Authinfo.isCustomerView();
+      return Utils.isAdminPage() && (Authinfo.isCustomerAdmin() || Authinfo.isReadOnlyAdmin()) && Authinfo.isCustomerView();
     }
 
     function showProBadge() {
