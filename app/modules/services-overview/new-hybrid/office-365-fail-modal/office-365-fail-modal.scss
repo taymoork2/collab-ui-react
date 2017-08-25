@@ -1,0 +1,9 @@
+@import '~collab-ui/scss/settings/colors';
+
+office-365-fail-modal {
+  width: 100%;
+
+  .modal-body {
+    color: $color-alerts-base;
+  }
+}

@@ -69,6 +69,7 @@ export class ServicesOverviewPrivateTrunkCard extends ServicesOverviewHybridCard
   }
 
   public $onInit() {
+    // Note: already checked with privateTrunkDomainEventHandler() :/
     this.hasVerifiedDomain();
   }
 

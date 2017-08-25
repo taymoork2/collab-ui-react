@@ -34,7 +34,7 @@ services-overview {
 
     h5 {
       margin-bottom: 0;
-      margin-left: 0.5rem;
+      margin-left: 1rem;
       opacity: 1;
       z-index: 100;
 
@@ -252,6 +252,48 @@ services-overview {
 
     .btn.disabled {
       width: calc(100% - 1rem);
+    }
+  }
+
+  // Active card
+  .active-card {
+    > article {
+      display: flex;
+    }
+  }
+
+  // .active-card_header {}
+
+  .active-card_content {
+    margin: 0 1rem;
+    margin-bottom: auto;
+  }
+
+  .active-card_footer {
+    margin: 0 1rem 1rem;
+    text-align: center;
+  }
+
+  // Inactive card
+  .inactive-card {
+    > article {
+      display: flex;
+    }
+  }
+
+  // .inactive-card_header {}
+
+  .inactive-card_content {
+    margin: 0 1rem;
+    margin-bottom: auto;
+  }
+
+  .inactive-card_footer {
+    margin: 0 1rem 1rem;
+    text-align: center;
+
+    .btn {
+      width: 100%;
     }
   }
 }

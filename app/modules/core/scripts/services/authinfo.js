@@ -506,7 +506,7 @@
         return isEntitled(Config.entitlements.fusion_cal);
       },
       isFusionGoogleCal: function () {
-        return isEntitled(Config.entitlements.fusion_google_cal);
+        return isEntitled(Config.entitlements.fusion_gcal);
       },
       isFusionEC: function () {
         return isEntitled(Config.entitlements.fusion_ec);

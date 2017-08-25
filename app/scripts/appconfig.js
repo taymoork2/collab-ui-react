@@ -3796,9 +3796,14 @@
 
         $stateProvider
           .state('services-overview', {
-            url: '/services',
-            template: '<services-overview></services-overview>',
+            url: '/services?office365&reason',
+            template: '<services-overview url-params="$resolve.urlParams"></services-overview>',
             parent: 'main',
+            resolve: {
+              urlParams: /* @ngInject */ function ($stateParams) {
+                return $stateParams;
+              },
+            },
           })
           .state('cluster-list', {
             url: '/services/clusters',
@@ -4631,6 +4636,18 @@
               calendarServiceView: {
                 template: '<calendar-service-settings-page></calendar-service-settings-page>',
               },
+            },
+          })
+          .state('office-365-service', {
+            abstract: true,
+            parent: 'main',
+            template: '<div ui-view></div>',
+          })
+          .state('office-365-service.settings', {
+            url: '/services/office-365/settings',
+            template: '<office-365-settings-page></office-365-settings-page>',
+            controller: /* @ngInject */ function (Analytics) {
+              return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CAL_O365_SETTINGS);
             },
           })
           .state('google-calendar-service', {
