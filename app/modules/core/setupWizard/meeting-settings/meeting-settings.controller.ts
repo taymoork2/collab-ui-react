@@ -12,7 +12,7 @@ export class MeetingSettingsCtrl {
     siteUrl: '',
     timezone: '',
     centerType: '',
-    quantity: 1,
+    quantity: 0,
   };
 
   public steps = Steps;
@@ -257,6 +257,7 @@ export class MeetingSettingsCtrl {
     this.validateWebexSiteUrl(siteName).then((response) => {
       if (response.isValid && (response.errorCode === 'validSite')) {
         this.sitesArray.push(_.clone(this.siteModel));
+        this.addSiteToDistributedArray(_.clone(this.siteModel));
         this.clearInputs();
       } else {
         if (response.errorCode === 'duplicateSite') {
@@ -273,7 +274,39 @@ export class MeetingSettingsCtrl {
     });
   }
 
+  public removeFromDistributedLicensesArray(site) {
+    if (!_.isEmpty(this.distributedLicensesArray)) {
+      let i = -1;
+      _.forEach(this.distributedLicensesArray, (siteGroup, index) => {
+        if (_.find(siteGroup, { siteUrl: site.siteUrl })) {
+          i = index;
+        }
+      });
+      this.distributedLicensesArray.splice(i, 1);
+    }
+  }
+
+  public addSiteToDistributedArray(site) {
+    if (!_.isEmpty(this.distributedLicensesArray)) {
+      const newSite = _.map(this.centerDetails, (center) => {
+        const siteObject: IWebExSite = {
+          centerType: center.centerType,
+          quantity: site.quantity,
+          siteUrl: site.siteUrl,
+          timezone: site.timezone,
+          setupType: site.setupType,
+        };
+        if (!site.setupType) {
+          delete siteObject.setupType;
+        }
+        return siteObject;
+      });
+      this.distributedLicensesArray.push(newSite);
+    }
+  }
+
   public removeSite(index: number): void {
+    this.removeFromDistributedLicensesArray(this.sitesArray[index]);
     this.sitesArray.splice(index, 1);
   }
 
@@ -293,9 +326,10 @@ export class MeetingSettingsCtrl {
     return (licenseVolume - this.sumOfWebExLicensesAssigned(siteArray));
   }
 
-  public getMinForSiteType(siteUrl) {
+
+  public getLicensesForSite(siteUrl) {
     const total = _.sumBy(_.filter(_.flatten(this.distributedLicensesArray), { siteUrl: siteUrl }), 'quantity');
-    return (total === 0) ? 1 : 0;
+    return total;
   }
 
   public getLicensesAssignedTotal(centerType) {
@@ -310,19 +344,32 @@ export class MeetingSettingsCtrl {
     return licensesRemaining;
   }
 
+  private hasSitesWithoutLicensesAssigned() {
+    let result = false;
+    _.each(this.sitesArray, (site) => {
+      if (this.getLicensesForSite(site.siteUrl) === 0) {
+        result = true;
+      }
+    });
+    return result;
+  }
+
   public enableOrDisableNext(step: Steps) {
     switch (step) {
       case Steps.SITES_LICENSES: {
         let licensesRemaining = 0;
         _.forEach(this.centerDetails, (center) => {
           licensesRemaining += this.calculateLicensesRemaining(center.centerType);
-          if (licensesRemaining === 0) {
-            this.updateSitesLicenseCount();
-            this.updateSitesAudioPackageDisplay();
-          }
         });
+
+        const sitesWithoutLicenses = this.hasSitesWithoutLicensesAssigned();
         _.each(this.licenseDistributionForm.$$controls, (control) => { control.$validate(); });
-        _.set(this.$scope.wizard, 'isNextDisabled', licensesRemaining !== 0 || this.licenseDistributionForm.$invalid);
+        const invalidData = this.licenseDistributionForm.$invalid || licensesRemaining !== 0 || sitesWithoutLicenses;
+        if (!invalidData) {
+          this.updateSitesLicenseCount();
+          this.updateSitesAudioPackageDisplay();
+        }
+        _.set(this.$scope.wizard, 'isNextDisabled', invalidData);
         break;
       }
       case Steps.SITES_SETUP: {
@@ -422,7 +469,7 @@ export class MeetingSettingsCtrl {
       });
   }
   public ccaspSetNextDisabled() {
-    if (!this.audioPartnerName || ! this.ccasp.subscriptionId) {
+    if (!this.audioPartnerName || !this.ccasp.subscriptionId) {
       this.setNextDisableStatus(true);
     }
   }
@@ -450,23 +497,25 @@ export class MeetingSettingsCtrl {
   }
 
   public constructDistributedSitesArray(): void {
-    this.distributedLicensesArray = _.map(this.sitesArray, (site: IWebExSite) => {
-      return _.map(this.centerDetails, (center) => {
-        const siteObject: IWebExSite = {
-          centerType: center.centerType,
-          quantity: site.quantity,
-          siteUrl: site.siteUrl,
-          timezone: site.timezone,
-          setupType: site.setupType,
-        };
-        if (!site.setupType) {
-          delete siteObject.setupType;
-        }
-        return siteObject;
+    //if it doesn't exit build
+    if (_.isEmpty(this.distributedLicensesArray)) {
+      this.distributedLicensesArray = _.map(this.sitesArray, (site: IWebExSite) => {
+        return _.map(this.centerDetails, (center) => {
+          const siteObject: IWebExSite = {
+            centerType: center.centerType,
+            quantity: site.quantity,
+            siteUrl: site.siteUrl,
+            timezone: site.timezone,
+            setupType: site.setupType,
+          };
+          if (!site.setupType) {
+            delete siteObject.setupType;
+          }
+          return siteObject;
+        });
       });
-    });
-
-    this.mergeExistingWebexSites();
+      this.mergeExistingWebexSites();
+    }
   }
 
   private mergeExistingWebexSites(): void {
