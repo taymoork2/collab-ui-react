@@ -1,11 +1,13 @@
-<cs-page-header title-name="reportsPage.pageTitle"></cs-page-header>
+<cs-page-header title-name="{{'reportsPage.pageTitle' | translate}}"></cs-page-header>
 
 <div class="content-container partner-spark-reports">
   <div ng-if="!$ctrl.isIframeLoaded"
        id="sparkReportsIframeLoading"
        name="sparkReportsIframeLoading">
     <br/>
-    <i ng-hide="$ctrl.isNoData" class="icon icon-spinner icon-2x"></i>
+    <i ng-hide="$ctrl.isNoData" class="icon icon-spinner metrics-loading-icon"></i>
+    <p class="metrics-loading-data" translate="reportsPage.loadingData"></p>
+    <p class="metrics-loading-description" translate="reportsPage.loadingDescription"></p>
     <div ng-show="$ctrl.isNoData" translate="reportsPage.noData"></div>
   </div>
 

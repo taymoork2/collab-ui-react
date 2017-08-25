@@ -1,4 +1,4 @@
-import { CallLocationSettingsData, CallLocationSettingsService, LocationSettingsOptionsService, LocationSettingsOptions } from 'modules/call/locations/shared';
+import { CallLocationSettingsData, CallLocationSettingsService, LocationSettingsOptionsService, LocationSettingsOptions, VoicemailPilotNumber } from 'modules/call/locations/shared';
 import { InternalNumberRange } from 'modules/call/shared/internal-number-range';
 import { LocationCallerId } from 'modules/call/locations/shared';
 import { PstnService } from 'modules/huron/pstn';
@@ -59,10 +59,11 @@ class CallLocationCtrl implements ng.IComponentController {
     }
   }
 
-  private initComponentData() {
-    return this.LocationSettingsOptionsService.getOptions().then(locationOptions => this.locationSettingsOptions = locationOptions)
+  private initComponentData(): ng.IPromise<string | void> {
+    return this.LocationSettingsOptionsService.getOptions()
+      .then(locationOptions => this.locationSettingsOptions = locationOptions)
       .then(() => {
-        this.CallLocationSettingsService.get(this.uuid)
+        return this.CallLocationSettingsService.get(this.uuid)
           .then(locationSettings => {
             this.callLocationSettingsData = locationSettings;
             this.showRoutingPrefix = this.setShowRoutingPrefix(locationSettings.customerVoice.routingPrefixLength);
@@ -90,6 +91,11 @@ class CallLocationCtrl implements ng.IComponentController {
 
   public onNameChanged(name: string): void {
     this.callLocationSettingsData.location.name = name;
+    this.checkForChanges();
+  }
+
+  public onMoHChanged(locationMediaId: string): void {
+    this.callLocationSettingsData.mediaId = locationMediaId;
     this.checkForChanges();
   }
 
@@ -144,6 +150,21 @@ class CallLocationCtrl implements ng.IComponentController {
     this.checkForChanges();
   }
 
+  public onCompanyVoicemailChanged(_voicemailPilotNumber: string, _voicemailPilotNumberGenerated: boolean, companyVoicemailEnabled: boolean): void {
+    _.set(this.callLocationSettingsData.customer, 'hasVoicemailService', companyVoicemailEnabled);
+    this.checkForChanges();
+  }
+
+  public onExtTransferChanged(allowExternalTransfer: boolean): void {
+    this.callLocationSettingsData.location.allowExternalTransfer = allowExternalTransfer;
+    this.checkForChanges();
+  }
+
+  public onLocationVoicemailChanged(voicemailPilotNumber: VoicemailPilotNumber): void {
+    this.callLocationSettingsData.location.voicemailPilotNumber = voicemailPilotNumber;
+    this.checkForChanges();
+  }
+
   public checkForChanges(): void {
     if (this.CallLocationSettingsService.matchesOriginalConfig(this.callLocationSettingsData)) {
       this.resetForm();
@@ -156,8 +177,10 @@ class CallLocationCtrl implements ng.IComponentController {
   }
 
   private resetForm(): void {
-    this.form.$setPristine();
-    this.form.$setUntouched();
+    if (this.form) {
+      this.form.$setPristine();
+      this.form.$setUntouched();
+    }
   }
 
   private setShowRoutingPrefix(routingPrefixLength: number | null): boolean {

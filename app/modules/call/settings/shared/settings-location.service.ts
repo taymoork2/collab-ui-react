@@ -1,0 +1,217 @@
+import { Customer, CustomerVoice, HuronCustomerService, ServicePackage } from 'modules/huron/customer';
+import { CustomerSettings } from './customer-settings';
+import { CompanyNumber, ExternalCallerIdType } from 'modules/call/settings/settings-company-caller-id';
+import { MediaOnHoldService } from 'modules/huron/media-on-hold';
+import { AvrilService, AvrilCustomer } from 'modules/huron/avril';
+import { Notification } from 'modules/core/notifications';
+
+export class CallSettingsData {
+  public customer: CustomerSettings;
+  public customerVoice: CustomerVoice;
+  public companyMoh: string;
+  public companyCallerId: CompanyNumber;
+  public avrilCustomer: AvrilCustomer;
+}
+// TODO: (jlowery) This service will eventually replace
+// the HuronSettings service when multilocation goes GA.
+export class CallSettingsService {
+  private callSettingsDataCopy: CallSettingsData;
+  private errors: string[] = [];
+  private supportsCompanyMoh: boolean = false;
+
+  /* @ngInject */
+  constructor(
+    private $q: ng.IQService,
+    private HuronCustomerService: HuronCustomerService,
+    private MediaOnHoldService: MediaOnHoldService,
+    private AvrilService: AvrilService,
+    private Notification: Notification,
+    private FeatureToggleService,
+    private CallerId,
+    private ServiceSetup,
+    private Authinfo,
+  ) {
+    //Company Media On Hold Support
+    this.FeatureToggleService.supports(FeatureToggleService.features.huronMOHEnable)
+      .then(result => this.supportsCompanyMoh = result);
+  }
+
+  public get(): ng.IPromise<CallSettingsData> {
+    const callSettingsData = new CallSettingsData();
+    return this.$q.all({
+      customer: this.getCustomer().then(customer => callSettingsData.customer = customer),
+      customerVoice: this.getVoiceCustomer().then(customerVoice => callSettingsData.customerVoice = customerVoice),
+      companyCallerId: this.getCompanyCallerId().then(companyCallerId => callSettingsData.companyCallerId = companyCallerId),
+      companyMoh: this.getCompanyMedia().then(companyMoh => callSettingsData.companyMoh = companyMoh),
+    })
+    .then(() => this.getAvrilCustomer(callSettingsData.customer.hasVoicemailService).then(avrilCustomer => callSettingsData.avrilCustomer = avrilCustomer))
+    .then(() => {
+      this.callSettingsDataCopy = this.cloneSettingsData(callSettingsData);
+      return callSettingsData;
+    });
+  }
+
+  public save(data: CallSettingsData): ng.IPromise<CallSettingsData> {
+    return this.saveCustomerServicePackage(data.customer, data.customerVoice)
+      .then(() => this.updateAvrilCustomer(data.avrilCustomer, data.customer))
+      .then(() => this.saveCompanyCallerId(data.companyCallerId))
+      .then(() => this.get());
+  }
+
+  private getCustomer(): ng.IPromise<CustomerSettings> {
+    return this.HuronCustomerService.getCustomer()
+      .then(customer => {
+        let hasVoicemailService = false;
+        let hasVoiceService = false;
+        _.forEach(customer.links, (service) => {
+          if (service.rel === 'avril') {
+            hasVoicemailService = true;
+          } else if (service.rel === 'voice') {
+            hasVoiceService = true;
+          }
+        });
+        return new CustomerSettings({
+          uuid: customer.uuid,
+          name: customer.name,
+          servicePackage: customer.servicePackage,
+          links: customer.links,
+          hasVoiceService: hasVoiceService,
+          hasVoicemailService: hasVoicemailService,
+        });
+      }).catch(error => {
+        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.customerGetError'));
+        return this.rejectAndNotifyPossibleErrors();
+      });
+  }
+
+  private saveCustomerServicePackage(customerData: CustomerSettings, customerVoiceData: CustomerVoice): ng.IPromise<void> {
+    if (!_.isEqual(customerData, this.callSettingsDataCopy.customer)) {
+      const customer = new Customer();
+      if (customerData.hasVoicemailService) {
+        _.set(customer, 'servicePackage', ServicePackage.VOICE_VOICEMAIL);
+        _.set(customer, 'voicemail', {
+          pilotNumber: this.ServiceSetup.generateVoiceMailNumber(this.Authinfo.getOrgId(), customerVoiceData.regionCode),
+        });
+      } else {
+        _.set(customer, 'servicePackage', ServicePackage.VOICE_ONLY);
+      }
+      return this.HuronCustomerService.updateCustomer(customer)
+        .catch(error => {
+          this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.voicemailUpdateError'));
+          return this.rejectAndNotifyPossibleErrors();
+        });
+    } else {
+      return this.$q.resolve();
+    }
+  }
+
+  private getVoiceCustomer(): ng.IPromise<CustomerVoice> {
+    return this.HuronCustomerService.getVoiceCustomer()
+    .catch(error => {
+      this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.customerGetError'));
+      return this.rejectAndNotifyPossibleErrors();
+    });
+  }
+
+  private getCompanyMedia(): ng.IPromise<string> {
+    if (this.supportsCompanyMoh) {
+      return this.MediaOnHoldService.getCompanyMedia()
+      .catch(error => {
+        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohGetError'));
+        return this.$q.reject();
+      });
+    }
+    return this.$q.resolve('');
+  }
+
+  private getCompanyCallerId(): ng.IPromise<CompanyNumber> {
+    return this.CallerId.listCompanyNumbers().then(companyNumbers => {
+      const companyCallerId = _.find<CompanyNumber>(companyNumbers, companyNumber => {
+        return companyNumber.externalCallerIdType === ExternalCallerIdType.COMPANY_CALLER_ID_TYPE
+          || (companyNumber.externalCallerIdType === ExternalCallerIdType.COMPANY_NUMBER_TYPE);
+      });
+      if (companyCallerId) {
+        return new CompanyNumber({
+          uuid: _.get<string>(companyCallerId, 'uuid'),
+          name: _.get<string>(companyCallerId, 'name'),
+          pattern: _.get<string>(companyCallerId, 'pattern'),
+          externalCallerIdType: _.get<ExternalCallerIdType>(companyCallerId, 'externalCallerIdType'),
+        });
+      } else {
+        return undefined;
+      }
+    });
+  }
+
+  private saveCompanyCallerId(data: CompanyNumber): ng.IPromise<CompanyNumber | void> {
+    if (!_.isEqual(data, this.callSettingsDataCopy.companyCallerId)) {
+      if (!data && !_.isUndefined(_.get(this.callSettingsDataCopy, 'companyCallerId.uuid', undefined))) {
+        return this.CallerId.deleteCompanyNumber(this.callSettingsDataCopy.companyCallerId.uuid)
+          .catch(error => {
+            this.errors.push(this.Notification.processErrorResponse(error, 'huronSettings.companyCallerIdsaveError'));
+            this.rejectAndNotifyPossibleErrors();
+          });
+      } else {
+        if (!data.uuid) {
+          return this.CallerId.saveCompanyNumber(data)
+            .catch(error => {
+              this.errors.push(this.Notification.processErrorResponse(error, 'huronSettings.companyCallerIdsaveError'));
+              this.rejectAndNotifyPossibleErrors();
+            });
+        } else {
+          return this.CallerId.updateCompanyNumber(data.uuid, data)
+            .catch(error => {
+              this.errors.push(this.Notification.processErrorResponse(error, 'huronSettings.companyCallerIdsaveError'));
+              this.rejectAndNotifyPossibleErrors();
+            });
+        }
+      }
+    } else {
+      return this.$q.resolve();
+    }
+  }
+
+  public getAvrilCustomer(hasVoicemailService: boolean): ng.IPromise<AvrilCustomer> {
+    if (hasVoicemailService) {
+      return this.AvrilService.getAvrilCustomer()
+      .catch(error => {
+        this.errors.push(this.Notification.processErrorResponse(error, 'huronSettings.avrilCustomerGetError'));
+        return this.rejectAndNotifyPossibleErrors();
+      });
+    } else {
+      return this.$q.resolve(new AvrilCustomer());
+    }
+  }
+
+  public updateAvrilCustomer(data: AvrilCustomer, customerData: CustomerSettings): ng.IPromise<void> {
+    if (customerData.hasVoicemailService && !_.isEqual(this.callSettingsDataCopy.avrilCustomer.features, data.features)) {
+      return this.AvrilService.updateAvrilCustomer(data)
+        .catch(error => {
+          this.errors.push(this.Notification.processErrorResponse(error, 'huronSettings.avrilCustomerSaveError'));
+          return this.rejectAndNotifyPossibleErrors();
+        });
+    } else {
+      return this.$q.resolve();
+    }
+  }
+
+  public getOriginalConfig(): CallSettingsData {
+    return this.cloneSettingsData(this.callSettingsDataCopy);
+  }
+
+  public matchesOriginalConfig(huronSettingsData: CallSettingsData): boolean {
+    return _.isEqual(huronSettingsData, this.callSettingsDataCopy);
+  }
+
+  private cloneSettingsData(settingsData: CallSettingsData): CallSettingsData {
+    return _.cloneDeep(settingsData);
+  }
+
+  private rejectAndNotifyPossibleErrors(): void | ng.IPromise<any> {
+    if (this.errors.length > 0) {
+      this.Notification.notify(this.errors);
+      return this.$q.reject();
+    }
+  }
+
+}

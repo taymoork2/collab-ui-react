@@ -1,4 +1,8 @@
 {
+  "subscriptionsAuthinfo": [{
+    "subscriptionId": "intSubId",
+    "endDate": "subEndDate"
+  }],
   "subscriptionsTrialResponse": [{
     "licenses": [{
       "features": ["squared-room-moderation"],

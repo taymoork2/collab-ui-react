@@ -17,7 +17,6 @@
       $scope.orgId = Authinfo.getOrgId();
       $scope.isPartner = Authinfo.isPartnerAdmin();
       $scope.isPartnerSales = Authinfo.isPartnerSalesAdmin();
-      $scope.isCustomerLaunchedFromPartner = Authinfo.isCustomerLaunchedFromPartner();
       $scope.roleList = _.map(roles, function (role) {
         return $translate.instant('atlasRoles.' + role);
       }).sort().join(', ');

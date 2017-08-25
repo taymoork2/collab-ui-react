@@ -1,5 +1,8 @@
 <div ng-form="locationCallerIdForm">
-  <label ng-if="$ctrl.showLabel" class="control-label" translate="locations.locationCallerId"></label>
+  <label ng-if="$ctrl.showLabel"
+    class="sub-section__label"
+    translate="locations.locationCallerId">
+  </label>
   <cs-toggle-switch
     ng-model="$ctrl.locationCallerIdEnabled"
     toggle-id="locationCallerIdToggle"

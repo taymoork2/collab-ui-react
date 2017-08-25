@@ -27,12 +27,16 @@
         <i class="icon icon-spinner" ng-if="card.isUpdating"></i>
         <i class="icon icon-circle status-indicator" ng-class="{ 'success' : card.dirsyncEnabled, 'disabled': !card.dirsyncEnabled }" ng-if="!card.isUpdating"></i>
         <span translate="overview.cards.users.directorySynchronization"></span>
-        <a id="viewDirSyncSettings"  ng-click="card.showDirSyncSettings()"><i class="icon-settings icon"></i></a>
+        <a href id="viewDirSyncSettings"  ng-click="card.showDirSyncSettings()" aria-label="{{'overview.cards.users.directorySynchronization' | translate}}">
+          <i class="icon-settings icon"></i>
+        </a>
       </li>
       <li>
         <i class="icon icon-circle status-indicator" ng-class="card.ssoEnabled ? 'success' : 'disabled' "></i>
         <span translate="overview.cards.users.singleSignOn"></span>
-        <a id="viewSsoSettings"  ng-click="card.showSSOSettings()"><i class="icon-settings icon"></i></a>
+        <a href id="viewSsoSettings"  ng-click="card.showSSOSettings()" aria-label="{{'overview.cards.users.singleSignOn' | translate}}">
+          <i class="icon-settings icon"></i>
+        </a>
       </li>
     </ul>
   </div>

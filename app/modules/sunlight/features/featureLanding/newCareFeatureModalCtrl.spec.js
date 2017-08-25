@@ -87,7 +87,7 @@ describe('Controller: NewCareFeatureModalCtrl', function () {
     var code = 'Va';
     $scope.ok(code);
     expect(modalFake.close).toHaveBeenCalledWith(code);
-    expect($state.go).toHaveBeenCalledWith('care.setupAssistant', {
+    expect($state.go).toHaveBeenCalledWith('care.assistant', {
       type: 'virtualAssistant',
     });
   });

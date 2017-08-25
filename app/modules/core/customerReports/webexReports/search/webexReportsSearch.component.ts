@@ -29,6 +29,7 @@ class WebexReportsSearch implements ng.IComponentController {
 
   /* @ngInject */
   public constructor(
+    private Analytics,
     private $scope: IGridApiScope,
     private Notification: Notification,
     private $state: ng.ui.IStateService,
@@ -42,7 +43,7 @@ class WebexReportsSearch implements ng.IComponentController {
   }
 
   public $onInit(): void {
-
+    this.Analytics.trackEvent(this.SearchService.featureName, {});
     this.initDateRange();
     this.setGridOptions();
     this.$scope.$emit('selectEnable', false);
@@ -192,17 +193,16 @@ class WebexReportsSearch implements ng.IComponentController {
       displayName: this.$translate.instant('webexReports.searchGridHeader.endTime'),
     }];
     this.gridOptions = {
-      rowHeight: 44,
+      rowHeight: 45,
       data: '$ctrl.gridData',
       multiSelect: false,
       appScopeProvider: this,
       columnDefs: columnDefs,
       enableRowSelection: true,
       enableColumnMenus: false,
-      enableColumnResizing: true,
       enableRowHeaderSelection: false,
-      enableVerticalScrollbar: false,
-      enableHorizontalScrollbar: false,
+      enableVerticalScrollbar: 0,
+      enableHorizontalScrollbar: 0,
       onRegisterApi: (gridApi) => {
         gridApi.selection.on.rowSelectionChanged(this.$scope, (row) => {
           this.showDetail(row.entity);

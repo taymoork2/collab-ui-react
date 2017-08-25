@@ -124,7 +124,7 @@
           })
           .state('login', {
             parent: 'loginLazyLoad',
-            url: '/login?bmmp_env&email&customerOrgId&partnerOrgId',
+            url: '/login?bmmp_env&email&customerOrgId&partnerOrgId&subscriptionId',
             views: {
               'main@': {
                 template: '<login/>',
@@ -331,16 +331,17 @@
             onExit: panelOnExit,
             onEnter: panelOnEnter({ type: 'large' }),
           });
-
         // Enter and Exit functions for panel(large or side)
         function panelOnEnter(options) {
           options = options || {};
           return /* @ngInject */ function ($modal, $state, $previousState, atlas2017NameChangeFeatureToggled) {
-            if (atlas2017NameChangeFeatureToggled) {
-              if (!options.type) {
-                options.type = 'side-panel-full-height';
-              } else {
-                options.type += ' side-panel-full-height';
+            if (_.get($state.data, 'sidepanel', '') !== 'not-full') {
+              if (atlas2017NameChangeFeatureToggled) {
+                if (!options.type) {
+                  options.type = 'side-panel-full-height';
+                } else {
+                  options.type += ' side-panel-full-height';
+                }
               }
             }
 
@@ -798,6 +799,11 @@
             onEnter: /* @ngInject */ function (OnlineAnalyticsService) {
               OnlineAnalyticsService.track(OnlineAnalyticsService.MY_COMPANY_SUBSCRIPTIONS);
             },
+            resolve: {
+              account: /* @ngInject */ function (AccountService) {
+                return AccountService.updateAuthinfoAccount();
+              },
+            },
             views: {
               tabContent: {
                 controllerAs: 'mcpSub',
@@ -950,6 +956,11 @@
           .state('users.manage', {
             abstract: true,
             parent: 'modal',
+            resolve: {
+              account: /* @ngInject */ function (AccountService) {
+                return AccountService.updateAuthinfoAccount();
+              },
+            },
             views: {
               'modal@': {
                 controller: 'UserManageModalController',
@@ -1077,6 +1088,11 @@
           })
           .state('editService', {
             parent: 'modal',
+            resolve: {
+              account: /* @ngInject */ function (AccountService) {
+                return AccountService.updateAuthinfoAccount();
+              },
+            },
             views: {
               'modal@': {
                 controller: 'OnboardCtrl',
@@ -1139,6 +1155,8 @@
               currentUserId: '',
               orgInfo: {},
               preferredLanguageDetails: {},
+              userLocation: {},
+              memberType: '',
             },
             data: {
               displayName: 'Overview',
@@ -1181,10 +1199,11 @@
             },
           })
           .state('user-overview.userLocationDetails', {
-            template: '<uc-user-location-details user-id="$resolve.userId"></uc-user-location-details>',
+            template: '<uc-user-location-details user-id="$resolve.userId" userLocation="$resolve.userLocation"></uc-user-location-details>',
             params: {
               reloadToggle: false,
               userDetails: {},
+              userLocation: {},
             },
             data: {},
             resolve: {
@@ -1198,6 +1217,9 @@
               }),
               userId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams.currentUser, 'id');
+              },
+              userLocation: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.userLocation, 'userLocation');
               },
             },
           })
@@ -1365,6 +1387,32 @@
               },
               selected: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams, 'selected');
+              },
+            },
+          })
+          .state('user-overview.communication.primaryLine', {
+            template: '<uc-primary-line owner-id="$resolve.ownerId" line-selection="$resolve.lineSelection"></uc-primary-line>',
+            params: {
+              ownerId: null,
+              lineSelection: {},
+            },
+            data: {
+              displayName: 'Line selection for calls',
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/huron/primaryLine'));
+                }, 'uc-primary-line');
+              }),
+              ownerId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentUser, 'id');
+              },
+              lineSelection: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams, 'lineSelection', {});
+              },
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('user-overview.communication.primaryLine').data.displayName = $translate.instant('primaryLine.title');
               },
             },
           })
@@ -1800,7 +1848,7 @@
               tabContent: {
                 controllerAs: 'nav',
                 controller: 'SparkMetricsCtrl',
-                templateUrl: 'modules/core/customerReports/webexMetrics/sparkMetrics.tpl.html',
+                templateUrl: 'modules/core/customerReports/sparkMetrics/sparkMetrics.tpl.html',
               },
             },
           })
@@ -1815,7 +1863,7 @@
             },
           })
           .state('reports.webex-metrics', {
-            url: '/webexMetrics/:siteUrl',
+            url: '/webexMetrics',
             views: {
               tabContent: {
                 controllerAs: 'nav',
@@ -1823,11 +1871,34 @@
                 templateUrl: 'modules/core/customerReports/webexMetrics/webexMetrics.tpl.html',
               },
             },
-            params: {
-              siteUrl: {
-                squash: true,
-                value: '',
+          })
+          .state('reports.webex-metrics.metrics', {
+            url: '/:siteUrl/metrics',
+            views: {
+              metricsContent: {
+                templateUrl: 'modules/core/customerReports/webexMetrics/metrics/metricsFrame.tpl.html',
               },
+            },
+          })
+          .state('reports.webex-metrics.diagnostics', {
+            url: '/diagnostics',
+            views: {
+              metricsContent: {
+                template: '<cust-webex-reports-search></cust-webex-reports-search>',
+              },
+            },
+          })
+          .state('reports.webex-metrics.classic', {
+            url: '/classic',
+            views: {
+              metricsContent: {
+                controllerAs: 'nav',
+                controller: 'WebexReportsCtrl',
+                templateUrl: 'modules/core/customerReports/webexReports/webexReports.tpl.html',
+              },
+            },
+            params: {
+              siteUrl: null,
             },
           })
           .state('reports.media', {
@@ -1986,9 +2057,11 @@
             },
           })
           .state('place-overview.placeLocationDetails', {
-            template: '<uc-user-location-details></uc-user-location-details>',
+            template: '<uc-user-location-details user-id="$resolve.userId"></uc-user-location-details>',
             params: {
               reloadToggle: false,
+              userDetails: {},
+              memberType: '',
             },
             data: {},
             resolve: {
@@ -2000,6 +2073,9 @@
                   done(require('modules/call/locations/locations-user-details'));
                 }, 'locations-user-details');
               }),
+              userId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentPlace, 'cisUuid');
+              },
             },
           })
           .state('place-overview.preferredLanguage', {
@@ -2188,6 +2264,32 @@
               },
               data: /* @ngInject */ function ($state, $translate) {
                 $state.get('place-overview.communication.externaltransfer').data.displayName = $translate.instant('serviceSetupModal.externalTransfer.title');
+              },
+            },
+          })
+          .state('place-overview.communication.primaryLine', {
+            template: '<uc-primary-line owner-id="$resolve.placeId" line-selection="$resolve.lineSelection"></uc-primary-line>',
+            params: {
+              placeId: null,
+              lineSelection: {},
+            },
+            data: {
+              displayName: 'Line selection for calls',
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/huron/primaryLine'));
+                }, 'uc-primary-line');
+              }),
+              placeId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentPlace, 'cisUuid');
+              },
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('place-overview.communication.primaryLine').data.displayName = $translate.instant('primaryLine.title');
+              },
+              lineSelection: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams, 'lineSelection');
               },
             },
           })
@@ -2714,7 +2816,7 @@
           })
           .state('firsttimewizard', {
             parent: 'firsttimesplash',
-            template: '<cr-wizard provision="provision" tabs="tabs" finish="finish" is-first-time="true"></cr-wizard>',
+            template: '<cr-wizard tabs="tabs" finish="finish" is-first-time="true"></cr-wizard>',
             controller: 'SetupWizardCtrl',
             data: {
               firstTimeSetup: true,
@@ -2851,6 +2953,9 @@
           })
           .state('provisioning.pending', {
             url: '/pending',
+            data: {
+              sidepanel: 'not-full',
+            },
             views: {
               provisioningView: {
                 templateUrl: 'modules/squared/provisioning-console/pending/provisioning-pending.html',
@@ -2859,6 +2964,9 @@
           })
           .state('provisioning.completed', {
             url: '/completed',
+            data: {
+              sidepanel: 'not-full',
+            },
             views: {
               provisioningView: {
                 templateUrl: 'modules/squared/provisioning-console/completed/provisioning-completed.html',
@@ -2867,6 +2975,9 @@
           })
           .state('order-details', {
             parent: 'sidepanel',
+            data: {
+              sidepanel: 'not-full',
+            },
             views: {
               'sidepanel@': {
                 controller: 'ProvisioningDetailsController',
@@ -3208,6 +3319,18 @@
               }),
             },
           })
+          .state('huronsettingslocation', {
+            url: '/services/call-settings-location',
+            parent: 'hurondetails',
+            template: '<uc-call-settings></uc-call-settings>',
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/call/settings'));
+                }, 'call-settings-location');
+              }),
+            },
+          })
           .state('call-locations', {
             url: '/services/call-locations',
             parent: 'hurondetails',
@@ -3437,9 +3560,7 @@
         $stateProvider
           .state('services-overview', {
             url: '/services',
-            templateUrl: 'modules/services-overview/services-overview.html',
-            controller: 'ServicesOverviewCtrl',
-            controllerAs: 'servicesOverviewCtrl',
+            template: '<services-overview></services-overview>',
             parent: 'main',
           })
           .state('cluster-list', {
@@ -4019,6 +4140,9 @@
               hasCucmSupportFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCucmSupport);
               },
+              hasImpSupportFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridImp);
+              },
             },
           })
           .state('add-resource.expressway', {
@@ -4035,6 +4159,11 @@
             },
             params: {
               wizard: null,
+            },
+            resolve: {
+              hasImpSupportFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridImp);
+              },
             },
           })
           .state('add-resource.expressway.hostname', {
@@ -4618,91 +4747,8 @@
             controllerAs: 'sync',
           });
 
-        $stateProvider
-          .state('care', {
-            parent: 'main',
-            abstract: true,
-          })
-          .state('care.DetailsBase', {
-            parent: 'main',
-            abstract: true,
-            templateUrl: 'modules/sunlight/details/details.tpl.html',
-          })
-          .state('care.Details', {
-            url: '/services/careDetails',
-            parent: 'care.DetailsBase',
-            views: {
-              header: {
-                templateUrl: 'modules/sunlight/details/detailsHeader.tpl.html',
-                controller: 'DetailsHeaderCtrl',
-                controllerAs: 'header',
-              },
-              main: {
-                template: '<div ui-view></div>',
-              },
-            },
-          })
-          .state('care.Settings', {
-            url: '/settings',
-            parent: 'care.Details',
-            templateUrl: 'modules/sunlight/settings/careSettings.tpl.html',
-            controller: 'CareLocalSettingsCtrl',
-            controllerAs: 'localCareSettings',
-          })
-          .state('care.Features', {
-            url: '/features',
-            parent: 'care.Details',
-            templateUrl: 'modules/sunlight/features/featureLanding/careFeatures.tpl.html',
-            controller: 'CareFeaturesCtrl',
-            controllerAs: 'careFeaturesCtrl',
-            resolve: {
-              collectFeatureToggles: /* @ngInject */ function (FeatureToggleService, $state) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasVirtualAssistantEnable).then(function (isEnabled) {
-                  $state.isVirtualAssistantEnabled = isEnabled;
-                });
-              },
-            },
-          })
-          .state('care.setupAssistant', {
-            url: '/setupAssistant/:type',
-            parent: 'care.Details',
-            templateUrl: 'modules/sunlight/features/template/ctSetupAssistant.tpl.html',
-            controller: 'CareSetupAssistantCtrl',
-            controllerAs: 'careSetupAssistant',
-            params: {
-              template: null,
-              isEditFeature: null,
-            },
-            resolve: {
-              isCareProactiveChatTrialsEnabled: /* @ngInject */ function (FeatureToggleService, $state) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasCareProactiveChatTrials)
-                  .then(function (isEnabled) {
-                    $state.isCareProactiveChatTrialsEnabled = isEnabled;
-                  });
-              },
-              isCareAssistantEnabled: /* @ngInject */ function (FeatureToggleService, $state) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasCareChatAssistant)
-                  .then(function (isEnabled) {
-                    $state.isCareAssistantEnabled = isEnabled;
-                  });
-              },
-            },
-          })
-          .state('care.Features.DeleteFeature', {
-            parent: 'modalDialog',
-            views: {
-              'modal@': {
-                controller: 'CareFeaturesDeleteCtrl',
-                controllerAs: 'careFeaturesDeleteCtrl',
-                templateUrl: 'modules/sunlight/features/featureLanding/careFeaturesDeleteModal.tpl.html',
-              },
-            },
-            params: {
-              deleteFeatureName: null,
-              deleteFeatureId: null,
-              deleteFeatureType: null,
-            },
-          });
+        // Spark Care: set state provider elements
+        require('./care.appconfig').configureStateProvider($stateProvider);
 
         $stateProvider
           .state('gss', {

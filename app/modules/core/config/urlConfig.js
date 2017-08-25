@@ -128,12 +128,6 @@
       integration: 'https://config.appstaging.ciscoccservice.com/config/v1',
       prod: 'https://config.produs1.ciscoccservice.com/config/v1',
     },
-    VirtualAssistantConfigServiceUrl: {
-      dev: 'http://localhost:8080/bot-services/v1/config',
-      cfe: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/config',
-      integration: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/config',
-      prod: 'https://bot-services.produs1.ciscoccservice.com/bot-services/v1/config',
-    },
     SunlightBubbleUrl: {
       dev: 'https://bubble.devus1.ciscoccservice.com',
       cfe: 'https://bubble.appstaging.ciscoccservice.com',
@@ -237,25 +231,25 @@
       prod: 'https://lyra-a.wbx2.com/lyra/api/v1',
     },
     WebExReportQBSforBaseUrl: {
-      dev: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_webex_v1',
+      dev: 'https://qlik1-rl-lab.cisco.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_webex_v1',
       cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_webex_v1',
       integration: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_webex_v1',
       prod: 'https://qlick.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_webex_v1',
     },
     SparkReportQBSforBaseUrl: {
-      dev: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_spark_v1',
+      dev: 'https://qlik1-rl-lab.cisco.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_spark_v1',
       cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_spark_v1',
       integration: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_spark_v1',
       prod: 'https://qlick.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_spark_v1',
     },
     WebExReportQBSforPremiumUrl: {
-      dev: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_webex_v1',
+      dev: 'https://qlik1-rl-lab.cisco.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_webex_v1',
       cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_webex_v1',
       integration: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_webex_v1',
       prod: 'https://qlick.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_webex_v1',
     },
     SparkReportQBSforPremiumUrl: {
-      dev: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_spark_v1',
+      dev: 'https://qlik1-rl-lab.cisco.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_spark_v1',
       cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_spark_v1',
       integration: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_spark_v1',
       prod: 'https://qlick.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_spark_v1',
@@ -299,11 +293,11 @@
       integration: 'https://%s/custportal/extensions/spark-report-partner/spark-report-partner.html',
       prod: 'https://%s/custportal/extensions/spark-report-partner/spark-report-partner.html',
     },
-    BotServicesConfigUrl: {
-      dev: 'https://bot-services.produs1.ciscoccservice.com/bot-services/v1/',
-      cfe: 'https://bot-services.produs1.ciscoccservice.com/bot-services/v1/',
-      integration: 'https://bot-services.produs1.ciscoccservice.com/bot-services/v1/',
-      prod: 'https://bot-services.produs1.ciscoccservice.com/bot-services/v1/',
+    VirtualAssistantConfigServiceUrl: {
+      dev: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/config',
+      cfe: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/config',
+      integration: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/config',
+      prod: 'https://bot-services.produs1.ciscoccservice.com/bot-services/v1/config',
     },
     // urls same for all environments
 

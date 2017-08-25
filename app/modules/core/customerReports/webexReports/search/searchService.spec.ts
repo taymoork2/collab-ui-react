@@ -131,11 +131,14 @@ describe('Service: searchService', () => {
   });
 
   it('should get correct data when call meeting utcDateByTimezone', function () {
-    const data = '2017-08-02 07:44:30.0';
+    let data = '2017-08-02 07:44:30.0';
     const timeZone = 'Asia/Shanghai';
     spyOn(this.SearchService, 'getOffset').and.returnValue('+08:00');
     this.SearchService.setStorage('timeZone', timeZone);
-    const _data = this.SearchService.utcDateByTimezone(data);
+    let _data = this.SearchService.utcDateByTimezone(data);
+    expect(_data).toBeDefined();
+    data = '';
+    _data = this.SearchService.utcDateByTimezone(data);
     expect(_data).toBeDefined();
   });
 

@@ -6,7 +6,7 @@
     .controller('CareFeaturesDeleteCtrl', CareFeaturesDeleteCtrl);
 
   /* @ngInject */
-  function CareFeaturesDeleteCtrl($rootScope, $scope, $stateParams, $timeout, CardUtils, CareFeatureList, Log, Notification) {
+  function CareFeaturesDeleteCtrl($rootScope, $scope, $stateParams, $timeout, CardUtils, CareFeatureList, VirtualAssistantService, Log, Notification) {
     var vm = this;
     vm.deleteFeature = deleteFeature;
     vm.deleteBtnDisabled = false;
@@ -15,15 +15,15 @@
     vm.featureType = $stateParams.deleteFeatureType;
     vm.confirmationText = 'careChatTpl.deleteFeatureTextConfirmation';
 
-    if (vm.featureType === 'Va') {
+    if (vm.featureType === VirtualAssistantService.serviceCard.id) {
       vm.confirmationText = 'careChatTpl.deleteVaFeatureTextConfirmation';
     }
 
     function deleteFeature() {
       vm.deleteBtnDisabled = true;
       var deleteFunc = CareFeatureList.deleteTemplate;
-      if (vm.featureType === 'Va') {
-        deleteFunc = CareFeatureList.deleteVirtualAssistantConfig;
+      if (vm.featureType === VirtualAssistantService.serviceCard.id) {
+        deleteFunc = VirtualAssistantService.deleteConfig.bind(VirtualAssistantService);
       }
       deleteFunc(vm.featureId).then(function () {
         deleteSuccess();

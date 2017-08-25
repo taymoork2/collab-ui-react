@@ -5,4 +5,18 @@
   .indent {
     padding-left: vr-adjust(32px);
   }
+
+  .area-code {
+    min-width: 50rem;
+  }
+
+  .terminus-warning {
+    font-size: 0.75rem;
+
+    .icon-warning {
+      margin-right: 0.25rem;
+    }
+
+    margin-bottom: 1rem;
+  }
 }

@@ -362,7 +362,7 @@ describe('SetupWizardCtrl', function () {
       this.expectStepOrder(['planReview', 'serviceSetup', 'meetingSettings', 'enterpriseSettings', 'careSettings']);
       this.expectSubStepOrder('planReview', ['init']);
       this.expectSubStepOrder('serviceSetup', ['pickCallLocationType', 'setupCallLocation']);
-      this.expectSubStepOrder('meetingSettings', ['siteSetup', 'licenseDistribution', 'summary']);
+      this.expectSubStepOrder('meetingSettings', ['migrateTrial', 'siteSetup', 'licenseDistribution', 'summary']);
       this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'enterprisePmrSetup', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
       this.expectSubStepOrder('careSettings', ['csonboard']);
     });
@@ -377,7 +377,26 @@ describe('SetupWizardCtrl', function () {
     });
 
     it('displays the set TSP partner view during meeting setup', function () {
-      this.expectSubStepOrder('meetingSettings', ['siteSetup', 'licenseDistribution', 'setPartnerAudio', 'summary']);
+      this.expectSubStepOrder('meetingSettings', ['migrateTrial', 'siteSetup', 'licenseDistribution', 'setPartnerAudio', 'summary']);
+    });
+  });
+
+  describe('CCASP license handling', function () {
+    beforeEach(function () {
+      this.SetupWizardService.hasPendingServiceOrder.and.returnValue(true);
+      this.SetupWizardService.hasPendingWebExMeetingLicenses.and.returnValue(true);
+    });
+
+    it('displays the CCASP tab when CCASP Audio license is present', function () {
+      spyOn(this.SetupWizardService, 'hasCCASPPackage').and.returnValue(true);
+      this.initController();
+      this.expectSubStepOrder('meetingSettings', ['migrateTrial', 'siteSetup', 'licenseDistribution', 'setCCASP', 'summary']);
+    });
+
+    it('does NOT display the set CCASP tab when CCASP Audio license is NOT present', function () {
+      spyOn(this.SetupWizardService, 'hasCCASPPackage').and.returnValue(false);
+      this.initController();
+      this.expectSubStepOrder('meetingSettings', ['migrateTrial', 'siteSetup', 'licenseDistribution', 'summary']);
     });
   });
 

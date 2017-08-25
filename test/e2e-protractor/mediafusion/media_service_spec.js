@@ -6,6 +6,7 @@ describe('Validate Media Service Managemnt Page', function () {
       login.login('media-fusion-admin');
     }, 120000);
 
+    // TODO: remove all sleeps before re-enabling. Use util methods.
     xdescribe('Mediaservice page : ', function () {
       it('Navigate to Mediaservice page', function () {
         browser.sleep(5000);
@@ -66,6 +67,7 @@ describe('Validate Media Service Managemnt Page', function () {
       });
     });
 
+    // TODO: remove all sleeps before re-enabling. Use util methods.
     xdescribe('Adoption page : ', function () {
       it('Navigate to adoption page', function () {
         browser.sleep(5000);
@@ -94,6 +96,7 @@ describe('Validate Media Service Managemnt Page', function () {
       });
     });
 
+    // TODO: remove all sleeps before re-enabling. Use util methods.
     xdescribe('Resource page : ', function () {
       it('Navigate to Resource page', function () {
         browser.sleep(3000);
@@ -121,21 +124,11 @@ describe('Validate Media Service Managemnt Page', function () {
 
     describe('Settings page : ', function () {
       beforeEach(function () {
-        browser.sleep(3000);
         navigation.clickServicesTab();
-        browser.sleep(3000);
-        mediaservice.resourceButton.isPresent().then(function (result) {
-          if (result) {
-            mediaservice.settingsButton.isPresent().then(function (result1) {
-              if (result1) {
-                mediaservice.clickSettings();
-              }
-            });
-          }
-        });
+        utils.click(mediaservice.settingsButton);
+        navigation.expectCurrentUrl('/mediaserviceV2/settings');
       });
       it('Should have the correct settings details displayed', function () {
-        utils.click(mediaservice.settingsTab);
         utils.expectIsDisplayed(mediaservice.generalTitle);
         utils.expectIsDisplayed(mediaservice.deactivateServiceHeading);
         utils.expectIsDisplayed(mediaservice.deactivateButton);
@@ -160,18 +153,14 @@ describe('Validate Media Service Managemnt Page', function () {
 
     describe('Side Panel : ', function () {
       var selectedClusterName;
-      beforeEach(function () {
-        browser.sleep(3000);
+      beforeEach(function (done) {
         navigation.clickServicesTab();
-        browser.sleep(3000);
-        mediaservice.resourceButton.isPresent().then(function (isPresent) {
-          if (isPresent) {
-            mediaservice.clickResource();
-            utils.click(mediaservice.clusterFirstTr);
-            mediaservice.clusterFirstTd.getText().then(function (text) {
-              selectedClusterName = text;
-            });
-          }
+        utils.click(mediaservice.resourceButton);
+        utils.click(mediaservice.clusterFirstTr);
+        utils.waitIsDisplayed(mediaservice.clusterFirstTd);
+        mediaservice.clusterFirstTd.getText().then(function (text) {
+          selectedClusterName = text;
+          done();
         });
       });
       it('Should have the correct Header and Status details displayed', function () {
@@ -200,7 +189,7 @@ describe('Validate Media Service Managemnt Page', function () {
       });
       it('Should navigate to respective settings, when Cluster Settings is clicked', function () {
         utils.click(mediaservice.clusterSettingsLink);
-        browser.sleep(3000);
+
         //expect(mediaservice.clusterSettingsPageHeader.getText()).toEqual(selectedClusterName + ' settings');
         utils.expectIsDisplayed(mediaservice.clusterUpgradeTitle);
         utils.expectIsDisplayed(mediaservice.clusterDeleteClusterTitle);

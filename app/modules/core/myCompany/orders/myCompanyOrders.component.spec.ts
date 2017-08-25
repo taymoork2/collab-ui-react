@@ -5,13 +5,14 @@ describe('Component: myCompanyOrders', () => {
     this.initModules('Core');
     this.injectDependencies(
       '$q',
+      'Config',
       'DigitalRiverService',
       'MyCompanyOrdersService',
       'Notification',
     );
 
     const purchaseOrdersList: IOrderDetail[] = [{
-      externalOrderId: '123',
+      externalOrderId: '1',
       orderDate: new Date(),
       status: 'COMPLETED',
       total: 15.95,
@@ -19,13 +20,29 @@ describe('Component: myCompanyOrders', () => {
         'first description',
       ],
     }, {
-      externalOrderId: '456',
+      externalOrderId: '2',
       orderDate: new Date(),
       status: 'PROVISIONING',
       total: 15.95,
       productDescriptionList: [
         'fourth description',
         'fifth description',
+      ],
+    }, {
+      externalOrderId: '3',
+      orderDate: new Date(),
+      status: this.Config.webexSiteStatus.PENDING_PARM,
+      total: 15.95,
+      productDescriptionList: [
+        'second description',
+      ],
+    }, {
+      externalOrderId: '4',
+      orderDate: new Date(),
+      status: 'CLOSED',
+      total: 15.95,
+      productDescriptionList: [
+        'closed description',
       ],
     }];
 
@@ -36,7 +53,6 @@ describe('Component: myCompanyOrders', () => {
     spyOn(this.MyCompanyOrdersService, 'getOrderDetails').and.returnValue(this.getOrderDetailsDefer.promise);
     spyOn(this.Notification, 'errorWithTrackingId');
 
-    spyOn(this.DigitalRiverService, 'getOrderHistoryUrl').and.returnValue(this.getDigitalRiverOrderHistoryUrlDefer.promise);
     spyOn(this.DigitalRiverService, 'logout').and.returnValue(this.$q.resolve());
 
     this.compileComponent('myCompanyOrders');
@@ -80,11 +96,13 @@ describe('Component: myCompanyOrders', () => {
 
     it('should load data on orderDetailList', function () {
       expect(this.controller.orderDetailList).toEqual(jasmine.any(Array));
-      expect(this.controller.orderDetailList.length).toBeGreaterThan(0);
+      expect(this.controller.orderDetailList.length).toBe(3);
       expect(this.controller.orderDetailList[0].productDescriptionList).toEqual('first description');
       expect(this.controller.orderDetailList[1].productDescriptionList).toEqual('fourth description, fifth description');
+      expect(this.controller.orderDetailList[2].productDescriptionList).toEqual('second description');
       expect(this.controller.orderDetailList[0].status).toEqual('myCompanyOrders.completed');
       expect(this.controller.orderDetailList[1].status).toEqual('myCompanyOrders.pending');
+      expect(this.controller.orderDetailList[2].status).toEqual('myCompanyOrders.pendingActivation');
     });
 
     it('should have a data row and no loading icon', function () {
@@ -99,13 +117,13 @@ describe('Component: myCompanyOrders', () => {
     });
 
     xit('should sort on order number', function () {
-      expect(this.view.find('.ui-grid-row').first()).toContainText('123');
-      expect(this.view.find('.ui-grid-row').last()).toContainText('456');
+      expect(this.view.find('.ui-grid-row').first()).toContainText('1');
+      expect(this.view.find('.ui-grid-row').last()).toContainText('2');
 
       this.view.find('.ui-grid-header-cell').first().click();
 
-      expect(this.view.find('.ui-grid-row').first()).toContainText('456');
-      expect(this.view.find('.ui-grid-row').last()).toContainText('123');
+      expect(this.view.find('.ui-grid-row').first()).toContainText('2');
+      expect(this.view.find('.ui-grid-row').last()).toContainText('1');
     });
 
     it('should call viewInvoice on action click', function () {

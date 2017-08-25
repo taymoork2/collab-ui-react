@@ -12,8 +12,7 @@
   .status-row {
     margin-bottom: 1rem;
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+    flex-flow: row wrap;
 
     .title {
       min-width: 15rem;

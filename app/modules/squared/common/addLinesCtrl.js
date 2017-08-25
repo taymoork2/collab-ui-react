@@ -227,8 +227,7 @@
 
     function syncGridDidDn(rowEntity, modifiedFieldName) {
       if (modifiedFieldName === 'location') {
-        $scope.locationUuid = rowEntity.selectedLocation.uuid;
-        CommonLineService.loadLocationInternalNumberPool(null, $scope.locationUuid);
+        populateExtensions(rowEntity);
       }
       if (vm.showExtensions === false) {
         var dnLength = rowEntity.assignedDn.pattern.length;
@@ -252,6 +251,14 @@
           }
         }
       }
+    }
+
+    function populateExtensions(rowEntity) {
+      var selectedLocationColumn = rowEntity.selectedLocation.uuid;
+      return CommonLineService.loadLocationInternalNumberPool(null, selectedLocationColumn)
+        .then(function (internalNumberPool) {
+          rowEntity.assignedDn.pattern = internalNumberPool[0].pattern;
+        });
     }
 
     $scope.noExtInPool = $translate.instant('usersPage.notApplicable');

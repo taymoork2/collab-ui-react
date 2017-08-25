@@ -1,13 +1,13 @@
 import * as provisionerHelper from './provisioner.helper';
 import * as atlasHelper from './provisioner.helper.atlas';
-import * as cmiHelper from './provisioner.helper.cmi';
+import * as cmiHelper from './huron/provisioner.helper.cmi';
 import * as helper from '../../api_sanity/test_helper';
 import * as _ from 'lodash';
 import * as Promise from 'promise';
-import { PstnCustomer } from './terminus-customers';
-import { PstnCustomerE911Signee } from './terminus-customers-customer-e911';
-import { PstnNumbersOrders } from './terminus-numbers-orders';
-import * as pstnHelper from './provisioner.helper.pstn';
+import { PstnCustomer } from './huron/terminus-customers';
+import { PstnCustomerE911Signee } from './huron/terminus-customers-customer-e911';
+import { PstnNumbersOrders } from './huron/terminus-numbers-orders';
+import * as pstnHelper from './huron/provisioner.helper.pstn';
 
 /* global LONG_TIMEOUT */
 
@@ -61,10 +61,15 @@ export function provisionCmiCustomer(partnerName, customer, site, numberRange, s
 export function provisionCustomerAndLogin(customer) {
   return this.provisionAtlasCustomer(customer.partner, customer.trial)
     .then(atlasCustomer => {
-      if (atlasCustomer && customer.cmiCustomer) {
+      if (atlasCustomer.offers[0].id == 'MESSAGE') {
+        console.log('No offers selected, proceeding without CMI setup!');
+        return loginPartner(customer.partner)
+          .then(() => switchToCustomerWindow(customer.name, customer.doFtsw));
+      } else if (atlasCustomer && customer.cmiCustomer) {
         customer.cmiCustomer.uuid = atlasCustomer.customerOrgId;
         customer.cmiCustomer.name = atlasCustomer.customerName;
         return this.provisionCmiCustomer(customer.partner, customer.cmiCustomer, customer.cmiSite, customer.numberRange, customer.doFtsw)
+          .then(() => provisionUsers(customer))
           .then(() => setupPSTN(customer))
           .then(() => loginPartner(customer.partner))
           .then(() => switchToCustomerWindow(customer.name, customer.doFtsw));
@@ -185,5 +190,44 @@ function switchToCustomerWindow(customerName, doFtsw) {
       return utils.wait(navigation.ftswSidePanel, LONG_TIMEOUT);
     }
   });
+}
+
+export function provisionUsers(customer) {
+  if (customer.users) {
+    console.log(`Need to provision ${customer.users} users for ${customer.name}!`);
+    return provisionerHelper.getToken(customer.partner)
+      .then(token => {
+        console.log('Got token for provisionUsers!');
+        return atlasHelper.getAtlasOrg(token, customer.cmiCustomer.uuid)
+          .then((response) => {
+            const licenseArray = _.get(response, 'licenses', undefined);
+            const licenseCom = _.find(licenseArray, ['licenseType', 'COMMUNICATION']);
+            console.log('Got communication type of license for provisionUsers!');
+            let internalExt = 351;
+            let userList = [];
+            for (var i = 0; i < customer.users; i++) {
+              internalExt = internalExt + i;
+              const userObj = {
+                email: `${customer.name}_${i}@gmail.com`,
+                userEntitlements: null,
+                licenses: [{
+                  id: `${licenseCom.licenseId}`,
+                  OperationId: 'ADD',
+                  properties: { internalExtension: `${internalExt}` },
+                },
+                ],
+              }
+              userList.push(userObj);
+            }
+
+            let finalList = { users: userList }
+
+            return atlasHelper.createAtlasUser(token, customer.cmiCustomer.uuid, finalList)
+              .then(() => {
+                console.log(`Successfully added users for ${customer.name}!`);
+              });
+          });
+      });
+  }
 }
 

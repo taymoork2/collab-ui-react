@@ -28,7 +28,7 @@ export class AlarmDetailsSidepanelCtrl implements ng.IComponentController {
     }
   }
 
-  public getAlarmSeverityCssClass = this.HybridServicesClusterStatesService.getAlarmSeverityCssClass;
+  public getAlarmSeverityCssClass = this.HybridServicesClusterStatesService.getAlarmSeverityCSSClass;
 
   // This hack should be removed once FMS starts using the correct format for alarm timestamps.
   public parseDate = timestamp => {

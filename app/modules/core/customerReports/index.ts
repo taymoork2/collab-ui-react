@@ -1,4 +1,4 @@
-require('./webexMetrics/_webex-metrics.scss');
+require('./customer-reports.scss');
 
 export default angular
   .module('core.customer-reports', [

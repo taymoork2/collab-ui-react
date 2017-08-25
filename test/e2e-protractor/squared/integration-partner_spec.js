@@ -1,6 +1,6 @@
 'use strict';
 
-/* global LONG_TIMEOUT */
+/* globals LONG_TIMEOUT, ANIMATION_DURATION_MS */
 
 describe('Partner flow', function () {
   var appWindow;
@@ -26,7 +26,15 @@ describe('Partner flow', function () {
     });
 
     it('should display partner support page', function () {
+      // notes:
+      // - clicking the user info button causes an animation (0.3s)
+      // - so we must wait until appropriate CSS selector indicates that the animation is complete
+      // - TODO: work out alternative solution that doesn't require 'browser.sleep()'
       utils.click(navigation.userInfoButton);
+      utils.wait(navigation.userInfoDropDownMenu);
+      browser.sleep(ANIMATION_DURATION_MS);
+
+      // - after animation is complete, allow click to fire
       utils.click(navigation.supportLink).then(navigation.launchSupportPage);
     });
   });

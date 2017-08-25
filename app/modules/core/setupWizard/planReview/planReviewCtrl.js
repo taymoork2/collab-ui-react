@@ -54,6 +54,7 @@
     vm._helpers = {
       maxServiceRows: maxServiceRows,
     };
+    vm.orderDetails = SetupWizardService.getOrderAndSubId();
 
     vm.isCareEnabled = false;
 
@@ -61,9 +62,10 @@
     vm.pendingMeetingLicenses = SetupWizardService.getPendingMeetingLicenses().concat(SetupWizardService.getPendingAudioLicenses());
     vm.pendingCallLicenses = SetupWizardService.getPendingCallLicenses();
     vm.pendingMessageLicenses = SetupWizardService.getPendingMessageLicenses();
-    vm.hasPendingLicenses = vm.pendingMeetingLicenses.concat(vm.pendingCallLicenses, vm.pendingMessageLicenses).length > 0;
+    vm.pendingCareLicenses = SetupWizardService.getPendingCareLicenses();
+    vm.hasPendingLicenses = vm.pendingMeetingLicenses.concat(vm.pendingCallLicenses, vm.pendingMessageLicenses, vm.pendingCareLicenses).length > 0;
     if (vm.hasPendingLicenses) {
-      _.forEach([vm.pendingMeetingLicenses, vm.pendingCallLicenses, vm.pendingMessageLicenses], function (licenseArray) {
+      _.forEach([vm.pendingMeetingLicenses, vm.pendingCallLicenses, vm.pendingMessageLicenses, vm.pendingCareLicenses], function (licenseArray) {
         getPendingLicenseDisplayValues(licenseArray);
       });
     }

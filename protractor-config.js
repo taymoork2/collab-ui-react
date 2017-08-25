@@ -21,6 +21,7 @@ var LONG_TIMEOUT = 1000 * 60 * 2;
 var VERY_LONG_TIMEOUT = 1000 * 60 * 5;
 var E2E_FAIL_RETRY = appConfig.e2eFailRetry;
 var NEWLINE = '\n';
+var ANIMATION_DURATION_MS = 300;
 
 var maxInstances;
 if (process.env.SAUCE__MAX_INSTANCES) {
@@ -103,6 +104,7 @@ exports.config = {
 
     global.TIMEOUT = TIMEOUT;
     global.LONG_TIMEOUT = LONG_TIMEOUT;
+    global.ANIMATION_DURATION_MS = ANIMATION_DURATION_MS;
 
     global.getE2eRunCounter = processEnvUtil.getE2eRunCounter;
     global.getE2eRunCounterMax = processEnvUtil.getE2eRunCounterMax;
@@ -155,7 +157,9 @@ exports.config = {
     var EnterEmailAddrPage = require('./test/e2e-protractor/pages/enterEmailAddr.page.js');
     var CreateAccountPage = require('./test/e2e-protractor/pages/createAccount.page.js');
     var CareLandingPage = require('./test/e2e-protractor/pages/careLanding.page.js');
+    var CareFeatureLandingPage = require('./test/e2e-protractor/pages/careFeatureLanding.page.js');
     var CareChatTemplateSetupPage = require('./test/e2e-protractor/pages/careChatTemplate.page.js');
+    var CareVirtualAssistantTemplateSetupPage = require('./test/e2e-protractor/pages/careVirtualAssistantTemplate.page.js');
     var ManageUsersPage = require('./test/e2e-protractor/pages/manageUsers.page.js');
     var GSSDashboardPage = require('./test/e2e-protractor/pages/gssDashboard.page.js');
     var GSSComponentPage = require('./test/e2e-protractor/pages/gssComponent.page.js');
@@ -202,7 +206,9 @@ exports.config = {
     global.enterEmailAddrPage = new EnterEmailAddrPage();
     global.createAccountPage = new CreateAccountPage();
     global.careLandingPage = new CareLandingPage();
+    global.careFeatureLandingPage = new CareFeatureLandingPage();
     global.careChatTemplateSetupPage = new CareChatTemplateSetupPage();
+    global.careVirtualAssistantTemplateSetupPage = new CareVirtualAssistantTemplateSetupPage();
     global.manageUsersPage = new ManageUsersPage();
     global.gssDashboard = new GSSDashboardPage();
     global.gssComponent = new GSSComponentPage();

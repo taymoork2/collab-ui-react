@@ -1,7 +1,8 @@
 import { AvrilService } from './avril.service';
 
 export * from './avrilSite';
-export * from './avril.service';
+export * from './avril-customer';
+export { AvrilService };
 
 export default angular
   .module('huron.avril.service', [

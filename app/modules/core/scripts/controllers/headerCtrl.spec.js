@@ -30,8 +30,8 @@ describe('Controller: HeaderCtrl', function () {
 
     describe('and is customer admin', function () {
       beforeEach(function () {
-        spyOn(this.Authinfo, 'isPartnerAdmin').and.returnValue(false);
-        spyOn(this.Authinfo, 'isPartnerSalesAdmin').and.returnValue(false);
+        spyOn(this.Authinfo, 'isCustomerAdmin').and.returnValue(true);
+        spyOn(this.Authinfo, 'isCustomerView').and.returnValue(true);
       });
 
       it('should show my company page button', function () {
@@ -71,6 +71,16 @@ describe('Controller: HeaderCtrl', function () {
       it('should show company name', function () {
         expect(this.controller.showOrgName()).toBe(true);
       });
+    });
+  });
+
+  describe('Readonly Admin Page', function () {
+    it('should show my company page button', function () {
+      spyOn(this.Utils, 'isAdminPage').and.returnValue(true);
+      spyOn(this.Authinfo, 'isReadOnlyAdmin').and.returnValue(true);
+      spyOn(this.Authinfo, 'isCustomerView').and.returnValue(true);
+      this.initController();
+      expect(this.controller.showMyCompany()).toBe(true);
     });
   });
 

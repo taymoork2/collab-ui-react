@@ -209,6 +209,16 @@ var auth = {
     pass: 'Cisco@1234!',
     org: '2381e2e2-e912-4d33-8fe2-021216906eb9',
   },
+  'huron-ui-test-partner-prod': {
+    user: 'huron.ui.test.partner+production@gmail.com',
+    pass: 'Cisco@1234!',
+    org: 'b93be93e-5f57-4977-9db9-3d1e6dc12dca',
+  },
+  'virtualassistant-admin': {
+    user: 'sparkcarebot+admin@gmail.com',
+    pass: 'Cisco@123',
+    org: '5abcd266-e194-475e-bc48-010af5da6dde',
+  },
 };
 
 var clientId = 'C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec';

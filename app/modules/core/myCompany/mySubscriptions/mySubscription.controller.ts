@@ -7,7 +7,9 @@ import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-ser
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 import { ProPackService } from 'modules/core/proPack/proPack.service';
 
-export class MySubscriptionCtrl {
+export class MySubscriptionCtrl implements ng.IController {
+  private readonly HEADER_BROADCAST = 'TOGGLE_HEADER_BANNER';
+
   public hybridServices: string[] = [];
   public licenseCategory: ISubscriptionCategory[] = [];
   public subscriptionDetails: ISubscription[] = [];
@@ -28,12 +30,12 @@ export class MySubscriptionCtrl {
   public isSharedMeetingsLicense: boolean = false;
   public isProPackPurchased: boolean = false;
   public isProPackEnabled: boolean = false;
-  public overage: boolean = false;
 
   public proPackData: IOfferData;
   public proPackList: string[] = ['subscriptions.hybridDataSecurity', 'subscriptions.advancedReporting', 'subscriptions.complianceFunctionality'];
   public premiumTooltip: string = this.$translate.instant('subscriptions.premiumTooltip');
 
+  private overage: boolean = false;
   private readonly BASE_CATEGORY: ISubscriptionCategory = {
     offers: [],
     offerWrapper: [],
@@ -70,6 +72,8 @@ export class MySubscriptionCtrl {
   /* @ngInject */
   constructor(
     private $q: ng.IQService,
+    private $rootScope: ng.IRootScopeService,
+    private $scope: ng.IScope,
     private $translate: ng.translate.ITranslateService,
     private Authinfo,
     private Config,
@@ -88,17 +92,21 @@ export class MySubscriptionCtrl {
     }).then((toggles: any): void => {
       this.isProPackPurchased = toggles.isProPackPurchased;
       this.isProPackEnabled = toggles.isProPackEnabled;
+
+      _.forEach(this.SUBSCRIPTION_TYPES, (_value, key: string): void => {
+        const category: ISubscriptionCategory = _.cloneDeep(this.BASE_CATEGORY);
+        category.label = $translate.instant('subscriptions.' + key);
+
+        this.licenseCategory.push(category);
+      });
+
+      this.hybridServicesRetrieval();
+      this.subscriptionRetrieval();
     });
 
-    _.forEach(this.SUBSCRIPTION_TYPES, (_value, key: string): void => {
-      const category: ISubscriptionCategory = _.cloneDeep(this.BASE_CATEGORY);
-      category.label = $translate.instant('subscriptions.' + key);
-
-      this.licenseCategory.push(category);
+    this.$scope.$on('$destroy', (): void => {
+      this.$rootScope.$emit(this.HEADER_BROADCAST);
     });
-
-    this.hybridServicesRetrieval();
-    this.subscriptionRetrieval();
   }
 
   public showCategory(category: ISubscriptionCategory): boolean {
@@ -190,13 +198,15 @@ export class MySubscriptionCtrl {
   }
 
   private subscriptionRetrieval(): void {
-    this.Orgservice.getLicensesUsage(false).then((subscriptions: any[]): void => {
+    this.Orgservice.getLicensesUsage().then((subscriptions: any[]): void => {
       // filter out subscriptions with a license with an offerName that is 'MSGR'
       // - as of 2017-07-24, 'Authinfo.isExternallyManagedLicense()' is sufficient for checking this
       subscriptions = _.reject(subscriptions, (subscription) => {
         const licenses = _.get(subscription, 'licenses');
         return _.some(licenses, license => this.Authinfo.isExternallyManagedLicense(license));
       });
+
+      const authinfoSubscriptions = this.Authinfo.getSubscriptions();
 
       _.forEach(subscriptions, (subscription: any, subIndex: number): void => {
         const newSubscription: ISubscription = {
@@ -217,9 +227,14 @@ export class MySubscriptionCtrl {
             newSubscription.isOnline = true;
           }
         }
-        if (subscription.endDate) {
+
+        const matchingSubscription = _.find(authinfoSubscriptions, {
+          subscriptionId: subscription.internalSubscriptionId,
+        });
+        const matchingSubscriptionEndDate = _.get<string>(matchingSubscription, 'endDate', '');
+        if (matchingSubscriptionEndDate) {
           const currentDate = new Date();
-          const subscriptionEndDate = new Date(subscription.endDate);
+          const subscriptionEndDate = new Date(matchingSubscriptionEndDate);
           const timeDiff = subscriptionEndDate.getTime() - currentDate.getTime();
           const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
@@ -374,6 +389,8 @@ export class MySubscriptionCtrl {
           this.showSingleSub = true;
         }
       });
+
+      this.setOverageWarning();
     });
   }
 
@@ -487,5 +504,16 @@ export class MySubscriptionCtrl {
     }
 
     return offer;
+  }
+
+  private setOverageWarning(): void {
+    if (this.overage && this.isProPackEnabled) {
+      this.$rootScope.$emit(this.HEADER_BROADCAST, {
+        iconCss: 'icon-warning',
+        translation: 'subscriptions.overageWarning',
+        type: 'danger',
+        visible: true,
+      });
+    }
   }
 }

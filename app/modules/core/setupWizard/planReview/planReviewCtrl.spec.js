@@ -14,7 +14,7 @@ describe('Controller: PlanReviewCtrl', function () {
   var authInfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('5632f806-ad09-4a26-a0c0-a49a13f38873'),
     getMessageServices: jasmine.createSpy('getMessageServices').and.returnValue(getJSONFixture('core/json/authInfo/messagingServices.json').singleLicense),
-    getCommunicationServices: jasmine.createSpy('getCommunicationServices').and.returnValue(getJSONFixture('core/json/authInfo/commServices.json')),
+    getCommunicationServices: jasmine.createSpy('getCommunicationServices').and.returnValue(getJSONFixture('core/json/authInfo/commServices.json').singleLicense),
     getConferenceServices: jasmine.createSpy('getConferenceServices').and.returnValue(getJSONFixture('core/json/authInfo/confServices.json')),
     getCareServices: jasmine.createSpy('getCareServices').and.returnValue(getJSONFixture('core/json/authInfo/careServices.json').careLicense),
     getCmrServices: jasmine.createSpy('getCmrServices').and.returnValue(getJSONFixture('core/json/authInfo/cmrServices.json')),
@@ -65,6 +65,10 @@ describe('Controller: PlanReviewCtrl', function () {
       offerName: 'CF',
       capacity: 200,
     }]);
+    spyOn(SetupWizardService, 'getOrderAndSubId').and.returnValue({
+      orderId: 'abc123',
+      subscriptionId: 'def456',
+    });
     controller = $controller('PlanReviewCtrl', {
       $scope: $scope,
     });

@@ -36,8 +36,7 @@
   .card-footer {
     width: 100%;
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+    flex-flow: row wrap;
     justify-content: space-between;
     align-items: flex-end;
 
@@ -51,7 +50,7 @@
       color: $gray-base;
     }
 
-    a {
+    .icon-download {
       font-size: rem-calc(24);
       color: $gray-light-1;
       top: -2px;
@@ -62,8 +61,7 @@
 
   .spinner-icon {
     display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
+    flex-flow: row nowrap;
     justify-content: center;
     align-items: center;
   }
@@ -94,11 +92,14 @@
   }
 }
 
+header > p > span.badge {
+  @include vr-spacing(pt, 1);
+}
+
 .no-features {
   display: flex;
   flex: 1;
-  flex-direction: column;
-  flex-wrap: nowrap;
+  flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
   text-align: center;
@@ -123,8 +124,7 @@
 .care-new-feature-modal {
   // The modal body.
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-flow: row wrap;
 
   @include vr-spacing(pt, 0);
   @include vr-spacing(pr, 2);

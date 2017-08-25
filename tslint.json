@@ -1,5 +1,8 @@
 {
-  "rulesDirectory": ["node_modules/tslint-eslint-rules/dist/rules"],
+  "rulesDirectory": [
+    "node_modules/tslint-eslint-rules/dist/rules",
+    "node_modules/tslint-jasmine-rules/dist"
+  ],
   "rules": {
     "align": [
       true,
@@ -27,6 +30,7 @@
       true,
       "assert",
       "count",
+      "debug",
       "dir",
       "dirxml",
       "error",
@@ -54,6 +58,7 @@
     "no-duplicate-super": true,
     "no-eval": true,
     "no-extra-semi": true,
+    "no-focused-tests": true,
     "no-trailing-whitespace": true,
     "no-invalid-template-strings": true,
     "no-irregular-whitespace": true,

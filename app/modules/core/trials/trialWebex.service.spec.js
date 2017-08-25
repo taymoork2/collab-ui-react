@@ -47,6 +47,20 @@ describe('Service: Webex Trial Service', function () {
       this.$httpBackend.flush();
     });
 
+    it('should fail to validate site url even if \'isValid\' is true if \'isExist\' flag is set to true', function () {
+      this.$httpBackend.whenPOST(this.UrlConfig.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke').respond({
+        properties: [{
+          isValid: 'true',
+          errorCode: '0',
+          isExist: 'true',
+        }],
+      });
+      this.TrialWebexService.validateSiteUrl('trial-acmecorp.webex.com').then(function (response) {
+        expect(response.isValid).toBe(false);
+      });
+      this.$httpBackend.flush();
+    });
+
     it('should fail to validate an invalid site url', function () {
       this.$httpBackend.whenPOST(this.UrlConfig.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke').respond({
         properties: [{

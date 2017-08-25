@@ -2,26 +2,26 @@
   <cs-sp-header>
     <div class="header-info">
       <div class="header-info-wrap">
-        <h3 translate="provisioningConsole.orderNumber" translate-values="{orderNumber: provisioningDetailsCtrl.order.webOrderID}"></h3>
-        <p ng-if="provisioningDetailsCtrl.order.status === Status.COMPLETED" translate = "provisioningConsole.details.completed" translate-value="{orderDate: provisioningDetailsCtrl.dateInfo}" >
+        <h5 translate="provisioningConsole.orderNumber" translate-values="{orderNumber: provisioningDetailsCtrl.order.webOrderID}"></h5>
+        <p ng-if="provisioningDetailsCtrl.order.status === status.COMPLETED" translate="provisioningConsole.details.completed" translate-values="{orderDate: provisioningDetailsCtrl.dateInfo}">
         </p>
-        <p ng-if="provisioningDetailsCtrl.order.status !== Status.COMPLETED" translate = "provisioningConsole.details.pending" translate-value="{orderDate: provisioningDetailsCtrl.dateInfo}" >
+        <p ng-if="provisioningDetailsCtrl.order.status !== status.COMPLETED" translate="provisioningConsole.details.pending" translate-values="{orderDate: provisioningDetailsCtrl.dateInfo}">
         </p>
-
       </div>
     </div>
   </cs-sp-header>
   <cs-sp-container>
     <cs-sp-section>
       <div class="form-group">
-        <label class="col-sm-4 control-label" translate="provisioningConsole.manualCode"></label>
-        <div class="col-sm-8">
-          <p class="form-control-static">{{provisioningDetailsCtrl.order.manualCode}}</p>
+        <div class="col-sm-12">
+          <p class="form-control-static"><span translate="provisioningConsole.manualCode"></span> {{provisioningDetailsCtrl.order.manualCode}} - {{provisioningDetailsCtrl.manualCode[provisioningDetailsCtrl.order.manualCode]}}
+          </p>
         </div>
       </div>
+    </cs-sp-section>
+    <cs-sp-section>
       <section-title title-key="provisioningConsole.details.customerInfo.title">
       </section-title>
-
       <div class="form-group">
         <label class="col-sm-4 control-label" translate="provisioningConsole.customerName"></label>
         <div class="col-sm-8">
@@ -50,7 +50,7 @@
     <cs-sp-section ng-if="provisioningDetailsCtrl.order.siteUrl">
       <section-title title-key="provisioningConsole.details.siteInfo.title"></section-title>
       <div class="text-center" ng-show="provisioningDetailsCtrl.isLoading">
-          <i class="icon icon-spinner icon-2x"></i>
+        <i class="icon icon-spinner icon-2x"></i>
       </div>
       <div class="form-group">
         <label class="col-sm-4 control-label" translate="provisioningConsole.details.siteInfo.url"></label>
@@ -108,6 +108,18 @@
           <div class="col-sm-8">
             <p class="form-control-static">{{audioItem.serviceName || '-'}}</p>
           </div>
+        </div>
+        <div class="form-group" ng-if="audioItem.serviceName === 'CCASP'">
+          <label class="col-sm-4 control-label" translate="provisioningConsole.details.audio.ccaspPartnerName"></label>
+          <div class="col-sm-8">
+            <p class="form-control-static">{{audioItem.ccaspPartnerName || '-'}}</p>
+          </div>
+          <div class="row"/>
+        <label class="col-sm-4 control-label" translate="provisioningConsole.details.audio.ccaspSubscriptionId"></label>
+          <div class="col-sm-8">
+            <p class="form-control-static">{{audioItem.ccaAggregationSubId || '-'}}</p>
+          </div>
+
         </div>
         <div class="form-group">
           <label class="col-sm-4 control-label" translate="provisioningConsole.details.audio.action"></label>
