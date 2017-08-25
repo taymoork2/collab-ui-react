@@ -335,7 +335,7 @@
         function panelOnEnter(options) {
           options = options || {};
           return /* @ngInject */ function ($modal, $state, $previousState, atlas2017NameChangeFeatureToggled) {
-            if (_.get($state.data, 'sidepanel', '') !== 'not-full') {
+            if (_.get($state, 'current.data.sidepanel', '') !== 'not-full') {
               if (atlas2017NameChangeFeatureToggled) {
                 if (!options.type) {
                   options.type = 'side-panel-full-height';
