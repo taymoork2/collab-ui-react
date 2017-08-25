@@ -836,6 +836,17 @@
               },
             },
           })
+          .state('my-company.billing', {
+            url: '/my-company/billing',
+            onEnter: /* @ngInject */ function (OnlineAnalyticsService) {
+              OnlineAnalyticsService.track(OnlineAnalyticsService.MY_COMPANY_BILLING);
+            },
+            views: {
+              tabContent: {
+                template: '<my-company-billing></my-company-billing>',
+              },
+            },
+          })
           .state('users', {
             abstract: true,
             template: '<div ui-view></div>',

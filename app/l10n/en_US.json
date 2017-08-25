@@ -7677,7 +7677,9 @@
     "pageTitle": "My Company",
     "subscription": "Subscriptions",
     "info": "Info",
-    "order": "Order History"
+    "order": "Order History",
+    "billing": "Billing Info",
+    "loadError": "An error occurred while loading the page"
   },
   "subscriptions": {
     "activeUsers": "Active Users",
