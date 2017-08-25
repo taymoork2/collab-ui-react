@@ -269,7 +269,9 @@ var UsersPage = function () {
 
   this.createUserWithLicense = function (alias, checkbox) {
     users.createUser(alias);
-    utils.click(checkbox);
+    if (checkbox) {
+      utils.click(checkbox);
+    }
     utils.click(users.onboardButton);
     utils.expectIsDisplayed(users.finishButton);
     utils.click(users.finishButton);

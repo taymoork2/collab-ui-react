@@ -43,7 +43,7 @@ source ./bin/include/env-var-helpers
 #   in a Jenkins build env, as env vars are injected via other means)
 if ! is_ci; then
     echo "[INFO] detected running in local dev environment, injecting build env vars for \"dev\"."
-    inj_build_env_vars_for "dev"
+    inj_build_env_vars_for "dev" >/dev/null
 fi
 
 

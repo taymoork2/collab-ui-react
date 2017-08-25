@@ -14,19 +14,20 @@ describe('Onboard users with Meeting Service', function () {
 
   describe('Onboard user', function () {
     it('should add a user (Meeting On)', function () {
-      users.createUserWithLicense(testUser, LICENSE);
-    });
-
-    it('should check (Meeting On) then uncheck', function () {
-      users.clickServiceCheckbox(testUser, false, true, LICENSE);
+      // TODO: brspence - revert back to creating user with meeting license after backend fix
+      users.createUserWithLicense(testUser);
     });
 
     it('should check (Meeting Off) then check', function () {
       users.clickServiceCheckbox(testUser, false, false, LICENSE);
     });
 
-    it('should check (Meeting On)', function () {
+    it('should check (Meeting On) then uncheck', function () {
       users.clickServiceCheckbox(testUser, false, true, LICENSE);
+    });
+
+    it('should check (Meeting Off)', function () {
+      users.clickServiceCheckbox(testUser, false, false, LICENSE);
     });
   });
 

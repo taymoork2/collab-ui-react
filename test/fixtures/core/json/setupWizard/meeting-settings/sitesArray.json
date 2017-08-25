@@ -1,0 +1,11 @@
+[
+  {
+    "siteUrl": "someSiteUrl.dmz.webex.com",
+    "timezone": 5,
+    "centerType": "MC",
+    "quantity": 50,
+    "audioPackageDisplay": "someAudioPackageDisplay",
+    "setupType": "setupType",
+    "keepExistingSite": true
+  }
+]

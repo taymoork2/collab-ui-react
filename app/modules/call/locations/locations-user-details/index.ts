@@ -3,6 +3,7 @@ import notifications from 'modules/core/notifications';
 import callLocationsModule from 'modules/call/locations';
 
 export { UserLocationDetailsComponent };
+export * from './locations-user-details.component';
 
 export default angular
   .module('call.locations.locations-user-details', [
