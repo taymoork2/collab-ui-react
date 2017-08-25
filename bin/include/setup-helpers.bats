@@ -48,29 +48,6 @@ source ./setup-helpers
     rm -f foo
 }
 
-@test "mk_workspace_tar - should make a 'workspace.tar.gz' file that is a shallow-copy of the workspace" {
-    run mk_workspace_tar
-    [ $status -eq 0 ]
-
-    # check files present in the tar
-    [ -f workspace.tar.gz ]
-    run tar -tf workspace.tar.gz ./README.md
-    [ $status -eq 0 ]
-    run tar -tf workspace.tar.gz ./.git/HEAD
-    [ $status -eq 0 ]
-    run tar -tf workspace.tar.gz ./app/index.html
-    [ $status -eq 0 ]
-
-    # unpack, enter the dir, and test 'git log -n1' to verify valid git HEAD is intact
-    mkdir -p ./tmp && cd ./tmp && tar xzf ../workspace.tar.gz && {
-        run git log -n1
-        [ $status -eq 0 ]
-    }
-    cd ../ && rm -rf ./tmp
-
-    rm -f workspace.tar.gz
-}
-
 @test "get_bash_conf_file - should print '.bash_profile' if os is OSX, otherwise '.bashrc'" {
     run get_bash_conf_file
     if [ "`uname`" = "Darwin" ]; then
@@ -89,7 +66,7 @@ source ./setup-helpers
     cd $HOME
     run export_project_root_env_var
     [ $status -eq 1 ]
-    [ "$output" = "Error: traversed to '/' while trying to find top-level dir" ]
+    [ "$output" = "[ERROR] traversed to '/' while trying to find top-level dir" ]
 }
 
 @test "export_project_root_env_var - should leave one and only one 'export ${project_root_env_var_name}' entry into the appropriate bash config file." {
