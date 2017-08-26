@@ -2011,7 +2011,7 @@
             url: '/:siteUrl/metrics',
             views: {
               metricsContent: {
-                templateUrl: 'modules/core/customerReports/webexMetrics/metrics/metricsFrame.tpl.html',
+                template: '<metrics-frame></metrics-frame>',
               },
             },
           })

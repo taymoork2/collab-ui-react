@@ -89,13 +89,6 @@ describe('Controller: WebEx Metrics Ctrl', function () {
     expect(event.preventDefault).toHaveBeenCalled();
   });
 
-  it('should do prevent state change when loading reports', function () {
-    var event = jasmine.createSpyObj('event', ['preventDefault']);
-    this.controller.isIframeLoaded = false;
-    this.controller.onStateChangeStart(event, null, null, { name: 'reports.webex-metrics.metrics' });
-    expect(event.preventDefault).toHaveBeenCalled();
-  });
-
   it('should do something when state change success', function () {
     var event = jasmine.createSpyObj('event', ['preventDefault']);
     spyOn(this.controller, 'loadMetricsReport');

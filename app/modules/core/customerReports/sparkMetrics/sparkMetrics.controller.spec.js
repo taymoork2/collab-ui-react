@@ -81,21 +81,5 @@ describe('Controller: Spark Metrics Ctrl', function () {
   it('initial state, isIframeLoaded should be false, currentFilter should be metrics', function () {
     expect(this.controller.sparkMetrics.appData.url).toBe(this.testData);
   });
-
-  it('should do prevent state change when loading reports', function () {
-    var event = jasmine.createSpyObj('event', ['preventDefault']);
-    this.controller.isIframeLoaded = false;
-    this.controller.onStateChangeStart(event);
-    expect(event.preventDefault).toHaveBeenCalled();
-  });
-
-  it('should call unfreezeState when loading timeout', function () {
-    spyOn(this.controller, 'unfreezeState');
-    this.controller.startLoadReport();
-    jasmine.clock().install();
-    jasmine.clock().tick(120000);
-    expect(this.controller.unfreezeState).toHaveBeenCalledWith(true);
-    jasmine.clock().uninstall();
-  });
 });
 
