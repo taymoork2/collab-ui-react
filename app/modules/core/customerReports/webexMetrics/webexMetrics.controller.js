@@ -60,10 +60,6 @@
         title: 'reportsPage.webexMetrics.diagnostics',
         state: 'reports.webex-metrics.diagnostics',
       },
-      {
-        title: 'reportsPage.webexMetrics.classic',
-        state: 'reports.webex-metrics.classic',
-      },
     ];
 
     var selectEnable = $scope.$on('selectEnable', function (data) {
@@ -135,6 +131,7 @@
     }
 
     function init() {
+      checkClassic();
       Userservice.getUser(
         'me',
         function (data) {
@@ -151,6 +148,17 @@
         }
       );
       Analytics.trackReportsEvent(Analytics.sections.REPORTS.eventNames.CUST_WEBEX_REPORT);
+    }
+
+    function checkClassic() {
+      vm.isWebexMetricsEnabled = $scope.header.isWebexMetricsEnabled;
+      vm.isWebexClassicEnabled = $scope.header.isWebexClassicEnabled;
+      if (vm.isWebexMetricsEnabled && vm.isWebexClassicEnabled) {
+        vm.metricsOptions.push({
+          title: 'reportsPage.webexMetrics.classic',
+          state: 'reports.webex-metrics.classic',
+        });
+      }
     }
 
     function updateWebexMetrics() {

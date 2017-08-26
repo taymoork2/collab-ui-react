@@ -38,6 +38,10 @@ describe('Controller: WebEx Metrics Ctrl', function () {
         current: { },
         go: function () {},
       };
+      this.$scope.header = {
+        isWebexMetricsEnabled: true,
+        isWebexClassicEnabled: true,
+      };
       this.controller = this.$controller('WebExMetricsCtrl', {
         $sce: this.$sce,
         $scope: this.$scope,
