@@ -15,6 +15,7 @@
     $window,
     Analytics,
     Authinfo,
+    LoadingTimeout,
     Notification,
     ProPackService,
     QlikService,
@@ -36,6 +37,8 @@
     ];
     vm.reportView = vm.sparkMetrics.views[0];
     vm.init = init;
+    vm.unfreezeState = unfreezeState;
+    vm.startLoadReport = startLoadReport;
 
     init();
 
@@ -91,6 +94,7 @@
         updateIframe();
       })
         .catch(function (error) {
+          vm.unfreezeState(true);
           Notification.errorWithTrackingId(error, 'common.error');
         });
     }
@@ -113,21 +117,34 @@
         function loadIframe() {
           var submitFormBtn = $window.document.getElementById('submitFormBtn');
           submitFormBtn.click();
+          startLoadReport();
         },
         0
       );
     }
 
     function messageHandle(event) {
+      if (event.data === 'unfreeze') {
+        $log.log('Unfreeze message received.');
+        vm.unfreezeState(true);
+        $timeout.cancel(vm.startLoadReportTimer);
+      }
+    }
+
+    function unfreezeState(isLoaded) {
       var iframeEle = angular.element('#webexMetricsIframeContainer');
       var currScope = iframeEle.scope();
 
-      if (event.data === 'unfreeze') {
-        $log.log('Unfreeze message received.');
-        currScope.$apply(function () {
-          vm.isIframeLoaded = true;
-        });
-      }
+      currScope.$apply(function () {
+        vm.isIframeLoaded = isLoaded;
+      });
+    }
+
+    function startLoadReport() {
+      vm.startLoadReportTimer = $timeout(
+        vm.unfreezeState(true),
+        LoadingTimeout
+      );
     }
 
     $window.iframeLoaded = function (iframeId) {

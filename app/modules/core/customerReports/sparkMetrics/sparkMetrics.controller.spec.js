@@ -88,5 +88,14 @@ describe('Controller: Spark Metrics Ctrl', function () {
     this.controller.onStateChangeStart(event);
     expect(event.preventDefault).toHaveBeenCalled();
   });
+
+  it('should call unfreezeState when loading timeout', function () {
+    spyOn(this.controller, 'unfreezeState');
+    this.controller.startLoadReport();
+    jasmine.clock().install();
+    jasmine.clock().tick(120000);
+    expect(this.controller.unfreezeState).toHaveBeenCalledWith(true);
+    jasmine.clock().uninstall();
+  });
 });
 
