@@ -206,6 +206,7 @@
         }
       })
         .catch(function (error) {
+          $scope.$broadcast('unfreezeState', true);
           Notification.errorWithTrackingId(error, 'common.error');
         });
     }
