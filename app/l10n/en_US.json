@@ -711,7 +711,7 @@
     "meetingNumber": "Meeting Number",
     "scheduledFrom": "Scheduled From",
     "placeholder-date": "Choose a day",
-    "hostNameAndId":"Host Name/Host ID",
+    "hostNameAndId": "Host Name/Host ID",
     "siteIdAndName": "Site ID/Site Name",
     "search-info-title": "Search for a meeting",
     "placeholder-text": "Search email or meeting number",
@@ -3644,7 +3644,7 @@
       "ccaspSubscriptionId": "CCA-SP provider subscription id number",
       "chooseCCASPPartner": "Choose CCA-SP partner",
       "ccaspPartner": "CCA-SP Partner: {{partner}}",
-      "errorNoMatch":"The subscription ID number and CCA-SP Partner do not match. Please enter a valid subscription ID and SSA-SP Partner combination",
+      "errorNoMatch": "The subscription ID number and CCA-SP Partner do not match. Please enter a valid subscription ID and SSA-SP Partner combination",
       "ccaspProvided": "Conferencing Audio: CCA-SP provided by {{partner}}"
     },
     "existingWebExTrialSites": "You have the following WebEx site that was part of your free trial, would you like to continue using it?",
@@ -4407,7 +4407,7 @@
     "failedToFetchSiteLevelLanguage": "Failed to fetch site level language. Reason:",
     "userModule": "user",
     "placeModule": "place",
-    "placeDetails":"Place Details",
+    "placeDetails": "Place Details",
     "saveModal": {
       "title": "Save Settings",
       "message1": "Changing the language will cause all devices for this user to reboot and may take a few minutes.",
@@ -5180,7 +5180,9 @@
     "SD": "Cisco Spark Room Device",
     "deleteOrgTitle": "Delete Customer",
     "deleteOrgConfirmMsg": "Are you sure you want to permanently delete customer '{{orgName}}'?",
+    "deleteOrgHmsError": "For the customer '{{orgName}}' Hybrid Media Service is currently Active, please deactivate Hybrid Media Service before deleting the customer.",
     "deleteOrg": "Delete Customer",
+    "iUnderstand": "I Understand",
     "deleteOrgSuccess": "{{orgName}} successfully deleted",
     "deleteOrgError": "{{orgName}} was not deleted.",
     "pstnOrders": "PSTN Orders & Imports",
@@ -6775,10 +6777,12 @@
     "callbackTemplateCode": "Ca",
     "callbackMediaType": "Callback",
     "chatPlusCallbackMediaType": "Chat+Callback",
-    "Ch" : "Chat",
-    "Ca" : "Callback",
-    "ChCa" : "Chat+Callback",
-    "Va" : "Customer Virtual Assistant",
+    "virtualAssistantCode": "Va",
+    "virtualAssistantMediaType": "Virtual Assistants",
+    "Ch": "Chat",
+    "Ca": "Callback",
+    "ChCa": "Chat+Callback",
+    "Va": "Customer Virtual Assistant",
     "newFeatures": {
       "newFeatureButtonText": "New",
       "newCareTemplateModalTitle": "Create New Care Template",
@@ -7538,7 +7542,7 @@
       "meeting": {
         "title": "Meeting",
         "notEnabledText": "Join up to 25 colleagues in a Team Space Sync-up or many more in a WebEx Meeting Center.",
-        "serviceProvisioning":"Meeting service is being provisioned and will be available soon.",
+        "serviceProvisioning": "Meeting service is being provisioned and will be available soon.",
         "meetingsNotSetUp": "Meeting service not set up",
         "setupMeetingService": "Set up Meeting Service"
       },
@@ -7741,7 +7745,7 @@
       "VoIPOnly": "VoIP Only",
       "CCASP": "CCA-SP",
       "TSP": "TSP Audio",
-      "ST" : "WebEx Storage",
+      "ST": "WebEx Storage",
       "STSPK": "Spark Storage",
       "MSGR": "Messenger"
     }
