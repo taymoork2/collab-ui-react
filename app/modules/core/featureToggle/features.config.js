@@ -76,6 +76,7 @@ module.exports = {
   filterBadges: 'filter-badges',
   flagMsg: 'flag-msg',
   geoHintEnabled: 'geo-hint-enabled',
+  huronMultiSite: 'h-i1484',
   huronAAMediaUpload: 'huron-aa-mediaupload',
   huronAACallerInput: 'huron-aa-callerinput',
   huronAARestApi: 'huron-aa-restapi',
