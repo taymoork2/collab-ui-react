@@ -30,7 +30,7 @@ export class CallUserPage {
         dialingRestrictions: element(by.cssContainingText('.feature-name', 'Dialing Restrictions')),
       },
     };
-    this.callSubMenu = element.all(by.css('[ui-sref="user-overview.communication"]')).get(2);
+    this.callSubMenu = element.all(by.css('a[ui-sref="user-overview.communication"]')).get(0);
     this.dialingRestrictions = {
       nationaDialing: {
         title: element(by.cssContainingText('.section-title-row', 'National Dialing')),

@@ -161,7 +161,7 @@ describe('Huron Functional: add-places', () => {
             utils.expectIsDisplayed(CallPlaces.LineConfigPg);
           });
           it('should have Directory Numbers section', () => {
-            utils.expectIsDisplayed(CallPlaces.dirNumSct);
+            utils.expectIsDisplayed(CallPlaces.directoryNumSct);
           });
           it('should have Call Forwarding section', () => {
             utils.expectIsDisplayed(CallPlaces.callFwdSct);
@@ -255,7 +255,7 @@ describe('Huron Functional: add-places', () => {
             utils.expectIsDisplayed(CallPlaces.LineConfigPg);
           });
           it('should have Directory Numbers section', () => {
-            utils.expectIsDisplayed(CallPlaces.dirNumSct);
+            utils.expectIsDisplayed(CallPlaces.directoryNumSct);
           });
           it('should have Caller ID section', () => {
             utils.expectIsDisplayed(CallPlaces.callerIdSct);
