@@ -81,12 +81,5 @@ describe('Controller: Spark Metrics Ctrl', function () {
   it('initial state, isIframeLoaded should be false, currentFilter should be metrics', function () {
     expect(this.controller.sparkMetrics.appData.url).toBe(this.testData);
   });
-
-  it('should do prevent state change when loading reports', function () {
-    var event = jasmine.createSpyObj('event', ['preventDefault']);
-    this.controller.isIframeLoaded = false;
-    this.controller.onStateChangeStart(event);
-    expect(event.preventDefault).toHaveBeenCalled();
-  });
 });
 

@@ -7,11 +7,8 @@
 
   /* @ngInject */
   function SparkMetricsCtrl(
-    $log,
-    $rootScope,
     $sce,
     $scope,
-    $timeout,
     $window,
     Analytics,
     Authinfo,
@@ -96,38 +93,16 @@
     }
 
     function updateIframe() {
-      vm.isIframeLoaded = false;
-
       var iframeUrl = vm.sparkMetrics.appData.url;
-      $scope.trustIframeUrl = $sce.trustAsResourceUrl(iframeUrl);
-      $scope.appId = vm.sparkMetrics.appData.appId;
-      $scope.QlikTicket = vm.sparkMetrics.appData.ticket;
-      $scope.node = vm.sparkMetrics.appData.node;
-      $scope.persistent = vm.sparkMetrics.appData.persistent;
-      $scope.vID = vm.sparkMetrics.appData.vID;
-
-      var parser = $window.document.createElement('a');
-      parser.href = iframeUrl;
-
-      $timeout(
-        function loadIframe() {
-          var submitFormBtn = $window.document.getElementById('submitFormBtn');
-          submitFormBtn.click();
-        },
-        0
-      );
-    }
-
-    function messageHandle(event) {
-      var iframeEle = angular.element('#webexMetricsIframeContainer');
-      var currScope = iframeEle.scope();
-
-      if (event.data === 'unfreeze') {
-        $log.log('Unfreeze message received.');
-        currScope.$apply(function () {
-          vm.isIframeLoaded = true;
-        });
-      }
+      var data = {
+        trustIframeUrl: $sce.trustAsResourceUrl(iframeUrl),
+        appId: vm.sparkMetrics.appData.appId,
+        QlikTicket: vm.sparkMetrics.appData.ticket,
+        node: vm.sparkMetrics.appData.node,
+        persistent: vm.sparkMetrics.appData.persistent,
+        vID: vm.sparkMetrics.appData.vID,
+      };
+      $scope.$broadcast('updateIframe', iframeUrl, data);
     }
 
     $window.iframeLoaded = function (iframeId) {
@@ -138,19 +113,5 @@
         rec[0].contentWindow.postMessage(token + ',' + orgID, '*');
       });
     };
-
-    vm.onStateChangeStart = function (event) {
-      if (!vm.isIframeLoaded) {
-        event.preventDefault();
-      }
-    };
-
-    $window.addEventListener('message', messageHandle, true);
-    var stateChangeStart = $rootScope.$on('$stateChangeStart', vm.onStateChangeStart);
-
-    $scope.$on('$destory', function () {
-      stateChangeStart();
-      $window.removeEventListener('message', messageHandle, true);
-    });
   }
 })();
