@@ -14,9 +14,9 @@
      id="iframeContainer"
      name="iframeContainer"
      class="fullSize">
-    <iframe id="webexMetricsIframeContainer"
-            name="webexMetricsIframeContainer"
-            onLoad="iframeLoaded('#webexMetricsIframeContainer')"
+    <iframe id="sparkMetricsIframeContainer"
+            name="sparkMetricsIframeContainer"
+            onLoad="iframeLoaded('#sparkMetricsIframeContainer')"
             i-frame-resizable="iframeContainer"
             class="fullSize"
             frameborder="0">
@@ -26,7 +26,7 @@
           action={{$ctrl.data.trustIframeUrl}}
           method="get"
           hidden
-          target="webexMetricsIframeContainer">
+          target="sparkMetricsIframeContainer">
 
         <input id="appid"
                name="appid"
