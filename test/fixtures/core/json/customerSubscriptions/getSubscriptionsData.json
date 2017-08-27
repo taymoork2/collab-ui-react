@@ -89,8 +89,7 @@
     "endDate": "2065-08-02T07:00:00.000Z",
     "duration": -1,
     "gracePeriod": 0,
-    "orderingTool": "CCW",
-    "pendingServiceOrderUUID": "1a35a909-1688-4353-a558-d4ea85e1c948"
+    "orderingTool": "CCW"
   },
   {
     "subscriptionId": "2675675-2365756-42365756-8767575-d05b7c67657",

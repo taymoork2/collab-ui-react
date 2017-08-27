@@ -201,7 +201,13 @@ describe('Service: SetupWizard Service', function () {
     it('with a subscriptionId referencing a subscription that is not ACTIVE, isProvisionedSubscription should return boolean false', function () {
       const activeSubscriptions = _.clone(this.authinfoActiveSubscriptions);
       activeSubscriptions[1].status = 'PENDING';
+      delete activeSubscriptions[1].pendingServiceOrderUUID;
       this.Authinfo.getSubscriptions.and.returnValue(this.activeSubscriptions);
+      expect(this.SetupWizardService.isProvisionedSubscription('Sub-os090835')).toBe(false);
+    });
+
+    it('with a subscriptionId referencing a subscription that is being modified (has a status of ACTIVE but contains a pendingServiceOrderUUID), isProvisionedSubscription should return boolean false', function () {
+      this.Authinfo.getSubscriptions.and.returnValue(this.authinfoActiveSubscriptions);
       expect(this.SetupWizardService.isProvisionedSubscription('Sub-os090835')).toBe(false);
     });
   });

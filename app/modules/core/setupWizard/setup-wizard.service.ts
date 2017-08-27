@@ -45,7 +45,7 @@ export class SetupWizardService {
     }
     const subscription = _.find(this.Authinfo.getSubscriptions(), { externalSubscriptionId: subscriptionId });
 
-    return _.get(subscription, 'status') === this.Config.subscriptionStatus.ACTIVE;
+    return (_.get(subscription, 'status') === this.Config.subscriptionStatus.ACTIVE) && !_.has(subscription, 'pendingServiceOrderUUID');
   }
 
   public addProvisioningCallbacks(callObject: { [keys: string]: Function }) {
