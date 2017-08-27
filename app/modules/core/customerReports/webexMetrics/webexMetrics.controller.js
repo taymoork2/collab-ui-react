@@ -7,12 +7,10 @@
 
   /* @ngInject */
   function WebExMetricsCtrl(
-    $log,
     $sce,
     $scope,
     $stateParams,
     $timeout,
-    $window,
     $rootScope,
     $state,
     Analytics,
@@ -70,6 +68,7 @@
 
     vm.$state = $state;
     vm.init = init;
+    vm.checkClassic = checkClassic;
     vm.goMetricsState = goMetricsState;
     vm.loadMetricsReport = loadMetricsReport;
     vm.onStateChangeStart = onStateChangeStart;
@@ -231,10 +230,6 @@
       };
       $scope.$broadcast('updateIframe', iframeUrl, data);
     }
-
-    $window.iframeLoaded = function (iframeId) {
-      $log.log('Iframe loaded ' + iframeId);
-    };
 
     function onStateChangeStart(event, toState, toParams, fromState) {
       var isSubState = fromState.name.indexOf('reports.webex-metrics.') === 0;

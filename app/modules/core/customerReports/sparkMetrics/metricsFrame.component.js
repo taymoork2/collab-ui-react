@@ -3,8 +3,8 @@
 
   angular
     .module('core.customer-reports')
-    .component('metricsFrame', {
-      templateUrl: 'modules/core/customerReports/webexMetrics/metrics/metricsFrame.tpl.html',
+    .component('sparkMetricsFrame', {
+      templateUrl: 'modules/core/customerReports/sparkMetrics/metricsFrame.tpl.html',
       controller: metricsFrameController,
     });
 
@@ -46,12 +46,15 @@
     }
 
     function unfreezeState(event, isLoaded) {
-      var iframeEle = angular.element('#webexMetricsIframeContainer');
+      var iframeEle = angular.element('#sparkMetricsIframeContainer');
       var currScope = iframeEle.scope();
-
-      currScope.$apply(function () {
+      if (event) {
         vm.isIframeLoaded = isLoaded;
-      });
+      } else {
+        currScope.$apply(function () {
+          vm.isIframeLoaded = isLoaded;
+        });
+      }
     }
 
     function startLoadReport() {

@@ -116,5 +116,8 @@ describe('Controller: WebEx Metrics Ctrl', function () {
     expect(this.controller.loadMetricsReport).toHaveBeenCalled();
     expect(this.controller.isNoData).toBe(false);
   });
+  it('should call checkClassic when init, the merticsOptions contains classic tab', function () {
+    expect(this.controller.metricsOptions.length).toBe(3);
+  });
 });
 
