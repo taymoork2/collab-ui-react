@@ -56,6 +56,7 @@
 
     var authorizeUser = function () {
       $scope.loading = true;
+      var isSuccess = true;
       Auth.authorize({
         reauthorize: $stateParams.reauthorize,
       })
@@ -99,12 +100,15 @@
               LogMetricsService.logMetrics('Customer logged in', LogMetricsService.getEventType('customerLogin'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
             }
             $rootScope.$emit('LOGIN');
-            return $state.go(state, params);
+            return $state.go(state, params).catch(_.noop); // don't reject on $stateChangeStart prevention (eg. unauthorized)
           }
         }).catch(function () {
+          isSuccess = false;
           return $state.go('login-error');
         }).finally(function () {
-          MetricsService.stopTimer(TimingKey.LOGIN_DURATION);
+          MetricsService.stopTimer(TimingKey.LOGIN_DURATION, {
+            success: isSuccess,
+          });
         });
     };
 
