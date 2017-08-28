@@ -14,23 +14,29 @@
 * Running a Single .spec File
   * To run a single test you can pass the --specs parameter:
 `yarn protractor-babel -- --specs <path to spec file>`
+
 ```
-yarn protractor-babel -- --specs ./test/e2e-protractor/huron/functional/call-settings_spec.js
+yarn protractor-babel -- --specs  ./test/e2e-protractor/huron/functional/call-settings_spec.js
 ```
 * Running with yarn:
 `yarn protractor-babel -- --specs ./test/e2e-protractor/huron/functional/call-settings_spec.js`
 
 * Via Sauce Labs
+* Set following Environment variables to run the tests via Suaucelab.
+* Unset following Environment variables to run the tests locally
 ```
 export SAUCE__MAX_INSTANCES="2"
 export SAUCE__USERNAME="atlas-web-limited"
 export SAUCE__ACCESS_KEY="b99c8bc7-4a28-4d87-8cd8-eba7c688d48c"
-yarn protractor-babel -- --specs ./test/e2e-protractor/huron/functional/<test name>.js --sauce --int
+
+yarn protractor-babel -- --specs ./test/e2e-protractor/huron/functional/<test name>.js  --int
+
 ```
 
 * Ruuning all files in a given directory change directory to huron and apply the cmd.
 ```
-yarn protractor-babel -- --suite huron --sauce --int
+yarn protractor-babel -- --suite huron  --int
+
 ```
 
 * The VS code debug launch config is  as follows for running a given sepc file in debugger mode
