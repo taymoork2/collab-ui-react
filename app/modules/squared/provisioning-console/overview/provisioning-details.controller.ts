@@ -1,6 +1,8 @@
 import { ProvisioningService } from './../provisioning.service';
 import { Status } from './../provisioning.service';
 import { ManualCode } from './../provisioning.service';
+import { Notification } from 'modules/core/notifications';
+import { STATUS_UPDATE_EVENT_NAME } from './../provisioning.service';
 
 export interface IServiceItem {
   siteUrl: string;
@@ -41,7 +43,9 @@ export class ProvisioningDetailsController {
 
   /* @ngInject */
   constructor(
+    private $rootScope,
     private $stateParams,
+    private Notification: Notification,
     private ProvisioningService: ProvisioningService) {
     this.order = this.$stateParams.order;
     this.items = {};
@@ -108,6 +112,27 @@ export class ProvisioningDetailsController {
       result.cmr = this.getServiceItemsForType(serviceItems.cmr);
     }
     return result;
+  }
+
+
+   /*
+  * Move an order between pending, in progress and completed.
+  */
+  public moveTo(order, newStatus: Status): void {
+    this.isLoading = true;
+    this.ProvisioningService.updateOrderStatus<{status: string}>(order, newStatus)
+    .then((result) => {
+      if (result) {
+        this.order.status = newStatus;
+        this.$rootScope.$broadcast(STATUS_UPDATE_EVENT_NAME, order);
+      }
+    })
+    .catch((error) => {
+      this.Notification.errorResponse(error);
+    })
+    .finally(() => {
+      this.isLoading = false;
+    });
   }
 }
 

@@ -1152,7 +1152,7 @@
   },
   "provisioningConsole": {
     "provisioningConsole": "Provisioning Console",
-    "orderNumber": "Order Number: {{orderNumber}}",
+    "orderNumber": "Order Number",
     "manualCode": "Manual Code",
     "customerName": "Customer Name",
     "customerMail": "Customer Email",
@@ -1172,6 +1172,7 @@
       "completed": "Completed"
     },
     "details": {
+      "orderNumber": "Order Number {{orderNumber}}",
       "noSites": "This order doesn't have any sites listed",
       "completed": "Order completed: {{orderDate}}",
       "pending": "Request received: {{orderDate}}",

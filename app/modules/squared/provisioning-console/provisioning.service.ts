@@ -10,6 +10,8 @@ export enum Status {
   COMPLETED = 'COMPLETED',
 }
 
+export const STATUS_UPDATE_EVENT_NAME = 'prov_status_update';
+
 export enum ManualCode {
   'Not Used' = 100,
   'Transfer; Modify of non-CI WebEx site' = 200,
