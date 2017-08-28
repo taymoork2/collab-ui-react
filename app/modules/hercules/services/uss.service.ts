@@ -216,7 +216,7 @@ export class USSService {
       .then(this.extractData);
   }
 
-  public notifyReadOnlyLaunch(): ng.IPromise<''> {
+  public invalidateHybridUserCache(): ng.IPromise<''> {
     return this.$http.post<''>(`${this.USSUrl}/internals/actions/invalidateUser/invoke`, null)
       .then(this.extractData);
   }
