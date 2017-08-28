@@ -5,7 +5,7 @@ import * as provisionerHelper from './provisioner.helper';
 import * as atlasHelper from './provisioner.helper.atlas';
 import * as huronCmiHelper from './huron/provisioner.helper.cmi';
 import * as huronPstnHelper from './huron/provisioner.helper.pstn';
-import * as huronFeaturesHelper from './huron/provision.helper.features';
+import * as huronFeaturesHelper from './huron/provisioner.helper.features';
 
 /* global LONG_TIMEOUT */
 
