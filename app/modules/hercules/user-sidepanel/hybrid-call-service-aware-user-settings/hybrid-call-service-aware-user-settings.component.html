@@ -19,11 +19,7 @@
                           ng-model="$ctrl.entitledToggle"
                           cs-change="$ctrl.changeEntitlement(toggleValue)"
                           size="small"
-                          ng-if="!$ctrl.loadingPage && !$ctrl.couldNotReadUser">
-        </cs-toggle-switch>
-        <cs-toggle-switch ng-if="!$ctrl.loadingPage && $ctrl.couldNotReadUser"
-                          is-disabled="true"
-                          size="small">
+                          is-disabled="!$ctrl.loadingPage && $ctrl.couldNotReadUser">
         </cs-toggle-switch>
         <span cs-loader
               class="cloud-extension-label loader-example--small"

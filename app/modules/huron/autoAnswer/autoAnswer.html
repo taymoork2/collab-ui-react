@@ -6,7 +6,7 @@
         ng-model="$ctrl.autoAnswerEnabled"
         toggle-id="enableAutoAnswer"
         name="enableAutoAnswer"
-        is-disabled="{{$ctrl.autoAnswerNoSupportedPhone}}"
+        is-disabled="$ctrl.autoAnswerNoSupportedPhone"
         cs-change="$ctrl.onAutoAnswerToggleChange(toggleValue)"
         size="small">
       </cs-toggle-switch></div>
