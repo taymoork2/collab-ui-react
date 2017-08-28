@@ -550,7 +550,7 @@ export class MeetingSettingsCtrl {
   // In the case of modify orders, the order will apply to an active subscription.
   // If we have WebEx licenses, we need pull those siteUrls and include them in the provision context
   public findExistingWebexSites(): void {
-    const actingSubscriptionLicenses = _.get<IConferenceLicense[]>(this.SetupWizardService.getActingSubscription(), 'licenses', []);
+    const actingSubscriptionLicenses = this.SetupWizardService.getActingSubscriptionLicenses();
     const existingConferenceServicesInActingSubscripton = _.filter(actingSubscriptionLicenses, (license: IConferenceLicense) => _.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC], license.offerName));
 
     // Create an array of existing sites

@@ -50,26 +50,13 @@
     vm.trialDaysRemaining = 0;
     vm.trialUsedPercentage = 0;
     vm.isInitialized = false; // invert the logic and initialize to false so the template doesn't flicker before spinner
+    vm.showPendingView = false;
     vm.getUserServiceRowClass = getUserServiceRowClass;
     vm._helpers = {
       maxServiceRows: maxServiceRows,
     };
-    vm.orderDetails = SetupWizardService.getOrderAndSubId();
 
     vm.isCareEnabled = false;
-
-    // TODO update this logic when Room, Message and Care licenses are implemented.
-    vm.pendingMeetingLicenses = SetupWizardService.getPendingMeetingLicenses().concat(SetupWizardService.getPendingAudioLicenses());
-    vm.pendingCallLicenses = SetupWizardService.getPendingCallLicenses();
-    vm.pendingMessageLicenses = SetupWizardService.getPendingMessageLicenses();
-    vm.pendingCareLicenses = SetupWizardService.getPendingCareLicenses();
-    vm.hasPendingLicenses = vm.pendingMeetingLicenses.concat(vm.pendingCallLicenses, vm.pendingMessageLicenses, vm.pendingCareLicenses).length > 0;
-    if (vm.hasPendingLicenses) {
-      _.forEach([vm.pendingMeetingLicenses, vm.pendingCallLicenses, vm.pendingMessageLicenses, vm.pendingCareLicenses], function (licenseArray) {
-        getPendingLicenseDisplayValues(licenseArray);
-      });
-    }
-    vm.showPendingView = vm.hasPendingLicenses;
 
     vm.hasExistingLicenses = Authinfo.getLicenses().length;
     vm.getNamedLabel = function (label) {
@@ -102,6 +89,27 @@
 
     init();
 
+    function setActingSubscription(option) {
+      SetupWizardService.setActingSubscriptionOption(option);
+      fetchPendingSubscriptionInfo();
+    }
+
+    function fetchPendingSubscriptionInfo() {
+      // TODO update this logic when Room, Message and Care licenses are implemented.
+      vm.pendingMeetingLicenses = SetupWizardService.getPendingMeetingLicenses().concat(SetupWizardService.getPendingAudioLicenses());
+      vm.pendingCallLicenses = SetupWizardService.getPendingCallLicenses();
+      vm.pendingMessageLicenses = SetupWizardService.getPendingMessageLicenses();
+      vm.pendingCareLicenses = SetupWizardService.getPendingCareLicenses();
+      vm.hasPendingLicenses = vm.pendingMeetingLicenses.concat(vm.pendingCallLicenses, vm.pendingMessageLicenses, vm.pendingCareLicenses).length > 0;
+      if (vm.hasPendingLicenses) {
+        _.forEach([vm.pendingMeetingLicenses, vm.pendingCallLicenses, vm.pendingMessageLicenses, vm.pendingCareLicenses], function (licenseArray) {
+          getPendingLicenseDisplayValues(licenseArray);
+        });
+      }
+      vm.showPendingView = vm.hasPendingLicenses;
+      vm.orderDetails = SetupWizardService.getOrderAndSubId();
+    }
+
     function getUserServiceRowClass(hasRoomSystem) {
       //determine how many vertical entrees there is going to be
       var returnClass = (hasRoomSystem) ? classes.hasRoomSys + ' ' + classes.userService : classes.userService;
@@ -125,6 +133,19 @@
     }
 
     function init() {
+      // pending subscription initialization
+      vm.setActingSubscription = setActingSubscription;
+      if (SetupWizardService.hasPendingSubscriptionOptions()) {
+        vm.pendingSubscriptionOptions = SetupWizardService.getPendingSubscriptionOptions();
+        vm.selectedSubscription = SetupWizardService.getActingPendingSubscriptionOptionSelection();
+        if (!SetupWizardService.hasPendingServiceOrder()) {
+          setActingSubscription(vm.selectedSubscription);
+        }
+      }
+      if (SetupWizardService.hasPendingServiceOrder()) {
+        fetchPendingSubscriptionInfo();
+      }
+
       vm.isCareEnabled = Authinfo.isCare();
 
       vm.messagingServices.services = Authinfo.getMessageServices() || [];

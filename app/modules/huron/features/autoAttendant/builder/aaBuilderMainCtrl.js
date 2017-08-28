@@ -618,6 +618,7 @@
       AACommonService.setDynAnnounceToggle(featureToggleDefault);
       AACommonService.setRestApiToggle(featureToggleDefault);
       AACommonService.setReturnedCallerToggle(featureToggleDefault);
+      AACommonService.setMultiSiteEnabledToggle(featureToggleDefault);
       return checkFeatureToggles();
     }
 
@@ -629,6 +630,7 @@
         hasRestApi: FeatureToggleService.supports(FeatureToggleService.features.huronAARestApi),
         hasDynAnnounce: FeatureToggleService.supports(FeatureToggleService.features.huronAADynannounce),
         hasReturnedCaller: FeatureToggleService.supports(FeatureToggleService.features.huronAAReturnCaller),
+        hasMultiSites: FeatureToggleService.supports(FeatureToggleService.features.huronMultiSite),
       });
     }
 
@@ -640,6 +642,7 @@
       AACommonService.setDynAnnounceToggle(featureToggles.hasDynAnnounce);
       AutoAttendantCeMenuModelService.setDynAnnounceToggle(featureToggles.hasDynAnnounce);
       AACommonService.setReturnedCallerToggle(featureToggles.hasReturnedCaller);
+      AACommonService.setMultiSiteEnabledToggle(featureToggles.hasMultiSites);
     }
 
     //load the feature toggle prior to creating the elements

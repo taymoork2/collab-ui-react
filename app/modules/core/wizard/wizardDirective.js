@@ -70,6 +70,7 @@ require('./_wizard.scss');
     vm.getTabController = getTabController;
     vm.getSubTabController = getSubTabController;
     vm.getSubTabTitle = getSubTabTitle;
+    vm.getTitleKey = getTitleKey;
 
     vm.setSubTab = setSubTab;
     vm.resetSubTab = resetSubTab;
@@ -84,6 +85,7 @@ require('./_wizard.scss');
 
     vm.isFirstTab = isFirstTab;
     vm.isLastTab = isLastTab;
+    vm.isMeetingSetupTabOnly = isMeetingSetupTabOnly;
     vm.isFirstStep = isFirstStep;
     vm.isLastStep = isLastStep;
     vm.isFirstTime = isFirstTime;
@@ -107,7 +109,7 @@ require('./_wizard.scss');
 
     // If tabs change (feature support in SetupWizard) and a step is not defined, re-initialize
     $scope.$watchCollection('tabs', function (tabs) {
-      if (tabs && tabs.length > 0 && _.isUndefined(vm.current.step)) {
+      if (tabs && tabs.length > 0 && (_.isUndefined(vm.current.step) || vm.current.step.name === 'select-subscription')) {
         init();
       }
     });
@@ -372,12 +374,17 @@ require('./_wizard.scss');
     }
 
     function isFirstTab() {
-      return getTabs().indexOf(getTab()) === 0;
+      return getTabs().indexOf(getTab()) === 0 && !isLastTab();
     }
 
     function isLastTab() {
       var tabs = getTabs();
       return tabs.indexOf(getTab()) === tabs.length - 1;
+    }
+
+    function isMeetingSetupTabOnly() {
+      var tabs = getTabs();
+      return tabs.length === 1 && tabs[0].name === 'meetingSettings';
     }
 
     function isFirstStep() {
@@ -414,7 +421,7 @@ require('./_wizard.scss');
     }
 
     function setNextText() {
-      if ((isFirstTab() && isFirstTime() && !isCustomerPartner() && !isFromPartnerLaunch()) || (isFirstTab() && isFirstStep() && !isSingleTabSingleStep())) {
+      if ((isFirstTab() && isLastStep() && isFirstTime() && !isCustomerPartner() && !isFromPartnerLaunch()) || (isFirstTab() && isLastStep() && !isSingleTabSingleStep())) {
         vm.nextText = $translate.instant('firstTimeWizard.getStarted');
       } else if (isFirstTime() && isLastTab() && isFirstStep() && hasPendingLicenses()) {
         vm.nextText = $translate.instant('common.provision');
@@ -457,6 +464,10 @@ require('./_wizard.scss');
         return _.isUndefined(vm.current.step.buttons);
       }
       return false;
+    }
+
+    function getTitleKey() {
+      return _.get(vm.current.step, 'title') || _.get(vm.current.tab, 'title');
     }
 
     $scope.$on('wizardNextText', function (event, action) {

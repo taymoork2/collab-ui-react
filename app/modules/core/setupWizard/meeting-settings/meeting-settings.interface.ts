@@ -50,7 +50,7 @@ export interface IExistingTrialSites extends IWebExSite {
 export interface IWebexLicencesPayload {
   provisionOrder: boolean;
   sendCustomerEmail?: boolean;
-  serviceOrderUUID: string | null;
+  serviceOrderUUID?: string | null;
   webexProvisioningParams?: IWebexProvisioningParams;
 }
 
@@ -66,13 +66,13 @@ export interface IWebExProvisioningData {
 
 export interface IPendingOrderSubscription {
   duration?: number;
-  externalSubscriptionId?: string;
+  externalSubscriptionId: string;
   gracePeriod?: number;
   licenses?: any;
   orderingTool?: string;
-  pendingServiceOrderUUID?: string | undefined;
+  pendingServiceOrderUUID?: string;
   status?: string;
-  subscriptionId?: string;
+  subscriptionId: string;
   trialDuration?: number;
 }
 

@@ -95,6 +95,16 @@ describe('ReadonlyInterceptor', function () {
       expect(this.Notification.notifyReadOnly.calls.count()).toBe(0);
     });
 
+    it('does not intercept users report white-listed paths', function () {
+      var config = {
+        method: 'POST',
+        url: 'https://atlas-intb.ciscospark.com/admin/api/v1/csv/organizations/4ccdd247-9f7a-4ffe-b10d-64c7872b9cca/users/report',
+      };
+      this.ReadonlyInterceptor.request(config);
+      expect(this.$q.reject.calls.count()).toBe(0);
+      expect(this.Notification.notifyReadOnly.calls.count()).toBe(0);
+    });
+
     it('does not intercept white-listed states', function () {
       var config = {
         data: 'x',

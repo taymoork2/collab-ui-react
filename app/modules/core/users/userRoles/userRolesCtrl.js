@@ -22,6 +22,68 @@ require('./_user-roles.scss');
       $scope.showPartnerManagementRole = result;
     });
 
+    var ROLE_TRANSLATIONS = {
+      analytics: $translate.instant('rolesPanel.analytics'),
+      assignRoles: $translate.instant('rolesPanel.assignRoles'),
+      customerManagement: $translate.instant('rolesPanel.customerManagement'),
+      companyPolicyTemplates: $translate.instant('rolesPanel.companyPolicyTemplates'),
+      licensesAndUpgrades: $translate.instant('rolesPanel.licensesAndUpgrades'),
+      organizationManagement: $translate.instant('rolesPanel.organizationManagement'),
+      overviewReports: $translate.instant('rolesPanel.overviewReports'),
+      supportMetrics: $translate.instant('rolesPanel.supportMetrics'),
+      trialsManagement: $translate.instant('rolesPanel.trialsManagement'),
+      userManagement: $translate.instant('rolesPanel.userManagement'),
+    };
+
+    $scope.roleTooltips = {
+      billingAdminAria: ROLE_TRANSLATIONS.licensesAndUpgrades,
+      billingAdmin: '<ul class="roles-tooltip"><li><i class="icon icon-remove"></i>' + ROLE_TRANSLATIONS.userManagement +
+        '</li><li><i class="icon icon-remove"></i>' + ROLE_TRANSLATIONS.companyPolicyTemplates +
+        '</li><li><i class="icon icon-remove"></i>' + ROLE_TRANSLATIONS.analytics +
+        '</li><li><i class="icon icon-remove"></i>' + ROLE_TRANSLATIONS.supportMetrics +
+        '</li><li><i class="icon icon-check"></i>' + ROLE_TRANSLATIONS.licensesAndUpgrades +
+        '</li><li><i class="icon icon-remove"></i>' + ROLE_TRANSLATIONS.assignRoles + '</li></ul>',
+      compliance: $translate.instant('ciRoles.complianceTooltip'),
+
+      fullAdminAria: ROLE_TRANSLATIONS.userManagement + ' ' + ROLE_TRANSLATIONS.companyPolicyTemplates + ' ' + ROLE_TRANSLATIONS.analytics +
+        ' ' + ROLE_TRANSLATIONS.supportMetrics + ' ' + ROLE_TRANSLATIONS.licensesAndUpgrades + ' ' + ROLE_TRANSLATIONS.assignRoles,
+      fullAdmin: '<ul class="roles-tooltip"><li><i class="icon icon-check"></i>' + ROLE_TRANSLATIONS.userManagement +
+        '</li><li><i class="icon icon-check"></i>' + ROLE_TRANSLATIONS.companyPolicyTemplates +
+        '</li><li><i class="icon icon-check"></i>' + ROLE_TRANSLATIONS.analytics +
+        '</li><li><i class="icon icon-check"></i>' + ROLE_TRANSLATIONS.supportMetrics +
+        '</li><li><i class="icon icon-check"></i>' + ROLE_TRANSLATIONS.licensesAndUpgrades +
+        '</li><li><i class="icon icon-check"></i>' + ROLE_TRANSLATIONS.assignRoles + '</li></ul>',
+
+      helpdesk: $translate.instant('ciRoles.atlas-portal.partner.helpdeskTooltip'),
+      orderAmin: $translate.instant('ciRoles.atlas-portal.partner.orderadminTooltip'),
+      partnerMgmt: $translate.instant('ciRoles.atlas-portal.cisco.partnermgmtTooltip'),
+      proPack: $translate.instant('usersPreview.resetAccessTipForBasicPack'),
+      readonlyAdmin: $translate.instant('rolesPanel.readonlyAdminTooltip'),
+
+      salesAdminAria: ROLE_TRANSLATIONS.customerManagement + ' ' + ROLE_TRANSLATIONS.overviewReports + ' ' + ROLE_TRANSLATIONS.trialsManagement,
+      salesAdmin: '<ul class="roles-tooltip"><li><i class="icon icon-check"></i>' + ROLE_TRANSLATIONS.customerManagement +
+        '</li><li><i class="icon icon-check"></i>' + ROLE_TRANSLATIONS.overviewReports +
+        '</li><li><i class="icon icon-remove"></i>' + ROLE_TRANSLATIONS.organizationManagement +
+        '</li><li><i class="icon icon-check"></i>' + ROLE_TRANSLATIONS.trialsManagement + '</li></ul>',
+
+      supportAdminAria: ROLE_TRANSLATIONS.analytics + ' ' + ROLE_TRANSLATIONS.supportMetrics,
+      supportAdmin: '<ul class="roles-tooltip"><li><i class="icon icon-remove"></i>' + ROLE_TRANSLATIONS.userManagement +
+        '</li><li><i class="icon icon-remove"></i>' + ROLE_TRANSLATIONS.companyPolicyTemplates +
+        '</li><li><i class="icon icon-check"></i>' + ROLE_TRANSLATIONS.analytics +
+        '</li><li><i class="icon icon-check"></i>' + ROLE_TRANSLATIONS.supportMetrics +
+        '</li><li><i class="icon icon-remove"></i>' + ROLE_TRANSLATIONS.licensesAndUpgrades +
+        '</li><li><i class="icon icon-remove"></i>' + ROLE_TRANSLATIONS.assignRoles + '</li></ul>',
+
+      userAdminAria: ROLE_TRANSLATIONS.userManagement + ' ' + ROLE_TRANSLATIONS.companyPolicyTemplates + ' ' +
+        ROLE_TRANSLATIONS.analytics + ' ' + ROLE_TRANSLATIONS.supportMetrics + ' ' + ROLE_TRANSLATIONS.licensesAndUpgrades,
+      userAdmin: '<ul class="roles-tooltip"><li><i class="icon icon-check"></i>' + ROLE_TRANSLATIONS.userManagement +
+        '</li><li><i class="icon icon-check"></i>' + ROLE_TRANSLATIONS.companyPolicyTemplates +
+        '</li><li><i class="icon icon-check"></i>' + ROLE_TRANSLATIONS.analytics +
+        '</li><li><i class="icon icon-check"></i>' + ROLE_TRANSLATIONS.supportMetrics +
+        '</li><li><i class="icon icon-check"></i>' + ROLE_TRANSLATIONS.licensesAndUpgrades +
+        '</li><li><i class="icon icon-remove"></i>' + ROLE_TRANSLATIONS.assignRoles + '</li></ul>',
+    };
+
     $scope.showOrderAdminRole = false;
     $scope.showComplianceRole = false;
     $scope.updateRoles = updateRoles;

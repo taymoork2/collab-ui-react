@@ -38,6 +38,10 @@ describe('Controller: WebEx Metrics Ctrl', function () {
         current: { },
         go: function () {},
       };
+      this.$scope.header = {
+        isWebexMetricsEnabled: true,
+        isWebexClassicEnabled: true,
+      };
       this.controller = this.$controller('WebExMetricsCtrl', {
         $sce: this.$sce,
         $scope: this.$scope,
@@ -85,13 +89,6 @@ describe('Controller: WebEx Metrics Ctrl', function () {
     expect(event.preventDefault).toHaveBeenCalled();
   });
 
-  it('should do prevent state change when loading reports', function () {
-    var event = jasmine.createSpyObj('event', ['preventDefault']);
-    this.controller.isIframeLoaded = false;
-    this.controller.onStateChangeStart(event, null, null, { name: 'reports.webex-metrics.metrics' });
-    expect(event.preventDefault).toHaveBeenCalled();
-  });
-
   it('should do something when state change success', function () {
     var event = jasmine.createSpyObj('event', ['preventDefault']);
     spyOn(this.controller, 'loadMetricsReport');
@@ -118,6 +115,9 @@ describe('Controller: WebEx Metrics Ctrl', function () {
     this.controller.updateWebexMetrics();
     expect(this.controller.loadMetricsReport).toHaveBeenCalled();
     expect(this.controller.isNoData).toBe(false);
+  });
+  it('should call checkClassic when init, the merticsOptions contains classic tab', function () {
+    expect(this.controller.metricsOptions.length).toBe(3);
   });
 });
 

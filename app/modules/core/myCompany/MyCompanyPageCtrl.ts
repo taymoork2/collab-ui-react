@@ -1,4 +1,5 @@
 require('./_myCompany.scss');
+import { DigitalRiverService } from 'modules/online/digitalRiver/digitalRiver.service';
 
 class MyCompanyPageCtrl {
 
@@ -11,6 +12,8 @@ class MyCompanyPageCtrl {
   /* @ngInject */
   constructor(
     private Authinfo,
+    private DigitalRiverService: DigitalRiverService,
+    private FeatureToggleService,
     private $translate: ng.translate.ITranslateService,
   ) {
     this._tabs = [{
@@ -22,12 +25,26 @@ class MyCompanyPageCtrl {
     }];
 
     const customers = this.Authinfo.getCustomerAccounts();
-    const result = _.some(customers, { customerType: 'Online' });
-    if (result) {
+    const isOnline = _.some(customers, { customerType: 'Online' });
+    if (isOnline) {
       this._tabs.push({
         title: this.$translate.instant('my-company.order'),
         state: 'my-company.orders',
       });
+      const subscriptions = this.Authinfo.getSubscriptions();
+      const hasPaidOrders = _.some(subscriptions, { orderingTool: 'DIGITAL_RIVER' });
+      if (hasPaidOrders) {
+        this.FeatureToggleService.atlasMyCompanyBillingTabGetStatus().then((toggle) => {
+          if (toggle) {
+            this._tabs.push({
+              title: this.$translate.instant('my-company.billing'),
+              state: 'my-company.billing',
+            });
+          }
+        });
+      }
+      // create cookie for Digital River
+      this.DigitalRiverService.getDigitalRiverToken();
     }
   }
 }

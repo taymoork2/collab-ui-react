@@ -11,6 +11,7 @@ class InlineEditText implements ng.IComponentController {
 
   public editEnabled = false;
   public saveInProgress = false;
+  public isProPackCustomer: boolean | false;
   public onSave: Function;
   public form: InlineEditTextForm;
   public modelOptions: ng.INgModelOptions = {
@@ -31,7 +32,12 @@ class InlineEditText implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private $q: ng.IQService,
-  ) {}
+    private $state: ng.ui.IStateService,
+    private FeatureToggleService,
+  ) {
+    this.FeatureToggleService.getFeatureForUser(this.$state.params.id, FeatureToggleService.features.atlasITProPackPurchased)
+    .then(result => this.isProPackCustomer = result);
+  }
 
   public $onInit(): void {
     if (this.asyncValidators && typeof this.modelOptions.debounce === 'object') {
@@ -39,6 +45,10 @@ class InlineEditText implements ng.IComponentController {
     }
 
     this.determineShowTextLink(this.isTextClickable);
+  }
+
+  public showProBadge(): boolean {
+    return this.$state.current.controller === 'HelpdeskOrgController' && this.isProPackCustomer;
   }
 
   public $onChanges(changes: { isTextClickable: ng.IChangesObject<any> }): void {

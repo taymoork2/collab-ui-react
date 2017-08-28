@@ -1,4 +1,4 @@
-<div class="grid-contents" ng-class="{'selected' : row.isSelected}" ng-click="grid.appScope.showUserDetails(row.entity)">
+<div class="grid-contents" ng-class="{'selected' : row.isSelected}" ng-click="grid.appScope.showUserDetails(row.entity)" aria-label="{{:: grid.appScope.getImageAria(row.entity)}}">
   <img ng-if="grid.appScope.isValidThumbnail(row.entity)" class="user-img" ng-src="{{grid.appScope.getUserPhoto(row.entity)}}"/>
   <span ng-if="!grid.appScope.isValidThumbnail(row.entity)" class="user-img">
     <i class="icon icon-user"></i>

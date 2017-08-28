@@ -104,7 +104,6 @@
     "status": "Status",
     "pending": "Invite Pending",
     "error": "Invitation email error",
-    "all": "All",
     "administrators": "Administrators",
     "inviteUsers": "Add Users",
     "manageUsers": "Manage Users",
@@ -171,7 +170,8 @@
     "careAddUserRoleError": "Error adding roles to user.",
     "careDeleteCESRoleError": "Error deleting CES role from user",
     "loadError": "An error while loading the users list.",
-    "ciscoSparkJabberInteropTooltip": "Enable messaging between Cisco Spark and Jabber. Provide access for Jabber users to Cisco Spark spaces. Changes can take up to 24 hours."
+    "ciscoSparkJabberInteropTooltip": "Enable messaging between Cisco Spark and Jabber. Provide access for Jabber users to Cisco Spark spaces. Changes can take up to 24 hours.",
+    "userImage": "User Image"
   },
   "userManage": {
     "org": {
@@ -557,7 +557,6 @@
     "loadingData": "Loading Data",
     "loadingDescription": "For best results, allow reports to finish loading.",
     "pageTitle": "Reports",
-    "all": "All",
     "engagement": "Engagement",
     "quality": "Quality",
     "details": "Call Detail Record",
@@ -712,7 +711,7 @@
     "meetingNumber": "Meeting Number",
     "scheduledFrom": "Scheduled From",
     "placeholder-date": "Choose a day",
-    "hostNameAndId":"Host Name/Host ID",
+    "hostNameAndId": "Host Name/Host ID",
     "siteIdAndName": "Site ID/Site Name",
     "search-info-title": "Search for a meeting",
     "placeholder-text": "Search email or meeting number",
@@ -3597,6 +3596,9 @@
     "newSubsOnly": "New services in your subscription",
     "planReview": "Plan Review",
     "subscriptionReview": "Subscription Review",
+    "selectSubscriptionTitle": "Which subscription would you like to set up",
+    "selectSubscriptionPrompt": "You have more than one pending subscription. Please choose which one you would like to set up first.",
+    "selectSubscriptionLabel": "Choose a subscription to set up",
     "pendingLicensesError": "There was an error in the call for pending licenses",
     "subscriptionId": "Subscription IDs",
     "subscriptionID": "Subscription ID: ",
@@ -3642,7 +3644,7 @@
       "ccaspSubscriptionId": "CCA-SP provider subscription id number",
       "chooseCCASPPartner": "Choose CCA-SP partner",
       "ccaspPartner": "CCA-SP Partner: {{partner}}",
-      "errorNoMatch":"The subscription ID number and CCA-SP Partner do not match. Please enter a valid subscription ID and SSA-SP Partner combination",
+      "errorNoMatch": "The subscription ID number and CCA-SP Partner do not match. Please enter a valid subscription ID and SSA-SP Partner combination",
       "ccaspProvided": "Conferencing Audio: CCA-SP provided by {{partner}}"
     },
     "existingWebExTrialSites": "You have the following WebEx site that was part of your free trial, would you like to continue using it?",
@@ -4405,7 +4407,7 @@
     "failedToFetchSiteLevelLanguage": "Failed to fetch site level language. Reason:",
     "userModule": "user",
     "placeModule": "place",
-    "placeDetails":"Place Details",
+    "placeDetails": "Place Details",
     "saveModal": {
       "title": "Save Settings",
       "message1": "Changing the language will cause all devices for this user to reboot and may take a few minutes.",
@@ -5178,7 +5180,9 @@
     "SD": "Cisco Spark Room Device",
     "deleteOrgTitle": "Delete Customer",
     "deleteOrgConfirmMsg": "Are you sure you want to permanently delete customer '{{orgName}}'?",
+    "deleteOrgHmsError": "For the customer '{{orgName}}' Hybrid Media Service is currently Active, please deactivate Hybrid Media Service before deleting the customer.",
     "deleteOrg": "Delete Customer",
+    "iUnderstand": "I Understand",
     "deleteOrgSuccess": "{{orgName}} successfully deleted",
     "deleteOrgError": "{{orgName}} was not deleted.",
     "pstnOrders": "PSTN Orders & Imports",
@@ -6775,10 +6779,12 @@
     "callbackTemplateCode": "Ca",
     "callbackMediaType": "Callback",
     "chatPlusCallbackMediaType": "Chat+Callback",
-    "Ch" : "Chat",
-    "Ca" : "Callback",
-    "ChCa" : "Chat+Callback",
-    "Va" : "Customer Virtual Assistant",
+    "virtualAssistantCode": "Va",
+    "virtualAssistantMediaType": "Virtual Assistants",
+    "Ch": "Chat",
+    "Ca": "Callback",
+    "ChCa": "Chat+Callback",
+    "Va": "Customer Virtual Assistant",
     "newFeatures": {
       "newFeatureButtonText": "New",
       "newCareTemplateModalTitle": "Create New Care Template",
@@ -7538,7 +7544,7 @@
       "meeting": {
         "title": "Meeting",
         "notEnabledText": "Join up to 25 colleagues in a Team Space Sync-up or many more in a WebEx Meeting Center.",
-        "serviceProvisioning":"Meeting service is being provisioned and will be available soon.",
+        "serviceProvisioning": "Meeting service is being provisioned and will be available soon.",
         "meetingsNotSetUp": "Meeting service not set up",
         "setupMeetingService": "Set up Meeting Service"
       },
@@ -7680,7 +7686,9 @@
     "pageTitle": "My Company",
     "subscription": "Subscriptions",
     "info": "Info",
-    "order": "Order History"
+    "order": "Order History",
+    "billing": "Billing Info",
+    "loadError": "An error occurred while loading the page"
   },
   "subscriptions": {
     "activeUsers": "Active Users",
@@ -7739,7 +7747,7 @@
       "VoIPOnly": "VoIP Only",
       "CCASP": "CCA-SP",
       "TSP": "TSP Audio",
-      "ST" : "WebEx Storage",
+      "ST": "WebEx Storage",
       "STSPK": "Spark Storage",
       "MSGR": "Messenger"
     }
