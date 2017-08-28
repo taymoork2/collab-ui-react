@@ -3,6 +3,7 @@ class LocationsRoutingPrefixCtrl implements ng.IComponentController {
   public routingPrefix: string;
   public routingPrefixLength: string;
   public onChangeFn: Function;
+  public routingPrefixForm: ng.IFormController;
   public messages: any = {};
 
   /* @ngInject */

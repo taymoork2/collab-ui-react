@@ -36,21 +36,14 @@ describe('Component: locationRoutingPrefix', () => {
       expect(this.view).toContainElement(PREFIX_INPUT);
     });
 
-    it('should not call onChangeFn when input is too long', function() {
+    it('form should not be valid when input is too long', function() {
       this.view.find(PREFIX_INPUT).val('123456789').change();
-      expect(this.controller.form.$invalid).toBeTruthy();
-      // expect(this.$scope.onChangeFn).not.toHaveBeenCalled();
+      expect(this.controller.routingPrefixForm.$valid).toBeFalsy();
     });
 
-    it('should not call onChangeFn when input is invalid', function() {
+    it('form should not be valid when input is invalid', function() {
       this.view.find(PREFIX_INPUT).val('123456%$%&^789').change();
-      // expect(this.controller.form.$invalid).toBeTruthy();
-      // expect(this.$scope.onChangeFn).not.toHaveBeenCalled();
-    });
-
-    it('should call onChangeFn when input is valid', function() {
-      this.view.find(PREFIX_INPUT).val('1234').change();
-      expect(this.$scope.onChangeFn).toHaveBeenCalledWith('1234');
+      expect(this.controller.routingPrefixForm.$valid).toBeFalsy();
     });
   });
 });

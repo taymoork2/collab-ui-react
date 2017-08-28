@@ -9,7 +9,7 @@ export class LocationsWizardComponent {
   public bindings = {};
 }
 
-const PAGE_ESA: number = 6;
+const PAGE_ESA: number = 5;
 
 class LocationsWizardController implements ng.IComponentController {
   private static readonly PAGE_TRANSITION_TIMEOUT: number = 10;
@@ -76,9 +76,9 @@ class LocationsWizardController implements ng.IComponentController {
           this.PstnModel.setProvider(_.get<PstnCarrier>(carriers, '[0]'));
           this.showEmergencyServiceAddress = true;
         } else {
-          this.lastIndex = 5;
+          this.lastIndex = 4;
         }
-      }).catch(() => this.lastIndex = 5);
+      }).catch(() => this.lastIndex = 4);
     });
 
     this.$q.resolve(this.initComponent()).finally(() => this.loading = false);
@@ -101,14 +101,6 @@ class LocationsWizardController implements ng.IComponentController {
 
   public onTimeZoneChanged(timeZone: string) {
     this.callLocationSettingsData.location.timeZone = timeZone;
-  }
-
-  public onDateFormatChanged(dateFormat: string): void {
-    this.callLocationSettingsData.location.dateFormat = dateFormat;
-  }
-
-  public onTimeFormatChanged(timeFormat: string): void {
-    this.callLocationSettingsData.location.timeFormat = timeFormat;
   }
 
   public onPreferredLanguageChanged(preferredLanguage: string): void {
