@@ -1,3 +1,4 @@
+import { Config } from 'modules/core/config/config';
 import { IPendingOrderSubscription, IPendingLicense } from './meeting-settings/meeting-settings.interface';
 import { HuronCustomerService } from 'modules/huron/customer';
 import { HuronCompassService } from 'modules/huron/compass';
@@ -30,7 +31,7 @@ export class SetupWizardService {
     private $http: ng.IHttpService,
     private $translate: ng.translate.ITranslateService,
     private Authinfo,
-    private Config,
+    private Config: Config,
     private SessionStorage,
     private StorageKeys,
     private UrlConfig,

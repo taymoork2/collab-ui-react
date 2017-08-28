@@ -1,5 +1,6 @@
 import './hybrid-services-cluster-list-with-cards.scss';
 
+import { Config } from 'modules/core/config/config';
 import { EnterprisePrivateTrunkService } from 'modules/hercules/services/enterprise-private-trunk-service';
 import { HybridServicesClusterService, IResourceGroups, HighLevelStatusForService } from 'modules/hercules/services/hybrid-services-cluster.service';
 import { IToolkitModalService } from 'modules/core/modal';
@@ -47,7 +48,7 @@ class HybridServicesClusterListWithCardsCtrl implements ng.IComponentController 
     private $translate: ng.translate.ITranslateService,
     private Analytics,
     private Authinfo,
-    private Config,
+    private Config: Config,
     private EnterprisePrivateTrunkService: EnterprisePrivateTrunkService,
     private HybridServicesClusterService: HybridServicesClusterService,
     private HybridServicesClusterStatesService: HybridServicesClusterStatesService,

@@ -1,3 +1,4 @@
+import { Config } from 'modules/core/config/config';
 import { MetricsService, OperationalKey } from 'modules/core/metrics';
 import { WindowService } from 'modules/core/window';
 
@@ -31,7 +32,7 @@ export class Notification {
     private $translate: ng.translate.ITranslateService,
     private MetricsService: MetricsService,
     private WindowService: WindowService,
-    private Config,
+    private Config: Config,
     private toaster,
   ) {
     this.initTimeouts();

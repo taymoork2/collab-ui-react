@@ -1,3 +1,4 @@
+import { Config } from 'modules/core/config/config';
 import { DigitalRiverService } from 'modules/online/digitalRiver/digitalRiver.service';
 import { IOrderDetail } from './myCompanyOrders.service';
 import { Notification } from 'modules/core/notifications';
@@ -22,7 +23,7 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
   constructor(
     private $translate: angular.translate.ITranslateService,
     private $window: ng.IWindowService,
-    private Config,
+    private Config: Config,
     private DigitalRiverService: DigitalRiverService,
     private Notification: Notification,
     private MyCompanyOrdersService: MyCompanyOrdersService,

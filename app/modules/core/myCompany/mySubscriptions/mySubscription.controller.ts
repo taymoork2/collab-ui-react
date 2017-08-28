@@ -1,3 +1,4 @@
+import { Config } from 'modules/core/config/config';
 import { DigitalRiverService } from 'modules/online/digitalRiver/digitalRiver.service';
 import { Notification } from 'modules/core/notifications';
 import { OnlineUpgradeService, IBmmpAttr, IProdInst } from 'modules/online/upgrade/upgrade.service';
@@ -75,7 +76,7 @@ export class MySubscriptionCtrl implements ng.IController {
     private $scope: ng.IScope,
     private $translate: ng.translate.ITranslateService,
     private Authinfo,
-    private Config,
+    private Config: Config,
     private DigitalRiverService: DigitalRiverService,
     private HybridServicesUtilsService: HybridServicesUtilsService,
     private Notification: Notification,
@@ -179,8 +180,6 @@ export class MySubscriptionCtrl implements ng.IController {
     if (!this.overage) {
       if (offer.usage) {
         this.overage = offer.usage > offer.volume;
-      } else if (offer.totalUsage) {
-        this.overage = offer.totalUsage > offer.volume;
       }
     }
   }

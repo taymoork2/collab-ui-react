@@ -1,3 +1,5 @@
+import { Config } from 'modules/core/config/config';
+
 interface IHeaderTab {
   title: string;
   state: string;
@@ -12,7 +14,7 @@ class HuronDetailsHeaderComponentCtrl implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private Authinfo,
-    private Config,
+    private Config: Config,
     private FeatureToggleService,
     private $translate: ng.translate.ITranslateService,
   ) { }

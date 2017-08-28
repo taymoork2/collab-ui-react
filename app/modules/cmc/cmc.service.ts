@@ -1,4 +1,5 @@
 import { ICmcUserData, ICmcOrgStatusResponse, ICmcUserStatusResponse, ICmcUser, ICmcIssue } from './cmc.interface';
+import { Config } from 'modules/core/config/config';
 
 export class CmcService {
 
@@ -13,7 +14,7 @@ export class CmcService {
   constructor(
     private $q: ng.IQService,
     private Orgservice,
-    private Config,
+    private Config: Config,
     private UrlConfig,
     private CmcServiceMock,
     private $http: ng.IHttpService,
