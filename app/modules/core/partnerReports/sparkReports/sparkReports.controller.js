@@ -25,6 +25,7 @@
     $sce,
     $timeout,
     $window,
+    Analytics,
     Authinfo,
     Notification,
     QlikService,
@@ -42,8 +43,10 @@
         orgIds = _.map(customerList, function (customer) {
           return customer.customerOrgId;
         });
+        orgIds.unshift(Authinfo.getOrgId());
         loadSparkReports();
       });
+      Analytics.trackReportsEvent(Analytics.sections.REPORTS.eventNames.PARTNER_SPARK_REPORT);
     }
 
     function loadSparkReports() {

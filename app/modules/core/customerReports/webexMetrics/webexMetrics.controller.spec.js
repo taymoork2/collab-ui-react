@@ -12,6 +12,7 @@ describe('Controller: WebEx Metrics Ctrl', function () {
       '$timeout',
       '$window',
       '$rootScope',
+      'Analytics',
       'Authinfo',
       'LocalStorage',
       'Notification',
@@ -19,7 +20,7 @@ describe('Controller: WebEx Metrics Ctrl', function () {
       'QlikService',
       'Userservice'
     );
-
+    spyOn(this.Analytics, 'trackReportsEvent');
     spyOn(this.Authinfo, 'setEmails');
     spyOn(this.Authinfo, 'getConferenceServicesWithoutSiteUrl').and.returnValue([]);
     spyOn(this.Authinfo, 'getConferenceServicesWithLinkedSiteUrl').and.returnValue([]);
@@ -37,6 +38,10 @@ describe('Controller: WebEx Metrics Ctrl', function () {
         current: { },
         go: function () {},
       };
+      this.$scope.header = {
+        isWebexMetricsEnabled: true,
+        isWebexClassicEnabled: true,
+      };
       this.controller = this.$controller('WebExMetricsCtrl', {
         $sce: this.$sce,
         $scope: this.$scope,
@@ -45,6 +50,7 @@ describe('Controller: WebEx Metrics Ctrl', function () {
         $window: this.$window,
         $rootScope: this.$rootScope,
         $state: $state,
+        Analytics: this.Analytics,
         Authinfo: this.Authinfo,
         LocalStorage: this.LocalStorage,
         Notification: this.Notification,
@@ -55,6 +61,10 @@ describe('Controller: WebEx Metrics Ctrl', function () {
       this.$scope.$apply();
     };
     this.initController();
+  });
+
+  it('should call Analytics.trackReportsEvent during init', function () {
+    expect(this.Analytics.trackReportsEvent).toHaveBeenCalledWith(this.Analytics.sections.REPORTS.eventNames.CUST_WEBEX_REPORT);
   });
 
   it('premium settings should be controlled by ProPackService or Authinfo.isPremium', function () {
@@ -76,13 +86,6 @@ describe('Controller: WebEx Metrics Ctrl', function () {
   it('should not go to reports.webex-metrics when at reports.webex-metrics sub state', function () {
     var event = jasmine.createSpyObj('event', ['preventDefault']);
     this.controller.onStateChangeStart(event, { name: 'reports.webex-metrics' }, {}, { name: 'reports.webex-metrics.metrics' });
-    expect(event.preventDefault).toHaveBeenCalled();
-  });
-
-  it('should do prevent state change when loading reports', function () {
-    var event = jasmine.createSpyObj('event', ['preventDefault']);
-    this.controller.isIframeLoaded = false;
-    this.controller.onStateChangeStart(event, null, null, { name: 'reports.webex-metrics.metrics' });
     expect(event.preventDefault).toHaveBeenCalled();
   });
 
@@ -112,6 +115,9 @@ describe('Controller: WebEx Metrics Ctrl', function () {
     this.controller.updateWebexMetrics();
     expect(this.controller.loadMetricsReport).toHaveBeenCalled();
     expect(this.controller.isNoData).toBe(false);
+  });
+  it('should call checkClassic when init, the merticsOptions contains classic tab', function () {
+    expect(this.controller.metricsOptions.length).toBe(3);
   });
 });
 

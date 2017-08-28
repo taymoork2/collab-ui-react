@@ -1,3 +1,10 @@
+export enum ServicePackage {
+  VOICE_ONLY = 'VOICE_ONLY',
+  VOICE_VOICEMAIL = 'VOICE_VOICEMAIL', // Avril Only
+  VOICE_VOICEMAIL_AVRIL = 'VOICE_VOICEMAIL_AVRIL', // Unity and Avril
+  DEMO_STANDARD = 'DEMO_STANDARD', // Unity only
+}
+
 export interface IRCustomer {
   uuid: string;
   name: string;

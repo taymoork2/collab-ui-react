@@ -39,7 +39,7 @@
           type="text"
           cs-input-size="medium-4"
           ng-change="meetingCtrl.checkValidTransferData()"
-          ng-model="meetingCtrl.transferSiteDetails.transferCode">
+          ng-model="meetingCtrl.transferSiteCode">
       </div>
     </div>
     <div class="col-lg-12">
@@ -51,7 +51,7 @@
           cs-input-size="medium-4"
           cs-input-secondary-label="{{::'firstTimeWizard.pmrSiteURLDomain' | translate}}"
           ng-change="meetingCtrl.checkValidTransferData()"
-          ng-model="meetingCtrl.transferSiteDetails.siteUrl">
+          ng-model="meetingCtrl.transferSiteUrl">
         <div class="cs-input__messages error-msg-spacing" role="alert" ng-if="meetingCtrl.error.isError">
           <div class="message">{{meetingCtrl.error.errorMsg}}</div>
         </div>

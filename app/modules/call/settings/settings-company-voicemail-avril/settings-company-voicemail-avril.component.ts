@@ -1,6 +1,6 @@
 import { Site } from 'modules/huron/sites';
 import { IOption } from 'modules/huron/dialing/dialing.service';
-import { IAvrilFeatures } from 'modules/huron/avril';
+import { IAvrilSiteFeatures } from 'modules/huron/avril';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
 
 const VM_TO_EMAIL_WITH_ATTACH: string = 'withAttachment';
@@ -8,7 +8,7 @@ const VM_TO_EMAIL_WITHOUT_ATTACH: string = 'withoutAttachment';
 
 class CompanyVoicemailAvrilComponentCtrl implements ng.IComponentController {
   public site: Site;
-  public features: IAvrilFeatures;
+  public features: IAvrilSiteFeatures;
   public selectedNumber: IOption;
   public missingDirectNumbers: boolean;
   public filterPlaceholder: string;

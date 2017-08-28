@@ -19,8 +19,13 @@
     bottom: 0;
   }
 
-  .control-label {
-    color: $gray-dark-4;
+  .display-flex {
+    display: flex;
+    align-items: center;
+  }
+
+  .warning-padding {
+    padding-left: 16px;
   }
 }
 
@@ -48,7 +53,7 @@
         flex: 1 1 0;
       }
       .icon-star {
-        padding: .5rem;
+        padding: .5rem .5rem .5rem 0;
         color: #f0a309;
       }
     }

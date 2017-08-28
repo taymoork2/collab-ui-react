@@ -67,40 +67,43 @@ describe('Component: HybridServicesClusterListWithCardsComponent', function () {
 
     it('should update filters and displayed clusters', function () {
       HybridServicesClusterService.getResourceGroups.and.returnValue($q.resolve({ unassigned: [{
+        name: 'asdf',
         targetType: 'c_mgmt',
         connectors: [{
           alarms: [],
           connectorType: 'c_mgmt',
-          runningState: 'running',
+          state: 'running',
           hostname: 'a.elg.no',
         }],
       }, {
+        name: 'asdf',
         targetType: 'mf_mgmt',
         connectors: [{
           alarms: [],
           connectorType: 'mf_mgmt',
-          runningState: 'running',
+          state: 'running',
           hostname: 'a.elg.no',
         }],
       }, {
+        name: 'asdf',
         targetType: 'cs_mgmt',
         connectors: [{
           alarms: [],
           connectorType: 'cs_mgmt',
-          runningState: 'running',
+          state: 'running',
           hostname: 'a.elg.no',
         }],
       }, {
+        name: 'asdf',
         targetType: 'ucm_mgmt',
         connectors: [{
           alarms: [],
           connectorType: 'ucm_mgmt',
-          runningState: 'running',
+          state: 'running',
           hostname: 'a.elg.no',
         }],
       }] }));
       initController(false);
-      window.console.log('controller.filters', controller.filters);
       expect(controller.filters[0].count).toBe(0);
       expect(controller.filters[1].count).toBe(0);
       expect(controller.filters[2].count).toBe(0);
@@ -124,22 +127,30 @@ describe('Component: HybridServicesClusterListWithCardsComponent', function () {
         {
           uuid: 'b01dface',
           name: 'To fulle menn',
-          serviceStatus: 'unknown',
+          status: {
+            state: 'unknown',
+          },
         },
         {
           uuid: 'f005ba11',
           name: 'Aldri stol på en fyllik',
-          serviceStatus: 'outage',
+          status: {
+            state: 'outage',
+          },
         },
         {
           uuid: 'deadbea7',
           name: 'Skinnet bedrar',
-          serviceStatus: 'operational',
+          status: {
+            state: 'operational',
+          },
         },
         {
           uuid: 'ba5eba11',
           name: 'Ingen har skylda',
-          serviceStatus: 'impaired',
+          status: {
+            state: 'impaired',
+          },
         },
       ]));
     });
@@ -153,57 +164,69 @@ describe('Component: HybridServicesClusterListWithCardsComponent', function () {
           name: 'To fulle menn',
           id: 'b01dface',
           targetType: 'ept',
-          servicesStatuses: [
-            {
-              serviceId: 'ept',
-              state: {
-                cssClass: 'warning',
+          extendedProperties: {
+            servicesStatuses: [
+              {
+                serviceId: 'ept',
+                state: {
+                  cssClass: 'warning',
+                  name: 'unknown',
+                },
+                total: 1,
               },
-              total: 1,
-            },
-          ],
+            ],
+          },
         },
         {
           name: 'Aldri stol på en fyllik',
           id: 'f005ba11',
           targetType: 'ept',
-          servicesStatuses: [
-            {
-              serviceId: 'ept',
-              state: {
-                cssClass: 'danger',
+          extendedProperties: {
+            servicesStatuses: [
+              {
+                serviceId: 'ept',
+                state: {
+                  cssClass: 'danger',
+                  name: 'outage',
+                },
+                total: 1,
               },
-              total: 1,
-            },
-          ],
+            ],
+          },
         },
         {
           name: 'Skinnet bedrar',
           id: 'deadbea7',
           targetType: 'ept',
-          servicesStatuses: [
-            {
-              serviceId: 'ept',
-              state: {
-                cssClass: 'success',
+          extendedProperties: {
+            servicesStatuses: [
+              {
+                serviceId: 'ept',
+                state: {
+                  cssClass: 'success',
+                  name: 'operational',
+                },
+                total: 1,
               },
-              total: 1,
-            },
-          ],
+            ],
+          },
         },
         {
           name: 'Ingen har skylda',
           id: 'ba5eba11',
           targetType: 'ept',
-          servicesStatuses: [
-            {
-              serviceId: 'ept',
-              state: {
-                cssClass: 'warning',
+          extendedProperties: {
+            servicesStatuses: [
+              {
+                serviceId: 'ept',
+                state: {
+                  cssClass: 'warning',
+                  name: 'impaired',
+                },
+                total: 1,
               },
-              total: 1,
-            },
-          ],
+            ],
+          },
         },
       ]));
     });

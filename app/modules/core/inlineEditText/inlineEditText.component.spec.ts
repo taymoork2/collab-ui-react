@@ -6,7 +6,11 @@ describe('Component: InlineEditText', () => {
     this.injectDependencies(
       '$q',
       '$scope',
+      '$state',
+      'FeatureToggleService',
     );
+
+    spyOn(this.FeatureToggleService, 'getFeatureForUser').and.returnValue(this.$q.resolve(false));
 
     this.ESCAPE_KEY = jQuery.Event('keyup', {
       keyCode: 27,
@@ -110,7 +114,7 @@ describe('Component: InlineEditText', () => {
     });
 
     it('should save new value after clicking submit button', function () {
-      this.view.find(this.INPUT).val(this.newValue).change();
+      this.view.find(this.INPUT).val(this.newValue).change().submit();
       this.view.find(this.SUBMIT_BUTTON).click();
 
       expect(this.$scope.saveValue).toHaveBeenCalledWith(this.newValue);
@@ -120,7 +124,7 @@ describe('Component: InlineEditText', () => {
     it('should remain in edit mode if save fails', function () {
       this.$scope.saveValue.and.returnValue(this.$q.reject());
 
-      this.view.find(this.INPUT).val(this.newValue).change();
+      this.view.find(this.INPUT).val(this.newValue).change().submit();
       this.view.find(this.SUBMIT_BUTTON).click();
 
       expect(this.$scope.saveValue).toHaveBeenCalledWith(this.newValue);

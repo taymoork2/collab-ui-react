@@ -6,7 +6,7 @@
     .controller('CareFeaturesCtrl', CareFeaturesCtrl);
 
   /* @ngInject */
-  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification) {
+  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification, VirtualAssistantService) {
     var vm = this;
     vm.isVirtualAssistantEnabled = $state.isVirtualAssistantEnabled;
     vm.init = init;
@@ -72,38 +72,18 @@
       icons: ['icon-message', 'icon-phone'],
       data: [],
     }];
-
-    if (vm.isVirtualAssistantEnabled) {
-      vm.features.push({
-        name: 'Va',
-        getFeature: CareFeatureList.getVirtualAssistantConfigs,
-        formatter: CareFeatureList.formatVirtualAssistant,
-        i18n: 'careChatTpl.chatTemplate',
-        isEmpty: false,
-        color: 'cta',
-        icons: ['icon-bot-four'],
-        data: [],
-      });
-    }
     vm.filters = [{
       name: $translate.instant('common.all'),
-      filterValue: 'all',
+      filterValue: CareFeatureList.filterConstants.all,
     }, {
-      name: $translate.instant('sunlightDetails.chatMediaType'),
-      filterValue: 'chat',
-    }, {
-      name: $translate.instant('sunlightDetails.callbackMediaType'),
-      filterValue: 'callback',
-    }, {
-      name: $translate.instant('sunlightDetails.chatPlusCallbackMediaType'),
-      filterValue: 'chatPlusCallback',
-    }];
+      name: $translate.instant('common.customerSupportTemplates'),
+      filterValue: CareFeatureList.filterConstants.customerSupport,
+    },
+    ];
 
     if (vm.isVirtualAssistantEnabled) {
-      vm.filters.push({
-        name: $translate.instant('sunlightDetails.virtualAssistantMediaType'),
-        filterValue: 'virtualAssistant',
-      });
+      vm.features.push(VirtualAssistantService.featureList);
+      vm.filters.push(VirtualAssistantService.featureFilter);
     }
 
     init();
@@ -210,6 +190,15 @@
 
     vm.editCareFeature = function (feature, $event) {
       $event.stopImmediatePropagation();
+      if (feature.featureType === VirtualAssistantService.serviceCard.id) {
+        VirtualAssistantService.getConfig(feature.templateId).then(function (template) {
+          VirtualAssistantService.serviceCard.goToService($state, {
+            isEditFeature: true,
+            template: template,
+          });
+        });
+        return;
+      }
       CareFeatureList.getTemplate(feature.templateId).then(function (template) {
         $state.go('care.setupAssistant', {
           isEditFeature: true,

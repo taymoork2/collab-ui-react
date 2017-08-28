@@ -10,7 +10,6 @@ describe('UserListCtrl: Ctrl', function () {
       '$rootScope',
       '$scope',
       '$state',
-      'Auth',
       'Authinfo',
       'Config',
       'DirSyncService',
@@ -75,7 +74,6 @@ describe('UserListCtrl: Ctrl', function () {
     spyOn(this.Authinfo, 'isCSB').and.returnValue(true);
     spyOn(this.Authinfo, 'getOrgId').and.returnValue(this.currentUser.meta.organizationID);
     this.isCiscoSpy = spyOn(this.Authinfo, 'isCisco').and.returnValue(false);
-    spyOn(this.Auth, 'isOnlineOrg').and.returnValue(this.$q.resolve(false));
 
     spyOn(this.FeatureToggleService, 'atlasEmailStatusGetStatus').and.returnValue(this.$q.resolve(false));
 

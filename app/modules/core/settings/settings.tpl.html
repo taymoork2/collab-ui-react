@@ -7,6 +7,10 @@
       <security-setting></security-setting>
     </setting-section>
 
+    <setting-section setting="settingsCtrl.externalCommunication" ng-if="settingsCtrl.externalCommunication">
+      <external-communication-setting></external-communication-setting>
+    </setting-section>
+
     <setting-section setting="settingsCtrl.privacy" ng-if="settingsCtrl.privacy">
       <privacy-setting></privacy-setting>
     </setting-section>

@@ -8,7 +8,7 @@
     <p ng-repeat="destination in $ctrl.destinationList | orderBy: 'address'" class="feature">
       <span class="feature-name">{{destination.address}}</span>
       <span class="feature-status">
-        <i class="icon icon-circle status-indicator" ng-class="$ctrl.getStatusIndicatorCSSClass(destination.state)"></i>
+        <cs-statusindicator ng-model="destination.cssClass"></cs-statusindicator>
         <span translate="{{'servicesOverview.cardStatus.' + destination.state}}"></span>
       </span>
     </p>

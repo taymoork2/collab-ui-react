@@ -5,7 +5,7 @@
     .controller('TypeSelectorController', TypeSelectorController);
 
   /* @ngInject */
-  function TypeSelectorController($q, $stateParams, $translate, Authinfo, Config, HybridServicesClusterService, hasCucmSupportFeatureToggle) {
+  function TypeSelectorController($q, $stateParams, $translate, Authinfo, Config, HybridServicesClusterService, hasCucmSupportFeatureToggle, hasImpSupportFeatureToggle) {
     var vm = this;
     vm.UIstate = 'loading';
     vm.isEntitledTo = {
@@ -54,6 +54,11 @@
           contextHelpText: vm.hasSetup.context ? $translate.instant('hercules.fusion.add-resource.type.context-description') : $translate.instant('hercules.fusion.add-resource.type.context-not-setup'),
           cucmHelpText: $translate.instant('hercules.fusion.add-resource.type.cucm-description'),
         };
+
+        if (hasImpSupportFeatureToggle) {
+          vm._translation.expresswayHelpText = $translate.instant('hercules.fusion.add-resource.type.expressway-description-with-imp');
+        }
+
         // Only Expressway supports the partner registration
         if (Authinfo.isCustomerLaunchedFromPartner()) {
           vm.hasSetup.mediafusion = false;

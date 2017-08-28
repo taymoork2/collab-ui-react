@@ -187,21 +187,21 @@ describe('HelpdeskCardsService', function () {
       expect(card.services[0].serviceId).toEqual('squared-fusion-cal');
       expect(card.services[0].status).toEqual('operational');
       expect(card.services[0].setup).toBeTruthy();
-      expect(card.services[0].statusCss).toEqual('success');
+      expect(card.services[0].cssClass).toEqual('success');
 
       expect(card.services[1].serviceId).toEqual('squared-fusion-uc');
       expect(card.services[1].status).toEqual('operational');
       expect(card.services[1].setup).toBeTruthy();
-      expect(card.services[1].statusCss).toEqual('success');
+      expect(card.services[1].cssClass).toEqual('success');
 
       expect(card.services[2].serviceId).toEqual('squared-fusion-media');
       expect(card.services[2].status).toEqual('setupNotComplete');
       expect(card.services[2].setup).toBeFalsy();
-      expect(card.services[2].statusCss).toEqual('disabled');
+      expect(card.services[2].cssClass).toEqual('disabled');
     });
 
     it('should return correct hybrid service card when google calendar is enabled', function () {
-      spyOn(CloudConnectorService, 'getService').and.returnValue(q.resolve({ serviceId: 'squared-fusion-gcal', setup: true, status: 'OK', statusCss: 'success' }));
+      spyOn(CloudConnectorService, 'getService').and.returnValue(q.resolve({ serviceId: 'squared-fusion-gcal', setup: true, status: 'OK', cssClass: 'success' }));
       var org = {
         services: ['squared-fusion-mgmt', 'squared-fusion-gcal'],
       };
@@ -214,7 +214,7 @@ describe('HelpdeskCardsService', function () {
       expect(card.services[0].serviceId).toEqual('squared-fusion-gcal');
       expect(card.services[0].status).toEqual('OK');
       expect(card.services[0].setup).toBeTruthy();
-      expect(card.services[0].statusCss).toEqual('success');
+      expect(card.services[0].cssClass).toEqual('success');
     });
 
     it('should get the voicemail status from UCCService if the org is entitled to Call Service Connect, and show a green icon if the service is good', function () {
@@ -233,7 +233,7 @@ describe('HelpdeskCardsService', function () {
       $scope.$apply();
 
       expect(card.services.length).toBe(1);
-      expect(card.services[0].statusCss).toEqual('success');
+      expect(card.services[0].cssClass).toEqual('success');
       expect(UCCService.getOrgVoicemailConfiguration).toHaveBeenCalled();
     });
 

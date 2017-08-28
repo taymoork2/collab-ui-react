@@ -1,10 +1,12 @@
 import { UserV1, UserV2, UserNumber, UserRemoteDestination } from './user';
+import { PrimaryNumber } from 'modules/huron/primaryLine';
 
 interface IUserV1Resource extends ng.resource.IResourceClass<ng.resource.IResource<UserV1>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
 }
 
 interface IUserV2Resource extends ng.resource.IResourceClass<ng.resource.IResource<UserV2>> {
+  update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
 }
 
 interface IRemoteDestinationResource extends UserRemoteDestination, ng.resource.IResourceClass<ng.resource.IResource<UserRemoteDestination>> {
@@ -31,8 +33,9 @@ export class HuronUserService {
         update: updateAction,
       });
 
-    this.userV2Resource = <IUserV2Resource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/users/:userId/', {},
+    this.userV2Resource = <IUserV2Resource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/users/:userId', {},
       {
+        update: updateAction,
       });
 
     this.remoteDestinationResource = <IRemoteDestinationResource>this.$resource(this.HuronConfig.getCmiUrl() + '/voice/customers/:customerId/users/:userId/remotedestinations', {},
@@ -79,5 +82,23 @@ export class HuronUserService {
       customerId: this.Authinfo.getOrgId(),
       userId: userId,
     }).$promise;
+  }
+
+  public getUserLineSelection(userId: string): ng.IPromise<PrimaryNumber> {
+    return this.userV2Resource.get({
+      customerId: this.Authinfo.getOrgId(),
+      userId: userId,
+      wide: true,
+    }).$promise
+    .then(user => {
+      return _.get(user, 'primaryNumber');
+    });
+  }
+
+  public updateUserV2(userId: string, data: UserV2): ng.IPromise<any> {
+    return this.userV2Resource.update({
+      customerId: this.Authinfo.getOrgId(),
+      userId: userId,
+    },  data).$promise;
   }
 }

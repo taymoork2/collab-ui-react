@@ -2,7 +2,7 @@
 
 describe('Customer Reports', function () {
   it('should login', function () {
-    login.login('pbr-admin');
+    login.login('account-admin');
   });
 
   describe('Reports Page', function () {

@@ -33,7 +33,7 @@ describe('Squared Add User Flow', function () {
 
   describe('Add users through modal', function () {
     it('should login as pbr org admin and view users', function () {
-      login.login('pbr-admin', '#/users')
+      login.login('account-admin', '#/users')
         .then(function (bearerToken) {
           token = bearerToken;
         });

@@ -3,8 +3,7 @@
 
   var pageDirectiveNames = [
     'ctName',
-    'ctVirtualAssistantName',
-    'ctVirtualAssistantAvatar',
+    'ctVirtualAssistant',
     'ctProfile',
     'ctOverview',
     'ctProactivePrompt',
@@ -14,7 +13,6 @@
     'ctOffHours',
     'ctChatStatusMessages',
     'ctSummary',
-    'ctVirtualAssistantSummary',
   ];
 
   pageDirectiveNames.forEach(function (directiveName) {

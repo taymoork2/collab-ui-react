@@ -11,9 +11,9 @@
     $scope,
     $stateParams,
     $timeout,
-    $window,
     $rootScope,
     $state,
+    Analytics,
     Authinfo,
     LocalStorage,
     Notification,
@@ -57,10 +57,6 @@
         title: 'reportsPage.webexMetrics.diagnostics',
         state: 'reports.webex-metrics.diagnostics',
       },
-      {
-        title: 'reportsPage.webexMetrics.classic',
-        state: 'reports.webex-metrics.classic',
-      },
     ];
 
     var selectEnable = $scope.$on('selectEnable', function (data) {
@@ -71,12 +67,16 @@
     $scope.$on('$destroy', onDestory);
 
     vm.$state = $state;
+    vm.init = init;
+    vm.checkClassic = checkClassic;
     vm.goMetricsState = goMetricsState;
     vm.loadMetricsReport = loadMetricsReport;
     vm.onStateChangeStart = onStateChangeStart;
     vm.onStateChangeSuccess = onStateChangeSuccess;
     vm.updateWebexMetrics = updateWebexMetrics;
     vm.updateIframe = updateIframe;
+
+    init();
 
     function onlyUnique(value, index, self) {
       return self.indexOf(value) === index;
@@ -127,26 +127,41 @@
       });
     }
 
-    Userservice.getUser(
-      'me',
-      function (data) {
-        if (data.success) {
-          var trainSites = [];
-          if (data.emails) {
-            Authinfo.setEmails(data.emails);
-            var adminTrainSiteNames = _.get(data, 'adminTrainSiteNames', []);
-            var linkedTrainSiteNames = _.get(data, 'linkedTrainSiteNames', []);
-            trainSites = _.concat(adminTrainSiteNames, linkedTrainSiteNames);
-            generateWebexMetricsUrl(trainSites);
+    function init() {
+      checkClassic();
+      Userservice.getUser(
+        'me',
+        function (data) {
+          if (data.success) {
+            var trainSites = [];
+            if (data.emails) {
+              Authinfo.setEmails(data.emails);
+              var adminTrainSiteNames = _.get(data, 'adminTrainSiteNames', []);
+              var linkedTrainSiteNames = _.get(data, 'linkedTrainSiteNames', []);
+              trainSites = _.concat(adminTrainSiteNames, linkedTrainSiteNames);
+              generateWebexMetricsUrl(trainSites);
+            }
           }
         }
+      );
+      Analytics.trackReportsEvent(Analytics.sections.REPORTS.eventNames.CUST_WEBEX_REPORT);
+    }
+
+    function checkClassic() {
+      vm.isWebexMetricsEnabled = $scope.header.isWebexMetricsEnabled;
+      vm.isWebexClassicEnabled = $scope.header.isWebexClassicEnabled;
+      if (vm.isWebexMetricsEnabled && vm.isWebexClassicEnabled) {
+        vm.metricsOptions.push({
+          title: 'reportsPage.webexMetrics.classic',
+          state: 'reports.webex-metrics.classic',
+        });
       }
-    );
+    }
 
     function updateWebexMetrics() {
       var storageMetricsSiteUrl = LocalStorage.get('webexMetricsSiteUrl');
       var webexSelected = vm.webexSelected;
-      vm.isIframeLoaded = false;
+      $scope.$broadcast('unfreezeState', false);
 
       if (webexSelected !== storageMetricsSiteUrl) {
         LocalStorage.put('webexMetricsSiteUrl', webexSelected);
@@ -199,49 +214,25 @@
         }
       })
         .catch(function (error) {
+          $scope.$broadcast('unfreezeState', true);
           Notification.errorWithTrackingId(error, 'common.error');
         });
     }
 
     function updateIframe() {
-      vm.isIframeLoaded = false;
-
       var iframeUrl = vm.webexMetrics.appData.url;
-      $scope.trustIframeUrl = $sce.trustAsResourceUrl(iframeUrl);
-      $scope.appId = vm.webexMetrics.appData.appId;
-      $scope.QlikTicket = vm.webexMetrics.appData.ticket;
-      $scope.node = vm.webexMetrics.appData.node;
-      $scope.persistent = vm.webexMetrics.appData.persistent;
-      $scope.vID = vm.webexMetrics.appData.vID;
-
-      var parser = $window.document.createElement('a');
-      parser.href = iframeUrl;
-
-      $timeout(
-        function loadIframe() {
-          var submitFormBtn = $window.document.getElementById('submitFormBtn');
-          submitFormBtn.click();
-        }, // loadIframe()
-        0
-      );
+      var data = {
+        trustIframeUrl: $sce.trustAsResourceUrl(iframeUrl),
+        appId: vm.webexMetrics.appData.appId,
+        QlikTicket: vm.webexMetrics.appData.ticket,
+        node: vm.webexMetrics.appData.node,
+        persistent: vm.webexMetrics.appData.persistent,
+        vID: vm.webexMetrics.appData.vID,
+      };
+      $scope.$broadcast('updateIframe', iframeUrl, data);
     }
 
-    $window.iframeLoaded = function (iframeId) {
-      var currScope = angular.element(iframeId).scope();
-      var phase = currScope.$$phase;
-
-      if (!phase) {
-        currScope.$apply(function () {
-          vm.isIframeLoaded = true;
-        });
-      }
-    };
-
     function onStateChangeStart(event, toState, toParams, fromState) {
-      if (fromState.name === 'reports.webex-metrics.metrics' && !vm.isIframeLoaded) {
-        event.preventDefault();
-        return;
-      }
       var isSubState = fromState.name.indexOf('reports.webex-metrics.') === 0;
 
       if (isSubState && toState.name === 'reports.webex-metrics') {

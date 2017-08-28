@@ -108,12 +108,6 @@
     }
 
     function isAllowedTab(tab) {
-      // partner settings moved to new location under FeatureToggleService.atlas2017NameChange
-      // once feature toggle removed, updated Config to restrict 'settings' in partner view
-      if (tab.state === 'settings' && Authinfo.isPartner() && vm.controlHubEnabled) {
-        return false;
-      }
-
       return Authinfo.isAllowedState(tab.state) && !isHideProdTab(tab);
     }
 

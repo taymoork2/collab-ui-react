@@ -194,20 +194,15 @@ describe('Component: LocationsWizardComponent -', () => {
     });
 
     it('should turn Voicemail on', function () {
-      let number: string = '';
-      this.controller.onLocationVoicemailChanged(true, number);
-      expect(this.controller.locationDetail.voicemailPilotNumber.number).toEqual(null);
+      this.controller.onLocationVoicemailChanged({ number: '+19725551212', generated: false });
+      expect(this.controller.locationDetail.voicemailPilotNumber.number).toEqual('+19725551212');
       expect(this.controller.locationDetail.voicemailPilotNumber.generated).toEqual(false);
-      number = '-19725551212';
-      this.controller.onLocationVoicemailChanged(true, number);
-      expect(this.controller.locationDetail.voicemailPilotNumber.number).toEqual(number);
-      expect(this.controller.locationDetail.voicemailPilotNumber.generated).toEqual(true);
     });
 
     it('should turn Voicemail off', function () {
-      this.controller.onLocationVoicemailChanged(false);
-      expect(this.controller.locationDetail.voicemailPilotNumber.number).toEqual(null);
-      expect(this.controller.locationDetail.voicemailPilotNumber.generated).toEqual(false);
+      this.controller.onLocationVoicemailChanged({ number: '+150708071004091414081311041300051000081', generated: true });
+      expect(this.controller.locationDetail.voicemailPilotNumber.number).toEqual('+150708071004091414081311041300051000081');
+      expect(this.controller.locationDetail.voicemailPilotNumber.generated).toEqual(true);
     });
   });
 

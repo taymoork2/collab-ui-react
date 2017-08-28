@@ -1,7 +1,7 @@
 <div class="feature-list">
   <ul>
     <li class="feature" ng-repeat="directoryNumber in $ctrl.directoryNumbers | limitTo:$ctrl.numberOfLines track by directoryNumber.uuid">
-      <a id="{{::directoryNumber.uuid}}"
+      <a href id="{{::directoryNumber.uuid}}"
         ng-if="::$ctrl.directoryNumberSref"
         ui-sref="{{::$ctrl.directoryNumberSref}}"
         ng-click="$ctrl.onDirectoryNumberClick()">
@@ -24,10 +24,10 @@
       </a>
     </li>
   </ul>
-  <a class="line-show-more-less-text" ng-click="$ctrl.showMoreClicked()" ng-show="$ctrl.showMoreButton()">
+  <a href class="line-show-more-less-text" ng-click="$ctrl.showMoreClicked()" ng-show="$ctrl.showMoreButton()">
     <span translate="common.showMore"></span>
   </a>
-  <a class="line-show-more-less-text" ng-click="$ctrl.showLessClicked()" ng-show="$ctrl.showLessButton()">
+  <a href class="line-show-more-less-text" ng-click="$ctrl.showLessClicked()" ng-show="$ctrl.showLessButton()">
     <span translate="common.showLess"></span>
   </a>
 </div>

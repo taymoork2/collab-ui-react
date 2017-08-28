@@ -8,7 +8,6 @@ export default angular
     require('angular-translate'),
     require('angular-ui-router'),
     require('modules/hercules/services/hybrid-services-cluster.service').default,
-    require('modules/hercules/services/hybrid-services-cluster-states.service').default,
     require('modules/hercules/services/hybrid-services-utils.service').default,
     require('modules/core/modal').default,
     require('modules/core/notifications').default,

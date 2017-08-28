@@ -71,7 +71,7 @@
             if (card.enabled) {
               _.each(card.serviceList, function (service) {
                 service.UIstateLink = getUIStateLink(service.serviceId);
-                service.healthStatus = service.statusCss;
+                service.healthStatus = service.cssClass;
               });
             }
           });

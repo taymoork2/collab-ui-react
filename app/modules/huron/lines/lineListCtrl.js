@@ -54,8 +54,10 @@
       filterValue: 'all',
     };
 
-    vm.isCallTrial = Authinfo.getLicenseIsTrial('COMMUNICATION', 'ciscouc') || Authinfo.getLicenseIsTrial('SHARED_DEVICES', false);
-
+    vm.isCallTrial = (_.isUndefined(Authinfo.getLicenseIsTrial('COMMUNICATION', 'ciscouc')) ||
+                       Authinfo.getLicenseIsTrial('COMMUNICATION', 'ciscouc')) &&
+                       (_.isUndefined(Authinfo.getLicenseIsTrial('SHARED_DEVICES', false)) ||
+                       Authinfo.getLicenseIsTrial('SHARED_DEVICES', false));
     // Defines Grid Filters "Unassigned" and "Assigned"
     vm.filters = [{
       name: $translate.instant('linesPage.unassignedLines'),

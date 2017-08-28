@@ -142,7 +142,15 @@ var UsersPage = function () {
   this.collabRadio1 = element(by.id('collabRadioLabel1'));
   this.collabRadio2 = element(by.id('collabRadioLabel2'));
 
+  // TODO: rename 'rolesChevron' to something more appropriate
+  // - as of 2017-08-18, this 'a#rolesChevron' does NOT navigate to a UI state that offers anything
+  //   to do with role-management, only first/last/display name management
   this.rolesChevron = element(by.css('#rolesChevron .header-title'));
+
+  this.breadcrumb = {};
+  this.breadcrumb.overview = element(by.cssContainingText('ul.breadcrumbs li a', 'Overview'));
+  this.rolesAndSecurityMenuOption = element(by.css('[translate="usersPreview.rolesAndSecurity"] + .actions-menu'));
+
   this.headerOrganizationName = element(by.css('.navbar-orgname'));
   this.messageLicenses = element(by.id('messaging'));
   this.conferenceLicenses = element(by.id('conference'));
@@ -261,7 +269,9 @@ var UsersPage = function () {
 
   this.createUserWithLicense = function (alias, checkbox) {
     users.createUser(alias);
-    utils.click(checkbox);
+    if (checkbox) {
+      utils.click(checkbox);
+    }
     utils.click(users.onboardButton);
     utils.expectIsDisplayed(users.finishButton);
     utils.click(users.finishButton);

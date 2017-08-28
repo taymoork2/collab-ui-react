@@ -1,12 +1,10 @@
 export class DigitalRiverService {
   private readonly DIGITAL_RIVER_URL = {
-    spark: 'https://buy.ciscospark.com/store/ciscoctg/en_US/',
-    webex: 'https://buy.webex.com/store/ciscoctg/en_US/',
-    dr: 'https://gc.digitalriver.com/store/ciscoctg/',
+    store: 'https://buy.ciscospark.com/store/ciscoctg/en_US/',
+    billing: 'https://buy.ciscospark.com/DRHM/store?Action=DisplayAddEditPaymentPage&SiteID=ciscoctg&ThemeID=4805888100&',
   };
 
   private readonly DIGITAL_RIVER_COOKIE = 'webexToken';
-  private readonly WEBEX_ENVIRONMENT = 'webex';
 
   /* @ngInject */
   constructor(
@@ -16,14 +14,13 @@ export class DigitalRiverService {
     private UrlConfig,
   ) {}
 
-  public getOrderHistoryUrl(env: string): ng.IPromise<string> {
-    const ORDER_HISTORY_PATH = 'DisplayAccountOrderListPage?';
-    return this.getDigitalRiverUrl(ORDER_HISTORY_PATH, env);
+  public getSubscriptionsUrl(): ng.IPromise<string> {
+    const subscriptionsPath = 'DisplaySelfServiceSubscriptionHistoryListPage?';
+    return this.getDigitalRiverUrl(subscriptionsPath, 'store');
   }
 
-  public getSubscriptionsUrl(env: string): ng.IPromise<string> {
-    const SUBSCRIPTIONS_PATH = 'DisplaySelfServiceSubscriptionHistoryListPage?';
-    return this.getDigitalRiverUrl(SUBSCRIPTIONS_PATH, env);
+  public getBillingUrl(): ng.IPromise<string> {
+    return this.getDigitalRiverUrl('', 'billing');
   }
 
   public getInvoiceUrl(reqId: string, product: string): ng.IPromise<string> {
@@ -31,7 +28,7 @@ export class DigitalRiverService {
     if (_.includes(product, 'WebEx')) {
       invoicePath += 'ThemeID=4777108300&';
     }
-    return this.getDigitalRiverUrl(invoicePath, 'dr');
+    return this.getDigitalRiverUrl(invoicePath, 'store');
   }
 
   public logout(env: string): ng.IHttpPromise<any> {
@@ -51,7 +48,7 @@ export class DigitalRiverService {
   private getDigitalRiverUrl(path: string, env: string): ng.IPromise<string> {
     return this.getDigitalRiverToken()
       .then((response) => {
-        const queryParams = env === this.WEBEX_ENVIRONMENT ? 'ThemeID=4777108300&DRL=' : 'DRL=';
+        const queryParams = 'DRL=';
         return _.get(this.DIGITAL_RIVER_URL, env) + path + queryParams + encodeURIComponent(response);
       });
   }

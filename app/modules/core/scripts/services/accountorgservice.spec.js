@@ -10,6 +10,7 @@ describe('Service : AccountOrgService', function () {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('bcd7afcd-839d-4c61-a7a8-31c6c7f016d7'),
   };
   var appSecurityRegex = /.*\/settings\/clientSecurityPolicy\.*/;
+  var blockExternalCommuncationRegex = /.*\/settings\/blockExternalCommunications\.*/;
 
   beforeEach(angular.mock.module(function ($provide) {
     $provide.value('Authinfo', authInfo);
@@ -61,6 +62,33 @@ describe('Service : AccountOrgService', function () {
 
       AccountOrgService.getAppSecurity(authInfo.getOrgId()).then(function (response) {
         expect(response.data.clientSecurityPolicy).toBe(true);
+      });
+      $httpBackend.flush();
+    });
+  });
+
+  describe('Block External Communication ', function () {
+    //Block External Communcation Setter check
+    it('should set blcok external communication setting', function () {
+      $httpBackend.whenPUT(blockExternalCommuncationRegex).respond([200, {}]);
+
+      AccountOrgService.setBlockExternalCommunication(authInfo.getOrgId(), true).then(function (response) {
+        expect(response.status).toEqual(200);
+      });
+      $httpBackend.flush();
+    });
+
+    //Block External Communcation Setter Getter check
+    it('should get blcok external communication setting', function () {
+      $httpBackend.whenGET(blockExternalCommuncationRegex).respond(function () {
+        var data = {
+          blockExternalCommunications: true,
+        };
+        return [200, data];
+      });
+
+      AccountOrgService.getBlockExternalCommunication(authInfo.getOrgId()).then(function (blockExternalCommunication) {
+        expect(blockExternalCommunication).toBe(true);
       });
       $httpBackend.flush();
     });
