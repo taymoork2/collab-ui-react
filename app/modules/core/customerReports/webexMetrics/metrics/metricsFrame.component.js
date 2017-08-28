@@ -49,9 +49,13 @@
       var iframeEle = angular.element('#webexMetricsIframeContainer');
       var currScope = iframeEle.scope();
 
-      currScope.$apply(function () {
+      if (event) {
         vm.isIframeLoaded = isLoaded;
-      });
+      } else {
+        currScope.$apply(function () {
+          vm.isIframeLoaded = isLoaded;
+        });
+      }
     }
 
     function startLoadReport() {
