@@ -13,6 +13,14 @@
   padding: 0.1rem;
 }
 
+.modal-title {
+  padding-left: .1rem !important;
+}
+
+.checkbox_text_align {
+  padding-top: 2.7rem;
+}
+
 .modal-footer-padding {
   padding-left: 16px;
 }
@@ -38,6 +46,10 @@
   height: 100%;
   width: 100%;
 }
+.media-model-align {
+  padding-top: .5rem;
+  padding-left: 1rem;
+}
 
 .media-modal-position {
   position: absolute;
@@ -45,4 +57,5 @@
 }
 .media-cluster-list {
   line-height: 1.71;
+  color: #F24141;
 }
