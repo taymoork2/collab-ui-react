@@ -4,7 +4,7 @@
       <div class="header-info-wrap">
         <div class="header-title">
           <span>{{customerOverview.currentCustomer.customerName}}</span>
-            <span ng-if="customerOverview.currentCustomer.isPremium && customerOverview.isProPackEnabled" class="badge badge--outline primary premium" translate="common.pro"></span>
+            <cr-pro-pack-icon ng-if="customerOverview.currentCustomer.isPremium && customerOverview.isProPackEnabled" class="premium" tooltip="{{::grid.appScope.premiumTooltip}}" tooltip-append-to-body="true"></cr-pro-pack-icon>
         </div>
       </div>
     </div>
