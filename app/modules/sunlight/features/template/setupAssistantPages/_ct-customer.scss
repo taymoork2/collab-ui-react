@@ -280,8 +280,7 @@
 
   .ct-flex-container {
     display: flex;
-    flex-direction: row;
-    flex-flow: row;
+    flex-flow: row row;
   }
 
   .ct-attribute-row {

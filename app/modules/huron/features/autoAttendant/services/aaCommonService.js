@@ -20,6 +20,7 @@
     var routeSIPAddressToggle = false;
     var dynAnnounceToggle = false;
     var returnedCallerToggle = false;
+    var multiSiteToggle = false;
     var uniqueId = 0;
     var restApiToggle = false;
     var aaRestApiStatus = false;
@@ -58,6 +59,8 @@
       isRestApiToggle: isRestApiToggle,
       setDynAnnounceToggle: setDynAnnounceToggle,
       setReturnedCallerToggle: setReturnedCallerToggle,
+      setMultiSiteEnabledToggle: setMultiSiteEnabledToggle,
+      isMultiSiteEnabled: isMultiSiteEnabled,
       isDynAnnounceToggle: isDynAnnounceToggle,
       isCallerInputToggle: isCallerInputToggle,
       isMediaUploadToggle: isMediaUploadToggle,
@@ -185,6 +188,12 @@
 
     function setReturnedCallerToggle(status) {
       returnedCallerToggle = status;
+    }
+    function setMultiSiteEnabledToggle(status) {
+      multiSiteToggle = status;
+    }
+    function isMultiSiteEnabled() {
+      return multiSiteToggle;
     }
 
     function isReturnedCallerToggle() {

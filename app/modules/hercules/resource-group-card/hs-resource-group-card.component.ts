@@ -25,7 +25,7 @@ export class ResourceGroupCardController implements ng.IComponentController {
       .map('connectors')
       .flatten()
       .value();
-    return this.HybridServicesClusterStatesService.getMergedStateSeverity(connectors as IConnector[]).cssClass;
+    return this.HybridServicesClusterStatesService.getServiceStatusDetails(connectors as IConnector[]).cssClass;
   }
 
   public hasUsers() {

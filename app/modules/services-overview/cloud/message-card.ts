@@ -1,0 +1,32 @@
+import { ICardButton, ServicesOverviewCard } from '../shared/services-overview-card';
+
+export class ServicesOverviewMessageCard extends ServicesOverviewCard {
+  public getShowMoreButton(): ICardButton | undefined {
+    return undefined;
+  }
+
+  private _buttons: ICardButton[];
+
+  public getButtons(): ICardButton[] {
+    return this._buttons;
+  }
+
+  /* @ngInject */
+  public constructor(Authinfo) {
+    super({
+      description: 'servicesOverview.cards.message.description',
+      icon: 'icon-circle-message',
+      name: 'servicesOverview.cards.message.title',
+    });
+
+    this._buttons = Authinfo.isAllowedState('messenger')
+      ? [{
+        name: 'servicesOverview.cards.message.buttons.webexMessenger',
+        routerState: 'messenger',
+        buttonClass: 'btn-link',
+      }]
+      : [];
+
+    this.loading = false;
+  }
+}

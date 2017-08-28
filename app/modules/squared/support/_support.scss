@@ -184,20 +184,20 @@
   height: calc(100vh - (50px + (1px * 2) + 5rem + 4.125rem));
 }
 
+.support-logs form {
+  margin-top: auto;
+}
+
 .support-logs .grid-refresh {
   margin-top: 32px;
 }
 
 .support-logs .empty-list {
-  position: absolute;
-  top: 150px;
-  left: 0;
-  right: 0;
   color: $gray-darker;
+  background-color: $gray-light-4;
 }
 
 .support-logs .empty-list p {
-  font-size: 1rem;
   padding: 24px 0 0 32px;
 }
 

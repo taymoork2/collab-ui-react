@@ -18,6 +18,7 @@ class CustomerReportsHeaderCtrl {
     }
     this.$q.all(this.promises).then((features: any): void => {
       if (features.webexMetrics && features.proPackEnabled) {
+        this.isWebexMetricsEnabled = true;
         this.headerTabs.push({
           title: this.$translate.instant('reportsPage.sparkReports'),
           state: 'reports.sparkMetrics',
@@ -31,7 +32,6 @@ class CustomerReportsHeaderCtrl {
           title: this.$translate.instant('reportsPage.sparkReports'),
           state: 'reports.spark',
         });
-        this.checkWebex();
       }
       if (features.isMfEnabled) {
         if (features.mf) {
@@ -55,6 +55,7 @@ class CustomerReportsHeaderCtrl {
         title: this.$translate.instant('reportsPage.usageReports.usageReportTitle'),
         state: 'reports.device-usage',
       });
+      this.checkWebex();
       if (this.$state.current.name === 'reports') {
         this.goToFirstReportsTab();
       }
@@ -62,6 +63,8 @@ class CustomerReportsHeaderCtrl {
   }
 
   private webex: boolean = false;
+  public isWebexClassicEnabled: boolean = false;
+  public isWebexMetricsEnabled = false;
   public headerTabs = new Array<any>();
   private promises: any = {
     mf: this.FeatureToggleService.atlasMediaServiceMetricsMilestoneOneGetStatus(),
@@ -78,16 +81,24 @@ class CustomerReportsHeaderCtrl {
       this.WebExApiGatewayService.siteFunctions(url).then((result: any): void => {
         if (result.isAdminReportEnabled && result.isIframeSupported) {
           if (!this.webex) {
-            this.headerTabs.push({
-              title: this.$translate.instant('reportsPage.webex'),
-              state: 'reports.webex',
-            });
+            this.isWebexClassicEnabled = true;
             this.webex = true;
+            this.checkWebexTab();
           }
         }
       }).catch(_.noop);
     });
   }
+
+  private  checkWebexTab(): void {
+    if (!this.isWebexMetricsEnabled) {
+      this.headerTabs.push({
+        title: this.$translate.instant('reportsPage.webex'),
+        state: 'reports.webex',
+      });
+    }
+  }
+
   public goToFirstReportsTab(): void {
     const firstTab = this.headerTabs[0];
     this.$state.go(firstTab.state);

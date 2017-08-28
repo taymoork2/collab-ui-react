@@ -5,7 +5,7 @@ import {
 
 import {
   PstnModel, PstnService, PstnCarrier,
-  SWIVEL,
+  SWIVEL, PstnAddressService, Address,
 } from 'modules/huron/pstn';
 
 import {
@@ -36,7 +36,8 @@ class LocationsWizardController implements ng.IComponentController {
   public showEmergencyServiceAddress: boolean;
   public showDialPlanChangedDialog: boolean;
   public showVoiceMailDisableDialog: boolean;
-  public address = {};
+  public address: Address = new Address();
+  public voicemailEnable: boolean = false;
   public addressValidated: boolean = false;
   public addressValidating: boolean = false;
   public validationMessages = {
@@ -65,7 +66,7 @@ class LocationsWizardController implements ng.IComponentController {
               private HuronSettingsOptionsService: HuronSettingsOptionsService,
               private HuronSettingsService: HuronSettingsService,
               private LocationsService: LocationsService,
-              private PstnServiceAddressService,
+              private PstnAddressService: PstnAddressService,
               private Notification: Notification) {
     this.namePlaceholder = this.$translate.instant('locations.namePlaceholder');
   }
@@ -180,8 +181,8 @@ class LocationsWizardController implements ng.IComponentController {
 
   public validateAddress() {
     this.addressValidating = true;
-    this.PstnServiceAddressService.lookupAddressV2(this.address, this.PstnModel.getProviderId())
-      .then(address => {
+    this.PstnAddressService.lookup(this.PstnModel.getProviderId(), this.address)
+      .then((address: Address) => {
         if (address) {
           this.address = address;
           this.addressValidated = true;
@@ -197,7 +198,7 @@ class LocationsWizardController implements ng.IComponentController {
   }
 
   public resetAddr() {
-    this.address = {};
+    this.address = new Address();
     this.addressValidated = false;
     this.addressFound = false;
   }

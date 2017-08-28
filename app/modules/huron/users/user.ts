@@ -1,3 +1,4 @@
+import { PrimaryNumber } from 'modules/huron/primaryLine';
 export class UserV1 {
   public uuid?: string;
   public firstName?: string;
@@ -43,7 +44,8 @@ export class UserV2 {
   public userName?: string;
   public sipAddress?: string;
   public preferredLanguage?: string;
-  public numbers: UserNumber[];
+  public numbers?: UserNumber[];
+  public primaryNumber?: PrimaryNumber;
 
   constructor(obj: {
     uuid: string | undefined,
@@ -52,7 +54,8 @@ export class UserV2 {
     userName: string | undefined,
     sipAddress: string | undefined,
     preferredLanguage: string | undefined,
-    numbers: UserNumber[],
+    numbers: UserNumber[] | undefined,
+    primaryNumber: PrimaryNumber | undefined,
 
   }) {
     this.uuid = obj.uuid;
@@ -62,6 +65,7 @@ export class UserV2 {
     this.preferredLanguage = obj.preferredLanguage;
     this.sipAddress = obj.sipAddress;
     this.numbers = obj.numbers;
+    this.primaryNumber = obj.primaryNumber;
   }
 }
 
@@ -107,3 +111,4 @@ export class UserRemoteDestination {
     this.enableMobileConnect = obj.enableMobileConnect;
   }
 }
+

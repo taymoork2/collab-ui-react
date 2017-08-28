@@ -1,6 +1,5 @@
 export class CallPlacesPage {
   constructor() {
-    this.placesTab = element(by.css('i.icon-location'));
     this.addNewPlace = element.all(by.css('button.add-button')).first();
     this.addNewPlaceEmpty = element.all(by.css('button.add-button.places-empty')).first();
     this.newPlaceInput = element(by.id('newPlace'));

@@ -5,6 +5,7 @@ const path = require('path');
 const loaders = require('./loaders');
 const StyleLintPlugin = require('stylelint-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const stylelintFormatter = require('stylelint-formatter-pretty');
 
 const host = args.host || '127.0.0.1';
 const port = args.port || '8000';
@@ -80,11 +81,12 @@ function webpackConfig(env) {
     config.plugins.push(new BundleAnalyzerPlugin());
   }
 
-  // Activate once IntelliJ / WebStorm supports stylelint
   if (!env.nolint) {
     config.plugins.push(new StyleLintPlugin({
       configFile: '.stylelintrc.js',
       failOnError: true,
+      formatter: stylelintFormatter,
+      syntax: 'scss',
     }));
   }
 

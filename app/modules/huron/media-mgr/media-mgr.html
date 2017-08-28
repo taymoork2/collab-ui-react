@@ -86,36 +86,43 @@
       </div>
       <div class="mb-panel-right">
         <div ng-if="$ctrl.activeMedia">
-          <div class="mb-rows" ng-if="!$ctrl.mohEditInProgress">
-            <div class="mb-row-content">
-              <div class="mb-title text-left nowrap">{{$ctrl.activeMedia.displayName}}</div>
-              <span cs-dropdown class="mb-title actions-menu dropdown pull-right">
-                <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
-                  <i class="icon icon-more"></i>
-                </button>
-                <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
-                  <li><a ng-click="$ctrl.editMedia()"><span>{{::"mediaMgrModal.edit" | translate}}</span></a></li>
-                  <li><a ng-click="$ctrl.deleteMedia($ctrl.activeMedia)"><span>{{::"mediaMgrModal.delete" | translate}}</span></a></li>
-                </ul>
-              </span>
-            </div>
-            <div class="mb-row-content">
-              <div class="mb-desc text-left">{{$ctrl.activeMedia.description}}</div>
-            </div>
-          </div>
-          <div class="mb-rows" ng-if="$ctrl.mohEditInProgress">
+          <div class="mb-rows">
             <form name="$ctrl.form" novalidate role="form">
-              <div class="mb-row-content">
+              <div class="mb-row-content" ng-if="!$ctrl.mohEditStatus.title">
+                <div class="mb-title text-left nowrap" ng-click="$ctrl.editMedia('Title')">{{$ctrl.activeMedia.displayName}}</div>
+                <span cs-dropdown class="mb-title actions-menu dropdown pull-right">
+                  <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
+                    <i class="icon icon-more"></i>
+                  </button>
+                  <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
+                    <li><a ng-click="$ctrl.editMedia()"><span>{{::"mediaMgrModal.edit" | translate}}</span></a></li>
+                    <li><a ng-click="$ctrl.deleteMedia($ctrl.activeMedia)"><span>{{::"mediaMgrModal.delete" | translate}}</span></a></li>
+                  </ul>
+                </span>
+              </div>
+              <div class="mb-row-content" ng-if="$ctrl.mohEditStatus.title">
                 <input cs-input type="text" name="displayName" placeholder="$ctrl.activeMedia.displayName" ng-model="$ctrl.activeMedia.displayName"
                   cs-input-group-size="medium-12" cs-input-messages="$ctrl.displayNameMessages" ng-maxlength="48" ng-required="true">
+                  <span cs-dropdown class="mb-title actions-menu dropdown pull-right">
+                    <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
+                      <i class="icon icon-more"></i>
+                    </button>
+                    <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
+                      <li><a ng-click="$ctrl.editMedia()"><span>{{::"mediaMgrModal.edit" | translate}}</span></a></li>
+                      <li><a ng-click="$ctrl.deleteMedia($ctrl.activeMedia)"><span>{{::"mediaMgrModal.delete" | translate}}</span></a></li>
+                    </ul>
+                  </span>
               </div>
-              <div class="mb-row-content">
+              <div class="mb-row-content" ng-if="!$ctrl.mohEditStatus.description">
+                <div class="mb-desc text-left" ng-click="$ctrl.editMedia('Description')">{{$ctrl.activeMedia.description}}</div>
+              </div>
+              <div class="mb-row-content" ng-if="$ctrl.mohEditStatus.description">
                 <textarea cs-input type="text" name="description" rows="3" placeholder="{{ $ctrl.activeMedia.description || ' ' }}" ng-model="$ctrl.activeMedia.description"
                   cs-input-group-size="medium-12" cs-input-messages="$ctrl.descriptionMessages" ng-maxlength="512" ng-required="false">
                 </textarea>
               </div>
             </form>
-            <div class="mb-panel-footer">
+            <div class="mb-panel-footer" ng-if="$ctrl.mohEditInProgress()">
               <button class="btn" type="submit" ng-click="$ctrl.cancelEditMedia($ctrl.activeMedia)">{{::"mediaMgrModal.cancelButton" | translate}}</button>
               <button class="btn btn--primary" type="submit" ng-disabled="$ctrl.form.$invalid" ng-click="$ctrl.saveEditMedia($ctrl.activeMedia)">{{::"mediaMgrModal.saveButton" | translate}}</button>
             </div>

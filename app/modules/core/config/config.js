@@ -258,6 +258,14 @@
         INITIALIZED: 'INITIALIZED',
       },
 
+      subscriptionStatus: {
+        PENDING: 'PENDING',
+        ACTIVE: 'ACTIVE',
+        CANCELLED: 'CANCELLED',
+        SUSPENDED: 'SUSPENDED',
+        INITIALIZED: 'INITIALIZED',
+      },
+
       licenseTypes: {
         AUDIO: 'AUDIO',
         MESSAGING: 'MESSAGING',

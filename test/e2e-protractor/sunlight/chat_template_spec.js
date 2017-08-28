@@ -90,7 +90,7 @@ describe('Care admin should be able to', function () {
     utils.expectIsDisplayed(careLandingPage.creatCTButton);
     utils.click(careLandingPage.creatCTButton);
     validateDisplayNewFeatureModal();
-    utils.click(careChatTemplateSetupPage.createChatTemplateButton);
+    utils.click(careFeatureLandingPage.createChatTemplateButton);
     utils.expectIsDisplayed(careChatTemplateSetupPage.ctNameInput);
     utils.waitForText(careChatTemplateSetupPage.nameHint, 'Enter a name for you to identify this template');
     utils.expectIsNotDisplayed(careChatTemplateSetupPage.setUpLeftBtn);
@@ -98,16 +98,16 @@ describe('Care admin should be able to', function () {
   }
 
   function validateDisplayNewFeatureModal() {
-    utils.expectIsDisplayed(careChatTemplateSetupPage.careNewFeatureModal);
-    utils.expectIsDisplayed(careChatTemplateSetupPage.createChatTemplateButton);
+    utils.expectIsDisplayed(careFeatureLandingPage.careNewFeatureModal);
+    utils.expectIsDisplayed(careFeatureLandingPage.createChatTemplateButton);
   }
 
   function editTemplate(templateNameSuffix) {
     utils.click(utils.searchbox);
     utils.clear(utils.searchField);
     utils.sendKeys(utils.searchField, careChatTemplateSetupPage.randomChatTemplateName);
-    utils.waitForText(careChatTemplateSetupPage.chatTemplateName, careChatTemplateSetupPage.randomChatTemplateName);
-    utils.click(careChatTemplateSetupPage.editChatTemplateBtnOnCard);
+    utils.waitForText(careLandingPage.foundCardName, careChatTemplateSetupPage.randomChatTemplateName);
+    utils.click(careLandingPage.editCardBtnOnCard);
     utils.expectIsDisplayed(careChatTemplateSetupPage.ctNameInput);
     utils.waitForText(careChatTemplateSetupPage.nameHint, 'Enter a name for you to identify this template');
     utils.expectIsNotDisplayed(careChatTemplateSetupPage.setUpLeftBtn);
@@ -313,9 +313,9 @@ describe('Care admin should be able to', function () {
     utils.click(utils.searchbox);
     utils.clear(utils.searchField);
     utils.sendKeys(utils.searchField, templateName);
-    utils.waitForText(careChatTemplateSetupPage.chatTemplateName, templateName);
-    utils.click(careChatTemplateSetupPage.deleteEmbedCodeBtnOnCard);
-    utils.click(careChatTemplateSetupPage.deleteChatTemplateonModal);
+    utils.waitForText(careLandingPage.foundCardName, templateName);
+    utils.click(careLandingPage.deleteCardBtnOnCard);
+    utils.click(careLandingPage.deleteTemplateOnModal);
     notifications.assertSuccess(templateName + ' has been deleted successfully.');
     utils.click(utils.searchbox);
     utils.clear(utils.searchField);

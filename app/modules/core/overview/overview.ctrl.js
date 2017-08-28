@@ -185,28 +185,20 @@ require('./_overview.scss');
           Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
         }
       }, Authinfo.getOrgId(), params);
-      Orgservice.getAdminOrgUsage()
-        .then(function (response) {
-          var sharedDevicesUsage = -1;
-          var seaGullsUsage = -1;
-          _.each(response.data, function (subscription) {
-            _.each(subscription, function (licenses) {
-              _.each(licenses, function (license) {
-                if (license.status === Config.licenseStatus.ACTIVE) {
-                  if (license.offerName === Config.offerCodes.SD) {
-                    sharedDevicesUsage = license.usage;
-                  } else if (license.offerName === Config.offerCodes.SB) {
-                    seaGullsUsage = license.usage;
-                  }
-                }
-              });
-            });
-          });
-          if (sharedDevicesUsage === 0 || seaGullsUsage === 0) {
+      Orgservice.getLicensesUsage()
+        .then(function (subscriptions) {
+          var activeLicenses = _.filter(_.flatMap(subscriptions, 'licenses'), ['status', Config.licenseStatus.ACTIVE]);
+          var sharedDeviceLicenses = _.filter(activeLicenses, ['offerName', Config.offerCodes.SD]);
+          var sharedDevicesUsage = _.sumBy(sharedDeviceLicenses, 'usage');
+          var showSharedDevicesNotification = sharedDeviceLicenses.length > 0 && sharedDevicesUsage === 0;
+          var sparkBoardLicenses = _.filter(activeLicenses, ['offerName', Config.offerCodes.SB]);
+          var sparkBoardUsage = _.sumBy(sparkBoardLicenses, 'usage');
+          var showSparkBoardNotification = sparkBoardLicenses.length > 0 && sparkBoardUsage === 0;
+          if (showSharedDevicesNotification || showSparkBoardNotification) {
             setRoomSystemEnabledDevice(true);
-            if (sharedDevicesUsage === 0 && seaGullsUsage === 0) {
+            if (showSharedDevicesNotification && showSparkBoardNotification) {
               vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpDevices'));
-            } else if (seaGullsUsage === 0) {
+            } else if (showSparkBoardNotification) {
               vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSparkBoardDevices'));
             } else {
               vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSharedDevices'));

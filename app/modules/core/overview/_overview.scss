@@ -219,8 +219,16 @@
         border-top: 1px solid $gray-light-2;
         display: flex;
 
+        &.no-close {
+          padding-right: vr-adjust(16);
+        }
+
         .badge {
           top: rem-calc(-1.5);
+        }
+
+        .text-right {
+          text-align: right;
         }
 
         .text {

@@ -61,11 +61,17 @@ export function provisionCmiCustomer(partnerName, customer, site, numberRange, s
 export function provisionCustomerAndLogin(customer) {
   return this.provisionAtlasCustomer(customer.partner, customer.trial)
     .then(atlasCustomer => {
-      if (atlasCustomer && customer.cmiCustomer) {
+      if (atlasCustomer.offers[0].id == 'MESSAGE') {
+        console.log('No offers selected, proceeding without CMI setup!');
+        return loginPartner(customer.partner)
+          .then(() => switchToCustomerWindow(customer.name, customer.doFtsw));
+      } else if (atlasCustomer && customer.cmiCustomer) {
         customer.cmiCustomer.uuid = atlasCustomer.customerOrgId;
         customer.cmiCustomer.name = atlasCustomer.customerName;
         return this.provisionCmiCustomer(customer.partner, customer.cmiCustomer, customer.cmiSite, customer.numberRange, customer.doFtsw)
+          .then(() => provisionUsers(customer))
           .then(() => setupPSTN(customer))
+          .then(() => setupHuntGroup(customer))
           .then(() => loginPartner(customer.partner))
           .then(() => switchToCustomerWindow(customer.name, customer.doFtsw));
       } else {
@@ -187,3 +193,94 @@ function switchToCustomerWindow(customerName, doFtsw) {
   });
 }
 
+export function provisionUsers(customer) {
+  if (customer.users) {
+    console.log(`Need to provision ${customer.users} users for ${customer.name}!`);
+    return provisionerHelper.getToken(customer.partner)
+      .then(token => {
+        console.log('Got token for provisionUsers!');
+        return atlasHelper.getAtlasOrg(token, customer.cmiCustomer.uuid)
+          .then((response) => {
+            const licenseArray = _.get(response, 'licenses', undefined);
+            const licenseCom = _.find(licenseArray, ['licenseType', 'COMMUNICATION']);
+            console.log('Got communication type of license for provisionUsers!');
+            let internalExt = 351;
+            let userList = [];
+            for (var i = 0; i < customer.users; i++) {
+              internalExt = internalExt + i;
+              const userObj = {
+                email: `${customer.name}_${i}@gmail.com`,
+                userEntitlements: null,
+                licenses: [{
+                  id: `${licenseCom.licenseId}`,
+                  OperationId: 'ADD',
+                  properties: { internalExtension: `${internalExt}` },
+                },
+                ],
+              }
+              userList.push(userObj);
+            }
+
+            let finalList = { users: userList }
+
+            return atlasHelper.createAtlasUser(token, customer.cmiCustomer.uuid, finalList)
+              .then(() => {
+                console.log(`Successfully added users for ${customer.name}!`);
+              });
+          });
+      });
+  }
+}
+
+export function setupHuntGroup(customer) {
+  const huntGroupName = `${customer.name}_HG`
+  const memberEmail = `${customer.name}_0@gmail.com`
+  const fallbackEmail = `${customer.name}_1@gmail.com`
+  const huntingType = 'DA_LONGEST_IDLE_TIME'
+  const huntPilotDN = '310'
+  const dn_type = 'NUMBER_FORMAT_EXTENSION'
+  let tempArray = ''
+  let memberUUID = ''
+  let fallbackUUID = ''
+  if (customer.doHuntGroup) {
+    console.log(`Need to provision hunt group for ${customer.name}!`);
+    return provisionerHelper.getToken(customer.partner)
+      .then(token => {
+        console.log('Got token for provisionUsers!');
+        console.log('Get UUID of member')
+        return cmiHelper.getMemberUUID(token, customer.cmiCustomer.uuid, `${memberEmail}`)
+          .then((response) => {
+            tempArray = _.find(_.get(response, 'members', undefined), ['userName', `${memberEmail}`]);
+            memberUUID = tempArray.numbers[0].uuid
+            console.log(`Got UUID of member ${memberUUID}`)
+            console.log('Get UUID of fallback Destination')
+            return cmiHelper.getMemberUUID(token, customer.cmiCustomer.uuid, `${fallbackEmail}`)
+              .then((response) => {
+                tempArray = _.find(_.get(response, 'members', undefined), ['userName', `${fallbackEmail}`]);
+                fallbackUUID = tempArray.numbers[0].uuid
+                console.log(`Got UUID of fallback destination ${fallbackUUID}`)
+                console.log('prepare post for hunt group and post it!')
+                var hgBody = {
+                  fallbackDestination: {
+                    numberUuid: `${fallbackUUID}`,
+                    sendToVoicemail: false,
+                  },
+                  huntMethod: `${huntingType}`,
+                  members: [
+                    `${memberUUID}`,
+                  ],
+                  name: `${huntGroupName}`,
+                  numbers: [{
+                    number: `${huntPilotDN}`,
+                    type: `${dn_type}`,
+                  }],
+                }
+                return cmiHelper.createCmiHuntGroup(token, customer.cmiCustomer.uuid, hgBody)
+                  .then(() => {
+                    console.log(`Successfully added hunt group for ${customer.name}!`);
+                  });
+              });
+          });
+      });
+  }
+}

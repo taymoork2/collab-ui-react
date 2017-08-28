@@ -4,7 +4,6 @@ class LineLabel implements ng.IComponentController {
   public applyToAllSharedLines: boolean;
   public onChangeFn: Function;
   public showApplyToAllSharedLines: boolean;
-  public disableCheckBox: boolean;
 
   /* @ngInject */
   constructor(
@@ -16,7 +15,7 @@ class LineLabel implements ng.IComponentController {
       .then((result) => {
         this.lineLabelToggle = result;
       });
-    this.applyToAllSharedLines ? this.disableCheckBox = true : this.disableCheckBox = false;
+    this.applyToAllSharedLines = false;
   }
 
   public onLineLabelChange(): void {
@@ -28,7 +27,6 @@ class LineLabel implements ng.IComponentController {
       lineLabel: lineLabel,
       applyToAllSharedLines: applyToAllSharedLines,
     });
-    this.disableCheckBox = false;
   }
 }
 
@@ -39,7 +37,6 @@ export class LineLabelComponent implements ng.IComponentOptions {
     onChangeFn: '&',
     lineLabel: '<',
     showApplyToAllSharedLines: '<',
-    disableCheckBox: '=',
     applyToAllSharedLines: '=',
   };
 }

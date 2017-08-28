@@ -25,7 +25,7 @@ describe('Huron Functional: places-features', () => {
   });
 
   it('should navigate to places page', () => {
-    utils.click(CallPlaces.placesTab);
+    utils.click(navigation.placesTab);
     navigation.expectDriverCurrentUrl('places');
   });
 

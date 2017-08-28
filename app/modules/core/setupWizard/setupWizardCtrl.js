@@ -6,7 +6,7 @@ require('./_setup-wizard.scss');
   angular.module('Core')
     .controller('SetupWizardCtrl', SetupWizardCtrl);
 
-  function SetupWizardCtrl($q, $scope, $state, $stateParams, $timeout, Authinfo, Config, FeatureToggleService, Orgservice, SetupWizardService, Utils, Notification) {
+  function SetupWizardCtrl($q, $scope, $state, $stateParams, $timeout, Authinfo, Config, FeatureToggleService, Orgservice, SessionStorage, SetupWizardService, StorageKeys, Notification) {
     var isFirstTimeSetup = _.get($state, 'current.data.firstTimeSetup', false);
     var shouldRemoveSSOSteps = false;
     var isSharedDevicesOnlyLicense = false;
@@ -20,7 +20,15 @@ require('./_setup-wizard.scss');
     $scope.isCSB = Authinfo.isCSB();
     $scope.isCustomerPresent = SetupWizardService.isCustomerPresent();
 
+    // If a partner cross-launches into a customer through the Order Processing flow
+    // with a subscriptionId of an active subscription, we navigate the user to overview
+    if (isFirstTimeSetup && SetupWizardService.isProvisionedSubscription(SessionStorage.get(StorageKeys.SUBSCRIPTION_ID))) {
+      Authinfo.setSetupDone(true);
+      return $state.go('overview');
+    }
+
     if (Authinfo.isCustomerAdmin()) {
+      SetupWizardService.onActingSubscriptionChange(init);
       initToggles().finally(init);
     }
 
@@ -36,8 +44,9 @@ require('./_setup-wizard.scss');
 
       var adminOrgUsagePromise = Orgservice.getAdminOrgUsage()
         .then(function (subscriptions) {
-          var licenseTypes = Utils.getDeepKeyValues(subscriptions, 'licenseType');
-          isSharedDevicesOnlyLicense = _.without(licenseTypes, Config.licenseTypes.SHARED_DEVICES).length === 0;
+          var licenses = _.flatMap(subscriptions, 'licenses');
+          var uniqueLicenseTypes = _.uniq(_.map(licenses, 'licenseType'));
+          isSharedDevicesOnlyLicense = _.without(uniqueLicenseTypes, Config.licenseTypes.SHARED_DEVICES).length === 0;
         })
         .catch(_.noop);
 
@@ -46,25 +55,19 @@ require('./_setup-wizard.scss');
           supportsAtlasPMRonM2 = _supportsAtlasPMRonM2;
         });
 
+      var pendingSubscriptionsPromise = SetupWizardService.populatePendingSubscriptions();
+
       var promises = [
         adminOrgUsagePromise,
         atlasPMRonM2Promise,
         hI1484Promise,
+        pendingSubscriptionsPromise,
       ];
-
-      if (SetupWizardService.hasPendingServiceOrder()) {
-        var tabsBasedOnPendingLicensesPromise = SetupWizardService.getPendingLicenses().then(function () {
-          shouldShowMeetingsTab = SetupWizardService.hasPendingWebExMeetingLicenses();
-          hasPendingCallLicenses = SetupWizardService.hasPendingCallLicenses();
-          hasPendingLicenses = SetupWizardService.hasPendingLicenses();
-        });
-        promises.push(tabsBasedOnPendingLicensesPromise);
-      }
-
       return $q.all(promises);
     }
 
     function init() {
+      getPendingSubscriptionFlags();
       var tabs = getInitTabs();
 
       initPlanReviewTab(tabs);
@@ -76,6 +79,12 @@ require('./_setup-wizard.scss');
       initFinishTab(tabs);
       removeTabsWithEmptySteps(tabs);
       $scope.tabs = filterTabsByStateParams(tabs);
+    }
+
+    function getPendingSubscriptionFlags() {
+      shouldShowMeetingsTab = SetupWizardService.hasPendingWebExMeetingLicenses();
+      hasPendingCallLicenses = SetupWizardService.hasPendingCallLicenses();
+      hasPendingLicenses = SetupWizardService.hasPendingLicenses();
     }
 
     function getInitTabs() {
@@ -120,7 +129,16 @@ require('./_setup-wizard.scss');
         }],
       };
 
-      if (SetupWizardService.hasPendingServiceOrder()) {
+      if (SetupWizardService.hasPendingSubscriptionOptions()) {
+        var step = {
+          name: 'select-subscription',
+          template: 'modules/core/setupWizard/planReview/select-subscription.html',
+          title: 'firstTimeWizard.selectSubscriptionTitle',
+        };
+        tab.steps.splice(0, 0, step);
+      }
+
+      if (SetupWizardService.hasPendingServiceOrder() || SetupWizardService.hasPendingSubscriptionOptions()) {
         tab.label = 'firstTimeWizard.subscriptionReview';
         tab.title = 'firstTimeWizard.subscriptionReview';
       }

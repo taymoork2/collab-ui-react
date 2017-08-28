@@ -3,6 +3,8 @@ import { AuthenticationSetting } from './authentication/authenticationSetting.co
 import { BrandingSetting } from './branding/brandingSetting.component';
 import { DomainsSetting } from './domain/domainsSetting.component';
 import { RetentionSetting } from './retention/retentionSetting.component';
+import { ExternalCommunicationSetting } from './externalCommunication/externalCommunicationSetting.component';
+
 import { SecuritySetting } from './security/securitySetting.component';
 import { SipDomainSetting } from './sipDomain/sipDomainSetting.component';
 import { SupportSetting } from './supportSection/supportSetting.component';
@@ -21,6 +23,7 @@ export class SettingsCtrl {
   public deviceBranding: SettingSection;
   public support: SettingSection;
   public retention: SettingSection;
+  public externalCommunication: SettingSection;
   public dirsync: SettingSection;
 
   // Footer and broadcast controls
@@ -65,9 +68,9 @@ export class SettingsCtrl {
       this.dirsync = new DirSyncSetting();
       if (this.Authinfo.isEnterpriseCustomer()) {
         this.initSecurity();
+        this.initBlockExternalCommunication();
         this.initRetention();
       }
-
     }
     //TODO temporary adding device branding
     this.initDeviceBranding();
@@ -131,6 +134,19 @@ export class SettingsCtrl {
     this.$q.all(promises).then((result) => {
       if (result.pinSettingsToggle) {
         this.security = new SecuritySetting(result.proPackPurchased);
+      }
+    });
+  }
+
+  private initBlockExternalCommunication() {
+    const promises = {
+      blockExternalCommunicationToggle: this.FeatureToggleService.atlasBlockExternalCommunicationSettingsGetStatus(),
+      proPackPurchased: this.ProPackService.hasProPackPurchasedOrNotEnabled(),
+    };
+
+    this.$q.all(promises).then((result) => {
+      if (result.blockExternalCommunicationToggle) {
+        this.externalCommunication = new ExternalCommunicationSetting(result.proPackPurchased);
       }
     });
   }

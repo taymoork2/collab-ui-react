@@ -45,7 +45,7 @@ export class ExternalTransferService {
         customerId: this.Authinfo.getOrgId(),
         placeId: memberId,
       }).$promise.then(settings => {
-        return _.get(settings, 'tmpAllowExternalTransfer');
+        return _.get(settings, 'allowExternalTransfer');
       });
     }
   }
@@ -69,7 +69,7 @@ export class ExternalTransferService {
       return this.extTransferResourcePlace.update({
         customerId: this.Authinfo.getOrgId(),
         placeId: memberId,
-      }, { tmpAllowExternalTransfer: allowExternalTransfer }).$promise;
+      }, { allowExternalTransfer: allowExternalTransfer }).$promise;
     }
   }
 }

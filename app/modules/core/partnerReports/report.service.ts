@@ -58,7 +58,7 @@ export class ReportService {
   }
 
   // Active User Functions
-  public getOverallActiveUserData(filter: ITimespan): ng.IHttpPromise<any> {
+  public getOverallActiveUserData(filter: ITimespan): ng.IPromise<any> {
     this.timeFilter = filter.value;
     this.activeUserCustomerGraphs = {};
     this.overallPopulation = 0;

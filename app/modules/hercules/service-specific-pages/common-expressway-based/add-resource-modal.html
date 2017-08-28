@@ -153,7 +153,9 @@
   <div ng-show="vm.preregistrationCompletedGoToExpressway">
     <p><span translate="hercules.addResourceDialog.youMayNowRegister" translate-values="{hostname: vm.clustername || ''}"></span></p>
 
-    <p>{{vm.localizedWillBeInstalledMessage}}</p>
+    <p><span translate="hercules.addResourceDialog.willBeInstalled"
+             translate-values="{ ConnectorName: vm.localizedConnectorName, ServiceName: vm.localizedServiceName }"></span>
+    </p>
 
     <p><span translate="hercules.addResourceDialog.go-to-your-expressway"
              translate-values="{ConnectorName: vm.localizedConnectorName}"></span>

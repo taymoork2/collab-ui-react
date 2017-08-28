@@ -18,7 +18,6 @@ export class MySubscriptionCtrl implements ng.IController {
   public trialUrlFailed: boolean = false;
   public productInstanceFailed: boolean = false;
   public loading: boolean = false;
-  public digitalRiverSubscriptionsUrl: string;
   public emptyBmmpAttr: IBmmpAttr = {
     subscriptionId: '',
     productInstanceId: '',
@@ -121,8 +120,8 @@ export class MySubscriptionCtrl implements ng.IController {
     return _.isNumber(usage);
   }
 
-  private getChangeSubURL(env: string): ng.IPromise<string> {
-    return this.DigitalRiverService.getSubscriptionsUrl(env).then((subscriptionsUrl: string): string => {
+  private getChangeSubURL(): ng.IPromise<string> {
+    return this.DigitalRiverService.getSubscriptionsUrl().then((subscriptionsUrl: string): string => {
       return subscriptionsUrl;
     }).catch((error: any): string => {
       this.loading = false;
@@ -198,13 +197,15 @@ export class MySubscriptionCtrl implements ng.IController {
   }
 
   private subscriptionRetrieval(): void {
-    this.Orgservice.getLicensesUsage(false).then((subscriptions: any[]): void => {
+    this.Orgservice.getLicensesUsage().then((subscriptions: any[]): void => {
       // filter out subscriptions with a license with an offerName that is 'MSGR'
       // - as of 2017-07-24, 'Authinfo.isExternallyManagedLicense()' is sufficient for checking this
       subscriptions = _.reject(subscriptions, (subscription) => {
         const licenses = _.get(subscription, 'licenses');
         return _.some(licenses, license => this.Authinfo.isExternallyManagedLicense(license));
       });
+
+      const authinfoSubscriptions = this.Authinfo.getSubscriptions();
 
       _.forEach(subscriptions, (subscription: any, subIndex: number): void => {
         const newSubscription: ISubscription = {
@@ -225,9 +226,14 @@ export class MySubscriptionCtrl implements ng.IController {
             newSubscription.isOnline = true;
           }
         }
-        if (subscription.endDate) {
+
+        const matchingSubscription = _.find(authinfoSubscriptions, {
+          subscriptionId: subscription.internalSubscriptionId,
+        });
+        const matchingSubscriptionEndDate = _.get<string>(matchingSubscription, 'endDate', '');
+        if (matchingSubscriptionEndDate) {
           const currentDate = new Date();
-          const subscriptionEndDate = new Date(subscription.endDate);
+          const subscriptionEndDate = new Date(matchingSubscriptionEndDate);
           const timeDiff = subscriptionEndDate.getTime() - currentDate.getTime();
           const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
@@ -338,11 +344,6 @@ export class MySubscriptionCtrl implements ng.IController {
         this.oneOnlineSub = true;
       }
 
-      if (_.find(this.subscriptionDetails, 'isOnline')) {
-        // create cookie for Digital River
-        this.DigitalRiverService.getDigitalRiverToken();
-      }
-
       let enterpriseSubs = 1;
       let enterpriseTrials = 1;
       this.OnlineUpgradeService.getProductInstances(this.Authinfo.getUserId()).then((instances) => {
@@ -391,7 +392,7 @@ export class MySubscriptionCtrl implements ng.IController {
     subscription.productInstanceId = prodResponse.productInstanceId;
     subscription.name = prodResponse.name;
     const env: string = _.includes(prodResponse.name, 'Spark') ? this.SPARK : this.WEBEX;
-    this.getChangeSubURL(env).then((urlResponse) => {
+    this.getChangeSubURL().then((urlResponse) => {
       subscription.changeplanOverride = '';
       if (urlResponse && env === this.SPARK) {
         subscription.changeplanOverride = urlResponse;

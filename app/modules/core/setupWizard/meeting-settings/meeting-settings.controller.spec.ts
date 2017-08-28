@@ -1,4 +1,7 @@
 describe('Controller: MeetingSettingsCtrl', () => {
+  const transferCodeResponse = getJSONFixture('core/json/orders/transferCodeResponse.json');
+  const actingSubscription = getJSONFixture('core/json/customerSubscriptions/getSubscriptionsData.json');
+
   beforeEach(function () {
     this.initModules('Core');
     this.injectDependencies(
@@ -17,6 +20,12 @@ describe('Controller: MeetingSettingsCtrl', () => {
     spyOn(this.TrialTimeZoneService, 'getTimeZones').and.returnValue(this.$q.resolve({}));
     spyOn(this.TrialWebexService, 'validateSiteUrl').and.returnValue(this.$q.resolve({ isValid: true, errorCode: 'validSite' }));
     spyOn(this.SetupWizardService, 'getPendingAudioLicenses').and.returnValue([{ offerName: 'TSP' }]);
+    // is this being used? the data format wasn't even right before
+    spyOn(this.SetupWizardService, 'getActingSubscriptionLicenses').and.returnValue(actingSubscription[0].licenses);
+    spyOn(this.SetupWizardService, 'validateCCASPPartner').and.returnValue(this.$q.resolve(true));
+    spyOn(this.SetupWizardService, 'hasCCASPPackage').and.returnValue(true);
+    spyOn(this.SetupWizardService, 'getCCASPPartners').and.returnValue(this.$q.resolve(['partner1', 'partner2']));
+    spyOn(this.SetupWizardService, 'validateTransferCode').and.returnValue(this.$q.resolve(transferCodeResponse));
   });
 
   function initController(): void {
@@ -27,19 +36,21 @@ describe('Controller: MeetingSettingsCtrl', () => {
     beforeEach(function () {
       initController.apply(this);
     });
-    //TODO: write different initialization test
-    xit('should call findExistingWebexTrialSites()', function () {
-      expect(this.controller.findExistingWebexTrialSites).toHaveBeenCalled();
-    });
 
+    xit('should find existing WebEx licenses on acting subscription and push them to sitesArray', function () {
+      expect(this.SetupWizardService.getActingSubscriptionLicenses).toHaveBeenCalled();
+      const hasSiteUrlFromActiveLicense = _.some(this.controller.sitesArray, { siteUrl: 'frankSinatraTest.dmz' });
+      expect(hasSiteUrlFromActiveLicense).toBe(true);
+      expect(this.controller.sitesArray).toBe(false);
+    });
   });
 
-  describe('upon click of the Validate button ', function () {
+  describe('upon click of the Validate button in site setup', function () {
     beforeEach(function () {
       initController.apply(this);
     });
 
-    it('should call validateWebexSiteUrl() and expect the site to be added to the sitesArray', function () {
+    it('should call validateWebexSiteUrl() and if VALID add the site the sitesArray', function () {
       const siteUrl = 'testSiteHere';
       this.controller.siteModel.siteUrl = siteUrl;
       this.controller.siteModel.timezone = 'someTimeZoneHere';
@@ -51,15 +62,9 @@ describe('Controller: MeetingSettingsCtrl', () => {
       expect(this.controller.sitesArray.length).toBe(1);
       expect(this.controller.disableValidateButton).toBe(false);
     });
-  });
 
-  describe('upon click of the Validate button test the error condition: ', function () {
-    beforeEach(function () {
+    it('should call validateWebexSiteUrl() and if INVALID showError to be called and site not to be added', function () {
       this.TrialWebexService.validateSiteUrl.and.returnValue(this.$q.resolve({ isValid: false, errorCode: 'invalidSite' }));
-      initController.apply(this);
-    });
-
-    it('should call validateWebexSiteUrl() and expect showError to be called', function () {
       this.controller.siteModel.siteUrl = 'testSiteHere';
       this.controller.siteModel.timeZone = 'someTimeZoneHere';
       this.controller.validateMeetingSite();
@@ -70,6 +75,33 @@ describe('Controller: MeetingSettingsCtrl', () => {
     });
   });
 
+  describe('License distribution', function () {
+    beforeEach(function () {
+      initController.apply(this);
+    });
+    it('should calculate license quantity for sites correctly', function () {
+      initController.apply(this);
+      const sitesArray = [
+        { quantity: 1, siteUrl: 'site1' },
+        { quantity: 5, siteUrl: 'site2' },
+      ];
+      const distributedLicensesArray = [
+        [{ centerType: 'EC', quantity: 3, siteUrl: 'site1' },
+        { centerType: 'MC', quantity: 1, siteUrl: 'site1' },
+        { centerType: 'TC', quantity: 4, siteUrl: 'site1' }],
+        [{ centerType: 'EC', quantity: 1, siteUrl: 'site2' },
+        { centerType: 'MC', quantity: 1, siteUrl: 'site2' },
+        { centerType: 'TC', quantity: 0, siteUrl: 'site2' }],
+      ];
+      this.controller.sitesArray = _.clone(sitesArray);
+      this.controller.distributedLicensesArray = _.clone(distributedLicensesArray);
+      this.controller.updateSitesLicenseCount();
+      this.$scope.$apply();
+
+      expect(this.controller.sitesArray[0].quantity).toEqual(8);
+      expect(this.controller.sitesArray[1].quantity).toEqual(2);
+    });
+  });
   describe('when licenses include a TSP Audio package', function () {
     beforeEach(function () {
       spyOn(this.SetupWizardService, 'hasTSPAudioPackage').and.returnValue(true);
@@ -82,25 +114,14 @@ describe('Controller: MeetingSettingsCtrl', () => {
   });
 
   describe('when a webex site is being transferred', function () {
-    const transferCodeResponse = {
-      data: {
-        siteList: [{
-          siteUrl: 'mytransferredsite.webex.com',
-          timezone: '4',
-        } ],
-      },
-    };
     beforeEach(function () {
-      spyOn(this.SetupWizardService, 'validateTransferCode').and.returnValue(this.$q.resolve(transferCodeResponse));
       initController.apply(this);
       this.controller.showTransferCodeInput = true;
       this.controller.centerDetails = [{ centerType: 'EE' }];
-      this.controller.transferSiteDetails = {
-        siteUrl: 'mywebexsite',
-        transferCode: '12345678',
-      };
+      this.controller.transferSiteUrl = 'mywebexsite';
+      this.controller.transferSiteCode = '12345678';
       this.$scope.$apply();
-      this.$rootScope.$broadcast('wizard-meeting-settings-migrate-site-event');
+      this.controller.migrateTrialNext();
       this.$scope.$digest();
     });
     it('validates and processes the transfer code', function () {
@@ -115,23 +136,14 @@ describe('Controller: MeetingSettingsCtrl', () => {
   });
 
   describe('when a second transfer code is used', function () {
-    const transferCodeResponse = {
-      data: {
-        siteList: [{
-          siteUrl: 'mySecondTransferredsite.webex.com',
-          timezone: '4',
-        } ],
-      },
-    };
+    _.set(transferCodeResponse, 'data.siteList[0].siteUrl', 'mySecondTransferredsite.webex.com');
     beforeEach(function () {
-      spyOn(this.SetupWizardService, 'validateTransferCode').and.returnValue(this.$q.resolve(transferCodeResponse));
+      this.SetupWizardService.validateTransferCode.and.returnValue(this.$q.resolve(transferCodeResponse));
       initController.apply(this);
       this.controller.showTransferCodeInput = true;
       this.controller.centerDetails = [{ centerType: 'EE' }];
-      this.controller.transferSiteDetails = {
-        siteUrl: 'mywebexsite',
-        transferCode: '12345678',
-      };
+      this.controller.transferSiteUrl = 'mywebexsite';
+      this.controller.transferSiteCode = '12345678';
       this.controller.sitesArray = [
         {
           siteUrl: 'myFirstTransferredSite',
@@ -139,7 +151,7 @@ describe('Controller: MeetingSettingsCtrl', () => {
         },
       ];
       this.$scope.$apply();
-      this.$rootScope.$broadcast('wizard-meeting-settings-migrate-site-event');
+      this.controller.migrateTrialNext();
       this.$scope.$digest();
     });
     it('replaces the earlier transferred site with the new one', function () {
@@ -150,8 +162,6 @@ describe('Controller: MeetingSettingsCtrl', () => {
 
   describe('when licenses include CCASP', function () {
     beforeEach(function () {
-      spyOn(this.SetupWizardService, 'hasCCASPPackage').and.returnValue(true);
-      spyOn(this.SetupWizardService, 'getCCASPPartners').and.returnValue(this.$q.resolve(['partner1', 'partner2']));
       initController.apply(this);
       spyOn(this.controller, 'setNextDisableStatus').and.callThrough();
       this.controller.ccasp.partnerNameSelected = 'bob';
@@ -161,18 +171,17 @@ describe('Controller: MeetingSettingsCtrl', () => {
       expect(this.SetupWizardService.getCCASPPartners).toHaveBeenCalled();
       expect(this.controller.ccasp.partnerOptions.length).toBe(2);
     });
-    it('validates correctly', function() {
+    it('validates correctly', function () {
       expect(this.controller.audioPartnerName).toBe(null);
-      spyOn(this.SetupWizardService, 'validateCCASPPartner').and.returnValue(this.$q.resolve(true));
       this.controller.ccaspValidate();
       this.$scope.$digest();
       expect(this.controller.audioPartnerName).toBe('bob');
       expect(this.controller.setNextDisableStatus).toHaveBeenCalledWith(false);
       expect(this.controller.ccasp.isError).toEqual(false);
     });
-    it('validates incorrectly', function() {
+    it('validates incorrectly', function () {
       expect(this.controller.audioPartnerName).toBe(null);
-      spyOn(this.SetupWizardService, 'validateCCASPPartner').and.returnValue(this.$q.resolve(false));
+      this.SetupWizardService.validateCCASPPartner.and.returnValue(this.$q.resolve(false));
       this.controller.ccaspValidate();
       this.$scope.$digest();
       expect(this.controller.audioPartnerName).toBe(null);

@@ -74,6 +74,16 @@ describe('Controller: HeaderCtrl', function () {
     });
   });
 
+  describe('Readonly Admin Page', function () {
+    it('should show my company page button', function () {
+      spyOn(this.Utils, 'isAdminPage').and.returnValue(true);
+      spyOn(this.Authinfo, 'isReadOnlyAdmin').and.returnValue(true);
+      spyOn(this.Authinfo, 'isCustomerView').and.returnValue(true);
+      this.initController();
+      expect(this.controller.showMyCompany()).toBe(true);
+    });
+  });
+
   describe('Non-Admin Page', function () {
     it('should not show my company page button', function () {
       spyOn(this.Utils, 'isAdminPage').and.returnValue(false);

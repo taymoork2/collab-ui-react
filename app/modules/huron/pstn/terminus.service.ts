@@ -121,6 +121,18 @@ export class TerminusService {
     });
   }
 
+  public customerLocations(): ng.resource.IResourceClass<ng.resource.IResource<any>> {
+    return this.$resource(this.HuronConfig.getTerminusV2Url() + '/customers/:customerId/locations/:locationId', {}, {});
+  }
+
+  public customerLocationAddresses(): ITerminusResource {
+    return <ITerminusResource>this.$resource(this.HuronConfig.getTerminusV2Url() + '/customers/:customerId/locations/:locationId/addresses/:addressId', {}, {
+      update: {
+        method: 'PUT',
+      },
+    });
+  }
+
   public carrier(): ng.resource.IResourceClass<ng.resource.IResource<any>>  {
     return this.$resource(this.HuronConfig.getTerminusUrl() + '/carriers/:carrierId', {});
   }

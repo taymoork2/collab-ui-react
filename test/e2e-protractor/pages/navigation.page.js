@@ -1,6 +1,6 @@
 'use strict';
 
-/*global TIMEOUT*/
+/*global TIMEOUT, ANIMATION_DURATION_MS*/
 
 var Navigation = function () {
   this.body = element(by.tagName('body'));
@@ -9,6 +9,7 @@ var Navigation = function () {
   this.ftswSidePanel = element(by.css('cr-wizard-nav'));
   this.tabCount = element.all(by.repeater('page in pages'));
   this.homeTab = element(by.css('li.overviewTab > a'));
+  this.placesTab = element(by.css('li.placeTab > a'))
   this.usersTab = element(by.css('li.userTab > a'));
   this.accountTab = element(by.css('li.accountTab > a'));
   this.orgTab = element(by.css('a[href="#organizations"]'));
@@ -246,6 +247,7 @@ var Navigation = function () {
 
   this.logout = function () {
     utils.click(this.userInfoButton);
+    browser.sleep(ANIMATION_DURATION_MS);
     utils.click(this.logoutButton);
     this.expectDriverCurrentUrl('/login', 'idbroker.webex.com');
     browser.get('data:,');

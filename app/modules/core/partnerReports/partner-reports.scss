@@ -1,5 +1,6 @@
 @import '~collab-ui/scss/settings/core';
 @import '~collab-ui/scss/settings/page';
+@import '~collab-ui/scss/settings/fonts';
 
 .partner-spark-reports {
   &.content-container {
@@ -11,5 +12,23 @@
   .full-size__iframe {
     height: 100%;
     width: 100%;
+  }
+  #sparkReportsIframeLoading {
+    text-align: center;
+  }
+
+  .metrics-loading-icon {
+    margin-top: 10vh;
+    font-size: 7rem;
+  }
+
+  .metrics-loading-data {
+    margin-top: 1rem;
+    font-size: 1.8rem;
+    font-family: $brand-font-extra-light;
+  }
+
+  .metrics-loading-description {
+    margin-top: 1rem;
   }
 }
