@@ -95,6 +95,7 @@
     "es6-promise": "^4.1.0",
     "foundation-sites": "5.5.2",
     "google-libphonenumber": "^2.0.15",
+    "http-status-codes": "^1.2.0",
     "ical.js": "~1.2.1",
     "imagesloaded": "3.1.8",
     "jquery": "~3.2.1",
