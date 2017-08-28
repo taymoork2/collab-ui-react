@@ -56,10 +56,6 @@ eg. `yarn start -- --noopen` passes the `--noopen` argument to our `start` task
 
 * Clean `build`, `dist` and `test` directories
 
-### `yarn clean-install`
-
-* Remove `./node_modules` directory, and reinstall npm dependencies
-
 ### `yarn commit`
 
 * Starts a wizard to write a proper [git commit message](https://github.com/angular/angular.js/blob/master/CONTRIBUTING.md#commit)

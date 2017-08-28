@@ -16,7 +16,6 @@
   "scripts": {
     "analyze": "yarn build -- --env.analyze",
     "build": "yarn clean && node --max-old-space-size=2048 ./node_modules/.bin/webpack --bail --profile",
-    "clean-install": "rimraf node_modules && yarn install",
     "clean-test": "rimraf ./test/results ./test/coverage && yarn test",
     "clean": "rimraf dist dist-source-map build",
     "commit": "git-cz",
