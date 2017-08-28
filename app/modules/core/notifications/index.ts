@@ -11,6 +11,7 @@ export default angular
     require('scripts/app.templates'),
     require('angularjs-toaster'),
     require('angular-translate'),
+    require('angular-ui-router'),
     require('modules/core/config/config').default,
     require('modules/core/scripts/services/log'),
     metricsModule,
