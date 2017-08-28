@@ -1,3 +1,4 @@
+import pagingGroupInitiatorModule from './index';
 import { Member } from 'modules/huron/members';
 
 describe('Component: pgInitiator', () => {
@@ -53,7 +54,7 @@ describe('Component: pgInitiator', () => {
   };
 
   beforeEach(function () {
-    this.initModules('huron.paging-group.initiator');
+    this.initModules(pagingGroupInitiatorModule);
     this.injectDependencies(
       '$scope',
       '$q',

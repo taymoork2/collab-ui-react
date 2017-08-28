@@ -1,3 +1,5 @@
+import pagingGroupNumberModule from './index';
+
 describe('Component: pgNumber setup', () => {
 
   const numberData = {
@@ -7,7 +9,7 @@ describe('Component: pgNumber setup', () => {
   const successResponse = [numberData];
 
   beforeEach(function () {
-    this.initModules('huron.paging-group.number');
+    this.initModules(pagingGroupNumberModule);
     this.injectDependencies(
       '$httpBackend',
       'Notification',

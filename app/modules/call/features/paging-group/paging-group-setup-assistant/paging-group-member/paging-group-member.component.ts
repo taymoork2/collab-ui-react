@@ -1,5 +1,5 @@
 import { Member, USER_REAL_USER, USER_PLACE } from 'modules/huron/members';
-import { IMemberWithPicture } from 'modules/huron/features/pagingGroup';
+import { IMemberWithPicture } from 'modules/call/features/paging-group/shared';
 
 class PagingGroupMemberCtrl implements ng.IComponentController {
   public memberName: string;
@@ -117,7 +117,7 @@ class PagingGroupMemberCtrl implements ng.IComponentController {
 
 export class PgMemberComponent implements ng.IComponentOptions {
   public controller = PagingGroupMemberCtrl;
-  public templateUrl = 'modules/huron/features/pagingGroup/pgSetupAssistant/pgMember/pgMember.html';
+  public templateUrl = 'modules/call/features/paging-group/paging-group-setup-assistant/paging-group-member/paging-group-member.component.html';
   public bindings = {
     onUpdate: '&',
     selectedMembers: '<',

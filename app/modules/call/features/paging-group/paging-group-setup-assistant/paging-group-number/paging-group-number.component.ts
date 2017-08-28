@@ -1,5 +1,4 @@
-import { PagingNumberService } from 'modules/huron/features/pagingGroup/pgNumber.service';
-import { INumberData } from 'modules/huron/features/pagingGroup/pagingGroup';
+import { PagingNumberService, INumberData } from 'modules/call/features/paging-group/shared';
 
 class PagingNumberCtrl implements ng.IComponentController {
   public pagingGroupNumber: INumberData;
@@ -40,7 +39,7 @@ class PagingNumberCtrl implements ng.IComponentController {
 
 export class PgNumberComponent implements ng.IComponentOptions {
   public controller = PagingNumberCtrl;
-  public templateUrl = 'modules/huron/features/pagingGroup/pgSetupAssistant/pgNumber/pgNumber.html';
+  public templateUrl = 'modules/call/features/paging-group/paging-group-setup-assistant/paging-group-number/paging-group-number.component.html';
   public bindings = {
     onUpdate: '&',
     pagingGroupNumber: '<',

@@ -1,16 +1,15 @@
-import { PgInitiatorComponent } from './pgInitiator.component';
+import { PgMemberComponent } from './paging-group-member.component';
 import notifications from 'modules/core/notifications';
 import featureMemberService from 'modules/huron/features/services';
 
 export default angular
-  .module('huron.paging-group.initiator', [
+  .module('call.paging-group.member', [
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
-    'huron.paging-group',
     require('angular-translate'),
     require('modules/core/config/urlConfig'),
     featureMemberService,
     notifications,
   ])
-  .component('pgInitiator', new PgInitiatorComponent())
+  .component('pgMember',  new PgMemberComponent())
   .name;

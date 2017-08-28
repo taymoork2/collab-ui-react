@@ -1,6 +1,5 @@
-import { IPagingGroup, IMemberData, INumberData, IInitiatorData, IMemberWithPicture, USER, PLACE, PUBLIC, CUSTOM } from 'modules/huron/features/pagingGroup/pagingGroup';
-import { PagingNumberService } from 'modules/huron/features/pagingGroup/pgNumber.service';
-import { PagingGroupService } from 'modules/huron/features/pagingGroup/pagingGroup.service';
+import { IPagingGroup, IMemberData, INumberData, IInitiatorData, IMemberWithPicture, USER, PLACE, PUBLIC, CUSTOM } from 'modules/call/features/paging-group/shared';
+import { PagingGroupService, PagingNumberService } from 'modules/call/features/paging-group/shared';
 import { FeatureMemberService } from 'modules/huron/features/services';
 import { Member, USER_PLACE, USER_REAL_USER } from 'modules/huron/members';
 
@@ -614,7 +613,7 @@ class PgEditComponentCtrl implements ng.IComponentController {
 
 export class PgEditComponent implements ng.IComponentOptions {
   public controller = PgEditComponentCtrl;
-  public templateUrl = 'modules/huron/features/pagingGroup/edit/pgEdit.html';
+  public templateUrl = 'modules/call/features/paging-group/paging-group-edit/paging-group-edit.component.html';
   public bindings = {
     pgId: '<',
   };

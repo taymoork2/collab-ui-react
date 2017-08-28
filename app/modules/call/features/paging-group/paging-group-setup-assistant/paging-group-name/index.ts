@@ -1,7 +1,7 @@
-import { PgNameComponent } from './pgName.component';
+import { PgNameComponent } from './paging-group-name.component';
 
 export default angular
-  .module('huron.paging-group.name', [
+  .module('call.paging-group.name', [
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),

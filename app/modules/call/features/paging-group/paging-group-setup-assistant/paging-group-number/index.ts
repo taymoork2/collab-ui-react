@@ -1,15 +1,16 @@
-import { PgNumberComponent } from './pgNumber.component';
+import { PgNumberComponent } from './paging-group-number.component';
+import pagingGroupNumberServiceModule from 'modules/call/features/paging-group/shared';
 import notifications from 'modules/core/notifications';
 
 export default angular
-  .module('huron.paging-group.number', [
+  .module('call.paging-group.number', [
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
-    'huron.paging-group',
     require('angular-resource'),
     require('modules/huron/telephony/cmiServices'),
     require('modules/huron/telephony/telephonyConfig'),
     require('modules/core/scripts/services/authinfo'),
+    pagingGroupNumberServiceModule,
     notifications,
   ])
   .component('pgNumber', new PgNumberComponent())

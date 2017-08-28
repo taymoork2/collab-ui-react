@@ -1,8 +1,10 @@
+import pagingGroupNameModule from './index';
+
 describe('Component: pgName', () => {
   const NAME_INPUT = 'input#nameInput';
 
   beforeEach(function () {
-    this.initModules('huron.paging-group.name');
+    this.initModules(pagingGroupNameModule);
     this.injectDependencies(
       '$scope',
     );

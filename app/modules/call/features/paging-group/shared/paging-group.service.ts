@@ -1,5 +1,4 @@
-import { IPagingGroup, INumberData } from 'modules/huron/features/pagingGroup/pagingGroup';
-import { PagingNumberService } from 'modules/huron/features/pagingGroup/pgNumber.service';
+import { IPagingGroup, INumberData, PagingNumberService } from 'modules/call/features/paging-group/shared';
 
 interface IPagingGroupResource extends ng.resource.IResourceClass<ng.resource.IResource<IPagingGroup>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<IPagingGroup>>;

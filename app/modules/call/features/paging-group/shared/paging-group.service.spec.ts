@@ -1,3 +1,4 @@
+import serviceModule from './index';
 describe('Service: PagingGroupService', () => {
 
   let successSpy;
@@ -10,7 +11,7 @@ describe('Service: PagingGroupService', () => {
   };
 
   beforeEach(function () {
-    this.initModules('huron.paging-group');
+    this.initModules(serviceModule);
     this.injectDependencies(
       '$httpBackend',
       'PagingGroupService',

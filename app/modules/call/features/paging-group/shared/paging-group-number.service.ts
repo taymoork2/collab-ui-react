@@ -1,4 +1,4 @@
-import { INumberData } from 'modules/huron/features/pagingGroup/pagingGroup';
+import { INumberData } from 'modules/call/features/paging-group/shared';
 
 interface ISearchData {
   customerId: string;
