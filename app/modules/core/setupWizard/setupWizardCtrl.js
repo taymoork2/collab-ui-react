@@ -388,6 +388,13 @@ require('./_setup-wizard.scss');
           tab.steps = _.slice(tab.steps, index, index + $stateParams.numberOfSteps);
         }
       }
+
+      // Show Subscription selection step if user is setting up WebEx meetings
+      if ($stateParams.currentTab === 'meetingSettings') {
+        var planReviewTab = _.find(tabs, { name: 'planReview' });
+        filteredTabs.unshift(planReviewTab);
+      }
+
       return filteredTabs;
     }
   }
