@@ -5194,6 +5194,8 @@
     "accountStatus": "Account Status",
     "totalUsers": "Total Users",
     "purchased": "Purchased",
+    "pendingSetup": "Pending Setup",
+    "partnerOnly": "Partner Only",
     "domain": "{count, plural, =1{Domain} other{Domains}}",
     "domains": "Domains",
     "quantityWithValue": "Qty: {{quantity}}",
