@@ -5,5 +5,5 @@ this_pwd="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 . "$this_pwd/include/pre-rebase-helpers"
 
 if file_has_changed ".proj-comms/announcement"; then
-    print_notice_banner ".proj-comms/announcement"
+    print_notice_banner "$this_pwd/../../.proj-comms/announcement"
 fi
