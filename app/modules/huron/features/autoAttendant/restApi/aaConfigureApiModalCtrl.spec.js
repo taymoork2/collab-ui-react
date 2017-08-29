@@ -18,7 +18,6 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
   var menu;
   var menuEntry;
   var q;
-  var c;
   var action;
   var $translate;
   var $window;
@@ -29,6 +28,7 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
       then: jasmine.createSpy('modalInstance.result.then'),
     },
   };
+
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
 
@@ -94,7 +94,7 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
     spyOn($translate, 'instant');
     $translate.instant.and.returnValue('New Variable');
 
-    c = controller('AAConfigureApiModalCtrl', {
+    controller = controller('AAConfigureApiModalCtrl', {
       $scope: $scope,
       $modalInstance: modalFake,
       aa_schedule: schedule,
@@ -119,7 +119,7 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
   describe('activate', function () {
     it('should be defined', function () {
       $scope.$apply();
-      expect(c).toBeDefined();
+      expect(controller).toBeDefined();
     });
   });
 
@@ -132,7 +132,7 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
         newVariableValue: 'test1',
         isWarn: true,
       };
-      c.canShowWarn(test);
+      controller.canShowWarn(test);
       expect(test.isWarn).toBe(false);
     });
 
@@ -144,7 +144,7 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
         newVariableValue: 'Test1',
         isWarn: false,
       };
-      c.variableSet = [{
+      controller.variableSet = [{
         value: '',
         newVariableValue: 'Test1',
         variableName: 'New Variable',
@@ -154,7 +154,7 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
         variableName: 'Test1',
         isWarn: false,
       }];
-      c.canShowWarn(test);
+      controller.canShowWarn(test);
       expect(test.isWarn).toBe(true);
     });
 
@@ -165,7 +165,7 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
         newVariableValue: '',
         isWarn: false,
       };
-      c.canShowWarn(test);
+      controller.canShowWarn(test);
       expect(test.isWarn).toBe(false);
     });
   });
@@ -173,32 +173,32 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
   describe('addVariableSet', function () {
     it('should push variableSet in existing set', function () {
       $scope.$apply();
-      expect(c.variableSet.length).toBe(1);
-      c.addVariableSet();
-      expect(c.variableSet.length).toBe(2);
+      expect(controller.variableSet.length).toBe(1);
+      controller.addVariableSet();
+      expect(controller.variableSet.length).toBe(2);
     });
   });
 
   describe('isSaveDisabled', function () {
     it('should disable save whenever any field is empty', function () {
       $scope.$apply();
-      expect(c.isSaveDisabled()).toBe(false);
+      expect(controller.isSaveDisabled()).toBe(false);
     });
   });
 
   describe('deleteVariableSet', function () {
     it('should delete variableSet for given index', function () {
       $scope.$apply();
-      expect(c.variableSet.length).toBe(1);
-      c.deleteVariableSet(0);
-      expect(c.variableSet.length).toBe(0);
+      expect(controller.variableSet.length).toBe(1);
+      controller.deleteVariableSet(0);
+      expect(controller.variableSet.length).toBe(0);
     });
   });
 
   describe('save', function () {
     it('save function call results in closing the Modal.', function () {
       $scope.$apply();
-      c.save();
+      controller.save();
       expect(modalFake.close).toHaveBeenCalled();
     });
   });
@@ -206,31 +206,24 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
   describe('populateUiModal', function () {
     it('populateUi with the dynamicList', function () {
       $scope.$apply();
-      expect(c.dynamicValues.length).toBe(2);
-      expect(c.dynamicValues[0].model).toBe('Static text');
-      expect(c.dynamicValues[1].model).toBe('Original-Caller-Number');
+      expect(controller.dynamicValues.length).toBe(2);
+      expect(controller.dynamicValues[0].model).toBe('Static text');
+      expect(controller.dynamicValues[1].model).toBe('Original-Caller-Number');
     });
   });
 
   describe('cancel', function () {
     it('should cancel the modal', function () {
       $scope.$apply();
-      c.lastSavedDynList = '';
-      c.lastSavedVariableList = '';
-      c.cancel();
+      controller.lastSavedDynList = '';
+      controller.lastSavedVariableList = '';
+      controller.cancel();
       expect(modalFake.close).toHaveBeenCalled();
     });
   });
 
   describe('dynamic functionality', function () {
     beforeEach(function () {
-      var modalFake = {
-        close: jasmine.createSpy('modalInstance.close'),
-        dismiss: jasmine.createSpy('modalInstance.dismiss'),
-        result: {
-          then: jasmine.createSpy('modalInstance.result.then'),
-        },
-      };
       var scopeElement = {
         insertElement: function (string) {
           return string;
@@ -286,22 +279,10 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
           return true;
         },
       });
-      c = controller('AAConfigureApiModalCtrl', {
-        $scope: $scope,
-        $modalInstance: modalFake,
-        aa_schedule: schedule,
-        aa_index: index,
-      });
     });
 
     it('should be able to create dynamicList', function () {
       spyOn(AACommonService, 'isDynAnnounceToggle').and.returnValue(true);
-      var c = controller('AAConfigureApiModalCtrl', {
-        $scope: $scope,
-        $modalInstance: modalFake,
-        aa_schedule: schedule,
-        aa_index: index,
-      });
       var action = AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', '');
       action.dynamicList = [{
         action: {
@@ -314,24 +295,16 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
       }];
       var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
       menuEntry.addAction(action);
-
       aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
       aaUiModel.openHours.addEntryAt(0, menuEntry);
-
       expect(_.get(menuEntry.actions[0], 'dynamicList[0].action.eval.value', '')).toBe('Static Text');
       $scope.$apply();
-      c.saveDynamicUi();
+      controller.saveDynamicUi();
       expect(_.get(menuEntry.actions[0], 'dynamicList[0].isDynamic', '')).toBe(false);
     });
 
     it('should be able to create dynamicList', function () {
       spyOn(AACommonService, 'isDynAnnounceToggle').and.returnValue(false);
-      var c = controller('AAConfigureApiModalCtrl', {
-        $scope: $scope,
-        $modalInstance: modalFake,
-        aa_schedule: schedule,
-        aa_index: index,
-      });
       var action = AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', '');
       action.dynamicList = [{
         action: {
@@ -344,82 +317,49 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
       }];
       var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
       menuEntry.addAction(action);
-
       aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
       aaUiModel.openHours.addEntryAt(0, menuEntry);
       expect(_.get(menuEntry.actions[0], 'dynamicList[0].action.eval.value', '')).toBe('Static Text');
       $scope.$apply();
-      c.saveDynamicUi();
+      controller.saveDynamicUi();
       expect(_.get(menuEntry.actions[0], 'dynamicList[0].isDynamic', '')).toBe(false);
     });
 
     describe('variable warning', function () {
       it('fullWarningMsg', function () {
-        var c;
         menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
         menuEntry.addAction(AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', ''));
-
         aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
         aaUiModel.openHours.addEntryAt(0, menuEntry);
-
-        // setup the options menu
-        c = controller('AAConfigureApiModalCtrl', {
-          $scope: $scope,
-          $modalInstance: modalFake,
-          aa_schedule: schedule,
-          aa_index: index,
-        });
-        expect(c.fullWarningMsgValue).toBe(false);
-        c.toggleFullWarningMsg();
-        expect(c.fullWarningMsgValue).toBe(true);
+        expect(controller.fullWarningMsgValue).toBe(false);
+        controller.toggleFullWarningMsg();
+        expect(controller.fullWarningMsgValue).toBe(true);
       });
+
       it('getWarning returning true', function () {
-        var c;
         menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
         menuEntry.addAction(AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', ''));
-
         aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
         aaUiModel.openHours.addEntryAt(0, menuEntry);
-
-        // setup the options menu
-        c = controller('AAConfigureApiModalCtrl', {
-          $scope: $scope,
-          $modalInstance: modalFake,
-          aa_schedule: schedule,
-          aa_index: index,
-        });
-        c.deletedSessionVariablesList = ['test', 'test2'];
-        expect(c.getWarning()).toBe(true);
+        controller.deletedSessionVariablesList = ['test', 'test2'];
+        expect(controller.getWarning()).toBe(true);
       });
+
       it('getWarning returning false', function () {
-        var c;
         menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
         menuEntry.addAction(AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', ''));
-
         aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
         aaUiModel.openHours.addEntryAt(0, menuEntry);
-        // setup the options menu
-        c = controller('AAConfigureApiModalCtrl', {
-          $scope: $scope,
-          $modalInstance: modalFake,
-          aa_schedule: schedule,
-          aa_index: index,
-        });
-        c.deletedSessionVariablesList = {};
-        expect(c.getWarning()).toBe(false);
+        controller.deletedSessionVariablesList = {};
+        expect(controller.getWarning()).toBe(false);
       });
+
       it('calling closeFullWarningMsg', function () {
-        c = controller('AAConfigureApiModalCtrl', {
-          $scope: $scope,
-          $modalInstance: modalFake,
-          aa_schedule: schedule,
-          aa_index: index,
-        });
-        c.closeFullWarningMsg();
-        expect(c.fullWarningMsgValue).toBe(false);
+        controller.closeFullWarningMsg();
+        expect(controller.fullWarningMsgValue).toBe(false);
       });
+
       it('broadcast of CE Updated', function () {
-        var c;
         menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
         menuEntry.dynamicList = [{
           action: {
@@ -432,22 +372,14 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
         menuEntry.addAction(AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', ''));
         aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
         aaUiModel.openHours.addEntryAt(0, menuEntry);
-
-        // setup the options menu
-        c = controller('AAConfigureApiModalCtrl', {
-          $scope: $scope,
-          $modalInstance: modalFake,
-          aa_schedule: schedule,
-          aa_index: index,
-        });
         $scope.$apply();
-        c.deletedSessionVariablesList = [];
+        controller.deletedSessionVariablesList = [];
         $rootScope.$broadcast('CE Updated');
-        c.getWarning();
-        expect(c.fullWarningMsgValue).toBe(false);
+        controller.getWarning();
+        expect(controller.fullWarningMsgValue).toBe(false);
       });
+
       it('broadcast of CIVarNameChanged', function () {
-        var c;
         menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
         menuEntry.dynamicList = [{
           action: {
@@ -460,19 +392,11 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
         menuEntry.addAction(AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', ''));
         aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
         aaUiModel.openHours.addEntryAt(0, menuEntry);
-
-        // setup the options menu
-        c = controller('AAConfigureApiModalCtrl', {
-          $scope: $scope,
-          $modalInstance: modalFake,
-          aa_schedule: schedule,
-          aa_index: index,
-        });
         $scope.$apply();
-        c.deletedSessionVariablesList = [];
+        controller.deletedSessionVariablesList = [];
         $rootScope.$broadcast('CIVarNameChanged');
-        c.getWarning();
-        expect(c.fullWarningMsgValue).toBe(false);
+        controller.getWarning();
+        expect(controller.fullWarningMsgValue).toBe(false);
       });
     });
   });

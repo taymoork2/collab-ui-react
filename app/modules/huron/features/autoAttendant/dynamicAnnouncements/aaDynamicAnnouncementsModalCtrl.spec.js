@@ -150,22 +150,22 @@ describe('Controller: AADynamicAnnouncementsModalCtrl', function () {
         $scope.$apply();
       });
 
-      it('should be false when variable not selected', function () {
+      it('should be empty when variable not selected', function () {
         expect(controller.isSaveEnabled()).toBe('');
       });
 
-      it('should be false when variable is not selected but readAs option is selected', function () {
+      it('should be empty when variable is not selected but readAs option is selected', function () {
         controller.readAsSelection.label = 'Number';
         controller.variableSelection.label = '';
         expect(controller.isSaveEnabled()).toBe('');
       });
 
-      it('should be true when variable is selected', function () {
+      it('should not return empty when variable is selected', function () {
         controller.variableSelection.label = 'testVariable';
         expect(controller.isSaveEnabled()).toBe('testVariable');
       });
 
-      it('should be true when variable and readAs option is selected', function () {
+      it('should not return empty when variable and readAs option is selected', function () {
         controller.variableSelection.label = 'testVariable';
         controller.readAsSelection.label = 'Number';
         expect(controller.isSaveEnabled()).toBe('testVariable');

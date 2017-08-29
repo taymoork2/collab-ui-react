@@ -20,6 +20,7 @@ describe('Directive: dynamicPromptDirective', function () {
       element.remove();
     }
     element = undefined;
+    $window = $compile = $rootScope = $timeout = undefined;
   });
 
   beforeEach(angular.mock.module('uc.autoattendant'));
@@ -32,25 +33,29 @@ describe('Directive: dynamicPromptDirective', function () {
     $timeout = _$timeout_;
   }));
 
-  afterEach((function () {
-    $window = $compile = $rootScope = $timeout = undefined;
-  }));
-
   describe('basic', function () {
+    beforeEach(function () {
+      jasmine.clock().uninstall();
+      jasmine.clock().install();
+    });
+
     it('should set up the basic dynamic prompt without ngModel and fail', function () {
-      $scope = $rootScope.$new();
-      $scope.mock = {};
-      $scope.mock.modelValues = [];
-      $scope.mock.dynamicTags = [];
-      element = angular.element('<dynamic-prompt dynamic-tags="mock.dynamicTags" model-values="mock.modelValues" insert-element="insertElement" spellcheck="false"></dynamic-prompt>');
-      $compile(element)($scope);
-      $scope.$digest();
+      setTimeout(function () {
+        $scope = $rootScope.$new();
+        $scope.mock = {};
+        $scope.mock.modelValues = [];
+        $scope.mock.dynamicTags = [];
+        element = angular.element('<dynamic-prompt dynamic-tags="mock.dynamicTags" model-values="mock.modelValues" insert-element="insertElement" spellcheck="false"></dynamic-prompt>');
+        $compile(element)($scope);
+        $scope.$digest();
+        $timeout.flush();
+        $scope.$apply();
+      }, 100);
+      jasmine.clock().tick(101);
       expect(element.attr(CONSTANTS.placeHolderDataDiv)).toBe(undefined);
     });
 
     it('should set up the basic dynamic prompt', function () {
-      jasmine.clock().uninstall();
-      jasmine.clock().install();
       setTimeout(function () {
         $scope = $rootScope.$new();
         $scope.mock = {};
@@ -75,8 +80,6 @@ describe('Directive: dynamicPromptDirective', function () {
     });
 
     it('should set up the basic dynamic prompt without prepopulation', function () {
-      jasmine.clock().uninstall();
-      jasmine.clock().install();
       setTimeout(function () {
         $scope = $rootScope.$new();
         $scope.mock = {};
@@ -100,8 +103,6 @@ describe('Directive: dynamicPromptDirective', function () {
     });
 
     it('should set up the basic dynamic prompt with modelValue data', function () {
-      jasmine.clock().uninstall();
-      jasmine.clock().install();
       setTimeout(function () {
         $scope = $rootScope.$new();
         $scope.mock = {};

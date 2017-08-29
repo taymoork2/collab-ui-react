@@ -30,7 +30,19 @@
     }
 
     function decodedValue(evalValue) {
-      return decodeURIComponent(evalValue).trim();
+      return _.trim(decodeURIComponent(evalValue));
+    }
+
+    function createAction(actionValue, htmlValue, isDynamicValue) {
+      var action = {
+        model: actionValue,
+        html: htmlValue,
+        isDynamic: isDynamicValue,
+      };
+      if (isDynamicValue) {
+        action.label = checkVariableName(actionValue);
+      }
+      return action;
     }
 
     function openConfigureApiModal() {
@@ -41,20 +53,12 @@
           if (_.has(action, 'dynamicList')) {
             vm.dynamicValues = [];
             _.forEach(action.dynamicList, function (opt) {
-              var model = {};
+              var model;
+              var evalValue = _.get(opt.action.eval, 'value', '');
               if (!opt.isDynamic) {
-                model = {
-                  model: decodedValue(_.get(opt.action.eval, 'value')),
-                  html: _.get(opt.action.eval, 'value'),
-                  isDynamic: false,
-                };
+                model = createAction(decodedValue(evalValue), evalValue, false);
               } else {
-                model = {
-                  model: _.get(opt.action.eval, 'value'),
-                  label: checkVariableName(_.get(opt.action.eval, 'value')),
-                  html: decodeURIComponent(opt.htmlModel),
-                  isDynamic: true,
-                };
+                model = createAction(evalValue, opt.htmlModel, true);
               }
               if (!_.isEqual(opt.htmlModel, '%3Cbr%3E')) {
                 vm.dynamicValues.push(model);
@@ -102,20 +106,12 @@
       }
       vm.dynamicValues = [];
       _.forEach(action.dynamicList, function (opt) {
-        var model = {};
+        var model;
+        var evalValue = _.get(opt.action.eval, 'value');
         if (!opt.isDynamic) {
-          model = {
-            model: _.get(opt.action.eval, 'value'),
-            html: _.get(opt.action.eval, 'value'),
-            isDynamic: false,
-          };
+          model = createAction(evalValue, evalValue, false);
         } else {
-          model = {
-            model: _.get(opt.action.eval, 'value'),
-            label: checkVariableName(_.get(opt.action.eval, 'value')),
-            html: decodeURIComponent(opt.htmlModel),
-            isDynamic: true,
-          };
+          model = createAction(evalValue, decodeURIComponent(opt.htmlModel), true);
         }
         vm.dynamicValues.push(model);
       });

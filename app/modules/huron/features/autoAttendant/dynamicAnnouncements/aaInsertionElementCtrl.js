@@ -35,31 +35,31 @@
 
     /////////////////////
 
-    function setResult(node, actionType, result, id) {
+    function setResult(node, actionType, result, insertionElementID) {
       if (!_.isEqual(vm.elementText, result.variable.label) || !_.isEqual(vm.readAs, result.readAs.value)) {
         vm.elementText = result.variable.label;
         vm.readAs = result.readAs.value;
         actionType.value = result.variable.value;
         actionType.as = vm.readAs;
-        var ele = '<aa-insertion-element element-text="' + actionType.value + '" read-as="' + actionType.as + '" element-id="' + id + '" aa-element-type="' + $scope.aaElementType + '"></aa-insertion-element>';
+        var ele = '<aa-insertion-element element-text="' + actionType.value + '" read-as="' + actionType.as + '" element-id="' + insertionElementID + '" aa-element-type="' + $scope.aaElementType + '"></aa-insertion-element>';
         node.htmlModel = encodeURIComponent(ele);
       }
     }
 
     function mainClickFn() {
-      var id = $scope.elementId;
-      populateUiModel(id);
+      var insertionElementID = $scope.elementId;
+      populateUiModel(insertionElementID);
       var dynaList = actionEntry.actions[0].dynamicList;
       _.forEach(dynaList, function (node) {
         var html = decodeURIComponent(node.htmlModel);
-        if (html.search(id) >= 0) {
+        if (html.search(insertionElementID) >= 0) {
           var actionType;
           switch ($scope.aaElementType) {
             case 'REST':
               actionType = node.action.eval;
               openModal(actionType).result
                 .then(function (result) {
-                  setResult(node, actionType, result, id);
+                  setResult(node, actionType, result, insertionElementID);
                 });
               break;
 
@@ -67,7 +67,7 @@
               actionType = node.say;
               openModal(actionType).result
                 .then(function (result) {
-                  setResult(node, actionType, result, id);
+                  setResult(node, actionType, result, insertionElementID);
                   AACommonService.setSayMessageStatus(true);
                 });
           }

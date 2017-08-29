@@ -13,6 +13,7 @@
     var apiConfig;
     var action;
     var CONSTANTS = {};
+    var ui;
 
     var dependentCeSessionVariablesList = [];
     var dynamicVariablesList = [];
@@ -31,7 +32,6 @@
       variableName: '',
       isWarn: false,
     }];
-    vm.ui = {};
     vm.deletedSessionVariablesList = [];
 
     vm.selectVariablePlaceholder = $translate.instant('autoAttendant.selectVariablePlaceholder');
@@ -101,7 +101,7 @@
     function addLocalAndQueriedSessionVars() {
       // reset the displayed SessionVars to the original queried items
       availableSessionVariablesList = dependentCeSessionVariablesList;
-      availableSessionVariablesList = _.concat(dependentCeSessionVariablesList, AACommonService.collectThisCeActionValue(vm.ui, true, false));
+      availableSessionVariablesList = _.concat(dependentCeSessionVariablesList, AACommonService.collectThisCeActionValue(ui, true, false));
       availableSessionVariablesList = _.uniq(availableSessionVariablesList).sort();
     }
 
@@ -272,7 +272,7 @@
 
       if (!variable.isWarn) {
         // args to collect - ui to examine, true for sessionVars, false for conditionals
-        variable.isWarn = AACommonService.collectThisCeActionValue(vm.ui, true, false).filter(function (value) {
+        variable.isWarn = AACommonService.collectThisCeActionValue(ui, true, false).filter(function (value) {
           return _.isEqual(value, nameInput);
         }).length > 1;
       }
@@ -335,9 +335,9 @@
     }
 
     function activate() {
-      vm.ui = AAUiModelService.getUiModel();
+      ui = AAUiModelService.getUiModel();
       apiConfig = 'apiConfig' + aa_schedule + '-' + aa_index + '-' + AACommonService.getUniqueId();
-      var uiMenu = vm.ui[aa_schedule];
+      var uiMenu = ui[aa_schedule];
 
       vm.menuEntry = uiMenu.entries[aa_index];
       if (!_.isUndefined(vm.menuEntry.actions[0])) {
