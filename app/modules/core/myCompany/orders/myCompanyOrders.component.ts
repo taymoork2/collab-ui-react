@@ -1,10 +1,13 @@
+import { Config } from 'modules/core/config/config';
 import { DigitalRiverService } from 'modules/online/digitalRiver/digitalRiver.service';
 import { IOrderDetail } from './myCompanyOrders.service';
 import { Notification } from 'modules/core/notifications';
 import { MyCompanyOrdersService } from './myCompanyOrders.service';
 
 const COMPLETED = 'COMPLETED';
+const CLOSED = 'CLOSED';
 const TRIAL = 'Trial';
+const FREE = 'Free';
 
 class MyCompanyOrdersCtrl implements ng.IComponentController {
 
@@ -20,6 +23,7 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
   constructor(
     private $translate: angular.translate.ITranslateService,
     private $window: ng.IWindowService,
+    private Config: Config,
     private DigitalRiverService: DigitalRiverService,
     private Notification: Notification,
     private MyCompanyOrdersService: MyCompanyOrdersService,
@@ -29,21 +33,26 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
     this.loading = true;
     this.initGridOptions();
     this.MyCompanyOrdersService.getOrderDetails().then(orderDetails => {
-      this.orderDetailList = _.map(orderDetails, (orderDetail: any) => {
-        if (_.size(orderDetail.productDescriptionList) > 0) {
-          orderDetail.productDescriptionList =
-              this.formatProductDescriptionList(orderDetail.productDescriptionList);
+      this.orderDetailList = _.filter(orderDetails, (orderDetail: any) => {
+        if (CLOSED !== orderDetail.status) {
+          if (_.size(orderDetail.productDescriptionList) > 0) {
+            orderDetail.productDescriptionList =
+                this.formatProductDescriptionList(orderDetail.productDescriptionList);
+          }
+          orderDetail.isTrial = false;
+          if (_.includes(orderDetail.productDescriptionList, TRIAL) ||
+              _.includes(orderDetail.productDescriptionList, FREE)) {
+            orderDetail.isTrial = true;
+          }
+          if (COMPLETED === orderDetail.status) {
+            orderDetail.status = this.$translate.instant('myCompanyOrders.completed');
+          } else if (this.Config.webexSiteStatus.PENDING_PARM === orderDetail.status) {
+            orderDetail.status = this.$translate.instant('myCompanyOrders.pendingActivation');
+          } else {
+            orderDetail.status = this.$translate.instant('myCompanyOrders.pending');
+          }
+          return orderDetail;
         }
-        orderDetail.isTrial = false;
-        if (_.includes(orderDetail.productDescriptionList, TRIAL)) {
-          orderDetail.isTrial = true;
-        }
-        if (COMPLETED === orderDetail.status) {
-          orderDetail.status = this.$translate.instant('myCompanyOrders.completed');
-        } else {
-          orderDetail.status = this.$translate.instant('myCompanyOrders.pending');
-        }
-        return orderDetail;
       });
       // sort orders with newest in top
       this.orderDetailList.sort((a: IOrderDetail, b: IOrderDetail): number => {

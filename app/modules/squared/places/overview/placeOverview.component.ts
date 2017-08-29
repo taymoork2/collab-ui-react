@@ -4,7 +4,7 @@ import IPlace = csdm.IPlace;
 import ICsdmDataModelService = csdm.ICsdmDataModelService;
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 import { PlaceCallOverviewService, PlaceCallOverviewData } from 'modules/squared/places/callOverview/placeCallOverview.service';
-import { LocationsService } from 'modules/call/locations/shared';
+import { LocationsService, LocationListItem, MEMBER_TYPE_PLACE } from 'modules/call/locations';
 import { IPreferredLanguageFeature, PreferredLanguageFeature, IPreferredLanugageOption } from 'modules/huron/preferredLanguage';
 import { Notification } from 'modules/core/notifications';
 
@@ -33,6 +33,9 @@ class PlaceOverview implements ng.IComponentController {
   public ishI1484: boolean = false;
 
   public placeLocation: string;
+  public locationOptions: LocationListItem[] = [];
+  public selectedLocation: LocationListItem;
+
   public placeCallOverviewData: PlaceCallOverviewData;
   public prefLanguageSaveInProcess: boolean = false;
   public preferredLanguage: IPreferredLanugageOption[];
@@ -77,8 +80,8 @@ class PlaceOverview implements ng.IComponentController {
     }
   }
 
-  public hasSquaredFusionUc(): boolean {
-    return this.hasEntitlement('squared-fusion-uc');
+  public hasHybridEntitlements(): boolean {
+    return this.hasEntitlement('squared-fusion-uc') || this.hasEntitlement('squared-fusion-cal') || this.hasEntitlement('squared-fusion-gcal');
   }
 
   public initPlaceCallOverviewData(): void {
@@ -121,11 +124,12 @@ class PlaceOverview implements ng.IComponentController {
   public getPlaceLocation(): void {
     this.LocationsService.getUserLocation(this.currentPlace.cisUuid).then(result => {
       this.placeLocation = result.name;
+      this.selectedLocation = result;
     });
   }
 
   public openPanel(): void {
-    this.$state.go('place-overview.placeLocationDetails');
+    this.$state.go('place-overview.placeLocationDetails' , { memberType: MEMBER_TYPE_PLACE });
   }
 
   public openPreferredLanguage(): void {
@@ -405,4 +409,7 @@ class PlaceOverview implements ng.IComponentController {
 export class PlaceOverviewComponent implements ng.IComponentOptions {
   public controller = PlaceOverview;
   public templateUrl = 'modules/squared/places/overview/placeOverview.html';
+  public bindings = {
+    userDetails: '<',
+  };
 }

@@ -1,3 +1,4 @@
+import { Config } from 'modules/core/config/config';
 import {
   isEmpty,
   last,
@@ -14,7 +15,7 @@ export class HuronCompassService {
 
   /* @ngInject */
   constructor(
-    private Config,
+    private Config: Config,
     private UrlConfig,
     private $http,
     private $rootScope: ng.IScope,

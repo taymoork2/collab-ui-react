@@ -176,6 +176,9 @@
   right: 0;
   color: #F5A623;
 }
+.media-checkbox:before {
+  margin-bottom: 40px !important;
+}
 @keyframes scaleUpMediaCards {
   0% {
     transform: scale(0, 0);

@@ -1,7 +1,8 @@
-import { IFMSOrganization, ICluster, IConnector, IExtendedCluster, IExtendedConnector, ConnectorType, IClusterAggregate, IConnectorAlarm, IExtendedConnectorAlarm, ExtendedConnectorState } from 'modules/hercules/hybrid-services.types';
-import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
+import { IFMSOrganization, ICluster, IConnector, IExtendedCluster, IExtendedConnector, ConnectorType, IClusterAggregate, IConnectorAlarm, IExtendedConnectorAlarm, IExtendedClusterFusion, IClusterWithExtendedConnectors, ConnectorMaintenanceMode } from 'modules/hercules/hybrid-services.types';
+import { HybridServicesClusterStatesService, IConnectorStateDetails } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 import { CsdmPollerFactory as CsdmPoller, CsdmHubFactory } from 'modules/squared/devices/services/CsdmPoller';
 import { CsdmCacheUpdater } from 'modules/squared/devices/services/CsdmCacheUpdater';
+import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 
 interface IClusterCache {
   c_mgmt: any;
@@ -15,7 +16,7 @@ interface IClusterCache {
 }
 
 interface IStateSeverity {
-  state: ExtendedConnectorState;
+  state: any;
   stateSeverity: string;
   stateSeverityValue: number;
 }
@@ -38,36 +39,57 @@ export class ClusterService {
   /* @ngInject */
   constructor(
     private $http: ng.IHttpService,
+    private $q: ng.IQService,
     private Authinfo,
     private CsdmCacheUpdater: CsdmCacheUpdater,
     private CsdmHubFactory: CsdmHubFactory,
     private CsdmPoller: CsdmPoller,
+    private HybridServicesClusterService: HybridServicesClusterService,
     private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
     private UrlConfig,
   ) {}
+
+  private addExtendedPropertiesToClusters(clusters: IClusterWithExtendedConnectors[]): ng.IPromise<IExtendedClusterFusion[]> {
+    return this.HybridServicesClusterService.addExtendedPropertiesToClusters(clusters)
+      .then((clusters) => {
+        return this.HybridServicesClusterService.addServicesStatusesToClusters(clusters);
+      });
+  }
+
+  private addExtendedPropertiesToConnectorsOfClusters(clusters: ICluster[]): IClusterWithExtendedConnectors[] {
+    return _.map(clusters, (cluster) => {
+      return {
+        ...cluster,
+        connectors: _.map(cluster.connectors, (connector) => {
+          return this.HybridServicesClusterService.addExtendedPropertiesToConnector(connector, cluster);
+        }),
+      };
+    });
+  }
 
   // Public methods
   public fetch() {
     return this.$http
       .get<IFMSOrganization>(`${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}?fields=@wide`)
       .then(this.extractDataFromResponse)
-      .then((org: IFMSOrganization) => {
-        // only keep clusters that have a targetType (just to be on the safe side)
-        return _.filter<ICluster>(org.clusters, cluster => {
-          return cluster.targetType !== 'unknown';
-        });
+      .then((org) => {
+        return this.HybridServicesClusterService.filterUnknownClusters(
+          this.HybridServicesClusterService.filterClustersWithBadContextConnectors(
+            this.HybridServicesClusterService.filterClustersWithEmptyNames(org.clusters),
+          ),
+        );
       })
       .then(clusters => {
         // start modeling the response to match how the UI uses it, per connectorType
         return <IClusterCache>{
-          c_mgmt: this.clusterType('c_mgmt', clusters),
-          c_ucmc: this.clusterType('c_ucmc', clusters),
-          c_cal: this.clusterType('c_cal', clusters),
-          c_imp: this.clusterType('c_imp', clusters),
-          mf_mgmt: this.clusterType('mf_mgmt', clusters),
-          hds_app: this.clusterType('hds_app', clusters),
-          cs_mgmt: this.clusterType('cs_mgmt', clusters),
-          cs_context: this.clusterType('cs_context', clusters),
+          c_mgmt: this.filterConnectorsInsideClusters('c_mgmt', clusters),
+          c_ucmc: this.filterConnectorsInsideClusters('c_ucmc', clusters),
+          c_cal: this.filterConnectorsInsideClusters('c_cal', clusters),
+          c_imp: this.filterConnectorsInsideClusters('c_imp', clusters),
+          mf_mgmt: this.filterConnectorsInsideClusters('mf_mgmt', clusters),
+          hds_app: this.filterConnectorsInsideClusters('hds_app', clusters),
+          cs_mgmt: this.filterConnectorsInsideClusters('cs_mgmt', clusters),
+          cs_context: this.filterConnectorsInsideClusters('cs_context', clusters),
         };
       })
       .then(clusters => {
@@ -83,6 +105,33 @@ export class ClusterService {
         };
         return result;
       })
+      // ⭐️ Make the resulting data closer to what HybridServicesClusterService is doing
+      .then(clusters => {
+        const result = <IClusterCache>{
+          c_mgmt: this.addExtendedPropertiesToConnectorsOfClusters(clusters.c_mgmt),
+          c_ucmc: this.addExtendedPropertiesToConnectorsOfClusters(clusters.c_ucmc),
+          c_cal: this.addExtendedPropertiesToConnectorsOfClusters(clusters.c_cal),
+          c_imp: this.addExtendedPropertiesToConnectorsOfClusters(clusters.c_imp),
+          mf_mgmt: this.addExtendedPropertiesToConnectorsOfClusters(clusters.mf_mgmt),
+          hds_app: this.addExtendedPropertiesToConnectorsOfClusters(clusters.hds_app),
+          cs_mgmt: this.addExtendedPropertiesToConnectorsOfClusters(clusters.cs_mgmt),
+          cs_context: this.addExtendedPropertiesToConnectorsOfClusters(clusters.cs_context),
+        };
+        return result;
+      })
+      .then(clusters => {
+        return this.$q.all({
+          c_mgmt: this.addExtendedPropertiesToClusters(clusters.c_mgmt),
+          c_ucmc: this.addExtendedPropertiesToClusters(clusters.c_ucmc),
+          c_cal: this.addExtendedPropertiesToClusters(clusters.c_cal),
+          c_imp: this.addExtendedPropertiesToClusters(clusters.c_imp),
+          mf_mgmt: this.addExtendedPropertiesToClusters(clusters.mf_mgmt),
+          hds_app: this.addExtendedPropertiesToClusters(clusters.hds_app),
+          cs_mgmt: this.addExtendedPropertiesToClusters(clusters.cs_mgmt),
+          cs_context: this.addExtendedPropertiesToClusters(clusters.cs_context),
+        });
+      })
+      //⭐️ End of Making the resulting data closer to what HybridServicesClusterService is doing
       .then(clusters => {
         const result = <IClusterCache>{
           c_mgmt: _.keyBy(clusters.c_mgmt, 'id'),
@@ -106,6 +155,9 @@ export class ClusterService {
         this.CsdmCacheUpdater.update(this.clusterCache.cs_mgmt, clusters.cs_mgmt);
         this.CsdmCacheUpdater.update(this.clusterCache.cs_context, clusters.cs_context);
         return this.clusterCache;
+      })
+      .then((result) => {
+        return result;
       });
   }
 
@@ -171,30 +223,34 @@ export class ClusterService {
 
   // Private methods
   private extractDataFromResponse<T>(response: ng.IHttpPromiseCallbackArg<T>) {
-    return response.data;
-  }
-
-  private findExtendedState(connector: IConnector): ExtendedConnectorState {
-    if (connector.alarms.length === 0) {
-      return connector.state;
-    }
-    return _.some(connector.alarms, alarm => {
-      return alarm.severity === 'critical' || alarm.severity === 'error';
-    }) ? 'has_error_alarms' : 'has_warning_alarms';
+    return response.data as T;
   }
 
   private addExtendedState(connector: IConnector): IExtendedConnector {
     const result = _.extend({}, connector, {
-      extendedState: this.findExtendedState(connector),
+      // hack
+      extendedProperties: {
+        alarms: 'none',
+        alarmsBadgeCss: '',
+        hasUpgradeAvailable: false,
+        maintenanceMode: 'off' as ConnectorMaintenanceMode,
+        state: <IConnectorStateDetails>{
+          cssClass: 'success',
+          label: 'ok',
+          name: 'running',
+          severity: 0,
+        },
+      },
     });
     return result;
   }
 
+  // obsolete
   private getMostSevereRunningState(previous: IStateSeverity, connector: IExtendedConnector): IStateSeverity {
-    const severity = this.HybridServicesClusterStatesService.getSeverity(connector, 'extendedState');
+    const severity = this.HybridServicesClusterStatesService.getConnectorStateDetails(connector);
     if (severity.severity > previous.stateSeverityValue) {
       return {
-        state: connector.extendedState,
+        state: connector.state,
         stateSeverity: severity.label,
         stateSeverityValue: severity.severity,
       };
@@ -316,7 +372,7 @@ export class ClusterService {
    * @param type connector type
    * @param clusters array of Hybrid Services clusters
    */
-  private addAggregatedData(type: ConnectorType, clusters: ICluster[]) {
+  private addAggregatedData(type: ConnectorType, clusters: ICluster[]): IExtendedCluster[] {
     // We add aggregated data like alarms, states and versions to the cluster
     return _.map(clusters, cluster => {
       cluster = _.cloneDeep(cluster);
@@ -334,7 +390,7 @@ export class ClusterService {
    * @param type connector type
    * @param clusters array of Hybrid Services clusters
    */
-  private clusterType(type: ConnectorType, clusters: ICluster[]) {
+  private filterConnectorsInsideClusters(type: ConnectorType, clusters: ICluster[]) {
     return _.chain(clusters)
       .filter(cluster => _.some(cluster.provisioning, { connectorType: type }))
       .map(cluster => {
@@ -347,8 +403,13 @@ export class ClusterService {
 }
 
 export default angular
-  .module('core.cluster-service', [
-    // TO COMPLETE
+  .module('hercules.cluster-service', [
+    require('modules/core/scripts/services/authinfo'),
+    require('modules/squared/devices/services/CsdmCacheUpdater'),
+    require('modules/squared/devices/services/CsdmPoller'),
+    require('modules/hercules/services/hybrid-services-cluster.service').default,
+    require('modules/hercules/services/hybrid-services-cluster-states.service').default,
+    require('modules/core/config/urlConfig'),
   ])
   .service('ClusterService', ClusterService)
   .name;

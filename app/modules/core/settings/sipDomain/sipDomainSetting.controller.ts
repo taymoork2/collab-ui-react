@@ -1,3 +1,4 @@
+import { Config } from 'modules/core/config/config';
 import { Notification } from 'modules/core/notifications';
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 
@@ -54,7 +55,7 @@ export class SipDomainSettingController {
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
     private $window: ng.IWindowService,
-    private Config,
+    private Config: Config,
     private FeatureToggleService,
     private Notification: Notification,
     private Orgservice,

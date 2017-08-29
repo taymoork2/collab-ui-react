@@ -1,43 +1,90 @@
-import { IConnector, ConnectorAlarmSeverity, ConnectorState, ExtendedConnectorState, StatusIndicatorCSSClass, ServiceSeverityLabel, ServiceSeverity } from 'modules/hercules/hybrid-services.types';
+import { IConnector, ConnectorAlarmSeverity, ConnectorState, ServiceStatusCSSClass, ConnectorStateSeverityLabel, ConnectorStateSeverity, ServiceStatus, ConnectorStateCSSClass } from 'modules/hercules/hybrid-services.types';
+import { HighLevelStatusForService } from 'modules/hercules/services/hybrid-services-cluster.service';
 
-export interface IMergedStateSeverity {
-  cssClass: StatusIndicatorCSSClass;
-  label: ServiceSeverityLabel;
+export interface IConnectorStateDetails {
+  cssClass: ConnectorStateCSSClass;
+  label: ConnectorStateSeverityLabel;
   name: ConnectorState;
-  severity: ServiceSeverity;
+  severity: ConnectorStateSeverity;
 }
 
-type AlarmCSSClass = 'warning' | 'danger';
-type Status = 'operational' | 'impaired' | 'outage' | 'setupNotComplete' | 'unknown';
+export interface IServiceStatusDetails {
+  cssClass: ServiceStatusCSSClass;
+  name: ServiceStatus;
+}
 
 export class HybridServicesClusterStatesService {
   /* @ngInject */
-  constructor() {
-    this.getSeverity = this.getSeverity.bind(this);
-  }
+  constructor() {}
 
-  public getAlarmSeverityCssClass(alarmSeverity: ConnectorAlarmSeverity): AlarmCSSClass {
+  public getAlarmSeverityCSSClass(alarmSeverity: ConnectorAlarmSeverity): 'warning' | 'danger' {
     if (alarmSeverity === 'critical' || alarmSeverity === 'error') {
       return 'danger';
     }
     return 'warning';
   }
 
-  // Special function, returning a FULL state with a name, a severity and
-  // a severity label
-  public getMergedStateSeverity(connectors: IConnector[]): IMergedStateSeverity {
-    let stateSeverity;
+  public getConnectorStateDetails(connector: IConnector): IConnectorStateDetails {
+    const state = connector.state;
+    const severity = this.getConnectorStateSeverity(state);
+    return {
+      cssClass: this.getConnectorStateCSSClass(severity),
+      label: this.getConnectorStateSeverityLabel(severity),
+      name: connector.state,
+      severity: this.getConnectorStateSeverity(state),
+    };
+  }
+
+  /**
+   * To be sued to get an hybrid service statuse, but could be used with any array of
+   * connectors!
+   * @param connectors IConnector[]
+   */
+  // TODO: take into account the upgradeState of the connector!
+  public getServiceStatusDetails(connectors: IConnector[]): IServiceStatusDetails {
     if (connectors.length === 0) {
-      stateSeverity = this.getStateSeverity('not_installed');
-      return <IMergedStateSeverity>{
-        cssClass: this.getSeverityCssClass(stateSeverity),
-        label: this.getSeverityLabel(stateSeverity),
-        name: 'not_installed',
-        severity: stateSeverity,
+      const implicitStateLabel: ServiceStatus = 'outage';
+      return {
+        cssClass: this.getServiceStatusCSSClassFromLabel(implicitStateLabel),
+        name: implicitStateLabel,
       };
+    } else if (connectors.length === 1) {
+      let implicitStateLabel: ServiceStatus  = 'outage';
+      // If the only connector is running, only case where it's not an outage
+      if (connectors[0].state === 'running') {
+        implicitStateLabel = 'operational';
+      }
+      return {
+        cssClass: this.getServiceStatusCSSClassFromLabel(implicitStateLabel),
+        name: implicitStateLabel,
+      };
+    } else {
+      const connectorStateSeverities = _.map(connectors, (connector) => {
+        return this.getConnectorStateSeverity(connector.state);
+      });
+      const allGreens = _.every(connectorStateSeverities, (severity) => severity === 0);
+      const allReds = _.every(connectorStateSeverities, (severity) => severity === 3);
+      const hasGreens = _.some(connectorStateSeverities, (severity) => severity === 0);
+      const hasGrays = _.some(connectorStateSeverities, (severity) => severity === 1);
+      const hasYellows = _.some(connectorStateSeverities, (severity) => severity === 2);
+      const hasReds = _.some(connectorStateSeverities, (severity) => severity === 3);
+      if (allGreens) {
+        return {
+          cssClass: this.getServiceStatusCSSClassFromLabel('operational'),
+          name: 'operational',
+        };
+      } else if (allReds || (!hasGreens && !hasGrays) || (!hasGreens && !hasYellows) || (!hasGreens && !hasReds)) {
+        return {
+          cssClass: this.getServiceStatusCSSClassFromLabel('outage'),
+          name: 'outage',
+        };
+      } else {
+        return {
+          cssClass: this.getServiceStatusCSSClassFromLabel('impaired'),
+          name: 'impaired',
+        };
+      }
     }
-    const mostSevereConnector = _.last<IConnector>(_.sortBy(connectors, connector => this.getStateSeverity(connector)));
-    return this.getSeverity(mostSevereConnector);
   }
 
   public getMergedUpgradeState(connectors: IConnector[]): 'upgraded' | 'upgrading' {
@@ -45,19 +92,8 @@ export class HybridServicesClusterStatesService {
     return allAreUpgraded ? 'upgraded' : 'upgrading';
   }
 
-  public getSeverity(connectorOrState: IConnector | ConnectorState, property?: string): IMergedStateSeverity {
-    property = property || 'state';
-    const stateSeverity = this.getStateSeverity(connectorOrState);
-    return <IMergedStateSeverity>{
-      cssClass: this.getSeverityCssClass(stateSeverity),
-      label: this.getSeverityLabel(stateSeverity),
-      name: _.isString(connectorOrState) ? connectorOrState : connectorOrState[property],
-      severity: stateSeverity,
-    };
-  }
-
-  public getSeverityLabel(value: ServiceSeverity): ServiceSeverityLabel {
-    let label: ServiceSeverityLabel = 'ok';
+  public getConnectorStateSeverityLabel(value: ConnectorStateSeverity): ConnectorStateSeverityLabel {
+    let label: ConnectorStateSeverityLabel = 'ok';
     switch (value) {
       case 0:
         label = 'ok';
@@ -75,40 +111,24 @@ export class HybridServicesClusterStatesService {
     return label;
   }
 
-  public getStateSeverity(connectorOrState: IConnector | ExtendedConnectorState): ServiceSeverity {
-    // Also note that this function accepts both a connector or just a string
-    let state: ExtendedConnectorState = 'running';
-    if (!_.isString(connectorOrState)) {
-      if (this.connectorHasAlarms(connectorOrState)) {
-        state = _.some(connectorOrState.alarms, (alarm) => {
-          return alarm.severity === 'critical' || alarm.severity === 'error';
-        }) ? 'has_error_alarms' : 'has_warning_alarms';
-      } else {
-        state = connectorOrState.state;
-      }
-    } else {
-      state = connectorOrState;
-    }
-
-    let value: ServiceSeverity = 0;
+  public getConnectorStateSeverity(state: ConnectorState): ConnectorStateSeverity {
+    let value: ConnectorStateSeverity = 0;
     switch (state) {
       case 'running':
         break;
-      case 'not_installed':
-      case 'not_configured':
-      case 'no_nodes_registered':
       case 'disabled':
+      case 'not_configured':
+      case 'not_installed':
         value = 1;
         break;
       case 'downloading':
       case 'installing':
-      case 'uninstalling':
       case 'registered':
-      case 'has_warning_alarms':
+      case 'uninstalling':
+      case 'initializing':
         value = 2;
         break;
       case 'not_operational':
-      case 'has_error_alarms':
       case 'offline':
       case 'stopped':
       case 'unknown':
@@ -118,8 +138,8 @@ export class HybridServicesClusterStatesService {
     return value;
   }
 
-  public getStatusIndicatorCSSClass(status: Status): StatusIndicatorCSSClass {
-    let cssClass: StatusIndicatorCSSClass;
+  public getServiceStatusCSSClassFromLabel(status: ServiceStatus | HighLevelStatusForService): ServiceStatusCSSClass {
+    let cssClass: ServiceStatusCSSClass;
     switch (status) {
       case 'operational':
         cssClass = 'success';
@@ -131,7 +151,6 @@ export class HybridServicesClusterStatesService {
         cssClass = 'disabled';
         break;
       case 'impaired':
-      case 'unknown':
       default:
         cssClass = 'warning';
     }
@@ -139,12 +158,8 @@ export class HybridServicesClusterStatesService {
   }
 
   // Private
-  private connectorHasAlarms(connector: IConnector): boolean {
-    return connector.alarms && connector.alarms.length > 0;
-  }
-
-  private getSeverityCssClass(severity: ServiceSeverity): StatusIndicatorCSSClass {
-    let cssClass: StatusIndicatorCSSClass = 'success';
+  private getConnectorStateCSSClass(severity: ConnectorStateSeverity): ConnectorStateCSSClass {
+    let cssClass: ConnectorStateCSSClass = 'success';
     switch (severity) {
       case 0:
         cssClass = 'success';

@@ -81,7 +81,7 @@
           .then(function (data) {
             hybridServicesCard.services.push({
               serviceId: 'voicemail',
-              statusCss: UCCService.mapStatusToCss(data.voicemailOrgEnableInfo.orgVoicemailStatus),
+              cssClass: UCCService.mapStatusToCss(data.voicemailOrgEnableInfo.orgVoicemailStatus),
             });
           })
           .catch(function (error) {

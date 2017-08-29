@@ -10,6 +10,7 @@ describe('Controller: Spark Metrics Ctrl', function () {
       '$scope',
       '$timeout',
       '$window',
+      'Analytics',
       'Authinfo',
       'Notification',
       'ProPackService',
@@ -21,6 +22,7 @@ describe('Controller: Spark Metrics Ctrl', function () {
     this.premium = 'Premium';
     this.testData = 'qlik-loader/custportal';
 
+    spyOn(this.Analytics, 'trackReportsEvent');
     spyOn(this.Authinfo, 'setEmails');
     spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(true));
     spyOn(this.QlikService, 'getSparkReportQBSforPremiumUrl').and.callFake(function () {
@@ -52,6 +54,7 @@ describe('Controller: Spark Metrics Ctrl', function () {
         $scope: this.$scope,
         $timeout: this.$timeout,
         $window: this.$window,
+        Analytics: this.Analytics,
         Authinfo: this.Authinfo,
         Notification: this.Notification,
         ProPackService: this.ProPackService,
@@ -61,6 +64,10 @@ describe('Controller: Spark Metrics Ctrl', function () {
       this.$scope.$apply();
     };
     this.initController();
+  });
+
+  it('should call Analytics.trackReportsEvent during init', function () {
+    expect(this.Analytics.trackReportsEvent).toHaveBeenCalledWith(this.Analytics.sections.REPORTS.eventNames.CUST_SPARK_REPORT);
   });
 
   it('should turn to premium view', function () {
@@ -73,13 +80,6 @@ describe('Controller: Spark Metrics Ctrl', function () {
 
   it('initial state, isIframeLoaded should be false, currentFilter should be metrics', function () {
     expect(this.controller.sparkMetrics.appData.url).toBe(this.testData);
-  });
-
-  it('should do prevent state change when loading reports', function () {
-    var event = jasmine.createSpyObj('event', ['preventDefault']);
-    this.controller.isIframeLoaded = false;
-    this.controller.onStateChangeStart(event);
-    expect(event.preventDefault).toHaveBeenCalled();
   });
 });
 

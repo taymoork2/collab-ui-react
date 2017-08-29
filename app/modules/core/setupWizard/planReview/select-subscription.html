@@ -1,0 +1,23 @@
+<div>
+  <div class="loading" ng-if="!planReview.isInitialized">
+    <i class="icon icon-spinner"></i>
+  </div>
+  <div class="wizard-plan-review" ng-if="planReview.isInitialized">
+    <h4 translate="firstTimeWizard.selectSubscriptionPrompt"></h4>
+    <form name="planReview.selectSubscriptionForm">
+      <div class="cs-input-group columns medium-7">
+        <label for="selectSubscription"
+        class="cs-input__label"
+        translate="firstTimeWizard.selectSubscriptionLabel"></label>
+        <cs-select
+          id="selectSubscription"
+          name="selectSubscription"
+          ng-model="planReview.selectedSubscription"
+          options="planReview.pendingSubscriptionOptions"
+          on-change-fn="planReview.setActingSubscription(value)"
+          filter="false">
+        </cs-select>
+      </div>
+    </form>
+  </div>
+</div>

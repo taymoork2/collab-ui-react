@@ -1,12 +1,13 @@
 import './hybrid-services-cluster-list-with-cards.scss';
 
+import { Config } from 'modules/core/config/config';
 import { EnterprisePrivateTrunkService } from 'modules/hercules/services/enterprise-private-trunk-service';
-import { HybridServicesClusterService, IResourceGroups } from 'modules/hercules/services/hybrid-services-cluster.service';
-import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
+import { HybridServicesClusterService, IResourceGroups, HighLevelStatusForService } from 'modules/hercules/services/hybrid-services-cluster.service';
 import { IToolkitModalService } from 'modules/core/modal';
 import { Notification } from 'modules/core/notifications';
 import { ResourceGroupService } from 'modules/hercules/services/resource-group.service';
 import { ClusterTargetType } from 'modules/hercules/hybrid-services.types';
+import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 
 interface IFilter {
   name: string;
@@ -47,7 +48,7 @@ class HybridServicesClusterListWithCardsCtrl implements ng.IComponentController 
     private $translate: ng.translate.ITranslateService,
     private Analytics,
     private Authinfo,
-    private Config,
+    private Config: Config,
     private EnterprisePrivateTrunkService: EnterprisePrivateTrunkService,
     private HybridServicesClusterService: HybridServicesClusterService,
     private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
@@ -338,19 +339,22 @@ class HybridServicesClusterListWithCardsCtrl implements ng.IComponentController 
 
     this.EnterprisePrivateTrunkService.fetch()
       .then((destinations) => {
-        // TODO: check the shape of destination and see if it has .serviceStatus like expcted below
-        return _.map(destinations, (destination: any) => {
+        // TODO: check the shape of destination and see if it has .serviceStatus like expected below
+        return _.map(destinations, (destination) => {
           return {
             name: destination.name,
             id: destination.uuid,
             targetType: 'ept',
-            servicesStatuses: [{
-              serviceId: 'ept',
-              state: {
-                cssClass: this.HybridServicesClusterStatesService.getStatusIndicatorCSSClass(destination.serviceStatus),
-              },
-              total: 1,
-            }],
+            extendedProperties: {
+              servicesStatuses: [{
+                serviceId: 'ept',
+                state: {
+                  cssClass: this.HybridServicesClusterStatesService.getServiceStatusCSSClassFromLabel(destination.status.state as HighLevelStatusForService),
+                  name: destination.status.state,
+                },
+                total: 1,
+              }],
+            },
           };
         });
       })

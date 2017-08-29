@@ -33,25 +33,17 @@
   <span class="footer-content">
   <span class="badge warning" ng-if="card.trial && (overview.trialDaysLeft > 0 || !overview.trialDaysLeft)" translate="customerPage.trial"></span>
   <span class="badge alert" ng-if="card.trial && (overview.trialDaysLeft && overview.trialDaysLeft <= 0)" translate="customerPage.expired"></span>
-  <a ng-href="{{overview.statusPageUrl}}" target="_blank" class="monitoring-cell" ng-show="card.showHealth">
+  <a ng-href="{{overview.statusPageUrl}}" target="_blank" class="monitoring-cell" ng-show="card.showHealth" aria-label="{{::card.healthStatusAria}}">
     <cs-statusindicator ng-model="card.healthStatus"></cs-statusindicator>
     <span>{{card.levelText}}</span>
   </a>
   </span>
   <span class="footer-icons">
-    <a ng-href="{{card.settingsUrl}}" ng-if="card.settingsUrl">
+    <a ng-href="{{card.settingsUrl}}" ng-if="card.settingsUrl" aria-label="{{card.name | translate}} {{'common.settings' | translate}}">
       &nbsp;<i class="icon icon-settings"></i>
     </a>
   </span>
 </footer>
-<section class="card-menu ng-isolate-scope" ng-class="{ open: cm.menuOpen === true }" menutitle="card.name"
-         ng-if="card.enabled">
-  <div class="card-menu-heading">
-    <span class="ng-binding">SETTINGS</span>
-    <button type="button" class="close" ng-click="cm.toggleSettings()"><span class="sr-only">Close</span>
-    </button>
-  </div>
-</section>
 <section ng-if="!card.enabled" class="disabled-section">
   <span>{{(card.notEnabledText || 'overview.notEnabledText') | translate}}</span>
   <a ng-href="{{card.notEnabledAction}}" ng-if="card.notEnabledAction" target="_blank">{{::card.notEnabledActionText |

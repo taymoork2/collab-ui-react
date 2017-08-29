@@ -532,7 +532,11 @@
       return ServiceSetup.listSites().then(function () {
         if (ServiceSetup.sites.length !== 0) {
           return ServiceSetup.getSite(ServiceSetup.sites[0].uuid).then(function (site) {
-            vm.ui.systemTimeZone = _.find(vm.ui.timeZoneOptions, function (timezone) {
+            if (!site.timeZone) {
+              // no time zone. no need to loop
+              return undefined;
+            }
+            return _.find(vm.ui.timeZoneOptions, function (timezone) {
               return timezone.id === site.timeZone;
             });
           });
@@ -614,6 +618,7 @@
       AACommonService.setDynAnnounceToggle(featureToggleDefault);
       AACommonService.setRestApiToggle(featureToggleDefault);
       AACommonService.setReturnedCallerToggle(featureToggleDefault);
+      AACommonService.setMultiSiteEnabledToggle(featureToggleDefault);
       return checkFeatureToggles();
     }
 
@@ -625,6 +630,7 @@
         hasRestApi: FeatureToggleService.supports(FeatureToggleService.features.huronAARestApi),
         hasDynAnnounce: FeatureToggleService.supports(FeatureToggleService.features.huronAADynannounce),
         hasReturnedCaller: FeatureToggleService.supports(FeatureToggleService.features.huronAAReturnCaller),
+        hasMultiSites: FeatureToggleService.supports(FeatureToggleService.features.huronMultiSite),
       });
     }
 
@@ -636,6 +642,7 @@
       AACommonService.setDynAnnounceToggle(featureToggles.hasDynAnnounce);
       AutoAttendantCeMenuModelService.setDynAnnounceToggle(featureToggles.hasDynAnnounce);
       AACommonService.setReturnedCallerToggle(featureToggles.hasReturnedCaller);
+      AACommonService.setMultiSiteEnabledToggle(featureToggles.hasMultiSites);
     }
 
     //load the feature toggle prior to creating the elements
@@ -657,14 +664,19 @@
       // Define vm.ui.builder.ceInfo_name for editing purpose.
       vm.ui.builder.ceInfo_name = _.cloneDeep(vm.ui.ceInfo.name);
 
-      getTimeZoneOptions().then(getSystemTimeZone)
-        .finally(function () {
-          AutoAttendantCeMenuModelService.clearCeMenuMap();
-          vm.aaModel = AAModelService.getAAModel();
-          vm.aaModel.aaRecord = undefined;
-          vm.selectAA(aaName);
-          setLoadingDone();
-        });
+      getTimeZoneOptions().then(function () {
+        return getSystemTimeZone();
+      }).then(function (tz) {
+        if (tz) {
+          vm.ui.systemTimeZone = tz;
+        }
+      }).finally(function () {
+        AutoAttendantCeMenuModelService.clearCeMenuMap();
+        vm.aaModel = AAModelService.getAAModel();
+        vm.aaModel.aaRecord = undefined;
+        vm.selectAA(aaName);
+        setLoadingDone();
+      });
     }
 
     function evalKeyPress($keyCode) {

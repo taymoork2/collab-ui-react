@@ -1,3 +1,4 @@
+import { Config } from 'modules/core/config/config';
 
 interface IWindowService extends ng.IWindowService {
   webkitURL: any;
@@ -44,7 +45,7 @@ export class CsvDownloadService {
     private $rootScope: ng.IRootScopeService,
     private $timeout: ng.ITimeoutService,
     private Authinfo,
-    private Config,
+    private Config: Config,
     private UrlConfig,
     private Utils,
     private UserListService,

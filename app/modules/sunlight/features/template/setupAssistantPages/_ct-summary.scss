@@ -2,8 +2,7 @@
   @include vr-spacing(mt, 11);
 
   display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
+  flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
 

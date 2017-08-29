@@ -48,7 +48,6 @@ describe('Controller: MySubscriptionCtrl', function () {
     spyOn(this.ProPackService, 'hasProPackEnabled').and.returnValue(this.$q.resolve(false));
     spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(false));
     spyOn(this.Authinfo, 'getUserId').and.returnValue('12345');
-    spyOn(this.DigitalRiverService, 'getDigitalRiverToken');
     spyOn(this.DigitalRiverService, 'getDigitalRiverUpgradeTrialUrl').and.returnValue(this.$q.resolve({ data: trialUrlResponse }));
     spyOn(this.DigitalRiverService, 'getSubscriptionsUrl').and.returnValue(this.$q.resolve(drUrlResponse));
     spyOn(this.$rootScope, '$broadcast').and.callThrough();
@@ -104,8 +103,8 @@ describe('Controller: MySubscriptionCtrl', function () {
 
   it('should initialize with expected data for online orgs', function () {
     this.data.subscriptionsResponse[0].internalSubscriptionId = onlineIntSubId;
-    this.data.subscriptionsResponse[0].endDate = 'subEndDate';
     spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.data.subscriptionsResponse));
+    spyOn(this.Authinfo, 'getSubscriptions').and.returnValue(this.data.subscriptionsAuthinfo);
     this.data.subscriptionsFormatted[0].isOnline = true;
     this.data.subscriptionsFormatted[0].productInstanceId = productInstanceId;
     this.data.subscriptionsFormatted[0].name = productName;
@@ -122,7 +121,6 @@ describe('Controller: MySubscriptionCtrl', function () {
     expect(this.controller.subscriptionDetails).toEqual(this.data.subscriptionsFormatted);
 
     expect(this.controller.visibleSubscriptions).toBeTruthy();
-    expect(this.DigitalRiverService.getDigitalRiverToken).toHaveBeenCalled();
     expect(this.controller.licenseSummary).toEqual('subscriptions.licenseSummaryOnline');
     expect(this.$rootScope.$broadcast).toHaveBeenCalled();
   });
@@ -144,8 +142,8 @@ describe('Controller: MySubscriptionCtrl', function () {
 
   it('should initialize with expected data for online trial orgs', function () {
     this.data.subscriptionsTrialResponse[0].internalSubscriptionId = onlineIntSubId;
-    this.data.subscriptionsTrialResponse[0].endDate = 'subEndDate';
     spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.data.subscriptionsTrialResponse));
+    spyOn(this.Authinfo, 'getSubscriptions').and.returnValue(this.data.subscriptionsAuthinfo);
     this.data.trialSubscriptionData[0].isOnline = true;
     this.data.trialSubscriptionData[0].upgradeTrialUrl = trialUrlResponse;
     this.data.trialSubscriptionData[0].productInstanceId = productInstanceId;
@@ -164,7 +162,6 @@ describe('Controller: MySubscriptionCtrl', function () {
     expect(this.controller.visibleSubscriptions).toBeTruthy();
     expect(this.$rootScope.$broadcast).toHaveBeenCalled();
     expect(this.controller.licenseSummary).toEqual(this.$translate.instant('subscriptions.licenseSummaryOnline'));
-    expect(this.DigitalRiverService.getDigitalRiverToken).toHaveBeenCalled();
   });
 
   describe('Tests for Shared Meeting Licenses : ', function () {

@@ -16,8 +16,12 @@ import outboundDialDigitModule from 'modules/call/settings/settings-outbound-dia
 import locationCosModule from 'modules/call/locations/locations-cos';
 import internalRangeServiceModule from 'modules/call/shared/internal-number-range';
 import routingPrefixModule from 'modules/call/locations/locations-routing-prefix';
-import locationVoicemailModule from 'modules/call/locations/locations-voicemail-avril';
+import locationVoicemailModule from 'modules/call/locations/locations-voicemail';
 import locationCallerIdModule from 'modules/call/locations/locations-caller-id';
+import externalCallTransferModule from 'modules/call/settings/settings-external-call-transfer';
+
+export * from './shared';
+export * from './locations-user-details';
 
 export default angular
   .module('call.locations', [
@@ -40,6 +44,7 @@ export default angular
     routingPrefixModule,
     locationVoicemailModule,
     locationCallerIdModule,
+    externalCallTransferModule,
   ])
 .component('ucCallLocations', new CallLocationsComponent())
 .component('ucCallLocation', new CallLocationComponent())

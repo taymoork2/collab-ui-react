@@ -14,7 +14,7 @@ source "${WX2_ADMIN_WEB_CLIENT_HOME}/bin/include/env-var-helpers"
 # - inject build env vars if running this script in a dev environment
 # - on jenkins, the necessary env vars will already have been injected as a pre-build step
 if ! is_ci; then
-    inj_build_env_vars_for "dev"
+    inj_build_env_vars_for "dev" >/dev/null
 fi
 
 # Cleanup tcp processed from previous jobs

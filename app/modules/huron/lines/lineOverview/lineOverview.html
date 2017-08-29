@@ -42,11 +42,10 @@
       </uc-simultaneous-calls>
       <uc-line-label     
         line-label="$ctrl.lineOverviewData.line.label.value"
-        apply-to-all-shared-lines="$ctrl.lineOverviewData.line.label.appliesToAllSharedLines"
+        apply-to-all-shared-lines="$ctrl.applyToAllSharedLines"
         ng-hide="!$ctrl.showLineLabel"     
         ng-if="$ctrl.lineOverviewData.line.uuid"
         show-apply-to-all-shared-lines="$ctrl.showApplyToAllSharedLines"
-        disable-check-box="$ctrl.disableCheckBox"
         on-change-fn="$ctrl.setLineLabel(lineLabel, applyToAllSharedLines)">
       </uc-line-label>      
       <uc-caller-id

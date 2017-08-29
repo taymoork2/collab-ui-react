@@ -1,3 +1,5 @@
+import { Config } from 'modules/core/config/config';
+
 interface IHeaderTab {
   title: string;
   state: string;
@@ -12,7 +14,7 @@ class HuronDetailsHeaderComponentCtrl implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private Authinfo,
-    private Config,
+    private Config: Config,
     private FeatureToggleService,
     private $translate: ng.translate.ITranslateService,
   ) { }
@@ -39,10 +41,20 @@ class HuronDetailsHeaderComponentCtrl implements ng.IComponentController {
       });
     }
 
-    this.tabs.push({
-      title: this.$translate.instant('huronDetails.settingsTitle'),
-      state: 'huronsettings',
-    });
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484)
+      .then(enabled => {
+        if (enabled) {
+          this.tabs.push({
+            title: this.$translate.instant('huronDetails.settingsTitle'),
+            state: 'huronsettingslocation',
+          });
+        } else {
+          this.tabs.push({
+            title: this.$translate.instant('huronDetails.settingsTitle'),
+            state: 'huronsettings',
+          });
+        }
+      });
   }
 
   private showFeatureTab(): boolean {

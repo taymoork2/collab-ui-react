@@ -2,31 +2,44 @@
 @import '../../../../node_modules/collab-ui/scss/settings/page';
 @import '../../../../node_modules/collab-ui/scss/settings/fonts';
 
-.metricsContent {
-  overflow: hidden !important;
-  padding: 0 !important;
-}
+.customer-reports {
+  .metricsContent {
+    overflow: hidden !important;
+    padding: 0 !important;
+  }
 
-.fullSize {
-  height: 100%;
-  width: 100%;
-}
+  .fullSize {
+    height: 100%;
+    width: 100%;
+  }
 
-.sparkMetricsContent {
-  height: calc(100vh - (#{$top-bar-height} + (#{$top-bar-border-width} * 2) + #{$page-header-height})) !important;
-}
+  .webexMetricsContent {
+    height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height})) !important;
+  }
 
-.metrics-loading-icon {
-  margin-top: 10vh;
-  font-size: 7rem;
-}
+  .metrics-loading-icon {
+    margin-top: 10vh;
+    font-size: 7rem;
+  }
 
-.metrics-loading-data {
-  margin-top: 1rem;
-  font-size: 1.8rem;
-  font-family: $brand-font-extra-light;
-}
+  .metrics-loading-data {
+    margin-top: 1rem;
+    font-size: 1.8rem;
+    font-family: $brand-font-extra-light;
+  }
 
-.metrics-loading-description {
-  margin-top: 1rem;
+  .metrics-loading-description {
+    margin-top: 1rem;
+  }
+
+  .webex-metrics-sub-header {
+    .page-sub-header .nav li a, .page-sub-header .nav .li a,
+    .page-sub-header .nav li.current.active > a.nav-link, .page-sub-header .nav .current.active.li > a.nav-link,
+    .page-sub-header .nav li a:hover, .page-sub-header .nav .li a:hover{
+      border: none;
+    }
+    .page-sub-header .nav li a, .page-sub-header .nav .li a {
+      font-size: 1rem;
+    }
+  }
 }

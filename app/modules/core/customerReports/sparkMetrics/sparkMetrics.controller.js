@@ -7,11 +7,10 @@
 
   /* @ngInject */
   function SparkMetricsCtrl(
-    $rootScope,
     $sce,
     $scope,
-    $timeout,
     $window,
+    Analytics,
     Authinfo,
     Notification,
     ProPackService,
@@ -33,6 +32,9 @@
       },
     ];
     vm.reportView = vm.sparkMetrics.views[0];
+    vm.init = init;
+
+    init();
 
     function generateWebexMetricsUrl() {
       ProPackService.hasProPackPurchased().then(function (isPurchased) {
@@ -43,9 +45,7 @@
       });
     }
 
-    if (!_.isUndefined(Authinfo.getPrimaryEmail())) {
-      generateWebexMetricsUrl();
-    } else {
+    function init() {
       Userservice.getUser(
         'me',
         function (data) {
@@ -57,6 +57,7 @@
           }
         }
       );
+      Analytics.trackReportsEvent(Analytics.sections.REPORTS.eventNames.CUST_SPARK_REPORT);
     }
 
     function loadMetricsReport() {
@@ -87,60 +88,31 @@
         updateIframe();
       })
         .catch(function (error) {
+          $scope.$broadcast('unfreezeState', true);
           Notification.errorWithTrackingId(error, 'common.error');
         });
     }
 
     function updateIframe() {
-      vm.isIframeLoaded = false;
-
       var iframeUrl = vm.sparkMetrics.appData.url;
-      $scope.trustIframeUrl = $sce.trustAsResourceUrl(iframeUrl);
-      $scope.appId = vm.sparkMetrics.appData.appId;
-      $scope.QlikTicket = vm.sparkMetrics.appData.ticket;
-      $scope.node = vm.sparkMetrics.appData.node;
-      $scope.persistent = vm.sparkMetrics.appData.persistent;
-      $scope.vID = vm.sparkMetrics.appData.vID;
-
-      var parser = $window.document.createElement('a');
-      parser.href = iframeUrl;
-
-      $timeout(
-        function loadIframe() {
-          var submitFormBtn = $window.document.getElementById('submitFormBtn');
-          submitFormBtn.click();
-        },
-        0
-      );
+      var data = {
+        trustIframeUrl: $sce.trustAsResourceUrl(iframeUrl),
+        appId: vm.sparkMetrics.appData.appId,
+        QlikTicket: vm.sparkMetrics.appData.ticket,
+        node: vm.sparkMetrics.appData.node,
+        persistent: vm.sparkMetrics.appData.persistent,
+        vID: vm.sparkMetrics.appData.vID,
+      };
+      $scope.$broadcast('updateIframe', iframeUrl, data);
     }
 
     $window.iframeLoaded = function (iframeId) {
-      var currScope = angular.element(iframeId).scope();
-      var phase = currScope.$$phase;
       var rec = angular.element(iframeId);
       rec.ready(function () {
         var token = $window.sessionStorage.getItem('accessToken');
         var orgID = Authinfo.getOrgId();
         rec[0].contentWindow.postMessage(token + ',' + orgID, '*');
       });
-
-      if (!phase) {
-        currScope.$apply(function () {
-          vm.isIframeLoaded = true;
-        });
-      }
     };
-
-    vm.onStateChangeStart = function (event) {
-      if (!vm.isIframeLoaded) {
-        event.preventDefault();
-      }
-    };
-
-    var stateChangeStart = $rootScope.$on('$stateChangeStart', vm.onStateChangeStart);
-
-    $scope.$on('$destory', function () {
-      stateChangeStart();
-    });
   }
 })();

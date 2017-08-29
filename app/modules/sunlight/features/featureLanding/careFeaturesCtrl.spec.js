@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Care Feature Ctrl should ', function () {
-  var controller, $filter, $q, $rootScope, $state, $scope, Authinfo, CareFeatureList,
+  var controller, $filter, $q, $rootScope, $state, $scope, Authinfo, CareFeatureList, VirtualAssistantService,
     Log, Notification, deferred, callbackDeferred, chatPlusCallbackDeferred, virtualAssistantDeferred, $translate;
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('Test-Org-Id'),
@@ -19,7 +19,7 @@ describe('Care Feature Ctrl should ', function () {
     });
   };
 
-  var getVirtualAssistantConfigsSuccess = function () {
+  var listConfigsSuccess = function () {
     return {
       items: [
         {
@@ -33,6 +33,7 @@ describe('Care Feature Ctrl should ', function () {
           config: { token: '22e724e0bc604e99b0cfd281cd6c282a' },
         },
         {
+          id: 'SomeId',
           name: 'Virtual Assistant Staging Config',
           type: 'APIAI',
           config: { token: '22e724e0bc604e99b0cfd281cd6c282a' },
@@ -60,7 +61,7 @@ describe('Care Feature Ctrl should ', function () {
     $provide.value('Authinfo', spiedAuthinfo);
   }));
 
-  beforeEach(inject(function (_$rootScope_, $controller, _$filter_, _$state_, _$q_, _Authinfo_, _CareFeatureList_, _Notification_, _Log_, _$translate_) {
+  beforeEach(inject(function (_$rootScope_, $controller, _$filter_, _$state_, _$q_, _Authinfo_, _CareFeatureList_, _Notification_, _Log_, _$translate_, _VirtualAssistantService_) {
     $rootScope = _$rootScope_;
     $filter = _$filter_;
     $q = _$q_;
@@ -69,6 +70,7 @@ describe('Care Feature Ctrl should ', function () {
     Authinfo = _Authinfo_;
     $translate = _$translate_;
     CareFeatureList = _CareFeatureList_;
+    VirtualAssistantService = _VirtualAssistantService_;
     Log = _Log_;
     Notification = _Notification_;
 
@@ -80,7 +82,7 @@ describe('Care Feature Ctrl should ', function () {
     spyOn(CareFeatureList, 'getChatTemplates').and.returnValue(deferred.promise);
     spyOn(CareFeatureList, 'getCallbackTemplates').and.returnValue(callbackDeferred.promise);
     spyOn(CareFeatureList, 'getChatPlusCallbackTemplates').and.returnValue(chatPlusCallbackDeferred.promise);
-    spyOn(CareFeatureList, 'getVirtualAssistantConfigs').and.returnValue(virtualAssistantDeferred.promise);
+    spyOn(VirtualAssistantService.featureList, 'getFeature').and.returnValue(virtualAssistantDeferred.promise);
     spyOn($state, 'go');
 
     // Turned on virtual assistant enabled flag
@@ -95,6 +97,7 @@ describe('Care Feature Ctrl should ', function () {
       Log: Log,
       Notification: Notification,
       $translate: $translate,
+      VirtualAssistantService: VirtualAssistantService,
     });
   }));
 
@@ -102,7 +105,7 @@ describe('Care Feature Ctrl should ', function () {
     deferred.resolve(getTemplatesSuccess('chat', templateList));
     callbackDeferred.resolve(getTemplatesSuccess('callback', templateList));
     chatPlusCallbackDeferred.resolve(getTemplatesSuccess('chatPlusCallback', templateList));
-    virtualAssistantDeferred.resolve(getVirtualAssistantConfigsSuccess());
+    virtualAssistantDeferred.resolve(listConfigsSuccess());
   };
 
   it('initialize and get the list of templates and update pageState ', function () {

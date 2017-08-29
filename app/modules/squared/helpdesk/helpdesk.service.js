@@ -496,9 +496,9 @@
     function elevateToReadonlyAdmin(orgId) {
       return $http
         .post(urlBase + 'helpdesk/organizations/' + encodeURIComponent(orgId) + '/actions/elevatereadonlyadmin/invoke')
-        .then(USSService.notifyReadOnlyLaunch)
+        .then(USSService.invalidateHybridUserCache)
         .catch(angular.noop)
-        .then(HybridServicesExtrasService.notifyReadOnlyLaunch)
+        .then(HybridServicesExtrasService.invalidateHybridUserCache)
         .catch(angular.noop);
     }
 

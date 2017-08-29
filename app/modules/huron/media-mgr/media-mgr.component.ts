@@ -48,7 +48,10 @@ export class MediaMgrCtrl implements ng.IComponentController {
   public mohUploadCancelled: boolean = false;
   public mohUploadInProgress: boolean = false;
   public mohUploadPercentComplete: number = 0;
-  public mohEditInProgress: boolean = false;
+  public mohEditStatus = {
+    title: false,
+    description: false,
+  };
   public searchStr: string = '';
   public mediaList: IMedia[];
   public displayNameMessages = {
@@ -157,8 +160,33 @@ export class MediaMgrCtrl implements ng.IComponentController {
       }).catch(error => this.Notification.errorResponse(error, 'mediaMgrModal.restoreMediaError'));
   }
 
-  public editMedia(): void {
-    this.mohEditInProgress = true;
+  public editMedia(content?: string): void {
+    if (content === 'Title') {
+      this.mohEditStatus.title = true;
+    } else if (content === 'Description') {
+      this.mohEditStatus.description = true;
+    } else {
+      this.mohEditStatus.title = true;
+      this.mohEditStatus.description = true;
+    }
+  }
+
+  public editMediaComplete() {
+    this.mohEditStatus.title = false;
+    this.mohEditStatus.description = false;
+  }
+
+  public mohEditInProgress(content?: string): boolean {
+    if (content === 'Title' && this.mohEditStatus.title) {
+      return true;
+    }
+    if (content === 'Description' && this.mohEditStatus.description) {
+      return true;
+    }
+    if (this.mohEditStatus.title || this.mohEditStatus.description) {
+      return true;
+    }
+    return false;
   }
 
   public cancelEditMedia(mohFile: IMedia): void {
@@ -166,14 +194,14 @@ export class MediaMgrCtrl implements ng.IComponentController {
       .then(() => {
         const activeMedia = _.find(this.mediaList, { filename: mohFile.filename });
         this.setActiveMedia(activeMedia);
-      }).finally(() => this.mohEditInProgress = false);
+      }).finally(() => this.editMediaComplete());
   }
 
   public saveEditMedia(mohFile: IMedia): void {
     this.MediaMgrService.editMedia(mohFile)
       .then(() => this.getMedia())
       .catch(error => this.Notification.errorResponse(error, 'mediaMgrModal.editMediaError'))
-      .finally(() => this.mohEditInProgress = false);
+      .finally(() => this.editMediaComplete());
   }
 
   public deleteMedia(mohFile: IMedia): void {

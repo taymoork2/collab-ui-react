@@ -1,23 +1,30 @@
 import { IRLocation, Location, IRLocationListItem, LocationListItem, IRLocationInternalNumberPoolList, LocationInternalNumberPoolList } from './location';
 
-interface ILocationInternalNumberPoolResource extends ng.resource.IResourceClass<IRLocationInternalNumberPoolList & ng.resource.IResource<IRLocationInternalNumberPoolList>> {}
-
 interface ILocationResource extends ng.resource.IResourceClass<ng.resource.IResource<IRLocationListItem>> {}
 
 interface IUserLocationDetailResource extends ng.resource.IResourceClass<ng.resource.IResource<IRLocation>> {}
+
+interface IUserMoveLocationResource extends ng.resource.IResourceClass<ng.resource.IResource<IRLocation>> {
+  update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
+}
 
 interface ILocationDetailResource extends ng.resource.IResourceClass<ng.resource.IResource<IRLocation>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
 }
 
+interface ILocationInternalNumberPoolResource extends ng.resource.IResourceClass<IRLocationInternalNumberPoolList & ng.resource.IResource<IRLocationInternalNumberPoolList>> {}
+
 export class LocationsService {
-  private locationInternalNumberPoolResource: ILocationInternalNumberPoolResource;
   private locationListResource: ILocationResource;
   private userLocationDetailResource: IUserLocationDetailResource;
+  private userMoveLocationResource: IUserMoveLocationResource;
   private locationDetailResource: ILocationDetailResource;
+  private locationInternalNumberPoolResource: ILocationInternalNumberPoolResource;
+  private defaultLocation: LocationListItem | undefined = undefined;
 
   /* @ngInject */
   constructor(
+    private $q: ng.IQService,
     private $resource: ng.resource.IResourceService,
     private HuronConfig,
     private Authinfo,
@@ -39,6 +46,10 @@ export class LocationsService {
         save: saveAction,
       });
     this.locationInternalNumberPoolResource = this.$resource(`${this.HuronConfig.getCmiUrl()}/voice/customers/:customerId/locations/:locationId/internalnumberpools`, {}, {}) as ILocationInternalNumberPoolResource;
+    this.userMoveLocationResource = <IUserMoveLocationResource>this.$resource(`${this.HuronConfig.getCmiV2Url()}/customers/:customerId/users/:userId/move/locations`, {},
+      {
+        update: updateAction,
+      });
     this.userLocationDetailResource = <IUserLocationDetailResource>this.$resource(`${this.HuronConfig.getCmiV2Url()}/customers/:customerId/users/:userId`, {}, {});
     this.locationDetailResource = <ILocationDetailResource>this.$resource(`${this.HuronConfig.getCmiV2Url()}/customers/:customerId/locations/:locationId`, {},
       {
@@ -46,25 +57,21 @@ export class LocationsService {
       });
   }
 
-  public getLocationInternalNumberPoolList(locationId, directorynumber, order, patternQuery, patternlimit): IPromise<LocationInternalNumberPoolList[]> {
-    return this.locationInternalNumberPoolResource.query({
-      customerId: this.Authinfo.getOrgId(),
-      locationId: locationId,
-      directorynumber,
-      order,
-      pattern: patternQuery,
-      limit: patternlimit,
-    }).$promise.then((response) => {
-      return _.map(response, location => {
-        return new LocationInternalNumberPoolList(location);
-      });
-    });
-  }
-
   public getLocationList(): IPromise<LocationListItem[]> {
     return this.locationListResource.get({
       customerId: this.Authinfo.getOrgId(),
       wide: true,
+    }).$promise.then(locations => {
+      return _.map(_.get<IRLocationListItem[]>(locations, 'locations', []), location => {
+        return new LocationListItem(location);
+      });
+    });
+  }
+
+  public getLocationsByRoutingPrefix(routingPrefix: string): IPromise<LocationListItem[]> {
+    return this.locationListResource.get({
+      customerId: this.Authinfo.getOrgId(),
+      routingprefix: routingPrefix,
     }).$promise.then(locations => {
       return _.map(_.get<IRLocationListItem[]>(locations, 'locations', []), location => {
         return new LocationListItem(location);
@@ -134,11 +141,38 @@ export class LocationsService {
     }).$promise;
   }
 
+  public updateUserLocation(userId: string, locationId: string | undefined, validateFlag: boolean): ng.IPromise<void> {
+    return this.userMoveLocationResource.update({
+      customerId: this.Authinfo.getOrgId(),
+      userId,
+    }, {
+      locationUuid: locationId,
+      validate: validateFlag,
+    }).$promise.then(() => {
+      if ( validateFlag === true) {
+        return this.updateUserLocation(userId, locationId, false);
+      } else {
+        return this.$q.resolve();
+      }
+    });
+  }
+
   public deleteLocation(locationId: string): ng.IPromise<IRLocation> {
     return this.locationDetailResource.delete({
       customerId: this.Authinfo.getOrgId(),
       locationId: locationId,
     }, location).$promise;
+  }
+
+  public getDefaultLocation() {
+    if (!this.defaultLocation) {
+      return this.getLocationList().then(locationList => {
+        this.defaultLocation = locationList[0];
+        return this.defaultLocation;
+      });
+    } else {
+      return this.$q.resolve(this.defaultLocation);
+    }
   }
 
   public makeDefault(locationId: string): ng.IPromise<void> {
@@ -147,7 +181,9 @@ export class LocationsService {
       locationId: locationId,
     }, {
       defaultLocation: true,
-    }).$promise;
+    }).$promise.then(() => {
+      this.getDefaultLocation();
+    });
   }
 
   public filterCards(locations: LocationListItem[], filterText: string): LocationListItem[] {
@@ -168,6 +204,21 @@ export class LocationsService {
         return item.name === name;
       });
       return filterList.length > 0;
+    });
+  }
+
+  public getLocationInternalNumberPoolList(locationId, directorynumber, order, patternQuery, patternlimit): IPromise<LocationInternalNumberPoolList[]> {
+    return this.locationInternalNumberPoolResource.query({
+      customerId: this.Authinfo.getOrgId(),
+      locationId: locationId,
+      directorynumber,
+      order,
+      pattern: patternQuery,
+      limit: patternlimit,
+    }).$promise.then((response) => {
+      return _.map(response, location => {
+        return new LocationInternalNumberPoolList(location);
+      });
     });
   }
 }

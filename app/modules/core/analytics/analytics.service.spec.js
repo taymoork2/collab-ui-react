@@ -116,6 +116,34 @@ describe('Service: Analytics', function () {
     });
   });
 
+  describe('when calling report event', function () {
+    beforeEach(function () {
+      this.CUST_SPARK_REPORT = 'Reports: Customer Spark Qlik report';
+      this.CUST_WEBEX_REPORT = 'Reports: Customer WebEx Qlik report';
+      this.PARTNER_SPARK_REPORT = 'Reports: Partner Spark Qlik report';
+
+      spyOn(this.Authinfo, 'getUserId').and.returnValue('111');
+      spyOn(this.Authinfo, 'getOrgId').and.returnValue('999');
+
+      this.triggerEvent = function (eventName) {
+        this.Analytics.trackReportsEvent(eventName);
+        this.$scope.$apply();
+      };
+    });
+    it('should call _track when Customer Spark reports trackReportsEvent is called', function () {
+      this.triggerEvent(this.Analytics.sections.REPORTS.eventNames.CUST_SPARK_REPORT);
+      expect(this.Analytics._track.calls.mostRecent().args).toContain(this.CUST_SPARK_REPORT);
+    });
+    it('should call _track when Customer WebEx reports trackReportsEvent is called', function () {
+      this.triggerEvent(this.Analytics.sections.REPORTS.eventNames.CUST_WEBEX_REPORT);
+      expect(this.Analytics._track.calls.mostRecent().args).toContain(this.CUST_WEBEX_REPORT);
+    });
+    it('should call _track when Partner Spark reports trackReportsEvent is called', function () {
+      this.triggerEvent(this.Analytics.sections.REPORTS.eventNames.PARTNER_SPARK_REPORT);
+      expect(this.Analytics._track.calls.mostRecent().args).toEqual([this.PARTNER_SPARK_REPORT, { cisco_userId: '111', cisco_orgId: '999', cisco_type: false }]);
+    });
+  });
+
   describe('when calling trial events', function () {
     it('should call _track when trackTrialSteps is called', function () {
       this.Analytics.trackTrialSteps(this.Analytics.eventNames.START, {});

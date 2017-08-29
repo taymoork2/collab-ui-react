@@ -295,6 +295,7 @@
             states.push('proactivePrompt');
           }
           states.push('customerInformation');
+          states.push('virtualAssistant');
           states.push('agentUnavailable');
           states.push('offHours');
           states.push('feedback');
@@ -317,6 +318,7 @@
             states.push('proactivePrompt');
           }
           states.push('customerInformationChat');
+          states.push('virtualAssistant');
           states.push('agentUnavailable');
           states.push('feedback');
           states.push('profile');
@@ -325,11 +327,6 @@
           states.push('feedbackCallback');
           states.push('offHours');
           states.push('summary');
-          break;
-        case 'virtualAssistant':
-          states.push('virtualAssistantName');
-          states.push('virtualAssistantAvatar');
-          states.push('virtualAssistantSummary');
           break;
         default:
           return states;

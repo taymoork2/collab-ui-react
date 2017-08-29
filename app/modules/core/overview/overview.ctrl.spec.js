@@ -78,9 +78,7 @@ describe('Controller: OverviewCtrl', function () {
 
     var getOrgNoSip = this.orgServiceJSONFixture.getOrgNoSip;
     spyOn(this.Orgservice, 'getAdminOrg').and.callFake(_.noop);
-    spyOn(this.Orgservice, 'getAdminOrgUsage').and.returnValue(this.$q.resolve({
-      data: this.orgServiceJSONFixture.getLicensesUsage.singleSub,
-    }));
+    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.orgServiceJSONFixture.getLicensesUsage.singleSub));
     spyOn(this.Orgservice, 'getUnlicensedUsers').and.callFake(_.noop);
     spyOn(this.Orgservice, 'getOrg').and.callFake(function (callback) {
       callback(getOrgNoSip, 200);
@@ -157,7 +155,7 @@ describe('Controller: OverviewCtrl', function () {
 
   describe('Enable Devices', function () {
     beforeEach(function () {
-      this.Orgservice.getAdminOrgUsage.and.returnValue(this.$q.resolve({ data: this.usageOnlySharedDevicesFixture }));
+      this.Orgservice.getLicensesUsage.and.returnValue(this.$q.resolve(this.usageOnlySharedDevicesFixture));
       this.initController();
     });
 

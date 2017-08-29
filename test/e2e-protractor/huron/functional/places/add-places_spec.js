@@ -1,6 +1,6 @@
 import * as provisioner from '../../../provisioner/provisioner';
 import { huronCustomer } from '../../../provisioner/huron/huron-customer-config';
-import { CallPlacesPage } from '../../pages/CallPlaces.page';
+import { CallPlacesPage } from '../../pages/callPlaces.page';
 
 const CallPlaces = new CallPlacesPage();
 
@@ -21,7 +21,7 @@ describe('Huron Functional: add-places', () => {
   });
 
   it('should navigate to places page', () => {
-    utils.click(CallPlaces.placesTab);
+    utils.click(navigation.placesTab);
     navigation.expectDriverCurrentUrl('places');
   });
 
@@ -161,7 +161,7 @@ describe('Huron Functional: add-places', () => {
             utils.expectIsDisplayed(CallPlaces.LineConfigPg);
           });
           it('should have Directory Numbers section', () => {
-            utils.expectIsDisplayed(CallPlaces.dirNumSct);
+            utils.expectIsDisplayed(CallPlaces.directoryNumSct);
           });
           it('should have Call Forwarding section', () => {
             utils.expectIsDisplayed(CallPlaces.callFwdSct);
@@ -255,7 +255,7 @@ describe('Huron Functional: add-places', () => {
             utils.expectIsDisplayed(CallPlaces.LineConfigPg);
           });
           it('should have Directory Numbers section', () => {
-            utils.expectIsDisplayed(CallPlaces.dirNumSct);
+            utils.expectIsDisplayed(CallPlaces.directoryNumSct);
           });
           it('should have Caller ID section', () => {
             utils.expectIsDisplayed(CallPlaces.callerIdSct);

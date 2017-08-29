@@ -52,6 +52,7 @@
     'rzModule',
     'dragularModule',
     require('modules/bmmp/learn-more-banner').default,
+    require('modules/core/account').default,
     require('modules/core/banner').default,
     require('modules/core/csgrid').default,
     require('modules/core/users/userOverview').default,
@@ -102,6 +103,7 @@
     'Hercules',
     'Huron',
     'Sunlight',
+    require('modules/squared/devices/services/CsdmCacheUpdater'),
     require('modules/squared/devices/services/CsdmPoller'),
     require('modules/squared/partner-management').default,
     require('modules/squared/provisioning-console').default,
@@ -118,7 +120,6 @@
     'uc.cdrlogsupport',
     'uc.autoattendant',
     'ngIcal',
-    'huron.paging-group',
     'huron.call-pickup.setup-assistant',
     'huron.TerminusServices',
     'huron.externalNumberService',
@@ -133,6 +134,7 @@
     require('modules/huron/lines/deleteExternalNumber').default,
     require('modules/huron/media-mgr').default,
     require('modules/call/features').default,
+    require('modules/call/features/paging-group/shared').default,
   ])
     .constant('ASTParser', require('acorn'))
     .constant('ASTWalker', require('acorn/dist/walk'));
@@ -151,6 +153,7 @@
     require('modules/hercules/private-trunk/private-trunk-setup').default,
     require('modules/hercules/resource-group-card').default,
     require('modules/hercules/service-settings/calendar-service-setup').default,
+    require('modules/hercules/services/calendar-cloud-connector.service').default,
     require('modules/hercules/services/cluster-service').default,
     require('modules/hercules/services/enterprise-private-trunk-service').default,
     require('modules/hercules/services/excel-service').default,

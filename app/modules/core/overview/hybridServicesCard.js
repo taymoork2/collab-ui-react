@@ -6,7 +6,7 @@
     .factory('OverviewHybridServicesCard', OverviewHybridServicesCard);
 
   /* @ngInject */
-  function OverviewHybridServicesCard($q, Authinfo, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, HybridServicesUtilsService, Notification) {
+  function OverviewHybridServicesCard($q, Authinfo, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, HybridServicesExtrasService, HybridServicesUtilsService, Notification, USSService) {
     return {
       createCard: function createCard() {
         var card = {};
@@ -19,7 +19,7 @@
         card.notEnabledActionText = 'overview.cards.hybrid.notEnabledActionText';
         card.serviceList = [];
 
-        function init() {
+        function init(hasInvalidated) {
           $q.all({
             nameChangeEnabled: FeatureToggleService.atlas2017NameChangeGetStatus(),
             hybridImp: FeatureToggleService.atlasHybridImpGetStatus(),
@@ -63,7 +63,20 @@
                 card.serviceList.push(HybridServicesClusterService.getStatusForService('contact-center-context', response.clusterList.value));
               }
             } else {
-              Notification.errorWithTrackingId(response.clusterList.reason, 'overview.cards.hybrid.herculesError');
+              if (_.get(response, 'clusterList.reason.status') === 403 && !hasInvalidated) {
+                $q.all([
+                  // Partner user most likely is out of sync in FMS/USS cache after the trial was added in the Atlas backend
+                  // To remedy, invalidate the user cache
+                  USSService.invalidateHybridUserCache(),
+                  HybridServicesExtrasService.invalidateHybridUserCache(),
+                ])
+                  .then(function () {
+                    // We have invalidated the cache, lets init again
+                    init(true);
+                  });
+              } else {
+                Notification.errorWithTrackingId(response.clusterList.reason, 'overview.cards.hybrid.herculesError');
+              }
             }
             card.enabled = _.some(card.serviceList, function (service) {
               return service.setup;
@@ -71,12 +84,12 @@
             if (card.enabled) {
               _.each(card.serviceList, function (service) {
                 service.UIstateLink = getUIStateLink(service.serviceId);
-                service.healthStatus = service.statusCss;
+                service.healthStatus = service.cssClass;
               });
             }
           });
         }
-        init();
+        init(false);
 
         function getUIStateLink(serviceId) {
           if (serviceId === 'squared-fusion-uc') {

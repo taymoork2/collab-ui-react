@@ -118,124 +118,118 @@
         }
       },
       updateAccountInfo: function (data) {
-        if (data) {
-          var msgLicenses = [];
-          var confLicenses = [];
-          var commLicenses = [];
-          var cmrLicenses = [];
-          var careLicenses = [];
-          var confLicensesWithoutSiteUrl = [];
-          var confLicensesLinkedSiteUrl = [];
-          authData.customerAccounts = data.customers || [];
+        if (!data) {
+          return;
+        }
 
-          if (authData.customerAccounts.length > 0) {
-            authData.hasAccount = true;
+        var msgLicenses = [];
+        var confLicenses = [];
+        var commLicenses = [];
+        var cmrLicenses = [];
+        var careLicenses = [];
+        var confLicensesWithoutSiteUrl = [];
+        var confLicensesLinkedSiteUrl = [];
+        var accounts = data.customers || [];
+        authData.hasAccount = accounts.length > 0;
+        authData.customerAccounts = accounts;
+
+        authData.customerType = _.get(accounts, '[0].customerType', '');
+        authData.customerId = _.get(accounts, '[0].customerId');
+        authData.commerceRelation = _.get(accounts, '[0].commerceRelation', '');
+        authData.subscriptions = _.flattenDeep(_.map(accounts, 'subscriptions'));
+        authData.customerAdminEmail = _.get(accounts, '[0].customerAdminEmail');
+
+        _.forEach(accounts, function (account, accountIndex) {
+          var licenses = [];
+          // If org has subscriptions get the license information from subscriptions, else from licences
+          if (_.has(account, 'subscriptions')) {
+            licenses = _.flatMap(account.subscriptions, 'licenses');
+          } else if (_.has(account, 'licenses')) {
+            licenses = _.get(account, 'licenses', []);
           }
 
-          authData.customerType = _.get(authData.customerAccounts, '[0].customerType', '');
-          authData.customerId = _.get(authData.customerAccounts, '[0].customerId');
-          authData.commerceRelation = _.get(authData.customerAccounts, '[0].commerceRelation', '');
-          authData.subscriptions = _.flattenDeep(_.map(authData.customerAccounts, 'subscriptions'));
-          authData.customerAdminEmail = _.get(authData.customerAccounts, '[0].customerAdminEmail');
+          _.forEach(licenses, function (license) {
+            var service = null;
 
-          for (var x = 0; x < authData.customerAccounts.length; x++) {
-            var customerAccount = authData.customerAccounts[x];
-            var customerAccountLicenses = [];
+            // Store license before filtering
+            authData.licenses.push(license);
 
-            //If org has subscriptions get the license information from subscriptions, else from licences
-            if (_.has(customerAccount, 'licenses')) {
-              customerAccountLicenses = _.get(customerAccount, 'licenses');
-            } else if (customerAccount.subscriptions) {
-              for (var subId = 0; subId < customerAccount.subscriptions.length; subId++) {
-                if (customerAccount.subscriptions[subId].licenses) {
-                  customerAccountLicenses = _.concat(customerAccountLicenses, customerAccount.subscriptions[subId].licenses);
-                }
-              }
+            // Do not store invalid licenses in service buckets
+            if (license.status === Config.licenseStatus.CANCELLED || license.status === Config.licenseStatus.SUSPENDED) {
+              return;
             }
 
-            for (var l = 0; l < customerAccountLicenses.length; l++) {
-              var license = customerAccountLicenses[l];
-              var service = null;
-
-              // Store license before filtering
-              authData.licenses.push(license);
-
-              // Do not store invalid licenses in service buckets
-              if (license.status === Config.licenseStatus.CANCELLED || license.status === Config.licenseStatus.SUSPENDED) {
-                continue;
-              }
-
-              switch (license.licenseType) {
-                case Config.licenseTypes.CONFERENCING:
-                  if ((this.isCustomerAdmin() || this.isReadOnlyAdmin()) &&
-                    (license.siteUrl || license.linkedSiteUrl) &&
-                    !_.includes(authData.roles, 'Site_Admin')) {
-                    authData.roles.push('Site_Admin');
-                  }
-                  service = new ServiceFeature($translate.instant(Config.confMap[license.offerName], {
-                    capacity: license.capacity,
-                  }), x + 1, 'confRadio', license);
-                  if (license.siteUrl) {
-                    confLicensesWithoutSiteUrl.push(service);
-                  }
-                  if (license.linkedSiteUrl) {
-                    confLicensesLinkedSiteUrl.push(service);
-                  }
-                  confLicenses.push(service);
-                  break;
-                case Config.licenseTypes.MESSAGING:
-                  service = new ServiceFeature($translate.instant('onboardModal.paidMsg'), x + 1, 'msgRadio', license);
-                  msgLicenses.push(service);
-                  break;
-                case Config.licenseTypes.COMMUNICATION:
-                  service = new ServiceFeature($translate.instant('onboardModal.paidComm'), x + 1, 'commRadio', license);
-                  commLicenses.push(service);
-                  // store the partner for Communication license
-                  authData.commPartnerOrgId = license.partnerOrgId;
-                  break;
-                case Config.licenseTypes.SHARED_DEVICES:
-                  // store the partner for shared devices(room systems) license
-                  authData.roomPartnerOrgId = license.partnerOrgId;
-                  break;
-                case Config.licenseTypes.CARE:
-                  if (license.offerName === Config.offerCodes.CDC) {
-                    service = new ServiceFeature($translate.instant('onboardModal.paidCDC'), x + 1, 'careRadio', license);
-                    hasCDCOffer = true;
-                  } else if (license.offerName === Config.offerCodes.CVC) {
-                    service = new ServiceFeature($translate.instant('onboardModal.paidCVC'), x + 1, 'careRadio', license);
-                    hasCVCOffer = true;
-                  }
-                  careLicenses.push(service);
-                  break;
-                case Config.licenseTypes.CMR:
-                  service = new ServiceFeature($translate.instant('onboardModal.cmr'), x + 1, 'cmrRadio', license);
-                  cmrLicenses.push(service);
-              }
-            } //end for
-          } //end for
-          if (msgLicenses.length !== 0) {
-            authData.messageServices = msgLicenses;
-          }
-          if (confLicenses.length !== 0) {
-            authData.conferenceServices = confLicenses;
-          }
-          if (commLicenses.length !== 0) {
-            authData.communicationServices = commLicenses;
-          }
-          if (careLicenses.length !== 0) {
-            authData.careServices = careLicenses;
-          }
-          if (cmrLicenses.length !== 0) {
-            authData.cmrServices = cmrLicenses;
-          }
-          if (confLicensesWithoutSiteUrl.length !== 0) {
-            authData.conferenceServicesWithoutSiteUrl = confLicensesWithoutSiteUrl;
-          }
-          if (confLicensesLinkedSiteUrl.length !== 0) {
-            authData.conferenceServicesWithLinkedSiteUrl = confLicensesLinkedSiteUrl;
-          }
-          $rootScope.$broadcast('AccountinfoUpdated');
-        } //end if
+            switch (license.licenseType) {
+              case Config.licenseTypes.CONFERENCING:
+                if ((this.isCustomerAdmin() || this.isReadOnlyAdmin()) &&
+                  (license.siteUrl || license.linkedSiteUrl) &&
+                  !_.includes(authData.roles, 'Site_Admin')) {
+                  authData.roles.push('Site_Admin');
+                }
+                service = new ServiceFeature($translate.instant(Config.confMap[license.offerName], {
+                  capacity: license.capacity,
+                }), accountIndex + 1, 'confRadio', license);
+                if (license.siteUrl) {
+                  confLicensesWithoutSiteUrl.push(service);
+                }
+                if (license.linkedSiteUrl) {
+                  confLicensesLinkedSiteUrl.push(service);
+                }
+                confLicenses.push(service);
+                break;
+              case Config.licenseTypes.MESSAGING:
+                service = new ServiceFeature($translate.instant('onboardModal.paidMsg'), accountIndex + 1, 'msgRadio', license);
+                msgLicenses.push(service);
+                break;
+              case Config.licenseTypes.COMMUNICATION:
+                service = new ServiceFeature($translate.instant('onboardModal.paidComm'), accountIndex + 1, 'commRadio', license);
+                commLicenses.push(service);
+                // store the partner for Communication license
+                authData.commPartnerOrgId = license.partnerOrgId;
+                break;
+              case Config.licenseTypes.SHARED_DEVICES:
+                // store the partner for shared devices(room systems) license
+                authData.roomPartnerOrgId = license.partnerOrgId;
+                break;
+              case Config.licenseTypes.CARE:
+                if (license.offerName === Config.offerCodes.CDC) {
+                  service = new ServiceFeature($translate.instant('onboardModal.paidCDC'), accountIndex + 1, 'careRadio', license);
+                  hasCDCOffer = true;
+                } else if (license.offerName === Config.offerCodes.CVC) {
+                  service = new ServiceFeature($translate.instant('onboardModal.paidCVC'), accountIndex + 1, 'careRadio', license);
+                  hasCVCOffer = true;
+                }
+                careLicenses.push(service);
+                break;
+              case Config.licenseTypes.CMR:
+                service = new ServiceFeature($translate.instant('onboardModal.cmr'), accountIndex + 1, 'cmrRadio', license);
+                cmrLicenses.push(service);
+                break;
+            }
+          }.bind(this));
+        }.bind(this));
+        if (msgLicenses.length !== 0) {
+          authData.messageServices = msgLicenses;
+        }
+        if (confLicenses.length !== 0) {
+          authData.conferenceServices = confLicenses;
+        }
+        if (commLicenses.length !== 0) {
+          authData.communicationServices = commLicenses;
+        }
+        if (careLicenses.length !== 0) {
+          authData.careServices = careLicenses;
+        }
+        if (cmrLicenses.length !== 0) {
+          authData.cmrServices = cmrLicenses;
+        }
+        if (confLicensesWithoutSiteUrl.length !== 0) {
+          authData.conferenceServicesWithoutSiteUrl = confLicensesWithoutSiteUrl;
+        }
+        if (confLicensesLinkedSiteUrl.length !== 0) {
+          authData.conferenceServicesWithLinkedSiteUrl = confLicensesLinkedSiteUrl;
+        }
+        $rootScope.$broadcast('AccountinfoUpdated');
       },
       getOrgName: function () {
         return authData.orgName;

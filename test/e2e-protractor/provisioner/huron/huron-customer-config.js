@@ -9,16 +9,36 @@ const partnerEmail = isProductionBackend ? 'huron.ui.test.partner+production_' :
 const now = Date.now();
 
 let offers = [];
-offers.push(new TrialOffer({
-  id: Offers.OFFER_CALL,
-  licenseCount: 100,
-}));
-offers.push(new TrialOffer({
-  id: Offers.OFFER_ROOM_SYSTEMS,
-  licenseCount: 5,
-}));
 
-export function huronCustomer(test, numberRange, users, pstn, pstnLines, doFtsw) {
+export function huronCustomer(test, numberRange, users, pstn, pstnLines, doFtsw, selectedOffer, doHuntGroup) {
+  switch (selectedOffer) {
+    case 'CALL':
+      offers.push(new TrialOffer({
+        id: Offers.OFFER_CALL,
+        licenseCount: 100,
+      }));
+      break;
+    case 'ROOMSYSTEMS':
+      offers.push(new TrialOffer({
+        id: Offers.OFFER_ROOM_SYSTEMS,
+        licenseCount: 5,
+      }));
+      break;
+    case 'NONE':
+      offers.push(new TrialOffer({
+        id: Offers.OFFER_MESSAGE,
+      }));
+      break;
+    default:
+      offers.push(new TrialOffer({
+        id: Offers.OFFER_CALL,
+        licenseCount: 100,
+      }));
+      offers.push(new TrialOffer({
+        id: Offers.OFFER_ROOM_SYSTEMS,
+        licenseCount: 5,
+      }));
+  }
   const customerName = `${os.userInfo().username}_${test}`;
   const customer = {
     partner: testPartner,
@@ -34,10 +54,11 @@ export function huronCustomer(test, numberRange, users, pstn, pstnLines, doFtsw)
       beginNumber: numberRange ? numberRange.beginNumber : '300',
       endNumber: numberRange ? numberRange.endNumber : '399',
     }),
-    users: undefined,
+    users: users || undefined,
     pstn: pstn || undefined,
     pstnLines: pstnLines || 3,
     doFtsw: doFtsw || false,
+    doHuntGroup: doHuntGroup || false,
   };
   return customer;
 }

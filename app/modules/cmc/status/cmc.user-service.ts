@@ -1,4 +1,5 @@
 import { ICmcUserStatusInfoResponse, ICmcUserStatus } from './../cmc.interface';
+import { Config } from 'modules/core/config/config';
 import * as moment from 'moment';
 
 export class CmcUserService {
@@ -7,7 +8,7 @@ export class CmcUserService {
   constructor(
     private $log: ng.ILogService,
     private Authinfo,
-    private Config,
+    private Config: Config,
     private UrlConfig,
     private $http: ng.IHttpService,
     private $translate,

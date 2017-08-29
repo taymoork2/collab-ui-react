@@ -2,10 +2,6 @@
 @import '~collab-ui/scss/settings/colors';
 @import '~collab-ui/scss/tools/mixins/spacing-responsive';
 
-.iframe-container {
-  display: inline;
-}
-
 .subscriptions-container {
   @include vr-spacing(mh, 1);
   @include vr-spacing(mv, 1.25);

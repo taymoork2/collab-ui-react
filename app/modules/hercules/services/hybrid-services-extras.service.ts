@@ -22,7 +22,7 @@ export class HybridServicesExtrasService {
   ) {
     this.extractDataAndTranslateAlarms = this.extractDataAndTranslateAlarms.bind(this);
     this.extractDataFromResponse = this.extractDataFromResponse.bind(this);
-    this.notifyReadOnlyLaunch = this.notifyReadOnlyLaunch.bind(this);
+    this.invalidateHybridUserCache = this.invalidateHybridUserCache.bind(this);
   }
 
   public addPreregisteredClusterToAllowList(hostname: string, clusterId: string): ng.IPromise<any> {
@@ -56,7 +56,7 @@ export class HybridServicesExtrasService {
       });
   }
 
-  public notifyReadOnlyLaunch(): ng.IPromise<any> {
+  public invalidateHybridUserCache(): ng.IPromise<any> {
     const url = `${this.UrlConfig.getHerculesUrlV2()}/internals/actions/invalidateUser/invoke`;
     return this.$http.post(url, null);
   }

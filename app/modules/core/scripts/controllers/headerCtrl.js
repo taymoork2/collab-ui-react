@@ -45,7 +45,7 @@
     }
 
     function showMyCompany() {
-      return Utils.isAdminPage() && Authinfo.isCustomerAdmin() && Authinfo.isCustomerView();
+      return Utils.isAdminPage() && (Authinfo.isCustomerAdmin() || Authinfo.isReadOnlyAdmin()) && Authinfo.isCustomerView();
     }
 
     function showProBadge() {
@@ -62,10 +62,8 @@
         }];
       } else if (showOrgName()) {
         vm.adminTabs = [{
-          icon: 'icon-settings-active',
+          tab: 'admin-orgname-only',
           title: Authinfo.getOrgName(),
-          link: '/settings',
-          iconClass: 'icon-outline',
         }];
       }
     }

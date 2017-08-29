@@ -1,3 +1,4 @@
+import { Config } from 'modules/core/config/config';
 import { IOfferData } from 'modules/core/myCompany/mySubscriptions/subscriptionsInterfaces';
 import { ProPackService } from 'modules/core/proPack/proPack.service';
 import { SharedMeetingsReportService } from 'modules/core/myCompany/mySubscriptions/sharedMeetings/sharedMeetingsReport.service';
@@ -12,7 +13,7 @@ class SubscriptionRowCtrl {
   constructor(
     private $translate: ng.translate.ITranslateService,
     private $window: ng.IWindowService,
-    private Config,
+    private Config: Config,
     private FeatureToggleService,
     private ProPackService: ProPackService,
     private SharedMeetingsReportService: SharedMeetingsReportService,

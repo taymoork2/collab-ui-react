@@ -11,6 +11,7 @@ export class LocationSettingsOptions {
   public defaultToneOptions: IOption[];
   public dialPlan: IDialPlan;
   public locationCallerIdOptions: IOption[];
+  public companyVoicemailOptions: IOption[];
 }
 
 export class LocationSettingsOptionsService {
@@ -35,6 +36,7 @@ export class LocationSettingsOptionsService {
       defaultToneOptions: this.loadDefaultToneOptions().then(defaultToneOptions => locationOptions.defaultToneOptions = defaultToneOptions),
       dialPlan: this.loadDialPlan().then(dialPlan => locationOptions.dialPlan = dialPlan),
       locationCallerIdOptions: this.loadLocationCallerIdNumbers(undefined).then(callerIdNumbers => locationOptions.locationCallerIdOptions = callerIdNumbers),
+      companyVoicemailOptions: this.loadCompanyVoicemailNumbers(undefined).then(companyVoicemailNumbers => locationOptions.companyVoicemailOptions = companyVoicemailNumbers),
     }).then(() => {
       return locationOptions;
     });
@@ -75,6 +77,18 @@ export class LocationSettingsOptionsService {
 
   public loadLocationCallerIdNumbers(filter: string | undefined): ng.IPromise<IOption[]> {
     return this.NumberService.getNumberList(filter, NumberType.EXTERNAL)
+      .then(externalNumbers => {
+        return _.map(externalNumbers, externalNumber => {
+          return <IOption> {
+            value: externalNumber.number,
+            label: this.PhoneNumberService.getNationalFormat(externalNumber.number),
+          };
+        });
+      });
+  }
+
+  public loadCompanyVoicemailNumbers(filter: string | undefined): ng.IPromise<IOption[]> {
+    return this.NumberService.getNumberList(filter, NumberType.EXTERNAL, false)
       .then(externalNumbers => {
         return _.map(externalNumbers, externalNumber => {
           return <IOption> {
