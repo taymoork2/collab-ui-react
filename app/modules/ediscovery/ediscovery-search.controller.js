@@ -54,7 +54,7 @@
     vm.searchBySelected = '' || vm.searchByOptions[0];
     vm.searchModel = null;
     vm.queryModel = null;
-    vm.limitError = false;
+    vm.limitErrorMessage = null;
 
     vm.searchResults = {
       keywords: [],
@@ -211,8 +211,8 @@
 
     function searchByLimit() {
       var limit = !_.isNull(vm.searchModel) ? splitWords(vm.searchModel) : null;
-      if (_.isArray(limit) && _.isLength(limit.length) > 100) {
-        vm.limitError = true;
+      if (_.isArray(limit) && limit.length > 5) {
+        vm.limitErrorMessage = _.eq(vm.searchByOptions[0], vm.searchBySelected) ? $translate.instant('ediscovery.searchErrors.invalidEmailLimit') : $translate.instant('ediscovery.searchErrors.invalidSpaceIdLimit');
       } else {
         advancedSearch();
       }
@@ -547,7 +547,7 @@
 
     function resetSearchPageToInitialState() {
       vm.roomInfo = false;
-      vm.limitError = false;
+      vm.limitErrorMessage = null;
       vm.queryModel = null;
       vm.generateDescription = null;
       vm.isReport = true;

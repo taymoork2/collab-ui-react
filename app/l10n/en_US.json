@@ -3392,7 +3392,7 @@
   "ediscovery": {
     "browserTabHeaderTitle": "eDiscovery Search and Extraction",
     "heading": "Search Compliance Data",
-    "subheading": "Choose to search for specific users or spaces. Add more than one by separating with commas.",
+    "subheading": "Choose to search for specific users or spaces. Add up to 5 users or spaces by separating with commas.",
     "searchTip": "Search data by space ID",
     "unableToDownloadFile": "Unable to download file",
     "timeout": "Timeout",
@@ -3419,7 +3419,8 @@
     },
     "searchErrors": {
       "queryLimit": "query must be 200 characters or less",
-      "invalidLimit": "search must be limited to less than 100 emails or room id's",
+      "invalidEmailLimit": "Enter only up to 5 email addresses",
+      "invalidSpaceIdLimit": "Search must be limited to less than 5 Space IDs",
       "noMatchesFound": "No Matches Found",
       "requestFailed": "Request Failed: Tracking ID {{trackingId}}"
     },
