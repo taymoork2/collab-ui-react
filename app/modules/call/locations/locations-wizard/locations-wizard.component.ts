@@ -79,7 +79,7 @@ class LocationsWizardController implements ng.IComponentController {
           this.lastIndex = 4;
         }
       }).catch(() => this.lastIndex = 4);
-    });
+    }).catch(() => this.lastIndex = 4);
 
     this.$q.resolve(this.initComponent()).finally(() => this.loading = false);
   }
