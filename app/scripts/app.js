@@ -84,6 +84,7 @@
     require('modules/core/scripts/services/authinfo'),
     require('modules/core/healthMonitor/healthService'),
     require('modules/core/users').default,
+    require('modules/core/rate-limit').default,
     require('modules/core/scripts/services/localize'),
     require('modules/core/scripts/services/utils'),
     require('modules/core/scripts/services/log'),
