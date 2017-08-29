@@ -75,6 +75,9 @@
       phone7832: {
         trialDeviceQuantityValidator: '',
       },
+      phone8841: {
+        trialDeviceQuantityValidator: '',
+      },
       phone7841: {
         trialDeviceQuantityValidator: '',
       },
@@ -141,6 +144,9 @@
     vm.phone8845 = _.find(_trialCallData.details.phones, {
       model: 'CISCO_8845',
     });
+    vm.phone8841 = _.find(_trialCallData.details.phones, {
+      model: 'CISCO_8841',
+    });
     vm.phone7832 = _.find(_trialCallData.details.phones, {
       model: 'CISCO_7832',
     });
@@ -153,6 +159,7 @@
     vm.setQuantity(vm.mx300);
     vm.setQuantity(vm.phone8865);
     vm.setQuantity(vm.phone8845);
+    vm.setQuantity(vm.phone8841);
     vm.setQuantity(vm.phone7832);
     vm.setQuantity(vm.phone7841);
 

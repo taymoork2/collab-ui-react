@@ -218,6 +218,12 @@
         model: 'CISCO_7832',
         type: 'CALL_DEVICES',
       },
+      CISCO_8841: {
+        min: 1,
+        max: 4,
+        model: 'CISCO_8841',
+        type: 'CALL_DEVICES',
+      },
       CISCO_7841: {
         min: 1,
         max: 4,
