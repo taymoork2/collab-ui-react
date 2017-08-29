@@ -216,7 +216,7 @@ export class USSService {
       .then(this.extractData);
   }
 
-  public invalidateHybridUserCache(): ng.IPromise<''> {
+  public invalidateHybridUserCache = (): ng.IPromise<''> => {
     return this.$http.post<''>(`${this.USSUrl}/internals/actions/invalidateUser/invoke`, null)
       .then(this.extractData);
   }
