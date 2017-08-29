@@ -155,7 +155,11 @@ describe('Huron Functional: first-time-setup', () => {
       expect(utils.getCheckboxVal(callSettings.voicemailToEmailCheckBox)).toBeFalsy();
     });
     it('should check External Voicemail Access box', () => {
-      utils.click(wizard.scrollToBottomButton);
+      wizard.scrollToBottomButton.isDisplayed().then(function (result) {
+        if (result) {
+          utils.click(wizard.scrollToBottomButton);
+        };
+      });
       utils.setCheckboxIfDisplayed(callSettings.externalVoicemailCheckBox, true, 1000);
     });
     it('should display a dropdown to select a phone number for external voicemail access when activated', () => {
@@ -176,6 +180,11 @@ describe('Huron Functional: first-time-setup', () => {
       utils.click(wizard.voicemailEmailWithAttachment);
     });
     it('should click Email notification without attachment', () => {
+      wizard.scrollToBottomButton.isDisplayed().then(function (result) {
+        if (result) {
+          utils.click(wizard.scrollToBottomButton);
+        };
+      });
       utils.click(wizard.voicemailEmailWithoutAttachment);
     });
     it('should enable save button', () => {
