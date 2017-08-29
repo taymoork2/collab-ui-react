@@ -1979,6 +1979,7 @@
     "noDevices": "After you activate Cisco desk phones and room devices, you'll see them listed here.",
     "noneFound": "No devices found",
     "tryAgain": "Try another search.",
+    "searchFailed": "Device search failed",
     "licenseWarningTitle": "License",
     "licenseWarningHeader": "There is a problem with the license for this service.",
     "licenseSuspendedWarning": "Your room device licenses are suspended.",

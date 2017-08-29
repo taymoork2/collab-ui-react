@@ -20,7 +20,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
   public searchResult: Device[];
 
   /* @ngInject */
-  constructor(private CsdmSearchService: CsdmSearchService, private $translate) {
+  constructor(private CsdmSearchService: CsdmSearchService, private $translate, private Notification) {
     this.currentSearchObject = SearchObject.create('');
     this.currentBullet = new Bullet(this.currentSearchObject);
     this.updateSearchFilters();
@@ -100,17 +100,27 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
         return;
       }
       this.updateSearchResult();
+    }).catch(e => {
+      DeviceSearch.ShowSearchError(this.Notification, e);
     });
   }
 
+  public static ShowSearchError(Notification, e) {
+    if (e && e.status !== 400) {
+      Notification.errorResponse(e, 'spacesPage.searchFailed');
+    }
+  }
+
   private performFilterUpdateSearch() {
-    this.CsdmSearchService.search(SearchObject.create(this.searchField)).then(response => {
-      if (response && response.data) {
-        this.updateSearchFilters(response.data);
-        return;
-      }
-      this.updateSearchFilters();
-    });
+    this.CsdmSearchService.search(SearchObject.create(this.searchField))
+      .then(response => {
+        if (response && response.data) {
+          this.updateSearchFilters(response.data);
+          return;
+        }
+        this.updateSearchFilters();
+      })
+      .catch(e => DeviceSearch.ShowSearchError(this.Notification, e));
   }
 
   public getTokens() {

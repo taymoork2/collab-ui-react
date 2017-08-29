@@ -4,6 +4,7 @@ import { SearchObject } from '../services/search/searchObject';
 import { SearchHits } from '../services/search/searchResult';
 import { CsdmSearchService } from '../services/csdmSearch.service';
 import { IOnChangesObject } from 'angular';
+import { DeviceSearch } from './deviceSearch.component';
 
 class DeviceList implements ng.IComponentController {
 
@@ -26,6 +27,7 @@ class DeviceList implements ng.IComponentController {
               private $translate,
               CsdmHuronOrgDeviceService,
               private $scope,
+              private Notification,
               Authinfo) {
     this.huronDeviceService = CsdmHuronOrgDeviceService.create(Authinfo.getOrgId());
     this.gridOptions = {
@@ -129,21 +131,24 @@ class DeviceList implements ng.IComponentController {
     this.searchObject.nextPage();
     if ((this.searchObject.from || 0) < (this.searchHits && this.searchHits.total || 0)) {
       this.loadingMore = fromScrollEvent;
-      this.CsdmSearchService.search(this.searchObject).then((response) => {
-        if (response && response.data) {
-          this.searchHits.hits.push.apply(this.searchHits.hits, response.data.hits.hits);
-        }
-      }).finally(() => {
-        if (fromScrollEvent) {
-          this.gridApi.infiniteScroll.dataLoaded(false, ((this.searchObject.from || 0) + this.searchHits.hits.length) < this.searchHits.total);
-        }
-        if (
-          (this.gridApi.grid.gridHeight || 0) > (45 + 45 * this.searchHits.hits.length)
-          && ((this.searchObject.from || 0) + this.searchHits.hits.length) < this.searchHits.total) {
-          this.loadMore(fromScrollEvent);
-        }
-        this.loadingMore = false;
-      });
+      this.CsdmSearchService.search(this.searchObject)
+        .then((response) => {
+          if (response && response.data) {
+            this.searchHits.hits.push.apply(this.searchHits.hits, response.data.hits.hits);
+          }
+        })
+        .catch(e => DeviceSearch.ShowSearchError(this.Notification, e))
+        .finally(() => {
+          if (fromScrollEvent) {
+            this.gridApi.infiniteScroll.dataLoaded(false, ((this.searchObject.from || 0) + this.searchHits.hits.length) < this.searchHits.total);
+          }
+          if (
+            (this.gridApi.grid.gridHeight || 0) > (45 + 45 * this.searchHits.hits.length)
+            && ((this.searchObject.from || 0) + this.searchHits.hits.length) < this.searchHits.total) {
+            this.loadMore(fromScrollEvent);
+          }
+          this.loadingMore = false;
+        });
     }
   }
 }
