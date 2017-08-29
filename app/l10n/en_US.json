@@ -7406,6 +7406,21 @@
         "maxLengthError": "Name cannot be longer than 50 characters.",
         "duplicateError": "Customer Virtual Assistant must have a unique name."
       },
+      "avatar": {
+        "title": "Customer Virtual Assistant Avatar",
+        "desc": "Choose the avatar your customers see in their chat window, when they interact with your Customer Virtual Assistant",
+        "upload": "Upload Avatar",
+        "preview": "Avatar Preview",
+        "fileBrowser": "file browser",
+        "uploadingImage": "Uploading image...",
+        "uploadDesc": "Upload an image of maximum 1MB. Supported file type is PNG.",
+        "previewDesc": "To edit, upload a new image of maximum 1MB. Supported file types is PNG.",
+        "uploadBestResults": "For best results make sure that your image has a transparent background with no padding.",
+        "dragDropDesc": "Drag and drop a file or use the ",
+        "errorUnsupportedFile": "Cannot upload unsupported file. Supported file type is PNG.",
+        "errorOverMaxFileSizeLimit": "The image file size must be less than 1 MB.",
+        "errorUploadFile": "Cannot upload image. Try again."
+      },
       "summary": {
         "desc": "You have configured your Customer Virtual Assistant. To use the assisted service feature in your organization's chat application, add your assistant to a Customer Support Template.",
         "editDesc": "You have edited your Customer Virtual Assistant. To use the assisted service feature in your organization’s chat application, add your assistant to a Customer Support Template.",

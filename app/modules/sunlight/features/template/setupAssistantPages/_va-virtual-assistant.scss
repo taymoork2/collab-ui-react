@@ -3,6 +3,7 @@
 @import 'va-virtual-assistant-access-token';
 @import 'va-virtual-assistant-name';
 @import 'va-virtual-assistant-summary';
+@import 'va-virtual-assistant-avatar';
 
 .va-button {
   display: flex;
@@ -41,3 +42,4 @@
     @include vr-spacing(m, 0);
   }
 }
+
