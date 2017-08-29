@@ -330,13 +330,24 @@ require('./_overview.scss');
       });
     }
 
+    function initializeProvisioningEventHandler() {
+      if (SetupWizardService.hasPendingServiceOrder()) {
+        var pendingServiceOrderUUID = SetupWizardService.getActingSubscriptionServiceOrderUUID();
+
+        SetupWizardService.getPendingOrderStatusDetails(pendingServiceOrderUUID).then(function (productProvStatus) {
+          forwardEvent('provisioningEventHandler', productProvStatus);
+        });
+      }
+    }
+
     forwardEvent('licenseEventHandler', Authinfo.getLicenses());
 
-    if (SetupWizardService.hasPendingServiceOrder()) {
-      var pendingServiceOrderUUID = SetupWizardService.getActingSubscriptionServiceOrderUUID();
-
-      SetupWizardService.getPendingOrderStatusDetails(pendingServiceOrderUUID).then(function (productProvStatus) {
-        forwardEvent('provisioningEventHandler', productProvStatus);
+    // Initialize Pending Subscription data if org has pending subscriptions
+    if (SetupWizardService.serviceDataHasBeenInitialized) {
+      initializeProvisioningEventHandler();
+    } else {
+      SetupWizardService.populatePendingSubscriptions().then(function () {
+        initializeProvisioningEventHandler();
       });
     }
 

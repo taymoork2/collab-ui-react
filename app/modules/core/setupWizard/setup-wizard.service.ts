@@ -18,6 +18,7 @@ interface IOption {
 
 export class SetupWizardService {
   public provisioningCallbacks = {};
+  public serviceDataHasBeenInitialized: boolean = false;
 
   private actingSubscription?: IPendingSubscription;
   private pendingSubscriptions: IPendingSubscription[] = [];
@@ -141,6 +142,8 @@ export class SetupWizardService {
     this.willNotProvision = flag;
   }
 
+  // the pendingServiceOrderUUID property indicates whether a subscription has pending licenses
+  // This is the main flag to determine if a subscription is pending or has a pending order on it
   public hasPendingServiceOrder(): boolean {
     return this.getActingSubscriptionServiceOrderUUID() !== undefined;
   }
@@ -211,6 +214,7 @@ export class SetupWizardService {
       if (this.pendingSubscriptions.length === 1) {
         this.actingSubscription = this.pendingSubscriptions[0];
       }
+      this.serviceDataHasBeenInitialized = true;
       return this.pendingSubscriptions;
     });
   }
