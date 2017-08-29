@@ -9290,6 +9290,7 @@
     "processingError": "Error processing media file.  Please try again.",
     "getMediaListError": "An error occurred obtaining the list of media.  Please refresh to try again.",
     "uploadMediaError": "An error occurred uploading media.  Please try again.",
+    "downloadMediaError": "An error occurred downloading media.  Please try again.",
     "restoreMediaError": "An error occurred restoring media.",
     "deleteMediaError": "An error occurred deleting media.",
     "cleanupMediaError": "An error occurred cleaning up a failed media upload.",
