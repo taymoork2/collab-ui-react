@@ -78,16 +78,11 @@ class Chart implements ng.IComponentController {
         event: 'clickSlice',
         method: (e) => {
           if (data) {
-            // const search = data.bucketName + ':' + e.dataItem.title;
             this.pieChartClicked({ searchField: data.bucketName, query: e.dataItem.title });
-            // this.currentBullet.text = (this.currentBullet.text ? this.currentBullet.text + ',' : '') + search;
-            // // this.search = (this.search ? this.search + ',' : '') + search;
-            // this.searchChanged2();
           }
         },
       }],
     };
-    // const chartData = this.CommonMetricsGraphService.getDummyPieChart();
     this.chart = AmCharts.makeChart(this.baseChart, chartData);
 
   }

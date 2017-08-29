@@ -44,12 +44,12 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
 
   public addToSearch(field: string, query: string) {
     this.currentSearchObject.setTokenizedQuery(field, query, false);
-    this.searchChanged2();
+    this.searchChange();
   }
 
   public setSortOrder(field: string, order: string) {
     this.currentSearchObject.setSortOrder(field, order);
-    this.searchChanged2();
+    this.searchChange();
   }
 
   public setCurrentSearch(search: string) {
@@ -57,7 +57,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
     if (newSearch !== this.searchField) {
       this.searchField = newSearch;
       this.currentSearchObject = this.createSearchObject(this.searchField, this._currentFilterValue);
-      this.searchChanged2();
+      this.searchChange();
     }
   }
 
@@ -65,7 +65,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
     value = value === 'all' ? '' : value;
     this._currentFilterValue = value;
     this.currentSearchObject = this.createSearchObject(this.searchField, this._currentFilterValue);
-    this.searchChanged2();
+    this.searchChange();
   }
 
   public createSearchObject(searchField: string, currentFilterValue: string): SearchObject {
@@ -78,15 +78,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
     return SearchObject.create(searchField);
   }
 
-  public searchChanged2() {
-    // const prev = (this.search || '');
-    // const searchField = (this.searchField || '');
-    // // if(prev.length > 0 && searchField> 0) {
-    // let s = prev;
-    // if (searchField.length > 0) {
-    //   s = prev.length > 0 ? prev + ',' + searchField : searchField;
-    // }
-    // const search = SearchObject.create(s);
+  public searchChange() {
     const search = _.cloneDeep(this.currentSearchObject);
 
     this.performSearch(search); //TODO avoid at now
@@ -124,7 +116,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
 
   public removeBullet(bullet: Bullet) {
     this.currentSearchObject.removeToken(bullet.searchField);
-    this.searchChanged2();
+    this.searchChange();
   }
 
   // public getFinishedTokens() {
