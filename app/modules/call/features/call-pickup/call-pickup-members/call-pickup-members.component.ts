@@ -1,7 +1,6 @@
 import { Member } from 'modules/huron/members';
-import { IMember, IPickupGroup, IMemberNumber, ICallPickupNumbers } from 'modules/huron/features/callPickup/services';
+import { IMember, IPickupGroup, IMemberNumber, ICallPickupNumbers, CallPickupGroupService } from 'modules/call/features/call-pickup/shared';
 import { Notification } from 'modules/core/notifications';
-import { CallPickupGroupService } from 'modules/huron/features/callPickup/services/callPickupGroup.service';
 import { IToolkitModalService } from 'modules/core/modal';
 
 class CallPickupMembersCtrl implements ng.IComponentController {
@@ -118,7 +117,7 @@ class CallPickupMembersCtrl implements ng.IComponentController {
         });
       });
     this.$modal.open({
-      templateUrl: 'modules/huron/features/callPickup/callPickupMembers/callPickupLinesTaken.html',
+      templateUrl: 'modules/call/features/call-pickup/call-pickup-members/call-pickup-lines-taken-modal.html',
       type: 'dialog',
       scope: modalScope,
     });
@@ -221,7 +220,7 @@ class CallPickupMembersCtrl implements ng.IComponentController {
 
 export class CallPickupMembersComponent implements ng.IComponentOptions {
   public controller = CallPickupMembersCtrl;
-  public templateUrl = 'modules/huron/features/callPickup/callPickupMembers/callPickupMembers.html';
+  public templateUrl = 'modules/call/features/call-pickup/call-pickup-members/call-pickup-members.component.html';
   public bindings = {
     onUpdate: '&',
     selectedMembers: '<',

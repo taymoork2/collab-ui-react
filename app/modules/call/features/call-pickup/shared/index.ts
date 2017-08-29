@@ -1,19 +1,19 @@
-import { CallPickupGroupService } from './callPickupGroup.service';
+import { CallPickupGroupService } from './call-pickup.service';
 import memberService from 'modules/huron/members';
+import featureMemberService from 'modules/huron/features/services';
 
-export * from './callPickupGroup';
-export * from './callPickupGroup.service';
+export * from './call-pickup';
+export { CallPickupGroupService };
 
 export default angular
-  .module('huron.call-pickup', [
-    require('scripts/app.templates'),
-    require('collab-ui-ng').default,
+  .module('call.call-pickup.services', [
     require('angular-resource'),
-    memberService,
     require('modules/core/scripts/services/authinfo'),
     require('modules/core/config/urlConfig'),
     require('modules/huron/telephony/cmiServices'),
     require('modules/huron/telephony/telephonyConfig'),
+    memberService,
+    featureMemberService,
   ])
   .service('CallPickupGroupService', CallPickupGroupService)
   .name;

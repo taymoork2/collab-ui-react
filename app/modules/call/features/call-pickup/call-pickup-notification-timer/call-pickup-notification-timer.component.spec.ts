@@ -1,7 +1,9 @@
+import notificationTimerModule from './index';
+
 describe('Component: callPickupNotificationTimer', () => {
   const NOTIFICATION_TIMER = 'input[name="notificationTimer"]';
   beforeEach(function () {
-    this.initModules('huron.call-pickup.notificationtimer');
+    this.initModules(notificationTimerModule);
     this.injectDependencies(
       '$scope',
     );
@@ -9,7 +11,7 @@ describe('Component: callPickupNotificationTimer', () => {
   });
 
   function initComponent() {
-    this.compileComponent('callPickupNotificationTimer', {
+    this.compileComponent('ucCallPickupNotificationTimer', {
       notificationTimer: 'notificationTimer',
       onChangeFn: 'onChangeFn(notificationTimer)',
     });

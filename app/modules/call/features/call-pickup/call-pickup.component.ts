@@ -1,8 +1,7 @@
-import { IPickupGroup, IMember, ICallPickupNumbers, IMemberNumber, ICardMemberCheckbox } from 'modules/huron/features/callPickup/services/callPickupGroup';
-import { CallPickupGroupService } from 'modules/huron/features/callPickup/services/callPickupGroup.service';
+import { IPickupGroup, IMember, ICallPickupNumbers, IMemberNumber, ICardMemberCheckbox, CallPickupGroupService } from 'modules/call/features/call-pickup/shared';
 import { Member } from 'modules/huron/members';
 
-class CallPickupSetupAssistantCtrl implements ng.IComponentController {
+class CallPickupCtrl implements ng.IComponentController {
 
   //Call Pickup group name
   public name: string = '';
@@ -310,7 +309,7 @@ class CallPickupSetupAssistantCtrl implements ng.IComponentController {
 
   public cancelModal(): void {
     this.$modal.open({
-      templateUrl: 'modules/huron/features/callPickup/callPickupCancelModal.html',
+      templateUrl: 'modules/call/features/call-pickup/call-pickup-cancel-modal.html',
       type: 'dialog',
     });
   }
@@ -344,7 +343,7 @@ class CallPickupSetupAssistantCtrl implements ng.IComponentController {
   }
 }
 
-export class CallPickupSetupAssistantComponent implements ng.IComponentOptions {
-  public controller = CallPickupSetupAssistantCtrl;
-  public templateUrl = 'modules/huron/features/callPickup/callPickupSetupAssistant.html';
+export class CallPickupComponent implements ng.IComponentOptions {
+  public controller = CallPickupCtrl;
+  public templateUrl = 'modules/call/features/call-pickup/call-pickup.component.html';
 }

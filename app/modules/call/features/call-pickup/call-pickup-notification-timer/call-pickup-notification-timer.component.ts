@@ -1,6 +1,3 @@
-/*import { CallPickupGroupService } from 'modules/huron/features/callPickup/services/callPickupGroup.service';
-import { IPickupGroup } from 'modules/huron/features/callPickup/services';*/
-
 class CallPickupNotificationTimerCtrl implements ng.IComponentController {
 
   private MIN_SECONDS: number = 1;
@@ -40,7 +37,7 @@ class CallPickupNotificationTimerCtrl implements ng.IComponentController {
 
 export class CallPickupNotificationTimerComponent implements ng.IComponentOptions {
   public controller = CallPickupNotificationTimerCtrl;
-  public templateUrl = 'modules/huron/features/callPickup/callPickupNotificationTimer/callPickupNotificationTimer.html';
+  public templateUrl = 'modules/call/features/call-pickup/call-pickup-notification-timer/call-pickup-notification-timer.component.html';
   public bindings = {
     notificationTimer: '<',
     onChangeFn: '&',

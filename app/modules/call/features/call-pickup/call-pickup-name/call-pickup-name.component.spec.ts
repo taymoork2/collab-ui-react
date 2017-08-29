@@ -1,8 +1,10 @@
+import callPickupNameModule from './index';
+
 describe('Component: callPickupName', () => {
   const NAME_INPUT = 'input#nameInput';
   const pickupList = getJSONFixture('huron/json/features/callPickup/pickupList.json');
   beforeEach(function () {
-    this.initModules('huron.call-pickup.name');
+    this.initModules(callPickupNameModule);
     this.injectDependencies(
       '$scope',
       '$q',
@@ -14,7 +16,7 @@ describe('Component: callPickupName', () => {
   });
 
   function initComponent() {
-    this.compileComponent('callPickupName', {
+    this.compileComponent('ucCallPickupName', {
       onUpdate: 'onUpdate(name, isValid)',
       callPickupName: 'callPickupName',
       isNew: 'isNew',

@@ -3710,11 +3710,11 @@
           .state('huronCallPickup', {
             url: '/callPickup',
             parent: 'hurondetails',
-            template: '<call-pickup-setup-assistant></call-pickup-setup-assistant>',
+            template: '<uc-call-pickup></uc-call-pickup>',
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/huron/features/callPickup/callPickupSetupAssistant'));
+                  done(require('modules/call/features/call-pickup'));
                 }, 'call-pickup');
               }),
             },
@@ -3722,14 +3722,14 @@
           .state('callpickupedit', {
             url: '/features/pi/edit',
             parent: 'main',
-            template: '<call-pickup-setup-assistant></call-pickup-setup-assistant>',
+            template: '<uc-call-pickup></uc-call-pickup>',
             params: {
               feature: null,
             },
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/huron/features/callPickup/callPickupSetupAssistant'));
+                  done(require('modules/call/features/call-pickup'));
                 }, 'call-pickup');
               }),
             },

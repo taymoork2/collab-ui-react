@@ -31,11 +31,11 @@
       <div class="sub-section">
         <h5 class="sub-section__title" translate="callPickup.nameLabel"></h5>
         <p class="sub-section__description" translate="callPickup.nameHint"></p>
-        <call-pickup-name
+        <uc-call-pickup-name
           on-update="$ctrl.setCallPickupName(name, isValid)"
           call-pickup-name="$ctrl.callPickup.name"
           is-new="false">
-        </call-pickup-name>
+        </uc-call-pickup-name>
       </div>
     </div>
   </div>
@@ -47,20 +47,20 @@
       <div class="sub-section">
         <h5 class="sub-section__title" translate="callPickup.notificationTimer"></h5>
         <p class="sub-section__description" translate="callPickup.timerHint"></p>
-        <call-pickup-notification-timer
+        <uc-call-pickup-notification-timer
           notification-timer="$ctrl.callPickup.notificationTimer"
           on-change-fn="$ctrl.setCallPickupNotificationTimer(notificationTimer)">
-        </call-pickup-notification-timer>
+        </uc-call-pickup-notification-timer>
       </div>
       <div class="sub-section">
         <h5 class="sub-section__title" translate="callPickup.pickupNotification"></h5>
         <p class="sub-section__description" translate="callPickup.pickupHint"></p>
-        <call-pickup-notifications
+        <uc-call-pickup-notifications
           on-change-fn="$ctrl.setNotifications(playSound, displayCalledParty, displayCallingParty)"
           play-Sound="$ctrl.callPickup.playSound"
           display-calling-party="$ctrl.callPickup.displayCallingPartyId"
           display-called-party="$ctrl.callPickup.displayCalledPartyId">
-        </call-pickup-notifications>
+        </uc-call-pickup-notifications>
       </div>
     </div>
   </div>
@@ -72,12 +72,12 @@
       <div class="sub-section">
         <h5 class="sub-section__title" translate="callPickup.memberLabel"></h5>
         <p class="sub-section__description" translate="callPickup.memberHint"></p>
-        <call-pickup-members
+        <uc-call-pickup-members
           on-update="$ctrl.onUpdateMember(member, isValidMember)"
           selected-members="$ctrl.selectedMembers"
           saved-call-pickup="$ctrl.callPickup"
           on-edit-update="$ctrl.onEditUpdateMember(savedCallPickup)">
-        </call-pickup-members>
+        </uc-call-pickup-members>
       </div>
     </div>
   </div>

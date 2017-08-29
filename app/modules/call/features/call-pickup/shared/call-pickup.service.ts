@@ -1,6 +1,6 @@
 import { Member } from 'modules/huron/members';
-import { IPickupGroup } from 'modules/huron/features/callPickup/services/callPickupGroup';
-import { IMemberNumber, IMember, ICardMemberCheckbox } from 'modules/huron/features/callPickup/services';
+import { IMemberNumber, IMember, ICardMemberCheckbox, IPickupGroup } from 'modules/call/features/call-pickup/shared';
+
 interface IPickupGroupResource extends ng.resource.IResourceClass<ng.resource.IResource<IPickupGroup>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<IPickupGroup>>;
 }

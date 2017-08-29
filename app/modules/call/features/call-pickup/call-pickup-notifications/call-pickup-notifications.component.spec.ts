@@ -1,9 +1,11 @@
+import callPickupNotifications from './index';
+
 describe('Component: callPickupNotifications', () => {
   const PLAY_SOUND = 'input#playSound';
   const DISPLAY_CALLED = 'input#displayCalledParty';
   const DISPLAY_CALLING = 'input#displayCallingParty';
   beforeEach(function () {
-    this.initModules('huron.call-pickup.notifications');
+    this.initModules(callPickupNotifications);
     this.injectDependencies(
       '$scope',
     );
@@ -11,7 +13,7 @@ describe('Component: callPickupNotifications', () => {
   });
 
   function initComponent() {
-    this.compileComponent('callPickupNotifications', {
+    this.compileComponent('ucCallPickupNotifications', {
       onChangeFn: 'onChangeFn(playSound, displayCalledParty, displayCallingParty)',
       displayCallingParty: 'displayCallingParty',
       displayCalledParty: 'displayCalledParty',

@@ -1,3 +1,4 @@
+import callPickupMembersModule from './index';
 import { Member } from 'modules/huron/members';
 
 describe('Component: callPickupMembers', () => {
@@ -10,7 +11,7 @@ describe('Component: callPickupMembers', () => {
   const model = { disabled: true, userName: 'johndoe@gmail.com', uuid: '1000' };
 
   beforeEach(function () {
-    this.initModules('huron.call-pickup.members');
+    this.initModules(callPickupMembersModule);
     this.injectDependencies(
       '$scope',
       '$q',
@@ -58,7 +59,7 @@ describe('Component: callPickupMembers', () => {
   });
 
   function initComponent() {
-    this.compileComponent('callPickupMembers', {
+    this.compileComponent('ucCallPickupMembers', {
       onUpdate: 'onUpdate(member, isValidMember)',
       selectedMembers: 'selectedMembers',
       isNew: 'isNew',

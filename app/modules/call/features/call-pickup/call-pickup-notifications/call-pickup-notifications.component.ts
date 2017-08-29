@@ -3,7 +3,10 @@ class CallPickupNotificationsCtrl implements ng.IComponentController {
   private playSound: boolean;
   private displayCallingParty;
   private displayCalledParty;
+
+  /* @ngInject */
   constructor() { }
+
   public onChange(): void {
     this.onChangeFn({
       playSound: this.playSound,
@@ -15,7 +18,7 @@ class CallPickupNotificationsCtrl implements ng.IComponentController {
 
 export class CallPickupNotificationsComponent implements ng.IComponentOptions {
   public controller = CallPickupNotificationsCtrl;
-  public templateUrl = 'modules/huron/features/callPickup/callPickupNotifications/callPickupNotifications.html';
+  public templateUrl = 'modules/call/features/call-pickup/call-pickup-notifications/call-pickup-notifications.component.html';
   public bindings = {
     onChangeFn: '&',
     displayCalledParty: '<',

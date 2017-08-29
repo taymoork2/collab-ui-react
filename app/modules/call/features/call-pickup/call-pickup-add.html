@@ -12,21 +12,21 @@
       next-fn="$ctrl.nextPage()">
 
       <form novalidate name="$ctrl.form" role="form">
-        <call-pickup-name
+        <uc-call-pickup-name
           ng-if="$ctrl.getPageIndex() === 0"
           on-update="$ctrl.onUpdateName(name, isValid)"
           call-pickup-name="$ctrl.name"
           is-new="true"
           ng-class="$ctrl.animation">
-        </call-pickup-name>
+        </uc-call-pickup-name>
 
-        <call-pickup-members
+        <uc-call-pickup-members
           ng-if="$ctrl.getPageIndex() === 1"
           on-update="$ctrl.onUpdateMember(member, isValidMember)"
           selected-members="$ctrl.selectedMembers"
           ng-class="$ctrl.animation"
           is-new="true">
-        </call-pickup-members>
+        </uc-call-pickup-members>
       </form>
     </cs-setup-assistant>
   </cs-overlay-panel>

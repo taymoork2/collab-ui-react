@@ -1,5 +1,4 @@
-import { CallPickupGroupService } from 'modules/huron/features/callPickup/services/callPickupGroup.service';
-import { IPickupGroup } from 'modules/huron/features/callPickup/services';
+import { CallPickupGroupService, IPickupGroup } from 'modules/call/features/call-pickup/shared';
 
 class CallPickupNameCtrl implements ng.IComponentController {
   public callPickupName: string;
@@ -9,8 +8,9 @@ class CallPickupNameCtrl implements ng.IComponentController {
   public isNew: boolean;
 
   /* @ngInject */
-  constructor(private CallPickupGroupService: CallPickupGroupService,
-              ) {
+  constructor(
+    private CallPickupGroupService: CallPickupGroupService,
+  ) {
     this.listOfCallPickups = this.CallPickupGroupService.getListOfPickupGroups();
   }
 
@@ -37,7 +37,7 @@ class CallPickupNameCtrl implements ng.IComponentController {
 
 export class CallPickupNameComponent implements ng.IComponentOptions {
   public controller = CallPickupNameCtrl;
-  public templateUrl = 'modules/huron/features/callPickup/callPickupName/callPickupName.html';
+  public templateUrl = 'modules/call/features/call-pickup/call-pickup-name/call-pickup-name.component.html';
   public bindings = {
     onUpdate: '&',
     callPickupName: '<',

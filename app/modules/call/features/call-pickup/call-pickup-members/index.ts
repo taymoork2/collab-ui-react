@@ -1,23 +1,23 @@
-import { CallPickupMembersComponent } from './callPickupMembers.component';
+import { CallPickupMembersComponent } from './call-pickup-members.component';
 import memberService from 'modules/huron/members';
 import notifications from 'modules/core/notifications';
 import featureMemberService from 'modules/huron/features/services';
-import callPickupGroupService from 'modules/huron/features/callPickup/services/';
+import callPickupGroupService from 'modules/call/features/call-pickup/shared';
 import focusModule from 'modules/core/focus';
 
 export default angular
-  .module('huron.call-pickup.members', [
+  .module('call.call-pickup.members', [
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
-    memberService,
-    callPickupGroupService,
     require('modules/core/config/urlConfig'),
-    notifications,
-    featureMemberService,
     require('modules/huron/telephony/cmiServices'),
     require('modules/core/scripts/services/authinfo'),
+    memberService,
+    callPickupGroupService,
+    notifications,
+    featureMemberService,
     focusModule,
   ])
-  .component('callPickupMembers',  new CallPickupMembersComponent())
+  .component('ucCallPickupMembers',  new CallPickupMembersComponent())
   .name;

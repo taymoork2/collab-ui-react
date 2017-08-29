@@ -1,4 +1,4 @@
-//import { Member } from 'modules/huron/members';
+import callPickupServiceModule from './index';
 
 describe('Service: callPickupService', () => {
   const membersList = getJSONFixture('huron/json/features/callPickup/membersList.json');
@@ -9,7 +9,7 @@ describe('Service: callPickupService', () => {
   const cp = getJSONFixture('huron/json/features/callPickup/pickup.json');
 
   beforeEach(function () {
-    this.initModules('huron.call-pickup.members');
+    this.initModules(callPickupServiceModule);
     this.injectDependencies(
       '$scope',
       '$q',

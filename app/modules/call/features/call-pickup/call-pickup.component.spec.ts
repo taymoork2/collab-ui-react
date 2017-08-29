@@ -1,4 +1,6 @@
-describe('Component: callPickupSetupAssistant', () => {
+import callPickupModule from './index';
+
+describe('Component: callPickup', () => {
 
   const member = getJSONFixture('huron/json/features/callPickup/member.json');
   const members = [member];
@@ -9,7 +11,7 @@ describe('Component: callPickupSetupAssistant', () => {
   const updateFailureResp = getJSONFixture('huron/json/features/callPickup/errorResponse.json');
   const saveNumbers = ['a0a2ee69-82f4-43d1-8d1d-c0d47c65a975', 'a0a2ee69-82f4-43d1-8d1d-c0d47c65a976'];
   beforeEach(function () {
-    this.initModules('huron.call-pickup.setup-assistant');
+    this.initModules(callPickupModule);
     this.injectDependencies(
       '$scope',
       '$timeout',
@@ -48,7 +50,7 @@ describe('Component: callPickupSetupAssistant', () => {
   });
 
   function initComponent() {
-    this.compileComponent('callPickupSetupAssistant', {});
+    this.compileComponent('ucCallPickup', {});
   }
 
   describe('check for changes call pickup', () => {
@@ -336,7 +338,7 @@ describe('Component: callPickupSetupAssistant', () => {
       spyOn(this.$modal, 'open');
       this.controller.cancelModal();
       expect(this.$modal.open).toHaveBeenCalledWith({
-        templateUrl: 'modules/huron/features/callPickup/callPickupCancelModal.html',
+        templateUrl: 'modules/call/features/call-pickup/call-pickup-cancel-modal.html',
         type: 'dialog',
       });
     });
