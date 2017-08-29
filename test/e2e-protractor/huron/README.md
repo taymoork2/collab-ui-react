@@ -17,6 +17,9 @@
 ```
 npm run protractor-babel -- --specs ./test/e2e-protractor/huron/functional/call-settings_spec.js
 ```
+* Running with yarn:
+`yarn protractor-babel -- --specs ./test/e2e-protractor/huron/functional/call-settings_spec.js`
+
 * Via Sauce Labs
 ```
 export SAUCE__MAX_INSTANCES="2"
@@ -95,8 +98,16 @@ fdescribe('only I will run', () => {...});
 npm run protractor-babel -- --provisionerKeepCustomer --specs ./test/e2e-protractor/huron/functional/call-settings_spec.js
 ```
 
-* By default, the provisioner will skip the first time setup wizard (ftsw).
-* If you need to test some functionality of the first time setup wizard, the constructor will take a true/false value.
-* `True` will cause the provisioner to not skip the ftsw. Default is `false`. Example:
-* `const customer = huronCustomer('<test case>', null, null, null, null, true);`
-```
+* Currently, the list of variables are as follows:
+* `huronCustomer(<customer_Name>, numberRange, users, hasPSTN, noOfLines, doFTW, offers)`
+* Where:
+* `numberRange`:
+* `users`:
+* `hasPSTN`: null || true --Sets up pstn for test case. True sets up pstn. Default is null/false
+* `noOfLines`: integer --Number of phone numbers to setup for pstn
+* `doFTW`: null || true --By default the first time wizard is skipped. True will allow access to FTW for testing
+* `offers`: null || 'CALL' || 'ROOMSERVICES' || 'NONE' --Determine which offers are set up with customer.
+*                       -null: defaults to both call and roomservices
+                        -CALL: CALL feature only
+                        -ROOMSERVICES: Room services only
+                        -NONE: sets up an account with messaging only
