@@ -5,7 +5,7 @@
   var angularResourceModule = require('angular-resource');
   var angularTranslateModule = require('angular-translate');
   var authModule = require('modules/core/auth/auth');
-  var configModule = require('modules/core/config/config');
+  var configModule = require('modules/core/config/config').default;
   var urlConfigModule = require('modules/core/config/urlConfig');
   var authinfoModule = require('modules/core/scripts/services/authinfo');
   var logModule = require('modules/core/scripts/services/log');

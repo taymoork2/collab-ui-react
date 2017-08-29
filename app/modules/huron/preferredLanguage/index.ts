@@ -5,7 +5,7 @@ export default angular
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
-    require('modules/core/config/config'),
+    require('modules/core/config/config').default,
   ])
   .component('ucPreferredLanguage', new PreferredLanguageComponent())
   .name;

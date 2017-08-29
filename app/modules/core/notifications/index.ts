@@ -11,7 +11,7 @@ export default angular
     require('scripts/app.templates'),
     require('angularjs-toaster'),
     require('angular-translate'),
-    require('modules/core/config/config'),
+    require('modules/core/config/config').default,
     require('modules/core/scripts/services/log'),
     metricsModule,
     windowModule,

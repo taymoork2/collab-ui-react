@@ -14,7 +14,7 @@
     require('modules/core/auth/token.service'),
     require('modules/core/modal').default,
     'core.body',
-    'core.chartColors',
+    require('modules/core/config/chartColors').default,
     require('modules/core/controlHub').default,
     require('modules/core/l10n').default,
     'core.localize',

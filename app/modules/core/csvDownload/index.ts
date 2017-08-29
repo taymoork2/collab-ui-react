@@ -7,7 +7,7 @@ import csvSimpleExportModule from './csvSimpleExport';
 
 const analyticsModule = require('modules/core/analytics');
 const userListServiceModule = require('modules/core/scripts/services/userlist.service');
-const config = require('modules/core/config/config');
+const config = require('modules/core/config/config').default;
 
 import './_csv-download.scss';
 

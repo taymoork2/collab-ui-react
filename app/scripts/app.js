@@ -69,7 +69,7 @@
     require('modules/core/auth/user').default,
     require('modules/core/auth/token.service'),
     require('modules/core/auth/idle').default,
-    require('modules/core/config/config'),
+    require('modules/core/config/config').default,
 
     // TODO: eventually a larger component encapsulating customer-overview should supercede this
     require('modules/core/customers/customerSubscriptions/adminList').default,

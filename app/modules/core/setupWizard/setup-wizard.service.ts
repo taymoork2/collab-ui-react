@@ -353,7 +353,7 @@ export class SetupWizardService {
 export default angular
   .module('core.setup-wizard-service', [
     require('angular-translate'),
-    require('modules/core/config/config'),
+    require('modules/core/config/config').default,
     require('modules/core/config/urlConfig'),
     require('modules/core/scripts/services/authinfo'),
     require('modules/core/scripts/services/org.service'),

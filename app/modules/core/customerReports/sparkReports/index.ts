@@ -26,9 +26,9 @@ export default angular
     require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
-    require('modules/core/config/chartColors'),
     require('modules/core/config/urlConfig'),
     require('modules/core/scripts/services/authinfo'),
+    require('modules/core/config/chartColors').default,
   ])
   .controller('SparkReportCtrl', SparkReportCtrl)
   .service('DummySparkDataService', DummySparkDataService)

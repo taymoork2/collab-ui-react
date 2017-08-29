@@ -319,7 +319,7 @@
 
   module.exports = angular
     .module('core.urlconfig', [
-      require('modules/core/config/config'),
+      require('modules/core/config/config').default,
       require('modules/core/scripts/services/utils'),
     ])
     .factory('UrlConfig', UrlConfig)

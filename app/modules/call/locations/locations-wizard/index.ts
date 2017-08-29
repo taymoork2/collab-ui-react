@@ -11,7 +11,7 @@ export default angular.module('call.locations.wizard', [
   require('angular-translate'),
   require('scripts/app.templates'),
   require('collab-ui-ng').default,
-  require('modules/core/config/config'),
+  require('modules/core/config/config').default,
   callLocationsModule,
   callSettingsModule,
   callHuntGroupModule,

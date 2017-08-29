@@ -16,7 +16,7 @@ require('angular-ui-grid/ui-grid.js');
       require('modules/core/featureToggle').default,
       require('modules/core/notifications').default,
       require('modules/core/proPack').default,
-      require('modules/core/config/config'),
+      require('modules/core/config/config').default,
       require('modules/core/auth/token.service'),
       require('modules/core/scripts/services/org.service'),
       require('modules/core/scripts/services/authinfo'),

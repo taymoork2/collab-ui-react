@@ -660,8 +660,7 @@ export class Config {
   }
 }
 
-// TODO: update to 'export default angular' and update references
-module.exports = angular
+export default angular
   .module('core.config', [
     require('modules/core/storage').default,
   ])
