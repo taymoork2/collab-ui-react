@@ -1472,6 +1472,7 @@
     "searchAddMembers": "Search & Add Members",
     "select": "Select",
     "selectLanguage": "Select a language",
+    "selectLocation": "Select a Location",
     "service": "Service",
     "settings": "Settings",
     "showAllAdminUsers": "Show all {{numUsers}} administrators",
@@ -4252,6 +4253,7 @@
     "invalidMember": "Select at least one member",
     "nameLabel": "Call Park Name",
     "nameDesc": "The call park name appears on the call park members' devices",
+    "locationLabel": "Call Park Location",
     "numberLabel": "Call Park Number",
     "numberDesc": "Select a single extension number or number range",
     "memberLabel": "Call Park Members",
@@ -4372,6 +4374,10 @@
     "sayInvalidChar": "Invalid character. {{char}} is not allowed.",
     "errorGetNumber": "'{{pagingGroupName}}' paging group was not able to get the number assigned to this group. Please contact the support team.",
     "loadError": "An error while loading the paging groups."
+  },
+  "sharedFeature": {
+    "identifyLocation": "Identify the Location",
+    "identifyLocationDesc": "Identify a Location for this {{feature}}, search by Name or Routing Prefix."
   },
   "telephonyPreview": {
     "lines": "Lines",
