@@ -4,6 +4,7 @@ import { NumberService, NumberType } from 'modules/huron/numbers';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
 import { HuntGroupService } from 'modules/call/features/hunt-group';
 import { MediaOnHoldService } from 'modules/huron/media-on-hold';
+import { Notification } from 'modules/core/notifications';
 
 export class HuronSettingsOptions {
   public preferredLanguageOptions: IOption[];
@@ -34,6 +35,7 @@ export class HuronSettingsOptionsService {
     private DialPlanService: DialPlanService,
     private HuntGroupService: HuntGroupService,
     private MediaOnHoldService: MediaOnHoldService,
+    private Notification: Notification,
     private FeatureToggleService,
     private Authinfo,
     private DirectoryNumberService,
@@ -67,6 +69,9 @@ export class HuronSettingsOptionsService {
       settingsOptions.dialPlan = _.get<IDialPlan>(response, 'dialPlan');
       settingsOptions.extensionsAssigned = _.get<boolean>(response, 'extensionsAssigned');
       return settingsOptions;
+    }).catch(error => {
+      this.Notification.errorWithTrackingId(error);
+      return this.$q.reject();
     });
   }
 

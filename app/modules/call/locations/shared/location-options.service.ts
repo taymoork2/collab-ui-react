@@ -3,6 +3,7 @@ import { IDialPlan, DialPlanService } from 'modules/huron/dialPlans';
 import { NumberService, NumberType } from 'modules/huron/numbers';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
 import { MediaOnHoldService } from 'modules/huron/media-on-hold';
+import { Notification } from 'modules/core/notifications';
 
 export class LocationSettingsOptions {
   public mediaOnHoldOptions: IOption[];
@@ -23,6 +24,7 @@ export class LocationSettingsOptionsService {
      private DialPlanService: DialPlanService,
      private NumberService: NumberService,
      private PhoneNumberService: PhoneNumberService,
+     private Notification: Notification,
      private ServiceSetup,
      private FeatureToggleService,
   ) { }
@@ -39,6 +41,10 @@ export class LocationSettingsOptionsService {
       companyVoicemailOptions: this.loadCompanyVoicemailNumbers(undefined).then(companyVoicemailNumbers => locationOptions.companyVoicemailOptions = companyVoicemailNumbers),
     }).then(() => {
       return locationOptions;
+    })
+    .catch(error => {
+      this.Notification.errorWithTrackingId(error);
+      return this.$q.reject();
     });
   }
 
