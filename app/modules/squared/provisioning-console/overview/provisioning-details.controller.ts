@@ -29,6 +29,12 @@ export class ProvisioningDetailsController {
   public isLoading: boolean = false;
   public status = Status;
   public isShowRaw = false;
+  public customerInfo = {
+    customerName: '-',
+    customerEmail: '-',
+    partnerName: '-',
+    partnerEmail: '-',
+  };
 
   public items: {
     audio?: IDetailItem,
@@ -64,12 +70,20 @@ export class ProvisioningDetailsController {
     };
   }
 
+  private populateCustomer(orderContent) {
+    this.customerInfo.customerName = _.get(orderContent, 'common.customerInfo.endCustomerInfo.name', '-');
+    this.customerInfo.customerEmail = _.get(orderContent, 'common.customerInfo.endCustomerInfo.adminDetails.emailId', '-');
+    this.customerInfo.partnerName = _.get(orderContent, 'collabServiceInfoCommon.partnerName', '-');
+    this.customerInfo.partnerEmail = _.get(orderContent, 'common.customerInfo.partnerInfo.adminDetails.emailId', '-');
+  }
+
   private init(): void {
     this.isLoading = true;
     this.dateInfo  = (this.order.status !== Status.COMPLETED) ? this.order.orderReceived : this.order.lastModified;
     this.ProvisioningService.getOrder(this.order.orderUUID).then((orderDetail) => {
       this.isLoading = false;
       const orderContent = JSON.parse(orderDetail.orderContent || '{}');
+      this.populateCustomer(orderContent);
       if (_.has(orderContent , 'collabServiceInfoCommon.site')) {
         this.selectedSite = _.find(orderContent.collabServiceInfoCommon.site, (site) => {
           return site.siteUrl === this.order.siteUrl;
