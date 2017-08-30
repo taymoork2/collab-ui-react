@@ -240,7 +240,7 @@ require('./_setup-wizard.scss');
               $timeout(function () {
                 //   $scope.$emit('wizardNextButtonDisable', true);
               });
-              if (error.errorCode === 42003) {
+              if (error.errorCode === 412) {
                 //Error code from Drachma
                 Notification.errorWithTrackingId(error, 'firstTimeWizard.error.overCapacity');
               } else {
