@@ -1232,6 +1232,25 @@
         "cmrLicense": "CMR License Volume",
         "cmrOverage": "CMR Overage"
       }
+    },
+    "manualCodes": {
+      "100" :"Not Used",
+      "200":"Transfer; Modify of non-CI WebEx site",
+      "210":"Create non-CI Site (new)",
+      "300":"TSP to WEBEX Audio/VoIPOnly; TSP partner to direct customer transfer",
+      "400":"WEBEX/VoIPOnly to TSP Audio; Direct customer to partner transfer",
+      "450":"Modify of MP audio",
+      "500":"Manual Branding needed",
+      "600":"CCASP Audio Setup, Modify, Cancel, Suspend/Resume, or Audio Change",
+      "650":"CCA-Enterprise setup, Cancel",
+      "700":"CCASP to WEBEX Audio/VoIPOnly",
+      "750":"CCA-Enterprise to WEBEX Audio/VoIPOnly",
+      "800":"WEBEX Audio/VoIPOnly to CCASP",
+      "850":"WEBEX Audio/VoIPOnly to CCA-Enterprise",
+      "900":"Temporary feature filtering manual code",
+      "910":"CMR changes for non-CI sites",
+      "920":"TSP partner to partner transfer",
+      "1000":"Messenger"
     }
   },
   "cdrLogs": {

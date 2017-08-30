@@ -1,6 +1,5 @@
 import { ProvisioningService } from './../provisioning.service';
 import { Status } from './../provisioning.service';
-import { ManualCode } from './../provisioning.service';
 import { Notification } from 'modules/core/notifications';
 import { STATUS_UPDATE_EVENT_NAME } from './../provisioning.service';
 
@@ -29,7 +28,6 @@ export class ProvisioningDetailsController {
   public dateInfo: string = '';
   public isLoading: boolean = false;
   public status = Status;
-  public manualCode = ManualCode;
 
   public items: {
     audio?: IDetailItem,
@@ -45,6 +43,7 @@ export class ProvisioningDetailsController {
   constructor(
     private $rootScope,
     private $stateParams,
+    private $translate,
     private Notification: Notification,
     private ProvisioningService: ProvisioningService) {
     this.order = this.$stateParams.order;
@@ -97,6 +96,10 @@ export class ProvisioningDetailsController {
     } else {
       return [];
     }
+  }
+
+  public getManualCode(code) {
+    return this.$translate.instant('provisioningConsole.manualCodes.' + code);
   }
 
   /*
