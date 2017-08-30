@@ -152,11 +152,7 @@ describe('Huron Functional: first-time-setup', () => {
       expect(utils.getCheckboxVal(callSettings.voicemailToEmailCheckBox)).toBeFalsy();
     });
     it('should check External Voicemail Access box', () => {
-      wizard.scrollToBottomButton.isDisplayed().then(function (result) {
-        if (result) {
-          utils.click(wizard.scrollToBottomButton);
-        };
-      });
+      utils.click(wizard.scrollToBottomButton);
       utils.setCheckboxIfDisplayed(callSettings.externalVoicemailCheckBox, true, 1000);
     });
     it('should display a dropdown to select a phone number for external voicemail access when activated', () => {
@@ -174,14 +170,11 @@ describe('Huron Functional: first-time-setup', () => {
       utils.setCheckboxIfDisplayed(callSettings.voicemailToEmailCheckBox, true, 1000);
     });
     it('should default to Email notification with Attachment', () => {
+      utils.scrollIntoView(wizard.voicemailEmailWithAttachment);
       utils.click(wizard.voicemailEmailWithAttachment);
     });
     it('should click Email notification without attachment', () => {
-      wizard.scrollToBottomButton.isDisplayed().then(function (result) {
-        if (result) {
-          utils.click(wizard.scrollToBottomButton);
-        };
-      });
+      utils.scrollIntoView(wizard.voicemailEmailWithoutAttachment);
       utils.click(wizard.voicemailEmailWithoutAttachment);
     });
     it('should enable save button', () => {
@@ -190,7 +183,7 @@ describe('Huron Functional: first-time-setup', () => {
   });
 
   describe('Finalize first time wizard setup', () => {
-    const SUBDOMAIN = 'ftwTestWizard';
+    const SUBDOMAIN = 'ftwTest';
     it('should click on get started button to progress to next screen', () => {
       utils.click(wizard.beginBtn);
       utils.expectIsDisplayed(wizard.enterpriseSettingsBanner);
