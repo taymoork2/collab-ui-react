@@ -52,6 +52,7 @@ describe('Component: lineOverview', () => {
       'MediaOnHoldService',
       'FeatureToggleService',
       'Notification',
+      'LocationsService',
     );
 
     this.existingLinePrimary = existingLinePrimary;
@@ -79,6 +80,8 @@ describe('Component: lineOverview', () => {
     spyOn(this.LineOverviewService, 'save').and.returnValue(this.saveDefer.promise);
 
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
+
+    spyOn(this.LocationsService, 'getUserLocation').and.returnValue(this.$q.resolve(true));
 
     spyOn(this.MediaOnHoldService, 'getLineMohOptions').and.returnValue(this.$q.resolve(this.lineMediaOptions));
 
@@ -214,6 +217,7 @@ describe('Component: lineOverview', () => {
       expect(this.DirectoryNumberOptionsService.getExternalNumberOptions).toHaveBeenCalled();
       expect(this.Notification.errorResponse).toHaveBeenCalledWith('503', 'directoryNumberPanel.internalNumberPoolError');
     });
+
   });
 
   describe('Media On Hold Options', () => {
