@@ -5,11 +5,13 @@ import { SearchHits } from '../services/search/searchResult';
 import { CsdmSearchService } from '../services/csdmSearch.service';
 import { IOnChangesObject } from 'angular';
 import { DeviceSearch } from './deviceSearch.component';
+import { GridCellService } from '../../core/csgrid/cs-grid-cell/gridCell.service';
+import IDevice = csdm.IDevice;
 
 class DeviceList implements ng.IComponentController {
 
   private huronDeviceService: any;
-  public gridOptions;
+  public gridOptions: uiGrid.IGridOptions;
   public gridApi: uiGrid.IGridApi;
   public loadingMore = false;
 
@@ -28,28 +30,30 @@ class DeviceList implements ng.IComponentController {
               CsdmHuronOrgDeviceService,
               private $scope,
               private Notification,
+              private GridCellService: GridCellService,
               Authinfo) {
     this.huronDeviceService = CsdmHuronOrgDeviceService.create(Authinfo.getOrgId());
     this.gridOptions = {
-      data: 'lctrl.getResult()',
+      data: this.getResult(),
       infiniteScrollRowsFromEnd: 5,
       infiniteScrollDown: true,
       useExternalSorting: true,
-      enableHorizontalScrollbar: 0,
       rowHeight: 45,
-      enableRowHeaderSelection: false,
-      enableColumnMenus: false,
-      multiSelect: false,
+      appScopeProvider: {
+        selectRow: (grid: uiGrid.IGridInstance, row: uiGrid.IGridRow): void => {
+          this.GridCellService.selectRow(grid, row);
+          this.expandDevice(row.entity);
+        },
+        expandDevice: (device: IDevice) => {
+          this.expandDevice(device);
+        },
+      },
       onRegisterApi: (gridApi: IGridApiWithInfiniteScroll) => {
         this.gridApi = gridApi;
-        gridApi.selection.on.rowSelectionChanged(this.$scope, (row) => {
-          this.expandDevice(row.entity);
-        });
         gridApi.infiniteScroll.on.needLoadMoreData(this.$scope, () => {
           this.loadMore(true);
         });
-        gridApi.core.on.sortChanged($scope, (grid, sortColumns) => {
-          grid = grid;
+        gridApi.core.on.sortChanged($scope, (_grid, sortColumns) => {
           const sortColumn = _.first(sortColumns);
           if (sortColumn) {
             this.sortOrderChanged({
@@ -65,7 +69,6 @@ class DeviceList implements ng.IComponentController {
         field: 'photos',
         displayName: '',
         cellTemplate: this.getTemplate('_imageTpl'),
-        sortable: false,
         width: 70,
       }, {
         field: 'displayName',
@@ -79,7 +82,6 @@ class DeviceList implements ng.IComponentController {
         field: 'connectionStatus',
         displayName: this.$translate.instant('spacesPage.statusHeader'),
         cellTemplate: this.getTemplate('_statusTpl'),
-        sortable: true,
         sort: {
           direction: 'asc',
           priority: 0,
@@ -97,7 +99,14 @@ class DeviceList implements ng.IComponentController {
 
   public $onChanges(onChangesObj: IOnChangesObject) {
     if (onChangesObj.searchHits && this.gridApi && this.searchHits && this.searchHits.hits) {
-      this.gridApi.grid.scrollTo(this.searchHits.hits[0]);
+      this.gridOptions.data = this.getResult();
+      this.gridApi.core.refreshRows().then(() => {
+        if (this.gridOptions && this.gridOptions.columnDefs && this.gridOptions.data) {
+          // this.gridApi.grid.getRow(this.gridOptions.data[0]);
+          this.gridApi.core.scrollTo(this.gridOptions.data[0], this.gridOptions.columnDefs[0]);
+        }
+      });
+
       if ((this.gridApi && this.gridApi.grid.gridHeight || 0) > (45 + 45 * 20)) {
         this.loadMore();
       }
