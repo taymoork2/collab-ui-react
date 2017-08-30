@@ -412,7 +412,7 @@ require('./_customer-list.scss');
 
     function convertStatusToInt(a) {
       // These numbers are simply used for sorting, meaning lower numbers come first for ascending
-      var statuses = ['active', 'expired', 'trial', 'partnerOnly', 'pendingSetup'];
+      var statuses = ['active', 'expired', 'trial'];
       var index = statuses.indexOf(a);
       if (index === -1) {
         return statuses.length;
@@ -801,11 +801,11 @@ require('./_customer-list.scss');
       });
 
       if (isTrial) {
-        return rowData.daysLeft <= 0 ? 'expired' : 'trial';
-      } else if (_.isEmpty(rowData.licenseList)) {
-        return rowData.isPartner ? 'partnerOnly' : 'pendingSetup';
+        if (rowData.daysLeft <= 0) {
+          return 'expired';
+        }
       }
-      return 'active';
+      return isTrial ? 'trial' : 'active';
     }
 
     function selectRow(grid, row) {
