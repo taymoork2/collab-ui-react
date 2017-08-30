@@ -1,8 +1,12 @@
 <div class="ui-grid-cell-contents" style="padding-top: 1.5rem" ng-if="grid.appScope.$ctrl.serviceId !== 'ept'">
-  <span ng-if="row.entity.extendedProperties.isEmpty">
+  <span ng-if="row.entity.extendedProperties.isEmpty && row.entity.extendedProperties.allowedRedirectTarget">
     <cs-statusindicator ng-model="disabled"></cs-statusindicator>
-    <span translate="hercules.status.no_nodes_registered"></span>
+    <span translate="hercules.fusion.list.complete-registration"></span>
   </span>
+  <span ng-if="row.entity.extendedProperties.isEmpty && !row.entity.extendedProperties.allowedRedirectTarget">
+      <cs-statusindicator ng-model="disabled"></cs-statusindicator>
+      <span translate="hercules.status.no_nodes_registered"></span>
+    </span>
   <span ng-if="!row.entity.extendedProperties.isEmpty">
     <span ng-hide="row.entity.extendedProperties.maintenanceMode === 'on' || row.entity.extendedProperties.maintenanceMode === 'pending'">
       <cs-statusindicator ng-model="row.entity.extendedProperties.servicesStatus.state.cssClass"></cs-statusindicator>
