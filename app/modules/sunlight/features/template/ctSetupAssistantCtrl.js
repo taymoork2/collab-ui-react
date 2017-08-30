@@ -1071,11 +1071,9 @@
       var modelText = $stateParams.isEditFeature ? {
         bodyMessage: $translate.instant('careChatTpl.ctEditBody'),
         trailingMessage: $translate.instant('careChatTpl.ctEditMessage'),
-        process: $translate.instant('careChatTpl.ctEditing'),
       } : {
         bodyMessage: $translate.instant('careChatTpl.ctCreationBody'),
         trailingMessage: $translate.instant('careChatTpl.ctCreationMessage'),
-        process: $translate.instant('careChatTpl.ctCreation'),
       };
 
       vm.cancelModalText = {
@@ -1084,12 +1082,8 @@
           bodyMessage: modelText.bodyMessage,
           trailingMessage: modelText.trailingMessage,
         }),
-        continueButton: $translate.instant('careChatTpl.continueButton', {
-          confirmProcess: modelText.process,
-        }),
-        confirmButton: $translate.instant('careChatTpl.confirmButton', {
-          cancelProcess: modelText.process,
-        }),
+        continueButton: $translate.instant('careChatTpl.continueButton'),
+        confirmButton: $translate.instant('careChatTpl.confirmButton'),
       };
       $modal.open({
         templateUrl: 'modules/sunlight/features/template/ctCancelModal.tpl.html',
