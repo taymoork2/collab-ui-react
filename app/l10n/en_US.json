@@ -1427,6 +1427,7 @@
     "enable": "Enable",
     "enabled": "Enabled",
     "error": "Error",
+    "fieldRequired": "This field is required",
     "finish": "Finish",
     "firstName": "First Name",
     "general": "General",
@@ -1475,7 +1476,6 @@
     "pending": "Pending",
     "play": "Play",
     "postpone": "Postpone",
-    "pro": "Pro",
     "proceed": "Proceed",
     "quantity": "Qty",
     "releaseChannel": "Release Channel",
@@ -3447,7 +3447,8 @@
       "invalidEmailLimit": "Enter only up to 5 email addresses",
       "invalidSpaceIdLimit": "Search must be limited to less than 5 Space IDs",
       "noMatchesFound": "No Matches Found",
-      "requestFailed": "Request Failed: Tracking ID {{trackingId}}"
+      "requestFailed": "Request Failed: Tracking ID {{trackingId}}",
+      "504RequestFailed": "Search Timed Out: Tracking ID {{trackingId}}"
     },
     "encryption": {
       "instructions": "After downloading your report, use this password to open the .zip file. You can also access the password by clicking on the key icon in the reports list.",

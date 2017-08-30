@@ -289,9 +289,13 @@
               }
             })
             .catch(function (err) {
-              vm.error = $translate.instant('ediscovery.searchErrors.requestFailed', {
+              var timeoutError = $translate.instant('ediscovery.searchErrors.504RequestFailed', {
                 trackingId: err.data.trackingId,
               });
+              var requestError = $translate.instant('ediscovery.searchErrors.requestFailed', {
+                trackingId: err.data.trackingId,
+              });
+              vm.error = err.status === 504 ? timeoutError : requestError;
               Analytics.trackEdiscoverySteps(Analytics.sections.EDISCOVERY.eventNames.SEARCH_ERROR, {
                 trackingId: err.data.trackingId,
                 emailSelected: vm.emailSelected && vm.searchModel,
@@ -538,7 +542,7 @@
     function searchButtonDisabled(_error) {
       var error = !_.isUndefined(_error) ? _error : false;
       var disable = !vm.searchCriteria.roomId || vm.searchCriteria.roomId === '' || vm.searchingForRoom === true;
-      return vm.ediscoveryToggle ? (error || vm.dateValidationError) : disable;
+      return vm.ediscoveryToggle ? (error || vm.dateValidationError || !vm.searchModel) : disable;
     }
 
     function retrySearch() {
