@@ -366,5 +366,56 @@ describe('Huron Functional: user-line-settings', () => {
         utils.expectIsDisplayed(callUserPlacePage.sharedLine.title);
       });
     });
+
+    it('should navigate back to call details view', () => {
+      utils.click(callUserPage.callSubMenu);
+      utils.expectIsDisplayed(callUserPage.callOverview.directoryNumbers.title);
+      utils.expectIsDisplayed(callUserPage.callOverview.features.title);
+    });
+  });
+
+  describe('Add a new line', () => {
+    it('should display add a new line link', () => {
+      utils.expectIsDisplayed(callUserPage.callOverview.addNewLine);
+    });
+
+    it('should be on add line page', () => {
+      utils.click(callUserPage.callOverview.addNewLine);
+    });
+
+    it('should display Directory Numbers section', () => {
+      utils.expectIsDisplayed(callUserPlacePage.directoryNumber.title);
+    });
+
+    it('should display Call Forwarding section', () => {
+      utils.expectIsDisplayed(callUserPlacePage.callForwarding.title);
+    });
+
+    it('should display Simultaneous Calls section', () => {
+      utils.expectIsDisplayed(callUserPlacePage.simultaneousCalling.title);
+    });
+
+    it('should display Caller ID section', () => {
+      utils.expectIsDisplayed(callUserPlacePage.callerId.title);
+    });
+
+    it('should display Auto Answer section', () => {
+      utils.expectIsDisplayed(callUserPlacePage.autoAnswer.title);
+    });
+
+    it('should display Shared Line section', () => {
+      utils.expectIsDisplayed(callUserPlacePage.sharedLine.title);
+    });
+
+    it('should display save button and clickable', () => {
+      utils.expectIsDisplayed(callUserPlacePage.saveButton);
+      utils.expectIsEnabled(callUserPlacePage.saveButton);
+    });
+
+    it('should create a new line and display success', () => {
+      utils.click(callUserPlacePage.saveButton).then(() => {
+        notifications.assertSuccess();
+      });
+    });
   });
 });
