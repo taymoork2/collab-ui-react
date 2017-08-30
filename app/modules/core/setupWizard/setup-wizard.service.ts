@@ -1,5 +1,5 @@
 import { Config } from 'modules/core/config/config';
-import { IPendingOrderSubscription, IPendingLicense } from './meeting-settings/meeting-settings.interface';
+import { IPendingOrderSubscription, IPendingLicense, IConferenceService } from './meeting-settings/meeting-settings.interface';
 import { HuronCustomerService } from 'modules/huron/customer';
 import { HuronCompassService } from 'modules/huron/compass';
 
@@ -315,9 +315,8 @@ export class SetupWizardService {
   }
 
   public hasWebexMeetingTrial() {
-    const conferencingServices = _.filter(this.Authinfo.getConferenceServices(), { license: { isTrial: true } });
-
-    return _.some(conferencingServices, service => _.get(service, 'license.offerName') === this.Config.offerCodes.MC || _.get(service, 'license.offerName') === this.Config.offerCodes.EE);
+    const conferencingServices: IConferenceService[] = _.filter(this.Authinfo.getConferenceServices(), { license: { isTrial: true } });
+    return _.some(conferencingServices, (service: IConferenceService) => _.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC, this.Config.offerCodes.CF, this.Config.offerCodes.CMR], service.license.offerName));
   }
 
   public validateTransferCode(payload) {
