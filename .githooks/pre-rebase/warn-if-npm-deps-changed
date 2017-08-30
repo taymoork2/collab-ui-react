@@ -5,7 +5,7 @@ this_pwd="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 . "$this_pwd/include/pre-rebase-helpers"
 
 if file_has_changed "yarn.lock"; then
-    print_notice_banner <<_EOF
+    cat <<_EOF | print_notice_banner
 'yarn.lock' has changed (see below for diff).
 
 Re-running \`yarn\` is advised.
