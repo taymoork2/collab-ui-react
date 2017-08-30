@@ -8067,6 +8067,9 @@
       "cannotReadStatus": "Could not read Hybrid Voicemail status.",
       "hybridVoicemail": "Voicemail",
       "orgNotEnabled": "Organization not enabled."
+    },
+    "hybridImp": {
+      "hybridImp": "IM&Presence Interop"
     }
   },
   "partnerManagement": {

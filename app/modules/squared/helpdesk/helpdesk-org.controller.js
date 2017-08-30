@@ -6,7 +6,7 @@
     .controller('HelpdeskOrgController', HelpdeskOrgController);
 
   /* @ngInject */
-  function HelpdeskOrgController($anchorScroll, $location, $modal, $q, $scope, $state, $stateParams, $translate, $window, Authinfo, Config, HelpdeskService, HelpdeskCardsOrgService, FeatureToggleService, HybridServicesClusterService, LicenseService, Notification, Orgservice, UrlConfig) {
+  function HelpdeskOrgController($anchorScroll, $location, $modal, $q, $scope, $state, $stateParams, $translate, $window, Authinfo, Config, HelpdeskService, HelpdeskCardsOrgService, FeatureToggleService, LicenseService, Notification, Orgservice, UrlConfig) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.org) {
@@ -43,7 +43,6 @@
     vm.cardsAvailable = false;
     vm.adminUsersAvailable = false;
     vm.findServiceOrders = findServiceOrders;
-    vm.openHybridServicesModal = openHybridServicesModal;
     vm._helpers = {
       notifyError: notifyError,
     };
@@ -163,7 +162,6 @@
       vm.messageCard = HelpdeskCardsOrgService.getMessageCardForOrg(vm.org, licenses);
       vm.meetingCard = HelpdeskCardsOrgService.getMeetingCardForOrg(vm.org, licenses);
       vm.callCard = HelpdeskCardsOrgService.getCallCardForOrg(vm.org, licenses);
-      vm.hybridServicesCard = HelpdeskCardsOrgService.getHybridServicesCardForOrg(vm.org);
       vm.roomSystemsCard = HelpdeskCardsOrgService.getRoomSystemsCardForOrg(vm.org, licenses);
       vm.cardsAvailable = true;
       vm.careCard = HelpdeskCardsOrgService.getCareCardForOrg(vm.org, licenses);
@@ -290,31 +288,6 @@
       }, vm._helpers.notifyError)
         .finally(function () {
           vm.launchingAtlas = false;
-        });
-    }
-
-    function openHybridServicesModal() {
-      vm.loadingHSData = true;
-      HybridServicesClusterService.getAll(vm.orgId)
-        .then(function (hsData) {
-          $modal.open({
-            templateUrl: 'modules/squared/helpdesk/helpdesk-extended-information.html',
-            controller: 'HelpdeskExtendedInfoDialogController as modal',
-            resolve: {
-              title: function () {
-                return 'helpdesk.hybridServicesDetails';
-              },
-              data: function () {
-                return hsData;
-              },
-            },
-          });
-        })
-        .catch(function (error) {
-          Notification.errorResponse(error, 'hercules.genericFailure');
-        })
-        .finally(function () {
-          vm.loadingHSData = false;
         });
     }
 
