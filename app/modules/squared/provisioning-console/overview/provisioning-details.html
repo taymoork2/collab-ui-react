@@ -107,6 +107,18 @@
           </div>
         </div>
       </cs-sp-section>
+      <cs-sp-section>
+        <div class="section-title-row">
+          <button class="btn info" class="btn btn-info" ng-click="provisioningDetailsCtrl.isShowRaw = !provisioningDetailsCtrl.isShowRaw">
+            <span translate= "provisioningConsole.actions.showRaw" ng-show="!provisioningDetailsCtrl.isShowRaw"></span>
+            <span translate= "provisioningConsole.actions.hideRaw" ng-show="provisioningDetailsCtrl.isShowRaw"></span>
+          </button>
+        </div>
+        <div collapse="!provisioningDetailsCtrl.isShowRaw" class="provisioning-details__raw">
+          <hr>
+          <pre>{{provisioningDetailsCtrl.items | json}}</pre>
+        </div>
+      </cs-sp-section>
       <!-- Audio -->
       <cs-sp-section ng-if="provisioningDetailsCtrl.items.audio.serviceTypeItems.length > 0">
         <section-title title-key="{{provisioningDetailsCtrl.items.audio.title}}"></section-title>

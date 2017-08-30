@@ -28,6 +28,7 @@ export class ProvisioningDetailsController {
   public dateInfo: string = '';
   public isLoading: boolean = false;
   public status = Status;
+  public isShowRaw = false;
 
   public items: {
     audio?: IDetailItem,
