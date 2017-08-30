@@ -454,7 +454,7 @@ export class MySubscriptionCtrl implements ng.IController {
     this.ServiceDescriptorService.getServices().then((services) => {
       return this.ServiceDescriptorService.filterEnabledServices(services);
     }).then((enabledServices) => {
-      enabledServices.sort((s1, s2) => this.HybridServicesUtilsService.hybridServicesComparator(s1.id, s2.id));
+      enabledServices.sort((s1, s2) => this.HybridServicesUtilsService.hybridServicesComparator({ value: s1.id }, { value: s2.id }));
       return _.map(enabledServices, (service: any) => {
         if (service.id === 'squared-fusion-uc' || service.id === 'squared-fusion-ec') {
           return `hercules.serviceNames.${service.id}.full`;
