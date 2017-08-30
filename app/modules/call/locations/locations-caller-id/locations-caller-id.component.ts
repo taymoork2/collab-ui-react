@@ -13,6 +13,7 @@ class LocationCallerIdCtrl implements ng.IComponentController {
   public onChangeFn: Function;
   public onNumberFilter: Function;
   public locationCallerIdEnabled: boolean;
+  public size: string;
 
 
   /* @ngInject */
@@ -92,5 +93,6 @@ export class LocationCallerIdComponent implements ng.IComponentOptions {
     companyName: '<',
     onNumberFilter: '&',
     onChangeFn: '&',
+    size: '&',
   };
 }

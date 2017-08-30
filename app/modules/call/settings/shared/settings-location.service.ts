@@ -1,5 +1,6 @@
 import { Customer, CustomerVoice, HuronCustomerService, ServicePackage } from 'modules/huron/customer';
 import { CustomerSettings } from './customer-settings';
+import { LocationsService, Location } from 'modules/call/locations/shared';
 import { CompanyNumber, ExternalCallerIdType } from 'modules/call/settings/settings-company-caller-id';
 import { MediaOnHoldService } from 'modules/huron/media-on-hold';
 import { AvrilService, AvrilCustomer } from 'modules/huron/avril';
@@ -11,6 +12,7 @@ export class CallSettingsData {
   public companyMoh: string;
   public companyCallerId: CompanyNumber;
   public avrilCustomer: AvrilCustomer;
+  public defaultLocation: Location;
 }
 // TODO: (jlowery) This service will eventually replace
 // the HuronSettings service when multilocation goes GA.
@@ -25,6 +27,7 @@ export class CallSettingsService {
     private HuronCustomerService: HuronCustomerService,
     private MediaOnHoldService: MediaOnHoldService,
     private AvrilService: AvrilService,
+    private LocationsService: LocationsService,
     private Notification: Notification,
     private FeatureToggleService,
     private CallerId,
@@ -43,6 +46,7 @@ export class CallSettingsService {
       customerVoice: this.getVoiceCustomer().then(customerVoice => callSettingsData.customerVoice = customerVoice),
       companyCallerId: this.getCompanyCallerId().then(companyCallerId => callSettingsData.companyCallerId = companyCallerId),
       companyMoh: this.getCompanyMedia().then(companyMoh => callSettingsData.companyMoh = companyMoh),
+      defaultLocation: this.getDefaultLocation().then(defaultLocation => callSettingsData.defaultLocation = defaultLocation),
     })
     .then(() => this.getAvrilCustomer(callSettingsData.customer.hasVoicemailService).then(avrilCustomer => callSettingsData.avrilCustomer = avrilCustomer))
     .then(() => {
@@ -54,6 +58,7 @@ export class CallSettingsService {
   public save(data: CallSettingsData): ng.IPromise<CallSettingsData> {
     return this.saveCustomerServicePackage(data.customer, data.customerVoice)
       .then(() => this.updateAvrilCustomer(data.avrilCustomer, data.customer))
+      .then(() => this.updateLocation(data.defaultLocation))
       .then(() => this.saveCompanyCallerId(data.companyCallerId))
       .then(() => this.get());
   }
@@ -190,6 +195,29 @@ export class CallSettingsService {
           this.errors.push(this.Notification.processErrorResponse(error, 'huronSettings.avrilCustomerSaveError'));
           return this.rejectAndNotifyPossibleErrors();
         });
+    } else {
+      return this.$q.resolve();
+    }
+  }
+
+  private getDefaultLocation() {
+    return this.LocationsService.getDefaultLocation()
+      .then(defaultLocation => {
+        return this.LocationsService.getLocation(_.get(defaultLocation, 'uuid'));
+      })
+      .catch(error => {
+        this.errors.push(this.Notification.processErrorResponse(error, 'locations.getFailed'));
+        return this.rejectAndNotifyPossibleErrors();
+      });
+  }
+
+  private updateLocation(data: Location): ng.IPromise<void> {
+    if (!_.isEqual(this.callSettingsDataCopy.defaultLocation, data.defaultLocation)) {
+      return this.LocationsService.updateLocation(data)
+      .catch(error => {
+        this.errors.push(this.Notification.processErrorResponse(error, 'locations.updateFailed'));
+        return this.rejectAndNotifyPossibleErrors();
+      });
     } else {
       return this.$q.resolve();
     }

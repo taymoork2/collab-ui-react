@@ -121,6 +121,15 @@
                   cs-input-group-size="medium-12" cs-input-messages="$ctrl.descriptionMessages" ng-maxlength="512" ng-required="false">
                 </textarea>
               </div>
+              <div class="mb-panel-body">
+                <cs-card class="full section-background download-media-card">
+                  <div class="mb-row-content">
+                    <div class="label-download text-left">{{$ctrl.activeMedia.filename}}</div>
+                    <button class="btn--none" ng-if="!$ctrl.mohDownloadInProgress"><i class="icon icon-download" ng-click="$ctrl.downloadFromUrl($ctrl.activeMedia)"></i></button>
+                    <button class="btn--none" ng-if="$ctrl.mohDownloadInProgress"><i class="icon icon-spinner"></i></button>
+                  </div>
+                </cs-card>
+              </div>
             </form>
             <div class="mb-panel-footer" ng-if="$ctrl.mohEditInProgress()">
               <button class="btn" type="submit" ng-click="$ctrl.cancelEditMedia($ctrl.activeMedia)">{{::"mediaMgrModal.cancelButton" | translate}}</button>

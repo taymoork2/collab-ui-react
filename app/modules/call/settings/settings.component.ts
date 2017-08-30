@@ -9,6 +9,7 @@ import { PstnModel } from 'modules/huron/pstn/pstn.model';
 import { PstnCarrier } from 'modules/huron/pstn/pstnProviders/pstnCarrier';
 import { IAvrilSiteFeatures } from 'modules/huron/avril';
 import { SetupWizardService } from 'modules/core/setupWizard/setup-wizard.service';
+import { Config } from 'modules/core/config/config';
 
 const API_IMPL_SWIVEL = 'SWIVEL';
 
@@ -58,7 +59,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
     private PstnService: PstnService,
     private PstnModel: PstnModel,
     private Authinfo,
-    private Config,
+    private Config: Config,
     private Orgservice,
     private FeatureToggleService,
     private SetupWizardService: SetupWizardService,

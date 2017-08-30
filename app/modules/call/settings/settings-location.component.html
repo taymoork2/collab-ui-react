@@ -65,9 +65,13 @@
       <div class="section__content">
         <uc-location-company-voicemail
           ftsw="false"
+          voicemail-pilot-number="$ctrl.callSettingsData.defaultLocation.voicemailPilotNumber"
           features="$ctrl.callSettingsData.avrilCustomer.features"
+          dial-plan-country-code="$ctrl.settingsOptions.dialPlan.countryCode"
+          external-number-options="$ctrl.settingsOptions.companyVoicemailOptions"
           company-voicemail-enabled="$ctrl.callSettingsData.customer.hasVoicemailService"
-          on-change-fn="$ctrl.onCompanyVoicemailChanged(companyVoicemailEnabled, features)">
+          on-change-fn="$ctrl.onCompanyVoicemailChanged(companyVoicemailEnabled, voicemailPilotNumber, features)"
+          on-number-filter="$ctrl.onCompanyVoicemailFilter(filter)">
         </uc-location-company-voicemail>
       </div>
     </div>

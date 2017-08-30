@@ -40,7 +40,9 @@
       <h4 class="title-margin-bottom"translate="locations.internalDialingTitle"></h4>
       <div class="row full service-setup bottom-margin" ng-if="$ctrl.showRoutingPrefix">
         <uc-location-routing-prefix
+          ftsw="true"
           routing-prefix="$ctrl.callLocationSettingsData.location.routingPrefix"
+          routing-prefix-length="7"
           on-change-fn="$ctrl.onRoutingPrefixChanged(routingPrefix)">
         </uc-location-routing-prefix>
       </div>
@@ -193,7 +195,9 @@
         <div class="section__content">
           <div class="sub-section" ng-if="$ctrl.showRoutingPrefix">
             <uc-location-routing-prefix
+              ftsw="false"
               routing-prefix="$ctrl.callLocationSettingsData.location.routingPrefix"
+              routing-prefix-length="$ctrl.callLocationSettingsData.customerVoice.routingPrefixLength"
               on-change-fn="$ctrl.onRoutingPrefixChanged(routingPrefix)">
             </uc-location-routing-prefix>
           </div>
@@ -238,6 +242,7 @@
               on-change-fn="$ctrl.onRegionCodeChanged(regionCode, useSimplifiedNationalDialing)">
             </uc-dialing-setup>
           </div>
+          <!-- Voicemail disabled at location level for phase 1.
           <div class="sub-section">
             <uc-location-voicemail
               ng-if="$ctrl.callLocationSettingsData.customer.hasVoicemailService"
@@ -249,7 +254,7 @@
               number-filter-fn="$ctrl.onNumberFilter(filter)"
               change-fn="$ctrl.onLocationVoicemailChanged(voicemailPilotNumber)">
             </uc-location-voicemail>
-          </div>
+          </div> -->
           <div class="sub-section">
             <uc-ext-transfer-org
               location="true"

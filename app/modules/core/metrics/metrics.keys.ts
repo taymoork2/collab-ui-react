@@ -1,5 +1,6 @@
 export enum DiagnosticKey {
   LICENSE_MAP_ERROR = 'atlas_license_map_error',
+  NOTIFICATION = 'atlas_notification',
 }
 
 export enum OperationalKey {

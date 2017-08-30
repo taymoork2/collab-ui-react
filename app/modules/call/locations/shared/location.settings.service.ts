@@ -234,7 +234,15 @@ export class CallLocationSettingsService {
         return this.rejectAndNotifyPossibleErrors();
       });
     } else {
-      return this.$q.resolve([]);
+      // if locationId is not specified, get the extentions from the default location
+      return this.LocationsService.getDefaultLocation()
+        .then(defaultLocation => {
+          if (defaultLocation && defaultLocation.uuid && !defaultLocation.routingPrefix) {
+            return this.InternalNumberRangeService.getLocationRangeList(defaultLocation.uuid);
+          } else {
+            return this.$q.resolve([]);
+          }
+        });
     }
   }
   private createInternalNumberRange(locationId: string, range: InternalNumberRange): ng.IPromise<string> {
@@ -310,6 +318,25 @@ export class CallLocationSettingsService {
     } else {
       return this.$q.resolve(new AvrilCustomer());
     }
+  }
+
+  public getLocationExtensionRanges(routingPrefix: string): ng.IPromise<InternalNumberRange[]> {
+    return this.LocationsService.getLocationsByRoutingPrefix(routingPrefix)
+      .then(locations => {
+        if (locations.length > 0) {
+          return this.InternalNumberRangeService.getLocationRangeList(_.get(locations, '[0].uuid', ''))
+            .then(numberRanges => {
+              this.callLocationSettingsDataCopy.internalNumberRanges = numberRanges;
+              return numberRanges;
+            });
+        } else {
+          return this.$q.resolve([]);
+        }
+      })
+      .catch(error => {
+        this.errors.push(this.Notification.processErrorResponse(error, 'locations.getLocationNumberRangesFailed'));
+        return this.rejectAndNotifyPossibleErrors();
+      });
   }
 
   public getOriginalConfig(): CallLocationSettingsData {

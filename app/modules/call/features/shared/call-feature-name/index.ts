@@ -1,3 +1,4 @@
+import './call-feature-name.component.scss';
 import { CallFeatureNameComponent } from './call-feature-name.component';
 
 export default angular

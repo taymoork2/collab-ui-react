@@ -1,9 +1,10 @@
-export default class MessengerInteropService {
+import { Config } from 'modules/core/config/config';
 
+export default class MessengerInteropService {
   /* @ngInject */
   constructor(
     private Authinfo,
-    private Config,
+    private Config: Config,
   ) {}
 
   public hasAssignableMessageItems() {

@@ -27,13 +27,23 @@ media-mgr {
     min-height: 0;
   }
 
-  .cs-card.large {
-    width: 80%;
-    margin-top: 6rem;
-    border: 1px dashed $gray-light-1;
-    border-radius: 8px;
+  .download-media-card {
     background-color: $gray-light-4;
     align-self: center;
+    margin: 0;
+    padding: 0.25rem 0.5rem;
+
+    .label-download {
+      font-family: 'CiscoSansTT Light';
+      font-size: 16px;
+      color: $gray-dark-3;
+      align-self: center;
+    }
+
+    .icon-download {
+      color: $gray-base;
+      vertical-align: middle;
+    }
   }
 
   .mb-nav {
@@ -88,6 +98,15 @@ media-mgr {
     padding-right: 0;
     overflow-y: auto;
     min-height: 0;
+
+    .cs-card.large {
+      width: 80%;
+      margin-top: 6rem;
+      border: 1px dashed $gray-light-1;
+      border-radius: 8px;
+      background-color: $gray-light-4;
+      align-self: center;
+    }
   }
 
   .mb-panel-left {
@@ -323,5 +342,9 @@ media-mgr {
 
   .btn {
     height: 2.25rem;
+  }
+
+  .btn--none {
+    padding: 0;
   }
 }

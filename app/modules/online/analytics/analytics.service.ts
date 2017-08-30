@@ -1,3 +1,5 @@
+import { Config } from 'modules/core/config/config';
+
 declare const _satellite;
 
 export class OnlineAnalyticsService {
@@ -9,7 +11,7 @@ export class OnlineAnalyticsService {
   /* @ngInject */
   constructor(
     private Authinfo,
-    private Config,
+    private Config: Config,
   ) {}
 
   public track(event: string): void {

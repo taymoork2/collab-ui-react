@@ -23,12 +23,13 @@
             </div>
             <div class="col-md-6">
               <div class="cs-input-group search-box" ng-class="{'error': ediscoverySearchCtrl.limitError}">
-                <form class="input-validation" novalidate>
-                  <input class="cs-input" type="text" ng-model="ediscoverySearchCtrl.searchModel" autofocus="true"
-                   ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)" placeholder="{{ediscoverySearchCtrl.searchPlaceholder}}">
-                   <p class="cs-input__help-text search-spacing">{{ediscoverySearchCtrl.searchHelpText}}</p>
-                  <div class="cs-input__messages" ng-if="ediscoverySearchCtrl.limitError" role="alert">
-                    <div translate="ediscovery.searchErrors.invalidLimit"></div>
+                <form name="searchForm" class="input-validation" novalidate>
+                  <input required class="cs-input" type="text" ng-model="ediscoverySearchCtrl.searchModel" autofocus="true"
+                   ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)" placeholder="{{ediscoverySearchCtrl.searchPlaceholder}}" >
+                   <p ng-if="!ediscoverySearchCtrl.limitError" class="cs-input__help-text search-spacing">{{ediscoverySearchCtrl.searchHelpText}}</p>
+                  <div class="cs-input__messages" role="alert">
+                    <div ng-if="ediscoverySearchCtrl.limitErrorMessage" class="search-error-msg">{{ediscoverySearchCtrl.limitErrorMessage}}
+                    </div>
                   </div>
                 </form>
               </div>

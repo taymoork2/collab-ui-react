@@ -1,13 +1,11 @@
-import * as provisionerHelper from './provisioner.helper';
-import * as atlasHelper from './provisioner.helper.atlas';
-import * as cmiHelper from './huron/provisioner.helper.cmi';
-import * as helper from '../../api_sanity/test_helper';
 import * as _ from 'lodash';
 import * as Promise from 'promise';
-import { PstnCustomer } from './huron/terminus-customers';
-import { PstnCustomerE911Signee } from './huron/terminus-customers-customer-e911';
-import { PstnNumbersOrders } from './huron/terminus-numbers-orders';
-import * as pstnHelper from './huron/provisioner.helper.pstn';
+import * as helper from '../../api_sanity/test_helper';
+import * as provisionerHelper from './provisioner.helper';
+import * as atlasHelper from './provisioner.helper.atlas';
+import * as huronCmiHelper from './huron/provisioner.helper.cmi';
+import * as huronPstnHelper from './huron/provisioner.helper.pstn';
+import * as huronFeaturesHelper from './huron/provisioner.helper.features';
 
 /* global LONG_TIMEOUT */
 
@@ -31,33 +29,6 @@ export function provisionAtlasCustomer(partnerName, trial) {
     });
 }
 
-export function provisionCmiCustomer(partnerName, customer, site, numberRange, setupWiz) {
-  return provisionerHelper.getToken(partnerName)
-    .then(token => {
-      console.log(`Creating customer ${customer.name} in CMI...`);
-      return cmiHelper.createCmiCustomer(token, customer)
-        .then(() => {
-          console.log(`${customer.name} successfully created in CMI!`);
-          console.log('Creating site in CMI...');
-          return cmiHelper.createCmiSite(token, customer.uuid, site);
-        })
-        .then(() => {
-          console.log('Site successfully created in CMI!');
-          console.log(`Creating number range ${numberRange.name} in CMI...`);
-          return cmiHelper.createNumberRange(token, customer.uuid, numberRange);
-        })
-        .then(() => {
-          if (!setupWiz) {
-            console.log('Number Range successfully created in CMI!');
-            return provisionerHelper.flipFtswFlag(token, customer.uuid);
-          } else {
-            return Promise.resolve();
-          }
-        });
-    });
-}
-
-
 export function provisionCustomerAndLogin(customer) {
   return this.provisionAtlasCustomer(customer.partner, customer.trial)
     .then(atlasCustomer => {
@@ -68,10 +39,10 @@ export function provisionCustomerAndLogin(customer) {
       } else if (atlasCustomer && customer.cmiCustomer) {
         customer.cmiCustomer.uuid = atlasCustomer.customerOrgId;
         customer.cmiCustomer.name = atlasCustomer.customerName;
-        return this.provisionCmiCustomer(customer.partner, customer.cmiCustomer, customer.cmiSite, customer.numberRange, customer.doFtsw)
+        return huronCmiHelper.provisionCmiCustomer(customer.partner, customer.cmiCustomer, customer.cmiSite, customer.numberRange, customer.doFtsw)
           .then(() => provisionUsers(customer))
-          .then(() => setupPSTN(customer))
-          .then(() => setupHuntGroup(customer))
+          .then(() => huronPstnHelper.setupPSTN(customer))
+          .then(() => huronFeaturesHelper.setupHuntGroup(customer))
           .then(() => loginPartner(customer.partner))
           .then(() => switchToCustomerWindow(customer.name, customer.doFtsw));
       } else {
@@ -79,66 +50,6 @@ export function provisionCustomerAndLogin(customer) {
           .then(() => switchToCustomerWindow(customer.name));
       }
     });
-}
-
-export function setupPSTN(customer) {
-  if (customer.pstn) {
-    return provisionerHelper.getToken(customer.partner)
-      .then(token => {
-        console.log('Creating PSTN customer');
-        var obj = {};
-        obj.firstName = customer.cmiCustomer.name;
-        obj.email = customer.trial.customerEmail;
-        obj.uuid = customer.cmiCustomer.uuid;
-        obj.name = customer.name;
-        obj.resellerId = helper.auth[customer.partner].org;
-        const pstnCustomer = new PstnCustomer(obj);
-        return pstnHelper.createPstnCustomer(token, pstnCustomer)
-          .then(() => {
-            console.log('Adding e911 signature to customer');
-            obj = {};
-            obj.firstName = customer.cmiCustomer.name;
-            obj.email = customer.trial.customerEmail;
-            obj.name = customer.name;
-            obj.e911Signee = customer.cmiCustomer.uuid;
-            const pstnCustomerE911 = new PstnCustomerE911Signee(obj);
-            return pstnHelper.putE911Signee(token, pstnCustomerE911)
-              .then(() => {
-                console.log('Adding phone numbers to customer');
-                obj = {};
-                obj.numbers = customerNumbersPSTN(customer.pstnLines);
-                const pstnNumbersOrders = new PstnNumbersOrders(obj);
-                return pstnHelper.addPstnNumbers(token, pstnNumbersOrders, customer.cmiCustomer.uuid);
-              });
-          });
-      });
-  }
-}
-
-export function customerNumbersPSTN(number) {
-  var prevNumber = 0;
-  var pstnNumbers = [];
-  for (var i = 0; i < number; i++) {
-    var numbers = numberPSTN(prevNumber);
-    prevNumber = numbers[1];
-    pstnNumbers.push(numbers[0]);
-  }
-  return pstnNumbers;
-}
-
-export function numberPSTN(prevNumber) {
-  var date = Date.now();
-  // If created at same millisecond as previous
-  if (date <= prevNumber) {
-    date = ++prevNumber;
-  } else {
-    prevNumber = date;
-  }
-  // get last 10 digits from date and format into PSTN number
-  date = date.toString();
-  date = ('+1919' + date.substr(date.length - 7));
-  console.log('Added Phone Number: ' + date);
-  return [date, prevNumber];
 }
 
 export function tearDownAtlasCustomer(partnerName, customerName) {
@@ -232,55 +143,3 @@ export function provisionUsers(customer) {
   }
 }
 
-export function setupHuntGroup(customer) {
-  const huntGroupName = `${customer.name}_HG`
-  const memberEmail = `${customer.name}_0@gmail.com`
-  const fallbackEmail = `${customer.name}_1@gmail.com`
-  const huntingType = 'DA_LONGEST_IDLE_TIME'
-  const huntPilotDN = '310'
-  const dn_type = 'NUMBER_FORMAT_EXTENSION'
-  let tempArray = ''
-  let memberUUID = ''
-  let fallbackUUID = ''
-  if (customer.doHuntGroup) {
-    console.log(`Need to provision hunt group for ${customer.name}!`);
-    return provisionerHelper.getToken(customer.partner)
-      .then(token => {
-        console.log('Got token for provisionUsers!');
-        console.log('Get UUID of member')
-        return cmiHelper.getMemberUUID(token, customer.cmiCustomer.uuid, `${memberEmail}`)
-          .then((response) => {
-            tempArray = _.find(_.get(response, 'members', undefined), ['userName', `${memberEmail}`]);
-            memberUUID = tempArray.numbers[0].uuid
-            console.log(`Got UUID of member ${memberUUID}`)
-            console.log('Get UUID of fallback Destination')
-            return cmiHelper.getMemberUUID(token, customer.cmiCustomer.uuid, `${fallbackEmail}`)
-              .then((response) => {
-                tempArray = _.find(_.get(response, 'members', undefined), ['userName', `${fallbackEmail}`]);
-                fallbackUUID = tempArray.numbers[0].uuid
-                console.log(`Got UUID of fallback destination ${fallbackUUID}`)
-                console.log('prepare post for hunt group and post it!')
-                var hgBody = {
-                  fallbackDestination: {
-                    numberUuid: `${fallbackUUID}`,
-                    sendToVoicemail: false,
-                  },
-                  huntMethod: `${huntingType}`,
-                  members: [
-                    `${memberUUID}`,
-                  ],
-                  name: `${huntGroupName}`,
-                  numbers: [{
-                    number: `${huntPilotDN}`,
-                    type: `${dn_type}`,
-                  }],
-                }
-                return cmiHelper.createCmiHuntGroup(token, customer.cmiCustomer.uuid, hgBody)
-                  .then(() => {
-                    console.log(`Successfully added hunt group for ${customer.name}!`);
-                  });
-              });
-          });
-      });
-  }
-}

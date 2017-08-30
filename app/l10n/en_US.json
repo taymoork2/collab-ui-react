@@ -1472,6 +1472,7 @@
     "searchAddMembers": "Search & Add Members",
     "select": "Select",
     "selectLanguage": "Select a language",
+    "selectLocation": "Select a Location",
     "service": "Service",
     "settings": "Settings",
     "showAllAdminUsers": "Show all {{numUsers}} administrators",
@@ -1802,7 +1803,9 @@
       "placeholder": "8100",
       "numericOnlyError": "Routing Prefix can only contain digits.",
       "tooShortError": "Routing Prefix must contain at least one digit.",
-      "tooLongError": "Routing Prefix can contain a maximum of seven digits."
+      "tooShortErrorParam": "Routing Prefix must contain at least {{length}} digit(s).",
+      "tooLongError": "Routing Prefix can contain a maximum of seven digits.",
+      "required": "Routing Prefix is required."
     },
     "externalTransfer": {
       "title": "External Call Transfer/Conference",
@@ -3390,7 +3393,7 @@
   "ediscovery": {
     "browserTabHeaderTitle": "eDiscovery Search and Extraction",
     "heading": "Search Compliance Data",
-    "subheading": "Choose to search for specific users or spaces. Add more than one by separating with commas.",
+    "subheading": "Choose to search for specific users or spaces. Add up to 5 users or spaces by separating with commas.",
     "searchTip": "Search data by space ID",
     "unableToDownloadFile": "Unable to download file",
     "timeout": "Timeout",
@@ -3417,7 +3420,8 @@
     },
     "searchErrors": {
       "queryLimit": "query must be 200 characters or less",
-      "invalidLimit": "search must be limited to less than 100 emails or room id's",
+      "invalidEmailLimit": "Enter only up to 5 email addresses",
+      "invalidSpaceIdLimit": "Search must be limited to less than 5 Space IDs",
       "noMatchesFound": "No Matches Found",
       "requestFailed": "Request Failed: Tracking ID {{trackingId}}"
     },
@@ -3661,7 +3665,7 @@
     "meetingSettingsError": {
       "pleaseSelectTimeZone": "Please select a Time Zone",
       "duplicateSite": "This site already exists",
-      "invalidLicense": "License number should be an integer greater than 0",
+      "invalidLicense": "License number should be a non-negative integer",
       "pleaseEnterSiteName": "Please enter a site name",
       "enteredSiteNotValid": "The entered site is not valid. Please try another site.",
       "totalSiteLicenseNumber": "Site <b>{{ siteUrl }}</b> should have license number > 0"
@@ -4251,6 +4255,7 @@
     "invalidMember": "Select at least one member",
     "nameLabel": "Call Park Name",
     "nameDesc": "The call park name appears on the call park members' devices",
+    "locationLabel": "Call Park Location",
     "numberLabel": "Call Park Number",
     "numberDesc": "Select a single extension number or number range",
     "memberLabel": "Call Park Members",
@@ -4371,6 +4376,10 @@
     "sayInvalidChar": "Invalid character. {{char}} is not allowed.",
     "errorGetNumber": "'{{pagingGroupName}}' paging group was not able to get the number assigned to this group. Please contact the support team.",
     "loadError": "An error while loading the paging groups."
+  },
+  "sharedFeature": {
+    "identifyLocation": "Identify the Location",
+    "identifyLocationDesc": "Identify a Location for this {{feature}}, search by Name or Routing Prefix."
   },
   "telephonyPreview": {
     "lines": "Lines",
@@ -5195,6 +5204,8 @@
     "accountStatus": "Account Status",
     "totalUsers": "Total Users",
     "purchased": "Purchased",
+    "pendingSetup": "Pending Setup",
+    "partnerOnly": "Partner Only",
     "domain": "{count, plural, =1{Domain} other{Domains}}",
     "domains": "Domains",
     "quantityWithValue": "Qty: {{quantity}}",
@@ -6740,6 +6751,7 @@
     "copyLocation": "Duplicate",
     "reload": "Reload",
     "routingPrefix": "Routing Prefix: {{prefix}}",
+    "routingPrefixDesc": "This prefix will be used as a compound number to connect with users at this location.  Length must be {{length}} digits.",
     "makeDefaultTitle": "Make Default",
     "makeDefaultDesc": "Are you sure you want to make this location default?  It will be the default location for new users or places.",
     "createLocation": "Create Location",
@@ -9287,6 +9299,7 @@
     "processingError": "Error processing media file.  Please try again.",
     "getMediaListError": "An error occurred obtaining the list of media.  Please refresh to try again.",
     "uploadMediaError": "An error occurred uploading media.  Please try again.",
+    "downloadMediaError": "An error occurred downloading media.  Please try again.",
     "restoreMediaError": "An error occurred restoring media.",
     "deleteMediaError": "An error occurred deleting media.",
     "cleanupMediaError": "An error occurred cleaning up a failed media upload.",

@@ -35,11 +35,14 @@ export class CallUserPlacePage {
 
     this.simultaneousCalling = {
       title: element(by.cssContainingText('.section__title', 'Simultaneous Calls')),
-
+      radio2: element(by.css('label[for="simultaneousTwo"]')),
+      radio8: element(by.css('label[for="simultaneousEight"]')),
     };
 
     this.callerId = {
       title: element(by.cssContainingText('.section__title', 'Caller ID')),
+      customName: element(by.css('input#callerIdName')),
+      customNumber: element(by.css('[ng-model="$ctrl.phoneNumber"]')),
     };
 
     this.autoAnswer = {
@@ -48,6 +51,7 @@ export class CallUserPlacePage {
 
     this.sharedLine = {
       title: element(by.cssContainingText('.section__title', 'Shared Line')),
+      member: element(by.css('.dropdown-menu ul li a')),
     };
   };
 }

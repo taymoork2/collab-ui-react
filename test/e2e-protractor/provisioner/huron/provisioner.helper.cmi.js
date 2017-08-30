@@ -1,5 +1,31 @@
 import * as provisionerHelper from '../provisioner.helper';
 
+export function provisionCmiCustomer(partnerName, customer, site, numberRange, setupWiz) {
+  return provisionerHelper.getToken(partnerName)
+    .then(token => {
+      console.log(`Creating customer ${customer.name} in CMI...`);
+      return createCmiCustomer(token, customer)
+        .then(() => {
+          console.log(`${customer.name} successfully created in CMI!`);
+          console.log('Creating site in CMI...');
+          return createCmiSite(token, customer.uuid, site);
+        })
+        .then(() => {
+          console.log('Site successfully created in CMI!');
+          console.log(`Creating number range ${numberRange.name} in CMI...`);
+          return createNumberRange(token, customer.uuid, numberRange);
+        })
+        .then(() => {
+          if (!setupWiz) {
+            console.log('Number Range successfully created in CMI!');
+            return provisionerHelper.flipFtswFlag(token, customer.uuid);
+          } else {
+            return Promise.resolve();
+          }
+        });
+    });
+}
+
 export function createCmiCustomer(token, customer) {
   const options = {
     method: 'POST',
