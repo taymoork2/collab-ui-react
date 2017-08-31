@@ -274,7 +274,7 @@ class HuronHelper {
   }
 }
 
-class Helper {
+export class Helper {
 
   constructor(private $translate) {
   }

@@ -1,0 +1,50 @@
+<cs-searchfilter filters="dctrl.searchFilters"
+                 search-item-fn="dctrl.setCurrentSearch(searchStr)"
+                 set-filter-fn="dctrl.setCurrentFilterValue(filter.filterValue)">{}
+</cs-searchfilter>
+<!--<cs-searchfilter filters="sc.filteredView.getFilters()" search-item-fn="sc.filteredView.setCurrentSearch(searchStr)" set-filter-fn="sc.filteredView.setCurrentFilterValue(filter.filterValue)" class="ng-isolate-scope">-->
+  <!--<div class="searchfilter">-->
+    <!--<div class="searchbox" onclick="angular.element('#searchFilter').focus();" ng-click="" role="button" tabindex="0">-->
+      <!--<div class="searchinput">-->
+        <!--<i class="icon icon-search" ng-click="searchFilter.closeSearch(searchFilter.searchStr, $event);" role="button" tabindex="0"></i>-->
+        <!--<input id="searchFilter" cs-expandinginput="" ng-model="searchFilter.searchStr" ng-change="searchFilter.searchItem(searchFilter.searchStr)" type="text" placeholder="" ng-focus="searchFilter.searchItem(searchFilter.searchStr); searchFilter.inputFocus = true; searchFilter.expand()" ng-blur="searchFilter.inputFocus = false" focus-width="150" style="width: 1px; min-width: 1px; max-width: 200px;" cs-expandinginput-minwidth="1px" class="ng-pristine ng-valid ng-isolate-scope ng-empty ng-touched" aria-invalid="false">-->
+        <!--<i class="icon icon-exit-outline clear" ng-click="searchFilter.clearSearch();" role="button" tabindex="0"></i>-->
+      <!--</div>-->
+    <!--</div>-->
+    <!--&lt;!&ndash; ngIf: filters &ndash;&gt;-->
+  <!--</div>-->
+<!--</cs-searchfilter>-->
+<!--
+<div class="devices-search" ng-class="{searching: dctrl.searching }">
+  <form ng-class="{
+              'active': dctrl.search || dctrl.inputActive,
+              'no-match': dctrl.search && !dctrl.groupedDevices.length
+            }">
+
+    <div class="bullets">
+      <div class="bullet" ng-repeat="token in dctrl.getTokens()" ng-dblclick="dctrl.removeBullet(token)">
+        {{token.searchField}}:{{token.query}}<i class="icon icon-close"/>
+      </div>
+    </div>
+    <div class="bullet current" ng-if="dctrl.currentBullet.searchField">{{dctrl.currentBullet.searchField}}:</div>
+    <input
+      type="text"
+      class="form-control"
+      ng-model="dctrl.currentBullet.text"
+      ng-blur="dctrl.inputActive=false"
+      ng-focus="dctrl.inputActive=true"
+      placeholder="Search for devices..."
+      ng-change="dctrl.searchChange()"
+      ng-model-options="{ debounce: { default: 250 } }"
+    />
+
+
+    <i
+      ng-if="dctrl.search"
+      class="fa fa-times clear-icon"
+      ng-click="dctrl.clearSearch()"
+    />
+
+  </form>
+</div>
+-->

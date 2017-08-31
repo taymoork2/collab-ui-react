@@ -2555,6 +2555,21 @@
               serviceId: {},
             },
           })
+          .state('devices-redux', {
+            // abstract: true,
+            templateUrl: 'modules/csdm/devicesRedux/devices.html',
+            controller: 'DevicesReduxCtrl',
+            controllerAs: 'devices',
+            parent: 'main',
+          })
+          .state('devices-redux.search', {
+            url: '/devices-redux',
+            views: {
+              leftPanel: {
+                templateUrl: 'modules/csdm/devicesRedux/list.html',
+              },
+            },
+          })
           .state('devices', {
             url: '/devices',
             templateUrl: 'modules/squared/devices/devices.html',
