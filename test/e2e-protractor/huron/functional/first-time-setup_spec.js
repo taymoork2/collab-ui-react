@@ -147,7 +147,7 @@ describe('Huron Functional: first-time-wizard', () => {
     });
   });
 
-  describe('Voicemail settings', () => {
+  xdescribe('Voicemail settings', () => {
     it('should default to not having External Voicemail Access', () => {
       utils.scrollIntoView(wizard.companyVoicemailToggle);
       expect(utils.getCheckboxVal(wizard.companyVoicemailToggle)).toBeFalsy();
@@ -190,7 +190,7 @@ describe('Huron Functional: first-time-wizard', () => {
     });
   });
 
-  describe('Finalize first time wizard setup', () => {
+  xdescribe('Finalize first time wizard setup', () => {
     const SUBDOMAIN = 'ftwTest';
     it('should click on get started button to progress to next screen', () => {
       utils.click(wizard.beginBtn);

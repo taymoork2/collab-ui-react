@@ -175,7 +175,7 @@ describe('Huron Functional: call-settings', () => {
     });
   });
 
-  describe('Voicemail', () => {
+  xdescribe('Voicemail', () => {
     describe('Activate voicemail', () => {
       it('should default to inactive', () => {
         utils.expectSwitchState(callSettings.voicemailSwitch, false);
@@ -199,7 +199,7 @@ describe('Huron Functional: call-settings', () => {
       });
     });
 
-    describe('Voicemail settings', () => {
+    xdescribe('Voicemail settings', () => {
       it('should default to not having External Voicemail Access', () => {
         utils.scrollIntoView(callSettings.externalVoicemailCheckBox);
         expect(utils.getCheckboxVal(callSettings.externalVoicemailCheckBox)).toBeFalsy();
@@ -228,7 +228,7 @@ describe('Huron Functional: call-settings', () => {
       });
     });
 
-    describe('Turn off Voicemail settings', () => {
+    xdescribe('Turn off Voicemail settings', () => {
       it('should switch to inactive on click', () => {
         utils.click(callSettings.voicemailSwitch);
       });
