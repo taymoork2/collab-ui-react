@@ -4,7 +4,6 @@
   module.exports = angular
     .module('core.responseinterceptor', [
       require('modules/core/auth/auth'),
-      require('modules/core/rate-limit').default,
       require('modules/core/scripts/services/log'),
     ])
     .factory('ResponseInterceptor', ResponseInterceptor)
@@ -30,10 +29,6 @@
           return $q.reject(response);
         }
 
-        var RateLimitService = $injector.get('RateLimitService');
-        if (RateLimitService.hasBeenThrottled(response)) {
-          return RateLimitService.retryThrottledResponse(response);
-        }
         // injected manually to get around circular dependency problem with $translateProvider
         // http://stackoverflow.com/questions/20647483/angularjs-injecting-service-into-a-http-interceptor-circular-dependency/21632161
         var Auth = $injector.get('Auth');
