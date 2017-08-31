@@ -131,7 +131,7 @@ exports.fonts = {
     {
       loader: 'file-loader',
       options: {
-        name: 'fonts/[name].[ext]',
+        name: 'fonts/[name].[ext]?[hash]',
       },
     },
   ],
@@ -143,7 +143,7 @@ exports.images = {
     {
       loader: 'file-loader',
       options: {
-        name: '[path][name].[ext]',
+        name: '[path][name].[ext]?[hash]',
       },
     },
   ],
@@ -156,7 +156,7 @@ exports.vendorImages = {
     {
       loader: 'file-loader',
       options: {
-        name: 'images/[name].[ext]',
+        name: 'images/[name].[ext]?[hash]',
       },
     },
   ],
