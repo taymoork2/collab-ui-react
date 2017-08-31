@@ -455,7 +455,6 @@
             $state.modal.dismiss();
           }
         }
-
         $stateProvider
           .state('addDeviceFlow', {
             parent: 'modal',
