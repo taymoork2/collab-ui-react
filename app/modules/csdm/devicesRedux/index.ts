@@ -7,7 +7,7 @@ import { ChartComponent } from './chart.component';
 export default angular
   .module('Csdm.devices', [
     require('scripts/app.templates'),
-    require('modules/csdm/services'),
+    'Csdm.services',
     require('angular-resource'),
   ])
   .component('deviceSearch', new DeviceSearchComponent())
