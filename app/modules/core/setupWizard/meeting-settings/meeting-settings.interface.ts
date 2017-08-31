@@ -5,7 +5,10 @@ export interface IWebExSite {
   quantity?: number;
   audioPackageDisplay?: string;
   setupType?: string;
-  keepExistingSite?: boolean;
+}
+
+export interface IExistingWebExTrialSite extends IWebExSite {
+  keepExistingSite: boolean;
 }
 
 export interface IWebexSiteDetail {
@@ -41,10 +44,6 @@ export interface IConferenceLicense {
   siteUrl?: string;
   isCIUnifiedSite?: true;
   licenseModel: string;
-}
-
-export interface IExistingTrialSites extends IWebExSite {
-  keepExistingSite: boolean;
 }
 
 export interface IWebexLicencesPayload {

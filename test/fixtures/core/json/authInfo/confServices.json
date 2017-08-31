@@ -30,6 +30,28 @@
         "cloudmeetings"
       ],
       "volume": 200,
+      "isTrial": true,
+      "status": "ACTIVE",
+      "capacity": 200,
+      "siteUrl": "sqcie2e30.dmz.webex.com",
+      "isCIUnifiedSite": true,
+      "licenseModel": "Cloud Shared Meeting"
+    },
+    "isCustomerPartner": false
+  },
+  {
+    "label": "Meeting Center 200",
+    "value": 1,
+    "name": "confRadio",
+    "license": {
+      "licenseId": "MC_60a53872-76d1-404d-ba44-a4929ac839e6_sqcie2e30.dmz.webex.com",
+      "offerName": "MC",
+      "licenseType": "CONFERENCING",
+      "billingServiceId": "SubCt31test20161222111",
+      "features": [
+        "cloudmeetings"
+      ],
+      "volume": 200,
       "isTrial": false,
       "status": "ACTIVE",
       "capacity": 200,

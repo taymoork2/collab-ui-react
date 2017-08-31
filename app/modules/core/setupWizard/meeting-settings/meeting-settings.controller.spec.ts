@@ -1,6 +1,7 @@
 describe('Controller: MeetingSettingsCtrl', () => {
   const transferCodeResponse = getJSONFixture('core/json/orders/transferCodeResponse.json');
   const actingSubscription = getJSONFixture('core/json/customerSubscriptions/getSubscriptionsData.json');
+  const conferenceServices = getJSONFixture('core/json/authInfo/confServices.json');
 
   beforeEach(function () {
     this.initModules('Core');
@@ -20,8 +21,8 @@ describe('Controller: MeetingSettingsCtrl', () => {
     spyOn(this.TrialTimeZoneService, 'getTimeZones').and.returnValue(this.$q.resolve({}));
     spyOn(this.TrialWebexService, 'validateSiteUrl').and.returnValue(this.$q.resolve({ isValid: true, errorCode: 'validSite' }));
     spyOn(this.SetupWizardService, 'getPendingAudioLicenses').and.returnValue([{ offerName: 'TSP' }]);
-    // is this being used? the data format wasn't even right before
     spyOn(this.SetupWizardService, 'getActingSubscriptionLicenses').and.returnValue(actingSubscription[0].licenses);
+    spyOn(this.Authinfo, 'getConferenceServices').and.returnValue(conferenceServices);
     spyOn(this.SetupWizardService, 'validateCCASPPartner').and.returnValue(this.$q.resolve(true));
     spyOn(this.SetupWizardService, 'hasCCASPPackage').and.returnValue(true);
     spyOn(this.SetupWizardService, 'getCCASPPartners').and.returnValue(this.$q.resolve(['partner1', 'partner2']));
@@ -39,9 +40,15 @@ describe('Controller: MeetingSettingsCtrl', () => {
 
     xit('should find existing WebEx licenses on acting subscription and push them to sitesArray', function () {
       expect(this.SetupWizardService.getActingSubscriptionLicenses).toHaveBeenCalled();
+      expect(this.controller.sitesArray.length).toBe(1);
       const hasSiteUrlFromActiveLicense = _.some(this.controller.sitesArray, { siteUrl: 'frankSinatraTest.dmz' });
       expect(hasSiteUrlFromActiveLicense).toBe(true);
-      expect(this.controller.sitesArray).toBe(false);
+    });
+
+    it('should find existing trial WebEx licenses on acting subscription and push them to sitesArray', function () {
+      expect(this.Authinfo.getConferenceServices).toHaveBeenCalled();
+      const hasSiteUrlFromTrialLicense = _.some(this.controller.existingSites, { siteUrl: 'sqcie2e30.dmz' });
+      expect(hasSiteUrlFromTrialLicense).toBe(true);
     });
   });
 
@@ -59,11 +66,13 @@ describe('Controller: MeetingSettingsCtrl', () => {
       this.$scope.$digest();
 
       expect(this.controller.validateWebexSiteUrl).toHaveBeenCalledWith(siteUrl.concat('.webex.com'));
-      expect(this.controller.sitesArray.length).toBe(1);
+      const hasAddedSite = _.some(this.controller.sitesArray, { siteUrl: siteUrl });
+      expect(hasAddedSite).toBe(true);
       expect(this.controller.disableValidateButton).toBe(false);
     });
 
     it('should call validateWebexSiteUrl() and if INVALID showError to be called and site not to be added', function () {
+      this.controller.sitesArray = [];
       this.TrialWebexService.validateSiteUrl.and.returnValue(this.$q.resolve({ isValid: false, errorCode: 'invalidSite' }));
       this.controller.siteModel.siteUrl = 'testSiteHere';
       this.controller.siteModel.timeZone = 'someTimeZoneHere';
@@ -121,6 +130,7 @@ describe('Controller: MeetingSettingsCtrl', () => {
       this.controller.transferSiteUrl = 'mywebexsite';
       this.controller.transferSiteCode = '12345678';
       this.$scope.$apply();
+      this.controller.sitesArray = [];
       this.controller.migrateTrialNext();
       this.$scope.$digest();
     });
@@ -149,14 +159,22 @@ describe('Controller: MeetingSettingsCtrl', () => {
           siteUrl: 'myFirstTransferredSite',
           setupType: 'TRANSFER',
         },
+        {
+          siteUrl: 'myExistingTrialSite',
+          setupType: 'TRIALCONVERT',
+        },
       ];
       this.$scope.$apply();
       this.controller.migrateTrialNext();
       this.$scope.$digest();
     });
-    it('replaces the earlier transferred site with the new one', function () {
-      expect(this.controller.sitesArray.length).toBe(1);
-      expect(this.controller.distributedLicensesArray[0][0].siteUrl).toBe('mySecondTransferredsite');
+    it('replaces the earlier transferred site with the new one and does not remove trial sites', function () {
+      const hasSecondTransferredSite = _.some(this.controller.sitesArray, { siteUrl: 'mySecondTransferredsite' });
+      const hasFirstTransferredSite = _.some(this.controller.sitesArray, { siteUrl: 'myFirstTransferredSite' });
+      expect(this.controller.sitesArray.length).toBe(2);
+      expect(hasSecondTransferredSite).toBe(true);
+      expect(hasFirstTransferredSite).toBe(false);
+      expect(this.controller.distributedLicensesArray[1][0].siteUrl).toBe('mySecondTransferredsite');
     });
   });
 
