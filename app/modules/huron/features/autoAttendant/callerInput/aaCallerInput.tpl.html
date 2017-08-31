@@ -34,7 +34,7 @@
         <div ng-if="aaCallerInput.inputActions.length" class="row aa-pm-vertical-line" ng-repeat="keyAction in aaCallerInput.inputActions">
           <div class="row">
             <ng-form name="nameKeyedInputForm">
-              <div class="small-2 columns">
+              <div class="small-2 columns aa-call-input-width">
                 <cs-select ng-model="keyAction.key" options="keyAction.keys" placeholder="aaCallerInput.selectPlaceholder" on-change-fn="aaCallerInput.keyChanged($index, keyAction.key)" class="aa-pm-key-select" icon="icon-chevron-down" ng-class="{'not-selected':!keyAction.key}">
                 </cs-select>
               </div>
