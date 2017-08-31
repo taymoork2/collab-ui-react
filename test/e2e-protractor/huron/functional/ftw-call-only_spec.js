@@ -194,16 +194,12 @@ describe('Huron Functional: first-time-setup', () => {
     const SUBDOMAIN = `ftwTestWizard${now}`;
     it('should click on get started button to progress to next screen', () => {
       utils.click(wizard.beginBtn);
-      utils.expectIsDisplayed(wizard.enterpriseSettingsBanner);
-      utils.expectIsNotDisplayed(wizard.checkAvailabilitySuccess);
-      utils.expectIsDisabled(wizard.checkAvailabilityBtn);
-      utils.expectIsDisabled(wizard.beginBtn);
     });
     it('should have a pop-up modal for successful save', () => {
-      utils.expectIsDisplayed(wizard.saveToaster);
-      utils.click(wizard.closeToaster);
+      notifications.assertSuccess();
     });
     it('should set up a Webex domain', () => {
+      utils.waitForPresence(wizard.checkAvailabilityBtn, 6000);
       utils.waitUntilEnabled(wizard.sipInput);
       let iter;
       for (iter = 0; iter < SUBDOMAIN.length; iter++) {
