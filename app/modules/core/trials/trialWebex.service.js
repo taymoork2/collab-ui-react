@@ -26,6 +26,7 @@
       getTrialStatus: getTrialStatus,
       provisionWebexSites: provisionWebexSites,
       provisionSubscriptionWithoutWebexSites: provisionSubscriptionWithoutWebexSites,
+      provisionSubscription: provisionSubscription,
       setProvisioningWebexSendCustomerEmailFlag: setProvisioningWebexSendCustomerEmailFlag,
       setProvisioningWebexSitesData: setProvisioningWebexSitesData,
       getProvisioningWebexSitesData: getProvisioningWebexSitesData,
@@ -116,11 +117,8 @@
 
     function provisionWebexSites() {
       var payload = _.get(webexProvisioningData, 'webexLicencesPayload');
-      if (_.has(webexProvisioningData, 'sendCustomerEmail')) {
-        _.set(payload, 'sendCustomerEmail', webexProvisioningData.sendCustomerEmail);
-      }
-
       var subscriptionId = _.get(webexProvisioningData, 'subscriptionId');
+
       return provisionSubscription(payload, subscriptionId)
         .finally(function () {
           SetupWizardService.clearDeterminantParametersFromSession();
@@ -132,11 +130,8 @@
         provisionOrder: true,
         serviceOrderUUID: SetupWizardService.getActingSubscriptionServiceOrderUUID(),
       };
-      if (_.has(webexProvisioningData, 'sendCustomerEmail')) {
-        _.set(payload, 'sendCustomerEmail', webexProvisioningData.sendCustomerEmail);
-      }
-
       var subscriptionId = SetupWizardService.getInternalSubscriptionId();
+
       return provisionSubscription(payload, subscriptionId);
     }
 
@@ -145,6 +140,12 @@
         $q.reject('invlaid paramenters passed to provision subscription.');
       }
       var webexProvisioningUrl = UrlConfig.getAdminServiceUrl() + 'subscriptions/' + subscriptionId + '/provision';
+
+      if (_.has(webexProvisioningData, 'sendCustomerEmail')) {
+        _.set(payload, 'sendCustomerEmail', webexProvisioningData.sendCustomerEmail);
+      } else {
+        _.set(payload, 'sendCustomerEmail', false);
+      }
 
       return $http.post(webexProvisioningUrl, payload);
     }
