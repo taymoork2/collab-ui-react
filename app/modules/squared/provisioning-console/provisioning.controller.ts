@@ -60,9 +60,11 @@ export class ProvisioningController {
     }, {
       field: 'orderReceived',
       displayName: this.$translate.instant('provisioningConsole.orderReceived'),
+      type: 'date',
     }, {
       field: 'lastModified',
       displayName: this.$translate.instant('provisioningConsole.lastModified'),
+      type: 'date',
     }, {
       field: 'status',
       displayName: this.$translate.instant('provisioningConsole.status'),
