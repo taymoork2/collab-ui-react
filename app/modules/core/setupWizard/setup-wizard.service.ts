@@ -63,6 +63,13 @@ export class SetupWizardService {
     return this.$q.all(promises);
   }
 
+  // A subscriptionId parameter is passed from outside of Atlas (Order Processing Client)
+  // to induce a determinant Service Setup flow; acting on a specified pending subscription.
+  // Once the flow is complete, the subscriptionID must be cleared to prevent interference with state flows.
+  public clearDeterminantParametersFromSession() {
+    this.SessionStorage.remove(this.StorageKeys.SUBSCRIPTION_ID);
+  }
+
   public hasPendingSubscriptionOptions(): boolean {
     return this.pendingSubscriptions.length > 1;
   }

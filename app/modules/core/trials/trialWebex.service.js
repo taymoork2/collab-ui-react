@@ -121,7 +121,10 @@
       }
 
       var subscriptionId = _.get(webexProvisioningData, 'subscriptionId');
-      return provisionSubscription(payload, subscriptionId);
+      return provisionSubscription(payload, subscriptionId)
+        .finally(function () {
+          SetupWizardService.clearDeterminantParametersFromSession();
+        });
     }
 
     function provisionSubscriptionWithoutWebexSites() {
