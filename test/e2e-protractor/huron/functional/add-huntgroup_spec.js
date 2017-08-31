@@ -67,11 +67,11 @@ describe('Huron Functional: adding-huntgroup', () => {
         utils.expectIsEnabled(manageUsersPage.buttons.next);
       });
       utils.click(manageUsersPage.buttons.next);
-      utils.expectIsDisplayed(addUser.sparkCallRadio);
     });
 
     it('should select Cisco Spark Call', () => {
       utils.expectIsEnabled(manageUsersPage.buttons.save);
+      utils.waitForPresence(addUser.sparkCallRadio, 6000);
       utils.click(addUser.sparkCallRadio);
       utils.expectIsEnabled(manageUsersPage.buttons.next);
     });
