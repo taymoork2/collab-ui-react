@@ -1390,6 +1390,7 @@
   },
   "common": {
     "actions": "Actions",
+    "activate": "Activate",
     "provision": "Provision",
     "doNotProvision": "Do not Provision",
     "add": "Add",
@@ -2613,6 +2614,7 @@
         "certificatesNew": "Use certificates provided from the Cisco Spark Control default trust list or upload your own.  If you use your own, make sure the hostnames are on a verified domain. For help, click <a href=\"http://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">here.</a>",
         "certificatesCannotRead": "Could not read certificate list.",
         "certificatesCannotDelete": "Could not delete certificate. Try again later",
+        "certificatesDeleted": "Certificate deleted successfully.",
         "certificatesEmailAddress": "Email Address",
         "certificatesCommonName": "Common Name",
         "certificatesOrganizationalUnit": "Organizational Unit",
