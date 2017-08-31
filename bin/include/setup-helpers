@@ -248,6 +248,7 @@ function update_bash_profile_to_source_bashrc_as_needed {
     if [ "$(uname)" = "Darwin" ]; then
         if ! grep -q "$grep_term" "$bash_profile_file"; then
             echo "[INFO] '.bash_profile' must source '.bashrc' for \`nvm\` support in shell, updating..."
+            echo "[WARNING] If you were already sourcing '.bashrc', please check '.bash_profile' to ensure it is not sourced twice."
             echo "" >> "$bash_profile_file"
             echo "# source in .bashrc" >> "$bash_profile_file"
             echo "$unescaped_entry_line" >> "$bash_profile_file"
