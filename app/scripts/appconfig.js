@@ -3927,7 +3927,7 @@
               hasContextExpandedTypesToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasContextExpandedTypes);
               },
-              displayName: translateDisplayName('cdrLogs.advancedCDR'),
+              displayName: translateDisplayName('common.overview'),
             },
           })
           .state('context-fields-sidepanel.options', {
@@ -4034,7 +4034,7 @@
               fields: /* @ngInject */ function ($stateParams) {
                 return $stateParams.fields;
               },
-              displayName: translateDisplayName('fieldsetPage.fields'),
+              displayName: translateDisplayName('sidePanelBreadcrumb.fields'),
             },
           })
           .state('context-cluster-sidepanel', {

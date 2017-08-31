@@ -47,6 +47,7 @@
     "call": "Call",
     "connect": "Connect",
     "deviceConfiguration": "Device Configuration",
+    "fields": "Fields",
     "meeting": "Meeting",
     "overview": "Overview",
     "sessionEnablement": "Session Enablement",
