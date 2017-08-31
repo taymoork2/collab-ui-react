@@ -412,6 +412,9 @@
               case 'squared-fusion-ec':
                 vm.hybridServicesCard.ec.status = status;
                 break;
+              case 'spark-hybrid-impinterop':
+                vm.hybridServicesCard.imp.status = status;
+                break;
             }
             if (status.lastStateChange) {
               status.lastStateChangeText = HybridServicesI18NService.getTimeSinceText(status.lastStateChange);

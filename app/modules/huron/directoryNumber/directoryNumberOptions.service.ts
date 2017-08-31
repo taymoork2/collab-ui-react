@@ -18,6 +18,7 @@ export enum Pattern {
 }
 
 export class DirectoryNumberOptionsService {
+  private locationsInternalNumbersOptions: ng.resource.IResourceClass<ng.resource.IResource<IDirectoryNumber>>;
   private internalNumbersOptions: ng.resource.IResourceClass<ng.resource.IResource<IDirectoryNumber>>;
   private externalNumbersOptions: ng.resource.IResourceClass<ng.resource.IResource<IDirectoryNumber>>;
 
@@ -26,21 +27,39 @@ export class DirectoryNumberOptionsService {
     private $resource: ng.resource.IResourceService,
     private Authinfo,
     private HuronConfig,
+    private FeatureToggleService,
+    private LocationsService,
   ) {
+    this.locationsInternalNumbersOptions = this.$resource(this.HuronConfig.getCmiUrl() + '/voice/customers/:customerId/locations/:locationId/internalnumberpools');
     this.internalNumbersOptions = this.$resource(this.HuronConfig.getCmiUrl() + '/voice/customers/:customerId/internalnumberpools/:internalNumberId');
     this.externalNumbersOptions = this.$resource(this.HuronConfig.getCmiUrl() + '/voice/customers/:customerId/externalnumberpools/:externalNumberId');
   }
 
-  public getInternalNumberOptions(pattern?: string | Pattern, assignment?: Availability): ng.IPromise<string[]> {
-    return this.internalNumbersOptions.query({
-      customerId: this.Authinfo.getOrgId(),
-      directorynumber: assignment || Availability.UNASSIGNED,
-      order: 'pattern',
-      pattern: pattern ? '%' + pattern + '%' : undefined,
-    }).$promise
-    .then(options => {
-      return _.map(options, 'pattern');
-    });
+  public getInternalNumberOptions(pattern?: string | Pattern, assignment?: Availability, locationId?: string): ng.IPromise<string[]> {
+    return this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484)
+      .then(isSupported => {
+        if (isSupported && locationId && !_.isUndefined(locationId)) {
+          return this.loadLocationsInternalNumberPool(pattern, assignment, locationId);
+        } else {
+          return this.internalNumbersOptions.query({
+            customerId: this.Authinfo.getOrgId(),
+            directorynumber: assignment || Availability.UNASSIGNED,
+            order: 'pattern',
+            pattern: pattern ? '%' + pattern + '%' : undefined,
+          }).$promise
+            .then(options => {
+              return _.map(options, 'pattern');
+            });
+        }
+      });
+  }
+
+  public loadLocationsInternalNumberPool(pattern?: string | Pattern, assignment?: Availability, locationId?: string): ng.IPromise<string[]> {
+    const directorynumber = assignment || Availability.UNASSIGNED;
+    return this.LocationsService.getLocationInternalNumberPoolList(locationId, directorynumber, pattern , null, null)
+      .then(options => {
+        return _.map(options, 'pattern');
+      });
   }
 
   public getExternalNumberOptions(pattern?: string | Pattern, assignment?: Availability, externalNumberType?: ExternalNumberType): ng.IPromise<string[]> {

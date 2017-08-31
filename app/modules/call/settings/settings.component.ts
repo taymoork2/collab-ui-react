@@ -83,7 +83,6 @@ class HuronSettingsCtrl implements ng.IComponentController {
       }
     }, null, params);
 
-
     this.PstnService.getCustomer(this.Authinfo.getOrgId()).then(() => {
       this.isTerminusCustomer = true;
     });
@@ -96,7 +95,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
     });
 
     this.loadFeatureToggles();
-    this.$q.resolve(this.initSettingsComponent()).finally( () => this.loading = false);
+    this.$q.resolve(this.initSettingsComponent()).finally(() => this.loading = false);
 
     if (this.ftsw) {
       this.$scope.$watch(() => {
@@ -115,9 +114,9 @@ class HuronSettingsCtrl implements ng.IComponentController {
 
   private initSettingsComponent(): ng.IPromise<any> {
     return this.HuronSettingsOptionsService.getOptions().then(options => this.settingsOptions = options)
-    .then(() => {
-      return this.HuronSettingsService.get(this.siteId).then(huronSettingsData => this.huronSettingsData = huronSettingsData);
-    });
+      .then(() => {
+        return this.HuronSettingsService.get(this.siteId).then(huronSettingsData => this.huronSettingsData = huronSettingsData);
+      });
   }
 
   private loadFeatureToggles(): ng.IPromise<any> {
@@ -154,7 +153,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
       .then(huronSettingsData => {
         this.huronSettingsData = huronSettingsData;
         this.Notification.success('serviceSetupModal.saveSuccess');
-      }).finally( () => {
+      }).finally(() => {
         this.processing = false;
         this.resetForm();
         if (showEnableVoicemailModal && !this.ftsw) {
@@ -167,7 +166,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
     if (this.showDialPlanChangedDialog && this.showVoiceMailDisableDialog) {
       this.openDialPlanChangeDialog()
         .then(() => this.openDisableVoicemailWarningDialog()
-        .then(() => this.saveHuronSettings()));
+          .then(() => this.saveHuronSettings()));
     } else if (this.showDialPlanChangedDialog) {
       this.openDialPlanChangeDialog()
         .then(() => this.saveHuronSettings());
@@ -183,7 +182,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
     return this.ModalService.open({
       title: this.$translate.instant('serviceSetupModal.saveModal.title'),
       message: this.$translate.instant('serviceSetupModal.saveModal.message1') + '<br/><br/>'
-        + this.$translate.instant('serviceSetupModal.saveModal.message2'),
+      + this.$translate.instant('serviceSetupModal.saveModal.message2'),
       close: this.$translate.instant('common.yes'),
       dismiss: this.$translate.instant('common.no'),
     }).result;

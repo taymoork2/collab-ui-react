@@ -5,6 +5,7 @@ export enum DiagnosticKey {
 
 export enum OperationalKey {
   NOTIFICATION = 'atlas_notification',
+  RATE_LIMIT_RETRY = 'atlas_rate_limit_retry',
 }
 
 export enum TimingKey {

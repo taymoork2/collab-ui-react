@@ -1,5 +1,5 @@
 import { ClusterService } from 'modules/hercules/services/cluster-service';
-import { ConnectorType, HybridServiceId, ICluster, ConnectorMaintenanceMode, IExtendedCluster } from 'modules/hercules/hybrid-services.types';
+import { ConnectorType, HybridServiceId, IExtendedCluster } from 'modules/hercules/hybrid-services.types';
 import { EnterprisePrivateTrunkService, IPrivateTrunkResourceWithStatus } from 'modules/hercules/services/enterprise-private-trunk-service';
 import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
 
@@ -9,10 +9,6 @@ import { HighLevelStatusForService } from 'modules/hercules/services/hybrid-serv
 
 export interface IGridApiScope extends ng.IScope {
   gridApi?: any;
-}
-
-export interface IClusterWithMaintenanceModeLabel extends ICluster {
-  maintenanceModeLabel?: ConnectorMaintenanceMode;
 }
 
 export class HybridServiceClusterListCtrl implements ng.IComponentController {

@@ -9,14 +9,19 @@ interface INumberResource extends ng.resource.IResourceClass<ng.resource.IResour
 
 export class NumberService {
   private numberResource: INumberResource;
+  private hasLocations: boolean = false;
 
   /* @ngInject */
   constructor(
     private $resource: ng.resource.IResourceService,
     private Authinfo,
     private HuronConfig,
+    private FeatureToggleService,
   ) {
     this.numberResource = <INumberResource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/numbers');
+    this.FeatureToggleService.supports(FeatureToggleService.features.hI1484).then(supports => {
+      this.hasLocations = supports;
+    });
   }
 
   public getNumberList(number?: string, type?: NumberType, assigned?: boolean, order?: NumberOrder, limit?: number, offset?: number): ng.IPromise<INumber[]> {
@@ -28,6 +33,7 @@ export class NumberService {
       order: order,
       limit: limit,
       offset: offset,
+      depricated: !this.hasLocations,
     }).$promise
     .then(numberList => {
       return _.get(numberList, 'numbers', []);

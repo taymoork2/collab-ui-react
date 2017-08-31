@@ -150,17 +150,21 @@
     }
 
     function getEmergencyAddress() {
-      TerminusService.customerNumberE911V2().get({
-        customerId: Authinfo.getOrgId(),
-        number: deviceOverview.emergencyCallbackNumber,
-      }).$promise.then(function (info) {
-        deviceOverview.emergencyAddress = info.e911Address;
-        deviceOverview.emergencyAddressStatus = info.status;
-      }).then(function () {
-        deviceOverview.isE911Available = true;
-      }).catch(function () {
+      if (deviceOverview.emergencyCallbackNumber) {
+        TerminusService.customerNumberE911V2().get({
+          customerId: Authinfo.getOrgId(),
+          number: deviceOverview.emergencyCallbackNumber,
+        }).$promise.then(function (info) {
+          deviceOverview.emergencyAddress = info.e911Address;
+          deviceOverview.emergencyAddressStatus = info.status;
+        }).then(function () {
+          deviceOverview.isE911Available = true;
+        }).catch(function () {
+          deviceOverview.e911NotFound = true;
+        });
+      } else {
         deviceOverview.e911NotFound = true;
-      });
+      }
     }
 
     function initTimeZoneOptions() {

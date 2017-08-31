@@ -354,6 +354,7 @@ export class Config {
       'callpickupedit',
       'device-overview',
       'devices',
+      'devices-redux',
       'didadd',
       'huntgroups',
       'huronCallPark',

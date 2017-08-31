@@ -2555,6 +2555,21 @@
               serviceId: {},
             },
           })
+          .state('devices-redux', {
+            // abstract: true,
+            templateUrl: 'modules/csdm/devicesRedux/devices.html',
+            controller: 'DevicesReduxCtrl',
+            controllerAs: 'devices',
+            parent: 'main',
+          })
+          .state('devices-redux.search', {
+            url: '/devices-redux',
+            views: {
+              leftPanel: {
+                templateUrl: 'modules/csdm/devicesRedux/list.html',
+              },
+            },
+          })
           .state('devices', {
             url: '/devices',
             templateUrl: 'modules/squared/devices/devices.html',
@@ -4168,10 +4183,16 @@
             abstract: true,
             url: '/services/cluster/expressway/:id',
             parent: 'main',
-            template: '<hybrid-services-cluster-page cluster-id="$resolve.id" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></hybrid-services-cluster-page>',
+            template: '<hybrid-services-cluster-page cluster-id="$resolve.id" back-state="$resolve.backState" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></hybrid-services-cluster-page>',
+            params: {
+              backState: null,
+            },
             resolve: {
               id: /* @ngInject */ function ($stateParams) {
                 return $stateParams.id;
+              },
+              backState: /* @ngInject */ function ($stateParams) {
+                return $stateParams.backState;
               },
               hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
@@ -4334,10 +4355,16 @@
             abstract: true,
             url: '/services/cluster/hds/:id',
             parent: 'main',
-            template: '<hybrid-services-cluster-page cluster-id="$resolve.id" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></hybrid-services-cluster-page>',
+            template: '<hybrid-services-cluster-page cluster-id="$resolve.id" back-state="$resolve.backState" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></hybrid-services-cluster-page>',
+            params: {
+              backState: null,
+            },
             resolve: {
               id: /* @ngInject */ function ($stateParams) {
                 return $stateParams.id;
+              },
+              backState: /* @ngInject */ function ($stateParams) {
+                return $stateParams.backState;
               },
               hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
@@ -4356,10 +4383,16 @@
             abstract: true,
             url: '/services/cluster/mediafusion/:id',
             parent: 'main',
-            template: '<hybrid-services-cluster-page cluster-id="$resolve.id" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></hybrid-services-cluster-page>',
+            template: '<hybrid-services-cluster-page cluster-id="$resolve.id" back-state="$resolve.backState" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></hybrid-services-cluster-page>',
+            params: {
+              backState: null,
+            },
             resolve: {
               id: /* @ngInject */ function ($stateParams) {
                 return $stateParams.id;
+              },
+              backState: /* @ngInject */ function ($stateParams) {
+                return $stateParams.backState;
               },
               hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
@@ -4385,10 +4418,16 @@
             abstract: true,
             url: '/services/cluster/cucm/:id',
             parent: 'main',
-            template: '<hybrid-services-cluster-page cluster-id="$resolve.id" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></hybrid-services-cluster-page>',
+            template: '<hybrid-services-cluster-page cluster-id="$resolve.id" back-state="$resolve.backState" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></hybrid-services-cluster-page>',
+            params: {
+              backState: null,
+            },
             resolve: {
               id: /* @ngInject */ function ($stateParams) {
                 return $stateParams.id;
+              },
+              backState: /* @ngInject */ function ($stateParams) {
+                return $stateParams.backState;
               },
               hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);

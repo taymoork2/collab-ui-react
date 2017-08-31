@@ -57,6 +57,14 @@
     title: 'tabs.deviceTab',
     state: 'devices',
     link: '/devices',
+    feature: '!csdm-device-red',
+  }, {
+    tab: 'deviceTab',
+    icon: 'icon-devices',
+    title: 'tabs.deviceTab',
+    state: 'devices-redux',
+    link: '/devices-redux',
+    feature: 'csdm-device-red',
   }, {
     tab: 'reportTab',
     icon: 'icon-bars',
@@ -168,6 +176,15 @@
     title: 'tabs.deviceTab',
     state: 'devices',
     link: '/devices',
+    feature: '!csdm-device-red',
+    iconClass: 'icon-outline',
+  }, {
+    tab: 'deviceTab',
+    icon: 'icon-endpoint-active',
+    title: 'tabs.deviceTab',
+    state: 'devices-redux',
+    link: '/devices-redux',
+    feature: 'csdm-device-red',
     iconClass: 'icon-outline',
   }, {
     tab: 'reportTab',

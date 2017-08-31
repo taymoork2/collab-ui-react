@@ -57,14 +57,17 @@ export class ClusterSidepanelOverviewCtrl implements ng.IComponentController {
     if (this.cluster.targetType === 'c_mgmt') {
       this.$state.go('expressway-cluster.nodes', {
         id: this.clusterId,
+        backState: this.connectorType === 'c_cal' ? 'calendar-service.list' : 'call-service.list',
       });
     } else if (this.cluster.targetType === 'mf_mgmt') {
       this.$state.go('mediafusion-cluster.nodes', {
         id: this.clusterId,
+        backState: 'media-service-v2.list',
       });
     } else if (this.cluster.targetType === 'hds_app') {
       this.$state.go('hds-cluster.nodes', {
         id: this.clusterId,
+        backState: 'hds.list',
       });
     }
   }

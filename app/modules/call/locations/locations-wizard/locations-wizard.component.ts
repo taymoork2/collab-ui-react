@@ -158,7 +158,7 @@ class LocationsWizardController implements ng.IComponentController {
 
   public filterExtensionRangesByRoutingPrefix(routingPrefix) {
     return this.CallLocationSettingsService.getLocationExtensionRanges(routingPrefix)
-      .then(numberRanges => this.callLocationSettingsData.internalNumberRanges = numberRanges);
+      .then(numberRanges => this.callLocationSettingsData.internalNumberRanges = _.cloneDeep(numberRanges));
   }
 
   public resetAddr() {

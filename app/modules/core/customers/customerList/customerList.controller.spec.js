@@ -139,17 +139,6 @@ describe('Controller: CustomerListCtrl', function () {
       testTrialData.communications.isTrial = false;
     }
 
-    function setTestDataPendingSetup() {
-      setTestDataActive();
-      testTrialData.licenseList = [];
-    }
-
-    function setTestDataPartnerOnly() {
-      setTestDataPendingSetup();
-      testTrialData.licenseList = [];
-      testTrialData.isPartner = true;
-    }
-
     it('should properly calculate trials past the grace period', function () {
       setTestDataExpired();
       testTrialData.daysLeft = -99;
@@ -179,10 +168,6 @@ describe('Controller: CustomerListCtrl', function () {
       expect(controller.getAccountStatus(testTrialData)).toBe('trial');
       setTestDataActive();
       expect(controller.getAccountStatus(testTrialData)).toBe('active');
-      setTestDataPendingSetup();
-      expect(controller.getAccountStatus(testTrialData)).toBe('pendingSetup');
-      setTestDataPartnerOnly();
-      expect(controller.getAccountStatus(testTrialData)).toBe('partnerOnly');
     });
   });
 

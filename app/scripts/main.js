@@ -221,6 +221,7 @@
     'oc.lazyLoad',
     'Gemini',
     'CMC',
+    'Csdm',
   ]).config(require('./main.config'))
     .run(require('./main.run'))
     .name;
