@@ -9,7 +9,7 @@
     var wizardData = $stateParams.wizard.state().data;
     vm.title = wizardData.title;
 
-    $scope.telephonyInfo = {};
+    vm.telephonyInfo = {};
     vm.isMapped = false;
     vm.isMapInProgress = false;
     vm.isResetInProgress = false;
@@ -23,16 +23,16 @@
     vm.isDisabled = true;
 
     vm.loadLocations = loadLocations;
-    $scope.locationOptions = [];
-    $scope.selectedLocation = '';
-    $scope.locationUuid = '';
+    vm.locationOptions = [];
+    vm.selectedLocation = '';
+    vm.locationUuid = '';
 
-    $scope.returnInternalNumberlist = CommonLineService.returnInternalNumberList;
-    $scope.returnExternalNumberList = CommonLineService.returnExternalNumberList;
-    $scope.getInternalNumberPool = CommonLineService.getInternalNumberPool;
-    $scope.getExternalNumberPool = CommonLineService.getExternalNumberPool;
-    $scope.syncGridDidDn = syncGridDidDn;
-    $scope.checkDnOverlapsSteeringDigit = CommonLineService.checkDnOverlapsSteeringDigit;
+    vm.returnInternalNumberlist = CommonLineService.returnInternalNumberList;
+    vm.returnExternalNumberList = CommonLineService.returnExternalNumberList;
+    vm.getInternalNumberPool = CommonLineService.getInternalNumberPool;
+    vm.getExternalNumberPool = CommonLineService.getExternalNumberPool;
+    vm.syncGridDidDn = syncGridDidDn;
+    vm.checkDnOverlapsSteeringDigit = CommonLineService.checkDnOverlapsSteeringDigit;
 
     function loadLocations() {
       return FeatureToggleService.supports(FeatureToggleService.features.hI1484)
@@ -40,18 +40,18 @@
           if (supported) {
             return LocationsService.getLocationList()
               .then(function (locationOptions) {
-                $scope.locationOptions = locationOptions;
+                vm.locationOptions = locationOptions;
                 _.forEach(locationOptions, function (result) {
                   if (result.defaultLocation == true) {
                     _.forEach(vm.addDnGridOptions.data, function (data) {
                       data.selectedLocation = { uuid: result.uuid, name: result.name };
-                      $scope.selectedLocation = data.selectedLocation.name;
-                      $scope.locationUuid = data.selectedLocation.uuid;
+                      vm.selectedLocation = data.selectedLocation.name;
+                      vm.locationUuid = data.selectedLocation.uuid;
                     });
                   }
                 });
 
-                if ($scope.locationOptions.length > 1) {
+                if (vm.locationOptions.length > 1) {
                   vm.locationColumn = {
                     field: 'location',
                     displayName: $translate.instant('usersPreview.location'),
@@ -61,7 +61,7 @@
                 }
               })
               .then(function () {
-                return CommonLineService.loadLocationInternalNumberPool(null, $scope.locationUuid);
+                return CommonLineService.loadLocationInternalNumberPool(null, vm.locationUuid);
               });
           } else {
             return CommonLineService.loadInternalNumberPool();
@@ -120,8 +120,8 @@
     vm.getSelectedNumbers = function () {
       var entity = vm.addDnGridOptions.data[0];
       if (FeatureToggleService.supports(FeatureToggleService.features.hI1484)) {
-        if (entity.selectedLocation && $scope.locationOptions.length > 1) {
-          $scope.locationUuid = entity.selectedLocation.uuid;
+        if (entity.selectedLocation && vm.locationOptions.length > 1) {
+          vm.locationUuid = entity.selectedLocation.uuid;
         }
       }
       var directoryNumber;
@@ -135,7 +135,7 @@
       return {
         directoryNumber: directoryNumber,
         externalNumber: externalNumber,
-        locationUuid: $scope.locationUuid,
+        locationUuid: vm.locationUuid,
       };
     };
 
@@ -147,7 +147,7 @@
       $q.all([CommonLineService.loadExternalNumberPool(), CommonLineService.loadPrimarySiteInfo(), toggleShowExtensions(), loadLocations()])
         .finally(function () {
           $scope.externalNumber = _.head(CommonLineService.getExternalNumberPool());
-          $scope.telephonyInfo = CommonLineService.getTelephonyInfo();
+          vm.telephonyInfo = CommonLineService.getTelephonyInfo();
           vm.isDisabled = !!(CommonLineService.getInternalNumberPool().length === 0 || CommonLineService.getExternalNumberPool().length === 0);
 
           if (vm.showExtensions === true) {
@@ -266,7 +266,7 @@
       'placeholder="placeholder" input-placeholder="inputPlaceholder" ' +
       'on-change-fn="grid.appScope.syncGridDidDn(row.entity, \'internalNumber\')"' +
       'labelfield="pattern" valuefield="uuid" required="true" filter="true"' +
-      ' is-warn="{{grid.appScope.checkDnOverlapsSteeringDigit(row.entity)}}" warn-msg="{{\'usersPage.steeringDigitOverlapWarning\' | translate: { steeringDigitInTranslation: telephonyInfo.steeringDigit } }}" > </cs-select></div>' +
+      ' is-warn="{{grid.appScope.checkDnOverlapsSteeringDigit(row.entity)}}" warn-msg="{{\'usersPage.steeringDigitOverlapWarning\' | translate: { steeringDigitInTranslation: grid.appScope.telephonyInfo.steeringDigit } }}" > </cs-select></div>' +
       '<div ng-show="row.entity.assignedDn === undefined"> ' +
       '<cs-select name="noInternalNumber" ' +
       'ng-model="grid.appScope.noExtInPool" labelfield="grid.appScope.noExtInPool" is-disabled="true" > </cs-select>' +
@@ -298,6 +298,7 @@
       data: [{
         name: wizardData.account.name,
       }],
+      appScopeProvider: vm,
       enableSorting: false,
       rowHeight: 45,
       columnDefs: [{
