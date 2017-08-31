@@ -58,6 +58,10 @@ hs-cluster-card {
       padding-right: 1rem;
     }
 
+    cs-statusindicator {
+      padding-right: 4px;
+    }
+
     .cluster-list-timezone {
       @include text-overflow();
     }
