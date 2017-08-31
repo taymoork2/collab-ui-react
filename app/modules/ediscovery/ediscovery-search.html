@@ -22,14 +22,16 @@
               </cs-select>
             </div>
             <div class="col-md-6">
-              <div class="cs-input-group search-box" ng-class="{'error': ediscoverySearchCtrl.limitError}">
-                <form name="searchForm" class="input-validation" novalidate>
-                  <input required class="cs-input" type="text" ng-model="ediscoverySearchCtrl.searchModel" autofocus="true"
+              <div class="cs-input-group search-box" ng-class="{'error': ediscoverySearchCtrl.limitErrorMessage || (sForm.sInput.$invalid && sForm.sInput.$touched)}">
+                <form name="sForm" class="input-validation" novalidate>
+                  <input required class="cs-input" type="text" name="sInput" ng-model="ediscoverySearchCtrl.searchModel" autofocus="true"
                    ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)" placeholder="{{ediscoverySearchCtrl.searchPlaceholder}}" >
-                   <p ng-if="!ediscoverySearchCtrl.limitError" class="cs-input__help-text search-spacing">{{ediscoverySearchCtrl.searchHelpText}}</p>
-                  <div class="cs-input__messages" role="alert">
-                    <div ng-if="ediscoverySearchCtrl.limitErrorMessage" class="search-error-msg">{{ediscoverySearchCtrl.limitErrorMessage}}
+                   <p ng-if="!ediscoverySearchCtrl.limitErrorMessage" class="cs-input__help-text search-spacing">{{ediscoverySearchCtrl.searchHelpText}}</p>
+                  <div ng-class="{'search-req-msg': !ediscoverySearchCtrl.limitErrorMessage}" class="cs-input__messages" role="alert">
+                    <div ng-messages="sForm.sInput.$error" class="search-limit-msg">
+                      <span ng-message="required" translate="ediscovery.searchErrors.required"></span>
                     </div>
+                    <span ng-if="ediscoverySearchCtrl.limitErrorMessage" class="search-limit-msg">{{ediscoverySearchCtrl.limitErrorMessage}}</span>
                   </div>
                 </form>
               </div>
