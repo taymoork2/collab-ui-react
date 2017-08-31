@@ -104,6 +104,16 @@ class CallLocationCtrl implements ng.IComponentController {
     this.checkForChanges();
   }
 
+  public onTimeFormatChanged(timeFormat: string): void {
+    this.callLocationSettingsData.location.timeFormat = timeFormat;
+    this.checkForChanges();
+  }
+
+  public onDateFormatChanged(dateFormat: string): void {
+    this.callLocationSettingsData.location.dateFormat = dateFormat;
+    this.checkForChanges();
+  }
+
   public onPreferredLanguageChanged(preferredLanguage: string): void {
     this.callLocationSettingsData.location.preferredLanguage = preferredLanguage;
     this.checkForChanges();
