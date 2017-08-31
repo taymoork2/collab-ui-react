@@ -41,7 +41,7 @@
             elementHtml = elementHtml.replace('ReadAs', vm.readAsSelection.value);
             var myId = id + Date.now();
             //replacing element-id
-            elementHtml = elementHtml.replace('Id', myId);
+            elementHtml = elementHtml.replace('elementId', myId);
             //replacing id
             elementHtml = elementHtml.replace('Id', myId);
             dispatchElementInsertion(id, elementHtml, range);
