@@ -41,6 +41,23 @@
     "userPrefsSaved": "User Preferences Updated",
     "initError": "There was an error refreshing page: ${error}"
   },
+  "sidePanelBreadcrumb": {
+    "aware": "Aware",
+    "awareStatusHistory": "Aware Status History",
+    "call": "Call",
+    "connect": "Connect",
+    "deviceConfiguration": "Device Configuration",
+    "fields": "Fields",
+    "meeting": "Meeting",
+    "overview": "Overview",
+    "sessionEnablement": "Session Enablement",
+    "statusHistory": "Status History",
+    "userOverViewMessage": "Message",
+    "voiceMail": "Voice Mail",
+    "privileges": "Privileges",
+    "care": "Care",
+    "node": "Node"
+  },
   "usersPage": {
     "assignServices": "Assign Services",
     "assignDnAndDirectLines": "Assign Numbers",
