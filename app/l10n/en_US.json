@@ -6873,6 +6873,18 @@
           "Label": "Users are offered tasks based on their availability and capacity."
         }
       },
+      "chatCount": {
+        "sectionInfoTitle" : "Chats",
+        "sectionInfoDescription": "Set this option for all users in your organization.",
+        "sectionContentTitle" : "Number of concurrent Chats",
+        "sectionContentDescription" : "Configure the number of concurrent chats allowed for a user"
+      },
+      "video": {
+        "sectionInfoTitle" : "Video",
+        "sectionInfoDescription": "Set this option for all users in your organization.",
+        "sectionContentTitle" : "Enable Video Call from Chat",
+        "sectionContentDescription" : "Specify if users can initiate a video call during a chat."
+      },
       "saveModal": {
         "Header": "Care Settings",
         "BodyMsg1": "Are you sure you want to change your care settings?",
