@@ -3673,6 +3673,7 @@
     "webexProvisioningError": "An error occured while provisioning.",
     "webexProvisioningSuccess": "Your services are being provisioned.",
     "hasTransferCode": "I have a transfer code to migrate an existing WebEx site.",
+    "dontHaveTransferCode": "Don't have a transfer code?",
     "transferCodeInvalidError": "The transfer code and site name do not match. Please enter a valid site name and transfer code combination.",
     "haveExistingWebExSite": "Do you have an existing WebEx site?",
     "existingWebExSiteDescription": "If you have an existing WebEx site that you want to migrate you can enter a transfer code. Do you have a transfer code?",
@@ -8031,7 +8032,8 @@
       "narrow-title": "Select a Customer",
       "narrow-info": "To filter a search to one customer only, start at the main search tool page and search for the customer by display name. Then click <i class='icon icon-search'></i> in the customer's search result card.",
       "referTo": "Refer to",
-      "search-criterias-orders": "<strong>Orders</strong>: Order number must start with at least 8 digits or a 'ssw' prefix. An exact match will be searched."
+      "search-criterias-orders": "<strong>Orders</strong>: Order number must start with at least 8 digits or a 'ssw' prefix. An exact match will be searched.",
+      "webExSiteTooltip": "This is the web address that you use to reach your meeting room. The address must end in \".webex.com\"."
     },
     "history": {
       "clear": "Clear History",

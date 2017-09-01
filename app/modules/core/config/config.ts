@@ -52,6 +52,7 @@ export class Config {
   public readonly ssoUrl = 'https://help.webex.com/community/cisco-cloud-collab-mgmt/content?filterID=contentstatus[published]~category[security]';
   public readonly rolesUrl = 'https://help.webex.com/community/cisco-cloud-collab-mgmt/content?filterID=contentstatus[published]~category[getting-started]';
   public readonly supportUrl = 'https://help.webex.com/community/cisco-cloud-collab-mgmt';
+  public readonly webexSiteMigrationUrl = 'http://try.webex.com/mk/get/ciscowebexmigration';
   public readonly partnerSupportUrl = 'https://help.webex.com/community/cisco-cloud-collab-mgmt-partners';
 
   public readonly usersperpage = 100;
