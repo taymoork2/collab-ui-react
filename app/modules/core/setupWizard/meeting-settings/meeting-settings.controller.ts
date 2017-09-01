@@ -627,7 +627,7 @@ export class MeetingSettingsCtrl {
     const webexSiteDetailsList: WebExSite[] = [];
     const webexLicensesPayload: IWebexLicencesPayload = {
       provisionOrder: true,
-      sendCustomerEmail: true,
+      sendCustomerEmail: false,
       serviceOrderUUID: this.SetupWizardService.getActingSubscriptionServiceOrderUUID(),
     };
 
