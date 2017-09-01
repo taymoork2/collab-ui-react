@@ -78,6 +78,7 @@ class DeviceList implements ng.IComponentController {
           priority: 1,
         },
         sortCellFiltered: true,
+        cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.expandDevice(row.entity)" cell-value="row.entity.displayName"></cs-grid-cell>',
       }, {
         field: 'connectionStatus',
         displayName: this.$translate.instant('spacesPage.statusHeader'),
