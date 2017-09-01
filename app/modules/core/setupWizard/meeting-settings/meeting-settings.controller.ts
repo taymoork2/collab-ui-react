@@ -57,6 +57,13 @@ class ExistingWebexTrialSite extends WebExSite {
   }
 }
 
+interface ICCASPData {
+  partnerOptions: string[];
+  partnerNameSelected: string | null;
+  subscriptionId: string;
+  isError: boolean;
+}
+
 export class MeetingSettingsCtrl {
   public siteModel: IWebExSite = {
     siteUrl: '',
@@ -87,7 +94,7 @@ export class MeetingSettingsCtrl {
   public distributedLicensesArray: IWebExSite[][];
   public centerDetails = this.getWebExMeetingsLicenseTypeDetails();
   public tspPartnerOptions = [];
-  public audioPartnerName = null;
+  public audioPartnerName: string | null = null;
   public dropdownPlaceholder = this.$translate.instant('common.select');
   public licenseDistributionErrors = {
     required: this.$translate.instant('firstTimeWizard.required'),
@@ -99,7 +106,7 @@ export class MeetingSettingsCtrl {
   public transferSiteUrl = '';
   public transferSiteCode = '';
   private nextButtonDisabledStatus = false;
-  public ccasp = {
+  public ccasp: ICCASPData = {
     partnerOptions: [],
     partnerNameSelected: null,
     subscriptionId: '',
@@ -139,16 +146,26 @@ export class MeetingSettingsCtrl {
       this.constructDistributedSitesArray();
       this.updateDistributedSitesArray(sitesLicensesData);
     }
-
-    if (this.SetupWizardService.hasTSPAudioPackage()) {
-      this.populateTSPPartnerOptions();
+    // if there is already and active subscription with TSP or CCASP dont display the page - just populate the data.
+    if (this.SetupWizardService.hasPendingTSPAudioPackage()) {
+      const activeTSPAudioPackage = this.SetupWizardService.getActiveTSPAudioPackage();
+      if (activeTSPAudioPackage === undefined) {
+        this.populateTSPPartnerOptions();
+      } else {
+        this.audioPartnerName = activeTSPAudioPackage.tspPartnerName;
+      }
+    }
+    if (this.SetupWizardService.hasPendingCCASPPackage()) {
+      const activeCCASPPackage = this.SetupWizardService.getActiveCCASPPackage();
+      if (activeCCASPPackage === undefined) {
+        this.populateCCASPPartnerOptions();
+      } else {
+        this.audioPartnerName = activeCCASPPackage.ccaspPartnerName;
+        this.ccasp.subscriptionId = activeCCASPPackage.ccaspSubscriptionId;
+      }
     }
 
     this.hasTrialSites = this.SetupWizardService.hasWebexMeetingTrial();
-
-    if (this.SetupWizardService.hasCCASPPackage()) {
-      this.populateCCASPPartnerOptions();
-    }
 
     const regex = new RegExp(MeetingSettingsCtrl.showUserMgmntEmailPattern);
     this.isShowUserManagement = regex.test(this.Authinfo.getUserName());
@@ -283,20 +300,6 @@ export class MeetingSettingsCtrl {
     });
   }
 
-  private updateSitesAudioPackageDisplay() {
-    const audioPackage = this.SetupWizardService.getPendingAudioLicenses();
-    if (audioPackage && audioPackage[0]) {
-      let audioPackageDisplay = 'subscriptions.licenseTypes.' + audioPackage[0].offerName;
-      audioPackageDisplay = this.$translate.instant(audioPackageDisplay);
-      if (this.audioPartnerName) {
-        audioPackageDisplay += this.$translate.instant('firstTimeWizard.providedBy') + this.audioPartnerName;
-      }
-      _.forEach(this.sitesArray, (site) => {
-        site.audioPackageDisplay = audioPackageDisplay;
-      });
-    }
-  }
-
   private findTimezoneObject(timezoneId) {
     return _.find(this.timeZoneOptions, { timeZoneId: timezoneId });
   }
@@ -427,7 +430,6 @@ export class MeetingSettingsCtrl {
         const invalidData = this.licenseDistributionForm.$invalid || licensesRemaining !== 0 || sitesWithoutLicenses;
         if (!invalidData) {
           this.updateSitesLicenseCount();
-          this.updateSitesAudioPackageDisplay();
         }
         _.set(this.$scope.wizard, 'isNextDisabled', invalidData);
         break;
@@ -460,9 +462,6 @@ export class MeetingSettingsCtrl {
 
   public setNextDisableStatus(status) {
     _.set(this.$scope.wizard, 'isNextDisabled', status);
-    if (this.audioPartnerName) {
-      this.updateSitesAudioPackageDisplay();
-    }
   }
 
   public addOrRemoveExistingWebExSite(site) {

@@ -1,5 +1,5 @@
 import { Config } from 'modules/core/config/config';
-import { IPendingOrderSubscription, IPendingLicense, IConferenceService } from './meeting-settings/meeting-settings.interface';
+import { IPendingOrderSubscription, IPendingLicense, IConferenceService, ICCASPLicense, ITSPLicense } from './meeting-settings/meeting-settings.interface';
 import { HuronCustomerService } from 'modules/huron/customer';
 import { HuronCompassService } from 'modules/huron/compass';
 
@@ -11,6 +11,7 @@ interface IPendingSubscription {
   pendingServiceOrderUUID: string;
   subscriptionId: string;
 }
+
 interface IOption {
   label: string;
   value: string;
@@ -187,12 +188,20 @@ export class SetupWizardService {
     return _.filter(this.getActingSubscriptionPendingLicenses(), (license: IPendingLicense) => license.status === this.Config.licenseStatus.INITIALIZED && (license.offerName === this.Config.offerCodes.CDC || license.offerName === this.Config.offerCodes.CVC));
   }
 
-  public hasTSPAudioPackage() {
+  public hasPendingTSPAudioPackage() {
     return _.some(this.getActingSubscriptionPendingLicenses(), { offerName: this.Config.offerCodes.TSP });
   }
 
-  public hasCCASPPackage() {
+  public hasPendingCCASPPackage() {
     return _.some(this.getActingSubscriptionPendingLicenses(), { offerName: this.Config.offerCodes.CCASP });
+  }
+
+  public getActiveTSPAudioPackage() {
+    return <ITSPLicense>_.find(this.getActingSubscriptionLicenses(), { offerName: this.Config.offerCodes.TSP });
+  }
+
+  public getActiveCCASPPackage() {
+    return <ICCASPLicense>_.find(this.getActingSubscriptionLicenses(), { offerName: this.Config.offerCodes.CCASP });
   }
 
   private getPendingAuthinfoSubscriptions() {

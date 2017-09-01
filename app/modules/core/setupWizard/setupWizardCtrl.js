@@ -183,10 +183,10 @@ require('./_setup-wizard.scss');
       };
 
       if (shouldShowMeetingsTab) {
-        if (!SetupWizardService.hasTSPAudioPackage()) {
+        if (!SetupWizardService.hasPendingTSPAudioPackage() || SetupWizardService.getActiveTSPAudioPackage() !== undefined) {
           _.remove(meetingTab.steps, { name: 'setPartnerAudio' });
         }
-        if (!SetupWizardService.hasCCASPPackage()) {
+        if (!SetupWizardService.hasPendingCCASPPackage() || SetupWizardService.getActiveCCASPPackage() !== undefined) {
           _.remove(meetingTab.steps, { name: 'setCCASP' });
         }
         tabs.splice(1, 0, meetingTab);

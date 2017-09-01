@@ -24,7 +24,8 @@ describe('Controller: MeetingSettingsCtrl', () => {
     spyOn(this.SetupWizardService, 'getActingSubscriptionLicenses').and.returnValue(actingSubscription[0].licenses);
     spyOn(this.Authinfo, 'getConferenceServices').and.returnValue(conferenceServices);
     spyOn(this.SetupWizardService, 'validateCCASPPartner').and.returnValue(this.$q.resolve(true));
-    spyOn(this.SetupWizardService, 'hasCCASPPackage').and.returnValue(true);
+    spyOn(this.SetupWizardService, 'hasPendingCCASPPackage').and.returnValue(true);
+    spyOn(this.SetupWizardService, 'getActiveCCASPPackage').and.returnValue(undefined);
     spyOn(this.SetupWizardService, 'getCCASPPartners').and.returnValue(this.$q.resolve(['partner1', 'partner2']));
     spyOn(this.SetupWizardService, 'validateTransferCode').and.returnValue(this.$q.resolve(transferCodeResponse));
     spyOn(this.Authinfo, 'getUserName').and.returnValue('ordersimp-somedude@mailinator.com');
@@ -168,7 +169,7 @@ describe('Controller: MeetingSettingsCtrl', () => {
   });
   describe('when licenses include a TSP Audio package', function () {
     beforeEach(function () {
-      spyOn(this.SetupWizardService, 'hasTSPAudioPackage').and.returnValue(true);
+      spyOn(this.SetupWizardService, 'hasPendingTSPAudioPackage').and.returnValue(true);
       spyOn(this.SetupWizardService, 'getTSPPartners').and.returnValue(this.$q.resolve(['abc', 'def']));
       initController.apply(this);
     });
@@ -233,7 +234,7 @@ describe('Controller: MeetingSettingsCtrl', () => {
     });
   });
 
-  describe('when licenses include CCASP', function () {
+  describe('when pending licenses include CCASP and there are no CCASP active licenses', function () {
     beforeEach(function () {
       initController.apply(this);
       spyOn(this.controller, 'setNextDisableStatus').and.callThrough();
@@ -262,4 +263,28 @@ describe('Controller: MeetingSettingsCtrl', () => {
       this.controller.ccasp.isError = true;
     });
   });
+
+  describe('pending when licenses include CCASP and there is a CCASP active license', function () {
+    beforeEach(function () {
+      const ccaspActivePackcage = {
+        licenseId: 'CCASP_8c8098f4-e324-45af-8abc-ff75594090c8_testccanew002-ittest.dmz.webex.com',
+        offerName: 'CCASP',
+        licenseType: 'AUDIO',
+        status: 'ACTIVE',
+        ccaspPartnerName: 'West IP Communications',
+        ccaspSubscriptionId: 'Sub1154854',
+      };
+      this.SetupWizardService.getActiveCCASPPackage.and.returnValue(ccaspActivePackcage);
+      initController.apply(this);
+      spyOn(this.controller, 'setNextDisableStatus').and.callThrough();
+    });
+    it('should not get the list of ccaspPartners ', function () {
+      expect(this.SetupWizardService.getCCASPPartners).not.toHaveBeenCalled();
+    });
+    it('should populate partner subscription data from active subscription', function () {
+      expect(this.controller.audioPartnerName).toEqual('West IP Communications');
+      expect(this.controller.ccasp.subscriptionId).toEqual('Sub1154854');
+    });
+  });
+
 });

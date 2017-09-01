@@ -93,6 +93,15 @@ export interface IPendingLicense {
   status: string;
 }
 
+export interface ICCASPLicense extends IPendingLicense {
+  ccaspPartnerName: string;
+  ccaspSubscriptionId: string;
+}
+
+export interface ITSPLicense extends IPendingLicense {
+  tspPartnerName: string;
+}
+
 export interface ICCASPInfo {
   partnerName: string;
   subscriptionId: string;
