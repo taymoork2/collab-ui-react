@@ -10,5 +10,5 @@ if file_has_changed "yarn.lock"; then
 
 Re-running \`yarn\` is advised.
 _EOF
-    diff_changed_file "yarn.lock"
+
 fi
