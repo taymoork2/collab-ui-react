@@ -7,7 +7,7 @@
 
   /* @ngInject */
   function AABuilderMainCtrl($rootScope, $modalStack, $scope, $translate, $state, $stateParams, $q, AAUiModelService, AAMediaUploadService,
-    AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantCeService,
+    AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantCeService, AutoAttendantLocationService,
     AAValidationService, AANumberAssignmentService, AANotificationService, Authinfo, AACommonService, AAUiScheduleService, AACalendarService,
     AATrackChangeService, AADependencyService, ServiceSetup, Analytics, AAMetricNameService, FeatureToggleService) {
     var vm = this;
@@ -529,6 +529,12 @@
 
     function getSystemTimeZone() {
       vm.ui.systemTimeZone = DEFAULT_TZ;
+      if (AACommonService.isMultiSiteEnabled()) {
+        return AutoAttendantLocationService.getDefaultLocation().then(function (locationInfo) {
+          return { id: locationInfo.timeZone, label: locationInfo.timeZone };
+        });
+      }
+      // otherwise
       return ServiceSetup.listSites().then(function () {
         if (ServiceSetup.sites.length !== 0) {
           return ServiceSetup.getSite(ServiceSetup.sites[0].uuid).then(function (site) {
