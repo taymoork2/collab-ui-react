@@ -150,6 +150,8 @@ export class MeetingSettingsCtrl {
     this.clearError();
   }
 
+  public migrateSiteUrl = this.Config.webexSiteMigrationUrl;
+
   private pushProvisioningCallIntoQueue(): void {
     const webexLicenses: IWebexLicencesPayload = this.constructWebexLicensesPayload();
     this.TrialWebexService.setProvisioningWebexSitesData(webexLicenses, this.SetupWizardService.getInternalSubscriptionId());
