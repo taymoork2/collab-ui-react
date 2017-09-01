@@ -14,6 +14,13 @@ enum CustomHttpStatus {
   UNKNOWN = 0,
 }
 
+enum XhrStatus {
+  COMPLETE = 'complete',
+  ERROR = 'error',
+  TIMEOUT = 'timeout',
+  ABORT = 'abort',
+}
+
 export class Notification {
   public readonly type = NotificationType;
   private static readonly MESSAGES = 'messages';
@@ -69,7 +76,7 @@ export class Notification {
   }
 
   private notifyHttpErrorResponse(errorMsg: string, response: ng.IHttpResponse<any>): void {
-    if (!this.isCancelledResponse(response)) {
+    if (!this.isAbortResponse(response)) {
       const headers = _.get(response, 'headers');
       this.popToast({
         notifications: errorMsg,
@@ -79,6 +86,7 @@ export class Notification {
         requestMethod: _.get(response, 'config.method'),
         requestUrl: _.get(response, 'config.url'),
         trackingId: _.isFunction(headers) ? headers('TrackingID') : undefined,
+        xhrStatus: _.get(response, 'xhrStatus'),
       });
     }
   }
@@ -101,8 +109,9 @@ export class Notification {
     requestMethod?: string,
     requestUrl?: string,
     trackingId?: string,
+    xhrStatus?: string,
   }): void {
-    const { notifications, type, title, allowHtml, httpStatus, requestMethod, requestUrl, trackingId } = options;
+    const { notifications, type, title, allowHtml, httpStatus, requestMethod, requestUrl, trackingId, xhrStatus } = options;
     if (this.preventToasters) {
       this.$log.warn('Deliberately prevented a notification:', notifications);
       return;
@@ -123,6 +132,7 @@ export class Notification {
     this.MetricsService.trackOperationalMetric(OperationalKey.NOTIFICATION, {
       action_type: notificationType,
       http_status: _.isUndefined(httpStatus) ? undefined : _.toString(httpStatus),
+      state: xhrStatus,
     });
 
     if (notificationType === NotificationType.ERROR) {
@@ -134,6 +144,7 @@ export class Notification {
         requestMethod,
         requestUrl,
         trackingId,
+        xhrStatus,
       });
     }
 
@@ -156,11 +167,13 @@ export class Notification {
 
   private addResponseMessage(errorMsg: string, response: ng.IHttpResponse<any>, useResponseData: boolean = false): string {
     const status = _.get<number>(response, 'status');
-    if (this.isCancelledResponse(response)) {
+    if (this.isAbortResponse(response)) {
       errorMsg = this.addTranslateKeyMessage(errorMsg, 'errors.statusCancelled');
-    } else if (this.isOfflineStatus(status)) {
+    } else if (this.isOfflineStatus(response)) {
       errorMsg = this.addTranslateKeyMessage(errorMsg, 'errors.statusOffline');
-    } else if (this.isRejectedStatus(status)) {
+    } else if (this.isTimeoutResponse(response)) {
+      errorMsg = this.addTranslateKeyMessage(errorMsg, 'errors.statusTimeout');
+    } else if (this.isErrorResponse(response)) {
       errorMsg = this.addTranslateKeyMessage(errorMsg, 'errors.statusRejected');
     } else if (this.isNotFoundStatus(status)) {
       errorMsg = this.addTranslateKeyMessage(errorMsg, 'errors.status404');
@@ -179,15 +192,20 @@ export class Notification {
     return `${this.addTrailingPeriod(message)} ${this.$translate.instant(translateKey)}`;
   }
 
-  private isCancelledResponse(response: ng.IHttpResponse<any>): boolean {
-    return this.isRejectedStatus(_.get<number>(response, 'status')) && _.get(response, 'config.timeout.$$state.status') > 0;
-  }
-  private isOfflineStatus(status: number): boolean {
-    return this.isNetworkOffline && this.isRejectedStatus(status);
+  private isAbortResponse(response: ng.IHttpResponse<any>): boolean {
+    return _.get(response, 'xhrStatus') === XhrStatus.ABORT;
   }
 
-  private isRejectedStatus(status: number): boolean {
-    return status === CustomHttpStatus.REJECTED;
+  private isTimeoutResponse(response: ng.IHttpResponse<any>): boolean {
+    return _.get(response, 'xhrStatus') === XhrStatus.TIMEOUT;
+  }
+
+  private isOfflineStatus(response: ng.IHttpResponse<any>): boolean {
+    return this.isNetworkOffline && this.isErrorResponse(response);
+  }
+
+  private isErrorResponse(response: ng.IHttpResponse<any>): boolean {
+    return _.get(response, 'xhrStatus') === XhrStatus.ERROR;
   }
 
   private isNotFoundStatus(status: number): boolean {
