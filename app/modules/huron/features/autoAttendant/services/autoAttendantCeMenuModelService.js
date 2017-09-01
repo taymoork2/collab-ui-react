@@ -595,6 +595,7 @@
             if (announcements && announcements.length > 0 && !_.isUndefined(announcements[0].play)) {
               action.url = decodeUtf8(announcements[0].play.url);
               action.deleteUrl = decodeUtf8(announcements[0].play.deleteUrl);
+              action.value = decodeUtf8(announcements[0].play.url);
             } else {
               if (announcements.length > 0 && _.has(announcements[0], 'say')) {
                 //second check is needed to maintain the upload in case of no file uploaded but upload file is selected
@@ -846,7 +847,7 @@
               htmlModel: '',
             }];
           } else {
-            action = new Action(iaType, initialAnnouncementObject.value);
+            action = new Action(iaType, initialAnnouncementObject.deleteUrl);
           }
         } else {
           action = new Action(iaType, '');
@@ -930,7 +931,7 @@
               htmlModel: '',
             }];
           } else {
-            action = new Action(paType, periodicAnnouncementObject.value);
+            action = new Action(paType, periodicAnnouncementObject.deleteUrl);
           }
         } else {
           action = new Action(paType, '');

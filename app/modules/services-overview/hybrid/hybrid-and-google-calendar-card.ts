@@ -112,7 +112,7 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
     const serviceId = 'squared-fusion-gcal';
     if (this.display) {
       // We only get the status for Hybrid Calendar that way
-      this.CloudConnectorService.getService()
+      this.CloudConnectorService.getService('squared-fusion-gcal')
         .then(servicesStatus => {
           const servicesStatuses = [servicesStatus] as IServiceStatusWithSetup[];
           // .googleActive conveys the same meaning as .active for Hybrid Calendar

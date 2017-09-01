@@ -12,6 +12,7 @@ class ExtensionRangeCtrl implements ng.IComponentController {
   public messages: any = {};
   public DEFAULT_START_RANGE: string = '500';
   public DEFAULT_END_RANGE: string = '599';
+  public addDisabled: boolean = false;
 
   /* @ngInject */
   constructor(
@@ -94,7 +95,13 @@ class ExtensionRangeCtrl implements ng.IComponentController {
 
   public isDisabled(numberRange: InternalNumberRange): boolean {
     if (this.isCreateLocation) {
-      return !!this.isRoutingPrefixValid && !_.isEmpty(numberRange.uuid);
+      if (this.isRoutingPrefixValid) {
+        this.addDisabled = false;
+        return !_.isEmpty(numberRange.uuid);
+      } else {
+        this.addDisabled = true;
+        return true;
+      }
     } else {
       return !_.isEmpty(numberRange.uuid);
     }

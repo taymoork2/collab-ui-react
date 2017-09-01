@@ -57,6 +57,9 @@ describe('Care virtualassistant admin setup virtual assistant', function () {
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.apiaiClientAccessToken);
 
     utils.sendKeys(careVirtualAssistantTemplateSetupPage.apiaiClientAccessToken, APIAITestClientToken);
+
+    utils.click(careVirtualAssistantTemplateSetupPage.validateBtn);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.checkMarkIcon);
   });
 
   it('Create: Move to Naming Modal', function () {
@@ -115,6 +118,9 @@ describe('Care virtualassistant admin setup virtual assistant', function () {
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpLeftBtn);
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.apiaiClientAccessToken);
+
+    utils.click(careVirtualAssistantTemplateSetupPage.validateBtn);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.checkMarkIcon);
   });
 
   it('Edit: Move to Naming Modal; rename', function () {

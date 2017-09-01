@@ -109,7 +109,6 @@ export class Config {
     care_digital: 'cloud-contact-center-digital',
     care_inbound_voice: 'cloud-contact-center-inbound-voice',
     context: 'contact-center-context',
-    fusion_google_cal: 'squared-fusion-gcal',
     fusion_khaos: 'squared-fusion-khaos',
     message: 'squared-room-moderation',
     imp: 'spark-hybrid-impinterop',
@@ -354,6 +353,7 @@ export class Config {
       'callpickupedit',
       'device-overview',
       'devices',
+      'devices-redux',
       'didadd',
       'huntgroups',
       'huronCallPark',
@@ -422,6 +422,7 @@ export class Config {
       'expressway-cluster',
       'hybrid-services-connector-sidepanel',
       'services-overview',
+      'office-365-service',
     ],
     'squared-fusion-gcal': [
       'add-resource',

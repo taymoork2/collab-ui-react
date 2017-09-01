@@ -6,27 +6,29 @@ export class HybridServicesUtilsService {
     'c_mgmt',
     'c_cal',
     'c_ucmc',
+    'cs_mgmt',
+    'cs_context',
     'c_imp',
     'mf_mgmt',
     'hds_app',
-    'cs_mgmt',
-    'cs_context',
     'ucm_mgmt',
     'c_serab',
   ];
   private static readonly orderedServices: HybridServiceId[] = [
     'squared-fusion-mgmt',
     'squared-fusion-cal',
+    'squared-fusion-o365',
     'squared-fusion-gcal',
     'squared-fusion-uc',
     'squared-fusion-ec',
+    'contact-center-context',
     'spark-hybrid-impinterop',
     'ept',
     'squared-fusion-media',
     'spark-hybrid-datasecurity',
-    'contact-center-context',
     'squared-fusion-khaos',
     'squared-fusion-servicability',
+    'voicemail',
   ];
 
   /* @ngInject */
@@ -101,11 +103,11 @@ export class HybridServicesUtilsService {
    * @param serviceType1 service id
    * @param serviceType2 service id
    */
-  public hybridServicesComparator = (serviceType1: HybridServiceId, serviceType2: HybridServiceId): -1 | 0 | 1 => {
-    if (serviceType1 === serviceType2) {
+  public hybridServicesComparator = (serviceType1: { value: HybridServiceId }, serviceType2: { value: HybridServiceId }): -1 | 0 | 1 => {
+    if (serviceType1.value === serviceType2.value) {
       return 0;
     }
-    if (_.indexOf(HybridServicesUtilsService.orderedServices, serviceType1) < _.indexOf(HybridServicesUtilsService.orderedServices, serviceType2)) {
+    if (_.indexOf(HybridServicesUtilsService.orderedServices, serviceType1.value) < _.indexOf(HybridServicesUtilsService.orderedServices, serviceType2.value)) {
       return -1;
     } else {
       return 1;
@@ -118,11 +120,11 @@ export class HybridServicesUtilsService {
    * @param connectorType1 connector type
    * @param connectorType2 connector type
    */
-  public hybridConnectorsComparator(connectorType1: ConnectorType, connectorType2: ConnectorType): -1 | 0 | 1 {
-    if (connectorType1 === connectorType2) {
+  public hybridConnectorsComparator(connectorType1: { value: ConnectorType }, connectorType2: { value: ConnectorType }): -1 | 0 | 1 {
+    if (connectorType1.value === connectorType2.value) {
       return 0;
     }
-    if (_.indexOf(HybridServicesUtilsService.orderedConnectors, connectorType1) < _.indexOf(HybridServicesUtilsService.orderedConnectors, connectorType2)) {
+    if (_.indexOf(HybridServicesUtilsService.orderedConnectors, connectorType1.value) < _.indexOf(HybridServicesUtilsService.orderedConnectors, connectorType2.value)) {
       return -1;
     } else {
       return 1;

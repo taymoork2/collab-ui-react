@@ -40,6 +40,7 @@ export class CallSettingsService {
   }
 
   public get(): ng.IPromise<CallSettingsData> {
+    this.errors = [];
     const callSettingsData = new CallSettingsData();
     return this.$q.all({
       customer: this.getCustomer().then(customer => callSettingsData.customer = customer),
@@ -52,15 +53,18 @@ export class CallSettingsService {
     .then(() => {
       this.callSettingsDataCopy = this.cloneSettingsData(callSettingsData);
       return callSettingsData;
-    });
+    })
+    .catch(() => this.rejectAndNotifyPossibleErrors());
   }
 
   public save(data: CallSettingsData): ng.IPromise<CallSettingsData> {
+    this.errors = [];
     return this.saveCustomerServicePackage(data.customer, data.customerVoice)
       .then(() => this.updateAvrilCustomer(data.avrilCustomer, data.customer))
       .then(() => this.updateLocation(data.defaultLocation))
       .then(() => this.saveCompanyCallerId(data.companyCallerId))
-      .then(() => this.get());
+      .then(() => this.get())
+      .catch(() => this.rejectAndNotifyPossibleErrors());
   }
 
   private getCustomer(): ng.IPromise<CustomerSettings> {
@@ -85,7 +89,7 @@ export class CallSettingsService {
         });
       }).catch(error => {
         this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.customerGetError'));
-        return this.rejectAndNotifyPossibleErrors();
+        return this.$q.reject();
       });
   }
 
@@ -103,7 +107,7 @@ export class CallSettingsService {
       return this.HuronCustomerService.updateCustomer(customer)
         .catch(error => {
           this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.voicemailUpdateError'));
-          return this.rejectAndNotifyPossibleErrors();
+          return this.$q.reject();
         });
     } else {
       return this.$q.resolve();
@@ -114,7 +118,7 @@ export class CallSettingsService {
     return this.HuronCustomerService.getVoiceCustomer()
     .catch(error => {
       this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.customerGetError'));
-      return this.rejectAndNotifyPossibleErrors();
+      return this.$q.reject();
     });
   }
 
@@ -154,20 +158,20 @@ export class CallSettingsService {
         return this.CallerId.deleteCompanyNumber(this.callSettingsDataCopy.companyCallerId.uuid)
           .catch(error => {
             this.errors.push(this.Notification.processErrorResponse(error, 'huronSettings.companyCallerIdsaveError'));
-            this.rejectAndNotifyPossibleErrors();
+            return this.$q.reject();
           });
       } else {
         if (!data.uuid) {
           return this.CallerId.saveCompanyNumber(data)
             .catch(error => {
               this.errors.push(this.Notification.processErrorResponse(error, 'huronSettings.companyCallerIdsaveError'));
-              this.rejectAndNotifyPossibleErrors();
+              return this.$q.reject();
             });
         } else {
           return this.CallerId.updateCompanyNumber(data.uuid, data)
             .catch(error => {
               this.errors.push(this.Notification.processErrorResponse(error, 'huronSettings.companyCallerIdsaveError'));
-              this.rejectAndNotifyPossibleErrors();
+              return this.$q.reject();
             });
         }
       }
@@ -181,7 +185,7 @@ export class CallSettingsService {
       return this.AvrilService.getAvrilCustomer()
       .catch(error => {
         this.errors.push(this.Notification.processErrorResponse(error, 'huronSettings.avrilCustomerGetError'));
-        return this.rejectAndNotifyPossibleErrors();
+        return this.$q.reject();
       });
     } else {
       return this.$q.resolve(new AvrilCustomer());
@@ -193,7 +197,7 @@ export class CallSettingsService {
       return this.AvrilService.updateAvrilCustomer(data)
         .catch(error => {
           this.errors.push(this.Notification.processErrorResponse(error, 'huronSettings.avrilCustomerSaveError'));
-          return this.rejectAndNotifyPossibleErrors();
+          return this.$q.reject();
         });
     } else {
       return this.$q.resolve();
@@ -207,7 +211,7 @@ export class CallSettingsService {
       })
       .catch(error => {
         this.errors.push(this.Notification.processErrorResponse(error, 'locations.getFailed'));
-        return this.rejectAndNotifyPossibleErrors();
+        return this.$q.reject();
       });
   }
 
@@ -216,7 +220,7 @@ export class CallSettingsService {
       return this.LocationsService.updateLocation(data)
       .catch(error => {
         this.errors.push(this.Notification.processErrorResponse(error, 'locations.updateFailed'));
-        return this.rejectAndNotifyPossibleErrors();
+        return this.$q.reject();
       });
     } else {
       return this.$q.resolve();

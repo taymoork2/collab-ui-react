@@ -52,9 +52,9 @@ eg. `yarn start -- --noopen` passes the `--noopen` argument to our `start` task
 * Build the application with webpack
 * Build output to `dist` directory
 
-### `yarn clean`
+### `yarn clean-dist`
 
-* Clean `build`, `dist` and `test` directories
+* Clean `build`, `dist` and `dist-source-map` directories
 
 ### `yarn commit`
 

@@ -79,7 +79,7 @@ module.exports = function (config) {
     singleRun: true,
 
     // time (ms) karma server waits for a browser message before disconnecting from it
-    browserNoActivityTimeout: 15000,  // default 10000
+    browserNoActivityTimeout: 15000, // default 10000
 
     // if a browser disconnects from karma server, re-attempt N times
     //
@@ -91,7 +91,7 @@ module.exports = function (config) {
     // - ...exhibit what appears to be a race condition when spawning multiple tasks to
     //   run karma tests in parallel (either via 'gulp karma-parallel' or 'ktest-all')
     // - to mitigate this, we increment the disconnect tolerance to 2
-    browserDisconnectTolerance: 2,    // default 0
+    browserDisconnectTolerance: 2, // default 0
   });
 
   config.set(_config);

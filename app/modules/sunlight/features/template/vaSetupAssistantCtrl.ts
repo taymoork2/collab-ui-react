@@ -22,6 +22,9 @@ export class CareSetupVirtualAssistantCtrl {
   public templateButtonText = this.$translate.instant('common.finish');
   public saveTemplateErrorOccurred = false;
   public cancelModalText = {};
+  public nameForm: ng.IFormController;
+  public tokenForm: ng.IFormController;
+  private escalationIntentUrl: string;
 
   public template = {
     templateId: '',
@@ -38,6 +41,8 @@ export class CareSetupVirtualAssistantCtrl {
         VirtualAssistantAccessToken: {
           enabled: true,
           accessTokenValue: '',
+          invalidToken: true,
+          validatingToken: false,
         },
         VirtualAssistantName: {
           enabled: true,
@@ -69,6 +74,7 @@ export class CareSetupVirtualAssistantCtrl {
     private CTService,
     private LogMetricsService,
     private Notification,
+    private UrlConfig,
   ) {
     if (this.$stateParams.isEditFeature) {
       this.isEditFeature = true;
@@ -76,6 +82,7 @@ export class CareSetupVirtualAssistantCtrl {
       this.template.configuration.pages.VirtualAssistantConfigOverview.isApiAiAgentConfigured = true;
       this.template.configuration.pages.VirtualAssistantName.nameValue = this.$stateParams.template.name;
       this.template.configuration.pages.VirtualAssistantAccessToken.accessTokenValue = this.$stateParams.template.config.token;
+      this.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = false;
     }
     const controller = this;
     (<IScopeWithController>this.$scope).controller = controller; // used by ctCancelModal to not be tied to 1 controller.
@@ -87,6 +94,7 @@ export class CareSetupVirtualAssistantCtrl {
       controller.logoFile = 'data:image/png;base64,' + controller.$window.btoa(String.fromCharCode.apply(null, new Uint8Array(data.data)));
       controller.logoUploaded = true;
     });
+    this.escalationIntentUrl = this.UrlConfig.getEscalationIntentUrl();
   }
 
   /**
@@ -107,7 +115,7 @@ export class CareSetupVirtualAssistantCtrl {
    */
   public getSummaryDescription(): string {
     if (this.isEditFeature) {
-      return this.getVaText('summary.edit-desc');
+      return this.getVaText('summary.editDesc');
     } else {
       return this.getVaText('summary.desc');
     }
@@ -117,28 +125,11 @@ export class CareSetupVirtualAssistantCtrl {
    * open up the 'Cancel' modal with certain text.
    */
   public cancelModal(): void {
-    const modelText = this.isEditFeature ? {
-      bodyMessage: this.$translate.instant('careChatTpl.ctEditBody'),
-      trailingMessage: this.$translate.instant('careChatTpl.ctEditMessage'),
-      process: this.$translate.instant('careChatTpl.ctEditing'),
-    } : {
-      bodyMessage: this.$translate.instant('careChatTpl.ctCreationBody'),
-      trailingMessage: this.$translate.instant('careChatTpl.ctCreationMessage'),
-      process: this.$translate.instant('careChatTpl.ctCreation'),
-    };
-
     this.cancelModalText = {
       cancelHeader: this.$translate.instant('careChatTpl.cancelHeader'),
-      cancelDialog: this.$translate.instant('careChatTpl.cancelDialog', {
-        bodyMessage: modelText.bodyMessage,
-        trailingMessage: modelText.trailingMessage,
-      }),
-      continueButton: this.$translate.instant('careChatTpl.continueButton', {
-        confirmProcess: modelText.process,
-      }),
-      confirmButton: this.$translate.instant('careChatTpl.confirmButton', {
-        cancelProcess: modelText.process,
-      }),
+      cancelDialog: this.getVaText('cancelDialog'),
+      continueButton: this.$translate.instant('careChatTpl.continueButton'),
+      confirmButton: this.$translate.instant('careChatTpl.confirmButton'),
     };
     this.$modal.open({
       templateUrl: 'modules/sunlight/features/template/ctCancelModal.tpl.html',
@@ -235,17 +226,46 @@ export class CareSetupVirtualAssistantCtrl {
     }
   }
 
+  public onAPIAITokenChange(): void {
+    const controller = this;
+    this.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = true;
+    controller.tokenForm.tokenInput.$setValidity('invalidToken', true); // reset validation
+  }
+
+  /**
+   * validate the api.ai Token
+   */
+  public validateAPIAIToken(): void {
+    const controller = this;
+    controller.template.configuration.pages.VirtualAssistantAccessToken.validatingToken = true;
+    const accessToken = (controller.template.configuration.pages.VirtualAssistantAccessToken.accessTokenValue || '').trim();
+    controller.service.isAPIAITokenValid(accessToken)
+      .then(function () {
+        controller.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = false;
+        controller.tokenForm.tokenInput.$setValidity('invalidToken', true); //mark input as valid
+        controller.template.configuration.pages.VirtualAssistantAccessToken.validatingToken = false;
+      })
+      .catch(function () {
+        controller.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = true;
+        controller.tokenForm.tokenInput.$setValidity('invalidToken', false); //mark input as invalid
+        controller.template.configuration.pages.VirtualAssistantAccessToken.validatingToken = false;
+      });
+  }
+
   /** Data Validation functions **/
   public isApiAiAgentConfigured(): boolean {
     return !!this.template.configuration.pages.VirtualAssistantConfigOverview.isApiAiAgentConfigured;
   }
 
   public isAccessTokenValid(): boolean {
-    return !!(this.template.configuration.pages.VirtualAssistantAccessToken.accessTokenValue || '').trim() && this.isValidTokenLength();
+    return !!(this.template.configuration.pages.VirtualAssistantAccessToken.accessTokenValue || '').trim()
+      && this.isValidTokenLength()
+      && !this.template.configuration.pages.VirtualAssistantAccessToken.invalidToken;
   }
 
   public isNameValid(): boolean {
-    return !!(this.template.configuration.pages.VirtualAssistantName.nameValue || '').trim() && this.isValidNameLength();
+    const name = (this.template.configuration.pages.VirtualAssistantName.nameValue || '').trim();
+    return !!name && this.isValidNameLength(name) && this.isUniqueName(name);
   }
 
   public getVaText(textIdExtension: string): string {
@@ -369,8 +389,20 @@ export class CareSetupVirtualAssistantCtrl {
   private isValidTokenLength(): boolean {
     return (this.template.configuration.pages.VirtualAssistantAccessToken.accessTokenValue || '').trim().length <= this.maxTokenLength;
   }
-  private isValidNameLength(): boolean {
-    return (this.template.configuration.pages.VirtualAssistantName.nameValue || '').trim().length <= this.maxNameLength;
+  private isValidNameLength(name): boolean {
+    return name.trim().length <= this.maxNameLength;
+  }
+  private isUniqueName(name): boolean {
+    const controller = this;
+    const list = this.service.featureList.data;
+    //will return undefined if no name found,  !undefined = true
+    const isUnique = !_.find(list, function (cva: any) {
+      return cva.id !== controller.template.templateId && cva.name.toLowerCase() === name.toLowerCase();
+    });
+    if (this.nameForm && name) {
+      this.nameForm.nameInput.$setValidity('duplicateNameError', isUnique);
+    }
+    return isUnique;
   }
 }
 angular

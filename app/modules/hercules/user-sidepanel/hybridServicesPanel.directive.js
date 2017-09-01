@@ -60,7 +60,7 @@
     function init() {
       $q.all({
         servicesFromFms: ServiceDescriptorService.getServices(),
-        gcalService: CloudConnectorService.getService(),
+        gcalService: CloudConnectorService.getService('squared-fusion-gcal'),
       }).then(function (response) {
         vm.services.calendarExchange = getServiceIfEnabled(response.servicesFromFms, 'squared-fusion-cal');
         vm.services.callServiceAware = getServiceIfEnabled(response.servicesFromFms, 'squared-fusion-uc');

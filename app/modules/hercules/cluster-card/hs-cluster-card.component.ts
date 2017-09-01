@@ -81,18 +81,22 @@ export class ClusterCardController implements ng.IComponentController {
     if (type === 'c_mgmt') {
       this.$state.go('expressway-cluster.nodes', {
         id: id,
+        backState: 'cluster-list',
       });
     } else if (type === 'mf_mgmt') {
       this.$state.go('mediafusion-cluster.nodes', {
         id: id,
+        backState: 'cluster-list',
       });
     } else if (type === 'hds_app') {
       this.$state.go('hds-cluster.nodes', {
         id: id,
+        backState: 'cluster-list',
       });
     } else if (type === 'ucm_mgmt') {
       this.$state.go('cucm-cluster.nodes', {
         id: id,
+        backState: 'cluster-list',
       });
     }
   }

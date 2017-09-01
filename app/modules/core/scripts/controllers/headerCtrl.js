@@ -55,7 +55,7 @@
     function getAdminTabs() {
       if (showMyCompany()) {
         vm.adminTabs = [{
-          icon: 'icon-settings-active',
+          icon: 'icon-company-active',
           title: Authinfo.getOrgName(),
           link: '/my-company',
           iconClass: 'icon-outline',

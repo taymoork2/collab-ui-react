@@ -41,6 +41,23 @@
     "userPrefsSaved": "User Preferences Updated",
     "initError": "There was an error refreshing page: ${error}"
   },
+  "sidePanelBreadcrumb": {
+    "aware": "Aware",
+    "awareStatusHistory": "Aware Status History",
+    "call": "Call",
+    "connect": "Connect",
+    "deviceConfiguration": "Device Configuration",
+    "fields": "Fields",
+    "meeting": "Meeting",
+    "overview": "Overview",
+    "sessionEnablement": "Session Enablement",
+    "statusHistory": "Status History",
+    "userOverViewMessage": "Message",
+    "voiceMail": "Voice Mail",
+    "privileges": "Privileges",
+    "care": "Care",
+    "node": "Node"
+  },
   "usersPage": {
     "assignServices": "Assign Services",
     "assignDnAndDirectLines": "Assign Numbers",
@@ -1152,7 +1169,7 @@
   },
   "provisioningConsole": {
     "provisioningConsole": "Provisioning Console",
-    "orderNumber": "Order Number: {{orderNumber}}",
+    "orderNumber": "Order Number",
     "manualCode": "Manual Code",
     "customerName": "Customer Name",
     "customerMail": "Customer Email",
@@ -1165,13 +1182,16 @@
       "title": "Actions",
       "progress": "Mark as in progress",
       "completed": "Mark as completed",
-      "pending": "Mark as pending"
+      "pending": "Mark as pending",
+      "showRaw": "Show Raw Data",
+      "hideRaw": "Hide Raw Data"
     },
     "tabs": {
       "pending": "Pending",
       "completed": "Completed"
     },
     "details": {
+      "orderNumber": "Order Number {{orderNumber}}",
       "noSites": "This order doesn't have any sites listed",
       "completed": "Order completed: {{orderDate}}",
       "pending": "Request received: {{orderDate}}",
@@ -1231,6 +1251,25 @@
         "cmrLicense": "CMR License Volume",
         "cmrOverage": "CMR Overage"
       }
+    },
+    "manualCodes": {
+      "100" :"Not Used",
+      "200":"Transfer; Modify of non-CI WebEx site",
+      "210":"Create non-CI Site (new)",
+      "300":"TSP to WEBEX Audio/VoIPOnly; TSP partner to direct customer transfer",
+      "400":"WEBEX/VoIPOnly to TSP Audio; Direct customer to partner transfer",
+      "450":"Modify of MP audio",
+      "500":"Manual Branding needed",
+      "600":"CCASP Audio Setup, Modify, Cancel, Suspend/Resume, or Audio Change",
+      "650":"CCA-Enterprise setup, Cancel",
+      "700":"CCASP to WEBEX Audio/VoIPOnly",
+      "750":"CCA-Enterprise to WEBEX Audio/VoIPOnly",
+      "800":"WEBEX Audio/VoIPOnly to CCASP",
+      "850":"WEBEX Audio/VoIPOnly to CCA-Enterprise",
+      "900":"Temporary feature filtering manual code",
+      "910":"CMR changes for non-CI sites",
+      "920":"TSP partner to partner transfer",
+      "1000":"Messenger"
     }
   },
   "cdrLogs": {
@@ -1368,6 +1407,7 @@
   },
   "common": {
     "actions": "Actions",
+    "activate": "Activate",
     "provision": "Provision",
     "doNotProvision": "Do not Provision",
     "add": "Add",
@@ -1404,6 +1444,7 @@
     "enable": "Enable",
     "enabled": "Enabled",
     "error": "Error",
+    "fieldRequired": "This field is required",
     "finish": "Finish",
     "firstName": "First Name",
     "general": "General",
@@ -1452,7 +1493,6 @@
     "pending": "Pending",
     "play": "Play",
     "postpone": "Postpone",
-    "pro": "Pro",
     "proceed": "Proceed",
     "quantity": "Qty",
     "releaseChannel": "Release Channel",
@@ -1982,6 +2022,7 @@
     "noDevices": "After you activate Cisco desk phones and room devices, you'll see them listed here.",
     "noneFound": "No devices found",
     "tryAgain": "Try another search.",
+    "searchFailed": "Device search failed",
     "licenseWarningTitle": "License",
     "licenseWarningHeader": "There is a problem with the license for this service.",
     "licenseSuspendedWarning": "Your room device licenses are suspended.",
@@ -2217,6 +2258,7 @@
       "squared-fusion-uc.full": "Call Service Aware",
       "squared-fusion-cal": "Calendar Service",
       "squared-fusion-gcal": "Calendar Service",
+      "squared-fusion-o365": "Calendar Service",
       "squared-fusion-media": "Media Service",
       "contact-center-context": "Context Service",
       "squared-fusion-ec": "Call Service Connect",
@@ -2229,6 +2271,7 @@
       "squared-fusion-uc": "Hybrid Call Service",
       "squared-fusion-cal": "Hybrid Calendar Service",
       "squared-fusion-gcal": "Hybrid Calendar (Google)",
+      "squared-fusion-o365": "Hybrid Calendar (Office 365)",
       "spark-hybrid-datasecurity": "Hybrid Data Security",
       "squared-fusion-media": "Hybrid Media Service",
       "hybrid-context": "Hybrid Context Service",
@@ -2316,6 +2359,7 @@
         "squared-fusion-uc": "Aware",
         "squared-fusion-cal": "Calendar",
         "squared-fusion-gcal": "Calendar",
+        "squared-fusion-o365": "Calendar",
         "squared-fusion-ec": "Connect",
         "squared-fusion-ec-and-voicemail": "Connect + Voicemail",
         "squared-fusion-ec-place": "Hybrid Call Service Connect"
@@ -2325,6 +2369,7 @@
         "squared-fusion-cal": "Add @spark to an invitation to create a Cisco Spark room for your meeting. Add @webex to attach your WebEx Personal Room.",
         "squared-fusion-cal-place": "Calendar Service enables One Button To Push (OBTP) capabilities for meetings in a place",
         "squared-fusion-gcal": "Add @spark to an invitation to create a Cisco Spark room for your meeting. Add @webex to attach your WebEx Personal Room.",
+        "squared-fusion-o365": "Add @spark to an invitation to create a Cisco Spark room for your meeting. Add @webex to attach your WebEx Personal Room.",
         "squared-fusion-ec": "Users' incoming calls will ring their work phones and the Cisco Spark app. Users can call their colleagues from either their phones or the app, too.",
         "spark-hybrid-impinterop": "TODO: Here is a description of what Hybrid IM&P can do."
       },
@@ -2591,6 +2636,7 @@
         "certificatesNew": "Use certificates provided from the Cisco Spark Control default trust list or upload your own.  If you use your own, make sure the hostnames are on a verified domain. For help, click <a href=\"http://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">here.</a>",
         "certificatesCannotRead": "Could not read certificate list.",
         "certificatesCannotDelete": "Could not delete certificate. Try again later",
+        "certificatesDeleted": "Certificate deleted successfully.",
         "certificatesEmailAddress": "Email Address",
         "certificatesCommonName": "Common Name",
         "certificatesOrganizationalUnit": "Organizational Unit",
@@ -3422,7 +3468,8 @@
       "invalidEmailLimit": "Enter only up to 5 email addresses",
       "invalidSpaceIdLimit": "Search must be limited to less than 5 Space IDs",
       "noMatchesFound": "No Matches Found",
-      "requestFailed": "Request Failed: Tracking ID {{trackingId}}"
+      "requestFailed": "Request Failed: Tracking ID {{trackingId}}",
+      "504RequestFailed": "Search Timed Out: Tracking ID {{trackingId}}"
     },
     "encryption": {
       "instructions": "After downloading your report, use this password to open the .zip file. You can also access the password by clicking on the key icon in the reports list.",
@@ -3915,7 +3962,7 @@
     "callerInputLabel": "Name",
     "callerInputNamePlaceHolder": "Name Variable",
     "callerNameInputHelpText": "Name of variable being supplied",
-    "callerInputMaxLength": "Callers can use &#35; as the last digit for numbers less than the maximum length.",
+    "callerInputMaxLength": "Callers can use &#35; as the last digit for numbers less than  <br> the maximum length.",
     "actionPhoneMenu": "Phone Menu",
     "actionPhoneMenuHint": "Play a message and take action based on the caller's input.",
     "actionDecision": "Decision",
@@ -4955,6 +5002,7 @@
       "phone8865": "8865",
       "phone8845": "8845",
       "phone7832": "7832",
+      "phone8841": "8841",
       "phone7841": "7841",
       "quantity": "Quantity",
       "invalidQuantity": "Quantity must be between {{min}} and {{max}}",
@@ -5203,8 +5251,6 @@
     "accountStatus": "Account Status",
     "totalUsers": "Total Users",
     "purchased": "Purchased",
-    "pendingSetup": "Pending Setup",
-    "partnerOnly": "Partner Only",
     "domain": "{count, plural, =1{Domain} other{Domains}}",
     "domains": "Domains",
     "quantityWithValue": "Qty: {{quantity}}",
@@ -5411,6 +5457,7 @@
   "addDeviceWizard": {
     "newDevice": "New Device",
     "newCode": "New Code",
+    "qrCode": "qr code graphic",
     "confirmRoomDeviceOnly": {
       "roomDeviceOnly": "Room device activation only",
       "noSparkCallWarning": "This user can only activate Cisco Spark room devices. Before they can activate a desk phone, you must enable the Cisco Spark call service for them from the Users page."
@@ -6626,6 +6673,7 @@
     "Online": "Online",
     "OnlineWithIssues": "Online, With Issues",
     "Offline": "Offline",
+    "OfflineExpired": "Deactivated",
     "Unknown": "Unknown",
     "WithDevices": "With Devices",
     "upgradeChannels": {
@@ -6760,7 +6808,7 @@
     "locationSelectDesc": "Choose the physical location where this user primarily works from.",
     "locationDetailTitle": "Location Details",
     "locationDetailDesc": "Locations let you group Cisco Spark Call settings together based on specific geography. Specify a name and caller ID for this location.",
-    "userLocMoveErrorDesc": "This user's extension does not exist at this location. Before you move this user, you must create a range that contains the extension in the new location.",
+    "locMoveErrorDesc": "Move failed: {{msg}}",
     "mohTitle": "Location Media on Hold",
     "mohDesc": "Set the default media to be played for this location.",
     "mohSelectLabel": "Media Selection",
@@ -6824,6 +6872,18 @@
           "Header": "Automated Routing",
           "Label": "Users are offered tasks based on their availability and capacity."
         }
+      },
+      "chatCount": {
+        "sectionInfoTitle" : "Chats",
+        "sectionInfoDescription": "Set this option for all users in your organization.",
+        "sectionContentTitle" : "Number of concurrent Chats",
+        "sectionContentDescription" : "Configure the number of concurrent chats allowed for a user"
+      },
+      "video": {
+        "sectionInfoTitle" : "Video",
+        "sectionInfoDescription": "Set this option for all users in your organization.",
+        "sectionContentTitle" : "Enable Video Call from Chat",
+        "sectionContentDescription" : "Specify if users can initiate a video call during a chat."
       },
       "saveModal": {
         "Header": "Care Settings",
@@ -7088,8 +7148,8 @@
     "ctCreationMessage": "This template will not be saved.",
     "ctEditMessage": "Changes will not be saved.",
     "cancelDialog": "Are you sure you want to cancel {{bodyMessage}}? {{trailingMessage}}",
-    "confirmButton": "Cancel {{cancelProcess}}",
-    "continueButton": "Continue {{confirmProcess}}",
+    "confirmButton": "Yes",
+    "continueButton": "No",
     "preview": "Preview",
     "attributes": "Attributes",
     "windowTitleLabel": "Window Title",
@@ -7281,51 +7341,53 @@
       "configOverview": {
         "title": "Customer Virtual Assistant Configuration Requirements",
         "desc": "Review the prerequisites for creating a Customer Virtual Assistant",
-        "box-title": "Create an API.AI agent before you create your Customer Virtual Assistant.",
-        "box-desc": "Build an automated agent in API.AI with a natural language dialogue. Your integrated Customer Virtual Assistant uses the built-in dialogue to interact with your customers and escalate a conversation to live agents as needed.",
-        "box-radio-one": "No, I don’t have a preconfigured API.AI agent",
-        "box-radio-one-desc1": "Go to ",
-        "box-radio-apiai": "API.AI",
-        "box-radio-one-desc2": " to create an agent. To get started, see the ",
-        "box-radio-apiai-doc": "API.AI documentation",
-        "box-radio-two": "Yes, I have a preconfigured API.AI agent and am ready to proceed",
-        "box-radio-two-desc": "Click the arrow to continue to integrate your API.AI agent with a Customer Virtual Assistant"
+        "boxTitle": "Create an API.AI agent before you create your Customer Virtual Assistant.",
+        "boxDesc": "Build an automated agent in API.AI with a natural language dialogue. Your integrated Customer Virtual Assistant uses the built-in dialogue to interact with your customers and escalate a conversation to live agents as needed.",
+        "boxRadioOne": "No, I don’t have a preconfigured API.AI agent",
+        "boxRadioOneDesc1": "Go to ",
+        "boxRadioApiai": "API.AI",
+        "boxRadioOneDesc2": " to create an agent. To get started, see the ",
+        "boxRadioApiaiDoc": "API.AI documentation",
+        "boxRadioTwo": "Yes, I have a preconfigured API.AI agent and am ready to proceed",
+        "boxRadioTwoDesc": "Click the arrow to continue to integrate your API.AI agent with a Customer Virtual Assistant"
       },
       "dialogIntegration": {
         "title": "Configure Dialogue Integration",
         "desc": "Add a preconfigured Escalation Intent to complete your API.AI agent configuration",
-        "box-step-one": "Download preconfigured Escalation Intent JSON file.",
-        "box-step-one-desc": "An Escalation Intent allows your Customer Virtual Assistant to escalate a conversation to an agent.",
-        "box-step-two": "Upload Escalation Intent to API.AI Agent.",
-        "box-step-two-desc": "On your API.AI agent’s Intents page, click the vertical ellipsis (⋮) and choose Upload Intent. Upload the escalation.json file you downloaded.",
-        "box-step-three": "Customize Escalation Intent in API.AI.",
-        "box-step-three-desc": "On your API.AI agent’s Intents page, choose Escalation Intent. Modify the User Says fields to change the user expressions that trigger escalation. All user expressions must:",
-        "box-bullet-one": "Use template mode",
-        "box-bullet-two": "Contain a reference to @sys.any:Topic",
-        "box-step-three-desc-cont": "The @ symbol next to the user expression indicates the template mode. Click the symbol to toggle the mode. Do not modify the GetExpert action.",
-        "download-button-text": "Download Escalation Intent",
-        "learn-more-link": "Learn more",
-        "final-note": "about integrating Customer Virtual Assistants."
+        "boxStepOne": "Download preconfigured Escalation Intent JSON file.",
+        "boxStepOneDesc": "An Escalation Intent allows your Customer Virtual Assistant to escalate a conversation to an agent.",
+        "boxStepTwo": "Upload Escalation Intent to API.AI Agent.",
+        "boxStepTwoDesc": "On your API.AI agent’s Intents page, click the vertical ellipsis (⋮) and choose Upload Intent. Upload the escalation.json file you downloaded.",
+        "boxStepThree": "Customize Escalation Intent in API.AI.",
+        "boxStepThreeDesc": "On your API.AI agent’s Intents page, choose Escalation Intent. Modify the User Says fields to change the user expressions that trigger escalation. All user expressions must:",
+        "boxBulletOne": "Use template mode",
+        "boxBulletTwo": "Contain a reference to @sys.any:Topic",
+        "boxStepThreeDescCont": "The @ symbol next to the user expression indicates the template mode. Click the symbol to toggle the mode. Do not modify the GetExpert action.",
+        "downloadButtonText": "Download Escalation Intent",
+        "learnMoreLink": "Learn more",
+        "finalNote": "about integrating Customer Virtual Assistants."
       },
       "accessToken": {
         "title": "Complete Dialogue Integration",
         "desc": "Complete your integration to enable the use of natural dialogue in your customer interactions",
-        "box-desc": "Each API.AI agent has a unique client access token. After completing your API.AI configuration, copy the client access token from the settings for your agent and enter it here to complete the integration.",
-        "input-label": "API.AI Client Access Token",
-        "validate-button-text": "Validate",
-        "max-length-error": "Client Access Token cannot be longer than 128 characters."
+        "boxDesc": "Each API.AI agent has a unique client access token stored in the agent settings. Copy the token from your configured API.AI agent settings, enter it here, and click \"Validate\" to check the token before you complete the dialogue integration.",
+        "inputLabel": "API.AI Client Access Token",
+        "validateButtonText": "Validate",
+        "maxLengthError": "Client Access Token cannot be longer than 128 characters.",
+        "invalidTokenText": "Invalid API.AI client access token. Verify token and try again."
       },
       "name": {
         "title": "Customer Virtual Assistant Name",
         "desc": "Specify the name your customers see when they interact with your Customer Virtual Assistant",
-        "box-desc": "Choose a unique name for your Customer Virtual Assistant that is no longer than 50 characters.",
-        "input-label": "Enter Name",
-        "max-length-error": "Name cannot be longer than 50 characters."
+        "boxDesc": "Choose a unique name for your Customer Virtual Assistant that is no longer than 50 characters.",
+        "inputLabel": "Enter Name",
+        "maxLengthError": "Name cannot be longer than 50 characters.",
+        "duplicateError": "Customer Virtual Assistant must have a unique name."
       },
       "summary": {
         "desc": "You have configured your Customer Virtual Assistant. To use the assisted service feature in your organization's chat application, add your assistant to a Customer Support Template.",
-        "edit-desc": "You have edited your Customer Virtual Assistant. Click Finish to save the configuration so you can start using the new version of this template on your organization website.",
-        "desc-cont": "Click Finish to save the configuration.",
+        "editDesc": "You have edited your Customer Virtual Assistant. To use the assisted service feature in your organization’s chat application, add your assistant to a Customer Support Template.",
+        "descCont": "Click Finish to save the configuration.",
         "errorCreateTemplate": "Cannot save Customer Virtual Assistant. Try again."
       },
       "messages": {
@@ -7335,9 +7397,9 @@
         "getConfigFailureText": "Failed to load the Customer Virtual Assistant.",
         "deleteConfigFailureText": "Failed to delete the Customer Virtual Assistant.",
         "createConfigFailureText": "Failed to save Customer Virtual Assistant.",
-        "updateConfigFailureText": "Failed to save Customer Virtual Assistant.",
-        "testAPIAITokenFailureText": "Invalid client access token. Your Dialogue Integration with {{ featureName }} is disabled. Update the Customer Virtual Assistant with a valid token from your API.AI agent settings."
-      }
+        "updateConfigFailureText": "Failed to save Customer Virtual Assistant."
+      },
+      "cancelDialog": "Are you sure you want to cancel?\nThe Customer Virtual Assistant will not be saved."
     }
   },
   "huronHuntGroup": {
@@ -7586,6 +7648,7 @@
         "services": {
           "squared-fusion-cal": "Calendar (Exchange)",
           "squared-fusion-gcal": "Calendar (Google)",
+          "squared-fusion-o365": "Calendar (Office 365)",
           "squared-fusion-uc": "Call",
           "spark-hybrid-impinterop": "IM & Presence",
           "squared-fusion-mgmt": "Management",
@@ -8067,6 +8130,9 @@
       "cannotReadStatus": "Could not read Hybrid Voicemail status.",
       "hybridVoicemail": "Voicemail",
       "orgNotEnabled": "Organization not enabled."
+    },
+    "hybridImp": {
+      "hybridImp": "IM&Presence Interop"
     }
   },
   "partnerManagement": {
@@ -8441,6 +8507,7 @@
     "showMore": "View all",
     "genericButtons": {
       "setup": "Set up",
+      "prereq": "View prerequisites",
       "learnMore": "Learn More"
     },
     "cardStatus": {

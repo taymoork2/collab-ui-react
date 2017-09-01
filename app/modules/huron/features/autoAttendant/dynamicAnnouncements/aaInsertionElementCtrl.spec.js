@@ -134,6 +134,7 @@ describe('Controller: AAInsertionElementCtrl', function () {
           return true;
         },
         focus: function () {},
+        remove: function () {},
       };
       var rangeGetter = function () {
         var range = {
@@ -155,6 +156,7 @@ describe('Controller: AAInsertionElementCtrl', function () {
       };
       spyOn(angular, 'element').and.returnValue(dynamicElement);
       spyOn(dynamicElement, 'focus');
+      spyOn(dynamicElement, 'remove');
       spyOn(dynamicElement, 'scope').and.returnValue(scopeElement);
       spyOn(scopeElement, 'insertElement');
       spyOn($window, 'getSelection').and.returnValue({

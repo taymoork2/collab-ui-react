@@ -16,7 +16,6 @@
   
       @include vr-spacing(pt, 3);
     }
-  
     .desc {
       @include vr-spacing(pt, 1);
       @include vr-spacing(pb, 2.5);
@@ -25,13 +24,11 @@
       font-size: $h4-font-size;
     }
   }
-  .no-margin {
-    margin-top: 0;
-  }
   .name-input {
     display: inline-flex;
     align-items: inherit;
-    margin: auto;
+    margin-right: auto;
+    margin-left: auto;
     width: 54.5rem;
     .cs-input {
       width: 19rem;
@@ -39,6 +36,14 @@
     }
     .input-description {
       width: 56rem;
+    }
+  }
+}
+
+.cs-setupassistant--content {
+  .call-feature-name {
+    .typeahead-large.no-margin-top {
+      margin-top: 0;
     }
   }
 }
