@@ -3958,7 +3958,7 @@
     "callerInputLabel": "Name",
     "callerInputNamePlaceHolder": "Name Variable",
     "callerNameInputHelpText": "Name of variable being supplied",
-    "callerInputMaxLength": "Callers can use &#35; as the last digit for numbers less than the maximum length.",
+    "callerInputMaxLength": "Callers can use &#35; as the last digit for numbers less than  <br> the maximum length.",
     "actionPhoneMenu": "Phone Menu",
     "actionPhoneMenuHint": "Play a message and take action based on the caller's input.",
     "actionDecision": "Decision",

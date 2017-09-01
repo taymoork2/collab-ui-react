@@ -34,7 +34,7 @@
         <div ng-if="aaCallerInput.inputActions.length" class="row aa-pm-vertical-line" ng-repeat="keyAction in aaCallerInput.inputActions">
           <div class="row">
             <ng-form name="nameKeyedInputForm">
-              <div class="small-2 columns">
+              <div class="small-2 columns aa-call-input-width">
                 <cs-select ng-model="keyAction.key" options="keyAction.keys" placeholder="aaCallerInput.selectPlaceholder" on-change-fn="aaCallerInput.keyChanged($index, keyAction.key)" class="aa-pm-key-select" icon="icon-chevron-down" ng-class="{'not-selected':!keyAction.key}">
                 </cs-select>
               </div>
@@ -59,9 +59,10 @@
       <div class="aa-select-min">
          <cs-select id="maxLength{{ schedule + index }}" ng-model="aaCallerInput.maxStringLength" ng-change="aaCallerInput.setMaxStringLength()" options="aaCallerInput.maxLengthOptions"></cs-select>
       </div>
-      <div>
-        <span class="small-12 large-12 columns aa-message-max-length-subtext" translate="autoAttendant.callerInputMaxLength"></span>
+     <div>
+       <p class="small-12 columns aa-call-input-subtextlen" translate="autoAttendant.callerInputMaxLength"></p>
       </div>
+      <br/>
     </div>
   </div>
   <div class="panel">
