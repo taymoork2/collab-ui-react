@@ -32,12 +32,12 @@
 
             return HybridServicesUtilsService.allSettled({
               clusterList: HybridServicesClusterService.getAll(),
-              gcalService: Authinfo.isEntitled(Config.entitlements.fusion_google_cal) ? CloudConnectorService.getService() : $q.resolve({}),
+              gcalService: Authinfo.isEntitled(Config.entitlements.fusion_gcal) ? CloudConnectorService.getService('squared-fusion-gcal') : $q.resolve({}),
               featureToggles: featureToggles,
             });
           }).then(function (response) {
             if (response.gcalService.status === 'fulfilled') {
-              if (Authinfo.isEntitled(Config.entitlements.fusion_google_cal)) {
+              if (Authinfo.isEntitled(Config.entitlements.fusion_gcal)) {
                 card.serviceList.push(response.gcalService.value);
               }
             } else {

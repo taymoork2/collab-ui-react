@@ -65,7 +65,7 @@ class HelpDeskHybridServicesOrgCardComponentCtrl implements ng.IComponentControl
       });
 
     if (this.LicenseService.orgIsEntitledTo(org, 'squared-fusion-gcal')) {
-      this.CloudConnectorService.getService(org.id)
+      this.CloudConnectorService.getService('squared-fusion-gcal', org.id)
         .then((service) => {
           hybridServicesCard.services.push(service);
         })

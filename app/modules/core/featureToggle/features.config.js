@@ -35,6 +35,7 @@ module.exports = {
   atlasNewUserExport: 'atlas-new-user-export',
   atlasNurturingEmails: 'atlas-nurturing-emails',
   atlasMyCompanyBillingTab: 'atlas-my-company-billing-tab',
+  atlasOffice365Support: 'atlas-office365-support',
   atlasOrderProvisioningConsole: 'atlas-order-provisioning-console',
   atlasPartnerManagement: 'atlas-partner-management',
   atlasPinSettings: 'atlas-pin-settings',

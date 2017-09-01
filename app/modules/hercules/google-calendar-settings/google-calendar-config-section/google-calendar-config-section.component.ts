@@ -29,7 +29,7 @@ class GoogleCalendarConfigSectionCtrl implements ng.IComponentController {
   public $onInit() {
     this.$q.all([
       this.CloudConnectorService.getApiKey(),
-      this.CloudConnectorService.getService(),
+      this.CloudConnectorService.getService('squared-fusion-gcal'),
     ])
       .then(([ apiKey, service]) => {
         const aclAdminAccount = service.aclAdminAccount || '';
