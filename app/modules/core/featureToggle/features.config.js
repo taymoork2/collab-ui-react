@@ -6,6 +6,7 @@ module.exports = {
   atlasCareProactiveChatTrials: 'atlas-care-proactiveChat-trials',
   atlasVirtualAssistantEnable: 'atlas-virtual-assistant-enable',
   atlasCareChatAssistant: 'care-chat-assistant',
+  atlasCareChatToVideoTrials: 'care-chat-to-video-trials',
   atlasCareAutomatedRouteTrials: 'care-automated-routing',
   atlasContextServiceTrials: 'atlas-context-service-trials',
   atlasContextExpandedTypes: 'atlas-context-expanded-types',
