@@ -36,6 +36,11 @@
     };
   }
 
+  function translateDisplayName(translateKey) {
+    return /* @ngInject */ function translate($translate) {
+      _.set(this, 'data.displayName', $translate.instant(translateKey));
+    };
+  }
   angular
     .module('wx2AdminWebClientApp')
     .config(['$httpProvider', '$stateProvider', '$urlRouterProvider', '$translateProvider', '$compileProvider', 'languagesProvider',
@@ -450,7 +455,6 @@
             $state.modal.dismiss();
           }
         }
-
         $stateProvider
           .state('addDeviceFlow', {
             parent: 'modal',
@@ -1158,6 +1162,7 @@
                     $stateParams.entitlements = response.sqEntitlements;
                   });
               },
+              displayName: translateDisplayName('common.overview'),
             },
             params: {
               currentUser: {},
@@ -1169,9 +1174,7 @@
               userLocation: {},
               memberType: '',
             },
-            data: {
-              displayName: 'Overview',
-            },
+            data: {},
           })
           .state('user-overview.communication', {
             views: {
@@ -1182,15 +1185,14 @@
             params: {
               reloadToggle: false,
             },
-            data: {
-              displayName: 'Call',
-            },
+            data: {},
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
                   done(require('modules/huron/overview'));
                 }, 'user-call-overview');
               }),
+              displayName: translateDisplayName('sidePanelBreadcrumb.call'),
             },
           })
           .state('user-overview.userDetails', {
@@ -1204,9 +1206,7 @@
             },
             data: {},
             resolve: {
-              data: /* @ngInject */ function ($state, $translate) {
-                $state.get('user-overview.userDetails').data.displayName = $translate.instant('usersPreview.userDetails');
-              },
+              displayName: translateDisplayName('usersPreview.userDetails'),
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
                   done(require('modules/huron/preferredLanguage/preferredLanguageDetails'));
@@ -1230,9 +1230,7 @@
             },
             data: {},
             resolve: {
-              data: /* @ngInject */ function ($state, $translate) {
-                $state.get('user-overview.userLocationDetails').data.displayName = $translate.instant('usersPreview.location');
-              },
+              displayName: translateDisplayName('usersPreview.location'),
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
                   done(require('modules/call/locations/locations-user-details'));
@@ -1258,14 +1256,13 @@
               channels: /* @ngInject */ function (CsdmUpgradeChannelService) {
                 return CsdmUpgradeChannelService.getUpgradeChannelsPromise();
               },
+              displayName: translateDisplayName('sidePanelBreadcrumb.deviceConfiguration'),
             },
             params: {
               currentDevice: {},
               huronDeviceService: {},
             },
-            data: {
-              displayName: 'Device Configuration',
-            },
+            data: {},
           })
           .state('user-overview.csdmDevice.emergencyServices', {
             views: {
@@ -1274,9 +1271,7 @@
               },
             },
             resolve: {
-              data: /* @ngInject */ function ($state, $translate) {
-                $state.get('user-overview.csdmDevice.emergencyServices').data.displayName = $translate.instant('spacesPage.emergencyTitle');
-              },
+              displayName: translateDisplayName('spacesPage.emergencyTitle'),
             },
             data: {},
             params: {
@@ -1296,29 +1291,27 @@
               watcher: null,
               selected: null,
             },
-            data: {
-              displayName: 'Voicemail',
-            },
+            data: {},
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
                   done(require('modules/huron/voicemail'));
                 }, 'user-call-voicemail');
               }),
+              displayName: translateDisplayName('sidePanelBreadcrumb.voiceMail'),
               ownerId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams.currentUser, 'id');
               },
             },
           })
           .state('user-overview.communication.snr', {
+
             views: {
               'side-panel-container@user-overview': {
                 template: '<uc-snr owner-id="$resolve.ownerId" ></uc-snr>',
               },
             },
-            data: {
-              displayName: 'Single Number Reach',
-            },
+            data: {},
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
@@ -1328,9 +1321,7 @@
               ownerId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams.currentUser, 'id');
               },
-              data: /* @ngInject */ function ($state, $translate) {
-                $state.get('user-overview.communication.snr').data.displayName = $translate.instant('singleNumberReachPanel.title');
-              },
+              displayName: translateDisplayName('singleNumberReachPanel.title'),
             },
           })
           .state('user-overview.communication.speedDials', {
@@ -1339,9 +1330,7 @@
                 template: '<uc-speed-dial owner-type="users" owner-id="$resolve.ownerId"></uc-speed-dial>',
               },
             },
-            data: {
-              displayName: 'Speed Dials',
-            },
+            data: {},
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
@@ -1351,6 +1340,7 @@
               ownerId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams.currentUser, 'id');
               },
+              displayName: translateDisplayName('telephonyPreview.speedDials'),
             },
           })
           .state('user-overview.communication.cos', {
@@ -1368,9 +1358,7 @@
               ownerId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams.currentUser, 'id');
               },
-              data: /* @ngInject */ function ($state, $translate) {
-                $state.get('user-overview.communication.cos').data.displayName = $translate.instant('serviceSetupModal.cos.title');
-              },
+              displayName: translateDisplayName('serviceSetupModal.cos.title'),
             },
           })
           .state('user-overview.communication.externaltransfer', {
@@ -1392,9 +1380,7 @@
               ownerId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams.currentUser, 'id');
               },
-              data: /* @ngInject */ function ($state, $translate) {
-                $state.get('user-overview.communication.externaltransfer').data.displayName = $translate.instant('serviceSetupModal.externalTransfer.title');
-              },
+              displayName: translateDisplayName('serviceSetupModal.externalTransfer.title'),
             },
           })
           .state('user-overview.communication.internationalDialing', {
@@ -1407,9 +1393,7 @@
               watcher: null,
               selected: null,
             },
-            data: {
-              displayName: 'International Dialing',
-            },
+            data: {},
             resolve: {
               watcher: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams, 'watcher');
@@ -1417,6 +1401,7 @@
               selected: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams, 'selected');
               },
+              displayName: translateDisplayName('internationalDialingPanel.title'),
             },
           })
           .state('user-overview.communication.local', {
@@ -1429,9 +1414,7 @@
               watcher: null,
               selected: null,
             },
-            data: {
-              displayName: 'Local Dialing',
-            },
+            data: {},
             resolve: {
               watcher: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams, 'watcher');
@@ -1439,6 +1422,7 @@
               selected: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams, 'selected');
               },
+              displayName: translateDisplayName('telephonyPreview.localDialing'),
             },
           })
           .state('user-overview.communication.primaryLine', {
@@ -1476,15 +1460,14 @@
             params: {
               numberId: '',
             },
-            data: {
-              displayName: 'Line Configuration',
-            },
+            data: {},
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
                   done(require('modules/huron/lines/lineOverview'));
                 }, 'user-call-line');
               }),
+              displayName: translateDisplayName('directoryNumberPanel.title'),
               ownerId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams.currentUser, 'id');
               },
@@ -1504,8 +1487,9 @@
                 controllerAs: '$ctrl',
               },
             },
-            data: {
-              displayName: 'Message',
+            data: {},
+            resolve: {
+              displayName: translateDisplayName('sidePanelBreadcrumb.userOverViewMessage'),
             },
             params: {
               licenseType: 'MESSAGING',
@@ -1517,9 +1501,7 @@
                 template: '<hybrid-imp-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName"></hybrid-imp-user-settings>',
               },
             },
-            data: {
-              displayName: 'Hybrid IM & Presence',
-            },
+            data: {},
             resolve: {
               userId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.currentUser.id;
@@ -1527,6 +1509,7 @@
               userName: /* @ngInject */ function ($stateParams) {
                 return $stateParams.currentUser.userName;
               },
+              displayName: translateDisplayName('hercules.hybridServiceNames.spark-hybrid-impinterop'),
             },
             params: {
               extensionId: {},
@@ -1540,8 +1523,9 @@
                 controller: 'CalendarServicePreviewCtrl',
               },
             },
-            data: {
-              displayName: 'Calendar Service',
+            data: {},
+            resolve: {
+              displayName: translateDisplayName('hercules.serviceNames.squared-fusion-cal'),
             },
             params: {
               extensionId: {},
@@ -1554,8 +1538,9 @@
                 template: '<user-status-history service-id="\'squared-fusion-cal\'"></user-status-history>',
               },
             },
-            data: {
-              displayName: 'Status History',
+            data: {},
+            resolve: {
+              displayName: translateDisplayName('sidePanelBreadcrumb.statusHistory'),
             },
             params: {
               serviceId: {},
@@ -1568,8 +1553,9 @@
                 controller: 'CalendarServicePreviewCtrl',
               },
             },
-            data: {
-              displayName: 'Calendar Service',
+            data: {},
+            resolve: {
+              displayName: translateDisplayName('hercules.serviceNames.squared-fusion-gcal'),
             },
             params: {
               extensionId: {},
@@ -1582,8 +1568,9 @@
                 template: '<user-status-history service-id="\'squared-fusion-gcal\'"></user-status-history>',
               },
             },
-            data: {
-              displayName: 'Status History',
+            data: {},
+            resolve: {
+              displayName: translateDisplayName('sidePanelBreadcrumb.statusHistory'),
             },
             params: {
               serviceId: {},
@@ -1591,9 +1578,7 @@
           })
           .state('user-overview.hybrid-services-squared-fusion-uc', {
             template: '<hybrid-call-service-aggregated-section user-id="$resolve.userId" user-email-address="$resolve.userName"></hybrid-call-service-aggregated-section>',
-            data: {
-              displayName: 'Call Service',
-            },
+            data: {},
             resolve: {
               userId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.currentUser.id;
@@ -1601,6 +1586,7 @@
               userName: /* @ngInject */ function ($stateParams) {
                 return $stateParams.currentUser.userName;
               },
+              displayName: translateDisplayName('hercules.serviceNames.squared-fusion-uc'),
             },
           })
           .state('user-overview.hybrid-services-squared-fusion-uc.aware-settings', {
@@ -1609,9 +1595,7 @@
                 template: '<hybrid-call-service-aware-user-settings user-id="$resolve.userId" user-email-address="$resolve.userEmailAddress" entitlement-updated-callback="$resolve.onEntitlementChange(options)"></hybrid-call-service-aware-user-settings>',
               },
             },
-            data: {
-              displayName: 'Aware',
-            },
+            data: {},
             params: {
               userId: '',
               userEmailAddress: '',
@@ -1621,6 +1605,7 @@
               userId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.userId;
               },
+              displayName: translateDisplayName('sidePanelBreadcrumb.aware'),
               userEmailAddress: /* @ngInject */ function ($stateParams) {
                 return $stateParams.userEmailAddress;
               },
@@ -1635,8 +1620,9 @@
                 template: '<user-status-history service-id="\'squared-fusion-uc\'"></user-status-history>',
               },
             },
-            data: {
-              displayName: 'Status History',
+            data: {},
+            resolve: {
+              displayName: translateDisplayName('sidePanelBreadcrumb.statusHistory'),
             },
             params: {
               serviceId: {},
@@ -1648,15 +1634,14 @@
                 template: '<hybrid-call-service-connect-user-settings user-id="$resolve.userId" user-email-address="$resolve.userEmailAddress" entitlement-updated-callback="$resolve.onEntitlementChange(options)"  voicemail-feature-toggled="$resolve.voicemailFeatureToggled" user-test-tool-feature-toggled="$resolve.userTestToolFeatureToggled"></hybrid-call-service-connect-user-settings>',
               },
             },
-            data: {
-              displayName: 'Connect',
-            },
+            data: {},
             params: {
               userId: '',
               userEmailAddress: '',
               onEntitlementChange: Function,
             },
             resolve: {
+              displayName: translateDisplayName('sidePanelBreadcrumb.connect'),
               userId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.userId;
               },
@@ -1680,8 +1665,9 @@
                 template: '<user-status-history service-id="\'squared-fusion-ec\'"></user-status-history>',
               },
             },
-            data: {
-              displayName: 'Status History',
+            data: {},
+            resolve: {
+              displayName: translateDisplayName('sidePanelBreadcrumb.statusHistory'),
             },
             params: {
               serviceId: {},
@@ -1695,8 +1681,9 @@
                 controllerAs: 'confPreview',
               },
             },
-            data: {
-              displayName: 'Meeting',
+            data: {},
+            resolve: {
+              displayName: translateDisplayName('sidePanelBreadcrumb.meeting'),
             },
             params: {
               service: 'CONFERENCING',
@@ -1709,8 +1696,9 @@
                 controller: 'WebExUserSettingsCtrl',
               },
             },
-            data: {
-              displayName: 'Session Enablement',
+            data: {},
+            resolve: {
+              displayName: translateDisplayName('sidePanelBreadcrumb.meeting'),
             },
             params: {
               currentUser: {},
@@ -1724,8 +1712,9 @@
                 controller: 'WebExUserSettings2Ctrl',
               },
             },
-            data: {
-              displayName: 'Privileges',
+            data: {},
+            resolve: {
+              displayName: translateDisplayName('sidePanelBreadcrumb.privileges'),
             },
             params: {
               currentUser: {},
@@ -1740,8 +1729,9 @@
                 controllerAs: 'SunlightUserOverview',
               },
             },
-            data: {
-              displayName: 'Care',
+            data: {},
+            resolve: {
+              displayName: translateDisplayName('sidePanelBreadcrumb.care'),
             },
             params: {
               service: 'CONTACTCENTER',
@@ -1791,9 +1781,7 @@
               service: 'CMC',
             },
             resolve: {
-              data: /* @ngInject */ function ($translate, $state) {
-                $state.get('user-overview.cmc').data.displayName = $translate.instant('cmc.userSettings.title');
-              },
+              displayName: translateDisplayName('cmc.userSettings.title'),
               user: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams, 'currentUser');
               },
@@ -1860,8 +1848,9 @@
             params: {
               currentOrganization: null,
             },
-            data: {
-              displayName: 'Overview',
+            data: {},
+            resolve: {
+              displayName: translateDisplayName('common.overview'),
             },
           })
           .state('organization-overview.features', {
@@ -1875,8 +1864,9 @@
             params: {
               reloadToggle: false,
             },
-            data: {
-              displayName: 'Beta Features',
+            data: {},
+            resolve: {
+              displayName: translateDisplayName('organizationsPage.betaFeatures'),
             },
           })
           .state('organization-overview.add.addNumbers', {
@@ -2190,6 +2180,9 @@
             data: {
               displayName: 'Overview',
             },
+            resolve: {
+              displayName: translateDisplayName('common.overview'),
+            },
           })
           .state('place-overview.placeLocationDetails', {
             views: {
@@ -2204,9 +2197,7 @@
             },
             data: {},
             resolve: {
-              data: /* @ngInject */ function ($state, $translate) {
-                $state.get('place-overview.placeLocationDetails').data.displayName = $translate.instant('usersPreview.location');
-              },
+              displayName: translateDisplayName('usersPreview.location'),
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
                   done(require('modules/call/locations/locations-user-details'));
@@ -2229,9 +2220,7 @@
             },
             data: {},
             resolve: {
-              data: /* @ngInject */ function ($state, $translate) {
-                $state.get('place-overview.preferredLanguage').data.displayName = $translate.instant('serviceSetupModal.preferredLanguage');
-              },
+              displayName: translateDisplayName('serviceSetupModal.preferredLanguage'),
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
                   done(require('modules/huron/preferredLanguage/preferredLanguageDetails'));
@@ -2254,14 +2243,13 @@
               channels: /* @ngInject */ function (CsdmUpgradeChannelService) {
                 return CsdmUpgradeChannelService.getUpgradeChannelsPromise();
               },
+              displayName: translateDisplayName('deviceDetailPage.deviceConfig'),
             },
             params: {
               currentDevice: {},
               huronDeviceService: {},
             },
-            data: {
-              displayName: 'Device Configuration',
-            },
+            data: {},
           })
           .state('place-overview.csdmDevice.emergencyServices', {
             views: {
@@ -2270,9 +2258,7 @@
               },
             },
             resolve: {
-              data: /* @ngInject */ function ($state, $translate) {
-                $state.get('place-overview.csdmDevice.emergencyServices').data.displayName = $translate.instant('spacesPage.emergencyTitle');
-              },
+              displayName: translateDisplayName('spacesPage.emergencyTitle'),
             },
             data: {},
             params: {
@@ -2291,15 +2277,14 @@
             params: {
               reloadToggle: false,
             },
-            data: {
-              displayName: 'Call',
-            },
+            data: {},
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
                   done(require('modules/squared/places/callOverview'));
                 }, 'place-call-overview');
               }),
+              displayName: translateDisplayName('sidePanelBreadcrumb.call'),
             },
           })
           .state('place-overview.communication.speedDials', {
@@ -2308,9 +2293,7 @@
                 template: '<uc-speed-dial owner-type="places" owner-id="$resolve.ownerId"></uc-speed-dial>',
               },
             },
-            data: {
-              displayName: 'Speed Dials',
-            },
+            data: {},
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
@@ -2320,6 +2303,7 @@
               ownerId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams.currentPlace, 'cisUuid');
               },
+              displayName: translateDisplayName('telephonyPreview.speedDials'),
             },
           })
           .state('place-overview.communication.cos', {
@@ -2337,9 +2321,7 @@
               ownerId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams.currentPlace, 'cisUuid');
               },
-              data: /* @ngInject */ function ($state, $translate) {
-                $state.get('place-overview.communication.cos').data.displayName = $translate.instant('serviceSetupModal.cos.title');
-              },
+              displayName: translateDisplayName('serviceSetupModal.cos.title'),
             },
           })
           .state('place-overview.communication.internationalDialing', {
@@ -2352,9 +2334,7 @@
               watcher: null,
               selected: null,
             },
-            data: {
-              displayName: 'International Dialing',
-            },
+            data: {},
             resolve: {
               watcher: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams, 'watcher');
@@ -2362,6 +2342,7 @@
               selected: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams, 'selected');
               },
+              displayName: translateDisplayName('telephonyPreview.internationalDialing'),
             },
           })
           .state('place-overview.communication.local', {
@@ -2374,9 +2355,7 @@
               watcher: null,
               selected: null,
             },
-            data: {
-              displayName: 'Local Dialing',
-            },
+            data: {},
             resolve: {
               watcher: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams, 'watcher');
@@ -2384,6 +2363,7 @@
               selected: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams, 'selected');
               },
+              displayName: translateDisplayName('telephonyPreview.localDialing'),
             },
           })
           .state('place-overview.communication.line-overview', {
@@ -2395,9 +2375,7 @@
             params: {
               numberId: '',
             },
-            data: {
-              displayName: 'Line Configuration',
-            },
+            data: {},
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
@@ -2416,6 +2394,7 @@
               numberId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams, 'numberId', '');
               },
+              displayName: translateDisplayName('directoryNumberPanel.title'),
             },
           })
           .state('place-overview.communication.externaltransfer', {
@@ -2433,9 +2412,7 @@
               ownerId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams.currentPlace, 'cisUuid');
               },
-              data: /* @ngInject */ function ($state, $translate) {
-                $state.get('place-overview.communication.externaltransfer').data.displayName = $translate.instant('serviceSetupModal.externalTransfer.title');
-              },
+              displayName: translateDisplayName('serviceSetupModal.externalTransfer.title'),
             },
           })
           .state('place-overview.communication.primaryLine', {
@@ -2471,8 +2448,9 @@
                 controller: 'CalendarServicePreviewCtrl',
               },
             },
-            data: {
-              displayName: 'Calendar Service',
+            data: {},
+            resolve: {
+              displayName: translateDisplayName('hercules.serviceNames.squared-fusion-cal'),
             },
             params: {
               extensionId: {},
@@ -2494,16 +2472,21 @@
             params: {
               serviceId: {},
             },
+            resolve: {
+              displayName: translateDisplayName('sidePanelBreadcrumb.statusHistory'),
+            },
           })
           .state('place-overview.hybrid-services-squared-fusion-gcal', {
+
             views: {
               'side-panel-container@place-overview': {
                 templateUrl: 'modules/hercules/user-sidepanel/calendarServicePreview.tpl.html',
                 controller: 'CalendarServicePreviewCtrl',
               },
             },
-            data: {
-              displayName: 'Calendar Service',
+            data: {},
+            resolve: {
+              displayName: translateDisplayName('hercules.serviceNames.squared-fusion-cal'),
             },
             params: {
               extensionId: {},
@@ -2518,11 +2501,12 @@
                 template: '<user-status-history service-id="\'squared-fusion-gcal\'"></user-status-history>',
               },
             },
-            data: {
-              displayName: 'Status History',
-            },
+            data: {},
             params: {
               serviceId: {},
+            },
+            resolve: {
+              displayName: translateDisplayName('sidePanelBreadcrumb.statusHistory'),
             },
           })
           .state('place-overview.hybrid-services-squared-fusion-uc', {
@@ -2532,14 +2516,15 @@
                 controller: 'CallServicePlaceSettingsCtrl',
               },
             },
-            data: {
-              displayName: 'Call Service',
-            },
+            data: {},
             params: {
               extensionId: {},
               extensions: {},
               editService: {},
               getCurrentPlace: {},
+            },
+            resolve: {
+              displayName: translateDisplayName('hercules.serviceNames.squared-fusion-uc'),
             },
           })
           .state('place-overview.hybrid-services-squared-fusion-uc.uc-history', {
@@ -2548,11 +2533,12 @@
                 template: '<user-status-history service-id="\'squared-fusion-uc\'"></user-status-history>',
               },
             },
-            data: {
-              displayName: 'Aware Status History',
-            },
+            data: {},
             params: {
               serviceId: {},
+            },
+            resolve: {
+              displayName: translateDisplayName('sidePanelBreadcrumb.awareStatusHistory'),
             },
           })
           .state('devices-redux', {
@@ -2596,13 +2582,11 @@
               channels: /* @ngInject */ function (CsdmUpgradeChannelService) {
                 return CsdmUpgradeChannelService.getUpgradeChannelsPromise();
               },
+              displayName: translateDisplayName('sidePanelBreadcrumb.overview'),
             },
             params: {
               currentDevice: {},
               huronDeviceService: {},
-            },
-            data: {
-              displayName: 'Overview',
             },
           })
           .state('device-overview.emergencyServices', {
@@ -2616,9 +2600,7 @@
               },
             },
             resolve: {
-              data: /* @ngInject */ function ($state, $translate) {
-                $state.get('device-overview.emergencyServices').data.displayName = $translate.instant('spacesPage.emergencyTitle');
-              },
+              displayName: translateDisplayName('spacesPage.emergencyTitle'),
             },
             data: {},
             params: {
@@ -2828,9 +2810,7 @@
                   defer.resolve(data);
                 }
               },
-              data: /* @ngInject */ function ($state, $translate) {
-                $state.get('customer-overview').data.displayName = $translate.instant('common.overview');
-              },
+              displayName: translateDisplayName('common.overview'),
             },
             params: {
               currentCustomer: {},
@@ -2856,9 +2836,7 @@
               },
             },
             resolve: {
-              data: /* @ngInject */ function ($state, $translate) {
-                $state.get('customer-overview.customerAdministrators').data.displayName = $translate.instant('customerPage.administrators');
-              },
+              displayName: translateDisplayName('customerPage.administrators'),
             },
             data: {},
           })
@@ -2871,9 +2849,7 @@
               },
             },
             resolve: {
-              data: /* @ngInject */ function ($state, $translate) {
-                $state.get('customer-overview.customerSubscriptions').data.displayName = $translate.instant('customerPage.orderRequest');
-              },
+              displayName: translateDisplayName('customerPage.orderRequest'),
             },
           })
           .state('customer-overview.ordersOverview', {
@@ -2888,9 +2864,7 @@
               },
             },
             resolve: {
-              data: /* @ngInject */ function ($state, $translate) {
-                $state.get('customer-overview.ordersOverview').data.displayName = $translate.instant('customerPage.pstnOrders');
-              },
+              displayName: translateDisplayName('customerPage.pstnOrders'),
               lazy: resolveLazyLoad(function (done) {
                 require(['modules/huron/pstn/pstnOrderManagement/ordersOverview'], done);
               }),
@@ -2908,9 +2882,7 @@
               },
             },
             resolve: {
-              data: /* @ngInject */ function ($state, $translate) {
-                $state.get('customer-overview.meetingDetail').data.displayName = $translate.instant('customerPage.meetingLicenses');
-              },
+              displayName: translateDisplayName('customerPage.meetingLicenses'),
             },
             data: {},
             params: {
@@ -2926,9 +2898,7 @@
               },
             },
             resolve: {
-              data: /* @ngInject */ function ($state, $translate) {
-                $state.get('customer-overview.sharedDeviceDetail').data.displayName = $translate.instant('customerPage.sharedDeviceLicenses');
-              },
+              displayName: translateDisplayName('customerPage.sharedDeviceLicenses'),
             },
             data: {},
             params: {
@@ -2944,9 +2914,7 @@
               },
             },
             resolve: {
-              data: /* @ngInject */ function ($state, $translate) {
-                $state.get('customer-overview.careLicenseDetail').data.displayName = $translate.instant('customerPage.careLicenses');
-              },
+              displayName: translateDisplayName('customerPage.careLicenses'),
             },
             data: {},
             params: {
@@ -2962,9 +2930,7 @@
               },
             },
             resolve: {
-              data: /* @ngInject */ function ($state, $translate) {
-                $state.get('customer-overview.externalNumbers').data.displayName = $translate.instant('customerPage.phoneNumbers');
-              },
+              displayName: translateDisplayName('customerPage.phoneNumbers'),
             },
             data: {},
           })
@@ -2977,9 +2943,7 @@
               },
             },
             resolve: {
-              data: /*ngInject */ function ($state, $translate) {
-                $state.get('customer-overview.domainDetail').data.displayName = $translate.instant('customerPage.domains');
-              },
+              displayName: translateDisplayName('customerPage.domains'),
             },
             data: {},
             params: {
@@ -2999,9 +2963,7 @@
               },
             },
             resolve: {
-              data: /* @ngInject */ function ($state, $translate) {
-                $state.get('customerPstnOrdersOverview').data.displayName = $translate.instant('customerPage.pstnOrders');
-              },
+              displayName: translateDisplayName('customerPage.pstnOrders'),
               lazy: resolveLazyLoad(function (done) {
                 require(['modules/huron/pstn/pstnOrderManagement/customerPstnOrdersOverview'], done);
               }),
@@ -3289,8 +3251,9 @@
               imported: '',
               logstashPath: '',
             },
-            data: {
-              displayName: 'Advanced CDR Report',
+            data: {},
+            resolve: {
+              displayName: translateDisplayName('cdrLogs.advancedCDR'),
             },
           })
           .state('cdrladderdiagram', {
@@ -3944,9 +3907,7 @@
                 templateUrl: 'modules/context/fields/sidepanel/hybrid-context-fields-sidepanel-header.html',
               },
             },
-            data: {
-              displayName: 'Overview',
-            },
+            data: {},
             params: {
               field: {},
               process: function () {},
@@ -3966,6 +3927,7 @@
               hasContextExpandedTypesToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasContextExpandedTypes);
               },
+              displayName: translateDisplayName('common.overview'),
             },
           })
           .state('context-fields-sidepanel.options', {
@@ -4036,9 +3998,7 @@
                 templateUrl: 'modules/context/fieldsets/sidepanel/hybrid-context-fieldsets-sidepanel-header.html',
               },
             },
-            data: {
-              displayName: 'Overview',
-            },
+            data: {},
             params: {
               fieldset: {},
               process: function () {},
@@ -4054,6 +4014,7 @@
               callback: /* @ngInject */ function ($stateParams) {
                 return $stateParams.callback;
               },
+              displayName: translateDisplayName('sidePanelBreadcrumb.overview'),
             },
           })
           .state('context-fieldsets-sidepanel.fields', {
@@ -4064,9 +4025,8 @@
                 controllerAs: 'contextFieldsetsSidepanelFieldListCtrl',
               },
             },
-            data: {
-              displayName: 'Fields',
-            },
+
+            data: {},
             params: {
               fields: {},
             },
@@ -4074,6 +4034,7 @@
               fields: /* @ngInject */ function ($stateParams) {
                 return $stateParams.fields;
               },
+              displayName: translateDisplayName('sidePanelBreadcrumb.fields'),
             },
           })
           .state('context-cluster-sidepanel', {
@@ -4294,9 +4255,7 @@
                 templateUrl: 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html',
               },
             },
-            data: {
-              displayName: 'Overview',
-            },
+            data: {},
             params: {
               clusterId: null,
               connectorType: null,
@@ -4311,6 +4270,7 @@
               hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
               },
+              displayName: translateDisplayName('sidePanelBreadcrumb.overview'),
             },
           })
           .state('hds-cluster-details.host-details', {
@@ -4321,9 +4281,7 @@
                 controllerAs: 'hostDetailsCtrl',
               },
             },
-            data: {
-              displayName: 'Node',
-            },
+            data: {},
             params: {
               host: null,
               hostSerial: null,
@@ -4332,6 +4290,7 @@
               hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
               },
+              displayName: translateDisplayName('sidePanelBreadcrumb.node'),
             },
           })
           .state('hds-cluster-details.alarm-details', {
@@ -4904,9 +4863,7 @@
                 templateUrl: 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html',
               },
             },
-            data: {
-              displayName: 'Overview',
-            },
+            data: {},
             params: {
               clusterId: null,
               connectorType: null,
@@ -4918,6 +4875,7 @@
               connectorType: /* @ngInject */ function ($stateParams) {
                 return $stateParams.connectorType;
               },
+              displayName: translateDisplayName('sidePanelBreadcrumb.overview'),
             },
           })
           .state('media-cluster-details.host-details', {

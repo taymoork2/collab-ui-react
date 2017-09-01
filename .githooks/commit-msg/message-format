@@ -69,6 +69,6 @@ echo ""
 echo "Commit message does not meet expected guidelines:"
 echo "https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/wiki/How-to-commit-changes#commit-message-raw-format"
 echo ""
-echo "Please retry with a proper commit or use \`npm run commit\` to help you format a message"
+echo "Please retry with a proper commit or use \`yarn commit\` to help you format a message"
 
 exit 1

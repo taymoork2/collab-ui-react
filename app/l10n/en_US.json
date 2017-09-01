@@ -41,6 +41,23 @@
     "userPrefsSaved": "User Preferences Updated",
     "initError": "There was an error refreshing page: ${error}"
   },
+  "sidePanelBreadcrumb": {
+    "aware": "Aware",
+    "awareStatusHistory": "Aware Status History",
+    "call": "Call",
+    "connect": "Connect",
+    "deviceConfiguration": "Device Configuration",
+    "fields": "Fields",
+    "meeting": "Meeting",
+    "overview": "Overview",
+    "sessionEnablement": "Session Enablement",
+    "statusHistory": "Status History",
+    "userOverViewMessage": "Message",
+    "voiceMail": "Voice Mail",
+    "privileges": "Privileges",
+    "care": "Care",
+    "node": "Node"
+  },
   "usersPage": {
     "assignServices": "Assign Services",
     "assignDnAndDirectLines": "Assign Numbers",
@@ -1427,6 +1444,7 @@
     "enable": "Enable",
     "enabled": "Enabled",
     "error": "Error",
+    "fieldRequired": "This field is required",
     "finish": "Finish",
     "firstName": "First Name",
     "general": "General",
@@ -1475,7 +1493,6 @@
     "pending": "Pending",
     "play": "Play",
     "postpone": "Postpone",
-    "pro": "Pro",
     "proceed": "Proceed",
     "quantity": "Qty",
     "releaseChannel": "Release Channel",
@@ -3447,7 +3464,8 @@
       "invalidEmailLimit": "Enter only up to 5 email addresses",
       "invalidSpaceIdLimit": "Search must be limited to less than 5 Space IDs",
       "noMatchesFound": "No Matches Found",
-      "requestFailed": "Request Failed: Tracking ID {{trackingId}}"
+      "requestFailed": "Request Failed: Tracking ID {{trackingId}}",
+      "504RequestFailed": "Search Timed Out: Tracking ID {{trackingId}}"
     },
     "encryption": {
       "instructions": "After downloading your report, use this password to open the .zip file. You can also access the password by clicking on the key icon in the reports list.",
@@ -5435,6 +5453,7 @@
   "addDeviceWizard": {
     "newDevice": "New Device",
     "newCode": "New Code",
+    "qrCode": "qr code graphic",
     "confirmRoomDeviceOnly": {
       "roomDeviceOnly": "Room device activation only",
       "noSparkCallWarning": "This user can only activate Cisco Spark room devices. Before they can activate a desk phone, you must enable the Cisco Spark call service for them from the Users page."
@@ -6785,7 +6804,7 @@
     "locationSelectDesc": "Choose the physical location where this user primarily works from.",
     "locationDetailTitle": "Location Details",
     "locationDetailDesc": "Locations let you group Cisco Spark Call settings together based on specific geography. Specify a name and caller ID for this location.",
-    "userLocMoveErrorDesc": "This user's extension does not exist at this location. Before you move this user, you must create a range that contains the extension in the new location.",
+    "locMoveErrorDesc": "Move failed: {{msg}}",
     "mohTitle": "Location Media on Hold",
     "mohDesc": "Set the default media to be played for this location.",
     "mohSelectLabel": "Media Selection",

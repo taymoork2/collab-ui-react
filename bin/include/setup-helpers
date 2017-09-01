@@ -234,8 +234,33 @@ function export_project_root_env_var {
     eval "$entry_line"
 }
 
+# notes:
+# - 'nvm' will install itself by default to '.bashrc'
+# - in OSX, default terminal sessions load '.bash_profile', NOT '.bashrc' on new sessions
+# - so we modify '.bash_profile' to load '.bashrc' by default, as needed
+function update_bash_profile_to_source_bashrc_as_needed {
+    local bash_profile_file
+    bash_profile_file="$HOME/.bash_profile"
+    local entry_line='\[\[ -s \"\$HOME/.bashrc\" \]\] && source \"\$HOME/.bashrc\"'
+    local grep_term="^$entry_line"
+    local unescaped_entry_line
+    unescaped_entry_line="$(echo "$entry_line" | sed -E 's/\\(.)/\1/g')"  # <= unescape backslashes
+    if [ "$(uname)" = "Darwin" ]; then
+        if ! grep -q "$grep_term" "$bash_profile_file"; then
+            echo "[INFO] '.bash_profile' must source '.bashrc' for \`nvm\` support in shell, updating..."
+            echo "[WARNING] If you were already sourcing '.bashrc', please check '.bash_profile' to ensure it is not sourced twice."
+            echo "" >> "$bash_profile_file"
+            echo "# source in .bashrc" >> "$bash_profile_file"
+            echo "$unescaped_entry_line" >> "$bash_profile_file"
+        fi
+    fi
+}
+
 # make sure WX2_ADMIN_WEB_CLIENT_HOME is set
 export_project_root_env_var
+
+# in OSX, make sure '.bash_profile' sources '.bashrc'
+update_bash_profile_to_source_bashrc_as_needed
 
 # Check NPM local path
 # shellcheck disable=SC2015

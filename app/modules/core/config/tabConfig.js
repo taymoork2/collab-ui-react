@@ -137,7 +137,7 @@
     link: '/gss',
   }, {
     tab: 'customerTab',
-    icon: 'icon-people-active',
+    icon: 'icon-company-active',
     title: 'tabs.customerTab',
     state: 'partnercustomers',
     link: '/partner/customers',
