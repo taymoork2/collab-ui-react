@@ -295,7 +295,7 @@ export class USSService {
   }
 
   private extractData<T>(res: ng.IHttpResponse<T>): T {
-    return res.data as T;
+    return res.data;
   }
 
   private extractJournalEntries(res: ng.IHttpResponse<any>): IJournalEntry[] {

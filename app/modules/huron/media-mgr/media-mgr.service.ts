@@ -42,7 +42,7 @@ export class MediaMgrService {
     return this.$http<IMedia[]>({
       method: 'GET',
       url: `${this.HuronConfig.getMmsUrl()}/organizations/${this.Authinfo.getOrgId()}/media`,
-    }).then(response => response.data as IMedia[]);
+    }).then(response => response.data);
   }
 
   public uploadMedia(media: IMediaUpload, uploadProgressCallback: (number) => void): ng.IPromise<any> {

@@ -223,7 +223,7 @@ export class ClusterService {
 
   // Private methods
   private extractDataFromResponse<T>(response: ng.IHttpResponse<T>) {
-    return response.data as T;
+    return response.data;
   }
 
   private addExtendedState(connector: IConnector): IExtendedConnector {
