@@ -70,7 +70,7 @@ export class Notification {
 
   private notifyHttpErrorResponse(errorMsg: string, response: ng.IHttpPromiseCallbackArg<any>): void {
     if (!this.isCancelledResponse(response)) {
-      const headers = _.get(response, 'config.headers');
+      const headers = _.get(response, 'headers');
       this.popToast({
         notifications: errorMsg,
         type: NotificationType.ERROR,
