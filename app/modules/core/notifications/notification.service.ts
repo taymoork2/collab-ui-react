@@ -52,23 +52,23 @@ export class Notification {
     this.notify(this.$translate.instant(messageKey, messageParams), NotificationType.ERROR, this.getTitle(titleKey), allowHtml);
   }
 
-  public errorWithTrackingId(response: ng.IHttpPromiseCallbackArg<any>, errorKey?: string, errorParams?: Object): void {
+  public errorWithTrackingId(response: ng.IHttpResponse<any>, errorKey?: string, errorParams?: Object): void {
     let errorMsg = this.getErrorMessage(errorKey, errorParams);
     errorMsg = this.addResponseMessage(errorMsg, response, false);
     this.notifyHttpErrorResponse(errorMsg, response);
   }
 
-  public processErrorResponse(response: ng.IHttpPromiseCallbackArg<any>, errorKey?: string, errorParams?: Object): string {
+  public processErrorResponse(response: ng.IHttpResponse<any>, errorKey?: string, errorParams?: Object): string {
     const errorMsg = this.getErrorMessage(errorKey, errorParams);
     return this.addResponseMessage(errorMsg, response, true);
   }
 
-  public errorResponse(response: ng.IHttpPromiseCallbackArg<any>, errorKey?: string, errorParams?: Object): void {
+  public errorResponse(response: ng.IHttpResponse<any>, errorKey?: string, errorParams?: Object): void {
     const errorMsg = this.processErrorResponse(response, errorKey, errorParams);
     this.notifyHttpErrorResponse(errorMsg, response);
   }
 
-  private notifyHttpErrorResponse(errorMsg: string, response: ng.IHttpPromiseCallbackArg<any>): void {
+  private notifyHttpErrorResponse(errorMsg: string, response: ng.IHttpResponse<any>): void {
     if (!this.isCancelledResponse(response)) {
       const headers = _.get(response, 'headers');
       this.popToast({
@@ -154,7 +154,7 @@ export class Notification {
     this.$timeout(() => this.preventToasters = false, 1000);
   }
 
-  private addResponseMessage(errorMsg: string, response: ng.IHttpPromiseCallbackArg<any>, useResponseData: boolean = false): string {
+  private addResponseMessage(errorMsg: string, response: ng.IHttpResponse<any>, useResponseData: boolean = false): string {
     const status = _.get<number>(response, 'status');
     if (this.isCancelledResponse(response)) {
       errorMsg = this.addTranslateKeyMessage(errorMsg, 'errors.statusCancelled');
@@ -179,7 +179,7 @@ export class Notification {
     return `${this.addTrailingPeriod(message)} ${this.$translate.instant(translateKey)}`;
   }
 
-  private isCancelledResponse(response: ng.IHttpPromiseCallbackArg<any>): boolean {
+  private isCancelledResponse(response: ng.IHttpResponse<any>): boolean {
     return this.isRejectedStatus(_.get<number>(response, 'status')) && _.get(response, 'config.timeout.$$state.status') > 0;
   }
   private isOfflineStatus(status: number): boolean {
@@ -202,7 +202,7 @@ export class Notification {
     return status === HttpStatus.UNAUTHORIZED;
   }
 
-  private addMessageFromResponseData(errorMsg: string, response: ng.IHttpPromiseCallbackArg<any>): string {
+  private addMessageFromResponseData(errorMsg: string, response: ng.IHttpResponse<any>): string {
     let error: string;
     let errors: any[] | string;
     let responseMessage: string | undefined;
@@ -250,7 +250,7 @@ export class Notification {
       .value();
   }
 
-  private addTrackingId(errorMsg: string, response: ng.IHttpPromiseCallbackArg<any>): string {
+  private addTrackingId(errorMsg: string, response: ng.IHttpResponse<any>): string {
     const headers = _.get(response, 'headers');
     let trackingId = _.isFunction(headers) && headers('TrackingID');  // exposed via CORS headers
     if (!trackingId) {

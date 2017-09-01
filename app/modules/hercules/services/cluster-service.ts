@@ -222,7 +222,7 @@ export class ClusterService {
   }
 
   // Private methods
-  private extractDataFromResponse<T>(response: ng.IHttpPromiseCallbackArg<T>) {
+  private extractDataFromResponse<T>(response: ng.IHttpResponse<T>) {
     return response.data as T;
   }
 

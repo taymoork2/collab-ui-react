@@ -81,7 +81,7 @@ export class HybridServicesExtrasService {
       .value();
   }
 
-  private extractDataFromResponse<T>(response: ng.IHttpPromiseCallbackArg<T>): T {
+  private extractDataFromResponse<T>(response: ng.IHttpResponse<T>): T {
     return _.get<T>(response, 'data');
   }
 

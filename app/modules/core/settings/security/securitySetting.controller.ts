@@ -37,7 +37,7 @@ export class SecuritySettingController {
       });
   }
 
-  private appSecuritySettingLoaded(response: ng.IHttpPromiseCallbackArg<IGetAppSecurityResponse>) {
+  private appSecuritySettingLoaded(response: ng.IHttpResponse<IGetAppSecurityResponse>) {
     if (_.has(response, 'data.clientSecurityPolicy')) {
       this._isSparkClientSecurityEnabled = _.get<boolean>(response, 'data.clientSecurityPolicy');
       this.isSparkClientSecurityLoaded = true;

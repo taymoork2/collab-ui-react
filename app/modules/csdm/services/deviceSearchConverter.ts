@@ -1,4 +1,4 @@
-import IHttpPromiseCallbackArg = angular.IHttpPromiseCallbackArg;
+import IHttpResponse = angular.IHttpResponse;
 import { DeviceHelper, HuronDeviceHelper } from './csdmHelper';
 import { SearchResult } from './search/searchResult';
 
@@ -10,7 +10,7 @@ export class DeviceSearchConverter {
     this.deviceHelper = new DeviceHelper($translate);
   }
 
-  public convertSearchResult(result: IHttpPromiseCallbackArg<SearchResult>): IHttpPromiseCallbackArg<SearchResult> {
+  public convertSearchResult(result: IHttpResponse<SearchResult>): IHttpResponse<SearchResult> {
     if (result.data && result.data.hits && result.data.hits.hits) {
       result.data.hits.hits.forEach(d => Device.convert(this.deviceHelper, d));
     }
