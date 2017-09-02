@@ -314,17 +314,13 @@ require('./helpdesk.scss');
       if (isValidOrderEntry(searchString)) {
         vm.searchingForOrders = true;
         HelpdeskService.searchOrders(searchString).then(function (res) {
-          var order = [];
-          var found = _.find(res, function (el) { return el.orderStatus === 'PROVISIONED'; });
-          if (!_.isUndefined(found)) {
-            order.push(found);
-          }
+          var orders = HelpdeskService.filterOrders(res);
 
-          if (order.length === 0) {
+          if (orders.length === 0) {
             vm.currentSearch.orderSearchResults = null;
             vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.noSearchHits');
           } else {
-            vm.currentSearch.orderSearchResults = order;
+            vm.currentSearch.orderSearchResults = orders;
             vm.currentSearch.orderSearchFailure = null;
           }
           vm.searchingForOrders = false;

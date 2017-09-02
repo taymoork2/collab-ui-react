@@ -6,30 +6,43 @@
     .controller('HelpdeskOrderController', HelpdeskOrderController);
 
   /* @ngInject */
-  function HelpdeskOrderController($state, $stateParams, $translate, $timeout, Authinfo, HelpdeskService, Notification) {
+  function HelpdeskOrderController($state, $stateParams, $translate, $timeout, $window, Authinfo, HelpdeskService, Notification) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.order) {
-      vm.orderId = $stateParams.order.externalOrderId;
+      vm.order = $stateParams.order;
+      vm.orderId = vm.order.externalOrderId;
+      vm.lastProvisioningContact = vm.order.lastProvisioningContact;
+      vm.oldLastProvisioningContact = _.clone(vm.lastProvisioningContact);
     } else {
       vm.orderId = $stateParams.id;
     }
-    vm.showCustomerEmailSent = true;
-    vm.showPartnerEmailSent = true;
-    vm.customerAdminEmailEdit = vm.partnerAdminEmailEdit = false;
-    vm.showCustomerAdminEmailEdit = showCustomerAdminEmailEdit;
-    vm.updateCustomerAdminEmail = updateCustomerAdminEmail;
+    // Flag to show spinners while email update is being fetched
+    vm.loadingCustomerEmailUpdate = false;
+    vm.loadingPartnerEmailUpdate = false;
+    vm.loadingProvisioningContactUpdate = false;
+
+    // Flags to show input field and edit button
+    vm.showCustomerEmailEditView = false;
+    vm.showPartnerEmailEditView = false;
+    vm.showProvisioningContactEditView = false;
+
+    // Logic for showing links
+    vm.isAdminEmailEditAllowed = isAdminEmailEditAllowed;
+    vm.isProvisionContactEditAllowed = isProvisionContactEditAllowed;
+    vm.isSetupOrderAllowed = isSetupOrderAllowed;
+
+    vm.showEmailEditView = showEmailEditView;
+    vm.updateAdminEmail = updateAdminEmail;
+    vm.isAccountActivated = isAccountActivated;
+    vm.isProvisionedOrderPending = isProvisionedOrderPending;
     vm.getEmailStatus = getEmailStatus;
-    vm.cancelCustomerAdminEmailEdit = cancelCustomerAdminEmailEdit;
-    vm.showPartnerAdminEmailEdit = showPartnerAdminEmailEdit;
-    vm.updatePartnerAdminEmail = updatePartnerAdminEmail;
-    vm.cancelPartnerAdminEmailEdit = cancelPartnerAdminEmailEdit;
+    vm.cancelAdminEmailEdit = cancelAdminEmailEdit;
     vm.resendAdminEmail = resendAdminEmail;
-    vm.isEditAllowed = Authinfo.isOrderAdminUser();
+    vm.hasPermissionToEditInfo = Authinfo.isOrderAdminUser();
     vm.goToCustomerPage = goToCustomerPage;
     vm.goToPartnerPage = goToPartnerPage;
-    vm.isAccountActivated = isAccountActivated;
-    vm.partnerOrgExists = partnerOrgExists;
+    vm.launchOrderProcessingClient = launchOrderProcessingClient;
 
     vm._helpers = {
       notifyError: notifyError,
@@ -37,23 +50,61 @@
 
     var oneTier = '1-tier';
 
+    var emailObjsMap = {
+      customer: {
+        email: 'customerAdminEmail',
+        showEditEmail: 'showCustomerEmailEditView',
+        showResendEmail: 'showResendCustomerEmail',
+        showLoadingEmail: 'loadingCustomerEmailUpdate',
+        lastTimeSent: 'customerEmailSent',
+        oldEmail: 'oldcustomerAdminEmail',
+      },
+      partner: {
+        email: 'partnerAdminEmail',
+        showEditEmail: 'showPartnerEmailEditView',
+        showResendEmail: 'showResendPartnerEmail',
+        showLoadingEmail: 'loadingPartnerEmailUpdate',
+        lastTimeSent: 'partnerEmailSent',
+        oldEmail: 'oldpartnerAdminEmail',
+
+      },
+      provisioning: {
+        email: 'lastProvisioningContact',
+        showEditEmail: 'showProvisioningContactEditView',
+        showResendEmail: 'showResendProvisioningContact',
+        showLoadingEmail: 'loadingProvisioningContactUpdate',
+        lastTimeSent: 'provisioningEmailSent',
+        oldEmail: 'oldLastProvisioningContact',
+      },
+    };
+
     // Get Order details
-    HelpdeskService.searchOrders(vm.orderId).then(initOrderView, vm._helpers.notifyError);
+    if (!vm.order) {
+      HelpdeskService.searchOrders(vm.orderId).then(initOrderView, vm._helpers.notifyError);
+    } else {
+      initOrderView(vm.order);
+    }
 
     function initOrderView(order) {
       // Getting information from the order.
-      var orderObj = _.find(order, function (res) {
-        return res.orderStatus === 'PROVISIONED';
-      });
-      if (_.isUndefined(orderObj)) {
-        return;
+      var orderObj;
+      if (_.isArray(order)) {
+        orderObj = _.find(order, function (res) {
+          return res.orderStatus === 'PROVISIONED';
+        });
+        if (_.isEmpty(orderObj)) {
+          return;
+        }
+      } else {
+        orderObj = order;
       }
       vm.orderUuid = orderObj.orderUuid;
       vm.subscriptionId = orderObj.serviceId;
-      var accountId = orderObj.accountId;
+      vm.accountId = orderObj.accountId;
       vm.orderId = orderObj.externalOrderId;
 
       //Getting the customer info from order payload or update clientContent
+      vm.lastEmailSent = orderObj.lastProvisioningEmailTimestamp ? (new Date(orderObj.lastProvisioningEmailTimestamp)).toUTCString() : undefined;
       var emailUpdates = _.get(orderObj, 'clientContent.adminEmailUpdates');
       var customerEmailUpdates = _.filter(emailUpdates, function (data) {
         return data.orderEmailType === 'CUSTOMER_ADMIN';
@@ -85,10 +136,13 @@
       }
       vm.oldpartnerAdminEmail = vm.partnerAdminEmail;
 
-
+      if (!vm.accountId) {
+        vm.provisionTime = orderObj.orderStatus !== 'PROVISIONED' ? null : (new Date(orderObj.lastModified)).toUTCString();
+        vm.accountName = _.get(orderObj, 'orderContent.common.customerInfo.endCustomerInfo.name');
+      }
       // Getting the account details using the account Id from order.
-      if (accountId) {
-        HelpdeskService.getAccount(accountId)
+      if (vm.accountId) {
+        HelpdeskService.getAccount(vm.accountId)
           .then(function (account) {
             vm.account = account;
             vm.accountName = account.accountName;
@@ -101,7 +155,7 @@
                 vm.managedBy = _.get(org, 'displayName', '');
               }, vm._helpers.notifyError);
             }
-            vm.provisionTime = (new Date(orderObj.orderReceived)).toGMTString();
+            vm.provisionTime = (new Date(orderObj.orderReceived)).toUTCString();
             vm.accountActivated = false;
             vm.accountActivationInfo = $translate.instant('common.no');
             if (vm.accountOrgId) {
@@ -110,47 +164,33 @@
                 var activationDate = _.get(org, 'meta.created');
                 if (activationDate) {
                   vm.accountActivated = true;
-                  vm.accountActivationInfo = (new Date(activationDate)).toGMTString();
+                  vm.accountActivationInfo = (new Date(activationDate)).toUTCString();
                 }
               });
             }
 
             // Get the most recent date that emails were sent to customer and partner
             // First, get latest date the welcome email was sent to customer.
-            getEmailStatus(true);
+            getEmailStatus('customer');
             // If Partner is available, get the latest date welcome mail was sent to partner.
             if (vm.partnerOrgId) {
-              getEmailStatus(false);
+              getEmailStatus('partner');
             }
           });
       }
     }
 
     // Make REST calls to get the email status.
-    function getEmailStatus(isCustomer) {
-      if (isCustomer) {
-        HelpdeskService.getEmailStatus(vm.customerAdminEmail)
-          .then(function (response) {
-            // First element of response array is the latest.
-            vm.customerEmailSent = null;
-            var emailSent = getEmailSentTime(response);
-            if (emailSent && emailSent.timestamp) {
-              vm.customerEmailSent = HelpdeskService.unixTimestampToUTC(emailSent.timestamp);
-            }
-            vm.showCustomerEmailSent = true;
-          }, vm._helpers.notifyError);
-      } else {
-        HelpdeskService.getEmailStatus(vm.partnerAdminEmail)
-          .then(function (response) {
-            // First element of response array is the latest.
-            vm.partnerEmailSent = null;
-            var emailSent = getEmailSentTime(response);
-            if (emailSent && emailSent.timestamp) {
-              vm.partnerEmailSent = HelpdeskService.unixTimestampToUTC(emailSent.timestamp);
-            }
-            vm.showPartnerEmailSent = true;
-          }, vm._helpers.notifyError);
-      }
+    function getEmailStatus(emailType) {
+      var emailObj = emailObjsMap[emailType];
+      HelpdeskService.getEmailStatus(vm[emailObj.email])
+        .then(function (response) {
+          var emailSent = getEmailSentTime(response);
+          if (emailSent && emailSent.timestamp) {
+            vm[emailObj.lastTimeSent] = HelpdeskService.unixTimestampToUTC(emailSent.timestamp);
+          }
+          vm[emailObj.showLoadingEmail] = false;
+        }, vm._helpers.notifyError);
     }
 
     function getEmailSentTime(emails) {
@@ -164,71 +204,64 @@
     }
 
     // Allow Customer Admin Email address to be editted
-    function showCustomerAdminEmailEdit() {
-      vm.customerAdminEmailEdit = true;
+    function showEmailEditView(emailType) {
+      var editViewFlag = emailObjsMap[emailType].showEditEmail;
+      vm[editViewFlag] = true;
     }
 
-    // Update Customer Admin Email and send welcome email
-    function updateCustomerAdminEmail() {
-      HelpdeskService.editAdminEmail(vm.orderUuid, vm.customerAdminEmail, true)
+    function updateAdminEmail(emailType) {
+      var isCustomer = emailType === 'customer';
+      var emailObj = emailObjsMap[emailType];
+      HelpdeskService.editAdminEmail(vm.orderUuid, vm[emailObj.email], isCustomer)
         .then(function () {
           Notification.success('helpdesk.editAdminEmailSuccess');
-          vm.oldcustomerAdminEmail = vm.customerAdminEmail;
-          vm.customerAdminEmailEdit = false;
-          vm.showCustomerEmailSent = false;
+          var emailTypeMap = emailObjsMap[emailType];
+          vm[emailTypeMap.oldEmail] = vm[emailTypeMap.email];
+          vm[emailTypeMap.showLoadingEmail] = true;
+          vm[emailTypeMap.showEditEmail] = false;
           $timeout(function () {
-            getEmailStatus(false);
+            getEmailStatus(emailType);
           }, 5000);
         }, function (response) {
           Notification.errorResponse(response, 'helpdesk.editAdminEmailFailure');
         });
     }
 
-    // Cancel (close) the Edit option
-    function cancelCustomerAdminEmailEdit() {
-      vm.customerAdminEmailEdit = false;
-      vm.customerAdminEmail = vm.oldcustomerAdminEmail;
+    function isAccountActivated() {
+      return vm.accountId && vm.accountActivated;
     }
 
-    // Allow Partner Admin Email address to be editted
-    function showPartnerAdminEmailEdit() {
-      vm.partnerAdminEmailEdit = true;
+    function isAdminEmailEditAllowed() {
+      return vm.accountId && vm.hasPermissionToEditInfo;
     }
 
-    // Update Partner Admin Email and send welcome email
-    function updatePartnerAdminEmail() {
-      HelpdeskService.editAdminEmail(vm.orderUuid, vm.partnerAdminEmail, false)
-        .then(function () {
-          Notification.success('helpdesk.editAdminEmailSuccess');
-          vm.oldpartnerAdminEmail = vm.partnerAdminEmail;
-          vm.partnerAdminEmailEdit = false;
-          vm.showPartnerEmailSent = false;
-          $timeout(function () {
-            getEmailStatus(false);
-          }, 5000);
-        }, function (response) {
-          Notification.errorResponse(response, 'helpdesk.editAdminEmailFailure');
-        });
+    function isProvisionedOrderPending() {
+      return vm.order.purchaseOrderId && vm.order.orderStatus !== 'PROVISIONED';
+    }
+
+    function isProvisionContactEditAllowed() {
+      return vm.hasPermissionToEditInfo && vm.isProvisionedOrderPending;
+    }
+
+    function isSetupOrderAllowed() {
+      return vm.hasPermissionToEditInfo && vm.isProvisionedOrderPending;
     }
 
     // Cancel (close) the Edit option
-    function cancelPartnerAdminEmailEdit() {
-      vm.partnerAdminEmailEdit = false;
-      vm.partnerAdminEmail = vm.oldpartnerAdminEmail;
+    function cancelAdminEmailEdit(emailType) {
+      var emailObj = emailObjsMap[emailType];
+      vm[emailObj.email] = vm[emailObj.oldEmail];
+      vm[emailObj.showEditEmail] = false;
     }
 
     // Resend the welcome email to specified party.  Attempt to last send date.
-    function resendAdminEmail(isCustomer) {
-      HelpdeskService.resendAdminEmail(vm.orderUuid, isCustomer)
+    function resendAdminEmail(emailType) {
+      HelpdeskService.resendAdminEmail(vm.orderUuid, emailType)
         .then(function () {
-          if (isCustomer) {
-            vm.showCustomerEmailSent = false;
-          } else {
-            vm.showPartnerEmailSent = false;
-          }
-
+          var emailObj = emailObjsMap[emailType];
+          vm[emailObj.showLoadingEmail] = true;
           $timeout(function () {
-            getEmailStatus(isCustomer);
+            getEmailStatus(emailType);
           }, 5000);
           Notification.success('helpdesk.resendMailSuccess');
         }, function (response) {
@@ -245,14 +278,15 @@
       $state.go('helpdesk.org', { id: vm.partnerOrgId });
     }
 
-    // Check if account has been activated.
-    function isAccountActivated() {
-      return (vm.accountActivated);
+    function launchOrderProcessingClient() {
+      HelpdeskService.getOrderProcessingUrl(vm.order.purchaseOrderId)
+        .then(function (opcUrl) {
+          $window.open(opcUrl, '_blank');
+        }, function (res) {
+          notifyError(res);
+        });
     }
 
-    function partnerOrgExists() {
-      return (vm.partnerOrgId);
-    }
     function notifyError(response) {
       Notification.errorResponse(response, 'helpdesk.unexpectedError');
     }
