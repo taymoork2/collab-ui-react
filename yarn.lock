@@ -1675,8 +1675,8 @@ clap@^1.0.9:
     chalk "^1.1.3"
 
 clean-css@4.1.x:
-  version "4.1.7"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/clean-css/-/clean-css-4.1.7.tgz#b9aea4f85679889cf3eae8b40349ec4ebdfdd032"
+  version "4.1.8"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/clean-css/-/clean-css-4.1.8.tgz#061455b2494a750ac98f46d8d5ebb17c679ea9d1"
   dependencies:
     source-map "0.5.x"
 
@@ -7752,8 +7752,8 @@ source-list-map@^2.0.0:
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/source-list-map/-/source-list-map-2.0.0.tgz#aaa47403f7b245a92fbc97ea08f250d6087ed085"
 
 source-map-support@^0.4.1, source-map-support@^0.4.15, source-map-support@~0.4.0:
-  version "0.4.16"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/source-map-support/-/source-map-support-0.4.16.tgz#16fecf98212467d017d586a2af68d628b9421cd8"
+  version "0.4.17"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/source-map-support/-/source-map-support-0.4.17.tgz#6f2150553e6375375d0ccb3180502b78c18ba430"
   dependencies:
     source-map "^0.5.6"
 
