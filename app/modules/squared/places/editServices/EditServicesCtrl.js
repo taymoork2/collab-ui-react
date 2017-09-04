@@ -28,7 +28,7 @@
           entitlements: updatedEntitlements,
           enableCalService: vm.enableCalService,
         },
-      }, vm.service === 'sparkOnly' && vm.enableCalService ? 'sparkOnlyAndCalendar' : vm.service);
+      }, (vm.enableCalService && vm.enableCalService !== initialEnableCalService) ? 'calendar' : vm.service);
     };
 
     vm.hasNextStep = function () {
