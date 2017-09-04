@@ -10,6 +10,8 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
   private currentSearchObject: SearchObject;
   public currentBullet: Bullet;
   private inputActive: boolean;
+  private searchDelayTimer: ng.IPromise<any> | null;
+  private static readonly SEARCH_DELAY_MS = 200;
 
   //bindings
   private searchResultChanged: (e: { result?: SearchResult }) => {};
@@ -20,7 +22,10 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
   public searchResult: Device[];
 
   /* @ngInject */
-  constructor(private CsdmSearchService: CsdmSearchService, private $translate, private Notification) {
+  constructor(private CsdmSearchService: CsdmSearchService,
+              private $translate,
+              private Notification,
+              private $timeout: ng.ITimeoutService) {
     this.currentSearchObject = SearchObject.create('');
     this.currentBullet = new Bullet(this.currentSearchObject);
     this.updateSearchFilters();
@@ -90,13 +95,20 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
       return; //nothing changed, abort search change.
     }
 
-    this.performSearch(search); //TODO avoid at now
-    // this.searchObject = search;
-    this.searchChanged({ search: search });
-
-    if (this._currentFilterValue) {
-      this.performFilterUpdateSearch();
+    if (this.searchDelayTimer) {
+      this.$timeout.cancel(this.searchDelayTimer);
+      this.searchDelayTimer = null;
     }
+
+    this.searchDelayTimer = this.$timeout(() => {
+      this.performSearch(search); //TODO avoid at now
+      // this.searchObject = search;
+      this.searchChanged({ search: search });
+
+      if (this._currentFilterValue) {
+        this.performFilterUpdateSearch();
+      }
+    }, DeviceSearch.SEARCH_DELAY_MS);
   }
 
   private performSearch(search: SearchObject) {
