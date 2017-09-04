@@ -297,7 +297,7 @@ class PlaceOverview implements ng.IComponentController {
           nextOptions: {
             sparkCall: 'addDeviceFlow.addLines',
             sparkCallConnect: 'addDeviceFlow.callConnectOptions',
-            sparkOnlyAndCalendar: 'addDeviceFlow.editCalendarService',
+            calendar: 'addDeviceFlow.editCalendarService',
           },
         },
         'addDeviceFlow.addLines': {
