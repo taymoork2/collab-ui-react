@@ -40,6 +40,12 @@
     vm.hasBackStep = function () {
       return wizardData.function !== 'editServices';
     };
+    vm.disableCalendar = function () {
+      return vm.service !== initialService;
+    };
+    vm.disableServices = function () {
+      return vm.enableCalService !== initialEnableCalService;
+    };
 
     function getUpdatedEntitlements() {
       var entitlements = (wizardData.account.entitlements || ['webex-squared', 'spark']);
