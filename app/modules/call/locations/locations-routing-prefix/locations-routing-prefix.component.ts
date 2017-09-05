@@ -5,6 +5,7 @@ class LocationsRoutingPrefixCtrl implements ng.IComponentController {
   public onChangeFn: Function;
   public routingPrefixForm: ng.IFormController;
   public messages: any = {};
+  public minRoutingPrefixLength: string = '1';
 
   /* @ngInject */
   constructor(
@@ -16,6 +17,9 @@ class LocationsRoutingPrefixCtrl implements ng.IComponentController {
 
     if (routingPrefixLength && routingPrefixLength.currentValue) {
       this.routingPrefixLength = routingPrefixLength.currentValue;
+      if (!this.ftsw) {
+        this.minRoutingPrefixLength = routingPrefixLength.currentValue;
+      }
 
       this.messages = {
         pattern: this.$translate.instant('serviceSetupModal.routingPrefix.numericOnlyError'),

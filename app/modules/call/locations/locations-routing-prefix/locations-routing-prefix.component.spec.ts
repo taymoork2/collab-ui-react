@@ -45,5 +45,47 @@ describe('Component: locationRoutingPrefix', () => {
       this.view.find(PREFIX_INPUT).val('123456%$%&^789').change();
       expect(this.controller.routingPrefixForm.$valid).toBeFalsy();
     });
+
+    it('form should be valid when input is valid', function() {
+      this.view.find(PREFIX_INPUT).val('9876').change();
+      expect(this.controller.routingPrefixForm.$valid).toBeTruthy();
+    });
+  });
+
+  describe('Use in Edit Location', () => {
+    beforeEach(function() {
+      this.$scope.ftsw = false;
+      this.$scope.routingPrefix = null;
+      this.$scope.routingPrefixLength = '6';
+      this.$scope.$apply();
+    });
+
+    it('should display field description', function() {
+      expect(this.view).toContainElement(DESCRIPTION_BLOCK);
+    });
+
+    it('should have a prefix input field', function() {
+      expect(this.view).toContainElement(PREFIX_INPUT);
+    });
+
+    it('form should not be valid when input is too short', function() {
+      this.view.find(PREFIX_INPUT).val('12345').change();
+      expect(this.controller.routingPrefixForm.$valid).toBeFalsy();
+    });
+
+    it('form should not be valid when input is too long', function() {
+      this.view.find(PREFIX_INPUT).val('123456789').change();
+      expect(this.controller.routingPrefixForm.$valid).toBeFalsy();
+    });
+
+    it('form should not be valid when input is invalid', function() {
+      this.view.find(PREFIX_INPUT).val('123456%$%&^').change();
+      expect(this.controller.routingPrefixForm.$valid).toBeFalsy();
+    });
+
+    it('form should be valid when input is valid', function() {
+      this.view.find(PREFIX_INPUT).val('987634').change();
+      expect(this.controller.routingPrefixForm.$valid).toBeTruthy();
+    });
   });
 });
