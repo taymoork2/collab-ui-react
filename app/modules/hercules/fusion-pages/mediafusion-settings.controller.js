@@ -12,7 +12,7 @@
     vm.saveTrustedSip = saveTrustedSip;
     vm.hasMFFeatureToggle = hasMFFeatureToggle;
     vm.hasMFSIPFeatureToggle = hasMFSIPFeatureToggle;
-    // vm.hasMFSIPFeatureToggle = true;
+    vm.hasMFSIPFeatureToggle = true;
     //vm.sipurlconfiguration = '';
     vm.upgradeSchedule = {
       title: 'hercules.expresswayClusterSettings.upgradeScheduleHeader',
@@ -29,6 +29,7 @@
     MediaClusterServiceV2.getProperties($stateParams.id)
       .then(function (properties) {
         vm.sipurlconfiguration = properties['mf.ucSipTrunk'];
+        vm.trustedsipconfiguration = properties['mf.trustedSipSources'];
       });
 
     vm.deregisterModalOptions = {

@@ -2726,22 +2726,9 @@
               },
             },
           })
-          .state('gmTdDetails.sites', { <<
-            << << < HEAD
+          .state('gmTdDetails.sites', {
             params: {
               data: {},
-            },
-            template: '<gm-td-sites></gm-td-sites>',
-          })
-          .state('gmTdDetails.notes', {
-            template: '<gm-td-notes></gm-td-notes>',
-            params: {
-              obj: {},
-            },
-            ===
-            === =
-            params: {
-              data: {}
             },
             views: {
               'side-panel-container@gmTdDetails': {
@@ -2756,10 +2743,8 @@
               },
             },
             params: {
-              obj: {}
+              obj: {},
             },
-            >>>
-            >>> > 51 ad1fd271293c4f7ac465a9a1f95d51b4032435
           })
           .state('gmTdNumbersRequest', {
             data: {},
@@ -2797,9 +2782,12 @@
               },
             },
           })
-          .state('gemCbgDetails.sites', { <<
-            << << < HEAD
-            template: '<cbg-sites></cbg-sites>',
+          .state('gemCbgDetails.sites', {
+            views: {
+              'side-panel-container@gemCbgDetails': {
+                template: '<cbg-sites></cbg-sites>',
+              },
+            },
             params: {
               obj: {},
             },
@@ -2811,42 +2799,14 @@
             },
           })
           .state('gemCbgDetails.notes', {
-            template: '<cbg-notes></cbg-notes>',
-            params: {
-              obj: {},
-            },
-            ===
-            === =
-            views: {
-              'side-panel-container@gemCbgDetails': {
-                template: '<cbg-sites></cbg-sites>',
-              },
-            },
-            params: {
-              obj: {}
-            },
-          })
-          .state('gemCbgDetails.editCountry', {
-            views: {
-              'side-panel-container@gemCbgDetails': {
-                template: '<cbg-edit-country></cbg-edit-country>',
-              },
-            },
-            params: {
-              obj: {}
-            },
-          })
-          .state('gemCbgDetails.notes', {
             views: {
               'side-panel-container@gemCbgDetails': {
                 template: '<cbg-notes></cbg-notes>',
               },
             },
             params: {
-              obj: {}
+              obj: {},
             },
-            >>>
-            >>> > 51 ad1fd271293c4f7ac465a9a1f95d51b4032435
           })
           .state('partnercustomers.list', {
             url: '/customers',
