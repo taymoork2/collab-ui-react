@@ -6,10 +6,12 @@
     .controller('MediafusionClusterSettingsController', MediafusionClusterSettingsController);
 
   /* @ngInject */
-  function MediafusionClusterSettingsController($stateParams, HybridServicesClusterService, Notification, MediaClusterServiceV2, hasMFFeatureToggle) {
+  function MediafusionClusterSettingsController($stateParams, HybridServicesClusterService, Notification, MediaClusterServiceV2, hasMFFeatureToggle, hasMFSIPFeatureToggle) {
     var vm = this;
     vm.saveSipTrunk = saveSipTrunk;
+    vm.saveTrustedSip = saveTrustedSip;
     vm.hasMFFeatureToggle = hasMFFeatureToggle;
+    vm.hasMFSIPFeatureToggle = hasMFSIPFeatureToggle;
     //vm.sipurlconfiguration = '';
     vm.upgradeSchedule = {
       title: 'hercules.expresswayClusterSettings.upgradeScheduleHeader',
@@ -19,9 +21,14 @@
       title: 'mediaFusion.sipconfiguration.title',
     };
 
+    vm.trustedSip = {
+      title: 'mediaFusion.trustedSip.title',
+    };
+
     MediaClusterServiceV2.getProperties($stateParams.id)
       .then(function (properties) {
         vm.sipurlconfiguration = properties['mf.ucSipTrunk'];
+        vm.trustedsipconfiguration = properties['mf.trustedSipSources'];
       });
 
     vm.deregisterModalOptions = {
@@ -63,6 +70,19 @@
         .setProperties($stateParams.id, vm.payLoad)
         .then(function () {
           Notification.success('mediaFusion.sipconfiguration.success');
+        }, function (err) {
+          Notification.errorWithTrackingId(err, 'hercules.genericFailure');
+        });
+    }
+
+    function saveTrustedSip() {
+      vm.payLoad = {
+        'mf.trustedSipSources': vm.trustedsipconfiguration,
+      };
+      MediaClusterServiceV2
+        .setProperties($stateParams.id, vm.payLoad)
+        .then(function () {
+          Notification.success('mediaFusion.trustedSip.success');
         }, function (err) {
           Notification.errorWithTrackingId(err, 'hercules.genericFailure');
         });

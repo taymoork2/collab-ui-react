@@ -13,20 +13,29 @@
   </div>
 
   <div ng-if="devices.anyDevicesOrCodesLoaded">
-    <div class="page-sub-header devices-header" ng-class="{minimized: devices.searchMinimized}">
-      <device-search search="devices.search" search-object="devices.searchObject"
-                     search-interaction="devices.searchInteraction"
-                     search-changed="devices.searchChanged(search)" clear-search="devices.clearSearch()"
-                     search-result-changed="devices.searchResultChanged(result)"></device-search>
-      <div class="clearfix row">
+    <cs-page-sub-header ng-hide="sc.filteredView.isInState(sc.filteredView.emptydatasource)">
+      <cs-page-sub-header-left>
+        <device-search search="devices.search" search-object="devices.searchObject"
+                       search-interaction="devices.searchInteraction"
+                       search-changed="devices.searchChanged(search)" clear-search="devices.clearSearch()"
+                       search-result-changed="devices.searchResultChanged(result)"></device-search>
+      </cs-page-sub-header-left>
+      <cs-page-sub-header-right>
+        <span
+          ng-if="devices.deviceExportFeature"
+          class="icon icon-download export-button"
+          ng-click="devices.startDeviceExport()"
+          ng-hide="devices.exporting">
+        </span>
         <button
           class="btn btn--people add-button pull-right"
           ng-click="devices.startAddDeviceFlow()"
           ng-disabled="devices.addDeviceIsDisabled">
           <span translate="spacesPage.addBtn"></span>
         </button>
-      </div>
-    </div>
+
+      </cs-page-sub-header-right>
+    </cs-page-sub-header>
     <device-list search-hits="devices.searchResult.hits" search-object="devices.searchObject" sort-order-changed="devices.sortOrderChanged(field,order)"></device-list>
   </div>
 </div>

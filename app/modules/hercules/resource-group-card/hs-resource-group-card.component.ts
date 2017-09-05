@@ -14,6 +14,10 @@ export class ResourceGroupCardController implements ng.IComponentController {
     private HybridServicesI18NService: HybridServicesI18NService,
   ) {}
 
+  public $onInit() {
+    this.group.statusCssClass = this.getStatusCssClass();
+  }
+
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     if (changes.forceOpen) {
       this.showDetails = changes.forceOpen.currentValue;

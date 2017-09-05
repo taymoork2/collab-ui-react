@@ -181,7 +181,7 @@ export class ServicesOverviewController implements ng.IComponentController {
           });
       })
       .catch((error) => {
-        this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+        this.Notification.errorWithTrackingId(error, 'overview.cards.hybrid.herculesError');
       });
 
     if (this.urlParams.office365 === 'success') {

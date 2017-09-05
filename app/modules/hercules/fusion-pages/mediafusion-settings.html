@@ -18,25 +18,28 @@
         <div class="sub-section">
           <h5 class="sub-section__label" translate="mediaFusion.sipconfiguration.title"></h5>
           <p class="sub-section__description" translate="mediaFusion.sipconfiguration.description"></p>
-          <input
-            cs-input
-            type="text"
-            id="sipurlconfiguration"
-            placeholder="{{'mediaFusion.sipconfiguration.placeholder' | translate}}"
-            ng-model="clusterSettings.sipurlconfiguration"
-            cs-input-group-size="medium-4"
-            cs-input-help-text="{{'mediaFusion.sipconfiguration.example' | translate}}">
+          <input cs-input type="text" id="sipurlconfiguration" placeholder="{{'mediaFusion.sipconfiguration.placeholder' | translate}}"
+            ng-model="clusterSettings.sipurlconfiguration" cs-input-group-size="medium-4" cs-input-help-text="{{'mediaFusion.sipconfiguration.example' | translate}}">
           <button type="button" class="btn media-service-btn-padding" ng-click="clusterSettings.saveSipTrunk()" translate="common.save"></button>
+        </div>
+      </setting-section>
+    </div>
+
+    <div ng-if="clusterSettings.hasMFSIPFeatureToggle">
+      <setting-section setting="clusterSettings.trustedSip" class="needs-border-top">
+        <div class="sub-section">
+          <h5 class="sub-section__label" translate="mediaFusion.trustedSip.title"></h5>
+          <p class="sub-section__description" translate="mediaFusion.trustedSip.description"></p>
+          <input cs-input type="text" id="trustedsipconfiguration" placeholder="{{'mediaFusion.trustedSip.placeholder' | translate}}"
+            ng-model="clusterSettings.trustedsipconfiguration" cs-input-group-size="medium-4">
+          <button type="button" class="btn media-service-btn-padding" ng-click="clusterSettings.saveTrustedSip()" translate="common.save"></button>
         </div>
       </setting-section>
     </div>
 
     <release-channel-section cluster="clusterSettings.cluster"></release-channel-section>
 
-    <hs-rename-and-deregister-cluster-section
-      service-id="'squared-fusion-media'"
-      cluster="clusterSettings.cluster"
-      deregister-modal-options="clusterSettings.deregisterModalOptions">
+    <hs-rename-and-deregister-cluster-section service-id="'squared-fusion-media'" cluster="clusterSettings.cluster" deregister-modal-options="clusterSettings.deregisterModalOptions">
     </hs-rename-and-deregister-cluster-section>
 
   </div>

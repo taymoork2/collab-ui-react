@@ -125,7 +125,7 @@ class DeviceList implements ng.IComponentController {
 
   public expandDevice(device) {
     this.$http.get(device.url).then((res) => {
-      const realDevice = (device.productFamily === 'Huron') ? this.CsdmConverter.convertHuronDevice(res.data) :
+      const realDevice = (device.productFamily === 'Huron' || device.productFamily === 'ATA') ? this.CsdmConverter.convertHuronDevice(res.data) :
         this.CsdmConverter.convertCloudberryDevice(res.data);
       this.$state.go('device-overview', {
         currentDevice: realDevice,

@@ -63,6 +63,7 @@ module.exports = {
     careFeatureLandingPage: true,
     careChatTemplateSetupPage: true,
     careVirtualAssistantTemplateSetupPage: true,
+    careSettingsPage: true,
     inject: true,
     invite: true,
     inviteusers: true,

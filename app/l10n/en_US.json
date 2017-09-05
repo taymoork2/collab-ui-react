@@ -1253,23 +1253,23 @@
       }
     },
     "manualCodes": {
-      "100" :"Not Used",
-      "200":"Transfer; Modify of non-CI WebEx site",
-      "210":"Create non-CI Site (new)",
-      "300":"TSP to WEBEX Audio/VoIPOnly; TSP partner to direct customer transfer",
-      "400":"WEBEX/VoIPOnly to TSP Audio; Direct customer to partner transfer",
-      "450":"Modify of MP audio",
-      "500":"Manual Branding needed",
-      "600":"CCASP Audio Setup, Modify, Cancel, Suspend/Resume, or Audio Change",
-      "650":"CCA-Enterprise setup, Cancel",
-      "700":"CCASP to WEBEX Audio/VoIPOnly",
-      "750":"CCA-Enterprise to WEBEX Audio/VoIPOnly",
-      "800":"WEBEX Audio/VoIPOnly to CCASP",
-      "850":"WEBEX Audio/VoIPOnly to CCA-Enterprise",
-      "900":"Temporary feature filtering manual code",
-      "910":"CMR changes for non-CI sites",
-      "920":"TSP partner to partner transfer",
-      "1000":"Messenger"
+      "100": "Not Used",
+      "200": "Transfer; Modify of non-CI WebEx site",
+      "210": "Create non-CI Site (new)",
+      "300": "TSP to WEBEX Audio/VoIPOnly; TSP partner to direct customer transfer",
+      "400": "WEBEX/VoIPOnly to TSP Audio; Direct customer to partner transfer",
+      "450": "Modify of MP audio",
+      "500": "Manual Branding needed",
+      "600": "CCASP Audio Setup, Modify, Cancel, Suspend/Resume, or Audio Change",
+      "650": "CCA-Enterprise setup, Cancel",
+      "700": "CCASP to WEBEX Audio/VoIPOnly",
+      "750": "CCA-Enterprise to WEBEX Audio/VoIPOnly",
+      "800": "WEBEX Audio/VoIPOnly to CCASP",
+      "850": "WEBEX Audio/VoIPOnly to CCA-Enterprise",
+      "900": "Temporary feature filtering manual code",
+      "910": "CMR changes for non-CI sites",
+      "920": "TSP partner to partner transfer",
+      "1000": "Messenger"
     }
   },
   "cdrLogs": {
@@ -3064,6 +3064,8 @@
       "goToNode": "Go to node",
       "moveNode": "Move node",
       "deregisterNode": "Deregister node",
+      "removeNode": "Remove node",
+      "removeNodeTooltip": "Nodes cannot be removed from single node clusters. If you want to remove the Expressway from the Cisco Collaboration Cloud, deregister the cluster from the settings page.",
       "pendingTooltip": "Pending since: {{date}}. Maintenance mode has been requested. Please wait until the node is ready.",
       "maintenanceModeTooltip": "Use maintenance mode to stop the connectors in this node and stop email alarm notifications.",
       "maintenancePending": "Pending maintenance",
@@ -3080,7 +3082,8 @@
       },
       "alertBannerNumber": "{count, plural, =1{Upgrade for connectors available!} other{Upgrades for connectors available!}}",
       "alertBannerTime": "{count, plural, =1{It} other{They}} will be applied on {date}.",
-      "alertBannerLink": "<a ng-click=\"{{onclick}}\">Upgrade {{service}} connectors now</a>."
+      "alertBannerLink": "<a ng-click=\"{{onclick}}\">Upgrade {{service}} connectors now</a>.",
+      "instructions": "Instructions"
     },
     "hybridServicesConnectorSidepanel": {
       "alarmDetails": "Alarm Details"
@@ -3673,6 +3676,7 @@
     "webexProvisioningError": "An error occured while provisioning.",
     "webexProvisioningSuccess": "Your services are being provisioned.",
     "hasTransferCode": "I have a transfer code to migrate an existing WebEx site.",
+    "dontHaveTransferCode": "Don't have a transfer code?",
     "transferCodeInvalidError": "The transfer code and site name do not match. Please enter a valid site name and transfer code combination.",
     "haveExistingWebExSite": "Do you have an existing WebEx site?",
     "existingWebExSiteDescription": "If you have an existing WebEx site that you want to migrate you can enter a transfer code. Do you have a transfer code?",
@@ -4048,9 +4052,14 @@
     "phoneMenuRepeatFour": "Four Times",
     "phoneMenuRepeatFive": "Five Times",
     "phoneMenuHelp": "Select the desired language and voice used to speak the text to the caller. The message is optional and if none is entered, the conversation will still listen for caller input.",
-    "phoneMenuErrorRouteToQueueTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To Queue target.",
-    "phoneMenuSubmenuErrorRouteToQueueTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}}: Submenu Input digit {{subkey}} is missing Route To Queue target.",
-    "phoneMenuErrorRouteToAATargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To Auto Attendant target.",
+    "phoneMenuErrorTargetMissing": "You forgot to choose a target for an action in Phone Menu {{at}} of the {{schedule}} schedule.",
+    "phoneMenuSubmenuErrorTargetMissing": "You forgot to choose a target action in  a Submenu in Phone Menu {{at}} of the {{schedule}} schedule.",
+    "subMenuErrorNoInputValuesEntered": "You forgot to choose an action in  a Submenu in Phone Menu {{at}} of the {{schedule}} schedule",
+    "routeCallErrorRouteToVoicemailTargetMissing": "{{schedule}} schedule at Route Call {{at}}: Route To Voicemail is missing target.",
+    "routeCallErrorRouteToUserTargetMissing": "{{schedule}} schedule at Route Call {{at}}: Route To User is missing target.",
+    "routeCallErrorRouteToHGTargetMissing": "{{schedule}} schedule at Route Call {{at}}: Route To Hunt Group is missing target.",
+    "routeCallErrorRouteToAATargetMissing": "{{schedule}} schedule at Route Call {{at}}: Route To AutoAttendant is missing target.",
+    "routeCallErrorRouteToPhoneNumberTargetMissing": "{{schedule}} schedule at Route Call {{at}}: Route To Phone Number has a missing or invalid target.",
     "dynamicText": "Dynamic Text",
     "variable": "Variable",
     "readAs": "Read as",
@@ -4058,28 +4067,11 @@
     "date": "Date",
     "digits": "Digits",
     "word": "Word",
-    "callerInputMenuErrorVariableNameMissing": "{{schedule}} schedule at Caller Input Menu {{at}} is missing a variable name ",
+    "callerInputMenuErrorVariableNameMissing": "You forgot to enter a Name Variable in Caller Input Menu {{at}} of the {{schedule}} schedule.",
     "conditionalThenTargetMissing": "{{schedule}} schedule at Decision Menu {{at}} is missing a target for the 'Then' entry",
     "conditionalIsEntryVariableMissing": "{{schedule}} schedule at Decision Menu {{at}} is missing an entry for 'Is'",
     "conditionalIsEntryVariableUnevenQouotes": "{{schedule}} schedule at Decision Menu {{at}} has unclosed quotes for 'Is'",
     "conditionalIfEntryVariableMissing": "{{schedule}} schedule at Decision Menu {{at}} is missing an entry for 'If'",
-    "phoneMenuMenuErrorNoInputValuesEntered": "{{schedule}} schedule at Phone Menu {{at}} has no input values entered",
-    "subMenuErrorNoInputValuesEntered": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}}: SubMenu has no input values entered",
-    "callerInputMenuErrorNoInputValuesEntered": "{{schedule}} schedule at Caller Input Menu {{at}} has no input values entered",
-    "phoneMenuSubmenuErrorRouteToAATargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input Digit {{key}}: Submenu Input digit {{subkey}} is missing Route To Auto Attendant target.",
-    "phoneMenuErrorRouteToHGTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To Hunt Group target.",
-    "phoneMenuSubmenuErrorRouteToHGTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}}: Submenu Input digit {{subkey}} is missing Route To Hunt Group target.",
-    "phoneMenuErrorRouteToPhoneNumberTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} has a missing or invalid Route To Phone Number target.",
-    "phoneMenuSubmenuErrorRouteToPhoneNumberTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}}: Submenu Input digit {{subkey}} has a missing or invalid Route To Phone Number target.",
-    "phoneMenuErrorRouteToUserTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To User target.",
-    "phoneMenuSubmenuErrorRouteToUserTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}}: Submenu Input digit {{subkey}} is missing Route To User target.",
-    "phoneMenuErrorRouteToVoicemailTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}} is missing Route To Voicemail target.",
-    "phoneMenuSubmenuErrorRouteToVoicemailTargetMissing": "{{schedule}} schedule at Phone Menu {{at}}: Input digit {{key}}: Submenu Input digit {{subkey}} is missing Route To Voicemail target.",
-    "routeCallErrorRouteToVoicemailTargetMissing": "{{schedule}} schedule at Route Call {{at}}: Route To Voicemail is missing target.",
-    "routeCallErrorRouteToUserTargetMissing": "{{schedule}} schedule at Route Call {{at}}: Route To User is missing target.",
-    "routeCallErrorRouteToHGTargetMissing": "{{schedule}} schedule at Route Call {{at}}: Route To Hunt Group is missing target.",
-    "routeCallErrorRouteToAATargetMissing": "{{schedule}} schedule at Route Call {{at}}: Route To AutoAttendant is missing target.",
-    "routeCallErrorRouteToPhoneNumberTargetMissing": "{{schedule}} schedule at Route Call {{at}}: Route To Phone Number has a missing or invalid target.",
     "addNumberMsg": "This auto attendant will answer all calls to the following numbers. You can add or remove numbers at any time.",
     "numberInfoPopover": "If you don’t enter a number here, it’s okay. Calls may still come through from another Auto Attendant.",
     "routeCallPopover": "Select how to route call.",
@@ -5737,6 +5729,12 @@
       "placeholder": "Enter the SIP trunk address...",
       "example": "Example: sips://203.0.113.0:5062"
     },
+    "trustedSip": {
+      "success": "Trusted SIP source(s) saved successfully.",
+      "title": "Trusted SIP sources",
+      "description": "Enter a comma-separated list of Unified CM or Expressway IP addresses. These entries are treated as trusted SIP sources and allowed to send SIP calls to Hybrid Media Service.",
+      "placeholder": "Enter the trusted SIP sources..."
+    },
     "videoQuality": {
       "title": "Video Quality",
       "description": "Enable 1080P HD video for all participants hosted on on-premises media nodes.",
@@ -6873,6 +6871,18 @@
           "Label": "Users are offered tasks based on their availability and capacity."
         }
       },
+      "chatCount": {
+        "sectionInfoTitle": "Chats",
+        "sectionInfoDescription": "Set this option for all users in your organization.",
+        "sectionContentTitle": "Number of concurrent Chats",
+        "sectionContentDescription": "Configure the number of concurrent chats allowed for a user"
+      },
+      "video": {
+        "sectionInfoTitle": "Video",
+        "sectionInfoDescription": "Set this option for all users in your organization.",
+        "sectionContentTitle": "Enable Video Call from Chat",
+        "sectionContentDescription": "Specify if users can initiate a video call during a chat."
+      },
       "saveModal": {
         "Header": "Care Settings",
         "BodyMsg1": "Are you sure you want to change your care settings?",
@@ -7318,7 +7328,7 @@
     "embedCodeWarnMsg_callback": "It is important to verify all domains where you want to use callback template. You will not be able to embed callback template on unverified domains.",
     "configureOrgLogoMsg": "Go to Settings page to modify your organization logo",
     "virtualAssistant": {
-      "featureText" : {
+      "featureText": {
         "virtualAssistantCode": "Va",
         "virtualAssistantMediaType": "Virtual Assistants",
         "selectVADesc": "Create a virtual assistant who provides automated chat support and escalates issues as needed.",
@@ -7629,6 +7639,8 @@
         "title": "Hybrid Services",
         "googleCalendarError": "Could not reach the service for Google Calendar.",
         "herculesError": "Could not reach the service for Cisco Spark Hybrid Services.",
+        "herculesErrorCacheInvalidation": "Could not invalidate current user's Hybrid Services cache.",
+        "herculesErrorAuthentication": "The current user is not allowed to read this organization's Hybrid Services data.",
         "notEnabledText": "Hybrid Services allows you to integrate your on-premises systems with the Cisco Collaboration Platform.",
         "notEnabledTextNew": "Hybrid Services allows you to integrate your on-premises systems with the Cisco Spark Platform.",
         "notEnabledActionText": "Learn More",
@@ -8019,7 +8031,8 @@
       "narrow-title": "Select a Customer",
       "narrow-info": "To filter a search to one customer only, start at the main search tool page and search for the customer by display name. Then click <i class='icon icon-search'></i> in the customer's search result card.",
       "referTo": "Refer to",
-      "search-criterias-orders": "<strong>Orders</strong>: Order number must start with at least 8 digits or a 'ssw' prefix. An exact match will be searched."
+      "search-criterias-orders": "<strong>Orders</strong>: Order number must start with at least 8 digits or a 'ssw' prefix. An exact match will be searched.",
+      "webExSiteTooltip": "This is the web address that you use to reach your meeting room. The address must end in \".webex.com\"."
     },
     "history": {
       "clear": "Clear History",

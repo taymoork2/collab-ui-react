@@ -28,7 +28,7 @@ describe('Controller: Care Local Settings', function () {
         $interval: $intervalSpy,
         Notification: Notification,
       });
-      $scope.routingSelector = { dirty: false };
+      $scope.orgConfigForm = { dirty: false };
       spyOn(sunlightConfigService, 'updateChatConfig').and.callFake(function () {
         var deferred = $q.defer();
         deferred.resolve('fake update response');
@@ -214,7 +214,7 @@ describe('Care Settings - when org has K2 entitlement', function () {
         $interval: $intervalSpy,
         Notification: Notification,
       });
-      $scope.routingSelector = { dirty: false };
+      $scope.orgConfigForm = { dirty: false };
       spyOn(sunlightConfigService, 'updateChatConfig').and.callFake(function () {
         var deferred = q.defer();
         deferred.resolve('fake update response');
@@ -367,36 +367,27 @@ describe('Care Settings - Routing Toggling', function () {
         $interval: $intervalSpy,
         Notification: Notification,
       });
-      $scope.routingSelector = { dirty: false,
+      $scope.orgConfigForm = { dirty: false,
         $setPristine: function () { },
         $setUntouched: function () { } };
     })
   );
-  it('should show Pick Routing as selected.', function () {
+  it('should show the saved org chat configurations as selected.', function () {
     spyOn(sunlightConfigService, 'updateChatConfig').and.callFake(function () {
       var deferred = q.defer();
       deferred.resolve('fake update response');
       return deferred.promise;
     });
-    $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { routingType: 'pick' });
+    $httpBackend.expectGET(sunlightChatConfigUrl)
+      .respond(200, { routingType: 'push', maxChatCount: 4, videoCallEnabled: true });
     $httpBackend.flush();
     expect(controller).toBeDefined();
-    expect(controller.selectedRouting).toBe(controller.RoutingType.PICK);
+    expect(controller.orgChatConfig.selectedRouting).toBe(controller.RoutingType.PUSH);
+    expect(controller.orgChatConfig.selectedChatCount).toBe(4);
+    expect(controller.orgChatConfig.selectedVideoInChatToggle).toBe(true);
   });
 
-  it('should show Push Routing as selected.', function () {
-    spyOn(sunlightConfigService, 'updateChatConfig').and.callFake(function () {
-      var deferred = q.defer();
-      deferred.resolve('fake update response');
-      return deferred.promise;
-    });
-    $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { routingType: 'push' });
-    $httpBackend.flush();
-    expect(controller).toBeDefined();
-    expect(controller.selectedRouting).toBe(controller.RoutingType.PUSH);
-  });
-
-  it('should show success toaster if routing update backend API success', function () {
+  it('should show success toaster if update of orgChatConfig backend API is a success', function () {
     spyOn(sunlightConfigService, 'updateChatConfig').and.callFake(function () {
       var deferred = q.defer();
       deferred.resolve('fake update response');
@@ -405,17 +396,20 @@ describe('Care Settings - Routing Toggling', function () {
     spyOn(Notification, 'success').and.callFake(function () {
       return true;
     });
-    $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { routingType: 'pick' });
+    $httpBackend.expectGET(sunlightChatConfigUrl)
+      .respond(200, { routingType: 'pick', maxChatCount: 4, videoCallEnabled: true });
     $httpBackend.flush();
     controller.isProcessing = true;
-    controller.updateRoutingType();
+    controller.saveOrgChatConfigurations();
     $scope.$apply();
     expect(Notification.success).toHaveBeenCalled();
-    expect(controller.selectedRouting).toBe(controller.RoutingType.PICK);
+    expect(controller.orgChatConfig.selectedRouting).toBe(controller.RoutingType.PICK);
+    expect(controller.orgChatConfig.selectedChatCount).toBe(4);
+    expect(controller.orgChatConfig.selectedVideoInChatToggle).toBe(true);
     expect(controller.isProcessing).toBe(false);
   });
 
-  it('should show failure toaster if routing update backend API fails', function () {
+  it('should show failure toaster if org chat config update backend API fails', function () {
     spyOn(sunlightConfigService, 'updateChatConfig').and.callFake(function () {
       var deferred = q.defer();
       deferred.reject('fake update response');
@@ -424,25 +418,39 @@ describe('Care Settings - Routing Toggling', function () {
     spyOn(Notification, 'errorWithTrackingId').and.callFake(function () {
       return true;
     });
-    $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { routingType: 'pick' });
+    controller.orgChatConfig.selectedRouting = controller.RoutingType.PICK;
+    controller.orgChatConfig.selectedChatCount = 4;
+    controller.orgChatConfig.selectedVideoInChatToggle = true;
+    $httpBackend.expectGET(sunlightChatConfigUrl)
+      .respond(200, { routingType: 'push', maxChatCount: 3, videoCallEnabled: false });
     $httpBackend.flush();
-    controller.updateRoutingType();
+    controller.saveOrgChatConfigurations();
     $scope.$apply();
     expect(Notification.errorWithTrackingId).toHaveBeenCalled();
+    expect(controller.isProcessing).toBe(false);
+    expect(controller.orgChatConfig.selectedRouting).toBe(controller.RoutingType.PUSH);
+    expect(controller.orgChatConfig.selectedChatCount).toBe(3);
+    expect(controller.orgChatConfig.selectedVideoInChatToggle).toBe(false);
   });
 
-  it('should reset form if routing toggle is canceled', function () {
+  it('should reset form if modification made is cancelled', function () {
     spyOn(sunlightConfigService, 'updateChatConfig').and.callFake(function () {
       var deferred = q.defer();
       deferred.resolve('fake update response');
       return deferred.promise;
     });
-    $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { routingType: 'pick' });
+    controller.orgChatConfig.selectedRouting = controller.RoutingType.PICK;
+    controller.orgChatConfig.selectedChatCount = 4;
+    controller.orgChatConfig.selectedVideoInChatToggle = true;
+    $httpBackend.expectGET(sunlightChatConfigUrl)
+      .respond(200, { routingType: 'push', maxChatCount: 5, videoCallEnabled: false });
     $httpBackend.flush();
     controller.savedRoutingType = controller.RoutingType.PUSH;
     controller.cancelEdit();
     $scope.$apply();
-    expect(controller.selectedRouting).toBe(controller.RoutingType.PUSH);
+    expect(controller.orgChatConfig.selectedRouting).toBe(controller.RoutingType.PUSH);
+    expect(controller.orgChatConfig.selectedChatCount).toBe(5);
+    expect(controller.orgChatConfig.selectedVideoInChatToggle).toBe(false);
   });
 });
 

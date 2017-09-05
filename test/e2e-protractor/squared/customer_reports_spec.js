@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Customer Reports', function () {
+xdescribe('Customer Reports', function () {
   it('should login', function () {
     login.login('account-admin');
   });

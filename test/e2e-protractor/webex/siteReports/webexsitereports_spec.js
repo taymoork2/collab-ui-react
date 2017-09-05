@@ -104,7 +104,7 @@ while (1 >= webExCommon.testInfo.describeCount) {
     if (webExCommon.testInfo.testType == 'T31') {
       it('should navigate to webex reports index for site ' + webExCommon.testInfo.siteUrl, function () {
         if (setup) {
-          utils.click(webExSiteReports.webexReportsLink);
+          webExSiteReports.clickWebexReports();
           utils.wait(webExSiteReports.webexSiteReportsPanel);
           utils.wait(webExCommon.BTS4.cardSectionId);
         }
@@ -112,7 +112,7 @@ while (1 >= webExCommon.testInfo.describeCount) {
     } else {
       it('should navigate to webex reports index for site ' + webExCommon.testInfo.siteUrl, function () {
         if (setup) {
-          utils.click(webExSiteReports.webexReportsLink);
+          webExSiteReports.clickWebexReports();
           utils.wait(webExSiteReports.webexSiteReportsPanel);
           utils.wait(webExCommon.BTS1.cardSectionId);
         }

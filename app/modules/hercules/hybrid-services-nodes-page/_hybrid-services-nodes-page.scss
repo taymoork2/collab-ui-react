@@ -78,24 +78,8 @@ hybrid-services-nodes-page {
     }
   }
 
-  [cs-dropdown-toggle] {
-    margin-left: 1.5rem;
-    font-size: 14px;
-    padding: 0.3rem;
-  }
-
-  .open [cs-dropdown-menu] {
-    left: auto;
-    right: 0;
-
-    .icon {
-      vertical-align: -2px;
-      margin-left: 3px;
-      color: $gray-base;
-    }
-  }
-
   .upgrade-link {
     margin: 0 2px;
   }
+
 }

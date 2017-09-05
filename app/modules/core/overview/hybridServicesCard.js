@@ -73,9 +73,16 @@
                   .then(function () {
                     // We have invalidated the cache, lets init again
                     init(true);
+                  })
+                  .catch(function (error) {
+                    Notification.errorWithTrackingId(error, 'overview.cards.hybrid.herculesErrorCacheInvalidation');
                   });
               } else {
-                Notification.errorWithTrackingId(response.clusterList.reason, 'overview.cards.hybrid.herculesError');
+                if (_.get(response, 'clusterList.reason.status') === 403) {
+                  Notification.errorWithTrackingId(response.clusterList.reason, 'overview.cards.hybrid.herculesErrorAuthentication');
+                } else {
+                  Notification.errorWithTrackingId(response.clusterList.reason, 'overview.cards.hybrid.herculesError');
+                }
               }
             }
             card.enabled = _.some(card.serviceList, function (service) {
