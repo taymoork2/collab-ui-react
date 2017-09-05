@@ -42,7 +42,7 @@
 
     function deleteExpressway() {
       $modal.open({
-        templateUrl: 'modules/hercules/cluster-sidepanel/host-details/confirm-deleteHost-dialog.html',
+        templateUrl: 'modules/hercules/hybrid-services-nodes-page/delete-expressway-host-modal/confirm-deleteHost-dialog.html',
         type: 'dialog',
         controller: 'ConfirmDeleteHostController',
         controllerAs: 'confirmDeleteHostDialog',
