@@ -278,8 +278,8 @@ acorn@^4.0.3:
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/acorn/-/acorn-4.0.13.tgz#105495ae5361d697bd195c825192e1ad7f253787"
 
 acorn@^5.0.0, acorn@^5.1.1:
-  version "5.1.1"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/acorn/-/acorn-5.1.1.tgz#53fe161111f912ab999ee887a90a0bc52822fd75"
+  version "5.1.2"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/acorn/-/acorn-5.1.2.tgz#911cb53e036807cf0fa778dc5d370fbd864246d7"
 
 acorn@~2.6.4:
   version "2.6.4"
@@ -1602,12 +1602,12 @@ caniuse-api@^1.5.2:
     lodash.uniq "^4.5.0"
 
 caniuse-db@^1.0.30000529, caniuse-db@^1.0.30000634, caniuse-db@^1.0.30000639:
-  version "1.0.30000721"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/caniuse-db/-/caniuse-db-1.0.30000721.tgz#cdc52efe8f82dd13916615b78e86f704ece61802"
+  version "1.0.30000723"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/caniuse-db/-/caniuse-db-1.0.30000723.tgz#fce6e6c1d13eeb6fe957fe80acf27bd24694d741"
 
 caniuse-lite@^1.0.30000718:
-  version "1.0.30000721"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/caniuse-lite/-/caniuse-lite-1.0.30000721.tgz#931a21a7bd85016300328d21f126d84b73437d35"
+  version "1.0.30000723"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/caniuse-lite/-/caniuse-lite-1.0.30000723.tgz#f9db1e2868caf097b00265ac2e71ba44b608fb1e"
 
 capture-stack-trace@^1.0.0:
   version "1.0.0"
