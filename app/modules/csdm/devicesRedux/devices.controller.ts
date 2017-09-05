@@ -172,7 +172,7 @@ export class DevicesCtrl {
     });
 
     this.FeatureToggleService.atlasDeviceExportGetStatus().then((result: boolean) => {
-      this.deviceExportFeature = !result;
+      this.deviceExportFeature = result;
     });
   }
 
