@@ -79,7 +79,7 @@ describe('HybridServicesHostDetailsController: ', function () {
 
   it('should open the correct modal window when deleteExpressway() is called', function () {
     var correctDeleteExpresswayNodeDialogOptions = {
-      templateUrl: 'modules/hercules/cluster-sidepanel/host-details/confirm-deleteHost-dialog.html',
+      templateUrl: 'modules/hercules/hybrid-services-nodes-page/delete-expressway-host-modal/confirm-deleteHost-dialog.html',
       controller: 'ConfirmDeleteHostController',
       controllerAs: 'confirmDeleteHostDialog',
     };

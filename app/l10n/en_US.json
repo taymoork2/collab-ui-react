@@ -3042,6 +3042,8 @@
       "goToNode": "Go to node",
       "moveNode": "Move node",
       "deregisterNode": "Deregister node",
+      "removeNode": "Remove node",
+      "removeNodeTooltip": "Nodes cannot be removed from single node clusters. If you want to remove the Expressway from the Cisco Collaboration Cloud, deregister the cluster from the settings page.",
       "pendingTooltip": "Pending since: {{date}}. Maintenance mode has been requested. Please wait until the node is ready.",
       "maintenanceModeTooltip": "Use maintenance mode to stop the connectors in this node and stop email alarm notifications.",
       "maintenancePending": "Pending maintenance",
@@ -3058,7 +3060,8 @@
       },
       "alertBannerNumber": "{count, plural, =1{Upgrade for connectors available!} other{Upgrades for connectors available!}}",
       "alertBannerTime": "{count, plural, =1{It} other{They}} will be applied on {date}.",
-      "alertBannerLink": "<a ng-click=\"{{onclick}}\">Upgrade {{service}} connectors now</a>."
+      "alertBannerLink": "<a ng-click=\"{{onclick}}\">Upgrade {{service}} connectors now</a>.",
+      "instructions": "Instructions"
     },
     "hybridServicesConnectorSidepanel": {
       "alarmDetails": "Alarm Details"
