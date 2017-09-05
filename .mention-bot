@@ -17,9 +17,12 @@
     "name": "thobasse",
     "files": ["app/modules/hercules/**/*.js"]
   }, {
-    "name": "woulamme",
-    "files": ["app/modules/squared/devices/**/*.js"]
-  }],
+    "name": "WebExSquared/atlas-device-management",
+    "files": ["app/modules/squared/devices/**/*", "app/modules/squared/places/**/*", "app/modules/squared/common/filtered-view/*", "app/modules/csdm/**/*"]
+  }, {
+     "name": "WebExSquared/atlas-call-team",
+     "files": ["app/modules/squared/places/**/*"]
+   }],
   "fileBlacklist": ["app/l10n/*.json", "yarn.lock"],
   "userBlacklist": ["admolla", "atlas-ui-bot-gen", "cidylle", "cstoy", "mikecan", "stimurbe", "zamamoha", "zzatking"]
 }
