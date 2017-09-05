@@ -18,6 +18,7 @@ function webpackConfig(env) {
   if (!env.nolint) {
     commonWebpackConfig.module.rules.push(loaders.eslint);
     commonWebpackConfig.module.rules.push(loaders.tslint);
+    commonWebpackConfig.plugins.push(plugins.styleLintPlugin);
   }
 
   // base config
