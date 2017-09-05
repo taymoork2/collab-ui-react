@@ -2,6 +2,7 @@ import { Device } from '../services/deviceSearchConverter';
 import { SearchFields, SearchObject } from '../services/search/searchObject';
 import { SearchResult } from '../services/search/searchResult';
 import { CsdmSearchService } from '../services/csdmSearch.service';
+import { SearchTranslator } from '../services/search/searchTranslator';
 
 export class DeviceSearch implements ng.IComponentController, ISearchHandler {
   public searchField = '';
@@ -25,7 +26,8 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
   constructor(private CsdmSearchService: CsdmSearchService,
               private $translate,
               private Notification,
-              private $timeout: ng.ITimeoutService) {
+              private $timeout: ng.ITimeoutService,
+              private DeviceSearchTranslator: SearchTranslator) {
     this.currentSearchObject = SearchObject.create('');
     this.currentBullet = new Bullet(this.currentSearchObject);
     this.updateSearchFilters();
@@ -74,13 +76,14 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
   }
 
   public createSearchObject(searchField: string, currentFilterValue: string): SearchObject {
+    const translatedExpression = this.DeviceSearchTranslator.translate(searchField || '');
     if (currentFilterValue) {
       if (searchField) {
-        return SearchObject.create('(' + searchField + ') AND ' + currentFilterValue);
+        return SearchObject.create('(' + translatedExpression + ') AND ' + currentFilterValue);
       }
       return SearchObject.create(currentFilterValue);
     }
-    return SearchObject.create(searchField);
+    return SearchObject.create(translatedExpression);
   }
 
   public searchChange() {
