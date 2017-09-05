@@ -2790,7 +2790,11 @@
             },
           })
           .state('gemCbgDetails.editCountry', {
-            template: '<cbg-edit-country></cbg-edit-country>',
+            views: {
+              'side-panel-container@gemCbgDetails': {
+                template: '<cbg-edit-country></cbg-edit-country>',
+              },
+            },
             params: {
               obj: {},
             },
