@@ -7,6 +7,12 @@ const _ = require('lodash');
 function webpackConfig(env) {
   const commonWebpackConfig = commonWebpack(env);
 
+  // option to opt-in to lint in test env
+  if (env.lint) {
+    commonWebpackConfig.module.rules.push(loaders.eslint);
+    commonWebpackConfig.module.rules.push(loaders.tslint);
+  }
+
   // include instrumentation loader
   commonWebpackConfig.module.rules.push(loaders.instrumentJs);
   commonWebpackConfig.module.rules.push(loaders.instrumentTs);

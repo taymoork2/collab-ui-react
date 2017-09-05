@@ -5,6 +5,7 @@ const merge = require('webpack-merge');
 const dllDepsConfig = require('./dll-deps.config');
 const commonWebpack = require('./webpack.common');
 const plugins = require('./plugins');
+const loaders = require('./loaders');
 const lsMostRecentFile = require('../utils/lsMostRecentFile');
 const processEnvUtil = require('../utils/processEnvUtil')();
 
@@ -12,6 +13,12 @@ const hotMiddlewareScript = 'webpack-hot-middleware/client?timeout=30000';
 
 function webpackConfig(env) {
   const commonWebpackConfig = commonWebpack(env);
+
+  // option to opt-out of lint in dev env
+  if (!env.nolint) {
+    commonWebpackConfig.module.rules.push(loaders.eslint);
+    commonWebpackConfig.module.rules.push(loaders.tslint);
+  }
 
   // base config
   const devWebpack = {

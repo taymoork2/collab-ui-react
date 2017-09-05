@@ -50,11 +50,6 @@ function webpackConfig(env) {
     ],
   };
 
-  if (!env.nolint) {
-    config.module.rules.push(loaders.eslint);
-    config.module.rules.push(loaders.tslint);
-  }
-
   config.plugins = [
     new webpack.ProgressPlugin(),
     new webpack.ProvidePlugin({
