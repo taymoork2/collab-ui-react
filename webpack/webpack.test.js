@@ -22,12 +22,12 @@ function webpackConfig(env) {
 
   const testConfig = merge.smart(commonWebpackConfig, {
     devtool: 'inline-source-map',
-    output: {},
     plugins: [
       new webpack.NormalModuleReplacementPlugin(/\.(svg|png|jpg|jpeg|gif|ico|scss|css|woff|woff2|ttf|eot|pdf)$/, 'node-noop'),
     ],
   });
-
+  // replace `output` with empty object
+  testConfig.output = {};
   // remove `entry` for karma-webpack
   delete testConfig.entry;
 
