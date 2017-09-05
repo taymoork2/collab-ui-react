@@ -8,7 +8,8 @@ function webpackConfig(env) {
   const commonWebpackConfig = commonWebpack(env);
 
   // include instrumentation loader
-  commonWebpackConfig.module.rules.push(loaders.instrument);
+  commonWebpackConfig.module.rules.push(loaders.instrumentJs);
+  commonWebpackConfig.module.rules.push(loaders.instrumentTs);
 
   const tsLoaderRule = _.find(commonWebpackConfig.module.rules, loaders.ts);
   const tsLoader = _.find(tsLoaderRule.use, {

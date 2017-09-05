@@ -229,16 +229,35 @@ exports.dependencies = [{
   ],
 }];
 
-exports.instrument = {
-  test: /\.(js|ts)$/,
+exports.instrumentJs = {
+  test: /\.js$/,
   use: [
     {
       loader: 'istanbul-instrumenter-loader',
+      options: {
+        esModules: false,
+      },
     },
   ],
   exclude: [
     /node_modules/,
-    /spec\.(js|ts)$/,
+    /spec\.js$/,
+  ],
+};
+
+exports.instrumentTs = {
+  test: /\.ts$/,
+  use: [
+    {
+      loader: 'istanbul-instrumenter-loader',
+      options: {
+        esModules: true,
+      },
+    },
+  ],
+  exclude: [
+    /node_modules/,
+    /spec\.ts$/,
   ],
   enforce: 'post',
 };
