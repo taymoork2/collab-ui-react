@@ -51,6 +51,12 @@
   margin-top: 10px;
 }
 
+.device-list {
+  .status-indicator {
+    padding-right: 8px;
+  }
+}
+
 .section-content {
   .activation-code {
     font-family: $brand-font-cisco-TT-Extra-Light;
