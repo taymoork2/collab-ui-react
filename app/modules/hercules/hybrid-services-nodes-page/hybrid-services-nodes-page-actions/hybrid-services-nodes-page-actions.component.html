@@ -18,12 +18,12 @@
       </a>
     </li>
     <li ng-if="$ctrl.displayMoveNodeMenuItem($ctrl.targetType)">
-      <a ng-click="$ctrl.openMoveNodeModal($ctrl.node)">
+      <a id="move-ecp" ng-click="$ctrl.openMoveNodeModal($ctrl.node)">
         <span translate="hercules.nodesPage.moveNode"></span>
       </a>
     </li>
     <li ng-if="$ctrl.displayDeregisterNodeMenuItem($ctrl.targetType)">
-      <a ng-click="$ctrl.openDeregisterNodeModal($ctrl.node)">
+      <a id="deregister-ecp" ng-click="$ctrl.openDeregisterNodeModal($ctrl.node)">
         <span translate="hercules.nodesPage.deregisterNode"></span>
       </a>
     </li>
