@@ -227,25 +227,6 @@
     </article>
   </cs-card>
 
-  <cs-card class="large header-bar gray-light" ng-show="helpdeskOrgCtrl.hybridServicesCard.entitled">
-    <article>
-      <header class="align-center" ng-class="helpdeskOrgCtrl.loadingHSData ? 'wait' : 'pointer'" ng-click="helpdeskOrgCtrl.openHybridServicesModal()">
-        <div class="overview-header">
-          <i class="icon icon-circle-data"></i>{{'helpdesk.hybridServices' | translate}}
-        </div>
-      </header>
-      <section>
-        <h5 translate="common.status"></h5>
-        <div ng-repeat="hybridService in helpdeskOrgCtrl.hybridServicesCard.services">
-          <span>
-            <i class="icon icon-circle circle-status-icon"
-               ng-class="'helpdesk-' + hybridService.cssClass"></i>
-          </span>
-          <span translate="{{'overview.cards.hybrid.services.' + hybridService.serviceId}}"></span>
-        </div>
-      </section>
-      <footer></footer>
-    </article>
-  </cs-card>
+  <help-desk-hybrid-services-org-card org="helpdeskOrgCtrl.org"></help-desk-hybrid-services-org-card>
 
 </cs-card-layout>

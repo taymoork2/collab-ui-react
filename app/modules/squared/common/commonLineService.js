@@ -150,7 +150,7 @@
     }
 
     function getNameTemplate() {
-      nameTemplate = '<div class="ui-grid-cell-contents"><span class="name-display-style">{{row.entity.name}}</span>' +
+      nameTemplate = '<div class="ui-grid-cell-contents" ng-click=""><span class="name-display-style">{{row.entity.name}}</span>' +
         '<span class="email-display-style">{{row.entity.address}}</span></div>';
       return nameTemplate;
     }

@@ -1,11 +1,17 @@
 import { Config } from 'modules/core/config/config';
-import { MetricsService, OperationalKey } from 'modules/core/metrics';
+import { DiagnosticKey, MetricsService, OperationalKey } from 'modules/core/metrics';
 import { WindowService } from 'modules/core/window';
+import * as HttpStatus from 'http-status-codes';
 
 enum NotificationType {
   ERROR = 'error',
   SUCCESS = 'success',
   WARNING = 'warning',
+}
+
+enum CustomHttpStatus {
+  REJECTED = -1,
+  UNKNOWN = 0,
 }
 
 export class Notification {
@@ -14,12 +20,6 @@ export class Notification {
   private static readonly HTML_MESSAGES = 'htmlMessages';
   private static readonly NO_TIMEOUT = 0;
   private static readonly DEFAULT_TIMEOUT = 3000;
-  private static readonly HTTP_STATUS = {
-    NOT_FOUND: 404,
-    REJECTED: -1,
-    UNAUTHORIZED: 401,
-    UNKNOWN: 0,
-  };
   private failureTimeout: number;
   private successTimeout: number;
   private preventToasters = false;
@@ -29,6 +29,7 @@ export class Notification {
   constructor(
     private $log: ng.ILogService,
     private $timeout: ng.ITimeoutService,
+    private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
     private MetricsService: MetricsService,
     private WindowService: WindowService,
@@ -69,11 +70,15 @@ export class Notification {
 
   private notifyHttpErrorResponse(errorMsg: string, response: ng.IHttpPromiseCallbackArg<any>): void {
     if (!this.isCancelledResponse(response)) {
+      const headers = _.get(response, 'config.headers');
       this.popToast({
         notifications: errorMsg,
         type: NotificationType.ERROR,
         allowHtml: false,
         httpStatus: _.get(response, 'status'),
+        requestMethod: _.get(response, 'config.method'),
+        requestUrl: _.get(response, 'config.url'),
+        trackingId: _.isFunction(headers) ? headers('TrackingID') : undefined,
       });
     }
   }
@@ -93,8 +98,11 @@ export class Notification {
     title?: string,
     allowHtml: boolean,
     httpStatus?: number,
+    requestMethod?: string,
+    requestUrl?: string,
+    trackingId?: string,
   }): void {
-    const { notifications, type, title, allowHtml, httpStatus } = options;
+    const { notifications, type, title, allowHtml, httpStatus, requestMethod, requestUrl, trackingId } = options;
     if (this.preventToasters) {
       this.$log.warn('Deliberately prevented a notification:', notifications);
       return;
@@ -116,6 +124,18 @@ export class Notification {
       action_type: notificationType,
       http_status: _.isUndefined(httpStatus) ? undefined : _.toString(httpStatus),
     });
+
+    if (notificationType === NotificationType.ERROR) {
+      this.MetricsService.trackDiagnosticMetric(DiagnosticKey.NOTIFICATION, {
+        currentState: _.get(this.$state, 'current.name'),
+        httpStatus,
+        notificationMessage: _.toString(notificationMessages),
+        notificationType,
+        requestMethod,
+        requestUrl,
+        trackingId,
+      });
+    }
 
     this.toaster.pop({
       title: title,
@@ -167,19 +187,19 @@ export class Notification {
   }
 
   private isRejectedStatus(status: number): boolean {
-    return status === Notification.HTTP_STATUS.REJECTED;
+    return status === CustomHttpStatus.REJECTED;
   }
 
   private isNotFoundStatus(status: number): boolean {
-    return status === Notification.HTTP_STATUS.NOT_FOUND;
+    return status === HttpStatus.NOT_FOUND;
   }
 
   private isUnknownStatus(status: number): boolean {
-    return status === Notification.HTTP_STATUS.UNKNOWN;
+    return status === CustomHttpStatus.UNKNOWN;
   }
 
   private isUnauthorizedStatus(status: number): boolean {
-    return status === Notification.HTTP_STATUS.UNAUTHORIZED;
+    return status === HttpStatus.UNAUTHORIZED;
   }
 
   private addMessageFromResponseData(errorMsg: string, response: ng.IHttpPromiseCallbackArg<any>): string {

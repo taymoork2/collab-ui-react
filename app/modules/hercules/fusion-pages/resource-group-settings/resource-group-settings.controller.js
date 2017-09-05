@@ -8,7 +8,7 @@
   /* @ngInject */
   function ResourceGroupSettingsController($stateParams, ResourceGroupService, Notification, $state, HybridServicesClusterService, $modal) {
     var vm = this;
-    vm.backUrl = 'cluster-list';
+    vm.backState = 'cluster-list';
     vm.clusters = {
       title: 'hercules.resourceGroupSettings.clustersHeader',
     };

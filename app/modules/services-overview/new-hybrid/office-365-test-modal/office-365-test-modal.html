@@ -1,0 +1,49 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$ctrl.dismiss()">
+    <span class="sr-only" translate="common.close"></span>
+  </button>
+  <h1 class="modal-title">Hybrid Calendar setup</h1>
+</div>
+<div class="modal-body" ng-if="!$ctrl.success">
+  <h2>Test your Office 365 configuration</h2>
+  <div ng-form="$ctrl.emailTestingForm" novalidate>
+    <div class="row">
+      <div class="cs-input-group medium-12 columns">
+        <input
+          cs-input
+          ng-focus="true"
+          type="email"
+          name="email"
+          cs-input-group-size="medium-10"
+          cs-input-label="To test your Office 365 configuration, enter an account from your organization that uses Office 365."
+          cs-input-messages="$ctrl.validationMessages"
+          ng-keypress="$ctrl.handleKeypress($event)"
+          ng-required="true"
+          ng-model="$ctrl.email">
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-body" ng-if="$ctrl.success">
+  <h2>Setup complete</h2>
+  <p>Great! You can now enable Hybrid Calendar for your users.</p>
+  <p>To enable users, you can:</p>
+  <ul>
+    <li>Enable them individually from the <a href="#">users page</a>.</li>
+    <li>Enable them in bulk using the <a href="#">CSV template</a>.</li>
+  </ul>
+  <p>Refer to <a href="#">documentation</a> if you need help enabling users.</p>
+</div>
+<div class="modal-footer" ng-if="!$ctrl.success">
+  <button cs-btn class="btn btn-default" ng-click="$ctrl.dismiss()">
+    <span>Cancel</span>
+  </button>
+  <button cs-btn class="btn btn-primary" ng-disabled="!$ctrl.emailTestingForm.$valid" loading="$ctrl.loading" ng-click="$ctrl.test($ctrl.email)">
+    <span>Test</span>
+  </button>
+</div>
+<div class="modal-footer" ng-if="$ctrl.success">
+  <button cs-btn class="btn btn-primary" ng-click="$ctrl.close()">
+    <span translate="common.done"></span>
+  </button>
+</div>

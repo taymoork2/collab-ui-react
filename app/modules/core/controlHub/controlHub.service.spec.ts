@@ -18,7 +18,7 @@ describe('ControlHubService', () => {
   });
 
   it('it should return control hub tabs', function () {
-    expect(this.ControlHubService.getTabs().length).toBe(15);
+    expect(this.ControlHubService.getTabs().length).toBe(16);
   });
 
   describe('getCollapsed()', () => {

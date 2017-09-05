@@ -139,7 +139,7 @@
           var calServiceExchange = getExtension('squared-fusion-cal') || {};
           var calServiceGoogle = getExtension('squared-fusion-gcal');
           if (calServiceGoogle) {
-            CloudConnectorService.getService()
+            CloudConnectorService.getService('squared-fusion-gcal')
               .then(function (service) {
                 var isSetup = service.setup;
                 calServiceGoogle.isSetup = isSetup;

@@ -3,16 +3,10 @@
 var interceptorModule = require('modules/core/scripts/services/responseinterceptor');
 describe('ResponseInterceptor', function () {
   beforeEach(function () {
-    this.initModules(interceptorModule, function ($httpProvider) {
-      $httpProvider.interceptors.push('ResponseInterceptor');
-    });
+    this.initModules(interceptorModule);
 
     this.injectDependencies(
-      '$http',
-      '$httpBackend',
-      '$timeout',
       'Auth',
-      'RateLimitService',
       'ResponseInterceptor'
     );
 
@@ -21,97 +15,6 @@ describe('ResponseInterceptor', function () {
 
     this.testRefreshAccessTokenAndResendRequestForResponse = testRefreshAccessTokenAndResendRequestForResponse;
     this.testLogoutForResponse = testLogoutForResponse;
-  });
-
-  /* eslint-disable */
-  describe('Rate Limit', function () {
-    beforeEach(function () {
-      jasmine.clock().install();
-      jasmine.clock().mockDate();
-
-      this.URL = '/rate-limited-url';
-
-      // overwrite service defaults for testing
-      this.RateLimitService.MIN_DELAY = 100;
-      this.RateLimitService.MAX_DELAY = 1000;
-
-      installPromiseMatchers();
-    });
-
-    afterEach(function () {
-      jasmine.clock().uninstall();
-
-      this.$httpBackend.verifyNoOutstandingExpectation();
-      this.$httpBackend.verifyNoOutstandingRequest();
-    });
-
-    it('should retry until some success code', function () {
-      this.$httpBackend.expectGET(this.URL).respond(429);
-      var promise = this.$http.get(this.URL);
-      this.$httpBackend.flush();
-
-      this.$httpBackend.expectGET(this.URL).respond(429);
-      this.$timeout.flush(200);
-      this.$httpBackend.flush();
-
-      this.$httpBackend.expectGET(this.URL).respond(200);
-      this.$timeout.flush(400);
-      this.$httpBackend.flush();
-
-      expect(promise).toBeResolvedWith(jasmine.objectContaining({
-        status: 200,
-      }));
-    });
-
-    it('should retry until some error code', function () {
-      this.$httpBackend.expectGET(this.URL).respond(429);
-      var promise = this.$http.get(this.URL);
-      this.$httpBackend.flush();
-
-      this.$httpBackend.expectGET(this.URL).respond(429);
-      this.$timeout.flush(200);
-      this.$httpBackend.flush();
-
-      this.$httpBackend.expectGET(this.URL).respond(500);
-      this.$timeout.flush(400);
-      this.$httpBackend.flush();
-
-      expect(promise).toBeRejectedWith(jasmine.objectContaining({
-        status: 500,
-      }));
-    });
-
-    it('should retry until max retry delay', function () {
-      this.RateLimitService.HAS_JITTER = false;
-
-      this.$httpBackend.expectGET(this.URL).respond(429);
-      var promise = this.$http.get(this.URL);
-      this.$httpBackend.flush();
-
-      this.$httpBackend.expectGET(this.URL).respond(429);
-      this.$timeout.flush(100);
-      this.$httpBackend.flush();
-
-      this.$httpBackend.expectGET(this.URL).respond(429);
-      this.$timeout.flush(200);
-      this.$httpBackend.flush();
-
-      this.$httpBackend.expectGET(this.URL).respond(429);
-      this.$timeout.flush(400);
-      this.$httpBackend.flush();
-
-      this.$httpBackend.expectGET(this.URL).respond(429);
-      this.$timeout.flush(800);
-      this.$httpBackend.flush();
-
-      this.$httpBackend.expectGET(this.URL).respond(429);
-      this.$timeout.flush(1000);
-      this.$httpBackend.flush();
-
-      expect(promise).toBeRejectedWith(jasmine.objectContaining({
-        status: 429,
-      }));
-    });
   });
 
   describe('Token Refresh', function () {

@@ -9,6 +9,7 @@ import { SharedLine, SharedLineService } from 'modules/huron/sharedLine';
 import { Notification } from 'modules/core/notifications';
 import { AutoAnswerService } from 'modules/huron/autoAnswer';
 import { IOption } from 'modules/huron/dialing';
+import { LocationsService } from 'modules/call/locations';
 
 class LineOverview implements ng.IComponentController {
   private ownerType: string;
@@ -28,6 +29,7 @@ class LineOverview implements ng.IComponentController {
   public showLineLabel: boolean = true;
   public panelTitle: string = this.$translate.instant('mediaOnHoldPanel.mohTitle');
   public panelDesc: string = this.$translate.instant('mediaOnHoldPanel.mohDesc');
+  public locationId: string | undefined;
 
   // Directory Number properties
   public esnPrefix: string;
@@ -64,12 +66,22 @@ class LineOverview implements ng.IComponentController {
     private CsdmDataModelService,
     private AutoAnswerService: AutoAnswerService,
     private $q,
+    public LocationsService: LocationsService,
   ) { }
 
   public $onInit(): void {
     this.initActions();
     this.initConsumerType();
-    this.initLineOverviewData();
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484)
+      .then(isSupported => {
+        if (isSupported) {
+          this.getUserLocation().then(() => {
+            this.initLineOverviewData();
+          });
+        } else {
+          this.initLineOverviewData();
+        }
+      });
   }
 
   private initActions(): void {
@@ -84,14 +96,14 @@ class LineOverview implements ng.IComponentController {
   private initLineOverviewData(): void {
     this.showExtensions = true;
     if (!this.numberId) {
-      this.DirectoryNumberOptionsService.getInternalNumberOptions()
+      this.DirectoryNumberOptionsService.getInternalNumberOptions(undefined, undefined, this.locationId)
         .then(numbers => {
           this.internalNumbers = numbers;
           this.getLineOverviewData();
         }).catch(error => this.Notification.errorResponse(error, 'directoryNumberPanel.internalNumberPoolError'));
     } else {
       this.getLineOverviewData();
-      this.DirectoryNumberOptionsService.getInternalNumberOptions()
+      this.DirectoryNumberOptionsService.getInternalNumberOptions(undefined, undefined, this.locationId)
         .then(numbers => {
           this.internalNumbers = numbers;
         }).catch(error => this.Notification.errorResponse(error, 'directoryNumberPanel.internalNumberPoolError'));
@@ -133,6 +145,12 @@ class LineOverview implements ng.IComponentController {
       });
   }
 
+  public getUserLocation(): IPromise<void> {
+    return this.LocationsService.getUserLocation(this.ownerId).then(result => {
+      this.locationId = result.uuid;
+    });
+  }
+
   public setDirectoryNumbers(internalNumber: string, externalNumber: string): void {
     this.lineOverviewData.line.internal = internalNumber;
     this.lineOverviewData.line.external = externalNumber;
@@ -143,7 +161,7 @@ class LineOverview implements ng.IComponentController {
   }
 
   public refreshInternalNumbers(filter: string): void {
-    this.DirectoryNumberOptionsService.getInternalNumberOptions(filter)
+    this.DirectoryNumberOptionsService.getInternalNumberOptions(filter, undefined, this.locationId)
       .then(numbers => this.internalNumbers = numbers)
       .catch(error => this.Notification.errorResponse(error, 'directoryNumberPanel.internalNumberPoolError'));
   }

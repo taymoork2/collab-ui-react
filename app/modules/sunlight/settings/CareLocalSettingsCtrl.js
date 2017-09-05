@@ -45,19 +45,36 @@
       },
     ];
 
-    vm.showRouterToggle = false;
-    vm.savedRoutingType = vm.RoutingType.PICK;
-
-    vm.enableRoutingMechanism = function () {
-      return !vm.selectedRouting;
+    vm.featureToggles = {
+      showRouterToggle: false,
+      chatToVideoFeatureToggle: false,
     };
 
+    var maxChatCount = 5;
+    vm.orgChatConfigDataModel = {
+      routingType: vm.RoutingType.PICK,
+      chatCount: maxChatCount,
+      videoInChatToggle: true,
+    };
+
+    vm.enableRoutingMechanism = function () {
+      return !vm.orgChatConfig.selectedRouting;
+    };
+
+    vm.orgChatConfig = {
+      selectedRouting: vm.RoutingType.PICK,
+      selectedChatCount: maxChatCount,
+      selectedVideoInChatToggle: true,
+    };
+
+    vm.chatCountOptions = _.range(1, 6);
+
     $scope.$on('$locationChangeStart', function (event, next) {
-      if ($scope.routingSelector.$dirty) {
+      if ($scope.orgConfigForm.$dirty) {
         event.preventDefault();
         var message = 'sunlightDetails.settings.saveModal.BodyMsg2';
         vm.openSaveModal(message).result.then(function () {
-          vm.updateRoutingType();
+          vm.saveOrgChatConfigurations();
           gotoSelectedPage(next);
         }, function () {
           gotoSelectedPage(next);
@@ -73,7 +90,7 @@
 
     vm.openModal = function () {
       var message = 'sunlightDetails.settings.saveModal.BodyMsg1';
-      vm.openSaveModal(message).result.then(vm.updateRoutingType);
+      vm.openSaveModal(message).result.then(vm.saveOrgChatConfigurations);
     };
 
     vm.openSaveModal = function (message) {
@@ -84,42 +101,71 @@
         dismiss: $translate.instant('common.no'),
       });
     };
-    vm.updateRoutingType = function () {
+
+    vm.saveOrgChatConfigurations = function () {
       vm.isProcessing = true;
-      SunlightConfigService.updateChatConfig(getSelectedRoutingToUpdate()).then(function (results) {
-        Log.debug('Care setting: Routing mechanism update is success', results);
+      SunlightConfigService.updateChatConfig(getOrgChatConfigFromView()).then(function (results) {
+        Log.debug('Care settings: Org chat configurations updated successfully', results);
         Notification.success($translate.instant('sunlightDetails.settings.setUpCareSuccess'));
         vm.isProcessing = false;
-        vm.savedRoutingType = vm.selectedRouting;
-        resetFrom();
+        updateSavedConfiguration();
       }, function (error) {
+        vm.isProcessing = false;
         vm.cancelEdit();
-        Log.error('Care setting: Routing mechanism update is failure', error);
+        Log.error('Care settings: Org chat configurations update is a failure', error);
         Notification.errorWithTrackingId(error, $translate.instant('firstTimeWizard.careSettingsUpdateFailed'));
       });
     };
 
+    function updateSavedConfiguration() {
+      vm.orgChatConfigDataModel.routingType = vm.orgChatConfig.selectedRouting;
+      vm.orgChatConfigDataModel.chatCount = vm.orgChatConfig.selectedChatCount;
+      vm.orgChatConfigDataModel.videoInChatToggle = vm.orgChatConfig.selectedVideoInChatToggle;
+      resetForm();
+    }
+
     vm.cancelEdit = function () {
-      vm.selectedRouting = vm.savedRoutingType;
-      resetFrom();
+      vm.orgChatConfig.selectedRouting = vm.orgChatConfigDataModel.routingType;
+      vm.orgChatConfig.selectedChatCount = vm.orgChatConfigDataModel.chatCount;
+      vm.orgChatConfig.selectedVideoInChatToggle = vm.orgChatConfigDataModel.videoInChatToggle;
+      resetForm();
     };
 
-    function resetFrom() {
-      if ($scope.routingSelector) {
-        $scope.routingSelector.$setPristine();
-        $scope.routingSelector.$setUntouched();
+    function resetForm() {
+      if ($scope.orgConfigForm) {
+        $scope.orgConfigForm.$setPristine();
+        $scope.orgConfigForm.$setUntouched();
       }
     }
 
-    function getSelectedRoutingToUpdate() {
-      var routingData = {};
-      routingData.routingType = vm.selectedRouting;
-      if (vm.selectedRouting === vm.RoutingType.PUSH) {
-        routingData.notificationUrls = [UrlConfig.getSunlightPushNotificationUrl()];
+    function getOrgChatConfigFromView() {
+      var orgChatConfig = {};
+      orgChatConfig.routingType = vm.orgChatConfig.selectedRouting;
+      if (vm.orgChatConfig.selectedRouting === vm.RoutingType.PUSH) {
+        orgChatConfig.notificationUrls = [UrlConfig.getSunlightPushNotificationUrl()];
       } else {
-        routingData.notificationUrls = [UrlConfig.getSunlightPickNotificationUrl()];
+        orgChatConfig.notificationUrls = [UrlConfig.getSunlightPickNotificationUrl()];
       }
-      return routingData;
+      orgChatConfig.videoCallEnabled = vm.orgChatConfig.selectedVideoInChatToggle;
+      orgChatConfig.maxChatCount = parseInt(vm.orgChatConfig.selectedChatCount, 10);
+      return orgChatConfig;
+    }
+
+    function populateOrgChatConfigViewModel(result, isCalledOnInit) {
+      vm.csOnboardingStatus = _.get(result, 'data.csOnboardingStatus');
+      vm.aaOnboardingStatus = _.get(result, 'data.aaOnboardingStatus');
+      vm.appOnboardingStatus = _.get(result, 'data.appOnboardStatus');
+
+      if (isCalledOnInit) {
+        vm.orgChatConfigDataModel.routingType = _.get(result, 'data.routingType', vm.RoutingType.PICK);
+        vm.orgChatConfig.selectedRouting = vm.orgChatConfigDataModel.routingType;
+
+        vm.orgChatConfigDataModel.chatCount = _.get(result, 'data.maxChatCount', maxChatCount);
+        vm.orgChatConfig.selectedChatCount = vm.orgChatConfigDataModel.chatCount;
+
+        vm.orgChatConfigDataModel.videoInChatToggle = _.get(result, 'data.videoCallEnabled', true);
+        vm.orgChatConfig.selectedVideoInChatToggle = vm.orgChatConfigDataModel.videoInChatToggle;
+      }
     }
 
     vm.onboardToCare = function () {
@@ -172,7 +218,8 @@
 
     function processOnboardStatus() {
       SunlightConfigService.getChatConfig().then(function (result) {
-        var onboardingStatus = getOnboardingStatus(result);
+        populateOrgChatConfigViewModel(result);
+        var onboardingStatus = getOnboardingStatus();
         switch (onboardingStatus) {
           case vm.status.SUCCESS:
             Notification.success($translate.instant('sunlightDetails.settings.setUpCareSuccess'));
@@ -206,13 +253,7 @@
       Notification.error($translate.instant('sunlightDetails.settings.setUpCareFailure'));
     }
 
-    function getOnboardingStatus(result) {
-      vm.csOnboardingStatus = _.get(result, 'data.csOnboardingStatus');
-      vm.aaOnboardingStatus = _.get(result, 'data.aaOnboardingStatus');
-      vm.appOnboardingStatus = _.get(result, 'data.appOnboardStatus');
-      vm.selectedRouting = _.get(result, 'data.routingType', vm.RoutingType.PICK);
-      vm.savedRoutingType = vm.selectedRouting;
-
+    function getOnboardingStatus() {
       var onboardingStatus = vm.status.UNKNOWN;
       if (vm.csOnboardingStatus === vm.status.SUCCESS && vm.appOnboardingStatus === vm.status.SUCCESS) {
         if (Authinfo.isCareVoice()) {
@@ -232,10 +273,14 @@
 
     function init() {
       FeatureToggleService.atlasCareAutomatedRouteTrialsGetStatus().then(function (result) {
-        vm.showRouterToggle = result;
+        vm.featureToggles.showRouterToggle = result;
+      });
+      FeatureToggleService.atlasCareChatToVideoTrialsGetStatus().then(function (result) {
+        vm.featureToggles.chatToVideoFeatureToggle = result && Authinfo.isCareVoice();
       });
       SunlightConfigService.getChatConfig().then(function (result) {
-        var onboardingStatus = getOnboardingStatus(result);
+        populateOrgChatConfigViewModel(result, true);
+        var onboardingStatus = getOnboardingStatus();
         switch (onboardingStatus) {
           case vm.status.PENDING:
             vm.state = vm.IN_PROGRESS;

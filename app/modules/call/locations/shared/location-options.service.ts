@@ -3,9 +3,12 @@ import { IDialPlan, DialPlanService } from 'modules/huron/dialPlans';
 import { NumberService, NumberType } from 'modules/huron/numbers';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
 import { MediaOnHoldService } from 'modules/huron/media-on-hold';
+import { Notification } from 'modules/core/notifications';
 
 export class LocationSettingsOptions {
   public mediaOnHoldOptions: IOption[];
+  public dateFormatOptions: IOption[];
+  public timeFormatOptions: IOption[];
   public preferredLanguageOptions: IOption[];
   public timeZoneOptions: IOption[];
   public defaultToneOptions: IOption[];
@@ -23,6 +26,7 @@ export class LocationSettingsOptionsService {
      private DialPlanService: DialPlanService,
      private NumberService: NumberService,
      private PhoneNumberService: PhoneNumberService,
+     private Notification: Notification,
      private ServiceSetup,
      private FeatureToggleService,
   ) { }
@@ -31,6 +35,8 @@ export class LocationSettingsOptionsService {
     const locationOptions = new LocationSettingsOptions();
     return this.$q.all({
       mediaOnHoldOptions: this.loadMoHOptions().then(mediaOnHoldOptions => locationOptions.mediaOnHoldOptions = mediaOnHoldOptions),
+      dateFormatOptions: this.loadDateFormatOptions().then(dateFormatOptions => locationOptions.dateFormatOptions = dateFormatOptions),
+      timeFormatOptions: this.loadTimeFormatOptions().then(timeFormatOptions => locationOptions.timeFormatOptions = timeFormatOptions),
       timeZoneOptions: this.loadTimeZoneOptions().then(timeZoneOptions => locationOptions.timeZoneOptions = timeZoneOptions),
       preferredLanguageOptions: this.loadPreferredLanguageOptions().then(preferredLanguageOptions => locationOptions.preferredLanguageOptions = preferredLanguageOptions),
       defaultToneOptions: this.loadDefaultToneOptions().then(defaultToneOptions => locationOptions.defaultToneOptions = defaultToneOptions),
@@ -39,6 +45,10 @@ export class LocationSettingsOptionsService {
       companyVoicemailOptions: this.loadCompanyVoicemailNumbers(undefined).then(companyVoicemailNumbers => locationOptions.companyVoicemailOptions = companyVoicemailNumbers),
     }).then(() => {
       return locationOptions;
+    })
+    .catch(error => {
+      this.Notification.errorWithTrackingId(error);
+      return this.$q.reject();
     });
   }
 
@@ -49,6 +59,14 @@ export class LocationSettingsOptionsService {
           return this.MediaOnHoldService.getLocationMohOptions();
         }
       });
+  }
+
+  private loadDateFormatOptions(): ng.IPromise<IOption[]> {
+    return this.ServiceSetup.getDateFormats();
+  }
+
+  private loadTimeFormatOptions(): ng.IPromise<IOption[]> {
+    return this.ServiceSetup.getTimeFormats();
   }
 
   private loadTimeZoneOptions(): ng.IPromise<IOption[]> {

@@ -17,6 +17,7 @@
     }
     &.active {
       border: solid 1px $color-primary-darker;
+      background: $gray-light-4;
     }
   }
 }

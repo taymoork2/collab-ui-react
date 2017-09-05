@@ -143,6 +143,8 @@ describe('Controller: TrialDeviceController', function () {
 
       this.controller.phone7832.quantity = 2;
       this.controller.phone7832.enabled = true;
+      this.controller.phone8841.quantity = 1;
+      this.controller.phone8841.enabled = true;
       this.controller.phone8845.quantity = 1;
       this.controller.phone8845.enabled = true;
       this.controller.sx10.quantity = 1;
@@ -152,7 +154,7 @@ describe('Controller: TrialDeviceController', function () {
       var roomSystemsQuantity = this.controller.getTypeQuantity('roomSystems');
       var phonesQuantity = this.controller.getTypeQuantity('phones');
       expect(roomSystemsQuantity).toBe(2);
-      expect(phonesQuantity).toBe(3);
+      expect(phonesQuantity).toBe(4);
     });
 
     it('should set quantity to current value', function () {

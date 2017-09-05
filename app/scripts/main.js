@@ -14,7 +14,7 @@
     require('modules/core/auth/token.service'),
     require('modules/core/modal').default,
     'core.body',
-    'core.chartColors',
+    require('modules/core/config/chartColors').default,
     require('modules/core/controlHub').default,
     require('modules/core/l10n').default,
     'core.localize',
@@ -120,7 +120,6 @@
     'uc.cdrlogsupport',
     'uc.autoattendant',
     'ngIcal',
-    'huron.call-pickup.setup-assistant',
     'huron.TerminusServices',
     'huron.externalNumberService',
     'huron.place-overview',
@@ -135,6 +134,7 @@
     require('modules/huron/media-mgr').default,
     require('modules/call/features').default,
     require('modules/call/features/paging-group/shared').default,
+    require('modules/call/features/call-pickup/shared').default,
   ])
     .constant('ASTParser', require('acorn'))
     .constant('ASTWalker', require('acorn/dist/walk'));
@@ -221,6 +221,7 @@
     'oc.lazyLoad',
     'Gemini',
     'CMC',
+    'Csdm',
   ]).config(require('./main.config'))
     .run(require('./main.run'))
     .name;

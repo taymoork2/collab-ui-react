@@ -619,8 +619,11 @@ sq-places-page-overview,
   }
 }
 
-.status-indicator {
-  padding-right: 8px;
+.sq-devices-page-overview,
+.sq-devices-page {
+  .status-indicator {
+    padding-right: 8px;
+  }
 }
 
 .device-status-red {

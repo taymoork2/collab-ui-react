@@ -315,11 +315,12 @@
     LogMetricsUrl: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
     SSOTestUrl: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
     SSOSetupUrl: 'https://idbroker.webex.com/idb/idbconfig/',
+    EscalationIntentUrl: 'https://care-assistant.produs1.ciscoccservice.com/onboarding/apiai/escalation.json',
   };
 
   module.exports = angular
     .module('core.urlconfig', [
-      require('modules/core/config/config'),
+      require('modules/core/config/config').default,
       require('modules/core/scripts/services/utils'),
     ])
     .factory('UrlConfig', UrlConfig)

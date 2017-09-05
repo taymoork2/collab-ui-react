@@ -70,18 +70,26 @@ export class MetricsService {
 
   public startTimer(key: TimingKey) {
     const metric = this.getMetricByKey(key);
+    if (!metric) {
+      return;
+    }
+
     if (metric.markStart && this.isNotPerformanceTimingKey(metric.markStart)) {
       this.mark(metric.markStart);
     }
   }
 
-  public stopTimer(key: TimingKey) {
+  public stopTimer(key: TimingKey, props?: Object) {
     const metric = this.getMetricByKey(key);
+    if (!metric) {
+      return;
+    }
+
     if (metric.markStop && this.isNotPerformanceTimingKey(metric.markStop)) {
       this.mark(metric.markStop);
     }
     this.measure(metric);
-    this.reportMeasurement(metric);
+    this.reportMeasurement(metric, props);
     this.cleanup(metric);
   }
 
@@ -201,7 +209,7 @@ export class MetricsService {
     return this.Config.isProd() && !this.Config.isE2E();
   }
 
-  private reportMeasurement(metric: TimingMetric) {
+  private reportMeasurement(metric: TimingMetric, props?: Object) {
     if (typeof this.$window.performance.getEntriesByName === 'undefined') {
       return;
     }
@@ -210,23 +218,19 @@ export class MetricsService {
     if (measurements.length) {
       const measurement = _.last(measurements);
       if (measurement.duration >= 0) {
-        const durationMetric = {
+        const durationMetric = _.assign({
           duration_in_millis: measurement.duration,
-        };
+        }, props);
 
         this.sendToInflux(metric.key, durationMetric);
       }
     }
   }
 
-  private getMetricByKey(key: TimingKey) {
-    const metric = _.find(this.timingMetrics, {
+  private getMetricByKey(key: TimingKey): TimingMetric | undefined {
+    return _.find(this.timingMetrics, {
       key,
     });
-    if (!metric) {
-      throw new Error(`No TimingMetric by key: ${key}`);
-    }
-    return metric;
   }
 
   private isNotPerformanceTimingKey(key: string) {
@@ -254,6 +258,10 @@ export class MetricsService {
   }
 
   private cleanup(metric: TimingMetric) {
+    if (metric.isOneTime) {
+      _.remove(this.timingMetrics, metric);
+    }
+
     if (typeof this.$window.performance.clearMarks === 'undefined' || typeof this.$window.performance.clearMeasures === 'undefined') {
       return;
     }

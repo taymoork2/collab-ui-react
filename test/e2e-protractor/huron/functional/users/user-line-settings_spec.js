@@ -3,6 +3,7 @@ import { huronCustomer } from '../../../provisioner/huron/huron-customer-config'
 import { CallUserPage } from '../../pages/callUser.page';
 import { CallUserPlacePage } from '../../pages/callUserPlace.page';
 import { CallSettingsPage } from '../../pages/callSettings.page';
+import * as os from 'os';
 
 const callUserPage = new CallUserPage();
 const now = Date.now();
@@ -20,8 +21,17 @@ describe('Huron Functional: user-line-settings', () => {
   const DESTINATION_CUSTOM = '890';
   const DESTINATION_TYPE_EXTERNAL = 'External';
   const DESTINATION_TYPE_URI = 'URI Address';
-  const DESTINATION_TYPE_CUSTOM = 'Custom';
+  const CUSTOM = 'Custom';
+  const BLOCKED = 'Blocked Outbound Caller ID';
+  const USER2_EMAIL = `${os.userInfo().username}user_line_settings_${now}@gmail.com`;
+  const USER2_FIRST_NAME = 'Rain';
+  const USER2_LAST_NAME = 'Jader';
 
+  /* ---------------------------------------------------------------
+     Similar Line Configuration test cases are also in Places.
+     Good to keep both in sync if changes are being made here.
+     Places do not support voicemail.
+  ----------------------------------------------------------------*/
   beforeAll(done => {
     provisioner.provisionCustomerAndLogin(customer)
       .then(done);
@@ -63,6 +73,7 @@ describe('Huron Functional: user-line-settings', () => {
       utils.click(manageUsersPage.buttons.next);
       utils.expectIsDisplayed(manageUsersPage.manual.emailAddress.addUsersField, LONG_TIMEOUT);
       utils.expectIsDisplayed(manageUsersPage.manual.radio.emailAddress);
+      utils.click(manageUsersPage.manual.radio.emailAddress);
     });
     it('Should contain valid input fields on selecting names and email', () => {
       utils.click(manageUsersPage.manual.radio.nameAndEmail);
@@ -74,9 +85,16 @@ describe('Huron Functional: user-line-settings', () => {
       utils.sendKeys(manageUsersPage.manual.namesAndEmail.lastName, USER_LAST_NAME);
       utils.sendKeys(manageUsersPage.manual.namesAndEmail.emailAddress, USER_EMAIL);
       utils.expectIsDisplayed(manageUsersPage.manual.namesAndEmail.plusIcon);
+      utils.click(manageUsersPage.manual.namesAndEmail.plusIcon);
+    });
+    it('should enable add icon when valid entries are entered', () => {
+      utils.sendKeys(manageUsersPage.manual.namesAndEmail.firstName, USER2_FIRST_NAME);
+      utils.sendKeys(manageUsersPage.manual.namesAndEmail.lastName, USER2_LAST_NAME);
+      utils.sendKeys(manageUsersPage.manual.namesAndEmail.emailAddress, USER2_EMAIL);
+      utils.expectIsDisplayed(manageUsersPage.manual.namesAndEmail.plusIcon);
     });
     it('should enable next button on adding valid user information', () => {
-      utils.expectIsDisabled(manageUsersPage.buttons.next);
+      utils.expectIsEnabled(manageUsersPage.buttons.next);
       utils.click(manageUsersPage.manual.namesAndEmail.plusIcon);
       utils.waitUntilEnabled(manageUsersPage.buttons.next).then(() => {
         utils.expectIsEnabled(manageUsersPage.buttons.next);
@@ -100,7 +118,7 @@ describe('Huron Functional: user-line-settings', () => {
     it('should navigate to Add user success page when finish is clicked', () => {
       utils.click(manageUsersPage.buttons.finish);
       utils.expectIsDisplayed(manageUsersPage.buttons.finish);
-      utils.waitForText(callUserPage.successPage.newUserCount, '1 New user');
+      utils.waitForText(callUserPage.successPage.newUserCount, '2 New users');
       utils.expectIsDisplayed(callUserPage.successPage.recordsProcessed);
     });
     it('should navigate to Users overview page', () => {
@@ -179,7 +197,7 @@ describe('Huron Functional: user-line-settings', () => {
       //Forward All
       it('should be able to add Call Forward All Custom Destination Number', () => {
         utils.click(callUserPlacePage.callForwarding.radioAll);
-        utils.selectDropdown('.csSelect-container[name="CallDestTypeSelect"]', DESTINATION_TYPE_CUSTOM);
+        utils.selectDropdown('.csSelect-container[name="CallDestTypeSelect"]', CUSTOM);
         utils.sendKeys(callUserPlacePage.callForwarding.destinationInputCustom, DESTINATION_CUSTOM);
         utils.click(callUserPlacePage.saveButton).then(() => {
           notifications.assertSuccess();
@@ -224,7 +242,7 @@ describe('Huron Functional: user-line-settings', () => {
       });
       it('should be able to add Call Forward Busy or Away Custom Destination Number', () => {
         utils.click(callUserPlacePage.callForwarding.radioBusyOrAway);
-        utils.selectDropdown('.csSelect-container[name="CallDestTypeSelect"]', DESTINATION_TYPE_CUSTOM);
+        utils.selectDropdown('.csSelect-container[name="CallDestTypeSelect"]', CUSTOM);
         utils.sendKeys(callUserPlacePage.callForwarding.busyInternalInputCustom, DESTINATION_CUSTOM);
         utils.click(callUserPlacePage.saveButton).then(() => {
           notifications.assertSuccess();
@@ -266,7 +284,7 @@ describe('Huron Functional: user-line-settings', () => {
       });
       it('should be able to add Call Forward Busy or Away with different External Custom Destination Number', () => {
         utils.click(callUserPlacePage.callForwarding.radioBusyOrAway);
-        utils.selectDropdown('.csSelect-container[name="CallDestTypeSelect"]', DESTINATION_TYPE_CUSTOM);
+        utils.selectDropdown('.csSelect-container[name="CallDestTypeSelect"]', CUSTOM);
         utils.sendKeys(callUserPlacePage.callForwarding.busyExternalInputCustom, DESTINATION_CUSTOM);
         utils.click(callUserPlacePage.saveButton).then(() => {
           notifications.assertSuccess();
@@ -303,21 +321,100 @@ describe('Huron Functional: user-line-settings', () => {
       it('should display the Simultaneous Calls section', () => {
         utils.expectIsDisplayed(callUserPlacePage.simultaneousCalling.title);
       });
+      it('should be able to select the option for 8 Simultaneous Calls ', () => {
+        utils.click(callUserPlacePage.simultaneousCalling.radio8);
+        utils.click(callUserPlacePage.saveButton).then(() => {
+          notifications.assertSuccess();
+        });
+      });
+      it('should be able to select the option for 2 Simultaneous Calls ', () => {
+        utils.click(callUserPlacePage.simultaneousCalling.radio2);
+        utils.click(callUserPlacePage.saveButton).then(() => {
+          notifications.assertSuccess();
+        });
+      });
     });
 
     describe('Caller ID', () => {
       it('should display the Caller ID section', () => {
         utils.expectIsDisplayed(callUserPlacePage.callerId.title);
       });
+      it('should be able to set custom Caller ID', () => {
+        utils.selectDropdown('.csSelect-container[name="callerIdSelection"]', CUSTOM);
+        utils.sendKeys(callUserPlacePage.callerId.customName, USER_FIRST_NAME);
+        utils.sendKeys(callUserPlacePage.callerId.customNumber, DESTINATION_E164);
+        utils.click(callUserPlacePage.saveButton).then(() => {
+          notifications.assertSuccess();
+        });
+      });
+      it('should be able to Block custom Caller ID', () => {
+        utils.selectDropdown('.csSelect-container[name="callerIdSelection"]', BLOCKED);
+        utils.click(callUserPlacePage.saveButton).then(() => {
+          notifications.assertSuccess();
+        });
+      });
     });
+
     describe('Auto Answer', () => {
       it('should display the Auto Answer section', () => {
         utils.expectIsDisplayed(callUserPlacePage.autoAnswer.title);
       });
     });
+
     describe('Shared Line', () => {
       it('should display the Shared Line section', () => {
         utils.expectIsDisplayed(callUserPlacePage.sharedLine.title);
+      });
+    });
+
+    it('should navigate back to call details view', () => {
+      utils.click(callUserPage.callSubMenu);
+      utils.expectIsDisplayed(callUserPage.callOverview.directoryNumbers.title);
+      utils.expectIsDisplayed(callUserPage.callOverview.features.title);
+    });
+  });
+
+  describe('Add a new line', () => {
+    it('should display add a new line link', () => {
+      utils.expectIsDisplayed(callUserPage.callOverview.addNewLine);
+    });
+
+    it('should be on add line page', () => {
+      utils.click(callUserPage.callOverview.addNewLine);
+    });
+
+    it('should display Directory Numbers section', () => {
+      utils.expectIsDisplayed(callUserPlacePage.directoryNumber.title);
+    });
+
+    it('should display Call Forwarding section', () => {
+      utils.expectIsDisplayed(callUserPlacePage.callForwarding.title);
+    });
+
+    it('should display Simultaneous Calls section', () => {
+      utils.expectIsDisplayed(callUserPlacePage.simultaneousCalling.title);
+    });
+
+    it('should display Caller ID section', () => {
+      utils.expectIsDisplayed(callUserPlacePage.callerId.title);
+    });
+
+    it('should display Auto Answer section', () => {
+      utils.expectIsDisplayed(callUserPlacePage.autoAnswer.title);
+    });
+
+    it('should display Shared Line section', () => {
+      utils.expectIsDisplayed(callUserPlacePage.sharedLine.title);
+    });
+
+    it('should display save button and clickable', () => {
+      utils.expectIsDisplayed(callUserPlacePage.saveButton);
+      utils.expectIsEnabled(callUserPlacePage.saveButton);
+    });
+
+    it('should create a new line and display success', () => {
+      utils.click(callUserPlacePage.saveButton).then(() => {
+        notifications.assertSuccess();
       });
     });
   });

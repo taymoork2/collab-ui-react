@@ -5,7 +5,7 @@ export class AddHuntGroupPage {
     this.closeBtn = element(by.id('close-panel'));
     this.toNextPage = element(by.css('span.icon.icon-arrow-next'));
     this.disabledBtn = element(by.css('button.btn--circle.btn--primary.btn--right.disabled'));
-    this.description = element(by.css('p.input-description.ng-binding'));
+    this.description = element(by.css('p.input-description'));
     this.hgName = element(by.css('input.form-control'));
     this.enableBtn = element(by.css('button.btn--circle.btn--primary.btn--right'));
     this.closeDialog = element(by.css('div.modal-content.undefined.dialog'));

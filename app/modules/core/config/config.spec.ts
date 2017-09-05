@@ -1,6 +1,6 @@
 describe('Config', function () {
   beforeEach(function () {
-    this.initModules('core.config', 'core.tabconfig');
+    this.initModules(require('./config').default, 'core.tabconfig');
     this.injectDependencies(
       '$location',
       '$q',

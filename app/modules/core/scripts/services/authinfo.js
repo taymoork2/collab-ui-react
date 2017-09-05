@@ -3,7 +3,7 @@
 
   module.exports = angular.module('core.authinfo', [
     require('angular-translate'),
-    require('modules/core/config/config'),
+    require('modules/core/config/config').default,
     require('modules/core/config/tabConfig'),
   ])
     .service('Authinfo', Authinfo)
@@ -506,7 +506,7 @@
         return isEntitled(Config.entitlements.fusion_cal);
       },
       isFusionGoogleCal: function () {
-        return isEntitled(Config.entitlements.fusion_google_cal);
+        return isEntitled(Config.entitlements.fusion_gcal);
       },
       isFusionEC: function () {
         return isEntitled(Config.entitlements.fusion_ec);

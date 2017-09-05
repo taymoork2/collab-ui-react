@@ -120,7 +120,10 @@
           },
         },
       }).result
-        .then(readCerts);
+        .then(function () {
+          Notification.success('hercules.settings.call.certificatesDeleted');
+        })
+        .finally(readCerts);
     };
 
     function readCerts() {

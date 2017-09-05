@@ -1,0 +1,32 @@
+<div class="devices-redux">
+  <cs-page-header title-name="{{'spacesPage.title' | translate}}"></cs-page-header>
+  <div ng-if="!devices.anyDevicesOrCodesLoaded">
+    <div style="padding: 100px; text-align: center;">
+      <i class="icon icon-2x icon-spinner"/>
+    </div>
+  </div>
+
+  <div ng-if="devices.subscriptionErrorsExist">
+    <div class="error-spinner">
+      <i class="icon icon-2x icon-spinner"/>
+    </div>
+  </div>
+
+  <div ng-if="devices.anyDevicesOrCodesLoaded">
+    <div class="page-sub-header devices-header" ng-class="{minimized: devices.searchMinimized}">
+      <device-search search="devices.search" search-object="devices.searchObject"
+                     search-interaction="devices.searchInteraction"
+                     search-changed="devices.searchChanged(search)" clear-search="devices.clearSearch()"
+                     search-result-changed="devices.searchResultChanged(result)"></device-search>
+      <div class="clearfix row">
+        <button
+          class="btn btn--people add-button pull-right"
+          ng-click="devices.startAddDeviceFlow()"
+          ng-disabled="devices.addDeviceIsDisabled">
+          <span translate="spacesPage.addBtn"></span>
+        </button>
+      </div>
+    </div>
+    <device-list search-hits="devices.searchResult.hits" search-object="devices.searchObject" sort-order-changed="devices.sortOrderChanged(field,order)"></device-list>
+  </div>
+</div>

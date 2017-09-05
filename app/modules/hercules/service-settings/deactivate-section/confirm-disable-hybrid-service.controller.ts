@@ -21,7 +21,7 @@ export class ConfirmDisableHybridServiceCtrl {
   public confirmDeactivation = () => {
     this.loading = true;
     let disable = this.ServiceDescriptorService.disableService;
-    if (this.serviceId === 'squared-fusion-gcal') {
+    if (this.serviceId === 'squared-fusion-gcal' || this.serviceId === 'squared-fusion-o365') {
       disable = this.CloudConnectorService.deactivateService;
     }
     disable(this.serviceId)

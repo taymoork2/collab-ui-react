@@ -21,6 +21,20 @@
         </uc-time-zone>
       </div>
       <div class="row full service-setup bottom-margin">
+        <uc-date-format
+          date-format="$ctrl.callLocationSettingsData.location.dateFormat"
+          date-format-options="$ctrl.locationSettingsOptions.dateFormatOptions"
+          on-change-fn="$ctrl.onDateFormatChanged(dateFormat)">
+        </uc-date-format>
+      </div>
+      <div class="row full service-setup bottom-margin">
+        <uc-time-format
+          time-format="$ctrl.callLocationSettingsData.location.timeFormat"
+          time-format-options="$ctrl.locationSettingsOptions.timeFormatOptions"
+          on-change-fn="$ctrl.onTimeFormatChanged(timeFormat)">
+        </uc-time-format>
+      </div>
+      <div class="row full service-setup bottom-margin">
         <uc-settings-preferred-language
           preferred-language="$ctrl.callLocationSettingsData.location.preferredLanguage"
           preferred-language-options="$ctrl.locationSettingsOptions.preferredLanguageOptions"
@@ -164,6 +178,20 @@
               time-zone-options="$ctrl.locationSettingsOptions.timeZoneOptions"
               on-change-fn="$ctrl.onTimeZoneChanged(timeZone)">
             </uc-time-zone>
+          </div>
+          <div class="sub-section">
+            <uc-date-format
+              date-format="$ctrl.callLocationSettingsData.location.dateFormat"
+              date-format-options="$ctrl.locationSettingsOptions.dateFormatOptions"
+              on-change-fn="$ctrl.onDateFormatChanged(dateFormat)">
+            </uc-date-format>
+          </div>
+          <div class="sub-section">
+            <uc-time-format
+              time-format="$ctrl.callLocationSettingsData.location.timeFormat"
+              time-format-options="$ctrl.locationSettingsOptions.timeFormatOptions"
+              on-change-fn="$ctrl.onTimeFormatChanged(timeFormat)">
+            </uc-time-format>
           </div>
           <div class="sub-section">
             <uc-settings-preferred-language

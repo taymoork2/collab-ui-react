@@ -20,6 +20,6 @@
     "name": "woulamme",
     "files": ["app/modules/squared/devices/**/*.js"]
   }],
-  "fileBlacklist": ["app/l10n/*.json"],
+  "fileBlacklist": ["app/l10n/*.json", "yarn.lock"],
   "userBlacklist": ["admolla", "atlas-ui-bot-gen", "cidylle", "cstoy", "mikecan", "stimurbe", "zamamoha", "zzatking"]
 }

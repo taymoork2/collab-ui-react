@@ -95,6 +95,25 @@ export class LocationsService {
     .then(response =>  _.get<Location>(response, 'location'));
   }
 
+  public searchLocations(searchTerm): ng.IPromise<LocationListItem[]> {
+    const args = {
+      customerId: this.Authinfo.getOrgId(),
+      wide: true,
+    };
+
+    if (isNaN(searchTerm)) {
+      args['name'] = searchTerm;
+    } else {
+      args['routingprefix'] = searchTerm;
+    }
+
+    return this.locationListResource.get(args).$promise.then(locations => {
+      return _.map(_.get<IRLocationListItem[]>(locations, 'locations', []), location => {
+        return new LocationListItem(location);
+      });
+    });
+  }
+
   public createLocation(location: Location): ng.IPromise<string> {
     let locationHeader: string;
     return this.locationListResource.save({

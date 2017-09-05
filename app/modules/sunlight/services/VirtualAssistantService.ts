@@ -51,6 +51,7 @@ export class VirtualAssistantService {
     private $resource: ng.resource.IResourceService,
     private Authinfo,
     private UrlConfig,
+    private $q: any,
   ) {
   }
 
@@ -179,6 +180,7 @@ export class VirtualAssistantService {
    * returns promise resolving true on success, false on failure
    */
   public isAPIAITokenValid(token: string): ng.IPromise<boolean> {
+    const result = this.$q.defer();
     const request = {
       method: 'POST',
       url: 'https://api.api.ai/v1/query?v=20150910',
@@ -193,17 +195,18 @@ export class VirtualAssistantService {
         query: 'Hello',
       },
     };
-    return this.$http(request)
+    this.$http(request)
       .then(function (response: any) {
-        const result = 200 <= response.statusCode && response.statusCode < 300;
-        if (!result) {
-          return false;
+        const statusCode = (response.data.statusCode || response.data.status.code || 426); //Upgrade of code required
+        if (200 <= statusCode && statusCode < 300) {
+          result.resolve(true);
+        } else {
+          result.reject(false);
         }
-        return true;
-      })
-      .catch(function () {
-        return false;
+      }, function () {
+        result.reject(false);
       });
+    return result.promise;
   }
 
   /**
