@@ -2,6 +2,7 @@ const path = require('path');
 
 const appPath = path.resolve('./app');
 const testPath = path.resolve('./test');
+const examplePath = path.resolve('./examples');
 
 exports.js = {
   test: /\.js$/,
@@ -39,7 +40,7 @@ exports.tslint = {
       },
     },
   ],
-  include: [appPath, testPath],
+  include: [appPath, testPath, examplePath],
   exclude: [/node_modules/],
   enforce: 'pre',
 };
@@ -57,7 +58,7 @@ exports.ts = {
       },
     },
   ],
-  include: [appPath, testPath],
+  include: [appPath, testPath, examplePath],
   exclude: [/node_modules/],
 };
 
