@@ -102,7 +102,6 @@
       </div>
     </div>
     <div class="save-care-section" ng-if="orgConfigForm.$dirty">
-      <p></p>
       <button ng-click="localCareSettings.cancelEdit()" translate="common.cancel" ng-disabled="localCareSettings.isProcessing"></button>
       <button class="btn btn--primary" cs-btn loading="localCareSettings.isProcessing" ng-click="localCareSettings.openModal()"><span translate="common.save"></span></button>
     </div>
