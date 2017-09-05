@@ -1253,23 +1253,23 @@
       }
     },
     "manualCodes": {
-      "100" :"Not Used",
-      "200":"Transfer; Modify of non-CI WebEx site",
-      "210":"Create non-CI Site (new)",
-      "300":"TSP to WEBEX Audio/VoIPOnly; TSP partner to direct customer transfer",
-      "400":"WEBEX/VoIPOnly to TSP Audio; Direct customer to partner transfer",
-      "450":"Modify of MP audio",
-      "500":"Manual Branding needed",
-      "600":"CCASP Audio Setup, Modify, Cancel, Suspend/Resume, or Audio Change",
-      "650":"CCA-Enterprise setup, Cancel",
-      "700":"CCASP to WEBEX Audio/VoIPOnly",
-      "750":"CCA-Enterprise to WEBEX Audio/VoIPOnly",
-      "800":"WEBEX Audio/VoIPOnly to CCASP",
-      "850":"WEBEX Audio/VoIPOnly to CCA-Enterprise",
-      "900":"Temporary feature filtering manual code",
-      "910":"CMR changes for non-CI sites",
-      "920":"TSP partner to partner transfer",
-      "1000":"Messenger"
+      "100": "Not Used",
+      "200": "Transfer; Modify of non-CI WebEx site",
+      "210": "Create non-CI Site (new)",
+      "300": "TSP to WEBEX Audio/VoIPOnly; TSP partner to direct customer transfer",
+      "400": "WEBEX/VoIPOnly to TSP Audio; Direct customer to partner transfer",
+      "450": "Modify of MP audio",
+      "500": "Manual Branding needed",
+      "600": "CCASP Audio Setup, Modify, Cancel, Suspend/Resume, or Audio Change",
+      "650": "CCA-Enterprise setup, Cancel",
+      "700": "CCASP to WEBEX Audio/VoIPOnly",
+      "750": "CCA-Enterprise to WEBEX Audio/VoIPOnly",
+      "800": "WEBEX Audio/VoIPOnly to CCASP",
+      "850": "WEBEX Audio/VoIPOnly to CCA-Enterprise",
+      "900": "Temporary feature filtering manual code",
+      "910": "CMR changes for non-CI sites",
+      "920": "TSP partner to partner transfer",
+      "1000": "Messenger"
     }
   },
   "cdrLogs": {
@@ -5729,7 +5729,7 @@
     "trustedSip": {
       "success": "Trusted SIP source(s) saved successfully.",
       "title": "Trusted SIP sources",
-      "description": "Enter the ip addresses of the SIP sources from where SIP calls will be accepted.",
+      "description": "Enter a comma-separated list of Unified CM or Expressway IP addresses. These entries are treated as trusted SIP sources and allowed to send SIP calls to Hybrid Media Service.",
       "placeholder": "Enter the trusted SIP sources..."
     },
     "videoQuality": {
@@ -6869,16 +6869,16 @@
         }
       },
       "chatCount": {
-        "sectionInfoTitle" : "Chats",
+        "sectionInfoTitle": "Chats",
         "sectionInfoDescription": "Set this option for all users in your organization.",
-        "sectionContentTitle" : "Number of concurrent Chats",
-        "sectionContentDescription" : "Configure the number of concurrent chats allowed for a user"
+        "sectionContentTitle": "Number of concurrent Chats",
+        "sectionContentDescription": "Configure the number of concurrent chats allowed for a user"
       },
       "video": {
-        "sectionInfoTitle" : "Video",
+        "sectionInfoTitle": "Video",
         "sectionInfoDescription": "Set this option for all users in your organization.",
-        "sectionContentTitle" : "Enable Video Call from Chat",
-        "sectionContentDescription" : "Specify if users can initiate a video call during a chat."
+        "sectionContentTitle": "Enable Video Call from Chat",
+        "sectionContentDescription": "Specify if users can initiate a video call during a chat."
       },
       "saveModal": {
         "Header": "Care Settings",
@@ -7325,7 +7325,7 @@
     "embedCodeWarnMsg_callback": "It is important to verify all domains where you want to use callback template. You will not be able to embed callback template on unverified domains.",
     "configureOrgLogoMsg": "Go to Settings page to modify your organization logo",
     "virtualAssistant": {
-      "featureText" : {
+      "featureText": {
         "virtualAssistantCode": "Va",
         "virtualAssistantMediaType": "Virtual Assistants",
         "selectVADesc": "Create a virtual assistant who provides automated chat support and escalates issues as needed.",

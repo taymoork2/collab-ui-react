@@ -12,7 +12,6 @@
     vm.saveTrustedSip = saveTrustedSip;
     vm.hasMFFeatureToggle = hasMFFeatureToggle;
     vm.hasMFSIPFeatureToggle = hasMFSIPFeatureToggle;
-    vm.hasMFSIPFeatureToggle = true;
     //vm.sipurlconfiguration = '';
     vm.upgradeSchedule = {
       title: 'hercules.expresswayClusterSettings.upgradeScheduleHeader',
