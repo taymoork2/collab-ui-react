@@ -10,12 +10,6 @@ function file_has_changed {
     return $?
 }
 
-function diff_changed_file {
-    local changed_file="$1"
-    [ -z "$changed_file" ] && return 1
-    git diff HEAD "$target_head" "$changed_file"
-}
-
 # note:
 # - this function expects banner contents to be piped in
 #
