@@ -11,7 +11,7 @@ import phoneNumberModule from 'modules/huron/phoneNumber';
 import featureToggleModule from 'modules/core/featureToggle';
 import callDestModule from 'modules/call/shared/call-destination-translate';
 
-export * from './call-feature-fallback-destination.service';
+export { CallFeatureFallbackDestinationService };
 export * from './call-feature-fallback-destination';
 
 export default angular

@@ -1,8 +1,16 @@
 import { CallFeatureMember, CardType } from './call-feature-member';
-import { MemberService, Member, MemberType, USER_PLACE } from 'modules/huron/members';
+import { MemberService, Member, MemberType, USER_PLACE, USER_REAL_USER } from 'modules/huron/members';
 import { FeatureMemberService } from 'modules/huron/features/services';
 import { Line } from 'modules/huron/lines/services/line';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
+import { CardUtils } from 'modules/core/cards';
+
+export enum ComponentType {
+  CALL_PARK = 'CALL_PARK',
+  CALL_PICKUP = 'CALL_PICKUP',
+  HUNT_GROUP = 'HUNT_GROUP',
+  PAGING_GROUP = 'PAGING_GROUP',
+}
 
 class CallFeatureMembersCtrl implements ng.IComponentController {
   public static readonly DISPLAYED_MEMBER_SIZE: number = 10;
@@ -15,6 +23,7 @@ class CallFeatureMembersCtrl implements ng.IComponentController {
   public memberItemType: string;
   public removeKey: string;
   public removeStr: string;
+  public componentType: ComponentType;
   public showExternalNumbers: boolean;
   public isNew: boolean;
   public dragAndDrop: boolean;
@@ -26,6 +35,7 @@ class CallFeatureMembersCtrl implements ng.IComponentController {
   public reordering: boolean = false;
   public dragularInstance;
   public location;
+  public memberSearchTemplate: string;
 
   /* @ngInject */
   constructor(
@@ -33,8 +43,18 @@ class CallFeatureMembersCtrl implements ng.IComponentController {
     private FeatureMemberService: FeatureMemberService,
     private $translate: ng.translate.ITranslateService,
     private PhoneNumberService: PhoneNumberService,
+    private CardUtils: CardUtils,
     private dragularService,
-  ) {}
+  ) {
+    switch (this.componentType) {
+      case ComponentType.PAGING_GROUP:
+        this.memberSearchTemplate = 'callFeatureMemberWithUsernameTemplate.html';
+        break;
+      default:
+        this.memberSearchTemplate = 'callFeatureMemberWithNumberTemplate.html';
+        break;
+    }
+  }
 
   public $onInit(): void {
     this.memberHint = this.$translate.instant(this.memberHintKey);
@@ -51,6 +71,7 @@ class CallFeatureMembersCtrl implements ng.IComponentController {
   private processMemberChanges(memberChanges: ng.IChangesObject<any>): void {
     this.reordering = false;
     this.displayedMembers = _.take<CallFeatureMember>(memberChanges.currentValue, CallFeatureMembersCtrl.DISPLAYED_MEMBER_SIZE);
+    this.CardUtils.resize();
   }
 
   public getMemberList(value: string): ng.IPromise<CallFeatureMember[]> {
@@ -90,11 +111,34 @@ class CallFeatureMembersCtrl implements ng.IComponentController {
       case 'number':
         return this.convertAsNumbers(members);
       default: // memberItemType = 'member'
-        return this.convertAsMembers(members);
+        switch (this.componentType) {
+          case ComponentType.PAGING_GROUP:
+            return this.convertAsPagingGroupMembers(members);
+          default:
+            return this.convertAsHuntGroupMembers(members);
+        }
     }
   }
 
-  private convertAsMembers(members: Member[]): CallFeatureMember[] {
+  private convertAsPagingGroupMembers(members: Member[]): CallFeatureMember[] {
+    const filteredMembers = _.filter(members, number => this.isNewMember(number.uuid || ''));
+    return _.map(filteredMembers, member => {
+      return new CallFeatureMember({
+        uuid: member.uuid || '',
+        name: this.formatDisplayName(member),
+        showName: true,
+        type: member.type === USER_PLACE ? MemberType.USER_PLACE : MemberType.USER_REAL_USER,
+        cardType: CardType.SIMPLE,
+        complexCardType: undefined,
+        number: member.type === USER_REAL_USER ? _.get(member, 'userName') : '',
+        memberItemId: undefined,
+        memberItems: [],
+        thumbnailSrc: undefined,
+      });
+    });
+  }
+
+  private convertAsHuntGroupMembers(members: Member[]): CallFeatureMember[] {
     const filteredMembers = _.filter(members, number => this.isNewMember(number.uuid || ''));
     return _.map(filteredMembers, member => {
       const primaryNumber = this.getPrimaryNumber(member);
@@ -155,11 +199,11 @@ class CallFeatureMembersCtrl implements ng.IComponentController {
     if (member.displayName) {
       return member.displayName;
     } else if (member.firstName && member.lastName) {
-      return member.firstName + ' ' + member.lastName + ' (' + member.userName + ')';
+      return `${member.firstName} ${member.lastName} (${member.userName})`;
     } else if (member.firstName) {
-      return member.firstName + ' (' + member.userName + ')';
+      return `${member.firstName} (${member.userName})`;
     } else if (member.lastName) {
-      return  member.lastName + ' (' + member.userName + ')';
+      return  `${member.lastName} (${member.userName})`;
     } else {
       return member.userName || '';
     }
@@ -268,6 +312,7 @@ export class CallFeatureMembersComponent implements ng.IComponentOptions {
   public bindings = {
     members: '<',
     filterBy: '<',
+    componentType: '<',
     showExternalNumbers: '<',
     isNew: '<',
     memberHintKey: '@',

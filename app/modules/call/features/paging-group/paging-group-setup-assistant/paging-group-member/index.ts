@@ -1,3 +1,5 @@
+import './paging-group-member.component.scss';
+
 import { PgMemberComponent } from './paging-group-member.component';
 import notifications from 'modules/core/notifications';
 import featureMemberService from 'modules/huron/features/services';

@@ -22,9 +22,11 @@
       type="text"
       name="editCallFeatureName"
       cs-input-size="small-12"
+      cs-input-messages="$ctrl.messages"
       placeholder={{::$ctrl.placeholder}}
       ng-model="$ctrl.name"
       ng-change="$ctrl.onNameChange()"
-      ng-required="$ctrl.isRequired">
+      ng-required="$ctrl.isRequired"
+      ng-pattern="$ctrl.validationRegEx">
   </div>
 </div>

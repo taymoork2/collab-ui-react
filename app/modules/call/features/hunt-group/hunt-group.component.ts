@@ -328,7 +328,6 @@ class HuntGroupCtrl implements ng.IComponentController {
     return this.$translate.instant('callPark.createHelpText');
   }
 
-
 }
 
 export class HuntGroupComponent implements ng.IComponentOptions {

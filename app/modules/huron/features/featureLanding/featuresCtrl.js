@@ -8,7 +8,7 @@ require('./_feature-landing.scss');
     .controller('HuronFeaturesCtrl', HuronFeaturesCtrl);
 
   /* @ngInject */
-  function HuronFeaturesCtrl($scope, $state, $filter, $modal, $q, $translate, Authinfo, HuronFeaturesListService, HuntGroupService, CallParkService, PagingGroupService, CallPickupGroupService, AutoAttendantCeInfoModelService, Notification, Log, CardUtils) {
+  function HuronFeaturesCtrl($scope, $state, $filter, $modal, $q, $translate, Authinfo, HuronFeaturesListService, HuntGroupService, CallParkService, PagingGroupSettingsService, CallPickupGroupService, AutoAttendantCeInfoModelService, Notification, Log, CardUtils) {
     var vm = this;
     vm.searchData = searchData;
     vm.setFilter = setFilter;
@@ -90,7 +90,7 @@ require('./_feature-landing.scss');
     }, {
       name: 'PG',
       getFeature: function () {
-        return PagingGroupService.getListOfPagingGroups();
+        return PagingGroupSettingsService.listPagingGroupsWithNumberData();
       },
       formatter: HuronFeaturesListService.pagingGroups,
       isEmpty: false,

@@ -3,20 +3,10 @@
 @import '~collab-ui/scss/settings/colors';
 @import '~collab-ui/scss/tools/mixins/spacing-responsive';
 
-.call-feature-edit {
-  .typeahead .dropdown-menu {
-    .active > a {
-      background: $gray-light-2;
-    }
-    span {
-      font-size: $h4-font-size;
-      font-family: $brand-font-light;
-      color: $gray-dark-2;
-    }
+.paging-group-initiators {
+  .cs-radio-group {
+    margin-bottom: .5rem;
   }
-}
-
-.call-feature-members {
   .search-add {
     display: inline-flex;
     align-items: inherit;
@@ -56,14 +46,11 @@
   .members-footer {
     margin: auto;
     width: 54.5rem;
+    margin-bottom: 2rem;
     .member-count {
       color: $gray;
       padding-right: 2rem;
     }
-  }
-  .members-reorder {
-    cursor: move;
-    cursor: grab;
   }
   .members-container {
     display: flex;
@@ -85,20 +72,6 @@
       flex: 1;
       align-content: flex-start;
       justify-content: center;
-    }
-
-    &.members-reorderable {
-      flex-direction: column;
-    }
-  }
-}
-
-.typeahead-large,
-.typeahead {
-  .dropdown-menu {
-    li a + a {
-      padding-top: 0;
-      margin-top: -.5rem;
     }
   }
 }

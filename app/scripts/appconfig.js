@@ -3811,24 +3811,20 @@
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
                   done(require('modules/call/features/paging-group/paging-group-setup-assistant'));
-                }, 'call-paging');
+                }, 'call-paging-group');
               }),
             },
           })
           .state('huronPagingGroupEdit', {
             url: '/huronPagingGroupEdit',
             parent: 'main',
-            template: '<pg-edit pg-id="$resolve.pgId"></pg-edit>',
+            template: '<uc-paging-group></uc-paging-group>',
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/call/features/paging-group/paging-group-edit'));
-                }, 'call-paging');
+                  done(require('modules/call/features/paging-group'));
+                }, 'call-paging-group');
               }),
-              pgId: /* @ngInject */ function pgId($stateParams) {
-                var id = _.get($stateParams.feature, 'id');
-                return id;
-              },
             },
             params: {
               feature: null,

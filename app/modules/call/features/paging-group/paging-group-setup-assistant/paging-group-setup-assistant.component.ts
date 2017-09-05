@@ -1,4 +1,4 @@
-import { IPagingGroup, IMemberData, INumberData, IInitiatorData, IMemberWithPicture, PagingGroupService, PLACE, USER, PUBLIC, CUSTOM } from 'modules/call/features/paging-group/shared';
+import { IMemberData, INumberData, IInitiatorData, IMemberWithPicture, PagingGroupService, PLACE, USER, PUBLIC, CUSTOM } from 'modules/call/features/paging-group/shared';
 import { USER_REAL_USER } from 'modules/huron/members';
 import { IToolkitModalService } from 'modules/core/modal';
 
@@ -183,7 +183,7 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
       });
     }
 
-    const pg: IPagingGroup = <IPagingGroup>{
+    const pg: any = {
       name: this.name,
       extension: this.number.extension,
       members: members,
