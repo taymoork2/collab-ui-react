@@ -276,7 +276,7 @@
         vm.featureToggles.showRouterToggle = result;
       });
       FeatureToggleService.atlasCareChatToVideoTrialsGetStatus().then(function (result) {
-        vm.featureToggles.chatToVideoFeatureToggle = result && Authinfo.isCareVoice();
+        vm.featureToggles.chatToVideoFeatureToggle = result && Authinfo.isCare();
       });
       SunlightConfigService.getChatConfig().then(function (result) {
         populateOrgChatConfigViewModel(result, true);
