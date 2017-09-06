@@ -13,7 +13,10 @@ const now = Date.now();
 /* globals LONG_TIMEOUT, manageUsersPage, navigation, users, telephony */
 
 describe('Huron Functional: add-call-park', () => {
-  const customer = huronCustomer('add-call-park');
+  const customer = huronCustomer({
+    test: 'add-call-park',
+    users: 3,
+  });
   beforeAll(done => {
     provisioner.provisionCustomerAndLogin(customer)
       .then(done);

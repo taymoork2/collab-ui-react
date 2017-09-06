@@ -7,11 +7,17 @@ const callSettings = new CallSettingsPage();
 /* global LONG_TIMEOUT */
 
 describe('Huron Functional: first-time-setup', () => {
-  const customer = huronCustomer('ftw-roomsystems-only', null, null, true, 3, true, 'ROOMSYSTEMS');
-  //huronCustomer(<customer_Name>, numberRange, users, hasPSTN, noOfLines, doFTW, offers)
+  const customerOptions = {
+    test: 'ftw-roomsystems-only',
+    offers: ['ROOMSYSTEMS'],
+    pstn: 3,
+    doFtsw: true,
+  };
+  const customer = huronCustomer(customerOptions);
+  const now = Date.now();
 
   beforeAll(done => {
-    provisioner.provisionCustomerAndLogin(customer, false).then(done);
+    provisioner.provisionCustomerAndLogin(customer).then(done);
   });
   afterAll(done => {
     provisioner.tearDownAtlasCustomer(customer.partner, customer.name).then(done);
@@ -182,8 +188,8 @@ describe('Huron Functional: first-time-setup', () => {
     });
   });
 
-  xdescribe('Finalize first time wizard setup', () => {
-    const SUBDOMAIN = 'ftwTest';
+  describe('Finalize first time wizard setup', () => {
+    const SUBDOMAIN = `ftwTestWizard${now}`;
     it('should click on get started button to progress to next screen', () => {
       utils.click(wizard.beginBtn);
       utils.expectIsDisplayed(wizard.enterpriseSettingsBanner);
