@@ -299,7 +299,7 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
 
 export class PrivateTrunkSetupComponent implements ng.IComponentOptions {
   public controller = PrivateTrunkSetupCtrl;
-  public templateUrl = 'modules/hercules/private-trunk/private-trunk-setup/private-trunk-setup.html';
+  public template = require('modules/hercules/private-trunk/private-trunk-setup/private-trunk-setup.html');
   public bindings = {
     currentStepIndex: '<',
     dismiss: '&',

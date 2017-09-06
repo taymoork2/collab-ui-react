@@ -80,7 +80,7 @@ class HuntGroupNumbersCtrl implements ng.IComponentController {
 
 export class HuntGroupNumbersComponent implements ng.IComponentOptions {
   public controller = HuntGroupNumbersCtrl;
-  public templateUrl = 'modules/call/features/hunt-group/hunt-group-numbers/hunt-group-numbers.component.html';
+  public template = require('modules/call/features/hunt-group/hunt-group-numbers/hunt-group-numbers.component.html');
   public bindings = {
     numbers: '<',
     isNew: '<',

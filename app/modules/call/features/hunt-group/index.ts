@@ -17,7 +17,6 @@ export * from './hunt-group.service';
 
 export default angular
   .module('call.features.hunt-group', [
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
     huntGroupNumbers,

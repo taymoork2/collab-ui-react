@@ -263,7 +263,7 @@ class CallFeatureMembersCtrl implements ng.IComponentController {
 
 export class CallFeatureMembersComponent implements ng.IComponentOptions {
   public controller = CallFeatureMembersCtrl;
-  public templateUrl = 'modules/call/features/shared/call-feature-members/call-feature-members.component.html';
+  public template = require('modules/call/features/shared/call-feature-members/call-feature-members.component.html');
   public bindings = {
     members: '<',
     filterBy: '<',

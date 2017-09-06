@@ -5,7 +5,7 @@
     .module('Gemini')
     .component('cbgSites', {
       controller: cbgSitesCtrl,
-      templateUrl: 'modules/gemini/callbackGroup/details/cbgSites.tpl.html',
+      template: require('modules/gemini/callbackGroup/details/cbgSites.tpl.html'),
     });
 
   /* @ngInject */
@@ -33,7 +33,7 @@
     function onClick(site, toCbg) {
       $modal.open({
         type: 'dialog',
-        templateUrl: 'modules/gemini/callbackGroup/details/moveSiteConfirm.tpl.html',
+        template: require('modules/gemini/callbackGroup/details/moveSiteConfirm.tpl.html'),
       }).result.then(function () {
         moveSite(site, toCbg);
       });

@@ -35,7 +35,7 @@ class HsTestToolResultsTableComponentCtrl implements ng.IComponentController {
 
 export class HsTestToolResultsTableComponent implements ng.IComponentOptions {
   public controller = HsTestToolResultsTableComponentCtrl;
-  public templateUrl = 'modules/hercules/service-settings/verify-sip-destination/hs-test-tool-results-table/hs-test-tool-results-table.component.html';
+  public template = require('modules/hercules/service-settings/verify-sip-destination/hs-test-tool-results-table/hs-test-tool-results-table.component.html');
   public bindings = {
     testResults: '<',
   };

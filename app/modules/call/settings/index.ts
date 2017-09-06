@@ -37,7 +37,6 @@ import trialRegionalSettings from 'modules/core/trials/regionalSettings';
 
 export default angular
   .module('call.settings', [
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
     require('modules/huron/pstn/pstn.service').default,

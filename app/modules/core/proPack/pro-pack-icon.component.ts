@@ -1,5 +1,5 @@
 export class ProPackIconComponent implements ng.IComponentOptions {
-  // public templateUrl = 'modules/core/proPack/pro-pack-icon.component.html';
+  // public template = require('modules/core/proPack/pro-pack-icon.component.html');
   public template = `<span class="pro-pack-icon">
     <svg width="32px" height="12px" viewBox="0 0 32 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
       <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">

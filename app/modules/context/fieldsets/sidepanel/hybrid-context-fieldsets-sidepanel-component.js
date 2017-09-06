@@ -6,7 +6,7 @@ require('./_fieldsets-sidepanel.scss');
   angular.module('Context')
     .component('contextFieldsetsSidepanel', {
       controller: ContextFieldsetsSidepanelCtrl,
-      templateUrl: 'modules/context/fieldsets/sidepanel/hybrid-context-fieldsets-sidepanel.html',
+      template: require('modules/context/fieldsets/sidepanel/hybrid-context-fieldsets-sidepanel.html'),
       bindings: {
         fieldset: '<',
         process: '<',

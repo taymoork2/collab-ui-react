@@ -98,7 +98,7 @@ class HybridCallServiceAggregatedSectionCtrl implements ng.IComponentController 
 
 export class HybridCallServiceAggregatedSectionComponent implements ng.IComponentOptions {
   public controller = HybridCallServiceAggregatedSectionCtrl;
-  public templateUrl = 'modules/hercules/user-sidepanel/hybrid-call-service-aggregated-section/hybrid-call-service-aggregated-section.component.html';
+  public template = require('modules/hercules/user-sidepanel/hybrid-call-service-aggregated-section/hybrid-call-service-aggregated-section.component.html');
   public bindings = {
     userId: '<',
     userEmailAddress: '<',

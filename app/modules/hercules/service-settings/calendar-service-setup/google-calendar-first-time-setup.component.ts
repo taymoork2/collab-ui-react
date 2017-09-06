@@ -154,7 +154,7 @@ export class GoogleCalendarFirstTimeSetupCtrl implements ng.IComponentController
 
 export class GoogleCalendarFirstTimeSetupComponent implements ng.IComponentOptions {
   public controller = GoogleCalendarFirstTimeSetupCtrl;
-  public templateUrl = 'modules/hercules/service-settings/calendar-service-setup/google-calendar-first-time-setup.component.html';
+  public template = require('modules/hercules/service-settings/calendar-service-setup/google-calendar-first-time-setup.component.html');
   public bindings = {
     firstTimeSetup: '=',
   };

@@ -195,7 +195,7 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
 
 export class HybridServiceClusterListComponent implements ng.IComponentOptions {
   public controller = HybridServiceClusterListCtrl;
-  public templateUrl = 'modules/hercules/service-specific-pages/components/cluster-list/hybrid-service-cluster-list.html';
+  public template = require('modules/hercules/service-specific-pages/components/cluster-list/hybrid-service-cluster-list.html');
   public bindings = {
     serviceId: '<',
     clusterId: '<',

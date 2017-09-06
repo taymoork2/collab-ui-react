@@ -4,7 +4,7 @@
   angular
     .module('Gemini')
     .component('ccaCard', {
-      templateUrl: 'modules/gemini/components/cca-card.html',
+      template: require('modules/gemini/components/cca-card.html'),
       controller: CcaCardCtrl,
     });
 

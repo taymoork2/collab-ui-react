@@ -12,7 +12,6 @@ export { DomainManagementCtrl };
 
 export default angular.module('core.domain-management', [
   require('angular-translate'),
-  require('scripts/app.templates'),
   require('modules/core/config/config').default,
   require('modules/core/scripts/services/authinfo'),
   require('modules/core/scripts/services/log'),

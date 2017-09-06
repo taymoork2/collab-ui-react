@@ -35,7 +35,7 @@ class CallFeatureNameCtrl implements ng.IComponentController {
 
 export class CallFeatureNameComponent implements ng.IComponentOptions {
   public controller = CallFeatureNameCtrl;
-  public templateUrl = 'modules/call/features/shared/call-feature-name/call-feature-name.component.html';
+  public template = require('modules/call/features/shared/call-feature-name/call-feature-name.component.html');
   public bindings = {
     placeholderKey: '@',
     nameHintKey: '@',

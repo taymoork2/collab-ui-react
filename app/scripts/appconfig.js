@@ -200,7 +200,7 @@
             parent: 'stateRedirectLazyLoad',
             views: {
               'main@': {
-                templateUrl: 'modules/core/stateRedirect/unauthorized.tpl.html',
+                template: require('modules/core/stateRedirect/unauthorized.tpl.html'),
                 controller: 'StateRedirectCtrl',
                 controllerAs: 'stateRedirect',
               },
@@ -211,7 +211,7 @@
             parent: 'stateRedirectLazyLoad',
             views: {
               'main@': {
-                templateUrl: 'modules/core/stateRedirect/loginError.tpl.html',
+                template: require('modules/core/stateRedirect/loginError.tpl.html'),
                 controller: 'StateRedirectCtrl',
                 controllerAs: 'stateRedirect',
               },
@@ -221,7 +221,7 @@
           .state('backend-temp-unavailable', {
             views: {
               'main@': {
-                templateUrl: 'modules/core/stateRedirect/backendTempUnavailable.tpl.html',
+                template: require('modules/core/stateRedirect/backendTempUnavailable.tpl.html'),
               },
             },
             authenticate: false,
@@ -229,7 +229,7 @@
           .state('server-maintenance', {
             views: {
               'main@': {
-                templateUrl: 'modules/core/stateRedirect/serverMaintenance.tpl.html',
+                template: require('modules/core/stateRedirect/serverMaintenance.tpl.html'),
               },
             },
             authenticate: false,
@@ -239,7 +239,7 @@
             url: '/404',
             views: {
               'main@': {
-                templateUrl: 'modules/core/stateRedirect/404.tpl.html',
+                template: require('modules/core/stateRedirect/404.tpl.html'),
                 controller: 'StateRedirectCtrl',
                 controllerAs: 'stateRedirect',
               },
@@ -303,7 +303,7 @@
           .state('main', {
             views: {
               'main@': {
-                templateUrl: 'modules/core/views/main.tpl.html',
+                template: require('modules/core/views/main.tpl.html'),
               },
             },
             abstract: true,
@@ -465,7 +465,7 @@
               'modal@': {
                 controller: 'ChooseDeviceTypeCtrl',
                 controllerAs: 'chooseDeviceType',
-                templateUrl: 'modules/squared/devices/addDeviceNew/ChooseDeviceTypeTemplate.tpl.html',
+                template: require('modules/squared/devices/addDeviceNew/ChooseDeviceTypeTemplate.tpl.html'),
               },
             },
             params: {
@@ -478,7 +478,7 @@
               'modal@': {
                 controller: 'ConfirmRoomDeviceOnlyCtrl',
                 controllerAs: 'confirmRoomDeviceOnly',
-                templateUrl: 'modules/squared/devices/addDeviceNew/ConfirmRoomDeviceOnlyTemplate.tpl.html',
+                template: require('modules/squared/devices/addDeviceNew/ConfirmRoomDeviceOnlyTemplate.tpl.html'),
               },
             },
             params: {
@@ -491,7 +491,7 @@
               'modal@': {
                 controller: 'ChooseDeviceTypeCtrl',
                 controllerAs: 'chooseDeviceType',
-                templateUrl: 'modules/squared/devices/addDeviceNew/ChooseDeviceTypeTemplate.tpl.html',
+                template: require('modules/squared/devices/addDeviceNew/ChooseDeviceTypeTemplate.tpl.html'),
               },
             },
             params: {
@@ -504,7 +504,7 @@
               'modal@': {
                 controller: 'ChooseAccountTypeCtrl',
                 controllerAs: 'chooseAccountType',
-                templateUrl: 'modules/squared/devices/addDeviceNew/ChooseAccountTypeTemplate.tpl.html',
+                template: require('modules/squared/devices/addDeviceNew/ChooseAccountTypeTemplate.tpl.html'),
               },
             },
             params: {
@@ -517,7 +517,7 @@
               'modal@': {
                 controller: 'ChoosePersonalCtrl',
                 controllerAs: 'choosePersonal',
-                templateUrl: 'modules/squared/devices/addDeviceNew/ChoosePersonalTemplate.tpl.html',
+                template: require('modules/squared/devices/addDeviceNew/ChoosePersonalTemplate.tpl.html'),
               },
             },
             params: {
@@ -530,7 +530,7 @@
               'modal@': {
                 controller: 'ChooseSharedSpaceCtrl',
                 controllerAs: 'choosePlace',
-                templateUrl: 'modules/squared/devices/addDeviceNew/ChooseSharedSpaceTemplate.tpl.html',
+                template: require('modules/squared/devices/addDeviceNew/ChooseSharedSpaceTemplate.tpl.html'),
               },
             },
             params: {
@@ -543,7 +543,7 @@
               'modal@': {
                 controller: 'NewSharedSpaceCtrl',
                 controllerAs: 'newPlace',
-                templateUrl: 'modules/squared/devices/addPlace/NewSharedSpaceTemplate.tpl.html',
+                template: require('modules/squared/devices/addPlace/NewSharedSpaceTemplate.tpl.html'),
               },
             },
             params: {
@@ -556,7 +556,7 @@
               'modal@': {
                 controller: 'AddLinesCtrl',
                 controllerAs: 'addLines',
-                templateUrl: 'modules/squared/common/AddLinesTemplate.tpl.html',
+                template: require('modules/squared/common/AddLinesTemplate.tpl.html'),
               },
             },
             params: {
@@ -570,7 +570,7 @@
             },
             views: {
               'modal@': {
-                templateUrl: 'modules/squared/devices/addDeviceNew/ShowActivationCodeTemplate.tpl.html',
+                template: require('modules/squared/devices/addDeviceNew/ShowActivationCodeTemplate.tpl.html'),
                 controller: 'ShowActivationCodeCtrl',
                 controllerAs: 'showActivationCode',
               },
@@ -583,7 +583,7 @@
             },
             views: {
               'modal@': {
-                templateUrl: 'modules/squared/places/editServices/EditServicesTemplate.tpl.html',
+                template: require('modules/squared/places/editServices/EditServicesTemplate.tpl.html'),
                 controller: 'EditServicesCtrl',
                 controllerAs: 'editServices',
               },
@@ -615,7 +615,7 @@
             url: '/activate',
             views: {
               'main@': {
-                templateUrl: 'modules/squared/views/activate.html',
+                template: require('modules/squared/views/activate.html'),
                 controller: 'ActivateCtrl',
               },
             },
@@ -630,19 +630,19 @@
           })
           .state('csadmin', {
             url: '/csadmin?eqp',
-            templateUrl: 'modules/squared/csadmin/csadmin.html',
+            template: require('modules/squared/csadmin/csadmin.html'),
             controller: 'CsAdminCtrl',
             parent: 'main',
           })
           .state('downloads', {
             url: '/downloads',
             parent: 'main-unauthenticated',
-            templateUrl: 'modules/squared/views/downloads.html',
+            template: require('modules/squared/views/downloads.html'),
             controller: 'DownloadsCtrl',
             authenticate: false,
           })
           .state('domainmanagement', {
-            templateUrl: 'modules/core/domainManagement/domainManagement.tpl.html',
+            template: require('modules/core/domainManagement/domainManagement.tpl.html'),
             parent: 'main',
           })
           .state('domainmanagement.add', {
@@ -651,7 +651,7 @@
               'modal@': {
                 controller: 'DomainManageAddCtrl',
                 controllerAs: 'dmpopup',
-                templateUrl: 'modules/core/domainManagement/add.tpl.html',
+                template: require('modules/core/domainManagement/add.tpl.html'),
               },
             },
             params: {
@@ -664,7 +664,7 @@
               'modal@': {
                 controller: 'DomainManageInstructionsCtrl',
                 controllerAs: 'dmpopup',
-                templateUrl: 'modules/core/domainManagement/instructions.tpl.html',
+                template: require('modules/core/domainManagement/instructions.tpl.html'),
               },
             },
             params: {
@@ -678,7 +678,7 @@
               'modal@': {
                 controller: 'DomainManageDeleteCtrl',
                 controllerAs: 'dmpopup',
-                templateUrl: 'modules/core/domainManagement/delete.tpl.html',
+                template: require('modules/core/domainManagement/delete.tpl.html'),
               },
             },
             params: {
@@ -692,7 +692,7 @@
               'modal@': {
                 controller: 'DomainManageDeleteCtrl',
                 controllerAs: 'dmpopup',
-                templateUrl: 'modules/core/domainManagement/unclaim.tpl.html',
+                template: require('modules/core/domainManagement/unclaim.tpl.html'),
               },
             },
             params: {
@@ -706,7 +706,7 @@
               'modal@': {
                 controller: 'DomainManageClaimCtrl',
                 controllerAs: 'dmpopup',
-                templateUrl: 'modules/core/domainManagement/claim.tpl.html',
+                template: require('modules/core/domainManagement/claim.tpl.html'),
               },
             },
             params: {
@@ -720,7 +720,7 @@
               'modal@': {
                 controller: 'DomainManageVerifyCtrl',
                 controllerAs: 'dmpopup',
-                templateUrl: 'modules/core/domainManagement/verify.tpl.html',
+                template: require('modules/core/domainManagement/verify.tpl.html'),
               },
             },
             params: {
@@ -730,7 +730,7 @@
           })
           .state('settings', {
             url: '/settings',
-            templateUrl: 'modules/core/settings/settings.tpl.html',
+            template: require('modules/core/settings/settings.tpl.html'),
             controller: 'SettingsCtrl',
             controllerAs: 'settingsCtrl',
             parent: 'main',
@@ -744,13 +744,13 @@
               'modal@': {
                 controller: 'Enable3rdPartyAuthCtrl',
                 controllerAs: 'enable3rdPartyAuth',
-                templateUrl: 'modules/core/settings/authentication/enable3rdPartyAuth.tpl.html',
+                template: require('modules/core/settings/authentication/enable3rdPartyAuth.tpl.html'),
               },
             },
           })
           .state('profile', {
             url: '/profile',
-            templateUrl: 'modules/core/partnerProfile/partnerProfile.tpl.html',
+            template: require('modules/core/partnerProfile/partnerProfile.tpl.html'),
             controller: 'PartnerProfileCtrl',
             parent: 'main',
           })
@@ -758,7 +758,7 @@
             parent: 'modalSmall',
             views: {
               'modal@': {
-                templateUrl: 'modules/core/partnerProfile/branding/brandingUpload.tpl.html',
+                template: require('modules/core/partnerProfile/branding/brandingUpload.tpl.html'),
                 controller: 'BrandingCtrl',
                 controllerAs: 'brandupload',
               },
@@ -769,7 +769,7 @@
             parent: 'modal',
             views: {
               'modal@': {
-                templateUrl: 'modules/core/partnerProfile/branding/brandingExample.tpl.html',
+                template: require('modules/core/partnerProfile/branding/brandingExample.tpl.html'),
                 controller: 'BrandingExampleCtrl',
                 controllerAs: 'brandEg',
               },
@@ -781,7 +781,7 @@
           })
           .state('processorder', {
             url: '/processorder',
-            templateUrl: 'modules/squared/views/processorder.html',
+            template: require('modules/squared/views/processorder.html'),
             controller: 'ProcessorderCtrl',
             controllerAs: 'processOrder',
             parent: 'main-unauthenticated',
@@ -789,13 +789,13 @@
           })
           .state('overview', {
             url: '/overview',
-            templateUrl: 'modules/core/overview/overview.tpl.html',
+            template: require('modules/core/overview/overview.tpl.html'),
             controller: 'OverviewCtrl',
             controllerAs: 'overview',
             parent: 'main',
           })
           .state('my-company', {
-            templateUrl: 'modules/core/myCompany/myCompanyPage.tpl.html',
+            template: require('modules/core/myCompany/myCompanyPage.tpl.html'),
             controller: 'MyCompanyPageCtrl',
             controllerAs: 'mcp',
             parent: 'main',
@@ -815,7 +815,7 @@
               tabContent: {
                 controllerAs: 'mcpSub',
                 controller: 'MySubscriptionCtrl',
-                templateUrl: 'modules/core/myCompany/mySubscriptions/mySubscription.tpl.html',
+                template: require('modules/core/myCompany/mySubscriptions/mySubscription.tpl.html'),
               },
             },
           })
@@ -828,7 +828,7 @@
               tabContent: {
                 controllerAs: 'mcpInfo',
                 controller: 'MyCompanyPageInfoCtrl',
-                templateUrl: 'modules/core/myCompany/myCompanyPageInfo.tpl.html',
+                template: require('modules/core/myCompany/myCompanyPageInfo.tpl.html'),
               },
             },
           })
@@ -861,7 +861,7 @@
           })
           .state('users.list', {
             url: '/users',
-            templateUrl: 'modules/core/users/userList/userList.tpl.html',
+            template: require('modules/core/users/userList/userList.tpl.html'),
             controller: 'UserListCtrl',
             params: {
               showAddUsers: {},
@@ -873,7 +873,7 @@
               'modal@': {
                 controller: 'UserDeleteCtrl',
                 controllerAs: 'userDelete',
-                templateUrl: 'modules/core/users/userDelete/userDelete.tpl.html',
+                template: require('modules/core/users/userDelete/userDelete.tpl.html'),
                 resolve: {
                   modalInfo: function ($state) {
                     $state.params.modalId = 'deleteUserModal';
@@ -894,7 +894,7 @@
               'modal@': {
                 controller: 'UserDeleteCtrl',
                 controllerAs: 'userDelete',
-                templateUrl: 'modules/core/users/userDelete/userDeleteSelf.tpl.html',
+                template: require('modules/core/users/userDelete/userDeleteSelf.tpl.html'),
                 resolve: {
                   modalInfo: function ($state) {
                     $state.params.modalId = 'deleteUserModal';
@@ -918,7 +918,7 @@
                 template: '<div ui-view="usersAdd"></div>',
               },
               'usersAdd@users.add': {
-                templateUrl: 'modules/core/users/userAdd/onboardUsersModal.tpl.html',
+                template: require('modules/core/users/userAdd/onboardUsersModal.tpl.html'),
                 resolve: {
                   modalInfo: function ($state) {
                     $state.params.modalClass = 'add-users';
@@ -931,7 +931,7 @@
           .state('users.add.services', {
             views: {
               'usersAdd@users.add': {
-                templateUrl: 'modules/core/users/userAdd/assignServicesModal.tpl.html',
+                template: require('modules/core/users/userAdd/assignServicesModal.tpl.html'),
                 resolve: {
                   modalInfo: function ($state) {
                     $state.params.modalClass = 'add-users';
@@ -947,14 +947,14 @@
           .state('users.add.services.dn', {
             views: {
               'usersAdd@users.add': {
-                templateUrl: 'modules/huron/users/assignDnAndDirectLinesModal.tpl.html',
+                template: require('modules/huron/users/assignDnAndDirectLinesModal.tpl.html'),
               },
             },
           })
           .state('users.add.results', {
             views: {
               'usersAdd@users.add': {
-                templateUrl: 'modules/core/users/userAdd/addUsersResultsModal.tpl.html',
+                template: require('modules/core/users/userAdd/addUsersResultsModal.tpl.html'),
                 resolve: {
                   modalInfo: function ($state) {
                     $state.params.modalClass = 'add-users';
@@ -990,12 +990,12 @@
           .state('users.manage.org', {
             controller: 'UserManageOrgController',
             controllerAs: 'umoc',
-            templateUrl: 'modules/core/users/userManage/userManageOrg.tpl.html',
+            template: require('modules/core/users/userManage/userManageOrg.tpl.html'),
           })
           .state('users.manage.activedir', {
             controller: 'UserManageActiveDirController',
             controllerAs: 'umadc',
-            templateUrl: 'modules/core/users/userManage/userManageActiveDir.tpl.html',
+            template: require('modules/core/users/userManage/userManageActiveDir.tpl.html'),
           })
           .state('users.manage.emailSuppress', {
             template: '<user-manage-email-suppress dismiss="$dismiss()"></user-manage-email-suppress>',
@@ -1009,7 +1009,7 @@
             abstract: true,
             controller: 'UserManageAdvancedController',
             controllerAs: 'umac',
-            templateUrl: 'modules/core/users/userManage/userManageAdvanced.tpl.html',
+            template: require('modules/core/users/userManage/userManageAdvanced.tpl.html'),
           })
           .state('users.manage.advanced.add', {
             abstract: true,
@@ -1024,19 +1024,19 @@
             template: '<div ui-view class="flex-container flex-item-resize"></div>',
           })
           .state('users.manage.advanced.add.ob.installConnector', {
-            templateUrl: 'modules/core/users/userManage/userManageInstallConnector.tpl.html',
+            template: require('modules/core/users/userManage/userManageInstallConnector.tpl.html'),
           })
           .state('users.manage.advanced.add.ob.syncStatus', {
-            templateUrl: 'modules/core/users/userManage/userManageAdvancedSyncStatus.tpl.html',
+            template: require('modules/core/users/userManage/userManageAdvancedSyncStatus.tpl.html'),
           })
           .state('users.manage.advanced.add.ob.dirsyncServices', {
-            templateUrl: 'modules/core/users/userManage/userManageAssignServices.tpl.html',
+            template: require('modules/core/users/userManage/userManageAssignServices.tpl.html'),
             controller: /* @ngInject */ function ($scope) {
               $scope.dirsyncInitForServices();
             },
           })
           .state('users.manage.advanced.add.ob.dirsyncResult', {
-            templateUrl: 'modules/core/users/userManage/userManageAdvancedResults.tpl.html',
+            template: require('modules/core/users/userManage/userManageAdvancedResults.tpl.html'),
             controller: /* @ngInject */ function ($scope) {
               $scope.umac.isBusy = true;
               $scope.csv.model = $scope.model;
@@ -1073,21 +1073,21 @@
           .state('users.convert.services', {
             views: {
               'usersConvert@users.convert': {
-                templateUrl: 'modules/core/users/userAdd/assignServicesModal.tpl.html',
+                template: require('modules/core/users/userAdd/assignServicesModal.tpl.html'),
               },
             },
           })
           .state('users.convert.services.dn', {
             views: {
               'usersConvert@users.convert': {
-                templateUrl: 'modules/huron/users/assignDnAndDirectLinesModal.tpl.html',
+                template: require('modules/huron/users/assignDnAndDirectLinesModal.tpl.html'),
               },
             },
           })
           .state('users.convert.results', {
             views: {
               'usersConvert@users.convert': {
-                templateUrl: 'modules/core/users/userAdd/addUsersResultsModal.tpl.html',
+                template: require('modules/core/users/userAdd/addUsersResultsModal.tpl.html'),
               },
             },
           })
@@ -1100,14 +1100,14 @@
                 template: '<div ui-view="usersCsv"></div>',
               },
               'usersCsv@users.csv': {
-                templateUrl: 'modules/core/users/userCsv/userCsvFileModal.tpl.html',
+                template: require('modules/core/users/userCsv/userCsvFileModal.tpl.html'),
               },
             },
           })
           .state('users.csv.results', {
             views: {
               'usersCsv@users.csv': {
-                templateUrl: 'modules/core/users/userCsv/userCsvResultsModal.tpl.html',
+                template: require('modules/core/users/userCsv/userCsvResultsModal.tpl.html'),
               },
             },
           })
@@ -1124,7 +1124,7 @@
                 template: '<div ui-view="editServices"></div>',
               },
               'editServices@editService': {
-                templateUrl: 'modules/core/users/userOverview/editServices.tpl.html',
+                template: require('modules/core/users/userOverview/editServices.tpl.html'),
               },
             },
             params: {
@@ -1134,7 +1134,7 @@
           .state('editService.dn', {
             views: {
               'editServices@editService': {
-                templateUrl: 'modules/huron/users/assignDnAndDirectLinesModal.tpl.html',
+                template: require('modules/huron/users/assignDnAndDirectLinesModal.tpl.html'),
               },
             },
           })
@@ -1145,7 +1145,7 @@
               'main@': {
                 controller: 'userRedirectCtrl',
                 controllerAs: 'userRedirect',
-                templateUrl: 'modules/core/users/userRedirect/userRedirect.tpl.html',
+                template: require('modules/core/users/userRedirect/userRedirect.tpl.html'),
               },
             },
           })
@@ -1155,13 +1155,13 @@
               'sidepanel@': {
                 controller: 'UserOverviewCtrl',
                 controllerAs: 'userOverview',
-                templateUrl: 'modules/core/users/userOverview/userOverview.tpl.html',
+                template: require('modules/core/users/userOverview/userOverview.tpl.html'),
               },
               'header@user-overview': {
-                templateUrl: 'modules/core/users/userOverview/userHeader.tpl.html',
+                template: require('modules/core/users/userOverview/userHeader.tpl.html'),
               },
               'userPending@user-overview': {
-                templateUrl: 'modules/core/users/userOverview/userPending.tpl.html',
+                template: require('modules/core/users/userOverview/userPending.tpl.html'),
               },
             },
             resolve: {
@@ -1259,7 +1259,7 @@
               'side-panel-container@user-overview': {
                 controller: 'DeviceOverviewCtrl',
                 controllerAs: 'deviceOverview',
-                templateUrl: 'modules/squared/devices/overview/deviceOverview.tpl.html',
+                template: require('modules/squared/devices/overview/deviceOverview.tpl.html'),
               },
             },
             resolve: {
@@ -1488,7 +1488,7 @@
           .state('user-overview.messaging', {
             views: {
               'side-panel-container@user-overview': {
-                templateUrl: 'modules/core/users/userOverview/messaging-preview/messaging-preview.html',
+                template: require('modules/core/users/userOverview/messaging-preview/messaging-preview.html'),
                 controller: 'MessagingPreviewCtrl',
                 controllerAs: '$ctrl',
               },
@@ -1525,7 +1525,7 @@
           .state('user-overview.hybrid-services-squared-fusion-cal', {
             views: {
               'side-panel-container@user-overview': {
-                templateUrl: 'modules/hercules/user-sidepanel/calendarServicePreview.tpl.html',
+                template: require('modules/hercules/user-sidepanel/calendarServicePreview.tpl.html'),
                 controller: 'CalendarServicePreviewCtrl',
               },
             },
@@ -1555,7 +1555,7 @@
           .state('user-overview.hybrid-services-squared-fusion-gcal', {
             views: {
               'side-panel-container@user-overview': {
-                templateUrl: 'modules/hercules/user-sidepanel/calendarServicePreview.tpl.html',
+                template: require('modules/hercules/user-sidepanel/calendarServicePreview.tpl.html'),
                 controller: 'CalendarServicePreviewCtrl',
               },
             },
@@ -1682,7 +1682,7 @@
           .state('user-overview.conferencing', {
             views: {
               'side-panel-container@user-overview': {
-                templateUrl: 'modules/core/users/userOverview/conferencePreview.tpl.html',
+                template: require('modules/core/users/userOverview/conferencePreview.tpl.html'),
                 controller: 'ConferencePreviewCtrl',
                 controllerAs: 'confPreview',
               },
@@ -1698,7 +1698,7 @@
           .state('user-overview.conferencing.webex', {
             views: {
               'side-panel-container@user-overview': {
-                templateUrl: 'modules/webex/userSettings/userSettings.tpl.html',
+                template: require('modules/webex/userSettings/userSettings.tpl.html'),
                 controller: 'WebExUserSettingsCtrl',
               },
             },
@@ -1714,7 +1714,7 @@
           .state('user-overview.conferencing.webex.webex2', {
             views: {
               'side-panel-container@user-overview': {
-                templateUrl: 'modules/webex/userSettings/userSettings2.tpl.html',
+                template: require('modules/webex/userSettings/userSettings2.tpl.html'),
                 controller: 'WebExUserSettings2Ctrl',
               },
             },
@@ -1730,7 +1730,7 @@
           .state('user-overview.contactCenter', {
             views: {
               'side-panel-container@user-overview': {
-                templateUrl: 'modules/sunlight/users/userOverview/sunlightUserOverview.tpl.html',
+                template: require('modules/sunlight/users/userOverview/sunlightUserOverview.tpl.html'),
                 controller: 'SunlightUserOverviewCtrl',
                 controllerAs: 'SunlightUserOverview',
               },
@@ -1747,7 +1747,7 @@
             views: {
               'side-panel-container@user-overview': {
                 controller: 'UserRolesCtrl',
-                templateUrl: 'modules/core/users/userRoles/userRoles.tpl.html',
+                template: require('modules/core/users/userRoles/userRoles.tpl.html'),
               },
             },
             resolve: {
@@ -1766,7 +1766,7 @@
             views: {
               'side-panel-container@user-overview': {
                 controller: 'UserRolesCtrl',
-                templateUrl: 'modules/core/users/userRoles/userRoles.tpl.html',
+                template: require('modules/core/users/userRoles/userRoles.tpl.html'),
               },
             },
             data: {},
@@ -1796,7 +1796,7 @@
           .state('cmc-base', {
             abstract: true,
             parent: 'main',
-            templateUrl: 'modules/cmc/details/cmc-details.html',
+            template: require('modules/cmc/details/cmc-details.html'),
           })
           .state('cmc', {
             parent: 'cmc-base',
@@ -1832,7 +1832,7 @@
 
           .state('organizations', {
             url: '/organizations',
-            templateUrl: 'modules/core/organizations/organizationList/organizationList.tpl.html',
+            template: require('modules/core/organizations/organizationList/organizationList.tpl.html'),
             controller: 'ListOrganizationsCtrl',
             parent: 'main',
           })
@@ -1842,10 +1842,10 @@
               'sidepanel@': {
                 controller: 'OrganizationOverviewCtrl',
                 controllerAs: 'orgOverview',
-                templateUrl: 'modules/core/organizations/organizationOverview/organizationOverview.tpl.html',
+                template: require('modules/core/organizations/organizationOverview/organizationOverview.tpl.html'),
               },
               'header@organization-overview': {
-                templateUrl: 'modules/core/organizations/organizationOverview/organizationHeader.tpl.html',
+                template: require('modules/core/organizations/organizationOverview/organizationHeader.tpl.html'),
               },
             },
             params: {
@@ -1859,7 +1859,7 @@
           .state('organization-overview.features', {
             views: {
               'side-panel-container@organization-overview': {
-                templateUrl: 'modules/core/organizations/organizationFeatures/organizationFeatures.tpl.html',
+                template: require('modules/core/organizations/organizationFeatures/organizationFeatures.tpl.html'),
                 controller: 'OrganizationFeaturesCtrl',
                 controllerAs: 'features',
               },
@@ -1875,7 +1875,7 @@
           .state('organization-overview.add.addNumbers', {
             views: {
               'side-panel-container@organization-overview': {
-                templateUrl: 'modules/core/organizations/organizationAdd/addNumbers.tpl.html',
+                template: require('modules/core/organizations/organizationAdd/addNumbers.tpl.html'),
                 controller: 'DidAddCtrl',
                 controllerAs: 'didAdd',
               },
@@ -1887,7 +1887,7 @@
           })
           .state('site-list', {
             url: '/site-list',
-            templateUrl: 'modules/core/siteList/siteList.tpl.html',
+            template: require('modules/core/siteList/siteList.tpl.html'),
             controller: 'WebExSiteRowCtrl',
             controllerAs: 'siteList',
             parent: 'main',
@@ -1897,7 +1897,7 @@
             views: {
               'modal@': {
                 controller: 'SiteCSVModalCtrl',
-                templateUrl: 'modules/webex/siteCSVModal/siteCSVModal.tpl.html',
+                template: require('modules/webex/siteCSVModal/siteCSVModal.tpl.html'),
                 controllerAs: 'siteCSVModalCtrl',
               },
             },
@@ -1910,7 +1910,7 @@
             views: {
               'modal@': {
                 controller: 'SiteCSVResultsCtrl',
-                templateUrl: 'modules/webex/siteCSVResultsModal/siteCSVResults.tpl.html',
+                template: require('modules/webex/siteCSVResultsModal/siteCSVResults.tpl.html'),
                 controllerAs: 'siteCSVResult',
               },
             },
@@ -1919,7 +1919,7 @@
             },
           })
           .state('site-list.site-settings', {
-            templateUrl: 'modules/webex/siteSettings/siteSettings.tpl.html',
+            template: require('modules/webex/siteSettings/siteSettings.tpl.html'),
             controller: 'WebExSiteSettingsCtrl',
             parent: 'main',
             params: {
@@ -1927,7 +1927,7 @@
             },
           })
           .state('site-list.site-setting', {
-            templateUrl: 'modules/webex/siteSetting/siteSetting.tpl.html',
+            template: require('modules/webex/siteSetting/siteSetting.tpl.html'),
             controller: 'WebExSiteSettingCtrl',
             parent: 'main',
             params: {
@@ -1944,7 +1944,7 @@
                 template: '<cust-webex-reports-panel></cust-webex-reports-panel>',
               },
               'header@webexReportsPanel': {
-                templateUrl: 'modules/core/customerReports/webexReports/search/webexReportsPanelHeader.html',
+                template: require('modules/core/customerReports/webexReports/search/webexReportsPanelHeader.html'),
               },
             },
           })
@@ -1959,7 +1959,7 @@
           })
           .state('reports', {
             url: '/reports',
-            templateUrl: 'modules/core/customerReports/customerReportsHeader.tpl.html',
+            template: require('modules/core/customerReports/customerReportsHeader.tpl.html'),
             controller: 'CustomerReportsHeaderCtrl',
             controllerAs: 'header',
             parent: 'main',
@@ -1970,7 +1970,7 @@
               tabContent: {
                 controllerAs: 'nav',
                 controller: 'SparkReportCtrl',
-                templateUrl: 'modules/core/customerReports/sparkReports/sparkReports.tpl.html',
+                template: require('modules/core/customerReports/sparkReports/sparkReports.tpl.html'),
               },
             },
           })
@@ -1980,7 +1980,7 @@
               tabContent: {
                 controllerAs: 'nav',
                 controller: 'SparkMetricsCtrl',
-                templateUrl: 'modules/core/customerReports/sparkMetrics/sparkMetrics.tpl.html',
+                template: require('modules/core/customerReports/sparkMetrics/sparkMetrics.tpl.html'),
               },
             },
           })
@@ -1990,7 +1990,7 @@
               tabContent: {
                 controllerAs: 'nav',
                 controller: 'MediaServiceMetricsContoller',
-                templateUrl: 'modules/mediafusion/metrics-graph-report/mediaServiceMetricsReports.tpl.html',
+                template: require('modules/mediafusion/metrics-graph-report/mediaServiceMetricsReports.tpl.html'),
               },
             },
           })
@@ -2000,7 +2000,7 @@
               tabContent: {
                 controllerAs: 'nav',
                 controller: 'WebExMetricsCtrl',
-                templateUrl: 'modules/core/customerReports/webexMetrics/webexMetrics.tpl.html',
+                template: require('modules/core/customerReports/webexMetrics/webexMetrics.tpl.html'),
               },
             },
           })
@@ -2034,7 +2034,7 @@
               metricsContent: {
                 controllerAs: 'nav',
                 controller: 'WebexReportsCtrl',
-                templateUrl: 'modules/core/customerReports/webexReports/webexReports.tpl.html',
+                template: require('modules/core/customerReports/webexReports/webexReports.tpl.html'),
               },
             },
             params: {
@@ -2047,7 +2047,7 @@
               tabContent: {
                 controllerAs: 'nav',
                 controller: 'MediaReportsController',
-                templateUrl: 'modules/mediafusion/reports/media-reports.html',
+                template: require('modules/mediafusion/reports/media-reports.html'),
               },
             },
           })
@@ -2057,7 +2057,7 @@
               tabContent: {
                 controllerAs: 'nav',
                 controller: 'MediaReportsController',
-                templateUrl: 'modules/mediafusion/reports/media-reports-phase-two.html',
+                template: require('modules/mediafusion/reports/media-reports-phase-two.html'),
               },
             },
             resolve: {
@@ -2072,7 +2072,7 @@
               tabContent: {
                 controllerAs: 'nav',
                 controller: 'CareReportsController',
-                templateUrl: 'modules/sunlight/reports/careReports.tpl.html',
+                template: require('modules/sunlight/reports/careReports.tpl.html'),
               },
             },
           })
@@ -2082,7 +2082,7 @@
               tabContent: {
                 controllerAs: 'deviceUsage',
                 controller: 'DeviceUsageCtrl',
-                templateUrl: 'modules/core/customerReports/deviceUsage/total.tpl.html',
+                template: require('modules/core/customerReports/deviceUsage/total.tpl.html'),
               },
             },
           })
@@ -2092,7 +2092,7 @@
               tabContent: {
                 controllerAs: 'nav',
                 controller: 'WebexReportsCtrl',
-                templateUrl: 'modules/core/customerReports/webexReports/webexReports.tpl.html',
+                template: require('modules/core/customerReports/webexReports/webexReports.tpl.html'),
               },
             },
             params: {
@@ -2100,7 +2100,7 @@
             },
           })
           .state('webex-reports-iframe', {
-            templateUrl: 'modules/webex/siteReportsIframe/siteReportIframe.tpl.html',
+            template: require('modules/webex/siteReportsIframe/siteReportIframe.tpl.html'),
             controller: 'ReportsIframeCtrl',
             parent: 'main',
             params: {
@@ -2114,13 +2114,13 @@
           })
           .state('userprofile', {
             url: '/userprofile/:uid',
-            templateUrl: 'modules/squared/views/userprofile.html',
+            template: require('modules/squared/views/userprofile.html'),
             controller: 'UserProfileCtrl',
             parent: 'main',
           })
           .state('support', {
             url: '/support',
-            templateUrl: 'modules/squared/support/support.html',
+            template: require('modules/squared/support/support.html'),
             controller: 'SupportCtrl',
             parent: 'main',
             resolve: {
@@ -2133,7 +2133,7 @@
             url: '/status',
             views: {
               supportPane: {
-                templateUrl: 'modules/squared/support/support-status.html',
+                template: require('modules/squared/support/support-status.html'),
                 controller: 'SupportCtrl',
                 controllerAs: 'support',
               },
@@ -2144,7 +2144,7 @@
 
             views: {
               supportPane: {
-                templateUrl: 'modules/squared/support/support-logs.html',
+                template: require('modules/squared/support/support-logs.html'),
                 controller: 'SupportCtrl',
               },
             },
@@ -2153,7 +2153,7 @@
             url: '/billing?enc',
             views: {
               supportPane: {
-                templateUrl: 'modules/squared/support/support-billing.html',
+                template: require('modules/squared/support/support-billing.html'),
                 controller: 'BillingCtrl',
               },
             },
@@ -2161,7 +2161,7 @@
           })
           .state('billing', {
             url: '/orderprovisioning?enc',
-            templateUrl: 'modules/squared/support/billing.tpl.html',
+            template: require('modules/squared/support/billing.tpl.html'),
             controller: 'BillingCtrl',
             parent: 'main',
           })
@@ -2171,7 +2171,7 @@
            */
           .state('places', {
             url: '/places',
-            templateUrl: 'modules/squared/places/places.html',
+            template: require('modules/squared/places/places.html'),
             controller: 'PlacesCtrl',
             controllerAs: 'sc',
             parent: 'main',
@@ -2186,7 +2186,7 @@
                 template: '<place-overview></place-overview>',
               },
               'header@place-overview': {
-                templateUrl: 'modules/squared/places/overview/placeHeader.html',
+                template: require('modules/squared/places/overview/placeHeader.html'),
               },
             },
             params: {
@@ -2251,7 +2251,7 @@
               'side-panel-container@place-overview': {
                 controller: 'DeviceOverviewCtrl',
                 controllerAs: 'deviceOverview',
-                templateUrl: 'modules/squared/devices/overview/deviceOverview.tpl.html',
+                template: require('modules/squared/devices/overview/deviceOverview.tpl.html'),
               },
             },
             resolve: {
@@ -2455,7 +2455,7 @@
           .state('place-overview.hybrid-services-squared-fusion-cal', {
             views: {
               'side-panel-container@place-overview': {
-                templateUrl: 'modules/hercules/user-sidepanel/calendarServicePreview.tpl.html',
+                template: require('modules/hercules/user-sidepanel/calendarServicePreview.tpl.html'),
                 controller: 'CalendarServicePreviewCtrl',
               },
             },
@@ -2491,7 +2491,7 @@
 
             views: {
               'side-panel-container@place-overview': {
-                templateUrl: 'modules/hercules/user-sidepanel/calendarServicePreview.tpl.html',
+                template: require('modules/hercules/user-sidepanel/calendarServicePreview.tpl.html'),
                 controller: 'CalendarServicePreviewCtrl',
               },
             },
@@ -2523,7 +2523,7 @@
           .state('place-overview.hybrid-services-squared-fusion-uc', {
             views: {
               'side-panel-container@place-overview': {
-                templateUrl: 'modules/hercules/user-sidepanel/hybrid-call-service-place-settings/callServicePlaceSettings.template.html',
+                template: require('modules/hercules/user-sidepanel/hybrid-call-service-place-settings/callServicePlaceSettings.template.html'),
                 controller: 'CallServicePlaceSettingsCtrl',
               },
             },
@@ -2554,7 +2554,7 @@
           })
           .state('devices-redux', {
             // abstract: true,
-            templateUrl: 'modules/csdm/devicesRedux/devices.html',
+            template: require('modules/csdm/devicesRedux/devices.html'),
             controller: 'DevicesReduxCtrl',
             controllerAs: 'devices',
             parent: 'main',
@@ -2563,13 +2563,13 @@
             url: '/devices-redux',
             views: {
               leftPanel: {
-                templateUrl: 'modules/csdm/devicesRedux/list.html',
+                template: require('modules/csdm/devicesRedux/list.html'),
               },
             },
           })
           .state('devices', {
             url: '/devices',
-            templateUrl: 'modules/squared/devices/devices.html',
+            template: require('modules/squared/devices/devices.html'),
             controller: 'DevicesCtrl',
             controllerAs: 'sc',
             parent: 'main',
@@ -2583,10 +2583,10 @@
               'sidepanel@': {
                 controller: 'DeviceOverviewCtrl',
                 controllerAs: 'deviceOverview',
-                templateUrl: 'modules/squared/devices/overview/deviceOverview.tpl.html',
+                template: require('modules/squared/devices/overview/deviceOverview.tpl.html'),
               },
               'header@device-overview': {
-                templateUrl: 'modules/squared/devices/overview/deviceHeader.tpl.html',
+                template: require('modules/squared/devices/overview/deviceHeader.tpl.html'),
               },
             },
             resolve: {
@@ -2608,7 +2608,7 @@
                 template: '<uc-emergency-services></uc-emergency-services>',
               },
               'header@device-overview.emergencyServices': {
-                templateUrl: 'modules/squared/devices/emergencyServices/emergencyServicesHeader.tpl.html',
+                template: require('modules/squared/devices/emergencyServices/emergencyServicesHeader.tpl.html'),
               },
             },
             resolve: {
@@ -2640,7 +2640,7 @@
           .state('partneroverview', {
             parent: 'partner',
             url: '/overview',
-            templateUrl: 'modules/core/partnerHome/partnerHome.tpl.html',
+            template: require('modules/core/partnerHome/partnerHome.tpl.html'),
             controller: 'PartnerHomeCtrl',
           })
           .state('partnerreports', {
@@ -2652,14 +2652,14 @@
           .state('partnerreports.base', {
             parent: 'partner',
             url: '/base',
-            templateUrl: 'modules/core/partnerReports/partnerReports.tpl.html',
+            template: require('modules/core/partnerReports/partnerReports.tpl.html'),
             controller: 'PartnerReportCtrl',
             controllerAs: 'nav',
           })
           .state('partnerreports.spark', {
             parent: 'partner',
             url: '/spark',
-            templateUrl: 'modules/core/partnerReports/sparkReports/sparkReports.tpl.html',
+            template: require('modules/core/partnerReports/sparkReports/sparkReports.tpl.html'),
             controller: 'SparkReportsCtrl',
             controllerAs: '$ctrl',
           })
@@ -2689,7 +2689,7 @@
           })
           .state('gem.servicesPartner', {
             url: '/services/spList',
-            templateUrl: 'modules/gemini/common/servicePartner.tpl.html',
+            template: require('modules/gemini/common/servicePartner.tpl.html'),
             controller: 'servicePartnerCtrl',
             controllerAs: 'gsls',
           })
@@ -2701,7 +2701,7 @@
             controller: 'CbgsCtrl',
             controllerAs: 'cbgsCtrl',
             url: '/services/gemcbg/:companyName/:customerId',
-            templateUrl: 'modules/gemini/callbackGroup/cbgs.tpl.html',
+            template: require('modules/gemini/callbackGroup/cbgs.tpl.html'),
           })
           .state('gem.base.tds', {
             url: '/services/td/:companyName/:customerId',
@@ -2722,7 +2722,7 @@
             params: {
               customerId: null,
             },
-            templateUrl: 'modules/gemini/callbackGroup/cbgRequest.tpl.html',
+            template: require('modules/gemini/callbackGroup/cbgRequest.tpl.html'),
           })
           .state('gmTdDetails', {
             data: {},
@@ -2735,7 +2735,7 @@
                 template: '<gm-td-details></gm-td-details>',
               },
               'header@gmTdDetails': {
-                templateUrl: 'modules/gemini/telephonyDomain/details/gmTdDetailsHeader.tpl.html',
+                template: require('modules/gemini/telephonyDomain/details/gmTdDetailsHeader.tpl.html'),
               },
             },
           })
@@ -2770,7 +2770,7 @@
                 template: '<gm-td-numbers></gm-td-numbers>',
               },
               'header@gmTdNumbersRequest': {
-                templateUrl: 'modules/gemini/telephonyDomain/details/gmTdDetailsHeader.tpl.html',
+                template: require('modules/gemini/telephonyDomain/details/gmTdDetailsHeader.tpl.html'),
               },
             },
           })
@@ -2827,7 +2827,7 @@
           })
           .state('partnercustomers.list', {
             url: '/customers',
-            templateUrl: 'modules/core/customers/customerList/customerList.tpl.html',
+            template: require('modules/core/customers/customerList/customerList.tpl.html'),
             controller: 'CustomerListCtrl',
             controllerAs: 'customerList',
             params: {
@@ -2840,7 +2840,7 @@
               'sidepanel@': {
                 controller: 'CustomerOverviewCtrl',
                 controllerAs: 'customerOverview',
-                templateUrl: 'modules/core/customers/customerOverview/customerOverview.tpl.html',
+                template: require('modules/core/customers/customerOverview/customerOverview.tpl.html'),
               },
             },
             resolve: {
@@ -2881,7 +2881,7 @@
               'side-panel-container@customer-overview': {
                 controller: 'CustomerAdministratorDetailCtrl',
                 controllerAs: 'customerAdmin',
-                templateUrl: 'modules/core/customers/customerAdministrators/customerAdministratorDetail.tpl.html',
+                template: require('modules/core/customers/customerAdministrators/customerAdministratorDetail.tpl.html'),
               },
             },
             resolve: {
@@ -2894,7 +2894,7 @@
               'side-panel-container@customer-overview': {
                 controller: 'CustomerSubscriptionsDetailCtrl',
                 controllerAs: '$ctrl',
-                templateUrl: 'modules/core/customers/customerSubscriptions/customerSubscriptionsDetail.tpl.html',
+                template: require('modules/core/customers/customerSubscriptions/customerSubscriptionsDetail.tpl.html'),
               },
             },
             resolve: {
@@ -2927,7 +2927,7 @@
               'side-panel-container@customer-overview': {
                 controller: 'MeetingDetailCtrl',
                 controllerAs: 'meetingDetail',
-                templateUrl: 'modules/core/customers/customerOverview/meetingDetail.tpl.html',
+                template: require('modules/core/customers/customerOverview/meetingDetail.tpl.html'),
               },
             },
             resolve: {
@@ -2943,7 +2943,7 @@
               'side-panel-container@customer-overview': {
                 controller: 'SharedDeviceDetailCtrl',
                 controllerAs: 'sharedDeviceDetail',
-                templateUrl: 'modules/core/customers/customerOverview/sharedDeviceDetail.tpl.html',
+                template: require('modules/core/customers/customerOverview/sharedDeviceDetail.tpl.html'),
               },
             },
             resolve: {
@@ -2959,7 +2959,7 @@
               'side-panel-container@customer-overview': {
                 controller: 'CareLicenseDetailCtrl',
                 controllerAs: 'careLicenseDetail',
-                templateUrl: 'modules/core/customers/customerOverview/careLicenseDetail.tpl.html',
+                template: require('modules/core/customers/customerOverview/careLicenseDetail.tpl.html'),
               },
             },
             resolve: {
@@ -2975,7 +2975,7 @@
               'side-panel-container@customer-overview': {
                 controller: 'ExternalNumberDetailCtrl',
                 controllerAs: 'externalNumbers',
-                templateUrl: 'modules/huron/externalNumbers/externalNumberDetail.tpl.html',
+                template: require('modules/huron/externalNumbers/externalNumberDetail.tpl.html'),
               },
             },
             resolve: {
@@ -2988,7 +2988,7 @@
               'side-panel-container@customer-overview': {
                 controller: 'DomainDetailCtrl',
                 controllerAs: 'domainDetail',
-                templateUrl: 'modules/core/customers/customerOverview/domainDetail.tpl.html',
+                template: require('modules/core/customers/customerOverview/domainDetail.tpl.html'),
               },
             },
             resolve: {
@@ -3096,7 +3096,7 @@
             abstract: true,
             views: {
               'main@': {
-                templateUrl: 'modules/core/setupWizard/firstTimeWizard.tpl.html',
+                template: require('modules/core/setupWizard/firstTimeWizard.tpl.html'),
                 controller: 'FirstTimeWizardCtrl',
               },
             },
@@ -3131,7 +3131,7 @@
           })
           .state('trialExtInterest', {
             url: '/trialExtInterest?eqp',
-            templateUrl: 'modules/core/trialExtInterest/trialExtInterest.tpl.html',
+            template: require('modules/core/trialExtInterest/trialExtInterest.tpl.html'),
             controller: 'TrialExtInterestCtrl',
             controllerAs: 'extInterest',
             parent: 'main',
@@ -3142,7 +3142,7 @@
               'main@': {
                 controller: 'HelpdeskHeaderController',
                 controllerAs: 'helpdeskHeaderCtrl',
-                templateUrl: 'modules/squared/helpdesk/helpdesk.tpl.html',
+                template: require('modules/squared/helpdesk/helpdesk.tpl.html'),
               },
             },
             abstract: true,
@@ -3150,7 +3150,7 @@
           })
           .state('helpdesklaunch', {
             url: '/helpdesklaunch',
-            templateUrl: 'modules/squared/helpdesk/helpdesk-launch.html',
+            template: require('modules/squared/helpdesk/helpdesk-launch.html'),
             parent: 'main',
           })
           .state('helpdesk', {
@@ -3161,11 +3161,11 @@
           })
           .state('helpdesk.search', {
             url: '/helpdesk',
-            templateUrl: 'modules/squared/helpdesk/helpdesk-search.html',
+            template: require('modules/squared/helpdesk/helpdesk-search.html'),
           })
           .state('helpdesk.user', {
             url: '/helpdesk/user/:orgId/:id',
-            templateUrl: 'modules/squared/helpdesk/helpdesk-user.html',
+            template: require('modules/squared/helpdesk/helpdesk-user.html'),
             controller: 'HelpdeskUserController',
             controllerAs: 'helpdeskUserCtrl',
             params: {
@@ -3176,7 +3176,7 @@
           })
           .state('helpdesk.order', {
             url: '/helpdesk/order/:orderId/:id',
-            templateUrl: 'modules/squared/helpdesk/helpdesk-order.html',
+            template: require('modules/squared/helpdesk/helpdesk-order.html'),
             controller: 'HelpdeskOrderController',
             controllerAs: 'helpdeskOrderCtrl',
             params: {
@@ -3185,7 +3185,7 @@
           })
           .state('helpdesk.org', {
             url: '/helpdesk/org/:id',
-            templateUrl: 'modules/squared/helpdesk/helpdesk-org.html',
+            template: require('modules/squared/helpdesk/helpdesk-org.html'),
             controller: 'HelpdeskOrgController',
             controllerAs: 'helpdeskOrgCtrl',
             params: {
@@ -3195,7 +3195,7 @@
           })
           .state('helpdesk.cloudberry-device', {
             url: '/helpdesk/cloudberryDevice/:orgId/:id',
-            templateUrl: 'modules/squared/helpdesk/helpdesk-cloudberry-device.html',
+            template: require('modules/squared/helpdesk/helpdesk-cloudberry-device.html'),
             controller: 'HelpdeskCloudberryDeviceController',
             controllerAs: 'helpdeskDeviceCtrl',
             params: {
@@ -3206,7 +3206,7 @@
           })
           .state('helpdesk.huron-device', {
             url: '/helpdesk/huronDevice/:orgId/:id',
-            templateUrl: 'modules/squared/helpdesk/helpdesk-huron-device.html',
+            template: require('modules/squared/helpdesk/helpdesk-huron-device.html'),
             controller: 'HelpdeskHuronDeviceController',
             controllerAs: 'helpdeskDeviceCtrl',
             params: {
@@ -3220,7 +3220,7 @@
               'main@': {
                 controller: 'ProvisioningController',
                 controllerAs: 'provisioningCtrl',
-                templateUrl: 'modules/squared/provisioning-console/provisioning.html',
+                template: require('modules/squared/provisioning-console/provisioning.html'),
               },
             },
             abstract: true,
@@ -3245,7 +3245,7 @@
             },
             views: {
               provisioningView: {
-                templateUrl: 'modules/squared/provisioning-console/pending/provisioning-pending.html',
+                template: require('modules/squared/provisioning-console/pending/provisioning-pending.html'),
               },
             },
           })
@@ -3256,7 +3256,7 @@
             },
             views: {
               provisioningView: {
-                templateUrl: 'modules/squared/provisioning-console/completed/provisioning-completed.html',
+                template: require('modules/squared/provisioning-console/completed/provisioning-completed.html'),
               },
             },
           })
@@ -3269,7 +3269,7 @@
               'sidepanel@': {
                 controller: 'ProvisioningDetailsController',
                 controllerAs: 'provisioningDetailsCtrl',
-                templateUrl: 'modules/squared/provisioning-console/overview/provisioning-details.html',
+                template: require('modules/squared/provisioning-console/overview/provisioning-details.html'),
               },
             },
             params: {
@@ -3280,7 +3280,7 @@
         $stateProvider
           .state('cdrsupport', {
             url: '/cdrsupport',
-            templateUrl: 'modules/huron/cdrLogs/cdrlogs.tpl.html',
+            template: require('modules/huron/cdrLogs/cdrlogs.tpl.html'),
             controller: 'CdrLogsCtrl',
             controllerAs: 'cdr',
             parent: 'main',
@@ -3291,7 +3291,7 @@
               'sidepanel@': {
                 controller: 'CdrOverviewCtrl',
                 controllerAs: 'cdrpanel',
-                templateUrl: 'modules/huron/cdrLogs/cdrOverview/cdrOverview.tpl.html',
+                template: require('modules/huron/cdrLogs/cdrOverview/cdrOverview.tpl.html'),
               },
             },
             params: {
@@ -3311,7 +3311,7 @@
             parent: 'modal',
             views: {
               'modal@': {
-                templateUrl: 'modules/huron/cdrLogs/cdrLadderDiagram/cdrLadderDiagram.tpl.html',
+                template: require('modules/huron/cdrLogs/cdrLadderDiagram/cdrLadderDiagram.tpl.html'),
                 controller: 'CdrLadderDiagramCtrl',
                 controllerAs: 'cdrLadderDiagram',
               },
@@ -3345,23 +3345,23 @@
             },
           })
           .state('trial.info', {
-            templateUrl: 'modules/core/trials/trial.tpl.html',
+            template: require('modules/core/trials/trial.tpl.html'),
           })
           .state('trial.finishSetup', {
-            templateUrl: 'modules/core/trials/trialFinishSetup.tpl.html',
+            template: require('modules/core/trials/trialFinishSetup.tpl.html'),
           })
           .state('trial.webex', {
-            templateUrl: 'modules/core/trials/trialWebex.tpl.html',
+            template: require('modules/core/trials/trialWebex.tpl.html'),
             controller: 'TrialWebexCtrl',
             controllerAs: 'webexTrial',
           })
           .state('trial.call', {
-            templateUrl: 'modules/core/trials/trialDevice.tpl.html',
+            template: require('modules/core/trials/trialDevice.tpl.html'),
             controller: 'TrialDeviceController',
             controllerAs: 'callTrial',
           })
           .state('trial.pstnDeprecated', {
-            templateUrl: 'modules/core/trials/trialPstn.tpl.html',
+            template: require('modules/core/trials/trialPstn.tpl.html'),
             controller: 'TrialPstnCtrl',
             controllerAs: 'pstnTrial',
           })
@@ -3378,12 +3378,12 @@
             },
           })
           .state('trial.emergAddress', {
-            templateUrl: 'modules/core/trials/trialEmergAddress.tpl.html',
+            template: require('modules/core/trials/trialEmergAddress.tpl.html'),
             controller: 'TrialEmergAddressCtrl',
             controllerAs: 'eAddressTrial',
           })
           .state('trial.addNumbers', {
-            templateUrl: 'modules/core/trials/addNumbers.tpl.html',
+            template: require('modules/core/trials/addNumbers.tpl.html'),
             controller: 'DidAddCtrl',
             controllerAs: 'didAdd',
             params: {
@@ -3399,7 +3399,7 @@
             },
             views: {
               'modal@': {
-                templateUrl: 'modules/huron/didAdd/didAdd.tpl.html',
+                template: require('modules/huron/didAdd/didAdd.tpl.html'),
                 controller: 'DidAddCtrl',
                 controllerAs: 'didAdd',
               },
@@ -3506,39 +3506,39 @@
                 controllerAs: 'pstnSetup',
               },
               '@pstnSetup': {
-                templateUrl: 'modules/huron/pstnSetup/pstnProviders/pstnProviders.tpl.html',
+                template: require('modules/huron/pstnSetup/pstnProviders/pstnProviders.tpl.html'),
                 controller: 'PstnProvidersCtrl',
                 controllerAs: 'pstnProviders',
               },
             },
           })
           .state('pstnSetup.contractInfo', {
-            templateUrl: 'modules/huron/pstnSetup/pstnContractInfo/pstnContractInfo.tpl.html',
+            template: require('modules/huron/pstnSetup/pstnContractInfo/pstnContractInfo.tpl.html'),
             controller: 'PstnContractInfoCtrl',
             controllerAs: 'pstnContractInfo',
           })
           .state('pstnSetup.serviceAddress', {
-            templateUrl: 'modules/huron/pstnSetup/pstnServiceAddress/pstnServiceAddress.tpl.html',
+            template: require('modules/huron/pstnSetup/pstnServiceAddress/pstnServiceAddress.tpl.html'),
             controller: 'PstnServiceAddressCtrl',
             controllerAs: 'pstnServiceAddress',
           })
           .state('pstnSetup.orderNumbers', {
-            templateUrl: 'modules/huron/pstnSetup/pstnNumbers/pstnNumbers.tpl.html',
+            template: require('modules/huron/pstnSetup/pstnNumbers/pstnNumbers.tpl.html'),
             controller: 'PstnNumbersCtrl',
             controllerAs: 'pstnNumbers',
           })
           .state('pstnSetup.swivelNumbers', {
-            templateUrl: 'modules/huron/pstnSetup/pstnSwivelNumbers/pstnSwivelNumbers.tpl.html',
+            template: require('modules/huron/pstnSetup/pstnSwivelNumbers/pstnSwivelNumbers.tpl.html'),
             controller: 'PstnSwivelNumbersCtrl',
             controllerAs: 'pstnSwivelNumbers',
           })
           .state('pstnSetup.review', {
-            templateUrl: 'modules/huron/pstnSetup/pstnReview/pstnReview.tpl.html',
+            template: require('modules/huron/pstnSetup/pstnReview/pstnReview.tpl.html'),
             controller: 'PstnReviewCtrl',
             controllerAs: 'pstnReview',
           })
           .state('pstnSetup.nextSteps', {
-            templateUrl: 'modules/huron/pstnSetup/pstnNextSteps/pstnNextSteps.tpl.html',
+            template: require('modules/huron/pstnSetup/pstnNextSteps/pstnNextSteps.tpl.html'),
             controller: 'PstnNextStepsCtrl',
             controllerAs: 'pstnNextSteps',
             params: {
@@ -3548,7 +3548,7 @@
           .state('hurondetailsBase', {
             abstract: true,
             parent: 'main',
-            templateUrl: 'modules/huron/details/huronDetails.html',
+            template: require('modules/huron/details/huronDetails.html'),
           })
           .state('hurondetails', {
             parent: 'hurondetailsBase',
@@ -3571,7 +3571,7 @@
           .state('huronlines', {
             url: '/services/call-lines',
             parent: 'hurondetails',
-            templateUrl: 'modules/huron/lines/lineList.tpl.html',
+            template: require('modules/huron/lines/lineList.tpl.html'),
             controller: 'LinesListCtrl',
             controllerAs: 'linesListCtrl',
           })
@@ -3669,7 +3669,7 @@
             parent: 'modal',
             views: {
               'modal@': {
-                templateUrl: 'modules/huron/cdrReports/cdrReportsModal.html',
+                template: require('modules/huron/cdrReports/cdrReportsModal.html'),
               },
             },
           })
@@ -3677,21 +3677,21 @@
             parent: 'modal',
             views: {
               'modal@': {
-                templateUrl: 'modules/call/settings/settings-bulk-enable-vm-modal/settings-bulk-enable-vm-modal.html',
+                template: require('modules/call/settings/settings-bulk-enable-vm-modal/settings-bulk-enable-vm-modal.html'),
               },
             },
           })
           .state('huronfeatures', {
             url: '/services/call-features',
             parent: 'hurondetails',
-            templateUrl: 'modules/huron/features/featureLanding/features.tpl.html',
+            template: require('modules/huron/features/featureLanding/features.tpl.html'),
             controller: 'HuronFeaturesCtrl',
             controllerAs: 'huronFeaturesCtrl',
           })
           .state('huronnewfeature', {
             url: '/newfeature',
             parent: 'hurondetails',
-            templateUrl: 'modules/huron/features/newFeature/newFeature.tpl.html',
+            template: require('modules/huron/features/newFeature/newFeature.tpl.html'),
             controller: 'NewFeatureCtrl',
             controllerAs: 'newFeatureCtrl',
           })
@@ -3701,7 +3701,7 @@
               aaName: '',
               aaTemplate: '',
             },
-            templateUrl: 'modules/huron/features/autoAttendant/builder/aaBuilderMain.tpl.html',
+            template: require('modules/huron/features/autoAttendant/builder/aaBuilderMain.tpl.html'),
             controller: 'AABuilderMainCtrl',
             controllerAs: 'aaBuilderMain',
           })
@@ -3711,7 +3711,7 @@
               'modal@': {
                 controller: 'HuronFeatureDeleteCtrl',
                 controllerAs: 'huronFeatureDelete',
-                templateUrl: 'modules/huron/features/featureLanding/featureDeleteModal.tpl.html',
+                template: require('modules/huron/features/featureLanding/featureDeleteModal.tpl.html'),
               },
             },
             params: {
@@ -3726,7 +3726,7 @@
               'modal@': {
                 controller: 'HuronFeatureAADependsCtrl',
                 controllerAs: 'huronFeatureAADepends',
-                templateUrl: 'modules/huron/features/featureLanding/featureAADependsModal.tpl.html',
+                template: require('modules/huron/features/featureLanding/featureAADependsModal.tpl.html'),
               },
             },
             params: {
@@ -3871,7 +3871,7 @@
           })
           // hybrid context
           .state('context', {
-            templateUrl: 'modules/context/container/hybrid-context-container.html',
+            template: require('modules/context/container/hybrid-context-container.html'),
             controller: 'HybridContextContainerController',
             controllerAs: 'hybridContextContainerController',
             parent: 'main',
@@ -3915,7 +3915,7 @@
             parent: 'context',
             views: {
               contextServiceView: {
-                templateUrl: 'modules/context/fields/hybrid-context-fields.html',
+                template: require('modules/context/fields/hybrid-context-fields.html'),
                 controller: 'HybridContextFieldsCtrl',
                 controllerAs: 'contextFields',
               },
@@ -3956,7 +3956,7 @@
                 template: '<context-fields-sidepanel field="$resolve.field" process="$resolve.process" callback="$resolve.callback"></context-fields-sidepanel>',
               },
               'header@context-fields-sidepanel': {
-                templateUrl: 'modules/context/fields/sidepanel/hybrid-context-fields-sidepanel-header.html',
+                template: require('modules/context/fields/sidepanel/hybrid-context-fields-sidepanel-header.html'),
               },
             },
             data: {},
@@ -4002,7 +4002,7 @@
             parent: 'context',
             views: {
               contextServiceView: {
-                templateUrl: 'modules/context/fieldsets/hybrid-context-fieldsets.html',
+                template: require('modules/context/fieldsets/hybrid-context-fieldsets.html'),
                 controller: 'HybridContextFieldsetsCtrl',
                 controllerAs: 'contextFieldsets',
               },
@@ -4043,7 +4043,7 @@
                 template: '<context-fieldsets-sidepanel fieldset="$resolve.fieldset" process="$resolve.process" callback="$resolve.callback" ></context-fieldsets-sidepanel>',
               },
               'header@context-fieldsets-sidepanel': {
-                templateUrl: 'modules/context/fieldsets/sidepanel/hybrid-context-fieldsets-sidepanel-header.html',
+                template: require('modules/context/fieldsets/sidepanel/hybrid-context-fieldsets-sidepanel-header.html'),
               },
             },
             data: {},
@@ -4068,7 +4068,7 @@
           .state('context-fieldsets-sidepanel.fields', {
             views: {
               'side-panel-container@context-fieldsets-sidepanel': {
-                templateUrl: 'modules/context/fieldsets/sidepanel/fieldList/hybrid-context-fieldsets-field-list.html',
+                template: require('modules/context/fieldsets/sidepanel/fieldList/hybrid-context-fieldsets-field-list.html'),
                 controller: 'ContextFieldsetsSidepanelFieldListCtrl',
                 controllerAs: 'contextFieldsetsSidepanelFieldListCtrl',
               },
@@ -4092,7 +4092,7 @@
                 template: '<cluster-sidepanel-overview cluster-type="\'cs_mgmt\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType"></cluster-sidepanel-overview>',
               },
               'header@context-cluster-sidepanel': {
-                templateUrl: 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html',
+                template: require('modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html'),
               },
             },
             // If data not present, $state.current.data.displayName can't be changed
@@ -4169,7 +4169,7 @@
           .state('context-cluster-sidepanel.host-details', {
             views: {
               'side-panel-container@context-cluster-sidepanel': {
-                templateUrl: 'modules/hercules/cluster-sidepanel/host-details/host-details.html',
+                template: require('modules/hercules/cluster-sidepanel/host-details/host-details.html'),
                 controller: 'HybridServicesHostDetailsController',
                 controllerAs: 'hostDetailsCtrl',
               },
@@ -4223,7 +4223,7 @@
                 template: '<hybrid-services-connector-sidepanel connector="$resolve.connector"></hybrid-services-connector-sidepanel>',
               },
               'header@hybrid-services-connector-sidepanel': {
-                templateUrl: 'modules/hercules/hybrid-services-connector-sidepanel/hybrid-services-connector-sidepanel-header.html',
+                template: require('modules/hercules/hybrid-services-connector-sidepanel/hybrid-services-connector-sidepanel-header.html'),
               },
             },
             // If data not present, $state.current.data.displayName can't be changed
@@ -4255,7 +4255,7 @@
             },
           })
           .state('hds', {
-            templateUrl: 'modules/hds/resources/hybrid-data-security-container.html',
+            template: require('modules/hds/resources/hybrid-data-security-container.html'),
             controller: 'HDSServiceController',
             controllerAs: 'hdsServiceController',
             parent: 'main',
@@ -4289,7 +4289,7 @@
               fullPane: {
                 controller: 'HDSSettingsController',
                 controllerAs: 'hdsSettings',
-                templateUrl: 'modules/hds/settings/hds-settings.html',
+                template: require('modules/hds/settings/hds-settings.html'),
               },
             },
           })
@@ -4300,7 +4300,7 @@
                 template: '<cluster-sidepanel-overview cluster-type="\'hds_app\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></cluster-sidepanel-overview>',
               },
               'header@hds-cluster-details': {
-                templateUrl: 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html',
+                template: require('modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html'),
               },
             },
             data: {},
@@ -4324,7 +4324,7 @@
           .state('hds-cluster-details.host-details', {
             views: {
               'side-panel-container@hds-cluster-details': {
-                templateUrl: 'modules/hercules/cluster-sidepanel/host-details/host-details.html',
+                template: require('modules/hercules/cluster-sidepanel/host-details/host-details.html'),
                 controller: 'HybridServicesHostDetailsController',
                 controllerAs: 'hostDetailsCtrl',
               },
@@ -4412,7 +4412,7 @@
           })
           .state('mediafusion-cluster.settings', {
             url: '/settings',
-            templateUrl: 'modules/hercules/fusion-pages/mediafusion-settings.html',
+            template: require('modules/hercules/fusion-pages/mediafusion-settings.html'),
             controller: 'MediafusionClusterSettingsController',
             controllerAs: 'clusterSettings',
             resolve: {
@@ -4462,7 +4462,7 @@
               'modal@': {
                 controller: 'TypeSelectorController',
                 controllerAs: 'vm',
-                templateUrl: 'modules/hercules/fusion-pages/add-resource/common/type-selector.html',
+                template: require('modules/hercules/fusion-pages/add-resource/common/type-selector.html'),
               },
             },
             params: {
@@ -4486,7 +4486,7 @@
               'modal@': {
                 controller: 'ExpresswayServiceSelectorController',
                 controllerAs: 'vm',
-                templateUrl: 'modules/hercules/fusion-pages/add-resource/expressway/service-selector.html',
+                template: require('modules/hercules/fusion-pages/add-resource/expressway/service-selector.html'),
               },
             },
             params: {
@@ -4504,7 +4504,7 @@
               'modal@': {
                 controller: 'ExpresswayEnterHostnameController',
                 controllerAs: 'vm',
-                templateUrl: 'modules/hercules/fusion-pages/add-resource/expressway/enter-hostname.html',
+                template: require('modules/hercules/fusion-pages/add-resource/expressway/enter-hostname.html'),
               },
             },
             params: {
@@ -4517,7 +4517,7 @@
               'modal@': {
                 controller: 'ExpresswayEnterNameController',
                 controllerAs: 'vm',
-                templateUrl: 'modules/hercules/fusion-pages/add-resource/expressway/enter-name.html',
+                template: require('modules/hercules/fusion-pages/add-resource/expressway/enter-name.html'),
               },
             },
             params: {
@@ -4530,7 +4530,7 @@
               'modal@': {
                 controller: 'ExpresswaySelectResourceGroupController',
                 controllerAs: 'vm',
-                templateUrl: 'modules/hercules/fusion-pages/add-resource/expressway/select-resource-group.html',
+                template: require('modules/hercules/fusion-pages/add-resource/expressway/select-resource-group.html'),
               },
             },
             params: {
@@ -4543,7 +4543,7 @@
               'modal@': {
                 controller: 'ExpresswayEndController',
                 controllerAs: 'vm',
-                templateUrl: 'modules/hercules/fusion-pages/add-resource/expressway/end.html',
+                template: require('modules/hercules/fusion-pages/add-resource/expressway/end.html'),
               },
             },
             params: {
@@ -4559,7 +4559,7 @@
               'modal@': {
                 controller: 'AddResourceControllerClusterViewV2',
                 controllerAs: 'redirectResource',
-                templateUrl: 'modules/mediafusion/media-service-v2/add-resources/add-resource-dialog.html',
+                template: require('modules/mediafusion/media-service-v2/add-resources/add-resource-dialog.html'),
                 modalClass: 'redirect-add-resource',
               },
             },
@@ -4576,7 +4576,7 @@
               'modal@': {
                 controller: 'MediafusionEnterNameController',
                 controllerAs: 'vm',
-                templateUrl: 'modules/hercules/fusion-pages/add-resource/mediafusion/enter-name.html',
+                template: require('modules/hercules/fusion-pages/add-resource/mediafusion/enter-name.html'),
               },
             },
             params: {
@@ -4589,7 +4589,7 @@
               'modal@': {
                 controller: 'MediafusionEndController',
                 controllerAs: 'vm',
-                templateUrl: 'modules/hercules/fusion-pages/add-resource/mediafusion/end.html',
+                template: require('modules/hercules/fusion-pages/add-resource/mediafusion/end.html'),
               },
             },
             params: {
@@ -4600,7 +4600,7 @@
             parent: 'modalSmall',
             views: {
               'modal@': {
-                templateUrl: 'modules/hercules/fusion-pages/add-resource/context/context.html',
+                template: require('modules/hercules/fusion-pages/add-resource/context/context.html'),
               },
             },
             params: {
@@ -4616,7 +4616,7 @@
               'modal@': {
                 controller: 'CucmHostnameController',
                 controllerAs: 'vm',
-                templateUrl: 'modules/hercules/fusion-pages/add-resource/cucm/cucm-hostname.html',
+                template: require('modules/hercules/fusion-pages/add-resource/cucm/cucm-hostname.html'),
               },
             },
             params: {
@@ -4629,7 +4629,7 @@
               'modal@': {
                 controller: 'CucmClusterNameController',
                 controllerAs: 'vm',
-                templateUrl: 'modules/hercules/fusion-pages/add-resource/cucm/cucm-cluster-name.html',
+                template: require('modules/hercules/fusion-pages/add-resource/cucm/cucm-cluster-name.html'),
               },
             },
             params: {
@@ -4642,7 +4642,7 @@
               'modal@': {
                 controller: 'CucmEndController',
                 controllerAs: 'vm',
-                templateUrl: 'modules/hercules/fusion-pages/add-resource/cucm/cucm-end.html',
+                template: require('modules/hercules/fusion-pages/add-resource/cucm/cucm-end.html'),
               },
             },
             params: {
@@ -4650,7 +4650,7 @@
             },
           })
           .state('calendar-service', {
-            templateUrl: 'modules/hercules/service-specific-pages/calendar-service-pages/calendar-service-container.html',
+            template: require('modules/hercules/service-specific-pages/calendar-service-pages/calendar-service-container.html'),
             controller: 'CalendarServiceContainerController',
             controllerAs: 'vm',
             params: {
@@ -4669,7 +4669,7 @@
             url: '/services/calendar',
             views: {
               calendarServiceView: {
-                templateUrl: 'modules/hercules/service-specific-pages/calendar-service-pages/calendar-service-resources.html',
+                template: require('modules/hercules/service-specific-pages/calendar-service-pages/calendar-service-resources.html'),
                 controller: /* @ngInject */ function (Analytics) {
                   return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CAL_EXC_LIST);
                 },
@@ -4709,7 +4709,7 @@
             },
           })
           .state('call-service', {
-            templateUrl: 'modules/hercules/service-specific-pages/call-service-pages/call-service-container.html',
+            template: require('modules/hercules/service-specific-pages/call-service-pages/call-service-container.html'),
             controller: 'CallServiceContainerController',
             controllerAs: 'vm',
             params: {
@@ -4727,7 +4727,7 @@
             url: '/services/call',
             views: {
               callServiceView: {
-                templateUrl: 'modules/hercules/service-specific-pages/call-service-pages/call-service-resources.html',
+                template: require('modules/hercules/service-specific-pages/call-service-pages/call-service-resources.html'),
               },
               controller: /* @ngInject */ function (Analytics) {
                 return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CALL_LIST);
@@ -4740,7 +4740,7 @@
               callServiceView: {
                 controllerAs: 'callServiceSettings',
                 controller: 'CallServiceSettingsController',
-                templateUrl: 'modules/hercules/service-settings/call-service-settings.html',
+                template: require('modules/hercules/service-settings/call-service-settings.html'),
               },
             },
             resolve: {
@@ -4753,7 +4753,7 @@
             },
           })
           .state('imp-service', {
-            templateUrl: 'modules/hercules/service-specific-pages/imp-service-pages/imp-service-container.html',
+            template: require('modules/hercules/service-specific-pages/imp-service-pages/imp-service-container.html'),
             controller: 'ImpServiceContainerController',
             controllerAs: 'vm',
             params: {
@@ -4783,7 +4783,7 @@
             url: '/services/imp',
             views: {
               impServiceView: {
-                templateUrl: 'modules/hercules/service-specific-pages/imp-service-pages/imp-service-resources.html',
+                template: require('modules/hercules/service-specific-pages/imp-service-pages/imp-service-resources.html'),
               },
             },
             params: {
@@ -4807,7 +4807,7 @@
                 template: '<private-trunk-sidepanel trunk-id="$resolve.trunkId"></private-trunk-sidepanel>',
               },
               'header@private-trunk-sidepanel': {
-                templateUrl: 'modules/hercules/private-trunk/private-trunk-sidepanel/private-trunk-sidepanel-header.html',
+                template: require('modules/hercules/private-trunk/private-trunk-sidepanel/private-trunk-sidepanel-header.html'),
               },
             },
             data: {},
@@ -4844,7 +4844,7 @@
                 template: '<cluster-sidepanel-overview cluster-type="\'c_mgmt\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></cluster-sidepanel-overview>',
               },
               'header@expressway-cluster-sidepanel': {
-                templateUrl: 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html',
+                template: require('modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html'),
               },
             },
             // If data not present, $state.current.data.displayName can't be changed
@@ -4868,7 +4868,7 @@
           .state('expressway-cluster-sidepanel.host-details', {
             views: {
               'side-panel-container@expressway-cluster-sidepanel': {
-                templateUrl: 'modules/hercules/cluster-sidepanel/host-details/host-details.html',
+                template: require('modules/hercules/cluster-sidepanel/host-details/host-details.html'),
                 controller: 'HybridServicesHostDetailsController',
                 controllerAs: 'hostDetailsCtrl',
               },
@@ -4907,7 +4907,7 @@
           })
           .state('resource-group-settings', {
             url: '/services/resourceGroups/:id/settings',
-            templateUrl: 'modules/hercules/fusion-pages/resource-group-settings/resource-group-settings.html',
+            template: require('modules/hercules/fusion-pages/resource-group-settings/resource-group-settings.html'),
             controller: 'ResourceGroupSettingsController',
             controllerAs: 'rgsCtrl',
             parent: 'main',
@@ -4923,7 +4923,7 @@
                 template: '<cluster-sidepanel-overview cluster-type="\'mf_mgmt\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType"></cluster-sidepanel-overview>',
               },
               'header@media-cluster-details': {
-                templateUrl: 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html',
+                template: require('modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html'),
               },
             },
             data: {},
@@ -4944,7 +4944,7 @@
           .state('media-cluster-details.host-details', {
             views: {
               'side-panel-container@media-cluster-details': {
-                templateUrl: 'modules/hercules/cluster-sidepanel/host-details/host-details.html',
+                template: require('modules/hercules/cluster-sidepanel/host-details/host-details.html'),
                 controller: 'HybridServicesHostDetailsController',
                 controllerAs: 'hostDetailsCtrl',
               },
@@ -4981,7 +4981,7 @@
           })
 
           .state('media-service-v2', {
-            templateUrl: 'modules/mediafusion/media-service-v2/media-service-overview.html',
+            template: require('modules/mediafusion/media-service-v2/media-service-overview.html'),
             controller: 'MediaServiceControllerV2',
             controllerAs: 'med',
             parent: 'main',
@@ -5015,7 +5015,7 @@
               fullPane: {
                 controllerAs: 'mediaServiceSettings',
                 controller: 'MediaServiceSettingsControllerV2',
-                templateUrl: 'modules/mediafusion/media-service-v2/settings/media-service-settings.html',
+                template: require('modules/mediafusion/media-service-v2/settings/media-service-settings.html'),
               },
             },
             controller: /* @ngInject */ function (Analytics) {
@@ -5033,7 +5033,7 @@
             parent: 'mainLazyLoad',
             views: {
               'main@': {
-                templateUrl: 'modules/ediscovery/ediscovery.tpl.html',
+                template: require('modules/ediscovery/ediscovery.tpl.html'),
               },
             },
             abstract: true,
@@ -5048,7 +5048,7 @@
             url: '/search',
             controller: 'EdiscoverySearchController',
             controllerAs: 'ediscoverySearchCtrl',
-            templateUrl: 'modules/ediscovery/ediscovery-search.html',
+            template: require('modules/ediscovery/ediscovery-search.html'),
             params: {
               report: null,
               reRun: false,
@@ -5058,7 +5058,7 @@
             url: '/reports',
             controller: 'EdiscoveryReportsController',
             controllerAs: 'ediscoveryCtrl',
-            templateUrl: 'modules/ediscovery/ediscovery-reports.html',
+            template: require('modules/ediscovery/ediscovery-reports.html'),
           });
 
         $stateProvider
@@ -5066,7 +5066,7 @@
             parent: 'mainLazyLoad',
             views: {
               'main@': {
-                templateUrl: 'modules/squared/partner-management/pm-main.html',
+                template: require('modules/squared/partner-management/pm-main.html'),
               },
             },
             abstract: true,
@@ -5080,32 +5080,32 @@
           })
           .state('partnerManagement.search', {
             url: '/',
-            templateUrl: 'modules/squared/partner-management/pm-search.html',
+            template: require('modules/squared/partner-management/pm-search.html'),
           })
           .state('partnerManagement.searchResults', {
-            templateUrl: 'modules/squared/partner-management/pm-searchResults.html',
+            template: require('modules/squared/partner-management/pm-searchResults.html'),
           })
           .state('partnerManagement.orgExists', {
-            templateUrl: 'modules/squared/partner-management/pm-orgExists.html',
+            template: require('modules/squared/partner-management/pm-orgExists.html'),
           })
           .state('partnerManagement.orgClaimed', {
-            templateUrl: 'modules/squared/partner-management/pm-orgClaimed.html',
+            template: require('modules/squared/partner-management/pm-orgClaimed.html'),
           })
           .state('partnerManagement.contactAdmin', {
-            templateUrl: 'modules/squared/partner-management/pm-contactAdmin.html',
+            template: require('modules/squared/partner-management/pm-contactAdmin.html'),
           })
           .state('partnerManagement.create', {
-            templateUrl: 'modules/squared/partner-management/pm-create.html',
+            template: require('modules/squared/partner-management/pm-create.html'),
           })
           .state('partnerManagement.createSuccess', {
-            templateUrl: 'modules/squared/partner-management/pm-createSuccess.html',
+            template: require('modules/squared/partner-management/pm-createSuccess.html'),
           });
 
         $stateProvider
           .state('messenger', {
             parent: 'main',
             url: '/services/messenger',
-            templateUrl: 'modules/messenger/ci-sync/ciSync.tpl.html',
+            template: require('modules/messenger/ci-sync/ciSync.tpl.html'),
             controller: 'CiSyncCtrl',
             controllerAs: 'sync',
           });
@@ -5116,20 +5116,20 @@
         $stateProvider
           .state('gss', {
             url: '/gss',
-            templateUrl: 'modules/gss/gssIframe/gssIframe.tpl.html',
+            template: require('modules/gss/gssIframe/gssIframe.tpl.html'),
             controller: 'GssIframeCtrl',
             controllerAs: 'gssIframeCtrl',
             parent: 'main',
           })
           .state('gss.dashboard', {
             url: '/dashboard',
-            templateUrl: 'modules/gss/dashboard/dashboard.tpl.html',
+            template: require('modules/gss/dashboard/dashboard.tpl.html'),
             controller: 'DashboardCtrl',
             controllerAs: 'dashboardCtrl',
           })
           .state('gss.components', {
             url: '/components',
-            templateUrl: 'modules/gss/components/components.tpl.html',
+            template: require('modules/gss/components/components.tpl.html'),
             controller: 'ComponentsCtrl',
             controllerAs: 'componentsCtrl',
           })
@@ -5140,7 +5140,7 @@
               '@gss': {
                 controller: 'DelComponentCtrl',
                 controllerAs: 'delComponentCtrl',
-                templateUrl: 'modules/gss/components/deleteComponent/deleteComponent.tpl.html',
+                template: require('modules/gss/components/deleteComponent/deleteComponent.tpl.html'),
               },
             },
             params: {
@@ -5149,7 +5149,7 @@
           })
           .state('gss.services', {
             url: '/services',
-            templateUrl: 'modules/gss/services/services.tpl.html',
+            template: require('modules/gss/services/services.tpl.html'),
             controller: 'GSSServicesCtrl',
             controllerAs: 'gssServicesCtrl',
           })
@@ -5157,7 +5157,7 @@
             url: '/delete',
             views: {
               '@gss': {
-                templateUrl: 'modules/gss/services/deleteService/deleteService.tpl.html',
+                template: require('modules/gss/services/deleteService/deleteService.tpl.html'),
                 controller: 'DeleteServiceCtrl',
                 controllerAs: 'deleteServiceCtrl',
               },
@@ -5168,7 +5168,7 @@
           })
           .state('gss.incidents', {
             url: '/incidents',
-            templateUrl: 'modules/gss/incidents/incidents.tpl.html',
+            template: require('modules/gss/incidents/incidents.tpl.html'),
             controller: 'IncidentsCtrl',
             controllerAs: 'incidentsCtrl',
           })
@@ -5176,7 +5176,7 @@
             url: '/new',
             views: {
               '@gss': {
-                templateUrl: 'modules/gss/incidents/createIncident/createIncident.tpl.html',
+                template: require('modules/gss/incidents/createIncident/createIncident.tpl.html'),
                 controller: 'CreateIncidentCtrl',
                 controllerAs: 'createIncidentCtrl',
               },
@@ -5186,7 +5186,7 @@
             url: '/delete',
             views: {
               '@gss': {
-                templateUrl: 'modules/gss/incidents/deleteIncident/deleteIncident.tpl.html',
+                template: require('modules/gss/incidents/deleteIncident/deleteIncident.tpl.html'),
                 controller: 'DeleteIncidentCtrl',
                 controllerAs: 'deleteIncidentCtrl',
               },
@@ -5199,7 +5199,7 @@
             url: '/update',
             views: {
               '@gss': {
-                templateUrl: 'modules/gss/incidents/updateIncident/updateIncident.tpl.html',
+                template: require('modules/gss/incidents/updateIncident/updateIncident.tpl.html'),
                 controller: 'UpdateIncidentCtrl',
                 controllerAs: 'updateIncidentCtrl',
               },

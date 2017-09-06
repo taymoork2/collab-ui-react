@@ -25,14 +25,13 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
     private CmcUserService,
     private $translate,
     private Notification: Notification,
-    private $templateCache,
     private $filter: ng.IFilterService,
     private $scope: ng.IScope,
     private $window,
   ) {
     this.orgId = this.Authinfo.getOrgId();
     this.orgName = this.Authinfo.getOrgName();
-    this.statTemplate = this.$templateCache.get('modules/cmc/status/statColumn.tpl.html');
+    this.statTemplate = require('modules/cmc/status/statColumn.tpl.html');
 
     // TODO Add this and also  errors when CMC provides more info
     // this.filters = [{
@@ -170,7 +169,7 @@ class CmcDetailsStatusComponentCtrl implements ng.IComponentController {
 
 export class CmcDetailsStatusComponent implements ng.IComponentOptions {
   public controller = CmcDetailsStatusComponentCtrl;
-  public templateUrl = 'modules/cmc/status/status.component.html';
+  public template = require('modules/cmc/status/status.component.html');
   public bindings = {
   };
 }

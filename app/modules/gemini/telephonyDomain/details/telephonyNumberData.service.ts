@@ -25,7 +25,6 @@ export class TelephonyNumberDataService {
     private gemService,
     private uiGridConstants,
     private $timeout: ng.ITimeoutService,
-    private $templateCache: ng.ITemplateCacheService,
     private $translate: ng.translate.ITranslateService,
     private TelephonyNumberValidateService: TelephonyNumberValidateService,
   ) {
@@ -98,13 +97,13 @@ export class TelephonyNumberDataService {
       cellTooltip: true,
       displayName: this.$translate.instant('gemini.tds.numbers.field.phoneNumber'),
       cellClass: isEdit ? 'cell-border-none' : '',
-      cellTemplate: this.$templateCache.get(CELL_TEMPLATE_URL + 'phoneNumberCellTemplate.tpl.html'),
+      cellTemplate: require(CELL_TEMPLATE_URL + 'phoneNumberCellTemplate.tpl.html'),
     }, {
       width: '11%',
       field: 'label',
       displayName: this.$translate.instant('gemini.tds.numbers.field.phoneLabel'),
       cellClass: isEdit ? 'cell-border-none' : '',
-      cellTemplate: this.$templateCache.get(CELL_TEMPLATE_URL + 'phoneLabelCellTemplate.tpl.html'),
+      cellTemplate: require(CELL_TEMPLATE_URL + 'phoneLabelCellTemplate.tpl.html'),
     }, {
       width: '12%',
       field: 'dnisNumberFormat',
@@ -112,7 +111,7 @@ export class TelephonyNumberDataService {
       cellTooltip: true,
       displayName: this.$translate.instant('gemini.tds.numbers.field.accessNumber'),
       cellClass: isEdit ? 'cell-border-none' : '',
-      cellTemplate: this.$templateCache.get(CELL_TEMPLATE_URL + 'accessNumberCellTemplate.tpl.html'),
+      cellTemplate: require(CELL_TEMPLATE_URL + 'accessNumberCellTemplate.tpl.html'),
     }, {
       width: '9%',
       field: 'tollType',
@@ -120,7 +119,7 @@ export class TelephonyNumberDataService {
       cellTooltip: true,
       displayName: this.$translate.instant('gemini.tds.numbers.field.tollType'),
       cellClass: isEdit ? 'cell-border-none' : '',
-      cellTemplate: this.$templateCache.get(CELL_TEMPLATE_URL + 'tollTypeCellTemplate.tpl.html'),
+      cellTemplate: require(CELL_TEMPLATE_URL + 'tollTypeCellTemplate.tpl.html'),
     }, {
       width: '8%',
       field: 'callType',
@@ -128,7 +127,7 @@ export class TelephonyNumberDataService {
       cellTooltip: true,
       displayName: this.$translate.instant('gemini.tds.numbers.field.callType'),
       cellClass: isEdit ? 'cell-border-none' : '',
-      cellTemplate: this.$templateCache.get(CELL_TEMPLATE_URL + 'callTypeCellTemplate.tpl.html'),
+      cellTemplate: require(CELL_TEMPLATE_URL + 'callTypeCellTemplate.tpl.html'),
     }, {
       width: '12%',
       field: 'defaultNumber',
@@ -136,7 +135,7 @@ export class TelephonyNumberDataService {
       cellTooltip: true,
       displayName: this.$translate.instant('gemini.tds.numbers.field.defaultNumber'),
       cellClass: isEdit ? 'cell-border-none' : '',
-      cellTemplate: this.$templateCache.get(CELL_TEMPLATE_URL + 'defaultNumberCellTemplate.tpl.html'),
+      cellTemplate: require(CELL_TEMPLATE_URL + 'defaultNumberCellTemplate.tpl.html'),
     }, {
       width: '11%',
       field: 'globalListDisplay',
@@ -144,7 +143,7 @@ export class TelephonyNumberDataService {
       cellTooltip: true,
       displayName: this.$translate.instant('gemini.tds.numbers.field.globalDisplay'),
       cellClass: isEdit ? 'cell-border-none' : '',
-      cellTemplate: this.$templateCache.get(CELL_TEMPLATE_URL + 'globalListDisplayCellTemplate.tpl.html'),
+      cellTemplate: require(CELL_TEMPLATE_URL + 'globalListDisplayCellTemplate.tpl.html'),
     }, {
       width: '9%',
       field: 'country',
@@ -152,7 +151,7 @@ export class TelephonyNumberDataService {
       cellTooltip: true,
       displayName: this.$translate.instant('gemini.tds.numbers.field.country'),
       cellClass: isEdit ? 'cell-border-none' : '',
-      cellTemplate: this.$templateCache.get(CELL_TEMPLATE_URL + 'countryCellTemplate.tpl.html'),
+      cellTemplate: require(CELL_TEMPLATE_URL + 'countryCellTemplate.tpl.html'),
     }, {
       width: '13%',
       field: 'isHidden',
@@ -160,7 +159,7 @@ export class TelephonyNumberDataService {
       cellTooltip: true,
       displayName: this.$translate.instant('gemini.tds.numbers.field.hiddenOnClient'),
       cellClass: isEdit ? 'cell-border-none' : '',
-      cellTemplate: this.$templateCache.get(CELL_TEMPLATE_URL + 'isHiddenCellTemplate.tpl.html'),
+      cellTemplate: require(CELL_TEMPLATE_URL + 'isHiddenCellTemplate.tpl.html'),
     }];
 
     if (isEdit) {

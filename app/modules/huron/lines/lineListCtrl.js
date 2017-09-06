@@ -6,7 +6,7 @@
     .controller('LinesListCtrl', LinesListCtrl);
 
   /* @ngInject */
-  function LinesListCtrl($scope, $templateCache, $timeout, $translate, LineListService, Log, Config, Notification, $state, FeatureToggleService, Authinfo) {
+  function LinesListCtrl($scope, $timeout, $translate, LineListService, Log, Config, Notification, $state, FeatureToggleService, Authinfo) {
     var vm = this;
 
     vm.currentDataPosition = 0;
@@ -263,7 +263,7 @@
     }
 
     function getTemplate(name) {
-      return $templateCache.get('modules/huron/lines/templates/' + name + '.html');
+      return require('modules/huron/lines/templates/' + name + '.html');
     }
 
     FeatureToggleService.supports(FeatureToggleService.features.huronPstn)

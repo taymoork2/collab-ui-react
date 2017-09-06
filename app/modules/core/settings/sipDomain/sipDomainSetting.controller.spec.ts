@@ -55,7 +55,7 @@ describe('Controller: SipDomainSettingController', function () {
     };
 
     this.modal = {
-      templateUrl: '',
+      template: require(''),
       type: 'dialog',
     };
 
@@ -501,7 +501,7 @@ describe('Controller: SipDomainSettingController', function () {
     describe('Function editSubdomain - ', function () {
       beforeEach(function () {
         this.cscModal = _.cloneDeep(this.modal);
-        this.cscModal.templateUrl = 'modules/core/settings/sipDomain/editCSCWarning.tpl.html';
+        this.cscModal.template = require('modules/core/settings/sipDomain/editCSCWarning.tpl.html');
       });
 
       it('when CSC is enabled should do nothing', function () {
@@ -536,7 +536,7 @@ describe('Controller: SipDomainSettingController', function () {
     describe('Account Settings Save and Cancel Options', function () {
       beforeEach(function () {
         this.saveModal = _.cloneDeep(this.modal);
-        this.saveModal.templateUrl = 'modules/core/settings/sipDomain/updateSipDomainWarning.tpl.html';
+        this.saveModal.template = require('modules/core/settings/sipDomain/updateSipDomainWarning.tpl.html');
       });
 
       it('should verify through a modal', function () {

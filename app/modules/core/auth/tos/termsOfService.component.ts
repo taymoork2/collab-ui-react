@@ -16,7 +16,6 @@ class TermsOfServiceCtrl implements ng.IComponentController {
     private $state: ng.ui.IStateService,
     private Auth,
     private TOSService: TOSService,
-    private $templateCache: ng.ITemplateCacheService,
     private $modal: IToolkitModalService,
     private $window: ng.IWindowService,
     private $scope: ng.IScope,
@@ -39,8 +38,8 @@ class TermsOfServiceCtrl implements ng.IComponentController {
   public $onInit(): void {
     // Load a copy of the ToS PDF that was converted to HTML. This WILL be out of date with what
     // is in the hosted PDF, but it looks nice and we can track the user scrolling to the bottom
-    const tosHtml: string = this.$templateCache.get<string>('modules/core/auth/tos/tos.html');
-    const tosStyle: string = this.$templateCache.get<string>('modules/core/auth/tos/tos-style.html');
+    const tosHtml: string = require('modules/core/auth/tos/tos.html');
+    const tosStyle: string = require('modules/core/auth/tos/tos-style.html');
 
     this.acceptingToS = false;
 
@@ -122,5 +121,5 @@ class TermsOfServiceCtrl implements ng.IComponentController {
 
 export class TermsOfServiceComponent implements ng.IComponentOptions {
   public controller = TermsOfServiceCtrl;
-  public templateUrl = 'modules/core/auth/tos/termsOfService.html';
+  public template = require('modules/core/auth/tos/termsOfService.html');
 }

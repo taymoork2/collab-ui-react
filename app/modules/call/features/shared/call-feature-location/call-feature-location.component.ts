@@ -57,7 +57,7 @@ class CallFeatureLocationCtrl implements ng.IComponentController {
 
 export class CallFeatureLocationComponent implements ng.IComponentOptions {
   public controller = CallFeatureLocationCtrl;
-  public templateUrl = 'modules/call/features/shared/call-feature-location/call-feature-location.component.html';
+  public template = require('modules/call/features/shared/call-feature-location/call-feature-location.component.html');
   public bindings = {
     isNew: '<',
     onChangeFn: '&',

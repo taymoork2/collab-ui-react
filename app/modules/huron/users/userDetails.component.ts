@@ -95,7 +95,7 @@ class UserDetails implements ng.IComponentController {
 
 export class UserDetailsComponent implements ng.IComponentOptions {
   public controller = UserDetails;
-  public templateUrl = 'modules/huron/users/userDetails.html';
+  public template = require('modules/huron/users/userDetails.html');
   public bindings = {
     details: '<',
     onUserDetailClick: '&',

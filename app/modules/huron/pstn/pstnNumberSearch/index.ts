@@ -7,7 +7,6 @@ import pstnSelectorName from './pstnSelector';
 
 export default angular
   .module('huron.pstn.pstn-number-search', [
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
     pstnNpaNxxName,

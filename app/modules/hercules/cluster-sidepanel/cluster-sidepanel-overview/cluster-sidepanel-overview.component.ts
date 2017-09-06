@@ -75,7 +75,7 @@ export class ClusterSidepanelOverviewCtrl implements ng.IComponentController {
 
 export class ClusterSidepanelOverviewComponent implements ng.IComponentOptions {
   public controller = ClusterSidepanelOverviewCtrl;
-  public templateUrl = 'modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview.html';
+  public template = require('modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview.html');
   public bindings = {
     clusterType: '<',
     clusterId: '<',

@@ -4,7 +4,7 @@
   angular
     .module('Core')
     .component('crBmmpBanner', {
-      templateUrl: 'modules/core/myCompany/bmmpBanner/bmmpBanner.tpl.html',
+      template: require('modules/core/myCompany/bmmpBanner/bmmpBanner.tpl.html'),
       controller: BmmpBannerCtrl,
     });
 

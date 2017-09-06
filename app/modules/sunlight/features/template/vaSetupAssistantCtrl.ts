@@ -160,7 +160,7 @@ export class CareSetupVirtualAssistantCtrl {
       confirmButton: this.$translate.instant('careChatTpl.confirmButton'),
     };
     this.$modal.open({
-      templateUrl: 'modules/sunlight/features/template/ctCancelModal.tpl.html',
+      template: require('modules/sunlight/features/template/ctCancelModal.tpl.html'),
       type: 'dialog',
       scope: this.$scope,
     });

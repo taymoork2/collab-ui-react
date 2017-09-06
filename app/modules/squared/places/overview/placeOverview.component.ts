@@ -408,7 +408,7 @@ class PlaceOverview implements ng.IComponentController {
 
 export class PlaceOverviewComponent implements ng.IComponentOptions {
   public controller = PlaceOverview;
-  public templateUrl = 'modules/squared/places/overview/placeOverview.html';
+  public template = require('modules/squared/places/overview/placeOverview.html');
   public bindings = {
     userDetails: '<',
   };

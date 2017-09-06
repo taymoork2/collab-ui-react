@@ -168,7 +168,7 @@ export class EmergencyServicesCtrl {
 }
 export class EmergencyServicesComponent implements ng.IComponentOptions {
   public controller = EmergencyServicesCtrl;
-  public templateUrl = 'modules/squared/devices/emergencyServices/emergencyServices.html';
+  public template = require('modules/squared/devices/emergencyServices/emergencyServices.html');
   public bindings = <{ [binding: string]: string }>{
   };
 }

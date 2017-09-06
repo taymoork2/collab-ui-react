@@ -1,5 +1,5 @@
 export class MediaCallVolume implements ng.IComponentOptions {
-  public templateUrl = 'modules/mediafusion/reports/resources-reports/callVolume/media-call-volume.html';
+  public template = require('modules/mediafusion/reports/resources-reports/callVolume/media-call-volume.html');
   public bindings = {
     parentcntrl: '=',
   };

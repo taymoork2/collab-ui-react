@@ -5,7 +5,7 @@ import { TokenMethods } from './tokenMethods';
 
 export class PstnSwivelNumbersComponent implements ng.IComponentOptions {
   public controller = PstnSwivelNumbersCtrl;
-  public templateUrl = 'modules/huron/pstn/pstnSwivelNumbers/pstnSwivelNumbers.html';
+  public template = require('modules/huron/pstn/pstnSwivelNumbers/pstnSwivelNumbers.html');
   public bindings = {
     numbers: '<',
     acknowledge: '<',

@@ -26,7 +26,6 @@ class DeviceList implements ng.IComponentController {
   /* @ngInject */
   constructor(private $state,
               private CsdmSearchService: CsdmSearchService,
-              private $templateCache,
               private $translate,
               CsdmHuronOrgDeviceService,
               private $scope,
@@ -129,7 +128,7 @@ class DeviceList implements ng.IComponentController {
   }
 
   private getTemplate(name) {
-    return this.$templateCache.get('modules/csdm/templates/' + name + '.html');
+    return require('modules/csdm/templates/' + name + '.html');
   }
 
   public expandDevice(device) {
@@ -187,5 +186,5 @@ export class DeviceListComponent implements ng.IComponentOptions {
     sortOrderChanged: '&',
   };
   public controllerAs = 'lctrl';
-  public templateUrl = 'modules/csdm/devicesRedux/list.html';
+  public template = require('modules/csdm/devicesRedux/list.html');
 }

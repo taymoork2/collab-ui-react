@@ -5,7 +5,7 @@
     .module('Gemini')
     .component('cbgEditCountry', {
       controller: cbgEditCountry,
-      templateUrl: 'modules/gemini/callbackGroup/details/cbgEditCountry.tpl.html',
+      template: require('modules/gemini/callbackGroup/details/cbgEditCountry.tpl.html'),
     });
 
   /* @ngInject */

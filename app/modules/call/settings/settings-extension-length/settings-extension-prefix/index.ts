@@ -6,7 +6,6 @@ import huronSettingsServiceModule from 'modules/call/settings/shared';
 
 export default angular
   .module('call.settings.extension-prefix', [
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
     require('angular-resource'),

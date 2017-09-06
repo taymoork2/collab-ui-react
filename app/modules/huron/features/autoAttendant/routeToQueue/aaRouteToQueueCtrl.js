@@ -229,7 +229,7 @@
 
     function openQueueSettings() {
       return $modal.open({
-        templateUrl: 'modules/huron/features/autoAttendant/routeToQueue/aaNewTreatmentModal.tpl.html',
+        template: require('modules/huron/features/autoAttendant/routeToQueue/aaNewTreatmentModal.tpl.html'),
         controller: 'AANewTreatmentModalCtrl',
         controllerAs: 'aaNewTreatmentModalCtrl',
         type: 'full',

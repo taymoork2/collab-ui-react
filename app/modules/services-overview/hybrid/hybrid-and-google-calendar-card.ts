@@ -29,7 +29,7 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
     this.$modal.open({
       controller: 'SelectCalendarServiceController',
       controllerAs: 'vm',
-      templateUrl: 'modules/hercules/service-settings/calendar-service-setup/select-calendar-service-modal.html',
+      template: require('modules/hercules/service-settings/calendar-service-setup/select-calendar-service-modal.html'),
     })
     .result
     .then((result) => {
@@ -50,7 +50,7 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
       },
       controller: 'AddResourceController',
       controllerAs: 'vm',
-      templateUrl: 'modules/hercules/service-specific-pages/common-expressway-based/add-resource-modal.html',
+      template: require('modules/hercules/service-specific-pages/common-expressway-based/add-resource-modal.html'),
     })
       .result
       .then((value) => {

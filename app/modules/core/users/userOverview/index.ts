@@ -15,7 +15,6 @@ import './_user-overview.scss';
 export * from './userOverview.service';
 export default angular
   .module('core.users.userOverview', [
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     messagingPreviewModule,
     sunlightServiceModule,

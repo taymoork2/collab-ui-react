@@ -110,7 +110,7 @@
 
     vm.confirmCertDelete = function (cert) {
       $modal.open({
-        templateUrl: 'modules/hercules/service-settings/confirm-certificate-delete.html',
+        template: require('modules/hercules/service-settings/confirm-certificate-delete.html'),
         type: 'small',
         controller: 'ConfirmCertificateDeleteController',
         controllerAs: 'confirmCertificateDelete',
@@ -178,7 +178,7 @@
         },
         controller: 'VerifySipDestinationModalController',
         controllerAs: 'vm',
-        templateUrl: 'modules/hercules/service-settings/verify-sip-destination/verify-sip-destination-modal.html',
+        template: require('modules/hercules/service-settings/verify-sip-destination/verify-sip-destination-modal.html'),
         type: 'full',
       });
     };

@@ -27,6 +27,6 @@ class CmcDetailsHeaderComponentCtrl implements ng.IComponentController {
 
 export class CmcDetailsHeaderComponent implements ng.IComponentOptions {
   public controller = CmcDetailsHeaderComponentCtrl;
-  public templateUrl = 'modules/cmc/details/cmc-details-header.html';
+  public template = require('modules/cmc/details/cmc-details-header.html');
   public bindings = { };
 }

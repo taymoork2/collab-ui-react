@@ -8,7 +8,7 @@ require('../devices/_devices.scss');
     .controller('PlacesCtrl',
 
       /* @ngInject */
-      function ($q, $scope, $state, $templateCache, $translate, CsdmFilteredViewFactory, CsdmDataModelService, Userservice, Authinfo, WizardFactory, RemPlaceModal, FeatureToggleService, ServiceDescriptorService, GridCellService) {
+      function ($q, $scope, $state, $translate, CsdmFilteredViewFactory, CsdmDataModelService, Userservice, Authinfo, WizardFactory, RemPlaceModal, FeatureToggleService, ServiceDescriptorService, GridCellService) {
         var vm = this;
 
         vm.data = [];
@@ -232,7 +232,7 @@ require('../devices/_devices.scss');
         };
 
         function getTemplate(name) {
-          return $templateCache.get('modules/squared/places/templates/' + name + '.html');
+          return require('modules/squared/places/templates/' + name + '.html');
         }
 
         function sortFn(a, b) {

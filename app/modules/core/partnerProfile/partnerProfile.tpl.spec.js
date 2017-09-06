@@ -43,7 +43,7 @@ describe('Template: partnerProfile', function () {
       this.$controller('PartnerProfileCtrl', {
         $scope: this.$scope,
       });
-      var template = this.$templateCache.get('modules/core/partnerProfile/partnerProfile.tpl.html');
+      var template = require('modules/core/partnerProfile/partnerProfile.tpl.html');
       var elem = angular.element(template);
       elem.find('#brandingTpl').remove();
       this.view = this.$compile(elem)(this.$scope);

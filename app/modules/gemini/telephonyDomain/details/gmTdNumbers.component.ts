@@ -423,7 +423,7 @@ class GmTdNumbersCtrl implements ng.IComponentController {
   public downloadTemplate() {
     this.$modal.open({
       type: 'dialog',
-      templateUrl: 'modules/gemini/telephonyDomain/details/downloadConfirm.html',
+      template: require('modules/gemini/telephonyDomain/details/downloadConfirm.html'),
     }).result.then(() => {
       this.WindowLocation.set(this.TelephonyDomainService.getDownloadUrl());
     });
@@ -736,5 +736,5 @@ class GmTdNumbersCtrl implements ng.IComponentController {
 
 export class GmTdNumbersComponent implements ng.IComponentOptions {
   public controller = GmTdNumbersCtrl;
-  public templateUrl = 'modules/gemini/telephonyDomain/details/gmTdNumbers.tpl.html';
+  public template = require('modules/gemini/telephonyDomain/details/gmTdNumbers.tpl.html');
 }

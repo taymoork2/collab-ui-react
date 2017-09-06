@@ -215,7 +215,7 @@ export class CallConnectOptions implements ng.IComponentController {
 export class CallConnectOptionsComponent implements ng.IComponentOptions {
   public controller = CallConnectOptions;
   public controllerAs = 'callConnectOptions';
-  public templateUrl = 'modules/squared/places/callConnect/CallConnectOptions.tpl.html';
+  public template = require('modules/squared/places/callConnect/CallConnectOptions.tpl.html');
   public bindings = {
     dismiss: '&',
   };

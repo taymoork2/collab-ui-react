@@ -17,7 +17,6 @@ import supportSectionModule from './supportSection';
 
 export default angular.module('core.settings', [
   require('angular-cache'),
-  require('scripts/app.templates'),
   require('collab-ui-ng').default,
   require('angular-translate'),
   authenticationModule,

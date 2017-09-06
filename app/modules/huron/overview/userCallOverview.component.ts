@@ -167,5 +167,5 @@ class UserCallOverviewCtrl implements ng.IComponentController {
 
 export class UserCallOverviewComponent implements ng.IComponentOptions {
   public controller = UserCallOverviewCtrl;
-  public templateUrl = 'modules/huron/overview/userCallOverview.html';
+  public template = require('modules/huron/overview/userCallOverview.html');
 }

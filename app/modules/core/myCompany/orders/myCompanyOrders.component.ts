@@ -118,6 +118,6 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
 angular
   .module('Core')
   .component('myCompanyOrders', {
-    templateUrl: 'modules/core/myCompany/orders/myCompanyOrders.tpl.html',
+    template: require('modules/core/myCompany/orders/myCompanyOrders.tpl.html'),
     controller: MyCompanyOrdersCtrl,
   });

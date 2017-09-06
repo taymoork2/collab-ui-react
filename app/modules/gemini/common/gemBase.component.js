@@ -5,7 +5,7 @@
     .module('Gemini')
     .component('gemBase', {
       controller: GemBaseCtrl,
-      templateUrl: 'modules/gemini/common/gemBase.html',
+      template: require('modules/gemini/common/gemBase.html'),
     });
 
   /* @ngInject */

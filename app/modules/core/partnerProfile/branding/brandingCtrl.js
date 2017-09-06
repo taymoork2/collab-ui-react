@@ -230,7 +230,7 @@ module.exports = function BrandingCtrl($log, $state, $modal, $scope, $translate,
       type: 'small',
       scope: $scope,
       modalClass: 'modal-logo-upload',
-      templateUrl: 'modules/core/partnerProfile/branding/brandingUpload.tpl.html',
+      template: require('modules/core/partnerProfile/branding/brandingUpload.tpl.html'),
     });
   }
 

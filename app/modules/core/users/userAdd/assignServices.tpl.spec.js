@@ -57,7 +57,7 @@ describe('assignServices', function () {
   beforeEach(angular.mock.module('WebExApp'));
   beforeEach(angular.mock.module(csvDownloadModule));
 
-  beforeEach(inject(function ($compile, $rootScope, $templateCache, _$httpBackend_,
+  beforeEach(inject(function ($compile, $rootScope, _$httpBackend_,
     $controller, _$q_, _$state_, _Authinfo_, _CsvDownloadService_,
     _Orgservice_, _$previousState_, _CloudConnectorService_) {
     $scope = $rootScope.$new();
@@ -180,7 +180,7 @@ describe('assignServices', function () {
       $state: $state,
     });
 
-    var html = $templateCache.get('modules/core/users/userAdd/assignServices.tpl.html');
+    var html = require('modules/core/users/userAdd/assignServices.tpl.html');
     view = $compile(angular.element('<div>').append(html))($scope);
     $scope.$apply();
 

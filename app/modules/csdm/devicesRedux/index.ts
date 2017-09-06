@@ -6,7 +6,6 @@ import { ChartComponent } from './chart.component';
 
 export default angular
   .module('Csdm.devices', [
-    require('scripts/app.templates'),
     'Csdm.services',
     require('angular-resource'),
   ])

@@ -23,7 +23,7 @@ class PagingGroupNameCtrl implements ng.IComponentController {
 
 export class PgNameComponent implements ng.IComponentOptions {
   public controller = PagingGroupNameCtrl;
-  public templateUrl = 'modules/call/features/paging-group/paging-group-setup-assistant/paging-group-name/paging-group-name.component.html';
+  public template = require('modules/call/features/paging-group/paging-group-setup-assistant/paging-group-name/paging-group-name.component.html');
   public bindings = {
     onUpdate: '&',
     pagingGroupName: '<',

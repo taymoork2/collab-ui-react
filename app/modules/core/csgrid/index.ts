@@ -13,7 +13,6 @@ export default angular
     'ui.grid.infiniteScroll',
     'ui.grid.pagination',
     'ui.grid.resizeColumns',
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
   ])
   .component('csGrid', new CsGridComponent())

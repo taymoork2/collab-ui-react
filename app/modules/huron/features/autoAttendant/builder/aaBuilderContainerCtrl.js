@@ -20,7 +20,7 @@
       }
 
       var modalInstance = $modal.open({
-        templateUrl: 'modules/huron/features/autoAttendant/schedule/aaScheduleModal.tpl.html',
+        template: require('modules/huron/features/autoAttendant/schedule/aaScheduleModal.tpl.html'),
         controller: 'AAScheduleModalCtrl',
         controllerAs: 'aaScheduleModalCtrl',
         size: 'lg',

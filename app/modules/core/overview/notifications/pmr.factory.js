@@ -16,7 +16,7 @@
           dismiss: function () {},
           link: function () {
             $modal.open({
-              templateUrl: 'modules/core/setupWizard/enterpriseSettings/enterprise.pmrSetupModal.tpl.html',
+              template: require('modules/core/setupWizard/enterpriseSettings/enterprise.pmrSetupModal.tpl.html'),
               controller: 'EnterpriseSettingsCtrl',
               controllerAs: 'entprCtrl',
               type: 'small',

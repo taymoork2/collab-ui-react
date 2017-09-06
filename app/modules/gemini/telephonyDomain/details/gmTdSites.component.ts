@@ -38,7 +38,7 @@ class GmTdSites implements ng.IComponentController {
   public onClick(site, targetTd) {
     this.$modal.open({
       type: 'dialog',
-      templateUrl: 'modules/gemini/callbackGroup/details/moveSiteConfirm.tpl.html',
+      template: require('modules/gemini/callbackGroup/details/moveSiteConfirm.tpl.html'),
     }).result.then(() => {
       this.moveSite(site, targetTd);
     });
@@ -92,5 +92,5 @@ class GmTdSites implements ng.IComponentController {
 
 export class GmTdSitesComponent implements ng.IComponentOptions {
   public controller = GmTdSites;
-  public templateUrl = 'modules/gemini/telephonyDomain/details/gmTdSites.html';
+  public template = require('modules/gemini/telephonyDomain/details/gmTdSites.html');
 }

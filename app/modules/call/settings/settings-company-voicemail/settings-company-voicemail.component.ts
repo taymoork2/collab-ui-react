@@ -119,7 +119,7 @@ class CompanyVoicemailCtrl implements ng.IComponentController {
 
 export class CompanyVoicemailComponent implements ng.IComponentOptions {
   public controller = CompanyVoicemailCtrl;
-  public templateUrl = 'modules/call/settings/settings-company-voicemail/settings-company-voicemail.component.html';
+  public template = require('modules/call/settings/settings-company-voicemail/settings-company-voicemail.component.html');
   public bindings = {
     site: '<',
     dialPlanCountryCode: '<',

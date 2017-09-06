@@ -101,5 +101,5 @@ class WebexReportsMore implements ng.IComponentController {
 
 export class CustWebexReportsMoreComponent implements ng.IComponentOptions {
   public controller = WebexReportsMore;
-  public templateUrl = 'modules/core/customerReports/webexReports/search/webexReportsMore.html';
+  public template = require('modules/core/customerReports/webexReports/search/webexReportsMore.html');
 }

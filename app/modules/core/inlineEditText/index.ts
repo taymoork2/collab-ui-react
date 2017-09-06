@@ -7,7 +7,6 @@ import { InlineEditTextComponent } from './inlineEditText.component';
 
 export default angular
   .module('core.inline-edit-text', [
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     csInput,
     focusModule,

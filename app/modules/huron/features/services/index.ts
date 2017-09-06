@@ -5,7 +5,7 @@ export * from './featureMember.service';
 
 export default angular
   .module('huron.feature-member-service', [
-    // require('scripts/app.templates'),
+    //
     // require('collab-ui-ng').default,
     require('angular-resource'),
     require('modules/core/scripts/services/authinfo'),

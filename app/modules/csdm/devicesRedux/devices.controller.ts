@@ -96,7 +96,7 @@ export class DevicesCtrl {
 
   public startDeviceExport() {
     this.$modal.open({
-      templateUrl: 'modules/squared/devices/export/devices-export.html',
+      template: require('modules/squared/devices/export/devices-export.html'),
       type: 'dialog',
     }).result.then(() => {
       this.openExportProgressTracker();
@@ -107,7 +107,7 @@ export class DevicesCtrl {
 
   private openExportProgressTracker() {
     this.exportProgressDialog = this.$modal.open({
-      templateUrl: 'modules/squared/devices/export/devices-export-progress.html',
+      template: require('modules/squared/devices/export/devices-export-progress.html'),
       type: 'dialog',
       controller: () => {
         return {

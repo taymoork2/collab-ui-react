@@ -124,7 +124,7 @@
     }
     function openVarNamesModal(vname, thisCeHasVar) {
       return $modal.open({
-        templateUrl: 'modules/huron/features/autoAttendant/builder/aaVarNames.tpl.html',
+        template: require('modules/huron/features/autoAttendant/builder/aaVarNames.tpl.html'),
         controller: 'AAVarNamesModalCtrl',
         controllerAs: 'aaVarNamesModalCtrl',
         type: 'dialog',

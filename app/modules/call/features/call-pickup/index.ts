@@ -10,7 +10,6 @@ import featureMemberService from 'modules/huron/features/services';
 
 export default angular
   .module('call.call-pickup', [
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
     callPickupName,

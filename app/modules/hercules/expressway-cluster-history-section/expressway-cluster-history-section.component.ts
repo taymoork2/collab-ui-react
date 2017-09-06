@@ -28,7 +28,7 @@ class ExpresswayClusterHistorySectionCtrl implements ng.IComponentController {
       },
       controller: 'ExpresswayClusterHistoryModalWindowController',
       controllerAs: 'vm',
-      templateUrl: 'modules/hercules/expressway-cluster-history-section/expressway-cluster-history-modal-window.html',
+      template: require('modules/hercules/expressway-cluster-history-section/expressway-cluster-history-modal-window.html'),
     });
   }
 
@@ -36,7 +36,7 @@ class ExpresswayClusterHistorySectionCtrl implements ng.IComponentController {
 
 export class ExpresswayClusterHistorySectionComponent implements ng.IComponentOptions {
   public controller = ExpresswayClusterHistorySectionCtrl;
-  public templateUrl = 'modules/hercules/expressway-cluster-history-section/expressway-cluster-history-section.html';
+  public template = require('modules/hercules/expressway-cluster-history-section/expressway-cluster-history-section.html');
   public bindings = {
     clusterId: '<',
     clusterName: '<',

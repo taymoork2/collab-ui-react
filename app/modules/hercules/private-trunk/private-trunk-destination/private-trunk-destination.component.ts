@@ -189,7 +189,7 @@ export class PrivateTrunkDestinationCtrl implements ng.IComponentController {
 }
 export class PrivateTrunkDestinationComponent implements ng.IComponentOptions {
   public controller = PrivateTrunkDestinationCtrl;
-  public templateUrl = 'modules/hercules/private-trunk/private-trunk-destination/private-trunk-destination.html';
+  public template = require('modules/hercules/private-trunk/private-trunk-destination/private-trunk-destination.html');
   public bindings = {
     isFirstTimeSetup: '<',
     privateTrunkResource: '<',
