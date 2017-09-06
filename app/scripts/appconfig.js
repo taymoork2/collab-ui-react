@@ -1862,19 +1862,6 @@
               displayName: translateDisplayName('organizationsPage.betaFeatures'),
             },
           })
-          .state('organization-overview.add.addNumbers', {
-            views: {
-              'side-panel-container@organization-overview': {
-                template: require('modules/core/organizations/organizationAdd/addNumbers.tpl.html'),
-                controller: 'DidAddCtrl',
-                controllerAs: 'didAdd',
-              },
-            },
-            params: {
-              currentTrial: {},
-              currentOrg: {},
-            },
-          })
           .state('site-list', {
             url: '/site-list',
             template: require('modules/core/siteList/siteList.tpl.html'),
