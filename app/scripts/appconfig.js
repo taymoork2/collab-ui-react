@@ -738,16 +738,6 @@
               showSettings: null,
             },
           })
-          .state('authentication.enable3rdPartyAuth', {
-            parent: 'modal',
-            views: {
-              'modal@': {
-                controller: 'Enable3rdPartyAuthCtrl',
-                controllerAs: 'enable3rdPartyAuth',
-                template: require('modules/core/settings/authentication/enable3rdPartyAuth.tpl.html'),
-              },
-            },
-          })
           .state('profile', {
             url: '/profile',
             template: require('modules/core/partnerProfile/partnerProfile.tpl.html'),
