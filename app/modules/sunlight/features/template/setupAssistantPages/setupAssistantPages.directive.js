@@ -19,7 +19,7 @@
     angular
       .module('Sunlight')
       .directive(directiveName, function () {
-        return createSetupAssistantPageDirective(directiveName + '.tpl.html');
+        return createSetupAssistantPageDirective(directiveName);
       });
   });
 
@@ -28,7 +28,7 @@
       link: function ($scope, element, $attributes) {
         $scope.careSetupAssistant.cardMode = $attributes.mode;
       },
-      template: require('modules/sunlight/features/template/setupAssistantPages/') + pageFile,
+      template: require('modules/sunlight/features/template/setupAssistantPages/' + pageFile + '.tpl.html'),
       restrict: 'EA',
       scope: false,
     };
