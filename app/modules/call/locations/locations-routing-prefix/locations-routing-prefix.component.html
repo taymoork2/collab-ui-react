@@ -10,7 +10,7 @@
         placeholder="8100"
         ng-pattern="/^[0-9]*$/"
         ng-maxlength="$ctrl.routingPrefixLength"
-        ng-minlength="$ctrl.routingPrefixLength"
+        ng-minlength="$ctrl.minRoutingPrefixLength"
         ng-model="$ctrl.routingPrefix"
         ng-change="$ctrl.onRoutingPrefixChanged()"
         ng-required="!$ctrl.ftsw"

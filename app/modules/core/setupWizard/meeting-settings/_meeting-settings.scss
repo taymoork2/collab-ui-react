@@ -68,6 +68,18 @@
       font-size: .8rem;
     }
   }
+  .icon-help {
+    color: $color-blue-darker;
+  }
+
+  .input-block--transfer-code {
+    .cs-input-group > .cs-input-group {
+      margin-bottom: 0;
+    }
+    .input-block__help-link {
+      font-size: .8em;
+    }
+  }
 
   .ccasp-partner__confirmation {
     margin-left: 0;
@@ -76,4 +88,7 @@
       padding-right: .5rem;
     }
   }
-}
+  .license_distrib__row--site {
+    word-break: break-all;
+  }
+ }

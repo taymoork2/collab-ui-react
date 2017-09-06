@@ -52,6 +52,7 @@ export class Config {
   public readonly ssoUrl = 'https://help.webex.com/community/cisco-cloud-collab-mgmt/content?filterID=contentstatus[published]~category[security]';
   public readonly rolesUrl = 'https://help.webex.com/community/cisco-cloud-collab-mgmt/content?filterID=contentstatus[published]~category[getting-started]';
   public readonly supportUrl = 'https://help.webex.com/community/cisco-cloud-collab-mgmt';
+  public readonly webexSiteMigrationUrl = 'http://try.webex.com/mk/get/ciscowebexmigration';
   public readonly partnerSupportUrl = 'https://help.webex.com/community/cisco-cloud-collab-mgmt-partners';
 
   public readonly usersperpage = 100;
@@ -109,7 +110,6 @@ export class Config {
     care_digital: 'cloud-contact-center-digital',
     care_inbound_voice: 'cloud-contact-center-inbound-voice',
     context: 'contact-center-context',
-    fusion_google_cal: 'squared-fusion-gcal',
     fusion_khaos: 'squared-fusion-khaos',
     message: 'squared-room-moderation',
     imp: 'spark-hybrid-impinterop',
@@ -423,6 +423,7 @@ export class Config {
       'expressway-cluster',
       'hybrid-services-connector-sidepanel',
       'services-overview',
+      'office-365-service',
     ],
     'squared-fusion-gcal': [
       'add-resource',

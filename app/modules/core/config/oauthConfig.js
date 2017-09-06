@@ -67,6 +67,7 @@
     };
 
     return {
+      getAdminPortalUrl: getAdminPortalUrl,
       getLogoutUrl: getLogoutUrl,
       getClientId: getClientId,
       getOauthLoginUrl: getOauthLoginUrl,

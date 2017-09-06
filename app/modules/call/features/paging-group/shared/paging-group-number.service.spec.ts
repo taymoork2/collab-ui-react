@@ -34,21 +34,17 @@ describe('Component: pgNumber service', () => {
       'PagingNumberService',
       'Authinfo',
       'HuronConfig',
+      'NumberService',
     );
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
 
     this.getNumberListDefer = this.$q.defer();
     spyOn(this.PagingNumberService, 'getNumberSuggestions').and.returnValue(this.getNumberListDefer.promise);
-  });
-
-  afterEach(function () {
-    this.$httpBackend.verifyNoOutstandingExpectation();
-    this.$httpBackend.verifyNoOutstandingRequest();
+    spyOn(this.NumberService, 'getNumberList');
   });
 
   it('should get a suggested number', function () {
-    this.$httpBackend.whenGET(this.HuronConfig.getCmiUrl() + '/voice/customers/' + this.Authinfo.getOrgId() + '/internalnumberpools?directorynumber=&order=pattern&pattern=%25222%25').respond(200, successResponse1);
-
+    this.NumberService.getNumberList.and.returnValue(successResponse1);
     this.PagingNumberService.getNumberSuggestions('222').then(function (response) {
       const numberData2 = <INumberData> {
         extension: '3333',
@@ -64,10 +60,9 @@ describe('Component: pgNumber service', () => {
       extensionUUID: undefined,
     };
     const groupId: string = 'abcd1234-abcd-abcd-abcddef123456';
-    this.$httpBackend.whenGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/features/paging/' + groupId + '/numbers').respond(200, successResponse2);
+    this.NumberService.getNumberList.and.returnValue(successResponse2);
     this.PagingNumberService.getNumberExtension(groupId).then(function (response) {
       expect(response).toEqual(numberData3);
     });
-    this.$httpBackend.flush();
   });
 });

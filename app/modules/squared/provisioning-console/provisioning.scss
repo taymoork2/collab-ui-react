@@ -4,6 +4,11 @@
   background-color: $color-white;
 }
 
+.provisioning-details {
+  &.break-word {
+    word-wrap: break-word;
+  }
+}
 .provisioning-details__raw {
   font-size: .85rem;
 }

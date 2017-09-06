@@ -44,37 +44,13 @@
           <div class="pull-right">
             <span ng-if="node.platformVersion !== 'unknown'" class="node-serial" translate="hercules.nodesPage.platformVersion" translate-value-version="{{::node.platformVersion}}"></span>
             <span class="node-serial" translate="hercules.nodesPage.serial" translate-value-serial="{{::node.serial}}"></span>
-            <span cs-dropdown>
-              <button cs-dropdown-toggle class="actions-button btn--link dropdown-toggle" translate="common.actions"></button>
-              <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
-                <li ng-if="$ctrl.displayMaintenanceModeMenuItem($ctrl.data.targetType) && node.maintenanceMode === 'off'">
-                  <a ng-click="$ctrl.enableMaintenanceMode(node)">
-                    <span translate="hercules.nodesPage.enableMaintenanceMode"></span>
-                    <i class="icon icon-question-circle" tooltip-placement="left" tooltip="{{::'hercules.nodesPage.maintenanceModeTooltip' | translate}}" tooltip-append-to-body="true"></i>
-                  </a>
-                </li>
-                <li ng-if="$ctrl.displayMaintenanceModeMenuItem($ctrl.data.targetType) && node.maintenanceMode !== 'off'">
-                  <a ng-click="$ctrl.disableMaintenanceMode(node)">
-                    <span translate="hercules.nodesPage.disableMaintenanceMode"></span>
-                  </a>
-                </li>
-                <li ng-if="$ctrl.displayGoToNodeMenuItem($ctrl.data.targetType)">
-                  <a target="_blank" ng-href="https://{{::node.name}}/">
-                    <span translate="hercules.nodesPage.goToNode"></span>
-                  </a>
-                </li>
-                <li ng-if="$ctrl.displayMoveNodeMenuItem($ctrl.data.targetType)">
-                  <a ng-click="$ctrl.openMoveNodeModal(node)">
-                    <span translate="hercules.nodesPage.moveNode"></span>
-                  </a>
-                </li>
-                <li ng-if="$ctrl.displayDeregisterNodeMenuItem($ctrl.data.targetType)">
-                  <a ng-click="$ctrl.openDeregisterNodeModal(node)">
-                    <span translate="hercules.nodesPage.deregisterNode"></span>
-                  </a>
-                </li>
-              </ul>
-            </span>
+            <hybrid-services-nodes-page-actions cluster-id="$ctrl.data.id"
+                                                cluster-name="$ctrl.data.name"
+                                                node="node"
+                                                number-of-cluster-nodes="$ctrl.data.nodes.length"
+                                                target-type="$ctrl.data.targetType"
+                                                reload-data-callback="$ctrl.reloadDataCallback(options)">
+            </hybrid-services-nodes-page-actions>
           </div>
         </td>
       </tr>

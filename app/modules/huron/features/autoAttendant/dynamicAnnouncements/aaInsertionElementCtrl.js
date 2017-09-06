@@ -52,6 +52,7 @@
                 var ele = '<aa-insertion-element element-text="' + node.say.value + '" read-as="' + node.say.as + '" element-id="' + id + '"id="' + id + '" contenteditable="false""></aa-insertion-element>';
                 node.htmlModel = encodeURIComponent(ele);
                 AACommonService.setSayMessageStatus(true);
+                $rootScope.$broadcast('CE Updated');
               }
             });
         }

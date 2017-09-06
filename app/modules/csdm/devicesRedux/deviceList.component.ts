@@ -78,6 +78,7 @@ class DeviceList implements ng.IComponentController {
           priority: 1,
         },
         sortCellFiltered: true,
+        cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.expandDevice(row.entity)" cell-value="row.entity.displayName"></cs-grid-cell>',
       }, {
         field: 'connectionStatus',
         displayName: this.$translate.instant('spacesPage.statusHeader'),
@@ -124,7 +125,7 @@ class DeviceList implements ng.IComponentController {
 
   public expandDevice(device) {
     this.$http.get(device.url).then((res) => {
-      const realDevice = (device.productFamily === 'Huron') ? this.CsdmConverter.convertHuronDevice(res.data) :
+      const realDevice = (device.productFamily === 'Huron' || device.productFamily === 'ATA') ? this.CsdmConverter.convertHuronDevice(res.data) :
         this.CsdmConverter.convertCloudberryDevice(res.data);
       this.$state.go('device-overview', {
         currentDevice: realDevice,

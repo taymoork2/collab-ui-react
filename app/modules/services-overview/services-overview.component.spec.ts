@@ -26,7 +26,11 @@ describe('ServiceOverviewCtrl', () => {
 
 
   function initController() {
-    ctrl = $componentController('servicesOverview', {}, {});
+    ctrl = $componentController('servicesOverview', {}, {
+      urlParams: {
+        office365: undefined,
+      },
+    });
     ctrl.$onInit();
     $scope.$apply();
   }

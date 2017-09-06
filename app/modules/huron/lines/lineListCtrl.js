@@ -216,8 +216,7 @@
         headerCellClass: 'externalNumberHeader',
         width: '20%',
       }, {
-        //TODO: (egandhi): replace with Lcation column once API is available
-        field: 'firstName',
+        field: 'locationName',
         displayName: $translate.instant('usersPreview.location'),
         sortable: true,
         cellClass: 'anyColumn',

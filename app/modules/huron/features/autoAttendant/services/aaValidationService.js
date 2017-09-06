@@ -10,36 +10,35 @@
     var routeToCalls = [{
       name: 'goto',
       errRCMsg: 'autoAttendant.routeCallErrorRouteToAATargetMissing',
-      errPhoneMsg: 'autoAttendant.phoneMenuErrorRouteToAATargetMissing',
-      errSubMenuPhoneMsg: 'autoAttendant.phoneMenuSubmenuErrorRouteToAATargetMissing',
+      errPhoneMsg: 'autoAttendant.phoneMenuErrorTargetMissing',
+      errSubMenuPhoneMsg: 'autoAttendant.phoneMenuSubmenuErrorTargetMissing',
     }, {
       name: 'routeToHuntGroup',
       errRCMsg: 'autoAttendant.routeCallErrorRouteToHGTargetMissing',
-      errPhoneMsg: 'autoAttendant.phoneMenuErrorRouteToHGTargetMissing',
-      errSubMenuPhoneMsg: 'autoAttendant.phoneMenuSubmenuErrorRouteToHGTargetMissing',
+      errPhoneMsg: 'autoAttendant.phoneMenuErrorTargetMissing',
+      errSubMenuPhoneMsg: 'autoAttendant.phoneMenuSubmenuErrorTargetMissing',
     }, {
       name: 'routeToUser',
       errRCMsg: 'autoAttendant.routeCallErrorRouteToUserTargetMissing',
-      errPhoneMsg: 'autoAttendant.phoneMenuErrorRouteToUserTargetMissing',
-      errSubMenuPhoneMsg: 'autoAttendant.phoneMenuSubmenuErrorRouteToUserTargetMissing',
+      errPhoneMsg: 'autoAttendant.phoneMenuErrorTargetMissing',
+      errSubMenuPhoneMsg: 'autoAttendant.phoneMenuSubmenuErrorTargetMissing',
     }, {
       name: 'routeToVoiceMail',
       errRCMsg: 'autoAttendant.routeCallErrorRouteToVoicemailTargetMissing',
-      errPhoneMsg: 'autoAttendant.phoneMenuErrorRouteToVoicemailTargetMissing',
-      errSubMenuPhoneMsg: 'autoAttendant.phoneMenuSubmenuErrorRouteToVoicemailTargetMissing',
+      errPhoneMsg: 'autoAttendant.phoneMenuErrorTargetMissing',
+      errSubMenuPhoneMsg: 'autoAttendant.phoneMenuSubmenuErrorTargetMissing',
     }, {
       name: 'route',
       errRCMsg: 'autoAttendant.routeCallErrorRouteToPhoneNumberTargetMissing',
-      errPhoneMsg: 'autoAttendant.phoneMenuErrorRouteToPhoneNumberTargetMissing',
-      errSubMenuPhoneMsg: 'autoAttendant.phoneMenuSubmenuErrorRouteToPhoneNumberTargetMissing',
+      errPhoneMsg: 'autoAttendant.phoneMenuErrorTargetMissing',
+      errSubMenuPhoneMsg: 'autoAttendant.phoneMenuSubmenuErrorTargetMissing',
     }, {
       name: 'routeToQueue',
       /* not implemented */
       errRCMsg: '',
-      errPhoneMsg: 'autoAttendant.phoneMenuErrorRouteToQueueTargetMissing',
-      errSubMenuPhoneMsg: 'autoAttendant.phoneMenuSubmenuErrorRouteToQueueTargetMissing',
+      errPhoneMsg: 'autoAttendant.phoneMenuErrorTargetMissing',
+      errSubMenuPhoneMsg: 'autoAttendant.phoneMenuSubmenuErrorTargetMissing',
     }];
-
 
     var runActionInputName = 'runActionsOnInput';
     var errMissingVariableNameMsg = 'autoAttendant.callerInputMenuErrorVariableNameMissing';
@@ -151,18 +150,17 @@
 
     /* whichLane - openHours, closeHours, holiday */
     function checkAllKeys(optionMenu, whichLane, outErrors) {
-      _.forEach(optionMenu.entries, function (entry) {
+      _.forEach(optionMenu.entries, function (entry, index) {
         /* will be defined only if a submenu. We can make use of this later to
          * differentiate btw menu and sub menus for the error condition
          */
 
-        var saveKey = optionMenu.key;
         if (AutoAttendantCeMenuModelService.isCeMenu(entry)) {
-          // submenu
-          if (noEntriesCeMenu(entry, outErrors, whichLane)) {
+          // submenu: using index to hold the sub menu numbers of original ceMenu
+          if (noEntriesCeMenu(entry, outErrors, whichLane, index)) {
             outErrors.push({
+              subMenuAt: index + 1, // array starts at zero
               msg: errSubMenuNoInputValuesEnteredMsg,
-              key: entry.key,
             });
           }
 
@@ -177,16 +175,14 @@
 
         _.find(routeToCalls, function (routeTo) {
           if (routeTo.name === entry.actions[0].name) {
-            if (_.isUndefined(saveKey)) {
+            if (_.isUndefined(optionMenu.key)) {
               outErrors.push({
                 msg: routeTo.errPhoneMsg,
-                key: entry.key,
               });
             } else {
+              // we can make use of the fact that the optionMenu key is undefined if subMenu
               outErrors.push({
                 msg: routeTo.errSubMenuPhoneMsg,
-                key: saveKey,
-                subkey: entry.key,
               });
             }
           }
@@ -275,23 +271,15 @@
       if (_.has(optionMenu, 'entries') && (optionMenu.entries.length > 0)) {
         checkAllKeys(optionMenu, fromLane, errors, 0);
       }
+      errors = _.uniqBy(errors, 'msg');
+
       _.forEach(errors, function (err) {
         isValid = false;
 
-        if (_.has(err, 'subkey')) {
-          AANotificationService.error(err.msg, {
-            key: err.key,
-            schedule: translatedLabel,
-            at: _.indexOf(menuOptions, optionMenu) + 1,
-            subkey: err.subkey,
-          });
-        } else {
-          AANotificationService.error(err.msg, {
-            key: err.key,
-            schedule: translatedLabel,
-            at: _.indexOf(menuOptions, optionMenu) + 1,
-          });
-        }
+        AANotificationService.error(err.msg, {
+          schedule: translatedLabel,
+          at: _.indexOf(menuOptions, optionMenu) + 1,
+        });
       });
 
       return isValid;

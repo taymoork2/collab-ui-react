@@ -1,6 +1,8 @@
 import { SearchInteraction } from './deviceSearch.component';
 import { SearchObject } from '../services/search/searchObject';
 import { SearchResult } from '../services/search/searchResult';
+import { IToolkitModalService } from '../../core/modal/index';
+import { Notification } from 'modules/core/notifications';
 require('./_devices.scss');
 
 export class DevicesCtrl {
@@ -22,7 +24,8 @@ export class DevicesCtrl {
   private csdmHybridCallFeature: boolean;
   private csdmMultipleDevicesPerPlaceFeature: boolean;
   private deviceExportFeature: boolean;
-
+  public exporting: boolean;
+  private exportProgressDialog: ng.ui.bootstrap.IModalServiceInstance;
   private adminUserDetails: {
     firstName: any;
     lastName: any;
@@ -34,7 +37,12 @@ export class DevicesCtrl {
   //region for add device/place button
 
   /* @ngInject */
-  constructor(private WizardFactory, private $state, private FeatureToggleService, private $q, private Userservice, private ServiceDescriptorService, private Authinfo) {
+  constructor(
+    private $modal: IToolkitModalService,
+    private DeviceExportService,
+    private $translate: ng.translate.ITranslateService,
+    private Notification: Notification,
+    private WizardFactory, private $state, private FeatureToggleService, private $q, private Userservice, private ServiceDescriptorService, private Authinfo) {
     this.searchResult = { aggregations: {}, hits: { hits: [], total: 0 } };
     this.initForAddButton();
   }
@@ -63,6 +71,51 @@ export class DevicesCtrl {
 
   }
 
+  public startDeviceExport() {
+    this.$modal.open({
+      templateUrl: 'modules/squared/devices/export/devices-export.html',
+      type: 'dialog',
+    }).result.then(() => {
+      this.openExportProgressTracker();
+    }, () => {
+      this.exporting = false;
+    });
+  }
+
+  private openExportProgressTracker() {
+    this.exportProgressDialog = this.$modal.open({
+      templateUrl: 'modules/squared/devices/export/devices-export-progress.html',
+      type: 'dialog',
+      controller: () => {
+        return {
+          cancelExport: () => {
+            this.DeviceExportService.cancelExport();
+          },
+        };
+      },
+      controllerAs: 'vm',
+    });
+    this.exportProgressDialog.opened.then(() => {
+      this.exporting = true;
+      this.DeviceExportService.exportDevices((percent) => {
+        this.exportStatus(percent);
+      });
+    });
+  }
+  private exportStatus(percent) {
+    if (percent === 100) {
+      this.exportProgressDialog.close();
+      this.exporting = false;
+      const title = this.$translate.instant('spacesPage.export.exportCompleted');
+      const text = this.$translate.instant('spacesPage.export.deviceListReadyForDownload');
+      this.Notification.success(text, title);
+    } else if (percent === -1) {
+      this.exportProgressDialog.close();
+      this.exporting = false;
+      const warn = this.$translate.instant('spacesPage.export.deviceExportFailedOrCancelled');
+      this.Notification.warning(warn);
+    }
+  }
   public addToSearch(field: string, query: string) {
     this.searchInteraction.addToSearch(field, query);
   }

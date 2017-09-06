@@ -3,6 +3,7 @@
 describe('Care admin should be able to', function () {
   var createSummaryMessage = 'You have configured the template. Click Finish to save the configuration and generate embed code so you can start using this template on your organization website.';
   var editSummaryMessage = 'You have edited the template. Click Finish to save the configuration so you can start using the new version of this template on your organization website.';
+  var virtualAssistantName = 'Sprk care test1-E2E test';
   beforeAll(function () {
     login.login('contactcenter-admin', '#/services');
   });
@@ -25,7 +26,6 @@ describe('Care admin should be able to', function () {
   });
 
   it('validate proactive prompt page', function () {
-    utils.click(careChatTemplateSetupPage.proactivePromptToggle);
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
     validateContentsOfProactivePromptPage();
   });
@@ -33,6 +33,11 @@ describe('Care admin should be able to', function () {
   it('validate customer info page', function () {
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
     validateContentsOfCustomerInfoPage();
+  });
+
+  it('validate virtual assistant page', function () {
+    utils.click(careChatTemplateSetupPage.setUpRightBtn);
+    validateContentsOfVirtualAssistantPage();
   });
 
   it('validate agent unavailable page', function () {
@@ -121,6 +126,7 @@ describe('Care admin should be able to', function () {
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
+    utils.click(careChatTemplateSetupPage.setUpRightBtn);
   }
 
   function validateDismissOfCTSetupWizard() {
@@ -158,11 +164,18 @@ describe('Care admin should be able to', function () {
 
   function validateContentsOfProfilePage() {
     validateTitleAndDesc('Branding and Identity', 'Configure how your company or your agent is visually represented');
+    utils.waitForText(careChatTemplateSetupPage.profileInfoMsg, 'You can change the organization logo on the Settings page');
+    utils.expectIsNotDisplayed(careChatTemplateSetupPage.botAgentToggle);
     utils.click(careChatTemplateSetupPage.agentProfile);
+    utils.waitForText(careChatTemplateSetupPage.namePreview, virtualAssistantName);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.botPreviewIcon);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.botAgentToggle);
     utils.click(careChatTemplateSetupPage.agentNameRadio);
-    utils.waitForText(careChatTemplateSetupPage.agentNamePreview, 'Agent display name');
+    utils.click(careChatTemplateSetupPage.agentToggle);
+    utils.waitForText(careChatTemplateSetupPage.namePreview, 'Agent display name');
     utils.click(careChatTemplateSetupPage.agentAliasRadio);
-    utils.waitForText(careChatTemplateSetupPage.agentNamePreview, 'Agent alias');
+    utils.waitForText(careChatTemplateSetupPage.namePreview, 'Agent alias');
+    utils.waitForText(careChatTemplateSetupPage.profileInfoMsg, 'You cannot change the default agent avatar seen in the Preview');
     utils.expectIsDisplayed(careChatTemplateSetupPage.agentPreviewIcon);
     utils.expectIsDisplayed(careChatTemplateSetupPage.previewMinimizeIcon);
     utils.expectIsDisplayed(careChatTemplateSetupPage.previewCloseIcon);
@@ -176,6 +189,10 @@ describe('Care admin should be able to', function () {
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfoDisabledCard);
     utils.click(careChatTemplateSetupPage.customerInfoToggle);
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfoEnabledCard);
+    utils.click(careChatTemplateSetupPage.proactivePromptToggle);
+    browser.sleep(1000)
+    utils.waitUntilEnabled(careChatTemplateSetupPage.vcaEnabled);
+    utils.click(careChatTemplateSetupPage.virtualAssistantToggle);
     utils.expectCount(careChatTemplateSetupPage.overviewCard, OVERVIEW_CARD_COUNT)
   }
 
@@ -252,6 +269,21 @@ describe('Care admin should be able to', function () {
     utils.expectIsNotDisplayed(careChatTemplateSetupPage.customerInfo_screen_optional2);
     utils.click(careChatTemplateSetupPage.customerInfo_attCard_redioOptional);
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_screen_optional2);
+  }
+
+  function validateContentsOfVirtualAssistantPage() {
+    validateTitleAndDesc('Customer Virtual Assistant', 'Select a preconfigured Customer Virtual Assistant who provides initial automated support in your customer chat experience');
+    var defaultWelcomeMsg = 'Hello, how can I help you today?';
+    utils.expectValueToBeSet(careChatTemplateSetupPage.botWelcomeMessage, defaultWelcomeMsg);
+    utils.waitForText(careChatTemplateSetupPage.botWelcomeMessagePreview, defaultWelcomeMsg);
+    utils.clear(careChatTemplateSetupPage.botWelcomeMessage);
+    var testMsg = 'test welcome message';
+    utils.sendKeys(careChatTemplateSetupPage.botWelcomeMessage, testMsg);
+    utils.waitForText(careChatTemplateSetupPage.botWelcomeMessagePreview, testMsg);
+    utils.waitForText(careChatTemplateSetupPage.botNamePreview, virtualAssistantName);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.botPreviewIcon);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.previewMinimizeIcon);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.previewCloseIcon);
   }
 
   function validateContentsOfFeedbackPage() {

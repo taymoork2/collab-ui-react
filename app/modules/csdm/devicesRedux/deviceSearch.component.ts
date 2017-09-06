@@ -2,6 +2,7 @@ import { Device } from '../services/deviceSearchConverter';
 import { SearchFields, SearchObject } from '../services/search/searchObject';
 import { SearchResult } from '../services/search/searchResult';
 import { CsdmSearchService } from '../services/csdmSearch.service';
+import { SearchTranslator } from '../services/search/searchTranslator';
 
 export class DeviceSearch implements ng.IComponentController, ISearchHandler {
   public searchField = '';
@@ -10,6 +11,8 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
   private currentSearchObject: SearchObject;
   public currentBullet: Bullet;
   private inputActive: boolean;
+  private searchDelayTimer: ng.IPromise<any> | null;
+  private static readonly SEARCH_DELAY_MS = 200;
 
   //bindings
   private searchResultChanged: (e: { result?: SearchResult }) => {};
@@ -20,7 +23,11 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
   public searchResult: Device[];
 
   /* @ngInject */
-  constructor(private CsdmSearchService: CsdmSearchService, private $translate, private Notification) {
+  constructor(private CsdmSearchService: CsdmSearchService,
+              private $translate,
+              private Notification,
+              private $timeout: ng.ITimeoutService,
+              private DeviceSearchTranslator: SearchTranslator) {
     this.currentSearchObject = SearchObject.create('');
     this.currentBullet = new Bullet(this.currentSearchObject);
     this.updateSearchFilters();
@@ -69,13 +76,14 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
   }
 
   public createSearchObject(searchField: string, currentFilterValue: string): SearchObject {
+    const translatedExpression = this.DeviceSearchTranslator.translate(searchField || '');
     if (currentFilterValue) {
       if (searchField) {
-        return SearchObject.create('(' + searchField + ') AND ' + currentFilterValue);
+        return SearchObject.create('(' + translatedExpression + ') AND ' + currentFilterValue);
       }
       return SearchObject.create(currentFilterValue);
     }
-    return SearchObject.create(searchField);
+    return SearchObject.create(translatedExpression);
   }
 
   public searchChange() {
@@ -90,13 +98,20 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
       return; //nothing changed, abort search change.
     }
 
-    this.performSearch(search); //TODO avoid at now
-    // this.searchObject = search;
-    this.searchChanged({ search: search });
-
-    if (this._currentFilterValue) {
-      this.performFilterUpdateSearch();
+    if (this.searchDelayTimer) {
+      this.$timeout.cancel(this.searchDelayTimer);
+      this.searchDelayTimer = null;
     }
+
+    this.searchDelayTimer = this.$timeout(() => {
+      this.performSearch(search); //TODO avoid at now
+      // this.searchObject = search;
+      this.searchChanged({ search: search });
+
+      if (this._currentFilterValue) {
+        this.performFilterUpdateSearch();
+      }
+    }, DeviceSearch.SEARCH_DELAY_MS);
   }
 
   private performSearch(search: SearchObject) {

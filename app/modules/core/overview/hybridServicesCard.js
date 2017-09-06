@@ -32,12 +32,12 @@
 
             return HybridServicesUtilsService.allSettled({
               clusterList: HybridServicesClusterService.getAll(),
-              gcalService: Authinfo.isEntitled(Config.entitlements.fusion_google_cal) ? CloudConnectorService.getService() : $q.resolve({}),
+              gcalService: Authinfo.isEntitled(Config.entitlements.fusion_gcal) ? CloudConnectorService.getService('squared-fusion-gcal') : $q.resolve({}),
               featureToggles: featureToggles,
             });
           }).then(function (response) {
             if (response.gcalService.status === 'fulfilled') {
-              if (Authinfo.isEntitled(Config.entitlements.fusion_google_cal)) {
+              if (Authinfo.isEntitled(Config.entitlements.fusion_gcal)) {
                 card.serviceList.push(response.gcalService.value);
               }
             } else {
@@ -73,9 +73,16 @@
                   .then(function () {
                     // We have invalidated the cache, lets init again
                     init(true);
+                  })
+                  .catch(function (error) {
+                    Notification.errorWithTrackingId(error, 'overview.cards.hybrid.herculesErrorCacheInvalidation');
                   });
               } else {
-                Notification.errorWithTrackingId(response.clusterList.reason, 'overview.cards.hybrid.herculesError');
+                if (_.get(response, 'clusterList.reason.status') === 403) {
+                  Notification.errorWithTrackingId(response.clusterList.reason, 'overview.cards.hybrid.herculesErrorAuthentication');
+                } else {
+                  Notification.errorWithTrackingId(response.clusterList.reason, 'overview.cards.hybrid.herculesError');
+                }
               }
             }
             card.enabled = _.some(card.serviceList, function (service) {

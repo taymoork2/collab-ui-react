@@ -82,6 +82,7 @@ describe('Controller: AAInsertionElementCtrl', function () {
         htmlModel: encodeURIComponent(ele),
       }];
       menuEntry.addAction(action);
+      spyOn($rootScope, '$broadcast');
       spyOn($modal, 'open').and.returnValue({
         result: modal.promise,
       });
@@ -106,6 +107,7 @@ describe('Controller: AAInsertionElementCtrl', function () {
       $scope.$apply();
       expect(controller.elementText).toEqual('testVar');
       expect(controller.readAs).toEqual('testValRead');
+      expect($rootScope.$broadcast).toHaveBeenCalledWith('CE Updated');
     });
   });
 
