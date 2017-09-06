@@ -2,6 +2,7 @@ import { PagingGroupService } from './paging-group.service';
 import { PagingNumberService } from './paging-group-number.service';
 import notificationModule from 'modules/core/notifications';
 import numberModule from 'modules/huron/numbers';
+import featuresModule from 'modules/core/featureToggle';
 
 export * from './paging-group';
 export { PagingGroupService };
@@ -15,6 +16,7 @@ export default angular
     require('modules/core/scripts/services/authinfo'),
     notificationModule,
     numberModule,
+    featuresModule,
   ])
   .service('PagingGroupService', PagingGroupService)
   .service('PagingNumberService', PagingNumberService)

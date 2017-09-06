@@ -33,7 +33,7 @@ export class NumberService {
       order: order,
       limit: limit,
       offset: offset,
-      depricated: !this.hasLocations,
+      deprecated: !this.hasLocations,
     }).$promise
     .then(numberList => {
       return _.get(numberList, 'numbers', []);

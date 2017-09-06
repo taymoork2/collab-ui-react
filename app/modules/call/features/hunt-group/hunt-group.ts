@@ -72,15 +72,18 @@ export class HuntGroupNumber {
   public uuid: string;
   public type: NumberType;
   public number: string;
+  public siteToSite: string | undefined;
 
   constructor (obj: {
     uuid: string,
     type: NumberType,
     number: string,
+    siteToSite?: string,
   }) {
     this.uuid = obj.uuid;
     this.type = obj.type;
     this.number = obj.number;
+    this.siteToSite = obj.siteToSite;
   }
 }
 
