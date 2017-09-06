@@ -3665,13 +3665,6 @@
             controller: 'HuronFeaturesCtrl',
             controllerAs: 'huronFeaturesCtrl',
           })
-          .state('huronnewfeature', {
-            url: '/newfeature',
-            parent: 'hurondetails',
-            template: require('modules/huron/features/newFeature/newFeature.tpl.html'),
-            controller: 'NewFeatureCtrl',
-            controllerAs: 'newFeatureCtrl',
-          })
           .state('huronfeatures.aabuilder', {
             parent: 'hurondetails',
             params: {

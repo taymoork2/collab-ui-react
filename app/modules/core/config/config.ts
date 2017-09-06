@@ -370,7 +370,6 @@ export class Config {
       'huronCallPickup',
       'huronPagingGroupEdit',
       'huronlines',
-      'huronnewfeature',
       'huronsettings',
       'huronrecords',
       'huronsettingslocation',
