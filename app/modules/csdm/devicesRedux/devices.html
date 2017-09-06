@@ -13,9 +13,10 @@
   </div>
 
   <div ng-if="devices.anyDevicesOrCodesLoaded">
-    <cs-page-sub-header ng-hide="sc.filteredView.isInState(sc.filteredView.emptydatasource)">
+    <cs-page-sub-header ng-hide="devices.emptydatasource()">
       <cs-page-sub-header-left>
         <device-search search="devices.search" search-object="devices.searchObject"
+                       is-searching="devices.issearching"
                        search-interaction="devices.searchInteraction"
                        search-changed="devices.searchChanged(search)" clear-search="devices.clearSearch()"
                        search-result-changed="devices.searchResultChanged(result)"></device-search>
@@ -36,6 +37,52 @@
 
       </cs-page-sub-header-right>
     </cs-page-sub-header>
-    <device-list search-hits="devices.searchResult.hits" search-object="devices.searchObject" sort-order-changed="devices.sortOrderChanged(field,order)"></device-list>
+    <div class="content-container">
+      <cs-accordion id="licenseWarning" ng-show="devices.licenseError">
+        <cs-accordion-group show-caret="true" display-status="warning">
+          <cs-accordion-heading>
+            <span class="badge badge-custom-warn">{{'spacesPage.licenseWarningTitle' | translate}}</span>
+            <span>{{'spacesPage.licenseWarningHeader' | translate}}</span>
+          </cs-accordion-heading>
+          <p>{{devices.licenseError}}</p>
+        </cs-accordion-group>
+      </cs-accordion>
+      <div ng-if="devices.initializing()">
+        <div class="message-container">
+          <div class="empty-devices-content">
+            <div class="grid-refresh">
+              <i class='icon icon-spinner icon-2x'></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div ng-if="devices.issearching">
+        <div class="message-container">
+          <div class="grid-refresh">
+            <i class='icon icon-spinner icon-2x'></i>
+          </div>
+        </div>
+      </div>
+      <div ng-if="devices.showresult()" id="roomsListPanel" class="row">
+        <device-list search-hits="devices.searchResult.hits" search-object="devices.searchObject" sort-order-changed="devices.sortOrderChanged(field,order)"></device-list>
+      </div>
+      <div ng-if="devices.emptysearchresult()">
+        <div class="none_found">
+          <i class="icon icon-circle-comp-negative"/>
+          <span class="h2" translate="spacesPage.noneFound"></span>
+          <span class="h5" translate="spacesPage.tryAgain"></span>
+        </div>
+      </div>
+      <div ng-if="devices.emptydatasource()">
+        <div class="none_found">
+          <i class="icon icon-circle-telepresence"/>
+          <span class="h2" translate="spacesPage.nothingHere"></span>
+          <span class="h5" translate="spacesPage.noDevices"></span>
+          <button class="btn btn--people btn--large add-button" ng-click="sc.startAddDeviceFlow()">
+            <span translate="spacesPage.addBtn"></span>
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

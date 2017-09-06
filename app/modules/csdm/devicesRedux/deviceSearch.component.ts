@@ -22,6 +22,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
   private searchInteraction: SearchInteraction;
   public search: string;
   public searchResult: Device[];
+  private isSearching: boolean;
 
   /* @ngInject */
   constructor(private CsdmSearchService: CsdmSearchService,
@@ -116,6 +117,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
   }
 
   private performSearch(search: SearchObject) {
+    this.isSearching = true;
     this.CsdmSearchService.search(search).then((response) => {
       if (response && response.data) {
         this.updateSearchResult(response.data);
@@ -123,6 +125,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
       }
       this.updateSearchResult();
     }).catch(e => {
+      this.isSearching = false;
       DeviceSearch.ShowSearchError(this.Notification, e);
     });
   }
@@ -297,6 +300,7 @@ export class DeviceSearchComponent implements ng.IComponentOptions {
     searchResultChanged: '&',
     searchObject: '=',
     searchChanged: '&',
+    isSearching: '=',
     clearSearch: '&',
   };
   public controllerAs = 'dctrl';
