@@ -29,6 +29,7 @@ export class ProvisioningDetailsController {
   public isLoading: boolean = false;
   public status = Status;
   public isShowRaw = false;
+  public orderContent;
   public customerInfo = {
     customerName: '-',
     customerEmail: '-',
@@ -83,6 +84,7 @@ export class ProvisioningDetailsController {
     this.ProvisioningService.getOrder(this.order.orderUUID).then((orderDetail) => {
       this.isLoading = false;
       const orderContent = JSON.parse(orderDetail.orderContent || '{}');
+      this.orderContent = orderContent;
       this.populateCustomer(orderContent);
       if (_.has(orderContent , 'collabServiceInfoCommon.site')) {
         this.selectedSite = _.find(orderContent.collabServiceInfoCommon.site, (site) => {
