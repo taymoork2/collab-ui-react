@@ -2023,6 +2023,7 @@
     "noneFound": "No devices found",
     "tryAgain": "Try another search.",
     "searchFailed": "Device search failed",
+    "searchFailedQuery": "Device search failed, please review your search query",
     "licenseWarningTitle": "License",
     "licenseWarningHeader": "There is a problem with the license for this service.",
     "licenseSuspendedWarning": "Your room device licenses are suspended.",
