@@ -1535,6 +1535,24 @@ describe('OnboardCtrl: Ctrl', function () {
     });
   });
 
+  describe('onBack', function () {
+    beforeEach(function () {
+      this.$previousState.get.and.returnValue({
+        state: {
+          name: 'users.manage.emailSuppress',
+        },
+      });
+      installPromiseMatchers.apply(this);
+      initController.apply(this);
+    });
+
+    it('should go to users.manage.picker when previous state is users.manage.emailSuppress', function () {
+      this.$scope.onBack();
+      this.$scope.$apply();
+      expect(this.$state.go).toHaveBeenCalledWith('users.manage.picker');
+    });
+  });
+
   function initUserShouldAddCall() {
     this.$scope.currentUserEnablesCall = true;
     this.$scope.$apply();

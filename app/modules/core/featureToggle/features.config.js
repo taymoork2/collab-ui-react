@@ -17,6 +17,7 @@ module.exports = {
   atlasEdiscovery: 'atlas-ediscovery',
   atlasEdiscoveryIPSetting: 'atlas-ediscovery-ip-setting',
   atlasEmailStatus: 'atlas-email-status',
+  atlasEmailSuppress: 'atlas-email-suppress',
   atlasHelpDeskExt: 'atlas-helpdesk-extended-information',
   atlasHelpDeskOrderSearch: 'atlas-helpdesk-order-search',
   atlasHybridDataSecurity: 'atlas-hybrid-data-security',

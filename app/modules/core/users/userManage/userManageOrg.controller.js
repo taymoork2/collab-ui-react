@@ -7,7 +7,7 @@ require('./_user-manage.scss');
     .controller('UserManageOrgController', UserManageOrgController);
 
   /* @ngInject */
-  function UserManageOrgController($state, Analytics, UserCsvService, OnboardService, Orgservice) {
+  function UserManageOrgController($state, Analytics, UserCsvService, OnboardService, Orgservice, FeatureToggleService) {
     var vm = this;
 
     vm.onInit = onInit;
@@ -17,8 +17,9 @@ require('./_user-manage.scss');
     vm.onNext = onNext;
     vm.cancelModal = cancelModal;
     vm.convertableUsers = false;
-
     vm.onInit();
+
+    var isAtlasEmailSuppressToggle = false;
 
     //////////////////
     function onInit() {
@@ -26,6 +27,9 @@ require('./_user-manage.scss');
         if (data.success && data.totalResults > 0) {
           vm.convertableUsers = true;
         }
+      });
+      FeatureToggleService.atlasEmailSuppressGetStatus().then(function (toggle) {
+        isAtlasEmailSuppressToggle = toggle;
       });
     }
 
@@ -35,27 +39,34 @@ require('./_user-manage.scss');
     }
 
     function onNext() {
-      switch (vm.manageType) {
-        case 'manual':
-          Analytics.trackAddUsers(Analytics.eventNames.NEXT, Analytics.sections.ADD_USERS.uploadMethods.MANUAL);
-          $state.go('users.add');
-          break;
+      if (isAtlasEmailSuppressToggle) {
+        $state.go('users.manage.emailSuppress', {
+          manageType: vm.manageType,
+          prevState: 'users.manage.org',
+        });
+      } else {
+        switch (vm.manageType) {
+          case 'manual':
+            Analytics.trackAddUsers(Analytics.eventNames.NEXT, Analytics.sections.ADD_USERS.uploadMethods.MANUAL);
+            $state.go('users.add');
+            break;
 
-        case 'bulk':
-          Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.CSV_UPLOAD, Analytics.sections.ADD_USERS.uploadMethods.CSV);
-          $state.go('users.csv');
-          break;
+          case 'bulk':
+            Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.CSV_UPLOAD, Analytics.sections.ADD_USERS.uploadMethods.CSV);
+            $state.go('users.csv');
+            break;
 
-        case 'advanced':
-          Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.INSTALL_CONNECTOR, Analytics.sections.ADD_USERS.uploadMethods.SYNC);
-          $state.go('users.manage.advanced.add.ob.installConnector');
-          break;
+          case 'advancedNoDS':
+            Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.INSTALL_CONNECTOR, Analytics.sections.ADD_USERS.uploadMethods.SYNC);
+            $state.go('users.manage.advanced.add.ob.installConnector');
+            break;
 
-        case 'convert':
-          $state.go('users.convert', {
-            manageUsers: true,
-          });
-          break;
+          case 'convert':
+            $state.go('users.convert', {
+              manageUsers: true,
+            });
+            break;
+        }
       }
     }
   }

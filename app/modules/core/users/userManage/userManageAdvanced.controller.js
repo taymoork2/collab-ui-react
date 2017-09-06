@@ -36,6 +36,9 @@ require('./_user-manage.scss');
     function onInit() {
       // save state we came from here so we can go back when exiting this flow
       rootState = $previousState.get().state.name;
+      if (rootState === 'users.manage.emailSuppress') {
+        rootState = 'users.manage.picker';
+      }
 
       $rootScope.$on('add-user-dirsync-started', function () {
         vm.isBusy = true;

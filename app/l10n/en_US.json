@@ -228,6 +228,12 @@
       "advancedLabel": "Modify all synchronized users",
       "advancedDetails": "Add new licenses to all users."
     },
+    "emailSuppress": {
+      "willGetEmail": "Users will automatically be sent a welcome email from Cisco.",
+      "canChange": "You can change this setting on the account settings page.",
+      "willNotGetEmail": "Cisco won't send a welcome email to users. You have to notify users about their new service.  <a href='https://help.webex.com/docs/DOC-nnnn' target='_blank' style='display:none'>Learn more.</a>",
+      "hasSparkCall": "Cisco Spark Call invitations are always sent to provide the generated device activation code to users."
+    },
     "manual": {
       "titleModify": "Manually Modify Users",
       "titleAddModify": "Manually Add or Modify Users",
@@ -7700,6 +7706,12 @@
     "authentication": {
       "title": "Authentication",
       "subsectionLabel": "Single Sign-On"
+    },
+    "email": {
+      "title": "Email",
+      "subsectionLabel": "Suppress Admin Invite emails",
+      "subsectionDescription": "When enabled users will not automatically receive invite emails from Cisco Spark. Only allowed when SSO is enabled.",
+      "setEmailSuppressFailed": "Failed to set emails suppress status."
     },
     "retention": {
       "title": "Retention",
