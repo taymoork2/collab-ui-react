@@ -2,6 +2,7 @@ import { INumberData } from 'modules/call/features/paging-group/shared';
 import { NumberType, NumberService } from 'modules/huron/numbers';
 
 export class PagingNumberService {
+  public hasLocations: boolean = false;
 
   /* @ngInject */
   constructor(
@@ -9,16 +10,21 @@ export class PagingNumberService {
     private $resource: ng.resource.IResourceService,
     private HuronConfig,
     private Authinfo,
-  ) {}
+    private FeatureToggleService,
+  ) {
+    // TODO: samwi - remove when locations is GA
+    this.FeatureToggleService.supports(FeatureToggleService.features.hI1484).then(supports => {
+      this.hasLocations = supports;
+    });
+  }
 
   public getNumberSuggestions(hint?: string): ng.IPromise<INumberData[]> {
     return this.NumberService.getNumberList(hint, NumberType.INTERNAL, false).then(
-      (response) => _.map(response, function (dn: any) {
-        const numberData = <INumberData>{
-          extension: dn.number,
+      (response) => _.map(response, (dn: any) => {
+        return <INumberData>{
+          extension: this.hasLocations ? dn.siteToSite : dn.number,
           extensionUUID: dn.uuid,
         };
-        return numberData;
       }));
   }
 

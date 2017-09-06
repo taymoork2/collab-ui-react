@@ -270,15 +270,28 @@ describe('Service: Notification', function () {
     it('should not notify an error for cancelled request', function () {
       const response = createHttpResponseWith({
         status: -1,
+        xhrStatus: 'abort',
       });
       $timeout.flush(); // resolves timeout promise
       Notification.errorResponse(response, 'Something happened.');
       expect(toaster.pop).not.toHaveBeenCalled();
     });
 
+    it('should notify an error for timeout request', function () {
+      const response = createHttpResponseWith({
+        status: -1,
+        xhrStatus: 'timeout',
+      });
+      $timeout.flush(); // resolves timeout promise
+      Notification.errorResponse(response, 'Something happened.');
+      const notifyMessage = 'Something happened. errors.statusTimeout. TrackingID: Atlas_123';
+      expect(toaster.pop).toHaveBeenCalledWith(MakePopResponse(undefined, 'error', notifyMessage, 0));
+    });
+
     it('should notify an error with rejected error message', function () {
       const response = createHttpResponseWith({
         status: -1,
+        xhrStatus: 'error',
       });
       Notification.errorResponse(response, 'Something happened.');
       const notifyMessage = 'Something happened. errors.statusRejected. TrackingID: Atlas_123';

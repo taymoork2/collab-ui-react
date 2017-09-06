@@ -3,6 +3,7 @@ import { SearchFields, SearchObject } from '../services/search/searchObject';
 import { SearchResult } from '../services/search/searchResult';
 import { CsdmSearchService } from '../services/csdmSearch.service';
 import { SearchTranslator } from '../services/search/searchTranslator';
+import { Notification } from '../../core/notifications/notification.service';
 
 export class DeviceSearch implements ng.IComponentController, ISearchHandler {
   public searchField = '';
@@ -126,9 +127,13 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
     });
   }
 
-  public static ShowSearchError(Notification, e) {
-    if (e && e.status !== 400) {
-      Notification.errorResponse(e, 'spacesPage.searchFailed');
+  public static ShowSearchError(Notification: Notification, e) {
+    if (e) {
+      if (e.status === 400) {
+        Notification.errorWithTrackingId(e, 'spacesPage.searchFailedQuery');
+      } else {
+        Notification.errorResponse(e, 'spacesPage.searchFailed');
+      }
     }
   }
 

@@ -470,11 +470,11 @@ export class HybridServicesClusterService {
       });
   }
 
-  private extractClustersFromResponse<T>(response: ng.IHttpPromiseCallbackArg<T>): ICluster[] {
+  private extractClustersFromResponse<T>(response: ng.IHttpResponse<T>): ICluster[] {
     return _.get(this.extractDataFromResponse(response), 'clusters', []);
   }
 
-  private extractDataFromResponse<T>(response: ng.IHttpPromiseCallbackArg<T>): T {
+  private extractDataFromResponse<T>(response: ng.IHttpResponse<T>): T {
     return _.get<T>(response, 'data');
   }
 
