@@ -6,6 +6,7 @@ export class DirSyncSetting extends SettingSection {
   public constructor() {
     super('dirsync');
     this.subsectionLabel = '';    // dont display a subsection label
+    this.subsectionDescription = '';
   }
 }
 

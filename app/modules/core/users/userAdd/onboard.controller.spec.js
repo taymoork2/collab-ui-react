@@ -1542,7 +1542,7 @@ describe('OnboardCtrl: Ctrl', function () {
           name: 'users.manage.emailSuppress',
         },
       });
-      installPromiseMatchers.apply(this);
+      installPromiseMatchers();
       initController.apply(this);
     });
 

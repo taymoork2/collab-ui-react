@@ -7,7 +7,7 @@ require('./_user-manage.scss');
     .controller('UserManageOrgController', UserManageOrgController);
 
   /* @ngInject */
-  function UserManageOrgController($state, Analytics, UserCsvService, OnboardService, Orgservice, FeatureToggleService) {
+  function UserManageOrgController(Analytics, FeatureToggleService, OnboardService, Orgservice, $state, UserCsvService) {
     var vm = this;
 
     vm.onInit = onInit;

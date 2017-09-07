@@ -231,7 +231,7 @@
     "emailSuppress": {
       "willGetEmail": "Users will automatically be sent a welcome email from Cisco.",
       "canChange": "You can change this setting on the account settings page.",
-      "willNotGetEmail": "Cisco won't send a welcome email to users. You have to notify users about their new service.  <a href='https://help.webex.com/docs/DOC-nnnn' target='_blank' style='display:none'>Learn more.</a>",
+      "willNotGetEmail": "Cisco will not send a welcome email to users. You have to notify users about their new service.",
       "hasSparkCall": "Cisco Spark Call invitations are always sent to provide the generated device activation code to users."
     },
     "manual": {

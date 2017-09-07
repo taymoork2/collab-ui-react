@@ -7,7 +7,7 @@ require('./_user-manage.scss');
     .controller('UserManageActiveDirController', UserManageActiveDirController);
 
   /* @ngInject */
-  function UserManageActiveDirController($state, UserCsvService, OnboardService, $timeout, FeatureToggleService) {
+  function UserManageActiveDirController(FeatureToggleService, OnboardService, $state, $timeout, UserCsvService) {
     var vm = this;
 
     vm.onInit = onInit;

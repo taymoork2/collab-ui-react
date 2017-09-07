@@ -6,7 +6,7 @@ export class BrandingSetting extends SettingSection {
   public constructor() {
     super('branding');
     this.subsectionLabel = '';
-    this.subsectionDescription = ' ';
+    this.subsectionDescription = '';
   }
 }
 

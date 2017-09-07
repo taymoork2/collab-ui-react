@@ -4,7 +4,7 @@ describe('UserManageEmailSuppressController', function () {
   ///////////////////
 
   function init() {
-    this.initModules('Core', 'Huron', 'Sunlight');
+    this.initModules('Core');
     this.injectDependencies('$scope', '$stateParams', '$controller', 'Analytics', 'Orgservice', '$q');
 
     this.$state = {
