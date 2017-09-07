@@ -1,6 +1,6 @@
 export enum NumberType {
-  INTERNAL = <any>'internal',
-  EXTERNAL = <any>'external',
+  INTERNAL = 'internal',
+  EXTERNAL = 'external',
 }
 
 export interface INumber {
