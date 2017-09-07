@@ -3720,9 +3720,17 @@
       "invalidLicense": "License number should be a non-negative integer",
       "pleaseEnterSiteName": "Please enter a site name",
       "enteredSiteNotValid": "The entered site is not valid. Please try another site.",
-      "totalSiteLicenseNumber": "Site <b>{{ siteUrl }}</b> should have license number > 0"
+      "totalSiteLicenseNumber": "Site <b>{{ siteUrl }}</b> should have license number > 0",
+      "noUserManagementSelected": "Please select how you'd like to manage your users"
     },
     "siteName": "Site Name",
+    "userManagement": "User management",
+    "userManagementWhere": "Where would you like to provision and manage your WebEx users?",
+    "userManagementHelp": "Which one should I choose",
+    "userManagementWebEx": "WebEx Site Admin",
+    "userManagementSpark": "Spark Control Hub",
+    "userManagementViaSpark": "User management via Spark Control Hub",
+    "userManagementViaWebex": "User management via WebEx Site Admin",
     "theseWillBeYourWebExSites": "These will be your {{siteCount}} WebEx sites",
     "thisWillBeYourWebExSite": "This will be your WebEx site",
     "basicMeetings": "Basic Meetings",

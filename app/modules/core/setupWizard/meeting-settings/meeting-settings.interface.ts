@@ -18,9 +18,16 @@ export interface IWebexSiteDetail {
   quantity: number;
 }
 
+export enum SiteErrorType {
+  URL = 'URL',
+  TIME_ZONE = 'TIME_ZONE',
+  USER_MGMT = 'USR_MGMT',
+}
+
 export interface ISiteNameError {
   isError: boolean;
   errorMsg: string;
+  errorType?: SiteErrorType;
 }
 
 export interface IConferenceService {

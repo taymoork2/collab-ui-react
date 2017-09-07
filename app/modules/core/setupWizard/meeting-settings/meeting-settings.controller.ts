@@ -1,12 +1,13 @@
 import './_meeting-settings.scss';
 import { Config } from 'modules/core/config/config';
-import { IWebExSite, ISiteNameError, IConferenceService, IExistingWebExTrialSite, IWebexLicencesPayload, IPendingLicense, IConferenceLicense } from './meeting-settings.interface';
+import { IWebExSite, ISiteNameError, SiteErrorType, IConferenceService, IExistingWebExTrialSite, IWebexLicencesPayload, IPendingLicense, IConferenceLicense } from './meeting-settings.interface';
 import { SetupWizardService } from '../setup-wizard.service';
 
 export enum Steps {
   SITES_SETUP = 'SITES_SETUP',
   SITES_LICENSES = 'SITES_LICENSES',
 }
+
 
 class WebExSite {
   public centerType: string;
@@ -63,8 +64,11 @@ export class MeetingSettingsCtrl {
     centerType: '',
     quantity: 0,
   };
+  private static showUserMgmntEmailPattern = '^ordersimp-.*@mailinator.com';
+  public setupTypeLegacy = this.Config.setupTypes.legacy;
 
   public steps = Steps;
+  public siteErrorType = SiteErrorType;
   public error: ISiteNameError = {
     isError: false,
     errorMsg: '',
@@ -101,6 +105,7 @@ export class MeetingSettingsCtrl {
     subscriptionId: '',
     isError: false,
   };
+  public isShowUserManagement = false;
 
   /* @ngInject */
   constructor(
@@ -144,6 +149,10 @@ export class MeetingSettingsCtrl {
     if (this.SetupWizardService.hasCCASPPackage()) {
       this.populateCCASPPartnerOptions();
     }
+
+    const regex = new RegExp(MeetingSettingsCtrl.showUserMgmntEmailPattern);
+    this.isShowUserManagement = regex.test(this.Authinfo.getUserName());
+
   }
 
   public onInputChange() {
@@ -295,35 +304,41 @@ export class MeetingSettingsCtrl {
   public validateMeetingSite(): void {
     this.disableValidateButton = true;
     if (_.isEmpty(this.siteModel.siteUrl)) {
-      this.showError(this.$translate.instant('firstTimeWizard.meetingSettingsError.pleaseEnterSiteName'));
+      this.showError(this.$translate.instant('firstTimeWizard.meetingSettingsError.pleaseEnterSiteName'), this.siteErrorType.URL);
       return;
     }
-
     if (_.isEmpty(this.siteModel.timezone)) {
-      this.showError(this.$translate.instant('firstTimeWizard.meetingSettingsError.pleaseSelectTimeZone'));
+      this.showError(this.$translate.instant('firstTimeWizard.meetingSettingsError.pleaseSelectTimeZone'), this.siteErrorType.TIME_ZONE);
       return;
     }
     if (_.some(this.sitesArray, { siteUrl: this.siteModel.siteUrl })) {
-      this.showError(this.$translate.instant('firstTimeWizard.meetingSettingsError.duplicateSite'));
+      this.showError(this.$translate.instant('firstTimeWizard.meetingSettingsError.duplicateSite'), this.siteErrorType.URL);
       return;
     }
-
+    if (this.siteModel.setupType === undefined && this.isShowUserManagement ) {
+      this.showError(this.$translate.instant('firstTimeWizard.meetingSettingsError.noUserManagementSelected'), this.siteErrorType.USER_MGMT);
+      return;
+    }
     const siteName = this.siteModel.siteUrl.concat(this.Config.siteDomainUrl.webexUrl);
     this.validateWebexSiteUrl(siteName).then((response) => {
       if (response.isValid && (response.errorCode === 'validSite')) {
+        //SparkControlHub user management means there is no setupType
+        if (this.siteModel.setupType !== this.setupTypeLegacy) {
+          delete this.siteModel.setupType;
+        }
         this.sitesArray.push(_.clone(this.siteModel));
         this.addSiteToDistributedArray(_.clone(this.siteModel));
-        this.clearInputs();
+        this.clearWebexSiteInputs();
       } else {
         if (response.errorCode === 'duplicateSite') {
-          this.showError(this.$translate.instant('firstTimeWizard.meetingSettingsError.duplicateSite'));
+          this.showError(this.$translate.instant('firstTimeWizard.meetingSettingsError.duplicateSite'), this.siteErrorType.URL);
         } else {
-          this.showError(this.$translate.instant('firstTimeWizard.meetingSettingsError.enteredSiteNotValid'));
+          this.showError(this.$translate.instant('firstTimeWizard.meetingSettingsError.enteredSiteNotValid'), this.siteErrorType.URL);
         }
         return;
       }
     }).catch(() => {
-      this.clearInputs();
+      this.clearWebexSiteInputs();
     }).finally(() => {
       this.disableValidateButton = false;
     });
@@ -609,20 +624,26 @@ export class MeetingSettingsCtrl {
     return this.TrialWebexService.validateSiteUrl(siteName, source);
   }
 
-  private showError(msg) {
+  private showError(msg, errorType?: SiteErrorType) {
     this.error.isError = true;
     this.error.errorMsg = msg;
+    if (!_.isUndefined(errorType)) {
+      this.error.errorType = errorType;
+    }
     this.disableValidateButton = false;
   }
 
   private clearError(): void {
+
     this.error.isError = false;
     this.error.errorMsg = '';
+    delete this.error.errorType;
   }
 
-  private clearInputs(): void {
+  private clearWebexSiteInputs(): void {
     this.siteModel.siteUrl = '';
     this.siteModel.timezone = '';
+    this.siteModel.setupType = undefined;
   }
 
   private constructWebexLicensesPayload(): IWebexLicencesPayload {

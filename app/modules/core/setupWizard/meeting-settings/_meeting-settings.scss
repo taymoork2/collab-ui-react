@@ -1,6 +1,11 @@
 @import '~collab-ui/scss/settings/colors';
 
 .meeting-settings {
+
+  .error input[type=radio]+label:before {
+    border-color: #e74a3e;
+  }
+
   .site-preview {
     margin-top: 10px;
     margin-bottom: 10px;
@@ -25,6 +30,14 @@
 
   .delete-site {
     font-size: 24px;
+  }
+  .small {
+    span {
+      font-size: .75rem;
+    }
+  }
+  .info .cs-input__messages {
+    padding-top: 0px;
   }
 
   .keep-existing-trials {
@@ -91,4 +104,4 @@
   .license_distrib__row--site {
     word-break: break-all;
   }
- }
+}

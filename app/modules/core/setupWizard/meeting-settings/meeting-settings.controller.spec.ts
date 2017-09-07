@@ -27,6 +27,7 @@ describe('Controller: MeetingSettingsCtrl', () => {
     spyOn(this.SetupWizardService, 'hasCCASPPackage').and.returnValue(true);
     spyOn(this.SetupWizardService, 'getCCASPPartners').and.returnValue(this.$q.resolve(['partner1', 'partner2']));
     spyOn(this.SetupWizardService, 'validateTransferCode').and.returnValue(this.$q.resolve(transferCodeResponse));
+    spyOn(this.Authinfo, 'getUserName').and.returnValue('ordersimp-somedude@mailinator.com');
   });
 
   function initController(): void {
@@ -52,15 +53,32 @@ describe('Controller: MeetingSettingsCtrl', () => {
     });
   });
 
+  describe('user management in meeting site setup', function () {
+    it('should be shown if the logged in user\'s email matches the pattern "ordersimp-<>@mailinator.com"', function() {
+      initController.apply(this);
+      expect(this.controller.isShowUserManagement).toEqual(true);
+    });
+    it('should NOT be shown if the logged in user\'s email does NOT match the pattern "ordersimp-<>@mailinator.com"', function() {
+      this.Authinfo.getUserName.and.returnValue('bob@nonmatching-email.com');
+      initController.apply(this);
+      expect(this.controller.isShowUserManagement).toEqual(false);
+      this.Authinfo.getUserName.and.returnValue('ordersimp@email.com');
+      initController.apply(this);
+      expect(this.controller.isShowUserManagement).toEqual(false);
+    });
+  });
+
   describe('upon click of the Validate button in site setup', function () {
     beforeEach(function () {
       initController.apply(this);
+      this.controller.isShowUserManagement = false;
     });
 
     it('should call validateWebexSiteUrl() and if VALID add the site the sitesArray', function () {
       const siteUrl = 'testSiteHere';
       this.controller.siteModel.siteUrl = siteUrl;
       this.controller.siteModel.timezone = 'someTimeZoneHere';
+      this.controller.isShowUserManagement = false;
       spyOn(this.controller, 'validateWebexSiteUrl').and.callThrough();
       this.controller.validateMeetingSite();
       this.$scope.$digest();
@@ -81,6 +99,43 @@ describe('Controller: MeetingSettingsCtrl', () => {
 
       expect(this.controller.sitesArray.length).toBe(0);
       expect(this.controller.error.isError).toBe(true);
+    });
+
+    describe ('when user management is enabled', function()  {
+      const siteUrl = 'testSiteHere';
+      beforeEach(function () {
+        initController.apply(this);
+        this.controller.siteModel = {
+          siteUrl: siteUrl,
+          timezone: 'someTimeZoneHere',
+        };
+        this.controller.isShowUserManagement = true;
+        this.controller.sitesArray = [];
+        this.disableValidateButton = true;
+        spyOn(this.controller, 'validateWebexSiteUrl').and.callThrough();
+      });
+      it('site will not validate without type selected', function () {
+        this.controller.validateMeetingSite();
+        this.$scope.$digest();
+        const hasAddedSite = _.some(this.controller.sitesArray, { siteUrl: siteUrl });
+        expect(hasAddedSite).toBe(false);
+      });
+      it('site WILL validate with type selected but NOT set setup type if it\'s not LEGACY', function () {
+        this.controller.siteModel.setupType = 'undefined';
+        this.controller.validateMeetingSite();
+        this.$scope.$digest();
+        const addedSite = _.find(this.controller.sitesArray, { siteUrl: siteUrl });
+        expect(addedSite).toBeDefined();
+        expect(addedSite['setupType']).not.toBeDefined();
+      });
+      it('site will validate with type selected and set setup type if it IS LEGACY', function () {
+        this.controller.siteModel.setupType = this.Config.setupTypes.legacy;
+        this.controller.validateMeetingSite();
+        this.$scope.$digest();
+        const addedSite = _.find(this.controller.sitesArray, { siteUrl: siteUrl });
+        expect(addedSite).toBeDefined();
+        expect(addedSite['setupType']).toEqual(this.Config.setupTypes.legacy);
+      });
     });
   });
 
