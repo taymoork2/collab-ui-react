@@ -1,6 +1,9 @@
 (function () {
   'use strict';
 
+  // TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
+  var hybridServicesCardTemplatePath = require('ngtemplate-loader?module=Core!./hybridServicesCard.tpl.html');
+
   angular
     .module('Core')
     .factory('OverviewHybridServicesCard', OverviewHybridServicesCard);
@@ -12,7 +15,7 @@
         var card = {};
         card.name = 'overview.cards.hybrid.title';
         card.cardClass = 'hybrid-card';
-        card.template = 'modules/core/overview/hybridServicesCard.tpl.html';
+        card.template = hybridServicesCardTemplatePath;
         card.icon = 'icon-circle-data';
         card.enabled = false;
         card.notEnabledAction = 'https://www.cisco.com/go/hybrid-services';
