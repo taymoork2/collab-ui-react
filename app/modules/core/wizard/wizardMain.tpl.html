@@ -5,6 +5,10 @@
     </button>
   </div>
   <div class="wizard-main-content" ng-if="wizard.current.tab" ng-controller="wizard.getTabController">
+    <!--
+      currently ng-include templates loaded through ngtemplate-loader
+      TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
+    -->
     <div scroll-indicator ng-include="wizard.current.step.template" class="wizard-main-wrapper" ng-controller="wizard.getSubTabController">
     </div>
   </div>
@@ -21,6 +25,10 @@
   </div>
   <div class="modal-body">
     <div class="wizard-main-content" ng-if="wizard.current.tab" ng-controller="wizard.getTabController">
+      <!--
+        currently ng-include templates loaded through ngtemplate-loader
+        TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
+      -->
       <div scroll-indicator ng-include="wizard.current.step.template" class="wizard-main-wrapper" ng-controller="wizard.getSubTabController">
       </div>
     </div>
