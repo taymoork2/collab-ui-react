@@ -26,6 +26,8 @@
       setAppSecurity: setAppSecurity,
       getBlockExternalCommunication: getBlockExternalCommunication,
       setBlockExternalCommunication: setBlockExternalCommunication,
+      getFileSharingControl: getFileSharingControl,
+      setFileSharingControl: setFileSharingControl,
     };
 
     return service;
@@ -174,6 +176,28 @@
       return $http.put(url, {
         blockExternalCommunications: blockExternalCommunication,
       });
+    }
+
+    // Get FileSharingControl from the FileSharingControl API(boolean)
+    function getFileSharingControl(org) {
+      if (!org || org === '') {
+        return $q.reject('A Valid organization ID must be Entered');
+      }
+      // TODO using hardcode first, wait for backend code
+      var url = getDeviceSettingsUrl(org) + '/fileSharingControl';
+      return $http.get(url).then(function (response) {
+        return response.data;
+      });
+    }
+
+    // Sets FileSharingControl to fileSharingControl API
+    function setFileSharingControl(org, fileSharingControl) {
+      if (!org || org === '') {
+        return $q.reject('A Valid organization ID must be Entered');
+      }
+      //TODO using hardcode first, wait for backend code
+      var url = getDeviceSettingsUrl(org) + '/fileSharingControl';
+      return $http.put(url, fileSharingControl);
     }
   }
 })();
