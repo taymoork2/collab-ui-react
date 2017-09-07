@@ -47,20 +47,9 @@
           <p>{{devices.licenseError}}</p>
         </cs-accordion-group>
       </cs-accordion>
-      <div ng-if="devices.initializing()">
-        <div class="message-container">
-          <div class="empty-devices-content">
-            <div class="grid-refresh">
-              <i class='icon icon-spinner icon-2x'></i>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div ng-if="devices.issearching">
-        <div class="message-container">
-          <div class="grid-refresh">
-            <i class='icon icon-spinner icon-2x'></i>
-          </div>
+      <div class="searchingcontainer" ng-if="devices.issearching || devices.initializing()">
+        <div class="loadmore">
+          <i class="icon icon-2x icon-spinner"/>
         </div>
       </div>
       <div ng-if="devices.showresult()" id="roomsListPanel" class="row">

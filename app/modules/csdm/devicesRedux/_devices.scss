@@ -233,6 +233,23 @@
     font-weight: 700;
   }
 
+  .searchingcontainer {
+    position: relative;
+    top:30vh;
+    width: inherit;
+    height: 0px;
+    z-index: 2;
+    .loadmore {
+      position: relative;
+      height: 100px;
+      bottom: 100px;
+      text-align: center;
+
+      i {
+        margin: 50px 0 5px;
+      }
+    }
+  }
   .details-pane {
     padding-top: 20px;
 
@@ -299,7 +316,6 @@
     .ui-grid-footer-cell {
       padding: 0 20px;
     }
-
     .loadmorecontainer {
       position: relative;
       width: inherit;
@@ -312,7 +328,7 @@
 
         background: linear-gradient(rgba(255, 255, 255, 0), white, white);
         i {
-          margin: 50px 32px 5px 0;
+          margin: 50px 0 5px;
         }
       }
     }
