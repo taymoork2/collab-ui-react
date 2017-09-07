@@ -2,6 +2,7 @@
 @import '~collab-ui/scss/settings/typography';
 @import '~collab-ui/scss/tools/placeholders/page-layout';
 @import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '../../../styles/variables';
 
 .devices-redux {
   //@extend %grid-subheader;
@@ -471,10 +472,10 @@
 
 .is-read-only-admin .devices-redux .result-pane {
   .gridStyle {
-    height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height} + 44px));
+    height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height} + #{$read-only-banner-height}));
   }
   .grid-container {
-    height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height} + 48rem + 44px));
+    height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height} + 48rem + #{$read-only-banner-height}));
   }
 }
 
