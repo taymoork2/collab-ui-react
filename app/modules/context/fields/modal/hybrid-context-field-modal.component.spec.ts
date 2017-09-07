@@ -261,6 +261,7 @@ describe('field modal component', () => {
           'context.dictionary.dataTypes.double',
           'context.dictionary.dataTypes.integer',
           'context.dictionary.dataTypes.string',
+          'context.dictionary.dataTypes.enumString',
         ]);
       });
 
