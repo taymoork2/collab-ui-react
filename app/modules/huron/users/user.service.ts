@@ -77,6 +77,27 @@ export class HuronUserService {
     });
   }
 
+  public getUserV2LineLabel(userId: string): ng.IPromise<string> {
+    return this.getUserV2(userId).then(user => {
+      const firstName = _.get(user, 'firstName');
+      const lastName = _.get(user, 'lastName');
+      let tempLineLabel = '';
+      if (firstName || lastName) {
+        if (firstName) {
+          tempLineLabel = firstName as string;
+          if (lastName) {
+            tempLineLabel = tempLineLabel + ' ' + lastName;
+          }
+        } else if (lastName) {
+          tempLineLabel = lastName as string;
+        }
+      } else {
+        tempLineLabel = _.get(user, 'userName');
+      }
+      return tempLineLabel;
+    });
+  }
+
   public getRemoteDestinations(userId: string): ng.IPromise<any[]> {
     return this.remoteDestinationResource.query({
       customerId: this.Authinfo.getOrgId(),
