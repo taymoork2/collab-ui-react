@@ -5,7 +5,10 @@ import { CallPlacesPage } from '../../pages/callPlaces.page';
 const CallPlaces = new CallPlacesPage();
 
 describe('Huron Functional: add-places', () => {
-  const customer = huronCustomer('add-place');
+  const customer = huronCustomer({
+    test: 'add-place',
+    offers: ['CALL', 'ROOMSYSTEMS'],
+  });
   beforeAll(done => {
     provisioner.provisionCustomerAndLogin(customer)
       .then(done);

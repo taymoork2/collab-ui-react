@@ -1,7 +1,7 @@
 export class CallParkFeaturePage {
   constructor() {
     // Setup assistant pages
-    this.createCPTitle = element(by.cssContainingText('h2.title.ng-binding', 'Create Call Park'));
+    this.createCPTitle = element(by.cssContainingText('h2.title', 'Create Call Park'));
     this.closeBtn = element(by.id('close-panel'));
     this.toNextPage = element(by.css('span.icon.icon-arrow-next'));
     this.disabledBtn = element(by.css('button.btn--circle.btn--primary.btn--right.disabled'));
@@ -21,14 +21,14 @@ export class CallParkFeaturePage {
     this.singleNumber = element(by.css('[name="singleNumber"]'));
     this.leftPanel = element(by.css('div.left-panel'));
     this.rightPanel = element(by.css('div.right-panel'));
-    this.leftSide = element(by.cssContainingText('p.title.ng-binding', '310'));
+    this.leftSide = element(by.cssContainingText('p.title', '310'));
     this.rightSide = element(by.css('i.icon.icon-exit'));
     this.inputMember = element(by.css('[placeholder="Search & Add Members"]'));
     this.memberCard = element(by.css('div.card-member'));
     this.memberLeft = element(by.css('div.left-panel'));
     this.memberMiddle = element(by.css('div.middle-panel'));
     this.memberRight = element(by.css('div.right-panel'));
-    this.createEnabled = element(by.cssContainingText('div.btn-helptext.helptext-btn--right.ng-binding.active.enabled', 'Create'));
+    this.createEnabled = element(by.cssContainingText('div.btn-helptext.helptext-btn--right', 'Create'));
     // Feature page
     this.article = element(by.css('article'));
     this.cpDetailHeader = element(by.cssContainingText('div.header-with-right-icon', 'new-cp'));

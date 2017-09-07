@@ -41,6 +41,7 @@
       _.set(this, 'data.displayName', $translate.instant(translateKey));
     };
   }
+
   angular
     .module('wx2AdminWebClientApp')
     .config(['$httpProvider', '$stateProvider', '$urlRouterProvider', '$translateProvider', '$compileProvider', 'languagesProvider',
@@ -1433,9 +1434,7 @@
               ownerId: null,
               lineSelection: {},
             },
-            data: {
-              displayName: 'Line selection for calls',
-            },
+            data: {},
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
@@ -1448,9 +1447,7 @@
               lineSelection: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams, 'lineSelection', {});
               },
-              data: /* @ngInject */ function ($state, $translate) {
-                $state.get('user-overview.communication.primaryLine').data.displayName = $translate.instant('primaryLine.title');
-              },
+              displayName: translateDisplayName('primaryLine.title'),
             },
           })
           .state('user-overview.communication.line-overview', {
@@ -1747,14 +1744,14 @@
               },
             },
             resolve: {
-              data: /* @ngInject */ function ($state, $translate, FeatureToggleService) {
+              displayName: /* @ngInject */ function ($state, $translate, FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasRolesAndSecurity).then(function (enabled) {
                   if (enabled) {
-                    _.set($state.get('user-overview.user-profile'), 'data.displayName', $translate.instant('usersPreview.userDetails'));
+                    _.set(this, 'data.displayName', $translate.instant('usersPreview.userDetails'));
                   } else {
-                    _.set($state.get('user-overview.user-profile'), 'data.displayName', $translate.instant('rolesPanel.roles'));
+                    _.set(this, 'data.displayName', $translate.instant('rolesPanel.roles'));
                   }
-                });
+                }.bind(this));
               },
             },
           })
@@ -1767,9 +1764,7 @@
             },
             data: {},
             resolve: {
-              data: /* @ngInject */ function ($state, $translate) {
-                _.set($state.get('user-overview.roles-and-security'), 'data.displayName', $translate.instant('usersPreview.rolesAndSecurity'));
-              },
+              displayName: translateDisplayName('usersPreview.rolesAndSecurity'),
             },
           })
           .state('user-overview.cmc', {
@@ -2426,9 +2421,7 @@
               placeId: null,
               lineSelection: {},
             },
-            data: {
-              displayName: 'Line selection for calls',
-            },
+            data: {},
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
@@ -2438,9 +2431,7 @@
               placeId: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams.currentPlace, 'cisUuid');
               },
-              data: /* @ngInject */ function ($state, $translate) {
-                $state.get('place-overview.communication.primaryLine').data.displayName = $translate.instant('primaryLine.title');
-              },
+              displayName: translateDisplayName('primaryLine.title'),
               lineSelection: /* @ngInject */ function ($stateParams) {
                 return _.get($stateParams, 'lineSelection');
               },
@@ -3021,10 +3012,11 @@
               },
             },
             resolve: {
-              data: /* @ngInject */ function ($state, $stateParams) {
-                $state.get('customerPstnOrdersOverview.orderDetail').data.displayName = $stateParams.vendor === 'BYOPSTN' ?
+              displayName: /* @ngInject */ function ($state, $stateParams) {
+                var displayName = $stateParams.vendor === 'BYOPSTN' ?
                   $stateParams.currentOrder.formattedDate :
                   $stateParams.currentOrder.carrierOrderId;
+                _.set(this, 'data.displayName', displayName);
               },
               lazy: resolveLazyLoad(function (done) {
                 require(['modules/huron/pstn/pstnOrderManagement/orderDetail'], done);
@@ -3054,10 +3046,11 @@
             },
             data: {},
             resolve: {
-              data: /* @ngInject */ function ($state, $translate, $stateParams) {
-                $state.get('customer-overview.orderDetail').data.displayName = $stateParams.isCarrierByopstn ?
+              displayName: /* @ngInject */ function ($state, $translate, $stateParams) {
+                var displayName = $stateParams.isCarrierByopstn ?
                   $stateParams.currentOrder.formattedDate :
                   $stateParams.currentOrder.carrierOrderId;
+                _.set(this, 'data.displayName', displayName);
               },
               lazy: resolveLazyLoad(function (done) {
                 require(['modules/huron/pstn/pstnOrderManagement/orderDetail'], done);

@@ -42,7 +42,7 @@ export class RateLimitService {
     return _.includes(this.THROTTLED_STATUS_CODES, _.get(response, 'status'));
   }
 
-  public retryThrottledResponse<T>(response: ng.IHttpPromiseCallbackArg<T>) {
+  public retryThrottledResponse<T>(response: ng.IHttpResponse<T>) {
     const config = _.get<IRetryHttpConfig>(response, 'config');
     if (!config) {
       return this.$q.reject(response);
@@ -57,7 +57,7 @@ export class RateLimitService {
     return this.retryExponentialBackoff<T>(config, _.toNumber(retryAfterValue));
   }
 
-  public trackMetric(response: ng.IHttpPromiseCallbackArg<any>) {
+  public trackMetric(response: ng.IHttpResponse<any>) {
     const config = _.get<IRetryHttpConfig>(response, 'config');
     if (!this.hasRetryConfig(config)) {
       return;

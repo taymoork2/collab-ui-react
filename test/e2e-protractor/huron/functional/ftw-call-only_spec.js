@@ -7,8 +7,13 @@ const callSettings = new CallSettingsPage();
 /* global LONG_TIMEOUT */
 
 describe('Huron Functional: first-time-setup', () => {
-  const customer = huronCustomer('ftw-call-only', null, null, true, 3, true, 'CALL');
-  //huronCustomer(<customer_Name>, numberRange, users, hasPSTN, noOfLines, dofix FTW, offers)
+  const customerOptions = {
+    test: 'ftw-call-only',
+    pstn: 3,
+    doFtsw: true,
+  };
+  const customer = huronCustomer(customerOptions);
+  const now = Date.now();
 
   beforeAll(done => {
     provisioner.provisionCustomerAndLogin(customer, false).then(done);
@@ -185,8 +190,8 @@ describe('Huron Functional: first-time-setup', () => {
     });
   });
 
-  xdescribe('Finalize first time wizard setup', () => {
-    const SUBDOMAIN = 'ftwTest';
+  describe('Finalize first time wizard setup', () => {
+    const SUBDOMAIN = `ftwTestWizard${now}`;
     it('should click on get started button to progress to next screen', () => {
       utils.click(wizard.beginBtn);
       utils.expectIsDisplayed(wizard.enterpriseSettingsBanner);

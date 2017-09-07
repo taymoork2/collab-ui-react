@@ -3,11 +3,11 @@ import { huronCustomer } from '../../provisioner/huron/huron-customer-config';
 import { CallSettingsPage } from '../pages/callSettings.page';
 
 const callSettings = new CallSettingsPage();
-
 /* global LONG_TIMEOUT */
 
 describe('Huron Functional: call-settings', () => {
-  const customer = huronCustomer('call-settings');
+  const customer = huronCustomer({ test: 'call-settings' });
+
   beforeAll(done => {
     provisioner.provisionCustomerAndLogin(customer)
       .then(done);
@@ -58,7 +58,7 @@ describe('Huron Functional: call-settings', () => {
     });
 
     it('click on save button', () => {
-      utils.click(callSettings.saveButton).then(()=> {
+      utils.click(callSettings.saveButton).then(() => {
         notifications.assertSuccess();
       });
     });

@@ -8,6 +8,7 @@ export interface INumber {
   number: string;
   type: NumberType;
   directoryNumber: IDirectoryNumber;
+  siteToSite?: string;
 }
 
 export interface IDirectoryNumber {

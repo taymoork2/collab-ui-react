@@ -9,7 +9,10 @@ const CallUser = new CallUserPage();
 const SpeedDialsPage = new CallSpeedDialsPage();
 
 describe('Huron Functional: places-features', () => {
-  const customer = huronCustomer('places-features');
+  const customer = huronCustomer({
+    test: 'places-features',
+    offers: ['CALL', 'ROOMSYSTEMS'],
+  });
   beforeAll(done => {
     provisioner.provisionCustomerAndLogin(customer)
       .then(done);

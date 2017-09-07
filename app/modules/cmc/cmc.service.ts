@@ -69,7 +69,7 @@ export class CmcService {
       //this.requestTimeout(deferred);
       const url: string = this.cmcUrl + `/organizations/${orgId}/status`;
       return this.$http.get<ICmcOrgStatusResponse>(url, { timeout: this.requestTimeout() }).then((response) => {
-        return response.data as ICmcOrgStatusResponse;
+        return response.data;
       });
     } else {
       return this.CmcServiceMock.mockOrgStatus(orgId);

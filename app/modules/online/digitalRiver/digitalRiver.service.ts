@@ -37,7 +37,7 @@ export class DigitalRiverService {
 
   public getDigitalRiverToken(): ng.IPromise<string> {
     return this.$http.get<string>(this.UrlConfig.getAdminServiceUrl() + 'commerce/online/users/authtoken')
-      .then(response => response.data as string)
+      .then(response => response.data)
       .then(authToken => this.setDRCookie(authToken));
   }
 
