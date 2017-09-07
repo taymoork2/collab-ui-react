@@ -1,0 +1,60 @@
+<div class="setting">
+  <input
+    cs-input
+    type="checkbox"
+    id="blockDesktopAppDownload"
+    ng-model="fileSharingControlCtrl.isBlockDesktopAppDownload"
+    cs-input-label="{{::'globalSettings.fileSharingControl.desktopApps'|translate}}"
+    ng-disabled="!fileSharingControlCtrl.isFileSharingControlSettingLoaded || !fileSharingControlCtrl.isProPackPurchased"/>
+  <input
+    cs-input
+    type="checkbox"
+    id="blockWebAppDownload"
+    ng-model="fileSharingControlCtrl.isBlockWebAppDownload"
+    cs-input-label="{{::'globalSettings.fileSharingControl.webApp'|translate}}"
+    ng-disabled="!fileSharingControlCtrl.isFileSharingControlSettingLoaded || !fileSharingControlCtrl.isProPackPurchased"/>
+  <input
+    cs-input
+    type="checkbox"
+    id="blockMobileAppDownload"
+    ng-model="fileSharingControlCtrl.isBlockMobileAppDownload"
+    cs-input-label="{{::'globalSettings.fileSharingControl.mobileApps'|translate}}"
+    ng-disabled="!fileSharingControlCtrl.isFileSharingControlSettingLoaded || !fileSharingControlCtrl.isProPackPurchased"/>
+  <input
+    cs-input
+    type="checkbox"
+    id="blockBotsDownload"
+    ng-model="fileSharingControlCtrl.isBlockBotsDownload"
+    cs-input-label="{{::'globalSettings.fileSharingControl.integrationAndBots'|translate}}"
+    ng-disabled="!fileSharingControlCtrl.isFileSharingControlSettingLoaded || !fileSharingControlCtrl.isProPackPurchased"/>
+  <h5 class="sub-section__label" translate="globalSettings.fileSharingControl.uploadSubsectionLabel"></h5>
+  <p class="sub-section__description" translate="globalSettings.fileSharingControl.uploadSubsectionLabelDescription"></p>
+  <input
+    cs-input
+    type="checkbox"
+    id="blockDesktopAppUpload"
+    ng-model="fileSharingControlCtrl.isBlockDesktopAppUpload"
+    cs-input-label="{{::'globalSettings.fileSharingControl.desktopApps'|translate}}"
+    ng-disabled="!fileSharingControlCtrl.isFileSharingControlSettingLoaded || !fileSharingControlCtrl.isProPackPurchased"/>
+  <input
+    cs-input
+    type="checkbox"
+    id="blockWebAppUpload"
+    ng-model="fileSharingControlCtrl.isBlockWebAppUpload"
+    cs-input-label="{{::'globalSettings.fileSharingControl.webApp'|translate}}"
+    ng-disabled="!fileSharingControlCtrl.isFileSharingControlSettingLoaded || !fileSharingControlCtrl.isProPackPurchased"/>
+  <input
+    cs-input
+    type="checkbox"
+    id="blockMobileAppUpload"
+    ng-model="fileSharingControlCtrl.isBlockMobileAppUpload"
+    cs-input-label="{{::'globalSettings.fileSharingControl.mobileApps'|translate}}"
+    ng-disabled="!fileSharingControlCtrl.isFileSharingControlSettingLoaded || !fileSharingControlCtrl.isProPackPurchased"/>
+  <input
+    cs-input
+    type="checkbox"
+    id="blockBotsUpload"
+    ng-model="fileSharingControlCtrl.isBlockBotsUpload"
+    cs-input-label="{{::'globalSettings.fileSharingControl.integrationAndBots'|translate}}"
+    ng-disabled="!fileSharingControlCtrl.isFileSharingControlSettingLoaded || !fileSharingControlCtrl.isProPackPurchased"/>
+</div>
