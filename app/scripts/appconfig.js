@@ -3900,7 +3900,7 @@
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<context-field-modal existing-field-ids="$resolve.existingFieldIds" callback="$resolve.callback" existing-field-data="$resolve.existingFieldData" in-use="$resolve.inUse" dismiss="$dismiss()" has-context-expanded-types-toggle="$resolve.hasContextExpandedTypesToggle" class="context-modal"></context-field-modal>',
+                template: '<context-field-modal existing-field-ids="$resolve.existingFieldIds" callback="$resolve.callback" existing-field-data="$resolve.existingFieldData" in-use="$resolve.inUse" dismiss="$dismiss()" class="context-modal"></context-field-modal>',
               },
             },
             params: {
@@ -3908,7 +3908,6 @@
               existingFieldData: {},
               inUse: false,
               callback: function () {},
-              hasContextExpandedTypesToggle: false,
             },
             resolve: {
               existingFieldIds: /* @ngInject */ function ($stateParams) {
@@ -3923,16 +3922,13 @@
               callback: /* @ngInject */ function ($stateParams) {
                 return $stateParams.callback;
               },
-              hasContextExpandedTypesToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasContextExpandedTypes);
-              },
             },
           })
           .state('context-fields-sidepanel', {
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                template: '<context-fields-sidepanel field="$resolve.field" process="$resolve.process" callback="$resolve.callback" has-context-expanded-types-toggle="$resolve.hasContextExpandedTypesToggle"></context-fields-sidepanel>',
+                template: '<context-fields-sidepanel field="$resolve.field" process="$resolve.process" callback="$resolve.callback"></context-fields-sidepanel>',
               },
               'header@context-fields-sidepanel': {
                 templateUrl: 'modules/context/fields/sidepanel/hybrid-context-fields-sidepanel-header.html',
@@ -3943,7 +3939,6 @@
               field: {},
               process: function () {},
               callback: function () {},
-              hasContextExpandedTypesToggle: false,
             },
             resolve: {
               field: /* @ngInject */ function ($stateParams) {
@@ -3954,9 +3949,6 @@
               },
               callback: /* @ngInject */ function ($stateParams) {
                 return $stateParams.callback;
-              },
-              hasContextExpandedTypesToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasContextExpandedTypes);
               },
               displayName: translateDisplayName('common.overview'),
             },

@@ -67,7 +67,6 @@ class FieldModalCtrl implements ng.IComponentController {
   public optionRadios: Object[];
   public uniqueOptionCheckPassed: boolean = true;
   public nonEmptyOptionCheckPassed: boolean = true;
-  public hasContextExpandedTypesToggle: boolean;
   public inactiveOptionsList: IOption[] = [];
   public existingFieldOptionsList: IOption[] = [];
   public firstReordering: boolean = true;
@@ -103,9 +102,7 @@ class FieldModalCtrl implements ng.IComponentController {
     this.dataTypeApiMap[this.$translate.instant('context.dictionary.dataTypes.double')] = 'double';
     this.dataTypeApiMap[this.$translate.instant('context.dictionary.dataTypes.integer')] = 'integer';
     this.dataTypeApiMap[this.$translate.instant('context.dictionary.dataTypes.string')] = 'string';
-    if (this.hasContextExpandedTypesToggle) {
-      this.dataTypeApiMap[this.$translate.instant('context.dictionary.dataTypes.enumString')] = 'string';
-    }
+    this.dataTypeApiMap[this.$translate.instant('context.dictionary.dataTypes.enumString')] = 'string';
 
     // map encrypted type to value that is accepted by api
     this.classificationApiMap = {};
@@ -508,7 +505,7 @@ class FieldModalCtrl implements ng.IComponentController {
   }
 
   public isSingleSelectCheckPassed(): boolean {
-    if (this.hasContextExpandedTypesToggle && this.fieldData.dataTypeUI === this.$translate.instant('context.dictionary.dataTypes.enumString')) {
+    if (this.fieldData.dataTypeUI === this.$translate.instant('context.dictionary.dataTypes.enumString')) {
       return this.isMinimumOptionsSet() && this.uniqueOptionCheckPassed && this.nonEmptyOptionCheckPassed && this.isNotInSingleSelectEditingMode();
     }
     return true;
@@ -671,7 +668,7 @@ class FieldModalCtrl implements ng.IComponentController {
   }
 
   public displaySingleSelectOptions() {
-    return this.hasContextExpandedTypesToggle && this.fieldData.dataTypeUI === this.$translate.instant('context.dictionary.dataTypes.enumString');
+    return this.fieldData.dataTypeUI === this.$translate.instant('context.dictionary.dataTypes.enumString');
   }
 
   public isDisabledWhenInUse() {
@@ -687,7 +684,6 @@ export class FieldModalComponent implements ng.IComponentOptions {
     existingFieldData: '<',
     callback: '<',
     dismiss: '&',
-    hasContextExpandedTypesToggle: '<',
     inUse: '<',
   };
 }
