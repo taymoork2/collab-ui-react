@@ -65,7 +65,6 @@ describe('field modal component', () => {
         existingFieldIds: 'existingFieldIds',
         callback: 'callback()',
         dismiss: 'dismiss()',
-        hasContextExpandedTypesToggle: true,
         inUse: false,
       });
     });
@@ -255,7 +254,6 @@ describe('field modal component', () => {
           existingFieldIds: 'existingFieldIds',
           callback: 'callback()',
           dismiss: 'dismiss()',
-          hasContextExpandedTypesToggle: false,
         });
 
         expect(Object.keys(this.controller.dataTypeApiMap)).toEqual([
@@ -778,7 +776,6 @@ describe('field modal component', () => {
         existingFieldIds: [this.existingField.id],
         callback: 'callback()',
         dismiss: 'dismiss()',
-        hasContextExpandedTypesToggle: true,
       });
 
       this.findElementWithContent = (parent, elementType, content) => {
