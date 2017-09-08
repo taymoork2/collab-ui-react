@@ -7103,6 +7103,7 @@
     "embedCode": "Embed Code",
     "virtualAssistantDesc": "Select a preconfigured Customer Virtual Assistant who provides initial automated support in your customer chat experience",
     "virtualAssistantWelcomeMessage": "Hello, how can I help you today?",
+    "virtualAssistantWelcomeMessageHelp": "The Customer Virtual Assistant only says this message to start a chat where the customer doesn’t enter their question through the customer information form first.",
     "profileDesc": "Configure how your company or your agent is visually represented",
     "profile_org_info": "Use a single profile to represent all agents in your organization.",
     "profile_agent_info": "Use unique profiles to represent the different agents in your organization.",
