@@ -209,6 +209,16 @@ var auth = {
     pass: 'Cisco@1234!',
     org: '2381e2e2-e912-4d33-8fe2-021216906eb9',
   },
+  'huron-ui-test-partner-h-i1484': {
+    user: 'huron.ui.test.partner+hi1484@gmail.com',
+    pass: 'Cisco@1234!',
+    org: '2381e2e2-e912-4d33-8fe2-021216906eb9',
+  },
+  'huron-ui-test-partner-h-i1238': {
+    user: 'huron.ui.test.partner+hi1238@gmail.com',
+    pass: 'Cisco@1234!',
+    org: '2381e2e2-e912-4d33-8fe2-021216906eb9',
+  },
   'huron-ui-test-partner-prod': {
     user: 'huron.ui.test.partner+production@gmail.com',
     pass: 'Cisco@1234!',

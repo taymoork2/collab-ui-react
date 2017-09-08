@@ -5,9 +5,8 @@ import { CallSpeedDialsPage } from '../../pages/callSpeedDials.page';
 
 const CallUser = new CallUserPage();
 const SpeedDialsPage = new CallSpeedDialsPage();
-const now = Date.now();
 
-/* globals LONG_TIMEOUT, manageUsersPage, navigation, users, telephony */
+/* globals, navigation, users, telephony */
 describe('Huron Functional: user-features', () => {
   const customer = huronCustomer({
     test: 'user-features',
