@@ -43,7 +43,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
   public supportsAvrilVoicemailMailbox: boolean = false;
   public hI1484: boolean;
   public hasPendingCallLicenses: boolean = false;
-
+  public avrilI1559: boolean = false;
   public huronSettingsData: HuronSettingsData;
 
   /* @ngInject */
@@ -128,6 +128,9 @@ class HuronSettingsCtrl implements ng.IComponentController {
 
     this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484)
       .then(result => this.hI1484 = result);
+
+    this.FeatureToggleService.avrilI1559GetStatus()
+      .then(result => this.avrilI1559 = result);
 
     return this.$q.resolve();
   }

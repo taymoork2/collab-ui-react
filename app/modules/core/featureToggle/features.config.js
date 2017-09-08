@@ -215,5 +215,6 @@ module.exports = {
   atlasRolesAndSecurity: 'atlas-roles-and-security',
   csdmMultipleDevicesPerPlace: 'csdm-multiple-devices-per-place',
   avrilI1558: 'avril-i1558',
+  avrilI1559: 'avril-i1559',
   hI1474: 'h-i1474',
 };

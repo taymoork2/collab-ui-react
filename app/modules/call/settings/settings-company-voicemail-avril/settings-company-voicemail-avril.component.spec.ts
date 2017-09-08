@@ -16,7 +16,18 @@ describe('Component: companyVoicemailAvril', () => {
   const AVRIL_FEATURES = new AvrilSiteFeatures();
   const USE_TLS_CHECKBOX = 'input#useTLS';
   const ENABLE_OTP_CHECKBOX = 'input#enableOTP';
-
+  const avrilFeatures = new AvrilSiteFeatures({
+    VM2E: false,
+    VM2E_PT: false,
+    VMOTP: true,
+    VM2E_TLS: true,
+    VM2T: false,
+    VM2E_Attachment: false,
+    VM2E_Transcript: false,
+    VM2S: false,
+    VM2S_Attachment: false,
+    VM2S_Transcript: false,
+  });
   beforeEach(function() {
     this.initModules(companyVoicemailAvrilModule);
     this.injectDependencies(
@@ -106,17 +117,11 @@ describe('Component: companyVoicemailAvril', () => {
     });
 
     it('should call onChangeFn when an external number is chosen', function() {
-      const avrilFeatures = new AvrilSiteFeatures({
-        VM2E: false,
-        VM2E_PT: false,
-        VMOTP: true,
-        VM2E_TLS: true,
-      });
       this.view.find(VOICEMAIL_TOGGLE).click();
       expect(this.view).toContainElement(EXTERNAL_VM_CHECKBOX);
       this.view.find(EXTERNAL_VM_CHECKBOX).click();
       this.view.find(COMPANY_NUMBER_SELECT).find(DROPDOWN_OPTIONS).get(0).click();
-      expect(this.$scope.onChangeFn.calls.argsFor(2)).toEqual(['+19725551212', 'false', true, avrilFeatures]);
+      expect(this.$scope.onChangeFn.calls.argsFor(2)).toEqual(['+19725551212', 'false', true, AVRIL_FEATURES]);
     });
   });
 
@@ -128,13 +133,8 @@ describe('Component: companyVoicemailAvril', () => {
     });
 
     it('should show Email Attachment radios, use TLS checkbox and call onChangeFn when Voicemail to Email is checked', function() {
-      const avrilFeatures = new AvrilSiteFeatures({
-        VM2E: true,
-        VM2E_PT: false,
-        VMOTP: true,
-        VM2E_TLS: true,
-      });
-
+      avrilFeatures.VM2E = true;
+      avrilFeatures.VM2E_PT = false;
       this.view.find(VOICEMAIL_TOGGLE).click();
       expect(this.view).toContainElement(VOICEMAIL_TO_EMAIL_CHECKBOX);
       this.view.find(VOICEMAIL_TO_EMAIL_CHECKBOX).click();
@@ -148,13 +148,8 @@ describe('Component: companyVoicemailAvril', () => {
     });
 
     it('should call onChangeFn when Email Notification without Attachment is checked', function() {
-      const avrilFeatures = new AvrilSiteFeatures({
-        VM2E: false,
-        VM2E_PT: true,
-        VMOTP: true,
-        VM2E_TLS: true,
-      });
-
+      avrilFeatures.VM2E = false;
+      avrilFeatures.VM2E_PT = true;
       this.view.find(VOICEMAIL_TOGGLE).click();
       expect(this.view).toContainElement(VOICEMAIL_TO_EMAIL_CHECKBOX);
       this.view.find(VOICEMAIL_TO_EMAIL_CHECKBOX).click();
@@ -167,13 +162,9 @@ describe('Component: companyVoicemailAvril', () => {
     });
 
     it('should call onChangeFn when use TLS is unchecked', function() {
-      const avrilFeatures = new AvrilSiteFeatures({
-        VM2E: true,
-        VM2E_PT: false,
-        VMOTP: true,
-        VM2E_TLS: false,
-      });
-
+      avrilFeatures.VM2E = true;
+      avrilFeatures.VM2E_TLS = false;
+      avrilFeatures.VM2E_PT = false,
       this.view.find(VOICEMAIL_TOGGLE).click();
       expect(this.view).toContainElement(VOICEMAIL_TO_EMAIL_CHECKBOX);
       this.view.find(VOICEMAIL_TO_EMAIL_CHECKBOX).click();

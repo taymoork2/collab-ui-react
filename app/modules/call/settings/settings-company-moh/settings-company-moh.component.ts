@@ -1,4 +1,4 @@
-import { IOption } from 'modules/huron/dialing/dialing.service';
+import { IOption } from 'modules/huron/dialing';
 
 class CompanyMediaOnHoldCtrl implements ng.IComponentController {
   public companyMoh: string;
