@@ -51,7 +51,14 @@ class DeviceList implements ng.IComponentController {
           this.loadMore(true);
         });
         gridApi.core.on.sortChanged($scope, (_grid, sortColumns) => {
-          const sortColumn = _.first(sortColumns);
+          let sortedSortColumns = sortColumns;
+          if (sortColumns.length > 1) {
+            sortedSortColumns = _.orderBy(sortColumns, 'sort.priority', 'desc');
+            _.forEach(_.tail(sortedSortColumns), (columnToUnsort) => {
+              columnToUnsort.sort = {};
+            });
+          }
+          const sortColumn = _.first(sortedSortColumns);
           if (sortColumn) {
             this.sortOrderChanged({
               field: sortColumn.field || '',
@@ -70,24 +77,22 @@ class DeviceList implements ng.IComponentController {
       }, {
         field: 'displayName',
         displayName: this.$translate.instant('spacesPage.nameHeader'),
-        sort: {
-          direction: 'asc',
-          priority: 1,
-        },
-        sortCellFiltered: true,
+        suppressRemoveSort: true,
         cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.expandDevice(row.entity)" cell-value="row.entity.displayName"></cs-grid-cell>',
       }, {
         field: 'connectionStatus',
         displayName: this.$translate.instant('spacesPage.statusHeader'),
         cellTemplate: this.getTemplate('_statusTpl'),
-        sort: {
+        sort: { // This has no effect on the actual sorting, but makes the grid reflect the default sort in searchObject.ts
           direction: 'asc',
           priority: 0,
         },
+        suppressRemoveSort: true,
       }, {
         field: 'product',
         displayName: this.$translate.instant('spacesPage.typeHeader'),
         cellTemplate: this.getTemplate('_productTpl'),
+        suppressRemoveSort: true,
       }],
     };
   }

@@ -48,6 +48,7 @@ export class SearchObject {
   public static create(search: string): SearchObject {
     const sobject = new SearchObject();
     sobject.query = search;
+    sobject.setSortOrder(Aggregate[Aggregate.connectionStatus], 'asc');
 
     // return subject;
     sobject.tokenizedQuery = _.chain(search)
