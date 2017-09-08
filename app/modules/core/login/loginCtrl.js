@@ -64,7 +64,7 @@
           CacheWarmUpService.warmUpCaches();
           $interval(function () {
             CacheWarmUpService.warmUpCaches();
-          }, 240000);
+          }, 100000);
 
           if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {
             $state.go('firsttimewizard');
