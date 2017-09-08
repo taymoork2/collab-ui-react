@@ -604,6 +604,10 @@ export class Config {
     return this.LocalStorage.get(this.TEST_ENV_CONFIG) === 'e2e-prod';
   }
 
+  public forceIntegrationForE2E(): boolean {
+    return this.LocalStorage.get(this.TEST_ENV_CONFIG) === 'e2e-integration';
+  }
+
   public isCfe(): boolean {
     return !this.forceProdForE2E() && this.getCurrentHostname() === this.hostnameConfig.CFE;
   }
@@ -623,7 +627,7 @@ export class Config {
   }
 
   public isIntegration(): boolean {
-    return !this.forceProdForE2E() && this.getCurrentHostname() === this.hostnameConfig.INTEGRATION;
+    return !this.forceProdForE2E() && (this.getCurrentHostname() === this.hostnameConfig.INTEGRATION || this.forceIntegrationForE2E());
   }
 
   public isProd(): boolean {
