@@ -8,8 +8,6 @@ module.exports = {
   atlasCareChatAssistant: 'care-chat-assistant',
   atlasCareChatToVideoTrials: 'care-chat-to-video-trials',
   atlasCareAutomatedRouteTrials: 'care-automated-routing',
-  atlasContextServiceTrials: 'atlas-context-service-trials',
-  atlasContextExpandedTypes: 'atlas-context-expanded-types',
   atlasDarling: 'atlas-darling',
   atlasBlockExternalCommunicationSettings: 'atlas-block-external-communication-settings',
   atlasFileSharingControlSettings: 'atlas-file-sharing-control-settings',

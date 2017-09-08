@@ -51,6 +51,7 @@ describe('Huron Functional: places-features', () => {
       });
       it('should go to Assign Numbers section and select an extension', () => {
         utils.click(CallPlaces.nxtBtn2);
+        utils.waitForPresence(CallPlaces.dropdownSelection);
         utils.selectDropdown('.csSelect-container[name="internalNumber"]', '304');
       });
       it('should go to a final setup patch with a QR', () => {

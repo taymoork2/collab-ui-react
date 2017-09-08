@@ -34,11 +34,13 @@ eg. `yarn start -- --noopen` passes the `--noopen` argument to our `start` task
 ### `yarn start`
 
 * Alias for `yarn serve`
+* Can opt-out of linting with `--env.nolint`
 
 ### `yarn test`
 
 * Alias for `yarn ktest-all`
 * Runs parallel karma unit tests with `karma.conf.js`
+* Can opt-in to linting with `--env.lint`
 
 ## Custom Scripts
 

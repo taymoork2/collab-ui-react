@@ -152,21 +152,23 @@ describe('Huron Functional: first-time-wizard', () => {
     });
   });
 
-  xdescribe('Voicemail settings', () => {
+  describe('Voicemail settings', () => {
     it('should default to not having External Voicemail Access', () => {
-      utils.scrollIntoView(wizard.companyVoicemailToggle);
+      utils.click(wizard.scrollToBottomButton);
       expect(utils.getCheckboxVal(wizard.companyVoicemailToggle)).toBeFalsy();
     });
     it('should enable voicemail toggle', () => {
+      utils.scrollBottom('.modal');
       utils.setCheckboxIfDisplayed(wizard.companyVoicemailToggle, true, 1000);
     });
     it('should have two blank checkbox options', () => {
+      utils.scrollIntoView(callSettings.voicemailToEmailCheckBox);
       expect(utils.getCheckboxVal(callSettings.externalVoicemailCheckBox)).toBeFalsy();
       expect(utils.getCheckboxVal(callSettings.voicemailToEmailCheckBox)).toBeFalsy();
     });
     it('should check External Voicemail Access box', () => {
-      utils.click(wizard.scrollToBottomButton);
       utils.setCheckboxIfDisplayed(callSettings.externalVoicemailCheckBox, true, 1000);
+      utils.scrollBottom('.modal');
     });
     it('should display a dropdown to select a phone number for external voicemail access when activated', () => {
       utils.click(wizard.voicemailDropdown);
@@ -181,13 +183,12 @@ describe('Huron Functional: first-time-wizard', () => {
     });
     it('should allow Voicemail to Email when box is checked', () => {
       utils.setCheckboxIfDisplayed(callSettings.voicemailToEmailCheckBox, true, 1000);
+      utils.scrollIntoView(wizard.voicemailEmailWithoutAttachment);
     });
     it('should default to Email notification with Attachment', () => {
-      utils.scrollIntoView(wizard.voicemailEmailWithAttachment);
       utils.click(wizard.voicemailEmailWithAttachment);
     });
     it('should click Email notification without attachment', () => {
-      utils.scrollIntoView(wizard.voicemailEmailWithoutAttachment);
       utils.click(wizard.voicemailEmailWithoutAttachment);
     });
     it('should enable save button', () => {
@@ -199,16 +200,12 @@ describe('Huron Functional: first-time-wizard', () => {
     const SUBDOMAIN = `ftwTestWizard${now}`;
     it('should click on get started button to progress to next screen', () => {
       utils.click(wizard.beginBtn);
-      utils.expectIsDisplayed(wizard.enterpriseSettingsBanner);
-      utils.expectIsNotDisplayed(wizard.checkAvailabilitySuccess);
-      utils.expectIsDisabled(wizard.checkAvailabilityBtn);
-      utils.expectIsDisabled(wizard.beginBtn);
     });
     it('should have a pop-up modal for successful save', () => {
-      utils.expectIsDisplayed(wizard.saveToaster);
-      utils.click(wizard.closeToaster);
+      notifications.assertSuccess();
     });
     it('should set up a Webex domain', () => {
+      utils.waitForPresence(wizard.checkAvailabilityBtn, 6000);
       utils.waitUntilEnabled(wizard.sipInput);
       let iter;
       for (iter = 0; iter < SUBDOMAIN.length; iter++) {

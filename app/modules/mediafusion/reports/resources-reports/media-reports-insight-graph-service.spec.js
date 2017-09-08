@@ -9,7 +9,7 @@ describe('Service: Media Reports Insight Graph Service', function () {
   vm.nodesUnavailable = vm.nodesUnavailable + ' ' + 1;
   vm.redirectCluster = 'mediaFusion.metrics.callsRedirectedCluster';
   vm.redirectCluster = vm.redirectCluster + ' ' + 5;
-  vm.bullett = 'round';
+  vm.bullett = 'images/mf_insight_16.png';
   vm.insightCloud = 'insight_cloudParticipants';
 
 
