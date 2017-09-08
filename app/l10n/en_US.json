@@ -5834,11 +5834,11 @@
       "lowAvailableClusters": "Low availability clusters",
       "clusterTakingMoreCalls": "Clusters hosting more no of calls",
       "totalMeetings": "Total Number of Meetings",
-      "meetOnPrem": "Meeting Host Type",
+      "meetOnPrem": "Resources Used for Meetings",
       "clientTypes": "Client Types",
       "clients": "Clients",
       "noOfMeet": "Number of Meetings",
-      "meetingLocationTitle": "Total Meetings by Host Type",
+      "meetingLocationTitle": "Total Meetings by Resources Used",
       "meetings": "Meetings",
       "location": "Location",
       "totalCloud": "Cloud Calls",
@@ -5866,7 +5866,10 @@
         "windows": "Windows Mobile",
         "total": "Total",
         "mac": "MAC",
-        "windowsDesk": "Windows"
+        "windowsDesk": "Windows",
+        "sparkDesktop": "Spark Desktop",
+        "sparkMobile": "Spark Mobile",
+        "sparkDevices": "Spark Devices"
       },
       "mobile": "Mobile",
       "cardDescription": {
