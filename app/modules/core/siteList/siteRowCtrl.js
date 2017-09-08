@@ -15,6 +15,8 @@ require('./_site-list.scss');
     WebExSiteRowService.initSiteRows();
     this.gridOptions = WebExSiteRowService.getGridOptions();
 
+    this.gridOptions.appScopeProvider = this;
+
     this.linkToReports = function (siteUrl) {
       $state.go('reports.webex-metrics', { siteUrl: siteUrl });
     };

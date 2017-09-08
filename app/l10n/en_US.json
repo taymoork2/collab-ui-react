@@ -5834,11 +5834,11 @@
       "lowAvailableClusters": "Low availability clusters",
       "clusterTakingMoreCalls": "Clusters hosting more no of calls",
       "totalMeetings": "Total Number of Meetings",
-      "meetOnPrem": "Meeting Host Type",
+      "meetOnPrem": "Resources Used for Meetings",
       "clientTypes": "Client Types",
       "clients": "Clients",
       "noOfMeet": "Number of Meetings",
-      "meetingLocationTitle": "Total Meetings by Host Type",
+      "meetingLocationTitle": "Total Meetings by Resources Used",
       "meetings": "Meetings",
       "location": "Location",
       "totalCloud": "Cloud Calls",
@@ -5866,7 +5866,10 @@
         "windows": "Windows Mobile",
         "total": "Total",
         "mac": "MAC",
-        "windowsDesk": "Windows"
+        "windowsDesk": "Windows",
+        "sparkDesktop": "Spark Desktop",
+        "sparkMobile": "Spark Mobile",
+        "sparkDevices": "Spark Devices"
       },
       "mobile": "Mobile",
       "cardDescription": {
@@ -7104,6 +7107,7 @@
     "embedCode": "Embed Code",
     "virtualAssistantDesc": "Select a preconfigured Customer Virtual Assistant who provides initial automated support in your customer chat experience",
     "virtualAssistantWelcomeMessage": "Hello, how can I help you today?",
+    "virtualAssistantWelcomeMessageHelp": "The Customer Virtual Assistant only says this message to start a chat where the customer doesn’t enter their question through the customer information form first.",
     "profileDesc": "Configure how your company or your agent is visually represented",
     "profile_org_info": "Use a single profile to represent all agents in your organization.",
     "profile_agent_info": "Use unique profiles to represent the different agents in your organization.",

@@ -9,8 +9,8 @@
       <button class="icon icon-trash icon-lg" ng-class="{'active' : $ctrl.isModalActive($ctrl.ModalView.Trash)}" ng-click="$ctrl.setModal($ctrl.ModalView.Trash)"></button>
     </div>
     <div class="mb-container" ng-if="$ctrl.loading">
-      <div class="mb-panel loading centered" ng-if="$ctrl.loading">
-        <i class="icon icon-spinner icon-4x"></i>
+      <div class="mb-panel centered">
+        <i class="icon icon-spinner icon-3x"></i>
       </div>
     </div>
     <div class="mb-container" ng-if="$ctrl.uploadActionInProgress()">
@@ -125,8 +125,10 @@
                 <cs-card class="full section-background download-media-card">
                   <div class="mb-row-content">
                     <div class="label-download text-left">{{$ctrl.activeMedia.filename}}</div>
-                    <button class="btn--none" ng-if="!$ctrl.mohDownloadInProgress"><i class="icon icon-download" ng-click="$ctrl.downloadFromUrl($ctrl.activeMedia)"></i></button>
-                    <button class="btn--none" ng-if="$ctrl.mohDownloadInProgress"><i class="icon icon-spinner"></i></button>
+                    <div ng-switch="$ctrl.mohDownloadInProgress" ng-hide-animate>
+                      <i class="icon icon-download" ng-switch-when="false" ng-disabled="!$ctrl.isMohFileAvailable($ctrl.activeMedia.mediaState)" ng-click="$ctrl.downloadFromUrl($ctrl.activeMedia)"></i>
+                      <i class="icon icon-spinner" ng-switch-when="true"></i>
+                    </div>
                   </div>
                 </cs-card>
               </div>

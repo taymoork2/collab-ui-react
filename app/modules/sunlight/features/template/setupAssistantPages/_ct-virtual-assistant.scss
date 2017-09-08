@@ -236,4 +236,12 @@
       line-height: 16px;
     }
   }
+
+  .bot-welcome-msg-help {
+    color: $gray-base;
+    letter-spacing: 0;
+    line-height: 1rem;
+    @include vr-spacing(mt, -0.625);
+    padding: 0rem !important;
+  }
 }
