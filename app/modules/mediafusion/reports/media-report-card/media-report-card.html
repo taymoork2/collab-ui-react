@@ -20,7 +20,7 @@
           <span class="overflow-updown-text" ng-class="{'no-display': $ctrl.parentcntrl.cardIndicator === 0 || $ctrl.headername !== $ctrl.parentcntrl.second_card_heading}">
             {{$ctrl.parentcntrl.cardIndicator}} <span><span translate='mediaFusion.metrics.inThe'></span></span> {{$ctrl.parentcntrl.timeSelected.label}}
           </span>
-          <div class="spinner-position" ng-if="!$ctrl.value && $ctrl.value !== 0">
+          <div class="spinner-position" ng-if="!$ctrl.value">
             <i class='icon icon-spinner icon-2x'></i>
           </div>
         </div>
