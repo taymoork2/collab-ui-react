@@ -40,7 +40,7 @@ class Example implements ng.IComponentController {
 // This is for example only - this is already dynamically required in atlas modules
 // templateUrl can be set to string path to html
 // eg. public templateUrl = 'modules/<path>/<to>/<file>.html';
-const templateUrl = require('!ngtemplate?module=atlas.templates!raw!./example.html');
+const templateUrl = require('!ngtemplate-loader?module=atlas.templates!raw-loader!./example.html');
 
 export class ExampleComponent implements ng.IComponentOptions {
   public controller = Example;

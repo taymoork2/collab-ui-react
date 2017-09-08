@@ -2,11 +2,17 @@ import * as provisioner from '../../provisioner/provisioner';
 import { huronCustomer } from '../../provisioner/huron/huron-customer-config';
 
 describe('Huron Functional: first-time-setup', () => {
-  const customer = huronCustomer('ftw-msg-only', null, null, null, null, true, 'NONE');
-  //huronCustomer(<customer_Name>, numberRange, users, hasPSTN, noOfLines, doFTW, offers)
+  const customerOptions = {
+    test: 'ftw-msg-only',
+    offers: ['MESSAGE'],
+    callOptions: false,
+    doFtsw: true,
+  };
+  const customer = huronCustomer(customerOptions);
+  const now = Date.now();
 
   beforeAll(done => {
-    provisioner.provisionCustomerAndLogin(customer, false).then(done);
+    provisioner.provisionCustomerAndLogin(customer).then(done);
   });
   afterAll(done => {
     provisioner.tearDownAtlasCustomer(customer.partner, customer.name).then(done);
@@ -29,27 +35,23 @@ describe('Huron Functional: first-time-setup', () => {
   });
 
   describe('Finalize first time wizard setup', () => {
-    const SUBDOMAIN = 'ftwTestWizard';
+    const SUBDOMAIN = `ftwTestWizard${now}`;
     it('should click on get started button to progress to next screen', () => {
       utils.click(wizard.beginBtn);
-      utils.expectIsDisplayed(wizard.enterpriseSettingsBanner);
-      utils.expectIsNotDisplayed(wizard.checkAvailabilitySuccess);
-      utils.expectIsDisabled(wizard.checkAvailabilityBtn);
-      utils.expectIsDisabled(wizard.beginBtn);
+    });
+    it('should clear input for Webex domain on Cancel', () => {
+      utils.sendKeys(wizard.sipInput, SUBDOMAIN);
+      utils.click(wizard.cancelBtn);
     });
     it('should set up a Webex domain', () => {
-      utils.waitUntilEnabled(wizard.sipInput);
-      let iter;
-      for (iter = 0; iter < SUBDOMAIN.length; iter++) {
-        utils.sendKeys(wizard.sipInput, SUBDOMAIN.charAt(iter));
-      };
+      utils.sendKeys(wizard.sipInput, SUBDOMAIN);
     });
     it('should check availability of domain', () => {
       utils.click(wizard.checkAvailabilityBtn);
       utils.expectIsDisplayed(wizard.checkAvailabilitySuccess);
     });
     it('should click Next button', () => {
-      utils.waitUntilEnabled(wizard.beginBtn)
+      utils.waitUntilEnabled(wizard.beginBtn, 6000)
         .then(() => utils.click(wizard.beginBtn));
     });
     it('should land on a finalized page', () => {

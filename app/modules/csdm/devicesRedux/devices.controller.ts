@@ -6,13 +6,17 @@ import { Notification } from 'modules/core/notifications';
 require('./_devices.scss');
 
 export class DevicesCtrl {
-
   public anyDevicesOrCodesLoaded = true; //TODO remove
   public searchMinimized = true;
   public searchInteraction = new SearchInteraction();
   private _searchString: string = '';
+  private _emptydatasource = false;
+  private _emptysearchresult = false;
+  public issearching = false;
   private _searchResult: SearchResult;
   private _searchObject: SearchObject;
+  public licenseError: string;
+
 
   //region for add device/place button
   private showPersonal = false;
@@ -39,12 +43,22 @@ export class DevicesCtrl {
   /* @ngInject */
   constructor(
     private $modal: IToolkitModalService,
+    AccountOrgService,
     private DeviceExportService,
     private $translate: ng.translate.ITranslateService,
     private Notification: Notification,
     private WizardFactory, private $state, private FeatureToggleService, private $q, private Userservice, private ServiceDescriptorService, private Authinfo) {
-    this.searchResult = { aggregations: {}, hits: { hits: [], total: 0 } };
     this.initForAddButton();
+    AccountOrgService.getAccount(Authinfo.getOrgId())
+      .then((response) => {
+        const hasNoSuspendedLicense = !!_.find(response.data.accounts, {
+          licenses: [{
+            offerName: 'SD',
+            status: 'SUSPENDED',
+          }],
+        });
+        this.licenseError = hasNoSuspendedLicense ? $translate.instant('spacesPage.licenseSuspendedWarning') : '';
+      });
   }
 
   get searchResult(): SearchResult {
@@ -54,18 +68,24 @@ export class DevicesCtrl {
   set searchResult(value: SearchResult) {
     this._searchResult = value;
   }
+  public initializing() {
+    return !(this._searchObject || this._searchResult);
+  }
+
+  public showresult() {
+    return !this.initializing() && !this.emptydatasource() && !this.emptysearchresult();
+  }
+  public emptysearchresult() {
+    return this._emptysearchresult;
+  }
+
+  public emptydatasource() {
+    return this._emptydatasource;
+  }
 
   get searchObject(): SearchObject {
     return this._searchObject;
   }
-
-  // set search(value: string) {
-  //   this._searchString = value;
-  // }
-  //
-  // get search() {
-  //   return this._searchString;
-  // }
 
   public $onInit(): void {
 
@@ -131,6 +151,9 @@ export class DevicesCtrl {
 
   public searchResultChanged(result: SearchResult) {
     this._searchResult = result;
+    this._emptydatasource = (this._searchString === '') && (this._searchResult && this._searchResult.hits.total === 0);
+    this._emptysearchresult = (this._searchString !== '') && (this._searchResult && this._searchResult.hits.total === 0);
+    this.issearching = false;
     // this._searchResult.splice(0, this._searchResult.length);
     // if (result && result.length) {
     //   Array.prototype.push.apply(this._searchResult, result);

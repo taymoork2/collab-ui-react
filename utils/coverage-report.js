@@ -1,30 +1,35 @@
-var _ = require('lodash');
-var glob = require('glob');
-var istanbul = require('istanbul');
-var loadCoverage = require('remap-istanbul/lib/loadCoverage');
-var remap = require('remap-istanbul/lib/remap');
-var reporter = new istanbul.Reporter(undefined, 'test/coverage/combined/');
+const glob = require('glob');
+const fs = require('fs');
+const path = require('path');
+const karmaPath = path.resolve('./karma');
 
-var NO_SOURCE_MAP = 'Error: Could not find source map for:';
-var JS_SUFFIX = '.js"';
-var EXCLUDING = 'Excluding:';
+const istanbulCreateReporter = require('istanbul-api').createReporter;
+const istanbulCoverage = require('istanbul-lib-coverage');
 
-glob('test/coverage/json/*.json', {}, function (er, files) {
-  var collector = remap(loadCoverage(files), {
-    exclude: 'karma',
-    warn: function (_msg) {
-      var msg = _.toString(_msg);
-      if (_.includes(msg, NO_SOURCE_MAP)) {
-        // Don't warn for javascript files - they won't have a source
-        if (!_.includes(msg, JS_SUFFIX)) {
-          console.warn(msg);
-        }
-      } else if (!_.includes(msg, EXCLUDING)) {
-        console.warn(msg);
-      }
-    },
+const map = istanbulCoverage.createCoverageMap();
+const reporter = istanbulCreateReporter();
+reporter.dir = './test/coverage/combined/';
+
+glob('./test/coverage/json/*.json', {}, function (error, files) {
+  if (error) {
+    throw new Error(error);
+  }
+  if (!Array.isArray(files)) {
+    throw new Error('Coverage files not found');
+  }
+
+  files.forEach(file => {
+    const coverageJson = JSON.parse(fs.readFileSync(file, 'UTF-8'));
+    map.merge(coverageJson);
+  });
+
+  map.filter((path) => {
+    if (path.startsWith(karmaPath)) {
+      return false;
+    }
+    return true;
   });
 
   reporter.addAll(['html', 'cobertura']);
-  reporter.write(collector, true, _.noop);
+  reporter.write(map);
 });

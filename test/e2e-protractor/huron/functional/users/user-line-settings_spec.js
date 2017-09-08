@@ -12,7 +12,7 @@ const callSettingsPage = new CallSettingsPage();
 
 /* globals LONG_TIMEOUT, manageUsersPage, navigation, users, telephony */
 describe('Huron Functional: user-line-settings', () => {
-  const customer = huronCustomer('user-line-settings');
+  const customer = huronCustomer({ test: 'user-line-settings' });
   const USER_EMAIL = `huron.ui.test.partner+${customer.name}_${now}@gmail.com`;
   const USER_FIRST_NAME = 'Darth';
   const USER_LAST_NAME = 'Vader';

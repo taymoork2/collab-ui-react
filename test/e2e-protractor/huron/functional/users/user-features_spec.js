@@ -9,7 +9,7 @@ const now = Date.now();
 
 /* globals LONG_TIMEOUT, manageUsersPage, navigation, users, telephony */
 describe('Huron Functional: user-features', () => {
-  const customer = huronCustomer('user-features');
+  const customer = huronCustomer({ test: 'user-features' });
   const USER_EMAIL = `huron.ui.test.partner+${customer.name}_${now}@gmail.com`;
   const USER_FIRST_NAME = 'Darth';
   const USER_LAST_NAME = 'Vader';

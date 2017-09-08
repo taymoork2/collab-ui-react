@@ -43,14 +43,14 @@ export function addPstnNumbers(token, customerNumbers, uuid) {
 }
 
 export function setupPSTN(customer) {
-  if (customer.pstn) {
+  if (customer.callOptions.pstn) {
     return provisionerHelper.getToken(customer.partner)
       .then(token => {
         console.log('Creating PSTN customer');
         var obj = {};
-        obj.firstName = customer.cmiCustomer.name;
+        obj.firstName = customer.callOptions.cmiCustomer.name;
         obj.email = customer.trial.customerEmail;
-        obj.uuid = customer.cmiCustomer.uuid;
+        obj.uuid = customer.callOptions.cmiCustomer.uuid;
         obj.name = customer.name;
         obj.resellerId = helper.auth[customer.partner].org;
         const pstnCustomer = new PstnCustomer(obj);
@@ -58,18 +58,18 @@ export function setupPSTN(customer) {
           .then(() => {
             console.log('Adding e911 signature to customer');
             obj = {};
-            obj.firstName = customer.cmiCustomer.name;
+            obj.firstName = customer.callOptions.cmiCustomer.name;
             obj.email = customer.trial.customerEmail;
             obj.name = customer.name;
-            obj.e911Signee = customer.cmiCustomer.uuid;
+            obj.e911Signee = customer.callOptions.cmiCustomer.uuid;
             const pstnCustomerE911 = new PstnCustomerE911Signee(obj);
             return putE911Signee(token, pstnCustomerE911)
               .then(() => {
                 console.log('Adding phone numbers to customer');
                 obj = {};
-                obj.numbers = customerNumbersPSTN(customer.pstnLines);
+                obj.numbers = customer.callOptions.pstn;
                 const pstnNumbersOrders = new PstnNumbersOrders(obj);
-                return addPstnNumbers(token, pstnNumbersOrders, customer.cmiCustomer.uuid);
+                return addPstnNumbers(token, pstnNumbersOrders, customer.callOptions.cmiCustomer.uuid);
               });
           });
       });
@@ -77,14 +77,16 @@ export function setupPSTN(customer) {
 }
 
 export function customerNumbersPSTN(number) {
-  var prevNumber = 0;
-  var pstnNumbers = [];
-  for (var i = 0; i < number; i++) {
-    var numbers = numberPSTN(prevNumber);
-    prevNumber = numbers[1];
-    pstnNumbers.push(numbers[0]);
+  if (number) {
+    var prevNumber = 0;
+    var pstnNumbers = [];
+    for (var i = 0; i < number; i++) {
+      var numbers = numberPSTN(prevNumber);
+      prevNumber = numbers[1];
+      pstnNumbers.push(numbers[0]);
+    }
+    return pstnNumbers;
   }
-  return pstnNumbers;
 }
 
 export function numberPSTN(prevNumber) {

@@ -162,16 +162,16 @@ export class MediaMgrCtrl implements ng.IComponentController {
       const data = response.data;
       const fileName = mohFile.filename;
       const file = new this.$window.Blob([data], {
-        type: 'application/audio',
+        type: 'application/octet-stream',
       });
       if (this.$window.navigator.msSaveOrOpenBlob) {
         // IE
         this.$window.navigator.msSaveOrOpenBlob(file, fileName);
       } else if (!('download' in this.$window.document.createElement('a'))) {
-        // Safari…
+        // Pre-10 Safari
         this.$window.location.href = this.$window.URL.createObjectURL(file);
       } else {
-        const downloadContainer = angular.element('<div data-tap-disabled="true"><a></a></div>');
+        const downloadContainer = angular.element('<div><a></a></div>');
         const downloadLink = angular.element(downloadContainer.children()[0]);
         downloadLink.attr({
           href: this.$window.URL.createObjectURL(file),

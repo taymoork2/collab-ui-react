@@ -48,5 +48,6 @@ export class CallPlacesPage {
     this.autoAnsSct = element(by.cssContainingText('.section__title', 'Auto Answer'));
     this.sharedLineSct = element(by.cssContainingText('.section__title', 'Shared Line'));
     this.sideNavClose = element(by.css('button.panel-close'));
+    this.dropdownSelection = element(by.css('.ng-not-empty[name="internalNumber"]'));
   }
 };
