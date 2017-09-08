@@ -50,20 +50,22 @@ module.exports = function (config) {
       stats: 'errors-only',
     },
 
-    coverageReporter: {
-      dir: 'test/coverage/',
-      reporters: [{
-        type: 'json',
-        subdir: 'json',
-        file: shimFileName + '.json',
-      }],
+    coverageIstanbulReporter: {
+      'fixWebpackSourcePaths': true,
+      'dir': 'test/coverage/',
+      'reports': ['json'],
+      'report-config': {
+        json: {
+          file: 'json/' + shimFileName + '.json',
+        },
+      },
     },
 
     webpackServer: {
       noInfo: true, // please don't spam the console when running in karma!
     },
 
-    reporters: ['progress', 'coverage'],
+    reporters: ['progress', 'coverage-istanbul'],
 
     port: 9876,
 

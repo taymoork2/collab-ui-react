@@ -180,10 +180,6 @@ describe('Component: fields sidepanel', function () {
     });
 
     describe('getOptionsCount', function () {
-      beforeEach(function () {
-        ctrl.hasContextExpandedTypesToggle = true;
-      });
-
       it('should return 0 for empty field', function () {
         expect(ctrl.getOptionCount()).toBe(0);
       });
@@ -251,7 +247,6 @@ describe('Component: fields sidepanel', function () {
       var baseDataTypeDefinition;
 
       beforeEach(function () {
-        ctrl.hasContextExpandedTypesToggle = true;
         ctrl.field = baseField;
 
         baseDataTypeDefinition = {
@@ -301,7 +296,6 @@ describe('Component: fields sidepanel', function () {
       var dataTypeDefinition = { a: 'a', b: 'b' };
       beforeEach(function () {
         ctrl.field.dataTypeDefinition = _.cloneDeep(dataTypeDefinition);
-        ctrl.hasContextExpandedTypesToggle = true;
       });
 
       it('should return the expected object based on the field', function () {
@@ -346,7 +340,6 @@ describe('Component: fields sidepanel', function () {
       membershipReturnSpy.and.returnValue(this.$q.resolve([]));
       this.compileComponentNoApply('contextFieldsSidepanel', {
         field: field,
-        hasContextExpandedTypesToggle: false,
       });
 
       this.getController = function () {
@@ -444,8 +437,6 @@ describe('Component: fields sidepanel', function () {
           dataTypeUI: 'Single Select',
           dataTypeDefinition: { type: 'enum' },
         };
-
-        this.$scope.hasContextExpandedTypesToggle = true;
 
         membershipReturnSpy.and.returnValue(this.$q.resolve([fieldToUse.id]));
 

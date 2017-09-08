@@ -13,7 +13,10 @@ const now = Date.now();
 /* globals LONG_TIMEOUT, manageUsersPage, navigation, users, telephony */
 
 describe('Huron Functional: adding-huntgroup', () => {
-  const customer = huronCustomer('adding-huntgroup');
+  const customer = huronCustomer({
+    test: 'adding-huntgroup',
+    users: 3,
+  });
   beforeAll(done => {
     provisioner.provisionCustomerAndLogin(customer)
       .then(done);
@@ -249,7 +252,7 @@ describe('Huron Functional: adding-huntgroup', () => {
 
     it('should input pilot number', () => {
       utils.sendKeys(addHuntGroup.inputNumber, '310');
-      browser.driver.sleep(500);
+      browser.driver.sleep(1000);
       utils.sendKeys(addHuntGroup.inputNumber, protractor.Key.ENTER);
     });
 
@@ -270,7 +273,7 @@ describe('Huron Functional: adding-huntgroup', () => {
 
     it('should input second pilot number', () => {
       utils.sendKeys(addHuntGroup.inputNumber, '311');
-      browser.driver.sleep(500);
+      browser.driver.sleep(1000);
       utils.sendKeys(addHuntGroup.inputNumber, protractor.Key.ENTER);
     });
     it('should displays both the cards', () => {
@@ -335,7 +338,7 @@ describe('Huron Functional: adding-huntgroup', () => {
     it('should start selecting members', () => {
       utils.click(addHuntGroup.enableBtn);
       utils.sendKeys(addHuntGroup.inputMember, `${os.userInfo().username}`);
-      browser.driver.sleep(500);
+      browser.driver.sleep(1000);
       utils.sendKeys(addHuntGroup.inputNumber, protractor.Key.ENTER);
     });
 
@@ -380,7 +383,7 @@ describe('Huron Functional: adding-huntgroup', () => {
 
     it('should enter internal destination', () => {
       utils.sendKeys(addHuntGroup.inputMember, `${os.userInfo().username}`);
-      browser.driver.sleep(500);
+      browser.driver.sleep(1000);
       utils.sendKeys(addHuntGroup.inputNumber, protractor.Key.ENTER);
     });
 

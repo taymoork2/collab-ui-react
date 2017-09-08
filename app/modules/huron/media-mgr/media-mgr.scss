@@ -31,7 +31,7 @@ media-mgr {
     background-color: $gray-light-4;
     align-self: center;
     margin: 0;
-    padding: 0.25rem 0.5rem;
+    padding: 0.5rem;
 
     .label-download {
       font-family: 'CiscoSansTT Light';
@@ -40,9 +40,19 @@ media-mgr {
       align-self: center;
     }
 
+    .icon {
+      vertical-align: middle;
+    }
+
     .icon-download {
       color: $gray-base;
-      vertical-align: middle;
+      &:disabled {
+        color: $gray-light-2;
+      }
+    }
+
+    .icon-spinner {
+      color: $gray-base;
     }
   }
 
@@ -107,6 +117,10 @@ media-mgr {
       background-color: $gray-light-4;
       align-self: center;
     }
+
+    .icon-spinner {
+      color: $color-primary-base;
+    }
   }
 
   .mb-panel-left {
@@ -125,7 +139,7 @@ media-mgr {
       justify-content: space-between;
       font-family: 'CiscoSansTT Extra Light';
       text-align: end;
-      margin: .75rem .75rem .5rem .5rem;
+      margin: .5rem .75rem .5rem .5rem;
     }
 
     .nowrap {
@@ -237,15 +251,18 @@ media-mgr {
       outline: none !important;
       box-shadow: none !important;
     }
+
+    .icon-spinner {
+      color: $color-primary-base;
+    }
+
   }
 
   .searchbox .searchinput {
-    margin: 0;
     border: none;
   }
 
   .searchfilter {
-    margin: 0;
     border: none;
     width: 100%;
   }
@@ -267,8 +284,7 @@ media-mgr {
 
   .icon-msg-alignment {
     vertical-align: middle;
-    margin-right: 0.25rem;
-    margin-left: 0.25rem;
+    margin: 0rem 0.25rem 0rem 0rem;
   }
 
   .icon-trash {
@@ -283,9 +299,9 @@ media-mgr {
     color: $gray-light-1;
   }
 
-  .icon-spinner {
-    color: $color-primary-base;
-    margin: 0;
+  .btn--none.ng-animate {
+    transition: 0s none;
+    animation: 0s none;
   }
 
   .icon-error {
@@ -297,6 +313,7 @@ media-mgr {
     color: $color-primary-base;
     text-align: right;
     margin: 0;
+    padding: 0;
     &:disabled {
       color: $color-primary-lighter;
       margin: 0;
@@ -321,6 +338,7 @@ media-mgr {
 
   .progress-bar {
     margin: 6rem;
+
     .icon-exit {
       align-self: center;
       margin-left: 0.5rem;
@@ -342,9 +360,5 @@ media-mgr {
 
   .btn {
     height: 2.25rem;
-  }
-
-  .btn--none {
-    padding: 0;
   }
 }
