@@ -1,5 +1,4 @@
 import { IGridApi } from 'ui-grid';
-import { CsdmConverter } from '../../squared/devices/services/CsdmConverter';
 import { SearchObject } from '../services/search/searchObject';
 import { SearchHits } from '../services/search/searchResult';
 import { CsdmSearchService } from '../services/csdmSearch.service';
@@ -22,9 +21,7 @@ class DeviceList implements ng.IComponentController {
 
   /* @ngInject */
   constructor(private $state,
-              private $http,
               private CsdmSearchService: CsdmSearchService,
-              private CsdmConverter: CsdmConverter,
               private $templateCache,
               private $translate,
               CsdmHuronOrgDeviceService,
@@ -124,13 +121,9 @@ class DeviceList implements ng.IComponentController {
   }
 
   public expandDevice(device) {
-    this.$http.get(device.url).then((res) => {
-      const realDevice = (device.productFamily === 'Huron' || device.productFamily === 'ATA') ? this.CsdmConverter.convertHuronDevice(res.data) :
-        this.CsdmConverter.convertCloudberryDevice(res.data);
-      this.$state.go('device-overview', {
-        currentDevice: realDevice,
-        huronDeviceService: this.huronDeviceService,
-      });
+    this.$state.go('device-overview', {
+      currentDevice: device,
+      huronDeviceService: this.huronDeviceService,
     });
   }
 
