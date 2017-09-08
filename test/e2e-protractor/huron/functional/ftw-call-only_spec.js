@@ -38,11 +38,19 @@ describe('Huron Functional: first-time-setup', () => {
 
   describe('Call Settings', () => {
     describe('Time Zone and Preferred Language', () => {
-      it('should not show a time zone dropdown', () => {
-        utils.expectIsNotDisplayed(wizard.timeZoneDropdown);
+      const newPreferredLanguage = 'English (United Kingdom)';
+      const oldPreferredLanguage = 'English (United States)';
+      const newTimeZone = 'America/New York';
+      it('should change Time Zone to America/New York', () => {
+        utils.expectIsDisplayed(wizard.timeZoneDropdown);
+        utils.selectDropdown('.csSelect-container[name="timeZone"]', newTimeZone);
       });
-      it('should not show a language dropdown', () => {
-        utils.expectIsNotDisplayed(wizard.preferredLanguageDropdown);
+      it('should be able to select English (United Kingdom) from dropdown', () => {
+        utils.expectIsDisplayed(wizard.preferredLanguageDropdown);
+        utils.selectDropdown('.csSelect-container[name="preferredLanguage"]', newPreferredLanguage);
+      });
+      it('should be able to select English (United States) from dropdown', () => {
+        utils.selectDropdown('.csSelect-container[name="preferredLanguage"]', oldPreferredLanguage);
       });
     });
   });
