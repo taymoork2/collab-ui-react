@@ -4,7 +4,7 @@
   var TimingKey = require('../metrics').TimingKey;
 
   /* @ngInject */
-  function LoginCtrl($location, $rootScope, $scope, $state, $stateParams, $translate, Auth, Authinfo, Config, Log, LocalStorage, LogMetricsService, MetricsService, PageParam, SessionStorage, StorageKeys, TokenService, Utils, CacheWarmUpService) {
+  function LoginCtrl($interval, $location, $rootScope, $scope, $state, $stateParams, $translate, Auth, Authinfo, Config, Log, LocalStorage, LogMetricsService, MetricsService, PageParam, SessionStorage, StorageKeys, TokenService, Utils, CacheWarmUpService) {
     var queryParams = SessionStorage.popObject(StorageKeys.REQUESTED_QUERY_PARAMS);
     var language = LocalStorage.get('language');
 
@@ -62,6 +62,9 @@
       })
         .then(function () {
           CacheWarmUpService.warmUpCaches();
+          $interval(function () {
+            CacheWarmUpService.warmUpCaches();
+          }, 240000);
 
           if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {
             $state.go('firsttimewizard');
