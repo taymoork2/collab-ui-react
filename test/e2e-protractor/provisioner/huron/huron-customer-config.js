@@ -38,3 +38,11 @@ export function huronCustomer(huronCustomerOptions) {
   };
   return atlasCustomer(customer);
 }
+
+// CUSTOMER OBJECT
+const example = {
+  partner: 'string',
+  name: 'string',
+  email: 'string',
+
+};
