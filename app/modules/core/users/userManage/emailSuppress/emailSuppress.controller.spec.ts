@@ -27,7 +27,6 @@ describe('Controller: UserManageEmailSuppressController', function () {
       initController.apply(this);
     });
     it('should init with expected responses and default values', function () {
-      // this.$timeout.flush();
       expect(this.controller.isEmailSuppressed).toBeTruthy();
       expect(this.controller.isSparkCallEnabled).toBeTruthy();
       expect(this.controller.dataLoaded).toBeTruthy();

@@ -1,8 +1,13 @@
+interface IAdminOrgResponse {
+  ssoEnabled: boolean;
+  isOnBoardingEmailSuppressed: boolean;
+}
+
 export class EmailSettingController {
 
-  public ssoStatusLoaded: boolean = false;
-  public isEmailSuppressed: boolean = false;
-  public isEmailSuppressDisabled: boolean = false;
+  public ssoStatusLoaded = false;
+  public isEmailSuppressed = false;
+  public isEmailSuppressDisabled = false;
 
   /* @ngInject */
   constructor(
@@ -13,19 +18,17 @@ export class EmailSettingController {
       basicInfo: true,
       disableCache: true,
     };
-    this.Orgservice.getAdminOrgAsPromise(null, params).then((response: ng.IHttpResponse<{ success: boolean, ssoEnabled: boolean, isOnBoardingEmailSuppressed: boolean }>) => {
+    this.Orgservice.getAdminOrgAsPromise(null, params).then((response: ng.IHttpResponse<IAdminOrgResponse>) => {
       this.getAdminOrgHandler(response.data);
     });
   }
 
-  private getAdminOrgHandler(data: { success: boolean, ssoEnabled: boolean, isOnBoardingEmailSuppressed: boolean }) {
-    if (data.success) {
-      const ssoEnabled: boolean = data.ssoEnabled || false;
-      const isOnBoardingEmailSuppressed: boolean = data.isOnBoardingEmailSuppressed || false;
-      this.ssoStatusLoaded = true;
-      this.isEmailSuppressed = isOnBoardingEmailSuppressed;
-      this.isEmailSuppressDisabled = !ssoEnabled;
-    }
+  private getAdminOrgHandler(data: IAdminOrgResponse) {
+    const ssoEnabled = data.ssoEnabled || false;
+    const isOnBoardingEmailSuppressed = data.isOnBoardingEmailSuppressed || false;
+    this.ssoStatusLoaded = true;
+    this.isEmailSuppressed = isOnBoardingEmailSuppressed;
+    this.isEmailSuppressDisabled = !ssoEnabled;
   }
 
   public onChange(toggleValue: boolean) {

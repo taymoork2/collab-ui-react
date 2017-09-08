@@ -1,10 +1,15 @@
 import { ManageType } from '../userManage.keys';
 
+interface IAdminOrgResponse {
+  isOnBoardingEmailSuppressed: boolean;
+  licenses: [{ licenseId: string }];
+}
+
 export class UserManageEmailSuppressController implements ng.IComponentController {
 
-  public dataLoaded: boolean = false;
-  public isEmailSuppressed: boolean = false;
-  public isSparkCallEnabled: boolean = false;
+  public dataLoaded = false;
+  public isEmailSuppressed = false;
+  public isSparkCallEnabled = false;
   private manageType: string;
   private prevState: string;
   private dismiss: Function;
@@ -24,18 +29,16 @@ export class UserManageEmailSuppressController implements ng.IComponentControlle
     const params = {
       basicInfo: true,
     };
-    this.Orgservice.getAdminOrgAsPromise(null, params).then((response: ng.IHttpResponse<{ success: boolean, isOnBoardingEmailSuppressed: boolean, licenses: [{ licenseId: string }] }>) => {
-      if (response.data.success) {
-        // Check isEmailSuppressed status
-        const isOnBoardingEmailSuppressed: boolean = response.data.isOnBoardingEmailSuppressed || false;
-        this.isEmailSuppressed = isOnBoardingEmailSuppressed;
+    this.Orgservice.getAdminOrgAsPromise(null, params).then((response: ng.IHttpResponse<IAdminOrgResponse>) => {
+      // Check isEmailSuppressed status
+      const isOnBoardingEmailSuppressed = response.data.isOnBoardingEmailSuppressed || false;
+      this.isEmailSuppressed = isOnBoardingEmailSuppressed;
 
-        // Check isSparkCallEnabled status
-        this.isSparkCallEnabled = !!_.find(response.data.licenses, function (license) {
-          return _.startsWith(license.licenseId, 'CO_');
-        });
-        this.dataLoaded = true;
-      }
+      // Check isSparkCallEnabled status
+      this.isSparkCallEnabled = _.some(response.data.licenses, function (license) {
+        return _.startsWith(license.licenseId, 'CO_');
+      });
+      this.dataLoaded = true;
     });
   }
 

@@ -20,7 +20,7 @@ require('./_user-manage.scss');
     vm.onInit();
 
     var isAtlasEmailSuppressToggle = false;
-    var ManageType = require('./userManage.keys').ManageType;
+    vm.ManageType = require('./userManage.keys').ManageType;
 
     //////////////////
     function onInit() {
@@ -47,22 +47,22 @@ require('./_user-manage.scss');
         });
       } else {
         switch (vm.manageType) {
-          case ManageType.MANUAL:
+          case vm.ManageType.MANUAL:
             Analytics.trackAddUsers(Analytics.eventNames.NEXT, Analytics.sections.ADD_USERS.uploadMethods.MANUAL);
             $state.go('users.add');
             break;
 
-          case ManageType.BULK:
+          case vm.ManageType.BULK:
             Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.CSV_UPLOAD, Analytics.sections.ADD_USERS.uploadMethods.CSV);
             $state.go('users.csv');
             break;
 
-          case ManageType.ADVANCED_NO_DS:
+          case vm.ManageType.ADVANCED_NO_DS:
             Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.INSTALL_CONNECTOR, Analytics.sections.ADD_USERS.uploadMethods.SYNC);
             $state.go('users.manage.advanced.add.ob.installConnector');
             break;
 
-          case ManageType.CONVERT:
+          case vm.ManageType.CONVERT:
             $state.go('users.convert', {
               manageUsers: true,
             });
