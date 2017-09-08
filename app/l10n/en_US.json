@@ -8368,6 +8368,27 @@
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
+        },
+        "prerequisites": {
+          "title": "Hybrid Call Prerequisites",
+          "cannotReachFlagService": "Failed to read existing checkbox statuses.",
+          "steps": "Steps",
+          "expresswaySetup": {
+            "intro": "Use this checklist alongside the \"Prepare Your Environment\" chapter in the deployment guide. Make sure you complete all the prerequsites necessary for deploying the Expressway-C connector host.",
+            "openDocumentation": "Open Documentation",
+            "planCapacity": "Plan your connector capacity (dedicated or shared)",
+            "redundancy": "Deploy Expressway-C in a cluster for redundancy",
+            "followRequirements": "Follow requirements for the Expressway software",
+            "followRequirementsHelp1": "Use the minimum supported version. (See \"Management Connector Release Notes\")",
+            "followRequirementsHelp2": "Install the .OVA file by following the Cisco Expressway Virtual Machine Installation Guide.",
+            "bypassFirstTimeWizard": "Bypass the first time setup wizard",
+            "bypassFirstTimeWizardHelp1": "Choose Proceed without selecting services, paste the text from your release key email, and then continue.",
+            "configureExpresswayC": "Configure the Expressway-C",
+            "configureExpresswayCHelp1": "Use the Cisco Expressway Basic Configuration Deployment Guide for basic documentation.",
+            "configureExpresswayCHelp2": "Use the Cisco Expressway Cluster Creation and Maintenance Deployment Guide to Configure the Expressway as a master peer.",
+            "openPortOnFirewall": "Open port 443 on your firewall outbound from the Expressway-C to these domains:",
+            "openPortOnFirewallHelp1": "Obtain the details of your HTTP proxy if your organization uses one to access the internet. It must use basic or no authentication. See the hybrid services deployment documentation for support proxy options."
+          }
         }
       },
       "hybridMedia": {
