@@ -38,7 +38,7 @@
                   type="radio"
                   ng-model="umadc.manageType"
                   id="ad-manual"
-                  ng-value="'manual'"
+                  ng-value="umadc.ManageType.MANUAL"
                   cs-input-label="{{::'userManage.ad.manualLabel'|translate}}"
                   cs-input-help-text="{{'userManage.ad.manualDetails'|translate: {maxUsersInManual: umadc.maxUsersInManual} }}">
               </li>
@@ -47,7 +47,7 @@
                   type="radio"
                   ng-model="umadc.manageType"
                   id="ad-bulk"
-                  ng-value="'bulk'"
+                  ng-value="umadc.ManageType.BULK"
                   cs-input-label="{{::'userManage.ad.bulkLabel'|translate}}"
                   cs-input-help-text="{{'userManage.ad.bulkDetails'|translate: {maxUsersInCSV: umadc.maxUsersInCSV} }}">
                 <p class="csv-export-link">
@@ -62,7 +62,7 @@
                   type="radio"
                   ng-model="umadc.manageType"
                   id="ad-advanced"
-                  ng-value="'advancedDS'"
+                  ng-value="umadc.ManageType.ADVANCED_DS"
                   cs-input-label="{{::'userManage.ad.advancedLabel'|translate}}"
                   cs-input-help-text="{{::'userManage.ad.advancedDetails'|translate}}">
               </li>

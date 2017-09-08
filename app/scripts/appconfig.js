@@ -998,9 +998,7 @@
             templateUrl: 'modules/core/users/userManage/userManageActiveDir.tpl.html',
           })
           .state('users.manage.emailSuppress', {
-            controller: 'UserManageEmailSuppressController',
-            controllerAs: 'umesc',
-            templateUrl: 'modules/core/users/userManage/userManageEmailSuppress.tpl.html',
+            template: '<user-manage-email-suppress dismiss="$dismiss()"></user-manage-email-suppress>',
             params: {
               manageType: null,
               prevState: null,

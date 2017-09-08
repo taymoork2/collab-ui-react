@@ -19,6 +19,7 @@ require('./_user-manage.scss');
     vm.onInit();
 
     var isAtlasEmailSuppressToggle = false;
+    vm.ManageType = require('./userManage.keys').ManageType;
 
     //////////////////
     function onInit() {
@@ -44,15 +45,15 @@ require('./_user-manage.scss');
         });
       } else {
         switch (vm.manageType) {
-          case 'manual':
+          case vm.ManageType.MANUAL:
             $state.go('users.add');
             break;
 
-          case 'bulk':
+          case vm.ManageType.BULK:
             $state.go('users.csv');
             break;
 
-          case 'advancedDS':
+          case vm.ManageType.ADVANCED_DS:
             $state.go('users.manage.advanced.add.ob.syncStatus');
             break;
         }

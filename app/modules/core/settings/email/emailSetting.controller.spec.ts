@@ -19,9 +19,7 @@ describe('Controller: EmailSettingController', () => {
   }
 
   function initSpies() {
-    spyOn(Orgservice, 'getAdminOrg').and.callFake(function (callback) {
-      callback({ success: true, ssoEnabled: true, isOnBoardingEmailSuppressed: true });
-    });
+    spyOn(Orgservice, 'getAdminOrgAsPromise');
     spyOn(Notification, 'success');
     spyOn(Notification, 'error');
     spyOn(Notification, 'errorResponse');
@@ -48,7 +46,7 @@ describe('Controller: EmailSettingController', () => {
       });
 
       function initSpyFailure() {
-        Orgservice.getAdminOrg.and.returnValue($q.reject({}));
+        Orgservice.getAdminOrgAsPromise.and.returnValue($q.reject({}));
       }
     });
 
@@ -64,27 +62,23 @@ describe('Controller: EmailSettingController', () => {
       });
 
       function initSpySSOEnabled() {
-        Orgservice.getAdminOrg.and.callFake(function (callback) {
-          callback({ success: true, ssoEnabled: true, isOnBoardingEmailSuppressed: true });
-        });
+        Orgservice.getAdminOrgAsPromise.and.returnValue($q.resolve({ data: { success: true, ssoEnabled: true, isOnBoardingEmailSuppressed: true } }));
       }
     });
 
     describe('when getAdminOrg isOnBoardingEmailSuppressed true and sso status false', () => {
       beforeEach(inject(dependencies));
-      beforeEach(initSpySSOEnabled);
+      beforeEach(initSpySSODisabled);
       beforeEach(initController);
 
-      it('should set isEmailSuppressed true and isEmailSuppressDisabled false', () => {
+      it('should set isEmailSuppressed true and isEmailSuppressDisabled true', () => {
         expect(controller.ssoStatusLoaded).toBeTruthy();
         expect(controller.isEmailSuppressed).toBeTruthy();
         expect(controller.isEmailSuppressDisabled).toBeTruthy();
       });
 
-      function initSpySSOEnabled() {
-        Orgservice.getAdminOrg.and.callFake(function (callback) {
-          callback({ success: true, ssoEnabled: false, isOnBoardingEmailSuppressed: true });
-        });
+      function initSpySSODisabled() {
+        Orgservice.getAdminOrgAsPromise.and.returnValue($q.resolve({ data: { success: true, ssoEnabled: false, isOnBoardingEmailSuppressed: true } }));
       }
     });
   });

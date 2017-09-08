@@ -13,8 +13,7 @@ export class EmailSettingController {
       basicInfo: true,
       disableCache: true,
     };
-    this.Orgservice.getAdminOrg(this.getAdminOrgHandler.bind(this), null, params);
-    this.Orgservice.getAdminOrgAsPromise().then((response: ng.IHttpResponse<{ success: boolean, ssoEnabled: boolean, isOnBoardingEmailSuppressed: boolean }>) => {
+    this.Orgservice.getAdminOrgAsPromise(null, params).then((response: ng.IHttpResponse<{ success: boolean, ssoEnabled: boolean, isOnBoardingEmailSuppressed: boolean }>) => {
       this.getAdminOrgHandler(response.data);
     });
   }
