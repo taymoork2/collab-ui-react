@@ -6,11 +6,10 @@ describe('Component: InlineEditText', () => {
     this.injectDependencies(
       '$q',
       '$scope',
-      '$state',
-      'FeatureToggleService',
+      'ProPackService',
     );
 
-    spyOn(this.FeatureToggleService, 'getFeatureForUser').and.returnValue(this.$q.resolve(false));
+    spyOn(this.ProPackService, 'showProBadgeInHelpDesk').and.returnValue(this.$q.resolve(false));
 
     this.ESCAPE_KEY = jQuery.Event('keyup', {
       keyCode: 27,

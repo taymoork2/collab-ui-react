@@ -3490,7 +3490,7 @@
     "searchErrors": {
       "queryLimit": "query must be 200 characters or less",
       "invalidEmailLimit": "Enter only up to 5 email addresses",
-      "invalidSpaceIdLimit": "Search must be limited to less than 5 Space IDs",
+      "invalidSpaceIdLimit": "Enter only up to 5 Space IDs",
       "noMatchesFound": "No Matches Found",
       "requestFailed": "Request Failed: Tracking ID {{trackingId}}",
       "504RequestFailed": "Search Timed Out: Tracking ID {{trackingId}}"

@@ -29,7 +29,7 @@
                    <p ng-if="!ediscoverySearchCtrl.limitErrorMessage" class="cs-input__help-text search-spacing">{{ediscoverySearchCtrl.searchHelpText}}</p>
                   <div ng-class="{'search-req-msg': !ediscoverySearchCtrl.limitErrorMessage}" class="cs-input__messages" role="alert">
                     <div ng-messages="sForm.sInput.$error" class="search-limit-msg">
-                      <span ng-message="required" translate="ediscovery.searchErrors.required"></span>
+                      <span ng-message="required" translate="common.fieldRequired"></span>
                     </div>
                     <span ng-if="ediscoverySearchCtrl.limitErrorMessage" class="search-limit-msg">{{ediscoverySearchCtrl.limitErrorMessage}}</span>
                   </div>
