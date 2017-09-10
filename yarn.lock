@@ -168,8 +168,8 @@
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/@types/angular/-/angular-1.6.32.tgz#fc791aad038227d9413eb5e552993e1076f8a509"
 
 "@types/google-libphonenumber@^7.4.10":
-  version "7.4.11"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/@types/google-libphonenumber/-/google-libphonenumber-7.4.11.tgz#3e4e4532cc64747c9217d658477deadf052ea3c1"
+  version "7.4.12"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/@types/google-libphonenumber/-/google-libphonenumber-7.4.12.tgz#fe22fdc1c6571f5e9991da26938411d3d2a05d4f"
 
 "@types/jasmine-jquery@^1.5":
   version "1.5.32"
@@ -1307,18 +1307,18 @@ bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.4.0:
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/bn.js/-/bn.js-4.11.8.tgz#2cde09eb5ee341f484746bb0309b3253b1b1442f"
 
 body-parser@^1.16.1:
-  version "1.17.2"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/body-parser/-/body-parser-1.17.2.tgz#f8892abc8f9e627d42aedafbca66bf5ab99104ee"
+  version "1.18.0"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/body-parser/-/body-parser-1.18.0.tgz#d3b224d467fa2ce8d43589c0245043267c093634"
   dependencies:
-    bytes "2.4.0"
+    bytes "3.0.0"
     content-type "~1.0.2"
-    debug "2.6.7"
-    depd "~1.1.0"
-    http-errors "~1.6.1"
-    iconv-lite "0.4.15"
+    debug "2.6.8"
+    depd "~1.1.1"
+    http-errors "~1.6.2"
+    iconv-lite "0.4.18"
     on-finished "~2.3.0"
-    qs "6.4.0"
-    raw-body "~2.2.0"
+    qs "6.5.0"
+    raw-body "2.3.1"
     type-is "~1.6.15"
 
 boolbase@~1.0.0:
@@ -1521,13 +1521,13 @@ builtin-status-codes@^3.0.0:
   version "3.0.0"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/builtin-status-codes/-/builtin-status-codes-3.0.0.tgz#85982878e21b98e1c66425e03d0174788f569ee8"
 
-bytes@2.4.0:
-  version "2.4.0"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/bytes/-/bytes-2.4.0.tgz#7d97196f9d5baf7f6935e25985549edd2a6c2339"
-
 bytes@2.5.0:
   version "2.5.0"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/bytes/-/bytes-2.5.0.tgz#4c9423ea2d252c270c41b2bdefeff9bb6b62c06a"
+
+bytes@3.0.0:
+  version "3.0.0"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/bytes/-/bytes-3.0.0.tgz#d32815404d689699f85a4ea4fa8755dd13a96048"
 
 cachedir@^1.1.0:
   version "1.1.1"
@@ -2304,12 +2304,6 @@ debug@2.6.4:
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/debug/-/debug-2.6.4.tgz#7586a9b3c39741c0282ae33445c4e8ac74734fe0"
   dependencies:
     ms "0.7.3"
-
-debug@2.6.7:
-  version "2.6.7"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/debug/-/debug-2.6.7.tgz#92bad1f6d05bbb6bba22cca88bcd0ec894c2861e"
-  dependencies:
-    ms "2.0.0"
 
 decamelize@^1.0.0, decamelize@^1.1.1, decamelize@^1.1.2:
   version "1.2.0"
@@ -4015,21 +4009,21 @@ htmlparser2@~3.3.0:
     domutils "1.1"
     readable-stream "1.0"
 
-http-errors@~1.5.0:
-  version "1.5.1"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/http-errors/-/http-errors-1.5.1.tgz#788c0d2c1de2c81b9e6e8c01843b6b97eb920750"
-  dependencies:
-    inherits "2.0.3"
-    setprototypeof "1.0.2"
-    statuses ">= 1.3.1 < 2"
-
-http-errors@~1.6.1, http-errors@~1.6.2:
+http-errors@1.6.2, http-errors@~1.6.1, http-errors@~1.6.2:
   version "1.6.2"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/http-errors/-/http-errors-1.6.2.tgz#0a002cc85707192a7e7946ceedc11155f60ec736"
   dependencies:
     depd "1.1.1"
     inherits "2.0.3"
     setprototypeof "1.0.3"
+    statuses ">= 1.3.1 < 2"
+
+http-errors@~1.5.0:
+  version "1.5.1"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/http-errors/-/http-errors-1.5.1.tgz#788c0d2c1de2c81b9e6e8c01843b6b97eb920750"
+  dependencies:
+    inherits "2.0.3"
+    setprototypeof "1.0.2"
     statuses ">= 1.3.1 < 2"
 
 http-proxy-agent@^1.0.0:
@@ -4072,8 +4066,8 @@ http-signature@~1.1.0:
     sshpk "^1.7.0"
 
 http-status-codes@^1.2.0:
-  version "1.2.0"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/http-status-codes/-/http-status-codes-1.2.0.tgz#bfe719129128f268d7ac47026141ef81af49ce48"
+  version "1.3.0"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/http-status-codes/-/http-status-codes-1.3.0.tgz#9cd0e71391773d0671b489d41cbc5094aa4163b6"
 
 https-browserify@0.0.1:
   version "0.0.1"
@@ -4091,11 +4085,7 @@ ical.js@~1.2.1:
   version "1.2.2"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/ical.js/-/ical.js-1.2.2.tgz#59b517362a8f61dce0342fe67deb7c20dd119f6e"
 
-iconv-lite@0.4.15:
-  version "0.4.15"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/iconv-lite/-/iconv-lite-0.4.15.tgz#fe265a218ac6a57cfe854927e9d04c19825eddeb"
-
-iconv-lite@^0.4.17, iconv-lite@^0.4.5:
+iconv-lite@0.4.18, iconv-lite@^0.4.17, iconv-lite@^0.4.5:
   version "0.4.18"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/iconv-lite/-/iconv-lite-0.4.18.tgz#23d8656b16aae6742ac29732ea8f0336a4789cf2"
 
@@ -6167,8 +6157,8 @@ parseuri@0.0.5:
     better-assert "~1.0.0"
 
 parseurl@~1.3.1:
-  version "1.3.1"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/parseurl/-/parseurl-1.3.1.tgz#c8ab8c9223ba34888aa64a297b28853bec18da56"
+  version "1.3.2"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/parseurl/-/parseurl-1.3.2.tgz#fc289d4ed8993119460c156253262cdc8de65bf3"
 
 path-browserify@0.0.0:
   version "0.0.0"
@@ -6792,17 +6782,21 @@ qs@6.2.1:
   version "6.2.1"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/qs/-/qs-6.2.1.tgz#ce03c5ff0935bc1d9d69a9f14cbd18e568d67625"
 
-qs@6.4.0, qs@~6.4.0:
-  version "6.4.0"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/qs/-/qs-6.4.0.tgz#13e26d28ad6b0ffaa91312cd3bf708ed351e7233"
-
-qs@6.5.0, "qs@>= 0.4.0":
+qs@6.5.0:
   version "6.5.0"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/qs/-/qs-6.5.0.tgz#8d04954d364def3efc55b5a0793e1e2c8b1e6e49"
+
+"qs@>= 0.4.0":
+  version "6.5.1"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/qs/-/qs-6.5.1.tgz#349cdf6eef89ec45c12d7d5eb3fc0c870343a6d8"
 
 qs@^5.2.1:
   version "5.2.1"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/qs/-/qs-5.2.1.tgz#801fee030e0b9450d6385adc48a4cc55b44aedfc"
+
+qs@~6.4.0:
+  version "6.4.0"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/qs/-/qs-6.4.0.tgz#13e26d28ad6b0ffaa91312cd3bf708ed351e7233"
 
 query-command-supported@~1.0.0:
   version "1.0.0"
@@ -6854,12 +6848,13 @@ range-parser@^1.0.3, range-parser@^1.2.0, range-parser@~1.2.0:
   version "1.2.0"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/range-parser/-/range-parser-1.2.0.tgz#f49be6b487894ddc40dcc94a322f611092e00d5e"
 
-raw-body@~2.2.0:
-  version "2.2.0"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/raw-body/-/raw-body-2.2.0.tgz#994976cf6a5096a41162840492f0bdc5d6e7fb96"
+raw-body@2.3.1:
+  version "2.3.1"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/raw-body/-/raw-body-2.3.1.tgz#30f95e2a67a14e2e4413d8d51fdd92c877e8f2ed"
   dependencies:
-    bytes "2.4.0"
-    iconv-lite "0.4.15"
+    bytes "3.0.0"
+    http-errors "1.6.2"
+    iconv-lite "0.4.18"
     unpipe "1.0.0"
 
 raw-loader@^0.5.1, raw-loader@~0.5.1:
