@@ -6,6 +6,7 @@ import { IOnChangesObject } from 'angular';
 import { DeviceSearch } from './deviceSearch.component';
 import { GridCellService } from '../../core/csgrid/cs-grid-cell/gridCell.service';
 import IDevice = csdm.IDevice;
+import { Device } from '../services/deviceSearchConverter';
 
 class DeviceList implements ng.IComponentController {
 
@@ -129,7 +130,18 @@ class DeviceList implements ng.IComponentController {
     this.$state.go('device-overview', {
       currentDevice: device,
       huronDeviceService: this.huronDeviceService,
+      deviceDeleted: this.deviceDeleted(this.searchHits),
     });
+  }
+
+  public deviceDeleted(searchHits) {
+    return function(url) {
+      if (searchHits && searchHits.hits) {
+        _.remove(searchHits.hits, (device: Device) => {
+          return device.url === url;
+        });
+      }
+    };
   }
 
   private loadMore(fromScrollEvent = false) {

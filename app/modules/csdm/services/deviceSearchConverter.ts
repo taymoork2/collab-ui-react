@@ -33,6 +33,7 @@ export class Device {
   public product: string;
   public isCloudberryDevice?: boolean;
   public isHuronDevice?: boolean;
+  public url: string;
 
   constructor(deviceHelper) {
     Device.init(deviceHelper, this);

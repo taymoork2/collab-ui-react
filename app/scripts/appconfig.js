@@ -2590,6 +2590,7 @@
             params: {
               currentDevice: {},
               huronDeviceService: {},
+              deviceDeleted: null,
             },
           })
           .state('device-overview.emergencyServices', {
