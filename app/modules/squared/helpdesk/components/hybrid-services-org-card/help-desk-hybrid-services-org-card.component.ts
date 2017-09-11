@@ -21,6 +21,7 @@ class HelpDeskHybridServicesOrgCardComponentCtrl implements ng.IComponentControl
   private hybridServiceIds: HybridServiceId[] = ['squared-fusion-cal', 'squared-fusion-uc', 'squared-fusion-media', 'spark-hybrid-datasecurity', 'contact-center-context', 'spark-hybrid-impinterop'];
   private hybridServicesCard: IHybridCard;
   private org: IOrg;
+  public isConsumerOrg = false;
   public loadingHSData: boolean;
   public hybridServicesComparator = this.HybridServicesUtilsService.hybridServicesComparator;
 
@@ -52,7 +53,10 @@ class HelpDeskHybridServicesOrgCardComponentCtrl implements ng.IComponentControl
       return hybridServicesCard;
     }
 
-    this.HybridServicesClusterService.getAll(org.id)
+    if (org.id === 'consumer') {
+      this.isConsumerOrg = true;
+    } else {
+      this.HybridServicesClusterService.getAll(org.id)
       .then((clusterList) => {
         _.forEach(hybridServiceIds, (serviceId) => {
           if (this.LicenseService.orgIsEntitledTo(org, serviceId)) {
@@ -63,6 +67,8 @@ class HelpDeskHybridServicesOrgCardComponentCtrl implements ng.IComponentControl
       .catch((response) => {
         this.Notification.errorResponse(response, 'helpdesk.unexpectedError');
       });
+    }
+
 
     if (this.LicenseService.orgIsEntitledTo(org, 'squared-fusion-gcal')) {
       this.CloudConnectorService.getService('squared-fusion-gcal', org.id)
