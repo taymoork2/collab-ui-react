@@ -3,7 +3,11 @@
 
   angular
     .module('uc.autoattendant')
-    .controller('AABuilderContainerCtrl', AABuilderContainerCtrl);
+    .component('aaBuilderContainer', {
+      controller: AABuilderContainerCtrl,
+      controllerAs: 'aaBuilder',
+      template: require('./aaBuilderContainer.tpl.html'),
+    });
 
   /* @ngInject */
   function AABuilderContainerCtrl($scope, $modal, AAUiModelService, AAModelService, AAValidationService) {
