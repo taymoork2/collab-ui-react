@@ -90,7 +90,7 @@
       _this.siteRows.gridOptions.columnDefs.push({
         field: 'siteConfLicenses',
         displayName: $translate.instant('siteList.licenseTypes'),
-        cellTemplate: 'modules/core/siteList/siteLicenseTypesColumn.tpl.html',
+        cellTemplate: require('modules/core/siteList/siteLicenseTypesColumn.tpl.html'),
         sortable: false,
         width: '17%',
       });
@@ -98,7 +98,7 @@
       _this.siteRows.gridOptions.columnDefs.push({
         field: 'siteActions',
         displayName: $translate.instant('siteList.siteActions'),
-        cellTemplate: 'modules/core/siteList/siteActionsColumn.tpl.html',
+        cellTemplate: require('modules/core/siteList/siteActionsColumn.tpl.html'),
         sortable: false,
       });
 
