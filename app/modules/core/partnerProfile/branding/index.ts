@@ -1,6 +1,7 @@
 
 const BrandingCtrl = require('./brandingCtrl');
 const BrandingExampleCtrl = require('./brandingExample.controller');
+import { PartnerProfileBrandingDirectiveFactory } from './branding.directive';
 
 import './_branding.scss';
 import './_brandingUpload.scss';
@@ -21,4 +22,5 @@ export default angular.module('core.partnerProfile.branding', [
 ])
   .controller('BrandingCtrl', BrandingCtrl)
   .controller('BrandingExampleCtrl', BrandingExampleCtrl)
+  .directive('crPartnerProfileBranding', PartnerProfileBrandingDirectiveFactory)
   .name;
