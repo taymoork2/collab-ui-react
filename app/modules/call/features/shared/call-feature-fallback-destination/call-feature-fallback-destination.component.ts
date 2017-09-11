@@ -9,6 +9,7 @@ import { CallDestinationTranslateService, ICallDestinationTranslate } from 'modu
 class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
   public fallbackDestination: FallbackDestination;
   public showReversionLookup: boolean;
+  public isCallPark: boolean;
   public isNew: boolean;
   public onChangeFn: Function;
 
@@ -56,7 +57,8 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
   }
 
   private processCallFeatureFallbackDestChanges(fallbackDestinationChanges: ng.IChangesObject<any>): void {
-    if (_.isNull(fallbackDestinationChanges.currentValue.number) && _.isNull(fallbackDestinationChanges.currentValue.numberUuid)) {
+    if (_.isNull(fallbackDestinationChanges.currentValue.number) &&
+        _.isNull(fallbackDestinationChanges.currentValue.numberUuid) && !this.isCallPark) {
       this.showMember = false;
       this.showReversionLookup = (this.fallbackDestination.number || this.fallbackDestination.numberUuid) ? false : true;
       this.selectedReversionNumber = '';
@@ -77,8 +79,14 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
           this.showMember = true;
           this.showReversionLookup = false;
         } else {
-          this.showMember = false;
-          this.showReversionLookup = true;
+          if (this.isCallPark) {
+            this.showMember = false;
+            this.showReversionLookup = false;
+            this.fallbackDestForm.$setValidity('', true, this.fallbackDestForm);
+          } else {
+            this.showMember = false;
+            this.showReversionLookup = true;
+          }
         }
       }
     }
@@ -180,6 +188,7 @@ export class CallFeatureFallbackDestinationComponent implements ng.IComponentOpt
   public bindings = {
     fallbackDestination: '<',
     showReversionLookup: '<',
+    isCallPark: '<',
     isNew: '<',
     isAlternate: '<',
     onChangeFn: '&',

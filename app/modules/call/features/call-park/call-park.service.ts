@@ -27,7 +27,7 @@ export class CallParkService {
   private callParkRangeResource: ICallParkRangeResource;
   private callParkDataCopy: CallPark;
   private callParkProperties: string[] = ['uuid', 'name', 'startRange', 'endRange', 'members', 'fallbackTimer'];
-  private fallbackDestProperties: string[] = ['memberUuid', 'name', 'number', 'numberUuid', 'sendToVoicemail'];
+  private fallbackDestProperties: string[] = ['memberUuid', 'name', 'number', 'numberUuid', 'sendToVoicemail', 'timer'];
 
   /* @ngInject */
   constructor(
@@ -78,6 +78,8 @@ export class CallParkService {
       .then( (callParkResource) => {
         const callPark = new CallPark(_.pick<CallPark, CallPark>(callParkResource, this.callParkProperties));
         callPark.fallbackDestination = new FallbackDestination(_.pick<FallbackDestination, FallbackDestination>(callParkResource.fallbackDestination, this.fallbackDestProperties));
+        // The timer property is not in GET callpark and needs to be set to null to be consistent.
+        callPark.fallbackDestination.timer = null;
 
         const callParkMembers: CallFeatureMember[] = _.map(callParkResource.members, member => {
           return new CallFeatureMember({
