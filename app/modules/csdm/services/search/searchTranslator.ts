@@ -81,20 +81,29 @@ export class SearchTranslator {
   }
 
   private findTranslationKeyInSubSearch(translationTable: {}, splittedSearch: string[], start: number, end: number): TranslationMatch {
-
+    if (start === end) {
+      return new TranslationMatch(splittedSearch, false);
+    }
     const partialSearch = _
       .chain(splittedSearch)
       .slice(start, end)
       .join(' ')
       .toLower()
       .value();
-    let translationKey = _.findKey(translationTable, function (value: string) {
-      return _.startsWith(_.toLower(value), partialSearch);
-    });
-    if (!translationKey) {
-      translationKey = _.findKey(translationTable, function (value: string) {
-        return _.toLower(value).indexOf(partialSearch) >= 0;
+    let translationKey = '';
+    if (partialSearch.length < 4) {
+      translationKey =  _.findKey(translationTable, function (value: string) {
+        return _.isEqual(_.toLower(value), partialSearch);
       });
+    } else {
+      translationKey = _.findKey(translationTable, function (value: string) {
+        return _.startsWith(_.toLower(value), partialSearch);
+      });
+      if (!translationKey) {
+        translationKey = _.findKey(translationTable, function (value: string) {
+          return _.toLower(value).indexOf(partialSearch) >= 0;
+        });
+      }
     }
     return new TranslationMatch(splittedSearch, !!translationKey, translationKey, start, end);
   }
