@@ -34,6 +34,10 @@
         </div>
       </div>
       <div class="row aa-flex-row">
+        <!--
+          currently ng-include templates loaded through ngtemplate-loader
+          TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
+        -->
         <div ng-controller="actions.getOptionController" ng-include="actions.option.url"></div>
       </div>
     </div>
