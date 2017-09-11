@@ -17,7 +17,7 @@
           text: 'homePage.urgentUpgrade',
           textValues: {
             connector: $translate.instant('hercules.connectorNameFromConnectorType.' + connectorType),
-            link: (connectorType === 'c_cal') ? 'calendar-service.list' : 'call-service.list',
+            link: 'cluster-list',
           },
         };
         return notification;

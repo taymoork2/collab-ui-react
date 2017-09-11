@@ -285,8 +285,7 @@ require('./_overview.scss');
     function findAnyUrgentUpgradeInHybridServices() {
       HybridServicesClusterService.getAll()
         .then(function (clusters) {
-          // c_mgmt will be tested when it will have its own service page back
-          var connectorsToTest = ['c_cal', 'c_ucmc'];
+          var connectorsToTest = ['c_mgmt', 'c_cal', 'c_ucmc', 'c_imp'];
           connectorsToTest.forEach(function (connectorType) {
             var hasUrgentUpgrade = _.find(clusters, function (cluster) {
               return _.some(cluster.provisioning, function (p) {
