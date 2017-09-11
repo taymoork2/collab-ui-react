@@ -114,14 +114,11 @@ beforeEach(function () {
    * Init a controller on this.controller and compile a template on this.view
    *
    * @param {String} controller Name of the controller
-   * @param {String} template Path of the template
+   * @param {String} templateString The template string
    * @param {Object} options Optional controller configuration
    */
-  this.compileView = function (controller, template, options) {
+  this.compileViewTemplate = function (controller, templateString, options) {
     this.initController(controller, options);
-
-    this.injectDependencies('$templateCache');
-    var templateString = this.$templateCache.get(template);
     this.compileTemplate('<div>' + templateString + '</div>');
   };
 

@@ -1,7 +1,7 @@
 'use strict';
 
 describe('components:showComponents', function () {
-  var $compile, $controller, $q, $scope, controller, ComponentsService, GSSService,;
+  var $compile, $controller, $q, $scope, controller, ComponentsService, GSSService;
   var view;
   var hasData = 'gss-components-list';
   var noData = 'centered-info-pane';

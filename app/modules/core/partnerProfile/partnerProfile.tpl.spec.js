@@ -6,7 +6,6 @@ describe('Template: partnerProfile', function () {
     this.injectDependencies(
       '$controller',
       '$compile',
-      '$templateCache',
       '$q',
       '$scope',
       'Authinfo',

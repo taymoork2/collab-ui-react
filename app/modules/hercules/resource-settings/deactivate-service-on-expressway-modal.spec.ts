@@ -1,7 +1,7 @@
 describe('DeactivateServiceModalView', function () {
   beforeEach(function () {
     this.initModules('Hercules');
-    this.injectDependencies('$compile', '$controller', '$templateCache', '$scope', '$q', 'HybridServicesClusterService');
+    this.injectDependencies('$compile', '$controller', '$scope', '$q', 'HybridServicesClusterService');
 
     spyOn(this.HybridServicesClusterService, 'deprovisionConnector').and.returnValue(this.$q.resolve({}));
 

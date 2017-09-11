@@ -12,7 +12,7 @@ describe('cell-template-action', function () {
     view = undefined;
   });
 
-  beforeEach(inject(function (_$templateCache_, _$rootScope_, _$compile_) {
+  beforeEach(inject(function (_$rootScope_, _$compile_) {
     $scope = _$rootScope_.$new();
     $compile = _$compile_;
     html = require('modules/ediscovery/cell-template-action.html');

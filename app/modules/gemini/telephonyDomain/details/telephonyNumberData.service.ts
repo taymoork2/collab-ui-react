@@ -1,7 +1,6 @@
 import { TelephonyNumberValidateService } from './telephonyNumberValidate.service';
 
 const DATA_TYPE: any = { MANUAL_ADD : 0, IMPORT_TD : 1, IMPORT_CSV : 2, SUBMITTED : 3 };
-const CELL_TEMPLATE_URL: string = 'modules/gemini/telephonyDomain/details/cellTemplate/';
 
 export class TelephonyNumberDataService {
 
@@ -97,13 +96,13 @@ export class TelephonyNumberDataService {
       cellTooltip: true,
       displayName: this.$translate.instant('gemini.tds.numbers.field.phoneNumber'),
       cellClass: isEdit ? 'cell-border-none' : '',
-      cellTemplate: require(CELL_TEMPLATE_URL + 'phoneNumberCellTemplate.tpl.html'),
+      cellTemplate: this.requireCellTemplate('phoneNumberCellTemplate'),
     }, {
       width: '11%',
       field: 'label',
       displayName: this.$translate.instant('gemini.tds.numbers.field.phoneLabel'),
       cellClass: isEdit ? 'cell-border-none' : '',
-      cellTemplate: require(CELL_TEMPLATE_URL + 'phoneLabelCellTemplate.tpl.html'),
+      cellTemplate: this.requireCellTemplate('phoneLabelCellTemplate'),
     }, {
       width: '12%',
       field: 'dnisNumberFormat',
@@ -111,7 +110,7 @@ export class TelephonyNumberDataService {
       cellTooltip: true,
       displayName: this.$translate.instant('gemini.tds.numbers.field.accessNumber'),
       cellClass: isEdit ? 'cell-border-none' : '',
-      cellTemplate: require(CELL_TEMPLATE_URL + 'accessNumberCellTemplate.tpl.html'),
+      cellTemplate: this.requireCellTemplate('accessNumberCellTemplate'),
     }, {
       width: '9%',
       field: 'tollType',
@@ -119,7 +118,7 @@ export class TelephonyNumberDataService {
       cellTooltip: true,
       displayName: this.$translate.instant('gemini.tds.numbers.field.tollType'),
       cellClass: isEdit ? 'cell-border-none' : '',
-      cellTemplate: require(CELL_TEMPLATE_URL + 'tollTypeCellTemplate.tpl.html'),
+      cellTemplate: this.requireCellTemplate('tollTypeCellTemplate'),
     }, {
       width: '8%',
       field: 'callType',
@@ -127,7 +126,7 @@ export class TelephonyNumberDataService {
       cellTooltip: true,
       displayName: this.$translate.instant('gemini.tds.numbers.field.callType'),
       cellClass: isEdit ? 'cell-border-none' : '',
-      cellTemplate: require(CELL_TEMPLATE_URL + 'callTypeCellTemplate.tpl.html'),
+      cellTemplate: this.requireCellTemplate('callTypeCellTemplate'),
     }, {
       width: '12%',
       field: 'defaultNumber',
@@ -135,7 +134,7 @@ export class TelephonyNumberDataService {
       cellTooltip: true,
       displayName: this.$translate.instant('gemini.tds.numbers.field.defaultNumber'),
       cellClass: isEdit ? 'cell-border-none' : '',
-      cellTemplate: require(CELL_TEMPLATE_URL + 'defaultNumberCellTemplate.tpl.html'),
+      cellTemplate: this.requireCellTemplate('defaultNumberCellTemplate'),
     }, {
       width: '11%',
       field: 'globalListDisplay',
@@ -143,7 +142,7 @@ export class TelephonyNumberDataService {
       cellTooltip: true,
       displayName: this.$translate.instant('gemini.tds.numbers.field.globalDisplay'),
       cellClass: isEdit ? 'cell-border-none' : '',
-      cellTemplate: require(CELL_TEMPLATE_URL + 'globalListDisplayCellTemplate.tpl.html'),
+      cellTemplate: this.requireCellTemplate('globalListDisplayCellTemplate'),
     }, {
       width: '9%',
       field: 'country',
@@ -151,7 +150,7 @@ export class TelephonyNumberDataService {
       cellTooltip: true,
       displayName: this.$translate.instant('gemini.tds.numbers.field.country'),
       cellClass: isEdit ? 'cell-border-none' : '',
-      cellTemplate: require(CELL_TEMPLATE_URL + 'countryCellTemplate.tpl.html'),
+      cellTemplate: this.requireCellTemplate('countryCellTemplate'),
     }, {
       width: '13%',
       field: 'isHidden',
@@ -159,7 +158,7 @@ export class TelephonyNumberDataService {
       cellTooltip: true,
       displayName: this.$translate.instant('gemini.tds.numbers.field.hiddenOnClient'),
       cellClass: isEdit ? 'cell-border-none' : '',
-      cellTemplate: require(CELL_TEMPLATE_URL + 'isHiddenCellTemplate.tpl.html'),
+      cellTemplate: this.requireCellTemplate('isHiddenCellTemplate'),
     }];
 
     if (isEdit) {
@@ -219,6 +218,10 @@ export class TelephonyNumberDataService {
   public initNumber(data, telephonyDomainId) {
     this.initDropdownList(data, telephonyDomainId);
     this.addNumber(data);
+  }
+
+  private requireCellTemplate(path: string): string {
+    return require('modules/gemini/telephonyDomain/details/cellTemplate/' + path + '.tpl.html');
   }
 
   private initDropdownList(data, telephonyDomainId) {

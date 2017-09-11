@@ -55,7 +55,6 @@ describe('Controller: SipDomainSettingController', function () {
     };
 
     this.modal = {
-      template: require(''),
       type: 'dialog',
     };
 
@@ -499,11 +498,6 @@ describe('Controller: SipDomainSettingController', function () {
     });
 
     describe('Function editSubdomain - ', function () {
-      beforeEach(function () {
-        this.cscModal = _.cloneDeep(this.modal);
-        this.cscModal.template = require('modules/core/settings/sipDomain/editCSCWarning.tpl.html');
-      });
-
       it('when CSC is enabled should do nothing', function () {
         spyOn(this.$modal, 'open');
         this.initController();
