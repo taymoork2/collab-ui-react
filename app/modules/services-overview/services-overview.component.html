@@ -15,7 +15,7 @@
       <span translate="servicesOverview.noActiveHybridCards"></span>
       <span translate="servicesOverview.userIsMissingEntitlements" ng-if="!$ctrl.hasOneOrMoreHybridEntitlements()"></span>
     </p>
-    <cs-card-layout>
+    <cs-card-layout block-view="true">
       <cs-card class="small" ng-class="card.cardClass" ng-repeat="card in $ctrl.getHybridCards()" ng-if="card.display">
         <article ng-include="card.template"></article>
       </cs-card>
