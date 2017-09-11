@@ -29,24 +29,6 @@
       vm.clusterList = clusterList;
     });
 
-    /*    function redirectToTargetAndCloseWindowClicked(hostName, enteredCluster) {
-      $modalInstance.close();
-//      AddResourceCommonServiceV2.addRedirectTargetClicked(hostName, enteredCluster).then(function () {
-//        AddResourceCommonServiceV2.redirectPopUpAndClose(hostName, enteredCluster, vm.selectedClusterId, vm.firstTimeSetup);
-//      });
-      AddResourceCommonServiceV2.redirectPopUpAndClose(hostName, enteredCluster, vm.selectedClusterId, vm.firstTimeSetup).then( function (resultArray) {
-        $q.all(resultArray).then(function (result) {
-          var resultRhesos = result[0];
-          var resultSparkCall = result[1];
-          if(!_.isUndefined(resultRhesos) && !_.isUndefined(resultSparkCall)){
-            //calling create cluster when both rhesos and spark call entitlement is succeeded
-            AddResourceCommonServiceV2.addRedirectTargetClicked(hostName, enteredCluster);
-          }          
-        });
-      });
-    }
-*/
-
     function redirectToTargetAndCloseWindowClicked(hostName, enteredCluster) {
       $modalInstance.close();
       if (vm.firstTimeSetup) {
