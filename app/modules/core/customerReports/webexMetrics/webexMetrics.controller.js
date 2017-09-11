@@ -19,6 +19,7 @@
     Notification,
     ProPackService,
     QlikService,
+    FeatureToggleService,
     Userservice
   ) {
     var vm = this;
@@ -26,11 +27,13 @@
     vm.metrics = 'metrics';
     vm.search = 'search';
     vm.classic = 'classic';
+    vm.MEI = 'MEI';
     vm.webexOptions = [];
     vm.webexSelected = null;
     vm.webexMetrics = {};
     vm.isNoData = false;
     vm.selectEnable = true;
+    vm.selectMEI = false;
     vm.reportType = 'WebEx';
     vm.env = {
       int: 'integration',
@@ -43,8 +46,8 @@
         appName: 'basic_webex_v1',
       },
       {
-        view: 'Premium',
-        appName: 'premium_webex_v1',
+        view: 'MEI',
+        appName: 'mei',
       },
     ];
     vm.reportView = vm.webexMetrics.views[0];
@@ -58,6 +61,13 @@
         state: 'reports.webex-metrics.diagnostics',
       },
     ];
+
+    function featureToggleoOnMEI() {
+      vm.metricsOptions.push({
+        title: 'reportsPage.webexMetrics.MEI',
+        state: 'reports.webex-metrics.MEI',
+      });
+    }
 
     var selectEnable = $scope.$on('selectEnable', function (data) {
       vm.selectEnable = data.defaultPrevented;
@@ -77,7 +87,6 @@
     vm.updateIframe = updateIframe;
 
     init();
-
     function onlyUnique(value, index, self) {
       return self.indexOf(value) === index;
     }
@@ -99,6 +108,7 @@
       webexSiteUrls = getUniqueWebexSiteUrls(webexSiteUrls);
 
       vm.webexOptions = webexSiteUrls;
+
       promisChainDone();
     }
 
@@ -119,20 +129,24 @@
       }
       vm.webexSelected = webexSelected;
       $timeout(goMetricsState);
-      ProPackService.hasProPackPurchased().then(function (isPurchased) {
-        if (isPurchased) {
-          vm.reportView = vm.webexMetrics.views[1];
-        }
-        updateWebexMetrics();
-      });
+      updateWebexMetrics();
     }
 
     function init() {
+      checkProPackPurchased();
       checkClassic();
       Userservice.getUser(
         'me',
         function (data) {
           if (data.success) {
+            FeatureToggleService.getFeaturesForUser(data.id, FeatureToggleService.features.webexMEI).then(function (response) {
+              _.forEach(response.developer, function (value) {
+                if (value.key === FeatureToggleService.features.webexMEI && value.val === true) {
+                  featureToggleoOnMEI();
+                }
+              });
+            });
+
             var trainSites = [];
             if (data.emails) {
               Authinfo.setEmails(data.emails);
@@ -145,6 +159,18 @@
         }
       );
       Analytics.trackReportsEvent(Analytics.sections.REPORTS.eventNames.CUST_WEBEX_REPORT);
+    }
+
+    function checkProPackPurchased() {
+      ProPackService.hasProPackPurchased().then(function (isPurchased) {
+        if (isPurchased) {
+          vm.webexMetrics.views[0] = {
+            view: 'Premium',
+            appName: 'premium_webex_v1',
+          };
+          vm.reportView = vm.webexMetrics.views[0];
+        }
+      });
     }
 
     function checkClassic() {
@@ -167,7 +193,7 @@
         LocalStorage.put('webexMetricsSiteUrl', webexSelected);
       }
 
-      if (!_.isNull(vm.webexSelected)) {
+      if (!(_.isNull(vm.webexSelected) || _.isUndefined(vm.webexSelected))) {
         vm.isNoData = false;
         vm.loadMetricsReport();
       } else {
@@ -179,6 +205,12 @@
       function loadUrlAndIframe(url) {
         vm.metricsOptions[0].url = url;
         updateIframe();
+      }
+
+      if (vm.selectMEI === true) {
+        vm.reportView = vm.webexMetrics.views[1];
+      } else {
+        vm.reportView = vm.webexMetrics.views[0];
       }
 
       var userInfo = {
@@ -246,11 +278,19 @@
     function onStateChangeSuccess(event, toState, toParams, fromState) {
       if (toState.name === 'reports.webex-metrics.metrics') {
         vm.selectEnable = true;
+        vm.selectMEI = false;
         if (fromState.name.indexOf('reports.webex-metrics.') === 0) {
-          vm.loadMetricsReport();
+          vm.updateWebexMetrics();
+        }
+      } else if (toState.name === 'reports.webex-metrics.MEI') {
+        vm.selectEnable = false;
+        vm.selectMEI = true;
+        if (fromState.name.indexOf('reports.webex-metrics.') === 0) {
+          vm.updateWebexMetrics();
         }
       } else if (toState.name === 'reports.webex-metrics.classic') {
         vm.selectEnable = false;
+        vm.selectMEI = false;
       }
     }
 

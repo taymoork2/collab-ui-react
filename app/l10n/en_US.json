@@ -692,6 +692,7 @@
     "webexMetrics": {
       "title": "WebEx",
       "metrics": "Metrics",
+      "MEI": "MEI",
       "diagnostics": "Diagnostics",
       "classic": "Classic",
       "webexClassic": "WebEx Classic",
