@@ -1,0 +1,31 @@
+<div class="modal-header">
+  <button class="close" ng-click="$dismiss()" type="button">
+    <span class="sr-only" translate="common.close">
+    </span>
+  </button>
+  <h5 class="modal-title" translate="servicesOverview.cards.hybridCall.prerequisites.title"></h5>
+</div>
+<div class="modal-body">
+  <tabset justified="true">
+    <tab heading="{{vm.expresswayTabHeading}}">
+      <div class="tab-content">
+        <basic-expressway-prerequisites on-change="vm.expresswayData(options)"></basic-expressway-prerequisites>
+      </div>
+    </tab>
+    <tab heading="Hybrid Call Service Aware (0/7)">
+      <div class="tab-content">
+        and blah blah blah
+      </div>
+    </tab>
+    <tab heading="Hybrid Call Service Connect (0/9)">
+      <div class="tab-content">
+        something something
+      </div>
+    </tab>
+  </tabset>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-primary">
+    <span translate="common.close" ng-click="$close()"></span>
+  </button>
+</div>
