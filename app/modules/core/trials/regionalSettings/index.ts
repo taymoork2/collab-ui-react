@@ -1,4 +1,6 @@
 import { TrialRegionalSettingsComponent } from './trialRegionalSettings.component';
+import { TrialRegionalSettingsFTSWDirectiveFactory } from './regionalSettingsFTSW.directive';
+import { TrialRegionalSettingsSectionDirectiveFactory } from './regionalSettingsSection.directive';
 import HuronCountryService from 'modules/huron/countries';
 import FeatureToggleServices from 'modules/core/featureToggle';
 
@@ -11,4 +13,6 @@ export default angular
     FeatureToggleServices,
   ])
   .component('trialRegionalSettings', new TrialRegionalSettingsComponent())
+  .directive('trialRegionalSettingsSection', TrialRegionalSettingsSectionDirectiveFactory)
+  .directive('trialRegionalSettingsFTSW', TrialRegionalSettingsFTSWDirectiveFactory)
   .name;

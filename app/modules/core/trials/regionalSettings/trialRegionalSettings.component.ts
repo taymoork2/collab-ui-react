@@ -3,7 +3,7 @@ import { HuronCompassService } from 'modules/huron/compass/compass.service';
 
 export class TrialRegionalSettingsComponent implements ng.IComponentOptions {
   public controller = TrialRegionalSettingsCtrl;
-  public template = require('modules/core/trials/regionalSettings/regionalSettings.html');
+  public template = require('./trialRegionalSettings.html');
   public bindings = {
     isFtsw: '<',
     callTrialEnabled: '<',
