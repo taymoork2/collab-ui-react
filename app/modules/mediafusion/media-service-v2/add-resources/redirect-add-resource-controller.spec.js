@@ -21,9 +21,6 @@ describe('RedirectAddResourceControllerV2', function () {
     $q = _$q_;
     httpBackend = $httpBackend;
     httpBackend.when('GET', /^\w+.*/).respond({});
-    // redirectTargetPromise = {
-    //   then: jasmine.createSpy('then'),
-    // };
     $state = _$state_;
     $stateParams = _$stateParams_;
     AddResourceCommonServiceV2 = _AddResourceCommonServiceV2_;
