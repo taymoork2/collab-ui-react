@@ -1,6 +1,8 @@
 import './settings.component.scss';
 
 import { HuronSettingsComponent } from './settings.component';
+import { SettingsNewDirectiveFactory } from './settings-new.directive';
+import { SettingsEditDirectiveFactory } from './settings-edit.directive';
 import { CallSettingsComponent } from './settings-location.component';
 
 //module dependancy names
@@ -75,4 +77,6 @@ export default angular
   ])
   .component('ucSettings', new HuronSettingsComponent())
   .component('ucCallSettings', new CallSettingsComponent())
+  .directive('ucSettingsNew', SettingsNewDirectiveFactory)
+  .directive('ucSettingsEdit', SettingsEditDirectiveFactory)
   .name;
