@@ -443,7 +443,12 @@
     deviceOverview.deleteDevice = function () {
       RemDeviceModal
         .open(deviceOverview.currentDevice)
-        .then($state.sidepanel.close);
+        .then(function () {
+          $state.sidepanel.close();
+          if (_.isFunction($stateParams.deviceDeleted)) {
+            $stateParams.deviceDeleted(deviceOverview.currentDevice.url);
+          }
+        });
     };
 
     deviceOverview.openAtaSettings = function () {
