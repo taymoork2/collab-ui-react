@@ -1,6 +1,7 @@
 import { DirectoryNumberComponent  } from './directoryNumber.component';
 import { DirectoryNumberOptionsService } from './directoryNumberOptions.service';
 import { LocationsService } from 'modules/call/locations/shared';
+import { NumberService } from 'modules/huron/numbers/number.service';
 import featureToggleServiceModule from 'modules/core/featureToggle';
 
 export * from './directoryNumberOptions.service';
@@ -18,4 +19,5 @@ export default angular
   .component('ucDirectoryNumber', new DirectoryNumberComponent())
   .service('DirectoryNumberOptionsService', DirectoryNumberOptionsService)
   .service('LocationsService', LocationsService)
+  .service('NumberService', NumberService)
   .name;
