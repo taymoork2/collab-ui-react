@@ -1466,6 +1466,7 @@
     "incorrectFormat": "Incorrect format",
     "info": "Info",
     "invalidEmail": "This is not a valid Email Address.",
+    "emailAddressesDonotMatch": "Email Addresses do not match",
     "invalidFormat": "Invalid Format",
     "invalidMax": "Maximum value is {{max}}.",
     "invalidMaxLength": "Character length cannot be more than {{max}}.",
@@ -4866,7 +4867,8 @@
     "companyName": "Legal Company Name",
     "firstName": "Signee's First Name",
     "lastName": "Signee's Last Name",
-    "emailAddress": "Signee's Email Address"
+    "emailAddress": "Signee's Email Address",
+    "confirmEmailAddress": "Signee's Confirm Email Address"
   },
   "intelepeerFeatures": {
     "feature1": "Service available in U.S. 48 states",

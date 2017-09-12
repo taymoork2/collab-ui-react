@@ -48,6 +48,7 @@
             firstName: '',
             lastName: '',
             emailAddress: '',
+            confirmEmailAddress: '',
           },
           pstnNumberInfo: {
             state: {},
