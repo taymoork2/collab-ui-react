@@ -48,6 +48,10 @@ export class CareSetupVirtualAssistantCtrl {
           enabled: true,
           nameValue: '',
         },
+        VirtualAssistantAvatar: {
+          enabled: true,
+          fileValue: {},
+        },
         VirtualAssistantSummary: {
           enabled: true,
           visibleError: false,
@@ -59,6 +63,29 @@ export class CareSetupVirtualAssistantCtrl {
   public states = Object.keys(this.template.configuration.pages);
   public currentState = this.states[0];
 
+  // Simulation for Avatar Upload result.
+  // The actual integration for the API responsible for store/retrieve the avatar image will
+  // take place in a following US.
+  private SIMULATE_AVATAR_LOAD_PERIOD = 4000;
+
+  // Avatar file load progress states
+  public avatarState = {
+    SELECT: 'SELECT',
+    LOADING: 'LOADING',
+    PREVIEW: 'PREVIEW',
+  };
+  public avatarUploadState = this.avatarState.SELECT;
+  public MAX_AVATAR_FILE_SIZE = 1048576; // 1MB
+
+  // Avatar file error
+  public avatarErrorType = {
+    NO_ERROR: 'None',
+    FILE_TYPE_ERROR: 'FileTypeError',
+    FILE_SIZE_ERROR: 'FileSizeError',
+    FILE_UPLOAD_ERROR: 'FileUploadError',
+  };
+  public avatarError = this.avatarErrorType.NO_ERROR;
+  public avatarFile = null;
 
   /* @ngInject*/
   constructor(
@@ -83,7 +110,18 @@ export class CareSetupVirtualAssistantCtrl {
       this.template.configuration.pages.VirtualAssistantName.nameValue = this.$stateParams.template.name;
       this.template.configuration.pages.VirtualAssistantAccessToken.accessTokenValue = this.$stateParams.template.config.token;
       this.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = false;
+
+      // NOTE: since the actual avatar file name has no correlation to an actual image in the file system, there is no way to, at
+      //       this point, load the avatar during edit mode. This is part of the integration story (next), where the
+      //       actual API to retrieve the image will be brought to this work.
+      //       AT THIS TIME, the image will come out empty during edit initialization!
+      if (this.$stateParams.template.config.avatarFile) {
+        this.avatarUploadState = this.avatarState.PREVIEW;
+        this.template.configuration.pages.VirtualAssistantAvatar.fileValue = this.$stateParams.template.config.avatarFile;
+        this.avatarFile = this.$stateParams.template.config.avatarFile;
+      }
     }
+
     const controller = this;
     (<IScopeWithController>this.$scope).controller = controller; // used by ctCancelModal to not be tied to 1 controller.
 
@@ -159,7 +197,7 @@ export class CareSetupVirtualAssistantCtrl {
     if (0 === this.getPageIndex()) {
       return 'hidden';
     }
-    return (this.getPageIndex() > 0);
+    return (this.getPageIndex() > 0 && !this.isAvatarUploading());
   }
 
   /**
@@ -175,7 +213,9 @@ export class CareSetupVirtualAssistantCtrl {
       case 'VirtualAssistantAccessToken':
         return this.isAccessTokenValid();
       case 'VirtualAssistantName':
-        return this.isNameValid();
+        return this.isNameValid() && !this.isAvatarUploading();
+      case 'VirtualAssistantAvatar':
+        return !this.isAvatarUploading();
       case 'VirtualAssistantSummary':
         return 'hidden';
     }
@@ -184,6 +224,10 @@ export class CareSetupVirtualAssistantCtrl {
    * Move forward to next page in modal series.
    */
   public nextPage(): void {
+    // This is to clear a possible error issued during image loading. For instance one attempts to drag-drop a JPG,
+    // the file is invalid, the message is displayed, and it must be cleared when toggling between pages.
+    this.avatarError = this.avatarErrorType.NO_ERROR;
+
     const controller = this;
     controller.animation = 'slide-left';
     controller.$timeout(function () {
@@ -195,6 +239,10 @@ export class CareSetupVirtualAssistantCtrl {
    * Move backwards to previous page in modal series.
    */
   public previousPage(): void {
+    // This is to clear a possible error issued during image loading. For instance one attempts to drag-drop a JPG,
+    // the file is invalid, the message is displayed, and it must be cleared when toggling between pages.
+    this.avatarError = this.avatarErrorType.NO_ERROR;
+
     const controller = this;
     controller.animation = 'slide-right';
     controller.saveTemplateErrorOccurred = false;
@@ -266,6 +314,84 @@ export class CareSetupVirtualAssistantCtrl {
   public isNameValid(): boolean {
     const name = (this.template.configuration.pages.VirtualAssistantName.nameValue || '').trim();
     return !!name && this.isValidNameLength(name) && this.isUniqueName(name);
+  }
+
+  /**
+   *  Determines if some avatar error occurred
+   *
+   * @returns {boolean} return true if error occurred; otherwise false
+   */
+  public isAvatarError(): boolean {
+    return this.avatarError !== this.avatarErrorType.NO_ERROR;
+  }
+
+  private isAvatarUploading(): boolean {
+    return this.avatarUploadState === this.avatarState.LOADING;
+  }
+
+  /**
+   *  The avatar load got interrupted - reset and prep to reload
+   *  NOTE: the integration with the actual API to save the Avatar belongs to a different US.
+   *        This functionality is here to demonstrate the flow and elements associated with the Avatar Upload feature.
+   */
+  private loadTimer;
+  public avatarStopLoad(): void {
+    this.$timeout.cancel(this.loadTimer);
+    if (this.isAvatarUploading()) {
+      this.avatarUploadState = this.avatarFile ? this.avatarState.PREVIEW : this.avatarState.SELECT;
+    }
+  }
+
+  /**
+   *  Image file name has to carry extension PNG.
+   *  Note: original functionality called for JPG, and SVG as well - this can be extended by addign to the array
+   *
+   * @param {string} fileName
+   * @returns {boolean}
+   */
+  private isImageFileName(fileName: string): boolean {
+    if ((fileName || '').trim().length > 0) {
+      const lowerCaseExt = fileName.trim().toLocaleLowerCase().split('.');
+      return lowerCaseExt.length >= 2 && ['png'].indexOf(lowerCaseExt[lowerCaseExt.length - 1]) >= 0;
+    }
+    return false;
+  }
+
+  /**
+   * Validate the avatar image file
+   * @param {any} fileSelected
+   * @returns {boolean} return true if the image file is valid; otherwise return false
+   */
+  private validateAvatarFile(fileSelected: any): boolean {
+    if (!this.isImageFileName(fileSelected.name)) {
+      this.avatarError = this.avatarErrorType.FILE_TYPE_ERROR;
+    } else if (fileSelected.size > this.MAX_AVATAR_FILE_SIZE || fileSelected.size <= 0) {
+      this.avatarError = this.avatarErrorType.FILE_SIZE_ERROR;
+    }
+    return !this.isAvatarError();
+  }
+
+  /**
+   *  Avatar file name is valid, then, upload it.
+   *
+   * @param fileSelected (via drag-and-drop or file select)
+   */
+  public uploadAvatar(fileSelected: any): void {
+    this.avatarError = this.avatarErrorType.NO_ERROR;
+    if (fileSelected && ('name' in fileSelected)) {
+      if (this.validateAvatarFile(fileSelected)) {
+        this.avatarUploadState = this.avatarState.LOADING;
+
+        // simulate a successful load
+        // NOTE: the integration with the actual API to save the Avatar belongs to a different US.
+        // This functionality is here to demonstrate the flow and elements associated with the Avatar Upload feature
+        this.loadTimer = this.$timeout(() => {
+          this.avatarUploadState = this.avatarState.PREVIEW;
+          this.avatarFile = fileSelected; // update the model
+          this.template.configuration.pages.VirtualAssistantAvatar.fileValue = fileSelected; // update the stored config
+        }, this.SIMULATE_AVATAR_LOAD_PERIOD);
+      }
+    }
   }
 
   public getVaText(textIdExtension: string): string {
@@ -383,7 +509,10 @@ export class CareSetupVirtualAssistantCtrl {
    * @returns {*}
    */
   private createConfigurationObject(): any {
-    return { token: this.template.configuration.pages.VirtualAssistantAccessToken.accessTokenValue.trim() };
+    return {
+      token: this.template.configuration.pages.VirtualAssistantAccessToken.accessTokenValue.trim(),
+      avatarFile: this.template.configuration.pages.VirtualAssistantAvatar.fileValue,
+    };
   }
 
   private isValidTokenLength(): boolean {
