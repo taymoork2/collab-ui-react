@@ -10,15 +10,13 @@ require('./_support.scss');
   function SupportCtrl($filter, $scope, $translate, $state, $stateParams, $window, Authinfo, CallflowService, CardUtils, Config, FeatureToggleService, FeedbackService, hasAtlasHybridCallUserTestTool, Log, LogService, ModalService, Notification, Orgservice, PageParam, ReportsService, UrlConfig, Userservice, Utils, WindowLocation) {
     $scope.showSupportDetails = false;
     $scope.showSystemDetails = false;
-    $scope.problemHandler = ' by Cisco';
-    $scope.helpHandler = 'by Cisco';
+    $scope.problemHandler = $translate.instant('supportPage.byCisco');
+    $scope.helpHandler = $translate.instant('supportPage.byCisco');
     $scope.reportingUrl = null;
     $scope.helpUrl = Config.helpUrl;
     $scope.ssoUrl = Config.ssoUrl;
     $scope.rolesUrl = Config.rolesUrl;
     $scope.statusPageUrl = UrlConfig.getStatusPageUrl();
-    $scope.problemContent = 'Problem reports are being handled';
-    $scope.helpContent = 'Help content is provided';
     $scope.searchInput = 'none';
     $scope.showCdrCallFlowLink = false;
     $scope.showPartnerManagementLink = false;
@@ -195,11 +193,11 @@ require('./_support.scss');
 
           if (!_.isEmpty(settings.reportingSiteUrl)) {
             $scope.reportingUrl = settings.reportingSiteUrl;
-            $scope.problemHandler = 'externally';
+            $scope.problemHandler = $translate.instant('supportPage.externally');
           }
           if (!_.isEmpty(settings.helpUrl)) {
             $scope.helpUrl = settings.helpUrl;
-            $scope.helpHandler = 'externally';
+            $scope.helpHandler = $translate.instant('supportPage.externally');
           }
         } else {
           Log.debug('Get org failed. Status: ' + status);
