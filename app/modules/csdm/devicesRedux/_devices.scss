@@ -235,7 +235,7 @@
 
   .searchingcontainer {
     position: relative;
-    top:30vh;
+    top: 30vh;
     width: inherit;
     height: 0px;
     z-index: 2;
@@ -379,11 +379,23 @@
     background-color: white !important;
   }
 
+  .searcherror {
+    .searchfilter {
+      .searchbox {
+        .searchinput {
+          border-color: red;
+        }
+      }
+    }
+  }
+
   .devices-search {
     min-width: 250px;
     max-width: 600px;
     position: relative;
     top: -2rem;
+
+
     form {
       display: flex;
       flex-wrap: wrap;

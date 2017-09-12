@@ -14,6 +14,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
   private inputActive: boolean;
   private searchDelayTimer: ng.IPromise<any> | null;
   private static readonly SEARCH_DELAY_MS = 200;
+  public searchError = false;
 
   //bindings
   private searchResultChanged: (e: { result?: SearchResult }) => {};
@@ -99,6 +100,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
     ) {
       return; //nothing changed, abort search change.
     }
+    this.searchError = false;
 
     if (this.searchDelayTimer) {
       this.$timeout.cancel(this.searchDelayTimer);
@@ -126,14 +128,22 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
       this.updateSearchResult();
     }).catch(e => {
       this.isSearching = false;
-      DeviceSearch.ShowSearchError(this.Notification, e);
+      DeviceSearch.ShowSearchError(this.Notification, e, this.showErroredBox);
     });
   }
 
-  public static ShowSearchError(Notification: Notification, e) {
+  private showErroredBox = () => {
+    this.searchError = true;
+  }
+
+  public static ShowSearchError(Notification: Notification, e, onFourHundredError: Function | null) {
     if (e) {
       if (e.status === 400) {
-        Notification.errorWithTrackingId(e, 'spacesPage.searchFailedQuery');
+        if (onFourHundredError) {
+          onFourHundredError();
+        } else {
+          Notification.errorWithTrackingId(e, 'spacesPage.searchFailedQuery');
+        }
       } else {
         Notification.errorResponse(e, 'spacesPage.searchFailed');
       }
@@ -149,7 +159,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
         }
         this.updateSearchFilters();
       })
-      .catch(e => DeviceSearch.ShowSearchError(this.Notification, e));
+      .catch(e => DeviceSearch.ShowSearchError(this.Notification, e, this.showErroredBox));
   }
 
   public getTokens() {
