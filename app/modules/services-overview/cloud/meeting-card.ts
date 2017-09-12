@@ -1,5 +1,8 @@
 import { ICardButton, ServicesOverviewCard } from '../shared/services-overview-card';
 
+// TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
+const servicesOverviewMeetingCardTemplatePath = require('ngtemplate-loader?module=Hercules!./meeting-card.html');
+
 export class ServicesOverviewMeetingCard extends ServicesOverviewCard {
   private moreButton: ICardButton = {
     name: 'servicesOverview.showMore',
@@ -77,7 +80,7 @@ export class ServicesOverviewMeetingCard extends ServicesOverviewCard {
       description: 'servicesOverview.cards.meeting.description',
       icon: 'icon-circle-group',
       name: 'servicesOverview.cards.meeting.title',
-      template: 'modules/services-overview/cloud/meeting-card.html',
+      template: servicesOverviewMeetingCardTemplatePath,
     });
   }
 }
