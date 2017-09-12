@@ -3,6 +3,12 @@ import { IToolkitModalService } from 'modules/core/modal';
 export interface IScopeWithController extends ng.IScope {
   controller?: any;
 }
+
+// TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
+// preserve the ng-include module paths
+const requireContext = (require as any).context(`ngtemplate-loader?module=Sunlight&relativeTo=app/!modules/sunlight/features/template/setupAssistantPages`, false, /^\.\/va.*\.tpl\.html$/);
+requireContext.keys().map(key => requireContext(key));
+
 export class CareSetupVirtualAssistantCtrl {
 
   private animationTimeout = 10;
@@ -247,7 +253,7 @@ export class CareSetupVirtualAssistantCtrl {
    * @returns {string}
    */
   public getCurrentPage(): string {
-    return 'modules/sunlight/features/template/setupAssistantPages/va' + this.currentState + '.tpl.html';
+    return `modules/sunlight/features/template/setupAssistantPages/va${this.currentState}.tpl.html`;
   }
 
   /**
