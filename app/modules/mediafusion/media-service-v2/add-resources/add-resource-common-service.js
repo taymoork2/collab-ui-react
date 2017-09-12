@@ -141,6 +141,7 @@
                 Notification.errorWithTrackingId(err, 'mediaFusion.videoQuality.error');
               });
           });
+        whiteListHost(hostName, vm.selectedClusterId);
       }, function (error) {
         deferred.reject();
         var errorMessage = $translate.instant('mediaFusion.clusters.clusterCreationFailed', {
