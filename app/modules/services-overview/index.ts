@@ -23,6 +23,7 @@ import { ServicesOverviewComponent } from 'modules/services-overview/services-ov
 import { Office365SetupModalComponent } from 'modules/services-overview/new-hybrid/office-365-setup-modal/office-365-setup-modal.component';
 import { Office365TestModalComponent } from 'modules/services-overview/new-hybrid/office-365-test-modal/office-365-test-modal.component';
 import { Office365FailModalComponent } from 'modules/services-overview/new-hybrid/office-365-fail-modal/office-365-fail-modal.component';
+import { CardUsersSummaryComponent } from 'modules/services-overview/new-hybrid/card-users-summary/card-users-summary.component';
 
 export default angular
   .module('Hercules')
@@ -49,4 +50,5 @@ export default angular
   .component('office365SetupModal', new Office365SetupModalComponent())
   .component('office365FailModal', new Office365FailModalComponent())
   .component('office365TestModal', new Office365TestModalComponent())
+  .component('cardUsersSummary', new CardUsersSummaryComponent())
   .name;
