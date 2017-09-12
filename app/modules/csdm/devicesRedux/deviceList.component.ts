@@ -9,11 +9,14 @@ import IDevice = csdm.IDevice;
 import { Device } from '../services/deviceSearchConverter';
 
 class DeviceList implements ng.IComponentController {
+  private static RowHeight = 45;
+  private static HeaderHeight = 45;
 
   private huronDeviceService: any;
   public gridOptions: uiGrid.IGridOptions;
   public gridApi: uiGrid.IGridApi;
   public loadingMore = false;
+  public loadingMoreSpinner = false;
 
   //bindings
   public searchObject: SearchObject;
@@ -33,10 +36,8 @@ class DeviceList implements ng.IComponentController {
     this.huronDeviceService = CsdmHuronOrgDeviceService.create(Authinfo.getOrgId());
     this.gridOptions = {
       data: this.getResult(),
-      infiniteScrollRowsFromEnd: 5,
-      infiniteScrollDown: true,
       useExternalSorting: true,
-      rowHeight: 45,
+      rowHeight: DeviceList.RowHeight,
       appScopeProvider: {
         selectRow: (grid: uiGrid.IGridInstance, row: uiGrid.IGridRow): void => {
           this.GridCellService.selectRow(grid, row);
@@ -46,12 +47,9 @@ class DeviceList implements ng.IComponentController {
           this.expandDevice(device);
         },
       },
-      onRegisterApi: (gridApi: IGridApiWithInfiniteScroll) => {
+      onRegisterApi: (gridApi: IGridApi) => {
         this.gridApi = gridApi;
-        gridApi.infiniteScroll.on.needLoadMoreData(this.$scope, () => {
-          this.loadMore(true);
-        });
-        gridApi.core.on.sortChanged($scope, (_grid, sortColumns) => {
+        gridApi.core.on.sortChanged(this.$scope, (_grid, sortColumns) => {
           let sortedSortColumns = sortColumns;
           if (sortColumns.length > 1) {
             sortedSortColumns = _.orderBy(sortColumns, 'sort.priority', 'desc');
@@ -68,6 +66,11 @@ class DeviceList implements ng.IComponentController {
             return;
           }
           this.sortOrderChanged({ field: '', order: '' });
+        });
+        gridApi.core.on.scrollEnd(this.$scope, (scrollEvent: IJQueryMouseEventObjectWithNewScrollTop) => {
+          if ((gridApi.grid.gridHeight || 0) + scrollEvent.newScrollTop > (this.getResult() || []).length * DeviceList.RowHeight) {
+            this.loadMore(true);
+          }
         });
       },
       columnDefs: [{
@@ -111,10 +114,9 @@ class DeviceList implements ng.IComponentController {
         }
       });
 
-      if ((this.gridApi && this.gridApi.grid.gridHeight || 0) > (45 + 45 * 20)) {
+      if ((this.gridApi && this.gridApi.grid.gridHeight || 0) > (DeviceList.HeaderHeight + DeviceList.RowHeight * 20)) {
         this.loadMore();
       }
-      this.gridApi.infiniteScroll.dataLoaded(false, ((this.searchObject && this.searchObject.from || 0) + this.searchHits.hits.length) < this.searchHits.total);
     }
   }
 
@@ -149,8 +151,9 @@ class DeviceList implements ng.IComponentController {
       this.searchObject = SearchObject.create('');
     }
     this.searchObject.nextPage();
-    if ((this.searchObject.from || 0) < (this.searchHits && this.searchHits.total || 0)) {
-      this.loadingMore = fromScrollEvent;
+    if ((this.searchObject.from || 0) < (this.searchHits && this.searchHits.total || 0) && !this.loadingMore) {
+      this.loadingMore = true;
+      this.loadingMoreSpinner = fromScrollEvent;
       this.CsdmSearchService.search(this.searchObject)
         .then((response) => {
           if (response && response.data) {
@@ -159,22 +162,20 @@ class DeviceList implements ng.IComponentController {
         })
         .catch(e => DeviceSearch.ShowSearchError(this.Notification, e, null))
         .finally(() => {
-          if (fromScrollEvent) {
-            this.gridApi.infiniteScroll.dataLoaded(false, ((this.searchObject.from || 0) + this.searchHits.hits.length) < this.searchHits.total);
-          }
           if (
-            (this.gridApi.grid.gridHeight || 0) > (45 + 45 * this.searchHits.hits.length)
+            (this.gridApi.grid.gridHeight || 0) > (DeviceList.HeaderHeight + DeviceList.RowHeight * this.searchHits.hits.length)
             && ((this.searchObject.from || 0) + this.searchHits.hits.length) < this.searchHits.total) {
             this.loadMore(fromScrollEvent);
           }
           this.loadingMore = false;
+          this.loadingMoreSpinner = false;
         });
     }
   }
 }
 
-interface IGridApiWithInfiniteScroll extends IGridApi {
-  infiniteScroll: any;
+interface IJQueryMouseEventObjectWithNewScrollTop extends JQueryMouseEventObject {
+  newScrollTop: number;
 }
 
 export class DeviceListComponent implements ng.IComponentOptions {
