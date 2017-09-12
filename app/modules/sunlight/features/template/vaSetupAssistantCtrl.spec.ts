@@ -304,7 +304,7 @@ describe('Care Setup Virtual Assistant Ctrl', function () {
 
     it('Next button on Avatar Page enabled when avatar file error', function () {
       controller.avatarUploadState = controller.avatarState.PREVIEW;
-      controller.avatarError = 'FileUploadError';
+      controller.template.configuration.pages.VirtualAssistantAvatar.avatarError = 'FileUploadError';
       checkStateOfNavigationButtons(NAME_PAGE_INDEX, true, false);
     });
   });
@@ -339,29 +339,38 @@ describe('Care Setup Virtual Assistant Ctrl', function () {
     });
   });
   describe('Avatar Page', function () {
-    it('should validate avatar file type', function () {
-      const size = 1000;
-      controller.avatarError = controller.avatarErrorType.NO_ERROR;
-      controller.uploadAvatar({ name: 'abc.jpeg', size });
-      expect(controller.avatarError).toEqual(controller.avatarErrorType.FILE_TYPE_ERROR);
+    let deferredFileDataUrl;
+    beforeEach(inject(initializeCtrl(true)));
+    beforeEach(function() {
+      deferredFileDataUrl = $q.defer();
+      spyOn(VirtualAssistantService, 'getFileDataUrl').and.returnValue(deferredFileDataUrl.promise);
+    });
 
-      controller.avatarError = controller.avatarErrorType.NO_ERROR;
+    it('should validate avatar file type', function () {
+      deferredFileDataUrl.resolve('');
+      const size = 1000;
+      controller.template.configuration.pages.VirtualAssistantAvatar.avatarError = controller.avatarErrorType.NO_ERROR;
+      controller.uploadAvatar({ name: 'abc.jpeg', size });
+      expect(controller.template.configuration.pages.VirtualAssistantAvatar.avatarError).toEqual(controller.avatarErrorType.FILE_TYPE_ERROR);
+
+      controller.template.configuration.pages.VirtualAssistantAvatar.avatarError = controller.avatarErrorType.NO_ERROR;
       controller.uploadAvatar({ name: 'abc.png', size });
-      expect(controller.avatarError).toEqual(controller.avatarErrorType.NO_ERROR);
+      expect(controller.template.configuration.pages.VirtualAssistantAvatar.avatarError).toEqual(controller.avatarErrorType.NO_ERROR);
     });
 
     it('should validate avatar file size', function () {
-      controller.avatarError = controller.avatarErrorType.NO_ERROR;
+      deferredFileDataUrl.resolve('');
+      controller.template.configuration.pages.VirtualAssistantAvatar.avatarError = controller.avatarErrorType.NO_ERROR;
       controller.uploadAvatar({ name: 'abc.png' , size: controller.MAX_AVATAR_FILE_SIZE + 1 });
-      expect(controller.avatarError).toEqual(controller.avatarErrorType.FILE_SIZE_ERROR);
+      expect(controller.template.configuration.pages.VirtualAssistantAvatar.avatarError).toEqual(controller.avatarErrorType.FILE_SIZE_ERROR);
 
-      controller.avatarError = controller.avatarErrorType.NO_ERROR;
+      controller.template.configuration.pages.VirtualAssistantAvatar.avatarError = controller.avatarErrorType.NO_ERROR;
       controller.uploadAvatar({ name: 'abc.png' , size: 0 });
-      expect(controller.avatarError).toEqual(controller.avatarErrorType.FILE_SIZE_ERROR);
+      expect(controller.template.configuration.pages.VirtualAssistantAvatar.avatarError).toEqual(controller.avatarErrorType.FILE_SIZE_ERROR);
 
-      controller.avatarError = controller.avatarErrorType.NO_ERROR;
+      controller.template.configuration.pages.VirtualAssistantAvatar.avatarError = controller.avatarErrorType.NO_ERROR;
       controller.uploadAvatar({ name: 'abc.png' , size: controller.MAX_AVATAR_FILE_SIZE });
-      expect(controller.avatarError).toEqual(controller.avatarErrorType.NO_ERROR);
+      expect(controller.template.configuration.pages.VirtualAssistantAvatar.avatarError).toEqual(controller.avatarErrorType.NO_ERROR);
     });
   });
   describe('Summary Page', function () {

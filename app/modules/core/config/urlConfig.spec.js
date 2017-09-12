@@ -362,12 +362,12 @@ describe('UrlConfigSpec', function () {
     });
   });
 
-  it('should return correct Virtual Assistant Config Service url', function () {
-    whenCalling('getVirtualAssistantConfigServiceUrl').expectUrlToBe({
-      dev: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/config',
-      cfe: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/config',
-      integration: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/config',
-      prod: 'https://bot-services.produs1.ciscoccservice.com/bot-services/v1/config',
+  it('should return correct Virtual Assistant Service url', function () {
+    whenCalling('getVirtualAssistantServiceUrl').expectUrlToBe({
+      dev: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/',
+      cfe: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/',
+      integration: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/',
+      prod: 'https://bot-services.produs1.ciscoccservice.com/bot-services/v1/',
     });
   });
 

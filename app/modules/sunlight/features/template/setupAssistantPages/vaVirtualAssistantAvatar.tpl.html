@@ -11,23 +11,28 @@
 
     <div ng-switch-when="SELECT|PREVIEW" ng-switch-when-separator="|" class="va-dash-box" ngf-drop="vaSetupAssistant.uploadAvatar($file)" ngf-drag-over-class="'dragover'" ngf-multiple="false">
         <span ng-if="vaSetupAssistant.avatarUploadState == 'SELECT'">
-          <div class="va-icon-circle">
-            <i class="icon bot icon-bot-four icon-4x"></i>
+          <div>
+            <div class="va-img-circle">
+              <img class="va-img" src="/images/vaAvatarDefaultIcon.png"></img>
+            </div>
           </div>
-          <h3 class="header3 ct-title">{{vaSetupAssistant.getVaText('avatar.upload')}}</h3>
+          <h3 id="avatarUpload" class="header3 ct-title">{{vaSetupAssistant.getVaText('avatar.upload')}}</h3>
           <p class="ct-title-desc">{{vaSetupAssistant.getVaText('avatar.uploadDesc')}}</p>
+          <p class="ct-title-desc">{{vaSetupAssistant.getVaText('avatar.defaultAvatar')}}</p>
         </span>
 
         <span ng-if="vaSetupAssistant.avatarUploadState == 'PREVIEW'">
-          <div class="va-center">
-            <img class="va-img-circle" ngf-src="vaSetupAssistant.avatarFile"></img>
+          <div>
+            <div class="va-img-circle">
+              <img class="va-img" ngf-src="vaSetupAssistant.template.configuration.pages.VirtualAssistantAvatar.fileValue"></img>
+            </div>
           </div>
-          <h3 class="header3 ct-title">{{vaSetupAssistant.getVaText('avatar.preview')}}</h3>
+          <h3 id="avatarPreview" class="header3 ct-title">{{vaSetupAssistant.getVaText('avatar.preview')}}</h3>
           <p class="ct-title-desc">{{vaSetupAssistant.getVaText('avatar.previewDesc')}}</p>
         </span>
 
         <p class="ct-title-desc">{{vaSetupAssistant.getVaText('avatar.uploadBestResults')}}</p>
-        <div ngf-select="vaSetupAssistant.uploadAvatar($file)" ngf-accept="'image/png'" ngf-pattern="'.png'" ngf-multiple="false">
+        <div ngf-select="vaSetupAssistant.uploadAvatar($file)" ngf-accept="'image/png'" ngf-multiple="false">
           <p class="ct-title-desc va-input-messages">{{vaSetupAssistant.getVaText('avatar.dragDropDesc')}}<label class="va-input-label">{{vaSetupAssistant.getVaText('avatar.fileBrowser')}}</label></p>
         </div>
     </div>
@@ -44,7 +49,7 @@
   </div>
 
   <div class="va-center va-error" ng-if="vaSetupAssistant.isAvatarError()">
-    <div ng-switch="vaSetupAssistant.avatarError" block-view="true">
+    <div ng-switch="vaSetupAssistant.template.configuration.pages.VirtualAssistantAvatar.avatarError" block-view="true">
       <i class="icon icon-error icon-lg"></i>
       <span ng-switch-when="FileTypeError"> {{vaSetupAssistant.getVaText('avatar.errorUnsupportedFile')}}</span>
       <span ng-switch-when="FileSizeError"> {{vaSetupAssistant.getVaText('avatar.errorOverMaxFileSizeLimit')}}</span>
