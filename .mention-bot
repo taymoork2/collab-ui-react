@@ -4,7 +4,9 @@
   "message": "Hi @pullRequester! By analyzing the annotation information on this pull request, I identified @reviewers to be potential reviewers.",
   "alwaysNotifyForPaths": [{
     "name": "kribalac",
-    "files": ["app/modules/mediafusion/**/*.js"]
+    "files": [
+      "app/modules/mediafusion/**/*"
+    ]
   }, {
     "name": "mipark2",
     "files": [
@@ -14,15 +16,26 @@
       "webpack/**/*"
     ]
   }, {
-    "name": "thobasse",
-    "files": ["app/modules/hercules/**/*.js"]
+    "name": "WebExSquared/atlas-hybrid-services-ui",
+    "files": [
+      "app/modules/hds/**/*",
+      "app/modules/hercules/**/*",
+      "app/modules/mediafusion/**/*"
+    ]
   }, {
     "name": "WebExSquared/atlas-device-management",
-    "files": ["app/modules/squared/devices/**/*", "app/modules/squared/places/**/*", "app/modules/squared/common/filtered-view/*", "app/modules/csdm/**/*"]
+    "files": [
+      "app/modules/csdm/**/*"
+      "app/modules/squared/common/filtered-view/*",
+      "app/modules/squared/devices/**/*",
+      "app/modules/squared/places/**/*",
+    ]
   }, {
      "name": "WebExSquared/atlas-call-team",
-     "files": ["app/modules/squared/places/**/*"]
+     "files": [
+       "app/modules/squared/places/**/*"
+      ]
    }],
   "fileBlacklist": ["app/l10n/*.json", "yarn.lock"],
-  "userBlacklist": ["admolla", "atlas-ui-bot-gen", "cidylle", "cstoy", "mikecan", "stimurbe", "zamamoha", "zzatking"]
+  "userBlacklist": ["admolla", "atlas-ui-bot-gen", "cidylle", "cstoy", "mikecan", "thobasse", "stimurbe", "zamamoha", "zzatking"]
 }
