@@ -157,7 +157,7 @@ class DeviceList implements ng.IComponentController {
             this.searchHits.hits.push.apply(this.searchHits.hits, response.data.hits.hits);
           }
         })
-        .catch(e => DeviceSearch.ShowSearchError(this.Notification, e))
+        .catch(e => DeviceSearch.ShowSearchError(this.Notification, e, null))
         .finally(() => {
           if (fromScrollEvent) {
             this.gridApi.infiniteScroll.dataLoaded(false, ((this.searchObject.from || 0) + this.searchHits.hits.length) < this.searchHits.total);
