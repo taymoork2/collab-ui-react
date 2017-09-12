@@ -179,7 +179,12 @@ export class CloudConnectorService {
     }
     return this.$http
       .delete(`${this.UrlConfig.getCccUrl()}/orgs/${this.Authinfo.getOrgId()}/services/${requestedService}`)
-      .then(() => this.ServiceDescriptorService.disableService(serviceId));
+      .then(() => {
+        if (requestedService === 'squared-fusion-gcal') {
+          return this.ServiceDescriptorService.disableService(serviceId);
+        }
+        return undefined;
+      });
   }
 
   public getProvisioningResultTranslationKey(provisioningResultCode: number): string {

@@ -189,8 +189,7 @@ export class ServicesOverviewController implements ng.IComponentController {
         template: '<office-365-test-modal class="modal-content" close="$close()" dismiss="$dismiss()"></office-365-test-modal>',
         type: 'full',
       }).result
-      .finally(() => {
-        window.console.warn('$state.go');
+      .then(() => {
         this.$state.go('.', { office365: null });
       });
     } else if (this.urlParams.office365 === 'failure') {
@@ -198,8 +197,7 @@ export class ServicesOverviewController implements ng.IComponentController {
         template: `<office-365-fail-modal class="modal-content" reason="${this.urlParams.reason}" close="$close()" dismiss="$dismiss()"></office-365-fail-modal>`,
         type: 'full',
       }).result
-      .finally(() => {
-        window.console.warn('$state.go');
+      .then(() => {
         this.$state.go('.', { office365: null, reason: null });
       });
     }

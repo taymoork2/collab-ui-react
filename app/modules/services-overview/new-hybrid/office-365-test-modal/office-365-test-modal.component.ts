@@ -47,6 +47,8 @@ class Office365TestModalController implements ng.IComponentController {
       })
       .catch((error) => {
         this.loading = false;
+        // TODO: if status === 412 use an error message saying that it's a timeout and that
+        // they should try again
         this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
       });
   }
