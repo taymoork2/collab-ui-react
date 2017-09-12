@@ -73,9 +73,11 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
 
   public setCurrentFilterValue(value: string) {
     value = value === 'all' ? '' : value;
-    this._currentFilterValue = value;
-    this.currentSearchObject = this.createSearchObject(this.searchField, this._currentFilterValue);
-    this.searchChange();
+    if (this._currentFilterValue !== value) {
+      this._currentFilterValue = value;
+      this.currentSearchObject = this.createSearchObject(this.searchField, this._currentFilterValue);
+      this.searchChange();
+    }
   }
 
   public createSearchObject(searchField: string, currentFilterValue: string): SearchObject {
