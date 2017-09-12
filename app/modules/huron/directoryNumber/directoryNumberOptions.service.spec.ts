@@ -151,7 +151,7 @@ describe('Service: DirectoryNumberOptionsService', () => {
     });
     it('should get internal numbers list with LocationId when locationId is passed when featureToggle is ON', function () {
       this.DirectoryNumberOptionsService.getInternalNumberOptions(undefined, undefined, this.locationId).then( function (){
-        expect(this.LocationsService.getLocationInternalNumberPoolList).toHaveBeenCalledWith(this.locationId, undefined, undefined, null, null);
+        expect(this.NumberService.getNumberList).toHaveBeenCalledWith(null, undefined, undefined, null, null, null, null, this.locationId);
       });
       this.$rootScope.$digest();
     });

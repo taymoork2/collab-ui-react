@@ -24,7 +24,7 @@ export class NumberService {
     });
   }
 
-  public getNumberList(number?: string, type?: NumberType, assigned?: boolean, order?: NumberOrder, limit?: number, offset?: number): ng.IPromise<INumber[]> {
+  public getNumberList(number?: string, type?: NumberType, assigned?: boolean, order?: NumberOrder, limit?: number, offset?: number, locationId?: string): ng.IPromise<INumber[]> {
     return this.numberResource.get({
       customerId: this.Authinfo.getOrgId(),
       number: number,
@@ -33,6 +33,7 @@ export class NumberService {
       order: order,
       limit: limit,
       offset: offset,
+      locationId: locationId,
       deprecated: !this.hasLocations,
     }).$promise
     .then(numberList => {

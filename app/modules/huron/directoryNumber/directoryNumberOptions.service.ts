@@ -1,3 +1,5 @@
+import { NumberType } from 'modules/huron/numbers';
+
 export interface IDirectoryNumber {
   pattern: string;
 }
@@ -28,7 +30,7 @@ export class DirectoryNumberOptionsService {
     private Authinfo,
     private HuronConfig,
     private FeatureToggleService,
-    private LocationsService,
+    private NumberService,
   ) {
     this.locationsInternalNumbersOptions = this.$resource(this.HuronConfig.getCmiUrl() + '/voice/customers/:customerId/locations/:locationId/internalnumberpools');
     this.internalNumbersOptions = this.$resource(this.HuronConfig.getCmiUrl() + '/voice/customers/:customerId/internalnumberpools/:internalNumberId');
@@ -56,9 +58,9 @@ export class DirectoryNumberOptionsService {
 
   public loadLocationsInternalNumberPool(pattern?: string | Pattern, assignment?: Availability, locationId?: string): ng.IPromise<string[]> {
     const directorynumber = assignment || Availability.UNASSIGNED;
-    return this.LocationsService.getLocationInternalNumberPoolList(locationId, directorynumber, pattern , null, null)
+    return this.NumberService.getNumberList(pattern, NumberType.INTERNAL, directorynumber, null, null, null, locationId)
       .then(options => {
-        return _.map(options, 'pattern');
+        return _.map(options, 'internal');
       });
   }
 
