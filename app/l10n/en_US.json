@@ -1580,7 +1580,8 @@
     "customPlaceholder": "e.g. 81095555",
     "customHelpText": "Site-to-Site to External Site",
     "alternateCustomPlaceholder": "e.g. 456, 4567, 45678",
-    "alternateCustomHelpText": "Internal extension or custom number"
+    "alternateCustomHelpText": "Internal extension or custom number",
+    "invalidFormat": "Invalid Format. Only numbers (0-9), special characters (*#+,) and characters (PpFfCc) with a max length of 50 are allowed"
   },
   "homePage": {
     "overview": "Last 4 weeks",
