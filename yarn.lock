@@ -1593,12 +1593,12 @@ caniuse-api@^1.5.2:
     lodash.uniq "^4.5.0"
 
 caniuse-db@^1.0.30000529, caniuse-db@^1.0.30000634, caniuse-db@^1.0.30000639:
-  version "1.0.30000726"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/caniuse-db/-/caniuse-db-1.0.30000726.tgz#9bb742f8d026a62df873bc03c06843d2255b60d7"
+  version "1.0.30000727"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/caniuse-db/-/caniuse-db-1.0.30000727.tgz#4e22593089b0f35c1b2adcfc28234493a21a4b2e"
 
 caniuse-lite@^1.0.30000718, caniuse-lite@^1.0.30000726:
-  version "1.0.30000726"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/caniuse-lite/-/caniuse-lite-1.0.30000726.tgz#966a753fa107a09d4131cf8b3d616723a06ccf7e"
+  version "1.0.30000727"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/caniuse-lite/-/caniuse-lite-1.0.30000727.tgz#20c895768398ded5f98a4beab4a76c285def41d2"
 
 capture-stack-trace@^1.0.0:
   version "1.0.0"
@@ -2020,8 +2020,8 @@ content-security-policy-builder@1.0.0:
     dashify "^0.2.0"
 
 content-type@~1.0.2:
-  version "1.0.2"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/content-type/-/content-type-1.0.2.tgz#b7d113aee7a8dd27bd21133c4dc2529df1721eed"
+  version "1.0.4"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/content-type/-/content-type-1.0.4.tgz#e138cc75e040c727b1966fe5e5f8c9aee256fe3b"
 
 conventional-commit-types@^2.0.0:
   version "2.2.0"
@@ -4026,6 +4026,10 @@ http-errors@~1.5.0:
     setprototypeof "1.0.2"
     statuses ">= 1.3.1 < 2"
 
+http-parser-js@>=0.4.0:
+  version "0.4.5"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/http-parser-js/-/http-parser-js-0.4.5.tgz#a3ecf39a667481a38ca60882ab57a2db578b9970"
+
 http-proxy-agent@^1.0.0:
   version "1.0.0"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/http-proxy-agent/-/http-proxy-agent-1.0.0.tgz#cc1ce38e453bf984a0f7702d2dd59c73d081284a"
@@ -4652,8 +4656,8 @@ jquery@~3.2.1:
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/jquery/-/jquery-3.2.1.tgz#5c4d9de652af6cd0a770154a631bba12b015c787"
 
 js-base64@^2.1.8, js-base64@^2.1.9:
-  version "2.2.0"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/js-base64/-/js-base64-2.2.0.tgz#5e8a8d193a908198dd23d1704826d207b0e5a8f6"
+  version "2.3.1"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/js-base64/-/js-base64-2.3.1.tgz#3705897c35fce0e202132630e750d8a17cd220ec"
 
 js-md5@^0.4.1:
   version "0.4.2"
@@ -4668,8 +4672,8 @@ js-untar@^0.1.4:
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/js-untar/-/js-untar-0.1.4.tgz#0418bf4fd8dba19e1045a5478b1ed9036ae5765d"
 
 js-yaml@^3.4.3, js-yaml@^3.5.1, js-yaml@^3.7.0, js-yaml@^3.9.1:
-  version "3.9.1"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/js-yaml/-/js-yaml-3.9.1.tgz#08775cebdfdd359209f0d2acd383c8f86a6904a0"
+  version "3.10.0"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/js-yaml/-/js-yaml-3.10.0.tgz#2e78441646bd4682e963f22b6e92823c309c62dc"
   dependencies:
     argparse "^1.0.7"
     esprima "^4.0.0"
@@ -7226,8 +7230,8 @@ right-pad@^1.0.1:
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/right-pad/-/right-pad-1.0.1.tgz#8ca08c2cbb5b55e74dafa96bf7fd1a27d568c8d0"
 
 rimraf@2, rimraf@^2.2.8, rimraf@^2.4.4, rimraf@^2.5.1, rimraf@^2.5.2, rimraf@^2.6.0, rimraf@^2.6.1:
-  version "2.6.1"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/rimraf/-/rimraf-2.6.1.tgz#c2338ec643df7a1b7fe5c54fa86f57428a55f33d"
+  version "2.6.2"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/rimraf/-/rimraf-2.6.2.tgz#2ed8150d24a16ea8651e6d6ef0f47c4158ce7a36"
   dependencies:
     glob "^7.0.5"
 
@@ -8723,9 +8727,10 @@ webpack@^2.2.1:
     yargs "^6.0.0"
 
 websocket-driver@>=0.5.1:
-  version "0.6.5"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/websocket-driver/-/websocket-driver-0.6.5.tgz#5cb2556ceb85f4373c6d8238aa691c8454e13a36"
+  version "0.7.0"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/websocket-driver/-/websocket-driver-0.7.0.tgz#0caf9d2d755d93aee049d4bdd0d3fe2cca2a24eb"
   dependencies:
+    http-parser-js ">=0.4.0"
     websocket-extensions ">=0.1.1"
 
 websocket-extensions@>=0.1.1:

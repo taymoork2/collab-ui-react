@@ -63,6 +63,14 @@ xdescribe('Service: QlikService', function () {
       expect(Object.keys(res.data)).toContain('ticket');
     });
 
+    it('should return appId and ticket if call Webex MEI API', function () {
+      var promise = QlikService.getWebExReportQBSforMEIUrl(testData.postParam);
+
+      $httpBackend.flush();
+      var res = promise.$$state.value;
+      expect(Object.keys(res.data)).toContain('ticket');
+    });
+
     it('should return appId and ticket if call Spark base API', function () {
       var promise = QlikService.getSparkReportQBSforBaseUrl(testData.postParam);
 
@@ -78,25 +86,39 @@ xdescribe('Service: QlikService', function () {
       var res = promise.$$state.value;
       expect(Object.keys(res.data)).toContain('ticket');
     });
+
+    it('should return appId and ticket if call Spark MEI API', function () {
+      var promise = QlikService.getSparkReportQBSforMEIUrl(testData.postParam);
+
+      $httpBackend.flush();
+      var res = promise.$$state.value;
+      expect(Object.keys(res.data)).toContain('ticket');
+    });
   });
 
   describe('WebEx/Spark report Qlik mashup address', function () {
     beforeEach(function () {
       spyOn(UrlConfig, 'getWebExReportAppforBaseUrl');
       spyOn(UrlConfig, 'getWebExReportAppforPremiumUrl');
+      spyOn(UrlConfig, 'getWebExReportAppforMEIUrl');
       spyOn(UrlConfig, 'getSparkReportAppforBaseUrl');
       spyOn(UrlConfig, 'getSparkReportAppforPremiumUrl');
+      spyOn(UrlConfig, 'getSparkReportAppforMEIUrl');
     });
     it('should return Qlik mashup address if error code not exist', function () {
       UrlConfig.getWebExReportAppforBaseUrl.and.returnValue(testData.qlikMashupUrl);
       UrlConfig.getWebExReportAppforPremiumUrl.and.returnValue(testData.qlikMashupUrl);
+      UrlConfig.getWebExReportAppforMEIUrl.and.returnValue(testData.qlikMashupUrl);
       UrlConfig.getSparkReportAppforBaseUrl.and.returnValue(testData.qlikMashupUrl);
       UrlConfig.getSparkReportAppforPremiumUrl.and.returnValue(testData.qlikMashupUrl);
+      UrlConfig.getSparkReportAppforMEIUrl.and.returnValue(testData.qlikMashupUrl);
       var appUrls = [
         QlikService.getWebExReportAppforBaseUrl(),
         QlikService.getWebExReportAppforPremiumUrl(),
+        QlikService.getWebExReportAppforMEIUrl(),
         QlikService.getSparkReportAppforBaseUrl(),
         QlikService.getSparkReportAppforPremiumUrl(),
+        QlikService.getSparkReportAppforMEIUrl(),
       ];
       _.each(appUrls, function (appUrl) {
         expect(appUrl).toEqual('qlik-loader');

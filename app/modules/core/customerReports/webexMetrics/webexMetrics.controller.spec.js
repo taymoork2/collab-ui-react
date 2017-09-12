@@ -72,7 +72,7 @@ describe('Controller: WebEx Metrics Ctrl', function () {
 
     this.ProPackService.hasProPackPurchased.and.returnValue(this.$q.resolve(true));
     this.initController();
-    expect(this.controller.reportView).toEqual(this.controller.webexMetrics.views[1]);
+    expect(this.controller.reportView).toEqual(this.controller.webexMetrics.views[0]);
   });
 
   it('should not have anything in the dropdown for webex metrics', function () {
@@ -91,12 +91,12 @@ describe('Controller: WebEx Metrics Ctrl', function () {
 
   it('should do something when state change success', function () {
     var event = jasmine.createSpyObj('event', ['preventDefault']);
-    spyOn(this.controller, 'loadMetricsReport');
+    spyOn(this.controller, 'updateWebexMetrics');
     this.controller.selectEnable = false;
     this.controller.onStateChangeSuccess(event, { name: 'reports.webex-metrics.metrics' }, {}, { name: 'reports.webex-metrics.classic' });
 
     expect(this.controller.selectEnable).toBe(true);
-    expect(this.controller.loadMetricsReport).toHaveBeenCalled();
+    expect(this.controller.updateWebexMetrics).toHaveBeenCalled();
 
     this.controller.onStateChangeSuccess(event, { name: 'reports.webex-metrics.classic' });
     expect(this.controller.selectEnable).toBe(false);

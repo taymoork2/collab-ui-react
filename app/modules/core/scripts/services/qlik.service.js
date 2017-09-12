@@ -12,8 +12,10 @@
     var service = {
       getWebExReportQBSforBaseUrl: getWebExReportQBSforBaseUrl,
       getWebExReportQBSforPremiumUrl: getWebExReportQBSforPremiumUrl,
+      getWebExReportQBSforMEIUrl: getWebExReportQBSforMEIUrl,
       getWebExReportAppforBaseUrl: getWebExReportAppforBaseUrl,
       getWebExReportAppforPremiumUrl: getWebExReportAppforPremiumUrl,
+      getWebExReportAppforMEIUrl: getWebExReportAppforMEIUrl,
       getSparkReportQBSforBaseUrl: getSparkReportQBSforBaseUrl,
       getSparkReportQBSforPremiumUrl: getSparkReportQBSforPremiumUrl,
       getSparkReportAppforBaseUrl: getSparkReportAppforBaseUrl,
@@ -76,6 +78,7 @@
       });
     }
 
+    // webex QBS
     function getWebExReportQBSforBaseUrl(data) {
       var url = UrlConfig.getWebExReportQBSforBaseUrl();
       return $http.post(url, data).then(extractData).catch(catchError);
@@ -86,6 +89,12 @@
       return $http.post(url, data).then(extractData).catch(catchError);
     }
 
+    function getWebExReportQBSforMEIUrl(data) {
+      var url = UrlConfig.getWebExReportQBSforMEIUrl();
+      return $http.post(url, data).then(extractData).catch(catchError);
+    }
+
+    //webex App
     function getWebExReportAppforBaseUrl(qrp) {
       return UrlConfig.getWebExReportAppforBaseUrl(qrp);
     }
@@ -94,6 +103,11 @@
       return UrlConfig.getWebExReportAppforPremiumUrl(qrp);
     }
 
+    function getWebExReportAppforMEIUrl(qrp) {
+      return UrlConfig.getWebExReportAppforMEIUrl(qrp);
+    }
+
+    //spark QBS
     function getSparkReportQBSforBaseUrl(data) {
       var url = UrlConfig.getSparkReportQBSforBaseUrl();
       return $http.post(url, data).then(extractData).catch(catchError);
@@ -104,6 +118,7 @@
       return $http.post(url, data).then(extractData).catch(catchError);
     }
 
+    //spark App
     function getSparkReportAppforBaseUrl(qrp) {
       return UrlConfig.getSparkReportAppforBaseUrl(qrp);
     }
