@@ -98,7 +98,7 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
       }, {
         name: 'total',
         displayName: this.$translate.instant('myCompanyOrders.priceHeader'),
-        cellTemplate: 'modules/core/myCompany/orders/myCompanyOrdersAction.tpl.html',
+        cellTemplate: require('modules/core/myCompany/orders/myCompanyOrdersAction.tpl.html'),
         width: '14%',
       }],
     };

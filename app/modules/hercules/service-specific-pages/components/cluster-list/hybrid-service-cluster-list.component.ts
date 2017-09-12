@@ -119,12 +119,12 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
       columnDefs: [{
         field: 'name',
         displayName: this.$translate.instant(`hercules.clusterListComponent.clusters-title-${this.serviceId}`),
-        cellTemplate: 'modules/hercules/service-specific-pages/components/cluster-list/cluster-list-display-name.html',
+        cellTemplate: require('modules/hercules/service-specific-pages/components/cluster-list/cluster-list-display-name.html'),
         width: '35%',
       }, {
         field: 'serviceStatus',
         displayName: this.$translate.instant('hercules.clusterListComponent.status-title'),
-        cellTemplate: 'modules/hercules/service-specific-pages/components/cluster-list/cluster-list-status.html',
+        cellTemplate: require('modules/hercules/service-specific-pages/components/cluster-list/cluster-list-status.html'),
         width: '65%',
       }],
       onRegisterApi: (gridApi) => {
