@@ -8,9 +8,9 @@ export class HybridCalendarExchangeActiveCardComponent implements ng.IComponentO
   public controller = HybridCalendarExchangeActiveCardController;
   public template = `
     <article>
-      <div class="active-card_header">
+      <div class="active-card_header card_header--stretched">
         <h4 translate="servicesOverview.cards.hybridCalendar.title"></h4>
-        <span>[Exchange]</span>
+        <span><img src="/images/hybrid-services/Microsoft_Exchange_logo_small.png" alt="{{::servicesOverview.cards.hybridCalendar.exchangeTitle | translate}}"></span>
       </div>
       <div class="active-card_content">
         <p translate="servicesOverview.cards.hybridCalendar.description"></p>

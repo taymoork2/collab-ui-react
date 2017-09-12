@@ -8,9 +8,9 @@ export class HybridCalendarGoogleActiveCardComponent implements ng.IComponentOpt
   public controller = HybridCalendarGoogleActiveCardController;
   public template = `
     <article>
-      <div class="active-card_header">
+      <div class="active-card_header card_header--stretched">
         <h4 translate="servicesOverview.cards.hybridCalendar.title"></h4>
-        <span>[Google]</span>
+        <span><img src="/images/hybrid-services/Google_Calendar_logo_small.png" alt="{{::servicesOverview.cards.hybridCalendar.googleTitle | translate}}"></span>
       </div>
       <div class="active-card_content">
         <p translate="servicesOverview.cards.hybridCalendar.description"></p>
