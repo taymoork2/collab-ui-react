@@ -65,3 +65,16 @@ export function createAtlasUser(token, orgId, userList) {
   console.log('Start to create Users!');
   return provisionerHelper.makeRequest(options);
 };
+
+export function createAtlasPlace(token, orgId, placeList) {
+  const options = {
+    method: 'POST',
+    uri: `${config.getCsdmServiceUrl()}organization/${orgId}/places`,
+    headers: {
+      Authorization: `Bearer  ${token}`,
+    },
+    body: placeList,
+    json: true,
+  };
+  return provisionerHelper.makeRequest(options);
+}
