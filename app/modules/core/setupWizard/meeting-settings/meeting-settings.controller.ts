@@ -443,6 +443,21 @@ export class MeetingSettingsCtrl {
     }
   }
 
+  public getSitesAudioPackageDisplay() {
+    const audioPackage = this.SetupWizardService.getPendingAudioLicenses();
+    if (_.isEmpty(audioPackage)) {
+      return null;
+    }
+    let audioPackageDisplay = this.$translate.instant('subscriptions.licenseTypes.' + audioPackage[0].offerName);
+    if (this.audioPartnerName) {
+      audioPackageDisplay = this.$translate.instant('firstTimeWizard.conferencingAudioProvided', {
+        partner:  this.audioPartnerName,
+        service: audioPackageDisplay,
+      });
+    }
+    return audioPackageDisplay;
+  }
+
   public checkValidTransferData() {
     this.clearError();
     let invalid = false;

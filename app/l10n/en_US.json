@@ -3702,15 +3702,14 @@
     "supportCenterLicensesRemaining": "Support Center Licenses Remaining",
     "tspPartnerRequired": "You have purchased TSP for your audio plan. A partner is required to provide this service.",
     "chooseTSPPartner": "Choose TSP partner",
-    "tspProvidedBy":"Conferencing Audio: TSP provided by {{partner}}",
+    "conferencingAudioProvided": "Conferencing Audio: {{service}} provided by {{partner}}",
     "ccasp": {
       "ccaspSubheading": "Conferencing audio setup",
       "ccaspDescription": "You have purchased audio from a partner. Please enter your audio provider's subscription ID number.  If you do not have one then contact your partner from who you purchased this subscription",
       "ccaspSubscriptionId": "CCA-SP provider subscription id number",
       "chooseCCASPPartner": "Choose CCA-SP partner",
       "ccaspPartner": "CCA-SP Partner: {{partner}}",
-      "errorNoMatch": "The subscription ID number and CCA-SP Partner do not match. Please enter a valid subscription ID and SSA-SP Partner combination",
-      "ccaspProvided": "Conferencing Audio: CCA-SP provided by {{partner}}"
+      "errorNoMatch": "The subscription ID number and CCA-SP Partner do not match. Please enter a valid subscription ID and SSA-SP Partner combination"
     },
     "existingWebExTrialSites": "You have the following WebEx site that was part of your free trial, would you like to continue using it?",
     "setupSitesDescription": "Now it's time to choose the URL you will use for each site. This is the URL people will type into their browser in order to join a meeting that you host",
