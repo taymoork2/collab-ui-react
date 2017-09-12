@@ -101,7 +101,11 @@ exports.html = {
   test: /\.html$/,
   use: [
     {
-      loader: 'raw-loader',
+      loader: 'html-loader',
+      options: {
+        minimize: true,
+        removeAttributeQuotes: false, // consistency preference
+      },
     },
   ],
   exclude: /\/app\/index.html$/,
