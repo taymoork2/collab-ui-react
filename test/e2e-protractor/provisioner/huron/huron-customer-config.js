@@ -23,6 +23,7 @@ export function huronCustomer(huronCustomerOptions) {
     users: huronUsers(options.users, options.numberRange ? options.numberRange.beginNumber : undefined, pstnNumbers),
     doFtsw: options.doFtsw || false,
     // doHuntGroup: doHuntGroup || false,
+    doCallPickUp: options.doCallPickUp || false,
   };
   return atlasCustomer(customer);
 }

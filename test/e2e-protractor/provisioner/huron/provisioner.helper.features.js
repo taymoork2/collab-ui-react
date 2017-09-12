@@ -53,3 +53,42 @@ export function setupHuntGroup(customer) {
       });
   }
 }
+
+export function setupCallPickup(customer) {
+  if (customer.doCallPickUp) {
+    const callPickupName = `${customer.name}_test_pickup`
+    const member_Obi = 'Obi'
+    const member_Princess = 'Princess'
+    let uuid_Obi = ''
+    let uuid_Princess = ''
+    console.log(`Provisioing call pickup for ${customer.name}!`);
+    return provisionerHelper.getToken(customer.partner)
+      .then(token => {
+        return cmiHelper.getUserUUID(token, customer.callOptions.cmiCustomer.uuid, `${member_Obi}`)
+          .then(response => {
+            return cmiHelper.getNumberUUID(token, customer.callOptions.cmiCustomer.uuid, `${response.members[0].uuid}`)
+              .then(response => {
+                uuid_Obi = `${response.numbers[0].uuid}`
+                return cmiHelper.getUserUUID(token, customer.callOptions.cmiCustomer.uuid, `${member_Princess}`)
+                  .then(response => {
+                    return cmiHelper.getNumberUUID(token, customer.callOptions.cmiCustomer.uuid, `${response.members[0].uuid}`)
+                      .then(response => {
+                        uuid_Princess = `${response.numbers[0].uuid}`
+                        var pickUpBody = {
+                          name: `${callPickupName}`,
+                          members: [
+                            `${uuid_Obi}`,
+                            `${uuid_Princess}`,
+                          ],
+                        }
+                        return cmiHelper.createCallPickUp(token, customer.callOptions.cmiCustomer.uuid, pickUpBody)
+                          .then(() => {
+                            console.log(`Successfully added call pickup${customer.name}!`);
+                          })
+                      })
+                  })
+              })
+          })
+      })
+  }
+}

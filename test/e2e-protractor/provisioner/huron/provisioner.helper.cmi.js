@@ -101,3 +101,40 @@ export function createCmiHuntGroup(token, customerId, hgBody) {
   };
   return provisionerHelper.makeRequest(options);
 }
+
+export function createCallPickUp(token, customerId, pickUpBody) {
+  const options = {
+    method: 'POST',
+    uri: `${config.getCmiV2ServiceUrl()}customers/${customerId}/features/callpickups?wide=true`,
+    headers: {
+      Authorization: `Bearer  ${token}`,
+    },
+    body: pickUpBody,
+    json: true,
+  };
+  return provisionerHelper.makeRequest(options);
+}
+
+export function getUserUUID(token, customerId, value) {
+  const options = {
+    method: 'GET',
+    uri: `${config.getCmiV2ServiceUrl()}customers/${customerId}/members?limit=3&name=${value}&wide=false`,
+    headers: {
+      Authorization: `Bearer  ${token}`,
+    },
+    json: true,
+  };
+  return provisionerHelper.makeRequest(options);
+}
+
+export function getNumberUUID(token, customerId, userUUID) {
+  const options = {
+    method: 'GET',
+    uri: `${config.getCmiV2ServiceUrl()}customers/${customerId}/users/${userUUID}/numbers`,
+    headers: {
+      Authorization: `Bearer  ${token}`,
+    },
+    json: true,
+  };
+  return provisionerHelper.makeRequest(options);
+}
