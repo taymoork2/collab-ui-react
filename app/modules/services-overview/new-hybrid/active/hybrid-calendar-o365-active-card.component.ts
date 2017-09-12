@@ -8,9 +8,9 @@ export class HybridCalendarO365ActiveCardComponent implements ng.IComponentOptio
   public controller = HybridCalendarO365ActiveCardController;
   public template = `
     <article>
-      <div class="active-card_header">
+      <div class="active-card_header card_header--stretched">
         <h4 translate="servicesOverview.cards.hybridCalendar.title"></h4>
-        <span>[Office 365]</span>
+        <span><img src="/images/hybrid-services/Office_365_logo_small.png" alt="{{::servicesOverview.cards.hybridCalendar.office365Title | translate}}"></span>
       </div>
       <div class="active-card_content">
         <p translate="servicesOverview.cards.hybridCalendar.description"></p>

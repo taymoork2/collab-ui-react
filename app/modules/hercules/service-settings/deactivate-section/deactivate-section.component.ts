@@ -25,7 +25,7 @@ class DeactivateSectionCtrl implements ng.IComponentController {
   ) {}
 
   public $onInit() {
-    this.localizedServiceName = this.$translate.instant('hercules.hybridServiceNames.' + this.serviceId);
+    this.localizedServiceName = this.$translate.instant(`hercules.hybridServiceNames.${this.serviceId}`);
     if (this.serviceId === 'squared-fusion-cal' || this.serviceId === 'squared-fusion-uc' || this.serviceId === 'spark-hybrid-impinterop') {
       this.localizedConnectorName = this.$translate.instant(`hercules.connectorNames.${this.serviceId}`);
     }
