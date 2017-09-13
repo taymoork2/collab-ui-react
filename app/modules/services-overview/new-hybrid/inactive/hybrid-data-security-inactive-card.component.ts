@@ -78,7 +78,7 @@ export class HybridDataSecurityInactiveCardComponent implements ng.IComponentOpt
     <article>
       <div class="inactive-card_header">
         <h4 translate="servicesOverview.cards.hybridDataSecurity.title"></h4>
-        <cr-pro-pack-icon ng-if="$ctrl.showProBadge" tooltip="{{::$ctrl.infoText| translate}}" tooltip-append-to-body="true" tooltip-placement="right"></cr-pro-pack-icon>
+        <cr-pro-pack-icon ng-if="$ctrl.showProBadge" tooltip="{{::$ctrl.infoText| translate}}" tooltip-append-to-body="true" tooltip-placement="right" tooltip-trigger="focus mouseenter" tabindex="0" aria-label="{{::$ctrl.infoText| translate}}"></cr-pro-pack-icon>
       </div>
       <div class="inactive-card_content">
         <p translate="servicesOverview.cards.hybridDataSecurity.description"></p>
