@@ -1307,18 +1307,18 @@ bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.4.0:
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/bn.js/-/bn.js-4.11.8.tgz#2cde09eb5ee341f484746bb0309b3253b1b1442f"
 
 body-parser@^1.16.1:
-  version "1.18.0"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/body-parser/-/body-parser-1.18.0.tgz#d3b224d467fa2ce8d43589c0245043267c093634"
+  version "1.18.1"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/body-parser/-/body-parser-1.18.1.tgz#9c1629370bcfd42917f30641a2dcbe2ec50d4c26"
   dependencies:
     bytes "3.0.0"
-    content-type "~1.0.2"
+    content-type "~1.0.4"
     debug "2.6.8"
     depd "~1.1.1"
     http-errors "~1.6.2"
-    iconv-lite "0.4.18"
+    iconv-lite "0.4.19"
     on-finished "~2.3.0"
-    qs "6.5.0"
-    raw-body "2.3.1"
+    qs "6.5.1"
+    raw-body "2.3.2"
     type-is "~1.6.15"
 
 boolbase@~1.0.0:
@@ -2019,7 +2019,7 @@ content-security-policy-builder@1.0.0:
   dependencies:
     dashify "^0.2.0"
 
-content-type@~1.0.2:
+content-type@~1.0.2, content-type@~1.0.4:
   version "1.0.4"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/content-type/-/content-type-1.0.4.tgz#e138cc75e040c727b1966fe5e5f8c9aee256fe3b"
 
@@ -3081,8 +3081,8 @@ esutils@^2.0.2:
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/esutils/-/esutils-2.0.2.tgz#0abf4f1caa5bcb1f7a9d8acc6dea4faaa04bac9b"
 
 etag@^1.7.0, etag@~1.8.0:
-  version "1.8.0"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/etag/-/etag-1.8.0.tgz#6f631aef336d6c46362b51764044ce216be3c051"
+  version "1.8.1"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/etag/-/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
 
 ev-emitter@^1.0.0:
   version "1.1.1"
@@ -3963,8 +3963,8 @@ html-entities@^1.2.0:
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/html-entities/-/html-entities-1.2.1.tgz#0df29351f0721163515dfb9e5543e5f6eed5162f"
 
 html-minifier@^3.2.3:
-  version "3.5.4"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/html-minifier/-/html-minifier-3.5.4.tgz#e9bbcca964a6815617ed7c31f1f20b476b50b807"
+  version "3.5.5"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/html-minifier/-/html-minifier-3.5.5.tgz#3bdc9427e638bbe3dbde96c0eb988b044f02739e"
   dependencies:
     camel-case "3.0.x"
     clean-css "4.1.x"
@@ -4089,11 +4089,7 @@ ical.js@~1.2.1:
   version "1.2.2"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/ical.js/-/ical.js-1.2.2.tgz#59b517362a8f61dce0342fe67deb7c20dd119f6e"
 
-iconv-lite@0.4.18:
-  version "0.4.18"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/iconv-lite/-/iconv-lite-0.4.18.tgz#23d8656b16aae6742ac29732ea8f0336a4789cf2"
-
-iconv-lite@^0.4.17, iconv-lite@^0.4.5:
+iconv-lite@0.4.19, iconv-lite@^0.4.17, iconv-lite@^0.4.5:
   version "0.4.19"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/iconv-lite/-/iconv-lite-0.4.19.tgz#f7468f60135f5e5dad3399c0a81be9a1603a082b"
 
@@ -4611,8 +4607,8 @@ jasmine-jquery@^2.1.1:
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/jasmine-jquery/-/jasmine-jquery-2.1.1.tgz#d4095e646944a26763235769ab018d9f30f0d47b"
 
 jasmine-promise-matchers@^2.0.2:
-  version "2.3.0"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/jasmine-promise-matchers/-/jasmine-promise-matchers-2.3.0.tgz#bf8438797b5fad02227638c72c5848d692eff386"
+  version "2.4.0"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/jasmine-promise-matchers/-/jasmine-promise-matchers-2.4.0.tgz#84c1ef55a378158bc4c22d8379d40f9918711d0d"
 
 jasmine-reporters@^2.2.0:
   version "2.2.1"
@@ -4656,8 +4652,8 @@ jquery@~3.2.1:
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/jquery/-/jquery-3.2.1.tgz#5c4d9de652af6cd0a770154a631bba12b015c787"
 
 js-base64@^2.1.8, js-base64@^2.1.9:
-  version "2.3.1"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/js-base64/-/js-base64-2.3.1.tgz#3705897c35fce0e202132630e750d8a17cd220ec"
+  version "2.3.2"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/js-base64/-/js-base64-2.3.2.tgz#a79a923666372b580f8e27f51845c6f7e8fbfbaf"
 
 js-md5@^0.4.1:
   version "0.4.2"
@@ -5455,7 +5451,11 @@ mime@1.3.4:
   version "1.3.4"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/mime/-/mime-1.3.4.tgz#115f9e3b6b3daf2959983cb38f149a2d40eb5d53"
 
-"mime@>= 0.0.1", mime@^1.3.4:
+"mime@>= 0.0.1":
+  version "2.0.0"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/mime/-/mime-2.0.0.tgz#e58e03970e44e57ed1394893b07e6312f71925e3"
+
+mime@^1.3.4:
   version "1.4.0"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/mime/-/mime-1.4.0.tgz#69e9e0db51d44f2a3b56e48b7817d7d137f1a343"
 
@@ -6794,7 +6794,7 @@ qs@6.5.0:
   version "6.5.0"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/qs/-/qs-6.5.0.tgz#8d04954d364def3efc55b5a0793e1e2c8b1e6e49"
 
-"qs@>= 0.4.0":
+qs@6.5.1, "qs@>= 0.4.0":
   version "6.5.1"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/qs/-/qs-6.5.1.tgz#349cdf6eef89ec45c12d7d5eb3fc0c870343a6d8"
 
@@ -6856,13 +6856,13 @@ range-parser@^1.0.3, range-parser@^1.2.0, range-parser@~1.2.0:
   version "1.2.0"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/range-parser/-/range-parser-1.2.0.tgz#f49be6b487894ddc40dcc94a322f611092e00d5e"
 
-raw-body@2.3.1:
-  version "2.3.1"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/raw-body/-/raw-body-2.3.1.tgz#30f95e2a67a14e2e4413d8d51fdd92c877e8f2ed"
+raw-body@2.3.2:
+  version "2.3.2"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/raw-body/-/raw-body-2.3.2.tgz#bcd60c77d3eb93cde0050295c3f379389bc88f89"
   dependencies:
     bytes "3.0.0"
     http-errors "1.6.2"
-    iconv-lite "0.4.18"
+    iconv-lite "0.4.19"
     unpipe "1.0.0"
 
 raw-loader@^0.5.1, raw-loader@~0.5.1:
@@ -7324,8 +7324,8 @@ schema-utils@^0.3.0:
     ajv "^5.0.0"
 
 script-loader@^0.7.0:
-  version "0.7.0"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/script-loader/-/script-loader-0.7.0.tgz#685dc7e7069e0dee7a92674f0ebc5b0f55baa5ec"
+  version "0.7.1"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/script-loader/-/script-loader-0.7.1.tgz#751624cdc992ff02a07bf29a851a8e92e094a0bf"
   dependencies:
     raw-loader "~0.5.1"
 
