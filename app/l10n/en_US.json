@@ -8408,7 +8408,7 @@
       },
       "hybridCalendar": {
         "title": "Hybrid Calendar",
-        "description": "Inserts Join and Room details by adding @WebEx and/or @Spark to the Meeting Invite Location field.",
+        "description": "Use @WebEx or @Spark in a meeting location to insert join details, show upcoming meetings in Cisco Spark app, and provide One Button to Push (OBTP) to Join.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
