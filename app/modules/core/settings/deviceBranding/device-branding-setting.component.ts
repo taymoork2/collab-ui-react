@@ -6,9 +6,10 @@ export class DeviceBrandingSetting extends SettingSection {
   public subsectionLabel: string;
   /* @ngInject */
   public constructor() {
-    super('branding');
+    super('deviceBranding');
     this.subsectionLabel = '';
-    this.description = "Brand your employee's experience with Cisco applications, emails and devices by uploading custom logos and/or imagery.";
+    this.subsectionDescription = '';
+    this.description = 'globalSettings.deviceBranding.description';
   }
 }
 
