@@ -6,24 +6,24 @@ import { IDeferred, IHttpService, IQService } from 'angular';
 import * as _ from 'lodash';
 
 export class CsdmSearchService {
-  private pendingPromise: IDeferred<undefined>;
+  private pendingPromise: Map<Caller, IDeferred<undefined>> = {};
 
   /* @ngInject */
   constructor(private $http: IHttpService, private $q: IQService, private UrlConfig, private Authinfo, private DeviceSearchConverter: DeviceSearchConverter) {
 
   }
 
-  public search(search: SearchObject): IHttpPromise<SearchResult> {
-    if (this.pendingPromise) {
-      this.pendingPromise.resolve();
+  public search(search: SearchObject, caller: Caller): IHttpPromise<SearchResult> {
+    if (this.pendingPromise[caller]) {
+      this.pendingPromise[caller].resolve();
     }
     const url = this.UrlConfig.getCsdmServiceUrl() + '/organization/' + this.Authinfo.getOrgId() + '/devices/_search';
     SearchObject.initDefaults(search);
-    this.pendingPromise = this.$q.defer();
+    this.pendingPromise[caller] = this.$q.defer();
     return this.$http
       .get<SearchResult>(
         url + CsdmSearchService.constructSearchString(search),
-        { timeout: this.pendingPromise.promise })
+        { timeout: this.pendingPromise[caller].promise })
       .then(data => this.DeviceSearchConverter.convertSearchResult(data));
   }
 
@@ -41,4 +41,9 @@ export class CsdmSearchService {
     }
     return '';
   }
+}
+
+export enum Caller {
+  aggregator = 'aggregator',
+  searchOrLoadMore = 'search',
 }

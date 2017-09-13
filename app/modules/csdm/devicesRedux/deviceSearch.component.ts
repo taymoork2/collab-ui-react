@@ -1,7 +1,7 @@
 import { Device } from '../services/deviceSearchConverter';
 import { SearchFields, SearchObject } from '../services/search/searchObject';
 import { SearchResult } from '../services/search/searchResult';
-import { CsdmSearchService } from '../services/csdmSearch.service';
+import { Caller, CsdmSearchService } from '../services/csdmSearch.service';
 import { SearchTranslator } from '../services/search/searchTranslator';
 import { Notification } from '../../core/notifications/notification.service';
 
@@ -122,7 +122,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
 
   private performSearch(search: SearchObject) {
     this.isSearching = true;
-    this.CsdmSearchService.search(search).then((response) => {
+    this.CsdmSearchService.search(search, Caller.searchOrLoadMore).then((response) => {
       if (response && response.data) {
         this.updateSearchResult(response.data);
         return;
@@ -153,7 +153,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
   }
 
   private performFilterUpdateSearch() {
-    this.CsdmSearchService.search(SearchObject.create(this.searchField))
+    this.CsdmSearchService.search(SearchObject.create(this.searchField), Caller.aggregator)
       .then(response => {
         if (response && response.data) {
           this.updateSearchFilters(response.data);

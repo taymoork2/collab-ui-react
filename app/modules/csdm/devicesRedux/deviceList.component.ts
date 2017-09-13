@@ -1,7 +1,7 @@
 import { IGridApi } from 'ui-grid';
 import { SearchObject } from '../services/search/searchObject';
 import { SearchHits } from '../services/search/searchResult';
-import { CsdmSearchService } from '../services/csdmSearch.service';
+import { Caller, CsdmSearchService } from '../services/csdmSearch.service';
 import { IOnChangesObject } from 'angular';
 import { DeviceSearch } from './deviceSearch.component';
 import { GridCellService } from '../../core/csgrid/cs-grid-cell/gridCell.service';
@@ -137,7 +137,7 @@ class DeviceList implements ng.IComponentController {
   }
 
   public deviceDeleted(searchHits) {
-    return function(url) {
+    return function (url) {
       if (searchHits && searchHits.hits) {
         _.remove(searchHits.hits, (device: Device) => {
           return device.url === url;
@@ -154,7 +154,7 @@ class DeviceList implements ng.IComponentController {
     if ((this.searchObject.from || 0) < (this.searchHits && this.searchHits.total || 0) && !this.loadingMore) {
       this.loadingMore = true;
       this.loadingMoreSpinner = fromScrollEvent;
-      this.CsdmSearchService.search(this.searchObject)
+      this.CsdmSearchService.search(this.searchObject, Caller.searchOrLoadMore)
         .then((response) => {
           if (response && response.data) {
             this.searchHits.hits.push.apply(this.searchHits.hits, response.data.hits.hits);
