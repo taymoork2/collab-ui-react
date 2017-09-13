@@ -25,10 +25,10 @@
   }, {
     "name": "WebExSquared/atlas-device-management",
     "files": [
-      "app/modules/csdm/**/*"
+      "app/modules/csdm/**/*",
       "app/modules/squared/common/filtered-view/*",
       "app/modules/squared/devices/**/*",
-      "app/modules/squared/places/**/*",
+      "app/modules/squared/places/**/*"
     ]
   }, {
      "name": "WebExSquared/atlas-call-team",
@@ -37,5 +37,5 @@
       ]
    }],
   "fileBlacklist": ["app/l10n/*.json", "yarn.lock"],
-  "userBlacklist": ["admolla", "atlas-ui-bot-gen", "cidylle", "cstoy", "mikecan", "thobasse", "stimurbe", "zamamoha", "zzatking"]
+  "userBlacklist": ["admolla", "atlas-ui-bot-gen", "cidylle", "cstoy", "mikecan", "thobasse", "stimurbe", "svanneyg", "zamamoha", "zzatking"]
 }
