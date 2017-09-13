@@ -72,17 +72,16 @@ class UserLocationDetailsCtrl implements ng.IComponentController {
         _.forEach(error.data.details, detail => {
           switch (detail.productErrorCode) {
             case '19579':
-              this.Notification.error('locations.errCode19579');
+              this.Notification.errorWithTrackingId(error, 'locations.errCode19579');
               break;
             case '19580':
-              this.Notification.error('locations.errCode19580');
+              this.Notification.errorWithTrackingId(error, 'locations.errCode19580');
               break;
             case '19584':
-              this.Notification.error('locations.errCode19584');
+              this.Notification.errorWithTrackingId(error, 'locations.errCode19584');
               break;
           }
         });
-        this.Notification.errorWithTrackingId(error);
       })
       .finally ( () => {
         this.saveInProcess = false;
