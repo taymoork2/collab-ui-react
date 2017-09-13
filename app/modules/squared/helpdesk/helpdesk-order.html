@@ -29,6 +29,9 @@
           <span>{{helpdeskOrderCtrl.orderId}}</span>
         </div>
         <div class="large-3 columns details-value">
+          <a ng-if="helpdeskOrderCtrl.isSetupOrderAllowed()"
+            ng-click="helpdeskOrderCtrl.launchOrderProcessingClient()"
+            translate="helpdesk.setUpOrder"></a>
         </div>
       </div>
 
@@ -71,11 +74,13 @@
           <span>{{'helpdesk.companyName' | translate}}</span>
         </div>
         <div class="large-5 columns details-value">
-          <span ng-if="!helpdeskOrderCtrl.isAccountActivated()">{{helpdeskOrderCtrl.accountName}}</span>
+          <span ng-if="helpdeskOrderCtrl.accountName && !helpdeskOrderCtrl.isAccountActivated()">{{helpdeskOrderCtrl.accountName}}</span>
+          <span ng-if="helpdeskOrderCtrl.endCustomerName && !helpdeskOrderCtrl.isOrderProvisioned()">{{helpdeskOrderCtrl.endCustomerName}}</span>
           <a ng-click="helpdeskOrderCtrl.goToCustomerPage()" ng-if="helpdeskOrderCtrl.isAccountActivated()">{{helpdeskOrderCtrl.accountName}}</a>
+          <a ng-click="helpdeskOrderCtrl.goToProvisionedCustomerPage()" ng-if="helpdeskOrderCtrl.orgId && helpdeskOrderCtrl.isOrderProvisioned()">{{helpdeskOrderCtrl.endCustomerName}}</a>
         </div>
         <div class="large-5 columns details-value" ng-if="::!helpdeskOrderCtrl.accountName">
-          <span ng-if="!helpdeskOrderCtrl.accountName">N/A</span>
+          <span ng-if="!helpdeskOrderCtrl.accountName && !helpdeskOrderCtrl.endCustomerName">N/A</span>
         </div>
         <div class="large-3">
         </div>
@@ -90,10 +95,10 @@
         </div>
         <div class="large-3 columns details-value" ng-if="!helpdeskOrderCtrl.isAccountActivated() && helpdeskOrderCtrl.isAdminEmailEditAllowed()" ng-show="!helpdeskOrderCtrl.showCustomerEmailEditView">
           <a class="custom-spacing"
-             ng-click="helpdeskOrderCtrl.showEmailEditView('customer')">
+             ng-click="helpdeskOrderCtrl.showEmailEditView(helpdeskOrderCtrl.emailTypes.CUSTOMER)">
             {{'helpdesk.editAdminEmail' | translate}}
           </a>
-          <a ng-click="helpdeskOrderCtrl.resendAdminEmail('customer')">
+          <a ng-click="helpdeskOrderCtrl.resendAdminEmail(helpdeskOrderCtrl.emailTypes.CUSTOMER)">
             {{'helpdesk.resendAdminEmail' | translate}}
           </a>
           <i tooltip-html-unsafe="{{'helpdesk.resendTooltip' | translate}}" tooltip-placement="right"
@@ -104,10 +109,10 @@
           <input ng-model="helpdeskOrderCtrl.customerAdminEmail" class="edit-box-style custom-spacing">
         </div>
         <div class="large-3 columns details-value" ng-show="helpdeskOrderCtrl.showCustomerEmailEditView">
-          <a class="custom-spacing" ng-click="helpdeskOrderCtrl.updateAdminEmail('customer')">
+          <a class="custom-spacing" ng-click="helpdeskOrderCtrl.updateAdminEmail(helpdeskOrderCtrl.emailTypes.CUSTOMER)">
             {{'common.save' | translate}}
           </a>
-          <a ng-click="helpdeskOrderCtrl.cancelAdminEmailEdit('customer')">
+          <a ng-click="helpdeskOrderCtrl.cancelAdminEmailEdit(helpdeskOrderCtrl.emailTypes.CUSTOMER)">
             {{'common.cancel' | translate}}
           </a>
         </div>
@@ -119,10 +124,33 @@
         <div class="large-4 columns details-heading">
           <span>{{'helpdesk.provisioningContactEmail' | translate}}</span>
         </div>
-        <div class="large-5 columns details-value">
+        <div class="large-5 columns details-value" ng-show="!helpdeskOrderCtrl.showProvisioningContactEditView">
           <span class="custom-spacing">{{helpdeskOrderCtrl.lastProvisioningContact}}</span>
         </div>
-        <div class="large-3">
+        <div class="large-3 columns details-value" ng-if="::helpdeskOrderCtrl.isProvisionContactEditAllowed()" ng-show="!helpdeskOrderCtrl.showProvisioningContactEditView">
+          <a class="custom-spacing"
+              ng-click="helpdeskOrderCtrl.showEmailEditView(helpdeskOrderCtrl.emailTypes.PROVISIONING)">
+            {{'helpdesk.editAdminEmail' | translate}}
+          </a>
+          <a ng-click="helpdeskOrderCtrl.resendAdminEmail(helpdeskOrderCtrl.emailTypes.PROVISIONING)">
+            {{'helpdesk.resendAdminEmail' | translate}}
+          </a>
+          <i tooltip-html-unsafe="{{'helpdesk.resendTooltip' | translate}}" tooltip-placement="right"
+              tooltip-trigger="mouseenter"
+              class="icon icon-information icon-lg blue-icon-info"></i>
+        </div>
+        <div class="large-5 columns details-value" ng-show="helpdeskOrderCtrl.showProvisioningContactEditView">
+          <input ng-model="helpdeskOrderCtrl.lastProvisioningContact" class="edit-box-style custom-spacing">
+        </div>
+        <div class="large-3 columns details-value" ng-show="helpdeskOrderCtrl.showProvisioningContactEditView">
+          <a class="custom-spacing" ng-click="helpdeskOrderCtrl.updateAdminEmail(helpdeskOrderCtrl.emailTypes.PROVISIONING)">
+            {{'common.save' | translate}}
+          </a>
+          <a ng-click="helpdeskOrderCtrl.cancelAdminEmailEdit(helpdeskOrderCtrl.emailTypes.PROVISIONING)">
+            {{'common.cancel' | translate}}
+          </a>
+        </div>
+        <div class="large-3" ng-if="::!helpdeskOrderCtrl.isProvisionContactEditAllowed()">
         </div>
       </div>
 
@@ -171,10 +199,10 @@
           </div>
           <div class="large-3 columns details-value" ng-show="!helpdeskOrderCtrl.showPartnerEmailEditView"  ng-if="::helpdeskOrderCtrl.hasPermissionToEditInfo">
             <a class="custom-spacing" ng-if="::helpdeskOrderCtrl.hasPermissionToEditInfo"
-               ng-click="helpdeskOrderCtrl.showEmailEditView('partner')">
+               ng-click="helpdeskOrderCtrl.showEmailEditView(helpdeskOrderCtrl.emailTypes.PARTNER)">
               {{'helpdesk.editAdminEmail' | translate}}
             </a>
-            <a ng-click="helpdeskOrderCtrl.resendAdminEmail('partner')">
+            <a ng-click="helpdeskOrderCtrl.resendAdminEmail(helpdeskOrderCtrl.emailTypes.PARTNER)">
               {{'helpdesk.resendAdminEmail' | translate}}
             </a>
             <i tooltip-html-unsafe="{{'helpdesk.resendTooltip' | translate}}" tooltip-placement="right"
@@ -185,10 +213,10 @@
             <input ng-model="helpdeskOrderCtrl.partnerAdminEmail" class="edit-box-style custom-spacing">
           </div>
           <div class="large-3 columns details-value" ng-show="helpdeskOrderCtrl.showPartnerEmailEditView">
-            <a class="custom-spacing" ng-click="helpdeskOrderCtrl.updateAdminEmail('partner')">
+            <a class="custom-spacing" ng-click="helpdeskOrderCtrl.updateAdminEmail(helpdeskOrderCtrl.emailTypes.PARTNER)">
               {{'common.save' | translate}}
             </a>
-            <a ng-click="helpdeskOrderCtrl.cancelAdminEmailEdit('partner')">
+            <a ng-click="helpdeskOrderCtrl.cancelAdminEmailEdit(helpdeskOrderCtrl.emailTypes.PARTNER)">
               {{'common.cancel' | translate}}
             </a>
           </div>

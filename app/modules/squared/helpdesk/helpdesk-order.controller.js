@@ -32,23 +32,34 @@
     vm.isProvisionContactEditAllowed = isProvisionContactEditAllowed;
     vm.isSetupOrderAllowed = isSetupOrderAllowed;
 
-    vm.showEmailEditView = showEmailEditView;
-    vm.updateAdminEmail = updateAdminEmail;
+    // Logic for defining order states
     vm.isAccountActivated = isAccountActivated;
     vm.isProvisionedOrderPending = isProvisionedOrderPending;
+    vm.isOrderProvisioned = isOrderProvisioned;
+
+    vm.showEmailEditView = showEmailEditView;
+    vm.updateAdminEmail = updateAdminEmail;
     vm.getEmailStatus = getEmailStatus;
     vm.cancelAdminEmailEdit = cancelAdminEmailEdit;
     vm.resendAdminEmail = resendAdminEmail;
     vm.hasPermissionToEditInfo = Authinfo.isOrderAdminUser();
     vm.goToCustomerPage = goToCustomerPage;
     vm.goToPartnerPage = goToPartnerPage;
+    vm.goToProvisionedCustomerPage = goToProvisionedCustomerPage;
     vm.launchOrderProcessingClient = launchOrderProcessingClient;
 
     vm._helpers = {
       notifyError: notifyError,
     };
 
+    vm.emailTypes = {
+      CUSTOMER: 'customer',
+      PARTNER: 'partner',
+      PROVISIONING: 'provisioning',
+    };
+
     var oneTier = '1-tier';
+    var PROVISIONED = 'PROVISIONED';
 
     var emailObjsMap = {
       customer: {
@@ -90,7 +101,7 @@
       var orderObj;
       if (_.isArray(order)) {
         orderObj = _.find(order, function (res) {
-          return res.orderStatus === 'PROVISIONED';
+          return res.orderStatus === PROVISIONED;
         });
         if (_.isEmpty(orderObj)) {
           return;
@@ -137,8 +148,8 @@
       vm.oldpartnerAdminEmail = vm.partnerAdminEmail;
 
       if (!vm.accountId) {
-        vm.provisionTime = orderObj.orderStatus !== 'PROVISIONED' ? null : (new Date(orderObj.lastModified)).toUTCString();
-        vm.accountName = _.get(orderObj, 'orderContent.common.customerInfo.endCustomerInfo.name');
+        vm.provisionTime = orderObj.orderStatus !== PROVISIONED ? null : (new Date(orderObj.lastModified)).toUTCString();
+        vm.endCustomerName = _.get(orderObj, 'orderContent.common.customerInfo.endCustomerInfo.name');
       }
       // Getting the account details using the account Id from order.
       if (vm.accountId) {
@@ -171,11 +182,20 @@
 
             // Get the most recent date that emails were sent to customer and partner
             // First, get latest date the welcome email was sent to customer.
-            getEmailStatus('customer');
+            getEmailStatus(vm.emailTypes.CUSTOMER);
             // If Partner is available, get the latest date welcome mail was sent to partner.
             if (vm.partnerOrgId) {
-              getEmailStatus('partner');
+              getEmailStatus(vm.emailTypes.PARTNER);
             }
+          });
+      }
+
+      if (!vm.accountId && !vm.isProvisionedOrderPending()) {
+        HelpdeskService.getSubscription(vm.order.subscriptionUuid)
+          .then(function (res) {
+            vm.orgId = _.get(res, 'customer.orgId');
+          }, function (response) {
+            Notification.errorResponse(response, 'helpdesk.getOrgDetailsFailure');
           });
       }
     }
@@ -210,7 +230,7 @@
     }
 
     function updateAdminEmail(emailType) {
-      var isCustomer = emailType === 'customer';
+      var isCustomer = emailType === vm.emailTypes.CUSTOMER || emailType === vm.emailTypes.PROVISIONING;
       var emailObj = emailObjsMap[emailType];
       HelpdeskService.editAdminEmail(vm.orderUuid, vm[emailObj.email], isCustomer)
         .then(function () {
@@ -236,15 +256,19 @@
     }
 
     function isProvisionedOrderPending() {
-      return vm.order.purchaseOrderId && vm.order.orderStatus !== 'PROVISIONED';
+      return vm.order.purchaseOrderId && vm.order.orderStatus !== PROVISIONED;
+    }
+
+    function isOrderProvisioned() {
+      return vm.order.purchaseOrderId && vm.order.orderStatus === PROVISIONED;
     }
 
     function isProvisionContactEditAllowed() {
-      return vm.hasPermissionToEditInfo && vm.isProvisionedOrderPending;
+      return vm.hasPermissionToEditInfo && vm.isProvisionedOrderPending();
     }
 
     function isSetupOrderAllowed() {
-      return vm.hasPermissionToEditInfo && vm.isProvisionedOrderPending;
+      return vm.hasPermissionToEditInfo && vm.isProvisionedOrderPending();
     }
 
     // Cancel (close) the Edit option
@@ -256,7 +280,8 @@
 
     // Resend the welcome email to specified party.  Attempt to last send date.
     function resendAdminEmail(emailType) {
-      HelpdeskService.resendAdminEmail(vm.orderUuid, emailType)
+      var isCustomer = emailType === vm.emailTypes.CUSTOMER || emailType === vm.emailTypes.PROVISIONING;
+      HelpdeskService.resendAdminEmail(vm.orderUuid, isCustomer)
         .then(function () {
           var emailObj = emailObjsMap[emailType];
           vm[emailObj.showLoadingEmail] = true;
@@ -276,6 +301,13 @@
 
     function goToPartnerPage() {
       $state.go('helpdesk.org', { id: vm.partnerOrgId });
+    }
+
+    function goToProvisionedCustomerPage() {
+      if (!vm.orgId) {
+        return Notification.errorResponse(null, 'helpdesk.getOrgDetailsFailure');
+      }
+      $state.go('helpdesk.org', { id: vm.orgId });
     }
 
     function launchOrderProcessingClient() {
