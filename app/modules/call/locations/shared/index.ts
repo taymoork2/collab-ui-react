@@ -7,6 +7,7 @@ import locationCosServiceModule from 'modules/call/shared/cos';
 import internalNumberRangeModule from 'modules/call/shared/internal-number-range';
 import huronCustomerModule from 'modules/huron/customer';
 import callSettingsSharedModule from 'modules/call/settings/shared';
+import huronPstnModule from 'modules/huron/pstn';
 
 export * from './location';
 export { LocationsService };
@@ -23,6 +24,7 @@ export default angular
     internalNumberRangeModule,
     huronCustomerModule,
     callSettingsSharedModule,
+    huronPstnModule,
   ])
 
   .service('LocationsService', LocationsService)

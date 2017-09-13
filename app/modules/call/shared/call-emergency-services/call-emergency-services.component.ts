@@ -6,7 +6,7 @@ import { Notification } from 'modules/core/notifications';
 
 export class CallEmergencyServicesComponent implements ng.IComponentOptions {
   public controller = CallEmergencyServicesCtrl;
-  public templateUrl = 'modules/call/shared/call-emergency-services/call-emergency-services.html';
+  public template = require('modules/call/shared/call-emergency-services/call-emergency-services.html');
   public bindings = {
     number: '=',        //IOption: Model for select - emergency callback number (ECBN)
     numberOptions: '<', //IOptions []: Options for select - ECBN

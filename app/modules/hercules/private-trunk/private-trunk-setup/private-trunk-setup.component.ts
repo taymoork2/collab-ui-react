@@ -276,9 +276,9 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
   }
 
   public dismissModal(): void {
-    const templateUrl = (this.isFirstTimeSetup) ? 'modules/hercules/private-trunk/private-trunk-setup/private-trunk-cancel-confirm.html' : 'modules/hercules/private-trunk/private-trunk-setup/private-trunk-destination-cancel-confirm.html';
+    const template = (this.isFirstTimeSetup) ? require('./private-trunk-cancel-confirm.html') : require('./private-trunk-destination-cancel-confirm.html');
     this.$modal.open({
-      templateUrl: templateUrl,
+      template: template,
       type: 'dialog',
     })
       .result.then(() => {
