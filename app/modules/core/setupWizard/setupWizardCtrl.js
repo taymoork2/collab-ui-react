@@ -282,8 +282,11 @@ require('./_setup-wizard.scss');
         return true;
       }
 
+      var currentSubscription = SetupWizardService.getActingPendingSubscriptionOptionSelection();
+
       return _.some(Authinfo.getLicenses(), function (license) {
-        return license.licenseType === Config.licenseTypes.COMMUNICATION || license.licenseType === Config.licenseTypes.SHARED_DEVICES;
+        return (license.licenseType === Config.licenseTypes.COMMUNICATION || license.licenseType === Config.licenseTypes.SHARED_DEVICES)
+          && (_.isUndefined(currentSubscription) || license.billingServiceId === currentSubscription.value);
       });
     }
 

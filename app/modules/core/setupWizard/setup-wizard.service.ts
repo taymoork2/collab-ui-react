@@ -89,7 +89,7 @@ export class SetupWizardService {
     const matchingOption = _.find(options, {
       value: this.getActingSubscriptionId(),
     });
-    return matchingOption || options[0];
+    return matchingOption || options[0] || undefined;
   }
 
   public setActingSubscriptionOption(subscriptionOption: IOption) {

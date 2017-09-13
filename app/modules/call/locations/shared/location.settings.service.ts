@@ -96,7 +96,7 @@ export class CallLocationSettingsService {
   private getEmergencyServiceAddress(locationId: string): ng.IPromise<Address> {
     const defaultAddress: Address = new Address();
     defaultAddress.country = this.PstnModel.getCountryCode();
-    if (locationId) {
+    if (locationId && this.PstnModel.getCustomerId()) {
       return this.PstnAddressService.getByLocation(this.PstnModel.getCustomerId(), locationId)
       .then(addresses => {
         if (_.isArray(addresses) && addresses.length > 0) {
