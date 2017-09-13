@@ -145,6 +145,11 @@ export class MeetingSettingsCtrl {
       this.updateSitesArray(sitesLicensesData);
       this.constructDistributedSitesArray();
       this.updateDistributedSitesArray(sitesLicensesData);
+      this.audioPartnerName = _.get(webexSitesData, 'webexLicencesPayload.webexProvisioningParams.audioPartnerName', null);
+      this.ccasp.subscriptionId =  _.get(webexSitesData, 'webexLicencesPayload.webexProvisioningParams.ccaspSubscriptionId', '');
+      if (this.ccasp.subscriptionId) {
+        this.ccasp.partnerNameSelected = this.audioPartnerName;
+      }
     }
     // if there is already and active subscription with TSP or CCASP dont display the page - just populate the data.
     if (this.SetupWizardService.hasPendingTSPAudioPackage()) {
