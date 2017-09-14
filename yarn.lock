@@ -4027,8 +4027,8 @@ http-errors@~1.5.0:
     statuses ">= 1.3.1 < 2"
 
 http-parser-js@>=0.4.0:
-  version "0.4.5"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/http-parser-js/-/http-parser-js-0.4.5.tgz#a3ecf39a667481a38ca60882ab57a2db578b9970"
+  version "0.4.6"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/http-parser-js/-/http-parser-js-0.4.6.tgz#195273f58704c452d671076be201329dd341dc55"
 
 http-proxy-agent@^1.0.0:
   version "1.0.0"
@@ -4231,8 +4231,8 @@ inquirer@^3.0.6:
     through "^2.3.6"
 
 interpret@^1.0.0:
-  version "1.0.3"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/interpret/-/interpret-1.0.3.tgz#cbc35c62eeee73f19ab7b10a801511401afc0f90"
+  version "1.0.4"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/interpret/-/interpret-1.0.4.tgz#820cdd588b868ffb191a809506d6c9c8f212b1b0"
 
 invariant@^2.2.0, invariant@^2.2.2:
   version "2.2.2"
@@ -5452,8 +5452,8 @@ mime@1.3.4:
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/mime/-/mime-1.3.4.tgz#115f9e3b6b3daf2959983cb38f149a2d40eb5d53"
 
 "mime@>= 0.0.1":
-  version "2.0.0"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/mime/-/mime-2.0.0.tgz#e58e03970e44e57ed1394893b07e6312f71925e3"
+  version "2.0.1"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/mime/-/mime-2.0.1.tgz#73dd0bc6a678836cc8322db5d8e4c3e6f3c06471"
 
 mime@^1.3.4:
   version "1.4.0"
