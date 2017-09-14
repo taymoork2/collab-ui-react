@@ -169,7 +169,11 @@
     require('modules/hercules/services/uss.service').default,
   ]);
 
-  angular.module('HDS', ['Core', 'Hercules']);
+  angular.module('HDS', [
+    'Core',
+    'Hercules',
+    require('modules/hds/services/hds.service'),
+  ]);
 
   angular.module('Mediafusion', ['Core', 'Hercules', 'Squared']);
 
@@ -222,6 +226,7 @@
     'Gemini',
     'CMC',
     'Csdm',
+    require('modules/services-overview').default,
   ]).config(require('./main.config'))
     .run(require('./main.run'))
     .name;

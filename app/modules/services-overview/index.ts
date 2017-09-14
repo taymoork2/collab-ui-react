@@ -26,29 +26,45 @@ import { Office365FailModalComponent } from 'modules/services-overview/new-hybri
 import { CardUsersSummaryComponent } from 'modules/services-overview/new-hybrid/card-users-summary/card-users-summary.component';
 
 export default angular
-  .module('Hercules')
+  .module('services-overview', [
+    require('angular-translate'),
+    require('modules/core/analytics'),
+    require('modules/core/auth/auth'),
+    require('modules/core/config/config').default,
+    require('modules/core/featureToggle').default,
+    require('modules/core/notifications').default,
+    require('modules/core/proPack').default,
+    require('modules/core/scripts/services/authinfo'),
+    require('modules/hds/services/hds.service'),
+    require('modules/hercules/private-trunk/private-trunk-prereq').default,
+    require('modules/hercules/private-trunk/private-trunk-services').default,
+    require('modules/hercules/services/calendar-cloud-connector.service').default,
+    require('modules/hercules/services/enterprise-private-trunk-service').default,
+    require('modules/hercules/services/hybrid-services-cluster.service').default,
+    require('modules/hercules/services/uss.service').default,
+  ])
+  .component('cardUsersSummary', new CardUsersSummaryComponent())
+  .component('eptActiveCard', new EPTActiveCardComponent())
+  .component('eptInactiveCard', new EPTInactiveCardComponent())
   .component('hybridCalendarExchangeActiveCard', new HybridCalendarExchangeActiveCardComponent())
   .component('hybridCalendarExchangeInactiveCard', new HybridCalendarExchangeInactiveCardComponent())
-  .component('hybridCalendarO365InactiveCard', new HybridCalendarO365InactiveCardComponent())
-  .component('hybridCalendarO365ActiveCard', new HybridCalendarO365ActiveCardComponent())
   .component('hybridCalendarGoogleActiveCard', new HybridCalendarGoogleActiveCardComponent())
   .component('hybridCalendarGoogleInactiveCard', new HybridCalendarGoogleInactiveCardComponent())
+  .component('hybridCalendarO365ActiveCard', new HybridCalendarO365ActiveCardComponent())
+  .component('hybridCalendarO365InactiveCard', new HybridCalendarO365InactiveCardComponent())
   .component('hybridCallActiveCard', new HybridCallActiveCardComponent())
   .component('hybridCallInactiveCard', new HybridCallInactiveCardComponent())
   .component('hybridContextActiveCard', new HybridContextActiveCardComponent())
   .component('hybridContextInactiveCard', new HybridContextInactiveCardComponent())
-  .component('hybridMediaActiveCard', new HybridMediaActiveCardComponent())
-  .component('hybridMediaInactiveCard', new HybridMediaInactiveCardComponent())
   .component('hybridDataSecurityActiveCard', new HybridDataSecurityActiveCardComponent())
   .component('hybridDataSecurityInactiveCard', new HybridDataSecurityInactiveCardComponent())
-  .component('eptActiveCard', new EPTActiveCardComponent())
-  .component('eptInactiveCard', new EPTInactiveCardComponent())
   .component('hybridImpActiveCard', new HybridIMPActiveCardComponent())
   .component('hybridImpInactiveCard', new HybridIMPInactiveCardComponent())
+  .component('hybridMediaActiveCard', new HybridMediaActiveCardComponent())
+  .component('hybridMediaInactiveCard', new HybridMediaInactiveCardComponent())
+  .component('office365FailModal', new Office365FailModalComponent())
+  .component('office365SetupModal', new Office365SetupModalComponent())
+  .component('office365TestModal', new Office365TestModalComponent())
   .component('onPremisesCard', new OnPremisesActiveCardComponent())
   .component('servicesOverview', new ServicesOverviewComponent())
-  .component('office365SetupModal', new Office365SetupModalComponent())
-  .component('office365FailModal', new Office365FailModalComponent())
-  .component('office365TestModal', new Office365TestModalComponent())
-  .component('cardUsersSummary', new CardUsersSummaryComponent())
   .name;
