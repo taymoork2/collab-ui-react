@@ -263,6 +263,11 @@ export class Config {
     CCASP: 'CCASP', //Cloud Connected Audio - Service Partners
   };
 
+  public readonly orderingTool = {
+    online: 'CISCO_ONLINE_OPC',
+    digitalRiver: 'DIGITAL_RIVER',
+  };
+
   public readonly licenseStatus = {
     PENDING: 'PENDING',
     ACTIVE: 'ACTIVE',

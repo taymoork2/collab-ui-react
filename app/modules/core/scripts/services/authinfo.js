@@ -136,7 +136,7 @@
         authData.customerType = _.get(accounts, '[0].customerType', '');
         authData.customerId = _.get(accounts, '[0].customerId');
         authData.commerceRelation = _.get(accounts, '[0].commerceRelation', '');
-        authData.subscriptions = _.flattenDeep(_.map(accounts, 'subscriptions'));
+        authData.subscriptions = _.without(_.flattenDeep(_.map(accounts, 'subscriptions')), undefined);
         authData.customerAdminEmail = _.get(accounts, '[0].customerAdminEmail');
 
         _.forEach(accounts, function (account, accountIndex) {
