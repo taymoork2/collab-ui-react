@@ -36,22 +36,18 @@ export class CallPickupGroupService {
   }
 
   public areAllLinesInPickupGroup(member: Member): ng.IPromise<boolean> {
-    const promises: ng.IPromise<string>[] = [];
+    const promises: ng.IPromise<void>[] = [];
     let disabled = true;
     return this.getMemberNumbers(member.uuid).then((data: IMemberNumber[]) => {
       disabled = true;
       _.forEach(data, (memberNumber) => {
-        const promise = this.isLineInPickupGroup(memberNumber.internal);
-        promises.push(promise);
-        promise.then((line: string) => {
+        promises.push(this.isLineInPickupGroup(memberNumber.internal).then((line: string) => {
           if (line === '') {
             disabled = false;
           }
-        });
+        }));
       });
-      return this.$q.all(promises).then(() => {
-        return disabled;
-      });
+      return this.$q.all(promises).then(() => disabled);
     });
   }
 
@@ -138,7 +134,7 @@ export class CallPickupGroupService {
           if (autoSelect) {
             const saveNumber = {
               uuid: number.uuid,
-              internalNumber: this.hasLocations ? number.siteToSite : number.internal,
+              internalNumber: number.internal,
             };
             member.saveNumbers.push(saveNumber);
             value = true;       //autoselect primary number or first available number
