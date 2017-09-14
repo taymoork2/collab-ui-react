@@ -142,7 +142,7 @@ describe('Controller: HelpdeskOrderController', function () {
       expect(HelpdeskService.getEmailStatus).toHaveBeenCalledTimes(3);
     });
   });
-  describe('CSM purchase order details', function () {
+  describe('CSM pending purchase order details', function () {
     beforeEach(function () {
       spyOn(HelpdeskService, 'searchOrders');
       $stateParams.order = getJSONFixture('core/json/orders/csmOrder.json');
@@ -162,6 +162,21 @@ describe('Controller: HelpdeskOrderController', function () {
     });
     it('sets the order is pending flag to true', function () {
       expect(orderController.isProvisionedOrderPending()).toBe(true);
+    });
+  });
+  describe('CSM provisioned purchase order details', function () {
+    beforeEach(function () {
+      spyOn(HelpdeskService, 'getSubscription').and.returnValue($q.resolve({ customer: { orgId: '123456' } }));
+      $stateParams.order = getJSONFixture('core/json/orders/csmOrder.json');
+      $stateParams.order.orderStatus = 'PROVISIONED';
+      orderController = $controller('HelpdeskOrderController', {
+        $stateParams: $stateParams,
+      });
+      $scope.$apply();
+    });
+    it('gets the value for the orgId if the order is provisioned', function () {
+      expect(HelpdeskService.getSubscription).toHaveBeenCalled();
+      expect(orderController.orgId).toBe('123456');
     });
   });
 });

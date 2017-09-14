@@ -40,6 +40,7 @@
       invokeInviteEmail: invokeInviteEmail,
       getAccount: getAccount,
       getOrder: getOrder,
+      getSubscription: getSubscription,
       getEmailStatus: getEmailStatus,
       hasBounceDetails: hasBounceDetails,
       clearBounceDetails: clearBounceDetails,
@@ -212,14 +213,12 @@
       return _.filter(orders, function (el) { return _.includes(statusFilters, el.orderStatus) && _.includes(orderToolFilters, el.orderingTool); });
     }
 
-    function resendAdminEmail(orderUUID, orderType) {
+    function resendAdminEmail(orderUUID, isCustomer) {
       var url;
-      if (orderType === 'customer') {
+      if (isCustomer) {
         url = urlBase + 'helpdesk/orders/' + orderUUID + '/actions/resendcustomeradminemail/invoke';
-      } else if (orderType === 'partner') {
+      } else {
         url = urlBase + 'helpdesk/orders/' + orderUUID + '/actions/resendpartneradminemail/invoke';
-      } else if (orderType === 'provisioning') {
-        url = urlBase + 'helpdesk/orders/' + orderUUID + '/actions/resendprovisioningcontactemail/invoke';
       }
       return $http.post(url).then(extractData);
     }
@@ -550,6 +549,12 @@
     function getOrder(orderId) {
       return $http
         .get(urlBase + 'orders/' + encodeURIComponent(orderId))
+        .then(extractData);
+    }
+
+    function getSubscription(subscriptionId) {
+      return $http
+        .get(urlBase + 'subscriptions/' + encodeURIComponent(subscriptionId))
         .then(extractData);
     }
 
