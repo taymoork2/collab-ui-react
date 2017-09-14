@@ -1,5 +1,6 @@
 import { Member } from 'modules/huron/members';
 import { IMemberNumber, IMember, ICardMemberCheckbox, IPickupGroup } from 'modules/call/features/call-pickup/shared';
+import { NumberService } from 'modules/huron/numbers';
 
 interface IPickupGroupResource extends ng.resource.IResourceClass<ng.resource.IResource<IPickupGroup>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<IPickupGroup>>;
@@ -9,15 +10,18 @@ export class CallPickupGroupService {
   private pickupGroupResource: IPickupGroupResource;
   private callPickupCopy: IPickupGroup;
   private callPickupProperties: string[] = ['name', 'notificationTimer', 'playSound', 'displayCallingPartyId', 'displayCalledPartyId'];
+  private hasLocations: boolean = false;
  /* @ngInject */
   constructor(
     private $resource: ng.resource.IResourceService,
     private HuronConfig,
     private Authinfo,
     private UserNumberService,
-    private NumberSearchServiceV2,
+    private NumberService: NumberService,
     private $q: ng.IQService,
     private $translate: ng.translate.ITranslateService,
+    private InternalNumberPoolService,
+    private FeatureToggleService,
   ) {
     this.pickupGroupResource = <IPickupGroupResource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/features/callpickups/:callPickupGroupId', { wide: true },
       {
@@ -25,29 +29,30 @@ export class CallPickupGroupService {
           method: 'PUT',
         },
       });
+
+    this.FeatureToggleService.supports(FeatureToggleService.features.hI1484).then(supports => {
+      this.hasLocations = supports;
+    });
   }
 
   public areAllLinesInPickupGroup(member: Member): ng.IPromise<boolean> {
-    const scope = this;
     const promises: ng.IPromise<string>[] = [];
     let disabled = true;
-    return scope.getMemberNumbers(member.uuid)
-    .then(
-      (data: IMemberNumber[]) => {
-        disabled = true;
-        _.forEach(data, function(memberNumber) {
-          const promise = scope.isLineInPickupGroup(memberNumber.internal);
-          promises.push(promise);
-          promise.then((line: string) => {
-            if (line === '') {
-              disabled = false;
-            }
-          });
-        });
-        return scope.$q.all(promises).then(function() {
-          return disabled;
+    return this.getMemberNumbers(member.uuid).then((data: IMemberNumber[]) => {
+      disabled = true;
+      _.forEach(data, (memberNumber) => {
+        const promise = this.isLineInPickupGroup(memberNumber.internal);
+        promises.push(promise);
+        promise.then((line: string) => {
+          if (line === '') {
+            disabled = false;
+          }
         });
       });
+      return this.$q.all(promises).then(() => {
+        return disabled;
+      });
+    });
   }
 
   public saveCallPickupGroup(pickupGroup: IPickupGroup): ng.IPromise<IPickupGroup> {
@@ -98,20 +103,13 @@ export class CallPickupGroupService {
   }
 
   public isLineInPickupGroup(directoryNumber: string): ng.IPromise<string> {
-    return this.NumberSearchServiceV2.get({
+    return this.InternalNumberPoolService.query({
       customerId: this.Authinfo.getOrgId(),
-      number: directoryNumber,
-      wide: true,
+      pattern: directoryNumber,
     }).$promise.then(response => {
-      const number = _.get(response, 'numbers');
-      const pickupFeatures = <IPickupGroupResource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/numbers/:internalPoolId',
-                           { wide: true });
-      return pickupFeatures.get({
-        customerId: this.Authinfo.getOrgId(),
-        internalPoolId: number[0].uuid,
-      }).$promise.then(response => {
+      return this.NumberService.getNumber(response[0].uuid).then((response) => {
         const features: any = _.get(response, 'features');
-        const pickupName = _.find(features, function(feature: any) { return feature.type === 'CALL_FEATURE_PICKUP_GROUP'; });
+        const pickupName = _.find(features, (feature: any) => feature.type === 'CALL_FEATURE_PICKUP_GROUP');
         if (pickupName) {
           return pickupName.name;
         } else {
@@ -122,26 +120,25 @@ export class CallPickupGroupService {
   }
 
   public createCheckboxes(member: IMember, memberNumbers: IMemberNumber[]): ng.IPromise<any> {
-    const scope = this;
     let autoSelect = true;
     const linesInPickupGroupPromises: ng.IPromise<string>[] = [];
-    _.forEach(memberNumbers, function (number) {
-      linesInPickupGroupPromises.push(scope.isLineInPickupGroup(number.internal));
+    _.forEach(memberNumbers, (number) => {
+      linesInPickupGroupPromises.push(this.isLineInPickupGroup(number.internal));
     });
-    return scope.$q.all(linesInPickupGroupPromises).then((pickupGroupName: string[]) => {
-      _.forEach(memberNumbers, function (number, index) {
+    return this.$q.all(linesInPickupGroupPromises).then((pickupGroupName: string[]) => {
+      _.forEach(memberNumbers, (number, index) => {
         let disabled = false;
         let sublabel = '';
         let value = false;
         if (pickupGroupName[index] !== '') {
           disabled = true;
-          sublabel = scope.$translate.instant('callPickup.assignmentMsg', { pickupGroupName: pickupGroupName[index] });
+          sublabel = this.$translate.instant('callPickup.assignmentMsg', { pickupGroupName: pickupGroupName[index] });
           value = false;
         } else {
           if (autoSelect) {
             const saveNumber = {
               uuid: number.uuid,
-              internalNumber: number.internal,
+              internalNumber: this.hasLocations ? number.siteToSite : number.internal,
             };
             member.saveNumbers.push(saveNumber);
             value = true;       //autoselect primary number or first available number
@@ -151,7 +148,7 @@ export class CallPickupGroupService {
           }
         }
         member.checkboxes[index] = {
-          label: number.internal + (number.external ? ' & ' + number.external : ''),
+          label: (this.hasLocations ? number.siteToSite : number.internal) + (number.external ? ' & ' + number.external : ''),
           sublabel: sublabel,
           value: value,
           numberUuid: number.uuid,
@@ -162,9 +159,8 @@ export class CallPickupGroupService {
   }
 
   public createCheckboxesForEdit(member: IMember, memberNumbers: IMemberNumber[], pickupName: string): ICardMemberCheckbox[] {
-    const scope = this;
-    _.forEach(memberNumbers, function (number, index) {
-      scope.isLineInPickupGroup(number.internal)
+    _.forEach(memberNumbers, (number, index) => {
+      this.isLineInPickupGroup(number.internal)
       .then((pickupGroupName: string) => {
         let disabled = false;
         let sublabel = '';
@@ -173,11 +169,11 @@ export class CallPickupGroupService {
           value = true;
         } else if (pickupGroupName !== '' && pickupGroupName !== pickupName) {
           disabled = true;
-          sublabel = scope.$translate.instant('callPickup.assignmentMsg', { pickupGroupName: pickupGroupName });
+          sublabel = this.$translate.instant('callPickup.assignmentMsg', { pickupGroupName: pickupGroupName });
           value = false;
         }
         member.checkboxes[index] = {
-          label: number.internal + (number.external ? ' & ' + number.external : ''),
+          label: (this.hasLocations ? number.siteToSite : number.internal) + (number.external ? ' & ' + number.external : ''),
           sublabel: sublabel,
           value: value,
           numberUuid: number.uuid,
