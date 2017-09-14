@@ -33,7 +33,6 @@
     vm.webexMetrics = {};
     vm.isNoData = false;
     vm.selectEnable = true;
-    vm.selectMEI = false;
     vm.reportType = 'WebEx';
     vm.env = {
       int: 'integration',
@@ -207,7 +206,7 @@
         updateIframe();
       }
 
-      if (vm.selectMEI === true) {
+      if ($state.current.name === 'reports.webex-metrics.MEI') {
         vm.reportView = vm.webexMetrics.views[1];
       } else {
         vm.reportView = vm.webexMetrics.views[0];
@@ -270,6 +269,7 @@
       if (isSubState && toState.name === 'reports.webex-metrics') {
         event.preventDefault();
       }
+
       if (isSubState) {
         toParams.siteUrl = vm.webexSelected;
       }
@@ -278,19 +278,16 @@
     function onStateChangeSuccess(event, toState, toParams, fromState) {
       if (toState.name === 'reports.webex-metrics.metrics') {
         vm.selectEnable = true;
-        vm.selectMEI = false;
         if (fromState.name.indexOf('reports.webex-metrics.') === 0) {
           vm.updateWebexMetrics();
         }
       } else if (toState.name === 'reports.webex-metrics.MEI') {
         vm.selectEnable = false;
-        vm.selectMEI = true;
         if (fromState.name.indexOf('reports.webex-metrics.') === 0) {
           vm.updateWebexMetrics();
         }
       } else if (toState.name === 'reports.webex-metrics.classic') {
         vm.selectEnable = false;
-        vm.selectMEI = false;
       }
     }
 
