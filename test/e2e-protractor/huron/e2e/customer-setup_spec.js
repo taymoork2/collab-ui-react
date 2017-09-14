@@ -154,7 +154,7 @@ describe('Huron Functional: e2e-customer-setup', () => {
       });
       it('should navigate to manually add user with "email" or "Names and email" when hit "Next"', () => {
         utils.click(manageUsersPage.buttons.next);
-        if (featureToggle.features.atlasatlasEmailSuppress) {
+        if (featureToggle.features.atlasEmailSuppress) {
           utils.wait(manageUsersPage.emailSuppress.emailSuppressIcon);
           utils.click(manageUsersPage.buttons.next);
         }
