@@ -4,6 +4,7 @@ import { CallFeaturesPage } from '../pages/callFeatures.page';
 import { CallParkFeaturePage } from '../pages/callParkFeature.page';
 import { CallUserPage } from '../pages/callUser.page';
 import * as os from 'os';
+import { featureToggle } from '../../utils/featureToggle.utils';
 
 const callFeatures = new CallFeaturesPage();
 const callParkFeature = new CallParkFeaturePage();
@@ -45,6 +46,10 @@ describe('Huron Functional: add-call-park', () => {
 
     it('should navigate to manually add user with "email" or "Names and email" when hit "Next"', () => {
       utils.click(manageUsersPage.buttons.next);
+      if (featureToggle.features.atlasEmailSuppress) {
+        utils.wait(manageUsersPage.emailSuppress.emailSuppressIcon);
+        utils.click(manageUsersPage.buttons.next);
+      }
       utils.expectIsDisplayed(manageUsersPage.manual.emailAddress.addUsersField, LONG_TIMEOUT);
       utils.expectIsDisplayed(manageUsersPage.manual.radio.emailAddress);
       utils.click(manageUsersPage.manual.radio.emailAddress);

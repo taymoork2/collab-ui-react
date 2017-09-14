@@ -2,6 +2,8 @@
 
 'use strict';
 
+var featureToggle = require('../utils/featureToggle.utils');
+
 // TODO - break up into UserList/UserAdd/UserPreview
 var UsersPage = function () {
   this.inviteTestUser = {
@@ -258,6 +260,10 @@ var UsersPage = function () {
     utils.waitForText(manageUsersPage.select.title, 'Add or Modify Users');
     utils.click(manageUsersPage.select.radio.orgManual);
     utils.click(manageUsersPage.buttons.next);
+    if (featureToggle.features.atlasEmailSuppress) {
+      utils.wait(manageUsersPage.emailSuppress.emailSuppressIcon);
+      utils.click(manageUsersPage.buttons.next);
+    }
 
     utils.click(this.nameAndEmailRadio);
     utils.sendKeys(this.firstName, 'Test');

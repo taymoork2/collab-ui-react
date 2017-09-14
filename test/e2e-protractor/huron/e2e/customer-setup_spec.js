@@ -4,6 +4,7 @@ import * as os from 'os';
 import { CallSettingsPage } from '../pages/callSettings.page';
 import { CallUserPage } from '../pages/callUser.page';
 import { AddPlacesPage } from '../pages/addPlaces.page';
+import { featureToggle } from '../../utils/featureToggle.utils';
 
 const addPlaces = new AddPlacesPage();
 const AddUser = new CallUserPage();
@@ -153,6 +154,10 @@ describe('Huron Functional: e2e-customer-setup', () => {
       });
       it('should navigate to manually add user with "email" or "Names and email" when hit "Next"', () => {
         utils.click(manageUsersPage.buttons.next);
+        if (featureToggle.features.atlasEmailSuppress) {
+          utils.wait(manageUsersPage.emailSuppress.emailSuppressIcon);
+          utils.click(manageUsersPage.buttons.next);
+        }
         utils.expectIsDisplayed(manageUsersPage.manual.emailAddress.addUsersField, LONG_TIMEOUT);
         utils.expectIsDisplayed(manageUsersPage.manual.radio.emailAddress);
       });

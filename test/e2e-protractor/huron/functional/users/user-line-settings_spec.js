@@ -4,6 +4,7 @@ import { CallUserPage } from '../../pages/callUser.page';
 import { CallUserPlacePage } from '../../pages/callUserPlace.page';
 import { CallSettingsPage } from '../../pages/callSettings.page';
 import * as os from 'os';
+import { featureToggle } from '../../../utils/featureToggle.utils';
 
 const callUserPage = new CallUserPage();
 const now = Date.now();
@@ -71,6 +72,10 @@ describe('Huron Functional: user-line-settings', () => {
     });
     it('should navigate to manually add user with "email" or "Names and email" when hit "Next"', () => {
       utils.click(manageUsersPage.buttons.next);
+      if (featureToggle.features.atlasEmailSuppress) {
+        utils.wait(manageUsersPage.emailSuppress.emailSuppressIcon);
+        utils.click(manageUsersPage.buttons.next);
+      }
       utils.expectIsDisplayed(manageUsersPage.manual.emailAddress.addUsersField, LONG_TIMEOUT);
       utils.expectIsDisplayed(manageUsersPage.manual.radio.emailAddress);
       utils.click(manageUsersPage.manual.radio.emailAddress);
