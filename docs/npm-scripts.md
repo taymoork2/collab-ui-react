@@ -4,9 +4,9 @@
 
 ## Optional Arguments
 
-Arguments are passed to commands after a special `--` delimiter
+Long-form arguments (e.g. `--foo`, `--bar=baz`) are passed through to the underlying script commands.
 
-eg. `yarn start -- --noopen` passes the `--noopen` argument to our `start` task
+eg. `yarn start --noopen` passes the `--noopen` argument to underlying `start` script
 
 #### Common build arguments
 
@@ -15,6 +15,7 @@ eg. `yarn start -- --noopen` passes the `--noopen` argument to our `start` task
 
 * `webpack` arguments must be prefixed with `env.`
   * `--env.nolint` to prevent lint loaders during build
+  * `--env.analyze` to open the bundle visual analyzer
 
 #### Common test arguments
 
@@ -74,7 +75,7 @@ eg. `yarn start -- --noopen` passes the `--noopen` argument to our `start` task
 ### `yarn eslint`
 
 * Run eslint on entire project
-* Use `yarn eslint -- --fix` to try to autofix as many issues as possible
+* Use `yarn eslint --fix` to try to autofix as many issues as possible
 
 ### `yarn json-verify`
 
@@ -97,12 +98,12 @@ eg. `yarn start -- --noopen` passes the `--noopen` argument to our `start` task
 * Reruns tests on app/test file changes
 * Focus tests (`fdescribe`, `fit`) to isolate tests
 
-### `yarn ktest-debug -- <tests>`
+### `yarn ktest-debug <tests>`
 
 * Runs `./bin/ktest --no-parallel --no-single-run --debug`
 * Runs specific karma unit tests in debug mode (chrome browser)
 
-### `yarn ktest-watch -- <tests>`
+### `yarn ktest-watch <tests>`
 
 * Runs `./bin/ktest --no-parallel --no-single-run --auto-watch`
 * Runs specific karma unit tests in watch mode for iterative development
@@ -119,7 +120,7 @@ eg. `yarn start -- --noopen` passes the `--noopen` argument to our `start` task
 
 * Updates webdriver and runs protractor
 
-### `yarn protractor -- --specs <tests>`
+### `yarn protractor --specs <tests>`
 
 * Updates webdriver and runs protractor on tests in specified files
 
