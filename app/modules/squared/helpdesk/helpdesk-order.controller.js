@@ -29,8 +29,7 @@
 
     // Logic for showing links
     vm.isAdminEmailEditAllowed = isAdminEmailEditAllowed;
-    vm.isProvisionContactEditAllowed = isProvisionContactEditAllowed;
-    vm.isSetupOrderAllowed = isSetupOrderAllowed;
+    vm.isProvisionEditAllowed = isProvisionEditAllowed;
 
     // Logic for defining order states
     vm.isAccountActivated = isAccountActivated;
@@ -65,7 +64,6 @@
       customer: {
         email: 'customerAdminEmail',
         showEditEmail: 'showCustomerEmailEditView',
-        showResendEmail: 'showResendCustomerEmail',
         showLoadingEmail: 'loadingCustomerEmailUpdate',
         lastTimeSent: 'customerEmailSent',
         oldEmail: 'oldcustomerAdminEmail',
@@ -73,7 +71,6 @@
       partner: {
         email: 'partnerAdminEmail',
         showEditEmail: 'showPartnerEmailEditView',
-        showResendEmail: 'showResendPartnerEmail',
         showLoadingEmail: 'loadingPartnerEmailUpdate',
         lastTimeSent: 'partnerEmailSent',
         oldEmail: 'oldpartnerAdminEmail',
@@ -82,9 +79,8 @@
       provisioning: {
         email: 'lastProvisioningContact',
         showEditEmail: 'showProvisioningContactEditView',
-        showResendEmail: 'showResendProvisioningContact',
-        showLoadingEmail: 'loadingProvisioningContactUpdate',
-        lastTimeSent: 'provisioningEmailSent',
+        showLoadingEmail: 'loadingCustomerEmailUpdate',
+        lastTimeSent: 'customerEmailSent',
         oldEmail: 'oldLastProvisioningContact',
       },
     };
@@ -115,7 +111,6 @@
       vm.orderId = orderObj.externalOrderId;
 
       //Getting the customer info from order payload or update clientContent
-      vm.lastEmailSent = orderObj.lastProvisioningEmailTimestamp ? (new Date(orderObj.lastProvisioningEmailTimestamp)).toUTCString() : undefined;
       var emailUpdates = _.get(orderObj, 'clientContent.adminEmailUpdates');
       var customerEmailUpdates = _.filter(emailUpdates, function (data) {
         return data.orderEmailType === 'CUSTOMER_ADMIN';
@@ -150,6 +145,7 @@
       if (!vm.accountId) {
         vm.provisionTime = orderObj.orderStatus !== PROVISIONED ? null : (new Date(orderObj.lastModified)).toUTCString();
         vm.endCustomerName = _.get(orderObj, 'orderContent.common.customerInfo.endCustomerInfo.name');
+        vm.customerEmailSent = orderObj.lastProvisioningEmailTimestamp ? (new Date(orderObj.lastProvisioningEmailTimestamp)).toUTCString() : undefined;
       }
       // Getting the account details using the account Id from order.
       if (vm.accountId) {
@@ -188,9 +184,7 @@
               getEmailStatus(vm.emailTypes.PARTNER);
             }
           });
-      }
-
-      if (!vm.accountId && !vm.isProvisionedOrderPending()) {
+      } else if (!vm.isProvisionedOrderPending()) {
         HelpdeskService.getSubscription(vm.order.subscriptionUuid)
           .then(function (res) {
             vm.orgId = _.get(res, 'customer.orgId');
@@ -256,18 +250,14 @@
     }
 
     function isProvisionedOrderPending() {
-      return vm.order.purchaseOrderId && vm.order.orderStatus !== PROVISIONED;
+      return vm.order && vm.order.purchaseOrderId && vm.order.orderStatus !== PROVISIONED;
     }
 
     function isOrderProvisioned() {
-      return vm.order.purchaseOrderId && vm.order.orderStatus === PROVISIONED;
+      return vm.order && vm.order.purchaseOrderId && vm.order.orderStatus === PROVISIONED;
     }
 
-    function isProvisionContactEditAllowed() {
-      return vm.hasPermissionToEditInfo && vm.isProvisionedOrderPending();
-    }
-
-    function isSetupOrderAllowed() {
+    function isProvisionEditAllowed() {
       return vm.hasPermissionToEditInfo && vm.isProvisionedOrderPending();
     }
 
@@ -280,7 +270,7 @@
 
     // Resend the welcome email to specified party.  Attempt to last send date.
     function resendAdminEmail(emailType) {
-      var isCustomer = emailType === vm.emailTypes.CUSTOMER || emailType === vm.emailTypes.PROVISIONING;
+      var isCustomer = (emailType === vm.emailTypes.CUSTOMER || emailType === vm.emailTypes.PROVISIONING);
       HelpdeskService.resendAdminEmail(vm.orderUuid, isCustomer)
         .then(function () {
           var emailObj = emailObjsMap[emailType];
@@ -305,7 +295,7 @@
 
     function goToProvisionedCustomerPage() {
       if (!vm.orgId) {
-        return Notification.errorResponse(null, 'helpdesk.getOrgDetailsFailure');
+        return Notification.error('helpdesk.getOrgDetailsFailure');
       }
       $state.go('helpdesk.org', { id: vm.orgId });
     }
