@@ -12,7 +12,7 @@ export interface IAvrilSiteFeatures {
   VM2T: boolean;
   VM2E: boolean;
   VM2E_PT?: boolean | undefined; //tobe obsoleted when I1559 GA
-  VM2E_Attachment: boolean;
+  VM2E_Attachment?: boolean | undefined;
   VM2E_Transcript: boolean;
   VM2E_TLS: boolean;
   VM2S: boolean;
@@ -53,7 +53,7 @@ export class AvrilSiteFeatures implements IAvrilSiteFeatures {
   public VM2T: boolean ;
   public VM2E: boolean;
   public VM2E_PT?: boolean | undefined;
-  public VM2E_Attachment: boolean;
+  public VM2E_Attachment?: boolean | undefined;
   public VM2E_Transcript: boolean;
   public VM2E_TLS: boolean;
   public VM2S: boolean;
@@ -64,7 +64,6 @@ export class AvrilSiteFeatures implements IAvrilSiteFeatures {
   constructor(obj: IAvrilSiteFeatures  = {
     VM2T: false,
     VM2E: false,
-    VM2E_Attachment: false,
     VM2E_Transcript: false,
     VM2E_TLS: false,
     VM2S: false,

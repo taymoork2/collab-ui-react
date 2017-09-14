@@ -326,66 +326,6 @@ describe('Component: companyVoicemailAvril', () => {
     });
   });
 
-  describe('should Enable Voicemail to Spark with language set to other than English', () => {
-    beforeEach(function() {
-      this.$scope.features = new AvrilSiteFeatures();
-      this.$scope.externalNumberOptions = [];
-      // spyOn(this.Authinfo, 'isMessageEntitled').and.returnValue(true);
-      this.$scope.$apply();
-    });
-
-    it('should show is checked', function() {
-      const avrilFeatures = new AvrilSiteFeatures({
-        VM2T: false,
-        VM2E: false,
-        VM2E_Attachment: false,
-        VM2E_Transcript: false,
-        VM2E_TLS: false,
-        VM2S: true,
-        VM2S_Attachment: true,
-        VM2S_Transcript: false,
-        VMOTP: true,
-      });
-
-      this.view.find(VOICEMAIL_TOGGLE).click();
-      expect(this.view.find(VOICEMAIL_TO_SPARK_WITH_ATTACHMENT)).toBeChecked();
-      expect(this.view).not.toContainElement(VOICEMAIL_TO_SPARK_WITH_TRANSCRIPT);
-      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(GENERATED_VM_PILOT_NUMBER, 'true', true, avrilFeatures);
-    });
-  });
-
-  describe('Enable Voicemail - Transcript features for language set to other than English', () => {
-    beforeEach(function() {
-      this.$scope.features = new AvrilSiteFeatures();
-      this.$scope.externalNumberOptions = [];
-      this.$scope.$apply();
-    });
-
-    it('should not list VM2E and VM2S Transcript features for language set to other than English', function() {
-      const avrilFeatures = new AvrilSiteFeatures({
-        VM2T: false,
-        VM2E: true,
-        VM2E_Attachment: true,
-        VM2E_Transcript: false,
-        VM2E_TLS: true,
-        VM2S: true,
-        VM2S_Attachment: true,
-        VM2S_Transcript: false,
-        VMOTP: true,
-      });
-
-      this.view.find(VOICEMAIL_TOGGLE).click();
-      this.view.find(VOICEMAIL_TO_EMAIL).click();
-
-      expect(this.view.find(VOICEMAIL_TO_EMAIL_WITH_ATTACHMENT)).toBeChecked();
-      expect(this.view).not.toContainElement(VOICEMAIL_TO_EMAIL_WITH_TRANSCRIPT);
-      this.$scope.features.VM2E = true;
-      expect(this.view.find(VOICEMAIL_TO_SPARK_WITH_ATTACHMENT)).toBeChecked();
-      expect(this.view).not.toContainElement(VOICEMAIL_TO_SPARK_WITH_TRANSCRIPT);
-      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(GENERATED_VM_PILOT_NUMBER, 'true', true, avrilFeatures);
-    });
-  });
-
   describe('Voicemail Enabled: Enable OTP ', () => {
     beforeEach(function() {
       this.$scope.features = new AvrilSiteFeatures();
