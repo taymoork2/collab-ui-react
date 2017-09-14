@@ -3106,6 +3106,12 @@
     "addressesStatusComponent": {
       "addresses": "Addresses",
       "noAddressesFound": "No addresses found"
+    },
+    "resourceAlarms": {
+      "err.dns.resolution": {
+        "title": "Unable to resolve address {{hostname}}",
+        "description": "Unable to resolve address {{hostname}}. See <a href=\"{{troubleshootingLink}}\" target=\"_blank\">documentation</a> for guidance in resolving the issue."
+      }
     }
   },
   "cmc": {
