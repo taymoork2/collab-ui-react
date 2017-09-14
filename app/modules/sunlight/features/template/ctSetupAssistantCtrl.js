@@ -971,7 +971,7 @@
       vm.selectedVA = vm.template.configuration.virtualAssistant.config;
 
       // update modified VA Name from the configured VA info
-      if (vm.selectedVA.id && vm.hasConfiguredVirtualAssistantServices) {
+      if (vm.selectedVA && vm.selectedVA.id && vm.hasConfiguredVirtualAssistantServices) {
         var selectedVA = _.find(vm.configuredVirtualAssistantServices, {
           id: vm.selectedVA.id,
         });
@@ -1686,7 +1686,7 @@
           }
         }).catch(function (error) {
           vm.configuredVirtualAssistantServices = [];
-          Notification.errorWithTrackingId(error, $translate.instant('careChatTpl.getVirtualAssistantListError'));
+          Notification.errorWithTrackingId(error, 'careChatTpl.getVirtualAssistantListError');
         });
       }
     }

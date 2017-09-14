@@ -25,6 +25,7 @@ module.exports = {
   atlasEdiscovery: 'atlas-ediscovery',
   atlasEmailStatus: 'atlas-email-status',
   atlasEmailSuppress: 'atlas-email-suppress',
+  atlasExpertVirtualAssistantEnable: 'atlas-expert-virtual-assistant-enable',
   atlasF3745AutoAssignLicenses: 'atlas-f3745-auto-assign-licenses',
   atlasFileSharingControlSettings: 'atlas-file-sharing-control-settings',
   atlasHelpDeskExt: 'atlas-helpdesk-extended-information',

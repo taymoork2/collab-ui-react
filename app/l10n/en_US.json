@@ -6946,13 +6946,17 @@
     "newFeatures": {
       "newFeatureButtonText": "New",
       "newCareTemplateModalTitle": "Create New Care Template",
+      "newVirtualAssistantModalTitle": "Create New Virtual Assistant",
+      "newCustomerSupportTemplateModalTitle": "Create New Customer Support Template",
       "noCareFeatures": "Care Features are not available for the current login",
-      "selectCHDesc": "This template gives your customers the ability to contact your agents via chat.",
-      "selectCADesc": "This template gives your customers the ability to request a callback from your agents.",
-      "selectCHCADesc": "This template gives your customers the option to contact your agents via chat or request a callback.",
-      "chatType": "Chat",
-      "callbackType": "Callback",
-      "chatPlusCallbackType": "Chat+Callback"
+      "selectCHDesc": "Create a chat template that defines your customer support chat experience.",
+      "selectCADesc": "Create a template that defines how your customers request a callback.",
+      "selectCHCADesc": "Create a template that defines both the customer support chat experience, and how your customers request a callback.",
+      "selectCSTDesc": "Create web templates that define your customer support experience through chat and callback.",
+      "chatType": "Chat Template",
+      "callbackType": "Callback Template",
+      "chatPlusCallbackType": "Chat+Callback Template",
+      "virtualAssistant": "Virtual Assistant"
     },
     "settings": {
       "setUpCare": "Care",
@@ -7432,8 +7436,13 @@
       "featureText": {
         "virtualAssistantCode": "Va",
         "virtualAssistantMediaType": "Virtual Assistants",
-        "selectVADesc": "Create a virtual assistant who provides automated chat support and escalates issues as needed.",
-        "virtualAssistantType": "Customer Virtual Assistant"
+        "selectVADesc": "Create virtual assistants that can provide automated chat support to customers, or manage escalated chat requests in Cisco Spark.",
+        "selectCVADesc": "Create a virtual assistant who provides automated chat support and escalates issues as needed.",
+        "selectEVADesc": "Create a virtual assistant who connects subject matter experts in Cisco Spark spaces to customers with chat requests.",
+        "evaDisabledTooltip": "You can only have one Expert Virtual Assistant for your organization. To change the settings of your existing Expert Virtual Assistant, edit it from the Features page.",
+        "virtualAssistantType": "Virtual Assistant",
+        "expertVirtualAssistantType": "Expert <br> Virtual Assistant",
+        "customerVirtualAssistantType": "Customer <br> Virtual Assistant"
       },
       "createTitle": "Create Customer Virtual Assistant",
       "editTitle": "Edit Customer Virtual Assistant",

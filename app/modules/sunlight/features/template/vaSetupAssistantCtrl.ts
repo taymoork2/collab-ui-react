@@ -44,7 +44,7 @@ export class CareSetupVirtualAssistantCtrl {
     templateId: '',
     name: '',
     configuration: {
-      mediaType: this.VirtualAssistantService.serviceCard.type,
+      mediaType: this.VirtualAssistantService.cvaServiceCard.type,
       pages: {
         VirtualAssistantConfigOverview: {
           enabled: true,

@@ -15,32 +15,50 @@ export class VirtualAssistantService {
   };
 
   // Service Card definition. describes how to render the top-level virtual assistant 'card' for care.
-  public serviceCard = {
+  public cvaServiceCard = {
     id: 'Va',
     type: 'virtualAssistant',
     code: this.getVaMessageKey('featureText.virtualAssistantCode'),
-    label: this.getVaMessageKey('featureText.virtualAssistantType'),
-    description: this.getVaMessageKey('featureText.selectVADesc'),
-    icons: ['icon-bot-four'],
+    label: this.getVaMessageKey('featureText.customerVirtualAssistantType'),
+    description: this.getVaMessageKey('featureText.selectCVADesc'),
+    icons: [],
+    image: '/images/cvaIcon.png',
+    color: 'feature-va-color',
     disabled: false,
     goToService: this.goToService.bind(this),
   };
+
+  // Service Card definition. describes how to render the top-level virtual assistant 'card' for care.
+  public evaServiceCard = {
+    id: 'eVa',
+    type: 'eVirtualAssistant',
+    code: this.getVaMessageKey('featureText.virtualAssistantCode'),
+    label: this.getVaMessageKey('featureText.expertVirtualAssistantType'),
+    description: this.getVaMessageKey('featureText.selectEVADesc'),
+    icons: [],
+    image: '/images/evaIcon.png',
+    color: 'feature-va-color',
+    disabled: false,
+    disabledTooltip:  this.getVaMessageKey('featureText.evaDisabledTooltip'),
+    goToService: this.goToService.bind(this),
+  };
+
   // Feature List definition. describes how to fetch and render list of existing virtual assistant configurations as
   // 'cards' for care.
   public featureList = {
-    name: this.serviceCard.id,
+    name: this.cvaServiceCard.id,
     getFeature: this.listConfigs.bind(this),
     formatter: this.formatVirtualAssistantConfigs.bind(this),
     i18n: 'careChatTpl.chatTemplate',
     isEmpty: false,
     color: 'cta',
-    icons: this.serviceCard.icons,
+    icons: this.cvaServiceCard.icons,
     data: [],
   };
   // Feature List Filter definition. describes how to filter this feature
   public featureFilter = {
     name: this.getVaText('featureText.virtualAssistantMediaType'),
-    filterValue: this.serviceCard.type,
+    filterValue: this.cvaServiceCard.type,
   };
 
 
@@ -82,10 +100,14 @@ export class VirtualAssistantService {
    * @returns {String} id of Service
    */
   private goToService($state: ng.ui.IStateService, params?: object): string {
+    // For now, it will do nothing but close the modal for expert virtual assistant
+    if (_.get(params, 'type') === this.evaServiceCard.type) {
+      return this.evaServiceCard.id;
+    }
     $state.go('care.assistant', (<any>Object).assign({
-      type: this.serviceCard.type,
+      type: params,
     }, params));
-    return this.serviceCard.id;
+    return this.cvaServiceCard.id;
   }
   // LogMetricsService.logMetrics('Created template for Care', LogMetricsService.getEventType('careTemplateFinish'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
   /**
@@ -105,6 +127,7 @@ export class VirtualAssistantService {
       },
     });
   }
+
   /**
    * list all configurations for orgId
    * @param orgId
@@ -115,6 +138,33 @@ export class VirtualAssistantService {
       .get().$promise;
   }
 
+  /**
+   * list all Expert Virtual Assistants for orgId
+   * @param orgId
+   * returns promise resolving to JSON array of configurations or empty array on error
+   */
+  public listExpertAssistants(orgId: string): ng.IPromise<any> {
+    return this.getExpertAssistantResource(orgId || this.Authinfo.getOrgId())
+      .get().$promise;
+  }
+
+  /**
+   * obtain resource for Expert Virtual Assistant API Rest calls.
+   * @param orgId
+   * @param expertAssistantId
+   * @returns {*}
+   */
+  private getExpertAssistantResource(orgId: string, expertAssistantId?: string): IConfigurationResource {
+    const  baseUrl = this.UrlConfig.getExpertVirtualAssistantServiceUrl();
+    return <IConfigurationResource>this.$resource(baseUrl + 'config/organization/:orgId/expert-assistant/:expertAssistantId', {
+      orgId: orgId,
+      expertAssistantId: expertAssistantId,
+    }, {
+      update: {
+        method: 'PUT',
+      },
+    });
+  }
   /**
    * get a single identified configuration for orgId
    * @param botServicesConfigId
@@ -259,7 +309,7 @@ export class VirtualAssistantService {
       if (!item.name) {
         item.name = item.templateId;
       }
-      item.mediaType = service.serviceCard.type;
+      item.mediaType = service.cvaServiceCard.type;
       // CA-115: indicates that item.status should not be visible until UX defines the value to be set when "In use"
       // item.status = 'Not in use';
       item.featureType = feature.name;
