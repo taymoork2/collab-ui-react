@@ -16,7 +16,6 @@ exports.addPlaceWizard = {
     firstServiceOption: element(by.id('service1')),
   },
   showActivationCode: {
-    spinner: element(by.className('icon-spinner')),
     qrCodeImage: element(by.className('qrCodeImage')),
     activationCode: element(by.className('activation-code')),
   },
