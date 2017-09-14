@@ -155,14 +155,6 @@ describe('Service:AACommonService', function () {
       AACommonService.setMultiSiteEnabledToggle(true);
       expect(AACommonService.isMultiSiteEnabled()).toBeTruthy();
     });
-    it('setCallerInputToggle should set to false', function () {
-      AACommonService.setCallerInputToggle(false);
-      expect(AACommonService.isCallerInputToggle()).toBeFalsy();
-    });
-    it('setCallerInputToggle should set to true', function () {
-      AACommonService.setCallerInputToggle(true);
-      expect(AACommonService.isCallerInputToggle()).toBeTruthy();
-    });
     it('setRouteSIPAddressToggle should set to false', function () {
       AACommonService.setRouteSIPAddressToggle(false);
       expect(AACommonService.isRouteSIPAddressToggle()).toBeFalsy();
