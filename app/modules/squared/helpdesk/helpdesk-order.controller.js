@@ -6,7 +6,7 @@
     .controller('HelpdeskOrderController', HelpdeskOrderController);
 
   /* @ngInject */
-  function HelpdeskOrderController($state, $stateParams, $translate, $timeout, $window, Authinfo, HelpdeskService, Notification) {
+  function HelpdeskOrderController($state, $stateParams, $translate, $timeout, $window, Authinfo, FeatureToggleService, HelpdeskService, Notification) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.order) {
@@ -46,6 +46,9 @@
     vm.goToPartnerPage = goToPartnerPage;
     vm.goToProvisionedCustomerPage = goToProvisionedCustomerPage;
     vm.launchOrderProcessingClient = launchOrderProcessingClient;
+
+    // Feature toggle to hide setup link
+    vm.supportsHelpDeskOrderSetup = false;
 
     vm._helpers = {
       notifyError: notifyError,
@@ -93,6 +96,10 @@
     }
 
     function initOrderView(order) {
+      FeatureToggleService.atlasHelpDeskOrderSetupGetStatus().then(function (result) {
+        vm.supportsHelpDeskOrderSetup = result;
+      });
+
       // Getting information from the order.
       var orderObj;
       if (_.isArray(order)) {

@@ -29,7 +29,7 @@
           <span>{{helpdeskOrderCtrl.orderId}}</span>
         </div>
         <div class="large-3 columns details-value">
-          <a ng-if="helpdeskOrderCtrl.isProvisionEditAllowed()"
+          <a ng-if="helpdeskOrderCtrl.supportsHelpDeskOrderSetup && helpdeskOrderCtrl.isProvisionEditAllowed()"
             ng-click="helpdeskOrderCtrl.launchOrderProcessingClient()"
             translate="helpdesk.setUpOrder"></a>
         </div>
