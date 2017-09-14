@@ -149,7 +149,7 @@ var UsersPage = function () {
 
   this.breadcrumb = {};
   this.breadcrumb.overview = element(by.cssContainingText('ul.breadcrumbs li a', 'Overview'));
-  this.rolesAndSecurityMenuOption = element(by.css('[translate="usersPreview.rolesAndSecurity"] + .actions-menu'));
+  this.rolesAndSecurityMenuOption = element(by.id('rolesAndSecurity'));
 
   this.headerOrganizationName = element(by.css('.navbar-orgname'));
   this.messageLicenses = element(by.id('messaging'));
