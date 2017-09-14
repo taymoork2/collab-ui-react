@@ -158,7 +158,7 @@ describe('Controller: HelpdeskOrderController', function () {
       expect(HelpdeskService.getAccount).not.toHaveBeenCalled();
     });
     it('gets the value for the last email sent', function () {
-      expect(orderController.lastEmailSent).toBeDefined();
+      expect(orderController.customerEmailSent).toBeDefined();
     });
     it('sets the order is pending flag to true', function () {
       expect(orderController.isProvisionedOrderPending()).toBe(true);

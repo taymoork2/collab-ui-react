@@ -251,33 +251,6 @@ describe('Controller: HelpdeskController', function () {
 
       expect(this.controller.currentSearch.orderSearchFailure).toEqual('helpdesk.noSearchHits');
     });
-
-    it('simple search with less than eight characters shows search failure directly', function () {
-      this.controller.isOrderSearchEnabled = true;
-      // Search string is 7 numeric string, and should fail the lower limit of 8 digits.
-      this.controller.searchString = '6789123';
-      this.controller.search();
-      expect(this.controller.searchingForOrders).toBeFalsy();
-      this.$scope.$apply();
-      expect(this.controller.showUsersResultPane()).toBeTruthy();
-      expect(this.controller.showOrgsResultPane()).toBeTruthy();
-      expect(this.controller.showOrdersResultPane()).toBeTruthy();
-      expect(this.controller.showDeviceResultPane()).toBeFalsy();
-      expect(this.controller.currentSearch.orderSearchFailure).toEqual('helpdesk.badOrderSearchInput');
-    });
-
-    it('simple search with prefix different from "ssw" shows search failure directly', function () {
-      this.controller.isOrderSearchEnabled = true;
-      this.controller.searchString = 'ssx67891234';
-      this.controller.search();
-      expect(this.controller.searchingForOrders).toBeFalsy();
-      this.$scope.$apply();
-      expect(this.controller.showUsersResultPane()).toBeTruthy();
-      expect(this.controller.showOrgsResultPane()).toBeTruthy();
-      expect(this.controller.showOrdersResultPane()).toBeTruthy();
-      expect(this.controller.showDeviceResultPane()).toBeFalsy();
-      expect(this.controller.currentSearch.orderSearchFailure).toEqual('helpdesk.badOrderSearchInput');
-    });
   });
 
   describe('backend http error', function () {
