@@ -12,12 +12,14 @@
     <div class="helpdesk-orderDetail">
       <div class="orderTitle">
         <h2>{{helpdeskOrderCtrl.orderId}}</h2>
-        <h5>{{helpdeskOrderCtrl.accountName}}</h5>
+        <h5 ng-if="helpdeskOrderCtrl.accountName">{{helpdeskOrderCtrl.accountName}}</h5>
+        <h5 ng-if="helpdeskOrderCtrl.endCustomerName">{{helpdeskOrderCtrl.endCustomerName}}</h5>
       </div>
       <hr>
       <div class="row">
         <div class="medium-5 columns details-heading">
-          <span><strong translate="helpdesk.customerInfo"></strong></span>
+          <span ng-if="::!helpdeskOrderCtrl.isProvisionedOrderPending()"><strong translate="helpdesk.customerInfo"></strong></span>
+          <span ng-if="::helpdeskOrderCtrl.isProvisionedOrderPending()"><strong translate="helpdesk.orderInfo"></strong></span>
         </div>
       </div>
 
