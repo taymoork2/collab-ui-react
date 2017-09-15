@@ -4,7 +4,7 @@ import { CallFeaturesPage } from '../pages/callFeatures.page';
 import { CallParkFeaturePage } from '../pages/callParkFeature.page';
 import { CallUserPage } from '../pages/callUser.page';
 import * as os from 'os';
-import { featureToggle } from '../../utils/featureToggle.utils';
+import * as featureToggle from '../../utils/featureToggle.utils';
 
 const callFeatures = new CallFeaturesPage();
 const callParkFeature = new CallParkFeaturePage();

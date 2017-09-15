@@ -2,7 +2,7 @@ import * as provisioner from '../../../provisioner/provisioner';
 import { huronCustomer } from '../../../provisioner/huron/huron-customer-config';
 import { CallUserPage } from '../../pages/callUser.page';
 import { CallSpeedDialsPage } from '../../pages/callSpeedDials.page';
-import { featureToggle } from '../../../utils/featureToggle.utils';
+import * as featureToggle from '../../../utils/featureToggle.utils';
 
 const CallUser = new CallUserPage();
 const SpeedDialsPage = new CallSpeedDialsPage();
