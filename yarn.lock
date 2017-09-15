@@ -152,14 +152,14 @@
     "@types/angular" "*"
 
 "@types/angular-ui-bootstrap@~0.13.43":
-  version "0.13.44"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/@types/angular-ui-bootstrap/-/angular-ui-bootstrap-0.13.44.tgz#dedc80a8e8badc12ef87a8e5f0ebef625939ec47"
+  version "0.13.45"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/@types/angular-ui-bootstrap/-/angular-ui-bootstrap-0.13.45.tgz#57c1ba7d38b1f61c317e86f20de505e1525656ca"
   dependencies:
     "@types/angular" "*"
 
 "@types/angular-ui-router@~1.1.37":
-  version "1.1.37"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/@types/angular-ui-router/-/angular-ui-router-1.1.37.tgz#1e67926083f5e78d28d7c7e83d01c9929e70b6cb"
+  version "1.1.38"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/@types/angular-ui-router/-/angular-ui-router-1.1.38.tgz#a7d496d5db49be302022a3a0acb4ba2de60c394c"
   dependencies:
     "@types/angular" "*"
 
@@ -185,8 +185,8 @@
     "@types/jasmine" "*"
 
 "@types/jasmine@*", "@types/jasmine@^2.2.31", "@types/jasmine@^2.5.0":
-  version "2.5.54"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/@types/jasmine/-/jasmine-2.5.54.tgz#a6b5f2ae2afb6e0307774e8c7c608e037d491c63"
+  version "2.6.0"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/@types/jasmine/-/jasmine-2.6.0.tgz#997b41a27752b4850af2683bc4a8d8222c25bd02"
 
 "@types/jquery@*":
   version "3.2.12"
@@ -1277,8 +1277,8 @@ better-assert@~1.0.0:
     callsite "1.0.0"
 
 big.js@^3.1.3:
-  version "3.1.3"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/big.js/-/big.js-3.1.3.tgz#4cada2193652eb3ca9ec8e55c9015669c9806978"
+  version "3.2.0"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/big.js/-/big.js-3.2.0.tgz#a5fc298b81b9e0dca2e458824784b65c52ba588e"
 
 binary-extensions@^1.0.0:
   version "1.10.0"
@@ -3513,8 +3513,8 @@ formidable@1.0.x:
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/formidable/-/formidable-1.0.17.tgz#ef5491490f9433b705faa77249c99029ae348559"
 
 forwarded@~0.1.0:
-  version "0.1.1"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/forwarded/-/forwarded-0.1.1.tgz#8a4e30c640b05395399a3549c730257728048961"
+  version "0.1.2"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/forwarded/-/forwarded-0.1.2.tgz#98c23dab1175657b8c0573e8ceccd91b0ff18c84"
 
 foundation-sites@5.5.2:
   version "5.5.2"
@@ -6097,8 +6097,8 @@ pad-right@^0.2.2:
     repeat-string "^1.5.2"
 
 pako@^1.0.3:
-  version "1.0.5"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/pako/-/pako-1.0.5.tgz#d2205dfe5b9da8af797e7c163db4d1f84e4600bc"
+  version "1.0.6"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/pako/-/pako-1.0.6.tgz#0101211baa70c4bca4a0f63f2206e97b7dfaf258"
 
 pako@~0.2.0:
   version "0.2.9"
