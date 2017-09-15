@@ -1343,6 +1343,26 @@
               displayName: translateDisplayName('telephonyPreview.speedDials'),
             },
           })
+          .state('user-overview.communication.phoneButtonLayout', {
+            views: {
+              'side-panel-container@user-overview': {
+                template: '<uc-phone-button-layout owner-type="users" owner-id="$resolve.ownerId"></uc-phone-button-layout>',
+              },
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/huron/phoneButtonLayout'));
+                }, 'user-call-phonebuttonlayout');
+              }),
+              ownerId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentUser, 'id');
+              },
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('user-overview.communication.phoneButtonLayout').data.displayName = $translate.instant('telephonyPreview.phoneButtonLayout');
+              },
+            },
+          })
           .state('user-overview.communication.cos', {
             views: {
               'side-panel-container@user-overview': {
