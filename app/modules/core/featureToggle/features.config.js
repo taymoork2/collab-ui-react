@@ -39,6 +39,7 @@ module.exports = {
   atlasMyCompanyBillingTab: 'atlas-my-company-billing-tab',
   atlasOffice365Support: 'atlas-office365-support',
   atlasOrderProvisioningConsole: 'atlas-order-provisioning-console',
+  atlasJira2126UseAltEndpoint: 'atlas-jira-2126-use-alt-endpoint',
   atlasPartnerManagement: 'atlas-partner-management',
   atlasPartnerSparkReports: 'atlas-partner-spark-reports',
   atlasPinSettings: 'atlas-pin-settings',
