@@ -2,6 +2,7 @@
 @import '~collab-ui/scss/settings/typography';
 @import '~collab-ui/scss/tools/placeholders/page-layout';
 @import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '../../../styles/variables';
 
 .devices-redux {
   //@extend %grid-subheader;
@@ -307,12 +308,6 @@
   }
   .result-pane {
     width: 100%;
-    .gridStyle {
-      height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height}));
-    }
-    .grid-container {
-      height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height} + 48rem));
-    }
     .ui-grid-footer-cell {
       padding: 0 20px;
     }
@@ -500,5 +495,23 @@
   .pager {
     text-align: center;
     padding-bottom: 20px;
+  }
+}
+
+.is-read-only-admin .devices-redux .result-pane {
+  .gridStyle {
+    height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height} + #{$read-only-banner-height}));
+  }
+  .grid-container {
+    height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height} + 48rem + #{$read-only-banner-height}));
+  }
+}
+
+.devices-redux .result-pane {
+  .gridStyle {
+    height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height}));
+  }
+  .grid-container {
+    height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height} + 48rem));
   }
 }
