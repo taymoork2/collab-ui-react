@@ -93,6 +93,7 @@
     require('modules/core/validation').default,
     require('modules/core/customerReports').default,
     require('modules/core/partnerReports').default,
+    require('modules/gemini/reports').default,
   ])
     .constant('CryptoJS', require('crypto-js'))
     .constant('addressparser', require('emailjs-addressparser'));
