@@ -8878,6 +8878,7 @@
       "showMore": "Show more"
     },
     "reportsChart": {
+      "usageReports": "CCA Usage Reports",
       "reportTab": {
         "title": "Reports",
         "usage": "Usage",
