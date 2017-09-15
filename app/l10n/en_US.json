@@ -6748,6 +6748,10 @@
         "type": "Automatic Updates Disabled",
         "message": "System software will not be updated."
       },
+      "soontobedeactivated": {
+        "type": "Device will soon be deactivated",
+        "message": "The device has not been online for a long time and the authentication token will soon expire."
+      },
       "NTPStatus": {
         "type": "Time Server Not Reachable",
         "message": "The connection to an NTP server could not be established. The time displayed on your endpoint may be wrong."
