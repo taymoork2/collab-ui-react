@@ -2,7 +2,6 @@
 
 describe('Service: AutoAttendantCeMenuModelService', function () {
   var AutoAttendantCeMenuModelService;
-  // require('jasmine-collection-matchers');
   var ceInfos = getJSONFixture('huron/json/autoAttendant/rawCeInfos.json');
 
   // Welcome menu
