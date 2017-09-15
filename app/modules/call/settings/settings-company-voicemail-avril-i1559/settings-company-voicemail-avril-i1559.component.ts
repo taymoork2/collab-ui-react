@@ -50,18 +50,6 @@ class CompanyVoicemailAvrilI1559ComponentCtrl implements ng.IComponentController
       externalNumberOptions,
     } = changes;
 
-    if (externalNumberOptions) {
-      if (!this.selectedNumber && externalNumberOptions.currentValue && _.isArray(externalNumberOptions.currentValue)) {
-        if (externalNumberOptions.currentValue.length === 0) {
-          this.missingDirectNumbers = true;
-          this.missingDirectNumbersHelpText = this.$translate.instant('serviceSetupModal.voicemailNoDirectNumbersError');
-        } else {
-          this.missingDirectNumbers = false;
-          this.missingDirectNumbersHelpText = '';
-        }
-      }
-    }
-
     if (features && features.currentValue) {
       this.localAvrilFeatures = _.clone(features.currentValue);
     }
@@ -76,6 +64,17 @@ class CompanyVoicemailAvrilI1559ComponentCtrl implements ng.IComponentController
       }
       this.siteLanguage = _.get<string>(site.currentValue, 'preferredLanguage');
     }
+    if (externalNumberOptions) {
+      if (externalNumberOptions.currentValue && _.isArray(externalNumberOptions.currentValue)) {
+        if (!_.isUndefined(this.selectedNumber) && !_.isEmpty(this.selectedNumber.value) || externalNumberOptions.currentValue.length) {
+          this.missingDirectNumbers = false;
+          this.missingDirectNumbersHelpText = '';
+        } else if (externalNumberOptions.currentValue.length === 0) {
+          this.missingDirectNumbers = true;
+          this.missingDirectNumbersHelpText = this.$translate.instant('serviceSetupModal.voicemailNoDirectNumbersError');
+        }
+      }
+    }
   }
 
   public onCompanyVoicemailNumberChanged(): void {
@@ -83,7 +82,7 @@ class CompanyVoicemailAvrilI1559ComponentCtrl implements ng.IComponentController
   }
 
   public onVoicemailToPhoneChanged(): void {
-    if (this.voicemailToPhone) {
+    if (this.localAvrilFeatures.VM2T) {
       this.onChange(_.get<string>(this.selectedNumber, 'value'), 'false', true);
     } else {
       const pilotNumber = this.ServiceSetup.generateVoiceMailNumber(this.Authinfo.getOrgId(), this.dialPlanCountryCode);
