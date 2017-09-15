@@ -8876,6 +8876,41 @@
       },
       "by": "by",
       "showMore": "Show more"
+    },
+    "reportsChart": {
+      "reportTab": {
+        "title": "Reports",
+        "usage": "Usage",
+        "peakPorts": "Peak Ports",
+        "participants": "Participants",
+        "typesSize": "Types and Size"
+      },
+      "kpi": {
+        "hostGrowth": "ACTIVE HOST",
+        "meetingGrowth": "TOTAL MEETINGS",
+        "audioGrowth": "AUDIO MINUTES",
+        "audioPortGrowth": "PEAK AUDIO PORTS",
+        "videoGrowth": "VIDEO MINUTES",
+        "videoPortGrowth": "PEAK VIDEO PORTS"
+      },
+      "filter": {
+        "custom": "Custom",
+        "account": "Customer",
+        "customer": "Partner",
+        "advanced": "Advanced",
+        "duration": "Duration",
+        "siteURLs": "Site URLs",
+        "allSites": "All Sites",
+        "CSVExport": "CSV Export",
+        "last90Days": "Last 90 Days",
+        "last45Days": "Last 45 Days",
+        "allAccounts": "All Customers",
+        "selectEnable": "selectEnable",
+        "last6Months": "Last 6 Months",
+        "sessionTypes": "Session Types",
+        "last12Months": "Last 12 Months",
+        "allSesstionTypes": "All Sesstion Types"
+      }
     }
   },
   "timeZones": {

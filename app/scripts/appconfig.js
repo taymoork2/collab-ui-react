@@ -2678,6 +2678,15 @@
             url: '/services/overview',
             template: '<cca-card></cca-card>',
           })
+          .state('gemReports', {
+            parent: 'partner',
+            url: '/services/reports',
+            template: '<cca-reports-tabs></cca-reports-tabs>',
+          })
+          .state('gemReports.group', {
+            url: '/:name',
+            template: '<cca-reports report-chart-data="$ctrl.chartsData"></cca-reports>',
+          })
           .state('gem.servicesPartner', {
             url: '/services/spList',
             templateUrl: 'modules/gemini/common/servicePartner.tpl.html',
