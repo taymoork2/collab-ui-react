@@ -19,8 +19,10 @@ export class HybridDataSecurityActiveCardComponent implements ng.IComponentOptio
         <p><a ui-sref="hds.list">View all</a></p>
       </div>
       <div class="active-card_footer">
-        <cs-statusindicator ng-model="$ctrl.serviceStatus.cssClass"></cs-statusindicator>
-        <span translate="{{'servicesOverview.cardStatus.'+$ctrl.serviceStatus.status}}"></span>
+        <a ui-sref="hds.list">
+          <cs-statusindicator ng-model="$ctrl.serviceStatus.cssClass"></cs-statusindicator>
+          <span translate="{{'servicesOverview.cardStatus.'+$ctrl.serviceStatus.status}}"></span>
+        </a>
       </div>
     </article>
   `;

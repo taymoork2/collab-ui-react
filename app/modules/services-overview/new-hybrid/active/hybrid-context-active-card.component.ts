@@ -17,8 +17,10 @@ export class HybridContextActiveCardComponent implements ng.IComponentOptions {
         <p><a ui-sref="context-resources">View all</a></p>
       </div>
       <div class="active-card_footer">
-        <cs-statusindicator ng-model="$ctrl.serviceStatus.cssClass"></cs-statusindicator>
-        <span translate="{{'servicesOverview.cardStatus.'+$ctrl.serviceStatus.status}}"></span>
+        <a ui-sref="context-resources">
+          <cs-statusindicator ng-model="$ctrl.serviceStatus.cssClass"></cs-statusindicator>
+          <span translate="{{'servicesOverview.cardStatus.'+$ctrl.serviceStatus.status}}"></span>
+        </a>
       </div>
     </article>
   `;

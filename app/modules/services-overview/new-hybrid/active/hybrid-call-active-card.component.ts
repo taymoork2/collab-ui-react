@@ -20,8 +20,10 @@ export class HybridCallActiveCardComponent implements ng.IComponentOptions {
         <card-users-summary link="'calendar-service.list'" summary="$ctrl.userStatusesSummary"></card-users-summary>
       </div>
       <div class="active-card_footer">
-        <cs-statusindicator ng-model="$ctrl.serviceStatus.cssClass"></cs-statusindicator>
-        <span translate="{{'servicesOverview.cardStatus.'+$ctrl.serviceStatus.status}}"></span>
+        <a ui-sref="call-service.list">
+          <cs-statusindicator ng-model="$ctrl.serviceStatus.cssClass"></cs-statusindicator>
+          <span translate="{{'servicesOverview.cardStatus.'+$ctrl.serviceStatus.status}}"></span>
+        </a>
       </div>
     </article>
   `;
