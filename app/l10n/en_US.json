@@ -7847,6 +7847,7 @@
     "less": "Less",
     "licenses": "Licenses:",
     "licenseSummary": "License Summary",
+    "licenseSummaryEnterprise": "License Summary for Enterprise",
     "licenseSummaryOnline": "License Summary for {{name}}",
     "licenseUsageReport": "License Usage Report",
     "loadError": "An error occurred while loading subscriptions.",
