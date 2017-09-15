@@ -17,7 +17,7 @@ describe('AddLinesCtrl: Ctrl', function () {
       'Notification'
     );
 
-    this.internalNumbers = getJSONFixture('huron/json/internalNumbers/internalNumbers.json');
+    this.internalNumbers = getJSONFixture('huron/json/internalNumbers/numbersInternalNumbers.json');
     this.externalNumbers = getJSONFixture('huron/json/externalNumbers/externalNumbers.json');
     this.externalNumberPool = getJSONFixture('huron/json/externalNumberPoolMap/externalNumberPool.json');
     this.externalNumberPoolMap = getJSONFixture('huron/json/externalNumberPoolMap/externalNumberPoolMap.json');
