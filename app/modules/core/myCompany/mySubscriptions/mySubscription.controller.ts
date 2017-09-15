@@ -196,14 +196,7 @@ export class MySubscriptionCtrl implements ng.IController {
   }
 
   private subscriptionRetrieval(): void {
-    this.Orgservice.getLicensesUsage().then((subscriptions: any[]): void => {
-      // filter out subscriptions with a license with an offerName that is 'MSGR'
-      // - as of 2017-07-24, 'Authinfo.isExternallyManagedLicense()' is sufficient for checking this
-      subscriptions = _.reject(subscriptions, (subscription) => {
-        const licenses = _.get(subscription, 'licenses');
-        return _.some(licenses, license => this.Authinfo.isExternallyManagedLicense(license));
-      });
-
+    this.Orgservice.getInternallyManagedSubscriptions().then((subscriptions: any[]): void => {
       const authinfoSubscriptions = this.Authinfo.getSubscriptions();
 
       _.forEach(subscriptions, (subscription: any, subIndex: number): void => {
