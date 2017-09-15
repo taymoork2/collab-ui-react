@@ -134,7 +134,7 @@ export class DevicesController {
       columnDefs: [{
         field: 'photos',
         displayName: '',
-        cellTemplate: this.getTemplate('_imageTpl'),
+        cellTemplate: require('./templates/_imageTpl.html'),
         width: 70,
       }, {
         field: 'displayName',
@@ -158,14 +158,10 @@ export class DevicesController {
       }, {
         field: 'product',
         displayName: $translate.instant('spacesPage.typeHeader'),
-        cellTemplate: this.getTemplate('_productTpl'),
+        cellTemplate: require('./templates/_productTpl.html'),
         sortingAlgorithm: DevicesController.sortFn,
       }],
     };
-  }
-
-  private getTemplate(name) {
-    return require('modules/squared/devices/templates/' + name + '.html');
   }
 
   private static sortFn(a, b) {

@@ -76,7 +76,7 @@ class DeviceList implements ng.IComponentController {
       columnDefs: [{
         field: 'photos',
         displayName: '',
-        cellTemplate: this.getTemplate('_imageTpl'),
+        cellTemplate: require('modules/csdm/templates/_imageTpl.html'),
         width: 70,
       }, {
         field: 'displayName',
@@ -86,7 +86,7 @@ class DeviceList implements ng.IComponentController {
       }, {
         field: 'connectionStatus',
         displayName: this.$translate.instant('spacesPage.statusHeader'),
-        cellTemplate: this.getTemplate('_statusTpl'),
+        cellTemplate: require('modules/csdm/templates/_statusTpl.html'),
         sort: { // This has no effect on the actual sorting, but makes the grid reflect the default sort in searchObject.ts
           direction: 'asc',
           priority: 0,
@@ -95,7 +95,7 @@ class DeviceList implements ng.IComponentController {
       }, {
         field: 'product',
         displayName: this.$translate.instant('spacesPage.typeHeader'),
-        cellTemplate: this.getTemplate('_productTpl'),
+        cellTemplate: require('modules/csdm/templates/_productTpl.html'),
         suppressRemoveSort: true,
       }],
     };
@@ -125,10 +125,6 @@ class DeviceList implements ng.IComponentController {
 
   public getResult() {
     return this.searchHits && this.searchHits.hits;
-  }
-
-  private getTemplate(name) {
-    return require('modules/csdm/templates/' + name + '.html');
   }
 
   public expandDevice(device) {

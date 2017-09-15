@@ -118,7 +118,7 @@ require('../devices/_devices.scss');
           columnDefs: [{
             field: 'photos',
             displayName: '',
-            cellTemplate: getTemplate('image.tpl'),
+            cellTemplate: require('./templates/image.tpl.html'),
             sortable: false,
             width: 70,
           }, {
@@ -145,7 +145,7 @@ require('../devices/_devices.scss');
           }, {
             field: 'action',
             displayName: $translate.instant('placesPage.actionHeader'),
-            cellTemplate: getTemplate('actions.tpl'),
+            cellTemplate: require('./templates/actions.tpl.html'),
             sortable: false,
           }],
         };
@@ -230,10 +230,6 @@ require('../devices/_devices.scss');
           $event.stopPropagation();
           RemPlaceModal.open(place);
         };
-
-        function getTemplate(name) {
-          return require('modules/squared/places/templates/' + name + '.html');
-        }
 
         function sortFn(a, b) {
           if (a && a.localeCompare) {

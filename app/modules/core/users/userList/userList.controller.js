@@ -151,10 +151,6 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
       });
     }
 
-    function getTemplate(name) {
-      return require('modules/core/users/userList/templates/' + name + '.html');
-    }
-
     function getUserList(startAt) {
       var startIndex = startAt || 0;
 
@@ -539,7 +535,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
       var columnDefs = [{
         field: 'photos',
         displayName: '',
-        cellTemplate: getTemplate('photoCell.tpl'),
+        cellTemplate: require('./templates/photoCell.tpl.html'),
         headerCellTemplate: '<div class="ui-grid-cell-contents" aria-label="{{:: \'usersPage.userImage\' | translate}}" tabindex="0"></div>',
         width: 70,
       }, {
@@ -567,11 +563,11 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
         id: 'userStatus',
         cellFilter: 'userListFilter',
         displayName: $translate.instant('usersPage.status'),
-        cellTemplate: getTemplate('status.tpl'),
+        cellTemplate: require('./templates/status.tpl.html'),
       }, {
         field: 'action',
         displayName: $translate.instant('usersPage.actionHeader'),
-        cellTemplate: getTemplate('actions.tpl'),
+        cellTemplate: require('./templates/actions.tpl.html'),
       }];
 
       function onRegisterApi(gridApi) {

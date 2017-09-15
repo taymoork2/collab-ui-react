@@ -96,13 +96,13 @@ export class TelephonyNumberDataService {
       cellTooltip: true,
       displayName: this.$translate.instant('gemini.tds.numbers.field.phoneNumber'),
       cellClass: isEdit ? 'cell-border-none' : '',
-      cellTemplate: this.requireCellTemplate('phoneNumberCellTemplate'),
+      cellTemplate: require('./cellTemplate/phoneNumberCellTemplate.tpl.html'),
     }, {
       width: '11%',
       field: 'label',
       displayName: this.$translate.instant('gemini.tds.numbers.field.phoneLabel'),
       cellClass: isEdit ? 'cell-border-none' : '',
-      cellTemplate: this.requireCellTemplate('phoneLabelCellTemplate'),
+      cellTemplate: require('./cellTemplate/phoneLabelCellTemplate.tpl.html'),
     }, {
       width: '12%',
       field: 'dnisNumberFormat',
@@ -110,7 +110,7 @@ export class TelephonyNumberDataService {
       cellTooltip: true,
       displayName: this.$translate.instant('gemini.tds.numbers.field.accessNumber'),
       cellClass: isEdit ? 'cell-border-none' : '',
-      cellTemplate: this.requireCellTemplate('accessNumberCellTemplate'),
+      cellTemplate: require('./cellTemplate/accessNumberCellTemplate.tpl.html'),
     }, {
       width: '9%',
       field: 'tollType',
@@ -118,7 +118,7 @@ export class TelephonyNumberDataService {
       cellTooltip: true,
       displayName: this.$translate.instant('gemini.tds.numbers.field.tollType'),
       cellClass: isEdit ? 'cell-border-none' : '',
-      cellTemplate: this.requireCellTemplate('tollTypeCellTemplate'),
+      cellTemplate: require('./cellTemplate/tollTypeCellTemplate.tpl.html'),
     }, {
       width: '8%',
       field: 'callType',
@@ -126,7 +126,7 @@ export class TelephonyNumberDataService {
       cellTooltip: true,
       displayName: this.$translate.instant('gemini.tds.numbers.field.callType'),
       cellClass: isEdit ? 'cell-border-none' : '',
-      cellTemplate: this.requireCellTemplate('callTypeCellTemplate'),
+      cellTemplate: require('./cellTemplate/callTypeCellTemplate.tpl.html'),
     }, {
       width: '12%',
       field: 'defaultNumber',
@@ -134,7 +134,7 @@ export class TelephonyNumberDataService {
       cellTooltip: true,
       displayName: this.$translate.instant('gemini.tds.numbers.field.defaultNumber'),
       cellClass: isEdit ? 'cell-border-none' : '',
-      cellTemplate: this.requireCellTemplate('defaultNumberCellTemplate'),
+      cellTemplate: require('./cellTemplate/defaultNumberCellTemplate.tpl.html'),
     }, {
       width: '11%',
       field: 'globalListDisplay',
@@ -142,7 +142,7 @@ export class TelephonyNumberDataService {
       cellTooltip: true,
       displayName: this.$translate.instant('gemini.tds.numbers.field.globalDisplay'),
       cellClass: isEdit ? 'cell-border-none' : '',
-      cellTemplate: this.requireCellTemplate('globalListDisplayCellTemplate'),
+      cellTemplate: require('./cellTemplate/globalListDisplayCellTemplate.tpl.html'),
     }, {
       width: '9%',
       field: 'country',
@@ -150,7 +150,7 @@ export class TelephonyNumberDataService {
       cellTooltip: true,
       displayName: this.$translate.instant('gemini.tds.numbers.field.country'),
       cellClass: isEdit ? 'cell-border-none' : '',
-      cellTemplate: this.requireCellTemplate('countryCellTemplate'),
+      cellTemplate: require('./cellTemplate/countryCellTemplate.tpl.html'),
     }, {
       width: '13%',
       field: 'isHidden',
@@ -158,7 +158,7 @@ export class TelephonyNumberDataService {
       cellTooltip: true,
       displayName: this.$translate.instant('gemini.tds.numbers.field.hiddenOnClient'),
       cellClass: isEdit ? 'cell-border-none' : '',
-      cellTemplate: this.requireCellTemplate('isHiddenCellTemplate'),
+      cellTemplate: require('./cellTemplate/isHiddenCellTemplate.tpl.html'),
     }];
 
     if (isEdit) {
@@ -218,10 +218,6 @@ export class TelephonyNumberDataService {
   public initNumber(data, telephonyDomainId) {
     this.initDropdownList(data, telephonyDomainId);
     this.addNumber(data);
-  }
-
-  private requireCellTemplate(path: string): string {
-    return require('modules/gemini/telephonyDomain/details/cellTemplate/' + path + '.tpl.html');
   }
 
   private initDropdownList(data, telephonyDomainId) {
