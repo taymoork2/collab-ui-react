@@ -53,10 +53,9 @@ class WebexReportsMore implements ng.IComponentController {
       });
   }
 
-  private timestampToDate(timestamp, formate): string {
+  private timestampToDate(timestamp, format): string {
     const offset = this.SearchService.getOffset(this.timeZone);
-    const utcTime = moment(timestamp).utc().format('YYYY-MM-DD HH:mm:ss');
-    return moment.utc(utcTime).utcOffset(offset).format(formate);
+    return moment(timestamp).utc().utcOffset(offset).format(format);
   }
 
   private getParticipants() {

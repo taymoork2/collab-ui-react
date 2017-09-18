@@ -912,7 +912,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
           stateParams.wizard = huronExistingUser;
           spyOn(OtpService, 'generateOtp').and.returnValue($q.resolve({
             code: activationCode,
-            friendlyExpiresOn: expiryTime,
+            expiresOn: expiryTime,
           }));
           initController();
           $scope.$digest();

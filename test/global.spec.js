@@ -1,5 +1,11 @@
 'use strict';
 
+var consoleWarn = console.warn;
+console.warn = function () {
+  consoleWarn.apply(console, arguments);
+  fail('Unhandled warning in unit test');
+};
+
 var Promise = require('promise');
 require('oclazyload');
 beforeEach(angular.mock.module('oc.lazyLoad', function ($provide) {
