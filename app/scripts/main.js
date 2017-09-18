@@ -161,6 +161,7 @@
     require('modules/hercules/services/enterprise-private-trunk-service').default,
     require('modules/hercules/services/excel-service').default,
     require('modules/hercules/services/fms-org-settings.service').default,
+    require('modules/hercules/services/hs-flag-service').default,
     require('modules/hercules/services/hybrid-services-cluster-states.service').default,
     require('modules/hercules/services/hybrid-services-cluster.service').default,
     require('modules/hercules/services/hybrid-services-extras.service').default,
