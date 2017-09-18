@@ -3635,7 +3635,7 @@
     "invalidEmailAddress": "Invalid Email Address",
     "csvDuplicateEmail": "This email is skipped due to duplicate email address in the CSV file.",
     "bulkInvalidDID": "The \"Direct Line\" field contains an invalid number.  Please fix and try again.",
-    "tooManyActiveMessageLicenses": "There are more than one \"Cisco Spark Message\" license enabled.  Please fix and try again.",
+    "tooManyActiveSparkCallLicenses": "There are more than one \"Cisco Spark Call\" license enabled.  Please fix and try again.",
     "csvWrongLicenseFormat": "License fields contain invalid data. Please fix and try again.",
     "processBulkResponseError": "An error has occurred while reading the response. Please try again.",
     "processBulkError": "Unidentified error while processing the user. Please try again.",
