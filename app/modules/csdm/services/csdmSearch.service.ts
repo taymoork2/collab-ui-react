@@ -18,23 +18,30 @@ export class CsdmSearchService {
       this.pendingPromise[caller].resolve();
     }
     const url = this.UrlConfig.getCsdmServiceUrl() + '/organization/' + this.Authinfo.getOrgId() + '/devices/_search';
-    SearchObject.initDefaults(search);
     this.pendingPromise[caller] = this.$q.defer();
     return this.$http
       .get<SearchResult>(
-        url + CsdmSearchService.constructSearchString(search),
+        url + this.constructSearchString(search),
         { timeout: this.pendingPromise[caller].promise })
       .then(data => this.DeviceSearchConverter.convertSearchResult(data));
   }
 
-  private static constructSearchString(searchObject): string {
-    if (!searchObject) {
-      return 'empty';
+  public constructSearchString(so: SearchObject): string {
+    if (!so) {
+      throw new Error('Invalid search state.');
     }
-    const so = _.cloneDeep(searchObject);
-    delete so['tokenizedQuery'];
-    const search = _.join(_.map(so, (v: any, k: string) => {
-      return k + '=' + v;
+
+    const params = {
+      query: so.getSearchQuery(),
+      aggregates: so.aggregates,
+      size: so.size,
+      from: so.from,
+      sortField: so.sortField,
+      sortOrder: so.sortOrder,
+    };
+
+    const search = _.join(_.map(params, (v: any, k: string) => {
+      return k + '=' + encodeURIComponent(v);
     }), '&');
     if (search && search.length > 0) {
       return '?' + search;

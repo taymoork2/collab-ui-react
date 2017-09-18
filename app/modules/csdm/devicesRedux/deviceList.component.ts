@@ -19,7 +19,7 @@ class DeviceList implements ng.IComponentController {
   public loadingMoreSpinner = false;
 
   //bindings
-  public searchObject: SearchObject;
+  public searchObject: SearchObject = SearchObject.createWithQuery('');
   public searchHits: SearchHits;
   public sortOrderChanged: (e?: { field: string, order: string }) => {};
 
@@ -151,9 +151,6 @@ class DeviceList implements ng.IComponentController {
   }
 
   private loadMore(fromScrollEvent = false) {
-    if (!this.searchObject) {
-      this.searchObject = SearchObject.create('');
-    }
     this.searchObject.nextPage();
     if ((this.searchObject.from || 0) < (this.searchHits && this.searchHits.total || 0) && !this.loadingMore) {
       this.loadingMore = true;
@@ -164,7 +161,7 @@ class DeviceList implements ng.IComponentController {
             this.searchHits.hits.push.apply(this.searchHits.hits, response.data.hits.hits);
           }
         })
-        .catch(e => DeviceSearch.ShowSearchError(this.Notification, e, null))
+        .catch(e => DeviceSearch.ShowSearchError(this.Notification, e))
         .finally(() => {
           if (
             (this.gridApi.grid.gridHeight || 0) > (DeviceList.HeaderHeight + DeviceList.RowHeight * this.searchHits.hits.length)

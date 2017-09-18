@@ -145,7 +145,7 @@ export class DevicesCtrl {
   }
 
   public searchChanged(search: SearchObject) {
-    this._searchString = search.query || '';
+    this._searchString = search.getSearchQuery();
     this._searchObject = search;
   }
 
