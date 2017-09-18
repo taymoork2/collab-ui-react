@@ -282,6 +282,10 @@ services-overview {
   .active-card_footer {
     margin: 0 1rem 1rem;
     text-align: center;
+
+    a {
+      color: inherit;
+    }
   }
 
   // Inactive card

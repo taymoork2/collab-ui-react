@@ -4,7 +4,7 @@ import * as os from 'os';
 import { CallSettingsPage } from '../pages/callSettings.page';
 import { CallUserPage } from '../pages/callUser.page';
 import { AddPlacesPage } from '../pages/addPlaces.page';
-import { featureToggle } from '../../utils/featureToggle.utils';
+import * as featureToggle from '../../utils/featureToggle.utils';
 
 const addPlaces = new AddPlacesPage();
 const AddUser = new CallUserPage();

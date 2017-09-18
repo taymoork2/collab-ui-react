@@ -1,12 +1,9 @@
 import { PrivateTrunkPrereqService } from './private-trunk-prereq.service';
-interface IDomain {
-  text: string;
-}
 interface ITranslationMessages {
   helpText: string;
 }
 export class PrivateTrunkPrereqCtrl implements ng.IComponentController {
-  public domains: IDomain[];
+  public domains: string[];
   public hasVerifiedDomain: boolean = false;
   public connectivityHelpMessages: ITranslationMessages[];
   public fullServiceHelpMessages: ITranslationMessages[];

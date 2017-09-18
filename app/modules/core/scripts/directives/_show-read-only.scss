@@ -1,4 +1,5 @@
 @import '~collab-ui/scss/settings/colors';
+@import '../../../../styles/variables';
 
 .read-only-modal {
   h3 {
@@ -21,7 +22,7 @@
   color: $white;
   text-align: center;
   background-color: $color-attention-light;
-  height: 2.75rem;
+  height: $read-only-banner-height;
   line-height: 2.625rem;
   font-size: 1.0625rem;
 }
@@ -30,7 +31,7 @@
   .side-panel {
     top: 97px;
     &.side-panel-full-height {
-      top: 44px;
+      top: $read-only-banner-height;
     }
   }
 }

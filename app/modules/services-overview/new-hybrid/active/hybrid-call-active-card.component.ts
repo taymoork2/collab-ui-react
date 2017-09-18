@@ -17,12 +17,13 @@ export class HybridCallActiveCardComponent implements ng.IComponentOptions {
         <p><a ui-sref="call-service.settings">Configure</a></p>
         <p><span>Resources</span></p>
         <p><a ui-sref="call-service.list">View all</a></p>
-        <p><span>Users</span></p>
-        <p><a href><span class="badge badge--outline badge--round">X</span> users active</a></p>
+        <card-users-summary link="'calendar-service.list'" summary="$ctrl.userStatusesSummary"></card-users-summary>
       </div>
       <div class="active-card_footer">
-        <cs-statusindicator ng-model="$ctrl.serviceStatus.cssClass"></cs-statusindicator>
-        <span translate="{{'servicesOverview.cardStatus.'+$ctrl.serviceStatus.status}}"></span>
+        <a ui-sref="call-service.list">
+          <cs-statusindicator ng-model="$ctrl.serviceStatus.cssClass"></cs-statusindicator>
+          <span translate="{{'servicesOverview.cardStatus.'+$ctrl.serviceStatus.status}}"></span>
+        </a>
       </div>
     </article>
   `;

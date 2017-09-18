@@ -14,14 +14,14 @@
     "TODO: remove typings script after a short transition period"
   ],
   "scripts": {
-    "analyze": "yarn build -- --env.analyze",
+    "analyze": "yarn build --env.analyze",
     "build": "yarn clean-dist && node --max-old-space-size=2048 ./node_modules/.bin/webpack --bail --profile",
     "clean-test": "rimraf ./test/results ./test/coverage && yarn test",
     "clean-dist": "rimraf dist dist-source-map build",
     "commit": "git-cz",
     "coverage-report": "node ./utils/coverage-report",
     "debug-webpack": "node --inspect --debug-brk ./node_modules/.bin/webpack --env.no-devtool",
-    "e2e": "yarn protractor -- --production-backend --suite jenkins",
+    "e2e": "yarn protractor --production-backend --suite jenkins",
     "eslint": "eslint ./app ./config ./karma ./protractor ./test ./utils ./webpack",
     "json-verify": "node ./utils/json-verify.js",
     "ktest-all-no-parallel": "./bin/ktest-all --no-parallel",
@@ -33,7 +33,7 @@
     "lint": "yarn eslint && yarn tslint && yarn stylelint",
     "postinstall": "yarn ts-spec-delete && yarn typings",
     "posttest": "yarn coverage-report",
-    "preinstall": "node ./utils/semver-check.js",
+    "preinstall": "node ./utils/version-check.js",
     "prestart": "yarn",
     "pretest": "rimraf ./test/coverage",
     "protractor": "yarn webdriver && node ./protractor/e2e",
@@ -41,10 +41,10 @@
     "sauce-job": "./bin/mk-proper-sauce-link.sh",
     "serve-dist": "./bin/start-lite-server.sh dist",
     "serve": "./bin/start-lite-server.sh dev",
-    "start": "yarn serve --",
+    "start": "yarn serve",
     "stats": "yarn clean-dist && webpack --progress --profile --json > stats.json",
     "stylelint": "stylelint './app/**/**/*.scss'",
-    "test": "yarn ktest-all --",
+    "test": "yarn ktest-all",
     "ts-spec-delete": "node ./utils/ts-spec-delete.js",
     "tslint": "tslint --type-check --format stylish --project ./tsconfig.json",
     "typings": "rimraf ./typings",
@@ -242,7 +242,8 @@
   },
   "engines": {
     "node": ">=6.0.0 <7.0.0",
-    "npm": ">=3.0.0 <4.0"
+    "npm": ">=3.0.0 <4.0",
+    "yarn": ">=1.0"
   },
   "config": {
     "commitizen": {

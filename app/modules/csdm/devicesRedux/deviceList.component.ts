@@ -30,6 +30,7 @@ class DeviceList implements ng.IComponentController {
               private $translate,
               CsdmHuronOrgDeviceService,
               private $scope,
+              private $window: Window,
               private Notification,
               private GridCellService: GridCellService,
               Authinfo) {
@@ -109,8 +110,11 @@ class DeviceList implements ng.IComponentController {
       this.gridOptions.data = this.getResult();
       this.gridApi.core.refreshRows().then(() => {
         if (this.gridOptions && this.gridOptions.columnDefs && this.gridOptions.data) {
-          // this.gridApi.grid.getRow(this.gridOptions.data[0]);
-          this.gridApi.core.scrollTo(this.gridOptions.data[0], this.gridOptions.columnDefs[0]);
+
+          const elements = this.$window.document.getElementsByClassName('ui-grid-viewport');
+          if (elements && elements[0]) {
+            elements[0].scrollTop = 0;
+          }
         }
       });
 

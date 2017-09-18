@@ -446,6 +446,7 @@
     input[type="text"] {
       width: 100%;
       @include vr-spacing(pl, 0.25);
+      @include vr-spacing(pr, 6.7);
       &:disabled {
         background-color: white;
       }

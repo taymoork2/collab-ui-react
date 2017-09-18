@@ -1,26 +1,31 @@
 import { PrivateTrunkPrereqService } from 'modules/hercules/private-trunk/private-trunk-prereq';
+import { Notification } from 'modules/core/notifications';
 
-class EPTInactiveCardController implements ng.IComponentController {
+export class EPTInactiveCardController implements ng.IComponentController {
+  public loading = true;
+  public canSetup = false;
+
   /* @ngInject */
   constructor(
+    private Notification: Notification,
     private PrivateTrunkPrereqService: PrivateTrunkPrereqService,
   ) {}
 
   public $onInit(): void {
-    // TODO: look for domains? this.PrivateTrunkPrereqService.getVerifiedDomains()
-    // TODO: look for destinationList? this.FeatureToggleService.supports(this.FeatureToggleService.features.huronEnterprisePrivateTrunking)
-      // .then((supported: boolean) => {
-      //   if (supported) {
-      //     this.EnterprisePrivateTrunkService.fetch()
-      //       .then((sipTrunkResources: IPrivateTrunkResource[]) => {
-      //         sipTrunkResources
-      //       });
-      //   }
-      // });
+    this.PrivateTrunkPrereqService.getVerifiedDomains()
+      .then(domains => {
+        this.canSetup = domains.length > 0;
+      })
+      .catch((err) => {
+        this.Notification.errorWithTrackingId(err, 'hercules.genericFailure');
+      })
+      .finally(() => {
+        this.loading = false;
+      });
   }
 
   public openPrerequisites(): void {
-    this.PrivateTrunkPrereqService.openModal();
+    this.PrivateTrunkPrereqService.openPreReqModal();
   }
 
   public openSetUp(): void {
@@ -35,12 +40,15 @@ export class EPTInactiveCardComponent implements ng.IComponentOptions {
       <div class="inactive-card_header">
         <h4 translate="servicesOverview.cards.privateTrunk.title"></h4>
       </div>
-      <div class="inactive-card_content">
+      <div ng-if="$ctrl.loading">
+        <i class="icon icon-spinner icon-2x"></i>
+      </div>
+      <div class="inactive-card_content" ng-if="!$ctrl.loading">
         <p translate="servicesOverview.cards.privateTrunk.description"></p>
       </div>
-      <div class="inactive-card_footer">
+      <div class="inactive-card_footer" ng-if="!$ctrl.loading">
         <p><a href ng-click="$ctrl.openPrerequisites()" translate="servicesOverview.genericButtons.prereq"></a></p>
-        <p><button class="btn btn--primary" ng-click="$ctrl.openSetUp()" translate="servicesOverview.genericButtons.setup"></button></p>
+        <p><button class="btn btn--primary" ng-disabled="!$ctrl.canSetup" ng-click="$ctrl.openSetUp()" translate="servicesOverview.genericButtons.setup"></button></p>
       </div>
     </article>
   `;

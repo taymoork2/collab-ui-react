@@ -1,7 +1,30 @@
+import { USSService, IStatusSummary } from 'modules/hercules/services/uss.service';
+
 class HybridCalendarO365ActiveCardController implements ng.IComponentController {
+  private subscribeStatusesSummary: any;
+
+  public userStatusesSummary: IStatusSummary | undefined;
+
   /* @ngInject */
   constructor(
+    private USSService: USSService,
   ) {}
+
+  public $onInit() {
+    this.extractSummary();
+    this.subscribeStatusesSummary = this.USSService.subscribeStatusesSummary('data', this.extractSummary.bind(this));
+  }
+
+  public $onDestroy() {
+    this.subscribeStatusesSummary.cancel();
+  }
+
+  private extractSummary() {
+    // TODO: filter by "ownedBy" once implemented on the server
+    this.userStatusesSummary = _.find(this.USSService.extractSummaryForAService(['squared-fusion-cal']), {
+      serviceId: 'squared-fusion-cal',
+    });
+  }
 }
 
 export class HybridCalendarO365ActiveCardComponent implements ng.IComponentOptions {
@@ -16,12 +39,13 @@ export class HybridCalendarO365ActiveCardComponent implements ng.IComponentOptio
         <p translate="servicesOverview.cards.hybridCalendar.description"></p>
         <p><span>Service</span></p>
         <p><a ui-sref="office-365-service.settings">Configure</a></p>
-        <p><span>Users</span></p>
-        <p><a href><span class="badge badge--outline badge--round">X</span> users active</a></p>
+        <card-users-summary link="'office-365-service.settings'" summary="$ctrl.userStatusesSummary"></card-users-summary>
       </div>
       <div class="active-card_footer">
-        <cs-statusindicator ng-model="$ctrl.serviceStatus.cssClass"></cs-statusindicator>
-        <span translate="{{'servicesOverview.cardStatus.'+$ctrl.serviceStatus.status}}"></span>
+        <a ui-sref="office-365-service.settings">
+          <cs-statusindicator ng-model="$ctrl.serviceStatus.cssClass"></cs-statusindicator>
+          <span translate="{{'servicesOverview.cardStatus.'+$ctrl.serviceStatus.status}}"></span>
+        </a>
       </div>
     </article>
   `;

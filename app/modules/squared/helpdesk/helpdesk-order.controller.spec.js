@@ -160,8 +160,11 @@ describe('Controller: HelpdeskOrderController', function () {
     it('gets the value for the last email sent', function () {
       expect(orderController.customerEmailSent).toBeDefined();
     });
-    it('sets the order is pending flag to true', function () {
+    it('sets the isProvisionedOrderPending flag to true if order is pending', function () {
       expect(orderController.isProvisionedOrderPending()).toBe(true);
+    });
+    it('sets the isAccountActivated flag to not be true', function () {
+      expect(orderController.isAccountActivated()).not.toBe(true);
     });
   });
   describe('CSM provisioned purchase order details', function () {
@@ -177,6 +180,9 @@ describe('Controller: HelpdeskOrderController', function () {
     it('gets the value for the orgId if the order is provisioned', function () {
       expect(HelpdeskService.getSubscription).toHaveBeenCalled();
       expect(orderController.orgId).toBe('123456');
+    });
+    it('sets the isOrderProvisioned flag to true', function () {
+      expect(orderController.isOrderProvisioned()).toBe(true);
     });
   });
 });

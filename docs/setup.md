@@ -1,7 +1,7 @@
 ## Setup the environment
 
 * On macOS: install Xcode toolchain: `xcode-select --install`
-* Project requires node v6, npm v3+, and yarn 0.27.0+
+* Project requires node v6, npm v3+, and yarn v1.0.0+
 * Use [nvm](https://github.com/creationix/nvm) to manage your node versions
   * `nvm install lts/boron` to install the latest [LTS](https://github.com/nodejs/LTS) version
   * `nvm ls` to see list of locally available versions

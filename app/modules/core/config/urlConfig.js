@@ -305,11 +305,11 @@
       integration: 'https://%s/custportal/extensions/spark-report-partner/spark-report-partner.html',
       prod: 'https://%s/custportal/extensions/spark-report-partner/spark-report-partner.html',
     },
-    VirtualAssistantConfigServiceUrl: {
-      dev: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/config',
-      cfe: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/config',
-      integration: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/config',
-      prod: 'https://bot-services.produs1.ciscoccservice.com/bot-services/v1/config',
+    VirtualAssistantServiceUrl: {
+      dev: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/',
+      cfe: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/',
+      integration: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/',
+      prod: 'https://bot-services.produs1.ciscoccservice.com/bot-services/v1/',
     },
     WebExReportAppforMEIUrl: {
       dev: 'https://%s/custportal/extensions/MEI/MEI.html',

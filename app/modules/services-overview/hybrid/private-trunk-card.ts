@@ -2,6 +2,7 @@ import { ServicesOverviewHybridCard } from './services-overview-hybrid-card';
 import { ICardButton, CardType } from '../shared/services-overview-card';
 
 import { IPrivateTrunkResource } from 'modules/hercules/private-trunk/private-trunk-services/private-trunk';
+import { PrivateTrunkPrereqService } from 'modules/hercules/private-trunk/private-trunk-prereq';
 
 export class ServicesOverviewPrivateTrunkCard extends ServicesOverviewHybridCard {
   public getShowMoreButton(): undefined {
@@ -51,20 +52,20 @@ export class ServicesOverviewPrivateTrunkCard extends ServicesOverviewHybridCard
   }
 
   public openModal(): void {
-    this.PrivateTrunkPrereqService.openModal();
+    this.PrivateTrunkPrereqService.openPreReqModal();
   }
 
   public openSetupModal(): void {
     if (this.hasDomain) {
       this.PrivateTrunkPrereqService.openSetupModal();
     } else {
-      this.PrivateTrunkPrereqService.openModal();
+      this.PrivateTrunkPrereqService.openPreReqModal();
     }
   }
 
-  public hasVerifiedDomain(): boolean {
-    return this.PrivateTrunkPrereqService.getVerifiedDomains().then(response => {
-      this.hasDomain = response.length > 0;
+  public hasVerifiedDomain(): ng.IPromise<void> {
+    return this.PrivateTrunkPrereqService.getVerifiedDomains().then(domains => {
+      this.hasDomain = domains.length > 0;
     });
   }
 
@@ -75,7 +76,7 @@ export class ServicesOverviewPrivateTrunkCard extends ServicesOverviewHybridCard
 
   /* @ngInject */
   public constructor(
-    private PrivateTrunkPrereqService,
+    private PrivateTrunkPrereqService: PrivateTrunkPrereqService,
   ) {
     super({
       name: 'servicesOverview.cards.privateTrunk.title',

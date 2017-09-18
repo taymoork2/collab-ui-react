@@ -115,7 +115,13 @@ export class UCCService {
 
 }
 
+import * as AuthinfoModuleName from 'modules/core/scripts/services/authinfo';
+import * as UrlConfigModuleName from 'modules/core/config/urlConfig';
+
 export default angular
-  .module('Hercules')
+  .module('hercules.ucc-service', [
+    AuthinfoModuleName,
+    UrlConfigModuleName,
+  ])
   .service('UCCService', UCCService)
   .name;

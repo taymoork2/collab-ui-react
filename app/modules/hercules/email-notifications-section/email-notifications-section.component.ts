@@ -36,7 +36,10 @@ class EmailNotificationsSectionCtrl implements ng.IComponentController {
     }
   }
 
-  private init(serviceId) {
+  private init(serviceId: HybridServiceId) {
+    if (serviceId === 'squared-fusion-o365') {
+      serviceId = 'squared-fusion-cal';
+    }
     this.serviceId = serviceId;
     this.ServiceDescriptorService.getEmailSubscribers(serviceId)
       .then((emailSubscribers: string[]) => {

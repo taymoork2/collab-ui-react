@@ -79,6 +79,7 @@ describe('Care virtualassistant admin setup virtual assistant', function () {
 
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.title);
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.titleDesc);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.avatarUpload);
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpLeftBtn);
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
   });
@@ -150,6 +151,7 @@ describe('Care virtualassistant admin setup virtual assistant', function () {
 
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.title);
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.titleDesc);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.avatarPreview);
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpLeftBtn);
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
   });
