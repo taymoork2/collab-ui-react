@@ -7786,7 +7786,43 @@
     "pageTitle": "Settings",
     "branding": {
       "title": "Branding",
-      "subsectionLabel": "Branding"
+      "description": "Brand your employees' experience with Cisco applications and devices by uploading custom logos and/or imagery.",
+      "descriptionPartner": "Brand your customers' experience with Cisco applications by uploading a custom logo.",
+      "useDefaultBranding": "Use default branding"
+    },
+    "applicationBranding": {
+      "subsectionLabel": "Applications"
+    },
+    "deviceBranding": {
+      "subsectionLabel": "Devices",
+      "useCustomBranding": "Use custom brand imagery on devices",
+      "exampleLink": "(see examples)",
+      "logolight": "Brand logo (light)",
+      "logodark": "Brand logo (dark)",
+      "halfwakeBackground": "Custom brand image",
+      "dropFile": "Drop file here or click to select file",
+      "removeFile": "Remove",
+      "fileGuide": "For best results, logos should be transparent png files, without padding and 272x272px. Recommended brand image image size is 3840x2160 (1920x1080 minimum), png or jpeg.",
+      "failedToSave": "Failed to save",
+      "fileApplied": "Applied to all room devices.",
+      "uploading": "Uploading...",
+      "uploaded": "Uploaded",
+      "uploadFailed": "Upload Failed",
+      "uploadFailedWithReason": "Failed to upload image. Reason:",
+      "example": {
+        "title": "Device Branding Examples",
+        "wakeupTab": "Wake-up flow",
+        "awakeTab": "Awake state",
+        "wakeupDescription": "As the device wakes up from standby, it will either display default branding or custom branding. Custom branding can include a custom brand image and/or a light brand logo.",
+        "awakeDescription": "When the device is awake, custom branding can be shown by applying a dark brand logo.",
+        "defaultBrand": "Default Branding",
+        "customBrandImageLogo": "Custom brand image and brand logo (light) applied",
+        "customBrandLogo": "Custom brand logo (dark) applied"
+      }
+
+    },
+    "webexVersion": {
+      "title": "Webex Version"
     },
     "sipDomain": {
       "title": "Cisco Spark SIP Address",
@@ -7866,7 +7902,11 @@
       "problemReportsToCustomUrl": "Send problem reports to a custom URL",
       "problemReportsTextPlaceholder": "Enter additional support contact information here, like phone numbers or email addresses",
       "helpSiteLabel": "Help Site",
-      "useCustomHelpSite": "Use a custom help site"
+      "useCustomHelpSite": "Use a custom help site",
+      "noDeviceSupportText": "No support text on screen",
+      "enableDeviceSupportText": "Show custom support text on screen",
+      "supportTextPlaceholder": "e.g. For support call +1 (800)2XX-27XX",
+      "deviceSupportTextDescription": "This will be displayed in the bottom left corner of the main screens, in awake state. For best results, limit your text entry to 35 characters."
     },
     "dirsync": {
       "loading": "Updating Status",

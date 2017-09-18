@@ -771,6 +771,17 @@
               modalType: 'Partner',
             },
           })
+          .state('deviceBrandingExample', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                template: require('modules/core/settings/branding/deviceBrandingExample.html'),
+                controller: 'BrandingExampleCtrl',
+                controllerAs: 'brandEg',
+              },
+            },
+            authenticate: false,
+          })
           .state('processorder', {
             url: '/processorder',
             template: require('modules/squared/views/processorder.html'),

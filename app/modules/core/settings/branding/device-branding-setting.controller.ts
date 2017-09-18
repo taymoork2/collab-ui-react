@@ -1,11 +1,13 @@
+
 import { CsdmConfigurationService } from '../../../squared/devices/services/CsdmConfigurationService';
+
 export class DeviceBrandingController implements ng.IComponentController {
-  get usePartnerLogo(): boolean {
-    return this._usePartnerLogo;
+  get useDefaultBranding(): boolean {
+    return this._useDefaultBranding;
   }
 
-  set usePartnerLogo(value: boolean) {
-    this._usePartnerLogo = value;
+  set useDefaultBranding(value: boolean) {
+    this._useDefaultBranding = value;
   }
 
   get file(): File {
@@ -20,17 +22,14 @@ export class DeviceBrandingController implements ng.IComponentController {
   public halfwakeBackground: ImgFile;
   public logolight: ImgFile;
   public logodark: ImgFile;
-  private _usePartnerLogo = true;
-  private useParnerLogoInitialVal = true;
+  private _useDefaultBranding = true;
+  private useDefaultBrandingInitialValue = true;
   private applyInProgress = false;
-  // private CsdmConfigurationService: CsdmConfigurationService;
 
   /* @ngInject */
-  constructor(private Upload, private $q: ng.IQService, private Notification,
+  constructor(private Upload, private $q: ng.IQService, private Notification, private $state,
               private $http, private UrlConfig, private Authinfo, private CsdmConfigurationService: CsdmConfigurationService) {
     this.resetFiles();
-
-    // this.CsdmConfigurationService = new CsdmConfigurationService($http, Authinfo, UrlConfig);
   }
 
   private resetFiles() {
@@ -66,21 +65,24 @@ export class DeviceBrandingController implements ng.IComponentController {
       this.halfwakeBackground.url = <string>_.get(brandingSetting.value, 'halfwakeBackground.url');
       this.halfwakeBackground.changed = false;
       this.halfwakeBackground.fetchTempDownloadUrl();
-      this._usePartnerLogo = false;
-      this.useParnerLogoInitialVal = false;
+      this._useDefaultBranding = false;
+      this.useDefaultBrandingInitialValue = false;
+    } else {
+      this.useDefaultBrandingInitialValue = true;
+      this._useDefaultBranding = true;
     }
   }
 
   public changeInBranding(): boolean {
-    return (this.halfwakeBackground.changed || this.logolight.changed || this.logodark.changed) && !this.usePartnerLogo || this.usePartnerLogo !== this.useParnerLogoInitialVal;
+    return (this.halfwakeBackground.changed || this.logolight.changed || this.logodark.changed) && !this.useDefaultBranding || this.useDefaultBranding !== this.useDefaultBrandingInitialValue;
   }
 
   public applyAllowed(): boolean {
-    return (this.halfwakeBackground.isvalid && this.logolight.isvalid && this.logodark.isvalid) || (this.useParnerLogoInitialVal === false && this.usePartnerLogo);
+    return (this.halfwakeBackground.isvalid || this.logolight.isvalid || this.logodark.isvalid) || (this.useDefaultBrandingInitialValue === false && this.useDefaultBranding);
   }
 
-  public toggleLogo() {
-    //
+  public showDeviceBrandingExample() {
+    this.$state.go('deviceBrandingExample', {});
   }
 
   public applyBranding() {
@@ -106,10 +108,10 @@ export class DeviceBrandingController implements ng.IComponentController {
       })
       .then((results) => {
         this.setFilesFromBrandingSetting(_.get(results, 'settings.data'), true);
-        this.Notification.success('Branding files uploaded');
+        this.Notification.success('partnerProfile.processing');
       })
       .catch((error) => {
-        this.Notification.errorResponse(error, 'Failed to save');
+        this.Notification.errorResponse(error, 'globalSettings.deviceBranding.failedToSave');
       })
       .finally(() => {
         this.applyInProgress = false;
@@ -118,19 +120,18 @@ export class DeviceBrandingController implements ng.IComponentController {
 
   public saveBrandingConfig() {
     this.applyInProgress = true;
-    if (this.usePartnerLogo) {
+    if (this.useDefaultBranding) {
       return this.CsdmConfigurationService.deleteRuleForOrg('branding')
         .then(() => {
-          //   this.Notification.success('Branding set to default');
-          //   this.useParnerLogoInitialVal = this.usePartnerLogo;
           return {};
         });
     } else {
-      return this.CsdmConfigurationService.updateRuleForOrg('branding', {
-        logoLight: { url: this.logolight.url },
-        logoDark: { url: this.logodark.url },
-        halfwakeBackground: { url: this.halfwakeBackground.url },
-      })
+      return this.CsdmConfigurationService.updateRuleForOrg('branding',
+        {
+          logoLight: this.logolight.url ? { url: this.logolight.url } : undefined,
+          logoDark: this.logodark.url ? { url: this.logodark.url } : undefined,
+          halfwakeBackground: this.halfwakeBackground.url ? { url: this.halfwakeBackground.url } : undefined,
+        })
         .then((setting) => {
           return setting;
         });
@@ -138,7 +139,7 @@ export class DeviceBrandingController implements ng.IComponentController {
   }
 
   private generateUploadPromise(imgFile: ImgFile) {
-    if (!imgFile.changed) {
+    if (!imgFile.changed || !imgFile.file) {
       return this.$q.resolve({});
     }
     return imgFile.fetchNewUploadUrl()
@@ -148,22 +149,23 @@ export class DeviceBrandingController implements ng.IComponentController {
   }
 
   private cleanOld(imgFile: ImgFile) {
-    if (!imgFile.origUrl || (imgFile.origUrl === imgFile.url && !this.usePartnerLogo)) {
+    if (!imgFile.origUrl || (imgFile.origUrl === imgFile.url && !this.useDefaultBranding)) {
       return this.$q.resolve({});
     }
     return imgFile.deleteOrig();
   }
 }
 
-class ImgFile {
+export class ImgFile {
   public changed = false;
-  private _url: string;
-  private _origUrl: string;
-  private _file: File;
+  public status: string;
+  private _url?: string;
+  private _origUrl?: string;
+  private _file?: File;
   public image;
   private uploadUrl: string;
   private _tempDownloadUrl: string | undefined;
-  public uploadProgress: number | boolean = false;
+  public uploadProgress: number = -1;
   public logoCriteria = {
     pattern: '.png',
     width: {
@@ -174,11 +176,15 @@ class ImgFile {
     },
   };
 
-  get origUrl(): string {
+  get origUrl(): string | undefined{
     return this._origUrl;
   }
 
-  public get file(): File {
+  public get fileSize() {
+    return this._file && this._file.size || '';
+  }
+
+  public get file(): File | undefined {
     return this._file;
   }
 
@@ -190,20 +196,26 @@ class ImgFile {
     return this._tempDownloadUrl;
   }
 
-  public set file(value: File) {
+  public set file(value: File | undefined) {
     this._file = value;
+    this._tempDownloadUrl = undefined;
+    this.url = undefined;
     this.changed = true;
+  }
+
+  public removeFile() {
+    this.file = undefined;
   }
 
   public get isvalid(): boolean {
     return !!(this.file || this.url);
   }
 
-  get url(): string {
+  get url(): string | undefined{
     return this._url;
   }
 
-  set url(value: string) {
+  set url(value: string | undefined) {
     this._url = value;
     if (!this._origUrl) {
       this._origUrl = value;
@@ -214,6 +226,8 @@ class ImgFile {
   }
 
   public fetchNewUploadUrl() {
+    this.uploadProgress = 0;
+    this.status = 'globalSettings.deviceBranding.uploading';
     const adminUrl = this.UrlConfig.getAdminServiceUrl();
     return this.$http.post(adminUrl + 'organizations/' + this.Authinfo.getOrgId() + '/config/files/')
       .then((res) => {
@@ -235,21 +249,25 @@ class ImgFile {
   }
 
   public uploadImage() {
+    this.uploadProgress = 1;
+    this.status = 'globalSettings.deviceBranding.uploading';
     return this.Upload.http({
       url: this.uploadUrl,
       method: 'PUT',
       headers: {
-        'Content-Type': this.file.type,
+        'Content-Type': this.file && this.file.type,
       },
       data: this.file,
     })
       .then(() => {
         this.uploadProgress = 100;
+        this.status = 'globalSettings.deviceBranding.uploaded';
       }, (error) => {
-        this.Notification.errorResponse(error, 'Failed to upload image. Reason:');
+        this.status = 'globalSettings.deviceBranding.uploadFailed';
+        this.Notification.errorResponse(error, 'globalSettings.deviceBranding.uploadFailedWithReason');
         return this.$q.reject(error);
       }, (evt) => {
-        this.uploadProgress = 100.0 * evt.loaded / evt.total;
+        this.uploadProgress = Math.round(100.0 * evt.loaded / evt.total);
       });
   }
 

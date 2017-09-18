@@ -1,22 +1,23 @@
 import { SettingSection } from '../settingSection';
+
 const BrandingCtrl = require('modules/core/partnerProfile/branding/brandingCtrl');
 
-export class BrandingSetting extends SettingSection {
+export class WebexVersionSetting extends SettingSection {
   /* @ngInject */
   public constructor() {
-    super('branding');
+    super('webexVersion');
     this.subsectionLabel = '';
     this.subsectionDescription = '';
   }
 }
 
-export class BrandingSettingComponent implements ng.IComponentOptions {
+export class WebexVersionSettingComponent implements ng.IComponentOptions {
   public controller = BrandingCtrl;
-  public controllerAs = 'bctrl';
   public bindings = {
     showVersion: '<',
     showBranding: '<',
   };
+  public controllerAs = 'bctrl';
   public template = require('modules/core/partnerProfile/branding/branding.tpl.html');
   public transclude = true;
 }
