@@ -3,7 +3,10 @@
 describe('controller: CbgRequestCtrl', function () {
   var $q, $state, $scope, $controller, $stateParams, $httpBackend;
   var ctrl, cbgService, gemService, Notification, UrlConfig;
-  var preData = getJSONFixture('gemini/common.json');
+
+  beforeEach(function () {
+    this.preData = _.cloneDeep(getJSONFixture('gemini/common.json'));
+  });
 
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Gemini'));
@@ -13,9 +16,6 @@ describe('controller: CbgRequestCtrl', function () {
 
   afterEach(function () {
     $q = $state = $httpBackend = UrlConfig = $scope = $controller = $stateParams = ctrl = cbgService = undefined;
-  });
-  afterAll(function () {
-    preData = undefined;
   });
 
   function dependencies(_$q_, _$state_, _UrlConfig_, _$httpBackend_, $rootScope, _$controller_, _$stateParams_, _Notification_, _gemService_, _cbgService_) {
@@ -42,7 +42,7 @@ describe('controller: CbgRequestCtrl', function () {
     $stateParams.customerId = 'ff808081552992ec0155299619cb0001';
 
     var getCountriesUrl = UrlConfig.getGeminiUrl() + 'countries';
-    $httpBackend.expectGET(getCountriesUrl).respond(200, preData.getCountries);
+    $httpBackend.expectGET(getCountriesUrl).respond(200, this.preData.getCountries);
     $httpBackend.flush();
 
     ctrl = $controller('CbgRequestCtrl', {
@@ -51,7 +51,7 @@ describe('controller: CbgRequestCtrl', function () {
       $element: angular.element(''),
     });
 
-    ctrl.countries = preData.getCountries.content.data;
+    ctrl.countries = this.preData.getCountries.content.data;
   }
 
   describe('$onInit', function () {
@@ -72,15 +72,15 @@ describe('controller: CbgRequestCtrl', function () {
 
   describe('onSubmit', function () {
     it('should call $state.modal.close', function () {
-      cbgService.postRequest.and.returnValue($q.resolve(preData.common));
+      cbgService.postRequest.and.returnValue($q.resolve(this.preData.common));
       ctrl.onSubmit();
       $scope.$apply();
       expect($state.modal.close).toHaveBeenCalled();
     });
 
     it('should call Notification.notify', function () {
-      preData.common.content.data.returnCode = 1000;
-      cbgService.postRequest.and.returnValue($q.resolve(preData.common));
+      this.preData.common.content.data.returnCode = 1000;
+      cbgService.postRequest.and.returnValue($q.resolve(this.preData.common));
       ctrl.onSubmit();
       $scope.$apply();
       expect(Notification.notify).toHaveBeenCalled();
