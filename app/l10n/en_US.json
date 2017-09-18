@@ -6750,7 +6750,7 @@
       },
       "soontobedeactivated": {
         "type": "Device will soon be deactivated",
-        "message": "The device has not been online for a while and the authentication token will expire in {{expireInDays}}."
+        "message": "This device has been offline for over six weeks. Make sure it comes online within {{expireInDays}} days to avoid deactivation."
       },
       "NTPStatus": {
         "type": "Time Server Not Reachable",
