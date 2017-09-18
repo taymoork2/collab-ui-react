@@ -30,9 +30,17 @@
         <div class="sub-section">
           <h5 class="sub-section__label" translate="mediaFusion.trustedSip.title"></h5>
           <p class="sub-section__description" translate="mediaFusion.trustedSip.description"></p>
-          <input cs-input type="text" id="trustedsipconfiguration" placeholder="{{'mediaFusion.trustedSip.placeholder' | translate}}"
-            ng-model="clusterSettings.trustedsipconfiguration" cs-input-group-size="medium-4">
-          <button type="button" class="btn media-service-btn-padding" ng-click="clusterSettings.saveTrustedSip()" translate="common.save"></button>
+          <!-- <input cs-input type="text" id="trustedsipconfiguration" placeholder="{{'mediaFusion.trustedSip.placeholder' | translate}}"
+            ng-model="clusterSettings.trustedsipconfiguration" cs-input-group-size="medium-4"> -->
+            <tags-input add-on-blur="true"
+                        on-tag-added="clusterSettings.saveTrustedSip()"
+                        on-tag-removed="clusterSettings.saveTrustedSip()"
+                        placeholder="{{'mediaFusion.trustedSip.placeholder' | translate}}"
+                        ng-model="clusterSettings.trustedsipconfiguration"
+                        type="text"
+                        allowed-tags-pattern="((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)|((?:(?:(?:\w[\.\-\+]?)*)\w)+)((?:(?:(?:\w[\.\-\+]?){0,62})\w)+)\.(\w{2,6}))">
+            </tags-input>
+          <!-- <button type="button" class="btn media-service-btn-padding" ng-click="clusterSettings.saveTrustedSip()" translate="common.save"></button> -->
         </div>
       </setting-section>
     </div>
