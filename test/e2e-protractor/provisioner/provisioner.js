@@ -6,7 +6,7 @@ import * as atlasHelper from './provisioner.helper.atlas';
 import * as huronCmiHelper from './huron/provisioner.helper.cmi';
 import * as huronPstnHelper from './huron/provisioner.helper.pstn';
 import * as huronFeaturesHelper from './huron/provisioner.helper.features';
-import { atlasUsers } from './atlas-users-config';
+import * as atlasUsers from './atlas-users-config';
 
 /* global LONG_TIMEOUT */
 
@@ -93,6 +93,9 @@ export function loginPartner(partnerEmail) {
 }
 
 function switchToCustomerWindow(customerName, doFtsw) {
+  utils.click(element(by.css('i.icon-search')));
+  utils.sendKeys(element(by.id('searchFilter')), customerName);
+  utils.waitForSpinner()
   utils.click(element(by.cssContainingText('.ui-grid-cell', customerName)));
   utils.click(partner.launchCustomerPanelButton);
   return utils.switchToNewWindow().then(() => {
