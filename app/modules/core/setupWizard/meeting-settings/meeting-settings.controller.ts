@@ -173,7 +173,11 @@ export class MeetingSettingsCtrl {
     this.hasTrialSites = this.SetupWizardService.hasWebexMeetingTrial();
 
     const regex = new RegExp(MeetingSettingsCtrl.showUserMgmntEmailPattern);
-    this.isShowUserManagement = regex.test(this.Authinfo.getUserName());
+    if (_.includes(this.Authinfo.getUserName(), '@')) {
+      this.isShowUserManagement = regex.test(this.Authinfo.getUserName());
+    } else {
+      this.isShowUserManagement = regex.test(this.Authinfo.getPrimaryEmail());
+    }
 
   }
 
