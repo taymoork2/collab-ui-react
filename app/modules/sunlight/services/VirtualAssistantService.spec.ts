@@ -3,7 +3,7 @@ import { VirtualAssistantService } from './VirtualAssistantService';
 
 describe('Care Virtual Assistant Service', function () {
 
-  const SERVICE_URL = 'testApp.ciscoservice.com/bot-services/v1/config';
+  const SERVICE_URL = 'testApp.ciscoservice.com/bot-services/v1/';
   const TEST_ORG_ID = 'A-UUID-VALUE';
   const TEST_BOT_NAME = 'A NAME';
   const TEST_BOT_CONFIG_ID = 'ANOTHER-UUID-VALUE';
@@ -11,7 +11,7 @@ describe('Care Virtual Assistant Service', function () {
   let VirtualAssistantService: VirtualAssistantService, $httpBackend, $state;
 
   const spiedUrlConfig = {
-    getVirtualAssistantConfigServiceUrl: jasmine.createSpy('getVirtualAssistantConfigServiceUrl').and.returnValue(SERVICE_URL),
+    getVirtualAssistantServiceUrl: jasmine.createSpy('getVirtualAssistantServiceUrl').and.returnValue(SERVICE_URL),
   };
 
   const spiedAuthinfo = {
@@ -90,7 +90,7 @@ describe('Care Virtual Assistant Service', function () {
     done();
   });
 
-  it('should fail to delete a given Virtual Assistan when server gives an error', function (done) {
+  it('should fail to delete a given Virtual Assistant when server gives an error', function (done) {
     const url = new RegExp('.*/organization/' + TEST_ORG_ID + '/botconfig/' + TEST_BOT_CONFIG_ID);
     $httpBackend.expectDELETE(url).respond(500);
     VirtualAssistantService.deleteConfig(TEST_BOT_CONFIG_ID, TEST_ORG_ID).then(function () {
@@ -100,12 +100,16 @@ describe('Care Virtual Assistant Service', function () {
     done();
   });
 
-
   it('URL should support updateConfig', function () {
     const url = new RegExp('.*/organization/' + TEST_ORG_ID + '/botconfig/' + TEST_BOT_CONFIG_ID);
-    $httpBackend.expectPUT(url).respond(200);
     const config = { token: APIAI_TEST_BOT_TOKEN };
-    VirtualAssistantService.updateConfig(TEST_BOT_CONFIG_ID, VirtualAssistantService.configurationTypes.apiai, TEST_BOT_NAME, config, TEST_ORG_ID);
+    $httpBackend.expectPUT(url, {
+      type: VirtualAssistantService.configurationTypes.apiai,
+      name: TEST_BOT_NAME,
+      config: config,
+      icon: 'iconURL',
+    }).respond(200);
+    VirtualAssistantService.updateConfig(TEST_BOT_CONFIG_ID, VirtualAssistantService.configurationTypes.apiai, TEST_BOT_NAME, config, TEST_ORG_ID, 'iconURL');
     $httpBackend.flush();
   });
 
@@ -118,16 +122,40 @@ describe('Care Virtual Assistant Service', function () {
         type: VirtualAssistantService.configurationTypes.apiai,
         name: TEST_BOT_NAME,
         config: config,
+        icon: 'iconURL',
       }) // respond with a 201, no data, but the location header of the stated form.
       .respond(201, {}, {
         location: 'organization/' + TEST_ORG_ID + '/botconfig/' + TEST_BOT_CONFIG_ID,
       });
     let result;
-    VirtualAssistantService.addConfig(VirtualAssistantService.configurationTypes.apiai, TEST_BOT_NAME, config, TEST_ORG_ID)
+    VirtualAssistantService.addConfig(VirtualAssistantService.configurationTypes.apiai, TEST_BOT_NAME, config, TEST_ORG_ID, 'iconURL')
       .then(function (response) {
         result = { botServicesConfigId: response.botServicesConfigId };
       });
     $httpBackend.flush();
     expect(result).toEqual(expectedResponse);
+  });
+
+  it('URL should support avatar icon validation', function () {
+    const url = new RegExp('.*/validateIcon');
+    $httpBackend.expectPOST(url, { icon: 'iconURL' }).respond(200, {}, {});
+    let result = false;
+    VirtualAssistantService.isAvatarFileValid(TEST_ORG_ID, 'iconURL')
+      .then(function() {
+        result = true;
+      });
+    $httpBackend.flush();
+    expect(result).toEqual(true);
+  });
+  it('should fail on invalid avatar', function () {
+    const url = new RegExp('.*/validateIcon');
+    $httpBackend.expectPOST(url, { icon: 'iconURL' }).respond(500, {}, {});
+    let result = false;
+    VirtualAssistantService.isAvatarFileValid(TEST_ORG_ID, 'iconURL')
+      .then(function() {
+        result = true;
+      });
+    $httpBackend.flush();
+    expect(result).toEqual(false);
   });
 });

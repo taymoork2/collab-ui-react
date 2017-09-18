@@ -4,7 +4,7 @@ import { CallFeaturesPage } from '../pages/callFeatures.page';
 import { AddHuntGroupPage } from '../pages/addHuntGroup.page';
 import { CallUserPage } from '../pages/callUser.page';
 import * as os from 'os';
-import { featureToggle } from '../../utils/featureToggle.utils';
+import * as featureToggle from '../../utils/featureToggle.utils';
 
 const callFeatures = new CallFeaturesPage();
 const addHuntGroup = new AddHuntGroupPage();

@@ -4,7 +4,7 @@ import { CallUserPage } from '../../pages/callUser.page';
 import { CallUserPlacePage } from '../../pages/callUserPlace.page';
 import { CallSettingsPage } from '../../pages/callSettings.page';
 import * as os from 'os';
-import { featureToggle } from '../../../utils/featureToggle.utils';
+import * as featureToggle from '../../../utils/featureToggle.utils';
 
 const callUserPage = new CallUserPage();
 const now = Date.now();

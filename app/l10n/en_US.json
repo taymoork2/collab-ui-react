@@ -3490,7 +3490,7 @@
     "searchErrors": {
       "queryLimit": "query must be 200 characters or less",
       "invalidEmailLimit": "Enter only up to 5 email addresses",
-      "invalidSpaceIdLimit": "Search must be limited to less than 5 Space IDs",
+      "invalidSpaceIdLimit": "Enter only up to 5 Space IDs",
       "noMatchesFound": "No Matches Found",
       "requestFailed": "Request Failed: Tracking ID {{trackingId}}",
       "504RequestFailed": "Search Timed Out: Tracking ID {{trackingId}}"
@@ -6715,6 +6715,7 @@
     "WithDevices": "With Devices",
     "upgradeChannels": {
       "Stable": "Stable",
+      "Stable_Preview": "Stable Preview",
       "Latest": "Latest",
       "Beta": "Beta",
       "Preview": "Preview"
@@ -7437,6 +7438,7 @@
         "uploadingImage": "Uploading image...",
         "uploadDesc": "Upload an image of maximum 1MB. Supported file type is PNG.",
         "previewDesc": "To edit, upload a new image of maximum 1MB. Supported file types is PNG.",
+        "defaultAvatar": "If no image is uploaded, this default image is used.",
         "uploadBestResults": "For best results make sure that your image has a transparent background with no padding.",
         "dragDropDesc": "Drag and drop a file or use the ",
         "errorUnsupportedFile": "Cannot upload unsupported file. Supported file type is PNG.",
@@ -7733,10 +7735,6 @@
       "title": "Branding",
       "subsectionLabel": "Branding"
     },
-    "deviceBranding": {
-      "title": "Branding",
-      "description": "Brand your employee's experience with Cisco applications, emails and devices by uploading custom logos and/or imagery."
-    },
     "sipDomain": {
       "title": "Cisco Spark SIP Address",
       "subsectionLabel": "SIP Domain Prefix",
@@ -7854,6 +7852,7 @@
     "less": "Less",
     "licenses": "Licenses:",
     "licenseSummary": "License Summary",
+    "licenseSummaryEnterprise": "License Summary for Enterprise",
     "licenseSummaryOnline": "License Summary for {{name}}",
     "licenseUsageReport": "License Usage Report",
     "loadError": "An error occurred while loading subscriptions.",
@@ -8153,6 +8152,7 @@
     "outboundDigit": "Outbound Dial Digit",
     "areaCode": "Area Code",
     "customerInfo": "Customer Information",
+    "orderInfo": "Order Information",
     "webOrderId": "Web Order Number",
     "subscriptionId": "Subscription ID",
     "orderProvision": "Order Provisioned",
