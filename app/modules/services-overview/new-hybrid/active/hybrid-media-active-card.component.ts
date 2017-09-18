@@ -17,12 +17,12 @@ export class HybridMediaActiveCardComponent implements ng.IComponentOptions {
         <p><a ui-sref="media-service-v2.settings">Configure</a></p>
         <p><span>Resources</span></p>
         <p><a ui-sref="media-service-v2.list">View all</a></p>
-        <p><span>Users</span></p>
-        <p><a href><span class="badge badge--outline badge--round">X</span> users active</a></p>
       </div>
       <div class="active-card_footer">
-        <cs-statusindicator ng-model="$ctrl.serviceStatus.cssClass"></cs-statusindicator>
-        <span translate="{{'servicesOverview.cardStatus.'+$ctrl.serviceStatus.status}}"></span>
+        <a ui-sref="media-service-v2.list">
+          <cs-statusindicator ng-model="$ctrl.serviceStatus.cssClass"></cs-statusindicator>
+          <span translate="{{'servicesOverview.cardStatus.'+$ctrl.serviceStatus.status}}"></span>
+        </a>
       </div>
     </article>
   `;

@@ -17,7 +17,7 @@ export interface IMemberNumber extends ng.resource.IResource<IMemberNumber> {
   uuid: string;
   internal: string;
   external?: string | undefined;
-  siteTosite: string;
+  siteToSite: string;
   incomingCallMaximum: number;
   primary: boolean | undefined;
   shared: boolean;

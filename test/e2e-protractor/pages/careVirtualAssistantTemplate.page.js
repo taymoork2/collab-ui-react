@@ -24,6 +24,10 @@ var VirtualAssistantTemplateCreation = function () {
   // Name page info
   this.name = element(by.name('nameInput'));
 
+  // Avatar upload/preview
+  this.avatarUpload = element(by.id('avatarUpload'));
+  this.avatarPreview = element(by.id('avatarPreview'));
+
   // Summary Page
   this.finishBtn = element(by.id('vaSetupFinishBtn'));
 

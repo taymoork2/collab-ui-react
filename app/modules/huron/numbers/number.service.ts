@@ -18,7 +18,7 @@ export class NumberService {
     private HuronConfig,
     private FeatureToggleService,
   ) {
-    this.numberResource = <INumberResource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/numbers');
+    this.numberResource = <INumberResource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/numbers/:numberUuid');
     this.FeatureToggleService.supports(FeatureToggleService.features.hI1484).then(supports => {
       this.hasLocations = supports;
     });
@@ -39,5 +39,14 @@ export class NumberService {
     .then(numberList => {
       return _.get(numberList, 'numbers', []);
     });
+  }
+
+  public getNumber(number: string): any {
+    return this.numberResource.get({
+      customerId: this.Authinfo.getOrgId(),
+      numberUuid: number,
+      deprecated: !this.hasLocations,
+      wide: true,
+    }).$promise;
   }
 }

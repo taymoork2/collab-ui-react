@@ -105,7 +105,7 @@ class CompanyVoicemailAvrilComponentCtrl implements ng.IComponentController {
   }
 
   public onVoicemailToEmailChanged(): void {
-    if (this.voicemailToEmail) {
+    if (this.voicemailToEmail && !_.isUndefined(this.features)) {
       this.features.VM2E = true;
       this.features.VM2E_PT = false;
       this.attachmentPref = VM_TO_EMAIL_WITH_ATTACH;
@@ -137,6 +137,9 @@ class CompanyVoicemailAvrilComponentCtrl implements ng.IComponentController {
       let pilotNumber: string = '';
       if (setOTP && this.isMessage) {
         this.enableOTP = this.features.VMOTP = true;
+      }
+      if (this.features && _.isUndefined(this.features.VM2E_PT)) {
+        this.features.VM2E_PT = false;
       }
       if (this.selectedNumber && this.selectedNumber.value) {
         this.onCompanyVoicemailNumberChanged();

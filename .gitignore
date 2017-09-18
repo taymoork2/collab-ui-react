@@ -30,6 +30,7 @@ stats.json
 .tern-project
 package-lock.json
 yarn.lock
+yarn-error.log
 
 build
 coverage

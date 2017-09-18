@@ -20,6 +20,7 @@ module.exports = {
   atlasEmailSuppress: 'atlas-email-suppress',
   atlasHelpDeskExt: 'atlas-helpdesk-extended-information',
   atlasHelpDeskOrderSearch: 'atlas-helpdesk-order-search',
+  atlasHelpDeskOrderSetup: 'atlas-helpdesk-order-setup',
   atlasHybridDataSecurity: 'atlas-hybrid-data-security',
   atlasITProPack: 'atlas-it-pro-pack',
   atlasITProPackPurchased: 'atlas-it-pro-pack-purchased',

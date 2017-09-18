@@ -200,7 +200,7 @@
 
         <div class="form-group" ng-show="deviceOverview.currentDevice.software">
           <label class="col-sm-4 control-label" translate="deviceOverviewPage.software"></label>
-          <div class="col-sm-4" ng-if="deviceOverview.canChangeUpgradeChannel">
+          <div class="col-sm-6" ng-if="deviceOverview.canChangeUpgradeChannel">
             <cs-select
               ng-model="deviceOverview.selectedUpgradeChannel"
               options="deviceOverview.upgradeChannelOptions"
@@ -211,7 +211,7 @@
             >
             </cs-select>
           </div>
-          <div class="col-sm-4" ng-if="deviceOverview.updatingUpgradeChannel">
+          <div class="col-sm-2" ng-if="deviceOverview.updatingUpgradeChannel">
             <div cs-loader class="loader-example--small"></div>
           </div>
           <div class="col-sm-8" ng-if="deviceOverview.shouldShowUpgradeChannel">

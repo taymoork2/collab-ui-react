@@ -2,6 +2,7 @@ import * as provisioner from '../../../provisioner/provisioner';
 import { huronCustomer } from '../../../provisioner/huron/huron-customer-config';
 import { CallUserPage } from '../../pages/callUser.page';
 import { CallSpeedDialsPage } from '../../pages/callSpeedDials.page';
+import * as featureToggle from '../../../utils/featureToggle.utils';
 
 const CallUser = new CallUserPage();
 const SpeedDialsPage = new CallSpeedDialsPage();
@@ -40,6 +41,10 @@ describe('Huron Functional: add-user', () => {
     });
     it('should navigate to manually add user with "email" or "Names and email" when hit "Next"', () => {
       utils.click(manageUsersPage.buttons.next);
+      if (featureToggle.features.atlasEmailSuppress) {
+        utils.wait(manageUsersPage.emailSuppress.emailSuppressIcon);
+        utils.click(manageUsersPage.buttons.next);
+      }
       utils.expectIsDisplayed(manageUsersPage.manual.emailAddress.addUsersField, LONG_TIMEOUT);
       utils.expectIsDisplayed(manageUsersPage.manual.radio.emailAddress);
     });

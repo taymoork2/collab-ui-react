@@ -93,6 +93,7 @@
     require('modules/core/validation').default,
     require('modules/core/customerReports').default,
     require('modules/core/partnerReports').default,
+    require('modules/gemini/reports').default,
   ])
     .constant('CryptoJS', require('crypto-js'))
     .constant('addressparser', require('emailjs-addressparser'));
@@ -103,8 +104,10 @@
     'Hercules',
     'Huron',
     'Sunlight',
+    'LicenseService',
     require('modules/squared/devices/services/CsdmCacheUpdater'),
     require('modules/squared/devices/services/CsdmPoller'),
+    require('modules/squared/helpdesk/mock-data').default,
     require('modules/squared/partner-management').default,
     require('modules/squared/provisioning-console').default,
   ]);
@@ -158,6 +161,7 @@
     require('modules/hercules/services/enterprise-private-trunk-service').default,
     require('modules/hercules/services/excel-service').default,
     require('modules/hercules/services/fms-org-settings.service').default,
+    require('modules/hercules/services/hs-flag-service').default,
     require('modules/hercules/services/hybrid-services-cluster-states.service').default,
     require('modules/hercules/services/hybrid-services-cluster.service').default,
     require('modules/hercules/services/hybrid-services-extras.service').default,
@@ -166,10 +170,15 @@
     require('modules/hercules/services/l2sip-service').default,
     require('modules/hercules/services/resource-group.service').default,
     require('modules/hercules/services/service-descriptor.service').default,
+    require('modules/hercules/services/ucc-service').default,
     require('modules/hercules/services/uss.service').default,
   ]);
 
-  angular.module('HDS', ['Core', 'Hercules']);
+  angular.module('HDS', [
+    'Core',
+    'Hercules',
+    require('modules/hds/services/hds.service'),
+  ]);
 
   angular.module('Mediafusion', ['Core', 'Hercules', 'Squared']);
 
@@ -222,6 +231,7 @@
     'Gemini',
     'CMC',
     'Csdm',
+    require('modules/services-overview').default,
   ]).config(require('./main.config'))
     .run(require('./main.run'))
     .name;

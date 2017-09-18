@@ -79,7 +79,7 @@ describe('Controller: MySubscriptionCtrl', function () {
     expect(this.controller.licenseCategory).toEqual(this.data.licensesFormatted);
     expect(this.controller.subscriptionDetails).toEqual(this.data.subscriptionsFormatted);
     expect(this.controller.visibleSubscriptions).toBeTruthy();
-    expect(this.controller.licenseSummary).toBeUndefined();
+    expect(this.controller.licenseSummary).toEqual('subscriptions.licenseSummaryEnterprise');
     expect(this.$rootScope.$broadcast).toHaveBeenCalled();
   });
 
@@ -136,7 +136,7 @@ describe('Controller: MySubscriptionCtrl', function () {
     expect(this.controller.licenseCategory).toEqual(this.data.trialLicenseData);
     expect(this.controller.subscriptionDetails).toEqual(this.data.trialSubscriptionData);
     expect(this.controller.visibleSubscriptions).toBeTruthy();
-    expect(this.controller.licenseSummary).toBeUndefined();
+    expect(this.controller.licenseSummary).toEqual('subscriptions.licenseSummaryEnterprise');
     expect(this.$rootScope.$broadcast).toHaveBeenCalled();
   });
 

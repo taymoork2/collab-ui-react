@@ -26,6 +26,14 @@ export class CareSetupVirtualAssistantCtrl {
   public tokenForm: ng.IFormController;
   private escalationIntentUrl: string;
 
+  // Avatar file error
+  public avatarErrorType = {
+    NO_ERROR: 'None',
+    FILE_TYPE_ERROR: 'FileTypeError',
+    FILE_SIZE_ERROR: 'FileSizeError',
+    FILE_UPLOAD_ERROR: 'FileUploadError',
+  };
+
   public template = {
     templateId: '',
     name: '',
@@ -50,7 +58,9 @@ export class CareSetupVirtualAssistantCtrl {
         },
         VirtualAssistantAvatar: {
           enabled: true,
-          fileValue: {},
+          fileValue: '',
+          avatarError: this.avatarErrorType.NO_ERROR,
+          uploadCanceled: false,
         },
         VirtualAssistantSummary: {
           enabled: true,
@@ -63,11 +73,6 @@ export class CareSetupVirtualAssistantCtrl {
   public states = Object.keys(this.template.configuration.pages);
   public currentState = this.states[0];
 
-  // Simulation for Avatar Upload result.
-  // The actual integration for the API responsible for store/retrieve the avatar image will
-  // take place in a following US.
-  private SIMULATE_AVATAR_LOAD_PERIOD = 4000;
-
   // Avatar file load progress states
   public avatarState = {
     SELECT: 'SELECT',
@@ -76,16 +81,6 @@ export class CareSetupVirtualAssistantCtrl {
   };
   public avatarUploadState = this.avatarState.SELECT;
   public MAX_AVATAR_FILE_SIZE = 1048576; // 1MB
-
-  // Avatar file error
-  public avatarErrorType = {
-    NO_ERROR: 'None',
-    FILE_TYPE_ERROR: 'FileTypeError',
-    FILE_SIZE_ERROR: 'FileSizeError',
-    FILE_UPLOAD_ERROR: 'FileUploadError',
-  };
-  public avatarError = this.avatarErrorType.NO_ERROR;
-  public avatarFile = null;
 
   /* @ngInject*/
   constructor(
@@ -111,14 +106,9 @@ export class CareSetupVirtualAssistantCtrl {
       this.template.configuration.pages.VirtualAssistantAccessToken.accessTokenValue = this.$stateParams.template.config.token;
       this.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = false;
 
-      // NOTE: since the actual avatar file name has no correlation to an actual image in the file system, there is no way to, at
-      //       this point, load the avatar during edit mode. This is part of the integration story (next), where the
-      //       actual API to retrieve the image will be brought to this work.
-      //       AT THIS TIME, the image will come out empty during edit initialization!
-      if (this.$stateParams.template.config.avatarFile) {
+      if (this.$stateParams.template.icon) {
         this.avatarUploadState = this.avatarState.PREVIEW;
-        this.template.configuration.pages.VirtualAssistantAvatar.fileValue = this.$stateParams.template.config.avatarFile;
-        this.avatarFile = this.$stateParams.template.config.avatarFile;
+        this.template.configuration.pages.VirtualAssistantAvatar.fileValue = this.$stateParams.template.icon;
       }
     }
 
@@ -226,7 +216,7 @@ export class CareSetupVirtualAssistantCtrl {
   public nextPage(): void {
     // This is to clear a possible error issued during image loading. For instance one attempts to drag-drop a JPG,
     // the file is invalid, the message is displayed, and it must be cleared when toggling between pages.
-    this.avatarError = this.avatarErrorType.NO_ERROR;
+    this.template.configuration.pages.VirtualAssistantAvatar.avatarError = this.avatarErrorType.NO_ERROR;
 
     const controller = this;
     controller.animation = 'slide-left';
@@ -241,7 +231,7 @@ export class CareSetupVirtualAssistantCtrl {
   public previousPage(): void {
     // This is to clear a possible error issued during image loading. For instance one attempts to drag-drop a JPG,
     // the file is invalid, the message is displayed, and it must be cleared when toggling between pages.
-    this.avatarError = this.avatarErrorType.NO_ERROR;
+    this.template.configuration.pages.VirtualAssistantAvatar.avatarError = this.avatarErrorType.NO_ERROR;
 
     const controller = this;
     controller.animation = 'slide-right';
@@ -267,10 +257,11 @@ export class CareSetupVirtualAssistantCtrl {
     const name = this.template.configuration.pages.VirtualAssistantName.nameValue.trim();
     const config = this.createConfigurationObject(); // Note: this is our point of extensibility as other types besides api.ai are supported.
     this.creatingTemplate = true;
+    const avatarDataURL = this.template.configuration.pages.VirtualAssistantAvatar.fileValue;
     if (this.isEditFeature) {
-      this.updateFeature(this.template.templateId, this.template.configuration.pages.VirtualAssistantConfigOverview.configurationType, name, config, this.orgId);
+      this.updateFeature(this.template.templateId, this.template.configuration.pages.VirtualAssistantConfigOverview.configurationType, name, config, this.orgId, avatarDataURL);
     } else {
-      this.createFeature(this.template.configuration.pages.VirtualAssistantConfigOverview.configurationType, name, config, this.orgId);
+      this.createFeature(this.template.configuration.pages.VirtualAssistantConfigOverview.configurationType, name, config, this.orgId, avatarDataURL);
     }
   }
 
@@ -322,23 +313,24 @@ export class CareSetupVirtualAssistantCtrl {
    * @returns {boolean} return true if error occurred; otherwise false
    */
   public isAvatarError(): boolean {
-    return this.avatarError !== this.avatarErrorType.NO_ERROR;
+    return this.template.configuration.pages.VirtualAssistantAvatar.avatarError !== this.avatarErrorType.NO_ERROR;
   }
 
   private isAvatarUploading(): boolean {
     return this.avatarUploadState === this.avatarState.LOADING;
   }
 
+  private changeAvatarUploadState(): void {
+    this.avatarUploadState = _.isEmpty(this.template.configuration.pages.VirtualAssistantAvatar.fileValue) ? this.avatarState.SELECT : this.avatarState.PREVIEW;
+  }
+
   /**
-   *  The avatar load got interrupted - reset and prep to reload
-   *  NOTE: the integration with the actual API to save the Avatar belongs to a different US.
-   *        This functionality is here to demonstrate the flow and elements associated with the Avatar Upload feature.
+   *  Avatar uploading interrupted
    */
-  private loadTimer;
   public avatarStopLoad(): void {
-    this.$timeout.cancel(this.loadTimer);
     if (this.isAvatarUploading()) {
-      this.avatarUploadState = this.avatarFile ? this.avatarState.PREVIEW : this.avatarState.SELECT;
+      this.changeAvatarUploadState();
+      this.template.configuration.pages.VirtualAssistantAvatar.uploadCanceled = true;
     }
   }
 
@@ -364,9 +356,9 @@ export class CareSetupVirtualAssistantCtrl {
    */
   private validateAvatarFile(fileSelected: any): boolean {
     if (!this.isImageFileName(fileSelected.name)) {
-      this.avatarError = this.avatarErrorType.FILE_TYPE_ERROR;
+      this.template.configuration.pages.VirtualAssistantAvatar.avatarError = this.avatarErrorType.FILE_TYPE_ERROR;
     } else if (fileSelected.size > this.MAX_AVATAR_FILE_SIZE || fileSelected.size <= 0) {
-      this.avatarError = this.avatarErrorType.FILE_SIZE_ERROR;
+      this.template.configuration.pages.VirtualAssistantAvatar.avatarError = this.avatarErrorType.FILE_SIZE_ERROR;
     }
     return !this.isAvatarError();
   }
@@ -377,20 +369,36 @@ export class CareSetupVirtualAssistantCtrl {
    * @param fileSelected (via drag-and-drop or file select)
    */
   public uploadAvatar(fileSelected: any): void {
-    this.avatarError = this.avatarErrorType.NO_ERROR;
+    this.template.configuration.pages.VirtualAssistantAvatar.avatarError = this.avatarErrorType.NO_ERROR;
+    this.template.configuration.pages.VirtualAssistantAvatar.uploadCanceled = false;
     if (fileSelected && ('name' in fileSelected)) {
       if (this.validateAvatarFile(fileSelected)) {
         this.avatarUploadState = this.avatarState.LOADING;
-
-        // simulate a successful load
-        // NOTE: the integration with the actual API to save the Avatar belongs to a different US.
-        // This functionality is here to demonstrate the flow and elements associated with the Avatar Upload feature
-        this.loadTimer = this.$timeout(() => {
-          this.avatarUploadState = this.avatarState.PREVIEW;
-          this.avatarFile = fileSelected; // update the model
-          this.template.configuration.pages.VirtualAssistantAvatar.fileValue = fileSelected; // update the stored config
-        }, this.SIMULATE_AVATAR_LOAD_PERIOD);
+        this.service.getFileDataUrl(fileSelected)
+          .then((avatardataURL) => {
+            this.service.isAvatarFileValid(this.orgId, avatardataURL)
+              .then(() => {
+                if (!this.template.configuration.pages.VirtualAssistantAvatar.uploadCanceled) {
+                  this.template.configuration.pages.VirtualAssistantAvatar.fileValue = avatardataURL; // update the stored config
+                }
+              })
+              .catch(() => {
+                this.handleAvatarFileUploadError();
+              });
+          })
+          .catch(() => {
+            this.handleAvatarFileUploadError();
+          })
+          .finally(() => {
+            this.changeAvatarUploadState();
+          });
       }
+    }
+  }
+
+  private handleAvatarFileUploadError() {
+    if (!this.template.configuration.pages.VirtualAssistantAvatar.uploadCanceled) {
+      this.template.configuration.pages.VirtualAssistantAvatar.avatarError = this.avatarErrorType.FILE_UPLOAD_ERROR;
     }
   }
 
@@ -454,10 +462,11 @@ export class CareSetupVirtualAssistantCtrl {
    * @param name
    * @param config
    * @param orgId
+   * @param avatarDataURL optional
    */
-  private createFeature(type: string, name: string, config: any, orgId: string): void {
+  private createFeature(type: string, name: string, config: any, orgId: string, avatarDataURL?: string): void {
     const controller = this;
-    controller.service.addConfig(type, name, config, orgId)
+    controller.service.addConfig(type, name, config, orgId, avatarDataURL)
       .then(function () {
         controller.handleFeatureCreation();
         controller.LogMetricsService.logMetrics('Created template for Care Virtual Assistant', controller.LogMetricsService.getEventType('careTemplateFinish'), controller.LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
@@ -488,10 +497,11 @@ export class CareSetupVirtualAssistantCtrl {
    * @param name
    * @param config
    * @param orgId
+   * @param avatarDataURl optional
    */
-  private updateFeature(templateId: string, type: string, name: string, config: any, orgId: string): void {
+  private updateFeature(templateId: string, type: string, name: string, config: any, orgId: string, avatarDataURL?: string): void {
     const controller = this;
-    controller.service.updateConfig(templateId, type, name, config, orgId)
+    controller.service.updateConfig(templateId, type, name, config, orgId, avatarDataURL)
       .then(function () {
         controller.handleFeatureUpdate();
         controller.LogMetricsService.logMetrics('Updated template for Care VirtualAssistant', controller.LogMetricsService.getEventType('careTemplateFinish'), controller.LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
@@ -511,7 +521,6 @@ export class CareSetupVirtualAssistantCtrl {
   private createConfigurationObject(): any {
     return {
       token: this.template.configuration.pages.VirtualAssistantAccessToken.accessTokenValue.trim(),
-      avatarFile: this.template.configuration.pages.VirtualAssistantAvatar.fileValue,
     };
   }
 

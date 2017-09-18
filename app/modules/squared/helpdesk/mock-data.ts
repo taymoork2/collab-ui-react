@@ -1,7 +1,9 @@
-(function () {
-  'use strict';
+export class HelpdeskMockData {
 
-  var mockData = {
+  /* @ngInject */
+  constructor() {}
+
+  public readonly mockData = {
     users: [{
       active: true,
       id: 'ddb4dd78-26a2-45a2-8ad8-4c181c5b3f0a',
@@ -586,5 +588,10 @@
       download: 'http://someverylongurl.txt',
     },
   };
-  angular.module('Squared').constant('HelpdeskMockData', mockData);
-}());
+}
+
+export default angular
+  .module('squared.mockdata', [])
+  .service('HelpdeskMockData', HelpdeskMockData)
+  .name;
+

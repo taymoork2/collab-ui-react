@@ -7,7 +7,7 @@ class CompanyVoicemailAvrilI1559ComponentCtrl implements ng.IComponentController
   public site: Site;
   public features: IAvrilSiteFeatures;
   public selectedNumber: IOption;
-  public missingDirectNumbers: boolean;
+  public missingDirectNumbers: boolean = false;
   public filterPlaceholder: string;
   public externalNumberOptions: IOption[];
   public dialPlanCountryCode: string;
@@ -50,18 +50,6 @@ class CompanyVoicemailAvrilI1559ComponentCtrl implements ng.IComponentController
       externalNumberOptions,
     } = changes;
 
-    if (externalNumberOptions) {
-      if (externalNumberOptions.currentValue && _.isArray(externalNumberOptions.currentValue)) {
-        if (externalNumberOptions.currentValue.length === 0) {
-          this.missingDirectNumbers = true;
-          this.missingDirectNumbersHelpText = this.$translate.instant('serviceSetupModal.voicemailNoDirectNumbersError');
-        } else {
-          this.missingDirectNumbers = false;
-          this.missingDirectNumbersHelpText = '';
-        }
-      }
-    }
-
     if (features && features.currentValue) {
       this.localAvrilFeatures = _.clone(features.currentValue);
     }
@@ -75,8 +63,16 @@ class CompanyVoicemailAvrilI1559ComponentCtrl implements ng.IComponentController
         this.localAvrilFeatures.VM2T = false;
       }
       this.siteLanguage = _.get<string>(site.currentValue, 'preferredLanguage');
-      if (this.siteLanguage !== 'en_US') {
-        this.localAvrilFeatures.VM2T = false;
+    }
+    if (externalNumberOptions) {
+      if (externalNumberOptions.currentValue && _.isArray(externalNumberOptions.currentValue)) {
+        if (!_.isUndefined(this.selectedNumber) && !_.isEmpty(this.selectedNumber.value) || externalNumberOptions.currentValue.length) {
+          this.missingDirectNumbers = false;
+          this.missingDirectNumbersHelpText = '';
+        } else if (externalNumberOptions.currentValue.length === 0) {
+          this.missingDirectNumbers = true;
+          this.missingDirectNumbersHelpText = this.$translate.instant('serviceSetupModal.voicemailNoDirectNumbersError');
+        }
       }
     }
   }
@@ -86,7 +82,7 @@ class CompanyVoicemailAvrilI1559ComponentCtrl implements ng.IComponentController
   }
 
   public onVoicemailToPhoneChanged(): void {
-    if (this.voicemailToPhone) {
+    if (this.localAvrilFeatures.VM2T) {
       this.onChange(_.get<string>(this.selectedNumber, 'value'), 'false', true);
     } else {
       const pilotNumber = this.ServiceSetup.generateVoiceMailNumber(this.Authinfo.getOrgId(), this.dialPlanCountryCode);
@@ -120,7 +116,7 @@ class CompanyVoicemailAvrilI1559ComponentCtrl implements ng.IComponentController
   }
 
   public isLanguageEnglish(): boolean {
-    return (this.siteLanguage === 'en_US' || this.siteLanguage === 'en_GB');
+    return (this.siteLanguage === 'en_US');
   }
 
   public onCompanyVoicemailChange(value: boolean, initFeatures: boolean = true): void {
@@ -141,12 +137,13 @@ class CompanyVoicemailAvrilI1559ComponentCtrl implements ng.IComponentController
   }
 
   public initVoicemailFeatures() {
-    if (!_.isUndefined(this.localAvrilFeatures) && this.isMessageEntitled) {
-      this.localAvrilFeatures.VM2T = false;
-      this.localAvrilFeatures.VM2S = true;
-      this.localAvrilFeatures.VM2S_Attachment = true;
-      this.localAvrilFeatures.VM2S_Transcript = this.isLanguageEnglish() ? true : false;
-      this.localAvrilFeatures.VMOTP = true;
+    if (!_.isUndefined(this.localAvrilFeatures)) {
+      this.localAvrilFeatures.VM2T = this.isMessageEntitled && this.isLanguageEnglish() ? false : true;
+      this.localAvrilFeatures.VM2E_Attachment = false;
+      this.localAvrilFeatures.VM2S = this.isMessageEntitled ? true : false;
+      this.localAvrilFeatures.VM2S_Attachment = this.isMessageEntitled ? true : false;
+      this.localAvrilFeatures.VM2S_Transcript = this.isLanguageEnglish() && this.isMessageEntitled ? true : false;
+      this.localAvrilFeatures.VMOTP = this.isLanguageEnglish() && this.isMessageEntitled ? true : false;
     }
   }
 

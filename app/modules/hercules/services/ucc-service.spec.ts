@@ -1,8 +1,8 @@
-import { UCCService } from './ucc-service';
+import moduleName, { UCCService } from './ucc-service';
 
 describe('UCCService', () => {
 
-  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module(moduleName));
   beforeEach(angular.mock.module(mockDependencies));
 
   const voicemailBaseUrl = 'https://ucc-intb.ciscospark.com/voicemail/api/v1';

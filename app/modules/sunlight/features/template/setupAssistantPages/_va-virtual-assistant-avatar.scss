@@ -29,29 +29,25 @@
   }
 }
 
-.va-icon-circle {
-  @include vr-spacing(pt, 0.5);
-  width: 100px;
-  height: 100px;
+.va-img-circle {
+  margin: auto;
+  height:100px;
+  width:100px;
   border-radius: 50%;
   border: 1px solid $gray-light-1;
-  align-items: center;
-  background-image: none;
-  vertical-align: bottom;
-  text-align: center;
-  display: block;
+  position: relative;
   overflow: hidden;
-  margin: auto;
-
-  .icon {
-    color: $gray-light-1;
-  }
 }
 
-.va-img-circle {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
+.va-img {
+  max-width: 100%;
+  max-height: 100%;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  top: 0;
+  right: 0;
+  margin: auto;
 }
 
 .va-input-label {
@@ -59,15 +55,6 @@
   position: relative;
   display: inline-block;
   color: $color-blue-base;
-}
-
-.va-center {
-  margin: auto;
-  align-items: center;
-  vertical-align: top;
-  text-align: center;
-  overflow: hidden;
-  justify-content: center;
 }
 
 .va-spinner-center {
@@ -82,6 +69,7 @@
 
 .va-error {
   @include vr-spacing(mt, 0.75);
+  text-align: center;
   color: $color-red-base;
 }
 

@@ -13,7 +13,6 @@ describe('Component: companyVoicemailAvril', () => {
   const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
   const GENERATED_VM_PILOT_NUMBER = '+150708071004091414081311041300051000081';
   const externalNumberOptions = getJSONFixture('huron/json/settings/externalNumbersOptions.json');
-  const AVRIL_FEATURES = new AvrilSiteFeatures();
   const USE_TLS_CHECKBOX = 'input#useTLS';
   const ENABLE_OTP_CHECKBOX = 'input#enableOTP';
   const avrilFeatures = new AvrilSiteFeatures({
@@ -22,7 +21,6 @@ describe('Component: companyVoicemailAvril', () => {
     VMOTP: true,
     VM2E_TLS: true,
     VM2T: false,
-    VM2E_Attachment: false,
     VM2E_Transcript: false,
     VM2S: false,
     VM2S_Attachment: false,
@@ -80,7 +78,8 @@ describe('Component: companyVoicemailAvril', () => {
 
     it('should call onChangeFn when voicemail is toggled', function() {
       this.view.find(VOICEMAIL_TOGGLE).click();
-      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(GENERATED_VM_PILOT_NUMBER, 'true', true, AVRIL_FEATURES);
+      avrilFeatures.VM2E_TLS = false;
+      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(GENERATED_VM_PILOT_NUMBER, 'true', true, avrilFeatures);
     });
 
     it('should have External Voicemail Access and Voicemail to Email checkboxes when voicemail is toggled on', function() {
@@ -117,11 +116,12 @@ describe('Component: companyVoicemailAvril', () => {
     });
 
     it('should call onChangeFn when an external number is chosen', function() {
+      avrilFeatures.VM2E_TLS = false;
       this.view.find(VOICEMAIL_TOGGLE).click();
       expect(this.view).toContainElement(EXTERNAL_VM_CHECKBOX);
       this.view.find(EXTERNAL_VM_CHECKBOX).click();
       this.view.find(COMPANY_NUMBER_SELECT).find(DROPDOWN_OPTIONS).get(0).click();
-      expect(this.$scope.onChangeFn.calls.argsFor(2)).toEqual(['+19725551212', 'false', true, AVRIL_FEATURES]);
+      expect(this.$scope.onChangeFn.calls.argsFor(2)).toEqual(['+19725551212', 'false', true, avrilFeatures]);
     });
   });
 
@@ -135,6 +135,7 @@ describe('Component: companyVoicemailAvril', () => {
     it('should show Email Attachment radios, use TLS checkbox and call onChangeFn when Voicemail to Email is checked', function() {
       avrilFeatures.VM2E = true;
       avrilFeatures.VM2E_PT = false;
+      avrilFeatures.VM2E_TLS = true;
       this.view.find(VOICEMAIL_TOGGLE).click();
       expect(this.view).toContainElement(VOICEMAIL_TO_EMAIL_CHECKBOX);
       this.view.find(VOICEMAIL_TO_EMAIL_CHECKBOX).click();
@@ -150,6 +151,7 @@ describe('Component: companyVoicemailAvril', () => {
     it('should call onChangeFn when Email Notification without Attachment is checked', function() {
       avrilFeatures.VM2E = false;
       avrilFeatures.VM2E_PT = true;
+      avrilFeatures.VM2E_TLS = true;
       this.view.find(VOICEMAIL_TOGGLE).click();
       expect(this.view).toContainElement(VOICEMAIL_TO_EMAIL_CHECKBOX);
       this.view.find(VOICEMAIL_TO_EMAIL_CHECKBOX).click();
