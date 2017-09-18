@@ -45,14 +45,14 @@
 
               </div>
               <div class="h5 profile-name" ng-switch = "careSetupAssistant.displaySelectedProfileAttribute()">
-                <div ng-switch-when="org">
+                <div class="disp-text" ng-switch-when="org">
                   {{careSetupAssistant.getAttributeParam('value', 'organization', 'welcomeHeader')}}
                 </div>
-                <div ng-switch-when="agent">
+                <div class="disp-text" ng-switch-when="agent">
                   {{careSetupAssistant.agentNamePreview | translate}}
                 </div>
-                <div ng-switch-default>
-                  <div>{{::careSetupAssistant.careVirtualAssistantName()}}</div>
+                <div class="disp-text" ng-switch-default>
+                  {{::careSetupAssistant.careVirtualAssistantName()}}
                 </div>
               </div>
               <div class="right actions">
