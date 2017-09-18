@@ -353,6 +353,15 @@ describe('UrlConfigSpec', function () {
     });
   });
 
+  it('should return correct hydra url', function () {
+    whenCalling('getHydraServiceUrl').expectUrlToBe({
+      dev: 'https://api.ciscospark.com/v1',
+      cfe: 'https://api.ciscospark.com/v1',
+      integration: 'https://api.ciscospark.com/v1',
+      prod: 'https://api.ciscospark.com/v1',
+    });
+  });
+
   it('should return correct Sunlight Config Service url', function () {
     whenCalling('getSunlightConfigServiceUrl').expectUrlToBe({
       dev: 'https://config.devus1.ciscoccservice.com/config/v1',
