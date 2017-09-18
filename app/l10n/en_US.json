@@ -6715,6 +6715,7 @@
     "WithDevices": "With Devices",
     "upgradeChannels": {
       "Stable": "Stable",
+      "Stable_Preview": "Stable Preview",
       "Latest": "Latest",
       "Beta": "Beta",
       "Preview": "Preview"
