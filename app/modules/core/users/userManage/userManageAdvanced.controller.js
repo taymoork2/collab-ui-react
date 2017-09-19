@@ -89,7 +89,7 @@ require('./_user-manage.scss');
       if (isCsvProcessing()) {
         $modal.open({
           type: 'dialog',
-          templateUrl: 'modules/core/users/userCsv/userCsvStopImportConfirm.tpl.html',
+          template: require('modules/core/users/userCsv/userCsvStopImportConfirm.tpl.html'),
         }).result.then(function () {
           // cancel the current import
           $scope.csv.isCancelledByUser = true;

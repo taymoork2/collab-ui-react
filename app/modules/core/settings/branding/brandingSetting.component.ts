@@ -13,5 +13,5 @@ export class BrandingSetting extends SettingSection {
 export class BrandingSettingComponent implements ng.IComponentOptions {
   public controller = BrandingCtrl;
   public controllerAs = 'bctrl';
-  public templateUrl = 'modules/core/partnerProfile/branding/branding.tpl.html';
+  public template = require('modules/core/partnerProfile/branding/branding.tpl.html');
 }

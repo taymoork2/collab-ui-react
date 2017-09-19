@@ -125,7 +125,7 @@
     function openExtendedInformation() {
       if (vm.supportsExtendedInformation) {
         $modal.open({
-          templateUrl: 'modules/squared/helpdesk/helpdesk-extended-information.html',
+          template: require('modules/squared/helpdesk/helpdesk-extended-information.html'),
           controller: 'HelpdeskExtendedInfoDialogController as modal',
           resolve: {
             title: function () {

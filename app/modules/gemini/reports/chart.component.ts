@@ -76,6 +76,6 @@ class ReportsChart implements ng.IComponentController {
 
 export class CustChartComponent implements ng.IComponentOptions {
   public controller = ReportsChart;
-  public templateUrl = 'modules/gemini/reports/chart.html';
+  public template = require('modules/gemini/reports/chart.html');
   public bindings = { provideData: '<', close: '&', size: '@' };
 }

@@ -194,5 +194,5 @@ class PlaceCallOverview implements ng.IComponentController {
 
 export class PlaceCallOverviewComponent implements ng.IComponentOptions {
   public controller = PlaceCallOverview;
-  public templateUrl = 'modules/squared/places/callOverview/placeCallOverview.html';
+  public template = require('modules/squared/places/callOverview/placeCallOverview.html');
 }

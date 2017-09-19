@@ -96,7 +96,7 @@ class EmergencyServiceNumberCtrl implements ng.IComponentController {
 
 export class EmergencyServiceNumberComponent implements ng.IComponentOptions {
   public controller = EmergencyServiceNumberCtrl;
-  public templateUrl = 'modules/call/settings/settings-emergency-service-number/settings-emergency-service-number.component.html';
+  public template = require('modules/call/settings/settings-emergency-service-number/settings-emergency-service-number.component.html');
   public bindings = {
     site: '<',
     emergencyCallbackNumber: '<',

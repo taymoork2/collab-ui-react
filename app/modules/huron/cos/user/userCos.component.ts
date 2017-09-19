@@ -244,7 +244,7 @@ class UserClassOfService implements ng.IComponentController {
 
 export class UserClassOfServiceComponent implements ng.IComponentOptions {
   public controller = UserClassOfService;
-  public templateUrl = 'modules/huron/cos/user/userCos.component.html';
+  public template = require('modules/huron/cos/user/userCos.component.html');
   public bindings = {
     memberType: '@',
     memberId: '<',

@@ -17,5 +17,5 @@ export class PrivacySettingsComponent implements ng.IComponentOptions {
   };
   public controller = PrivacySettingController;
   public controllerAs = 'vm';
-  public templateUrl = 'modules/core/settings/privacySection/privacySettings.tpl.html';
+  public template = require('modules/core/settings/privacySection/privacySettings.tpl.html');
 }

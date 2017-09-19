@@ -199,7 +199,7 @@ export class BulkEnableVmCtrl implements ng.IComponentController {
 
 export class BulkEnableVmComponent implements ng.IComponentOptions {
   public controller = BulkEnableVmCtrl;
-  public templateUrl = 'modules/call/settings/settings-bulk-enable-vm/settings-bulk-enable-vm.component.html';
+  public template = require('modules/call/settings/settings-bulk-enable-vm/settings-bulk-enable-vm.component.html');
   public bindings = {
     scope: '=',
   };

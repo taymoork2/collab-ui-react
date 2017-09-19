@@ -5,6 +5,9 @@ import { CloudConnectorService } from 'modules/hercules/services/calendar-cloud-
 import { Notification } from 'modules/core/notifications';
 import { IServiceStatusWithSetup } from 'modules/hercules/services/hybrid-services-cluster.service';
 
+// TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
+const hybridAndGoogleCalendarCardTemplatePath = require('ngtemplate-loader?module=Hercules!./hybrid-and-google-calendar-card.html');
+
 export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOverviewCard {
   private canDisplay: ng.IDeferred<boolean> = this.$q.defer();
   private googleStatus: ICardStatus;
@@ -29,7 +32,7 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
     this.$modal.open({
       controller: 'SelectCalendarServiceController',
       controllerAs: 'vm',
-      templateUrl: 'modules/hercules/service-settings/calendar-service-setup/select-calendar-service-modal.html',
+      template: require('modules/hercules/service-settings/calendar-service-setup/select-calendar-service-modal.html'),
     })
     .result
     .then((result) => {
@@ -50,7 +53,7 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
       },
       controller: 'AddResourceController',
       controllerAs: 'vm',
-      templateUrl: 'modules/hercules/service-specific-pages/common-expressway-based/add-resource-modal.html',
+      template: require('modules/hercules/service-specific-pages/common-expressway-based/add-resource-modal.html'),
     })
       .result
       .then((value) => {
@@ -174,7 +177,7 @@ export class ServicesOverviewHybridAndGoogleCalendarCard extends ServicesOvervie
       cardType: CardType.hybrid,
       description: 'servicesOverview.cards.hybridCalendar.description',
       name: 'servicesOverview.cards.hybridCalendar.title',
-      template: 'modules/services-overview/hybrid/hybrid-and-google-calendar-card.html',
+      template: hybridAndGoogleCalendarCardTemplatePath,
     });
     this.display = Authinfo.isFusionCal() && Authinfo.isFusionGoogleCal();
     this.fetchGoogleCalendar();

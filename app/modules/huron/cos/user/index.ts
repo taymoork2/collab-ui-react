@@ -4,7 +4,6 @@ import FeatureToggleService from 'modules/core/featureToggle';
 
 export default angular
   .module('huron.user-class-of-service', [
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
     'ngResource',

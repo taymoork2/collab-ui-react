@@ -23,7 +23,7 @@
         type: 'small',
         controller: 'AddServiceCtrl',
         controllerAs: 'addServiceCtrl',
-        templateUrl: 'modules/gss/services/addService/addService.tpl.html',
+        template: require('modules/gss/services/addService/addService.tpl.html'),
         modalClass: 'status-add-service',
       }).result.then(function () {
         GSSService.getServices()

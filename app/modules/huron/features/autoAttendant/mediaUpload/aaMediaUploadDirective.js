@@ -10,7 +10,7 @@
       restrict: 'AE',
       controller: 'AAMediaUploadCtrl',
       controllerAs: 'aaMediaUpload',
-      templateUrl: 'modules/huron/features/autoAttendant/mediaUpload/aaMedia.tpl.html',
+      template: require('modules/huron/features/autoAttendant/mediaUpload/aaMedia.tpl.html'),
       scope: {
         schedule: '@aaSchedule',
         menuId: '@aaMenuId',

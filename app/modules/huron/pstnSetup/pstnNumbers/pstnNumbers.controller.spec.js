@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: PstnNumbersCtrl', function () {
-  var controller, $compile, $scope, $state, $q, $translate, PstnService, PstnModel, Notification, PstnAreaService, FeatureToggleService;
+  var $state, $q, $translate, PstnService, PstnModel, Notification, PstnAreaService, FeatureToggleService;
   var element;
 
   var customer = getJSONFixture('huron/json/pstnSetup/customer.json');
@@ -116,9 +116,7 @@ describe('Controller: PstnNumbersCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight')); // Remove this when FeatureToggleService is removed.
 
-  beforeEach(inject(function ($rootScope, _$compile_, _$state_, _$q_, _$translate_, _PstnService_, _PstnModel_, _Notification_, _PstnAreaService_, _FeatureToggleService_) {
-    $scope = $rootScope.$new();
-    $compile = _$compile_;
+  beforeEach(inject(function (_$state_, _$q_, _$translate_, _PstnService_, _PstnModel_, _Notification_, _PstnAreaService_, _FeatureToggleService_) {
     $state = _$state_;
     $q = _$q_;
     $translate = _$translate_;
@@ -144,13 +142,10 @@ describe('Controller: PstnNumbersCtrl', function () {
     spyOn($translate, 'instant').and.callThrough();
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
 
-    controller = compileTemplate();
+    compileTemplate.apply(this);
   }));
 
   afterEach(function () {
-    controller = undefined;
-    $compile = undefined;
-    $scope = undefined;
     $state = undefined;
     $q = undefined;
     $translate = undefined;
@@ -177,50 +172,48 @@ describe('Controller: PstnNumbersCtrl', function () {
   });
 
   function compileTemplate() {
-    var template = '<div><div ng-controller="PstnNumbersCtrl as pstnNumbers" ng-include="\'modules/huron/pstnSetup/pstnNumbers/pstnNumbers.tpl.html\'"></div></div>';
-    element = $compile(template)($scope);
-    $scope.$apply();
-    $translate.instant.calls.reset();
-    return _.get(element.scope(), '$$childTail.pstnNumbers');
+    this.compileViewTemplate('PstnNumbersCtrl', require('modules/huron/pstnSetup/pstnNumbers/pstnNumbers.tpl.html'), {
+      controllerAs: 'pstnNumbers',
+    });
   }
 
   describe('initial/default data', function () {
     it('should not have an areaCodeOptions array', function () {
-      expect(controller.model.pstn.areaCodeOptions).toBeDefined();
-      expect(controller.model.tollFree.areaCodeOptions).toBeDefined();
+      expect(this.controller.model.pstn.areaCodeOptions).toBeDefined();
+      expect(this.controller.model.tollFree.areaCodeOptions).toBeDefined();
     });
 
     it('should have defaults quantity', function () {
-      expect(controller.model.pstn.quantity).toEqual(2);
-      expect(controller.model.tollFree.quantity).toEqual(1);
+      expect(this.controller.model.pstn.quantity).toEqual(2);
+      expect(this.controller.model.tollFree.quantity).toEqual(1);
     });
 
     it('should have state set through PstnService on first time', function () {
-      expect(controller.model.pstn.state).toEqual(location.areas[0]);
+      expect(this.controller.model.pstn.state).toEqual(location.areas[0]);
     });
 
     it('should have showTollFreeNumbers set to false if feature toggle returns false', function () {
-      $scope.$apply();
-      expect(controller.showTollFreeNumbers).toBe(false);
+      this.$scope.$apply();
+      expect(this.controller.showTollFreeNumbers).toBe(false);
     });
   });
 
   describe('orderNumbers', function () {
     it('should default to no orders', function () {
-      expect(controller.orderCart).toEqual([]);
-      expect(controller.orderNumbersTotal).toEqual(0);
+      expect(this.controller.orderCart).toEqual([]);
+      expect(this.controller.orderNumbersTotal).toEqual(0);
     });
 
     it('should notify error on Next button action', function () {
-      controller.goToReview();
+      this.controller.goToReview();
       expect(Notification.error).toHaveBeenCalledWith('pstnSetup.orderNumbersPrompt');
     });
 
     it('should update with new numbers', function () {
-      controller.orderCart = orderCart;
-      $scope.$apply();
-      expect(controller.orderNumbersTotal).toEqual(6);
-      controller.goToReview();
+      this.controller.orderCart = orderCart;
+      this.$scope.$apply();
+      expect(this.controller.orderNumbersTotal).toEqual(6);
+      this.controller.goToReview();
       expect($state.go).toHaveBeenCalledWith('pstnSetup.review');
     });
   });
@@ -228,123 +221,123 @@ describe('Controller: PstnNumbersCtrl', function () {
   describe('getCapabilities', function () {
     it('should not show toll-free tabs if trial', function () {
       PstnModel.setIsTrial(true);
-      expect(controller.showTollFreeNumbers).toBe(false);
+      expect(this.controller.showTollFreeNumbers).toBe(false);
     });
 
     it('should not show toll-free tab in paid if not supported', function () {
       PstnModel.setIsTrial(false);
-      controller.getCapabilities();
-      $scope.$apply();
-      expect(controller.showTollFreeNumbers).toBe(false);
+      this.controller.getCapabilities();
+      this.$scope.$apply();
+      expect(this.controller.showTollFreeNumbers).toBe(false);
     });
 
     it('should show toll-free tab in paid if supported', function () {
-      controller.isTrial = false;
+      this.controller.isTrial = false;
       PstnService.getCarrierCapabilities = jasmine.createSpy().and.returnValue($q.resolve(capabilityWithTollFree));
-      controller.getCapabilities();
-      $scope.$apply();
-      expect(controller.showTollFreeNumbers).toBe(true);
+      this.controller.getCapabilities();
+      this.$scope.$apply();
+      expect(this.controller.showTollFreeNumbers).toBe(true);
     });
   });
 
   describe('showOrderQuantity', function () {
     it('should not show quantity for single order', function () {
-      expect(controller.showOrderQuantity(singleOrder)).toBeFalsy();
+      expect(this.controller.showOrderQuantity(singleOrder)).toBeFalsy();
     });
 
     it('should not show quantity if is a consecutive order', function () {
-      expect(controller.showOrderQuantity(consecutiveOrder)).toBeFalsy();
+      expect(this.controller.showOrderQuantity(consecutiveOrder)).toBeFalsy();
     });
 
     it('should show quantity if is nonconsecutive order', function () {
-      expect(controller.showOrderQuantity(nonconsecutiveOrder)).toBeTruthy();
+      expect(this.controller.showOrderQuantity(nonconsecutiveOrder)).toBeTruthy();
     });
 
     it('should show quantity if is a port order', function () {
-      expect(controller.showOrderQuantity(portOrder)).toBeTruthy();
+      expect(this.controller.showOrderQuantity(portOrder)).toBeTruthy();
     });
 
     it('should show quantity if is an advanced order', function () {
-      expect(controller.showOrderQuantity(advancedOrder)).toBeTruthy();
+      expect(this.controller.showOrderQuantity(advancedOrder)).toBeTruthy();
     });
   });
 
   describe('formatTelephoneNumber', function () {
     it('should format a single order', function () {
-      expect(controller.formatTelephoneNumber(singleOrder)).toEqual('(214) 555-1000');
+      expect(this.controller.formatTelephoneNumber(singleOrder)).toEqual('(214) 555-1000');
     });
 
     it('should format a consecutive order', function () {
-      expect(controller.formatTelephoneNumber(consecutiveOrder)).toEqual('(214) 555-1000 - 1001');
+      expect(this.controller.formatTelephoneNumber(consecutiveOrder)).toEqual('(214) 555-1000 - 1001');
     });
 
     it('should format a nonconsecutive order', function () {
-      expect(controller.formatTelephoneNumber(nonconsecutiveOrder)).toEqual('(214) 555-1XXX');
+      expect(this.controller.formatTelephoneNumber(nonconsecutiveOrder)).toEqual('(214) 555-1XXX');
     });
 
     it('should format a port order', function () {
-      expect(controller.formatTelephoneNumber(portOrder)).toEqual('pstnSetup.portNumbersLabel');
+      expect(this.controller.formatTelephoneNumber(portOrder)).toEqual('pstnSetup.portNumbersLabel');
     });
 
     it('should format an advanced order', function () {
-      expect(controller.formatTelephoneNumber(advancedOrder)).toEqual('(' + advancedOrder.data.areaCode + ') XXX-XXXX');
+      expect(this.controller.formatTelephoneNumber(advancedOrder)).toEqual('(' + advancedOrder.data.areaCode + ') XXX-XXXX');
     });
 
     it('should format an advanced order with nxx', function () {
-      expect(controller.formatTelephoneNumber(advancedNxxOrder)).toEqual('(' + advancedNxxOrder.data.areaCode + ') ' + advancedNxxOrder.data.nxx + '-XXXX');
+      expect(this.controller.formatTelephoneNumber(advancedNxxOrder)).toEqual('(' + advancedNxxOrder.data.areaCode + ') ' + advancedNxxOrder.data.nxx + '-XXXX');
     });
   });
 
   describe('removeOrder', function () {
     beforeEach(function () {
-      controller.orderCart = [singleOrder, consecutiveOrder, nonconsecutiveOrder, portOrder, advancedOrder];
+      this.controller.orderCart = [singleOrder, consecutiveOrder, nonconsecutiveOrder, portOrder, advancedOrder];
     });
 
     it('should remove a single order', function () {
-      controller.removeOrder(singleOrder);
-      $scope.$apply();
+      this.controller.removeOrder(singleOrder);
+      this.$scope.$apply();
 
-      expect(controller.orderCart).not.toContain(singleOrder);
+      expect(this.controller.orderCart).not.toContain(singleOrder);
     });
 
     it('should remove a consecutive order', function () {
-      controller.removeOrder(consecutiveOrder);
-      $scope.$apply();
+      this.controller.removeOrder(consecutiveOrder);
+      this.$scope.$apply();
 
-      expect(controller.orderCart).not.toContain(consecutiveOrder);
+      expect(this.controller.orderCart).not.toContain(consecutiveOrder);
     });
 
     it('should remove a nonconsecutive order', function () {
-      controller.removeOrder(nonconsecutiveOrder);
-      $scope.$apply();
+      this.controller.removeOrder(nonconsecutiveOrder);
+      this.$scope.$apply();
 
-      expect(controller.orderCart).not.toContain(nonconsecutiveOrder);
+      expect(this.controller.orderCart).not.toContain(nonconsecutiveOrder);
     });
 
     it('should remove a port order', function () {
-      controller.removeOrder(portOrder);
-      $scope.$apply();
+      this.controller.removeOrder(portOrder);
+      this.$scope.$apply();
 
-      expect(controller.orderCart).not.toContain(portOrder);
+      expect(this.controller.orderCart).not.toContain(portOrder);
     });
 
     it('should remove an advanced order', function () {
-      controller.removeOrder(advancedOrder);
-      $scope.$apply();
+      this.controller.removeOrder(advancedOrder);
+      this.$scope.$apply();
 
-      expect(controller.orderCart).not.toContain(advancedOrder);
+      expect(this.controller.orderCart).not.toContain(advancedOrder);
     });
   });
 
   describe('addOrders', function () {
     it('should add an advanced PSTN order', function () {
-      controller.model.pstn.areaCode = {
+      this.controller.model.pstn.areaCode = {
         code: advancedOrder.data.areaCode,
       };
-      controller.model.pstn.quantity = advancedOrder.data.length;
-      controller.model.pstn.consecutive = advancedOrder.data.consecutive;
-      controller.addToCart(BLOCK_ORDER, NUMTYPE_DID);
-      expect(controller.orderCart).toContain({
+      this.controller.model.pstn.quantity = advancedOrder.data.length;
+      this.controller.model.pstn.consecutive = advancedOrder.data.consecutive;
+      this.controller.addToCart(BLOCK_ORDER, NUMTYPE_DID);
+      expect(this.controller.orderCart).toContain({
         data: {
           areaCode: advancedOrder.data.areaCode,
           length: advancedOrder.data.length,
@@ -356,13 +349,13 @@ describe('Controller: PstnNumbersCtrl', function () {
     });
 
     it('should add an advanced toll-free order', function () {
-      controller.model.tollFree.areaCode = {
+      this.controller.model.tollFree.areaCode = {
         code: advancedTollFreeOrder.data.areaCode,
       };
-      controller.model.tollFree.quantity = advancedTollFreeOrder.data.length;
-      controller.model.tollFree.consecutive = advancedTollFreeOrder.data.consecutive;
-      controller.addToCart(BLOCK_ORDER, NUMTYPE_TOLLFREE);
-      expect(controller.orderCart).toContain({
+      this.controller.model.tollFree.quantity = advancedTollFreeOrder.data.length;
+      this.controller.model.tollFree.consecutive = advancedTollFreeOrder.data.consecutive;
+      this.controller.addToCart(BLOCK_ORDER, NUMTYPE_TOLLFREE);
+      expect(this.controller.orderCart).toContain({
         data: {
           areaCode: advancedTollFreeOrder.data.areaCode,
           length: advancedTollFreeOrder.data.length,

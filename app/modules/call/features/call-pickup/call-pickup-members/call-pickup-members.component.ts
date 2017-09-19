@@ -109,7 +109,7 @@ class CallPickupMembersCtrl implements ng.IComponentController {
         });
       });
     this.$modal.open({
-      templateUrl: 'modules/call/features/call-pickup/call-pickup-members/call-pickup-lines-taken-modal.html',
+      template: require('modules/call/features/call-pickup/call-pickup-members/call-pickup-lines-taken-modal.html'),
       type: 'dialog',
       scope: modalScope,
     });
@@ -210,7 +210,7 @@ class CallPickupMembersCtrl implements ng.IComponentController {
 
 export class CallPickupMembersComponent implements ng.IComponentOptions {
   public controller = CallPickupMembersCtrl;
-  public templateUrl = 'modules/call/features/call-pickup/call-pickup-members/call-pickup-members.component.html';
+  public template = require('modules/call/features/call-pickup/call-pickup-members/call-pickup-members.component.html');
   public bindings = {
     onUpdate: '&',
     selectedMembers: '<',

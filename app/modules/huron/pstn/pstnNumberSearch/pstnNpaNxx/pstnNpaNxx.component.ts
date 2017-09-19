@@ -157,7 +157,7 @@ class PstnNpaNxxCtrl implements ng.IComponentController {
 
 export class PstnNpaNxxComponent implements ng.IComponentOptions {
   public controller = PstnNpaNxxCtrl;
-  public templateUrl = 'modules/huron/pstn/pstnNumberSearch/pstnNpaNxx/pstnNpaNxx.html';
+  public template = require('modules/huron/pstn/pstnNumberSearch/pstnNpaNxx/pstnNpaNxx.html');
   public bindings = {
     model: '<',
     search: '&',

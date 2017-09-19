@@ -8,7 +8,7 @@
         selected: '=',
       },
       controller: cbgCountryCtrl,
-      templateUrl: 'modules/gemini/callbackGroup/cbgCountry.tpl.html',
+      template: require('modules/gemini/callbackGroup/cbgCountry.tpl.html'),
     });
 
   /* @ngInject */
@@ -62,7 +62,7 @@
     function onDownloadTemplate() {
       $modal.open({
         type: 'dialog',
-        templateUrl: 'modules/gemini/telephonyDomain/details/downloadConfirm.html',
+        template: require('modules/gemini/telephonyDomain/details/downloadConfirm.html'),
       }).result.then(function () {
         WindowLocation.set(cbgService.getDownloadCountryUrl());
       });

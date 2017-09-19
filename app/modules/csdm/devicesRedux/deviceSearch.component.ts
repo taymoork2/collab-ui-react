@@ -276,5 +276,5 @@ export class DeviceSearchComponent implements ng.IComponentOptions {
     clearSearch: '&',
   };
   public controllerAs = 'dctrl';
-  public templateUrl = 'modules/csdm/devicesRedux/deviceSearch.html';
+  public template = require('modules/csdm/devicesRedux/deviceSearch.html');
 }

@@ -128,7 +128,7 @@ class DeviceSettings implements ng.IComponentController {
 
 export class DeviceSettingsComponent implements ng.IComponentOptions {
   public controller = DeviceSettings;
-  public templateUrl = 'modules/squared/places/deviceSettings/deviceSettings.html';
+  public template = require('modules/squared/places/deviceSettings/deviceSettings.html');
   public bindings = <{ [binding: string]: string }>{
     ownerType: '@',
     ownerId: '<',

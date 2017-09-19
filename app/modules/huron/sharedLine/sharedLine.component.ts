@@ -73,7 +73,7 @@ class SharedLineCtrl implements ng.IComponentController {
 
 export class SharedLineComponent implements ng.IComponentOptions {
   public controller = SharedLineCtrl;
-  public templateUrl = 'modules/huron/sharedLine/sharedLine.html';
+  public template = require('modules/huron/sharedLine/sharedLine.html');
   public bindings = {
     sharedLines: '<',
     newSharedLineMembers: '<',

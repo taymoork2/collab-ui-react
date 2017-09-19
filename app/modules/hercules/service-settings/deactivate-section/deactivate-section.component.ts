@@ -13,7 +13,7 @@ class DeactivateSectionCtrl implements ng.IComponentController {
     },
     controller: 'ConfirmDisableHybridServiceCtrl',
     controllerAs: '$ctrl',
-    templateUrl: 'modules/hercules/service-settings/deactivate-section/confirm-disable-hybrid-service.html',
+    template: require('modules/hercules/service-settings/deactivate-section/confirm-disable-hybrid-service.html'),
     type: 'dialog',
   };
 
@@ -52,7 +52,7 @@ class DeactivateSectionCtrl implements ng.IComponentController {
 
 class DeactivateSectionComponent implements ng.IComponentOptions {
   public controller = DeactivateSectionCtrl;
-  public templateUrl = 'modules/hercules/service-settings/deactivate-section/deactivate-section.html';
+  public template = require('modules/hercules/service-settings/deactivate-section/deactivate-section.html');
   public bindings = {
     serviceId: '<',
     deactivateModalOptions: '<',

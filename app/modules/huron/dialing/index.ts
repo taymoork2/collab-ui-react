@@ -6,7 +6,6 @@ export * from './dialing.service';
 
 export default angular
   .module('huron.dialing', [
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
     require('angular-resource'),

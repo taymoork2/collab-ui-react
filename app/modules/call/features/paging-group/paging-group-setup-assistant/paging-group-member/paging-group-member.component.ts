@@ -117,7 +117,7 @@ class PagingGroupMemberCtrl implements ng.IComponentController {
 
 export class PgMemberComponent implements ng.IComponentOptions {
   public controller = PagingGroupMemberCtrl;
-  public templateUrl = 'modules/call/features/paging-group/paging-group-setup-assistant/paging-group-member/paging-group-member.component.html';
+  public template = require('modules/call/features/paging-group/paging-group-setup-assistant/paging-group-member/paging-group-member.component.html');
   public bindings = {
     onUpdate: '&',
     selectedMembers: '<',

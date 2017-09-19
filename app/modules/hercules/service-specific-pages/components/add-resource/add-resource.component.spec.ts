@@ -41,7 +41,7 @@ describe('Component: addHybridResourceButton ', () => {
     ctrl.$onInit();
     $rootScope.$apply();
     ctrl.modalWindowOptions = {
-      templateUrl: 'example/path/to/template',
+      template: '<div>example template</div>',
     };
     ctrl.openAddResourceModal();
     expect($modal.open).toHaveBeenCalledWith(jasmine.objectContaining(ctrl.modalWindowOptions));
@@ -52,7 +52,7 @@ describe('Component: addHybridResourceButton ', () => {
     ctrl.$onInit();
     $rootScope.$apply();
     ctrl.modalWindowOptions = {
-      templateUrl: 'example/path/to/template',
+      template: '<div>example template</div>',
     };
     ctrl.openAddResourceModal();
     expect($modal.open).toHaveBeenCalledWith(jasmine.objectContaining(ctrl.modalWindowOptions));

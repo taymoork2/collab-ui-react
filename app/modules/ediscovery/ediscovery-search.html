@@ -132,7 +132,7 @@
     </div>
   </div>
 
-  <div class="search-result-area" ng-if="ediscoverySearchCtrl.roomInfo && !ediscoverySearchCtrl.ediscoveryToggle" ng-include="'modules/ediscovery/ediscovery-search-result.html'"></div>
-  <div class="search-result-area" ng-if="ediscoverySearchCtrl.roomInfo && ediscoverySearchCtrl.ediscoveryToggle" ng-include="'modules/ediscovery/ediscovery-search-result-adv.html'"></div>
+  <ediscovery-search-result class="search-result-area" ng-if="ediscoverySearchCtrl.roomInfo && !ediscoverySearchCtrl.ediscoveryToggle"></ediscovery-search-result>
+  <ediscovery-search-result-adv class="search-result-area" ng-if="ediscoverySearchCtrl.roomInfo && ediscoverySearchCtrl.ediscoveryToggle"></ediscovery-search-result-adv>
 
 </div>

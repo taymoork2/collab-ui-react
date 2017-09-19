@@ -184,7 +184,7 @@ require('./_user-add.scss');
       if (Authinfo.isOnline()) {
         $modal.open({
           type: 'dialog',
-          templateUrl: 'modules/core/users/userAdd/licenseErrorModal.tpl.html',
+          template: require('modules/core/users/userAdd/licenseErrorModal.tpl.html'),
         }).result.then(function () {
           $previousState.forget('modalMemo');
           $state.go('my-company.subscriptions');
@@ -583,7 +583,7 @@ require('./_user-add.scss');
     $scope.confirmAdditionalServiceSetup = function () {
       $modal.open({
         type: 'dialog',
-        templateUrl: 'modules/core/users/userAdd/confirmLeavingDialog.tpl.html',
+        template: require('modules/core/users/userAdd/confirmLeavingDialog.tpl.html'),
       }).result.then(function () {
         $state.go('firsttimewizard');
       });

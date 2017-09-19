@@ -20,7 +20,7 @@
         <span ng-if="dbctrl.isPartner || dbctrl.isDirectCustomer" translate="branding.useCiscoLogo"></span>
         <span ng-if="!dbctrl.isPartner && !dbctrl.isDirectCustomer" translate="branding.usePartnerLogo"
               translate-value-partner="{{bctrl.partner.displayName}}"></span>
-        <a ng-if="!dbctrl.isPartner && !dbctrl.isDirectCustomer" ng-click=dbctrl.showBrandingExample('Partner')
+        <a ng-if="!dbctrl.isPartner && !dbctrl.isDirectCustomer" ng-click="dbctrl.showBrandingExample('Partner')"
            translate="branding.exampleLink"></a>
       </label>
     </div>

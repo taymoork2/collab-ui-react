@@ -333,5 +333,5 @@ class CcaReportsTabs implements ng.IComponentController {
 
 export class CcaReportsTabsComponent implements ng.IComponentOptions {
   public controller = CcaReportsTabs;
-  public templateUrl = 'modules/gemini/reports/ccaReportsTabs.html';
+  public template = require('modules/gemini/reports/ccaReportsTabs.html');
 }

@@ -159,7 +159,7 @@ class HybridServicesNodesPageActionsComponentCtrl implements ng.IComponentContro
       type: 'small',
       controller: 'ReassignClusterControllerV2',
       controllerAs: 'reassignCluster',
-      templateUrl: 'modules/mediafusion/media-service-v2/side-panel/reassign-node-to-different-cluster/reassign-cluster-dialog.html',
+      template: require('modules/mediafusion/media-service-v2/side-panel/reassign-node-to-different-cluster/reassign-cluster-dialog.html'),
     })
       .result
       .then(() => {
@@ -179,7 +179,7 @@ class HybridServicesNodesPageActionsComponentCtrl implements ng.IComponentContro
       type: 'dialog',
       controller: 'HostDeregisterControllerV2',
       controllerAs: 'hostDeregister',
-      templateUrl: 'modules/mediafusion/media-service-v2/side-panel/deregister-node/host-deregister-dialog.html',
+      template: require('modules/mediafusion/media-service-v2/side-panel/deregister-node/host-deregister-dialog.html'),
     })
       .result
       .then(() => {
@@ -193,7 +193,7 @@ class HybridServicesNodesPageActionsComponentCtrl implements ng.IComponentContro
 
   public openDeleteExpresswayNodeModal(node: ISimplifiedNode): void {
     this.$modal.open({
-      templateUrl: 'modules/hercules/hybrid-services-nodes-page/delete-expressway-host-modal/confirm-deleteHost-dialog.html',
+      template: require('modules/hercules/hybrid-services-nodes-page/delete-expressway-host-modal/confirm-deleteHost-dialog.html'),
       type: 'dialog',
       controller: 'ConfirmDeleteHostController',
       controllerAs: 'confirmDeleteHostDialog',
@@ -215,7 +215,7 @@ class HybridServicesNodesPageActionsComponentCtrl implements ng.IComponentContro
 }
 
 export class HybridServicesNodesPageActionsComponent implements ng.IComponentOptions {
-  public templateUrl = 'modules/hercules/hybrid-services-nodes-page/hybrid-services-nodes-page-actions/hybrid-services-nodes-page-actions.component.html';
+  public template = require('modules/hercules/hybrid-services-nodes-page/hybrid-services-nodes-page-actions/hybrid-services-nodes-page-actions.component.html');
   public controller = HybridServicesNodesPageActionsComponentCtrl;
   public bindings = {
     clusterId: '<',

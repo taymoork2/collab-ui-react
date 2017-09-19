@@ -78,7 +78,7 @@ export class BasicExpresswayPrerequisitesComponentController implements ng.IComp
 
 export class BasicExpresswayPrerequisitesComponent implements ng.IComponentOptions {
   public controller = BasicExpresswayPrerequisitesComponentController;
-  public templateUrl = 'modules/services-overview/new-hybrid/prerequisites-modals/basic-expressway-prerequisites/basic-expressway-prerequisites.component.html';
+  public template = require('modules/services-overview/new-hybrid/prerequisites-modals/basic-expressway-prerequisites/basic-expressway-prerequisites.component.html');
   public bindings = {
     onChange: '&',
   };

@@ -313,7 +313,7 @@ export class ServicesOverviewController implements ng.IComponentController {
 
 export class ServicesOverviewComponent implements ng.IComponentOptions {
   public controller = ServicesOverviewController;
-  public templateUrl = 'modules/services-overview/services-overview.component.html';
+  public template = require('modules/services-overview/services-overview.component.html');
   public bindings = {
     urlParams: '<',
   };

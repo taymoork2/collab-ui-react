@@ -309,7 +309,7 @@ class CallPickupCtrl implements ng.IComponentController {
 
   public cancelModal(): void {
     this.$modal.open({
-      templateUrl: 'modules/call/features/call-pickup/call-pickup-cancel-modal.html',
+      template: require('modules/call/features/call-pickup/call-pickup-cancel-modal.html'),
       type: 'dialog',
     });
   }
@@ -345,5 +345,5 @@ class CallPickupCtrl implements ng.IComponentController {
 
 export class CallPickupComponent implements ng.IComponentOptions {
   public controller = CallPickupCtrl;
-  public templateUrl = 'modules/call/features/call-pickup/call-pickup.component.html';
+  public template = require('modules/call/features/call-pickup/call-pickup.component.html');
 }

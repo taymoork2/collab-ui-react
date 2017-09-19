@@ -9,7 +9,6 @@ export default angular
     notificationModule,
     require('angular-translate'),
     require('modules/core/config/urlConfig'),
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('modules/core/partnerReports/commonReportServices').default,
     require('modules/core/config/chartColors').default,

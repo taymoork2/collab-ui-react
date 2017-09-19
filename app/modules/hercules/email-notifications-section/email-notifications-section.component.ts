@@ -115,7 +115,7 @@ class EmailNotificationsSectionCtrl implements ng.IComponentController {
 
 export class EmailNotificationsSectionComponent implements ng.IComponentOptions {
   public controller = EmailNotificationsSectionCtrl;
-  public templateUrl = 'modules/hercules/email-notifications-section/email-notifications-section.html';
+  public template = require('modules/hercules/email-notifications-section/email-notifications-section.html');
   public bindings = {
     serviceId: '<',
   };

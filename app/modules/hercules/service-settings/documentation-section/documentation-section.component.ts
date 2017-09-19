@@ -47,7 +47,7 @@ class DocumentationSectionCtrl implements IDocumentationSectionCtrl, ng.ICompone
 
 class DocumentationSectionComponent implements ng.IComponentOptions {
   public controller = DocumentationSectionCtrl;
-  public templateUrl = 'modules/hercules/service-settings/documentation-section/documentation-section.html';
+  public template = require('modules/hercules/service-settings/documentation-section/documentation-section.html');
   public bindings = {
     serviceId: '<',
   };

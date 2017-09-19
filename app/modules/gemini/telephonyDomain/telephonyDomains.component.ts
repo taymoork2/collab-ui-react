@@ -29,7 +29,6 @@ class TelephonyDomains implements ng.IComponentController {
     private $modal: IToolkitModalService,
     private $rootScope: ng.IRootScopeService,
     private $stateParams: ng.ui.IStateParamsService,
-    private $templateCache: ng.ITemplateCacheService,
     private $translate: ng.translate.ITranslateService,
     private TelephonyDomainService: TelephonyDomainService,
   ) {
@@ -170,7 +169,7 @@ class TelephonyDomains implements ng.IComponentController {
       width: '12%',
       field: 'status',
       displayName: this.$translate.instant('gemini.cbgs.field.status_'),
-      cellTemplate: this.$templateCache.get('modules/gemini/callbackGroup/cbgsStatus.tpl.html'),
+      cellTemplate: require('modules/gemini/callbackGroup/cbgsStatus.tpl.html'),
     }, {
       field: 'customerAttribute',
       cellTooltip: true,
@@ -197,5 +196,5 @@ class TelephonyDomains implements ng.IComponentController {
 
 export class TelephonyDomainsComponent implements ng.IComponentOptions {
   public controller = TelephonyDomains;
-  public templateUrl = 'modules/gemini/telephonyDomain/telephonyDomains.html';
+  public template = require('modules/gemini/telephonyDomain/telephonyDomains.html');
 }

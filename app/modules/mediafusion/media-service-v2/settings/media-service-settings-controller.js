@@ -124,7 +124,7 @@
     }
 
     vm.deactivateModalOptions = {
-      templateUrl: 'modules/mediafusion/media-service-v2/settings/confirm-disable-dialog.html',
+      template: require('modules/mediafusion/media-service-v2/settings/confirm-disable-dialog.html'),
       controller: 'DisableMediaServiceController',
       controllerAs: 'disableServiceDialog',
       type: 'small',

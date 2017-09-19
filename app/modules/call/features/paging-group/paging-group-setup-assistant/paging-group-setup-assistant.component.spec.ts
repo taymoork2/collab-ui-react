@@ -403,7 +403,7 @@ describe('Component: pgSetupAssistant', () => {
     it('should call the modal', function () {
       this.controller.cancelModal();
       expect(this.$modal.open).toHaveBeenCalledWith({
-        templateUrl: 'modules/call/features/paging-group/paging-group-setup-assistant/paging-group-cancel-modal.html',
+        template: require('modules/call/features/paging-group/paging-group-setup-assistant/paging-group-cancel-modal.html'),
         type: 'dialog',
       });
     });

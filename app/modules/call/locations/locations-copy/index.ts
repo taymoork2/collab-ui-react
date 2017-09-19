@@ -5,7 +5,6 @@ import locationsNameModule from 'modules/call/locations/locations-name';
 
 export default angular
   .module('call.locations.copy-location', [
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     notifications,
     locationsServiceModule,

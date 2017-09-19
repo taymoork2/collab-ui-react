@@ -104,7 +104,7 @@ angular.module('Sunlight.paging', [])
     };
   });
 
-angular.module('Sunlight.pagination', ['Sunlight.paging', 'Sunlight.tabindex', require('scripts/app.templates')]).controller('SlPaginationController',
+angular.module('Sunlight.pagination', ['Sunlight.paging', 'Sunlight.tabindex']).controller('SlPaginationController',
   function ($scope, $attrs, $parse, slPaging, slPaginationConfig) {
     var ctrl = this;
     // Setup configuration parameters
@@ -241,7 +241,7 @@ angular.module('Sunlight.pagination', ['Sunlight.paging', 'Sunlight.tabindex', r
       restrict: 'A',
       controller: 'SlPaginationController',
       controllerAs: 'pagination',
-      templateUrl: 'modules/sunlight/reports/pagination.tpl.html',
+      template: require('modules/sunlight/reports/pagination.tpl.html'),
       link: function (scope, element, attrs, ctrls) {
         element.addClass('pagination');
         var paginationCtrl = ctrls[0], ngModelCtrl = ctrls[1];

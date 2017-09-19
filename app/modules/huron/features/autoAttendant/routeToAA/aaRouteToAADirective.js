@@ -19,7 +19,7 @@
       },
       controller: 'AARouteToAACtrl',
       controllerAs: 'aaRouteToAA',
-      templateUrl: 'modules/huron/features/autoAttendant/routeToAA/aaRouteToAA.tpl.html',
+      template: require('modules/huron/features/autoAttendant/routeToAA/aaRouteToAA.tpl.html'),
     };
   }
 })();

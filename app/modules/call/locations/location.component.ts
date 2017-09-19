@@ -252,7 +252,7 @@ class CallLocationCtrl implements ng.IComponentController {
 
 export class CallLocationComponent implements ng.IComponentOptions {
   public controller = CallLocationCtrl;
-  public templateUrl = 'modules/call/locations/location.component.html';
+  public template = require('modules/call/locations/location.component.html');
   public bindings = {
     ftsw: '<',
     uuid: '<',

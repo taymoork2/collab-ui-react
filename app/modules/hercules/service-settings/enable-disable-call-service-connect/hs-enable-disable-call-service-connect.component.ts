@@ -51,7 +51,7 @@ class HsEnableDisableCallServiceConnectComponentCtrl implements ng.IComponentCon
     this.saving = true;
 
     this.$modal.open({
-      templateUrl: 'modules/hercules/service-settings/enable-disable-call-service-connect/confirm-disable-csc-dialog.html',
+      template: require('modules/hercules/service-settings/enable-disable-call-service-connect/confirm-disable-csc-dialog.html'),
       type: 'dialog',
     })
       .result
@@ -75,7 +75,7 @@ class HsEnableDisableCallServiceConnectComponentCtrl implements ng.IComponentCon
 
 export class HsEnableDisableCallServiceConnectComponent implements ng.IComponentOptions {
   public controller = HsEnableDisableCallServiceConnectComponentCtrl;
-  public templateUrl = 'modules/hercules/service-settings/enable-disable-call-service-connect/hs-enable-disable-call-service-connect.html';
+  public template = require('modules/hercules/service-settings/enable-disable-call-service-connect/hs-enable-disable-call-service-connect.html');
   public bindings = {
     serviceIsEnabled: '<',
     onCallServiceConnectEnabled: '&',

@@ -6,7 +6,7 @@
     .controller('LinesListCtrl', LinesListCtrl);
 
   /* @ngInject */
-  function LinesListCtrl($scope, $templateCache, $timeout, $translate, LineListService, Log, Config, Notification, $state, FeatureToggleService, Authinfo) {
+  function LinesListCtrl($scope, $timeout, $translate, LineListService, Log, Config, Notification, $state, FeatureToggleService, Authinfo) {
     var vm = this;
 
     vm.currentDataPosition = 0;
@@ -225,7 +225,7 @@
       }, {
         field: 'displayField()',
         displayName: $translate.instant('linesPage.assignedTo'),
-        cellTemplate: getTemplate('_tooltipTpl'),
+        cellTemplate: require('./templates/_tooltipTpl.html'),
         sortable: true,
         sort: {
           direction: 'asc',
@@ -238,7 +238,7 @@
         field: 'actions',
         displayName: $translate.instant('linesPage.actionHeader'),
         enableSorting: false,
-        cellTemplate: getTemplate('_actionsTpl'),
+        cellTemplate: require('./templates/_actionsTpl.html'),
         width: '20%',
         cellClass: 'actionsColumn',
         headerCellClass: 'actionsHeader',
@@ -260,10 +260,6 @@
         }
         getLineList();
       }
-    }
-
-    function getTemplate(name) {
-      return $templateCache.get('modules/huron/lines/templates/' + name + '.html');
     }
 
     FeatureToggleService.supports(FeatureToggleService.features.huronPstn)

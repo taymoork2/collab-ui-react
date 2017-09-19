@@ -85,7 +85,7 @@ class CsGridCtrl {
 }
 
 export class CsGridComponent implements ng.IComponentOptions {
-  public templateUrl = 'modules/core/csgrid/csGrid.tpl.html';
+  public template = require('modules/core/csgrid/csGrid.tpl.html');
   public controller = CsGridCtrl;
   public bindings = {
     gridApi: '<',

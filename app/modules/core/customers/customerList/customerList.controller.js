@@ -7,7 +7,7 @@ require('./_customer-list.scss');
     .controller('CustomerListCtrl', CustomerListCtrl);
 
   /* @ngInject */
-  function CustomerListCtrl($q, $scope, $state, $templateCache, $translate, $window, Analytics, Authinfo, Config, ExternalNumberService, FeatureToggleService, GridCellService, HuronCompassService, Log, Notification, Orgservice, PartnerService, TrialService) {
+  function CustomerListCtrl($q, $scope, $state, $translate, $window, Analytics, Authinfo, Config, ExternalNumberService, FeatureToggleService, GridCellService, HuronCompassService, Log, Notification, Orgservice, PartnerService, TrialService) {
     var PREMIUM = 'premium';
     var STANDARD = 'standard';
 
@@ -170,9 +170,9 @@ require('./_customer-list.scss');
       updateServiceForOrg: updateServiceForOrg,
     };
 
-    var nameTemplate = $templateCache.get('modules/core/customers/customerList/grid/nameColumn.tpl.html');
-    var compactServiceTemplate = $templateCache.get('modules/core/customers/customerList/grid/compactServiceColumn.tpl.html');
-    var accountStatusTemplate = $templateCache.get('modules/core/customers/customerList/grid/accountStatusColumn.tpl.html');
+    var nameTemplate = require('modules/core/customers/customerList/grid/nameColumn.tpl.html');
+    var compactServiceTemplate = require('modules/core/customers/customerList/grid/compactServiceColumn.tpl.html');
+    var accountStatusTemplate = require('modules/core/customers/customerList/grid/accountStatusColumn.tpl.html');
 
     // new column defs for the customer list redesign. These should stay once the feature is rolled out
     var customerNameField = {

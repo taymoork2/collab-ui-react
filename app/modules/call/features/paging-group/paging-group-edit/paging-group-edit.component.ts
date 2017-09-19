@@ -613,7 +613,7 @@ class PgEditComponentCtrl implements ng.IComponentController {
 
 export class PgEditComponent implements ng.IComponentOptions {
   public controller = PgEditComponentCtrl;
-  public templateUrl = 'modules/call/features/paging-group/paging-group-edit/paging-group-edit.component.html';
+  public template = require('modules/call/features/paging-group/paging-group-edit/paging-group-edit.component.html');
   public bindings = {
     pgId: '<',
   };

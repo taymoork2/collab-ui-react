@@ -155,7 +155,7 @@ class HybridCallServiceConnectUserSettingsCtrl implements ng.IComponentControlle
 
 export class HybridCallServiceConnectUserSettingsComponent implements ng.IComponentOptions {
   public controller = HybridCallServiceConnectUserSettingsCtrl;
-  public templateUrl = 'modules/hercules/user-sidepanel/hybrid-call-service-connect-user-settings/hybrid-call-service-connect-user-settings.component.html';
+  public template = require('modules/hercules/user-sidepanel/hybrid-call-service-connect-user-settings/hybrid-call-service-connect-user-settings.component.html');
   public bindings = {
     userId: '<',
     userEmailAddress: '<',

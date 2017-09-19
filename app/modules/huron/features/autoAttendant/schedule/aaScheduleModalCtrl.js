@@ -608,7 +608,7 @@
 
     function openImportModal() {
       var importModal = $modal.open({
-        templateUrl: 'modules/huron/features/autoAttendant/schedule/importSchedule.tpl.html',
+        template: require('modules/huron/features/autoAttendant/schedule/importSchedule.tpl.html'),
         type: 'dialog',
         controller: 'AAScheduleImportCtrl',
         controllerAs: 'import',

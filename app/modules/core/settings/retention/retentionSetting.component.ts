@@ -13,6 +13,6 @@ export class RetentionSetting extends ProPackSettingSection {
 export class RetentionSettingComponent implements ng.IComponentOptions {
   public controller = RetentionSettingController;
   public controllerAs = 'vm';
-  public templateUrl = 'modules/core/settings/retention/retentionSetting.tpl.html';
+  public template = require('modules/core/settings/retention/retentionSetting.tpl.html');
 }
 

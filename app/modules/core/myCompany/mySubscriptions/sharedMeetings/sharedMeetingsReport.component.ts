@@ -279,7 +279,7 @@ class SharedMeetingsReportCtrl {
 }
 
 export class SharedMeetingComponent implements ng.IComponentOptions {
-  public templateUrl = 'modules/core/myCompany/mySubscriptions/sharedMeetings/sharedMeetingsReport.tpl.html';
+  public template = require('modules/core/myCompany/mySubscriptions/sharedMeetings/sharedMeetingsReport.tpl.html');
   public controller = SharedMeetingsReportCtrl;
   public bindings = {
     siteUrl: '@',

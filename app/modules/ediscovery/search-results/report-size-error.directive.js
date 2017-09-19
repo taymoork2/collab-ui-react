@@ -6,7 +6,7 @@
   function reportSizeError() {
     var directive = {
       restrict: 'E',
-      templateUrl: 'modules/ediscovery/search-results/report-size-error.tpl.html',
+      template: require('modules/ediscovery/search-results/report-size-error.tpl.html'),
     };
 
     return directive;

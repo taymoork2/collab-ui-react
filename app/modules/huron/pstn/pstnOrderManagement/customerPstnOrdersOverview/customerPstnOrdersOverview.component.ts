@@ -1,6 +1,6 @@
 export class CustomerPstnOrdersOverviewComponent implements ng.IComponentOptions {
   public controller = CustomerPstnOrdersOverviewCtrl;
-  public templateUrl = 'modules/huron/pstn/pstnOrderManagement/customerPstnOrdersOverview/customerPstnOrdersOverview.html';
+  public template = require('modules/huron/pstn/pstnOrderManagement/customerPstnOrdersOverview/customerPstnOrdersOverview.html');
   public bindings = {
     currentCustomer: '<',
     vendor: '<',

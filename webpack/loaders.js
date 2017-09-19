@@ -101,14 +101,11 @@ exports.html = {
   test: /\.html$/,
   use: [
     {
-      loader: 'ngtemplate-loader',
+      loader: 'html-loader',
       options: {
-        module: 'atlas.templates',
-        relativeTo: `${appPath}/`,
+        minimize: true,
+        removeAttributeQuotes: false, // consistency preference
       },
-    },
-    {
-      loader: 'raw-loader',
     },
   ],
   exclude: /\/app\/index.html$/,

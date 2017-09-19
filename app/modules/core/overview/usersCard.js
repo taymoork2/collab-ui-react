@@ -1,6 +1,9 @@
 (function () {
   'use strict';
 
+  // TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
+  var usersCardTemplatePath = require('ngtemplate-loader?module=Core!./usersCard.tpl.html');
+
   angular
     .module('Core')
     .factory('OverviewUsersCard', OverviewUsersCard);
@@ -12,7 +15,7 @@
         var card = {};
 
         card.name = 'overview.cards.users.title';
-        card.template = 'modules/core/overview/usersCard.tpl.html';
+        card.template = usersCardTemplatePath;
         card.cardClass = 'user-card';
         card.icon = 'icon-circle-user';
         card.isUpdating = true;

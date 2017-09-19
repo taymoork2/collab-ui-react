@@ -6,7 +6,6 @@ require('./digitalRiverIframe.scss');
 
 export default angular
   .module('online.digital-river', [
-    require('scripts/app.templates'),
     loadEventModule,
     require('modules/core/config/urlConfig'),
   ])

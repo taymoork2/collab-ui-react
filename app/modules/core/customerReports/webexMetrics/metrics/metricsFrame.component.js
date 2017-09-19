@@ -4,7 +4,7 @@
   angular
     .module('core.customer-reports')
     .component('metricsFrame', {
-      templateUrl: 'modules/core/customerReports/webexMetrics/metrics/metricsFrame.tpl.html',
+      template: require('modules/core/customerReports/webexMetrics/metrics/metricsFrame.tpl.html'),
       controller: metricsFrameController,
     });
 

@@ -311,7 +311,7 @@ require('./_customer-overview.scss');
       if (!openWindow || openWindow.closed || typeof openWindow.closed === 'undefined') {
         $modal.open({
           type: 'dialog',
-          templateUrl: 'modules/core/customers/customerOverview/popUpBlocked.tpl.html',
+          template: require('modules/core/customers/customerOverview/popUpBlocked.tpl.html'),
         });
       }
 
@@ -457,7 +457,7 @@ require('./_customer-overview.scss');
         if (vm.isMediaFusionEnabled) {
           $modal.open({
             type: 'dialog',
-            templateUrl: 'modules/core/customers/customerOverview/customerDeleteConfirmErrorHMS.tpl.html',
+            template: require('modules/core/customers/customerOverview/customerDeleteConfirmErrorHMS.tpl.html'),
             controller: function () {
               var ctrl = this;
               ctrl.orgName = vm.customerName;
@@ -467,7 +467,7 @@ require('./_customer-overview.scss');
         } else {
           $modal.open({
             type: 'dialog',
-            templateUrl: 'modules/core/customers/customerOverview/customerDeleteConfirm.tpl.html',
+            template: require('modules/core/customers/customerOverview/customerDeleteConfirm.tpl.html'),
             controller: function () {
               var ctrl = this;
               ctrl.orgName = vm.customerName;

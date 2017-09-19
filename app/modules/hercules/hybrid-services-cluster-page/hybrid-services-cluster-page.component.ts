@@ -71,7 +71,7 @@ class HybridServicesClusterPageCtrl implements ng.IComponentController {
 
 export class HybridServicesClusterPageComponent implements ng.IComponentOptions {
   public controller = HybridServicesClusterPageCtrl;
-  public templateUrl = 'modules/hercules/hybrid-services-cluster-page/hybrid-services-cluster-page.html';
+  public template = require('modules/hercules/hybrid-services-cluster-page/hybrid-services-cluster-page.html');
   public bindings = {
     backState: '<',
     clusterId: '<',

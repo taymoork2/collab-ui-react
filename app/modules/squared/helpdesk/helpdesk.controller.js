@@ -41,11 +41,11 @@ require('./helpdesk.scss');
     });
 
     function showSearchHelp() {
-      var searchHelpUrl = 'modules/squared/helpdesk/helpdesk-search-help-dialog.html';
-      var searchHelpMobileUrl = 'modules/squared/helpdesk/helpdesk-search-help-dialog-mobile.html';
+      var searchHelpTemplate = require('./helpdesk-search-help-dialog.html');
+      var searchHelpMobileTemplate = require('./helpdesk-search-help-dialog-mobile.html');
       var isSearchOrderEnabled = vm.isOrderSearchEnabled;
       $modal.open({
-        templateUrl: HelpdeskService.checkIfMobile() ? searchHelpMobileUrl : searchHelpUrl,
+        template: HelpdeskService.checkIfMobile() ? searchHelpMobileTemplate : searchHelpTemplate,
         controller: function () {
           var vm = this;
           vm.isCustomerHelpDesk = !Authinfo.isInDelegatedAdministrationOrg();

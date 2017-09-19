@@ -4,7 +4,7 @@
   angular
     .module('core.customer-reports')
     .component('sparkMetricsFrame', {
-      templateUrl: 'modules/core/customerReports/sparkMetrics/metricsFrame.tpl.html',
+      template: require('modules/core/customerReports/sparkMetrics/metricsFrame.tpl.html'),
       controller: metricsFrameController,
     });
 

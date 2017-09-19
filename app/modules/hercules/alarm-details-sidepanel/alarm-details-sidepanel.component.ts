@@ -62,7 +62,7 @@ export class AlarmDetailsSidepanelCtrl implements ng.IComponentController {
 
 export class AlarmDetailsSidepanelComponent implements ng.IComponentOptions {
   public controller = AlarmDetailsSidepanelCtrl;
-  public templateUrl = 'modules/hercules/alarm-details-sidepanel/alarm-details-sidepanel.html';
+  public template = require('modules/hercules/alarm-details-sidepanel/alarm-details-sidepanel.html');
   public bindings = {
     alarm: '<',
   };

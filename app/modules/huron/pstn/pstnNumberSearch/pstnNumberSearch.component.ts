@@ -169,7 +169,7 @@ class PstnNumberSearchCtrl implements ng.IComponentController {
 
 export class PstnNumberSearchComponent implements ng.IComponentOptions {
   public controller = PstnNumberSearchCtrl;
-  public templateUrl = 'modules/huron/pstn/pstnNumberSearch/pstnNumberSearch.html';
+  public template = require('modules/huron/pstn/pstnNumberSearch/pstnNumberSearch.html');
   public bindings = {
     model: '=',
     search: '&',

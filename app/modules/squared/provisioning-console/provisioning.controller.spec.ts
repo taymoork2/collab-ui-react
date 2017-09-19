@@ -25,7 +25,6 @@ describe('Controller: ProvisioningController', function () {
       '$rootScope',
       '$scope',
       '$state',
-      '$templateCache',
       '$timeout',
       '$translate',
       'Notification',

@@ -445,7 +445,7 @@ require('./_wizard.scss');
 
     function openTermsAndConditions() {
       $modal.open({
-        templateUrl: 'modules/core/wizard/termsAndConditions.tpl.html',
+        template: require('modules/core/wizard/termsAndConditions.tpl.html'),
       });
     }
 
@@ -484,7 +484,7 @@ require('./_wizard.scss');
         finish: '=',
         isFirstTime: '=',
       },
-      templateUrl: 'modules/core/wizard/wizard.tpl.html',
+      template: require('modules/core/wizard/wizard.tpl.html'),
     };
 
     return directive;
@@ -494,7 +494,7 @@ require('./_wizard.scss');
     var directive = {
       require: '^crWizard',
       restrict: 'AE',
-      templateUrl: 'modules/core/wizard/wizardNav.tpl.html',
+      template: require('modules/core/wizard/wizardNav.tpl.html'),
     };
 
     return directive;
@@ -506,7 +506,7 @@ require('./_wizard.scss');
       require: '^crWizard',
       restrict: 'AE',
       scope: true,
-      templateUrl: 'modules/core/wizard/wizardMain.tpl.html',
+      template: require('modules/core/wizard/wizardMain.tpl.html'),
       link: link,
     };
 
@@ -535,7 +535,7 @@ require('./_wizard.scss');
     var directive = {
       restrict: 'AE',
       scope: true,
-      templateUrl: 'modules/core/wizard/wizardButtons.tpl.html',
+      template: require('modules/core/wizard/wizardButtons.tpl.html'),
       link: link,
     };
 

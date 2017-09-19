@@ -44,7 +44,7 @@ class PrivateTrunkSidepanelComponentCtrl implements ng.IComponentController {
 
 export class PrivateTrunkSidepanelComponent implements ng.IComponentOptions {
   public controller = PrivateTrunkSidepanelComponentCtrl;
-  public templateUrl = 'modules/hercules/private-trunk/private-trunk-sidepanel/private-trunk-sidepanel.component.html';
+  public template = require('modules/hercules/private-trunk/private-trunk-sidepanel/private-trunk-sidepanel.component.html');
   public bindings = {
     trunkId: '<',
   };

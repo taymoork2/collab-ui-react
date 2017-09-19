@@ -6,7 +6,6 @@ export * from 'modules/huron/sharedLine/sharedLine.service';
 
 export default angular
   .module('huron.shared-line', [
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
     require('angular-resource'),
