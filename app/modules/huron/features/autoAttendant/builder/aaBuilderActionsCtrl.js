@@ -58,6 +58,16 @@
       metric: 'Decision-Title',
       showHelpLink: true,
       actions: ['conditional'],
+    }, {
+      title: $translate.instant('autoAttendant.actionCallerInput'),
+      controller: 'AACallerInputCtrl as aaCallerInput',
+      url: 'modules/huron/features/autoAttendant/callerInput/aaCallerInput.tpl.html',
+      hint: $translate.instant('autoAttendant.actionCallerInputHint'),
+      help: $translate.instant('autoAttendant.actionCallerInputHelp') + appendSpecialCharHelp,
+      metric: 'Caller-Input-Title',
+      type: [3, 4],
+      showHelpLink: true,
+      actions: ['runActionsOnInput'],
     }];
 
     vm.actionPlaceholder = $translate.instant('autoAttendant.actionPlaceholder');
@@ -206,19 +216,6 @@
         vm.options[0].help = vm.options[0].help.concat('<br></br>').concat($translate.instant('autoAttendant.mediaUploadFileInfo'));
         vm.options[1].help = vm.options[1].help.concat('<br></br>').concat($translate.instant('autoAttendant.mediaUploadFileInfo'));
         vm.options[2].help = vm.options[2].help.concat('<br></br>').concat($translate.instant('autoAttendant.mediaUploadFileInfo'));
-      }
-      if (AACommonService.isCallerInputToggle()) {
-        vm.options.splice(4, 0, {
-          title: $translate.instant('autoAttendant.actionCallerInput'),
-          controller: 'AACallerInputCtrl as aaCallerInput',
-          url: 'modules/huron/features/autoAttendant/callerInput/aaCallerInput.tpl.html',
-          hint: $translate.instant('autoAttendant.actionCallerInputHint'),
-          help: $translate.instant('autoAttendant.actionCallerInputHelp') + appendSpecialCharHelp,
-          metric: 'Caller-Input-Title',
-          type: [3, 4],
-          showHelpLink: true,
-          actions: ['runActionsOnInput'],
-        });
       }
 
       if (AACommonService.isRestApiToggle()) {

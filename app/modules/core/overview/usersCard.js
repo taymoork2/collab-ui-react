@@ -41,14 +41,37 @@
 
         function displayLicenseData(licenses) {
           var finalCounts = {};
+          var sharedDevices = {};
+          // TODO: Would benefit from a shared service for license counts w/mySubscriptions and helpdesk
           _.forEach(licenses, function (data) {
-            if (data.licenseType in finalCounts) {
+            if (data.licenseType === Config.licenseTypes.SHARED_DEVICES) {
+              if (data.offerName in sharedDevices) {
+                sharedDevices[data.offerName].volume = sharedDevices[data.offerName].volume + data.volume;
+              } else {
+                sharedDevices[data.offerName] = {
+                  volume: data.volume,
+                  usage: data.usage,
+                };
+              }
+            } else if (data.licenseType in finalCounts) {
               finalCounts[data.licenseType].volume = finalCounts[data.licenseType].volume + data.volume;
               finalCounts[data.licenseType].usage = finalCounts[data.licenseType].usage + data.usage;
             } else {
               finalCounts[data.licenseType] = {
                 volume: data.volume,
                 usage: data.usage,
+              };
+            }
+          });
+
+          _.forEach(sharedDevices, function (deviceType) {
+            if (Config.licenseTypes.SHARED_DEVICES in finalCounts) {
+              finalCounts[Config.licenseTypes.SHARED_DEVICES].volume = finalCounts[Config.licenseTypes.SHARED_DEVICES].volume + deviceType.volume;
+              finalCounts[Config.licenseTypes.SHARED_DEVICES].usage = finalCounts[Config.licenseTypes.SHARED_DEVICES].usage + deviceType.usage;
+            } else {
+              finalCounts[Config.licenseTypes.SHARED_DEVICES] = {
+                volume: deviceType.volume,
+                usage: deviceType.usage,
               };
             }
           });

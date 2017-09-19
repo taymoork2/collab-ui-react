@@ -93,7 +93,7 @@ class WebexReportsSearch implements ng.IComponentController {
 
   private initDateRange() {
     this.today = moment().format('YYYY-MM-DD');
-    this.startDate = moment().subtract('days', DATERANGE).format('YYYY-MM-DD');
+    this.startDate = moment().subtract(DATERANGE, 'days').format('YYYY-MM-DD');
 
     this.endDate = this.today;
     this.storeData.endDate = this.endDate;
