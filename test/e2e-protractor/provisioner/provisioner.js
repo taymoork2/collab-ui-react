@@ -6,7 +6,7 @@ import * as atlasHelper from './provisioner.helper.atlas';
 import * as huronCmiHelper from './huron/provisioner.helper.cmi';
 import * as huronPstnHelper from './huron/provisioner.helper.pstn';
 import * as huronFeaturesHelper from './huron/provisioner.helper.features';
-import * as atlasUsers from './atlas-users-config';
+import * as atlasUser from './atlas-users-config';
 
 /* global LONG_TIMEOUT */
 
@@ -115,7 +115,7 @@ export function provisionUsers(customer) {
         return atlasHelper.getAtlasOrg(token, customer.orgId)
           .then(response => {
             const licenseArray = _.get(response, 'licenses', undefined);
-            const users = { users: atlasUsers(customer, licenseArray) };
+            const users = { users: atlasUser.atlasUsers(customer, licenseArray) };
             return atlasHelper.createAtlasUser(token, customer.orgId, users)
               .then(() => {
                 console.log(`Successfully onboarded users for ${customer.name}!`);
