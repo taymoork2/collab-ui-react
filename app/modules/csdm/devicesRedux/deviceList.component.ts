@@ -19,7 +19,7 @@ class DeviceList implements ng.IComponentController {
   public loadingMoreSpinner = false;
 
   //bindings
-  public searchObject: SearchObject = SearchObject.createWithQuery('');
+  public searchObject: SearchObject;
   public searchHits: SearchHits;
   public sortOrderChanged: (e?: { field: string, order: string }) => {};
 

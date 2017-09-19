@@ -9,7 +9,6 @@ export class DevicesCtrl {
   public anyDevicesOrCodesLoaded = true; //TODO remove
   public searchMinimized = true;
   public searchInteraction = new SearchInteraction();
-  private _searchString: string = '';
   private _emptydatasource = false;
   private _emptysearchresult = false;
   public issearching = false;
@@ -59,6 +58,8 @@ export class DevicesCtrl {
         });
         this.licenseError = hasNoSuspendedLicense ? $translate.instant('spacesPage.licenseSuspendedWarning') : '';
       });
+
+    this._searchObject = SearchObject.createWithQuery('');
   }
 
   get searchResult(): SearchResult {
@@ -68,18 +69,18 @@ export class DevicesCtrl {
   set searchResult(value: SearchResult) {
     this._searchResult = value;
   }
-  public initializing() {
+  public initializing(): boolean {
     return !(this._searchObject || this._searchResult);
   }
 
-  public showresult() {
+  public showresult(): boolean {
     return !this.initializing() && !this.emptydatasource() && !this.emptysearchresult();
   }
-  public emptysearchresult() {
+  public emptysearchresult(): boolean {
     return this._emptysearchresult;
   }
 
-  public emptydatasource() {
+  public emptydatasource(): boolean {
     return this._emptydatasource;
   }
 
@@ -144,15 +145,11 @@ export class DevicesCtrl {
     this.searchInteraction.setSortOrder(field, order);
   }
 
-  public searchChanged(search: SearchObject) {
-    this._searchString = search.getSearchQuery();
-    this._searchObject = search;
-  }
-
   public searchResultChanged(result: SearchResult) {
+    const searchString = this._searchObject.getSearchQuery();
     this._searchResult = result;
-    this._emptydatasource = (this._searchString === '') && (this._searchResult && this._searchResult.hits.total === 0);
-    this._emptysearchresult = (this._searchString !== '') && (this._searchResult && this._searchResult.hits.total === 0);
+    this._emptydatasource = (searchString === '') && (this._searchResult && this._searchResult.hits.total === 0);
+    this._emptysearchresult = (searchString !== '') && (this._searchResult && this._searchResult.hits.total === 0);
     this.issearching = false;
   }
 
