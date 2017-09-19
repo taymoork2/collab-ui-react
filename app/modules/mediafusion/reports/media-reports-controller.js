@@ -60,7 +60,7 @@
 
     vm.second_card_heading = vm.cloud_calls_heading;
     vm.redirected_heading = vm.cloud_calls_heading;
-    vm.second_card_value = 0;
+
     vm.hosted_participants_heading = vm.on_prem_participants_heading;
     vm.hosted_heading = vm.on_prem_calls_heading;
     vm.availabilityCardHeading = vm.clusterAvailabilityCardHeading;
@@ -299,6 +299,7 @@
 
     function setTotalCallsData() {
       MediaReportsService.getTotalCallsData(vm.timeSelected, vm.clusterSelected).then(function (response) {
+        vm.second_card_value = 0;
         if (vm.clusterId === vm.allClusters) {
           if (response === vm.ABORT) {
             return undefined;
