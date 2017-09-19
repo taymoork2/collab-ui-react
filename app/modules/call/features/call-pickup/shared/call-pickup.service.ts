@@ -20,7 +20,6 @@ export class CallPickupGroupService {
     private NumberService: NumberService,
     private $q: ng.IQService,
     private $translate: ng.translate.ITranslateService,
-    private InternalNumberPoolService,
     private FeatureToggleService,
   ) {
     this.pickupGroupResource = <IPickupGroupResource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/features/callpickups/:callPickupGroupId', { wide: true },
@@ -41,7 +40,7 @@ export class CallPickupGroupService {
     return this.getMemberNumbers(member.uuid).then((data: IMemberNumber[]) => {
       disabled = true;
       _.forEach(data, (memberNumber) => {
-        promises.push(this.isLineInPickupGroup(memberNumber.internal).then((line: string) => {
+        promises.push(this.isLineInPickupGroup(this.hasLocations ? memberNumber.siteToSite : memberNumber.internal).then((line: string) => {
           if (line === '') {
             disabled = false;
           }
@@ -99,11 +98,9 @@ export class CallPickupGroupService {
   }
 
   public isLineInPickupGroup(directoryNumber: string): ng.IPromise<string> {
-    return this.InternalNumberPoolService.query({
-      customerId: this.Authinfo.getOrgId(),
-      pattern: directoryNumber,
-    }).$promise.then(response => {
-      return this.NumberService.getNumber(response[0].uuid).then((response) => {
+    return this.NumberService.getNumberList(directoryNumber)
+      .then((response) => this.NumberService.getNumber(response[0].uuid))
+      .then((response) => {
         const features: any = _.get(response, 'features');
         const pickupName = _.find(features, (feature: any) => feature.type === 'CALL_FEATURE_PICKUP_GROUP');
         if (pickupName) {
@@ -112,14 +109,13 @@ export class CallPickupGroupService {
           return '';
         }
       });
-    });
   }
 
   public createCheckboxes(member: IMember, memberNumbers: IMemberNumber[]): ng.IPromise<any> {
     let autoSelect = true;
     const linesInPickupGroupPromises: ng.IPromise<string>[] = [];
     _.forEach(memberNumbers, (number) => {
-      linesInPickupGroupPromises.push(this.isLineInPickupGroup(number.internal));
+      linesInPickupGroupPromises.push(this.isLineInPickupGroup(this.hasLocations ? number.siteToSite : number.internal));
     });
     return this.$q.all(linesInPickupGroupPromises).then((pickupGroupName: string[]) => {
       _.forEach(memberNumbers, (number, index) => {
@@ -156,7 +152,7 @@ export class CallPickupGroupService {
 
   public createCheckboxesForEdit(member: IMember, memberNumbers: IMemberNumber[], pickupName: string): ICardMemberCheckbox[] {
     _.forEach(memberNumbers, (number, index) => {
-      this.isLineInPickupGroup(number.internal)
+      this.isLineInPickupGroup(this.hasLocations ? number.siteToSite : number.internal)
       .then((pickupGroupName: string) => {
         let disabled = false;
         let sublabel = '';
