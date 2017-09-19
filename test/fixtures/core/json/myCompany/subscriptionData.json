@@ -1,7 +1,8 @@
 {
   "subscriptionsAuthinfo": [{
     "subscriptionId": "intSubId",
-    "endDate": "subEndDate"
+    "endDate": "subEndDate",
+    "orderingTool": "CISCO_ONLINE_OPC"
   }],
   "subscriptionsTrialResponse": [{
     "licenses": [{

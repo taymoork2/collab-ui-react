@@ -11,6 +11,20 @@ interface IUploadMetaDataResponse {
   uploadUrlTtl: number;
 }
 
+export interface IVariantMetaDataResponse {
+  createTime: string;
+  downloadUrl: string;
+  encoding: string;
+  lastModifyTime: string;
+  locale: string;
+  md5Sum: string;
+  mediaId: string;
+  size: number;
+  state: string;
+  transcodeJobId: string;
+  variantId: string;
+}
+
 export class MediaMgrService {
 
   public upload: ng.angularFileUpload.IUploadPromise<any>;
@@ -28,7 +42,7 @@ export class MediaMgrService {
     return this.$http<IMedia[]>({
       method: 'GET',
       url: `${this.HuronConfig.getMmsUrl()}/organizations/${this.Authinfo.getOrgId()}/media`,
-    }).then(response => response.data as IMedia[]);
+    }).then(response => response.data);
   }
 
   public uploadMedia(media: IMediaUpload, uploadProgressCallback: (number) => void): ng.IPromise<any> {
@@ -43,7 +57,7 @@ export class MediaMgrService {
       });
   }
 
-  private getUploadUrl(media: IMediaUpload): ng.IPromise<any> {
+  private getUploadUrl(media: IMediaUpload): ng.IPromise<angular.IHttpResponse<{}>> {
     const urlReq: ng.IRequestConfig = {
       method: 'POST',
       url: `${this.HuronConfig.getMmsUrl()}/organizations/${this.Authinfo.getOrgId()}/media`,
@@ -80,7 +94,7 @@ export class MediaMgrService {
     return this.$q.resolve();
   }
 
-  private transcodeMedia(mediaId: string, checkSum: string): ng.IPromise<any> {
+  private transcodeMedia(mediaId: string, checkSum: string): ng.IPromise<angular.IHttpResponse<{}>> {
     const transcodeReq: ng.IRequestConfig = {
       method: 'POST',
       url: `${this.HuronConfig.getMmsUrl()}/organizations/${this.Authinfo.getOrgId()}/media/${mediaId}/variants`,
@@ -94,7 +108,28 @@ export class MediaMgrService {
     return this.$http(transcodeReq);
   }
 
-  public editMedia(media: IMedia): ng.IPromise<any> {
+  public downloadFromUrl(media: IMedia): ng.IPromise<angular.IHttpResponse<{}>>  {
+    const urlReq: ng.IRequestConfig = {
+      method: 'GET',
+      url: `${this.HuronConfig.getMmsUrl()}/organizations/${this.Authinfo.getOrgId()}/media/${media.mediaId}/variants/${media.mediaId}`,
+    };
+    return this.$http(urlReq)
+      .then((response) => {
+        const data = <IVariantMetaDataResponse> response.data;
+        const url = data.downloadUrl;
+        const downloadReq: ng.IRequestConfig = {
+          method: 'GET',
+          url: url,
+          responseType: 'arraybuffer',
+          headers: {
+            Authorization: undefined,
+          },
+        };
+        return this.$http(downloadReq);
+      });
+  }
+
+  public editMedia(media: IMedia): ng.IPromise<angular.IHttpResponse<{}>> {
     const editReq: ng.IRequestConfig = {
       method: 'PUT',
       url: `${this.HuronConfig.getMmsUrl()}/organizations/${this.Authinfo.getOrgId()}/media/${media.mediaId}`,
@@ -106,7 +141,7 @@ export class MediaMgrService {
     return this.$http(editReq);
   }
 
-  public restoreMedia(media: IMedia): ng.IPromise<any> {
+  public restoreMedia(media: IMedia): ng.IPromise<angular.IHttpResponse<{}>> {
     const deleteReq: ng.IRequestConfig = {
       method: 'PUT',
       url: `${this.HuronConfig.getMmsUrl()}/organizations/${this.Authinfo.getOrgId()}/media/${media.mediaId}`,
@@ -117,7 +152,7 @@ export class MediaMgrService {
     return this.$http(deleteReq);
   }
 
-  public deleteMedia(media: IMedia): ng.IPromise<any> {
+  public deleteMedia(media: IMedia): ng.IPromise<angular.IHttpResponse<{}>> {
     const deleteReq: ng.IRequestConfig = {
       method: 'DELETE',
       url: `${this.HuronConfig.getMmsUrl()}/organizations/${this.Authinfo.getOrgId()}/media/${media.mediaId}`,
@@ -125,7 +160,7 @@ export class MediaMgrService {
     return this.$http(deleteReq);
   }
 
-  public deletePermAll(): ng.IPromise<any> {
+  public deletePermAll(): ng.IPromise<angular.IHttpResponse<{}>> {
     const deleteReq: ng.IRequestConfig = {
       method: 'DELETE',
       url: `${this.HuronConfig.getMmsUrl()}/organizations/${this.Authinfo.getOrgId()}/media`,
@@ -133,7 +168,7 @@ export class MediaMgrService {
     return this.$http(deleteReq);
   }
 
-  public deletePermMedia(media: IMedia): ng.IPromise<any> {
+  public deletePermMedia(media: IMedia): ng.IPromise<angular.IHttpResponse<{}>> {
     const deleteReq: ng.IRequestConfig = {
       method: 'DELETE',
       url: `${this.HuronConfig.getMmsUrl()}/organizations/${this.Authinfo.getOrgId()}/media/${media.mediaId}?permanent=true`,

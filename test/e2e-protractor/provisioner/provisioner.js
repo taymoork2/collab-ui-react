@@ -6,6 +6,7 @@ import * as atlasHelper from './provisioner.helper.atlas';
 import * as huronCmiHelper from './huron/provisioner.helper.cmi';
 import * as huronPstnHelper from './huron/provisioner.helper.pstn';
 import * as huronFeaturesHelper from './huron/provisioner.helper.features';
+import { atlasUsers } from './atlas-users-config';
 
 /* global LONG_TIMEOUT */
 
@@ -32,22 +33,21 @@ export function provisionAtlasCustomer(partnerName, trial) {
 export function provisionCustomerAndLogin(customer) {
   return this.provisionAtlasCustomer(customer.partner, customer.trial)
     .then(atlasCustomer => {
-      if (atlasCustomer.offers[0].id == 'MESSAGE') {
-        console.log('No offers selected, proceeding without CMI setup!');
-        return loginPartner(customer.partner)
-          .then(() => switchToCustomerWindow(customer.name, customer.doFtsw));
-      } else if (atlasCustomer && customer.cmiCustomer) {
-        customer.cmiCustomer.uuid = atlasCustomer.customerOrgId;
-        customer.cmiCustomer.name = atlasCustomer.customerName;
-        return huronCmiHelper.provisionCmiCustomer(customer.partner, customer.cmiCustomer, customer.cmiSite, customer.numberRange, customer.doFtsw)
-          .then(() => provisionUsers(customer))
+      customer.orgId = atlasCustomer.customerOrgId;
+      if (atlasCustomer && customer.callOptions) {
+        customer.callOptions.cmiCustomer.uuid = atlasCustomer.customerOrgId;
+        customer.callOptions.cmiCustomer.name = atlasCustomer.customerName;
+        return huronCmiHelper.provisionCmiCustomer(customer.partner, customer.callOptions.cmiCustomer, customer.callOptions.cmiSite, customer.callOptions.numberRange, customer.doFtsw, customer.doCallPickUp)
           .then(() => huronPstnHelper.setupPSTN(customer))
+          .then(() => provisionUsers(customer))
+          .then(() => provisionPlaces(customer))
           .then(() => huronFeaturesHelper.setupHuntGroup(customer))
+          .then(() => huronFeaturesHelper.setupCallPickup(customer))
           .then(() => loginPartner(customer.partner))
           .then(() => switchToCustomerWindow(customer.name, customer.doFtsw));
       } else {
         return loginPartner(customer.partner)
-          .then(() => switchToCustomerWindow(customer.name));
+          .then(() => switchToCustomerWindow(customer.name, customer.doFtsw));
       }
     });
 }
@@ -106,40 +106,41 @@ function switchToCustomerWindow(customerName, doFtsw) {
 
 export function provisionUsers(customer) {
   if (customer.users) {
-    console.log(`Need to provision ${customer.users} users for ${customer.name}!`);
+    console.log(`Onboarding users for ${customer.name}!`);
     return provisionerHelper.getToken(customer.partner)
       .then(token => {
-        console.log('Got token for provisionUsers!');
-        return atlasHelper.getAtlasOrg(token, customer.cmiCustomer.uuid)
-          .then((response) => {
+        return atlasHelper.getAtlasOrg(token, customer.orgId)
+          .then(response => {
             const licenseArray = _.get(response, 'licenses', undefined);
-            const licenseCom = _.find(licenseArray, ['licenseType', 'COMMUNICATION']);
-            console.log('Got communication type of license for provisionUsers!');
-            let internalExt = 351;
-            let userList = [];
-            for (var i = 0; i < customer.users; i++) {
-              internalExt = internalExt + i;
-              const userObj = {
-                email: `${customer.name}_${i}@gmail.com`,
-                userEntitlements: null,
-                licenses: [{
-                  id: `${licenseCom.licenseId}`,
-                  OperationId: 'ADD',
-                  properties: { internalExtension: `${internalExt}` },
-                },
-                ],
-              }
-              userList.push(userObj);
-            }
-
-            let finalList = { users: userList }
-
-            return atlasHelper.createAtlasUser(token, customer.cmiCustomer.uuid, finalList)
+            const users = { users: atlasUsers(customer, licenseArray) };
+            return atlasHelper.createAtlasUser(token, customer.orgId, users)
               .then(() => {
-                console.log(`Successfully added users for ${customer.name}!`);
+                console.log(`Successfully onboarded users for ${customer.name}!`);
               });
           });
       });
   }
 }
 
+function provisionPlaces(customer) {
+  if (customer.places) {
+    console.log('Creating locations');
+    return provisionerHelper.getToken(customer.partner)
+      .then(token => {
+        createPlaceObj(token, customer.orgId, customer.places);
+        console.log('Successfully added places');
+      });
+  }
+}
+
+function createPlaceObj(tkn, id, plObj) {
+  let placeObj = {};
+  for (let i = 0; i < plObj.length; i++) {
+    placeObj[i] = plObj[i];
+    createNewPlace(tkn, id, placeObj[i]);
+  }
+}
+
+function createNewPlace(tkn, id, plObj) {
+  return atlasHelper.createAtlasPlace(tkn, id, plObj)
+}

@@ -115,10 +115,6 @@
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/directorynumbers/:directoryNumberId', {
       customerId: '@customerId',
       directoryNumberId: '@directoryNumberId',
-    }, {
-      update: {
-        method: 'PUT',
-      },
     });
   }
 

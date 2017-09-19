@@ -226,9 +226,9 @@
                    ng-repeat="order in helpdeskCtrl.currentSearch.orderSearchResults | limitTo:helpdeskCtrl.currentSearch.orderLimit">
             <article tabindex="{{$index * 10 + 3}}" ui-sref="helpdesk.order({order:order})">
               <header>
-                <h5>
-                  {{order.externalOrderId}}
+                <h5 translate="helpdesk.orderNumber" translate-values="{orderNumber: order.externalOrderId}">
                 </h5>
+                <h5 ng-if="order.serviceId" translate="helpdesk.subscriptionIdDisplay" translate-values="{subId: order.serviceId}"></h5>
               </header>
               <section>
               </section>

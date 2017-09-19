@@ -1,5 +1,6 @@
 import { IExtendedConnectorAlarm } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
+import { HybridServicesExtrasService } from 'modules/hercules/services/hybrid-services-extras.service';
 
 interface IAlarmModified extends IExtendedConnectorAlarm {
   alarmSolutionElements: any[];
@@ -14,6 +15,7 @@ export class AlarmDetailsSidepanelCtrl implements ng.IComponentController {
     private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
     private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
+    private HybridServicesExtrasService: HybridServicesExtrasService,
   ) {}
 
   public $onInit() {
@@ -37,7 +39,10 @@ export class AlarmDetailsSidepanelCtrl implements ng.IComponentController {
   }
 
   private init(alarm: IAlarmModified) {
-    if (alarm.solution) {
+    if (alarm.key) {
+      this.alarm = this.HybridServicesExtrasService.translateResourceAlarm(alarm) as IAlarmModified;
+    }
+    if (!alarm.key && alarm.solution) {
       alarm.alarmSolutionElements = [];
       if (_.size(alarm.solutionReplacementValues) > 0) {
         _.forEach(alarm.solution.split('%s'), (value, i) => {
@@ -50,8 +55,8 @@ export class AlarmDetailsSidepanelCtrl implements ng.IComponentController {
       } else {
         alarm.alarmSolutionElements.push({ text: this.alarm.solution });
       }
+      this.alarm = alarm;
     }
-    this.alarm = alarm;
   }
 }
 

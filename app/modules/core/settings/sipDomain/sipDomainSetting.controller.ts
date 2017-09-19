@@ -49,6 +49,7 @@ export class SipDomainSettingController {
 
   /* @ngInject */
   constructor(
+    private $element: ng.IRootElementService,
     private $modal,
     private $rootScope: ng.IRootScopeService,
     private $scope: ng.IScope,
@@ -134,6 +135,10 @@ export class SipDomainSettingController {
     } else {
       this.$scope.$emit(this.DISMISS_DISABLE, !this.isConfirmed);
     }
+  }
+
+  public resetFocus() {
+    this.$timeout(() => { this.$element.find('#editSubdomainLink').focus(); });
   }
 
   public validateSipDomain() {
@@ -225,6 +230,7 @@ export class SipDomainSettingController {
   public editSubdomain() {
     if (!this.isCsc) {
       this.toggleSipForm();
+      this.$timeout(() => { this.$element.find('#sipDomainInput').focus(); });
     }
   }
 

@@ -2,6 +2,7 @@ const path = require('path');
 
 const appPath = path.resolve('./app');
 const testPath = path.resolve('./test');
+const examplePath = path.resolve('./examples');
 
 exports.js = {
   test: /\.js$/,
@@ -39,7 +40,7 @@ exports.tslint = {
       },
     },
   ],
-  include: [appPath, testPath],
+  include: [appPath, testPath, examplePath],
   exclude: [/node_modules/],
   enforce: 'pre',
 };
@@ -57,7 +58,7 @@ exports.ts = {
       },
     },
   ],
-  include: [appPath, testPath],
+  include: [appPath, testPath, examplePath],
   exclude: [/node_modules/],
 };
 
@@ -131,7 +132,7 @@ exports.fonts = {
     {
       loader: 'file-loader',
       options: {
-        name: 'fonts/[name].[ext]',
+        name: 'fonts/[name].[ext]?[hash]',
       },
     },
   ],
@@ -143,7 +144,7 @@ exports.images = {
     {
       loader: 'file-loader',
       options: {
-        name: '[path][name].[ext]',
+        name: '[path][name].[ext]?[hash]',
       },
     },
   ],
@@ -156,7 +157,7 @@ exports.vendorImages = {
     {
       loader: 'file-loader',
       options: {
-        name: 'images/[name].[ext]',
+        name: 'images/[name].[ext]?[hash]',
       },
     },
   ],
@@ -228,16 +229,35 @@ exports.dependencies = [{
   ],
 }];
 
-exports.instrument = {
-  test: /\.(js|ts)$/,
+exports.instrumentJs = {
+  test: /\.js$/,
   use: [
     {
       loader: 'istanbul-instrumenter-loader',
+      options: {
+        esModules: false,
+      },
     },
   ],
   exclude: [
     /node_modules/,
-    /spec\.(js|ts)$/,
+    /spec\.js$/,
+  ],
+};
+
+exports.instrumentTs = {
+  test: /\.ts$/,
+  use: [
+    {
+      loader: 'istanbul-instrumenter-loader',
+      options: {
+        esModules: true,
+      },
+    },
+  ],
+  exclude: [
+    /node_modules/,
+    /spec\.ts$/,
   ],
   enforce: 'post',
 };

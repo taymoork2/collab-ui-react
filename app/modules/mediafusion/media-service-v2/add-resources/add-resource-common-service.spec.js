@@ -56,9 +56,33 @@ describe('AddResourceCommonServiceV2', function () {
     expect(MediaClusterServiceV2.createClusterV2).toHaveBeenCalled();
     expect(Notification.errorWithTrackingId).toHaveBeenCalled();
   });
-  it('MediaServiceActivationV2 enableMediaService should be called for redirectPopUpAndClose', function () {
+  it('MediaServiceActivationV2 enableMediaService should not be called for redirectPopUpAndClose', function () {
     spyOn(MediaServiceActivationV2, 'enableMediaService');
     AddResourceCommonServiceV2.redirectPopUpAndClose('hostName', 'enteredCluster', 'clusterId', true);
+    expect(MediaServiceActivationV2.enableMediaService).not.toHaveBeenCalled();
+  });
+  it('MediaClusterServiceV2 createClusterV2,createPropertySet,updatePropertySetById should be called for createFirstTimeSetupCluster', function () {
+    var respnse = {
+      data: { id: '12345' },
+    };
+    spyOn(MediaClusterServiceV2, 'createClusterV2').and.returnValue($q.resolve(respnse));
+    spyOn(MediaClusterServiceV2, 'createPropertySet').and.returnValue($q.resolve(respnse));
+    spyOn(MediaClusterServiceV2, 'updatePropertySetById').and.returnValue($q.resolve(respnse));
+    AddResourceCommonServiceV2.createFirstTimeSetupCluster('hostName', 'enteredCluster');
+    httpBackend.verifyNoOutstandingExpectation();
+    expect(MediaClusterServiceV2.createClusterV2).toHaveBeenCalled();
+    expect(MediaClusterServiceV2.createPropertySet).toHaveBeenCalled();
+    expect(MediaClusterServiceV2.updatePropertySetById).toHaveBeenCalled();
+  });
+
+  it('MediaServiceActivationV2 enableMediaServiceEntitlements should be called for enableMediaServiceEntitlements', function () {
+    spyOn(MediaServiceActivationV2, 'enableMediaServiceEntitlements');
+    AddResourceCommonServiceV2.enableMediaServiceEntitlements();
+    expect(MediaServiceActivationV2.enableMediaServiceEntitlements).toHaveBeenCalled();
+  });
+  it('MediaServiceActivationV2 enableMediaService should be called for enableMediaService', function () {
+    spyOn(MediaServiceActivationV2, 'enableMediaService');
+    AddResourceCommonServiceV2.enableMediaService('123');
     expect(MediaServiceActivationV2.enableMediaService).toHaveBeenCalled();
   });
 });

@@ -14,7 +14,6 @@ var EnumDataTypeUtils = DataTypeDefinition.EnumDataTypeUtils;
         field: '<',
         process: '<',
         callback: '<',
-        hasContextExpandedTypesToggle: '<',
       },
     });
 
@@ -87,7 +86,7 @@ var EnumDataTypeUtils = DataTypeDefinition.EnumDataTypeUtils;
     };
 
     vm.isDataTypeWithOptions = function () {
-      return vm.hasContextExpandedTypesToggle ? _.get(vm, 'field.dataTypeDefinition.type') === 'enum' : false;
+      return _.get(vm, 'field.dataTypeDefinition.type') === 'enum';
     };
 
     vm.getOptionSidepanelOptions = function () {

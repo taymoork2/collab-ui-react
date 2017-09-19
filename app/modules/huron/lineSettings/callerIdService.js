@@ -11,7 +11,7 @@
     .name;
 
   /* @ngInject */
-  function CallerId(Authinfo, $q, CompanyNumberService, UserDirectoryNumberService, DirectoryNumberUserService, DirectoryNumber,
+  function CallerId(Authinfo, $q, CompanyNumberService, UserDirectoryNumberService, DirectoryNumberUserService,
     UserEndpointService, SipEndpointDirectoryNumberService) {
     var callerIdOptions = [];
     var userDnList = [];
@@ -136,8 +136,6 @@
     }
 
     function updateInternalCallerId(userUuid, userName) {
-      var promises = [];
-      var promise;
       return getUserDn(userUuid).then(function () {
         // for each line
         getUserDnList().forEach(function (userDn) {
@@ -151,32 +149,26 @@
           };
           // Only update on primary line.
           if (userDn.isPrimary) {
-            // Update alerting name on DN
-            promise = DirectoryNumber.updateDirectoryNumber(userDn.uuid, {
-              alertingName: userName,
-            }).then(function () {
-              // for each shared user
-              var sharedUserPromises = [];
-              var sharedUserPromise;
-              userDn.sharedUsers.forEach(function (user) {
-                sharedUserPromise = listUserEndPoints(user.uuid).then(function (devices) {
-                  // for each device
-                  var endPointPromises = [];
-                  var endPointPromise;
-                  devices.forEach(function (device) {
-                    endPointPromise = updateEndPointDn(device.endpoint.uuid, userDn.uuid, data);
-                    endPointPromises.push(endPointPromise);
-                  });
-                  return $q.all(endPointPromises);
+            // for each shared user
+            var sharedUserPromises = [];
+            var sharedUserPromise;
+            userDn.sharedUsers.forEach(function (user) {
+              sharedUserPromise = listUserEndPoints(user.uuid).then(function (devices) {
+                // for each device
+                var endPointPromises = [];
+                var endPointPromise;
+                devices.forEach(function (device) {
+                  endPointPromise = updateEndPointDn(device.endpoint.uuid, userDn.uuid, data);
+                  endPointPromises.push(endPointPromise);
                 });
-                sharedUserPromises.push(sharedUserPromise);
+                return $q.all(endPointPromises);
               });
-              return $q.all(sharedUserPromises);
+              sharedUserPromises.push(sharedUserPromise);
             });
-            promises.push(promise);
+            return $q.all(sharedUserPromises);
           }
         });
-        return $q.all(promises);
+        return $q.all();
       });
     }
 

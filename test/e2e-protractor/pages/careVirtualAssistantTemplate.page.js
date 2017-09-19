@@ -1,14 +1,12 @@
 'use strict';
 
 var VirtualAssistantTemplateCreation = function () {
-  this.title = element(by.css('.va-title'));
-  this.titleDesc = element(by.css('.va-title-desc'));
+  this.title = element(by.css('.h3'));
+  this.titleDesc = element(by.css('.h6'));
 
   this.setUpLeftBtn = element(by.css('.btn--primary.btn--left'));
   this.setUpRightBtn = element(by.css('.btn--primary.btn--right'));
 
-  this.setUpLeftBtn = element(by.css('.btn--primary.btn--left'));
-  this.setUpRightBtn = element(by.css('.btn--primary.btn--right'));
   this.closePanelX = element(by.id('close-panel'));
 
   // config overview page info
@@ -20,17 +18,20 @@ var VirtualAssistantTemplateCreation = function () {
 
   // Access Token page info
   this.apiaiClientAccessToken = element(by.name('tokenInput'));
+  this.validateBtn = element(by.css('.btn.validate-button'));
+  this.checkMarkIcon = element(by.css('.icon.icon-check'));
 
   // Name page info
   this.name = element(by.name('nameInput'));
+
+  // Avatar upload/preview
+  this.avatarUpload = element(by.id('avatarUpload'));
+  this.avatarPreview = element(by.id('avatarPreview'));
 
   // Summary Page
   this.finishBtn = element(by.id('vaSetupFinishBtn'));
 
   // Cancel Modal
-  this.cancelTitle = element(by.css('.modal-title'));
-  this.cancelDesc = element(by.css('ct-confirmation-message'));
-  this.noCancelBtn = element(by.id('continueChat'));
   this.cancelBtn = element(by.id('cancelChat'));
 
   // Delete Template

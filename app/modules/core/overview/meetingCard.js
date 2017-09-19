@@ -85,7 +85,6 @@
         card.showMeetingSettings = function () {
           $state.go('setupwizardmodal', {
             currentTab: 'meetingSettings',
-            currentStep: 'migrate',
             onlyShowSingleTab: true,
             showStandardModal: true,
           });

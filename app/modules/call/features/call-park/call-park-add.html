@@ -25,7 +25,19 @@
           ng-class="$ctrl.animation">
         </uc-call-feature-name>
 
-        <div class="select-number-details" ng-if="$ctrl.pageIndex === 1" ng-class="$ctrl.animation">
+        <uc-call-feature-location
+          call-feature-type="huronFeatureDetails.cp"
+          ng-if="($ctrl.pageIndex === 1 && $ctrl.showLocation())"
+          ng-class="$ctrl.animation"
+          is-required="true"
+          is-new="true"
+          location="$ctrl.callPark.location"
+          on-change-fn="$ctrl.setCallParkLocation(location)"
+          on-key-press-fn="$ctrl.enterNextPage(keyCode)"
+          ng-class="$ctrl.animation">
+        </uc-call-feature-location>
+
+        <div class="select-number-details" ng-if="($ctrl.pageIndex === 1 && !$ctrl.showLocation()) || ($ctrl.pageIndex === 2 && $ctrl.showLocation())" ng-class="$ctrl.animation">
           <div class="typeahead-large cpselect large">
             <div class="title" translate="callPark.selectParkNumber"></div>
             <div class="desc" translate="callPark.selectParkHint"></div>
@@ -40,7 +52,8 @@
           </div>
         </div>
 
-        <uc-call-feature-members ng-if="$ctrl.pageIndex === 2"
+        <uc-call-feature-members
+          ng-if="($ctrl.pageIndex === 2 && !$ctrl.showLocation()) || ($ctrl.pageIndex === 3 && $ctrl.showLocation())"
           members="$ctrl.callPark.members"
           member-hint-key="callPark.memberHint"
           member-item-type="member"

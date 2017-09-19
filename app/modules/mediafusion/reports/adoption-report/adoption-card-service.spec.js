@@ -39,10 +39,10 @@ describe('Service: AdoptionCardService', function () {
       value: 1294,
     }],
   };
-  var mobileHeading = 'mediaFusion.metrics.mobile';
-  var desktopHeading = 'mediaFusion.metrics.clientType.desktop';
-  var tpHeading = 'mediaFusion.metrics.clientType.tp';
-  var othersHeading = 'mediaFusion.metrics.othersHeading';
+  var sparkMobileHeading = 'mediaFusion.metrics.clientType.sparkMobile';
+  var sparkDesktopHeading = 'mediaFusion.metrics.clientType.sparkDesktop';
+  var sparkDevicesHeading = 'mediaFusion.metrics.clientType.sparkDevices';
+  var sipHeading = 'mediaFusion.metrics.clientType.sip';
 
 
   beforeEach(inject(function (_AdoptionCardService_) {
@@ -96,7 +96,7 @@ describe('Service: AdoptionCardService', function () {
     var chart = AdoptionCardService.setClientTypePiechart(dummyData);
     var totalPercentage = 0;
     expect(chart.dataProvider[1].percentage).toBe(13.31);
-    expect(chart.dataProvider[1].name).toBe(mobileHeading);
+    expect(chart.dataProvider[1].name).toBe(sparkMobileHeading);
     _.each(chart.dataProvider, function (type) {
       totalPercentage += type.percentage;
     });
@@ -108,7 +108,7 @@ describe('Service: AdoptionCardService', function () {
     var chart = AdoptionCardService.setClientTypePiechart(dummyData);
     var totalPercentage = 0;
     expect(chart.dataProvider[0].percentage).toBe(32.11);
-    expect(chart.dataProvider[0].name).toBe(desktopHeading);
+    expect(chart.dataProvider[0].name).toBe(sparkDesktopHeading);
     _.each(chart.dataProvider, function (type) {
       totalPercentage += type.percentage;
     });
@@ -119,8 +119,8 @@ describe('Service: AdoptionCardService', function () {
   it('all tp should be groped together when setClientTypePiechart is called', function () {
     var chart = AdoptionCardService.setClientTypePiechart(dummyData);
     var totalPercentage = 0;
-    expect(chart.dataProvider[2].percentage).toBe(54.4);
-    expect(chart.dataProvider[2].name).toBe(tpHeading);
+    expect(chart.dataProvider[2].percentage).toBe(32.77);
+    expect(chart.dataProvider[2].name).toBe(sipHeading);
     _.each(chart.dataProvider, function (type) {
       totalPercentage += type.percentage;
     });
@@ -131,8 +131,8 @@ describe('Service: AdoptionCardService', function () {
   it('all others should be groped together when setClientTypePiechart is called', function () {
     var chart = AdoptionCardService.setClientTypePiechart(dummyData);
     var totalPercentage = 0;
-    expect(chart.dataProvider[3].percentage).toBe(0.18);
-    expect(chart.dataProvider[3].name).toBe(othersHeading);
+    expect(chart.dataProvider[3].percentage).toBe(21.62);
+    expect(chart.dataProvider[3].name).toBe(sparkDevicesHeading);
     _.each(chart.dataProvider, function (type) {
       totalPercentage += type.percentage;
     });

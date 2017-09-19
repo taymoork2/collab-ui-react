@@ -4,9 +4,7 @@
   module.exports = UserOverviewCtrl;
 
   /* @ngInject */
-  function UserOverviewCtrl($scope, $state, $stateParams, $translate, $window, $q,
-    Authinfo, Config, DirSyncService, FeatureToggleService, MessengerInteropService,
-    Notification, Userservice, UserOverviewService) {
+  function UserOverviewCtrl($scope, $state, $stateParams, $translate, $window, $q, Authinfo, Config, DirSyncService, FeatureToggleService, MessengerInteropService, Notification, Userservice, UserOverviewService) {
     var vm = this;
 
     vm.savePreferredLanguage = savePreferredLanguage;
@@ -34,7 +32,6 @@
     vm.isValidThumbnail = Userservice.isValidThumbnail;
     vm.clickService = clickService;
     vm.clickUserDetailsService = clickUserDetailsService;
-    vm.clickRolesAndSecurity = clickRolesAndSecurity;
     vm.actionList = [];
     vm.hasSparkCall = false;
     vm.enableRolesAndSecurityOption = false;
@@ -148,10 +145,6 @@
 
     function clickService(feature) {
       $state.go('user-overview.' + feature.state);
-    }
-
-    function clickRolesAndSecurity() {
-      $state.go('user-overview.roles-and-security');
     }
 
     function clickUserDetailsService(feature) {

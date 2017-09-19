@@ -6,10 +6,16 @@ describe('Service: DirectoryNumberOptionsService', () => {
     this.injectDependencies(
       '$httpBackend',
       'Authinfo',
+      'FeatureToggleService',
       'HuronConfig',
       'DirectoryNumberOptionsService',
+      '$q',
+      'LocationsService',
+      '$rootScope',
     );
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
+    spyOn(this.LocationsService, 'getLocationInternalNumberPoolList');
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
 
     const internalNumbersResponse: IDirectoryNumber[] = [
       { pattern: '12345' },
@@ -37,6 +43,7 @@ describe('Service: DirectoryNumberOptionsService', () => {
     this.externalNumbers = externalNumbers;
     this.internalNumbersResponse = internalNumbersResponse;
     this.externalNumbersResponse = externalNumbersResponse;
+    this.locationId = '1234';
   });
   beforeEach(installPromiseMatchers);
 
@@ -45,7 +52,8 @@ describe('Service: DirectoryNumberOptionsService', () => {
     this.$httpBackend.verifyNoOutstandingRequest();
   });
 
-  describe('getInternalNumbers function', function () {
+  describe('getInternalNumbers function toggle OFF', function () {
+
     it('should get internal numbers list', function () {
       this.$httpBackend.expectGET(this.HuronConfig.getCmiUrl() + '/voice/customers/' + this.Authinfo.getOrgId() + '/internalnumberpools?directorynumber=&order=pattern')
         .respond(200, this.internalNumbersResponse);
@@ -136,4 +144,17 @@ describe('Service: DirectoryNumberOptionsService', () => {
       this.$httpBackend.flush();
     });
   });
+
+  describe('getInternalNumbers function with toggles', function () {
+    beforeEach(function () {
+      this.FeatureToggleService.supports.and.returnValue(this.$q.resolve(true));
+    });
+    it('should get internal numbers list with LocationId when locationId is passed when featureToggle is ON', function () {
+      this.DirectoryNumberOptionsService.getInternalNumberOptions(undefined, undefined, this.locationId).then( function (){
+        expect(this.NumberService.getNumberList).toHaveBeenCalledWith(null, undefined, undefined, null, null, null, null, this.locationId);
+      });
+      this.$rootScope.$digest();
+    });
+  });
+
 });

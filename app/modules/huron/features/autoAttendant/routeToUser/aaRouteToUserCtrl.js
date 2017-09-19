@@ -147,7 +147,7 @@
 
     // get user's primary extension via CMI users API property primaryDirectoryNumber
     function getUserExtension(user) {
-      if (AACommonService.isMultiSiteEnabled(user)) {
+      if (AACommonService.isMultiSiteEnabled()) {
         return AAUserService.get(user).$promise.then(function (response) {
           var numbers = _.map(response.numbers, 'siteToSite');
 

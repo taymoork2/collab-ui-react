@@ -14,7 +14,7 @@
     require('modules/core/auth/token.service'),
     require('modules/core/modal').default,
     'core.body',
-    'core.chartColors',
+    require('modules/core/config/chartColors').default,
     require('modules/core/controlHub').default,
     require('modules/core/l10n').default,
     'core.localize',
@@ -93,6 +93,7 @@
     require('modules/core/validation').default,
     require('modules/core/customerReports').default,
     require('modules/core/partnerReports').default,
+    require('modules/gemini/reports').default,
   ])
     .constant('CryptoJS', require('crypto-js'))
     .constant('addressparser', require('emailjs-addressparser'));
@@ -103,8 +104,10 @@
     'Hercules',
     'Huron',
     'Sunlight',
+    'LicenseService',
     require('modules/squared/devices/services/CsdmCacheUpdater'),
     require('modules/squared/devices/services/CsdmPoller'),
+    require('modules/squared/helpdesk/mock-data').default,
     require('modules/squared/partner-management').default,
     require('modules/squared/provisioning-console').default,
   ]);
@@ -120,7 +123,6 @@
     'uc.cdrlogsupport',
     'uc.autoattendant',
     'ngIcal',
-    'huron.call-pickup.setup-assistant',
     'huron.TerminusServices',
     'huron.externalNumberService',
     'huron.place-overview',
@@ -135,6 +137,7 @@
     require('modules/huron/media-mgr').default,
     require('modules/call/features').default,
     require('modules/call/features/paging-group/shared').default,
+    require('modules/call/features/call-pickup/shared').default,
   ])
     .constant('ASTParser', require('acorn'))
     .constant('ASTWalker', require('acorn/dist/walk'));
@@ -158,6 +161,7 @@
     require('modules/hercules/services/enterprise-private-trunk-service').default,
     require('modules/hercules/services/excel-service').default,
     require('modules/hercules/services/fms-org-settings.service').default,
+    require('modules/hercules/services/hs-flag-service').default,
     require('modules/hercules/services/hybrid-services-cluster-states.service').default,
     require('modules/hercules/services/hybrid-services-cluster.service').default,
     require('modules/hercules/services/hybrid-services-extras.service').default,
@@ -166,10 +170,15 @@
     require('modules/hercules/services/l2sip-service').default,
     require('modules/hercules/services/resource-group.service').default,
     require('modules/hercules/services/service-descriptor.service').default,
+    require('modules/hercules/services/ucc-service').default,
     require('modules/hercules/services/uss.service').default,
   ]);
 
-  angular.module('HDS', ['Core', 'Hercules']);
+  angular.module('HDS', [
+    'Core',
+    'Hercules',
+    require('modules/hds/services/hds.service'),
+  ]);
 
   angular.module('Mediafusion', ['Core', 'Hercules', 'Squared']);
 
@@ -221,6 +230,8 @@
     'oc.lazyLoad',
     'Gemini',
     'CMC',
+    'Csdm',
+    require('modules/services-overview').default,
   ]).config(require('./main.config'))
     .run(require('./main.run'))
     .name;

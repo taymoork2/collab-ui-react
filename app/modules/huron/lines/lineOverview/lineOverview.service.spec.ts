@@ -134,6 +134,7 @@ describe('Service: LineOverviewService', () => {
     this.lineOverview.autoAnswer = this.autoAnswer;
     this.lineOverview.voicemailEnabled = false;
     this.lineOverview.lineMoh = this.lineMoh;
+    this.lineOverview.line.label.value = this.line.label.value;
     this.lineOverview.services = [];
 
     this.getLineDefer = this.$q.defer();
@@ -186,6 +187,10 @@ describe('Service: LineOverviewService', () => {
 
     this.userServiceDefer = this.$q.defer();
     spyOn(this.HuronUserService, 'getUserServices').and.returnValue(this.userServiceDefer.promise);
+
+    this.getLineLabelDefer = this.$q.defer();
+    spyOn(this.HuronUserService, 'getUserV2LineLabel').and.returnValue(this.getLineLabelDefer.promise);
+
     spyOn(this.HuronVoicemailService, 'isEnabledForUser').and.returnValue(false);
     spyOn(this.HuronVoicemailService, 'update').and.returnValue(this.$q.resolve(200));
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
@@ -204,6 +209,7 @@ describe('Service: LineOverviewService', () => {
       this.getAutoAnswerDefer.resolve(this.autoAnswer);
       this.getLineMohDefer.resolve(this.lineMoh);
       this.userServiceDefer.resolve([]);
+      this.getLineLabelDefer.resolve(this.line.label.value);
     });
 
     it('should call LineService.getLine and CallForward.getCallForward', function () {
@@ -332,6 +338,7 @@ describe('Service: LineOverviewService', () => {
       this.listCompanyNumbersDefer.resolve([]);
       this.userServiceDefer.resolve([]);
       this.getLineMohDefer.resolve('');
+      this.getLineLabelDefer.resolve(this.line.label.value);
     });
 
     it('save should call PUT after changing extension', function () {
@@ -353,6 +360,7 @@ describe('Service: LineOverviewService', () => {
       this.newLine = new Line();
       this.getLineDefer.resolve(this.newLine);
       this.getCallForwardDefer.resolve(this.callForward);
+      this.getLineLabelDefer.resolve(this.line.label.value);
       this.updateCallForwardDefer.resolve(this.callForward);
       this.createSharedLineDefer.resolve([]);
       this.createLineDefer.resolve(this.line);
@@ -361,6 +369,8 @@ describe('Service: LineOverviewService', () => {
     it('save should call LineOverviewService.createLine for new line', function () {
       this.LineOverviewService.get(LineConsumerType.PLACES, '12345');
       this.$rootScope.$digest();
+
+      expect(this.HuronUserService.getUserV2LineLabel).toHaveBeenCalled();
 
       const lineOverviewNewLine = new LineOverviewData();
       lineOverviewNewLine.line = this.newLine;
@@ -371,6 +381,7 @@ describe('Service: LineOverviewService', () => {
 
       expect(this.LineOverviewService.createLine).toHaveBeenCalled();
       expect(this.CallForwardService.updateCallForward).toHaveBeenCalled();
+      expect(this.LineService.updateLine).toHaveBeenCalled();
     });
   });
 

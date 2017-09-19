@@ -12,7 +12,7 @@
     <div class="medium-1">
       <cs-toggle-switch ng-model="$ctrl.voicemailToggle"
                         toggle-id="voicemail-toggle"
-                        is-disabled="{{!$ctrl.isCallServiceConnectEnabled}}"
+                        is-disabled="!$ctrl.isCallServiceConnectEnabled"
                         cs-change="$ctrl.toggleVoicemail($ctrl.voicemailToggle)"
                         size="small">
       </cs-toggle-switch>

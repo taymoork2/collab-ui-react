@@ -57,6 +57,9 @@ describe('Care virtualassistant admin setup virtual assistant', function () {
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.apiaiClientAccessToken);
 
     utils.sendKeys(careVirtualAssistantTemplateSetupPage.apiaiClientAccessToken, APIAITestClientToken);
+
+    utils.click(careVirtualAssistantTemplateSetupPage.validateBtn);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.checkMarkIcon);
   });
 
   it('Create: Move to Naming Modal', function () {
@@ -69,6 +72,16 @@ describe('Care virtualassistant admin setup virtual assistant', function () {
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.name);
 
     utils.sendKeys(careVirtualAssistantTemplateSetupPage.name, APIAITestAgentName);
+  });
+
+  it('Create: Move to Avatar Upload Modal', function () {
+    utils.click(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
+
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.title);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.titleDesc);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.avatarUpload);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpLeftBtn);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
   });
 
   it('Create: Finally Move to Summary Modal', function () {
@@ -115,6 +128,9 @@ describe('Care virtualassistant admin setup virtual assistant', function () {
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpLeftBtn);
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.apiaiClientAccessToken);
+
+    utils.click(careVirtualAssistantTemplateSetupPage.validateBtn);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.checkMarkIcon);
   });
 
   it('Edit: Move to Naming Modal; rename', function () {
@@ -128,6 +144,16 @@ describe('Care virtualassistant admin setup virtual assistant', function () {
 
     utils.clear(careVirtualAssistantTemplateSetupPage.name);
     utils.sendKeys(careVirtualAssistantTemplateSetupPage.name, RenamedAPIAITestAgentName);
+  });
+
+  it('Edit: Move to Avatar Upload Modal', function () {
+    utils.click(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
+
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.title);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.titleDesc);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.avatarPreview);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpLeftBtn);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
   });
 
   it('Edit: Finally Move to Summary Modal', function () {

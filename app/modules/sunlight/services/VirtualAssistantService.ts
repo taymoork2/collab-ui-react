@@ -51,6 +51,7 @@ export class VirtualAssistantService {
     private $resource: ng.resource.IResourceService,
     private Authinfo,
     private UrlConfig,
+    private $q: any,
   ) {
   }
 
@@ -94,8 +95,8 @@ export class VirtualAssistantService {
    * @returns {*}
    */
   private getConfigResource(orgId: string, botServicesConfigId?: string): IConfigurationResource {
-    const  baseUrl = this.UrlConfig.getVirtualAssistantConfigServiceUrl();
-    return <IConfigurationResource>this.$resource(baseUrl + '/organization/:orgId/botconfig/:botServicesConfigId', {
+    const  baseUrl = this.UrlConfig.getVirtualAssistantServiceUrl();
+    return <IConfigurationResource>this.$resource(baseUrl + 'config/organization/:orgId/botconfig/:botServicesConfigId', {
       orgId: orgId,
       botServicesConfigId: botServicesConfigId,
     }, {
@@ -142,14 +143,16 @@ export class VirtualAssistantService {
    * @param name
    * @param config
    * @param orgId
+   * @param iconURL URL to avatar icon file
    * returns promise
    */
-  public addConfig(type: string, name: string, config: object, orgId: string): ng.IPromise<any> {
+  public addConfig(type: string, name: string, config: object, orgId: string, iconURL?: string): ng.IPromise<any> {
     return this.getConfigResource(orgId || this.Authinfo.getOrgId())
       .save({
         type: type,
         name: name,
         config: config,
+        icon: iconURL,
       }, function (data, headers) {
         data.botServicesConfigId = headers('location').split('/').pop();
         return data;
@@ -163,14 +166,16 @@ export class VirtualAssistantService {
    * @param name
    * @param config
    * @param orgId
+   * @param iconURL URL to avatar icon file
    * returns promise
    */
-  public updateConfig(botServicesConfigId: string, type: string, name: string, config: object, orgId: string): ng.IPromise<void> {
+  public updateConfig(botServicesConfigId: string, type: string, name: string, config: object, orgId: string, iconURL?: string): ng.IPromise<void> {
     return this.getConfigResource(orgId || this.Authinfo.getOrgId(), botServicesConfigId)
       .update({
         type: type,
         name: name,
         config: config,
+        icon: iconURL,
       }).$promise;
   }
   /**
@@ -179,6 +184,7 @@ export class VirtualAssistantService {
    * returns promise resolving true on success, false on failure
    */
   public isAPIAITokenValid(token: string): ng.IPromise<boolean> {
+    const result = this.$q.defer();
     const request = {
       method: 'POST',
       url: 'https://api.api.ai/v1/query?v=20150910',
@@ -193,17 +199,50 @@ export class VirtualAssistantService {
         query: 'Hello',
       },
     };
-    return this.$http(request)
+    this.$http(request)
       .then(function (response: any) {
-        const result = 200 <= response.statusCode && response.statusCode < 300;
-        if (!result) {
-          return false;
+        const statusCode = (response.data.statusCode || response.data.status.code || 426); //Upgrade of code required
+        if (200 <= statusCode && statusCode < 300) {
+          result.resolve(true);
+        } else {
+          result.reject(false);
         }
-        return true;
-      })
-      .catch(function () {
-        return false;
+      }, function () {
+        result.reject(false);
       });
+    return result.promise;
+  }
+
+  /**
+   * obtain resource for Virtual Assistant configuration API Rest calls.
+   * @param orgId
+   * @param botServicesConfigId
+   * @returns {*}
+   */
+  private getValidateResource(orgId?: string): IConfigurationResource {
+    const baseUrl = this.UrlConfig.getVirtualAssistantServiceUrl();
+    return <IConfigurationResource>this.$resource(baseUrl + 'validateIcon', {
+      orgId: orgId,
+    }, {
+      update: {
+        method: 'POST',
+      },
+    });
+  }
+
+  /**
+   * Test the avatar file to see if it is within expected boundaries: PNG file, 1MB max
+   *
+   * @param orgId
+   * @param botServicesConfigId
+   * @param iconURL
+   * returns promise resolving true on success, false on failure
+   */
+  public isAvatarFileValid(orgId: string, iconURL: string): ng.IPromise<void> {
+    return this.getValidateResource(orgId || this.Authinfo.getOrgId())
+      .update({
+        icon: iconURL,
+      }).$promise;
   }
 
   /**
@@ -233,6 +272,26 @@ export class VirtualAssistantService {
     });
   }
 
+  /**
+   * Get the data url from file object
+   * @param {Object} fileObject
+   * @returns {Promise<String>} promise resolving to the data url on success; otherwise promise rejected
+   */
+  public getFileDataUrl(fileObject: any): ng.IPromise<String> {
+    return this.$q((resolve, reject) => {
+      if (!fileObject) {
+        return reject('');
+      }
+      const fileReader = new FileReader();
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      };
+      fileReader.onerror = () => {
+        reject('');
+      };
+      fileReader.readAsDataURL(fileObject);
+    });
+  }
 }
 export default angular
   .module('Sunlight')

@@ -221,31 +221,31 @@ export class MySubscriptionCtrl implements ng.IController {
         }
         if (subscription.internalSubscriptionId && (subscription.internalSubscriptionId !== 'unknown')) {
           newSubscription.internalSubscriptionId = subscription.internalSubscriptionId;
-          if (subscription.internalSubscriptionId !== 'Trial') {
-            newSubscription.isOnline = true;
-          }
         }
 
-        const matchingSubscription = _.find(authinfoSubscriptions, {
-          subscriptionId: subscription.internalSubscriptionId,
+        const matchingSubscription = _.find(authinfoSubscriptions, (sub: ISubscription) => {
+          return (sub.subscriptionId === subscription.internalSubscriptionId) && (sub.orderingTool === this.Config.orderingTool.online || sub.orderingTool === this.Config.orderingTool.digitalRiver);
         });
-        const matchingSubscriptionEndDate = _.get<string>(matchingSubscription, 'endDate', '');
-        if (matchingSubscriptionEndDate) {
-          const currentDate = new Date();
-          const subscriptionEndDate = new Date(matchingSubscriptionEndDate);
-          const timeDiff = subscriptionEndDate.getTime() - currentDate.getTime();
-          const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+        if (!_.isUndefined(matchingSubscription)) {
+          newSubscription.isOnline = true;
+          const matchingSubscriptionEndDate = _.get<string>(matchingSubscription, 'endDate', '');
+          if (matchingSubscriptionEndDate) {
+            const currentDate = new Date();
+            const subscriptionEndDate = new Date(matchingSubscriptionEndDate);
+            const timeDiff = subscriptionEndDate.getTime() - currentDate.getTime();
+            const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
-          newSubscription.endDate = this.$translate.instant('subscriptions.expires', { date: moment(subscriptionEndDate).format('MMM DD, YYYY') });
-          if (diffDays > this.EXPIRATION_DAYS.warning) {
-            newSubscription.badge = this.EXPIRATION_BADGES.default;
-          } else if (diffDays > this.EXPIRATION_DAYS.alert) {
-            newSubscription.badge = this.EXPIRATION_BADGES.warning;
-          } else if (diffDays > this.EXPIRATION_DAYS.expired) {
-            newSubscription.badge = this.EXPIRATION_BADGES.alert;
-          } else {
-            newSubscription.endDate = this.$translate.instant('subscriptions.expired');
-            newSubscription.badge = this.EXPIRATION_BADGES.alert;
+            newSubscription.endDate = this.$translate.instant('subscriptions.expires', { date: moment(subscriptionEndDate).format('MMM DD, YYYY') });
+            if (diffDays > this.EXPIRATION_DAYS.warning) {
+              newSubscription.badge = this.EXPIRATION_BADGES.default;
+            } else if (diffDays > this.EXPIRATION_DAYS.alert) {
+              newSubscription.badge = this.EXPIRATION_BADGES.warning;
+            } else if (diffDays > this.EXPIRATION_DAYS.expired) {
+              newSubscription.badge = this.EXPIRATION_BADGES.alert;
+            } else {
+              newSubscription.endDate = this.$translate.instant('subscriptions.expired');
+              newSubscription.badge = this.EXPIRATION_BADGES.alert;
+            }
           }
         }
 
@@ -360,6 +360,9 @@ export class MySubscriptionCtrl implements ng.IController {
                 this.subscriptionDetails[index].name = this.$translate.instant('subscriptions.numberedName', { number: enterpriseSubs++ });
               }
             }
+            if (this.subscriptionDetails.length === 1) {
+              this.licenseSummary = this.$translate.instant('subscriptions.licenseSummaryEnterprise');
+            }
           } else {
             const prodResponse: IProdInst = _.find(instances, ['subscriptionId', subscription.internalSubscriptionId]);
             if (prodResponse) {
@@ -447,7 +450,7 @@ export class MySubscriptionCtrl implements ng.IController {
     this.ServiceDescriptorService.getServices().then((services) => {
       return this.ServiceDescriptorService.filterEnabledServices(services);
     }).then((enabledServices) => {
-      enabledServices.sort((s1, s2) => this.HybridServicesUtilsService.hybridServicesComparator(s1.id, s2.id));
+      enabledServices.sort((s1, s2) => this.HybridServicesUtilsService.hybridServicesComparator({ value: s1.id }, { value: s2.id }));
       return _.map(enabledServices, (service: any) => {
         if (service.id === 'squared-fusion-uc' || service.id === 'squared-fusion-ec') {
           return `hercules.serviceNames.${service.id}.full`;

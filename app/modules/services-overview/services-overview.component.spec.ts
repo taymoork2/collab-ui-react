@@ -1,18 +1,18 @@
 import componentModule from './index';
 
-import { ServicesOverviewController } from 'modules/services-overview/services-overview.component';
+import { ServicesOverviewController } from './services-overview.component';
 
-describe('ServiceOverviewCtrl', () => {
+describe('ServicesOverviewController', () => {
 
-  let $componentController: ng.IComponentControllerService, $httpBackend: ng.IHttpBackendService, $scope: ng.IScope;
+  let $componentController: ng.IComponentControllerService;
+  let $httpBackend: ng.IHttpBackendService;
+  let $scope: ng.IScope;
   let ctrl: ServicesOverviewController;
 
   beforeEach(angular.mock.module(componentModule));
-  beforeEach(angular.mock.module('HDS'));
-  beforeEach(angular.mock.module('Mediafusion'));
   beforeEach(inject(dependencies));
 
-  function dependencies(_$componentController_, _$httpBackend_, _$rootScope_, _PrivateTrunkPrereqService_ ) {
+  function dependencies(_$componentController_, _$httpBackend_, _$rootScope_) {
     $componentController = _$componentController_;
     $httpBackend = _$httpBackend_;
     $scope = _$rootScope_.$new();
@@ -26,7 +26,11 @@ describe('ServiceOverviewCtrl', () => {
 
 
   function initController() {
-    ctrl = $componentController('servicesOverview', {}, {});
+    ctrl = $componentController('servicesOverview', {}, {
+      urlParams: {
+        office365: undefined,
+      },
+    });
     ctrl.$onInit();
     $scope.$apply();
   }

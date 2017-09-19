@@ -9,6 +9,7 @@ import { SharedLine, SharedLineService } from 'modules/huron/sharedLine';
 import { Notification } from 'modules/core/notifications';
 import { AutoAnswerService } from 'modules/huron/autoAnswer';
 import { IOption } from 'modules/huron/dialing';
+import { LocationsService } from 'modules/call/locations';
 
 class LineOverview implements ng.IComponentController {
   private ownerType: string;
@@ -28,6 +29,7 @@ class LineOverview implements ng.IComponentController {
   public showLineLabel: boolean = true;
   public panelTitle: string = this.$translate.instant('mediaOnHoldPanel.mohTitle');
   public panelDesc: string = this.$translate.instant('mediaOnHoldPanel.mohDesc');
+  public locationId: string | undefined;
 
   // Directory Number properties
   public esnPrefix: string;
@@ -39,6 +41,7 @@ class LineOverview implements ng.IComponentController {
   public showApplyToAllSharedLines: boolean = false;
   public applyToAllSharedLines: boolean = false;
   public origApplyToAllSharedLinesValue: boolean;
+  private MAX_LABEL_LENGTH: number = 30;
 
   //SharedLine Properties
   public newSharedLineMembers: Member[] = [];
@@ -64,12 +67,22 @@ class LineOverview implements ng.IComponentController {
     private CsdmDataModelService,
     private AutoAnswerService: AutoAnswerService,
     private $q,
+    public LocationsService: LocationsService,
   ) { }
 
   public $onInit(): void {
     this.initActions();
     this.initConsumerType();
-    this.initLineOverviewData();
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484)
+      .then(isSupported => {
+        if (isSupported) {
+          this.getUserLocation().then(() => {
+            this.initLineOverviewData();
+          });
+        } else {
+          this.initLineOverviewData();
+        }
+      });
   }
 
   private initActions(): void {
@@ -84,14 +97,14 @@ class LineOverview implements ng.IComponentController {
   private initLineOverviewData(): void {
     this.showExtensions = true;
     if (!this.numberId) {
-      this.DirectoryNumberOptionsService.getInternalNumberOptions()
+      this.DirectoryNumberOptionsService.getInternalNumberOptions(undefined, undefined, this.locationId)
         .then(numbers => {
           this.internalNumbers = numbers;
           this.getLineOverviewData();
         }).catch(error => this.Notification.errorResponse(error, 'directoryNumberPanel.internalNumberPoolError'));
     } else {
       this.getLineOverviewData();
-      this.DirectoryNumberOptionsService.getInternalNumberOptions()
+      this.DirectoryNumberOptionsService.getInternalNumberOptions(undefined, undefined, this.locationId)
         .then(numbers => {
           this.internalNumbers = numbers;
         }).catch(error => this.Notification.errorResponse(error, 'directoryNumberPanel.internalNumberPoolError'));
@@ -115,6 +128,12 @@ class LineOverview implements ng.IComponentController {
       this.showActions = this.setShowActionsFlag(this.lineOverviewData.line);
       if (!this.lineOverviewData.line.uuid) { // new line, grab first available internal number
         this.lineOverviewData.line.internal = this.internalNumbers[0];
+        if (lineOverviewData.line.label != null) {
+          if (this.lineOverviewData.line.label != null) {
+            this.lineOverviewData.line.label.value = this.lineOverviewData.line.internal +
+              ' - ' + lineOverviewData.line.label.value.substr(0,  this.MAX_LABEL_LENGTH - this.lineOverviewData.line.internal.length - 3);
+          }
+        }
         this.form.$setDirty();
       }
     });
@@ -133,17 +152,30 @@ class LineOverview implements ng.IComponentController {
       });
   }
 
+  public getUserLocation(): IPromise<void> {
+    return this.LocationsService.getUserLocation(this.ownerId).then(result => {
+      this.locationId = result.uuid;
+    });
+  }
+
   public setDirectoryNumbers(internalNumber: string, externalNumber: string): void {
     this.lineOverviewData.line.internal = internalNumber;
     this.lineOverviewData.line.external = externalNumber;
     this.checkForChanges();
-    // Hide out line label and clear any values
-    this.showLineLabel = false;
-    this.lineOverviewData.line.label = null;
+    // If add a new line and DN changed, regenerate line label, else hide line label and clear its values
+    if (this.lineOverviewData.line.uuid === undefined ) {
+      if (this.lineOverviewData.line.label != null) {
+        this.lineOverviewData.line.label.value = this.lineOverviewData.line.internal + ' - ' +
+          this.lineOverviewData.line.label.value.substr(this.lineOverviewData.line.internal.length + 3,  this.MAX_LABEL_LENGTH);
+      }
+    } else {
+      this.showLineLabel = false;
+      this.lineOverviewData.line.label = null;
+    }
   }
 
   public refreshInternalNumbers(filter: string): void {
-    this.DirectoryNumberOptionsService.getInternalNumberOptions(filter)
+    this.DirectoryNumberOptionsService.getInternalNumberOptions(filter, undefined, this.locationId)
       .then(numbers => this.internalNumbers = numbers)
       .catch(error => this.Notification.errorResponse(error, 'directoryNumberPanel.internalNumberPoolError'));
   }

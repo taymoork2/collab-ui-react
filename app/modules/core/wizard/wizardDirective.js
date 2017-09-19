@@ -115,13 +115,7 @@ require('./_wizard.scss');
     });
 
     function initCurrent() {
-      if ($stateParams.currentTab) {
-        vm.current.tab = _.find(getTabs(), {
-          name: $stateParams.currentTab,
-        });
-      } else {
-        vm.current.tab = getTabs()[0];
-      }
+      vm.current.tab = getTabs()[0];
 
       if ($stateParams.currentSubTab) {
         vm.current.subTab = _.find(getTab().subTabs, {

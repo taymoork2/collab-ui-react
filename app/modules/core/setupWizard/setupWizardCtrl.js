@@ -183,10 +183,10 @@ require('./_setup-wizard.scss');
       };
 
       if (shouldShowMeetingsTab) {
-        if (!SetupWizardService.hasTSPAudioPackage()) {
+        if (!SetupWizardService.hasPendingTSPAudioPackage() || SetupWizardService.getActiveTSPAudioPackage() !== undefined) {
           _.remove(meetingTab.steps, { name: 'setPartnerAudio' });
         }
-        if (!SetupWizardService.hasCCASPPackage()) {
+        if (!SetupWizardService.hasPendingCCASPPackage() || SetupWizardService.getActiveCCASPPackage() !== undefined) {
           _.remove(meetingTab.steps, { name: 'setCCASP' });
         }
         tabs.splice(1, 0, meetingTab);
@@ -240,7 +240,7 @@ require('./_setup-wizard.scss');
               $timeout(function () {
                 //   $scope.$emit('wizardNextButtonDisable', true);
               });
-              if (error.errorCode === 42003) {
+              if (error.errorCode === 412) {
                 //Error code from Drachma
                 Notification.errorWithTrackingId(error, 'firstTimeWizard.error.overCapacity');
               } else {
@@ -282,8 +282,11 @@ require('./_setup-wizard.scss');
         return true;
       }
 
+      var currentSubscription = SetupWizardService.getActingPendingSubscriptionOptionSelection();
+
       return _.some(Authinfo.getLicenses(), function (license) {
-        return license.licenseType === Config.licenseTypes.COMMUNICATION || license.licenseType === Config.licenseTypes.SHARED_DEVICES;
+        return (license.licenseType === Config.licenseTypes.COMMUNICATION || license.licenseType === Config.licenseTypes.SHARED_DEVICES)
+          && (_.isUndefined(currentSubscription) || license.billingServiceId === currentSubscription.value);
       });
     }
 
@@ -388,6 +391,13 @@ require('./_setup-wizard.scss');
           tab.steps = _.slice(tab.steps, index, index + $stateParams.numberOfSteps);
         }
       }
+
+      // Show Subscription selection step if user is setting up WebEx meetings
+      if ($stateParams.currentTab === 'meetingSettings') {
+        var planReviewTab = _.find(tabs, { name: 'planReview' });
+        filteredTabs.unshift(planReviewTab);
+      }
+
       return filteredTabs;
     }
   }

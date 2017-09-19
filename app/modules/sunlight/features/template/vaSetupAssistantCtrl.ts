@@ -22,6 +22,17 @@ export class CareSetupVirtualAssistantCtrl {
   public templateButtonText = this.$translate.instant('common.finish');
   public saveTemplateErrorOccurred = false;
   public cancelModalText = {};
+  public nameForm: ng.IFormController;
+  public tokenForm: ng.IFormController;
+  private escalationIntentUrl: string;
+
+  // Avatar file error
+  public avatarErrorType = {
+    NO_ERROR: 'None',
+    FILE_TYPE_ERROR: 'FileTypeError',
+    FILE_SIZE_ERROR: 'FileSizeError',
+    FILE_UPLOAD_ERROR: 'FileUploadError',
+  };
 
   public template = {
     templateId: '',
@@ -38,10 +49,18 @@ export class CareSetupVirtualAssistantCtrl {
         VirtualAssistantAccessToken: {
           enabled: true,
           accessTokenValue: '',
+          invalidToken: true,
+          validatingToken: false,
         },
         VirtualAssistantName: {
           enabled: true,
           nameValue: '',
+        },
+        VirtualAssistantAvatar: {
+          enabled: true,
+          fileValue: '',
+          avatarError: this.avatarErrorType.NO_ERROR,
+          uploadCanceled: false,
         },
         VirtualAssistantSummary: {
           enabled: true,
@@ -54,6 +73,14 @@ export class CareSetupVirtualAssistantCtrl {
   public states = Object.keys(this.template.configuration.pages);
   public currentState = this.states[0];
 
+  // Avatar file load progress states
+  public avatarState = {
+    SELECT: 'SELECT',
+    LOADING: 'LOADING',
+    PREVIEW: 'PREVIEW',
+  };
+  public avatarUploadState = this.avatarState.SELECT;
+  public MAX_AVATAR_FILE_SIZE = 1048576; // 1MB
 
   /* @ngInject*/
   constructor(
@@ -69,6 +96,7 @@ export class CareSetupVirtualAssistantCtrl {
     private CTService,
     private LogMetricsService,
     private Notification,
+    private UrlConfig,
   ) {
     if (this.$stateParams.isEditFeature) {
       this.isEditFeature = true;
@@ -76,7 +104,14 @@ export class CareSetupVirtualAssistantCtrl {
       this.template.configuration.pages.VirtualAssistantConfigOverview.isApiAiAgentConfigured = true;
       this.template.configuration.pages.VirtualAssistantName.nameValue = this.$stateParams.template.name;
       this.template.configuration.pages.VirtualAssistantAccessToken.accessTokenValue = this.$stateParams.template.config.token;
+      this.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = false;
+
+      if (this.$stateParams.template.icon) {
+        this.avatarUploadState = this.avatarState.PREVIEW;
+        this.template.configuration.pages.VirtualAssistantAvatar.fileValue = this.$stateParams.template.icon;
+      }
     }
+
     const controller = this;
     (<IScopeWithController>this.$scope).controller = controller; // used by ctCancelModal to not be tied to 1 controller.
 
@@ -87,6 +122,7 @@ export class CareSetupVirtualAssistantCtrl {
       controller.logoFile = 'data:image/png;base64,' + controller.$window.btoa(String.fromCharCode.apply(null, new Uint8Array(data.data)));
       controller.logoUploaded = true;
     });
+    this.escalationIntentUrl = this.UrlConfig.getEscalationIntentUrl();
   }
 
   /**
@@ -107,7 +143,7 @@ export class CareSetupVirtualAssistantCtrl {
    */
   public getSummaryDescription(): string {
     if (this.isEditFeature) {
-      return this.getVaText('summary.edit-desc');
+      return this.getVaText('summary.editDesc');
     } else {
       return this.getVaText('summary.desc');
     }
@@ -117,28 +153,11 @@ export class CareSetupVirtualAssistantCtrl {
    * open up the 'Cancel' modal with certain text.
    */
   public cancelModal(): void {
-    const modelText = this.isEditFeature ? {
-      bodyMessage: this.$translate.instant('careChatTpl.ctEditBody'),
-      trailingMessage: this.$translate.instant('careChatTpl.ctEditMessage'),
-      process: this.$translate.instant('careChatTpl.ctEditing'),
-    } : {
-      bodyMessage: this.$translate.instant('careChatTpl.ctCreationBody'),
-      trailingMessage: this.$translate.instant('careChatTpl.ctCreationMessage'),
-      process: this.$translate.instant('careChatTpl.ctCreation'),
-    };
-
     this.cancelModalText = {
       cancelHeader: this.$translate.instant('careChatTpl.cancelHeader'),
-      cancelDialog: this.$translate.instant('careChatTpl.cancelDialog', {
-        bodyMessage: modelText.bodyMessage,
-        trailingMessage: modelText.trailingMessage,
-      }),
-      continueButton: this.$translate.instant('careChatTpl.continueButton', {
-        confirmProcess: modelText.process,
-      }),
-      confirmButton: this.$translate.instant('careChatTpl.confirmButton', {
-        cancelProcess: modelText.process,
-      }),
+      cancelDialog: this.getVaText('cancelDialog'),
+      continueButton: this.$translate.instant('careChatTpl.continueButton'),
+      confirmButton: this.$translate.instant('careChatTpl.confirmButton'),
     };
     this.$modal.open({
       templateUrl: 'modules/sunlight/features/template/ctCancelModal.tpl.html',
@@ -168,7 +187,7 @@ export class CareSetupVirtualAssistantCtrl {
     if (0 === this.getPageIndex()) {
       return 'hidden';
     }
-    return (this.getPageIndex() > 0);
+    return (this.getPageIndex() > 0 && !this.isAvatarUploading());
   }
 
   /**
@@ -184,7 +203,9 @@ export class CareSetupVirtualAssistantCtrl {
       case 'VirtualAssistantAccessToken':
         return this.isAccessTokenValid();
       case 'VirtualAssistantName':
-        return this.isNameValid();
+        return this.isNameValid() && !this.isAvatarUploading();
+      case 'VirtualAssistantAvatar':
+        return !this.isAvatarUploading();
       case 'VirtualAssistantSummary':
         return 'hidden';
     }
@@ -193,6 +214,10 @@ export class CareSetupVirtualAssistantCtrl {
    * Move forward to next page in modal series.
    */
   public nextPage(): void {
+    // This is to clear a possible error issued during image loading. For instance one attempts to drag-drop a JPG,
+    // the file is invalid, the message is displayed, and it must be cleared when toggling between pages.
+    this.template.configuration.pages.VirtualAssistantAvatar.avatarError = this.avatarErrorType.NO_ERROR;
+
     const controller = this;
     controller.animation = 'slide-left';
     controller.$timeout(function () {
@@ -204,6 +229,10 @@ export class CareSetupVirtualAssistantCtrl {
    * Move backwards to previous page in modal series.
    */
   public previousPage(): void {
+    // This is to clear a possible error issued during image loading. For instance one attempts to drag-drop a JPG,
+    // the file is invalid, the message is displayed, and it must be cleared when toggling between pages.
+    this.template.configuration.pages.VirtualAssistantAvatar.avatarError = this.avatarErrorType.NO_ERROR;
+
     const controller = this;
     controller.animation = 'slide-right';
     controller.saveTemplateErrorOccurred = false;
@@ -228,11 +257,38 @@ export class CareSetupVirtualAssistantCtrl {
     const name = this.template.configuration.pages.VirtualAssistantName.nameValue.trim();
     const config = this.createConfigurationObject(); // Note: this is our point of extensibility as other types besides api.ai are supported.
     this.creatingTemplate = true;
+    const avatarDataURL = this.template.configuration.pages.VirtualAssistantAvatar.fileValue;
     if (this.isEditFeature) {
-      this.updateFeature(this.template.templateId, this.template.configuration.pages.VirtualAssistantConfigOverview.configurationType, name, config, this.orgId);
+      this.updateFeature(this.template.templateId, this.template.configuration.pages.VirtualAssistantConfigOverview.configurationType, name, config, this.orgId, avatarDataURL);
     } else {
-      this.createFeature(this.template.configuration.pages.VirtualAssistantConfigOverview.configurationType, name, config, this.orgId);
+      this.createFeature(this.template.configuration.pages.VirtualAssistantConfigOverview.configurationType, name, config, this.orgId, avatarDataURL);
     }
+  }
+
+  public onAPIAITokenChange(): void {
+    const controller = this;
+    this.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = true;
+    controller.tokenForm.tokenInput.$setValidity('invalidToken', true); // reset validation
+  }
+
+  /**
+   * validate the api.ai Token
+   */
+  public validateAPIAIToken(): void {
+    const controller = this;
+    controller.template.configuration.pages.VirtualAssistantAccessToken.validatingToken = true;
+    const accessToken = (controller.template.configuration.pages.VirtualAssistantAccessToken.accessTokenValue || '').trim();
+    controller.service.isAPIAITokenValid(accessToken)
+      .then(function () {
+        controller.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = false;
+        controller.tokenForm.tokenInput.$setValidity('invalidToken', true); //mark input as valid
+        controller.template.configuration.pages.VirtualAssistantAccessToken.validatingToken = false;
+      })
+      .catch(function () {
+        controller.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = true;
+        controller.tokenForm.tokenInput.$setValidity('invalidToken', false); //mark input as invalid
+        controller.template.configuration.pages.VirtualAssistantAccessToken.validatingToken = false;
+      });
   }
 
   /** Data Validation functions **/
@@ -241,11 +297,109 @@ export class CareSetupVirtualAssistantCtrl {
   }
 
   public isAccessTokenValid(): boolean {
-    return !!(this.template.configuration.pages.VirtualAssistantAccessToken.accessTokenValue || '').trim() && this.isValidTokenLength();
+    return !!(this.template.configuration.pages.VirtualAssistantAccessToken.accessTokenValue || '').trim()
+      && this.isValidTokenLength()
+      && !this.template.configuration.pages.VirtualAssistantAccessToken.invalidToken;
   }
 
   public isNameValid(): boolean {
-    return !!(this.template.configuration.pages.VirtualAssistantName.nameValue || '').trim() && this.isValidNameLength();
+    const name = (this.template.configuration.pages.VirtualAssistantName.nameValue || '').trim();
+    return !!name && this.isValidNameLength(name) && this.isUniqueName(name);
+  }
+
+  /**
+   *  Determines if some avatar error occurred
+   *
+   * @returns {boolean} return true if error occurred; otherwise false
+   */
+  public isAvatarError(): boolean {
+    return this.template.configuration.pages.VirtualAssistantAvatar.avatarError !== this.avatarErrorType.NO_ERROR;
+  }
+
+  private isAvatarUploading(): boolean {
+    return this.avatarUploadState === this.avatarState.LOADING;
+  }
+
+  private changeAvatarUploadState(): void {
+    this.avatarUploadState = _.isEmpty(this.template.configuration.pages.VirtualAssistantAvatar.fileValue) ? this.avatarState.SELECT : this.avatarState.PREVIEW;
+  }
+
+  /**
+   *  Avatar uploading interrupted
+   */
+  public avatarStopLoad(): void {
+    if (this.isAvatarUploading()) {
+      this.changeAvatarUploadState();
+      this.template.configuration.pages.VirtualAssistantAvatar.uploadCanceled = true;
+    }
+  }
+
+  /**
+   *  Image file name has to carry extension PNG.
+   *  Note: original functionality called for JPG, and SVG as well - this can be extended by addign to the array
+   *
+   * @param {string} fileName
+   * @returns {boolean}
+   */
+  private isImageFileName(fileName: string): boolean {
+    if ((fileName || '').trim().length > 0) {
+      const lowerCaseExt = fileName.trim().toLocaleLowerCase().split('.');
+      return lowerCaseExt.length >= 2 && ['png'].indexOf(lowerCaseExt[lowerCaseExt.length - 1]) >= 0;
+    }
+    return false;
+  }
+
+  /**
+   * Validate the avatar image file
+   * @param {any} fileSelected
+   * @returns {boolean} return true if the image file is valid; otherwise return false
+   */
+  private validateAvatarFile(fileSelected: any): boolean {
+    if (!this.isImageFileName(fileSelected.name)) {
+      this.template.configuration.pages.VirtualAssistantAvatar.avatarError = this.avatarErrorType.FILE_TYPE_ERROR;
+    } else if (fileSelected.size > this.MAX_AVATAR_FILE_SIZE || fileSelected.size <= 0) {
+      this.template.configuration.pages.VirtualAssistantAvatar.avatarError = this.avatarErrorType.FILE_SIZE_ERROR;
+    }
+    return !this.isAvatarError();
+  }
+
+  /**
+   *  Avatar file name is valid, then, upload it.
+   *
+   * @param fileSelected (via drag-and-drop or file select)
+   */
+  public uploadAvatar(fileSelected: any): void {
+    this.template.configuration.pages.VirtualAssistantAvatar.avatarError = this.avatarErrorType.NO_ERROR;
+    this.template.configuration.pages.VirtualAssistantAvatar.uploadCanceled = false;
+    if (fileSelected && ('name' in fileSelected)) {
+      if (this.validateAvatarFile(fileSelected)) {
+        this.avatarUploadState = this.avatarState.LOADING;
+        this.service.getFileDataUrl(fileSelected)
+          .then((avatardataURL) => {
+            this.service.isAvatarFileValid(this.orgId, avatardataURL)
+              .then(() => {
+                if (!this.template.configuration.pages.VirtualAssistantAvatar.uploadCanceled) {
+                  this.template.configuration.pages.VirtualAssistantAvatar.fileValue = avatardataURL; // update the stored config
+                }
+              })
+              .catch(() => {
+                this.handleAvatarFileUploadError();
+              });
+          })
+          .catch(() => {
+            this.handleAvatarFileUploadError();
+          })
+          .finally(() => {
+            this.changeAvatarUploadState();
+          });
+      }
+    }
+  }
+
+  private handleAvatarFileUploadError() {
+    if (!this.template.configuration.pages.VirtualAssistantAvatar.uploadCanceled) {
+      this.template.configuration.pages.VirtualAssistantAvatar.avatarError = this.avatarErrorType.FILE_UPLOAD_ERROR;
+    }
   }
 
   public getVaText(textIdExtension: string): string {
@@ -308,10 +462,11 @@ export class CareSetupVirtualAssistantCtrl {
    * @param name
    * @param config
    * @param orgId
+   * @param avatarDataURL optional
    */
-  private createFeature(type: string, name: string, config: any, orgId: string): void {
+  private createFeature(type: string, name: string, config: any, orgId: string, avatarDataURL?: string): void {
     const controller = this;
-    controller.service.addConfig(type, name, config, orgId)
+    controller.service.addConfig(type, name, config, orgId, avatarDataURL)
       .then(function () {
         controller.handleFeatureCreation();
         controller.LogMetricsService.logMetrics('Created template for Care Virtual Assistant', controller.LogMetricsService.getEventType('careTemplateFinish'), controller.LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
@@ -342,10 +497,11 @@ export class CareSetupVirtualAssistantCtrl {
    * @param name
    * @param config
    * @param orgId
+   * @param avatarDataURl optional
    */
-  private updateFeature(templateId: string, type: string, name: string, config: any, orgId: string): void {
+  private updateFeature(templateId: string, type: string, name: string, config: any, orgId: string, avatarDataURL?: string): void {
     const controller = this;
-    controller.service.updateConfig(templateId, type, name, config, orgId)
+    controller.service.updateConfig(templateId, type, name, config, orgId, avatarDataURL)
       .then(function () {
         controller.handleFeatureUpdate();
         controller.LogMetricsService.logMetrics('Updated template for Care VirtualAssistant', controller.LogMetricsService.getEventType('careTemplateFinish'), controller.LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
@@ -363,14 +519,28 @@ export class CareSetupVirtualAssistantCtrl {
    * @returns {*}
    */
   private createConfigurationObject(): any {
-    return { token: this.template.configuration.pages.VirtualAssistantAccessToken.accessTokenValue.trim() };
+    return {
+      token: this.template.configuration.pages.VirtualAssistantAccessToken.accessTokenValue.trim(),
+    };
   }
 
   private isValidTokenLength(): boolean {
     return (this.template.configuration.pages.VirtualAssistantAccessToken.accessTokenValue || '').trim().length <= this.maxTokenLength;
   }
-  private isValidNameLength(): boolean {
-    return (this.template.configuration.pages.VirtualAssistantName.nameValue || '').trim().length <= this.maxNameLength;
+  private isValidNameLength(name): boolean {
+    return name.trim().length <= this.maxNameLength;
+  }
+  private isUniqueName(name): boolean {
+    const controller = this;
+    const list = this.service.featureList.data;
+    //will return undefined if no name found,  !undefined = true
+    const isUnique = !_.find(list, function (cva: any) {
+      return cva.id !== controller.template.templateId && cva.name.toLowerCase() === name.toLowerCase();
+    });
+    if (this.nameForm && name) {
+      this.nameForm.nameInput.$setValidity('duplicateNameError', isUnique);
+    }
+    return isUnique;
   }
 }
 angular

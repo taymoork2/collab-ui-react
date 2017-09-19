@@ -2,5 +2,13 @@
 
 .order-provisioning {
   background-color: $color-white;
-  height: 100vh;
+}
+
+.provisioning-details {
+  &.break-word {
+    word-wrap: break-word;
+  }
+}
+.provisioning-details__raw {
+  font-size: .85rem;
 }

@@ -29,19 +29,22 @@
       return $http.delete(url);
     };
 
+    function recoverProm(errorResponse) {
+      Notification.errorWithTrackingId(errorResponse, 'mediaFusion.mediaNetworkFailure');
+      return undefined;
+    }
+
+    function enableMediaServiceEntitlements() {
+      return [enableRhesosEntitlement().catch(recoverProm), enableCallServiceEntitlement().catch(recoverProm)];
+    }
 
     function enableMediaService(serviceId) {
-      ServiceDescriptorService.enableService(serviceId).then(
-        function success() {
-          setisMediaServiceEnabled(true);
-          enableOrpheusForMediaFusion();
-          enableRhesosEntitlement();
-          enableCallServiceEntitlement();
-          setOrgSettingsForDevOps();
-        },
-        function error() {
-          Notification.error('mediaFusion.mediaServiceActivationFailure');
-        });
+      ServiceDescriptorService.enableService(serviceId).then('', function () {
+        Notification.error('mediaFusion.mediaServiceActivationFailure');
+      });
+      setisMediaServiceEnabled(true);
+      enableOrpheusForMediaFusion();
+      setOrgSettingsForDevOps();
     }
 
     var enableOrpheusForMediaFusion = function () {
@@ -141,12 +144,7 @@
 
     var enableRhesosEntitlement = function () {
       var url = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/services/rhesos';
-      return $http.post(url).then(
-        function success() {},
-        function error(errorResponse) {
-          Notification.errorWithTrackingId(errorResponse, 'mediaFusion.mediaNetworkFailure');
-        }
-      );
+      return $http.post(url);
     };
 
     var enableCallServiceEntitlement = function () {
@@ -155,12 +153,7 @@
         roles: ['Spark_CallService'],
       };
       var url = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/services/spark';
-      return $http.post(url, payload).then(
-        function success() {},
-        function error(errorResponse) {
-          Notification.errorWithTrackingId(errorResponse, 'mediaFusion.mediaNetworkFailure');
-        }
-      );
+      return $http.post(url, payload);
     };
 
     var setOrgSettingsForDevOps = function () {
@@ -188,6 +181,7 @@
       disableOrpheusForMediaFusion: disableOrpheusForMediaFusion,
       deactivateHybridMedia: deactivateHybridMedia,
       disableMFOrgSettingsForDevOps: disableMFOrgSettingsForDevOps,
+      enableMediaServiceEntitlements: enableMediaServiceEntitlements,
     };
   }
 })();

@@ -31,9 +31,11 @@ describe('Controller: SupportCtrl', function () {
     });
     spyOn(Authinfo, 'isCiscoMock').and.returnValue(true);
     spyOn(Authinfo, 'isCisco').and.returnValue(false);
+    spyOn(Authinfo, 'isComplianceUser').and.returnValue(false);
+    spyOn(Authinfo, 'isOrderAdminUser').and.returnValue(true);
     spyOn(Config, 'isProd').and.returnValue(false);
     spyOn(FeatureToggleService, 'atlasOrderProvisioningConsoleGetStatus').and.returnValue($q.resolve(true));
-    spyOn(Authinfo, 'isOrderAdminUser').and.returnValue(true);
+    spyOn(FeatureToggleService, 'atlasEdiscoveryGetStatus').and.returnValue($q.resolve(false));
     $scope = $rootScope.$new();
     controller = $controller('SupportCtrl', {
       $scope: $scope,
@@ -66,6 +68,20 @@ describe('Controller: SupportCtrl', function () {
   it('should NOT show PartnerManagementLink if user does NOT have partner management role', function () {
     $scope.initializeShowLinks();
     expect($scope.showPartnerManagementLink).toEqual(false);
+  });
+
+  describe('ediscovery console', function () {
+    it('should NOT show if user does NOT have both compliance role and ediscovery feature toggle', function () {
+      expect($scope.showEdiscoveryLink()).toEqual(false);
+    });
+
+    it('should show if user has both compliance role and ediscovery feature toggle', function () {
+      FeatureToggleService.atlasEdiscoveryGetStatus.and.returnValue($q.resolve(true));
+      Authinfo.isComplianceUser.and.returnValue(true);
+      $scope.initializeShowLinks();
+      $scope.$apply();
+      expect($scope.showEdiscoveryLink()).toEqual(true);
+    });
   });
 
   describe('launch Order Provisioning Console', function () {

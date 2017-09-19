@@ -68,8 +68,20 @@ class UserLocationDetailsCtrl implements ng.IComponentController {
           this.$state.go('place-overview', { placeLocation : this.selectedLocation.name }, { reload: true });
         }
       })
-      .catch(() => {
-        this.Notification.error('locations.userLocMoveErrorDesc');
+      .catch((error) => {
+        _.forEach(error.data.details, detail => {
+          switch (detail.productErrorCode) {
+            case '19579':
+              this.Notification.errorWithTrackingId(error, 'locations.errCode19579');
+              break;
+            case '19580':
+              this.Notification.errorWithTrackingId(error, 'locations.errCode19580');
+              break;
+            case '19584':
+              this.Notification.errorWithTrackingId(error, 'locations.errCode19584');
+              break;
+          }
+        });
       })
       .finally ( () => {
         this.saveInProcess = false;

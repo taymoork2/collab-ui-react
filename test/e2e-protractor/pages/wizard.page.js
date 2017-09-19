@@ -2,6 +2,7 @@
 
 var Wizard = function () {
   var TRIAL_TEXT = 'Start your new 90-day trial';
+  var SETTINGS_SAVED = 'Call settings saved successfully';
 
   this.wizard = element(by.css('.wizard'));
   this.mainView = element(by.css('.wizard-main'));
@@ -12,7 +13,6 @@ var Wizard = function () {
   this.enterpriseTab = element(by.id('wizard-enterpriseSettings-link'));
   this.messagingTab = element(by.id('wizard-messagingSetup-link'));
   this.messageInteropFeature = element(by.id('messenger-interop-feature'));
-  // this.addusersTab = element(by.id('wizard-addUsers-link'));
   this.addusersTab = element(by.css('.icon-add-users'));
   this.mainviewTitle = element(by.css('.wizard-main-title'));
   this.mainviewSubtitle = element(by.css('.wizard-main-wrapper h3'));
@@ -24,6 +24,7 @@ var Wizard = function () {
   this.saveBtn = element(by.buttonText('Save'));
   this.yesBtn = element(by.buttonText('Yes'));
   this.skipBtn = element(by.css('.skip-btn'));
+  this.cancelBtn = element(by.css('button[translate="common.cancel"]'));
   this.finishBtn = element(by.buttonText('Finish'));
   this.esEvaluateBtn = element(by.css('[ng-click="evaluateStep(\'initial\', \'enterpriseSettings\')"]'));
   this.toExpCloudDataBtn = element.all(by.css('[ng-click="changeStep(\'exportCloudData\')"]'));
@@ -49,12 +50,21 @@ var Wizard = function () {
   this.extensionLengthSuffixInput = element(by.id('endRange0'));
   this.dialOneRadio = element(by.css('.cs-radio[for="nationalDialing"]'));
   this.companyVoicemailToggle = element(by.css('label[for="companyVoicemailToggle"]'));
-  this.scrollToBottomButton = element(by.css('.icon-right-arrow-contain'));
+  this.scrollToBottomButton = element(by.css('.icon.icon-right-arrow-contain'));
   this.voicemailDropdown = element.all(by.binding('csSelect.getLabel(csSelect.selected)')).last();
   this.voicemailDropdownSelect = element.all(by.css('li[ng-class="csSelect.style(option)"]')).last();
   this.planReviewMessagesTrial = element(by.cssContainingText('div[ng-if="planReview.messagingServices.isNewTrial"]', TRIAL_TEXT));
   this.planReviewMeetingsTrial = element(by.cssContainingText('div[ng-if="planReview.confServices.isNewTrial"]', TRIAL_TEXT));
   this.planReviewCallTrial = element(by.cssContainingText('div[ng-if="planReview.commServices.isNewTrial"]', TRIAL_TEXT));
+  this.voicemailEmailWithAttachment = element(by.css('.cs-radio[for="withAttachment"]'));
+  this.voicemailEmailWithoutAttachment = element(by.css('.cs-radio[for="withoutAttachment"]'));
+  this.enterpriseSettingsBanner = element.all(by.css('[translate="firstTimeWizard.enterpriseSettings"]')).first();
+  this.sipInput = element(by.id('sipDomainInput'));
+  this.checkAvailabilityBtn = element(by.css('.btn.btn--cta'));
+  this.checkAvailabilitySuccess = element.all(by.css('i.icon.icon-check.domain-icon.domain-success')).first();
+  this.getStartedBanner = element.all(by.css('[translate="firstTimeWizard.getStarted"]'));
+  this.saveToaster = element(by.cssContainingText('div[ng-repeat="message in directiveData.messages"]', SETTINGS_SAVED));
+  this.closeToaster = element(by.css('.toast-close-button'));
 
   this.clickPlanReview = function () {
     utils.click(this.reviewTab);

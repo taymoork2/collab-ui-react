@@ -8,7 +8,7 @@ export default angular
     require('angular-translate'),
     require('collab-ui-ng').default,
     require('modules/core/analytics'),
-    require('modules/core/config/config'),
+    require('modules/core/config/config').default,
     require('modules/core/notifications').default,
     require('modules/core/scripts/services/authinfo'),
     require('modules/hercules/services/enterprise-private-trunk-service').default,

@@ -191,7 +191,7 @@ require('../devices/_devices.scss');
                   sparkCall: 'addDeviceFlow.addLines',
                   sparkCallConnect: 'addDeviceFlow.callConnectOptions',
                   sparkOnly: 'addDeviceFlow.showActivationCode',
-                  sparkOnlyAndCalendar: 'addDeviceFlow.editCalendarService',
+                  calendar: 'addDeviceFlow.editCalendarService',
                 },
               },
               'addDeviceFlow.callConnectOptions': {

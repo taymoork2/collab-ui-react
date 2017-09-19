@@ -1,5 +1,6 @@
 @import '~collab-ui/scss/settings/colors';
 @import '~collab-ui/scss/settings/typography';
+@import '~collab-ui/scss/tools/mixins/text-overflow';
 
 services-overview {
   display: block;
@@ -34,7 +35,7 @@ services-overview {
 
     h5 {
       margin-bottom: 0;
-      margin-left: 0.5rem;
+      margin-left: 1rem;
       opacity: 1;
       z-index: 100;
 
@@ -252,6 +253,87 @@ services-overview {
 
     .btn.disabled {
       width: calc(100% - 1rem);
+    }
+  }
+
+  // Active card
+  .active-card {
+    > article {
+      display: flex;
+    }
+  }
+
+  .active-card_header {
+    padding: 0 1rem;
+    margin-bottom: 1rem;
+
+    h4 {
+      @include text-overflow();
+      font-size: 1.2rem !important;
+      text-align: left !important;
+    }
+  }
+
+  .active-card_content {
+    margin: 0 1rem;
+    margin-bottom: auto;
+  }
+
+  .active-card_footer {
+    margin: 0 1rem 1rem;
+    text-align: center;
+
+    a {
+      color: inherit;
+    }
+  }
+
+  // Inactive card
+  .inactive-card {
+    > article {
+      min-height: 300px !important;
+    }
+  }
+
+  .inactive-card_header {
+    padding: 0 1rem;
+    margin-bottom: 1rem;
+
+    h4 {
+      @include text-overflow();
+      font-size: 1.2rem !important;
+      text-align: left !important;
+    }
+  }
+
+  .card_header--stretched {
+    display: flex;
+    align-items: center;
+
+    h4 {
+      margin-right: auto;
+      flex-grow: 1;
+      flex-shrink: 0;
+    }
+
+    span {
+      max-width: 90px;
+      margin-left: 1rem;
+      padding-top: 0.5rem;
+    }
+  }
+
+  .inactive-card_content {
+    margin: 0 1rem;
+    margin-bottom: auto;
+  }
+
+  .inactive-card_footer {
+    margin: 0 1rem 1rem;
+    text-align: center;
+
+    .btn {
+      width: 100%;
     }
   }
 }

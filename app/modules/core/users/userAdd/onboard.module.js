@@ -12,7 +12,7 @@ require('./_user-add.scss');
   module.exports = angular
     .module('core.users.userAdd', [
       require('modules/core/scripts/services/authinfo'),
-      require('modules/core/config/config'),
+      require('modules/core/config/config').default,
     ])
     .service('OnboardService', OnboardService)
     .service('MessengerInteropService', MessengerInteropService)

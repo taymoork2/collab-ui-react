@@ -4,9 +4,11 @@ import { CustomerSettings } from 'modules/call/settings/shared/customer-settings
 import { LocationCosService, LocationCos } from 'modules/call/shared/cos';
 import { InternalNumberRange, InternalNumberRangeService } from 'modules/call/shared/internal-number-range';
 import { Customer, CustomerVoice, HuronCustomerService, ServicePackage } from 'modules/huron/customer';
-import { ExtensionLengthService } from 'modules/call/settings/shared/extension-length.service';
+import { ExtensionLengthService, IExtensionLength } from 'modules/call/settings/shared/extension-length.service';
 import { AvrilService, AvrilCustomer } from 'modules/huron/avril';
 import { Notification } from 'modules/core/notifications';
+import { PstnAddressService, PstnModel, Address } from 'modules/huron/pstn';
+import { EmergencyNumber } from 'modules/huron/phoneNumber';
 
 export class CallLocationSettingsData {
   public location: Location;
@@ -16,6 +18,9 @@ export class CallLocationSettingsData {
   public customer: CustomerSettings;
   public customerVoice: CustomerVoice;
   public avrilCustomer: AvrilCustomer;
+  //Emergency Services
+  public address: Address;
+  public emergencyNumber: EmergencyNumber;
 }
 
 export class CallLocationSettingsService {
@@ -25,16 +30,18 @@ export class CallLocationSettingsService {
 
   /* @ngInject */
   constructor(
+    private $q: ng.IQService,
     private LocationsService: LocationsService,
+    private PstnModel: PstnModel,
+    private PstnAddressService: PstnAddressService,
     private MediaOnHoldService: MediaOnHoldService,
     private LocationCosService: LocationCosService,
     private InternalNumberRangeService: InternalNumberRangeService,
     private HuronCustomerService: HuronCustomerService,
     private Notification: Notification,
-    private $q: ng.IQService,
     private ExtensionLengthService: ExtensionLengthService,
-    private FeatureToggleService,
     private AvrilService: AvrilService,
+    private FeatureToggleService,
   ) {
     // Location Media On Hold Support
     this.FeatureToggleService.supports(FeatureToggleService.features.huronMOHEnable)
@@ -42,9 +49,12 @@ export class CallLocationSettingsService {
   }
 
   public get(locationId: string): ng.IPromise<CallLocationSettingsData> {
+    this.errors = [];
     const callLocationSettingsData = new CallLocationSettingsData();
     return this.$q.all({
       location: this.getLocation(locationId).then(location => callLocationSettingsData.location = location),
+      address: this.getEmergencyServiceAddress(locationId).then(address => callLocationSettingsData.address = address),
+      emergencyNumber: this.getEmergencyCallbackNumber(locationId).then(emergencyNumber => callLocationSettingsData.emergencyNumber = emergencyNumber),
       mediaId: this.getLocationMedia(locationId).then(mediaId => callLocationSettingsData.mediaId = mediaId),
       internalNumberRanges: this.getInternalNumberRanges(locationId).then(internalNumberRanges => callLocationSettingsData.internalNumberRanges = internalNumberRanges),
       cosRestrictions: this.getCosRestrictions(locationId).then(cosRestrictions => callLocationSettingsData.cosRestrictions = cosRestrictions),
@@ -55,27 +65,62 @@ export class CallLocationSettingsService {
     .then(() => {
       this.callLocationSettingsDataCopy = this.cloneSettingsData(callLocationSettingsData);
       return callLocationSettingsData;
-    });
+    })
+    .catch(() => this.rejectAndNotifyPossibleErrors());
   }
 
   public save(data: CallLocationSettingsData): ng.IPromise<CallLocationSettingsData> {
+    this.errors = [];
     if (!data.location.uuid) {
       return this.createLocation(data.location)
         .then(locationId => data.location.uuid = locationId)
         .then(() => this.saveCustomerServicePackage(data.customer))
         .then(() => this.saveExtensionLength(data.customerVoice.extensionLength, null))
         .then(() => this.$q.all(this.createParallelRequests(data, true)))
-        .then(() => this.get(data.location.uuid || ''));
+        .then(() => this.get(data.location.uuid || ''))
+        .catch(() => this.rejectAndNotifyPossibleErrors());
     } else {
       if (!_.isEqual(data.location, this.callLocationSettingsDataCopy.location)) {
         return this.updateLocation(data.location)
           .then(() => this.$q.all(this.createParallelRequests(data, false)))
-          .then(() => this.get(data.location.uuid || ''));
+          .then(() => this.get(data.location.uuid || ''))
+          .catch(() => this.rejectAndNotifyPossibleErrors());
       } else {
         return this.$q.all(this.createParallelRequests(data, false))
-          .then(() => this.get(data.location.uuid || ''));
+          .then(() => this.get(data.location.uuid || ''))
+          .catch(() => this.rejectAndNotifyPossibleErrors());
       }
     }
+  }
+
+  private getEmergencyServiceAddress(locationId: string): ng.IPromise<Address> {
+    const defaultAddress: Address = new Address();
+    defaultAddress.country = this.PstnModel.getCountryCode();
+    if (locationId && this.PstnModel.getCustomerId()) {
+      return this.PstnAddressService.getByLocation(this.PstnModel.getCustomerId(), locationId)
+      .then(addresses => {
+        if (_.isArray(addresses) && addresses.length > 0) {
+          return addresses[0];
+        }
+        return defaultAddress;
+      })
+      .catch(error => {
+        this.errors.push(this.Notification.processErrorResponse(error, 'settingsServiceAddress.getError'));
+        return this.$q.reject();
+      });
+    }
+    return this.$q.resolve(defaultAddress);
+  }
+
+  private getEmergencyCallbackNumber(locationId: string): ng.IPromise<EmergencyNumber> {
+    if (locationId) {
+      return this.LocationsService.getEmergencyCallbackNumber(locationId)
+      .catch(error => {
+        this.errors.push(this.Notification.processErrorResponse(error, 'settingsServiceNumber.getError'));
+        return this.$q.reject();
+      });
+    }
+    return this.$q.resolve(new EmergencyNumber());
   }
 
   private getLocation(locationId: string) {
@@ -83,7 +128,7 @@ export class CallLocationSettingsService {
       return this.LocationsService.getLocation(locationId)
         .catch(error => {
           this.errors.push(this.Notification.processErrorResponse(error, 'locations.getFailed'));
-          return this.rejectAndNotifyPossibleErrors();
+          return this.$q.reject();
         });
     } else {
       return this.$q.resolve(new Location());
@@ -95,7 +140,7 @@ export class CallLocationSettingsService {
       .then(locationHeader => _.last(locationHeader.split('/')))
       .catch(error => {
         this.errors.push(this.Notification.processErrorResponse(error, 'locations.createFailed'));
-        return this.rejectAndNotifyPossibleErrors();
+        return this.$q.reject();
       });
   }
 
@@ -103,7 +148,7 @@ export class CallLocationSettingsService {
     return this.LocationsService.updateLocation(data)
       .catch(error => {
         this.errors.push(this.Notification.processErrorResponse(error, 'locations.updateFailed'));
-        return this.rejectAndNotifyPossibleErrors();
+        return this.$q.reject();
       });
   }
 
@@ -126,6 +171,16 @@ export class CallLocationSettingsService {
     if (!ftsw && !_.isEqual(data.cosRestrictions, this.callLocationSettingsDataCopy.cosRestrictions)) {
       promises.push(this.saveCosRestrictions(data.location.uuid || '', data.cosRestrictions));
     }
+    //Emergency Service Address(ESA)
+    if (!_.isEqual(this.callLocationSettingsDataCopy.address, data.address) ) {
+      promises.push(this.saveEmergencyServicesAddress(data));
+    }
+
+    //Emergency Callback Number (ECBA)
+    if (!_.isEqual(this.callLocationSettingsDataCopy.emergencyNumber, data.emergencyNumber) ) {
+      promises.push(this.saveEmergencyCallbackNumber(data));
+    }
+
     return promises;
   }
 
@@ -134,7 +189,7 @@ export class CallLocationSettingsService {
       return this.MediaOnHoldService.getLocationMedia(locationId)
       .catch(error => {
         this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohGetError'));
-        return this.rejectAndNotifyPossibleErrors();
+        return this.$q.reject();
       });
     }
     return this.$q.resolve('');
@@ -144,6 +199,7 @@ export class CallLocationSettingsService {
     return this.MediaOnHoldService.updateMediaOnHold(mediaId, 'Location', locationId)
       .catch(error => {
         this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohUpdateError'));
+        return this.$q.reject();
       });
   }
 
@@ -151,8 +207,10 @@ export class CallLocationSettingsService {
     return this.MediaOnHoldService.unassignMediaOnHold('Location', locationId)
       .catch(error => {
         this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohUpdateError'));
+        return this.$q.reject();
       });
   }
+
   private getCustomer(): ng.IPromise<CustomerSettings> {
     return this.HuronCustomerService.getCustomer()
       .then(customer => {
@@ -175,7 +233,7 @@ export class CallLocationSettingsService {
         });
       }).catch(error => {
         this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.customerGetError'));
-        return this.rejectAndNotifyPossibleErrors();
+        return this.$q.reject();
       });
   }
 
@@ -190,7 +248,7 @@ export class CallLocationSettingsService {
       return this.HuronCustomerService.updateCustomer(customer)
         .catch(error => {
           this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.voicemailUpdateError'));
-          return this.rejectAndNotifyPossibleErrors();
+          return this.$q.reject();
         });
     } else {
       return this.$q.resolve();
@@ -202,14 +260,14 @@ export class CallLocationSettingsService {
       return this.LocationCosService.getLocationCos(locationId)
         .catch(error => {
           this.errors.push(this.Notification.processErrorResponse(error, 'locations.getLocationCosFailed'));
-          return this.rejectAndNotifyPossibleErrors();
+          return this.$q.reject();
         });
     } else {
       return this.$q.resolve(new LocationCos());
     }
   }
 
-  private saveCosRestrictions(locationId: string, cosRestrictions: LocationCos): ng.IPromise<string | void> {
+  private saveCosRestrictions(locationId: string, cosRestrictions: LocationCos): ng.IPromise<(string | void)[]> {
     const promises: ng.IPromise<string | void>[] = [];
     _.forEach(cosRestrictions.location, locationRestriction => {
       if (locationRestriction.uuid) {
@@ -222,7 +280,7 @@ export class CallLocationSettingsService {
     return this.$q.all(promises)
       .catch(error => {
         this.errors.push(this.Notification.processErrorResponse(error, 'locations.updateLocationCosFailed'));
-        return this.rejectAndNotifyPossibleErrors();
+        return this.$q.reject();
       });
   }
 
@@ -231,7 +289,7 @@ export class CallLocationSettingsService {
       return this.InternalNumberRangeService.getLocationRangeList(locationId)
       .catch(error => {
         this.errors.push(this.Notification.processErrorResponse(error, 'locations.getLocationNumberRangesFailed'));
-        return this.rejectAndNotifyPossibleErrors();
+        return this.$q.reject();
       });
     } else {
       // if locationId is not specified, get the extentions from the default location
@@ -251,7 +309,7 @@ export class CallLocationSettingsService {
         this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.extensionAddError', {
           extension: range.name,
         }));
-        return this.rejectAndNotifyPossibleErrors();
+        return this.$q.reject();
       });
   }
 
@@ -261,7 +319,7 @@ export class CallLocationSettingsService {
         this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.extensionDeleteError', {
           extension: range.name,
         }));
-        return this.rejectAndNotifyPossibleErrors();
+        return this.$q.reject();
       });
   }
 
@@ -292,20 +350,63 @@ export class CallLocationSettingsService {
     return this.HuronCustomerService.getVoiceCustomer()
       .catch(error => {
         this.errors.push(this.Notification.processErrorResponse(error, 'locations.getCustomerFailed'));
-        return this.rejectAndNotifyPossibleErrors();
+        return this.$q.reject();
       });
   }
 
-  private saveExtensionLength(newExtensionLength: number | null, extensionPrefix: number | null): ng.IPromise<void> {
+  private saveExtensionLength(newExtensionLength: number | null, extensionPrefix: number | null): ng.IPromise<IExtensionLength | void> {
     if (!_.isEqual(this.callLocationSettingsDataCopy.customerVoice.extensionLength, newExtensionLength)) {
       return this.ExtensionLengthService.saveExtensionLength(newExtensionLength, extensionPrefix)
         .catch(error => {
           this.errors.push(this.Notification.processErrorResponse(error, 'locations.updateExtensionLengthFailed'));
-          return this.rejectAndNotifyPossibleErrors();
+          return this.$q.reject();
         });
     } else {
       return this.$q.resolve();
     }
+  }
+
+  private saveEmergencyServicesAddress(data: CallLocationSettingsData): ng.IPromise<void> {
+    if (!data.location.uuid) {
+      this.Notification.error('emergencyServices.locationUnknown');
+      return this.$q.reject();
+    }
+    if (this.callLocationSettingsDataCopy.address && this.callLocationSettingsDataCopy.address.validated) {
+      //Normally the new address has be validated and the uuid has been removed
+      data.address.uuid = this.callLocationSettingsDataCopy.address.uuid;
+      return this.PstnAddressService.updateToLocation(this.PstnModel.getCustomerId(), data.location.uuid, data.address)
+      .catch(error => {
+        this.errors.push(this.Notification.processErrorResponse(error, 'settingsServiceAddress.saveError'));
+        return this.$q.reject();
+      });
+    }
+    return this.PstnAddressService.addToLocation(this.PstnModel.getCustomerId(), data.location.uuid, data.address)
+      .catch(error => {
+        this.errors.push(this.Notification.processErrorResponse(error, 'settingsServiceAddress.saveError'));
+        return this.$q.reject();
+      });
+  }
+
+  private saveEmergencyCallbackNumber(data: CallLocationSettingsData): ng.IPromise<void> {
+    if (!data.location.uuid) {
+      this.Notification.error('emergencyServices.locationUnknown');
+      return this.$q.reject();
+    }
+    if (_.isString(data.emergencyNumber.uuid) && data.emergencyNumber.uuid.length > 0) {
+      return this.LocationsService.updateEmergencyCallbackNumber(data.location.uuid, data.emergencyNumber)
+      .catch(error => {
+        this.errors.push(this.Notification.processErrorResponse(error, 'settingsServiceNumber.saveError'));
+        return this.$q.reject();
+      });
+    }
+    return this.LocationsService.createEmergencyCallbackNumber(data.location.uuid, data.emergencyNumber)
+    .then(emergencyNumberId => {
+      data.emergencyNumber.uuid = emergencyNumberId;
+    })
+    .catch(error => {
+      this.errors.push(this.Notification.processErrorResponse(error, 'settingsServiceNumber.saveError'));
+      return this.$q.reject();
+    });
   }
 
   private getAvrilCustomer(hasVoicemailService: boolean): ng.IPromise<AvrilCustomer> {
@@ -313,7 +414,7 @@ export class CallLocationSettingsService {
       return this.AvrilService.getAvrilCustomer()
       .catch(error => {
         this.errors.push(this.Notification.processErrorResponse(error, 'huronSettings.avrilCustomerGetError'));
-        return this.rejectAndNotifyPossibleErrors();
+        return this.$q.reject();
       });
     } else {
       return this.$q.resolve(new AvrilCustomer());
@@ -335,7 +436,7 @@ export class CallLocationSettingsService {
       })
       .catch(error => {
         this.errors.push(this.Notification.processErrorResponse(error, 'locations.getLocationNumberRangesFailed'));
-        return this.rejectAndNotifyPossibleErrors();
+        return this.$q.reject();
       });
   }
 

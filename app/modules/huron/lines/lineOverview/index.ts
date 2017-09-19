@@ -29,7 +29,7 @@ export default angular
     callerId,
     mediaOnHold,
     sharedLine,
-    require('modules/core/config/config'),
+    require('modules/core/config/config').default,
     notifications,
     siteService,
     memberService,

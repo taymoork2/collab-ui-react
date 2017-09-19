@@ -1,6 +1,13 @@
-import { CallLocationSettingsService, LocationSettingsOptionsService, CallLocationSettingsData, LocationSettingsOptions, LocationCallerId, HIDDEN, LocationListItem } from 'modules/call/locations/shared';
-import { PstnModel, PstnService, PstnAddressService, Address, PstnCarrier, SWIVEL } from 'modules/huron/pstn';
+import {
+  CallLocationSettingsService, LocationSettingsOptionsService,
+  CallLocationSettingsData, LocationSettingsOptions, LocationListItem,
+  LocationCallerId, HIDDEN,
+} from '../shared';
 import { InternalNumberRange } from 'modules/call/shared/internal-number-range';
+import {
+  PstnModel, PstnService, PstnCarrier, SWIVEL,
+} from 'modules/huron/pstn';
+
 import { Notification } from 'modules/core/notifications';
 
 export class LocationsWizardComponent {
@@ -15,21 +22,16 @@ class LocationsWizardController implements ng.IComponentController {
   private static readonly PAGE_TRANSITION_TIMEOUT: number = 10;
 
   public ftsw: boolean = false; //Used for child components
-  public addressFound: boolean;
   public form: ng.IFormController;
   public index: number = 0;
   public animation: string;
-  public showEmergencyServiceAddress: boolean;
-  public addressValidated: boolean = false;
-  public addressValidating: boolean = false;
   public namePlaceholder: string;
+  public validationMessages: {required, uniqueAsyncValidator};
   public callLocationSettingsData: CallLocationSettingsData;
   public locationSettingsOptions: LocationSettingsOptions;
   public showRoutingPrefix: boolean = true;
   public loading: boolean = false;
   public processing: boolean = false;
-  public validationMessages: Object;
-  public address: Address = new Address();
   public defaultLocation: LocationListItem;
   public isRoutingPrefixValid: boolean;
 
@@ -47,7 +49,6 @@ class LocationsWizardController implements ng.IComponentController {
     private Orgservice,
     private LocationSettingsOptionsService: LocationSettingsOptionsService,
     private CallLocationSettingsService: CallLocationSettingsService,
-    private PstnAddressService: PstnAddressService,
     private PstnService: PstnService,
     private PstnModel: PstnModel,
     private Notification: Notification,
@@ -66,7 +67,6 @@ class LocationsWizardController implements ng.IComponentController {
         this.PstnModel.setCountryCode(data.countryCode);
       }
     });
-
     this.PstnService.getCustomer(this.Authinfo.getOrgId()).then(() => {
       this.PstnModel.setCustomerId(this.Authinfo.getOrgId());
       this.PstnModel.setCustomerExists(true);
@@ -74,12 +74,11 @@ class LocationsWizardController implements ng.IComponentController {
       this.PstnService.listCustomerCarriers(this.Authinfo.getOrgId()).then(carriers => {
         if (_.get(carriers, '[0].apiImplementation') !== SWIVEL) {
           this.PstnModel.setProvider(_.get<PstnCarrier>(carriers, '[0]'));
-          this.showEmergencyServiceAddress = true;
         } else {
           this.lastIndex = 4;
         }
       }).catch(() => this.lastIndex = 4);
-    });
+    }).catch(() => this.lastIndex = 4);
 
     this.$q.resolve(this.initComponent()).finally(() => this.loading = false);
   }
@@ -138,33 +137,13 @@ class LocationsWizardController implements ng.IComponentController {
     this.callLocationSettingsData.location.regionCodeDialing.simplifiedNationalDialing = useSimplifiedNationalDialing;
   }
 
-  public validateAddress() {
-    this.addressValidating = true;
-    this.PstnAddressService.lookup(this.PstnModel.getProviderId(), this.address)
-      .then((address: Address) => {
-        if (address) {
-          this.address = address;
-          this.addressValidated = true;
-          this.addressFound = true;
-        } else {
-          this.Notification.error('pstnSetup.serviceAddressNotFound');
-        }
-      })
-      .catch(error => this.Notification.errorResponse(error))
-      .finally(() => {
-        this.addressValidating = false;
-      });
-  }
-
   public filterExtensionRangesByRoutingPrefix(routingPrefix) {
     return this.CallLocationSettingsService.getLocationExtensionRanges(routingPrefix)
-      .then(numberRanges => this.callLocationSettingsData.internalNumberRanges = numberRanges);
+      .then(numberRanges => this.callLocationSettingsData.internalNumberRanges = _.cloneDeep(numberRanges));
   }
 
   public resetAddr() {
-    this.address = new Address();
-    this.addressValidated = false;
-    this.addressFound = false;
+    this.callLocationSettingsData.address.reset();
   }
 
   public getLastIndex(): number {
@@ -183,13 +162,11 @@ class LocationsWizardController implements ng.IComponentController {
   }
 
   public nextButton(): any {
-    if (this.index === PAGE_ESA) {
-      //You may change your ESA, but it is not required to create a location
-      if (this.form && this.form.$valid) {
-        //Must be valid if ESA is being set/changed
-        return this.addressValidated;
+    if (this.form && this.form.$valid && (this.index === PAGE_ESA)) {
+      //Must be valid if ESA is being set/changed
+      if (this.PstnModel.isCustomerExists()) {
+        return this.callLocationSettingsData.address.validated;
       }
-      return true;
     }
     return this.form && this.form.$valid;
   }

@@ -5,7 +5,10 @@ export interface IWebExSite {
   quantity?: number;
   audioPackageDisplay?: string;
   setupType?: string;
-  keepExistingSite?: boolean;
+}
+
+export interface IExistingWebExTrialSite extends IWebExSite {
+  keepExistingSite: boolean;
 }
 
 export interface IWebexSiteDetail {
@@ -15,9 +18,16 @@ export interface IWebexSiteDetail {
   quantity: number;
 }
 
+export enum SiteErrorType {
+  URL = 'URL',
+  TIME_ZONE = 'TIME_ZONE',
+  USER_MGMT = 'USR_MGMT',
+}
+
 export interface ISiteNameError {
   isError: boolean;
   errorMsg: string;
+  errorType?: SiteErrorType;
 }
 
 export interface IConferenceService {
@@ -41,10 +51,6 @@ export interface IConferenceLicense {
   siteUrl?: string;
   isCIUnifiedSite?: true;
   licenseModel: string;
-}
-
-export interface IExistingTrialSites extends IWebExSite {
-  keepExistingSite: boolean;
 }
 
 export interface IWebexLicencesPayload {
@@ -85,6 +91,15 @@ export interface IPendingLicense {
   volume: number;
   isTrial: boolean;
   status: string;
+}
+
+export interface ICCASPLicense extends IPendingLicense {
+  ccaspPartnerName: string;
+  ccaspSubscriptionId: string;
+}
+
+export interface ITSPLicense extends IPendingLicense {
+  tspPartnerName: string;
 }
 
 export interface ICCASPInfo {

@@ -28,6 +28,11 @@ describe('Care Setup Virtual Assistant Ctrl', function () {
 
     },
     {
+      name: 'VirtualAssistantAvatar',
+      previousButtonState: true,
+      nextButtonState: true,
+    },
+    {
       name: 'VirtualAssistantSummary',
       previousButtonState: true,
       nextButtonState: 'hidden',
@@ -98,6 +103,7 @@ describe('Care Setup Virtual Assistant Ctrl', function () {
       spyOn(CTService, 'getLogo').and.returnValue(getLogoDeferred.promise);
       spyOn(CTService, 'getLogoUrl').and.returnValue(getLogoUrlDeferred.promise);
       spyOn(Notification, 'success');
+      spyOn(Notification, 'error');
       spyOn(Notification, 'errorWithTrackingId');
       spyOn(LogMetricsService, 'logMetrics').and.callFake(function () {});
       $stateParams = {
@@ -167,7 +173,7 @@ describe('Care Setup Virtual Assistant Ctrl', function () {
     it('getSummaryDescription with isEditFeature true', function () {
       controller.isEditFeature = true;
       controller.getSummaryDescription();
-      expect(controller.getVaText).toHaveBeenCalledWith('summary.edit-desc');
+      expect(controller.getVaText).toHaveBeenCalledWith('summary.editDesc');
     });
   });
 
@@ -222,12 +228,23 @@ describe('Care Setup Virtual Assistant Ctrl', function () {
     });
   });
 
+  const getForm = function(inputName): any {
+    return {
+      [inputName]: {
+        $setValidity: jasmine.createSpy('$setValidity'),
+      },
+    };
+  };
+
   describe('Field Checks on All Pages with fields', function () {
     const CONFIG_OVERVIEW_PAGE_INDEX = 0;
     const ACCESS_TOKEN_PAGE_INDEX = 2;
     const NAME_PAGE_INDEX = 3;
 
     beforeEach(inject(initializeCtrl(true)));
+    beforeEach(function () {
+      controller.nameForm = getForm('nameInput');
+    });
 
     it('Next button on Config Overview Page enabled when isApiAiAgentConfigured is true', function () {
       controller.template.configuration.pages.VirtualAssistantConfigOverview.isApiAiAgentConfigured = true;
@@ -239,27 +256,13 @@ describe('Care Setup Virtual Assistant Ctrl', function () {
       checkStateOfNavigationButtons(CONFIG_OVERVIEW_PAGE_INDEX, 'hidden', false);
     });
 
-    it('Next button on Access Token Page enabled when accessTokenValue is not empty', function () {
-      controller.template.configuration.pages.VirtualAssistantAccessToken.accessTokenValue = 'Hello World';
+    it('Next button on Access Token Page enabled when accessTokenValue is valid', function () {
+      controller.template.configuration.pages.VirtualAssistantAccessToken.accessTokenValue = '123';
+      controller.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = true;
+      checkStateOfNavigationButtons(ACCESS_TOKEN_PAGE_INDEX, true, false);
+
+      controller.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = false;
       checkStateOfNavigationButtons(ACCESS_TOKEN_PAGE_INDEX, true, true);
-    });
-
-    it('Next button on Access Token Page disabled when accessTokenValue is too long', function () {
-      controller.template.configuration.pages.VirtualAssistantAccessToken.accessTokenValue = repeatString('X', controller.maxTokenLength);
-      checkStateOfNavigationButtons(ACCESS_TOKEN_PAGE_INDEX, true, true);
-
-      controller.template.configuration.pages.VirtualAssistantAccessToken.accessTokenValue = repeatString('X', controller.maxTokenLength + 1);
-      checkStateOfNavigationButtons(ACCESS_TOKEN_PAGE_INDEX, true, false);
-    });
-
-    it('Next button on Access Token Page disabled when accessTokenValue is empty', function () {
-      controller.template.configuration.pages.VirtualAssistantAccessToken.accessTokenValue = '';
-      checkStateOfNavigationButtons(ACCESS_TOKEN_PAGE_INDEX, true, false);
-    });
-
-    it('Next button on Access Token Page disabled when accessTokenValue is only spaces', function () {
-      controller.template.configuration.pages.VirtualAssistantAccessToken.accessTokenValue = '  ';
-      checkStateOfNavigationButtons(ACCESS_TOKEN_PAGE_INDEX, true, false);
     });
 
     it('Next button on Name Page enabled when nameValue is not empty', function () {
@@ -284,8 +287,92 @@ describe('Care Setup Virtual Assistant Ctrl', function () {
       controller.template.configuration.pages.VirtualAssistantName.nameValue = '  ';
       checkStateOfNavigationButtons(NAME_PAGE_INDEX, true, false);
     });
-  });
 
+    it('Next button on Name Page disabled when nameValue is not unique', function () {
+      controller.service.featureList.data = [{ name: 'hi i am baymax', id: '1' }];
+      controller.template.configuration.pages.VirtualAssistantName.nameValue = 'Hi I am Baymax';
+      checkStateOfNavigationButtons(NAME_PAGE_INDEX, true, false);
+
+      controller.template.configuration.pages.VirtualAssistantName.nameValue = 'Baymax';
+      checkStateOfNavigationButtons(NAME_PAGE_INDEX, true, true);
+    });
+
+    it('Next and Back button on Avatar Page disabled when avatar file is loading', function () {
+      controller.avatarUploadState = controller.avatarState.LOADING;
+      checkStateOfNavigationButtons(NAME_PAGE_INDEX, false, false);
+    });
+
+    it('Next button on Avatar Page enabled when avatar file error', function () {
+      controller.avatarUploadState = controller.avatarState.PREVIEW;
+      controller.template.configuration.pages.VirtualAssistantAvatar.avatarError = 'FileUploadError';
+      checkStateOfNavigationButtons(NAME_PAGE_INDEX, true, false);
+    });
+  });
+  describe('AccessToken Page', function () {
+    let deferred;
+    beforeEach(inject(initializeCtrl(true)));
+    beforeEach(function () {
+      deferred = $q.defer();
+      spyOn(VirtualAssistantService, 'isAPIAITokenValid').and.returnValue(deferred.promise);
+
+      controller.tokenForm = getForm('tokenInput');
+    });
+
+    it('should validateToken successfully', function () {
+      deferred.resolve(true);
+      controller.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = true;
+
+      controller.validateAPIAIToken();
+      $scope.$apply();
+
+      expect(controller.template.configuration.pages.VirtualAssistantAccessToken.invalidToken).toEqual(false);
+    });
+
+    it('should validateToken unsuccessfully', function () {
+      deferred.reject(false);
+      controller.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = false;
+
+      controller.validateAPIAIToken();
+      $scope.$apply();
+
+      expect(controller.template.configuration.pages.VirtualAssistantAccessToken.invalidToken).toEqual(true);
+    });
+  });
+  describe('Avatar Page', function () {
+    let deferredFileDataUrl;
+    beforeEach(inject(initializeCtrl(true)));
+    beforeEach(function() {
+      deferredFileDataUrl = $q.defer();
+      spyOn(VirtualAssistantService, 'getFileDataUrl').and.returnValue(deferredFileDataUrl.promise);
+    });
+
+    it('should validate avatar file type', function () {
+      deferredFileDataUrl.resolve('');
+      const size = 1000;
+      controller.template.configuration.pages.VirtualAssistantAvatar.avatarError = controller.avatarErrorType.NO_ERROR;
+      controller.uploadAvatar({ name: 'abc.jpeg', size });
+      expect(controller.template.configuration.pages.VirtualAssistantAvatar.avatarError).toEqual(controller.avatarErrorType.FILE_TYPE_ERROR);
+
+      controller.template.configuration.pages.VirtualAssistantAvatar.avatarError = controller.avatarErrorType.NO_ERROR;
+      controller.uploadAvatar({ name: 'abc.png', size });
+      expect(controller.template.configuration.pages.VirtualAssistantAvatar.avatarError).toEqual(controller.avatarErrorType.NO_ERROR);
+    });
+
+    it('should validate avatar file size', function () {
+      deferredFileDataUrl.resolve('');
+      controller.template.configuration.pages.VirtualAssistantAvatar.avatarError = controller.avatarErrorType.NO_ERROR;
+      controller.uploadAvatar({ name: 'abc.png' , size: controller.MAX_AVATAR_FILE_SIZE + 1 });
+      expect(controller.template.configuration.pages.VirtualAssistantAvatar.avatarError).toEqual(controller.avatarErrorType.FILE_SIZE_ERROR);
+
+      controller.template.configuration.pages.VirtualAssistantAvatar.avatarError = controller.avatarErrorType.NO_ERROR;
+      controller.uploadAvatar({ name: 'abc.png' , size: 0 });
+      expect(controller.template.configuration.pages.VirtualAssistantAvatar.avatarError).toEqual(controller.avatarErrorType.FILE_SIZE_ERROR);
+
+      controller.template.configuration.pages.VirtualAssistantAvatar.avatarError = controller.avatarErrorType.NO_ERROR;
+      controller.uploadAvatar({ name: 'abc.png' , size: controller.MAX_AVATAR_FILE_SIZE });
+      expect(controller.template.configuration.pages.VirtualAssistantAvatar.avatarError).toEqual(controller.avatarErrorType.NO_ERROR);
+    });
+  });
   describe('Summary Page', function () {
     let deferred;
     beforeEach(inject(initializeCtrl(true)));
@@ -340,6 +427,29 @@ describe('Care Setup Virtual Assistant Ctrl', function () {
       deferred.resolve({
         success: true,
         status: 200,
+      });
+
+      controller.submitFeature();
+      $scope.$apply();
+
+      expect(Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
+        featureName: jasmine.any(String),
+      });
+      expect(controller.saveTemplateErrorOccurred).toBeFalsy();
+      expect($state.go).toHaveBeenCalled();
+      expect(LogMetricsService.logMetrics.calls.argsFor(0)[1]).toEqual('CARETEMPLATEFINISH');
+    });
+
+    it('should submit template successfully', function () {
+      //by default, this flag is false
+      expect(controller.saveTemplateErrorOccurred).toBeFalsy();
+
+      spyOn($state, 'go');
+      spyOn($stateParams, 'isEditFeature').and.returnValue(false);
+      deferred.resolve({
+        success: true,
+        botServicesConfigId: 'ABotConfigurationId',
+        status: 201,
       });
 
       controller.submitFeature();

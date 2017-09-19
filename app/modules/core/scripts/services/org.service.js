@@ -5,7 +5,7 @@
   var angularResourceModule = require('angular-resource');
   var angularTranslateModule = require('angular-translate');
   var authModule = require('modules/core/auth/auth');
-  var configModule = require('modules/core/config/config');
+  var configModule = require('modules/core/config/config').default;
   var urlConfigModule = require('modules/core/config/urlConfig');
   var authinfoModule = require('modules/core/scripts/services/authinfo');
   var logModule = require('modules/core/scripts/services/log');
@@ -52,6 +52,7 @@
       setHybridServiceReleaseChannelEntitlement: setHybridServiceReleaseChannelEntitlement,
       updateDisplayName: updateDisplayName,
       validateDisplayName: validateDisplayName,
+      setOrgEmailSuppress: setOrgEmailSuppress,
     };
 
     var savedOrgSettingsCache = [];
@@ -380,6 +381,14 @@
       }
 
       return $http.get(orgUrl);
+    }
+
+    function setOrgEmailSuppress(isEmailSuppressed) {
+      var adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/emails';
+      var emailSuppressRequest = {
+        suppressEmail: isEmailSuppressed,
+      };
+      return $http.post(adminUrl, emailSuppressRequest);
     }
 
     function getOrgCacheOption(callback, oid, config) {

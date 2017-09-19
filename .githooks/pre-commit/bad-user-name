@@ -1,5 +1,7 @@
 #!/bin/bash
 
+user_display_name="$(git config user.name)"
+
 function error_out {
     2>&1 echo "Please set your user display name properly (use your proper name please):"
     2>&1 echo ""
@@ -9,10 +11,24 @@ function error_out {
     exit 1
 }
 
-# prevent empty user display name
-user_display_name="$(git config user.name)"
-if [[ "${user_display_name}" =~ ^\ *$ ]]; then
+function print_error_msg {
+    2>&1 echo "[ERROR] $@"
+    2>&1 echo "Your current value: \`$user_display_name\`"
+    2>&1 echo ""
     error_out
+}
+
+# prevent empty user display name
+if [[ "${user_display_name}" =~ ^\ *$ ]]; then
+    print_error_msg "User display name must be set."
+fi
+
+# prevent punctuation chars
+if [[ "${user_display_name}" =~ ^[[:punct:]] ]]; then
+    print_error_msg "User display name cannot begin with a punctuation char ([!\"#$%&'()*+,-./:;<=>?@[\]^_\`{|}~])."
+fi
+if [[ "${user_display_name}" =~ [[:punct:]]$ ]]; then
+    print_error_msg "User display name cannot end with a punctuation char ([!\"#$%&'()*+,-./:;<=>?@[\]^_\`{|}~])."
 fi
 
 # prevent user display name being the same as CEC id

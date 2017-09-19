@@ -52,6 +52,7 @@ export class Config {
   public readonly ssoUrl = 'https://help.webex.com/community/cisco-cloud-collab-mgmt/content?filterID=contentstatus[published]~category[security]';
   public readonly rolesUrl = 'https://help.webex.com/community/cisco-cloud-collab-mgmt/content?filterID=contentstatus[published]~category[getting-started]';
   public readonly supportUrl = 'https://help.webex.com/community/cisco-cloud-collab-mgmt';
+  public readonly webexSiteMigrationUrl = 'http://try.webex.com/mk/get/ciscowebexmigration';
   public readonly partnerSupportUrl = 'https://help.webex.com/community/cisco-cloud-collab-mgmt-partners';
 
   public readonly usersperpage = 100;
@@ -109,7 +110,6 @@ export class Config {
     care_digital: 'cloud-contact-center-digital',
     care_inbound_voice: 'cloud-contact-center-inbound-voice',
     context: 'contact-center-context',
-    fusion_google_cal: 'squared-fusion-gcal',
     fusion_khaos: 'squared-fusion-khaos',
     message: 'squared-room-moderation',
     imp: 'spark-hybrid-impinterop',
@@ -263,6 +263,11 @@ export class Config {
     CCASP: 'CCASP', //Cloud Connected Audio - Service Partners
   };
 
+  public readonly orderingTool = {
+    online: 'CISCO_ONLINE_OPC',
+    digitalRiver: 'DIGITAL_RIVER',
+  };
+
   public readonly licenseStatus = {
     PENDING: 'PENDING',
     ACTIVE: 'ACTIVE',
@@ -354,6 +359,7 @@ export class Config {
       'callpickupedit',
       'device-overview',
       'devices',
+      'devices-redux',
       'didadd',
       'huntgroups',
       'huronCallPark',
@@ -422,6 +428,7 @@ export class Config {
       'expressway-cluster',
       'hybrid-services-connector-sidepanel',
       'services-overview',
+      'office-365-service',
     ],
     'squared-fusion-gcal': [
       'add-resource',
@@ -547,7 +554,7 @@ export class Config {
     WX2_User: ['overview', 'support', 'activateProduct'],
     WX2_Support: ['overview', 'reports', 'support'],
     WX2_SquaredInviter: [],
-    PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'gem', 'gemOverview', 'gemCbgDetails', 'gmTdDetails', 'gmTdNumbersRequest', 'customer-overview', 'partnerreports', 'trial', 'trialAdd', 'trialEdit', 'profile', 'pstn', 'pstnSetup', 'pstnWizard', 'video', 'settings'],
+    PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'gem', 'gemOverview', 'gemReports', 'gemCbgDetails', 'gmTdDetails', 'gmTdNumbersRequest', 'customer-overview', 'partnerreports', 'trial', 'trialAdd', 'trialEdit', 'profile', 'pstn', 'pstnSetup', 'pstnWizard', 'video', 'settings'],
     PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trial', 'trialAdd', 'trialEdit', 'pstn', 'pstnSetup', 'pstnWizard', 'video'],
     CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
     //TODO User role is used by Online Ordering UI. The dr* states will be removed once the Online UI is separated from Atlas.
@@ -602,6 +609,10 @@ export class Config {
     return this.LocalStorage.get(this.TEST_ENV_CONFIG) === 'e2e-prod';
   }
 
+  public forceIntegrationForE2E(): boolean {
+    return this.LocalStorage.get(this.TEST_ENV_CONFIG) === 'e2e-integration';
+  }
+
   public isCfe(): boolean {
     return !this.forceProdForE2E() && this.getCurrentHostname() === this.hostnameConfig.CFE;
   }
@@ -621,7 +632,7 @@ export class Config {
   }
 
   public isIntegration(): boolean {
-    return !this.forceProdForE2E() && this.getCurrentHostname() === this.hostnameConfig.INTEGRATION;
+    return !this.forceProdForE2E() && (this.getCurrentHostname() === this.hostnameConfig.INTEGRATION || this.forceIntegrationForE2E());
   }
 
   public isProd(): boolean {
@@ -660,8 +671,7 @@ export class Config {
   }
 }
 
-// TODO: update to 'export default angular' and update references
-module.exports = angular
+export default angular
   .module('core.config', [
     require('modules/core/storage').default,
   ])

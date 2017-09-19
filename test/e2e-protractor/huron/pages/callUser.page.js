@@ -23,6 +23,7 @@ export class CallUserPage {
         title: element(by.css('[translate="directoryNumberPanel.directNumbers"]')),
         number: element(by.css('[ng-click="$ctrl.onDirectoryNumberClick()"]')),
       },
+      addNewLine: element(by.css('a.as-button[translate="usersPreview.addNewLinePreview"]')),
       features: {
         title: element(by.css('[translate="telephonyPreview.features"]')),
         singleNumberReach: element(by.cssContainingText('.feature-name', 'Single Number Reach')),

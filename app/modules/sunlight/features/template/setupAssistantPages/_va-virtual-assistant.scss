@@ -3,23 +3,7 @@
 @import 'va-virtual-assistant-access-token';
 @import 'va-virtual-assistant-name';
 @import 'va-virtual-assistant-summary';
-
-.va-title {
-  color: #4F5051;
-  font-family: 'CiscoSansTT Thin';
-  font-size: rem-calc(24px);
-  letter-spacing: 0;
-  line-height: rem-calc(42px);
-  padding-top: rem-calc(20px);
-}
-
-.va-title-desc {
-  color: #858688;
-  font-family: 'CiscoSansTT Light';
-  font-size: rem-calc(14px);
-  letter-spacing: 0;
-  line-height: rem-calc(20px);
-}
+@import 'va-virtual-assistant-avatar';
 
 .va-button {
   display: flex;
@@ -29,65 +13,33 @@
   color: $gray-dark-2;
 }
 
-#va-content {
+.input-label {
+  @include vr-spacing(mt, 2.3125);
+  font-family: 'CiscoSansTT Regular';
+  font-size: 20px;
+  color: $gray-dark-2;
+  letter-spacing: 0;
+  line-height: 24px;
+}
+
+.va-card {
+  @include vr-spacing(mt, 5);
+
   display: flex;
-  -webkit-box-pack: center;
+  flex-flow: column;
+}
+
+.va-card-center {
   justify-content: center;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  flex-direction: column;
-  position: relative;
+  width: 100% !important;
 }
 
 .va-box {
-  border: 1px solid #D7D7D8;
+  border: 1px solid $gray-light-2;
   border-radius: 3px;
 
   .submit {
-    margin: 0;
-
-    input {
-      border-radius: 2px;
-      margin-top: rem-calc(12px);
-      margin-bottom: 0;
-      width: rem-calc(386px);
-
-      &:disabled {
-        background: #EBEBEC;
-        border: 1px solid #D7D7D8;
-      }
-
-      &.ng-valid-maxlength {
-        background: #FFFFFF;
-        border: 1px solid #9B9B9B;
-      }
-
-      &.ng-invalid-maxlength {
-        background: #FEDCD7;
-        border: 1px solid #F96452;
-      }
-    }
-
-    .inline-error {
-      color: #F96452;
-      display: flex;
-      font-family: 'CiscoSansTT Regular';
-      margin-top: rem-calc(8px);
-
-      .icon-error {
-        color: #F96452;
-        font-size: rem-calc(16px);
-        margin-right: .5rem;
-      }
-
-      .inline-error-msg {
-        font-size: rem-calc(12px);
-      }
-
-      &.ng-hide:not(.ng-hide-animate) {
-        display: flex !important; // override to make invisible
-        visibility: hidden;
-      }
-    }
+    @include vr-spacing(m, 0);
   }
 }
+

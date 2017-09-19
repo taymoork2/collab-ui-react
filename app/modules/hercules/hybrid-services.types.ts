@@ -8,7 +8,7 @@ export type ConnectorState = 'running' | 'not_installed' | 'disabled' | 'downloa
 export type ConnectorType = 'c_mgmt' | 'c_cal' | 'c_ucmc' | 'mf_mgmt' | 'hds_app' | 'cs_mgmt' | 'cs_context' | 'ucm_mgmt' | 'c_serab' | 'c_imp';
 export type ConnectorUpgradeState = 'upgraded' | 'upgrading' | 'pending';
 export type DayOfWeek = 'sunday' | 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday';
-export type HybridServiceId = 'squared-fusion-mgmt' | 'squared-fusion-cal' | 'squared-fusion-gcal' | 'squared-fusion-uc' | 'squared-fusion-ec' | 'squared-fusion-media' | 'spark-hybrid-datasecurity' | 'contact-center-context' | 'squared-fusion-khaos' | 'squared-fusion-servicability' | 'ept' | 'spark-hybrid-impinterop';
+export type HybridServiceId = 'squared-fusion-mgmt' | 'squared-fusion-cal' | 'squared-fusion-gcal' | 'squared-fusion-uc' | 'squared-fusion-ec' | 'squared-fusion-media' | 'spark-hybrid-datasecurity' | 'contact-center-context' | 'squared-fusion-khaos' | 'squared-fusion-servicability' | 'ept' | 'spark-hybrid-impinterop' | 'squared-fusion-o365' | 'voicemail';
 export type ServiceAlarmSeverity = 'error' | 'warning' | 'critical';
 
 // Connectors
@@ -207,6 +207,11 @@ export interface IHostAggregate {
   upgradeState: ConnectorUpgradeState;
 }
 
+export interface ISolutionReplacementValues {
+  text: string;
+  link: string;
+}
+
 export interface IConnectorAlarm {
   id: string;
   // This hack should be removed once FMS starts using the correct format for alarm timestamps.
@@ -217,16 +222,16 @@ export interface IConnectorAlarm {
   title: string;
   description: string;
   solution: string;
-  solutionReplacementValues: {
-    text: string;
-    link: string;
-  }[];
+  solutionReplacementValues: ISolutionReplacementValues[];
+  key?: string;
+  replacementValues: IAlarmReplacementValues[];
 }
 
 export interface IAlarmReplacementValues {
   key: string;
   value: string;
   type?: string;
+  href?: string;
 }
 
 export interface IServiceAlarm {

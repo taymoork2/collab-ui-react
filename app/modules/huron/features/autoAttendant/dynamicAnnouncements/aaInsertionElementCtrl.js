@@ -6,7 +6,7 @@
     .controller('AAInsertionElementCtrl', AAInsertionElementCtrl);
 
   /* @ngInject */
-  function AAInsertionElementCtrl($rootScope, $scope, $modal, $translate, AAUiModelService, AACommonService, AADynaAnnounceService) {
+  function AAInsertionElementCtrl($rootScope, $scope, $modal, $translate, AAUiModelService, AACommonService) {
     var vm = this;
 
     var ui;
@@ -49,9 +49,10 @@
                 vm.readAs = result.readAs.value;
                 node.say.value = result.variable.value;
                 node.say.as = vm.readAs;
-                var ele = '<aa-insertion-element element-text="' + node.say.value + '" read-as="' + node.say.as + '" element-id="' + id + '"></aa-insertion-element>';
+                var ele = '<aa-insertion-element element-text="' + node.say.value + '" read-as="' + node.say.as + '" element-id="' + id + '"id="' + id + '" contenteditable="false""></aa-insertion-element>';
                 node.htmlModel = encodeURIComponent(ele);
                 AACommonService.setSayMessageStatus(true);
+                $rootScope.$broadcast('CE Updated');
               }
             });
         }
@@ -77,10 +78,10 @@
     }
 
     function closeClickFn() {
-      var range = AADynaAnnounceService.getRange();
-      range.endContainer.parentElement.parentElement.parentElement.remove();
-
       var id = $scope.elementId;
+      var idSelectorPrefix = '#';
+      angular.element(idSelectorPrefix.concat(id)).remove();
+
       populateUiModel(id);
       var dynaList = actionEntry.actions[0].dynamicList;
       _.forEach(dynaList, function (node) {

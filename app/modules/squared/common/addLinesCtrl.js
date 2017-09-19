@@ -9,10 +9,7 @@
     var wizardData = $stateParams.wizard.state().data;
     vm.title = wizardData.title;
 
-    $scope.entitylist = [{
-      name: wizardData.account.name,
-    }];
-    $scope.telephonyInfo = {};
+    vm.telephonyInfo = {};
     vm.isMapped = false;
     vm.isMapInProgress = false;
     vm.isResetInProgress = false;
@@ -26,16 +23,16 @@
     vm.isDisabled = true;
 
     vm.loadLocations = loadLocations;
-    $scope.locationOptions = [];
-    $scope.selectedLocation = '';
-    $scope.locationUuid = '';
+    vm.locationOptions = [];
+    vm.selectedLocation = '';
+    vm.locationUuid = '';
 
-    $scope.returnInternalNumberlist = CommonLineService.returnInternalNumberList;
-    $scope.returnExternalNumberList = CommonLineService.returnExternalNumberList;
-    $scope.getInternalNumberPool = CommonLineService.getInternalNumberPool;
-    $scope.getExternalNumberPool = CommonLineService.getExternalNumberPool;
-    $scope.syncGridDidDn = syncGridDidDn;
-    $scope.checkDnOverlapsSteeringDigit = CommonLineService.checkDnOverlapsSteeringDigit;
+    vm.returnInternalNumberlist = CommonLineService.returnInternalNumberList;
+    vm.returnExternalNumberList = CommonLineService.returnExternalNumberList;
+    vm.getInternalNumberPool = CommonLineService.getInternalNumberPool;
+    vm.getExternalNumberPool = CommonLineService.getExternalNumberPool;
+    vm.syncGridDidDn = syncGridDidDn;
+    vm.checkDnOverlapsSteeringDigit = CommonLineService.checkDnOverlapsSteeringDigit;
 
     function loadLocations() {
       return FeatureToggleService.supports(FeatureToggleService.features.hI1484)
@@ -43,30 +40,28 @@
           if (supported) {
             return LocationsService.getLocationList()
               .then(function (locationOptions) {
-                $scope.locationOptions = locationOptions;
+                vm.locationOptions = locationOptions;
                 _.forEach(locationOptions, function (result) {
                   if (result.defaultLocation == true) {
-                    _.forEach($scope.entitylist, function (data) {
+                    _.forEach(vm.addDnGridOptions.data, function (data) {
                       data.selectedLocation = { uuid: result.uuid, name: result.name };
-                      $scope.selectedLocation = data.selectedLocation.name;
-                      $scope.locationUuid = data.selectedLocation.uuid;
+                      vm.selectedLocation = data.selectedLocation.name;
+                      vm.locationUuid = data.selectedLocation.uuid;
                     });
                   }
                 });
 
-                if ($scope.locationOptions.length > 1) {
+                if (vm.locationOptions.length > 1) {
                   vm.locationColumn = {
                     field: 'location',
                     displayName: $translate.instant('usersPreview.location'),
-                    sortable: false,
                     cellTemplate: locationTemplate,
-                    width: '*',
                   };
                   vm.addDnGridOptions.columnDefs.splice(1, 0, vm.locationColumn);
                 }
               })
               .then(function () {
-                return CommonLineService.loadLocationInternalNumberPool(null, $scope.locationUuid);
+                return CommonLineService.loadLocationInternalNumberPool(null, vm.locationUuid);
               });
           } else {
             return CommonLineService.loadInternalNumberPool();
@@ -123,10 +118,10 @@
     };
 
     vm.getSelectedNumbers = function () {
-      var entity = $scope.entitylist[0];
+      var entity = vm.addDnGridOptions.data[0];
       if (FeatureToggleService.supports(FeatureToggleService.features.hI1484)) {
-        if (entity.selectedLocation && $scope.locationOptions.length > 1) {
-          $scope.locationUuid = entity.selectedLocation.uuid;
+        if (entity.selectedLocation && vm.locationOptions.length > 1) {
+          vm.locationUuid = entity.selectedLocation.uuid;
         }
       }
       var directoryNumber;
@@ -140,7 +135,7 @@
       return {
         directoryNumber: directoryNumber,
         externalNumber: externalNumber,
-        locationUuid: $scope.locationUuid,
+        locationUuid: vm.locationUuid,
       };
     };
 
@@ -152,21 +147,21 @@
       $q.all([CommonLineService.loadExternalNumberPool(), CommonLineService.loadPrimarySiteInfo(), toggleShowExtensions(), loadLocations()])
         .finally(function () {
           $scope.externalNumber = _.head(CommonLineService.getExternalNumberPool());
-          $scope.telephonyInfo = CommonLineService.getTelephonyInfo();
+          vm.telephonyInfo = CommonLineService.getTelephonyInfo();
           vm.isDisabled = !!(CommonLineService.getInternalNumberPool().length === 0 || CommonLineService.getExternalNumberPool().length === 0);
 
           if (vm.showExtensions === true) {
-            CommonLineService.assignDNForUserList($scope.entitylist);
+            CommonLineService.assignDNForUserList(vm.addDnGridOptions.data);
             $scope.validateDnForUser();
           } else {
-            mapDidToDn($scope.entitylist);
+            mapDidToDn(vm.addDnGridOptions.data);
           }
           vm.processing = false;
         });
     }
 
     function validateDnForUser() {
-      if (CommonLineService.isDnNotAvailable($scope.entitylist)) {
+      if (CommonLineService.isDnNotAvailable(vm.addDnGridOptions.data)) {
         $scope.$emit('wizardNextButtonDisable', true);
       } else {
         $scope.$emit('wizardNextButtonDisable', false);
@@ -177,7 +172,7 @@
       vm.isResetInProgress = true;
       vm.isResetEnabled = false;
       CommonLineService.loadInternalNumberPool().then(function () {
-        CommonLineService.assignDNForUserList($scope.entitylist);
+        CommonLineService.assignDNForUserList(vm.addDnGridOptions.data);
         validateDnForUser();
         vm.isReset = true;
         vm.isResetInProgress = false;
@@ -188,9 +183,9 @@
     }
 
     function mapDidToDn() {
-      CommonLineService.mapDidToDn($scope.entitylist).then(function (externalNumberMapping) {
+      CommonLineService.mapDidToDn(vm.addDnGridOptions.data).then(function (externalNumberMapping) {
         $scope.externalNumberMapping = externalNumberMapping;
-        CommonLineService.assignMapUserList($scope.entitylist.length, $scope.externalNumberMapping, $scope.entitylist);
+        CommonLineService.assignMapUserList(vm.addDnGridOptions.data.length, $scope.externalNumberMapping, vm.addDnGridOptions.data);
         vm.isMapped = true;
         vm.isMapInProgress = false;
         validateDnForUser();
@@ -271,7 +266,7 @@
       'placeholder="placeholder" input-placeholder="inputPlaceholder" ' +
       'on-change-fn="grid.appScope.syncGridDidDn(row.entity, \'internalNumber\')"' +
       'labelfield="pattern" valuefield="uuid" required="true" filter="true"' +
-      ' is-warn="{{grid.appScope.checkDnOverlapsSteeringDigit(row.entity)}}" warn-msg="{{\'usersPage.steeringDigitOverlapWarning\' | translate: { steeringDigitInTranslation: telephonyInfo.steeringDigit } }}" > </cs-select></div>' +
+      ' is-warn="{{grid.appScope.checkDnOverlapsSteeringDigit(row.entity)}}" warn-msg="{{\'usersPage.steeringDigitOverlapWarning\' | translate: { steeringDigitInTranslation: grid.appScope.telephonyInfo.steeringDigit } }}" > </cs-select></div>' +
       '<div ng-show="row.entity.assignedDn === undefined"> ' +
       '<cs-select name="noInternalNumber" ' +
       'ng-model="grid.appScope.noExtInPool" labelfield="grid.appScope.noExtInPool" is-disabled="true" > </cs-select>' +
@@ -299,9 +294,37 @@
       'labelfield="pattern" valuefield="uuid" required="true" filter="true"> </cs-select>' +
       '<span class="warning did-map-error">{{row.entity.didDnMapMsg | translate }}</span> </div> ';
 
+    vm.addDnGridOptions = {
+      data: [{
+        name: wizardData.account.name,
+      }],
+      appScopeProvider: vm,
+      enableSorting: false,
+      rowHeight: 45,
+      columnDefs: [{
+        field: 'name',
+        displayName: $translate.instant('usersPage.nameHeader'),
+        cellTemplate: nameTemplate,
+      }, {
+        field: 'externalNumber',
+        displayName: $translate.instant('usersPage.directLineHeader'),
+        cellTemplate: externalExtensionTemplate,
+        maxWidth: 220,
+        minWidth: 140,
+      }, {
+        field: 'internalExtension',
+        displayName: $translate.instant('usersPage.extensionHeader'),
+        cellTemplate: internalExtensionTemplate,
+        maxWidth: 220,
+        minWidth: 140,
+      }],
+    };
+
     // To differentiate the Place list change made by map operation
     //  and other manual/reset operation.
-    $scope.$watch('entitylist', function () {
+    $scope.$watch(function () {
+      return vm.addDnGridOptions.data;
+    }, function () {
       if (vm.isMapped) {
         vm.isMapped = false;
       } else {
@@ -317,42 +340,6 @@
 
     $scope.isResetEnabled = false;
     validateDnForUser();
-
-    vm.addDnGridOptions = {
-      data: 'entitylist',
-      enableHorizontalScrollbar: 0,
-      enableRowSelection: false,
-      multiSelect: false,
-      rowHeight: 45,
-      enableRowHeaderSelection: false,
-      enableColumnResize: true,
-      enableColumnMenus: false,
-      columnDefs: [{
-        field: 'name',
-        displayName: $translate.instant('usersPage.nameHeader'),
-        sortable: false,
-        cellTemplate: nameTemplate,
-        width: '*',
-      },
-      {
-        field: 'externalNumber',
-        displayName: $translate.instant('usersPage.directLineHeader'),
-        sortable: false,
-        cellTemplate: externalExtensionTemplate,
-        maxWidth: 220,
-        minWidth: 140,
-        width: '*',
-      }, {
-        field: 'internalExtension',
-        displayName: $translate.instant('usersPage.extensionHeader'),
-        sortable: false,
-        cellTemplate: internalExtensionTemplate,
-        maxWidth: 220,
-        minWidth: 140,
-        width: '*',
-      }],
-    };
-
     vm.activateDID();
   }
 })();

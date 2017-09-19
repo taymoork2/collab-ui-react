@@ -353,6 +353,15 @@ describe('UrlConfigSpec', function () {
     });
   });
 
+  it('should return correct hydra url', function () {
+    whenCalling('getHydraServiceUrl').expectUrlToBe({
+      dev: 'https://api.ciscospark.com/v1',
+      cfe: 'https://api.ciscospark.com/v1',
+      integration: 'https://api.ciscospark.com/v1',
+      prod: 'https://api.ciscospark.com/v1',
+    });
+  });
+
   it('should return correct Sunlight Config Service url', function () {
     whenCalling('getSunlightConfigServiceUrl').expectUrlToBe({
       dev: 'https://config.devus1.ciscoccservice.com/config/v1',
@@ -362,12 +371,12 @@ describe('UrlConfigSpec', function () {
     });
   });
 
-  it('should return correct Virtual Assistant Config Service url', function () {
-    whenCalling('getVirtualAssistantConfigServiceUrl').expectUrlToBe({
-      dev: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/config',
-      cfe: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/config',
-      integration: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/config',
-      prod: 'https://bot-services.produs1.ciscoccservice.com/bot-services/v1/config',
+  it('should return correct Virtual Assistant Service url', function () {
+    whenCalling('getVirtualAssistantServiceUrl').expectUrlToBe({
+      dev: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/',
+      cfe: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/',
+      integration: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/',
+      prod: 'https://bot-services.produs1.ciscoccservice.com/bot-services/v1/',
     });
   });
 

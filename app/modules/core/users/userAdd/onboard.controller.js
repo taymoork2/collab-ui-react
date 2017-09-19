@@ -215,6 +215,9 @@ require('./_user-add.scss');
     }
 
     var rootState = $previousState.get().state.name;
+    if (rootState === 'users.manage.emailSuppress') {
+      rootState = 'users.manage.picker';
+    }
     $scope.onBack = function (state) {
       var goToState = state || rootState;
       Analytics.trackAddUsers(Analytics.eventNames.BACK, Analytics.sections.ADD_USERS.uploadMethods.MANUAL, { emailEntryMethod: Analytics.sections.ADD_USERS.manualMethods[$scope.model.userInputOption.toString()] });

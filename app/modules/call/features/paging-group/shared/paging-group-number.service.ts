@@ -1,37 +1,30 @@
 import { INumberData } from 'modules/call/features/paging-group/shared';
-
-interface ISearchData {
-  customerId: string;
-  directorynumber: string;
-  order: string;
-  pattern?: string;
-}
+import { NumberType, NumberService } from 'modules/huron/numbers';
 
 export class PagingNumberService {
+  public hasLocations: boolean = false;
 
   /* @ngInject */
-  constructor(private InternalNumberPoolService,
-              private $resource: ng.resource.IResourceService,
-              private HuronConfig,
-              private Authinfo) {
+  constructor(
+    private NumberService: NumberService,
+    private $resource: ng.resource.IResourceService,
+    private HuronConfig,
+    private Authinfo,
+    private FeatureToggleService,
+  ) {
+    // TODO: samwi - remove when locations is GA
+    this.FeatureToggleService.supports(FeatureToggleService.features.hI1484).then(supports => {
+      this.hasLocations = supports;
+    });
   }
 
   public getNumberSuggestions(hint?: string): ng.IPromise<INumberData[]> {
-    const data: ISearchData = {
-      customerId: this.Authinfo.getOrgId(),
-      directorynumber: '',
-      order: 'pattern',
-    };
-    if (hint) {
-      data.pattern = '%' + hint + '%';
-    }
-    return this.InternalNumberPoolService.query(data).$promise.then(
-      (response) => _.map(response, function (dn: any) {
-        const numberData = <INumberData>{
-          extension: dn.pattern,
+    return this.NumberService.getNumberList(hint, NumberType.INTERNAL, false).then(
+      (response) => _.map(response, (dn: any) => {
+        return <INumberData>{
+          extension: this.hasLocations ? dn.siteToSite : dn.number,
           extensionUUID: dn.uuid,
         };
-        return numberData;
       }));
   }
 

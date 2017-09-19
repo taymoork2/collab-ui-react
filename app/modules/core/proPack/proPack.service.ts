@@ -1,11 +1,21 @@
 export class ProPackService {
 
+  public isProPackCustomer: boolean = false;
+
   /* @ngInject */
   constructor(
     private Authinfo,
+    private Config,
     private FeatureToggleService,
+    private LicenseService,
     private $q: ng.IQService,
-    ) {}
+    private $state,
+    ) {
+    this.LicenseService.getLicensesInOrg(this.$state.params.id)
+      .then((licenses) => {
+        this.isProPackCustomer = _.some(licenses, license => _.get(license, 'offerCode') === this.Config.offerCodes.MGMTPRO);
+      });
+  }
 
   public hasProPackEnabled(): ng.IPromise<boolean> {
     return this.FeatureToggleService.atlasITProPackGetStatus().then(result => {
@@ -51,6 +61,10 @@ export class ProPackService {
     return this.$q.all(promises).then(result => {
       return result.proPack && !(result.proPackPurchased || this.Authinfo.isPremium());
     });
+  }
+
+  public showProBadgeInHelpDesk(): boolean {
+    return this.$state.current.name === 'helpdesk.org' && this.isProPackCustomer;
   }
 
 }

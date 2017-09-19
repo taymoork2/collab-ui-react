@@ -1,5 +1,6 @@
 import { SettingSection } from './settingSection';
 import { AuthenticationSetting } from './authentication/authenticationSetting.component';
+import { EmailSetting } from './email/emailSetting.component';
 import { BrandingSetting } from './branding/brandingSetting.component';
 import { DomainsSetting } from './domain/domainsSetting.component';
 import { RetentionSetting } from './retention/retentionSetting.component';
@@ -19,6 +20,7 @@ export class SettingsCtrl {
   public domains: SettingSection;
   public sipDomain: SettingSection;
   public authentication: SettingSection;
+  public email: SettingSection;
   public branding: SettingSection;
   public deviceBranding: SettingSection;
   public support: SettingSection;
@@ -62,6 +64,7 @@ export class SettingsCtrl {
     // if they are not a partner, provide everything else
     if (!this.Authinfo.isPartner()) {
       this.authentication = new AuthenticationSetting();
+      this.initEmailSuppress();
       this.domains = new DomainsSetting();
       this.privacy = new PrivacySetting();
       this.sipDomain = new SipDomainSetting();
@@ -160,6 +163,14 @@ export class SettingsCtrl {
     this.$q.all(promises).then((result) => {
       if (result.retentionToggle) {
         this.retention = new RetentionSetting(result.proPackPurchased);
+      }
+    });
+  }
+
+  private initEmailSuppress() {
+    this.FeatureToggleService.atlasEmailSuppressGetStatus().then((toggle) => {
+      if (toggle) {
+        this.email = new EmailSetting();
       }
     });
   }

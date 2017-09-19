@@ -1,11 +1,19 @@
 import * as HttpStatus from 'http-status-codes';
+import { MetricsService, OperationalKey } from 'modules/core/metrics';
 
 interface IRetryHttpConfig extends ng.IRequestConfig {
   retryConfig: RetryConfig;
 }
 
+enum RetryState {
+  FAIL = 'fail',
+  RETRY = 'retry',
+  SUCCESS = 'success',
+}
+
 class RetryConfig {
   public baseMultiplier = 1;
+  public delayInMillis = 0;
   public isLastRetry = false;
 }
 
@@ -27,13 +35,14 @@ export class RateLimitService {
     private $http: ng.IHttpService,
     private $q: ng.IQService,
     private $timeout: ng.ITimeoutService,
+    private MetricsService: MetricsService,
   ) {}
 
   public hasBeenThrottled(response): boolean {
     return _.includes(this.THROTTLED_STATUS_CODES, _.get(response, 'status'));
   }
 
-  public retryThrottledResponse(response: ng.IHttpPromiseCallbackArg<any>) {
+  public retryThrottledResponse<T>(response: ng.IHttpResponse<T>) {
     const config = _.get<IRetryHttpConfig>(response, 'config');
     if (!config) {
       return this.$q.reject(response);
@@ -45,14 +54,40 @@ export class RateLimitService {
       return this.$q.reject(response);
     }
     const retryAfterValue = _.isFunction(response.headers) && response.headers(this.RETRY_AFTER_HEADER);
-    return this.retryExponentialBackoff(config, _.toNumber(retryAfterValue));
+    return this.retryExponentialBackoff<T>(config, _.toNumber(retryAfterValue));
   }
 
-  private retryExponentialBackoff(config: IRetryHttpConfig, retryAfterInSeconds: number) {
+  public trackMetric(response: ng.IHttpResponse<any>) {
+    const config = _.get<IRetryHttpConfig>(response, 'config');
+    if (!this.hasRetryConfig(config)) {
+      return;
+    }
+
+    let state: RetryState;
+    if (this.hasBeenThrottled(response)) {
+      if (config.retryConfig.isLastRetry) {
+        state = RetryState.FAIL;
+      } else {
+        state = RetryState.RETRY;
+      }
+    } else {
+      state = RetryState.SUCCESS;
+    }
+
+    this.MetricsService.trackOperationalMetric(OperationalKey.RATE_LIMIT_RETRY, {
+      delay_in_millis: config.retryConfig.delayInMillis,
+      request_method: config.method,
+      request_url: config.url,
+      state,
+      tracking_id: _.isFunction(config.headers) ? config.headers('TrackingID') : undefined,
+    });
+  }
+
+  private retryExponentialBackoff<T>(config: IRetryHttpConfig, retryAfterInSeconds: number) {
     const retryAfterInMillis = _.isNaN(retryAfterInSeconds) ? 0 : retryAfterInSeconds * 1000;
-    const delayInMillis = this.calculateBackoffDelay(config, retryAfterInMillis);
-    config.retryConfig.isLastRetry = delayInMillis >= this.MAX_DELAY;
-    return this.delayHttpRequest(config, delayInMillis);
+    config.retryConfig.delayInMillis = this.calculateBackoffDelay(config, retryAfterInMillis);
+    config.retryConfig.isLastRetry = config.retryConfig.delayInMillis >= this.MAX_DELAY;
+    return this.delayHttpRequest<T>(config, config.retryConfig.delayInMillis);
   }
 
   private calculateBackoffDelay(config: IRetryHttpConfig, retryAfterInMillis: number) {
@@ -67,8 +102,11 @@ export class RateLimitService {
     }
   }
 
-  private delayHttpRequest(config: ng.IRequestConfig, delayInMillis: number) {
-    return this.$timeout(() => this.$http(config), delayInMillis);
+  private delayHttpRequest<T>(config: ng.IRequestConfig, delayInMillis: number) {
+    return this.$timeout(() => this.$http<T>(config), delayInMillis);
   }
 
+  private hasRetryConfig(config: IRetryHttpConfig) {
+    return _.has(config, 'retryConfig');
+  }
 }

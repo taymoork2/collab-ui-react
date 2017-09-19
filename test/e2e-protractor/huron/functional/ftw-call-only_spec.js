@@ -7,7 +7,13 @@ const callSettings = new CallSettingsPage();
 /* global LONG_TIMEOUT */
 
 describe('Huron Functional: first-time-setup', () => {
-  const customer = huronCustomer('ftw-call-only', null, null, true, 3, true, 'CALL');
+  const customerOptions = {
+    test: 'ftw-call-only',
+    pstn: 3,
+    doFtsw: true,
+  };
+  const customer = huronCustomer(customerOptions);
+  const now = Date.now();
 
   beforeAll(done => {
     provisioner.provisionCustomerAndLogin(customer, false).then(done);
@@ -32,11 +38,19 @@ describe('Huron Functional: first-time-setup', () => {
 
   describe('Call Settings', () => {
     describe('Time Zone and Preferred Language', () => {
-      it('should not show a time zone dropdown', () => {
-        utils.expectIsNotDisplayed(wizard.timeZoneDropdown);
+      const newPreferredLanguage = 'English (United Kingdom)';
+      const oldPreferredLanguage = 'English (United States)';
+      const newTimeZone = 'America/New York';
+      it('should change Time Zone to America/New York', () => {
+        utils.expectIsDisplayed(wizard.timeZoneDropdown);
+        utils.selectDropdown('.csSelect-container[name="timeZone"]', newTimeZone);
       });
-      it('should not show a language dropdown', () => {
-        utils.expectIsNotDisplayed(wizard.preferredLanguageDropdown);
+      it('should be able to select English (United Kingdom) from dropdown', () => {
+        utils.expectIsDisplayed(wizard.preferredLanguageDropdown);
+        utils.selectDropdown('.csSelect-container[name="preferredLanguage"]', newPreferredLanguage);
+      });
+      it('should be able to select English (United States) from dropdown', () => {
+        utils.selectDropdown('.csSelect-container[name="preferredLanguage"]', oldPreferredLanguage);
       });
     });
   });
@@ -143,19 +157,21 @@ describe('Huron Functional: first-time-setup', () => {
 
   describe('Voicemail settings', () => {
     it('should default to not having External Voicemail Access', () => {
-      utils.scrollIntoView(wizard.companyVoicemailToggle);
+      utils.click(wizard.scrollToBottomButton);
       expect(utils.getCheckboxVal(wizard.companyVoicemailToggle)).toBeFalsy();
     });
     it('should enable voicemail toggle', () => {
+      utils.scrollBottom('.modal');
       utils.setCheckboxIfDisplayed(wizard.companyVoicemailToggle, true, 1000);
     });
     it('should have two blank checkbox options', () => {
+      utils.scrollIntoView(callSettings.voicemailToEmailCheckBox);
       expect(utils.getCheckboxVal(callSettings.externalVoicemailCheckBox)).toBeFalsy();
       expect(utils.getCheckboxVal(callSettings.voicemailToEmailCheckBox)).toBeFalsy();
     });
     it('should check External Voicemail Access box', () => {
-      utils.click(wizard.scrollToBottomButton);
       utils.setCheckboxIfDisplayed(callSettings.externalVoicemailCheckBox, true, 1000);
+      utils.scrollBottom('.modal');
     });
     it('should display a dropdown to select a phone number for external voicemail access when activated', () => {
       utils.click(wizard.voicemailDropdown);
@@ -170,9 +186,51 @@ describe('Huron Functional: first-time-setup', () => {
     });
     it('should allow Voicemail to Email when box is checked', () => {
       utils.setCheckboxIfDisplayed(callSettings.voicemailToEmailCheckBox, true, 1000);
+      utils.scrollIntoView(wizard.voicemailEmailWithoutAttachment);
+    });
+    it('should default to Email notification with Attachment', () => {
+      utils.click(wizard.voicemailEmailWithAttachment);
+    });
+    it('should click Email notification without attachment', () => {
+      utils.click(wizard.voicemailEmailWithoutAttachment);
     });
     it('should enable save button', () => {
       utils.expectIsEnabled(wizard.beginBtn);
+    });
+  });
+
+  describe('Finalize first time wizard setup', () => {
+    const SUBDOMAIN = `ftwTestWizard${now}`;
+    it('should click on get started button to progress to next screen', () => {
+      utils.click(wizard.beginBtn);
+    });
+    it('should have a pop-up modal for successful save', () => {
+      notifications.assertSuccess();
+    });
+    it('should set up a Webex domain', () => {
+      utils.waitForPresence(wizard.checkAvailabilityBtn, 6000);
+      utils.waitUntilEnabled(wizard.sipInput);
+      let iter;
+      for (iter = 0; iter < SUBDOMAIN.length; iter++) {
+        utils.sendKeys(wizard.sipInput, SUBDOMAIN.charAt(iter));
+      };
+    });
+    it('should check availability of domain', () => {
+      utils.click(wizard.checkAvailabilityBtn);
+      utils.expectIsDisplayed(wizard.checkAvailabilitySuccess);
+    });
+    it('should click Next button', () => {
+      utils.waitUntilEnabled(wizard.beginBtn)
+        .then(() => utils.click(wizard.beginBtn));
+    });
+    it('should land on a finalized page', () => {
+      utils.expectIsDisplayed(wizard.getStartedBanner);
+    });
+    it('should click on Finish button', () => {
+      utils.click(wizard.beginBtn);
+    });
+    it('should land on Control Hub Overview', () => {
+      navigation.expectDriverCurrentUrl('overview');
     });
   });
 });

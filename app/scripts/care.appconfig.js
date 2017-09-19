@@ -74,8 +74,7 @@
               });
           },
           isCareAssistantEnabled: /* @ngInject */ function (FeatureToggleService, $state) {
-            // SL team: replace atlasCareChatAssistant with atlasVirtualAssistantEnable
-            return FeatureToggleService.supports(FeatureToggleService.features.atlasCareChatAssistant)
+            return FeatureToggleService.supports(FeatureToggleService.features.atlasVirtualAssistantEnable)
               .then(function (isEnabled) {
                 $state.isCareAssistantEnabled = isEnabled;
               });

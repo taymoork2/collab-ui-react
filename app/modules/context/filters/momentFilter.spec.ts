@@ -24,13 +24,5 @@ describe('momentFilter', () => {
     it('should return empty string for invalid ISO date string input', function () {
       expect(dateFilter('2017-08-32T21:15:31.627Z', 'LL')).toBe('');
     });
-
-    it('should return empty string for empty string input', function () {
-      expect(dateFilter('   ', 'LL')).toBe('');
-    });
-
-    it('should return empty string for invalid string input', function () {
-      expect(dateFilter('bubba gump', 'LL')).toBe('');
-    });
   });
 });

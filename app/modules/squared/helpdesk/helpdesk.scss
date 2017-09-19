@@ -121,11 +121,13 @@
     .details-heading {
       color: $gray-dark-4;
       margin-bottom: 0.75rem;
+      padding-right: 0;
     }
 
     .details-value {
       color: $gray-dark-1;
       word-wrap: break-word;
+      padding-right: 0;
     }
 
     .details-value-device {
@@ -211,7 +213,7 @@
 }
 
 .helpdesk-orderDetail {
-  width: 50%;
+  width: 55%;
   margin: 0 auto;
 
   .blue-icon-info {
@@ -219,13 +221,15 @@
   }
 
   .custom-spacing {
-    margin-right: 0.5rem;
+    margin-right: 0.3rem;
   }
 
   .edit-box-style {
     margin-right: 1rem;
-    width: 300px;
-    padding: 10px 5px;
+    width: 100%;
+    padding: 4px 5px;
+    color: $gray-dark-1;
+    font-size: 0.875rem;
   }
 }
 

@@ -21,6 +21,20 @@
         </uc-time-zone>
       </div>
       <div class="row full service-setup bottom-margin">
+        <uc-date-format
+          date-format="$ctrl.callLocationSettingsData.location.dateFormat"
+          date-format-options="$ctrl.locationSettingsOptions.dateFormatOptions"
+          on-change-fn="$ctrl.onDateFormatChanged(dateFormat)">
+        </uc-date-format>
+      </div>
+      <div class="row full service-setup bottom-margin">
+        <uc-time-format
+          time-format="$ctrl.callLocationSettingsData.location.timeFormat"
+          time-format-options="$ctrl.locationSettingsOptions.timeFormatOptions"
+          on-change-fn="$ctrl.onTimeFormatChanged(timeFormat)">
+        </uc-time-format>
+      </div>
+      <div class="row full service-setup bottom-margin">
         <uc-settings-preferred-language
           preferred-language="$ctrl.callLocationSettingsData.location.preferredLanguage"
           preferred-language-options="$ctrl.locationSettingsOptions.preferredLanguageOptions"
@@ -68,7 +82,7 @@
         <uc-outbound-dial-digit
           steering-digit="$ctrl.callLocationSettingsData.location.steeringDigit"
           internal-number-ranges="$ctrl.callLocationSettingsData.internalNumberRanges"
-          is-terminus-customer="$ctrl.isTerminusCustomer"
+          is-terminus-customer="$ctrl.PstnModel.isCustomerExists()"
           on-change-fn="$ctrl.onSteeringDigitChanged(steeringDigit)">
         </uc-outbound-dial-digit>
       </div>
@@ -97,8 +111,16 @@
     <form novalidate class="cs-form content-container" name="$ctrl.form" role="form" ng-if="!$ctrl.loading">
       <div class="save-section" ng-class="{invisible: !$ctrl.form.$dirty}">
         <p></p>
-        <button ng-click="$ctrl.onCancel()" translate="common.cancel"></button>
-        <button class="btn btn--primary" cs-btn loading="$ctrl.processing" ng-click="$ctrl.saveLocation()" ng-disabled="$ctrl.form.$invalid"><span translate="common.save"></span></button>
+        <button ng-click="$ctrl.onCancel()"
+          translate="common.cancel">
+        </button>
+        <button
+          class="btn btn--primary"
+          cs-btn loading="$ctrl.processing"
+          ng-click="$ctrl.saveLocation()"
+          ng-disabled="$ctrl.saveDisabled()">
+          <span translate="common.save"></span>
+        </button>
       </div>
 
       <!--Location Details -->
@@ -166,6 +188,20 @@
             </uc-time-zone>
           </div>
           <div class="sub-section">
+            <uc-date-format
+              date-format="$ctrl.callLocationSettingsData.location.dateFormat"
+              date-format-options="$ctrl.locationSettingsOptions.dateFormatOptions"
+              on-change-fn="$ctrl.onDateFormatChanged(dateFormat)">
+            </uc-date-format>
+          </div>
+          <div class="sub-section">
+            <uc-time-format
+              time-format="$ctrl.callLocationSettingsData.location.timeFormat"
+              time-format-options="$ctrl.locationSettingsOptions.timeFormatOptions"
+              on-change-fn="$ctrl.onTimeFormatChanged(timeFormat)">
+            </uc-time-format>
+          </div>
+          <div class="sub-section">
             <uc-settings-preferred-language
               preferred-language="$ctrl.callLocationSettingsData.location.preferredLanguage"
               preferred-language-options="$ctrl.locationSettingsOptions.preferredLanguageOptions"
@@ -226,7 +262,7 @@
             <uc-outbound-dial-digit
               steering-digit="$ctrl.callLocationSettingsData.location.steeringDigit"
               internal-number-ranges="$ctrl.callLocationSettingsData.internalNumberRanges"
-              is-terminus-customer="$ctrl.isTerminusCustomer"
+              is-terminus-customer="$ctrl.PstnModel.isCustomerExists()"
               on-change-fn="$ctrl.onSteeringDigitChanged(steeringDigit)">
             </uc-outbound-dial-digit>
           </div>
@@ -238,7 +274,7 @@
               supports-simplified-national-dialing="$ctrl.locationSettingsOptions.dialPlan.supportsSimplifiedNationalDialing"
               supports-local-dialing="$ctrl.locationSettingsOptions.dialPlan.supportsLocalDialing"
               region-code="$ctrl.callLocationSettingsData.location.regionCodeDialing.regionCode"
-              is-terminus-customer="$ctrl.isTerminusCustomer"
+              is-terminus-customer="$ctrl.PstnModel.isCustomerExists()"
               on-change-fn="$ctrl.onRegionCodeChanged(regionCode, useSimplifiedNationalDialing)">
             </uc-dialing-setup>
           </div>
@@ -284,8 +320,8 @@
         </div>
       </div>
 
-      <!-- TODO: (jlowery) Emergency Services -->
-      <!-- <div class="cs-form__section">
+      <!-- Emergency Services -->
+      <div class="cs-form__section bottom-pdding">
         <div class="section__info">
           <div cs-sticky>
             <h4 class="section__title" translate="locations.emergencyServicesTitle"></h4>
@@ -294,10 +330,18 @@
         </div>
         <div class="section__content">
           <div class="sub-section">
-
+            <uc-call-emergency-services
+              number="$ctrl.number"
+              number-options="$ctrl.locationSettingsOptions.emergencyNumbersOptions"
+              address="$ctrl.callLocationSettingsData.address"
+              is-pstn-setup="$ctrl.PstnModel.isCustomerExists()"
+              allow-ecn-setup="true">
+            </uc-call-emergency-services>
           </div>
         </div>
-      </div> -->
+      </div>
+
+
     </form>
   </div>
   <!-- EDIT LOCATION ENDS -->

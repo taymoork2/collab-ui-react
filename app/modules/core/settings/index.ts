@@ -3,6 +3,7 @@ import { SettingsCtrl } from './settings.controller';
 import './_settings.scss';
 
 import authenticationModule from './authentication';
+import emailModule from './email';
 import brandingModule from './branding';
 import deviceBrandingModule from './deviceBranding';
 import domainsModule from './domain';
@@ -20,6 +21,7 @@ export default angular.module('core.settings', [
   require('collab-ui-ng').default,
   require('angular-translate'),
   authenticationModule,
+  emailModule,
   brandingModule,
   deviceBrandingModule,
   dirSyncModule,

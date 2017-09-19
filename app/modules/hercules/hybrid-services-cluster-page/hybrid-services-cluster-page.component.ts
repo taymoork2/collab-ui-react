@@ -3,7 +3,7 @@ import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-s
 class HybridServicesClusterPageCtrl implements ng.IComponentController {
   public tabs: { title: string, state: string }[] = [];
   public title: string;
-  public backUrl: string = 'cluster-list';
+  public backState = 'cluster-list';
   public hasNodesViewFeatureToggle: boolean;
 
   /* @ngInject */
@@ -15,9 +15,12 @@ class HybridServicesClusterPageCtrl implements ng.IComponentController {
   ) {}
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }) {
-    const { clusterId } = changes;
+    const { clusterId, backState } = changes;
     if (clusterId && clusterId.currentValue) {
       this.init(clusterId.currentValue);
+    }
+    if (backState && backState.currentValue) {
+      this.backState = backState.currentValue;
     }
   }
 
@@ -70,6 +73,7 @@ export class HybridServicesClusterPageComponent implements ng.IComponentOptions 
   public controller = HybridServicesClusterPageCtrl;
   public templateUrl = 'modules/hercules/hybrid-services-cluster-page/hybrid-services-cluster-page.html';
   public bindings = {
+    backState: '<',
     clusterId: '<',
     hasNodesViewFeatureToggle: '<',
   };

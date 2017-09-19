@@ -4,6 +4,19 @@ export interface IOption {
   value: string;
 }
 
+export class Option {
+  public label: string;
+  public value: string;
+
+  constructor(option: IOption = {
+    label: '',
+    value: '',
+  }) {
+    this.label = option.label;
+    this.value = option.value;
+  }
+}
+
 export interface ICOSRestriction {
   restriction: string;
   blocked: boolean;

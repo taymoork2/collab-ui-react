@@ -1,5 +1,7 @@
 'use strict';
 
+var featureToggle = require('../utils/featureToggle.utils');
+
 /* global manageUsersPage */
 
 // NOTE: Be sure to re-enable the afterAll at line 151 when re-enabling this test!
@@ -24,9 +26,6 @@ describe('Manage Users - CSV File -', function () {
 
     utils.expectIsDisplayed(users.messageServiceFree);
     utils.expectIsDisplayed(users.meetingServicePaid);
-    // utils.expectIsDisplayed(users.hybridServices_sidePanel_Calendar);
-    // utils.expectIsDisplayed(users.hybridServices_sidePanel_UC);
-
     utils.click(users.closeSidePanel);
   }
 
@@ -43,6 +42,10 @@ describe('Manage Users - CSV File -', function () {
     utils.waitForText(manageUsersPage.select.title, 'Add or Modify Users');
     utils.click(manageUsersPage.select.radio.orgBulk);
     utils.click(manageUsersPage.buttons.next);
+    if (featureToggle.features.atlasEmailSuppress) {
+      utils.wait(manageUsersPage.emailSuppress.emailSuppressIcon);
+      utils.click(manageUsersPage.buttons.next);
+    }
     utils.waitForText(manageUsersPage.bulk.title, 'Bulk Add or Modify Users');
   });
 

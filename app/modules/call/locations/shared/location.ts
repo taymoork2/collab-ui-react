@@ -115,7 +115,10 @@ export class Location implements ILocation {
       generated: _.get(location.voicemailPilotNumber, 'generated'),
     });
     this.regionCodeDialing = location.regionCodeDialing;
-    this.callerId = location.callerId;
+    this.callerId = _.isNull(location.callerId) ? location.callerId : new LocationCallerId({
+      name: _.get(location.callerId, 'name'),
+      number: _.get(location.callerId, 'number'),
+    });
   }
 }
 
