@@ -1194,8 +1194,8 @@
       "progress": "Mark as in progress",
       "completed": "Mark as completed",
       "pending": "Mark as pending",
-      "showRaw": "Show Raw Data",
-      "hideRaw": "Hide Raw Data"
+      "showOrder": "Show Order Data",
+      "hideOrder": "Hide Order Data"
     },
     "tabs": {
       "pending": "Pending",
