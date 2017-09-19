@@ -10,8 +10,8 @@ describe('CsdmSearchService', () => {
   });
 
   afterEach(function () {
-    this.$httpBackend.verifyNoOutstandingExpectation();
     this.$httpBackend.verifyNoOutstandingRequest();
+    this.$httpBackend.verifyNoOutstandingExpectation();
   });
 
   it('service is initialized', function () {
@@ -19,45 +19,49 @@ describe('CsdmSearchService', () => {
   });
   describe('perform empty search', () => {
     it('should return a data object', function () {
-      const url = this.UrlConfig.getCsdmServiceUrl() + '/organization/--org--/devices/_search?size=20&from=0&query=&aggregates=product,connectionStatus,productFamily,activeInterface,errorCodes,software,upgradeChannel';
+      const searchObj = SearchObject.createWithQuery('');
+      const url = this.UrlConfig.getCsdmServiceUrl() + '/organization/--org--/devices/_search' + this.CsdmSearchService.constructSearchString(searchObj);
       this.$httpBackend.expectGET(url).respond(200);
-      this.CsdmSearchService.search(<SearchObject>{});
+      this.CsdmSearchService.search(searchObj);
       this.$httpBackend.flush();
     });
   });
 
   describe('perform type search', () => {
     it('should return a data object', function () {
-      const url = this.UrlConfig.getCsdmServiceUrl() + '/organization/--org--/devices/_search?query=cloudberry&size=20&from=0&aggregates=product,connectionStatus,productFamily,activeInterface,errorCodes,software,upgradeChannel';
+      const searchObj = SearchObject.createWithQuery('cloudberry');
+      const url = this.UrlConfig.getCsdmServiceUrl() + '/organization/--org--/devices/_search' + this.CsdmSearchService.constructSearchString(searchObj);
       this.$httpBackend.expectGET(url).respond(200);
-      this.CsdmSearchService.search({ query: 'cloudberry' });
+      this.CsdmSearchService.search(searchObj);
       this.$httpBackend.flush();
     });
   });
 
   describe('perform type and any search', () => {
     it('should return a data object', function () {
-      const url = this.UrlConfig.getCsdmServiceUrl() + '/organization/--org--/devices/_search?query=product:sx10,any:test&size=20&sortField=connectionStatus&sortOrder=asc&from=0&aggregates=product,connectionStatus,productFamily,activeInterface,errorCodes,software,upgradeChannel';
+      const searchObj = SearchObject.createWithQuery('product:sx10,any:test');
+      const url = this.UrlConfig.getCsdmServiceUrl() + '/organization/--org--/devices/_search' + this.CsdmSearchService.constructSearchString(searchObj);
       this.$httpBackend.expectGET(url).respond(200);
-      this.CsdmSearchService.search(SearchObject.create('product:sx10,any:test'));
+      this.CsdmSearchService.search(searchObj);
       this.$httpBackend.flush();
     });
   });
 
   describe('perform two consequtive search', () => {
     it('should cancel the first request', function () {
-      const url = this.UrlConfig.getCsdmServiceUrl() + '/organization/--org--/devices/_search?size=20&from=0&query=&aggregates=product,connectionStatus,productFamily,activeInterface,errorCodes,software,upgradeChannel';
+      const searchObj = SearchObject.createWithQuery('');
+      const url = this.UrlConfig.getCsdmServiceUrl() + '/organization/--org--/devices/_search' + this.CsdmSearchService.constructSearchString(searchObj);
       this.$httpBackend.expectGET(url).respond(200);
       this.$httpBackend.expectGET(url).respond(200);
       let queryOneExecuted = false;
       let queryOneFinally = false;
       let queryTwoExecuted = false;
-      this.CsdmSearchService.search(<SearchObject>{}).then(() => {
+      this.CsdmSearchService.search(searchObj).then(() => {
         queryOneExecuted = true;
       }).finally(() => {
         queryOneFinally = true;
       });
-      this.CsdmSearchService.search(<SearchObject>{}).then(() => {
+      this.CsdmSearchService.search(searchObj).then(() => {
         queryTwoExecuted = true;
       });
       this.$httpBackend.flush();
@@ -69,18 +73,19 @@ describe('CsdmSearchService', () => {
 
   describe('perform two consequtive search with different caller', () => {
     it('should allow both requests', function () {
-      const url = this.UrlConfig.getCsdmServiceUrl() + '/organization/--org--/devices/_search?size=20&from=0&query=&aggregates=product,connectionStatus,productFamily,activeInterface,errorCodes,software,upgradeChannel';
+      const searchObj = SearchObject.createWithQuery('');
+      const url = this.UrlConfig.getCsdmServiceUrl() + '/organization/--org--/devices/_search' + this.CsdmSearchService.constructSearchString(searchObj);
       this.$httpBackend.expectGET(url).respond(200);
       this.$httpBackend.expectGET(url).respond(200);
       let queryOneExecuted = false;
       let queryOneFinally = false;
       let queryTwoExecuted = false;
-      this.CsdmSearchService.search(<SearchObject>{}, Caller.searchOrLoadMore).then(() => {
+      this.CsdmSearchService.search(searchObj, Caller.searchOrLoadMore).then(() => {
         queryOneExecuted = true;
       }).finally(() => {
         queryOneFinally = true;
       });
-      this.CsdmSearchService.search(<SearchObject>{}, Caller.aggregator).then(() => {
+      this.CsdmSearchService.search(searchObj, Caller.aggregator).then(() => {
         queryTwoExecuted = true;
       });
       this.$httpBackend.flush();
