@@ -1,8 +1,8 @@
 import testModule from './index';
 
 describe('Service: TelephonyDomainService', () => {
-  beforeAll(function () {
-    this.preData = getJSONFixture('gemini/common.json');
+  beforeEach(function () {
+    this.preData = _.cloneDeep(getJSONFixture('gemini/common.json'));
 
     this.domainName = '0520_Bing_TD_02';
     this.customerId = 'ff808081527ccb3f0153116a3531041e';
