@@ -145,7 +145,7 @@ export class DevicesCtrl {
   }
 
   public searchChanged(search: SearchObject) {
-    this._searchString = search.query || '';
+    this._searchString = search.getSearchQuery();
     this._searchObject = search;
   }
 
@@ -154,10 +154,6 @@ export class DevicesCtrl {
     this._emptydatasource = (this._searchString === '') && (this._searchResult && this._searchResult.hits.total === 0);
     this._emptysearchresult = (this._searchString !== '') && (this._searchResult && this._searchResult.hits.total === 0);
     this.issearching = false;
-    // this._searchResult.splice(0, this._searchResult.length);
-    // if (result && result.length) {
-    //   Array.prototype.push.apply(this._searchResult, result);
-    // }
   }
 
   private initForAddButton() {
