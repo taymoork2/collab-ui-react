@@ -51,6 +51,8 @@
       align-items: center;
       justify-content: space-between;
       background-color: $gray-light-4;
+      padding-top: 2rem!important;
+      padding-bottom: 2rem!important;
 
       .profile-name {
         @include vr-spacing(pb, 0.5);
@@ -94,7 +96,7 @@
       @include vr-spacing(mt, 1);
       @include vr-spacing(ml, 1.5);
       @include vr-spacing(mr, 2);
-      @include vr-spacing(mb, -1);
+      @include vr-spacing(mb, -2);
 
       border-radius: 2px 2px 0px;
 
@@ -144,7 +146,6 @@
       .customer-details {
         float: right;
         position: relative;
-        top: -1rem;
 
         .customer-message {
           @include vr-spacing(p, 0.75);

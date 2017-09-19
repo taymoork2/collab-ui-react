@@ -6,7 +6,7 @@
     .controller('CareLocalSettingsCtrl', CareLocalSettingsCtrl);
 
   /* @ngInject */
-  function CareLocalSettingsCtrl($location, $interval, $q, $scope, $translate, Authinfo, Log, Notification, SunlightConfigService, ModalService, FeatureToggleService, UrlConfig) {
+  function CareLocalSettingsCtrl($location, $interval, $q, $scope, $translate, Authinfo, HydraService, Log, Notification, SunlightConfigService, ModalService, FeatureToggleService, UrlConfig) {
     var vm = this;
 
     vm.ONBOARDED = 'onboarded';
@@ -23,6 +23,8 @@
     vm.csOnboardingStatus = vm.status.UNKNOWN;
     vm.aaOnboardingStatus = vm.status.UNKNOWN;
     vm.appOnboardingStatus = vm.status.UNKNOWN;
+
+    vm.careSetupDoneByOrgAdmin = (Authinfo.getOrgId() === Authinfo.getUserOrgId());
 
     vm.state = vm.ONBOARDED;
     vm.errorCount = 0;
@@ -178,10 +180,9 @@
       if (Authinfo.isCareVoice() && vm.aaOnboardingStatus !== vm.status.SUCCESS) {
         promises.onBoardAA = SunlightConfigService.aaOnboard();
       }
-      if (vm.appOnboardingStatus !== vm.status.SUCCESS) {
+      if (vm.careSetupDoneByOrgAdmin && vm.appOnboardingStatus !== vm.status.SUCCESS) {
         promises.onBoardBotApp = SunlightConfigService.onboardCareBot();
       }
-
       $q.all(promises).then(function (results) {
         Log.debug('Care onboarding is success', results);
         startPolling();
@@ -216,10 +217,24 @@
       }
     }
 
+    function setViewModelState(onboardingStatus) {
+      switch (onboardingStatus) {
+        case vm.status.SUCCESS:
+          vm.state = vm.ONBOARDED;
+          break;
+        case vm.status.PENDING:
+          vm.state = vm.IN_PROGRESS;
+          startPolling();
+          break;
+        default:
+          vm.state = vm.NOT_ONBOARDED;
+      }
+    }
+
     function processOnboardStatus() {
       SunlightConfigService.getChatConfig().then(function (result) {
         populateOrgChatConfigViewModel(result);
-        var onboardingStatus = getOnboardingStatus();
+        var onboardingStatus = getOnboardingStatus(result);
         switch (onboardingStatus) {
           case vm.status.SUCCESS:
             Notification.success($translate.instant('sunlightDetails.settings.setUpCareSuccess'));
@@ -253,22 +268,75 @@
       Notification.error($translate.instant('sunlightDetails.settings.setUpCareFailure'));
     }
 
-    function getOnboardingStatus() {
+    function getOnboardingStatus(result) {
       var onboardingStatus = vm.status.UNKNOWN;
-      if (vm.csOnboardingStatus === vm.status.SUCCESS && vm.appOnboardingStatus === vm.status.SUCCESS) {
-        if (Authinfo.isCareVoice()) {
-          onboardingStatus = vm.aaOnboardingStatus;
-        } else {
-          onboardingStatus = vm.status.SUCCESS;
-        }
-      } else if (vm.csOnboardingStatus !== vm.status.SUCCESS) {
-        onboardingStatus = vm.csOnboardingStatus;
-      } else if (vm.appOnboardingStatus !== vm.status.SUCCESS) {
-        onboardingStatus = vm.appOnboardingStatus;
+      vm.csOnboardingStatus = _.get(result, 'data.csOnboardingStatus');
+      vm.aaOnboardingStatus = _.get(result, 'data.aaOnboardingStatus');
+      if (vm.careSetupDoneByOrgAdmin) {
+        onboardingStatus = onboardingDoneByAdminStatus();
       } else {
-        onboardingStatus = vm.status.UNKNOWN;
+        onboardingStatus = onboardingDoneByPartnerStatus();
       }
       return onboardingStatus;
+    }
+
+    function onboardingDoneByAdminStatus() {
+      var onboardingDoneByAdminStatus = vm.status.UNKNOWN;
+      if (vm.csOnboardingStatus === vm.status.SUCCESS && vm.appOnboardingStatus === vm.status.SUCCESS) {
+        onboardingDoneByAdminStatus = onboardingStatusWhenCareVoiceEnabled();
+      } else if (vm.csOnboardingStatus !== vm.status.SUCCESS) {
+        onboardingDoneByAdminStatus = vm.csOnboardingStatus;
+      } else if (vm.appOnboardingStatus !== vm.status.SUCCESS) {
+        onboardingDoneByAdminStatus = vm.appOnboardingStatus;
+      } else {
+        onboardingDoneByAdminStatus = vm.status.UNKNOWN;
+      }
+      return onboardingDoneByAdminStatus;
+    }
+
+    function onboardingDoneByPartnerStatus() {
+      var onboardingDoneByPartnerStatus = vm.status.UNKNOWN;
+      if (vm.csOnboardingStatus === vm.status.SUCCESS) {
+        onboardingDoneByPartnerStatus = onboardingStatusWhenCareVoiceEnabled();
+      } else if (vm.csOnboardingStatus !== vm.status.SUCCESS) {
+        onboardingDoneByPartnerStatus = vm.csOnboardingStatus;
+      }
+      return onboardingDoneByPartnerStatus;
+    }
+
+    function onboardingStatusWhenCareVoiceEnabled() {
+      var status;
+      if (Authinfo.isCareVoice()) {
+        status = vm.aaOnboardingStatus;
+      } else {
+        status = vm.status.SUCCESS;
+      }
+      return status;
+    }
+
+    function setAppOnboardingStatus(status) {
+      vm.appOnboardingStatus = status;
+    }
+
+    function getOnboardStatusAndUpdateConfigIfRequired(result) {
+      var onboardingStatus = getOnboardingStatus(result);
+      setViewModelState(onboardingStatus);
+      if (result.data.orgName === '' || !(_.get(result, 'data.orgName'))) {
+        result.data.orgName = Authinfo.getOrgName();
+        SunlightConfigService.updateChatConfig(result.data).then(function (result) {
+          Log.debug('Successfully updated org config with org name', result);
+        });
+      }
+    }
+
+    function enableSetupButtonForAppOnboarding(orgConfigResponse) {
+      var onboardingStatus = getOnboardingStatus(orgConfigResponse);
+      setViewModelState(onboardingStatus);
+      var requestPayload = _.cloneDeep(orgConfigResponse);
+      requestPayload.data.appOnboardStatus = vm.status.UNKNOWN;
+      SunlightConfigService.updateChatConfig(requestPayload.data).then(function (response) {
+        Log.debug('Successfully updated org config with appOnboardStatus as Unknown', response);
+      });
     }
 
     function init() {
@@ -280,23 +348,19 @@
       });
       SunlightConfigService.getChatConfig().then(function (result) {
         populateOrgChatConfigViewModel(result, true);
-        var onboardingStatus = getOnboardingStatus();
-        switch (onboardingStatus) {
-          case vm.status.PENDING:
-            vm.state = vm.IN_PROGRESS;
-            startPolling();
-            break;
-          case vm.status.SUCCESS:
-            vm.state = vm.ONBOARDED;
-            break;
-          default:
-            vm.state = vm.NOT_ONBOARDED;
-        }
-        if (result.data.orgName === '' || !(_.get(result, 'data.orgName'))) {
-          result.data.orgName = Authinfo.getOrgName();
-          SunlightConfigService.updateChatConfig(result.data).then(function (result) {
-            Log.debug('Successfully updated org config with org name', result);
-          });
+        if (result.data && result.data.appOnboardStatus === vm.status.SUCCESS && vm.careSetupDoneByOrgAdmin) {
+          HydraService.getHydraApplicationDetails(result.data.hydraAppId).then(function () {
+            setAppOnboardingStatus(vm.status.SUCCESS);
+            getOnboardStatusAndUpdateConfigIfRequired(result);
+          })
+            .catch(function (error) {
+              if (error.status === 403) {
+                setAppOnboardingStatus(vm.status.UNKNOWN);
+                enableSetupButtonForAppOnboarding(result);
+              }
+            });
+        } else {
+          getOnboardStatusAndUpdateConfigIfRequired(result);
         }
       })
         .catch(function (result) {

@@ -441,6 +441,13 @@
     function createAnnouncements(menuEntry) {
       var actions = menuEntry.actions;
       var newActionArray = [];
+      if (actions.length === 0) {
+        // if save is from the schedule modal, no actions when AA is 1st created
+        newActionArray[0] = {};
+        newActionArray[0].value = '';
+        newActionArray[0].voice = '';
+        return newActionArray;
+      }
       for (var i = 0; i < actions.length; i++) {
         newActionArray[i] = {};
         menuEntry.description = actions[i].description;

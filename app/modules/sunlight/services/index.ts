@@ -1,5 +1,6 @@
 const SunlightConfigService = require('./sunlightConfigService');
 const SunlightReportService = require('./sunlightReportService');
+const HydraService = require('./hydraService');
 const ConfigServices = require('./sunlightServices');
 
 const urlConfigModule = require('modules/core/config/urlConfig');
@@ -13,6 +14,7 @@ export default angular
   ])
   .service('SunlightConfigService', SunlightConfigService)
   .service('SunlightReportService', SunlightReportService)
+  .service('HydraService', HydraService)
   .factory('ConfigTemplateService', ConfigServices.ConfigTemplateService)
   .factory('ConfigUserService', ConfigServices.ConfigUserService)
   .name;

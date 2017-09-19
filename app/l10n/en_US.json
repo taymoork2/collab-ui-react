@@ -1466,6 +1466,7 @@
     "incorrectFormat": "Incorrect format",
     "info": "Info",
     "invalidEmail": "This is not a valid Email Address.",
+    "emailAddressesDonotMatch": "Email Addresses do not match",
     "invalidFormat": "Invalid Format",
     "invalidMax": "Maximum value is {{max}}.",
     "invalidMaxLength": "Character length cannot be more than {{max}}.",
@@ -3634,7 +3635,7 @@
     "invalidEmailAddress": "Invalid Email Address",
     "csvDuplicateEmail": "This email is skipped due to duplicate email address in the CSV file.",
     "bulkInvalidDID": "The \"Direct Line\" field contains an invalid number.  Please fix and try again.",
-    "tooManyActiveMessageLicenses": "There are more than one \"Cisco Spark Message\" license enabled.  Please fix and try again.",
+    "tooManyActiveSparkCallLicenses": "There are more than one \"Cisco Spark Call\" license enabled.  Please fix and try again.",
     "csvWrongLicenseFormat": "License fields contain invalid data. Please fix and try again.",
     "processBulkResponseError": "An error has occurred while reading the response. Please try again.",
     "processBulkError": "Unidentified error while processing the user. Please try again.",
@@ -4866,7 +4867,8 @@
     "companyName": "Legal Company Name",
     "firstName": "Signee's First Name",
     "lastName": "Signee's Last Name",
-    "emailAddress": "Signee's Email Address"
+    "emailAddress": "Signee's Email Address",
+    "confirmEmailAddress": "Signee's Confirm Email Address"
   },
   "intelepeerFeatures": {
     "feature1": "Service available in U.S. 48 states",
@@ -6748,6 +6750,10 @@
       "noupgrade": {
         "type": "Automatic Updates Disabled",
         "message": "System software will not be updated."
+      },
+      "soontobedeactivated": {
+        "type": "Device will soon be deactivated",
+        "message": "This device has been offline for over six weeks. Make sure it comes online within {{expireInDays}} days to avoid deactivation."
       },
       "NTPStatus": {
         "type": "Time Server Not Reachable",
