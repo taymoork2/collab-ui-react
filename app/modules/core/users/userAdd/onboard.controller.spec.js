@@ -5,7 +5,7 @@ var csvDownloadModule = require('modules/core/csvDownload').default;
 describe('OnboardCtrl: Ctrl', function () {
   function init() {
     this.initModules('Core', 'Hercules', 'Huron', 'Messenger', 'Sunlight', 'WebExApp', csvDownloadModule);
-    this.injectDependencies('$httpBackend', '$modal', '$q', '$scope', '$state', '$stateParams', '$previousState', '$timeout', 'Analytics', 'Authinfo', 'CsvDownloadService', 'DialPlanService', 'FeatureToggleService', 'MessengerInteropService', 'Notification', 'Orgservice', 'SyncService', 'SunlightConfigService', 'TelephonyInfoService', 'Userservice', 'UrlConfig', 'WebExUtilsFact', 'ServiceSetup', 'LogMetricsService');
+    this.injectDependencies('$httpBackend', '$modal', '$q', '$scope', '$state', '$stateParams', '$previousState', '$timeout', 'Analytics', 'Authinfo', 'CsvDownloadService', 'DialPlanService', 'FeatureToggleService', 'MessengerInteropService', 'Notification', 'Orgservice', 'SyncService', 'SunlightConfigService', 'TelephonyInfoService', 'NumberService', 'Userservice', 'UrlConfig', 'WebExUtilsFact', 'ServiceSetup', 'LogMetricsService');
     initDependencySpies.apply(this);
   }
 
@@ -41,7 +41,7 @@ describe('OnboardCtrl: Ctrl', function () {
       },
     });
 
-    this.mock.internalNumbers = getJSONFixture('huron/json/internalNumbers/internalNumbers.json');
+    this.mock.internalNumbers = getJSONFixture('huron/json/internalNumbers/numbersInternalNumbers.json');
     this.mock.externalNumbers = getJSONFixture('huron/json/externalNumbers/externalNumbers.json');
     this.mock.externalNumberPool = getJSONFixture('huron/json/externalNumberPoolMap/externalNumberPool.json');
     this.mock.externalNumberPoolMap = getJSONFixture('huron/json/externalNumberPoolMap/externalNumberPoolMap.json');
@@ -88,8 +88,8 @@ describe('OnboardCtrl: Ctrl', function () {
       callback({}, 200);
     });
 
-    spyOn(this.TelephonyInfoService, 'getInternalNumberPool').and.returnValue(this.mock.internalNumbers);
-    spyOn(this.TelephonyInfoService, 'loadInternalNumberPool').and.returnValue(this.$q.resolve(this.mock.internalNumbers));
+    spyOn(this.NumberService, 'getNumberList').and.returnValue(this.$q.resolve(this.mock.internalNumbers));
+
     spyOn(this.TelephonyInfoService, 'getExternalNumberPool').and.returnValue(this.mock.externalNumbers);
     spyOn(this.DialPlanService, 'getDialPlan').and.returnValue(this.$q.resolve({
       extensionGenerated: 'false',
@@ -99,7 +99,7 @@ describe('OnboardCtrl: Ctrl', function () {
     spyOn(this.TelephonyInfoService, 'loadExtPoolWithMapping').and.returnValue(this.$q.resolve(this.mock.externalNumberPoolMap));
 
     spyOn(this.FeatureToggleService, 'getFeaturesForUser').and.returnValue(this.mock.getMyFeatureToggles);
-    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve());
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
     spyOn(this.TelephonyInfoService, 'getPrimarySiteInfo').and.returnValue(this.$q.resolve(this.mock.sites));
     spyOn(this.ServiceSetup, 'listSites').and.returnValue(this.$q.resolve(this.mock.sites));
 
@@ -529,9 +529,9 @@ describe('OnboardCtrl: Ctrl', function () {
       this.$scope.$apply();
       expect(promise).toBeResolved();
       expect(this.$scope.usrlist[0].externalNumber).toBeDefined();
-      expect(this.$scope.usrlist[0].assignedDn.pattern).toEqual('4000');
+      expect(this.$scope.usrlist[0].assignedDn.number).toEqual('503');
       expect(this.$scope.usrlist[1].externalNumber).toBeDefined();
-      expect(this.$scope.usrlist[1].assignedDn.pattern).toEqual('4001');
+      expect(this.$scope.usrlist[1].assignedDn.number).toEqual('504');
     });
 
     it('editServicesSave', function () {
@@ -555,17 +555,17 @@ describe('OnboardCtrl: Ctrl', function () {
       this.$scope.assignDNForUserList();
       this.$scope.$apply();
       expect(this.$scope.usrlist[0].externalNumber.pattern).toEqual('null');
-      expect(this.$scope.usrlist[0].assignedDn.pattern).toEqual('4000');
+      expect(this.$scope.usrlist[0].assignedDn.number).toEqual('503');
       expect(this.$scope.usrlist[1].externalNumber.pattern).toEqual('null');
-      expect(this.$scope.usrlist[1].assignedDn.pattern).toEqual('4001');
+      expect(this.$scope.usrlist[1].assignedDn.number).toEqual('504');
     });
 
     it('convertUsersNext', function () {
       this.$scope.convertUsersNext();
       this.$scope.$apply();
       expect(this.$state.go).toHaveBeenCalledWith('users.convert.services.dn');
-      expect(this.$scope.usrlist[0].assignedDn.pattern).toEqual('4000');
-      expect(this.$scope.usrlist[1].assignedDn.pattern).toEqual('4001');
+      expect(this.$scope.usrlist[0].assignedDn.number).toEqual('503');
+      expect(this.$scope.usrlist[1].assignedDn.number).toEqual('504');
     });
 
     it('assignDNForConvertUsers', function () {
