@@ -74,7 +74,7 @@
     }
 
     function loadInternalNumberPool(pattern) {
-      return NumberService.getNumberList(pattern, 'internal', undefined, null, null, null, null)
+      return NumberService.getNumberList(pattern, 'internal', false, null, null, null, null)
         .then(function (internalPool) {
           internalNumberPool = internalPool;
         }).catch(function (response) {
@@ -84,7 +84,7 @@
     }
 
     function loadLocationInternalNumberPool(pattern, locationId) {
-      return NumberService.getNumberList(pattern, 'internal', undefined, null, null, null, locationId)
+      return NumberService.getNumberList(pattern, 'internal', false, null, null, null, locationId)
         .then(function (internalPool) {
           internalNumberPool = internalPool;
           return _.cloneDeep(internalNumberPool);

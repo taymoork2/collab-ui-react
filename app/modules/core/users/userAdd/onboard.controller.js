@@ -272,7 +272,7 @@ require('./_user-add.scss');
 
     function loadLocationInternalNumberPool(pattern, locationUuid, userEntity) {
       $scope.labelField = 'siteToSite';
-      return NumberService.getNumberList(pattern, 'internal', undefined, null, null, null, locationUuid)
+      return NumberService.getNumberList(pattern, 'internal', false, null, null, null, locationUuid)
         .then(function (internalNumberPool) {
           $scope.internalNumberPool = internalNumberPool;
           if (userEntity) {
@@ -287,7 +287,7 @@ require('./_user-add.scss');
 
     function loadInternalNumberPool(pattern) {
       $scope.labelField = 'number';
-      return NumberService.getNumberList(pattern, 'internal', undefined, null, null, null, null)
+      return NumberService.getNumberList(pattern, 'internal', false, null, null, null, null)
         .then(function (internalNumberPool) {
           $scope.internalNumberPool = internalNumberPool;
         }).catch(function (response) {
