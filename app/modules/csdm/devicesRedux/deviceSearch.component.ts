@@ -66,7 +66,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
     const newSearch = (search || '').trim();
     if (newSearch !== this.searchField) {
       this.searchField = newSearch;
-      this.currentSearchObject.setQuery(this.searchField);
+      this.currentSearchObject.setQuery(this.DeviceSearchTranslator.translate(this.searchField));
       this.searchChange();
     }
   }
@@ -75,7 +75,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
     value = value === 'all' ? '' : value;
     if (this._currentFilterValue !== value) {
       this._currentFilterValue = value;
-      this.currentSearchObject.setFilterValue(this.DeviceSearchTranslator.translate(this._currentFilterValue));
+      this.currentSearchObject.setFilterValue(this._currentFilterValue);
       this.searchChange();
     }
   }
