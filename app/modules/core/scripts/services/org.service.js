@@ -53,6 +53,7 @@
       updateDisplayName: updateDisplayName,
       validateDisplayName: validateDisplayName,
       setOrgEmailSuppress: setOrgEmailSuppress,
+      getInternallyManagedSubscriptions: getInternallyManagedSubscriptions,
     };
 
     var savedOrgSettingsCache = [];
@@ -519,6 +520,20 @@
         .then(function (response) {
           return _.get(response, 'status') === 'ALLOWED';
         });
+    }
+
+    // filter out subscriptions with a license with an offerName that is 'MSGR'
+    // - as of 2017-07-24, 'Authinfo.isExternallyManagedLicense()' is sufficient for checking this
+    // TODO: verify whether this should be the default behavior
+    function getInternallyManagedSubscriptions() {
+      return getLicensesUsage().then(function (subscriptions) {
+        return _.reject(subscriptions, function (subscription) {
+          var licenses = _.get(subscription, 'licenses');
+          return _.some(licenses, function (license) {
+            return Authinfo.isExternallyManagedLicense(license);
+          });
+        });
+      });
     }
   }
 })();

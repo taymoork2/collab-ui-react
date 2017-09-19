@@ -17,7 +17,7 @@ describe('MultipleSubscriptionsCtrl: Ctrl', function () {
     Authinfo = _Authinfo_;
 
     getLicensesUsage = getJSONFixture('core/json/organizations/Orgservice.json').getLicensesUsage;
-    spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.resolve());
+    spyOn(Orgservice, 'getInternallyManagedSubscriptions').and.returnValue($q.resolve());
     spyOn(Authinfo, 'getLicenses').and.returnValue('anything');
   }));
 
@@ -37,13 +37,13 @@ describe('MultipleSubscriptionsCtrl: Ctrl', function () {
   describe('MultipleSubscriptionsCtrl controller', function () {
     describe('for single subscriptions', function () {
       beforeEach(function () {
-        Orgservice.getLicensesUsage.and.returnValue($q.resolve(getLicensesUsage.singleSub));
+        Orgservice.getInternallyManagedSubscriptions.and.returnValue($q.resolve(getLicensesUsage.singleSub));
         initController();
       });
 
       it('should verify that there is one subscriptionId', function () {
         expect('getLicenses').toBeDefined();
-        expect(Orgservice.getLicensesUsage).toHaveBeenCalled();
+        expect(Orgservice.getInternallyManagedSubscriptions).toHaveBeenCalled();
         expect(controller.oneBilling).toEqual(true);
         expect(controller.subscriptionOptions).toEqual(['srvcid-integ-uitest-1a']);
         expect(controller.showLicenses('srvcid-integ-uitest-1a', false)).toEqual(true);
@@ -52,7 +52,7 @@ describe('MultipleSubscriptionsCtrl: Ctrl', function () {
 
     describe('for multiple subscriptions', function () {
       beforeEach(function () {
-        Orgservice.getLicensesUsage.and.returnValue($q.resolve(getLicensesUsage.multiSub));
+        Orgservice.getInternallyManagedSubscriptions.and.returnValue($q.resolve(getLicensesUsage.multiSub));
         initController();
       });
 
@@ -66,7 +66,7 @@ describe('MultipleSubscriptionsCtrl: Ctrl', function () {
 
     describe('for trial subscriptions', function () {
       beforeEach(function () {
-        Orgservice.getLicensesUsage.and.returnValue($q.resolve(getLicensesUsage.trialSub));
+        Orgservice.getInternallyManagedSubscriptions.and.returnValue($q.resolve(getLicensesUsage.trialSub));
         initController();
       });
 
