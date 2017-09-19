@@ -1,4 +1,4 @@
-import { Member } from 'modules/huron/members';
+import { Member, MemberService } from 'modules/huron/members';
 import { IMember, IPickupGroup, IMemberNumber, ICallPickupNumbers, CallPickupGroupService } from 'modules/call/features/call-pickup/shared';
 import { Notification } from 'modules/core/notifications';
 import { IToolkitModalService } from 'modules/core/modal';
@@ -11,13 +11,13 @@ class CallPickupMembersCtrl implements ng.IComponentController {
   public errorMemberInput: boolean = false;
   public memberName: string;
   private maxMembersAllowed: number = parseInt(this.$translate.instant('callPickup.maxMembersAllowed'), 10) || 30;
-  private readonly suggestionLimit = 3;
   public readonly removeText = this.$translate.instant('callPickup.removeMember');
   public isNew: boolean;
   public savedCallPickup: IPickupGroup;
   /* @ngInject */
   constructor(
     private Notification: Notification,
+    private MemberService: MemberService,
     private FeatureMemberService,
     private $translate: ng.translate.ITranslateService,
     private CallPickupGroupService: CallPickupGroupService,
@@ -26,10 +26,9 @@ class CallPickupMembersCtrl implements ng.IComponentController {
     private $element,
   ) { }
 
-  public fetchMembers(memberName: String): void {
+  public fetchMembers(memberName: string): void | IPromise<Member[]> {
     if (memberName) {
-      return this.FeatureMemberService.getMemberSuggestionsByLimit(memberName, this.suggestionLimit)
-      .then((members: Member[]) => {
+      return this.MemberService.getMemberList(memberName, false).then((members: Member[]) => {
         this.memberList = _.reject(members, mem => _.some(this.selectedMembers, member =>
         member.member.uuid === mem.uuid ));
         this.errorMemberInput = (this.memberList && this.memberList.length === 0);

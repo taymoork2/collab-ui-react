@@ -4,6 +4,7 @@ import notifications from 'modules/core/notifications';
 import featureMemberService from 'modules/huron/features/services';
 import callPickupGroupService from 'modules/call/features/call-pickup/shared';
 import focusModule from 'modules/core/focus';
+import membersModule from 'modules/huron/members';
 
 export default angular
   .module('call.call-pickup.members', [
@@ -18,6 +19,7 @@ export default angular
     notifications,
     featureMemberService,
     focusModule,
+    membersModule,
   ])
   .component('ucCallPickupMembers',  new CallPickupMembersComponent())
   .name;
