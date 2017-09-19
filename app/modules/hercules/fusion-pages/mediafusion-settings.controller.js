@@ -31,8 +31,8 @@
         vm.trustedsipconfiguration = properties['mf.trustedSipSources'];
         var sipArray = [];
         if (!_.isUndefined(vm.trustedsipconfiguration)) {
-          _.forEach(vm.trustedsipconfiguration.split(','), function (value) {
-            sipArray.push({ text: value });
+          sipArray = _.map(vm.trustedsipconfiguration.split(','), function (value) {
+            return { text: value };
           });
         }
         if (vm.trustedsipconfiguration !== '') {
