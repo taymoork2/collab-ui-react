@@ -2,6 +2,7 @@
 @import '~collab-ui/scss/settings/typography';
 @import '~collab-ui/scss/tools/placeholders/page-layout';
 @import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '../../../styles/variables';
 
 .devices-redux {
   //@extend %grid-subheader;
@@ -235,7 +236,7 @@
 
   .searchingcontainer {
     position: relative;
-    top:30vh;
+    top: 30vh;
     width: inherit;
     height: 0px;
     z-index: 2;
@@ -307,12 +308,6 @@
   }
   .result-pane {
     width: 100%;
-    .gridStyle {
-      height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height}));
-    }
-    .grid-container {
-      height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height} + 48rem));
-    }
     .ui-grid-footer-cell {
       padding: 0 20px;
     }
@@ -379,11 +374,23 @@
     background-color: white !important;
   }
 
+  .searcherror {
+    .searchfilter {
+      .searchbox {
+        .searchinput {
+          border-color: red;
+        }
+      }
+    }
+  }
+
   .devices-search {
     min-width: 250px;
     max-width: 600px;
     position: relative;
     top: -2rem;
+
+
     form {
       display: flex;
       flex-wrap: wrap;
@@ -488,5 +495,23 @@
   .pager {
     text-align: center;
     padding-bottom: 20px;
+  }
+}
+
+.is-read-only-admin .devices-redux .result-pane {
+  .gridStyle {
+    height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height} + #{$read-only-banner-height}));
+  }
+  .grid-container {
+    height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height} + 48rem + #{$read-only-banner-height}));
+  }
+}
+
+.devices-redux .result-pane {
+  .gridStyle {
+    height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height}));
+  }
+  .grid-container {
+    height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height} + 48rem));
   }
 }

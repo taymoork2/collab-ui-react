@@ -1,5 +1,7 @@
 'use strict';
 
+var featureToggle = require('../utils/featureToggle.utils');
+
 /* global manageUsersPage */
 
 // NOTE: Be sure to re-enable the afterAll at line 144 when re-enabling this test!
@@ -40,6 +42,10 @@ describe('Manage Users - Manual -', function () {
       utils.waitForText(manageUsersPage.select.title, 'Add or Modify Users');
       utils.click(manageUsersPage.select.radio.orgManual);
       utils.click(manageUsersPage.buttons.next);
+      if (featureToggle.features.atlasEmailSuppress) {
+        utils.wait(manageUsersPage.emailSuppress.emailSuppressIcon);
+        utils.click(manageUsersPage.buttons.next);
+      }
       utils.waitForText(manageUsersPage.select.title, 'Manually Add or Modify Users');
     });
 

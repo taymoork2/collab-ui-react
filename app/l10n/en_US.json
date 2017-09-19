@@ -228,6 +228,12 @@
       "advancedLabel": "Modify all synchronized users",
       "advancedDetails": "Add new licenses to all users."
     },
+    "emailSuppress": {
+      "willGetEmail": "Users will automatically be sent a welcome email from Cisco.",
+      "canChange": "You can change this setting on the account settings page.",
+      "willNotGetEmail": "Cisco will not send a welcome email to users. You have to notify users about their new service.",
+      "hasSparkCall": "Cisco Spark Call invitations are always sent to provide the generated device activation code to users."
+    },
     "manual": {
       "titleModify": "Manually Modify Users",
       "titleAddModify": "Manually Add or Modify Users",
@@ -686,6 +692,7 @@
     "webexMetrics": {
       "title": "WebEx",
       "metrics": "Metrics",
+      "MEI": "MEI",
       "diagnostics": "Diagnostics",
       "classic": "Classic",
       "webexClassic": "WebEx Classic",
@@ -1120,6 +1127,10 @@
     "showDetails": "Show Details",
     "hideDetails": "Hide Details",
     "problemReports": "Problem Reports",
+    "problemReportHandling": "Problem reports are being handled {{handler}}.",
+    "helpContent": "Help content is provided {{handler}}.",
+    "byCisco": "by Cisco",
+    "externally": "externally",
     "reportingUrl": "Reporting URL:",
     "help": "Help",
     "faqs": "FAQs",
@@ -1455,6 +1466,7 @@
     "incorrectFormat": "Incorrect format",
     "info": "Info",
     "invalidEmail": "This is not a valid Email Address.",
+    "emailAddressesDonotMatch": "Email Addresses do not match",
     "invalidFormat": "Invalid Format",
     "invalidMax": "Maximum value is {{max}}.",
     "invalidMaxLength": "Character length cannot be more than {{max}}.",
@@ -1513,6 +1525,7 @@
     "select": "Select",
     "selectLanguage": "Select a language",
     "selectLocation": "Select a Location",
+    "selectNumber": "Select a number",
     "service": "Service",
     "settings": "Settings",
     "showAllAdminUsers": "Show all {{numUsers}} administrators",
@@ -1572,7 +1585,8 @@
     "customPlaceholder": "e.g. 81095555",
     "customHelpText": "Site-to-Site to External Site",
     "alternateCustomPlaceholder": "e.g. 456, 4567, 45678",
-    "alternateCustomHelpText": "Internal extension or custom number"
+    "alternateCustomHelpText": "Internal extension or custom number",
+    "invalidFormat": "Invalid Format. Only numbers (0-9), special characters (*#+,) and characters (PpFfCc) with a max length of 50 are allowed"
   },
   "homePage": {
     "overview": "Last 4 weeks",
@@ -1794,27 +1808,27 @@
     "mohTitle": "Company Media on Hold",
     "mohDesc": "Set the default media to be played at the company level.",
     "mohSelectLabel": "Media Selection",
-    "voicemailToEmailLabel": "Voicemail to Email",
     "EmailNotificationAttached": "Email Notification with Attachment",
     "EmailNotificationWithoutAttached": "Email Notification without Attachment",
-    "voicemailToPhoneLabel": "Voicemail to Phone",
-    "phoneVoicemailAddedCostText": "Using this number incurs a usage cost.",
-    "voicemailToSparkLabel": "Voicemail to Cisco Spark",
-    "voicemailToSparkAndPhoneLabel": "Voicemail to Cisco Spark and Phone",
-    "messageWaitingIndicatorText": "The Message Waiting Indicator (MWI) continues to blink until users access their voicemails from their phones.",
-    "voicemailToEmailHelpText": "Warning: Voicemail attachments sent via email are not secure.",
     "voicemailToEmailAttachmentText": "Voicemail attachments sent via email are not secure.",
     "voicemailNumberCostHelpText": "Using this number incurs a usage cost",
+    "externalVoicemailAccessLabel": "External Voicemail Access",
+    "externalNumberDescriptionText": "Select a number that users can call to check their voicemail from outside the company network.",
+    "voicemailToPhoneLabel": "Voicemail to phone",
+    "voicemailToEmailLabel": "Voicemail to email",
+    "voicemailToSparkLabel": "Voicemail to Spark",
+    "voicemailToPhoneDescriptionText": "Select a number that users can call to check their voicemail from outside the company network.",
+    "notificationAttached": "Notification with Attachment",
+    "notificationTranscript": "Notification with Transcript",
+    "voicemailToEmailHelpText": "Warning: Voicemail attachments sent via email are not secure.",
     "voicemailToEmailGetError": "Failed to get voicemail to email settings.",
     "voicemailToEmailUpdateError": "Failed to update voicemail to email settings.",
     "voicemailTimeZoneGetError": "Failed to get voicemail time zone.",
-    "externalVoicemailAccessLabel": "External Voicemail Access",
     "voicemailPilotHelpText": "Usage of this E164 number incurs a usage cost.",
     "errorGettingOptionaVmDidToggle": "There was a problem getting the optionalVmDid toggle.",
-    "externalNumberDescriptionText": "Select a number that users can call to check their voicemail from outside the company network.",
     "voicemailPrefixTitle": "Voicemail ID Prefix",
     "voicemailPrefixDesc": "Select a prefix to reserve for dialing mailboxes from a device. Extensions between {{number}}{{extensionLength0}} and {{number}}{{extensionLength9}} are not recommended for assignment.",
-    "vmUseTLS": "Use TLS",
+    "vmUseTLS": "Secure email delivery (use TLS)",
     "vmPinManagement": "Pin Management",
     "vmPinHelp": "OTP will be shared over Spark in case of user voicemail toggle on/off and user account locked/expired.",
     "vmEnableOTP": "Enable OTP (One-time Pin)",
@@ -3093,6 +3107,12 @@
     "addressesStatusComponent": {
       "addresses": "Addresses",
       "noAddressesFound": "No addresses found"
+    },
+    "resourceAlarms": {
+      "err.dns.resolution": {
+        "title": "Unable to resolve address {{hostname}}",
+        "description": "Unable to resolve address {{hostname}}. See <a href=\"{{troubleshootingLink}}\" target=\"_blank\">documentation</a> for guidance in resolving the issue."
+      }
     }
   },
   "cmc": {
@@ -3471,7 +3491,7 @@
     "searchErrors": {
       "queryLimit": "query must be 200 characters or less",
       "invalidEmailLimit": "Enter only up to 5 email addresses",
-      "invalidSpaceIdLimit": "Search must be limited to less than 5 Space IDs",
+      "invalidSpaceIdLimit": "Enter only up to 5 Space IDs",
       "noMatchesFound": "No Matches Found",
       "requestFailed": "Request Failed: Tracking ID {{trackingId}}",
       "504RequestFailed": "Search Timed Out: Tracking ID {{trackingId}}"
@@ -3615,7 +3635,7 @@
     "invalidEmailAddress": "Invalid Email Address",
     "csvDuplicateEmail": "This email is skipped due to duplicate email address in the CSV file.",
     "bulkInvalidDID": "The \"Direct Line\" field contains an invalid number.  Please fix and try again.",
-    "tooManyActiveMessageLicenses": "There are more than one \"Cisco Spark Message\" license enabled.  Please fix and try again.",
+    "tooManyActiveSparkCallLicenses": "There are more than one \"Cisco Spark Call\" license enabled.  Please fix and try again.",
     "csvWrongLicenseFormat": "License fields contain invalid data. Please fix and try again.",
     "processBulkResponseError": "An error has occurred while reading the response. Please try again.",
     "processBulkError": "Unidentified error while processing the user. Please try again.",
@@ -3695,14 +3715,14 @@
     "supportCenterLicensesRemaining": "Support Center Licenses Remaining",
     "tspPartnerRequired": "You have purchased TSP for your audio plan. A partner is required to provide this service.",
     "chooseTSPPartner": "Choose TSP partner",
+    "conferencingAudioProvided": "Conferencing Audio: {{service}} provided by {{partner}}",
     "ccasp": {
       "ccaspSubheading": "Conferencing audio setup",
       "ccaspDescription": "You have purchased audio from a partner. Please enter your audio provider's subscription ID number.  If you do not have one then contact your partner from who you purchased this subscription",
       "ccaspSubscriptionId": "CCA-SP provider subscription id number",
       "chooseCCASPPartner": "Choose CCA-SP partner",
       "ccaspPartner": "CCA-SP Partner: {{partner}}",
-      "errorNoMatch": "The subscription ID number and CCA-SP Partner do not match. Please enter a valid subscription ID and SSA-SP Partner combination",
-      "ccaspProvided": "Conferencing Audio: CCA-SP provided by {{partner}}"
+      "errorNoMatch": "The subscription ID number and CCA-SP Partner do not match. Please enter a valid subscription ID and SSA-SP Partner combination"
     },
     "existingWebExTrialSites": "You have the following WebEx site that was part of your free trial, would you like to continue using it?",
     "setupSitesDescription": "Now it's time to choose the URL you will use for each site. This is the URL people will type into their browser in order to join a meeting that you host",
@@ -3720,9 +3740,17 @@
       "invalidLicense": "License number should be a non-negative integer",
       "pleaseEnterSiteName": "Please enter a site name",
       "enteredSiteNotValid": "The entered site is not valid. Please try another site.",
-      "totalSiteLicenseNumber": "Site <b>{{ siteUrl }}</b> should have license number > 0"
+      "totalSiteLicenseNumber": "Site <b>{{ siteUrl }}</b> should have license number > 0",
+      "noUserManagementSelected": "Please select how you'd like to manage your users"
     },
     "siteName": "Site Name",
+    "userManagement": "User management",
+    "userManagementWhere": "Where would you like to provision and manage your WebEx users?",
+    "userManagementHelp": "Which one should I choose",
+    "userManagementWebEx": "WebEx Site Admin",
+    "userManagementSpark": "Spark Control Hub",
+    "userManagementViaSpark": "User management via Spark Control Hub",
+    "userManagementViaWebex": "User management via WebEx Site Admin",
     "theseWillBeYourWebExSites": "These will be your {{siteCount}} WebEx sites",
     "thisWillBeYourWebExSite": "This will be your WebEx site",
     "basicMeetings": "Basic Meetings",
@@ -4839,7 +4867,8 @@
     "companyName": "Legal Company Name",
     "firstName": "Signee's First Name",
     "lastName": "Signee's Last Name",
-    "emailAddress": "Signee's Email Address"
+    "emailAddress": "Signee's Email Address",
+    "confirmEmailAddress": "Signee's Confirm Email Address"
   },
   "intelepeerFeatures": {
     "feature1": "Service available in U.S. 48 states",
@@ -5343,7 +5372,8 @@
     "description": "In the case of an emergency, local emergency response crew would use this address to locate the caller.",
     "savePrompt": "Save this address?",
     "saveSuccess": "Emergency Service Address updated successfully.",
-    "saveError": "Error occurred updating Emergency Service Address."
+    "saveError": "Error occurred updating Emergency Service Address.",
+    "getError": "Error occurred retrieving Emergency Service Address."
   },
   "settingsServiceNumber": {
     "label": "Emergency Service Number",
@@ -5351,7 +5381,13 @@
     "savePrompt": "Save this number?",
     "saveSuccess": "Emergency Service Number updated successfully.",
     "saveError": "Error occurred updating Emergency Service Number.",
+    "getError": "Error occurred retrieving Emergency Service Number.",
     "warning": "Please select a number assigned to a user or Cisco Spark Call feature"
+  },
+  "emergencyServices": {
+    "warnNoExternNumber": "Before you can add an Emergency Callback Number to this location you need to add a user or place with an external number.",
+    "warnNoPstn": "Once you have PSTN set up, you will need to add Emergency Service information to locations",
+    "locationUnknown": "Unknown location - ID missing"
   },
   "didManageModal": {
     "buttonText": "Add Numbers",
@@ -5834,11 +5870,11 @@
       "lowAvailableClusters": "Low availability clusters",
       "clusterTakingMoreCalls": "Clusters hosting more no of calls",
       "totalMeetings": "Total Number of Meetings",
-      "meetOnPrem": "Meeting Host Type",
+      "meetOnPrem": "Resources Used for Meetings",
       "clientTypes": "Client Types",
       "clients": "Clients",
       "noOfMeet": "Number of Meetings",
-      "meetingLocationTitle": "Total Meetings by Host Type",
+      "meetingLocationTitle": "Total Meetings by Resources Used",
       "meetings": "Meetings",
       "location": "Location",
       "totalCloud": "Cloud Calls",
@@ -5866,11 +5902,14 @@
         "windows": "Windows Mobile",
         "total": "Total",
         "mac": "MAC",
-        "windowsDesk": "Windows"
+        "windowsDesk": "Windows",
+        "sparkDesktop": "Spark Desktop",
+        "sparkMobile": "Spark Mobile",
+        "sparkDevices": "Spark Devices"
       },
       "mobile": "Mobile",
       "cardDescription": {
-        "clientTypeDesc": "Summary of common categories of meeting clients that are used in an organization.<br><b>Desktop</b> : Windows , MAC OSX, Web Browser<br> <b>Mobile</b> : iPhone, Android, iPad.<br><b>Telepresence</b> : Telepresence room device, SIP Endpoints, Spark board.<br><b>Others</b> : Any unknown endpoints or clients that don’t fit the other categories.",
+        "clientTypeDesc": "Summary of common categories of meeting clients that are used in an organization.<br><b>Spark Desktop</b> : Windows , MAC OSX, Web Browser<br> <b>Spark Mobile</b> : iPhone, Android, iPad.<br><b>Spark Devices</b> : Telepresence room device, Spark board.<br><b>Others</b> : Any unknown endpoints or clients that don’t fit the other categories.",
         "totalCallsDesc": "<b>Cloud Calls</b> : Number of calls that could not utilize enterprise Hybrid Media Nodes, because of no connection to the enterprise network or being subject to enforced policy.<br> <b>Overflowed to Cloud</b> : Number of calls made within an enterprise but overflowed to a cloud cluster.<br> <b>On-Premises</b>: Number of calls hosted on any of the enterprise clusters.",
         "totalCallsClusterDesc": "<b>Redirected by this Cluster</b> : Number of calls that could not be hosted by this cluster and hence got redirected.<br><b>On-Premises</b> : Number of calls hosted on any of the enterprise clusters.",
         "meetsHostTypeDesc": "Summary of meetings based on where the organization’s calls were hosted.<br><b>On Premises</b> : Meeting and participants were hosted on the enterprise clusters<br><b>Cloud</b> : Meeting and participants were hosted on cloud clusters<br><b>Cloud and On-Premises</b> : Meeting and participants cascaded between enterprise and cloud clusters",
@@ -6678,6 +6717,7 @@
     "WithDevices": "With Devices",
     "upgradeChannels": {
       "Stable": "Stable",
+      "Stable_Preview": "Stable Preview",
       "Latest": "Latest",
       "Beta": "Beta",
       "Preview": "Preview"
@@ -6710,6 +6750,10 @@
       "noupgrade": {
         "type": "Automatic Updates Disabled",
         "message": "System software will not be updated."
+      },
+      "soontobedeactivated": {
+        "type": "Device will soon be deactivated",
+        "message": "This device has been offline for over six weeks. Make sure it comes online within {{expireInDays}} days to avoid deactivation."
       },
       "NTPStatus": {
         "type": "Time Server Not Reachable",
@@ -7104,6 +7148,7 @@
     "embedCode": "Embed Code",
     "virtualAssistantDesc": "Select a preconfigured Customer Virtual Assistant who provides initial automated support in your customer chat experience",
     "virtualAssistantWelcomeMessage": "Hello, how can I help you today?",
+    "virtualAssistantWelcomeMessageHelp": "The Customer Virtual Assistant only says this message to start a chat where the customer doesn’t enter their question through the customer information form first.",
     "profileDesc": "Configure how your company or your agent is visually represented",
     "profile_org_info": "Use a single profile to represent all agents in your organization.",
     "profile_agent_info": "Use unique profiles to represent the different agents in your organization.",
@@ -7385,6 +7430,22 @@
         "inputLabel": "Enter Name",
         "maxLengthError": "Name cannot be longer than 50 characters.",
         "duplicateError": "Customer Virtual Assistant must have a unique name."
+      },
+      "avatar": {
+        "title": "Customer Virtual Assistant Avatar",
+        "desc": "Choose the avatar your customers see in their chat window, when they interact with your Customer Virtual Assistant",
+        "upload": "Upload Avatar",
+        "preview": "Avatar Preview",
+        "fileBrowser": "file browser",
+        "uploadingImage": "Uploading image...",
+        "uploadDesc": "Upload an image of maximum 1MB. Supported file type is PNG.",
+        "previewDesc": "To edit, upload a new image of maximum 1MB. Supported file types is PNG.",
+        "defaultAvatar": "If no image is uploaded, this default image is used.",
+        "uploadBestResults": "For best results make sure that your image has a transparent background with no padding.",
+        "dragDropDesc": "Drag and drop a file or use the ",
+        "errorUnsupportedFile": "Cannot upload unsupported file. Supported file type is PNG.",
+        "errorOverMaxFileSizeLimit": "The image file size must be less than 1 MB.",
+        "errorUploadFile": "Cannot upload image. Try again."
       },
       "summary": {
         "desc": "You have configured your Customer Virtual Assistant. To use the assisted service feature in your organization's chat application, add your assistant to a Customer Support Template.",
@@ -7688,6 +7749,12 @@
       "title": "Authentication",
       "subsectionLabel": "Single Sign-On"
     },
+    "email": {
+      "title": "Email",
+      "subsectionLabel": "Suppress Admin Invite emails",
+      "subsectionDescription": "When enabled users will not automatically receive invite emails from Cisco Spark. Only allowed when SSO is enabled.",
+      "setEmailSuppressFailed": "Failed to set emails suppress status."
+    },
     "retention": {
       "title": "Retention",
       "subsectionLabel": "Cisco Spark Message Data",
@@ -7787,6 +7854,7 @@
     "less": "Less",
     "licenses": "Licenses:",
     "licenseSummary": "License Summary",
+    "licenseSummaryEnterprise": "License Summary for Enterprise",
     "licenseSummaryOnline": "License Summary for {{name}}",
     "licenseUsageReport": "License Usage Report",
     "loadError": "An error occurred while loading subscriptions.",
@@ -7914,6 +7982,11 @@
     "userDetails": "User Details",
     "orders": "Orders",
     "orderDetails": "Orders Details",
+    "orderNumber": "Order Number: {{orderNumber}}",
+    "awaitingProvDetails": "Awaiting Provisioning Details",
+    "setUpOrder": "Set Up Order",
+    "provisioningContactEmail": "Provisioning Contact Email",
+    "subscriptionIdDisplay": "Subscription Id: {{subId}}",
     "badUserSearchInput": "Enter at least three characters per word. To search by name or email, enter two words, for example John Doe or john.doe.",
     "tooManySearchResults": "Search returned too many results. Please narrow your search criteria.",
     "unexpectedError": "An unexpected error occurred",
@@ -8081,6 +8154,7 @@
     "outboundDigit": "Outbound Dial Digit",
     "areaCode": "Area Code",
     "customerInfo": "Customer Information",
+    "orderInfo": "Order Information",
     "webOrderId": "Web Order Number",
     "subscriptionId": "Subscription ID",
     "orderProvision": "Order Provisioned",
@@ -8098,6 +8172,7 @@
     "resendMailFailure": "Failed to resend welcome email.",
     "editAdminEmailSuccess": "Admin email was updated successfully.",
     "editAdminEmailFailure": "Failed to update admin email.",
+    "getOrgDetailsFailure": "Failed to retrieve organization details.",
     "userStatusEventLog": "User Status Event Log",
     "lastEmailEvent": "Last Email Event",
     "clearBounce": "Clear Bounce",
@@ -8355,13 +8430,14 @@
       },
       "hybridCalendar": {
         "title": "Hybrid Calendar",
-        "description": "Inserts Join and Room details by adding @WebEx and/or @Spark to the Meeting Invite Location field.",
+        "description": "Use @WebEx or @Spark in a meeting location to insert join details, show upcoming meetings in Cisco Spark app, and provide One Button to Push (OBTP) to Join.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
         },
         "exchangeTitle": "Microsoft Exchange",
         "googleTitle": "Google Calendar",
+        "office365Title": "Office 365",
         "error": "Could not retrieve Google Calendar status"
       },
       "hybridCall": {
@@ -8370,6 +8446,27 @@
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
+        },
+        "prerequisites": {
+          "title": "Hybrid Call Prerequisites",
+          "cannotReachFlagService": "Failed to read existing checkbox statuses.",
+          "steps": "Steps",
+          "expresswaySetup": {
+            "intro": "Use this checklist alongside the \"Prepare Your Environment\" chapter in the deployment guide. Make sure you complete all the prerequsites necessary for deploying the Expressway-C connector host.",
+            "openDocumentation": "Open Documentation",
+            "planCapacity": "Plan your connector capacity (dedicated or shared)",
+            "redundancy": "Deploy Expressway-C in a cluster for redundancy",
+            "followRequirements": "Follow requirements for the Expressway software",
+            "followRequirementsHelp1": "Use the minimum supported version. (See \"Management Connector Release Notes\")",
+            "followRequirementsHelp2": "Install the .OVA file by following the Cisco Expressway Virtual Machine Installation Guide.",
+            "bypassFirstTimeWizard": "Bypass the first time setup wizard",
+            "bypassFirstTimeWizardHelp1": "Choose Proceed without selecting services, paste the text from your release key email, and then continue.",
+            "configureExpresswayC": "Configure the Expressway-C",
+            "configureExpresswayCHelp1": "Use the Cisco Expressway Basic Configuration Deployment Guide for basic documentation.",
+            "configureExpresswayCHelp2": "Use the Cisco Expressway Cluster Creation and Maintenance Deployment Guide to Configure the Expressway as a master peer.",
+            "openPortOnFirewall": "Open port 443 on your firewall outbound from the Expressway-C to these domains:",
+            "openPortOnFirewallHelp1": "Obtain the details of your HTTP proxy if your organization uses one to access the internet. It must use basic or no authentication. See the hybrid services deployment documentation for support proxy options."
+          }
         }
       },
       "hybridMedia": {
@@ -8785,6 +8882,42 @@
       },
       "by": "by",
       "showMore": "Show more"
+    },
+    "reportsChart": {
+      "usageReports": "CCA Usage Reports",
+      "reportTab": {
+        "title": "Reports",
+        "usage": "Usage",
+        "peakPorts": "Peak Ports",
+        "participants": "Participants",
+        "typesSize": "Types and Size"
+      },
+      "kpi": {
+        "hostGrowth": "ACTIVE HOST",
+        "meetingGrowth": "TOTAL MEETINGS",
+        "audioGrowth": "AUDIO MINUTES",
+        "audioPortGrowth": "PEAK AUDIO PORTS",
+        "videoGrowth": "VIDEO MINUTES",
+        "videoPortGrowth": "PEAK VIDEO PORTS"
+      },
+      "filter": {
+        "custom": "Custom",
+        "account": "Customer",
+        "customer": "Partner",
+        "advanced": "Advanced",
+        "duration": "Duration",
+        "siteURLs": "Site URLs",
+        "allSites": "All Sites",
+        "CSVExport": "CSV Export",
+        "last90Days": "Last 90 Days",
+        "last45Days": "Last 45 Days",
+        "allAccounts": "All Customers",
+        "selectEnable": "selectEnable",
+        "last6Months": "Last 6 Months",
+        "sessionTypes": "Session Types",
+        "last12Months": "Last 12 Months",
+        "allSesstionTypes": "All Sesstion Types"
+      }
     }
   },
   "timeZones": {

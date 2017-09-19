@@ -140,8 +140,12 @@ describe('Service: UserOverviewService', () => {
 
     describe('getAccountActiveStatus', () => {
 
-      it('should return false if user has no entitlements', function () {
+      it('should return false if user has no ciscouc, nor lastLoginTime, nor spark.signUpDate', function () {
         expect(this.UserOverviewService.getAccountActiveStatus(this.updatedUser)).toBeFalsy();
+      });
+      it('should return true if user has lastLoginTime', function () {
+        this.updatedUser.meta.lastLoginTime = '09/06/2017 09:50 AM';
+        expect(this.UserOverviewService.getAccountActiveStatus(this.updatedUser)).toBeTruthy();
       });
 
     });

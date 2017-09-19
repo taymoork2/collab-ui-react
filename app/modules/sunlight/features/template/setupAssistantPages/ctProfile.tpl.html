@@ -45,14 +45,14 @@
 
               </div>
               <div class="h5 profile-name" ng-switch = "careSetupAssistant.displaySelectedProfileAttribute()">
-                <div ng-switch-when="org">
+                <div class="disp-text" ng-switch-when="org">
                   {{careSetupAssistant.getAttributeParam('value', 'organization', 'welcomeHeader')}}
                 </div>
-                <div ng-switch-when="agent">
+                <div class="disp-text" ng-switch-when="agent">
                   {{careSetupAssistant.agentNamePreview | translate}}
                 </div>
-                <div ng-switch-default>
-                  <div>{{::careSetupAssistant.careVirtualAssistantName()}}</div>
+                <div class="disp-text" ng-switch-default>
+                  {{::careSetupAssistant.careVirtualAssistantName()}}
                 </div>
               </div>
               <div class="right actions">
@@ -70,7 +70,7 @@
                 <span class="speech-bubble"><span class="top left"></span></span>
                 <span class="message" translate="careChatTpl.customerMsg"></span>
                 <div class="body-smallest time" translate="careChatTpl.agentMsgTime"></div>
-                <em class="body-smallest agent-status" translate="careChatTpl.agentEnteredStatus"></em>
+                <em class="body-smallest agent-status" ng-if="careSetupAssistant.selectedAvater !== 'bot'" translate="careChatTpl.agentEnteredStatus"></em>
               </div>
             </section>
             <footer class="h6 footer" translate="careChatTpl.typeNewMsg"></footer>

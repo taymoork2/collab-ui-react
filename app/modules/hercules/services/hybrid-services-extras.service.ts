@@ -1,4 +1,4 @@
-import { HybridServiceId, IServiceAlarm, IAlarmReplacementValues, ConnectorType } from 'modules/hercules/hybrid-services.types';
+import { HybridServiceId, IServiceAlarm, IAlarmReplacementValues, ConnectorType, IConnectorAlarm } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesI18NService } from 'modules/hercules/services/hybrid-services-i18n.service';
 
 export interface IAllowedRegistrationHost {
@@ -63,7 +63,13 @@ export class HybridServicesExtrasService {
 
   private convertToTranslateReplacements(alarmReplacementValues: IAlarmReplacementValues[]) {
     return _.reduce(alarmReplacementValues, (translateReplacements, replacementValue) => {
-      translateReplacements[replacementValue.key] = replacementValue.type === 'timestamp' ? this.HybridServicesI18NService.getLocalTimestamp(replacementValue.value) : replacementValue.value;
+      if (replacementValue.type === 'timestamp') {
+        translateReplacements[replacementValue.key] = this.HybridServicesI18NService.getLocalTimestamp(replacementValue.value);
+      } else if (replacementValue.type === 'link') {
+        translateReplacements[replacementValue.key] = replacementValue.href;
+      } else {
+        translateReplacements[replacementValue.key] = replacementValue.value;
+      }
       return translateReplacements;
     }, {});
   }
@@ -79,6 +85,16 @@ export class HybridServicesExtrasService {
         return alarm;
       })
       .value();
+  }
+
+  public translateResourceAlarm(alarm: IConnectorAlarm): IConnectorAlarm {
+    if (alarm.key && alarm.replacementValues) {
+      const translationKey = `hercules.resourceAlarms.${alarm.key}`;
+      const translateReplacements = this.convertToTranslateReplacements(alarm.replacementValues);
+      alarm.title = this.$translate.instant(`${translationKey}.title`, translateReplacements);
+      alarm.description = this.$translate.instant(`${translationKey}.description`, translateReplacements);
+    }
+    return alarm;
   }
 
   private extractDataFromResponse<T>(response: ng.IHttpResponse<T>): T {

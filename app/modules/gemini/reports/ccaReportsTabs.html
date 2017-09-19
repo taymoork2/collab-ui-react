@@ -1,0 +1,130 @@
+<div class="gemini-page">
+  <cs-page-header title-name="{{'gemini.reportsChart.reportTab.title' | translate}}"></cs-page-header>
+  <cs-page-sub-header class="row show-grid">
+    <cs-page-sub-header-left class="column medium-5" tabs="$ctrl.tabs"></cs-page-sub-header-left>
+
+    <cs-page-sub-header-right class="column medium-7" ng-if="$ctrl.filterEnable">
+      <div class="col-sm-4 col-sm-offset-1">
+        <cs-select
+          name="customers"
+          ng-model="$ctrl.data.customerSelected"
+          options="$ctrl.data.customerOptions"
+          on-change-fn="$ctrl.onCustomer()"
+          placeholder="$ctrl.customerPlaceholder"
+        ></cs-select>
+      </div>
+      <div class="col-sm-4">
+        <cs-select
+          name="account"
+          ng-model="$ctrl.data.accountSelected"
+          options="$ctrl.data.accountOptions"
+          on-change-fn="$ctrl.onAccount()"
+          placeholder="$ctrl.data.accountPlaceholder"
+        ></cs-select>
+      </div>
+      <div class="col-sm-3">
+        <button type="button" class="btn btn&#45;&#45;primary" ng-click="$ctrl.onAdvanced = !$ctrl.onAdvanced">
+          {{::'gemini.reportsChart.filter.advanced' | translate}}
+          <i class="icon icon-arrow-down" ng-class="{'icon-arrow-down': !$ctrl.onAdvanced, 'icon-arrow-up': $ctrl.onAdvanced}"></i></button>
+        <span class="pull-right icon icon-download icon-2x" ng-csv="$ctrl.getExportCSV()"></span>
+      </div>
+    </cs-page-sub-header-right>
+  </cs-page-sub-header>
+
+  <div class="row chartFilter" ng-if="$ctrl.onAdvanced">
+    <div class="col-sm-6">
+        <div class="col-sm-5">
+          <cs-select
+          name="sites"
+          ng-model="$ctrl.data.siteSelected"
+          options="$ctrl.data.siteOptions"
+          on-change-fn="$ctrl.onSites()"
+          placeholder="$ctrl.data.sitePlaceholder"
+          ></cs-select>
+        </div>
+        <div class="col-sm-5">
+          <cs-select
+            multi="true"
+            name="sesstionTypes"
+            plural="Sesstion Types"
+            singular="Sesstion Type"
+            max="$ctrl.data.sessionMax"
+            on-change-fn="$ctrl.onSession()"
+            options="$ctrl.data.sessionOptions"
+            ng-model="$ctrl.data.sessionSelected"
+            ng-if="$ctrl.data.sessionOptions.length"
+            placeholder="$ctrl.data.sessionPlaceholder"
+          ></cs-select>
+        </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="col-sm-7">
+        {{$ctrl.startDateFormat}} thru {{$ctrl.endDateFormat}}
+      </div>
+      <div class="col-sm-5 pull-right">
+        <cs-select
+          name="duration"
+          ng-model="$ctrl.data.durationSelected"
+          options="$ctrl.data.durationOptions"
+          on-change-fn="$ctrl.onDuration()"
+        ></cs-select>
+      </div>
+    </div>
+
+    <div class="row " ng-if="$ctrl.onAdvanced && $ctrl.data.dateEnable">
+      <div class="col-sm-5 pull-right datepickerList">
+        <div class="tk-example-datepicker start-time pull-left" >
+          <div class="example-indent"
+               ng-click="$ctrl.onChangeDate()"
+               tooltip-class="tn-search-error"
+               tooltip-append-to-body="true"
+               tooltip-is-open="$ctrl.errMsg.datePicker !==''"
+               tooltip-html-unsafe="{{$ctrl.errMsg.datePicker}}"
+               ng-class="{'error': $ctrl.errMsg.datePicker !==''}">
+
+            <cs-datepicker
+              ng-model="$ctrl.startDate"
+              placeholder="{{::'webexReports.placeholder-date' | translate}}"
+              first-enabled-date="{{$ctrl.dateRange.start.firstEnableDate}}"
+              last-enabled-date="{{$ctrl.dateRange.start.lastEnableDate}}">
+            </cs-datepicker>
+          </div>
+        </div>
+        <span class="data-span  col-sm-1 pull-left" translate="webexReports.to"></span>
+        <div class="tk-example-datepicker end-time pull-left">
+          <div class="example-indent" ng-click="$ctrl.onChangeDate()">
+            <cs-datepicker
+              ng-model="$ctrl.endDate"
+              placeholder="{{::'webexReports.placeholder-date' | translate}}"
+              first-enabled-date="{{$ctrl.dateRange.end.firstEnableDate}}"
+              last-enabled-date="{{$ctrl.dateRange.end.lastEnableDate}}">
+            </cs-datepicker>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div ng-if="!$ctrl.loading">
+    <cs-card-layout class="kpi-banner">
+      <cs-card class="small"  ng-repeat="item in $ctrl.KPIData">
+        <article>
+          <header>
+            <h4> {{::'gemini.reportsChart.kpi.'+ item.name | translate}}</h4></header>
+          <section>
+            <p ng-class="{'waring': item.flag, '': !item.flag}">{{item.value}} <i class="icon" ng-if="item.value !== '--'" ng-class="{'icon-arrow-down': item.flag, 'icon-arrow-up': !item.flag}"></i></p>
+          </section>
+        </article>
+      </cs-card>
+    </cs-card-layout>
+
+    <div ui-view></div>
+  </div>
+
+  <div ng-if="$ctrl.loading" class="grid-refresh">
+      <span class="spinner-example-large">
+        <i class="icon icon-spinner icon-3x"></i>
+      </span>
+  </div>
+</div>

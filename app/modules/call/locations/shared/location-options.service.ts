@@ -1,9 +1,10 @@
 import { IOption } from 'modules/huron/dialing/dialing.service';
 import { IDialPlan, DialPlanService } from 'modules/huron/dialPlans';
 import { NumberService, NumberType } from 'modules/huron/numbers';
-import { PhoneNumberService } from 'modules/huron/phoneNumber';
+import { PhoneNumberService, CallPhoneNumber } from 'modules/huron/phoneNumber';
 import { MediaOnHoldService } from 'modules/huron/media-on-hold';
 import { Notification } from 'modules/core/notifications';
+import { LocationsService } from './locations.service';
 
 export class LocationSettingsOptions {
   public mediaOnHoldOptions: IOption[];
@@ -15,6 +16,7 @@ export class LocationSettingsOptions {
   public dialPlan: IDialPlan;
   public locationCallerIdOptions: IOption[];
   public companyVoicemailOptions: IOption[];
+  public emergencyNumbersOptions: IOption[];
 }
 
 export class LocationSettingsOptionsService {
@@ -29,6 +31,7 @@ export class LocationSettingsOptionsService {
      private Notification: Notification,
      private ServiceSetup,
      private FeatureToggleService,
+     private LocationsService: LocationsService,
   ) { }
 
   public getOptions(): ng.IPromise<LocationSettingsOptions> {
@@ -43,6 +46,7 @@ export class LocationSettingsOptionsService {
       dialPlan: this.loadDialPlan().then(dialPlan => locationOptions.dialPlan = dialPlan),
       locationCallerIdOptions: this.loadLocationCallerIdNumbers(undefined).then(callerIdNumbers => locationOptions.locationCallerIdOptions = callerIdNumbers),
       companyVoicemailOptions: this.loadCompanyVoicemailNumbers(undefined).then(companyVoicemailNumbers => locationOptions.companyVoicemailOptions = companyVoicemailNumbers),
+      emergencyNumbersOptions: this.loadEmergencyNumbersOptions().then(emergencyNumbersOptions => locationOptions.emergencyNumbersOptions = emergencyNumbersOptions),
     }).then(() => {
       return locationOptions;
     })
@@ -115,5 +119,16 @@ export class LocationSettingsOptionsService {
           };
         });
       });
+  }
+
+  public loadEmergencyNumbersOptions(): ng.IPromise<IOption[]> {
+    return this.LocationsService.getEmergencyCallbackNumbersOptions().then((numbers: CallPhoneNumber[]) => {
+      return _.map(numbers, number => {
+        return <IOption> {
+          value: number.external,
+          label: number.externalLabel,
+        };
+      });
+    });
   }
 }

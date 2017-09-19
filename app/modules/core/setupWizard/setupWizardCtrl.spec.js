@@ -34,6 +34,10 @@ describe('SetupWizardCtrl', function () {
     spyOn(this.SetupWizardService, 'hasPendingServiceOrder').and.returnValue(false);
     spyOn(this.SetupWizardService, 'isCustomerPresent').and.returnValue(this.$q.resolve(true));
     spyOn(this.SetupWizardService, 'isProvisionedSubscription').and.returnValue(false);
+    spyOn(this.SetupWizardService, 'hasPendingCCASPPackage').and.returnValue(false);
+    spyOn(this.SetupWizardService, 'hasPendingTSPAudioPackage').and.returnValue(false);
+    spyOn(this.SetupWizardService, 'getActiveCCASPPackage').and.returnValue(undefined);
+    spyOn(this.SetupWizardService, 'getActiveTSPAudioPackage').and.returnValue(undefined);
     spyOn(this.Authinfo, 'getLicenses').and.returnValue([{
       licenseType: 'SHARED_DEVICES',
     }]);
@@ -389,12 +393,19 @@ describe('SetupWizardCtrl', function () {
     beforeEach(function () {
       this.SetupWizardService.hasPendingServiceOrder.and.returnValue(true);
       this.SetupWizardService.hasPendingWebExMeetingLicenses.and.returnValue(true);
-      spyOn(this.SetupWizardService, 'hasTSPAudioPackage').and.returnValue(true);
-      this.initController();
+      this.SetupWizardService.hasPendingTSPAudioPackage.and.returnValue(true);
     });
 
-    it('displays the set TSP partner view during meeting setup', function () {
+    it('displays the set TSP partner view during meeting setup if there is not active TSP license present', function () {
+      this.SetupWizardService.getActiveTSPAudioPackage.and.returnValue(undefined);
+      this.initController();
       this.expectSubStepOrder('meetingSettings', ['migrateTrial', 'siteSetup', 'licenseDistribution', 'setPartnerAudio', 'summary']);
+    });
+
+    it('does not display TSP partner view during meeting setup if there is active TSP license present', function () {
+      this.SetupWizardService.getActiveTSPAudioPackage.and.returnValue({});
+      this.initController();
+      this.expectSubStepOrder('meetingSettings', ['migrateTrial', 'siteSetup', 'licenseDistribution', 'summary']);
     });
   });
 
@@ -404,14 +415,21 @@ describe('SetupWizardCtrl', function () {
       this.SetupWizardService.hasPendingWebExMeetingLicenses.and.returnValue(true);
     });
 
-    it('displays the CCASP tab when CCASP Audio license is present', function () {
-      spyOn(this.SetupWizardService, 'hasCCASPPackage').and.returnValue(true);
+    it('displays the CCASP tab when pending CCASP Audio license is present and no active CCASP audio', function () {
+      this.SetupWizardService.hasPendingCCASPPackage.and.returnValue(true);
+      this.SetupWizardService.getActiveCCASPPackage.and.returnValue(undefined);
       this.initController();
       this.expectSubStepOrder('meetingSettings', ['migrateTrial', 'siteSetup', 'licenseDistribution', 'setCCASP', 'summary']);
     });
+    it('does NOT display the CCASP tab when pending CCASP Audio license is present and there is an  active CCASP audio', function () {
+      this.SetupWizardService.hasPendingCCASPPackage.and.returnValue(true);
+      this.SetupWizardService.getActiveCCASPPackage.and.returnValue({});
+      this.initController();
+      this.expectSubStepOrder('meetingSettings', ['migrateTrial', 'siteSetup', 'licenseDistribution', 'summary']);
+    });
 
-    it('does NOT display the set CCASP tab when CCASP Audio license is NOT present', function () {
-      spyOn(this.SetupWizardService, 'hasCCASPPackage').and.returnValue(false);
+    it('does NOT display the set CCASP tab when pending CCASP Audio license is NOT present', function () {
+      this.SetupWizardService.hasPendingCCASPPackage.and.returnValue(false);
       this.initController();
       this.expectSubStepOrder('meetingSettings', ['migrateTrial', 'siteSetup', 'licenseDistribution', 'summary']);
     });

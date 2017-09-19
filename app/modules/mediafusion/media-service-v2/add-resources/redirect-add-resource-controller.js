@@ -6,7 +6,7 @@
     .controller('RedirectAddResourceControllerV2', RedirectAddResourceControllerV2);
 
   /* @ngInject */
-  function RedirectAddResourceControllerV2($modalInstance, $translate, firstTimeSetup, yesProceed, $modal, AddResourceCommonServiceV2, $window, $state) {
+  function RedirectAddResourceControllerV2($modalInstance, $translate, firstTimeSetup, yesProceed, $modal, AddResourceCommonServiceV2, $window, $state, $q) {
     var vm = this;
     vm.clusterList = [];
     vm.selectPlaceholder = $translate.instant('mediaFusion.add-resource-dialog.cluster-placeholder');
@@ -31,9 +31,29 @@
 
     function redirectToTargetAndCloseWindowClicked(hostName, enteredCluster) {
       $modalInstance.close();
-      AddResourceCommonServiceV2.addRedirectTargetClicked(hostName, enteredCluster).then(function () {
-        AddResourceCommonServiceV2.redirectPopUpAndClose(hostName, enteredCluster, vm.selectedClusterId, vm.firstTimeSetup);
-      });
+      if (vm.firstTimeSetup) {
+        $q.all(AddResourceCommonServiceV2.enableMediaServiceEntitlements()).then(function (result) {
+          var resultRhesos = result[0];
+          var resultSparkCall = result[1];
+          if (!_.isUndefined(resultRhesos) && !_.isUndefined(resultSparkCall)) {
+            //create cluster
+            //on success call media service activation service enableMediaService
+            AddResourceCommonServiceV2.createFirstTimeSetupCluster(hostName, enteredCluster).then(function () {
+              //call the rest of the services which needs to be enabled
+              AddResourceCommonServiceV2.enableMediaService();
+              AddResourceCommonServiceV2.redirectPopUpAndClose(hostName, enteredCluster);
+            }, function () {
+              $state.go('services-overview');
+            });
+          } else {
+            $state.go('services-overview');
+          }
+        });
+      } else {
+        AddResourceCommonServiceV2.addRedirectTargetClicked(hostName, enteredCluster).then(function () {
+          AddResourceCommonServiceV2.redirectPopUpAndClose(hostName, enteredCluster);
+        });
+      }
     }
 
     function closeSetupModal(isCloseOk) {

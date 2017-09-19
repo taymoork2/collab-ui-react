@@ -22,6 +22,8 @@
     vm.aaOnboardingStatus = vm.status.UNKNOWN;
     vm.appOnboardingStatus = vm.status.UNKNOWN;
 
+    vm.careSetupDoneByAdmin = (Authinfo.getOrgId() === Authinfo.getUserOrgId());
+
     vm.state = vm.status.UNKNOWN;
     vm.errorCount = 0;
 
@@ -35,7 +37,7 @@
       if (Authinfo.isCareVoice() && vm.aaOnboardingStatus !== vm.status.SUCCESS) {
         promises.onBoardAA = SunlightConfigService.aaOnboard();
       }
-      if (vm.appOnboardingStatus !== vm.status.SUCCESS) {
+      if (vm.careSetupDoneByAdmin && vm.appOnboardingStatus !== vm.status.SUCCESS) {
         promises.onBoardBotApp = SunlightConfigService.onboardCareBot();
       }
       $q.all(promises).then(function (results) {
@@ -110,24 +112,50 @@
     }
 
     function getOnboardingStatus(result) {
+      var onboardingStatus = vm.status.UNKNOWN;
       vm.csOnboardingStatus = _.get(result, 'data.csOnboardingStatus');
       vm.aaOnboardingStatus = _.get(result, 'data.aaOnboardingStatus');
-      vm.appOnboardingStatus = _.get(result, 'data.appOnboardStatus');
-      var onboardingStatus = vm.status.UNKNOWN;
-      if (vm.csOnboardingStatus === vm.status.SUCCESS && vm.appOnboardingStatus === vm.status.SUCCESS) {
-        if (Authinfo.isCareVoice()) {
-          onboardingStatus = vm.aaOnboardingStatus;
-        } else {
-          onboardingStatus = vm.status.SUCCESS;
-        }
-      } else if (vm.csOnboardingStatus !== vm.status.SUCCESS) {
-        onboardingStatus = vm.csOnboardingStatus;
-      } else if (vm.appOnboardingStatus !== vm.status.SUCCESS) {
-        onboardingStatus = vm.appOnboardingStatus;
+      if (vm.careSetupDoneByAdmin) {
+        onboardingStatus = onboardingDoneByAdminStatus(result);
       } else {
-        onboardingStatus = vm.status.UNKNOWN;
+        onboardingStatus = onboardingDoneByPartnerStatus();
       }
       return onboardingStatus;
+    }
+
+    function onboardingDoneByAdminStatus(result) {
+      var onboardingDoneByAdminStatus = vm.status.UNKNOWN;
+      vm.appOnboardingStatus = _.get(result, 'data.appOnboardStatus');
+      if (vm.csOnboardingStatus === vm.status.SUCCESS && vm.appOnboardingStatus === vm.status.SUCCESS) {
+        onboardingDoneByAdminStatus = onboardingStatusWhenCareVoiceEnabled();
+      } else if (vm.csOnboardingStatus !== vm.status.SUCCESS) {
+        onboardingDoneByAdminStatus = vm.csOnboardingStatus;
+      } else if (vm.appOnboardingStatus !== vm.status.SUCCESS) {
+        onboardingDoneByAdminStatus = vm.appOnboardingStatus;
+      } else {
+        onboardingDoneByAdminStatus = vm.status.UNKNOWN;
+      }
+      return onboardingDoneByAdminStatus;
+    }
+
+    function onboardingDoneByPartnerStatus() {
+      var onboardingDoneByPartnerStatus = vm.status.UNKNOWN;
+      if (vm.csOnboardingStatus === vm.status.SUCCESS) {
+        onboardingDoneByPartnerStatus = onboardingStatusWhenCareVoiceEnabled();
+      } else if (vm.csOnboardingStatus !== vm.status.SUCCESS) {
+        onboardingDoneByPartnerStatus = vm.csOnboardingStatus;
+      }
+      return onboardingDoneByPartnerStatus;
+    }
+
+    function onboardingStatusWhenCareVoiceEnabled() {
+      var status;
+      if (Authinfo.isCareVoice()) {
+        status = vm.aaOnboardingStatus;
+      } else {
+        status = vm.status.SUCCESS;
+      }
+      return status;
     }
 
     function enableNext() {

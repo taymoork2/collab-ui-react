@@ -3,19 +3,20 @@ import { huronCustomer } from '../../../provisioner/huron/huron-customer-config'
 import { CallUserPage } from '../../pages/callUser.page';
 import { CallUserPlacePage } from '../../pages/callUserPlace.page';
 import { CallSettingsPage } from '../../pages/callSettings.page';
-import * as os from 'os';
 
 const callUserPage = new CallUserPage();
-const now = Date.now();
 const callUserPlacePage = new CallUserPlacePage();
 const callSettingsPage = new CallSettingsPage();
 
-/* globals LONG_TIMEOUT, manageUsersPage, navigation, users, telephony */
+/* globals navigation, users, telephony */
 describe('Huron Functional: user-line-settings', () => {
-  const customer = huronCustomer({ test: 'user-line-settings' });
-  const USER_EMAIL = `huron.ui.test.partner+${customer.name}_${now}@gmail.com`;
-  const USER_FIRST_NAME = 'Darth';
-  const USER_LAST_NAME = 'Vader';
+  const customer = huronCustomer({
+    test: 'user-line-settings',
+    users: 2,
+  });
+
+  const USERS = customer.users;
+
   const DESTINATION_E164 = '4695550000';
   const DESTINATION_URI = 'callforward@uri.com';
   const DESTINATION_CUSTOM = '890';
@@ -23,9 +24,6 @@ describe('Huron Functional: user-line-settings', () => {
   const DESTINATION_TYPE_URI = 'URI Address';
   const CUSTOM = 'Custom';
   const BLOCKED = 'Blocked Outbound Caller ID';
-  const USER2_EMAIL = `${os.userInfo().username}user_line_settings_${now}@gmail.com`;
-  const USER2_FIRST_NAME = 'Rain';
-  const USER2_LAST_NAME = 'Jader';
 
   /* ---------------------------------------------------------------
      Similar Line Configuration test cases are also in Places.
@@ -63,74 +61,9 @@ describe('Huron Functional: user-line-settings', () => {
     navigation.expectDriverCurrentUrl('users');
   });
 
-  describe('Add user flow', () => {
-    it('should navigate to Manage Users page and "Manually add or modify users" radio button is selected', () => {
-      utils.click(manageUsersPage.buttons.manageUsers);
-      utils.waitForText(manageUsersPage.select.title, 'Add or Modify Users');
-      utils.expectIsDisplayed(manageUsersPage.select.radio.orgManual);
-    });
-    it('should navigate to manually add user with "email" or "Names and email" when hit "Next"', () => {
-      utils.click(manageUsersPage.buttons.next);
-      utils.expectIsDisplayed(manageUsersPage.manual.emailAddress.addUsersField, LONG_TIMEOUT);
-      utils.expectIsDisplayed(manageUsersPage.manual.radio.emailAddress);
-      utils.click(manageUsersPage.manual.radio.emailAddress);
-    });
-    it('Should contain valid input fields on selecting names and email', () => {
-      utils.click(manageUsersPage.manual.radio.nameAndEmail);
-      utils.expectIsDisplayed(manageUsersPage.manual.namesAndEmail.firstName);
-    });
-    it('should enable add icon when valid entries are entered', () => {
-      utils.expectIsDisplayed(callUserPage.inactivePlusIcon);
-      utils.sendKeys(manageUsersPage.manual.namesAndEmail.firstName, USER_FIRST_NAME);
-      utils.sendKeys(manageUsersPage.manual.namesAndEmail.lastName, USER_LAST_NAME);
-      utils.sendKeys(manageUsersPage.manual.namesAndEmail.emailAddress, USER_EMAIL);
-      utils.expectIsDisplayed(manageUsersPage.manual.namesAndEmail.plusIcon);
-      utils.click(manageUsersPage.manual.namesAndEmail.plusIcon);
-    });
-    it('should enable add icon when valid entries are entered', () => {
-      utils.sendKeys(manageUsersPage.manual.namesAndEmail.firstName, USER2_FIRST_NAME);
-      utils.sendKeys(manageUsersPage.manual.namesAndEmail.lastName, USER2_LAST_NAME);
-      utils.sendKeys(manageUsersPage.manual.namesAndEmail.emailAddress, USER2_EMAIL);
-      utils.expectIsDisplayed(manageUsersPage.manual.namesAndEmail.plusIcon);
-    });
-    it('should enable next button on adding valid user information', () => {
-      utils.expectIsEnabled(manageUsersPage.buttons.next);
-      utils.click(manageUsersPage.manual.namesAndEmail.plusIcon);
-      utils.waitUntilEnabled(manageUsersPage.buttons.next).then(() => {
-        utils.expectIsEnabled(manageUsersPage.buttons.next);
-      });
-    });
-    it('should navigate to Add Service for users phase', () => {
-      utils.click(manageUsersPage.buttons.next);
-      utils.expectIsDisplayed(callUserPage.sparkCallRadio);
-    });
-    it('should select Cisco Spark Call', () => {
-      utils.expectIsEnabled(manageUsersPage.buttons.save);
-      utils.click(callUserPage.sparkCallRadio);
-      utils.expectIsEnabled(manageUsersPage.buttons.next);
-    });
-    it('should click on next and navigate to Assign Numbers', () => {
-      utils.click(manageUsersPage.buttons.next);
-      utils.expectIsDisplayed(manageUsersPage.buttons.finish, LONG_TIMEOUT);
-      utils.waitForText(callUserPage.assignNumbers.title, 'Assign Numbers');
-      utils.expectIsDisplayed(callUserPage.assignNumbers.subMenu);
-    });
-    it('should navigate to Add user success page when finish is clicked', () => {
-      utils.click(manageUsersPage.buttons.finish);
-      utils.expectIsDisplayed(manageUsersPage.buttons.finish);
-      utils.waitForText(callUserPage.successPage.newUserCount, '2 New users');
-      utils.expectIsDisplayed(callUserPage.successPage.recordsProcessed);
-    });
-    it('should navigate to Users overview page', () => {
-      utils.click(manageUsersPage.buttons.finish);
-      navigation.expectDriverCurrentUrl('users');
-      utils.expectIsDisplayed(navigation.tabs);
-    });
-  });
-
   it('Enter the user details on the search bar and Navigate to user details view', () => {
     utils.click(callUserPage.usersList.searchFilter);
-    utils.sendKeys(callUserPage.usersList.searchFilter, USER_EMAIL + protractor.Key.ENTER);
+    utils.sendKeys(callUserPage.usersList.searchFilter, USERS[0].email + protractor.Key.ENTER);
     utils.click(callUserPage.usersList.userFirstName);
     utils.expectIsDisplayed(users.servicesPanel);
     utils.expectIsDisplayed(users.communicationsService);
@@ -157,20 +90,10 @@ describe('Huron Functional: user-line-settings', () => {
       it('should display the Phone Number', () => {
         utils.expectIsDisplayed(callUserPlacePage.directoryNumber.phoneNumber);
       });
-      //Add Directory Number
-      it('should select the extension to be added', () => {
-        utils.selectDropdown('.csSelect-container[name="internalNumber"]', '305');
-      });
-      it('should be able to add the Directory number', () => {
-        utils.click(callUserPlacePage.saveButton).then(() => {
-          notifications.assertSuccess();
-        });
-      });
-      it('should not show save button', () => {
-        utils.expectIsNotDisplayed(callUserPlacePage.saveButton);
-      });
+
       //Edit Directory Number
       it('should be able to edit the extension and save', () => {
+        browser.driver.sleep(1000);
         utils.selectDropdown('.csSelect-container[name="internalNumber"]', '315');
         utils.click(callUserPlacePage.saveButton).then(() => {
           notifications.assertSuccess();
@@ -341,7 +264,7 @@ describe('Huron Functional: user-line-settings', () => {
       });
       it('should be able to set custom Caller ID', () => {
         utils.selectDropdown('.csSelect-container[name="callerIdSelection"]', CUSTOM);
-        utils.sendKeys(callUserPlacePage.callerId.customName, USER_FIRST_NAME);
+        utils.sendKeys(callUserPlacePage.callerId.customName, 'USER NAME');
         utils.sendKeys(callUserPlacePage.callerId.customNumber, DESTINATION_E164);
         utils.click(callUserPlacePage.saveButton).then(() => {
           notifications.assertSuccess();
@@ -364,6 +287,27 @@ describe('Huron Functional: user-line-settings', () => {
     describe('Shared Line', () => {
       it('should display the Shared Line section', () => {
         utils.expectIsDisplayed(callUserPlacePage.sharedLine.title);
+      });
+
+      it('Add a member', () => {
+        utils.sendKeys(callUserPlacePage.sharedLine.inputMember, USERS[1].email);
+        browser.driver.sleep(1000);
+        utils.sendKeys(callUserPlacePage.sharedLine.inputMember, protractor.Key.ENTER);
+        browser.driver.sleep(1000);
+        utils.expectIsDisplayed(callUserPlacePage.sharedLine.accordionMember);
+        utils.expectText(callUserPlacePage.sharedLine.accordionMember, USERS[1].name.givenName + ' ' + USERS[1].name.familyName);
+        utils.click(callUserPlacePage.saveButton).then(() => {
+          notifications.assertSuccess();
+        });
+      });
+      it('Remove a member', () => {
+        utils.expectIsDisplayed(callUserPlacePage.sharedLine.accordionMember);
+        utils.expectText(callUserPlacePage.sharedLine.accordionMember, USERS[1].name.givenName + ' ' + USERS[1].name.familyName);
+        utils.click(callUserPlacePage.sharedLine.sharedMember);
+        utils.click(callUserPlacePage.sharedLine.removeMember);
+        utils.click(callUserPlacePage.sharedLine.removeMemberBtn).then(() => {
+          notifications.assertSuccess();
+        });
       });
     });
 

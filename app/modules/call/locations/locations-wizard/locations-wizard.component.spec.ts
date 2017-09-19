@@ -1,8 +1,9 @@
 import locationsWizardComponentModule from './index';
 import { Location, CallLocationSettingsData, LocationCallerId, HIDDEN } from '../shared/';
 import { CustomerVoice } from 'modules/huron/customer';
-import { INTELEPEER, SWIVEL } from 'modules/huron/pstn';
+import { INTELEPEER, SWIVEL, Address } from 'modules/huron/pstn';
 import { LocationSettingsOptions } from 'modules/call/locations/shared';
+import { EmergencyNumber } from 'modules/huron/phoneNumber';
 
 //Test Data
 let licenseNumber: number;
@@ -95,6 +96,8 @@ describe('Component: LocationsWizardComponent -', () => {
     callLocationSettingsData = new CallLocationSettingsData();
     callLocationSettingsData.location = new Location();
     callLocationSettingsData.customerVoice = new CustomerVoice();
+    callLocationSettingsData.address = new Address();
+    callLocationSettingsData.emergencyNumber = new EmergencyNumber();
   }
 
   function initComponent(): void {
@@ -214,12 +217,12 @@ describe('Component: LocationsWizardComponent -', () => {
     it('should test next button when last page', function () {
       this.controller.index = 5;
       this.controller.form.$valid = false;
-      expect(this.controller.nextButton()).toEqual(true);
+      expect(this.controller.nextButton()).toEqual(false);
       this.controller.form.$valid = true;
-      this.controller.addressValidated = true;
-      expect(this.controller.nextButton()).toEqual(this.controller.addressValidated);
-      this.controller.addressValidated = false;
-      expect(this.controller.nextButton()).toEqual(this.controller.addressValidated);
+      this.controller.callLocationSettingsData.address.validated = true;
+      expect(this.controller.nextButton()).toEqual(this.controller.callLocationSettingsData.address.validated);
+      this.controller.callLocationSettingsData.address.validated = false;
+      expect(this.controller.nextButton()).toEqual(this.controller.callLocationSettingsData.address.validated);
     });
 
     it('should test previous page', function () {

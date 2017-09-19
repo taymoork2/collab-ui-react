@@ -263,6 +263,11 @@ export class Config {
     CCASP: 'CCASP', //Cloud Connected Audio - Service Partners
   };
 
+  public readonly orderingTool = {
+    online: 'CISCO_ONLINE_OPC',
+    digitalRiver: 'DIGITAL_RIVER',
+  };
+
   public readonly licenseStatus = {
     PENDING: 'PENDING',
     ACTIVE: 'ACTIVE',
@@ -549,7 +554,7 @@ export class Config {
     WX2_User: ['overview', 'support', 'activateProduct'],
     WX2_Support: ['overview', 'reports', 'support'],
     WX2_SquaredInviter: [],
-    PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'gem', 'gemOverview', 'gemCbgDetails', 'gmTdDetails', 'gmTdNumbersRequest', 'customer-overview', 'partnerreports', 'trial', 'trialAdd', 'trialEdit', 'profile', 'pstn', 'pstnSetup', 'pstnWizard', 'video', 'settings'],
+    PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'gem', 'gemOverview', 'gemReports', 'gemCbgDetails', 'gmTdDetails', 'gmTdNumbersRequest', 'customer-overview', 'partnerreports', 'trial', 'trialAdd', 'trialEdit', 'profile', 'pstn', 'pstnSetup', 'pstnWizard', 'video', 'settings'],
     PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trial', 'trialAdd', 'trialEdit', 'pstn', 'pstnSetup', 'pstnWizard', 'video'],
     CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
     //TODO User role is used by Online Ordering UI. The dr* states will be removed once the Online UI is separated from Atlas.
@@ -604,6 +609,10 @@ export class Config {
     return this.LocalStorage.get(this.TEST_ENV_CONFIG) === 'e2e-prod';
   }
 
+  public forceIntegrationForE2E(): boolean {
+    return this.LocalStorage.get(this.TEST_ENV_CONFIG) === 'e2e-integration';
+  }
+
   public isCfe(): boolean {
     return !this.forceProdForE2E() && this.getCurrentHostname() === this.hostnameConfig.CFE;
   }
@@ -623,7 +632,7 @@ export class Config {
   }
 
   public isIntegration(): boolean {
-    return !this.forceProdForE2E() && this.getCurrentHostname() === this.hostnameConfig.INTEGRATION;
+    return !this.forceProdForE2E() && (this.getCurrentHostname() === this.hostnameConfig.INTEGRATION || this.forceIntegrationForE2E());
   }
 
   public isProd(): boolean {

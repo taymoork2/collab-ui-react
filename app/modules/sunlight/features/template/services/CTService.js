@@ -90,7 +90,7 @@
     }
 
     function labelForTime(time) {
-      return moment(time, 'HH:mm').format('hh:mm A');
+      return moment(time, 'HH:mm').locale('en').format('hh:mm A');
     }
 
     function hoursWithSuffix(suffix) {

@@ -4,8 +4,23 @@ import { SipDomainSettingController } from './sipDomainSetting.controller';
 describe('Controller: SipDomainSettingController', function () {
   beforeEach(function () {
     this.initModules(testModule);
-    this.injectDependencies('$controller', '$modal', '$rootScope', '$scope', '$timeout', '$translate', '$q', '$window', 'Config',
-      'FeatureToggleService', 'Notification', 'Orgservice', 'ServiceDescriptorService', 'SparkDomainManagementService', 'UrlConfig');
+    this.injectDependencies(
+      '$controller',
+      '$modal',
+      '$rootScope',
+      '$scope',
+      '$timeout',
+      '$translate',
+      '$q',
+      '$window',
+      'Config',
+      'FeatureToggleService',
+      'Notification',
+      'Orgservice',
+      'ServiceDescriptorService',
+      'SparkDomainManagementService',
+      'UrlConfig',
+    );
 
     this.orgServiceJSONFixture = getJSONFixture('core/json/organizations/Orgservice.json');
     this.domainSuffix = '.ciscospark.com';
@@ -42,6 +57,11 @@ describe('Controller: SipDomainSettingController', function () {
     this.modal = {
       templateUrl: '',
       type: 'dialog',
+    };
+
+    this.focus = jasmine.createSpy('focus');
+    this.$element = {
+      find: jasmine.createSpy('find').and.returnValue({ focus: this.focus }),
     };
 
     spyOn(this.$rootScope, '$broadcast').and.callThrough();
@@ -82,6 +102,7 @@ describe('Controller: SipDomainSettingController', function () {
 
     this.initController = (): void => {
       this.controller = this.$controller(SipDomainSettingController, {
+        $element: this.$element,
         $scope: this.$scope,
         $rootScope: this.$rootScope,
         $translate: this.$translate,
@@ -303,6 +324,14 @@ describe('Controller: SipDomainSettingController', function () {
       expect(this.$scope.$emit).toHaveBeenCalledTimes(4);
     });
 
+    it('should return focus to #editSubdomainLink', function () {
+      this.initController();
+      this.controller.resetFocus();
+      this.$timeout.flush();
+      expect(this.$element.find).toHaveBeenCalledWith('#editSubdomainLink');
+      expect(this.focus).toHaveBeenCalledTimes(1);
+    });
+
     describe('verifyAvailabilityAndValidity should set controller.verified based on the inputValue', function () {
       it('available response', function () {
         spyOn(this.SparkDomainManagementService, 'checkDomainAvailability').and.returnValue(this.$q.resolve(this.availableResponse));
@@ -483,7 +512,9 @@ describe('Controller: SipDomainSettingController', function () {
         this.controller.editSubdomain();
         this.$scope.$apply();
         expect(this.$modal.open).not.toHaveBeenCalled();
+        this.$timeout.flush();
         expect(this.controller.toggleSipForm).not.toHaveBeenCalled();
+        expect(this.$element.find).not.toHaveBeenCalled();
       });
 
       it('should only call toggleSipForm', function () {
@@ -496,6 +527,9 @@ describe('Controller: SipDomainSettingController', function () {
         this.$scope.$apply();
         expect(this.$modal.open).not.toHaveBeenCalled();
         expect(this.controller.toggleSipForm).toHaveBeenCalledTimes(1);
+        this.$timeout.flush();
+        expect(this.$element.find).toHaveBeenCalledWith('#sipDomainInput');
+        expect(this.focus).toHaveBeenCalledTimes(1);
       });
     });
 

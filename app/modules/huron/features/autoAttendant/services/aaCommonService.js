@@ -16,7 +16,6 @@
     var aaMediaUploadStatus = false;
     var aaQueueSettingsStatus = false;
     var mediaUploadToggle = false;
-    var callerInputToggle = false;
     var routeSIPAddressToggle = false;
     var dynAnnounceToggle = false;
     var returnedCallerToggle = false;
@@ -53,7 +52,6 @@
       setMediaUploadStatus: setMediaUploadStatus,
       setQueueSettingsStatus: setQueueSettingsStatus,
       setMediaUploadToggle: setMediaUploadToggle,
-      setCallerInputToggle: setCallerInputToggle,
       setRouteSIPAddressToggle: setRouteSIPAddressToggle,
       setRestApiToggle: setRestApiToggle,
       isRestApiToggle: isRestApiToggle,
@@ -62,7 +60,6 @@
       setMultiSiteEnabledToggle: setMultiSiteEnabledToggle,
       isMultiSiteEnabled: isMultiSiteEnabled,
       isDynAnnounceToggle: isDynAnnounceToggle,
-      isCallerInputToggle: isCallerInputToggle,
       isMediaUploadToggle: isMediaUploadToggle,
       isRouteSIPAddressToggle: isRouteSIPAddressToggle,
       isReturnedCallerToggle: isReturnedCallerToggle,
@@ -178,10 +175,6 @@
       mediaUploadToggle = status;
     }
 
-    function setCallerInputToggle(status) {
-      callerInputToggle = status;
-    }
-
     function setRouteSIPAddressToggle(status) {
       routeSIPAddressToggle = status;
     }
@@ -214,10 +207,6 @@
 
     function isMediaUploadToggle() {
       return mediaUploadToggle;
-    }
-
-    function isCallerInputToggle() {
-      return callerInputToggle;
     }
 
     function isRouteSIPAddressToggle() {

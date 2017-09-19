@@ -997,6 +997,13 @@
             controllerAs: 'umadc',
             templateUrl: 'modules/core/users/userManage/userManageActiveDir.tpl.html',
           })
+          .state('users.manage.emailSuppress', {
+            template: '<user-manage-email-suppress dismiss="$dismiss()"></user-manage-email-suppress>',
+            params: {
+              manageType: null,
+              prevState: null,
+            },
+          })
 
           .state('users.manage.advanced', {
             abstract: true,
@@ -2005,6 +2012,14 @@
               },
             },
           })
+          .state('reports.webex-metrics.MEI', {
+            url: '/:siteUrl/MEI',
+            views: {
+              metricsContent: {
+                template: '<metrics-frame></metrics-frame>',
+              },
+            },
+          })
           .state('reports.webex-metrics.diagnostics', {
             url: '/diagnostics',
             views: {
@@ -2583,6 +2598,7 @@
             params: {
               currentDevice: {},
               huronDeviceService: {},
+              deviceDeleted: null,
             },
           })
           .state('device-overview.emergencyServices', {
@@ -2661,6 +2677,15 @@
             parent: 'partner',
             url: '/services/overview',
             template: '<cca-card></cca-card>',
+          })
+          .state('gemReports', {
+            parent: 'partner',
+            url: '/services/reports',
+            template: '<cca-reports-tabs></cca-reports-tabs>',
+          })
+          .state('gemReports.group', {
+            url: '/:name',
+            template: '<cca-reports report-chart-data="$ctrl.chartsData"></cca-reports>',
           })
           .state('gem.servicesPartner', {
             url: '/services/spList',

@@ -3,17 +3,14 @@ import { IToolkitModalService } from 'modules/core/modal';
 class HybridCallInactiveCardController implements ng.IComponentController {
   /* @ngInject */
   constructor(
-    private $translate: ng.translate.ITranslateService,
     private $modal: IToolkitModalService,
-    private ModalService,
   ) {}
 
   public openPrerequisites(): void {
-    this.ModalService.open({
-      hideDismiss: true,
-      title: 'Not implemented yet',
-      message: '¯\_(ツ)_/¯',
-      close: this.$translate.instant('common.close'),
+    this.$modal.open({
+      controller: 'HybridCallPrerequisitesController',
+      controllerAs: 'vm',
+      templateUrl: 'modules/services-overview/new-hybrid/prerequisites-modals/hybrid-call-prerequisites.html',
     });
   }
 

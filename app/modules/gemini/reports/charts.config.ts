@@ -1,0 +1,16 @@
+module.exports = [
+  { group: 'usage', url: 'minute/meeting', type: 'column', title: 'TOTAL DATA MEETING MINUTES' },
+  { group: 'usage', url: 'minute/audio', type: 'column', title: 'AUDIO MINUTES BY CALL TYPE' },
+  { group: 'usage', url: 'minute/video', type: 'line', title: 'VIDEO MEETING MINUTES' },
+  { group: 'usage', url: 'minute/audio/session-type', type: 'column', title: 'AUDIO MINUTES BY SESSION TYPE' },
+  { group: 'usage', url: 'minute/audio/pstn', type: 'column', title: 'TOTAL AUDIO PSTN MINUTES' },
+  { group: 'usage', url: 'minute/audio/cca', type: 'column', title: 'TOTAL AUDIO CCA MINUTES' },
+  { group: 'peakPorts', url: 'peakport/meeting', type: 'column', title: 'PEAK DATA PORTS' },
+  { group: 'peakPorts', url: 'peakport/audio', type: 'line', title: 'PEAK AUDIO PORTS' },
+  { group: 'peakPorts', url: 'peakport/video', type: 'column', title: 'PEAK VIDEO PORTS' },
+  { group: 'participants', url: 'participants/host-method', type: 'column', title: 'HOST SCHEDULING METHOD' },
+  { group: 'participants', url: 'participants/attend-method', type: 'column', title: 'ATTENDANCE METHOD' },
+  { group: 'participants', url: 'participants/hosts', type: 'columns', title: 'ACTIVE WEBEX HOSTS' },
+  { group: 'participants', url: 'participants/attendees', type: 'column', title: 'TOTAL ATTENDEES' },
+  { group: 'typesSize', url: 'quantity/meeting/size', type: 'line', title: 'AVERAGE MEETING SIZE BY NUMBER OF PARTICIPANTS' },
+];

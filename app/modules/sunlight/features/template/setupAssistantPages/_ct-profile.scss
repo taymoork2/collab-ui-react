@@ -122,6 +122,11 @@
           @include vr-spacing(pr, 0.5);
         }
       }
+
+      .disp-text {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
 
     > section {

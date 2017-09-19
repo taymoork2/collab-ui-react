@@ -59,12 +59,6 @@ describe('MediaServiceActivationV2', function () {
       identityOrgId: '5632f806-ad09-4a26-a0c0-a49a13f38873',
       mediaAgentOrgIds: ['5632f806-ad09-4a26-a0c0-a49a13f38873', 'mocked'],
     });
-    $httpBackend.when('POST', 'https://atlas-intb.ciscospark.com/admin/api/v1/organizations/12345/services/rhesos').respond({
-      statusCode: 200,
-    });
-    $httpBackend.when('POST', 'https://atlas-intb.ciscospark.com/admin/api/v1/organizations/12345/services/spark').respond({
-      statusCode: 200,
-    });
     $httpBackend.when('GET', 'https://identity.webex.com/organization/scim/v1/Orgs/12345?disableCache=true').respond({
       statusCode: 200,
     });

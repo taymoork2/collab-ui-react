@@ -24,9 +24,11 @@ describe('Controller: MeetingSettingsCtrl', () => {
     spyOn(this.SetupWizardService, 'getActingSubscriptionLicenses').and.returnValue(actingSubscription[0].licenses);
     spyOn(this.Authinfo, 'getConferenceServices').and.returnValue(conferenceServices);
     spyOn(this.SetupWizardService, 'validateCCASPPartner').and.returnValue(this.$q.resolve(true));
-    spyOn(this.SetupWizardService, 'hasCCASPPackage').and.returnValue(true);
+    spyOn(this.SetupWizardService, 'hasPendingCCASPPackage').and.returnValue(true);
+    spyOn(this.SetupWizardService, 'getActiveCCASPPackage').and.returnValue(undefined);
     spyOn(this.SetupWizardService, 'getCCASPPartners').and.returnValue(this.$q.resolve(['partner1', 'partner2']));
     spyOn(this.SetupWizardService, 'validateTransferCode').and.returnValue(this.$q.resolve(transferCodeResponse));
+    spyOn(this.Authinfo, 'getUserName').and.returnValue('ordersimp-somedude@mailinator.com');
   });
 
   function initController(): void {
@@ -52,15 +54,32 @@ describe('Controller: MeetingSettingsCtrl', () => {
     });
   });
 
+  describe('user management in meeting site setup', function () {
+    it('should be shown if the logged in user\'s email matches the pattern "ordersimp-<>@mailinator.com"', function() {
+      initController.apply(this);
+      expect(this.controller.isShowUserManagement).toEqual(true);
+    });
+    it('should NOT be shown if the logged in user\'s email does NOT match the pattern "ordersimp-<>@mailinator.com"', function() {
+      this.Authinfo.getUserName.and.returnValue('bob@nonmatching-email.com');
+      initController.apply(this);
+      expect(this.controller.isShowUserManagement).toEqual(false);
+      this.Authinfo.getUserName.and.returnValue('ordersimp@email.com');
+      initController.apply(this);
+      expect(this.controller.isShowUserManagement).toEqual(false);
+    });
+  });
+
   describe('upon click of the Validate button in site setup', function () {
     beforeEach(function () {
       initController.apply(this);
+      this.controller.isShowUserManagement = false;
     });
 
     it('should call validateWebexSiteUrl() and if VALID add the site the sitesArray', function () {
       const siteUrl = 'testSiteHere';
       this.controller.siteModel.siteUrl = siteUrl;
       this.controller.siteModel.timezone = 'someTimeZoneHere';
+      this.controller.isShowUserManagement = false;
       spyOn(this.controller, 'validateWebexSiteUrl').and.callThrough();
       this.controller.validateMeetingSite();
       this.$scope.$digest();
@@ -81,6 +100,43 @@ describe('Controller: MeetingSettingsCtrl', () => {
 
       expect(this.controller.sitesArray.length).toBe(0);
       expect(this.controller.error.isError).toBe(true);
+    });
+
+    describe ('when user management is enabled', function()  {
+      const siteUrl = 'testSiteHere';
+      beforeEach(function () {
+        initController.apply(this);
+        this.controller.siteModel = {
+          siteUrl: siteUrl,
+          timezone: 'someTimeZoneHere',
+        };
+        this.controller.isShowUserManagement = true;
+        this.controller.sitesArray = [];
+        this.disableValidateButton = true;
+        spyOn(this.controller, 'validateWebexSiteUrl').and.callThrough();
+      });
+      it('site will not validate without type selected', function () {
+        this.controller.validateMeetingSite();
+        this.$scope.$digest();
+        const hasAddedSite = _.some(this.controller.sitesArray, { siteUrl: siteUrl });
+        expect(hasAddedSite).toBe(false);
+      });
+      it('site WILL validate with type selected but NOT set setup type if it\'s not LEGACY', function () {
+        this.controller.siteModel.setupType = 'undefined';
+        this.controller.validateMeetingSite();
+        this.$scope.$digest();
+        const addedSite = _.find(this.controller.sitesArray, { siteUrl: siteUrl });
+        expect(addedSite).toBeDefined();
+        expect(addedSite['setupType']).not.toBeDefined();
+      });
+      it('site will validate with type selected and set setup type if it IS LEGACY', function () {
+        this.controller.siteModel.setupType = this.Config.setupTypes.legacy;
+        this.controller.validateMeetingSite();
+        this.$scope.$digest();
+        const addedSite = _.find(this.controller.sitesArray, { siteUrl: siteUrl });
+        expect(addedSite).toBeDefined();
+        expect(addedSite['setupType']).toEqual(this.Config.setupTypes.legacy);
+      });
     });
   });
 
@@ -113,7 +169,7 @@ describe('Controller: MeetingSettingsCtrl', () => {
   });
   describe('when licenses include a TSP Audio package', function () {
     beforeEach(function () {
-      spyOn(this.SetupWizardService, 'hasTSPAudioPackage').and.returnValue(true);
+      spyOn(this.SetupWizardService, 'hasPendingTSPAudioPackage').and.returnValue(true);
       spyOn(this.SetupWizardService, 'getTSPPartners').and.returnValue(this.$q.resolve(['abc', 'def']));
       initController.apply(this);
     });
@@ -178,7 +234,7 @@ describe('Controller: MeetingSettingsCtrl', () => {
     });
   });
 
-  describe('when licenses include CCASP', function () {
+  describe('when pending licenses include CCASP and there are no CCASP active licenses', function () {
     beforeEach(function () {
       initController.apply(this);
       spyOn(this.controller, 'setNextDisableStatus').and.callThrough();
@@ -207,4 +263,28 @@ describe('Controller: MeetingSettingsCtrl', () => {
       this.controller.ccasp.isError = true;
     });
   });
+
+  describe('pending when licenses include CCASP and there is a CCASP active license', function () {
+    beforeEach(function () {
+      const ccaspActivePackcage = {
+        licenseId: 'CCASP_8c8098f4-e324-45af-8abc-ff75594090c8_testccanew002-ittest.dmz.webex.com',
+        offerName: 'CCASP',
+        licenseType: 'AUDIO',
+        status: 'ACTIVE',
+        ccaspPartnerName: 'West IP Communications',
+        ccaspSubscriptionId: 'Sub1154854',
+      };
+      this.SetupWizardService.getActiveCCASPPackage.and.returnValue(ccaspActivePackcage);
+      initController.apply(this);
+      spyOn(this.controller, 'setNextDisableStatus').and.callThrough();
+    });
+    it('should not get the list of ccaspPartners ', function () {
+      expect(this.SetupWizardService.getCCASPPartners).not.toHaveBeenCalled();
+    });
+    it('should populate partner subscription data from active subscription', function () {
+      expect(this.controller.audioPartnerName).toEqual('West IP Communications');
+      expect(this.controller.ccasp.subscriptionId).toEqual('Sub1154854');
+    });
+  });
+
 });

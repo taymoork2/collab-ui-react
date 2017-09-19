@@ -7,7 +7,7 @@
 
   /* @ngInject */
   function AABuilderMainCtrl($rootScope, $modalStack, $scope, $translate, $state, $stateParams, $q, AAUiModelService, AAMediaUploadService,
-    AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantCeService,
+    AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantCeService, AutoAttendantLocationService,
     AAValidationService, AANumberAssignmentService, AANotificationService, Authinfo, AACommonService, AAUiScheduleService, AACalendarService,
     AATrackChangeService, AADependencyService, ServiceSetup, Analytics, AAMetricNameService, FeatureToggleService) {
     var vm = this;
@@ -529,6 +529,12 @@
 
     function getSystemTimeZone() {
       vm.ui.systemTimeZone = DEFAULT_TZ;
+      if (AACommonService.isMultiSiteEnabled()) {
+        return AutoAttendantLocationService.getDefaultLocation().then(function (locationInfo) {
+          return { id: locationInfo.timeZone, label: locationInfo.timeZone };
+        });
+      }
+      // otherwise
       return ServiceSetup.listSites().then(function () {
         if (ServiceSetup.sites.length !== 0) {
           return ServiceSetup.getSite(ServiceSetup.sites[0].uuid).then(function (site) {
@@ -613,7 +619,6 @@
 
     function setUpFeatureToggles(featureToggleDefault) {
       AACommonService.setMediaUploadToggle(featureToggleDefault);
-      AACommonService.setCallerInputToggle(featureToggleDefault);
       AACommonService.setRouteSIPAddressToggle(featureToggleDefault);
       AACommonService.setDynAnnounceToggle(featureToggleDefault);
       AACommonService.setRestApiToggle(featureToggleDefault);
@@ -624,7 +629,6 @@
 
     function checkFeatureToggles() {
       return $q.all({
-        hasCallerinput: FeatureToggleService.supports(FeatureToggleService.features.huronAACallerInput),
         hasMediaUpload: FeatureToggleService.supports(FeatureToggleService.features.huronAAMediaUpload),
         hasRouteRoom: FeatureToggleService.supports(FeatureToggleService.features.huronAARouteRoom),
         hasRestApi: FeatureToggleService.supports(FeatureToggleService.features.huronAARestApi),
@@ -635,7 +639,6 @@
     }
 
     function assignFeatureToggles(featureToggles) {
-      AACommonService.setCallerInputToggle(featureToggles.hasCallerinput);
       AACommonService.setMediaUploadToggle(featureToggles.hasMediaUpload);
       AACommonService.setRouteSIPAddressToggle(featureToggles.hasRouteRoom);
       AACommonService.setRestApiToggle(featureToggles.hasRestApi);

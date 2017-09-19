@@ -183,10 +183,10 @@ require('./_setup-wizard.scss');
       };
 
       if (shouldShowMeetingsTab) {
-        if (!SetupWizardService.hasTSPAudioPackage()) {
+        if (!SetupWizardService.hasPendingTSPAudioPackage() || SetupWizardService.getActiveTSPAudioPackage() !== undefined) {
           _.remove(meetingTab.steps, { name: 'setPartnerAudio' });
         }
-        if (!SetupWizardService.hasCCASPPackage()) {
+        if (!SetupWizardService.hasPendingCCASPPackage() || SetupWizardService.getActiveCCASPPackage() !== undefined) {
           _.remove(meetingTab.steps, { name: 'setCCASP' });
         }
         tabs.splice(1, 0, meetingTab);
@@ -282,8 +282,11 @@ require('./_setup-wizard.scss');
         return true;
       }
 
+      var currentSubscription = SetupWizardService.getActingPendingSubscriptionOptionSelection();
+
       return _.some(Authinfo.getLicenses(), function (license) {
-        return license.licenseType === Config.licenseTypes.COMMUNICATION || license.licenseType === Config.licenseTypes.SHARED_DEVICES;
+        return (license.licenseType === Config.licenseTypes.COMMUNICATION || license.licenseType === Config.licenseTypes.SHARED_DEVICES)
+          && (_.isUndefined(currentSubscription) || license.billingServiceId === currentSubscription.value);
       });
     }
 

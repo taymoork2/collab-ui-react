@@ -37,10 +37,12 @@ export function provisionCustomerAndLogin(customer) {
       if (atlasCustomer && customer.callOptions) {
         customer.callOptions.cmiCustomer.uuid = atlasCustomer.customerOrgId;
         customer.callOptions.cmiCustomer.name = atlasCustomer.customerName;
-        return huronCmiHelper.provisionCmiCustomer(customer.partner, customer.callOptions.cmiCustomer, customer.callOptions.cmiSite, customer.callOptions.numberRange, customer.doFtsw)
+        return huronCmiHelper.provisionCmiCustomer(customer.partner, customer.callOptions.cmiCustomer, customer.callOptions.cmiSite, customer.callOptions.numberRange, customer.doFtsw, customer.doCallPickUp)
           .then(() => huronPstnHelper.setupPSTN(customer))
           .then(() => provisionUsers(customer))
+          .then(() => provisionPlaces(customer))
           .then(() => huronFeaturesHelper.setupHuntGroup(customer))
+          .then(() => huronFeaturesHelper.setupCallPickup(customer))
           .then(() => loginPartner(customer.partner))
           .then(() => switchToCustomerWindow(customer.name, customer.doFtsw));
       } else {
@@ -120,3 +122,25 @@ export function provisionUsers(customer) {
   }
 }
 
+function provisionPlaces(customer) {
+  if (customer.places) {
+    console.log('Creating locations');
+    return provisionerHelper.getToken(customer.partner)
+      .then(token => {
+        createPlaceObj(token, customer.orgId, customer.places);
+        console.log('Successfully added places');
+      });
+  }
+}
+
+function createPlaceObj(tkn, id, plObj) {
+  let placeObj = {};
+  for (let i = 0; i < plObj.length; i++) {
+    placeObj[i] = plObj[i];
+    createNewPlace(tkn, id, placeObj[i]);
+  }
+}
+
+function createNewPlace(tkn, id, plObj) {
+  return atlasHelper.createAtlasPlace(tkn, id, plObj)
+}

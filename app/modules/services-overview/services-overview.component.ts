@@ -26,16 +26,32 @@ import { PrivateTrunkPrereqService } from 'modules/hercules/private-trunk/privat
 import { ProPackService }  from 'modules/core/proPack/proPack.service';
 
 export class ServicesOverviewController implements ng.IComponentController {
-  private cards: ServicesOverviewCard[];
+  // ️️⚠️ Property below is exclusive to the OLD cards, before the UI rewrite for the office 365 feature
+  private cards: ServicesOverviewCard[] = [
+    new ServicesOverviewMessageCard(this.Authinfo),
+    new ServicesOverviewMeetingCard(this.Authinfo),
+    new ServicesOverviewCallCard(this.Authinfo, this.Config),
+    new ServicesOverviewCareCard(this.Authinfo),
+    new ServicesOverviewHybridServicesCard(this.Authinfo),
+    new ServicesOverviewCmcCard(this.Authinfo),
+    new ServicesOverviewHybridAndGoogleCalendarCard(this.$state, this.$q, this.$modal, this.Authinfo, this.CloudConnectorService, this.Notification),
+    new ServicesOverviewHybridCalendarCard(this.Authinfo),
+    new ServicesOverviewHybridCallCard(this.Authinfo),
+    new ServicesOverviewHybridMediaCard(this.Authinfo, this.Config),
+    new ServicesOverviewHybridDataSecurityCard(this.$state, this.Authinfo, this.Config, this.HDSService, this.Notification),
+    new ServicesOverviewHybridContextCard(this.Authinfo),
+    new ServicesOverviewPrivateTrunkCard(this.PrivateTrunkPrereqService),
+    new ServicesOverviewImpCard(this.Authinfo),
+  ];
+
+  // ⚠️ Properties below are exclusive to the new cards coming with the office 365 feature
   private servicesToDisplay: HybridServiceId[] = [];
   private servicesActive: HybridServiceId[] = [];
   private servicesInactive: HybridServiceId[] = [];
   private urlParams: ng.ui.IStateParamsService;
-
   public clusters: IExtendedClusterFusion[] | null = null;
   public servicesStatuses: (ICCCService | IPrivateTrunkResourceWithStatus | IServiceStatusWithSetup)[] = [];
-
-  public showNewHybridCards = false;
+  public loadingHybridServicesCards = true;
 
   /* @ngInject */
   constructor(
@@ -57,23 +73,6 @@ export class ServicesOverviewController implements ng.IComponentController {
   ) {}
 
   public $onInit() {
-    this.cards = [
-      new ServicesOverviewMessageCard(this.Authinfo),
-      new ServicesOverviewMeetingCard(this.Authinfo),
-      new ServicesOverviewCallCard(this.Authinfo, this.Config),
-      new ServicesOverviewCareCard(this.Authinfo),
-      new ServicesOverviewHybridServicesCard(this.Authinfo),
-      new ServicesOverviewCmcCard(this.Authinfo),
-      new ServicesOverviewHybridAndGoogleCalendarCard(this.$state, this.$q, this.$modal, this.Authinfo, this.CloudConnectorService, this.Notification),
-      new ServicesOverviewHybridCalendarCard(this.Authinfo),
-      new ServicesOverviewHybridCallCard(this.Authinfo),
-      new ServicesOverviewHybridMediaCard(this.Authinfo, this.Config),
-      new ServicesOverviewHybridDataSecurityCard(this.$state, this.Authinfo, this.Config, this.HDSService, this.Notification),
-      new ServicesOverviewHybridContextCard(this.Authinfo),
-      new ServicesOverviewPrivateTrunkCard( this.PrivateTrunkPrereqService),
-      new ServicesOverviewImpCard(this.Authinfo),
-    ];
-
     this.loadWebexSiteList();
     this.loadHybridServicesStatuses();
 
@@ -81,9 +80,10 @@ export class ServicesOverviewController implements ng.IComponentController {
       hasProPackEnabled: this.ProPackService.hasProPackEnabled(),
       hasProPackPurchased: this.ProPackService.hasProPackPurchased(),
     };
-    this.$q.all(PropackPromises).then(result => {
-      this.forwardEvent('proPackEventHandler', result);
-    });
+    this.$q.all(PropackPromises)
+      .then(result => {
+        this.forwardEvent('proPackEventHandler', result);
+      });
 
     const features = this.$q.all({
       atlasHybridDataSecurity: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridDataSecurity),
@@ -95,8 +95,9 @@ export class ServicesOverviewController implements ng.IComponentController {
       huronEnterprisePrivateTrunking: this.FeatureToggleService.supports(this.FeatureToggleService.features.huronEnterprisePrivateTrunking),
     });
 
+    // ️️⚠️ Code below is exclusive to the OLD cards, before the UI rewrite for the office 365 feature
     features
-      .then((response: any) => {
+      .then((response) => {
         this.forwardEvent('hybridDataSecurityFeatureToggleEventHandler', response.atlasHybridDataSecurity);
         this.forwardEvent('atlasHybridImpFeatureToggleEventHandler', response.atlasHybridImp);
         if (response.atlasPMRonM2) {
@@ -107,14 +108,13 @@ export class ServicesOverviewController implements ng.IComponentController {
         this.forwardEvent('sparkCallCdrReportingFeatureToggleEventhandler', response.hI802);
         this.forwardEvent('privateTrunkFeatureToggleEventHandler', response.huronEnterprisePrivateTrunking);
         if (response.huronEnterprisePrivateTrunking) {
-          this.PrivateTrunkPrereqService.getVerifiedDomains().then(response => {
-            this.forwardEvent('privateTrunkDomainEventHandler', response.length);
+          this.PrivateTrunkPrereqService.getVerifiedDomains().then(domains => {
+            this.forwardEvent('privateTrunkDomainEventHandler', domains.length);
           });
         }
       });
 
-    // Code below is exclusive to the new cards coming with the office 365 feature while the code
-    // above this comment could be used for both branches (with or without the feature toggle)
+    // ⚠️ Code below is exclusive to the new cards coming with the office 365 feature
     features
       .then((response) => {
         if (this.Authinfo.isFusionUC()) {
@@ -146,7 +146,7 @@ export class ServicesOverviewController implements ng.IComponentController {
         }
       })
       .then(() => {
-        // all orgs are entitled to some hybrid services
+        // Now let's get all clusters, needed to do some computation (like finding the status for the services to display)
         return this.HybridServicesClusterService.getAll();
       })
       .then((clusters) => {
@@ -155,17 +155,18 @@ export class ServicesOverviewController implements ng.IComponentController {
           if (_.includes(['squared-fusion-uc', 'squared-fusion-cal', 'squared-fusion-media', 'spark-hybrid-datasecurity', 'contact-center-context', 'spark-hybrid-impinterop'], serviceId)) {
             return this.HybridServicesClusterService.getStatusForService(serviceId, clusters);
           } else if (_.includes(['squared-fusion-gcal', 'squared-fusion-o365'], serviceId)) {
-            // TODO: When down, we should say "we don't know" instead of `setup: false`
-            return this.CloudConnectorService.getService(serviceId as CCCService).catch(() => ({
-              serviceId: serviceId,
-              setup: false,
-            }));
+            // TODO: When the backend returns an error, we should say "we don't know" instead of considering `setup: false`
+            return this.CloudConnectorService.getService(serviceId as CCCService)
+              .catch(() => ({
+                serviceId: serviceId,
+                setup: false,
+              }));
           } else if (serviceId === 'ept') {
-            // TODO: check with EPT people if 404 errors are expected
-            return this.EnterprisePrivateTrunkService.fetch().catch(() => ({
-              serviceId: serviceId,
-              setup: false,
-            }));
+            return this.EnterprisePrivateTrunkService.fetch()
+              .catch(() => ({
+                serviceId: serviceId,
+                setup: false,
+              }));
           }
         });
         return this.$q.all<any[]>(promises)
@@ -178,6 +179,9 @@ export class ServicesOverviewController implements ng.IComponentController {
                 this.servicesInactive.push(serviceId);
               }
             });
+          })
+          .finally(() => {
+            this.loadingHybridServicesCards = false;
           });
       })
       .catch((error) => {
@@ -189,8 +193,7 @@ export class ServicesOverviewController implements ng.IComponentController {
         template: '<office-365-test-modal class="modal-content" close="$close()" dismiss="$dismiss()"></office-365-test-modal>',
         type: 'full',
       }).result
-      .finally(() => {
-        window.console.warn('$state.go');
+      .then(() => {
         this.$state.go('.', { office365: null });
       });
     } else if (this.urlParams.office365 === 'failure') {
@@ -198,8 +201,7 @@ export class ServicesOverviewController implements ng.IComponentController {
         template: `<office-365-fail-modal class="modal-content" reason="${this.urlParams.reason}" close="$close()" dismiss="$dismiss()"></office-365-fail-modal>`,
         type: 'full',
       }).result
-      .finally(() => {
-        window.console.warn('$state.go');
+      .then(() => {
         this.$state.go('.', { office365: null, reason: null });
       });
     }

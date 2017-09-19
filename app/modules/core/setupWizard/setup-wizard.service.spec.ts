@@ -136,15 +136,15 @@ describe('Service: SetupWizard Service', function () {
     });
   });
 
-  describe('hasCCASPPackage()', function () {
+  describe('hasPendingCCASPPackage()', function () {
     it('should identify CCASP order', function () {
       this.SetupWizardService.actingSubscription = {
         pendingLicenses: this.order.licenseFeatures,
       };
-      let result = this.SetupWizardService.hasCCASPPackage();
+      let result = this.SetupWizardService.hasPendingCCASPPackage();
       expect(result).toBe(true);
       _.remove(this.SetupWizardService.actingSubscription.pendingLicenses, { offerName: 'CCASP' });
-      result = this.SetupWizardService.hasCCASPPackage();
+      result = this.SetupWizardService.hasPendingCCASPPackage();
       expect(result).toBe(false);
     });
 

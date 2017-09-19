@@ -21,7 +21,7 @@ export class CallDestinationTranslateService {
       customHelpText: this.$translate.instant('callDestination.customHelpText'),
       alternateCustomPlaceholder: this.$translate.instant('callDestination.alternateCustomPlaceholder'),
       alternateCustomHelpText: this.$translate.instant('callDestination.alternateCustomHelpText'),
-      commonInvalidFormat: this.$translate.instant('common.invalidFormat'),
+      commonInvalidFormat: this.$translate.instant('callDestination.invalidFormat'),
       commonInvalidRequired: this.$translate.instant('common.invalidRequired'),
     });
   }

@@ -19,6 +19,7 @@ import routingPrefixModule from 'modules/call/locations/locations-routing-prefix
 import locationVoicemailModule from 'modules/call/locations/locations-voicemail';
 import locationCallerIdModule from 'modules/call/locations/locations-caller-id';
 import externalCallTransferModule from 'modules/call/settings/settings-external-call-transfer';
+import callEmergencyServicesModule from 'modules/call/shared/call-emergency-services';
 
 export * from './shared';
 export * from './locations-user-details';
@@ -45,6 +46,7 @@ export default angular
     locationVoicemailModule,
     locationCallerIdModule,
     externalCallTransferModule,
+    callEmergencyServicesModule,
   ])
 .component('ucCallLocations', new CallLocationsComponent())
 .component('ucCallLocation', new CallLocationComponent())

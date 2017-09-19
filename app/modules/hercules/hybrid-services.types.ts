@@ -207,6 +207,11 @@ export interface IHostAggregate {
   upgradeState: ConnectorUpgradeState;
 }
 
+export interface ISolutionReplacementValues {
+  text: string;
+  link: string;
+}
+
 export interface IConnectorAlarm {
   id: string;
   // This hack should be removed once FMS starts using the correct format for alarm timestamps.
@@ -217,16 +222,16 @@ export interface IConnectorAlarm {
   title: string;
   description: string;
   solution: string;
-  solutionReplacementValues: {
-    text: string;
-    link: string;
-  }[];
+  solutionReplacementValues: ISolutionReplacementValues[];
+  key?: string;
+  replacementValues: IAlarmReplacementValues[];
 }
 
 export interface IAlarmReplacementValues {
   key: string;
   value: string;
   type?: string;
+  href?: string;
 }
 
 export interface IServiceAlarm {

@@ -167,8 +167,8 @@ describe('Component: lineOverview', () => {
       spyOn(this.$state, 'go');
     });
 
-    it('should NOT show line label on add a new line', function () {
-      expect(this.view.find(LINE_LABEL_INPUT)).not.toExist();
+    it('should show line label on add a new line', function () {
+      expect(this.view.find(LINE_LABEL_INPUT)).toExist();
     });
 
     it('should grab the first available internal line', function () {

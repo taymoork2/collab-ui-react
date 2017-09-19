@@ -52,6 +52,7 @@
       setHybridServiceReleaseChannelEntitlement: setHybridServiceReleaseChannelEntitlement,
       updateDisplayName: updateDisplayName,
       validateDisplayName: validateDisplayName,
+      setOrgEmailSuppress: setOrgEmailSuppress,
     };
 
     var savedOrgSettingsCache = [];
@@ -380,6 +381,14 @@
       }
 
       return $http.get(orgUrl);
+    }
+
+    function setOrgEmailSuppress(isEmailSuppressed) {
+      var adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/emails';
+      var emailSuppressRequest = {
+        suppressEmail: isEmailSuppressed,
+      };
+      return $http.post(adminUrl, emailSuppressRequest);
     }
 
     function getOrgCacheOption(callback, oid, config) {

@@ -1,0 +1,9 @@
+<div ng-if="$ctrl.ssoStatusLoaded">
+  <cs-toggle-switch ng-model="$ctrl.isEmailSuppressed"
+          is-disabled="$ctrl.isEmailSuppressDisabled"
+          cs-change="$ctrl.onChange(toggleValue)"
+          toggle-id="toggleEmailSuppress"
+          name="toggleEmailSuppress"
+          size="small">
+  </cs-toggle-switch>
+</div>

@@ -72,9 +72,10 @@
   }
 
   .save-cancel-footer {
-    width: calc(100% - 100px);
+    width: 100%;
     position: fixed;
-    top: calc(100vh - 60px);
+    bottom: 0;
+    left: 0;
     background-color: $gray-light-4;
     @include vr-spacing(ph, 2);
     @include vr-spacing(pv, 1);

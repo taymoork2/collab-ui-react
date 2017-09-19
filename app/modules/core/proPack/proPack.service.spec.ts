@@ -7,8 +7,11 @@ describe('ProPackService', () => {
     this.injectDependencies(
       '$q',
       '$rootScope',
+      '$state',
       'Authinfo',
+      'Config',
       'FeatureToggleService',
+      'LicenseService',
       'ProPackService',
     );
     spyOn(this.Authinfo, 'isPremium').and.returnValue(false);

@@ -262,9 +262,10 @@ export class UserOverviewService {
     if (!_.isEmpty(user.entitlements)) {
 
       const userHasSignedUp = _.some(user.userSettings, (x) => _.includes(x, 'spark.signUpDate'));
+      const userHasLastLoginTime = _.has(user.meta, 'lastLoginTime');
       const hasCiscouc = this.userHasEntitlement(user, 'ciscouc');
 
-      return (userHasSignedUp || hasCiscouc);
+      return (userHasSignedUp || userHasLastLoginTime || hasCiscouc);
     }
     // user is not active
     return false;

@@ -14,6 +14,7 @@ export function atlasCustomer(customerOptions) {
     users: options.users || undefined,
     places: options.places || undefined,
     doFtsw: options.doFtsw || false,
+    doCallPickUp: options.doCallPickUp || false,
   };
   return customer;
 }

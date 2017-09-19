@@ -1,5 +1,6 @@
 @import '~collab-ui/scss/settings/colors';
 @import '~collab-ui/scss/settings/typography';
+@import '~collab-ui/scss/tools/mixins/text-overflow';
 
 services-overview {
   display: block;
@@ -262,7 +263,16 @@ services-overview {
     }
   }
 
-  // .active-card_header {}
+  .active-card_header {
+    padding: 0 1rem;
+    margin-bottom: 1rem;
+
+    h4 {
+      @include text-overflow();
+      font-size: 1.2rem !important;
+      text-align: left !important;
+    }
+  }
 
   .active-card_content {
     margin: 0 1rem;
@@ -272,16 +282,46 @@ services-overview {
   .active-card_footer {
     margin: 0 1rem 1rem;
     text-align: center;
+
+    a {
+      color: inherit;
+    }
   }
 
   // Inactive card
   .inactive-card {
     > article {
-      display: flex;
+      min-height: 300px !important;
     }
   }
 
-  // .inactive-card_header {}
+  .inactive-card_header {
+    padding: 0 1rem;
+    margin-bottom: 1rem;
+
+    h4 {
+      @include text-overflow();
+      font-size: 1.2rem !important;
+      text-align: left !important;
+    }
+  }
+
+  .card_header--stretched {
+    display: flex;
+    align-items: center;
+
+    h4 {
+      margin-right: auto;
+      flex-grow: 1;
+      flex-shrink: 0;
+    }
+
+    span {
+      max-width: 90px;
+      margin-left: 1rem;
+      padding-top: 0.5rem;
+    }
+  }
 
   .inactive-card_content {
     margin: 0 1rem;

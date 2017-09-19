@@ -50,6 +50,7 @@ describe('Component: AlarmListSectionComponent  ', () => {
         link: 'l',
       },
     ],
+    replacementValues: [],
   };
 
   it ('should change state to hybrid-services-connector-sidepanel.alarm-details in goToAlarm() when newLink is true', () => {

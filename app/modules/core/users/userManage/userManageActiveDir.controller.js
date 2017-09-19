@@ -7,7 +7,7 @@ require('./_user-manage.scss');
     .controller('UserManageActiveDirController', UserManageActiveDirController);
 
   /* @ngInject */
-  function UserManageActiveDirController($state, UserCsvService, OnboardService, $timeout) {
+  function UserManageActiveDirController(FeatureToggleService, OnboardService, $state, $timeout, UserCsvService) {
     var vm = this;
 
     vm.onInit = onInit;
@@ -16,11 +16,17 @@ require('./_user-manage.scss');
     vm.manageType = 'manual';
     vm.maxUsersInCSV = UserCsvService.maxUsersInCSV;
     vm.maxUsersInManual = OnboardService.maxUsersInManual;
-
     vm.onInit();
 
+    var isAtlasEmailSuppressToggle = false;
+    vm.ManageType = require('./userManage.keys').ManageType;
+
     //////////////////
-    function onInit() { }
+    function onInit() {
+      FeatureToggleService.atlasEmailSuppressGetStatus().then(function (toggle) {
+        isAtlasEmailSuppressToggle = toggle;
+      });
+    }
 
     function onTurnOffDS() {
       $state.modal.dismiss();
@@ -32,18 +38,25 @@ require('./_user-manage.scss');
     }
 
     function onNext() {
-      switch (vm.manageType) {
-        case 'manual':
-          $state.go('users.add');
-          break;
+      if (isAtlasEmailSuppressToggle) {
+        $state.go('users.manage.emailSuppress', {
+          manageType: vm.manageType,
+          prevState: 'users.manage.activedir',
+        });
+      } else {
+        switch (vm.manageType) {
+          case vm.ManageType.MANUAL:
+            $state.go('users.add');
+            break;
 
-        case 'bulk':
-          $state.go('users.csv');
-          break;
+          case vm.ManageType.BULK:
+            $state.go('users.csv');
+            break;
 
-        case 'advanced':
-          $state.go('users.manage.advanced.add.ob.syncStatus');
-          break;
+          case vm.ManageType.ADVANCED_DS:
+            $state.go('users.manage.advanced.add.ob.syncStatus');
+            break;
+        }
       }
     }
   }
