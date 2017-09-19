@@ -233,16 +233,32 @@
 
     $scope.$watch('options.configureSSO', function (updatedConfigureSSOValue) {
       if ($rootScope.ssoEnabled && updatedConfigureSSOValue === 1) {
-        var r = $window.confirm($translate.instant('ssoModal.disableSSOByRadioWarning'));
-        if (r === true) {
-          $scope.options.configureSSO = 1;
-          $scope.options.deleteSSOBySwitchingRadio = true;
-          deleteSSO();
-        } else {
-          $scope.options.modifySSO = false; //reset modify flag if user clicks cancel
-          $scope.options.configureSSO = 0;
-          $scope.options.deleteSSOBySwitchingRadio = false;
-        }
+        // Check if emails are suppressed or not
+        var isOnBoardingEmailSuppressed = false;
+        var r = false;
+        var params = {
+          basicInfo: true,
+          disableCache: false,
+        };
+        Orgservice.getAdminOrgAsPromise(null, params).then(function (response) {
+          isOnBoardingEmailSuppressed = response.data.isOnBoardingEmailSuppressed || false;
+          if (isOnBoardingEmailSuppressed) {
+            r = $window.confirm($translate.instant('ssoModal.disableSSOByRadioWarningWhenEmailsSuppressed'));
+          } else {
+            r = $window.confirm($translate.instant('ssoModal.disableSSOByRadioWarning'));
+          }
+          if (r === true) {
+            $scope.options.configureSSO = 1;
+            $scope.options.deleteSSOBySwitchingRadio = true;
+            Orgservice.setOrgEmailSuppress(false).then(function () {
+              deleteSSO();
+            });
+          } else {
+            $scope.options.modifySSO = false; //reset modify flag if user clicks cancel
+            $scope.options.configureSSO = 0;
+            $scope.options.deleteSSOBySwitchingRadio = false;
+          }
+        });
       }
     });
 
