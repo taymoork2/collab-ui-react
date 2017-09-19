@@ -13,6 +13,7 @@
     /*jshint validthis: true */
     var vm = this;
 
+    var firstTimeZoneChanged = true;
     vm.calendar = null;
 
     vm.save = save;
@@ -381,13 +382,14 @@
         // copy value from modal to the ui model
         vm.ui.timeZone = vm.timeZone;
 
-        if (_.isUndefined(vm.aaModel.aaRecord.assignedTimeZone)) {
+        if (firstTimeZoneChanged) {
           // log event for first-time timezone change in a schedule
           var type = 'change';
           Analytics.trackEvent(AAMetricNameService.TIME_ZONE, {
             type: type,
             timezone: vm.ui.timeZone.id,
           });
+          firstTimeZoneChanged = false;
         }
 
         // update model
@@ -647,6 +649,7 @@
     function activate() {
       vm.aaModel = AAModelService.getAAModel();
       vm.ui = AAUiModelService.getUiModel();
+      vm.aaModel.aaRecord.assignedTimeZone = vm.ui.timeZone.id;
       $timeout(function () {
         populateUiModel();
       }, 250);
