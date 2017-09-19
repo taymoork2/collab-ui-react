@@ -7505,7 +7505,7 @@
         "fileBrowser": "file browser",
         "uploadingImage": "Uploading image...",
         "uploadDesc": "Upload an image of maximum 1MB. Supported file type is PNG.",
-        "previewDesc": "To edit, upload a new image of maximum 1MB. Supported file types is PNG.",
+        "previewDesc": "To edit, upload a new image of maximum 1MB. Supported file type is PNG.",
         "defaultAvatar": "If no image is uploaded, this default image is used.",
         "uploadBestResults": "For best results make sure that your image has a transparent background with no padding.",
         "dragDropDesc": "Drag and drop a file or use the ",
