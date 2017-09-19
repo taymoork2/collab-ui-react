@@ -22,8 +22,8 @@ describe('Controller: AABuilderActionsCtrl', function () {
 
   var sortedOptions = [
     {
-	  title: 'autoAttendant.actionCallerInput',
-	}, {
+      title: 'autoAttendant.actionCallerInput',
+    }, {
       title: 'autoAttendant.actionDecision',
     }, {
       title: 'autoAttendant.actionPhoneMenu',
