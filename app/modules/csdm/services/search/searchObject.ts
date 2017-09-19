@@ -41,7 +41,7 @@ export class SearchObject {
   public hasError: boolean;
   public lastGoodQuery: string;
   private parsedQuery: ISearchElement;
-  private currentFilterValue: string;
+  public currentFilterValue: string;
 
   private constructor() {
   }

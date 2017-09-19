@@ -83,7 +83,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
   public searchChange() {
     if (this.lastSearchObject && this.lastSearchObject.equals(this.currentSearchObject)) {
       return;
-    } else if (this.currentSearchObject.hasError) {
+    } else if (this.currentSearchObject.hasError && this.lastSearchObject.currentFilterValue === this.currentSearchObject.currentFilterValue) {
       return;
     }
     const search = _.cloneDeep(this.currentSearchObject);
