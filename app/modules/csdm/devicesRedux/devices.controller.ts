@@ -3,14 +3,13 @@ import { SearchObject } from '../services/search/searchObject';
 import { SearchResult } from '../services/search/searchResult';
 import { IToolkitModalService } from '../../core/modal/index';
 import { Notification } from 'modules/core/notifications';
+
 require('./_devices.scss');
 
 export class DevicesCtrl {
   public anyDevicesOrCodesLoaded = true; //TODO remove
   public searchMinimized = true;
   public searchInteraction = new SearchInteraction();
-  private _emptydatasource = false;
-  private _emptysearchresult = false;
   public issearching = false;
   private _searchResult: SearchResult;
   private _searchObject: SearchObject;
@@ -40,13 +39,12 @@ export class DevicesCtrl {
   //region for add device/place button
 
   /* @ngInject */
-  constructor(
-    private $modal: IToolkitModalService,
-    AccountOrgService,
-    private DeviceExportService,
-    private $translate: ng.translate.ITranslateService,
-    private Notification: Notification,
-    private WizardFactory, private $state, private FeatureToggleService, private $q, private Userservice, private ServiceDescriptorService, private Authinfo) {
+  constructor(private $modal: IToolkitModalService,
+              AccountOrgService,
+              private DeviceExportService,
+              private $translate: ng.translate.ITranslateService,
+              private Notification: Notification,
+              private WizardFactory, private $state, private FeatureToggleService, private $q, private Userservice, private ServiceDescriptorService, private Authinfo) {
     this.initForAddButton();
     AccountOrgService.getAccount(Authinfo.getOrgId())
       .then((response) => {
@@ -69,6 +67,7 @@ export class DevicesCtrl {
   set searchResult(value: SearchResult) {
     this._searchResult = value;
   }
+
   public initializing(): boolean {
     return !(this._searchObject || this._searchResult);
   }
@@ -76,12 +75,15 @@ export class DevicesCtrl {
   public showresult(): boolean {
     return !this.initializing() && !this.emptydatasource() && !this.emptysearchresult();
   }
+
   public emptysearchresult(): boolean {
-    return this._emptysearchresult;
+    return this._searchObject && this._searchObject.getSearchQuery() !== ''
+      && (this._searchResult && this._searchResult.hits.total === 0);
   }
 
   public emptydatasource(): boolean {
-    return this._emptydatasource;
+    return this._searchObject && this._searchObject.getSearchQuery() === ''
+      && (this._searchResult && this._searchResult.hits.total === 0);
   }
 
   get searchObject(): SearchObject {
@@ -123,6 +125,7 @@ export class DevicesCtrl {
       });
     });
   }
+
   private exportStatus(percent) {
     if (percent === 100) {
       this.exportProgressDialog.close();
@@ -137,6 +140,7 @@ export class DevicesCtrl {
       this.Notification.warning(warn);
     }
   }
+
   public addToSearch(field: string, query: string) {
     this.searchInteraction.addToSearch(field, query);
   }
@@ -146,10 +150,7 @@ export class DevicesCtrl {
   }
 
   public searchResultChanged(result: SearchResult) {
-    const searchString = this._searchObject.getSearchQuery();
     this._searchResult = result;
-    this._emptydatasource = (searchString === '') && (this._searchResult && this._searchResult.hits.total === 0);
-    this._emptysearchresult = (searchString !== '') && (this._searchResult && this._searchResult.hits.total === 0);
     this.issearching = false;
   }
 
@@ -198,9 +199,9 @@ export class DevicesCtrl {
 
   private isOrgEntitledToHuron() {
     return _.filter(this.Authinfo.getLicenses(),
-        function (l: any) {
-          return l.licenseType === 'COMMUNICATION';
-        }).length > 0;
+      function (l: any) {
+        return l.licenseType === 'COMMUNICATION';
+      }).length > 0;
   }
 
   private fetchDetailsForLoggedInUser() {
