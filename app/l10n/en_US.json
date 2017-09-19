@@ -5385,7 +5385,6 @@
     "warning": "Please select a number assigned to a user or Cisco Spark Call feature"
   },
   "emergencyServices": {
-    "warnNoExternNumber": "Before you can add an Emergency Callback Number to this location you need to add a user or place with an external number.",
     "warnNoPstn": "Once you have PSTN set up, you will need to add Emergency Service information to locations",
     "locationUnknown": "Unknown location - ID missing"
   },

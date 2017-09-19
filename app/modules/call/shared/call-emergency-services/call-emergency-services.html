@@ -1,23 +1,18 @@
 <div class="call-emergency-services">
   <div ng-if="$ctrl.showES()">
-
-    <label class="sub-section__label" translate="spacesPage.ecn"></label>
-    <div ng-form="$ctrl.emergencyCallbackNumberForm">
-      <cs-select
-        ng-model="$ctrl.number"
-        options="$ctrl.numberOptions"
-        labelfield="label"
-        valuefield="value"
-        placeholder="$ctrl.selectHolder"
-        cs-required="$ctrl.isNumberRequired()"
-        is-disabled="!$ctrl.allowEcnSetup"
-        filter="true">
-      </cs-select>
-      <div ng-if="!$ctrl.allowEcnSetup">
-        <p class="ces-warning">
-          <span><i class="icon icon-warning warning"></i></span>
-          <span translate="emergencyServices.warnNoExternNumber"></span>
-        </p>
+    <div ng-if="$ctrl.allowEcnSetup">
+      <label class="sub-section__label" translate="spacesPage.ecn"></label>
+      <div ng-form="$ctrl.emergencyCallbackNumberForm">
+        <cs-select
+          ng-model="$ctrl.number"
+          options="$ctrl.numberOptions"
+          labelfield="label"
+          valuefield="value"
+          placeholder="$ctrl.selectHolder"
+          cs-required="$ctrl.isNumberRequired()"
+          is-disabled="!$ctrl.allowEcnSetup"
+          filter="true">
+        </cs-select>
       </div>
     </div>
     <label class="sub-section__label ces-address-label" translate="spacesPage.esa"></label>
