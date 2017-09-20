@@ -108,7 +108,7 @@ class ReleaseChannelSectionController implements ng.IComponentController {
       },
       controller: 'ChangeReleaseChannelDialogController',
       controllerAs: 'vm',
-      templateUrl: 'modules/hercules/fusion-pages/change-release-channel-dialog/change-release-channel-dialog.html',
+      template: require('modules/hercules/fusion-pages/change-release-channel-dialog/change-release-channel-dialog.html'),
       type: 'dialog',
     })
     .result
@@ -168,7 +168,7 @@ class ReleaseChannelSectionController implements ng.IComponentController {
 
 export class ReleaseChannelSectionComponent implements ng.IComponentOptions {
   public controller = ReleaseChannelSectionController;
-  public templateUrl = 'modules/hercules/fusion-pages/release-channel-section/release-channel-section.tpl.html';
+  public template = require('modules/hercules/fusion-pages/release-channel-section/release-channel-section.tpl.html');
   public bindings = {
     cluster: '<',
     resourceGroup: '<',

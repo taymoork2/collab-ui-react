@@ -37,7 +37,7 @@ class PrivateTrunkSettingsPageComponentCtrl implements ng.IComponentController {
 
 export class PrivateTrunkSettingsPageComponent implements ng.IComponentOptions {
   public controller = PrivateTrunkSettingsPageComponentCtrl;
-  public templateUrl = 'modules/hercules/private-trunk/private-trunk-rename-and-delete/private-trunk-settings-page.component.html';
+  public template = require('modules/hercules/private-trunk/private-trunk-rename-and-delete/private-trunk-settings-page.component.html');
   public bindings = {
     trunkId: '<',
   };

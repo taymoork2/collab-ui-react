@@ -37,7 +37,7 @@ class CallPickupNameCtrl implements ng.IComponentController {
 
 export class CallPickupNameComponent implements ng.IComponentOptions {
   public controller = CallPickupNameCtrl;
-  public templateUrl = 'modules/call/features/call-pickup/call-pickup-name/call-pickup-name.component.html';
+  public template = require('modules/call/features/call-pickup/call-pickup-name/call-pickup-name.component.html');
   public bindings = {
     onUpdate: '&',
     callPickupName: '<',

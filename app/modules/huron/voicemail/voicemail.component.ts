@@ -31,7 +31,7 @@ class VoicemailCtrl implements ng.IComponentController {
   public save() {
     if (!this.enableVoicemail) {
       this.$modal.open({
-        templateUrl: 'modules/huron/voicemail/disableConfirmation.tpl.html',
+        template: require('modules/huron/voicemail/disableConfirmation.tpl.html'),
         scope: this.$scope,
         type: 'dialog',
       }).result.then(() => {
@@ -68,7 +68,7 @@ class VoicemailCtrl implements ng.IComponentController {
 
 export class VoicemailComponent implements ng.IComponentOptions {
   public controller = VoicemailCtrl;
-  public templateUrl = 'modules/huron/voicemail/voicemail.html';
+  public template = require('modules/huron/voicemail/voicemail.html');
   public bindings = {
     ownerId: '<',
   };

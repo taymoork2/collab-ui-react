@@ -61,7 +61,7 @@ class PrimaryLine implements ng.IComponentController {
 
 export class PrimaryLineComponent implements ng.IComponentOptions {
   public controller = PrimaryLine;
-  public templateUrl = 'modules/huron/primaryLine/primaryLine.html';
+  public template = require('modules/huron/primaryLine/primaryLine.html');
   public bindings = {
     ownerId: '=',
     lineSelection: '=',

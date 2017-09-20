@@ -214,7 +214,10 @@ describe('Controller: AAMessageTypeCtrl', function () {
       });
 
       it('should be able to create dynamicList', function () {
-        var c;
+        var ctrl;
+        var $event = {
+          keyCode: 8,
+        };
         var action = AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', '');
         action.dynamicList = [{
           say: {
@@ -230,16 +233,48 @@ describe('Controller: AAMessageTypeCtrl', function () {
         aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
         aaUiModel.openHours.addEntryAt(0, menuEntry);
         // setup the options menu
-        c = controller('AAMessageTypeCtrl', {
+        ctrl = controller('AAMessageTypeCtrl', {
           $scope: $scope,
         });
 
-        c.actionEntry = menuEntry.actions[0];
-        expect(c.actionEntry.dynamicList[0].say.value).toEqual('');
-        c.saveDynamicUi();
-        expect(c.actionEntry.dynamicList[0].say.value).toEqual('this is test say message');
-        expect(c.actionEntry.dynamicList[1].say.value).toEqual('Test Attribute');
-        expect(c.actionEntry.dynamicList[1].isDynamic).toEqual(true);
+        ctrl.actionEntry = menuEntry.actions[0];
+        expect(ctrl.actionEntry.dynamicList[0].say.value).toEqual('');
+        ctrl.saveDynamicUi($event);
+        expect(ctrl.actionEntry.dynamicList[0].say.value).toEqual('this is test say message');
+        expect(ctrl.actionEntry.dynamicList[1].say.value).toEqual('Test Attribute');
+        expect(ctrl.actionEntry.dynamicList[1].isDynamic).toEqual(true);
+      });
+
+      it('should be able to create dynamicList with keycode other than backspace', function () {
+        var ctrl;
+        var $event1 = {
+          keyCode: 9,
+        };
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', '');
+        action.dynamicList = [{
+          say: {
+            value: '',
+            voice: '',
+          },
+          isDynamic: false,
+          htmlModel: '',
+        }];
+        menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        menuEntry.addAction(action);
+
+        aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+        aaUiModel.openHours.addEntryAt(0, menuEntry);
+        // setup the options menu
+        ctrl = controller('AAMessageTypeCtrl', {
+          $scope: $scope,
+        });
+
+        ctrl.actionEntry = menuEntry.actions[0];
+        expect(ctrl.actionEntry.dynamicList[0].say.value).toBe('');
+        ctrl.saveDynamicUi($event1);
+        expect(ctrl.actionEntry.dynamicList[0].say.value).toBe('this is test say message');
+        expect(ctrl.actionEntry.dynamicList[1].say.value).toBe('Test Attribute');
+        expect(ctrl.actionEntry.dynamicList[1].isDynamic).toBe(true);
       });
     });
 

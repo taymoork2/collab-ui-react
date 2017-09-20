@@ -321,7 +321,7 @@ require('./_feature-landing.scss');
 
     function openModal() {
       var modalInstance = $modal.open({
-        templateUrl: 'modules/huron/features/newFeature/newFeatureModal.tpl.html',
+        template: require('modules/huron/features/newFeature/newFeatureModal.tpl.html'),
         controller: 'NewFeatureModalCtrl',
         controllerAs: 'newFeatureModalCtrl',
       });

@@ -43,7 +43,7 @@ class CopyLocationCtrl implements ng.IComponentController {
 
 export class CopyLocationComponent implements ng.IComponentOptions {
   public controller = CopyLocationCtrl;
-  public templateUrl = 'modules/call/locations/locations-copy/locations-copy.component.html';
+  public template = require('modules/call/locations/locations-copy/locations-copy.component.html');
   public bindings = {
     dismiss: '&',
     close: '&',

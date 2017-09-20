@@ -3,7 +3,10 @@
 describe('Component: CbgDetails', function () {
   var $q, $state, $modal, $scope, $stateParams, $window, $componentCtrl, $httpBackend;
   var obj, ctrl, cbgService, gemService, Notification, UrlConfig;
-  var preData = getJSONFixture('gemini/common.json');
+
+  beforeEach(function () {
+    this.preData = _.cloneDeep(getJSONFixture('gemini/common.json'));
+  });
 
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Gemini'));
@@ -13,9 +16,6 @@ describe('Component: CbgDetails', function () {
 
   afterEach(function () {
     $q = $state = $httpBackend = UrlConfig = $modal = $scope = $stateParams = $window = $componentCtrl = obj = ctrl = cbgService = gemService = Notification = undefined;
-  });
-  afterAll(function () {
-    preData = undefined;
   });
 
   function dependencies(_$q_, _$state_, _UrlConfig_, _$httpBackend_, _$modal_, _$window_, _$rootScope_, _$stateParams_, _$componentController_, _Notification_, _cbgService_, _gemService_) {
@@ -56,14 +56,14 @@ describe('Component: CbgDetails', function () {
     };
 
     var getCountriesUrl = UrlConfig.getGeminiUrl() + 'countries';
-    $httpBackend.expectGET(getCountriesUrl).respond(200, preData.getCountries);
+    $httpBackend.expectGET(getCountriesUrl).respond(200, this.preData.getCountries);
     $httpBackend.flush();
 
     ctrl = $componentCtrl('cbgDetails', { $scope: $scope, $state: $state });
   }
 
   function setMockData(key, val) {
-    preData.common = {
+    this.preData.common = {
       links: [],
       content: {
         data: {
@@ -77,7 +77,7 @@ describe('Component: CbgDetails', function () {
         },
       },
     };
-    var info = preData.common;
+    var info = this.preData.common;
     _.set(info, key, val);
     return info;
   }
@@ -85,10 +85,10 @@ describe('Component: CbgDetails', function () {
   describe('$onInit', function () {
     function initReturnValue(catchStatus) {
       obj = {};
-      obj.Notes = setMockData('content.data.body', preData.getNotes);
-      obj.Histories = setMockData('content.data.body', preData.getHistories);
-      obj.RemedyTicket = setMockData('content.data', preData.getRemedyTicket);
-      obj.CurrentCallbackGroup = setMockData('content.data.body', preData.getCurrentCallbackGroup);
+      obj.Notes = setMockData.call(this, 'content.data.body', this.preData.getNotes);
+      obj.Histories = setMockData.call(this, 'content.data.body', this.preData.getHistories);
+      obj.RemedyTicket = setMockData.call(this, 'content.data', this.preData.getRemedyTicket);
+      obj.CurrentCallbackGroup = setMockData.call(this, 'content.data.body', this.preData.getCurrentCallbackGroup);
 
       cbgService.getNotes.and.returnValue($q.resolve(obj.Notes));
       cbgService.getHistories.and.returnValue($q.resolve(obj.Histories));
@@ -101,7 +101,7 @@ describe('Component: CbgDetails', function () {
     }
 
     it('should call notification.notify when get histories error', function () {
-      initReturnValue();
+      initReturnValue.call(this);
       obj.Histories.content.data.returnCode = 1000;
       ctrl.$onInit();
       $scope.$apply();
@@ -109,7 +109,7 @@ describe('Component: CbgDetails', function () {
     });
 
     it('should get all correct data on init when show the details', function () {
-      initReturnValue();
+      initReturnValue.call(this);
       ctrl.$onInit();
       $scope.$apply();
       $scope.$emit('cbgNotesUpdated', obj.Notes);
@@ -117,7 +117,7 @@ describe('Component: CbgDetails', function () {
     });
 
     it('when status equal A', function () {
-      initReturnValue();
+      initReturnValue.call(this);
       obj.CurrentCallbackGroup.content.data.body.status = 'A';
       ctrl.$onInit();
       $scope.$apply();
@@ -125,7 +125,7 @@ describe('Component: CbgDetails', function () {
     });
 
     it('when status equal null', function () {
-      initReturnValue();
+      initReturnValue.call(this);
       obj.CurrentCallbackGroup.content.data.body.status = '';
       ctrl.$onInit();
       $scope.$apply();
@@ -133,14 +133,14 @@ describe('Component: CbgDetails', function () {
     });
 
     it('Must throw Notification.errorResponse', function () {
-      initReturnValue(true);
+      initReturnValue.call(this, true);
       ctrl.$onInit();
       $scope.$apply();
       expect(Notification.errorResponse).toHaveBeenCalled();
     });
 
     it('should get all error data on init when show the details', function () {
-      initReturnValue();
+      initReturnValue.call(this);
       obj.Notes.content.data.returnCode = 1000;
       obj.Histories.content.data.returnCode = 1000;
       obj.CurrentCallbackGroup.content.data.returnCode = 1000;
@@ -160,7 +160,7 @@ describe('Component: CbgDetails', function () {
     beforeEach(initModel);
 
     it('should call $state.reload on updateCallbackGroupStatus', function () {
-      var response = preData.common;
+      var response = this.preData.common;
       response.content.data.returnCode = 0;
       response.content.data.body = 'ff808081582992dd01588fd31ee80fa2';
       cbgService.updateCallbackGroupStatus.and.returnValue($q.resolve(response));
@@ -177,7 +177,7 @@ describe('Component: CbgDetails', function () {
     });
 
     it('should call Notification.notify on updateCallbackGroupStatus', function () {
-      var response = preData.common;
+      var response = this.preData.common;
       response.content.data.returnCode = 1000;
       cbgService.updateCallbackGroupStatus.and.returnValue($q.resolve(response));
       ctrl.onApprove();
@@ -186,7 +186,7 @@ describe('Component: CbgDetails', function () {
     });
 
     it('should call $state.reload on updateCallbackGroupStatus', function () {
-      var response = preData.common;
+      var response = this.preData.common;
       response.content.data.returnCode = 0;
       response.content.data.body = 'ff808081582992dd01588fd31ee80fa2';
       cbgService.updateCallbackGroupStatus.and.returnValue($q.resolve(response));
@@ -196,7 +196,7 @@ describe('Component: CbgDetails', function () {
     });
 
     it('should return a boolean for ctrl.btnCompleteLoading', function () {
-      var response = preData.common;
+      var response = this.preData.common;
       response.content.data.returnCode = 0;
       cbgService.updateCallbackGroupStatus.and.returnValue($q.resolve(response));
       ctrl.onComplete();

@@ -68,7 +68,7 @@ export class ClusterCardController implements ng.IComponentController {
       },
       controller: 'ClusterDeregisterController',
       controllerAs: 'clusterDeregister',
-      templateUrl: 'modules/hercules/rename-and-deregister-cluster-section/deregister-dialog.html',
+      template: require('modules/hercules/rename-and-deregister-cluster-section/deregister-dialog.html'),
       type: 'dialog',
     })
     .result
@@ -168,7 +168,7 @@ export class ClusterCardController implements ng.IComponentController {
 
 export class ClusterCardComponent implements ng.IComponentOptions {
   public controller = ClusterCardController;
-  public templateUrl = 'modules/hercules/cluster-card/hs-cluster-card.component.html';
+  public template = require('modules/hercules/cluster-card/hs-cluster-card.component.html');
   public bindings = {
     cluster: '<',
   };

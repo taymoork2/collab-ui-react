@@ -60,7 +60,6 @@
   require('./app.dependencies');
 
   angular.module('wx2AdminWebClientApp', [
-    require('./app.templates'),
     require('modules/core/scripts/controllers/bodyCtrl'),
     require('modules/core/account').default,
     require('modules/core/analytics'),

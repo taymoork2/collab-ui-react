@@ -67,7 +67,7 @@ class DirectoryNumberListCtrl implements ng.IComponentController {
 angular
   .module('Huron')
   .component('directoryNumberList', {
-    templateUrl: 'modules/huron/overview/directoryNumberList.html',
+    template: require('modules/huron/overview/directoryNumberList.html'),
     controller: DirectoryNumberListCtrl,
     bindings: {
       directoryNumbers: '<',

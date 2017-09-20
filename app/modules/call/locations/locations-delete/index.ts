@@ -6,7 +6,6 @@ export { DeleteLocationComponent };
 
 export default angular
   .module('call.locations.delete-location', [
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     notifications,
     locationsServiceModule,

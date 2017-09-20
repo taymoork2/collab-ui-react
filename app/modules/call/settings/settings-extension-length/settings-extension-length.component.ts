@@ -183,7 +183,7 @@ class ExtensionLengthCtrl implements ng.IComponentController {
 
 export class ExtensionLengthComponent implements ng.IComponentOptions {
   public controller = ExtensionLengthCtrl;
-  public templateUrl = 'modules/call/settings/settings-extension-length/settings-extension-length.component.html';
+  public template = require('modules/call/settings/settings-extension-length/settings-extension-length.component.html');
   public bindings = {
     firstTimeSetup: '<',
     extensionLength: '<',

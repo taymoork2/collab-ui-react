@@ -227,7 +227,7 @@ export class SetupWizardService {
           subscriptionId: pendingSubscription.subscriptionId!,
         });
       });
-      if (this.pendingSubscriptions.length === 1) {
+      if (!_.isEmpty(this.pendingSubscriptions)) {
         this.actingSubscription = this.pendingSubscriptions[0];
       }
       this.serviceDataHasBeenInitialized = true;

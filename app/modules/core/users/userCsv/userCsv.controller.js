@@ -193,7 +193,7 @@ require('./_user-csv.scss');
       if (vm.model.isProcessing) {
         $modal.open({
           type: 'dialog',
-          templateUrl: 'modules/core/users/userCsv/userCsvStopImportConfirm.tpl.html',
+          template: require('modules/core/users/userCsv/userCsvStopImportConfirm.tpl.html'),
         }).result.then(function () {
           // cancel the current import
           vm.cancelProcessCsv();
@@ -230,7 +230,7 @@ require('./_user-csv.scss');
       if (Authinfo.isOnline()) {
         $modal.open({
           type: 'dialog',
-          templateUrl: 'modules/core/users/userCsv/licenseUnavailabilityModal.tpl.html',
+          template: require('modules/core/users/userCsv/licenseUnavailabilityModal.tpl.html'),
         }).result.then(function () {
           $state.go('my-company.subscriptions');
         });
@@ -605,7 +605,7 @@ require('./_user-csv.scss');
         var directoryNumber = '', directLine = '';
         var licenseList = [];
         var entitleList = [];
-        var numOfActiveMessageLicenses = 0;
+        var numOfActiveCallLicenses = 0;
         var isWrongLicenseFormat = false;
         var calendarServiceResourceGroup = null;
         var callServiceResourceGroup = null;
@@ -687,9 +687,9 @@ require('./_user-csv.scss');
             if (header.license) { // if this is a license column
               if (isTrue(input)) {
                 licenseList.push(new LicenseFeature(header.license, true));
-                // Check Active Spark Message
-                if (header.name.toUpperCase().indexOf('SPARK MESSAGE') !== -1) {
-                  numOfActiveMessageLicenses++;
+                // Check Active Spark Call
+                if (header.name.toUpperCase().indexOf('SPARK CALL') !== -1) {
+                  numOfActiveCallLicenses++;
                 }
               } else if (isFalse(input)) {
                 if (vm.model.enableRemove) {
@@ -726,9 +726,9 @@ require('./_user-csv.scss');
           if (isWrongLicenseFormat) {
             processingError = true;
             addUserError(csvRowIndex, id, $translate.instant('firstTimeWizard.csvWrongLicenseFormat'));
-          } else if (numOfActiveMessageLicenses > 1) {
+          } else if (numOfActiveCallLicenses > 1) {
             processingError = true;
-            addUserError(csvRowIndex, id, $translate.instant('firstTimeWizard.tooManyActiveMessageLicenses'));
+            addUserError(csvRowIndex, id, $translate.instant('firstTimeWizard.tooManyActiveSparkCallLicenses'));
           } else {
             uniqueEmails.push(id);
             // Do not send name and displayName if it's a DirSync org

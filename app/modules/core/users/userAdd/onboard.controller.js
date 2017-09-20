@@ -8,7 +8,7 @@ require('./_user-add.scss');
     .controller('OnboardCtrl', OnboardCtrl);
 
   /*@ngInject*/
-  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Analytics, Authinfo, Config, FeatureToggleService, DialPlanService, Log, LogMetricsService, MessengerInteropService, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, LocationsService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact, ServiceSetup, ExternalNumberPool, DirSyncService) {
+  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Analytics, Authinfo, Config, FeatureToggleService, DialPlanService, Log, LogMetricsService, MessengerInteropService, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, LocationsService, NumberService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact, ServiceSetup, ExternalNumberPool, DirSyncService) {
     var vm = this;
 
     $scope.hasAccount = Authinfo.hasAccount();
@@ -30,6 +30,8 @@ require('./_user-add.scss');
     $scope.timer = 0;
     $scope.searchPlaceholder = $translate.instant('usersPage.convertUserSearch');
     $scope.manageUsers = $stateParams.manageUsers;
+
+    $scope.labelField = '';
 
     $scope.loadLocations = loadLocations;
     $scope.loadInternalNumberPool = loadInternalNumberPool;
@@ -182,7 +184,7 @@ require('./_user-add.scss');
       if (Authinfo.isOnline()) {
         $modal.open({
           type: 'dialog',
-          templateUrl: 'modules/core/users/userAdd/licenseErrorModal.tpl.html',
+          template: require('modules/core/users/userAdd/licenseErrorModal.tpl.html'),
         }).result.then(function () {
           $previousState.forget('modalMemo');
           $state.go('my-company.subscriptions');
@@ -263,19 +265,18 @@ require('./_user-add.scss');
     function returnInternalNumberlist(pattern, locationUuid) {
       if ($scope.ishI1484) {
         loadLocationInternalNumberPool(pattern, locationUuid);
-      } else if (pattern) {
-        loadInternalNumberPool(pattern);
       } else {
-        return $scope.internalNumberPool;
+        loadInternalNumberPool(pattern);
       }
     }
 
     function loadLocationInternalNumberPool(pattern, locationUuid, userEntity) {
-      return TelephonyInfoService.loadLocationInternalNumberPool(pattern, $scope.PATTERN_LIMIT, locationUuid)
+      $scope.labelField = 'siteToSite';
+      return NumberService.getNumberList(pattern, 'internal', false, null, null, null, locationUuid)
         .then(function (internalNumberPool) {
           $scope.internalNumberPool = internalNumberPool;
           if (userEntity) {
-            userEntity.assignedDn.pattern = internalNumberPool[0].pattern;
+            userEntity.assignedDn.pattern = internalNumberPool[0].internal;
           }
           return $scope.internalNumberPool;
         }).catch(function (response) {
@@ -285,12 +286,14 @@ require('./_user-add.scss');
     }
 
     function loadInternalNumberPool(pattern) {
-      return TelephonyInfoService.loadInternalNumberPool(pattern, $scope.PATTERN_LIMIT).then(function (internalNumberPool) {
-        $scope.internalNumberPool = internalNumberPool;
-      }).catch(function (response) {
-        $scope.internalNumberPool = [];
-        Notification.errorResponse(response, 'directoryNumberPanel.internalNumberPoolError');
-      });
+      $scope.labelField = 'number';
+      return NumberService.getNumberList(pattern, 'internal', false, null, null, null, null)
+        .then(function (internalNumberPool) {
+          $scope.internalNumberPool = internalNumberPool;
+        }).catch(function (response) {
+          $scope.internalNumberPool = [];
+          Notification.errorResponse(response, 'directoryNumberPanel.internalNumberPoolError');
+        });
     }
 
     function loadLocations() {
@@ -401,12 +404,18 @@ require('./_user-add.scss');
       };
       for (var i = 0; i < $scope.usrlist.length - 1; i++) {
         for (var j = i + 1; j < $scope.usrlist.length; j++) {
-          if (!_.isUndefined($scope.usrlist[i].assignedDn) && !_.isUndefined($scope.usrlist[j].assignedDn) && ($scope.usrlist[i].assignedDn.uuid !== 'none') && ($scope.usrlist[i].assignedDn.pattern === $scope.usrlist[j].assignedDn.pattern)) {
-            //same extension across different locations are allowed to be set
-            if ($scope.ishI1484 && $scope.usrlist[i].selectedLocation.uuid !== $scope.usrlist[j].selectedLocation.uuid) {
-              break;
+          if ($scope.ishI1484) {
+            if (!_.isUndefined($scope.usrlist[i].assignedDn) && !_.isUndefined($scope.usrlist[j].assignedDn) && ($scope.usrlist[i].assignedDn.uuid !== 'none') && ($scope.usrlist[i].assignedDn.siteToSite === $scope.usrlist[j].assignedDn.siteToSite)) {
+              //same extension across different locations are allowed to be set
+              if ($scope.usrlist[i].selectedLocation.uuid !== $scope.usrlist[j].selectedLocation.uuid) {
+                break;
+              }
+              didDnDupe.dnDupe = true;
             }
-            didDnDupe.dnDupe = true;
+          } else {
+            if (!_.isUndefined($scope.usrlist[i].assignedDn) && !_.isUndefined($scope.usrlist[j].assignedDn) && ($scope.usrlist[i].assignedDn.uuid !== 'none') && ($scope.usrlist[i].assignedDn.number === $scope.usrlist[j].assignedDn.number)) {
+              didDnDupe.dnDupe = true;
+            }
           }
           if (!_.isUndefined($scope.usrlist[i].externalNumber) && !_.isUndefined($scope.usrlist[j].externalNumber) && ($scope.usrlist[i].externalNumber.uuid !== 'none') && ($scope.usrlist[i].externalNumber.pattern === $scope.usrlist[j].externalNumber.pattern)) {
             didDnDupe.didDupe = true;
@@ -443,8 +452,8 @@ require('./_user-add.scss');
 
     function initToggles() {
       FeatureToggleService.supports(FeatureToggleService.features.hI1484)
-        .then(function (ishI1484) {
-          $scope.ishI1484 = ishI1484;
+        .then(function (supports) {
+          $scope.ishI1484 = supports;
         });
     }
 
@@ -529,7 +538,7 @@ require('./_user-add.scss');
           _.forEach($scope.usrlist, function (user, userIndex) {
             if ($scope.usrlist[userIndex].selectedLocation.uuid === selectedLocationColumn) {
               _.forEach(internalNumberPool, function (internalNumber, index) {
-                if (internalNumberPool[index].pattern === $scope.usrlist[userIndex].assignedDn.pattern) {
+                if (internalNumberPool[index].siteToSite === $scope.usrlist[userIndex].assignedDn.siteToSite) {
                   //if the number is present on the grid, then set its index position to 1 on the copyArray
                   copyArray[index] = 1;
                 }
@@ -539,7 +548,7 @@ require('./_user-add.scss');
           for (var i = 0; i < copyArray.length; i++) {
             //pick the first number which is not already on the grid, in copy array, the element is not 1, and that index from the internalNumberPool
             if (copyArray[i] !== 1) {
-              rowEntity.assignedDn.pattern = internalNumberPool[i].pattern;
+              rowEntity.assignedDn.siteToSite = internalNumberPool[i].siteToSite;
               break;
             }
           }
@@ -574,7 +583,7 @@ require('./_user-add.scss');
     $scope.confirmAdditionalServiceSetup = function () {
       $modal.open({
         type: 'dialog',
-        templateUrl: 'modules/core/users/userAdd/confirmLeavingDialog.tpl.html',
+        template: require('modules/core/users/userAdd/confirmLeavingDialog.tpl.html'),
       }).result.then(function () {
         $state.go('firsttimewizard');
       });
@@ -1028,7 +1037,7 @@ require('./_user-add.scss');
       'refresh-data-fn="grid.appScope.returnInternalNumberlist(filter, row.entity.selectedLocation.uuid)" wait-time="0" ' +
       'placeholder="placeholder" input-placeholder="inputPlaceholder" ' +
       'on-change-fn="grid.appScope.syncGridDidDn(row.entity, \'internalNumber\')"' +
-      'labelfield="pattern" valuefield="uuid" required="true" filter="true"' +
+      'labelfield="{{grid.appScope.labelField}}" valuefield="uuid" required="true" filter="true"' +
       ' is-warn="{{grid.appScope.checkDnOverlapsSteeringDigit(row.entity)}}" warn-msg="{{\'usersPage.steeringDigitOverlapWarning\' | translate: { steeringDigitInTranslation: telephonyInfo.steeringDigit } }}" > </cs-select></div>' +
       '<div ng-show="row.entity.assignedDn === undefined"> ' +
       '<cs-select name="noInternalNumber" ' +
@@ -1906,9 +1915,16 @@ require('./_user-add.scss');
             userItem.location = userAndDnObj[0].selectedLocation.uuid;
           }
 
-          if (userAndDnObj[0].assignedDn && userAndDnObj[0].assignedDn.pattern.length > 0) {
-            userItem.internalExtension = userAndDnObj[0].assignedDn.pattern;
+          if ($scope.ishI1484) {
+            if (userAndDnObj[0].assignedDn && userAndDnObj[0].assignedDn.siteToSite.length > 0) {
+              userItem.internalExtension = userAndDnObj[0].assignedDn.siteToSite;
+            }
+          } else {
+            if (userAndDnObj[0].assignedDn && userAndDnObj[0].assignedDn.number.length > 0) {
+              userItem.internalExtension = userAndDnObj[0].assignedDn.number;
+            }
           }
+
           if (userAndDnObj[0].externalNumber && userAndDnObj[0].externalNumber.uuid !== 'none') {
             userItem.directLine = userAndDnObj[0].externalNumber.pattern;
           }

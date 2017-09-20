@@ -127,7 +127,7 @@ class PagingInitiatorCtrl implements ng.IComponentController {
 
 export class PgInitiatorComponent implements ng.IComponentOptions {
   public controller = PagingInitiatorCtrl;
-  public templateUrl = 'modules/call/features/paging-group/paging-group-setup-assistant/paging-group-initiator/paging-group-initiator.component.html';
+  public template = require('modules/call/features/paging-group/paging-group-setup-assistant/paging-group-initiator/paging-group-initiator.component.html');
   public bindings = {
     onUpdate: '&',
     initiatorType: '<',

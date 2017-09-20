@@ -32,7 +32,7 @@ class PreferredLanguageCtrl implements ng.IComponentController {
 
 export class PreferredLanguageComponent implements ng.IComponentOptions {
   public controller = PreferredLanguageCtrl;
-  public templateUrl = 'modules/call/settings/settings-preferred-language/settings-preferred-language.component.html';
+  public template = require('modules/call/settings/settings-preferred-language/settings-preferred-language.component.html');
   public bindings = {
     preferredLanguage: '<',
     preferredLanguageOptions: '<',

@@ -70,5 +70,5 @@ class GoogleCalendarConfigSectionCtrl implements ng.IComponentController {
 
 export class GoogleCalendarConfigSectionComponent implements ng.IComponentOptions {
   public controller = GoogleCalendarConfigSectionCtrl;
-  public templateUrl = 'modules/hercules/google-calendar-settings/google-calendar-config-section/google-calendar-config-section.html';
+  public template = require('modules/hercules/google-calendar-settings/google-calendar-config-section/google-calendar-config-section.html');
 }

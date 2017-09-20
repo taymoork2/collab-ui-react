@@ -131,7 +131,7 @@
       bindToController: true,
       controllerAs: 'hybridServicesPanelCtrl',
       controller: 'hybridServicesPanelCtrl',
-      templateUrl: 'modules/hercules/user-sidepanel/hybridServicesPanel.tpl.html',
+      template: require('modules/hercules/user-sidepanel/hybridServicesPanel.tpl.html'),
     };
   }
 })();

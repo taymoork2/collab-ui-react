@@ -34,7 +34,6 @@ class WebexReportsSearch implements ng.IComponentController {
     private Notification: Notification,
     private $state: ng.ui.IStateService,
     private SearchService: SearchService,
-    private $templateCache: ng.ITemplateCacheService,
     private $translate: ng.translate.ITranslateService,
   ) {
     this.gridData = [];
@@ -93,7 +92,7 @@ class WebexReportsSearch implements ng.IComponentController {
 
   private initDateRange() {
     this.today = moment().format('YYYY-MM-DD');
-    this.startDate = moment().subtract('days', DATERANGE).format('YYYY-MM-DD');
+    this.startDate = moment().subtract(DATERANGE, 'days').format('YYYY-MM-DD');
 
     this.endDate = this.today;
     this.storeData.endDate = this.endDate;
@@ -176,7 +175,7 @@ class WebexReportsSearch implements ng.IComponentController {
       sortable: true,
       field: 'status_',
       displayName: this.$translate.instant('webexReports.searchGridHeader.status'),
-      cellTemplate: this.$templateCache.get('modules/core/customerReports/webexReports/search/webexMeetingStatus.html'),
+      cellTemplate: require('modules/core/customerReports/webexReports/search/webexMeetingStatus.html'),
     }, {
       cellTooltip: true,
       field: 'meetingName',
@@ -214,5 +213,5 @@ class WebexReportsSearch implements ng.IComponentController {
 
 export class CustWebexReportsSearchComponent implements ng.IComponentOptions {
   public controller = WebexReportsSearch;
-  public templateUrl = 'modules/core/customerReports/webexReports/search/webexReportsSearch.html';
+  public template = require('modules/core/customerReports/webexReports/search/webexReportsSearch.html');
 }

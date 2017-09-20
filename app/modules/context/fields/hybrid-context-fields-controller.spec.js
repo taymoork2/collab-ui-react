@@ -553,7 +553,7 @@ describe('HybridContextFieldsCtrl', function () {
     it('should show field-edit elements even if feature toggle is false', function () {
       // set default result, just in case it's called
       this.featureSupportSpy.and.returnValue($q.resolve(false));
-      this.compileView('HybridContextFieldsCtrl', 'modules/context/fields/hybrid-context-fields.html', { controllerAs: 'contextFields' });
+      this.compileViewTemplate('HybridContextFieldsCtrl', require('modules/context/fields/hybrid-context-fields.html'), { controllerAs: 'contextFields' });
       var button = this.view.find('button'); // there's only one button for now
       expect(button).toExist();
       expect(button).toHaveClass('btn');

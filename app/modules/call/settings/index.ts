@@ -1,6 +1,8 @@
 import './settings.component.scss';
 
 import { HuronSettingsComponent } from './settings.component';
+import { SettingsNewDirectiveFactory } from './settings-new.directive';
+import { SettingsEditDirectiveFactory } from './settings-edit.directive';
 import { CallSettingsComponent } from './settings-location.component';
 
 //module dependancy names
@@ -37,7 +39,6 @@ import trialRegionalSettings from 'modules/core/trials/regionalSettings';
 
 export default angular
   .module('call.settings', [
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
     require('modules/huron/pstn/pstn.service').default,
@@ -76,4 +77,6 @@ export default angular
   ])
   .component('ucSettings', new HuronSettingsComponent())
   .component('ucCallSettings', new CallSettingsComponent())
+  .directive('ucSettingsNew', SettingsNewDirectiveFactory)
+  .directive('ucSettingsEdit', SettingsEditDirectiveFactory)
   .name;

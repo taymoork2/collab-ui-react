@@ -5,7 +5,6 @@ import notifications from 'modules/core/notifications';
 import modalservice from 'modules/core/modal';
 export default angular
   .module('hercules.private-trunk-deactivate', [
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
     privateTrunkService,

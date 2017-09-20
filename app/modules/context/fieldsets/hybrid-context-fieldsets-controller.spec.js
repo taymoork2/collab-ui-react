@@ -871,7 +871,7 @@ describe('HybridContextFieldsetsCtrl', function () {
 
     it('should show fieldset-edit elements even if feature toggle is false', function () {
       this.featureSupportSpy.and.returnValue($q.resolve(false));
-      this.compileView('HybridContextFieldsetsCtrl', 'modules/context/fieldsets/hybrid-context-fieldsets.html', { controllerAs: 'contextFieldsets' });
+      this.compileViewTemplate('HybridContextFieldsetsCtrl', require('modules/context/fieldsets/hybrid-context-fieldsets.html'), { controllerAs: 'contextFieldsets' });
       var button = this.view.find('button'); // there's only one button for now
       expect(button).toExist();
       expect(button).toHaveClass('btn');

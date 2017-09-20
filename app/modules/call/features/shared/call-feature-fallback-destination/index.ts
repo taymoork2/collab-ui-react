@@ -17,7 +17,6 @@ export default angular
     require('angular-resource'),
     require('modules/huron/telephony/telephonyConfig'),
     require('modules/core/scripts/services/authinfo'),
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
     require('modules/huron/telephony/cmiServices'),

@@ -115,7 +115,7 @@ class HybridImpUserSettingsComponentCtrl implements ng.IComponentController {
 
 export class HybridImpUserSettingsComponent implements ng.IComponentOptions {
   public controller = HybridImpUserSettingsComponentCtrl;
-  public templateUrl = 'modules/hercules/user-sidepanel/hybrid-imp-user-settings/hybrid-imp-user-settings.component.html';
+  public template = require('modules/hercules/user-sidepanel/hybrid-imp-user-settings/hybrid-imp-user-settings.component.html');
   public bindings = {
     userId: '<',
     userEmailAddress: '<',

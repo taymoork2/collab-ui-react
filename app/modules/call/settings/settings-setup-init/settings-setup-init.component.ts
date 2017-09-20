@@ -25,7 +25,7 @@ class SettingSetupInitCtrl {
 
 export class SettingSetupInitComponent implements ng.IComponentOptions {
   public controller = SettingSetupInitCtrl;
-  public templateUrl = 'modules/call/settings/settings-setup-init/settings-setup-init.component.html';
+  public template = require('modules/call/settings/settings-setup-init/settings-setup-init.component.html');
   public bindings = {
     ftsw: '<',
   };

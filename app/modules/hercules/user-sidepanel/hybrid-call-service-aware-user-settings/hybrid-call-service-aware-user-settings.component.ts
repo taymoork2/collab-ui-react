@@ -216,7 +216,7 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
 
 export class HybridCallServiceAwareUserSettingsComponent implements ng.IComponentOptions {
   public controller = HybridCallServiceAwareUserSettingsCtrl;
-  public templateUrl = 'modules/hercules/user-sidepanel/hybrid-call-service-aware-user-settings/hybrid-call-service-aware-user-settings.component.html';
+  public template = require('modules/hercules/user-sidepanel/hybrid-call-service-aware-user-settings/hybrid-call-service-aware-user-settings.component.html');
   public bindings = {
     userId: '<',
     userEmailAddress: '<',

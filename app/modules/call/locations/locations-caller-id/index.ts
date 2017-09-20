@@ -5,7 +5,6 @@ export { LocationCallerIdComponent };
 
 export default angular
   .module('call.locations.locations-caller-id', [
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
     phoneNumberModule,

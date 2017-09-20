@@ -48,7 +48,7 @@
   ) {
     var directive = {
       restrict: 'E',
-      templateUrl: 'modules/webex/csvDownload/webexCsvDownload.tpl.html',
+      template: require('modules/webex/csvDownload/webexCsvDownload.tpl.html'),
       scope: {
         type: '@',
         filedownloadurl: '@',

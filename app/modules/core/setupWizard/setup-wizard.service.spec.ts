@@ -48,21 +48,15 @@ describe('Service: SetupWizard Service', function () {
       });
 
       it('setting the acting subscription option should provide acting subscription information', function () {
-        expect(this.SetupWizardService.getActingOrderId()).toBeUndefined();
-        expect(this.SetupWizardService.getActingSubscriptionId()).toBeUndefined();
-        expect(this.SetupWizardService.getInternalSubscriptionId()).toBeUndefined();
-        expect(this.SetupWizardService.getActingSubscriptionServiceOrderUUID()).toBeUndefined();
-        expect(this.SetupWizardService.hasPendingServiceOrder()).toBe(false);
-
         const onChangeSpy = jasmine.createSpy('subscriptionChangeSpy');
         this.SetupWizardService.onActingSubscriptionChange(onChangeSpy);
-        this.SetupWizardService.setActingSubscriptionOption(this.pendingSubscriptionOptions[0]);
+        this.SetupWizardService.setActingSubscriptionOption(this.pendingSubscriptionOptions[1]);
 
         expect(onChangeSpy).toHaveBeenCalled();
-        expect(this.SetupWizardService.getActingOrderId()).toBe('wo-os090944');
-        expect(this.SetupWizardService.getActingSubscriptionId()).toBe('Sub-os090944');
-        expect(this.SetupWizardService.getInternalSubscriptionId()).toBe('d98a5a59-4f37-4b2e-acd0-81b7a1f13558');
-        expect(this.SetupWizardService.getActingSubscriptionServiceOrderUUID()).toBe('56f28ee2-ce5d-4b10-8077-4a170fcb1493');
+        expect(this.SetupWizardService.getActingOrderId()).toBe('wo-os090945');
+        expect(this.SetupWizardService.getActingSubscriptionId()).toBe('Sub-os090945');
+        expect(this.SetupWizardService.getInternalSubscriptionId()).toBe('9fc29d2c-c5a6-46c9-aec9-111fa3359b40');
+        expect(this.SetupWizardService.getActingSubscriptionServiceOrderUUID()).toBe('c414b051-61b9-4e2d-9427-9366b3370195');
         expect(this.SetupWizardService.hasPendingServiceOrder()).toBe(true);
       });
     });

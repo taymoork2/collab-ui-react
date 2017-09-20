@@ -6,7 +6,7 @@
     .controller('AANewTreatmentModalCtrl', AANewTreatmentModalCtrl);
 
   /* @ngInject */
-  function AANewTreatmentModalCtrl($modalInstance, $translate, $scope, AALanguageService, AACommonService, AutoAttendantCeMenuModelService, AAUiModelService, aa_schedule, aa_menu_id, aa_index, aa_key_index, aa_from_route_call, aa_from_decision) {
+  function AANewTreatmentModalCtrl($rootScope, $modalInstance, $translate, $scope, AALanguageService, AACommonService, AutoAttendantCeMenuModelService, AAUiModelService, aa_schedule, aa_menu_id, aa_index, aa_key_index, aa_from_route_call, aa_from_decision) {
     var vm = this;
     var conditional = 'conditional';
 
@@ -51,6 +51,7 @@
     vm.musicOnHold = '';
     vm.menuEntry = undefined;
     vm.ok = ok;
+    vm.cancel = cancel;
     vm.isSaveEnabled = isSaveEnabled;
     vm.uploadMohTrigger = uploadMohTrigger;
 
@@ -95,7 +96,6 @@
       return action;
     }
 
-    //else the dismiss was called
     function ok() {
       updateLanguageVoice();
       updateMaxWaitTime();
@@ -103,7 +103,13 @@
       updateFallback();
       autoValidate();
       AACommonService.setQueueSettingsStatus(true);
+      $rootScope.$broadcast('AASaveQueueSettings');
       $modalInstance.close();
+    }
+
+    function cancel() {
+      $rootScope.$broadcast('AACancelQueueSettings');
+      $modalInstance.dismiss();
     }
 
     function autoValidate() {

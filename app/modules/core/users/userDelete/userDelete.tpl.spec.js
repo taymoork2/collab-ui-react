@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Template: userDelete', function () {
-  var $compile, $scope, $templateCache, $controller, controller;
+  var $compile, $scope, $controller, controller;
   var view;
   var DELETE_BUTTON = '#deleteUserButton';
   var OK_BUTTON = '#okButton';
@@ -22,10 +22,9 @@ describe('Template: userDelete', function () {
   beforeEach(inject(dependencies));
   beforeEach(compileView);
 
-  function dependencies(_$compile_, $rootScope, _$templateCache_, _$controller_) {
+  function dependencies(_$compile_, $rootScope, _$controller_) {
     $compile = _$compile_;
     $scope = $rootScope.$new();
-    $templateCache = _$templateCache_;
     $controller = _$controller_;
   }
 
@@ -39,7 +38,7 @@ describe('Template: userDelete', function () {
     controller.isMsgrUser = false;
     controller.msgrloaded = true;
 
-    var template = $templateCache.get('modules/core/users/userDelete/userDelete.tpl.html');
+    var template = require('modules/core/users/userDelete/userDelete.tpl.html');
     view = $compile(angular.element(template))($scope);
     $scope.$apply();
   }
@@ -60,7 +59,7 @@ describe('Template: userDelete', function () {
 
   it('should have ok button with isMsgrUser enabled', function () {
     controller.isMsgrUser = true;
-    var template = $templateCache.get('modules/core/users/userDelete/userDelete.tpl.html');
+    var template = require('modules/core/users/userDelete/userDelete.tpl.html');
     view = $compile(angular.element(template))($scope);
     $scope.$apply();
 

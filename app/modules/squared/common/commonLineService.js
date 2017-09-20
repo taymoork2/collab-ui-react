@@ -6,12 +6,11 @@
     .service('CommonLineService', CommonLineService);
 
   /* @ngInject */
-  function CommonLineService(TelephonyInfoService, FeatureToggleService, Notification, $translate) {
+  function CommonLineService(TelephonyInfoService, NumberService, FeatureToggleService, Notification, $translate) {
     var entitylist = [];
     var internalNumberPool = [];
     var externalNumberPool = [];
     var telephonyInfo = {};
-    var PATTERN_LIMIT = 50;
     var nameTemplate;
 
     var service = {
@@ -75,22 +74,24 @@
     }
 
     function loadInternalNumberPool(pattern) {
-      return TelephonyInfoService.loadInternalNumberPool(pattern, PATTERN_LIMIT).then(function (internalPool) {
-        internalNumberPool = internalPool;
-      }).catch(function (response) {
-        internalNumberPool = [];
-        Notification.errorResponse(response, 'directoryNumberPanel.internalNumberPoolError');
-      });
+      return NumberService.getNumberList(pattern, 'internal', false, null, null, null, null)
+        .then(function (internalPool) {
+          internalNumberPool = internalPool;
+        }).catch(function (response) {
+          internalNumberPool = [];
+          Notification.errorResponse(response, 'directoryNumberPanel.internalNumberPoolError');
+        });
     }
 
     function loadLocationInternalNumberPool(pattern, locationId) {
-      return TelephonyInfoService.loadLocationInternalNumberPool(pattern, PATTERN_LIMIT, locationId).then(function (internalPool) {
-        internalNumberPool = internalPool;
-        return _.cloneDeep(internalNumberPool);
-      }).catch(function (response) {
-        internalNumberPool = [];
-        Notification.errorResponse(response, 'directoryNumberPanel.internalNumberPoolError');
-      });
+      return NumberService.getNumberList(pattern, 'internal', false, null, null, null, locationId)
+        .then(function (internalPool) {
+          internalNumberPool = internalPool;
+          return _.cloneDeep(internalNumberPool);
+        }).catch(function (response) {
+          internalNumberPool = [];
+          Notification.errorResponse(response, 'directoryNumberPanel.internalNumberPoolError');
+        });
     }
 
     function loadExternalNumberPool(pattern) {
@@ -160,10 +161,8 @@
         .then(function (supported) {
           if (supported) {
             loadLocationInternalNumberPool(pattern, locationId);
-          } else if (pattern) {
-            loadInternalNumberPool(pattern);
           } else {
-            return internalNumberPool;
+            loadInternalNumberPool(pattern);
           }
         });
     }

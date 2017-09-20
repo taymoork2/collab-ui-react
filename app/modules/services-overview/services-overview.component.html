@@ -4,6 +4,10 @@
   <h5><span translate="servicesOverview.cloudServices"></span></h5>
   <cs-card-layout block-view="true">
     <cs-card class="small" ng-class="card.cardClass" ng-repeat="card in $ctrl.getCloudCards()" ng-if="card.display">
+      <!--
+        currently ng-include templates loaded through ngtemplate-loader
+        TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
+      -->
       <article ng-include="card.template"></article>
     </cs-card>
   </cs-card-layout>
@@ -17,6 +21,10 @@
     </p>
     <cs-card-layout block-view="true">
       <cs-card class="small" ng-class="card.cardClass" ng-repeat="card in $ctrl.getHybridCards()" ng-if="card.display">
+        <!--
+          currently ng-include templates loaded through ngtemplate-loader
+          TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
+        -->
         <article ng-include="card.template"></article>
       </cs-card>
     </cs-card-layout>
@@ -60,6 +68,10 @@
     <h5><span translate="servicesOverview.crossServices"></span></h5>
     <cs-card-layout>
       <cs-card class="small" ng-class="card.cardClass" ng-repeat="card in $ctrl.getCmcCards()" ng-if="card.display">
+        <!--
+          currently ng-include templates loaded through ngtemplate-loader
+          TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
+        -->
         <article ng-include="card.template"></article>
       </cs-card>
     </cs-card-layout>

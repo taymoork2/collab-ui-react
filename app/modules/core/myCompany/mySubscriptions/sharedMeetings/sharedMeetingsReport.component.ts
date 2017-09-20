@@ -191,10 +191,7 @@ class SharedMeetingsReportCtrl {
     this.chart = this.SharedMeetingsReportService.setChartData(dummyData, this.chart, this.timeSelected);
   }
   private dateFix(dateString: string , optionalMins: number = 0): string {
-    const time = dateString.substring(dateString.length, dateString.length - 4);
-    const tempDate = dateString.split(time)[0];
-    const fulldate = moment(tempDate).format('YYYY/MM/DD') + ' ' + moment(time).add(optionalMins, 'm').format('HH:mm');
-    return fulldate;
+    return moment(dateString, 'YYYYMM').add(optionalMins, 'm').format('YYYY/MM/DD HH:mm');
   }
 
   private makeCSV(csvLink1: string | undefined, csvLink2: string | undefined): void {
@@ -246,8 +243,7 @@ class SharedMeetingsReportCtrl {
 
           if (this.maxConcurrentData) {
             _.forEach(this.maxConcurrentData.MaxConcurrentMeetings, (meeting) => {
-              const dateLength = meeting.TimeBucketStart.length;
-              const startMonthYear = moment(meeting.TimeBucketStart.substring(0 , dateLength - 4)).format('MMM-YY');
+              const startMonthYear = moment(meeting.TimeBucketStart, 'YYYYMM').format('MMM-YY');
               concurrentData.push({
                 SiteName: siteName,
                 Month: startMonthYear,
@@ -283,7 +279,7 @@ class SharedMeetingsReportCtrl {
 }
 
 export class SharedMeetingComponent implements ng.IComponentOptions {
-  public templateUrl = 'modules/core/myCompany/mySubscriptions/sharedMeetings/sharedMeetingsReport.tpl.html';
+  public template = require('modules/core/myCompany/mySubscriptions/sharedMeetings/sharedMeetingsReport.tpl.html');
   public controller = SharedMeetingsReportCtrl;
   public bindings = {
     siteUrl: '@',

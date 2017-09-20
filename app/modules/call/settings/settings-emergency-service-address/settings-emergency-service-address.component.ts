@@ -145,6 +145,6 @@ class EmergencyServiceAddressCtrl implements ng.IComponentController {
 
 export class EmergencyServiceAddressComponent implements ng.IComponentOptions {
   public controller = EmergencyServiceAddressCtrl;
-  public templateUrl = 'modules/call/settings/settings-emergency-service-address/settings-emergency-service-address.component.html';
+  public template = require('modules/call/settings/settings-emergency-service-address/settings-emergency-service-address.component.html');
   public bindings = { };
 }

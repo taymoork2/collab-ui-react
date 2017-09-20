@@ -4,7 +4,7 @@ import { IToolkitModalService } from 'modules/core/modal';
 /* UI for allowing user to export the Csv and Template. Does not do downloading on its own! See csvDownload.component */
 export class UserCsvExportComponent {
   public controller = UserCsvExportController;
-  public templateUrl = 'modules/core/users/userCsv/userCsvExport.component.html';
+  public template = require('modules/core/users/userCsv/userCsvExport.component.html');
   public bindings = {
     onStatusChange: '&',
     asLink: '@',
@@ -79,14 +79,14 @@ class UserCsvExportController implements ng.IComponentController {
 
     this.$modal.open({
       type: 'dialog',
-      templateUrl: 'modules/core/users/userCsv/userCsvExportConfirm.tpl.html',
+      template: require('modules/core/users/userCsv/userCsvExportConfirm.tpl.html'),
     }).result
       .then(() => {
         if (this.isOverExportThreshold) {
           // warn that entitlements won't be exported since there are too many users
           this.$modal.open({
             type: 'dialog',
-            templateUrl: 'modules/core/users/userCsv/userCsvExportConfirm10K.tpl.html',
+            template: require('modules/core/users/userCsv/userCsvExportConfirm10K.tpl.html'),
             controller: function () {
               const modalCtrl = this;
               modalCtrl.maxUsers = CsvDownloadService.USER_EXPORT_THRESHOLD;

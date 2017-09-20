@@ -59,7 +59,7 @@ export class PrivateTrunkPrereqCtrl implements ng.IComponentController {
 }
 export class PrivateTrunkPrereqComponent implements ng.IComponentOptions {
   public controller = PrivateTrunkPrereqCtrl;
-  public templateUrl = 'modules/hercules/private-trunk/private-trunk-prereq/private-trunk-prereq.html';
+  public template = require('modules/hercules/private-trunk/private-trunk-prereq/private-trunk-prereq.html');
   public bindings = {
   };
 }

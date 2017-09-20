@@ -8,8 +8,8 @@ const DATA_TYPE: any = { MANUAL_ADD : 0, IMPORT_TD : 1, IMPORT_CSV : 2, SUBMITTE
 const DNIS_TYPE: any = { NEW: 0, EXISTED: 1, NON_CCA: 2 };
 const DNIS_CHANGE_TYPE: any = { INPUT_DNIS: 0, CHANGE_TOLLTYPE: 1, CHANGE_CALLTYPE: 2 };
 
-const SUBMIT_CONFIRM_TEMPLATE = 'modules/gemini/telephonyDomain/details/gmTdSubmitConfirm.tpl.html';
-const SUBMIT_MUTIDISPLAY_TEMPLATE = 'modules/gemini/telephonyDomain/details/gmTdSubmitMultipleDisplayConfirm.tpl.html';
+const SUBMIT_CONFIRM_TEMPLATE = require('./gmTdSubmitConfirm.tpl.html');
+const SUBMIT_MUTIDISPLAY_TEMPLATE = require('./gmTdSubmitMultipleDisplayConfirm.tpl.html');
 
 class GmTdNumbersCtrl implements ng.IComponentController {
 
@@ -423,7 +423,7 @@ class GmTdNumbersCtrl implements ng.IComponentController {
   public downloadTemplate() {
     this.$modal.open({
       type: 'dialog',
-      templateUrl: 'modules/gemini/telephonyDomain/details/downloadConfirm.html',
+      template: require('modules/gemini/telephonyDomain/details/downloadConfirm.html'),
     }).result.then(() => {
       this.WindowLocation.set(this.TelephonyDomainService.getDownloadUrl());
     });
@@ -643,7 +643,7 @@ class GmTdNumbersCtrl implements ng.IComponentController {
   private postAll(result) {
     this.$modal.open({
       type: 'dialog',
-      templateUrl: result === 1 ? SUBMIT_CONFIRM_TEMPLATE : SUBMIT_MUTIDISPLAY_TEMPLATE,
+      template: result === 1 ? SUBMIT_CONFIRM_TEMPLATE : SUBMIT_MUTIDISPLAY_TEMPLATE,
     }).result.then(() => {
       this.confirmPostAll();
     });
@@ -736,5 +736,5 @@ class GmTdNumbersCtrl implements ng.IComponentController {
 
 export class GmTdNumbersComponent implements ng.IComponentOptions {
   public controller = GmTdNumbersCtrl;
-  public templateUrl = 'modules/gemini/telephonyDomain/details/gmTdNumbers.tpl.html';
+  public template = require('modules/gemini/telephonyDomain/details/gmTdNumbers.tpl.html');
 }

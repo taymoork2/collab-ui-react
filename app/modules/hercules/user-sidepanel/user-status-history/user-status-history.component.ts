@@ -95,7 +95,7 @@ class UserStatusHistoryCtrl implements ng.IComponentController {
 
 export class UserStatusHistoryComponent implements ng.IComponentOptions {
   public controller = UserStatusHistoryCtrl;
-  public templateUrl = 'modules/hercules/user-sidepanel/user-status-history/user-status-history.html';
+  public template = require('modules/hercules/user-sidepanel/user-status-history/user-status-history.html');
   public bindings = {
     serviceId: '<',
   };

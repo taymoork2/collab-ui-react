@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Template: planReview', function () {
-  var $scope, $controller, $httpBackend, controller, $q, $templateCache, $compile, view;
+  var $scope, $controller, $httpBackend, controller, $q, $compile, view;
   var FeatureToggleService, Userservice, UrlConfig, getUserMe;
 
   afterEach(function () {
@@ -36,13 +36,12 @@ describe('Template: planReview', function () {
   beforeEach(initSpies);
   beforeEach(compileView);
 
-  function dependencies(_$compile_, _$controller_, _$httpBackend_, _$q_, $rootScope, _$templateCache_, _Authinfo_, _FeatureToggleService_, _Userservice_, _UrlConfig_) {
+  function dependencies(_$compile_, _$controller_, _$httpBackend_, _$q_, $rootScope, _Authinfo_, _FeatureToggleService_, _Userservice_, _UrlConfig_) {
     $compile = _$compile_;
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
     $q = _$q_;
     $scope = $rootScope.$new();
-    $templateCache = _$templateCache_;
     authInfo = _Authinfo_;
     FeatureToggleService = _FeatureToggleService_;
     UrlConfig = _UrlConfig_;
@@ -68,7 +67,7 @@ describe('Template: planReview', function () {
       $scope: $scope,
     });
     $scope.planReview = controller;
-    var template = $templateCache.get('modules/core/setupWizard/planReview/planReview.tpl.html');
+    var template = require('modules/core/setupWizard/planReview/planReview.tpl.html');
     view = $compile(angular.element(template))($scope);
     $httpBackend.flush();
     $scope.$apply();

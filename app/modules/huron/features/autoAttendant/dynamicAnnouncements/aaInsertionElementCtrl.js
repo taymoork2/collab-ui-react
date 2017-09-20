@@ -61,7 +61,7 @@
 
     function openModal(say) {
       return $modal.open({
-        templateUrl: 'modules/huron/features/autoAttendant/dynamicAnnouncements/aaDynamicAnnouncementsModal.tpl.html',
+        template: require('modules/huron/features/autoAttendant/dynamicAnnouncements/aaDynamicAnnouncementsModal.tpl.html'),
         controller: 'AADynamicAnnouncementsModalCtrl',
         controllerAs: 'aaDynamicAnnouncementsModalCtrl',
         type: 'small',

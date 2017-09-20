@@ -24,7 +24,7 @@
       type: 'small',
       controller: 'RedirectAddResourceControllerV2',
       controllerAs: 'redirectResource',
-      templateUrl: 'modules/mediafusion/media-service-v2/add-resources/add-resource-dialog.html',
+      template: require('modules/mediafusion/media-service-v2/add-resources/add-resource-dialog.html'),
       modalClass: 'redirect-add-resource',
     };
 
@@ -34,7 +34,7 @@
           vm.addResourceModal.resolve.firstTimeSetup = false;
         } else if (Authinfo.isCustomerLaunchedFromPartner()) {
           $modal.open({
-            templateUrl: 'modules/hercules/service-specific-pages/components/add-resource/partnerAdminWarning.html',
+            template: require('modules/hercules/service-specific-pages/components/add-resource/partnerAdminWarning.html'),
             type: 'dialog',
           });
         } else {

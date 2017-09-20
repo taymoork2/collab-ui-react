@@ -22,7 +22,7 @@ class CallLocationNameCtrl implements ng.IComponentController {
 
 export class CallLocationNameComponent implements ng.IComponentOptions {
   public controller = CallLocationNameCtrl;
-  public templateUrl = 'modules/call/locations/locations-name/locations-name.component.html';
+  public template = require('modules/call/locations/locations-name/locations-name.component.html');
   public bindings = {
     name: '<',
     onChangeFn: '&',

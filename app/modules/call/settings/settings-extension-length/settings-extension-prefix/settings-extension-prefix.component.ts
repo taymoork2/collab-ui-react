@@ -49,7 +49,7 @@ class ExtensionPrefixCtrl implements ng.IComponentController {
 
 export class ExtensionPrefixComponent implements ng.IComponentOptions {
   public controller = ExtensionPrefixCtrl;
-  public templateUrl = 'modules/call/settings/settings-extension-length/settings-extension-prefix/settings-extension-prefix.component.html';
+  public template = require('modules/call/settings/settings-extension-length/settings-extension-prefix/settings-extension-prefix.component.html');
   public bindings = {
     newExtensionLength: '<',
     oldExtensionLength: '<',

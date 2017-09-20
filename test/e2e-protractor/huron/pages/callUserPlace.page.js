@@ -52,6 +52,11 @@ export class CallUserPlacePage {
     this.sharedLine = {
       title: element(by.cssContainingText('.section__title', 'Shared Line')),
       member: element(by.css('.dropdown-menu ul li a')),
+      inputMember: element(by.css('input#userInput')),
+      accordionMember: element.all(by.css('.accordion .accordion--navigation')).get(0),
+      sharedMember: element.all(by.css('.accordion--primary a')).get(0),
+      removeMember: element(by.id('removeMemberLink')),
+      removeMemberBtn: element(by.id('removeMemberButton')),
     };
   };
 }

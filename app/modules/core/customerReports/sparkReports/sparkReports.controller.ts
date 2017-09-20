@@ -164,9 +164,9 @@ export class SparkReportCtrl {
 
   private initDatePicker(): void {
     if (this.timeSelected.value === this.ReportConstants.WEEK_FILTER.value) {
-      this.startDate = moment().subtract('days', 7).format('YYYY-MM-DD');
+      this.startDate = moment().subtract(7, 'days').format('YYYY-MM-DD');
       this.endDate =  moment().format('YYYY-MM-DD');
-      this.startTime = moment().subtract('days', 7).format('h:mm A');
+      this.startTime = moment().subtract(7, 'days').format('h:mm A');
       this.endTime = moment().format('h:mm A');
     }
   }
@@ -323,19 +323,19 @@ export class SparkReportCtrl {
 
   private dateChangeHandler(): void {
     if (this.timeSelected.value === this.ReportConstants.MONTH_FILTER.value) {
-      this.startDate = moment().subtract('weeks', 4).format('YYYY-MM-DD');
+      this.startDate = moment().subtract(4, 'weeks').format('YYYY-MM-DD');
       this.endDate = moment().format('YYYY-MM-DD');
-      this.startTime = moment().subtract('weeks', 4).format('h:mm A');
+      this.startTime = moment().subtract(4, 'weeks').format('h:mm A');
       this.endTime = moment().format('h:mm A');
     } else if (this.timeSelected.value === this.ReportConstants.THREE_MONTH_FILTER.value) {
-      this.startDate = moment().subtract('months', 3).format('YYYY-MM-DD');
+      this.startDate = moment().subtract(3, 'months').format('YYYY-MM-DD');
       this.endDate = moment().format('YYYY-MM-DD');
-      this.startTime = moment().subtract('months', 3).format('h:mm A');
+      this.startTime = moment().subtract(3, 'months').format('h:mm A');
       this.endTime = moment().format('h:mm A');
     } else if (this.timeSelected.value === this.ReportConstants.WEEK_FILTER.value) {
-      this.startDate = moment().subtract('days', 7).format('YYYY-MM-DD');
+      this.startDate = moment().subtract(7, 'days').format('YYYY-MM-DD');
       this.endDate = moment().format('YYYY-MM-DD');
-      this.startTime = moment().subtract('days', 7).format('h:mm A');
+      this.startTime = moment().subtract(7, 'days').format('h:mm A');
       this.endTime = moment().format('h:mm A');
     }
   }

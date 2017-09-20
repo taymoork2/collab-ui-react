@@ -19,7 +19,7 @@
     init();
 
     function init() {
-      Orgservice.getLicensesUsage().then(function (subscriptions) {
+      Orgservice.getInternallyManagedSubscriptions().then(function (subscriptions) {
         vm.subscriptionOptions = _.uniq(_.map(subscriptions, 'subscriptionId'));
         vm.selectedSubscription = _.head(vm.subscriptionOptions);
         vm.oneBilling = _.size(vm.subscriptionOptions) === 1;

@@ -43,7 +43,7 @@ interface ICustomScope extends ng.IScope {
 
 export class PstnTrialSetupComponent implements ng.IComponentOptions {
   public controller = PstnTrialSetupCtrl;
-  public templateUrl = 'modules/huron/pstn/pstnTrialSetup/pstnTrialSetup.html';
+  public template = require('modules/huron/pstn/pstnTrialSetup/pstnTrialSetup.html');
   public bindings = {
     dismiss: '&',
   };

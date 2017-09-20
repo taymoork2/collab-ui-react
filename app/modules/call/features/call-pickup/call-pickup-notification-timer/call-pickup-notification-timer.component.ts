@@ -37,7 +37,7 @@ class CallPickupNotificationTimerCtrl implements ng.IComponentController {
 
 export class CallPickupNotificationTimerComponent implements ng.IComponentOptions {
   public controller = CallPickupNotificationTimerCtrl;
-  public templateUrl = 'modules/call/features/call-pickup/call-pickup-notification-timer/call-pickup-notification-timer.component.html';
+  public template = require('modules/call/features/call-pickup/call-pickup-notification-timer/call-pickup-notification-timer.component.html');
   public bindings = {
     notificationTimer: '<',
     onChangeFn: '&',

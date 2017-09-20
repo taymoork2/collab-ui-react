@@ -3,7 +3,11 @@
 
   angular
     .module('uc.autoattendant')
-    .controller('AABuilderContainerCtrl', AABuilderContainerCtrl);
+    .component('aaBuilderContainer', {
+      controller: AABuilderContainerCtrl,
+      controllerAs: 'aaBuilder',
+      template: require('./aaBuilderContainer.tpl.html'),
+    });
 
   /* @ngInject */
   function AABuilderContainerCtrl($scope, $modal, AAUiModelService, AAModelService, AAValidationService) {
@@ -20,7 +24,7 @@
       }
 
       var modalInstance = $modal.open({
-        templateUrl: 'modules/huron/features/autoAttendant/schedule/aaScheduleModal.tpl.html',
+        template: require('modules/huron/features/autoAttendant/schedule/aaScheduleModal.tpl.html'),
         controller: 'AAScheduleModalCtrl',
         controllerAs: 'aaScheduleModalCtrl',
         size: 'lg',

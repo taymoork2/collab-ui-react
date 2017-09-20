@@ -32,7 +32,7 @@ class CucmClusterSettingsPageCtrl implements ng.IComponentController {
 
 export class CucmClusterSettingsPageComponent implements ng.IComponentOptions {
   public controller = CucmClusterSettingsPageCtrl;
-  public templateUrl = 'modules/hercules/cucm-cluster-settings/cucm-cluster-settings.component.html';
+  public template = require('modules/hercules/cucm-cluster-settings/cucm-cluster-settings.component.html');
   public bindings = {
     clusterId: '<',
   };

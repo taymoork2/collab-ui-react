@@ -271,7 +271,7 @@
         place: '=',
         eservice: '=',
       },
-      templateUrl: 'modules/hercules/user-sidepanel/hybridServices.tpl.html',
+      template: require('modules/hercules/user-sidepanel/hybridServices.tpl.html'),
     };
   }
 }());

@@ -389,7 +389,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
 
 export class HuronSettingsComponent implements ng.IComponentOptions {
   public controller = HuronSettingsCtrl;
-  public templateUrl = 'modules/call/settings/settings.component.html';
+  public template = require('modules/call/settings/settings.component.html');
   public bindings = {
     ftsw: '<',
   };

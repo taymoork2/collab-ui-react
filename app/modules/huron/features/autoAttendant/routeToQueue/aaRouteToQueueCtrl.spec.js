@@ -580,6 +580,134 @@ describe('Controller: AARouteToQueueCtrl', function () {
         $rootScope.$broadcast('CIVarNameChanged');
         expect(controller.fullWarningMsgValue).toBe(false);
       });
+      it('broadcast of Cancel Clicked for initialAnnouncement ', function () {
+        var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        var ele = '<aa-insertion-element element-text="testValue" read-as="testReadValue" element-id="1011"></aa-insertion-element>';
+        var initialAnnouncement = 'initialAnnouncement';
+        var queueSettings = {};
+        AutoAttendantCeMenuModelService.clearCeMenuMap();
+        $scope.fromRouteCall = true;
+        var routeToQueue = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', '');
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', '');
+        action.dynamicList = [{
+          say: {
+            value: 'test',
+            voice: '',
+            as: 'test',
+          },
+          isDynamic: true,
+          htmlModel: encodeURIComponent(ele),
+        }];
+        initialAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        initialAnnouncement.addAction(action);
+        queueSettings.initialAnnouncement = initialAnnouncement;
+        routeToQueue.queueSettings = queueSettings;
+        menuEntry.addAction(routeToQueue);
+        aaUiModel[schedule].addEntryAt(index, menuEntry);
+        var controller = $controller('AARouteToQueueCtrl', {
+          $scope: $scope,
+        });
+        $scope.$apply();
+        controller.deletedSessionVariablesList = ['test', ''];
+        $rootScope.$broadcast('AACancelQueueSettings');
+        expect(controller.fullWarningMsgValue).toBe(false);
+      });
+      it('broadcast of Cancel Clicked for periodicAnnouncement ', function () {
+        var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        var ele = '<aa-insertion-element element-text="testValue" read-as="testReadValue" element-id="1011"></aa-insertion-element>';
+        var periodicAnnouncement = 'periodicAnnouncement';
+        var queueSettings = {};
+        AutoAttendantCeMenuModelService.clearCeMenuMap();
+        $scope.fromRouteCall = true;
+        var routeToQueue = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', '');
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', '');
+        action.dynamicList = [{
+          say: {
+            value: 'test',
+            voice: '',
+            as: 'test',
+          },
+          isDynamic: true,
+          htmlModel: encodeURIComponent(ele),
+        }];
+        periodicAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        periodicAnnouncement.addAction(action);
+        queueSettings.periodicAnnouncement = periodicAnnouncement;
+        routeToQueue.queueSettings = queueSettings;
+        menuEntry.addAction(routeToQueue);
+        aaUiModel[schedule].addEntryAt(index, menuEntry);
+        var controller = $controller('AARouteToQueueCtrl', {
+          $scope: $scope,
+        });
+        $scope.$apply();
+        controller.deletedSessionVariablesList = ['test', ''];
+        $rootScope.$broadcast('AACancelQueueSettings');
+        expect(controller.fullWarningMsgValue).toBe(false);
+      });
+      it('broadcast of Ok Clicked for initialAnnouncement ', function () {
+        var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        var ele = '<aa-insertion-element element-text="testValue" read-as="testReadValue" element-id="1011"></aa-insertion-element>';
+        var initialAnnouncement = 'initialAnnouncement';
+        var queueSettings = {};
+        AutoAttendantCeMenuModelService.clearCeMenuMap();
+        $scope.fromRouteCall = true;
+        var routeToQueue = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', '');
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', '');
+        action.dynamicList = [{
+          say: {
+            value: 'test',
+            voice: '',
+            as: 'test',
+          },
+          isDynamic: true,
+          htmlModel: encodeURIComponent(ele),
+        }];
+        initialAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        initialAnnouncement.addAction(action);
+        queueSettings.initialAnnouncement = initialAnnouncement;
+        routeToQueue.queueSettings = queueSettings;
+        menuEntry.addAction(routeToQueue);
+        aaUiModel[schedule].addEntryAt(index, menuEntry);
+        var controller = $controller('AARouteToQueueCtrl', {
+          $scope: $scope,
+        });
+        $scope.$apply();
+        controller.deletedSessionVariablesList = ['test', ''];
+        $rootScope.$broadcast('AASaveQueueSettings');
+        expect(controller.fullWarningMsgValue).toBe(false);
+      });
+      it('broadcast of Ok Clicked for periodicAnnouncement ', function () {
+        var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        var ele = '<aa-insertion-element element-text="testValue" read-as="testReadValue" element-id="1011"></aa-insertion-element>';
+        var periodicAnnouncement = 'periodicAnnouncement';
+        var queueSettings = {};
+        AutoAttendantCeMenuModelService.clearCeMenuMap();
+        $scope.fromRouteCall = true;
+        var routeToQueue = AutoAttendantCeMenuModelService.newCeActionEntry('routeToQueue', '');
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', '');
+        action.dynamicList = [{
+          say: {
+            value: 'test',
+            voice: '',
+            as: 'test',
+          },
+          isDynamic: true,
+          htmlModel: encodeURIComponent(ele),
+        }];
+        periodicAnnouncement = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        periodicAnnouncement.addAction(action);
+        queueSettings.periodicAnnouncement = periodicAnnouncement;
+        routeToQueue.queueSettings = queueSettings;
+        menuEntry.addAction(routeToQueue);
+        aaUiModel[schedule].addEntryAt(index, menuEntry);
+        var controller = $controller('AARouteToQueueCtrl', {
+          $scope: $scope,
+        });
+        $scope.$apply();
+        controller.deletedSessionVariablesList = ['test', ''];
+        $rootScope.$broadcast('AASaveQueueSettings');
+        expect(controller.fullWarningMsgValue).toBe(false);
+      });
     });
   });
 });

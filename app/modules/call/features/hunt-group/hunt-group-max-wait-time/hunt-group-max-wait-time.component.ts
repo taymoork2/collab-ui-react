@@ -52,7 +52,7 @@ class HuntGroupMaxWaitTimeCtrl implements ng.IComponentController {
 
 export class HuntGroupMaxWaitTimeComponent implements ng.IComponentOptions {
   public controller = HuntGroupMaxWaitTimeCtrl;
-  public templateUrl = 'modules/call/features/hunt-group/hunt-group-max-wait-time/hunt-group-max-wait-time.component.html';
+  public template = require('modules/call/features/hunt-group/hunt-group-max-wait-time/hunt-group-max-wait-time.component.html');
   public bindings = {
     maxWaitMins: '<',
     options: '<',

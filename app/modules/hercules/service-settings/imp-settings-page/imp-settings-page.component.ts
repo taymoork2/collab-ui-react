@@ -8,5 +8,5 @@ class ImpSettingsPageComponentCtrl implements ng.IComponentController {
 
 export class ImpSettingsPageComponent implements ng.IComponentOptions {
   public controller = ImpSettingsPageComponentCtrl;
-  public templateUrl = 'modules/hercules/service-settings/imp-settings-page/imp-settings-page.component.html';
+  public template = require('modules/hercules/service-settings/imp-settings-page/imp-settings-page.component.html');
 }

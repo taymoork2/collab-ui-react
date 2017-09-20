@@ -47,7 +47,7 @@ class CsvSimpleExportController implements ng.IComponentController {
 }
 
 export class CsvSimpleExportComponent implements ng.IComponentOptions {
-  public templateUrl = 'modules/core/csvDownload/csvSimpleExport/csvSimpleExport.component.html';
+  public template = require('modules/core/csvDownload/csvSimpleExport/csvSimpleExport.component.html');
   public controller = CsvSimpleExportController;
   public bindings = {
     onExport: '&',              // called when user clicks the export icon

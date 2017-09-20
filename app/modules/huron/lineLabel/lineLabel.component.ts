@@ -32,7 +32,7 @@ class LineLabel implements ng.IComponentController {
 
 export class LineLabelComponent implements ng.IComponentOptions {
   public controller = LineLabel;
-  public templateUrl = 'modules/huron/lineLabel/lineLabel.html';
+  public template = require('modules/huron/lineLabel/lineLabel.html');
   public bindings = {
     onChangeFn: '&',
     lineLabel: '<',

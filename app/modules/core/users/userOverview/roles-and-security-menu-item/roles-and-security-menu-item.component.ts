@@ -13,5 +13,5 @@ export class RolesAndSecurityMenuItemComponentController implements ng.IComponen
 
 export class RolesAndSecurityMenuItemComponent implements ng.IComponentOptions {
   public controller = RolesAndSecurityMenuItemComponentController;
-  public templateUrl = 'modules/core/users/userOverview/roles-and-security-menu-item/roles-and-security-menu-item.component.html';
+  public template = require('modules/core/users/userOverview/roles-and-security-menu-item/roles-and-security-menu-item.component.html');
 }
