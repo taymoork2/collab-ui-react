@@ -24,7 +24,7 @@ export function huronCustomer(huronCustomerOptions) {
     users: huronUsers(options.users, options.numberRange ? options.numberRange.beginNumber : undefined, pstnNumbers),
     doFtsw: options.doFtsw || false,
     places: huronPlaces(options.places, options.numberRange ? options.numberRange.beginNumber : undefined, pstnNumbers),
-    // doHuntGroup: doHuntGroup || false,
+    doHuntGroup: options.doHuntGroup || false,
     doCallPickUp: options.doCallPickUp || false,
     doCallPark: options.doCallPark || false,
   };

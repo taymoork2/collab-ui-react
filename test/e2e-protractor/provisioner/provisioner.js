@@ -37,7 +37,7 @@ export function provisionCustomerAndLogin(customer) {
       if (atlasCustomer && customer.callOptions) {
         customer.callOptions.cmiCustomer.uuid = atlasCustomer.customerOrgId;
         customer.callOptions.cmiCustomer.name = atlasCustomer.customerName;
-        return huronCmiHelper.provisionCmiCustomer(customer.partner, customer.callOptions.cmiCustomer, customer.callOptions.cmiSite, customer.callOptions.numberRange, customer.doFtsw, customer.doCallPickUp)
+        return huronCmiHelper.provisionCmiCustomer(customer.partner, customer.callOptions.cmiCustomer, customer.callOptions.cmiSite, customer.callOptions.numberRange, customer.doFtsw, customer.doCallPickUp, customer.doHuntGroup)
           .then(() => huronPstnHelper.setupPSTN(customer))
           .then(() => provisionUsers(customer))
           .then(() => provisionPlaces(customer))
