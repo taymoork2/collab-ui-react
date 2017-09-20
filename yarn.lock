@@ -1809,9 +1809,9 @@ collab-ui-ng@*:
     masonry-layout "^4.1.1"
     moment "^2.10.6"
 
-collab-ui-ng@~7.1.0:
-  version "7.1.0"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/collab-ui-ng/-/collab-ui-ng-7.1.0.tgz#1082385df55d0d939344ddfc379d92044b079ab3"
+collab-ui-ng@~7.2.0:
+  version "7.2.0"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/collab-ui-ng/-/collab-ui-ng-7.2.0.tgz#384e915409c8dead62dfc0870303fdf7cba7f517"
   dependencies:
     angular "^1.5.0"
     angular-animate "^1.5.0"
