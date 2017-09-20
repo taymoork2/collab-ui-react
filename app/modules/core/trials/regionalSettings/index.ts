@@ -14,5 +14,5 @@ export default angular
   ])
   .component('trialRegionalSettings', new TrialRegionalSettingsComponent())
   .directive('trialRegionalSettingsSection', TrialRegionalSettingsSectionDirectiveFactory)
-  .directive('trialRegionalSettingsFTSW', TrialRegionalSettingsFTSWDirectiveFactory)
+  .directive('trialRegionalSettingsFtsw', TrialRegionalSettingsFTSWDirectiveFactory)
   .name;
