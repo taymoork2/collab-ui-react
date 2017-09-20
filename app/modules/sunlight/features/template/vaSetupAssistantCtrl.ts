@@ -386,6 +386,7 @@ export class CareSetupVirtualAssistantCtrl {
               .then(() => {
                 if (!this.template.configuration.pages.VirtualAssistantAvatar.uploadCanceled) {
                   this.template.configuration.pages.VirtualAssistantAvatar.fileValue = avatardataURL; // update the stored config
+                  this.changeAvatarUploadState();
                 }
               })
               .catch(() => {
