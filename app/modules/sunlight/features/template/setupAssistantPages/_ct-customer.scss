@@ -191,7 +191,7 @@
   .ct-selectable-container {
     &.active {
       border-color: $color-primary-darker;
-      border-style: solid;
+      border-style: none;
       border-width: rem-calc(1px);
       background-color: white;
     }
