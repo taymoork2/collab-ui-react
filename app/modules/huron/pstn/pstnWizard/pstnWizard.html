@@ -31,11 +31,11 @@
     <emergency-services
       address="$ctrl.address"
       country-code="$ctrl.countryCode"
-      validation="$ctrl.isValid"
+      validation="$ctrl.address.validated"
       address-loading="$ctrl.loading"
-      address-found="$ctrl.isValid"
+      address-found="$ctrl.address.validated"
       reset-address="$ctrl.resetAddress()"
-      read-only="$ctrl.isValid"
+      read-only="$ctrl.address.validated"
       validate-address="$ctrl.validateAddress()"
       show-validation="true">
     </emergency-services>

@@ -46,7 +46,7 @@ class CallLocationCtrl implements ng.IComponentController {
       this.$q.resolve(this.initComponentData()).finally( () => this.loading = false);
     }
 
-    this.PstnService.getCustomer(this.Authinfo.getOrgId()).then(() => {
+    this.PstnService.getCustomerV2(this.Authinfo.getOrgId()).then(() => {
       this.PstnModel.setCustomerId(this.Authinfo.getOrgId());
       this.PstnModel.setCustomerExists(true);
     });

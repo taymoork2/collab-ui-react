@@ -4,6 +4,8 @@ import pstnModel from '../pstn.model';
 import pstnService from '../pstn.service';
 import notifications from 'modules/core/notifications';
 import huronCountryService from 'modules/huron/countries';
+import PstnAddressServiceModule from '../shared/pstn-address';
+import LocationsServiceModule from 'modules/call/locations';
 
 export * from './pstnWizard.service';
 export * from './directInwardDialing';
@@ -18,6 +20,8 @@ export default angular
     pstnService,
     notifications,
     huronCountryService,
+    PstnAddressServiceModule,
+    LocationsServiceModule,
   ])
   .component('ucPstnPaidWizard', new PstnWizardComponent())
   .service('PstnWizardService', PstnWizardService)

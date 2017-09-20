@@ -34,8 +34,8 @@ describe('Controller: PstnServiceAddressCtrl', function () {
   }));
 
   it('should init data', function () {
-    expect(controller.address).toEqual({});
-    expect(controller.isValid).toEqual(false);
+    expect(controller.address).not.toBeUndefined();
+    expect(controller.address.validated).toEqual(false);
   });
 
   it('should lookup address and return valid', function () {
@@ -47,7 +47,7 @@ describe('Controller: PstnServiceAddressCtrl', function () {
     $scope.$apply();
 
     expect(PstnServiceAddressService.lookupAddressV2).toHaveBeenCalledWith(myAddress, carrier.uuid);
-    expect(controller.isValid).toEqual(true);
+    expect(controller.address.validated).toEqual(true);
   });
 
   it('should notify error if address is not valid', function () {
@@ -56,17 +56,17 @@ describe('Controller: PstnServiceAddressCtrl', function () {
     $scope.$apply();
 
     expect(PstnServiceAddressService.lookupAddressV2).toHaveBeenCalled();
-    expect(controller.isValid).toEqual(false);
+    expect(controller.address.validated).toEqual(false);
     expect(Notification.error).toHaveBeenCalledWith('pstnSetup.serviceAddressNotFound');
   });
 
   it('should go to order numbers if address is valid', function () {
-    expect(controller.isValid).toEqual(false);
+    expect(controller.address.validated).toEqual(false);
 
     controller.validateAddress();
     $scope.$apply();
 
-    expect(controller.isValid).toEqual(true);
+    expect(controller.address.validated).toEqual(true);
 
     controller.next();
     $scope.$apply();

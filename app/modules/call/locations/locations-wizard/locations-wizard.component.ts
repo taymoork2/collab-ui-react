@@ -67,7 +67,7 @@ class LocationsWizardController implements ng.IComponentController {
         this.PstnModel.setCountryCode(data.countryCode);
       }
     });
-    this.PstnService.getCustomer(this.Authinfo.getOrgId()).then(() => {
+    this.PstnService.getCustomerV2(this.Authinfo.getOrgId()).then(() => {
       this.PstnModel.setCustomerId(this.Authinfo.getOrgId());
       this.PstnModel.setCustomerExists(true);
 

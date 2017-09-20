@@ -6,6 +6,7 @@ import { LocationSettingsOptions } from 'modules/call/locations/shared';
 import { EmergencyNumber } from 'modules/huron/phoneNumber';
 
 //Test Data
+let OrgId: string;
 let licenseNumber: number;
 let countryCode: string = 'US';
 let carriers = [{
@@ -79,6 +80,7 @@ describe('Component: LocationsWizardComponent -', () => {
   }
 
   function resetData(): void {
+    OrgId = '1234bbbbaaaadddd';
     licenseNumber = -1;
     countryCode = 'US';
     carriers = [{
@@ -106,8 +108,9 @@ describe('Component: LocationsWizardComponent -', () => {
 
   function initSpies(): void {
     spyOn(this.Authinfo, 'getLicenses').and.returnValue(getLicenses(licenseNumber));
+    spyOn(this.Authinfo, 'getOrgId').and.returnValue(OrgId);
     spyOn(this.Orgservice, 'getOrg').and.returnValue(this.$q.resolve({ countryCode: countryCode }));
-    spyOn(this.PstnService, 'getCustomer').and.returnValue(this.$q.resolve());
+    spyOn(this.PstnService, 'getCustomerV2').and.returnValue(this.$q.resolve());
     spyOn(this.PstnService, 'listCustomerCarriers').and.returnValue(this.$q.resolve(carriers));
     spyOn(this.CallLocationSettingsService, 'get').and.returnValue(this.$q.resolve(callLocationSettingsData));
     spyOn(this.CallLocationSettingsService, 'save').and.returnValue(this.$q.resolve());

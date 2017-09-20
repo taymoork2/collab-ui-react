@@ -1,4 +1,6 @@
 import { PstnCarrier } from './pstnProviders/pstnCarrier';
+import { Address } from './shared/pstn-address';
+
 export interface IOrder {
   orderType: string;
   data: any;
@@ -27,7 +29,7 @@ export class PstnModel {
   private customerFirstName: string;
   private customerLastName: string;
   private customerEmail: string;
-  private serviceAddress: Object;
+  private serviceAddress: Address = new Address();
   private customerExists: boolean;
   private resellerExists: boolean;
   private carrierExists: boolean;
@@ -52,7 +54,7 @@ export class PstnModel {
     this.customerFirstName = '';
     this.customerLastName = '';
     this.customerEmail = '';
-    this.serviceAddress = {};
+    this.serviceAddress.reset();
     this.customerExists = false;
     this.resellerExists = false;
     this.carrierExists = false;
@@ -71,7 +73,7 @@ export class PstnModel {
   public clearProviderSpecificData(): void {
     this.customerFirstName = '';
     this.customerLastName = '';
-    this.serviceAddress = {};
+    this.serviceAddress.reset();
     this.siteExists = false;
     this.carrierExists = false;
     this.carrierExists = false;
@@ -85,7 +87,11 @@ export class PstnModel {
   }
 
   public setCustomerId(_customerId: string): void {
-    this.customerId = _customerId;
+    if (_.isString(_customerId)) {
+      this.customerId = _customerId;
+    } else {
+      this.customerId = '';
+    }
   }
 
   public getCustomerId(): string {
@@ -124,11 +130,11 @@ export class PstnModel {
     return this.customerEmail;
   }
 
-  public setServiceAddress(_serviceAddress: Object): void {
+  public setServiceAddress(_serviceAddress: Address) {
     this.serviceAddress = _serviceAddress;
   }
 
-  public getServiceAddress(): Object {
+  public getServiceAddress(): Address {
     return this.serviceAddress;
   }
 
