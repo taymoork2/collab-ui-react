@@ -282,7 +282,7 @@ class ReportCardCtrl {
 }
 
 export class ReportCardComponent implements ng.IComponentOptions {
-  public templateUrl = 'modules/core/partnerReports/reportCard/reportCard.tpl.html';
+  public template = require('modules/core/partnerReports/reportCard/reportCard.tpl.html');
   public controller = ReportCardCtrl;
   public bindings = {
     dropdown: '<',

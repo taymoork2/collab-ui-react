@@ -69,5 +69,5 @@ class GmTdHeaderCtrl implements ng.IComponentController {
 export class GmTdHeaderComponent implements ng.IComponentOptions {
   public bindings = { showRemedyTicket: '<', tdBaseInfo: '<' };
   public controller = GmTdHeaderCtrl;
-  public templateUrl = 'modules/gemini/telephonyDomain/details/gmTdHeader.tpl.html';
+  public template = require('modules/gemini/telephonyDomain/details/gmTdHeader.tpl.html');
 }

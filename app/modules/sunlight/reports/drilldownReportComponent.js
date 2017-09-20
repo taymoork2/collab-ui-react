@@ -168,7 +168,7 @@
       callback: '&',
       gridData: '=?',
     },
-    templateUrl: 'modules/sunlight/reports/drilldownReport.tpl.html',
+    template: require('modules/sunlight/reports/drilldownReport.tpl.html'),
     controllerAs: 'dd',
   }
   );

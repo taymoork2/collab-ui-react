@@ -1,6 +1,9 @@
 (function () {
   'use strict';
 
+  // TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
+  var meetingCardTemplatePath = require('ngtemplate-loader?module=Core!./meetingCard.tpl.html');
+
   angular
     .module('Core')
     .factory('OverviewMeetingCard', OverviewMeetingCard);
@@ -11,7 +14,7 @@
       createCard: function createCard($scope) {
         var card = {};
         card.isCSB = Authinfo.isCSB();
-        card.template = 'modules/core/overview/meetingCard.tpl.html';
+        card.template = meetingCardTemplatePath;
         card.icon = 'icon-circle-group';
         card.desc = 'overview.cards.meeting.desc';
         card.name = 'overview.cards.meeting.title';

@@ -35,8 +35,8 @@ describe('Controller: SupportCtrl', function () {
       }
       view = undefined;
     });
-    beforeEach(inject(function (_$templateCache_) {
-      var html = _$templateCache_.get('modules/squared/support/support-status.html');
+    beforeEach(inject(function () {
+      var html = require('modules/squared/support/support-status.html');
       view = $compile(angular.element(html))($scope);
     }));
 

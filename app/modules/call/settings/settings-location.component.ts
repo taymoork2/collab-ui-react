@@ -179,6 +179,6 @@ class CallSettingsCtrl implements ng.IComponentController {
 
 export class CallSettingsComponent implements ng.IComponentOptions {
   public controller = CallSettingsCtrl;
-  public templateUrl = 'modules/call/settings/settings-location.component.html';
+  public template = require('modules/call/settings/settings-location.component.html');
   public bindings = {};
 }

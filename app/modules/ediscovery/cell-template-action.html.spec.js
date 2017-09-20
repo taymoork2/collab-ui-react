@@ -3,7 +3,7 @@
 var ediscoveryModule = require('./ediscovery.module');
 describe('cell-template-action', function () {
   beforeEach(angular.mock.module(ediscoveryModule));
-  var $templateCache, $scope, $compile, view, html;
+  var $scope, $compile, view, html;
 
   afterEach(function () {
     if (view) {
@@ -12,11 +12,10 @@ describe('cell-template-action', function () {
     view = undefined;
   });
 
-  beforeEach(inject(function (_$templateCache_, _$rootScope_, _$compile_) {
-    $templateCache = _$templateCache_;
+  beforeEach(inject(function (_$rootScope_, _$compile_) {
     $scope = _$rootScope_.$new();
     $compile = _$compile_;
-    html = $templateCache.get('modules/ediscovery/cell-template-action.html');
+    html = require('modules/ediscovery/cell-template-action.html');
   }));
 
   function compileHtml() {

@@ -25,7 +25,7 @@
       type: 'small',
       controller: 'HDSRedirectAddResourceController',
       controllerAs: 'hdsRedirectAddResourceController',
-      templateUrl: 'modules/hds/add-resource/add-resource-modal.html',
+      template: require('modules/hds/add-resource/add-resource-modal.html'),
       modalClass: 'redirect-add-resource',
       resolve: {
         firstTimeSetup: false,
@@ -38,7 +38,7 @@
           vm.addResourceModal.resolve.firstTimeSetup = true;
           if (Authinfo.isCustomerLaunchedFromPartner()) {
             $modal.open({
-              templateUrl: 'modules/hercules/service-specific-pages/components/add-resource/partnerAdminWarning.html',
+              template: require('modules/hercules/service-specific-pages/components/add-resource/partnerAdminWarning.html'),
               type: 'dialog',
             });
             return;

@@ -83,7 +83,7 @@ class LocationCallerIdCtrl implements ng.IComponentController {
 
 export class LocationCallerIdComponent implements ng.IComponentOptions {
   public controller = LocationCallerIdCtrl;
-  public templateUrl = 'modules/call/locations/locations-caller-id/locations-caller-id.component.html';
+  public template = require('modules/call/locations/locations-caller-id/locations-caller-id.component.html');
   public bindings = {
     showLabel: '<',
     callerId: '<',

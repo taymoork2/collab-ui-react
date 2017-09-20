@@ -67,7 +67,7 @@
         return;
       }
       $modal.open({
-        templateUrl: 'modules/hds/add-resource/confirm-setup-cancel-dialog.html',
+        template: require('modules/hds/add-resource/confirm-setup-cancel-dialog.html'),
         type: 'dialog',
       })
         .result.then(function () {

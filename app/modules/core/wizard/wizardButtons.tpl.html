@@ -1,4 +1,8 @@
 <div class="wizard-main-btns">
+  <!--
+    currently ng-include templates loaded through ngtemplate-loader
+    TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
+  -->
   <div ng-if="wizard.current.step.buttons" ng-include="wizard.current.step.buttons">
   </div>
   <div ng-if="wizard.hasDefaultButtons()">

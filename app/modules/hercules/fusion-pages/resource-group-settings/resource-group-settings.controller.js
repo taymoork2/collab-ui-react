@@ -84,7 +84,7 @@
         },
         controller: 'ConfirmDeleteResourceGroupController',
         controllerAs: 'vm',
-        templateUrl: 'modules/hercules/fusion-pages/resource-group-settings/confirm-delete-resource-group.html',
+        template: require('modules/hercules/fusion-pages/resource-group-settings/confirm-delete-resource-group.html'),
         type: 'dialog',
       }).result.then(function () {
         $state.go('cluster-list');
@@ -100,7 +100,7 @@
         },
         controller: 'AssignClustersController',
         controllerAs: 'vm',
-        templateUrl: 'modules/hercules/fusion-pages/resource-group-settings/assign-clusters.html',
+        template: require('modules/hercules/fusion-pages/resource-group-settings/assign-clusters.html'),
         type: 'full',
         windowClass: 'assign-clusters-modal',
       }).result.then(function (result) {

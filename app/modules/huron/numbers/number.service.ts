@@ -9,7 +9,6 @@ interface INumberResource extends ng.resource.IResourceClass<ng.resource.IResour
 
 export class NumberService {
   private numberResource: INumberResource;
-  private hasLocations: boolean = false;
 
   /* @ngInject */
   constructor(
@@ -19,34 +18,37 @@ export class NumberService {
     private FeatureToggleService,
   ) {
     this.numberResource = <INumberResource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/numbers/:numberUuid');
-    this.FeatureToggleService.supports(FeatureToggleService.features.hI1484).then(supports => {
-      this.hasLocations = supports;
-    });
   }
 
   public getNumberList(number?: string, type?: NumberType, assigned?: boolean, order?: NumberOrder, limit?: number, offset?: number, locationId?: string): ng.IPromise<INumber[]> {
-    return this.numberResource.get({
-      customerId: this.Authinfo.getOrgId(),
-      number: number,
-      type: type,
-      assigned: assigned,
-      order: order,
-      limit: limit,
-      offset: offset,
-      locationId: locationId,
-      deprecated: !this.hasLocations,
-    }).$promise
-    .then(numberList => {
-      return _.get(numberList, 'numbers', []);
+    return  this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484)
+    .then(supports => {
+      return this.numberResource.get({
+        customerId: this.Authinfo.getOrgId(),
+        number: number,
+        type: type,
+        assigned: assigned,
+        order: order,
+        limit: limit,
+        offset: offset,
+        location: locationId,
+        deprecated: !supports,
+      }).$promise
+        .then(numberList => {
+          return _.get(numberList, 'numbers', []);
+        });
     });
   }
 
   public getNumber(number: string): any {
-    return this.numberResource.get({
-      customerId: this.Authinfo.getOrgId(),
-      numberUuid: number,
-      deprecated: !this.hasLocations,
-      wide: true,
-    }).$promise;
+    return  this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484)
+    .then(supports => {
+      return this.numberResource.get({
+        customerId: this.Authinfo.getOrgId(),
+        numberUuid: number,
+        deprecated: !supports,
+        wide: true,
+      }).$promise;
+    });
   }
 }

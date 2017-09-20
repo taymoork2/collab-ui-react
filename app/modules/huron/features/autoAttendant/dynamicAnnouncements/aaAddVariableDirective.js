@@ -20,7 +20,7 @@
       },
       controller: 'AAAddVariableCtrl',
       controllerAs: 'aaAddVariable',
-      templateUrl: 'modules/huron/features/autoAttendant/dynamicAnnouncements/aaAddVariableDirective.tpl.html',
+      template: require('modules/huron/features/autoAttendant/dynamicAnnouncements/aaAddVariableDirective.tpl.html'),
     };
   }
 })();

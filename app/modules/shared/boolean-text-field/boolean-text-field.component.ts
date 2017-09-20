@@ -5,7 +5,7 @@ class BooleanTextFieldController implements ng.IComponentController {
 
 export class BooleanTextFieldComponent implements ng.IComponentOptions {
   public controller = BooleanTextFieldController;
-  public templateUrl = 'modules/shared/boolean-text-field/boolean-text-field.html';
+  public template = require('modules/shared/boolean-text-field/boolean-text-field.html');
   public bindings = {
     label: '@',
     value: '<',

@@ -14,7 +14,7 @@
     function openModal(options) {
       options = options || {};
       return $modal.open({
-        templateUrl: 'modules/core/modal/modal.tpl.html',
+        template: require('modules/core/modal/modal.tpl.html'),
         controller: 'ModalCtrl',
         controllerAs: 'modal',
         type: options.type || 'dialog',

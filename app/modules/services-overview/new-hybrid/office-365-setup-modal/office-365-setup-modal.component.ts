@@ -30,7 +30,7 @@ class Office365SetupModalController implements ng.IComponentController {
 
 export class Office365SetupModalComponent implements ng.IComponentOptions {
   public controller = Office365SetupModalController;
-  public templateUrl = 'modules/services-overview/new-hybrid/office-365-setup-modal/office-365-setup-modal.html';
+  public template = require('modules/services-overview/new-hybrid/office-365-setup-modal/office-365-setup-modal.html');
   public bindings = {
     close: '&',
     dismiss: '&',

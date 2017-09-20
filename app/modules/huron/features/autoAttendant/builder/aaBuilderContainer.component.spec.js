@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: AABuilderContainerCtrl', function () {
-  var $scope, controller, $modal;
+  var $scope, $modal;
   var AAModelService, AAUiModelService, AAValidationService;
 
   var uiModel = {
@@ -33,7 +33,7 @@ describe('Controller: AABuilderContainerCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function ($controller, _$rootScope_, _$modal_, _AAModelService_, _AAUiModelService_, _AAValidationService_) {
+  beforeEach(inject(function (_$rootScope_, _$modal_, _AAModelService_, _AAUiModelService_, _AAValidationService_) {
     $scope = _$rootScope_;
     $modal = _$modal_;
 
@@ -46,23 +46,21 @@ describe('Controller: AABuilderContainerCtrl', function () {
 
     spyOn($modal, 'open').and.returnValue(fakeModal);
 
-    controller = $controller('AABuilderContainerCtrl', {
-      $scope: $scope,
-    });
+    this.compileComponent('aaBuilderContainer');
   }));
 
   describe('openScheduleModal', function () {
     it('should not open the Modal on Validation error', function () {
       spyOn(AAValidationService, 'isValidCES').and.returnValue(false);
 
-      controller.openScheduleModal();
+      this.controller.openScheduleModal();
 
       expect($modal.open).not.toHaveBeenCalled();
     });
     it('should open the Modal on Validation success', function () {
       spyOn(AAValidationService, 'isValidCES').and.returnValue(true);
 
-      controller.openScheduleModal();
+      this.controller.openScheduleModal();
       fakeModal.close({
         holidays: [],
         hours: [],
@@ -76,7 +74,7 @@ describe('Controller: AABuilderContainerCtrl', function () {
 
   describe('getScheduleTitle', function () {
     it('should receive the schedule all day message', function () {
-      var title = controller.getScheduleTitle();
+      var title = this.controller.getScheduleTitle();
 
       expect(title).toEqual('autoAttendant.scheduleAllDay');
     });
@@ -85,7 +83,7 @@ describe('Controller: AABuilderContainerCtrl', function () {
       uiModel.isClosedHours = false;
       uiModel.isHolidays = true;
 
-      var title = controller.getScheduleTitle();
+      var title = this.controller.getScheduleTitle();
 
       expect(title).toEqual('autoAttendant.schedule');
     });
@@ -94,7 +92,7 @@ describe('Controller: AABuilderContainerCtrl', function () {
       uiModel.isClosedHours = true;
       uiModel.isHolidays = false;
 
-      var title = controller.getScheduleTitle();
+      var title = this.controller.getScheduleTitle();
 
       expect(title).toEqual('autoAttendant.schedule');
     });
@@ -103,7 +101,7 @@ describe('Controller: AABuilderContainerCtrl', function () {
       uiModel.isClosedHours = true;
       uiModel.isHolidays = true;
 
-      var title = controller.getScheduleTitle();
+      var title = this.controller.getScheduleTitle();
 
       expect(title).toEqual('autoAttendant.schedule');
     });

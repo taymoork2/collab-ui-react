@@ -76,5 +76,5 @@ class OnlineUpgrade {
 
 export class OnlineUpgradeComponent implements ng.IComponentOptions {
   public controller = OnlineUpgrade;
-  public templateUrl = 'modules/online/upgrade/upgradeModal.html';
+  public template = require('modules/online/upgrade/upgradeModal.html');
 }

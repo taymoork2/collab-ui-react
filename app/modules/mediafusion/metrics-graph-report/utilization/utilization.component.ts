@@ -1,5 +1,5 @@
 export class UtilizationMetrics implements ng.IComponentOptions {
-  public templateUrl = 'modules/mediafusion/metrics-graph-report/utilization/utilization.tpl.html';
+  public template = require('modules/mediafusion/metrics-graph-report/utilization/utilization.tpl.html');
   public bindings = {
     parentcntrl: '=',
   };

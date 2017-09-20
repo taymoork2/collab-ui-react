@@ -239,7 +239,7 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
 
   public cancelModal(): void {
     this.$modal.open({
-      templateUrl: 'modules/call/features/paging-group/paging-group-setup-assistant/paging-group-cancel-modal.html',
+      template: require('modules/call/features/paging-group/paging-group-setup-assistant/paging-group-cancel-modal.html'),
       type: 'dialog',
     });
   }
@@ -247,5 +247,5 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
 
 export class PgSetupAssistantComponent implements ng.IComponentOptions {
   public controller = PgSetupAssistantCtrl;
-  public templateUrl = 'modules/call/features/paging-group/paging-group-setup-assistant/paging-group-setup-assistant.component.html';
+  public template = require('modules/call/features/paging-group/paging-group-setup-assistant/paging-group-setup-assistant.component.html');
 }

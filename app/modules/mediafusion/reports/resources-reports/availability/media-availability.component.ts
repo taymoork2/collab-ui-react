@@ -1,5 +1,5 @@
 export class MediaAvailability implements ng.IComponentOptions {
-  public templateUrl = 'modules/mediafusion/reports/resources-reports/availability/media-availability.html';
+  public template = require('modules/mediafusion/reports/resources-reports/availability/media-availability.html');
   public bindings = {
     parentcntrl: '=',
   };

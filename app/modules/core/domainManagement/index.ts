@@ -5,6 +5,7 @@ import { DomainManageClaimCtrl } from './domainManageClaimCtrl';
 import { DomainManageDeleteCtrl } from './domainManageDeleteCtrl';
 import { DomainManageInstructionsCtrl } from './domainManageInstructionsCtrl';
 import { DomainManageVerifyCtrl } from './domainManageVerifyCtrl';
+import { DomainManagementDirectiveFactory } from './domainManagement.directive';
 
 require('./_domainManagement.scss');
 
@@ -12,7 +13,6 @@ export { DomainManagementCtrl };
 
 export default angular.module('core.domain-management', [
   require('angular-translate'),
-  require('scripts/app.templates'),
   require('modules/core/config/config').default,
   require('modules/core/scripts/services/authinfo'),
   require('modules/core/scripts/services/log'),
@@ -27,4 +27,5 @@ export default angular.module('core.domain-management', [
   .controller('DomainManageDeleteCtrl', DomainManageDeleteCtrl)
   .controller('DomainManageInstructionsCtrl', DomainManageInstructionsCtrl)
   .controller('DomainManageVerifyCtrl', DomainManageVerifyCtrl)
+  .directive('crDomainManagement', DomainManagementDirectiveFactory)
   .name;

@@ -4,6 +4,9 @@ import { ICardButton, CardType } from '../shared/services-overview-card';
 import { IPrivateTrunkResource } from 'modules/hercules/private-trunk/private-trunk-services/private-trunk';
 import { PrivateTrunkPrereqService } from 'modules/hercules/private-trunk/private-trunk-prereq';
 
+// TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
+const privateTrunkCardTemplatePath = require('ngtemplate-loader?module=Hercules!./private-trunk-card.html');
+
 export class ServicesOverviewPrivateTrunkCard extends ServicesOverviewHybridCard {
   public getShowMoreButton(): undefined {
     return undefined;
@@ -86,7 +89,7 @@ export class ServicesOverviewPrivateTrunkCard extends ServicesOverviewHybridCard
       display : true,
       routerState: 'private-trunk-overview',
       serviceId: 'ept',
-      template: 'modules/services-overview/hybrid/private-trunk-card.html',
+      template: privateTrunkCardTemplatePath,
     });
     this.hasDomain = false;
   }

@@ -69,7 +69,7 @@ class HelpDeskHybridVoicemailUserInfoComponentCtrl implements ng.IComponentContr
 
 export class HelpDeskHybridVoicemailUserInfoComponent implements ng.IComponentOptions {
   public controller = HelpDeskHybridVoicemailUserInfoComponentCtrl;
-  public templateUrl = 'modules/squared/helpdesk/components/hybrid-voicemail-user-info/help-desk-hybrid-voicemail-user-info.component.html';
+  public template = require('modules/squared/helpdesk/components/hybrid-voicemail-user-info/help-desk-hybrid-voicemail-user-info.component.html');
   public bindings = {
     orgId: '<',
     userId: '<',

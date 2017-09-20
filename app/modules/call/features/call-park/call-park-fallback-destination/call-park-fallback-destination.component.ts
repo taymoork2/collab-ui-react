@@ -45,7 +45,7 @@ class CallParkFallbackDestinationCtrl implements ng.IComponentController {
 
 export class CallParkFallbackDestinationComponent implements ng.IComponentOptions {
   public controller = CallParkFallbackDestinationCtrl;
-  public templateUrl = 'modules/call/features/call-park/call-park-fallback-destination/call-park-fallback-destination.component.html';
+  public template = require('modules/call/features/call-park/call-park-fallback-destination/call-park-fallback-destination.component.html');
   public bindings = {
     fallbackDestination: '<',
     onChangeFn: '&',

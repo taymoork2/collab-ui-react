@@ -19,7 +19,7 @@ export class CallServiceContainerController extends ExpresswayContainerControlle
     },
     controller: 'AddResourceController',
     controllerAs: 'vm',
-    templateUrl: 'modules/hercules/service-specific-pages/common-expressway-based/add-resource-modal.html',
+    template: require('modules/hercules/service-specific-pages/common-expressway-based/add-resource-modal.html'),
     type: 'small',
   };
 

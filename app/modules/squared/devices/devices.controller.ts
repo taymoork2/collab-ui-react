@@ -41,7 +41,6 @@ export class DevicesController {
     private $q: ng.IQService,
     private $state,
     private $translate: ng.translate.ITranslateService,
-    private $templateCache,
     private Authinfo,
     private DeviceExportService,
     private FeatureToggleService,
@@ -135,7 +134,7 @@ export class DevicesController {
       columnDefs: [{
         field: 'photos',
         displayName: '',
-        cellTemplate: this.getTemplate('_imageTpl'),
+        cellTemplate: require('./templates/_imageTpl.html'),
         width: 70,
       }, {
         field: 'displayName',
@@ -159,14 +158,10 @@ export class DevicesController {
       }, {
         field: 'product',
         displayName: $translate.instant('spacesPage.typeHeader'),
-        cellTemplate: this.getTemplate('_productTpl'),
+        cellTemplate: require('./templates/_productTpl.html'),
         sortingAlgorithm: DevicesController.sortFn,
       }],
     };
-  }
-
-  private getTemplate(name) {
-    return this.$templateCache.get('modules/squared/devices/templates/' + name + '.html');
   }
 
   private static sortFn(a, b) {
@@ -421,7 +416,7 @@ export class DevicesController {
 
   public startDeviceExport() {
     this.$modal.open({
-      templateUrl: 'modules/squared/devices/export/devices-export.html',
+      template: require('modules/squared/devices/export/devices-export.html'),
       type: 'dialog',
     }).result.then(() => {
       this.openExportProgressTracker();
@@ -432,7 +427,7 @@ export class DevicesController {
 
   private openExportProgressTracker() {
     this.exportProgressDialog = this.$modal.open({
-      templateUrl: 'modules/squared/devices/export/devices-export-progress.html',
+      template: require('modules/squared/devices/export/devices-export-progress.html'),
       type: 'dialog',
       controller: () => {
         return {

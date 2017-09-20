@@ -75,7 +75,7 @@ class Office365TestModalController implements ng.IComponentController {
 
 export class Office365TestModalComponent implements ng.IComponentOptions {
   public controller = Office365TestModalController;
-  public templateUrl = 'modules/services-overview/new-hybrid/office-365-test-modal/office-365-test-modal.html';
+  public template = require('modules/services-overview/new-hybrid/office-365-test-modal/office-365-test-modal.html');
   public bindings = {
     close: '&',
     dismiss: '&',

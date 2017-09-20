@@ -27,6 +27,8 @@
     vm.selectedLocation = '';
     vm.locationUuid = '';
 
+    vm.labelField = '';
+
     vm.returnInternalNumberlist = CommonLineService.returnInternalNumberList;
     vm.returnExternalNumberList = CommonLineService.returnExternalNumberList;
     vm.getInternalNumberPool = CommonLineService.getInternalNumberPool;
@@ -61,9 +63,11 @@
                 }
               })
               .then(function () {
+                vm.labelField = 'siteToSite';
                 return CommonLineService.loadLocationInternalNumberPool(null, vm.locationUuid);
               });
           } else {
+            vm.labelField = 'number';
             return CommonLineService.loadInternalNumberPool();
           }
         });
@@ -252,7 +256,7 @@
       var selectedLocationColumn = rowEntity.selectedLocation.uuid;
       return CommonLineService.loadLocationInternalNumberPool(null, selectedLocationColumn)
         .then(function (internalNumberPool) {
-          rowEntity.assignedDn.pattern = internalNumberPool[0].pattern;
+          rowEntity.assignedDn.siteToSite = internalNumberPool[0].siteToSite;
         });
     }
 
@@ -265,7 +269,7 @@
       'refresh-data-fn="grid.appScope.returnInternalNumberlist(filter , row.entity.selectedLocation.uuid)" wait-time="0" ' +
       'placeholder="placeholder" input-placeholder="inputPlaceholder" ' +
       'on-change-fn="grid.appScope.syncGridDidDn(row.entity, \'internalNumber\')"' +
-      'labelfield="pattern" valuefield="uuid" required="true" filter="true"' +
+      'labelfield="{{grid.appScope.labelField}}" valuefield="uuid" required="true" filter="true"' +
       ' is-warn="{{grid.appScope.checkDnOverlapsSteeringDigit(row.entity)}}" warn-msg="{{\'usersPage.steeringDigitOverlapWarning\' | translate: { steeringDigitInTranslation: grid.appScope.telephonyInfo.steeringDigit } }}" > </cs-select></div>' +
       '<div ng-show="row.entity.assignedDn === undefined"> ' +
       '<cs-select name="noInternalNumber" ' +

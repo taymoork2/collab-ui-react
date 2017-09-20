@@ -50,7 +50,7 @@
       },
       controller: 'DeleteClusterSettingControllerV2',
       controllerAs: 'deleteClust',
-      templateUrl: 'modules/mediafusion/media-service-v2/delete-cluster/delete-cluster-dialog.html',
+      template: require('modules/mediafusion/media-service-v2/delete-cluster/delete-cluster-dialog.html'),
     };
 
     loadCluster($stateParams.id);

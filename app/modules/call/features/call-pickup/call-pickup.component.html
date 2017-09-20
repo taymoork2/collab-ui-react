@@ -1,6 +1,6 @@
 <div ng-if="!$ctrl.callPickupId">
-<ng-include src="'modules/call/features/call-pickup/call-pickup-add.html'"></ng-include>
+<uc-call-pickup-add></uc-call-pickup-add>
 </div>
 <div class="call-pickup-edit" ng-if="$ctrl.callPickupId">
-  <ng-include src="'modules/call/features/call-pickup/call-pickup-edit.html'"></ng-include>
+  <uc-call-pickup-edit></uc-call-pickup-edit>
 </div>

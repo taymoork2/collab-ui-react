@@ -1,0 +1,20 @@
+<div class="section__info">
+  <h4 translate="partnerHomePage.regionalSettings"></h4>
+</div>
+<div class="section__content">
+  <div class="sub-section">
+    <p class="sub-section__description" translate="partnerHomePage.pstnCountry"></p>
+    <cs-select
+      name="{{$ctrl.selectName}}"
+      ng-model="$ctrl.defaultCountry"
+      options="$ctrl.countryList"
+      labelfield="name"
+      valuefield="id"
+      required
+      placeholder="$ctrl.placeholder"
+      on-change-fn="$ctrl.onChange()"
+      is-error="{{$ctrl.displayError()}}"
+      error-msg="{{::$ctrl.errorMessage}}">
+    </cs-select>
+  </div>
+</div>

@@ -19,14 +19,13 @@ class DeviceList implements ng.IComponentController {
   public loadingMoreSpinner = false;
 
   //bindings
-  public searchObject: SearchObject = SearchObject.createWithQuery('');
+  public searchObject: SearchObject;
   public searchHits: SearchHits;
   public sortOrderChanged: (e?: { field: string, order: string }) => {};
 
   /* @ngInject */
   constructor(private $state,
               private CsdmSearchService: CsdmSearchService,
-              private $templateCache,
               private $translate,
               CsdmHuronOrgDeviceService,
               private $scope,
@@ -77,7 +76,7 @@ class DeviceList implements ng.IComponentController {
       columnDefs: [{
         field: 'photos',
         displayName: '',
-        cellTemplate: this.getTemplate('_imageTpl'),
+        cellTemplate: require('modules/csdm/templates/_imageTpl.html'),
         width: 70,
       }, {
         field: 'displayName',
@@ -87,7 +86,7 @@ class DeviceList implements ng.IComponentController {
       }, {
         field: 'connectionStatus',
         displayName: this.$translate.instant('spacesPage.statusHeader'),
-        cellTemplate: this.getTemplate('_statusTpl'),
+        cellTemplate: require('modules/csdm/templates/_statusTpl.html'),
         sort: { // This has no effect on the actual sorting, but makes the grid reflect the default sort in searchObject.ts
           direction: 'asc',
           priority: 0,
@@ -96,7 +95,7 @@ class DeviceList implements ng.IComponentController {
       }, {
         field: 'product',
         displayName: this.$translate.instant('spacesPage.typeHeader'),
-        cellTemplate: this.getTemplate('_productTpl'),
+        cellTemplate: require('modules/csdm/templates/_productTpl.html'),
         suppressRemoveSort: true,
       }],
     };
@@ -126,10 +125,6 @@ class DeviceList implements ng.IComponentController {
 
   public getResult() {
     return this.searchHits && this.searchHits.hits;
-  }
-
-  private getTemplate(name) {
-    return this.$templateCache.get('modules/csdm/templates/' + name + '.html');
   }
 
   public expandDevice(device) {
@@ -187,5 +182,5 @@ export class DeviceListComponent implements ng.IComponentOptions {
     sortOrderChanged: '&',
   };
   public controllerAs = 'lctrl';
-  public templateUrl = 'modules/csdm/devicesRedux/list.html';
+  public template = require('modules/csdm/devicesRedux/list.html');
 }

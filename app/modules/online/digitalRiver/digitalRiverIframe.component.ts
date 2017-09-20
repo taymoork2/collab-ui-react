@@ -30,7 +30,7 @@ class DigitalRiverIframe implements ng.IComponentController {
 
 export class DigitalRiverIframeComponent implements ng.IComponentOptions {
   public controller = DigitalRiverIframe;
-  public templateUrl = 'modules/online/digitalRiver/digitalRiverIframe.html';
+  public template = require('modules/online/digitalRiver/digitalRiverIframe.html');
   public bindings = <{ [bindings: string]: string }>{
     iframeSrc: '<',
     iframeLoading: '<',

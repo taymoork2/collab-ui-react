@@ -6,7 +6,6 @@ import featureMemberService from 'modules/huron/features/services';
 
 export default angular
   .module('call.features.paging-group-edit', [
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
     require('modules/core/notifications').default,

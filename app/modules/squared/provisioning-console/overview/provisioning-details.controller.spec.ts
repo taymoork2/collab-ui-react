@@ -24,7 +24,6 @@ describe('Controller: ProvisioningDetailsController', function () {
       '$scope',
       '$state',
       '$stateParams',
-      '$templateCache',
       '$timeout',
       'ProvisioningService');
     initDependencySpies.apply(this);

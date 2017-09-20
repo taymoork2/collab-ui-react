@@ -33,6 +33,9 @@ export interface ICardParams {
   infoText?: string;
 }
 
+// TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
+const servicesOverviewCardTemplatePath = require('ngtemplate-loader?module=Hercules!./services-overview-card.html');
+
 export abstract class ServicesOverviewCard {
 
   private cardType: CardType;
@@ -69,7 +72,7 @@ export abstract class ServicesOverviewCard {
     display = true,
     icon = '',
     name,
-    template = 'modules/services-overview/shared/services-overview-card.html',
+    template = servicesOverviewCardTemplatePath,
     setupMode = false,
     infoIcon = '',
     infoText = '',

@@ -145,7 +145,7 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
 
   public openUpgradeModal(connectorType): void {
     this.$modal.open({
-      templateUrl: 'modules/hercules/connector-upgrade-modal/connector-upgrade-modal.html',
+      template: require('modules/hercules/connector-upgrade-modal/connector-upgrade-modal.html'),
       type: 'small',
       controller: 'ConnectorUpgradeController',
       controllerAs: 'ConnectorUpgradeCtrl',
@@ -213,7 +213,7 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
 
 export class HybridServicesNodesPageComponent implements ng.IComponentOptions {
   public controller = HybridServicesNodesPageCtrl;
-  public templateUrl = 'modules/hercules/hybrid-services-nodes-page/hybrid-services-nodes-page.html';
+  public template = require('modules/hercules/hybrid-services-nodes-page/hybrid-services-nodes-page.html');
   public bindings = {
     clusterId: '<',
   };

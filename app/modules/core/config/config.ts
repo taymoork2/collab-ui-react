@@ -39,7 +39,7 @@ export class Config {
 
   public readonly ciscoOrgId = '1eb65fdf-9643-417f-9974-ad72cae0e10f';
   public readonly ciscoMockOrgId = 'd30a6828-dc35-4753-bab4-f9b468828688';
-  public readonly consumerOrgId: 'consumer';
+  public readonly consumerOrgId = 'consumer';
   public readonly consumerMockOrgId = '584cf4cd-eea7-4c8c-83ee-67d88fc6eab5';
 
   public readonly scimSchemas = [
@@ -370,7 +370,6 @@ export class Config {
       'huronCallPickup',
       'huronPagingGroupEdit',
       'huronlines',
-      'huronnewfeature',
       'huronsettings',
       'huronrecords',
       'huronsettingslocation',

@@ -82,7 +82,7 @@ class SubscriptionRowCtrl {
 }
 
 export class SubscriptionRowComponent implements ng.IComponentOptions {
-  public templateUrl = 'modules/core/myCompany/mySubscriptions/subscription-row/subscriptionRow.tpl.html';
+  public template = require('modules/core/myCompany/mySubscriptions/subscription-row/subscriptionRow.tpl.html');
   public controller = SubscriptionRowCtrl;
   public bindings = {
     offer: '<',

@@ -1,6 +1,5 @@
 import {
   IRLocation, Location, IRLocationListItem, LocationListItem,
-  IRLocationInternalNumberPoolList, LocationInternalNumberPoolList,
 } from './location';
 
 import {
@@ -19,9 +18,6 @@ interface IUserMoveLocationResource extends ng.resource.IResourceClass<ng.resour
   update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
 }
 
-interface ILocationInternalNumberPoolResource extends ng.resource.IResourceClass<IRLocationInternalNumberPoolList & ng.resource.IResource<IRLocationInternalNumberPoolList>> {}
-
-
 interface INumberResource extends ng.resource.IResourceClass<ng.resource.IResource<IRCallPhoneNumberData>> {}
 interface IREmergencyNumberResource extends ng.resource.IResourceClass<ng.resource.IResource<IREmergencyNumberData>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
@@ -32,7 +28,6 @@ export class LocationsService {
   private userLocationDetailResource: IUserLocationDetailResource;
   private userMoveLocationResource: IUserMoveLocationResource;
   private locationDetailResource: ILocationDetailResource;
-  private locationInternalNumberPoolResource: ILocationInternalNumberPoolResource;
   private defaultLocation: LocationListItem | undefined = undefined;
   private numberResource: INumberResource;
   private emergencyNumberResource: IREmergencyNumberResource;
@@ -60,7 +55,6 @@ export class LocationsService {
       {
         save: saveAction,
       });
-    this.locationInternalNumberPoolResource = this.$resource(`${this.HuronConfig.getCmiUrl()}/voice/customers/:customerId/locations/:locationId/internalnumberpools`, {}, {}) as ILocationInternalNumberPoolResource;
     this.userMoveLocationResource = <IUserMoveLocationResource>this.$resource(`${this.HuronConfig.getCmiV2Url()}/customers/:customerId/users/:userId/move/locations`, {},
       {
         update: updateAction,
@@ -248,20 +242,6 @@ export class LocationsService {
     });
   }
 
-  public getLocationInternalNumberPoolList(locationId, directorynumber, order, patternQuery, patternlimit): IPromise<LocationInternalNumberPoolList[]> {
-    return this.locationInternalNumberPoolResource.query({
-      customerId: this.Authinfo.getOrgId(),
-      locationId: locationId,
-      directorynumber,
-      order,
-      pattern: patternQuery,
-      limit: patternlimit,
-    }).$promise.then((response) => {
-      return _.map(response, location => {
-        return new LocationInternalNumberPoolList(location);
-      });
-    });
-  }
 
   public getEmergencyCallbackNumbersOptions(): ng.IPromise<CallPhoneNumber[]> {
     return this.numberResource.get({

@@ -234,7 +234,7 @@ class GmtdDetails implements ng.IComponentController {
   public onCancelSubmission() {
     this.$modal.open({
       type: 'dialog',
-      templateUrl: 'modules/gemini/telephonyDomain/details/cancelSubmissionConfirm.tpl.html',
+      template: require('modules/gemini/telephonyDomain/details/cancelSubmissionConfirm.tpl.html'),
     }).result.then(() => {
       this.setButtonStatus('CancelSubmission');
       this.updateTelephonyDomainStatus('cancel');
@@ -257,5 +257,5 @@ class GmtdDetails implements ng.IComponentController {
 
 export class GmTdDetailsComponent implements ng.IComponentOptions {
   public controller = GmtdDetails;
-  public templateUrl = 'modules/gemini/telephonyDomain/details/gmTdDetails.html';
+  public template = require('modules/gemini/telephonyDomain/details/gmTdDetails.html');
 }

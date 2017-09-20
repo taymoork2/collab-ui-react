@@ -1,7 +1,7 @@
 'use strict';
 
 describe('components:showComponents', function () {
-  var $compile, $controller, $q, $scope, controller, ComponentsService, GSSService, $templateCache;
+  var $compile, $controller, $q, $scope, controller, ComponentsService, GSSService;
   var view;
   var hasData = 'gss-components-list';
   var noData = 'centered-info-pane';
@@ -18,18 +18,17 @@ describe('components:showComponents', function () {
   afterEach(destructDI);
   beforeEach(inject(dependencies));
   beforeEach(compileView);
-  function dependencies(_$rootScope_, _$controller_, _$compile_, _ComponentsService_, _GSSService_, _$templateCache_, _$q_) {
+  function dependencies(_$rootScope_, _$controller_, _$compile_, _ComponentsService_, _GSSService_, _$q_) {
     $scope = _$rootScope_.$new();
     $controller = _$controller_;
     $compile = _$compile_;
     ComponentsService = _ComponentsService_;
     GSSService = _GSSService_;
-    $templateCache = _$templateCache_;
     $q = _$q_;
   }
 
   function destructDI() {
-    $compile = $controller = $q = $scope = $templateCache = controller = ComponentsService = GSSService = undefined;
+    $compile = $controller = $q = $scope = controller = ComponentsService = GSSService = undefined;
   }
 
   function compileView() {
@@ -41,7 +40,7 @@ describe('components:showComponents', function () {
     $scope.comp = controller;
     spyOn(controller, 'addComponent').and.returnValue($q.resolve(true));
     spyOn(controller, 'updateComponent').and.returnValue($q.resolve({}));
-    var template = $templateCache.get('modules/gss/components/components.tpl.html');
+    var template = require('modules/gss/components/components.tpl.html');
     view = $compile(angular.element(template))($scope);
     $scope.$apply();
   }

@@ -103,7 +103,7 @@ class HelpDeskHybridServicesOrgCardComponentCtrl implements ng.IComponentControl
     this.HybridServicesClusterService.getAll(this.org.id)
       .then((hsData) => {
         this.$modal.open({
-          templateUrl: 'modules/squared/helpdesk/helpdesk-extended-information.html',
+          template: require('modules/squared/helpdesk/helpdesk-extended-information.html'),
           controller: 'HelpdeskExtendedInfoDialogController as modal',
           resolve: {
             title: () => {
@@ -128,7 +128,7 @@ class HelpDeskHybridServicesOrgCardComponentCtrl implements ng.IComponentControl
 
 export class HelpDeskHybridServicesOrgCardComponent implements ng.IComponentOptions {
   public controller = HelpDeskHybridServicesOrgCardComponentCtrl;
-  public templateUrl = 'modules/squared/helpdesk/components/hybrid-services-org-card/help-desk-hybrid-services-org-card.component.html';
+  public template = require('modules/squared/helpdesk/components/hybrid-services-org-card/help-desk-hybrid-services-org-card.component.html');
   public bindings = {
     org: '<',
   };

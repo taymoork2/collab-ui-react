@@ -152,7 +152,7 @@ export class RetentionSettingController {
       if (this.isNewRetentionShorter()) {
         this.$modal.open({
           type: 'dialog',
-          templateUrl: 'modules/core/settings/retention/confirmLowerRetention.tpl.html',
+          template: require('modules/core/settings/retention/confirmLowerRetention.tpl.html'),
           controllerAs: 'ctrl',
         }).result
           .then(() => { this.updateRetentionValue(); })

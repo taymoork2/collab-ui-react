@@ -74,7 +74,7 @@ export class AlarmListSectionComponentCtrl implements ng.IComponentController {
 
 export class AlarmListSectionComponent implements ng.IComponentOptions {
   public controller = AlarmListSectionComponentCtrl;
-  public templateUrl = 'modules/hercules/cluster-sidepanel/alarm-list/alarm-list-section.html';
+  public template = require('modules/hercules/cluster-sidepanel/alarm-list/alarm-list-section.html');
   public bindings = {
     alarms: '<',
     connectorType: '<',

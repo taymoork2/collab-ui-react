@@ -184,7 +184,7 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
 
 export class CallFeatureFallbackDestinationComponent implements ng.IComponentOptions {
   public controller = CallFeatureFallbackDestinationCtrl;
-  public templateUrl = 'modules/call/features/shared/call-feature-fallback-destination/call-feature-fallback-destination.component.html';
+  public template = require('modules/call/features/shared/call-feature-fallback-destination/call-feature-fallback-destination.component.html');
   public bindings = {
     fallbackDestination: '<',
     showReversionLookup: '<',

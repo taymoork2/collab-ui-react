@@ -33,6 +33,6 @@ class MyCompanyBillingCtrl implements ng.IComponentController {
 angular
   .module('Core')
   .component('myCompanyBilling', {
-    templateUrl: 'modules/core/myCompany/billing/myCompanyBilling.tpl.html',
+    template: require('modules/core/myCompany/billing/myCompanyBilling.tpl.html'),
     controller: MyCompanyBillingCtrl,
   });

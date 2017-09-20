@@ -20,7 +20,7 @@ class HybridCallServiceSupportSectionTestToolCtrl implements ng.IComponentContro
 
   public openTool(): void {
     this.$modal.open({
-      templateUrl: 'modules/hercules/user-sidepanel/hybrid-call-service-test-call-tool/hybrid-call-service-test-call-tool-modal.html',
+      template: require('modules/hercules/user-sidepanel/hybrid-call-service-test-call-tool/hybrid-call-service-test-call-tool-modal.html'),
       controller: 'HybridCallServiceTestToolModalController',
       controllerAs: 'vm',
       resolve: {
@@ -35,5 +35,5 @@ class HybridCallServiceSupportSectionTestToolCtrl implements ng.IComponentContro
 
 export class HybridCallServiceSupportSectionTestToolComponent implements ng.IComponentOptions {
   public controller = HybridCallServiceSupportSectionTestToolCtrl;
-  public templateUrl = 'modules/squared/support/hybrid-call-service-support-section-test-tool/hybrid-call-service-support-section-test-tool.component.html';
+  public template = require('modules/squared/support/hybrid-call-service-support-section-test-tool/hybrid-call-service-support-section-test-tool.component.html');
 }

@@ -7,7 +7,6 @@ import featuresModule from 'modules/core/featureToggle';
 
 export default angular
   .module('huron.hunt-group-numbers', [
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
     numberService,
