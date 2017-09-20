@@ -115,6 +115,19 @@ export function createCallPickUp(token, customerId, pickUpBody) {
   return provisionerHelper.makeRequest(options);
 }
 
+export function createCallPark(token, customerId, callParkBody) {
+  const options = {
+    method: 'POST',
+    uri: `${config.getCmiV2ServiceUrl()}customers/${customerId}/features/callparks`,
+    headers: {
+      Authorization: `Bearer  ${token}`,
+    },
+    body: callParkBody,
+    json: true,
+  };
+  return provisionerHelper.makeRequest(options);
+}
+
 export function getUserUUID(token, customerId, value) {
   const options = {
     method: 'GET',

@@ -26,6 +26,7 @@ export function huronCustomer(huronCustomerOptions) {
     places: huronPlaces(options.places, options.numberRange ? options.numberRange.beginNumber : undefined, pstnNumbers),
     // doHuntGroup: doHuntGroup || false,
     doCallPickUp: options.doCallPickUp || false,
+    doCallPark: options.doCallPark || false,
   };
   return atlasCustomer(customer);
 }

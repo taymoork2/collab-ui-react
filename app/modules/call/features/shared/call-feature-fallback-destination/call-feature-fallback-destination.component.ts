@@ -82,7 +82,9 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
           if (this.isCallPark) {
             this.showMember = false;
             this.showReversionLookup = false;
-            this.fallbackDestForm.$setValidity('', true, this.fallbackDestForm);
+            if (this.fallbackDestForm) {
+              this.fallbackDestForm.$setValidity('', true, this.fallbackDestForm);
+            }
           } else {
             this.showMember = false;
             this.showReversionLookup = true;

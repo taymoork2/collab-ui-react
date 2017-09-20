@@ -43,6 +43,7 @@ export function provisionCustomerAndLogin(customer) {
           .then(() => provisionPlaces(customer))
           .then(() => huronFeaturesHelper.setupHuntGroup(customer))
           .then(() => huronFeaturesHelper.setupCallPickup(customer))
+          .then(() => huronFeaturesHelper.setupCallPark(customer))
           .then(() => loginPartner(customer.partner))
           .then(() => switchToCustomerWindow(customer.name, customer.doFtsw));
       } else {
