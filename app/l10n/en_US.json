@@ -2281,7 +2281,7 @@
       "squared-fusion-ec": "Call Service Connect",
       "squared-fusion-ec.full": "Call Service Connect",
       "squared-fusion-mgmt": "Expressway Management Service",
-      "spark-hybrid-impinterop": "IM & Presence"
+      "spark-hybrid-impinterop": "Messaging Service"
     },
     "hybridServiceNames": {
       "squared-fusion-mgmt": "Hybrid Management Service",
@@ -2293,7 +2293,7 @@
       "squared-fusion-media": "Hybrid Media Service",
       "hybrid-context": "Hybrid Context Service",
       "ept": "Enterprise Private Trunking",
-      "spark-hybrid-impinterop": "Hybrid IM & Presence"
+      "spark-hybrid-impinterop": "Hybrid Messaging Service"
     },
     "connectorNames": {
       "squared-fusion-uc": "Call Connector",
@@ -2303,7 +2303,7 @@
       "contact-center-context": "Context Connector",
       "squared-fusion-ec": "Call Connector",
       "squared-fusion-mgmt": "Management Connector",
-      "spark-hybrid-impinterop": "IM & Presence Connector"
+      "spark-hybrid-impinterop": "Hybrid Messaging Connector"
     },
     "connectorNameFromConnectorType": {
       "c_cal": "Calendar Connector",
@@ -2315,7 +2315,7 @@
       "cs_context": "Context Connector",
       "ucm_mgmt": "Management Connector",
       "c_serab": "Serviceability Connector",
-      "c_imp": "IM & Presence Connector"
+      "c_imp": "Hybrid Messaging Connector"
     },
     "shortConnectorNameFromConnectorType": {
       "c_cal": "Calendar",
@@ -2327,7 +2327,7 @@
       "cs_context": "Context",
       "ucm_mgmt": "Management",
       "c_serab": "Serviceability",
-      "c_imp": "IM & Presence"
+      "c_imp": "Messaging"
     },
     "serviceNameFromConnectorType": {
       "c_cal": "Calendar Service",
@@ -2337,7 +2337,7 @@
       "cs_context": "Context Connector",
       "ucm_mgmt": "Management Connector",
       "c_serab": "Serviceability Connector",
-      "c_imp": "IM & Presence"
+      "c_imp": "Messaging Service"
     },
     "clusterTypeFromServiceId": {
       "squared-fusion-mgmt": "Expressway",
@@ -2388,7 +2388,7 @@
         "squared-fusion-gcal": "Add @spark to an invitation to create a Cisco Spark room for your meeting. Add @webex to attach your WebEx Personal Room.",
         "squared-fusion-o365": "Add @spark to an invitation to create a Cisco Spark room for your meeting. Add @webex to attach your WebEx Personal Room.",
         "squared-fusion-ec": "Users' incoming calls will ring their work phones and the Cisco Spark app. Users can call their colleagues from either their phones or the app, too.",
-        "spark-hybrid-impinterop": "TODO: Here is a description of what Hybrid IM&P can do."
+        "spark-hybrid-impinterop": "[TODO: Here is a description of what Hybrid Messaging can do.]"
       },
       "preferredWebExSite": "Preferred WebEx Site",
       "preferredWebExSiteDefault": "Default",
@@ -2903,7 +2903,7 @@
           "error": "Error fetching the different cluster types.",
           "title": "What type of resource do you want to add?",
           "expressway-description": "Can run Hybrid Call Service or Hybrid Calendar Service",
-          "expressway-description-with-imp": "Can run Hybrid Call Service, Hybrid Calendar Service, or Hybrid IM & Presence",
+          "expressway-description-with-imp": "Can run Hybrid Call Service, Hybrid Calendar Service, or Hybrid Messaging",
           "expressway-not-setup": "Expressway not set up",
           "mediafusion-description": "Can run Hybrid Media Service",
           "mediafusion-not-setup": "Media Service not set up",
@@ -2918,9 +2918,9 @@
             "title": "Choose services that you want the Expressway to manage:",
             "call-not-setup": "Hybrid Call Service not set up",
             "calendar-not-setup": "Hybrid Calendar Service not set up",
-            "imp-not-setup": "Hybrid IM & Presence Service not set up",
+            "imp-not-setup": "Hybrid Messaging Service not set up",
             "add-more-later": "You can add more services later by clicking Add Resource in the Call or Calendar page.",
-            "add-more-later-with-imp": "You can add more services later by clicking Add Resource in the Call, Calendar, or IM & Presence page."
+            "add-more-later-with-imp": "You can add more services later by clicking Add Resource in the Call, Calendar, or Messaging page."
           },
           "end": {
             "line1": "You may now register the Expressway with Cisco Collaboration Cloud.",
@@ -3113,6 +3113,24 @@
       "err.dns.resolution": {
         "title": "Unable to resolve address {{hostname}}",
         "description": "Unable to resolve address {{hostname}}. See <a href=\"{{troubleshootingLink}}\" target=\"_blank\">documentation</a> for guidance in resolving the issue."
+      },
+      "err.tcp.unreachable": {
+        "title": "Unable to connect to {{hostname}}",
+        "description": "Unable to connect to {{hostname}}. See <a href=\"{{troubleshootingLink}}\" target=\"_blank\">documentation</a> for guidance in resolving the issue."
+      },
+      "err.tcp.portrange": {
+        "title": "Invalid port number {{port}}. Destination's port number must be in range <5060, 5071>",
+        "description": "Invalid port number {{port}}. See <a href=\"{{troubleshootingLink}}\" target=\"_blank\">documentation</a> for guidance in resolving the issue."
+      },
+      "err.tls.failed": {
+        "title": "Unable to establish TLS connection to {{hostname}}",
+        "description": "Unable to establish TLS connection to {{hostname}}. See <a href=\"{{troubleshootingLink}}\" target=\"_blank\">documentation</a> for guidance in resolving the issue."
+      }
+    },
+    "serviceAlarms": {
+      "ept.service.alarm": {
+        "title": "Enterprise Private Trunking {{severity}} Alarm",
+        "description": "SIP Destination connectivity is in an {{state}} state"
       }
     }
   },
@@ -7742,7 +7760,7 @@
           "squared-fusion-gcal": "Calendar (Google)",
           "squared-fusion-o365": "Calendar (Office 365)",
           "squared-fusion-uc": "Call",
-          "spark-hybrid-impinterop": "IM & Presence",
+          "spark-hybrid-impinterop": "Messaging",
           "squared-fusion-mgmt": "Management",
           "squared-fusion-media": "Media",
           "spark-hybrid-datasecurity": "Data Security",
@@ -8239,7 +8257,7 @@
       "orgNotEnabled": "Organization not enabled."
     },
     "hybridImp": {
-      "hybridImp": "IM&Presence Interop"
+      "hybridImp": "Hybrid Messaging"
     }
   },
   "partnerManagement": {
@@ -8505,8 +8523,8 @@
         }
       },
       "hybridImp": {
-        "title": "Hybrid IM & Presence",
-        "description": "Dummy text to be updated",
+        "title": "Hybrid Messaging",
+        "description": "[A description of Hybrid Messaging goes here]",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
