@@ -8,7 +8,7 @@ describe('Component: autoAnswer', () => {
   const AUTO_ANSWER_ENABLED_TOGGLE = '#enableAutoAnswer';
   const AUTO_ANSWER_DISABLED_TOGGLE = 'input#enableAutoAnswer[type="checkbox"]:disabled';
   const AUTO_ANSWER_PHONE_SELECT = '#autoAnswerPhoneSelection';
-  const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
+  const DROPDOWN_OPTIONS = '.dropdown-menu ul li';
   const AUTO_ANSWER_MODE_SPEAKER_RADIO = '#autoAnswerSpeaker';
   const AUTO_ANSWER_MODE_HEADSET_RADIO = '#autoAnswerHeadset';
   const AUTO_ANSWER_PHONE_LABEL = '#autoAnswerDevice';

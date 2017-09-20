@@ -2,7 +2,7 @@ import mediaOnHold from './index';
 
 describe('Component: mediaOnHold', () => {
   const MEDIA_ON_HOLD_SELECT = '.csSelect-container[name="lineMohSelect"]';
-  const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
+  const DROPDOWN_OPTIONS = '.dropdown-menu ul li';
   const MEDIA_FILE_1 = 'drbd-1234-g79e-0op3';
   const MEDIA_FILE_2 = 'bjek-3491-fu69-l140';
 

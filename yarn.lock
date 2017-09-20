@@ -1793,9 +1793,25 @@ collab-ui-formly@~2.0.3:
     api-check "~7.5.0"
     collab-ui-ng "*"
 
-collab-ui-ng@*, collab-ui-ng@~7.0.1:
+collab-ui-ng@*:
   version "7.0.1"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/collab-ui-ng/-/collab-ui-ng-7.0.1.tgz#1b8b575fb89c453f0839d5e577a60a2938b24845"
+  dependencies:
+    angular "^1.5.0"
+    angular-animate "^1.5.0"
+    angular-messages "^1.5.0"
+    angular-ui-grid "~3.0.7"
+    angular-ui-router "^0.3.1"
+    collab-ui-stickyfill "^1.1.5"
+    google-libphonenumber "^2.0.15"
+    imagesloaded "3.1.8"
+    jquery "2.1.1"
+    masonry-layout "^4.1.1"
+    moment "^2.10.6"
+
+collab-ui-ng@~7.1.0:
+  version "7.1.0"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/collab-ui-ng/-/collab-ui-ng-7.1.0.tgz#1082385df55d0d939344ddfc379d92044b079ab3"
   dependencies:
     angular "^1.5.0"
     angular-animate "^1.5.0"

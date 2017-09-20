@@ -2,7 +2,7 @@ import { JSON_US } from 'modules/huron/pstn';
 
 describe('component: emergencyServices', () => {
   const EMERGENCYNUMBER_SELECT = '.csSelect-container[name="emergencyCallbackNumber"]';
-  const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
+  const DROPDOWN_OPTIONS = '.dropdown-menu ul li';
 
   const location = {
     type: 'State',

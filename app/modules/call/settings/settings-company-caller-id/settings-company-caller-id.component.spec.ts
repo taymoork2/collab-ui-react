@@ -6,7 +6,7 @@ describe('Component: companyCallerId', () => {
   const CALLER_ID_NAME = 'input#callerIdName';
   const CALLER_ID_NUMBER_SELECT = '.csSelect-container[name="companyCallerIdNumber"]';
   const COMBO_INPUT = '.combo-box input';
-  const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
+  const DROPDOWN_OPTIONS = '.dropdown-menu ul li';
   const externalNumberOptions = getJSONFixture('huron/json/settings/externalNumbersOptions.json');
 
   beforeEach(function() {

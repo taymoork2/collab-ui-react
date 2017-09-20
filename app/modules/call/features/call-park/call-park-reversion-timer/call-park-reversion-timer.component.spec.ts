@@ -1,9 +1,11 @@
+import callParkReversionTimerModule from './index';
+
 describe('Component: callParkReversionTimer', () => {
   const TIMER_SELECT = '.csSelect-container[name="fallbackTimer"]';
-  const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
+  const DROPDOWN_OPTIONS = '.dropdown-menu ul li';
 
   beforeEach(function() {
-    this.initModules('huron.call-park-reversion-timer');
+    this.initModules(callParkReversionTimerModule);
     this.injectDependencies(
       '$scope',
     );

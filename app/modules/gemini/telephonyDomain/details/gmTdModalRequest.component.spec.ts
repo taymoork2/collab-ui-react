@@ -13,7 +13,7 @@ describe('Component: gmTdModalRequest', () => {
       regionId: 'EMEA',
     };
     this.button = '[name="nextButton"]';
-    this.box = '.dropdown-menu ul li a';
+    this.box = '.dropdown-menu ul li';
     this.input = 'input[name="customerName"]';
     this.select = '.csSelect-container[name="region"]';
   });
