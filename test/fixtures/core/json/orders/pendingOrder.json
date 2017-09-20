@@ -1,0 +1,96 @@
+{
+    "webOrderId": "wo-osag081602/spvid-osag081602",
+    "provisionStatus": "PENDING_PARM",
+    "licenseFeatures": [
+        {
+            "licenseId": "CCASP_4ce687b3-707c-4bdc-ba43-fbdd94b0dd01",
+            "offerName": "CCASP",
+            "masterOfferName": "M3-EE1000-ENT",
+            "licenseType": "AUDIO",
+            "billingServiceId": "Sub-osag081602",
+            "features": [],
+            "volume": 0,
+            "isTrial": false,
+            "status": "INITIALIZED",
+            "capacity": 0
+        },
+        {
+            "licenseId": "CMR_3022a420-dccd-4970-846f-12c07a282f06",
+            "offerName": "CMR",
+            "masterOfferName": "M3-EE1000-ENT",
+            "licenseType": "CMR",
+            "billingServiceId": "Sub-osag081602",
+            "features": [],
+            "volume": 76,
+            "isTrial": false,
+            "status": "INITIALIZED",
+            "capacity": 0
+        },
+        {
+            "licenseId": "EE_40a0443f-7650-4804-8a4b-13a61eaee173",
+            "offerName": "EE",
+            "masterOfferName": "M3-EE1000-ENT",
+            "licenseType": "CONFERENCING",
+            "billingServiceId": "Sub-osag081602",
+            "features": [
+                "cloudmeetings"
+            ],
+            "volume": 76,
+            "isTrial": false,
+            "status": "INITIALIZED",
+            "capacity": 0
+        },
+        {
+            "licenseId": "ST-SPK_0dbd98f3-a4bb-44ef-91a0-1ccbd44266c5",
+            "offerName": "ST-SPK",
+            "masterOfferName": "M3-EE1000-ENT",
+            "licenseType": "STORAGE",
+            "billingServiceId": "Sub-osag081602",
+            "features": [],
+            "volume": 0,
+            "isTrial": false,
+            "status": "INITIALIZED",
+            "capacity": 0
+        },
+        {
+            "licenseId": "MS_6b76102f-7977-40da-8d64-85f91e45d754",
+            "offerName": "MS",
+            "masterOfferName": "M3-EE1000-ENT",
+            "licenseType": "MESSAGING",
+            "billingServiceId": "Sub-osag081602",
+            "features": [
+                "squared-room-moderation"
+            ],
+            "volume": 76,
+            "isTrial": false,
+            "status": "INITIALIZED",
+            "capacity": 0
+        },
+        {
+            "licenseId": "CF_13ab1102-5135-4a70-8331-4511502cd8c1",
+            "offerName": "CF",
+            "masterOfferName": "M3-EE1000-ENT",
+            "licenseType": "CONFERENCING",
+            "billingServiceId": "Sub-osag081602",
+            "features": [
+                "squared-syncup"
+            ],
+            "volume": 76,
+            "isTrial": false,
+            "status": "INITIALIZED",
+            "capacity": 0
+        },
+        {
+            "licenseId": "ST_4e14a02e-aa91-4449-9e98-7307c24e6fae",
+            "offerName": "ST",
+            "masterOfferName": "M3-EE1000-ENT",
+            "licenseType": "STORAGE",
+            "billingServiceId": "Sub-osag081602",
+            "features": [],
+            "volume": 0,
+            "isTrial": false,
+            "status": "INITIALIZED",
+            "capacity": 0
+        }
+    ]
+}

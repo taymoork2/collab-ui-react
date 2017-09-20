@@ -1,4 +1,4 @@
-import { IOption } from 'modules/huron/dialing/dialing.service';
+import { IOption } from 'modules/huron/dialing';
 
 class CompanyMediaOnHoldCtrl implements ng.IComponentController {
   public companyMoh: string;
@@ -11,6 +11,7 @@ class CompanyMediaOnHoldCtrl implements ng.IComponentController {
   constructor(
     private $modal,
     private $scope: ng.IScope,
+    private $state: ng.ui.IStateService,
   ) {}
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
@@ -26,6 +27,8 @@ class CompanyMediaOnHoldCtrl implements ng.IComponentController {
       component: 'MediaMgrComponent',
       template: '<media-mgr close="$close()" dismiss="$dismiss()"></media-mgr>',
       type: 'full',
+    }).result.finally(() => {
+      this.$state.reload();
     });
   }
 
@@ -38,7 +41,7 @@ class CompanyMediaOnHoldCtrl implements ng.IComponentController {
 
 export class CompanyMediaOnHoldComponent implements ng.IComponentOptions {
   public controller = CompanyMediaOnHoldCtrl;
-  public templateUrl = 'modules/call/settings/settings-company-moh/settings-company-moh.component.html';
+  public template = require('modules/call/settings/settings-company-moh/settings-company-moh.component.html');
   public bindings = {
     companyMoh: '<',
     companyMohOptions: '<',

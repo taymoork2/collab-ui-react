@@ -12,7 +12,6 @@
     height: 100%;
     flex-grow: 1;
     flex-direction: column;
-    overflow-y: hidden;
   }
 
   &.modal-body .flex-container {
@@ -40,8 +39,7 @@
 // Style the Upload/Export page
 .user-csv-bulk {
   display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
+  flex-flow: column nowrap;
   justify-content: flex-start;
 
   ul {

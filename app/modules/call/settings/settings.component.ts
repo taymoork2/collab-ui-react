@@ -1,14 +1,15 @@
 import { HuronSettingsService, HuronSettingsOptionsService, HuronSettingsOptions, HuronSettingsData, IEmergencyNumberOption } from 'modules/call/settings/shared';
 import { Notification } from 'modules/core/notifications';
-import { IExtensionRange } from 'modules/call/settings/settings-extension-range';
+import { InternalNumberRange } from 'modules/call/shared/internal-number-range';
 import { CompanyNumber } from 'modules/call/settings/settings-company-caller-id';
 import { IOption } from 'modules/huron/dialing/dialing.service';
 import { EmergencyCallbackNumber } from 'modules/huron/sites';
 import { PstnService } from 'modules/huron/pstn/pstn.service';
 import { PstnModel } from 'modules/huron/pstn/pstn.model';
 import { PstnCarrier } from 'modules/huron/pstn/pstnProviders/pstnCarrier';
-import { IAvrilFeatures } from 'modules/huron/avril';
-import { SettingSetupInitService } from 'modules/call/settings/settings-setup-init';
+import { IAvrilSiteFeatures } from 'modules/huron/avril';
+import { SetupWizardService } from 'modules/core/setupWizard/setup-wizard.service';
+import { Config } from 'modules/core/config/config';
 
 const API_IMPL_SWIVEL = 'SWIVEL';
 
@@ -40,8 +41,9 @@ class HuronSettingsCtrl implements ng.IComponentController {
   public showVoiceMailDisableDialog: boolean = false;
   public supportsAvrilVoicemail: boolean = false;
   public supportsAvrilVoicemailMailbox: boolean = false;
-  public ishI1484: boolean;
-
+  public hI1484: boolean;
+  public hasPendingCallLicenses: boolean = false;
+  public avrilI1559: boolean = false;
   public huronSettingsData: HuronSettingsData;
 
   /* @ngInject */
@@ -57,18 +59,20 @@ class HuronSettingsCtrl implements ng.IComponentController {
     private PstnService: PstnService,
     private PstnModel: PstnModel,
     private Authinfo,
-    private Config,
+    private Config: Config,
     private Orgservice,
     private FeatureToggleService,
-    private SettingSetupInitService: SettingSetupInitService,
+    private SetupWizardService: SetupWizardService,
   ) { }
 
   public $onInit(): void {
     this.loading = true;
 
+    this.hasPendingCallLicenses = this.SetupWizardService.hasPendingCallLicenses();
+
     this.showRegionAndVoicemail = this.Authinfo.getLicenses().filter(license => {
       return license.licenseType === this.Config.licenseTypes.COMMUNICATION;
-    }).length > 0;
+    }).length > 0 || this.hasPendingCallLicenses;
 
     const params = {
       basicInfo: true,
@@ -78,7 +82,6 @@ class HuronSettingsCtrl implements ng.IComponentController {
         this.PstnModel.setCountryCode(data.countryCode);
       }
     }, null, params);
-
 
     this.PstnService.getCustomer(this.Authinfo.getOrgId()).then(() => {
       this.isTerminusCustomer = true;
@@ -92,7 +95,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
     });
 
     this.loadFeatureToggles();
-    this.$q.resolve(this.initSettingsComponent()).finally( () => this.loading = false);
+    this.$q.resolve(this.initSettingsComponent()).finally(() => this.loading = false);
 
     if (this.ftsw) {
       this.$scope.$watch(() => {
@@ -109,15 +112,11 @@ class HuronSettingsCtrl implements ng.IComponentController {
     }
   }
 
-  public isMultiSelected() {
-    return this.SettingSetupInitService.getSelected() === 2;
-  }
-
   private initSettingsComponent(): ng.IPromise<any> {
     return this.HuronSettingsOptionsService.getOptions().then(options => this.settingsOptions = options)
-    .then(() => {
-      return this.HuronSettingsService.get(this.siteId).then(huronSettingsData => this.huronSettingsData = huronSettingsData);
-    });
+      .then(() => {
+        return this.HuronSettingsService.get(this.siteId).then(huronSettingsData => this.huronSettingsData = huronSettingsData);
+      });
   }
 
   private loadFeatureToggles(): ng.IPromise<any> {
@@ -128,14 +127,23 @@ class HuronSettingsCtrl implements ng.IComponentController {
       .then(result => this.supportsAvrilVoicemailMailbox = result);
 
     this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484)
-      .then(result => this.ishI1484 = result);
+      .then(result => this.hI1484 = result);
+
+    this.FeatureToggleService.avrilI1559GetStatus()
+      .then(result => this.avrilI1559 = result);
 
     return this.$q.resolve();
   }
 
-  // This is the hook to call save from ftsw.
-  public initNext(): ng.IPromise<void> {
-    return this.saveHuronSettings();
+  public setupCallSiteNext(): ng.IPromise<void> | void {
+    if (this.hasPendingCallLicenses) {
+      this.SetupWizardService.addProvisioningCallbacks({
+        call: this.saveHuronSettings.bind(this),
+      });
+    } else {
+      // TODO: samwi - remove when super onboard goes GA
+      return this.saveHuronSettings();
+    }
   }
 
   public saveHuronSettings(): ng.IPromise<void> {
@@ -148,7 +156,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
       .then(huronSettingsData => {
         this.huronSettingsData = huronSettingsData;
         this.Notification.success('serviceSetupModal.saveSuccess');
-      }).finally( () => {
+      }).finally(() => {
         this.processing = false;
         this.resetForm();
         if (showEnableVoicemailModal && !this.ftsw) {
@@ -161,7 +169,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
     if (this.showDialPlanChangedDialog && this.showVoiceMailDisableDialog) {
       this.openDialPlanChangeDialog()
         .then(() => this.openDisableVoicemailWarningDialog()
-        .then(() => this.saveHuronSettings()));
+          .then(() => this.saveHuronSettings()));
     } else if (this.showDialPlanChangedDialog) {
       this.openDialPlanChangeDialog()
         .then(() => this.saveHuronSettings());
@@ -177,7 +185,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
     return this.ModalService.open({
       title: this.$translate.instant('serviceSetupModal.saveModal.title'),
       message: this.$translate.instant('serviceSetupModal.saveModal.message1') + '<br/><br/>'
-        + this.$translate.instant('serviceSetupModal.saveModal.message2'),
+      + this.$translate.instant('serviceSetupModal.saveModal.message2'),
       close: this.$translate.instant('common.yes'),
       dismiss: this.$translate.instant('common.no'),
     }).result;
@@ -252,7 +260,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
     this.checkForChanges();
   }
 
-  public onExtensionRangeChanged(extensionRanges: IExtensionRange[]): void {
+  public onExtensionRangeChanged(extensionRanges: InternalNumberRange[]): void {
     this.huronSettingsData.internalNumberRanges = extensionRanges;
     this.checkForChanges();
   }
@@ -277,7 +285,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
     this.checkForChanges();
   }
 
-  public onCompanyVoicemailAvrilChanged(voicemailPilotNumber: string, voicemailPilotNumberGenerated: boolean, companyVoicemailEnabled: boolean, features: IAvrilFeatures) {
+  public onCompanyVoicemailAvrilChanged(voicemailPilotNumber: string, voicemailPilotNumberGenerated: boolean, companyVoicemailEnabled: boolean, features: IAvrilSiteFeatures) {
     _.set(this.huronSettingsData.customer, 'hasVoicemailService', companyVoicemailEnabled);
     if (!companyVoicemailEnabled) {
       this.huronSettingsData.site.disableVoicemail = true;
@@ -287,6 +295,11 @@ class HuronSettingsCtrl implements ng.IComponentController {
     this.huronSettingsData.site.voicemailPilotNumber = voicemailPilotNumber;
     this.huronSettingsData.site.voicemailPilotNumberGenerated = voicemailPilotNumberGenerated;
     this.huronSettingsData.avrilFeatures = features;
+    if (this.avrilI1559) {
+      if (!this.huronSettingsData.avrilFeatures.VM2T && !this.huronSettingsData.avrilFeatures.VM2S) {
+        this.resetForm();
+      }
+    }
     this.setShowVoiceMailDisableDialogFlag();
     this.checkForChanges();
   }
@@ -345,8 +358,10 @@ class HuronSettingsCtrl implements ng.IComponentController {
   private resetForm(): void {
     this.showDialPlanChangedDialog = false;
     this.showVoiceMailDisableDialog = false;
-    this.form.$setPristine();
-    this.form.$setUntouched();
+    if (this.form) {
+      this.form.$setPristine();
+      this.form.$setUntouched();
+    }
   }
 
   private setShowDialPlanChangedDialogFlag(): void {
@@ -374,7 +389,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
 
 export class HuronSettingsComponent implements ng.IComponentOptions {
   public controller = HuronSettingsCtrl;
-  public templateUrl = 'modules/call/settings/settings.component.html';
+  public template = require('modules/call/settings/settings.component.html');
   public bindings = {
     ftsw: '<',
   };

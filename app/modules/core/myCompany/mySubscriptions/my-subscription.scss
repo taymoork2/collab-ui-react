@@ -2,30 +2,13 @@
 @import '~collab-ui/scss/settings/colors';
 @import '~collab-ui/scss/tools/mixins/spacing-responsive';
 
-.iframe-container {
-  display: inline;
-}
-
 .subscriptions-container {
   @include vr-spacing(mh, 1);
   @include vr-spacing(mv, 1.25);
   @include vr-spacing(p, 0);
 
-  .overage-warning {
-    @include vr-spacing(mh, 1);
-
-    .cs-alert-banner-text {
-      max-width: rem-calc(900);
-    }
-
-    .icon-warning {
-      color: $color-alerts-base;
-      font-size: vr-adjust(16);
-      top: rem-calc(2);
-    }
-  }
-
-  .cs-card-layout {
+  .cs-card-layout,
+  .cs-card-layout.cs-card-block {
     @include vr-spacing(mt, 1.25);
   }
 
@@ -187,12 +170,9 @@
   }
 
   .pro-pack-card {
-    .card-title {
-      @include vr-spacing(mb, 1);
-    }
-
     .category-icon {
-      font-size: vr-adjust(20);
+      color: $color-blue-base !important;
+      top: 0 !important;
     }
 
     .category-icon,
@@ -216,10 +196,15 @@
   .pro-pack-card,
   .subscriptions {
     .card-title {
+      @include vr-spacing(mb, 1);
       @include vr-spacing(pl, 0);
       @include vr-spacing(pt, 0);
       color: $gray-dark-1;
       width: auto;
+
+      .online-subscription-summary {
+        @include vr-spacing(mb, 0);
+      }
     }
 
     .category-data-section {
@@ -227,6 +212,7 @@
 
       border-bottom: rem-calc(1) solid $gray-light-3;
       border-left: rem-calc(1) solid $gray-light-3;
+      min-width: vr-adjust(275);
 
       .category-list {
         @include vr-spacing(p, 0);
@@ -311,7 +297,7 @@
 
   .subscriptions {
     .subscription-column {
-      @include vr-spacing(pr, 0);
+      @include vr-spacing(ph, 0);
     }
 
     .category-data-section.item-without-borders {

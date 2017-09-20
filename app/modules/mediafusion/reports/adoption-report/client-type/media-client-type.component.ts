@@ -1,5 +1,5 @@
 export class MediaClientType implements ng.IComponentOptions {
-  public templateUrl = 'modules/mediafusion/reports/adoption-report/client-type/media-client-type.html';
+  public template = require('modules/mediafusion/reports/adoption-report/client-type/media-client-type.html');
   public bindings = {
     parentcntrl: '=',
   };

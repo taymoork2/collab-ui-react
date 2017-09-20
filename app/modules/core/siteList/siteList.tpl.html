@@ -2,9 +2,9 @@
      id="site-list"
      class="site-list">
 
-  <cs-page-header title-name="siteList.conferencing"></cs-page-header>
+  <cs-page-header title-name="{{'siteList.conferencing' | translate}}"></cs-page-header>
 
-  <div class="gridStyle" ui-grid="siteList.gridOptions"></div>
+  <cs-grid grid-options="siteList.gridOptions" spinner="false"></cs-grid>
   <!-- Start Webex linked form -->
   <form action="{{siteList.trustSrc(siteList.siteAdminUrl)}}"
     class="webex-hidden-form"

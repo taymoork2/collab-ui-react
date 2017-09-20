@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Partner Reports', function () {
+xdescribe('Partner Reports', function () {
   var customer = 'Spark UC Report Test Partner';
   var e2eCustomer = 'Spark UC Reports E2E Tests';
   var time = ['Last 7 Days', 'Last 4 Weeks', 'Last 3 Months'];

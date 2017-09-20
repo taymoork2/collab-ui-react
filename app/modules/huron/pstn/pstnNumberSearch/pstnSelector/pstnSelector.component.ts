@@ -37,15 +37,16 @@ class PstnSelectorCtrl implements ng.IComponentController {
     });
   }
 
-  public blockClick() {
+  public onBlockClick() {
     if (this.model.block) {
       if (this.model.quantity == null) {
         this.model.quantity = MIN_BLOCK_QUANTITY;
-      } else if (!(this.model.quantity >= MIN_BLOCK_QUANTITY || this.model.quantity <= MAX_BLOCK_QUANTITY)) {
+      } else if (!(this.model.quantity >= MIN_BLOCK_QUANTITY && this.model.quantity <= MAX_BLOCK_QUANTITY)) {
         this.model.quantity = MIN_BLOCK_QUANTITY;
       }
     } else {
       this.model.quantity = MIN_BLOCK_QUANTITY;
+      this.model.consecutive = false;
     }
   }
 
@@ -56,9 +57,9 @@ class PstnSelectorCtrl implements ng.IComponentController {
 
 export class PstnSelectorComponent implements ng.IComponentOptions {
   public controller = PstnSelectorCtrl;
-  public templateUrl = 'modules/huron/pstn/pstnNumberSearch/pstnSelector/pstnSelector.html';
+  public template = require('modules/huron/pstn/pstnNumberSearch/pstnSelector/pstnSelector.html');
   public bindings = {
-    model: '=',
+    model: '<',
     search: '&',
     simple: '<',
     numberType: '<',

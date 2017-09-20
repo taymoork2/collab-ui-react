@@ -1,18 +1,28 @@
-import { VerificationStep } from 'modules/hercules/services/l2sip-service';
+import { IFormattedResult } from 'modules/hercules/services/l2sip-service';
 
 class VerifySipDestinationModalController {
-
-  public sanitizedResultSet: VerificationStep[];
-
   /* @ngInject */
   constructor(
-    public resultSet: VerificationStep[],
+    private $translate: ng.translate.ITranslateService,
+    public resultSet: IFormattedResult[],
   ) {
-    this.sanitizedResultSet = _.filter(resultSet, (result) => {
-      return result.type !== 'ServerTestBegin' && result.type !== 'ServerTestEnd';
-    });
+    this.resultSet = resultSet;
   }
 
+  public localizeType(type: string): string {
+    return this.$translate.instant(`hercules.settings.verifySipDestination.types.${type}`);
+  }
+
+  public severityToIcon(severity): string {
+    switch (severity) {
+      case 'Error':
+        return 'icon-error';
+      case 'Warn':
+        return 'icon-warning';
+      default:
+        return 'icon-checkbox';
+    }
+  }
 }
 
 angular

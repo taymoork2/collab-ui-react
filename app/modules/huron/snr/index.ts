@@ -9,9 +9,9 @@ export * from './snr.service';
 
 export default angular
   .module('huron.snr', [
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
+    'call.shared.call-destination-translate',
     customerServiceModule,
     notifications,
     phoneNumberModule,

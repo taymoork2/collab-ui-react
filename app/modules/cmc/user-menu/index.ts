@@ -9,7 +9,6 @@ export default angular
   .module('cmc.user-details', [
     notificationModule,
     orgServiceModule,
-    require('scripts/app.templates'),
   ])
   .component('cmcUserDetails', new CmcUserDetailsComponent())
   .component('cmcUserDetailsSettings', new CmcUserDetailsSettingsComponent())

@@ -70,6 +70,7 @@ require('./_wizard.scss');
     vm.getTabController = getTabController;
     vm.getSubTabController = getSubTabController;
     vm.getSubTabTitle = getSubTabTitle;
+    vm.getTitleKey = getTitleKey;
 
     vm.setSubTab = setSubTab;
     vm.resetSubTab = resetSubTab;
@@ -84,6 +85,7 @@ require('./_wizard.scss');
 
     vm.isFirstTab = isFirstTab;
     vm.isLastTab = isLastTab;
+    vm.isMeetingSetupTabOnly = isMeetingSetupTabOnly;
     vm.isFirstStep = isFirstStep;
     vm.isLastStep = isLastStep;
     vm.isFirstTime = isFirstTime;
@@ -97,26 +99,23 @@ require('./_wizard.scss');
     vm.isCurrentTab = isCurrentTab;
     vm.loadOverview = loadOverview;
     vm.showDoItLater = false;
-    vm.showDontActivate = false;
+    vm.showDoNotProvision = false;
+    vm.willNotProvision = willNotProvision;
+    vm.doNotProvisionAndProceedNext = doNotProvisionAndProceedNext;
+    vm.proceedNext = proceedNext;
+    vm.isSingleTab = isSingleTab;
     vm.wizardNextLoad = false;
-
     vm.showSkipTabBtn = false;
 
     // If tabs change (feature support in SetupWizard) and a step is not defined, re-initialize
     $scope.$watchCollection('tabs', function (tabs) {
-      if (tabs && tabs.length > 0 && _.isUndefined(vm.current.step)) {
+      if (tabs && tabs.length > 0 && (_.isUndefined(vm.current.step) || vm.current.step.name === 'select-subscription')) {
         init();
       }
     });
 
     function initCurrent() {
-      if ($stateParams.currentTab) {
-        vm.current.tab = _.find(getTabs(), {
-          name: $stateParams.currentTab,
-        });
-      } else {
-        vm.current.tab = getTabs()[0];
-      }
+      vm.current.tab = getTabs()[0];
 
       if ($stateParams.currentSubTab) {
         vm.current.subTab = _.find(getTab().subTabs, {
@@ -140,7 +139,7 @@ require('./_wizard.scss');
       setNextText();
       vm.isNextDisabled = false;
       if (hasPendingLicenses()) {
-        vm.showDontActivate = true;
+        vm.showDoNotProvision = true;
       }
     }
 
@@ -293,13 +292,6 @@ require('./_wizard.scss');
           } else {
             nextStepSuccessful();
           }
-        } else if (getTab().name === 'meetingSettings') {
-          if (getStep().name === 'summary') {
-            $rootScope.$broadcast('wizard-meeting-settings-setup-save-event');
-            nextStepSuccessful();
-          } else {
-            nextStepSuccessful();
-          }
         } else {
           nextStepSuccessful();
         }
@@ -311,7 +303,10 @@ require('./_wizard.scss');
     var enterpriseSipSaveDeregister = $rootScope.$on('wizard-enterprise-sip-save', function () {
       nextStepSuccessful();
     });
-    $scope.$on('$destroy', enterpriseSipSaveDeregister);
+
+    $scope.$on('$destroy', function () {
+      enterpriseSipSaveDeregister();
+    });
 
     function nextStepSuccessful() {
       var steps = getSteps();
@@ -347,6 +342,23 @@ require('./_wizard.scss');
       });
     }
 
+    function doNotProvisionAndProceedNext() {
+      SetupWizardService.setWillNotProvision(true);
+      nextStep();
+    }
+
+    function proceedNext() {
+      if (SetupWizardService.getWillNotProvision()) {
+        SetupWizardService.setWillNotProvision(false);
+      }
+
+      nextStep();
+    }
+
+    function willNotProvision() {
+      return SetupWizardService.getWillNotProvision();
+    }
+
     function isCustomerPartner() {
       return Authinfo.hasRole('CUSTOMER_PARTNER');
     }
@@ -356,12 +368,17 @@ require('./_wizard.scss');
     }
 
     function isFirstTab() {
-      return getTabs().indexOf(getTab()) === 0;
+      return getTabs().indexOf(getTab()) === 0 && !isLastTab();
     }
 
     function isLastTab() {
       var tabs = getTabs();
       return tabs.indexOf(getTab()) === tabs.length - 1;
+    }
+
+    function isMeetingSetupTabOnly() {
+      var tabs = getTabs();
+      return tabs.length === 1 && tabs[0].name === 'meetingSettings';
     }
 
     function isFirstStep() {
@@ -375,6 +392,10 @@ require('./_wizard.scss');
 
     function isSingleTabSingleStep() {
       return vm.onlyShowSingleTab && vm.numberOfSteps === 1;
+    }
+
+    function isSingleTab() {
+      return vm.onlyShowSingleTab;
     }
 
     function isFirstTime() {
@@ -394,10 +415,10 @@ require('./_wizard.scss');
     }
 
     function setNextText() {
-      if ((isFirstTab() && isFirstTime() && !isCustomerPartner() && !isFromPartnerLaunch()) || (isFirstTab() && isFirstStep() && !isSingleTabSingleStep())) {
+      if ((isFirstTab() && isLastStep() && isFirstTime() && !isCustomerPartner() && !isFromPartnerLaunch()) || (isFirstTab() && isLastStep() && !isSingleTabSingleStep())) {
         vm.nextText = $translate.instant('firstTimeWizard.getStarted');
-      } else if (isFirstTime() && isLastTab() && isLastStep() && hasPendingLicenses()) {
-        vm.nextText = $translate.instant('common.activate');
+      } else if (isFirstTime() && isLastTab() && isFirstStep() && hasPendingLicenses()) {
+        vm.nextText = $translate.instant('common.provision');
       } else if (isFirstTime() && isLastTab() && isLastStep()) {
         vm.nextText = $translate.instant('common.finish');
       } else if ((getTab().name === 'meetingSettings') && isLastStep()) {
@@ -424,7 +445,7 @@ require('./_wizard.scss');
 
     function openTermsAndConditions() {
       $modal.open({
-        templateUrl: 'modules/core/wizard/termsAndConditions.tpl.html',
+        template: require('modules/core/wizard/termsAndConditions.tpl.html'),
       });
     }
 
@@ -437,6 +458,10 @@ require('./_wizard.scss');
         return _.isUndefined(vm.current.step.buttons);
       }
       return false;
+    }
+
+    function getTitleKey() {
+      return _.get(vm.current.step, 'title') || _.get(vm.current.tab, 'title');
     }
 
     $scope.$on('wizardNextText', function (event, action) {
@@ -459,7 +484,7 @@ require('./_wizard.scss');
         finish: '=',
         isFirstTime: '=',
       },
-      templateUrl: 'modules/core/wizard/wizard.tpl.html',
+      template: require('modules/core/wizard/wizard.tpl.html'),
     };
 
     return directive;
@@ -469,7 +494,7 @@ require('./_wizard.scss');
     var directive = {
       require: '^crWizard',
       restrict: 'AE',
-      templateUrl: 'modules/core/wizard/wizardNav.tpl.html',
+      template: require('modules/core/wizard/wizardNav.tpl.html'),
     };
 
     return directive;
@@ -481,7 +506,7 @@ require('./_wizard.scss');
       require: '^crWizard',
       restrict: 'AE',
       scope: true,
-      templateUrl: 'modules/core/wizard/wizardMain.tpl.html',
+      template: require('modules/core/wizard/wizardMain.tpl.html'),
       link: link,
     };
 
@@ -510,7 +535,7 @@ require('./_wizard.scss');
     var directive = {
       restrict: 'AE',
       scope: true,
-      templateUrl: 'modules/core/wizard/wizardButtons.tpl.html',
+      template: require('modules/core/wizard/wizardButtons.tpl.html'),
       link: link,
     };
 

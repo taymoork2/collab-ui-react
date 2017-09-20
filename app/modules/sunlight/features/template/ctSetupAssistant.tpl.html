@@ -9,6 +9,10 @@
           ng-switch-when = "name"
           ng-class="careChatSA.animation"></div>
 
+        <div ct-virtual-assistant
+             ng-switch-when = "virtualAssistant"
+             ng-class="careChatSA.animation"></div>
+
         <div ct-profile
           ng-switch-when = "profile"
           ng-class="careChatSA.animation"></div>
@@ -32,7 +36,7 @@
         <div ct-customer mode="callback"
           ng-switch-when = "customerInformationCallback"
           ng-class="careChatSA.animation"></div>
- 
+
         <div ct-feedback
           ng-switch-when = "feedback"
           ng-class="careChatSA.animation"></div>
@@ -56,6 +60,7 @@
         <div ct-summary
           ng-switch-when = "summary"
           ng-class="careChatSA.animation"></div>
+
       </div>
       </form>
     </cs-setup-assistant>

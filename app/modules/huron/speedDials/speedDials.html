@@ -7,7 +7,7 @@
   <cs-sp-container>
     <div class="warning" ng-show="$ctrl.reachSpeedDialLimit() && !$ctrl.editing && !$ctrl.reordering">
       <div class="cs-input__messages">
-        <div class="message limit-reach-warning" translate="speedDial.limitSpeedDialsReach"></div>
+        <div class="message limit-reach-warning" translate="speedDials.limitSpeedDialsReach"></div>
       </div>
     </div>
     <cs-sp-section>
@@ -54,11 +54,13 @@
                 <cs-call-destination
                     model="$ctrl.newNumber"
                     size="medium-12"
+                    country-code="$ctrl.countryCode"
                     inputs="$ctrl.callDestInputs"
                     id="number{{$index}}"
                     name="number{{$index}}"
                     select-type="select"
                     custom-number-translations="$ctrl.customTranslations"
+                    input-translations="$ctrl.inputTranslations"
                     on-change-fn="$ctrl.setSpeedDial(model)">
                 </cs-call-destination>
               </div>

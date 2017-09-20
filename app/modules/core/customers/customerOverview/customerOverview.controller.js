@@ -40,6 +40,7 @@ require('./_customer-overview.scss');
     vm.isOrgSetup = null;
     vm.isUpdateStatusEnabled = true;
     vm.isProPackEnabled = false;
+    vm.isMediaFusionEnabled = false;
 
     vm.partnerOrgId = Authinfo.getOrgId();
     vm.isPartnerAdmin = Authinfo.isPartnerAdmin();
@@ -65,7 +66,9 @@ require('./_customer-overview.scss');
       FeatureToggleService.atlasCareInboundTrialsGetStatus(),
       FeatureToggleService.atlasITProPackGetStatus(),
     ]).then(function (results) {
-      if (_.find(vm.currentCustomer.offers, { id: Config.offerTypes.roomSystems })) {
+      if (_.find(vm.currentCustomer.offers, {
+        id: Config.offerTypes.roomSystems,
+      })) {
         vm.showRoomSystems = true;
       }
       var isCareEnabled = results[0];
@@ -77,9 +80,11 @@ require('./_customer-overview.scss');
 
 
     function setOffers(isCareEnabled, isAdvanceCareEnabled) {
-      var licAndOffers = PartnerService.parseLicensesAndOffers(vm.currentCustomer, { isCareEnabled: isCareEnabled,
+      var licAndOffers = PartnerService.parseLicensesAndOffers(vm.currentCustomer, {
+        isCareEnabled: isCareEnabled,
         isAdvanceCareEnabled: isAdvanceCareEnabled,
-        isTrial: true });
+        isTrial: true,
+      });
       vm.offer = vm.currentCustomer.offer = _.get(licAndOffers, 'offer');
       vm.trialServices = _.chain(vm.currentCustomer.offer)
         .get('trialServices')
@@ -90,8 +95,10 @@ require('./_customer-overview.scss');
           });
         })
         .value();
-      vm.freeOrPaidServices = _.map(PartnerService.getFreeOrActiveServices(vm.currentCustomer, { isCareEnabled: isCareEnabled,
-        isTrial: false }), function (service) {
+      vm.freeOrPaidServices = _.map(PartnerService.getFreeOrActiveServices(vm.currentCustomer, {
+        isCareEnabled: isCareEnabled,
+        isTrial: false,
+      }), function (service) {
         return _.assign({}, service, {
           detail: service.free ? FREE : service.qty + ' ' + QTY,
           actionAvailable: hasSubview(service),
@@ -247,14 +254,14 @@ require('./_customer-overview.scss');
           return $q.all(updateUsersList);
         });
       })
-      .then(vm._helpers.openCustomerPortal)
-      .catch(function (response) {
-        Notification.errorWithTrackingId(response, 'customerPage.launchCustomerPortalError');
-        return response;
-      })
-      .finally(function () {
-        vm.loadingCustomerPortal = false;
-      });
+        .then(vm._helpers.openCustomerPortal)
+        .catch(function (response) {
+          Notification.errorWithTrackingId(response, 'customerPage.launchCustomerPortalError');
+          return response;
+        })
+        .finally(function () {
+          vm.loadingCustomerPortal = false;
+        });
     }
 
     function canUpdateLicensesForSelf() {
@@ -304,7 +311,7 @@ require('./_customer-overview.scss');
       if (!openWindow || openWindow.closed || typeof openWindow.closed === 'undefined') {
         $modal.open({
           type: 'dialog',
-          templateUrl: 'modules/core/customers/customerOverview/popUpBlocked.tpl.html',
+          template: require('modules/core/customers/customerOverview/popUpBlocked.tpl.html'),
         });
       }
 
@@ -382,11 +389,17 @@ require('./_customer-overview.scss');
       if (service.hasWebex || service.isMeeting) {
         var isTrial = _.get(options, 'isTrial', false);
         var services = isTrial ? PartnerService.getTrialMeetingServices(vm.currentCustomer.licenseList) : service.sub;
-        $state.go('customer-overview.meetingDetail', { meetingLicenses: services });
+        $state.go('customer-overview.meetingDetail', {
+          meetingLicenses: services,
+        });
       } else if (service.isRoom) {
-        $state.go('customer-overview.sharedDeviceDetail', { sharedDeviceLicenses: service.sub });
+        $state.go('customer-overview.sharedDeviceDetail', {
+          sharedDeviceLicenses: service.sub,
+        });
       } else if (service.isSparkCare) {
-        $state.go('customer-overview.careLicenseDetail', { careLicense: service.sub });
+        $state.go('customer-overview.careLicenseDetail', {
+          careLicense: service.sub,
+        });
       }
     }
 
@@ -419,6 +432,7 @@ require('./_customer-overview.scss');
 
     // Refactor this out.
     // Preferably call another service for this, or call once and store into universal data object
+    // we are setting vm.isMediaFusionEnabled from orgsetting to block deletion of org inmediafusion is enabled
     function getCountryCode() {
       var params = {
         basicInfo: true,
@@ -428,37 +442,53 @@ require('./_customer-overview.scss');
           if (data.countryCode) {
             vm.countryCode = data.countryCode;
           }
+          if (data.orgSettings) {
+            vm.isMediaFusionEnabled = data.orgSettings.isMediaFusionEnabled;
+          }
         } else {
           Log.error('Query org info failed. Status: ' + status);
         }
       }, vm.customerOrgId, params);
     }
 
+    //if vm.isMediaFusionEnabled then we ask the user to deactivate hybrid media service and not allowing deletion.
     function deleteTestOrg() {
       if (vm.isTest) {
-        $modal.open({
-          type: 'dialog',
-          templateUrl: 'modules/core/customers/customerOverview/customerDeleteConfirm.tpl.html',
-          controller: function () {
-            var ctrl = this;
-            ctrl.orgName = vm.customerName;
-          },
-          controllerAs: 'ctrl',
-        }).result.then(function () {
-          // delete the customer
-          vm.isDeleting = true;
-          Orgservice.deleteOrg(vm.customerOrgId).then(function () {
-            $state.go('partnercustomers.list');
-            Notification.success('customerPage.deleteOrgSuccess', {
-              orgName: vm.customerName,
-            });
-          }).catch(function (error) {
-            vm.isDeleting = false;
-            Notification.errorResponse(error, 'customerPage.deleteOrgError', {
-              orgName: vm.customerName,
+        if (vm.isMediaFusionEnabled) {
+          $modal.open({
+            type: 'dialog',
+            template: require('modules/core/customers/customerOverview/customerDeleteConfirmErrorHMS.tpl.html'),
+            controller: function () {
+              var ctrl = this;
+              ctrl.orgName = vm.customerName;
+            },
+            controllerAs: 'ctrl',
+          });
+        } else {
+          $modal.open({
+            type: 'dialog',
+            template: require('modules/core/customers/customerOverview/customerDeleteConfirm.tpl.html'),
+            controller: function () {
+              var ctrl = this;
+              ctrl.orgName = vm.customerName;
+            },
+            controllerAs: 'ctrl',
+          }).result.then(function () {
+            // delete the customer
+            vm.isDeleting = true;
+            Orgservice.deleteOrg(vm.customerOrgId).then(function () {
+              $state.go('partnercustomers.list');
+              Notification.success('customerPage.deleteOrgSuccess', {
+                orgName: vm.customerName,
+              });
+            }).catch(function (error) {
+              vm.isDeleting = false;
+              Notification.errorResponse(error, 'customerPage.deleteOrgError', {
+                orgName: vm.customerName,
+              });
             });
           });
-        });
+        }
       }
     }
   }

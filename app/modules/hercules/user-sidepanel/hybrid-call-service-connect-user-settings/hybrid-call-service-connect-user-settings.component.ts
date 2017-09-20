@@ -1,5 +1,6 @@
 import { HybridServicesI18NService } from 'modules/hercules/services/hybrid-services-i18n.service';
-import { HybridServiceUserSidepanelHelperService, IEntitlementNameAndState, IUserStatus } from 'modules/hercules/services/hybrid-services-user-sidepanel-helper.service';
+import { HybridServiceUserSidepanelHelperService, IEntitlementNameAndState } from 'modules/hercules/services/hybrid-services-user-sidepanel-helper.service';
+import { USSService, IUserStatusWithExtendedMessages } from 'modules/hercules/services/uss.service';
 
 class HybridCallServiceConnectUserSettingsCtrl implements ng.IComponentController {
 
@@ -11,8 +12,9 @@ class HybridCallServiceConnectUserSettingsCtrl implements ng.IComponentControlle
   private userEmailAddress: string;
   private entitlementUpdatedCallback: Function;
 
-  public userStatusAware: IUserStatus;
-  private userStatusConnect: IUserStatus;
+  public userStatusAware: IUserStatusWithExtendedMessages | undefined;
+  private userStatusConnect: IUserStatusWithExtendedMessages | undefined;
+  public lastStateChangeText: string = '';
 
   public entitledToggle: boolean;
   public userIsCurrentlyEntitled: boolean;
@@ -27,7 +29,7 @@ class HybridCallServiceConnectUserSettingsCtrl implements ng.IComponentControlle
     private HybridServicesI18NService: HybridServicesI18NService,
     private HybridServiceUserSidepanelHelperService: HybridServiceUserSidepanelHelperService,
     private Notification,
-    private USSService,
+    private USSService: USSService,
   ) { }
 
   public $onInit() {
@@ -65,7 +67,7 @@ class HybridCallServiceConnectUserSettingsCtrl implements ng.IComponentControlle
         }
 
         if (this.userStatusConnect && this.userStatusConnect.lastStateChange) {
-          this.userStatusConnect.lastStateChangeText = this.HybridServicesI18NService.getTimeSinceText(this.userStatusConnect.lastStateChange);
+          this.lastStateChangeText = this.HybridServicesI18NService.getTimeSinceText(this.userStatusConnect.lastStateChange);
         }
       })
       .catch((error) => {
@@ -153,7 +155,7 @@ class HybridCallServiceConnectUserSettingsCtrl implements ng.IComponentControlle
 
 export class HybridCallServiceConnectUserSettingsComponent implements ng.IComponentOptions {
   public controller = HybridCallServiceConnectUserSettingsCtrl;
-  public templateUrl = 'modules/hercules/user-sidepanel/hybrid-call-service-connect-user-settings/hybrid-call-service-connect-user-settings.component.html';
+  public template = require('modules/hercules/user-sidepanel/hybrid-call-service-connect-user-settings/hybrid-call-service-connect-user-settings.component.html');
   public bindings = {
     userId: '<',
     userEmailAddress: '<',

@@ -10,10 +10,10 @@
     var vm = this;
     vm.clusterList = [];
     var states = {
-      INIT: 0,          //Initial Screen (Yes/No options)
-      NO_PROCEED: 1,    //NoProceed download software screen
-      YES_PROCEED: 2,   //Yes proceed screen with cluste/node info
-      REGISTER_NODE: 3,  //Register node screen
+      INIT: 0, //Initial Screen (Yes/No options)
+      NO_PROCEED: 1, //NoProceed download software screen
+      YES_PROCEED: 2, //Yes proceed screen with cluste/node info
+      REGISTER_NODE: 3, //Register node screen
     };
     vm.states = states;
     vm.selectPlaceholder = $translate.instant('hds.add-resource-dialog.cluster');
@@ -45,9 +45,9 @@
     HDSAddResourceCommonService.updateClusterLists().then(function (clusterList) {
       vm.clusterList = clusterList;
     })
-    .catch(function (error) {
-      Notification.errorWithTrackingId(error, 'hds.genericError');
-    });
+      .catch(function (error) {
+        Notification.errorWithTrackingId(error, 'hds.genericError');
+      });
 
     function getAppTitle() {
       return proPackEnabled ? $translate.instant('loginPage.titlePro') : $translate.instant('loginPage.titleNew');
@@ -67,7 +67,7 @@
         return;
       }
       $modal.open({
-        templateUrl: 'modules/hds/add-resource/confirm-setup-cancel-dialog.html',
+        template: require('modules/hds/add-resource/confirm-setup-cancel-dialog.html'),
         type: 'dialog',
       })
         .result.then(function () {

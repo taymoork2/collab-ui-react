@@ -3,7 +3,6 @@ const _ = require('lodash');
 const args = require('yargs').argv;
 const path = require('path');
 const loaders = require('./loaders');
-const StyleLintPlugin = require('stylelint-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const host = args.host || '127.0.0.1';
@@ -49,11 +48,6 @@ function webpackConfig(env) {
     ],
   };
 
-  if (!env.nolint) {
-    config.module.rules.push(loaders.eslint);
-    config.module.rules.push(loaders.tslint);
-  }
-
   config.plugins = [
     new webpack.ProgressPlugin(),
     new webpack.ProvidePlugin({
@@ -78,14 +72,6 @@ function webpackConfig(env) {
 
   if (env.analyze) {
     config.plugins.push(new BundleAnalyzerPlugin());
-  }
-
-  // Activate once IntelliJ / WebStorm supports stylelint
-  if (!env.nolint) {
-    config.plugins.push(new StyleLintPlugin({
-      configFile: '.stylelintrc.js',
-      failOnError: true,
-    }));
   }
 
   config.resolve = {

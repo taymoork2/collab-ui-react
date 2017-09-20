@@ -86,7 +86,7 @@ describe('Component: hdsUpgradeSection', function () {
     var correctShowUpgradeNowDialogOptions = {
       controller: 'HDSUpgradeNowController',
       controllerAs: 'hdsUpgradeNowController',
-      templateUrl: 'modules/hds/software-upgrade/hds-upgrade-now-cluster-dialog.html',
+      template: require('modules/hds/software-upgrade/hds-upgrade-now-cluster-dialog.html'),
     };
     controller.showUpgradeNowDialog();
     expect($modal.open).toHaveBeenCalledWith(jasmine.objectContaining(correctShowUpgradeNowDialogOptions));

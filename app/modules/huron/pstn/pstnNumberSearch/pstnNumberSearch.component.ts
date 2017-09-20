@@ -16,7 +16,6 @@ class PstnNumberSearchCtrl implements ng.IComponentController {
   public countryCode: string;
   public errorMessage: string;
   //Ctrl Properties
-  public detailSearchEnable: boolean = false;
   public isTrial: boolean = true;
   public error: boolean = false;
 
@@ -31,19 +30,27 @@ class PstnNumberSearchCtrl implements ng.IComponentController {
     if (!_.isString(this.countryCode)) {
       this.countryCode = CCODE_US;
     }
-    switch (this.countryCode) {
-      case CCODE_CA:
-      case CCODE_US:
-        this.detailSearchEnable = true;
-        break;
-      default:
-        this.detailSearchEnable = false;
+    if (!_.isString(this.numberType)) {
+      this.numberType = NUMTYPE_DID;
     }
-    this.numberType = this.numberType || NUMTYPE_DID;
     this.isTrial = this.PstnModel.getIsTrial();
     if (this.isTrial) {
       this.model.quantity = MAX_SEARCH_SELECTION;
     }
+  }
+
+  public isDetailSearchEnabled(): boolean {
+    let detailSearchEnable: boolean = false;
+    if (this.numberType === NUMTYPE_DID) {
+      //using a switch due possibly adding other countries
+      switch (this.countryCode) {
+        case CCODE_CA:
+        case CCODE_US:
+          detailSearchEnable = true;
+          break;
+      }
+    }
+    return detailSearchEnable;
   }
 
   //Bypass method to parent binding
@@ -162,7 +169,7 @@ class PstnNumberSearchCtrl implements ng.IComponentController {
 
 export class PstnNumberSearchComponent implements ng.IComponentOptions {
   public controller = PstnNumberSearchCtrl;
-  public templateUrl = 'modules/huron/pstn/pstnNumberSearch/pstnNumberSearch.html';
+  public template = require('modules/huron/pstn/pstnNumberSearch/pstnNumberSearch.html');
   public bindings = {
     model: '=',
     search: '&',

@@ -36,7 +36,7 @@ class AddResourceComponentCtrl implements ng.IComponentController {
   public openAddResourceModal = () => {
     if (this.isPartnerAdmin && !this.allowPartnerRegistration) {
       this.$modal.open({
-        templateUrl: 'modules/hercules/service-specific-pages/components/add-resource/partnerAdminWarning.html',
+        template: require('modules/hercules/service-specific-pages/components/add-resource/partnerAdminWarning.html'),
         type: 'dialog',
       });
       return;
@@ -51,7 +51,7 @@ class AddResourceComponentCtrl implements ng.IComponentController {
 
 class AddResourceComponent implements ng.IComponentOptions {
   public controller = AddResourceComponentCtrl;
-  public templateUrl = 'modules/hercules/service-specific-pages/components/add-resource/add-resource-button.html';
+  public template = require('modules/hercules/service-specific-pages/components/add-resource/add-resource-button.html');
   public bindings = {
     modalWindowOptions: '<',
     allowPartnerRegistration: '<',

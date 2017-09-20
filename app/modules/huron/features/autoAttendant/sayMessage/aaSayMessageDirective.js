@@ -18,7 +18,7 @@
       },
       controller: 'AASayMessageCtrl',
       controllerAs: 'aaSay',
-      templateUrl: 'modules/huron/features/autoAttendant/sayMessage/aaSayMessage.tpl.html',
+      template: require('modules/huron/features/autoAttendant/sayMessage/aaSayMessage.tpl.html'),
     };
   }
 })();

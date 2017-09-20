@@ -3,6 +3,12 @@ export interface IWebExSite {
   timezone?: string | object;
   centerType: string;
   quantity?: number;
+  audioPackageDisplay?: string;
+  setupType?: string;
+}
+
+export interface IExistingWebExTrialSite extends IWebExSite {
+  keepExistingSite: boolean;
 }
 
 export interface IWebexSiteDetail {
@@ -12,9 +18,16 @@ export interface IWebexSiteDetail {
   quantity: number;
 }
 
+export enum SiteErrorType {
+  URL = 'URL',
+  TIME_ZONE = 'TIME_ZONE',
+  USER_MGMT = 'USR_MGMT',
+}
+
 export interface ISiteNameError {
   isError: boolean;
   errorMsg: string;
+  errorType?: SiteErrorType;
 }
 
 export interface IConferenceService {
@@ -24,7 +37,10 @@ export interface IConferenceService {
 }
 
 export interface IConferenceLicense {
+  billingServiceId: string;
+  capacity: number;
   features: string[];
+  siteId?: string;
   isTrial: boolean;
   trialId: string;
   licenseId: string;
@@ -37,14 +53,10 @@ export interface IConferenceLicense {
   licenseModel: string;
 }
 
-export interface IExistingTrialSites extends IWebExSite {
-  keepExistingSite: boolean;
-}
-
 export interface IWebexLicencesPayload {
   provisionOrder: boolean;
-  sendCustomerEmail: boolean;
-  serviceOrderUUID: string | null;
+  sendCustomerEmail?: boolean;
+  serviceOrderUUID?: string | null;
   webexProvisioningParams?: IWebexProvisioningParams;
 }
 
@@ -60,13 +72,13 @@ export interface IWebExProvisioningData {
 
 export interface IPendingOrderSubscription {
   duration?: number;
-  externalSubscriptionId?: string;
+  externalSubscriptionId: string;
   gracePeriod?: number;
   licenses?: any;
   orderingTool?: string;
-  pendingServiceOrderUUID?: string | undefined;
+  pendingServiceOrderUUID?: string;
   status?: string;
-  subscriptionId?: string;
+  subscriptionId: string;
   trialDuration?: number;
 }
 
@@ -79,4 +91,18 @@ export interface IPendingLicense {
   volume: number;
   isTrial: boolean;
   status: string;
+}
+
+export interface ICCASPLicense extends IPendingLicense {
+  ccaspPartnerName: string;
+  ccaspSubscriptionId: string;
+}
+
+export interface ITSPLicense extends IPendingLicense {
+  tspPartnerName: string;
+}
+
+export interface ICCASPInfo {
+  partnerName: string;
+  subscriptionId: string;
 }

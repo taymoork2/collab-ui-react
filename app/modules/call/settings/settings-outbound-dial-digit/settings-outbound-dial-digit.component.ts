@@ -1,10 +1,10 @@
-import { IExtensionRange } from 'modules/call/settings/settings-extension-range';
+import { InternalNumberRange } from 'modules/call/shared/internal-number-range';
 import { IOption } from 'modules/huron/dialing/dialing.service';
 
 class OutboundDialDigitCtrl implements ng.IComponentController {
   public selected: IOption;
   public steeringDigit: string;
-  public internalNumberRanges: IExtensionRange[];
+  public internalNumberRanges: InternalNumberRange[];
   public onChangeFn: Function;
 
   public steeringDigitOptions: IOption[] = [];
@@ -59,7 +59,7 @@ class OutboundDialDigitCtrl implements ng.IComponentController {
 
 export class OutboundDialDigitComponent implements ng.IComponentOptions {
   public controller = OutboundDialDigitCtrl;
-  public templateUrl = 'modules/call/settings/settings-outbound-dial-digit/settings-outbound-dial-digit.component.html';
+  public template = require('modules/call/settings/settings-outbound-dial-digit/settings-outbound-dial-digit.component.html');
   public bindings = {
     steeringDigit: '<',
     internalNumberRanges: '<',

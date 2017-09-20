@@ -1,4 +1,4 @@
-import { HybridVoicemailStatus } from 'modules/hercules/hybrid-services.types';
+import { HybridVoicemailStatus, ServiceStatusCSSClass } from 'modules/hercules/hybrid-services.types';
 
 export interface IUserDiscoveryInfo {
   directoryURI: string;
@@ -94,7 +94,7 @@ export class UCCService {
       .then(this.extractData);
   }
 
-  public mapStatusToCss(status: HybridVoicemailStatus): string {
+  public mapStatusToCss(status: HybridVoicemailStatus): ServiceStatusCSSClass {
     switch (status) {
       case 'NOT_CONFIGURED':
         return 'disabled';
@@ -108,14 +108,20 @@ export class UCCService {
         return 'warning';
       case undefined:
       default:
-        return 'default';
+        return 'disabled';
     }
 
   }
 
 }
 
+import * as AuthinfoModuleName from 'modules/core/scripts/services/authinfo';
+import * as UrlConfigModuleName from 'modules/core/config/urlConfig';
+
 export default angular
-  .module('Hercules')
+  .module('hercules.ucc-service', [
+    AuthinfoModuleName,
+    UrlConfigModuleName,
+  ])
   .service('UCCService', UCCService)
   .name;

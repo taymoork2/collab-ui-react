@@ -3,8 +3,23 @@
 describe('UserListCtrl: Ctrl', function () {
   function init() {
     this.initModules('Core', 'Huron', 'Sunlight');
-    this.injectDependencies('$rootScope', '$state', '$controller', '$q', '$httpBackend', 'Userservice', 'UserListService',
-      'Orgservice', 'Authinfo', 'Auth', 'Config', 'Notification', 'FeatureToggleService', 'DirSyncService');
+    this.injectDependencies(
+      '$controller',
+      '$httpBackend',
+      '$q',
+      '$rootScope',
+      '$scope',
+      '$state',
+      'Authinfo',
+      'Config',
+      'DirSyncService',
+      'FeatureToggleService',
+      'GridCellService',
+      'Notification',
+      'Orgservice',
+      'UserListService',
+      'Userservice'
+    );
     initFixtures.apply(this);
     initDependencySpies.apply(this);
   }
@@ -13,6 +28,10 @@ describe('UserListCtrl: Ctrl', function () {
     this.$rootScope.typeOfExport = {
       USER: 1,
       CUSTOMER: 2,
+    };
+
+    this.event = {
+      stopPropagation: jasmine.createSpy('stopPropagation'),
     };
 
     this.photoUsers = _.clone(getJSONFixture('core/json/users/userlist.controller.json'));
@@ -32,15 +51,9 @@ describe('UserListCtrl: Ctrl', function () {
       success: true,
     };
 
-    // var failedData = {
-    //   success: false,
-    //   status: 403,
-    //   Errors: [{
-    //     errorCode: '100106'
-    //   }]
-    // };
-
+    spyOn(this.$state, 'go');
     spyOn(this.Notification, 'success');
+    spyOn(this.Notification, 'errorResponse');
     spyOn(this.Userservice, 'resendInvitation').and.returnValue(this.$q.resolve({}));
     spyOn(this.UserListService, 'listUsers').and.callFake(function (startIndex, count, sortBy, sortOrder, callback, searchStr, getAdmins) {
       var response;
@@ -61,7 +74,6 @@ describe('UserListCtrl: Ctrl', function () {
     spyOn(this.Authinfo, 'isCSB').and.returnValue(true);
     spyOn(this.Authinfo, 'getOrgId').and.returnValue(this.currentUser.meta.organizationID);
     this.isCiscoSpy = spyOn(this.Authinfo, 'isCisco').and.returnValue(false);
-    spyOn(this.Auth, 'isOnlineOrg').and.returnValue(this.$q.resolve(false));
 
     spyOn(this.FeatureToggleService, 'atlasEmailStatusGetStatus').and.returnValue(this.$q.resolve(false));
 
@@ -74,9 +86,6 @@ describe('UserListCtrl: Ctrl', function () {
   }
 
   function initController() {
-    var _this = this;
-    this.$scope = this.$rootScope.$new();
-
     this.controller = this.$controller('UserListCtrl', {
       $scope: this.$scope,
       $state: this.$state,
@@ -86,19 +95,29 @@ describe('UserListCtrl: Ctrl', function () {
       Config: this.Config,
     });
 
-    spyOn(this.controller, 'configureGrid').and.callFake(function () {
-      // mock gridApi
-      _this.$scope.gridApi = {
-        infiniteScroll: {
-          saveScrollPercentage: jasmine.createSpy().and.returnValue(),
-          resetScroll: jasmine.createSpy().and.returnValue(),
-          dataLoaded: jasmine.createSpy().and.returnValue(),
+    this.controller.$onInit();
+
+    this.$scope.gridOptions.onRegisterApi({
+      core: {
+        on: {
+          sortChanged: _.noop,
         },
-      };
-      return _this.$q.resolve();
+      },
+      infiniteScroll: {
+        saveScrollPercentage: _.noop,
+        resetScroll: _.noop,
+        dataLoaded: _.noop,
+        on: {
+          needLoadMoreData: _.noop,
+        },
+      },
+      selection: {
+        on: {
+          rowSelectionChanged: _.noop,
+        },
+      },
     });
 
-    this.controller.$onInit();
     this.$scope.$apply();
   }
 
@@ -168,10 +187,10 @@ describe('UserListCtrl: Ctrl', function () {
     });
 
     it('should return photo thumbnail value', function () {
-      expect(this.$scope.getUserPhoto(this.photoUsers.photoUser)).toEqual(this.photoUsers.photoUser.photos[1].value);
+      expect(this.controller.getUserPhoto(this.photoUsers.photoUser)).toEqual(this.photoUsers.photoUser.photos[1].value);
     });
     it('should return null if no photo list', function () {
-      expect(this.$scope.getUserPhoto(this.currentUser)).toBeUndefined();
+      expect(this.controller.getUserPhoto(this.currentUser)).toBeUndefined();
     });
   });
 
@@ -181,16 +200,72 @@ describe('UserListCtrl: Ctrl', function () {
     });
 
     it('should verify valid photo thumbnail', function () {
-      expect(this.$scope.isValidThumbnail(this.photoUsers.photoUser)).toBe(true);
+      expect(this.controller.isValidThumbnail(this.photoUsers.photoUser)).toBe(true);
     });
     it('should verify no filename in thumbnail value', function () {
-      expect(this.$scope.isValidThumbnail(this.photoUsers.fileThumb)).toBe(false);
+      expect(this.controller.isValidThumbnail(this.photoUsers.fileThumb)).toBe(false);
     });
     it('should verify no thumbnail field', function () {
-      expect(this.$scope.isValidThumbnail(this.currentUser)).toBe(false);
+      expect(this.controller.isValidThumbnail(this.currentUser)).toBe(false);
     });
     it('should verify blank thumbnail field', function () {
-      expect(this.$scope.isValidThumbnail(this.photoUsers.emptyThumb)).toBe(false);
+      expect(this.controller.isValidThumbnail(this.photoUsers.emptyThumb)).toBe(false);
+    });
+  });
+
+  describe('handleDeleteUser', function () {
+    beforeEach(function () {
+      initController.apply(this);
+
+      this.user = {
+        userName: 'userName',
+        id: 'id',
+        meta: {
+          organizationID: 'organizationID',
+        },
+      };
+
+      this.userDetails = {
+        deleteUserOrgId: this.user.meta.organizationID,
+        deleteUserUuId: this.user.id,
+        deleteUsername: this.user.userName,
+      };
+
+      this.userDelete = 'users.delete';
+      this.selfDelete = 'users.deleteSelf';
+    });
+
+    it('should call keypressHandleDeleteUser and handleDeleteUser successfully when keypress event is enter', function () {
+      this.event.keyCode = this.GridCellService.ENTER;
+      this.controller.keypressHandleDeleteUser(this.event, this.user, true);
+      expect(this.event.stopPropagation).toHaveBeenCalled();
+      expect(this.$state.go).toHaveBeenCalledWith(this.selfDelete, this.userDetails);
+    });
+
+    it('should call keypressHandleDeleteUser and handleDeleteUser successfully when keypress event is space', function () {
+      this.event.keyCode = this.GridCellService.SPACE;
+      this.controller.keypressHandleDeleteUser(this.event, this.user, true);
+      expect(this.event.stopPropagation).toHaveBeenCalled();
+      expect(this.$state.go).toHaveBeenCalledWith(this.selfDelete, this.userDetails);
+    });
+
+    it('should call keypressHandleDeleteUser, but not handleDeleteUser, when keypress event is neither enter nor space', function () {
+      this.event.keyCode = 0;
+      this.controller.keypressHandleDeleteUser(this.event, this.user, true);
+      expect(this.event.stopPropagation).toHaveBeenCalled();
+      expect(this.$state.go).not.toHaveBeenCalled();
+    });
+
+    it('should call handleDeleteUser and call the delete self modal when self is true', function () {
+      this.controller.handleDeleteUser(this.event, this.user, true);
+      expect(this.event.stopPropagation).toHaveBeenCalled();
+      expect(this.$state.go).toHaveBeenCalledWith(this.selfDelete, this.userDetails);
+    });
+
+    it('should call handleDeleteUser and call the delete user modal when self is false', function () {
+      this.controller.handleDeleteUser(this.event, this.user, false);
+      expect(this.event.stopPropagation).toHaveBeenCalled();
+      expect(this.$state.go).toHaveBeenCalledWith(this.userDelete, this.userDetails);
     });
   });
 
@@ -206,10 +281,44 @@ describe('UserListCtrl: Ctrl', function () {
       this.entitlements = ['squared-call-initiation', 'spark', 'webex-squared'];
     });
 
-    it('should call resendInvitation successfully', function () {
-      this.$scope.resendInvitation(this.userEmail, this.userName, this.uuid, this.userStatus, this.dirsyncEnabled, this.entitlements);
+    it('should call keypressResendInvitation and resendInvitation successfully when keypress event is enter', function () {
+      this.event.keyCode = this.GridCellService.ENTER;
+      this.controller.keypressResendInvitation(this.event, this.userEmail, this.userName, this.uuid, this.userStatus, this.dirsyncEnabled, this.entitlements);
       this.$scope.$apply();
       expect(this.Notification.success).toHaveBeenCalled();
+      expect(this.event.stopPropagation).toHaveBeenCalled();
+    });
+
+    it('should call keypressResendInvitation and resendInvitation successfully when keypress event is space', function () {
+      this.event.keyCode = this.GridCellService.SPACE;
+      this.controller.keypressResendInvitation(this.event, this.userEmail, this.userName, this.uuid, this.userStatus, this.dirsyncEnabled, this.entitlements);
+      this.$scope.$apply();
+      expect(this.Notification.success).toHaveBeenCalled();
+      expect(this.event.stopPropagation).toHaveBeenCalled();
+    });
+
+    it('should call keypressResendInvitation, but not resendInvitation, when keypress event is neither enter nor space', function () {
+      this.event.keyCode = 0;
+      this.controller.keypressResendInvitation(this.event, this.userEmail, this.userName, this.uuid, this.userStatus, this.dirsyncEnabled, this.entitlements);
+      this.$scope.$apply();
+      expect(this.Notification.success).not.toHaveBeenCalled();
+      expect(this.Notification.errorResponse).not.toHaveBeenCalled();
+      expect(this.event.stopPropagation).toHaveBeenCalled();
+    });
+
+    it('should call resendInvitation successfully', function () {
+      this.controller.resendInvitation(this.event, this.userEmail, this.userName, this.uuid, this.userStatus, this.dirsyncEnabled, this.entitlements);
+      this.$scope.$apply();
+      expect(this.Notification.success).toHaveBeenCalled();
+      expect(this.event.stopPropagation).toHaveBeenCalled();
+    });
+
+    it('should call resendInvitation error notification on failure', function () {
+      this.Userservice.resendInvitation.and.returnValue(this.$q.reject({}));
+      this.controller.resendInvitation(this.event, this.userEmail, this.userName, this.uuid, this.userStatus, this.dirsyncEnabled, this.entitlements);
+      this.$scope.$apply();
+      expect(this.Notification.errorResponse).toHaveBeenCalled();
+      expect(this.event.stopPropagation).toHaveBeenCalled();
     });
   });
 
@@ -262,8 +371,8 @@ describe('UserListCtrl: Ctrl', function () {
   describe('canShowActionsMenu', function () {
     beforeEach(function () {
       initController.apply(this);
-      spyOn(this.$scope, 'canShowResendInvite').and.returnValue(true);
-      spyOn(this.$scope, 'canShowUserDelete').and.returnValue(true);
+      spyOn(this.controller, 'canShowResendInvite').and.returnValue(true);
+      spyOn(this.controller, 'canShowUserDelete').and.returnValue(true);
 
       this.user = {
         userStatus: 'active',
@@ -272,30 +381,30 @@ describe('UserListCtrl: Ctrl', function () {
 
     it('should return false if dirSync is enabled and user not pending', function () {
       this.$scope.dirsyncEnabled = true;
-      expect(this.$scope.canShowActionsMenu(this.user)).toBeFalsy();
+      expect(this.controller.canShowActionsMenu(this.user)).toBeFalsy();
     });
 
     it('should return true if dirSync is enabled and user is pending', function () {
       this.$scope.dirsyncEnabled = true;
       this.user.userStatus = 'pending';
-      expect(this.$scope.canShowActionsMenu(this.user)).toBeTruthy();
+      expect(this.controller.canShowActionsMenu(this.user)).toBeTruthy();
     });
 
     // test available actions
     it('should return false if no available actions', function () {
-      this.$scope.canShowUserDelete.and.returnValue(false);
-      this.$scope.canShowResendInvite.and.returnValue(false);
-      expect(this.$scope.canShowActionsMenu(this.user)).toBeFalsy();
+      this.controller.canShowUserDelete.and.returnValue(false);
+      this.controller.canShowResendInvite.and.returnValue(false);
+      expect(this.controller.canShowActionsMenu(this.user)).toBeFalsy();
     });
 
     it('should return true if only canShowResendInvite true', function () {
-      this.$scope.canShowUserDelete.and.returnValue(false);
-      expect(this.$scope.canShowActionsMenu(this.user)).toBeTruthy();
+      this.controller.canShowUserDelete.and.returnValue(false);
+      expect(this.controller.canShowActionsMenu(this.user)).toBeTruthy();
     });
 
     it('should return true if only canShowUserDelete true', function () {
-      this.$scope.canShowResendInvite.and.returnValue(false);
-      expect(this.$scope.canShowActionsMenu(this.user)).toBeTruthy();
+      this.controller.canShowResendInvite.and.returnValue(false);
+      expect(this.controller.canShowActionsMenu(this.user)).toBeTruthy();
     });
   });
 
@@ -309,32 +418,32 @@ describe('UserListCtrl: Ctrl', function () {
 
     it('should return false if no user licenses', function () {
       this.$scope.getUserLicenses.and.returnValue(false);
-      expect(this.$scope.canShowUserDelete(this.user)).toBeFalsy();
+      expect(this.controller.canShowUserDelete(this.user)).toBeFalsy();
     });
 
     it('should return false if dirsync enabled', function () {
       this.$scope.dirsyncEnabled = true;
-      expect(this.$scope.canShowUserDelete(this.user)).toBeFalsy();
+      expect(this.controller.canShowUserDelete(this.user)).toBeFalsy();
     });
 
     it('should return false if only admin is true', function () {
       this.$scope.isOnlyAdmin.and.returnValue(true);
       expect(this.$scope.isOnlyAdmin(this.user)).toBeTruthy();
-      expect(this.$scope.canShowUserDelete(this.user)).toBeFalsy();
+      expect(this.controller.canShowUserDelete(this.user)).toBeFalsy();
     });
 
     it('should return false if online buyer is true', function () {
       this.$scope.isOnlineBuyer.and.returnValue(true);
-      expect(this.$scope.canShowUserDelete(this.user)).toBeFalsy();
+      expect(this.controller.canShowUserDelete(this.user)).toBeFalsy();
     });
 
     it('should return true when all conditions met', function () {
-      expect(this.$scope.canShowUserDelete(this.user)).toBeTruthy();
+      expect(this.controller.canShowUserDelete(this.user)).toBeTruthy();
     });
 
     it('should return false when the user is a partner admin', function () {
       this.$scope.userList.partnerUsers.push(this.user);
-      expect(this.$scope.canShowUserDelete(this.user)).toBeFalsy();
+      expect(this.controller.canShowUserDelete(this.user)).toBeFalsy();
     });
   });
 
@@ -352,37 +461,37 @@ describe('UserListCtrl: Ctrl', function () {
 
     it('should return false if isCSB is true', function () {
       expect(this.$scope.isCSB).toBeFalsy();
-      expect(this.$scope.canShowResendInvite(this.user)).toBeFalsy();
+      expect(this.controller.canShowResendInvite(this.user)).toBeFalsy();
       this.Userservice.isHuronUser.and.returnValue(true);
-      expect(this.$scope.canShowResendInvite(this.user)).toBeTruthy();
+      expect(this.controller.canShowResendInvite(this.user)).toBeTruthy();
 
       this.$scope.isCSB = true;
-      expect(this.$scope.canShowResendInvite(this.user)).toBeFalsy();
+      expect(this.controller.canShowResendInvite(this.user)).toBeFalsy();
     });
 
     it('should return true if isHuronUser', function () {
-      expect(this.$scope.canShowResendInvite(this.user)).toBeFalsy();
+      expect(this.controller.canShowResendInvite(this.user)).toBeFalsy();
 
       this.Userservice.isHuronUser.and.returnValue(true);
-      expect(this.$scope.canShowResendInvite(this.user)).toBeTruthy();
+      expect(this.controller.canShowResendInvite(this.user)).toBeTruthy();
     });
 
     it('should return true if userStatus is pending', function () {
-      expect(this.$scope.canShowResendInvite(this.user)).toBeFalsy();
+      expect(this.controller.canShowResendInvite(this.user)).toBeFalsy();
       this.user.userStatus = 'pending';
-      expect(this.$scope.canShowResendInvite(this.user)).toBeTruthy();
+      expect(this.controller.canShowResendInvite(this.user)).toBeTruthy();
     });
 
     it('should return true if userStatus is error', function () {
-      expect(this.$scope.canShowResendInvite(this.user)).toBeFalsy();
+      expect(this.controller.canShowResendInvite(this.user)).toBeFalsy();
       this.user.userStatus = 'error';
-      expect(this.$scope.canShowResendInvite(this.user)).toBeTruthy();
+      expect(this.controller.canShowResendInvite(this.user)).toBeTruthy();
     });
 
     it('should return false if userStatus is neither pending nor error', function () {
-      expect(this.$scope.canShowResendInvite(this.user)).toBeFalsy();
+      expect(this.controller.canShowResendInvite(this.user)).toBeFalsy();
       this.user.userStatus = 'batman';
-      expect(this.$scope.canShowResendInvite(this.user)).toBeFalsy();
+      expect(this.controller.canShowResendInvite(this.user)).toBeFalsy();
     });
   });
 });

@@ -108,10 +108,10 @@ See [git-terminology](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-c
 
 ##### 1. Refresh npm dependencies
 
-  * `npm install` to install project dependencies
+  * `yarn` to install project dependencies
 
 ##### 2. Run the application
-  * `npm start` to run the development server
+  * `yarn start` to run the development server
   * See [npm scripts](docs/npm-scripts.md) for more build commands
 
 ##### 3. Make your feature change or bug fix
@@ -125,14 +125,15 @@ See [git-terminology](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-c
     * [example.service.ts](examples/unit/example.service.ts)
 
 ##### 4. Create your unit tests
-  * `npm test` or `npm run test` to run unit tests
-  * Example components - `npm run ktest-watch -- examples/unit/*.spec.ts`
+  * `yarn test` to run unit tests
+  * Example components - `yarn ktest-watch examples/unit/*.spec.ts`
     * [example.component.spec.ts](examples/unit/example.component.spec.ts)
     * [example.service.spec.ts](examples/unit/example.service.spec.ts)
 
 ##### 5. Create End-to-End test
   * **Important:** *Our functional e2e tests are only intended for the few, happy-path, critical workflows in Atlas. The majority of these deal with creating trials and users for particular services.  There should be a valid critical reason for adding a new e2e test. If you want to any advice, we do have a (rarely used) "Atlas UI E2E Tests" space in the Atlas Team.*
-  * `npm run protractor` to run protractor e2e tests
+  * `yarn protractor` to run protractor e2e tests
+  * `yarn protractor --specs test/e2e-protractor/examples/failed_test_retry_spec.js` to run a specific e2e test
   * e2e tests are organized by [modules](test/e2e-protractor)
   * Protractor elements are abstracted into [Page Objects](test/e2e-protractor/pages)
   * All element interactions are implemented through [Util functions](test/e2e-protractor/utils/test.utils.js)

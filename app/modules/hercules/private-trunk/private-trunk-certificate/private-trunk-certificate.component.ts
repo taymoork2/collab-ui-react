@@ -118,7 +118,7 @@ export class PrivateTrunkCertificateCtrl implements ng.IComponentController {
 
 export class PrivateTrunkCertificateComponent implements ng.IComponentOptions {
   public controller = PrivateTrunkCertificateCtrl;
-  public templateUrl = 'modules/hercules/private-trunk/private-trunk-certificate/private-trunk-certificate.html';
+  public template = require('modules/hercules/private-trunk/private-trunk-certificate/private-trunk-certificate.html');
   public bindings = {
     isFirstTimeSetup: '<',
     formattedCertList: '<',

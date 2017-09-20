@@ -4,7 +4,10 @@ describe('Component: cbgSites', function () {
   var $q, $modal, $window, $state, $scope, $componentCtrl, $httpBackend, UrlConfig;
   var ctrl, cbgService, PreviousState, Notification;
   var cbgs = getJSONFixture('gemini/callbackGroups.json');
-  var preData = getJSONFixture('gemini/common.json');
+
+  beforeEach(function () {
+    this.preData = _.cloneDeep(getJSONFixture('gemini/common.json'));
+  });
 
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Gemini'));
@@ -16,7 +19,7 @@ describe('Component: cbgSites', function () {
     $q = $modal = $httpBackend = UrlConfig = $window = $state = $scope = $componentCtrl = ctrl = cbgService = PreviousState = Notification = undefined;
   });
   afterAll(function () {
-    cbgs = preData = undefined;
+    cbgs = undefined;
   });
 
   function dependencies(_$q_, _$state_, _$httpBackend_, _UrlConfig_, _$rootScope_, _$componentController_, _$modal_, _$window_, _cbgService_, _PreviousState_, _Notification_) {
@@ -45,7 +48,7 @@ describe('Component: cbgSites', function () {
     $state.current.data = {};
 
     var getCountriesUrl = UrlConfig.getGeminiUrl() + 'countries';
-    $httpBackend.expectGET(getCountriesUrl).respond(200, preData.getCountries);
+    $httpBackend.expectGET(getCountriesUrl).respond(200, this.preData.getCountries);
 
     ctrl = $componentCtrl('cbgSites', { $scope: $scope, $state: $state });
   }
@@ -59,7 +62,7 @@ describe('Component: cbgSites', function () {
 
   describe('click event', function () {
     it('should moveSite', function () {
-      var moveSiteResponse = preData.common;
+      var moveSiteResponse = this.preData.common;
       moveSiteResponse.content.data.returnCode = 0;
       var site = {
         siteId: 'ff808081582992dd01589a5b232410bb',
@@ -83,7 +86,7 @@ describe('Component: cbgSites', function () {
     });
 
     it('should call Notification.notify in onmoveSite', function () {
-      var moveSiteResponse = preData.common;
+      var moveSiteResponse = this.preData.common;
       moveSiteResponse.content.data.returnCode = 1000;
       var site = {
         siteId: 'ff808081582992dd01589a5b232410bb',

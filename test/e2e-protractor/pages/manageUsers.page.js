@@ -34,6 +34,11 @@ var manageUsersPage = function () {
     },
   };
 
+  // email suppress
+  this.emailSuppress = {
+    emailSuppressIcon: element(by.css('.icon-circle-email')),
+  };
+
   // Manually add or Modify Users
   this.manual = {
     clearButton: element(by.css('.onboard-users .icon-trash')),

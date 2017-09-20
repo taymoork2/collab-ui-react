@@ -29,19 +29,22 @@
       return $http.delete(url);
     };
 
+    function recoverProm(errorResponse) {
+      Notification.errorWithTrackingId(errorResponse, 'mediaFusion.mediaNetworkFailure');
+      return undefined;
+    }
+
+    function enableMediaServiceEntitlements() {
+      return [enableRhesosEntitlement().catch(recoverProm), enableCallServiceEntitlement().catch(recoverProm)];
+    }
 
     function enableMediaService(serviceId) {
-      ServiceDescriptorService.enableService(serviceId).then(
-        function success() {
-          setisMediaServiceEnabled(true);
-          enableOrpheusForMediaFusion();
-          enableRhesosEntitlement();
-          enableCallServiceEntitlement();
-          setOrgSettingsForDevOps();
-        },
-        function error() {
-          Notification.error('mediaFusion.mediaServiceActivationFailure');
-        });
+      ServiceDescriptorService.enableService(serviceId).then('', function () {
+        Notification.error('mediaFusion.mediaServiceActivationFailure');
+      });
+      setisMediaServiceEnabled(true);
+      enableOrpheusForMediaFusion();
+      setOrgSettingsForDevOps();
     }
 
     var enableOrpheusForMediaFusion = function () {
@@ -81,9 +84,7 @@
       setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
         function success() {},
         function error(errorResponse) {
-          Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
-            failureMessage: errorResponse.message,
-          });
+          Notification.errorWithTrackingId(errorResponse, 'mediaFusion.mediaMicroserviceFailure');
         });
     };
 
@@ -124,17 +125,13 @@
             setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
               function success() {},
               function error(errorResponse) {
-                Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
-                  failureMessage: errorResponse.message,
-                });
+                Notification.errorWithTrackingId(errorResponse, 'mediaFusion.mediaMicroserviceFailure');
               });
           } else {
             deleteUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
               function success() {},
               function error(errorResponse) {
-                Notification.error('mediaFusion.mediaAgentOrgMappingFailure', {
-                  failureMessage: errorResponse.message,
-                });
+                Notification.errorWithTrackingId(errorResponse, 'mediaFusion.mediaMicroserviceFailure');
               });
           }
         });
@@ -184,6 +181,7 @@
       disableOrpheusForMediaFusion: disableOrpheusForMediaFusion,
       deactivateHybridMedia: deactivateHybridMedia,
       disableMFOrgSettingsForDevOps: disableMFOrgSettingsForDevOps,
+      enableMediaServiceEntitlements: enableMediaServiceEntitlements,
     };
   }
 })();

@@ -160,31 +160,31 @@ require('@ciscospark/internal-plugin-search');
         field: 'displayName',
         displayName: $translate.instant('ediscovery.reportsList.name'),
         sortable: true,
-        cellTemplate: 'modules/ediscovery/cell-template-name.html',
+        cellTemplate: require('modules/ediscovery/cell-template-name.html'),
         width: '*',
       }, {
         field: 'createdTime',
         displayName: $translate.instant('ediscovery.reportsList.dateGenerated'),
         sortable: false,
-        cellTemplate: 'modules/ediscovery/cell-template-createdTime.html',
+        cellTemplate: require('modules/ediscovery/cell-template-createdTime.html'),
         width: '*',
       }, {
         field: 'size',
         displayName: $translate.instant('ediscovery.reportsList.size'),
         sortable: false,
-        cellTemplate: 'modules/ediscovery/cell-template-size.html',
+        cellTemplate: require('modules/ediscovery/cell-template-size.html'),
         width: '110',
       }, {
         field: 'state',
         displayName: $translate.instant('ediscovery.reportsList.status'),
         sortable: false,
-        cellTemplate: 'modules/ediscovery/cell-template-state.html',
+        cellTemplate: require('modules/ediscovery/cell-template-state.html'),
         width: '*',
       }, {
         field: 'actions',
         displayName: $translate.instant('ediscovery.reportsList.actions'),
         sortable: false,
-        cellTemplate: 'modules/ediscovery/cell-template-action.html',
+        cellTemplate: require('modules/ediscovery/cell-template-action.html'),
         width: '160',
       }],
     };
@@ -239,14 +239,14 @@ require('@ciscospark/internal-plugin-search');
     function getKey(report) {
       if (isUserReportCreator(report)) {
         EdiscoveryService.getReportKey(report.encryptionKeyUrl, spark)
-        .then(function (key) {
-          $scope.reportName = report.displayName;
-          $scope.reportKey = key;
-          EdiscoveryService.openReportModal($scope, EdiscoveryService.modalTypes.PASSWORD);
-        })
-        .catch(function () {
-          Notification.error('ediscovery.encryption.unableGetPassword');
-        });
+          .then(function (key) {
+            $scope.reportName = report.displayName;
+            $scope.reportKey = key;
+            EdiscoveryService.openReportModal($scope, EdiscoveryService.modalTypes.PASSWORD);
+          })
+          .catch(function () {
+            Notification.error('ediscovery.encryption.unableGetPassword');
+          });
       }
     }
   }

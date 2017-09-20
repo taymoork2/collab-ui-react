@@ -1,27 +1,31 @@
 (function () {
   'use strict';
 
+  // TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
+  var hybridServicesCardTemplatePath = require('ngtemplate-loader?module=Core!./hybridServicesCard.tpl.html');
+
   angular
     .module('Core')
     .factory('OverviewHybridServicesCard', OverviewHybridServicesCard);
 
   /* @ngInject */
-  function OverviewHybridServicesCard($q, Authinfo, Config, FeatureToggleService, HybridServicesClusterService, CloudConnectorService) {
+  function OverviewHybridServicesCard($q, Authinfo, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, HybridServicesExtrasService, HybridServicesUtilsService, Notification, USSService) {
     return {
       createCard: function createCard() {
         var card = {};
         card.name = 'overview.cards.hybrid.title';
         card.cardClass = 'hybrid-card';
-        card.template = 'modules/core/overview/hybridServicesCard.tpl.html';
+        card.template = hybridServicesCardTemplatePath;
         card.icon = 'icon-circle-data';
         card.enabled = false;
         card.notEnabledAction = 'https://www.cisco.com/go/hybrid-services';
         card.notEnabledActionText = 'overview.cards.hybrid.notEnabledActionText';
         card.serviceList = [];
 
-        function init() {
+        function init(hasInvalidated) {
           $q.all({
             nameChangeEnabled: FeatureToggleService.atlas2017NameChangeGetStatus(),
+            hybridImp: FeatureToggleService.atlasHybridImpGetStatus(),
           }).then(function (featureToggles) {
             if (featureToggles.nameChangeEnabled) {
               card.notEnabledText = 'overview.cards.hybrid.notEnabledTextNew';
@@ -29,29 +33,60 @@
               card.notEnabledText = 'overview.cards.hybrid.notEnabledText';
             }
 
-            return $q.all({
+            return HybridServicesUtilsService.allSettled({
               clusterList: HybridServicesClusterService.getAll(),
-              gcalService: Authinfo.isEntitled(Config.entitlements.fusion_google_cal) ? CloudConnectorService.getService() : $q.resolve({}),
+              gcalService: Authinfo.isEntitled(Config.entitlements.fusion_gcal) ? CloudConnectorService.getService('squared-fusion-gcal') : $q.resolve({}),
               featureToggles: featureToggles,
             });
           }).then(function (response) {
-            if (Authinfo.isEntitled(Config.entitlements.fusion_google_cal)) {
-              card.serviceList.push(response.gcalService);
+            if (response.gcalService.status === 'fulfilled') {
+              if (Authinfo.isEntitled(Config.entitlements.fusion_gcal)) {
+                card.serviceList.push(response.gcalService.value);
+              }
+            } else {
+              Notification.errorWithTrackingId(response.gcalService.reason, 'overview.cards.hybrid.googleCalendarError');
             }
-            if (Authinfo.isEntitled(Config.entitlements.fusion_cal)) {
-              card.serviceList.push(HybridServicesClusterService.getStatusForService('squared-fusion-cal', response.clusterList));
-            }
-            if (Authinfo.isEntitled(Config.entitlements.fusion_uc)) {
-              card.serviceList.push(HybridServicesClusterService.getStatusForService('squared-fusion-uc', response.clusterList));
-            }
-            if (Authinfo.isEntitled(Config.entitlements.mediafusion)) {
-              card.serviceList.push(HybridServicesClusterService.getStatusForService('squared-fusion-media', response.clusterList));
-            }
-            if (Authinfo.isEntitled(Config.entitlements.hds)) {
-              card.serviceList.push(HybridServicesClusterService.getStatusForService('spark-hybrid-datasecurity', response.clusterList));
-            }
-            if (Authinfo.isEntitled(Config.entitlements.context)) {
-              card.serviceList.push(HybridServicesClusterService.getStatusForService('contact-center-context', response.clusterList));
+            if (response.clusterList.status === 'fulfilled') {
+              if (Authinfo.isEntitled(Config.entitlements.fusion_cal)) {
+                card.serviceList.push(HybridServicesClusterService.getStatusForService('squared-fusion-cal', response.clusterList.value));
+              }
+              if (Authinfo.isEntitled(Config.entitlements.fusion_uc)) {
+                card.serviceList.push(HybridServicesClusterService.getStatusForService('squared-fusion-uc', response.clusterList.value));
+              }
+              if (Authinfo.isEntitled(Config.entitlements.imp) && _.get(response, 'featureToggles.value.hybridImp')) {
+                card.serviceList.push(HybridServicesClusterService.getStatusForService('spark-hybrid-impinterop', response.clusterList.value));
+              }
+              if (Authinfo.isEntitled(Config.entitlements.mediafusion)) {
+                card.serviceList.push(HybridServicesClusterService.getStatusForService('squared-fusion-media', response.clusterList.value));
+              }
+              if (Authinfo.isEntitled(Config.entitlements.hds)) {
+                card.serviceList.push(HybridServicesClusterService.getStatusForService('spark-hybrid-datasecurity', response.clusterList.value));
+              }
+              if (Authinfo.isEntitled(Config.entitlements.context)) {
+                card.serviceList.push(HybridServicesClusterService.getStatusForService('contact-center-context', response.clusterList.value));
+              }
+            } else {
+              if (_.get(response, 'clusterList.reason.status') === 403 && !hasInvalidated) {
+                $q.all([
+                  // Partner user most likely is out of sync in FMS/USS cache after the trial was added in the Atlas backend
+                  // To remedy, invalidate the user cache
+                  USSService.invalidateHybridUserCache(),
+                  HybridServicesExtrasService.invalidateHybridUserCache(),
+                ])
+                  .then(function () {
+                    // We have invalidated the cache, lets init again
+                    init(true);
+                  })
+                  .catch(function (error) {
+                    Notification.errorWithTrackingId(error, 'overview.cards.hybrid.herculesErrorCacheInvalidation');
+                  });
+              } else {
+                if (_.get(response, 'clusterList.reason.status') === 403) {
+                  Notification.errorWithTrackingId(response.clusterList.reason, 'overview.cards.hybrid.herculesErrorAuthentication');
+                } else {
+                  Notification.errorWithTrackingId(response.clusterList.reason, 'overview.cards.hybrid.herculesError');
+                }
+              }
             }
             card.enabled = _.some(card.serviceList, function (service) {
               return service.setup;
@@ -59,12 +94,12 @@
             if (card.enabled) {
               _.each(card.serviceList, function (service) {
                 service.UIstateLink = getUIStateLink(service.serviceId);
-                service.healthStatus = service.statusCss;
+                service.healthStatus = service.cssClass;
               });
             }
           });
         }
-        init();
+        init(false);
 
         function getUIStateLink(serviceId) {
           if (serviceId === 'squared-fusion-uc') {
@@ -79,6 +114,8 @@
             return 'hds.list';
           } else if (serviceId === 'contact-center-context') {
             return 'context-resources';
+          } else if (serviceId === 'spark-hybrid-impinterop') {
+            return 'imp-service.list';
           }
         }
         return card;

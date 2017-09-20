@@ -75,7 +75,7 @@ class DeviceList implements ng.IComponentController {
     if (this.placeType === 'cloudberry' && this.csdmMultipleDevicesPerPlaceFeature) {
       this.$modal.open({
         type: 'dialog',
-        templateUrl: 'modules/huron/device/multipleDevicesConfirm.tpl.html',
+        template: require('modules/huron/device/multipleDevicesConfirm.tpl.html'),
       }).result.then(() => {
         this.onGenerateFn();
       });
@@ -102,7 +102,7 @@ class DeviceList implements ng.IComponentController {
 
 export class DeviceListComponent implements ng.IComponentOptions {
   public controller = DeviceList;
-  public templateUrl = 'modules/huron/device/deviceList.html';
+  public template = require('modules/huron/device/deviceList.html');
   public bindings = <{ [binding: string]: string }>{
     ownerType: '@',
     deviceList: '<',

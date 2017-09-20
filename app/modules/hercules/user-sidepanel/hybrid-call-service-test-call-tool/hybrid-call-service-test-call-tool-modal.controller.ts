@@ -1,6 +1,7 @@
 import { Notification } from 'modules/core/notifications';
-import { HybridServiceUserSidepanelHelperService, IUserStatus as IUserFromCommonIdentityStatus } from 'modules/hercules/services/hybrid-services-user-sidepanel-helper.service';
-import { L2SipService, VerificationStep, ISipDestinationSteps, Severity } from 'modules/hercules/services/l2sip-service';
+import { HybridServiceUserSidepanelHelperService } from 'modules/hercules/services/hybrid-services-user-sidepanel-helper.service';
+import { L2SipService, VerificationStep, ISipDestinationSteps, StepSeverity } from 'modules/hercules/services/l2sip-service';
+import { USSService } from 'modules/hercules/services/uss.service';
 
 interface IPhoto {
   value: string;
@@ -33,7 +34,7 @@ class HybridCallServiceTestToolModalController {
     private L2SipService: L2SipService,
     private Userservice,
     private UserListService,
-    private USSService,
+    private USSService: USSService,
     private HybridServiceUserSidepanelHelperService: HybridServiceUserSidepanelHelperService,
     public incomingCallerUserId: string,
     public allowChangingCaller = true,
@@ -66,7 +67,7 @@ class HybridCallServiceTestToolModalController {
 
   private getUserFromUss = (userId): IPromise<string> =>  {
     return this.HybridServiceUserSidepanelHelperService.getDataFromUSS(userId)
-      .then((data: IUserFromCommonIdentityStatus[]) => {
+      .then((data) => {
         return this.USSService.decorateWithStatus(data[1]);
       })
       .catch(() => {
@@ -150,7 +151,7 @@ class HybridCallServiceTestToolModalController {
       });
   }
 
-  public getNumberOfSteps(level: Severity): number {
+  public getNumberOfSteps(level: StepSeverity): number {
     return _.chain(this.result)
       .filter((step: VerificationStep) => step.severity === level)
       .size()

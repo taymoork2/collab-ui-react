@@ -14,20 +14,20 @@ source "${WX2_ADMIN_WEB_CLIENT_HOME}/bin/include/env-var-helpers"
 # - inject build env vars if running this script in a dev environment
 # - on jenkins, the necessary env vars will already have been injected as a pre-build step
 if ! is_ci; then
-    inj_build_env_vars_for "dev"
+    inj_build_env_vars_for "dev" >/dev/null
 fi
 
 # Cleanup tcp processed from previous jobs
 kill_wait "lite-server"
 
-npm run serve-dist -- --noopen &
+yarn serve-dist -- --noopen &
 # poll on web webserver at root context until it comes up
 while [ "$( curl_http_status "http://127.0.0.1:8000/" )" -ne 200 ]; do
     sleep 2;
 done
 
 # update webdriver
-npm run webdriver
+yarn webdriver
 
 function get_test_suite_arg {
     # check if a '--specs=...' arg was passed to this script

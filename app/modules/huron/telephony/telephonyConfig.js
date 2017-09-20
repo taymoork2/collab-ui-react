@@ -3,7 +3,7 @@
 
   module.exports = angular
     .module('huron.config', [
-      require('modules/core/config/config'),
+      require('modules/core/config/config').default,
       require('modules/huron/compass').default,
     ])
     .factory('HuronConfig', HuronConfig)

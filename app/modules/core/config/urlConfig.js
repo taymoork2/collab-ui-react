@@ -122,6 +122,12 @@
       integration: 'https://feature-a.wbx2.com/feature/api/v1',
       prod: 'https://feature-a.wbx2.com/feature/api/v1',
     },
+    HydraServiceUrl: {
+      dev: 'https://api.ciscospark.com/v1',
+      cfe: 'https://api.ciscospark.com/v1',
+      integration: 'https://api.ciscospark.com/v1',
+      prod: 'https://api.ciscospark.com/v1',
+    },
     SunlightConfigServiceUrl: {
       dev: 'https://config.devus1.ciscoccservice.com/config/v1',
       cfe: 'https://config.appstaging.ciscoccservice.com/config/v1',
@@ -231,34 +237,46 @@
       prod: 'https://lyra-a.wbx2.com/lyra/api/v1',
     },
     WebExReportQBSforBaseUrl: {
-      dev: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_webex_v1',
+      dev: 'https://qlik1-rl-lab.cisco.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_webex_v1',
       cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_webex_v1',
       integration: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_webex_v1',
       prod: 'https://qlick.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_webex_v1',
     },
     SparkReportQBSforBaseUrl: {
-      dev: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_spark_v1',
+      dev: 'https://qlik1-rl-lab.cisco.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_spark_v1',
       cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_spark_v1',
       integration: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_spark_v1',
       prod: 'https://qlick.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/basic_spark_v1',
     },
     WebExReportQBSforPremiumUrl: {
-      dev: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_webex_v1',
+      dev: 'https://qlik1-rl-lab.cisco.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_webex_v1',
       cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_webex_v1',
       integration: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_webex_v1',
       prod: 'https://qlick.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_webex_v1',
     },
     SparkReportQBSforPremiumUrl: {
-      dev: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_spark_v1',
+      dev: 'https://qlik1-rl-lab.cisco.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_spark_v1',
       cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_spark_v1',
       integration: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_spark_v1',
       prod: 'https://qlick.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_spark_v1',
     },
     SparkReportQBSforPartnerUrl: {
-      dev: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/partner_spark_v1',
+      dev: 'https://qlik1-rl-lab.cisco.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/partner_spark_v1', //dfw-qlickbts
       cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/partner_spark_v1',
       integration: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/partner_spark_v1',
       prod: 'https://qlick.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/partner_spark_v1',
+    },
+    WebExReportQBSforMEIUrl: {
+      dev: 'https://qlik1-rl-lab.cisco.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/mei',
+      cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/mei',
+      integration: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/mei',
+      prod: 'https://qlick.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/mei',
+    },
+    SparkReportQBSforMEIUrl: {
+      dev: 'https://qlik1-rl-lab.cisco.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/mei',
+      cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/mei',
+      integration: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/mei',
+      prod: 'https://qlick.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/mei',
     },
     //for Qlik mashup application Server. Currently, it's https://sjc-ngxbts.webex.com
     //qlik_reverse_proxy is populated after an API response
@@ -293,6 +311,24 @@
       integration: 'https://%s/custportal/extensions/spark-report-partner/spark-report-partner.html',
       prod: 'https://%s/custportal/extensions/spark-report-partner/spark-report-partner.html',
     },
+    VirtualAssistantServiceUrl: {
+      dev: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/',
+      cfe: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/',
+      integration: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/',
+      prod: 'https://bot-services.produs1.ciscoccservice.com/bot-services/v1/',
+    },
+    WebExReportAppforMEIUrl: {
+      dev: 'https://%s/custportal/extensions/MEI/MEI.html',
+      cfe: 'https://%s/custportal/extensions/MEI/MEI.html',
+      integration: 'https://%s/custportal/extensions/MEI/MEI.html',
+      prod: 'https://%s/custportal/extensions/MEI/MEI.html',
+    },
+    SparkReportAppforMEIUrl: {
+      dev: 'https://%s/custportal/extensions/MEI/MEI.html',
+      cfe: 'https://%s/custportal/extensions/MEI/MEI.html',
+      integration: 'https://%s/custportal/extensions/MEI/MEI.html',
+      prod: 'https://%s/custportal/extensions/MEI/MEI.html',
+    },
     // urls same for all environments
 
     ProdAdminServiceUrl: 'https://atlas-a.wbx2.com/admin/api/v1/',
@@ -309,11 +345,12 @@
     LogMetricsUrl: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
     SSOTestUrl: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
     SSOSetupUrl: 'https://idbroker.webex.com/idb/idbconfig/',
+    EscalationIntentUrl: 'https://care-assistant.produs1.ciscoccservice.com/onboarding/apiai/escalation.json',
   };
 
   module.exports = angular
     .module('core.urlconfig', [
-      require('modules/core/config/config'),
+      require('modules/core/config/config').default,
       require('modules/core/scripts/services/utils'),
     ])
     .factory('UrlConfig', UrlConfig)

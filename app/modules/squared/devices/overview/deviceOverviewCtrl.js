@@ -150,17 +150,21 @@
     }
 
     function getEmergencyAddress() {
-      TerminusService.customerNumberE911V2().get({
-        customerId: Authinfo.getOrgId(),
-        number: deviceOverview.emergencyCallbackNumber,
-      }).$promise.then(function (info) {
-        deviceOverview.emergencyAddress = info.e911Address;
-        deviceOverview.emergencyAddressStatus = info.status;
-      }).then(function () {
-        deviceOverview.isE911Available = true;
-      }).catch(function () {
+      if (deviceOverview.emergencyCallbackNumber) {
+        TerminusService.customerNumberE911V2().get({
+          customerId: Authinfo.getOrgId(),
+          number: deviceOverview.emergencyCallbackNumber,
+        }).$promise.then(function (info) {
+          deviceOverview.emergencyAddress = info.e911Address;
+          deviceOverview.emergencyAddressStatus = info.status;
+        }).then(function () {
+          deviceOverview.isE911Available = true;
+        }).catch(function () {
+          deviceOverview.e911NotFound = true;
+        });
+      } else {
         deviceOverview.e911NotFound = true;
-      });
+      }
     }
 
     function initTimeZoneOptions() {
@@ -249,15 +253,15 @@
           t38FaxEnabled: deviceOverview.faxEnabled,
         };
         huronDeviceService.setSettingsForAta(deviceOverview.currentDevice, settings)
-        .then(function () {
-          Notification.success('ataSettings.savedT38');
-        })
-        .catch(function (error) {
-          Notification.errorResponse(error, 'deviceOverviewPage.failedToSaveChanges');
-        })
-        .finally(function () {
-          deviceOverview.updatingT38Settings = false;
-        });
+          .then(function () {
+            Notification.success('ataSettings.savedT38');
+          })
+          .catch(function (error) {
+            Notification.errorResponse(error, 'deviceOverviewPage.failedToSaveChanges');
+          })
+          .finally(function () {
+            deviceOverview.updatingT38Settings = false;
+          });
       }, 100);
     }
 
@@ -439,7 +443,12 @@
     deviceOverview.deleteDevice = function () {
       RemDeviceModal
         .open(deviceOverview.currentDevice)
-        .then($state.sidepanel.close);
+        .then(function () {
+          $state.sidepanel.close();
+          if (_.isFunction($stateParams.deviceDeleted)) {
+            $stateParams.deviceDeleted(deviceOverview.currentDevice.url);
+          }
+        });
     };
 
     deviceOverview.openAtaSettings = function () {

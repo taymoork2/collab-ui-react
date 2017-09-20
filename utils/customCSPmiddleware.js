@@ -35,9 +35,15 @@ module.exports = csp({
       'https://qlik-loader',
       'https://10.29.42.18:4244',
       'https://10.29.42.18',
-      'https://*.webex.com',  //Qlik sense sites used for Spark/WebEx Metrics
+      'https://qlik-engine2',
+      'https://10.29.42.19:4244',
+      'https://10.29.42.19',
+      'https://*.webex.com', //Qlik sense sites used for Spark/WebEx Metrics
       'https://*.webex.com:4244',
       'https://*.webex.com:4248',
+      'https://*.cisco.com:4244',
+      'https://*.cisco.com',
+      'https://*.cisco.com:4248',
     ],
     objectSrc: [
       'http://www.cisco.com', // Terms of Service
@@ -82,6 +88,7 @@ module.exports = csp({
       'https://10.224.166.46:8443',
       'http://rpbtqlkhsn002.webex.com:8080',
       'https://rpbtqlkhsn006.webex.com',
+      'https://api.api.ai', // Virtual Assistant testing api.ai token
     ],
     fontSrc: [
       '\'self\'',

@@ -6,7 +6,6 @@ import privateTrunkDeactivate from 'modules/hercules/private-trunk/private-trunk
 import privateTrunkDomain from 'modules/hercules/private-trunk/private-trunk-domain';
 export default angular
   .module('hercules.private-trunk-overview-settings', [
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
     privateTrunkPrereq,

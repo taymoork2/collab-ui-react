@@ -2,6 +2,7 @@ import ICsdmDataModelService = csdm.ICsdmDataModelService;
 import IExternalLinkedAccount = csdm.IExternalLinkedAccount;
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 import { ResourceGroupService } from 'modules/hercules/services/resource-group.service';
+import { USSService, IUserProps } from 'modules/hercules/services/uss.service';
 import { Notification } from 'modules/core/notifications';
 import IWizardData = csdm.IWizardData;
 import { ExternalLinkedAccountHelperService } from '../../devices/services/external-acct-helper.service';
@@ -53,15 +54,17 @@ class EditCalendarService implements ng.IComponentController {
   }
 
   /* @ngInject */
-  constructor(private CsdmDataModelService: ICsdmDataModelService,
-              private $stateParams: ng.ui.IStateParamsService,
-              private $translate: ng.translate.ITranslateService,
-              ServiceDescriptorService: ServiceDescriptorService,
-              private ResourceGroupService: ResourceGroupService,
-              private USSService,
-              private Notification: Notification,
-              private ExtLinkHelperService: ExternalLinkedAccountHelperService) {
-    ServiceDescriptorService.getServices()
+  constructor(
+    private $stateParams: ng.ui.IStateParamsService,
+    private $translate: ng.translate.ITranslateService,
+    private CsdmDataModelService: ICsdmDataModelService,
+    private ExtLinkHelperService: ExternalLinkedAccountHelperService,
+    private Notification: Notification,
+    private ResourceGroupService: ResourceGroupService,
+    private ServiceDescriptorService: ServiceDescriptorService,
+    private USSService: USSService,
+  ) {
+    this.ServiceDescriptorService.getServices()
       .then((services) => {
         const enabledServices = ServiceDescriptorService.filterEnabledServices(services);
         const calendarExchange = _.head(_.filter(enabledServices, x => x.id === EditCalendarService.fusionCal));
@@ -221,7 +224,7 @@ class EditCalendarService implements ng.IComponentController {
           .then(() => {
             const props = this.getUssProps();
             if (props) {
-              this.USSService.updateUserProps(props).then(() => {
+              this.USSService.updateBulkUserProps([props]).then(() => {
                 this.dismiss();
                 this.Notification.success('addDeviceWizard.editServices.servicesSaved');
               }, (error) => {
@@ -246,7 +249,7 @@ class EditCalendarService implements ng.IComponentController {
 
   }
 
-  private getUssProps(): {} | null {
+  private getUssProps(): IUserProps | null {
     const props = this.wizardData.account.ussProps || null;
     if (this.resourceGroup.selected) {
       const resourceGroups = (props && props.resourceGroups) || {};
@@ -266,7 +269,7 @@ class EditCalendarService implements ng.IComponentController {
 export class EditCalendarServiceOverviewComponent implements ng.IComponentOptions {
   public controller = EditCalendarService;
   public controllerAs = 'editCalendarService';
-  public templateUrl = 'modules/squared/places/editCalendarService/editCalendarService.tpl.html';
+  public template = require('modules/squared/places/editCalendarService/editCalendarService.tpl.html');
   public bindings = {
     dismiss: '&',
   };

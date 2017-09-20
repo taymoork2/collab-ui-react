@@ -1,11 +1,16 @@
-import { IAvrilSite } from 'modules/huron/avril';
+import { IAvrilSite, AvrilSite, IAvrilCustomer, AvrilCustomer } from 'modules/huron/avril';
 
 interface IAvrilSiteResource extends ng.resource.IResourceClass<ng.resource.IResource<IAvrilSite>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
 }
 
+interface IAvrilCustomerResource extends ng.resource.IResourceClass<ng.resource.IResource<IAvrilCustomer>> {
+  update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
+}
+
 export class AvrilService {
   private avrilSiteResource: IAvrilSiteResource;
+  private avrilCustomerResource: IAvrilCustomerResource;
 
   /* @ngInject */
   constructor(
@@ -25,10 +30,15 @@ export class AvrilService {
       },
     };
 
-    this.avrilSiteResource = <IAvrilSiteResource>this.$resource(this.HuronConfig.getAvrilUrl() + '/customers/:customerId/sites/:siteId', {},
+    this.avrilSiteResource = <IAvrilSiteResource>this.$resource(`${this.HuronConfig.getAvrilUrl()}/customers/:customerId/sites/:siteId`, {},
       {
         update: updateAction,
         save: saveAction,
+      });
+
+    this.avrilCustomerResource = <IAvrilCustomerResource>this.$resource(`${this.HuronConfig.getAvrilUrl()}/customers/:customerId`, {},
+      {
+        update: updateAction,
       });
   }
 
@@ -36,7 +46,8 @@ export class AvrilService {
     return this.avrilSiteResource.get({
       customerId: this.Authinfo.getOrgId(),
       siteId: uuid,
-    }).$promise;
+    }).$promise
+    .then(response => new AvrilSite(response));
   }
 
   public createAvrilSite(avrilSite: IAvrilSite): ng.IPromise<string> {
@@ -46,8 +57,7 @@ export class AvrilService {
     }, avrilSite,
     (_response, headers) => {
       location = headers('Location');
-    }).$promise
-    .then(() => location);
+    }).$promise.then(() => location);
   }
 
   public updateAvrilSite(avrilSite: IAvrilSite): ng.IPromise<void> {
@@ -55,5 +65,19 @@ export class AvrilService {
       customerId: this.Authinfo.getOrgId(),
       siteId: avrilSite.guid,
     }, avrilSite).$promise;
+  }
+
+  public getAvrilCustomer(): ng.IPromise<IAvrilCustomer> {
+    return this.avrilCustomerResource.get({
+      customerId: this.Authinfo.getOrgId(),
+    }).$promise.then(response => new AvrilCustomer(response));
+  }
+
+  public updateAvrilCustomer(avrilCustomer: IAvrilCustomer): IPromise<void> {
+    return this.avrilCustomerResource.update({
+      customerId: this.Authinfo.getOrgId(),
+    }, {
+      features: avrilCustomer.features,
+    }).$promise;
   }
 }

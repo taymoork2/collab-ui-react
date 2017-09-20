@@ -1,6 +1,10 @@
+import * as _ from 'lodash';
+
 export const Offers = {
   OFFER_CALL: 'CALL',
   OFFER_ROOM_SYSTEMS: 'ROOMSYSTEMS',
+  OFFER_MESSAGE: 'MESSAGE',
+  OFFER_MEETING: 'MEETING',
 };
 
 export class AtlasTrial {
@@ -26,6 +30,36 @@ export class AtlasTrial {
     this.offers = obj.offers;
   }
 };
+
+export function getTrialOffers(offerList) {
+  let offers = [];
+  let id;
+  let licenseCount;
+
+  _.forEach(offerList, (offer) => {
+    switch (offer) {
+      case 'CALL':
+        id = Offers.OFFER_CALL;
+        licenseCount = 100;
+        break;
+      case 'ROOMSYSTEMS':
+        id = Offers.OFFER_ROOM_SYSTEMS;
+        licenseCount = 5;
+        break;
+      case 'MEETING':
+        id = Offers.OFFER_MEETING;
+        licenseCount = 100;
+        break;
+      default:
+        id = Offers.OFFER_MESSAGE;
+    }
+    offers.push(new TrialOffer({
+      id,
+      licenseCount,
+    }));
+  })
+  return offers;
+}
 
 export class TrialOffer {
   constructor(obj = {

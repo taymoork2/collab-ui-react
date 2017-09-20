@@ -3,6 +3,7 @@ import { ContextFieldsetsService } from 'modules/context/services/context-fields
 import { ContextFieldsService } from 'modules/context/services/context-fields-service';
 import { PropertyService, PropertyConstants } from 'modules/context/services/context-property-service';
 import { Authinfo } from 'modules/core/scripts/services/authinfo';
+import { FieldUtils } from 'modules/context/services/fieldUtils';
 
 /**
  * Fieldset data structure
@@ -75,6 +76,7 @@ class FieldsetModalCtrl implements ng.IComponentController {
     protected Notification: Notification,
     protected PropertyService: PropertyService,
     protected Authinfo: Authinfo,
+    private FieldUtils: FieldUtils,
   ) {}
 
   /**
@@ -279,14 +281,12 @@ class FieldsetModalCtrl implements ng.IComponentController {
 
     return _.map(unprocessedFields, (field: IFieldData) => {
 
-      let fieldInfo = this.classificationMap[field.classification] || this.localizedStrings['unencrypted'];
-      field.classification = fieldInfo;
+      const classification = this.classificationMap[field.classification] || this.localizedStrings['unencrypted'];
+      field.classification = classification;
 
-      if (field.dataType) {
-        field.dataType = _.upperFirst(field.dataType.trim());
-        fieldInfo += `, ${field.dataType}`;
-      }
-      field.fieldInfo = fieldInfo.trim();
+      const dataType = this.FieldUtils.getDataType(field);
+      const fieldInfo = `${dataType}, ${classification}`.trim();
+      field.fieldInfo = fieldInfo;
 
       return field;
     });
@@ -406,7 +406,7 @@ class FieldsetModalCtrl implements ng.IComponentController {
  */
 export class FieldsetModalComponent implements ng.IComponentOptions {
   public controller = FieldsetModalCtrl;
-  public templateUrl = 'modules/context/fieldsets/modal/fieldset-modal.html';
+  public template = require('modules/context/fieldsets/modal/fieldset-modal.html');
   public bindings = {
     existingFieldsetIds: '<',
     existingFieldsetData: '<',

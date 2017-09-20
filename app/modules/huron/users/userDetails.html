@@ -4,14 +4,14 @@
         <ul ng-if="::!$ctrl.dirsyncEnabled">
           <!--Adding a  section for Location details-->
             <li class="feature" ng-if="$ctrl.ishI1484 && $ctrl.hasSparkCall">
-              <a ng-click="$ctrl.openPanel()">
+              <a href ng-click="$ctrl.openPanel()">
                 <span class="feature-name" translate="usersPreview.location"></span>
-                <span class="feature-details feature-label">{{$ctrl.userLocation}}</span>
+                <span class="feature-details feature-label feature-status">{{$ctrl.userLocation}}</span>
                   <i class="feature-arrow"></i>
               </a>
             </li>
             <li class="feature" ng-repeat="userDetail in $ctrl.details track by $index">
-                <a ng-click="$ctrl.action(userDetail)" ng-class="{'no-services': !userDetail.actionAvailable}">
+                <a href ng-click="$ctrl.action(userDetail)" ng-class="{'no-services': !userDetail.actionAvailable}">
                     <span class="feature-name">{{userDetail.name}}</span>
                     <span class="feature-details feature-label" ng-if="userDetail.detail"
                         ng-class="{'feature-arrow-match': $ctrl.hasActionAvailable && !userDetail.actionAvailable, 'feature-status': $ctrl.hasActionAvailable, 'feature-details': !$ctrl.hasActionAvailable}">

@@ -1,16 +1,17 @@
 class CallLocationNameCtrl implements ng.IComponentController {
   public name: string;
   public onChangeFn: Function;
-  public form: ng.IFormController;
+  public messages: any = {};
 
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
-  ) {}
-
-  public validationMessages = {
-    required: this.$translate.instant('common.invalidRequired'),
-  };
+  ) {
+    this.messages = {
+      required: this.$translate.instant('common.invalidRequired'),
+      uniqueAsyncValidator: this.$translate.instant('locations.usedLocation'),
+    };
+  }
 
   public onNameChanged(): void {
     this.onChangeFn({
@@ -21,7 +22,7 @@ class CallLocationNameCtrl implements ng.IComponentController {
 
 export class CallLocationNameComponent implements ng.IComponentOptions {
   public controller = CallLocationNameCtrl;
-  public templateUrl = 'modules/call/locations/locations-name/locations-name.component.html';
+  public template = require('modules/call/locations/locations-name/locations-name.component.html');
   public bindings = {
     name: '<',
     onChangeFn: '&',

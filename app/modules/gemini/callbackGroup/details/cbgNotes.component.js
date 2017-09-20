@@ -4,7 +4,7 @@
   angular
     .module('Gemini')
     .component('cbgNotes', {
-      templateUrl: 'modules/gemini/callbackGroup/details/cbgNotes.tpl.html',
+      template: require('modules/gemini/callbackGroup/details/cbgNotes.tpl.html'),
       controller: CbgNotesCtrl,
     });
   /* @ngInject */

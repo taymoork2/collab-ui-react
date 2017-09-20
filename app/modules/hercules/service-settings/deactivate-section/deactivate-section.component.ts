@@ -5,7 +5,6 @@ class DeactivateSectionCtrl implements ng.IComponentController {
   public serviceId: string;
   public localizedServiceName: string;
   public localizedConnectorName: string;
-  public nameChangeEnabled: boolean;
 
   private deactivateModalOptions: any;
   private defaultDeactivateModalOptions: any = {
@@ -14,7 +13,7 @@ class DeactivateSectionCtrl implements ng.IComponentController {
     },
     controller: 'ConfirmDisableHybridServiceCtrl',
     controllerAs: '$ctrl',
-    templateUrl: 'modules/hercules/service-settings/deactivate-section/confirm-disable-hybrid-service.html',
+    template: require('modules/hercules/service-settings/deactivate-section/confirm-disable-hybrid-service.html'),
     type: 'dialog',
   };
 
@@ -23,16 +22,13 @@ class DeactivateSectionCtrl implements ng.IComponentController {
     private $modal,
     private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
-    private FeatureToggleService,
   ) {}
 
   public $onInit() {
-    this.FeatureToggleService.atlas2017NameChangeGetStatus().then((toggle: boolean): void => {
-      this.nameChangeEnabled = toggle;
-    });
-
-    this.localizedServiceName = this.$translate.instant('hercules.hybridServiceNames.' + this.serviceId);
-    this.localizedConnectorName = this.$translate.instant(`hercules.connectorNames.${this.serviceId}`);
+    this.localizedServiceName = this.$translate.instant(`hercules.hybridServiceNames.${this.serviceId}`);
+    if (this.serviceId === 'squared-fusion-cal' || this.serviceId === 'squared-fusion-uc' || this.serviceId === 'spark-hybrid-impinterop') {
+      this.localizedConnectorName = this.$translate.instant(`hercules.connectorNames.${this.serviceId}`);
+    }
   }
 
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
@@ -56,7 +52,7 @@ class DeactivateSectionCtrl implements ng.IComponentController {
 
 class DeactivateSectionComponent implements ng.IComponentOptions {
   public controller = DeactivateSectionCtrl;
-  public templateUrl = 'modules/hercules/service-settings/deactivate-section/deactivate-section.html';
+  public template = require('modules/hercules/service-settings/deactivate-section/deactivate-section.html');
   public bindings = {
     serviceId: '<',
     deactivateModalOptions: '<',

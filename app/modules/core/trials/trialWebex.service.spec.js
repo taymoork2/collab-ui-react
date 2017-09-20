@@ -47,6 +47,20 @@ describe('Service: Webex Trial Service', function () {
       this.$httpBackend.flush();
     });
 
+    it('should fail to validate site url even if \'isValid\' is true if \'isExist\' flag is set to true', function () {
+      this.$httpBackend.whenPOST(this.UrlConfig.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke').respond({
+        properties: [{
+          isValid: 'true',
+          errorCode: '0',
+          isExist: 'true',
+        }],
+      });
+      this.TrialWebexService.validateSiteUrl('trial-acmecorp.webex.com').then(function (response) {
+        expect(response.isValid).toBe(false);
+      });
+      this.$httpBackend.flush();
+    });
+
     it('should fail to validate an invalid site url', function () {
       this.$httpBackend.whenPOST(this.UrlConfig.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke').respond({
         properties: [{
@@ -153,7 +167,7 @@ describe('Service: Webex Trial Service', function () {
     });
   });
 
-  xdescribe('provision a webex site', function () {
+  describe('provision a webex site', function () {
     it('should successfully send WebEx site for provisioning', function () {
       var subscriptionId = 'some-test-id-here';
       var payload = {
@@ -166,9 +180,11 @@ describe('Service: Webex Trial Service', function () {
       };
       var response = { status: 200, message: 'Updated Provisioning parameters' };
       this.$httpBackend.whenPOST(this.UrlConfig.getAdminServiceUrl() + 'subscriptions/' + subscriptionId + '/provision').respond(response);
-      this.TrialWebexService.provisionWebexSites(payload, subscriptionId).then(function (response) {
+      this.TrialWebexService.provisionSubscription(payload, subscriptionId).then(function (response) {
         expect(response.status).toBe(200);
       });
+      var payloadHasSendCustomerEmailParam = _.has(payload, 'sendCustomerEmail');
+      expect(payloadHasSendCustomerEmailParam).toBe(true);
       this.$httpBackend.flush();
     });
 
@@ -184,7 +200,7 @@ describe('Service: Webex Trial Service', function () {
       };
       var errorResponse = { status: 400, message: 'Invalid Request' };
       this.$httpBackend.whenPOST(this.UrlConfig.getAdminServiceUrl() + 'subscriptions/' + subscriptionId + '/provision').respond(errorResponse);
-      this.TrialWebexService.provisionWebexSites(payload, subscriptionId).catch(function (response) {
+      this.TrialWebexService.provisionSubscription(payload, subscriptionId).catch(function (response) {
         expect(response.status).toBe(400);
       });
       this.$httpBackend.flush();

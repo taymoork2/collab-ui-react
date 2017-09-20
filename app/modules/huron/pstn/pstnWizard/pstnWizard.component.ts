@@ -11,7 +11,7 @@ import { PhoneNumberService } from 'modules/huron/phoneNumber';
 
 export class PstnWizardComponent implements ng.IComponentOptions {
   public controller = PstnWizardCtrl;
-  public templateUrl = 'modules/huron/pstn/pstnWizard/pstnWizard.html';
+  public template = require('modules/huron/pstn/pstnWizard/pstnWizard.html');
   public bindings = {
     dismiss: '&',
     close: '&',
@@ -122,7 +122,9 @@ export class PstnWizardCtrl implements ng.IComponentController {
     this.PstnService.getCarrierTollFreeInventory(this.PstnModel.getProviderId())
       .then(response => {
         this.model.tollFree.areaCodeOptions = response.areaCodes;
-        const areaCodes = response.areaCodes.join(', ') + '.';
+        const areaCodes = response.areaCodes
+        .map(area => area.code)
+        .join(', ') + '.';
         this.tollFreeTitle = this.$translate.instant('pstnSetup.tollFreeTitle', { areaCodes: areaCodes });
         this.model.tollFree.areaCode = null;
       })

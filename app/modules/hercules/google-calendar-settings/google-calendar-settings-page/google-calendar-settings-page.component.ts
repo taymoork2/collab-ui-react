@@ -1,14 +1,18 @@
+import { IStatusSummary, USSService } from 'modules/hercules/services/uss.service';
+import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
+import { IToolkitModalService } from 'modules/core/modal';
+
 class GoogleCalendarSettingsCtrl implements ng.IComponentController {
   public backState = 'services-overview';
-  public userStatusesSummary = [];
+  public userStatusesSummary: IStatusSummary[] = [];
   private subscribeStatusesSummary: any;
 
-  private serviceId = 'squared-fusion-gcal';
+  private serviceId: HybridServiceId = 'squared-fusion-gcal';
 
   /* @ngInject */
   constructor(
-    private $modal,
-    private USSService,
+    private $modal: IToolkitModalService,
+    private USSService: USSService,
   ) {}
 
   public $onInit() {
@@ -24,11 +28,11 @@ class GoogleCalendarSettingsCtrl implements ng.IComponentController {
     this.userStatusesSummary = this.USSService.extractSummaryForAService([this.serviceId]);
   }
 
-  public openUserStatusReportModal(): void {
+  public openUserStatusReportModal(): ng.ui.bootstrap.IModalServiceInstance {
     return this.$modal.open({
       controller: 'ExportUserStatusesController',
       controllerAs: 'exportUserStatusesCtrl',
-      templateUrl: 'modules/hercules/service-specific-pages/components/user-status-report/export-user-statuses.html',
+      template: require('modules/hercules/service-specific-pages/components/user-status-report/export-user-statuses.html'),
       type: 'small',
       resolve: {
         servicesId: () => [this.serviceId],
@@ -40,5 +44,5 @@ class GoogleCalendarSettingsCtrl implements ng.IComponentController {
 
 export class GoogleCalendarSettingsPageComponent implements ng.IComponentOptions {
   public controller = GoogleCalendarSettingsCtrl;
-  public templateUrl = 'modules/hercules/google-calendar-settings/google-calendar-settings-page/google-calendar-settings-page.html';
+  public template = require('modules/hercules/google-calendar-settings/google-calendar-settings-page/google-calendar-settings-page.html');
 }

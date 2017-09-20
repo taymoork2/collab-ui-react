@@ -21,6 +21,7 @@ describe('Controller: OverviewCtrl', function () {
       'OverviewNotificationFactory',
       'PstnService',
       'ReportsService',
+      'SetupWizardService',
       'SunlightReportService',
       'TrialService'
     );
@@ -71,15 +72,14 @@ describe('Controller: OverviewCtrl', function () {
     }]));
 
     spyOn(this.ProPackService, 'hasProPackEnabledAndNotPurchased').and.returnValue(this.$q.resolve(false));
+    spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'atlasPMRonM2GetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
     spyOn(this.LearnMoreBannerService, 'isElementVisible').and.returnValue(true);
 
     var getOrgNoSip = this.orgServiceJSONFixture.getOrgNoSip;
     spyOn(this.Orgservice, 'getAdminOrg').and.callFake(_.noop);
-    spyOn(this.Orgservice, 'getAdminOrgUsage').and.returnValue(this.$q.resolve({
-      data: this.orgServiceJSONFixture.getLicensesUsage.singleSub,
-    }));
+    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.orgServiceJSONFixture.getLicensesUsage.singleSub));
     spyOn(this.Orgservice, 'getUnlicensedUsers').and.callFake(_.noop);
     spyOn(this.Orgservice, 'getOrg').and.callFake(function (callback) {
       callback(getOrgNoSip, 200);
@@ -95,6 +95,10 @@ describe('Controller: OverviewCtrl', function () {
     spyOn(this.ReportsService, 'getOverviewMetrics').and.callFake(_.noop);
     spyOn(this.ReportsService, 'healthMonitor').and.callFake(_.noop);
     spyOn(this.SunlightReportService, 'getOverviewData').and.returnValue({});
+    spyOn(this.SetupWizardService, 'hasPendingServiceOrder').and.returnValue(true);
+    spyOn(this.SetupWizardService, 'getActingSubscriptionServiceOrderUUID').and.returnValue('someServiceOrderUUID');
+    spyOn(this.SetupWizardService, 'populatePendingSubscriptions').and.callThrough();
+    spyOn(this.SetupWizardService, 'getPendingOrderStatusDetails').and.returnValue(this.$q.resolve());
     spyOn(this.TrialService, 'getDaysLeftForCurrentUser').and.returnValue(this.$q.resolve(1));
 
     this.initController = function () {
@@ -156,7 +160,7 @@ describe('Controller: OverviewCtrl', function () {
 
   describe('Enable Devices', function () {
     beforeEach(function () {
-      this.Orgservice.getAdminOrgUsage.and.returnValue(this.$q.resolve({ data: this.usageOnlySharedDevicesFixture }));
+      this.Orgservice.getLicensesUsage.and.returnValue(this.$q.resolve(this.usageOnlySharedDevicesFixture));
       this.initController();
     });
 
@@ -185,6 +189,29 @@ describe('Controller: OverviewCtrl', function () {
       expect(callCard.healthStatus).toEqual('danger');
     });
   });
+
+  describe('Meeting Card with provisioning Event: If setup-wizard-service data has been intialized, ', function () {
+    beforeEach(function () {
+      _.set(this.SetupWizardService, 'serviceDataHasBeenInitialized', true);
+      this.initController();
+    });
+
+    it('should call forwardEvent function with productProvisioningStatus', function () {
+      expect(this.SetupWizardService.getPendingOrderStatusDetails).toHaveBeenCalledWith('someServiceOrderUUID');
+    });
+  });
+
+  describe('Meeting Card with provisioning Event: If setup-wizard-service data has not been intialized, ', function () {
+    beforeEach(function () {
+      _.set(this.SetupWizardService, 'serviceDataHasBeenInitialized', false);
+      this.initController();
+    });
+
+    it('should call populatePendingSubscriptions function', function () {
+      expect(this.SetupWizardService.populatePendingSubscriptions).toHaveBeenCalled();
+    });
+  });
+
 
   describe('Notifications', function () {
     beforeEach(function () {
@@ -337,6 +364,10 @@ describe('Controller: OverviewCtrl', function () {
   });
 
   describe('Premium Pro Pack Notification - showLearnMoreNotification', function () {
+    beforeEach(function () {
+      spyOn(this.Authinfo, 'isEnterpriseCustomer').and.returnValue(true);
+    });
+
     it('should default to false', function () {
       this.initController();
       expect(this.controller.showLearnMoreNotification).toBeFalsy();

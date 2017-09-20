@@ -1,3 +1,4 @@
+import { Config } from 'modules/core/config/config';
 
 interface IWindowService extends ng.IWindowService {
   webkitURL: any;
@@ -7,10 +8,6 @@ interface IReportDownloadReference {
   checksum: string;
   fileUrl: string;
   length: number;
-}
-
-interface IQServiceNewer extends ng.IQService {
-  race<TAll>(promises: ng.IPromise<TAll>[]): ng.IPromise<TAll[]>;
 }
 
 export class CsvDownloadTypes {
@@ -44,11 +41,11 @@ export class CsvDownloadService {
   constructor(
     private $window: IWindowService,
     private $http: ng.IHttpService,
-    private $q: IQServiceNewer,
+    private $q: ng.IQService,
     private $rootScope: ng.IRootScopeService,
     private $timeout: ng.ITimeoutService,
     private Authinfo,
-    private Config,
+    private Config: Config,
     private UrlConfig,
     private Utils,
     private UserListService,

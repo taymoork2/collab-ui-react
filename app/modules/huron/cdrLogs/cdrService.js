@@ -178,9 +178,9 @@
               });
             }
           },
-            function (response) {
-              return errorResponse(response);
-            });
+          function (response) {
+            return errorResponse(response);
+          });
           queryPromises.push(callingPromise);
         }
 
@@ -284,13 +284,13 @@
           return cdrArray;
         }
       },
-        function (response) {
-          if (response.status === -1) {
-            return ABORT;
-          } else {
-            return errorResponse(response);
-          }
-        });
+      function (response) {
+        if (response.status === -1) {
+          return ABORT;
+        } else {
+          return errorResponse(response);
+        }
+      });
     }
 
     function extractUniqueIds(cdrArray) {

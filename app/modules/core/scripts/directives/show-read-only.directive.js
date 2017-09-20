@@ -4,24 +4,18 @@ require('./_show-read-only.scss');
   'use strict';
 
   /* @ngInject */
-  function ShowReadOnly(Authinfo, $translate, $window) {
+  function ShowReadOnly(Authinfo, $translate) {
     function link(scope, element) {
       if (Authinfo.isReadOnlyAdmin()) {
+        var IS_READ_ONLY_ADMIN = 'is-read-only-admin';
         var wrapper = angular.element('.wrapper');
         wrapper.css('padding-top', '6rem');
         element.prepend('<div class="read-only-banner">' + $translate.instant('readOnlyModal.banner') + '</div>');
-        var observer = new $window.MutationObserver(function () {
-          var sidePanel = angular.element('div.side-panel');
-          if (sidePanel.hasClass('side-panel-full-height')) {
-            sidePanel.addClass('side-panel-correction-full-height');
-          } else {
-            sidePanel.addClass('side-panel-correction');
-          }
-        });
+        var body = angular.element('body');
+        body.addClass(IS_READ_ONLY_ADMIN);
 
-        observer.observe($window.document.body, {
-          childList: true,
-          subtree: true,
+        element.on('$destroy', function () {
+          body.removeClass(IS_READ_ONLY_ADMIN);
         });
       }
     }

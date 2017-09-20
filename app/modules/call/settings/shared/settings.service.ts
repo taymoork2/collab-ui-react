@@ -1,48 +1,24 @@
-import {
-  Customer, CustomerVoice, Link, HuronCustomerService,
-} from 'modules/huron/customer';
+import { CustomerVoice, HuronCustomerService, ServicePackage } from 'modules/huron/customer';
+import { CustomerSettings } from './customer-settings';
 import { ISite, HuronSiteService } from 'modules/huron/sites';
-import { IExtensionRange } from 'modules/call/settings/settings-extension-range';
 import { Notification } from 'modules/core/notifications';
 import { CompanyNumber, ExternalCallerIdType } from 'modules/call/settings/settings-company-caller-id';
-import { AvrilService, IAvrilSite, AvrilSite, IAvrilFeatures, AvrilFeatures } from 'modules/huron/avril';
+import { AvrilService, IAvrilSite, AvrilSite, IAvrilSiteFeatures, AvrilSiteFeatures } from 'modules/huron/avril';
 import { MediaOnHoldService } from 'modules/huron/media-on-hold';
 import { TerminusService } from 'modules/huron/pstn';
 import { ExtensionLengthService } from './extension-length.service';
+import { InternalNumberRange, InternalNumberRangeService } from 'modules/call/shared/internal-number-range';
 
 export class HuronSettingsData {
   public customer: CustomerSettings;
   public customerVoice: CustomerVoice;
   public site: ISite;
   public companyMoh: string;
-  public internalNumberRanges: IExtensionRange[];
+  public internalNumberRanges: InternalNumberRange[];
   public cosRestrictions: any;
   public companyCallerId: CompanyNumber;
   public voicemailToEmailSettings: IVoicemailToEmail;
-  public avrilFeatures: IAvrilFeatures;
-}
-
-export class CustomerSettings extends Customer {
-  public hasVoicemailService: boolean;
-  public hasVoiceService: boolean;
-
-  constructor(obj: {
-    uuid: string,
-    name: string,
-    servicePackage: string,
-    links: Link[],
-    hasVoicemailService: boolean,
-    hasVoiceService: boolean,
-  }) {
-    super({
-      uuid: obj.uuid,
-      name: obj.name,
-      servicePackage: obj.servicePackage,
-      links: obj.links,
-    });
-    this.hasVoicemailService = obj.hasVoicemailService;
-    this.hasVoiceService = obj.hasVoiceService;
-  }
+  public avrilFeatures: IAvrilSiteFeatures;
 }
 
 export interface IVoicemailUserTemplate {
@@ -59,10 +35,6 @@ export interface IVoicemailToEmail {
 export class HuronSettingsService {
   private huronSettingsDataCopy: HuronSettingsData;
   private errors: string[] = [];
-  private VOICE_ONLY = 'VOICE_ONLY';
-  private DEMO_STANDARD = 'DEMO_STANDARD'; // Unity only
-  private VOICE_VOICEMAIL = 'VOICE_VOICEMAIL'; // Avril Only
-  private VOICE_VOICEMAIL_AVRIL = 'VOICE_VOICEMAIL_AVRIL'; // Unity and Avril
   private supportsAvrilVoicemail: boolean = false;
   private supportsAvrilVoicemailMailbox: boolean = false;
   private supportsCompanyMoh: boolean = false;
@@ -83,6 +55,7 @@ export class HuronSettingsService {
     private FeatureToggleService,
     private TerminusService: TerminusService,
     private ExtensionLengthService: ExtensionLengthService,
+    private InternalNumberRangeService: InternalNumberRangeService,
   ) {
     //Avril and Unity Support
     this.FeatureToggleService.supports(FeatureToggleService.features.avrilVmEnable)
@@ -123,7 +96,7 @@ export class HuronSettingsService {
               } else {
                 return this.$q.resolve()
                   .then(() => {
-                    huronSettingsData.avrilFeatures = new AvrilFeatures();
+                    huronSettingsData.avrilFeatures = new AvrilSiteFeatures();
                   });
               }
             });
@@ -199,7 +172,7 @@ export class HuronSettingsService {
     }
   }
 
-  public saveExtensionLengthIncrease(newExtensionLength: string, extensionPrefix: string): ng.IPromise<any> {
+  public saveExtensionLengthIncrease(newExtensionLength: number | null, extensionPrefix: number | null): ng.IPromise<any> {
     return this.ExtensionLengthService.saveExtensionLength(newExtensionLength, extensionPrefix)
       .then(() => {
         if (this.huronSettingsDataCopy.customer.hasVoicemailService && !this.supportsAvrilVoicemailMailbox) {
@@ -219,7 +192,7 @@ export class HuronSettingsService {
   private createParallelRequests(data: HuronSettingsData): ng.IPromise<any>[] {
     const promises: ng.IPromise<any>[] = [];
     if (!_.isEqual(data.internalNumberRanges, this.huronSettingsDataCopy.internalNumberRanges)) {
-      Array.prototype.push.apply(promises, this.updateInternalNumberRanges(data.internalNumberRanges, this.skipInternalNumberRangeDelete(data, this.huronSettingsDataCopy)));
+      promises.push(...this.updateInternalNumberRanges(data.internalNumberRanges, this.skipInternalNumberRangeDelete(data, this.huronSettingsDataCopy)));
     }
 
     if (!_.isEqual(data.companyMoh, this.huronSettingsDataCopy.companyMoh)) {
@@ -333,36 +306,31 @@ export class HuronSettingsService {
       });
   }
 
-  private getInternalNumberRanges(): ng.IPromise<IExtensionRange[]> {
-    return this.ServiceSetup.listInternalNumberRanges().then(ranges => {
-      return _.map<any, IExtensionRange>(ranges, range => {
-        return {
-          uuid: range.uuid,
-          name: range.name,
-          beginNumber: range.beginNumber,
-          endNumber: range.endNumber,
-        };
-      }).sort( (a, b) => { // sort - order by beginNumber ascending
-        return _.toSafeInteger(a.beginNumber) - _.toSafeInteger(b.beginNumber);
+  private getInternalNumberRanges(): ng.IPromise<InternalNumberRange[]> {
+    return this.InternalNumberRangeService.getCustomerRangeList()
+      .catch(error => {
+        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.extensionGetError'));
+        return this.rejectAndNotifyPossibleErrors();
       });
-    });
   }
 
-  private createInternalNumberRange(range: IExtensionRange): ng.IPromise<void> {
-    return this.ServiceSetup.createInternalNumberRange(range)
+  private createInternalNumberRange(range: InternalNumberRange): ng.IPromise<string> {
+    return this.InternalNumberRangeService.createCustomerInternalNumberRange(range)
       .catch(error => {
         this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.extensionAddError', {
           extension: range.name,
         }));
+        return this.rejectAndNotifyPossibleErrors();
       });
   }
 
-  private deleteInternalNumberRange(range: IExtensionRange): ng.IPromise<void> {
-    return this.ServiceSetup.deleteInternalNumberRange(range)
+  private deleteInternalNumberRange(range: InternalNumberRange): ng.IPromise<InternalNumberRange> {
+    return this.InternalNumberRangeService.deleteCustomerInternalNumberRange(range)
       .catch(error => {
         this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.extensionDeleteError', {
           extension: range.name,
         }));
+        return this.rejectAndNotifyPossibleErrors();
       });
   }
 
@@ -372,7 +340,7 @@ export class HuronSettingsService {
     return extensionLength < origExtensionLength;
   }
 
-  private updateInternalNumberRanges(internalNumberRanges: IExtensionRange[], skipDelete: boolean = false): ng.IPromise<any>[] {
+  private updateInternalNumberRanges(internalNumberRanges: InternalNumberRange[], skipDelete: boolean = false): ng.IPromise<any>[] {
     const promises: ng.IPromise<any>[] = [];
     if (!skipDelete) {
       // first look for ranges to delete.
@@ -466,15 +434,15 @@ export class HuronSettingsService {
     const customer = {};
     if (customerData.hasVoicemailService) {
       if (this.supportsAvrilVoicemail && !this.supportsAvrilVoicemailMailbox) {
-        _.set(customer, 'servicePackage', this.VOICE_VOICEMAIL_AVRIL);
+        _.set(customer, 'servicePackage', ServicePackage.VOICE_VOICEMAIL_AVRIL);
       } else if (!this.supportsAvrilVoicemail && this.supportsAvrilVoicemailMailbox) {
-        _.set(customer, 'servicePackage', this.VOICE_VOICEMAIL);
+        _.set(customer, 'servicePackage', ServicePackage.VOICE_VOICEMAIL);
       } else {
-        _.set(customer, 'servicePackage', this.DEMO_STANDARD);
+        _.set(customer, 'servicePackage', ServicePackage.DEMO_STANDARD);
       }
       _.set(customer, 'voicemail', { pilotNumber: siteData.voicemailPilotNumber });
     } else {
-      _.set(customer, 'servicePackage', this.VOICE_ONLY);
+      _.set(customer, 'servicePackage', ServicePackage.VOICE_ONLY);
     }
     return this.ServiceSetup.updateCustomer(customer)
       .catch(error => {
@@ -482,7 +450,7 @@ export class HuronSettingsService {
       });
   }
 
-  private updateVoiceMailSettings(customerData: CustomerSettings, siteData: ISite, voicemailToEmailData: IVoicemailToEmail, avrilFeatures: IAvrilFeatures): ng.IPromise<any> {
+  private updateVoiceMailSettings(customerData: CustomerSettings, siteData: ISite, voicemailToEmailData: IVoicemailToEmail, avrilFeatures: IAvrilSiteFeatures): ng.IPromise<any> {
     if (customerData.hasVoicemailService) {
       if (!this.supportsAvrilVoicemailMailbox) { // Do not update Unity if Avril only
         const promises: ng.IPromise<any>[] = [];
@@ -501,7 +469,7 @@ export class HuronSettingsService {
             if (!_.isEqual(this.huronSettingsDataCopy.site.routingPrefix, siteData.routingPrefix)
               || !_.isEqual(this.huronSettingsDataCopy.site.extensionLength, siteData.extensionLength)
               || !_.isEqual(this.huronSettingsDataCopy.customer.hasVoicemailService, customerData.hasVoicemailService)) {
-              const vmaddress = this.deriveVoicemailAddress(siteData.routingPrefix || '', siteData.extensionLength, '');
+              const vmaddress = this.deriveVoicemailAddress(siteData.routingPrefix || '', Number(siteData.extensionLength), null);
               promises.push(this.updateVoicemailAddress(userTemplate.objectId, vmaddress));
             }
             if (!_.isEqual(this.huronSettingsDataCopy.site.timeZone, siteData.timeZone)
@@ -582,8 +550,8 @@ export class HuronSettingsService {
       });
   }
 
-  private deriveVoicemailAddress(routingPrefix: string, extensionLength: string, extensionPrefix: string): string {
-    return [routingPrefix, extensionLength, extensionPrefix].join('-');
+  private deriveVoicemailAddress(routingPrefix: string, extensionLength: number | null, extensionPrefix: number | null): string {
+    return [routingPrefix, _.toString(extensionLength), _.toString(extensionPrefix)].join('-');
   }
 
   private saveAutoAttendantSite(site: ISite): ng.IPromise<void> {
@@ -613,7 +581,7 @@ export class HuronSettingsService {
     }
   }
 
-  private updateAvrilSite(site: ISite, avrilFeatures: IAvrilFeatures): ng.IPromise<string | void> {
+  private updateAvrilSite(site: ISite, avrilFeatures: IAvrilSiteFeatures): ng.IPromise<string | void> {
     return this.AvrilService.updateAvrilSite(
       <IAvrilSite>{
         guid: site.uuid,
@@ -633,7 +601,7 @@ export class HuronSettingsService {
     });
   }
 
-  private createAvrilSite(site: ISite, avrilFeatures: IAvrilFeatures): ng.IPromise<string | void> {
+  private createAvrilSite(site: ISite, avrilFeatures: IAvrilSiteFeatures): ng.IPromise<string | void> {
     return this.AvrilService.createAvrilSite(
       <IAvrilSite>{
         guid: site.uuid,
@@ -663,7 +631,7 @@ export class HuronSettingsService {
 
   private rejectAndNotifyPossibleErrors(): void | ng.IPromise<any> {
     if (this.errors.length > 0) {
-      this.Notification.notify(this.errors, 'error');
+      this.Notification.notify(this.errors);
       return this.$q.reject();
     }
   }

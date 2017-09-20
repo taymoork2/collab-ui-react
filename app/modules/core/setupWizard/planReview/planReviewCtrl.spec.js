@@ -14,7 +14,7 @@ describe('Controller: PlanReviewCtrl', function () {
   var authInfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('5632f806-ad09-4a26-a0c0-a49a13f38873'),
     getMessageServices: jasmine.createSpy('getMessageServices').and.returnValue(getJSONFixture('core/json/authInfo/messagingServices.json').singleLicense),
-    getCommunicationServices: jasmine.createSpy('getCommunicationServices').and.returnValue(getJSONFixture('core/json/authInfo/commServices.json')),
+    getCommunicationServices: jasmine.createSpy('getCommunicationServices').and.returnValue(getJSONFixture('core/json/authInfo/commServices.json').singleLicense),
     getConferenceServices: jasmine.createSpy('getConferenceServices').and.returnValue(getJSONFixture('core/json/authInfo/confServices.json')),
     getCareServices: jasmine.createSpy('getCareServices').and.returnValue(getJSONFixture('core/json/authInfo/careServices.json').careLicense),
     getCmrServices: jasmine.createSpy('getCmrServices').and.returnValue(getJSONFixture('core/json/authInfo/cmrServices.json')),
@@ -50,6 +50,7 @@ describe('Controller: PlanReviewCtrl', function () {
         return false;
       }
     });
+    spyOn(SetupWizardService, 'hasPendingServiceOrder').and.returnValue(true);
     spyOn(SetupWizardService, 'getPendingMeetingLicenses').and.returnValue([{
       offerName: 'MC',
       capacity: 200,
@@ -58,7 +59,17 @@ describe('Controller: PlanReviewCtrl', function () {
       offerName: 'CO',
       capacity: 200,
     }]);
-
+    spyOn(SetupWizardService, 'getPendingAudioLicenses').and.returnValue([{
+      offerName: 'WEBEX',
+    }]);
+    spyOn(SetupWizardService, 'getPendingMessageLicenses').and.returnValue([{
+      offerName: 'CF',
+      capacity: 200,
+    }]);
+    spyOn(SetupWizardService, 'getOrderAndSubId').and.returnValue({
+      orderId: 'abc123',
+      subscriptionId: 'def456',
+    });
     controller = $controller('PlanReviewCtrl', {
       $scope: $scope,
     });
@@ -102,6 +113,14 @@ describe('Controller: PlanReviewCtrl', function () {
   describe('Pending Licenses View', function () {
     it('Should set the showPendingView toggle to true when subscription has pending licenses', function () {
       expect(controller.showPendingView).toBe(true);
+    });
+
+    it('Should concat meeting and audio licenses', function () {
+      expect(controller.pendingMeetingLicenses.length).toBe(2);
+    });
+
+    it('Should set the display value for the licenses', function () {
+      expect(controller.pendingMeetingLicenses[0].displayName).toBeDefined();
     });
   });
 

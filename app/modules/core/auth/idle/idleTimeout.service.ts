@@ -1,5 +1,6 @@
 import { WindowService } from 'modules/core/window';
 import { StorageKeys } from 'modules/core/storage/storage.keys';
+import { Config } from 'modules/core/config/config';
 
 export class IdleTimeoutService {
     //events that set user as active
@@ -21,7 +22,7 @@ export class IdleTimeoutService {
     private $rootScope: ng.IRootScopeService,
     private $window: ng.IWindowService,
     private Auth,
-    private Config,
+    private Config: Config,
     private Log,
     private LocalStorage,
     private WindowService: WindowService,

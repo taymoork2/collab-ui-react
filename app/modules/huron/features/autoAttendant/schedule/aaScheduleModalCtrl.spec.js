@@ -446,6 +446,7 @@ describe('Controller: AAScheduleModalCtrl', function () {
   describe('saveTimeZone', function () {
     beforeEach(function () {
       spyOn(Analytics, 'trackEvent');
+      spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
       var ceInfo = ce2CeInfo(rawCeInfo);
       aaModel.ceInfos.push(ceInfo);
       controller = $controller('AAScheduleModalCtrl as vm', {
@@ -459,29 +460,33 @@ describe('Controller: AAScheduleModalCtrl', function () {
         sectionToToggle: 'hours',
       });
       controller.aaModel = aaModel;
-      controller.aaModel.aaRecord.assignedTimeZone = undefined;
       controller.timeZoneForm = {
         $pristine: true,
       };
     });
 
-    it('should NOT store time zone into aaRecord if there is NO change in time zone drop-down list', function () {
+    it('should always store time zone into aaRecord even when there is NO change in time zone drop-down list', function () {
       controller.saveTimeZone();
-      expect(controller.aaModel.aaRecord.assignedTimeZone).toBe(undefined);
+      expect(controller.aaModel.aaRecord.assignedTimeZone).toBe(aaUiModel.timeZone.id);
     });
 
     it('should store time zone into aaRecord if there is a change in time zone drop-down list', function () {
       controller.timeZoneForm = {
         $pristine: false,
       };
+      controller.timeZone = { label: 'some time zone', id: 'some time zone' };
+
       controller.saveTimeZone();
-      expect(controller.aaModel.aaRecord.assignedTimeZone).toBe(aaUiModel.timeZone.id);
+      expect(controller.aaModel.aaRecord.assignedTimeZone).toBe('some time zone');
     });
 
     it('should log a timezone event for a first-time change in time zone drop-down list', function () {
       controller.timeZoneForm = {
         $pristine: false,
       };
+      controller.ui.timeZone = aaUiModel.timeZone;
+      controller.timeZone = aaUiModel.timeZone;
+
       controller.saveTimeZone();
       expect(Analytics.trackEvent).toHaveBeenCalledWith(AAMetricNameService.TIME_ZONE, {
         type: 'change',
@@ -495,9 +500,11 @@ describe('Controller: AAScheduleModalCtrl', function () {
         $pristine: false,
       };
       controller.aaModel.aaRecord.assignedTimeZone = aaUiModel.timeZone.id;
+      controller.timeZone = aaUiModel.timeZone;
 
       controller.saveTimeZone();
-      expect(Analytics.trackEvent).not.toHaveBeenCalled();
+      controller.saveTimeZone();
+      expect(Analytics.trackEvent.calls.count()).toBe(1);
       expect(controller.aaModel.aaRecord.assignedTimeZone).toBe(aaUiModel.timeZone.id);
     });
 
@@ -510,7 +517,6 @@ describe('Controller: AAScheduleModalCtrl', function () {
 
       controller.saveTimeZone();
       expect(Analytics.trackEvent).not.toHaveBeenCalled();
-      expect(controller.aaModel.aaRecord.assignedTimeZone).toBe(undefined);
     });
   });
 

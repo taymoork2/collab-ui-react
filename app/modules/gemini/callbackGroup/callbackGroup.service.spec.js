@@ -4,7 +4,10 @@ describe('Service: cbgService', function () {
   var cbgService, $httpBackend, UrlConfig, mockResponse;
   var groupId = 'ff8080815823e72c0158244952240022';
   var customerId = 'ff808081527ccb3f0152e39ec555010c';
-  var preData = getJSONFixture('gemini/common.json');
+
+  beforeEach(function () {
+    this.preData = _.cloneDeep(getJSONFixture('gemini/common.json'));
+  });
 
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Gemini'));
@@ -17,10 +20,6 @@ describe('Service: cbgService', function () {
     cbgService = $httpBackend = UrlConfig = mockResponse = undefined;
   });
 
-  afterAll(function () {
-    preData = undefined;
-  });
-
   function dependencies(_$httpBackend_, _cbgService_, _UrlConfig_) {
     UrlConfig = _UrlConfig_;
     cbgService = _cbgService_;
@@ -28,16 +27,16 @@ describe('Service: cbgService', function () {
   }
 
   function setData(key, value) {
-    var data = preData.common;
+    var data = this.preData.common;
     return _.set(data, key, value);
   }
 
   function initSpies() {
-    mockResponse = preData.common;
+    mockResponse = this.preData.common;
   }
 
   it('should return correct data in getOneCallbackGroup', function () {
-    var mockData = setData('content.data.body', preData.getCurrentCallbackGroup);
+    var mockData = setData.call(this, 'content.data.body', this.preData.getCurrentCallbackGroup);
     var url = UrlConfig.getGeminiUrl() + 'callbackgroup/customerId/' + customerId + '/groupId/' + groupId;
     $httpBackend.expectGET(url).respond(200, mockData);
 
@@ -49,7 +48,7 @@ describe('Service: cbgService', function () {
   });
 
   it('should return correct response data in updateCallbackGroup', function () {
-    var mockData = setData('content.data.body', 'ff8080815708077601581a417ded1a1e');
+    var mockData = setData.call(this, 'content.data.body', 'ff8080815708077601581a417ded1a1e');
     var url = UrlConfig.getGeminiUrl() + 'callbackgroup/';
     $httpBackend.expectPUT(url).respond(200, mockData);
 
@@ -61,7 +60,7 @@ describe('Service: cbgService', function () {
   });
 
   it('should return correct response info in updateCallbackGroupStatus when status is decline', function () {
-    var mockData = setData('content.data.body', 'ff8080815708077601581a417ded1a1e');
+    var mockData = setData.call(this, 'content.data.body', 'ff8080815708077601581a417ded1a1e');
     var url = UrlConfig.getGeminiUrl() + 'callbackgroup/customerId/' + customerId + '/groupId/' + groupId + '/decline';
     $httpBackend.expectPUT(url).respond(200, mockData);
 
@@ -72,7 +71,7 @@ describe('Service: cbgService', function () {
   });
 
   it('should return correct response info in updateCallbackGroupStatus when status is approve and data is null', function () {
-    var mockData = setData('content.data.body', 'ff8080815708077601581a417ded1a1e');
+    var mockData = setData.call(this, 'content.data.body', 'ff8080815708077601581a417ded1a1e');
     var url = UrlConfig.getGeminiUrl() + 'callbackgroup/customerId/' + customerId + '/groupId/' + groupId + '/status/approve';
     $httpBackend.expectPUT(url).respond(200, mockData);
 
@@ -83,7 +82,7 @@ describe('Service: cbgService', function () {
   });
 
   it('should return correct response info in getCountries', function () {
-    var mockData = preData.getCountries;
+    var mockData = this.preData.getCountries;
     var url = UrlConfig.getGeminiUrl() + 'countries';
     $httpBackend.expectGET(url).respond(200, mockData);
 
@@ -125,7 +124,7 @@ describe('Service: cbgService', function () {
 
   it('should return correct response info in getNotes', function () {
     var url = UrlConfig.getGeminiUrl() + 'activityLogs/' + customerId + '/' + groupId + '/add_notes_cg';
-    var mockData = setData('content.data.body', preData.getNotes);
+    var mockData = setData.call(this, 'content.data.body', this.preData.getNotes);
     $httpBackend.expectGET(url).respond(200, mockData);
 
     cbgService.getNotes(customerId, groupId).then(function (res) {
@@ -135,7 +134,7 @@ describe('Service: cbgService', function () {
   });
 
   it('should return correct response info in getHistories', function () {
-    var mockData = setData('content.data.body', preData.getHistories);
+    var mockData = setData.call(this, 'content.data.body', this.preData.getHistories);
     var url = UrlConfig.getGeminiUrl() + 'activityLogs';
     $httpBackend.expectPUT(url).respond(200, mockData);
 
@@ -146,7 +145,7 @@ describe('Service: cbgService', function () {
   });
 
   it('should return empty array in cbgsExportCSV', function () {
-    var mockData = setData('content.data.body', []);
+    var mockData = setData.call(this, 'content.data.body', []);
     var url = UrlConfig.getGeminiUrl() + 'callbackgroup/customerId/' + customerId;
     $httpBackend.expectGET(url).respond(200, mockData);
 
@@ -157,7 +156,7 @@ describe('Service: cbgService', function () {
   });
 
   it('should return correct data in cbgsExportCSV', function () {
-    var mockData = setData('content.data.body', preData.getCallbackGroups);
+    var mockData = setData.call(this, 'content.data.body', this.preData.getCallbackGroups);
     var url = UrlConfig.getGeminiUrl() + 'callbackgroup/customerId/' + customerId;
     $httpBackend.expectGET(url).respond(200, mockData);
 

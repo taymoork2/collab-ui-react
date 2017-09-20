@@ -7,8 +7,7 @@
   </button>
   <button class="btn-default"
           ng-click="$ctrl.cancel()"
-          cs-btn
-          loading="$ctrl.savingPage">
+          ng-disabled="$ctrl.savingPage">
     <span translate="common.cancel"></span>
   </button>
 </cs-sp-buttons>
@@ -21,11 +20,7 @@
                         ng-model="$ctrl.entitledToggle"
                         cs-change="$ctrl.changeEntitlement(toggleValue)"
                         size="small"
-                        ng-if="!$ctrl.loadingPage && !$ctrl.couldNotReadUser">
-      </cs-toggle-switch>
-      <cs-toggle-switch ng-if="!$ctrl.loadingPage && $ctrl.couldNotReadUser"
-                        is-disabled="true"
-                        size="small">
+                        is-disabled="!$ctrl.loadingPage && $ctrl.couldNotReadUser">
       </cs-toggle-switch>
       <span cs-loader
             class="cloud-extension-label loader-example--small"
@@ -48,8 +43,8 @@
                   translate="hercules.activationStatus.{{$ctrl.getStatus($ctrl.userStatus)}}"></span>
 
           <span class="cloud-extension-label last-state-change-timestamp"
-                ng-if="$ctrl.userIsCurrentlyEntitled && $ctrl.userStatus && $ctrl.userStatusConnect.lastStateChangeText">
-            {{$ctrl.userStatus.lastStateChangeText}}
+                ng-if="$ctrl.userIsCurrentlyEntitled && $ctrl.userStatus && $ctrl.lastStateChangeText">
+            {{$ctrl.lastStateChangeText}}
             </span>
 
           <span class="cloud-extension-label status-off"

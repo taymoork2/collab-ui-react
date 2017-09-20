@@ -2,14 +2,15 @@
   'use strict';
 
   angular
-  .module('core.trial')
-  .controller('TrialWebexCtrl', TrialWebexCtrl);
+    .module('core.trial')
+    .controller('TrialWebexCtrl', TrialWebexCtrl);
 
 
   /* @ngInject */
-  function TrialWebexCtrl($q, $scope, $translate, Analytics, TrialWebexService, TrialTimeZoneService) {
+  function TrialWebexCtrl($q, $scope, $translate, Analytics, Config, TrialWebexService, TrialTimeZoneService) {
     var vm = this;
     var _trialData = TrialWebexService.getData();
+    var webexSiteValidationSource = Config.shallowValidationSourceTypes.serviceSetup;
 
     vm.details = _trialData.details;
     vm.validatingUrl = false;
@@ -73,22 +74,22 @@
 
       return $q(function (resolve, reject) {
         vm.validatingUrl = true;
-        TrialWebexService.validateSiteUrl(viewValue)
-        .then(function (result) {
-          if (result.isValid) {
-            resolve();
-          } else {
-            vm.errorMessages.site = validationErrorsSite[result.errorCode];
-            Analytics.trackTrialSteps(Analytics.eventNames.VALIDATION_ERROR, vm.parentTrialData, { value: result, error: result.errorCode });
+        TrialWebexService.validateSiteUrl(viewValue, webexSiteValidationSource)
+          .then(function (result) {
+            if (result.isValid) {
+              resolve();
+            } else {
+              vm.errorMessages.site = validationErrorsSite[result.errorCode];
+              Analytics.trackTrialSteps(Analytics.eventNames.VALIDATION_ERROR, vm.parentTrialData, { value: result, error: result.errorCode });
+              reject();
+            }
+          })
+          .catch(function () {
             reject();
-          }
-        })
-        .catch(function () {
-          reject();
-        })
-        .finally(function () {
-          vm.validatingUrl = false;
-        });
+          })
+          .finally(function () {
+            vm.validatingUrl = false;
+          });
       });
     }
   }

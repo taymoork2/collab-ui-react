@@ -6,7 +6,7 @@ require('./_site-list.scss');
   angular
     .module('Core')
     .controller('WebExSiteRowCtrl', WebExSiteRowCtrl);
-    //TokenService, WebExUtilsFact,
+  //TokenService, WebExUtilsFact,
 
   /*@ngInject*/
   function WebExSiteRowCtrl($scope, $sce, $state, $timeout, TokenService, WebExUtilsFact, WebExSiteRowService) {
@@ -14,6 +14,8 @@ require('./_site-list.scss');
 
     WebExSiteRowService.initSiteRows();
     this.gridOptions = WebExSiteRowService.getGridOptions();
+
+    this.gridOptions.appScopeProvider = this;
 
     this.linkToReports = function (siteUrl) {
       $state.go('reports.webex-metrics', { siteUrl: siteUrl });

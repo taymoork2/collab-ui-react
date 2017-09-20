@@ -55,6 +55,6 @@ class CmcDetailsSettingsComponentCtrl implements ng.IComponentController {
 
 export class CmcDetailsSettingsComponent implements ng.IComponentOptions {
   public controller = CmcDetailsSettingsComponentCtrl;
-  public templateUrl = 'modules/cmc/settings/settings.component.html';
+  public template = require('modules/cmc/settings/settings.component.html');
   public bindings = { };
 }

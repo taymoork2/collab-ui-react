@@ -179,9 +179,7 @@ $aa-builder-text-color: $gray-dark-1;
   color: $aa-builder-text-color;
 
   &:focus {
-    outline-style: solid;
-    outline-width: 1px;
-    outline-color: transparent;
+    outline: solid 1px transparent;
   }
 }
 

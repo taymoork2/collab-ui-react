@@ -39,7 +39,6 @@
     .factory('SiteService', SiteService)
     .factory('AvrilSiteService', AvrilSiteService)
     .factory('AvrilSiteUpdateService', AvrilSiteUpdateService)
-    .factory('InternalNumberRangeService', InternalNumberRangeService)
     .factory('UserEndpointService', UserEndpointService)
     .factory('SipEndpointService', SipEndpointService)
     .factory('DirectoryNumberUserService', DirectoryNumberUserService)
@@ -116,10 +115,6 @@
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/directorynumbers/:directoryNumberId', {
       customerId: '@customerId',
       directoryNumberId: '@directoryNumberId',
-    }, {
-      update: {
-        method: 'PUT',
-      },
     });
   }
 
@@ -370,21 +365,6 @@
   }
 
   /* @ngInject */
-  function InternalNumberRangeService($resource, HuronConfig) {
-    return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/internalnumberranges/:internalNumberRangeId', {
-      customerId: '@customerId',
-      internalNumberRangeId: '@internalNumberRangeId',
-    }, {
-      save: {
-        method: 'POST',
-        headers: {
-          'Access-Control-Expose-Headers': 'Location',
-        },
-      },
-    });
-  }
-
-  /* @ngInject */
   function UserEndpointService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/users/:userId/endpoints/:userEndpointAssnId', {
       customerId: '@customerId',
@@ -581,7 +561,7 @@
     return _.get(responseObj, '[0]', responseObj);
   }
 
-    /* @ngInject */
+  /* @ngInject */
   function PlacesService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/places/:placesId', {
       customerId: '@customerId',

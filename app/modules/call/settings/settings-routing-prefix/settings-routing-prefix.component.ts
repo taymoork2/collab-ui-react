@@ -44,7 +44,7 @@ class RoutingPrefixCtrl implements ng.IComponentController {
 
 export class RoutingPrefixComponent implements ng.IComponentOptions {
   public controller = RoutingPrefixCtrl;
-  public templateUrl = 'modules/call/settings/settings-routing-prefix/settings-routing-prefix.component.html';
+  public template = require('modules/call/settings/settings-routing-prefix/settings-routing-prefix.component.html');
   public bindings = {
     routingPrefix: '<',
     onChangeFn: '&',

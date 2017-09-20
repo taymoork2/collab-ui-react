@@ -55,6 +55,12 @@ describe('Controller: DisableMediaServiceController', function () {
     controller.continue();
     expect(controller.step).toBe('2');
   });
+  it('should call the close and success notifictaion for done', function () {
+    spyOn(Notification, 'success');
+    controller.done();
+    expect(modalInstance.close).toHaveBeenCalled();
+    expect(Notification.success).toHaveBeenCalled();
+  });
   it('should call the MediaClusterServiceV2 deleteClusterWithConnector for deactivate', function () {
     var respnse = {
       status: 204,
@@ -65,10 +71,11 @@ describe('Controller: DisableMediaServiceController', function () {
     spyOn(MediaServiceActivationV2, 'disableOrpheusForMediaFusion');
     spyOn(MediaServiceActivationV2, 'deactivateHybridMedia');
     spyOn(MediaServiceActivationV2, 'disableMFOrgSettingsForDevOps');
-    spyOn(Notification, 'success');
+    spyOn(controller, 'step');
     controller.clusterIds = ['cluster1', 'cluster2'];
     controller.deactivate();
     httpMock.verifyNoOutstandingExpectation();
+    expect(controller.step).toBe('2');
     expect(MediaClusterServiceV2.deleteClusterWithConnector).toHaveBeenCalled();
     expect(MediaClusterServiceV2.deleteClusterWithConnector.calls.count()).toEqual(2);
     expect(ServiceDescriptorService.disableService).toHaveBeenCalled();
@@ -76,8 +83,6 @@ describe('Controller: DisableMediaServiceController', function () {
     expect(MediaServiceActivationV2.disableOrpheusForMediaFusion).toHaveBeenCalled();
     expect(MediaServiceActivationV2.deactivateHybridMedia).toHaveBeenCalled();
     expect(MediaServiceActivationV2.disableMFOrgSettingsForDevOps).toHaveBeenCalled();
-    expect(Notification.success).toHaveBeenCalled();
-    expect(modalInstance.close).toHaveBeenCalled();
   });
   it('should notify error when deactivate call fails', function () {
     spyOn(MediaClusterServiceV2, 'deleteClusterWithConnector').and.returnValue($q.resolve({
@@ -103,8 +108,8 @@ describe('Controller: DisableMediaServiceController', function () {
       }],
     }];
     spyOn(HybridServicesClusterService, 'getAll').and.returnValue($q.resolve(
-        clusters
-      ));
+      clusters
+    ));
     controller.getClusterList();
     httpMock.verifyNoOutstandingExpectation();
     expect(HybridServicesClusterService.getAll).toHaveBeenCalled();

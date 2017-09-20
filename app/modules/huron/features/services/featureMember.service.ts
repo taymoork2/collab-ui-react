@@ -1,5 +1,5 @@
 import { Member, MemberService, USER_REAL_USER, USER_PLACE } from 'modules/huron/members';
-import { IMemberWithPicture } from 'modules/huron/features/pagingGroup';
+import { IMemberWithPicture } from 'modules/call/features/paging-group/shared';
 
 export interface IFeatureMemberPicture {
   memberUuid: string;

@@ -15,9 +15,7 @@ export abstract class ExpresswayContainerController {
     private $modal,
     private $scope: ng.IScope,
     private $state: ng.ui.IStateService,
-    private Authinfo,
     private ClusterService: ClusterService,
-    protected hasPartnerRegistrationFeatureToggle,
     protected hasNodesViewFeatureToggle,
     protected Notification: Notification,
     protected ServiceDescriptorService: ServiceDescriptorService,
@@ -48,13 +46,6 @@ export abstract class ExpresswayContainerController {
       if (enabled) {
         return;
       }
-      if (this.Authinfo.isCustomerLaunchedFromPartner() && !this.hasPartnerRegistrationFeatureToggle) {
-        this.$modal.open({
-          templateUrl: 'modules/hercules/service-specific-pages/components/add-resource/partnerAdminWarning.html',
-          type: 'dialog',
-        });
-        return;
-      }
       this.$modal.open({
         resolve: {
           connectorType: () => this.connectorType,
@@ -63,7 +54,7 @@ export abstract class ExpresswayContainerController {
         },
         controller: 'AddResourceController',
         controllerAs: 'vm',
-        templateUrl: 'modules/hercules/service-specific-pages/common-expressway-based/add-resource-modal.html',
+        template: require('modules/hercules/service-specific-pages/common-expressway-based/add-resource-modal.html'),
         type: 'small',
       })
         .result

@@ -1,7 +1,10 @@
 require('../fields/_fields-list.scss');
+var momentFilter = require('../filters/momentFilter').Moment;
 
 (function () {
   'use strict';
+
+  var dateTimeFormatString = 'LL';
 
   var PropertyConstants = require('modules/context/services/context-property-service').PropertyConstants;
 
@@ -87,10 +90,6 @@ require('../fields/_fields-list.scss');
     }
 
     function processFieldset(fieldset) {
-      if (fieldset.lastUpdated) {
-        fieldset.lastUpdatedUI = moment(fieldset.lastUpdated).format('LL');
-      }
-
       // Find total number of fields and then subtract the inactive fields, to get the number of active fields.
       var totalNumberOfFields = (fieldset.fields) ? fieldset.fields.length : 0;
       fieldset.numOfFields = totalNumberOfFields - ((fieldset.inactiveFields) ? fieldset.inactiveFields.length : 0);
@@ -218,8 +217,10 @@ require('../fields/_fields-list.scss');
           displayName: $translate.instant('context.dictionary.access'),
           maxWidth: 200,
         }, {
-          field: 'lastUpdatedUI',
+          field: 'lastUpdated',
           displayName: $translate.instant('context.dictionary.dateUpdated'),
+          type: 'date',
+          cellFilter: momentFilter.getDateFilter(dateTimeFormatString),
           maxWidth: 300,
         }],
       };
@@ -245,14 +246,28 @@ require('../fields/_fields-list.scss');
 
       var lowerStr = str.toLowerCase();
       var containSearchStr = function (fieldset) {
-        var propertiesToCheck = ['id', 'description', 'numOfFields', 'lastUpdatedUI', 'publiclyAccessibleUI'];
+        var propertiesToCheck = ['id', 'description', 'numOfFields', 'lastUpdated', 'publiclyAccessibleUI'];
         return _.some(propertiesToCheck, function (property) {
-          var value;
-          if (property === 'numOfFields') {
-            value = (_.has(fieldset, 'numOfFields') ? (fieldset.numOfFields.toString()) : undefined);
-          } else {
-            value = _.get(fieldset, property, '').toLowerCase();
+          var value = _.get(fieldset, property);
+          if (value === undefined) {
+            return false;
           }
+          switch (property) {
+            case 'numOfFields':
+              value = value.toString();
+              break;
+            case 'lastUpdated':
+              value = value.trim();
+              if (value === '') {
+                // can't match against empty string because that will create a date based on "now"
+                return false;
+              }
+              value = moment(value).format(dateTimeFormatString);
+              break;
+            default:
+              break;
+          }
+          value = value.toLowerCase();
           return _.includes(value, lowerStr);
         });
       };

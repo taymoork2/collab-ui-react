@@ -365,7 +365,6 @@
             vm.totalcloudcalls = vm.onprem + vm.cloudOverflow;
           }
           vm.second_card_value = (vm.cloudOverflow == vm.noData) ? vm.noData : abbreviateNumber(vm.cloudOverflow);
-          vm.totalcloudcalls = abbreviateNumber(vm.totalcloudcalls);
         }
         vm.totalcloudShort = (vm.totalcloudcalls == vm.noData) ? vm.noData : abbreviateNumber(vm.totalcloudcalls);
         vm.totalcloudTooltip = checkForTooltip(vm.totalcloudShort) ? vm.totalcloudcalls : '';
@@ -374,6 +373,10 @@
         vm.onpremShort = (vm.onprem == vm.noData) ? vm.noData : abbreviateNumber(vm.onprem);
         vm.onpremTooltip = checkForTooltip(vm.onpremShort) ? vm.onprem : '';
         vm.cloudOverflowTooltip = checkForTooltip(vm.second_card_value) ? vm.cloudOverflow : '';
+
+        var overflow = (vm.cloudOverflow === vm.noData) ? 0 : vm.cloudOverflow;
+        vm.overflowPercentage = (overflow / vm.totalcloudcalls) * 100;
+        vm.overflowPercentage = _.round(vm.overflowPercentage, 2);
         setOverflowIndicator();
       });
     }

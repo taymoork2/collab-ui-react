@@ -36,7 +36,10 @@ class EmailNotificationsSectionCtrl implements ng.IComponentController {
     }
   }
 
-  private init(serviceId) {
+  private init(serviceId: HybridServiceId) {
+    if (serviceId === 'squared-fusion-o365') {
+      serviceId = 'squared-fusion-cal';
+    }
     this.serviceId = serviceId;
     this.ServiceDescriptorService.getEmailSubscribers(serviceId)
       .then((emailSubscribers: string[]) => {
@@ -112,7 +115,7 @@ class EmailNotificationsSectionCtrl implements ng.IComponentController {
 
 export class EmailNotificationsSectionComponent implements ng.IComponentOptions {
   public controller = EmailNotificationsSectionCtrl;
-  public templateUrl = 'modules/hercules/email-notifications-section/email-notifications-section.html';
+  public template = require('modules/hercules/email-notifications-section/email-notifications-section.html');
   public bindings = {
     serviceId: '<',
   };

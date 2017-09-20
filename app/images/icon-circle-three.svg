@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 45.2 (43514) - http://www.bohemiancoding.com/sketch -->
+    <title>Group</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Detailed-Designs" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="14:-Configure-Dialogue-Integration-" transform="translate(-440.000000, -561.000000)">
+            <g id="Group" transform="translate(440.000000, 561.000000)">
+                <circle id="Oval-2" fill="#049FD9" cx="12" cy="12" r="12"></circle>
+                <text id="3" font-family="CiscoSansLight, CiscoSans" font-size="16" font-weight="300" fill="#FFFFFF">
+                    <tspan x="7.2" y="18">3</tspan>
+                </text>
+            </g>
+        </g>
+    </g>
+</svg>

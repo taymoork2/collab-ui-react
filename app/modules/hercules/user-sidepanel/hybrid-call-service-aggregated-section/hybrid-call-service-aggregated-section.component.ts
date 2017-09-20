@@ -1,11 +1,12 @@
 import { UCCService } from 'modules/hercules/services/ucc-service';
-import { HybridServiceUserSidepanelHelperService, IUserStatus } from 'modules/hercules/services/hybrid-services-user-sidepanel-helper.service';
+import { HybridServiceUserSidepanelHelperService } from 'modules/hercules/services/hybrid-services-user-sidepanel-helper.service';
 import { Notification } from 'modules/core/notifications/notification.service';
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
+import { USSService, IUserStatusWithExtendedMessages } from 'modules/hercules/services/uss.service';
 
 interface IOptions {
-  callServiceAware: IUserStatus;
-  callServiceConnect: IUserStatus;
+  callServiceAware: any;
+  callServiceConnect: any;
 }
 
 class HybridCallServiceAggregatedSectionCtrl implements ng.IComponentController {
@@ -14,12 +15,12 @@ class HybridCallServiceAggregatedSectionCtrl implements ng.IComponentController 
 
   public userId: string;
   public userEmailAddress: string;
-  public callServiceAware: IUserStatus;
-  public callServiceConnect: IUserStatus;
+  public callServiceAware: IUserStatusWithExtendedMessages | undefined;
+  public callServiceConnect: IUserStatusWithExtendedMessages | undefined;
   public voicemailEnabled = false;
   public callServiceConnectEnabledForOrg: boolean;
 
-  private resourceGroupId: string;
+  public resourceGroupId: string;
 
   /* @ngInject */
   constructor(
@@ -28,7 +29,7 @@ class HybridCallServiceAggregatedSectionCtrl implements ng.IComponentController 
     private HybridServiceUserSidepanelHelperService: HybridServiceUserSidepanelHelperService,
     private Notification: Notification,
     private ServiceDescriptorService: ServiceDescriptorService,
-    private USSService,
+    private USSService: USSService,
     private UCCService: UCCService,
   ) { }
 
@@ -97,7 +98,7 @@ class HybridCallServiceAggregatedSectionCtrl implements ng.IComponentController 
 
 export class HybridCallServiceAggregatedSectionComponent implements ng.IComponentOptions {
   public controller = HybridCallServiceAggregatedSectionCtrl;
-  public templateUrl = 'modules/hercules/user-sidepanel/hybrid-call-service-aggregated-section/hybrid-call-service-aggregated-section.component.html';
+  public template = require('modules/hercules/user-sidepanel/hybrid-call-service-aggregated-section/hybrid-call-service-aggregated-section.component.html');
   public bindings = {
     userId: '<',
     userEmailAddress: '<',

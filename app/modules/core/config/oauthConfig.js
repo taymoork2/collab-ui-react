@@ -5,7 +5,7 @@
 
   module.exports = angular
     .module('core.oauthconfig', [
-      require('modules/core/config/config'),
+      require('modules/core/config/config').default,
       require('modules/core/scripts/services/utils'),
     ])
     .factory('OAuthConfig', OAuthConfig)
@@ -24,6 +24,7 @@
       'webex-messenger:get_webextoken',
       'cloud-contact-center:admin',
       'cmc-controller:get_status',
+      'spark-compliance:spark_conversations_read',
       'compliance:spark_conversations_read',
       'contact-center-context:pod_read',
       'contact-center-context:pod_write',
@@ -67,6 +68,7 @@
     };
 
     return {
+      getAdminPortalUrl: getAdminPortalUrl,
       getLogoutUrl: getLogoutUrl,
       getClientId: getClientId,
       getOauthLoginUrl: getOauthLoginUrl,

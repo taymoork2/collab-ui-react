@@ -15,7 +15,7 @@ class EmergencyServicesCtrl implements ng.IComponentController {
 
 export class EmergencyServicesComponent implements ng.IComponentOptions {
   public controller = EmergencyServicesCtrl;
-  public templateUrl = 'modules/core/trials/emergencyServices/emergencyServices.html';
+  public template = require('modules/core/trials/emergencyServices/emergencyServices.html');
   public bindings = {
     address: '<',
     validation: '<',

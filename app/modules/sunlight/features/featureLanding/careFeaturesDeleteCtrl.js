@@ -6,17 +6,26 @@
     .controller('CareFeaturesDeleteCtrl', CareFeaturesDeleteCtrl);
 
   /* @ngInject */
-  function CareFeaturesDeleteCtrl($rootScope, $scope, $stateParams, $timeout, $translate, CardUtils, CareFeatureList, Log, Notification) {
+  function CareFeaturesDeleteCtrl($rootScope, $scope, $stateParams, $timeout, CardUtils, CareFeatureList, VirtualAssistantService, Log, Notification) {
     var vm = this;
     vm.deleteFeature = deleteFeature;
     vm.deleteBtnDisabled = false;
     vm.featureId = $stateParams.deleteFeatureId;
     vm.featureName = $stateParams.deleteFeatureName;
     vm.featureType = $stateParams.deleteFeatureType;
+    vm.confirmationText = 'careChatTpl.deleteFeatureTextConfirmation';
+
+    if (vm.featureType === VirtualAssistantService.serviceCard.id) {
+      vm.confirmationText = 'careChatTpl.deleteVaFeatureTextConfirmation';
+    }
 
     function deleteFeature() {
       vm.deleteBtnDisabled = true;
-      CareFeatureList.deleteTemplate(vm.featureId).then(function () {
+      var deleteFunc = CareFeatureList.deleteTemplate;
+      if (vm.featureType === VirtualAssistantService.serviceCard.id) {
+        deleteFunc = VirtualAssistantService.deleteConfig.bind(VirtualAssistantService);
+      }
+      deleteFunc(vm.featureId).then(function () {
         deleteSuccess();
       }, function (response) {
         deleteError(response);
@@ -49,12 +58,10 @@
       if (_.isFunction($scope.$dismiss)) {
         $scope.$dismiss();
       }
-      Log.warn('Failed to delete template with name: ' + vm.featureName + ' and id:' + vm.featureId);
 
-      var error = $translate.instant('careChatTpl.deleteFailedText', {
-        featureName: vm.featureName,
-      });
-      Notification.errorWithTrackingId(response, error);
+      Log.warn('Failed to delete name: ' + vm.featureName + ' and id:' + vm.featureId);
+
+      Notification.errorWithTrackingId(response, 'careChatTpl.deleteFailedText', { featureName: vm.featureName });
     }
   }
 })();

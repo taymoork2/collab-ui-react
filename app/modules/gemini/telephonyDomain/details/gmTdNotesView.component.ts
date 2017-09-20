@@ -111,5 +111,5 @@ class GmTdNotesView implements ng.IComponentController {
 
 export class GmTdNotesViewComponent implements ng.IComponentOptions {
   public controller = GmTdNotesView;
-  public templateUrl = 'modules/gemini/telephonyDomain/details/gmTdNotesView.tpl.html';
+  public template = require('modules/gemini/telephonyDomain/details/gmTdNotesView.tpl.html');
 }

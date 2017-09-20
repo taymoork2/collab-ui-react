@@ -5,7 +5,7 @@
     .module('Core')
     .service('DeviceUsageModelService', DeviceUsageModelService);
 
-    /* @ngInject */
+  /* @ngInject */
   function DeviceUsageModelService(Authinfo, UrlConfig, $http, $q, $timeout) {
     var localUrlBase = 'http://berserk.rd.cisco.com:8080/atlas-server/admin/api/v1/organization';
     var urlBase = UrlConfig.getAdminServiceUrl() + 'organization';

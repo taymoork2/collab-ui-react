@@ -41,7 +41,7 @@ class ReportFilterCtrl {
 }
 
 export class ReportFilterComponent implements ng.IComponentOptions {
-  public templateUrl = 'modules/core/partnerReports/reportFilter/reportFilter.tpl.html';
+  public template = require('modules/core/partnerReports/reportFilter/reportFilter.tpl.html');
   public controller = ReportFilterCtrl;
   public bindings = {
     filterArray: '<',

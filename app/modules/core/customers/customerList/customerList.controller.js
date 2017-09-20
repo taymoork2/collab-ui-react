@@ -7,9 +7,7 @@ require('./_customer-list.scss');
     .controller('CustomerListCtrl', CustomerListCtrl);
 
   /* @ngInject */
-  function CustomerListCtrl($q, $scope, $state, $templateCache, $translate, $window,
-    Analytics, Authinfo, Config, ExternalNumberService, FeatureToggleService, Log,
-    Notification, Orgservice, PartnerService, TrialService, uiGridSelectionService, HuronCompassService) {
+  function CustomerListCtrl($q, $scope, $state, $translate, $window, Analytics, Authinfo, Config, ExternalNumberService, FeatureToggleService, GridCellService, HuronCompassService, Log, Notification, Orgservice, PartnerService, TrialService) {
     var PREMIUM = 'premium';
     var STANDARD = 'standard';
 
@@ -38,6 +36,7 @@ require('./_customer-list.scss');
     vm.isPartnerOrg = isPartnerOrg;
     vm.setTrial = setTrial;
     vm.showCustomerDetails = showCustomerDetails;
+    vm.selectRow = selectRow;
     vm.closeActionsDropdown = closeActionsDropdown;
     vm.addNumbers = addNumbers;
     vm.getLicenseCountColumnText = getLicenseCountColumnText;
@@ -171,14 +170,9 @@ require('./_customer-list.scss');
       updateServiceForOrg: updateServiceForOrg,
     };
 
-    var nameTemplate = $templateCache.get('modules/core/customers/customerList/grid/nameColumn.tpl.html');
-    var licenseCountTemplate = $templateCache.get('modules/core/customers/customerList/grid/licenseCountColumn.tpl.html');
-    /*AG TODO:  temporarily hidden until we have data:
-    var totalUsersTemplate = $templateCache.get('modules/core/customers/customerList/grid/totalUsersColumn.tpl.html');*/
-    var compactServiceTemplate = $templateCache.get('modules/core/customers/customerList/grid/compactServiceColumn.tpl.html');
-    var accountStatusTemplate = $templateCache.get('modules/core/customers/customerList/grid/accountStatusColumn.tpl.html');
-    var newNoteTemplate = $templateCache.get('modules/core/customers/customerList/grid/newNoteColumn.tpl.html');
-
+    var nameTemplate = require('modules/core/customers/customerList/grid/nameColumn.tpl.html');
+    var compactServiceTemplate = require('modules/core/customers/customerList/grid/compactServiceColumn.tpl.html');
+    var accountStatusTemplate = require('modules/core/customers/customerList/grid/accountStatusColumn.tpl.html');
 
     // new column defs for the customer list redesign. These should stay once the feature is rolled out
     var customerNameField = {
@@ -212,7 +206,7 @@ require('./_customer-list.scss');
       field: 'totalLicenses',
       displayName: $translate.instant('customerPage.totalLicenses'),
       width: '16.5%',
-      cellTemplate: licenseCountTemplate,
+      cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showCustomerDetails(row.entity)" cell-value="grid.appScope.getLicenseCountColumnText(row.entity)" center-text="true"></cs-grid-cell>',
       headerCellClass: 'align-center',
     };
     /* AG TODO:  once we have data for total users -- add back
@@ -220,14 +214,14 @@ require('./_customer-list.scss');
         field: 'totalUsers',
         displayName: $translate.instant('customerPage.active') + ' / ' + $translate.instant('customerPage.totalUsers'),
         width: '16%',
-        cellTemplate: totalUsersTemplate,
+        cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showCustomerDetails(row.entity)" cell-value="grid.appScope.getUserCountColumnText(row.entity)" center-text="true"></cs-grid-cell>',
         headerCellClass: 'align-center',
         sortingAlgorithm: userSort
       };*/
     var notesField = {
       field: 'notes',
       displayName: $translate.instant('customerPage.notes'),
-      cellTemplate: newNoteTemplate,
+      cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showCustomerDetails(row.entity)" cell-value="row.entity.notes.text"></cs-grid-cell>',
       sortingAlgorithm: notesSort,
     };
 
@@ -238,13 +232,7 @@ require('./_customer-list.scss');
     vm.gridOptions = {
       //gridOptions.data is populated directly by the functions supplying the data.
       appScopeProvider: vm,
-      multiSelect: false,
       rowHeight: 56,
-      enableRowHeaderSelection: false,
-      enableRowSelection: false,
-      enableColumnMenus: false,
-      enableColumnResizing: true,
-      enableHorizontalScrollbar: 0,
       onRegisterApi: function (gridApi) {
         vm.gridApi = gridApi;
 
@@ -305,14 +293,14 @@ require('./_customer-list.scss');
       setNotesTextOrder();
       initColumns();
 
-      $q.all([
-        FeatureToggleService.atlasCareTrialsGetStatus(),
-        FeatureToggleService.atlasCareInboundTrialsGetStatus(),
-        FeatureToggleService.atlasITProPackGetStatus(),
-      ]).then(function (toggles) {
-        vm.isCareEnabled = toggles[0];
-        vm.isAdvanceCareEnabled = toggles[1];
-        vm.isProPackEnabled = toggles[2];
+      $q.all({
+        isCareEnabled: FeatureToggleService.atlasCareTrialsGetStatus(),
+        isAdvanceCareEnabled: FeatureToggleService.atlasCareInboundTrialsGetStatus(),
+        isProPackEnabled: FeatureToggleService.atlasITProPackGetStatus(),
+      }).then(function (toggles) {
+        vm.isCareEnabled = toggles.isCareEnabled;
+        vm.isAdvanceCareEnabled = toggles.isAdvanceCareEnabled;
+        vm.isProPackEnabled = toggles.isProPackEnabled;
 
         if (!vm.isProPackEnabled) {
           _.remove(vm.filter.options, { value: PREMIUM });
@@ -817,11 +805,12 @@ require('./_customer-list.scss');
       return isTrial ? 'trial' : 'active';
     }
 
-    function showCustomerDetails(customer, gridRow) {
-      if (!_.isUndefined(gridRow)) {
-        uiGridSelectionService.toggleRowSelection(vm.gridApi.grid, gridRow, null, false, true);
-      }
+    function selectRow(grid, row) {
+      GridCellService.selectRow(grid, row);
+      vm.showCustomerDetails(row.entity);
+    }
 
+    function showCustomerDetails(customer) {
       vm.currentTrial = customer;
       HuronCompassService.setIsCustomer(true);
       $state.go('customer-overview', {

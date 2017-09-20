@@ -3,6 +3,7 @@ import { CallFeatureMember } from 'modules/call/features/shared/call-feature-mem
 import { FallbackDestination } from 'modules/call/features/shared/call-feature-fallback-destination';
 import { HuronSiteService } from 'modules/huron/sites';
 import { Notification } from 'modules/core/notifications';
+import { LocationsService, LocationListItem } from 'modules/call/locations';
 
 class CallParkCtrl implements ng.IComponentController {
   private static readonly DEFAULT_EXTENSION_LENGTH: string  = '4';
@@ -26,6 +27,9 @@ class CallParkCtrl implements ng.IComponentController {
   public extensionLength: string = CallParkCtrl.DEFAULT_EXTENSION_LENGTH;
   public isLoading: boolean = false;
   public saveInProcess: boolean = false;
+  public hasLocation: boolean = false;
+  public customerLocations: LocationListItem[];
+  public defaultLocation: LocationListItem;
 
   /* @ngInject */
   constructor(
@@ -38,6 +42,8 @@ class CallParkCtrl implements ng.IComponentController {
     private HuronSiteService: HuronSiteService,
     private Notification: Notification,
     private $translate: ng.translate.ITranslateService,
+    private FeatureToggleService,
+    private LocationsService: LocationsService,
   ) {
     this.callParkId = _.get<string>(this.$stateParams.feature, 'id');
     this.title = _.get<string>(this.$stateParams.feature, 'cardName');
@@ -65,10 +71,24 @@ class CallParkCtrl implements ng.IComponentController {
         this.extensionLength = site.extensionLength;
       });
     });
+
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484).then((supports) => {
+      this.hasLocation = supports;
+      //get locations and default location
+      this.LocationsService.getLocationList().then(locations => {
+        this.customerLocations = locations;
+        this.defaultLocation = locations[0];
+      });
+    });
   }
 
   public setCallParkName(name: string): void {
     this.callPark.name = name;
+    this.checkForChanges();
+  }
+
+  public setCallParkLocation(location): void {
+    this.callPark.location = location;
     this.checkForChanges();
   }
 
@@ -100,7 +120,7 @@ class CallParkCtrl implements ng.IComponentController {
 
   public cancelModal(): void {
     this.$modal.open({
-      templateUrl: 'modules/call/features/call-park/call-park-cancel-modal.html',
+      template: require('modules/call/features/call-park/call-park-cancel-modal.html'),
       type: 'dialog',
     });
   }
@@ -150,13 +170,13 @@ class CallParkCtrl implements ng.IComponentController {
         break;
       case 39:
       //right arrow
-        if (this.nextButton(this.pageIndex) === true) {
+        if (this.nextButton(this.pageIndex)) {
           this.nextPage();
         }
         break;
       case 37:
       //left arrow
-        if (this.previousButton(this.pageIndex) === true) {
+        if (this.previousButton(this.pageIndex)) {
           this.previousPage();
         }
         break;
@@ -166,20 +186,10 @@ class CallParkCtrl implements ng.IComponentController {
   }
 
   public enterNextPage($keyCode): boolean | undefined {
-    if ($keyCode === 13 && this.nextButton(this.pageIndex) === true) {
-      switch (this.pageIndex) {
-        case 0 :
-          if (!_.isUndefined(_.get(this.callPark, 'name'))) {
-            this.nextPage();
-          }
-          break;
-        case 1 :
-          if (this.form.$valid) {
-            this.nextPage();
-          }
-          break;
-        default : return false;
-      }
+    if ($keyCode === 13 && this.nextButton(this.pageIndex)) {
+      this.nextPage();
+    } else {
+      return false;
     }
   }
 
@@ -189,9 +199,26 @@ class CallParkCtrl implements ng.IComponentController {
         return !_.isUndefined(_.get(this.callPark, 'name'));
       },
       1: () => {
-        return this.form.$valid;
+        if (this.showLocation()) {
+          return this.callPark.location;
+        } else {
+          return this.form.$valid;
+        }
       },
       2: () => {
+        if (this.showLocation()) {
+          return this.form.$valid;
+        } else {
+          if (_.get(this.callPark, 'members', []).length !== 0) {
+            this.applyElement(this.$window.document.getElementsByClassName('helptext-btn--right'), 'enabled', 'add');
+            return true;
+          } else {
+            this.applyElement(this.$window.document.getElementsByClassName('helptext-btn--right'), 'enabled', 'remove');
+            return false;
+          }
+        }
+      },
+      3: () => {
         if (_.get(this.callPark, 'members', []).length !== 0) {
           this.applyElement(this.$window.document.getElementsByClassName('helptext-btn--right'), 'enabled', 'add');
           return true;
@@ -210,11 +237,11 @@ class CallParkCtrl implements ng.IComponentController {
   public nextPage(): void {
     this.animation = 'slide-left';
     this.$timeout( () => {
-      if (this.pageIndex === 2) {
+      if ((this.pageIndex === 2 && !this.showLocation()) || (this.pageIndex === 3 && this.showLocation()))  {
         this.createCallPark();
       } else {
         this.pageIndex++;
-        if (this.pageIndex === 2) {
+        if ((this.pageIndex === 2 && !this.showLocation()) || (this.pageIndex === 3 && this.showLocation())) {
           this.applyElement(this.$window.document.getElementsByClassName('btn--circle btn--primary btn--right'), 'save-call-feature', 'add');
           this.applyElement(this.$window.document.getElementsByClassName('helptext-btn--right'), 'active', 'add');
         }
@@ -258,6 +285,10 @@ class CallParkCtrl implements ng.IComponentController {
     return this.$translate.instant('callPark.createHelpText');
   }
 
+  public showLocation() {
+    return this.hasLocation && this.customerLocations.length > 1;
+  }
+
   private checkForChanges(): void {
     if (this.CallParkService.matchesOriginalConfig(this.callPark)) {
       this.resetForm();
@@ -273,6 +304,6 @@ class CallParkCtrl implements ng.IComponentController {
 
 export class CallParkComponent implements ng.IComponentOptions {
   public controller = CallParkCtrl;
-  public templateUrl = 'modules/call/features/call-park/call-park.component.html';
+  public template = require('modules/call/features/call-park/call-park.component.html');
   public bindings = {};
 }

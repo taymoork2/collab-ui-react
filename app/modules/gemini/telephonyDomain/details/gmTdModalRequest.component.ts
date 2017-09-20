@@ -67,5 +67,5 @@ class GmTdModalRequestCtrl implements ng.IComponentController {
 export class GmTdModalRequestComponent implements ng.IComponentOptions {
   public bindings = { dismiss: '&', close: '&' };
   public controller = GmTdModalRequestCtrl;
-  public templateUrl = 'modules/gemini/telephonyDomain/details/gmTdModalRequest.html';
+  public template = require('modules/gemini/telephonyDomain/details/gmTdModalRequest.html');
 }

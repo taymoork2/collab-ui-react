@@ -1,4 +1,5 @@
 @import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/page';
 
 .gemini-side-panel {
   .feature-arrow {
@@ -68,7 +69,7 @@
     width: 100%;
     overflow: hidden;
     li {
-      width: 30%;
+      width: 33.3%;
       height: 40px;
       float: left;
       list-style: none;
@@ -83,6 +84,7 @@
   padding-left: 0;
   padding-right: 0;
   overflow: hidden;
+  height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height})) !important;
 
   .meeting-search {
     display: flex;
@@ -126,17 +128,32 @@
       color: $white;
     }
 
-    .searchfilter {
-      height: 36px;
-      .searchbox {
-        margin-left: 2rem;
-        .searchinput {
-          > input {
-            width: 400px !important;
-            max-width: 400px !important;
-            margin-right: 30px;
-            color: $gray-dark-1 !important;
+    .searchList {
+      width: 100%;
+
+      .searchfilter {
+        height: 36px;
+        width: 70%;
+        .searchbox {
+          margin-left: 2rem;
+          .searchinput {
+            > input {
+              width: 300px !important;
+              max-width: 300px !important;
+              margin-right: 30px;
+              color: $gray-dark-1 !important;
+            }
           }
+        }
+      }
+
+      .timezone {
+        width: 25%;
+        padding-right: 1rem;
+
+        .select-options > li > a,
+        .select-options > .li > a {
+          font-size: 0.8rem;
         }
       }
     }
@@ -403,11 +420,16 @@
   }
 }
 
-.tooltip.tip-top[popup-class="tn-error"] {
+.tooltip.tip-top[popup-class="tn-search-error"] {
   margin-top: -5px;
   position: absolute;
+  padding: 0;
   .c-nub {
-    background-color: #FEDCD7; //TODO same about.
+    background: #FEDCD7;
+    border: solid 1px #E74A3E;
+    color: #E74A3E;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
 
     &::before {
       font-family: "Cisco_Toolkit_Icons";
@@ -438,4 +460,12 @@
     left: 50%;
     content: "";
   }
+}
+
+.ng-hide {
+  display: none;
+}
+
+.panel-container .side-panel-wrapper .side-panel-section .feature-list .success {
+  color: $color-green-dark !important;
 }

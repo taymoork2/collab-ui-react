@@ -1,5 +1,5 @@
 <div class="user-list">
-  <cs-page-header title-name="usersPage.pageTitle"></cs-page-header>
+  <cs-page-header title-name="{{'usersPage.pageTitle' | translate}}"></cs-page-header>
   <cs-page-sub-header>
     <cs-page-sub-header-left>
       <cs-searchfilter filters="filters" set-filter-fn="setFilter(filter.filterValue)" ng-model="placeholder.count"
@@ -21,8 +21,7 @@
 
   </cs-page-sub-header>
   <div class="user-list__content">
-    <div class="gridStyle" ui-grid="gridOptions" ui-grid-selection ui-grid-infinite-scroll grid-spinner="gridRefresh">
-    </div>
+    <cs-grid grid-api="gridApi" grid-options="gridOptions" spinner="gridRefresh" state="users.list" state-change-function="deselectRow()"></cs-grid>
     <div class="too-many-users" ng-if="activeFilter === 'all' && tooManyUsers">
       <div class="too-many-users__content">
         <p class="h2" translate="usersPage.searchUser"></p>

@@ -7,7 +7,7 @@
 
   /* @ngInject */
   function AABuilderMainCtrl($rootScope, $modalStack, $scope, $translate, $state, $stateParams, $q, AAUiModelService, AAMediaUploadService,
-    AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantCeService,
+    AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantCeService, AutoAttendantLocationService,
     AAValidationService, AANumberAssignmentService, AANotificationService, Authinfo, AACommonService, AAUiScheduleService, AACalendarService,
     AATrackChangeService, AADependencyService, ServiceSetup, Analytics, AAMetricNameService, FeatureToggleService) {
     var vm = this;
@@ -529,10 +529,20 @@
 
     function getSystemTimeZone() {
       vm.ui.systemTimeZone = DEFAULT_TZ;
+      if (AACommonService.isMultiSiteEnabled()) {
+        return AutoAttendantLocationService.getDefaultLocation().then(function (locationInfo) {
+          return { id: locationInfo.timeZone, label: locationInfo.timeZone };
+        });
+      }
+      // otherwise
       return ServiceSetup.listSites().then(function () {
         if (ServiceSetup.sites.length !== 0) {
           return ServiceSetup.getSite(ServiceSetup.sites[0].uuid).then(function (site) {
-            vm.ui.systemTimeZone = _.find(vm.ui.timeZoneOptions, function (timezone) {
+            if (!site.timeZone) {
+              // no time zone. no need to loop
+              return undefined;
+            }
+            return _.find(vm.ui.timeZoneOptions, function (timezone) {
               return timezone.id === site.timeZone;
             });
           });
@@ -609,33 +619,33 @@
 
     function setUpFeatureToggles(featureToggleDefault) {
       AACommonService.setMediaUploadToggle(featureToggleDefault);
-      AACommonService.setCallerInputToggle(featureToggleDefault);
       AACommonService.setRouteSIPAddressToggle(featureToggleDefault);
       AACommonService.setDynAnnounceToggle(featureToggleDefault);
       AACommonService.setRestApiToggle(featureToggleDefault);
       AACommonService.setReturnedCallerToggle(featureToggleDefault);
+      AACommonService.setMultiSiteEnabledToggle(featureToggleDefault);
       return checkFeatureToggles();
     }
 
     function checkFeatureToggles() {
       return $q.all({
-        hasCallerinput: FeatureToggleService.supports(FeatureToggleService.features.huronAACallerInput),
         hasMediaUpload: FeatureToggleService.supports(FeatureToggleService.features.huronAAMediaUpload),
         hasRouteRoom: FeatureToggleService.supports(FeatureToggleService.features.huronAARouteRoom),
         hasRestApi: FeatureToggleService.supports(FeatureToggleService.features.huronAARestApi),
         hasDynAnnounce: FeatureToggleService.supports(FeatureToggleService.features.huronAADynannounce),
         hasReturnedCaller: FeatureToggleService.supports(FeatureToggleService.features.huronAAReturnCaller),
+        hasMultiSites: FeatureToggleService.supports(FeatureToggleService.features.huronMultiSite),
       });
     }
 
     function assignFeatureToggles(featureToggles) {
-      AACommonService.setCallerInputToggle(featureToggles.hasCallerinput);
       AACommonService.setMediaUploadToggle(featureToggles.hasMediaUpload);
       AACommonService.setRouteSIPAddressToggle(featureToggles.hasRouteRoom);
       AACommonService.setRestApiToggle(featureToggles.hasRestApi);
       AACommonService.setDynAnnounceToggle(featureToggles.hasDynAnnounce);
       AutoAttendantCeMenuModelService.setDynAnnounceToggle(featureToggles.hasDynAnnounce);
       AACommonService.setReturnedCallerToggle(featureToggles.hasReturnedCaller);
+      AACommonService.setMultiSiteEnabledToggle(featureToggles.hasMultiSites);
     }
 
     //load the feature toggle prior to creating the elements
@@ -657,8 +667,13 @@
       // Define vm.ui.builder.ceInfo_name for editing purpose.
       vm.ui.builder.ceInfo_name = _.cloneDeep(vm.ui.ceInfo.name);
 
-      getTimeZoneOptions().then(getSystemTimeZone)
-      .finally(function () {
+      getTimeZoneOptions().then(function () {
+        return getSystemTimeZone();
+      }).then(function (tz) {
+        if (tz) {
+          vm.ui.systemTimeZone = tz;
+        }
+      }).finally(function () {
         AutoAttendantCeMenuModelService.clearCeMenuMap();
         vm.aaModel = AAModelService.getAAModel();
         vm.aaModel.aaRecord = undefined;

@@ -42,6 +42,7 @@
     vm.openExtendedInformation = openExtendedInformation;
     vm.openHybridServicesModal = openHybridServicesModal;
     vm.supportsExtendedInformation = false;
+    vm.isProPackCustomer = false;
     vm.cardsAvailable = false;
     vm.hasEmailStatus = hasEmailStatus;
     vm.hasEmailProblem = hasEmailProblem;
@@ -52,6 +53,10 @@
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasHelpDeskExt).then(function (result) {
       vm.supportsExtendedInformation = result;
+    });
+
+    FeatureToggleService.getFeatureForUser(vm.userId, FeatureToggleService.features.atlasITProPackPurchased).then(function (result) {
+      vm.isProPackCustomer = result;
     });
 
     HelpdeskService.getUser(vm.orgId, vm.userId)
@@ -90,7 +95,7 @@
     function openExtendedInformation() {
       if (vm.supportsExtendedInformation) {
         $modal.open({
-          templateUrl: 'modules/squared/helpdesk/helpdesk-extended-information.html',
+          template: require('modules/squared/helpdesk/helpdesk-extended-information.html'),
           controller: 'HelpdeskExtendedInfoDialogController as modal',
           modalId: 'HelpdeskExtendedInfoDialog',
           resolve: {
@@ -112,7 +117,6 @@
 
       // 'failed' email event with certain 'delivery-status.code' values can be better re-classified
       switch (_.get(emailEvent, 'delivery-status.code')) {
-
         // 605 => email has bounced
         case CODE_BOUNCED:
           return SUPPRESSED_STATE.BOUNCED;
@@ -408,6 +412,9 @@
               case 'squared-fusion-ec':
                 vm.hybridServicesCard.ec.status = status;
                 break;
+              case 'spark-hybrid-impinterop':
+                vm.hybridServicesCard.imp.status = status;
+                break;
             }
             if (status.lastStateChange) {
               status.lastStateChangeText = HybridServicesI18NService.getTimeSinceText(status.lastStateChange);
@@ -518,7 +525,7 @@
       USSService.getUserJournal(vm.userId, vm.orgId, 20)
         .then(function (hsData) {
           $modal.open({
-            templateUrl: 'modules/squared/helpdesk/helpdesk-extended-information.html',
+            template: require('modules/squared/helpdesk/helpdesk-extended-information.html'),
             controller: 'HelpdeskExtendedInfoDialogController as modal',
             resolve: {
               title: function () {

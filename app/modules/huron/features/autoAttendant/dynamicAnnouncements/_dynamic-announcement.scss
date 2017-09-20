@@ -1,17 +1,25 @@
-.aa-insertion-element {
+.aa-cancel-span {
+  @include vr-spacing(pr, 0);
+  position: absolute;
+  right: 0.25rem;
+  top: 0rem;
+}
+
+.aa-insertion-element.aa-insertion-element {
   background-color: $brand-primary;
-  @include vr-spacing(ml, 0.5);
-  @include vr-spacing(mr, 0.5);
-  @include vr-spacing(mb, 0.5);
+  @include vr-spacing(ml, 0);
+  @include vr-spacing(mr, 0);
+  @include vr-spacing(mb, 0);
+  @include vr-spacing(pr, 0.3);
   white-space: normal;
   display: inline-block;
   border-radius: 3px;
   border: 1px solid;
   border-color: $brand-primary;
+  position: relative;
 
-  .insertion-element {
-    @include vr-spacing(mr, 0.5);
-    @include vr-spacing(ml, 0.5);
+  .insertion-element.insertion-element {
+    padding-right: 1.5rem;
     color: $white;
     font-weight: bold;
     font-size: 1rem;
@@ -24,9 +32,16 @@
     }
   }
 
-  .cancel-dynamic {
+  .cancel-dynamic.cancel-dynamic {
+    padding-left: 0;
+    @include vr-spacing(pt, 0.3);
+    @include vr-spacing(pl, 0.1);
+    @include vr-spacing(pr, 0);
+    color: $white;
+    float: right;
     .cancel-dynamic-option {
       font-size: 1.1rem;
+      padding: 0;
       color: $white;
       &:focus {
         outline: 0px solid transparent;

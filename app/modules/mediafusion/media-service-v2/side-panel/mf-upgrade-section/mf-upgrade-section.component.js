@@ -7,7 +7,7 @@
         clusterId: '<',
       },
       controller: mfUpgradeSectionCtrl,
-      templateUrl: 'modules/mediafusion/media-service-v2/side-panel/mf-upgrade-section/mf-upgrade-section.html',
+      template: require('modules/mediafusion/media-service-v2/side-panel/mf-upgrade-section/mf-upgrade-section.html'),
     });
 
   /* @ngInject */
@@ -85,7 +85,7 @@
         type: 'small',
         controller: 'UpgradeNowControllerV2',
         controllerAs: 'upgradeClust',
-        templateUrl: 'modules/mediafusion/media-service-v2/side-panel/mf-upgrade-section/upgrade-now-cluster-dialog.html',
+        template: require('modules/mediafusion/media-service-v2/side-panel/mf-upgrade-section/upgrade-now-cluster-dialog.html'),
       });
 
       $scope.$on('$destroy', function () {

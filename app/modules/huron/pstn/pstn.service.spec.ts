@@ -355,7 +355,7 @@ describe('Service: PstnService', function () {
 
   it('should get translated order status message', function () {
     const translated = this.PstnService.translateStatusMessage(pendingOrder[0]);
-    expect(translated).toEqual('pstnSetup.orderStatus.trialStatus');
+    expect(translated).toEqual('pstnSetup.orderStatus.tosNotSigned');
   });
 
   it('should get original order status message since it does not exist in translations', function () {

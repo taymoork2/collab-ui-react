@@ -51,17 +51,18 @@ export class CsdmPlaceService {
     return this.deletePlace(item);
   }
 
-  public createCsdmPlace(name, entitlements, directoryNumber, externalNumber, externalLinkedAccounts) {
-    return this.createPlace(name, entitlements || ['webex-squared', 'spark'], directoryNumber, externalNumber, 'lyra_space', externalLinkedAccounts);
+  public createCsdmPlace(name, entitlements, locationUuid, directoryNumber, externalNumber, externalLinkedAccounts) {
+    return this.createPlace(name, entitlements || ['webex-squared', 'spark'], locationUuid, directoryNumber, externalNumber, 'lyra_space', externalLinkedAccounts);
   }
 
-  public createCmiPlace(name, entitlements, directoryNumber, externalNumber) {
-    return this.createPlace(name, entitlements || ['ciscouc', 'webex-squared'], directoryNumber, externalNumber, 'room', null);
+  public createCmiPlace(name, entitlements, locationUuid, directoryNumber, externalNumber) {
+    return this.createPlace(name, entitlements || ['ciscouc', 'webex-squared'], locationUuid, directoryNumber, externalNumber, 'room', null);
   }
 
-  public createPlace(name, entitlements, directoryNumber, externalNumber, machineType, externalLinkedAccounts): ng.IPromise<IPlace> {
+  public createPlace(name, entitlements, locationUuid, directoryNumber, externalNumber, machineType, externalLinkedAccounts): ng.IPromise<IPlace> {
     return this.$http.post(this.csdmPlacesUrl, {
       name: name,
+      locationUuid: locationUuid,
       directoryNumber: directoryNumber,
       externalNumber: externalNumber,
       entitlements: entitlements,
@@ -76,8 +77,9 @@ export class CsdmPlaceService {
     });
   }
 
-  public updatePlace(placeUrl, entitlements, directoryNumber, externalNumber, externalLinkedAccounts): ng.IPromise<IPlace> {
+  public updatePlace(placeUrl, entitlements, locationUuid, directoryNumber, externalNumber, externalLinkedAccounts): ng.IPromise<IPlace> {
     return this.$http.patch(placeUrl, {
+      locationUuid: locationUuid,
       directoryNumber: directoryNumber,
       externalNumber: externalNumber,
       entitlements: entitlements,

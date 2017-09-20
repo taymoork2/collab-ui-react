@@ -33,6 +33,7 @@
       '/releaseChannels',
       '/qlik-gtwy/api/v1/report/',
       '/custportal/extensions/',
+      '/users/report',
     ];
 
     var allowedState = [

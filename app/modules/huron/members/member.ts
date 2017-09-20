@@ -1,9 +1,14 @@
 import { Line } from 'modules/huron/lines/services/line';
 
+export enum MemberNumberType {
+  INTERNAL = 'internal',
+  EXTERNAL = 'external',
+}
+
 export enum MemberType {
-  USER_REAL_USER = <any>'user',
-  USER_PLACE = <any>'place',
-  USER_GROUP = <any>'group',
+  USER_REAL_USER = 'user',
+  USER_PLACE = 'place',
+  USER_GROUP = 'group',
 }
 
 export class Member {

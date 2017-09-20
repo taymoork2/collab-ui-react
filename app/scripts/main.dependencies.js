@@ -12,7 +12,7 @@ require('collab-amcharts/amcharts/plugins/export/libs/pdfmake/pdfmake.js');
 require('collab-amcharts/amcharts/plugins/export/libs/pdfmake/vfs_fonts.js');
 require('collab-amcharts/amcharts/plugins/export/libs/xlsx/xlsx.js');
 require('collab-amcharts/amcharts/themes/light.js');
-requireAll(require.context('file-loader?name=amcharts/images/[name].[ext]!collab-amcharts/amcharts/images', false));
+requireAll(require.context('file-loader?name=amcharts/images/[name].[ext]?[hash]!collab-amcharts/amcharts/images', false));
 
 require('bmmp/cisco-bmmp.js');
 

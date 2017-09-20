@@ -185,7 +185,7 @@ describe('Controller: DeviceUsageCtrl', function () {
 
       it('starts export and shows progress dialog after acknowledged in initial dialog', function () {
         controller.startDeviceUsageExport();
-        expect($modal.open).toHaveBeenCalled();  // initial dialog
+        expect($modal.open).toHaveBeenCalled(); // initial dialog
         fakeModal.close(); // user acks the export
         expect($modal.open).toHaveBeenCalled(); // progress dialog
         expect(DeviceUsageExportService.exportData).toHaveBeenCalled();

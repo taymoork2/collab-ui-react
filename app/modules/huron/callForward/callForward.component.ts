@@ -1,4 +1,5 @@
 import { CallForward, CallForwardAll, CallForwardBusy } from './callForward';
+import { CallDestinationTranslateService, ICallDestinationTranslate } from 'modules/call/shared/call-destination-translate';
 
 interface ITranslationMessages {
   placeholderText: string;
@@ -19,6 +20,7 @@ class CallForwardCtrl implements ng.IComponentController {
   public forwardState: string;
   public forwardExternalCallsDifferently: boolean = false;
   public forwardOptions: string[] = [];
+  public countryCode: string;
   public userVoicemailEnabled: boolean;
   public isPrimary: boolean;
   public ownerType: string;
@@ -33,9 +35,13 @@ class CallForwardCtrl implements ng.IComponentController {
   public isError: boolean = false;
   public errorMsg: {};
 
+  private inputTranslations: ICallDestinationTranslate;
+
  /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
+    private CallDestinationTranslateService: CallDestinationTranslateService,
+    private Orgservice,
   ) {
     this.customTranslations = {
       placeholderText: this.$translate.instant('callDestination.alternateCustomPlaceholder'),
@@ -46,6 +52,13 @@ class CallForwardCtrl implements ng.IComponentController {
       min: this.$translate.instant('callForwardPanel.ringDurationTimer.validation.error'),
       max: this.$translate.instant('callForwardPanel.ringDurationTimer.validation.error'),
     };
+    const params = {
+      basicInfo: true,
+    };
+    this.Orgservice.getOrg(_.noop, null, params).then(response => {
+      this.countryCode = response.data.countryCode;
+    });
+    this.inputTranslations = this.CallDestinationTranslateService.getCallDestinationTranslate();
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
@@ -218,7 +231,7 @@ class CallForwardCtrl implements ng.IComponentController {
 
 export class CallForwardComponent implements ng.IComponentOptions {
   public controller = CallForwardCtrl;
-  public templateUrl = 'modules/huron/callForward/callForward.html';
+  public template = require('modules/huron/callForward/callForward.html');
   public bindings = {
     userVoicemailEnabled: '<',
     ownerType: '<',

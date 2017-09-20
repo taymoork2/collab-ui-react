@@ -183,9 +183,9 @@
                 cs-input
                 type="checkbox"
                 id="{{commFeature.license.licenseId}}"
-                ng-change="checkLicenseAvailability('COMMUNICATION', radioStates.commRadio)"
-                ng-model="radioStates.commRadio"
-                ng-disabled="hybridCallServiceAware"
+                ng-change="checkCommLicenseAvailability(commFeature.commRadio, commFeature)"
+                ng-model="commFeature.commRadio"
+                ng-disabled="hybridCallServiceAware || disableCommCheckbox(commFeature)"
                 cs-input-label="{{::'onboardModal.paidSparkCall' | translate}}">
               <span class="license-entity under-label-reposition" translate="firstTimeWizard.namedLicense"></span>
             </div>
@@ -234,7 +234,7 @@
                     value="{{careRadioValue.K1}}"
                     cs-input-label="{{::careRadioValue.K1}}">
                   <span ng-class="{false: 'license-entity-disable', true: 'license-entity'}[radioStates.msgRadio]" class="under-label-reposition" translate="firstTimeWizard.namedLicense"></span>
-                  <span ng-if="radioStates.careRadio === careRadioValue.K1 && !radioStates.commRadio">
+                  <span ng-if="radioStates.careRadio === careRadioValue.K1 && !currentUserEnablesCall">
                     <div class="icon icon-warning"></div>
                     <span class="body-smallest care-information-text under-label-caremsg-reposition" translate="onboardModal.enableCallInfo"></span>
                   </span>
@@ -250,7 +250,7 @@
                     value="{{careRadioValue.K2}}"
                     cs-input-label="{{::careRadioValue.K2}}">
                   <span ng-class="{false: 'license-entity-disable', true: 'license-entity'}[radioStates.msgRadio]" class="under-label-reposition" translate="firstTimeWizard.namedLicense"></span>
-                  <span ng-if="radioStates.careRadio === careRadioValue.K2 && !radioStates.commRadio">
+                  <span ng-if="radioStates.careRadio === careRadioValue.K2 && !currentUserEnablesCall">
                     <div class="icon icon-warning"></div>
                     <span class="body-smallest care-information-text under-label-caremsg-reposition" translate="
                       onboardModal.enableCallInfo"></span>

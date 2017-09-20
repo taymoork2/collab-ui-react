@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <button type="button" class="close" ng-click="$dismiss()">
+  <button type="button" class="close" ng-click="$dismiss()" aria-label="{{'common.close' | translate}}">
   </button>
   <h3 class="modal-title" translate="{{ chooseDeviceType.title }}"></h3>
 </div>
@@ -13,11 +13,13 @@
     <div class="typeChoice">
       <div class="typeButtonWrapper typeButtonWrapperLeft">
         <div class="typeButton"
+             id="huronTypeButton"
+             focus-on
              ng-class="{'typeButtonClicked':chooseDeviceType.selectedDeviceType === 'huron'}"
              ng-click="chooseDeviceType.huron()"
              ng-dblclick="chooseDeviceType.next()">
           <div class="typeImageBox">
-            <img class="typeImage" type="image" src="images/devices/desk-phone-system.png"/>
+            <img class="typeImage" type="image" src="/images/devices/desk-phone-system.png"/>
           </div>
           <h4 translate="addDeviceWizard.chooseDeviceType.deskPhone"></h4>
           <span ng-if="!chooseDeviceType.showATA" translate="addDeviceWizard.chooseDeviceType.deskPhoneExamples"></span>
@@ -30,11 +32,12 @@
       </div>
       <div class="typeButtonWrapper">
         <div class="typeButton"
+             id="cloudberryTypeButton"
              ng-class="{'typeButtonClicked':chooseDeviceType.selectedDeviceType === 'cloudberry'}"
              ng-click="chooseDeviceType.cloudberry()"
              ng-dblclick="chooseDeviceType.next()">
           <div class="typeImageBox">
-            <img class="typeImage" type="image" src="images/devices/room-system.png"/>
+            <img class="typeImage" type="image" src="/images/devices/room-system.png"/>
           </div>
           <h4 translate="addDeviceWizard.chooseDeviceType.roomSystem"></h4>
           <span translate="addDeviceWizard.chooseDeviceType.roomSystemExamplesExpanded"></span>

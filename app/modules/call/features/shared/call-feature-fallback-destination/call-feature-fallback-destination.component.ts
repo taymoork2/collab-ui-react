@@ -4,10 +4,12 @@ import { NumberService } from 'modules/huron/numbers';
 import { Line } from 'modules/huron/lines/services/line';
 import { FeatureMemberService } from 'modules/huron/features/services';
 import { HuronVoicemailService } from 'modules/huron/voicemail';
+import { CallDestinationTranslateService, ICallDestinationTranslate } from 'modules/call/shared/call-destination-translate';
 
 class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
   public fallbackDestination: FallbackDestination;
   public showReversionLookup: boolean;
+  public isCallPark: boolean;
   public isNew: boolean;
   public onChangeFn: Function;
 
@@ -22,6 +24,8 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
   public isAlternate: boolean;
   public index: string = '';
 
+  private inputTranslations: ICallDestinationTranslate;
+
   /* @ngInject */
   constructor(
     private MemberService: MemberService,
@@ -29,7 +33,10 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
     private HuronVoicemailService: HuronVoicemailService,
     private FeatureMemberService: FeatureMemberService,
     private CallFeatureFallbackDestinationService: CallFeatureFallbackDestinationService,
-  ) {}
+    private CallDestinationTranslateService: CallDestinationTranslateService,
+  ) {
+    this.inputTranslations = this.CallDestinationTranslateService.getCallDestinationTranslate();
+  }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const { fallbackDestination, showReversionLookup, isAlternate } = changes;
@@ -50,7 +57,8 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
   }
 
   private processCallFeatureFallbackDestChanges(fallbackDestinationChanges: ng.IChangesObject<any>): void {
-    if (_.isNull(fallbackDestinationChanges.currentValue.number) && _.isNull(fallbackDestinationChanges.currentValue.numberUuid)) {
+    if (_.isNull(fallbackDestinationChanges.currentValue.number) &&
+        _.isNull(fallbackDestinationChanges.currentValue.numberUuid) && !this.isCallPark) {
       this.showMember = false;
       this.showReversionLookup = (this.fallbackDestination.number || this.fallbackDestination.numberUuid) ? false : true;
       this.selectedReversionNumber = '';
@@ -71,8 +79,14 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
           this.showMember = true;
           this.showReversionLookup = false;
         } else {
-          this.showMember = false;
-          this.showReversionLookup = true;
+          if (this.isCallPark) {
+            this.showMember = false;
+            this.showReversionLookup = false;
+            this.fallbackDestForm.$setValidity('', true, this.fallbackDestForm);
+          } else {
+            this.showMember = false;
+            this.showReversionLookup = true;
+          }
         }
       }
     }
@@ -170,10 +184,11 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
 
 export class CallFeatureFallbackDestinationComponent implements ng.IComponentOptions {
   public controller = CallFeatureFallbackDestinationCtrl;
-  public templateUrl = 'modules/call/features/shared/call-feature-fallback-destination/call-feature-fallback-destination.component.html';
+  public template = require('modules/call/features/shared/call-feature-fallback-destination/call-feature-fallback-destination.component.html');
   public bindings = {
     fallbackDestination: '<',
     showReversionLookup: '<',
+    isCallPark: '<',
     isNew: '<',
     isAlternate: '<',
     onChangeFn: '&',

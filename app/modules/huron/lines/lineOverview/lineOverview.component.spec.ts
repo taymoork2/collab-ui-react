@@ -52,6 +52,7 @@ describe('Component: lineOverview', () => {
       'MediaOnHoldService',
       'FeatureToggleService',
       'Notification',
+      'LocationsService',
     );
 
     this.existingLinePrimary = existingLinePrimary;
@@ -79,6 +80,8 @@ describe('Component: lineOverview', () => {
     spyOn(this.LineOverviewService, 'save').and.returnValue(this.saveDefer.promise);
 
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
+
+    spyOn(this.LocationsService, 'getUserLocation').and.returnValue(this.$q.resolve(true));
 
     spyOn(this.MediaOnHoldService, 'getLineMohOptions').and.returnValue(this.$q.resolve(this.lineMediaOptions));
 
@@ -124,7 +127,7 @@ describe('Component: lineOverview', () => {
       expect(this.DirectoryNumberOptionsService.getInternalNumberOptions).toHaveBeenCalled();
       expect(this.LineOverviewService.getEsnPrefix).toHaveBeenCalled();
       expect(this.DirectoryNumberOptionsService.getExternalNumberOptions).toHaveBeenCalled();
-      expect(this.MediaOnHoldService.getLineMohOptions).not.toHaveBeenCalled();
+      expect(this.MediaOnHoldService.getLineMohOptions).toHaveBeenCalled();
       expect(this.view.find(LINE_LABEL_INPUT)).toExist();
       expect(this.view.find(LINE_LABEL_INPUT).val()).toEqual('someuser@some.com');
     });
@@ -154,6 +157,7 @@ describe('Component: lineOverview', () => {
         line: new Line(),
         callForward: new CallForward(),
       };
+      this.lineOverview.sharedLines = [];
       this.getInternalNumberOptionsDefer.resolve(this.internalNumbers);
       this.getLineOverviewDataDefer.resolve(this.lineOverview);
       this.getEsnPrefixDefer.resolve(this.esnPrefix);
@@ -163,8 +167,8 @@ describe('Component: lineOverview', () => {
       spyOn(this.$state, 'go');
     });
 
-    it('should NOT show line label on add a new line', function () {
-      expect(this.view.find(LINE_LABEL_INPUT)).not.toExist();
+    it('should show line label on add a new line', function () {
+      expect(this.view.find(LINE_LABEL_INPUT)).toExist();
     });
 
     it('should grab the first available internal line', function () {
@@ -206,13 +210,14 @@ describe('Component: lineOverview', () => {
 
     it('should initialize assigned number and notify failure for internal number pool', function () {
       expect(this.LineOverviewService.get).toHaveBeenCalled();
-      expect(this.MediaOnHoldService.getLineMohOptions).not.toHaveBeenCalled();
+      expect(this.MediaOnHoldService.getLineMohOptions).toHaveBeenCalled();
       expect(this.lineOverview.line.internal).toEqual('1234');
       expect(this.DirectoryNumberOptionsService.getInternalNumberOptions).toHaveBeenCalled();
       expect(this.LineOverviewService.getEsnPrefix).toHaveBeenCalled();
       expect(this.DirectoryNumberOptionsService.getExternalNumberOptions).toHaveBeenCalled();
       expect(this.Notification.errorResponse).toHaveBeenCalledWith('503', 'directoryNumberPanel.internalNumberPoolError');
     });
+
   });
 
   describe('Media On Hold Options', () => {

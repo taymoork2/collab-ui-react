@@ -110,6 +110,6 @@ class CallLocationsCtrl implements ng.IComponentController {
 
 export class CallLocationsComponent implements ng.IComponentOptions {
   public controller = CallLocationsCtrl;
-  public templateUrl = 'modules/call/locations/locations.component.html';
+  public template = require('modules/call/locations/locations.component.html');
   public bindings = {};
 }

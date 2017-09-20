@@ -8,7 +8,7 @@ var temp = require('temp').track();
 var maxLineWidth = 100;
 
 // Our custom implementation of commitizen (https://github.com/commitizen/cz-cli)
-// used by `npm run commit` or 'git cz'
+// used by `yarn commit` or 'git cz'
 // Loosely based on:
 // https://github.com/leonardoanalista/cz-customizable
 // https://github.com/commitizen/cz-conventional-changelog
@@ -179,7 +179,7 @@ function buildCommit(answers) {
   }
 
   function parseNewLines(a) {
-/* Looking at Angular JS changelog format, multiple blank lines are allowed
+    /* Looking at Angular JS changelog format, multiple blank lines are allowed
     var b;
     while ( (b = a.replace(/\|\|/g, '|')) !== a ) {
       a = b;

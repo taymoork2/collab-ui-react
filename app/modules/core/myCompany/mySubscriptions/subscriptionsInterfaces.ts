@@ -10,6 +10,7 @@ export interface ISubscription {
   numSubscriptions: number;
   productInstanceId?: string;
   proPack?: IOfferData;
+  orderingTool?: string;
   quantity?: number;
   subscriptionId?: string;
   upgradeTrialUrl?: string;

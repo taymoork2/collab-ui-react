@@ -41,11 +41,11 @@ require('./helpdesk.scss');
     });
 
     function showSearchHelp() {
-      var searchHelpUrl = 'modules/squared/helpdesk/helpdesk-search-help-dialog.html';
-      var searchHelpMobileUrl = 'modules/squared/helpdesk/helpdesk-search-help-dialog-mobile.html';
+      var searchHelpTemplate = require('./helpdesk-search-help-dialog.html');
+      var searchHelpMobileTemplate = require('./helpdesk-search-help-dialog-mobile.html');
       var isSearchOrderEnabled = vm.isOrderSearchEnabled;
       $modal.open({
-        templateUrl: HelpdeskService.checkIfMobile() ? searchHelpMobileUrl : searchHelpUrl,
+        template: HelpdeskService.checkIfMobile() ? searchHelpMobileTemplate : searchHelpTemplate,
         controller: function () {
           var vm = this;
           vm.isCustomerHelpDesk = !Authinfo.isInDelegatedAdministrationOrg();
@@ -311,65 +311,40 @@ require('./helpdesk.scss');
 
     function searchOrders(searchString) {
       var searchDone = $q.defer();
-      if (isValidOrderEntry(searchString)) {
-        vm.searchingForOrders = true;
-        HelpdeskService.searchOrders(searchString).then(function (res) {
-          var order = [];
-          var found = _.find(res, function (el) { return el.orderStatus === 'PROVISIONED'; });
-          if (!_.isUndefined(found)) {
-            order.push(found);
-          }
-
-          if (order.length === 0) {
-            vm.currentSearch.orderSearchResults = null;
+      vm.searchingForOrders = true;
+      HelpdeskService.searchOrders(searchString).then(function (res) {
+        var orders = HelpdeskService.filterOrders(res);
+        if (orders.length === 0) {
+          vm.currentSearch.orderSearchResults = null;
+          vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.noSearchHits');
+        } else {
+          vm.currentSearch.orderSearchResults = orders;
+          vm.currentSearch.orderSearchFailure = null;
+        }
+        vm.searchingForOrders = false;
+        HelpdeskSearchHistoryService.saveSearch(vm.currentSearch);
+        vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches();
+      }, function (err) {
+        vm.searchingForOrders = false;
+        vm.currentSearch.orderSearchResults = null;
+        vm.currentSearch.orderSearchFailure = null;
+        if (err.status === 404) {
+          var errorCode = _.get(err.data, 'errorCode');
+          // Compare the error code with 'Order not found' (400117)
+          if (errorCode === 400117) {
             vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.noSearchHits');
           } else {
-            vm.currentSearch.orderSearchResults = order;
-            vm.currentSearch.orderSearchFailure = null;
+            vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.badOrderSearchInput');
           }
-          vm.searchingForOrders = false;
-          HelpdeskSearchHistoryService.saveSearch(vm.currentSearch);
-          vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches();
-        }, function (err) {
-          vm.searchingForOrders = false;
-          vm.currentSearch.orderSearchResults = null;
-          vm.currentSearch.orderSearchFailure = null;
-          if (err.status === 404) {
-            var errorCode = _.get(err.data, 'errorCode');
-            // Compare the error code with 'Order not found' (400117)
-            if (errorCode === 400117) {
-              vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.noSearchHits');
-            } else {
-              vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.badOrderSearchInput');
-            }
-          } else if (err.cancelled === true || err.timedout === true) {
-            vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.cancelled');
-          } else {
-            vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.unexpectedError');
-          }
-        }).finally(function () {
-          searchDone.resolve(stats(HelpdeskSplunkReporterService.ORDER_SEARCH, vm.currentSearch.orderSearchFailure || vm.currentSearch.orderSearchResults));
-        });
-      } else {
-        vm.searchingForOrders = false;
-        vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.badOrderSearchInput');
-        searchDone.resolve(stats(HelpdeskSplunkReporterService.ORDER_SEARCH, vm.currentSearch.orderSearchFailure));
-      }
+        } else if (err.cancelled === true || err.timedout === true) {
+          vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.cancelled');
+        } else {
+          vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.unexpectedError');
+        }
+      }).finally(function () {
+        searchDone.resolve(stats(HelpdeskSplunkReporterService.ORDER_SEARCH, vm.currentSearch.orderSearchFailure || vm.currentSearch.orderSearchResults));
+      });
       return searchDone.promise;
-    }
-
-    function isValidOrderEntry(searchString) {
-      // A valid order search entry should has a prefix of 'ssw' or minimum 8-digit followed by a hyphen '-'
-      if (searchString.toLowerCase().indexOf('ssw') === 0) {
-        return true;
-      }
-      var n = searchString.search('-');
-      var prefix = (n === -1) ? searchString : searchString.substring(0, n);
-
-      if (!isNaN(prefix) && prefix.length >= vm.orderNumberSize) {
-        return true;
-      }
-      return false;
     }
 
     function initSearchWithOrgFilter(org) {
@@ -421,9 +396,9 @@ require('./helpdesk.scss');
         case 'user':
           vm.currentSearch.userLimit += vm.searchResultsPageSize;
           HelpdeskService.findAndResolveOrgsForUserResults(
-          vm.currentSearch.userSearchResults,
-          vm.currentSearch.orgFilter,
-          vm.currentSearch.userLimit);
+            vm.currentSearch.userSearchResults,
+            vm.currentSearch.orgFilter,
+            vm.currentSearch.userLimit);
           break;
         case 'org':
           vm.currentSearch.orgLimit += vm.searchResultsPageSize;
@@ -498,7 +473,7 @@ require('./helpdesk.scss');
 
         case S:
           var orgLink = JSON.parse(activeElement.find('a')[0]['name']);
-        // TODO: Avoid throwing console error when element not found !
+          // TODO: Avoid throwing console error when element not found !
           if (orgLink) {
             initSearchWithOrgFilter(orgLink);
           }
