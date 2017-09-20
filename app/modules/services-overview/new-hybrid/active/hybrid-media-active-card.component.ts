@@ -10,18 +10,22 @@ export class HybridMediaActiveCardComponent implements ng.IComponentOptions {
     <article>
       <div class="active-card_header">
         <h4 translate="servicesOverview.cards.hybridMedia.title"></h4>
+        <i class="icon icon-question-circle" tooltip="{{'servicesOverview.cards.hybridMedia.description' | translate}}" tooltip-placement="bottom-right"></i>
       </div>
       <div class="active-card_content">
-        <p translate="servicesOverview.cards.hybridMedia.description"></p>
-        <p><span>Service</span></p>
-        <p><a ui-sref="media-service-v2.settings">Configure</a></p>
-        <p><span>Resources</span></p>
-        <p><a ui-sref="media-service-v2.list">View all</a></p>
+        <div class="active-card_section">
+          <div class="active-card_title">Service</div>
+          <div class="active-card_action"><a ui-sref="media-service-v2.settings">Configure</a></div>
+        </div>
+        <div class="active-card_section">
+          <div class="active-card_title">Resources</div>
+          <div class="active-card_action"><a ui-sref="media-service-v2.list">View all</a></div>
+        </div>
       </div>
       <div class="active-card_footer">
         <a ui-sref="media-service-v2.list">
-          <cs-statusindicator ng-model="$ctrl.serviceStatus.cssClass"></cs-statusindicator>
           <span translate="{{'servicesOverview.cardStatus.'+$ctrl.serviceStatus.status}}"></span>
+          <cs-statusindicator ng-model="$ctrl.serviceStatus.cssClass"></cs-statusindicator>
         </a>
       </div>
     </article>

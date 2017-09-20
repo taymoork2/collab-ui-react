@@ -261,40 +261,20 @@ services-overview {
     > article {
       display: flex;
     }
-  }
 
-  .active-card_header {
-    padding: 0 1rem;
-    margin-bottom: 1rem;
+    .icon-question-circle {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      font-size: 1.125rem;
+    }
 
-    h4 {
-      @include text-overflow();
-      font-size: 1.2rem !important;
-      text-align: left !important;
+    .badge {
+      line-height: 0.8;
     }
   }
 
-  .active-card_content {
-    margin: 0 1rem;
-    margin-bottom: auto;
-  }
-
-  .active-card_footer {
-    margin: 0 1rem 1rem;
-    text-align: center;
-
-    a {
-      color: inherit;
-    }
-  }
-
-  // Inactive card
-  .inactive-card {
-    > article {
-      min-height: 300px !important;
-    }
-  }
-
+  .active-card_header,
   .inactive-card_header {
     padding: 0 1rem;
     margin-bottom: 1rem;
@@ -306,14 +286,51 @@ services-overview {
     }
   }
 
+  .active-card_logo,
   .inactive-card_logo {
     max-width: 90px;
     padding-top: 0.5rem;
   }
 
+  .active-card_content,
   .inactive-card_content {
     margin: 0 1rem;
     margin-bottom: auto;
+  }
+
+  .active-card_section {
+    margin-bottom: 0.875rem;
+  }
+
+  .active-card_title {
+    font-size: 0.75rem;
+  }
+
+  .active-card_action {
+    font-size: 0.875rem;
+  }
+
+  .active-card_footer {
+    padding: 0.375rem 1rem;
+    text-align: left;
+    background-color: $gray-light-4;
+
+    a {
+      color: inherit;
+      display: flex;
+      align-items: center;
+    }
+
+    span {
+      margin-right: auto;
+    }
+  }
+
+  // Inactive card specific
+  .inactive-card {
+    > article {
+      min-height: 300px !important;
+    }
   }
 
   .inactive-card_footer {

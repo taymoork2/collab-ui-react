@@ -21,10 +21,14 @@ export class OnPremisesActiveCardComponent implements ng.IComponentOptions {
       </div>
       <div class="active-card_content">
         <p translate="servicesOverview.cards.clusterList.description"></p>
-        <ul>
-          <li ng-if="$ctrl.activeLink"><a ui-sref="cluster-list" translate="servicesOverview.cards.clusterList.buttons.all"></a></li>
-          <li ng-if="!$ctrl.activeLink" translate="servicesOverview.cards.clusterList.buttons.none"></li>
-        </ul>
+        <div class="active-card_section" ng-if="$ctrl.activeLink">
+          <div class="active-card_title" translate="servicesOverview.cards.clusterList.buttons.all"></div>
+          <div class="active-card_action"><a ui-sref="cluster-list">View</a></div>
+        </div>
+        <div class="active-card_section" ng-if="!$ctrl.activeLink">
+          <div class="active-card_title" translate="servicesOverview.cards.clusterList.buttons.all"></div>
+          <div class="active-card_action" translate="servicesOverview.cards.clusterList.buttons.none"></div>
+        </div>
       </div>
     </article>
   `;

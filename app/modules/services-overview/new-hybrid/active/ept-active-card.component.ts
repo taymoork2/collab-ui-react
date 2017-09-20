@@ -10,19 +10,23 @@ export class EPTActiveCardComponent implements ng.IComponentOptions {
     <article>
       <div class="active-card_header">
         <h4 translate="servicesOverview.cards.privateTrunk.title"></h4>
+        <i class="icon icon-question-circle" tooltip="{{'servicesOverview.cards.privateTrunk.description' | translate}}" tooltip-placement="bottom-right"></i>
       </div>
       <div class="active-card_content">
-        <p translate="servicesOverview.cards.privateTrunk.description"></p>
-        <p><span>Service</span></p>
-        <p><a ui-sref="private-trunk-overview.settings">Configure</a></p>
-        <p><span>Resources</span></p>
-        <p><a ui-sref="private-trunk-overview.list">View all</a></p>
-        <p><span>Users</span></p>
-        <p><a href><span class="badge badge--outline badge--round">X</span> users active</a></p>
+        <div class="active-card_section">
+          <div class="active-card_title">Service</div>
+          <div class="active-card_action"><a ui-sref="private-trunk-overview.settings">Configure</a></div>
+        </div>
+        <div class="active-card_section">
+          <div class="active-card_title">Resources</div>
+          <div class="active-card_action"><a ui-sref="private-trunk-overview.list">View all</a></div>
+        </div>
       </div>
       <div class="active-card_footer">
-        <cs-statusindicator ng-model="$ctrl.serviceStatus.cssClass"></cs-statusindicator>
-        <span translate="{{'servicesOverview.cardStatus.'+$ctrl.serviceStatus.status}}"></span>
+        <a ui-sref="private-trunk-overview.list">
+          <span translate="{{'servicesOverview.cardStatus.'+$ctrl.serviceStatus.status}}"></span>
+          <cs-statusindicator ng-model="$ctrl.serviceStatus.cssClass"></cs-statusindicator>
+        </a>
       </div>
     </article>
   `;
