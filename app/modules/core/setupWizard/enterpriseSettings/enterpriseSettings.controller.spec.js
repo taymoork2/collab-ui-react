@@ -16,7 +16,7 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
       'Notification',
       'ServiceSetup',
       'FeatureToggleService',
-      '$window',
+      '$modal',
       '$timeout'
     );
 
@@ -32,8 +32,8 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
       callback(orgServiceJSONFixture.getOrg, getOrgStatus);
     });
     spyOn(this.Orgservice, 'getAdminOrgAsPromise').and.returnValue(this.$q.resolve({ data: { success: true, isOnBoardingEmailSuppressed: true, licenses: [{ licenseId: 'CO_1234' }] } }));
-    spyOn(this.Orgservice, 'setOrgEmailSuppress').and.returnValue(this.$q.resolve());
-    spyOn(this.$window, 'confirm').and.returnValue(this.$q.resolve(true));
+    spyOn(this.Orgservice, 'setOrgEmailSuppress').and.returnValue(this.$q.reject());
+    spyOn(this.$modal, 'open').and.returnValue({ result: this.$q.resolve() });
 
     installPromiseMatchers();
     this.initController = function () {
@@ -98,12 +98,13 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     });
 
     it('should get email suppress status if sso is on and user selects simple option', function () {
-      this.$scope.ssoEnabled = true;
+      this.$rootScope.ssoEnabled = true;
       this.$scope.options.configureSSO = 1;
+      this.controller.changeSSO(1);
       this.$scope.$apply();
       this.$timeout.flush();
       expect(this.$scope.options.configureSSO).toEqual(1);
-      expect(this.$scope.options.deleteSSOBySwitchingRadio).toEqual(false);
+      expect(this.$scope.options.deleteSSOBySwitchingRadio).toEqual(true);
     });
 
     it('should go to next tab if sso is off and user selects simple option', function () {

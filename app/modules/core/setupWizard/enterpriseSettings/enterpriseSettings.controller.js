@@ -5,7 +5,7 @@
     .controller('EnterpriseSettingsCtrl', EnterpriseSettingsCtrl);
 
   /* @ngInject */
-  function EnterpriseSettingsCtrl($q, $rootScope, $scope, $timeout, $translate, $window, Authinfo, Config, Log, Notification, ServiceSetup, PersonalMeetingRoomManagementService, SSOService, Orgservice, UrlConfig, FeatureToggleService) {
+  function EnterpriseSettingsCtrl($q, $rootScope, $scope, $timeout, $translate, $window, Authinfo, Config, Log, Notification, ServiceSetup, PersonalMeetingRoomManagementService, SSOService, Orgservice, UrlConfig, FeatureToggleService, $modal) {
     var strEntityDesc = '<EntityDescriptor ';
     var strEntityId = 'entityID="';
     var strEntityIdEnd = '"';
@@ -232,35 +232,43 @@
     }];
 
     $scope.$watch('options.configureSSO', function (updatedConfigureSSOValue) {
+      vm.changeSSO(updatedConfigureSSOValue);
+    });
+
+    vm.changeSSO = function (updatedConfigureSSOValue) {
       if ($rootScope.ssoEnabled && updatedConfigureSSOValue === 1) {
         // Check if emails are suppressed or not
-        var isOnBoardingEmailSuppressed = false;
-        var r = false;
         var params = {
           basicInfo: true,
           disableCache: false,
         };
         Orgservice.getAdminOrgAsPromise(null, params).then(function (response) {
-          isOnBoardingEmailSuppressed = response.data.isOnBoardingEmailSuppressed || false;
-          if (isOnBoardingEmailSuppressed) {
-            r = $window.confirm($translate.instant('ssoModal.disableSSOByRadioWarningWhenEmailsSuppressed'));
-          } else {
-            r = $window.confirm($translate.instant('ssoModal.disableSSOByRadioWarning'));
-          }
-          if (r === true) {
+          var isOnBoardingEmailSuppressed = response.data.isOnBoardingEmailSuppressed || false;
+          $modal.open({
+            template: require('modules/core/setupWizard/enterpriseSettings/ssoDisableConfirm.tpl.html'),
+            type: 'dialog',
+            controller: function () {
+              var vm = this;
+              vm.message = isOnBoardingEmailSuppressed
+                ? $translate.instant('ssoModal.disableSSOByRadioWarningWhenEmailsSuppressed')
+                : $translate.instant('ssoModal.disableSSOByRadioWarning');
+            },
+            controllerAs: 'vm',
+          }).result.then(function () {
             $scope.options.configureSSO = 1;
             $scope.options.deleteSSOBySwitchingRadio = true;
+            // Set the email suppress state to FALSE when the SSO is disabled
             Orgservice.setOrgEmailSuppress(false).then(function () {
               deleteSSO();
             });
-          } else {
+          }).catch(function () {
             $scope.options.modifySSO = false; //reset modify flag if user clicks cancel
             $scope.options.configureSSO = 0;
             $scope.options.deleteSSOBySwitchingRadio = false;
-          }
+          });
         });
       }
-    });
+    };
 
     $scope.$watch('options.enableSSORadioOption', function () {
       var ssoValue = $scope.options.enableSSORadioOption;
@@ -316,12 +324,20 @@
     $scope.$watch('idpFile.file', function () {
       if ($scope.idpFile.file) {
         if ($rootScope.ssoEnabled) {
-          if ($window.confirm($translate.instant('ssoModal.idpOverwriteWarning'))) {
+          $modal.open({
+            template: require('modules/core/setupWizard/enterpriseSettings/ssoDisableConfirm.tpl.html'),
+            type: 'dialog',
+            controller: function () {
+              var vm = this;
+              vm.message = $translate.instant('ssoModal.idpOverwriteWarning');
+            },
+            controllerAs: 'vm',
+          }).result.then(function () {
             $timeout($scope.importRemoteIdp);
-          } else {
+          }).catch(function () {
             //reset
             resetFile();
-          }
+          });
         } else {
           //sso is not enabled.Import the idp file
           $timeout($scope.importRemoteIdp);
