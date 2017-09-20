@@ -78,7 +78,7 @@ export class HybridServicesUtilsService {
     }
   }
 
-  public serviceId2Icon(serviceId): string {
+  public serviceId2Icon(serviceId: HybridServiceId): string {
     switch (serviceId) {
       case 'squared-fusion-cal':
       case 'squared-fusion-gcal':
@@ -86,6 +86,8 @@ export class HybridServicesUtilsService {
       case 'squared-fusion-uc':
       case 'ept':
         return 'icon icon-circle-call';
+      case 'spark-hybrid-impinterop':
+        return 'icon icon-circle-message';
       case 'squared-fusion-media':
         return 'icon icon-circle-telepresence';
       case 'spark-hybrid-datasecurity':

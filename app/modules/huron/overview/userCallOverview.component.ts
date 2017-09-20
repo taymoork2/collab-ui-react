@@ -7,6 +7,8 @@ import { PrimaryLineService, PrimaryNumber } from 'modules/huron/primaryLine';
 const SNR_CHANGE = 'SNR_CHANGE';
 class UserCallOverviewCtrl implements ng.IComponentController {
 
+  private showPhoneButtonLayout: boolean = false;
+
   public currentUser;
   public actionList: IActionItem[];
   public features: IFeature[];
@@ -26,6 +28,7 @@ class UserCallOverviewCtrl implements ng.IComponentController {
     private $state: ng.ui.IStateService,
     private $stateParams: any,
     private $translate: ng.translate.ITranslateService,
+    private FeatureToggleService,
     private LineService: LineService,
     private HuronVoicemailService: HuronVoicemailService,
     private HuronUserService: HuronUserService,
@@ -45,6 +48,8 @@ class UserCallOverviewCtrl implements ng.IComponentController {
       this.snrEnabled = status;
       this.initFeatures();
     });
+    this.FeatureToggleService.supports(FeatureToggleService.features.huronPhoneButtonLayout)
+      .then(result => this.showPhoneButtonLayout = result);
   }
 
   public $onInit(): void {
@@ -109,7 +114,21 @@ class UserCallOverviewCtrl implements ng.IComponentController {
       detail: undefined,
       actionAvailable: true,
     };
-    this.features.push(service);
+    // it should be either "Speed Dials" or "Phone Button Layout" that is displayed.
+    if (!this.showPhoneButtonLayout) {
+      this.features.push(service);
+    }
+
+    const phoneButtonLayoutService: IFeature = {
+      name: this.$translate.instant('telephonyPreview.phoneButtonLayout'),
+      state: 'phoneButtonLayout',
+      detail: undefined,
+      actionAvailable: true,
+    };
+    // "Speed Dials" should be removed when "Phone Button Layout" goes GA
+    if (this.showPhoneButtonLayout) {
+      this.features.push(phoneButtonLayoutService);
+    }
 
     const cosService: IFeature = {
       name: this.$translate.instant('serviceSetupModal.cos.title'),

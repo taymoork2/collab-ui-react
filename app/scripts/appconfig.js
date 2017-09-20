@@ -1343,6 +1343,26 @@
               displayName: translateDisplayName('telephonyPreview.speedDials'),
             },
           })
+          .state('user-overview.communication.phoneButtonLayout', {
+            views: {
+              'side-panel-container@user-overview': {
+                template: '<uc-phone-button-layout owner-type="users" owner-id="$resolve.ownerId"></uc-phone-button-layout>',
+              },
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/huron/phoneButtonLayout'));
+                }, 'user-call-phonebuttonlayout');
+              }),
+              ownerId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentUser, 'id');
+              },
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('user-overview.communication.phoneButtonLayout').data.displayName = $translate.instant('telephonyPreview.phoneButtonLayout');
+              },
+            },
+          })
           .state('user-overview.communication.cos', {
             views: {
               'side-panel-container@user-overview': {
@@ -3818,9 +3838,12 @@
         $stateProvider
           .state('services-overview', {
             url: '/services?office365&reason',
-            template: '<services-overview url-params="$resolve.urlParams"></services-overview>',
+            template: '<services-overview has-office-365-feature-toggle="$resolve.hasOffice365FeatureToggle" url-params="$resolve.urlParams"></services-overview>',
             parent: 'main',
             resolve: {
+              hasOffice365FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasOffice365Support);
+              },
               urlParams: /* @ngInject */ function ($stateParams) {
                 return $stateParams;
               },

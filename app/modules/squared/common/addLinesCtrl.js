@@ -28,6 +28,7 @@
     vm.locationUuid = '';
 
     vm.labelField = '';
+    vm.ishI1484 = false;
 
     vm.returnInternalNumberlist = CommonLineService.returnInternalNumberList;
     vm.returnExternalNumberList = CommonLineService.returnExternalNumberList;
@@ -39,7 +40,8 @@
     function loadLocations() {
       return FeatureToggleService.supports(FeatureToggleService.features.hI1484)
         .then(function (supported) {
-          if (supported) {
+          vm.ishI1484 = supported;
+          if (vm.ishI1484) {
             return LocationsService.getLocationList()
               .then(function (locationOptions) {
                 vm.locationOptions = locationOptions;
@@ -123,14 +125,18 @@
 
     vm.getSelectedNumbers = function () {
       var entity = vm.addDnGridOptions.data[0];
-      if (FeatureToggleService.supports(FeatureToggleService.features.hI1484)) {
+      if (vm.ishI1484) {
         if (entity.selectedLocation && vm.locationOptions.length > 1) {
           vm.locationUuid = entity.selectedLocation.uuid;
         }
       }
       var directoryNumber;
       if (entity.assignedDn) {
-        directoryNumber = entity.assignedDn.pattern;
+        if (vm.ishI1484) {
+          directoryNumber = entity.assignedDn.internal;
+        } else {
+          directoryNumber = entity.assignedDn.number;
+        }
       }
       var externalNumber;
       if (entity.externalNumber && entity.externalNumber.uuid !== 'none') {

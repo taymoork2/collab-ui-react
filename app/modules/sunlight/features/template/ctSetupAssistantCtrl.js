@@ -967,6 +967,30 @@
       feedback: 'circle-star',
     };
 
+    vm.populateVirtualAssistantInfo = function () {
+      vm.template.configuration.virtualAssistant = vm.template.configuration.virtualAssistant || defaultVirtualAssistantConfig;
+
+      vm.selectedVA = vm.template.configuration.virtualAssistant.config;
+
+      // update modified VA Name from the configured VA info
+      if (vm.selectedVA.id && vm.hasConfiguredVirtualAssistantServices) {
+        var selectedVA = _.find(vm.configuredVirtualAssistantServices, {
+          id: vm.selectedVA.id,
+        });
+
+        if (selectedVA) {
+          vm.selectedVA.name = selectedVA.name;
+          vm.vaSelectionCommit();
+        }
+      }
+
+      vm.template.configuration.virtualAssistant.config =
+        vm.template.configuration.virtualAssistant.config ? vm.template.configuration.virtualAssistant.config : defaultVirtualAssistantConfig.config;
+
+      vm.template.configuration.virtualAssistant.welcomeMessage =
+        vm.template.configuration.virtualAssistant.welcomeMessage ? vm.template.configuration.virtualAssistant.welcomeMessage : defaultVirtualAssistantConfig.welcomeMessage;
+    };
+
     //Use the existing template fields when editing the template
     if ($stateParams.isEditFeature) {
       vm.template = $stateParams.template;
@@ -975,7 +999,7 @@
       populateFeedbackInformation();
       populateProactivePromptInformation();
       if (vm.template.configuration.mediaType !== vm.mediaTypes.callback) {
-        populateVirtualAssistantInfo();
+        vm.populateVirtualAssistantInfo();
       }
     }
 
@@ -1053,18 +1077,6 @@
         }
         vm.promptTime = CTService.getPromptTime(vm.template.configuration.proactivePrompt.fields.promptTime);
       }
-    }
-
-    function populateVirtualAssistantInfo() {
-      vm.template.configuration.virtualAssistant = vm.template.configuration.virtualAssistant || defaultVirtualAssistantConfig;
-
-      vm.selectedVA = vm.template.configuration.virtualAssistant.config;
-
-      vm.template.configuration.virtualAssistant.config =
-        vm.template.configuration.virtualAssistant.config ? vm.template.configuration.virtualAssistant.config : defaultVirtualAssistantConfig.config;
-
-      vm.template.configuration.virtualAssistant.welcomeMessage =
-        vm.template.configuration.virtualAssistant.welcomeMessage ? vm.template.configuration.virtualAssistant.welcomeMessage : defaultVirtualAssistantConfig.welcomeMessage;
     }
 
     function cancelModal() {
@@ -1667,6 +1679,7 @@
       if (vm.isCareAssistantEnabled) {
         VirtualAssistantService.listConfigs().then(function (result) {
           vm.configuredVirtualAssistantServices = result.items;
+          vm.hasConfiguredVirtualAssistantServices = (vm.configuredVirtualAssistantServices.length > 0);
           //if the virtual assistant list has only one VA available. use it by default.
           if (vm.configuredVirtualAssistantServices.length === 1 && !vm.isEditFeature && vm.template.configuration.mediaType !== vm.mediaTypes.callback) {
             var data = vm.configuredVirtualAssistantServices[0];
@@ -1675,8 +1688,9 @@
             vm.selectedVA.name = data.name;
 
             vm.vaSelectionCommit();
+          } else if (vm.isEditFeature) {
+            vm.populateVirtualAssistantInfo();
           }
-          vm.hasConfiguredVirtualAssistantServices = (vm.configuredVirtualAssistantServices.length > 0);
         }).catch(function (error) {
           vm.configuredVirtualAssistantServices = [];
           Notification.errorWithTrackingId(error, $translate.instant('careChatTpl.getVirtualAssistantListError'));

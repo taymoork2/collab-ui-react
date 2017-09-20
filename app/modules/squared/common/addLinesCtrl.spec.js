@@ -193,7 +193,7 @@ describe('AddLinesCtrl: Ctrl', function () {
 
       it('with only directoryNumber specified should set the wizardState with correct fields for show activation code modal', function () {
         this.controller.addDnGridOptions.data = [{
-          assignedDn: { pattern: this.directoryNumber },
+          assignedDn: { number: this.directoryNumber },
           externalNumber: { pattern: 'Ingen', uuid: 'none' },
         }];
         this.controller.next();
