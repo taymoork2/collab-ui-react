@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  module.exports = LicenseService;
+
   /* @ngInject */
   function LicenseService(Config, $translate, $q, $http, $location, HelpdeskMockData, UrlConfig) {
     var urlBase = UrlConfig.getAdminServiceUrl();
@@ -124,13 +126,4 @@
       getUnlicensedUsersCount: getUnlicensedUsersCount,
     };
   }
-
-  module.exports = angular
-    .module('LicenseService', [
-      require('modules/core/config/config').default,
-      require('modules/core/scripts/services/utils'),
-      require('./mock-data').default,
-    ])
-    .service('LicenseService', LicenseService)
-    .name;
 }());
