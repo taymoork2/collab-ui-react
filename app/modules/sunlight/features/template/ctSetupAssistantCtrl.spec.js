@@ -887,6 +887,23 @@ describe('Care Setup Assistant Ctrl', function () {
       controller.template.configuration.virtualAssistant.welcomeMessage = getStringOfLength(50);
       expect(controller.nextButton()).toEqual(true);
     });
+
+    it('should update modified name of the VA in the template config', function () {
+      controller.currentState = 'virtualAssistant';
+      var VAService = { id: 'id1', name: 'cva' };
+
+      controller.template.configuration.virtualAssistant.config.id = VAService.id;
+      controller.template.configuration.virtualAssistant.config.name = 'some-name';
+      controller.template.configuration.virtualAssistant.welcomeMessage = getStringOfLength(51);
+
+      controller.hasConfiguredVirtualAssistantServices = true;
+      controller.configuredVirtualAssistantServices = [VAService];
+      controller.populateVirtualAssistantInfo();
+
+      expect(controller.selectedVA).toEqual(VAService);
+      expect(controller.template.configuration.virtualAssistant.config.id).toEqual(VAService.id);
+      expect(controller.template.configuration.virtualAssistant.config.name).toEqual(VAService.name);
+    });
   });
 
   describe('Off Hours Page', function () {
