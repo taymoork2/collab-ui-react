@@ -1,0 +1,253 @@
+{
+	"ceWelcome": {
+		"callExperienceName": "AA Welcome",
+		"assignedResources": [{
+			"trigger": "incomingCall",
+			"type": "directoryNumber",
+			"id": "e7d68d8c-9e92-4330-a881-5fc9ace1f7d3"
+		}],
+		"defaultActionSet": "openHours",
+		"scheduleEventTypeMap": {
+			"open": "openHours"
+		},
+		"actionSets": [{
+			"name": "openHours",
+			"actions": [{
+
+				"runActionsOnInput": {
+					"description": "phone menu with announcements having dynamic",
+					"language": "",
+					"voice": "",
+					"prompts": {
+						"description": "",
+						"playList": [],
+						"sayList": [],
+						"announcements": [{
+							"dynamic": {
+								"dynamicOperations": [{
+										"isDynamic": false,
+										"htmlModel": "html1",
+										"say": {
+											"value": "You are calling from: ",
+											"voice": "Vanessa"
+										}
+									},
+									{
+										"isDynamic": true,
+										"htmlModel": "html1",
+										"say": {
+											"value": "Original-Caller-Number",
+											"as": "digits",
+											"voice": "Vanessa"
+										}
+									},
+									{
+										"isDynamic": false,
+										"htmlModel": "html1",
+										"say": {
+											"value": "press 0 to repeat this menu.",
+											"voice": "Vanessa"
+										}
+									}
+								]
+							}
+						}]
+					},
+					"attempts": 2,
+					"inputs": [{
+						"description": "",
+						"input": "0",
+						"actions": [{
+							"repeatActionsOnInput": {
+								"level": 0
+							}
+						}]
+					}],
+					"incompleteInputActions": [],
+					"rawInputActions": []
+				}
+			}]
+		}]
+	},
+	
+	"ceDynamicSay": {
+		"callExperienceName": "AA Welcome",
+		"assignedResources": [{
+			"trigger": "incomingCall",
+			"type": "directoryNumber",
+			"id": "e7d68d8c-9e92-4330-a881-5fc9ace1f7d3"
+		}],
+		"defaultActionSet": "openHours",
+		"scheduleEventTypeMap": {
+			"open": "openHours"
+		},
+		"actionSets": [{
+			"name": "openHours",
+			"actions": [
+			{
+				"dynamic": {
+					"dynamicOperations": [{
+							"isDynamic": false,
+							"htmlModel": "htmlModel",
+							"say": {
+								"value": "Account number you have entered is",
+								"voice": "kate"
+							}
+						},
+						{
+							"isDynamic": true,
+							"htmlModel": "htmlModel",
+							"say": {
+								"value": "Original-Caller-Number",
+								"as": "DIGITS",
+								"voice": "kate"
+							}
+						}
+					]
+				}
+			}
+			]
+		}]
+	},
+	
+	"ceWelcomeWithAnnouncementsPlay": {
+		"callExperienceName": "AA Welcome",
+		"assignedResources": [{
+			"trigger": "incomingCall",
+			"type": "directoryNumber",
+			"id": "e7d68d8c-9e92-4330-a881-5fc9ace1f7d3"
+		}],
+		"defaultActionSet": "openHours",
+		"scheduleEventTypeMap": {
+			"open": "openHours"
+		},
+		"actionSets": [{
+			"name": "openHours",
+			"actions": [{
+
+				"runActionsOnInput": {
+					"description": "phone menu with announcements having play",
+					"language": "",
+					"voice": "",
+					"prompts": {
+						"description": "",
+						"playList": [],
+						"sayList": [],
+						"announcements": [{
+								"play": {
+									"deleteUrl": "https://clio-manager-intb.ciscospark.com/clio-manager/api/v1/recordings/2a16238c-6d11-11e7-bff9-024286d27e00?orgId=dec55d7a-9d08-4a12-a9a7-052939c29ae0",
+									"voice": "Vanessa",
+									"url": "https://clio-manager-intb.ciscospark.com/clio-manager/api/v1/recordings/2a16238c-6d11-11e7-bff9-024286d27e00?orgId=dec55d7a-9d08-4a12-a9a7-052939c29ae0",
+									"description": "uploaded media"
+								}
+							}]
+					},
+					"attempts": 2,
+					"inputs": [{
+						"description": "",
+						"input": "0",
+						"actions": [{
+							"repeatActionsOnInput": {
+								"level": 0
+							}
+						}]
+					}],
+					"incompleteInputActions": [],
+					"rawInputActions": []
+				}
+			}]
+		}]
+	},
+	
+	"ceWelcomeWithAnnouncementsKeys": {
+		"type": "MENU_WELCOME",
+		"id": "menu0",
+		"headers": [],
+		"entries": [{
+			"CeMenu": {
+				"type": "MENU_OPTION",
+				"headers": [{
+					"CeMenuEntry": {
+						"description": "",
+						"type": "MENU_OPTION_ANNOUNCEMENT",
+						"key": "",
+						"actions": [{
+							"Action": {
+								"name": "dynamic",
+								"value": "",
+								"description": "",
+								"voice": "Vanessa",
+								"dynamicList": [{
+									"isDynamic": false,
+									"htmlModel": "html1",
+									"say": {
+										"value": "You are calling from: ",
+										"voice": "Vanessa"
+									}
+								}, {
+									"isDynamic": true,
+									"htmlModel": "html1",
+									"say": {
+										"value": "Original-Caller-Number",
+										"as": "digits",
+										"voice": "Vanessa"
+									}
+								}, {
+									"isDynamic": false,
+									"htmlModel": "html1",
+									"say": {
+										"value": "press 0 to repeat this menu.",
+										"voice": "Vanessa"
+									}
+								}]
+							}
+						}],
+						"timeout": "",
+						"language": "",
+						"voice": "",
+						"username": "",
+						"password": "",
+						"url": ""
+					}
+				}, {
+					"CeMenuEntry": {
+						"description": "",
+						"type": "MENU_OPTION_DEFAULT",
+						"key": "",
+						"actions": [],
+						"timeout": "",
+						"language": "",
+						"voice": "",
+						"username": "",
+						"password": "",
+						"url": ""
+					}
+				}],
+				"entries": [{
+					"CeMenuEntry": {
+						"description": "",
+						"type": "MENU_OPTION",
+						"key": "0",
+						"actions": [{
+							"Action": {
+								"name": "repeatActionsOnInput",
+								"value": "",
+								"description": "",
+								"voice": "",
+								"level": 0
+							}
+						}],
+						"timeout": "",
+						"language": "",
+						"voice": "",
+						"username": "",
+						"password": "",
+						"url": ""
+					}
+				}],
+				"id": "menu1",
+				"attempts": 2
+			}
+		}]
+	}
+}

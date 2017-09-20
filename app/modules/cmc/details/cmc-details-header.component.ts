@@ -6,19 +6,20 @@ interface IHeaderTab {
 class CmcDetailsHeaderComponentCtrl implements ng.IComponentController {
   public tabs: IHeaderTab[] = [];
   public back: boolean = true;
-  public backState: string = 'services-overview';
+  public backState = 'services-overview';
 
   /* @ngInject */
   constructor(
+    private $translate: ng.translate.ITranslateService,
   ) { }
 
   public $onInit(): void {
     this.tabs.push({
-      title: 'cmc.detailsPage.settings',
+      title: this.$translate.instant('cmc.detailsPage.settings'),
       state: 'cmc.settings',
     });
     this.tabs.push({
-      title: 'cmc.detailsPage.status',
+      title: this.$translate.instant('cmc.detailsPage.status'),
       state: 'cmc.status',
     });
   }
@@ -26,6 +27,6 @@ class CmcDetailsHeaderComponentCtrl implements ng.IComponentController {
 
 export class CmcDetailsHeaderComponent implements ng.IComponentOptions {
   public controller = CmcDetailsHeaderComponentCtrl;
-  public templateUrl = 'modules/cmc/details/cmc-details-header.html';
+  public template = require('modules/cmc/details/cmc-details-header.html');
   public bindings = { };
 }

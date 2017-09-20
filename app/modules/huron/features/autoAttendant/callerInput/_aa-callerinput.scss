@@ -109,7 +109,7 @@
 
   .aa-cnvt-digit {
     @include vr-spacing(mb, .5);
-    @include vr-spacing(mt, 1);
+    @include vr-spacing(mt, 0.3);
   }
 
   .aa-max-length-str {
@@ -148,5 +148,16 @@
     @include vr-spacing(mb, 1);
     @include vr-spacing(ml, 0);
     @include vr-spacing(pl, 0);
+  }
+  .aa-call-input-subtextlen {
+    @include vr-spacing(mt, -0.5);
+    @include vr-spacing(pl, 0);
+    @include vr-spacing(mb, 0.75);
+    color: $gray-light-1;
+    font-style: italic;
+  }
+
+   .aa-call-input-width {
+     width: 20%;
   }
 }

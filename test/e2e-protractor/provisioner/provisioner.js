@@ -1,9 +1,12 @@
-import * as provisionerHelper from './provisioner.helper';
-import * as atlasHelper from './provisioner.helper.atlas';
-import * as cmiHelper from './provisioner.helper.cmi';
-import * as helper from '../../api_sanity/test_helper';
 import * as _ from 'lodash';
 import * as Promise from 'promise';
+import * as helper from '../../api_sanity/test_helper';
+import * as provisionerHelper from './provisioner.helper';
+import * as atlasHelper from './provisioner.helper.atlas';
+import * as huronCmiHelper from './huron/provisioner.helper.cmi';
+import * as huronPstnHelper from './huron/provisioner.helper.pstn';
+import * as huronFeaturesHelper from './huron/provisioner.helper.features';
+import * as atlasUser from './atlas-users-config';
 
 /* global LONG_TIMEOUT */
 
@@ -27,41 +30,24 @@ export function provisionAtlasCustomer(partnerName, trial) {
     });
 }
 
-export function provisionCmiCustomer(partnerName, customer, site, numberRange) {
-  return provisionerHelper.getToken(partnerName)
-    .then(token => {
-      console.log(`Creating customer ${customer.name} in CMI...`);
-      return cmiHelper.createCmiCustomer(token, customer)
-        .then(() => {
-          console.log(`${customer.name} successfully created in CMI!`);
-          console.log('Creating site in CMI...');
-          return cmiHelper.createCmiSite(token, customer.uuid, site);
-        })
-        .then(() => {
-          console.log('Site successfully created in CMI!');
-          console.log(`Creating number range ${numberRange.name} in CMI...`);
-          return cmiHelper.createNumberRange(token, customer.uuid, numberRange);
-        })
-        .then(() => {
-          console.log('Number Range successfully created in CMI!');
-          return provisionerHelper.flipFtswFlag(token, customer.uuid);
-        });
-    });
-}
-
-
 export function provisionCustomerAndLogin(customer) {
   return this.provisionAtlasCustomer(customer.partner, customer.trial)
     .then(atlasCustomer => {
-      if (atlasCustomer && customer.cmiCustomer) {
-        customer.cmiCustomer.uuid = atlasCustomer.customerOrgId;
-        customer.cmiCustomer.name = atlasCustomer.customerName;
-        return this.provisionCmiCustomer(customer.partner, customer.cmiCustomer, customer.cmiSite, customer.numberRange)
+      customer.orgId = atlasCustomer.customerOrgId;
+      if (atlasCustomer && customer.callOptions) {
+        customer.callOptions.cmiCustomer.uuid = atlasCustomer.customerOrgId;
+        customer.callOptions.cmiCustomer.name = atlasCustomer.customerName;
+        return huronCmiHelper.provisionCmiCustomer(customer.partner, customer.callOptions.cmiCustomer, customer.callOptions.cmiSite, customer.callOptions.numberRange, customer.doFtsw, customer.doCallPickUp)
+          .then(() => huronPstnHelper.setupPSTN(customer))
+          .then(() => provisionUsers(customer))
+          .then(() => provisionPlaces(customer))
+          .then(() => huronFeaturesHelper.setupHuntGroup(customer))
+          .then(() => huronFeaturesHelper.setupCallPickup(customer))
           .then(() => loginPartner(customer.partner))
-          .then(() => switchToCustomerWindow(customer.name));
+          .then(() => switchToCustomerWindow(customer.name, customer.doFtsw));
       } else {
         return loginPartner(customer.partner)
-          .then(() => switchToCustomerWindow(customer.name));
+          .then(() => switchToCustomerWindow(customer.name, customer.doFtsw));
       }
     });
 }
@@ -99,17 +85,65 @@ function deleteAtlasCustomerIfFound(token, partnerName, customerName) {
         console.log(`${customerName} not found in Atlas!`);
         return true;
       }
-    })
+    });
 }
 
 export function loginPartner(partnerEmail) {
   return login.login(partnerEmail, '#/partner/customers');
 }
 
-function switchToCustomerWindow(customerName) {
+function switchToCustomerWindow(customerName, doFtsw) {
+  utils.click(element(by.css('i.icon-search')));
+  utils.sendKeys(element(by.id('searchFilter')), customerName);
+  utils.waitForSpinner()
   utils.click(element(by.cssContainingText('.ui-grid-cell', customerName)));
   utils.click(partner.launchCustomerPanelButton);
   return utils.switchToNewWindow().then(() => {
-    return utils.wait(navigation.tabs, LONG_TIMEOUT);
+    if (!doFtsw) {
+      return utils.wait(navigation.tabs, LONG_TIMEOUT);
+    } else {
+      return utils.wait(navigation.ftswSidePanel, LONG_TIMEOUT);
+    }
   });
+}
+
+export function provisionUsers(customer) {
+  if (customer.users) {
+    console.log(`Onboarding users for ${customer.name}!`);
+    return provisionerHelper.getToken(customer.partner)
+      .then(token => {
+        return atlasHelper.getAtlasOrg(token, customer.orgId)
+          .then(response => {
+            const licenseArray = _.get(response, 'licenses', undefined);
+            const users = { users: atlasUser.atlasUsers(customer, licenseArray) };
+            return atlasHelper.createAtlasUser(token, customer.orgId, users)
+              .then(() => {
+                console.log(`Successfully onboarded users for ${customer.name}!`);
+              });
+          });
+      });
+  }
+}
+
+function provisionPlaces(customer) {
+  if (customer.places) {
+    console.log('Creating locations');
+    return provisionerHelper.getToken(customer.partner)
+      .then(token => {
+        createPlaceObj(token, customer.orgId, customer.places);
+        console.log('Successfully added places');
+      });
+  }
+}
+
+function createPlaceObj(tkn, id, plObj) {
+  let placeObj = {};
+  for (let i = 0; i < plObj.length; i++) {
+    placeObj[i] = plObj[i];
+    createNewPlace(tkn, id, placeObj[i]);
+  }
+}
+
+function createNewPlace(tkn, id, plObj) {
+  return atlasHelper.createAtlasPlace(tkn, id, plObj)
 }

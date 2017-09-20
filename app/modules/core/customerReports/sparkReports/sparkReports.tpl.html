@@ -5,15 +5,12 @@
   </cs-page-sub-header-left>
   <cs-page-sub-header-right class="medium-9">
     <report-slider selected="nav.timeSelected" options="nav.timeOptions" update-functions="nav.timeUpdates"></report-slider>
-    <button type="button" class="btn btn--primary download-page" translate="reportsPage.downloadPage" ng-click="nav.exportFullPage()"></button>
+    <button type="button" value="exportPDF" class="btn btn--primary download-page" translate="reportsPage.downloadPage" ng-click="nav.exportFullPage()"></button>
   </cs-page-sub-header-right>
 </cs-page-sub-header>
 
 <!-- Main Content -->
-<div class="content-container">
-  <div class="row">
-    <learn-more-banner location="reports"></learn-more-banner>
-  </div>
+<div class="content-container" ng-if="!nav.displayDetails">
   <div class="row">
     <cs-card-layout>
       <report-card options="nav.avgRoomOptions" export-dropdown="nav.exportArrays.rooms" show="nav.displayEngagement" time="nav.timeSelected"></report-card>
@@ -23,5 +20,21 @@
       <report-card options="nav.mediaOptions" export-dropdown="nav.exportArrays.media" dropdown="nav.mediaDropdown" labels="nav.qualityLabels" show="nav.displayQuality" time="nav.timeSelected" lower-tooltip="nav.qualityTooltip"></report-card>
       <report-card options="nav.metricsOptions" export-dropdown="nav.exportArrays.metrics" labels="nav.metricsLabels" show="nav.displayQuality" time="nav.timeSelected"></report-card>
     </cs-card-layout>
+  </div>
+</div>
+<div class="detail-reports" ng-if="nav.displayDetails">
+  <cs-page-sub-header>
+    <cs-page-sub-header-left>
+      <cs-searchfilter search-item-fn="filterList(searchStr)" placeholder-text="{{nav.placeHolder.searchbox}}">
+      </cs-searchfilter>
+      <cs-datepicker required id="startDate" ng-model="nav.startDate" placeholder="{{'reportsPage.placeholder.startDate' | translate}}" view-format="YYYY-MM-DD"></cs-datepicker>
+      <input cs-timepicker ng-required="true" type="text" id="startTime" ng-model="nav.startTime" placeholder="{{nav.placeHolder.startTime}}" />
+      <span class="data-span">{{nav.placeHolder.to}}</span>
+      <cs-datepicker required id="endDate" ng-model="nav.endDate" placeholder="{{'reportsPage.placeholder.endDate' | translate}}" view-format="YYYY-MM-DD"></cs-datepicker>
+      <input cs-timepicker ng-required="true" type="text" id="endTime" ng-model="nav.endTime" placeholder="{{nav.placeHolder.endTime}}" />
+    </cs-page-sub-header-left>
+  </cs-page-sub-header>
+  <div class="detail-reports-content">
+    <cs-grid grid-options="nav.gridOptions" spinner="nav.gridRefresh"></cs-grid>
   </div>
 </div>

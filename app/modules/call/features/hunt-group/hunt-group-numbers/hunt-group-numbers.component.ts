@@ -9,11 +9,22 @@ class HuntGroupNumbersCtrl implements ng.IComponentController {
   public onKeyPressFn: Function;
   public selectedNumber: INumber | undefined;
   public errorNumberInput: boolean = false;
+  public hasLocations: boolean = false;
+  public numberTemplateUrl: string = 'hgNumbersTemplate.html';
 
   /* @ngInject */
   constructor(
     private NumberService: NumberService,
-  ) {}
+    private FeatureToggleService,
+  ) {
+    // TODO: samwi - remove when locations is GA
+    this.FeatureToggleService.supports(FeatureToggleService.features.hI1484).then(supports => {
+      if (supports) {
+        this.hasLocations = true;
+        this.numberTemplateUrl = 'hgNumbersTemplateLocations.html';
+      }
+    });
+  }
 
   public getNumberList(value: string): ng.IPromise<INumber[]> {
     return this.NumberService.getNumberList(value, undefined, false).then( numbers => {
@@ -35,6 +46,7 @@ class HuntGroupNumbersCtrl implements ng.IComponentController {
       uuid: number.uuid,
       type: number.type,
       number: number.number,
+      siteToSite: number.siteToSite,
     }));
     this.onNumbersChanged(this.numbers);
   }
@@ -68,7 +80,7 @@ class HuntGroupNumbersCtrl implements ng.IComponentController {
 
 export class HuntGroupNumbersComponent implements ng.IComponentOptions {
   public controller = HuntGroupNumbersCtrl;
-  public templateUrl = 'modules/call/features/hunt-group/hunt-group-numbers/hunt-group-numbers.component.html';
+  public template = require('modules/call/features/hunt-group/hunt-group-numbers/hunt-group-numbers.component.html');
   public bindings = {
     numbers: '<',
     isNew: '<',

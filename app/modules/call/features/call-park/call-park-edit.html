@@ -43,6 +43,17 @@
             ng-class="$ctrl.animation">
           </uc-call-feature-name>
         </div>
+        <div class="sub-section row collapse" ng-if="$ctrl.hasLocation">
+          <h5 class="sub-section__title" translate="callPark.locationLabel"></h5>
+          <uc-call-feature-location
+            call-feature-type="huronFeatureDetails.cp"
+            is-required="true"
+            is-new="false"
+            location="$ctrl.callPark.location"
+            on-change-fn="$ctrl.setCallParkLocation(location)"
+            class="columns medium-6">
+          </uc-call-feature-location>
+        </div>
         <div class="sub-section">
           <h5 class="sub-section__title" translate="callPark.numberLabel"></h5>
           <p class="sub-section__description" translate="callPark.numberDesc"></p>

@@ -94,7 +94,7 @@ export class FilteredView<T> {
 
   public setCurrentSearch(searchString: string): IPromise<T[]> {
 
-    const deferredRes = this.$q.defer();
+    const deferredRes = this.$q.defer<T[]>();
 
     this.isSearchOnly.then((isSearchOnly) => {
       if (isSearchOnly) {
@@ -182,6 +182,8 @@ export class FilteredView<T> {
       } else if (!this.isInState(FilteredViewState.initializing)) {
         if (!isSearchOnly && _.isEmpty(this.fetchedDataMap)) {
           this.listState = FilteredViewState.emptydatasource;
+        } else if (isSearchOnly && !this.currentSearchString) {
+          this.listState = FilteredViewState.searchonly;
         } else {
           this.listState = FilteredViewState.emptysearchresult;
         }

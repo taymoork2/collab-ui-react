@@ -19,6 +19,7 @@
     // These services don't allow TrackingID header
     var blacklist = [
       'statuspage.io',
+      'api.api.ai', //Virtual Assistant api.ai token validation
     ];
 
     // These services don't allow Access-Control-Expose-Headers header
@@ -27,6 +28,7 @@
       buildBlacklistedDomainWithWhitelistedSubdomainRegex('webex.com', ['identity']),
       buildBlacklistedDomainRegex('webexconnect.com'),
       buildBlacklistedDomainRegex('ciscoccservice.com'),
+      buildBlacklistedDomainRegex('api.api.ai'), //Virtual Assistant api.ai token validation
     ];
 
     return interceptor;

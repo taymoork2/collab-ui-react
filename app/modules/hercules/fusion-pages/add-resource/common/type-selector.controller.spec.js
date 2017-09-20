@@ -25,11 +25,11 @@ describe('Controller: TypeSelectorController', function () {
     Authinfo.isCustomerLaunchedFromPartner.and.returnValue(false);
   }));
 
-  function initController(hasPartnerRegistrationFeatureToggle) {
+  function initController() {
     return $controller('TypeSelectorController', {
       $stateParams: $stateParams,
       hasCucmSupportFeatureToggle: true,
-      hasPartnerRegistrationFeatureToggle: hasPartnerRegistrationFeatureToggle,
+      hasImpSupportFeatureToggle: false,
     });
   }
 
@@ -128,7 +128,7 @@ describe('Controller: TypeSelectorController', function () {
     it('should overwrite hasSetup to false and the help texts for media and context when partner admin', function () {
       Authinfo.isCustomerLaunchedFromPartner.and.returnValue(true);
       HybridServicesClusterService.serviceIsSetUp.and.callFake(serviceIsSetUpMockAlwaysTrue);
-      var controller = initController(true);
+      var controller = initController();
       expect(controller.hasSetup).toBe(undefined);
       $rootScope.$apply();
       expect(controller.hasSetup).toEqual({

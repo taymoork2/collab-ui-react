@@ -1,7 +1,7 @@
 import { PrivateTrunkPrereqService } from 'modules/hercules/private-trunk/private-trunk-prereq/private-trunk-prereq.service';
 import { PrivateTrunkResource, Destination } from 'modules/hercules/private-trunk/private-trunk-setup/private-trunk-setup';
 import { PrivateTrunkService } from 'modules/hercules/private-trunk/private-trunk-services';
-import { USSService } from 'modules/hercules/services/uss-service';
+import { USSService } from 'modules/hercules/services/uss.service';
 
 export interface IDestination {
   address: string;
@@ -147,8 +147,8 @@ export class PrivateTrunkDestinationCtrl implements ng.IComponentController {
     return count < this.duplicateCountCheck;
   }
 
-  public uniqueDomainValidation(viewValue: string): ng.IPromise<boolean> {
-    const validateDefer = this.$q.defer();
+  public uniqueDomainValidation(viewValue: string): ng.IPromise<void> {
+    const validateDefer = this.$q.defer<void>();
     this.PrivateTrunkService.isValidUniqueSipDestination(viewValue)
     .then((res) => {
       if (res) {
@@ -189,7 +189,7 @@ export class PrivateTrunkDestinationCtrl implements ng.IComponentController {
 }
 export class PrivateTrunkDestinationComponent implements ng.IComponentOptions {
   public controller = PrivateTrunkDestinationCtrl;
-  public templateUrl = 'modules/hercules/private-trunk/private-trunk-destination/private-trunk-destination.html';
+  public template = require('modules/hercules/private-trunk/private-trunk-destination/private-trunk-destination.html');
   public bindings = {
     isFirstTimeSetup: '<',
     privateTrunkResource: '<',

@@ -5,7 +5,6 @@
 
   angular.module('Core', [
     'angular-cache',
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     'cisco.formly',
     require('modules/core/auth/tos').default,
@@ -14,7 +13,8 @@
     require('modules/core/auth/token.service'),
     require('modules/core/modal').default,
     'core.body',
-    'core.chartColors',
+    require('modules/core/config/chartColors').default,
+    require('modules/core/controlHub').default,
     require('modules/core/l10n').default,
     'core.localize',
     'core.logmetricsservice',
@@ -28,6 +28,7 @@
     'core.proPack',
     'core.trial',
     'core.utils',
+    'core.cache',
     'csDonut',
     'ct.ui.router.extras.previous',
     'ngAnimate',
@@ -50,6 +51,9 @@
     'rzModule',
     'dragularModule',
     require('modules/bmmp/learn-more-banner').default,
+    require('modules/core/account').default,
+    require('modules/core/banner').default,
+    require('modules/core/csgrid').default,
     require('modules/core/users/userOverview').default,
     require('modules/core/analytics'),
     require('modules/core/featureToggle').default,
@@ -67,7 +71,7 @@
     require('modules/core/myCompany/mySubscriptions').default,
     require('modules/core/cards').default,
     require('modules/core/customerReports/sparkReports').default,
-    require('modules/core/customerReports/webexReports').default,
+    require('modules/core/customerReports/webexReports/search').default,
     require('modules/core/partnerReports/commonReportServices').default,
     require('modules/core/partnerReports/reportCard').default,
     require('modules/core/partnerReports/reportFilter').default,
@@ -80,12 +84,15 @@
     require('modules/core/trials/emergencyServices').default,
     require('modules/core/settings').default,
     require('modules/huron/countries').default,
-    require('modules/huron/settings').default,
+    require('modules/call/settings').default,
+    require('modules/call/locations').default,
     require('modules/huron/dialPlans').default,
     require('modules/core/domainManagement').default,
     require('modules/huron/features/featureLanding/hoverDelay.directive').default,
     require('modules/core/validation').default,
     require('modules/core/customerReports').default,
+    require('modules/core/partnerReports').default,
+    require('modules/gemini/reports').default,
   ])
     .constant('CryptoJS', require('crypto-js'))
     .constant('addressparser', require('emailjs-addressparser'));
@@ -96,8 +103,12 @@
     'Hercules',
     'Huron',
     'Sunlight',
+    'LicenseService',
+    require('modules/squared/devices/services/CsdmCacheUpdater'),
     require('modules/squared/devices/services/CsdmPoller'),
+    require('modules/squared/helpdesk/mock-data').default,
     require('modules/squared/partner-management').default,
+    require('modules/squared/provisioning-console').default,
   ]);
 
   angular.module('DigitalRiver', ['Core']);
@@ -111,11 +122,10 @@
     'uc.cdrlogsupport',
     'uc.autoattendant',
     'ngIcal',
-    'huron.paging-group',
-    'huron.call-pickup.setup-assistant',
-    'huron.bulk-enable-vm',
     'huron.TerminusServices',
     'huron.externalNumberService',
+    'huron.place-overview',
+    require('modules/call/settings/settings-bulk-enable-vm').default,
     require('modules/huron/lineSettings/callerIdService'),
     require('modules/huron/telephony/telephonyConfig'),
     require('modules/huron/telephony/cmiServices'),
@@ -125,9 +135,11 @@
     require('modules/huron/lines/deleteExternalNumber').default,
     require('modules/huron/media-mgr').default,
     require('modules/call/features').default,
+    require('modules/call/features/paging-group/shared').default,
+    require('modules/call/features/call-pickup/shared').default,
   ])
-  .constant('ASTParser', require('acorn'))
-  .constant('ASTWalker', require('acorn/dist/walk'));
+    .constant('ASTParser', require('acorn'))
+    .constant('ASTWalker', require('acorn/dist/walk'));
 
   angular.module('Hercules', [
     'Core',
@@ -137,27 +149,34 @@
     require('modules/hercules/cluster-card').default,
     require('modules/hercules/connector-upgrade-modal/connector-upgrade-modal.controller').default,
     require('modules/hercules/google-calendar-settings/google-calendar-config-section/google-calendar-second-time-setup').default,
+    require('modules/hercules/hybrid-services-cluster-list-with-cards').default,
     require('modules/hercules/hybrid-services-nodes-page').default,
     require('modules/hercules/private-trunk/private-trunk-overview-settings').default,
     require('modules/hercules/private-trunk/private-trunk-setup').default,
     require('modules/hercules/resource-group-card').default,
     require('modules/hercules/service-settings/calendar-service-setup').default,
+    require('modules/hercules/services/calendar-cloud-connector.service').default,
     require('modules/hercules/services/cluster-service').default,
+    require('modules/hercules/services/enterprise-private-trunk-service').default,
     require('modules/hercules/services/excel-service').default,
+    require('modules/hercules/services/fms-org-settings.service').default,
+    require('modules/hercules/services/hs-flag-service').default,
     require('modules/hercules/services/hybrid-services-cluster-states.service').default,
     require('modules/hercules/services/hybrid-services-cluster.service').default,
     require('modules/hercules/services/hybrid-services-extras.service').default,
     require('modules/hercules/services/hybrid-services-i18n.service').default,
     require('modules/hercules/services/hybrid-services-utils.service').default,
+    require('modules/hercules/services/l2sip-service').default,
+    require('modules/hercules/services/resource-group.service').default,
     require('modules/hercules/services/service-descriptor.service').default,
-    require('modules/hercules/services/uss-service'),
+    require('modules/hercules/services/ucc-service').default,
+    require('modules/hercules/services/uss.service').default,
   ]);
 
-  angular.module('HDS', ['Core', 'Hercules']);
-
-  angular.module('Ediscovery', [
+  angular.module('HDS', [
     'Core',
-    require('modules/ediscovery/bytes_filter'),
+    'Hercules',
+    require('modules/hds/services/hds.service'),
   ]);
 
   angular.module('Mediafusion', ['Core', 'Hercules', 'Squared']);
@@ -199,7 +218,7 @@
     'DigitalRiver',
     'Huron',
     'Hercules',
-    'Ediscovery',
+    require('modules/ediscovery/ediscovery.module'),
     'Mediafusion',
     'HDS',
     'WebExApp',
@@ -210,6 +229,8 @@
     'oc.lazyLoad',
     'Gemini',
     'CMC',
+    'Csdm',
+    require('modules/services-overview').default,
   ]).config(require('./main.config'))
     .run(require('./main.run'))
     .name;

@@ -4,14 +4,14 @@
   angular.module('Core')
     .component('leastMostUsed', {
       controller: LeastUsedCtrl,
-      templateUrl: 'modules/core/customerReports/deviceUsage/leastMostUsedDevices.component.html',
+      template: require('modules/core/customerReports/deviceUsage/leastMostUsedDevices.component.html'),
       bindings: {
         usedDevices: '<',
         waitingStats: '<',
         displayTitle: '<',
       },
     });
-    /* @ngInject */
+  /* @ngInject */
   function LeastUsedCtrl() {
     //var vm = this;
   }

@@ -5,11 +5,12 @@
     .controller('PstnNumbersCtrl', PstnNumbersCtrl);
 
   /* @ngInject */
-  function PstnNumbersCtrl($q, $scope, $state, $timeout, $translate, DidService, Notification, PstnModel, PstnService, PhoneNumberService, PstnAreaService, ValidationService, FeatureToggleService) {
+  function PstnNumbersCtrl($q, $scope, $state, $timeout, $translate, DidService, Notification, PstnModel, PstnService, PhoneNumberService, PstnAreaService, ValidationService) {
     var vm = this;
 
     vm.provider = PstnModel.getProvider();
     vm.orderCart = PstnModel.getOrders();
+    vm.countryCode = PstnModel.getCountryCode();
 
     var baseModel = {
       addDisabled: true,
@@ -120,7 +121,7 @@
     init();
 
     function init() {
-      PstnAreaService.getCountryAreas(PstnModel.getCountryCode()).then(function (location) {
+      PstnAreaService.getCountryAreas(vm.countryCode).then(function (location) {
         vm.model.pstn.quantity = null;
         vm.locationLabel = location.typeName;
         vm.model.pstn.states = location.areas;
@@ -134,20 +135,6 @@
         }
       });
       getCapabilities();
-      FeatureToggleService.supports(FeatureToggleService.features.huronFederatedSparkCall)
-      .then(function (results) {
-        vm.ftHuronFederatedSparkCall = results;
-        if (!results) {
-          $scope.$watchCollection(function () {
-            return vm.model.tollFree.searchResultsModel;
-          }, function (searchResultsModel) {
-            // set disabled in next digest because of cs-btn
-            $timeout(function () {
-              vm.model.tollFree.addDisabled = !_.includes(searchResultsModel, true);
-            });
-          });
-        }
-      });
     }
 
     vm.tollFreeFields = [{
@@ -350,11 +337,11 @@
       return false;
     }
 
-    function getCount() {
-      if (!vm.model.pstn.block) {
+    function getCount(modal) {
+      if (!modal.block) {
         return MAX_DID_QUANTITY;
       }
-      return (vm.model.pstn.quantity ? vm.model.pstn.quantity : MAX_DID_QUANTITY);
+      return (modal.quantity ? modal.quantity : MAX_DID_QUANTITY);
     }
 
     function getNxxValue() {
@@ -390,7 +377,7 @@
       var field = this;
       var params = {
         npa: vm.model.pstn.areaCode.code,
-        count: getCount(),
+        count: getCount(vm.model.pstn),
         sequential: vm.model.pstn.consecutive,
       };
       //add optional nxx parameter
@@ -457,7 +444,7 @@
       }
       var params = {
         npa: vm.model.tollFree.areaCode.code,
-        count: vm.model.tollFree.quantity === 1 ? undefined : vm.model.tollFree.quantity,
+        count: getCount(vm.model.tollFree),
       };
       vm.model.tollFree.searchResults = [];
       vm.model.tollFree.searchResultsModel = {};
@@ -518,7 +505,7 @@
       var model;
       var promises = [];
       var reservation;
-      vm.addLoading = true;
+
       // add to cart
       if (numberType === NUMTYPE_DID) {
         model = vm.model.pstn;
@@ -572,11 +559,8 @@
           }
         });
       }).finally(function () {
-        vm.addLoading = false;
-        // check if we need to decrement current page
-        if (model.paginateOptions.currentPage >= model.paginateOptions.numberOfPages()) {
-          model.paginateOptions.currentPage--;
-        }
+        model.addLoading = false;
+        model.searchResults = [];
       });
     }
 

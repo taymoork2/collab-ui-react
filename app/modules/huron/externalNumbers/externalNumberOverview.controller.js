@@ -11,17 +11,12 @@
     vm.loading = true;
     vm.allNumbersCount = 0;
     vm.isTerminusCustomer = isTerminusCustomer;
-    vm.isHuronSupportThinktel = false;
     vm.callAction = [{
       actionKey: 'customerPage.addNumbers',
       actionFunction: isTerminusCustomer,
     }];
     var ALL = 'all';
 
-    //(Paul Clark)This will be used for new "PstnProviders.component.ts"
-    FeatureToggleService.supports(FeatureToggleService.features.huronSupportThinktel).then(function (result) {
-      vm.isHuronSupportThinktel = result;
-    });
     FeatureToggleService.supports(FeatureToggleService.features.huronPstn).then(function (results) {
       vm.hPstn = results;
     });

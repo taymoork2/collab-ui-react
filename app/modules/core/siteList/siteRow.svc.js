@@ -63,7 +63,7 @@
 
           if (null != siteRow.csvPollIntervalObj) {
             // logMsg = funcName + "\n" +
-              // "siteUrl=" + siteRow.license.siteUrl;
+            // "siteUrl=" + siteRow.license.siteUrl;
             // $log.log(logMsg);
 
             $interval.cancel(siteRow.csvPollIntervalObj);
@@ -73,17 +73,9 @@
     };
 
     this.configureGrid = function () {
-      // var funcName = "configureGrid()";
-      // var logMsg = "";
-      //$log.log(logMsg);
-
       // Start of grid set up
       _this.siteRows.gridOptions = {
-        //data: $scope.gridData,
         data: _this.siteRows.gridData,
-        multiSelect: false,
-        enableRowSelection: false,
-        enableColumnMenus: false,
         rowHeight: 44,
         columnDefs: [],
       };
@@ -98,7 +90,7 @@
       _this.siteRows.gridOptions.columnDefs.push({
         field: 'siteConfLicenses',
         displayName: $translate.instant('siteList.licenseTypes'),
-        cellTemplate: 'modules/core/siteList/siteLicenseTypesColumn.tpl.html',
+        cellTemplate: require('modules/core/siteList/siteLicenseTypesColumn.tpl.html'),
         sortable: false,
         width: '17%',
       });
@@ -106,12 +98,9 @@
       _this.siteRows.gridOptions.columnDefs.push({
         field: 'siteActions',
         displayName: $translate.instant('siteList.siteActions'),
-        cellTemplate: 'modules/core/siteList/siteActionsColumn.tpl.html',
+        cellTemplate: require('modules/core/siteList/siteActionsColumn.tpl.html'),
         sortable: false,
       });
-
-      //$log.log(JSON.stringify(funcName + "\n" +
-      //JSON.stringify(siteRows.gridOptions)));
 
       _this.updateConferenceServices();
     }; //configureGrid

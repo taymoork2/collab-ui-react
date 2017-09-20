@@ -1,4 +1,5 @@
 import { IConnectorAlarm } from 'modules/hercules/hybrid-services.types';
+import { HybridServicesExtrasService } from 'modules/hercules/services/hybrid-services-extras.service';
 
 export class AlarmListSectionComponentCtrl implements ng.IComponentController {
 
@@ -16,12 +17,13 @@ export class AlarmListSectionComponentCtrl implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private $state: ng.ui.IStateService,
+    private HybridServicesExtrasService: HybridServicesExtrasService,
   ) {}
 
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
     const { alarms } = changes;
     if (alarms && alarms.currentValue) {
-      this.alarms = this.sortAlarmsBySeverity(alarms.currentValue);
+      this.alarms = _.map(this.sortAlarmsBySeverity(alarms.currentValue), (alarm) => this.HybridServicesExtrasService.translateResourceAlarm(alarm));
     }
   }
 
@@ -72,7 +74,7 @@ export class AlarmListSectionComponentCtrl implements ng.IComponentController {
 
 export class AlarmListSectionComponent implements ng.IComponentOptions {
   public controller = AlarmListSectionComponentCtrl;
-  public templateUrl = 'modules/hercules/cluster-sidepanel/alarm-list/alarm-list-section.html';
+  public template = require('modules/hercules/cluster-sidepanel/alarm-list/alarm-list-section.html');
   public bindings = {
     alarms: '<',
     connectorType: '<',

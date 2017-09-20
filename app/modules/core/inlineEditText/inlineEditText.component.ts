@@ -31,14 +31,19 @@ class InlineEditText implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private $q: ng.IQService,
+    private ProPackService,
   ) {}
 
   public $onInit(): void {
-    if (this.asyncValidators) {
+    if (this.asyncValidators && typeof this.modelOptions.debounce === 'object') {
       this.modelOptions.debounce.default = 250;
     }
 
     this.determineShowTextLink(this.isTextClickable);
+  }
+
+  public showProBadge(): boolean {
+    return this.ProPackService.showProBadgeInHelpDesk();
   }
 
   public $onChanges(changes: { isTextClickable: ng.IChangesObject<any> }): void {
@@ -85,7 +90,7 @@ class InlineEditText implements ng.IComponentController {
 }
 
 export class InlineEditTextComponent implements ng.IComponentOptions {
-  public templateUrl = 'modules/core/inlineEditText/inlineEditText.html';
+  public template = require('modules/core/inlineEditText/inlineEditText.html');
   public controller = InlineEditText;
   public bindings = {
     value: '<',

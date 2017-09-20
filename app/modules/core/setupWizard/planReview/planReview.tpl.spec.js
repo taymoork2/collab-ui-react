@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Template: planReview', function () {
-  var $scope, $controller, $httpBackend, controller, $q, $templateCache, $compile, view;
+  var $scope, $controller, $httpBackend, controller, $q, $compile, view;
   var FeatureToggleService, Userservice, UrlConfig, getUserMe;
 
   afterEach(function () {
@@ -19,7 +19,7 @@ describe('Template: planReview', function () {
   var authInfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('5632f806-ad09-4a26-a0c0-a49a13f38873'),
     getMessageServices: jasmine.createSpy('getMessageServices').and.returnValue(getJSONFixture('core/json/authInfo/messagingServices.json').singleLicense),
-    getCommunicationServices: jasmine.createSpy('getCommunicationServices').and.returnValue(getJSONFixture('core/json/authInfo/commServices.json')),
+    getCommunicationServices: jasmine.createSpy('getCommunicationServices').and.returnValue(getJSONFixture('core/json/authInfo/commServices.json').singleLicense),
     getConferenceServices: jasmine.createSpy('getConferenceServices').and.returnValue(getJSONFixture('core/json/authInfo/confServices.json')),
     getCareServices: jasmine.createSpy('getCareServices').and.returnValue(getJSONFixture('core/json/authInfo/careServices.json').careLicense),
     getCmrServices: jasmine.createSpy('getCmrServices').and.returnValue(getJSONFixture('core/json/authInfo/cmrServices.json')),
@@ -36,13 +36,12 @@ describe('Template: planReview', function () {
   beforeEach(initSpies);
   beforeEach(compileView);
 
-  function dependencies(_$compile_, _$controller_, _$httpBackend_, _$q_, $rootScope, _$templateCache_, _Authinfo_, _FeatureToggleService_, _Userservice_, _UrlConfig_) {
+  function dependencies(_$compile_, _$controller_, _$httpBackend_, _$q_, $rootScope, _Authinfo_, _FeatureToggleService_, _Userservice_, _UrlConfig_) {
     $compile = _$compile_;
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
     $q = _$q_;
     $scope = $rootScope.$new();
-    $templateCache = _$templateCache_;
     authInfo = _Authinfo_;
     FeatureToggleService = _FeatureToggleService_;
     UrlConfig = _UrlConfig_;
@@ -68,7 +67,7 @@ describe('Template: planReview', function () {
       $scope: $scope,
     });
     $scope.planReview = controller;
-    var template = $templateCache.get('modules/core/setupWizard/planReview/planReview.tpl.html');
+    var template = require('modules/core/setupWizard/planReview/planReview.tpl.html');
     view = $compile(angular.element(template))($scope);
     $httpBackend.flush();
     $scope.$apply();
@@ -89,7 +88,8 @@ describe('Template: planReview', function () {
       expect(view.find('#paidCare').length).toBe(1);
       expect(controller.careServices.isNewTrial).toEqual(false);
       expect(view.find('#careStartTrial').length).toBe(0);
-      expect(view.find('[translate="firstTimeWizard.care"]').length).toBe(2);
+      expect(view.find('[translate="firstTimeWizard.care"]').length).toBe(1);
+      // expect(view.find('#careLicenseText').length).toBe(1);
       expect(controller.careServices.services).toBeDefined();
       var careService = controller.careServices.services;
       expect(careService[0].license.volume).toBe(30);

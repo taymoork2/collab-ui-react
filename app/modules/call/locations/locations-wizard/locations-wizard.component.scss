@@ -1,0 +1,40 @@
+@import '~collab-ui/scss/tools/placeholders/page-layout';
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/typography';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+.overlay-panel__content {
+  .wizard-loading-spinner {
+    font-size: 3rem;
+    text-align: center;
+    margin-top: 3rem;
+  }
+}
+
+.create-location {
+  .location-create-step {
+    margin-top: 0;
+    display: flex;
+    flex: 1;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+    overflow-y: auto;
+    height: calc(100vh - 175px);
+
+    .step-title {
+      font-family: $brand-font-thin;
+      font-size: $h1-font-size;
+    }
+    .step-desc {
+      @include vr-spacing(pb, 2.75);
+      font-family: $brand-font-light;
+      font-size: $h4-font-size;
+    }
+    .section__content {
+      margin: 0;
+      width: 40rem;
+    }
+  }
+}

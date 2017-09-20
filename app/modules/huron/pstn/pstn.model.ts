@@ -1,9 +1,9 @@
 import { PstnCarrier } from './pstnProviders/pstnCarrier';
 export interface IOrder {
-  reservationId?: string;
   orderType: string;
-  numberType: string;
   data: any;
+  reservationId?: string;
+  numberType?: string;
 }
 
 export interface IAuthLicense {

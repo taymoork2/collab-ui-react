@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: PlanReviewCtrl', function () {
-  var $scope, controller, $httpBackend, UrlConfig, Userservice, FeatureToggleService, WebExUtilsFact;
+  var $scope, controller, $httpBackend, UrlConfig, Userservice, FeatureToggleService, SetupWizardService, WebExUtilsFact;
   var getUserMe;
   var sjSiteUrl = 'sjsite04.webex.com';
   var fakeSiteUrl = 'sitetransfer2.eng.webex.com';
@@ -14,7 +14,7 @@ describe('Controller: PlanReviewCtrl', function () {
   var authInfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('5632f806-ad09-4a26-a0c0-a49a13f38873'),
     getMessageServices: jasmine.createSpy('getMessageServices').and.returnValue(getJSONFixture('core/json/authInfo/messagingServices.json').singleLicense),
-    getCommunicationServices: jasmine.createSpy('getCommunicationServices').and.returnValue(getJSONFixture('core/json/authInfo/commServices.json')),
+    getCommunicationServices: jasmine.createSpy('getCommunicationServices').and.returnValue(getJSONFixture('core/json/authInfo/commServices.json').singleLicense),
     getConferenceServices: jasmine.createSpy('getConferenceServices').and.returnValue(getJSONFixture('core/json/authInfo/confServices.json')),
     getCareServices: jasmine.createSpy('getCareServices').and.returnValue(getJSONFixture('core/json/authInfo/careServices.json').careLicense),
     getCmrServices: jasmine.createSpy('getCmrServices').and.returnValue(getJSONFixture('core/json/authInfo/cmrServices.json')),
@@ -26,12 +26,13 @@ describe('Controller: PlanReviewCtrl', function () {
     $provide.value('Authinfo', authInfo);
   }));
 
-  beforeEach(inject(function ($controller, _$httpBackend_, $q, $rootScope, _FeatureToggleService_, _Userservice_, _UrlConfig_, _WebExUtilsFact_) {
+  beforeEach(inject(function ($controller, _$httpBackend_, $q, $rootScope, _FeatureToggleService_, _Userservice_, _UrlConfig_, _SetupWizardService_, _WebExUtilsFact_) {
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     UrlConfig = _UrlConfig_;
     Userservice = _Userservice_;
     FeatureToggleService = _FeatureToggleService_;
+    SetupWizardService = _SetupWizardService_;
     WebExUtilsFact = _WebExUtilsFact_;
 
     getUserMe = getJSONFixture('core/json/users/me.json');
@@ -49,7 +50,26 @@ describe('Controller: PlanReviewCtrl', function () {
         return false;
       }
     });
-
+    spyOn(SetupWizardService, 'hasPendingServiceOrder').and.returnValue(true);
+    spyOn(SetupWizardService, 'getPendingMeetingLicenses').and.returnValue([{
+      offerName: 'MC',
+      capacity: 200,
+    }]);
+    spyOn(SetupWizardService, 'getPendingCallLicenses').and.returnValue([{
+      offerName: 'CO',
+      capacity: 200,
+    }]);
+    spyOn(SetupWizardService, 'getPendingAudioLicenses').and.returnValue([{
+      offerName: 'WEBEX',
+    }]);
+    spyOn(SetupWizardService, 'getPendingMessageLicenses').and.returnValue([{
+      offerName: 'CF',
+      capacity: 200,
+    }]);
+    spyOn(SetupWizardService, 'getOrderAndSubId').and.returnValue({
+      orderId: 'abc123',
+      subscriptionId: 'def456',
+    });
     controller = $controller('PlanReviewCtrl', {
       $scope: $scope,
     });
@@ -87,6 +107,20 @@ describe('Controller: PlanReviewCtrl', function () {
       expect(controller.trialExists).toEqual(true);
       expect(controller.trialId).toEqual('33e66606-b1b8-4794-a7c5-5bfc5046380f');
       expect(controller.careServices.isNewTrial).toEqual(false);
+    });
+  });
+
+  describe('Pending Licenses View', function () {
+    it('Should set the showPendingView toggle to true when subscription has pending licenses', function () {
+      expect(controller.showPendingView).toBe(true);
+    });
+
+    it('Should concat meeting and audio licenses', function () {
+      expect(controller.pendingMeetingLicenses.length).toBe(2);
+    });
+
+    it('Should set the display value for the licenses', function () {
+      expect(controller.pendingMeetingLicenses[0].displayName).toBeDefined();
     });
   });
 
@@ -241,6 +275,22 @@ describe('Controller: PlanReviewCtrl', function () {
       var fakeSiteUrl = 'sitetransfer2.eng.webex.com';
       var searchResult = WebExUtilsFact.isCIEnabledSite(fakeSiteUrl);
       expect(searchResult).toBe(false);
+    });
+  });
+
+  describe('getNamedLabel function ', function () {
+    it('should return Chat and Callback string for a subscription that has license offer name CDC', function () {
+      var licenseOfferName = 'CDC';
+      var label = 'onboardModal.paidCDC';
+      var result = controller.getNamedLabel(licenseOfferName);
+      expect(result).toEqual(label);
+    });
+
+    it('should return Chat, Callback and Inbound Call string for a subscription that has license offer name CVC', function () {
+      var licenseOfferName = 'CVC';
+      var label = 'onboardModal.paidCVC';
+      var result = controller.getNamedLabel(licenseOfferName);
+      expect(result).toEqual(label);
     });
   });
 });

@@ -20,7 +20,7 @@ class HybridServicesConnectorSidepanelCtrl implements ng.IComponentController {
 
 export class HybridServicesConnectorSidepanelComponent implements ng.IComponentOptions {
   public controller = HybridServicesConnectorSidepanelCtrl;
-  public templateUrl = 'modules/hercules/hybrid-services-connector-sidepanel/hybrid-services-connector-sidepanel.html';
+  public template = require('modules/hercules/hybrid-services-connector-sidepanel/hybrid-services-connector-sidepanel.html');
   public bindings = {
     connector: '<',
   };

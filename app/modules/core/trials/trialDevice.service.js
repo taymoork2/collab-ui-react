@@ -218,6 +218,12 @@
         model: 'CISCO_7832',
         type: 'CALL_DEVICES',
       },
+      CISCO_8841: {
+        min: 1,
+        max: 4,
+        model: 'CISCO_8841',
+        type: 'CALL_DEVICES',
+      },
       CISCO_7841: {
         min: 1,
         max: 4,
@@ -306,9 +312,9 @@
       var countryLists = _.map(deviceArray, function (device) {
         //get country lists with patched replacements if any
         var countryListName = _.chain(replacementArray)
-        .find({ default: countryListTypes[device] })
-        .get('override', countryListTypes[device])
-        .value();
+          .find({ default: countryListTypes[device] })
+          .get('override', countryListTypes[device])
+          .value();
         return _countries[countryListName] || _countries.US;
       });
       return _.map(_.intersection.apply(null, countryLists), function (country) {

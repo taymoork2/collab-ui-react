@@ -50,7 +50,7 @@ export class PrivateTrunkCertificateService {
 
   public deleteCert(certId: string): ng.IPromise<any> {
     return this.$modal.open({
-      templateUrl: 'modules/hercules/private-trunk/private-trunk-certificate/private-trunk-certificate-delete-confirm.html',
+      template: require('modules/hercules/private-trunk/private-trunk-certificate/private-trunk-certificate-delete-confirm.html'),
       type: 'dialog',
     })
       .result.then(() => {
@@ -64,7 +64,7 @@ export class PrivateTrunkCertificateService {
 
   public deleteCerts(): ng.IPromise<any> {
     return this.$modal.open({
-      templateUrl: 'modules/hercules/private-trunk/private-trunk-certificate/private-trunk-all-certificates-delete-confirm.html',
+      template: require('modules/hercules/private-trunk/private-trunk-certificate/private-trunk-all-certificates-delete-confirm.html'),
       type: 'dialog',
     })
       .result.then(() => {

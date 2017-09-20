@@ -12,6 +12,7 @@ export class AuthenticationSettingController {
   ) {
     const params = {
       basicInfo: true,
+      disableCache: true,
     };
     this.Orgservice.getAdminOrg(this.getAdminOrgHandler.bind(this), null, params);
   }
@@ -26,7 +27,7 @@ export class AuthenticationSettingController {
     this.ssoEnabled = ssoEnabled;
     this.ssoStatus = ssoEnabled ? 'success' : 'disabled';
     this.ssoStatusLoaded = true;
-    this.ssoStatusText = `ssoModal.${this.ssoEnabled ? 'ssoEnabledStatus' : 'ssoNotEnabledStatus'}`;
+    this.ssoStatusText = `common.${this.ssoEnabled ? 'enabled' : 'disabled'}`;
   }
 
   public modifySSO() {

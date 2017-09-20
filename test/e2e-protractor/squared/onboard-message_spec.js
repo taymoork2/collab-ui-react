@@ -1,5 +1,7 @@
 'use strict';
 
+var featureToggle = require('../utils/featureToggle.utils');
+
 /* global manageUsersPage */
 
 describe('Onboard users with Message Service', function () {
@@ -40,6 +42,10 @@ describe('Onboard users with Message Service', function () {
       utils.waitForText(manageUsersPage.select.title, 'Add or Modify Users');
       utils.click(manageUsersPage.select.radio.orgManual);
       utils.click(manageUsersPage.buttons.next);
+      if (featureToggle.features.atlasEmailSuppress) {
+        utils.wait(manageUsersPage.emailSuppress.emailSuppressIcon);
+        utils.click(manageUsersPage.buttons.next);
+      }
       utils.waitForText(manageUsersPage.select.title, 'Manually Add or Modify Users');
     });
 
@@ -56,7 +62,12 @@ describe('Onboard users with Message Service', function () {
 
   describe('Onboard user', function () {
     it('should add a user (Message On)', function () {
-      users.createUserWithLicense(testUser, LICENSE);
+      // TODO: brspence - revert back to creating user with meeting license after backend fix
+      users.createUserWithLicense(testUser);
+    });
+
+    it('should check (Message Off) then check', function () {
+      users.clickServiceCheckbox(testUser, false, false, LICENSE);
     });
 
     it('should re-enable the Messenger interop entitlement', function () {
@@ -74,12 +85,8 @@ describe('Onboard users with Message Service', function () {
       users.clickServiceCheckbox(testUser, true, false, LICENSE);
     });
 
-    it('should check (Message Off) then check', function () {
+    it('should check (Message Off)', function () {
       users.clickServiceCheckbox(testUser, false, false, LICENSE);
-    });
-
-    it('should check (Message On)', function () {
-      users.clickServiceCheckbox(testUser, true, false, LICENSE);
     });
   });
 

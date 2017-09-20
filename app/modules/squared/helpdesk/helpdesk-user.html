@@ -17,6 +17,7 @@
         </span>
         <img class="user-img" ng-if="helpdeskUserCtrl.user.photos" ng-src="{{helpdeskUserCtrl.user.photos[1].value}}"/>
         {{helpdeskUserCtrl.user.displayName}}
+        <cr-pro-pack-icon ng-if="helpdeskUserCtrl.isProPackCustomer"></cr-pro-pack-icon>
       </h3>
 
       <hr>
@@ -209,10 +210,9 @@
 
     </div>
 
-    <div ng-if="helpdeskUserCtrl.cardsAvailable"
-         class="columns large-8 medium-7 card-panel"
-         ng-include src="'modules/squared/helpdesk/user-cards.html'">
-    </div>
+    <help-desk-user-cards ng-if="helpdeskUserCtrl.cardsAvailable"
+         class="columns large-8 medium-7 card-panel">
+    </help-desk-user-cards>
     <div ng-if="!helpdeskUserCtrl.cardsAvailable"
          class="columns large-8 medium-7 card-panel">
       <div cs-loader class="helpdesk-cards-loading"></div>

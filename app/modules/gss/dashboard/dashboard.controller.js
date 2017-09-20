@@ -48,7 +48,7 @@
         type: 'small',
         controller: 'AddComponentCtrl',
         controllerAs: 'addComponentCtrl',
-        templateUrl: 'modules/gss/components/addComponent/addComponent.tpl.html',
+        template: require('modules/gss/components/addComponent/addComponent.tpl.html'),
         modalClass: 'add-component',
       }).result.then(function () {
         loadComponents(GSSService.getServiceId());

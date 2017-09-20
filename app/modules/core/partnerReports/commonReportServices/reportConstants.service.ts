@@ -51,11 +51,12 @@ export class ReportConstants {
   public readonly ALL = 'all';
   public readonly ENGAGEMENT = 'engagement';
   public readonly QUALITY = 'quality';
+  public readonly DETAILS = 'details';
 
   // Report Filtering All/Engagement/quality
-  public readonly filterArray: IFilterObject[] = [{
+  public filterArray: IFilterObject[] = [{
     id: 'allReports',
-    label: 'reportsPage.all',
+    label: 'common.all',
     selected: true,
     toggle: undefined,
   }, {
@@ -73,7 +74,20 @@ export class ReportConstants {
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
+    private FeatureToggleService,
   ) {}
+
+  get FILTER_ARRAY(): IFilterObject[] {
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.hI802)
+      .then(supports => {
+        if (supports) {
+          if (this.filterArray.length < 4) {
+            this.filterArray.push({ id: 'records', label: 'reportsPage.details', selected: false, toggle: undefined });
+          }
+        }
+      });
+    return this.filterArray;
+  }
 
   get WEEK_FILTER(): ITimespan {
     return {

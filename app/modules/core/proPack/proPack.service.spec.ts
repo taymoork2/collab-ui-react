@@ -7,9 +7,14 @@ describe('ProPackService', () => {
     this.injectDependencies(
       '$q',
       '$rootScope',
+      '$state',
+      'Authinfo',
+      'Config',
       'FeatureToggleService',
+      'LicenseService',
       'ProPackService',
     );
+    spyOn(this.Authinfo, 'isPremium').and.returnValue(false);
     spyOn(this.FeatureToggleService, 'atlasITProPackGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'atlasITProPackPurchasedGetStatus').and.returnValue(this.$q.resolve(true));
     installPromiseMatchers();
@@ -29,24 +34,17 @@ describe('ProPackService', () => {
       expect(promise).toBeResolved();
     });
   });
-  describe('getProPackPurchased()', () => {
-    it('should return true if atlas-it-pro-pack-purchased FT is enabled  and false if it\'s not', function(){
-      let promise = this.ProPackService.getProPackPurchased().then(result => {
+  describe('hasProPackPurchased()', () => {
+    it('should return true if both atlas-it-pro-pack-purchased and atlas-it-pro-pack FTs are enabled or Authinfo.isPremium is true', function(){
+      let promise = this.ProPackService.hasProPackPurchased().then(result => {
         expect(result).toBeTruthy();
       });
       this.$rootScope.$digest();
       expect(promise).toBeResolved();
+
+      this.Authinfo.isPremium.and.returnValue(true);
       this.FeatureToggleService.atlasITProPackPurchasedGetStatus.and.returnValue(this.$q.resolve(false));
-      promise = this.ProPackService.getProPackPurchased().then(result => {
-        expect(result).toBeFalsy();
-      });
-      this.$rootScope.$digest();
-      expect(promise).toBeResolved();
-    });
-  });
-  describe('hasProPackPurchased()', () => {
-    it('should return true if both atlas-it-pro-pack-purchased and atlas-it-pro-pack FTs are enabled', function(){
-      const promise = this.ProPackService.hasProPackPurchased().then(result => {
+      promise = this.ProPackService.hasProPackPurchased().then(result => {
         expect(result).toBeTruthy();
       });
       this.$rootScope.$digest();
@@ -55,7 +53,6 @@ describe('ProPackService', () => {
 
     it('should return false if either atlas-it-pro-pack-purchased or atlas-it-pro-pack FTs are disabled', function(){
       this.FeatureToggleService.atlasITProPackGetStatus.and.returnValue(this.$q.resolve(false));
-      this.FeatureToggleService.atlasITProPackPurchasedGetStatus.and.returnValue(this.$q.resolve(true));
       let promise = this.ProPackService.hasProPackPurchased().then(result => {
         expect(result).toBeFalsy();
       });
@@ -73,8 +70,16 @@ describe('ProPackService', () => {
   });
 
   describe('hasProPackPurchasedOrNotEnabled()', () => {
-    it('should return true if both atlas-it-pro-pack-purchased is enabled and atlas-it-pro-pack FTs is enabled', function(){
-      const promise = this.ProPackService.hasProPackPurchasedOrNotEnabled().then(result => {
+    it('should return true if both atlas-it-pro-pack-purchased is enabled and atlas-it-pro-pack FTs is enabled or Authinfo.isPremium is true', function(){
+      let promise = this.ProPackService.hasProPackPurchasedOrNotEnabled().then(result => {
+        expect(result).toBeTruthy();
+      });
+      this.$rootScope.$digest();
+      expect(promise).toBeResolved();
+
+      this.Authinfo.isPremium.and.returnValue(true);
+      this.FeatureToggleService.atlasITProPackPurchasedGetStatus.and.returnValue(this.$q.resolve(false));
+      promise = this.ProPackService.hasProPackPurchasedOrNotEnabled().then(result => {
         expect(result).toBeTruthy();
       });
       this.$rootScope.$digest();
@@ -103,8 +108,16 @@ describe('ProPackService', () => {
   });
 
   describe('hasProPackEnabledAndNotPurchased()', () => {
-    it('should return false if atlas-it-pro-pack-purchased is enabled and atlas-it-pro-pack FTs is enabled', function(){
-      const promise = this.ProPackService.hasProPackEnabledAndNotPurchased().then(result => {
+    it('should return false if atlas-it-pro-pack-purchased is enabled or Authinfo.isPremium is true and atlas-it-pro-pack FTs is enabled', function(){
+      let promise = this.ProPackService.hasProPackEnabledAndNotPurchased().then(result => {
+        expect(result).toBeFalsy();
+      });
+      this.$rootScope.$digest();
+      expect(promise).toBeResolved();
+
+      this.Authinfo.isPremium.and.returnValue(true);
+      this.FeatureToggleService.atlasITProPackPurchasedGetStatus.and.returnValue(this.$q.resolve(false));
+      promise = this.ProPackService.hasProPackEnabledAndNotPurchased().then(result => {
         expect(result).toBeFalsy();
       });
       this.$rootScope.$digest();

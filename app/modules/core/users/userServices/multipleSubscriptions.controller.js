@@ -6,7 +6,7 @@
     .controller('MultipleSubscriptionsCtrl', MultipleSubscriptionsCtrl);
 
   /* @ngInject */
-  function MultipleSubscriptionsCtrl(Authinfo, Notification, Orgservice) {
+  function MultipleSubscriptionsCtrl(Notification, Orgservice) {
     var vm = this;
 
     vm.oneBilling = false;
@@ -19,19 +19,16 @@
     init();
 
     function init() {
-      var licensesInfo = Authinfo.getLicenses();
-      if (!_.isEmpty(licensesInfo)) {
-        Orgservice.getLicensesUsage().then(function (subscriptions) {
-          vm.subscriptionOptions = _.uniq(_.map(subscriptions, 'subscriptionId'));
-          vm.selectedSubscription = _.head(vm.subscriptionOptions);
-          vm.oneBilling = _.size(vm.subscriptionOptions) === 1;
-          vm.roomSystemsExist = _.some(_.flatten(_.uniq(_.map(subscriptions, 'licenses'))), {
-            licenseType: 'SHARED_DEVICES',
-          });
-        }).catch(function (response) {
-          Notification.errorResponse(response, 'onboardModal.subscriptionIdError');
+      Orgservice.getInternallyManagedSubscriptions().then(function (subscriptions) {
+        vm.subscriptionOptions = _.uniq(_.map(subscriptions, 'subscriptionId'));
+        vm.selectedSubscription = _.head(vm.subscriptionOptions);
+        vm.oneBilling = _.size(vm.subscriptionOptions) === 1;
+        vm.roomSystemsExist = _.some(_.flatten(_.uniq(_.map(subscriptions, 'licenses'))), {
+          licenseType: 'SHARED_DEVICES',
         });
-      }
+      }).catch(function (response) {
+        Notification.errorResponse(response, 'onboardModal.subscriptionIdError');
+      });
     }
 
     function showCareLicenses(careLicenses) {

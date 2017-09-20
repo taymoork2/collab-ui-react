@@ -2,28 +2,31 @@ import * as provisioner from '../../provisioner/provisioner';
 import { CustomerSetupPage } from '../pages/customerSetup.page';
 import * as os from 'os';
 import { CallSettingsPage } from '../pages/callSettings.page';
-import { AddUserPage } from '../pages/addUser.page';
+import { CallUserPage } from '../pages/callUser.page';
 import { AddPlacesPage } from '../pages/addPlaces.page';
+import * as featureToggle from '../../utils/featureToggle.utils';
 
 const addPlaces = new AddPlacesPage();
-const AddUser = new AddUserPage();
+const AddUser = new CallUserPage();
 const callSettings = new CallSettingsPage();
 const customerSetup = new CustomerSetupPage();
+const now = Date.now();
+
 /* globals partner, navigation, utils, LONG_TIMEOUT, wizard,manageUsersPage*/
 
 describe('Huron Functional: e2e-customer-setup', () => {
   const testPartner = 'huron-ui-test-partner';
   const CUSTOMER_NAME = `${os.userInfo().username}_e2e-customer-setup`;
   const CUSTOMER_EMAIL = `huron.ui.test.partner+${CUSTOMER_NAME}@gmail.com`;
-  const USER_EMAIL = 'huron.ui.test.user+captainphasma@gmail.com';
-  const USER_FIRST_NAME = 'Captain';
-  const USER_LAST_NAME = 'Phasma';
+  const USER_EMAIL = `huron.ui.test.partner+${CUSTOMER_NAME}_darthvader_${now}@gmail.com`;
+  const USER_FIRST_NAME = 'Darth';
+  const USER_LAST_NAME = 'Vader';
   var partnerWindow;
 
   beforeAll(done => {
     provisioner.tearDownAtlasCustomer(testPartner, CUSTOMER_NAME);
     provisioner.loginPartner(testPartner)
-    .then(done);
+      .then(done);
   });
   afterAll(done => {
     provisioner.tearDownAtlasCustomer(testPartner, CUSTOMER_NAME).then(done);
@@ -78,7 +81,7 @@ describe('Huron Functional: e2e-customer-setup', () => {
     });
     it('should launch customer service wizard setup portal', () => {
       utils.click(customerSetup.launchCustomerPortalButton);
-      utils.switchToNewWindow().then(() => { 
+      utils.switchToNewWindow().then(() => {
         utils.wait(wizard.wizard, LONG_TIMEOUT);
         utils.waitIsDisplayed(wizard.leftNav);
         utils.waitIsDisplayed(wizard.mainView);
@@ -126,7 +129,7 @@ describe('Huron Functional: e2e-customer-setup', () => {
     });
     it('should navigate to customer call settings page', () => {
       utils.click(customerSetup.services.call.callSettingsLink);
-      navigation.expectDriverCurrentUrl('services/call-settingsnew');
+      navigation.expectDriverCurrentUrl('services/call-settings');
       utils.waitForText(customerSetup.services.title, 'Call');
       utils.expectIsDisplayed(callSettings.regionalSettingsTitle);
       utils.expectIsDisplayed(callSettings.internalDialingTitle);
@@ -151,11 +154,15 @@ describe('Huron Functional: e2e-customer-setup', () => {
       });
       it('should navigate to manually add user with "email" or "Names and email" when hit "Next"', () => {
         utils.click(manageUsersPage.buttons.next);
+        if (featureToggle.features.atlasEmailSuppress) {
+          utils.wait(manageUsersPage.emailSuppress.emailSuppressIcon);
+          utils.click(manageUsersPage.buttons.next);
+        }
         utils.expectIsDisplayed(manageUsersPage.manual.emailAddress.addUsersField, LONG_TIMEOUT);
         utils.expectIsDisplayed(manageUsersPage.manual.radio.emailAddress);
       });
       it('Should contain valid input fields on selecting names and email', () => {
-        utils.click(manageUsersPage.manual.radio.nameAndEmail);      
+        utils.click(manageUsersPage.manual.radio.nameAndEmail);
         utils.expectIsDisplayed(manageUsersPage.manual.namesAndEmail.firstName);
       });
 

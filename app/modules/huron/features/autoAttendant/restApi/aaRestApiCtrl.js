@@ -2,8 +2,8 @@
   'use strict';
 
   angular
-  .module('uc.autoattendant')
-  .controller('AARestApiCtrl', AARestApiCtrl);
+    .module('uc.autoattendant')
+    .controller('AARestApiCtrl', AARestApiCtrl);
 
   /* @ngInject */
   function AARestApiCtrl($modal, $scope, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService) {
@@ -11,6 +11,7 @@
 
     var doREST = 'doREST';
     var action;
+    vm.variables = [];
 
     vm.method = '';
     vm.url = '';
@@ -24,6 +25,7 @@
       openModal().result.then(function () {
         vm.method = action.method;
         vm.url = action.url;
+        vm.variables = action.variableSet;
         if (!_.isEmpty(vm.method) && !_.isEmpty(vm.url)) {
           AACommonService.setRestApiStatus(true);
           AACommonService.setIsValid(vm.uniqueCtrlIdentifer, true);
@@ -40,7 +42,7 @@
 
     function openModal() {
       return $modal.open({
-        templateUrl: 'modules/huron/features/autoAttendant/restApi/aaConfigureApiModal.tpl.html',
+        template: require('modules/huron/features/autoAttendant/restApi/aaConfigureApiModal.tpl.html'),
         controller: 'AAConfigureApiModalCtrl',
         controllerAs: 'aaConfigureApiModal',
         type: 'full',

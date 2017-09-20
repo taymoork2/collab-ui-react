@@ -75,6 +75,9 @@
       phone7832: {
         trialDeviceQuantityValidator: '',
       },
+      phone8841: {
+        trialDeviceQuantityValidator: '',
+      },
       phone7841: {
         trialDeviceQuantityValidator: '',
       },
@@ -109,7 +112,7 @@
     };
 
     if (_.has($stateParams, 'details.details.shippingInformation.country')) {
-        // nothing was supplied to us and we have something from the backend
+      // nothing was supplied to us and we have something from the backend
       _trialDeviceData.shippingInfo = $stateParams.details.details.shippingInformation;
     }
 
@@ -141,6 +144,9 @@
     vm.phone8845 = _.find(_trialCallData.details.phones, {
       model: 'CISCO_8845',
     });
+    vm.phone8841 = _.find(_trialCallData.details.phones, {
+      model: 'CISCO_8841',
+    });
     vm.phone7832 = _.find(_trialCallData.details.phones, {
       model: 'CISCO_7832',
     });
@@ -153,6 +159,7 @@
     vm.setQuantity(vm.mx300);
     vm.setQuantity(vm.phone8865);
     vm.setQuantity(vm.phone8845);
+    vm.setQuantity(vm.phone8841);
     vm.setQuantity(vm.phone7832);
     vm.setQuantity(vm.phone7841);
 
@@ -184,12 +191,12 @@
     ////////////////
     function getCountriesForSelectedDevices() {
       var selectedDevices = _.chain(_.union(_trialRoomSystemData.details.roomSystems, _trialCallData.details.phones))
-      .filter(function (device) {
-        return device.quantity > 0 && device.enabled === true;
-      })
-      .map(function (device) {
-        return device.model;
-      }).value();
+        .filter(function (device) {
+          return device.quantity > 0 && device.enabled === true;
+        })
+        .map(function (device) {
+          return device.model;
+        }).value();
       return TrialDeviceService.getCountries(selectedDevices, _shipCountryListReplacement);
     }
 

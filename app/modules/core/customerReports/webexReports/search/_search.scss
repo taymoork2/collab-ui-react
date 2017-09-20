@@ -1,4 +1,5 @@
 @import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/settings/page';
 
 .gemini-side-panel {
   .feature-arrow {
@@ -19,7 +20,7 @@
       }
 
       .section-title-row {
-        padding: .5rem 0;
+        padding: 0.5rem 0;
         a {
           display: block;
           margin: 0 -25px;
@@ -31,17 +32,10 @@
 
           &:hover {
             background-color: $gray-light-4;
-
-            .pull-right {
-              color: $focus-color;
-            }
           }
 
           .pull-right {
-            .icon-right-arrow {
-              position: relative;
-              top: 1px;
-            }
+            color: $focus-color;
           }
         }
       }
@@ -51,6 +45,10 @@
         padding: 0;
       }
 
+      .pull-right {
+        color: $gray-light-1;
+      }
+
       h6.section-list {
         margin-top: -10px;
         margin-bottom: 10px;
@@ -58,6 +56,7 @@
 
       .session-type-list li {
         overflow: hidden;
+        font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
         span {
           float: right;
         }
@@ -70,7 +69,7 @@
     width: 100%;
     overflow: hidden;
     li {
-      width: 30%;
+      width: 33.3%;
       height: 40px;
       float: left;
       list-style: none;
@@ -84,8 +83,8 @@
   background: $white;
   padding-left: 0;
   padding-right: 0;
-  margin: -1rem -1.5rem;
   overflow: hidden;
+  height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height})) !important;
 
   .meeting-search {
     display: flex;
@@ -94,6 +93,12 @@
     .gridStyle {
       margin-top: 20px;
       height: calc(100vh - 266px) !important;
+    }
+
+    .error {
+      .cs-datapicker-normal {
+        background-color: #FEDCD7; //TODO Now Collab-UI(4.2.0) changed the color variable $color-alerts-lighter(#FEDCD7 => #F0928B), the original is #FEDCD7, But now it’s available, we need to check with Collab-UI Team.
+      }
     }
 
     .cs-datapicker-normal {
@@ -108,9 +113,11 @@
       }
     }
 
-    .cs-datepicker {
-      box-sizing: border-box;
-      width: 242px;
+    .example-indent {
+      position: relative;
+      .cs-datepicker {
+        width: 100%;
+      }
     }
 
     .cs-datepicker .calendar span.day-wrapper span.day.today {
@@ -121,27 +128,43 @@
       color: $white;
     }
 
-    .searchfilter {
-      height: 36px;
-      .searchbox {
-        margin-left: 2rem;
-        .searchinput {
-          > input {
-            width: 400px !important;
-            max-width: 400px !important;
-            margin-right: 30px;
-            color: $gray-dark-1 !important;
+    .searchList {
+      width: 100%;
+
+      .searchfilter {
+        height: 36px;
+        width: 70%;
+        .searchbox {
+          margin-left: 2rem;
+          .searchinput {
+            > input {
+              width: 300px !important;
+              max-width: 300px !important;
+              margin-right: 30px;
+              color: $gray-dark-1 !important;
+            }
           }
+        }
+      }
+
+      .timezone {
+        width: 25%;
+        padding-right: 1rem;
+
+        .select-options > li > a,
+        .select-options > .li > a {
+          font-size: 0.8rem;
         }
       }
     }
 
     .error {
-      background-color: $color-alerts-lighter;
+      //background-color: $color-alerts-lighter; //TODO same about.
+      background-color: #FEDCD7;
       border-color: $color-alerts-base;
 
       input {
-        background-color: $color-alerts-lighter;
+        background: none !important;
       }
     }
   }
@@ -221,7 +244,7 @@
         .name {
           color: $gray-base;
           line-height: 1;
-          font-size: 1.2rem;
+          font-size: 1rem;
           font-family: "CiscoSans";
         }
 
@@ -245,7 +268,7 @@
         .text-center {
           width: 50%;
 
-          h5 {
+          h6 {
             color: $gray-base;
           }
 
@@ -255,10 +278,12 @@
         }
       }
     }
+  }
 
-    .timeline {
-      margin-top: 15px;
-    }
+  .timeline {
+    margin-top: 25px;
+    min-height: 340px;
+    text-align: center;
   }
 
   .row {
@@ -311,6 +336,7 @@
           height: 31px;
           h4 {
             color: $gray-base;
+            font-size: 1rem;
           }
         }
         section {
@@ -321,7 +347,7 @@
 
         p {
           color: $color-primary-base;
-          font-size: 32px;
+          font-size: 30px;
           font-weight: 300;
           font-family: "CiscoSans";
 
@@ -331,14 +357,16 @@
 
             span {
               color: $color-primary-base;
-              font-size: .575rem;
+              font-size: 0.575rem;
+              font-family: "Cisco_Toolkit_Icons";
             }
           }
         }
 
         span {
-          font-size: 16px;
+          font-size: 14px;
           color: $gray-base;
+          font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
         }
       }
     }
@@ -390,4 +418,54 @@
       }
     }
   }
+}
+
+.tooltip.tip-top[popup-class="tn-search-error"] {
+  margin-top: -5px;
+  position: absolute;
+  padding: 0;
+  .c-nub {
+    background: #FEDCD7;
+    border: solid 1px #E74A3E;
+    color: #E74A3E;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+
+    &::before {
+      font-family: "Cisco_Toolkit_Icons";
+      color: $color-alerts-base;
+      //content: '\E0B0'; //TODO  same about.
+      content: '\E0BA';
+      margin-right: 4px;
+      vertical-align: top;
+    }
+
+    &::after {
+      position: absolute;
+      left: calc(50% + 1px);
+      content: "";
+      border: 4px solid;
+      z-index: 12;
+      bottom: -7px;
+      //border-color: $color-alerts-lighter transparent transparent; //TODO  same about.
+      border-color: #FEDCD7 transparent transparent;
+    }
+  }
+
+  &::after {
+    position: absolute;
+    bottom: -10px;
+    border: 5px solid;
+    border-color: $color-alerts-base transparent transparent transparent;
+    left: 50%;
+    content: "";
+  }
+}
+
+.ng-hide {
+  display: none;
+}
+
+.panel-container .side-panel-wrapper .side-panel-section .feature-list .success {
+  color: $color-green-dark !important;
 }

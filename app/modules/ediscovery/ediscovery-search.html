@@ -22,13 +22,16 @@
               </cs-select>
             </div>
             <div class="col-md-6">
-              <div class="cs-input-group search-box" ng-class="{'error': ediscoverySearchCtrl.limitError}">
-                <form class="input-validation" novalidate>
-                  <input class="cs-input" type="text" ng-model="ediscoverySearchCtrl.searchModel" autofocus="true"
-                   ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)" placeholder="{{ediscoverySearchCtrl.searchPlaceholder}}">
-                   <p class="cs-input__help-text search-spacing" translate="{{ediscoverySearchCtrl.searchHelpText}}"></p>
-                  <div class="cs-input__messages" ng-if="ediscoverySearchCtrl.limitError" role="alert">
-                    <div translate="ediscovery.searchErrors.invalidLimit"></div>
+              <div class="cs-input-group search-box" ng-class="{'error': ediscoverySearchCtrl.limitErrorMessage || (sForm.sInput.$invalid && sForm.sInput.$touched)}">
+                <form name="sForm" class="input-validation" novalidate>
+                  <input required class="cs-input" type="text" name="sInput" ng-model="ediscoverySearchCtrl.searchModel" autofocus="true"
+                   ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)" placeholder="{{ediscoverySearchCtrl.searchPlaceholder}}" >
+                   <p ng-if="!ediscoverySearchCtrl.limitErrorMessage" class="cs-input__help-text search-spacing">{{ediscoverySearchCtrl.searchHelpText}}</p>
+                  <div ng-class="{'search-req-msg': !ediscoverySearchCtrl.limitErrorMessage}" class="cs-input__messages" role="alert">
+                    <div ng-messages="sForm.sInput.$error" class="search-limit-msg">
+                      <span ng-message="required" translate="common.fieldRequired"></span>
+                    </div>
+                    <span ng-if="ediscoverySearchCtrl.limitErrorMessage" class="search-limit-msg">{{ediscoverySearchCtrl.limitErrorMessage}}</span>
                   </div>
                 </form>
               </div>
@@ -40,7 +43,7 @@
               <span class="search-spacing search-text small-gap">
                 <span translate="common.dateRange"></span>
                 <i ng-if="ediscoverySearchCtrl.showHover()"
-                tooltip="{{'ediscovery.searchParameters.dateRangeTooltip' | translate}}" tooltip-placement="right"
+                tooltip-html-unsafe="{{'ediscovery.searchParameters.dateRangeTooltip' | translate}}" tooltip-placement="right" tooltip-class="cs-datepicker-tooltip"
                 class="icon icon-info"></i>
               </span>
             </div>
@@ -57,7 +60,7 @@
             <span class="col-md-2" translate="common.to"></span>
             <div class="col-md-5 search-box">
             <cs-datepicker required  ng-model="ediscoverySearchCtrl.searchCriteria.endDate"
-              first-enabled-date="{{ediscoverySearchCtrl.lastEnabledDate}}"
+              first-enabled-date="{{ediscoverySearchCtrl.firstEnabledDate}}"
               last-enabled-date="{{ediscoverySearchCtrl.lastEnabledDate}}"
               disabled-tooltip-text="{{ediscoverySearchCtrl.getProPackTooltip()}}"
               view-format="YYYY-MM-DD">
@@ -70,12 +73,6 @@
               {{error}}
             </span>
           </div>
-          <div class="row date-checks" ng-if="ediscoverySearchCtrl.dateValidationWarning">
-            <i class="icon icon-warning date-validation search-warning"></i>
-            <span class="date-validation search-warning-text" ng-repeat="warning in ediscoverySearchCtrl.dateValidationWarning.warnings">
-              {{warning}}
-            </span>
-          </div>
           <!-- Text Message and File Name Row -->
           <div class="row query-row">
             <span class="search-spacing search-text large-gap" translate="ediscovery.searchParameters.messages"></span>
@@ -86,7 +83,7 @@
                 <input class="cs-input" type="text" name="qInput" ng-model="ediscoverySearchCtrl.queryModel"
                 placeholder="{{'ediscovery.searchParameters.messagesPlaceholder' | translate}}"
                 ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)" ng-maxlength="200">
-                <p class="cs-input__help-text search-spacing" translate="{{ediscoverySearchCtrl.messagesHelpText}}"></p>
+                <p class="cs-input__help-text search-spacing" translate="ediscovery.searchParameters.messagesHelpText"></p>
                 <div class="cs-input__messages" ng-messages="qForm.qInput.$error" role="alert">
                   <div ng-message="maxlength" class="query-error-msg" translate="ediscovery.searchErrors.queryLimit"></div>
                 </div>
@@ -135,7 +132,7 @@
     </div>
   </div>
 
-  <div class="search-result-area" ng-if="ediscoverySearchCtrl.roomInfo && !ediscoverySearchCtrl.ediscoveryToggle" ng-include="'modules/ediscovery/ediscovery-search-result.html'"></div>
-  <div class="search-result-area" ng-if="ediscoverySearchCtrl.roomInfo && ediscoverySearchCtrl.ediscoveryToggle" ng-include="'modules/ediscovery/ediscovery-search-result-adv.html'"></div>
+  <ediscovery-search-result class="search-result-area" ng-if="ediscoverySearchCtrl.roomInfo && !ediscoverySearchCtrl.ediscoveryToggle"></ediscovery-search-result>
+  <ediscovery-search-result-adv class="search-result-area" ng-if="ediscoverySearchCtrl.roomInfo && ediscoverySearchCtrl.ediscoveryToggle"></ediscovery-search-result-adv>
 
 </div>

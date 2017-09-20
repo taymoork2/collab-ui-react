@@ -150,7 +150,7 @@ export class PstnService {
     return this.$q.all(promises);
   }
 
-  public getCarrierInventory(carrierId: string, state: string, npa: string): ng.IPromise<any> {
+  public getCarrierInventory(carrierId: string, state: string, npa?: string): ng.IPromise<any> {
     const config: any = {
       carrierId: carrierId,
       numberType: NUMTYPE_DID,
@@ -240,7 +240,7 @@ export class PstnService {
       }).$promise;
     } else {
         // Otherwise release with carrier
-      return this.TerminusService.resellerCarrierNumbersReservationV2().delete({
+      return this.TerminusService.resellerNumberReservationV2().delete({
         resellerId: this.Authinfo.getCallPartnerOrgId(),
         reservationId: reservationId,
       }, {
@@ -642,11 +642,10 @@ export class PstnService {
       'Account Number and PIN Required': this.$translate.instant('pstnSetup.orderStatus.pinRequired'),
       'Address Mismatch': this.$translate.instant('pstnSetup.orderStatus.addressMismatch'),
       'BTN Mismatch': this.$translate.instant('pstnSetup.orderStatus.btnMismatch'),
-      'Customer has Trial Status': this.$translate.instant('pstnSetup.orderStatus.trialStatus'),
+      'Customer has Trial Status': this.$translate.instant('pstnSetup.orderStatus.tosNotSigned'),
       'FOC Received': this.$translate.instant('pstnSetup.orderStatus.focReceived'),
       'Invalid Authorization Signature': this.$translate.instant('pstnSetup.orderStatus.invalidSig'),
       'LOA Not Signed': this.$translate.instant('pstnSetup.orderStatus.loaNotSigned'),
-      'Terms of Service has not yet been accepted': this.$translate.instant('pstnSetup.orderStatus.tosNotSigned'),
       'Master Service Agreement not signed': this.$translate.instant('pstnSetup.orderStatus.msaNotSigned'),
       'Pending FOC from Vendor': this.$translate.instant('pstnSetup.orderStatus.pendingVendor'),
       Rejected: this.$translate.instant('pstnSetup.orderStatus.rejected'),

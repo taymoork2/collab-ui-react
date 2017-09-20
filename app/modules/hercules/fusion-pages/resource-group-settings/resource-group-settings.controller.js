@@ -6,9 +6,9 @@
     .controller('ResourceGroupSettingsController', ResourceGroupSettingsController);
 
   /* @ngInject */
-  function ResourceGroupSettingsController($stateParams, ResourceGroupService, Notification, $state, HybridServicesClusterService, $modal, FeatureToggleService) {
+  function ResourceGroupSettingsController($stateParams, ResourceGroupService, Notification, $state, HybridServicesClusterService, $modal) {
     var vm = this;
-    vm.backUrl = 'cluster-list';
+    vm.backState = 'cluster-list';
     vm.clusters = {
       title: 'hercules.resourceGroupSettings.clustersHeader',
     };
@@ -26,11 +26,6 @@
     vm.openAssignClustersModal = openAssignClustersModal;
     vm.handleKeypress = handleKeypress;
     vm.manageUsers = manageUsers;
-    vm.nameChangeEnabled = undefined;
-
-    FeatureToggleService.atlas2017NameChangeGetStatus().then(function (toggle) {
-      vm.nameChangeEnabled = toggle;
-    });
 
     loadResourceGroup($stateParams.id);
     determineIfRemoveAllowed();
@@ -89,7 +84,7 @@
         },
         controller: 'ConfirmDeleteResourceGroupController',
         controllerAs: 'vm',
-        templateUrl: 'modules/hercules/fusion-pages/resource-group-settings/confirm-delete-resource-group.html',
+        template: require('modules/hercules/fusion-pages/resource-group-settings/confirm-delete-resource-group.html'),
         type: 'dialog',
       }).result.then(function () {
         $state.go('cluster-list');
@@ -105,7 +100,7 @@
         },
         controller: 'AssignClustersController',
         controllerAs: 'vm',
-        templateUrl: 'modules/hercules/fusion-pages/resource-group-settings/assign-clusters.html',
+        template: require('modules/hercules/fusion-pages/resource-group-settings/assign-clusters.html'),
         type: 'full',
         windowClass: 'assign-clusters-modal',
       }).result.then(function (result) {

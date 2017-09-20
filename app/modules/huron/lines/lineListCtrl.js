@@ -6,7 +6,7 @@
     .controller('LinesListCtrl', LinesListCtrl);
 
   /* @ngInject */
-  function LinesListCtrl($scope, $templateCache, $timeout, $translate, LineListService, Log, Config, Notification, $state, FeatureToggleService, Authinfo) {
+  function LinesListCtrl($scope, $timeout, $translate, LineListService, Log, Config, Notification, $state, FeatureToggleService, Authinfo) {
     var vm = this;
 
     vm.currentDataPosition = 0;
@@ -28,6 +28,17 @@
     $scope.canShowActionsMenu = canShowActionsMenu;
     $scope.canShowExternalNumberDelete = canShowExternalNumberDelete;
     $scope.deleteExternalNumber = deleteExternalNumber;
+    $scope.initToggles = initToggles;
+
+    function initToggles() {
+      return FeatureToggleService.supports(FeatureToggleService.features.hI1484)
+        .then(function (supported) {
+          vm.ishI1484 = supported;
+          if (!supported) {
+            vm.gridOptions.columnDefs.splice(2, 1);
+          }
+        });
+    }
 
     vm.sort = {
       by: 'userid',
@@ -43,8 +54,10 @@
       filterValue: 'all',
     };
 
-    vm.isCallTrial = Authinfo.getLicenseIsTrial('COMMUNICATION', 'ciscouc') || Authinfo.getLicenseIsTrial('SHARED_DEVICES', false);
-
+    vm.isCallTrial = (_.isUndefined(Authinfo.getLicenseIsTrial('COMMUNICATION', 'ciscouc')) ||
+                       Authinfo.getLicenseIsTrial('COMMUNICATION', 'ciscouc')) &&
+                       (_.isUndefined(Authinfo.getLicenseIsTrial('SHARED_DEVICES', false)) ||
+                       Authinfo.getLicenseIsTrial('SHARED_DEVICES', false));
     // Defines Grid Filters "Unassigned" and "Assigned"
     vm.filters = [{
       name: $translate.instant('linesPage.unassignedLines'),
@@ -124,7 +137,7 @@
       vm.currentLine = null;
 
       // Get "unassigned" internal and external lines
-      LineListService.getLineList(startIndex, Config.usersperpage, vm.sort.by, vm.sort.order, vm.searchStr, vm.activeFilter, $scope.gridData)
+      LineListService.getLineList(startIndex, Config.usersperpage, vm.sort.by, vm.sort.order, vm.searchStr, vm.activeFilter, $scope.gridData, vm.ishI1484)
         .then(function (response) {
           $timeout(function () {
             vm.load = true;
@@ -139,7 +152,8 @@
           //function for sorting based on which piece of data the row has
           _.forEach($scope.gridData, function (row) {
             row.displayField = function () {
-              return (this.userId ? this.userId : $translate.instant('linesPage.unassignedLines')) + (this.status ? ' - ' + this.status : '');
+              var displayName = formatUserName(this.firstName, this.lastName, this.userId);
+              return (!_.isEmpty(displayName) ? displayName : $translate.instant('linesPage.unassignedLines')) + (this.status ? ' - ' + this.status : '');
             };
           });
           vm.gridRefresh = false;
@@ -151,6 +165,16 @@
           vm.gridRefresh = false;
         });
     } // End of function getLineList
+
+    function formatUserName(first, last, userId) {
+      var userName = userId;
+      var firstName = first || '';
+      var lastName = last || '';
+      if ((firstName.length > 0) || (lastName.length > 0)) {
+        userName = _.trim(firstName + ' ' + lastName);
+      }
+      return userName;
+    }
 
     var gridRowHeight = 44;
 
@@ -192,9 +216,16 @@
         headerCellClass: 'externalNumberHeader',
         width: '20%',
       }, {
+        field: 'locationName',
+        displayName: $translate.instant('usersPreview.location'),
+        sortable: true,
+        cellClass: 'anyColumn',
+        headerCellClass: 'anyHeader',
+        width: '*',
+      }, {
         field: 'displayField()',
         displayName: $translate.instant('linesPage.assignedTo'),
-        cellTemplate: getTemplate('_tooltipTpl'),
+        cellTemplate: require('./templates/_tooltipTpl.html'),
         sortable: true,
         sort: {
           direction: 'asc',
@@ -207,7 +238,7 @@
         field: 'actions',
         displayName: $translate.instant('linesPage.actionHeader'),
         enableSorting: false,
-        cellTemplate: getTemplate('_actionsTpl'),
+        cellTemplate: require('./templates/_actionsTpl.html'),
         width: '20%',
         cellClass: 'actionsColumn',
         headerCellClass: 'actionsHeader',
@@ -231,10 +262,6 @@
       }
     }
 
-    function getTemplate(name) {
-      return $templateCache.get('modules/huron/lines/templates/' + name + '.html');
-    }
-
     FeatureToggleService.supports(FeatureToggleService.features.huronPstn)
       .then(function (supported) {
         vm.hPstn = supported;
@@ -252,7 +279,6 @@
       });
     }
 
-
-    getLineList();
+    initToggles().finally(getLineList);
   }
 })();

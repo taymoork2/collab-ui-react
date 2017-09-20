@@ -42,7 +42,7 @@
       return calendarService.save({
         customerId: Authinfo.getOrgId(),
       },
-        data
+      data
       ).$promise;
     }
 
@@ -56,7 +56,7 @@
         customerId: Authinfo.getOrgId(),
         scheduleId: aCalendarId,
       },
-        data
+      data
       ).$promise;
     }
 

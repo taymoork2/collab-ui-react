@@ -8,7 +8,7 @@
     .service('HealthService', HealthService)
     .name;
 
-   /* @ngInject */
+  /* @ngInject */
   function HealthService($http, $q, UrlConfig) {
     var healthUrl = UrlConfig.getAdminServiceUrl() + 'ping';
 
@@ -23,9 +23,9 @@
         .then(function (response) {
           return response.data.serviceState;
         })
-      .catch(function (error) {
-        return $q.reject(error);
-      });
+        .catch(function (error) {
+          return $q.reject(error);
+        });
     }
   }
 })();

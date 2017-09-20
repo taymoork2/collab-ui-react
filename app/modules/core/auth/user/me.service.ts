@@ -16,8 +16,6 @@ export class MeService implements IMeService {
   public getMe(): ng.IPromise<IUser> {
     const meUrl = _.replace((this.UrlConfig.getScimUrl('') + '/me'), 'scim//', 'scim/');
     return this.$http.get<IUser>(meUrl)
-      .then(response => {
-        return response.data;
-      });
+      .then(response => response.data);
   }
 }

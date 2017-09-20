@@ -2,12 +2,13 @@
   'use strict';
 
   angular
-      .module('Sunlight')
-      .controller('CareFeaturesCtrl', CareFeaturesCtrl);
+    .module('Sunlight')
+    .controller('CareFeaturesCtrl', CareFeaturesCtrl);
 
   /* @ngInject */
-  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification) {
+  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification, VirtualAssistantService) {
     var vm = this;
+    vm.isVirtualAssistantEnabled = $state.isVirtualAssistantEnabled;
     vm.init = init;
     var pageStates = {
       newFeature: 'NewFeature',
@@ -67,24 +68,23 @@
       formatter: CareFeatureList.formatTemplates,
       i18n: 'careChatTpl.chatTemplate',
       isEmpty: false,
-      color: 'cta',
+      color: 'people',
       icons: ['icon-message', 'icon-phone'],
       data: [],
     }];
-
     vm.filters = [{
       name: $translate.instant('common.all'),
-      filterValue: 'all',
+      filterValue: CareFeatureList.filterConstants.all,
     }, {
-      name: $translate.instant('sunlightDetails.chatMediaType'),
-      filterValue: 'chat',
-    }, {
-      name: $translate.instant('sunlightDetails.callbackMediaType'),
-      filterValue: 'callback',
-    }, {
-      name: $translate.instant('sunlightDetails.chatPlusCallbackMediaType'),
-      filterValue: 'chatPlusCallback',
-    }];
+      name: $translate.instant('common.customerSupportTemplates'),
+      filterValue: CareFeatureList.filterConstants.customerSupport,
+    },
+    ];
+
+    if (vm.isVirtualAssistantEnabled) {
+      vm.features.push(VirtualAssistantService.featureList);
+      vm.filters.push(VirtualAssistantService.featureFilter);
+    }
 
     init();
 
@@ -188,7 +188,17 @@
       reInstantiateMasonry();
     }
 
-    vm.editCareFeature = function (feature) {
+    vm.editCareFeature = function (feature, $event) {
+      $event.stopImmediatePropagation();
+      if (feature.featureType === VirtualAssistantService.serviceCard.id) {
+        VirtualAssistantService.getConfig(feature.templateId).then(function (template) {
+          VirtualAssistantService.serviceCard.goToService($state, {
+            isEditFeature: true,
+            template: template,
+          });
+        });
+        return;
+      }
       CareFeatureList.getTemplate(feature.templateId).then(function (template) {
         $state.go('care.setupAssistant', {
           isEditFeature: true,
@@ -198,7 +208,9 @@
       });
     };
 
-    function deleteCareFeature(feature) {
+    function deleteCareFeature(feature, $event) {
+      $event.preventDefault();
+      $event.stopImmediatePropagation();
       featureToBeDeleted = feature;
       $state.go('care.Features.DeleteFeature', {
         deleteFeatureName: feature.name,
@@ -207,13 +219,15 @@
       });
     }
 
-    function openEmbedCodeModal(feature) {
+    function openEmbedCodeModal(feature, $event) {
+      $event.preventDefault();
+      $event.stopImmediatePropagation();
       CTService.openEmbedCodeModal(feature.templateId, feature.name);
     }
 
     function openNewCareFeatureModal() {
       $modal.open({
-        templateUrl: 'modules/sunlight/features/featureLanding/newCareFeatureModal.tpl.html',
+        template: require('modules/sunlight/features/featureLanding/newCareFeatureModal.tpl.html'),
         controller: 'NewCareFeatureModalCtrl',
         controllerAs: 'NewCareFeatureModalCtrl',
       });

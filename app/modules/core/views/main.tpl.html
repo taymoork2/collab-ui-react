@@ -1,7 +1,8 @@
-<div class="app-container">
+<div cr-feature-toggle feature-hide="atlas-2017-name-change" class="app-container">
   <div ng-controller="HeaderCtrl as headerCtrl">
     <cs-header ng-if="headerCtrl.headerTitle" navstyle="{{headerCtrl.navStyle}}" headertitle="{{headerCtrl.headerTitle}}" icon="{{headerCtrl.icon}}" show-read-only role="banner">
       <cs-header-left>
+        <cr-pro-pack-icon ng-if="headerCtrl.showProBadge()" class="pro-badge"></cr-pro-pack-icon>
         <div class="top-bar-orgname" ng-controller="UserInfoController" ng-if="headerCtrl.showOrgName()">
           <div class="top-bar-title" title="{{orgname}}">{{orgname}}</div>
         </div>
@@ -16,7 +17,9 @@
         <cr-user-info ng-if="headerCtrl.showUserDropDown()"></cr-user-info>
       </cs-header-right>
     </cs-header>
-    <learn-more-banner location="overview"></learn-more-banner>
+    <learn-more-overview-banner></learn-more-overview-banner>
+    <learn-more-report-banner></learn-more-report-banner>
+    <cr-banner class="header-adjust"></cr-banner>
   </div>
 
   <div class="wrapper">
@@ -26,6 +29,31 @@
     <div class="page-content-wrapper container-fluid" role="main">
       <div class="row full collapse">
         <div class="medium-12 columns content-view" ui-view="">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div cr-feature-toggle feature-show="atlas-2017-name-change" class="sidenav-app-container control-hub-container">
+  <div show-read-only></div>
+  <learn-more-report-banner></learn-more-report-banner>
+  <learn-more-overview-banner></learn-more-overview-banner>
+  <cr-banner></cr-banner>
+  <div class="sidenav-admin-container">
+    <div>
+    <div class="sidenav-admin-wrapper" ng-controller="TabsCtrl as tCtrl">
+      <cui-sidenav-admin image="{{tCtrl.image}}" headertitle="{{tCtrl.title}}" pages="tCtrl.tabs" ng-if="tCtrl.showLeftNav()" collapsed="tCtrl.collapsed">
+        <div ng-controller="HeaderCtrl as headerCtrl">
+          <cui-sidenav-admin-footer adminpages="headerCtrl.adminTabs" partner="{{headerCtrl.partnerInfo}}" collapsed="tCtrl.collapsed">
+            <cr-user-info ng-if="headerCtrl.showUserDropDown()"></cr-user-info>
+          </cui-sidenav-admin-footer>
+        </div>
+      </cui-sidenav-admin>
+    </div>
+    </div>
+    <div class="sidenav-page-content-wrapper" role="main">
+      <div class="row full collapse">
+        <div class="content-view" ui-view="">
         </div>
       </div>
     </div>

@@ -197,7 +197,7 @@ class CmcUserDetailsSettingsController implements ng.IComponentController {
 
 export class CmcUserDetailsSettingsComponent implements ng.IComponentOptions {
   public controller = CmcUserDetailsSettingsController;
-  public templateUrl = 'modules/cmc/user-menu/user-details-settings.component.html';
+  public template = require('modules/cmc/user-menu/user-details-settings.component.html');
   public bindings = {
     user: '<',
   };

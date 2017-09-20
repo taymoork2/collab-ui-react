@@ -54,7 +54,7 @@ class FeatureListCtrl implements ng.IComponentController {
 angular
   .module('Core')
   .component('featureList', {
-    templateUrl: 'modules/core/components/featureList/featureList.tpl.html',
+    template: require('modules/core/components/featureList/featureList.tpl.html'),
     controller: FeatureListCtrl,
     bindings: {
       features: '<',

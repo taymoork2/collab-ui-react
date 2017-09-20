@@ -90,7 +90,7 @@
     }
 
     function labelForTime(time) {
-      return moment(time, 'HH:mm').format('hh:mm A');
+      return moment(time, 'HH:mm').locale('en').format('hh:mm A');
     }
 
     function hoursWithSuffix(suffix) {
@@ -217,7 +217,7 @@
     function openEmbedCodeModal(templateId, templateName) {
       var header = $translate.instant('careChatTpl.embedCodeFor');
       $modal.open({
-        templateUrl: 'modules/sunlight/features/template/ctEmbedCodeModal.tpl.html',
+        template: require('modules/sunlight/features/template/ctEmbedCodeModal.tpl.html'),
         type: 'small',
         controller: 'EmbedCodeCtrl',
         controllerAs: 'embedCodeCtrl',
@@ -245,7 +245,7 @@
       };
     }
 
-    function getOverviewPageCards(mediaType, isProactiveFlagEnabled) {
+    function getOverviewPageCards(mediaType, isProactiveFlagEnabled, isVirtualChatAssistantEnabled) {
       var cards = [];
       switch (mediaType) {
         case 'chat':
@@ -253,6 +253,9 @@
             cards.push({ name: 'proactivePrompt', mediaIcons: [] });
           }
           cards.push({ name: 'customerInformation', mediaIcons: [] });
+          if (isVirtualChatAssistantEnabled) {
+            cards.push({ name: 'virtualAssistant', mediaIcons: [] });
+          }
           cards.push({ name: 'agentUnavailable', mediaIcons: [] });
           cards.push({ name: 'offHours', mediaIcons: [] });
           cards.push({ name: 'feedback', mediaIcons: [] });
@@ -267,6 +270,9 @@
             cards.push({ name: 'proactivePrompt', mediaIcons: ['icon-message'] });
           }
           cards.push({ name: 'customerInformationChat', mediaIcons: ['icon-message'] });
+          if (isVirtualChatAssistantEnabled) {
+            cards.push({ name: 'virtualAssistant', mediaIcons: ['icon-message'] });
+          }
           cards.push({ name: 'agentUnavailable', mediaIcons: ['icon-message'] });
           cards.push({ name: 'feedback', mediaIcons: ['icon-message'] });
           cards.push({ name: 'customerInformationCallback', mediaIcons: ['icon-phone'] });
@@ -289,6 +295,7 @@
             states.push('proactivePrompt');
           }
           states.push('customerInformation');
+          states.push('virtualAssistant');
           states.push('agentUnavailable');
           states.push('offHours');
           states.push('feedback');
@@ -311,6 +318,7 @@
             states.push('proactivePrompt');
           }
           states.push('customerInformationChat');
+          states.push('virtualAssistant');
           states.push('agentUnavailable');
           states.push('feedback');
           states.push('profile');

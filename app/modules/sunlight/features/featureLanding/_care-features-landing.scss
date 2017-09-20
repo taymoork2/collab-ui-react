@@ -13,69 +13,55 @@
     @include vr-spacing(pt, 1);
   }
 
-  .card-icon {
-    display: block;
-    height: 2rem;
-    width: 2rem;
-    line-height: 2.3rem;
-    border-radius: 50%;
-    background-color: $gray-light-4;
-    text-align: center;
+  .card-icons-inline {
+    @include vr-spacing(pt, 0.5);
 
-    @include vr-spacing(ml, 0.5);
+    display: block;
+    color: $gray-light-1;
+  }
+
+  .cs-card.hoverable {
+    article {
+      &.hover,
+      &:focus {
+        .embed-code-txt,
+        .card-icons-inline,
+        .icon-download {
+          color: $color-white;
+        }
+      }
+    }
   }
 
   .card-footer {
     width: 100%;
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+    flex-flow: row wrap;
     justify-content: space-between;
     align-items: flex-end;
 
     @include vr-spacing(ph, 1);
-    @include vr-spacing(pt, 4.5);
+    @include vr-spacing(pt, 1.5);
     @include vr-spacing(pb, 0.5);
+    @include vr-spacing(pl, 1.5);
 
     .embed-code-txt {
-      color: $color-primary;
-
-      &:hover,
-      &:focus {
-        cursor: pointer;
-      }
+      @include vr-spacing(pt, 1.5);
+      color: $gray-base;
     }
 
-    a {
+    .icon-download {
       font-size: rem-calc(24);
-      color: $gray-light-2;
+      color: $gray-light-1;
       top: -2px;
 
       @include vr-spacing(ml, 0.5);
-
-      &:hover,
-      &:focus {
-        color: $color-primary;
-      }
     }
-  }
-
-  .card-icon-color-Ch {
-    color: $color-primary-base;
-  }
-
-  .card-icon-color-Ca {
-    color: $color-alerts-base;
-  }
-
-  .card-icons-inline {
-    display: inline-flex;
   }
 
   .spinner-icon {
     display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
+    flex-flow: row nowrap;
     justify-content: center;
     align-items: center;
   }
@@ -106,11 +92,14 @@
   }
 }
 
+header > p > span.badge {
+  @include vr-spacing(pt, 1);
+}
+
 .no-features {
   display: flex;
   flex: 1;
-  flex-direction: column;
-  flex-wrap: nowrap;
+  flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
   text-align: center;
@@ -135,8 +124,7 @@
 .care-new-feature-modal {
   // The modal body.
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-flow: row wrap;
 
   @include vr-spacing(pt, 0);
   @include vr-spacing(pr, 2);
@@ -263,4 +251,55 @@
 .feature-modal-loading {
   font-size: 3rem;
   text-align: center;
+}
+
+$toolkit-primary: #0393c9;
+.cs-card.header-background.hoverable {
+  &.alerts {
+    article {
+      &.hover,
+      &:focus {
+        background-color: $color-pink-darker;
+        header {
+          background-color: $color-pink-darker;
+        }
+      }
+    }
+    .badge {
+      border-color: $color-pink-darker;
+      color: $color-pink-darker;
+    }
+  }
+
+  &.people {
+    article {
+      &.hover,
+      &:focus {
+        background-color: $color-mint-darker;
+        header {
+          background-color: $color-mint-darker;
+        }
+      }
+    }
+    .badge {
+      border-color: $color-mint-darker;
+      color: $color-mint-darker;
+    }
+  }
+
+  &.primary {
+    article {
+      &.hover,
+      &:focus {
+        background-color: $toolkit-primary;
+        header {
+          background-color: $toolkit-primary;
+        }
+      }
+    }
+    .badge {
+      border-color: $toolkit-primary;
+      color: $toolkit-primary;
+    }
+  }
 }

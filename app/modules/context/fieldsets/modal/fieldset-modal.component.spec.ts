@@ -159,13 +159,13 @@ describe('Component: context fieldset modal', () => {
   describe('createOrSaveButtonEnabled', function () {
     it('should return true if fieldset contains a field', function () {
       this.controller.fieldsetData.id = 'someId';
-      this.controller.fieldsetData.fields = ['abc'];
+      this.controller.selectedFields = ['abc'];
       expect(this.controller.createOrSaveButtonEnabled()).toBe(true);
     });
 
     it('should return false if no field is selected', function () {
       this.controller.fieldsetData.id = 'someId';
-      this.controller.fieldsetData.fields = [];
+      this.controller.selectedFields = [];
       expect(this.controller.createOrSaveButtonEnabled()).toBe(false);
     });
 
@@ -210,7 +210,9 @@ describe('Component: context fieldset modal', () => {
       }];
       const processedFields = this.controller.processedFields(unprocessedFields);
       expect(processedFields[0].classification).toBe('context.dictionary.fieldPage.unencrypted');
-      expect(processedFields[0].fieldInfo).toBe('context.dictionary.fieldPage.unencrypted, String');
+      const fieldInfo = processedFields[0].fieldInfo;
+      expect(fieldInfo).toContain('context.dictionary.fieldPage.unencrypted');
+      expect(fieldInfo).toContain('context.dictionary.dataTypes.string');
     });
     it('should return empty list when empty list is provided', function () {
       expect(this.controller.processedFields([]).length).toBe(0);
@@ -222,18 +224,23 @@ describe('Component: context fieldset modal', () => {
       this.controller.loadFields();
       expect(this.controller.allSelectableFields.length).toBe(3);
       expect(this.controller.allSelectableFields[0].classification).toEqual('context.dictionary.fieldPage.unencrypted');
-      expect(this.controller.allSelectableFields[0].fieldInfo).toEqual('context.dictionary.fieldPage.unencrypted, String');
+      const fieldInfo = this.controller.allSelectableFields[0].fieldInfo;
+      expect(fieldInfo).toContain('context.dictionary.fieldPage.unencrypted');
+      expect(fieldInfo).toContain('context.dictionary.dataTypes.string');
     });
 
-    it('should set the selected fields of the fieldset correctly', function (done) {
+    it('should set the selected and inactive fields of the fieldset correctly', function (done) {
       const fields = new Array<string>();
       mockedFields.forEach(field => {
         fields.push(field.id);
       });
+      const inactiveFields = new Array<string>();
+      inactiveFields.push(mockedFields[2].id);
       const existingFieldsetData = {
         id: 'EXISTING_FIELDSET',
         description: 'a description',
         fields: fields,
+        inactiveFields: inactiveFields,
         lastUpdated: new Date().toISOString(),
         publiclyAccessible: false,
         publiclyAccessibleUI: '',
@@ -241,7 +248,8 @@ describe('Component: context fieldset modal', () => {
       this.controller.fieldsetData = existingFieldsetData;
       this.controller.loadFields()
         .then(() => {
-          expect(this.controller.fields.length).toBe(3);
+          expect(this.controller.selectedFields.length).toBe(2);
+          expect(this.controller.inactiveFields.length).toBe(1);
           done();
         });
       this.$scope.$apply();
@@ -255,14 +263,14 @@ describe('Component: context fieldset modal', () => {
       expect(selectedFields[0].id).toBe('field2');
       expect(selectedFields[0].description).toBe('desc2');
       expect(selectedFields[0].classification).toBe('context.dictionary.fieldPage.unencrypted');
-      expect(selectedFields[0].dataType).toBe('String');
+      expect(selectedFields[0].dataType).toBe('string');
       expect(selectedFields[0].publiclyAccessible).toBe(true);
       expect(selectedFields[0].searchable).toBe(true);
 
       expect(selectedFields[1].id).toBe('field3');
       expect(selectedFields[1].description).toBe('desc3');
       expect(selectedFields[1].classification).toBe('context.dictionary.fieldPage.unencrypted');
-      expect(selectedFields[1].dataType).toBe('Boolean');
+      expect(selectedFields[1].dataType).toBe('boolean');
       expect(selectedFields[1].publiclyAccessible).toBe(true);
       expect(selectedFields[1].searchable).toBe(true);
     });
@@ -275,38 +283,48 @@ describe('Component: context fieldset modal', () => {
   describe('selectField', function () {
     it('should add the field to the selected fields', function () {
       this.controller.fieldsetData = { id: '', description: '', fields: [] };
-      this.controller.selectField({
-        id: 'field1',
-        description: 'desc1',
-        classification: 'context.dictionary.fieldPage.unencrypted',
-        dataType: 'String',
-        fieldInfo: 'context.dictionary.fieldPage.unencrypted, String',
-        publiclyAccessible: 'true',
-        translations: '',
-        searchable: true,
-        refUrl: '',
-        lastUpdated: '',
-      }, this.$scope.form);
-      expect(this.controller.fieldsetData.fields).toContain('field1');
+      this.controller.selectField(mockedFields[1], this.$scope.form);
+
+      expect(this.controller.selectedFields).toContain(mockedFields[1]);
+      expect(this.controller.fieldsetData.fields).toContain(mockedFields[1].id);
+    });
+    it('should remove the inactive field from the inactiveFields list on selecting it', function () {
+      this.controller.inactiveFields = [mockedFields[1]];
+      this.controller.fieldsetData = { id: '', description: '', fields: [mockedFields[0].id, mockedFields[1].id], inactiveFields: [mockedFields[1].id] };
+      this.controller.selectField(mockedFields[1], this.$scope.form);
+
+      expect(this.controller.selectedFields).toContain(mockedFields[1]);
+      expect(this.controller.fieldsetData.fields).toContain(mockedFields[1].id);
+      expect(this.controller.inactiveFields).not.toContain(mockedFields[1]);
+      expect(this.controller.fieldsetData.inactiveFields).not.toContain(mockedFields[1].id);
+    });
+    it('should not remove the inactive field from the inactiveFields list on selecting a different field', function () {
+      this.controller.fieldsetData = { id: '', description: '', fields: [mockedFields[0].id, mockedFields[1].id], inactiveFields: [mockedFields[1].id] };
+      this.controller.selectField(mockedFields[2], this.$scope.form);
+
+      expect(this.controller.selectedFields).toContain(mockedFields[2]);
+      expect(this.controller.fieldsetData.fields).toContain(mockedFields[2].id);
+      expect(this.controller.fieldsetData.inactiveFields).toContain(mockedFields[1].id);
     });
   });
 
   describe('removeFieldFromList', function () {
-    it('should remove the field from the selected fields', function () {
-      this.controller.fieldsetData = { id: '', description: '', fields: ['field1', 'field2'] };
-      this.controller.removeFieldFromList({
-        id: 'field2',
-        description: 'desc1',
-        classification: 'context.dictionary.fieldPage.unencrypted',
-        dataType: 'String',
-        fieldInfo: 'context.dictionary.fieldPage.unencrypted, String',
-        publiclyAccessible: 'true',
-        translations: '',
-        searchable: true,
-        refUrl: '',
-        lastUpdated: '',
-      }, this.$scope.fieldsetForm);
-      expect(this.controller.fieldsetData.fields).not.toContain('field2');
+    it('should remove the field from the selected fields when fieldset is not in-use', function () {
+      this.controller.fieldsetData = { id: '', description: '', fields: [mockedFields[0].id, mockedFields[1].id], inactiveFields: [] };
+      this.controller.removeFieldFromList(mockedFields[1], this.$scope.fieldsetForm);
+
+      expect(this.controller.selectedFields).not.toContain(mockedFields[1]);
+      expect(this.controller.fieldsetData.fields).not.toContain(mockedFields[1].id);
+      expect(formIsSetDirty).toBe(true);
+    });
+    it('should add field to inactiveFields list when fieldset is not in-use', function () {
+      this.controller.inUse = true;
+      this.controller.fieldsetData = { id: '', description: '', fields: [mockedFields[0].id, mockedFields[1].id], inactiveFields: [] };
+      this.controller.removeFieldFromList(mockedFields[1], this.$scope.fieldsetForm);
+
+      expect(this.controller.fieldsetData.inactiveFields).toContain(mockedFields[1].id);
+      expect(this.controller.fieldsetData.fields).toContain(mockedFields[1].id);
+      expect(this.controller.selectedFields).not.toContain(mockedFields[1]);
       expect(formIsSetDirty).toBe(true);
     });
   });

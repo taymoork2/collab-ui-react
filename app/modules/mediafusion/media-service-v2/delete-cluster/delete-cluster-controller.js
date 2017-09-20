@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function DeleteClusterSettingControllerV2($filter, $modalInstance, $q, $state, $translate, cluster, FeatureToggleService, HybridServicesClusterService, MediaClusterServiceV2, Notification) {
+  function DeleteClusterSettingControllerV2($filter, $modalInstance, $q, $state, $translate, cluster, HybridServicesClusterService, MediaClusterServiceV2, Notification) {
     var vm = this;
     vm.selectPlaceholder = $translate.instant('mediaFusion.add-resource-dialog.cluster-placeholder');
     vm.options = [];
@@ -20,16 +20,8 @@
     vm.ngDisable = false;
     vm.canContinue = canContinue;
 
-    FeatureToggleService.atlas2017NameChangeGetStatus().then(function (toggle) {
-      if (toggle) {
-        vm.deleteAreYouSure = $translate.instant('mediaFusion.deleteGroup.messageNew', {
-          groupName: cluster.name,
-        });
-      } else {
-        vm.deleteAreYouSure = $translate.instant('mediaFusion.deleteGroup.message', {
-          groupName: cluster.name,
-        });
-      }
+    vm.deleteAreYouSure = $translate.instant('mediaFusion.deleteGroup.message', {
+      groupName: cluster.name,
     });
 
     MediaClusterServiceV2.getAll()

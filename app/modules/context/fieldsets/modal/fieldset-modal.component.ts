@@ -3,6 +3,7 @@ import { ContextFieldsetsService } from 'modules/context/services/context-fields
 import { ContextFieldsService } from 'modules/context/services/context-fields-service';
 import { PropertyService, PropertyConstants } from 'modules/context/services/context-property-service';
 import { Authinfo } from 'modules/core/scripts/services/authinfo';
+import { FieldUtils } from 'modules/context/services/fieldUtils';
 
 /**
  * Fieldset data structure
@@ -11,6 +12,7 @@ interface IFieldsetData {
   id: string;
   description: string;
   fields: string[];
+  inactiveFields: string[];
   lastUpdated?: string;
   publiclyAccessible: Boolean;
   publiclyAccessibleUI: string;
@@ -50,7 +52,8 @@ class FieldsetModalCtrl implements ng.IComponentController {
   public localizedStrings: Object;            // Localized strings
   public classificationMap: Object;           // Map for field classfication
 
-  public fields: IFieldData[];                // Fields added to the fieldset
+  public selectedFields: IFieldData[];        // Fields added to the fieldset
+  public inactiveFields: IFieldData[];        // Fields marked inactive on Update
   public selectedField: string;               // Id for the field selected
   public allSelectableFields: IFieldData[];   // All Fields available for selection
   public fetchFailed: Boolean;                // Fetch status for loading all fields
@@ -59,6 +62,7 @@ class FieldsetModalCtrl implements ng.IComponentController {
   public existingFieldsetData: IFieldsetData;  //The fieldset passed in for edit
 
   public enableFieldsSelection: Boolean = false; //whether enable the fields selection
+  public inUse: Boolean;                         // Fieldset in-use
 
   private maxFieldsPerFieldsetAllowed: number = PropertyConstants.MAX_FIELDS_PER_FIELDSET_DEFAULT_VALUE; //maximum fields per fieldset allowed
 
@@ -72,6 +76,7 @@ class FieldsetModalCtrl implements ng.IComponentController {
     protected Notification: Notification,
     protected PropertyService: PropertyService,
     protected Authinfo: Authinfo,
+    private FieldUtils: FieldUtils,
   ) {}
 
   /**
@@ -113,6 +118,7 @@ class FieldsetModalCtrl implements ng.IComponentController {
        id: '',
        description: '',
        fields: [],
+       inactiveFields: [],
        publiclyAccessible: false,
        publiclyAccessibleUI: '',
      }
@@ -127,7 +133,7 @@ class FieldsetModalCtrl implements ng.IComponentController {
   }
 
   public setFieldsSelection () {
-    this.enableFieldsSelection = this.fields.length < this.maxFieldsPerFieldsetAllowed;
+    this.enableFieldsSelection = this.selectedFields.length < this.maxFieldsPerFieldsetAllowed;
   }
 
 
@@ -159,8 +165,9 @@ class FieldsetModalCtrl implements ng.IComponentController {
     return this.ContextFieldsService.getFields()
       .then(data => {
         const allFields = this.processedFields(data);
-        this.fields = this.getSelectedFields(allFields);
-        this.allSelectableFields = this.searchOnlyAvailableFields(allFields);
+        this.inactiveFields = this.getInactiveFields(allFields);
+        this.selectedFields = this.getSelectedFields(allFields);
+        this.allSelectableFields = this.getSelectableFields(allFields);
         this.sortFields(this.allSelectableFields);
       })
       .catch( err => {
@@ -216,7 +223,7 @@ class FieldsetModalCtrl implements ng.IComponentController {
    */
   public createOrSaveButtonEnabled() {
     return Boolean(!this.actionInProgress &&
-      this.nextButtonEnabled() && this.fieldsetData.fields.length > 0);
+      this.nextButtonEnabled() && this.selectedFields.length > 0);
   }
 
   /**
@@ -274,73 +281,109 @@ class FieldsetModalCtrl implements ng.IComponentController {
 
     return _.map(unprocessedFields, (field: IFieldData) => {
 
-      let fieldInfo = this.classificationMap[field.classification] || this.localizedStrings['unencrypted'];
-      field.classification = fieldInfo;
+      const classification = this.classificationMap[field.classification] || this.localizedStrings['unencrypted'];
+      field.classification = classification;
 
-      if (field.dataType) {
-        field.dataType = _.upperFirst(field.dataType.trim());
-        fieldInfo += `, ${field.dataType}`;
-      }
-      field.fieldInfo = fieldInfo.trim();
+      const dataType = this.FieldUtils.getDataType(field);
+      const fieldInfo = `${dataType}, ${classification}`.trim();
+      field.fieldInfo = fieldInfo;
 
       return field;
     });
   }
 
   /**
-   * Searches the available fields and returns the field list
+   * Searches the available selectedFields and returns the field list
    * @param fullFieldList
    * @returns {IFieldData[]}
    */
-  private searchOnlyAvailableFields(fullFieldList: IFieldData[]) {
-    for (let i = fullFieldList.length - 1; i >= 0; i--) {
-      for (let j = 0; j < this.fieldsetData.fields.length; j++) {
-        if (fullFieldList[i] && (fullFieldList[i].id === this.fieldsetData.fields[j])) {
-          fullFieldList.splice(i, 1);
-        }
-      }
-    }
-    return fullFieldList;
+  private getSelectableFields(fullFieldList: IFieldData[]) {
+    return _.difference(fullFieldList, this.selectedFields);
   }
 
   /**
-   * Returns the list of selected fields
+   * Returns the list of selected selectedFields
    * @param fullFieldList
    * @returns {Object[]}
    */
   public getSelectedFields(fullFieldList: IFieldData[]) {
+    const activeFields: string[] = _.difference(this.fieldsetData.fields, this.fieldsetData.inactiveFields);
+
     const selectedFields: IFieldData[] = [];
-    for (let i = fullFieldList.length - 1; i >= 0; i--) {
-      for (let j = 0; j < this.fieldsetData.fields.length; j++) {
-        if (fullFieldList[i] && (fullFieldList[i].id === this.fieldsetData.fields[j])) {
-          selectedFields.push(fullFieldList[i]);
+    // Not using lodash filter/includes because we have to maintain the order of selected fields.
+    for (let i = 0; i < activeFields.length; i++) {
+      for (let j = 0; j < fullFieldList.length; j++) {
+        if (fullFieldList[j] && (fullFieldList[j].id === activeFields[i])) {
+          selectedFields.push(fullFieldList[j]);
         }
       }
     }
-    this.sortFields(selectedFields);
+
     return selectedFields;
   }
 
   /**
-   * On selecting a field adds it to the list of selected fields for the fieldset and
-   * removes it from the list of fields available for selection
+   * Returns the list of inactiveField objects
+   * @param fullFieldList
+   * @returns {Object[]}
+   */
+  public getInactiveFields(fullFieldList: IFieldData[]) {
+    // Filters the list of all fields by using id to matches the inactive fields
+    const inactiveFields: any = _(fullFieldList).keyBy('id').at(this.fieldsetData.inactiveFields).value();
+    return inactiveFields;
+  }
+
+  /**
+   * On selecting a field adds it to the list of selected selectedFields for the fieldset and
+   * removes it from the list of selectedFields available for selection
    * @param field
    */
   public selectField(field: IFieldData) {
     this.selectedField = '';
-    this.fields.push(field);
-    this.fieldsetData.fields.push(field.id);
+    this.selectedFields.push(field);
+
+    // If it is in the inactive list, remove it from that list
+    if (_.filter(this.inactiveFields, { id: field.id }).length > 0) {
+
+      // remove this field from the inactiveFields
+      _.pull(this.inactiveFields, field);
+      _.pull(this.fieldsetData.inactiveFields, field.id);
+
+      // To reset the order, remove it from the fields list and add it at the end.
+      _.pull(this.fieldsetData.fields, field.id);
+      this.fieldsetData.fields.push(field.id);
+
+    } else {
+
+      this.fieldsetData.fields.push(field.id);
+
+    }
+
     _.pull(this.allSelectableFields, field);
     this.setFieldsSelection();
   }
 
   /**
    * Removes a field for the selected fields list and adds it to the list of fields available for selection.
+   * If the fieldset is in-Use, the removed field will be added to the inactiveFields list
+   * else, the removed field will be deleted from the fields list in the fieldset
    * @param field
    */
   public removeFieldFromList(field: IFieldData, form: ng.IFormController) {
-    _.pull(this.fields, field);
-    _.pull(this.fieldsetData.fields, field.id);
+
+    if (this.inUse) {
+
+      _.pull(this.selectedFields, field);
+      this.inactiveFields.push(field);
+      this.fieldsetData.inactiveFields.push(field.id);
+
+    } else {
+
+      _.pull(this.selectedFields, field);
+      _.pull(this.fieldsetData.fields, field.id);
+
+    }
+
     this.allSelectableFields.push(field);
     this.sortFields(this.allSelectableFields);
     form.$setDirty();
@@ -363,10 +406,11 @@ class FieldsetModalCtrl implements ng.IComponentController {
  */
 export class FieldsetModalComponent implements ng.IComponentOptions {
   public controller = FieldsetModalCtrl;
-  public templateUrl = 'modules/context/fieldsets/modal/fieldset-modal.html';
+  public template = require('modules/context/fieldsets/modal/fieldset-modal.html');
   public bindings = {
     existingFieldsetIds: '<',
     existingFieldsetData: '<',
+    inUse: '<',
     callback: '<',
     dismiss: '&',
   };

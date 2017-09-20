@@ -241,6 +241,7 @@ describe('userCsv.controller', function () {
         invalidHeaders: 'John,Doe,John Doe,johndoe@example.com,5001,12223335001,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE\nJane,Doe,Jane Doe,janedoe@example.com,,,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE',
         badCsvFormat: 'fa;lskdhgqiwoep;klnandf',
         invalidCsvData: {},
+        oneInvalidEmailUserTooManySparkCallLicenses: 'First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Spark Call,Spark Call 2\nJohn,Doe,John Doe,johndoe@example.com,5001,,true,true',
       };
       installPromiseMatchers.apply(this);
       initController.apply(this);
@@ -352,6 +353,38 @@ describe('userCsv.controller', function () {
           this.$scope.$apply();
           expect(this.$modal.open).toHaveBeenCalled();
         });
+      });
+    });
+
+    describe('Process CSV and Save Users with an invalid user', function () {
+      beforeEach(function () {
+        this.controller.model.file = this.mockCsvData.oneInvalidEmailUserTooManySparkCallLicenses;
+        this.$scope.$apply();
+        this.$timeout.flush();
+      });
+
+      it('should fail users that has more than 1 active Spark Call licenses', function () {
+        var newHeaders = getJSONFixture('core/json/users/headers.json');
+        newHeaders.columns.push({
+          name: 'Spark Call 2',
+          license: 'CO_spark_call_2',
+          entitlements: [
+            'ciscoUC',
+          ],
+        });
+        this.CsvDownloadService.getCsv.and.callFake(function (type) {
+          if (type === 'headers') {
+            return this.$q.resolve(newHeaders);
+          } else {
+            return this.$q.resolve({});
+          }
+        });
+        this.controller.startUpload();
+        this.$scope.$apply();
+        this.$timeout.flush();
+        expect(this.controller.model.processProgress).toEqual(100);
+        expect(this.controller.model.numTotalUsers).toEqual(1);
+        expect(this.controller.model.userErrorArray.length).toEqual(1);
       });
     });
 
@@ -961,6 +994,24 @@ describe('userCsv.controller', function () {
       expect(_.some(this.uploadedDataCapture[0].entitlements, function (entitlement) {
         return entitlement.entitlementName === 'squaredFusionCal' && entitlement.entitlementState === 'ACTIVE';
       })).toBeTruthy();
+    });
+  });
+
+  describe('onBack', function () {
+    beforeEach(function () {
+      this.$previousState.get.and.returnValue({
+        state: {
+          name: 'users.manage.emailSuppress',
+        },
+      });
+      installPromiseMatchers.apply(this);
+      initController.apply(this);
+    });
+
+    it('should go to users.manage.picker when previous state is users.manage.emailSuppress', function () {
+      this.controller.onBack();
+      this.$scope.$apply();
+      expect(this.$state.go).toHaveBeenCalledWith('users.manage.picker');
     });
   });
 });

@@ -10,7 +10,7 @@ class UserStatusReportComponentCtrl implements ng.IComponentController {
     this.$modal.open({
       controller: 'ExportUserStatusesController',
       controllerAs: 'exportUserStatusesCtrl',
-      templateUrl: 'modules/hercules/service-specific-pages/components/user-status-report/export-user-statuses.html',
+      template: require('modules/hercules/service-specific-pages/components/user-status-report/export-user-statuses.html'),
       type: 'small',
       resolve: {
         userStatusSummary: () => this.userStatuses,
@@ -22,7 +22,7 @@ class UserStatusReportComponentCtrl implements ng.IComponentController {
 
 class UserStatusReportComponent implements ng.IComponentOptions {
   public controller = UserStatusReportComponentCtrl;
-  public templateUrl = 'modules/hercules/service-specific-pages/components/user-status-report/user-status-report-button.html';
+  public template = require('modules/hercules/service-specific-pages/components/user-status-report/user-status-report-button.html');
   public bindings = {
     userStatuses: '<',
   };

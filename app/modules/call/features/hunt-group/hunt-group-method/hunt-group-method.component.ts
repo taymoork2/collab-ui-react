@@ -22,7 +22,7 @@ class HuntGroupMethodCtrl implements ng.IComponentController {
 
 export class HuntGroupMethodComponent implements ng.IComponentOptions {
   public controller = HuntGroupMethodCtrl;
-  public templateUrl = 'modules/call/features/hunt-group/hunt-group-method/hunt-group-method.component.html';
+  public template = require('modules/call/features/hunt-group/hunt-group-method/hunt-group-method.component.html');
   public bindings = {
     huntMethod: '<',
     isNew: '<',

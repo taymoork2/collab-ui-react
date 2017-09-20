@@ -8,9 +8,7 @@ describe('Service: searchService', () => {
 
   beforeEach(function () {
     this.initModules(testModule);
-    this.injectDependencies('$q', 'SearchService', 'UrlConfig', '$httpBackend');
-
-    spyOn(this.SearchService, 'getStatus').and.returnValue('Ended');
+    this.injectDependencies('$q', 'SearchService', 'UrlConfig', '$httpBackend', '$translate');
   });
 
   afterEach(function () {
@@ -72,7 +70,49 @@ describe('Service: searchService', () => {
     this.$httpBackend.flush();
   });
 
+  it('should get correct data when call getParticipants', function () {
+    const mockData = [{
+      joinTime: 1499389211000,
+      leaveTime: 1499399838000,
+      conferenceID: '66735067305608980',
+    }];
+    const url = `${this.UrlConfig.getGeminiUrl()}meetings/${this.conferenceID}/participants`;
+    this.$httpBackend.expectGET(url).respond(200, mockData);
+    this.SearchService.getParticipants(this.conferenceID).then((res) => {
+      expect(res[0].joinTime).toBeDefined();
+    });
+    this.$httpBackend.flush();
+  });
+
+
+  it('should get correct data when call getJoinMeetingTime', function () {
+    const mockData = [{
+      userId: '52887',
+      userName: '"cisqsite07 admin"',
+    }];
+    const url = `${this.UrlConfig.getGeminiUrl()}meetings/${this.conferenceID}/participants/join-meeting-time`;
+    this.$httpBackend.expectGET(url).respond(200, mockData);
+    this.SearchService.getJoinMeetingTime(this.conferenceID).then((res) => {
+      expect(res[0].userId).toBeDefined();
+    });
+    this.$httpBackend.flush();
+  });
+
+  it('should get correct data when call getJoinMeetingQuality', function () {
+    const mockData = [{
+      userId: '52887',
+      userName: '"cisqsite07 admin"',
+    }];
+    const url = `${this.UrlConfig.getGeminiUrl()}meetings/${this.conferenceID}/participants/join-meeting-quality`;
+    this.$httpBackend.expectGET(url).respond(200, mockData);
+    this.SearchService.getJoinMeetingQuality(this.conferenceID).then((res) => {
+      expect(res[0].userId).toBeDefined();
+    });
+    this.$httpBackend.flush();
+  });
+
   it('should get correct data when call meeting status', function () {
+    spyOn(this.$translate, 'instant').and.returnValue('Ended');
     const status = this.SearchService.getStatus(2);
     expect(status).toEqual('Ended');
   });
@@ -88,5 +128,32 @@ describe('Service: searchService', () => {
     expect(status).toEqual(50190706068695610);
     const wm: any = this.SearchService.getStorage('webexMeeting');
     expect(wm.status).toEqual('Ended');
+  });
+
+  it('should get correct data when call meeting utcDateByTimezone', function () {
+    let data = '2017-08-02 07:44:30.0';
+    const timeZone = 'Asia/Shanghai';
+    spyOn(this.SearchService, 'getOffset').and.returnValue('+08:00');
+    this.SearchService.setStorage('timeZone', timeZone);
+    let _data = this.SearchService.utcDateByTimezone(data);
+    expect(_data).toBeDefined();
+    data = '';
+    _data = this.SearchService.utcDateByTimezone(data);
+    expect(_data).toBeDefined();
+  });
+
+  it('should get correct data when call meeting getOffset', function () {
+    const data = this.SearchService.getOffset('ut18');
+    expect(data).toEqual('');
+  });
+
+  it('should get correct data when call meeting getGuess', function () {
+    const data = this.SearchService.getGuess(12);
+    expect(data).toEqual('');
+  });
+
+  it('should get correct data when call meeting getNames', function () {
+    const data = this.SearchService.getNames(12);
+    expect(data).toEqual('');
   });
 });

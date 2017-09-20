@@ -27,6 +27,11 @@ describe('Service: Care Reports Service', function () {
       expect(AmCharts.makeChart).toHaveBeenCalled();
     });
 
+    it('should have created a graph when showTaskOfferedDummy is called', function () {
+      CareReportsService.showTaskOfferedDummy('taskOffereddiv', 'dummyData', 'dummyData', dummyTitle, true);
+      expect(AmCharts.makeChart).toHaveBeenCalled();
+    });
+
     it('should have created a graph when showTaskTimeDummy is called', function () {
       CareReportsService.showTaskTimeDummy('taskTimeDiv', 'dummyData', 'dummyData', dummyTitle);
       expect(AmCharts.makeChart).toHaveBeenCalled();
@@ -44,6 +49,11 @@ describe('Service: Care Reports Service', function () {
 
     it('should have created a graph when showTaskIncomingGraph is called', function () {
       CareReportsService.showTaskIncomingGraph('taskIncomingdiv', 'dummyData', 'dummyData', dummyTitle, true);
+      expect(AmCharts.makeChart).toHaveBeenCalled();
+    });
+
+    it('should have created a graph when showTaskOfferedGraph is called', function () {
+      CareReportsService.showTaskOfferedGraph('taskOffereddiv', 'dummyData', 'dummyData', dummyTitle, true);
       expect(AmCharts.makeChart).toHaveBeenCalled();
     });
 
@@ -72,6 +82,18 @@ describe('Service: Care Reports Service', function () {
         graph.balloonFunction = undefined;
       });
       expect(taskIncomingReport).toEqual(expectedConfig);
+    });
+
+    it('Task Offered Chart Config should return expected Report for Today', function () {
+      var taskOfferedReport = CareReportsService.getTaskOfferedGraphConfig('dummyData', 'dummyTitle', 'dummyTitle', true);
+      var expectedConfig = responseData.taskOfferedReportToday;
+      _.map(taskOfferedReport.graphs, function (graph) {
+        graph.balloonFunction = undefined;
+      });
+      _.map(expectedConfig.graphs, function (graph) {
+        graph.balloonFunction = undefined;
+      });
+      expect(taskOfferedReport).toEqual(expectedConfig);
     });
 
     it('Task Incoming Chart Config should return expected Report for Past', function () {

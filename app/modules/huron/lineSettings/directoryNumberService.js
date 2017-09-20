@@ -49,7 +49,6 @@
       getDirectoryNumberESN: getDirectoryNumberESN,
       deleteDirectoryNumber: deleteDirectoryNumber,
       disassociateDirectoryNumber: disassociateDirectoryNumber,
-      updateDirectoryNumber: updateDirectoryNumber,
       changeInternalNumber: changeInternalNumber,
       getAlternateNumbers: getAlternateNumbers,
       addAlternateNumber: addAlternateNumber,
@@ -143,15 +142,6 @@
         userId: userUuid,
         directoryNumberId: dnUuid,
       }).$promise;
-    }
-
-    function updateDirectoryNumber(dnUuid, dnSettings) {
-      var dnPayload = _.cloneDeep(dnSettings);
-      delete dnPayload.uuid; // causes 500 error if present for PUT
-      return DirectoryNumberService.update({
-        customerId: Authinfo.getOrgId(),
-        directoryNumberId: dnUuid,
-      }, dnPayload).$promise;
     }
 
     function changeInternalNumber(oldDnId) {

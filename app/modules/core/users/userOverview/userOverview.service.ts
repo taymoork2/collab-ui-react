@@ -1,3 +1,4 @@
+import { Config } from 'modules/core/config/config';
 
 /* A User */
 export interface IUser {
@@ -102,7 +103,6 @@ class ServiceInvitations implements IServiceInvitations {
   }) {
     _.extend(this, obj);
   }
-
 }
 
 interface IInvitationResource extends ng.resource.IResourceClass<ng.resource.IResource<IInvitation>> {
@@ -123,7 +123,7 @@ export class UserOverviewService {
     private $resource: ng.resource.IResourceService,
     private $q: ng.IQService,
     private WebExUtilsFact,
-    private Config,
+    private Config: Config,
     private SunlightConfigService,
     private ServiceSetup,
     private Userservice,
@@ -262,9 +262,10 @@ export class UserOverviewService {
     if (!_.isEmpty(user.entitlements)) {
 
       const userHasSignedUp = _.some(user.userSettings, (x) => _.includes(x, 'spark.signUpDate'));
+      const userHasLastLoginTime = _.has(user.meta, 'lastLoginTime');
       const hasCiscouc = this.userHasEntitlement(user, 'ciscouc');
 
-      return (userHasSignedUp || hasCiscouc);
+      return (userHasSignedUp || userHasLastLoginTime || hasCiscouc);
     }
     // user is not active
     return false;

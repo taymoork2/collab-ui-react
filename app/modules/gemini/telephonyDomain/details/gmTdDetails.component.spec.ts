@@ -3,17 +3,11 @@ import testModule from '../index';
 describe('Component: gmTdDetails', () => {
   beforeEach(function () {
     this.initModules(testModule);
-    this.injectDependencies('$q', '$scope', 'UrlConfig', '$httpBackend', '$state', '$modal', '$stateParams', 'gemService', 'Notification', 'TelephonyDomainService', '$modal');
-
-    initSpies.apply(this);
+    this.injectDependencies('$q', '$scope', 'UrlConfig', '$httpBackend', '$state', '$modal', '$stateParams', 'gemService', 'Notification', 'TelephonyDomainService', '$modal', '$window');
     this.$stateParams.info = {
       customerId: 'ff808081527ccb3f0163116a3531593d',
       ccaDomainId: 'ff808081527ccb3f0153116a3531041e',
     };
-  });
-
-  beforeAll(function () {
-    this.preData = getJSONFixture('gemini/common.json');
 
     this.preData = {
       links: [],
@@ -126,6 +120,8 @@ describe('Component: gmTdDetails', () => {
     };
 
     this.countries = [ { countryId: 1, countryName: 'Albania' }, { countryId: 2, countryName: 'Algeria' } ];
+
+    initSpies.apply(this);
   });
 
   function initSpies() {
@@ -138,6 +134,7 @@ describe('Component: gmTdDetails', () => {
     spyOn(this.TelephonyDomainService, 'getHistories').and.returnValue(this.$q.resolve());
     spyOn(this.TelephonyDomainService, 'getTelephonyDomain').and.returnValue(this.$q.resolve());
     spyOn(this.TelephonyDomainService, 'updateTelephonyDomainStatus').and.returnValue(this.$q.resolve());
+    spyOn(this.$window, 'open');
   }
 
   function initComponent() {
@@ -210,6 +207,7 @@ describe('Component: gmTdDetails', () => {
 
       initComponent.call(this);
       this.view.find('.remedyTicket a').click();
+      expect(this.$window.open).toHaveBeenCalled();
       expect(this.view.find('.remedyTicket a')).toContainText(this.remedyTicket[0].remedyTicketId);
     });
 

@@ -1,9 +1,11 @@
+import { PrimaryNumber } from 'modules/huron/primaryLine';
 export class PlaceCallOverviewData {
   public preferredLanguageOptions: any[];
   public preferredLanguage: any;
   public placesPreferredLanguage: string;
   public defaultPreferredLanugage: any;
   public siteLevelPreferredLanguage: string;
+  public primaryNumber: PrimaryNumber;
 }
 
 export class PlaceCallOverviewService {
@@ -43,6 +45,7 @@ export class PlaceCallOverviewService {
     const queryString = {
       customerId: this.Authinfo.getOrgId(),
       placesId: placesId,
+      wide: true,
     };
     return this.PlacesService.get(queryString).$promise;
   }
@@ -58,6 +61,14 @@ export class PlaceCallOverviewService {
     return this.PlacesService.update(queryString, requestBody).$promise;
   }
 
+  public updateCmiPlacePrimaryNumber(placesId, lineSelection) {
+    const queryString = {
+      customerId: this.Authinfo.getOrgId(),
+      placesId: placesId,
+    };
+    return this.PlacesService.update(queryString, lineSelection).$promise;
+  }
+
   public getPlaceCallOverviewData(placesId): ng.IPromise<PlaceCallOverviewData> {
     const placeCallOverviewData = new PlaceCallOverviewData();
     this.errors = [];
@@ -68,7 +79,7 @@ export class PlaceCallOverviewService {
     return this.$q.all(promises).then( (data) => {
       if (this.errors.length > 0) {
         this.Notification.notify(this.errors, 'preferredLanguage.failedToFetchSiteLanguages');
-        return this.$q.reject();
+        return this.$q.reject() as atlas.QRejectWorkaround<PlaceCallOverviewData>;
       }
       const siteLevelPreferredLanguage = data[0];
       const languages = data[1];
@@ -82,6 +93,7 @@ export class PlaceCallOverviewService {
       placeCallOverviewData.preferredLanguage = placesPreferredLanguage ?
                                                   this.findPreferredLanguageByCode(languages, placesPreferredLanguage) :
                                                   defaultPreferredLanugage;
+      placeCallOverviewData.primaryNumber = _.get(data[2], 'primaryNumber');
       this.placeCallOverviewDataCopy = this.clonePlaceCallOverviewData(placeCallOverviewData);
       return placeCallOverviewData;
     });
@@ -107,8 +119,8 @@ export class PlaceCallOverviewService {
   private getDefaultPreferredLanguage(organizationLevelLanguage): any {
     const defaultPrefix: string = this.$translate.instant('preferredLanguage.organizationSettingLabel');
     const translatedLanguageLabel: string = organizationLevelLanguage ?
-                                        this.$translate.instant(organizationLevelLanguage) :
-                                        'languages.englishAmerican';
+                                        organizationLevelLanguage :
+      this.$translate.instant('languages.englishAmerican');
     const defaultLanguage = {
       label: defaultPrefix + translatedLanguageLabel,
       value: '',

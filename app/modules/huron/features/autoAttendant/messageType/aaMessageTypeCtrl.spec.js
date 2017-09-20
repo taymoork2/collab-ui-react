@@ -1,8 +1,8 @@
 'use strict';
 
 describe('Controller: AAMessageTypeCtrl', function () {
-  var AAUiModelService, AutoAttendantCeMenuModelService;
-  var $rootScope, $scope;
+  var AAUiModelService, AutoAttendantCeMenuModelService, AACommonService;
+  var $rootScope, $scope, $window;
   var menuEntry;
 
   var aaUiModel = {
@@ -14,16 +14,20 @@ describe('Controller: AAMessageTypeCtrl', function () {
 
   var schedule = 'openHours';
   var index = '0';
+  var dynamicElement;
+  var scopeElement;
 
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$rootScope_, _AAUiModelService_, _AutoAttendantCeMenuModelService_) {
+  beforeEach(inject(function (_$rootScope_, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _AACommonService_, _$window_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
+    $window = _$window_;
 
     AAUiModelService = _AAUiModelService_;
+    AACommonService = _AACommonService_;
 
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
 
@@ -49,6 +53,229 @@ describe('Controller: AAMessageTypeCtrl', function () {
 
     afterEach(function () {
       controller = null;
+    });
+
+
+    describe('dynamic functionality', function () {
+      beforeEach(function () {
+        scopeElement = {
+          insertElement: function (string) {
+            return string;
+          },
+        };
+        dynamicElement = {
+          scope: function () {
+            return true;
+          },
+          focus: function () {},
+        };
+        var rangeGetter = function () {
+          var range = {
+            collapsed: true,
+            endContainer: {
+              ownerDocument: {
+                activeElement: {
+                  childNodes: [{
+                    nodeName: '#text',
+                    nodeValue: 'this is test say message',
+                  }, {
+                    nodeName: 'SPAN',
+                    parentElement: {
+                      attributes: [{
+                        value: 'Test Attribute',
+                      }, {
+                        value: 'NUMBER',
+                      }, {
+                        value: 'dummyId',
+                      }],
+                    },
+                  }],
+                  className: 'dynamic-prompt aa-message-height',
+                  id: 'messageTypeopenHours0',
+                },
+              },
+            },
+          };
+          return range;
+        };
+        spyOn(angular, 'element').and.returnValue(dynamicElement);
+        spyOn(dynamicElement, 'focus');
+        spyOn(dynamicElement, 'scope').and.returnValue(scopeElement);
+        spyOn(AACommonService, 'isDynAnnounceToggle').and.returnValue(true);
+        spyOn(AACommonService, 'isMediaUploadToggle').and.returnValue(true);
+        spyOn(scopeElement, 'insertElement');
+        spyOn($window, 'getSelection').and.returnValue({
+          getRangeAt: rangeGetter,
+          rangeCount: true,
+          removeAllRanges: function () {
+            return true;
+          },
+          addRange: function () {
+            return true;
+          },
+        });
+      });
+
+      it('should be able to create new AA entry', function () {
+        var c;
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+        action.dynamicList = [{
+          say: {
+            value: 'dummy message',
+            voice: '',
+          },
+          isDynamic: true,
+          htmlModel: '',
+        }];
+        menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        menuEntry.addAction(action);
+
+        aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+        aaUiModel.openHours.addEntryAt(0, menuEntry);
+
+        // setup the options menu
+        c = controller('AAMessageTypeCtrl', {
+          $scope: $scope,
+        });
+
+        expect(c).toBeDefined();
+        expect(c.dynamicValues[0].model).toEqual('dummy message');
+      });
+
+      it('should be able to create new AA entry with dynamicValues set to value', function () {
+        var c;
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', '');
+        action.dynamicList = [{
+          say: {
+            value: 'test message',
+            voice: '',
+          },
+          isDynamic: true,
+          htmlModel: '',
+        }];
+        menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        menuEntry.addAction(action);
+
+        aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+        aaUiModel.openHours.addEntryAt(0, menuEntry);
+
+        // setup the options menu
+        c = controller('AAMessageTypeCtrl', {
+          $scope: $scope,
+        });
+        expect(c.dynamicValues.length).toEqual(1);
+        expect(c.dynamicValues[0].model).toEqual('test message');
+      });
+
+      it('should be able to switch play action to dynamic action', function () {
+        var c;
+        menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        menuEntry.addAction(AutoAttendantCeMenuModelService.newCeActionEntry('play', 'value for say message'));
+
+        aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+        aaUiModel.openHours.addEntryAt(0, menuEntry);
+
+        // setup the options menu
+        c = controller('AAMessageTypeCtrl', {
+          $scope: $scope,
+        });
+
+        c.messageOption = c.messageOptions[1];
+
+        c.actionEntry = menuEntry.actions[0];
+        c.setMessageOptions();
+
+        expect(c.actionEntry.value).toEqual('');
+
+        expect(c.actionEntry.name).toEqual('dynamic');
+      });
+
+      it('should be able to switch dynamic action to play action', function () {
+        var c;
+        menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        menuEntry.addAction(AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', ''));
+
+        aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+        aaUiModel.openHours.addEntryAt(0, menuEntry);
+
+        // setup the options menu
+        c = controller('AAMessageTypeCtrl', {
+          $scope: $scope,
+        });
+
+        c.messageOption = c.messageOptions[0];
+
+        c.actionEntry = menuEntry.actions[0];
+        c.setMessageOptions();
+
+        expect(c.actionEntry.value).toEqual('');
+
+        expect(c.actionEntry.name).toEqual('play');
+      });
+
+      it('should be able to create dynamicList', function () {
+        var ctrl;
+        var $event = {
+          keyCode: 8,
+        };
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', '');
+        action.dynamicList = [{
+          say: {
+            value: '',
+            voice: '',
+          },
+          isDynamic: false,
+          htmlModel: '',
+        }];
+        menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        menuEntry.addAction(action);
+
+        aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+        aaUiModel.openHours.addEntryAt(0, menuEntry);
+        // setup the options menu
+        ctrl = controller('AAMessageTypeCtrl', {
+          $scope: $scope,
+        });
+
+        ctrl.actionEntry = menuEntry.actions[0];
+        expect(ctrl.actionEntry.dynamicList[0].say.value).toEqual('');
+        ctrl.saveDynamicUi($event);
+        expect(ctrl.actionEntry.dynamicList[0].say.value).toEqual('this is test say message');
+        expect(ctrl.actionEntry.dynamicList[1].say.value).toEqual('Test Attribute');
+        expect(ctrl.actionEntry.dynamicList[1].isDynamic).toEqual(true);
+      });
+
+      it('should be able to create dynamicList with keycode other than backspace', function () {
+        var ctrl;
+        var $event1 = {
+          keyCode: 9,
+        };
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', '');
+        action.dynamicList = [{
+          say: {
+            value: '',
+            voice: '',
+          },
+          isDynamic: false,
+          htmlModel: '',
+        }];
+        menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        menuEntry.addAction(action);
+
+        aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+        aaUiModel.openHours.addEntryAt(0, menuEntry);
+        // setup the options menu
+        ctrl = controller('AAMessageTypeCtrl', {
+          $scope: $scope,
+        });
+
+        ctrl.actionEntry = menuEntry.actions[0];
+        expect(ctrl.actionEntry.dynamicList[0].say.value).toBe('');
+        ctrl.saveDynamicUi($event1);
+        expect(ctrl.actionEntry.dynamicList[0].say.value).toBe('this is test say message');
+        expect(ctrl.actionEntry.dynamicList[1].say.value).toBe('Test Attribute');
+        expect(ctrl.actionEntry.dynamicList[1].isDynamic).toBe(true);
+      });
     });
 
     describe('activate', function () {
@@ -174,7 +401,7 @@ describe('Controller: AAMessageTypeCtrl', function () {
         expect(c.actionEntry.name).toEqual('play');
       });
 
-      it('should be able to switch play action to dynamic action', function () {
+      it('should be able to switch play action to say action', function () {
         var c;
         menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
         menuEntry.addAction(AutoAttendantCeMenuModelService.newCeActionEntry('play', 'value for say message'));
@@ -402,6 +629,111 @@ describe('Controller: AAMessageTypeCtrl', function () {
       });
 
       expect(c.actionEntry.name).toEqual('play');
+    });
+
+    describe('varible warning', function () {
+      it('togglefullWarningMsg', function () {
+        var c;
+        menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        menuEntry.addAction(AutoAttendantCeMenuModelService.newCeActionEntry('say', 'value for say message'));
+
+        aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+        aaUiModel.openHours.addEntryAt(0, menuEntry);
+
+        // setup the options menu
+        c = controller('AAMessageTypeCtrl', {
+          $scope: $scope,
+        });
+        c.togglefullWarningMsg();
+        expect(c.fullWarningMsgValue).toBe(true);
+      });
+      it('getWarning returning true', function () {
+        var c;
+        menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        menuEntry.addAction(AutoAttendantCeMenuModelService.newCeActionEntry('say', 'value for say message'));
+
+        aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+        aaUiModel.openHours.addEntryAt(0, menuEntry);
+
+        // setup the options menu
+        c = controller('AAMessageTypeCtrl', {
+          $scope: $scope,
+        });
+        c.deletedSessionVariablesList = ['test', 'test2'];
+        c.getWarning();
+        spyOn(c, 'getWarning').and.returnValue(true);
+        expect(c.getWarning()).toBe(true);
+      });
+      it('getWarning returning false', function () {
+        var c;
+        menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        menuEntry.addAction(AutoAttendantCeMenuModelService.newCeActionEntry('say', 'value for say message'));
+
+        aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+        aaUiModel.openHours.addEntryAt(0, menuEntry);
+
+        // setup the options menu
+        c = controller('AAMessageTypeCtrl', {
+          $scope: $scope,
+        });
+        c.getWarning();
+        spyOn(c, 'getWarning').and.returnValue(false);
+        expect(c.getWarning()).toBe(false);
+      });
+      it('boradcast of CE Updated', function () {
+        var c;
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+        action.dynamicList = [{
+          say: {
+            value: 'dummy message',
+            voice: '',
+          },
+          isDynamic: true,
+          htmlModel: '',
+        }];
+        menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        menuEntry.addAction(action);
+
+        aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+        aaUiModel.openHours.addEntryAt(0, menuEntry);
+
+        // setup the options menu
+        c = controller('AAMessageTypeCtrl', {
+          $scope: $scope,
+        });
+        $scope.$apply();
+        c.deletedSessionVariablesList = [];
+        $rootScope.$broadcast('CE Updated');
+        c.getWarning();
+        expect(c.getWarning()).toBe(true);
+      });
+      it('boradcast of CIVarNameChanged', function () {
+        var c;
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+        action.dynamicList = [{
+          say: {
+            value: 'dummy message',
+            voice: '',
+          },
+          isDynamic: true,
+          htmlModel: '',
+        }];
+        menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        menuEntry.addAction(action);
+
+        aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+        aaUiModel.openHours.addEntryAt(0, menuEntry);
+
+        // setup the options menu
+        c = controller('AAMessageTypeCtrl', {
+          $scope: $scope,
+        });
+        $scope.$apply();
+        c.deletedSessionVariablesList = [];
+        $rootScope.$broadcast('CIVarNameChanged');
+        c.getWarning();
+        expect(c.getWarning()).toBe(true);
+      });
     });
   });
 });

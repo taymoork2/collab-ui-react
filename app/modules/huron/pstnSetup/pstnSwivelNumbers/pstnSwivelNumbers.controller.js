@@ -5,7 +5,7 @@
     .controller('PstnSwivelNumbersCtrl', PstnSwivelNumbersCtrl);
 
   /* @ngInject */
-  function PstnSwivelNumbersCtrl($translate, $state, $timeout, PstnModel, Notification, PhoneNumberService, FeatureToggleService) {
+  function PstnSwivelNumbersCtrl($translate, $state, $timeout, PstnModel, Notification, PhoneNumberService) {
     var vm = this;
 
     vm.hasCarriers = PstnModel.isCarrierExists;
@@ -43,10 +43,6 @@
       $timeout(function () {
         setSwivelNumberTokens(vm.swivelNumbers);
       }, 100);
-      FeatureToggleService.supports(FeatureToggleService.features.huronFederatedSparkCall)
-      .then(function (results) {
-        vm.ftHuronFederatedSparkCall = results;
-      });
     }
 
     function editToken(e) {
@@ -101,51 +97,23 @@
     }
 
     function validateSwivelNumbers() {
-      var invalid;
-      if (!vm.ftHuronFederatedSparkCall) {
-        var tokens = getSwivelNumberTokens() || [];
-        invalid = _.find(tokens, {
-          invalid: true,
-        });
-        if (invalid) {
-          Notification.error('pstnSetup.invalidNumberPrompt');
-        } else if (tokens.length === 0) {
-          Notification.error('pstnSetup.orderNumbersPrompt');
-        } else {
-          //set numbers for if they go back
-          PstnModel.setNumbers(tokens);
-          var numbers = _.map(tokens, function (number) {
-            return number.value;
-          });
-          var swivelOrder = [{
-            data: {
-              numbers: numbers,
-            },
-            numberType: NUMTYPE_DID,
-            orderType: SWIVEL_ORDER,
-          }];
-          PstnModel.setOrders(swivelOrder);
-          $state.go('pstnSetup.review');
-        }
+      var invalid = vm.invalidCount > 0;
+      if (invalid) {
+        Notification.error('pstnSetup.invalidNumberPrompt');
+      } else if (vm.swivelNumbers.length === 0) {
+        Notification.error('pstnSetup.orderNumbersPrompt');
       } else {
-        invalid = vm.invalidCount > 0;
-        if (invalid) {
-          Notification.error('pstnSetup.invalidNumberPrompt');
-        } else if (vm.swivelNumbers.length === 0) {
-          Notification.error('pstnSetup.orderNumbersPrompt');
-        } else {
-          //set numbers for if they go back
-          PstnModel.setNumbers(vm.swivelNumbers);
-          swivelOrder = [{
-            data: {
-              numbers: vm.swivelNumbers,
-            },
-            numberType: NUMTYPE_DID,
-            orderType: SWIVEL_ORDER,
-          }];
-          PstnModel.setOrders(swivelOrder);
-          $state.go('pstnSetup.review');
-        }
+        //set numbers for if they go back
+        PstnModel.setNumbers(vm.swivelNumbers);
+        var swivelOrder = [{
+          data: {
+            numbers: vm.swivelNumbers,
+          },
+          numberType: NUMTYPE_DID,
+          orderType: SWIVEL_ORDER,
+        }];
+        PstnModel.setOrders(swivelOrder);
+        $state.go('pstnSetup.review');
       }
     }
 

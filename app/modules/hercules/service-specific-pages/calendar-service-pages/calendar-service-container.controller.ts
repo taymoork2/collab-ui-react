@@ -5,10 +5,10 @@ import { ServiceDescriptorService } from 'modules/hercules/services/service-desc
 export class CalendarServiceContainerController extends ExpresswayContainerController {
 
   public tabs: any = [{
-    title: 'common.resources',
+    title: this.$translate.instant('common.resources'),
     state: 'calendar-service.list',
   }, {
-    title: 'common.settings',
+    title: this.$translate.instant('common.settings'),
     state: 'calendar-service.settings',
   }];
 
@@ -20,7 +20,7 @@ export class CalendarServiceContainerController extends ExpresswayContainerContr
     },
     controller: 'AddResourceController',
     controllerAs: 'vm',
-    templateUrl: 'modules/hercules/service-specific-pages/common-expressway-based/add-resource-modal.html',
+    template: require('modules/hercules/service-specific-pages/common-expressway-based/add-resource-modal.html'),
     type: 'small',
   };
 
@@ -31,17 +31,16 @@ export class CalendarServiceContainerController extends ExpresswayContainerContr
     $modal,
     $scope: ng.IScope,
     $state: ng.ui.IStateService,
-    Authinfo,
     private $stateParams: ng.ui.IStateParamsService,
+    private $translate: ng.translate.ITranslateService,
     ClusterService,
-    hasPartnerRegistrationFeatureToggle,
     hasNodesViewFeatureToggle,
     Notification: Notification,
     ServiceDescriptorService: ServiceDescriptorService,
     ServiceStateChecker,
     USSService,
   ) {
-    super($modal, $scope, $state, Authinfo, ClusterService, hasPartnerRegistrationFeatureToggle, hasNodesViewFeatureToggle, Notification, ServiceDescriptorService, ServiceStateChecker, USSService, ['squared-fusion-cal'], 'c_cal');
+    super($modal, $scope, $state, ClusterService, hasNodesViewFeatureToggle, Notification, ServiceDescriptorService, ServiceStateChecker, USSService, ['squared-fusion-cal'], 'c_cal');
     this.clusterId = this.$stateParams['clusterId'];
     if (this.$stateParams['backState']) {
       this.backState = this.$stateParams['backState'];

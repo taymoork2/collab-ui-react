@@ -51,6 +51,12 @@
   margin-top: 10px;
 }
 
+.device-list {
+  .status-indicator {
+    padding-right: 8px;
+  }
+}
+
 .section-content {
   .activation-code {
     font-family: $brand-font-cisco-TT-Extra-Light;
@@ -161,5 +167,26 @@
     .modal-footer {
       display: none !important;
     }
+  }
+}
+
+.multiple-devices-warning {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 4px;
+
+  color: $color-attention-base;
+  .icon {
+    margin: 3px 8px 0 0;
+    font-size: 13px;
+  }
+  span {
+    font-size: 13px;
+  }
+}
+
+.modal-body {
+  .spacing-for-second-paragraph {
+    margin-bottom: 12px;
   }
 }

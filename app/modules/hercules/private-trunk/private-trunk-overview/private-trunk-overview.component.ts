@@ -14,6 +14,7 @@ export class PrivateTrunkOverviewCtrl implements ng.IComponentController {
   /* @ngInject */
   constructor (
     private $state: ng.ui.IStateService,
+    private $translate: ng.translate.ITranslateService,
   ) {
   }
 
@@ -24,10 +25,10 @@ export class PrivateTrunkOverviewCtrl implements ng.IComponentController {
     }
 
     this.tabs = [{
-      title: 'servicesOverview.cards.privateTrunk.buttons.resources',
+      title: this.$translate.instant('servicesOverview.cards.privateTrunk.buttons.resources'),
       state: 'private-trunk-overview.list',
     }, {
-      title: 'servicesOverview.cards.hybridCall.buttons.settings',
+      title: this.$translate.instant('servicesOverview.cards.hybridCall.buttons.settings'),
       state: 'private-trunk-overview.settings',
     }];
   }
@@ -36,7 +37,7 @@ export class PrivateTrunkOverviewCtrl implements ng.IComponentController {
 
 export class PrivateTrunkOverviewComponent implements ng.IComponentOptions {
   public controller = PrivateTrunkOverviewCtrl;
-  public templateUrl = 'modules/hercules/private-trunk/private-trunk-overview/private-trunk-overview.html';
+  public template = require('modules/hercules/private-trunk/private-trunk-overview/private-trunk-overview.html');
   public bindings = {
     hasPrivateTrunkFeatureToggle: '<',
   };

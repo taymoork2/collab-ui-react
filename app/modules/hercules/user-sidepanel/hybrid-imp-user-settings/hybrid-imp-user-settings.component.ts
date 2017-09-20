@@ -1,6 +1,7 @@
-import { IUserStatus, HybridServiceUserSidepanelHelperService, IEntitlementNameAndState } from 'modules/hercules/services/hybrid-services-user-sidepanel-helper.service';
+import { HybridServiceUserSidepanelHelperService, IEntitlementNameAndState } from 'modules/hercules/services/hybrid-services-user-sidepanel-helper.service';
 import { HybridServicesI18NService } from 'modules/hercules/services/hybrid-services-i18n.service';
 import { Notification } from 'modules/core/notifications/notification.service';
+import { USSService, IUserStatusWithExtendedMessages } from 'modules/hercules/services/uss.service';
 
 class HybridImpUserSettingsComponentCtrl implements ng.IComponentController {
 
@@ -11,7 +12,8 @@ class HybridImpUserSettingsComponentCtrl implements ng.IComponentController {
   public savingPage = false;
   public couldNotReadUser = false;
 
-  public userStatus: IUserStatus;
+  public userStatus: IUserStatusWithExtendedMessages;
+  public lastStateChangeText: string = '';
 
   public entitledToggle: boolean;
   public userIsCurrentlyEntitled: boolean;
@@ -22,7 +24,7 @@ class HybridImpUserSettingsComponentCtrl implements ng.IComponentController {
     private HybridServiceUserSidepanelHelperService: HybridServiceUserSidepanelHelperService,
     private HybridServicesI18NService: HybridServicesI18NService,
     private Notification: Notification,
-    private USSService,
+    private USSService: USSService,
   ) { }
 
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
@@ -39,7 +41,7 @@ class HybridImpUserSettingsComponentCtrl implements ng.IComponentController {
   private getDataFromUSS(userId: string) {
     this.loadingPage = true;
     return this.USSService.getStatusesForUser(userId)
-      .then((statuses: IUserStatus[]) => {
+      .then((statuses) => {
         this.userStatus = _.find(statuses, { serviceId: 'spark-hybrid-impinterop' });
       })
       .then(() => {
@@ -50,7 +52,7 @@ class HybridImpUserSettingsComponentCtrl implements ng.IComponentController {
         }
 
         if (this.userStatus && this.userStatus.lastStateChange) {
-          this.userStatus.lastStateChangeText = this.HybridServicesI18NService.getTimeSinceText(this.userStatus.lastStateChange);
+          this.lastStateChangeText = this.HybridServicesI18NService.getTimeSinceText(this.userStatus.lastStateChange);
         }
       })
       .catch((error) => {
@@ -113,7 +115,7 @@ class HybridImpUserSettingsComponentCtrl implements ng.IComponentController {
 
 export class HybridImpUserSettingsComponent implements ng.IComponentOptions {
   public controller = HybridImpUserSettingsComponentCtrl;
-  public templateUrl = 'modules/hercules/user-sidepanel/hybrid-imp-user-settings/hybrid-imp-user-settings.component.html';
+  public template = require('modules/hercules/user-sidepanel/hybrid-imp-user-settings/hybrid-imp-user-settings.component.html');
   public bindings = {
     userId: '<',
     userEmailAddress: '<',

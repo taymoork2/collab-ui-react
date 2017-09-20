@@ -5,10 +5,14 @@
     .controller('TabsCtrl', TabsCtrl);
 
   /* @ngInject */
-  function TabsCtrl($rootScope, $scope, $translate, $location, $q, Utils, Authinfo, Config, FeatureToggleService, tabConfig) {
+  function TabsCtrl($rootScope, $scope, $translate, $location, $q, Utils, Authinfo, Config, FeatureToggleService, tabConfig, ControlHubService) {
     var vm = this;
     vm.features = [];
     vm.tabs = [];
+    vm.controlHubEnabled = false;
+    vm.image = null;
+    vm.collapsed = null;
+
     initTabs();
 
     $scope.$on('AuthinfoUpdated', initTabs);
@@ -67,14 +71,19 @@
     }
 
     function initTabs() {
-      vm.unfilteredTabs = initializeTabs();
-      vm.features = getUpdatedFeatureTogglesFromTabs(vm.unfilteredTabs, vm.features);
-      getFeatureToggles(vm.features);
-      filterTabsOnFeaturesAndSetActiveTab();
+      ControlHubService.getControlHubEnabled().then(function (result) {
+        vm.image = ControlHubService.getImage();
+        vm.collapsed = ControlHubService.getCollapsed();
+        vm.controlHubEnabled = result;
+        vm.unfilteredTabs = initializeTabs();
+        vm.features = getUpdatedFeatureTogglesFromTabs(vm.unfilteredTabs, vm.features);
+        getFeatureToggles(vm.features);
+        filterTabsOnFeaturesAndSetActiveTab();
+      });
     }
 
     function initializeTabs() {
-      var tabs = _.cloneDeep(tabConfig);
+      var tabs = _.cloneDeep(vm.controlHubEnabled ? ControlHubService.getTabs() : tabConfig);
       return _.chain(tabs)
         .filter(function (tab) {
           // Remove subPages whose parent tab is hideProd or states that aren't allowed

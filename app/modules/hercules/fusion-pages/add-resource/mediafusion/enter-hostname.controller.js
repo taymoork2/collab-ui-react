@@ -5,7 +5,7 @@
     .controller('MediafusionEnterHostnameController', MediafusionEnterHostnameController);
 
   /* @ngInject */
-  function MediafusionEnterHostnameController($stateParams, $translate, FeatureToggleService) {
+  function MediafusionEnterHostnameController($stateParams, $translate) {
     var vm = this;
     vm.hostname = '';
     vm.next = next;
@@ -18,11 +18,6 @@
         min: vm.minlength,
       }),
     };
-    vm.nameChangeEnabled = false;
-
-    FeatureToggleService.atlas2017NameChangeGetStatus().then(function (toggle) {
-      vm.nameChangeEnabled = toggle;
-    });
 
     ///////////////
 

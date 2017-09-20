@@ -4,9 +4,10 @@ import { WizardCtrl } from './WizardCtrl';
 import * as jstz from 'jstimezonedetect';
 import IDeferred = angular.IDeferred;
 import ICsdmDataModelService = csdm.ICsdmDataModelService;
-import IExternalLinkedAccount = csdm.IExternalLinkedAccount;
+import { ExternalLinkedAccountHelperService } from '../services/external-acct-helper.service';
+import { IWindowService } from 'angular';
 
-class ShowActivationCodeCtrl extends WizardCtrl {
+export class ShowActivationCodeCtrl extends WizardCtrl {
   private account: IAccountData;
   private showATA: boolean;
   private showPersonal: boolean;
@@ -27,7 +28,6 @@ class ShowActivationCodeCtrl extends WizardCtrl {
   private timezone: string;
   private foundUser: string;
 
-
   /* @ngInject */
   constructor($q: angular.IQService,
               private UserListService,
@@ -39,7 +39,9 @@ class ShowActivationCodeCtrl extends WizardCtrl {
               private $translate,
               private Notification,
               private CsdmEmailService: CsdmEmailService,
-              private USSService) {
+              private USSService,
+              private ExtLinkHelperService: ExternalLinkedAccountHelperService,
+              private $window: IWindowService) {
     super($q, $stateParams);
 
     this.showATA = this.wizardData.showATA;
@@ -101,6 +103,7 @@ class ShowActivationCodeCtrl extends WizardCtrl {
       this.timezone = 'UTC';
     }
   }
+
   public createActivationCode() {
     this.isLoading = true;
     this.failure = false;
@@ -109,17 +112,27 @@ class ShowActivationCodeCtrl extends WizardCtrl {
         if (this.account.cisUuid) { // Existing place
           this.createCodeForHuronPlace(this.account.cisUuid)
             .then(
-              (code) => { this.onCodeCreated(code); },
-              (err) => { this.onCodeCreationFailure(err); });
+              (code) => {
+                this.onCodeCreated(code);
+              },
+              (err) => {
+                this.onCodeCreationFailure(err);
+              });
         } else { // New place
-          this.createHuronPlace(this.account.name, this.wizardData.account.entitlements, this.wizardData.account.directoryNumber, this.wizardData.account.externalNumber)
+          this.createHuronPlace(this.account.name, this.wizardData.account.entitlements, this.wizardData.account.locationUuid, this.wizardData.account.directoryNumber, this.wizardData.account.externalNumber)
             .then((place) => {
               this.account.cisUuid = place.cisUuid;
               this.createCodeForHuronPlace(this.account.cisUuid)
                 .then(
-                  (code) => { this.onCodeCreated(code); },
-                  (err) => { this.onCodeCreationFailure(err); });
-            }, err => { this.onCodeCreationFailure(err); });
+                  (code) => {
+                    this.onCodeCreated(code);
+                  },
+                  (err) => {
+                    this.onCodeCreationFailure(err);
+                  });
+            }, err => {
+              this.onCodeCreationFailure(err);
+            });
         }
       } else { // Personal (never create new)
         this.createCodeForHuronUser(this.wizardData.account.username);
@@ -129,11 +142,24 @@ class ShowActivationCodeCtrl extends WizardCtrl {
         if (this.account.cisUuid) { // Existing place
           this.createCodeForCloudberryAccount(this.account.cisUuid)
             .then(
-              (code) => { this.onCodeCreated(code); },
-              (err) => { this.onCodeCreationFailure(err); });
+              (code) => {
+                this.onCodeCreated(code);
+              },
+              (err) => {
+                this.onCodeCreationFailure(err);
+              });
         } else { // New place
-          this.createCloudberryPlace(this.account.name, this.wizardData.account.entitlements, this.wizardData.account.directoryNumber,
-            this.wizardData.account.externalNumber, this.getExternalLinkedAccounts())
+          this.createCloudberryPlace(
+            this.account.name,
+            this.wizardData.account.entitlements,
+            this.wizardData.account.locationUuid,
+            this.wizardData.account.directoryNumber,
+            this.wizardData.account.externalNumber,
+            this.ExtLinkHelperService.getExternalLinkedAccountForSave(
+              this.wizardData.account.externalLinkedAccounts,
+              _.concat(this.wizardData.account.externalCalendarIdentifier || [], this.wizardData.account.externalHybridCallIdentifier || []),
+              this.wizardData.account.entitlements || [],
+            ))
             .then((place) => {
               this.account.cisUuid = place.cisUuid;
               this.$q.all({
@@ -149,13 +175,19 @@ class ShowActivationCodeCtrl extends WizardCtrl {
                 this.onCodeCreationFailure(e);
               });
 
-            }, (err) => { this.onCodeCreationFailure(err); });
+            }, (err) => {
+              this.onCodeCreationFailure(err);
+            });
         }
       } else { // Personal (never create new)
         this.createCodeForCloudberryAccount(this.account.cisUuid)
           .then(
-            (code) => { this.onCodeCreated(code); },
-            (err) => { this.onCodeCreationFailure(err); });
+            (code) => {
+              this.onCodeCreated(code);
+            },
+            (err) => {
+              this.onCodeCreationFailure(err);
+            });
       }
     }
   }
@@ -190,26 +222,8 @@ class ShowActivationCodeCtrl extends WizardCtrl {
     this.isLoading = false;
   }
 
-  public getExternalLinkedAccounts() {
-    const extLinkedAcc: IExternalLinkedAccount[] = [];
-    if (this.wizardData.account.externalCalendarIdentifier) {
-      _.forEach(this.wizardData.account.externalCalendarIdentifier, (acc) => {
-        extLinkedAcc.push(acc);
-      });
-    }
-    if (this.wizardData.account.externalHybridCallIdentifier) {
-      _.forEach(this.wizardData.account.externalHybridCallIdentifier, (acc) => {
-        extLinkedAcc.push(acc);
-      });
-    }
-    if (extLinkedAcc.length === 0) {
-      return null;
-    }
-    return _.sortBy(extLinkedAcc, ['operation']);
-  }
-
-  public createHuronPlace(name, entitlements, directoryNumber, externalNumber) {
-    return this.CsdmDataModelService.createCmiPlace(name, entitlements, directoryNumber, externalNumber);
+  public createHuronPlace(name, entitlements, locationUuid, directoryNumber, externalNumber) {
+    return this.CsdmDataModelService.createCmiPlace(name, entitlements, locationUuid, directoryNumber, externalNumber);
   }
 
   public createCodeForHuronPlace(cisUuid) {
@@ -221,15 +235,15 @@ class ShowActivationCodeCtrl extends WizardCtrl {
       .then((code) => {
         this.activationCode = code.code;
         this.friendlyActivationCode = this.formatActivationCode(this.activationCode);
-        this.expiryTime = code.friendlyExpiresOn;
+        this.expiryTime = code.expiresOn;
         this.generateQRCode();
       }, err => {
         this.onCodeCreationFailure(err);
       });
   }
 
-  public createCloudberryPlace(name, entitlements, directoryNumber, externalNumber, externalLinkedAccounts) {
-    return this.CsdmDataModelService.createCsdmPlace(name, entitlements, directoryNumber, externalNumber, externalLinkedAccounts);
+  public createCloudberryPlace(name, entitlements, locationUuid,  directoryNumber, externalNumber, externalLinkedAccounts) {
+    return this.CsdmDataModelService.createCsdmPlace(name, entitlements, locationUuid, directoryNumber, externalNumber, externalLinkedAccounts);
   }
 
   public createCodeForCloudberryAccount(cisUuid) {
@@ -241,7 +255,7 @@ class ShowActivationCodeCtrl extends WizardCtrl {
       return this.$q.resolve({});
     }
     ussProps.userId = cisUuid;
-    return this.USSService.updateUserProps(ussProps).then( (s) => {
+    return this.USSService.updateBulkUserProps([ussProps]).then((s) => {
       return s;
     }, (e) => {
       this.Notification.errorResponse(e, 'addDeviceWizard.showActivationCode.failedResourceGroup');
@@ -268,9 +282,9 @@ class ShowActivationCodeCtrl extends WizardCtrl {
     return activationCode ? activationCode.match(/.{4}/g).join('-') : '';
   }
 
-
   public activateEmail() {
     this.showEmail = true;
+    this.$stateParams.wizard.scrollToBottom(this.$window);
   }
 
   public getExpiresOn() {
@@ -323,7 +337,7 @@ class ShowActivationCodeCtrl extends WizardCtrl {
   }
 
   private extractUserObject(firstName, lastName: string, displayName, userName, cisUuid, orgId): IRecipientUser {
-    let name: string|null = null;
+    let name: string | null = null;
     let returnFirstName = firstName;
     if (!_.isEmpty(firstName)) {
       name = firstName;
@@ -369,7 +383,7 @@ class ShowActivationCodeCtrl extends WizardCtrl {
   }
 
   public sendActivationCodeEmail() {
-    const onEmailSent =  () => {
+    const onEmailSent = () => {
       this.Notification.notify(
         [this.$translate.instant('generateActivationCodeModal.emailSuccess', {
           address: this.selectedUser.email,

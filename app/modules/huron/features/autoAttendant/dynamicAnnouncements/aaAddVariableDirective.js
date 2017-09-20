@@ -13,10 +13,14 @@
         dynamicElement: '=dynamicElementString',
         schedule: '@aaSchedule',
         index: '=aaIndex',
+        isMenuHeader: '@aaMenuHeader',
+        menuKeyIndex: '@aaKeyIndex',
+        menuId: '@aaMenuId',
+        type: '@aaAnnouncementType',
       },
       controller: 'AAAddVariableCtrl',
       controllerAs: 'aaAddVariable',
-      templateUrl: 'modules/huron/features/autoAttendant/dynamicAnnouncements/aaAddVariableDirective.tpl.html',
+      template: require('modules/huron/features/autoAttendant/dynamicAnnouncements/aaAddVariableDirective.tpl.html'),
     };
   }
 })();

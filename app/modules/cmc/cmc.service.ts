@@ -1,4 +1,5 @@
 import { ICmcUserData, ICmcOrgStatusResponse, ICmcUserStatusResponse, ICmcUser, ICmcIssue } from './cmc.interface';
+import { Config } from 'modules/core/config/config';
 
 export class CmcService {
 
@@ -11,10 +12,9 @@ export class CmcService {
 
   /* @ngInject */
   constructor(
-    private $log: ng.ILogService,
     private $q: ng.IQService,
     private Orgservice,
-    private Config,
+    private Config: Config,
     private UrlConfig,
     private CmcServiceMock,
     private $http: ng.IHttpService,
@@ -35,7 +35,6 @@ export class CmcService {
   }
 
   public getUserData(user: ICmcUser): ICmcUserData {
-    this.$log.info('Getting data for user=', user);
     const entitled = this.hasCmcEntitlement(user);
     const mobileNumber = this.extractMobileNumber(user);
     return <ICmcUserData> {
@@ -47,19 +46,16 @@ export class CmcService {
   // TODO: Find out when cmc settings should be unavailable...
   public allowCmcSettings(orgId: string): ng.IPromise<boolean> {
     // based on org entitlements ?
-    const deferred = this.$q.defer();
+    const deferred = this.$q.defer<boolean>();
     this.Orgservice.getOrg((data, success) => {
-      this.$log.debug('data', data);
       if (success) {
         if (data.success) {
           deferred.resolve(this.hasCmcService(data.services));
-          this.$log.debug('org data:', data);
         } else {
           deferred.reject(data);
         }
       } else {
         deferred.resolve(false);
-        this.$log.debug('data', data);
       }
     }, orgId, {
       basicInfo: true,
@@ -72,7 +68,7 @@ export class CmcService {
       //let deferred: ng.IDeferred<any> = this.$q.defer();
       //this.requestTimeout(deferred);
       const url: string = this.cmcUrl + `/organizations/${orgId}/status`;
-      return this.$http.get(url, { timeout: this.requestTimeout() }).then((response) => {
+      return this.$http.get<ICmcOrgStatusResponse>(url, { timeout: this.requestTimeout() }).then((response) => {
         return response.data;
       });
     } else {
@@ -137,7 +133,6 @@ export class CmcService {
     if (!entitle) {
       url += '?removeEntitlement=true';
     }
-    this.$log.info('Updating cmc entitlement using url:', url);
     return this.$http.post(url, {});
   }
 
@@ -167,8 +162,6 @@ export class CmcService {
     };
 
     const scimUrl = this.UrlConfig.getScimUrl(user.meta.organizationID) + '/' + user.id;
-    this.$log.info('Updating user', user);
-    this.$log.info('User data', userMobileData);
     return this.$http({
       method: 'PATCH',
       url: scimUrl,

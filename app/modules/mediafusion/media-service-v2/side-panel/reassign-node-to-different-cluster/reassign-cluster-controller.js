@@ -50,6 +50,22 @@
       if (vm.clusterDetail == null) {
         MediaClusterServiceV2.createClusterV2(vm.selectedCluster, 'stable').then(function (res) {
           vm.clusterDetail = res.data;
+          // Add the created cluster to property set
+          MediaClusterServiceV2.getPropertySets()
+            .then(function (propertySets) {
+              if (propertySets.length > 0) {
+                vm.videoPropertySet = _.filter(propertySets, {
+                  name: 'videoQualityPropertySet',
+                });
+                if (vm.videoPropertySet.length > 0) {
+                  var clusterPayload = {
+                    assignedClusters: vm.clusterDetail.id,
+                  };
+                  // Assign it the property set with cluster list
+                  MediaClusterServiceV2.updatePropertySetById(vm.videoPropertySet[0].id, clusterPayload);
+                }
+              }
+            });
           moveHost(res);
         }, function () {
           vm.error = $translate.instant('mediaFusion.reassign.reassignErrorMessage', {

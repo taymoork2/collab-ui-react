@@ -1,4 +1,9 @@
 {
+  "subscriptionsAuthinfo": [{
+    "subscriptionId": "intSubId",
+    "endDate": "subEndDate",
+    "orderingTool": "CISCO_ONLINE_OPC"
+  }],
   "subscriptionsTrialResponse": [{
     "licenses": [{
       "features": ["squared-room-moderation"],
@@ -61,7 +66,12 @@
     "name": "subscriptions.enterpriseTrial",
     "numSubscriptions": 1,
     "endDate": "",
-    "badge": ""
+    "badge": "",
+    "bmmpAttr": {
+      "subscriptionId": "",
+      "productInstanceId": "",
+      "changeplanOverride": ""
+    }
   }],
   "subscriptionsResponse": [{
     "licenses": [{
@@ -164,7 +174,7 @@
       "status": "ACTIVE",
       "usage": 3,
       "volume": 100
-    },{
+    }, {
       "features": ["cloud-contact-center", "cloud-contact-center-inbound-voice"],
       "isTrial": false,
       "licenseId": "CVC_21770613-64d6-4658-a1f2-4a63ea819af2",
@@ -175,6 +185,31 @@
       "volume": 100
     }],
     "subscriptionId": "subID"
+  }],
+  "multiSubsOneWithMessengerLicense": [{
+    "licenses": [{
+      "features": ["webex-messenger", "spark--media"],
+      "isTrial": false,
+      "licenseId": "fake-license-id-0",
+      "licenseType": "MESSAGING",
+      "offerName": "MSGR",
+      "status": "ACTIVE",
+      "usage": 1,
+      "volume": 100
+    }],
+    "subscriptionId": "fake-sub-id-0"
+  }, {
+    "licenses": [{
+      "features": ["squared-room-moderation"],
+      "isTrial": false,
+      "licenseId": "fake-license-id-1",
+      "licenseType": "MESSAGING",
+      "offerName": "MS",
+      "status": "ACTIVE",
+      "usage": 7,
+      "volume": 100
+    }],
+    "subscriptionId": "fake-sub-id-1"
   }],
   "licensesFormatted": [{
     "label": "subscriptions.message",
@@ -456,7 +491,12 @@
     "name": "subscriptions.subscriptionNum",
     "numSubscriptions": 1,
     "endDate": "",
-    "badge": ""
+    "badge": "",
+    "bmmpAttr": {
+      "subscriptionId": "",
+      "productInstanceId": "",
+      "changeplanOverride": ""
+    }
   }],
   "servicesResponse": [{
     "id": "squared-fusion-mgmt",
@@ -508,6 +548,11 @@
       "volume": 100,
       "id": "donutId01",
       "tooltip": "subscriptions.licenseTypes.MGMPRO<br>subscriptions.usage8/100"
+    },
+    "bmmpAttr": {
+      "subscriptionId": "",
+      "productInstanceId": "",
+      "changeplanOverride": ""
     }
   }]
 }

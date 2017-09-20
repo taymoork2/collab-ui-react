@@ -3,6 +3,7 @@ var Spark = require('@ciscospark/spark-core').default;
 (function () {
   'use strict';
 
+  module.exports = EdiscoveryService;
   /* @ngInject */
   function EdiscoveryService($document, $http, $location, $modal, $q, $timeout, $window, Authinfo, CacheFactory, EdiscoveryMockData, ReportUtilService, TokenService, UrlConfig) {
     var urlBase = UrlConfig.getAdminServiceUrl();
@@ -212,10 +213,10 @@ var Spark = require('@ciscospark/spark-core').default;
 
     function openReportModal(_scope, modalType) {
       var template = (modalType && modalType === modalTypes.PASSWORD) ?
-        'modules/ediscovery/ediscovery-report-password-modal.html' :
-        'modules/ediscovery/download-report-modal.html';
+        require('./ediscovery-report-password-modal.html') :
+        require('./download-report-modal.html');
       $modal.open({
-        templateUrl: template,
+        template: template,
         type: 'small',
         scope: _scope,
       });
@@ -273,7 +274,4 @@ var Spark = require('@ciscospark/spark-core').default;
       setupSpark: setupSpark,
     };
   }
-
-  angular.module('Ediscovery')
-    .service('EdiscoveryService', EdiscoveryService);
 }());

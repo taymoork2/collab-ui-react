@@ -1,12 +1,14 @@
 (function () {
   'use strict';
 
+  var DiagnosticKey = require('../../metrics').DiagnosticKey;
+
   angular.module('Core')
     .service('PartnerService', PartnerService)
     .factory('ScimPatchService', ScimPatchService);
 
   /* @ngInject */
-  function PartnerService($http, $rootScope, $q, $translate, Analytics, Authinfo, Config, TrialService, UrlConfig, UserRoleService) {
+  function PartnerService($http, $rootScope, $q, $translate, Analytics, Authinfo, Config, MetricsService, TrialService, UrlConfig, UserRoleService) {
     var managedOrgsUrl = UrlConfig.getAdminServiceUrl() + 'organizations/%s/managedOrgs';
     var siteListUrl = UrlConfig.getAdminServiceUrl() + 'organizations/%s/sitesProvOrderStatus';
 
@@ -195,7 +197,8 @@
         service = mapping[licenseInfo.licenseType] || mapping[licenseInfo.offerName];
         if (!service) {
           // TODO: remove after identifying unhandled offers
-          throw new Error('Unable to map licenseType: ' + licenseInfo.licenseType + ', offerName: ' + licenseInfo.offerName);
+          var licenseInfoDebug = _.pick(licenseInfo, ['capacity', 'features', 'isCIUnifiedSite', 'isTrial', 'licenseId', 'licenseType', 'offerName', 'partnerOrgId', 'status', 'trialId', 'volume']);
+          MetricsService.trackDiagnosticMetricAndThrow(DiagnosticKey.LICENSE_MAP_ERROR, licenseInfoDebug);
         }
         service.licenseType = licenseInfo.licenseType;
       }
@@ -482,7 +485,11 @@
     // The information provided by this function will be used in displaying the service icons on the customer list page.
     function _getOrderedServices(data, options) {
       var servicesToProcess = ['messaging', 'conferencing', 'communications', 'webexEEConferencing',
-        'roomSystems', 'sparkBoard', 'care'];
+        'roomSystems', 'sparkBoard', 'care', 'advanceCare'];
+      var careServices = {
+        care: 'isCareEnabled',
+        advanceCare: 'isAdvanceCareEnabled',
+      };
       var servicesManagedByCurrentPartner = [];
       var servicesManagedByAnotherPartner = [];
 
@@ -491,7 +498,9 @@
         if (service === 'webexEEConferencing') {
           serviceToAdd = 'webex';
         }
-        if (service !== 'care' || (service === 'care' && _.get(options, 'isCareEnabled', true))) {
+
+        var careServiceEnabledPropertyName = careServices[service];
+        if (!careServices[service] || _.get(options, careServiceEnabledPropertyName, true)) {
           if (isServiceManagedByCurrentPartner(data[service])) {
             servicesManagedByCurrentPartner.push(serviceToAdd);
           } else {
@@ -794,9 +803,9 @@
         var name = _.chain(conferenceServices).sortBy('order').map(function (o) {
           return o.name;
         })
-        .uniq()
-        .value()
-        .join(', ');
+          .uniq()
+          .value()
+          .join(', ');
         var licenseQty = conferenceServices[0].qty;
         var hasWebex = _.some(conferenceServices, { isWebex: true });
         trialServices.push({ name: name, sub: conferenceServices, qty: licenseQty, icon: 'icon-circle-group', order: 1, hasWebex: hasWebex });

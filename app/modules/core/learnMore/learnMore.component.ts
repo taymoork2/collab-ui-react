@@ -5,13 +5,14 @@ export class LearnMoreCtrl {
 
   /* @ngInject */
   constructor(
+    private $window: ng.IWindowService,
     private Analytics,
   ) {}
 
   public clickLink(): void {
     if (_.isUndefined(this.isDisabled) || !this.isDisabled) {
       this.Analytics.trackPremiumEvent(this.Analytics.sections.PREMIUM.eventNames.LEARN_MORE, this.location);
-      // TODO: open learn more link in new window once URL is available
+      this.$window.open('http://www.cisco.com/go/pro-pack', '_blank');
     }
   }
 
@@ -21,7 +22,7 @@ export class LearnMoreCtrl {
 }
 
 export class LearnMoreComponent implements ng.IComponentOptions {
-  public templateUrl = 'modules/core/learnMore/learnMore.tpl.html';
+  public template = require('modules/core/learnMore/learnMore.tpl.html');
   public controller = LearnMoreCtrl;
   public bindings = {
     location: '@',

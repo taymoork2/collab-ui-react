@@ -2,7 +2,7 @@
   <form name="nameVariableForm" novalidate>
     <div class="row aa-flex-row">
       <div class="large-12 small-12 columns aa-name-variable">
-        <input cs-input type="text" ng-pattern="/^[a-zA-Z0-9 ]*$/" ng-required="true" ng-minlength="aaCallerInput.minVariableLength" name="callerInputNameVariable" id="callerInputNameVariable" placeholder="{{ :: 'autoAttendant.callerInputNamePlaceHolder' | translate }}" ng-maxlength="aaCallerInput.maxVariableLength" cs-input-messages="aaCallerInput.validationMsgs" cs-input-warning-message="{{ :: 'autoAttendant.callerInputVariableDuplicateMsg' | translate }}" cs-input-warning="aaCallerInput.isWarn" ng-model="aaCallerInput.nameInput" ng-change="aaCallerInput.saveNameInput()" cs-input-group-size="medium-12" cs-input-label="{{ :: 'autoAttendant.callerInputLabel' | translate }}">
+        <input cs-input type="text" ng-pattern="/^[a-zA-Z0-9 ]*$/" ng-required="true" ng-minlength="aaCallerInput.minVariableLength" name="callerInputNameVariable" id="callerInputNameVariable" placeholder="{{ :: 'autoAttendant.callerInputNamePlaceHolder' | translate }}" ng-maxlength="aaCallerInput.maxVariableLength" cs-input-messages="aaCallerInput.validationMsgs" cs-input-warning-message="{{ :: 'autoAttendant.callerInputVariableDuplicateMsg' | translate }}" cs-input-warning="aaCallerInput.isWarn" ng-model="aaCallerInput.nameInput" ng-change="aaCallerInput.saveNameInput()" ng-focus="aaCallerInput.setOldCallerInputValue(aaCallerInput.nameInput)" ng-blur="aaCallerInput.updateCIAction()" cs-input-group-size="medium-12" cs-input-label="{{ :: 'autoAttendant.callerInputLabel' | translate }}">
       </div>
     </div>
     <label class="add-name-input-help-desc" translate="autoAttendant.callerNameInputHelpText"></label>
@@ -34,7 +34,7 @@
         <div ng-if="aaCallerInput.inputActions.length" class="row aa-pm-vertical-line" ng-repeat="keyAction in aaCallerInput.inputActions">
           <div class="row">
             <ng-form name="nameKeyedInputForm">
-              <div class="small-2 columns">
+              <div class="small-2 columns aa-call-input-width">
                 <cs-select ng-model="keyAction.key" options="keyAction.keys" placeholder="aaCallerInput.selectPlaceholder" on-change-fn="aaCallerInput.keyChanged($index, keyAction.key)" class="aa-pm-key-select" icon="icon-chevron-down" ng-class="{'not-selected':!keyAction.key}">
                 </cs-select>
               </div>
@@ -59,9 +59,10 @@
       <div class="aa-select-min">
          <cs-select id="maxLength{{ schedule + index }}" ng-model="aaCallerInput.maxStringLength" ng-change="aaCallerInput.setMaxStringLength()" options="aaCallerInput.maxLengthOptions"></cs-select>
       </div>
-      <div>
-        <span class="small-12 large-12 columns aa-message-max-length-subtext" translate="autoAttendant.callerInputMaxLength"></span>
+     <div>
+       <p class="small-12 columns aa-call-input-subtextlen" translate="autoAttendant.callerInputMaxLength"></p>
       </div>
+      <br/>
     </div>
   </div>
   <div class="panel">

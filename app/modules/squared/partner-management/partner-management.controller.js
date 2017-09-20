@@ -101,9 +101,9 @@
       }).catch(function (resp) {
         vm.isLoading = false;
         Notification.errorWithTrackingId(resp,
-        'partnerManagement.error.searchFailed',
+          'partnerManagement.error.searchFailed',
           { msg: (_.isEmpty(resp.data)) ?
-          $translate.instant('partnerManagement.error.timeout') : resp.data.message });
+            $translate.instant('partnerManagement.error.timeout') : resp.data.message });
       });
     };
 
@@ -179,7 +179,7 @@
         Notification.errorWithTrackingId(resp,
           'partnerManagement.error.getOrgDetails',
           { msg: (_.isEmpty(resp.data)) ?
-          $translate.instant('partnerManagement.error.timeout') : resp.data.message });
+            $translate.instant('partnerManagement.error.timeout') : resp.data.message });
         vm.showSpinner = false;
       });
     }

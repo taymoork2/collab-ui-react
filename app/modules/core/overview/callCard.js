@@ -1,6 +1,9 @@
 (function () {
   'use strict';
 
+  // TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
+  var genericCardTemplatePath = require('ngtemplate-loader?module=Core!./genericCard.tpl.html');
+
   angular
     .module('Core')
     .factory('OverviewCallCard', OverviewCallCard);
@@ -11,7 +14,7 @@
       createCard: function createCard() {
         var card = {};
         card.isCSB = Authinfo.isCSB();
-        card.template = 'modules/core/overview/genericCard.tpl.html';
+        card.template = genericCardTemplatePath;
         card.icon = 'icon-circle-call';
         card.desc = 'overview.cards.call.desc';
         card.name = 'overview.cards.call.title';
@@ -24,14 +27,14 @@
         card.helper = OverviewHelper;
         card.showHealth = true;
 
-        // TODO (jlowery): Remove when i751-10d-ext toggle is GA
-        FeatureToggleService.sparkCallTenDigitExtGetStatus().then(function (result) {
-          if (result) {
-            card.settingsUrl = '#/services/call-settingsnew';
-          } else {
-            card.settingsUrl = '#/services/call-settings';
-          }
-        });
+        FeatureToggleService.supports(FeatureToggleService.features.hI1484)
+          .then(function (supported) {
+            if (supported) {
+              card.settingsUrl = '#/services/call-settings-location';
+            } else {
+              card.settingsUrl = '#/services/call-settings';
+            }
+          });
 
         card.reportDataEventHandler = function (event, response) {
           if (!response.data.success) return;
@@ -45,6 +48,7 @@
           _.each(data.components, function (component) {
             if (component.id === card.helper.statusIds.SparkCall) {
               card.healthStatus = card.helper.mapStatus(card.healthStatus, component.status);
+              card.healthStatusAria = card.helper.mapStatusAria(card.healthStatus, component.status);
             }
           });
         };

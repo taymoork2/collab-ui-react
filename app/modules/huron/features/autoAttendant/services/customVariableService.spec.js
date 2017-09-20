@@ -4,7 +4,6 @@ describe('Service: CustomVariableService', function () {
   var CustomVariableService, $httpBackend, HuronConfig, url, callExperienceURL, URL, ceId;
   var customVariablesURL;
 
-  // require('jasmine-collection-matchers');
   var Authinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
   };

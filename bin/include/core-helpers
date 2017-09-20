@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function abort {
     >&2 echo "Aborting '`basename $0`'"
     exit 1

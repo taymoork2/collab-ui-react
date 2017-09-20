@@ -21,16 +21,16 @@ describe('Controller: AACallerInputCtrl', function () {
     keys: [
       '0', '1', '4', '5', '6', '7', '8', '9', '#', '*',
     ] }, {
-      key: '2',
-      value: '',
-      keys: [
-        '0', '2', '4', '5', '6', '7', '8', '9', '#', '*',
-      ] }, {
-        key: '3',
-        value: '',
-        keys: [
-          '0', '3', '4', '5', '6', '7', '8', '9', '#', '*',
-        ] }];
+    key: '2',
+    value: '',
+    keys: [
+      '0', '2', '4', '5', '6', '7', '8', '9', '#', '*',
+    ] }, {
+    key: '3',
+    value: '',
+    keys: [
+      '0', '3', '4', '5', '6', '7', '8', '9', '#', '*',
+    ] }];
 
   var schedule = 'openHours';
   var index = '0';
@@ -126,6 +126,19 @@ describe('Controller: AACallerInputCtrl', function () {
       controller.saveNameInput();
       expect(controller.isWarn).toEqual(false);
       expect(aaCommonService.isValid()).toEqual(false);
+    });
+  });
+
+  describe('setOldCallerInputValue', function () {
+    it('should set old caller input value to a specified string', function () {
+      controller.setOldCallerInputValue('testDummyData');
+      expect(controller.oldCallerInputValue).toEqual('testDummyData');
+    });
+  });
+
+  describe('updateCIAction', function () {
+    it('should update Caller Input action', function () {
+      controller.updateCIAction();
     });
   });
 

@@ -4,28 +4,28 @@ describe('Component: externaltransferUser', () => {
 
   beforeEach(function () {
     this.orgSettingResponseOn = {
-      allowExternalTransfer: 'true',
+      allowExternalTransfer: 'On',
       uuid: 'e3cc6b07-59b6-40d2-8d9e-06986c45a99d',
     };
 
     this.orgSettingResponseOff = {
-      allowExternalTransfer: 'false',
+      allowExternalTransfer: 'Off',
       uuid: 'e3cc6b07-59b6-40d2-8d9e-06986c45a99d',
     };
 
     this.userSettingResponseOn = {
       firstName: 'Ollie',
-      allowExternalTransfer: 'On',
+      allowExternalTransfer: true,
     };
 
     this.userSettingResponseOff = {
       firstName: 'Ollie',
-      allowExternalTransfer: 'Off',
+      allowExternalTransfer: false,
     };
 
     this.userSettingResponseDefault = {
       firstName: 'Ollie',
-      allowExternalTransfer: 'Default',
+      allowExternalTransfer: null,
     };
   });
 
@@ -67,31 +67,41 @@ describe('Component: externaltransferUser', () => {
       alwaysAllow: 'serviceSetupModal.externalTransfer.alwaysAllow',
       neverAllow: 'serviceSetupModal.externalTransfer.neverAllow',
       defaultOrgSetting: 'serviceSetupModal.externalTransfer.orgSetting', //Organization Settings (On)',
+      ITransferOptions: [{
+        label: 'serviceSetupModal.externalTransfer.orgSetting',
+        value: null,
+      }, {
+        label: 'serviceSetupModal.externalTransfer.alwaysAllow',
+        value: true,
+      }, {
+        label: 'serviceSetupModal.externalTransfer.neverAllow',
+        value: false,
+      }],
     };
 
     beforeEach(initComponent);
     it('should load settings when user settings is On', function () {
       this.getOrgSettings.resolve(this.orgSettingResponseOn);
       this.getUserSettings.resolve(this.userSettingResponseOn['allowExternalTransfer']);
-      this.controller.on = 'On';
+      this.controller.on = true;
       this.$scope.$apply();
-      expect(this.controller.selected).toEqual(options['alwaysAllow']);
+      expect(this.controller.selected).toEqual(options.ITransferOptions[1]);
     });
 
     it('should load settings when user settings is Off', function () {
-      this.controller.off = 'Off';
+      this.controller.off = false;
       this.getOrgSettings.resolve(this.orgSettingResponseOff);
       this.getUserSettings.resolve(this.userSettingResponseOff['allowExternalTransfer']);
       this.$scope.$apply();
-      expect(this.controller.selected).toEqual(options['neverAllow']);
+      expect(this.controller.selected).toEqual(options.ITransferOptions[2]);
     });
 
     it('should load settings when user settings is Off', function () {
-      this.controller.default = 'Default';
-      this.getOrgSettings.resolve(this.orgSettingResponseOn);
+      this.controller.default = null;
+      this.getOrgSettings.resolve(this.orgSettingResponseOff);
       this.getUserSettings.resolve(this.userSettingResponseDefault['allowExternalTransfer']);
       this.$scope.$apply();
-      expect(this.controller.selected).toEqual(options['defaultOrgSetting']);
+      expect(this.controller.selected).toEqual(options.ITransferOptions[0]);
     });
   });
 

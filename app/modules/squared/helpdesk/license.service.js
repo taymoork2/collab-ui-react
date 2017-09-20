@@ -125,6 +125,12 @@
     };
   }
 
-  angular.module('Squared')
-    .service('LicenseService', LicenseService);
+  module.exports = angular
+    .module('LicenseService', [
+      require('modules/core/config/config').default,
+      require('modules/core/scripts/services/utils'),
+      require('./mock-data').default,
+    ])
+    .service('LicenseService', LicenseService)
+    .name;
 }());

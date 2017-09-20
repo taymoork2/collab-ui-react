@@ -39,11 +39,13 @@ describe('Controller: Customer Reports Ctrl', function () {
     this.devicesJson = getJSONFixture('core/json/customerReports/devices.json');
     this.defaults = getJSONFixture('core/json/partnerReports/commonReportService.json');
     this.conversationData = getJSONFixture('core/json/customerReports/conversation.json');
+    this.dummyCdrData = getJSONFixture('core/json/customerReports/cdrData.json');
 
     this.activeOptions = _.cloneDeep(this.ctrlData.activeUserOptions);
     this.activeOptions.description = 'activeUsers.customerPortalDescription';
     this.secondaryActiveOptions = _.cloneDeep(this.ctrlData.activeUserSecondaryOptions);
     this.secondaryActiveOptions.description = 'activeUsers.customerMostActiveDescription';
+    this.secondaryActiveOptions.missingUsersErrorDescription = 'activeUsers.missingUsersError';
     this.secondaryActiveOptions.search = true;
     this.secondaryActiveOptions.sortOptions = _.cloneDeep(this.activeData.sortOptions);
     this.secondaryActiveOptions.table.headers = _.cloneDeep(this.activeData.headers);
@@ -111,13 +113,13 @@ describe('Controller: Customer Reports Ctrl', function () {
       spyOn(this.DummySparkDataService, 'dummyDeviceData').and.callThrough();
 
       this.controller = this.$controller('SparkReportCtrl', {
+        $scope: this.$scope,
         $q: this.$q,
         CommonReportService: this.CommonReportService,
         SparkReportService: this.SparkReportService,
         DummySparkDataService: this.DummySparkDataService,
         SparkGraphService: this.SparkGraphService,
       });
-
       this.$scope.$apply();
       this.$timeout.flush();
     });
@@ -154,6 +156,7 @@ describe('Controller: Customer Reports Ctrl', function () {
         expect(this.controller.ALL).toEqual(this.ctrlData.ALL);
         expect(this.controller.ENGAGEMENT).toEqual(this.ctrlData.ENGAGEMENT);
         expect(this.controller.QUALITY).toEqual(this.ctrlData.QUALITY);
+        expect(this.controller.DETAILS).toEqual(this.ctrlData.DETAILS);
         expect(this.controller.displayEngagement).toBeTruthy();
         expect(this.controller.displayQuality).toBeTruthy();
 
@@ -251,14 +254,17 @@ describe('Controller: Customer Reports Ctrl', function () {
         this.controller.filterArray[1].toggle(this.ctrlData.ENGAGEMENT);
         expect(this.controller.displayEngagement).toBeTruthy();
         expect(this.controller.displayQuality).toBeFalsy();
+        expect(this.controller.displayDetails).toBeFalsy();
 
         this.controller.filterArray[2].toggle(this.ctrlData.QUALITY);
         expect(this.controller.displayEngagement).toBeFalsy();
         expect(this.controller.displayQuality).toBeTruthy();
+        expect(this.controller.displayDetails).toBeFalsy();
 
         this.controller.filterArray[0].toggle(this.ctrlData.ALL);
         expect(this.controller.displayEngagement).toBeTruthy();
         expect(this.controller.displayQuality).toBeTruthy();
+        expect(this.controller.displayDetails).toBeFalsy();
       });
     });
   });
@@ -322,6 +328,7 @@ describe('Controller: Customer Reports Ctrl', function () {
       spyOn(this.DummySparkDataService, 'dummyDeviceData').and.callThrough();
 
       this.controller = this.$controller('SparkReportCtrl', {
+        $scope: this.$scope,
         $q: this.$q,
         CommonReportService: this.CommonReportService,
         SparkReportService: this.SparkReportService,
@@ -508,6 +515,97 @@ describe('Controller: Customer Reports Ctrl', function () {
         media: this.controller.qualityLabels,
         metrics: this.controller.metricsLabels,
       });
+    });
+  });
+
+  describe('FeatureToggleService returns true for I802', function () {
+    beforeEach(function () {
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
+      spyOn(this.SparkReportService, 'getCDRReport').and.returnValue(this.$q.resolve(this.dummyCdrData));
+      this.controller = this.$controller('SparkReportCtrl as nav', {
+        $scope: this.$scope,
+        $q: this.$q,
+        CommonReportService: this.CommonReportService,
+        SparkReportService: this.SparkReportService,
+        DummySparkDataService: this.DummySparkDataService,
+        SparkGraphService: this.SparkGraphService,
+      });
+      this.$scope.$apply();
+    });
+
+    it('should have details tab present', function() {
+      expect(this.controller.ALL).toEqual(this.ctrlData.ALL);
+      expect(this.controller.ENGAGEMENT).toEqual(this.ctrlData.ENGAGEMENT);
+      expect(this.controller.QUALITY).toEqual(this.ctrlData.QUALITY);
+      expect(this.controller.DETAILS).toEqual(this.ctrlData.DETAILS);
+      expect(this.controller.filterArray.length).toEqual(4);
+    });
+
+    it('should have adjusted the startDate and endDate as time filter is Last 7 days', function() {
+      const sDate = moment().subtract(7, 'days').format('YYYY-MM-DD');
+      const sTime = moment().subtract(7, 'days').format('h:mm A');
+      const eDate = moment().format('YYYY-MM-DD');
+      const eTime = moment().format('h:mm A');
+      expect(this.controller.startDate).toEqual(sDate);
+      expect(this.controller.endDate).toEqual(eDate);
+      expect(this.controller.startTime).toEqual(sTime);
+      expect(this.controller.endTime).toEqual(eTime);
+    });
+
+    it('should have adjusted the startDate and endDate on time filter Changes', function() {
+      this.controller.timeSelected = this.defaults.timeFilter[1];
+      this.controller.timeUpdates.update();
+      this.$timeout.flush();
+      const sDate = moment().subtract(4, 'weeks').format('YYYY-MM-DD');
+      const sTime = moment().subtract(4, 'weeks').format('h:mm A');
+      const eDate = moment().format('YYYY-MM-DD');
+      const eTime = moment().format('h:mm A');
+      expect(this.controller.startDate).toEqual(sDate);
+      expect(this.controller.endDate).toEqual(eDate);
+      expect(this.controller.startTime).toEqual(sTime);
+      expect(this.controller.endTime).toEqual(eTime);
+    });
+
+    it('resetCards should alter the visible filterArray[x].toggle based on filters equals \'Details\'', function () {
+      this.controller.filterArray[3].toggle(this.ctrlData.DETAILS);
+      this.SparkReportService.getCDRReport.and.returnValue(this.$q.resolve(this.dummyCdrData));
+      this.$scope.$apply();
+      expect(this.controller.displayDetails).toBeTruthy();
+      expect(this.controller.gridOptions).toBeDefined();
+    });
+
+    it('should gridOptions.data have data loaded', function() {
+      this.controller.filterArray[3].toggle(this.ctrlData.DETAILS);
+      this.SparkReportService.getCDRReport.and.returnValue(this.$q.resolve(this.dummyCdrData));
+      this.$scope.$apply();
+      expect(this.controller.gridOptions.data.length).toEqual(5);
+    });
+  });
+
+  describe('FeatureToggleService returns false for I802', function () {
+    beforeEach(function () {
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
+      spyOn(this.SparkReportService, 'getCDRReport').and.returnValue(this.$q.resolve(this.dummyCdrData));
+      this.controller = this.$controller('SparkReportCtrl as nav', {
+        $scope: this.$scope,
+        $q: this.$q,
+        CommonReportService: this.CommonReportService,
+        SparkReportService: this.SparkReportService,
+        DummySparkDataService: this.DummySparkDataService,
+        SparkGraphService: this.SparkGraphService,
+      });
+      this.$scope.$apply();
+    });
+
+    it('should not have details tab present', function() {
+      expect(this.controller.filterArray.length).toEqual(3);
+      expect(this.controller.displayDetails).toBeFalsy();
+    });
+
+    it('gridOptions.data should not have data loaded', function() {
+      this.SparkReportService.getCDRReport.and.returnValue(this.$q.resolve(this.dummyCdrData));
+      this.$scope.$apply();
+      expect(this.controller.gridOptions).toBeUndefined();
     });
   });
 });

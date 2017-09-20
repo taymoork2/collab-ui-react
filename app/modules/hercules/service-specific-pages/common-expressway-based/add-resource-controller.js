@@ -7,7 +7,7 @@
 
 
   /* @ngInject */
-  function AddResourceController($modal, $modalInstance, $q, $state, $translate, $window, connectorType, FeatureToggleService, firstTimeSetup, FmsOrgSettings, HybridServicesClusterService, HybridServicesExtrasService, HybridServicesUtilsService, ProPackService, Notification, ResourceGroupService, serviceId) {
+  function AddResourceController($modal, $modalInstance, $state, $translate, $window, connectorType, firstTimeSetup, FmsOrgSettings, HybridServicesClusterService, HybridServicesExtrasService, HybridServicesUtilsService, Notification, ResourceGroupService, serviceId) {
     var vm = this;
     vm.connectors = [];
     vm.warning = warning;
@@ -31,10 +31,6 @@
     vm.localizedAddNewExpressway = $translate.instant('hercules.addResourceDialog.registerNewExpressway');
     vm.localizedAddNewExpresswayHelp = $translate.instant('hercules.addResourceDialog.registerNewExpresswayHelp');
     vm.localizedAddToExistingExpressway = $translate.instant('hercules.addResourceDialog.addToExistingExpressway');
-    vm.localizedWillBeInstalledMessage = $translate.instant('hercules.addResourceDialog.willBeInstalled', {
-      ConnectorName: vm.localizedConnectorName,
-      ServiceName: vm.localizedServiceName,
-    });
     vm.localizedExpresswaysName = $translate.instant('hercules.addResourceDialog.selectClusterPlaceholder');
     vm.localizedCannotProvionError = $translate.instant('hercules.addResourceDialog.cannotProvisionConnector', {
       ConnectorName: vm.localizedConnectorName,
@@ -46,20 +42,7 @@
     };
     vm.clustername = '';
 
-    vm.nameChangeEnabled = false;
-    $q.all({
-      nameChangeEnabled: FeatureToggleService.atlas2017NameChangeGetStatus(),
-      proPackEnabled: ProPackService.hasProPackPurchased(),
-    }).then(function (toggles) {
-      vm.nameChangeEnabled = toggles.nameChangeEnabled;
-      if (vm.nameChangeEnabled) {
-        vm.localizedHostNameHelpText = $translate.instant('hercules.addResourceDialog.nameHelptextNew', {
-          appTitle: toggles.proPackEnabled ? $translate.instant('loginPage.titlePro') : $translate.instant('loginPage.titleNew'),
-        });
-      } else {
-        vm.localizedHostNameHelpText = $translate.instant('hercules.addResourceDialog.nameHelptext');
-      }
-    });
+    vm.localizedHostNameHelpText = $translate.instant('hercules.addResourceDialog.nameHelptext');
 
     vm.localizedClusternameWatermark = $translate.instant('hercules.addResourceDialog.clusternameWatermark');
 
@@ -102,10 +85,10 @@
 
     function warning() {
       if (_.some(vm.connectors, function (connector) {
-        vm.warningMessage = vm.nameChangeEnabled ? $translate.instant('hercules.addResourceDialog.hostnameRegisteredNew') : $translate.instant('hercules.addResourceDialog.hostnameRegistered');
+        vm.warningMessage = $translate.instant('hercules.addResourceDialog.hostnameRegistered');
         return connector.toLowerCase() === vm.hostname.toLowerCase();
       })
-        ) {
+      ) {
         return true;
       }
       return false;
@@ -184,8 +167,8 @@
         _.forEach(cluster.connectorsHostname, function (connector) {
           if (connector.connectorType === 'c_mgmt') {
             vm.connectors.push(
-                    connector.hostname
-                  );
+              connector.hostname
+            );
           }
         });
       });
@@ -253,7 +236,7 @@
         return;
       }
       $modal.open({
-        templateUrl: 'modules/hercules/service-specific-pages/common-expressway-based/confirm-setup-cancel-dialog.html',
+        template: require('modules/hercules/service-specific-pages/common-expressway-based/confirm-setup-cancel-dialog.html'),
         type: 'dialog',
       })
         .result.then(function (isAborting) {

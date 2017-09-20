@@ -64,7 +64,7 @@ class SubscriptionDetailsCtrl {
 }
 
 export class SubscriptionDetailsComponent implements ng.IComponentOptions {
-  public templateUrl = 'modules/core/myCompany/mySubscriptions/subscription-details/subscriptionDetails.tpl.html';
+  public template = require('modules/core/myCompany/mySubscriptions/subscription-details/subscriptionDetails.tpl.html');
   public controller = SubscriptionDetailsCtrl;
   public bindings = {
     subscription: '<',

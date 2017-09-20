@@ -96,5 +96,5 @@ class GmTdHistories implements ng.IComponentController {
 
 export class GmTdHistoriesComponent implements ng.IComponentOptions {
   public controller = GmTdHistories;
-  public templateUrl = 'modules/gemini/telephonyDomain/details/gmTdHistories.tpl.html';
+  public template = require('modules/gemini/telephonyDomain/details/gmTdHistories.tpl.html');
 }

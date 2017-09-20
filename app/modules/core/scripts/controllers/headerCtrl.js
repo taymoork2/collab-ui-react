@@ -5,24 +5,30 @@
     .controller('HeaderCtrl', HeaderCtrl);
 
   /* @ngInject */
-  function HeaderCtrl($q, $translate, Authinfo, FeatureToggleService, ProPackService, Utils) {
+  function HeaderCtrl($q, $translate, Authinfo, ProPackService, Utils, Orgservice, ControlHubService) {
     var vm = this;
-
+    vm.partnerInfo = null;
+    vm.adminTabs = [];
     vm.showOrgName = showOrgName;
     vm.showUserDropDown = showUserDropDown;
     vm.showMyCompany = showMyCompany;
+    vm.showProBadge = showProBadge;
     init();
 
     function init() {
       vm.icon = 'icon-cisco-logo';
       $q.all({
         proPackEnabled: ProPackService.hasProPackPurchased(),
-        nameChangeEnabled: FeatureToggleService.atlas2017NameChangeGetStatus(),
+        nameChangeEnabled: ControlHubService.getControlHubEnabled(),
       }).then(function (toggles) {
         if (toggles.proPackEnabled && toggles.nameChangeEnabled) {
           vm.headerTitle = $translate.instant('loginPage.titlePro');
+          getAdminTabs();
+          getPartnerInfo();
         } else if (toggles.nameChangeEnabled) {
           vm.headerTitle = $translate.instant('loginPage.titleNew');
+          getAdminTabs();
+          getPartnerInfo();
         } else {
           vm.headerTitle = $translate.instant('loginPage.title');
         }
@@ -39,7 +45,46 @@
     }
 
     function showMyCompany() {
-      return Utils.isAdminPage() && !(Authinfo.isPartnerAdmin() || Authinfo.isPartnerSalesAdmin());
+      return Utils.isAdminPage() && (Authinfo.isCustomerAdmin() || Authinfo.isReadOnlyAdmin()) && Authinfo.isCustomerView();
+    }
+
+    function showProBadge() {
+      return Authinfo.isEnterpriseCustomer() && Authinfo.isPremium();
+    }
+
+    function getAdminTabs() {
+      if (showMyCompany()) {
+        vm.adminTabs = [{
+          icon: 'icon-company-active',
+          title: Authinfo.getOrgName(),
+          link: '/my-company',
+          iconClass: 'icon-outline',
+        }];
+      } else if (showOrgName()) {
+        vm.adminTabs = [{
+          tab: 'admin-orgname-only',
+          title: Authinfo.getOrgName(),
+        }];
+      }
+    }
+
+    function getPartnerInfo() {
+      if (Authinfo.isCustomerLaunchedFromPartner()) {
+        var params = {
+          disableCache: true,
+          basicInfo: true,
+        };
+        Orgservice.getOrg(function (data) {
+          if (data.success) {
+            var settings = data.orgSettings;
+            if (!_.isEmpty(settings) && settings.supportProviderCompanyName) {
+              vm.partnerInfo = $translate.instant('tabs.managedByPartner', {
+                partnerOrgName: settings.supportProviderCompanyName,
+              });
+            }
+          }
+        }, Authinfo.getUserOrgId(), params);
+      }
     }
   }
 })();

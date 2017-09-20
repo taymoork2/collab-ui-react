@@ -25,7 +25,6 @@
     .factory('BlfInternalExtValidation', BlfInternalExtValidation)
     .factory('BlfURIValidation', BlfURIValidation)
     .factory('NumberSearchServiceV2', NumberSearchServiceV2)
-    .factory('HuntGroupServiceV2', HuntGroupServiceV2)
     .factory('AssignAutoAttendantService', AssignAutoAttendantService)
     .factory('UserServiceVoice', UserServiceVoice)
     .factory('VoicemailService', VoicemailService)
@@ -40,7 +39,6 @@
     .factory('SiteService', SiteService)
     .factory('AvrilSiteService', AvrilSiteService)
     .factory('AvrilSiteUpdateService', AvrilSiteUpdateService)
-    .factory('InternalNumberRangeService', InternalNumberRangeService)
     .factory('UserEndpointService', UserEndpointService)
     .factory('SipEndpointService', SipEndpointService)
     .factory('DirectoryNumberUserService', DirectoryNumberUserService)
@@ -61,8 +59,6 @@
     .factory('UserCosRestrictionServiceV2', UserCosRestrictionServiceV2)
     .factory('CustomerCosRestrictionServiceV2', CustomerCosRestrictionServiceV2)
     .factory('PlacesService', PlacesService)
-    .factory('MemberSearchServiceV2', MemberSearchServiceV2)
-    .factory('CustomerDialPlanServiceV2', CustomerDialPlanServiceV2)
     .name;
 
   /* @ngInject */
@@ -119,10 +115,6 @@
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/directorynumbers/:directoryNumberId', {
       customerId: '@customerId',
       directoryNumberId: '@directoryNumberId',
-    }, {
-      update: {
-        method: 'PUT',
-      },
     });
   }
 
@@ -195,22 +187,6 @@
       customerId: '@customerId',
       number: '@number',
       assigned: '@assigned',
-    });
-  }
-
-  /* @ngInject */
-  function HuntGroupServiceV2($resource, HuronConfig) {
-    var baseUrl = HuronConfig.getCmiV2Url();
-    return $resource(baseUrl + '/customers/:customerId/features/huntgroups/:huntGroupId', {
-      customerId: '@customerId',
-      huntGroupId: '@huntGroupId',
-    }, {
-      update: {
-        method: 'PUT',
-      },
-      delete: {
-        method: 'DELETE',
-      },
     });
   }
 
@@ -384,21 +360,6 @@
       },
       get: {
         method: 'GET',
-      },
-    });
-  }
-
-  /* @ngInject */
-  function InternalNumberRangeService($resource, HuronConfig) {
-    return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/internalnumberranges/:internalNumberRangeId', {
-      customerId: '@customerId',
-      internalNumberRangeId: '@internalNumberRangeId',
-    }, {
-      save: {
-        method: 'POST',
-        headers: {
-          'Access-Control-Expose-Headers': 'Location',
-        },
       },
     });
   }
@@ -600,7 +561,7 @@
     return _.get(responseObj, '[0]', responseObj);
   }
 
-    /* @ngInject */
+  /* @ngInject */
   function PlacesService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/places/:placesId', {
       customerId: '@customerId',
@@ -609,21 +570,6 @@
       update: {
         method: 'PUT',
       },
-    });
-  }
-
-  /* @ngInject */
-  function MemberSearchServiceV2($resource, HuronConfig) {
-    return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/members', {
-      customerId: '@customerId',
-      name: '@name',
-    });
-  }
-
-  /* @ngInject */
-  function CustomerDialPlanServiceV2($resource, HuronConfig) {
-    return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/dialplans', {
-      customerId: '@customerId',
     });
   }
 })();

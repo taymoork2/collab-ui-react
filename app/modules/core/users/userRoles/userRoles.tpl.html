@@ -67,9 +67,12 @@
                     cs-input-label="{{fullAdmin.label}}"
                     ng-click="clearCheckboxes();"
                     ng-disabled="isEditingSelf">
-                  <i
-                    tooltip-html-unsafe="<ul class='roles-tooltip'><li><i class='icon icon-check'></i>{{::'rolesPanel.userManagement' | translate}}</li><li><i class='icon icon-check'></i>{{::'rolesPanel.companyPolicyTemplates' | translate}}</li><li><i class='icon icon-check'></i>{{::'rolesPanel.analytics' | translate}}</li><li><i class='icon icon-check'></i>{{::'rolesPanel.supportMetrics' | translate}}</li><li><i class='icon icon-check'></i>{{::'rolesPanel.licensesAndUpgrades' | translate}}</li><li><i class='icon icon-check'></i>{{::'rolesPanel.assignRoles' | translate}}</li></ul>"
-                    tooltip-placement="right" tooltip-trigger="mouseenter" class="icon icon-information role-information"></i>
+                  <i aria-label="{{::roleTooltips.fullAdminAria}}"
+                    tooltip-html-unsafe="{{::roleTooltips.fullAdmin}}"
+                    tooltip-placement="right"
+                    tooltip-trigger="focus mouseenter"
+                    class="icon icon-information role-information"
+                    tabindex="0"></i>
                 </div>
 
                 <div class="admin-options" id="readonly-admin-options" ng-if="enableReadonlyAdminOption">
@@ -83,7 +86,12 @@
                     cs-input-label="{{readonlyAdmin.label}}"
                     ng-click="clearCheckboxes();"
                     ng-disabled="isEditingSelf">
-                  <i tooltip="{{::'rolesPanel.readonlyAdminTooltip' | translate}}" tooltip-placement="right" tooltip-trigger="mouseenter" class="icon icon-information role-information"></i>
+                  <i aria-label="{{::roleTooltips.readonlyAdmin}}"
+                    tooltip="{{::roleTooltips.readonlyAdmin}}"
+                    tooltip-placement="right"
+                    tooltip-trigger="focus mouseenter"
+                    class="icon icon-information role-information"
+                    tabindex="0"></i>
                 </div>
 
                 <div class="admin-options" id="partial-admin-options">
@@ -103,37 +111,45 @@
                   <cs-checkbox ckid="salesAdminCkbx" class="indent-checkbox"
                               label="{{'rolesPanel.salesAdmin' | translate}}" ng-model="rolesObj.salesAdminValue"
                               ng-click="partialCheckboxes();" isdisabled="isEditingSelf"></cs-checkbox>
-                  <i
-                    tooltip-html-unsafe="<ul class='roles-tooltip'><li><i class='icon icon-check'></i>{{::'rolesPanel.customerManagement' | translate}}</li><li><i class='icon icon-check'></i>{{::'rolesPanel.overviewReports' | translate}}</li><li><i class='icon icon-remove'></i>{{::'rolesPanel.organizationManagement' | translate}}</li><li><i class='icon icon-check'></i>{{::'rolesPanel.trialsManagement' | translate}}</li></ul>"
-                    tooltip-placement="right" tooltip-trigger="mouseenter"
-                    class="icon icon-information role-information"></i>
+                  <i aria-label="{{::roleTooltips.salesAdminAria}}"
+                    tooltip-html-unsafe="{{::roleTooltips.salesAdmin}}"
+                    tooltip-placement="right"
+                    tooltip-trigger="focus mouseenter"
+                    class="icon icon-information role-information"
+                    tabindex="0"></i>
                 </div>
                 <div class="admin-options" ng-show="false">
                   <cs-checkbox ckid="userAdminCkbx" class="indent-checkbox" label="{{'rolesPanel.userAdmin' | translate}}"
                               ng-model="rolesObj.userAdminValue" ng-click="partialCheckboxes();"
                               isdisabled="isEditingSelf"></cs-checkbox>
-                  <i
-                    tooltip-html-unsafe="<ul class='roles-tooltip'><li><i class='icon icon-check'></i>{{::'rolesPanel.userManagement' | translate}}</li><li><i class='icon icon-check'></i>{{::'rolesPanel.companyPolicyTemplates' | translate}}</li><li><i class='icon icon-check'></i>{{::'rolesPanel.analytics' | translate}}</li><li><i class='icon icon-check'></i>{{::'rolesPanel.supportMetrics' | translate}}</li><li><i class='icon icon-check'></i>{{::'rolesPanel.licensesAndUpgrades' | translate}}</li><li><i class='icon icon-remove'></i>{{::'rolesPanel.assignRoles' | translate}}</li></ul>"
-                    tooltip-placement="right" tooltip-trigger="mouseenter"
-                    class="icon icon-information role-information"></i>
+                  <i aria-label="{{::roleTooltips.userAdminAria}}"
+                    tooltip-html-unsafe="{{::roleTooltips.userAdmin}}"
+                    tooltip-placement="right"
+                    tooltip-trigger="focus mouseenter"
+                    class="icon icon-information role-information"
+                    tabindex="0"></i>
                 </div>
                 <div class="admin-options" ng-show="false">
                   <cs-checkbox ckid="billingAdminCkbx" class="indent-checkbox"
                               label="{{'rolesPanel.billingAdmin' | translate}}" ng-model="rolesObj.billingAdminValue"
                               ng-click="partialCheckboxes();" isdisabled="isEditingSelf"></cs-checkbox>
-                  <i
-                    tooltip-html-unsafe="<ul class='roles-tooltip'><li><i class='icon icon-remove'></i>{{::'rolesPanel.userManagement' | translate}}</li><li><i class='icon icon-remove'></i>{{::'rolesPanel.companyPolicyTemplates' | translate}}</li><li><i class='icon icon-remove'></i>{{::'rolesPanel.analytics' | translate}}</li><li><i class='icon icon-remove'></i>{{::'rolesPanel.supportMetrics' | translate}}</li><li><i class='icon icon-check'></i>{{::'rolesPanel.licensesAndUpgrades' | translate}}</li><li><i class='icon icon-remove'></i>{{::'rolesPanel.assignRoles' | translate}}</li></ul>"
-                    tooltip-placement="right" tooltip-trigger="mouseenter"
-                    class="icon icon-information role-information"></i>
+                  <i aria-label="{{::roleTooltips.billingAdminAria}}"
+                    tooltip-html-unsafe="{{::roleTooltips.billingAdmin}}"
+                    tooltip-placement="right"
+                    tooltip-trigger="focus mouseenter"
+                    class="icon icon-information role-information"
+                    tabindex="0"></i>
                 </div>
                 <div class="admin-options">
                   <cs-checkbox ckid="supportAdminCkbx" class="indent-checkbox"
                               label="{{'rolesPanel.supportAdmin' | translate}}" ng-model="rolesObj.supportAdminValue"
                               ng-click="partialCheckboxes();" isdisabled="isEditingSelf"></cs-checkbox>
-                  <i
-                    tooltip-html-unsafe="<ul class='roles-tooltip'><li><i class='icon icon-remove'></i>{{::'rolesPanel.userManagement' | translate}}</li><li><i class='icon icon-remove'></i>{{::'rolesPanel.companyPolicyTemplates' | translate}}</li><li><i class='icon icon-check'></i>{{::'rolesPanel.analytics' | translate}}</li><li><i class='icon icon-check'></i>{{::'rolesPanel.supportMetrics' | translate}}</li><li><i class='icon icon-remove'></i>{{::'rolesPanel.licensesAndUpgrades' | translate}}</li><li><i class='icon icon-remove'></i>{{::'rolesPanel.assignRoles' | translate}}</li></ul>"
-                    tooltip-placement="right" tooltip-trigger="mouseenter"
-                    class="icon icon-information role-information"></i>
+                  <i aria-label="{{::roleTooltips.supportAdminAria}}"
+                    tooltip-html-unsafe="{{::roleTooltips.supportAdmin}}"
+                    tooltip-placement="right"
+                    tooltip-trigger="focus mouseenter"
+                    class="icon icon-information role-information"
+                    tabindex="0"></i>
                 </div>
               </div>
 
@@ -145,24 +161,36 @@
                               label="{{'ciRoles.atlas-portal.partner.helpdesk' | translate}}"
                               ng-model="rolesObj.helpdeskValue"
                               isdisabled="isEditingSelf" ng-click="helpdeskOnCheckedHandler()"></cs-checkbox>
-                  <i tooltip="{{::'ciRoles.atlas-portal.partner.helpdeskTooltip' | translate}}" tooltip-placement="right" tooltip-trigger="mouseenter"
-                    class="icon icon-information role-information"></i>
+                  <i aria-label="{{::roleTooltips.helpdesk}}"
+                    tooltip="{{::roleTooltips.helpdesk}}"
+                    tooltip-placement="right"
+                    tooltip-trigger="focus mouseenter"
+                    class="icon icon-information role-information"
+                    tabindex="0"></i>
                 </div>
                 <div class="admin-options" ng-if="showOrderAdminRole">
                   <cs-checkbox ckid="orderadminCkbx" class="indent-nestedcheckbox"
                               label="{{'ciRoles.atlas-portal.partner.orderadmin' | translate}}"
                               ng-model="rolesObj.orderAdminValue"
                               isdisabled="isEditingSelf" ng-click="orderadminOnCheckedHandler()"></cs-checkbox>
-                  <i tooltip="{{::'ciRoles.atlas-portal.partner.orderadminTooltip' | translate}}" tooltip-placement="right" tooltip-trigger="mouseenter"
-                    class="icon icon-information role-information"></i>
+                  <i aria-label="{{::roleTooltips.orderAdmin}}"
+                    tooltip="{{::roleTooltips.orderAdmin}}"
+                    tooltip-placement="right"
+                    tooltip-trigger="focus mouseenter"
+                    class="icon icon-information role-information"
+                    tabindex="0"></i>
                 </div>
                 <div class="admin-options" ng-if="showPartnerManagementRole">
                   <cs-checkbox ckid="partnermgmtCkbx" class="indent-checkbox"
                               label="{{'ciRoles.atlas-portal.cisco.partnermgmt' | translate}}"
                               ng-model="rolesObj.partnerManagementValue"
                               isdisabled="isEditingSelf" ng-click="partnerManagementOnCheckedHandler()"></cs-checkbox>
-                  <i tooltip="{{::'ciRoles.atlas-portal.cisco.partnermgmtTooltip' | translate}}" tooltip-placement="right" tooltip-trigger="mouseenter"
-                    class="icon icon-information role-information"></i>
+                  <i aria-label="{{::roleTooltips.partnerMgmt}}"
+                    tooltip="{{::roleTooltips.partnerMgmt}}"
+                    tooltip-placement="right"
+                    tooltip-trigger="focus mouseenter"
+                    class="icon icon-information role-information"
+                    tabindex="0"></i>
                 </div>
               </div>
 
@@ -174,8 +202,12 @@
                               label="{{'ciRoles.compliance' | translate}}"
                               ng-model="rolesObj.complianceValue"
                               isdisabled="isEditingSelf"></cs-checkbox>
-                  <i tooltip="{{::'ciRoles.complianceTooltip' | translate}}" tooltip-placement="right" tooltip-trigger="mouseenter"
-                    class="icon icon-information role-information"></i>
+                  <i aria-label="{{::roleTooltips.compliance}}"
+                    tooltip="{{::roleTooltips.compliance}}"
+                    tooltip-placement="right"
+                    tooltip-trigger="focus mouseenter"
+                    class="icon icon-information role-information"
+                    tabindex="0"></i>
                 </div>
               </div>
             </div>
@@ -183,13 +215,26 @@
         </div>
       </div>
     </cs-sp-section>
-    <cs-sp-section ng-if="showSecuritySection">
+    <cs-sp-section ng-if="showSecuritySection && isEnterpriseCustomer">
       <section-title
         title-key="usersPreview.security">
       </section-title>
-      <p translate="usersPreview.resetAccess"></p>
-      <p class="description"><span translate="usersPreview.resetAccessDetail"></span><span> </span><a target="_blank" href="https://help.webex.com/docs/DOC-19842" translate="usersPreview.learnMore"></a></p>
-      <button cs-btn class="btn btn--primary central" ng-click="resetAccess()" type="button" loading="resettingAccess"><span translate="usersPreview.resetAccess"></button>
+      <div class="reset-access-panel">
+        <p class="reset-access-segment-title">
+          <span translate="usersPreview.resetAccess"></span>
+          <i ng-if="!isProPack"
+            aria-label="{{::roleTooltips.proPack}}"
+            class="icon icon-info"
+            tooltip-trigger="focus mouseenter"
+            tooltip-animation="true"
+            tooltip-placement="right"
+            tooltip="{{::roleTooltips.proPack}}"
+            tabindex="0">
+          </i>
+        </p>
+        <p class="reset-access-segment-description"><span translate="usersPreview.resetAccessDetail"></span><a target="_blank" href="https://help.webex.com/docs/DOC-19842" translate="usersPreview.learnMore"></a></p>
+        <button cs-btn class="btn btn--primary central" ng-click="resetAccess()" type="button" loading="resettingAccess" ng-disabled="!isProPack"><span translate="usersPreview.resetAccess"></button>
+      </div>
     </cs-sp-section>
   </cs-sp-container>
 </form>

@@ -101,7 +101,7 @@ export class CommonReportService {
     return this.getService(url, cancelPromise);
   }
 
-  public returnErrorCheck(error, message: string, returnItem: any): any {
+  public returnErrorCheck<T = any>(error, message: string, returnItem: T): T {
     if (error.status === 401 || error.status === 403) {
       this.Notification.errorWithTrackingId(error, 'reportsPage.unauthorizedError');
     } else if ((error.status !== 0) || (error.config.timeout.$$state.status === 0)) {
@@ -123,7 +123,7 @@ export class CommonReportService {
       }
     } else if (filter.value === 1) {
       if (date === '') {
-        date = moment().subtract(1, this.ReportConstants.DAY).format(this.ReportConstants.DAY_FORMAT);
+        date = moment().subtract(1, this.ReportConstants.DAY).format();
       }
       const dayOffset: number = this.getOffset(_.toInteger(moment.tz(date, this.ReportConstants.TIMEZONE).format('e')));
       for (let x = 3; x >= 0; x--) {

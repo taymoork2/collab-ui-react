@@ -8,11 +8,11 @@
         connectorType: '<',
       },
       controller: expresswayUpgradeSectionCtrl,
-      templateUrl: 'modules/hercules/cluster-sidepanel/expressway-upgrade-section/expressway-upgrade-section.html',
+      template: require('modules/hercules/cluster-sidepanel/expressway-upgrade-section/expressway-upgrade-section.html'),
     });
 
   /* @ngInject */
-  function expresswayUpgradeSectionCtrl($modal, $scope, $timeout, $translate, ClusterService, HybridServicesUtilsService, FeatureToggleService) {
+  function expresswayUpgradeSectionCtrl($modal, $scope, $timeout, $translate, ClusterService, HybridServicesUtilsService) {
     var vm = this;
     var promise = null;
     vm.clusterId = '';
@@ -21,14 +21,7 @@
     vm.localizedManagementConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.c_mgmt');
     vm.localizedConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + vm.connectorType);
     vm.servicesId = HybridServicesUtilsService.connectorType2ServicesId(vm.connectorType);
-
-    FeatureToggleService.atlas2017NameChangeGetStatus().then(function (toggle) {
-      if (toggle) {
-        vm.localizedCCCName = $translate.instant('common.ciscoCollaborationCloudNew');
-      } else {
-        vm.localizedCCCName = $translate.instant('common.ciscoCollaborationCloud');
-      }
-    });
+    vm.localizedCCCName = $translate.instant('common.ciscoCollaborationCloud');
 
     vm.showUpgradeDialog = showUpgradeDialog;
     vm.$onInit = $onInit;
@@ -120,7 +113,7 @@
 
     function showUpgradeDialog(servicesId, connectorType, availableVersion) {
       $modal.open({
-        templateUrl: 'modules/hercules/software-upgrade/software-upgrade-dialog.html',
+        template: require('modules/hercules/software-upgrade/software-upgrade-dialog.html'),
         type: 'small',
         controller: 'SoftwareUpgradeController',
         controllerAs: 'softwareUpgradeCtrl',

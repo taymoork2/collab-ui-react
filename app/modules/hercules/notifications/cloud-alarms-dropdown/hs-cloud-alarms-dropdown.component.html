@@ -4,7 +4,7 @@
 </div>
 <div class="notification-dropdown-container" ng-if="$ctrl.open">
   <ul class="notification-dropdown">
-    <li class="notification-entry" ng-repeat="alarm in $ctrl.alarms">
+    <li class="notification-entry" ng-repeat="alarm in $ctrl.alarms track by alarm.id">
       <div class="notification-entry-severity">
         <span class="badge" ng-class="$ctrl.getBadgeCSSClass(alarm.severity)">{{::'hercules.alarms.' + alarm.severity | translate}}</span>
       </div>

@@ -1,0 +1,322 @@
+@import '~collab-ui/scss/settings/colors';
+
+.gemini-page {
+
+  .kpi-banner {
+    height: auto !important;
+    padding-bottom: 0.5rem;
+    padding-left: 0.3rem;
+    overflow: hidden;
+    background: $white;
+    padding-top: 1.2rem;
+
+    .small{
+      position: static !important;
+      width: 16.6% !important;
+      text-align: center;
+      margin: 0.25rem 0;
+
+      h4 {
+        color: $gray-dark-1;
+        font-size: 0.8rem;
+        text-align: center;
+      }
+
+      .waring {
+        color: $color-orange-darker;
+      }
+
+      .row {
+        padding-top: 1rem;
+        height: 4.2rem;
+      }
+
+      p {
+        font-size: 1.2rem;
+        height: 4.2rem;
+
+        i {
+          display: inline-block;
+          margin-right: 0.5rem;
+          margin-left: -0.3rem;
+          margin-top: 0.3rem;
+          vertical-align: top;
+        }
+      }
+    }
+  }
+
+  .page-sub-header__right {
+    margin-top: 12px;
+  }
+
+  .row.chartFilter {
+    background: #fff;
+    padding: 1rem;
+    border-bottom: 1px solid $gray-light-3;
+
+    .col-sm-6 {
+      padding-bottom: 0;
+    }
+
+    .col-sm-7 {
+      font-size: 0.9rem;
+      text-align: right;
+      line-height: 2.125rem;
+    }
+
+    .datepickerList {
+      padding:.5rem;
+      padding-bottom: 0;
+
+      .cs-datapicker-normal {
+        padding-right: 21px !important;
+
+        i.date-selected {
+          color: $gray-light-3;
+        }
+
+        .close {
+          z-index: -1;
+        }
+      }
+
+      .example-indent {
+        position: relative;
+        .cs-datepicker {
+          width: 100%;
+        }
+      }
+
+      .cs-datepicker .calendar span.day-wrapper span.day.today {
+        color: $color-primary-base;
+      }
+
+      .cs-datepicker .calendar span.day-wrapper span.day.selected-date {
+        color: $white;
+      }
+
+      .data-span {
+        width: 6%;
+        font-size: 15px;
+        line-height: 35px;
+        text-align: center;
+      }
+
+      .data-icon-i {
+        color: $gray-light-1;
+        cursor: pointer;
+        font-size: 30px;
+        line-height: 35px;
+        padding-right: 1rem;
+        margin-top: -10px;
+
+        &::before {
+          padding-top: 10px;
+          display: inline-block;
+          vertical-align: middle;
+        }
+      }
+
+      .tk-example-datepicker {
+        width: 46%;
+      }
+    }
+
+  }
+
+  .icon-download {
+    cursor: pointer;
+  }
+
+  .reportsChart {
+    margin-bottom: 1rem;
+    background: $white;
+
+    .sm-graphic {
+      width: 100%;
+      height: 380px !important;
+    }
+
+    .filter-main {
+      padding: 0.8rem;
+      width: 100%;
+      box-sizing: border-box;
+      text-align: center;
+
+      .filter-box {
+        text-align: left;
+        position: relative;
+        width: 100%;
+        padding: 2rem;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        background-color: $white;
+        border-radius: 2px;
+        -webkit-box-shadow: 0px 1px 2px 1px rgba(52, 53, 55, 0.18);
+        box-shadow: 0px 1px 2px 1px rgba(52, 53, 55, 0.18);
+        color: $gray-dark-1;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        vertical-align: top;
+
+        .selectList {
+          .cs-input__label {
+            float: left;
+            width: 25%;
+
+            span {
+              font-size: 16px;
+              font-family: "CiscoSansTT Regular", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            }
+          }
+
+          .csSelect-container {
+            width: 75%;
+          }
+        }
+
+        hr {
+          border-color: $gray-light-3;
+        }
+
+        .button-top {
+          margin-top: 1.6rem;
+        }
+      }
+    }
+
+    .spinner-example--large {
+      text-align: center;
+      margin-top: 10rem;
+      background: $gray-light-4;
+
+      i {
+        font-size: 3rem;
+      }
+    }
+
+    .reportsChartBody {
+      .chartHeader {
+
+        h4 {
+          font-family: "CiscoSansTT Light";
+          color: $gray-dark-1;
+          font-size: 0.9rem;
+          height: 1.2rem;
+        }
+
+        span {
+          font-size: 1.2rem;
+          color: $gray-light-2;
+        }
+      }
+    }
+
+    .chartList {
+      .panel-body {
+        padding: 1rem 0.5rem;
+        padding-top: 0;
+      }
+
+      .cs-card-layout {
+        &::after {
+          clear: both;
+          content: '';
+          height: 0;
+          display: block;
+        }
+
+        height: auto !important;
+      }
+
+      .cs-card {
+        &.large {
+          position: inherit !important;
+        }
+        .row {
+          position: absolute;
+          left: 45%;
+          top: 45%;
+        }
+
+        .chartHeader {
+          span {
+            i {
+              display: block;
+            }
+          }
+        }
+      }
+    }
+
+    *:focus {
+      box-shadow: none;
+    }
+  }
+
+  .customer-reports .metricsContent {
+    overflow: auto !important;
+  }
+
+  .page-sub-header {
+    .nav {
+      a {
+        &:hover{
+          border: 0 !important;
+        }
+        font-size: 1rem;
+        border: none  !important;
+      }
+    }
+  }
+}
+
+.reveal-modal.full .modal-content {
+  max-height: 780px;
+
+  .large-chart {
+    .modal-header {
+      position: relative;
+
+      .modal-title {
+        font-size: 24px;
+      }
+
+      .download {
+        position: absolute;
+        right: 4rem;
+        cursor: pointer;
+
+        i {
+          font-size: 1.5rem;
+          color: $white;
+        }
+      }
+    }
+
+    .modal-body {
+      height: calc(100vh - 131px);
+      max-height: 700px;
+
+      .amcharts-export-menu-top-right {
+        top: -96px;
+        right: 25px;
+      }
+
+      .amcharts-export-menu .export-main > a {
+        margin: 0;
+        padding: 1rem;
+        background: none;
+      }
+
+    }
+  }
+}
+

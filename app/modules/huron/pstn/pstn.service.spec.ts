@@ -114,6 +114,27 @@ describe('Service: PstnService', function () {
     createdBy: 'PARTNER',
   };
 
+  const numberSearchPayload: any = {
+    count: '100',
+    npa: '206',
+    numberType: 'DID',
+  };
+
+  const numberSearchPayloadWithSequential: any = {
+    count: '100',
+    npa: '206',
+    numberType: 'DID',
+    sequential: true,
+  };
+
+  const numberSearchPayloadWithState: any = {
+    count: '100',
+    npa: '206',
+    numberType: 'DID',
+    sequential: true,
+    state: 'WA',
+  };
+
   // dependencies
   beforeEach(function () {
     this.initModules(
@@ -334,7 +355,7 @@ describe('Service: PstnService', function () {
 
   it('should get translated order status message', function () {
     const translated = this.PstnService.translateStatusMessage(pendingOrder[0]);
-    expect(translated).toEqual('pstnSetup.orderStatus.trialStatus');
+    expect(translated).toEqual('pstnSetup.orderStatus.tosNotSigned');
   });
 
   it('should get original order status message since it does not exist in translations', function () {
@@ -476,4 +497,25 @@ describe('Service: PstnService', function () {
       this.$httpBackend.flush();
     });
   });
+
+  describe('searchCarrierInventory', function () {
+    it('should call carriers/{id}/numbers on Terminus V2 with params matching payload', function () {
+      this.$httpBackend.expectGET(this.HuronConfig.getTerminusV2Url() + '/carriers/' + suite.customerId + '/numbers?count=100&npa=206&numberType=DID').respond(201);
+      this.PstnService.searchCarrierInventory(suite.customerId, numberSearchPayload);
+      this.$httpBackend.flush();
+    });
+
+    it('should call carriers/{id}/numbers on Terminus V2 with params matching payload, adding sequential', function () {
+      this.$httpBackend.expectGET(this.HuronConfig.getTerminusV2Url() + '/carriers/' + suite.customerId + '/numbers?count=100&npa=206&numberType=DID&sequential=true').respond(201);
+      this.PstnService.searchCarrierInventory(suite.customerId, numberSearchPayloadWithSequential);
+      this.$httpBackend.flush();
+    });
+
+    it('should call carriers/{id}/numbers on Terminus V2 with params matching payload, adding state', function () {
+      this.$httpBackend.expectGET(this.HuronConfig.getTerminusV2Url() + '/carriers/' + suite.customerId + '/numbers?count=100&npa=206&numberType=DID&sequential=true&state=WA').respond(201);
+      this.PstnService.searchCarrierInventory(suite.customerId, numberSearchPayloadWithState);
+      this.$httpBackend.flush();
+    });
+  });
+
 });

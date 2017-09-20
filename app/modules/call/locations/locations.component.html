@@ -1,0 +1,81 @@
+<div class="call-locations">
+  <cs-page-sub-header>
+    <cs-page-sub-header-left>
+      <cs-searchfilter search-item-fn="$ctrl.searchData(searchStr)" placeholder-text="{{$ctrl.placeholder.name}}" hide-count="true">
+      </cs-searchfilter>
+    </cs-page-sub-header-left>
+    <cs-page-sub-header-right>
+      <button class="btn btn--people" ng-click="$ctrl.addLocation()">
+        <span translate="locations.addText"></span>
+      </button>
+    </cs-page-sub-header-right>
+  </cs-page-sub-header>
+
+  <div ng-if="$ctrl.pageState != 'STATE_NEW_LOCATION'" class="locations-content content-container">
+    <!--Show Reload page when all location requests fail-->
+    <div ng-if="$ctrl.pageState == 'STATE_RELOAD'">
+      <div class="features-reload">
+        <p class="h4" translate="huronFeatureDetails.sorryMessage"></p>
+        <div class="h2" translate="huronFeatureDetails.reloadMessage"></div>
+        <button type="button" class="btn btn--link" ng-click="$ctrl.reload()">{{'locations.reload' | translate}}</button>
+      </div>
+    </div>
+    <!--Show Spinner Icon until controller receives data from back-end-->
+    <div grid-spinner="$ctrl.pageState == 'STATE_LOADING'"></div>
+
+    <!-- Show Cards whenever data is received by controller-->
+    <div ng-if="$ctrl.pageState == 'STATE_SHOW_LOCATIONS'">
+      <div class="cs-card-container">
+        <cs-card-layout>
+          <cs-card ng-repeat="location in $ctrl.locations" class="small overview-card primary">
+            <article>
+              <header>
+                <i class="icon icon-star" ng-if="location.defaultLocation"></i>
+                <div class="header-with-right-icon">
+                  <p class="h4 ellipsis" title="{{location.name}}">{{location.name}}</p>
+                  <span cs-dropdown class="actions-menu dropdown pull-right">
+                   <button cs-dropdown-toggle class="btn-none card-action-btn" >
+                    <i class="icon icon-three-dots"></i>
+                   </button>
+                   <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
+                    <li ng-if="!location.defaultLocation" ng-click="$ctrl.makeDefaultLocation(location)"><a translate="locations.makeDefault"></a></li>
+                    <li ng-click="$ctrl.editLocation(location)"><a translate="common.edit"></a></li>
+                    <li><a ng-click="$ctrl.copyLocation(location)" translate="locations.copyLocation"></a></li>
+                    <li ng-if="!location.defaultLocation" ng-click="$ctrl.deleteLocation(location)"><a translate="common.delete"></a></li>
+                  </ul>
+                  </span>
+                </div>
+              </header>
+              <section class="card-body">
+                <div class="card-section">
+                  <span
+                    ng-if="location.routingPrefix !== null"
+                    class="route-title"
+                    translate="locations.routingPrefix"
+                    translate-values="{prefix: location.routingPrefix}">
+                  </span>
+                  <div class="overview-info">
+                    <div class="text-center">
+                        <div class="overview-count">{{location.userCount}}</div>
+                        <div class="overview-title" translate="common.users"></div>
+                    </div>
+                    <div class="text-center">
+                        <div class="overview-count">{{location.placeCount}}</div>
+                        <div class="overview-title" translate="pagingGroup.places"></div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </article>
+          </cs-card>
+        </cs-card-layout>
+      </div>
+
+    </div>
+  </div>
+</div>
+<div class="features-loading" ng-if="$ctrl.loading">
+  <i class="icon icon-spinner"></i>
+</div>
+
+

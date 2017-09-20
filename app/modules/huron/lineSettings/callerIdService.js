@@ -11,7 +11,7 @@
     .name;
 
   /* @ngInject */
-  function CallerId(Authinfo, $q, CompanyNumberService, UserDirectoryNumberService, DirectoryNumberUserService, DirectoryNumber,
+  function CallerId(Authinfo, $q, CompanyNumberService, UserDirectoryNumberService, DirectoryNumberUserService,
     UserEndpointService, SipEndpointDirectoryNumberService) {
     var callerIdOptions = [];
     var userDnList = [];
@@ -136,8 +136,6 @@
     }
 
     function updateInternalCallerId(userUuid, userName) {
-      var promises = [];
-      var promise;
       return getUserDn(userUuid).then(function () {
         // for each line
         getUserDnList().forEach(function (userDn) {
@@ -149,34 +147,28 @@
             display: userName,
             label: lineTextLabel,
           };
-          // Only update on primary line and all primary lines where there's no primary user.
-          if (userDn.isPrimary || !userDn.hasSharedPrimary) {
-            // Update alerting name on DN
-            promise = DirectoryNumber.updateDirectoryNumber(userDn.uuid, {
-              alertingName: userName,
-            }).then(function () {
-              // for each shared user
-              var sharedUserPromises = [];
-              var sharedUserPromise;
-              userDn.sharedUsers.forEach(function (user) {
-                sharedUserPromise = listUserEndPoints(user.uuid).then(function (devices) {
-                  // for each device
-                  var endPointPromises = [];
-                  var endPointPromise;
-                  devices.forEach(function (device) {
-                    endPointPromise = updateEndPointDn(device.endpoint.uuid, userDn.uuid, data);
-                    endPointPromises.push(endPointPromise);
-                  });
-                  return $q.all(endPointPromises);
+          // Only update on primary line.
+          if (userDn.isPrimary) {
+            // for each shared user
+            var sharedUserPromises = [];
+            var sharedUserPromise;
+            userDn.sharedUsers.forEach(function (user) {
+              sharedUserPromise = listUserEndPoints(user.uuid).then(function (devices) {
+                // for each device
+                var endPointPromises = [];
+                var endPointPromise;
+                devices.forEach(function (device) {
+                  endPointPromise = updateEndPointDn(device.endpoint.uuid, userDn.uuid, data);
+                  endPointPromises.push(endPointPromise);
                 });
-                sharedUserPromises.push(sharedUserPromise);
+                return $q.all(endPointPromises);
               });
-              return $q.all(sharedUserPromises);
+              sharedUserPromises.push(sharedUserPromise);
             });
-            promises.push(promise);
+            return $q.all(sharedUserPromises);
           }
         });
-        return $q.all(promises);
+        return $q.all();
       });
     }
 
@@ -200,19 +192,19 @@
           };
           userDnList.push(userLine);
 
-            // Get all the users of the line to decide if this line is a shared line
+          // Get all the users of the line to decide if this line is a shared line
           promise = DirectoryNumberUserService.query({
             customerId: Authinfo.getOrgId(),
             directoryNumberId: userLine.uuid,
           }).$promise
-              .then(function (dnUserInfo) {
-                dnUserInfo.forEach(function (dnUser) {
-                  this.sharedUsers.push(dnUser.user);
-                  if (dnUser.dnUsage === 'Primary') {
-                    this.hasSharedPrimary = true;
-                  }
-                }.bind(this));
-              }.bind(userLine));
+            .then(function (dnUserInfo) {
+              dnUserInfo.forEach(function (dnUser) {
+                this.sharedUsers.push(dnUser.user);
+                if (dnUser.dnUsage === 'Primary') {
+                  this.hasSharedPrimary = true;
+                }
+              }.bind(this));
+            }.bind(userLine));
           promises.push(promise);
         });
         return $q.all(promises);

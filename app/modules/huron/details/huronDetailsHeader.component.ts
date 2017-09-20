@@ -1,3 +1,5 @@
+import { Config } from 'modules/core/config/config';
+
 interface IHeaderTab {
   title: string;
   state: string;
@@ -5,15 +7,16 @@ interface IHeaderTab {
 
 class HuronDetailsHeaderComponentCtrl implements ng.IComponentController {
   public tabs: IHeaderTab[] = [];
-  public title: string = 'huronDetails.title';
+  public title: string = this.$translate.instant('huronDetails.title');
   public back: boolean = true;
   public backState: string = 'services-overview';
 
   /* @ngInject */
   constructor(
     private Authinfo,
-    private Config,
+    private Config: Config,
     private FeatureToggleService,
+    private $translate: ng.translate.ITranslateService,
   ) { }
 
   public $onInit(): void {
@@ -21,32 +24,33 @@ class HuronDetailsHeaderComponentCtrl implements ng.IComponentController {
       .then(enabled => {
         if (enabled) {
           this.tabs.splice(0, 0, {
-            title: 'huronDetails.locationsTitle',
-            state: 'calllocations',
+            title: this.$translate.instant('huronDetails.locationsTitle'),
+            state: 'call-locations',
           });
         }
       });
     this.tabs.push({
-      title: 'huronDetails.linesTitle',
+      title: this.$translate.instant('huronDetails.linesTitle'),
       state: 'huronlines',
     });
 
     if (this.showFeatureTab()) {
       this.tabs.push({
-        title: 'huronDetails.featuresTitle',
+        title: this.$translate.instant('huronDetails.featuresTitle'),
         state: 'huronfeatures',
       });
     }
-    this.FeatureToggleService.sparkCallTenDigitExtGetStatus()
+
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484)
       .then(enabled => {
         if (enabled) {
           this.tabs.push({
-            title: 'huronDetails.settingsTitle',
-            state: 'huronsettingsnew',
+            title: this.$translate.instant('huronDetails.settingsTitle'),
+            state: 'huronsettingslocation',
           });
         } else {
           this.tabs.push({
-            title: 'huronDetails.settingsTitle',
+            title: this.$translate.instant('huronDetails.settingsTitle'),
             state: 'huronsettings',
           });
         }
@@ -62,6 +66,6 @@ class HuronDetailsHeaderComponentCtrl implements ng.IComponentController {
 
 export class HuronDetailsHeaderComponent implements ng.IComponentOptions {
   public controller = HuronDetailsHeaderComponentCtrl;
-  public templateUrl = 'modules/huron/details/huronDetailsHeader.html';
+  public template = require('modules/huron/details/huronDetailsHeader.html');
   public bindings = { };
 }

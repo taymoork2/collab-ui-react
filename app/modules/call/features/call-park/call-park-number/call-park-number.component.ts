@@ -135,7 +135,7 @@ class CallParkNumberCtrl implements ng.IComponentController {
 
 export class CallParkNumberComponent implements ng.IComponentOptions {
   public controller = CallParkNumberCtrl;
-  public templateUrl = 'modules/call/features/call-park/call-park-number/call-park-number.component.html';
+  public template = require('modules/call/features/call-park/call-park-number/call-park-number.component.html');
   public bindings = {
     range: '<',
     extensionLength: '<',

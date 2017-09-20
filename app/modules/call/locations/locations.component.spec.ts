@@ -12,9 +12,9 @@ describe('Component: CallLocationsComponent', () => {
       '$state',
       '$q',
     );
-    spyOn(this.LocationsService, 'getLocations').and.returnValue(this.$q.reject());
+    spyOn(this.LocationsService, 'getLocationList').and.returnValue(this.$q.reject());
     spyOn(this.$state, 'go');
-    this.compileComponent('callLocations', {});
+    this.compileComponent('ucCallLocations', {});
   });
 
   it('should have pageState equal STATE_RELOAD', function() {
@@ -40,9 +40,9 @@ describe('Component: CallLocationsComponent', () => {
       '$state',
       '$q',
     );
-    spyOn(this.LocationsService, 'getLocations');
-    this.LocationsService.getLocations.and.returnValue(this.$q.resolve([]));
-    this.compileComponent('callLocations', {});
+    spyOn(this.LocationsService, 'getLocationList');
+    this.LocationsService.getLocationList.and.returnValue(this.$q.resolve([]));
+    this.compileComponent('ucCallLocations', {});
   });
 
   it('should have pageState equal STATE_NEW_LOCATION', function() {
@@ -70,10 +70,10 @@ describe('Component: CallLocationsComponent', () => {
       '$state',
       '$q',
     );
-    spyOn(this.LocationsService, 'getLocations');
+    spyOn(this.LocationsService, 'getLocationList');
     spyOn(this.LocationsService, 'filterCards');
-    this.LocationsService.getLocations.and.returnValue(this.$q.resolve(SUCCESS_DATA));
-    this.compileComponent('callLocations', {});
+    this.LocationsService.getLocationList.and.returnValue(this.$q.resolve(SUCCESS_DATA));
+    this.compileComponent('ucCallLocations', {});
   });
 
   it('should have pageState equal STATE_SHOW_LOCATIONS', function() {

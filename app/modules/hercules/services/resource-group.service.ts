@@ -28,13 +28,13 @@ export class ResourceGroupService {
 
   public getAll(orgId?: string): ng.IPromise<IResourceGroup[]> {
     return this.$http
-      .get(`${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId || this.Authinfo.getOrgId()}/resourceGroups`)
+      .get<IResourceGroup>(`${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId || this.Authinfo.getOrgId()}/resourceGroups`)
       .then(this.extractGroupsFromResponse);
   }
 
   public create(name: string, releaseChannel: string, orgId?: string): ng.IPromise<EmptyHTTPResponse> {
     return this.$http
-      .post(`${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId || this.Authinfo.getOrgId()}/resourceGroups`, {
+      .post<EmptyHTTPResponse>(`${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId || this.Authinfo.getOrgId()}/resourceGroups`, {
         name,
         releaseChannel,
       })
@@ -42,13 +42,13 @@ export class ResourceGroupService {
   }
 
   public remove(resourceGroupId: string, orgId?: string): ng.IPromise<EmptyHTTPResponse> {
-    return this.$http.delete(`${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId || this.Authinfo.getOrgId()}/resourceGroups/${resourceGroupId}`)
+    return this.$http.delete<EmptyHTTPResponse>(`${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId || this.Authinfo.getOrgId()}/resourceGroups/${resourceGroupId}`)
       .then(this.extractDataFromResponse);
   }
 
   public setName(resourceGroupId: string, name: string, orgId?: string): ng.IPromise<EmptyHTTPResponse> {
     return this.$http
-      .patch(`${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId || this.Authinfo.getOrgId()}/resourceGroups/${resourceGroupId}`, {
+      .patch<EmptyHTTPResponse>(`${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId || this.Authinfo.getOrgId()}/resourceGroups/${resourceGroupId}`, {
         name: name,
       })
       .then(this.extractDataFromResponse);
@@ -56,7 +56,7 @@ export class ResourceGroupService {
 
   public setReleaseChannel(resourceGroupId: string, releaseChannel: string, orgId?: string): ng.IPromise<EmptyHTTPResponse> {
     return this.$http
-      .patch(`${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId || this.Authinfo.getOrgId()}/resourceGroups/${resourceGroupId}`, {
+      .patch<EmptyHTTPResponse>(`${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId || this.Authinfo.getOrgId()}/resourceGroups/${resourceGroupId}`, {
         releaseChannel,
       })
       .then(this.extractDataFromResponse);
@@ -78,7 +78,7 @@ export class ResourceGroupService {
   }
 
   public assign(clusterId, resourceGroupId, orgId?): ng.IPromise<EmptyHTTPResponse> {
-    return this.$http.patch(`${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId || this.Authinfo.getOrgId()}/clusters/${clusterId}`, {
+    return this.$http.patch<EmptyHTTPResponse>(`${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId || this.Authinfo.getOrgId()}/clusters/${clusterId}`, {
       resourceGroupId,
     })
       .then(this.extractDataFromResponse);
@@ -118,17 +118,17 @@ export class ResourceGroupService {
       });
   }
 
-  private extractDataFromResponse<T>(response: ng.IHttpPromiseCallbackArg<T>) {
+  private extractDataFromResponse<T>(response: ng.IHttpResponse<T>) {
     return _.get<T>(response, 'data');
   }
 
-  private extractGroupsFromResponse<T>(response: ng.IHttpPromiseCallbackArg<T>) {
+  private extractGroupsFromResponse<T>(response: ng.IHttpResponse<T>) {
     const data = this.extractDataFromResponse(response);
     return _.get<T[]>(data, 'items', []);
   }
 }
 
 export default angular
-  .module('Hercules')
+  .module('hercules.resource-group-service', [])
   .service('ResourceGroupService', ResourceGroupService)
   .name;

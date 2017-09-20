@@ -6,5 +6,5 @@
     require('modules/core/scripts/services/authinfo'),
     require('modules/huron/telephony/cmiServices'),
   ])
-  .name;
+    .name;
 })();

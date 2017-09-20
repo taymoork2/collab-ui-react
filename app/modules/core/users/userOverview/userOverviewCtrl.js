@@ -4,16 +4,16 @@
   module.exports = UserOverviewCtrl;
 
   /* @ngInject */
-  function UserOverviewCtrl($scope, $state, $stateParams, $translate, $window, $q,
-    Authinfo, Config, DirSyncService, FeatureToggleService, MessengerInteropService,
-    Notification, SunlightConfigService, Userservice, UserOverviewService) {
+  function UserOverviewCtrl($scope, $state, $stateParams, $translate, $window, $q, Authinfo, Config, DirSyncService, FeatureToggleService, MessengerInteropService, Notification, Userservice, UserOverviewService) {
     var vm = this;
 
+    vm.savePreferredLanguage = savePreferredLanguage;
+    vm.prefLanguageSaveInProcess = false;
+    vm.preferredLanguage = '';
     vm.currentUser = $stateParams.currentUser;
     vm.entitlements = $stateParams.entitlements;
     vm.queryuserslist = $stateParams.queryuserslist;
     vm.orgInfo = $stateParams.orgInfo;
-
     vm.services = [];
     vm.userDetailList = [];
     vm.showGenerateOtpLink = false;
@@ -32,7 +32,6 @@
     vm.isValidThumbnail = Userservice.isValidThumbnail;
     vm.clickService = clickService;
     vm.clickUserDetailsService = clickUserDetailsService;
-    vm.clickRolesAndSecurity = clickRolesAndSecurity;
     vm.actionList = [];
     vm.hasSparkCall = false;
     vm.enableRolesAndSecurityOption = false;
@@ -148,12 +147,20 @@
       $state.go('user-overview.' + feature.state);
     }
 
-    function clickRolesAndSecurity() {
-      $state.go('user-overview.roles-and-security');
-    }
-
     function clickUserDetailsService(feature) {
       $state.go('user-overview.' + feature.state, { preferredLanguageDetails: preferredLanguageDetails });
+    }
+
+    function savePreferredLanguage(prefLang) {
+      vm.prefLanguageSaveInProcess = true;
+      UserOverviewService.updateUserPreferredLanguage(vm.currentUser.id, prefLang.value)
+        .then(function () {
+          preferredLanguageDetails.selectedLanguageCode = prefLang.value;
+          $state.go('user-overview');
+        })
+        .catch(function (error) {
+          Notification.errorResponse(error, 'preferredLanguage.failedToSaveChanges');
+        });
     }
 
     function getDisplayableServices(serviceName) {
@@ -264,6 +271,10 @@
       }
       vm.services.push(confState);
 
+      if (UserOverviewService.userHasEntitlement(vm.currentUser, 'squared-fusion-uc')) {
+        commState.detail = $translate.instant('onboardModal.paidCommHybrid');
+      }
+
       if (UserOverviewService.userHasEntitlement(vm.currentUser, 'ciscouc')) {
         if (hasLicense('CO')) {
           commState.detail = $translate.instant('onboardModal.paidComm');
@@ -273,22 +284,21 @@
       }
       vm.services.push(commState);
 
-      if (UserOverviewService.userHasEntitlement(vm.currentUser, 'cloud-contact-center')) {
-        if (hasLicense('CDC') || hasLicense('CVC')) {
-          SunlightConfigService.getUserInfo(vm.currentUser.id)
-            .then(function () {
-              var hasSyncKms = _.includes(vm.currentUser.roles, Config.backend_roles.spark_synckms);
-              var hasCiscoucCES = _.includes(vm.currentUser.roles, Config.backend_roles.ciscouc_ces);
-              var hasContextServiceEntitlement = _.includes(vm.currentUser.entitlements, Config.entitlements.context);
-              if ((hasSyncKms && hasContextServiceEntitlement) || hasCiscoucCES) {
-                if (hasLicense('CDC')) {
-                  contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
-                } else if (hasLicense('CVC')) {
-                  contactCenterState.detail = $translate.instant('onboardModal.paidContactCenterVoice');
-                }
-                vm.services.push(contactCenterState);
-              }
-            });
+      if (UserOverviewService.userHasEntitlement(vm.currentUser, Config.entitlements.care)) {
+        var hasDigitalCareEntitlement = _.includes(vm.currentUser.entitlements, Config.entitlements.care_digital);
+        var hasInboundVoiceEntitlement = _.includes(vm.currentUser.entitlements, Config.entitlements.care_inbound_voice);
+
+        var hasSyncKms = _.includes(vm.currentUser.roles, Config.backend_roles.spark_synckms);
+        var hasContextServiceEntitlement = _.includes(vm.currentUser.entitlements, Config.entitlements.context);
+        var isCvcLicensed = hasInboundVoiceEntitlement && hasLicense('CVC') && hasSyncKms && hasContextServiceEntitlement;
+        var isCdcLicensed = hasDigitalCareEntitlement && hasLicense('CDC') && hasSyncKms && hasContextServiceEntitlement;
+
+        if (isCvcLicensed) {
+          contactCenterState.detail = $translate.instant('onboardModal.paidContactCenterVoice');
+          vm.services.push(contactCenterState);
+        } else if (isCdcLicensed) {
+          contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
+          vm.services.push(contactCenterState);
         }
       }
     }
@@ -300,7 +310,8 @@
       var formattedLanguage = ciLanguageCode ? UserOverviewService.formatLanguage(ciLanguageCode) : ciLanguageCode;
       UserOverviewService.getUserPreferredLanguage(formattedLanguage).then(function (userLanguageDetails) {
         preferredLanguageState.detail = !_.isEmpty(userLanguageDetails.language) ? _.get(userLanguageDetails.language, 'label') : formattedLanguage;
-        preferredLanguageDetails.languageOptions = !_.isEmpty(userLanguageDetails.translatedLanguages) ? _.get(userLanguageDetails, 'translatedLanguages') : [];
+        var languageOptions = !_.isEmpty(userLanguageDetails.translatedLanguages) ? _.get(userLanguageDetails, 'translatedLanguages') : [];
+        preferredLanguageDetails.languageOptions = _.sortBy(languageOptions, 'label');
       }).catch(function (error) {
         Notification.errorResponse(error, 'usersPreview.userPreferredLanguageError');
       });
@@ -310,6 +321,7 @@
       preferredLanguageDetails.selectedLanguageCode = formattedLanguage;
       preferredLanguageDetails.currentUserId = vm.currentUser.id;
       preferredLanguageDetails.hasSparkCall = vm.hasSparkCall;
+      preferredLanguageDetails.save = savePreferredLanguage;
       vm.userDetailList.push(preferredLanguageState);
     }
 

@@ -18,16 +18,16 @@ export class FmsOrgSettings {
 
   public set(data: IFmsOrgSettings, orgId?: string): ng.IPromise<IFmsOrgSettings> {
     const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId || this.Authinfo.getOrgId()}/settings`;
-    return this.$http.patch(url, data)
+    return this.$http.patch<IFmsOrgSettings>(url, data)
       .then(this.extractDataFromResponse);
   }
 
-  private extractDataFromResponse<T>(response: ng.IHttpPromiseCallbackArg<T>): T {
+  private extractDataFromResponse<T>(response: ng.IHttpResponse<T>): T {
     return _.get<T>(response, 'data');
   }
 }
 
 export default angular
-  .module('Hercules')
+  .module('hercules.fms-org-settings', [])
   .service('FmsOrgSettings', FmsOrgSettings)
   .name;

@@ -57,6 +57,7 @@ describe('Controller: DevicesCtrl', function () {
     spyOn(FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'csdmPlaceCalendarGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.resolve(true));
+    spyOn(FeatureToggleService, 'csdmMultipleDevicesPerPlaceGetStatus').and.returnValue($q.resolve(true));
   }
 
   function initController() {
@@ -101,11 +102,13 @@ describe('Controller: DevicesCtrl', function () {
     var isEntitledToRoomSystem;
     var showATA;
     var showPersonal;
+    var csdmMultipleDevicesPerPlaceFeature;
     beforeEach(function () {
       isEntitledToHuron = true;
       isEntitledToRoomSystem = true;
       showATA = true;
       showPersonal = true;
+      csdmMultipleDevicesPerPlaceFeature = true;
       userCisUuid = 'userCisUuid';
       email = 'email@address.com';
       orgId = 'orgId';
@@ -131,6 +134,7 @@ describe('Controller: DevicesCtrl', function () {
       };
       controller.showATA = showATA;
       controller.showPersonal = showPersonal;
+      controller.csdmMultipleDevicesPerPlaceFeature = csdmMultipleDevicesPerPlaceFeature;
       controller.startAddDeviceFlow();
       $scope.$apply();
     });
@@ -142,6 +146,7 @@ describe('Controller: DevicesCtrl', function () {
       expect(wizardState.function).toBe('addDevice');
       expect(wizardState.showATA).toBe(showATA);
       expect(wizardState.showPersonal).toBe(showPersonal);
+      expect(wizardState.multipleRoomDevices).toBe(csdmMultipleDevicesPerPlaceFeature);
       expect(wizardState.admin.firstName).toBe(adminFirstName);
       expect(wizardState.admin.lastName).toBe(adminLastName);
       expect(wizardState.admin.displayName).toBe(adminDisplayName);
@@ -221,7 +226,7 @@ describe('Controller: DevicesCtrl', function () {
 
     it('starts export and shows progress dialog after acknowledged in initial dialog', function () {
       controller.startDeviceExport();
-      expect($modal.open).toHaveBeenCalled();  // initial dialog
+      expect($modal.open).toHaveBeenCalled(); // initial dialog
       fakeModal.close(); // user acks the export
       expect($modal.open).toHaveBeenCalled(); // progress dialog
       expect(DeviceExportService.exportDevices).toHaveBeenCalled();

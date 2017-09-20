@@ -12,7 +12,7 @@
     return {
       restrict: 'E',
       scope: false,
-      templateUrl: 'modules/huron/features/featureLanding/featureCards.tpl.html',
+      template: require('modules/huron/features/featureLanding/featureCards.tpl.html'),
     };
   }
 })();

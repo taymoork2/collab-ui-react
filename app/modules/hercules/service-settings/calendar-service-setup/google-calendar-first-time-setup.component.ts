@@ -70,7 +70,6 @@ export class GoogleCalendarFirstTimeSetupCtrl implements ng.IComponentController
   public currentStep: StepName = 'loading';
   public loading: boolean = true;
   public processing: boolean = false;
-  public nameChangeEnabled: boolean;
   public testAccountForm: ng.IFormController;
   public errorMessages = {
     testAccount: {
@@ -90,14 +89,9 @@ export class GoogleCalendarFirstTimeSetupCtrl implements ng.IComponentController
     private Authinfo,
     private CloudConnectorService: CloudConnectorService,
     private Notification: Notification,
-    private FeatureToggleService,
   ) { }
 
   public $onInit(): void {
-    this.FeatureToggleService.atlas2017NameChangeGetStatus().then((toggle: boolean): void => {
-      this.nameChangeEnabled = toggle;
-    });
-
     this.CloudConnectorService.getApiKey()
       .then((data) => {
         this.data.clientName = data.apiClientId;
@@ -160,7 +154,7 @@ export class GoogleCalendarFirstTimeSetupCtrl implements ng.IComponentController
 
 export class GoogleCalendarFirstTimeSetupComponent implements ng.IComponentOptions {
   public controller = GoogleCalendarFirstTimeSetupCtrl;
-  public templateUrl = 'modules/hercules/service-settings/calendar-service-setup/google-calendar-first-time-setup.component.html';
+  public template = require('modules/hercules/service-settings/calendar-service-setup/google-calendar-first-time-setup.component.html');
   public bindings = {
     firstTimeSetup: '=',
   };

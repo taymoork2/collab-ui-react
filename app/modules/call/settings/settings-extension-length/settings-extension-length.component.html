@@ -1,0 +1,17 @@
+<label class="sub-section__label" translate="serviceSetupModal.extensionLength"></label>
+<p class="description-block" translate="serviceSetupModal.extensionLengthDescription"></p>
+<div class="medium-2">
+  <cs-select
+    name="extensionLength"
+    ng-model="$ctrl.extensionLength"
+    options="$ctrl.extensionLengthOptions"
+    on-change-fn="$ctrl.onExtensionLengthChanged()"
+    filter="false"
+    is-disabled="$ctrl.isDisabled"
+    required="true">
+  </cs-select>
+</div>
+<p ng-if="$ctrl.showHelpText"
+  class="help-block">
+  {{$ctrl.helpText}}
+</p>

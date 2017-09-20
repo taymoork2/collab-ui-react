@@ -1,0 +1,192 @@
+@import '~collab-ui/scss/settings/colors';
+@import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~collab-ui/scss/tools/placeholders/page-layout';
+
+.huronsettings-state {
+  @extend %page-background-white;
+}
+
+.huronsettingslocation-state {
+  @extend %page-background-white;
+}
+
+.huron-settings {
+  @extend %content-header;
+
+  position: relative;
+
+  .loading-container {
+    font-size: 3rem;
+    text-align: center;
+  }
+
+  .huron-settings-main-container {
+    overflow: hidden;
+    overflow-y: auto;
+    background: $brand-white;
+
+    .trash-icon {
+      font-size: 1.7rem;
+      color: $gray-light-1;
+      cursor: pointer;
+
+      &:hover {
+        color: $color-primary-base;
+      }
+    }
+
+    .hide-delete {
+      visibility: hidden;
+    }
+
+    .icon-button-delete,
+    .service-setup-extension {
+      .formly-template-wrapper {
+        margin-bottom: 0;
+      }
+    }
+
+    .max-width-form ng-form {
+      width: 100%;
+    }
+
+    .service-address-buttons {
+      margin-top: 1rem;
+    }
+
+    .description-block,
+    .section__description {
+      color: $gray-dark-1;
+    }
+
+    .vm-switch-margin {
+      @include vr-spacing(mt, 0.75, 0px, true);
+    }
+
+    .voicemail-spacing {
+      @include vr-spacing(pl, 2);
+      @include vr-spacing(mb, 2.75);
+    }
+
+    .voicemail-email-spacing {
+      @include vr-spacing(pl, 2);
+    }
+
+    .voicemail-spacing-helptext {
+      @include vr-spacing(pl, 2);
+      @include vr-spacing(mb, 1.5);
+    }
+
+    .warning-message {
+      padding-top: 24px;
+      padding-left: 8px;
+    }
+
+    .no-padding {
+      padding: 0;
+    }
+
+    .warning-padding {
+      padding-left: 16px;
+    }
+
+    .no-border {
+      border: 0;
+    }
+
+    .no-margin {
+      margin: 0;
+    }
+
+    button.btn-link {
+      color: $color-primary-base;
+      background-color: transparent;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      &:hover {
+        color: $white;
+        background-color: $gray-dark-2;
+      }
+    }
+
+    .voicemail-switch-width {
+      max-width: 40rem;
+    }
+
+    .save-section {
+      position: fixed;
+      bottom: 0;
+    }
+
+    .display-flex {
+      display: flex;
+      align-items: center;
+    }
+
+    .service-setup-extension-length,
+    .inner-section-margin {
+      @include vr-spacing(mb, 2.25);
+    }
+
+    .service-setup-regional-settings,
+    .inner-section-margin {
+      @include vr-spacing(mt, 2.25);
+    }
+
+    .msg-container {
+      min-width: vr-adjust(600px);
+      padding-top: vr-adjust(12px);
+    }
+
+    .caller-id-toggle {
+      padding-top: .5rem !important;
+    }
+
+    .voicemail-toggle {
+      padding-top: .25rem !important;
+    }
+
+    .cs-form__section:last-child {
+      @include vr-spacing(pb, 5);
+    }
+  }
+
+  .cs-form__section {
+    > .section__info .sticky {
+      top: vr-adjust(60px);
+      bottom: vr-adjust(48px);
+    }
+  }
+
+  .save-popup-margin {
+    margin-bottom: vr-adjust(60px);
+  }
+
+  .cs-radio-group {
+    margin-bottom: 1rem;
+  }
+
+  .cs-checkbox-group {
+    margin-top: 1rem;
+  }
+
+  .warning-color {
+    color: $brand-warning;
+  }
+
+  .warning-padding {
+    padding-left: 25px;
+  }
+
+  .terminus-warning {
+    font-size: 0.75rem;
+
+    .icon-warning {
+      margin-right: 0.25rem;
+      margin-left: 0.3rem;
+    }
+  }
+}

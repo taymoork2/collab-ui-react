@@ -3,6 +3,7 @@ import { LineOverviewService } from './lineOverview.service';
 import lineService from 'modules/huron/lines/services';
 import directoryNumber from 'modules/huron/directoryNumber';
 import callForward from 'modules/huron/callForward';
+import mediaOnHold from 'modules/huron/media-on-hold';
 import simultaneousCalls from 'modules/huron/simultaneousCalls';
 import lineLabel from 'modules/huron/lineLabel';
 import callerId from 'modules/huron/callerId';
@@ -17,7 +18,6 @@ export * from 'modules/huron/lines/lineOverview/lineOverview.service';
 
 export default angular
   .module('huron.line-overview', [
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
     lineLabel,
@@ -26,8 +26,9 @@ export default angular
     simultaneousCalls,
     lineService,
     callerId,
+    mediaOnHold,
     sharedLine,
-    require('modules/core/config/config'),
+    require('modules/core/config/config').default,
     notifications,
     siteService,
     memberService,

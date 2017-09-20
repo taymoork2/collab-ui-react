@@ -8,6 +8,10 @@
   @extend %grid-subheader;
   @extend %page-background-white;
 
+  .grid-contents {
+    height: inherit;
+  }
+
   .ui-grid-cell:first-child,
   .ui-grid-header-cell:first-child {
     border-right: 0px;
@@ -199,9 +203,9 @@ sq-places-page-overview,
     @include vr-spacing(pl, 1.5, 1px, false);
     @include vr-spacing(ml, 1.5, -1px, true);
 
-    width: 100%;
-    background-color: $gray-light-4;
-    border-bottom: none;
+    p {
+      flex: 1 1 auto;
+    }
   }
 
   .modify-button {
@@ -332,6 +336,14 @@ sq-places-page-overview,
     max-width: 580px;
   }
 
+  .scrollSpace {
+    height: 130px;
+
+    @media print {
+      height: 0;
+    }
+  }
+
   .typeChoice {
     display: flex;
 
@@ -412,10 +424,11 @@ sq-places-page-overview,
 .errorBox {
   display: flex;
   align-items: flex-start;
+  margin-bottom: 8px;
 
   .icon {
     margin: 3px 8px 0 0;
-    color: #f5a623;
+    color: $color-attention-base;
   }
 }
 
@@ -606,8 +619,11 @@ sq-places-page-overview,
   }
 }
 
-.status-indicator {
-  padding-right: 8px;
+.sq-devices-page-overview,
+.sq-devices-page {
+  .status-indicator {
+    padding-right: 8px;
+  }
 }
 
 .device-status-red {

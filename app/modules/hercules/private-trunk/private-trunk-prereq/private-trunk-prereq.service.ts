@@ -7,11 +7,9 @@ export class PrivateTrunkPrereqService {
   constructor(
     private $modal: IToolkitModalService,
     private DomainManagementService: DomainManagementService,
-  ) {
+  ) {}
 
-  }
-
-  public openModal(): void {
+  public openPreReqModal(): void {
     this.dismissModal();
     this.domainModal = this.$modal.open({
       template: '<private-trunk-prereq class="modal-content"></private-trunk-prereq>',
@@ -35,12 +33,13 @@ export class PrivateTrunkPrereqService {
     }
   }
 
-  public getVerifiedDomains(): ng.IPromise<any[]> {
-    return this.DomainManagementService.getVerifiedDomains().then(domains => {
-      return _.chain(domains)
-        .filter(domain => domain.status === 'claimed' || domain.status === 'verified')
-        .map('text')
-        .value();
-    });
+  public getVerifiedDomains(): ng.IPromise<string[]> {
+    return this.DomainManagementService.getVerifiedDomains()
+      .then(domains => {
+        return _.chain(domains)
+          .filter(domain => domain.status === 'claimed' || domain.status === 'verified')
+          .map<string>('text')
+          .value();
+      });
   }
 }

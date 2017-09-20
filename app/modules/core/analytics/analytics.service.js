@@ -61,6 +61,7 @@
           BMMP_DISMISSAL: 'BMMP Banner dismissal',
           LEARN_MORE: 'Learn More option selected',
           PREMIUM_FILTER: 'Customer Overview Filtering',
+          RESET_ACCESS: 'Reset Access',
         },
         persistentProperties: null,
       },
@@ -122,6 +123,7 @@
           VISIT_HDS_SETTINGS: 'Visit Hybrid Data Security Service Settings',
           VISIT_CAL_EXC_LIST: 'Visit Hybrid Calendar (Exchange) Service Cluster List',
           VISIT_CAL_EXC_SETTINGS: 'Visit Hybrid Calendar (Exchange) Service Settings', // TODO
+          VISIT_CAL_O365_SETTINGS: 'Visit Hybrid Calendar (Office 365) Service Settings',
           VISIT_CAL_GOOG_SETTINGS: 'Visit Hybrid Calendar (Google) Service Settings',
           VISIT_CALL_LIST: 'Visit Hybrid Call Service Cluster List',
           VISIT_CALL_SETTINGS: 'Visit Hybrid Call Service Settings',
@@ -147,6 +149,15 @@
           CONTEXT_DELETE_FIELDSET_FAILURE: 'Fieldset deletion failed',
         },
       },
+      REPORTS: {
+        name: 'Visit reports',
+        eventNames: {
+          CUST_SPARK_REPORT: 'Reports: Customer Spark Qlik report',
+          CUST_WEBEX_REPORT: 'Reports: Customer WebEx Qlik report',
+          PARTNER_SPARK_REPORT: 'Reports: Partner Spark Qlik report',
+        },
+        persistentProperties: null,
+      },
     };
 
     var service = {
@@ -171,6 +182,7 @@
       trackAddUsers: trackAddUsers,
       trackCsv: trackCsv,
       trackHSNavigation: trackHSNavigation,
+      trackReportsEvent: trackReportsEvent,
     };
 
     return service;
@@ -401,6 +413,22 @@
     }
 
     /**
+     * Reports Event
+     */
+    function trackReportsEvent(eventName, payload) {
+      if (!eventName) {
+        return $q.reject(NO_EVENT_NAME);
+      }
+
+      var properties = _.extend({
+        userId: Authinfo.getUserId(),
+        orgId: Authinfo.getOrgId(),
+        type: Authinfo.isPartner(),
+      }, payload);
+      return trackEvent(eventName, properties);
+    }
+
+    /**
     * General Error Tracking
     */
 
@@ -441,10 +469,10 @@
 
       if (_.get(trialServices, enabledProp)) {
         return _.chain(trialServices[trialType])
-        .get(devicesPath, [])
-        .filter(function (device) { return device.quantity > 0; })
-        .map(function (device) { return { model: device.model, qty: device.quantity }; })
-        .value();
+          .get(devicesPath, [])
+          .filter(function (device) { return device.quantity > 0; })
+          .map(function (device) { return { model: device.model, qty: device.quantity }; })
+          .value();
       } else {
         return [];
       }

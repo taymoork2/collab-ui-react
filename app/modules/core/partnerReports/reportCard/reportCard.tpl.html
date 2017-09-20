@@ -8,11 +8,9 @@
           <i class='icon icon-three-dots export-dots'></i>
         </a>
         <ul class="dropdown-menu dropdown-primary" ng-class="{'export-visible': $ctrl.exportMenu}">
-          <li class="export-item"><a id="{{$ctrl.exportDropdown.header.id}}" translate="{{$ctrl.exportDropdown.header.label}}"></a></li>
+          <li class="export-item"><a id="{{$ctrl.exportDropdown.header.id}}">{{$ctrl.exportDropdown.header.label}}</a></li>
           <li ng-repeat="object in $ctrl.exportDropdown.menu" class="export-item" ng-click="$ctrl.dropdownSelect(object)">
-            <a id="{{object.id}}">
-              <span translate="{{object.label}}"></span>
-            </a>
+            <a id="{{object.id}}">{{::object.label}}</a>
           </li>
         </ul>
       </div>
@@ -70,13 +68,14 @@
           </p>
           <p ng-if="$ctrl.secondaryIsError()">
             <i class="icon icon-warning no-data-warning"></i>
-            <span translate="{{$ctrl.secondaryOptions.errorDescription}}"></span>
+            <span ng-if="$ctrl.secondaryTableHasRows()" translate="{{$ctrl.secondaryOptions.missingUsersErrorDescription}}"></span>
+            <span ng-if="!$ctrl.secondaryTableHasRows()" translate="{{$ctrl.secondaryOptions.errorDescription}}"></span>
           </p>
-          <div class="report-search" ng-if="$ctrl.secondaryIsSet() && $ctrl.secondaryOptions.search">
+          <div class="report-search" ng-if="$ctrl.secondaryOptions.search && $ctrl.showTable()">
             <i class="icon icon-search"></i>
             <input type="text" placeholder="{{$ctrl.placeholder}}" ng-model="$ctrl.searchField"></input>
           </div>
-          <table class="table table-bordered" ng-if="$ctrl.secondaryIsSet()">
+          <table class="table table-bordered" ng-if="$ctrl.showTable()">
             <thead>
               <th ng-repeat="header in $ctrl.secondaryOptions.table.headers" class="bold vertical-center {{header.class}}" ng-click="$ctrl.secondaryReportSort($index)">{{$ctrl.getHeader(header.title, $ctrl.secondaryOptions.alternateTranslations)}}</th>
             </thead>

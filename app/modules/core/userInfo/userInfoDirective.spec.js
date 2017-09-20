@@ -1,8 +1,11 @@
 'use strict';
 
 describe('UserInfoDirective', function () {
-  var $compile, $rootScope, Authinfo, Userservice;
+  var $compile, $rootScope, $provide, $q, Authinfo, Userservice;
   var view, scope;
+  var featureToggleService = {
+    supports: function () {},
+  };
 
   afterEach(function () {
     if (view) {
@@ -16,12 +19,17 @@ describe('UserInfoDirective', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module('WebExApp'));
+  beforeEach(angular.mock.module(function (_$provide_) {
+    $provide = _$provide_;
+    $provide.value('FeatureToggleService', featureToggleService);
+  }));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies(_$compile_, _$rootScope_, _Authinfo_, _Userservice_) {
+  function dependencies(_$compile_, _$rootScope_, _$q_, _Authinfo_, _Userservice_) {
     $compile = _$compile_;
     $rootScope = _$rootScope_;
+    $q = _$q_;
     Authinfo = _Authinfo_;
     Userservice = _Userservice_;
   }
@@ -30,6 +38,7 @@ describe('UserInfoDirective', function () {
     spyOn(Authinfo, 'isPartnerAdmin').and.returnValue(false);
     spyOn(Authinfo, 'isPartnerSalesAdmin').and.returnValue(false);
     spyOn(Userservice, 'getUser');
+    spyOn(featureToggleService, 'supports').and.returnValue($q.resolve(false));
   }
 
   function compileTemplate() {

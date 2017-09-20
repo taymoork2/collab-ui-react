@@ -3,7 +3,7 @@
 
   module.exports = angular
     .module('core.servererrorinterceptor', [
-      require('modules/core/config/config'),
+      require('modules/core/config/config').default,
       require('modules/core/scripts/services/authinfo'),
     ])
     .factory('ServerErrorInterceptor', ServerErrorInterceptor)

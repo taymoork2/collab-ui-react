@@ -20,6 +20,54 @@
   height: 8rem;
 }
 
+.aa-icon-font-size {
+  font-size: .75rem;
+  color: #F5A623 !important;
+}
+
+.aa-padding {
+  padding-left: 0rem;
+}
+
+.aa-text-overflow.aa-text-overflow {
+  display: inline-block;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #F5A623;
+  font-family: "CiscoSansTT Regular", "Helvetica Neue", Helvetica, Arial;
+  font-style: normal;
+  font-weight: normal;
+  font-size: .75rem;
+  padding-bottom: 1px;
+  line-height: 0.5rem;
+  padding-top: 0.2rem;
+  padding-right: 0.2rem;
+}
+
+.aa-div-click {
+  white-space: nowrap;
+  padding-top: 0.5rem;
+  padding-left: 0rem;
+  padding-bottom: 0.3rem;
+}
+
+.aa-full-warning.aa-full-warning {
+  padding: 11px;
+  font-size: .75rem;
+  position: absolute;
+  background-color: #FFF;
+  z-index: 100;
+  right: 0px;
+  border: 1px solid #F5A623;
+  color: #F5A623;
+  line-height: 1.2;
+  margin-top: 0.3rem;
+  white-space: normal;
+  left: 1rem;
+}
+
 @media screen and (min-width: 201rem) {
   .aa-message-width {
     width: 22.5rem;
@@ -28,7 +76,7 @@
 
 @media screen and (max-width: 200rem) {
   .aa-message-width {
-    width: 22.5rem;
+    max-width: 22.5rem;
   }
 }
 

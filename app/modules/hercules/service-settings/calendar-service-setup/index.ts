@@ -4,7 +4,6 @@ import 'modules/hercules/service-settings/calendar-service-setup/_google-calenda
 
 export default angular
   .module('hercules.google-calendar-first-time-setup', [
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
     require('modules/core/auth/auth'),

@@ -1,53 +1,41 @@
 'use strict';
 
 describe('Controller: MediafusionClusterSettingsController', function () {
-  beforeEach(angular.mock.module('core.config'));
-  beforeEach(angular.mock.module('core.org'));
-  beforeEach(angular.mock.module('Squared'));
-  beforeEach(angular.mock.module('Mediafusion'));
+  beforeEach(function () {
+    this.initModules(
+      'Hercules',
+      'Mediafusion'
+    );
+    this.injectDependencies(
+      '$q',
+      'HybridServicesClusterService',
+      'MediaClusterServiceV2'
+    );
 
-  var $httpBackend, controller, Authinfo, MediaClusterServiceV2, $q, properties;
-
-  Authinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('5632f806-ad09-4a26-a0c0-a49a13f38873'),
-  };
-
-  beforeEach(angular.mock.module(function ($provide) {
-    $provide.value('Authinfo', Authinfo);
-  }));
-
-  beforeEach(inject(function (_$httpBackend_, $controller, _MediaClusterServiceV2_, _$q_) {
-    $httpBackend = _$httpBackend_;
-    $httpBackend.when('GET', 'https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/5632f806-ad09-4a26-a0c0-a49a13f38873?fields=@wide').respond({});
-    MediaClusterServiceV2 = _MediaClusterServiceV2_;
-    $q = _$q_;
-    properties = {
+    this.properties = {
       'mf.ucSipTrunk': 'sipurl',
     };
 
-    spyOn(MediaClusterServiceV2, 'getProperties').and.returnValue($q.resolve(properties));
+    spyOn(this.HybridServicesClusterService, 'getAll').and.returnValue(this.$q.resolve());
+    spyOn(this.MediaClusterServiceV2, 'getProperties')
+      .and.returnValue(this.$q.resolve(this.properties));
+    spyOn(this.MediaClusterServiceV2, 'setProperties').and.returnValue(this.$q.resolve());
 
-    controller = $controller('MediafusionClusterSettingsController', {
-      $stateParams: {
-        id: '1234-5678-90',
+    this.initController('MediafusionClusterSettingsController', {
+      controllerLocals: {
+        hasMFFeatureToggle: true,
+        hasMFSIPFeatureToggle: true,
       },
-      MediaClusterServiceV2: MediaClusterServiceV2,
-      $q: $q,
-      hasMFFeatureToggle: true,
     });
-  }));
-
-  afterEach(function () {
-    $httpBackend.verifyNoOutstandingRequest();
-  });
-
-  it('controller should be defined', function () {
-    expect(controller).toBeDefined();
   });
 
   it('check if saveSipTrunk is called', function () {
-    spyOn(MediaClusterServiceV2, 'setProperties').and.returnValue($q.resolve());
-    controller.saveSipTrunk();
-    expect(MediaClusterServiceV2.setProperties).toHaveBeenCalled();
+    this.controller.saveSipTrunk();
+    expect(this.MediaClusterServiceV2.setProperties).toHaveBeenCalled();
+  });
+
+  it('check if saveTrustedSip is called', function () {
+    this.controller.saveTrustedSip();
+    expect(this.MediaClusterServiceV2.setProperties).toHaveBeenCalled();
   });
 });

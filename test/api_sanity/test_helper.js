@@ -24,7 +24,7 @@ var auth = {
   },
   'partner-reports': {
     user: 'admin@sparkucreports-testpartner.com',
-    pass: 'Cisco123!',
+    pass: 'P@ssword123',
     org: 'd71b4d69-721a-41b1-ae4b-6e0305eab12b',
   },
   'partner-sales-user': {
@@ -87,6 +87,11 @@ var auth = {
     pass: 'C1sc01234!',
     org: 'baab1ece-498c-452b-aea8-1a727413c818',
   },
+  'media-fusion-admin': {
+    user: 'mediafusion54@yahoo.com',
+    pass: 'Cisco!23',
+    org: '2c3c9f9e-73d9-4460-a668-047162ff1bac',
+  },
   'customer-support-admin': {
     user: 'admin@csreptestdom.collaborate.com',
     pass: 'P@ssword123',
@@ -131,7 +136,7 @@ var auth = {
   },
   'contactcenter-admin': {
     user: 'sunlight-atlas-test-admn@outlook.com',
-    pass: 'C1sco123=',
+    pass: 'C1sco123!',
     org: '36de4632-ccb9-4edf-8124-b74ce6943285',
   },
   'aa-admin': {
@@ -203,6 +208,26 @@ var auth = {
     user: 'huron.ui.test.partner@gmail.com',
     pass: 'Cisco@1234!',
     org: '2381e2e2-e912-4d33-8fe2-021216906eb9',
+  },
+  'huron-ui-test-partner-h-i1484': {
+    user: 'huron.ui.test.partner+hi1484@gmail.com',
+    pass: 'Cisco@1234!',
+    org: '2381e2e2-e912-4d33-8fe2-021216906eb9',
+  },
+  'huron-ui-test-partner-h-i1238': {
+    user: 'huron.ui.test.partner+hi1238@gmail.com',
+    pass: 'Cisco@1234!',
+    org: '2381e2e2-e912-4d33-8fe2-021216906eb9',
+  },
+  'huron-ui-test-partner-prod': {
+    user: 'huron.ui.test.partner+production@gmail.com',
+    pass: 'Cisco@1234!',
+    org: 'b93be93e-5f57-4977-9db9-3d1e6dc12dca',
+  },
+  'virtualassistant-admin': {
+    user: 'sparkcarebot+admin@gmail.com',
+    pass: 'Cisco@123',
+    org: '5abcd266-e194-475e-bc48-010af5da6dde',
   },
 };
 

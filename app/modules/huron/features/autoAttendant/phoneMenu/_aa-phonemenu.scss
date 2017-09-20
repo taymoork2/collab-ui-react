@@ -3,7 +3,7 @@
 %aa-menu-vertical-line {
   position: relative;
 
-  @include vr-spacing(pb, 1);
+  @include vr-spacing(pb, 0.3);
 
   &::before {
     top: 0;

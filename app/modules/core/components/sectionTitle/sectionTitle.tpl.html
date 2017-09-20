@@ -7,13 +7,13 @@
       </button>
       <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
         <li ng-repeat="action in $ctrl.actionList">
-          <a ng-click="action.actionFunction()" translate="{{action.actionKey}}"></a>
+          <a href ng-click="action.actionFunction()" translate="{{action.actionKey}}"></a>
         </li>
       </ul>
     </span>
     <span ng-if="$ctrl.asButton">
-      <a ng-if="!$ctrl.shouldShowArrow()" class="as-button" ng-click="$ctrl.actionList[0].actionFunction()" translate="{{$ctrl.actionList[0].actionKey}}"></a>
-      <a ng-if="$ctrl.shouldShowArrow()" class="as-arrow" ng-click="$ctrl.onActionClick()">
+      <a href ng-if="!$ctrl.shouldShowArrow()" class="as-button" ng-click="$ctrl.actionList[0].actionFunction()" translate="{{$ctrl.actionList[0].actionKey}}"></a>
+      <a href ng-if="$ctrl.shouldShowArrow()" class="as-arrow" ng-click="$ctrl.onActionClick()">
         <i class="icon icon-arrow-next"></i>
       </a>
     </span>

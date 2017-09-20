@@ -1,11 +1,19 @@
+import { L2SipService, ISipDestinationSteps, VerificationStep } from 'modules/hercules/services/l2sip-service';
+import { Notification } from 'modules/core/notifications';
+
 class VerifySipDestinationComponentCtrl implements ng.IComponentController {
 
   public destinationUrl: string;
   private onDestinationSave: Function;
+  private onResultReady: Function;
+  private onTestStarted: Function;
+
+  public loading = false;
 
   /* @ngInject */
   constructor(
-    private $modal,
+    private L2SipService: L2SipService,
+    private Notification: Notification,
   ) {}
 
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
@@ -15,15 +23,28 @@ class VerifySipDestinationComponentCtrl implements ng.IComponentController {
     }
   }
 
-  public openVerificationModal(): void {
-    this.$modal.open({
-      resolve: {
-        destinationUrl: () => this.destinationUrl,
-      },
-      controller: 'VerifySipDestinationModalController',
-      controllerAs: 'vm',
-      templateUrl: 'modules/hercules/service-settings/verify-sip-destination/verify-sip-destination-modal.html',
-      type: 'full',
+  public runTests(): void {
+    this.loading = true;
+    this.onTestStarted();
+    this.L2SipService.verifySipDestination(this.destinationUrl, true)
+      .then((result: ISipDestinationSteps) => {
+        const resultSet = this.L2SipService.formatSipTestResult(result.steps);
+        this.onResultReady({
+          succeeded: this.didTestSucceed(result.steps),
+          resultSet: resultSet,
+        });
+      })
+      .catch((error) => {
+        this.Notification.errorWithTrackingId(error, 'hercules.settings.verifySipDestination.testHadUnexpectedError');
+      })
+      .finally(() => {
+        this.loading = false;
+      });
+  }
+
+  private didTestSucceed(resultSet): boolean {
+    return !_.some(resultSet, (result: VerificationStep) => {
+      return result.severity === 'Error';
     });
   }
 
@@ -34,9 +55,11 @@ class VerifySipDestinationComponentCtrl implements ng.IComponentController {
 
 export class VerifySipDestinationComponent implements ng.IComponentOptions {
   public controller = VerifySipDestinationComponentCtrl;
-  public templateUrl = 'modules/hercules/service-settings/verify-sip-destination/verify-sip-destination.html';
+  public template = require('modules/hercules/service-settings/verify-sip-destination/verify-sip-destination.html');
   public bindings = {
     destinationUrl: '<',
     onDestinationSave: '&',
+    onResultReady: '&',
+    onTestStarted: '&',
   };
 }

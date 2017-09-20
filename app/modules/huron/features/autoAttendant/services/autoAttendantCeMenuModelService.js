@@ -17,7 +17,7 @@
   //     id: String // uuid
   //     trigger: String // 'inComing', 'outGoing'
   //     type: String // 'directoryNumber'
-//     number: String // '<E164>', '<DN>'
+  //     number: String // '<E164>', '<DN>'
   //
   //
   // CeMenu
@@ -370,12 +370,24 @@
 
     function parseSayObject(menuEntry, inObject) {
       var action;
-      action = new Action('say', decodeUtf8(inObject.value));
-      if (!action.value) {
-        action.name = 'play';
+      if (isDynAnnounceToggle() && decodeUtf8(inObject.value)) {
+        action = new Action('dynamic', '');
+        var dynaList = [{
+          say: {
+            value: decodeUtf8(inObject.value),
+            voice: '',
+          },
+          isDynamic: false,
+          htmlModel: '',
+        }];
+        action.dynamicList = dynaList;
+      } else {
+        action = new Action('say', decodeUtf8(inObject.value));
+        if (!action.value) {
+          action.name = 'play';
+        }
       }
       action.description = menuEntry.description;
-
       if (!_.isUndefined(inObject.voice)) {
         action.setVoice(inObject.voice);
       }
@@ -392,10 +404,22 @@
       for (var i = 0; i < objects.length; i++) {
         if (_.has(objects[i], 'say')) {
           parseSayObject(menuEntry, objects[i].say);
+        } else if (_.has(objects[i], 'dynamic')) {
+          parseDynamicObject(menuEntry, objects[i].dynamic.dynamicOperations);
         } else {
           parsePlayObject(menuEntry, objects[i].play);
         }
       }
+    }
+
+    function parseDynamicObject(menuEntry, inObject) {
+      var action;
+      action = new Action('dynamic', '');
+      action.dynamicList = inObject;
+      if (!_.isUndefined(inObject[0].say.voice)) {
+        action.setVoice(inObject[0].say.voice);
+      }
+      menuEntry.addAction(action);
     }
 
     function parsePlayObject(menuEntry, inObject) {
@@ -416,14 +440,25 @@
 
     function createAnnouncements(menuEntry) {
       var actions = menuEntry.actions;
-
       var newActionArray = [];
+      if (actions.length === 0) {
+        // if save is from the schedule modal, no actions when AA is 1st created
+        newActionArray[0] = {};
+        newActionArray[0].value = '';
+        newActionArray[0].voice = '';
+        return newActionArray;
+      }
       for (var i = 0; i < actions.length; i++) {
         newActionArray[i] = {};
         menuEntry.description = actions[i].description;
         if (actions[i].deleteUrl && _.startsWith(actions[i].getValue(), 'http')) {
           newActionArray[i].url = (actions[i].getValue() ? encodeUtf8(actions[i].getValue()) : '');
           newActionArray[i].deleteUrl = actions[i].deleteUrl;
+        } else if (actions[i].dynamicList) {
+          updateDynaListVoice(actions[i].dynamicList, actions[i].voice);
+          var dynamicOperations = actions[i].dynamicList;
+          newActionArray[i].dynamic = {};
+          newActionArray[i].dynamic.dynamicOperations = dynamicOperations;
         } else {
           newActionArray[i].value = (actions[i].getValue() ? encodeUtf8(actions[i].getValue()) : '');
         }
@@ -465,7 +500,7 @@
       if (!_.isUndefined(inAction.dynamic)) {
         action = new Action('dynamic', '');
         var dynamicList = inAction.dynamic.dynamicOperations;
-        menuEntry.dynamicList = dynamicList;
+        action.dynamicList = dynamicList;
         action.voice = dynamicList[0].say.voice;
         menuEntry.addAction(action);
       } else if (!_.isUndefined(inAction.play)) {
@@ -486,7 +521,7 @@
             isDynamic: false,
             htmlModel: '',
           }];
-          menuEntry.dynamicList = dynaList;
+          action.dynamicList = dynaList;
         } else {
           action = new Action('say', decodeUtf8(inAction.say.value));
           setDescription(action, inAction.say);
@@ -501,9 +536,7 @@
         menuEntry.addAction(action);
       } else if (!_.isUndefined(inAction.routeToExtension)) {
         action = new Action('routeToExtension', inAction.routeToExtension.destination);
-
         setDescription(action, inAction.routeToExtension);
-
         menuEntry.addAction(action);
       } else if (!_.isUndefined(inAction.routeToHuntGroup)) {
         action = new Action('routeToHuntGroup', inAction.routeToHuntGroup.id);
@@ -569,9 +602,25 @@
             if (announcements && announcements.length > 0 && !_.isUndefined(announcements[0].play)) {
               action.url = decodeUtf8(announcements[0].play.url);
               action.deleteUrl = decodeUtf8(announcements[0].play.deleteUrl);
+              action.value = decodeUtf8(announcements[0].play.url);
             } else {
               if (announcements.length > 0 && _.has(announcements[0], 'say')) {
-                action.value = decodeUtf8(announcements[0].say.value);
+                //second check is needed to maintain the upload in case of no file uploaded but upload file is selected
+                if (isDynAnnounceToggle() && decodeUtf8(announcements[0].say.value)) {
+                  var list = [{
+                    say: {
+                      value: decodeUtf8(announcements[0].say.value),
+                      voice: '',
+                    },
+                    isDynamic: false,
+                    htmlModel: '',
+                  }];
+                  action.dynamicList = list;
+                } else {
+                  action.value = decodeUtf8(announcements[0].say.value);
+                }
+              } else if (announcements.length > 0 && _.has(announcements[0], 'dynamic')) {
+                action.dynamicList = announcements[0].dynamic.dynamicOperations;
               }
             }
             action.voice = inAction.runActionsOnInput.voice;
@@ -776,11 +825,41 @@
       var iaType = parsedDescription.description.initialAnnouncementType;
       var action;
       if (_.has(parsedDescription, 'queueInitialAnnouncement')) {
-        action = new Action(iaType, parsedDescription.queueInitialAnnouncement);
+        if (isDynAnnounceToggle()) {
+          action = new Action('dynamic', '');
+          action.dynamicList = [{
+            say: {
+              value: parsedDescription.queueInitialAnnouncement,
+              voice: '',
+            },
+            isDynamic: false,
+            htmlModel: '',
+          }];
+        } else {
+          action = new Action(iaType, parsedDescription.queueInitialAnnouncement);
+        }
       } else {
         var initialAnnouncementAction = parsedDescription.initialAnnouncement;
-        var initialAnnouncementObject = ((_.has(initialAnnouncementAction, 'say')) ? initialAnnouncementAction.say : initialAnnouncementAction.play);
-        action = new Action(iaType, initialAnnouncementObject.value);
+        if (!_.isEqual(iaType, 'dynamic')) {
+          var initialAnnouncementObject = ((_.has(initialAnnouncementAction, 'say')) ? initialAnnouncementAction.say : initialAnnouncementAction.play);
+          if (isDynAnnounceToggle() && iaType === 'say') {
+            //for backward compatibility
+            action = new Action('dynamic', '');
+            action.dynamicList = [{
+              say: {
+                value: initialAnnouncementObject.value,
+                voice: '',
+              },
+              isDynamic: false,
+              htmlModel: '',
+            }];
+          } else {
+            action = new Action(iaType, initialAnnouncementObject.deleteUrl);
+          }
+        } else {
+          action = new Action(iaType, '');
+          action.dynamicList = initialAnnouncementAction.dynamic.dynamicOperations;
+        }
       }
       action.setDescription(parsedDescription.description.initialAnnouncementDescription);
       var initialAnnouncement = new CeMenuEntry();
@@ -827,14 +906,44 @@
         periodicAnnouncements = parsedDescription.queuePeriodicAnnouncements[0];
         periodicAnnouncement = periodicAnnouncements.queuePeriodicAnnouncement;
         paInterval = periodicAnnouncements.queuePeriodicAnnouncementInterval;
-        action = new Action(paType, periodicAnnouncement);
+        if (isDynAnnounceToggle() && paType === 'say') {
+          action = new Action('dynamic', '');
+          action.dynamicList = [{
+            say: {
+              value: periodicAnnouncement,
+              voice: '',
+            },
+            isDynamic: false,
+            htmlModel: '',
+          }];
+        } else {
+          action = new Action(paType, periodicAnnouncement);
+        }
       } else {
         periodicAnnouncements = _.get(parsedDescription, 'periodicAnnouncementActions[0]', '');
         periodicAnnouncement = periodicAnnouncements.periodicAnnouncement;
         paInterval = periodicAnnouncement.periodicInterval;
         var periodicMessage = periodicAnnouncement.periodicMessage;
-        var periodicAnnouncementObject = (_.has(periodicMessage, 'say') ? periodicMessage.say : periodicMessage.play);
-        action = new Action(paType, periodicAnnouncementObject.value);
+        if (!_.isEqual(paType, 'dynamic')) {
+          var periodicAnnouncementObject = (_.has(periodicMessage, 'say') ? periodicMessage.say : periodicMessage.play);
+          if (isDynAnnounceToggle() && paType === 'say') {
+            //for backward compatibility
+            action = new Action('dynamic', '');
+            action.dynamicList = [{
+              say: {
+                value: periodicAnnouncementObject.value,
+                voice: '',
+              },
+              isDynamic: false,
+              htmlModel: '',
+            }];
+          } else {
+            action = new Action(paType, periodicAnnouncementObject.deleteUrl);
+          }
+        } else {
+          action = new Action(paType, '');
+          action.dynamicList = periodicMessage.dynamic.dynamicOperations;
+        }
       }
 
 
@@ -1226,6 +1335,10 @@
       _.forEach(dynaList, function (opt) {
         if (_.has(opt, 'say')) {
           opt.say.voice = voice;
+          //this is for handling corner cases of some special characters for dynamic blocks
+          if (opt.isDynamic && (_.isEmpty(opt.say.value) || _.isEqual(opt.say.value.charCodeAt(0), 10))) {
+            opt.isDynamic = false;
+          }
         }
       });
     }
@@ -1246,9 +1359,8 @@
               newActionArray[i][actionName].description = menuEntry.actions[0].description;
             }
             if (actionName === 'dynamic') {
-              var voice = menuEntry.actions[0].getVoice();
-              updateDynaListVoice(menuEntry.dynamicList, voice);
-              var dynamicOperations = menuEntry.dynamicList;
+              updateDynaListVoice(menuEntry.actions[0].dynamicList, menuEntry.actions[0].getVoice());
+              var dynamicOperations = menuEntry.actions[0].dynamicList;
               newActionArray[i].dynamic = {};
               newActionArray[i].dynamic.dynamicOperations = dynamicOperations;
             } else if (actionName === 'say') {
@@ -1415,7 +1527,12 @@
         var actionName = actions[i].getName();
         var val = actions[i].getValue();
         newActionArray[i][actionName] = {};
-        if (actionName === 'say') {
+        if (actionName === 'dynamic') {
+          updateDynaListVoice(actions[i].dynamicList, actions[i].voice);
+          var dynamicOperations = actions[i].dynamicList;
+          newActionArray[i].dynamic = {};
+          newActionArray[i].dynamic.dynamicOperations = dynamicOperations;
+        } else if (actionName === 'say') {
           newActionArray[i][actionName].value = encodeUtf8(val);
           newActionArray[i][actionName].voice = actions[i].voice;
         } else if (actionName === 'play') {
@@ -1461,6 +1578,15 @@
     * Method for route to queue prior to CES def
     */
     function populateRouteToQueue(action) {
+      var dynaOpt = [{
+        say: {
+          value: '',
+          voice: '',
+        },
+        isDynamic: false,
+        htmlModel: '',
+      }];
+      var dynamicOperations;
       var newAction = {};
       if (action) {
         newAction.id = action.value;
@@ -1478,12 +1604,26 @@
             },
           };
         } else {
-          newAction.initialAnnouncement = {
-            say: {
-              value: initialAnnouncementValue,
-              voice: action.queueSettings.voice,
-            },
-          };
+          if (isDynAnnounceToggle() && !_.isEmpty(action.description) && !_.isEqual(action.description.initialAnnouncementType, 'play')) {
+            dynamicOperations = _.get(action.queueSettings.initialAnnouncement.actions[0], 'dynamicList', '');
+            updateDynaListVoice(dynamicOperations, action.queueSettings.voice);
+            //to cater the case when 'route to spark care' option is selected but modal remain closed
+            if (_.isUndefined(dynamicOperations)) {
+              dynamicOperations = dynaOpt;
+            }
+            newAction.initialAnnouncement = {
+              dynamic: {
+                dynamicOperations: dynamicOperations,
+              },
+            };
+          } else {
+            newAction.initialAnnouncement = {
+              say: {
+                value: initialAnnouncementValue,
+                voice: action.queueSettings.voice,
+              },
+            };
+          }
         }
 
         var periodicAnnouncementActionsArr = [];
@@ -1500,12 +1640,25 @@
             },
           };
         } else {
-          periodicAnnouncement = {
-            say: {
-              value: periodicAnnouncementValue,
-              voice: action.queueSettings.voice,
-            },
-          };
+          if (isDynAnnounceToggle() && !_.isEmpty(action.description) && !_.isEqual(action.description.periodicAnnouncementType, 'play')) {
+            dynamicOperations = _.get(action.queueSettings.periodicAnnouncement.actions[0], 'dynamicList', '');
+            updateDynaListVoice(dynamicOperations, action.queueSettings.voice);
+            if (_.isUndefined(dynamicOperations)) {
+              dynamicOperations = dynaOpt;
+            }
+            periodicAnnouncement = {
+              dynamic: {
+                dynamicOperations: dynamicOperations,
+              },
+            };
+          } else {
+            periodicAnnouncement = {
+              say: {
+                value: periodicAnnouncementValue,
+                voice: action.queueSettings.voice,
+              },
+            };
+          }
         }
         periodicAnnouncementActions.periodicAnnouncement = {
           periodicMessage: periodicAnnouncement,
@@ -1569,6 +1722,15 @@
               deleteUrl: encodeUtf8(action.deleteUrl),
               url: encodeUtf8(action.value),
             },
+          };
+        } else if (_.has(action, 'dynamicList')) {
+          updateDynaListVoice(action.dynamicList, action.voice);
+          var dynamicOperations = action.dynamicList;
+          var dynamic = {
+            dynamicOperations: dynamicOperations,
+          };
+          announcements = {
+            dynamic: dynamic,
           };
         } else {
           announcements = {
@@ -1636,7 +1798,6 @@
       // create menuOptions section
       var newOptionArray = [];
       var menuEntry;
-
       for (var i = 0; i < aaMenu.entries.length; i++) {
         menuEntry = aaMenu.entries[i];
         // skip incomplete key/action definition
@@ -1683,14 +1844,17 @@
         //deleteUrl has been configured
         //else it will go to a sayList, blank or otherwise
         //which is used later to trigger play or say
-        //--if (_.get(list, '[0].deleteUrl', undefined)) {
-        if (_.has(list[0].deleteUrl, undefined)) {
+        if (_.has(list, '[0].deleteUrl')) {
           inputAction.prompts.announcements = [{
             play: {
               deleteUrl: list[0].deleteUrl,
               voice: list[0].voice,
               url: list[0].url,
             },
+          }];
+        } else if (_.get(list, '[0].dynamic', undefined)) {
+          inputAction.prompts.announcements = [{
+            dynamic: list[0].dynamic,
           }];
         } else {
           inputAction.prompts.announcements = [{

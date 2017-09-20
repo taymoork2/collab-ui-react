@@ -1,24 +1,48 @@
 'use strict';
 
 describe('Template: trialPstn.tpl.spec.js:', function () {
-  var $q, $compile, $controller, $scope, $templateCache, Analytics, Orgservice, PstnAreaService, FeatureToggleService, PstnService;
+  var areas = getJSONFixture('../../app/modules/huron/pstn/pstnAreaService/states.json');
+  var $q, $compile, $controller, $scope, Analytics, Orgservice, PstnAreaService, PstnProvidersService, PstnService;
   var view;
   var skipBtn, backBtn;
 
   var location = {
     zipName: 'Zip Code',
     typeName: 'State',
-    areas: [{
-      name: 'Texas',
-      abbreviation: 'TX',
-    }],
+    areas: areas,
   };
+
+  var providers = [{
+    name: 'INTELEPEER',
+    logoSrc: null,
+    logoAlt: 'IntelePeer',
+    countryCode: 'US',
+    docSrc: 'docs/carriers/IntelePeerVoicePackage.pdf',
+    features: [
+      'intelepeerFeatures.feature1',
+      'intelepeerFeatures.feature2',
+      'intelepeerFeatures.feature3',
+      'intelepeerFeatures.feature4',
+    ],
+  }, {
+    name: 'TATA',
+    logoSrc: null,
+    logoAlt: 'Tata',
+    countryCode: 'US',
+    docSrc: 'docs/carriers/IntelePeerVoicePackage.pdf',
+    features: [
+      'tataFeatures.feature1',
+      'tataFeatures.feature2',
+      'tataFeatures.feature3',
+      'tataFeatures.feature4',
+    ],
+  }];
 
   afterEach(function () {
     if (view) {
       view.remove();
     }
-    $q = $compile = $controller = $scope = $templateCache = Analytics = Orgservice = PstnAreaService = FeatureToggleService = PstnService = undefined;
+    $q = $compile = $controller = $scope = Analytics = Orgservice = PstnAreaService = PstnService = undefined;
     view = skipBtn = backBtn = undefined;
   });
 
@@ -27,21 +51,19 @@ describe('Template: trialPstn.tpl.spec.js:', function () {
   beforeEach(compileView);
 
 
-  function dependencies(_$q_, _$compile_, _$controller_, _$rootScope_, _$templateCache_, _Analytics_, _Orgservice_, _PstnAreaService_, _FeatureToggleService_, _PstnService_) {
+  function dependencies(_$q_, _$compile_, _$controller_, _$rootScope_, _Analytics_, _Orgservice_, _PstnAreaService_, _PstnProvidersService_, _PstnService_) {
     $q = _$q_;
     $compile = _$compile_;
     $controller = _$controller_;
     $scope = _$rootScope_.$new();
-    $templateCache = _$templateCache_;
     PstnAreaService = _PstnAreaService_;
-    FeatureToggleService = _FeatureToggleService_;
     Orgservice = _Orgservice_;
     Analytics = _Analytics_;
+    PstnProvidersService = _PstnProvidersService_;
     PstnService = _PstnService_;
 
+    spyOn(PstnProvidersService, 'getCarriers').and.returnValue($q.resolve(providers));
     spyOn(PstnAreaService, 'getCountryAreas').and.returnValue($q.resolve(location));
-    spyOn(FeatureToggleService, 'huronSupportThinktelGetStatus').and.returnValue($q.resolve(true));
-    spyOn(FeatureToggleService, 'huronFederatedSparkCallGetStatus').and.returnValue($q.resolve(true));
 
     spyOn(Analytics, 'trackTrialSteps');
     spyOn(PstnService, 'getResellerV2').and.returnValue($q.resolve());
@@ -49,7 +71,7 @@ describe('Template: trialPstn.tpl.spec.js:', function () {
 
   function compileView() {
     spyOn(Orgservice, 'getOrg');
-    var template = $templateCache.get('modules/core/trials/trialPstn.tpl.html');
+    var template = require('modules/core/trials/trialPstn.tpl.html');
 
     $controller('TrialPstnCtrl', {
       $scope: $scope,
@@ -76,7 +98,4 @@ describe('Template: trialPstn.tpl.spec.js:', function () {
       expect(backBtnDOMElem.previousElementSibling).toBe(skipBtnDOMElem);
     });
   });
-
-  // TODO: add tests for other template elements
-  xdescribe('...other template elements...', function () {});
 });

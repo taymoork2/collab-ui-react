@@ -1,8 +1,11 @@
+import { Config } from 'modules/core/config/config';
 import { IOfferData } from 'modules/core/myCompany/mySubscriptions/subscriptionsInterfaces';
+import { ProPackService } from 'modules/core/proPack/proPack.service';
 import { SharedMeetingsReportService } from 'modules/core/myCompany/mySubscriptions/sharedMeetings/sharedMeetingsReport.service';
 
 class SubscriptionRowCtrl {
-  public isSharedMeetingsReportsEnabled: boolean;
+  public isSharedMeetingsReportsEnabled: boolean = false;
+  public isProPackEnabled: boolean = false;
   public offer: IOfferData;
   public wrapped: boolean;
 
@@ -10,8 +13,9 @@ class SubscriptionRowCtrl {
   constructor(
     private $translate: ng.translate.ITranslateService,
     private $window: ng.IWindowService,
-    private Config,
+    private Config: Config,
     private FeatureToggleService,
+    private ProPackService: ProPackService,
     private SharedMeetingsReportService: SharedMeetingsReportService,
     private WebExUtilsFact,
   ) { }
@@ -19,6 +23,10 @@ class SubscriptionRowCtrl {
   public $onInit(): void {
     this.FeatureToggleService.atlasSharedMeetingsReportsGetStatus().then((sharedMeetingReportsStatus) => {
       this.isSharedMeetingsReportsEnabled = sharedMeetingReportsStatus;
+    });
+
+    this.ProPackService.hasProPackEnabled().then((isProPackEnabled: boolean): void => {
+      this.isProPackEnabled = isProPackEnabled;
     });
   }
 
@@ -74,7 +82,7 @@ class SubscriptionRowCtrl {
 }
 
 export class SubscriptionRowComponent implements ng.IComponentOptions {
-  public templateUrl = 'modules/core/myCompany/mySubscriptions/subscription-row/subscriptionRow.tpl.html';
+  public template = require('modules/core/myCompany/mySubscriptions/subscription-row/subscriptionRow.tpl.html');
   public controller = SubscriptionRowCtrl;
   public bindings = {
     offer: '<',

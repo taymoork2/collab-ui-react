@@ -2,7 +2,7 @@
   'use strict';
 
   describe('Controller: TabsCtrl', function () {
-    var tabsController, $q, $controller, $rootScope, injectedRootScope, $scope, $location, Authinfo, Auth, UrlConfig, $provide, $injector;
+    var tabsController, $q, $controller, $rootScope, injectedRootScope, $scope, $location, Authinfo, Auth, UrlConfig, $provide, $injector, ControlHubService;
     var featureToggleService = {
       supports: function () {},
     };
@@ -48,7 +48,7 @@
       $provide.value('FeatureToggleService', featureToggleService);
     }));
 
-    beforeEach(inject(function (_$controller_, _$rootScope_, _$location_, _$q_, _Authinfo_, _Auth_, _UrlConfig_, _$injector_) {
+    beforeEach(inject(function (_$controller_, _$rootScope_, _$location_, _$q_, _Authinfo_, _Auth_, _UrlConfig_, _$injector_, _ControlHubService_) {
       $q = _$q_;
       $controller = _$controller_;
       $rootScope = _$rootScope_;
@@ -59,6 +59,7 @@
       Auth = _Auth_;
       UrlConfig = _UrlConfig_;
       $injector = _$injector_;
+      ControlHubService = _ControlHubService_;
 
       tabConfig = [{
         tab: 'tab1',
@@ -90,6 +91,7 @@
       spyOn($location, 'path');
       $provide.value('tabConfig', tabConfig);
       states = ['tab1', 'subTab1', 'subTab2', 'devTab', 'subDevTab'];
+      spyOn(ControlHubService, 'getControlHubEnabled').and.returnValue($q.resolve(false));
     }));
 
     function initTabsController(args, dontApply) {

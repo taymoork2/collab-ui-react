@@ -1,5 +1,5 @@
 <cs-card class="flip large-3 medium-6 small-12 menu-card header-bar overview-card {{$ctrl.headercolor}} {{$ctrl.cardClass}}">
-  <div class="card" ng-class="{'flipped':isFlipped}">
+  <div class="card" ng-class="{'flipped':isFlipped, 'card-on-top': $ctrl.dropdownPresent === true}">
     <article class="face front" ng-class="{'no-display': isFlipped}">
       <header>
         <div class="metrics-header"> {{$ctrl.headername}} </div>
@@ -21,7 +21,10 @@
             </p>
           </div>
       </section>
-      <i class='icon icon-add-outline media-flip-icon' ng-click="isFlipped=true"></i>
+      <div ng-class="{'no-display': $ctrl.headername !== $ctrl.parentcntrl.client_types || $ctrl.parentcntrl.hasHmsTwoDotFiveFeatureToggle == false || $ctrl.parentcntrl.hasHmsTwoDotFiveFeatureToggle == undefined}" class="footer-section">
+        <cs-select class='client-type-filter' ng-model="$ctrl.tooltipOptions.tooltipModel" options="$ctrl.tooltipOptions" on-change-fn="$ctrl.tooltipOptions.tooltipClickHandler()"></cs-select>
+      </div>
+      <i class='icon icon-info-outline media-flip-icon' ng-click="isFlipped=true"></i>
     </article>
 
     <article class="face back" ng-class="{'no-display': !isFlipped}">
@@ -42,7 +45,7 @@
           </div>
         </div>
       </section>
-      <i class='icon icon-remove-outline media-flip-icon' ng-click="isFlipped=false"></i>
+      <i class='icon icon-info media-flip-icon' ng-click="isFlipped=false"></i>
     </article>
     </div>
 </cs-card>

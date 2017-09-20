@@ -1,0 +1,57 @@
+<div ng-form="dialingForm" class="settings-dialing">
+  <label class="sub-section__label" translate="serviceSetupModal.dialing"></label>
+  <div class="cs-radio-group">
+    <input
+      type="radio"
+      id="nationalDialing"
+      name="dialingRadio"
+      value="national"
+      ng-model="$ctrl.dialingHabit"
+      ng-change="$ctrl.onDialingHabitChanged(value)">
+      <label class="cs-radio" for="nationalDialing"><span translate="serviceSetupModal.notSimplifiedDialingTitle"></span></label>
+      <p class="cs-input__help-text">{{$ctrl.exampleDialingWithOneString}}</p>
+      <div ng-if="$ctrl.supportsSimplifiedNationalDialing" class="cs-input-group cs-input-checkbox cs-checkbox-group indent">
+        <input
+          type="checkbox"
+          ng-model="$ctrl.useSimplifiedNationalDialing"
+          id="requireOneToDial"
+          name="requireOneToDial"
+          ng-change="$ctrl.onRegionCodeChanged()"
+          ng-disabled="$ctrl.dialingHabit === 'local'">
+          <label class="cs-checkbox" for="requireOneToDial"><span translate="serviceSetupModal.requireOneToDialLabel"></span></label>
+          <p class="cs-input__help-text">{{$ctrl.exampleDialingString}}</p>
+      </div>
+    <input
+      type="radio"
+      id="localDialing"
+      name="dialingRadio"
+      value="local"
+      ng-model="$ctrl.dialingHabit"
+      ng-change="$ctrl.onDialingHabitChanged(value)"
+      ng-disabled="!$ctrl.isTerminusCustomer || !$ctrl.supportsLocalDialing">
+      <label class="cs-radio" for="localDialing"><span translate="serviceSetupModal.simplifiedDialingTitle"></span></label>
+      <p class="cs-input__help-text">
+        {{:: 'serviceSetupModal.simplifiedDialingDesc' | translate}}
+        <br>
+        {{:: 'serviceSetupModal.multipleAreaCodeText' | translate}}
+      </p>
+  </div>
+  <div class="row indent area-code" ng-if="$ctrl.isTerminusCustomer && $ctrl.supportsLocalDialing">
+    <input
+      cs-input
+      type="text"
+      id="areacode-input"
+      name="areacode-input"
+      ng-model="$ctrl.regionCode"
+      ng-change="$ctrl.onRegionCodeChanged()"
+      ng-pattern="/^[0-9]*$/"
+      ng-disabled="$ctrl.dialingHabit === 'national'"
+      ng-required="$ctrl.dialingHabit === 'local'"
+      cs-input-group-size="medium-3"
+      cs-input-label="{{:: 'serviceSetupModal.localDialingNumberTitle' | translate}}"
+      cs-input-help-text="{{$ctrl.exampleDialingBaseString}}"
+      cs-input-messages="$ctrl.messages"
+      validate-dialing-area-code>
+  </div>
+  <p class="row full columns warning terminus-warning indent" ng-if="!$ctrl.isTerminusCustomer"><i class="icon icon-warning"></i>{{::'serviceSetupModal.warning.localDialing' | translate}}</p>
+</div>

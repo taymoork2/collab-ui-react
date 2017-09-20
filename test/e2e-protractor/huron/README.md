@@ -10,15 +10,62 @@
 * Use test utils in your expect statements, don't reinvent the wheel.
 ## Running Tests
 * Locally
-  * To run the tests locally in development, you must start Atlas locally via `npm start`, then from another terminal window execute the protractor tests.
+  * To run the tests locally in development, you must start Atlas locally via `yarn start`, then from another terminal window execute the protractor tests.
 * Running a Single .spec File
   * To run a single test you can pass the --specs parameter:
-`npm run protractor-babel -- --specs <path to spec file>`
+`yarn protractor-babel -- --specs <path to spec file>`
+
 ```
-npm run protractor-babel -- --specs ./test/e2e-protractor/huron/functional/call-settings_spec.js
+yarn protractor-babel -- --specs  ./test/e2e-protractor/huron/functional/call-settings_spec.js
 ```
+* Running with yarn:
+`yarn protractor-babel -- --specs ./test/e2e-protractor/huron/functional/call-settings_spec.js`
+
 * Via Sauce Labs
-  * TBD
+* Set following Environment variables to run the tests via Suaucelab.
+* Unset following Environment variables to run the tests locally
+```
+export SAUCE__MAX_INSTANCES="2"
+export SAUCE__USERNAME="atlas-web-limited"
+export SAUCE__ACCESS_KEY="b99c8bc7-4a28-4d87-8cd8-eba7c688d48c"
+
+yarn protractor-babel -- --specs ./test/e2e-protractor/huron/functional/<test name>.js --int
+
+```
+
+* Ruuning all files in a given directory change directory to huron and apply the cmd.
+```
+yarn protractor-babel -- --suite huron --int
+
+```
+
+* The VS code debug launch config is  as follows for running a given sepc file in debugger mode
+
+```
+{
+    "name": "Launch Protractor with Babel",
+    "type": "node",
+    "request": "launch",
+    "program": "${workspaceRoot}/node_modules/.bin/protractor",
+    // "args": [ "--specs", "${workspaceRoot}/test/e2e-protractor/squared/login_spec.js"],
+    "args": [ "--specs", "${file}"],
+    // "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/babel-node",
+    // "runtimeArgs": [
+    // "--nolazy"
+    // ],
+    "protocol": "inspector",
+    "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/babel-node",
+    "runtimeArgs": [
+    "--presets=es2015"
+    // "latest"
+    ],
+    // "stopOnEntry": false,
+    "sourceMaps": true,
+    "outFiles": []
+    // "console": "internalConsole"
+}
+```
+
 ## Developing Tests
 Listed below are some guidelines and best practices we need to follow when writing our tests.
 * The outer `describe()` function should be formatted with 'Huron Functional: `<test name>`'
@@ -52,7 +99,21 @@ fit('only I will run', () => {...});
 ```
 fdescribe('only I will run', () => {...});
 ```
-* To not have the provisioner delete your customer when done, use the `--provisionserKeepCustomer` flag when running protractor:
+* To not have the provisioner delete your customer when done, use the `--provisionerKeepCustomer` flag when running protractor:
 ```
-npm run protractor-babel -- --provisionerKeepCustomer --specs ./test/e2e-protractor/huron/functional/call-settings_spec.js
+yarn protractor-babel -- --provisionerKeepCustomer --specs ./test/e2e-protractor/huron/functional/call-settings_spec.js
 ```
+
+* Currently, the list of variables are as follows:
+* `huronCustomer(<customer_Name>, numberRange, users, hasPSTN, noOfLines, doFTW, offers)`
+* Where:
+* `numberRange`:
+* `users`:
+* `hasPSTN`: null || true --Sets up pstn for test case. True sets up pstn. Default is null/false
+* `noOfLines`: integer --Number of phone numbers to setup for pstn
+* `doFTW`: null || true --By default the first time wizard is skipped. True will allow access to FTW for testing
+* `offers`: null || 'CALL' || 'ROOMSERVICES' || 'NONE' --Determine which offers are set up with customer.
+*                       -null: defaults to both call and roomservices
+                        -CALL: CALL feature only
+                        -ROOMSERVICES: Room services only
+                        -NONE: sets up an account with messaging only

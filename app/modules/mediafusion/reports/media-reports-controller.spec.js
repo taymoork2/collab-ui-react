@@ -106,6 +106,7 @@ describe('Controller:MediaReportsController', function () {
       $interval: $interval,
       Log: Log,
       Config: Config,
+      hasHmsTwoDotFiveFeatureToggle: false,
     });
   }));
   it('controller should be defined', function () {
@@ -217,6 +218,7 @@ describe('Controller:MediaReportsController', function () {
       expect(controller.total).toBe(50);
       expect(controller.second_card_value).toBe('30');
       expect(controller.cardIndicator).toBe('+2');
+      expect(controller.overflowPercentage).toBe(60);
     });
 
     it('setClientTypeCard should invoke getClienTypeCardData', function () {

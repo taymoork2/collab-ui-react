@@ -38,9 +38,9 @@
     function getApplications() {
       if (!_discoveryPromise) {
         _discoveryPromise = $http.get(_contextDiscoveryUrl)
-           .then(function (response) {
-             return response.data;
-           });
+          .then(function (response) {
+            return response.data;
+          });
       }
       return _discoveryPromise;
     }

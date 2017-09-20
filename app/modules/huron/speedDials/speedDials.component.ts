@@ -1,7 +1,7 @@
 import { SpeedDialService, ISpeedDial } from './speedDial.service';
 import { IActionItem } from 'modules/core/components/sectionTitle/sectionTitle.component';
 import { Notification } from 'modules/core/notifications';
-
+import { CallDestinationTranslateService, ICallDestinationTranslate } from 'modules/call/shared/call-destination-translate';
 interface IValidationMessages {
   required: string;
   pattern: string;
@@ -28,6 +28,7 @@ class SpeedDialCtrl implements ng.IComponentController {
   private labelMessages: IValidationMessages;
   private numberMessages: IValidationMessages;
   private customTranslations: ITranslationMessages;
+  private inputTranslations: ICallDestinationTranslate;
   private actionList: IActionItem[];
   private actionListCopy: IActionItem[] = [];
   private callDestInputs: string[];
@@ -39,6 +40,7 @@ class SpeedDialCtrl implements ng.IComponentController {
   public inputType: any;
   public callPickupEnabled: boolean = false;
   public form: ng.IFormController;
+  public countryCode: string;
 
   /* @ngInject */
   constructor(
@@ -47,12 +49,20 @@ class SpeedDialCtrl implements ng.IComponentController {
     private dragularService,
     private Notification: Notification,
     private SpeedDialService: SpeedDialService,
+    private CallDestinationTranslateService: CallDestinationTranslateService,
     private $timeout: ng.ITimeoutService,
     private BlfInternalExtValidation,
     private Authinfo,
     private FeatureMemberService,
     private BlfURIValidation,
+    private Orgservice,
   ) {
+    const params = {
+      basicInfo: true,
+    };
+    this.Orgservice.getOrg(_.noop, null, params).then(response => {
+      this.countryCode = response.data.countryCode;
+    });
     this.callDestInputs = inputs;
     this.firstReordering = true;
     this.editing = false;
@@ -89,6 +99,7 @@ class SpeedDialCtrl implements ng.IComponentController {
       actionFunction: this.setReorder.bind(this),
     });
     this.actionList = _.cloneDeep(this.actionListCopy);
+    this.inputTranslations = this.CallDestinationTranslateService.getCallDestinationTranslate();
   }
 
   public extensionOwned(number: string): void {
@@ -237,7 +248,7 @@ class SpeedDialCtrl implements ng.IComponentController {
 
   public delete(sd): void {
     this.$modal.open({
-      templateUrl: 'modules/huron/speedDials/deleteConfirmation.tpl.html',
+      template: require('modules/huron/speedDials/deleteConfirmation.tpl.html'),
       type: 'dialog',
     }).result.then(() => {
       _.pull(this.speedDialList, sd);
@@ -262,7 +273,7 @@ class SpeedDialCtrl implements ng.IComponentController {
 
 export class SpeedDialComponent implements ng.IComponentOptions {
   public controller = SpeedDialCtrl;
-  public templateUrl = 'modules/huron/speedDials/speedDials.html';
+  public template = require('modules/huron/speedDials/speedDials.html');
   public bindings = {
     ownerId: '<',
     ownerType: '@',

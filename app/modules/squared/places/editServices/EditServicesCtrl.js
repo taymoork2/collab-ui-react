@@ -4,7 +4,7 @@
   angular.module('Core')
     .controller('EditServicesCtrl', EditServicesCtrl);
   /* @ngInject */
-  function EditServicesCtrl($stateParams, $scope, Notification, CsdmDataModelService) {
+  function EditServicesCtrl($stateParams, $scope, Notification, CsdmDataModelService, ExtLinkHelperService) {
     var ciscouc = 'ciscouc';
     var fusionec = 'squared-fusion-ec';
     var fusionuc = 'squared-fusion-uc';
@@ -22,12 +22,13 @@
     vm.enableCalService = wizardData.account.enableCalService || initialEnableCalService;
 
     vm.next = function () {
+      var updatedEntitlements = getUpdatedEntitlements();
       $stateParams.wizard.next({
         account: {
-          entitlements: getUpdatedEntitlements(),
+          entitlements: updatedEntitlements,
           enableCalService: vm.enableCalService,
         },
-      }, vm.service === 'sparkOnly' && vm.enableCalService ? 'sparkOnlyAndCalendar' : vm.service);
+      }, (vm.enableCalService && vm.enableCalService !== initialEnableCalService) ? 'calendar' : vm.service);
     };
 
     vm.hasNextStep = function () {
@@ -38,6 +39,12 @@
 
     vm.hasBackStep = function () {
       return wizardData.function !== 'editServices';
+    };
+    vm.disableCalendar = function () {
+      return vm.service !== initialService;
+    };
+    vm.disableServices = function () {
+      return vm.enableCalService !== initialEnableCalService;
     };
 
     function getUpdatedEntitlements() {
@@ -56,6 +63,33 @@
       }
       return entitlements;
     }
+
+    // vm.getUpdatedExternalLinkedAccounts = function getUpdatedExternalLinkedAccounts(updatedEntitlements, calendarEnabled) {
+    //   var entitlements = updatedEntitlements;
+    //   var cleaningWhitelist = [fusionCal, fusionGCal, fusionuc];
+    //   if (calendarEnabled) {
+    //     if ((_.intersection(entitlements, [fusionCal, fusionGCal]) || []).length === 0) {
+    //       entitlements = _.chain(updatedEntitlements).union([fusionCal, fusionGCal]).uniq().value();
+    //     }
+    //   }
+    //   var extLinkedAccts = _.map(wizardData.account.externalLinkedAccounts, function (extLink) {
+    //     if (
+    //       _.some(cleaningWhitelist, function (entitlement) {
+    //         return entitlement === extLink.providerID;
+    //       }) &&
+    //       !_.some(entitlements, function (entitlement) {
+    //         return entitlement === extLink.providerID;
+    //       })
+    //     ) {
+    //       extLink.operation = 'delete';
+    //     }
+    //     return extLink;
+    //   });
+    //   if (extLinkedAccts && extLinkedAccts.length > 0) {
+    //     return extLinkedAccts;
+    //   }
+    //   return null;
+    // };
 
     function getService(entitlements) {
       var service = 'sparkOnly';
@@ -94,7 +128,11 @@
         if (vm.service !== initialService || vm.enableCalService != initialEnableCalService) {
           CsdmDataModelService.reloadPlace(wizardData.account.cisUuid).then(function (place) {
             if (place) {
-              CsdmDataModelService.updateCloudberryPlace(place, getUpdatedEntitlements())
+              var updatedEntitlements = getUpdatedEntitlements();
+              CsdmDataModelService.updateCloudberryPlace(place, {
+                entitlements: updatedEntitlements,
+                externalLinkedAccounts: ExtLinkHelperService.getExternalLinkedAccountForSave(wizardData.account.externalLinkedAccounts, [], updatedEntitlements),
+              })
                 .then(function () {
                   $scope.$dismiss();
                   Notification.success('addDeviceWizard.editServices.servicesSaved');

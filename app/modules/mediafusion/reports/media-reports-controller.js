@@ -5,7 +5,7 @@
     .module('Mediafusion')
     .controller('MediaReportsController', MediaReportsController);
   /* @ngInject */
-  function MediaReportsController($q, $scope, $translate, $interval, $timeout, MediaClusterServiceV2, UtilizationResourceGraphService, MeetingLocationAdoptionGraphService, ParticipantDistributionResourceGraphService, NumberOfParticipantGraphService, MediaReportsService, Notification, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService, ClientTypeAdoptionGraphService, AdoptionCardService) {
+  function MediaReportsController($q, $scope, $translate, $interval, $timeout, MediaClusterServiceV2, UtilizationResourceGraphService, MeetingLocationAdoptionGraphService, ParticipantDistributionResourceGraphService, NumberOfParticipantGraphService, MediaReportsService, Notification, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService, ClientTypeAdoptionGraphService, AdoptionCardService, hasHmsTwoDotFiveFeatureToggle) {
     var vm = this;
     var interval = null;
     var deferred = $q.defer();
@@ -143,6 +143,25 @@
     vm.cardIndicator = 0;
     vm.clusterUnavailablityFlag = false;
 
+
+    vm.clientTypeOptions = [{
+      value: 0,
+      label: $translate.instant('mediaFusion.metrics.all'),
+    }, {
+      value: 1,
+      label: $translate.instant('mediaFusion.metrics.onPremisesHeading'),
+    }, {
+      value: 2,
+      label: $translate.instant('mediaFusion.metrics.cloudHeading'),
+    }];
+    vm.clientTypeSelected = vm.clientTypeOptions[0].value;
+    vm.clientTypeOptions['tooltipModel'] = vm.clientTypeOptions[0];
+
+    vm.clientTypeUpdateFromCard = clientTypeUpdateFromCard;
+    vm.clientTypeText = vm.clientTypeSelected.label;
+    vm.clientTypeOptions['tooltipClickHandler'] = clientTypeUpdateFromCard;
+
+    vm.hasHmsTwoDotFiveFeatureToggle = hasHmsTwoDotFiveFeatureToggle;
     setRefreshInterval();
     getCluster();
     timeUpdate();
@@ -346,7 +365,6 @@
             vm.totalcloudcalls = vm.onprem + vm.cloudOverflow;
           }
           vm.second_card_value = (vm.cloudOverflow == vm.noData) ? vm.noData : abbreviateNumber(vm.cloudOverflow);
-          vm.totalcloudcalls = abbreviateNumber(vm.totalcloudcalls);
         }
         vm.totalcloudShort = (vm.totalcloudcalls == vm.noData) ? vm.noData : abbreviateNumber(vm.totalcloudcalls);
         vm.totalcloudTooltip = checkForTooltip(vm.totalcloudShort) ? vm.totalcloudcalls : '';
@@ -355,6 +373,10 @@
         vm.onpremShort = (vm.onprem == vm.noData) ? vm.noData : abbreviateNumber(vm.onprem);
         vm.onpremTooltip = checkForTooltip(vm.onpremShort) ? vm.onprem : '';
         vm.cloudOverflowTooltip = checkForTooltip(vm.second_card_value) ? vm.cloudOverflow : '';
+
+        var overflow = (vm.cloudOverflow === vm.noData) ? 0 : vm.cloudOverflow;
+        vm.overflowPercentage = (overflow / vm.totalcloudcalls) * 100;
+        vm.overflowPercentage = _.round(vm.overflowPercentage, 2);
         setOverflowIndicator();
       });
     }
@@ -404,7 +426,7 @@
     }
 
     function setClientTypeCard() {
-      MediaReportsService.getClientTypeCardData(vm.timeSelected).then(function (response) {
+      MediaReportsService.getClientTypeCardData(vm.timeSelected, vm.clientTypeSelected).then(function (response) {
         if (response === vm.ABORT) {
           return undefined;
         } else if (_.isUndefined(response.data) || response.data.dataProvider.length === 0) {
@@ -511,7 +533,7 @@
     }
 
     function setClientTypeData() {
-      MediaReportsService.getClientTypeData(vm.timeSelected).then(function (response) {
+      MediaReportsService.getClientTypeData(vm.timeSelected, vm.clientTypeSelected).then(function (response) {
         if (_.isUndefined(response.graphData) || _.isUndefined(response.graphs) || response.graphData.length === 0 || response.graphs.length === 0) {
           setDummyClientType();
         } else {
@@ -756,6 +778,12 @@
           }
         }
       });
+    }
+
+    function clientTypeUpdateFromCard() {
+      vm.clientTypeSelected = vm.clientTypeOptions['tooltipModel'].value;
+      setClientTypeCard();
+      setClientTypeData();
     }
   }
 })();

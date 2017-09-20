@@ -19,18 +19,18 @@ require('modules/squared/processOrder/_countrySelectModal.scss');
 
     if (call && (call === 'emea' || call === 'thinktel')) {
       HuronCountryService.getHardCodedCountryList()
-      .then(function (countries) {
-        if (call === 'thinktel') {
-          vm.countryList = _.filter(countries, function (country) {
-            if (_.get(country, 'id') === 'US' || _.get(country, 'id') === 'CA' || _.get(country, 'id') === 'N/A') {
-              return true;
-            }
-          });
-        } else {
-          vm.countryList = countries;
-        }
-        openCountryModal();
-      });
+        .then(function (countries) {
+          if (call === 'thinktel') {
+            vm.countryList = _.filter(countries, function (country) {
+              if (_.get(country, 'id') === 'US' || _.get(country, 'id') === 'CA' || _.get(country, 'id') === 'N/A') {
+                return true;
+              }
+            });
+          } else {
+            vm.countryList = countries;
+          }
+          openCountryModal();
+        });
     } else {
       createOrg(enc);
     }
@@ -38,7 +38,7 @@ require('modules/squared/processOrder/_countrySelectModal.scss');
     function openCountryModal() {
       $modal.open({
         type: 'full',
-        templateUrl: 'modules/squared/processOrder/countrySelectModal.html',
+        template: require('modules/squared/processOrder/countrySelectModal.html'),
         controller: function () {
           var ctrl = this;
           ctrl.country = '';

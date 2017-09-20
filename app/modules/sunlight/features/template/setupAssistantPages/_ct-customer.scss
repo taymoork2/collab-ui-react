@@ -280,8 +280,7 @@
 
   .ct-flex-container {
     display: flex;
-    flex-direction: row;
-    flex-flow: row;
+    flex-flow: row row;
   }
 
   .ct-attribute-row {
@@ -447,6 +446,7 @@
     input[type="text"] {
       width: 100%;
       @include vr-spacing(pl, 0.25);
+      @include vr-spacing(pr, 6.7);
       &:disabled {
         background-color: white;
       }

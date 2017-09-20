@@ -102,7 +102,7 @@
         });
 
         it('should not redirect on unauthenticated state if getHealthStatus has error', function () {
-          goToState('login');  // unauthenticated
+          goToState('login'); // unauthenticated
           expect($state.go).not.toHaveBeenCalledWith('server-maintenance');
           // should not redirect to login since requested state doesn't require authentication
           expect($state.go).not.toHaveBeenCalledWith('login');

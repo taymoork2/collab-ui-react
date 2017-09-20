@@ -1,0 +1,20 @@
+.va-name-box {
+  @include vr-spacing(p, 2.1875);
+  width: rem-calc(612px);
+
+  input {
+    @include vr-spacing(mt, 0.75);
+  }
+
+  .cs-input-group {
+    @include vr-spacing(mb, 1.84);
+  }
+
+  .cs-input-group.error {
+    @include vr-spacing(mb, 0);
+  }
+
+  .cs-input__messages {
+    @include vr-spacing(mt, 0.5);
+  }
+}

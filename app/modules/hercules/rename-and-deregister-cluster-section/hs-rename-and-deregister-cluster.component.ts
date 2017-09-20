@@ -15,11 +15,12 @@ class RenameAndDeregisterClusterSectionCtrl implements ng.IComponentController {
     },
     controller: 'ClusterDeregisterController',
     controllerAs: 'clusterDeregister',
-    templateUrl: 'modules/hercules/rename-and-deregister-cluster-section/deregister-dialog.html',
+    template: require('modules/hercules/rename-and-deregister-cluster-section/deregister-dialog.html'),
     type: 'dialog',
   };
 
   public nameChangeEnabled: boolean = false;
+  public atlasHybridAuditLogEnabled = false;
   public serviceId: string;
   public showRenameSection: boolean;
   public clusterName: string;
@@ -45,6 +46,10 @@ class RenameAndDeregisterClusterSectionCtrl implements ng.IComponentController {
     this.FeatureToggleService.atlas2017NameChangeGetStatus().then((toggle: boolean): void => {
       this.nameChangeEnabled = toggle;
     });
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridAuditLog)
+      .then((enabled: boolean) => {
+        this.atlasHybridAuditLogEnabled = enabled;
+      });
 
     this.clusterType = this.$translate.instant(`hercules.clusterTypeFromServiceId.${this.serviceId}`);
     if (this.serviceId === 'ept') {
@@ -127,7 +132,7 @@ class RenameAndDeregisterClusterSectionCtrl implements ng.IComponentController {
 
 export class RenameAndDeregisterClusterSectionComponent implements ng.IComponentOptions {
   public controller = RenameAndDeregisterClusterSectionCtrl;
-  public templateUrl = 'modules/hercules/rename-and-deregister-cluster-section/hs-rename-and-deregister-cluster.component.html';
+  public template = require('modules/hercules/rename-and-deregister-cluster-section/hs-rename-and-deregister-cluster.component.html');
   public bindings = {
     serviceId: '<',
     cluster: '<',

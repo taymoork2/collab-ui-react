@@ -1,12 +1,15 @@
 require('./_fields-sidepanel.scss');
 
+var DataTypeDefinition = require('../dataTypeDefinition');
+var EnumDataTypeUtils = DataTypeDefinition.EnumDataTypeUtils;
+
 (function () {
   'use strict';
 
   angular.module('Context')
     .component('contextFieldsSidepanel', {
       controller: ContextFieldsSidepanelCtrl,
-      templateUrl: 'modules/context/fields/sidepanel/hybrid-context-fields-sidepanel.html',
+      template: require('modules/context/fields/sidepanel/hybrid-context-fields-sidepanel.html'),
       bindings: {
         field: '<',
         process: '<',
@@ -17,6 +20,7 @@ require('./_fields-sidepanel.scss');
   /* @ngInject */
   function ContextFieldsSidepanelCtrl(Analytics, ContextFieldsService, ContextFieldsetsService, Notification, $filter, ModalService, $state, $translate) {
     var vm = this;
+    vm.dateFormat = 'LL';
     vm.associatedFieldsets = [];
     vm.fetchFailure = false;
     vm.fetchInProgress = false;
@@ -29,6 +33,7 @@ require('./_fields-sidepanel.scss');
       actionFunction: function () {
         $state.go('context-field-modal', {
           existingFieldData: vm.field,
+          inUse: vm.inUse,
           callback: function (updatedField) {
             vm.field = vm.process(_.cloneDeep(updatedField));
             vm.callback(updatedField);
@@ -73,7 +78,26 @@ require('./_fields-sidepanel.scss');
     };
 
     vm.isEditable = function () {
-      return (!vm.publiclyAccessible && !vm.inUse);
+      return !vm.publiclyAccessible;
+    };
+
+    vm.isDeletable = function () {
+      return !vm.publiclyAccessible && !vm.inUse;
+    };
+
+    vm.isDataTypeWithOptions = function () {
+      return _.get(vm, 'field.dataTypeDefinition.type') === 'enum';
+    };
+
+    vm.getOptionSidepanelOptions = function () {
+      return {
+        dataTypeDefinition: _.get(vm, 'field.dataTypeDefinition'),
+        defaultOption: _.get(vm, 'field.defaultValue'),
+      };
+    };
+
+    vm.getOptionCount = function () {
+      return EnumDataTypeUtils.getActiveOptionsCount(vm.field.dataTypeDefinition);
     };
 
     vm.openDeleteConfirmDialog = function () {

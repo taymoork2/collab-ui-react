@@ -54,11 +54,13 @@
                 <cs-call-destination
                     model="$ctrl.newNumber"
                     size="medium-12"
+                    country-code="$ctrl.countryCode"
                     inputs="$ctrl.callDestInputs"
                     id="number{{$index}}"
                     name="number{{$index}}"
                     select-type="select"
                     custom-number-translations="$ctrl.customTranslations"
+                    input-translations="$ctrl.inputTranslations"
                     on-change-fn="$ctrl.setSpeedDial(model)">
                 </cs-call-destination>
               </div>

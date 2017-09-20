@@ -6,8 +6,7 @@
 .huron-new-feature-modal {
   // The modal body.
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-flow: row wrap;
 
   @include vr-spacing(pt, 0);
   @include vr-spacing(pr, 2);

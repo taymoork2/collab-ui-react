@@ -1,5 +1,6 @@
 import { Notification } from 'modules/core/notifications';
 import { TelephonyDomainService } from '../telephonyDomain.service';
+import { ICustomGmtNotesScope } from './gmTdNotes.component';
 
 class GmTdNotesView implements ng.IComponentController {
   private _getDataFromHttp: boolean = true;
@@ -19,7 +20,7 @@ class GmTdNotesView implements ng.IComponentController {
 
   /* @ngInject */
   public constructor(private gemService,
-                     private $scope: ng.IScope,
+                     private $scope: ICustomGmtNotesScope,
                      private Notification: Notification,
                      private $translate: ng.translate.ITranslateService,
                      private TelephonyDomainService: TelephonyDomainService,
@@ -110,5 +111,5 @@ class GmTdNotesView implements ng.IComponentController {
 
 export class GmTdNotesViewComponent implements ng.IComponentOptions {
   public controller = GmTdNotesView;
-  public templateUrl = 'modules/gemini/telephonyDomain/details/gmTdNotesView.tpl.html';
+  public template = require('modules/gemini/telephonyDomain/details/gmTdNotesView.tpl.html');
 }

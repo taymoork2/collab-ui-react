@@ -4,8 +4,8 @@
   </div>
   <h5 class="sub-name medium-2">
     {{::$ctrl.subscription.name}}
-    <div class="subscription-badge" ng-if="subscription.isOnline">
-      <span class="badge ng-scope" ng-class="subscription.badge">{{::subscription.endDate}}</span>
+    <div class="subscription-badge" ng-if="$ctrl.subscription.isOnline">
+      <span class="badge ng-scope" ng-class="$ctrl.subscription.badge">{{$ctrl.subscription.endDate}}</span>
     </div>
   </h5>
 
@@ -38,15 +38,16 @@
   <div class="license-quantity">
     <bmmp-subscription-upgrade-button ng-if="$ctrl.subscription.isOnline"
       class="btn btn--primary upgrade-button"
-      bmmp-attr="$ctrl.bmmpAttr"
+      bmmp-attr="$ctrl.subscription.bmmpAttr"
       widget-location="navigation-bar">
     </bmmp-subscription-upgrade-button>
-    <span translate="common.quantity"></span>
-    <span>: {{$ctrl.getQuantity()}}</span>
+    <div ng-if="!$ctrl.subscription.isOnline">
+      <span translate="common.quantity"></span>
+      <span>: {{$ctrl.getQuantity()}}</span>
+    </div>
   </div>
   <div ng-class="{'online-subscription-id': $ctrl.subscription.isOnline}" class="subscription-id h6" ng-if="$ctrl.getView()">
     <span translate="subscriptions.subscription"></span>
     <span>{{::$ctrl.subscription.subscriptionId}}</span>
-    <div>{{::$ctrl.subscription.endDate}}</div>
   </div>
 </div>

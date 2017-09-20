@@ -106,7 +106,7 @@
             },
             controllerAs: 'ata',
             controller: 'AtaDeviceController',
-            templateUrl: 'modules/squared/devices/ataDevices/ataDevice.html',
+            template: require('modules/squared/devices/ataDevices/ataDevice.html'),
             type: 'modal',
           }).result;
         }
