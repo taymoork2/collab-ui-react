@@ -161,7 +161,7 @@ describe('Controller: HelpdeskOrderController', function () {
       expect(orderController.customerEmailSent).toBeDefined();
     });
     it('sets the isProvisionedOrderPending flag to true if order is pending', function () {
-      expect(orderController.isProvisionedOrderPending()).toBe(true);
+      expect(orderController.isOrderPendingProvisioning()).toBe(true);
     });
     it('sets the isAccountActivated flag to not be true', function () {
       expect(orderController.isAccountActivated()).not.toBe(true);

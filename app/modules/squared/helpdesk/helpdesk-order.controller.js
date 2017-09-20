@@ -12,8 +12,6 @@
     if ($stateParams.order) {
       vm.order = $stateParams.order;
       vm.orderId = vm.order.externalOrderId;
-      vm.lastProvisioningContact = vm.order.lastProvisioningContact;
-      vm.oldLastProvisioningContact = _.clone(vm.lastProvisioningContact);
     } else {
       vm.orderId = $stateParams.id;
     }
@@ -22,18 +20,15 @@
     vm.loadingPartnerEmailUpdate = false;
     vm.loadingProvisioningContactUpdate = false;
 
-    // Flags to show input field and edit button
+    // Flags to toggle input field and edit button
     vm.showCustomerEmailEditView = false;
     vm.showPartnerEmailEditView = false;
     vm.showProvisioningContactEditView = false;
 
     // Logic for showing links
-    vm.isAdminEmailEditAllowed = isAdminEmailEditAllowed;
-    vm.isProvisionEditAllowed = isProvisionEditAllowed;
-
-    // Logic for defining order states
     vm.isAccountActivated = isAccountActivated;
-    vm.isProvisionedOrderPending = isProvisionedOrderPending;
+    vm.isAccountPendingActivation = isAccountPendingActivation;
+    vm.isOrderPendingProvisioning = isOrderPendingProvisioning;
     vm.isOrderProvisioned = isOrderProvisioned;
 
     vm.showEmailEditView = showEmailEditView;
@@ -153,6 +148,9 @@
         vm.provisionTime = orderObj.orderStatus !== PROVISIONED ? null : (new Date(orderObj.lastModified)).toUTCString();
         vm.endCustomerName = _.get(orderObj, 'orderContent.common.customerInfo.endCustomerInfo.name');
         vm.customerEmailSent = orderObj.lastProvisioningEmailTimestamp ? (new Date(orderObj.lastProvisioningEmailTimestamp)).toUTCString() : undefined;
+        vm.purchaseOrderId = orderObj.purchaseOrderId;
+        vm.lastProvisioningContact = vm.order.lastProvisioningContact;
+        vm.oldLastProvisioningContact = _.clone(vm.lastProvisioningContact);
       }
       // Getting the account details using the account Id from order.
       if (vm.accountId) {
@@ -190,8 +188,13 @@
             if (vm.partnerOrgId) {
               getEmailStatus(vm.emailTypes.PARTNER);
             }
+          }, function (response) {
+            Notification.errorResponse(response, 'helpdesk.getOrgDetailsFailure');
+            vm.accountName = $translate.instant('common.notAvailable');
+            vm.provisionTime = $translate.instant('common.notAvailable');
+            vm.accountActivated = $translate.instant('common.notAvailable');
           });
-      } else if (!vm.isProvisionedOrderPending()) {
+      } else if (!vm.isOrderPendingProvisioning()) {
         HelpdeskService.getSubscription(vm.order.subscriptionUuid)
           .then(function (res) {
             vm.orgId = _.get(res, 'customer.orgId');
@@ -252,20 +255,16 @@
       return vm.accountId && vm.accountActivated;
     }
 
-    function isAdminEmailEditAllowed() {
-      return vm.accountId && vm.hasPermissionToEditInfo;
+    function isAccountPendingActivation() {
+      return vm.accountId && !vm.accountActivated;
     }
 
-    function isProvisionedOrderPending() {
-      return vm.order && vm.order.purchaseOrderId && vm.order.orderStatus !== PROVISIONED;
+    function isOrderPendingProvisioning() {
+      return vm.purchaseOrderId && vm.order.orderStatus !== PROVISIONED;
     }
 
     function isOrderProvisioned() {
-      return vm.order && vm.order.purchaseOrderId && vm.order.orderStatus === PROVISIONED;
-    }
-
-    function isProvisionEditAllowed() {
-      return vm.hasPermissionToEditInfo && vm.isProvisionedOrderPending();
+      return vm.purchaseOrderId && vm.order.orderStatus === PROVISIONED;
     }
 
     // Cancel (close) the Edit option

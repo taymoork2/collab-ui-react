@@ -34,6 +34,11 @@ require('./helpdesk.scss');
     vm.isOrderSearchEnabled = false;
     vm.isOrderSearchEnabled = Authinfo.isCisco() || Authinfo.isCiscoMock();
 
+    var provStatuses = {
+      PROVISIONED: 'PROVISIONED',
+      PROVISIONING: 'PROVISIONING',
+    };
+
     $scope.$on('helpdeskLoadSearchEvent', function (event, args) {
       var search = args.message;
       setCurrentSearch(search);
@@ -318,6 +323,7 @@ require('./helpdesk.scss');
           vm.currentSearch.orderSearchResults = null;
           vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.noSearchHits');
         } else {
+          orders = sortOrdersForDisplay(orders);
           vm.currentSearch.orderSearchResults = orders;
           vm.currentSearch.orderSearchFailure = null;
         }
@@ -420,6 +426,26 @@ require('./helpdesk.scss');
           displayName: vm.currentSearch.orgFilter.displayName,
         };
       });
+    }
+
+    function sortOrdersForDisplay(orders) {
+      var sorted = [];
+      var serviceIdKeys = [];
+      _.forEach(orders, function (order) {
+        if (!(_.includes(serviceIdKeys, order.serviceId))) {
+          serviceIdKeys.push(order.serviceId);
+          if (order.purchaseOrderId && order.orderStatus !== provStatuses.PROVISIONED) {
+            var foundProvisionedService = _.find(_.get(order, 'productProvisionStatus.serviceStatus'), function (service) {
+              return _.includes([provStatuses.PROVISIONED, provStatuses.PROVISIONING], service.status);
+            });
+            if (foundProvisionedService) {
+              order.orderStatus = provStatuses.PROVISIONED;
+            }
+          }
+          sorted.push(order);
+        }
+      });
+      return sorted;
     }
 
     function keyPressHandler(event) {
