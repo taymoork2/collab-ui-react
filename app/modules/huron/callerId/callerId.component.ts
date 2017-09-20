@@ -260,7 +260,7 @@ export class CallerIdOption {
 
 export class CallerIdComponent implements ng.IComponentOptions {
   public controller = CallerId;
-  public templateUrl = 'modules/huron/callerId/callerId.html';
+  public template = require('modules/huron/callerId/callerId.html');
   public bindings = {
     callerIdOptions: '<',
     callerIdSelected: '<',

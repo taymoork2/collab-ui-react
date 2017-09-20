@@ -34,7 +34,7 @@
             },
             controllerAs: 'rdc',
             controller: 'ResetDeviceController',
-            templateUrl: 'modules/squared/devices/resetDevice/resetDevice.html',
+            template: require('modules/squared/devices/resetDevice/resetDevice.html'),
           }).result;
         }
 

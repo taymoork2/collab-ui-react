@@ -1,4 +1,3 @@
-import * as atlasTemplates from 'scripts/app.templates';
 import * as ngResource from 'angular-resource';
 
 import { ExampleComponent } from './example.component';
@@ -6,7 +5,6 @@ import { ExampleService } from './example.service';
 
 export default angular
   .module('atlas.example', [
-    atlasTemplates,
     ngResource,
   ])
   .component('atlasExample', new ExampleComponent())

@@ -2,7 +2,6 @@ import { OutboundDialDigitComponent } from './settings-outbound-dial-digit.compo
 
 export default angular
   .module('call.settings.outbound-dial-digit', [
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
   ])

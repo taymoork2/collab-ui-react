@@ -396,7 +396,7 @@ export class MediaMgrCtrl implements ng.IComponentController {
 
 export class MediaMgrComponent implements ng.IComponentOptions {
   public controller = MediaMgrCtrl;
-  public templateUrl = 'modules/huron/media-mgr/media-mgr.html';
+  public template = require('modules/huron/media-mgr/media-mgr.html');
   public bindings = {
     dismiss: '&',
     close: '&',

@@ -10,7 +10,6 @@ import pstnAddressServiceModule from 'modules/huron/pstn/shared/pstn-address';
 
 export default angular.module('call.locations.wizard', [
   require('angular-translate'),
-  require('scripts/app.templates'),
   require('collab-ui-ng').default,
   require('modules/core/config/config').default,
   callLocationsModule,

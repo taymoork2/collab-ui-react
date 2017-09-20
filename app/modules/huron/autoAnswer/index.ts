@@ -9,7 +9,6 @@ export * from './autoAnswer';
 
 export default angular
   .module('huron.auto-answer', [
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
     require('angular-resource'),

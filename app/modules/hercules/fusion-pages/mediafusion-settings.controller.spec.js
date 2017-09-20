@@ -14,6 +14,7 @@ describe('Controller: MediafusionClusterSettingsController', function () {
 
     this.properties = {
       'mf.ucSipTrunk': 'sipurl',
+      'mf.trustedSipSources': '1.1.1.1, 2.2.2.2',
     };
 
     spyOn(this.HybridServicesClusterService, 'getAll').and.returnValue(this.$q.resolve());
@@ -32,6 +33,7 @@ describe('Controller: MediafusionClusterSettingsController', function () {
   it('check if saveSipTrunk is called', function () {
     this.controller.saveSipTrunk();
     expect(this.MediaClusterServiceV2.setProperties).toHaveBeenCalled();
+    expect(this.controller.sipurlconfiguration).toBe('sipurl');
   });
 
   it('check if saveTrustedSip is called', function () {

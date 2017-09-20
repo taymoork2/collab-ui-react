@@ -44,7 +44,7 @@
             },
             controllerAs: 'rdc',
             controller: 'RemDeviceController',
-            templateUrl: 'modules/squared/devices/remDevice/remDevice.html',
+            template: require('modules/squared/devices/remDevice/remDevice.html'),
             type: 'dialog',
           }).result;
         }

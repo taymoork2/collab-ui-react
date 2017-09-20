@@ -8,7 +8,6 @@ export * from './media-on-hold.service';
 
 export default angular
   .module('huron.media-on-hold', [
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
     require('angular-resource'),

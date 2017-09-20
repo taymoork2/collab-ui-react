@@ -7,8 +7,8 @@ describe('Component: gmTdModalRequest', () => {
     initSpies.apply(this);
   });
 
-  beforeAll(function () {
-    this.preData = getJSONFixture('gemini/common.json');
+  beforeEach(function () {
+    this.preData = _.cloneDeep(getJSONFixture('gemini/common.json'));
     this.currentTelephonyDomain = {
       regionId: 'EMEA',
     };

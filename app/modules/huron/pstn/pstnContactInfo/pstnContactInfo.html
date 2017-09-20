@@ -1,25 +1,68 @@
-<div class="row collapse">
+<div class="row collapse" ng-form="$ctrl.form">
   <div class="columns">
     <div class="row full">
-      <div class="columns medium-12">
+      <div class="columns medium-12" ng-class="{'error': $ctrl.form.companyName.$invalid && $ctrl.form.companyName.$touched}">
         <label for="companyName" translate="pstnContractInformation.companyName"></label>
-        <input type="text" id="companyName" ng-model="$ctrl.contact.companyName" required>
+        <input type="text"
+              id="companyName"
+              name="companyName"
+              ng-model="$ctrl.contact.companyName" required>
+        <div class="cs-input__messages" ng-messages="$ctrl.form.companyName.$error" role="alert">
+          <div class="message" ng-message="required">{{::'common.invalidRequired' | translate}}</div>
+        </div>
       </div>
     </div>
     <div class="row full">
-      <div class="columns medium-6">
+      <div class="columns medium-6" ng-class="{'error': $ctrl.form.firstName.$invalid && $ctrl.form.firstName.$touched}">
         <label for="firstName" translate="pstnContractInformation.firstName"></label>
-        <input type="text" id="firstName" ng-model="$ctrl.contact.firstName" required>
+        <input type="text"
+              id="firstName"
+              name="firstName"
+              ng-model="$ctrl.contact.firstName" required>
+        <div class="cs-input__messages" ng-messages="$ctrl.form.firstName.$error" role="alert">
+          <div class="message" ng-message="required">{{::'common.invalidRequired' | translate}}</div>
+        </div>
       </div>
-      <div class="columns medium-6">
+      <div class="columns medium-6" ng-class="{'error': $ctrl.form.lastName.$invalid && $ctrl.form.lastName.$touched}">
         <label for="lastName" translate="pstnContractInformation.lastName"></label>
-        <input type="text" id="lastName" ng-model="$ctrl.contact.lastName" required>
+        <input type="text"
+              id="lastName"
+              name="lastName"
+              ng-model="$ctrl.contact.lastName" required>
+        <div class="cs-input__messages" ng-messages="$ctrl.form.lastName.$error" role="alert">
+          <div class="message" ng-message="required">{{::'common.invalidRequired' | translate}}</div>
+        </div>
       </div>
     </div>
     <div class="row full">
-      <div class="columns medium-12">
+      <div class="columns medium-12" ng-class="{'error': $ctrl.form.emailAddress.$invalid && $ctrl.form.emailAddress.$touched}">
         <label for="emailAddress" translate="pstnContractInformation.emailAddress"></label>
-        <input type="email" id="emailAddress" ng-model="$ctrl.contact.emailAddress" required>
+        <input type="email"
+              id="emailAddress"
+              name="emailAddress"
+              ng-change="$ctrl.form.confirmEmailAddress.$validate()"
+              ng-model="$ctrl.contact.emailAddress" required>
+        <div class="cs-input__messages" ng-messages="$ctrl.form.emailAddress.$error" role="alert">
+          <div class="message" ng-message="required">{{::'common.invalidRequired' | translate}}</div>
+          <div class="message" ng-message="email">{{::'common.invalidEmail' | translate}}</div>
+        </div>
+      </div>
+    </div>
+    <div class="row full">
+      <div class="columns medium-12" ng-class="{'error': $ctrl.form.confirmEmailAddress.$invalid && $ctrl.form.confirmEmailAddress.$touched}">
+        <label for="confirmEmailAddress" translate="pstnContractInformation.confirmEmailAddress"></label>
+        <input cs-input
+              type="email"
+              id="confirmEmailAddress"
+              name="confirmEmailAddress"
+              ng-model="$ctrl.contact.confirmEmailAddress"
+              cs-input-validators="$ctrl.emailValidators"
+              ng-paste="$event.preventDefault()" required>
+        <div class="cs-input__messages" ng-messages="$ctrl.form.confirmEmailAddress.$error" role="alert">
+          <div class="message" ng-message="required">{{::'common.invalidRequired' | translate}}</div>
+          <div class="message" ng-message="email">{{::'common.invalidEmail' | translate}}</div>
+          <div class="message" ng-message="emailsDonotMatch">{{::'common.emailAddressesDonotMatch' | translate}}</div>
+        </div>
       </div>
     </div>
   </div>

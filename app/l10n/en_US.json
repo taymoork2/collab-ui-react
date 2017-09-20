@@ -1194,8 +1194,8 @@
       "progress": "Mark as in progress",
       "completed": "Mark as completed",
       "pending": "Mark as pending",
-      "showRaw": "Show Raw Data",
-      "hideRaw": "Hide Raw Data"
+      "showOrder": "Show Order Data",
+      "hideOrder": "Hide Order Data"
     },
     "tabs": {
       "pending": "Pending",
@@ -1466,6 +1466,7 @@
     "incorrectFormat": "Incorrect format",
     "info": "Info",
     "invalidEmail": "This is not a valid Email Address.",
+    "emailAddressesDonotMatch": "Email Addresses do not match",
     "invalidFormat": "Invalid Format",
     "invalidMax": "Maximum value is {{max}}.",
     "invalidMaxLength": "Character length cannot be more than {{max}}.",
@@ -1504,6 +1505,7 @@
     "pending": "Pending",
     "play": "Play",
     "postpone": "Postpone",
+    "primary": "Primary",
     "proceed": "Proceed",
     "quantity": "Qty",
     "releaseChannel": "Release Channel",
@@ -3634,7 +3636,7 @@
     "invalidEmailAddress": "Invalid Email Address",
     "csvDuplicateEmail": "This email is skipped due to duplicate email address in the CSV file.",
     "bulkInvalidDID": "The \"Direct Line\" field contains an invalid number.  Please fix and try again.",
-    "tooManyActiveMessageLicenses": "There are more than one \"Cisco Spark Message\" license enabled.  Please fix and try again.",
+    "tooManyActiveSparkCallLicenses": "There are more than one \"Cisco Spark Call\" license enabled.  Please fix and try again.",
     "csvWrongLicenseFormat": "License fields contain invalid data. Please fix and try again.",
     "processBulkResponseError": "An error has occurred while reading the response. Please try again.",
     "processBulkError": "Unidentified error while processing the user. Please try again.",
@@ -4454,6 +4456,7 @@
     "voicemail": "Voicemail",
     "singleNumberReach": "Single Number Reach",
     "speedDials": "Speed Dials",
+    "phoneButtonLayout": "Phone Button Layout & Speed Dials",
     "internationalDialing": "International Dialing",
     "maxLines": "You reached the limit of 25 lines. Please remove a line from this user before provisioning additional lines.",
     "showMore": "Show more",
@@ -4630,6 +4633,32 @@
     "labelIncorrectCharacter": "Speed Dial Labels can not include < or >",
     "limitSpeedDialsReach": "You reached the limit of 125 speed dial entries.",
     "blfPickup": "{{username}} can see and pick up ringing calls for ext. {{extension}}"
+  },
+  "phoneButtonLayout": {
+    "addButton": "Add Button",
+    "blfPickup": "{{username}} can see and pick up ringing calls for ext. {{extension}}",
+    "buttonOrderTitle": "Order",
+    "buttonType": {
+      "FEATURE_BLF_DIRECTED_PARK": "Call Park",
+      "FEATURE_HLOG": "Hunt Group",
+      "FEATURE_LINE": "Line",
+      "FEATURE_NONE": "Empty",
+      "FEATURE_PRIVACY": "Privacy",
+      "FEATURE_SPEED_DIAL_BLF": "Speed Dial"
+    },
+    "buttonTypeTitle": "Feature",
+    "deleteConfirmation": "Are you sure you want to delete?",
+    "deleteConfirmationHeader": "Confirm Delete",
+    "description1": "View and edit the phone button template to customize buttons and speed dials for your devices.",
+    "description2": "Saving the phone button template will automatically update and reset all devices for this user. Please notify the user of any updates made.",
+    "label": "Contact Name",
+    "labelIncorrectCharacter": "Speed Dial Labels can not include < or >",
+    "number": "Contact Address",
+    "reachedButtonLimit": "You have reached the limit of {{buttonLimit}} phone button entries.",
+    "reorder": "Reorder",
+    "retrievePhoneButtonLayoutFailed": "Failed to retrieve phone button layout.",
+    "title": "Phone Button Layout & Speed Dials",
+    "updatePhoneButtonLayoutFailed": "Failed to save phone button layout changes."
   },
   "lineLabel": {
     "title": "Line Label",
@@ -4866,7 +4895,8 @@
     "companyName": "Legal Company Name",
     "firstName": "Signee's First Name",
     "lastName": "Signee's Last Name",
-    "emailAddress": "Signee's Email Address"
+    "emailAddress": "Signee's Email Address",
+    "confirmEmailAddress": "Signee's Confirm Email Address"
   },
   "intelepeerFeatures": {
     "feature1": "Service available in U.S. 48 states",
@@ -5383,7 +5413,6 @@
     "warning": "Please select a number assigned to a user or Cisco Spark Call feature"
   },
   "emergencyServices": {
-    "warnNoExternNumber": "Before you can add an Emergency Callback Number to this location you need to add a user or place with an external number.",
     "warnNoPstn": "Once you have PSTN set up, you will need to add Emergency Service information to locations",
     "locationUnknown": "Unknown location - ID missing"
   },

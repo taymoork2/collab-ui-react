@@ -13,7 +13,7 @@
       },
       controller: 'AABuilderLaneCtrl',
       controllerAs: 'aaLane',
-      templateUrl: 'modules/huron/features/autoAttendant/builder/aaBuilderLane.tpl.html',
+      template: require('modules/huron/features/autoAttendant/builder/aaBuilderLane.tpl.html'),
     };
   }
 })();

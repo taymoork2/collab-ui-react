@@ -9,7 +9,6 @@ import './_hs-cluster-card.scss';
 
 export default angular
   .module('hercules.cluster-card', [
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     featureToggleModule,
     hybridServicesI18NServiceModule,

@@ -1,8 +1,8 @@
 import testModule from '../index';
 
 describe('Component: gmTdNumbers', () => {
-  beforeAll(function () {
-    this.preData = getJSONFixture('gemini/common.json');
+  beforeEach(function () {
+    this.preData = _.cloneDeep(getJSONFixture('gemini/common.json'));
 
     this.submittedTD = this.preData.submittedTD;
     this.constObject = this.preData.gmTdConstObject;

@@ -122,6 +122,12 @@
       integration: 'https://feature-a.wbx2.com/feature/api/v1',
       prod: 'https://feature-a.wbx2.com/feature/api/v1',
     },
+    HydraServiceUrl: {
+      dev: 'https://api.ciscospark.com/v1',
+      cfe: 'https://api.ciscospark.com/v1',
+      integration: 'https://api.ciscospark.com/v1',
+      prod: 'https://api.ciscospark.com/v1',
+    },
     SunlightConfigServiceUrl: {
       dev: 'https://config.devus1.ciscoccservice.com/config/v1',
       cfe: 'https://config.appstaging.ciscoccservice.com/config/v1',

@@ -39,7 +39,7 @@ class HuronCustomerCreate {
 
 export class HuronCustomerCreateComponent implements ng.IComponentOptions {
   public controller = HuronCustomerCreate;
-  public templateUrl = 'modules/call/settings/settings-customer-create/settings-customer-create.component.html';
+  public template = require('modules/call/settings/settings-customer-create/settings-customer-create.component.html');
   public bindings = {
     ftsw: '<',
   };

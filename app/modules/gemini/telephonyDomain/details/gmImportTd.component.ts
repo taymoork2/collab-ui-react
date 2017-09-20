@@ -185,5 +185,5 @@ class GmImportTdCtrl implements ng.IComponentController {
 export class GmImportTdComponent implements ng.IComponentOptions {
   public controller = GmImportTdCtrl;
   public bindings = { dismiss: '&', close: '&' };
-  public templateUrl = 'modules/gemini/telephonyDomain/details/gmImportTd.html';
+  public template = require('modules/gemini/telephonyDomain/details/gmImportTd.html');
 }

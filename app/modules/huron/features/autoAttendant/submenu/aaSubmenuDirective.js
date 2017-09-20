@@ -17,7 +17,7 @@
       },
       controller: 'AASubmenuCtrl',
       controllerAs: 'aaSubmenu',
-      templateUrl: 'modules/huron/features/autoAttendant/submenu/aaSubmenu.tpl.html',
+      template: require('modules/huron/features/autoAttendant/submenu/aaSubmenu.tpl.html'),
     };
   }
 })();

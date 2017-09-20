@@ -18,14 +18,14 @@
       .state('care.DetailsBase', {
         parent: 'main',
         abstract: true,
-        templateUrl: 'modules/sunlight/details/details.tpl.html',
+        template: require('modules/sunlight/details/details.tpl.html'),
       })
       .state('care.Details', {
         url: '/services/careDetails',
         parent: 'care.DetailsBase',
         views: {
           header: {
-            templateUrl: 'modules/sunlight/details/detailsHeader.tpl.html',
+            template: require('modules/sunlight/details/detailsHeader.tpl.html'),
             controller: 'DetailsHeaderCtrl',
             controllerAs: 'header',
           },
@@ -37,14 +37,14 @@
       .state('care.Settings', {
         url: '/settings',
         parent: 'care.Details',
-        templateUrl: 'modules/sunlight/settings/careSettings.tpl.html',
+        template: require('modules/sunlight/settings/careSettings.tpl.html'),
         controller: 'CareLocalSettingsCtrl',
         controllerAs: 'localCareSettings',
       })
       .state('care.Features', {
         url: '/features',
         parent: 'care.Details',
-        templateUrl: 'modules/sunlight/features/featureLanding/careFeatures.tpl.html',
+        template: require('modules/sunlight/features/featureLanding/careFeatures.tpl.html'),
         controller: 'CareFeaturesCtrl',
         controllerAs: 'careFeaturesCtrl',
         resolve: {
@@ -59,7 +59,7 @@
       .state('care.setupAssistant', {
         url: '/setupAssistant/:type',
         parent: 'care.Details',
-        templateUrl: 'modules/sunlight/features/template/ctSetupAssistant.tpl.html',
+        template: require('modules/sunlight/features/template/ctSetupAssistant.tpl.html'),
         controller: 'CareSetupAssistantCtrl',
         controllerAs: 'careSetupAssistant',
         params: {
@@ -84,7 +84,7 @@
       .state('care.assistant', {
         url: '/virtualAssistant',
         parent: 'care.Details',
-        templateUrl: 'modules/sunlight/features/template/vaSetupAssistant.tpl.html',
+        template: require('modules/sunlight/features/template/vaSetupAssistant.tpl.html'),
         controller: 'CareSetupVirtualAssistantCtrl',
         controllerAs: 'vaSetupAssistant',
         params: {
@@ -98,7 +98,7 @@
           'modal@': {
             controller: 'CareFeaturesDeleteCtrl',
             controllerAs: 'careFeaturesDeleteCtrl',
-            templateUrl: 'modules/sunlight/features/featureLanding/careFeaturesDeleteModal.tpl.html',
+            template: require('modules/sunlight/features/featureLanding/careFeaturesDeleteModal.tpl.html'),
           },
         },
         params: {

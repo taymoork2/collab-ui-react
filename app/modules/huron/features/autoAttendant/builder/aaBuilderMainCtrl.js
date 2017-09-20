@@ -619,7 +619,6 @@
 
     function setUpFeatureToggles(featureToggleDefault) {
       AACommonService.setMediaUploadToggle(featureToggleDefault);
-      AACommonService.setCallerInputToggle(featureToggleDefault);
       AACommonService.setRouteSIPAddressToggle(featureToggleDefault);
       AACommonService.setDynAnnounceToggle(featureToggleDefault);
       AACommonService.setRestApiToggle(featureToggleDefault);
@@ -630,7 +629,6 @@
 
     function checkFeatureToggles() {
       return $q.all({
-        hasCallerinput: FeatureToggleService.supports(FeatureToggleService.features.huronAACallerInput),
         hasMediaUpload: FeatureToggleService.supports(FeatureToggleService.features.huronAAMediaUpload),
         hasRouteRoom: FeatureToggleService.supports(FeatureToggleService.features.huronAARouteRoom),
         hasRestApi: FeatureToggleService.supports(FeatureToggleService.features.huronAARestApi),
@@ -641,7 +639,6 @@
     }
 
     function assignFeatureToggles(featureToggles) {
-      AACommonService.setCallerInputToggle(featureToggles.hasCallerinput);
       AACommonService.setMediaUploadToggle(featureToggles.hasMediaUpload);
       AACommonService.setRouteSIPAddressToggle(featureToggles.hasRouteRoom);
       AACommonService.setRestApiToggle(featureToggles.hasRestApi);

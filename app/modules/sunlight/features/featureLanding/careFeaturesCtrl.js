@@ -227,7 +227,7 @@
 
     function openNewCareFeatureModal() {
       $modal.open({
-        templateUrl: 'modules/sunlight/features/featureLanding/newCareFeatureModal.tpl.html',
+        template: require('modules/sunlight/features/featureLanding/newCareFeatureModal.tpl.html'),
         controller: 'NewCareFeatureModalCtrl',
         controllerAs: 'NewCareFeatureModalCtrl',
       });

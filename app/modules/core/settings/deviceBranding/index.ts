@@ -9,7 +9,6 @@ export default angular.module('core.settings.deviceBranding', [
   'Squared',
   require('angular-cache'),
   require('angular-translate'),
-  require('scripts/app.templates'),
   require('collab-ui-ng').default,
   require('modules/core/scripts/services/logmetricsservice'),
   require('ng-file-upload'),

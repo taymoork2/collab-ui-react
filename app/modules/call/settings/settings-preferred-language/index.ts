@@ -4,7 +4,6 @@ export { PreferredLanguageComponent };
 
 export default angular
   .module('call.settings.preferred-language', [
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
   ])

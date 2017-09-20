@@ -37,7 +37,7 @@ export class PrivateTrunkOverviewCtrl implements ng.IComponentController {
 
 export class PrivateTrunkOverviewComponent implements ng.IComponentOptions {
   public controller = PrivateTrunkOverviewCtrl;
-  public templateUrl = 'modules/hercules/private-trunk/private-trunk-overview/private-trunk-overview.html';
+  public template = require('modules/hercules/private-trunk/private-trunk-overview/private-trunk-overview.html');
   public bindings = {
     hasPrivateTrunkFeatureToggle: '<',
   };

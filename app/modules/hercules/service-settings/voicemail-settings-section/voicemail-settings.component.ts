@@ -96,7 +96,7 @@ class HybridVoicemailCtrl implements ng.IComponentController {
 
 class HybridVoicemailSectionComponent implements ng.IComponentOptions {
   public controller = HybridVoicemailCtrl;
-  public templateUrl = 'modules/hercules/service-settings/voicemail-settings-section/voicemail-settings.html';
+  public template = require('modules/hercules/service-settings/voicemail-settings-section/voicemail-settings.html');
   public bindings = {
     isCallServiceConnectEnabled: '<',
   };

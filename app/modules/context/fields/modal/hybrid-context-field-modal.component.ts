@@ -678,7 +678,7 @@ class FieldModalCtrl implements ng.IComponentController {
 
 export class FieldModalComponent implements ng.IComponentOptions {
   public controller = FieldModalCtrl;
-  public templateUrl = 'modules/context/fields/modal/hybrid-context-field-modal.component.html';
+  public template = require('modules/context/fields/modal/hybrid-context-field-modal.component.html');
   public bindings = {
     existingFieldIds: '<',
     existingFieldData: '<',

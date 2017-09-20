@@ -60,9 +60,9 @@ class CcaReportsTabs implements ng.IComponentController {
 
   private initDateRange() {
     this.today = moment().format('YYYY-MM-DD');
-    this.startDate = moment().subtract('days', 97).format('YYYY-MM-DD');
+    this.startDate = moment().subtract(97, 'days').format('YYYY-MM-DD');
 
-    this.endDate = moment().subtract('days', 4).format('YYYY-MM-DD');
+    this.endDate = moment().subtract(4, 'days').format('YYYY-MM-DD');
     this.storeData.endDate = this.endDate;
     this.storeData.startDate = this.startDate;
     this.dateRange.start = {
@@ -333,5 +333,5 @@ class CcaReportsTabs implements ng.IComponentController {
 
 export class CcaReportsTabsComponent implements ng.IComponentOptions {
   public controller = CcaReportsTabs;
-  public templateUrl = 'modules/gemini/reports/ccaReportsTabs.html';
+  public template = require('modules/gemini/reports/ccaReportsTabs.html');
 }

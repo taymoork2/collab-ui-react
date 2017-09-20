@@ -21,7 +21,7 @@ class SipDestinationTestResultsComponentCtrl implements ng.IComponentController 
 
 export class SipDestinationTestResultsComponent implements ng.IComponentOptions {
   public controller = SipDestinationTestResultsComponentCtrl;
-  public templateUrl = 'modules/hercules/service-settings/verify-sip-destination/hs-sip-destination-test-results/hs-sip-destination-test-results.html';
+  public template = require('modules/hercules/service-settings/verify-sip-destination/hs-sip-destination-test-results/hs-sip-destination-test-results.html');
   public bindings = {
     testResultNumbers: '<',
   };

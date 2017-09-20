@@ -120,7 +120,7 @@ class CallParkCtrl implements ng.IComponentController {
 
   public cancelModal(): void {
     this.$modal.open({
-      templateUrl: 'modules/call/features/call-park/call-park-cancel-modal.html',
+      template: require('modules/call/features/call-park/call-park-cancel-modal.html'),
       type: 'dialog',
     });
   }
@@ -304,6 +304,6 @@ class CallParkCtrl implements ng.IComponentController {
 
 export class CallParkComponent implements ng.IComponentOptions {
   public controller = CallParkCtrl;
-  public templateUrl = 'modules/call/features/call-park/call-park.component.html';
+  public template = require('modules/call/features/call-park/call-park.component.html');
   public bindings = {};
 }

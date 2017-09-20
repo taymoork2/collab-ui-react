@@ -5,7 +5,6 @@ export * from './private-trunk-certificate.service';
 
 export default angular
   .module('hercules.private-trunk-certificate', [
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
     require('modules/hercules/services/cert-service').default,

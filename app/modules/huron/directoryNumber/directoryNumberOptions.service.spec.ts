@@ -14,7 +14,6 @@ describe('Service: DirectoryNumberOptionsService', () => {
       '$rootScope',
     );
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
-    spyOn(this.LocationsService, 'getLocationInternalNumberPoolList');
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
 
     const internalNumbersResponse: IDirectoryNumber[] = [

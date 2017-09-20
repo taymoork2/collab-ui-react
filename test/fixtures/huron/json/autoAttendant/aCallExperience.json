@@ -19,6 +19,29 @@
         "url": "file1.avi"
       }
     }, {
+        "doREST": {
+          "id": "fca066b1-4938-4b5f-9870-9e66ad17e0a2",
+          "varList": [
+            "testspark"
+          ]
+        }
+      },
+      {
+        "doREST": {
+          "id": "abc066b1-4938-4b5f-9870-9e66ad17edef",
+          "varList": [
+            "testcisco"
+          ]
+        }
+      },
+      {
+        "doREST": {
+          "id": "",
+          "varList": [
+            "newRestVar"
+          ]
+        }
+      },{
       "runActionsOnInput": {
         "description": "",
         "prompts": {

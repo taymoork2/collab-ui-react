@@ -42,7 +42,7 @@
 
     function openModal() {
       return $modal.open({
-        templateUrl: 'modules/huron/features/autoAttendant/restApi/aaConfigureApiModal.tpl.html',
+        template: require('modules/huron/features/autoAttendant/restApi/aaConfigureApiModal.tpl.html'),
         controller: 'AAConfigureApiModalCtrl',
         controllerAs: 'aaConfigureApiModal',
         type: 'full',

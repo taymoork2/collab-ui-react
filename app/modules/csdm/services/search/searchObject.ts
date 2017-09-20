@@ -1,10 +1,14 @@
 import * as _ from 'lodash';
+import { ISearchElement, QueryParser } from './queryParser';
 
-enum Aggregate {connectionStatus, product, productFamily, activeInterface, errorCodes,
-upgradeChannel, software}
+enum Aggregate {
+  connectionStatus, product, productFamily, activeInterface, errorCodes, upgradeChannel, software,
+}
+
 export enum SearchFields {product, software, ip, serial, mac, displayName, any, connectionStatus, errorCodes}
 
 export class SearchObject {
+
   public static SearchFields: { [x: string]: string } = {
     [SearchFields[SearchFields.product]]: 'Product',
     [SearchFields[SearchFields.software]]: 'Software',
@@ -17,66 +21,39 @@ export class SearchObject {
     tags: 'Tags',
   };
 
-  // public type?: string;
-  public query?: string;  //product:sx10,faosdiv
+
+  public query: string;
   public tokenizedQuery: { [key: string]: { searchField: string, query: string, active: boolean } };
-  public aggregates?: string;
-  public size?: number;
-  public from?: number;
-  public sortField: string;
-  public sortOrder: string;
+  public aggregates?: string = _.join([
+    Aggregate[Aggregate.product],
+    Aggregate[Aggregate.connectionStatus],
+    Aggregate[Aggregate.productFamily],
+    Aggregate[Aggregate.activeInterface],
+    Aggregate[Aggregate.errorCodes],
+    Aggregate[Aggregate.software],
+    Aggregate[Aggregate.upgradeChannel],
+  ], ',');
+
+  public size: number = 20;
+  public from: number = 0;
+  public sortField: string = Aggregate[Aggregate.connectionStatus];
+  public sortOrder: string = 'asc';
+  public hasError: boolean;
+  public lastGoodQuery: string;
+  private parsedQuery: ISearchElement;
+  public currentFilterValue: string;
 
   private constructor() {
   }
 
-  public static initDefaults(object: SearchObject) {
-    object.size = object.size || 20;
-    object.from = object.from || 0;
-    object.query = object.query || '';
-    object.aggregates = object.aggregates ||
-      _.join([
-        Aggregate[Aggregate.product],
-        Aggregate[Aggregate.connectionStatus],
-        Aggregate[Aggregate.productFamily],
-        Aggregate[Aggregate.activeInterface],
-        Aggregate[Aggregate.errorCodes],
-        Aggregate[Aggregate.software],
-        Aggregate[Aggregate.upgradeChannel],
-      ], ',');
-  }
-
-  public static create(search: string): SearchObject {
-    const sobject = new SearchObject();
-    sobject.query = search;
-    sobject.setSortOrder(Aggregate[Aggregate.connectionStatus], 'asc');
-
-    // return subject;
-    sobject.tokenizedQuery = _.chain(search)
-      .split(',')
-      .reduce((r, token) => {
-        const splitted = _.split(token, ':');
-        if (splitted.length === 2) {
-          if (_.some(_.keys(SearchObject.SearchFields)), (a) => splitted === a) {
-            r[splitted[0]] = { searchField: splitted[0], query: splitted[1], active: false };
-            // return { [splitted[0]]: splitted[1] };
-          } else {
-            r['any'] = { searchField: 'any', query: splitted[1], active: false };
-          }
-        } else if (token.length > 0) {
-          r['any'] = { searchField: 'any', query: token, active: false };
-        }
-        return r;
-      }, {})
-      .value();
-    return sobject;
+  public static createWithQuery(query: string): SearchObject {
+    const so = new SearchObject();
+    so.setQuery(query);
+    return so;
   }
 
   public nextPage() {
-    if (!this.from) {
-      this.from = 0;
-    }
     this.from += 20;
-    this.updateQuery();
   }
 
   public setTokenizedQuery(searchField: string, query: string, active: boolean) {
@@ -106,5 +83,50 @@ export class SearchObject {
     this.sortField = field;
     this.sortOrder = order;
     this.from = 0;
+  }
+
+  public setQuery(translatedQuery: string) {
+    try {
+      this.query = translatedQuery;
+      this.parsedQuery = QueryParser.parseQueryString(translatedQuery);
+      this.from = 0;
+      this.hasError = false;
+      this.lastGoodQuery = translatedQuery;
+    } catch (error) {
+      this.hasError = true;
+    }
+  }
+
+  public setFilterValue(filterValue: string) {
+    this.currentFilterValue = filterValue;
+    this.from = 0;
+  }
+
+  public getSearchQuery(): string {
+    if (this.currentFilterValue) {
+      if (this.lastGoodQuery) {
+        return '(' + this.lastGoodQuery + ') AND ' + this.currentFilterValue;
+      } else {
+        return this.currentFilterValue;
+      }
+    } else {
+      return this.lastGoodQuery || '';
+    }
+  }
+
+  public equals(other: SearchObject): boolean {
+    return other && other.query === (this.query || '')
+      && other.currentFilterValue === this.currentFilterValue
+      && other.from === this.from
+      && other.sortField === this.sortField
+      && other.sortOrder === this.sortOrder;
+  }
+
+  public cloneWithoutFilters(): SearchObject {
+    const myClone = _.cloneDeep(this);
+    myClone.setFilterValue('');
+    myClone.size = 0;
+    myClone.from = 0;
+    return myClone;
   }
 }

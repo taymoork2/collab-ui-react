@@ -542,8 +542,8 @@ describe('Controller: Customer Reports Ctrl', function () {
     });
 
     it('should have adjusted the startDate and endDate as time filter is Last 7 days', function() {
-      const sDate = moment().subtract('days', 7).format('YYYY-MM-DD');
-      const sTime = moment().subtract('days', 7).format('h:mm A');
+      const sDate = moment().subtract(7, 'days').format('YYYY-MM-DD');
+      const sTime = moment().subtract(7, 'days').format('h:mm A');
       const eDate = moment().format('YYYY-MM-DD');
       const eTime = moment().format('h:mm A');
       expect(this.controller.startDate).toEqual(sDate);
@@ -556,8 +556,8 @@ describe('Controller: Customer Reports Ctrl', function () {
       this.controller.timeSelected = this.defaults.timeFilter[1];
       this.controller.timeUpdates.update();
       this.$timeout.flush();
-      const sDate = moment().subtract('weeks', 4).format('YYYY-MM-DD');
-      const sTime = moment().subtract('weeks', 4).format('h:mm A');
+      const sDate = moment().subtract(4, 'weeks').format('YYYY-MM-DD');
+      const sTime = moment().subtract(4, 'weeks').format('h:mm A');
       const eDate = moment().format('YYYY-MM-DD');
       const eTime = moment().format('h:mm A');
       expect(this.controller.startDate).toEqual(sDate);

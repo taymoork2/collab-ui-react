@@ -1,5 +1,5 @@
 export class AvailabilityMetrics implements ng.IComponentOptions {
-  public templateUrl = 'modules/mediafusion/metrics-graph-report/availability/availability.tpl.html';
+  public template = require('modules/mediafusion/metrics-graph-report/availability/availability.tpl.html');
   public bindings = {
     parentcntrl: '=',
   };

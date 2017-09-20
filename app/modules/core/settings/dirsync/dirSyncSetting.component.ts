@@ -12,5 +12,5 @@ export class DirSyncSetting extends SettingSection {
 
 export class DirSyncSettingComponent implements ng.IComponentOptions {
   public controller = DirSyncSettingController;
-  public templateUrl = 'modules/core/settings/dirsync/dirsyncSetting.tpl.html';
+  public template = require('modules/core/settings/dirsync/dirsyncSetting.tpl.html');
 }

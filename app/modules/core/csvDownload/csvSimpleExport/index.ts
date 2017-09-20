@@ -7,7 +7,6 @@ export default angular
     require('angular-sanitize'),
     require('ng-csv/build/ng-csv'),
     require('collab-ui-ng').default,
-    require('scripts/app.templates'),
   ])
   .component('csvSimpleExport', new CsvSimpleExportComponent())
   .name;

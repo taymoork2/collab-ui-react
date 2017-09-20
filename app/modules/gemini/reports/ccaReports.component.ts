@@ -28,5 +28,5 @@ class CcaReports implements ng.IComponentController {
 export class CcaReportsComponent implements ng.IComponentOptions {
   public controller = CcaReports;
   public bindings = { reportChartData: '<' };
-  public templateUrl = 'modules/gemini/reports/ccaReports.html';
+  public template = require('modules/gemini/reports/ccaReports.html');
 }

@@ -51,7 +51,7 @@ export class ResourceGroupCardController implements ng.IComponentController {
 
 export class ResourceGroupCardComponent implements ng.IComponentOptions {
   public controller = ResourceGroupCardController;
-  public templateUrl = 'modules/hercules/resource-group-card/hs-resource-group-card.component.html';
+  public template = require('modules/hercules/resource-group-card/hs-resource-group-card.component.html');
   public bindings = {
     group: '<resourceGroup',
     onChange: '&',

@@ -34,7 +34,7 @@ class HybridDataSecurityClusterSettingsPageCtrl implements ng.IComponentControll
 
 export class HybridDataSecurityClusterSettingsPageComponent implements ng.IComponentOptions {
   public controller = HybridDataSecurityClusterSettingsPageCtrl;
-  public templateUrl = 'modules/hercules/hybrid-data-security-cluster-settings/hybrid-data-security-cluster-settings.html';
+  public template = require('modules/hercules/hybrid-data-security-cluster-settings/hybrid-data-security-cluster-settings.html');
   public bindings = {
     clusterId: '<',
   };

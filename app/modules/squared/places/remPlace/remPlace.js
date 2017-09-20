@@ -30,7 +30,7 @@
             },
             controllerAs: 'rdc',
             controller: 'RemPlaceController',
-            templateUrl: 'modules/squared/places/remPlace/remPlace.html',
+            template: require('modules/squared/places/remPlace/remPlace.html'),
             type: 'dialog',
           }).result;
         }

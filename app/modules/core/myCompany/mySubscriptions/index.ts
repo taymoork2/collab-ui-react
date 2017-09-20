@@ -20,7 +20,6 @@ export default angular
     sharedMeetingModule,
     webexUtilsModule,
     require('angular-translate'),
-    require('scripts/app.templates'),
     require('modules/core/scripts/services/authinfo'),
     require('modules/hercules/services/service-descriptor.service').default,
     require('modules/hercules/services/hybrid-services-utils.service').default,

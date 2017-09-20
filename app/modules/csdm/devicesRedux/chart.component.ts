@@ -136,5 +136,5 @@ export class ChartComponent implements ng.IComponentOptions {
     pieChartClicked: '&',
   };
   public controllerAs = 'chart';
-  public templateUrl = 'modules/csdm/devicesRedux/chart.html';
+  public template = require('modules/csdm/devicesRedux/chart.html');
 }

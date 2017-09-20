@@ -26,7 +26,6 @@ class DeviceList implements ng.IComponentController {
   /* @ngInject */
   constructor(private $state,
               private CsdmSearchService: CsdmSearchService,
-              private $templateCache,
               private $translate,
               CsdmHuronOrgDeviceService,
               private $scope,
@@ -77,7 +76,7 @@ class DeviceList implements ng.IComponentController {
       columnDefs: [{
         field: 'photos',
         displayName: '',
-        cellTemplate: this.getTemplate('_imageTpl'),
+        cellTemplate: require('modules/csdm/templates/_imageTpl.html'),
         width: 70,
       }, {
         field: 'displayName',
@@ -87,7 +86,7 @@ class DeviceList implements ng.IComponentController {
       }, {
         field: 'connectionStatus',
         displayName: this.$translate.instant('spacesPage.statusHeader'),
-        cellTemplate: this.getTemplate('_statusTpl'),
+        cellTemplate: require('modules/csdm/templates/_statusTpl.html'),
         sort: { // This has no effect on the actual sorting, but makes the grid reflect the default sort in searchObject.ts
           direction: 'asc',
           priority: 0,
@@ -96,7 +95,7 @@ class DeviceList implements ng.IComponentController {
       }, {
         field: 'product',
         displayName: this.$translate.instant('spacesPage.typeHeader'),
-        cellTemplate: this.getTemplate('_productTpl'),
+        cellTemplate: require('modules/csdm/templates/_productTpl.html'),
         suppressRemoveSort: true,
       }],
     };
@@ -128,10 +127,6 @@ class DeviceList implements ng.IComponentController {
     return this.searchHits && this.searchHits.hits;
   }
 
-  private getTemplate(name) {
-    return this.$templateCache.get('modules/csdm/templates/' + name + '.html');
-  }
-
   public expandDevice(device) {
     this.$state.go('device-overview', {
       currentDevice: device,
@@ -151,9 +146,6 @@ class DeviceList implements ng.IComponentController {
   }
 
   private loadMore(fromScrollEvent = false) {
-    if (!this.searchObject) {
-      this.searchObject = SearchObject.create('');
-    }
     this.searchObject.nextPage();
     if ((this.searchObject.from || 0) < (this.searchHits && this.searchHits.total || 0) && !this.loadingMore) {
       this.loadingMore = true;
@@ -164,7 +156,7 @@ class DeviceList implements ng.IComponentController {
             this.searchHits.hits.push.apply(this.searchHits.hits, response.data.hits.hits);
           }
         })
-        .catch(e => DeviceSearch.ShowSearchError(this.Notification, e, null))
+        .catch(e => DeviceSearch.ShowSearchError(this.Notification, e))
         .finally(() => {
           if (
             (this.gridApi.grid.gridHeight || 0) > (DeviceList.HeaderHeight + DeviceList.RowHeight * this.searchHits.hits.length)
@@ -190,5 +182,5 @@ export class DeviceListComponent implements ng.IComponentOptions {
     sortOrderChanged: '&',
   };
   public controllerAs = 'lctrl';
-  public templateUrl = 'modules/csdm/devicesRedux/list.html';
+  public template = require('modules/csdm/devicesRedux/list.html');
 }

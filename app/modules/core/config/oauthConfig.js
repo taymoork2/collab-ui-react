@@ -24,6 +24,7 @@
       'webex-messenger:get_webextoken',
       'cloud-contact-center:admin',
       'cmc-controller:get_status',
+      'spark-compliance:spark_conversations_read',
       'compliance:spark_conversations_read',
       'contact-center-context:pod_read',
       'contact-center-context:pod_write',

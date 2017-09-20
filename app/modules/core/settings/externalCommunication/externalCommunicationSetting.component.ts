@@ -13,5 +13,5 @@ export class ExternalCommunicationSetting extends ProPackSettingSection {
 export class ExternalCommunicationSettingComponent implements ng.IComponentOptions {
   public controller = ExternalCommunicationSettingController;
   public controllerAs = 'externalCommunicationCtrl';
-  public templateUrl = 'modules/core/settings/externalCommunication/externalCommunicationSetting.tpl.html';
+  public template = require('modules/core/settings/externalCommunication/externalCommunicationSetting.tpl.html');
 }

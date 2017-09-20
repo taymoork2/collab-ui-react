@@ -338,7 +338,7 @@ describe('Component: callPickup', () => {
       spyOn(this.$modal, 'open');
       this.controller.cancelModal();
       expect(this.$modal.open).toHaveBeenCalledWith({
-        templateUrl: 'modules/call/features/call-pickup/call-pickup-cancel-modal.html',
+        template: require('modules/call/features/call-pickup/call-pickup-cancel-modal.html'),
         type: 'dialog',
       });
     });

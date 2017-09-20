@@ -97,7 +97,7 @@ class ExternalTransferCtrl implements ng.IComponentController {
 
 export class ExternalTransferComponent implements ng.IComponentOptions {
   public controller = ExternalTransferCtrl;
-  public templateUrl = 'modules/huron/externaltransfer/externaltransfer.html';
+  public template = require('modules/huron/externaltransfer/externaltransfer.html');
   public bindings = {
     memberType: '@',
     memberId: '<',

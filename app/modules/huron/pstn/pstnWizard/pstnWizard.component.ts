@@ -11,7 +11,7 @@ import { PhoneNumberService } from 'modules/huron/phoneNumber';
 
 export class PstnWizardComponent implements ng.IComponentOptions {
   public controller = PstnWizardCtrl;
-  public templateUrl = 'modules/huron/pstn/pstnWizard/pstnWizard.html';
+  public template = require('modules/huron/pstn/pstnWizard/pstnWizard.html');
   public bindings = {
     dismiss: '&',
     close: '&',

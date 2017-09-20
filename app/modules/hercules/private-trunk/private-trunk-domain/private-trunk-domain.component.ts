@@ -122,7 +122,7 @@ export class PrivateTrunkDomainCtrl implements ng.IComponentController {
 
 export class PrivateTrunkDomainComponent implements ng.IComponentOptions {
   public controller = PrivateTrunkDomainCtrl;
-  public templateUrl = 'modules/hercules/private-trunk/private-trunk-domain/private-trunk-domain.html';
+  public template = require('modules/hercules/private-trunk/private-trunk-domain/private-trunk-domain.html');
   public bindings = {
     isFirstTimeSetup: '<',
     domains: '<',

@@ -6,7 +6,7 @@ import * as atlasHelper from './provisioner.helper.atlas';
 import * as huronCmiHelper from './huron/provisioner.helper.cmi';
 import * as huronPstnHelper from './huron/provisioner.helper.pstn';
 import * as huronFeaturesHelper from './huron/provisioner.helper.features';
-import { atlasUsers } from './atlas-users-config';
+import * as atlasUser from './atlas-users-config';
 
 /* global LONG_TIMEOUT */
 
@@ -40,6 +40,7 @@ export function provisionCustomerAndLogin(customer) {
         return huronCmiHelper.provisionCmiCustomer(customer.partner, customer.callOptions.cmiCustomer, customer.callOptions.cmiSite, customer.callOptions.numberRange, customer.doFtsw, customer.doCallPickUp)
           .then(() => huronPstnHelper.setupPSTN(customer))
           .then(() => provisionUsers(customer))
+          .then(() => provisionPlaces(customer))
           .then(() => huronFeaturesHelper.setupHuntGroup(customer))
           .then(() => huronFeaturesHelper.setupCallPickup(customer))
           .then(() => loginPartner(customer.partner))
@@ -92,6 +93,9 @@ export function loginPartner(partnerEmail) {
 }
 
 function switchToCustomerWindow(customerName, doFtsw) {
+  utils.click(element(by.css('i.icon-search')));
+  utils.sendKeys(element(by.id('searchFilter')), customerName);
+  utils.waitForSpinner()
   utils.click(element(by.cssContainingText('.ui-grid-cell', customerName)));
   utils.click(partner.launchCustomerPanelButton);
   return utils.switchToNewWindow().then(() => {
@@ -111,7 +115,7 @@ export function provisionUsers(customer) {
         return atlasHelper.getAtlasOrg(token, customer.orgId)
           .then(response => {
             const licenseArray = _.get(response, 'licenses', undefined);
-            const users = { users: atlasUsers(customer, licenseArray) };
+            const users = { users: atlasUser.atlasUsers(customer, licenseArray) };
             return atlasHelper.createAtlasUser(token, customer.orgId, users)
               .then(() => {
                 console.log(`Successfully onboarded users for ${customer.name}!`);
@@ -121,3 +125,25 @@ export function provisionUsers(customer) {
   }
 }
 
+function provisionPlaces(customer) {
+  if (customer.places) {
+    console.log('Creating locations');
+    return provisionerHelper.getToken(customer.partner)
+      .then(token => {
+        createPlaceObj(token, customer.orgId, customer.places);
+        console.log('Successfully added places');
+      });
+  }
+}
+
+function createPlaceObj(tkn, id, plObj) {
+  let placeObj = {};
+  for (let i = 0; i < plObj.length; i++) {
+    placeObj[i] = plObj[i];
+    createNewPlace(tkn, id, placeObj[i]);
+  }
+}
+
+function createNewPlace(tkn, id, plObj) {
+  return atlasHelper.createAtlasPlace(tkn, id, plObj)
+}

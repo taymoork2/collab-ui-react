@@ -320,7 +320,7 @@ export class SipDomainSettingController {
   private updateSubdomain(): void {
     this.saving = true;
     this.$modal.open({
-      templateUrl: 'modules/core/settings/sipDomain/updateSipDomainWarning.tpl.html',
+      template: require('modules/core/settings/sipDomain/updateSipDomainWarning.tpl.html'),
       type: 'dialog',
     }).result.then((): void => {
       this.saveSubdomain();

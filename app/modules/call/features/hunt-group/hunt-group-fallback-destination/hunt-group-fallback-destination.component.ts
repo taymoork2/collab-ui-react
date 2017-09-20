@@ -60,7 +60,7 @@ class HuntGroupFallbackDestinationCtrl implements ng.IComponentController {
 
 export class HuntGroupFallbackDestinationComponent implements ng.IComponentOptions {
   public controller = HuntGroupFallbackDestinationCtrl;
-  public templateUrl = 'modules/call/features/hunt-group/hunt-group-fallback-destination/hunt-group-fallback-destination.component.html';
+  public template = require('modules/call/features/hunt-group/hunt-group-fallback-destination/hunt-group-fallback-destination.component.html');
   public bindings = {
     destinationRule: '<',
     fallbackDestination: '<',
