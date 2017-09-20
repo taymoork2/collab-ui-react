@@ -25,7 +25,7 @@ class HuronCustomerCreate {
     this.SetupWizardService.activateAndCheckCapacity(country.id).then(() => {
       this.country = country;
     }).catch(error => {
-      if (error.errorCode === 412) {
+      if (error.status === 412) {
         //Error code from Drachma
         this.Notification.errorWithTrackingId(error, 'firstTimeWizard.error.overCapacity');
       } else {
