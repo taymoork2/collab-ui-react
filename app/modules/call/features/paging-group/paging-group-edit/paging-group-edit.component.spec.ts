@@ -3,7 +3,7 @@ import pagingGroupEditModule from './index';
 describe('Component: pgEdit', () => {
 
   const NUMBER_SELECT = '.csSelect-container[labelfield="extension"]';
-  const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
+  const DROPDOWN_OPTIONS = '.dropdown-menu ul li';
   const NAME_INPUT = 'input#paging-group-name';
   const SAVE_BUTTON = 'button.btn.btn--primary.ng-isolate-scope';
   const CANCEL_BUTTON = 'button.ng-binding';

@@ -4,7 +4,7 @@ describe('Component: directoryNumber', () => {
   const EXTERNAL_LABEL = 'label[for="externalNumber"]';
   const EXTERNAL_SELECT = '.csSelect-container[name="externalNumber"]';
   const DROPDOWN_FILTER = '.dropdown-menu input.select-filter';
-  const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
+  const DROPDOWN_OPTIONS = '.dropdown-menu ul li';
   const ESN_NUMBER = '.esn-number-field';
 
   const internalNumbers: string[] = [
