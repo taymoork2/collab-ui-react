@@ -300,8 +300,8 @@ describe('HybridServiceClusterList controller', () => {
         ctrl = initController('squared-fusion-media', undefined);
         ctrl.$onInit();
         expect(ctrl.clusterListGridOptions.data).toBe('$ctrl.clusterList');
-        expect(ctrl.clusterListGridOptions.columnDefs[0].cellTemplate).toBe('modules/hercules/service-specific-pages/components/cluster-list/cluster-list-display-name.html');
-        expect(ctrl.clusterListGridOptions.columnDefs[1].cellTemplate).toBe('modules/hercules/service-specific-pages/components/cluster-list/cluster-list-status.html');
+        expect(ctrl.clusterListGridOptions.columnDefs[0].cellTemplate).toBe(require('modules/hercules/service-specific-pages/components/cluster-list/cluster-list-display-name.html'));
+        expect(ctrl.clusterListGridOptions.columnDefs[1].cellTemplate).toBe(require('modules/hercules/service-specific-pages/components/cluster-list/cluster-list-status.html'));
       });
 
     });

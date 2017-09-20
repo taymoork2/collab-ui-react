@@ -193,7 +193,7 @@ class LocationCompanyVoicemailCtrl implements ng.IComponentController {
 
 export class LocationCompanyVoicemailComponent implements ng.IComponentOptions {
   public controller = LocationCompanyVoicemailCtrl;
-  public templateUrl = 'modules/call/settings/settings-company-voicemail-locations/settings-company-voicemail-locations.component.html';
+  public template = require('modules/call/settings/settings-company-voicemail-locations/settings-company-voicemail-locations.component.html');
   public bindings = {
     ftsw: '<',
     voicemailPilotNumber: '<',

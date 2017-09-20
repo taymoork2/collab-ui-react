@@ -57,7 +57,7 @@ class PstnSelectorCtrl implements ng.IComponentController {
 
 export class PstnSelectorComponent implements ng.IComponentOptions {
   public controller = PstnSelectorCtrl;
-  public templateUrl = 'modules/huron/pstn/pstnNumberSearch/pstnSelector/pstnSelector.html';
+  public template = require('modules/huron/pstn/pstnNumberSearch/pstnSelector/pstnSelector.html');
   public bindings = {
     model: '<',
     search: '&',

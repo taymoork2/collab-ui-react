@@ -60,5 +60,5 @@ class WebexReportsPanel implements ng.IComponentController {
 
 export class CustWebexReportsPanelComponent implements ng.IComponentOptions {
   public controller = WebexReportsPanel;
-  public templateUrl = 'modules/core/customerReports/webexReports/search/webexReportsPanel.html';
+  public template = require('modules/core/customerReports/webexReports/search/webexReportsPanel.html');
 }

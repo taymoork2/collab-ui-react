@@ -32,7 +32,7 @@ class GoogleCalendarSettingsCtrl implements ng.IComponentController {
     return this.$modal.open({
       controller: 'ExportUserStatusesController',
       controllerAs: 'exportUserStatusesCtrl',
-      templateUrl: 'modules/hercules/service-specific-pages/components/user-status-report/export-user-statuses.html',
+      template: require('modules/hercules/service-specific-pages/components/user-status-report/export-user-statuses.html'),
       type: 'small',
       resolve: {
         servicesId: () => [this.serviceId],
@@ -44,5 +44,5 @@ class GoogleCalendarSettingsCtrl implements ng.IComponentController {
 
 export class GoogleCalendarSettingsPageComponent implements ng.IComponentOptions {
   public controller = GoogleCalendarSettingsCtrl;
-  public templateUrl = 'modules/hercules/google-calendar-settings/google-calendar-settings-page/google-calendar-settings-page.html';
+  public template = require('modules/hercules/google-calendar-settings/google-calendar-settings-page/google-calendar-settings-page.html');
 }

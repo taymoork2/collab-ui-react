@@ -406,7 +406,7 @@ class FieldsetModalCtrl implements ng.IComponentController {
  */
 export class FieldsetModalComponent implements ng.IComponentOptions {
   public controller = FieldsetModalCtrl;
-  public templateUrl = 'modules/context/fieldsets/modal/fieldset-modal.html';
+  public template = require('modules/context/fieldsets/modal/fieldset-modal.html');
   public bindings = {
     existingFieldsetIds: '<',
     existingFieldsetData: '<',

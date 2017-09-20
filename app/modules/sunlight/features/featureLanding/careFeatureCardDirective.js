@@ -9,7 +9,7 @@
     return {
       restrict: 'E',
       scope: false,
-      templateUrl: 'modules/sunlight/features/featureLanding/careFeatureCard.tpl.html',
+      template: require('modules/sunlight/features/featureLanding/careFeatureCard.tpl.html'),
     };
   }
 })();

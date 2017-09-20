@@ -90,7 +90,7 @@ class InlineEditText implements ng.IComponentController {
 }
 
 export class InlineEditTextComponent implements ng.IComponentOptions {
-  public templateUrl = 'modules/core/inlineEditText/inlineEditText.html';
+  public template = require('modules/core/inlineEditText/inlineEditText.html');
   public controller = InlineEditText;
   public bindings = {
     value: '<',

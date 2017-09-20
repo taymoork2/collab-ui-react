@@ -10,7 +10,7 @@ class HybridCallInactiveCardController implements ng.IComponentController {
     this.$modal.open({
       controller: 'HybridCallPrerequisitesController',
       controllerAs: 'vm',
-      templateUrl: 'modules/services-overview/new-hybrid/prerequisites-modals/hybrid-call-prerequisites.html',
+      template: require('modules/services-overview/new-hybrid/prerequisites-modals/hybrid-call-prerequisites.html'),
     });
   }
 
@@ -23,7 +23,7 @@ class HybridCallInactiveCardController implements ng.IComponentController {
       },
       controller: 'AddResourceController',
       controllerAs: 'vm',
-      templateUrl: 'modules/hercules/service-specific-pages/common-expressway-based/add-resource-modal.html',
+      template: require('modules/hercules/service-specific-pages/common-expressway-based/add-resource-modal.html'),
       type: 'small',
     })
     .result

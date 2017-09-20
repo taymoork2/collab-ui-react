@@ -11,5 +11,5 @@ export class EmailSetting extends SettingSection {
 
 export class EmailSettingComponent implements ng.IComponentOptions {
   public controller = EmailSettingController;
-  public templateUrl = 'modules/core/settings/email/emailSetting.tpl.html';
+  public template = require('modules/core/settings/email/emailSetting.tpl.html');
 }

@@ -66,6 +66,6 @@ class HuronDetailsHeaderComponentCtrl implements ng.IComponentController {
 
 export class HuronDetailsHeaderComponent implements ng.IComponentOptions {
   public controller = HuronDetailsHeaderComponentCtrl;
-  public templateUrl = 'modules/huron/details/huronDetailsHeader.html';
+  public template = require('modules/huron/details/huronDetailsHeader.html');
   public bindings = { };
 }

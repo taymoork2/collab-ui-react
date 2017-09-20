@@ -15,10 +15,11 @@
   <div ng-if="devices.anyDevicesOrCodesLoaded">
     <cs-page-sub-header ng-hide="devices.emptydatasource()">
       <cs-page-sub-header-left>
-        <device-search search="devices.search" search-object="devices.searchObject"
+        <device-search search="devices.search"
+                       search-object="devices.searchObject"
                        is-searching="devices.issearching"
                        search-interaction="devices.searchInteraction"
-                       search-changed="devices.searchChanged(search)" clear-search="devices.clearSearch()"
+                       clear-search="devices.clearSearch()"
                        search-result-changed="devices.searchResultChanged(result)"></device-search>
       </cs-page-sub-header-left>
       <cs-page-sub-header-right>

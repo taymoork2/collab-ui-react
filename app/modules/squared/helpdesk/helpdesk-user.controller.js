@@ -95,7 +95,7 @@
     function openExtendedInformation() {
       if (vm.supportsExtendedInformation) {
         $modal.open({
-          templateUrl: 'modules/squared/helpdesk/helpdesk-extended-information.html',
+          template: require('modules/squared/helpdesk/helpdesk-extended-information.html'),
           controller: 'HelpdeskExtendedInfoDialogController as modal',
           modalId: 'HelpdeskExtendedInfoDialog',
           resolve: {
@@ -525,7 +525,7 @@
       USSService.getUserJournal(vm.userId, vm.orgId, 20)
         .then(function (hsData) {
           $modal.open({
-            templateUrl: 'modules/squared/helpdesk/helpdesk-extended-information.html',
+            template: require('modules/squared/helpdesk/helpdesk-extended-information.html'),
             controller: 'HelpdeskExtendedInfoDialogController as modal',
             resolve: {
               title: function () {

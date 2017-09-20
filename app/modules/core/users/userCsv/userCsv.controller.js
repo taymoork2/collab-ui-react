@@ -193,7 +193,7 @@ require('./_user-csv.scss');
       if (vm.model.isProcessing) {
         $modal.open({
           type: 'dialog',
-          templateUrl: 'modules/core/users/userCsv/userCsvStopImportConfirm.tpl.html',
+          template: require('modules/core/users/userCsv/userCsvStopImportConfirm.tpl.html'),
         }).result.then(function () {
           // cancel the current import
           vm.cancelProcessCsv();
@@ -230,7 +230,7 @@ require('./_user-csv.scss');
       if (Authinfo.isOnline()) {
         $modal.open({
           type: 'dialog',
-          templateUrl: 'modules/core/users/userCsv/licenseUnavailabilityModal.tpl.html',
+          template: require('modules/core/users/userCsv/licenseUnavailabilityModal.tpl.html'),
         }).result.then(function () {
           $state.go('my-company.subscriptions');
         });

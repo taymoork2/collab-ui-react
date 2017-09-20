@@ -10,7 +10,7 @@
       restrict: 'E',
       // scope: false,
       controller: 'UserInfoController',
-      templateUrl: 'modules/core/userInfo/userInfo.html',
+      template: require('modules/core/userInfo/userInfo.html'),
     };
   }
 })();

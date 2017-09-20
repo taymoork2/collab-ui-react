@@ -217,7 +217,7 @@
     function openEmbedCodeModal(templateId, templateName) {
       var header = $translate.instant('careChatTpl.embedCodeFor');
       $modal.open({
-        templateUrl: 'modules/sunlight/features/template/ctEmbedCodeModal.tpl.html',
+        template: require('modules/sunlight/features/template/ctEmbedCodeModal.tpl.html'),
         type: 'small',
         controller: 'EmbedCodeCtrl',
         controllerAs: 'embedCodeCtrl',

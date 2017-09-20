@@ -8,7 +8,6 @@ export { SettingSetupInitService };
 
 export default angular
   .module('call.settings.settings-setup-init', [
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
   ])
   .component('ucSettingsInit', new SettingSetupInitComponent())

@@ -3,6 +3,34 @@ require('./_setup-wizard.scss');
 (function () {
   'use strict';
 
+  // TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
+  var planReviewInitTemplatePath = require('ngtemplate-loader?module=Core!./planReview/planReview.tpl.html');
+  var planReviewSelectSubscriptionTemplatePath = require('ngtemplate-loader?module=Core!./planReview/select-subscription.html');
+
+  var enterpriseSetSipDomainTemplatePath = require('ngtemplate-loader?module=Core!./enterpriseSettings/enterprise.setSipDomain.tpl.html');
+  var enterpriseInitTemplatePath = require('ngtemplate-loader?module=Core!./enterpriseSettings/enterprise.init.tpl.html');
+  var enterpriseExportMetadataTemplatePath = require('ngtemplate-loader?module=Core!./enterpriseSettings/enterprise.exportMetadata.tpl.html');
+  var enterpriseImportIdpTemplatePath = require('ngtemplate-loader?module=Core!./enterpriseSettings/enterprise.importIdp.tpl.html');
+  var enterpriseTestSSOTemplatePath = require('ngtemplate-loader?module=Core!./enterpriseSettings/enterprise.testSSO.tpl.html');
+  var enterprisePmrSetupTemplatePath = require('ngtemplate-loader?module=Core!./enterpriseSettings/enterprise.pmrSetup.tpl.html');
+
+  var meetingSettingsMigrateTrialTemplatePath = require('ngtemplate-loader?module=Core!./meeting-settings/meeting-migrate-trial.html');
+  var meetingSettingsSiteSetupTemplatePath = require('ngtemplate-loader?module=Core!./meeting-settings/meeting-site-setup.html');
+  var meetingSettingsLicenseDistributionTemplatePath = require('ngtemplate-loader?module=Core!./meeting-settings/meeting-license-distribution.html');
+  var meetingSettingsSetPartnerAudioTemplatePath = require('ngtemplate-loader?module=Core!./meeting-settings/meeting-audio-partner.html');
+  var meetingSettingsSetCCASPTemplatePath = require('ngtemplate-loader?module=Core!./meeting-settings/meeting-ccasp.html');
+  var meetingSettingsSummaryTemplatePath = require('ngtemplate-loader?module=Core!./meeting-settings/meeting-summary.html');
+
+  var callSettingsCallPickupCountryTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/serviceHuronCustomerCreate.html');
+  var callSettingsPickLocationTypeTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/serviceSetupInit.html');
+  var callSettingsSetupLocationTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/locationSetup.html');
+  var callSettingsSetupSiteTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/serviceSetup.html');
+
+  var careSettingsTemplatePath = require('ngtemplate-loader?module=Core!./careSettings/careSettings.tpl.html');
+
+  var finishProvisionTemplatePath = require('ngtemplate-loader?module=Core!./finish/provision.html');
+  var finishDoneTemplatePath = require('ngtemplate-loader?module=Core!./finish/finish.html');
+
   angular.module('Core')
     .controller('SetupWizardCtrl', SetupWizardCtrl);
 
@@ -97,19 +125,19 @@ require('./_setup-wizard.scss');
         controller: 'EnterpriseSettingsCtrl as entprCtrl',
         steps: [{
           name: 'enterpriseSipUrl',
-          template: 'modules/core/setupWizard/enterpriseSettings/enterprise.setSipDomain.tpl.html',
+          template: enterpriseSetSipDomainTemplatePath,
         }, {
           name: 'init',
-          template: 'modules/core/setupWizard/enterpriseSettings/enterprise.init.tpl.html',
+          template: enterpriseInitTemplatePath,
         }, {
           name: 'exportMetadata',
-          template: 'modules/core/setupWizard/enterpriseSettings/enterprise.exportMetadata.tpl.html',
+          template: enterpriseExportMetadataTemplatePath,
         }, {
           name: 'importIdp',
-          template: 'modules/core/setupWizard/enterpriseSettings/enterprise.importIdp.tpl.html',
+          template: enterpriseImportIdpTemplatePath,
         }, {
           name: 'testSSO',
-          template: 'modules/core/setupWizard/enterpriseSettings/enterprise.testSSO.tpl.html',
+          template: enterpriseTestSSOTemplatePath,
         }],
       },
       ];
@@ -125,14 +153,14 @@ require('./_setup-wizard.scss');
         controller: 'PlanReviewCtrl as planReview',
         steps: [{
           name: 'init',
-          template: 'modules/core/setupWizard/planReview/planReview.tpl.html',
+          template: planReviewInitTemplatePath,
         }],
       };
 
       if (SetupWizardService.hasPendingSubscriptionOptions()) {
         var step = {
           name: 'select-subscription',
-          template: 'modules/core/setupWizard/planReview/select-subscription.html',
+          template: planReviewSelectSubscriptionTemplatePath,
           title: 'firstTimeWizard.selectSubscriptionTitle',
         };
         tab.steps.splice(0, 0, step);
@@ -158,27 +186,27 @@ require('./_setup-wizard.scss');
         controllerAs: 'meetingCtrl',
         steps: [{
           name: 'migrateTrial',
-          template: 'modules/core/setupWizard/meeting-settings/meeting-migrate-trial.html',
+          template: meetingSettingsMigrateTrialTemplatePath,
         },
         {
           name: 'siteSetup',
-          template: 'modules/core/setupWizard/meeting-settings/meeting-site-setup.html',
+          template: meetingSettingsSiteSetupTemplatePath,
         },
         {
           name: 'licenseDistribution',
-          template: 'modules/core/setupWizard/meeting-settings/meeting-license-distribution.html',
+          template: meetingSettingsLicenseDistributionTemplatePath,
         },
         {
           name: 'setPartnerAudio',
-          template: 'modules/core/setupWizard/meeting-settings/meeting-audio-partner.html',
+          template: meetingSettingsSetPartnerAudioTemplatePath,
         },
         {
           name: 'setCCASP',
-          template: 'modules/core/setupWizard/meeting-settings/meeting-ccasp.html',
+          template: meetingSettingsSetCCASPTemplatePath,
         },
         {
           name: 'summary',
-          template: 'modules/core/setupWizard/meeting-settings/meeting-summary.html',
+          template: meetingSettingsSummaryTemplatePath,
         }],
       };
 
@@ -215,22 +243,22 @@ require('./_setup-wizard.scss');
     function initCallSettingsTab(tabs) {
       var pickCountry = {
         name: 'callPickCountry',
-        template: 'modules/core/setupWizard/callSettings/serviceHuronCustomerCreate.html',
+        template: callSettingsCallPickupCountryTemplatePath,
       };
 
       var pickLocationType = {
         name: 'pickCallLocationType',
-        template: 'modules/core/setupWizard/callSettings/serviceSetupInit.html',
+        template: callSettingsPickLocationTypeTemplatePath,
       };
 
       var setupLocation = {
         name: 'setupCallLocation',
-        template: 'modules/core/setupWizard/callSettings/locationSetup.html',
+        template: callSettingsSetupLocationTemplatePath,
       };
 
       var setupSite = {
         name: 'setupCallSite',
-        template: 'modules/core/setupWizard/callSettings/serviceSetup.html',
+        template: callSettingsSetupSiteTemplatePath,
       };
 
       if (showCallSettings()) {
@@ -301,7 +329,7 @@ require('./_setup-wizard.scss');
           controller: 'CareSettingsCtrl as careSettings',
           steps: [{
             name: 'csonboard',
-            template: 'modules/core/setupWizard/careSettings/careSettings.tpl.html',
+            template: careSettingsTemplatePath,
           }],
         };
 
@@ -321,7 +349,7 @@ require('./_setup-wizard.scss');
       if (supportsAtlasPMRonM2) {
         var step = {
           name: 'enterprisePmrSetup',
-          template: 'modules/core/setupWizard/enterpriseSettings/enterprise.pmrSetup.tpl.html',
+          template: enterprisePmrSetupTemplatePath,
         };
         var enterpriseSettings = _.find(tabs, {
           name: 'enterpriseSettings',
@@ -343,10 +371,10 @@ require('./_setup-wizard.scss');
           controller: 'WizardFinishCtrl',
           steps: [{
             name: 'provision',
-            template: 'modules/core/setupWizard/finish/provision.html',
+            template: finishProvisionTemplatePath,
           }, {
             name: 'done',
-            template: 'modules/core/setupWizard/finish/finish.html',
+            template: finishDoneTemplatePath,
           }],
         };
 

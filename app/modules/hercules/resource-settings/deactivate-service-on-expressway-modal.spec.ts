@@ -1,11 +1,11 @@
 describe('DeactivateServiceModalView', function () {
   beforeEach(function () {
     this.initModules('Hercules');
-    this.injectDependencies('$compile', '$controller', '$templateCache', '$scope', '$q', 'HybridServicesClusterService');
+    this.injectDependencies('$compile', '$controller', '$scope', '$q', 'HybridServicesClusterService');
 
     spyOn(this.HybridServicesClusterService, 'deprovisionConnector').and.returnValue(this.$q.resolve({}));
 
-    this.html = this.$templateCache.get('modules/hercules/resource-settings/deactivate-service-on-expressway-modal.html');
+    this.html = require('modules/hercules/resource-settings/deactivate-service-on-expressway-modal.html');
     this.mockModal = { close: jasmine.createSpy('close') };
 
     this.initComponent = (): void => {

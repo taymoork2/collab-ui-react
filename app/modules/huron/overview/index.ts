@@ -8,7 +8,6 @@ import primaryLineModule from 'modules/huron/primaryLine';
 
 export default angular
   .module('huron', [
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
     serviceModule,

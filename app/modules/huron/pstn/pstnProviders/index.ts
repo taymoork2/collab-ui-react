@@ -13,7 +13,6 @@ export { PstnProvidersService } from './pstnProviders.service';
 
 export default angular
   .module('huron.pstn.pstn-providers', [
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
     pstnModel,

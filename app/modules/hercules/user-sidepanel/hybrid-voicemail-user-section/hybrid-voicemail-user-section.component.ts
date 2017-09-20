@@ -56,7 +56,7 @@ class HybridVoicemailUserSectionCtrl implements ng.IComponentController {
 
 export class HybridVoicemailUserSectionComponent implements ng.IComponentOptions {
   public controller = HybridVoicemailUserSectionCtrl;
-  public templateUrl = 'modules/hercules/user-sidepanel/hybrid-voicemail-user-section/hybrid-voicemail-user-section.html';
+  public template = require('modules/hercules/user-sidepanel/hybrid-voicemail-user-section/hybrid-voicemail-user-section.html');
   public bindings = {
     callServiceConnectEnabledForUser: '<',
     userId: '<',

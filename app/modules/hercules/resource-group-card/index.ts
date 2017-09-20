@@ -7,7 +7,6 @@ import './_hs-resource-group-card.scss';
 
 export default angular
   .module('hercules.resource-group-card', [
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     hybridServicesClusterStatesServiceModule,
     hybridServicesI18NServiceModule,

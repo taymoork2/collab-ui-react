@@ -1,7 +1,7 @@
 import testModule from './index';
 
 describe('Component: custWebexReportsMore', () => {
-  beforeAll(function () {
+  beforeEach(function () {
     this.overview = { status_ : 'In Proccess', meetingNumber: 12345678, meetingName: 'webexMeeting', conferenceID: 234234234 };
     this.meetingDetail = {
       overview: {

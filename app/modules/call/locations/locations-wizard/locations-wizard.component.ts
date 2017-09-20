@@ -12,7 +12,7 @@ import { Notification } from 'modules/core/notifications';
 
 export class LocationsWizardComponent {
   public controller = LocationsWizardController;
-  public templateUrl = 'modules/call/locations/locations-wizard/locations-wizard.component.html';
+  public template = require('modules/call/locations/locations-wizard/locations-wizard.component.html');
   public bindings = {};
 }
 
@@ -232,7 +232,7 @@ class LocationsWizardController implements ng.IComponentController {
 
   public cancelModal(): void {
     this.$modal.open({
-      templateUrl: 'modules/call/locations/locations-wizard/locations-wizard-cancel-modal.html',
+      template: require('modules/call/locations/locations-wizard/locations-wizard-cancel-modal.html'),
       type: 'dialog',
     });
   }

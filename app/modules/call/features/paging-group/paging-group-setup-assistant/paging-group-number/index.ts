@@ -4,7 +4,6 @@ import notifications from 'modules/core/notifications';
 
 export default angular
   .module('call.paging-group.number', [
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-resource'),
     require('modules/huron/telephony/cmiServices'),

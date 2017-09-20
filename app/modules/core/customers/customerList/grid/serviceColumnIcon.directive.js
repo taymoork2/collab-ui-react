@@ -5,14 +5,14 @@
     .module('Core')
     .directive('crServiceColumnIcon', serviceColumnIcon);
 
-  function serviceColumnIcon($interpolate, $sanitize, $templateCache, $translate, Config, PartnerService) {
+  function serviceColumnIcon($interpolate, $sanitize, $translate, Config, PartnerService) {
     var directive = {
       restrict: 'E',
       scope: {
         type: '@',
         row: '=',
       },
-      templateUrl: 'modules/core/customers/customerList/grid/serviceColumnIcon.tpl.html',
+      template: require('modules/core/customers/customerList/grid/serviceColumnIcon.tpl.html'),
       link: link,
     };
 
@@ -26,9 +26,9 @@
         _setVisibility(scope);
       }, 25));
       // caching some of the expensive and repeated operations
-      scope.TOOLTIP_TEMPLATE = $($templateCache.get('modules/core/customers/customerList/grid/serviceIconTooltip.tpl.html'));
+      scope.TOOLTIP_TEMPLATE = $(require('modules/core/customers/customerList/grid/serviceIconTooltip.tpl.html'));
       scope.WEBEX_TRANSLATION = $translate.instant('customerPage.webex');
-      scope.TOOLTIP_TEMPLATE_BLOCK = $($templateCache.get('modules/core/customers/customerList/grid/webexTooltipBlock.tpl.html'));
+      scope.TOOLTIP_TEMPLATE_BLOCK = $(require('modules/core/customers/customerList/grid/webexTooltipBlock.tpl.html'));
       var MAX_SITES_DISPLAYED = 2;
       var WEBEX_TYPE = 'webex'; // use this to stand for all types of webex products
       var POSSIBLE_SERVICE_STATUSES = {

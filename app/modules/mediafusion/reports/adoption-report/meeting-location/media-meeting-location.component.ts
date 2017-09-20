@@ -1,5 +1,5 @@
 export class MediaMeetingLocation implements ng.IComponentOptions {
-  public templateUrl = 'modules/mediafusion/reports/adoption-report/meeting-location/media-meeting-location.html';
+  public template = require('modules/mediafusion/reports/adoption-report/meeting-location/media-meeting-location.html');
   public bindings = {
     parentcntrl: '=',
   };

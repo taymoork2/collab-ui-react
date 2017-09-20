@@ -8,7 +8,7 @@
         connectorType: '<',
       },
       controller: expresswayUpgradeSectionCtrl,
-      templateUrl: 'modules/hercules/cluster-sidepanel/expressway-upgrade-section/expressway-upgrade-section.html',
+      template: require('modules/hercules/cluster-sidepanel/expressway-upgrade-section/expressway-upgrade-section.html'),
     });
 
   /* @ngInject */
@@ -113,7 +113,7 @@
 
     function showUpgradeDialog(servicesId, connectorType, availableVersion) {
       $modal.open({
-        templateUrl: 'modules/hercules/software-upgrade/software-upgrade-dialog.html',
+        template: require('modules/hercules/software-upgrade/software-upgrade-dialog.html'),
         type: 'small',
         controller: 'SoftwareUpgradeController',
         controllerAs: 'softwareUpgradeCtrl',

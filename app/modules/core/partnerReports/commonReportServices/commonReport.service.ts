@@ -123,7 +123,7 @@ export class CommonReportService {
       }
     } else if (filter.value === 1) {
       if (date === '') {
-        date = moment().subtract(1, this.ReportConstants.DAY).format(this.ReportConstants.DAY_FORMAT);
+        date = moment().subtract(1, this.ReportConstants.DAY).format();
       }
       const dayOffset: number = this.getOffset(_.toInteger(moment.tz(date, this.ReportConstants.TIMEZONE).format('e')));
       for (let x = 3; x >= 0; x--) {

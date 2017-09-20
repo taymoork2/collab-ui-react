@@ -7,7 +7,6 @@ export * from './callForward.service';
 
 export default angular
   .module('huron.call-forward', [
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
     require('angular-resource'),

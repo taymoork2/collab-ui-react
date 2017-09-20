@@ -213,10 +213,10 @@ var Spark = require('@ciscospark/spark-core').default;
 
     function openReportModal(_scope, modalType) {
       var template = (modalType && modalType === modalTypes.PASSWORD) ?
-        'modules/ediscovery/ediscovery-report-password-modal.html' :
-        'modules/ediscovery/download-report-modal.html';
+        require('./ediscovery-report-password-modal.html') :
+        require('./download-report-modal.html');
       $modal.open({
-        templateUrl: template,
+        template: template,
         type: 'small',
         scope: _scope,
       });

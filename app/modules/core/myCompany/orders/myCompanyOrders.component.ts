@@ -98,7 +98,7 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
       }, {
         name: 'total',
         displayName: this.$translate.instant('myCompanyOrders.priceHeader'),
-        cellTemplate: 'modules/core/myCompany/orders/myCompanyOrdersAction.tpl.html',
+        cellTemplate: require('modules/core/myCompany/orders/myCompanyOrdersAction.tpl.html'),
         width: '14%',
       }],
     };
@@ -118,6 +118,6 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
 angular
   .module('Core')
   .component('myCompanyOrders', {
-    templateUrl: 'modules/core/myCompany/orders/myCompanyOrders.tpl.html',
+    template: require('modules/core/myCompany/orders/myCompanyOrders.tpl.html'),
     controller: MyCompanyOrdersCtrl,
   });

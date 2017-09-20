@@ -18,7 +18,7 @@ class CallPickupNotificationsCtrl implements ng.IComponentController {
 
 export class CallPickupNotificationsComponent implements ng.IComponentOptions {
   public controller = CallPickupNotificationsCtrl;
-  public templateUrl = 'modules/call/features/call-pickup/call-pickup-notifications/call-pickup-notifications.component.html';
+  public template = require('modules/call/features/call-pickup/call-pickup-notifications/call-pickup-notifications.component.html');
   public bindings = {
     onChangeFn: '&',
     displayCalledParty: '<',

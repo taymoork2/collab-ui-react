@@ -10,6 +10,10 @@
           <span class="badge" ng-class="notificationController.getBadgeCSSClass(notification.type)">{{::notificationController.typeDisplayName(notification.type)}}</span>
         </div>
         <div class="notification-entry-details">
+          <!--
+            currently ng-include templates loaded through ngtemplate-loader
+            TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
+          -->
           <ng-include src="notification.template"></ng-include>
         </div>
       </li>

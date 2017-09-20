@@ -202,10 +202,13 @@ class CallLocationCtrl implements ng.IComponentController {
   }
 
   public saveDisabled(): boolean {
-    if (this.callLocationSettingsData.address && this.callLocationSettingsData.address.validated) {
-      return this.form.$invalid;
+    if (this.PstnModel.isCustomerExists()) {
+      if (this.callLocationSettingsData.address && this.callLocationSettingsData.address.validated) {
+        return this.form.$invalid;
+      }
+      return true;
     }
-    return true;
+    return this.form.$invalid;
   }
 
   public onCancel(): void {
@@ -249,7 +252,7 @@ class CallLocationCtrl implements ng.IComponentController {
 
 export class CallLocationComponent implements ng.IComponentOptions {
   public controller = CallLocationCtrl;
-  public templateUrl = 'modules/call/locations/location.component.html';
+  public template = require('modules/call/locations/location.component.html');
   public bindings = {
     ftsw: '<',
     uuid: '<',

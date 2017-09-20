@@ -29,6 +29,17 @@
       .then(function (properties) {
         vm.sipurlconfiguration = properties['mf.ucSipTrunk'];
         vm.trustedsipconfiguration = properties['mf.trustedSipSources'];
+        var sipArray = [];
+        if (!_.isUndefined(vm.trustedsipconfiguration)) {
+          sipArray = _.map(vm.trustedsipconfiguration.split(','), function (value) {
+            return { text: value };
+          });
+        }
+        if (vm.trustedsipconfiguration !== '') {
+          vm.trustedsipconfiguration = sipArray;
+        } else {
+          vm.trustedsipconfiguration = [];
+        }
       });
 
     vm.deregisterModalOptions = {
@@ -39,7 +50,7 @@
       },
       controller: 'DeleteClusterSettingControllerV2',
       controllerAs: 'deleteClust',
-      templateUrl: 'modules/mediafusion/media-service-v2/delete-cluster/delete-cluster-dialog.html',
+      template: require('modules/mediafusion/media-service-v2/delete-cluster/delete-cluster-dialog.html'),
     };
 
     loadCluster($stateParams.id);
@@ -77,7 +88,7 @@
 
     function saveTrustedSip() {
       vm.payLoad = {
-        'mf.trustedSipSources': vm.trustedsipconfiguration,
+        'mf.trustedSipSources': _.map(vm.trustedsipconfiguration, 'text').join(', '),
       };
       MediaClusterServiceV2
         .setProperties($stateParams.id, vm.payLoad)

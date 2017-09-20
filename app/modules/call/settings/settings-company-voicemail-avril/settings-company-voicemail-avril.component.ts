@@ -195,7 +195,7 @@ class CompanyVoicemailAvrilComponentCtrl implements ng.IComponentController {
 
 export class CompanyVoicemailAvrilComponent implements ng.IComponentOptions {
   public controller = CompanyVoicemailAvrilComponentCtrl;
-  public templateUrl = 'modules/call/settings/settings-company-voicemail-avril/settings-company-voicemail-avril.component.html';
+  public template = require('modules/call/settings/settings-company-voicemail-avril/settings-company-voicemail-avril.component.html');
   public bindings = {
     site: '<',
     features: '<',

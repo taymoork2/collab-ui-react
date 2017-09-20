@@ -9,7 +9,7 @@
   function multipleSubscriptions() {
     var directive = {
       restrict: 'E',
-      templateUrl: 'modules/core/users/userServices/multipleSubscriptions.tpl.html',
+      template: require('modules/core/users/userServices/multipleSubscriptions.tpl.html'),
       controller: 'MultipleSubscriptionsCtrl',
       controllerAs: 'multipleSubscriptions',
     };

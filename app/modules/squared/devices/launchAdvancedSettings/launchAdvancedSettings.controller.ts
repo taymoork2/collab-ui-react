@@ -228,7 +228,7 @@ angular
           },
           controllerAs: 'vm',
           controller: 'LaunchAdvancedSettingsController',
-          templateUrl: 'modules/squared/devices/launchAdvancedSettings/launchAdvancedSettings.tpl.html',
+          template: require('modules/squared/devices/launchAdvancedSettings/launchAdvancedSettings.tpl.html'),
           modalId: 'launchAdvancedSettingsModal',
           type: 'dialog',
         }).result;

@@ -231,7 +231,7 @@ class CallForwardCtrl implements ng.IComponentController {
 
 export class CallForwardComponent implements ng.IComponentOptions {
   public controller = CallForwardCtrl;
-  public templateUrl = 'modules/huron/callForward/callForward.html';
+  public template = require('modules/huron/callForward/callForward.html');
   public bindings = {
     userVoicemailEnabled: '<',
     ownerType: '<',

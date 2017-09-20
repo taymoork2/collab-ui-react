@@ -6,7 +6,7 @@
     .controller('CbgsCtrl', CbgsCtrl);
 
   /* @ngInject */
-  function CbgsCtrl($stateParams, $scope, $timeout, $rootScope, $translate, $filter, $templateCache, $state, Notification, cbgService, gemService) {
+  function CbgsCtrl($stateParams, $scope, $timeout, $rootScope, $translate, $filter, $state, Notification, cbgService, gemService) {
     var vm = this;
     vm.searchStr = '';
     vm.gridRefresh = true;
@@ -35,7 +35,7 @@
       width: '12%',
       field: 'status',
       displayName: $translate.instant('gemini.cbgs.field.status_'),
-      cellTemplate: $templateCache.get('modules/gemini/callbackGroup/cbgsStatus.tpl.html'),
+      cellTemplate: require('modules/gemini/callbackGroup/cbgsStatus.tpl.html'),
     }, {
       field: 'customerAttribute',
       cellTooltip: true,

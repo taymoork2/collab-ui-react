@@ -74,7 +74,7 @@ export class ProvisioningDetailsController {
   private populateCustomer(orderContent) {
     this.customerInfo.customerName = _.get(orderContent, 'common.customerInfo.endCustomerInfo.name', '-');
     this.customerInfo.customerEmail = _.get(orderContent, 'common.customerInfo.endCustomerInfo.adminDetails.emailId', '-');
-    this.customerInfo.partnerName = _.get(orderContent, 'collabServiceInfoCommon.partnerName', '-');
+    this.customerInfo.partnerName = _.get(orderContent, 'common.customerInfo.partnerInfo.name', '-');
     this.customerInfo.partnerEmail = _.get(orderContent, 'common.customerInfo.partnerInfo.adminDetails.emailId', '-');
   }
 

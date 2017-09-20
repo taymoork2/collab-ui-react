@@ -39,7 +39,7 @@ class PagingNumberCtrl implements ng.IComponentController {
 
 export class PgNumberComponent implements ng.IComponentOptions {
   public controller = PagingNumberCtrl;
-  public templateUrl = 'modules/call/features/paging-group/paging-group-setup-assistant/paging-group-number/paging-group-number.component.html';
+  public template = require('modules/call/features/paging-group/paging-group-setup-assistant/paging-group-number/paging-group-number.component.html');
   public bindings = {
     onUpdate: '&',
     pagingGroupNumber: '<',

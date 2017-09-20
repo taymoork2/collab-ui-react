@@ -27,7 +27,6 @@ export * from './locations-user-details';
 export default angular
   .module('call.locations', [
     require('modules/core/cards').default,
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-resource'),
     notifications,

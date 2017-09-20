@@ -6,7 +6,6 @@ export * from './settings-company-number';
 
 export default angular
   .module('call.settings.company-caller-id', [
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
     phoneNumberModule,

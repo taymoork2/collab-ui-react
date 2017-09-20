@@ -251,7 +251,7 @@ class LineOverview implements ng.IComponentController {
   public deleteSharedLineMember(sharedLine: SharedLine): void {
     this.deleteSharedLineMessage = this.$translate.instant('sharedLinePanel.disassociateUser');
     this.$modal.open({
-      templateUrl: 'modules/huron/sharedLine/removeSharedLineMember.html',
+      template: require('modules/huron/sharedLine/removeSharedLineMember.html'),
       scope: this.$scope,
       type: 'dialog',
     }).result.then( () => {
@@ -326,7 +326,7 @@ class LineOverview implements ng.IComponentController {
       user: this.ownerName,
     });
     this.$modal.open({
-      templateUrl: 'modules/huron/lines/lineOverview/lineDelete.html',
+      template: require('modules/huron/lines/lineOverview/lineDelete.html'),
       scope: this.$scope,
       type: 'dialog',
     }).result.then(() => {
@@ -396,7 +396,7 @@ class LineOverview implements ng.IComponentController {
 
 export class LineOverviewComponent implements ng.IComponentOptions {
   public controller = LineOverview;
-  public templateUrl = 'modules/huron/lines/lineOverview/lineOverview.html';
+  public template = require('modules/huron/lines/lineOverview/lineOverview.html');
   public bindings = {
     ownerType: '@',
     ownerId: '<',

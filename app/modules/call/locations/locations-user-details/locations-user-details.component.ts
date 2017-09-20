@@ -92,7 +92,7 @@ class UserLocationDetailsCtrl implements ng.IComponentController {
 
 export class UserLocationDetailsComponent implements ng.IComponentOptions {
   public controller = UserLocationDetailsCtrl;
-  public templateUrl = 'modules/call/locations/locations-user-details/locations-user-details.component.html';
+  public template = require('modules/call/locations/locations-user-details/locations-user-details.component.html');
   public bindings = {
     location: '<',
     locationOptions: '<',

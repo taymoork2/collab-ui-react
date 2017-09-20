@@ -11,5 +11,5 @@ class CalendarServiceSettingsPageComponentCtrl implements ng.IComponentControlle
 
 export class CalendarServiceSettingsPageComponent implements ng.IComponentOptions {
   public controller = CalendarServiceSettingsPageComponentCtrl;
-  public templateUrl = 'modules/hercules/service-settings/calendar-service-settings-page/calendar-service-settings-page.component.html';
+  public template = require('modules/hercules/service-settings/calendar-service-settings-page/calendar-service-settings-page.component.html');
 }

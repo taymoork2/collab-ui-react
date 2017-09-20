@@ -39,7 +39,7 @@ class LocationsRoutingPrefixCtrl implements ng.IComponentController {
 
 export class LocationsRoutingPrefixComponent implements ng.IComponentOptions {
   public controller = LocationsRoutingPrefixCtrl;
-  public templateUrl = 'modules/call/locations/locations-routing-prefix/locations-routing-prefix.component.html';
+  public template = require('modules/call/locations/locations-routing-prefix/locations-routing-prefix.component.html');
   public bindings = {
     ftsw: '<',
     routingPrefix: '<',

@@ -16,7 +16,6 @@ export default angular
     require('modules/hercules/services/hybrid-services-cluster-states.service').default,
     require('modules/hercules/services/hybrid-services-cluster.service').default,
     require('modules/hercules/services/resource-group.service').default,
-    require('scripts/app.templates'),
   ])
   .component('hybridServicesClusterListWithCards', new HybridServicesClusterListWithCardsComponent())
   .controller('SetDefaultReleaseChannelController', SetDefaultReleaseChannelController)

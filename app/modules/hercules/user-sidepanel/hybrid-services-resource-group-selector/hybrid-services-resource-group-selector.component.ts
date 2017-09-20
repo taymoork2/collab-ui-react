@@ -163,7 +163,7 @@ class HybridServicesResourceGroupSelectorCtrl implements ng.IComponentController
 
 export class HybridServicesResourceGroupSelectorComponent implements ng.IComponentOptions {
   public controller = HybridServicesResourceGroupSelectorCtrl;
-  public templateUrl = 'modules/hercules/user-sidepanel/hybrid-services-resource-group-selector/hybrid-services-resource-group-selector.component.html';
+  public template = require('modules/hercules/user-sidepanel/hybrid-services-resource-group-selector/hybrid-services-resource-group-selector.component.html');
   public bindings = {
     userId: '<',
     resourceGroupId: '<',

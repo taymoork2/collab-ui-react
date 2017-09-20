@@ -71,5 +71,5 @@ export class GoogleCalendarSecondTimeSetupCtrl implements ng.IComponentControlle
 
 export class GoogleCalendarSecondTimeSetupComponent implements ng.IComponentOptions {
   public controller = GoogleCalendarSecondTimeSetupCtrl;
-  public templateUrl = 'modules/hercules/google-calendar-settings/google-calendar-config-section/google-calendar-second-time-setup/google-calendar-second-time-setup.component.html';
+  public template = require('modules/hercules/google-calendar-settings/google-calendar-config-section/google-calendar-second-time-setup/google-calendar-second-time-setup.component.html');
 }

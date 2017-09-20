@@ -130,7 +130,7 @@ class LocationClassOfServiceCtrl implements ng.IComponentController {
 
 export class LocationClassOfServiceComponent implements ng.IComponentOptions {
   public controller = LocationClassOfServiceCtrl;
-  public templateUrl = 'modules/call/locations/locations-cos/locations-cos.component.html';
+  public template = require('modules/call/locations/locations-cos/locations-cos.component.html');
   public bindings = {
     cosRestrictions: '<',
     onChangeFn: '&',

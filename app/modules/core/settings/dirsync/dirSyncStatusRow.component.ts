@@ -32,7 +32,7 @@ class DirSyncStatusRowController implements ng.IComponentController {
 
 export class DirSyncStatusRowComponent implements ng.IComponentOptions {
   public controller = DirSyncStatusRowController;
-  public templateUrl = 'modules/core/settings/dirsync/dirSyncStatusRow.html';
+  public template = require('modules/core/settings/dirsync/dirSyncStatusRow.html');
   public bindings = {
     name: '<',
     enabled: '<',

@@ -9,7 +9,7 @@ var EnumDataTypeUtils = DataTypeDefinition.EnumDataTypeUtils;
   angular.module('Context')
     .component('contextFieldsSidepanel', {
       controller: ContextFieldsSidepanelCtrl,
-      templateUrl: 'modules/context/fields/sidepanel/hybrid-context-fields-sidepanel.html',
+      template: require('modules/context/fields/sidepanel/hybrid-context-fields-sidepanel.html'),
       bindings: {
         field: '<',
         process: '<',

@@ -7,7 +7,7 @@ import {
 
 export class HRServiceAddressComponent implements ng.IComponentOptions {
   public controller = ServiceAddressCtrl;
-  public templateUrl = 'modules/huron/serviceAddress/serviceAddress.html';
+  public template = require('modules/huron/serviceAddress/serviceAddress.html');
   public bindings = {
     address: '<',
     readOnly: '<',

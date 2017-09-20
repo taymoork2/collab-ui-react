@@ -111,7 +111,7 @@ class ExtensionRangeCtrl implements ng.IComponentController {
 
 export class ExtensionRangeComponent implements ng.IComponentOptions {
   public controller = ExtensionRangeCtrl;
-  public templateUrl = 'modules/call/settings/settings-extension-range/settings-extension-range.component.html';
+  public template = require('modules/call/settings/settings-extension-range/settings-extension-range.component.html');
   public bindings = {
     steeringDigit: '<',
     extensionLength: '<',
