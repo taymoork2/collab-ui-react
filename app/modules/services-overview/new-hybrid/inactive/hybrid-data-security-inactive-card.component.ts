@@ -5,7 +5,7 @@ import { ProPackService } from 'modules/core/proPack/proPack.service';
 class HybridDataSecurityInactiveCardController implements ng.IComponentController {
   private hasProPackPurchased: boolean = false;
   private hasProPackEnabled: boolean = false;
-  public showProBadge: boolean = false;
+  public showProBadge: boolean = true;
   public infoText: string = '';
 
   /* @ngInject */
@@ -36,7 +36,7 @@ class HybridDataSecurityInactiveCardController implements ng.IComponentControlle
     this.ModalService.open({
       hideDismiss: true,
       title: 'Not implemented yet',
-      message: '¯\_(ツ)_/¯',
+      message: '🐻',
       close: this.$translate.instant('common.close'),
     });
   }
@@ -78,13 +78,13 @@ export class HybridDataSecurityInactiveCardComponent implements ng.IComponentOpt
     <article>
       <div class="inactive-card_header">
         <h4 translate="servicesOverview.cards.hybridDataSecurity.title"></h4>
-        <cr-pro-pack-icon ng-if="$ctrl.showProBadge" tooltip="{{::$ctrl.infoText| translate}}" tooltip-append-to-body="true" tooltip-placement="right" tooltip-trigger="focus mouseenter" tabindex="0" aria-label="{{::$ctrl.infoText| translate}}"></cr-pro-pack-icon>
+        <div class="inactive-card_logo"><cr-pro-pack-icon ng-if="$ctrl.showProBadge" tooltip="{{::$ctrl.infoText| translate}}" tooltip-append-to-body="true" tooltip-placement="right" tooltip-trigger="focus mouseenter" tabindex="0" aria-label="{{::$ctrl.infoText| translate}}"></cr-pro-pack-icon></div>
       </div>
       <div class="inactive-card_content">
         <p translate="servicesOverview.cards.hybridDataSecurity.description"></p>
       </div>
       <div class="inactive-card_footer">
-        <p><a href ng-click="$ctrl.openPrerequisites()" translate="servicesOverview.genericButtons.prereq"></a></p>
+        <p><button class="btn btn--link" ng-click="$ctrl.openPrerequisites()" translate="servicesOverview.genericButtons.prereq"></button></p>
         <p><button class="btn btn--primary" ng-click="$ctrl.openSetUp()" translate="servicesOverview.genericButtons.setup"></button></p>
       </div>
     </article>

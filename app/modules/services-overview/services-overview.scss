@@ -306,21 +306,9 @@ services-overview {
     }
   }
 
-  .card_header--stretched {
-    display: flex;
-    align-items: center;
-
-    h4 {
-      margin-right: auto;
-      flex-grow: 1;
-      flex-shrink: 0;
-    }
-
-    span {
-      max-width: 90px;
-      margin-left: 1rem;
-      padding-top: 0.5rem;
-    }
+  .inactive-card_logo {
+    max-width: 90px;
+    padding-top: 0.5rem;
   }
 
   .inactive-card_content {
@@ -334,6 +322,10 @@ services-overview {
 
     .btn {
       width: 100%;
+    }
+
+    .btn--link {
+      margin-bottom: 0.5rem;
     }
   }
 }

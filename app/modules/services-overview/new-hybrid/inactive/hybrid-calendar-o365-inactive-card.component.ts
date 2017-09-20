@@ -12,7 +12,7 @@ class HybridCalendarO365InactiveCardController implements ng.IComponentControlle
     this.ModalService.open({
       hideDismiss: true,
       title: 'Not implemented yet',
-      message: '¯\_(ツ)_/¯',
+      message: '🐻',
       close: this.$translate.instant('common.close'),
     });
   }
@@ -31,13 +31,13 @@ export class HybridCalendarO365InactiveCardComponent implements ng.IComponentOpt
     <article>
       <div class="inactive-card_header card_header--stretched">
         <h4 translate="servicesOverview.cards.hybridCalendar.title"></h4>
-        <span><img src="/images/hybrid-services/Office_365_logo_small.png" alt="{{::servicesOverview.cards.hybridCalendar.office365Title | translate}}"></span>
+        <div class="inactive-card_logo"><img src="/images/hybrid-services/Office_365_logo_small.png" alt="{{::servicesOverview.cards.hybridCalendar.office365Title | translate}}"></div>
       </div>
       <div class="inactive-card_content">
         <p translate="servicesOverview.cards.hybridCalendar.description"></p>
       </div>
       <div class="inactive-card_footer">
-        <p><a href ng-click="$ctrl.openPrerequisites()" translate="servicesOverview.genericButtons.prereq"></a></p>
+        <!-- <p><button class="btn btn--link" ng-click="$ctrl.openPrerequisites()" translate="servicesOverview.genericButtons.prereq"></button></p> -->
         <p><button class="btn btn--primary" ng-click="$ctrl.openSetUp()" translate="servicesOverview.genericButtons.setup"></button></p>
       </div>
     </article>

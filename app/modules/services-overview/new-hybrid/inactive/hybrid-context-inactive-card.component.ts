@@ -10,7 +10,7 @@ class HybridContextInactiveCardController implements ng.IComponentController {
     this.ModalService.open({
       hideDismiss: true,
       title: 'Not implemented yet',
-      message: '¯\_(ツ)_/¯',
+      message: '🐻',
       close: this.$translate.instant('common.close'),
     });
   }
@@ -32,7 +32,7 @@ export class HybridContextInactiveCardComponent implements ng.IComponentOptions 
         <p translate="servicesOverview.cards.hybridContext.description"></p>
       </div>
       <div class="inactive-card_footer">
-        <p><a href ng-click="$ctrl.openPrerequisites()" translate="servicesOverview.genericButtons.prereq"></a></p>
+        <!-- <p><button class="btn btn--link" ng-click="$ctrl.openPrerequisites()" translate="servicesOverview.genericButtons.prereq"></button></p> -->
         <p><button class="btn btn--primary" ng-click="$ctrl.openSetUp()" translate="servicesOverview.genericButtons.setup"></button></p>
       </div>
     </article>

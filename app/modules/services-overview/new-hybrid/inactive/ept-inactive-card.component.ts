@@ -47,7 +47,7 @@ export class EPTInactiveCardComponent implements ng.IComponentOptions {
         <p translate="servicesOverview.cards.privateTrunk.description"></p>
       </div>
       <div class="inactive-card_footer" ng-if="!$ctrl.loading">
-        <p><a href ng-click="$ctrl.openPrerequisites()" translate="servicesOverview.genericButtons.prereq"></a></p>
+        <p><button class="btn btn--link" ng-click="$ctrl.openPrerequisites()" translate="servicesOverview.genericButtons.prereq"></button></p>
         <p><button class="btn btn--primary" ng-disabled="!$ctrl.canSetup" ng-click="$ctrl.openSetUp()" translate="servicesOverview.genericButtons.setup"></button></p>
       </div>
     </article>
