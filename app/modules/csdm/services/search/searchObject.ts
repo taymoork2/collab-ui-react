@@ -53,9 +53,6 @@ export class SearchObject {
   }
 
   public nextPage() {
-    if (!this.from) {
-      this.from = 0;
-    }
     this.from += 20;
   }
 
@@ -92,6 +89,7 @@ export class SearchObject {
     try {
       this.query = translatedQuery;
       this.parsedQuery = QueryParser.parseQueryString(translatedQuery);
+      this.from = 0;
       this.hasError = false;
       this.lastGoodQuery = translatedQuery;
     } catch (error) {
@@ -101,6 +99,7 @@ export class SearchObject {
 
   public setFilterValue(filterValue: string) {
     this.currentFilterValue = filterValue;
+    this.from = 0;
   }
 
   public getSearchQuery(): string {
