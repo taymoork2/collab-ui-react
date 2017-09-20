@@ -3113,6 +3113,24 @@
       "err.dns.resolution": {
         "title": "Unable to resolve address {{hostname}}",
         "description": "Unable to resolve address {{hostname}}. See <a href=\"{{troubleshootingLink}}\" target=\"_blank\">documentation</a> for guidance in resolving the issue."
+      },
+      "err.tcp.unreachable": {
+        "title": "Unable to connect to {{hostname}}",
+        "description": "Unable to connect to {{hostname}}. See <a href=\"{{troubleshootingLink}}\" target=\"_blank\">documentation</a> for guidance in resolving the issue."
+      },
+      "err.tcp.portrange": {
+        "title": "Invalid port number {{port}}. Destination's port number must be in range <5060, 5071>",
+        "description": "Invalid port number {{port}}. See <a href=\"{{troubleshootingLink}}\" target=\"_blank\">documentation</a> for guidance in resolving the issue."
+      },
+      "err.tls.failed": {
+        "title": "Unable to establish TLS connection to {{hostname}}",
+        "description": "Unable to establish TLS connection to {{hostname}}. See <a href=\"{{troubleshootingLink}}\" target=\"_blank\">documentation</a> for guidance in resolving the issue."
+      }
+    },
+    "serviceAlarms": {
+      "ept.service.alarm": {
+        "title": "Enterprise Private Trunking {{severity}} Alarm",
+        "description": "SIP Destination connectivity is in an {{state}} state"
       }
     }
   },
