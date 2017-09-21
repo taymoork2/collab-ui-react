@@ -19,8 +19,7 @@
     Notification,
     ProPackService,
     QlikService,
-    FeatureToggleService,
-    Userservice
+    FeatureToggleService
   ) {
     var vm = this;
 
@@ -86,26 +85,9 @@
     vm.updateIframe = updateIframe;
 
     init();
-    function onlyUnique(value, index, self) {
-      return self.indexOf(value) === index;
-    }
 
-    function handleSiteForReadOnly(siteUrls) {
-      var sites = [];
-      _.each(siteUrls, function (site) {
-        sites.push(_.replace(site, /#.*$/g, ''));
-      });
-      return sites;
-    }
-
-    function getUniqueWebexSiteUrls(siteUrls) {
-      return siteUrls.filter(onlyUnique);
-    }
-
-    function generateWebexMetricsUrl(trainSites) {
-      var webexSiteUrls = handleSiteForReadOnly(trainSites);
-      webexSiteUrls = getUniqueWebexSiteUrls(webexSiteUrls);
-
+    function generateWebexMetricsUrl() {
+      var webexSiteUrls = $scope.header.webexSiteList;
       vm.webexOptions = webexSiteUrls;
 
       promisChainDone();
@@ -134,29 +116,8 @@
     function init() {
       checkProPackPurchased();
       checkClassic();
-      Userservice.getUser(
-        'me',
-        function (data) {
-          if (data.success) {
-            FeatureToggleService.getFeaturesForUser(data.id, FeatureToggleService.features.webexMEI).then(function (response) {
-              _.forEach(response.developer, function (value) {
-                if (value.key === FeatureToggleService.features.webexMEI && value.val === true) {
-                  featureToggleoOnMEI();
-                }
-              });
-            });
-
-            var trainSites = [];
-            if (data.emails) {
-              Authinfo.setEmails(data.emails);
-              var adminTrainSiteNames = _.get(data, 'adminTrainSiteNames', []);
-              var linkedTrainSiteNames = _.get(data, 'linkedTrainSiteNames', []);
-              trainSites = _.concat(adminTrainSiteNames, linkedTrainSiteNames);
-              generateWebexMetricsUrl(trainSites);
-            }
-          }
-        }
-      );
+      checkWebexMEI();
+      generateWebexMetricsUrl();
       Analytics.trackReportsEvent(Analytics.sections.REPORTS.eventNames.CUST_WEBEX_REPORT);
     }
 
@@ -181,6 +142,17 @@
           state: 'reports.webex-metrics.classic',
         });
       }
+    }
+
+    function checkWebexMEI() {
+      var userId = Authinfo.getUserId();
+      FeatureToggleService.getFeaturesForUser(userId, FeatureToggleService.features.webexMEI).then(function (response) {
+        _.forEach(response.developer, function (value) {
+          if (value.key === FeatureToggleService.features.webexMEI && value.val === true) {
+            featureToggleoOnMEI();
+          }
+        });
+      });
     }
 
     function updateWebexMetrics() {
