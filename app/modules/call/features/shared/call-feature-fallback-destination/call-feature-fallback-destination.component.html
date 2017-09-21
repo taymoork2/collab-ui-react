@@ -3,9 +3,10 @@
     <span ng-bind-html="match.label.firstName | typeaheadHighlight:query" ng-if="match.label.firstName"></span>
     <span ng-bind-html="match.label.lastName | typeaheadHighlight:query" ng-if="match.label.lastName"></span>
     <span ng-bind-html="match.label.number | typeaheadHighlight:query" ng-if="match.label.number"></span>
+    <span ng-bind-html="match.label.siteToSite | typeaheadHighlight:query" ng-if="match.label.siteToSite"></span>
     <span ng-show="match.label.lastName">(<span ng-bind-html="match.label.userName | typeaheadHighlight:query"></span>)</span>
-    <span ng-show="!match.label.lastName && !match.label.displayName && !match.label.number" ng-bind-html="match.label.userName | typeaheadHighlight:query"></span>
-    <span ng-show="!match.label.userName && !match.label.number" ng-bind-html="match.label.displayName | typeaheadHighlight:query"></span>
+    <span ng-show="!match.label.lastName && !match.label.displayName && !match.label.number && !match.label.siteToSite" ng-bind-html="match.label.userName | typeaheadHighlight:query"></span>
+    <span ng-show="!match.label.userName && !match.label.number && !match.label.siteToSite" ng-bind-html="match.label.displayName | typeaheadHighlight:query"></span>
   </a>
   <div class="member__line">
     <span ng-bind-html="(match.label.numbers | callFeatureMemberNumberFormatterFilter : true) | typeaheadHighlight:query" ng-if="match.label.numbers"></span>

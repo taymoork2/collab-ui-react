@@ -9,6 +9,7 @@ interface INumberResource extends ng.resource.IResourceClass<ng.resource.IResour
 
 export class NumberService {
   private numberResource: INumberResource;
+  private userNumberResource: INumberResource;
 
   /* @ngInject */
   constructor(
@@ -18,6 +19,7 @@ export class NumberService {
     private FeatureToggleService,
   ) {
     this.numberResource = <INumberResource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/numbers/:numberUuid');
+    this.userNumberResource = <INumberResource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/users/:userId/numbers/:numberUuid');
   }
 
   public getNumberList(number?: string, type?: NumberType, assigned?: boolean, order?: NumberOrder, limit?: number, offset?: number, locationId?: string): ng.IPromise<INumber[]> {
@@ -50,5 +52,13 @@ export class NumberService {
         wide: true,
       }).$promise;
     });
+  }
+
+  public getUserNumber(userId, numberId): ng.IPromise<any> {
+    return this.userNumberResource.get({
+      customerId: this.Authinfo.getOrgId(),
+      userId: userId,
+      numberId: numberId,
+    }).$promise;
   }
 }

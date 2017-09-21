@@ -6,6 +6,7 @@ class CallParkFallbackDestinationCtrl implements ng.IComponentController {
 
   public reversionType: string = 'parker';
   public showReversionLookup: boolean = false;
+  public location;
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const callParkChanges = changes['fallbackDestination'];
@@ -49,5 +50,6 @@ export class CallParkFallbackDestinationComponent implements ng.IComponentOption
   public bindings = {
     fallbackDestination: '<',
     onChangeFn: '&',
+    location: '<',
   };
 }

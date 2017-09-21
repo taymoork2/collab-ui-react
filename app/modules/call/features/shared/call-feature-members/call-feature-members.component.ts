@@ -25,6 +25,7 @@ class CallFeatureMembersCtrl implements ng.IComponentController {
   public searchStr: string;
   public reordering: boolean = false;
   public dragularInstance;
+  public location;
 
   /* @ngInject */
   constructor(
@@ -53,7 +54,7 @@ class CallFeatureMembersCtrl implements ng.IComponentController {
   }
 
   public getMemberList(value: string): ng.IPromise<CallFeatureMember[]> {
-    return this.MemberService.getMemberList(value, true).then( members => {
+    return this.MemberService.getMemberList(value, true, undefined, undefined, undefined, undefined, undefined, undefined, _.get(this.location, 'uuid', undefined)).then( members => {
       return this.convertMemberToCallFeatureMember(members);
     });
   }
@@ -275,5 +276,6 @@ export class CallFeatureMembersComponent implements ng.IComponentOptions {
     memberItemType: '@',
     onChangeFn: '&',
     onKeyPressFn: '&',
+    location: '<',
   };
 }

@@ -41,6 +41,8 @@
   <div ng-if="!$ctrl.isNew">
     <cs-select
       ng-model="$ctrl.location"
+      labelfield="name"
+      valuefield="uuid"
       options="$ctrl.customerLocations"
       is-disabled="true">
   </div>
