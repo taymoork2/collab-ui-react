@@ -52,6 +52,7 @@ module.exports = {
   atlasNewCiDataModel: 'atlas-new-ci-data-model',
   atlasNewRoomSystems: 'atlas-new-roomSystems',
   atlasNewUserExport: 'atlas-new-user-export',
+  atlasCsvImportTaskMgr: 'atlas-csv-import-task-mgr',
   atlasNurturingEmails: 'atlas-nurturing-emails',
   atlasOffice365Support: 'atlas-office365-support',
   atlasOrderProvisioningConsole: 'atlas-order-provisioning-console',

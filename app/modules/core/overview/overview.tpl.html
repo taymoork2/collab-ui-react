@@ -44,6 +44,11 @@
               <button type="button" class="close" ng-if="notification.canDismiss" ng-click="overview.dismissNotification(notification)" aria-label="{{'common.close' | translate}}"></button>
             </div>
           </section>
+          <footer>
+            <div class="card-footer" cr-feature-toggle feature-show="atlas-csv-import-task-mgr">
+              <button type="button" class="btn btn--primary" ng-click="overview.showUserTaskMgr()">{{::"userTaskMgr.viewAllTasks" | translate}}</button>
+            </div>
+          </footer>
         </article>
       </cs-card>
     </cs-card-layout>

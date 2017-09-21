@@ -42,6 +42,7 @@ require('./_overview.scss');
     vm.notificationComparator = notificationComparator;
     vm.ftHuronPstn = false;
     vm.ftEnterpriseTrunking = false;
+    vm.showUserTaskMgr = showUserTaskMgr;
 
     ////////////////////////////////
 
@@ -371,6 +372,10 @@ require('./_overview.scss');
           forwardEvent('provisioningEventHandler', productProvStatus);
         });
       }
+    }
+
+    function showUserTaskMgr() {
+      $state.go('users.csv.taskmgr');
     }
 
     forwardEvent('licenseEventHandler', Authinfo.getLicenses());

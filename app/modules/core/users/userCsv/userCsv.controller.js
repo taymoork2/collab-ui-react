@@ -10,7 +10,8 @@ require('./_user-csv.scss');
   /* @ngInject */
   function UserCsvCtrl($interval, $modal, $q, $rootScope, $scope, $state, $timeout, $translate, $previousState,
     Analytics, Authinfo, Config, CsvDownloadService, HuronCustomer, LogMetricsService, NAME_DELIMITER, OnboardService,
-    Notification, ServiceDescriptorService, PhoneNumberService, UserCsvService, Userservice, ResourceGroupService, USSService, DirSyncService) {
+    Notification, ServiceDescriptorService, PhoneNumberService, UserCsvService, Userservice, ResourceGroupService, USSService, DirSyncService,
+    FeatureToggleService) {
     // variables
     var vm = this;
     vm.licenseUnavailable = false;
@@ -35,6 +36,11 @@ require('./_user-csv.scss');
     };
     var USER_ID_EMAIL_HEADER = 'User ID/Email (Required)';
     var NO_RESOURCE_GROUP = '**no resource group**';
+
+    var isAtlasCsvImportTaskMgrToggled = false;
+    FeatureToggleService.atlasCsvImportTaskMgrGetStatus().then(function (toggled) {
+      isAtlasCsvImportTaskMgrToggled = toggled;
+    });
 
     CsvDownloadService.getCsv('headers').then(function (csvData) {
       orgHeaders = _.cloneDeep(csvData.columns || []);
@@ -96,9 +102,6 @@ require('./_user-csv.scss');
       userErrorArray: [],
       csvChunk: 0,
     };
-    vm.model.desc = $translate.instant('csvUpload.desc', {
-      maxUsers: maxUsers,
-    });
     vm.model.templateAnchorText = $translate.instant('firstTimeWizard.downloadStep');
 
     // watches
@@ -175,11 +178,20 @@ require('./_user-csv.scss');
     };
 
     vm.startUpload = function () {
-      Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.CSV_UPLOAD);
-      beforeSubmitCsv().then(function () {
-        bulkSaveWithIndividualLicenses();
-        $state.go('users.csv.results');
-      });
+      if (isAtlasCsvImportTaskMgrToggled) {
+        // TO-DO
+        // * do the CSV pre-check validation, if CSV is valid, continue.
+        // * send the file to the file server and get a file location URL
+        // * submit the file URL to CLCP and get a job ID
+        // * then open the task dialog
+        $state.go('users.csv.taskmgr');
+      } else {
+        Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.CSV_UPLOAD);
+        beforeSubmitCsv().then(function () {
+          bulkSaveWithIndividualLicenses();
+          $state.go('users.csv.results');
+        });
+      }
     };
 
     $scope.$on('modal.closing', function (ev) {

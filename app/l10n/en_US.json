@@ -310,6 +310,10 @@
       "instructions": "Select the service entitlements that you want to provide to users."
     }
   },
+  "userTaskMgr": {
+    "title": "Tasks",
+    "viewAllTasks": "View all tasks"
+  },
   "onboardModal": {
     "ciscoSparkJabberInterop": "Cisco Spark / Jabber Interop",
     "spark": "Cisco Spark",
@@ -1422,6 +1426,7 @@
   "common": {
     "actions": "Actions",
     "activate": "Activate",
+    "active": "Active",
     "add": "Add",
     "agree": "Agree",
     "alert": "Alert",

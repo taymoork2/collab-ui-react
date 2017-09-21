@@ -1114,6 +1114,16 @@
               },
             },
           })
+          .state('users.csv.taskmgr', {
+            views: {
+              'usersCsv@users.csv': {
+                template: '<user-task-mgr dismiss="$dismiss()"></user-task-mgr>',
+              },
+            },
+            params: {
+              task: undefined,
+            },
+          })
           .state('editService', {
             parent: 'modal',
             resolve: {
