@@ -1,7 +1,7 @@
 export class CallPlacesPage {
   constructor() {
-    this.addNewPlace = element.all(by.css('button.add-button')).first();
-    this.addNewPlaceEmpty = element.all(by.css('button.add-button.places-empty')).first();
+    this.addNewPlace = element.all(by.css('button.btn--people')).first();
+    this.addNewPlaceEmpty = element.all(by.css('button.btn--people')).last();
     this.newPlaceInput = element(by.id('newPlace'));
     this.nxtBtn = element(by.id('next-button'));
     this.nxtBtn2 = element(by.css('[ng-click="chooseDeviceType.next()"]'));

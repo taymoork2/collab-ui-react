@@ -12,8 +12,7 @@ describe('Huron Functional: places-features', () => {
   const customer = huronCustomer({
     test: 'places-feature',
     offers: ['CALL', 'ROOMSYSTEMS'],
-    noOfPlaces: 3,
-    users: 3,
+    //places: { noOfPlaces: 3, }, This will be implemented in the near future
   });
   beforeAll(done => {
     provisioner.provisionCustomerAndLogin(customer)

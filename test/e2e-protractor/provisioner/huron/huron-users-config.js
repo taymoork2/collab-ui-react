@@ -11,21 +11,20 @@ export function huronUsers(number, extensions, lines) {
       const user = usersData[i];
       user.email = `${partnerEmail}${user.name.givenName}${user.name.familyName}_${os.userInfo().username}_${now}@gmail.com`;
       user.callOptions = {};
-      user.callOptions.internalExtension = parseInt(ext, 10) + i;
+      user.callOptions.internalExtension = (parseInt(ext, 10) + 10 + i).toString();
       if (lines && lines[i]) {
         user.callOptions.directLine = lines[i];
       }
       users.push(user);
     }
-
     return users;
   }
 }
 
 const usersData = [{
   name: {
-    givenName: 'Princess',
-    familyName: 'Leia',
+    givenName: 'Sheev',
+    familyName: 'Palpatine',
   },
 }, {
   name: {
@@ -114,8 +113,8 @@ const usersData = [{
   },
 }, {
   name: {
-    givenName: 'Emperor',
-    familyName: 'Palpatine',
+    givenName: 'Princess',
+    familyName: 'Leia',
   },
 }, {
   name: {

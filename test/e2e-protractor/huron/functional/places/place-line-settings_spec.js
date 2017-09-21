@@ -12,7 +12,7 @@ describe('Huron Functional: place-line-settings', () => {
   const customer = huronCustomer({
     test: 'place-line-settings',
     offers: ['CALL', 'ROOMSYSTEMS'],
-    places: 2,
+    places: { noOfPlaces: 2, noOfDids: 0 },
   });
 
   const PLACES = customer.places;

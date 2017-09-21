@@ -16,7 +16,7 @@ const now = Date.now();
 describe('Huron Functional: adding-huntgroup', () => {
   const customer = huronCustomer({
     test: 'adding-huntgroup',
-    users: 3,
+    users: { noOfUsers: 3, noOfDids: 0 },
   });
   beforeAll(done => {
     provisioner.provisionCustomerAndLogin(customer)
@@ -256,7 +256,7 @@ describe('Huron Functional: adding-huntgroup', () => {
     });
 
     it('should input pilot number', () => {
-      utils.sendKeys(addHuntGroup.inputNumber, '310');
+      utils.sendKeys(addHuntGroup.inputNumber, '325');
       browser.driver.sleep(1000);
       utils.sendKeys(addHuntGroup.inputNumber, protractor.Key.ENTER);
     });
@@ -277,7 +277,7 @@ describe('Huron Functional: adding-huntgroup', () => {
     });
 
     it('should input second pilot number', () => {
-      utils.sendKeys(addHuntGroup.inputNumber, '311');
+      utils.sendKeys(addHuntGroup.inputNumber, '326');
       browser.driver.sleep(1000);
       utils.sendKeys(addHuntGroup.inputNumber, protractor.Key.ENTER);
     });

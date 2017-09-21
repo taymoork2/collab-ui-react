@@ -39,11 +39,12 @@ export function provisionCustomerAndLogin(customer) {
         customer.callOptions.cmiCustomer.name = atlasCustomer.customerName;
         return huronCmiHelper.provisionCmiCustomer(customer.partner, customer.callOptions.cmiCustomer, customer.callOptions.cmiSite, customer.callOptions.numberRange, customer.doFtsw, customer.doCallPickUp, customer.doHuntGroup)
           .then(() => huronPstnHelper.setupPSTN(customer))
-          .then(() => provisionUsers(customer))
           .then(() => provisionPlaces(customer))
+          .then(() => provisionUsers(customer))
           .then(() => huronFeaturesHelper.setupHuntGroup(customer))
           .then(() => huronFeaturesHelper.setupCallPickup(customer))
           .then(() => huronFeaturesHelper.setupCallPark(customer))
+          .then(() => huronFeaturesHelper.setupCallPaging(customer))
           .then(() => loginPartner(customer.partner))
           .then(() => switchToCustomerWindow(customer.name, customer.doFtsw));
       } else {

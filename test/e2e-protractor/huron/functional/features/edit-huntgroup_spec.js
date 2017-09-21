@@ -9,7 +9,7 @@ const huntGroupEditPage = new HuntGroupEditPage();
 describe('Huron Functional: edit hunt group', () => {
   const customer = huronCustomer({
     test: 'edit-huntGroup',
-    users: 4,
+    users: { noOfUsers: 4, noOfDids: 0 },
     doHuntGroup: true,
   });
 
