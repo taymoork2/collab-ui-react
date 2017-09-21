@@ -11,7 +11,8 @@ export class CallPark {
   public fallbackDestination: FallbackDestination;
   public fallbackTimer: number;
   public members: CallFeatureMember[];
-  public location: string | undefined;
+  public locationUuid: string | undefined;
+  public location: object | undefined;
 
   constructor(obj: {
     uuid?: string,
@@ -21,7 +22,8 @@ export class CallPark {
     fallbackDestination: FallbackDestination,
     fallbackTimer: number,
     members: CallFeatureMember[],
-    location?: string,
+    locationUuid?: string,
+    location?: object,
   } = {
     uuid: undefined,
     name: undefined,
@@ -30,6 +32,7 @@ export class CallPark {
     fallbackDestination: new FallbackDestination(),
     fallbackTimer: FALLBACK_TIMER_DEFAULT,
     members: [],
+    locationUuid: undefined,
     location: undefined,
   }) {
     this.uuid = obj.uuid;
@@ -39,6 +42,7 @@ export class CallPark {
     this.fallbackDestination = obj.fallbackDestination;
     this.fallbackTimer = obj.fallbackTimer;
     this.members = obj.members;
+    this.locationUuid = obj.locationUuid;
     this.location = obj.location;
   }
 }

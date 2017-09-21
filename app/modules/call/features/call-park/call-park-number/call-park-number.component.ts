@@ -14,6 +14,7 @@ export enum RangeFieldName {
 class CallParkNumberCtrl implements ng.IComponentController {
 
   public range: ICallParkRangeItem;
+  public location;
   public extensionLength: string;
   public onChangeFn: Function;
   public onKeyPressFn: Function;
@@ -53,7 +54,7 @@ class CallParkNumberCtrl implements ng.IComponentController {
   }
 
   public getRangeList(): ng.IPromise<ICallParkRangeItem[]> {
-    return this.CallParkService.getRangeList().then( ranges => {
+    return this.CallParkService.getRangeList(this.location).then( ranges => {
       return ranges;
     });
   }
@@ -69,7 +70,7 @@ class CallParkNumberCtrl implements ng.IComponentController {
   }
 
   public getEndRangeList(startRange: string): ng.IPromise<string[]> {
-    return this.CallParkService.getEndRange(startRange).then( endRanges => {
+    return this.CallParkService.getEndRange(startRange, this.location).then( endRanges => {
       return _.drop(endRanges);
     });
   }
@@ -139,6 +140,7 @@ export class CallParkNumberComponent implements ng.IComponentOptions {
   public bindings = {
     range: '<',
     extensionLength: '<',
+    location: '<',
     onChangeFn: '&',
     onKeyPressFn: '&',
   };

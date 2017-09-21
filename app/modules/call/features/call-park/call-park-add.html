@@ -46,7 +46,8 @@
                   range="$ctrl.range"
                   extension-length="$ctrl.extensionLength"
                   on-change-fn="$ctrl.setCallParkRange(range)"
-                  on-key-press-fn="$ctrl.enterNextPage(keyCode)">
+                  on-key-press-fn="$ctrl.enterNextPage(keyCode)"
+                  location="$ctrl.callPark.location">
                 </uc-call-park-number>
               </div >
           </div>
@@ -62,7 +63,8 @@
           is-new="true"
           on-change-fn="$ctrl.setCallParkMembers(members)"
           on-key-press-fn="$ctrl.enterNextPage(keyCode)"
-          ng-class="$ctrl.animation">
+          ng-class="$ctrl.animation"
+          location="$ctrl.callPark.location">
         </uc-call-feature-members>
       </form>
 

@@ -8,6 +8,8 @@ import numberService from 'modules/huron/numbers';
 import voicemailServiceModule from 'modules/huron/voicemail';
 import featureMemberService from 'modules/huron/features/services';
 import phoneNumberModule from 'modules/huron/phoneNumber';
+import featureToggleModule from 'modules/core/featureToggle';
+import callDestModule from 'modules/call/shared/call-destination-translate';
 
 export * from './call-feature-fallback-destination.service';
 export * from './call-feature-fallback-destination';
@@ -27,6 +29,8 @@ export default angular
     numberService,
     voicemailServiceModule,
     phoneNumberModule,
+    featureToggleModule,
+    callDestModule,
   ])
   .component('ucFallbackDestination', new CallFeatureFallbackDestinationComponent())
   .service('CallFeatureFallbackDestinationService', CallFeatureFallbackDestinationService)

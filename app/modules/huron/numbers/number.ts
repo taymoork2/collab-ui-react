@@ -1,6 +1,8 @@
 export enum NumberType {
   INTERNAL = 'internal',
   EXTERNAL = 'external',
+  NUMBER_FORMAT_ENTERPRISE_LINE = 'NUMBER_FORMAT_ENTERPRISE_LINE',
+  NUMBER_FORMAT_EXTENSION = 'NUMBER_FORMAT_EXTENSION',
 }
 
 export interface INumber {
