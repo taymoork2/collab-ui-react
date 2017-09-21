@@ -98,12 +98,20 @@ export class MetricsService {
       return;
     }
 
+    if (this.hasInvalidTimingValues(this.$window.performance.timing)) {
+      return;
+    }
+
     const loadMetric = {
       dom_duration_in_millis: this.$window.performance.timing.loadEventEnd - this.$window.performance.timing.responseEnd,
       navigation_duration_in_millis: this.$window.performance.timing.fetchStart - this.$window.performance.timing.navigationStart,
       network_duration_in_millis: this.$window.performance.timing.responseEnd - this.$window.performance.timing.fetchStart,
       total_duration_in_millis: this.$window.performance.timing.loadEventEnd - this.$window.performance.timing.navigationStart,
     };
+
+    if (this.hasInvalidTimingValues(loadMetric)) {
+      return;
+    }
 
     this.sendToInflux(TimingKey.LOAD_DURATION, loadMetric);
   }
@@ -269,6 +277,11 @@ export class MetricsService {
     this.$window.performance.clearMarks(metric.markStart);
     this.$window.performance.clearMarks(metric.markStop);
     this.$window.performance.clearMeasures(metric.measure);
+  }
+
+  private hasInvalidTimingValues(obj: Object) {
+    const numberValues = _.filter(_.valuesIn<any>(obj), value => _.isNumber(value));
+    return _.isEmpty(numberValues) || _.some(numberValues, value => _.isNaN(value) || value < 0);
   }
 
 }
