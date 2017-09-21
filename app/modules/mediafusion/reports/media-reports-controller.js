@@ -379,6 +379,12 @@
         vm.overflowPercentage = (overflow / vm.totalcloudcalls) * 100;
         vm.overflowPercentage = _.round(vm.overflowPercentage, 2);
         setOverflowIndicator();
+      }, function () {
+        vm.onprem = vm.noData;
+        vm.cloudOverflow = vm.noData;
+        vm.total = vm.noData;
+        vm.cloudcalls = vm.noData;
+        vm.second_card_value = vm.noData;
       });
     }
 
@@ -423,6 +429,9 @@
             vm.totalParticipantschartOptions.noData = false;
           }
         }
+      }, function () {
+        AdoptionCardService.setDummyTotalParticipantsPiechart(false);
+        vm.totalParticipantschartOptions.noData = true;
       });
     }
 
@@ -437,6 +446,9 @@
           AdoptionCardService.setClientTypePiechart(response.data);
           vm.clientTypeschartOptions.noData = false;
         }
+      }, function () {
+        AdoptionCardService.setDummyClientTypePiechart();
+        vm.clientTypeschartOptions.noData = true;
       });
     }
 
@@ -462,6 +474,11 @@
           vm.totMeetingsShort = abbreviateNumber(vm.tot_number_meetings);
           vm.totMeetingsTooltip = checkForTooltip(vm.totMeetingsShort) ? vm.tot_number_meetings : '';
         }
+      }, function () {
+          AdoptionCardService.setDummyNumberOfMeetsOnPremisesPiechart();
+          vm.meetsHostedchartOptions.noData = true;
+          vm.totMeetingsShort = vm.noData;
+          vm.totMeetingsTooltip = '';
       });
     }
 
