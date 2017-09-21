@@ -31,7 +31,7 @@ export class HybridCalendarGoogleActiveCardComponent implements ng.IComponentOpt
       <div class="active-card_header card_header--stretched">
         <h4 translate="servicesOverview.cards.hybridCalendar.title"></h4>
         <i class="icon icon-question-circle" tooltip="{{'servicesOverview.cards.hybridCalendar.description' | translate}}" tooltip-placement="bottom-right"></i>
-        <div class="active-card_logo"><img src="/images/hybrid-services/Google_Calendar_logo_small.png" alt="{{::servicesOverview.cards.hybridCalendar.googleTitle | translate}}"></div>
+        <div class="active-card_logo active-card_logo--google"><img src="/images/hybrid-services/Google_Calendar_logo_small.png" alt="{{::servicesOverview.cards.hybridCalendar.googleTitle | translate}}"></div>
       </div>
       <div class="active-card_content">
         <div class="active-card_section">

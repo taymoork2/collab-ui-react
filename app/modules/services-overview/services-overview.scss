@@ -288,8 +288,13 @@ services-overview {
 
   .active-card_logo,
   .inactive-card_logo {
-    max-width: 90px;
+    width: 90px;
     padding-top: 0.5rem;
+  }
+
+  .active-card_logo--google,
+  .inactive-card_logo--google {
+    width: 70px;
   }
 
   .active-card_content,
