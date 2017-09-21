@@ -16,8 +16,7 @@ class HybridContextInactiveCardController implements ng.IComponentController {
   }
 
   public openSetUp(): void {
-    // TODO: open directly the modal that could be opened from the `context-resources` page?
-    this.$state.go('context-resources');
+    this.$state.go('add-resource.context');
   }
 }
 

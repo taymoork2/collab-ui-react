@@ -25,14 +25,6 @@ class HybridCallInactiveCardController implements ng.IComponentController {
       controllerAs: 'vm',
       template: require('modules/hercules/service-specific-pages/common-expressway-based/add-resource-modal.html'),
       type: 'small',
-    })
-    .result
-    .then((response) => {
-      // TODO: refresh page
-      window.console.info('success openSetUp Call', response);
-    })
-    .catch((error) => {
-      window.console.error('error openSetUp Exchange', error);
     });
   }
 }

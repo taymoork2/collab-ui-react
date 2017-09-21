@@ -18,11 +18,7 @@ class HybridCalendarGoogleInactiveCardController implements ng.IComponentControl
   }
 
   public openSetUp(): void {
-    this.CloudConnectorService.openSetupModal()
-      .then((response) => {
-        // TODO: refresh page
-        window.console.info('success openSetUp Exchange', response);
-      });
+    this.CloudConnectorService.openSetupModal();
   }
 }
 

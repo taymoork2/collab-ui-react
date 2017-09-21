@@ -3,8 +3,8 @@ import { IToolkitModalService } from 'modules/core/modal';
 class HybridCalendarExchangeInactiveCardController implements ng.IComponentController {
   /* @ngInject */
   constructor(
-    private $translate: ng.translate.ITranslateService,
     private $modal: IToolkitModalService,
+    private $translate: ng.translate.ITranslateService,
     private ModalService: IToolkitModalService,
   ) {}
 
@@ -28,14 +28,6 @@ class HybridCalendarExchangeInactiveCardController implements ng.IComponentContr
       controllerAs: 'vm',
       template: require('modules/hercules/service-specific-pages/common-expressway-based/add-resource-modal.html'),
       type: 'small',
-    })
-    .result
-    .then((response) => {
-      // TODO: refresh page
-      window.console.info('success openSetUp Exchange', response);
-    })
-    .catch((error) => {
-      window.console.error('error openSetUp Exchange', error);
     });
   }
 }

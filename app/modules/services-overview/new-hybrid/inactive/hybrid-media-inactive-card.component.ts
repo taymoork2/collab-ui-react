@@ -1,7 +1,9 @@
+import { IToolkitModalService } from 'modules/core/modal';
+
 class HybridMediaInactiveCardController implements ng.IComponentController {
   /* @ngInject */
   constructor(
-    private $state: ng.ui.IStateService,
+    private $modal: IToolkitModalService,
     private $translate: ng.translate.ITranslateService,
     private ModalService,
   ) {}
@@ -16,7 +18,17 @@ class HybridMediaInactiveCardController implements ng.IComponentController {
   }
 
   public openSetUp(): void {
-    this.$state.go('media-service-v2.list');
+    this.$modal.open({
+      resolve: {
+        firstTimeSetup: true,
+        yesProceed: true,
+      },
+      type: 'small',
+      controller: 'RedirectAddResourceControllerV2',
+      controllerAs: 'redirectResource',
+      template: require('modules/mediafusion/media-service-v2/add-resources/add-resource-dialog.html'),
+      modalClass: 'redirect-add-resource',
+    });
   }
 }
 

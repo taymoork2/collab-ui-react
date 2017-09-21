@@ -49,7 +49,7 @@
         <hybrid-data-security-active-card ng-if="$ctrl.isActive('spark-hybrid-datasecurity')" service-status="$ctrl.getServiceStatus('spark-hybrid-datasecurity')" class="cs-card small active-card"></hybrid-data-security-active-card>
       </cs-card-layout>
 
-      <h5><span>Inactive Hybrid Services</span></h5>
+      <h5><span translate="servicesOverview.inactiveHybridServices"></span></h5>
       <cs-card-layout block-view="true">
         <hybrid-calendar-exchange-inactive-card ng-if="$ctrl.isInactive('squared-fusion-cal')" class="cs-card small inactive-card"></hybrid-calendar-exchange-inactive-card>
         <hybrid-calendar-o365-inactive-card ng-if="$ctrl.isInactive('squared-fusion-o365')" class="cs-card small inactive-card"></hybrid-calendar-o365-inactive-card>

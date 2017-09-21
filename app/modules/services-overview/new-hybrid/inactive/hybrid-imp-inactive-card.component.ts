@@ -1,9 +1,11 @@
+import { IToolkitModalService } from 'modules/core/modal';
+
 class HybridIMPInactiveCardController implements ng.IComponentController {
   /* @ngInject */
   constructor(
-    private $state: ng.ui.IStateService,
+    private $modal: IToolkitModalService,
     private $translate: ng.translate.ITranslateService,
-    private ModalService,
+    private ModalService: IToolkitModalService,
   ) {}
 
   public openPrerequisites(): void {
@@ -16,7 +18,17 @@ class HybridIMPInactiveCardController implements ng.IComponentController {
   }
 
   public openSetUp(): void {
-    this.$state.go('imp-service.list');
+    this.$modal.open({
+      resolve: {
+        connectorType: () => 'c_imp',
+        serviceId: () => 'spark-hybrid-impinterop',
+        firstTimeSetup: true,
+      },
+      controller: 'AddResourceController',
+      controllerAs: 'vm',
+      template: require('modules/hercules/service-specific-pages/common-expressway-based/add-resource-modal.html'),
+      type: 'small',
+    });
   }
 }
 

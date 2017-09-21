@@ -10,16 +10,16 @@ export class HybridMediaActiveCardComponent implements ng.IComponentOptions {
     <article>
       <div class="active-card_header">
         <h4 translate="servicesOverview.cards.hybridMedia.title"></h4>
-        <i class="icon icon-question-circle" tooltip="{{'servicesOverview.cards.hybridMedia.description' | translate}}" tooltip-placement="bottom-right"></i>
+        <i class="icon icon-question-circle" tooltip="{{::'servicesOverview.cards.hybridMedia.description' | translate}}" tooltip-placement="bottom-right"></i>
       </div>
       <div class="active-card_content">
         <div class="active-card_section">
-          <div class="active-card_title">Service</div>
-          <div class="active-card_action"><a ui-sref="media-service-v2.settings">Configure</a></div>
+          <div class="active-card_title" translate="servicesOverview.cards.shared.service"></div>
+          <div class="active-card_action"><a ui-sref="media-service-v2.settings" translate="servicesOverview.cards.shared.configure"></a></div>
         </div>
         <div class="active-card_section">
-          <div class="active-card_title">Resources</div>
-          <div class="active-card_action"><a ui-sref="media-service-v2.list">View all</a></div>
+          <div class="active-card_title" translate="servicesOverview.cards.shared.resources"></div>
+          <div class="active-card_action"><a ui-sref="media-service-v2.list" translate="servicesOverview.cards.shared.viewAll"></a></div>
         </div>
       </div>
       <div class="active-card_footer">

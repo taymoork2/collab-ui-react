@@ -31,13 +31,13 @@ export class HybridCalendarO365ActiveCardComponent implements ng.IComponentOptio
     <article>
       <div class="active-card_header card_header--stretched">
         <h4 translate="servicesOverview.cards.hybridCalendar.title"></h4>
-        <i class="icon icon-question-circle" tooltip="{{'servicesOverview.cards.hybridCalendar.description' | translate}}" tooltip-placement="bottom-right"></i>
+        <i class="icon icon-question-circle" tooltip="{{::'servicesOverview.cards.hybridCalendar.description' | translate}}" tooltip-placement="bottom-right"></i>
         <div class="active-card_logo"><img src="/images/hybrid-services/Office_365_logo_small.png" alt="{{::servicesOverview.cards.hybridCalendar.office365Title | translate}}"></div>
       </div>
       <div class="active-card_content">
         <div class="active-card_section">
-          <div class="active-card_title">Service</div>
-          <div class="active-card_action"><a ui-sref="office-365-service.settings">Configure</a></div>
+          <div class="active-card_title" translate="servicesOverview.cards.shared.service"></div>
+          <div class="active-card_action"><a ui-sref="office-365-service.settings" translate="servicesOverview.cards.shared.configure"></a></div>
         </div>
         <card-users-summary summary="$ctrl.userStatusesSummary"></card-users-summary>
       </div>
