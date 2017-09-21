@@ -48,12 +48,12 @@ export class Config {
   ];
 
   public readonly feedbackUrl = 'https://conv-a.wbx2.com/conversation/api/v1/users/deskFeedbackUrl';
-  public readonly helpUrl = 'https://help.webex.com/community/cisco-cloud-collab-mgmt';
-  public readonly ssoUrl = 'https://help.webex.com/community/cisco-cloud-collab-mgmt/content?filterID=contentstatus[published]~category[security]';
-  public readonly rolesUrl = 'https://help.webex.com/community/cisco-cloud-collab-mgmt/content?filterID=contentstatus[published]~category[getting-started]';
-  public readonly supportUrl = 'https://help.webex.com/community/cisco-cloud-collab-mgmt';
+  public readonly helpUrl = 'https://collaborationhelp.cisco.com';
+  public readonly ssoUrl = 'https://collaborationhelp.cisco.com';
+  public readonly rolesUrl = 'https://collaborationhelp.cisco.com';
+  public readonly supportUrl = 'https://collaborationhelp.cisco.com';
   public readonly webexSiteMigrationUrl = 'http://try.webex.com/mk/get/ciscowebexmigration';
-  public readonly partnerSupportUrl = 'https://help.webex.com/community/cisco-cloud-collab-mgmt-partners';
+  public readonly partnerSupportUrl = 'https://collaborationhelp.cisco.com';
 
   public readonly usersperpage = 100;
   public readonly orgsPerPage = 100;

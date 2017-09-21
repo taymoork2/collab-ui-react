@@ -40,7 +40,7 @@ class DocumentationSectionCtrl implements IDocumentationSectionCtrl, ng.ICompone
     }
 
     if (this.serviceId === 'ept') {
-      this.helpLink = 'http://www.cisco.com/go/private-trunking';
+      this.helpLink = 'https://www.cisco.com/go/spark-calling-branch-office';
     }
   }
 }
