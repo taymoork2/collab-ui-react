@@ -260,7 +260,8 @@ export class VirtualAssistantService {
         item.name = item.templateId;
       }
       item.mediaType = service.serviceCard.type;
-      item.status = 'Not in use';
+      // CA-115: indicates that item.status should not be visible until UX defines the value to be set when "In use"
+      // item.status = 'Not in use';
       item.featureType = feature.name;
       item.color = feature.color;
       item.icons = feature.icons;
