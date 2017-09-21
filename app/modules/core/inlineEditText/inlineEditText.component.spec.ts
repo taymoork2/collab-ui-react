@@ -6,10 +6,7 @@ describe('Component: InlineEditText', () => {
     this.injectDependencies(
       '$q',
       '$scope',
-      'ProPackService',
     );
-
-    spyOn(this.ProPackService, 'showProBadgeInHelpDesk').and.returnValue(this.$q.resolve(false));
 
     this.ESCAPE_KEY = jQuery.Event('keyup', {
       keyCode: 27,
@@ -51,6 +48,29 @@ describe('Component: InlineEditText', () => {
       expect(this.view.find(this.INPUT)).not.toExist();
       expect(this.view.find(this.CANCEL_BUTTON).find(this.REMOVE_ICON)).not.toExist();
       expect(this.view.find(this.SUBMIT_BUTTON).find(this.CHECK_ICON)).not.toExist();
+    });
+  });
+
+  describe('showProPackIcon', () => {
+    it('should not show pro pack icon if not bound to component', function () {
+      this.initComponent();
+      expect(this.view.find('cr-pro-pack-icon')).not.toExist();
+    });
+
+    it('should not show pro pack icon if bound and false', function () {
+      this.$scope.shouldShowProPackIcon = false;
+      this.initComponent({
+        showProPackIcon: 'shouldShowProPackIcon',
+      });
+      expect(this.view.find('cr-pro-pack-icon')).not.toExist();
+    });
+
+    it('should show pro pack icon if bound and true', function () {
+      this.$scope.shouldShowProPackIcon = true;
+      this.initComponent({
+        showProPackIcon: 'shouldShowProPackIcon',
+      });
+      expect(this.view.find('cr-pro-pack-icon .pro-pack-icon')).toExist(); // find child element compiled from crProPackIcon component
     });
   });
 

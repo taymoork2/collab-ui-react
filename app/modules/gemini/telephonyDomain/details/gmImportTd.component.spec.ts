@@ -29,7 +29,7 @@ describe('Component: gmImportTd', () => {
 
     this.countries = [ { countryId: 1, countryName: 'Albania' }, { countryId: 2, countryName: 'Algeria' } ];
 
-    this.box = '.dropdown-menu ul li a';
+    this.box = '.dropdown-menu ul li';
     this.button = '[name="importButton"]';
     this.select = '.csSelect-container[name="customerName"]';
     this.selectGrid = '.ui-grid-selection-row-header-buttons';

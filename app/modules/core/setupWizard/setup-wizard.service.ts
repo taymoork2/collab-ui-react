@@ -161,31 +161,31 @@ export class SetupWizardService {
   }
 
   public hasPendingWebExMeetingLicenses(): boolean {
-    return _.some(this.getActingSubscriptionPendingLicenses(), (license: IPendingLicense) => license.status === this.Config.licenseStatus.INITIALIZED && (_.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC], license.offerName)));
+    return _.some(this.getActingSubscriptionPendingLicenses(), (license: IPendingLicense) => _.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC], license.offerName));
   }
 
   public getPendingMeetingLicenses(): IPendingLicense[] {
-    return _.filter(this.getActingSubscriptionPendingLicenses(), (license: IPendingLicense) => license.status === this.Config.licenseStatus.INITIALIZED && (_.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC, this.Config.offerCodes.CF, this.Config.offerCodes.CMR], license.offerName)));
+    return _.filter(this.getActingSubscriptionPendingLicenses(), (license: IPendingLicense) => _.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC, this.Config.offerCodes.CF, this.Config.offerCodes.CMR], license.offerName));
   }
 
   public hasPendingCallLicenses(): boolean {
-    return _.some(this.getActingSubscriptionPendingLicenses(), (license: IPendingLicense) => license.status === this.Config.licenseStatus.INITIALIZED && (_.includes([this.Config.licenseTypes.COMMUNICATION, this.Config.licenseTypes.SHARED_DEVICES], license.licenseType)));
+    return _.some(this.getActingSubscriptionPendingLicenses(), (license: IPendingLicense) => _.includes([this.Config.licenseTypes.COMMUNICATION, this.Config.licenseTypes.SHARED_DEVICES], license.licenseType));
   }
 
   public getPendingCallLicenses(): IPendingLicense[] {
-    return _.filter(this.getActingSubscriptionPendingLicenses(), (license: IPendingLicense) => license.status === this.Config.licenseStatus.INITIALIZED && (_.includes([this.Config.licenseTypes.COMMUNICATION, this.Config.licenseTypes.SHARED_DEVICES], license.licenseType)));
+    return _.filter(this.getActingSubscriptionPendingLicenses(), (license: IPendingLicense) => _.includes([this.Config.licenseTypes.COMMUNICATION, this.Config.licenseTypes.SHARED_DEVICES], license.licenseType));
   }
 
   public getPendingAudioLicenses(): IPendingLicense[] {
-    return _.filter(this.getActingSubscriptionPendingLicenses(), (license: IPendingLicense) => license.status === this.Config.licenseStatus.INITIALIZED && license.licenseType === this.Config.licenseTypes.AUDIO);
+    return _.filter(this.getActingSubscriptionPendingLicenses(), (license: IPendingLicense) => license.licenseType === this.Config.licenseTypes.AUDIO);
   }
 
   public getPendingMessageLicenses(): IPendingLicense[] {
-    return _.filter(this.getActingSubscriptionPendingLicenses(), (license: IPendingLicense) => license.status === this.Config.licenseStatus.INITIALIZED && license.offerName === this.Config.offerCodes.MS);
+    return _.filter(this.getActingSubscriptionPendingLicenses(), (license: IPendingLicense) => license.offerName === this.Config.offerCodes.MS);
   }
 
   public getPendingCareLicenses(): IPendingLicense[] {
-    return _.filter(this.getActingSubscriptionPendingLicenses(), (license: IPendingLicense) => license.status === this.Config.licenseStatus.INITIALIZED && (license.offerName === this.Config.offerCodes.CDC || license.offerName === this.Config.offerCodes.CVC));
+    return _.filter(this.getActingSubscriptionPendingLicenses(), (license: IPendingLicense) => license.offerName === this.Config.offerCodes.CDC || license.offerName === this.Config.offerCodes.CVC);
   }
 
   public hasPendingTSPAudioPackage() {

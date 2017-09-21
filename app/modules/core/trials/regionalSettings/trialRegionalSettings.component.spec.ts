@@ -2,7 +2,7 @@ import trialRegionalSettings from './index';
 
 describe('Component: trialRegionalSettings', () => {
   const COUNTRY_SELECT = '.csSelect-container[name="defaultCountry"]';
-  const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
+  const DROPDOWN_OPTIONS = '.dropdown-menu ul li';
   const PLACEHOLDER = '.placeholder';
   const ERROR_DIV = 'div.ellipsis span.text-wrap';
   const ERROR_MSG = 'common.invalidRequired';

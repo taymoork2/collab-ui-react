@@ -76,7 +76,7 @@
     };
 
     vm.isSharedMeetingsLicense = function (service) {
-      return _.toLower(_.get(service, 'license.licenseModel', '')) === Config.licenseModel.cloudSharedMeeting;
+      return (_.toLower(_.get(service, 'license.licenseModel', '')) === Config.licenseModel.cloudSharedMeeting) || (_.toLower(_.get(service, 'licenseModel', '')) === Config.licenseModel.cloudSharedMeeting);
     };
 
     vm.determineLicenseType = function (service) {

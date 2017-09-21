@@ -1917,7 +1917,7 @@ require('./_user-add.scss');
 
           if ($scope.ishI1484) {
             if (userAndDnObj[0].assignedDn && userAndDnObj[0].assignedDn.siteToSite.length > 0) {
-              userItem.internalExtension = userAndDnObj[0].assignedDn.siteToSite;
+              userItem.internalExtension = userAndDnObj[0].assignedDn.internal;
             }
           } else {
             if (userAndDnObj[0].assignedDn && userAndDnObj[0].assignedDn.number.length > 0) {

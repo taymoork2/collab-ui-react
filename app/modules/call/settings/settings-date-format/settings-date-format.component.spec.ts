@@ -2,7 +2,7 @@ import dateFormatModule from './index';
 
 describe('Component: dateFormat', () => {
   const DATE_FORMAT_SELECT = '.csSelect-container[name="dateFormatSelect"]';
-  const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
+  const DROPDOWN_OPTIONS = '.dropdown-menu ul li';
   const MONTH_DAY_YR_FORMAT = 'M-D-Y';
   const YR_MONTH_DAY_FORMAT = 'Y-M-D';
   const dateFormatOptions = getJSONFixture('huron/json/settings/dateFormat.json');

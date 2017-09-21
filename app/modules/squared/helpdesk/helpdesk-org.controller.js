@@ -43,6 +43,7 @@
     vm.cardsAvailable = false;
     vm.adminUsersAvailable = false;
     vm.findServiceOrders = findServiceOrders;
+    vm.isProPackCustomer = false;
     vm._helpers = {
       notifyError: notifyError,
     };
@@ -147,6 +148,7 @@
 
       LicenseService.getLicensesInOrg(vm.orgId).then(function (licenses) {
         initCards(licenses);
+        initProPackCustomer(licenses);
         findLicenseUsage();
       }, vm._helpers.notifyError);
       findManagedByOrgs(org);
@@ -165,6 +167,12 @@
       vm.roomSystemsCard = HelpdeskCardsOrgService.getRoomSystemsCardForOrg(vm.org, licenses);
       vm.cardsAvailable = true;
       vm.careCard = HelpdeskCardsOrgService.getCareCardForOrg(vm.org, licenses);
+    }
+
+    function initProPackCustomer(licenses) {
+      vm.isProPackCustomer = _.some(licenses, function (license) {
+        return _.get(license, 'offerCode') === Config.offerCodes.MGMTPRO;
+      });
     }
 
     function findManagedByOrgs(org) {

@@ -2,7 +2,7 @@ import extensionLengthModule from './index';
 
 describe('Component: extensionLength', () => {
   const EXTENSION_LENGTH_SELECT = '.csSelect-container[name="extensionLength"]';
-  const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
+  const DROPDOWN_OPTIONS = '.dropdown-menu ul li';
   const SELECT_TOGGLE = '.select-toggle';
   const EXTENSION_LENGTH_SIX = '6';
   const EXTENSION_LENGTH_TEN = '10';

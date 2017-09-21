@@ -29,12 +29,14 @@ export class CallParkFeaturePage {
     this.memberMiddle = element(by.css('div.middle-panel'));
     this.memberRight = element(by.css('div.right-panel'));
     this.createEnabled = element(by.cssContainingText('div.btn-helptext.helptext-btn--right', 'Create'));
+    this.numberDropdown = element(by.css('[template-url="ranges.html"]'));
+    this.memberDropdown = element(by.css('[template-url="callFeatureMemberTemplate.html"]'));
     // Feature page
     this.article = element(by.css('article'));
-    this.cpDetailHeader = element(by.cssContainingText('div.header-with-right-icon', 'new-cp'));
+    this.cpDetailHeader = element(by.css('div.header-with-right-icon'));
     this.btnClose = element(by.css('button.close'));
-    this.cpPilot = element(by.css('span', '10 Numbers'));
-    this.cpMembersCount = element(by.css('span.card-members.left', '1 Members'));
+    this.cpPilot = element(by.cssContainingText('span.card-section-num', 'Numbers'));
+    this.cpMembersCount = element(by.cssContainingText('span.card-members.left', 'Members'));
     this.deleteCP = element(by.cssContainingText('p.h3.modal-title', 'Delete'));
     this.cancelDeleteFeature = element(by.id('cancelDeleteFeature'));
     this.deleteFeature = element(by.id('deleteFeature'));
@@ -45,5 +47,16 @@ export class CallParkFeaturePage {
     this.editRevTime = element(by.css('input.combo-input'));
     this.editBackBtn = element(by.css('i.icon.icon-arrow-back'));
     this.editMemberCard = element(by.css('p.title'));
+    this.editCancel = element(by.cssContainingText('button', 'Cancel'));
+    this.editSave = element(by.cssContainingText('button', 'Save'));
+    this.anotherDestination = element(by.css('[for="radioParkDestination"]'));
+    this.fallbackDestination = element(by.css('input[typeahead-template-url="fallbackDestinationTemplate.html"]'));
+    this.fallbackDestinationDropdown = element(by.css('ul[template-url="fallbackDestinationTemplate.html"]'));
+    this.fallbackDestinationFormat = element(by.css('span.select-toggle'));
+    this.fallbackDestinationExternal = element(by.cssContainingText('a', 'External'));
+    this.fallbackDestinationExternalNumber = element(by.css('div.phone-number input'));
+    this.reversionTimerSelect = element(by.css('ul.select-options li:first-child'));
+    this.memberAdd = element(by.id('callfeaturememberadd'));
+    this.firstMemberCardRemove = element(by.css('div.members-container cs-card-member:first-child div.right-panel'));
   }
 };
