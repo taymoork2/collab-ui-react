@@ -30,7 +30,7 @@ for opt in "$@"; do
 done
 
 # always catch up current branch to mainline, and resync to fork's branch
-"$THIS_PWD/git-resync-current-branch.sh" "$@"
+"$THIS_PWD/rebase-branch-and-update-fork.sh" "$@"
 
 CURRENT_BRANCH="$(git branch | grep '^\*' | awk '{print $2;}')"
 GAUNTLET_REMOTE_NAME="$(git remote -v | grep 'https://gauntlet.wbx2.com/api/git/atlas-web' | head -1 | awk '{print $1;}')"
