@@ -18,7 +18,7 @@
     vm.resourceGroup = {
       title: 'hercules.resourceGroups.resourceGroupHeading',
     };
-    vm.userDocumentation = 'https://help.webex.com/docs/DOC-16382';
+    vm.userDocumentation = 'https://collaborationhelp.cisco.com/article/en-us/DOC-16382';
     vm.allowRemove = false;
     vm.showResetSection = false;
     vm.setGroupName = setGroupName;
