@@ -475,10 +475,10 @@
           vm.totMeetingsTooltip = checkForTooltip(vm.totMeetingsShort) ? vm.tot_number_meetings : '';
         }
       }, function () {
-          AdoptionCardService.setDummyNumberOfMeetsOnPremisesPiechart();
-          vm.meetsHostedchartOptions.noData = true;
-          vm.totMeetingsShort = vm.noData;
-          vm.totMeetingsTooltip = '';
+        AdoptionCardService.setDummyNumberOfMeetsOnPremisesPiechart();
+        vm.meetsHostedchartOptions.noData = true;
+        vm.totMeetingsShort = vm.noData;
+        vm.totMeetingsTooltip = '';
       });
     }
 
