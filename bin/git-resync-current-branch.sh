@@ -1,5 +1,10 @@
 #!/bin/bash
 
+THIS_PWD="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+source "$THIS_PWD/include/core-helpers"
+
+
 function ex_usage {
     echo "usage: $(basename "$0") [--fork=<fork>]"
     echo ""
@@ -8,6 +13,20 @@ function ex_usage {
     echo ""
     echo "ex. same as above, but specify a different fork"
     echo "  $(basename "$0") --fork=CBABU"
+    exit 1
+}
+
+function is_rebase_in_progress {
+    local git_dir
+    # shellcheck disable=SC2164
+    git_dir="$(cd -P "$THIS_PWD/../.git")"
+    [ -d "$git_dir/rebase-apply" ] && return 0
+    [ -d "$git_dir/rebase-merge" ] && return 0
+    return 1
+}
+
+function print_error_and_exit {
+    echo "Please resolve your rebase before re-running \`$(basename "$0")\`." | print_notice_banner
     exit 1
 }
 
@@ -36,7 +55,10 @@ CEC_ID="$(git config user.email)"
 CEC_ID="${CEC_ID%%@*}"
 FORK_NAME="${FORK_NAME:-$CEC_ID}"
 
+# catch up to mainline
 git fetch -p "$MAINLINE_REMOTE_NAME"
-git rebase "$MAINLINE_REMOTE_NAME/master"
+git rebase "$MAINLINE_REMOTE_NAME/master" || print_error_and_exit
+
+# sync local branch to fork
 git push -f "$FORK_NAME" "$CURRENT_BRANCH"
 set +x
