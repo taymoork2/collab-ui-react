@@ -30,7 +30,7 @@ export class CallParkFeaturePage {
     this.memberRight = element(by.css('div.right-panel'));
     this.createEnabled = element(by.cssContainingText('div.btn-helptext.helptext-btn--right', 'Create'));
     this.numberDropdown = element(by.css('[template-url="ranges.html"]'));
-    this.memberDropdown = element(by.css('[template-url="callFeatureMemberTemplate.html"]'));
+    this.memberDropdown = element(by.css('[template-url="callFeatureMemberWithNumberTemplate.html"]'));
     // Feature page
     this.article = element(by.css('article'));
     this.cpDetailHeader = element(by.css('div.header-with-right-icon'));
