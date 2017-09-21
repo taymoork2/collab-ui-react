@@ -26,6 +26,7 @@ describe('Huron Functional: call-park-feature', () => {
 
   const callParkStartNumber = (parseInt(customer.callOptions.numberRange.beginNumber) + 10).toString();
   const callParkEndNumber = (parseInt(customer.callOptions.numberRange.beginNumber) + 19).toString();
+  const callParkSingleNumber = (parseInt(customer.callOptions.numberRange.beginNumber) + 20).toString();
   const newCallParkName = 'new-cp';
 
   it('should be on overview page of customer portal', () => {
@@ -75,7 +76,7 @@ describe('Huron Functional: call-park-feature', () => {
     });
 
     it('should be able to input single call park number and cancel', () => {
-      utils.sendKeys(callParkFeature.singleNumber, (customer.callOptions.numberRange.beginNumber + 20).toString());
+      utils.sendKeys(callParkFeature.singleNumber, callParkSingleNumber);
       utils.expectIsEnabled(callParkFeature.editCancel);
       utils.expectIsEnabled(callParkFeature.editSave);
       utils.click(callParkFeature.editCancel);
@@ -92,7 +93,7 @@ describe('Huron Functional: call-park-feature', () => {
       });
 
       it('should be able to set the internal fallback destination', () => {
-        utils.sendKeys(callParkFeature.fallbackDestination, customer.callOptions.numberRange.beginNumber.toString());
+        utils.sendKeys(callParkFeature.fallbackDestination, customer.callOptions.numberRange.beginNumber);
         utils.expectIsDisplayed(callParkFeature.fallbackDestinationDropdown);
         utils.sendKeys(callParkFeature.fallbackDestination, protractor.Key.ENTER);
       });
@@ -172,7 +173,7 @@ describe('Huron Functional: call-park-feature', () => {
 
       it('should be able to set the internal fallback destination', () => {
         utils.click(callParkFeature.anotherDestination);
-        utils.sendKeys(callParkFeature.fallbackDestination, customer.callOptions.numberRange.beginNumber.toString());
+        utils.sendKeys(callParkFeature.fallbackDestination, customer.callOptions.numberRange.beginNumber);
         utils.expectIsDisplayed(callParkFeature.fallbackDestinationDropdown);
         utils.sendKeys(callParkFeature.fallbackDestination, protractor.Key.ENTER);
       });
