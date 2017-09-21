@@ -12,7 +12,7 @@
     </cs-card>
   </cs-card-layout>
 
-  <div cr-feature-toggle feature-hide="atlas-office365-support">
+  <div ng-if="!$ctrl.hasServicesOverviewRefreshToggle">
     <h5><span translate="servicesOverview.hybridServices"></span></h5>
     <p class="no-hybrid-cards-found"
       ng-if="!$ctrl.hasActiveHybridCards()">
@@ -30,7 +30,7 @@
     </cs-card-layout>
   </div>
 
-  <div cr-feature-toggle feature-show="atlas-office365-support">
+  <div ng-if="$ctrl.hasServicesOverviewRefreshToggle">
     <h5><span translate="servicesOverview.hybridServices"></span></h5>
     <div ng-if="$ctrl.loadingHybridServicesCards">
       <span class="icon icon-spinner icon-2x"></span>

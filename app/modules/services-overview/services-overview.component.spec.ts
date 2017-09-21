@@ -76,9 +76,9 @@ describe('ServicesOverviewController', () => {
     HybridServicesClusterService = _HybridServicesClusterService_;
   }
 
-  function initController(hasOffice365FeatureToggle = false) {
+  function initController(hasServicesOverviewRefreshToggle = false) {
     ctrl = $componentController('servicesOverview', {}, {
-      hasOffice365FeatureToggle: hasOffice365FeatureToggle,
+      hasServicesOverviewRefreshToggle: hasServicesOverviewRefreshToggle,
       urlParams: {
         office365: undefined,
       },

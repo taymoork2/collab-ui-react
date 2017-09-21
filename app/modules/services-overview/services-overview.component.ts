@@ -45,7 +45,7 @@ export class ServicesOverviewController implements ng.IComponentController {
   ];
 
   // ⚠️ The properties below are exclusive to the new cards coming with the office 365 feature
-  private hasOffice365FeatureToggle: boolean; // this feature toggle is used to decide if we display the new design for hybrid cards
+  private hasServicesOverviewRefreshToggle: boolean; // this feature toggle is used to decide if we display the new design for hybrid cards
   private urlParams: ng.ui.IStateParamsService;
   public _servicesToDisplay: HybridServiceId[] = []; // made public for easier testing
   public _servicesActive: HybridServiceId[] = []; // made public for easier testing
@@ -95,7 +95,7 @@ export class ServicesOverviewController implements ng.IComponentController {
       huronEnterprisePrivateTrunking: this.FeatureToggleService.supports(this.FeatureToggleService.features.huronEnterprisePrivateTrunking),
     });
 
-    if (!this.hasOffice365FeatureToggle) {
+    if (!this.hasServicesOverviewRefreshToggle) {
       this.loadHybridServicesStatuses();
       features
         .then((response) => {
@@ -316,7 +316,7 @@ export class ServicesOverviewComponent implements ng.IComponentOptions {
   public controller = ServicesOverviewController;
   public template = require('modules/services-overview/services-overview.component.html');
   public bindings = {
-    hasOffice365FeatureToggle: '<',
+    hasServicesOverviewRefreshToggle: '<',
     urlParams: '<',
   };
 }
