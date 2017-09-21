@@ -17,7 +17,10 @@
       ng-class="{'phonebuttonlayout-title-with-warning': $ctrl.isButtonLimitReached && !$ctrl.editing && !$ctrl.reordering}">
     </section-title>
     <p class="phonebutton-description" translate="phoneButtonLayout.description1"></p>
-    <p class="phonebutton-description phonebutton-description-next-line" translate="phoneButtonLayout.description2"></p>
+    <p class="phonebutton-description phonebutton-description-next-line">
+      <span translate="phoneButtonLayout.description2" translate-values="{ownerType: $ctrl.ownerType === 'places'? ('phoneButtonLayout.place' | translate) : ('phoneButtonLayout.user' | translate )}"></span>
+      <span ng-if="$ctrl.ownerType === 'users'" translate="phoneButtonLayout.description3" ></span>
+    </p>
     <form name="$ctrl.form" novalidate role="form">
       <div class="section-name phonebuttonlayout-readonly-wrapper">
         <div class="side-by-side-flex-elements">

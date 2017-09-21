@@ -21,6 +21,7 @@ const PHONE_BUTTON_LIMIT = 150;
 const inputs: string[] = ['external', 'uri', 'custom'];
 const addableButtonTypes: string[] = ['FEATURE_NONE', 'FEATURE_SPEED_DIAL_BLF'];
 const defaultNewButtonType: string = 'FEATURE_SPEED_DIAL_BLF';
+const PLACE_OWNER_TYPE: string = 'places';
 
 class PhoneButtonLayoutCtrl implements ng.IComponentController {
   private ownerId: string;
@@ -66,15 +67,25 @@ class PhoneButtonLayoutCtrl implements ng.IComponentController {
     private BlfInternalExtValidation,
     private Authinfo,
     private FeatureMemberService,
+    private HuronUserService,
     private BlfURIValidation,
   ) {
+  }
+
+  public $onInit() {
     this.callDestInputs = inputs;
     this.firstReordering = true;
     this.editing = false;
     this.reordering = false;
-    this.FeatureMemberService.getUser(this.ownerId).then((user) => {
-      this.ownerName = this.FeatureMemberService.getFullNameFromUser(user);
-    });
+    if (this.ownerType === PLACE_OWNER_TYPE) {
+      this.FeatureMemberService.getMachineAcct(this.ownerId).then((machine) => {
+        this.ownerName = _.get(machine, 'displayName');
+      });
+    } else {
+      this.HuronUserService.getUserV2(this.ownerId).then((user) => {
+        this.ownerName = this.HuronUserService.getFullNameFromUser(user);
+      });
+    }
     this.PhoneButtonLayoutService.getPhoneButtons(this.ownerType, this.ownerId).then((data) => {
       this.phoneButtonList = data.buttonLayout;
       this.setDefaultPhoneButtonAttributes(this.phoneButtonList);
@@ -106,9 +117,6 @@ class PhoneButtonLayoutCtrl implements ng.IComponentController {
         value: type,
       });
     });
-  }
-
-  public $onInit() {
     this.$scope.$watchCollection(() => {
       return this.phoneButtonList;
     }, () => {

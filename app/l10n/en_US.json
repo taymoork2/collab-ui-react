@@ -4679,15 +4679,18 @@
     "deleteConfirmation": "Are you sure you want to delete?",
     "deleteConfirmationHeader": "Confirm Delete",
     "description1": "View and edit the phone button template to customize buttons and speed dials for your devices.",
-    "description2": "Saving the phone button template will automatically update and reset all devices for this user. Please notify the user of any updates made.",
+    "description2": "Saving the phone button template will automatically update and reset all devices for this {{ownerType}}.",
+    "description3": "Please notify the user of any updates made.",
     "label": "Contact Name",
     "labelIncorrectCharacter": "Speed Dial Labels can not include < or >",
     "number": "Contact Address",
+    "place": "place",
     "reachedButtonLimit": "You have reached the limit of {{buttonLimit}} phone button entries.",
     "reorder": "Reorder",
     "retrievePhoneButtonLayoutFailed": "Failed to retrieve phone button layout.",
     "title": "Phone Button Layout & Speed Dials",
-    "updatePhoneButtonLayoutFailed": "Failed to save phone button layout changes."
+    "updatePhoneButtonLayoutFailed": "Failed to save phone button layout changes.",
+    "user": "user"
   },
   "lineLabel": {
     "title": "Line Label",

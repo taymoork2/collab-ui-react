@@ -26,6 +26,7 @@ describe('component: phoneButtonLayout', () => {
       'UrlConfig',
       '$httpBackend',
       'FeatureMemberService',
+      'HuronUserService',
     );
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
     this.callDestInputs = ['external', 'uri', 'custom'];
@@ -37,7 +38,9 @@ describe('component: phoneButtonLayout', () => {
       buttonLayout: [],
     }));
     spyOn(this.PhoneButtonLayoutService, 'updatePhoneButtons').and.returnValue(this.$q.resolve());
-    spyOn(this.FeatureMemberService, 'getFullNameFromUser').and.returnValue(this.$q.resolve({ user: { displayName: 'John Doe' } }));
+    spyOn(this.FeatureMemberService, 'getMachineAcct').and.returnValue(this.$q.resolve());
+    spyOn(this.HuronUserService, 'getFullNameFromUser').and.returnValue(this.$q.resolve({ user: { displayName: 'John Doe' } }));
+    spyOn(this.HuronUserService, 'getUserV2').and.returnValue(this.$q.resolve());
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('123');
     spyOn(this.HuronCustomerService, 'getVoiceCustomer').and.returnValue(this.$q.resolve({ uuid: '123', dialingPlanDetails: { regionCode: '', countryCode: '+1' } }));
     this.$httpBackend.whenGET(this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '/12345').respond(200);
@@ -48,16 +51,19 @@ describe('component: phoneButtonLayout', () => {
     this.$httpBackend.verifyNoOutstandingRequest();
   });
 
-  function initComponent() {
-    this.compileComponent('ucPhoneButtonLayout', {
-      ownerName: 'users',
-      ownerId: '12345',
-    });
-    this.$scope.$apply();
+  function initComponent(ownerType, ownerId) {
+
+    return function() {
+      this.compileComponent('ucPhoneButtonLayout', {
+        ownerType: ownerType,
+        ownerId: ownerId,
+      });
+      this.$scope.$apply();
+    };
   }
 
   describe('UI', () => {
-    beforeEach(initComponent);
+    beforeEach(initComponent('users', '12345'));
     it('should have phone buttons add functionality', function () {
       this.view.find(DROPDOWN_LIST).click();
       this.view.find(DROPDOWN_LIST_ADD).click();
@@ -68,7 +74,6 @@ describe('component: phoneButtonLayout', () => {
       expect(this.view.find(SAVE_BUTTON)).not.toBeDisabled();
       this.view.find(SAVE_BUTTON).click();
       expect(this.view.find(READ_ONLY).get(0)).toHaveText('Paul');
-      this.$httpBackend.flush();
     });
 
     it('should have phone buttons reorder functionality', function () {
@@ -81,13 +86,26 @@ describe('component: phoneButtonLayout', () => {
       this.view.find(DROPDOWN_LIST).click();
       this.view.find(DROPDOWN_LIST_REORDER).click();
       expect(this.view.find(REORDER).get(0)).toExist();
-      this.$httpBackend.flush();
+    });
+  });
+
+  describe('Initialize component with places', () => {
+    beforeEach(initComponent('places', '54321'));
+
+    it('should set owner details and load phone buttons for places', function () {
+      expect(this.PhoneButtonLayoutService.getPhoneButtons).toHaveBeenCalledWith('places', 54321);
+      expect(this.FeatureMemberService.getMachineAcct).toHaveBeenCalled();
+    });
+
+    afterEach(function () {
+      this.$httpBackend.verifyNoOutstandingExpectation();
+      this.$httpBackend.verifyNoOutstandingRequest();
     });
   });
 
   describe('cs-call-destination component', () => {
     let modelnumber, modeluri;
-    beforeEach(initComponent);
+    beforeEach(initComponent('users', '12345'));
     beforeEach(function () {
       modelnumber = '789';
       modeluri = 'test@cisco';
@@ -138,9 +156,8 @@ describe('component: phoneButtonLayout', () => {
   });
 
   describe('buildActionList function', () => {
-    beforeEach(initComponent);
+    beforeEach(initComponent('users', '12345'));
     afterEach(function () {
-      this.$httpBackend.flush();
       this.$httpBackend.verifyNoOutstandingExpectation();
       this.$httpBackend.verifyNoOutstandingRequest();
     });
@@ -179,9 +196,8 @@ describe('component: phoneButtonLayout', () => {
   });
 
   describe('setDefaultPhoneButtonAttributes function', () => {
-    beforeEach(initComponent);
+    beforeEach(initComponent('users', '12345'));
     afterEach(function () {
-      this.$httpBackend.flush();
       this.$httpBackend.verifyNoOutstandingExpectation();
       this.$httpBackend.verifyNoOutstandingRequest();
     });
@@ -278,9 +294,8 @@ describe('component: phoneButtonLayout', () => {
   });
 
   describe('updateIndex function', () => {
-    beforeEach(initComponent);
+    beforeEach(initComponent('users', '12345'));
     afterEach(function () {
-      this.$httpBackend.flush();
       this.$httpBackend.verifyNoOutstandingExpectation();
       this.$httpBackend.verifyNoOutstandingRequest();
     });

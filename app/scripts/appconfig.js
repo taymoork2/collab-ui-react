@@ -2332,6 +2332,26 @@
               displayName: translateDisplayName('telephonyPreview.speedDials'),
             },
           })
+          .state('place-overview.communication.phoneButtonLayout', {
+            views: {
+              'side-panel-container@place-overview': {
+                template: '<uc-phone-button-layout owner-type="places" owner-id="$resolve.ownerId"></uc-phone-button-layout>',
+              },
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/huron/phoneButtonLayout'));
+                }, 'place-call-phonebuttonlayout');
+              }),
+              ownerId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentPlace, 'id');
+              },
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('place-overview.communication.phoneButtonLayout').data.displayName = $translate.instant('telephonyPreview.phoneButtonLayout');
+              },
+            },
+          })
           .state('place-overview.communication.cos', {
             views: {
               'side-panel-container@place-overview': {

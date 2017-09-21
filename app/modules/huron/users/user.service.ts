@@ -122,4 +122,21 @@ export class HuronUserService {
       userId: userId,
     },  data).$promise;
   }
+
+  public getFullNameFromUser(user: any): string {
+    const firstName = this.getFirstNameFromUser(user);
+    const lastName = this.getLastNameFromUser(user);
+    if (firstName && lastName) {
+      return firstName + ' ' + lastName;
+    }
+    return user.userName;
+  }
+
+  private getFirstNameFromUser(user: any): string {
+    return _.get(user, 'firstName', '');
+  }
+
+  private getLastNameFromUser(user: any): string {
+    return _.get(user, 'lastName', '');
+  }
 }
