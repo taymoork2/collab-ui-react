@@ -95,6 +95,14 @@ export class HuntGroupService {
         });
         huntGroup.alternateDestination.name =  _.isNull(huntGroup.alternateDestination.name) ? _.get<string>(huntGroupResource.alternateDestination, 'userName') : huntGroup.alternateDestination.name;
 
+        huntGroup.numbers = _.filter(huntGroupResource.numbers, (number) => {
+          if (this.hasLocations) {
+            return number.type === NumberType.NUMBER_FORMAT_ENTERPRISE_LINE || number.type === NumberType.NUMBER_FORMAT_DIRECT_LINE;
+          } else {
+            return number.type === NumberType.NUMBER_FORMAT_EXTENSION || number.type === NumberType.NUMBER_FORMAT_DIRECT_LINE;
+          }
+        });
+
         const huntGroupMembers: CallFeatureMember[] = this.consolidateMembers(huntGroupResource.members);
         const promises: ng.IPromise<CallFeatureMember>[] = [];
         _.forEach(huntGroupMembers, member => {
