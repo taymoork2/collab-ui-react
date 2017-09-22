@@ -36,7 +36,7 @@
       <div class="mb-panel-left">
         <div class="mb-panel-header">
           <div class="mb-row-content">
-            <cs-searchfilter search-item-fn="$ctrl.searchByString(searchStr)" placeholder-text="{{::'mediaMgrModal.searchPlaceholder' | translate}}"></cs-searchfilter>
+            <cs-searchfilter search-item-fn="$ctrl.searchByString(searchStr)" placeholder-text="{{::'mediaMgrModal.searchPlaceholder' | translate}}" clear-aria-text="{{::'common.clear' | translate}}" search-placeholder-text="{{::'common.search' | translate}}"></cs-searchfilter>
             <label class="hotspot" for="upload">
               <i class="icon icon-plus icon-2x" ng-disabled="$ctrl.mohUploadInProgress"></i>
               <input id="upload" name="upload"
