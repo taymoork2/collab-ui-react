@@ -6241,6 +6241,8 @@
     "039007": "Your Email address is not accepted by our site.",
     "039008": "039008",
     "039009": "039009",
+    "060048": "No telephony privilege for CET user (WebEx audio or TSP is required)",
+    "060049": "TelephonySupport can not be NONE or OTHER for CET user",
     "010086": "The site does not support hybrid audio",
     "110055": "User limit exceeded for the session type \"{{sessionTypeName}}\".",
     "defaultProcessError": "Unable to process request.",
