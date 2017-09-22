@@ -1,6 +1,8 @@
+// TODO: algendel 9/26/17 ASAP replace this with components in  app/modules/core/siteList/webexSite/
 import './_meeting-settings.scss';
 import { Config } from 'modules/core/config/config';
-import { IWebExSite, ISiteNameError, SiteErrorType, IConferenceService, IExistingWebExTrialSite, IWebexLicencesPayload, IPendingLicense, IConferenceLicense } from './meeting-settings.interface';
+import { IConferenceLicense, IConferenceService, IExistingWebExTrialSite, IPendingLicense, ISiteNameError, IWebexLicencesPayload, IWebExSite, SiteErrorType } from './meeting-settings.interface';
+import { WebExSite } from './meeting-settings.model';
 import { SetupWizardService } from '../setup-wizard.service';
 
 export enum Steps {
@@ -8,33 +10,6 @@ export enum Steps {
   SITES_LICENSES = 'SITES_LICENSES',
 }
 
-
-class WebExSite {
-  public centerType: string;
-  public quantity: number;
-  public siteUrl: string;
-  public audioPackageDisplay?: string;
-  public timezone?: string | object;
-  public setupType?: string;
-
-  constructor({
-    centerType,
-    quantity,
-    siteUrl,
-    timezone,
-    setupType,
-  }: IWebExSite) {
-    this.centerType = centerType;
-    this.quantity = quantity || 0;
-    this.siteUrl = siteUrl;
-    this.timezone = timezone;
-    this.setupType = setupType;
-
-    if (!setupType) {
-      delete this.setupType;
-    }
-  }
-}
 
 class ExistingWebexTrialSite extends WebExSite {
   public keepExistingSite: boolean;

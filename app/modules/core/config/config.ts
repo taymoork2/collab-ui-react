@@ -560,6 +560,7 @@ export class Config {
     User: ['drLoginReturn', 'drOnboard', 'drConfirmAdminOrg', 'drOnboardQuestion', 'drOnboardEnterAdminEmail', 'drOrgName', 'drAdminChoices'],
     Site_Admin: [
       'site-list',
+      'site-list-add',
       'site-csv-import',
       'site-csv',
       'site-csv-results',

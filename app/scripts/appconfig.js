@@ -1908,6 +1908,33 @@
             controllerAs: 'siteList',
             parent: 'main',
           })
+          .state('site-list-add', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                template: '<webex-add-site-modal subscription-list="$resolve.subscriptionList"  conference-services="$resolve.conferenceServices" audio-licenses="$resolve.audioLicenses" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site->',
+              },
+            },
+            params: {
+              existingFieldIds: [],
+              existingFieldData: {},
+              inUse: false,
+              callback: function () { },
+            },
+            resolve: {
+              conferenceServices: /* @ngInject */ function (Authinfo) {
+                return Authinfo.getConferenceServices();
+              },
+              audioLicenses: /*@ngInject */ function (Authinfo, Config) {
+                var audioLicenses = _.filter(Authinfo.getLicenses(), { licenseType: Config.licenseTypes.AUDIO });
+                return audioLicenses;
+              },
+              subscriptionList: /* @ngInject */ function (Authinfo) {
+                var subscriptionIds = _.map(Authinfo.getSubscriptions(), 'externalSubscriptionId');
+                return subscriptionIds;
+              },
+            },
+          })
           .state('site-csv', {
             parent: 'modalSmall',
             views: {
