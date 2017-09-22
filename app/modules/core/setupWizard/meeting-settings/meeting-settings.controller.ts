@@ -534,6 +534,7 @@ export class MeetingSettingsCtrl {
     this.setNextDisableStatus(true);
     this.audioPartnerName = null;
   }
+
   public ccaspValidate() {
     this.disableValidateButton = true;
     this.setNextDisableStatus(true);
@@ -551,8 +552,15 @@ export class MeetingSettingsCtrl {
         this.ccaspSetInvalid(true);
       });
   }
+
   public ccaspSetNextDisabled() {
     if (!this.audioPartnerName || !this.ccasp.subscriptionId) {
+      this.setNextDisableStatus(true);
+    }
+  }
+
+  public tspSetNextDisabled() {
+    if (!this.audioPartnerName) {
       this.setNextDisableStatus(true);
     }
   }
