@@ -1,5 +1,6 @@
 import { IMedia } from './media-mgr.component';
 import { IMediaUpload } from './media-mgr.component';
+import { MAX_DISPLAY_NAME } from './media-mgr.component';
 
 interface IUploadMetaDataResponse {
   createTime: string;
@@ -63,6 +64,7 @@ export class MediaMgrService {
       url: `${this.HuronConfig.getMmsUrl()}/organizations/${this.Authinfo.getOrgId()}/media`,
       data: {
         filename: media.filename,
+        displayName: media.filename.substr(0, MAX_DISPLAY_NAME),
         md5Sum: media.checksum,
         size: media.filesize,
       },

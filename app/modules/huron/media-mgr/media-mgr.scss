@@ -43,17 +43,6 @@ media-mgr {
     .icon {
       vertical-align: middle;
     }
-
-    .icon-download {
-      color: $gray-base;
-      &:disabled {
-        color: $gray-light-2;
-      }
-    }
-
-    .icon-spinner {
-      color: $gray-base;
-    }
   }
 
   .mb-nav {
@@ -136,10 +125,9 @@ media-mgr {
 
     .mb-panel-header {
       display: flex;
-      justify-content: space-between;
-      font-family: 'CiscoSansTT Extra Light';
-      text-align: end;
-      margin: .5rem .75rem .5rem .5rem;
+      flex-direction: column;
+      vertical-align: middle;
+      margin: .5rem .75rem 1rem .5rem;
     }
 
     .nowrap {
@@ -148,6 +136,23 @@ media-mgr {
       white-space: nowrap;
       text-overflow: ellipsis;
     }
+  }
+
+  .searchbox .searchinput {
+    border: none;
+    background: none;
+    height: 1.5rem;
+  }
+
+  .searchfilter {
+    border: none;
+    background: none;
+    width: 100%;
+  }
+
+  .icon-search {
+    border: none;
+    top: .25rem;
   }
 
   .mb-panel-right {
@@ -187,7 +192,7 @@ media-mgr {
 
   .mb-panel-header {
     display: flex;
-    margin: 1.5rem auto 1.75rem;
+    margin: 1.5rem auto 2rem;
     justify-content: center;
   }
 
@@ -258,15 +263,6 @@ media-mgr {
 
   }
 
-  .searchbox .searchinput {
-    border: none;
-  }
-
-  .searchfilter {
-    border: none;
-    width: 100%;
-  }
-
   .media-text {
     font-family: 'CiscoSansTT Light';
     font-size: 14px;
@@ -299,6 +295,24 @@ media-mgr {
     color: $gray-light-1;
   }
 
+  .icon-download {
+    background: none;
+    color: $gray-base;
+    &:disabled {
+      background: none;
+      color: $gray-light-2;
+    }
+  }
+
+  .btn--none {
+    background: none;
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
+    &:disabled {
+      background: none;
+    }
+  }
+
   .btn--none.ng-animate {
     transition: 0s none;
     animation: 0s none;
@@ -320,37 +334,37 @@ media-mgr {
     }
   }
 
-  .progressbar-label {
-    font-family: 'CiscoSansTT Light';
-    font-size: 14px;
-    color: $gray-dark-2;
-  }
-
-  .progressbar-progress {
-    font-family: 'CiscoSansTT Light';
-    font-size: 14px;
-    color: $gray-dark-2;
-  }
-
-  .progressbar-sublabel {
-    color: $gray-base;
-  }
-
   .progress-bar {
     margin: 6rem;
 
+    .progressbar-icon-alignment {
+      display: flex;
+    }
+
+    .progressbar-content-alignment {
+      flex-grow: 1;
+    }
+
+    .progressbar-label {
+      font-family: 'CiscoSansTT Light';
+      font-size: 14px;
+      color: $gray-dark-2;
+    }
+
+    .progressbar-progress {
+      font-family: 'CiscoSansTT Light';
+      font-size: 14px;
+      color: $gray-dark-2;
+    }
+
+    .progressbar-sublabel {
+      color: $gray-base;
+    }
+
     .icon-exit {
-      align-self: center;
+      align-self: flex-end;
       margin-left: 0.5rem;
     }
-  }
-
-  .progressbar-icon-alignment {
-    display: flex;
-  }
-
-  .progressbar-content-alignment {
-    flex-grow: 1;
   }
 
   .centered {
@@ -360,5 +374,15 @@ media-mgr {
 
   .btn {
     height: 2.25rem;
+  }
+
+  .text-right.nowrap {
+    padding-left: 0.25rem;
+    white-space: nowrap;
+  }
+
+  .text-left.nowrap {
+    padding-right: 0.25rem;
+    white-space: nowrap;
   }
 }
