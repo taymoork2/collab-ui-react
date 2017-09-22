@@ -40,6 +40,10 @@
       border-right: rem-calc(1) solid $gray-light-3;
     }
 
+    .subscription-column.pro-pack-view {
+      border-left: rem-calc(1) solid $gray-light-3;
+    }
+
     .sub-name {
       @include vr-spacing(mt, 1.25);
       @include vr-spacing(ml, 1);

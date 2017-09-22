@@ -18,6 +18,10 @@ class SubscriptionDetailsCtrl {
     });
   }
 
+  public getProPackStatus(): boolean {
+    return this.isProPackPurchased && !_.isUndefined(this.subscription.proPack);
+  }
+
   public getUsage(offer: IOfferData): string  {
     if (_.isNumber(offer.usage)) {
       return `${offer.usage}/${offer.volume}`;
