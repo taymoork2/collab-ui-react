@@ -1,11 +1,8 @@
 <script type="text/ng-template" id="hgNumbersTemplate.html">
   <a>
-    <span ng-bind-html="(match.label.number | telephoneNumber) | typeaheadHighlight:query"></span>
-  </a>
-</script>
-<script type="text/ng-template" id="hgNumbersTemplateLocations.html">
-  <a>
-    <span ng-bind-html="(match.label.siteToSite | telephoneNumber) | typeaheadHighlight:query"></span>
+    <span ng-if="match.label.siteToSite" ng-bind-html="(match.label.siteToSite | telephoneNumber) | typeaheadHighlight:query"></span>
+    <span ng-if="!match.label.siteToSite && match.label.number" ng-bind-html="(match.label.number | telephoneNumber) | typeaheadHighlight:query"></span>
+    <span ng-if="!match.label.siteToSite && !match.label.number && match.label.external" ng-bind-html="(match.label.external | telephoneNumber) | typeaheadHighlight:query"></span>
   </a>
 </script>
 <div class="typeahead-large with-feature-title" ng-if="$ctrl.isNew">
@@ -16,7 +13,7 @@
     ng-class="{'error': $ctrl.errorNumberInput}"
     typeahead="number for number in $ctrl.getNumberList($viewValue) | limitTo:10"
     typeahead-on-select="$ctrl.selectNumber($item)"
-    typeahead-template-url="{{$ctrl.numberTemplateUrl}}"
+    typeahead-template-url="hgNumbersTemplate.html"
     typeahead-min-length="3"
     typeahead-wait-ms="200"
     placeholder="{{:: 'huronHuntGroup.numberPlaceholder' | translate}}"
@@ -41,15 +38,6 @@
 <div class="hg-edit-numbers">
   <cs-card-layout>
     <cs-card-number
-      ng-if="$ctrl.hasLocations"
-      ng-repeat="number in $ctrl.numbers track by number.uuid"
-      cs-id="number.uuid"
-      cs-title="number.siteToSite"
-      on-remove-fn="$ctrl.removeNumber(number)">
-    </cs-card-number>
-    <!-- TODO: samwi - remove when locations goes GA  -->
-    <cs-card-number
-      ng-if="!$ctrl.hasLocations"
       ng-repeat="number in $ctrl.numbers track by number.uuid"
       cs-id="number.uuid"
       cs-title="number.number"

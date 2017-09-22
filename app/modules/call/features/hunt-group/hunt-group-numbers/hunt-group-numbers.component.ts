@@ -10,7 +10,6 @@ class HuntGroupNumbersCtrl implements ng.IComponentController {
   public selectedNumber: INumber | undefined;
   public errorNumberInput: boolean = false;
   public hasLocations: boolean = false;
-  public numberTemplateUrl: string = 'hgNumbersTemplate.html';
 
   /* @ngInject */
   constructor(
@@ -21,7 +20,6 @@ class HuntGroupNumbersCtrl implements ng.IComponentController {
     this.FeatureToggleService.supports(FeatureToggleService.features.hI1484).then(supports => {
       if (supports) {
         this.hasLocations = true;
-        this.numberTemplateUrl = 'hgNumbersTemplateLocations.html';
       }
     });
   }
@@ -45,10 +43,14 @@ class HuntGroupNumbersCtrl implements ng.IComponentController {
     this.numbers.unshift(new HuntGroupNumber({
       uuid: number.uuid,
       type: number.type,
-      number: number.number,
+      number: this.getNumber(number),
       siteToSite: number.siteToSite,
     }));
     this.onNumbersChanged(this.numbers);
+  }
+
+  public getNumber(number) {
+    return (this.hasLocations && number.siteToSite) ? <string>number.siteToSite : number.number ? number.number : number.external ? number.external : undefined;
   }
 
   public removeNumber(hgnumber: HuntGroupNumber): void {
