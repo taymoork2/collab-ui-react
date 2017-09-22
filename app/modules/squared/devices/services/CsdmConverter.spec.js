@@ -285,14 +285,14 @@ describe('CsdmConverterSpec', function () {
       expect(converter.convertCloudberryDevices(arr)[0].hasIssues).toBeTruthy();
     });
 
-    it('has does not have issues when status.level is not ok and device is OFFLINE', function () {
+    it('has issues when status.level is not ok and device is OFFLINE', function () {
       var arr = [{
         status: {
           level: 'not_ok',
           connectionStatus: 'OFFLINE',
         },
       }];
-      expect(converter.convertCloudberryDevices(arr)[0].hasIssues).toBeFalsy();
+      expect(converter.convertCloudberryDevices(arr)[0].hasIssues).toBeTruthy();
     });
 
     it('has does not have issues when status.level is ok', function () {
