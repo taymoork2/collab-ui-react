@@ -77,6 +77,12 @@ eg. `yarn start --noopen` passes the `--noopen` argument to underlying `start` s
 * Run eslint on entire project
 * Use `yarn eslint --fix` to try to autofix as many issues as possible
 
+### `yarn gauntlet-push`
+
+* Runs `./bin/gauntlet-push.sh`
+* Defaults to a fork remote name matching your userid
+* Can specify specific fork with an argument `--fork=<remote>`
+
 ### `yarn json-verify`
 
 * Verifies well-formed `.json` files
@@ -123,6 +129,12 @@ eg. `yarn start --noopen` passes the `--noopen` argument to underlying `start` s
 ### `yarn protractor --specs <tests>`
 
 * Updates webdriver and runs protractor on tests in specified files
+
+### `yarn rebase-branch-and-update-fork`
+
+* Runs `./bin/rebase-branch-and-update-fork.sh`
+* Defaults to a fork remote name matching your userid
+* Can specify specific fork with an argument `--fork=<remote>`
 
 ### `yarn serve`
 
