@@ -30,7 +30,9 @@ const STATE_READY: string = 'READY';
 const STATE_DELETED: string = 'DELETED';
 const STATE_ERROR: string = 'ERROR';
 
-const GET_MEDIA_INTERVAL: number = 6000;
+export const MAX_DISPLAY_NAME = 48;
+
+const GET_MEDIA_INTERVAL: number = 30000;
 
 const ERROR_DELETE_IN_USE: number = 106;
 
@@ -91,8 +93,14 @@ export class MediaMgrCtrl implements ng.IComponentController {
     return modal === this.activeModal;
   }
 
-  public setActiveMedia(mediaSelection?: IMedia): void {
-    this.activeMedia = mediaSelection;
+  public setActiveMedia(mediaSelection: IMedia | undefined): void {
+    if ( this.mohDownloadInProgress ) {
+      this.Notification.notify(this.$translate.instant('mediaMgrModal.downloadInProgress'));
+    } else if ( mediaSelection !== this.activeMedia ) {
+      // If edit in progress, cancel it!
+      this.editMediaComplete();
+      this.activeMedia = mediaSelection;
+    }
   }
 
   public isActiveMedia(mediaSelection?: IMedia): boolean {
@@ -202,7 +210,9 @@ export class MediaMgrCtrl implements ng.IComponentController {
   public editMedia(content?: string): void {
     if (content === 'Title') {
       this.mohEditStatus.title = true;
+      this.mohEditStatus.description = false;
     } else if (content === 'Description') {
+      this.mohEditStatus.title = false;
       this.mohEditStatus.description = true;
     } else {
       this.mohEditStatus.title = true;
@@ -216,14 +226,32 @@ export class MediaMgrCtrl implements ng.IComponentController {
   }
 
   public mohEditInProgress(content?: string): boolean {
-    if (content === 'Title' && this.mohEditStatus.title) {
-      return true;
-    }
-    if (content === 'Description' && this.mohEditStatus.description) {
-      return true;
-    }
-    if (this.mohEditStatus.title || this.mohEditStatus.description) {
-      return true;
+    switch (content) {
+      case 'Title':
+        if (this.mohEditStatus.title) {
+          return true;
+        }
+        break;
+      case 'Description':
+        if (this.mohEditStatus.description) {
+          return true;
+        }
+        break;
+      case 'InlineEdit':
+        if (this.mohEditStatus.title || this.mohEditStatus.description) {
+          return true;
+        }
+        break;
+      case 'FullEditMode':
+        if (this.mohEditStatus.title && this.mohEditStatus.description) {
+          return true;
+        }
+        break;
+      default:
+        if (this.mohEditStatus.title || this.mohEditStatus.description) {
+          return true;
+        }
+        break;
     }
     return false;
   }
@@ -365,7 +393,6 @@ export class MediaMgrCtrl implements ng.IComponentController {
   public getDuration(mohFile: IMedia): string {
     const minutes = Math.floor(Number(mohFile.duration) / 60);
     const seconds = Number(mohFile.duration) - minutes * 60;
-
     const finalTime = _.padStart(minutes.toString(), 2, '') + ':' + _.padStart(seconds.toString(), 2, '0');
     return finalTime;
   }

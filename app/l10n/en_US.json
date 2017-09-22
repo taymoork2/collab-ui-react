@@ -9567,6 +9567,7 @@
     "cleanupMediaError": "An error occurred cleaning up a failed media upload.",
     "cancelUploadError": "An error occurred cancelling a media upload.",
     "unsupportedTypeError": "File type selected for upload is not supported.",
+    "downloadInProgress": "A download is in-progress. You can not select different media until the download has completed.",
     "displayName": {
       "required": "Media name is required",
       "tooShortError": "Media name must contain at least one characters.",
@@ -9582,7 +9583,7 @@
       "confirm": "Cancel Upload"
     },
     "deleteMedia": {
-      "title": "Permanantly Delete Media",
+      "title": "Permanently Delete Media",
       "message": "Note: Media file(s) recently deleted still might be in use by the system.",
       "cancel": "Cancel",
       "confirm": "Delete Media"
