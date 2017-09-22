@@ -211,7 +211,6 @@ module.exports = {
   csdmAtaCpc: 'csdm-ata-cpc',
   csdmAtaReboot: 'csdm-ata-reboot',
   hI1484: 'h-i1484', //Multi-Location Support
-  hI1485: 'h-i1485',
   atlasRolesAndSecurity: 'atlas-roles-and-security',
   csdmMultipleDevicesPerPlace: 'csdm-multiple-devices-per-place',
   avrilI1558: 'avril-i1558',
