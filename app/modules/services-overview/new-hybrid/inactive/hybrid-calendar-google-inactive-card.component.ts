@@ -28,7 +28,7 @@ export class HybridCalendarGoogleInactiveCardComponent implements ng.IComponentO
     <article>
       <div class="inactive-card_header card_header--stretched">
         <h4 translate="servicesOverview.cards.hybridCalendar.title"></h4>
-        <div class="inactive-card_logo inactive-card_logo--google"><img src="/images/hybrid-services/Google_Calendar_logo_small.png" alt="{{::servicesOverview.cards.hybridCalendar.googleTitle | translate}}"></div>
+        <div class="inactive-card_logo inactive-card_logo--google"><img src="/images/hybrid-services/Google_Calendar_logo_small.png" alt="{{::'servicesOverview.cards.hybridCalendar.googleTitle' | translate}}"></div>
       </div>
       <div class="inactive-card_content">
         <p translate="servicesOverview.cards.hybridCalendar.description"></p>

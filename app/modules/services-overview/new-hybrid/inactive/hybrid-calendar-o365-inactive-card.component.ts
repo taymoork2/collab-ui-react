@@ -31,7 +31,7 @@ export class HybridCalendarO365InactiveCardComponent implements ng.IComponentOpt
     <article>
       <div class="inactive-card_header card_header--stretched">
         <h4 translate="servicesOverview.cards.hybridCalendar.title"></h4>
-        <div class="inactive-card_logo"><img src="/images/hybrid-services/Office_365_logo_small.png" alt="{{::servicesOverview.cards.hybridCalendar.office365Title | translate}}"></div>
+        <div class="inactive-card_logo"><img src="/images/hybrid-services/Office_365_logo_small.png" alt="{{::'servicesOverview.cards.hybridCalendar.office365Title' | translate}}"></div>
       </div>
       <div class="inactive-card_content">
         <p translate="servicesOverview.cards.hybridCalendar.description"></p>

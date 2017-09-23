@@ -38,7 +38,7 @@ export class HybridCalendarExchangeInactiveCardComponent implements ng.IComponen
     <article>
       <div class="inactive-card_header card_header--stretched">
         <h4 translate="servicesOverview.cards.hybridCalendar.title"></h4>
-        <div class="inactive-card_logo"><img src="/images/hybrid-services/Microsoft_Exchange_logo_small.png" alt="{{::servicesOverview.cards.hybridCalendar.exchangeTitle | translate}}"></div>
+        <div class="inactive-card_logo"><img src="/images/hybrid-services/Microsoft_Exchange_logo_small.png" alt="{{::'servicesOverview.cards.hybridCalendar.exchangeTitle' | translate}}"></div>
       </div>
       <div class="inactive-card_content">
         <p translate="servicesOverview.cards.hybridCalendar.description"></p>
