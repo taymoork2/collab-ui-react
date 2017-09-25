@@ -40,13 +40,13 @@
         ng-if="!$ctrl.isCloudberryPlace()"
         on-change-fn="$ctrl.setSimultaneousCalls(incomingCallMaximum)">
       </uc-simultaneous-calls>
-      <uc-line-label     
+      <uc-line-label
         line-label="$ctrl.lineOverviewData.line.label.value"
         apply-to-all-shared-lines="$ctrl.applyToAllSharedLines"
-        ng-hide="!$ctrl.showLineLabel"     
+        ng-hide="!$ctrl.showLineLabel"
         show-apply-to-all-shared-lines="$ctrl.showApplyToAllSharedLines"
         on-change-fn="$ctrl.setLineLabel(lineLabel, applyToAllSharedLines)">
-      </uc-line-label>      
+      </uc-line-label>
       <uc-caller-id
         caller-id-options="$ctrl.callerIdOptions"
         custom-caller-id-name="$ctrl.lineOverviewData.callerId.customCallerIdName"

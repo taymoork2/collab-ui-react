@@ -1,4 +1,4 @@
-<form name="rolesEdit.form" role="form">
+<form name="rolesEdit.form" role="form" class="side-panel-form">
   <cs-sp-buttons  ng-show="rolesEdit.form.$dirty" title="{{'rolesPanel.editUser' | translate}}">
     <button cs-btn id="saveButton" class="btn btn--primary" ng-click="updateRoles()" type="button" ng-disabled="rolesEdit.form.$invalid" loading="updatingUser">{{::'common.save'|translate}}</button>
     <button id="cancelButton" translate="common.cancel" ng-click="resetFormData()" type="button" ng-disabled="updatingUser"></button>
@@ -40,8 +40,7 @@
               </div>
             </div>
             <div class="admin-roles-panel" ng-if="showRolesSection">
-              <p><span class="edit-title" translate="rolesPanel.administratorRoles"></span></p>
-
+              <section-title title-key="rolesPanel.administratorRoles"></section-title>
               <div class="cs-radio-group">
                 <div class="admin-options" id="no-admin-options">
                   <input
@@ -216,9 +215,7 @@
       </div>
     </cs-sp-section>
     <cs-sp-section ng-if="showSecuritySection && isEnterpriseCustomer">
-      <section-title
-        title-key="usersPreview.security">
-      </section-title>
+      <section-title title-key="usersPreview.security"></section-title>
       <div class="reset-access-panel">
         <p class="reset-access-segment-title">
           <span translate="usersPreview.resetAccess"></span>
