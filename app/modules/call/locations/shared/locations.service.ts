@@ -108,7 +108,7 @@ export class LocationsService {
       customerId: this.Authinfo.getOrgId(),
       userId,
     }).$promise
-    .then(response =>  _.get<Location>(response, 'location'));
+    .then(response => _.get<Location>(response, 'location'));
   }
 
   public searchLocations(searchTerm): ng.IPromise<LocationListItem[]> {
@@ -199,9 +199,10 @@ export class LocationsService {
     }, location).$promise;
   }
 
-  public getDefaultLocation() {
+  public getDefaultLocation(): ng.IPromise<LocationListItem> {
     if (!this.defaultLocation) {
       return this.getLocationList().then(locationList => {
+        //First one is always the default per API definition
         this.defaultLocation = locationList[0];
         return this.defaultLocation;
       });
@@ -217,6 +218,8 @@ export class LocationsService {
     }, {
       defaultLocation: true,
     }).$promise.then(() => {
+      //reset the default location
+      this.defaultLocation = undefined;
       this.getDefaultLocation();
     });
   }

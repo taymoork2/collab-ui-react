@@ -3,6 +3,7 @@ import pstnModel from '../pstn.model';
 import pstnService from '../pstn.service';
 import notifications from 'modules/core/notifications';
 import phoneNumberModule from 'modules/huron/phoneNumber';
+import PstnAddressServiceModule from '../shared/pstn-address';
 
 export default angular
   .module('huron.pstn.pstn-trial-setup', [
@@ -14,6 +15,7 @@ export default angular
     pstnService,
     notifications,
     phoneNumberModule,
+    PstnAddressServiceModule,
   ])
   .component('ucPstnTrialSetup', new PstnTrialSetupComponent())
   .name;

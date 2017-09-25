@@ -5,7 +5,7 @@ export interface ITerminusResource extends ng.resource.IResourceClass<ITerminus>
 }
 
 export interface IGenericResource<T> extends ng.resource.IResourceClass<T & ng.resource.IResource<T>> {
-  update: ng.resource.IResourceMethod<ng.resource.IResource<T>>;
+  update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
 }
 
 export interface IE911Address {
@@ -125,8 +125,15 @@ export class TerminusService {
     });
   }
 
-  public customerLocations(): ng.resource.IResourceClass<ng.resource.IResource<any>> {
-    return this.$resource(this.HuronConfig.getTerminusV2Url() + '/customers/:customerId/locations/:locationId', {}, {});
+  public customerLocations<T>(): IGenericResource<T> {
+    return <IGenericResource<T>>this.$resource(this.HuronConfig.getTerminusV2Url() + '/customers/:customerId/locations/:locationId', {}, {
+      save: {
+        headers: {
+          'Access-Control-Expose-Headers': 'Location',
+        },
+        method: 'POST',
+      },
+    });
   }
 
   public customerLocationAddresses<T>(): IGenericResource<T> {

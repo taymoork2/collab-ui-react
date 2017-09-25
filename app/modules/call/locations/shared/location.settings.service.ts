@@ -93,9 +93,11 @@ export class CallLocationSettingsService {
     }
   }
 
+  //Currently UI only supports 1 address per location
   private getEmergencyServiceAddress(locationId: string): ng.IPromise<Address> {
     const defaultAddress: Address = new Address();
     defaultAddress.country = this.PstnModel.getCountryCode();
+    defaultAddress.default = true;
     if (locationId && this.PstnModel.getCustomerId()) {
       return this.PstnAddressService.getByLocation(this.PstnModel.getCustomerId(), locationId)
       .then(addresses => {
@@ -371,8 +373,10 @@ export class CallLocationSettingsService {
       this.Notification.error('emergencyServices.locationUnknown');
       return this.$q.reject();
     }
+    //UI only supports 1 address per location
+    data.address.default = true;
     if (this.callLocationSettingsDataCopy.address && this.callLocationSettingsDataCopy.address.validated) {
-      //Normally the new address has be validated and the uuid has been removed
+      //Normally when new address has be validated and the uuid has been removed
       data.address.uuid = this.callLocationSettingsDataCopy.address.uuid;
       return this.PstnAddressService.updateToLocation(this.PstnModel.getCustomerId(), data.location.uuid, data.address)
       .catch(error => {
