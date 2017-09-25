@@ -1,4 +1,4 @@
-import hybridImpUserSettings from './index';
+import hybridMessagingUserSettings from './index';
 
 describe('hybridImpUserSettings', () => {
 
@@ -7,7 +7,7 @@ describe('hybridImpUserSettings', () => {
   beforeEach(angular.mock.module('Hercules'));
 
   beforeEach(function () {
-    this.initModules(hybridImpUserSettings);
+    this.initModules(hybridMessagingUserSettings);
   });
 
   beforeEach(inject(dependencies));
@@ -38,7 +38,7 @@ describe('hybridImpUserSettings', () => {
   }
 
   function initController(userId, emailAddress) {
-    ctrl = $componentController('hybridImpUserSettings', {}, {
+    ctrl = $componentController('hybridMessagingUserSettings', {}, {
       userId: undefined,
       userEmailAddress: emailAddress,
     });
