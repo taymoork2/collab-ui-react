@@ -17,14 +17,14 @@
     vm.selectedMediaType = $stateParams.type;
     vm.isCareAssistantEnabled = $state.isCareAssistantEnabled;
     vm.isCareProactiveChatTrialsEnabled = $state.isCareProactiveChatTrialsEnabled;
-
-    init();
-
     vm.mediaTypes = {
       chat: 'chat',
       callback: 'callback',
       chatPlusCallback: 'chatPlusCallback',
     };
+
+    init();
+
     vm.cancelModal = cancelModal;
     vm.evalKeyPress = evalKeyPress;
 
@@ -345,7 +345,7 @@
             },
           },
         },
-        virtualAssistant: defaultVirtualAssistantConfig,
+        virtualAssistant: _.cloneDeep(defaultVirtualAssistantConfig),
         pages: {
           customerInformation: {
             enabled: true,
@@ -673,7 +673,7 @@
             },
           },
         },
-        virtualAssistant: defaultVirtualAssistantConfig,
+        virtualAssistant: _.cloneDeep(defaultVirtualAssistantConfig),
         pages: {
           customerInformationChat: {
             enabled: true,
@@ -968,8 +968,6 @@
     };
 
     vm.populateVirtualAssistantInfo = function () {
-      vm.template.configuration.virtualAssistant = vm.template.configuration.virtualAssistant || defaultVirtualAssistantConfig;
-
       vm.selectedVA = vm.template.configuration.virtualAssistant.config;
 
       // update modified VA Name from the configured VA info
@@ -983,12 +981,10 @@
           vm.vaSelectionCommit();
         }
       }
-
-      vm.template.configuration.virtualAssistant.config =
-        vm.template.configuration.virtualAssistant.config ? vm.template.configuration.virtualAssistant.config : defaultVirtualAssistantConfig.config;
-
-      vm.template.configuration.virtualAssistant.welcomeMessage =
-        vm.template.configuration.virtualAssistant.welcomeMessage ? vm.template.configuration.virtualAssistant.welcomeMessage : defaultVirtualAssistantConfig.welcomeMessage;
+      if (!selectedVA) {
+        vm.template.configuration.virtualAssistant = _.cloneDeep(defaultVirtualAssistantConfig);
+      }
+      vm.selectedVA = vm.template.configuration.virtualAssistant.config;
     };
 
     //Use the existing template fields when editing the template
@@ -998,9 +994,6 @@
       populateCustomerInformationField4();
       populateFeedbackInformation();
       populateProactivePromptInformation();
-      if (vm.template.configuration.mediaType !== vm.mediaTypes.callback) {
-        vm.populateVirtualAssistantInfo();
-      }
     }
 
     function populateCustomerInformationField4() {
@@ -1675,13 +1668,13 @@
         vm.logoFile = 'data:image/png;base64,' + $window.btoa(String.fromCharCode.apply(null, new Uint8Array(data.data)));
         vm.logoUploaded = true;
       });
-
-      if (vm.isCareAssistantEnabled) {
+      //Should invoke VA config only for chat and chat+callback templates
+      if (vm.isCareAssistantEnabled && vm.selectedMediaType !== vm.mediaTypes.callback) {
         VirtualAssistantService.listConfigs().then(function (result) {
           vm.configuredVirtualAssistantServices = result.items;
           vm.hasConfiguredVirtualAssistantServices = (vm.configuredVirtualAssistantServices.length > 0);
           //if the virtual assistant list has only one VA available. use it by default.
-          if (vm.configuredVirtualAssistantServices.length === 1 && !vm.isEditFeature && vm.template.configuration.mediaType !== vm.mediaTypes.callback) {
+          if (vm.configuredVirtualAssistantServices.length === 1 && !vm.isEditFeature) {
             var data = vm.configuredVirtualAssistantServices[0];
             vm.selectedVA = vm.selectedVA || {};
             vm.selectedVA.id = data.id;

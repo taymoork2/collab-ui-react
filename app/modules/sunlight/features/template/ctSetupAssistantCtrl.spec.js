@@ -904,6 +904,32 @@ describe('Care Setup Assistant Ctrl', function () {
       expect(controller.template.configuration.virtualAssistant.config.id).toEqual(VAService.id);
       expect(controller.template.configuration.virtualAssistant.config.name).toEqual(VAService.name);
     });
+
+    it('should disable VA if bot is deleted', function () {
+      var DefaultSelectedVA = { id: '', name: '' };
+      var VAService = { id: 'id1', name: 'cva' };
+      var DefaultVirtualAssistantConfig = {
+        enabled: false,
+        config: {
+          id: '',
+          name: '',
+        },
+        welcomeMessage: $translate.instant('careChatTpl.virtualAssistantWelcomeMessage'),
+      };
+
+      controller.template.configuration.virtualAssistant.config.id = VAService.id;
+      controller.template.configuration.virtualAssistant.config.name = 'some-name';
+      controller.template.configuration.virtualAssistant.welcomeMessage = getStringOfLength(51);
+
+      controller.hasConfiguredVirtualAssistantServices = false;
+      controller.configuredVirtualAssistantServices = [];
+      controller.populateVirtualAssistantInfo();
+
+      expect(controller.template.configuration.virtualAssistant.enabled).toBe(false);
+      expect(controller.selectedVA).toEqual(DefaultSelectedVA);
+      expect(controller.template.configuration.virtualAssistant.config.id).toEqual(DefaultVirtualAssistantConfig.config.id);
+      expect(controller.template.configuration.virtualAssistant.config.name).toEqual(DefaultVirtualAssistantConfig.config.name);
+    });
   });
 
   describe('Off Hours Page', function () {
