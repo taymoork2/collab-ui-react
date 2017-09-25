@@ -42,7 +42,7 @@ class EmergencyServiceAddressCtrl implements ng.IComponentController {
     //Get Feature Toggle for locations
     this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484).then((supports) => {
       this.ftHasLocations = supports;
-    }).finally(this.initAddress);
+    }).finally(this.initAddress.bind(this));
   }
 
   private initAddress() {

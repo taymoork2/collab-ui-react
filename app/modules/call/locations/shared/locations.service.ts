@@ -245,23 +245,40 @@ export class LocationsService {
     });
   }
 
-
+  //return a list of assigned external numbers that are not the Voicemail Pilot number.
   public getEmergencyCallbackNumbersOptions(): ng.IPromise<CallPhoneNumber[]> {
-    return this.numberResource.get({
-      customerId: this.Authinfo.getOrgId(),
-      type: 'external',
-      assigned: true,
-      deprecated: false,
-    })
-    .$promise
-    .then((rNumberData: IRCallPhoneNumberData) => {
-      const numbers: CallPhoneNumber[] = [];
-      if (_.isArray(rNumberData.numbers)) {
-        rNumberData.numbers.forEach((rPhoneNumber: IRCallPhoneNumber) => {
-          numbers.push(new CallPhoneNumber(rPhoneNumber));
-        });
+    return this.getDefaultLocation()
+    .then(locationListItem => {
+      if (locationListItem.uuid) {
+        return this.getLocation(locationListItem.uuid);
       }
-      return numbers;
+      return this.$q.reject(); //uuid should always be set in this case
+    })
+    .then(location => {
+      return this.numberResource.get({
+        customerId: this.Authinfo.getOrgId(),
+        type: 'external',
+        assigned: true,
+        deprecated: false,
+      })
+      .$promise
+      .then((rNumberData: IRCallPhoneNumberData) => {
+        const numbers: CallPhoneNumber[] = [];
+        if (_.isArray(rNumberData.numbers)) {
+          rNumberData.numbers.forEach((rPhoneNumber: IRCallPhoneNumber) => {
+            let number: string = rPhoneNumber.external ? rPhoneNumber.external : '';
+            if (number.length > 0) {
+              if (number.charAt(0) === '\\') {
+                number = number.slice(1);
+              }
+            }
+            if (location.voicemailPilotNumber === null || location.voicemailPilotNumber.number !== number) {
+              numbers.push(new CallPhoneNumber(rPhoneNumber));
+            }
+          });
+        }
+        return numbers;
+      });
     });
   }
 
