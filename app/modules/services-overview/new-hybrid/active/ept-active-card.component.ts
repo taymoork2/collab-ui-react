@@ -15,7 +15,7 @@ export class EPTActiveCardComponent implements ng.IComponentOptions {
       <div class="active-card_content">
         <div class="active-card_section">
           <div class="active-card_title" translate="servicesOverview.cards.shared.service"></div>
-          <div class="active-card_action" translate="servicesOverview.cards.shared.configure"><a ui-sref="private-trunk-overview.settings"></a></div>
+          <div class="active-card_action"><a ui-sref="private-trunk-overview.settings" translate="servicesOverview.cards.shared.configure"></a></div>
         </div>
         <div class="active-card_section">
           <div class="active-card_title" translate="servicesOverview.cards.shared.resources"></div>

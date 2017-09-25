@@ -35,8 +35,8 @@ export class HybridCalendarExchangeActiveCardComponent implements ng.IComponentO
       </div>
       <div class="active-card_content">
         <div class="active-card_section">
-          <div class="active-card_title" translate="servicesOverview.cards.shared.service">Service</div>
-          <div class="active-card_action" translate="servicesOverview.cards.shared.configure"><a ui-sref="calendar-service.settings"></a></div>
+          <div class="active-card_title" translate="servicesOverview.cards.shared.service"></div>
+          <div class="active-card_action"><a ui-sref="calendar-service.settings" translate="servicesOverview.cards.shared.configure"></a></div>
         </div>
         <div class="active-card_section">
           <div class="active-card_title" translate="servicesOverview.cards.shared.resources"></div>

@@ -4,18 +4,7 @@ class HybridCalendarO365InactiveCardController implements ng.IComponentControlle
   /* @ngInject */
   constructor(
     private $modal: IToolkitModalService,
-    private $translate: ng.translate.ITranslateService,
-    private ModalService,
   ) {}
-
-  public openPrerequisites(): void {
-    this.ModalService.open({
-      hideDismiss: true,
-      title: 'Not implemented yet',
-      message: '🐻',
-      close: this.$translate.instant('common.close'),
-    });
-  }
 
   public openSetUp(): void {
     this.$modal.open({
@@ -37,7 +26,6 @@ export class HybridCalendarO365InactiveCardComponent implements ng.IComponentOpt
         <p translate="servicesOverview.cards.hybridCalendar.description"></p>
       </div>
       <div class="inactive-card_footer">
-        <!-- <p><button class="btn btn--link" ng-click="$ctrl.openPrerequisites()" translate="servicesOverview.genericButtons.prereq"></button></p> -->
         <p><button class="btn btn--primary" ng-click="$ctrl.openSetUp()" translate="servicesOverview.genericButtons.setup"></button></p>
       </div>
     </article>
