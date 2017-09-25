@@ -1514,7 +1514,7 @@
           .state('user-overview.hybrid-services-spark-hybrid-impinterop', {
             views: {
               'side-panel-container@user-overview': {
-                template: '<hybrid-imp-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName"></hybrid-imp-user-settings>',
+                template: '<hybrid-messaging-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName"></hybrid-messaging-user-settings>',
               },
             },
             data: {},
@@ -1530,6 +1530,20 @@
             params: {
               extensionId: {},
               extensions: {},
+            },
+          })
+          .state('user-overview.hybrid-services-spark-hybrid-impinterop.history', {
+            views: {
+              'side-panel-container@user-overview': {
+                template: '<user-status-history service-id="\'spark-hybrid-impinterop\'"></user-status-history>',
+              },
+            },
+            data: {},
+            resolve: {
+              displayName: translateDisplayName('sidePanelBreadcrumb.statusHistory'),
+            },
+            params: {
+              serviceId: {},
             },
           })
           .state('user-overview.hybrid-services-squared-fusion-cal', {
