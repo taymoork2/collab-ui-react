@@ -1,5 +1,5 @@
 <div ng-repeat="(fieldName, field) in getFilteredFields(fields)">
-  <div class="row ct-left-row ct-selectable-container" selectable ng-click="setActiveItem(field, fieldName)">
+  <div class="row ct-left-row ct-selectable-container" selectable ng-click="setActiveItem(field, fieldName)" ng-focus="setActiveItem(field, fieldName)">
     <div class="ct-flex-container">
       <label
         title="{{getLabel(field)}}"
