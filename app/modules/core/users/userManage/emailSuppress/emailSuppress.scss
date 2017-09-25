@@ -27,11 +27,10 @@ user-manage-email-suppress {
     .align-center {
       @include vr-spacing(mv, 0.5);
       display: inline-flex;
-      text-align: center;
-      max-width: 800px;
+      max-width: 650px;
       margin-left: auto;
       margin-right: auto;
-      @media screen and (max-width: 800px) {
+      @media screen and (max-width: 650px) {
         width: 90%;
       }
       .can-change {
@@ -45,12 +44,12 @@ user-manage-email-suppress {
         color: $color-attention-base;
         font-size: 1.5rem;
         top: 0.2rem;
-        right: 0.5rem;
+        right: 0.65rem;
       }
       .icon-info {
         color: $color-blue-base;
-        top: 0.4rem;
-        right: 0.1rem;
+        top: 1.25rem;
+        right: 0.65rem;
       }
     }
 

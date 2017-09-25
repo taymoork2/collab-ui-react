@@ -5,7 +5,24 @@
     .controller('EnterpriseSettingsCtrl', EnterpriseSettingsCtrl);
 
   /* @ngInject */
-  function EnterpriseSettingsCtrl($q, $rootScope, $scope, $timeout, $translate, $window, Authinfo, Config, Log, Notification, ServiceSetup, PersonalMeetingRoomManagementService, SSOService, Orgservice, UrlConfig, FeatureToggleService) {
+  function EnterpriseSettingsCtrl(
+    $modal,
+    $q,
+    $rootScope,
+    $scope,
+    $timeout,
+    $translate,
+    $window,
+    Authinfo,
+    Config,
+    FeatureToggleService,
+    Log,
+    Notification,
+    Orgservice,
+    PersonalMeetingRoomManagementService,
+    ServiceSetup,
+    SSOService,
+    UrlConfig) {
     var strEntityDesc = '<EntityDescriptor ';
     var strEntityId = 'entityID="';
     var strEntityIdEnd = '"';
@@ -232,19 +249,43 @@
     }];
 
     $scope.$watch('options.configureSSO', function (updatedConfigureSSOValue) {
-      if ($rootScope.ssoEnabled && updatedConfigureSSOValue === 1) {
-        var r = $window.confirm($translate.instant('ssoModal.disableSSOByRadioWarning'));
-        if (r === true) {
-          $scope.options.configureSSO = 1;
-          $scope.options.deleteSSOBySwitchingRadio = true;
-          deleteSSO();
-        } else {
-          $scope.options.modifySSO = false; //reset modify flag if user clicks cancel
-          $scope.options.configureSSO = 0;
-          $scope.options.deleteSSOBySwitchingRadio = false;
-        }
-      }
+      vm.changeSSO(updatedConfigureSSOValue);
     });
+
+    vm.changeSSO = function (updatedConfigureSSOValue) {
+      if ($rootScope.ssoEnabled && updatedConfigureSSOValue === 1) {
+        // Check if emails are suppressed or not
+        var params = {
+          basicInfo: true,
+          disableCache: false,
+        };
+        Orgservice.getAdminOrgAsPromise(null, params).then(function (response) {
+          var isOnBoardingEmailSuppressed = response.data.isOnBoardingEmailSuppressed || false;
+          $modal.open({
+            template: require('modules/core/setupWizard/enterpriseSettings/ssoDisableConfirm.tpl.html'),
+            type: 'dialog',
+            controller: function () {
+              var vm = this;
+              vm.message = isOnBoardingEmailSuppressed
+                ? $translate.instant('ssoModal.disableSSOByRadioWarningWhenEmailsSuppressed')
+                : $translate.instant('ssoModal.disableSSOByRadioWarning');
+            },
+            controllerAs: 'vm',
+          }).result.then(function () {
+            $scope.options.configureSSO = 1;
+            $scope.options.deleteSSOBySwitchingRadio = true;
+            // Set the email suppress state to FALSE when the SSO is disabled
+            Orgservice.setOrgEmailSuppress(false).then(function () {
+              deleteSSO();
+            });
+          }).catch(function () {
+            $scope.options.modifySSO = false; //reset modify flag if user clicks cancel
+            $scope.options.configureSSO = 0;
+            $scope.options.deleteSSOBySwitchingRadio = false;
+          });
+        });
+      }
+    };
 
     $scope.$watch('options.enableSSORadioOption', function () {
       var ssoValue = $scope.options.enableSSORadioOption;
@@ -300,12 +341,20 @@
     $scope.$watch('idpFile.file', function () {
       if ($scope.idpFile.file) {
         if ($rootScope.ssoEnabled) {
-          if ($window.confirm($translate.instant('ssoModal.idpOverwriteWarning'))) {
+          $modal.open({
+            template: require('modules/core/setupWizard/enterpriseSettings/ssoDisableConfirm.tpl.html'),
+            type: 'dialog',
+            controller: function () {
+              var vm = this;
+              vm.message = $translate.instant('ssoModal.idpOverwriteWarning');
+            },
+            controllerAs: 'vm',
+          }).result.then(function () {
             $timeout($scope.importRemoteIdp);
-          } else {
+          }).catch(function () {
             //reset
             resetFile();
-          }
+          });
         } else {
           //sso is not enabled.Import the idp file
           $timeout($scope.importRemoteIdp);
