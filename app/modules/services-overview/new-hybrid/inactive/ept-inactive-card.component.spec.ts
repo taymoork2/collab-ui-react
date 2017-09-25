@@ -1,5 +1,6 @@
 import componentModule from '../../index';
 
+import { PrivateTrunkPrereqService } from '../../../hercules/private-trunk/private-trunk-prereq';
 import { EPTInactiveCardController } from 'modules/services-overview/new-hybrid/inactive/ept-inactive-card.component';
 
 describe('Component: EPTInactiveCardController', () => {
@@ -8,7 +9,8 @@ describe('Component: EPTInactiveCardController', () => {
   let $q: ng.IQService;
   let $scope: ng.IScope;
   let ctrl: EPTInactiveCardController;
-  let PrivateTrunkPrereqService;
+  let PrivateTrunkPrereqService: PrivateTrunkPrereqService;
+  let getVerifiedDomains: jasmine.Spy;
 
   beforeEach(angular.mock.module(componentModule));
   beforeEach(inject(dependencies));
@@ -20,12 +22,10 @@ describe('Component: EPTInactiveCardController', () => {
     $scope = _$rootScope_.$new();
     PrivateTrunkPrereqService = _PrivateTrunkPrereqService_;
 
-    spyOn(PrivateTrunkPrereqService, 'getVerifiedDomains').and.returnValue($q.resolve([]));
+    getVerifiedDomains = spyOn(PrivateTrunkPrereqService, 'getVerifiedDomains').and.returnValue($q.resolve([]));
     spyOn(PrivateTrunkPrereqService, 'openPreReqModal');
     spyOn(PrivateTrunkPrereqService, 'openSetupModal');
   }
-
-  beforeEach(() => {});
 
   function initController() {
     ctrl = $componentController('eptInactiveCard', {}, {});
@@ -45,7 +45,7 @@ describe('Component: EPTInactiveCardController', () => {
       initController();
       ctrl.$onInit();
       $scope.$apply();
-      expect(PrivateTrunkPrereqService.getVerifiedDomains).toHaveBeenCalled();
+      expect(getVerifiedDomains).toHaveBeenCalled();
       expect(ctrl.loading).toBe(false);
     });
 
@@ -57,7 +57,7 @@ describe('Component: EPTInactiveCardController', () => {
     });
 
     it('should enable the set up button if there are trunks', () => {
-      PrivateTrunkPrereqService.getVerifiedDomains.and.returnValue($q.resolve(['a', 'b']));
+      getVerifiedDomains.and.returnValue($q.resolve(['a', 'b']));
       initController();
       ctrl.$onInit();
       $scope.$apply();
