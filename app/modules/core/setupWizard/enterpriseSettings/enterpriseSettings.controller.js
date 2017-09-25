@@ -5,7 +5,24 @@
     .controller('EnterpriseSettingsCtrl', EnterpriseSettingsCtrl);
 
   /* @ngInject */
-  function EnterpriseSettingsCtrl($q, $rootScope, $scope, $timeout, $translate, $window, Authinfo, Config, Log, Notification, ServiceSetup, PersonalMeetingRoomManagementService, SSOService, Orgservice, UrlConfig, FeatureToggleService, $modal) {
+  function EnterpriseSettingsCtrl(
+    $modal,
+    $q,
+    $rootScope,
+    $scope,
+    $timeout,
+    $translate,
+    $window,
+    Authinfo,
+    Config,
+    FeatureToggleService,
+    Log,
+    Notification,
+    Orgservice,
+    PersonalMeetingRoomManagementService,
+    ServiceSetup,
+    SSOService,
+    UrlConfig) {
     var strEntityDesc = '<EntityDescriptor ';
     var strEntityId = 'entityID="';
     var strEntityIdEnd = '"';
