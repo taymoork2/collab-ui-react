@@ -123,6 +123,7 @@ export class MeetingSettingsCtrl {
     private $rootScope: ng.IRootScopeService,
     private Authinfo,
     private Config: Config,
+    private FeatureToggleService,
     private Notification,
     private TrialTimeZoneService,
     private TrialWebexService,
@@ -172,13 +173,20 @@ export class MeetingSettingsCtrl {
 
     this.hasTrialSites = this.SetupWizardService.hasWebexMeetingTrial();
 
-    const regex = new RegExp(MeetingSettingsCtrl.showUserMgmntEmailPattern);
-    if (_.includes(this.Authinfo.getUserName(), '@')) {
-      this.isShowUserManagement = regex.test(this.Authinfo.getUserName());
-    } else {
-      this.isShowUserManagement = regex.test(this.Authinfo.getPrimaryEmail());
-    }
+    this.shouldShowUserManagement().then( result => {
+      this.isShowUserManagement = result;
+    });
+  }
 
+  // algendel9/25/17 we show user management if FT is enabled OR the pattern matches
+  private shouldShowUserManagement(): ng.IPromise<boolean> {
+    const regex = new RegExp(MeetingSettingsCtrl.showUserMgmntEmailPattern);
+    let isPatternMatch = false;
+    isPatternMatch =  regex.test(this.Authinfo.getUserName()) ||  regex.test(this.Authinfo.getPrimaryEmail()) || regex.test(this.Authinfo.getCustomerAdminEmail());
+    if (isPatternMatch) {
+      return this.$q.resolve(true);
+    }
+    return this.FeatureToggleService.atlasSetupSiteUserManagementGetStatus();
   }
 
   public onInputChange() {

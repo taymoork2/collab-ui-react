@@ -48,6 +48,7 @@ module.exports = {
   atlasReportsUpdate: 'atlas-reports-update',
   atlasComplianceRole: 'atlas-compliance-role',
   atlasSendEmailViaBMMP: 'atlas-send-email-via-bmmp',
+  atlasSetupSiteUserManagement: 'atlas-setup-site-user-management',
   atlasSipUriDomain: 'atlas-sip-uri-domain',
   atlasSharedMeetingsReports: 'atlas-shared-meetings-reports',
   atlasSubdomainUpdate: 'atlas-subdomain-update',

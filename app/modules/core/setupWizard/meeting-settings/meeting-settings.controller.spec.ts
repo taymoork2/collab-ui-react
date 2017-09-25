@@ -13,6 +13,7 @@ describe('Controller: MeetingSettingsCtrl', () => {
       '$translate',
       'Authinfo',
       'Config',
+      'FeatureToggleService',
       'Notification',
       'SetupWizardService',
       'TrialTimeZoneService',
@@ -29,6 +30,8 @@ describe('Controller: MeetingSettingsCtrl', () => {
     spyOn(this.SetupWizardService, 'getCCASPPartners').and.returnValue(this.$q.resolve(['partner1', 'partner2']));
     spyOn(this.SetupWizardService, 'validateTransferCode').and.returnValue(this.$q.resolve(transferCodeResponse));
     spyOn(this.Authinfo, 'getUserName').and.returnValue('ordersimp-somedude@mailinator.com');
+    spyOn(this.Authinfo, 'getCustomerAdminEmail').and.returnValue('ordersimp-somedude2@mailinator.com');
+    spyOn(this.FeatureToggleService, 'atlasSetupSiteUserManagementGetStatus').and.returnValue(this.$q.resolve(false));
   });
 
   function initController(): void {
@@ -55,17 +58,28 @@ describe('Controller: MeetingSettingsCtrl', () => {
   });
 
   describe('user management in meeting site setup', function () {
-    it('should be shown if the logged in user\'s email matches the pattern "ordersimp-<>@mailinator.com"', function() {
+    it('should be shown if the logged in user\'s email or customer admin email matches the pattern "ordersimp-<>@mailinator.com"', function() {
+      initController.apply(this);
+      expect(this.controller.isShowUserManagement).toEqual(true);
+      this.Authinfo.getUserName.and.returnValue('bob@nonmatching-email.com');
       initController.apply(this);
       expect(this.controller.isShowUserManagement).toEqual(true);
     });
-    it('should NOT be shown if the logged in user\'s email does NOT match the pattern "ordersimp-<>@mailinator.com"', function() {
+    it('should NOT be shown if the logged in user\'s email or customer admin email does NOT match the pattern "ordersimp-<>@mailinator.com" AND FT is false', function() {
       this.Authinfo.getUserName.and.returnValue('bob@nonmatching-email.com');
+      this.Authinfo.getCustomerAdminEmail.and.returnValue('another@nonmatching-email.com');
       initController.apply(this);
       expect(this.controller.isShowUserManagement).toEqual(false);
       this.Authinfo.getUserName.and.returnValue('ordersimp@email.com');
       initController.apply(this);
       expect(this.controller.isShowUserManagement).toEqual(false);
+    });
+    it('should be shown if the logged in user\'s emails does NOT match the pattern "ordersimp-<>@mailinator.com" BUT FT is true', function() {
+      this.Authinfo.getUserName.and.returnValue('bob@nonmatching-email.com');
+      this.Authinfo.getCustomerAdminEmail.and.returnValue('another@nonmatching-email.com');
+      this.FeatureToggleService.atlasSetupSiteUserManagementGetStatus.and.returnValue(this.$q.resolve(true));
+      initController.apply(this);
+      expect(this.controller.isShowUserManagement).toEqual(true);
     });
   });
 
