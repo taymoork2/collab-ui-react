@@ -2,6 +2,7 @@ import './partner-reports.scss';
 
 import FeatureToggleService from 'modules/core/featureToggle';
 import { PartnerReportsSwitchCtrl } from './partnerReportsSwitch.controller';
+import { PartnerReportsTabsComponent } from './partnerReportsTabs.component';
 
 export default angular
   .module('core.partner-reports', [
@@ -12,4 +13,5 @@ export default angular
     FeatureToggleService,
   ])
   .controller('PartnerReportsSwitchCtrl', PartnerReportsSwitchCtrl)
+  .component('partnerReportsTabs', new PartnerReportsTabsComponent())
   .name;
