@@ -62,7 +62,7 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
   public proPackEventHandler(result): void {
     this.hasProPackEnabled = result.hasProPackEnabled;
     this.hasProPackPurchased = result.hasProPackPurchased;
-    this.infoText = this.treatAsPurchased() ? '' : 'servicesOverview.cards.hybridDataSecurity.tooltip';
+    this.infoText = this.treatAsPurchased() ? '' : 'common.proPackTooltip';
     this.setLoading();
   }
 
@@ -87,7 +87,7 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
       name: 'servicesOverview.cards.hybridDataSecurity.title',
       routerState: 'hds.list',
       serviceId: 'spark-hybrid-datasecurity',
-      infoText: 'servicesOverview.cards.hybridDataSecurity.tooltip',
+      infoText: 'common.proPackTooltip',
       initEventsNumber: 2,
     });
     this.display = this.checkRoles() && this.Authinfo.isFusionHDS() && this.Authinfo.isEnterpriseCustomer();

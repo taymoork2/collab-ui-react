@@ -64,7 +64,7 @@ class HybridDataSecurityInactiveCardController implements ng.IComponentControlle
   public proPackEventHandler(result): void {
     this.hasProPackEnabled = result.hasProPackEnabled;
     this.hasProPackPurchased = result.hasProPackPurchased;
-    this.infoText = this.treatAsPurchased() ? '' : 'servicesOverview.cards.hybridDataSecurity.tooltip';
+    this.infoText = this.treatAsPurchased() ? '' : 'common.proPackTooltip';
   }
 
   private treatAsPurchased(): boolean {

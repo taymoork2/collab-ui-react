@@ -429,7 +429,6 @@
     "dirsyncToolTip": "Use DirSync to update the user's preferred language.",
     "rolesAndSecurity": "Roles and Security",
     "security": "Security",
-    "resetAccessTipForBasicPack": "To reset access for your users, contact your partner or Cisco account manager about Pro Pack.",
     "resetAccessSuccess": "{{name}}'s access reset successfully. Please allow a few hours to take effect.",
     "resetAccessFailure": "Unable to reset {{name}}'s access. Please try later.",
     "resetAccess": "Reset Access",
@@ -1509,6 +1508,7 @@
     "postpone": "Postpone",
     "primary": "Primary",
     "proceed": "Proceed",
+    "proPackTooltip": "This premium feature is available with Pro Pack. Contact your partner to learn more.",
     "quantity": "Qty",
     "releaseChannel": "Release Channel",
     "remove": "Remove",
@@ -7832,7 +7832,6 @@
       "defaultRetentionOption": "Default retention time",
       "customRetentionOption": "Custom retention time between 1 and 120 months",
       "customRetentionMonths": "months",
-      "proPackInfoCopy": "To set a retention time for your org, contact your partner admin about Pro Pack.",
       "modalTitle": "Update Retention Time",
       "modalBody1": "Are you sure you want to update the retention time for Cisco Spark Message to a shorter period?",
       "modalBody2": "Any additional data older than the new time period will be deleted.",
@@ -7854,13 +7853,11 @@
     "security": {
       "title": "Security",
       "subsectionLabel": "Cisco Spark Client Security",
-      "proPackInfoCopy": "This premium feature is available with Pro Pack. Contact your partner to learn more.",
       "description": "Users can only launch the Cisco Spark app on mobile devices protected with lock screens."
     },
     "externalCommunication": {
       "title": "External Communication",
       "subsectionLabel": "Messaging",
-      "proPackInfoCopy": "This premium feature is available with Pro Pack. Contact your partner to learn more.",
       "subsectionDescription": "Secure your organization's data by blocking external messaging.",
       "description": "Block your users from inviting external contacts to Cisco Spark spaces and prevent your users from joining external Cisco Spark spaces."
     },
@@ -8601,7 +8598,6 @@
       "hybridDataSecurity": {
         "title": "Hybrid Data Security",
         "description": "Manage your encryption keys and other security services on-premises.",
-        "tooltip": "This feature is available with Pro Pack. Contact your partner to learn more.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"

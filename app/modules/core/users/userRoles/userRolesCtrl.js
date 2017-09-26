@@ -57,7 +57,7 @@ require('./_user-roles.scss');
       helpdesk: $translate.instant('ciRoles.atlas-portal.partner.helpdeskTooltip'),
       orderAmin: $translate.instant('ciRoles.atlas-portal.partner.orderadminTooltip'),
       partnerMgmt: $translate.instant('ciRoles.atlas-portal.cisco.partnermgmtTooltip'),
-      proPack: $translate.instant('usersPreview.resetAccessTipForBasicPack'),
+      proPack: $translate.instant('common.proPackTooltip'),
       readonlyAdmin: $translate.instant('rolesPanel.readonlyAdminTooltip'),
 
       salesAdminAria: ROLE_TRANSLATIONS.customerManagement + ' ' + ROLE_TRANSLATIONS.overviewReports + ' ' + ROLE_TRANSLATIONS.trialsManagement,
