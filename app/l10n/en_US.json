@@ -3137,9 +3137,9 @@
       }
     },
     "serviceAlarms": {
-      "ept.service.alarm": {
-        "title": "Enterprise Private Trunking {{severity}} Alarm",
-        "description": "SIP Destination connectivity is in an {{state}} state"
+      "ept.service.key": {
+        "title": "Enterprise Private Trunking Alarm",
+        "description": "There is an issue with SIP Destination connectivity"
       }
     }
   },
