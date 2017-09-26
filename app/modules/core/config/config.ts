@@ -268,6 +268,11 @@ export class Config {
     digitalRiver: 'DIGITAL_RIVER',
   };
 
+  public readonly onlineProducts = {
+    spark: 'Spark',
+    webex: 'WebEx',
+  };
+
   public readonly licenseStatus = {
     PENDING: 'PENDING',
     ACTIVE: 'ACTIVE',

@@ -7,6 +7,7 @@ describe('Service: DigitalRiverService', () => {
       '$document',
       '$httpBackend',
       '$sce',
+      'Config',
       'DigitalRiverService',
       'UrlConfig',
     );
@@ -51,7 +52,7 @@ describe('Service: DigitalRiverService', () => {
   });
 
   it('should get digital river order invoice url', function () {
-    this.DigitalRiverService.getInvoiceUrl('123456', 'WebEx').then(response => {
+    this.DigitalRiverService.getInvoiceUrl('123456', this.Config.onlineProducts.webex).then(response => {
       expect(this.$document.prop).toHaveBeenCalledWith(this.cookie, this.webexToken);
       expect(response).toEqual('https://buy.ciscospark.com/store/ciscoctg/en_US/DisplayInvoicePage?requisitionID=123456&ThemeID=4777108300&DRL=abc%2B123');
     });
