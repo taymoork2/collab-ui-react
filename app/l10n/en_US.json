@@ -7719,6 +7719,7 @@
         "title": "Users",
         "directorySynchronization": "Directory Synchronization",
         "singleSignOn": "Single Sign-On",
+        "autoAssignLicenses": "Auto-Assign Licenses",
         "convertButton": "Review",
         "convertText": "Users ready for license conversion review",
         "unassignedLicenses": "You have <span class=\"convert-nr h4\">{{licenseNumber}}</span> unassigned {{licenseType}} licenses"
