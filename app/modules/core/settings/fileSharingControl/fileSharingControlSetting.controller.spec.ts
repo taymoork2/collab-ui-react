@@ -124,14 +124,14 @@ describe('Controller: FileSharingControlSettingController', () => {
     blockBotsUpload: boolean) {
     return () => {
       AccountOrgService.getFileSharingControl.and.returnValue($q.resolve({
-        blockDesktopAppDownload : blockDesktopAppDownload,
-        blockWebAppDownload : blockWebAppDownload,
-        blockMobileAppDownload : blockMobileAppDownload,
-        blockBotsDownload : blockBotsDownload,
-        blockDesktopAppUpload : blockDesktopAppUpload,
-        blockWebAppUpload : blockWebAppUpload,
-        blockMobileAppUpload : blockMobileAppUpload,
-        blockBotsUpload : blockBotsUpload}));
+        blockDesktopAppDownload,
+        blockWebAppDownload,
+        blockMobileAppDownload,
+        blockBotsDownload,
+        blockDesktopAppUpload,
+        blockWebAppUpload,
+        blockMobileAppUpload,
+        blockBotsUpload}));
     };
   }
 

@@ -97,7 +97,7 @@ describe('Service : AccountOrgService', function () {
   describe('File Sharing Control ', function () {
     //File Sharing Control check
     it('should set File Sharing Control', function () {
-      $httpBackend.whenPUT(fileSharingControlRegex).respond([200, {}]);
+      $httpBackend.expectPatch(fileSharingControlRegex).respond([200, {}]);
 
       AccountOrgService.setFileSharingControl(authInfo.getOrgId(), {}).then(function (response) {
         expect(response.status).toEqual(200);
@@ -106,8 +106,8 @@ describe('Service : AccountOrgService', function () {
     });
 
     //File Sharing Control Setter Getter check
-    it('should get blcok external communication setting', function () {
-      $httpBackend.whenGET(fileSharingControlRegex).respond(function () {
+    it('should get blcok desktpAppDownload', function () {
+      $httpBackend.expectGet(fileSharingControlRegex).respond(function () {
         var data = {
           fileShareControl: {
             blockDesktopAppDownload: true,
@@ -122,7 +122,7 @@ describe('Service : AccountOrgService', function () {
         return [200, data];
       });
 
-      AccountOrgService.getBlockExternalCommunication(authInfo.getOrgId()).then(function (fileShareControl) {
+      AccountOrgService.getFileSharingControl(authInfo.getOrgId()).then(function (fileShareControl) {
         expect(fileShareControl.blockDesktopAppDownload).toBe(true);
       });
       $httpBackend.flush();

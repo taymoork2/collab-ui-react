@@ -1,60 +1,61 @@
 <div class="setting">
+  <p class="sub-section__description" translate="globalSettings.fileSharingControl.downloadSubsectionLabelDescription"></p>
   <input
     cs-input
     type="checkbox"
     id="blockDesktopAppDownload"
-    ng-model="fileSharingControlCtrl.isBlockDesktopAppDownload"
+    ng-model="$ctrl.isBlockDesktopAppDownload"
     cs-input-label="{{::'globalSettings.fileSharingControl.desktopApps'|translate}}"
-    ng-disabled="!fileSharingControlCtrl.isFileSharingControlSettingLoaded || !fileSharingControlCtrl.isProPackPurchased"/>
+    ng-disabled="$ctrl.isCheckboxDisabled()"/>
   <input
     cs-input
     type="checkbox"
     id="blockWebAppDownload"
-    ng-model="fileSharingControlCtrl.isBlockWebAppDownload"
+    ng-model="$ctrl.isBlockWebAppDownload"
     cs-input-label="{{::'globalSettings.fileSharingControl.webApp'|translate}}"
-    ng-disabled="!fileSharingControlCtrl.isFileSharingControlSettingLoaded || !fileSharingControlCtrl.isProPackPurchased"/>
+    ng-disabled="$ctrl.isCheckboxDisabled()"/>
   <input
     cs-input
     type="checkbox"
     id="blockMobileAppDownload"
-    ng-model="fileSharingControlCtrl.isBlockMobileAppDownload"
+    ng-model="$ctrl.isBlockMobileAppDownload"
     cs-input-label="{{::'globalSettings.fileSharingControl.mobileApps'|translate}}"
-    ng-disabled="!fileSharingControlCtrl.isFileSharingControlSettingLoaded || !fileSharingControlCtrl.isProPackPurchased"/>
+    ng-disabled="$ctrl.isCheckboxDisabled()"/>
   <input
     cs-input
     type="checkbox"
     id="blockBotsDownload"
-    ng-model="fileSharingControlCtrl.isBlockBotsDownload"
+    ng-model="$ctrl.isBlockBotsDownload"
     cs-input-label="{{::'globalSettings.fileSharingControl.integrationAndBots'|translate}}"
-    ng-disabled="!fileSharingControlCtrl.isFileSharingControlSettingLoaded || !fileSharingControlCtrl.isProPackPurchased"/>
+    ng-disabled="$ctrl.isCheckboxDisabled()"/>
   <h5 class="sub-section__label" translate="globalSettings.fileSharingControl.uploadSubsectionLabel"></h5>
   <p class="sub-section__description" translate="globalSettings.fileSharingControl.uploadSubsectionLabelDescription"></p>
   <input
     cs-input
     type="checkbox"
     id="blockDesktopAppUpload"
-    ng-model="fileSharingControlCtrl.isBlockDesktopAppUpload"
+    ng-model="$ctrl.isBlockDesktopAppUpload"
     cs-input-label="{{::'globalSettings.fileSharingControl.desktopApps'|translate}}"
-    ng-disabled="!fileSharingControlCtrl.isFileSharingControlSettingLoaded || !fileSharingControlCtrl.isProPackPurchased"/>
+    ng-disabled="$ctrl.isCheckboxDisabled() || $ctrl.isBlockDesktopAppDownload"/>
   <input
     cs-input
     type="checkbox"
     id="blockWebAppUpload"
-    ng-model="fileSharingControlCtrl.isBlockWebAppUpload"
+    ng-model="$ctrl.isBlockWebAppUpload"
     cs-input-label="{{::'globalSettings.fileSharingControl.webApp'|translate}}"
-    ng-disabled="!fileSharingControlCtrl.isFileSharingControlSettingLoaded || !fileSharingControlCtrl.isProPackPurchased"/>
+    ng-disabled="$ctrl.isCheckboxDisabled() || $ctrl.isBlockWebAppDownload"/>
   <input
     cs-input
     type="checkbox"
     id="blockMobileAppUpload"
-    ng-model="fileSharingControlCtrl.isBlockMobileAppUpload"
+    ng-model="$ctrl.isBlockMobileAppUpload"
     cs-input-label="{{::'globalSettings.fileSharingControl.mobileApps'|translate}}"
-    ng-disabled="!fileSharingControlCtrl.isFileSharingControlSettingLoaded || !fileSharingControlCtrl.isProPackPurchased"/>
+    ng-disabled="$ctrl.isCheckboxDisabled() || $ctrl.isBlockMobileAppDownload"/>
   <input
     cs-input
     type="checkbox"
     id="blockBotsUpload"
-    ng-model="fileSharingControlCtrl.isBlockBotsUpload"
+    ng-model="$ctrl.isBlockBotsUpload"
     cs-input-label="{{::'globalSettings.fileSharingControl.integrationAndBots'|translate}}"
-    ng-disabled="!fileSharingControlCtrl.isFileSharingControlSettingLoaded || !fileSharingControlCtrl.isProPackPurchased"/>
+    ng-disabled="$ctrl.isCheckboxDisabled() || $ctrl.isBlockBotsDownload"/>
 </div>

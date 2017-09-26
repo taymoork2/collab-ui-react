@@ -11,18 +11,18 @@ interface IGetFileSharingControlSettingResponse {
 }
 export class FileSharingControlSettingController {
 
-  private _isBlockDesktopAppDownload: boolean = false;
-  private _isBlockWebAppDownload: boolean = false;
-  private _isBlockMobileAppDownload: boolean = false;
-  private _isBlockBotsDownload: boolean = false;
+  private _isBlockDesktopAppDownload = false;
+  private _isBlockWebAppDownload = false;
+  private _isBlockMobileAppDownload = false;
+  private _isBlockBotsDownload = false;
 
-  private _isBlockDesktopAppUpload: boolean = false;
-  private _isBlockWebAppUpload: boolean = false;
-  private _isBlockMobileAppUpload: boolean = false;
-  private _isBlockBotsUpload: boolean = false;
+  private _isBlockDesktopAppUpload = false;
+  private _isBlockWebAppUpload = false;
+  private _isBlockMobileAppUpload = false;
+  private _isBlockBotsUpload = false;
 
-  public isFileSharingControlSettingLoaded: boolean = false;
-  public isProPackPurchased: boolean = false;
+  public isFileSharingControlSettingLoaded = false;
+  public isProPackPurchased = false;
 
   private orgId: string;
 
@@ -69,12 +69,19 @@ export class FileSharingControlSettingController {
     this.isFileSharingControlSettingLoaded = true;
   }
 
+  public isCheckboxDisabled(): boolean {
+    return !this.isFileSharingControlSettingLoaded || !this.isProPackPurchased;
+  }
+
   public get isBlockDesktopAppDownload(): boolean {
     return this._isBlockDesktopAppDownload;
   }
 
   public set isBlockDesktopAppDownload(value: boolean) {
     this._isBlockDesktopAppDownload = value;
+    if (this._isBlockDesktopAppDownload) {
+      this._isBlockDesktopAppUpload = value;
+    }
     this.updateFileSharingControlSetting();
   }
 
@@ -84,15 +91,21 @@ export class FileSharingControlSettingController {
 
   public set isBlockWebAppDownload(value: boolean) {
     this._isBlockWebAppDownload = value;
+    if (this._isBlockWebAppDownload) {
+      this._isBlockWebAppUpload = value;
+    }
     this.updateFileSharingControlSetting();
   }
 
   public get isBlockMobileAppDownload(): boolean {
-    return this._isBlockWebAppDownload;
+    return this._isBlockMobileAppDownload;
   }
 
   public set isBlockMobileAppDownload(value: boolean) {
     this._isBlockMobileAppDownload = value;
+    if (this._isBlockMobileAppDownload) {
+      this._isBlockMobileAppUpload = value;
+    }
     this.updateFileSharingControlSetting();
   }
 
@@ -102,6 +115,9 @@ export class FileSharingControlSettingController {
 
   public set isBlockBotsDownload(value: boolean) {
     this._isBlockBotsDownload = value;
+    if (this._isBlockBotsDownload) {
+      this._isBlockBotsUpload = value;
+    }
     this.updateFileSharingControlSetting();
   }
 
@@ -124,7 +140,7 @@ export class FileSharingControlSettingController {
   }
 
   public get isBlockMobileAppUpload(): boolean {
-    return this._isBlockWebAppUpload;
+    return this._isBlockMobileAppUpload;
   }
 
   public set isBlockMobileAppUpload(value: boolean) {
@@ -133,11 +149,11 @@ export class FileSharingControlSettingController {
   }
 
   public get isBlockBotsUpload(): boolean {
-    return this._isBlockBotsDownload;
+    return this._isBlockBotsUpload;
   }
 
   public set isBlockBotsUpload(value: boolean) {
-    this._isBlockBotsDownload = value;
+    this._isBlockBotsUpload = value;
     this.updateFileSharingControlSetting();
   }
 
