@@ -8,25 +8,18 @@ describe('Component: gmTdHistories', () => {
   beforeEach(function () {
     this.initModules(testModule);
     this.injectDependencies('$q', '$scope', 'UrlConfig', '$httpBackend', 'Notification', 'gemService', 'TelephonyDomainService');
-    this.mockData = {
-      content: {
-        data: {
-          returnCode: 0,
-          body: [],
-        },
-      },
-    };
-    this.mockData.content.data.body.push({
+    this.mockData = [];
+    this.mockData.push({
       action: 'action name',
       userName: 'bing',
       createdDate: new Date(),
     });
-    this.mockData.content.data.body.push({
+    this.mockData.push({
       action: 'add_notes_td',
       userName: 'bing',
       createdDate: new Date(),
     });
-    this.mockData.content.data.body.push({
+    this.mockData.push({
       action:  'Edit_td_move_site',
       userName: 'bing',
       createdDate: new Date(),
@@ -87,12 +80,6 @@ describe('Component: gmTdHistories', () => {
     this.controller.isCollapsed = false;
     this.controller.onCollapse();
     expect(this.controller.isCollapsed).toBeTruthy();
-  });
-
-  it('failed to get histories when the returnCode is not 0', function () {
-    this.mockData.content.data.returnCode = 100;
-    initComponent.apply(this, [true, false]);
-    expect(this.Notification.error).toHaveBeenCalled();
   });
 
   it('should response error when failed to get histories via http request', function () {

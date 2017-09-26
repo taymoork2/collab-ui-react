@@ -9,7 +9,7 @@ require('../style/callbackGroup.scss');
     .controller('CbgRequestCtrl', CbgRequestCtrl);
 
   /* @ngInject */
-  function CbgRequestCtrl($state, $scope, $element, $translate, $rootScope, $stateParams, cbgService, Notification, gemService) {
+  function CbgRequestCtrl($state, $scope, $element, $translate, $rootScope, $stateParams, cbgService, Notification) {
     var vm = this;
     var customerId = _.get($stateParams, 'customerId');
 
@@ -43,20 +43,19 @@ require('../style/callbackGroup.scss');
     function onSubmit() {
       vm.loading = true;
       vm.model.countries = _.map(vm.countries, function (item) {
-        return { countryId: item.value, countryName: item.label };
+        return { id: item.value, name: item.label };
       });
+      vm.model.groupName = vm.model.customerName;
 
       $element.find('input').attr('readonly', true);
       $element.find('a.select-toggle').addClass('disabled');
       cbgService.postRequest(customerId, vm.model)
-        .then(function (res) {
-          var returnCode = _.get(res.content, 'data.returnCode');
-          if (returnCode) {
-            Notification.notify(gemService.showError(returnCode));
-            return;
-          }
+        .then(function () {
           $rootScope.$emit('cbgsUpdate', true);
           $state.modal.close();
+        })
+        .catch(function (err) {
+          Notification.errorResponse(err, 'errors.statusError', { status: err.status });
         });
     }
   }

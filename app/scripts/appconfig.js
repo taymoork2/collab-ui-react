@@ -338,6 +338,11 @@
             onEnter: panelOnEnter({
               type: 'large',
             }),
+            resolve: {
+              atlas2017NameChangeFeatureToggled: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlas2017NameChange);
+              },
+            },
           });
         // Enter and Exit functions for panel(large or side)
         function panelOnEnter(options) {
@@ -346,9 +351,9 @@
             if (_.get($state, 'current.data.sidepanel', '') !== 'not-full') {
               if (atlas2017NameChangeFeatureToggled) {
                 if (!options.type) {
-                  options.type = 'side-panel-full-height';
+                  options.type = 'side-panel-full-height nav-expanded';
                 } else {
-                  options.type += ' side-panel-full-height';
+                  options.type += ' side-panel-full-height nav-expanded';
                 }
               }
             }
@@ -2708,15 +2713,6 @@
             parent: 'partner',
             url: '/services/overview',
             template: '<cca-card></cca-card>',
-          })
-          .state('gemReports', {
-            parent: 'partner',
-            url: '/services/reports',
-            template: '<cca-reports-tabs></cca-reports-tabs>',
-          })
-          .state('gemReports.group', {
-            url: '/:name',
-            template: '<cca-reports report-chart-data="$ctrl.chartsData"></cca-reports>',
           })
           .state('gem.servicesPartner', {
             url: '/services/spList',

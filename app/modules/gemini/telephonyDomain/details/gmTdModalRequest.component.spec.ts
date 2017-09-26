@@ -8,7 +8,7 @@ describe('Component: gmTdModalRequest', () => {
   });
 
   beforeEach(function () {
-    this.preData = _.cloneDeep(getJSONFixture('gemini/common.json'));
+    this.preData = getJSONFixture('gemini/common.json');
     this.currentTelephonyDomain = {
       regionId: 'EMEA',
     };
@@ -44,8 +44,7 @@ describe('Component: gmTdModalRequest', () => {
 
     it('should display the correct element and bind the javasscript event', function () {
       spyOn(this.gemService, 'getStorage').and.returnValue(this.currentTelephonyDomain);
-      const response = this.preData.common;
-      response.content.data.body = [ { regionId: 'EMEA', regionName: 'EMEA' }, { regionId: 'US', regionName: 'US' }];
+      const response = [{ regionId: 'EMEA', regionName: 'EMEA' }, { regionId: 'US', regionName: 'US' }];
       this.TelephonyDomainService.getRegions.and.returnValue(this.$q.resolve(response));
       initComponent.call(this);
 

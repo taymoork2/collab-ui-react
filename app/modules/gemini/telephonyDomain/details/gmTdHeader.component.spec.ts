@@ -8,15 +8,11 @@ describe('Component: gmTdHeader', () => {
   beforeEach(function () {
     this.initModules(testModule);
     this.injectDependencies('$q', '$scope', 'UrlConfig', '$httpBackend', '$window', 'Notification', 'gemService', 'TelephonyDomainService');
-    this.mockData = {
-      content: {
-        data: [{
-          description: '8a607bdb5b1280d3015b1353f92800cd',
-          createTime: new Date(),
-          ticketUrl: '',
-        }],
-      },
-    };
+    this.mockData = [{
+      description: '8a607bdb5b1280d3015b1353f92800cd',
+      createTime: new Date(),
+      ticketUrl: '',
+    }];
     initSpies.apply(this);
   });
 

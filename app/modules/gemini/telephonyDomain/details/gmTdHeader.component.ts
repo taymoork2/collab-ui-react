@@ -42,9 +42,9 @@ class GmTdHeaderCtrl implements ng.IComponentController {
     }
 
     const type = 7;
-    this.gemService.getRemedyTicket(this.customerId, type)
+    this.gemService.getRemedyTicket(this.customerId, this.ccaDomainId, type)
       .then((res) => {
-        const resArr: any = _.filter(_.get(res, 'content.data'), (item: any) => {
+        const resArr: any = _.filter(res, (item: any) => {
           return item.description === this.ccaDomainId;
         });
         const remedyTicket: any = _.first(resArr);

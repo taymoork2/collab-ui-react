@@ -1,56 +1,21 @@
 {
-  "success": {
-    "links": [],
-    "content": {
-      "data": {
-        "body": [
-          {
-            "customerId": "ff808081570807760157d570572619f4",
-            "companyName": "atlas-Test1"
-          },
-          {
-            "customerId": "ff80808156b5630e0156b64536a40000",
-            "companyName": "C_Atlas-Test-3"
-          },
-          {
-            "customerId": "ff80808153878b6701554d8685330000",
-            "companyName": "h_Atlas-Test-8"
-          },
-          {
-            "customerId": "ff808081552992ec0155299619cb0001",
-            "companyName": "~!@#$<script>alert(1)</script>Atlas-Test-9"
-          }
-        ],
-        "returnCode": 0,
-        "trackId": "NA_2d33b777-1265-454e-869f-0aca0ad64583_e_25"
-      },
-      "health": {
-        "code": 200,
-        "status": "OK"
-      }
+  "success": [
+    {
+      "customerId": "ff808081570807760157d570572619f4",
+      "companyName": "atlas-Test1"
+    },
+    {
+      "customerId": "ff80808156b5630e0156b64536a40000",
+      "companyName": "C_Atlas-Test-3"
+    },
+    {
+      "customerId": "ff80808153878b6701554d8685330000",
+      "companyName": "h_Atlas-Test-8"
+    },
+    {
+      "customerId": "ff808081552992ec0155299619cb0001",
+      "companyName": "~!@#$<script>alert(1)</script>Atlas-Test-9"
     }
-  },
-  "error1": {
-    "links": [],
-    "content": {
-      "data": {
-        "body": [],
-        "returnCode": 0,
-        "trackId": "NA_2d33b777-1265-454e-869f-0aca0ad64583_e_25"
-      },
-      "health": {
-        "code": 200,
-        "status": "OK"
-      }
-    }
-  },
-  "error2": {
-    "links": [],
-    "content": {
-      "data": {
-        "returnCode": 1,
-        "message": "Error request"
-      }
-    }
-  }
+  ],
+  "error1": []
 }

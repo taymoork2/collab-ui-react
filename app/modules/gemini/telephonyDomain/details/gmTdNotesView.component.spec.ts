@@ -8,30 +8,10 @@ describe('Component: gmTdNotesView', () => {
   beforeEach(function () {
     this.initModules(testModule);
     this.injectDependencies('$q', '$scope', 'UrlConfig', '$httpBackend', 'Notification', 'gemService', 'TelephonyDomainService');
-    this.mockData = {
-      content: {
-        data: {
-          returnCode: 0,
-          body: [],
-        },
-      },
-    };
-    for (let i = 0; i < 5; i++) {
-      this.mockData.content.data.body.push({
-        userName: 'bing',
-        objectName: 'note content',
-      });
-    }
+    this.mockData = _.fill(Array(5), { userName: 'bing', objectName: 'note content' });
     this.postMockData = {
-      content: {
-        data: {
-          returnCode: 0,
-          body: {
-            userName: '',
-            objectName: 'new note',
-          },
-        },
-      },
+      userName: '',
+      objectName: 'new note',
     };
     initSpies.apply(this);
   });
@@ -39,7 +19,7 @@ describe('Component: gmTdNotesView', () => {
   function initSpies() {
     spyOn(this.Notification, 'error');
     spyOn(this.Notification, 'errorResponse');
-    spyOn(this.TelephonyDomainService, 'getNotes').and.returnValue(this.$q.resolve());
+    spyOn(this.TelephonyDomainService, 'getHistories').and.returnValue(this.$q.resolve());
     spyOn(this.TelephonyDomainService, 'postNotes').and.returnValue(this.$q.resolve());
   }
 
@@ -57,9 +37,9 @@ describe('Component: gmTdNotesView', () => {
     const notes: any[] = [];
     if (viaHttp) {
       if (httpError) {
-        this.TelephonyDomainService.getNotes.and.returnValue(this.$q.reject( { status: 404 } ));
+        this.TelephonyDomainService.getHistories.and.returnValue(this.$q.reject( { status: 404 } ));
       } else {
-        this.TelephonyDomainService.getNotes.and.returnValue(this.$q.resolve(this.mockData));
+        this.TelephonyDomainService.getHistories.and.returnValue(this.$q.resolve(this.mockData));
       }
     } else {
       for (let i = 0; i < 10; i++) {
@@ -91,13 +71,7 @@ describe('Component: gmTdNotesView', () => {
     expect(this.controller.isCollapsed).toBeTruthy();
   });
 
-  it('failed to get notes when the returnCode is not 0', function () {
-    this.mockData.content.data.returnCode = 100;
-    initComponent.apply(this, [true]);
-    expect(this.Notification.error).toHaveBeenCalled();
-  });
-
-  it('should response error when failed to get histories', function () {
+  it('should response error when failed to get notes', function () {
     initComponent.apply(this, [true, true]);
     expect(this.Notification.errorResponse).toHaveBeenCalled();
   });
@@ -125,26 +99,6 @@ describe('Component: gmTdNotesView', () => {
     01234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890
     01234567890012345678900123456789001234567890`;
     this.controller.onSave();
-    expect(this.Notification.error).toHaveBeenCalled();
-  });
-
-  it('should throw error message when the response body is null', function () {
-    this.postMockData.content.data.body = null;
-    this.TelephonyDomainService.postNotes.and.returnValue(this.$q.resolve(this.postMockData));
-    initComponent.apply(this);
-    this.controller.newNote = 'test';
-    this.controller.onSave();
-    this.$scope.$apply();
-    expect(this.Notification.error).toHaveBeenCalled();
-  });
-
-  it('should throw error message when the returnCode is not 0', function () {
-    this.postMockData.content.data.returnCode = 100;
-    this.TelephonyDomainService.postNotes.and.returnValue(this.$q.resolve(this.postMockData));
-    initComponent.apply(this);
-    this.controller.newNote = 'test';
-    this.controller.onSave();
-    this.$scope.$apply();
     expect(this.Notification.error).toHaveBeenCalled();
   });
 });

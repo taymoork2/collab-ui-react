@@ -1,7 +1,7 @@
 'use strict';
 
 describe('component: cbgEditCountry', function () {
-  var $q, $scope, $state, $stateParams, $componentCtrl, $httpBackend, UrlConfig;
+  var $q, $scope, $state, $stateParams, $componentCtrl;
   var ctrl, PreviousState, cbgService, Notification;
 
   beforeEach(function () {
@@ -15,10 +15,10 @@ describe('component: cbgEditCountry', function () {
   beforeEach(initController);
 
   afterEach(function () {
-    $q = $scope = $httpBackend = UrlConfig = $state = $stateParams = $componentCtrl = ctrl = PreviousState = cbgService = Notification = undefined;
+    $q = $scope = $state = $stateParams = $componentCtrl = ctrl = PreviousState = cbgService = Notification = undefined;
   });
 
-  function dependencies(_$q_, _$state_, _$httpBackend_, _UrlConfig_, _$rootScope_, _$stateParams_, _$componentController_, _PreviousState_, _Notification_, _cbgService_) {
+  function dependencies(_$q_, _$state_, _$rootScope_, _$stateParams_, _$componentController_, _PreviousState_, _Notification_, _cbgService_) {
     $q = _$q_;
     $state = _$state_;
     cbgService = _cbgService_;
@@ -27,8 +27,6 @@ describe('component: cbgEditCountry', function () {
     Notification = _Notification_;
     PreviousState = _PreviousState_;
     $componentCtrl = _$componentController_;
-    $httpBackend = _$httpBackend_;
-    UrlConfig = _UrlConfig_;
   }
 
   function initSpies() {
@@ -43,9 +41,6 @@ describe('component: cbgEditCountry', function () {
     $stateParams.obj = {};
     $state.current.data = {};
     $stateParams.obj.info = this.preData.getCurrentCallbackGroup;
-
-    var getCountriesUrl = UrlConfig.getGeminiUrl() + 'countries';
-    $httpBackend.expectGET(getCountriesUrl).respond(200, this.preData.getCountries);
 
     ctrl = $componentCtrl('cbgEditCountry', { $scope: $scope, $state: $state, $element: angular.element('') });
   }
@@ -101,22 +96,13 @@ describe('component: cbgEditCountry', function () {
 
   describe('click event for onSave', function () {
     it('should call $state.go when response correct data', function () {
-      var mockResponse = this.preData.common;
-      ctrl.countries = this.preData.getCountries.content.data;
-      cbgService.updateCallbackGroup.and.returnValue($q.resolve(mockResponse));
+      ctrl.countries = this.preData.getCountries;
+      cbgService.updateCallbackGroup.and.returnValue($q.resolve());
       ctrl.onSave();
       $scope.$apply();
       expect($state.go).toHaveBeenCalled();
     });
 
-    it('should call Notification.notify', function () {
-      var mockResponse = this.preData.common;
-      mockResponse.content.data.returnCode = 1000;
-      cbgService.updateCallbackGroup.and.returnValue($q.resolve(mockResponse));
-      ctrl.onSave();
-      $scope.$apply();
-      expect(Notification.notify).toHaveBeenCalled();
-    });
 
     it('should call Notification.errorResponse', function () {
       cbgService.updateCallbackGroup.and.returnValue($q.reject({ status: 404 }));

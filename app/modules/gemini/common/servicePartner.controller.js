@@ -10,15 +10,9 @@
     var vm = this;
     vm.loading = true;
     gemService.getSpData().then(function (res) {
-      var resJson = _.get(res.content, 'data');
-      if (resJson.returnCode) {
-        Notification.error('gemini.errorCode.loadError');
-        return;
-      }
-
-      if (resJson.body.length) {
+      if (res.length) {
         vm.loading = false;
-        vm.data = resJson.body;
+        vm.data = res;
       } else {
         Notification.error('gemini.msg.splsResponseErr');
       }

@@ -1,3 +1,5 @@
+import { Notification } from 'modules/core/notifications';
+
 class GmTdSites implements ng.IComponentController {
 
   public sites: any[];
@@ -12,10 +14,9 @@ class GmTdSites implements ng.IComponentController {
     private $state: ng.ui.IStateService,
     private $scope: ng.IScope,
     private $translate: ng.translate.ITranslateService,
+    private Notification: Notification,
     private $modal,
     private PreviousState,
-    private Notification,
-    private gemService,
     private TelephonyDomainService,
   ) {
     this.customerId = _.get(this.$stateParams, 'data.customerId', '');
@@ -56,18 +57,16 @@ class GmTdSites implements ng.IComponentController {
       sourceCcaDomainId: this.curTd.ccaDomainId,
       sourceDomainName: this.curTd.telephonyDomainName,
     };
-    this.TelephonyDomainService.moveSite(data).then((res) => {
+    this.TelephonyDomainService.moveSite(data).then(() => {
       this.showLoading = false;
 
-      const resJson: any = _.get(res.content, 'data');
-      if (resJson.returnCode) {
-        this.Notification.notify(this.gemService.showError(resJson.returnCode));
-        return;
-      }
       _.remove(this.sites, (obj: any) => {
         return obj.siteId === site.siteId;
       });
       this.$scope.$emit('detailWatch', { sitesLength: this.sites.length, isLoadingHistories: true });
+      this.$scope.$emit('tdUpdated', {});
+    }).catch((err) => {
+      this.Notification.errorResponse(err, 'errors.statusError', { status: err.status });
     });
   }
 
@@ -80,11 +79,10 @@ class GmTdSites implements ng.IComponentController {
       const curCcaDomainId = this.curTd.ccaDomainId;
       const curPrimaryBridgeId = this.curTd.primaryBridgeId;
       const curBackupBridgeId = this.curTd.backupBridgeId;
-      const curWebDomainId = this.curTd.webDomainId;
 
       _.remove(this.tds, (obj: any) => {
-        return (obj.ccaDomainId === curCcaDomainId) || (obj.primaryBridgeId !== curPrimaryBridgeId)
-          || (obj.backupBridgeId !== curBackupBridgeId) || (obj.webDomainId !== curWebDomainId);
+        return (obj.telephonyDomainId === null || obj.ccaDomainId === curCcaDomainId)
+          || (obj.primaryBridgeId !== curPrimaryBridgeId) || (obj.backupBridgeId !== curBackupBridgeId);
       });
     }
   }

@@ -7,9 +7,8 @@
 
   /* @ngInject */
   function cbgService($http, $translate, UrlConfig) {
-    var URL = UrlConfig.getGeminiUrl() + 'callbackgroup/';
+    var URL = UrlConfig.getGeminiUrl() + 'callbackgroup';
     var service = {
-      getNotes: getNotes,
       postNote: postNote,
       moveSite: moveSite,
       postRequest: postRequest,
@@ -20,17 +19,17 @@
       getOneCallbackGroup: getOneCallbackGroup,
       updateCallbackGroup: updateCallbackGroup,
       getDownloadCountryUrl: getDownloadCountryUrl,
-      updateCallbackGroupStatus: updateCallbackGroupStatus,
+      cancelCBSubmission: cancelCBSubmission,
     };
     return service;
 
     function getCallbackGroups(customerId) {
-      var url = URL + 'customerId/' + customerId;
+      var url = URL + '/customerId/' + customerId;
       return $http.get(url).then(extractData);
     }
 
     function getOneCallbackGroup(customerId, groupId) {
-      var url = URL + 'customerId/' + customerId + '/groupId/' + groupId;
+      var url = URL + '/customerId/' + customerId + '/groupId/' + groupId;
       return $http.get(url).then(extractData);
     }
 
@@ -38,15 +37,9 @@
       return $http.put(URL, data).then(extractData);
     }
 
-    function updateCallbackGroupStatus(customerId, ccaGroupId, operation, data) {
-      if (!data) {
-        data = {};
-      }
-      var url = URL + 'customerId/' + customerId + '/groupId/' + ccaGroupId + '/status/' + operation;
-      if (operation === 'cancel' || operation === 'decline') {
-        url = URL + 'customerId/' + customerId + '/groupId/' + ccaGroupId + '/' + operation;
-      }
-      return $http.put(url, data).then(extractData);
+    function cancelCBSubmission(customerId, ccaGroupId) {
+      var url = URL + '/customerId/' + customerId + '/groupId/' + ccaGroupId + '/cancel';
+      return $http.put(url, null).then(extractData);
     }
 
     function getCountries() {
@@ -55,23 +48,18 @@
     }
 
     function postRequest(customerId, data) {
-      var url = URL + 'customerId/' + customerId;
+      var url = URL + '/customerId/' + customerId;
       return $http.post(url, data).then(extractData);
     }
 
     function moveSite(data) {
-      var url = URL + 'movesite';
+      var url = URL + '/movesite';
       return $http.put(url, data).then(extractData);
     }
 
     function postNote(data) {
-      var url = UrlConfig.getGeminiUrl() + 'activityLogs';
+      var url = UrlConfig.getGeminiUrl() + 'notes';
       return $http.post(url, data).then(extractData);
-    }
-
-    function getNotes(customerId, ccaGroupId) {
-      var url = UrlConfig.getGeminiUrl() + 'activityLogs' + '/' + customerId + '/' + ccaGroupId + '/add_notes_cg';
-      return $http.get(url).then(extractData);
     }
 
     function getHistories(data) {
@@ -88,10 +76,8 @@
     }
 
     function cbgsExportCSV(customerId) {
-      var lines = [];
       var exportedLines = [];
       return getCallbackGroups(customerId).then(function (res) {
-        lines = res.content.data.body;
         var headerLine = {
           customerName: $translate.instant('gemini.cbgs.field.cbgName'),
           totalSites: $translate.instant('gemini.cbgs.field.totalSites'),
@@ -101,10 +87,10 @@
         };
 
         exportedLines.push(headerLine);
-        if (!lines.length) {
+        if (!_.size(res)) {
           return exportedLines; // only export the header when is empty
         }
-        _.forEach(lines, function (line) {
+        _.forEach(res, function (line) {
           exportedLines = exportedLines.concat(formateCsvData(line));
         });
         return exportedLines;
@@ -116,9 +102,9 @@
       var oneLine = {};
       var status = (data.status ? $translate.instant('gemini.cbgs.field.status.' + data.status) : '');
 
-      if (!data.callbackGroupSites.length) {
-        oneLine.customerName = number2CsvString(data.customerName);
-        oneLine.totalSites = data.totalSites;
+      if (!_.size(data.callbackGroupSites)) {
+        oneLine.customerName = number2CsvString(data.groupName ? data.groupName : data.customerName);
+        oneLine.totalSites = _.size(data.callbackGroupSites);
         oneLine.status = status;
         oneLine.customerAttribute = number2CsvString(data.customerAttribute);
         oneLine.sites = '';
@@ -129,8 +115,8 @@
       _.forEach(data.callbackGroupSites, function (row, key) {
         oneLine = {};
         if (!key) { // the first
-          oneLine.customerName = number2CsvString(data.customerName);
-          oneLine.totalSites = data.totalSites;
+          oneLine.customerName = number2CsvString(data.groupName ? data.groupName : data.customerName);
+          oneLine.totalSites = _.size(data.callbackGroupSites);
           oneLine.status = status;
           oneLine.customerAttribute = number2CsvString(data.customerAttribute);
         } else {

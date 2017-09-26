@@ -1,6 +1,6 @@
 <cs-page-sub-header>
   <cs-page-sub-header-left>
-    <cs-searchfilter placeholder-text="{{cbgsCtrl.placeholder}}" search-item-fn="cbgsCtrl.filterList(searchStr)" clear-aria-text="{{::'common.clear' | translate}}" search-placeholder-text="{{::'common.search' | translate}}"></cs-searchfilter>
+    <cs-searchfilter placeholder-text="{{cbgsCtrl.placeholder}}" search-item-fn="cbgsCtrl.filterList(searchStr)"></cs-searchfilter>
   </cs-page-sub-header-left>
   <cs-page-sub-header-right>
     <div class="page-option-buttons">
@@ -9,7 +9,7 @@
            tooltip="{{::'gemini.export.exportToCSV' | translate}}"
            tooltip-placement="top"
            tooltip-trigger="mouseenter">
-        <a class="export-users" ng-csv="cbgsCtrl.exportCSV()" ng-show="cbgsCtrl.isDownload" filename="{{'gemini.cbgs.csvFilename' | translate}}" quote-strings="true">
+        <a class="export-users" ng-csv="cbgsCtrl.exportCSV()" ng-show="cbgsCtrl.isDownload" filename="{{'gemini.cbgs.export.csvFilename' | translate}}" quote-strings="true">
           <button class="btn--none"><i class="icon icon-download icon-lg"></i></button>
         </a>
       </div>

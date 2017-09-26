@@ -580,6 +580,7 @@
     "loadingData": "Loading Data",
     "loadingDescription": "For best results, allow reports to finish loading.",
     "pageTitle": "Reports",
+    "ccaTab": "CCA",
     "engagement": "Engagement",
     "quality": "Quality",
     "details": "Call Detail Record",
@@ -8701,7 +8702,7 @@
     "services": {
       "pageTitle": "Service"
     },
-    "audiocca": "Cloud Connected Audio (CCA)",
+    "audiocca": "CCA SP Provisioning",
     "cca": {
       "title": "Cloud Connected Audio"
     },
@@ -8731,6 +8732,10 @@
       "genericError": "An unexpected error occurred. Please try again later.",
       "loadError": "There was an error while loading data."
     },
+    "export": {
+      "exportToCSV": "Export to CSV",
+      "exportInProcess": "Export in process"
+    },
     "tds": {
       "seeAll": "See All",
       "phoneNumbers": "Phone Numbers",
@@ -8755,8 +8760,6 @@
       },
       "numbers": {
         "export": {
-          "exportToCSV": "Export to CSV",
-          "exportInProcess": "Export in process",
           "csvFilename": "exported_telephonyNumbers.csv",
           "result": {
             "success": "Phone numbers are exported successfully.",
@@ -8823,7 +8826,8 @@
         },
         "download": {
           "csvTemplate": "Download CSV Template"
-        }
+        },
+        "importTdModalTitle": "Import Telephony Domain"
       },
       "field": {
         "status": "Status",
@@ -8835,10 +8839,7 @@
         "telephonyDomains": "Telephony Domains"
       },
       "submit": {
-        "returnCode": {
-          "5000": "Telephony domain submitted.",
-          "5001": "Telephony domain saved."
-        },
+        "success": "Telephony domain submitted.",
         "confirm": "Do you want to submit this Telephony Domain?",
         "validation": {
           "PhoneNumberLengthRange": "The phone number must be between 7 to 32 digits.",
@@ -8883,7 +8884,6 @@
       "selectedCountry": "Selected countries and regions",
       "editCountry": "Edit Countries and Regions",
       "downloadCsv": "Download CSV Template",
-      "csvFilename": "exported_callbackGroup.csv",
       "declineDialogTitle": "Decline Callback Group",
       "declineReason": "Reason Callback Group is declined",
       "provisionCbg": "Callback Group successfully updated",
@@ -8913,6 +8913,13 @@
           "R": "Rejected",
           "F": "Finish_edit",
           "P": "Provisioned"
+        }
+      },
+      "export": {
+        "csvFilename": "exported_callbackgroup.csv",
+        "result": {
+          "success": "Callback Group list has been successfully exported.",
+          "failed": "There was an error exporting Telephony Domain list."
         }
       },
       "request": {
@@ -8948,40 +8955,32 @@
       "by": "by",
       "showMore": "Show more"
     },
-    "reportsChart": {
-      "usageReports": "CCA Usage Reports",
-      "reportTab": {
-        "title": "Reports",
+    "reports": {
+      "headerTitle": "Reports",
+      "linkTitle": "CCA",
+      "tab": {
         "usage": "Usage",
         "peakPorts": "Peak Ports",
-        "participants": "Participants",
-        "typesSize": "Types and Size"
+        "participants": "Participants"
       },
       "kpi": {
         "hostGrowth": "ACTIVE HOST",
-        "meetingGrowth": "TOTAL MEETINGS",
         "audioGrowth": "AUDIO MINUTES",
-        "audioPortGrowth": "PEAK AUDIO PORTS",
         "videoGrowth": "VIDEO MINUTES",
+        "meetingGrowth": "TOTAL MEETINGS",
+        "audioPortGrowth": "PEAK AUDIO PORTS",
         "videoPortGrowth": "PEAK VIDEO PORTS"
       },
       "filter": {
         "custom": "Custom",
-        "account": "Customer",
-        "customer": "Partner",
         "advanced": "Advanced",
-        "duration": "Duration",
-        "siteURLs": "Site URLs",
         "allSites": "All Sites",
-        "CSVExport": "CSV Export",
         "last90Days": "Last 90 Days",
         "last45Days": "Last 45 Days",
         "allAccounts": "All Customers",
-        "selectEnable": "selectEnable",
         "last6Months": "Last 6 Months",
-        "sessionTypes": "Session Types",
         "last12Months": "Last 12 Months",
-        "allSesstionTypes": "All Sesstion Types"
+        "allSessionTypes": "All Session Types"
       }
     }
   },
