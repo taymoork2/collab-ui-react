@@ -23,18 +23,32 @@
   </div>
   <div class="status-block">
     <ul>
-      <li>
+      <li class="status-block__item directory-synchronization">
         <i class="icon icon-spinner" ng-if="card.isUpdating"></i>
         <i class="icon icon-circle status-indicator" ng-class="{ 'success' : card.dirsyncEnabled, 'disabled': !card.dirsyncEnabled }" ng-if="!card.isUpdating"></i>
         <span translate="overview.cards.users.directorySynchronization"></span>
-        <a href id="viewDirSyncSettings"  ng-click="card.showDirSyncSettings()" aria-label="{{'overview.cards.users.directorySynchronization' | translate}}">
+        <a href id="viewDirSyncSettings" ng-click="card.showDirSyncSettings()" aria-label="{{::'overview.cards.users.directorySynchronization' | translate}}">
           <i class="icon-settings icon"></i>
         </a>
       </li>
-      <li>
+      <li class="status-block__item single-sign-on">
         <i class="icon icon-circle status-indicator" ng-class="card.ssoEnabled ? 'success' : 'disabled' "></i>
         <span translate="overview.cards.users.singleSignOn"></span>
-        <a href id="viewSsoSettings"  ng-click="card.showSSOSettings()" aria-label="{{'overview.cards.users.singleSignOn' | translate}}">
+        <a href id="viewSsoSettings" ng-click="card.showSSOSettings()" aria-label="{{::'overview.cards.users.singleSignOn' | translate}}">
+          <i class="icon-settings icon"></i>
+        </a>
+      </li>
+
+      <li class="status-block__item auto-assign-licenses" cr-feature-toggle feature-show="atlas-f3745-auto-assign-licenses">
+        <!-- TODO: f3745 - apply logic for values returned by backend, once known -->
+        <!-- - currently assume enum of ('ACTIVATED'|'DEACTIVATED'|null) -->
+        <i class="icon icon-circle status-indicator" ng-class="{
+            'success': card.autoAssignLicensesStatus === 'ACTIVATED',
+            'warning': card.autoAssignLicensesStatus === 'DEACTIVATED',
+            'disabled': _.isNil(card.autoAssignLicensesStatus),
+          }"></i>
+        <span translate="overview.cards.users.autoAssignLicenses"></span>
+        <a href ng-click="card.showAutoAssignLicensesEditModal()" aria-label="{{::'overview.cards.users.autoAssignLicenses' | translate}}">
           <i class="icon-settings icon"></i>
         </a>
       </li>

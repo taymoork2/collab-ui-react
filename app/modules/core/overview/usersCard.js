@@ -9,10 +9,12 @@
     .factory('OverviewUsersCard', OverviewUsersCard);
 
   /* @ngInject */
-  function OverviewUsersCard($q, $rootScope, $state, $translate, Config, DirSyncService, ModalService, Orgservice) {
+  function OverviewUsersCard($q, $rootScope, $state, $translate, Config, DirSyncService, FeatureToggleService, ModalService, Orgservice) {
     return {
       createCard: function createCard() {
         var card = {};
+        card.features = {};
+        card.autoAssignLicensesStatus = undefined;
 
         card.name = 'overview.cards.users.title';
         card.template = usersCardTemplatePath;
@@ -154,6 +156,33 @@
             $state.go('users.manage.picker');
           });
         };
+
+        card.showAutoAssignLicensesEditModal = function () {
+          $state.go('users.list').then(function () {
+            $state.go('users.manage.org');
+          });
+        };
+
+        function initFeatureToggles() {
+          return $q.all({
+            atlasF3745AutoAssignLicenses: FeatureToggleService.atlasF3745AutoAssignLicensesGetStatus(),
+          }).then(function (features) {
+            card.features = features;
+          });
+        }
+
+        // TODO: f3745 - rip this out once backend is available
+        function initFakeValues() {
+          // TODO: f3745 - apply logic for values returned by backend, once known
+          // - currently assume enum of ('ACTIVATED'|'DEACTIVATED'|null)
+          if (card.features.atlasF3745AutoAssignLicenses) {
+            card.autoAssignLicensesStatus = 'ACTIVATED';
+            // card.autoAssignLicensesStatus = 'DEACTIVATED';
+            // card.autoAssignLicensesStatus = null;
+          }
+        }
+
+        initFeatureToggles().then(initFakeValues);
 
         return card;
       },
