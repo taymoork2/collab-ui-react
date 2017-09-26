@@ -4689,6 +4689,7 @@
     "reachedButtonLimit": "You have reached the limit of {{buttonLimit}} phone button entries.",
     "reorder": "Reorder",
     "retrievePhoneButtonLayoutFailed": "Failed to retrieve phone button layout.",
+    "success": "Phone button layout and speed dials saved successfully.",
     "title": "Phone Button Layout & Speed Dials",
     "updatePhoneButtonLayoutFailed": "Failed to save phone button layout changes.",
     "user": "user"
