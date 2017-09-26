@@ -214,14 +214,9 @@ class LineOverview implements ng.IComponentController {
   public setNewSharedLineMembers(members): void {
     this.newSharedLineMembers = members;
     this.showApplyToAllSharedLines = true;
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1485)
-      .then((result) => {
-        if (result) {
-          if (this.lineOverviewData.line.label != null) {
-            this.lineOverviewData.line.label.appliesToAllSharedLines = this.applyToAllSharedLines;
-          }
-        }
-      });
+    if (this.lineOverviewData.line.label != null) {
+      this.lineOverviewData.line.label.appliesToAllSharedLines = this.applyToAllSharedLines;
+    }
   }
 
   public setSharedLines(sharedLines): void {
