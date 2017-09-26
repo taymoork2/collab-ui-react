@@ -2692,6 +2692,23 @@
             controller: 'PartnerReportCtrl',
             controllerAs: 'nav',
           })
+          .state('partnerreports.tab', {
+            parent: 'partner',
+            template: '<partner-reports-tabs></partner-reports-tabs>',
+          })
+          .state('partnerreports.tab.base', {
+            url: '/metrics',
+            template: require('modules/core/partnerReports/partnerReports.tpl.html'),
+            controller: 'PartnerReportCtrl',
+            controllerAs: 'nav',
+          })
+          .state('partnerreports.tab.ccaReports', {
+            template: '<cca-reports-tabs></cca-reports-tabs>',
+          })
+          .state('partnerreports.tab.ccaReports.group', {
+            url: '/ccareports/:name',
+            template: '<cca-reports report-chart-data="$ctrl.chartsData"></cca-reports>',
+          })
           .state('partnerreports.spark', {
             parent: 'partner',
             url: '/spark',

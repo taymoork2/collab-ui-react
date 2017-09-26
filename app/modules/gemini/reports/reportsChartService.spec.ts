@@ -151,18 +151,6 @@ describe('Service: ReportsChartService', () => {
     expect(this.ReportsChartService.stdOpts).toBeDefined();
   });
 
-
-  it('should get correct data when csv data', function () {
-
-    this.ReportsChartService.exportCSV([this.csvChartData]);
-    expect(this.ReportsChartService.formatTdData).toBeDefined();
-
-    this.csvChartData.type = false;
-    this.ReportsChartService.exportCSV([this.csvChartData]);
-    expect(this.ReportsChartService.formatTdData).toBeDefined();
-
-  });
-
   it('should get correct data when AmchartsMakeChart data', function () {
 
     this.chartData.chart.length = 0;

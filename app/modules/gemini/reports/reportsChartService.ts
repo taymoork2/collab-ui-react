@@ -192,23 +192,25 @@ export class ReportsChartService {
   }
 
   public exportCSV(data) {
-    const headerLine = { title: '' };
-    const lines: any = data;
+    if (!_.size(data)) {
+      return ;
+    }
+    let headerLine: any;
     let exportedLines: any[] = [];
-    _.forEach(lines[0].data.chart, (item) => {
-      _.assignIn(headerLine, {
-        [item.time]: item.time,
-      });
+    const lines = data;
+    _.forEach(lines, (item) => {
+      if (!_.size(headerLine) && _.size(item.data.chart)) {
+        const headerL = _.map(item.data.chart, ite => _.get(ite, 'time'));
+        headerLine = _.concat(['\t'], headerL);
+      }
+      exportedLines = _.concat(exportedLines, this.formatData(item));
     });
-    exportedLines.push(headerLine);
-
-    _.forEach(lines, (line) => {
-      exportedLines = exportedLines.concat(this.formatTdData(line));
-    });
-    return exportedLines;
+    return _.concat([headerLine], exportedLines);
   }
 
-  private formatTdData(data) {  //TODO will optimization code
+  private formatData(data) {
+    const row = {};
+    const total = {};
     const unit = {
       THOUSANDS: 1000,
       MILLIONS: 1000 * 1000,
@@ -219,44 +221,23 @@ export class ReportsChartService {
       SEXTILLION : 1000 * 1000 * 1000 * 1000 * 1000 * 1000 * 1000,
       SEPTILLION : 1000 * 1000 * 1000 * 1000 * 1000 * 1000 * 1000 * 1000,
     };
-
     const number = _.get(unit, data.data.unit, 1);
-    const newData: any = [];
-    const oldGroup = data.data.chart;
-    newData[0] = ([data.title]);
-    if (!data.type || !_.size(data.data.chart)) {
-      return newData;
-    }
-    _.forEach(Object.keys(data.data.chart[0]), (key: any) => {
-      if (key === 'point' || key === 'time') {
-        return;
-      }
-      let list: any = {};
-      list = [key];
-      newData.push(list);
-    });
+    _.forEach(data.data.chart, (item) => {
+      total[item.time] = 0;
+      _.forEach(item, (val, key: string) => {
+        if (key === 'point' || key === 'time') {
+          return true;
+        }
 
-    _.forEach(Object.keys(newData), (total: number) => {
-      if (!(total * 1)) {
-        return ;
-      }
-      _.forEach(oldGroup, (list, num: any) => {
-        _.forEach(list, (name, key: any) => {
-          if (key === 'point' || key === 'time') {
-            return;
-          }
-          if (total * 1 === 1) {
-            newData[0][num + 1] = newData[0][num + 1] ? newData[0][num + 1] : 0;
-            newData[0][num + 1] += name * number;
-          }
-          if (key === newData[total][0]) {
-            newData[total][num + 1] = name * number;
-          }
-        });
+        if (!_.get(row, key)) {
+          _.set(row, key, [key]);
+        }
+        total[item.time] += _.parseInt(val) * number;
+        row[key].push(val * number);
       });
     });
-    newData.push(['']);
-    return newData;
+    const totalArr = _.concat([data.title], _.values(total));
+    return _.concat([totalArr], _.values(row));
   }
 
 }
