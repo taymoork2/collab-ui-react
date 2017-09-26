@@ -134,6 +134,12 @@
       integration: 'https://config.appstaging.ciscoccservice.com/config/v1',
       prod: 'https://config.produs1.ciscoccservice.com/config/v1',
     },
+    SunlightURServiceUrl: {
+      dev: 'https://pick.devus1.ciscoccservice.com/qnr/v1',
+      cfe: 'https://pick.appstaging.ciscoccservice.com/qnr/v1',
+      integration: 'https://pick.appstaging.ciscoccservice.com/qnr/v1',
+      prod: 'https://pick.produs1.ciscoccservice.com/qnr/v1',
+    },
     SunlightBubbleUrl: {
       dev: 'https://bubble.devus1.ciscoccservice.com',
       cfe: 'https://bubble.appstaging.ciscoccservice.com',
