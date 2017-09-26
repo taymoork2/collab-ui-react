@@ -1,20 +1,19 @@
 import './reports.scss';
-import { IToolkitModalService } from 'modules/core/modal';
 import { ReportsChartService } from './reportsChartService';
 import { SearchService } from 'modules/core/customerReports/webexReports/search/searchService';
 
 class ReportsChart implements ng.IComponentController {
   public size;
   public chartId;
-  public zoomEnable;
   public provideData;
   public title: string;
+  public exportMenu: boolean = false;
+  public threeDotsEnable: boolean = false;
 
   /* @ngInject */
   public constructor(
     private Utils,
     private SearchService: SearchService,
-    private $modal: IToolkitModalService,
     private $timeout: ng.ITimeoutService,
     private ReportsChartService: ReportsChartService,
   ) {
@@ -24,6 +23,7 @@ class ReportsChart implements ng.IComponentController {
   public $onInit(): void {
 
     if (this.size === 'large') {
+      this.chartId = `large_${this.chartId}`;
       this.largeChart();
     }
   }
@@ -33,26 +33,23 @@ class ReportsChart implements ng.IComponentController {
 
     if (provideData && _.get(provideData, 'currentValue')) {
       this.provideData = _.get(provideData, 'currentValue');
-      this.title = _.get(this.provideData, 'title');
-      this.zoomEnable = _.size(this.provideData.data.chart);
+      const unit = _.size(this.provideData.data.unit) ? ` (IN ${_.get(this.provideData, 'data.unit')})` : '';
+      this.title = _.get(this.provideData, 'title') + unit;
+      this.threeDotsEnable = !!_.size(this.provideData.data.chart);
       const data = this.preData(this.provideData);
       this.$timeout(() => this.ReportsChartService.AmchartsMakeChart(this.chartId, data));
     }
   }
 
-  public onZoom() {
-    this.SearchService.setStorage('largeChartData', this.provideData);
-    this.$modal.open({
-      type: 'full',
-      template: '<cca-chart close="$close()" size="large" class="large-chart" ></cca-chart>',
-    });
+  public toggleExportMenu(): void {
+    this.exportMenu = !this.exportMenu;
   }
 
   private largeChart() {
     const largeChartData = this.SearchService.getStorage('largeChartData');
     this.title = _.get(largeChartData, 'title');
     const data = this.preData(largeChartData);
-    this.ReportsChartService.smallToLarge('large_chart_content', data);
+    this.$timeout(() => this.ReportsChartService.smallToLarge(this.chartId, data));
   }
 
   private preData(data) {
