@@ -203,6 +203,7 @@ class PhoneButtonLayoutCtrl implements ng.IComponentController {
       }
     });
     this.PhoneButtonLayoutService.updatePhoneButtons(this.ownerType, this.ownerId, this.phoneButtonListFull).then(() => {
+      this.Notification.success('phoneButtonLayout.success');
       this.isValid = false;
       this.reordering = false;
       this.editing = false;

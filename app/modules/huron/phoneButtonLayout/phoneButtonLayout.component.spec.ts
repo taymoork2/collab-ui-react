@@ -27,6 +27,7 @@ describe('component: phoneButtonLayout', () => {
       '$httpBackend',
       'FeatureMemberService',
       'HuronUserService',
+      'Notification',
     );
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
     this.callDestInputs = ['external', 'uri', 'custom'];
@@ -43,6 +44,7 @@ describe('component: phoneButtonLayout', () => {
     spyOn(this.HuronUserService, 'getUserV2').and.returnValue(this.$q.resolve());
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('123');
     spyOn(this.HuronCustomerService, 'getVoiceCustomer').and.returnValue(this.$q.resolve({ uuid: '123', dialingPlanDetails: { regionCode: '', countryCode: '+1' } }));
+    spyOn(this.Notification, 'success');
     this.$httpBackend.whenGET(this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '/12345').respond(200);
   });
 
@@ -192,6 +194,26 @@ describe('component: phoneButtonLayout', () => {
       this.controller.reordering = true;
       this.controller.buildActionList();
       expect(this.controller.actionList.length).toEqual(0);
+    });
+  });
+
+  describe('save function', () => {
+    beforeEach(initComponent('users', '12345'));
+    afterEach(function () {
+      this.$httpBackend.verifyNoOutstandingExpectation();
+      this.$httpBackend.verifyNoOutstandingRequest();
+    });
+
+    it('should empty out destination and label values for FEATURE_NONE button types', function () {
+      this.controller.phoneButtonListFull = [{
+        type: 'FEATURE_NONE',
+        destination: 'bogus_destination_for_empty_button',
+        label: 'bogus_label_for_empty_button',
+      }];
+      this.controller.save();
+      expect(this.controller.phoneButtonListFull[0].destination).toEqual('');
+      expect(this.controller.phoneButtonListFull[0].label).toEqual('');
+      expect(this.PhoneButtonLayoutService.updatePhoneButtons).toHaveBeenCalledTimes(1);
     });
   });
 
