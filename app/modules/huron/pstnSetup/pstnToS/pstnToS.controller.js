@@ -5,7 +5,7 @@
     .controller('PstnToSCtrl', PstnToSCtrl);
 
   /* @ngInject */
-  function PstnToSCtrl($rootScope, $scope, $translate, $resource, Orgservice, PstnService, Notification) {
+  function PstnToSCtrl($q, $rootScope, $scope, $translate, Notification, Orgservice, PstnService) {
     var vm = this;
 
     var PSTN_TOS_ACCEPT = 'pstn-tos-accept-event';
@@ -42,7 +42,7 @@
     }
 
     function getCarriersStatic() {
-      getCarriersJson().query().$promise.then(function (carriers) {
+      getCarriersJson().then(function (carriers) {
         carriers.forEach(function (carrier) {
           //translate the feature strings
           for (var i = 0; i < carrier.features.length; i++) {
@@ -54,13 +54,7 @@
     }
 
     function getCarriersJson() {
-      return $resource('modules/huron/pstn/pstnProviders/pstnProviders.json', {}, {
-        query: {
-          method: 'GET',
-          isArray: true,
-          cache: true,
-        },
-      });
+      return $q.resolve(require('../../pstn/pstnProviders/pstnProviders.json'));
     }
 
     function getToSInfo() {
