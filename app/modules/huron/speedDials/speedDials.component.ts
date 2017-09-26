@@ -29,6 +29,7 @@ class SpeedDialCtrl implements ng.IComponentController {
   private numberMessages: IValidationMessages;
   private customTranslations: ITranslationMessages;
   private inputTranslations: ICallDestinationTranslate;
+  private customNumberValidationPatern: RegExp;
   private actionList: IActionItem[];
   private actionListCopy: IActionItem[] = [];
   private callDestInputs: string[];
@@ -100,6 +101,7 @@ class SpeedDialCtrl implements ng.IComponentController {
     });
     this.actionList = _.cloneDeep(this.actionListCopy);
     this.inputTranslations = this.CallDestinationTranslateService.getCallDestinationTranslate();
+    this.customNumberValidationPatern = this.CallDestinationTranslateService.getCustomNumberValidationPatern();
   }
 
   public extensionOwned(number: string): void {

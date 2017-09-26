@@ -1,6 +1,7 @@
 import { PhoneButtonLayoutService, IPhoneButton } from './phoneButtonLayout.service';
 import { IActionItem } from 'modules/core/components/sectionTitle/sectionTitle.component';
 import { Notification } from 'modules/core/notifications';
+import { CallDestinationTranslateService, ICallDestinationTranslate } from 'modules/call/shared/call-destination-translate';
 
 interface IValidationMessages {
   required: string;
@@ -39,6 +40,8 @@ class PhoneButtonLayoutCtrl implements ng.IComponentController {
   private labelMessages: IValidationMessages;
   private numberMessages: IValidationMessages;
   private customTranslations: ITranslationMessages;
+  private inputTranslations: ICallDestinationTranslate;
+  private customNumberValidationPatern: RegExp;
   private actionList: IActionItem[] = [];
   private buttonTypeInputs: object[] = [];
   private callDestInputs: string[];
@@ -63,6 +66,7 @@ class PhoneButtonLayoutCtrl implements ng.IComponentController {
     private dragularService,
     private Notification: Notification,
     private PhoneButtonLayoutService: PhoneButtonLayoutService,
+    private CallDestinationTranslateService: CallDestinationTranslateService,
     private $timeout: ng.ITimeoutService,
     private BlfInternalExtValidation,
     private Authinfo,
@@ -125,6 +129,8 @@ class PhoneButtonLayoutCtrl implements ng.IComponentController {
       this.isButtonLimitReached = this.phoneButtonListFull.length >= PHONE_BUTTON_LIMIT;
       this.buildActionList();
     });
+    this.inputTranslations = this.CallDestinationTranslateService.getCallDestinationTranslate();
+    this.customNumberValidationPatern = this.CallDestinationTranslateService.getCustomNumberValidationPatern();
   }
 
   public extensionOwned(number: string): void {
