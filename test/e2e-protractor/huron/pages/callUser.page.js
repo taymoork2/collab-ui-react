@@ -29,6 +29,7 @@ export class CallUserPage {
         singleNumberReach: element(by.cssContainingText('.feature-name', 'Single Number Reach')),
         speedDials: element(by.cssContainingText('.feature-name', 'Speed Dials')),
         dialingRestrictions: element(by.cssContainingText('.feature-name', 'Dialing Restrictions')),
+        phoneButtonLayout: element(by.cssContainingText('.feature-name', 'Phone Button Layout & Speed Dials')),
       },
     };
     this.callSubMenu = element.all(by.css('a[ui-sref="user-overview.communication"]')).get(0);
