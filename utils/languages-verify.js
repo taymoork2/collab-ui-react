@@ -4,7 +4,7 @@ var _ = require('lodash');
 var L10N_DIR = 'app/l10n';
 var L10N_SOURCE_VALUE_REGEX = /(value:\s'[a-z]{2}_[A-Z]{2}')/g;
 var L10N_SOURCE_REGEX = /[a-z]{2}_[A-Z]{2}/;
-var L10N_SOURCE = 'app/modules/core/l10n/languages.js';
+var L10N_SOURCE = 'app/modules/core/l10n/languages.ts';
 
 var PLURAL_DISALLOWED_KEYWORDS = [
   'zero',

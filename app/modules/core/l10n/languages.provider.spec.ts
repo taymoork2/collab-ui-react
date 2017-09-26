@@ -1,13 +1,11 @@
-'use strict';
-
-var testModule = require('./index').default;
+import testModule from './index';
 
 describe('Languages', function () {
   beforeEach(function init() {
     this.$window = {
       navigator: {},
     };
-    var $windowProvider = {
+    const $windowProvider = {
       $get: function () {
         return this.$window;
       }.bind(this),
