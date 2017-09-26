@@ -232,6 +232,7 @@
       "willGetEmail": "Users will automatically be sent a welcome email from Cisco.",
       "canChange": "You can change this setting on the account settings page.",
       "willNotGetEmail": "Cisco will not send a welcome email to users. You have to notify users about their new service.",
+      "learnMore": "Learn more",
       "hasSparkCall": "Cisco Spark Call invitations are always sent to provide the generated device activation code to users."
     },
     "manual": {
@@ -7823,8 +7824,8 @@
     },
     "email": {
       "title": "Email",
-      "subsectionLabel": "Suppress Admin Invite emails",
-      "subsectionDescription": "When enabled users will not automatically receive invite emails from Cisco Spark. Only allowed when SSO is enabled.",
+      "subsectionLabel": "Suppress Admin Invite Emails",
+      "subsectionDescription": "When enabled, users will not receive the automated Cisco invitation emails when licenses are assigned. Only use this feature if you wish to send your own email invite campaign. This setting only works if you turn on Single-Sign-On (SSO).",
       "setEmailSuppressFailed": "Failed to set emails suppress status."
     },
     "retention": {
