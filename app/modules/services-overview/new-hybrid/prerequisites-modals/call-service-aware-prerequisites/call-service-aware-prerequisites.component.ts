@@ -1,18 +1,19 @@
 import { HybridServicesPrerequisitesHelperService } from 'modules/services-overview/new-hybrid/prerequisites-modals/hybrid-services-prerequisites-helper.service';
 import { Notification } from 'modules/core/notifications';
 
-export class BasicExpresswayPrerequisitesComponentController implements ng.IComponentController {
+export class CallServiceAwarePrerequisitesComponentController implements ng.IComponentController {
 
-  public onChange: Function;
-  private flagPrefix = 'atlas.hybrid.setup.call.expressway.';
   public checkboxes = {
-    planCapacity: false,
-    redundancy: false,
-    followRequirements: false,
-    bypassFirstTimeWizard: false,
-    configureExpresswayC: false,
-    openPortOnFirewall: false,
+    determineCertificateTrust: false,
+    registerAllDomains: false,
+    installOrUpgradeUCM: false,
+    configureRouting: false,
+    setFormat: false,
+    enableUCMServices: false,
+    enableServiceability: false,
   };
+  private flagPrefix = 'atlas.hybrid.setup.call.aware.';
+  public onChange: Function;
 
   /* @ngInject */
   constructor(
@@ -49,9 +50,9 @@ export class BasicExpresswayPrerequisitesComponentController implements ng.IComp
 
 }
 
-export class BasicExpresswayPrerequisitesComponent implements ng.IComponentOptions {
-  public controller = BasicExpresswayPrerequisitesComponentController;
-  public template = require('modules/services-overview/new-hybrid/prerequisites-modals/basic-expressway-prerequisites/basic-expressway-prerequisites.component.html');
+export class CallServiceAwarePrerequisitesComponent implements ng.IComponentOptions {
+  public controller = CallServiceAwarePrerequisitesComponentController;
+  public template = require('modules/services-overview/new-hybrid/prerequisites-modals/call-service-aware-prerequisites/call-service-aware-prerequisites.component.html');
   public bindings = {
     onChange: '&',
   };

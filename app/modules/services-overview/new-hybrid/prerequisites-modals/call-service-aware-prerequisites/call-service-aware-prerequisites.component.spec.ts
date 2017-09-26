@@ -1,7 +1,7 @@
-describe('BasicExpresswayPrerequisitesComponentController', () => {
+describe('CallServiceAwarePrerequisitesComponentController', () => {
 
   let controller, $componentController, $q, $scope, HybridServicesFlagService;
-  const flagPrefix = 'atlas.hybrid.setup.call.expressway.';
+  const flagPrefix = 'atlas.hybrid.setup.call.aware.';
 
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(inject(dependencies));
@@ -25,7 +25,7 @@ describe('BasicExpresswayPrerequisitesComponentController', () => {
   }
 
   function initController(callback = Function()) {
-    controller = $componentController('basicExpresswayPrerequisites', {}, {
+    controller = $componentController('callServiceAwarePrerequisites', {}, {
       onChange: callback,
     });
     controller.$onInit();
@@ -43,8 +43,8 @@ describe('BasicExpresswayPrerequisitesComponentController', () => {
     });
 
     it('should check a box if the server says it has been checked previously', () => {
-      const raisedCheckboxName = 'theClansman';
-      const loweredCheckboxName = 'acesHigh';
+      const raisedCheckboxName = 'manicDepression';
+      const loweredCheckboxName = 'redHouse';
       spyOn(HybridServicesFlagService, 'readFlags').and.returnValue($q.resolve([{
         name: `${flagPrefix}${raisedCheckboxName}`,
         raised: true,
@@ -67,7 +67,7 @@ describe('BasicExpresswayPrerequisitesComponentController', () => {
     });
 
     it('should raise a flag when a box is checked', () => {
-      const checkboxName = 'theTrooper';
+      const checkboxName = 'purpleHaze';
       initController();
       $scope.$apply();
       controller.processChange(checkboxName, true);
@@ -75,15 +75,15 @@ describe('BasicExpresswayPrerequisitesComponentController', () => {
     });
 
     it('should lower a flag when a box is unchecked', () => {
-      const checkboxName = 'runForTheHills';
+      const checkboxName = 'heyJoe';
       initController();
       $scope.$apply();
       controller.processChange(checkboxName, false);
       expect(HybridServicesFlagService.lowerFlag).toHaveBeenCalledWith(`${flagPrefix}${checkboxName}`);
     });
 
-    it('should call the provided callback function once on init, and again when one checkbox has changed', () => {
-      const checkboxName = 'theEvilThatMenDo';
+    it('should call the provided callback function when one checkbox has changed', () => {
+      const checkboxName = 'theWindCriesMary';
       const callback = jasmine.createSpy('callback');
       initController(callback);
       $scope.$apply();
@@ -95,14 +95,14 @@ describe('BasicExpresswayPrerequisitesComponentController', () => {
       expect(callback.calls.mostRecent().args[0]).toEqual(jasmine.objectContaining({
         options: {
           numberChecked: 1,
-          totalNumber: 7,
+          totalNumber: 8,
         },
       }));
     });
 
-    it('should call the provided callback function once on init, and with the correct arguments when two checkboxes have changed', () => {
-      const checkboxName1 = 'OnlyTheGoodDieYoung';
-      const checkboxName2 = 'FearOfTheDark';
+    it('should call the provided callback function when two checkboxes have changed', () => {
+      const checkboxName1 = 'areYouExperienced';
+      const checkboxName2 = 'thirdStoneFromTheSun';
       const callback = jasmine.createSpy('callback');
       initController(callback);
       $scope.$apply();
@@ -116,7 +116,7 @@ describe('BasicExpresswayPrerequisitesComponentController', () => {
       expect(callback.calls.mostRecent().args[0]).toEqual(jasmine.objectContaining({
         options: {
           numberChecked: 2,
-          totalNumber: 8,
+          totalNumber: 9,
         },
       }));
     });

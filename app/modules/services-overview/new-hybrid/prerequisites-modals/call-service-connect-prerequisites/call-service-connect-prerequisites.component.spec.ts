@@ -1,18 +1,19 @@
-describe('BasicExpresswayPrerequisitesComponentController', () => {
+describe('CallServiceConnectPrerequisitesComponentController', () => {
 
-  let controller, $componentController, $q, $scope, HybridServicesFlagService;
-  const flagPrefix = 'atlas.hybrid.setup.call.expressway.';
+  let controller, $componentController, $q, $scope, HybridServicesFlagService, ServiceDescriptorService;
+  const flagPrefix = 'atlas.hybrid.setup.call.connect.';
 
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
   afterEach(cleanup);
 
-  function dependencies(_$rootScope_, _$componentController_, _$q_, _HybridServicesFlagService_) {
+  function dependencies(_$rootScope_, _$componentController_, _$q_, _HybridServicesFlagService_, _ServiceDescriptorService_) {
     $scope = _$rootScope_.$new();
     $componentController = _$componentController_;
     $q = _$q_;
     HybridServicesFlagService = _HybridServicesFlagService_;
+    ServiceDescriptorService = _ServiceDescriptorService_;
   }
 
   function initSpies() {
@@ -25,7 +26,7 @@ describe('BasicExpresswayPrerequisitesComponentController', () => {
   }
 
   function initController(callback = Function()) {
-    controller = $componentController('basicExpresswayPrerequisites', {}, {
+    controller = $componentController('callServiceConnectPrerequisites', {}, {
       onChange: callback,
     });
     controller.$onInit();
@@ -43,8 +44,8 @@ describe('BasicExpresswayPrerequisitesComponentController', () => {
     });
 
     it('should check a box if the server says it has been checked previously', () => {
-      const raisedCheckboxName = 'theClansman';
-      const loweredCheckboxName = 'acesHigh';
+      const raisedCheckboxName = 'welcomeToTheJungle';
+      const loweredCheckboxName = 'ItsSoEasy';
       spyOn(HybridServicesFlagService, 'readFlags').and.returnValue($q.resolve([{
         name: `${flagPrefix}${raisedCheckboxName}`,
         raised: true,
@@ -58,6 +59,20 @@ describe('BasicExpresswayPrerequisitesComponentController', () => {
       expect(controller.checkboxes[loweredCheckboxName]).toBeFalsy();
     });
 
+    it('should check with FMS if Call Service Aware has been setup', () => {
+      spyOn(ServiceDescriptorService, 'isServiceEnabled').and.returnValue($q.resolve(true));
+      initController();
+      $scope.$apply();
+      expect(controller.checkboxes['isAwareSetup']).toBeTruthy();
+    });
+
+    it('should assume that Call Service Aware has not been setup if FMS cannot be reached', () => {
+      spyOn(ServiceDescriptorService, 'isServiceEnabled').and.returnValue($q.reject({}));
+      initController();
+      $scope.$apply();
+      expect(controller.checkboxes['isAwareSetup']).toBeFalsy();
+    });
+
   });
 
   describe('responding to checkbox changes', () => {
@@ -67,7 +82,7 @@ describe('BasicExpresswayPrerequisitesComponentController', () => {
     });
 
     it('should raise a flag when a box is checked', () => {
-      const checkboxName = 'theTrooper';
+      const checkboxName = 'nightrain';
       initController();
       $scope.$apply();
       controller.processChange(checkboxName, true);
@@ -75,7 +90,7 @@ describe('BasicExpresswayPrerequisitesComponentController', () => {
     });
 
     it('should lower a flag when a box is unchecked', () => {
-      const checkboxName = 'runForTheHills';
+      const checkboxName = 'outTaGetMe';
       initController();
       $scope.$apply();
       controller.processChange(checkboxName, false);
@@ -83,7 +98,7 @@ describe('BasicExpresswayPrerequisitesComponentController', () => {
     });
 
     it('should call the provided callback function once on init, and again when one checkbox has changed', () => {
-      const checkboxName = 'theEvilThatMenDo';
+      const checkboxName = 'mrBrownstone';
       const callback = jasmine.createSpy('callback');
       initController(callback);
       $scope.$apply();
@@ -95,14 +110,14 @@ describe('BasicExpresswayPrerequisitesComponentController', () => {
       expect(callback.calls.mostRecent().args[0]).toEqual(jasmine.objectContaining({
         options: {
           numberChecked: 1,
-          totalNumber: 7,
+          totalNumber: 10,
         },
       }));
     });
 
     it('should call the provided callback function once on init, and with the correct arguments when two checkboxes have changed', () => {
-      const checkboxName1 = 'OnlyTheGoodDieYoung';
-      const checkboxName2 = 'FearOfTheDark';
+      const checkboxName1 = 'paradiseCity';
+      const checkboxName2 = 'myMichelle';
       const callback = jasmine.createSpy('callback');
       initController(callback);
       $scope.$apply();
@@ -116,7 +131,7 @@ describe('BasicExpresswayPrerequisitesComponentController', () => {
       expect(callback.calls.mostRecent().args[0]).toEqual(jasmine.objectContaining({
         options: {
           numberChecked: 2,
-          totalNumber: 8,
+          totalNumber: 11,
         },
       }));
     });
