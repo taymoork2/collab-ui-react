@@ -1,6 +1,6 @@
 <div class="sq-places-page-overview">
   <div ui-view="header"></div>
-  <cs-sp-buttons ng-class="{invisible: !$ctrl.onPrefLanguageChange}">
+  <cs-sp-buttons ng-if="$ctrl.onPrefLanguageChange">
     <button cs-btn loading="$ctrl.prefLanguageSaveInProcess" class="btn btn--primary" ng-click="$ctrl.savePreferredLanguage()" ng-disabled="$ctrl.prefLanguageSaveInProcess" type="click">
       <span translate="common.save"></span>
     </button>

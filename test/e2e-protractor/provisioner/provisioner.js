@@ -128,7 +128,7 @@ export function provisionUsers(customer) {
 
 function provisionPlaces(customer) {
   if (customer.places) {
-    console.log('Creating locations');
+    console.log('Creating places');
     return provisionerHelper.getToken(customer.partner)
       .then(token => {
         createPlaceObj(token, customer.orgId, customer.places);
