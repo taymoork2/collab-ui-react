@@ -28,7 +28,7 @@ describe('Controller: MeetingSettingsCtrl', () => {
     spyOn(this.SetupWizardService, 'getPendingAudioLicenses').and.returnValue([{ offerName: 'TSP' }]);
     spyOn(this.SetupWizardService, 'getActingSubscriptionLicenses').and.returnValue(actingSubscription['licenses']);
     spyOn(this.Authinfo, 'getConferenceServices').and.returnValue(conferenceServices);
-    spyOn(this.SetupWizardService, 'validateCCASPPartner').and.returnValue(this.$q.resolve(true));
+    spyOn(this.SetupWizardService, 'validateCCASPPartner').and.returnValue(this.$q.resolve({ isValid: true }));
     spyOn(this.SetupWizardService, 'hasPendingCCASPPackage').and.returnValue(true);
     spyOn(this.SetupWizardService, 'getActiveCCASPPackage').and.returnValue(undefined);
     spyOn(this.SetupWizardService, 'getCCASPPartners').and.returnValue(this.$q.resolve(['partner1', 'partner2']));
@@ -260,6 +260,7 @@ describe('Controller: MeetingSettingsCtrl', () => {
       expect(this.SetupWizardService.validateTransferCode).toHaveBeenCalledWith({
         siteUrl: 'mywebexsite.webex.com',
         transferCode: '12345678',
+        trackingId: undefined,
       });
       expect(this.controller.sitesArray.length).toBe(1);
       expect(this.controller.distributedLicensesArray[0].length).toBe(1);
@@ -321,7 +322,7 @@ describe('Controller: MeetingSettingsCtrl', () => {
     });
     it('validates incorrectly', function () {
       expect(this.controller.audioPartnerName).toBe(null);
-      this.SetupWizardService.validateCCASPPartner.and.returnValue(this.$q.resolve(false));
+      this.SetupWizardService.validateCCASPPartner.and.returnValue(this.$q.resolve({ isValid: false }));
       this.controller.ccaspValidate();
       this.$scope.$digest();
       expect(this.controller.audioPartnerName).toBe(null);

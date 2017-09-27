@@ -270,6 +270,11 @@
         return result;
       },
 
+      extractTrackingIdFromResponse: function (response) {
+        var headers = _.get(response, 'headers');
+        return _.isFunction(headers) ? headers('TrackingID') : undefined;
+      },
+
       getSqEntitlements: function (user) {
         var entitlements = {};
         if (_.isArray($rootScope.services)) {

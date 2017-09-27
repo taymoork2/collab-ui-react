@@ -273,6 +273,11 @@ export class Config {
     webex: 'WebEx',
   };
 
+  public readonly userManagementService = {
+    sparkControlHub: 'Spark Control Hub',
+    webexSiteAdmin: 'WebEx Site Admin',
+  };
+
   public readonly licenseStatus = {
     PENDING: 'PENDING',
     ACTIVE: 'ACTIVE',

@@ -160,7 +160,7 @@ describe('Service: SetupWizard Service', function () {
       const verifyUrl = `${this.UrlConfig.getAdminServiceUrl()}orders/123/ccasp/verify`;
       this.$httpBackend.when('POST', verifyUrl).respond(200, 'INVALID');
       this.SetupWizardService.validateCCASPPartner('123', 'someName').then((result) => {
-        expect(result).toBe(false);
+        expect(result.isValid).toBe(false);
       });
       this.$httpBackend.flush();
     });
@@ -170,7 +170,7 @@ describe('Service: SetupWizard Service', function () {
       const verifyUrl = `${this.UrlConfig.getAdminServiceUrl()}orders/123/ccasp/verify`;
       this.$httpBackend.when('POST', verifyUrl).respond(200, 'VALID');
       this.SetupWizardService.validateCCASPPartner('123', 'someName').then((result) => {
-        expect(result).toBe(true);
+        expect(result.isValid).toBe(true);
       });
       this.$httpBackend.flush();
     });
@@ -180,7 +180,7 @@ describe('Service: SetupWizard Service', function () {
       const verifyUrl = `${this.UrlConfig.getAdminServiceUrl()}orders/123/ccasp/verify`;
       this.$httpBackend.when('POST', verifyUrl).respond(400, 'VALID');
       this.SetupWizardService.validateCCASPPartner('123', 'someName').then((result) => {
-        expect(result).toBe(false);
+        expect(result.isValid).toBe(false);
       });
       this.$httpBackend.flush();
     });
