@@ -4,7 +4,7 @@ class WebexSiteSubscriptionCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    private $translate,
+    private $translate: ng.translate.ITranslateService,
   ) {
   }
   public subscriptionForm: ng.IFormController;
@@ -33,7 +33,7 @@ class WebexSiteSubscriptionCtrl implements ng.IComponentController {
 
 export class WebexSiteSubscriptionComponent implements ng.IComponentOptions {
   public controller = WebexSiteSubscriptionCtrl;
-  public template = require('modules/core/siteList/webexSite/webexSiteSubscription.html');
+  public template = require('modules/core/siteList/webex-site/webex-site-subscription.html');
   public bindings = {
     subscriptions: '<',
     onSubscriptionChange: '&',
@@ -41,6 +41,3 @@ export class WebexSiteSubscriptionComponent implements ng.IComponentOptions {
   };
 }
 
-export default angular
-  .module('Core')
-  .component('webexSiteSubscription', new WebexSiteSubscriptionComponent());

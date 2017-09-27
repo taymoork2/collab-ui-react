@@ -1,11 +1,12 @@
 import { IWebExSite, IPendingLicense } from 'modules/core/setupWizard/meeting-settings/meeting-settings.interface';
 import { WebExSite } from 'modules/core/setupWizard/meeting-settings/meeting-settings.model';
+import { Config }  from 'modules/core/config/config';
 class WebexSiteLicensesCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    private $translate,
-    private Config,
+    private $translate: ng.translate.ITranslateService,
+    private Config: Config,
   ) {
   }
 
@@ -168,7 +169,7 @@ class WebexSiteLicensesCtrl implements ng.IComponentController {
 
 export class WebexSiteLicensesComponent implements ng.IComponentOptions {
   public controller = WebexSiteLicensesCtrl;
-  public template = require('modules/core/siteList/webexSite/webexSiteLicenses.html');
+  public template = require('modules/core/siteList/webex-site/webex-site-licenses.html');
   public bindings = {
     sites: '<',
     meetingLicenses: '<',
@@ -177,6 +178,3 @@ export class WebexSiteLicensesComponent implements ng.IComponentOptions {
   };
 }
 
-export default angular
-  .module('Core')
-  .component('webexSiteLicenses', new WebexSiteLicensesComponent());

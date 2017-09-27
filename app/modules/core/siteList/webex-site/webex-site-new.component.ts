@@ -1,6 +1,8 @@
 import { IWebExSite, ISiteNameError, SiteErrorType } from
 'modules/core/setupWizard/meeting-settings/meeting-settings.interface';
-
+import { Config }  from 'modules/core/config/config';
+import { TrialTimeZoneService } from 'modules/core/trials/trialTimeZone.service';
+import { TrialWebexService } from 'modules/core/trials/trialWebex.service';
 
 class WebexSiteNewCtrl implements ng.IComponentController {
 
@@ -12,10 +14,10 @@ class WebexSiteNewCtrl implements ng.IComponentController {
   };
   /* @ngInject */
   constructor(
-    private $translate,
-    private Config,
-    private TrialTimeZoneService,
-    private TrialWebexService,
+    private $translate: ng.translate.ITranslateService,
+    private Config: Config,
+    private TrialTimeZoneService: TrialTimeZoneService,
+    private TrialWebexService: TrialWebexService,
 
   ) {
 
@@ -154,7 +156,7 @@ class WebexSiteNewCtrl implements ng.IComponentController {
 
 export class WebexSiteNewComponent implements ng.IComponentOptions {
   public controller = WebexSiteNewCtrl;
-  public template = require('modules/core/siteList/webexSite/webexSiteNew.html');
+  public template = require('modules/core/siteList/webex-site/webex-site-new.html');
   public bindings = {
     allowMultiples: '<',
     onSiteAdd: '&',
@@ -163,6 +165,3 @@ export class WebexSiteNewComponent implements ng.IComponentOptions {
   };
 }
 
-export default angular
-  .module('Core')
-  .component('webexSiteNew', new WebexSiteNewComponent());

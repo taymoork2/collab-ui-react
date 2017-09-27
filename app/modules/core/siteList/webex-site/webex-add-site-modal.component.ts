@@ -1,4 +1,4 @@
-import './addSite.scss';
+import './webex-site.scss';
 
 import { IWebExSite, IConferenceLicense, IWebexLicencesPayload } from 'modules/core/setupWizard/meeting-settings/meeting-settings.interface';
 import { WebExSite } from 'modules/core/setupWizard/meeting-settings/meeting-settings.model';
@@ -206,9 +206,9 @@ class WebexAddSiteModalController implements ng.IComponentController {
   }
 }
 
-class WebexAddSiteModalComponent implements ng.IComponentOptions {
+export class WebexAddSiteModalComponent implements ng.IComponentOptions {
   public controller = WebexAddSiteModalController;
-  public template = require('modules/core/siteList/webexSite/webexAddSiteModal.html');
+  public template = require('modules/core/siteList/webex-site/webex-add-site-modal.html');
   public bindings = {
     subscriptionList: '<',
     conferenceServices: '<',
@@ -217,6 +217,3 @@ class WebexAddSiteModalComponent implements ng.IComponentOptions {
   };
 }
 
-export default angular
-  .module('Core')
-  .component('webexAddSiteModal', new WebexAddSiteModalComponent());
