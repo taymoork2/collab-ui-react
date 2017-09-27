@@ -41,6 +41,7 @@ describe('Controller: WebEx Metrics Ctrl', function () {
       this.$scope.header = {
         isWebexMetricsEnabled: true,
         isWebexClassicEnabled: true,
+        webexSiteList: ['go.webex.com', 'alpha.webex.com'],
       };
       this.controller = this.$controller('WebExMetricsCtrl', {
         $sce: this.$sce,
@@ -76,7 +77,7 @@ describe('Controller: WebEx Metrics Ctrl', function () {
   });
 
   it('should not have anything in the dropdown for webex metrics', function () {
-    expect(this.controller.webexOptions.length).toBe(0);
+    expect(this.controller.webexOptions.length).toBe(2);
   });
 
   it('initial state, isIframeLoaded should be false, currentFilter should be metrics', function () {
