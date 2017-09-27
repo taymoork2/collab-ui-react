@@ -77,8 +77,8 @@ export class LocationsService {
     return this.locationListResource.get({
       customerId: this.Authinfo.getOrgId(),
       wide: true,
-    }).$promise.then(locations => {
-      return _.map(_.get<IRLocationListItem[]>(locations, 'locations', []), location => {
+    }).$promise.then(locationData => {
+      return _.map(_.get<IRLocationListItem[]>(locationData, 'locations', []), location => {
         return new LocationListItem(location);
       });
     });
@@ -88,8 +88,8 @@ export class LocationsService {
     return this.locationListResource.get({
       customerId: this.Authinfo.getOrgId(),
       routingprefix: routingPrefix,
-    }).$promise.then(locations => {
-      return _.map(_.get<IRLocationListItem[]>(locations, 'locations', []), location => {
+    }).$promise.then(locationData => {
+      return _.map(_.get<IRLocationListItem[]>(locationData, 'locations', []), location => {
         return new LocationListItem(location);
       });
     });
@@ -257,9 +257,9 @@ export class LocationsService {
     .then(location => {
       return this.numberResource.get({
         customerId: this.Authinfo.getOrgId(),
-        type: 'external',
         assigned: true,
         deprecated: false,
+        type: 'external',
       })
       .$promise
       .then((rNumberData: IRCallPhoneNumberData) => {
