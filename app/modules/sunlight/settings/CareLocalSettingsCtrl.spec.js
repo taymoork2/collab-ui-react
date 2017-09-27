@@ -677,6 +677,9 @@ describe('Admin logged in: Care Settings - when org has K2 entitlement', functio
   });
 
   it('should show error notification, if any of the onboarding promises fail', function () {
+    var dummyResponse = { status: 202 };
+    var promise = q.resolve(dummyResponse);
+    sunlightConfigService.onBoardCare.and.returnValue(promise);
     spyOn(sunlightConfigService, 'aaOnboard').and.callFake(function () {
       var deferred = q.defer();
       deferred.reject('fake update response');
@@ -692,6 +695,7 @@ describe('Admin logged in: Care Settings - when org has K2 entitlement', functio
     $scope.$apply();
     $httpBackend.verifyNoOutstandingExpectation();
     $httpBackend.verifyNoOutstandingRequest();
+    expect(controller.csOnboardingStatus).toBe(controller.status.SUCCESS);
     expect(controller.state).toBe(controller.NOT_ONBOARDED);
     expect(Notification.errorWithTrackingId).toHaveBeenCalled();
   });
