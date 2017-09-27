@@ -10,16 +10,18 @@ export class HybridContextActiveCardComponent implements ng.IComponentOptions {
     <article>
       <div class="active-card_header">
         <h4 translate="servicesOverview.cards.hybridContext.title"></h4>
+        <i class="icon icon-question-circle" tooltip="{{::'servicesOverview.cards.hybridContext.description' | translate}}" tooltip-placement="bottom-right"></i>
       </div>
       <div class="active-card_content">
-        <p translate="servicesOverview.cards.hybridContext.description"></p>
-        <p><span>Resources</span></p>
-        <p><a ui-sref="context-resources">View all</a></p>
+        <div class="active-card_section">
+          <div class="active-card_title" translate="servicesOverview.cards.shared.resources"></div>
+          <div class="active-card_action"><a ui-sref="context-resources" translate="servicesOverview.cards.shared.viewAll"></a></div>
+        </div>
       </div>
       <div class="active-card_footer">
         <a ui-sref="context-resources">
-          <cs-statusindicator ng-model="$ctrl.serviceStatus.cssClass"></cs-statusindicator>
           <span translate="{{'servicesOverview.cardStatus.'+$ctrl.serviceStatus.status}}"></span>
+          <cs-statusindicator ng-model="$ctrl.serviceStatus.cssClass"></cs-statusindicator>
         </a>
       </div>
     </article>

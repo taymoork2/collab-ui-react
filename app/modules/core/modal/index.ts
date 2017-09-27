@@ -6,12 +6,13 @@ const ModalCtrl = require('./modal.controller');
  * Add a type to the default Modal settings (used by $modal)
  */
 interface IToolkitModalSettings extends ng.ui.bootstrap.IModalSettings {
-  hideDismiss?: boolean;
-  hideTitle?: boolean;
-  title?: string;
-  message?: string;
   close?: string;
   dismiss?: string;
+  hideDismiss?: boolean;
+  hideTitle?: boolean;
+  message?: string;
+  modalClass?: string;
+  title?: string;
   type?: string;
 }
 

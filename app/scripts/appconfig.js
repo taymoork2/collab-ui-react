@@ -3909,11 +3909,11 @@
         $stateProvider
           .state('services-overview', {
             url: '/services?office365&reason',
-            template: '<services-overview has-office-365-feature-toggle="$resolve.hasOffice365FeatureToggle" url-params="$resolve.urlParams"></services-overview>',
+            template: '<services-overview has-services-overview-refresh-toggle="$resolve.atlasServicesOverviewRefresh" url-params="$resolve.urlParams"></services-overview>',
             parent: 'main',
             resolve: {
-              hasOffice365FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasOffice365Support);
+              atlasServicesOverviewRefresh: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasServicesOverviewRefresh);
               },
               urlParams: /* @ngInject */ function ($stateParams) {
                 return $stateParams;
