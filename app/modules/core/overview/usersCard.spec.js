@@ -42,24 +42,24 @@ describe('OverviewUsersCard', function () {
   });
 
   it('should create user card', function () {
-    expect(this.card.showLicenseCard).toEqual(false);
-    expect(this.card.name).toEqual('overview.cards.users.title');
+    expect(this.card.showLicenseCard).toBe(false);
+    expect(this.card.name).toBe('overview.cards.users.title');
   });
 
   it('should stay on convert user card', function () {
     this.card.unlicensedUsersHandler(this.convertUserData);
-    expect(this.card.usersToConvert).toEqual(10);
-    expect(this.card.showLicenseCard).toEqual(false);
+    expect(this.card.usersToConvert).toBe(10);
+    expect(this.card.showLicenseCard).toBe(false);
   });
 
   it('should create license card if convert users is 0', function () {
     this.card.unlicensedUsersHandler(this.userData);
     this.$rootScope.$apply();
 
-    expect(this.card.usersToConvert).toEqual(0);
-    expect(this.card.showLicenseCard).toEqual(true);
-    expect(this.card.name).toEqual('overview.cards.licenses.title');
-    expect(this.card.licenseNumber).toEqual(16);
-    expect(this.card.licenseType).toEqual(this.licenses[0].licenses[0].licenseType);
+    expect(this.card.usersToConvert).toBe(0);
+    expect(this.card.showLicenseCard).toBe(true);
+    expect(this.card.name).toBe('overview.cards.licenses.title');
+    expect(this.card.licenseNumber).toBe(16);
+    expect(this.card.licenseType).toBe(this.licenses[0].licenses[0].licenseType);
   });
 });
