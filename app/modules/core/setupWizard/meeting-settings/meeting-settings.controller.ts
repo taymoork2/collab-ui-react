@@ -611,15 +611,17 @@ export class MeetingSettingsCtrl {
   // If we have WebEx licenses, we need pull those siteUrls and include them in the provision context
   public findExistingWebexSites(): void {
     const actingSubscriptionLicenses = this.SetupWizardService.getActingSubscriptionLicenses();
-    const existingConferenceServicesInActingSubscripton = _.filter(actingSubscriptionLicenses, (license: IConferenceLicense) => _.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC], license.offerName));
-
+    const includedOfferNames = [this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC];
+    const existingConferenceServicesInActingSubscripton = _.filter(actingSubscriptionLicenses, (license: IConferenceLicense) =>
+      _.includes(includedOfferNames, license.offerName)) as IConferenceLicense[];
     // Create an array of existing sites
     this.existingWebexSites = _.map(existingConferenceServicesInActingSubscripton, (license) => {
-      return {
+      return new WebExSite({
         siteUrl: _.replace(_.get<string>(license, 'siteUrl'), this.Config.siteDomainUrl.webexUrl, ''),
         quantity: license.volume,
         centerType: license.offerName,
-      };
+        setupType: (license.isCIUnifiedSite !== true) ? this.setupTypeLegacy : undefined,
+      });
     });
 
     // Push unique sites to sitesArray
@@ -629,6 +631,7 @@ export class MeetingSettingsCtrl {
         quantity: 1,
         centerType: '',
         keepExistingSite: true,
+        setupType: site.setupType,
       };
     }));
   }

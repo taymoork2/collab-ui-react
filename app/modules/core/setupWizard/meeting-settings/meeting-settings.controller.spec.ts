@@ -1,7 +1,9 @@
 describe('Controller: MeetingSettingsCtrl', () => {
   const transferCodeResponse = getJSONFixture('core/json/orders/transferCodeResponse.json');
-  const actingSubscription = getJSONFixture('core/json/customerSubscriptions/getSubscriptionsData.json');
-  const conferenceServices = getJSONFixture('core/json/authInfo/confServices.json');
+  const actingSubscriptions = _.clone(getJSONFixture('core/json/customerSubscriptions/getSubscriptionsData.json'));
+  const conferenceServices = _.clone(getJSONFixture('core/json/authInfo/confServices.json'));
+  const actingSubscription = _.find(actingSubscriptions, { subscriptionId : '235235-2352532-42352311d-87235221-d05b7c3523596f577' });
+
 
   beforeEach(function () {
     this.initModules('Core');
@@ -22,7 +24,7 @@ describe('Controller: MeetingSettingsCtrl', () => {
     spyOn(this.TrialTimeZoneService, 'getTimeZones').and.returnValue(this.$q.resolve({}));
     spyOn(this.TrialWebexService, 'validateSiteUrl').and.returnValue(this.$q.resolve({ isValid: true, errorCode: 'validSite' }));
     spyOn(this.SetupWizardService, 'getPendingAudioLicenses').and.returnValue([{ offerName: 'TSP' }]);
-    spyOn(this.SetupWizardService, 'getActingSubscriptionLicenses').and.returnValue(actingSubscription[0].licenses);
+    spyOn(this.SetupWizardService, 'getActingSubscriptionLicenses').and.returnValue(actingSubscription['licenses']);
     spyOn(this.Authinfo, 'getConferenceServices').and.returnValue(conferenceServices);
     spyOn(this.SetupWizardService, 'validateCCASPPartner').and.returnValue(this.$q.resolve(true));
     spyOn(this.SetupWizardService, 'hasPendingCCASPPackage').and.returnValue(true);
@@ -54,6 +56,17 @@ describe('Controller: MeetingSettingsCtrl', () => {
       expect(this.Authinfo.getConferenceServices).toHaveBeenCalled();
       const hasSiteUrlFromTrialLicense = _.some(this.controller.existingSites, { siteUrl: 'sqcie2e30.dmz' });
       expect(hasSiteUrlFromTrialLicense).toBe(true);
+    });
+
+    it('should set the user management setup type correctly', function () {
+      this.controller.sitesArray = [];
+      this.controller.findExistingWebexSites();
+      const sparkSetupSite = _.find(this.controller.sitesArray, { siteUrl: 'frankSinatraTest.dmz' });
+      const legacySetupSite = _.find(this.controller.sitesArray, { siteUrl: 'frankSinatraTestWX.dmz' });
+      expect(this.controller.sitesArray.length).toEqual(2);
+      expect(sparkSetupSite['setupType']).toBeUndefined();
+      expect(legacySetupSite.hasOwnProperty('setupType')).toBeTruthy();
+      expect(legacySetupSite['setupType']).toEqual(this.Config.setupTypes.legacy);
     });
   });
 
