@@ -70,6 +70,10 @@ describe('Controller: PlanReviewCtrl', function () {
       orderId: 'abc123',
       subscriptionId: 'def456',
     });
+    spyOn(SetupWizardService, 'getPendingCareLicenses').and.returnValue([{
+      offerName: 'CVC',
+      capacity: 10,
+    }]);
     controller = $controller('PlanReviewCtrl', {
       $scope: $scope,
     });
@@ -115,12 +119,12 @@ describe('Controller: PlanReviewCtrl', function () {
       expect(controller.showPendingView).toBe(true);
     });
 
-    it('Should concat meeting and audio licenses', function () {
-      expect(controller.pendingMeetingLicenses.length).toBe(2);
-    });
-
-    it('Should set the display value for the licenses', function () {
-      expect(controller.pendingMeetingLicenses[0].displayName).toBeDefined();
+    it('Should correctly assemble the pendingLicenses array', function () {
+      expect(controller.pendingLicenses.length).toBe(2);
+      expect(controller.pendingLicenses[1].length).toBe(1);
+      expect(controller.pendingLicenses[0][0].title).toBeDefined();
+      expect(controller.pendingLicenses[0][0].licenses.length).toBe(2);
+      expect(controller.pendingLicenses[0][0].licenses[0].displayName).toBeDefined();
     });
   });
 

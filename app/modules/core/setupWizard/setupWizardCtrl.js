@@ -168,7 +168,7 @@ require('./_setup-wizard.scss');
 
       if (SetupWizardService.hasPendingServiceOrder() || SetupWizardService.hasPendingSubscriptionOptions()) {
         tab.label = 'firstTimeWizard.subscriptionReview';
-        tab.title = 'firstTimeWizard.subscriptionReview';
+        tab.title = 'firstTimeWizard.newSubsOnly';
       }
 
       tabs.splice(0, 0, tab);
