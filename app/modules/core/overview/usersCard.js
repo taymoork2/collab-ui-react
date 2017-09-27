@@ -9,7 +9,7 @@
     .factory('OverviewUsersCard', OverviewUsersCard);
 
   /* @ngInject */
-  function OverviewUsersCard($q, $rootScope, $state, $translate, Config, DirSyncService, FeatureToggleService, ModalService, Orgservice) {
+  function OverviewUsersCard($q, $rootScope, $state, $timeout, $translate, Config, DirSyncService, FeatureToggleService, ModalService, Orgservice) {
     return {
       createCard: function createCard() {
         var card = {};
@@ -152,14 +152,22 @@
         };
 
         card.manageUsers = function () {
+          // notes:
+          // - simply calling '$state.go(...)' inside of the callback does not seem to produce correct behavior
+          // - workaround for now is to delay the subsequent call till the next tick
+          // TODO: track down why the above is necessary --^
           $state.go('users.list').then(function () {
-            $state.go('users.manage.picker');
+            $timeout(function () {
+              $state.go('users.manage.picker');
+            });
           });
         };
 
         card.showAutoAssignLicensesEditModal = function () {
           $state.go('users.list').then(function () {
-            $state.go('users.manage.org');
+            $timeout(function () {
+              $state.go('users.manage.org');
+            });
           });
         };
 
