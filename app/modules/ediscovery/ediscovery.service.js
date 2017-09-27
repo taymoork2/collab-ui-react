@@ -7,10 +7,7 @@ var Spark = require('@ciscospark/spark-core').default;
   /* @ngInject */
   function EdiscoveryService($document, $http, $location, $modal, $q, $timeout, $window, Authinfo, CacheFactory, EdiscoveryMockData, ReportUtilService, TokenService, UrlConfig) {
     var urlBase = UrlConfig.getAdminServiceUrl();
-    var modalTypes = {
-      DOWNLOAD: 0,
-      PASSWORD: 1,
-    };
+
     var avalonRoomsUrlCache = CacheFactory.get('avalonRoomsUrlCache');
     if (!avalonRoomsUrlCache) {
       avalonRoomsUrlCache = new CacheFactory('avalonRoomsUrlCache', {
@@ -211,10 +208,9 @@ var Spark = require('@ciscospark/spark-core').default;
       });
     }
 
-    function openReportModal(_scope, modalType) {
-      var template = (modalType && modalType === modalTypes.PASSWORD) ?
-        require('./ediscovery-report-password-modal.html') :
-        require('./download-report-modal.html');
+    function openReportModal(_scope) {
+      var template = require('./ediscovery-report-password-modal.html');
+
       $modal.open({
         template: template,
         type: 'small',
@@ -270,7 +266,6 @@ var Spark = require('@ciscospark/spark-core').default;
       setEntitledForCompliance: setEntitledForCompliance,
       openReportModal: openReportModal,
       downloadReport: downloadReport,
-      modalTypes: modalTypes,
       setupSpark: setupSpark,
     };
   }

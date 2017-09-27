@@ -22,7 +22,6 @@ module.exports = {
   atlasDeviceExport: 'atlas-device-export',
   atlasDevicesAdvancedSettings: 'atlas-devices-advanced-settings',
   atlasEdiscovery: 'atlas-ediscovery',
-  atlasEdiscoveryIPSetting: 'atlas-ediscovery-ip-setting',
   atlasEmailStatus: 'atlas-email-status',
   atlasEmailSuppress: 'atlas-email-suppress',
   atlasF3745AutoAssignLicenses: 'atlas-f3745-auto-assign-licenses',
