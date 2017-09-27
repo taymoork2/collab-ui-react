@@ -11,8 +11,8 @@ const UserPhoneButtonLayout = new CallUserPhoneButtonLayoutPage();
 /* globals, navigation, users, telephony */
 describe('Huron Functional: user-phone-button-layout', () => {
   const customer = huronCustomer({
-    test: 'user-phone-button-layout',
-    users: 1,
+    test: 'user-phone-btn-layout',
+    users: { noOfUsers: 1 },
     toggle: 'h-i1238',
   });
   const USERS = customer.users;

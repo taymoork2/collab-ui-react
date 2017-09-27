@@ -12,8 +12,10 @@ describe('Huron Functional: places-features', () => {
   const customer = huronCustomer({
     test: 'places-feature',
     offers: ['CALL', 'ROOMSYSTEMS'],
-    //places: { noOfPlaces: 3, }, This will be implemented in the near future
+    places: { noOfPlaces: 3 },
   });
+  const PLACES = customer.places;
+
   beforeAll(done => {
     provisioner.provisionCustomerAndLogin(customer)
       .then(done);
@@ -34,40 +36,10 @@ describe('Huron Functional: places-features', () => {
   });
 
   describe('Add places flow', () => {
-    describe('create a new place with Desk Phone', () => {
-      it('should show an option to add new place', () => {
-        utils.click(CallPlaces.addNewPlaceEmpty);
-        utils.expectIsDisplayed(CallPlaces.newPlaceInput);
-      });
-      it('should take a new place input and allow to save', () => {
-        utils.expectIsDisabled(CallPlaces.nxtBtn);
-        utils.sendKeys(CallPlaces.newPlaceInput, 'Naboo');
-        utils.expectIsEnabled(CallPlaces.nxtBtn);
-      });
-      it('should go to device selection page and select a device', () => {
-        utils.click(CallPlaces.nxtBtn);
-        utils.expectIsDisabled(CallPlaces.nxtBtn2);
-        utils.click(CallPlaces.selectHuron);
-        utils.expectIsEnabled(CallPlaces.nxtBtn2);
-      });
-      it('should go to Assign Numbers section and select an extension', () => {
-        utils.click(CallPlaces.nxtBtn2);
-        utils.waitForPresence(CallPlaces.dropdownSelection);
-        utils.selectDropdown('.csSelect-container[name="internalNumber"]', '304');
-      });
-      it('should go to a final setup patch with a QR', () => {
-        utils.click(CallPlaces.nxtBtn3);
-        utils.expectIsDisplayed(CallPlaces.qrCode);
-      });
-      it('should close current setup', () => {
-        utils.click(CallPlaces.closeGrp);
-      });
-    });
-
     describe('Place Call Features', () => {
       it('should list newly added place by search', () => {
         utils.click(CallPlaces.searchPlaces);
-        utils.sendKeys(CallPlaces.searchBar, 'Naboo');
+        utils.searchAndClick(PLACES[0].name);
       });
       it('should click on newly added place and bring up side menu', () => {
         utils.click(CallPlaces.clickLocation);
