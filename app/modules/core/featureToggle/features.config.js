@@ -116,7 +116,6 @@ module.exports = {
   hi1033: 'h-i1033',
   hI1474: 'h-i1474',
   hI1484: 'h-i1484', // Multi-Location Support
-  hI1485: 'h-i1485',
   hI802: 'h-i802',
   hRegionalTones: 'h-regional-tones',
   huronAADynannounce: 'huron-aa-dynannounce',
