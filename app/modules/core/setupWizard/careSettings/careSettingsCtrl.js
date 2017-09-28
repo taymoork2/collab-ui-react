@@ -52,7 +52,6 @@
 
     vm.onboardToCare = function () {
       vm.state = vm.IN_PROGRESS;
-
       if (vm.defaultQueueStatus !== vm.status.SUCCESS) {
         var createQueueRequest = {
           queueId: Authinfo.getOrgId(),
@@ -66,7 +65,9 @@
           onboardCsAaAppToCare();
         })
           .catch(function (error) {
-            Log.debug('default queue creation is unsuccessful,' + error);
+            vm.state = vm.NOT_ONBOARDED;
+            Log.error('default queue creation is unsuccessful,' + error);
+            Notification.errorWithTrackingId(error, $translate.instant('firstTimeWizard.setUpCareFailure'));
           });
       } else {
         onboardCsAaAppToCare();
@@ -98,12 +99,8 @@
     }
 
     function processOnboardStatus() {
-      var onboardPromises = {};
-      onboardPromises.getQueue = URService.getQueue(vm.defaultQueueId);
-      onboardPromises.getChatConfig = SunlightConfigService.getChatConfig();
-
-      $q.all(onboardPromises).then(function (promiseResult) {
-        var onboardingStatus = getOnboardingStatus(promiseResult.getChatConfig);
+      SunlightConfigService.getChatConfig().then(function (result) {
+        var onboardingStatus = getOnboardingStatus(result);
         switch (onboardingStatus) {
           case vm.status.SUCCESS:
             Notification.success($translate.instant('firstTimeWizard.careSettingsComplete'));
@@ -112,16 +109,16 @@
             enableNext();
             break;
           case vm.status.FAILURE:
-            Notification.errorWithTrackingId(promiseResult.getChatConfig, $translate.instant('firstTimeWizard.setUpCareFailure'));
+            Notification.errorWithTrackingId(result, $translate.instant('firstTimeWizard.setUpCareFailure'));
             vm.state = vm.NOT_ONBOARDED;
             stopPolling();
             break;
           default:
-            Log.debug('Care setup status is not Success: ', promiseResult.getChatConfig);
+            Log.debug('Care setup status is not Success: ', result);
         }
       })
         .catch(function (error) {
-          if (error.getQueue.status !== 404 || error.getChatConfig.status !== 404) {
+          if (error.status !== 404) {
             Log.debug('Fetching Care setup status failed: ', error);
             if (vm.errorCount++ >= pollErrorCount) {
               vm.state = vm.status.UNKNOWN;
@@ -197,16 +194,9 @@
       _.set($scope.wizard, 'isNextDisabled', true);
     }
 
-    function init() {
-      disableNext();
-
-      var promisesOnInit = {};
-      promisesOnInit.getQueue = URService.getQueue(vm.defaultQueueId);
-      promisesOnInit.getChatConfig = SunlightConfigService.getChatConfig();
-
-      $q.all(promisesOnInit).then(function (promiseResult) {
-        vm.defaultQueueStatus = vm.status.SUCCESS;
-        var onboardingStatus = getOnboardingStatus(promiseResult.getChatConfig);
+    function getOnboardingStatusFromOrgChatConfig() {
+      SunlightConfigService.getChatConfig().then(function (result) {
+        var onboardingStatus = getOnboardingStatus(result);
         switch (onboardingStatus) {
           case vm.status.PENDING:
             vm.state = vm.IN_PROGRESS;
@@ -221,14 +211,29 @@
         }
       })
         .catch(function (error) {
-          if (error.getQueue.status === 404 || error.getChatConfig.status === 404) {
+          if (error.status === 404) {
             vm.state = vm.NOT_ONBOARDED;
           } else {
-            Log.debug('Fetching default Queue status or Care setup status, on load, failed: ', error);
+            Log.debug('Fetching Care setup status, on load, failed: ', error);
           }
         });
     }
 
+    function init() {
+      disableNext();
+
+      URService.getQueue(vm.defaultQueueId).then(function () {
+        vm.defaultQueueStatus = vm.status.SUCCESS;
+        getOnboardingStatusFromOrgChatConfig();
+      }, function (error) {
+        getOnboardingStatusFromOrgChatConfig();
+        if (error.status === 404) {
+          vm.state = vm.NOT_ONBOARDED;
+        } else {
+          Log.debug('Fetching default queue status, on load, failed: ', error);
+        }
+      });
+    }
     init();
   }
 })();

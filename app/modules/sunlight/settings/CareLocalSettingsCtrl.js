@@ -115,6 +115,8 @@
         };
         URService.updateQueue(vm.defaultQueueId, updateQueueRequest).then(function () {
           vm.defaultQueueStatus = vm.status.SUCCESS;
+          var rr = onboardingStatusDoneByAdminOrPartner();
+          setViewModelState(rr);
         }, function () {
           vm.defaultQueueStatus = vm.status.UNKNOWN;
         });
@@ -128,6 +130,8 @@
           };
           URService.createQueue(createQueueRequest).then(function () {
             vm.defaultQueueStatus = vm.status.SUCCESS;
+            var rr = onboardingStatusDoneByAdminOrPartner();
+            setViewModelState(rr);
           }, function () {
             vm.defaultQueueStatus = vm.status.UNKNOWN;
           });
@@ -286,13 +290,9 @@
     }
 
     function processOnboardStatus() {
-      var onboardPromises = {};
-      onboardPromises.getQueue = URService.getQueue(vm.defaultQueueId);
-      onboardPromises.getChatConfig = SunlightConfigService.getChatConfig();
-
-      $q.all(onboardPromises).then(function (promiseResult) {
-        populateOrgChatConfigViewModel(promiseResult.getChatConfig);
-        var onboardingStatus = getOnboardingStatus(promiseResult.getChatConfig);
+      SunlightConfigService.getChatConfig().then(function (result) {
+        populateOrgChatConfigViewModel(result);
+        var onboardingStatus = getOnboardingStatus(result);
         switch (onboardingStatus) {
           case vm.status.SUCCESS:
             Notification.success($translate.instant('sunlightDetails.settings.setUpCareSuccess'));
@@ -300,17 +300,17 @@
             stopPolling();
             break;
           case vm.status.FAILURE:
-            Notification.errorWithTrackingId(promiseResult.getChatConfig, $translate.instant('sunlightDetails.settings.setUpCareFailure'));
+            Notification.errorWithTrackingId(result, $translate.instant('sunlightDetails.settings.setUpCareFailure'));
             vm.state = vm.NOT_ONBOARDED;
             stopPolling();
             break;
           default:
-            Log.debug('Care setup status is not Success: ', promiseResult.getChatConfig);
+            Log.debug('Care setup status is not Success: ', result);
         }
       })
         .catch(function (error) {
-          if (error.getQueue.status !== 404 || error.getChatConfig.status !== 404) {
-            Log.debug('Fetching Default Queue status or Care setup status failed: ', error);
+          if (error.status !== 404) {
+            Log.debug('Fetching Care setup status failed: ', error);
             if (vm.errorCount++ >= pollErrorCount) {
               vm.state = vm.NOT_ONBOARDED;
               Notification.errorWithTrackingId(error, $translate.instant('sunlightDetails.settings.setUpCareFailure'));
@@ -330,6 +330,17 @@
       var onboardingStatus = vm.status.UNKNOWN;
       vm.csOnboardingStatus = _.get(result, 'data.csOnboardingStatus');
       vm.aaOnboardingStatus = _.get(result, 'data.aaOnboardingStatus');
+      // if (vm.careSetupDoneByOrgAdmin) {
+      //   onboardingStatus = onboardingDoneByAdminStatus();
+      // } else {
+      //   onboardingStatus = onboardingDoneByPartnerStatus();
+      // }
+      onboardingStatus = onboardingStatusDoneByAdminOrPartner();
+      return onboardingStatus;
+    }
+
+    function onboardingStatusDoneByAdminOrPartner() {
+      var onboardingStatus = vm.status.UNKNOWN;
       if (vm.careSetupDoneByOrgAdmin) {
         onboardingStatus = onboardingDoneByAdminStatus();
       } else {
@@ -418,6 +429,19 @@
       }
     }
 
+    function getOnboardingStatusFromOrgChatConfig() {
+      SunlightConfigService.getChatConfig().then(function (result) {
+        populateOrgChatConfigViewModel(result, true);
+        getCsAaAppOnboardingStatus(result);
+      }, function (error) {
+        if (error.status === 404) {
+          vm.state = vm.NOT_ONBOARDED;
+        } else {
+          Log.debug('Fetching Care setup status, on load, failed: ', error);
+        }
+      });
+    }
+
     function init() {
       FeatureToggleService.atlasCareAutomatedRouteTrialsGetStatus().then(function (result) {
         vm.featureToggles.showRouterToggle = result;
@@ -426,20 +450,15 @@
       FeatureToggleService.atlasCareChatToVideoTrialsGetStatus().then(function (result) {
         vm.featureToggles.chatToVideoFeatureToggle = result && Authinfo.isCare();
       });
-
-      var promisesOnInit = {};
-      promisesOnInit.getQueue = URService.getQueue(vm.defaultQueueId);
-      promisesOnInit.getChatConfig = SunlightConfigService.getChatConfig();
-
-      $q.all(promisesOnInit).then(function (promiseResult) {
+      URService.getQueue(vm.defaultQueueId).then(function () {
         vm.defaultQueueStatus = vm.status.SUCCESS;
-        populateOrgChatConfigViewModel(promiseResult.getChatConfig, true);
-        getCsAaAppOnboardingStatus(promiseResult.getChatConfig);
+        getOnboardingStatusFromOrgChatConfig();
       }, function (error) {
-        if (error.getQueue.status === 404 || error.getChatConfig.status === 404) {
+        getOnboardingStatusFromOrgChatConfig();
+        if (error.status === 404) {
           vm.state = vm.NOT_ONBOARDED;
         } else {
-          Log.debug('Fetching default Queue status or Care setup status, on load, failed: ', error);
+          Log.debug('Fetching default Queue status status, on load, failed: ', error);
         }
       });
     }
