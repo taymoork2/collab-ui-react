@@ -1,9 +1,9 @@
 import { INumber, NumberType } from './number';
 
 export enum NumberOrder {
-  ASCENDING = <any>'asc',
-  DESCENDING = <any>'desc',
-  SITETOSITE_ASC = <any>'SITETOSITE-ASC',
+  ASCENDING = 'asc',
+  DESCENDING = 'desc',
+  SITETOSITE_ASC = 'SITETOSITE-ASC',
 }
 
 interface INumberResource extends ng.resource.IResourceClass<ng.resource.IResource<INumber>> {}
