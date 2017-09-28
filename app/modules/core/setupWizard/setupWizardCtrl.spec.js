@@ -140,7 +140,7 @@ describe('SetupWizardCtrl', function () {
     it('the setup wizard should change the title of the tab', function () {
       var tab = _.find(this.$scope.tabs, { name: 'planReview' });
       expect(tab.label).toBe('firstTimeWizard.subscriptionReview');
-      expect(tab.title).toBe('firstTimeWizard.newSubsOnly');
+      expect(tab.title).toBe('firstTimeWizard.subscriptionReview');
     });
   });
 

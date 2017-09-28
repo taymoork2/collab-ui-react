@@ -52,6 +52,19 @@
     }
   }
 
+  .plan-review-help {
+    display: flex;
+    flex-direction: row;
+    align-items: top;
+    padding-bottom: 40px;
+    padding-top: 20px;
+  }
+
+  .plan-review-help-text {
+    flex-grow: 1;
+    margin-left: 10px;
+  }
+
   .pending-details {
     padding-left: 45px;
     padding-bottom: 10px;
