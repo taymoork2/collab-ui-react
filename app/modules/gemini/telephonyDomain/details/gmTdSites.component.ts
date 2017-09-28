@@ -58,8 +58,6 @@ class GmTdSites implements ng.IComponentController {
       sourceDomainName: this.curTd.telephonyDomainName,
     };
     this.TelephonyDomainService.moveSite(data).then(() => {
-      this.showLoading = false;
-
       _.remove(this.sites, (obj: any) => {
         return obj.siteId === site.siteId;
       });
@@ -67,6 +65,8 @@ class GmTdSites implements ng.IComponentController {
       this.$scope.$emit('tdUpdated', {});
     }).catch((err) => {
       this.Notification.errorResponse(err, 'errors.statusError', { status: err.status });
+    }).finally(() => {
+      this.showLoading = false;
     });
   }
 

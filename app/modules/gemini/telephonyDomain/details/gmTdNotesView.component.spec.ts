@@ -8,7 +8,7 @@ describe('Component: gmTdNotesView', () => {
   beforeEach(function () {
     this.initModules(testModule);
     this.injectDependencies('$q', '$scope', 'UrlConfig', '$httpBackend', 'Notification', 'gemService', 'TelephonyDomainService');
-    this.mockData = _.fill(Array(5), { userName: 'bing', objectName: 'note content' });
+    this.mockData = _.fill(Array(5), { userName: 'bing', objectName: 'note content', action: 'add_notes_td' });
     this.postMockData = {
       userName: '',
       objectName: 'new note',

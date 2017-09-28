@@ -114,12 +114,17 @@ class CcaReportsTabs implements ng.IComponentController {
 
   public onDuration() {
     const durVal: string = _.get(this.data, 'durationSelected.value');
-    durVal === 'customer' ? _.set(this.data, 'dateEnable', true) : _.set(this.data, 'dateEnable', false);
-    if (durVal !== 'customer') {
-      const arr: any = durVal.match(/^([MD])(90|45|12|6)$/);
 
-      this.startDateFormat = moment().subtract(_.parseInt(arr[2]) + 4, arr[1] === 'M' ? 'months' : 'days' ).format('MMM Do, YYYY');
+    if (durVal === 'customer') {
+      _.set(this.data, 'dateEnable', true);
+      this.startDateFormat = moment(this.startDate).format('MMM Do, YYYY');
+    } else {
+      _.set(this.data, 'dateEnable', false);
+      const arr: any = durVal.match(/^([MD])(90|45|12|6)$/);
+      const num = arr[1] === 'M' ? _.parseInt(arr[2]) : _.parseInt(arr[2]) - 4;
+      this.startDateFormat = moment().subtract(num, arr[1] === 'M' ? 'months' : 'days' ).format('MMM Do, YYYY');
     }
+
     this.setParameters();
   }
 
@@ -288,12 +293,12 @@ class CcaReportsTabs implements ng.IComponentController {
   }
 
   private getChartsData(data) {
+    this.csvData = [];
     const promises = this.getChartsFunction(data);
     this.$q.all(promises)
       .then((res) => {
         _.forEach(res, (item) => {
           this.chartsData[item.group][item.url] = item;
-          //item.data.chart = _.keyBy(item.data.chart, 'time');
           this.csvData.push(item);
           this.loading = false;
         });

@@ -255,7 +255,7 @@ export class TelephonyNumberDataService {
   public addNumber(data: any) {
     const newData = {
       rowId: ++this.rowId,
-      isEdit: !data || data.dataType === DATA_TYPE.IMPORT_TD,
+      isEdit: !data,
       dataType: (data && data.dataType) ? data.dataType : DATA_TYPE.MANUAL_ADD,
       dnisId: (data && data.dnisId) ? data.dnisId : '',
       phone: (data && data.phone) ? data.phone : '',

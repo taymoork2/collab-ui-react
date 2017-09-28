@@ -8756,7 +8756,7 @@
     "import": "Import",
     "hidden": "Hidden",
     "display": "Display",
-    "inputLengthError": "Your {{field}} should be less than {{length}} characters.",
+    "inputLengthError": "{{field}} should be less than {{length}} characters.",
     "invalidCharacters": "{{field}} can not include invalid characters.",
     "services": {
       "pageTitle": "Service"
@@ -8770,7 +8770,7 @@
     },
     "region": "Region",
     "cbgTitle": "Callback Groups",
-    "tdTitle": "Telephony Domain",
+    "tdTitle": "Telephony Domains",
     "button": {
       "decline": "Decline",
       "approve": "Approve",
@@ -8895,7 +8895,7 @@
         "webDomain": "Web Domain",
         "totalSites": "Sites Assigned",
         "partnerTdName": "Partner TD Name",
-        "telephonyDomains": "Telephony Domains"
+        "telephonyDomains": "Telephony Domain Name"
       },
       "submit": {
         "success": "Telephony domain submitted.",
@@ -8978,7 +8978,7 @@
         "csvFilename": "exported_callbackgroup.csv",
         "result": {
           "success": "Callback Group list has been successfully exported.",
-          "failed": "There was an error exporting Telephony Domain list."
+          "failed": "There was an error exporting Callback Group list."
         }
       },
       "request": {

@@ -18,12 +18,13 @@ require('../style/callbackGroup.scss');
     vm.countryDisable = '';
     vm.$onInit = $onInit;
     vm.onSubmit = onSubmit;
-    vm.onWarning = onWarning;
     vm.messages = {
       customerName: {
         required: $translate.instant('common.invalidRequired'),
-        warning: $translate.instant('gemini.invalidCharacters', { field: 'Callback Group Name' }),
-        maxlength: $translate.instant('gemini.inputLengthError', { length: 64, field: 'Customer Name' }),
+        maxlength: $translate.instant('gemini.inputLengthError', { length: 64, field: $translate.instant('gemini.cbgs.request.labelCustomer') }),
+      },
+      customerAttribute: {
+        maxlength: $translate.instant('gemini.inputLengthError', { length: 200, field: $translate.instant('gemini.cbgs.field.alias') }),
       },
     };
 
@@ -35,17 +36,13 @@ require('../style/callbackGroup.scss');
       });
     }
 
-    function onWarning() {
-      var reg = /[<>~!@#$%^&*=|/<>"{}[\]:;']+/g;
-      return reg.test(vm.model.customerName);
-    }
-
     function onSubmit() {
       vm.loading = true;
       vm.model.countries = _.map(vm.countries, function (item) {
         return { id: item.value, name: item.label };
       });
       vm.model.groupName = vm.model.customerName;
+      vm.model.customerId = customerId;
 
       $element.find('input').attr('readonly', true);
       $element.find('a.select-toggle').addClass('disabled');

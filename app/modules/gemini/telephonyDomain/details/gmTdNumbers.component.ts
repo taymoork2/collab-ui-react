@@ -4,6 +4,7 @@ import { TelephonyDomainService } from '../telephonyDomain.service';
 import { TelephonyNumberDataService } from './telephonyNumberData.service';
 import { TelephonyNumberValidateService } from './telephonyNumberValidate.service';
 
+const MAX_PHONE_NUMBERS: number = 300;
 const DATA_TYPE: any = { MANUAL_ADD : 0, IMPORT_TD : 1, IMPORT_CSV : 2, SUBMITTED : 3 };
 const DNIS_TYPE: any = { NEW: 0, EXISTED: 1, NON_CCA: 2 };
 const DNIS_CHANGE_TYPE: any = { INPUT_DNIS: 0, CHANGE_TOLLTYPE: 1, CHANGE_CALLTYPE: 2 };
@@ -430,22 +431,36 @@ class GmTdNumbersCtrl implements ng.IComponentController {
       type: 'default',
       template: '<gm-import-td dismiss="$dismiss()" close="$close()" class="new-field-modal"></gm-import-td>',
     }).result.then(() => {
+      let imported: number = 0;
       const data = this.gemService.getStorage('currentTelephonyDomain');
-
       const numbers = _.get(data, 'importTDNumbers', []);
-      _.forEach(numbers, (item: any) => {
-        if (!this.dnisId2ImportedNumberMapping[item.dnisId]) {
-          delete item.defaultNumber;
-          delete item.globalListDisplay;
+      this.loading = true;
 
-          item.dataType = DATA_TYPE.IMPORT_TD;
-          item.typeDisabled = true;
-          this.TelephonyNumberDataService.initNumber(item, this.telephonyDomainId);
-        }
+      this.$timeout(() => {
+        const totalNum = this.gridData.length + numbers.length;
+        const _numbers = totalNum > MAX_PHONE_NUMBERS ? _.slice(numbers, 0, MAX_PHONE_NUMBERS - this.gridData.length) : numbers;
 
-        this.dnisId2ImportedNumberMapping[item.dnisId] = item;
-      });
+        _.forEach(_numbers, (item: any) => {
+          if (!this.dnisId2ImportedNumberMapping[item.dnisId]) {
+            delete item.defaultNumber;
+            delete item.globalListDisplay;
 
+            item.dataType = DATA_TYPE.IMPORT_TD;
+            item.isEdit = false;
+            item.typeDisabled = true;
+            this.TelephonyNumberDataService.initNumber(item, this.telephonyDomainId);
+            imported++;
+          }
+
+          this.dnisId2ImportedNumberMapping[item.dnisId] = item;
+        });
+
+        this.$timeout(() => {
+          this.Notification.success('gemini.tds.numbers.import.resultMsg.success', { importedNumbersCount: imported });
+        }, 10);
+
+        this.loading = false;
+      }, 1000);
     });
   }
 
@@ -454,7 +469,10 @@ class GmTdNumbersCtrl implements ng.IComponentController {
     this.loading = true;
 
     this.$timeout(() => {
-      _.forEach(numbers, (item) => {
+      const totalNum = this.gridData.length + numbers.length;
+      const _numbers = totalNum > MAX_PHONE_NUMBERS ? _.slice(numbers, 0, MAX_PHONE_NUMBERS - this.gridData.length) : numbers;
+
+      _.forEach(_numbers, (item) => {
         const formattedItem = _.assignIn({}, item, {
           dataType: DATA_TYPE.IMPORT_CSV,
           typeDisabled: false,
@@ -465,14 +483,12 @@ class GmTdNumbersCtrl implements ng.IComponentController {
         imported++;
       });
 
-      if (imported) {
-        this.$timeout(() => {
-          this.Notification.success('gemini.tds.numbers.import.resultMsg.success', { importedNumbersCount: imported });
-        }, 10);
-      }
+      this.$timeout(() => {
+        this.Notification.success('gemini.tds.numbers.import.resultMsg.success', { importedNumbersCount: imported });
+      }, 10);
 
       this.loading = false;
-    }, 10);
+    }, 100);
   }
 
   public onCancel(): void {

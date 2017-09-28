@@ -52,7 +52,7 @@
 
     .getExportcsv {
       position: relative;
-      width: 120px;
+      width: 130px;
       padding: 0 1.5rem 0 0.5rem;
       box-sizing: border-box;
 
@@ -79,6 +79,11 @@
 
     .col-sm-6 {
       padding-bottom: 0;
+    }
+
+    .durationSelected {
+      text-align: right;
+      line-height: 37px;
     }
 
     .col-sm-7 {
@@ -156,16 +161,28 @@
     .sm-graphic {
       width: 100%;
       height: 380px !important;
+
+      .amExportButton {
+        top: -2.5rem;
+
+        ul {
+          padding: 0.5rem;
+        }
+      }
     }
 
     .reportsChartBody {
+
       .chartHeader {
+        padding: 0 1.5rem;
+        line-height: 30px;
+        box-sizing: border-box;
 
         h4 {
           font-family: "CiscoSansTT Light";
           color: $gray-dark-1;
           font-size: 0.9rem;
-          height: 1.2rem;
+          //padding: 0;
         }
 
         span {
