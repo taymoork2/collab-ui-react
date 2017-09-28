@@ -8689,6 +8689,10 @@ useragent@^2.1.12:
     lru-cache "2.2.x"
     tmp "0.0.x"
 
+usertiming@^0.1.8:
+  version "0.1.8"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/usertiming/-/usertiming-0.1.8.tgz#35378e7f41a248d40e658d05f80423469a7b0650"
+
 util-deprecate@~1.0.1:
   version "1.0.2"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"

@@ -1,3 +1,4 @@
+import 'usertiming'; // polyfill for performance methods - https://developer.mozilla.org/en-US/docs/Web/API/Performance
 import 'babel-polyfill';
 import '@ciscospark/internal-plugin-metrics';
 import '@ciscospark/plugin-logger';
