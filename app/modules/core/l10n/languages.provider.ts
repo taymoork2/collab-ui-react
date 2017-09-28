@@ -34,16 +34,7 @@ export class LanguagesProvider implements ng.IServiceProvider {
         return foundLanguage;
       }
 
-      const findLanguage = _.find(languages, language => {
-        const matchesBrowserCode = _.some(language.browserCodes, browserCode => {
-          return browserCode === browserLanguage || _.startsWith(browserCode, browserLanguage);
-        });
-        if (matchesBrowserCode) {
-          return true;
-        }
-
-        return false;
-      });
+      const findLanguage = _.find(languages, language => _.some(language.browserCodes, browserCode => _.startsWith(browserCode, browserLanguage)));
 
       if (findLanguage) {
         return findLanguage.value;
