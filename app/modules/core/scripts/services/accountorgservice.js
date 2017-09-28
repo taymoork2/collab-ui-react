@@ -12,6 +12,12 @@
   function AccountOrgService($http, $q, UrlConfig) {
     var accountUrl = UrlConfig.getAdminServiceUrl();
 
+    var FileShareControlType = {
+      BLOCK_BOTH: 'BLOCK_BOTH',
+      BLOCK_UPLOAD: 'BLOCK_UPLOAD',
+      NONE: 'NONE',
+    };
+
     var service = {
       getAccount: getAccount,
       getServices: getServices,
@@ -186,37 +192,46 @@
       // TODO using hardcode first, wait for backend code
       var url = getDeviceSettingsUrl(org);
       return $http.get(url).then(function (response) {
-        var fileSharingControl = { blockDesktopAppDownload: false, blockDesktopAppUpload: false, blockMobileAppDownload: false, blockMobileAppUpload: false, blockWebAppDownload: false, blockWebAppUpload: false, blockBotsDownload: false, blockBotsUpload: false };
+        var fileSharingControl = {
+          blockDesktopAppDownload: false,
+          blockDesktopAppUpload: false,
+          blockMobileAppDownload: false,
+          blockMobileAppUpload: false,
+          blockWebAppDownload: false,
+          blockWebAppUpload: false,
+          blockBotsDownload: false,
+          blockBotsUpload: false,
+        };
         var orgSettings = JSON.parse(response.data.orgSettings[0]);
         if (_.has(orgSettings, 'desktopFileShareControl')) {
-          if (_.get(orgSettings, 'desktopFileShareControl') == 'BLOCK_BOTH') {
+          if (_.get(orgSettings, 'desktopFileShareControl') === FileShareControlType.BLOCK_BOTH) {
             fileSharingControl.blockDesktopAppDownload = true;
             fileSharingControl.blockDesktopAppUpload = true;
-          } else if (_.get(orgSettings, 'desktopFileShareControl') == 'BLOCK_UPLOAD') {
+          } else if (_.get(orgSettings, 'desktopFileShareControl') === FileShareControlType.BLOCK_UPLOAD) {
             fileSharingControl.blockDesktopAppUpload = true;
           }
         }
         if (_.has(orgSettings, 'mobileFileShareControl')) {
-          if (_.get(orgSettings, 'mobileFileShareControl') == 'BLOCK_BOTH') {
+          if (_.get(orgSettings, 'mobileFileShareControl') === FileShareControlType.BLOCK_BOTH) {
             fileSharingControl.blockMobileAppDownload = true;
             fileSharingControl.blockMobileAppUpload = true;
-          } else if (_.get(orgSettings, 'mobileFileShareControl') == 'BLOCK_UPLOAD') {
+          } else if (_.get(orgSettings, 'mobileFileShareControl') === FileShareControlType.BLOCK_UPLOAD) {
             fileSharingControl.blockMobileAppUpload = true;
           }
         }
         if (_.has(orgSettings, 'webFileShareControl')) {
-          if (_.get(orgSettings, 'webFileShareControl') == 'BLOCK_BOTH') {
+          if (_.get(orgSettings, 'webFileShareControl') === FileShareControlType.BLOCK_BOTH) {
             fileSharingControl.blockWebAppDownload = true;
             fileSharingControl.blockWebAppUpload = true;
-          } else if (_.get(orgSettings, 'webFileShareControl') == 'BLOCK_UPLOAD') {
+          } else if (_.get(orgSettings, 'webFileShareControl') === FileShareControlType.BLOCK_UPLOAD) {
             fileSharingControl.blockWebAppUpload = true;
           }
         }
         if (_.has(orgSettings, 'botFileShareControl')) {
-          if (_.get(orgSettings, 'botFileShareControl') == 'BLOCK_BOTH') {
+          if (_.get(orgSettings, 'botFileShareControl') === FileShareControlType.BLOCK_BOTH) {
             fileSharingControl.blockBotsDownload = true;
             fileSharingControl.blockBotsUpload = true;
-          } else if (_.get(orgSettings, 'botFileShareControl') == 'BLOCK_UPLOAD') {
+          } else if (_.get(orgSettings, 'botFileShareControl') === FileShareControlType.BLOCK_UPLOAD) {
             fileSharingControl.blockBotsUpload = true;
           }
         }
@@ -231,35 +246,35 @@
       }
       var fileSharingSetting = {};
       if (fileSharingControl.blockDesktopAppDownload && fileSharingControl.blockDesktopAppUpload) {
-        fileSharingSetting.desktopFileShareControl = 'BLOCK_BOTH';
+        fileSharingSetting.desktopFileShareControl = FileShareControlType.BLOCK_BOTH;
       } else if (fileSharingControl.blockDesktopAppUpload) {
-        fileSharingSetting.desktopFileShareControl = 'BLOCK_UPLOAD';
+        fileSharingSetting.desktopFileShareControl = FileShareControlType.BLOCK_UPLOAD;
       } else {
-        fileSharingSetting.desktopFileShareControl = 'NONE';
+        fileSharingSetting.desktopFileShareControl = FileShareControlType.NONE;
       }
 
       if (fileSharingControl.blockMobileAppDownload && fileSharingControl.blockMobileAppUpload) {
-        fileSharingSetting.mobileFileShareControl = 'BLOCK_BOTH';
+        fileSharingSetting.mobileFileShareControl = FileShareControlType.BLOCK_BOTH;
       } else if (fileSharingControl.blockMobileAppUpload) {
-        fileSharingSetting.mobileFileShareControl = 'BLOCK_UPLOAD';
+        fileSharingSetting.mobileFileShareControl = FileShareControlType.BLOCK_UPLOAD;
       } else {
-        fileSharingSetting.mobileFileShareControl = 'NONE';
+        fileSharingSetting.mobileFileShareControl = FileShareControlType.NONE;
       }
 
       if (fileSharingControl.blockWebAppDownload && fileSharingControl.blockWebAppUpload) {
-        fileSharingSetting.webFileShareControl = 'BLOCK_BOTH';
+        fileSharingSetting.webFileShareControl = FileShareControlType.BLOCK_BOTH;
       } else if (fileSharingControl.blockWebAppUpload) {
-        fileSharingSetting.webFileShareControl = 'BLOCK_UPLOAD';
+        fileSharingSetting.webFileShareControl = FileShareControlType.BLOCK_UPLOAD;
       } else {
-        fileSharingSetting.webFileShareControl = 'NONE';
+        fileSharingSetting.webFileShareControl = FileShareControlType.NONE;
       }
 
       if (fileSharingControl.blockBotsDownload && fileSharingControl.blockBotsUpload) {
-        fileSharingSetting.botFileShareControl = 'BLOCK_BOTH';
+        fileSharingSetting.botFileShareControl = FileShareControlType.BLOCK_BOTH;
       } else if (fileSharingControl.blockBotsUpload) {
-        fileSharingSetting.botFileShareControl = 'BLOCK_UPLOAD';
+        fileSharingSetting.botFileShareControl = FileShareControlType.BLOCK_UPLOAD;
       } else {
-        fileSharingSetting.botFileShareControl = 'NONE';
+        fileSharingSetting.botFileShareControl = FileShareControlType.NONE;
       }
 
       var url = getDeviceSettingsUrl(org);

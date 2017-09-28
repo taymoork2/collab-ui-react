@@ -85,7 +85,7 @@ describe('Controller: FileSharingControlSettingController', () => {
           blockWebAppDownload : false,
           blockMobileAppDownload : false,
           blockBotsDownload : false,
-          blockDesktopAppUpload : false,
+          blockDesktopAppUpload : true,
           blockWebAppUpload : false,
           blockMobileAppUpload : false,
           blockBotsUpload : false});

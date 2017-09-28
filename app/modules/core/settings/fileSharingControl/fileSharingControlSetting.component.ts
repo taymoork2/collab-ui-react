@@ -13,5 +13,5 @@ export class FileSharingControlSetting extends ProPackSettingSection {
 
 export class FileSharingControlSettingComponent implements ng.IComponentOptions {
   public controller = FileSharingControlSettingController;
-  public templateUrl = 'modules/core/settings/fileSharingControl/fileSharingControlSetting.tpl.html';
+  public template = require('./fileSharingControlSetting.tpl.html');
 }
