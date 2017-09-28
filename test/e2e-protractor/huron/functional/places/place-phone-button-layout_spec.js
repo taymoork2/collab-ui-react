@@ -1,21 +1,22 @@
 import * as provisioner from '../../../provisioner/provisioner';
 import { huronCustomer } from '../../../provisioner/huron/huron-customer-config';
-import { CallUserPage } from '../../pages/callUser.page';
+import { CallPlacesPage } from '../../pages/callPlaces.page';
 import { CallUserPhoneButtonLayoutPage } from '../../pages/callUserPhoneButtonLayout.page';
 import { CallUserPlacePage } from '../../pages/callUserPlace.page';
 
-const CallUser = new CallUserPage();
-const CallUserLine = new CallUserPlacePage();
+const CallPlace = new CallPlacesPage()
+const CallPlaceLine = new CallUserPlacePage();
 const UserPhoneButtonLayout = new CallUserPhoneButtonLayoutPage();
 
 /* globals, navigation, users, telephony */
-describe('Huron Functional: user-phone-button-layout', () => {
+describe('Huron Functional: place-phone-button-layout', () => {
   const customer = huronCustomer({
-    test: 'user-phone-btn-layout',
-    users: { noOfUsers: 1 },
+    test: 'place-phone-button-layout',
+    offers: ['CALL', 'ROOMSYSTEMS'],
+    places: { noOfPlaces: 2, noOfDids: 0 },
     toggle: 'h-i1238',
   });
-  const USERS = customer.users;
+  const PLACES = customer.places;
 
   beforeAll(done => {
     provisioner.provisionCustomerAndLogin(customer)
@@ -29,40 +30,37 @@ describe('Huron Functional: user-phone-button-layout', () => {
     navigation.expectDriverCurrentUrl('overview');
     utils.expectIsDisplayed(navigation.tabs);
   });
-  it('should navigate to Users overview page', () => {
-    utils.click(navigation.usersTab);
-    navigation.expectDriverCurrentUrl('users');
+  it('should navigate to places overview page', () => {
+    utils.click(navigation.placesTab);
+    navigation.expectDriverCurrentUrl('places');
   });
 
-  it('Enter the user details on the search bar and Navigate to user details view', () => {
-    utils.click(CallUser.usersList.searchFilter);
-    utils.searchAndClick(USERS[0].email);
-    utils.expectIsDisplayed(users.servicesPanel);
-    utils.expectIsDisplayed(users.communicationsService);
+  it('should enter the place details on the search bar and Navigate to place details view', () => {
+    utils.click(CallPlace.searchPlaces);
+    utils.sendKeys(CallPlace.searchBar, PLACES[0].name);
+    utils.click(CallPlace.clickLocation);
   });
+
   it('should navigate to call details view', () => {
-    utils.click(users.communicationsService);
-    utils.expectIsDisplayed(CallUser.callOverview.features.title);
-    utils.expectIsDisplayed(CallUser.callOverview.features.singleNumberReach);
-    utils.expectIsDisplayed(CallUser.callOverview.features.speedDials);
-    utils.expectIsDisplayed(CallUser.callOverview.features.dialingRestrictions);
-    utils.expectIsDisplayed(CallUser.callOverview.features.phoneButtonLayout);
-    utils.expectIsDisplayed(CallUser.callOverview.addNewLine);
+    utils.click(CallPlace.callClick);
+    utils.expectIsDisplayed(CallPlace.featuresSct);
+    utils.expectIsDisplayed(CallPlace.callOverview.features.phoneButtonLayout);
+    utils.expectIsDisplayed(CallPlaceLine.callOverview.addNewLine);
   });
 
-  describe('Add Line Feature to User Phone Button Layout', () => {
-    it('add another line to the phone button Layout', () => {
-      utils.click(CallUser.callOverview.addNewLine);
-      utils.expectIsDisplayed(CallUserLine.directoryNumber.title);
-      utils.expectIsDisplayed(CallUserLine.saveButton);
-      utils.expectIsEnabled(CallUserLine.saveButton);
-      utils.click(CallUserLine.saveButton).then(() => {
+  describe('Add Line Feature to Place Phone Button Layout', () => {
+    it('add another line to the phone button layout', () => {
+      utils.click(CallPlaceLine.callOverview.addNewLine);
+      utils.expectIsDisplayed(CallPlaceLine.directoryNumber.title);
+      utils.expectIsDisplayed(CallPlaceLine.saveButton);
+      utils.expectIsEnabled(CallPlaceLine.saveButton);
+      utils.click(CallPlaceLine.saveButton).then(() => {
         notifications.assertSuccess();
       });
     })
-    it('should navigate to PhoneButton & Speed Dial details view', () => {
-      utils.click(CallUser.callSubMenu);
-      utils.click(CallUser.callOverview.features.phoneButtonLayout);
+    it('should navigate to Phone Button & Speed Dial details view', () => {
+      utils.click(CallPlace.callSubMenu);
+      utils.click(CallPlace.callOverview.features.phoneButtonLayout);
       utils.expectIsDisplayed(UserPhoneButtonLayout.title);
       utils.expectIsDisplayed(UserPhoneButtonLayout.actionMenu);
     });
@@ -103,7 +101,7 @@ describe('Huron Functional: user-phone-button-layout', () => {
         utils.expectIsDisplayed(UserPhoneButtonLayout.newSpeedDialContactName);
         utils.expectIsDisplayed(UserPhoneButtonLayout.newSpeedDialNumberFormat);
       });
-      it('should take user back to Phone Button List', () => {
+      it('should take place back to Phone Button List', () => {
         utils.click(UserPhoneButtonLayout.buttonCancelButton);
         utils.expectIsNotDisplayed(UserPhoneButtonLayout.newSpeedDialContactName);
         utils.expectIsDisplayed(UserPhoneButtonLayout.actionMenu);
@@ -111,12 +109,12 @@ describe('Huron Functional: user-phone-button-layout', () => {
     });
 
     describe('Add Speed Dial Phone Button action', () => {
-      const SPEEDDIAL_DESTINATION_E164_NAME = 'David Perry External E164';
-      const SPEEDDIAL_DESTINATION_E164_VALUE = '4695550001';
-      const SPEEDDIAL_DESTINATION_URI_NAME = 'Freddy Bob URI Address';
-      const SPEEDDIAL_DESTINATION_URI_VALUE = 'freddy.bob@uri.com';
-      const SPEEDDIAL_DESTINATION_CUSTOM_NAME = 'Raee Carter Custom DN';
-      const SPEEDDIAL_DESTINATION_CUSTOM_VALUE = '5002';
+      const SPEEDDIAL_DESTINATION_E164_NAME = 'Reena Perry External E164';
+      const SPEEDDIAL_DESTINATION_E164_VALUE = '4695550002';
+      const SPEEDDIAL_DESTINATION_URI_NAME = 'Chakra Bob URI Address';
+      const SPEEDDIAL_DESTINATION_URI_VALUE = 'chakra.bob@uri.com';
+      const SPEEDDIAL_DESTINATION_CUSTOM_NAME = 'Uma Carter Custom DN';
+      const SPEEDDIAL_DESTINATION_CUSTOM_VALUE = '5003';
       const SPEEDDIAL_DESTINATION_TYPE_EXTERNAL = 'External';
       const SPEEDDIAL_DESTINATION_TYPE_URI = 'URI Address';
       const SPEEDDIAL_DESTINATION_TYPE_CUSTOM = 'Custom';
@@ -180,9 +178,9 @@ describe('Huron Functional: user-phone-button-layout', () => {
 
     describe('Delete Speed Dial Phone Button Action', () => {
       beforeAll(() => {
-        utils.click(CallUser.callSubMenu);
-        utils.click(CallUser.callOverview.features.phoneButtonLayout);
-        utils.expectIsDisplayed(UserPhoneButtonLayout.firstSpeedDialEntryLabel);
+        utils.click(CallPlace.callSubMenu);
+        utils.click(CallPlace.callOverview.features.phoneButtonLayout);
+        utils.expectIsDisplayed(UserPhoneButtonLayout.firstSpeedDialEntryLabel); 
       });
       it('should see a list of speed dials phone buttons that can be deleted', () => {
         utils.expectCountToBeGreater(UserPhoneButtonLayout.speedDialEntries, 0);
@@ -202,12 +200,12 @@ describe('Huron Functional: user-phone-button-layout', () => {
       });
     });
 
-    describe('Feature None Action Menu', () => {
+    describe('Feature None Action Menu', () => { 
       const DESTINATION_TYPE_EMPTY = 'Empty';
       const DESTINATION_LABEL = 'None';
       beforeAll(() => {
-        utils.click(CallUser.callSubMenu);
-        utils.click(CallUser.callOverview.features.phoneButtonLayout);
+        utils.click(CallPlace.callSubMenu);
+        utils.click(CallPlace.callOverview.features.phoneButtonLayout);
       });
       it('should be able add feature none ', () => {
         utils.click(UserPhoneButtonLayout.actionMenu);
@@ -222,7 +220,6 @@ describe('Huron Functional: user-phone-button-layout', () => {
         // should see Edit button for Feature None
         utils.expectIsDisplayed(UserPhoneButtonLayout.firstEmptyDeleteButton);
       });
-        
       it('should be able to delete feature none ', () => {
         UserPhoneButtonLayout.firstFeatureNoneLabel.getText().then((initialFeatureNoneName) => {
           utils.click(UserPhoneButtonLayout.firstEmptyDeleteButton);
@@ -233,4 +230,5 @@ describe('Huron Functional: user-phone-button-layout', () => {
       });
     }); 
   });
-});
+});       
+

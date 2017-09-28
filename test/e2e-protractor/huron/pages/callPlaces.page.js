@@ -34,6 +34,7 @@ export class CallPlacesPage {
       features: {
         title: element(by.css('[translate="telephonyPreview.features"]')),
         speedDials: element(by.cssContainingText('.feature-name', 'Speed Dials')),
+        phoneButtonLayout: element(by.cssContainingText('.feature-name', 'Phone Button Layout & Speed Dials')),
       },
     };
     this.callSubMenu = element.all(by.css('[ui-sref="place-overview.communication"]')).last();
