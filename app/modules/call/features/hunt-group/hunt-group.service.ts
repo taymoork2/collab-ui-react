@@ -208,7 +208,7 @@ export class HuntGroupService {
         if (this.hasLocations) {
           return {
             number: number.siteToSite ? number.siteToSite : number.number,
-            type: number.siteToSite ? NUMBER_FORMAT_ENTERPRISE_LINE : NUMBER_FORMAT_DIRECT_LINE,
+            type: number.type ? number.type : number.siteToSite ? NUMBER_FORMAT_ENTERPRISE_LINE : NUMBER_FORMAT_DIRECT_LINE,
           };
         } else {
           return {
@@ -252,7 +252,7 @@ export class HuntGroupService {
         if (this.hasLocations) {
           return {
             number: number.siteToSite ? number.siteToSite : number.number,
-            type: number.siteToSite ? NUMBER_FORMAT_ENTERPRISE_LINE : NUMBER_FORMAT_DIRECT_LINE,
+            type: number.type ? number.type : number.siteToSite ? NUMBER_FORMAT_ENTERPRISE_LINE : NUMBER_FORMAT_DIRECT_LINE,
           };
         } else {
           return {
