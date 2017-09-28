@@ -221,6 +221,20 @@ describe('Controller:MediaReportsController', function () {
       expect(controller.overflowPercentage).toBe(60);
     });
 
+    it('overflowPercentage should not be NaN when total calls is 0', function () {
+      var response = {
+        data: {
+          callsOnPremise: 0,
+          callsRedirect: 0,
+        },
+      };
+      spyOn(MediaReportsService, 'getTotalCallsData').and.returnValue($q.resolve(response));
+      spyOn(MediaReportsService, 'getOverflowIndicator').and.returnValue($q.resolve(participantChangedata));
+      controller.setTotalCallsData();
+      httpMock.verifyNoOutstandingExpectation();
+      expect(controller.overflowPercentage).toBe(0);
+    });
+
     it('setClientTypeCard should invoke getClienTypeCardData', function () {
       spyOn(MediaReportsService, 'getClientTypeCardData').and.returnValue($q.resolve(clientTypeCountData));
       spyOn(MediaReportsService, 'getOverflowIndicator').and.returnValue($q.resolve(participantChangedata));
