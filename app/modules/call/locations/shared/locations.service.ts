@@ -77,8 +77,8 @@ export class LocationsService {
     return this.locationListResource.get({
       customerId: this.Authinfo.getOrgId(),
       wide: true,
-    }).$promise.then(locations => {
-      return _.map(_.get<IRLocationListItem[]>(locations, 'locations', []), location => {
+    }).$promise.then(locationData => {
+      return _.map(_.get<IRLocationListItem[]>(locationData, 'locations', []), location => {
         return new LocationListItem(location);
       });
     });
@@ -88,8 +88,8 @@ export class LocationsService {
     return this.locationListResource.get({
       customerId: this.Authinfo.getOrgId(),
       routingprefix: routingPrefix,
-    }).$promise.then(locations => {
-      return _.map(_.get<IRLocationListItem[]>(locations, 'locations', []), location => {
+    }).$promise.then(locationData => {
+      return _.map(_.get<IRLocationListItem[]>(locationData, 'locations', []), location => {
         return new LocationListItem(location);
       });
     });
@@ -108,7 +108,7 @@ export class LocationsService {
       customerId: this.Authinfo.getOrgId(),
       userId,
     }).$promise
-    .then(response =>  _.get<Location>(response, 'location'));
+    .then(response => _.get<Location>(response, 'location'));
   }
 
   public searchLocations(searchTerm): ng.IPromise<LocationListItem[]> {
@@ -199,9 +199,10 @@ export class LocationsService {
     }, location).$promise;
   }
 
-  public getDefaultLocation() {
+  public getDefaultLocation(): ng.IPromise<LocationListItem> {
     if (!this.defaultLocation) {
       return this.getLocationList().then(locationList => {
+        //First one is always the default per API definition
         this.defaultLocation = locationList[0];
         return this.defaultLocation;
       });
@@ -217,6 +218,8 @@ export class LocationsService {
     }, {
       defaultLocation: true,
     }).$promise.then(() => {
+      //reset the default location
+      this.defaultLocation = undefined;
       this.getDefaultLocation();
     });
   }
@@ -242,23 +245,40 @@ export class LocationsService {
     });
   }
 
-
+  //return a list of assigned external numbers that are not the Voicemail Pilot number.
   public getEmergencyCallbackNumbersOptions(): ng.IPromise<CallPhoneNumber[]> {
-    return this.numberResource.get({
-      customerId: this.Authinfo.getOrgId(),
-      type: 'external',
-      assigned: true,
-      deprecated: false,
-    })
-    .$promise
-    .then((rNumberData: IRCallPhoneNumberData) => {
-      const numbers: CallPhoneNumber[] = [];
-      if (_.isArray(rNumberData.numbers)) {
-        rNumberData.numbers.forEach((rPhoneNumber: IRCallPhoneNumber) => {
-          numbers.push(new CallPhoneNumber(rPhoneNumber));
-        });
+    return this.getDefaultLocation()
+    .then(locationListItem => {
+      if (locationListItem.uuid) {
+        return this.getLocation(locationListItem.uuid);
       }
-      return numbers;
+      return this.$q.reject(); //uuid should always be set in this case
+    })
+    .then(location => {
+      return this.numberResource.get({
+        customerId: this.Authinfo.getOrgId(),
+        assigned: true,
+        deprecated: false,
+        type: 'external',
+      })
+      .$promise
+      .then((rNumberData: IRCallPhoneNumberData) => {
+        const numbers: CallPhoneNumber[] = [];
+        if (_.isArray(rNumberData.numbers)) {
+          rNumberData.numbers.forEach((rPhoneNumber: IRCallPhoneNumber) => {
+            let number: string = rPhoneNumber.external ? rPhoneNumber.external : '';
+            if (number.length > 0) {
+              if (number.charAt(0) === '\\') {
+                number = number.slice(1);
+              }
+            }
+            if (location.voicemailPilotNumber === null || location.voicemailPilotNumber.number !== number) {
+              numbers.push(new CallPhoneNumber(rPhoneNumber));
+            }
+          });
+        }
+        return numbers;
+      });
     });
   }
 

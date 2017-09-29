@@ -15,13 +15,12 @@ export class CallParkFeaturePage {
     this.featureTitle = element(by.cssContainingText('div.title', 'Select Call Park Number'));
     this.featureDesc = element(by.cssContainingText('div.desc', 'Number ranges are used for interdepartmental transfers while single park numbers are for individual use.'));
     this.featureBackArrow = element(by.css('span.icon.icon-arrow-back'));
-    this.featureBackArrow = element(by.css('span.icon.icon-arrow-back'));
     this.startNumber = element(by.css('[name="startRange"]'));
     this.endNumber = element(by.css('[name="endRange"]'));
     this.singleNumber = element(by.css('[name="singleNumber"]'));
     this.leftPanel = element(by.css('div.left-panel'));
     this.rightPanel = element(by.css('div.right-panel'));
-    this.leftSide = element(by.cssContainingText('p.title', '310'));
+    this.leftSide = element(by.cssContainingText('p.title', '350'));
     this.rightSide = element(by.css('i.icon.icon-exit'));
     this.inputMember = element(by.css('[placeholder="Search & Add Members"]'));
     this.memberCard = element(by.css('div.card-member'));
@@ -30,7 +29,7 @@ export class CallParkFeaturePage {
     this.memberRight = element(by.css('div.right-panel'));
     this.createEnabled = element(by.cssContainingText('div.btn-helptext.helptext-btn--right', 'Create'));
     this.numberDropdown = element(by.css('[template-url="ranges.html"]'));
-    this.memberDropdown = element(by.css('[template-url="callFeatureMemberTemplate.html"]'));
+    this.memberDropdown = element(by.css('[template-url="callFeatureMemberWithNumberTemplate.html"]'));
     // Feature page
     this.article = element(by.css('article'));
     this.cpDetailHeader = element(by.css('div.header-with-right-icon'));

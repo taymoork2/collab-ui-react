@@ -239,7 +239,7 @@ describe('Partner managing other orgs: Controller: Care Settings', function () {
 });
 
 describe('Partner managing other orgs: Care Settings - when org has K2 entitlement', function () {
-  var controller, sunlightChatConfigUrl, sunlightConfigService, $httpBackend, Notification, urService, urServiceUrl, orgId, $interval, $intervalSpy,
+  var controller, sunlightChatConfigUrl, sunlightConfigService, $httpBackend, Notification, urServiceUrl, orgId, $interval, $intervalSpy,
     $scope, q;
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
@@ -252,9 +252,8 @@ describe('Partner managing other orgs: Care Settings - when org has K2 entitleme
     $provide.value('Authinfo', spiedAuthinfo);
   }));
   beforeEach(
-    inject(function ($controller, _$httpBackend_, _$interval_, $q, _$rootScope_, _Notification_, _SunlightConfigService_, _URService_, UrlConfig) {
+    inject(function ($controller, _$httpBackend_, _$interval_, $q, _$rootScope_, _Notification_, _SunlightConfigService_, UrlConfig) {
       q = $q;
-      urService = _URService_;
       sunlightConfigService = _SunlightConfigService_;
       $httpBackend = _$httpBackend_;
       Notification = _Notification_;
@@ -402,6 +401,9 @@ describe('Partner managing other orgs: Care Settings - when org has K2 entitleme
   });
 
   it('should show error notification, if any of the onboarding promises fail', function () {
+    var dummyResponse = { status: 202 };
+    var promise = q.resolve(dummyResponse);
+    sunlightConfigService.onBoardCare.and.returnValue(promise);
     spyOn(sunlightConfigService, 'aaOnboard').and.callFake(function () {
       var deferred = q.defer();
       deferred.reject('fake update response');
@@ -413,18 +415,20 @@ describe('Partner managing other orgs: Care Settings - when org has K2 entitleme
     $httpBackend.expectGET(sunlightChatConfigUrl).respond(404, {});
     $httpBackend.flush();
     expect(controller.state).toBe(controller.NOT_ONBOARDED);
+    controller.defaultQueueStatus = controller.status.SUCCESS;
     controller.onboardToCare();
     $scope.$apply();
     $httpBackend.verifyNoOutstandingExpectation();
     $httpBackend.verifyNoOutstandingRequest();
     expect(controller.state).toBe(controller.NOT_ONBOARDED);
+    expect(controller.csOnboardingStatus).toBe(controller.status.SUCCESS);
     expect(Notification.errorWithTrackingId).toHaveBeenCalled();
   });
 });
 
 describe('Partner managing his own org: Controller: Care Settings', function () {
-  var controller, sunlightChatConfigUrl, $httpBackend, Notification, $interval, $intervalSpy, $scope, orgId,
-    sunlightConfigService, urService, urServiceUrl, $q;
+  var controller, sunlightChatConfigUrl, $httpBackend, Notification, $interval, $intervalSpy, $scope,
+    sunlightConfigService, $q;
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
     getUserOrgId: jasmine.createSpy('getUserOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
@@ -437,8 +441,7 @@ describe('Partner managing his own org: Controller: Care Settings', function () 
     $provide.value('Authinfo', spiedAuthinfo);
   }));
   beforeEach(
-    inject(function ($controller, _$q_, _$rootScope_, _$httpBackend_, _Notification_, _$interval_, Authinfo, UrlConfig, _SunlightConfigService_, _URService_) {
-      urService = _URService_;
+    inject(function ($controller, _$q_, _$rootScope_, _$httpBackend_, _Notification_, _$interval_, Authinfo, UrlConfig, _SunlightConfigService_) {
       sunlightConfigService = _SunlightConfigService_;
       $q = _$q_;
       $httpBackend = _$httpBackend_;
@@ -448,7 +451,6 @@ describe('Partner managing his own org: Controller: Care Settings', function () 
       $intervalSpy = jasmine.createSpy('$interval', $interval).and.callThrough();
       $scope.wizard = {};
       $scope.wizard.isNextDisabled = false;
-      urServiceUrl = UrlConfig.getSunlightURServiceUrl() + '/organization/' + orgId + '/queue/' + orgId;
       sunlightChatConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/chat';
       controller = $controller('CareSettingsCtrl', {
         $scope: $scope,
@@ -636,7 +638,7 @@ describe('Partner managing his own org: Controller: Care Settings', function () 
 });
 
 describe('Partner managing his own org: Care Settings - when org has K2 entitlement', function () {
-  var controller, sunlightChatConfigUrl, sunlightConfigService, $httpBackend, Notification, orgId, urServiceUrl, urService, $interval, $intervalSpy,
+  var controller, sunlightChatConfigUrl, sunlightConfigService, $httpBackend, Notification, orgId, $interval, $intervalSpy,
     $scope, q;
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
@@ -649,9 +651,8 @@ describe('Partner managing his own org: Care Settings - when org has K2 entitlem
     $provide.value('Authinfo', spiedAuthinfo);
   }));
   beforeEach(
-    inject(function ($controller, _$httpBackend_, _$interval_, $q, _$rootScope_, _Notification_, _SunlightConfigService_, _URService_, UrlConfig) {
+    inject(function ($controller, _$httpBackend_, _$interval_, $q, _$rootScope_, _Notification_, _SunlightConfigService_, UrlConfig) {
       q = $q;
-      urService = _URService_;
       sunlightConfigService = _SunlightConfigService_;
       $httpBackend = _$httpBackend_;
       Notification = _Notification_;
@@ -661,7 +662,6 @@ describe('Partner managing his own org: Care Settings - when org has K2 entitlem
       $scope.wizard = {};
       $scope.wizard.isNextDisabled = false;
       orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
-      urServiceUrl = UrlConfig.getSunlightURServiceUrl() + '/organization/' + orgId + '/queue/' + orgId;
       sunlightChatConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + orgId + '/chat';
       controller = $controller('CareSettingsCtrl', {
         $scope: $scope,

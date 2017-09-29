@@ -238,8 +238,10 @@
   requireAll(require.context('modules/', true, /\.module\.(js|ts)$/));
   // require all other app files - ignore bootstrap.js, preload.js, newrelic
   requireAll(require.context('../', true, /\.\/(?!.*(\.spec|bootstrap.js$|scripts\/preload.js$|\/newrelic\/.*.js$)).*\.(js|ts)$/));
+  // require translation files
+  requireAll(require.context('file-loader?name=[path][name].[ext]!../l10n', false, /\.(json)$/));
   // require all other assets
-  requireAll(require.context('../', true, /\.(jpg|png|svg|ico|json|csv|pdf)$/));
+  requireAll(require.context('../', true, /\.(jpg|png|svg|ico|csv|pdf)$/));
 
   function requireAll(requireContext) {
     return requireContext.keys().map(requireContext);

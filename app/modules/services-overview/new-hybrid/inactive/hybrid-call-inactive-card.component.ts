@@ -10,7 +10,7 @@ class HybridCallInactiveCardController implements ng.IComponentController {
     this.$modal.open({
       controller: 'HybridCallPrerequisitesController',
       controllerAs: 'vm',
-      template: require('modules/services-overview/new-hybrid/prerequisites-modals/hybrid-call-prerequisites.html'),
+      template: require('modules/services-overview/new-hybrid/prerequisites-modals/hybrid-call-prerequisites-modal/hybrid-call-prerequisites.html'),
     });
   }
 
@@ -25,14 +25,6 @@ class HybridCallInactiveCardController implements ng.IComponentController {
       controllerAs: 'vm',
       template: require('modules/hercules/service-specific-pages/common-expressway-based/add-resource-modal.html'),
       type: 'small',
-    })
-    .result
-    .then((response) => {
-      // TODO: refresh page
-      window.console.info('success openSetUp Call', response);
-    })
-    .catch((error) => {
-      window.console.error('error openSetUp Exchange', error);
     });
   }
 }
@@ -48,7 +40,7 @@ export class HybridCallInactiveCardComponent implements ng.IComponentOptions {
         <p translate="servicesOverview.cards.hybridCall.description"></p>
       </div>
       <div class="inactive-card_footer">
-        <p><a href ng-click="$ctrl.openPrerequisites()" translate="servicesOverview.genericButtons.prereq"></a></p>
+        <p><button class="btn btn--link" ng-click="$ctrl.openPrerequisites()" translate="servicesOverview.genericButtons.prereq"></button></p>
         <p><button class="btn btn--primary" ng-click="$ctrl.openSetUp()" translate="servicesOverview.genericButtons.setup"></button></p>
       </div>
     </article>

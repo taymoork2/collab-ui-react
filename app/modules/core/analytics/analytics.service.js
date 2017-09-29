@@ -210,7 +210,10 @@
       }).then(function (result) {
         hasInit = true;
         if (result) {
-          mixpanel.init(result);
+          mixpanel.init(result, {
+            persistence: 'localStorage', // default to localStorage, fallback to cookie
+            cross_subdomain_cookie: false, // when cookies are needed, only use specific subdomain
+          });
         }
       });
     }

@@ -12,7 +12,7 @@
     });
 
   /* @ngInject */
-  function cbgCountryCtrl($scope, $modal, $window, $timeout, $translate, Notification, cbgService, WindowLocation) {
+  function cbgCountryCtrl($scope, $modal, $timeout, $translate, Notification, cbgService, WindowLocation) {
     var vm = this;
     vm.model = {
       file: null,
@@ -48,10 +48,10 @@
 
     function getCountries() {
       cbgService.getCountries().then(function (res) {
-        _.forEach(res.content.data, function (item) {
-          var key = item.countryName.replace(/[()".\-+,\s]/g, '');
+        _.forEach(res, function (item) {
+          var key = item.name.replace(/[()".\-+,\s]/g, '');
           vm.allCountries[key] = item;
-          vm.options.push({ value: item.countryId, label: item.countryName });
+          vm.options.push({ value: item.id, label: item.name });
           if (vm.selected.length) {
             updateOptions();
           }

@@ -17,7 +17,7 @@
     return {
       restrict: 'A',
       link: function (scope, element) {
-        element.bind('click', function () {
+        element.bind('click focus', function () {
           //Remove active class from previous selection
           $('.active').each(function () {
             $(this).removeClass('active');

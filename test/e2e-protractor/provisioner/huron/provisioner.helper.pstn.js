@@ -90,16 +90,15 @@ export function customerNumbersPSTN(number) {
 }
 
 export function numberPSTN(prevNumber) {
-  var date = Date.now();
-  // If created at same millisecond as previous
-  if (date <= prevNumber) {
-    date = ++prevNumber;
+  var randNum = Math.floor(Math.random() * 999999) + 10000;
+  if (randNum <= prevNumber) {
+    randNum = ++prevNumber;
   } else {
-    prevNumber = date;
+    prevNumber = randNum;
   }
-  // get last 10 digits from date and format into PSTN number
-  date = date.toString();
-  date = ('+1919' + date.substr(date.length - 7));
-  console.log('Added Phone Number: ' + date);
-  return [date, prevNumber];
+  randNum = randNum.toString();
+  randNum = ('7997293' + randNum).slice(-7);
+  randNum = ('+1919' + randNum);
+  console.log('Added Phone Number: ' + randNum);
+  return [randNum, prevNumber];
 }

@@ -11,7 +11,7 @@ const callParkFeature = new CallParkFeaturePage();
 describe('Huron Functional: call-park-feature', () => {
   const customer = huronCustomer({
     test: 'call-park-feature',
-    users: 3,
+    users: { noOfUsers: 3 },
     doCallPark: true,
   });
 
@@ -24,9 +24,9 @@ describe('Huron Functional: call-park-feature', () => {
     provisioner.tearDownAtlasCustomer(customer.partner, customer.name).then(done);
   });
 
-  const callParkStartNumber = (parseInt(customer.callOptions.numberRange.beginNumber) + 10).toString();
-  const callParkEndNumber = (parseInt(customer.callOptions.numberRange.beginNumber) + 19).toString();
-  const callParkSingleNumber = (parseInt(customer.callOptions.numberRange.beginNumber) + 20).toString();
+  const callParkStartNumber = (parseInt(customer.callOptions.numberRange.beginNumber) + 50).toString();
+  const callParkEndNumber = (parseInt(customer.callOptions.numberRange.beginNumber) + 59).toString();
+  const callParkSingleNumber = (parseInt(customer.callOptions.numberRange.beginNumber) + 60).toString();
   const newCallParkName = 'new-cp';
 
   it('should be on overview page of customer portal', () => {
@@ -93,7 +93,7 @@ describe('Huron Functional: call-park-feature', () => {
       });
 
       it('should be able to set the internal fallback destination', () => {
-        utils.sendKeys(callParkFeature.fallbackDestination, customer.callOptions.numberRange.beginNumber);
+        utils.sendKeys(callParkFeature.fallbackDestination, callParkStartNumber);
         utils.expectIsDisplayed(callParkFeature.fallbackDestinationDropdown);
         utils.sendKeys(callParkFeature.fallbackDestination, protractor.Key.ENTER);
       });
@@ -173,7 +173,7 @@ describe('Huron Functional: call-park-feature', () => {
 
       it('should be able to set the internal fallback destination', () => {
         utils.click(callParkFeature.anotherDestination);
-        utils.sendKeys(callParkFeature.fallbackDestination, customer.callOptions.numberRange.beginNumber);
+        utils.sendKeys(callParkFeature.fallbackDestination, callParkStartNumber);
         utils.expectIsDisplayed(callParkFeature.fallbackDestinationDropdown);
         utils.sendKeys(callParkFeature.fallbackDestination, protractor.Key.ENTER);
       });
@@ -361,6 +361,10 @@ describe('Huron Functional: call-park-feature', () => {
       utils.click(callParkFeature.startNumber);
       utils.sendKeys(callParkFeature.startNumber, callParkStartNumber);
       utils.expectIsDisplayed(callParkFeature.numberDropdown);
+      utils.sendKeys(callParkFeature.startNumber, protractor.Key.DOWN);
+      utils.sendKeys(callParkFeature.startNumber, protractor.Key.DOWN);
+      utils.sendKeys(callParkFeature.startNumber, protractor.Key.DOWN);
+      utils.sendKeys(callParkFeature.startNumber, protractor.Key.DOWN);
       utils.sendKeys(callParkFeature.startNumber, protractor.Key.ENTER);
     });
 

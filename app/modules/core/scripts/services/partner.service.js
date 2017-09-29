@@ -8,9 +8,10 @@
     .factory('ScimPatchService', ScimPatchService);
 
   /* @ngInject */
-  function PartnerService($http, $rootScope, $q, $translate, Analytics, Authinfo, Config, MetricsService, TrialService, UrlConfig, UserRoleService) {
+  function PartnerService($http, $rootScope, $q, $resource, $translate, Analytics, Authinfo, Config, MetricsService, TrialService, UrlConfig, UserRoleService) {
     var managedOrgsUrl = UrlConfig.getAdminServiceUrl() + 'organizations/%s/managedOrgs';
     var siteListUrl = UrlConfig.getAdminServiceUrl() + 'organizations/%s/sitesProvOrderStatus';
+    var patchAdminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/:orgId/users/:userId/actions/configureCustomerAdmin/invoke?customerOrgId=:customerOrgId';
 
     var customerStatus = {
       FREE: 0,
@@ -60,6 +61,7 @@
       getTrialMeetingServices: getTrialMeetingServices,
       canAdminTrial: canAdminTrial,
       isServiceManagedByCurrentPartner: isServiceManagedByCurrentPartner,
+      updateOrgForCustomerView: updateOrgForCustomerView,
       helpers: helpers,
     };
 
@@ -264,6 +266,16 @@
           resolve(UserRoleService.enableFullAdmin(primaryEmail, customerOrgId));
         }
       });
+    }
+
+    function updateOrgForCustomerView(customerOrgId) {
+      var params = {
+        orgId: Authinfo.getOrgId(),
+        userId: Authinfo.getUserId(),
+        customerOrgId: customerOrgId,
+      };
+
+      return $resource(patchAdminUrl, params).post();
     }
 
     function getLicenseObj(rowData, licenseTypeField) {

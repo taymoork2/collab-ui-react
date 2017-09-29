@@ -102,14 +102,14 @@ export function createCmiHuntGroup(token, customerId, hgBody) {
   return provisionerHelper.makeRequest(options);
 }
 
-export function createCallPickUp(token, customerId, pickUpBody) {
+export function createCallPickup(token, customerId, pickupBody) {
   const options = {
     method: 'POST',
     uri: `${config.getCmiV2ServiceUrl()}customers/${customerId}/features/callpickups?wide=true`,
     headers: {
       Authorization: `Bearer  ${token}`,
     },
-    body: pickUpBody,
+    body: pickupBody,
     json: true,
   };
   return provisionerHelper.makeRequest(options);
@@ -147,6 +147,31 @@ export function getNumberUUID(token, customerId, userUUID) {
     headers: {
       Authorization: `Bearer  ${token}`,
     },
+    json: true,
+  };
+  return provisionerHelper.makeRequest(options);
+}
+
+export function getPlaceUUID(token, customerId, value) {
+  const options = {
+    method: 'GET',
+    uri: `${config.getCmiV2ServiceUrl()}customers/${customerId}/places?limit=3&name=${value}&wide=false`,
+    headers: {
+      Authorization: `Bearer  ${token}`,
+    },
+    json: true,
+  };
+  return provisionerHelper.makeRequest(options);
+}
+
+export function createCallPaging(token, orgId, paging) {
+  const options = {
+    method: 'POST',
+    uri: `${config.getPagingServiceUrl()}customers/${orgId}/pagingGroups`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: paging,
     json: true,
   };
   return provisionerHelper.makeRequest(options);

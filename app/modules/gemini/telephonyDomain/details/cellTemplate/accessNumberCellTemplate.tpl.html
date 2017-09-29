@@ -1,4 +1,5 @@
-<div ng-if="grid.appScope.isEdit && row.entity.isEdit"
+<div ng-if="grid.appScope.isEdit"
+     ng-mouseover="row.entity.isEdit=true"
      class="ui-grid-cell-contents"
      ng-class="{'error': row.entity.validation.dnisNumberFormat.invalid || row.entity.duplicatedRowValidation.invalid}"
      tooltip-class="tn-error"
@@ -16,12 +17,6 @@
          ng-change="grid.appScope.changeDnisNumber(row, '{{row.entity.dnisNumber}}')"
          ng-blur="grid.appScope.changeAccessNumber(row)"
          ng-model="row.entity.dnisNumberFormat">
-</div>
-<div ng-if="grid.appScope.isEdit && !row.entity.isEdit"
-     ng-mouseover="row.entity.isEdit=true"
-     class="ui-grid-cell-contents"
-     title="{{row.entity.dnisNumberFormat}}">
-  <input type="text" cs-input value="{{row.entity.dnisNumberFormat}}">
 </div>
 <div ng-if="!grid.appScope.isEdit"
      class="ui-grid-cell-contents read-only-text"

@@ -299,11 +299,8 @@ export class MySubscriptionCtrl implements ng.IController {
             const offer: IOfferData = this.generateOffer(license, subIndex, licenseIndex);
 
             newSubscription.proPack = offer;
-            if (this.proPackData && this.proPackData.usage && offer.usage) {
-              this.proPackData.usage += offer.usage;
-              this.proPackData.volume += offer.volume;
-            } else if (this.proPackData && offer.usage) {
-              this.proPackData.usage = offer.usage;
+            if (this.proPackData) {
+              this.proPackData.usage = _.get(this.proPackData, 'usage', 0) + _.get(offer, 'usage', 0);
               this.proPackData.volume += offer.volume;
             } else {
               this.proPackData = _.cloneDeep(offer);

@@ -35,7 +35,6 @@ describe('Component: lineOverview', () => {
   };
 
   const esnPrefix: string = '7100';
-  const internalNumbers: string[] = ['1234', '5678'];
   const externalNumbers: string[] = ['+5555551212', '+5555551313'];
 
   beforeEach(angular.mock.module('Squared'));
@@ -58,7 +57,7 @@ describe('Component: lineOverview', () => {
     this.existingLinePrimary = existingLinePrimary;
     this.existingLineNonPrimary = existingLineNonPrimary;
     this.esnPrefix = esnPrefix;
-    this.internalNumbers = internalNumbers;
+    this.internalNumbers = getJSONFixture('huron/json/internalNumbers/numbersInternalNumbers.json');
     this.externalNumbers = externalNumbers;
     this.lineMediaOptions = getJSONFixture('huron/json/settings/company-moh.json');
 
@@ -172,7 +171,7 @@ describe('Component: lineOverview', () => {
     });
 
     it('should grab the first available internal line', function () {
-      expect(this.lineOverview.line.internal).toEqual('1234');
+      expect(this.lineOverview.line.internal).toEqual('503');
     });
 
     it('should show save and cancel buttons immediately', function () {

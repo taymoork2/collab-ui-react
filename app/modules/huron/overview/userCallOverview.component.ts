@@ -21,6 +21,7 @@ class UserCallOverviewCtrl implements ng.IComponentController {
   public primaryLineEnabled: boolean = false;
   public userPrimaryNumber: PrimaryNumber;
   public isPrimaryLineFeatureEnabled: boolean = false;
+  public buttonLayoutPromise: any;
 
   /* @ngInject */
   constructor(
@@ -48,11 +49,13 @@ class UserCallOverviewCtrl implements ng.IComponentController {
       this.snrEnabled = status;
       this.initFeatures();
     });
-    this.FeatureToggleService.supports(FeatureToggleService.features.huronPhoneButtonLayout)
-      .then(result => this.showPhoneButtonLayout = result);
   }
 
   public $onInit(): void {
+    this.buttonLayoutPromise = this.FeatureToggleService.supports(this.FeatureToggleService.features.huronPhoneButtonLayout)
+      .then(result => {
+        this.showPhoneButtonLayout = result;
+      });
     this.initActions();
     this.initNumbers();
     this.initServices();
@@ -85,7 +88,9 @@ class UserCallOverviewCtrl implements ng.IComponentController {
       this.checkPrimaryLineFeature(this.userPrimaryNumber);
     }).then(() => {
       this.userVmEnabled = this.HuronVoicemailService.isEnabledForUser(this.userServices);
-      this.initFeatures();
+      this.buttonLayoutPromise.finally(() => {
+        this.initFeatures();
+      });
     });
   }
 

@@ -35,9 +35,14 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
   }];
 
   public getButtons(): ICardButton[] {
-    if (this.treatAsPurchased()) {
-      return (this.active) ? this.buttons : [this.setupButton];
+    if (this.active) {
+      // Always display Resources + Settings if the service is active
+      return this.buttons;
+    } else if (this.treatAsPurchased()) {
+      // Service not active and we consider that they have Pro Pack, setup button
+      return [this.setupButton];
     } else {
+      // Service not active and no Pro Pack, Learn More button
       this.showProBadge = true;
       return [this.learnMoreButton];
     }
@@ -52,13 +57,12 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
   public hybridDataSecurityFeatureToggleEventHandler(hasFeature: boolean): void {
     this.display = this.checkRoles() && (this.Authinfo.isFusionHDS() || hasFeature) && this.Authinfo.isEnterpriseCustomer();
     this.setLoading();
-
   }
 
   public proPackEventHandler(result): void {
     this.hasProPackEnabled = result.hasProPackEnabled;
     this.hasProPackPurchased = result.hasProPackPurchased;
-    this.infoText = this.treatAsPurchased() ? '' : 'servicesOverview.cards.hybridDataSecurity.tooltip';
+    this.infoText = this.treatAsPurchased() ? '' : 'common.proPackTooltip';
     this.setLoading();
   }
 
@@ -83,7 +87,7 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
       name: 'servicesOverview.cards.hybridDataSecurity.title',
       routerState: 'hds.list',
       serviceId: 'spark-hybrid-datasecurity',
-      infoText: 'servicesOverview.cards.hybridDataSecurity.tooltip',
+      infoText: 'common.proPackTooltip',
       initEventsNumber: 2,
     });
     this.display = this.checkRoles() && this.Authinfo.isFusionHDS() && this.Authinfo.isEnterpriseCustomer();

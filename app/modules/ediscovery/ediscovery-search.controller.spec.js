@@ -11,7 +11,6 @@ describe('Controller: EdiscoverySearchController', function () {
     spyOn(this.Analytics, 'trackEdiscoverySteps').and.returnValue(this.$q.resolve());
     spyOn(this.Authinfo, 'isEnterpriseCustomer').and.returnValue(false);
     spyOn(this.FeatureToggleService, 'atlasEdiscoveryGetStatus').and.returnValue(this.$q.resolve(false));
-    spyOn(this.FeatureToggleService, 'atlasEdiscoveryIPSettingGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(false));
     spyOn(this.ProPackService, 'hasProPackEnabled').and.returnValue(this.$q.resolve(false));
   }

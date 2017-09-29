@@ -43,28 +43,19 @@
       "companyName": "~!@#$<script>alert(1)</script>Atlas-Test-9"
     }
   ],
-  "getCountries": {
-    "links": [],
-    "content": {
-      "data": [{
-        "countryId": 1,
-        "countryName": "Albania"
-      }, {
-        "countryId": 2,
-        "countryName": "Algeria"
-      }, {
-        "countryId": 3,
-        "countryName": "American Samoa"
-      }, {
-        "countryId": 4,
-        "countryName": "Andorra"
-      }],
-      "health": {
-        "code": 200,
-        "status": "OK"
-      }
-    }
-  },
+  "getCountries": [{
+    "id": 1,
+    "name": "Albania"
+  }, {
+    "id": 2,
+    "name": "Algeria"
+  }, {
+    "id": 3,
+    "name": "American Samoa"
+  }, {
+    "id": 4,
+    "name": "Andorra"
+  }],
   "getHistories": [{
     "id": "cb18c322-bc4c-4628-bb6c-203cc361ec1b",
     "userId": "71449abf-0a5b-4866-9208-5073e010a186",
@@ -111,7 +102,7 @@
     "objectName": "test",
     "siteID": "ff8080815823e72c0158244952240022",
     "customerID": "ff808081527ccb3f0152e39ec555010c",
-    "action": "add_note",
+    "action": "add_notes_td",
     "actionFor": null,
     "email": "liqing@qa.webex.com"
   }, {
@@ -123,7 +114,7 @@
     "objectName": "tete",
     "siteID": "ff8080815823e72c0158244952240022",
     "customerID": "ff808081527ccb3f0152e39ec555010c",
-    "action": "add_note",
+    "action": "add_notes_td",
     "actionFor": null,
     "email": "liqing@qa.webex.com"
   }, {
@@ -135,7 +126,7 @@
     "objectName": "tete",
     "siteID": "ff8080815823e72c0158244952240022",
     "customerID": "ff808081527ccb3f0152e39ec555010c",
-    "action": "add_note",
+    "action": "add_notes_cg",
     "actionFor": null,
     "email": "liqing@qa.webex.com"
   }, {
@@ -147,7 +138,7 @@
     "objectName": "tete",
     "siteID": "ff8080815823e72c0158244952240022",
     "customerID": "ff808081527ccb3f0152e39ec555010c",
-    "action": "add_note",
+    "action": "add_notes_cg",
     "actionFor": null,
     "email": "liqing@qa.webex.com"
   }, {
@@ -159,7 +150,7 @@
     "objectName": "tete",
     "siteID": "ff8080815823e72c0158244952240022",
     "customerID": "ff808081527ccb3f0152e39ec555010c",
-    "action": "add_note",
+    "action": "move_site",
     "actionFor": null,
     "email": "liqing@qa.webex.com"
   }, {
@@ -171,7 +162,7 @@
     "objectName": "tete",
     "siteID": "ff8080815823e72c0158244952240022",
     "customerID": "ff808081527ccb3f0152e39ec555010c",
-    "action": "add_note",
+    "action": "move_site",
     "actionFor": null,
     "email": "liqing@qa.webex.com"
   }],
@@ -208,8 +199,8 @@
     "customerAttribute": "test",
     "callbackGroupSites": [],
     "countries": [{
-      "countryId": 2,
-      "countryName": "Algeria"
+      "id": 2,
+      "name": "Algeria"
     }],
     "status": "S"
   },
@@ -265,7 +256,7 @@
     "defaultNumber": "1",
     "globalListDisplay": "1",
     "ccaDomainId": "ff8080815bcce6c9015bead026df0d23",
-    "isHidden": "false"
+    "isHidden": false
   },
   "gmTdConstObject": {
     "SELECT_TYPE": "Select Type",
@@ -288,7 +279,7 @@
     "countryOptions": [{ "label": "China", "value": "1"}, {"label": "US", "value": "2" }],
     "countryId2NameMapping": { "1": "China", "2": "US" },
     "countryName2IdMapping": { "China": "1", "US": "2" },
-    "isHiddenOptions": [{ "label": "Display", "value": "false" }, { "label": "Hidden", "value": "true" }],
+    "isHiddenOptions": [{ "label": "Display", "value": false }, { "label": "Hidden", "value": true }],
     "defaultNumberOptions": [{ "label": "", "value": "0" }],
     "globalDisplayOptions": [{ "label": "Display", "value": "1" }, { "label": "NO", "value": "0" }]
   },

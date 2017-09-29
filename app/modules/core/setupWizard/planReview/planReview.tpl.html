@@ -7,63 +7,27 @@
     <multiple-subscriptions ng-switch-when="false" ></multiple-subscriptions>
     <!-- Show new subscriptions details on load if there are any -->
     <div ng-switch-when="true">
-      <div class="order-and-subscription-numbers">
-        <div>
-          <p><span translate="firstTimeWizard.orderNumber"></span><span>{{planReview.orderDetails.orderId}}</span></p>
+        <div class="order-and-subscription-numbers">
+          <span translate="firstTimeWizard.orderNumber"></span><span>{{planReview.orderDetails.orderId}}</span><br>
+          <span translate="firstTimeWizard.subscriptionID"></span><span>{{planReview.orderDetails.subscriptionId}}</span>
         </div>
-        <div>
-          <p><span translate="firstTimeWizard.subscriptionID"></span><span>{{planReview.orderDetails.subscriptionId}}</span></p>
-        </div>
+      <div class="plan-review-help">
+        <div><span class="icon icon-warning icon-lg"></span></div>
+        <div><span class="plan-review-help-text" translate="firstTimeWizard.subscriptionReviewHelpText"></span></div>
       </div>
-      <h3 id="new-services-header" translate="firstTimeWizard.newSubsOnly"></h3>
-      <div ng-if="planReview.pendingMeetingLicenses.length > 0">
-        <div class="row full flex-row">
+      <div class="row row-pending" ng-repeat="serviceArray in planReview.pendingLicenses">
+        <div class="column large-4" ng-repeat="service in serviceArray">
           <div class="pending-header column-header">
-            <i class="icon icon-circle-group"></i>
-            <h3 translate="firstTimeWizard.meeting"></h3>
+            <i class="icon {{service.icon}}"></i>
+            <h3>{{service.title}}</h3>
+          </div>
+          <div class="pending-details" ng-repeat="license in service.licenses">
+            <div ng-if="license.licenseType === 'AUDIO'"><span translate="firstTimeWizard.audioPackage"></span></div>
+            <div><span>{{ license.displayName }}</span></div>
+            <div ng-if="license.licenseType !== 'AUDIO'"><span>{{planReview.determineLicenseType(license)}}</span></div>
           </div>
         </div>
-        <div class="pending-details" ng-repeat="license in planReview.pendingMeetingLicenses">
-          <div ng-if="license.licenseType === 'AUDIO'"><span translate="firstTimeWizard.audioPackage"></span></div>
-          <div><span>{{ license.displayName }}</span></div>
-          <div ng-if="license.licenseType !== 'AUDIO'"><span>{{planReview.determineLicenseType(license)}}</span></div>
-        </div>
-      </div>
-      <div ng-if="planReview.pendingMessageLicenses.length > 0">
-        <div class="row full flex-row">
-          <div class="pending-header column-header">
-            <i class="icon icon-circle-message"></i>
-            <h3 translate="firstTimeWizard.message"></h3>
-          </div>
-        </div>
-        <div class="pending-details" ng-repeat="license in planReview.pendingMessageLicenses">
-          <div><span>{{ license.displayName }}</span></div>
-          <div><span translate="firstTimeWizard.namedLicense"></span></div>
-        </div>
-      </div>
-      <div ng-if="planReview.pendingCallLicenses.length > 0">
-        <div class="row full flex-row">
-          <div class="pending-header column-header">
-            <i class="icon icon-circle-call"></i>
-            <h3 translate="firstTimeWizard.call"></h3>
-          </div>
-        </div>
-        <div class="pending-details" ng-repeat="license in planReview.pendingCallLicenses">
-          <div><span>{{ license.displayName }}</span></div>
-          <div><span translate="firstTimeWizard.namedLicense"></span></div>
-        </div>
-      </div>
-      <div ng-if="planReview.pendingCareLicenses.length > 0">
-        <div class="row full flex-row">
-          <div class="pending-header column-header">
-            <i class="icon icon-circle-contact-centre"></i>
-            <h3 translate="firstTimeWizard.care"></h3>
-          </div>
-        </div>
-        <div class="pending-details" ng-repeat="license in planReview.pendingCareLicenses">
-          <div><span>{{ license.displayName }}</span></div>
-          <div><span translate="firstTimeWizard.namedLicense"></span></div>
-        </div>
+        <div class="column large-4" ng-if="planReview.pendingLicenses[0].length === 2"></div>
       </div>
     </div>
     <div ng-switch-when="false">

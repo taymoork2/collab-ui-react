@@ -2,9 +2,6 @@
   <article>
     <header class="chartHeader">
       <h4 class="pull-left">{{$ctrl.title}}</h4>
-      <span class="pull-right" title="Zoom" ng-click="$ctrl.onZoom()"  ng-if="$ctrl.zoomEnable">
-          <i class="icon icon-zoom-in"></i>
-        </span>
     </header>
 
     <section>
@@ -12,14 +9,3 @@
     </section>
   </article>
 </cs-card>
-
-
-<div class="modal-header" ng-if="$ctrl.size === 'large'">
-  <button type="button" class="close" ng-click="$ctrl.close()">
-    <span class="sr-only" translate="common.close"></span>
-  </button>
-  <div class="download"><i class="icon icon-download"></i>
-  </div>
-  <h3 class="modal-title">{{$ctrl.title}}</h3>
-</div>
-<div id="large_chart_content" class="modal-body"></div>

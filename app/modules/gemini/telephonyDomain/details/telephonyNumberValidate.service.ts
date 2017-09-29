@@ -214,7 +214,7 @@ export class TelephonyNumberValidateService {
 
   private validateNumbersCount(allRows) {
     if (allRows.length > MAX_PHONE_NUMBERS) {
-      this.Notification.error(this.getValidationMessage('exceedNumberCount', {}, false));
+      this.Notification.error(this.getValidationKey('exceedNumberCount'));
       return false;
     }
     return true;
@@ -241,7 +241,6 @@ export class TelephonyNumberValidateService {
     }
 
     if (!_.isEmpty(row) && !_.isEmpty(message)) {
-      row.entity.isEdit = true;
       row.entity.defaultNumberValidation = { invalid: true, message: message, show: true };
       angular.element('#' + row.uid + '-defaultNumber').find('.select-toggle').focus();
       return false;
@@ -263,7 +262,6 @@ export class TelephonyNumberValidateService {
     }
 
     if (!_.isEmpty(row) && !_.isEmpty(message)) {
-      row.entity.isEdit = true;
       row.entity.globalDisplayValidation = { invalid: true, message: message, show: true };
       angular.element('#' + row.uid + '-globalListDisplay').find('.select-toggle').focus();
       return false;
@@ -283,7 +281,6 @@ export class TelephonyNumberValidateService {
       _.map(rowArray, (row: any) => {
         row.entity.duplicatedRowValidation.invalid = true;
       });
-      rowArray[0].entity.isEdit = true;
       angular.element('#' + rowArray[0].uid + '-phone').focus();
 
       flag = false;
@@ -291,7 +288,7 @@ export class TelephonyNumberValidateService {
     });
 
     if (!flag) {
-      this.Notification.error(this.getValidationMessage('duplicatedPhoneNumbers', {}, false), {}, this.getValidationMessage('duplicatedErrorTitle', {}, false));
+      this.Notification.error(this.getValidationKey('duplicatedPhoneNumbers'), {}, this.getValidationKey('duplicatedErrorTitle'));
     }
 
     return flag;
@@ -327,7 +324,6 @@ export class TelephonyNumberValidateService {
       const conflict_row = conflict_rows[0];
       const key = !_.isEqual(conflict_row.entity.tollType, base_row.entity.tollType) ? 'tollType' : 'callType';
 
-      conflict_row.entity.isEdit = true;
       conflict_row.entity.validation[key].invalid = true;
       conflict_row.entity.validation[key].message = this.getValidationMessage('conflict' + _.upperFirst(key));
       conflict_row.entity.validation[key].show = true;
@@ -338,7 +334,7 @@ export class TelephonyNumberValidateService {
     });
 
     if (!flag) {
-      this.Notification.error(this.getValidationMessage('conflictAccessNumbers', {}, false), {}, this.getValidationMessage('conflictErrorTitle', {}, false));
+      this.Notification.error(this.getValidationKey('conflictAccessNumbers'), {}, this.getValidationKey('conflictErrorTitle'));
     }
 
     return flag;
@@ -348,7 +344,7 @@ export class TelephonyNumberValidateService {
     let flag = true;
 
     if (mappings.phoneAndLabelLength > MAX_PHONE_LENGTH) {
-      this.Notification.error(this.getValidationMessage('exceedPhoneLength', {}, false), {}, this.getValidationMessage('exceedPhoneLengthTitle', {}, false));
+      this.Notification.error(this.getValidationKey('exceedPhoneLength'), {}, this.getValidationKey('exceedPhoneLengthTitle'));
       flag = false;
     }
 
@@ -360,22 +356,20 @@ export class TelephonyNumberValidateService {
 
     _.forEach(mappings.phoneNumber2RowsMapping, (rowArray) => {
       const displayRows = _.filter(rowArray, (row: any) => {
-        return row.entity.isHidden.value === 'false';
+        return !row.entity.isHidden.value;
       });
 
       if (displayRows.length === 0) {
-        rowArray[0].entity.isEdit = true;
         rowArray[0].entity.phnNumDisplayValidation.invalid = true;
 
         uid = rowArray[0].uid;
-        message = this.getValidationMessage('noDisplayNumber', {}, false);
+        message = this.getValidationKey('noDisplayNumber');
 
         result = 0;
         return false;
       } else if (displayRows.length > 1) {
         _.map(displayRows, (row) => {
           if (row.entity.defaultNumber.value === '0') {
-            row.entity.isEdit = true;
             row.entity.phnNumDisplayValidation.invalid = true;
             _.isEmpty(uid) ? uid = row.uid : uid = uid;
           }
@@ -394,18 +388,18 @@ export class TelephonyNumberValidateService {
   }
 
   private setFieldInvalid(row, field, invalid, message) {
-    if (invalid) {
-      row.entity.isEdit = true;
-    }
     row.entity.validation[field].invalid = invalid;
     row.entity.validation[field].message = message;
     row.entity.validation[field].show = invalid && message;
   }
 
-  public getValidationMessage(key: string, params: any = undefined, hasErrorIcon: boolean = true) {
-    let body = this.$translate.instant('gemini.tds.submit.validation.' + key, params);
-    body = hasErrorIcon ? '<div class="tn-error-msg">' + body + '</div>' : body;
-    return body;
+  private getValidationKey(key: string) {
+    return 'gemini.tds.submit.validation.' + key;
+  }
+
+  public getValidationMessage(key: string, params: any = undefined) {
+    const body = this.$translate.instant(this.getValidationKey(key), params);
+    return '<div class="tn-error-msg">' + body + '</div>';
   }
 
 }

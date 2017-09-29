@@ -12,14 +12,14 @@
         <basic-expressway-prerequisites on-change="vm.expresswayData(options)"></basic-expressway-prerequisites>
       </div>
     </tab>
-    <tab heading="Hybrid Call Service Aware (0/7)">
+    <tab heading="{{vm.awareTabHeading}}">
       <div class="tab-content">
-        and blah blah blah
+        <call-service-aware-prerequisites on-change="vm.awareData(options)"></call-service-aware-prerequisites>
       </div>
     </tab>
-    <tab heading="Hybrid Call Service Connect (0/9)">
+    <tab heading="{{vm.connectTabHeading}}">
       <div class="tab-content">
-        something something
+        <call-service-connect-prerequisites on-change="vm.connectData(options)"></call-service-connect-prerequisites>
       </div>
     </tab>
   </tabset>

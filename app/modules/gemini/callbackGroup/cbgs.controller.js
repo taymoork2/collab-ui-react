@@ -19,9 +19,9 @@
     vm.placeholder = $translate.instant('gemini.cbgs.placeholder-text');
 
     var columnDefs = [{
-      width: '20%',
+      width: '30%',
       sortable: true,
-      field: 'customerName',
+      field: 'groupName',
       displayName: $translate.instant('gemini.cbgs.field.cbgName'),
       cellTooltip: true,
     }, {
@@ -91,7 +91,7 @@
       $timeout(function () {
         vm.gridRefresh = false;
       }, 350);
-      if (!$scope.gridData_.length) {
+      if (!_.size($scope.gridData_)) {
         return;
       }
       $scope.gridData = $filter('filter')($scope.gridData_, vm.searchStr);
@@ -112,8 +112,11 @@
 
     function exportCSV() {
       vm.exportLoading = true;
-      return cbgService.cbgsExportCSV(vm.customerId).catch(function (res) {
-        Notification.errorResponse(res, 'sure');
+      return cbgService.cbgsExportCSV(vm.customerId).then(function (res) {
+        Notification.success('gemini.cbgs.export.result.success');
+        return res;
+      }).catch(function (res) {
+        Notification.errorResponse(res, 'gemini.cbgs.export.result.failed');
       }).finally(function () {
         $timeout(function () {
           vm.exportLoading = false;
@@ -126,15 +129,14 @@
 
       cbgService.getCallbackGroups(vm.customerId)
         .then(function (res) {
-          var cbgs = _.get(res, 'content.data.body', []);
-          $scope.gridData = cbgs;
-          $scope.gridData_ = cbgs;
+          $scope.gridData = res;
+          $scope.gridData_ = res;
           _.forEach($scope.gridData, function (row) {
-            row.groupName_ = row.groupName; // true groupName
             row.groupName = (row.groupName ? row.groupName : row.customerName);
             row.status_ = (row.status ? $translate.instant('gemini.cbgs.field.status.' + row.status) : '');
+            row.totalSites = _.size(row.callbackGroupSites);
           });
-          vm.isDownload = cbgs.length > 0;
+          vm.isDownload = !!_.size(res);
           vm.gridRefresh = false;
         })
         .catch(function (err) {

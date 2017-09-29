@@ -122,14 +122,7 @@ class GmTdNumbersCtrl implements ng.IComponentController {
 
     this.loading = true;
     this.TelephonyDomainService.getNumbers(this.customerId, this.ccaDomainId).then((res) => {
-      const resJson: any = _.get(res, 'content.data');
-      if (resJson.returnCode) {
-        this.Notification.notify(this.gemService.showError(resJson.returnCode));
-        return;
-      }
-
-      const data = resJson.body;
-      _.forEach(data, (item: any) => {
+      _.forEach(res, (item: any) => {
         if (_.toNumber(item.compareToSuperadminPhoneNumberStatus) === this.constObject.DATA_STATUS.DELETED) {
           return true;
         }
@@ -139,6 +132,8 @@ class GmTdNumbersCtrl implements ng.IComponentController {
       });
 
       this.loading = false;
+    }).catch((err) => {
+      this.Notification.errorResponse(err, 'errors.statusError', { status: err.status });
     });
   }
 
@@ -216,13 +211,7 @@ class GmTdNumbersCtrl implements ng.IComponentController {
     }
 
     this.TelephonyDomainService.getAccessNumberInfo(accessNumber).then((res: any) => {
-      const returnCode = _.get(res, 'content.data.returnCode');
-      if (returnCode) {
-        this.Notification.notify(this.gemService.showError(returnCode));
-        return;
-      }
-
-      accessNumberEntity = _.get(res, 'content.data.body')[0];
+      accessNumberEntity = res[0];
       if (_.isNull(accessNumberEntity.tollType) && _.isNull(accessNumberEntity.callType)) { // new access number
         accessNumberEntity = {};
         accessNumberEntity.number = accessNumber;
@@ -247,6 +236,8 @@ class GmTdNumbersCtrl implements ng.IComponentController {
 
       this.resetAccessNumberAttribute(row, accessNumberEntity, type);
       this.accessNumber2EntityMapping[accessNumber] = accessNumberEntity;
+    }).catch((err) => {
+      this.Notification.errorResponse(err, 'errors.statusError', { status: err.status });
     });
   }
 
@@ -321,6 +312,7 @@ class GmTdNumbersCtrl implements ng.IComponentController {
   public changeDefaultNumber(row) {
     this.resetDefaultNumberValidation(row);
     this.resetGlobalDisplayValidation(row);
+    this.resetHiddenOnClientValidation(row);
 
     const defaultNumber = row.entity.defaultNumber;
     if (defaultNumber.value === '0') {
@@ -400,8 +392,12 @@ class GmTdNumbersCtrl implements ng.IComponentController {
     const phone = row.entity.phone;
     const rows = this.phoneNumber2RowsMapping[phone];
     _.forEach(rows, (row) => {
-      row.entity.phnNumDisplayValidation = { invalid: false, message: '', show: false };
+      this.resetHiddenOnClientValidation(row);
     });
+  }
+
+  private resetHiddenOnClientValidation(row) {
+    row.entity.phnNumDisplayValidation = { invalid: false, message: '', show: false };
   }
 
   public deleteNumber(row) {
@@ -470,7 +466,9 @@ class GmTdNumbersCtrl implements ng.IComponentController {
       });
 
       if (imported) {
-        this.Notification.success('gemini.tds.numbers.import.resultMsg.success', { importedNumbersCount: imported });
+        this.$timeout(() => {
+          this.Notification.success('gemini.tds.numbers.import.resultMsg.success', { importedNumbersCount: imported });
+        }, 10);
       }
 
       this.loading = false;
@@ -660,11 +658,11 @@ class GmTdNumbersCtrl implements ng.IComponentController {
     this.$scope.$emit('detailWatch', { isEdit: false });
     this.submitLoading = true;
     this.TelephonyDomainService.postTelephonyDomain(this.customerId, this.submitTelephonyAllData).then((res: any) => {
-      const returnCode = _.get(res, 'content.data.code');
-      const returnMessage = _.get(res, 'content.data.message', '');
+      const returnCode = _.get(res, 'code');
+      const returnMessage = _.get(res, 'message', '');
 
-      if (returnCode <= 5001) {
-        this.Notification.success('gemini.tds.submit.returnCode.' + returnCode);
+      if (returnCode === '5000') {
+        this.Notification.success('gemini.tds.submit.success');
         this.$state.sidepanel.dismiss();
         this.$scope.$emit('tdUpdated');
       } else {

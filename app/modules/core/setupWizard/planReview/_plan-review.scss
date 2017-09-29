@@ -39,7 +39,30 @@
   }
 
   .order-and-subscription-numbers {
-    padding-bottom: 20px;
+    padding-bottom: 40px;
+    line-height: 1.4rem;
+    span {
+      font-size: 1rem;
+    }
+  }
+
+  .row-pending {
+    .column {
+      padding-bottom: 30px;
+    }
+  }
+
+  .plan-review-help {
+    display: flex;
+    flex-direction: row;
+    align-items: top;
+    padding-bottom: 40px;
+    padding-top: 20px;
+  }
+
+  .plan-review-help-text {
+    flex-grow: 1;
+    margin-left: 10px;
   }
 
   .pending-details {

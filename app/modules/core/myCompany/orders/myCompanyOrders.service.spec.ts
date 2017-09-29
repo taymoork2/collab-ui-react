@@ -28,6 +28,7 @@ describe('Service: MyCompanyOrdersService', () => {
       status: 'COMPLETED',
       total: 15.95,
       productDescriptionList: [],
+      invoiceURL: 'digitalriver.com',
     }];
 
     const purchaseOrdersResponse: IOrderList = {

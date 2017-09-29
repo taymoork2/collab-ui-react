@@ -12,7 +12,7 @@ export interface ICallDestinationTranslate {
   customHelpText: string;
   alternateCustomPlaceholder: string;
   alternateCustomHelpText: string;
-  commonInvalidFormat: string;
+  callDestinationInvalidFormat: string;
   commonInvalidRequired: string;
 }
 
@@ -30,7 +30,7 @@ export class CallDestinationTranslateObject implements ICallDestinationTranslate
   public customHelpText: string;
   public alternateCustomPlaceholder: string;
   public alternateCustomHelpText: string;
-  public commonInvalidFormat: string;
+  public callDestinationInvalidFormat: string;
   public commonInvalidRequired: string;
   constructor(
     callDestinationTranslate: ICallDestinationTranslate = {
@@ -47,7 +47,7 @@ export class CallDestinationTranslateObject implements ICallDestinationTranslate
       customHelpText: '',
       alternateCustomPlaceholder: '',
       alternateCustomHelpText: '',
-      commonInvalidFormat: '',
+      callDestinationInvalidFormat: '',
       commonInvalidRequired: '',
     }) {
     this.numberFormat = callDestinationTranslate.numberFormat;
@@ -63,7 +63,7 @@ export class CallDestinationTranslateObject implements ICallDestinationTranslate
     this.customHelpText = callDestinationTranslate.customHelpText;
     this.alternateCustomPlaceholder = callDestinationTranslate.alternateCustomPlaceholder;
     this.alternateCustomHelpText = callDestinationTranslate.alternateCustomHelpText;
-    this.commonInvalidFormat = callDestinationTranslate.commonInvalidFormat;
+    this.callDestinationInvalidFormat = callDestinationTranslate.callDestinationInvalidFormat;
     this.commonInvalidRequired = callDestinationTranslate.commonInvalidRequired;
   }
 }

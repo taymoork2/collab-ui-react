@@ -55,15 +55,33 @@
   }
 }
 
+.gmTdDetails-state {
+  .edit-td-name {
+    display: none;
+  }
+}
+
 .gmTdDetails-notes-state,
 .gmTdDetails-sites-state {
   cs-alert-banner {
+    display: none;
+  }
+
+  .edit-td-name {
     display: none;
   }
 }
 
 .gmTdNumbersRequest-state,
 .gmTdDetails-gmTdNumbers-state {
+  .edit-td-name {
+    display: block;
+  }
+
+  .nav-expanded {
+    width: calc(100vw - 216px);
+  }
+
   .side-panel {
     z-index: 1000;
 
@@ -82,6 +100,7 @@
       .side-panel-container {
         padding: 0;
         padding-bottom: 50px;
+        width: calc(100vw - 216px);
 
         .breadcrumb-container {
           padding: 0 1rem;
@@ -91,6 +110,10 @@
           height: calc(100vh - 390px);
           overflow-y: scroll;
           overflow-x: hidden;
+
+          .grid-refresh {
+            top: 25rem;
+          }
         }
       }
 

@@ -3,6 +3,25 @@ export class CallUserPlacePage {
     this.cancelButton = element(by.buttonText('Cancel'));
     this.saveButton = element(by.buttonText('Save'));
 
+    this.ownerslist = {
+      searchFilter: element(by.id('searchFilter')),
+    };
+    this.callOverview = {
+      directoryNumbers: {
+        title: element(by.css('[translate="directoryNumberPanel.directNumbers"]')),
+        number: element(by.css('[ng-click="$ctrl.onDirectoryNumberClick()"]')),
+      },
+      addNewLine: element(by.css('a.as-button[translate="usersPreview.addNewLinePreview"]')),
+      features: {
+        title: element(by.css('[translate="telephonyPreview.features"]')),
+        singleNumberReach: element(by.cssContainingText('.feature-name', 'Single Number Reach')),
+        speedDials: element(by.cssContainingText('.feature-name', 'Speed Dials')),
+        dialingRestrictions: element(by.cssContainingText('.feature-name', 'Dialing Restrictions')),
+      },
+    };
+    this.lineConfiguration = {
+      title: element(by.cssContainingText('.section-title-row', 'Line Configuration')),
+    };
     this.directoryNumber = {
       title: element(by.cssContainingText('.section__title', 'Directory Numbers')),
       extension: element(by.cssContainingText('label', 'Extension')),
@@ -31,6 +50,7 @@ export class CallUserPlacePage {
       busyExternalInputPhone: element(by.css('[model="$ctrl.busyExternal.destination"] [ng-model="$ctrl.phoneNumber"]')),
       busyExternalInputUri: element(by.css('[model="$ctrl.busyExternal.destination"]  [ng-model="$ctrl.inputModel"]')),
       forwardExternalVoicemail: element(by.css('label[for="externalDirectVoicemail"]')),
+      forwardExternalSelectInput: element.all(by.css('.csSelect-container[name="CallDestTypeSelect"] ')),
     };
 
     this.simultaneousCalling = {
@@ -42,7 +62,7 @@ export class CallUserPlacePage {
     this.callerId = {
       title: element(by.cssContainingText('.section__title', 'Caller ID')),
       customName: element(by.css('input#callerIdName')),
-      customNumber: element(by.css('[ng-model="$ctrl.phoneNumber"]')),
+      customNumber: element(by.css('[ng-form="callerIdForm"] [name="phoneinput"]')),
     };
 
     this.autoAnswer = {

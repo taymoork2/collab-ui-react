@@ -100,7 +100,7 @@ class GmTdImportNumbersFromCsvCtrl implements ng.IComponentController {
         tollType: this.stripFieldValue(item[3]),
         phoneType: this.stripFieldValue(item[4]),
         country: this.stripFieldValue(item[5]),
-        isHidden: this.stripFieldValue(item[6]) === 'Hidden' ? 'true' : 'false',
+        isHidden: this.stripFieldValue(item[6]) === 'Hidden',
       });
     });
 

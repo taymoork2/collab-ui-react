@@ -14,19 +14,34 @@ const now = Date.now();
 export function huronCustomer(huronCustomerOptions) {
   const options = huronCustomerOptions;
   const customerName = `${os.userInfo().username}_${options.test}`;
-  const pstnNumbers = customerNumbersPSTN(options.pstn);
+  let allPstnNumbers = [];
+  if (options.pstn) {
+    allPstnNumbers = customerNumbersPSTN(options.pstn);
+  };
+  if (options.users && options.users.noOfDids > 0) {
+    var userPstnNumbers = customerNumbersPSTN(options.users.noOfDids);
+    allPstnNumbers.push.apply(allPstnNumbers, userPstnNumbers);
+  };
+  if (options.places && options.places.noOfDids > 0) {
+    var placesPstnNumbers = customerNumbersPSTN(options.places.noOfDids);
+    allPstnNumbers.push.apply(allPstnNumbers, placesPstnNumbers);
+  };
+  if (allPstnNumbers.length < 1) {
+    allPstnNumbers = undefined;
+  };
   const customer = {
     partner: testPartner(options),
     name: customerName,
     email: `${partnerEmail}${customerName}_${now}@gmail.com`,
     offers: options.offers || ['CALL'],
-    callOptions: callOptions(options, pstnNumbers),
-    users: huronUsers(options.users, options.numberRange ? options.numberRange.beginNumber : undefined, pstnNumbers),
+    callOptions: callOptions(options, allPstnNumbers),
+    users: huronUsers(options.users ? options.users.noOfUsers : false, options.numberRange ? options.numberRange.beginNumber : undefined, userPstnNumbers),
     doFtsw: options.doFtsw || false,
-    places: huronPlaces(options.places, options.numberRange ? options.numberRange.beginNumber : undefined, pstnNumbers),
+    places: huronPlaces(options.places ? options.places.noOfPlaces : false, options.numberRange ? options.numberRange.beginNumber : undefined, placesPstnNumbers),
     doHuntGroup: options.doHuntGroup || false,
-    doCallPickUp: options.doCallPickUp || false,
+    doCallPickup: options.doCallPickup || false,
     doCallPark: options.doCallPark || false,
+    doCallPaging: options.doCallPaging || false,
   };
   return atlasCustomer(customer);
 }

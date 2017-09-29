@@ -1,3 +1,4 @@
+import { Config } from 'modules/core/config/config';
 export class DigitalRiverService {
   private readonly DIGITAL_RIVER_URL = {
     store: 'https://buy.ciscospark.com/store/ciscoctg/en_US/',
@@ -11,6 +12,7 @@ export class DigitalRiverService {
     private $document: ng.IDocumentService,
     private $http: ng.IHttpService,
     private $sce: ng.ISCEService,
+    private Config: Config,
     private UrlConfig,
   ) {}
 
@@ -25,7 +27,7 @@ export class DigitalRiverService {
 
   public getInvoiceUrl(reqId: string, product: string): ng.IPromise<string> {
     let invoicePath = 'DisplayInvoicePage?requisitionID=' + reqId + '&';
-    if (_.includes(product, 'WebEx')) {
+    if (_.includes(product, this.Config.onlineProducts.webex)) {
       invoicePath += 'ThemeID=4777108300&';
     }
     return this.getDigitalRiverUrl(invoicePath, 'store');

@@ -9,7 +9,7 @@
     });
 
   /* @ngInject */
-  function cbgSitesCtrl($state, $modal, $rootScope, $stateParams, $translate, cbgService, Notification, PreviousState, gemService) {
+  function cbgSitesCtrl($state, $modal, $rootScope, $stateParams, $translate, cbgService, PreviousState, Notification) {
     var vm = this;
     vm.onClick = onClick;
     vm.$onInit = $onInit;
@@ -40,6 +40,8 @@
     }
 
     function moveSite(site, toCbg) {
+      vm.showLoading = true;
+
       var data = {
         siteId: site.siteId,
         siteUrl: site.siteUrl,
@@ -49,16 +51,16 @@
         sourceGroupId: vm.currCbg.ccaGroupId,
         sourceGroupName: vm.currCbg.groupName, // From, DB: Object_Name
       };
-      cbgService.moveSite(data).then(function (res) {
-        var resJson = _.get(res.content, 'data');
-        if (resJson.returnCode) {
-          Notification.notify(gemService.showError(resJson.returnCode));
-          return;
-        }
-        $rootScope.$emit('cbgsUpdate', true);
+
+      cbgService.moveSite(data).then(function () {
+        vm.showLoading = false;
+
         _.remove(vm.sites, function (obj) {
           return obj.siteId === site.siteId;
         });
+        $rootScope.$emit('cbgsUpdate', true);
+      }).catch(function (err) {
+        Notification.errorResponse(err, 'errors.statusError', { status: err.status });
       });
     }
 

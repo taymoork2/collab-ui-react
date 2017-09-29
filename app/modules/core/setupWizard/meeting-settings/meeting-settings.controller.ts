@@ -1,6 +1,8 @@
+// TODO: algendel 9/26/17 ASAP replace this with components in  app/modules/core/siteList/webexSite/
 import './_meeting-settings.scss';
 import { Config } from 'modules/core/config/config';
-import { IWebExSite, ISiteNameError, SiteErrorType, IConferenceService, IExistingWebExTrialSite, IWebexLicencesPayload, IPendingLicense, IConferenceLicense } from './meeting-settings.interface';
+import { IConferenceLicense, IConferenceService, IExistingWebExTrialSite, IPendingLicense, ISiteNameError, IWebexLicencesPayload, IWebExSite, SiteErrorType } from './meeting-settings.interface';
+import { WebExSite } from './meeting-settings.model';
 import { SetupWizardService } from '../setup-wizard.service';
 
 export enum Steps {
@@ -8,33 +10,6 @@ export enum Steps {
   SITES_LICENSES = 'SITES_LICENSES',
 }
 
-
-class WebExSite {
-  public centerType: string;
-  public quantity: number;
-  public siteUrl: string;
-  public audioPackageDisplay?: string;
-  public timezone?: string | object;
-  public setupType?: string;
-
-  constructor({
-    centerType,
-    quantity,
-    siteUrl,
-    timezone,
-    setupType,
-  }: IWebExSite) {
-    this.centerType = centerType;
-    this.quantity = quantity || 0;
-    this.siteUrl = siteUrl;
-    this.timezone = timezone;
-    this.setupType = setupType;
-
-    if (!setupType) {
-      delete this.setupType;
-    }
-  }
-}
 
 class ExistingWebexTrialSite extends WebExSite {
   public keepExistingSite: boolean;
@@ -123,6 +98,7 @@ export class MeetingSettingsCtrl {
     private $rootScope: ng.IRootScopeService,
     private Authinfo,
     private Config: Config,
+    private FeatureToggleService,
     private Notification,
     private TrialTimeZoneService,
     private TrialWebexService,
@@ -172,13 +148,20 @@ export class MeetingSettingsCtrl {
 
     this.hasTrialSites = this.SetupWizardService.hasWebexMeetingTrial();
 
-    const regex = new RegExp(MeetingSettingsCtrl.showUserMgmntEmailPattern);
-    if (_.includes(this.Authinfo.getUserName(), '@')) {
-      this.isShowUserManagement = regex.test(this.Authinfo.getUserName());
-    } else {
-      this.isShowUserManagement = regex.test(this.Authinfo.getPrimaryEmail());
-    }
+    this.shouldShowUserManagement().then( result => {
+      this.isShowUserManagement = result;
+    });
+  }
 
+  // algendel9/25/17 we show user management if FT is enabled OR the pattern matches
+  private shouldShowUserManagement(): ng.IPromise<boolean> {
+    const regex = new RegExp(MeetingSettingsCtrl.showUserMgmntEmailPattern);
+    let isPatternMatch = false;
+    isPatternMatch =  regex.test(this.Authinfo.getUserName()) ||  regex.test(this.Authinfo.getPrimaryEmail()) || regex.test(this.Authinfo.getCustomerAdminEmail());
+    if (isPatternMatch) {
+      return this.$q.resolve(true);
+    }
+    return this.FeatureToggleService.atlasSetupSiteUserManagementGetStatus();
   }
 
   public onInputChange() {
@@ -534,6 +517,7 @@ export class MeetingSettingsCtrl {
     this.setNextDisableStatus(true);
     this.audioPartnerName = null;
   }
+
   public ccaspValidate() {
     this.disableValidateButton = true;
     this.setNextDisableStatus(true);
@@ -551,8 +535,15 @@ export class MeetingSettingsCtrl {
         this.ccaspSetInvalid(true);
       });
   }
+
   public ccaspSetNextDisabled() {
     if (!this.audioPartnerName || !this.ccasp.subscriptionId) {
+      this.setNextDisableStatus(true);
+    }
+  }
+
+  public tspSetNextDisabled() {
+    if (!this.audioPartnerName) {
       this.setNextDisableStatus(true);
     }
   }
@@ -620,15 +611,17 @@ export class MeetingSettingsCtrl {
   // If we have WebEx licenses, we need pull those siteUrls and include them in the provision context
   public findExistingWebexSites(): void {
     const actingSubscriptionLicenses = this.SetupWizardService.getActingSubscriptionLicenses();
-    const existingConferenceServicesInActingSubscripton = _.filter(actingSubscriptionLicenses, (license: IConferenceLicense) => _.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC], license.offerName));
-
+    const includedOfferNames = [this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC];
+    const existingConferenceServicesInActingSubscripton = _.filter(actingSubscriptionLicenses, (license: IConferenceLicense) =>
+      _.includes(includedOfferNames, license.offerName)) as IConferenceLicense[];
     // Create an array of existing sites
     this.existingWebexSites = _.map(existingConferenceServicesInActingSubscripton, (license) => {
-      return {
+      return new WebExSite({
         siteUrl: _.replace(_.get<string>(license, 'siteUrl'), this.Config.siteDomainUrl.webexUrl, ''),
         quantity: license.volume,
         centerType: license.offerName,
-      };
+        setupType: (license.isCIUnifiedSite !== true) ? this.setupTypeLegacy : undefined,
+      });
     });
 
     // Push unique sites to sitesArray
@@ -638,6 +631,7 @@ export class MeetingSettingsCtrl {
         quantity: 1,
         centerType: '',
         keepExistingSite: true,
+        setupType: site.setupType,
       };
     }));
   }

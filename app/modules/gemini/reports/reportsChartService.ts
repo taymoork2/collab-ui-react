@@ -1,3 +1,4 @@
+const CHARTS = require('./charts.config');
 
 export class ReportsChartService {
   private URL: string;
@@ -14,6 +15,11 @@ export class ReportsChartService {
   public getFilterData() {
     const url = `${this.URL}scorecard/accounts`;
     return this.$http.get(url).then(this.extractData);
+  }
+
+  public getkPIData(data) {
+    const _url = `${this.URL}scorecard/growth`;
+    return this.$http.post(_url, data).then(this.extractData);
   }
 
   public getChartData(url, data) {
@@ -34,14 +40,14 @@ export class ReportsChartService {
     } else {
       data = this.stackedColumnStdOpts(opts);
     }
-    if (div_id === 'large_chart_content') {
+    if (_.includes(div_id, 'large_')) {
       const largeOption = {
         export: { enabled: true },
         chartScrollbar: {},
         legend: {
           valueWidth: 0,
           markerSize: 10,
-          position: 'top',
+          position: 'bottom',
           align: 'center',
           horizontalGap: 10,
           equalWidths: false,
@@ -51,7 +57,12 @@ export class ReportsChartService {
       _.assignIn(data, largeOption);
       _.assignIn(data.categoryAxis, { axisAlpha: 0.1 });
     }
-    const chartData = div_id === 'unitTest' ? '' : AmCharts.makeChart(div_id, data);
+    _.forEach(data.graphs, (item) => {
+      const key = _.toUpper(_.replace(_.trim(item.valueField), /([,]+|\s+)/g, ''));
+      const color = CHARTS.color[key];
+      _.set(item, 'fillColors', color ? color : CHARTS.color.OTHER);
+    });
+    const chartData = (type === 'test' || div_id === 'unitTest') ? '' : AmCharts.makeChart(div_id, data);
     return chartData;
   }
 
@@ -64,7 +75,7 @@ export class ReportsChartService {
       _.assignIn(opts, {legend: {
         valueWidth: 0,
         markerSize: 10,
-        position: 'top',
+        position: 'bottom',
         align: 'center',
         horizontalGap: 10,
         equalWidths: false,
@@ -79,9 +90,8 @@ export class ReportsChartService {
     _.assignIn(opts.categoryAxis, { gridAlpha: 0 });
     _.assignIn(opts.valueAxes[0], {
       stackType: 'regular',
-      axisAlpha: 0.3,
+      axisAlpha: 0.2,
       gridAlpha: 0,
-      title: chartdata.unit,
     });
     return opts;
   }
@@ -93,7 +103,7 @@ export class ReportsChartService {
       legend: {
         valueWidth: 0,
         markerSize: 5,
-        position: 'top',
+        position: 'bottom',
         align: 'center',
         horizontalGap: 5,
         equalWidths: false,
@@ -101,7 +111,7 @@ export class ReportsChartService {
       },
     };
     _.assignIn(opts, others);
-    _.assignIn(opts.valueAxes[0], { gridAlpha: 0, title: chartdata.unit });
+    _.assignIn(opts.valueAxes[0], { gridAlpha: 0 });
     return opts;
   }
 
@@ -117,7 +127,7 @@ export class ReportsChartService {
       legend: {
         valueWidth: 0,
         markerSize: 10,
-        position: 'top',
+        position: 'bottom',
         align: 'center',
         horizontalGap: 10,
         equalWidths: false,
@@ -126,7 +136,7 @@ export class ReportsChartService {
     };
 
     _.assignIn(opts, others);
-    _.assignIn(opts.valueAxes[0], { axisAlpha: 0.3, gridAlpha: 0.1, title: chartdata.unit });
+    _.assignIn(opts.valueAxes[0], { axisAlpha: 0.2, gridAlpha: 0.1 });
     return opts;
   }
 
@@ -136,14 +146,14 @@ export class ReportsChartService {
       type: 'serial',
       categoryField: 'time',
       categoryAxis: {
-        gridPosition: 'start',
+        axisAlpha: 0.2,
+        labelOffset: 0,
         position: 'left',
         labelRotation: 45,
-        labelOffset: 0,
+        gridPosition: 'start',
         centerLabelOnFullPeriod: false,
-        axisAlpha: 0,
       },
-      export: { enabled: false },
+      export: { enabled: true },
       valueAxes: [{
         position: 'left',
         axisAlpha: 0,
@@ -160,8 +170,7 @@ export class ReportsChartService {
       valueField : type,
       type : 'column',
       fillAlphas: 0.8,
-      lineAlpha: 0.3,
-      color: '#000000',
+      lineAlpha: 0,
     };
 
     if (typecall === 'multiLinesStdOpts') {
@@ -182,29 +191,26 @@ export class ReportsChartService {
     return _.get(response, 'data');
   }
 
-  public reportChartExportCSV(data) {
-    const headerLine = {
-      title: '',
-    };
-    const lines: any = data;
-    let exportedLines: any[] = [];
-    if (!lines.length) {
+  public exportCSV(data) {
+    if (!_.size(data)) {
       return ;
     }
-    _.forEach(lines[0].data.chart, (item) => {
-      _.assignIn(headerLine, {
-        [item.time]: item.time,
-      });
+    let headerLine: any;
+    let exportedLines: any[] = [];
+    const lines = data;
+    _.forEach(lines, (item) => {
+      if (!_.size(headerLine) && _.size(item.data.chart)) {
+        const headerL = _.map(item.data.chart, ite => _.get(ite, 'time'));
+        headerLine = _.concat(['\t'], headerL);
+      }
+      exportedLines = _.concat(exportedLines, this.formatData(item));
     });
-    exportedLines.push(headerLine);
-
-    _.forEach(lines, (line) => {
-      exportedLines = exportedLines.concat(this.formatTdData(line));
-    });
-    return exportedLines;
+    return _.concat([headerLine], exportedLines);
   }
 
-  private formatTdData(data) {  //TODO will optimization code
+  private formatData(data) {
+    const row = {};
+    const total = {};
     const unit = {
       THOUSANDS: 1000,
       MILLIONS: 1000 * 1000,
@@ -215,43 +221,23 @@ export class ReportsChartService {
       SEXTILLION : 1000 * 1000 * 1000 * 1000 * 1000 * 1000 * 1000,
       SEPTILLION : 1000 * 1000 * 1000 * 1000 * 1000 * 1000 * 1000 * 1000,
     };
-
     const number = _.get(unit, data.data.unit, 1);
-    const newData: any = [];
-    const oldGroup = data.data.chart;
-    newData[0] = ([data.title]);
-    if (!data.type || !_.size(data.data.chart)) {
-      return newData;
-    }
-    _.forEach(Object.keys(data.data.chart[0]), (key: any) => {
-      if (key === 'point' || key === 'time') {
-        return;
-      }
-      let list: any = {};
-      list = [key];
-      newData.push(list);
-    });
-    _.forEach(Object.keys(newData), (total: number) => {
-      if (!(total * 1)) {
-        return ;
-      }
-      _.forEach(oldGroup, (list, num: any) => {
-        _.forEach(list, (name, key: any) => {
-          if (key === 'point' || key === 'time') {
-            return;
-          }
-          if (total * 1 === 1) {
-            newData[0][num + 1] = newData[0][num + 1] ? newData[0][num + 1] : 0;
-            newData[0][num + 1] += name * number;
-          }
-          if (key === newData[total][0]) {
-            newData[total][num + 1] = name * number;
-          }
-        });
+    _.forEach(data.data.chart, (item) => {
+      total[item.time] = 0;
+      _.forEach(item, (val, key: string) => {
+        if (key === 'point' || key === 'time') {
+          return true;
+        }
+
+        if (!_.get(row, key)) {
+          _.set(row, key, [key]);
+        }
+        total[item.time] += _.parseInt(val) * number;
+        row[key].push(val * number);
       });
     });
-    newData.push(['']);
-    return newData;
+    const totalArr = _.concat([data.title], _.values(total));
+    return _.concat([totalArr], _.values(row));
   }
 
 }

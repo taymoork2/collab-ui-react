@@ -6,12 +6,10 @@ export function huronPlaces(number, ext, pstnNumbers) {
       const place = placesData[i];
       place.name = placesData[i].name.displayName;
       if (ext) {
-        const extBegin = parseInt(ext);
-        place.directoryNumber = extBegin + i;
+        place.directoryNumber = (parseInt(ext) + i).toString();
       } else {
-        place.directoryNumber = 300 + i;
+        place.directoryNumber = (300 + i).toString();
       }
-      place.directoryNumber = place.directoryNumber.toString();
       place.entitlements = ['ciscouc', 'webex-squared'];
       place.machineType = 'room'
       if (pstnNumbers && pstnNumbers[i]) {
@@ -19,7 +17,6 @@ export function huronPlaces(number, ext, pstnNumbers) {
       }
       places.push(place);
     }
-
     return places;
   }
 }

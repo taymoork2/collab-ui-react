@@ -20,6 +20,10 @@ describe('Component: subscription details', function () {
     this.initController();
   });
 
+  it('should return proPack status for getProPackStatus', function () {
+    expect(this.controller.getProPackStatus()).toBeTruthy();
+  });
+
   it('should return string for getUsage', function () {
     expect(this.controller.getUsage(this.subscription.proPack)).toEqual('8/100');
   });

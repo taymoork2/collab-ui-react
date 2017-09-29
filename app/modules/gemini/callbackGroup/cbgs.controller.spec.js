@@ -112,7 +112,7 @@ describe('controller: CbgsCtrl', function () {
     });
 
     it('return correct data', function () {
-      var csvData = { content: { data: { body: {} } } };
+      var csvData = {};
       cbgService.cbgsExportCSV.and.returnValue($q.resolve(csvData));
       controller.exportCSV();
       $scope.$apply();
@@ -130,7 +130,7 @@ describe('controller: CbgsCtrl', function () {
     });
 
     it('gridData_ not empty', function () {
-      $scope.gridData_ = callbackGroups.content.data.body;
+      $scope.gridData_ = callbackGroups;
       controller.filterList('Test');
       $scope.$apply();
       $timeout.flush();

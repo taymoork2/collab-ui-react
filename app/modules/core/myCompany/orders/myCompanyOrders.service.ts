@@ -4,6 +4,7 @@ export interface IOrderDetail {
   status: string;
   total: number;
   productDescriptionList: string[];
+  invoiceURL: string;
 }
 
 export interface IOrderList {

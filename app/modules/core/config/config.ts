@@ -268,6 +268,11 @@ export class Config {
     digitalRiver: 'DIGITAL_RIVER',
   };
 
+  public readonly onlineProducts = {
+    spark: 'Spark',
+    webex: 'WebEx',
+  };
+
   public readonly licenseStatus = {
     PENDING: 'PENDING',
     ACTIVE: 'ACTIVE',
@@ -560,6 +565,7 @@ export class Config {
     User: ['drLoginReturn', 'drOnboard', 'drConfirmAdminOrg', 'drOnboardQuestion', 'drOnboardEnterAdminEmail', 'drOrgName', 'drAdminChoices'],
     Site_Admin: [
       'site-list',
+      'site-list-add',
       'site-csv-import',
       'site-csv',
       'site-csv-results',

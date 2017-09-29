@@ -14,26 +14,21 @@
     vm.modify = modify;
     vm.goBack = goBack;
     vm.loading = false;
-    vm.isValid = false;
 
     init();
 
     function init() {
       vm.address = _.cloneDeep(PstnModel.getServiceAddress());
       vm.countryCode = PstnModel.getCountryCode();
-      // If address has been set in the model, set it as valid
-      if (!_.isEmpty(vm.address)) {
-        vm.isValid = true;
-      }
     }
 
     function modify() {
       vm.address = {};
-      vm.isValid = false;
+      vm.address.validated = false;
     }
 
     function next() {
-      if (vm.isValid) {
+      if (vm.address.validated) {
         goToOrderNumbers();
       } else {
         validateAddress();
@@ -46,8 +41,8 @@
         .then(function (address) {
           if (address) {
             vm.address = address;
+            vm.address.validated = true;
             PstnModel.setServiceAddress(address);
-            vm.isValid = true;
           } else {
             Notification.error('pstnSetup.serviceAddressNotFound');
           }
@@ -70,8 +65,8 @@
 
     function resetAddress() {
       vm.address = {};
+      vm.address.validated = false;
       PstnModel.setServiceAddress(vm.address);
-      vm.isValid = false;
     }
 
     function goBack() {

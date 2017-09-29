@@ -33,6 +33,7 @@ class SnrCtrl implements ng.IComponentController {
   private form: ng.IFormController;
   private customTranslations: ITranslationMessages;
   private inputTranslations: ICallDestinationTranslate;
+  private customNumberValidationPatern: RegExp;
   private snrId: string = '';
 
   /* @ngInject */
@@ -54,6 +55,7 @@ class SnrCtrl implements ng.IComponentController {
       helpText: this.$translate.instant('callDestination.alternateCustomHelpText'),
     };
     this.inputTranslations = this.CallDestinationTranslateService.getCallDestinationTranslate();
+    this.customNumberValidationPatern = this.CallDestinationTranslateService.getCustomNumberValidationPatern();
     this.init();
   }
 

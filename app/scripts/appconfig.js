@@ -338,6 +338,11 @@
             onEnter: panelOnEnter({
               type: 'large',
             }),
+            resolve: {
+              atlas2017NameChangeFeatureToggled: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlas2017NameChange);
+              },
+            },
           });
         // Enter and Exit functions for panel(large or side)
         function panelOnEnter(options) {
@@ -346,9 +351,9 @@
             if (_.get($state, 'current.data.sidepanel', '') !== 'not-full') {
               if (atlas2017NameChangeFeatureToggled) {
                 if (!options.type) {
-                  options.type = 'side-panel-full-height';
+                  options.type = 'side-panel-full-height nav-expanded';
                 } else {
-                  options.type += ' side-panel-full-height';
+                  options.type += ' side-panel-full-height nav-expanded';
                 }
               }
             }
@@ -1514,7 +1519,7 @@
           .state('user-overview.hybrid-services-spark-hybrid-impinterop', {
             views: {
               'side-panel-container@user-overview': {
-                template: '<hybrid-imp-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName"></hybrid-imp-user-settings>',
+                template: '<hybrid-messaging-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName"></hybrid-messaging-user-settings>',
               },
             },
             data: {},
@@ -1530,6 +1535,20 @@
             params: {
               extensionId: {},
               extensions: {},
+            },
+          })
+          .state('user-overview.hybrid-services-spark-hybrid-impinterop.history', {
+            views: {
+              'side-panel-container@user-overview': {
+                template: '<user-status-history service-id="\'spark-hybrid-impinterop\'"></user-status-history>',
+              },
+            },
+            data: {},
+            resolve: {
+              displayName: translateDisplayName('sidePanelBreadcrumb.statusHistory'),
+            },
+            params: {
+              serviceId: {},
             },
           })
           .state('user-overview.hybrid-services-squared-fusion-cal', {
@@ -1888,6 +1907,33 @@
             controller: 'WebExSiteRowCtrl',
             controllerAs: 'siteList',
             parent: 'main',
+          })
+          .state('site-list-add', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                template: '<webex-add-site-modal subscription-list="$resolve.subscriptionList"  conference-services="$resolve.conferenceServices" audio-licenses="$resolve.audioLicenses" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site->',
+              },
+            },
+            params: {
+              existingFieldIds: [],
+              existingFieldData: {},
+              inUse: false,
+              callback: function () { },
+            },
+            resolve: {
+              conferenceServices: /* @ngInject */ function (Authinfo) {
+                return Authinfo.getConferenceServices();
+              },
+              audioLicenses: /*@ngInject */ function (Authinfo, Config) {
+                var audioLicenses = _.filter(Authinfo.getLicenses(), { licenseType: Config.licenseTypes.AUDIO });
+                return audioLicenses;
+              },
+              subscriptionList: /* @ngInject */ function (Authinfo) {
+                var subscriptionIds = _.map(Authinfo.getSubscriptions(), 'externalSubscriptionId');
+                return subscriptionIds;
+              },
+            },
           })
           .state('site-csv', {
             parent: 'modalSmall',
@@ -2318,6 +2364,26 @@
               displayName: translateDisplayName('telephonyPreview.speedDials'),
             },
           })
+          .state('place-overview.communication.phoneButtonLayout', {
+            views: {
+              'side-panel-container@place-overview': {
+                template: '<uc-phone-button-layout owner-type="places" owner-id="$resolve.ownerId"></uc-phone-button-layout>',
+              },
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/huron/phoneButtonLayout'));
+                }, 'place-call-phonebuttonlayout');
+              }),
+              ownerId: /* @ngInject */ function ($stateParams) {
+                return _.get($stateParams.currentPlace, 'id');
+              },
+              data: /* @ngInject */ function ($state, $translate) {
+                $state.get('place-overview.communication.phoneButtonLayout').data.displayName = $translate.instant('telephonyPreview.phoneButtonLayout');
+              },
+            },
+          })
           .state('place-overview.communication.cos', {
             views: {
               'side-panel-container@place-overview': {
@@ -2653,6 +2719,23 @@
             controller: 'PartnerReportCtrl',
             controllerAs: 'nav',
           })
+          .state('partnerreports.tab', {
+            parent: 'partner',
+            template: '<partner-reports-tabs></partner-reports-tabs>',
+          })
+          .state('partnerreports.tab.base', {
+            url: '/metrics',
+            template: require('modules/core/partnerReports/partnerReports.tpl.html'),
+            controller: 'PartnerReportCtrl',
+            controllerAs: 'nav',
+          })
+          .state('partnerreports.tab.ccaReports', {
+            template: '<cca-reports-tabs></cca-reports-tabs>',
+          })
+          .state('partnerreports.tab.ccaReports.group', {
+            url: '/ccareports/:name',
+            template: '<cca-reports report-chart-data="$ctrl.chartsData"></cca-reports>',
+          })
           .state('partnerreports.spark', {
             parent: 'partner',
             url: '/spark',
@@ -2674,15 +2757,6 @@
             parent: 'partner',
             url: '/services/overview',
             template: '<cca-card></cca-card>',
-          })
-          .state('gemReports', {
-            parent: 'partner',
-            url: '/services/reports',
-            template: '<cca-reports-tabs></cca-reports-tabs>',
-          })
-          .state('gemReports.group', {
-            url: '/:name',
-            template: '<cca-reports report-chart-data="$ctrl.chartsData"></cca-reports>',
           })
           .state('gem.servicesPartner', {
             url: '/services/spList',
@@ -3462,6 +3536,7 @@
               }),
               customerSetup: /* @ngInject */ function ($stateParams, PstnModel, PstnService, Notification) {
                 PstnModel.setCustomerId($stateParams.customerId);
+                PstnModel.setCustomerExists(false);
                 PstnModel.setCustomerName($stateParams.customerName);
                 PstnModel.setCustomerEmail($stateParams.customerEmail);
                 PstnModel.setIsTrial($stateParams.customerCommunicationLicenseIsTrial && $stateParams.customerRoomSystemsLicenseIsTrial);
@@ -3834,11 +3909,11 @@
         $stateProvider
           .state('services-overview', {
             url: '/services?office365&reason',
-            template: '<services-overview has-office-365-feature-toggle="$resolve.hasOffice365FeatureToggle" url-params="$resolve.urlParams"></services-overview>',
+            template: '<services-overview has-services-overview-refresh-toggle="$resolve.atlasServicesOverviewRefresh" url-params="$resolve.urlParams"></services-overview>',
             parent: 'main',
             resolve: {
-              hasOffice365FeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasOffice365Support);
+              atlasServicesOverviewRefresh: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasServicesOverviewRefresh);
               },
               urlParams: /* @ngInject */ function ($stateParams) {
                 return $stateParams;

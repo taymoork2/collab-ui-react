@@ -1,3 +1,4 @@
+var HttpStatus = require('http-status-codes');
 (function () {
   'use strict';
 
@@ -12,6 +13,7 @@
     vm.ONBOARDED = 'onboarded';
     vm.NOT_ONBOARDED = 'notOnboarded';
     vm.IN_PROGRESS = 'inProgress';
+
 
     vm.status = {
       UNKNOWN: 'Unknown',
@@ -211,12 +213,27 @@
       var promises = {};
       if (vm.csOnboardingStatus !== vm.status.SUCCESS) {
         promises.onBoardCS = SunlightConfigService.onBoardCare();
+        promises.onBoardCS.then(function (result) {
+          if (result.status === HttpStatus.ACCEPTED) {
+            vm.csOnboardingStatus = vm.status.SUCCESS;
+          }
+        });
       }
       if (Authinfo.isCareVoice() && vm.aaOnboardingStatus !== vm.status.SUCCESS) {
         promises.onBoardAA = SunlightConfigService.aaOnboard();
+        promises.onBoardAA.then(function (result) {
+          if (result.status === HttpStatus.NO_CONTENT) {
+            vm.aaOnboardingStatus = vm.status.SUCCESS;
+          }
+        });
       }
       if (vm.careSetupDoneByOrgAdmin && vm.appOnboardingStatus !== vm.status.SUCCESS) {
         promises.onBoardBotApp = SunlightConfigService.onboardCareBot();
+        promises.onBoardBotApp.then(function (result) {
+          if (result.status === HttpStatus.NO_CONTENT) {
+            vm.appOnboardingStatus = vm.status.SUCCESS;
+          }
+        });
       }
       $q.all(promises).then(function (results) {
         Log.debug('Care onboarding is success', results);
@@ -330,11 +347,6 @@
       var onboardingStatus = vm.status.UNKNOWN;
       vm.csOnboardingStatus = _.get(result, 'data.csOnboardingStatus');
       vm.aaOnboardingStatus = _.get(result, 'data.aaOnboardingStatus');
-      // if (vm.careSetupDoneByOrgAdmin) {
-      //   onboardingStatus = onboardingDoneByAdminStatus();
-      // } else {
-      //   onboardingStatus = onboardingDoneByPartnerStatus();
-      // }
       onboardingStatus = onboardingStatusDoneByAdminOrPartner();
       return onboardingStatus;
     }

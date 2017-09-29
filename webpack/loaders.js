@@ -112,7 +112,7 @@ exports.html = {
 };
 
 exports.assets = {
-  test: /\.(json|csv|pdf)(\?v=.*)?$/,
+  test: /\.(csv|pdf)(\?v=.*)?$/,
   use: [
     {
       loader: 'file-loader',

@@ -12,7 +12,7 @@
     </cs-card>
   </cs-card-layout>
 
-  <div cr-feature-toggle feature-hide="atlas-office365-support">
+  <div ng-if="!$ctrl.hasServicesOverviewRefreshToggle">
     <h5><span translate="servicesOverview.hybridServices"></span></h5>
     <p class="no-hybrid-cards-found"
       ng-if="!$ctrl.hasActiveHybridCards()">
@@ -30,7 +30,7 @@
     </cs-card-layout>
   </div>
 
-  <div cr-feature-toggle feature-show="atlas-office365-support">
+  <div ng-if="$ctrl.hasServicesOverviewRefreshToggle">
     <h5><span translate="servicesOverview.hybridServices"></span></h5>
     <div ng-if="$ctrl.loadingHybridServicesCards">
       <span class="icon icon-spinner icon-2x"></span>
@@ -49,7 +49,7 @@
         <hybrid-data-security-active-card ng-if="$ctrl.isActive('spark-hybrid-datasecurity')" service-status="$ctrl.getServiceStatus('spark-hybrid-datasecurity')" class="cs-card small active-card"></hybrid-data-security-active-card>
       </cs-card-layout>
 
-      <h5><span>Inactive Hybrid Services</span></h5>
+      <h5><span translate="servicesOverview.inactiveHybridServices"></span></h5>
       <cs-card-layout block-view="true">
         <hybrid-calendar-exchange-inactive-card ng-if="$ctrl.isInactive('squared-fusion-cal')" class="cs-card small inactive-card"></hybrid-calendar-exchange-inactive-card>
         <hybrid-calendar-o365-inactive-card ng-if="$ctrl.isInactive('squared-fusion-o365')" class="cs-card small inactive-card"></hybrid-calendar-o365-inactive-card>

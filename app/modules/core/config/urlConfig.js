@@ -183,8 +183,8 @@
       prod: 'https://hades.huron-dev.com/api/v1/elasticsearch/',
     },
     GeminiUrl: {
-      dev: 'https://hfccap2.qa.webex.com/pcs/api/v2/',
-      cfe: 'https://hfccap2.qa.webex.com/pcs/api/v2/',
+      dev: 'https://hfccap1.qa.webex.com/pcs/api/v2/',
+      cfe: 'https://hfccap1.qa.webex.com/pcs/api/v2/',
       integration: 'https://ccaportalbts.webex.com/pcs/api/v2/',
       prod: 'https://ccaportal.webex.com/pcs/api/v2/',
     },
@@ -318,10 +318,10 @@
       prod: 'https://%s/custportal/extensions/spark-report-partner/spark-report-partner.html',
     },
     VirtualAssistantServiceUrl: {
-      dev: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/',
-      cfe: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/',
-      integration: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/',
-      prod: 'https://bot-services.produs1.ciscoccservice.com/bot-services/v1/',
+      dev: 'https://virtual-assistant.appstaging.ciscoccservice.com/bot-services/v1/',
+      cfe: 'https://virtual-assistant.appstaging.ciscoccservice.com/bot-services/v1/',
+      integration: 'https://virtual-assistant.appstaging.ciscoccservice.com/bot-services/v1/',
+      prod: 'https://virtual-assistant.produs1.ciscoccservice.com/bot-services/v1/',
     },
     WebExReportAppforMEIUrl: {
       dev: 'https://%s/custportal/extensions/MEI/MEI.html',

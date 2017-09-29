@@ -9,7 +9,7 @@ export abstract class ProPackSettingSection extends SettingSection {
     super(settingKey);
     if (!proPackPurchased) {
       this.badge = 'badge--outline';
-      this.tooltipText = 'globalSettings.' + settingKey + '.proPackInfoCopy';
+      this.tooltipText = 'common.proPackTooltip';
     }
   }
 }

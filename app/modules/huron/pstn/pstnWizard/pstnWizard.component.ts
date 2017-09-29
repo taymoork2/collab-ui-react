@@ -1,5 +1,4 @@
 import { Notification } from 'modules/core/notifications/notification.service';
-import { IEmergencyAddress } from 'modules/squared/devices/emergencyServices/index';
 import { PstnWizardService } from './pstnWizard.service';
 import { DirectInwardDialing } from './directInwardDialing';
 import { TokenMethods } from '../pstnSwivelNumbers';
@@ -7,6 +6,7 @@ import { TOKEN_FIELD_ID } from '../pstn.const';
 import { PstnService } from '../pstn.service';
 import { PstnModel, IOrder } from '../pstn.model';
 import { NumberModel, INumbersModel } from '../pstnNumberSearch';
+import { PstnAddressService, Address } from '../shared/pstn-address';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
 
 export class PstnWizardComponent implements ng.IComponentOptions {
@@ -44,10 +44,9 @@ export class PstnWizardCtrl implements ng.IComponentController {
   public step: number = 1;
   public showButtons: boolean = false;
   public contact: {firstName, lastName, emailAddress, companyName};
-  public address: IEmergencyAddress;
+  public address: Address;
   public countryCode: string;
   public loading: boolean;
-  public isValid = false;
   public isTrial: boolean;
   public orderCart: IOrder[] = [];
   public model: INumbersModel = {
@@ -70,11 +69,13 @@ export class PstnWizardCtrl implements ng.IComponentController {
   public prevStep: number = 1;
   public loggedInPartnerPortal: boolean = false;
   private did: DirectInwardDialing = new DirectInwardDialing();
-  private i387FeatureToggle: boolean;
+  private ftI387PrivateTrunking: boolean;
+  private ftLocation: boolean;
 
   /* @ngInject */
   constructor(private PstnModel: PstnModel,
-              private PstnServiceAddressService,
+              private PstnServiceAddressService,              //Site Based
+              private PstnAddressService: PstnAddressService, //Location Based
               private Notification: Notification,
               private $state: ng.ui.IStateService,
               private $window: ng.IWindowService,
@@ -86,7 +87,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
               private FeatureToggleService,
               ) {
     this.contact = this.PstnWizardService.getContact();
-    this.address = _.cloneDeep(PstnModel.getServiceAddress());
+    this.address = (new Address()).copy(PstnModel.getServiceAddress());
     this.countryCode = PstnModel.getCountryCode();
     this.isTrial = PstnModel.getIsTrial();
     this.showPortNumbers = !this.isTrial;
@@ -102,7 +103,10 @@ export class PstnWizardCtrl implements ng.IComponentController {
   public $onInit(): void {
     this.PstnWizardService.init().then(() => this.enableCarriers = true);
     this.FeatureToggleService.supports(this.FeatureToggleService.features.huronEnterprisePrivateTrunking).then((enabled) => {
-      this.i387FeatureToggle = enabled;
+      this.ftI387PrivateTrunking = enabled;
+    });
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484).then((enabled) => {
+      this.ftLocation = enabled;
     });
   }
 
@@ -179,7 +183,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
 
   public goToSwivelNumbers(): void {
     this.loggedInPartnerPortal = this.PstnWizardService.isPartnerPortal();
-    if (this.i387FeatureToggle) {
+    if (this.ftI387PrivateTrunking) {
       this.blockByopNumberAddForPartnerAdmin = this.PstnWizardService.blockByopNumberAddForPartnerAdmin();
       if (this.blockByopNumberAddForPartnerAdmin || this.PstnModel.isEsaSigned()) {
         this.step = 9;
@@ -204,20 +208,44 @@ export class PstnWizardCtrl implements ng.IComponentController {
     this.showButtons = true;
   }
 
+  //Method is called from the uc-pstn-providers component
   public onProviderReady(): void {
-    this.PstnWizardService.initSites().then(() => {
-      //If new PSTN setup show all the carriers even if there only one
-      if (this.PstnModel.isCarrierExists() && this.PstnModel.isCustomerExists()) {
-        // Only 1 carrier should exist for a customer
-        if (this.PstnModel.getCarriers().length === 1) {
-          this.PstnModel.setSingleCarrierReseller(true);
-          this.PstnModel.setProvider(this.PstnModel.getCarriers()[0]);
-          this.goToNumbers();
-          this.getCapabilities();
-        }
-      }
+    if (!this.PstnModel.isCustomerExists()) {
+      //no need to initialize anything else because the Terminus customer hasn't been created.
       this.showCarriers = true;
-    });
+      return;
+    }
+    if (this.ftLocation) {
+      this.PstnWizardService.initLocations()
+      .then(() => {
+        //If new PSTN setup show all the carriers even if there only one
+        if (this.PstnModel.isCarrierExists()) {
+          // Only 1 carrier should exist for a customer
+          if (this.PstnModel.getCarriers().length === 1) {
+            this.PstnModel.setSingleCarrierReseller(true);
+            this.PstnModel.setProvider(this.PstnModel.getCarriers()[0]);
+            this.goToNumbers();
+            this.getCapabilities();
+          }
+        }
+        this.showCarriers = true;
+      });
+    } else {
+      this.PstnWizardService.initSites()
+      .then(() => {
+        //If new PSTN setup show all the carriers even if there only one
+        if (this.PstnModel.isCarrierExists()) {
+          // Only 1 carrier should exist for a customer
+          if (this.PstnModel.getCarriers().length === 1) {
+            this.PstnModel.setSingleCarrierReseller(true);
+            this.PstnModel.setProvider(this.PstnModel.getCarriers()[0]);
+            this.goToNumbers();
+            this.getCapabilities();
+          }
+        }
+        this.showCarriers = true;
+      });
+    }
   }
 
   public onProviderChange(): void {
@@ -226,17 +254,17 @@ export class PstnWizardCtrl implements ng.IComponentController {
 
   public previousStep(): void {
     // pre check
-    if (!this.i387FeatureToggle && this.isSwivel() && this.step === 5) {
+    if (!this.ftI387PrivateTrunking && this.isSwivel() && this.step === 5) {
       this.step = 1;
-    } else if (this.i387FeatureToggle && this.isSwivel() && this.step === 8) {
+    } else if (this.ftI387PrivateTrunking && this.isSwivel() && this.step === 8) {
       this.step = 1;
       this.PstnModel.setEsaDisclaimerAgreed(false);
-    } else if (this.i387FeatureToggle && this.isSwivel() && this.step === 9) {
+    } else if (this.ftI387PrivateTrunking && this.isSwivel() && this.step === 9) {
       this.PstnModel.setEsaDisclaimerAgreed(false);
       if (this.blockByopNumberAddForPartnerAdmin) {
         this.step = 1;
       }
-    } else if (this.i387FeatureToggle && this.isSwivel() && this.step === 10) {
+    } else if (this.ftI387PrivateTrunking && this.isSwivel() && this.step === 10) {
       if (this.blockByopNumberAddForPartnerAdmin) {
         this.step = 9;
       } else {
@@ -332,7 +360,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
       case 2:
         return this[`wizardForm${this.step}`].$invalid;
       case 3:
-        return this.isValid === false;
+        return this.address.validated === false;
       case 5:
         return !this.emergencyAcknowledge;
       case 9:
@@ -362,24 +390,38 @@ export class PstnWizardCtrl implements ng.IComponentController {
 
   public validateAddress(): void {
     this.loading = true;
-    this.PstnServiceAddressService.lookupAddressV2(this.address, this.PstnModel.getProviderId())
+
+    if (this.ftLocation) {
+      this.PstnAddressService.lookup(this.PstnModel.getProviderId(), this.address)
+      .then((address: Address | null) => {
+        if (address) {
+          this.address = address;
+          this.PstnModel.setServiceAddress((new Address()).copy(address));
+        } else {
+          this.Notification.error('pstnSetup.serviceAddressNotFound');
+        }
+      })
+      .catch(error => this.Notification.errorResponse(error))
+      .finally(() => this.loading = false);
+    } else {
+      this.PstnServiceAddressService.lookupAddressV2(this.address, this.PstnModel.getProviderId())
       .then(address => {
         if (address) {
           this.address = address;
           this.PstnModel.setServiceAddress(address);
-          this.isValid = true;
+          this.address.validated = true;
         } else {
           this.Notification.error('pstnSetup.serviceAddressNotFound');
         }
       })
       .catch(response => this.Notification.errorResponse(response))
       .finally(() => this.loading = false);
+    }
   }
 
   public resetAddress(): void {
-    this.address = {};
+    this.address.reset();
     this.PstnModel.setServiceAddress(this.address);
-    this.isValid = false;
   }
 
   public launchCustomerPortal(): void {

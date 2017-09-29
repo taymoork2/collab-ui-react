@@ -23,10 +23,13 @@ describe('Component: directoryNumber', () => {
     this.injectDependencies(
       '$scope',
       '$timeout',
+      'FeatureToggleService',
+      '$q',
     );
     this.$scope.internalRefreshFn = jasmine.createSpy('internalRefreshFn');
     this.$scope.externalRefreshFn = jasmine.createSpy('externalRefreshFn');
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
   });
 
   function initComponent() {

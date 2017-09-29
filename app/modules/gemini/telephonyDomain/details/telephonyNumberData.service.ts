@@ -74,7 +74,7 @@ export class TelephonyNumberDataService {
     this.tollTypeOptions = [{ label: SELECT_TYPE, value: '' }, { label: CCA_TOLL, value: CCA_TOLL }, { label: CCA_TOLL_FREE, value: CCA_TOLL_FREE }];
     this.callTypeOptions = [{ label: SELECT_TYPE, value: '' }, { label: INTERNATIONAL, value: INTERNATIONAL }, { label: DOMESTIC, value: DOMESTIC }];
     this._countryOptions = [{ label: SELECT_COUNTRY, value: '' }];
-    this.isHiddenOptions = [{ label: DISPLAY, value: 'false' }, { label: HIDDEN, value: 'true' }];
+    this.isHiddenOptions = [{ label: DISPLAY, value: false }, { label: HIDDEN, value: true }];
     this.defaultNumberOptions = [{ label: '', value: '0' }];
     this.globalDisplayOptions = [{ label: DISPLAY, value: '1' }, { label: NO, value: '0' }];
 
@@ -249,7 +249,7 @@ export class TelephonyNumberDataService {
       data.country = this._countryOptions[0];
     }
 
-    data.isHidden = data.isHidden === 'false' ? this.isHiddenOptions[0] : this.isHiddenOptions[1];
+    data.isHidden = !data.isHidden ? this.isHiddenOptions[0] : this.isHiddenOptions[1];
   }
 
   public addNumber(data: any) {

@@ -610,15 +610,26 @@ describe('orgService', function () {
 
   describe('getInternallyManagedSubscriptions', function () {
     beforeEach(function () {
-      this.subscriptions = [{
-        licenses: [{
-          licenseId: 'dummyLicenses',
-        }],
-      }];
+      this.subscriptions = [
+        {
+          licenses: [],
+        },
+        {
+          licenses: [
+            { licenseId: 'fake-license-id-1' },
+          ],
+        },
+        {
+          licenses: [
+            { licenseId: 'fake-license-id-1' },
+            { licenseId: 'fake-license-id-2' },
+          ],
+        },
+      ];
       spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.subscriptions));
     });
 
-    it('should return subscriptions where Authinfo.isExternallyManagedLicense is false', function () {
+    it('should return all subscriptions where Authinfo.isExternallyManagedLicense is false', function () {
       spyOn(this.Authinfo, 'isExternallyManagedLicense').and.returnValue(false);
       this.Orgservice.getInternallyManagedSubscriptions().then(function (response) {
         expect(response).toEqual(this.subscriptions);
@@ -626,10 +637,15 @@ describe('orgService', function () {
       this.$scope.$apply();
     });
 
-    it('should not return subscriptions where Authinfo.isExternallyManagedLicense is true', function () {
+    it('should filter out subscriptions with 1 and only 1 license and where Authinfo.isExternallyManagedLicense is true', function () {
       spyOn(this.Authinfo, 'isExternallyManagedLicense').and.returnValue(true);
       this.Orgservice.getInternallyManagedSubscriptions().then(function (response) {
         expect(response).not.toEqual(this.subscriptions);
+
+        // subscriptions with 0 and 2+ licenses are retained
+        expect(response.length).toBe(2);
+        expect(response[0]).toEqual(this.subscriptions[0]);
+        expect(response[1]).toEqual(this.subscriptions[2]);
       });
       this.$scope.$apply();
     });

@@ -9,7 +9,7 @@
   function gemService($http, $translate, UrlConfig, Authinfo) {
     var URL = {
       spData: UrlConfig.getGeminiUrl() + 'servicepartner',
-      remedyTicket: UrlConfig.getGeminiUrl() + 'remedyTicket/customers/',
+      remedyTicket: UrlConfig.getGeminiUrl() + 'customers/',
       getCountries: UrlConfig.getGeminiUrl() + 'countries',
     };
     var data = {};
@@ -33,8 +33,8 @@
       return $http.get(URL.spData).then(extractData);
     }
 
-    function getRemedyTicket(customerId, type) {
-      var url = URL.remedyTicket + customerId + '/siteId/0/type/' + type;
+    function getRemedyTicket(customerId, entityId, type) {
+      var url = URL.remedyTicket + customerId + '/type/' + type + '/entities/' + entityId + '/remedy-ticket';
       return $http.get(url).then(extractData);
     }
 
@@ -98,11 +98,11 @@
           var countryId2NameMapping = {};
           var countryOptions = [];
 
-          _.forEach(_.get(res, 'data.content.data'), function (item) {
-            var nameKey = item.countryName.replace(/,/g, '#@#');
-            countryName2IdMapping[nameKey] = item.countryId;
-            countryId2NameMapping[item.countryId] = item.countryName;
-            countryOptions.push({ label: item.countryName, value: item.countryId });
+          _.forEach(_.get(res, 'data'), function (item) {
+            var nameKey = item.name.replace(/,/g, '#@#');
+            countryName2IdMapping[nameKey] = item.id;
+            countryId2NameMapping[item.id] = item.name;
+            countryOptions.push({ label: item.name, value: item.id });
           });
 
           gmCountry = { countryName2IdMapping: countryName2IdMapping, countryId2NameMapping: countryId2NameMapping, countryOptions: countryOptions };

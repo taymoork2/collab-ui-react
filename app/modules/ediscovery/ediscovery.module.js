@@ -32,7 +32,6 @@ var EdiscoverySearchResultAdvDirectiveFactory = require('./ediscovery-search-res
     .service('EdiscoveryMockData', require('./mock-data'))
     .controller('EdiscoverySearchController', require('./ediscovery-search.controller'))
     .controller('EdiscoveryReportsController', require('./ediscovery-reports.controller'))
-    .directive('reportSizeError', require('./search-results/report-size-error.directive'))
     .directive('searchResultsComplete', require('./search-results/search-results-complete.directive'))
     .directive('searchResultsGenerate', require('./search-results/search-results-generate.directive'))
     .directive('searchResultsReport', require('./search-results/search-results-report.directive'))

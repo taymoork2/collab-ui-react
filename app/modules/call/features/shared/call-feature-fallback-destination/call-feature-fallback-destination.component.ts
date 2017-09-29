@@ -73,7 +73,7 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
         this.featurePromise.then(supports => {
           if (supports) {
             this.NumberService.getUserNumber(fallbackDestinationChanges.currentValue.memberUuid, fallbackDestinationChanges.currentValue.numberUuid)
-              .then(dn => this.directoryNumber = dn);
+              .then(dn => this.directoryNumber = dn.numbers[0]);
           } else {
             this.CallFeatureFallbackDestinationService.getDirectoryNumber(fallbackDestinationChanges.currentValue.numberUuid).then( dn => this.directoryNumber = dn);
           }
@@ -122,17 +122,17 @@ class CallFeatureFallbackDestinationCtrl implements ng.IComponentController {
 
     //TODO: samwi - remove when hI1484 is GA
     this.featurePromise.then(supports => {
-      if (_.has(data, 'directoryNumber')) { // number
-        fallbackDestination = new FallbackDestination({
-          number: supports ? _.get<string | null>(data, 'siteToSite', null) : _.get<string | null>(data, 'number', null),
-          numberUuid: null,
-          sendToVoicemail: false,
-        });
-      } else { // member
+      if (_.has(data, 'numbers')) { // member
         fallbackDestination = new FallbackDestination({
           name: this.CallFeatureFallbackDestinationService.getDisplayName(<Member>data),
           numberUuid: _.get<string | null>(this.getPrimaryNumber(<Member>data), 'uuid', null),
           memberUuid: _.get(data, 'uuid', null),
+          sendToVoicemail: false,
+        });
+      } else { // number
+        fallbackDestination = new FallbackDestination({
+          number: supports ? _.get<string | null>(data, 'siteToSite', null) : _.get<string | null>(data, 'number', null),
+          numberUuid: null,
           sendToVoicemail: false,
         });
       }

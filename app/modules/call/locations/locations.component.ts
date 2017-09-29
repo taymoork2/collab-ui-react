@@ -1,5 +1,5 @@
 import { IToolkitModalService } from 'modules/core/modal';
-import { LocationsService, ILocationListItem } from 'modules/call/locations/shared';
+import { LocationsService, ILocationListItem } from './shared';
 import { CardUtils } from 'modules/core/cards';
 const STATE_LOADING: string = 'STATE_LOADING';
 const STATE_SHOW_LOCATIONS: string = 'STATE_SHOW_LOCATIONS';

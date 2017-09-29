@@ -3,7 +3,7 @@ import { HybridServicesI18NService } from 'modules/hercules/services/hybrid-serv
 import { Notification } from 'modules/core/notifications/notification.service';
 import { USSService, IUserStatusWithExtendedMessages } from 'modules/hercules/services/uss.service';
 
-class HybridImpUserSettingsComponentCtrl implements ng.IComponentController {
+class HybridMessagingUserSettingsComponentCtrl implements ng.IComponentController {
 
   public userId;
   public userEmailAddress;
@@ -113,9 +113,9 @@ class HybridImpUserSettingsComponentCtrl implements ng.IComponentController {
 
 }
 
-export class HybridImpUserSettingsComponent implements ng.IComponentOptions {
-  public controller = HybridImpUserSettingsComponentCtrl;
-  public template = require('modules/hercules/user-sidepanel/hybrid-imp-user-settings/hybrid-imp-user-settings.component.html');
+export class HybridMessagingUserSettingsComponent implements ng.IComponentOptions {
+  public controller = HybridMessagingUserSettingsComponentCtrl;
+  public template = require('modules/hercules/user-sidepanel/hybrid-messaging-user-settings/hybrid-messaging-user-settings.component.html');
   public bindings = {
     userId: '<',
     userEmailAddress: '<',
