@@ -1,0 +1,37 @@
+{
+  "webexLicencesPayload": {
+    "provisionOrder": true,
+    "sendCustomerEmail": false,
+    "serviceOrderUUID": "5063bb62-557a-4a1c-be1c-8277fc22a84e",
+    "webexProvisioningParams": {
+      "webexSiteDetailsList": [
+        {
+          "centerType": "EE",
+          "quantity": 1,
+          "siteUrl": "frankSinatraTest.dmz.webex.com"
+        },
+        {
+          "centerType": "EE",
+          "quantity": 10,
+          "siteUrl": "frankSinatraTestWX.dmz.webex.com",
+          "setupType": "LEGACY"
+        },
+        {
+          "centerType": "EE",
+          "quantity": 40,
+          "siteUrl": "yb09261550leg.dmz.webex.com",
+          "setupType": "LEGACY"
+        },
+        {
+          "centerType": "EE",
+          "quantity": 49,
+          "siteUrl": "anotherNewSite.webex.com",
+          "timezone": "0",
+          "setupType": "LEGACY"
+        }
+      ],
+      "audioPartnerName": null
+    }
+  },
+  "subscriptionId": "dcb5ed2c-62c0-452c-bc94-5b6c2ff39723"
+}

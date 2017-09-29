@@ -1,4 +1,4 @@
-import { IWebExSite } from './meeting-settings.interface';
+import { IWebExSite, IExistingWebExTrialSite } from './meeting-settings.interface';
 
 export class WebExSite {
   public centerType: string;
@@ -23,6 +23,31 @@ export class WebExSite {
 
     if (!setupType) {
       delete this.setupType;
+    }
+  }
+}
+
+export class ExistingWebExSite extends WebExSite {
+  public keepExistingSite: boolean;
+  constructor({
+    centerType,
+    quantity,
+    siteUrl,
+    timezone,
+    setupType,
+    keepExistingSite,
+  }: IExistingWebExTrialSite) {
+    super({
+      centerType,
+      quantity,
+      siteUrl,
+      timezone,
+      setupType,
+    });
+    if (keepExistingSite) {
+      this.keepExistingSite = true;
+    } else {
+      delete this.keepExistingSite;
     }
   }
 }

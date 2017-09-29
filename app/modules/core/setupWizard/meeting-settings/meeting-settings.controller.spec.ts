@@ -1,9 +1,11 @@
+import { IWebExSite } from './meeting-settings.interface';
+
 describe('Controller: MeetingSettingsCtrl', () => {
   const transferCodeResponse = getJSONFixture('core/json/orders/transferCodeResponse.json');
   const actingSubscriptions = _.clone(getJSONFixture('core/json/customerSubscriptions/getSubscriptionsData.json'));
   const conferenceServices = _.clone(getJSONFixture('core/json/authInfo/confServices.json'));
   const actingSubscription = _.find(actingSubscriptions, { subscriptionId : '235235-2352532-42352311d-87235221-d05b7c3523596f577' });
-
+  const savedDataFromMeetingSetup = _.clone(getJSONFixture('core/json/setupWizard/meeting-settings/savedSitesData.json'));
 
   beforeEach(function () {
     this.initModules('Core');
@@ -31,9 +33,13 @@ describe('Controller: MeetingSettingsCtrl', () => {
     spyOn(this.SetupWizardService, 'getActiveCCASPPackage').and.returnValue(undefined);
     spyOn(this.SetupWizardService, 'getCCASPPartners').and.returnValue(this.$q.resolve(['partner1', 'partner2']));
     spyOn(this.SetupWizardService, 'validateTransferCode').and.returnValue(this.$q.resolve(transferCodeResponse));
+    spyOn(this.TrialWebexService, 'getProvisioningWebexSitesData').and.returnValue({});
     spyOn(this.Authinfo, 'getUserName').and.returnValue('ordersimp-somedude@mailinator.com');
     spyOn(this.Authinfo, 'getCustomerAdminEmail').and.returnValue('ordersimp-somedude2@mailinator.com');
     spyOn(this.FeatureToggleService, 'atlasSetupSiteUserManagementGetStatus').and.returnValue(this.$q.resolve(false));
+
+    this.savedDataFromMeetingSetup = savedDataFromMeetingSetup;
+    this.actingSubscription = actingSubscription;
   });
 
   function initController(): void {
@@ -45,22 +51,21 @@ describe('Controller: MeetingSettingsCtrl', () => {
       initController.apply(this);
     });
 
-    xit('should find existing WebEx licenses on acting subscription and push them to sitesArray', function () {
+    it('should find existing WebEx licenses on acting subscription and push them to sitesArray', function () {
       expect(this.SetupWizardService.getActingSubscriptionLicenses).toHaveBeenCalled();
-      expect(this.controller.sitesArray.length).toBe(1);
+      expect(this.controller.sitesArray.length).toBe(2);
       const hasSiteUrlFromActiveLicense = _.some(this.controller.sitesArray, { siteUrl: 'frankSinatraTest.dmz' });
+      expect(this.controller.sitesArray[0]['keepExistingSite']).toBeTruthy();
       expect(hasSiteUrlFromActiveLicense).toBe(true);
     });
 
     it('should find existing trial WebEx licenses on acting subscription and push them to sitesArray', function () {
       expect(this.Authinfo.getConferenceServices).toHaveBeenCalled();
-      const hasSiteUrlFromTrialLicense = _.some(this.controller.existingSites, { siteUrl: 'sqcie2e30.dmz' });
+      const hasSiteUrlFromTrialLicense = _.some(this.controller.existingTrialSites, { siteUrl: 'sqcie2e30.dmz' });
       expect(hasSiteUrlFromTrialLicense).toBe(true);
     });
 
     it('should set the user management setup type correctly', function () {
-      this.controller.sitesArray = [];
-      this.controller.findExistingWebexSites();
       const sparkSetupSite = _.find(this.controller.sitesArray, { siteUrl: 'frankSinatraTest.dmz' });
       const legacySetupSite = _.find(this.controller.sitesArray, { siteUrl: 'frankSinatraTestWX.dmz' });
       expect(this.controller.sitesArray.length).toEqual(2);
@@ -68,6 +73,40 @@ describe('Controller: MeetingSettingsCtrl', () => {
       expect(legacySetupSite.hasOwnProperty('setupType')).toBeTruthy();
       expect(legacySetupSite['setupType']).toEqual(this.Config.setupTypes.legacy);
     });
+
+  });
+
+  describe('when returning back to meeting setup', function () {
+    it('should set \'keep existing site\' correctly', function () {
+      // existing subscription services
+      const actingSubscriptionData = this.actingSubscription;
+      const uniqPreExistingSavedSites = _.chain(actingSubscriptionData.licenses).map('siteUrl').uniq().value();
+      // unique sites associated with licenses from existing subscription services
+      _.remove(uniqPreExistingSavedSites, _.isUndefined);
+      // data we have stashed while going through meeting setup
+      const returnedFromGetProvisioningWebexSitesData = _.get(this, 'savedDataFromMeetingSetup');
+      // sites info from this data
+      const savedSites = _.get(returnedFromGetProvisioningWebexSitesData, 'webexLicencesPayload.webexProvisioningParams.webexSiteDetailsList') as any[];
+      this.TrialWebexService.getProvisioningWebexSitesData.and.returnValue(returnedFromGetProvisioningWebexSitesData);
+
+      initController.apply(this);
+
+      //saved sites from eixsting subscriptions . They should have keepExistingSite set to true.
+      const preExistingRetrievedSites = _.filter(this.controller.sitesArray, (site: IWebExSite) => {
+        return _.includes(uniqPreExistingSavedSites, site.siteUrl + this.Config.siteDomainUrl.webexUrl);
+      });
+      // new saved sites
+      const newRetrievedites = _.reject(this.controller.sitesArray, (site: IWebExSite) => {
+        return _.includes(uniqPreExistingSavedSites, site.siteUrl + this.Config.siteDomainUrl.webexUrl);
+      });
+      // all sites should be carries over
+      expect(this.controller.sitesArray.length).toEqual(savedSites.length);
+      // all sites carried over from existing subscriptions have to have 'keepExisting' flag be true
+      expect(_.every(preExistingRetrievedSites, { keepExistingSite: true })).toBeTruthy();
+      // all new sites that wwere save should have 'keepExisting' flag be false
+      expect(_.every(newRetrievedites, { keepExistingSite: true })).toBeFalsy();
+    });
+
   });
 
   describe('user management in meeting site setup', function () {
