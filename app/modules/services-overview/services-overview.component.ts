@@ -216,6 +216,17 @@ export class ServicesOverviewController implements ng.IComponentController {
     return _.includes(this._servicesToDisplay, serviceId) && _.includes(this._servicesInactive, serviceId);
   }
 
+  public isAnyHybridServiceActive(): boolean {
+    return this._servicesActive.length > 0;
+  }
+
+  public showOnPremisesCard(): boolean {
+    // If one of the active services is a service containing "resources"
+    return _.some(this._servicesActive, (service) => {
+      return _.includes<HybridServiceId>(['squared-fusion-cal', 'squared-fusion-uc', 'spark-hybrid-impinterop', 'squared-fusion-media', 'spark-hybrid-datasecurity', 'contact-center-context', 'ept'], service);
+    });
+  }
+
   public getServiceStatus(serviceId: HybridServiceId): any {
     return _.find(this.servicesStatuses, { serviceId: serviceId });
   }
