@@ -890,7 +890,7 @@ describe('OnboardCtrl: Ctrl', function () {
         _.assign(this.$scope.usrlist[0], {
           assignedDn: {
             uuid: '111',
-            pattern: '123',
+            number: '123',
           },
           externalNumber: {
             uuid: '444',
@@ -908,7 +908,7 @@ describe('OnboardCtrl: Ctrl', function () {
         _.assign(this.$scope.usrlist[0], {
           assignedDn: {
             uuid: '111',
-            pattern: '123',
+            number: '123',
           },
           externalNumber: {
             uuid: 'none',
