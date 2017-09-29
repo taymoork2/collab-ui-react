@@ -71,7 +71,6 @@ require('./_wizard.scss');
     vm.getSubTabController = getSubTabController;
     vm.getSubTabTitle = getSubTabTitle;
     vm.getTitleKey = getTitleKey;
-    vm.getSubtitleKey = getSubtitleKey;
 
     vm.setSubTab = setSubTab;
     vm.resetSubTab = resetSubTab;
@@ -463,10 +462,6 @@ require('./_wizard.scss');
 
     function getTitleKey() {
       return _.get(vm.current.step, 'title') || _.get(vm.current.tab, 'title');
-    }
-
-    function getSubtitleKey() {
-      return _.get(vm.current.step, 'subtitle') || _.get(vm.current.tab, 'subtitle');
     }
 
     $scope.$on('wizardNextText', function (event, action) {
