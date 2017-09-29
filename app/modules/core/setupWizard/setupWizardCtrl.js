@@ -36,6 +36,7 @@ require('./_setup-wizard.scss');
 
   function SetupWizardCtrl($q, $scope, $state, $stateParams, $timeout, Authinfo, Config, FeatureToggleService, Orgservice, SessionStorage, SetupWizardService, StorageKeys, Notification) {
     var isFirstTimeSetup = _.get($state, 'current.data.firstTimeSetup', false);
+    var isITDecouplingFlow = false;
     var shouldRemoveSSOSteps = false;
     var isSharedDevicesOnlyLicense = false;
     var shouldShowMeetingsTab = false;
@@ -95,6 +96,7 @@ require('./_setup-wizard.scss');
     }
 
     function init() {
+      isITDecouplingFlow = SetupWizardService.hasPendingServiceOrder() || SetupWizardService.hasPendingSubscriptionOptions();
       getPendingSubscriptionFlags();
       var tabs = getInitTabs();
 
@@ -319,7 +321,9 @@ require('./_setup-wizard.scss');
     }
 
     function initCareTab(tabs) {
-      if (Authinfo.isCare()) {
+      /* If in future, Care settings becomes part of the new orders flow (IT Decoupling) 
+      the case where hasPendingCareLicenses && isITDecouplingFlow */
+      if (Authinfo.isCare() && !isITDecouplingFlow) {
         var careTab = {
           name: 'careSettings',
           label: 'firstTimeWizard.careSettings',

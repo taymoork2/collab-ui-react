@@ -32,6 +32,7 @@ describe('SetupWizardCtrl', function () {
     spyOn(this.SetupWizardService, 'hasPendingWebExMeetingLicenses').and.returnValue(false);
     spyOn(this.SetupWizardService, 'hasPendingCallLicenses').and.returnValue(false);
     spyOn(this.SetupWizardService, 'hasPendingServiceOrder').and.returnValue(false);
+    spyOn(this.SetupWizardService, 'hasPendingSubscriptionOptions').and.returnValue(false);
     spyOn(this.SetupWizardService, 'isCustomerPresent').and.returnValue(this.$q.resolve(true));
     spyOn(this.SetupWizardService, 'isProvisionedSubscription').and.returnValue(false);
     spyOn(this.SetupWizardService, 'hasPendingCCASPPackage').and.returnValue(false);
@@ -303,7 +304,7 @@ describe('SetupWizardCtrl', function () {
     });
   });
 
-  describe('When Authinfo.isCare is enabled and addUsers too', function () {
+  describe('When Authinfo.isCare, addUsers enabled and old order flow ', function () {
     beforeEach(function () {
       this.Authinfo.isCare.and.returnValue(true);
       this.Authinfo.isCSB.and.returnValue(false);
@@ -316,6 +317,19 @@ describe('SetupWizardCtrl', function () {
 
     it('careSettings should have a single substep', function () {
       this.expectSubStepOrder('careSettings', ['csonboard']);
+    });
+  });
+
+  describe('When pending Care license, and new orders flow ', function () {
+    beforeEach(function () {
+      this.SetupWizardService.hasPendingServiceOrder.and.returnValue(true);
+      this.SetupWizardService.hasPendingSubscriptionOptions.and.returnValue(true);
+      this.SetupWizardService.hasPendingLicenses.and.returnValue(true);
+      this.initController();
+    });
+
+    it('the wizard should have the 4 steps', function () {
+      this.expectStepOrder(['planReview', 'serviceSetup', 'enterpriseSettings', 'finish']);
     });
   });
 
@@ -380,12 +394,11 @@ describe('SetupWizardCtrl', function () {
     });
 
     it('the wizard should have a lot of settings', function () {
-      this.expectStepOrder(['planReview', 'serviceSetup', 'meetingSettings', 'enterpriseSettings', 'careSettings']);
+      this.expectStepOrder(['planReview', 'serviceSetup', 'meetingSettings', 'enterpriseSettings']);
       this.expectSubStepOrder('planReview', ['init']);
       this.expectSubStepOrder('serviceSetup', ['pickCallLocationType', 'setupCallLocation']);
       this.expectSubStepOrder('meetingSettings', ['migrateTrial', 'siteSetup', 'licenseDistribution', 'summary']);
       this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'enterprisePmrSetup', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
-      this.expectSubStepOrder('careSettings', ['csonboard']);
     });
   });
 
