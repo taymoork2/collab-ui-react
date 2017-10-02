@@ -1825,7 +1825,7 @@ collab-ui-ng@~7.2.0:
     masonry-layout "^4.1.1"
     moment "^2.10.6"
 
-collab-ui-stickyfill@^1.1.5, collab-ui-stickyfill@~1.1.5:
+collab-ui-stickyfill@^1.1.5:
   version "1.1.5"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/collab-ui-stickyfill/-/collab-ui-stickyfill-1.1.5.tgz#9d8ebe06363a3745e1e5461946ee7af6eff31457"
 
