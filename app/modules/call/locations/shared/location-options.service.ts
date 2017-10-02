@@ -102,8 +102,8 @@ export class LocationSettingsOptionsService {
       .then(externalNumbers => {
         return _.map(externalNumbers, externalNumber => {
           return <IOption> {
-            value: externalNumber.number,
-            label: this.PhoneNumberService.getNationalFormat(externalNumber.number),
+            value: _.get(externalNumber, 'external'),
+            label: this.PhoneNumberService.getNationalFormat(_.get(externalNumber, 'external')),
           };
         });
       });
@@ -114,8 +114,8 @@ export class LocationSettingsOptionsService {
       .then(externalNumbers => {
         return _.map(externalNumbers, externalNumber => {
           return <IOption> {
-            value: externalNumber.number,
-            label: this.PhoneNumberService.getNationalFormat(externalNumber.number),
+            value: _.get(externalNumber, 'external'),
+            label: this.PhoneNumberService.getNationalFormat(_.get(externalNumber, 'external')),
           };
         });
       });
