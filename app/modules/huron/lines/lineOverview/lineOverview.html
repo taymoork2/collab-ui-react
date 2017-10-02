@@ -54,7 +54,9 @@
         caller-id-selected="$ctrl.lineOverviewData.callerId.externalCallerIdType"
         direct-line="$ctrl.lineOverviewData.line.external"
         on-change-fn="$ctrl.setCallerId(callerIdSelected, customCallerIdName, customCallerIdNumber, companyNumber);"
-        company-numbers="$ctrl.lineOverviewData.companyNumbers">
+        company-numbers="$ctrl.lineOverviewData.companyNumbers"
+        owner-id="$ctrl.ownerId"
+        owner-type="$ctrl.ownerType">
       </uc-caller-id>
       <uc-auto-answer
         auto-answer="$ctrl.lineOverviewData.autoAnswer"

@@ -14,6 +14,8 @@ interface ILocationDetailResource extends ng.resource.IResourceClass<ng.resource
 
 interface IUserLocationDetailResource extends ng.resource.IResourceClass<ng.resource.IResource<IRLocation>> {}
 
+interface IPlaceLocationDetailResource extends ng.resource.IResourceClass<ng.resource.IResource<IRLocation>> {}
+
 interface IUserMoveLocationResource extends ng.resource.IResourceClass<ng.resource.IResource<IRLocation>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
 }
@@ -26,6 +28,7 @@ interface IREmergencyNumberResource extends ng.resource.IResourceClass<ng.resour
 export class LocationsService {
   private locationListResource: ILocationResource;
   private userLocationDetailResource: IUserLocationDetailResource;
+  private placeLocationDetailResource: IPlaceLocationDetailResource;
   private userMoveLocationResource: IUserMoveLocationResource;
   private locationDetailResource: ILocationDetailResource;
   private defaultLocation: LocationListItem | undefined = undefined;
@@ -60,6 +63,7 @@ export class LocationsService {
         update: updateAction,
       });
     this.userLocationDetailResource = <IUserLocationDetailResource>this.$resource(`${this.HuronConfig.getCmiV2Url()}/customers/:customerId/users/:userId`, {}, {});
+    this.placeLocationDetailResource = <IPlaceLocationDetailResource>this.$resource(`${this.HuronConfig.getCmiV2Url()}/customers/:customerId/places/:placeId`, {}, {});
     this.locationDetailResource = <ILocationDetailResource>this.$resource(`${this.HuronConfig.getCmiV2Url()}/customers/:customerId/locations/:locationId`, {},
       {
         update: updateAction,
@@ -109,6 +113,24 @@ export class LocationsService {
       userId,
     }).$promise
     .then(response => _.get<Location>(response, 'location'));
+  }
+
+  public getPlaceLocation(placeId: string): ng.IPromise<Location> {
+    return this.placeLocationDetailResource.get({
+      customerId: this.Authinfo.getOrgId(),
+      placeId,
+    }).$promise
+    .then(response => _.get<Location>(response, 'location'));
+  }
+
+  public getUserOrPlaceLocation(userOrPlaceUuid, userOrPlaceType): ng.IPromise<any> {
+    if (userOrPlaceType === 'user') {
+      return this.getUserLocation(userOrPlaceUuid);
+    } else if (userOrPlaceType === 'place') {
+      return this.getPlaceLocation(userOrPlaceUuid);
+    } else {
+      return this.$q.reject();
+    }
   }
 
   public searchLocations(searchTerm): ng.IPromise<LocationListItem[]> {

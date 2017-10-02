@@ -1,5 +1,6 @@
 import { IOption } from './../dialing/dialing.service';
 import { CallDestinationTranslateService, ICallDestinationTranslate } from 'modules/call/shared/call-destination-translate';
+import { LocationsService } from 'modules/call/locations/shared';
 
 const callerIdInputs = ['external'];
 
@@ -15,6 +16,7 @@ class CallerId implements ng.IComponentController {
   private customOption: CallerIdOption;
   private directLineOption: CallerIdOption;
   private blockOption: CallerIdOption;
+  private locationOption: CallerIdOption;
   private inputTranslations: ICallDestinationTranslate;
   private companyIdPattern: string;
   private companyNumberPattern: string;
@@ -23,6 +25,10 @@ class CallerId implements ng.IComponentController {
   private callerIdInputs: string[];
   public errorMessage: { pattern: string };
   public validator: { pattern: Function };
+  public locationPromise: ng.IPromise<any>;
+  public ownerId: string;
+  public ownerType: string;
+  public locationCallerIdUuid: string;
 
   private static readonly BLOCK_CALLERID_TYPE = {
     name: 'Blocked Outbound Caller ID',
@@ -44,13 +50,21 @@ class CallerId implements ng.IComponentController {
     name: 'Custom',
     key: 'EXT_CALLER_ID_CUSTOM',
   };
+  private static readonly LOCATION_TYPE = {
+    name: '',
+    key: 'EXT_CALLER_ID_LOCATION_NUMBER',
+  };
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
     private CallDestinationTranslateService: CallDestinationTranslateService,
+    private FeatureToggleService,
+    private LocationsService: LocationsService,
   ) {
+    this.locationPromise = this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484);
     this.initCallerId();
     this.inputTranslations = this.CallDestinationTranslateService.getCallDestinationTranslate();
+    CallerId.LOCATION_TYPE.name = this.$translate.instant('callerIdPanel.locationCallerId');
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }) {
@@ -96,9 +110,24 @@ class CallerId implements ng.IComponentController {
       callerIdSelected: this.callerIdSelected,
       customCallerIdName: this.customCallerIdName,
       customCallerIdNumber: this.customCallerIdNumber,
-      companyNumber: this.callerIdSelected ? this.callerIdSelected.label === CallerId.COMPANY_NUMBER_TYPE.name ? this.companyNumberPattern :
-        this.callerIdSelected.label === CallerId.COMPANY_CALLERID_TYPE.name ? this.companyIdPattern : null : null,
+      companyNumber: this.getCompanyNumber(),
     });
+  }
+
+  public getCompanyNumber() {
+    if (this.callerIdSelected) {
+      if (this.callerIdSelected.label === CallerId.COMPANY_NUMBER_TYPE.name) {
+        return this.companyNumberPattern;
+      } else if (this.callerIdSelected.label === CallerId.COMPANY_CALLERID_TYPE.name) {
+        return this.companyIdPattern;
+      } else if (this.callerIdSelected.label === CallerId.LOCATION_TYPE.name) {
+        return this.locationCallerIdUuid;
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
   }
 
   public showCustom(): boolean {
@@ -122,6 +151,27 @@ class CallerId implements ng.IComponentController {
     // Block Caller ID
     this.blockOption = new CallerIdOption(CallerId.BLOCK_CALLERID_TYPE.name, new CallerIdConfig('', this.$translate.instant('callerIdPanel.blockedCallerIdDescription'), '', CallerId.BLOCK_CALLERID_TYPE.key));
     this.options.push(this.blockOption);
+    // Location Caller ID
+    this.locationPromise.then(supports => {
+      if (supports) {
+        this.LocationsService.getUserOrPlaceLocation(this.ownerId, this.ownerType)
+          .then(userLocation => {
+            if (userLocation.uuid) {
+              return this.LocationsService.getLocation(userLocation.uuid);
+            } else {
+              return undefined;
+            }
+          })
+          .then(location => {
+            if (_.get(location, 'callerId')) {
+              this.locationCallerIdUuid = _.get(location, 'callerId.uuid');
+              this.locationOption = new CallerIdOption(CallerId.LOCATION_TYPE.name, new CallerIdConfig('', this.$translate.instant('callerIdPanel.locationCallerIdDescription'), `${_.get(location, 'callerId.name')} - ${_.get(location, 'callerId.number')}`, CallerId.LOCATION_TYPE.key));
+              this.options.push(this.locationOption);
+            }
+          });
+      }
+    });
+
     this.callerIdInputs = callerIdInputs;
     this.validator = {
       pattern: this.invalidCharactersValidation,
@@ -210,6 +260,9 @@ class CallerId implements ng.IComponentController {
       case CallerId.CUSTOM_COMPANY_TYPE.key:
         selected = this.customOption;
         break;
+      case CallerId.LOCATION_TYPE.key:
+        selected = this.locationOption;
+        break;
       case CallerId.BLOCK_CALLERID_TYPE.key:
       default:
         selected = this.blockOption;
@@ -269,5 +322,7 @@ export class CallerIdComponent implements ng.IComponentOptions {
     directLine: '<',
     companyNumbers: '<',
     onChangeFn: '&',
+    ownerId: '<',
+    ownerType: '<',
   };
 }

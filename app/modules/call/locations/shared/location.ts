@@ -118,6 +118,7 @@ export class Location implements ILocation {
     this.callerId = _.isNull(location.callerId) ? location.callerId : new LocationCallerId({
       name: _.get(location.callerId, 'name'),
       number: _.get(location.callerId, 'number'),
+      uuid: _.get(location.callerId, 'uuid'),
     });
   }
 }
@@ -159,20 +160,23 @@ export class RegionCodeDialing implements IRegionCodeDialing {
 }
 
 export interface ILocationCallerId {
-  name: string | null;
-  number: string | null;
+  name: string;
+  number: string;
+  uuid?: string;
 }
 
 export class LocationCallerId implements ILocationCallerId {
-  public name: string | null;
-  public number: string | null;
+  public name: string;
+  public number: string;
+  public uuid?: string;
 
   constructor(locationCallerId: ILocationCallerId = {
-    name: null,
-    number: null,
+    name: '',
+    number: '',
   }) {
     this.name = locationCallerId.name;
     this.number = locationCallerId.number;
+    this.uuid = locationCallerId.uuid;
   }
 }
 

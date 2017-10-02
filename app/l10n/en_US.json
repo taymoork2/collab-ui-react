@@ -4608,6 +4608,8 @@
     "directLine": "Direct Line",
     "blockedCallerId": "Blocked Outbound Caller ID",
     "blockedCallerIdDescription": "Caller will not see any caller ID or number",
+    "locationCallerId": "Location Caller ID",
+    "locationCallerIdDescription": "Caller will see Location ID or number",
     "companyCallerId": "Company Caller ID",
     "companyNumberLoadError": "Company numbers failed to load.",
     "customCallerId": "Custom",
