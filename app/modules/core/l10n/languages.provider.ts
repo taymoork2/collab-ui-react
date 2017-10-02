@@ -1,7 +1,13 @@
 import 'l10n/en_US.json';
 import { languageConfigs } from './languages';
 
-const languages = _.map(languageConfigs, languageConfig => ({
+interface ILanguage {
+  browserCodes: string[];
+  label: string;
+  value: string;
+}
+
+const languages: ILanguage[] = _.map(languageConfigs, languageConfig => ({
   browserCodes: languageConfig.browserCodes,
   label: languageConfig.label,
   value: languageConfig.value,
@@ -28,20 +34,18 @@ export class LanguagesProvider implements ng.IServiceProvider {
       this.getBrowserLanguage(),
       DEFAULT_LANGUAGE,
     ]);
+    let foundLanguage: ILanguage | undefined;
 
-    const preferredLanguage = _.reduce<string, string | undefined>(browserLanguages, (foundLanguage, browserLanguage) => {
-      if (foundLanguage) {
-        return foundLanguage;
-      }
+    _.find(browserLanguages, browserLanguage => {
+      foundLanguage = _.find(languages, language => _.some(language.browserCodes, browserCode => _.startsWith(browserCode, browserLanguage)));
+      return !!foundLanguage;
+    });
 
-      const findLanguage = _.find(languages, language => _.some(language.browserCodes, browserCode => _.startsWith(browserCode, browserLanguage)));
-
-      if (findLanguage) {
-        return findLanguage.value;
-      }
-    }, '');
-
-    return preferredLanguage || DEFAULT_LANGUAGE;
+    if (foundLanguage) {
+      return foundLanguage.value;
+    } else {
+      return DEFAULT_LANGUAGE;
+    }
   }
 
   private getBrowserLanguage() {
@@ -52,21 +56,21 @@ export class LanguagesProvider implements ng.IServiceProvider {
       'systemLanguage',
       'userLanguage',
     ];
+    let navigatorPropertyValue: string | string[] | undefined;
     const navigator = this.$windowProvider.$get().navigator;
-    const navigatorLanguage = _.reduce<string, string | string[] | undefined>(navigatorProperties, (foundLanguage, navigatorProperty) => {
-      if (foundLanguage) {
-        return foundLanguage;
-      }
 
-      const navigatorPropertyValue = _.get<string | string[] | undefined>(navigator, navigatorProperty);
-      if (_.isArray(navigatorPropertyValue)) {
-        return _.map(navigatorPropertyValue, language => this.formatLanguage(language));
-      } else if (_.isString(navigatorPropertyValue)) {
-        return this.formatLanguage(navigatorPropertyValue);
-      }
-    }, '');
+    _.find(navigatorProperties, navigatorProperty => {
+      navigatorPropertyValue = _.get(navigator, navigatorProperty);
+      return !!navigatorPropertyValue;
+    });
 
-    return navigatorLanguage || DEFAULT_LANGUAGE;
+    if (_.isArray(navigatorPropertyValue)) {
+      return _.map(navigatorPropertyValue, language => this.formatLanguage(language));
+    } else if (_.isString(navigatorPropertyValue)) {
+      return this.formatLanguage(navigatorPropertyValue);
+    } else {
+      return DEFAULT_LANGUAGE;
+    }
   }
 
   private formatLanguage(language: string) {
