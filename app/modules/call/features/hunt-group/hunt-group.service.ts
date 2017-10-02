@@ -255,9 +255,10 @@ export class HuntGroupService {
             type: number.type ? number.type : number.siteToSite ? NUMBER_FORMAT_ENTERPRISE_LINE : NUMBER_FORMAT_DIRECT_LINE,
           };
         } else {
+
           return {
             number: number.number,
-            type: number.type === NumberType.INTERNAL ? NUMBER_FORMAT_EXTENSION : NUMBER_FORMAT_DIRECT_LINE,
+            type: number.type === NumberType.INTERNAL || number.type === NUMBER_FORMAT_EXTENSION ? NUMBER_FORMAT_EXTENSION : NUMBER_FORMAT_DIRECT_LINE,
           };
         }
       }),
