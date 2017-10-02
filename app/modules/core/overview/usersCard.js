@@ -155,7 +155,7 @@
           // notes:
           // - simply calling '$state.go(...)' inside of the callback does not seem to produce correct behavior
           // - workaround for now is to delay the subsequent call till the next tick
-          // TODO: track down why the above is necessary --^
+          // TODO: reverify after angular-ui-router upgrade
           $state.go('users.list').then(function () {
             $timeout(function () {
               $state.go('users.manage.picker');
@@ -169,6 +169,17 @@
               $state.go('users.manage.org');
             });
           });
+        };
+
+        card.getAutoAssignLicensesStatusCssClass = function () {
+          var cssClassNames = {
+            ACTIVATED: 'success',
+            DEACTIVATED: 'warning',
+          };
+          if (_.isNil(card.autoAssignLicensesStatus)) {
+            return 'disabled';
+          }
+          return cssClassNames[card.autoAssignLicensesStatus];
         };
 
         function initFeatureToggles() {

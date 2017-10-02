@@ -6,17 +6,13 @@
 // - delete this file (obviated by 'manageusers-auto-assign-licenses_spec.js')
 'use strict';
 
-var featureToggle = require('../utils/featureToggle.utils');
-
 describe('Manage Users - Auto-Assign Licenses', function () {
   it('should login as a customer full admin', function () {
     login.login('ft--atlas-f3745-auto-assign-licenses', '#/overview');
   });
 
   it('should have an entry "Auto-Assign Licenses" for the "Licenses" card', function () {
-    if (featureToggle.features.atlasF3745AutoAssignLicenses) {
-      utils.expectIsDisplayed(overviewPage.cards.licenses.headerText);
-      utils.expectIsDisplayed(overviewPage.cards.licenses.autoAssignLicensesText);
-    }
+    utils.expectIsDisplayed(overviewPage.cards.licenses.headerText);
+    utils.expectIsDisplayed(overviewPage.cards.licenses.autoAssignLicensesText);
   });
 });
