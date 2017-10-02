@@ -68,7 +68,7 @@ var Navigation = function () {
   this.userInfoDropDownMenu = element(by.css('.user-info .dropdown-menu.visible'));
   this.launchPartnerButton = element(by.css('#launch-partner-btn a'));
 
-  this.partnerSupportUrl = 'https://help.webex.com/community/cisco-cloud-collab-mgmt-partners';
+  this.partnerSupportUrl = 'https://collaborationhelp.cisco.com';
 
   this.clickDevelopmentTab = function () {
     utils.click(this.developmentTab);
@@ -326,7 +326,7 @@ var Navigation = function () {
 
       browser.wait(function () {
         return browser.getCurrentUrl().then(function (currentUrl) {
-          return currentUrl === navigation.partnerSupportUrl;
+          return currentUrl.includes(navigation.partnerSupportUrl);
         });
       });
 

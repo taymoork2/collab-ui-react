@@ -204,7 +204,7 @@ describe('Controller: SipDomainSettingController', function () {
   });
 
   describe('FeatureToggleService returns true', function () {
-    const helpUrl: string = 'https://help.webex.com/docs/DOC-7763';
+    const helpUrl: string = 'https://collaborationhelp.cisco.com/article/en-us/DOC-7763';
     const blank: string = '_blank';
     const subdomainUnavailable: string = 'subdomainUnavailable';
     const invalidSubdomain: string = 'invalidSubdomain';

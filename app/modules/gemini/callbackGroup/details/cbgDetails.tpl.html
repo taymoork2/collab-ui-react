@@ -14,22 +14,22 @@
       <div class="header-info" id="customer-info">
         <div class="header-info-wrap">
           <div class="header-title">
-            <span>{{$ctrl.model.groupName ? $ctrl.model.groupName : $ctrl.model.customerName}}</span>
+            <span title="{{$ctrl.model.groupName ? $ctrl.model.groupName : $ctrl.model.customerName}}">{{$ctrl.model.groupName ? $ctrl.model.groupName : $ctrl.model.customerName}}</span>
             <a ng-if="$ctrl.model.isEdit" ui-sref="gemCbgDetails.editCountry({obj: {info: $ctrl.model, customerId: $ctrl.customerId}})"><i class="edit-button icon icon-edit"></i></a>
           </div>
         </div>
       </div>
     </cs-sp-header>
 
-    <cs-alert-banner ng-if="$ctrl.isShowCancelSubmission" type="warning">{{::'gemini.cbgs.submissionMsg' | translate}} <a ng-click="$ctrl.onCancelSubmission()">{{::'gemini.cbgs.cancelSubmissionLink' | translate}}</a></cs-alert-banner>
+    <cs-alert-banner ng-if="$ctrl.isShowCancelSubmission && !$ctrl.btnCancelSubmissionLoading" type="warning">{{::'gemini.cbgs.submissionMsg' | translate}} <a ng-click="$ctrl.onCancelSubmission()" translate="gemini.cbgs.cancelSubmissionLink"></a></cs-alert-banner>
     <cs-alert-banner ng-if="$ctrl.isShowReject" type="danger">{{::'gemini.cbgs.rejectSubmissionMsg' | translate}}</cs-alert-banner>
 
-    <div ui-view="side-panel-container">
+    <div class="side-panel-container-view" ui-view="side-panel-container">
       <cs-sp-container class="gemini-side-panel">
         <cs-sp-section>
           <div class="row">
             <div class="pull-left medium-9">
-              <span class="feature-name ellipsis spanBlock "  popover-trigger="mouseenter" popover="{{$ctrl.model.customerAttribute}}">{{::'gemini.cbgs.field.alias' | translate}}: {{$ctrl.model.customerAttribute}}</span>
+              <span class="feature-name ellipsis spanBlock" popover-trigger="mouseenter" popover="{{$ctrl.model.customerAttribute}}">{{::'gemini.cbgs.field.alias' | translate}}: {{$ctrl.model.customerAttribute}}</span>
             </div>
             <div class="columns medium-3">
               <span class="pull-right" ng-if="$ctrl.model.status">
@@ -48,8 +48,8 @@
                 </a>
               </li>
               <li class="feature" ng-if="!$ctrl.model.callbackGroupSites.length">
-                  <span class="feature-name" translate="gemini.cbgs.field.totalSites"></span>
-                  <span class="feature-status">0</span>
+                <span class="feature-name" translate="gemini.cbgs.field.totalSites"></span>
+                <span class="feature-status">0</span>
               </li>
             </ul>
           </div>
@@ -72,7 +72,7 @@
           </div>
           <div class="tag-container auto-scrollbar">
               <span class="tag tag-country" ng-repeat="val in $ctrl.model.countries">
-                  <span>{{val.countryName}}</span>
+                  <span>{{val.name}}</span>
               </span>
           </div>
         </cs-sp-section>
@@ -111,6 +111,14 @@
             <a class="primary-color" href ng-click="$ctrl.onShowAllHistories()" translate="gemini.cbgs.showMore"></a>
           </p>
         </cs-sp-section>
+
+        <cs-sp-buttons ng-if="$ctrl.model.status === 'S'">
+          <button type="button" class="btn btn--primary" cs-btn loading="$ctrl.btnCancelSubmissionLoading"
+                  ng-click="$ctrl.onCancelSubmission()" ng-if="$ctrl.isShowCancelSubmission"
+                  ng-disabled="$ctrl.btnCancelSubmissionDisable">
+            <span translate="gemini.button.cancelSubmission"></span>
+          </button>
+        </cs-sp-buttons>
 
       </cs-sp-container>
     </div>

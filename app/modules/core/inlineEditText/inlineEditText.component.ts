@@ -31,7 +31,6 @@ class InlineEditText implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private $q: ng.IQService,
-    private ProPackService,
   ) {}
 
   public $onInit(): void {
@@ -40,10 +39,6 @@ class InlineEditText implements ng.IComponentController {
     }
 
     this.determineShowTextLink(this.isTextClickable);
-  }
-
-  public showProBadge(): boolean {
-    return this.ProPackService.showProBadgeInHelpDesk();
   }
 
   public $onChanges(changes: { isTextClickable: ng.IChangesObject<any> }): void {
@@ -100,5 +95,6 @@ export class InlineEditTextComponent implements ng.IComponentOptions {
     validators: '<',
     asyncValidators: '<',
     validationMessages: '<',
+    showProPackIcon: '<?',
   };
 }

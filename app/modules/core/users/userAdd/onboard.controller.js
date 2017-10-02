@@ -272,7 +272,8 @@ require('./_user-add.scss');
 
     function loadLocationInternalNumberPool(pattern, locationUuid, userEntity) {
       $scope.labelField = 'siteToSite';
-      return NumberService.getNumberList(pattern, 'internal', false, null, null, null, locationUuid)
+      $scope.order = 'SITETOSITE-ASC';
+      return NumberService.getNumberList(pattern, 'internal', false, $scope.order, null, null, locationUuid)
         .then(function (internalNumberPool) {
           $scope.internalNumberPool = internalNumberPool;
           if (userEntity) {
@@ -1403,7 +1404,11 @@ require('./_user-add.scss');
 
       // make sure we have any internal extension and direct line set up for the users
       _.forEach(users, function (user) {
-        user.internalExtension = _.get(user, 'assignedDn.pattern');
+        if (!$scope.ishI1484) {
+          user.internalExtension = _.get(user, 'assignedDn.number');
+        } else {
+          user.internalExtension = _.get(user, 'assignedDn.internal');
+        }
         if ($scope.ishI1484 && $scope.locationOptions.length > 1) {
           user.location = _.get(user, 'selectedLocation.uuid');
         }

@@ -10,7 +10,7 @@
       <textarea rows="5" ng-maxlength="2048" ng-model="$ctrl.model.postData" required class="form-control optional-row" placeholder="{{'gemini.cbgs.notes.enterNote' | translate}}"></textarea>
     </form>
     <div class="text-right ui-mt">
-      <button id="addnote" class="btn info" translate="gemini.cbgs.notes.addNote"  ng-click="$ctrl.onSave()" ng-disabled="note.$invalid"></button>
+      <button id="addnote" class="btn info" translate="gemini.cbgs.notes.addNote" ng-click="$ctrl.onSave()" ng-disabled="note.$invalid || $ctrl.loading"></button>
     </div>
   </div>
   <div class="ui-mv ui-pt">

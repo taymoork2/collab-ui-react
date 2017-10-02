@@ -22,9 +22,12 @@ class DirectoryNumber implements ng.IComponentController {
   private internalOptions: IDirectoryNumberOption[] = [];
   private noneOption: IDirectoryNumberOption;
 
+  private isHI1484: boolean = false;
+
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
+    private FeatureToggleService,
   ) {
     this.inputPlaceholder = this.$translate.instant('directoryNumberPanel.searchNumber');
     this.placeholder = this.$translate.instant('directoryNumberPanel.chooseNumber');
@@ -33,6 +36,11 @@ class DirectoryNumber implements ng.IComponentController {
       value: null,
       label: this.nonePlaceholder,
     };
+  }
+
+  public $onInit(): void {
+    return this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484)
+    .then(result => this.isHI1484 = result);
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
@@ -46,7 +54,11 @@ class DirectoryNumber implements ng.IComponentController {
     // populate internalOptions
     if (internalNumbers) {
       if (internalNumbers.currentValue && _.isArray(internalNumbers.currentValue)) {
-        this.internalOptions = this.convertStringArrayToDirectoryNumberOptionsArray(internalNumbers.currentValue as string[]);
+        if (this.isHI1484) {
+          this.internalOptions = this.convertStringArrayToDirectoryNumberOptionsArrayInternalLocation(internalNumbers.currentValue as string[]);
+        } else {
+          this.internalOptions = this.convertStringArrayToDirectoryNumberOptionsArray(internalNumbers.currentValue as string[]);
+        }
       }
     }
 
@@ -133,6 +145,15 @@ class DirectoryNumber implements ng.IComponentController {
     if (matchingExternalNumber) {
       this.externalSelected = matchingExternalNumber;
     }
+  }
+
+  private convertStringArrayToDirectoryNumberOptionsArrayInternalLocation(dirNumbers: any[]): IDirectoryNumberOption[] {
+    return _.map(dirNumbers, (dirNumber) => {
+      return {
+        value: dirNumber.internal,
+        label: dirNumber.siteToSite,
+      };
+    });
   }
 
   private convertStringArrayToDirectoryNumberOptionsArray(dirNumbers: string[]): IDirectoryNumberOption[] {

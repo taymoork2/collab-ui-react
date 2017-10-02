@@ -37,12 +37,14 @@ export function provisionCustomerAndLogin(customer) {
       if (atlasCustomer && customer.callOptions) {
         customer.callOptions.cmiCustomer.uuid = atlasCustomer.customerOrgId;
         customer.callOptions.cmiCustomer.name = atlasCustomer.customerName;
-        return huronCmiHelper.provisionCmiCustomer(customer.partner, customer.callOptions.cmiCustomer, customer.callOptions.cmiSite, customer.callOptions.numberRange, customer.doFtsw, customer.doCallPickUp)
+        return huronCmiHelper.provisionCmiCustomer(customer.partner, customer.callOptions.cmiCustomer, customer.callOptions.cmiSite, customer.callOptions.numberRange, customer.doFtsw, customer.doCallPickUp, customer.doHuntGroup)
           .then(() => huronPstnHelper.setupPSTN(customer))
-          .then(() => provisionUsers(customer))
           .then(() => provisionPlaces(customer))
+          .then(() => provisionUsers(customer))
           .then(() => huronFeaturesHelper.setupHuntGroup(customer))
           .then(() => huronFeaturesHelper.setupCallPickup(customer))
+          .then(() => huronFeaturesHelper.setupCallPark(customer))
+          .then(() => huronFeaturesHelper.setupCallPaging(customer))
           .then(() => loginPartner(customer.partner))
           .then(() => switchToCustomerWindow(customer.name, customer.doFtsw));
       } else {
@@ -127,7 +129,7 @@ export function provisionUsers(customer) {
 
 function provisionPlaces(customer) {
   if (customer.places) {
-    console.log('Creating locations');
+    console.log('Creating places');
     return provisionerHelper.getToken(customer.partner)
       .then(token => {
         createPlaceObj(token, customer.orgId, customer.places);

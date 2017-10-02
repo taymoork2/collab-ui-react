@@ -18,8 +18,8 @@
       <hr>
       <div class="row">
         <div class="medium-5 columns details-heading">
-          <span ng-if="::!helpdeskOrderCtrl.isProvisionedOrderPending()"><strong translate="helpdesk.customerInfo"></strong></span>
-          <span ng-if="::helpdeskOrderCtrl.isProvisionedOrderPending()"><strong translate="helpdesk.orderInfo"></strong></span>
+          <span ng-if="::helpdeskOrderCtrl.isOrderProvisioned() || helpdeskOrderCtrl.accountId"><strong translate="helpdesk.customerInfo"></strong></span>
+          <span ng-if="::helpdeskOrderCtrl.isOrderPendingProvisioning()"><strong translate="helpdesk.orderInfo"></strong></span>
         </div>
       </div>
 
@@ -31,7 +31,7 @@
           <span>{{helpdeskOrderCtrl.orderId}}</span>
         </div>
         <div class="large-3 columns details-value">
-          <a ng-if="::helpdeskOrderCtrl.supportsHelpDeskOrderSetup && helpdeskOrderCtrl.isProvisionEditAllowed()"
+          <a ng-if="::helpdeskOrderCtrl.supportsHelpDeskOrderSetup && helpdeskOrderCtrl.hasPermissionToEditInfo && helpdeskOrderCtrl.isOrderPendingProvisioning()"
             ng-click="helpdeskOrderCtrl.launchOrderProcessingClient()"
             translate="helpdesk.setUpOrder"></a>
         </div>
@@ -76,13 +76,13 @@
           <span translate="helpdesk.companyName"></span>
         </div>
         <div class="large-5 columns details-value">
-          <span ng-if="helpdeskOrderCtrl.accountName && !helpdeskOrderCtrl.isAccountActivated()">{{helpdeskOrderCtrl.accountName}}</span>
-          <span ng-if="helpdeskOrderCtrl.endCustomerName && !helpdeskOrderCtrl.isOrderProvisioned()">{{helpdeskOrderCtrl.endCustomerName}}</span>
-          <a ng-click="helpdeskOrderCtrl.goToCustomerPage()" ng-if="helpdeskOrderCtrl.isAccountActivated()">{{helpdeskOrderCtrl.accountName}}</a>
-          <a ng-click="helpdeskOrderCtrl.goToProvisionedCustomerPage()" ng-if="helpdeskOrderCtrl.orgId && helpdeskOrderCtrl.isOrderProvisioned()">{{helpdeskOrderCtrl.endCustomerName}}</a>
+          <span ng-if="helpdeskOrderCtrl.accountName && helpdeskOrderCtrl.isAccountPendingActivation()">{{helpdeskOrderCtrl.accountName}}</span>
+          <span ng-if="helpdeskOrderCtrl.endCustomerName && helpdeskOrderCtrl.isOrderPendingProvisioning()">{{helpdeskOrderCtrl.endCustomerName}}</span>
+          <a ng-click="helpdeskOrderCtrl.goToCustomerPage()" ng-if="helpdeskOrderCtrl.accountActivated === true">{{helpdeskOrderCtrl.accountName}}</a>
+          <a ng-click="helpdeskOrderCtrl.goToProvisionedCustomerPage()" ng-if="helpdeskOrderCtrl.isOrderProvisioned()">{{helpdeskOrderCtrl.endCustomerName}}</a>
         </div>
-        <div class="large-5 columns details-value" ng-if="::!helpdeskOrderCtrl.accountName">
-          <span ng-if="!helpdeskOrderCtrl.accountName && !helpdeskOrderCtrl.endCustomerName">N/A</span>
+        <div class="large-5 columns details-value">
+          <span ng-if="!helpdeskOrderCtrl.accountName && !helpdeskOrderCtrl.endCustomerName" translate="common.notAvailable"></span>
         </div>
         <div class="large-3">
         </div>
@@ -95,7 +95,7 @@
         <div class="large-5 columns details-value" ng-show="!helpdeskOrderCtrl.showCustomerEmailEditView">
           <span class="custom-spacing">{{helpdeskOrderCtrl.customerAdminEmail}}</span>
         </div>
-        <div class="large-3 columns details-value" ng-if="!helpdeskOrderCtrl.isAccountActivated()" ng-show="!helpdeskOrderCtrl.showCustomerEmailEditView">
+        <div class="large-3 columns details-value" ng-if="helpdeskOrderCtrl.isAccountPendingActivation() || helpdeskOrderCtrl.isOrderPendingProvisioning()" ng-show="!helpdeskOrderCtrl.showCustomerEmailEditView">
           <a class="custom-spacing" ng-if="helpdeskOrderCtrl.hasPermissionToEditInfo" translate="helpdesk.editAdminEmail"
              ng-click="helpdeskOrderCtrl.showEmailEditView(helpdeskOrderCtrl.emailTypes.CUSTOMER)"></a>
           <a translate="helpdesk.resendAdminEmail" ng-click="helpdeskOrderCtrl.resendAdminEmail(helpdeskOrderCtrl.emailTypes.CUSTOMER)"></a>
@@ -110,7 +110,7 @@
           <a class="custom-spacing" translate="common.save" ng-click="helpdeskOrderCtrl.updateAdminEmail(helpdeskOrderCtrl.emailTypes.CUSTOMER)"></a>
           <a translate="common.cancel" ng-click="helpdeskOrderCtrl.cancelAdminEmailEdit(helpdeskOrderCtrl.emailTypes.CUSTOMER)"></a>
         </div>
-        <div class="large-3" ng-if="helpdeskOrderCtrl.isAccountActivated() || !helpdeskOrderCtrl.isAdminEmailEditAllowed()">
+        <div class="large-3" ng-if="helpdeskOrderCtrl.isAccountActivated() || helpdeskOrderCtrl.isOrderProvisioned()">
         </div>
       </div>
 
@@ -121,7 +121,7 @@
         <div class="large-5 columns details-value" ng-show="!helpdeskOrderCtrl.showProvisioningContactEditView">
           <span class="custom-spacing">{{helpdeskOrderCtrl.lastProvisioningContact}}</span>
         </div>
-        <div class="large-3 columns details-value" ng-if="::helpdeskOrderCtrl.isProvisionedOrderPending()" ng-show="!helpdeskOrderCtrl.showProvisioningContactEditView">
+        <div class="large-3 columns details-value" ng-if="::helpdeskOrderCtrl.isOrderPendingProvisioning()" ng-show="!helpdeskOrderCtrl.showProvisioningContactEditView">
           <a class="custom-spacing" translate="helpdesk.editAdminEmail" ng-if="helpdeskOrderCtrl.hasPermissionToEditInfo"
               ng-click="helpdeskOrderCtrl.showEmailEditView(helpdeskOrderCtrl.emailTypes.PROVISIONING)"></a>
           <a translate="helpdesk.resendAdminEmail" ng-click="helpdeskOrderCtrl.resendAdminEmail(helpdeskOrderCtrl.emailTypes.PROVISIONING)"></a>
@@ -136,7 +136,7 @@
           <a class="custom-spacing" translate="common.save" ng-click="helpdeskOrderCtrl.updateAdminEmail(helpdeskOrderCtrl.emailTypes.PROVISIONING)"></a>
           <a translate="common.cancel" ng-click="helpdeskOrderCtrl.cancelAdminEmailEdit(helpdeskOrderCtrl.emailTypes.PROVISIONING)"></a>
         </div>
-        <div class="large-3" ng-if="::!helpdeskOrderCtrl.isProvisionEditAllowed()">
+        <div class="large-3" ng-if="::helpdeskOrderCtrl.isOrderProvisioned()">
         </div>
       </div>
 

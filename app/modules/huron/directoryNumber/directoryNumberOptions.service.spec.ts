@@ -54,16 +54,13 @@ describe('Service: DirectoryNumberOptionsService', () => {
   describe('getInternalNumbers function toggle OFF', function () {
 
     it('should get internal numbers list', function () {
-      this.$httpBackend.expectGET(this.HuronConfig.getCmiUrl() + '/voice/customers/' + this.Authinfo.getOrgId() + '/internalnumberpools?directorynumber=&order=pattern')
-        .respond(200, this.internalNumbersResponse);
-      this.DirectoryNumberOptionsService.getInternalNumberOptions().then(response => {
-        expect(response).toEqual(this.internalNumbers);
+      this.DirectoryNumberOptionsService.getInternalNumberOptions().then(() => {
+        expect(this.NumberService.getNumberList).toHaveBeenCalledWith(null, undefined, undefined, null, null, null, null, null);
       });
-      this.$httpBackend.flush();
     });
 
     it('should reject the promise on a failed response', function () {
-      this.$httpBackend.expectGET(this.HuronConfig.getCmiUrl() + '/voice/customers/' + this.Authinfo.getOrgId() + '/internalnumberpools?directorynumber=&order=pattern')
+      this.$httpBackend.expectGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/numbers?assigned=false&deprecated=true&type=internal')
         .respond(500);
       const promise = this.DirectoryNumberOptionsService.getInternalNumberOptions();
       this.$httpBackend.flush();
@@ -149,7 +146,7 @@ describe('Service: DirectoryNumberOptionsService', () => {
       this.FeatureToggleService.supports.and.returnValue(this.$q.resolve(true));
     });
     it('should get internal numbers list with LocationId when locationId is passed when featureToggle is ON', function () {
-      this.DirectoryNumberOptionsService.getInternalNumberOptions(undefined, undefined, this.locationId).then( function (){
+      this.DirectoryNumberOptionsService.getInternalNumberOptions(undefined, undefined, this.locationId).then(() => {
         expect(this.NumberService.getNumberList).toHaveBeenCalledWith(null, undefined, undefined, null, null, null, null, this.locationId);
       });
       this.$rootScope.$digest();

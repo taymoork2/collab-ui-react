@@ -1,60 +1,13 @@
+// TODO: algendel 9/26/17 ASAP replace this with components in  app/modules/core/siteList/webexSite/
 import './_meeting-settings.scss';
 import { Config } from 'modules/core/config/config';
-import { IWebExSite, ISiteNameError, SiteErrorType, IConferenceService, IExistingWebExTrialSite, IWebexLicencesPayload, IPendingLicense, IConferenceLicense } from './meeting-settings.interface';
+import { IConferenceLicense, IConferenceService, IPendingLicense, ISiteNameError, IWebexLicencesPayload, IWebExSite, SiteErrorType } from './meeting-settings.interface';
+import { WebExSite, ExistingWebExSite } from './meeting-settings.model';
 import { SetupWizardService } from '../setup-wizard.service';
 
 export enum Steps {
   SITES_SETUP = 'SITES_SETUP',
   SITES_LICENSES = 'SITES_LICENSES',
-}
-
-
-class WebExSite {
-  public centerType: string;
-  public quantity: number;
-  public siteUrl: string;
-  public audioPackageDisplay?: string;
-  public timezone?: string | object;
-  public setupType?: string;
-
-  constructor({
-    centerType,
-    quantity,
-    siteUrl,
-    timezone,
-    setupType,
-  }: IWebExSite) {
-    this.centerType = centerType;
-    this.quantity = quantity || 0;
-    this.siteUrl = siteUrl;
-    this.timezone = timezone;
-    this.setupType = setupType;
-
-    if (!setupType) {
-      delete this.setupType;
-    }
-  }
-}
-
-class ExistingWebexTrialSite extends WebExSite {
-  public keepExistingSite: boolean;
-  constructor({
-    centerType,
-    quantity,
-    siteUrl,
-    timezone,
-    setupType,
-    keepExistingSite,
-  }: IExistingWebExTrialSite) {
-    super({
-      centerType,
-      quantity,
-      siteUrl,
-      timezone,
-      setupType,
-    });
-    this.keepExistingSite = keepExistingSite;
-  }
 }
 
 interface ICCASPData {
@@ -84,8 +37,8 @@ export class MeetingSettingsCtrl {
 
   public licenseDistributionForm: ng.IFormController;
   public ccaspForm: ng.IFormController;
-  public existingSites: ExistingWebexTrialSite[] = [];
-  public existingWebexSites: IWebExSite[] = [];
+  public existingTrialSites: ExistingWebExSite[] = [];
+  public existingWebexSites: WebExSite[] = [];
   public disableValidateButton: boolean = false;
   public selectTimeZonePlaceholder = this.$translate.instant('firstTimeWizard.selectTimeZonePlaceholder');
   public timeZoneOptions = this.TrialTimeZoneService.getTimeZones();
@@ -123,6 +76,7 @@ export class MeetingSettingsCtrl {
     private $rootScope: ng.IRootScopeService,
     private Authinfo,
     private Config: Config,
+    private FeatureToggleService,
     private Notification,
     private TrialTimeZoneService,
     private TrialWebexService,
@@ -135,8 +89,8 @@ export class MeetingSettingsCtrl {
     this.$scope.$watch(() => { return this.sitesArray.length; }, () => {
       this.enableOrDisableNext(Steps.SITES_SETUP);
     });
-    this.findExistingWebexTrialSites();
-    this.findExistingWebexSites();
+    this.existingTrialSites = this.findExistingWebexTrialSites();
+    this.existingWebexSites = this.findExistingWebexSites();
 
     // If user clicked back after setting WebEx sites in the meeting-settings tab, we want to preserve the entered sites
     const webexSitesData = this.TrialWebexService.getProvisioningWebexSitesData();
@@ -150,6 +104,8 @@ export class MeetingSettingsCtrl {
       if (this.ccasp.subscriptionId) {
         this.ccasp.partnerNameSelected = this.audioPartnerName;
       }
+    } else {
+      this.addExistingWebexSites(this.existingWebexSites);
     }
     // if there is already and active subscription with TSP or CCASP dont display the page - just populate the data.
     if (this.SetupWizardService.hasPendingTSPAudioPackage()) {
@@ -172,13 +128,20 @@ export class MeetingSettingsCtrl {
 
     this.hasTrialSites = this.SetupWizardService.hasWebexMeetingTrial();
 
-    const regex = new RegExp(MeetingSettingsCtrl.showUserMgmntEmailPattern);
-    if (_.includes(this.Authinfo.getUserName(), '@')) {
-      this.isShowUserManagement = regex.test(this.Authinfo.getUserName());
-    } else {
-      this.isShowUserManagement = regex.test(this.Authinfo.getPrimaryEmail());
-    }
+    this.shouldShowUserManagement().then( result => {
+      this.isShowUserManagement = result;
+    });
+  }
 
+  // algendel9/25/17 we show user management if FT is enabled OR the pattern matches
+  private shouldShowUserManagement(): ng.IPromise<boolean> {
+    const regex = new RegExp(MeetingSettingsCtrl.showUserMgmntEmailPattern);
+    let isPatternMatch = false;
+    isPatternMatch =  regex.test(this.Authinfo.getUserName()) ||  regex.test(this.Authinfo.getPrimaryEmail()) || regex.test(this.Authinfo.getCustomerAdminEmail());
+    if (isPatternMatch) {
+      return this.$q.resolve(true);
+    }
+    return this.FeatureToggleService.atlasSetupSiteUserManagementGetStatus();
   }
 
   public onInputChange() {
@@ -282,10 +245,18 @@ export class MeetingSettingsCtrl {
   }
 
   private updateSitesArray(sites) {
+    const existingSitesUrls = _.map(this.existingWebexSites, 'siteUrl');
     const sitesArray = _.chain(sites).uniqBy('siteUrl').map((site: WebExSite) => {
       const timezone = this.findTimezoneObject(site.timezone);
       const siteUrl = site.siteUrl.replace(this.Config.siteDomainUrl.webexUrl, '');
-      return new WebExSite({ centerType: '', quantity: 0, siteUrl: siteUrl, timezone: timezone, setupType: site.setupType });
+      const keepExistingSite = _.includes(existingSitesUrls, siteUrl);
+      return new ExistingWebExSite({
+         centerType: '',
+         quantity: 0,
+         siteUrl: siteUrl,
+         timezone: timezone,
+         setupType: site.setupType,
+         keepExistingSite: keepExistingSite });
     }).value();
 
     this.sitesArray = sitesArray;
@@ -534,6 +505,7 @@ export class MeetingSettingsCtrl {
     this.setNextDisableStatus(true);
     this.audioPartnerName = null;
   }
+
   public ccaspValidate() {
     this.disableValidateButton = true;
     this.setNextDisableStatus(true);
@@ -551,8 +523,15 @@ export class MeetingSettingsCtrl {
         this.ccaspSetInvalid(true);
       });
   }
+
   public ccaspSetNextDisabled() {
     if (!this.audioPartnerName || !this.ccasp.subscriptionId) {
+      this.setNextDisableStatus(true);
+    }
+  }
+
+  public tspSetNextDisabled() {
+    if (!this.audioPartnerName) {
       this.setNextDisableStatus(true);
     }
   }
@@ -603,42 +582,59 @@ export class MeetingSettingsCtrl {
   }
 
   // For existing trials that have a WebEx site, we will allow the customer to migrate the trial site into a paid subscription
-  public findExistingWebexTrialSites(): void {
+  public findExistingWebexTrialSites(): ExistingWebExSite[] {
     const conferencingServices = _.filter(this.Authinfo.getConferenceServices(), { license: { isTrial: true } });
     const existingTrials = _.filter(conferencingServices, (service: IConferenceService) => {
       return _.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC], service.license.offerName);
     });
+    const existingTrialSites: ExistingWebExSite[] = [];
 
     _.forEach(existingTrials, (trial: IConferenceService) => {
       if (_.has(trial, 'license.siteUrl')) {
-        this.existingSites.push(new ExistingWebexTrialSite({ centerType: trial.license.offerName, quantity: trial.license.volume, siteUrl: _.get<string>(trial, 'license.siteUrl').replace(this.Config.siteDomainUrl.webexUrl, ''), timezone: undefined, setupType: this.Config.setupTypes.trialConvert, keepExistingSite: true }));
+        existingTrialSites.push(new ExistingWebExSite({
+          centerType: trial.license.offerName,
+          quantity: trial.license.volume,
+          siteUrl: _.get<string>(trial, 'license.siteUrl').replace(this.Config.siteDomainUrl.webexUrl, ''),
+          timezone: undefined,
+          setupType: this.Config.setupTypes.trialConvert, keepExistingSite: true }));
       }
     });
+    return existingTrialSites;
   }
 
   // In the case of modify orders, the order will apply to an active subscription.
   // If we have WebEx licenses, we need pull those siteUrls and include them in the provision context
-  public findExistingWebexSites(): void {
+  public findExistingWebexSites(): WebExSite[] {
     const actingSubscriptionLicenses = this.SetupWizardService.getActingSubscriptionLicenses();
-    const existingConferenceServicesInActingSubscripton = _.filter(actingSubscriptionLicenses, (license: IConferenceLicense) => _.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC], license.offerName));
-
+    const includedOfferNames = [this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC];
+    const existingConferenceServicesInActingSubscripton = _.filter(actingSubscriptionLicenses, (license: IConferenceLicense) =>
+      _.includes(includedOfferNames, license.offerName)) as IConferenceLicense[];
     // Create an array of existing sites
-    this.existingWebexSites = _.map(existingConferenceServicesInActingSubscripton, (license) => {
-      return {
+    const existingWebexSites = _.map(existingConferenceServicesInActingSubscripton, (license) => {
+
+      return new WebExSite({
         siteUrl: _.replace(_.get<string>(license, 'siteUrl'), this.Config.siteDomainUrl.webexUrl, ''),
         quantity: license.volume,
         centerType: license.offerName,
-      };
+        setupType: (license.isCIUnifiedSite !== true) ? this.setupTypeLegacy : undefined,
+      });
     });
+    return existingWebexSites;
+  }
 
+  private addExistingWebexSites(existingWebexSites: WebExSite[]): void {
     // Push unique sites to sitesArray
-    this.sitesArray = this.sitesArray.concat(_.map(_.uniqBy(this.existingWebexSites, 'siteUrl'), (site) => {
-      return {
+    if (_.isEmpty(existingWebexSites)) {
+      return;
+    }
+    this.sitesArray = this.sitesArray.concat(_.map(_.uniqBy(existingWebexSites, 'siteUrl'), (site) => {
+      return  new ExistingWebExSite ({
         siteUrl: _.replace(_.get<string>(site, 'siteUrl'), this.Config.siteDomainUrl.webexUrl, ''),
         quantity: 1,
         centerType: '',
         keepExistingSite: true,
-      };
+        setupType: site.setupType,
+      });
     }));
   }
 

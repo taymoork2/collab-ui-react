@@ -6,8 +6,11 @@ class CallFeatureNameCtrl implements ng.IComponentController {
   public name: string;
   public isRequired: boolean;
   public isNew: boolean;
+  public validationRegEx: RegExp;
+  public validationRegExMessageKey: string;
   public onChangeFn: Function;
   public onKeyPressFn: Function;
+  public messages: Object;
 
   /* @ngInject */
   constructor(
@@ -17,6 +20,10 @@ class CallFeatureNameCtrl implements ng.IComponentController {
   public $onInit(): void {
     this.placeholder = this.$translate.instant(this.placeholderKey);
     this.nameHint = this.$translate.instant(this.nameHintKey);
+    this.messages = {
+      required: this.$translate.instant('common.invalidRequired'),
+      pattern: this.$translate.instant(this.validationRegExMessageKey),
+    };
   }
 
   public onNameChange(): void {
@@ -42,6 +49,8 @@ export class CallFeatureNameComponent implements ng.IComponentOptions {
     name: '<',
     isRequired: '<',
     isNew: '<',
+    validationRegEx: '<',
+    validationRegExMessageKey: '@',
     onChangeFn: '&',
     onKeyPressFn: '&',
   };

@@ -1,9 +1,10 @@
 <div class="row collapse" ng-form="$ctrl.form">
   <div class="columns">
-    <div class="row full">
-      <div class="columns medium-12" ng-class="{'error': $ctrl.form.companyName.$invalid && $ctrl.form.companyName.$touched}">
-        <label for="companyName" translate="pstnContractInformation.companyName"></label>
-        <input type="text"
+    <div class="row">
+      <div class="cs-input-group columns medium-12" ng-class="{'error': $ctrl.form.companyName.$invalid && $ctrl.form.companyName.$touched}">
+        <label class="cs-input__label" for="companyName" translate="pstnContractInformation.companyName"></label>
+        <input class="cs-input"
+              type="text"
               id="companyName"
               name="companyName"
               ng-model="$ctrl.contact.companyName" required>
@@ -12,10 +13,11 @@
         </div>
       </div>
     </div>
-    <div class="row full">
-      <div class="columns medium-6" ng-class="{'error': $ctrl.form.firstName.$invalid && $ctrl.form.firstName.$touched}">
-        <label for="firstName" translate="pstnContractInformation.firstName"></label>
-        <input type="text"
+    <div class="row">
+      <div class="cs-input-group columns medium-6" ng-class="{'error': $ctrl.form.firstName.$invalid && $ctrl.form.firstName.$touched}">
+        <label class="cs-input__label" for="firstName" translate="pstnContractInformation.firstName"></label>
+        <input class="cs-input"
+              type="text"
               id="firstName"
               name="firstName"
               ng-model="$ctrl.contact.firstName" required>
@@ -23,9 +25,10 @@
           <div class="message" ng-message="required">{{::'common.invalidRequired' | translate}}</div>
         </div>
       </div>
-      <div class="columns medium-6" ng-class="{'error': $ctrl.form.lastName.$invalid && $ctrl.form.lastName.$touched}">
-        <label for="lastName" translate="pstnContractInformation.lastName"></label>
-        <input type="text"
+      <div class="cs-input-group columns medium-6" ng-class="{'error': $ctrl.form.lastName.$invalid && $ctrl.form.lastName.$touched}">
+        <label class="cs-input__label "for="lastName" translate="pstnContractInformation.lastName"></label>
+        <input class="cs-input"
+              type="text"
               id="lastName"
               name="lastName"
               ng-model="$ctrl.contact.lastName" required>
@@ -34,13 +37,14 @@
         </div>
       </div>
     </div>
-    <div class="row full">
-      <div class="columns medium-12" ng-class="{'error': $ctrl.form.emailAddress.$invalid && $ctrl.form.emailAddress.$touched}">
-        <label for="emailAddress" translate="pstnContractInformation.emailAddress"></label>
-        <input type="email"
+    <div class="row">
+      <div class="cs-input-group columns medium-12" ng-class="{'error': $ctrl.form.emailAddress.$invalid && $ctrl.form.emailAddress.$touched}">
+        <label class="cs-input__label" for="emailAddress" translate="pstnContractInformation.emailAddress"></label>
+        <input class="cs-input"
+              type="email"
               id="emailAddress"
               name="emailAddress"
-              ng-change="$ctrl.form.confirmEmailAddress.$validate()"
+              ng-change="$ctrl.verifyConfirmEmailAddress()"
               ng-model="$ctrl.contact.emailAddress" required>
         <div class="cs-input__messages" ng-messages="$ctrl.form.emailAddress.$error" role="alert">
           <div class="message" ng-message="required">{{::'common.invalidRequired' | translate}}</div>
@@ -48,15 +52,15 @@
         </div>
       </div>
     </div>
-    <div class="row full">
-      <div class="columns medium-12" ng-class="{'error': $ctrl.form.confirmEmailAddress.$invalid && $ctrl.form.confirmEmailAddress.$touched}">
-        <label for="confirmEmailAddress" translate="pstnContractInformation.confirmEmailAddress"></label>
-        <input cs-input
+    <div class="row">
+      <div class="cs-input-group columns medium-12" ng-class="{'error': $ctrl.form.confirmEmailAddress.$invalid && $ctrl.form.confirmEmailAddress.$touched}">
+        <label class="cs-input__label" for="confirmEmailAddress" translate="pstnContractInformation.confirmEmailAddress"></label>
+        <input class="cs-input"
               type="email"
               id="confirmEmailAddress"
               name="confirmEmailAddress"
               ng-model="$ctrl.contact.confirmEmailAddress"
-              cs-input-validators="$ctrl.emailValidators"
+              ng-change="$ctrl.verifyConfirmEmailAddress()"
               ng-paste="$event.preventDefault()" required>
         <div class="cs-input__messages" ng-messages="$ctrl.form.confirmEmailAddress.$error" role="alert">
           <div class="message" ng-message="required">{{::'common.invalidRequired' | translate}}</div>

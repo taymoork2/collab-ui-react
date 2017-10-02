@@ -1,8 +1,12 @@
-import { INumberData } from 'modules/call/features/paging-group/shared';
+import { INumberData, IRPagingGroupNumber, PagingGroupNumber } from 'modules/call/features/paging-group/shared';
 import { NumberType, NumberService } from 'modules/huron/numbers';
+
+interface IPagingGroupNumbersResource extends ng.resource.IResourceClass<ng.resource.IResource<IRPagingGroupNumber>> {}
 
 export class PagingNumberService {
   public hasLocations: boolean = false;
+
+  private pagingGroupNumbersResource: IPagingGroupNumbersResource;
 
   /* @ngInject */
   constructor(
@@ -12,12 +16,15 @@ export class PagingNumberService {
     private Authinfo,
     private FeatureToggleService,
   ) {
+    this.pagingGroupNumbersResource = <IPagingGroupNumbersResource>this.$resource(`${this.HuronConfig.getCmiV2Url()}/customers/:customerId/features/paging/:pagingId/numbers`, {});
+
     // TODO: samwi - remove when locations is GA
     this.FeatureToggleService.supports(FeatureToggleService.features.hI1484).then(supports => {
       this.hasLocations = supports;
     });
   }
 
+  // TODO (jlowery): DELETE after pg setup wizard is refactored
   public getNumberSuggestions(hint?: string): ng.IPromise<INumberData[]> {
     return this.NumberService.getNumberList(hint, NumberType.INTERNAL, false).then(
       (response) => _.map(response, (dn: any) => {
@@ -28,9 +35,16 @@ export class PagingNumberService {
       }));
   }
 
+  public getInternalNumbers(filter?: string): ng.IPromise<string[]> {
+    return this.NumberService.getNumberList(filter, NumberType.INTERNAL, false)
+      .then(response => _.map(response, dn => {
+        return this.hasLocations ? dn.siteToSite || '' : dn.number;
+      }));
+  }
+
   // The uuid below should be pagingGroup's id, will call features API to get number
   public getNumberExtension(uuid: string): ng.IPromise<INumberData> {
-    return this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/features/paging/:pagingId/numbers').get({
+    return this.pagingGroupNumbersResource.get({
       customerId: this.Authinfo.getOrgId(),
       pagingId: uuid,
     }).$promise.then(response => {
@@ -43,6 +57,17 @@ export class PagingNumberService {
         numberData.extension = numbers[0];
       }
       return numberData;
+    });
+  }
+
+  public getNumbers(uuid: string): ng.IPromise<PagingGroupNumber[]> {
+    return this.pagingGroupNumbersResource.get({
+      customerId: this.Authinfo.getOrgId(),
+      pagingId: uuid,
+    }).$promise.then(response => {
+      return _.map(_.get(response, 'numbers', []), number => {
+        return new PagingGroupNumber(number);
+      });
     });
   }
 }

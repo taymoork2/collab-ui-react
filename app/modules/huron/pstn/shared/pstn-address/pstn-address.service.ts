@@ -23,13 +23,13 @@ export interface IAddress extends IAddressBase {
 }
 
 export class Address implements IAddress {
+  public uuid?: string;
   public streetAddress: string | null;
   public unit?: string;
   public city: string | null;
   public state: string | null;
   public zip: string | null;
   public country: string | null;
-  public uuid?: string;
   public validated: boolean = false;
   public default: boolean;
 
@@ -73,6 +73,18 @@ export class Address implements IAddress {
     this.default = false;
     this.validated = false;
   }
+
+  public copy (address: Address): Address {
+    this.uuid = address.uuid;
+    this.streetAddress = address.streetAddress;
+    this.unit = address.unit;
+    this.city = address.city;
+    this.state = address.state;
+    this.zip = address.zip;
+    this.country = address.country;
+    this.default = address.default;
+    return this;
+  }
 }
 
 export class PstnAddressService {
@@ -89,12 +101,12 @@ export class PstnAddressService {
       .$promise
       .then((response) => {
         if (response && _.isArray(response.addresses) && response.addresses.length > 0) {
-          const tmpAddress: Address = new Address(response.addresses[0]);
-          tmpAddress.validated = true;
-          if (!_.isString(tmpAddress.country) || tmpAddress.country.length === 0) {
-            tmpAddress.country = this.PstnModel.getCountryCode();
+          const address: Address = new Address(response.addresses[0]);
+          address.validated = true;
+          if (!_.isString(address.country) || address.country.length === 0) {
+            address.country = this.PstnModel.getCountryCode();
           }
-          return tmpAddress;
+          return address;
         }
         return null;
       });

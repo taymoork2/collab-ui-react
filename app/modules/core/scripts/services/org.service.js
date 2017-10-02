@@ -522,16 +522,18 @@
         });
     }
 
-    // filter out subscriptions with a license with an offerName that is 'MSGR'
+    // filter out subscriptions where the sole license matches { offerName: 'MSGR' }
     // - as of 2017-07-24, 'Authinfo.isExternallyManagedLicense()' is sufficient for checking this
     // TODO: verify whether this should be the default behavior
     function getInternallyManagedSubscriptions() {
       return getLicensesUsage().then(function (subscriptions) {
         return _.reject(subscriptions, function (subscription) {
           var licenses = _.get(subscription, 'licenses');
-          return _.some(licenses, function (license) {
-            return Authinfo.isExternallyManagedLicense(license);
-          });
+          if (_.size(licenses) !== 1) {
+            return false;
+          }
+          var license = _.head(licenses);
+          return Authinfo.isExternallyManagedLicense(license);
         });
       });
     }

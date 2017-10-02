@@ -1,5 +1,5 @@
 import { HuntGroupNumber } from 'modules/call/features/hunt-group';
-import { NumberService, INumber } from 'modules/huron/numbers';
+import { NumberService, INumber, NumberOrder } from 'modules/huron/numbers';
 
 const NUMBER_FORMAT_ENTERPRISE_LINE = 'NUMBER_FORMAT_ENTERPRISE_LINE';
 class HuntGroupNumbersCtrl implements ng.IComponentController {
@@ -10,7 +10,6 @@ class HuntGroupNumbersCtrl implements ng.IComponentController {
   public selectedNumber: INumber | undefined;
   public errorNumberInput: boolean = false;
   public hasLocations: boolean = false;
-  public numberTemplateUrl: string = 'hgNumbersTemplate.html';
 
   /* @ngInject */
   constructor(
@@ -21,13 +20,12 @@ class HuntGroupNumbersCtrl implements ng.IComponentController {
     this.FeatureToggleService.supports(FeatureToggleService.features.hI1484).then(supports => {
       if (supports) {
         this.hasLocations = true;
-        this.numberTemplateUrl = 'hgNumbersTemplateLocations.html';
       }
     });
   }
 
   public getNumberList(value: string): ng.IPromise<INumber[]> {
-    return this.NumberService.getNumberList(value, undefined, false).then( numbers => {
+    return this.NumberService.getNumberList(value, undefined, false, NumberOrder.SITETOSITE_ASC).then( numbers => {
       const filteredNumbers = _.filter(numbers, (number) => {
         return this.isNewNumber(number.uuid);
       });
@@ -45,10 +43,14 @@ class HuntGroupNumbersCtrl implements ng.IComponentController {
     this.numbers.unshift(new HuntGroupNumber({
       uuid: number.uuid,
       type: number.type,
-      number: number.number,
+      number: this.getNumber(number),
       siteToSite: number.siteToSite,
     }));
     this.onNumbersChanged(this.numbers);
+  }
+
+  public getNumber(number) {
+    return (this.hasLocations && number.siteToSite) ? <string>number.siteToSite : number.number ? number.number : number.external ? number.external : undefined;
   }
 
   public removeNumber(hgnumber: HuntGroupNumber): void {

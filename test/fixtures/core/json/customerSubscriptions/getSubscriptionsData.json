@@ -56,6 +56,23 @@
         "siteId": "5794f327"
       },
       {
+        "licenseId": "MC_0da6fgfd7c7d-f0fg8b-4097-5b29a-64fdgd62111995c4_frankSinatraTestWX.dmz.webex.com",
+        "offerName": "MC",
+        "masterOfferName": "M3-MC200-ENT",
+        "licenseType": "CONFERENCING",
+        "billingServiceId": "Sub-os090825",
+        "features": [
+          "cloudmeetings"
+        ],
+        "volume": 25,
+        "isTrial": false,
+        "status": "ACTIVE",
+        "capacity": 25,
+        "siteUrl": "frankSinatraTestWX.dmz.webex.com",
+        "isCIUnifiedSite": false,
+        "siteId": "5794f328"
+      },
+      {
         "licenseId": "MS_30ae927d-11af-42bb-982a-d7784bc8145f",
         "offerName": "MS",
         "masterOfferName": "M3-MC200-ENT",

@@ -112,7 +112,7 @@ exports.html = {
 };
 
 exports.assets = {
-  test: /\.(json|csv|pdf)(\?v=.*)?$/,
+  test: /\.(csv|pdf)(\?v=.*)?$/,
   use: [
     {
       loader: 'file-loader',
@@ -187,13 +187,6 @@ exports.dependencies = [{
     {
       loader: 'imports-loader',
       options: 'define=>false',
-    },
-  ],
-}, {
-  test: /stickyfill.js$/,
-  use: [
-    {
-      loader: 'script-loader',
     },
   ],
 }, {

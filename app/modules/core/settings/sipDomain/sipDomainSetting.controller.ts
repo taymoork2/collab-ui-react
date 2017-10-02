@@ -244,7 +244,7 @@ export class SipDomainSettingController {
   }
 
   public openSipHelpWiki() {
-    this.$window.open('https://help.webex.com/docs/DOC-7763', '_blank');
+    this.$window.open('https://collaborationhelp.cisco.com/article/en-us/DOC-7763', '_blank');
   }
 
   public toggleSipForm(): void {

@@ -24,7 +24,9 @@ class PlaceCallOverview implements ng.IComponentController {
   public primaryLineEnabled: boolean;
   public userPrimaryNumber: PrimaryNumber;
   public isPrimaryLineFeatureEnabled: boolean = false;
+  private showPhoneButtonLayout: boolean = false;
   public primaryLineFeature: IPrimaryLineFeature;
+  public buttonLayoutPromise: any;
 
   /* @ngInject */
   constructor(
@@ -32,6 +34,7 @@ class PlaceCallOverview implements ng.IComponentController {
     private $state: ng.ui.IStateService,
     $stateParams: any,
     private $translate: ng.translate.ITranslateService,
+    private FeatureToggleService,
     CsdmDataModelService: any,
     private LineService: LineService,
     private PlaceCallOverviewService: PlaceCallOverviewService,
@@ -52,6 +55,10 @@ class PlaceCallOverview implements ng.IComponentController {
 
   public $onInit(): void {
     if (this.hasSparkCall) {
+      this.buttonLayoutPromise = this.FeatureToggleService.supports(this.FeatureToggleService.features.huronPhoneButtonLayout)
+      .then(result => {
+        this.showPhoneButtonLayout = result;
+      });
       this.initActions();
       this.initNumbers();
       this.initServices();
@@ -85,7 +92,9 @@ class PlaceCallOverview implements ng.IComponentController {
       this.userPrimaryNumber = _.get(data[3], 'primaryNumber');
       this.checkPrimaryLineFeature(this.userPrimaryNumber);
     }).then (() => {
-      this.initFeatures();
+      this.buttonLayoutPromise.finally(() => {
+        this.initFeatures();
+      });
     });
   }
 
@@ -98,7 +107,19 @@ class PlaceCallOverview implements ng.IComponentController {
         detail: undefined,
         actionAvailable: true,
       };
-      this.features.push(service);
+      if (!this.showPhoneButtonLayout) {
+        this.features.push(service);
+      }
+
+      const phoneButtonLayoutService: IFeature = {
+        name: this.$translate.instant('telephonyPreview.phoneButtonLayout'),
+        state: 'phoneButtonLayout',
+        detail: undefined,
+        actionAvailable: true,
+      };
+      if (this.showPhoneButtonLayout) {
+        this.features.push(phoneButtonLayoutService);
+      }
 
       const cosService: IFeature = {
         name: this.$translate.instant('serviceSetupModal.cos.title'),

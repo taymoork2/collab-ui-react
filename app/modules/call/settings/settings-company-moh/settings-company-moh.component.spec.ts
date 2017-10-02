@@ -2,7 +2,7 @@ import companyMohModule from './index';
 
 describe('Component: companyMoh', () => {
   const COMPANY_MOH_SELECT = '.csSelect-container[name="mediaOnHoldSelect"]';
-  const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
+  const DROPDOWN_OPTIONS = '.dropdown-menu ul li';
   const MEDIA_FILE_1 = 'drbd-1234-g79e-0op3';
   const MEDIA_FILE_2 = 'bjek-3491-fu69-l140';
   const companyMediaOptions = getJSONFixture('huron/json/settings/company-moh.json');

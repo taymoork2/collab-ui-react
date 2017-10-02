@@ -39,9 +39,7 @@ describe('Component: directoryNumberList', () => {
       this.injectDependencies(
         '$scope',
         '$q',
-        'FeatureToggleService',
       );
-      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
       this.$scope.directoryNumbers = directoryNumbers;
       this.compileComponent('directoryNumberList', {
         directoryNumbers: 'directoryNumbers',
@@ -164,9 +162,7 @@ describe('Component: directoryNumberList', () => {
       this.injectDependencies(
         '$scope',
         '$q',
-        'FeatureToggleService',
       );
-      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
       this.$scope.directoryNumbers = directoryNumbers;
       this.compileComponent('directoryNumberList', {
         directoryNumbers: 'directoryNumbers',

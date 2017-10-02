@@ -45,7 +45,7 @@ export class ServicesOverviewController implements ng.IComponentController {
   ];
 
   // ⚠️ The properties below are exclusive to the new cards coming with the office 365 feature
-  private hasOffice365FeatureToggle: boolean; // this feature toggle is used to decide if we display the new design for hybrid cards
+  private hasServicesOverviewRefreshToggle: boolean; // this feature toggle is used to decide if we display the new design for hybrid cards
   private urlParams: ng.ui.IStateParamsService;
   public _servicesToDisplay: HybridServiceId[] = []; // made public for easier testing
   public _servicesActive: HybridServiceId[] = []; // made public for easier testing
@@ -95,7 +95,7 @@ export class ServicesOverviewController implements ng.IComponentController {
       huronEnterprisePrivateTrunking: this.FeatureToggleService.supports(this.FeatureToggleService.features.huronEnterprisePrivateTrunking),
     });
 
-    if (!this.hasOffice365FeatureToggle) {
+    if (!this.hasServicesOverviewRefreshToggle) {
       this.loadHybridServicesStatuses();
       features
         .then((response) => {
@@ -216,6 +216,17 @@ export class ServicesOverviewController implements ng.IComponentController {
     return _.includes(this._servicesToDisplay, serviceId) && _.includes(this._servicesInactive, serviceId);
   }
 
+  public isAnyHybridServiceActive(): boolean {
+    return this._servicesActive.length > 0;
+  }
+
+  public showOnPremisesCard(): boolean {
+    // If one of the active services is a service containing "resources"
+    return _.some(this._servicesActive, (service) => {
+      return _.includes<HybridServiceId>(['squared-fusion-cal', 'squared-fusion-uc', 'spark-hybrid-impinterop', 'squared-fusion-media', 'spark-hybrid-datasecurity', 'contact-center-context', 'ept'], service);
+    });
+  }
+
   public getServiceStatus(serviceId: HybridServiceId): any {
     return _.find(this.servicesStatuses, { serviceId: serviceId });
   }
@@ -316,7 +327,7 @@ export class ServicesOverviewComponent implements ng.IComponentOptions {
   public controller = ServicesOverviewController;
   public template = require('modules/services-overview/services-overview.component.html');
   public bindings = {
-    hasOffice365FeatureToggle: '<',
+    hasServicesOverviewRefreshToggle: '<',
     urlParams: '<',
   };
 }

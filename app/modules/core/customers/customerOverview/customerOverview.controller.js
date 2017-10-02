@@ -41,6 +41,7 @@ require('./_customer-overview.scss');
     vm.isUpdateStatusEnabled = true;
     vm.isProPackEnabled = false;
     vm.isMediaFusionEnabled = false;
+    vm.isNewPatchFlow = false;
 
     vm.partnerOrgId = Authinfo.getOrgId();
     vm.isPartnerAdmin = Authinfo.isPartnerAdmin();
@@ -65,6 +66,7 @@ require('./_customer-overview.scss');
       FeatureToggleService.atlasCareTrialsGetStatus(),
       FeatureToggleService.atlasCareInboundTrialsGetStatus(),
       FeatureToggleService.atlasITProPackGetStatus(),
+      FeatureToggleService.atlasJira2126UseAltEndpointGetStatus(),
     ]).then(function (results) {
       if (_.find(vm.currentCustomer.offers, {
         id: Config.offerTypes.roomSystems,
@@ -74,7 +76,7 @@ require('./_customer-overview.scss');
       var isCareEnabled = results[0];
       var isAdvanceCareEnabled = results[1];
       vm.isProPackEnabled = results[2];
-
+      vm.isNewPatchFlow = results[3];
       setOffers(isCareEnabled, isAdvanceCareEnabled);
     });
 
@@ -213,14 +215,17 @@ require('./_customer-overview.scss');
       return licIds;
     } //collectLicenses
 
-    function launchCustomerPortal() {
+    /* algendel 9/25/17 this uses UI to patch the permissions. There is a new endpoint. This should
+    /* remain in place until the new endpoint is thoroughly tested */
+
+    function updateUserAndCustomerOrgLegacy() {
       // TODO: revisit this function
       // - a simpler version was implemented in '649c251aeaefdedd57620e9fd3f4cd488b87b1f5'
       //   ...however, it did not include the logic to make the appropriate call to
       //   'Userservice.updateUsers()'
       // - this call is required in order to patch the partner-admin user as appropriate such that
       //   admin access to webex sites is enabled
-      vm.loadingCustomerPortal = true;
+
       var liclist = vm.currentCustomer.licenseList;
       var licIds = collectLicenseIdsForWebexSites(liclist);
       var partnerEmail = Authinfo.getPrimaryEmail();
@@ -231,6 +236,7 @@ require('./_customer-overview.scss');
       if (vm.isPartnerAdmin) {
         promise = PartnerService.modifyManagedOrgs(vm.customerOrgId);
       }
+
       return promise.then(function () {
         // non-admin users (e.g. sales admins) should not try to update their own licenses, but
         // instead launch the portal immediately
@@ -253,7 +259,18 @@ require('./_customer-overview.scss');
           });
           return $q.all(updateUsersList);
         });
-      })
+      });
+    }
+
+    /* algendel 9/25/17 this uses the new endpoint instead of relying on patching in the ui */
+    function updateUserAndCustomerOrg() {
+      return PartnerService.updateOrgForCustomerView(vm.customerOrgId);
+    }
+
+    function launchCustomerPortal() {
+      vm.loadingCustomerPortal = true;
+      var promise = (vm.isNewPatchFlow) ? updateUserAndCustomerOrg() : updateUserAndCustomerOrgLegacy();
+      return promise
         .then(vm._helpers.openCustomerPortal)
         .catch(function (response) {
           Notification.errorWithTrackingId(response, 'customerPage.launchCustomerPortalError');

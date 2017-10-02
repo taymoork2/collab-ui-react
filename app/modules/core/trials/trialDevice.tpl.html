@@ -374,8 +374,10 @@
           <div class="pull-left medium-8 with-slim-offset" ng-hide="callTrial.selectedCountryCode !== 'US'">
             <label translate="trialModal.call.state" for="state"/>
             <cs-select
+              aria-text="{{::'trialModal.call.state' | translate}}"
               ng-model="callTrial.shippingInfo.state"
               options="callTrial.usStates"
+              placeholder="::'common.select' | translate"
               id="trial--devices--state"
               name="trialDevicesState"
               labelfield="abbr"
@@ -410,10 +412,12 @@
           <div class="medium-12 cs-input-group">
             <label for="country" translate="trialModal.call.country"/>
             <cs-select
+              aria-text="{{::'trialModal.call.country' | translate}}"
               ng-model="callTrial.shippingInfo.country"
               id="trial--devices--country"
               name="trialDevicesCountry"
               options="callTrial.countries"
+              placeholder="::'common.select' | translate"
               ng-required="true"
               ng-change-fn="callTrial.countryChanged()">
             </cs-select>

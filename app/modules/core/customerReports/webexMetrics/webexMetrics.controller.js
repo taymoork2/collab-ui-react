@@ -7,6 +7,7 @@
 
   /* @ngInject */
   function WebExMetricsCtrl(
+    $q,
     $sce,
     $scope,
     $stateParams,
@@ -19,8 +20,7 @@
     Notification,
     ProPackService,
     QlikService,
-    FeatureToggleService,
-    Userservice
+    FeatureToggleService
   ) {
     var vm = this;
 
@@ -86,26 +86,9 @@
     vm.updateIframe = updateIframe;
 
     init();
-    function onlyUnique(value, index, self) {
-      return self.indexOf(value) === index;
-    }
 
-    function handleSiteForReadOnly(siteUrls) {
-      var sites = [];
-      _.each(siteUrls, function (site) {
-        sites.push(_.replace(site, /#.*$/g, ''));
-      });
-      return sites;
-    }
-
-    function getUniqueWebexSiteUrls(siteUrls) {
-      return siteUrls.filter(onlyUnique);
-    }
-
-    function generateWebexMetricsUrl(trainSites) {
-      var webexSiteUrls = handleSiteForReadOnly(trainSites);
-      webexSiteUrls = getUniqueWebexSiteUrls(webexSiteUrls);
-
+    function generateWebexMetricsUrl() {
+      var webexSiteUrls = $scope.header.webexSiteList;
       vm.webexOptions = webexSiteUrls;
 
       promisChainDone();
@@ -132,35 +115,17 @@
     }
 
     function init() {
-      checkProPackPurchased();
+      checkProPackPurchased().then(function () {
+        generateWebexMetricsUrl();
+      });
       checkClassic();
-      Userservice.getUser(
-        'me',
-        function (data) {
-          if (data.success) {
-            FeatureToggleService.getFeaturesForUser(data.id, FeatureToggleService.features.webexMEI).then(function (response) {
-              _.forEach(response.developer, function (value) {
-                if (value.key === FeatureToggleService.features.webexMEI && value.val === true) {
-                  featureToggleoOnMEI();
-                }
-              });
-            });
+      checkWebexMEI();
 
-            var trainSites = [];
-            if (data.emails) {
-              Authinfo.setEmails(data.emails);
-              var adminTrainSiteNames = _.get(data, 'adminTrainSiteNames', []);
-              var linkedTrainSiteNames = _.get(data, 'linkedTrainSiteNames', []);
-              trainSites = _.concat(adminTrainSiteNames, linkedTrainSiteNames);
-              generateWebexMetricsUrl(trainSites);
-            }
-          }
-        }
-      );
       Analytics.trackReportsEvent(Analytics.sections.REPORTS.eventNames.CUST_WEBEX_REPORT);
     }
 
     function checkProPackPurchased() {
+      var deferred = $q.defer();
       ProPackService.hasProPackPurchased().then(function (isPurchased) {
         if (isPurchased) {
           vm.webexMetrics.views[0] = {
@@ -169,7 +134,12 @@
           };
           vm.reportView = vm.webexMetrics.views[0];
         }
+        deferred.resolve(isPurchased);
+      },
+      function (response) {
+        deferred.reject(response);
       });
+      return deferred.promise;
     }
 
     function checkClassic() {
@@ -183,14 +153,36 @@
       }
     }
 
-    function updateWebexMetrics() {
+    function checkWebexMEI() {
+      var userId = Authinfo.getUserId();
+      FeatureToggleService.getFeaturesForUser(userId, FeatureToggleService.features.webexMEI).then(function (response) {
+        _.forEach(response.developer, function (value) {
+          if (value.key === FeatureToggleService.features.webexMEI && value.val === true) {
+            featureToggleoOnMEI();
+          }
+        });
+      });
+    }
+
+    function setStorageSite(siteUrl) {
+      var storageMetricsSiteUrl = LocalStorage.get('webexMetricsSiteUrl');
+
+      if (siteUrl !== storageMetricsSiteUrl) {
+        LocalStorage.put('webexMetricsSiteUrl', siteUrl);
+      }
+    }
+
+    function resetSiteSelector() {
       var storageMetricsSiteUrl = LocalStorage.get('webexMetricsSiteUrl');
       var webexSelected = vm.webexSelected;
-      $scope.$broadcast('unfreezeState', false);
 
-      if (webexSelected !== storageMetricsSiteUrl) {
-        LocalStorage.put('webexMetricsSiteUrl', webexSelected);
+      if (webexSelected !== storageMetricsSiteUrl && !_.isEmpty(storageMetricsSiteUrl)) {
+        vm.webexSelected = storageMetricsSiteUrl;
       }
+    }
+
+    function updateWebexMetrics() {
+      $scope.$broadcast('unfreezeState', false);
 
       if (!(_.isNull(vm.webexSelected) || _.isUndefined(vm.webexSelected))) {
         vm.isNoData = false;
@@ -240,11 +232,12 @@
           }
           var QlikMashupChartsUrl = _.get(QlikService, 'getWebExReportAppfor' + viewType + 'Url')(vm.webexMetrics.appData.qrp);
           vm.webexMetrics.appData.url = QlikMashupChartsUrl;
-
+          setStorageSite(vm.webexSelected);
           loadUrlAndIframe(QlikMashupChartsUrl);
         }
       })
         .catch(function (error) {
+          resetSiteSelector();
           $scope.$broadcast('unfreezeState', true);
           Notification.errorWithTrackingId(error, 'common.error');
         });

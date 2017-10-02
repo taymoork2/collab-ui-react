@@ -12,16 +12,17 @@ class CcaReportsTabs implements ng.IComponentController {
   private today: string;
   public endDate: string;
   public startDate: string;
-  public endDateFormat: string;
-  public startDateFormat: string;
   public errMsg: any = {};
   public dateRange: any = {};
   public storeData: any = {};
 
   public KPIData = {};
   public data: any = {};
+  public endDateFormat: string;
+  public startDateFormat: string;
   public loading: boolean = true;
   public filterEnable: boolean = false;
+
 
   /* @ngInject */
   public constructor(
@@ -36,20 +37,16 @@ class CcaReportsTabs implements ng.IComponentController {
   public $onInit(): void {
     this.tabs = [
       {
-        state: `gemReports.group({ name: 'usage' })`,
-        title: `gemini.reportsChart.reportTab.usage`,
+        state: `partnerreports.tab.ccaReports.group({ name: 'usage' })`,
+        title: `gemini.reports.tab.usage`,
       },
       {
-        state: `gemReports.group({ name: 'peakPorts' })`,
-        title: `gemini.reportsChart.reportTab.peakPorts`,
+        state: `partnerreports.tab.ccaReports.group({ name: 'peakPorts' })`,
+        title: `gemini.reports.tab.peakPorts`,
       },
       {
-        state: `gemReports.group({ name: 'participants' })`,
-        title: `gemini.reportsChart.reportTab.participants`,
-      },
-      {
-        state: `gemReports.group({ name: 'typesSize' })`,
-        title: `gemini.reportsChart.reportTab.typesSize`,
+        state: `partnerreports.tab.ccaReports.group({ name: 'participants' })`,
+        title: `gemini.reports.tab.participants`,
       },
     ];
 
@@ -69,8 +66,8 @@ class CcaReportsTabs implements ng.IComponentController {
       lastEnableDate: this.endDate,
       firstEnableDate: this.startDate,
     };
-    this.endDateFormat = moment(this.endDate).format('MMMM Do, YYYY');
     this.dateRange.end = this.dateRange.start;
+    this.endDateFormat = moment(this.endDate).format('MMM Do, YYYY');
   }
 
   public onChangeDate() {
@@ -87,9 +84,9 @@ class CcaReportsTabs implements ng.IComponentController {
     if (moment(this.startDate).unix() > moment(this.endDate).unix()) {
       this.errMsg.datePicker = this.$translate.instant('webexReports.end-date-tooltip');
     }
+    this.endDateFormat = moment(this.endDate).format('MMM Do, YYYY');
+    this.startDateFormat = moment(this.startDate).format('MMM Do, YYYY');
     this.setParameters();
-    this.endDateFormat = moment(this.endDate).format('MMMM Do, YYYY');
-    this.startDateFormat = moment(this.startDate).format('MMMM Do, YYYY');
   }
 
 
@@ -116,10 +113,12 @@ class CcaReportsTabs implements ng.IComponentController {
   }
 
   public onDuration() {
-    if (_.get(this.data, 'durationSelected.value') === 'customer') {
-      _.set(this.data, 'dateEnable', true);
-    } else {
-      _.set(this.data, 'dateEnable', false);
+    const durVal: string = _.get(this.data, 'durationSelected.value');
+    durVal === 'customer' ? _.set(this.data, 'dateEnable', true) : _.set(this.data, 'dateEnable', false);
+    if (durVal !== 'customer') {
+      const arr: any = durVal.match(/^([MD])(90|45|12|6)$/);
+
+      this.startDateFormat = moment().subtract(_.parseInt(arr[2]) + 4, arr[1] === 'M' ? 'months' : 'days' ).format('MMM Do, YYYY');
     }
     this.setParameters();
   }
@@ -159,7 +158,7 @@ class CcaReportsTabs implements ng.IComponentController {
     const data_ = _.map(data, (item: any) => {
       return { value: item.accountId, label: item.accountName };
     });
-    data_.unshift({ value: '', label: this.$translate.instant('gemini.reportsChart.filter.allAccounts') });
+    data_.unshift({ value: '', label: this.$translate.instant('gemini.reports.filter.allAccounts') });
     this.data.accountSelected = data_[0];
 
     _.set(this.data, 'accountData', data);
@@ -171,7 +170,7 @@ class CcaReportsTabs implements ng.IComponentController {
     const data_ = _.map(data, (item: any) => {
       return { value: item.siteId, label: item.siteUrl };
     });
-    data_.unshift({ value: '', label: this.$translate.instant('gemini.reportsChart.filter.allSites') });
+    data_.unshift({ value: '', label: this.$translate.instant('gemini.reports.filter.allSites') });
     this.data.siteSelected = data_[0];
 
     _.set(this.data, 'siteData', data);
@@ -205,19 +204,19 @@ class CcaReportsTabs implements ng.IComponentController {
   private initParameters() {
     this.data.sessionSelected = [];
     this.data.durationOptions = [
-      { label: this.$translate.instant('gemini.reportsChart.filter.last12Months'), value: 'M12' },
-      { label: this.$translate.instant('gemini.reportsChart.filter.last6Months'), value: 'M6' },
-      { label: this.$translate.instant('gemini.reportsChart.filter.last90Days'), value: 'D90' },
-      { label: this.$translate.instant('gemini.reportsChart.filter.last45Days'), value: 'D45' },
-      { label: this.$translate.instant('gemini.reportsChart.filter.custom'), value: 'customer' },
+      { label: this.$translate.instant('gemini.reports.filter.last12Months'), value: 'M12' },
+      { label: this.$translate.instant('gemini.reports.filter.last6Months'), value: 'M6' },
+      { label: this.$translate.instant('gemini.reports.filter.last90Days'), value: 'D90' },
+      { label: this.$translate.instant('gemini.reports.filter.last45Days'), value: 'D45' },
+      { label: this.$translate.instant('gemini.reports.filter.custom'), value: 'customer' },
     ];
     this.data.durationSelected = this.data.durationOptions[0];
     this.data.customerSelected = this.data.customerOptions[0];
-    this.data.sitePlaceholder = this.$translate.instant('gemini.reportsChart.filter.allSites');
-    this.data.accountPlaceholder = this.$translate.instant('gemini.reportsChart.filter.allAccounts');
-    this.data.sessionPlaceholder = this.$translate.instant('gemini.reportsChart.filter.allSesstionTypes');
-    this.startDateFormat = moment(this.startDate).subtract('months', 12).format('MMMM Do, YYYY');
+    this.data.sitePlaceholder = this.$translate.instant('gemini.reports.filter.allSites');
+    this.data.accountPlaceholder = this.$translate.instant('gemini.reports.filter.allAccounts');
+    this.data.sessionPlaceholder = this.$translate.instant('gemini.reports.filter.allSessionTypes');
     this.onCustomer();
+    this.onDuration();
   }
 
   private clearData( arr ) {
@@ -233,31 +232,6 @@ class CcaReportsTabs implements ng.IComponentController {
       endDate: this.endDate,
       startDate: this.startDate,
     };
-    const durationData = {
-      customer: {
-        number: 93,
-        unit : 'days',
-      },
-      M12: {
-        number: 12,
-        unit : 'months',
-      },
-      M6: {
-        number: 6,
-        unit : 'months',
-      },
-      D90: {
-        number: 90,
-        unit : 'days',
-      },
-      D45: {
-        number: 45,
-        unit : 'days',
-      },
-    };
-
-    const durationItem: any = _.get(durationData, duration);
-    this.startDateFormat = moment().subtract(durationItem.unit, durationItem.number).format('MMMM Do, YYYY');
     const customerId = _.get(this.data, 'customerSelected.value', '');
     const customer = _.find(this.data_, { orgId: customerId });
     const spAccountId = _.get(customer, 'spAccountId', '');
@@ -287,9 +261,8 @@ class CcaReportsTabs implements ng.IComponentController {
   }
 
   private getKPIData(data) {
-    const url = 'growth';
     const KPIkey = ['hostGrowth', 'meetingGrowth', 'audioGrowth', 'audioPortGrowth', 'videoGrowth', 'videoPortGrowth'];
-    this.ReportsChartService.getChartData(url, data)
+    this.ReportsChartService.getkPIData(data)
       .then((res: any) => {
         this.KPIData = _.map(KPIkey, (item: any) => {
           const oneKPI: any = _.find(res.result, { name: item });
@@ -300,14 +273,14 @@ class CcaReportsTabs implements ng.IComponentController {
 
   private getChartsFunction(data) {
     const data_ = {};
-    _.forEach(CHARTS, (item) => {
+    _.forEach(CHARTS.common, (item) => {
       if (!_.get(data_, item.group)) {
         data_[item.group] = {};
       }
       data_[item.group][item.url] = {};
     });
     this.chartsData = data_;
-    return _.map(CHARTS, (item: any) => {
+    return _.map(CHARTS.common, (item: any) => {
       return this.ReportsChartService.getChartData(item.url, data)
         .then(res => _.assignIn({}, item, { data: res }))
         .catch(() => _.assignIn({}, item, { data: {} }));
@@ -320,14 +293,15 @@ class CcaReportsTabs implements ng.IComponentController {
       .then((res) => {
         _.forEach(res, (item) => {
           this.chartsData[item.group][item.url] = item;
+          //item.data.chart = _.keyBy(item.data.chart, 'time');
           this.csvData.push(item);
           this.loading = false;
         });
       });
   }
 
-  public getExportCSV() {
-    return this.ReportsChartService.reportChartExportCSV(this.csvData);
+  public onExportCSV() {
+    return this.ReportsChartService.exportCSV(this.csvData);
   }
 }
 

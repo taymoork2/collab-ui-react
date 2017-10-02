@@ -1,6 +1,7 @@
 import { PhoneButtonLayoutService, IPhoneButton } from './phoneButtonLayout.service';
 import { IActionItem } from 'modules/core/components/sectionTitle/sectionTitle.component';
 import { Notification } from 'modules/core/notifications';
+import { CallDestinationTranslateService, ICallDestinationTranslate } from 'modules/call/shared/call-destination-translate';
 
 interface IValidationMessages {
   required: string;
@@ -21,6 +22,7 @@ const PHONE_BUTTON_LIMIT = 150;
 const inputs: string[] = ['external', 'uri', 'custom'];
 const addableButtonTypes: string[] = ['FEATURE_NONE', 'FEATURE_SPEED_DIAL_BLF'];
 const defaultNewButtonType: string = 'FEATURE_SPEED_DIAL_BLF';
+const PLACE_OWNER_TYPE: string = 'places';
 
 class PhoneButtonLayoutCtrl implements ng.IComponentController {
   private ownerId: string;
@@ -38,6 +40,8 @@ class PhoneButtonLayoutCtrl implements ng.IComponentController {
   private labelMessages: IValidationMessages;
   private numberMessages: IValidationMessages;
   private customTranslations: ITranslationMessages;
+  private inputTranslations: ICallDestinationTranslate;
+  private customNumberValidationPatern: RegExp;
   private actionList: IActionItem[] = [];
   private buttonTypeInputs: object[] = [];
   private callDestInputs: string[];
@@ -62,19 +66,30 @@ class PhoneButtonLayoutCtrl implements ng.IComponentController {
     private dragularService,
     private Notification: Notification,
     private PhoneButtonLayoutService: PhoneButtonLayoutService,
+    private CallDestinationTranslateService: CallDestinationTranslateService,
     private $timeout: ng.ITimeoutService,
     private BlfInternalExtValidation,
     private Authinfo,
     private FeatureMemberService,
+    private HuronUserService,
     private BlfURIValidation,
   ) {
+  }
+
+  public $onInit() {
     this.callDestInputs = inputs;
     this.firstReordering = true;
     this.editing = false;
     this.reordering = false;
-    this.FeatureMemberService.getUser(this.ownerId).then((user) => {
-      this.ownerName = this.FeatureMemberService.getFullNameFromUser(user);
-    });
+    if (this.ownerType === PLACE_OWNER_TYPE) {
+      this.FeatureMemberService.getMachineAcct(this.ownerId).then((machine) => {
+        this.ownerName = _.get(machine, 'displayName');
+      });
+    } else {
+      this.HuronUserService.getUserV2(this.ownerId).then((user) => {
+        this.ownerName = this.HuronUserService.getFullNameFromUser(user);
+      });
+    }
     this.PhoneButtonLayoutService.getPhoneButtons(this.ownerType, this.ownerId).then((data) => {
       this.phoneButtonList = data.buttonLayout;
       this.setDefaultPhoneButtonAttributes(this.phoneButtonList);
@@ -106,9 +121,6 @@ class PhoneButtonLayoutCtrl implements ng.IComponentController {
         value: type,
       });
     });
-  }
-
-  public $onInit() {
     this.$scope.$watchCollection(() => {
       return this.phoneButtonList;
     }, () => {
@@ -117,6 +129,8 @@ class PhoneButtonLayoutCtrl implements ng.IComponentController {
       this.isButtonLimitReached = this.phoneButtonListFull.length >= PHONE_BUTTON_LIMIT;
       this.buildActionList();
     });
+    this.inputTranslations = this.CallDestinationTranslateService.getCallDestinationTranslate();
+    this.customNumberValidationPatern = this.CallDestinationTranslateService.getCustomNumberValidationPatern();
   }
 
   public extensionOwned(number: string): void {
@@ -189,6 +203,7 @@ class PhoneButtonLayoutCtrl implements ng.IComponentController {
       }
     });
     this.PhoneButtonLayoutService.updatePhoneButtons(this.ownerType, this.ownerId, this.phoneButtonListFull).then(() => {
+      this.Notification.success('phoneButtonLayout.success');
       this.isValid = false;
       this.reordering = false;
       this.editing = false;

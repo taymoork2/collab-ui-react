@@ -51,10 +51,4 @@ describe('controller: servicePartnerCtrl', function () {
     $scope.$apply();
     expect(Notification.error).toHaveBeenCalledWith('gemini.msg.splsResponseErr');
   });
-
-  it('The response have message', function () {
-    defer.resolve(spData.error2);
-    $scope.$apply();
-    expect(Notification.error).toHaveBeenCalled();
-  });
 });

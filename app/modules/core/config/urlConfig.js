@@ -134,6 +134,12 @@
       integration: 'https://config.appstaging.ciscoccservice.com/config/v1',
       prod: 'https://config.produs1.ciscoccservice.com/config/v1',
     },
+    SunlightURServiceUrl: {
+      dev: 'https://pick.devus1.ciscoccservice.com/qnr/v1',
+      cfe: 'https://pick.appstaging.ciscoccservice.com/qnr/v1',
+      integration: 'https://pick.appstaging.ciscoccservice.com/qnr/v1',
+      prod: 'https://pick.produs1.ciscoccservice.com/qnr/v1',
+    },
     SunlightBubbleUrl: {
       dev: 'https://bubble.devus1.ciscoccservice.com',
       cfe: 'https://bubble.appstaging.ciscoccservice.com',
@@ -177,8 +183,8 @@
       prod: 'https://hades.huron-dev.com/api/v1/elasticsearch/',
     },
     GeminiUrl: {
-      dev: 'https://hfccap2.qa.webex.com/pcs/api/v2/',
-      cfe: 'https://hfccap2.qa.webex.com/pcs/api/v2/',
+      dev: 'https://hfccap1.qa.webex.com/pcs/api/v2/',
+      cfe: 'https://hfccap1.qa.webex.com/pcs/api/v2/',
       integration: 'https://ccaportalbts.webex.com/pcs/api/v2/',
       prod: 'https://ccaportal.webex.com/pcs/api/v2/',
     },
@@ -312,10 +318,10 @@
       prod: 'https://%s/custportal/extensions/spark-report-partner/spark-report-partner.html',
     },
     VirtualAssistantServiceUrl: {
-      dev: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/',
-      cfe: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/',
-      integration: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/',
-      prod: 'https://bot-services.produs1.ciscoccservice.com/bot-services/v1/',
+      dev: 'https://virtual-assistant.appstaging.ciscoccservice.com/bot-services/v1/',
+      cfe: 'https://virtual-assistant.appstaging.ciscoccservice.com/bot-services/v1/',
+      integration: 'https://virtual-assistant.appstaging.ciscoccservice.com/bot-services/v1/',
+      prod: 'https://virtual-assistant.produs1.ciscoccservice.com/bot-services/v1/',
     },
     WebExReportAppforMEIUrl: {
       dev: 'https://%s/custportal/extensions/MEI/MEI.html',

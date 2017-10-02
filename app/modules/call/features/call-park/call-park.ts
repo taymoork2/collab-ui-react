@@ -1,5 +1,6 @@
 import { CallFeatureMember } from 'modules/call/features/shared/call-feature-members/call-feature-member';
 import { FallbackDestination } from 'modules/call/features/shared/call-feature-fallback-destination';
+import { LocationListItem } from 'modules/call/locations';
 
 const FALLBACK_TIMER_DEFAULT: number = 120;
 
@@ -11,7 +12,7 @@ export class CallPark {
   public fallbackDestination: FallbackDestination;
   public fallbackTimer: number;
   public members: CallFeatureMember[];
-  public location: string | undefined;
+  public location: LocationListItem | undefined;
 
   constructor(obj: {
     uuid?: string,
@@ -21,7 +22,7 @@ export class CallPark {
     fallbackDestination: FallbackDestination,
     fallbackTimer: number,
     members: CallFeatureMember[],
-    location?: string,
+    location?: LocationListItem,
   } = {
     uuid: undefined,
     name: undefined,

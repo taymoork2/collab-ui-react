@@ -1,16 +1,16 @@
 import './inlineEditText.scss';
-import focusModule from 'modules/core/focus';
-import csInput from 'collab-ui-ng/dist/directives/input';
-import ProPackModule from 'modules/core/proPack';
+import focusModuleName from 'modules/core/focus';
+import csInputModuleName from 'collab-ui-ng/dist/directives/input';
+import proPackModuleName from 'modules/core/proPack';
 import { InlineEditTextComponent } from './inlineEditText.component';
 
 
 export default angular
   .module('core.inline-edit-text', [
     require('collab-ui-ng').default,
-    csInput,
-    focusModule,
-    ProPackModule,
+    csInputModuleName,
+    focusModuleName,
+    proPackModuleName,
   ])
   .component('crInlineEditText', new InlineEditTextComponent())
   .name;

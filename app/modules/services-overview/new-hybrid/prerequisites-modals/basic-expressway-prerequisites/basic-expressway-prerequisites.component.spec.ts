@@ -70,49 +70,55 @@ describe('BasicExpresswayPrerequisitesComponentController', () => {
       const checkboxName = 'theTrooper';
       initController();
       $scope.$apply();
-      controller.checkboxes[checkboxName] = true;
-      $scope.$apply();
+      controller.processChange(checkboxName, true);
       expect(HybridServicesFlagService.raiseFlag).toHaveBeenCalledWith(`${flagPrefix}${checkboxName}`);
     });
 
     it('should lower a flag when a box is unchecked', () => {
       const checkboxName = 'runForTheHills';
       initController();
-      controller.checkboxes[checkboxName] = true;
       $scope.$apply();
-      controller.checkboxes[checkboxName] = false;
-      $scope.$apply();
+      controller.processChange(checkboxName, false);
       expect(HybridServicesFlagService.lowerFlag).toHaveBeenCalledWith(`${flagPrefix}${checkboxName}`);
     });
 
-    it('should call the provided callback function when one checkbox has changed', () => {
+    it('should call the provided callback function once on init, and again when one checkbox has changed', () => {
       const checkboxName = 'theEvilThatMenDo';
       const callback = jasmine.createSpy('callback');
       initController(callback);
-      controller.checkboxes[checkboxName] = true;
       $scope.$apply();
-      expect(callback).toHaveBeenCalledWith({
+      expect(callback.calls.count()).toBe(1);
+
+      controller.checkboxes[checkboxName] = true;
+      controller.processChange(checkboxName, true);
+      expect(callback.calls.count()).toBe(2);
+      expect(callback.calls.mostRecent().args[0]).toEqual(jasmine.objectContaining({
         options: {
           numberChecked: 1,
           totalNumber: 7,
         },
-      });
+      }));
     });
 
-    it('should call the provided callback function when two checkboxes have changed', () => {
+    it('should call the provided callback function once on init, and with the correct arguments when two checkboxes have changed', () => {
       const checkboxName1 = 'OnlyTheGoodDieYoung';
       const checkboxName2 = 'FearOfTheDark';
       const callback = jasmine.createSpy('callback');
       initController(callback);
-      controller.checkboxes[checkboxName1] = true;
-      controller.checkboxes[checkboxName2] = true;
       $scope.$apply();
-      expect(callback).toHaveBeenCalledWith({
+      expect(callback.calls.count()).toBe(1);
+
+      controller.checkboxes[checkboxName1] = true;
+      controller.processChange(checkboxName1, true);
+      controller.checkboxes[checkboxName2] = true;
+      controller.processChange(checkboxName2, true);
+      expect(callback.calls.count()).toBe(3);
+      expect(callback.calls.mostRecent().args[0]).toEqual(jasmine.objectContaining({
         options: {
           numberChecked: 2,
           totalNumber: 8,
         },
-      });
+      }));
     });
   });
 

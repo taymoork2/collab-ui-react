@@ -36,6 +36,7 @@ class CallForwardCtrl implements ng.IComponentController {
   public errorMsg: {};
 
   private inputTranslations: ICallDestinationTranslate;
+  private customNumberValidationPatern: RegExp;
 
  /* @ngInject */
   constructor(
@@ -59,6 +60,7 @@ class CallForwardCtrl implements ng.IComponentController {
       this.countryCode = response.data.countryCode;
     });
     this.inputTranslations = this.CallDestinationTranslateService.getCallDestinationTranslate();
+    this.customNumberValidationPatern = this.CallDestinationTranslateService.getCustomNumberValidationPatern();
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {

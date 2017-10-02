@@ -12,6 +12,7 @@
     var externalNumberPool = [];
     var telephonyInfo = {};
     var nameTemplate;
+    var order = '';
 
     var service = {
       loadPrimarySiteInfo: loadPrimarySiteInfo,
@@ -84,7 +85,8 @@
     }
 
     function loadLocationInternalNumberPool(pattern, locationId) {
-      return NumberService.getNumberList(pattern, 'internal', false, null, null, null, locationId)
+      order = 'SITETOSITE-ASC';
+      return NumberService.getNumberList(pattern, 'internal', false, order, null, null, locationId)
         .then(function (internalPool) {
           internalNumberPool = internalPool;
           return _.cloneDeep(internalNumberPool);

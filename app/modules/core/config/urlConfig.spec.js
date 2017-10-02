@@ -371,12 +371,21 @@ describe('UrlConfigSpec', function () {
     });
   });
 
+  it('should return correct Sunlight UR Service url', function () {
+    whenCalling('getSunlightURServiceUrl').expectUrlToBe({
+      dev: 'https://pick.devus1.ciscoccservice.com/qnr/v1',
+      cfe: 'https://pick.appstaging.ciscoccservice.com/qnr/v1',
+      integration: 'https://pick.appstaging.ciscoccservice.com/qnr/v1',
+      prod: 'https://pick.produs1.ciscoccservice.com/qnr/v1',
+    });
+  });
+
   it('should return correct Virtual Assistant Service url', function () {
     whenCalling('getVirtualAssistantServiceUrl').expectUrlToBe({
-      dev: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/',
-      cfe: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/',
-      integration: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/',
-      prod: 'https://bot-services.produs1.ciscoccservice.com/bot-services/v1/',
+      dev: 'https://virtual-assistant.appstaging.ciscoccservice.com/bot-services/v1/',
+      cfe: 'https://virtual-assistant.appstaging.ciscoccservice.com/bot-services/v1/',
+      integration: 'https://virtual-assistant.appstaging.ciscoccservice.com/bot-services/v1/',
+      prod: 'https://virtual-assistant.produs1.ciscoccservice.com/bot-services/v1/',
     });
   });
 

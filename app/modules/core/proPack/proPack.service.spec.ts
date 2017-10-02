@@ -7,11 +7,8 @@ describe('ProPackService', () => {
     this.injectDependencies(
       '$q',
       '$rootScope',
-      '$state',
       'Authinfo',
-      'Config',
       'FeatureToggleService',
-      'LicenseService',
       'ProPackService',
     );
     spyOn(this.Authinfo, 'isPremium').and.returnValue(false);
@@ -20,7 +17,7 @@ describe('ProPackService', () => {
     installPromiseMatchers();
   });
   describe('hasProPackEnabled()', () => {
-    it('should return true if atlas-it-pro-pack FT is enabled  and false if it\'s not', function(){
+    it('should return true if atlas-it-pro-pack FT is enabled and false if it\'s not', function(){
       let promise = this.ProPackService.hasProPackEnabled().then(result => {
         expect(result).toBeTruthy();
       });

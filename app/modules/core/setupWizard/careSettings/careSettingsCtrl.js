@@ -1,10 +1,11 @@
+var HttpStatus = require('http-status-codes');
 (function () {
   'use strict';
 
   angular.module('Core')
     .controller('CareSettingsCtrl', CareSettingsCtrl);
 
-  function CareSettingsCtrl($interval, $q, $scope, $translate, Authinfo, Log, Notification, SunlightConfigService) {
+  function CareSettingsCtrl($interval, $q, $scope, $translate, Authinfo, Log, Notification, SunlightConfigService, UrlConfig, URService) {
     var vm = this;
 
     vm.status = {
@@ -18,27 +19,42 @@
     vm.NOT_ONBOARDED = 'notOnboarded';
     vm.IN_PROGRESS = 'inProgress';
 
+    vm.defaultQueueStatus = vm.status.UNKNOWN;
     vm.csOnboardingStatus = vm.status.UNKNOWN;
     vm.aaOnboardingStatus = vm.status.UNKNOWN;
     vm.appOnboardingStatus = vm.status.UNKNOWN;
 
+    vm.defaultQueueId = Authinfo.getOrgId();
     vm.careSetupDoneByAdmin = (Authinfo.getOrgId() === Authinfo.getUserOrgId());
 
     vm.state = vm.status.UNKNOWN;
     vm.errorCount = 0;
 
-    vm.onboardToCare = function () {
-      vm.state = vm.IN_PROGRESS;
-
+    function onboardCsAaAppToCare() {
       var promises = {};
       if (vm.csOnboardingStatus !== vm.status.SUCCESS) {
         promises.onBoardCS = SunlightConfigService.onBoardCare();
+        promises.onBoardCS.then(function (result) {
+          if (result.status === HttpStatus.ACCEPTED) {
+            vm.csOnboardingStatus = vm.status.SUCCESS;
+          }
+        });
       }
       if (Authinfo.isCareVoice() && vm.aaOnboardingStatus !== vm.status.SUCCESS) {
         promises.onBoardAA = SunlightConfigService.aaOnboard();
+        promises.onBoardAA.then(function (result) {
+          if (result.status === HttpStatus.NO_CONTENT) {
+            vm.aaOnboardingStatus = vm.status.SUCCESS;
+          }
+        });
       }
       if (vm.careSetupDoneByAdmin && vm.appOnboardingStatus !== vm.status.SUCCESS) {
         promises.onBoardBotApp = SunlightConfigService.onboardCareBot();
+        promises.onBoardBotApp.then(function (result) {
+          if (result.status === HttpStatus.NO_CONTENT) {
+            vm.appOnboardingStatus = vm.status.SUCCESS;
+          }
+        });
       }
       $q.all(promises).then(function (results) {
         Log.debug('Care onboarding is success', results);
@@ -48,6 +64,30 @@
         Log.error('Care onboarding failed with error', error);
         Notification.errorWithTrackingId(error, $translate.instant('firstTimeWizard.setUpCareFailure'));
       });
+    }
+
+    vm.onboardToCare = function () {
+      vm.state = vm.IN_PROGRESS;
+      if (vm.defaultQueueStatus !== vm.status.SUCCESS) {
+        var createQueueRequest = {
+          queueId: Authinfo.getOrgId(),
+          queueName: 'DEFAULT',
+          notificationUrls: [UrlConfig.getSunlightPickNotificationUrl()],
+          routingType: 'pick',
+        };
+
+        URService.createQueue(createQueueRequest).then(function () {
+          vm.defaultQueueStatus = vm.status.SUCCESS;
+          onboardCsAaAppToCare();
+        })
+          .catch(function (error) {
+            vm.state = vm.NOT_ONBOARDED;
+            Log.error('default queue creation is unsuccessful,' + error);
+            Notification.errorWithTrackingId(error, $translate.instant('firstTimeWizard.setUpCareFailure'));
+          });
+      } else {
+        onboardCsAaAppToCare();
+      }
     };
 
     var poller;
@@ -93,12 +133,12 @@
             Log.debug('Care setup status is not Success: ', result);
         }
       })
-        .catch(function (result) {
-          if (result.status !== 404) {
-            Log.debug('Fetching Care setup status failed: ', result);
+        .catch(function (error) {
+          if (error.status !== 404) {
+            Log.debug('Fetching Care setup status failed: ', error);
             if (vm.errorCount++ >= pollErrorCount) {
               vm.state = vm.status.UNKNOWN;
-              Notification.errorWithTrackingId(result, 'firstTimeWizard.careSettingsFetchFailed');
+              Notification.errorWithTrackingId(error, 'firstTimeWizard.careSettingsFetchFailed');
               stopPolling();
             }
           }
@@ -126,7 +166,9 @@
     function onboardingDoneByAdminStatus(result) {
       var onboardingDoneByAdminStatus = vm.status.UNKNOWN;
       vm.appOnboardingStatus = _.get(result, 'data.appOnboardStatus');
-      if (vm.csOnboardingStatus === vm.status.SUCCESS && vm.appOnboardingStatus === vm.status.SUCCESS) {
+      if (vm.defaultQueueStatus !== vm.status.SUCCESS) {
+        onboardingDoneByAdminStatus = vm.defaultQueueStatus;
+      } else if (vm.csOnboardingStatus === vm.status.SUCCESS && vm.appOnboardingStatus === vm.status.SUCCESS) {
         onboardingDoneByAdminStatus = onboardingStatusWhenCareVoiceEnabled();
       } else if (vm.csOnboardingStatus !== vm.status.SUCCESS) {
         onboardingDoneByAdminStatus = vm.csOnboardingStatus;
@@ -140,7 +182,9 @@
 
     function onboardingDoneByPartnerStatus() {
       var onboardingDoneByPartnerStatus = vm.status.UNKNOWN;
-      if (vm.csOnboardingStatus === vm.status.SUCCESS) {
+      if (vm.defaultQueueStatus !== vm.status.SUCCESS) {
+        onboardingDoneByPartnerStatus = vm.defaultQueueStatus;
+      } else if (vm.csOnboardingStatus === vm.status.SUCCESS) {
         onboardingDoneByPartnerStatus = onboardingStatusWhenCareVoiceEnabled();
       } else if (vm.csOnboardingStatus !== vm.status.SUCCESS) {
         onboardingDoneByPartnerStatus = vm.csOnboardingStatus;
@@ -166,9 +210,7 @@
       _.set($scope.wizard, 'isNextDisabled', true);
     }
 
-    function init() {
-      disableNext();
-
+    function getOnboardingStatusFromOrgChatConfig() {
       SunlightConfigService.getChatConfig().then(function (result) {
         var onboardingStatus = getOnboardingStatus(result);
         switch (onboardingStatus) {
@@ -184,15 +226,30 @@
             vm.state = vm.NOT_ONBOARDED;
         }
       })
-        .catch(function (result) {
-          if (result.status === 404) {
+        .catch(function (error) {
+          if (error.status === 404) {
             vm.state = vm.NOT_ONBOARDED;
           } else {
-            Log.debug('Fetching Care setup status, on load, failed: ', result);
+            Log.debug('Fetching Care setup status, on load, failed: ', error);
           }
         });
     }
 
+    function init() {
+      disableNext();
+
+      URService.getQueue(vm.defaultQueueId).then(function () {
+        vm.defaultQueueStatus = vm.status.SUCCESS;
+        getOnboardingStatusFromOrgChatConfig();
+      }, function (error) {
+        getOnboardingStatusFromOrgChatConfig();
+        if (error.status === 404) {
+          vm.state = vm.NOT_ONBOARDED;
+        } else {
+          Log.debug('Fetching default queue status, on load, failed: ', error);
+        }
+      });
+    }
     init();
   }
 })();

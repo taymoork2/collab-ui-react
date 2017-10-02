@@ -851,3 +851,8 @@ exports.selectDropdown = function (dropdown, option) {
   this.click(element(by.css(dropdown + ' span.select-toggle')));
   this.click(element(by.cssContainingText(dropdown + ' .select-options a', option)));
 };
+
+exports.selectLastDropdown = function (dropdown, option) {
+  this.click(element.all(by.css(dropdown + ' span.select-toggle')).last());
+  this.click(element.all(by.cssContainingText(dropdown + ' .select-options a', option)).last());
+};

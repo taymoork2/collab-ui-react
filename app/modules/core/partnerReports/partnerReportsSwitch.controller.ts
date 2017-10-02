@@ -13,7 +13,7 @@ export class PartnerReportsSwitchCtrl implements ng.IComponentController {
 
   public switchView(toggle: boolean): void {
     if (!toggle) {
-      this.$state.go('partnerreports.base');
+      this.$state.go('partnerreports.tab.base');
     } else {
       this.$state.go('partnerreports.spark');
     }

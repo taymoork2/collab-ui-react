@@ -26,7 +26,6 @@ describe('Controller: UserOverviewCtrl', function () {
     this.updatedUser.trainSiteNames = ['testSite'];
     this.invitations = getJSONFixture('core/json/users/invitations.json');
     this.featureToggles = getJSONFixture('core/json/users/me/featureToggles.json');
-    this.languages = getJSONFixture('huron/json/settings/languages.json');
   }
 
   function initDependencySpies() {
@@ -58,7 +57,6 @@ describe('Controller: UserOverviewCtrl', function () {
     spyOn(this.MessengerInteropService, 'hasAssignableMessageOrgEntitlement');
     spyOn(this.Notification, 'success');
     spyOn(this.Authinfo, 'isSquaredTeamMember').and.returnValue(false);
-    spyOn(this.ServiceSetup, 'getAllLanguages').and.returnValue(this.$q.resolve(this.languages));
   }
 
   function initStateParams() {

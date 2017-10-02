@@ -22,11 +22,11 @@ export class AddHuntGroupPage {
     this.lastCard = element.all(by.css('div.cs-card-number')).last();
     this.leftPanel = element(by.css('div.left-panel'));
     this.rightPanel = element(by.css('div.right-panel'));
-    this.leftSide = element(by.cssContainingText('p.title', '310'));
+    this.leftSide = element(by.cssContainingText('p.title', '325'));
     this.rightSide = element(by.css('i.icon.icon-exit'));
     this.inputMember = element(by.css('input'));
-    this.firstHG = element(by.cssContainingText('p.title', '310'));
-    this.secondHG = element(by.cssContainingText('p.title', '311'));
+    this.firstHG = element(by.cssContainingText('p.title', '325'));
+    this.secondHG = element(by.cssContainingText('p.title', '326'));
     this.longestIdle = element(by.cssContainingText('div', 'Longest Idle'));
     this.broadcast = element(by.cssContainingText('div', 'Broadcast'));
     this.circular = element(by.cssContainingText('div', 'Circular'));

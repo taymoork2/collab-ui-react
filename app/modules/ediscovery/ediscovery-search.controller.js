@@ -30,8 +30,6 @@
     vm.generateReport = generateReport;
     vm.runReport = runReport;
     vm.reportProgress = reportProgress;
-    vm.isOnPrem = isOnPrem;
-    $scope.downloadReportModal = downloadReportModal;
     vm.downloadReport = downloadReport;
     vm.cancelReport = cancelReport;
     vm.keyPressHandler = keyPressHandler;
@@ -97,12 +95,10 @@
         ProPackService.hasProPackEnabled(),
         ProPackService.hasProPackPurchased(),
         FeatureToggleService.atlasEdiscoveryGetStatus(),
-        FeatureToggleService.atlasEdiscoveryIPSettingGetStatus(),
       ]).then(function (toggles) {
         vm.proPackEnabled = toggles[0];
         vm.proPackPurchased = toggles[1];
         vm.ediscoveryToggle = toggles[2];
-        vm.ediscoveryIPSettingToggle = toggles[3];
         if (!vm.proPackPurchased) {
           vm.firstEnabledDate = moment().subtract(90, 'days').format('YYYY-MM-DD');
         }
@@ -282,9 +278,15 @@
                 resetSearchPageToInitialState();
               } else {
                 searchResults(result);
+                var convertedSize = bytesToSize(result.data.totalSizeInBytes);
+                var splitConvertedSize = convertedSize.split(' ');
+                var reportSize = parseInt(splitConvertedSize[0], 10);
+                var sizeInUnits = splitConvertedSize[1];
                 if (result.data.numRooms > 2500) {
                   vm.isReportMaxRooms = true;
                   vm.isReport = false;
+                } else if (reportSize >= 5 && sizeInUnits === 'GB') {
+                  vm.isReportTooBig = true;
                 }
               }
             })
@@ -470,22 +472,6 @@
       }
     }
 
-    function isOnPrem(report) {
-      $scope.reportHeader = $translate.instant('ediscovery.reportsList.modalHeader', {
-        name: report.displayName,
-      });
-      $scope.modalPlaceholder = $translate.instant('ediscovery.reportsList.modalPlaceholder');
-      vm.report = report;
-      var onPrem = vm.ediscoveryIPSettingToggle ? EdiscoveryService.openReportModal($scope) : downloadReport(report);
-      return onPrem;
-    }
-
-    function downloadReportModal() {
-      var downloadUrl = _.get(vm.report, 'downloadUrl');
-      vm.report.downloadUrl = _.replace(downloadUrl, downloadUrl.split('/')[2], $scope.ipAddressModel);
-      downloadReport(vm.report);
-    }
-
     function downloadReport(report) {
       vm.downloadingReport = true;
       EdiscoveryService.downloadReport(report)
@@ -570,10 +556,10 @@
       return words;
     }
 
-    function convertBytesToGB(bytes) {
+    function bytesToSize(bytes) {
       var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
       var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10);
-      return _.isNaN(i) ? 0 : Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+      return _.isNaN(i) ? '0 Bytes' : Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
     }
 
     function searchSetup() {
@@ -602,7 +588,7 @@
         numRooms: result.data.numRooms,
         numFiles: result.data.numFiles,
         numMessages: result.data.numMessages,
-        totalSize: convertBytesToGB(result.data.totalSizeInBytes),
+        totalSize: bytesToSize(result.data.totalSizeInBytes),
       };
       vm.searchResultsHeader = _.eq(vm.searchByOptions[0], vm.searchBySelected) ? $translate.instant('ediscovery.searchResults.emailAddress') : $translate.instant('ediscovery.searchResults.spaceId');
     }

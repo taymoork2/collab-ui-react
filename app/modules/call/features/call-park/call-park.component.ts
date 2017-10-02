@@ -87,7 +87,14 @@ class CallParkCtrl implements ng.IComponentController {
     this.checkForChanges();
   }
 
-  public setCallParkLocation(location): void {
+  public setCallParkLocation(location: LocationListItem): void {
+    if (this.callPark.location) {
+      this.setCallParkRange(<ICallParkRangeItem>{
+        startRange: '',
+        endRange: '',
+      });
+      this.setCallParkMembers([]);
+    }
     this.callPark.location = location;
     this.checkForChanges();
   }

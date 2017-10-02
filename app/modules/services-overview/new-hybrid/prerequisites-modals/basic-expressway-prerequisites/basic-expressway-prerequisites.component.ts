@@ -1,4 +1,4 @@
-import { HybridServicesFlagService } from 'modules/hercules/services/hs-flag-service';
+import { HybridServicesPrerequisitesHelperService } from 'modules/services-overview/new-hybrid/prerequisites-modals/hybrid-services-prerequisites-helper.service';
 import { Notification } from 'modules/core/notifications';
 
 export class BasicExpresswayPrerequisitesComponentController implements ng.IComponentController {
@@ -16,62 +16,35 @@ export class BasicExpresswayPrerequisitesComponentController implements ng.IComp
 
   /* @ngInject */
   constructor(
-    private $scope: ng.IScope,
-    private $window: ng.IWindowService,
-    private HybridServicesFlagService: HybridServicesFlagService,
+    private HybridServicesPrerequisitesHelperService: HybridServicesPrerequisitesHelperService,
     private Notification: Notification,
   ) {}
 
   public $onInit(): void {
-    this.readflags()
+    const prefixedFlags = this.HybridServicesPrerequisitesHelperService.getPrefixedFlags(this.flagPrefix, this.checkboxes);
+    this.HybridServicesPrerequisitesHelperService.readFlags(prefixedFlags, this.flagPrefix, this.checkboxes)
+      .then((checkboxes) => {
+        this.checkboxes = checkboxes;
+      })
       .catch((error) => {
         this.Notification.errorWithTrackingId(error, 'servicesOverview.cards.hybridCall.prerequisites.cannotReachFlagService');
       })
       .finally(() => {
-        this.setupWatch();
+        this.onChange(this.HybridServicesPrerequisitesHelperService.buildNumbersCheckedObject(this.checkboxes));
       });
   }
 
-  private getPrefixedFlags(): string[] {
-    return _.map(Object.keys(this.checkboxes), (checkbox) => `${this.flagPrefix}${checkbox}`);
-  }
-
-  private readflags(): ng.IPromise<void> {
-    const flags = this.getPrefixedFlags();
-    return this.HybridServicesFlagService.readFlags(flags)
-      .then((rawFlags) => {
-        _.forEach(rawFlags, (flag) => {
-          this.checkboxes[flag.name.replace(this.flagPrefix, '')] = flag.raised;
-        });
-      });
-  }
-
-  private setupWatch(): void {
-    this.$scope.$watch(() => this.checkboxes, (newValue, oldValue) => {
-      _.forEach(Object.keys(this.checkboxes), (flagName) => {
-        if (oldValue[flagName] !== newValue[flagName]) {
-          if (newValue[flagName]) {
-            this.HybridServicesFlagService.raiseFlag(`${this.flagPrefix}${flagName}`);
-          } else {
-            this.HybridServicesFlagService.lowerFlag(`${this.flagPrefix}${flagName}`);
-          }
-        }
-      });
-      this.onChange({
-        options: {
-          numberChecked: this.getNumberOfCheckboxes(newValue),
-          totalNumber: Object.keys(this.checkboxes).length,
-        },
-      });
-    }, true);
-  }
-
-  private getNumberOfCheckboxes(checkboxes): number {
-    return _.reduce(checkboxes, (sumTotalChecked, isChecked) => isChecked ? sumTotalChecked + 1 : sumTotalChecked, 0);
+  public processChange(flagName: string, newValue: boolean): void {
+    this.HybridServicesPrerequisitesHelperService.processFlagChange(flagName, this.flagPrefix, newValue);
+    this.onChange(this.HybridServicesPrerequisitesHelperService.buildNumbersCheckedObject(this.checkboxes));
   }
 
   public openDocumentation(): void {
-    this.$window.open('https://www.cisco.com/c/en/us/td/docs/voice_ip_comm/cloudCollaboration/spark/hybridservices/callservices/cmgt_b_ciscospark-hybrid-call-service-config-guide/cmgt_b_ciscospark-hybrid-call-service-config-guide_chapter_011.html');
+    this.onChange({
+      options: {
+        openDocumentation: true,
+      },
+    });
   }
 
 }

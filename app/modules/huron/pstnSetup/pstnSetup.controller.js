@@ -8,6 +8,7 @@
   function PstnSetupCtrl($state, $stateParams, PstnModel, PstnService, Notification) {
     //Save state params
     PstnModel.setCustomerId($stateParams.customerId);
+    PstnModel.setCustomerExists(false);
     PstnModel.setCustomerName($stateParams.customerName);
     PstnModel.setCustomerEmail($stateParams.customerEmail);
     PstnModel.setIsTrial($stateParams.customerCommunicationLicenseIsTrial && $stateParams.customerRoomSystemsLicenseIsTrial);

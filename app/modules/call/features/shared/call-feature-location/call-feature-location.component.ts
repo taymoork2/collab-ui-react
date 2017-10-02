@@ -5,6 +5,7 @@ class CallFeatureLocationCtrl implements ng.IComponentController {
   public static readonly DISPLAYED_MEMBER_SIZE: number = 10;
 
   public location;
+  public locationUuid;
   public searchLocation;
   public locationHint: string;
   public removeKey: string;
@@ -16,6 +17,7 @@ class CallFeatureLocationCtrl implements ng.IComponentController {
   public callFeatureType: string;
   public featureType: string;
   public hasLocation: boolean = false;
+  public customerLocations;
 
   /* @ngInject */
   constructor(
@@ -25,6 +27,9 @@ class CallFeatureLocationCtrl implements ng.IComponentController {
 
   public $onInit(): void {
     this.featureType = this.$translate.instant(this.callFeatureType);
+    if (!this.isNew) {
+      this.LocationsService.getLocationList().then(locations => this.customerLocations = locations);
+    }
   }
 
   public searchLocations(searchStr: string): ng.IPromise<LocationListItem[]> {
@@ -38,7 +43,7 @@ class CallFeatureLocationCtrl implements ng.IComponentController {
   }
 
   public removeLocation(): void {
-    this.location = null;
+    this.location = undefined;
     this.onLocationChanged(this.location);
   }
 

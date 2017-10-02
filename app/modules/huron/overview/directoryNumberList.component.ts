@@ -9,6 +9,7 @@ class DirectoryNumberListCtrl implements ng.IComponentController {
   private lineThreshold: number;
   public numberOfLines: number | undefined = this.lineThreshold;
   public lineLabelToggle: boolean;
+  public isHI1484: boolean = false;
 
   /* @ngInject */
   constructor(
@@ -21,10 +22,8 @@ class DirectoryNumberListCtrl implements ng.IComponentController {
   }
 
   public $onInit(): void {
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1485)
-      .then((result) => {
-        this.lineLabelToggle = result;
-      });
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484)
+      .then(result => this.isHI1484 = result);
   }
 
   public setLineUseLabel(primary: boolean, shared: boolean): string {

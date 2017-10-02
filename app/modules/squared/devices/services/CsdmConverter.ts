@@ -367,7 +367,7 @@ export class Helper {
   }
 
   public static hasIssues(obj) {
-    return this.getIsOnline(obj) && obj.status && obj.status.level && obj.status.level !== 'OK';
+    return obj.status && obj.status.level && obj.status.level !== 'OK';
   }
 
   public getDiagnosticsEvents(obj) {

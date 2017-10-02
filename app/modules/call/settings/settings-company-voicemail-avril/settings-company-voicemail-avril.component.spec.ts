@@ -10,7 +10,7 @@ describe('Component: companyVoicemailAvril', () => {
   const COMPANY_NUMBER_SELECT = '.csSelect-container[name="companyVoicemailNumber"]';
   const MESSAGE_CONTAINER = '.msg-container';
   const NO_EXTERNAL_NUMBER_WARNING = COMPANY_NUMBER_SELECT + ' ' + MESSAGE_CONTAINER;
-  const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
+  const DROPDOWN_OPTIONS = '.dropdown-menu ul li';
   const GENERATED_VM_PILOT_NUMBER = '+150708071004091414081311041300051000081';
   const externalNumberOptions = getJSONFixture('huron/json/settings/externalNumbersOptions.json');
   const USE_TLS_CHECKBOX = 'input#useTLS';

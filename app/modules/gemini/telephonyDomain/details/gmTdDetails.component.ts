@@ -2,9 +2,10 @@ import { Notification } from 'modules/core/notifications';
 import { TelephonyDomainService } from '../telephonyDomain.service';
 
 class GmtdDetails implements ng.IComponentController {
+  private static readonly NOTE_ACTION: string = 'add_notes_td';
+  private static readonly HISTORY_ACTION_FOR: string = 'Telephony Domain';
 
   public model;
-
   public remedyTicket;
   public customerId: string;
   public ccaDomainId: string;
@@ -43,7 +44,6 @@ class GmtdDetails implements ng.IComponentController {
 
   public $onInit(): void {
     this.getDetails();
-    this.getNotes();
     this.getHistories();
     this.getRemedyTicket();
     const deregister = this.$scope.$on('detailWatch', (_event, data) => {
@@ -78,14 +78,9 @@ class GmtdDetails implements ng.IComponentController {
   private getDetails() {
     this.TelephonyDomainService.getTelephonyDomain(this.customerId, this.ccaDomainId)
       .then((res) => {
-        if (_.get(res, 'content.data.returnCode')) {
-          this.Notification.error('gemini.errorCode.loadError');
-          return;
-        }
-
         const DATA_STATUS = this.gemService.getNumberStatus();
 
-        this.model = _.get(res, 'content.data.body');
+        this.model = res;
         this.model.domainName = this.model.telephonyDomainName || this.model.domainName;
         this.domainName = this.model.domainName;
         this.totalSites = this.model.telephonyDomainSites.length;
@@ -111,9 +106,9 @@ class GmtdDetails implements ng.IComponentController {
 
   private getRemedyTicket() {
     const type = 7;
-    this.gemService.getRemedyTicket(this.customerId, type)
+    this.gemService.getRemedyTicket(this.customerId, this.ccaDomainId, type)
       .then((res) => {
-        const resArr: any = _.filter(_.get(res, 'content.data'), (item: any) => {
+        const resArr: any = _.filter(res, (item: any) => {
           return item.description === this.ccaDomainId;
         });
         const remedyTicket: any = _.first(resArr);
@@ -123,6 +118,9 @@ class GmtdDetails implements ng.IComponentController {
           this.remedyTicket = remedyTicket;
           this.remedyTicketLoading = false;
         }
+      })
+      .catch((err) => {
+        this.Notification.errorResponse(err, 'errors.statusError', { status: err.status });
       });
   }
 
@@ -135,42 +133,22 @@ class GmtdDetails implements ng.IComponentController {
     this.isShowAllHistories = false;
   }
 
-  private getNotes() {
-    this.TelephonyDomainService.getNotes(this.customerId, this.ccaDomainId)
-      .then((res) => {
-        if (_.get(res, 'content.data.returnCode')) {
-          this.Notification.error('gemini.errorCode.loadError');
-          return;
-        }
-        this.notes = _.get(res, 'content.data.body', []);
-      })
-      .catch((err) => {
-        this.Notification.errorResponse(err, 'errors.statusError', { status: err.status });
-      });
-  }
-
   private getHistories() {
     const data = {
       siteId: this.ccaDomainId,
-      objectID: this.domainName,
+      objectId: this.domainName,
       customerId: this.customerId,
-      actionFor: 'Telephony Domain',
+      actionFor: GmtdDetails.HISTORY_ACTION_FOR,
     };
     this.TelephonyDomainService.getHistories(data)
-      .then((res) => {
-        if (_.get(res, 'content.data.returnCode')) {
-          this.Notification.error('gemini.errorCode.loadError');
-          return;
-        }
+      .then((res: any[]) => {
         this.hisLoading = false;
-        this.allHistories = _.get(res, 'content.data.body', []);
-        this.allHistories = _.filter(this.allHistories, (item: any): boolean => {
-          return item.action !== 'add_notes_td';
+        this.allHistories = res;
+        this.notes = _.remove(this.allHistories, (item: any): boolean => {
+          return item.action === GmtdDetails.NOTE_ACTION;
         });
         _.forEach(this.allHistories, (item) => {
-          item.action = _.upperFirst(item.action);
-
-          if (item.action === 'Edit_td_move_site') {
+          if (_.includes(item.action, 'site')) {
             const moveSiteMsg = item.siteID + ' ' + this.$translate.instant('gemini.cbgs.moveFrom') + ' ' + item.objectID + ' to ' + item.objectName;
             item.objectName = '';
             item.moveSiteMsg = moveSiteMsg;
@@ -205,19 +183,9 @@ class GmtdDetails implements ng.IComponentController {
     this.model['btn' + name + 'Disable'] = !this.model['btn' + name + 'Disable'];
   }
 
-  public updateTelephonyDomainStatus(operation: string) {
-    let telephonyDomainId: any = null;
-    if (this.model) {
-      telephonyDomainId = this.model.telephonyDomainId;
-    }
-    this.TelephonyDomainService.updateTelephonyDomainStatus(this.customerId, this.ccaDomainId, telephonyDomainId, operation)
-      .then((res) => {
-        const resJson: any = _.get(res, 'content.data');
-        if (resJson.returnCode) {
-          this.Notification.error('gemini.errorCode.genericError');
-          this.setButtonStatus('CancelSubmission');
-          return;
-        }
+  public cancelTDSubmission() {
+    this.TelephonyDomainService.cancelTDSubmission(this.customerId, this.ccaDomainId)
+      .then(() => {
         this.$state.go('gmTdDetails', { info: {
           customerId: this.customerId,
           ccaDomainId: this.ccaDomainId,
@@ -237,7 +205,7 @@ class GmtdDetails implements ng.IComponentController {
       template: require('modules/gemini/telephonyDomain/details/cancelSubmissionConfirm.tpl.html'),
     }).result.then(() => {
       this.setButtonStatus('CancelSubmission');
-      this.updateTelephonyDomainStatus('cancel');
+      this.cancelTDSubmission();
     });
   }
 

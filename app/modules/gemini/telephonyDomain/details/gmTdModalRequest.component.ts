@@ -44,8 +44,7 @@ class GmTdModalRequestCtrl implements ng.IComponentController {
   public getRegions() {
     this.TelephonyDomainService.getRegions()
       .then((res) => {
-        const optionsSource: any = _.get(res, 'content.data.body');
-        this.options = _.map(optionsSource, (item: any) => {
+        this.options = _.map(res, (item: any) => {
           return { value: item.regionId, label: item.regionName };
         });
       })

@@ -11,7 +11,7 @@ describe('SearchTranslator', () => {
       'CsdmStatus.activeInterface.lan': 'Wired',
       'CsdmStatus.upgradeChannels.Beta': 'Beta',
       'CsdmStatus.errorCodes.MediaBlockingDetected.type': 'Network Ports Blocked',
-      'CsdmStatus.errorCodes.MediaBlockingDetected.message': "Firewall may be blocking media on UDP and TCP. Call quality may be impacted. For information regarding the network port requirements see the article <a href='https://support.ciscospark.com/customer/portal/articles/1911657' class='issue-link'>Firewalls and Network Requirements for the Cisco Spark App</a>.",
+      'CsdmStatus.errorCodes.MediaBlockingDetected.message': "Firewall may be blocking media on UDP and TCP. Call quality may be impacted. For information regarding the network port requirements see the article <a href='https://collaborationhelp.cisco.com/article/en-us/n4vzhkx' class='issue-link'>Network Requirements for Cisco Spark Services (Administrators)</a>.",
     });
   });
 

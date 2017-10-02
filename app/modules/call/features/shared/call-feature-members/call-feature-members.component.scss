@@ -56,7 +56,6 @@
   .members-footer {
     margin: auto;
     width: 54.5rem;
-    margin-bottom: 2rem;
     .member-count {
       color: $gray;
       padding-right: 2rem;
@@ -70,7 +69,6 @@
     display: flex;
     flex-wrap: wrap;
     width: 100%;
-    margin-left: -.5rem;
 
     .overlay-panel & {
       @include vr-spacing(ml, 26, 0px, true);

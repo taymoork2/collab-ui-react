@@ -83,4 +83,25 @@ describe('Service: PhoneButtonLayoutService', () => {
     this.PhoneButtonLayoutService.updatePhoneButtons('users', 100000, this.putUserButtonLayouts);
     this.$httpBackend.flush();
   });
+
+  it('should get place\'s phonebuttons', function() {
+    this.$httpBackend.expectGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/places/100000/buttonlayouts')
+      .respond(200, this.getUserButtonLayouts);
+    this.PhoneButtonLayoutService.getPhoneButtons('places', 100000).then(function(data) {
+      expect(data.buttonLayout.length).toBe(2);
+    });
+    this.$httpBackend.flush();
+  });
+
+  it('should update place\'s phonebuttons', function() {
+    this.$httpBackend.expectPUT(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/places/100000/buttonlayouts',
+    function(putUserButtonLayouts) {
+      putUserButtonLayouts = JSON.parse(putUserButtonLayouts);
+      expect(putUserButtonLayouts).toBeDefined();
+      expect(putUserButtonLayouts.buttonLayout).toBeDefined();
+      return true;
+    }).respond(200);
+    this.PhoneButtonLayoutService.updatePhoneButtons('places', 100000, this.putUserButtonLayouts);
+    this.$httpBackend.flush();
+  });
 });

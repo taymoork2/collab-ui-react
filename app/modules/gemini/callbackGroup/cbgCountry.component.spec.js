@@ -92,10 +92,10 @@ describe('component: cbgCountry', function () {
 
   describe('click event', function () {
     it('onDelSelected', function () {
-      var countries = this.preData.getCountries.content.data;
+      var countries = this.preData.getCountries;
       ctrl.selected = [];
       _.forEach(countries, function (item) {
-        ctrl.selected.push({ value: item.countryId, label: item.countryName });
+        ctrl.selected.push({ value: item.id, label: item.name });
       });
 
       ctrl.onDelSelected('American Samoa');

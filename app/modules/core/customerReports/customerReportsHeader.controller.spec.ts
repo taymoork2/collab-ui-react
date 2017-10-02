@@ -87,7 +87,7 @@ describe('Controller: Customer Reports Ctrl', function () {
     });
 
     it('should only display spark and care reports tab', function () {
-      expect(this.controller.headerTabs).toEqual([headerTabs[0], propackTabs[0], propackTabs[1], headerTabs[3]]);
+      expect(this.controller.headerTabs).toContain(headerTabs[0], propackTabs[0]);
     });
 
   });

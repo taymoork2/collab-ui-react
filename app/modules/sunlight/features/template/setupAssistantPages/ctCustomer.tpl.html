@@ -15,7 +15,7 @@
         <article class="customer-preview-article ct-article header-border header-background articleHeight">
 
           <header class="customerHeader ct-selectable-container"
-                  selectable ng-click="careSetupAssistant.setActiveItem('welcomeHeader')">
+                  selectable ng-click="careSetupAssistant.setActiveItem('welcomeHeader')" autofocus>
             <label class="welcomeText textOverflow">{{careSetupAssistant.getAttributeParam('value', 'header', 'welcomeHeader')}}</label>
             <label class="orgText textOverflow">{{careSetupAssistant.getCustomerInformationFormFields().welcomeHeader.attributes[1].value}}</label>
           </header>
