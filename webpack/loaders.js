@@ -190,13 +190,6 @@ exports.dependencies = [{
     },
   ],
 }, {
-  test: /stickyfill.js$/,
-  use: [
-    {
-      loader: 'script-loader',
-    },
-  ],
-}, {
   test: /bard.js$/,
   use: [
     {

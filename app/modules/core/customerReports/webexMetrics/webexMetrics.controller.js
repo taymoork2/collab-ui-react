@@ -7,6 +7,7 @@
 
   /* @ngInject */
   function WebExMetricsCtrl(
+    $q,
     $sce,
     $scope,
     $stateParams,
@@ -114,14 +115,17 @@
     }
 
     function init() {
-      checkProPackPurchased();
+      checkProPackPurchased().then(function () {
+        generateWebexMetricsUrl();
+      });
       checkClassic();
       checkWebexMEI();
-      generateWebexMetricsUrl();
+
       Analytics.trackReportsEvent(Analytics.sections.REPORTS.eventNames.CUST_WEBEX_REPORT);
     }
 
     function checkProPackPurchased() {
+      var deferred = $q.defer();
       ProPackService.hasProPackPurchased().then(function (isPurchased) {
         if (isPurchased) {
           vm.webexMetrics.views[0] = {
@@ -130,7 +134,12 @@
           };
           vm.reportView = vm.webexMetrics.views[0];
         }
+        deferred.resolve(isPurchased);
+      },
+      function (response) {
+        deferred.reject(response);
       });
+      return deferred.promise;
     }
 
     function checkClassic() {
@@ -155,14 +164,25 @@
       });
     }
 
-    function updateWebexMetrics() {
+    function setStorageSite(siteUrl) {
+      var storageMetricsSiteUrl = LocalStorage.get('webexMetricsSiteUrl');
+
+      if (siteUrl !== storageMetricsSiteUrl) {
+        LocalStorage.put('webexMetricsSiteUrl', siteUrl);
+      }
+    }
+
+    function resetSiteSelector() {
       var storageMetricsSiteUrl = LocalStorage.get('webexMetricsSiteUrl');
       var webexSelected = vm.webexSelected;
-      $scope.$broadcast('unfreezeState', false);
 
-      if (webexSelected !== storageMetricsSiteUrl) {
-        LocalStorage.put('webexMetricsSiteUrl', webexSelected);
+      if (webexSelected !== storageMetricsSiteUrl && !_.isEmpty(storageMetricsSiteUrl)) {
+        vm.webexSelected = storageMetricsSiteUrl;
       }
+    }
+
+    function updateWebexMetrics() {
+      $scope.$broadcast('unfreezeState', false);
 
       if (!(_.isNull(vm.webexSelected) || _.isUndefined(vm.webexSelected))) {
         vm.isNoData = false;
@@ -212,11 +232,12 @@
           }
           var QlikMashupChartsUrl = _.get(QlikService, 'getWebExReportAppfor' + viewType + 'Url')(vm.webexMetrics.appData.qrp);
           vm.webexMetrics.appData.url = QlikMashupChartsUrl;
-
+          setStorageSite(vm.webexSelected);
           loadUrlAndIframe(QlikMashupChartsUrl);
         }
       })
         .catch(function (error) {
+          resetSiteSelector();
           $scope.$broadcast('unfreezeState', true);
           Notification.errorWithTrackingId(error, 'common.error');
         });

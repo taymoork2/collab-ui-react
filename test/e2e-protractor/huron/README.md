@@ -119,30 +119,30 @@ const customer = huronCustomer({
   offers: 'CALL'
 });
 ```
-# test: This is the name of your test. Use kabob case.
-# users: Define both the number of users and how many lines to provision for the test.
+`test:` This is the name of your test. Use kabob case.
+`users:` Define both the number of users and how many lines to provision for the test.
 - Example: `users: { noOfUsers: 5, noOfLines: 3 }` will create 5 users, giving pstn to the first 3 users (max 10 users)
-# places: Define both the number of places and how many lines to provision for the test.
+`places:` Define both the number of places and how many lines to provision for the test.
 - Example: `places: { nofOfPlaces: 3, nofOfLines: 2 }` will create 3 places, with the first 2 places recieving a pstn (max 5 places)
-# numberRange: Defines the extension range, giving both a beginning number and and end number for the range.
-# pstn: how many unassigned numbers to provision for testing. These can be added to users or places during testing.
+`numberRange:` Defines the extension range, giving both a beginning number and and end number for the range.
+`pstn:` how many unassigned numbers to provision for testing. These can be added to users or places during testing.
 * Note that if you create a group of users with 3 lines, a group of places with 1 line, and 4 pstns, you will provision a total of 8 lines, 3 assigned to users, 1 assigned to places, and 4 unassigned numbers.
-# doHuntGroup: Toggles the hunt group feature. True toggles it on. If this is not called, it will default to false.
+`doHuntGroup:` Toggles the hunt group feature. True toggles it on. If this is not called, it will default to false.
 * This will create a hunt group with 2 users. Be sure there are at least 2 users created in the provisioner!
-# doCallPickup: Toggles the call pickup feature. True toggles it on. If this is not called, it will default to false.
+`doCallPickup:` Toggles the call pickup feature. True toggles it on. If this is not called, it will default to false.
 * This will create a call pickup group with 2 users. Be sure there are at least 2 users created in the provisioner!
-# doCallPark: Toggles the call park feature. True toggles it on. If this is not called, it will default to false.
+`doCallPark:` Toggles the call park feature. True toggles it on. If this is not called, it will default to false.
 * This will create a call park group with 2 users. Be sure there are at least 2 users created in the provisioner!
-# doCallPaging: Toggles the call paging feature. True toggles it on. If this is not called, it will default to false.
+`doCallPaging:` Toggles the call paging feature. True toggles it on. If this is not called, it will default to false.
 * This will create a call paging group with 1 user and 1 place. Be sure there are at least 1 of each created in the provisioner!
-# doFtsw: Toggles the ability to do first time setup wizard. True allows for ftsw, false will have provisioner skip it.
-# offers: Toggles different offers for customer.
+`doFtsw:` Toggles the ability to do first time setup wizard. True allows for ftsw, false will have provisioner skip it.
+`offers:` Toggles different offers for customer.
 - `'CALL'`: Creates a customer with call feature only
 - `'ROOMSERVICES'`: Creates a customer with room services only
 - `'NONE'`: Creates a customer with messaging only
 - If not called, the customer will be created with call and roomservices.
 
-# Also note that extensions have been fixedly assigned to prevent conflicts. As of now extensions are as follows:
+Also note that extensions have been fixedly assigned to prevent conflicts. As of now extensions are as follows:
 - Places: 300-304
 - Users: 310-319
 - Hunt Group: 325

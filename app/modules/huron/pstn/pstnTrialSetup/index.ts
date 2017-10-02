@@ -1,9 +1,10 @@
 import { PstnTrialSetupComponent } from './pstnTrialSetup.component';
-import pstnModel from '../pstn.model';
-import pstnService from '../pstn.service';
-import notifications from 'modules/core/notifications';
+import pstnModelModule from '../pstn.model';
+import pstnServiceModule from '../pstn.service';
+import pstnAddressServiceModule from '../shared/pstn-address';
+import notificationsModule from 'modules/core/notifications';
 import phoneNumberModule from 'modules/huron/phoneNumber';
-import PstnAddressServiceModule from '../shared/pstn-address';
+
 
 export default angular
   .module('huron.pstn.pstn-trial-setup', [
@@ -11,11 +12,11 @@ export default angular
     require('angular-translate'),
     require('modules/core/trials/trial.module'),
     require('modules/core/analytics'),
-    pstnModel,
-    pstnService,
-    notifications,
+    pstnModelModule,
+    pstnServiceModule,
+    notificationsModule,
     phoneNumberModule,
-    PstnAddressServiceModule,
+    pstnAddressServiceModule,
   ])
   .component('ucPstnTrialSetup', new PstnTrialSetupComponent())
   .name;

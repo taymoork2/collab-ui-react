@@ -35,7 +35,10 @@
         .then(function (supported) {
           vm.ishI1484 = supported;
           if (!supported) {
+            vm.gridOptions.columnDefs.splice(0, 1);
             vm.gridOptions.columnDefs.splice(2, 1);
+          } else {
+            vm.gridOptions.columnDefs.splice(1, 1);
           }
         });
     }
@@ -202,6 +205,13 @@
         gridApi.core.on.sortChanged($scope, sortColumn);
       },
       columnDefs: [{
+        field: 'siteToSite',
+        displayName: $translate.instant('linesPage.internalNumberHeader'),
+        width: '20%',
+        cellClass: 'internalNumberColumn',
+        headerCellClass: 'internalNumberHeader',
+        sortable: true,
+      }, {
         field: 'internalNumber',
         displayName: $translate.instant('linesPage.internalNumberHeader'),
         width: '20%',

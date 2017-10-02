@@ -7,9 +7,14 @@
     <multiple-subscriptions ng-switch-when="false" ></multiple-subscriptions>
     <!-- Show new subscriptions details on load if there are any -->
     <div ng-switch-when="true">
+      <h4 class="plan-review-subtitle" translate="firstTimeWizard.servicesInSubscription"></h4>
       <div class="order-and-subscription-numbers">
         <span translate="firstTimeWizard.orderNumber"></span><span>{{planReview.orderDetails.orderId}}</span><br>
         <span translate="firstTimeWizard.subscriptionID"></span><span>{{planReview.orderDetails.subscriptionId}}</span>
+      </div>
+      <div class="plan-review-help">
+        <div><span class="icon icon-warning icon-lg"></span></div>
+        <div><span class="plan-review-help-text" translate="firstTimeWizard.subscriptionReviewHelpText"></span></div>
       </div>
       <div class="row row-pending" ng-repeat="serviceArray in planReview.pendingLicenses">
         <div class="column large-4" ng-repeat="service in serviceArray">

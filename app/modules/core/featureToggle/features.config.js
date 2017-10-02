@@ -22,7 +22,6 @@ module.exports = {
   atlasDeviceExport: 'atlas-device-export',
   atlasDevicesAdvancedSettings: 'atlas-devices-advanced-settings',
   atlasEdiscovery: 'atlas-ediscovery',
-  atlasEdiscoveryIPSetting: 'atlas-ediscovery-ip-setting',
   atlasEmailStatus: 'atlas-email-status',
   atlasEmailSuppress: 'atlas-email-suppress',
   atlasF3745AutoAssignLicenses: 'atlas-f3745-auto-assign-licenses',
@@ -117,7 +116,6 @@ module.exports = {
   hi1033: 'h-i1033',
   hI1474: 'h-i1474',
   hI1484: 'h-i1484', // Multi-Location Support
-  hI1485: 'h-i1485',
   hI802: 'h-i802',
   hRegionalTones: 'h-regional-tones',
   huronAADynannounce: 'huron-aa-dynannounce',

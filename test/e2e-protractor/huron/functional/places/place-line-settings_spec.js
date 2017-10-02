@@ -49,10 +49,7 @@ describe('Huron Functional: place-line-settings', () => {
   });
   it('should enter the place details on the search bar and Navigate to user details view', () => {
     utils.click(callPlacePage.searchPlaces);
-    utils.sendKeys(callPlacePage.searchBar, PLACES[1].name);
-  });
-  it('should click on newly added place and bring up side menu', () => {
-    utils.click(callPlacePage.clickLocation);
+    utils.searchAndClick(PLACES[1].name);
   });
   it('should select Call under services and navigate to the next page', () => {
     utils.click(callPlacePage.callClick);
