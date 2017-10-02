@@ -142,6 +142,11 @@ describe('Controller: EdiscoverySearchController', function () {
   describe('Create report with error', function () {
     beforeEach(function () {
       promise = this.$q.reject({
+        config: {
+          headers: {
+            TrackingID: 12345678,
+          },
+        },
         data: {
           errorCode: 420000,
           message: 'Invalid Input',
@@ -157,7 +162,7 @@ describe('Controller: EdiscoverySearchController', function () {
     });
 
     it('received from atlas backend', function () {
-      var errorNotification = spyOn(this.Notification, 'error');
+      var errorNotification = spyOn(this.Notification, 'errorWithTrackingId');
       this.ediscoverySearchController.createReport();
       this.$scope.$apply();
       expect(errorNotification).toHaveBeenCalled();
@@ -177,7 +182,7 @@ describe('Controller: EdiscoverySearchController', function () {
       spyOn(this.EdiscoveryService, 'generateReport').and.returnValue(this.$q.reject());
       spyOn(this.EdiscoveryService, 'patchReport').and.returnValue(this.$q.resolve({}));
       spyOn(this.EdiscoveryService, 'getReport').and.returnValue(promise);
-      spyOn(this.Notification, 'error').and.callFake(function () {
+      spyOn(this.Notification, 'errorWithTrackingId').and.callFake(function () {
         return true;
       });
     });
@@ -193,7 +198,7 @@ describe('Controller: EdiscoverySearchController', function () {
 
       expect(this.EdiscoveryService.generateReport.calls.count()).toBe(1);
       expect(this.EdiscoveryService.createReport).toHaveBeenCalled();
-      expect(this.Notification.error.calls.count()).toBe(1);
+      expect(this.Notification.errorWithTrackingId).toHaveBeenCalled();
       expect(this.EdiscoveryService.patchReport.calls.count()).toBe(1);
     });
   });

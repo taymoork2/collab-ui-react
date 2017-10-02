@@ -349,8 +349,8 @@
             runReport(res.runUrl, res.url);
           }
         })
-        .catch(function () {
-          Notification.error('ediscovery.searchResults.createReportFailed');
+        .catch(function (err) {
+          Notification.errorWithTrackingId(err, 'ediscovery.searchResults.createReportFailed');
           vm.report = null;
           vm.createReportInProgress = false;
         });
@@ -413,8 +413,8 @@
 
     function generateReport(postParams) {
       EdiscoveryService.generateReport(postParams)
-        .catch(function () {
-          Notification.error('ediscovery.searchResults.runFailed');
+        .catch(function (err) {
+          Notification.errorWithTrackingId(err, 'ediscovery.searchResults.runFailed');
           EdiscoveryService.patchReport(vm.currentReportId, {
             state: 'FAILED',
             failureReason: 'UNEXPECTED_FAILURE',
@@ -475,8 +475,8 @@
     function downloadReport(report) {
       vm.downloadingReport = true;
       EdiscoveryService.downloadReport(report)
-        .catch(function () {
-          Notification.error('ediscovery.unableToDownloadFile');
+        .catch(function (err) {
+          Notification.errorWithTrackingId(err, 'ediscovery.unableToDownloadFile');
         })
         .finally(function () {
           vm.downloadingReport = false;
