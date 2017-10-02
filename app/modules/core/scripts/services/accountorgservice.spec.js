@@ -11,7 +11,7 @@ describe('Service : AccountOrgService', function () {
   };
   var appSecurityRegex = /.*\/settings\/clientSecurityPolicy\.*/;
   var blockExternalCommuncationRegex = /.*\/settings\/blockExternalCommunications\.*/;
-  var fileSharingControlRegex = /.*\/settings\/fileSharingControl\.*/;
+  var fileSharingControlRegex = /.*\/settings\.*/;
 
   beforeEach(angular.mock.module(function ($provide) {
     $provide.value('Authinfo', authInfo);
@@ -97,7 +97,7 @@ describe('Service : AccountOrgService', function () {
   describe('File Sharing Control ', function () {
     //File Sharing Control check
     it('should set File Sharing Control', function () {
-      $httpBackend.expectPatch(fileSharingControlRegex).respond([200, {}]);
+      $httpBackend.expectPATCH(fileSharingControlRegex).respond([200, {}]);
 
       AccountOrgService.setFileSharingControl(authInfo.getOrgId(), {}).then(function (response) {
         expect(response.status).toEqual(200);
@@ -107,14 +107,14 @@ describe('Service : AccountOrgService', function () {
 
     //File Sharing Control Setter Getter check
     it('should get blcok desktpAppDownload', function () {
-      $httpBackend.expectGet(fileSharingControlRegex).respond(function () {
+      $httpBackend.expectGET(fileSharingControlRegex).respond(function () {
         var data = {
           fileShareControl: {
             blockDesktopAppDownload: true,
             blockWebAppDownload: false,
             blockMobileAppDownload: false,
             blockBotsDownload: false,
-            blockDesktopAppUpload: false,
+            blockDesktopAppUpload: true,
             blockWebAppUpload: false,
             blockMobileAppUpload: false,
             blockBotsUpload: false },
