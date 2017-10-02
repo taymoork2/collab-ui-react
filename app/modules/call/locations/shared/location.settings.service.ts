@@ -311,6 +311,7 @@ export class CallLocationSettingsService {
         });
     }
   }
+
   private createInternalNumberRange(locationId: string, range: InternalNumberRange): ng.IPromise<string> {
     return this.InternalNumberRangeService.createLocationInternalNumberRange(locationId, range)
       .catch(error => {
