@@ -102,8 +102,8 @@ export class HuronSettingsOptionsService {
       .then(externalNumbers => {
         return _.map(externalNumbers, externalNumber => {
           return <IOption> {
-            value: externalNumber.number,
-            label: this.PhoneNumberService.getNationalFormat(externalNumber.number),
+            value: externalNumber.number ? externalNumber.number : _.get(externalNumber, 'external'),
+            label: this.PhoneNumberService.getNationalFormat(externalNumber.number ? externalNumber.number : _.get(externalNumber, 'external')),
           };
         });
       });
@@ -114,8 +114,8 @@ export class HuronSettingsOptionsService {
       .then(externalNumbers => {
         return _.map(externalNumbers, externalNumber => {
           return <IOption> {
-            value: externalNumber.number,
-            label: this.PhoneNumberService.getNationalFormat(externalNumber.number),
+            value: externalNumber.number ? externalNumber.number : _.get(externalNumber, 'external'),
+            label: this.PhoneNumberService.getNationalFormat(externalNumber.number ? externalNumber.number : _.get(externalNumber, 'external')),
           };
         });
       });
@@ -147,8 +147,8 @@ export class HuronSettingsOptionsService {
         return _.map(externalNumbers, externalNumber => {
           return <IEmergencyNumberOption> {
             value: externalNumber.uuid,
-            pattern: externalNumber.number,
-            label: this.PhoneNumberService.getNationalFormat(externalNumber.number),
+            pattern: externalNumber.number ? externalNumber.number : _.get(externalNumber, 'external'),
+            label: this.PhoneNumberService.getNationalFormat(externalNumber.number ? externalNumber.number : _.get(externalNumber, 'external')),
           };
         });
       });
