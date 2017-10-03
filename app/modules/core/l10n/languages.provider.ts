@@ -30,10 +30,7 @@ export class LanguagesProvider implements ng.IServiceProvider {
   }
 
   public getPreferredLanguage() {
-    const browserLanguages = _.flatten([
-      this.getBrowserLanguage(),
-      DEFAULT_LANGUAGE,
-    ]);
+    const browserLanguages = this.getBrowserLanguages();
     let foundLanguage: ILanguage | undefined;
 
     _.find(browserLanguages, browserLanguage => {
@@ -48,7 +45,7 @@ export class LanguagesProvider implements ng.IServiceProvider {
     }
   }
 
-  private getBrowserLanguage() {
+  private getBrowserLanguages(): string[] {
     const navigatorProperties = [
       'languages',
       'language',
@@ -67,9 +64,9 @@ export class LanguagesProvider implements ng.IServiceProvider {
     if (_.isArray(navigatorPropertyValue)) {
       return _.map(navigatorPropertyValue, language => this.formatLanguage(language));
     } else if (_.isString(navigatorPropertyValue)) {
-      return this.formatLanguage(navigatorPropertyValue);
+      return [this.formatLanguage(navigatorPropertyValue)];
     } else {
-      return DEFAULT_LANGUAGE;
+      return [];
     }
   }
 
