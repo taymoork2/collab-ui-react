@@ -8,15 +8,11 @@
       "app/modules/mediafusion/**/*"
     ]
   }, {
-    "name": "mipark2",
-    "files": [
-      "bin/**/*"
-    ]
-  }, {
     "name": "WebExSquared/atlas-web-jedi",
     "files": [
       "*.sh",
       ".githooks/**/*",
+      "bin/**/*",
       "config/**/*",
       "protractor/**/*",
       "sauce/**/*",
@@ -26,7 +22,8 @@
   }, {
     "name": "WebExSquared/atlas-web-core-team",
     "files": [
-      "app/modules/core/**/*"
+      "app/modules/core/**/*",
+      "package.json"
     ]
   }, {
     "name": "WebExSquared/atlas-hybrid-services-ui",
