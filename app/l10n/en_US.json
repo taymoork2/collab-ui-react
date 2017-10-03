@@ -8446,7 +8446,8 @@
       "users": "Users",
       "inError": "users in error",
       "inPending": "users in pending activation",
-      "active": "users active"
+      "active": "users active",
+      "enableUsers": "Enable users"
     },
     "cards": {
       "shared": {
@@ -8736,6 +8737,14 @@
       "disabled": "Disabled",
       "setupNotComplete": "Setup not completed"
     }
+  },
+  "enableUsersModal": {
+    "title": "Enable users",
+    "subtitle": "You can now enable {{service}} for your users.",
+    "line1": "To enable users, you can:",
+    "item1": "Enable them individually from the <a ng-click=\"{{onclick}}\">users page</a>.",
+    "item2": "Enable them in bulk using the <a ng-click=\"{{onclick}}\">CSV template</a>.",
+    "line2": "Refer to <a href=\"http://www.cisco.com/go/hybrid-services-calendar\" target=\"_blank\">documentation</a> if you need help enabling users."
   },
   "readOnlyModal": {
     "banner": "You are in read-only mode"
