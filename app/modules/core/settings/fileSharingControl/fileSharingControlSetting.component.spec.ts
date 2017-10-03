@@ -47,16 +47,16 @@ describe('Controller: FileSharingControlSettingController', () => {
       });
     });
     describe('when getFileSharingControl return blockFileSharingControls set to true', () => {
-      let fileShareControlSetting = {
-        blockDesktopAppDownload : true,
-        blockWebAppDownload : false,
-        blockMobileAppDownload : false,
-        blockBotsDownload : false,
-        blockDesktopAppUpload : true,
-        blockWebAppUpload : false,
-        blockMobileAppUpload : false,
-        blockBotsUpload : false
-      }
+      const fileShareControlSetting = {
+        blockDesktopAppDownload: true,
+        blockWebAppDownload: false,
+        blockMobileAppDownload: false,
+        blockBotsDownload: false,
+        blockDesktopAppUpload: true,
+        blockWebAppUpload: false,
+        blockMobileAppUpload: false,
+        blockBotsUpload: false,
+      };
       beforeEach(initGetFileSharingControlWithResult(fileShareControlSetting));
       beforeEach(initController);
 
@@ -67,16 +67,16 @@ describe('Controller: FileSharingControlSettingController', () => {
     });
 
     describe('when getFileSharingControl return blockFileSharingControls set to false', () => {
-      let fileShareControlSetting = {
-        blockDesktopAppDownload : false,
-        blockWebAppDownload : false,
-        blockMobileAppDownload : false,
-        blockBotsDownload : false,
-        blockDesktopAppUpload : false,
-        blockWebAppUpload : false,
-        blockMobileAppUpload : false,
-        blockBotsUpload : false
-      }
+      const fileShareControlSetting = {
+        blockDesktopAppDownload: false,
+        blockWebAppDownload: false,
+        blockMobileAppDownload: false,
+        blockBotsDownload: false,
+        blockDesktopAppUpload: false,
+        blockWebAppUpload: false,
+        blockMobileAppUpload: false,
+        blockBotsUpload: false,
+      };
       beforeEach(initGetFileSharingControlWithResult(fileShareControlSetting));
       beforeEach(initController);
 
@@ -89,16 +89,16 @@ describe('Controller: FileSharingControlSettingController', () => {
 
   describe('updateFileSharingControlSetting', () => {
     beforeEach(function() {
-      let fileShareControlSetting = {
-        blockDesktopAppDownload : false,
-        blockWebAppDownload : false,
-        blockMobileAppDownload : false,
-        blockBotsDownload : false,
-        blockDesktopAppUpload : false,
-        blockWebAppUpload : false,
-        blockMobileAppUpload : false,
-        blockBotsUpload : false
-      }
+      const fileShareControlSetting = {
+        blockDesktopAppDownload: false,
+        blockWebAppDownload: false,
+        blockMobileAppDownload: false,
+        blockBotsDownload: false,
+        blockDesktopAppUpload: false,
+        blockWebAppUpload: false,
+        blockMobileAppUpload: false,
+        blockBotsUpload: false,
+      };
       initGetFileSharingControlWithResult(fileShareControlSetting);
       initGetBlockFileSharingControl();
       initController();
@@ -111,14 +111,14 @@ describe('Controller: FileSharingControlSettingController', () => {
 
       expect(AccountOrgService.setFileSharingControl)
         .toHaveBeenCalledWith(Authinfo.getOrgId(), {
-          blockDesktopAppDownload : true,
-          blockWebAppDownload : false,
-          blockMobileAppDownload : false,
-          blockBotsDownload : false,
-          blockDesktopAppUpload : true,
-          blockWebAppUpload : false,
-          blockMobileAppUpload : false,
-          blockBotsUpload : false});
+          blockDesktopAppDownload: true,
+          blockWebAppDownload: false,
+          blockMobileAppDownload: false,
+          blockBotsDownload: false,
+          blockDesktopAppUpload: true,
+          blockWebAppUpload: false,
+          blockMobileAppUpload: false,
+          blockBotsUpload: false});
     });
 
     it('should call AccountOrgService to save the value false', () => {
@@ -128,14 +128,14 @@ describe('Controller: FileSharingControlSettingController', () => {
 
       expect(AccountOrgService.setFileSharingControl)
         .toHaveBeenCalledWith(Authinfo.getOrgId(), {
-          blockDesktopAppDownload : false,
-          blockWebAppDownload : false,
-          blockMobileAppDownload : false,
-          blockBotsDownload : false,
-          blockDesktopAppUpload : false,
-          blockWebAppUpload : false,
-          blockMobileAppUpload : false,
-          blockBotsUpload : false});
+          blockDesktopAppDownload: false,
+          blockWebAppDownload: false,
+          blockMobileAppDownload: false,
+          blockBotsDownload: false,
+          blockDesktopAppUpload: false,
+          blockWebAppUpload: false,
+          blockMobileAppUpload: false,
+          blockBotsUpload: false});
     });
 
     function initGetBlockFileSharingControl() {
