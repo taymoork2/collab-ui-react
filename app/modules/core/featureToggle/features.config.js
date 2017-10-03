@@ -17,6 +17,7 @@ module.exports = {
   atlasCareProactiveChatTrials: 'atlas-care-proactiveChat-trials',
   atlasCareTrials: 'atlas-care-trials',
   atlasComplianceRole: 'atlas-compliance-role',
+  atlasContextServiceOnboarding: 'context-onboarding-trials',
   atlasDarling: 'atlas-darling',
   atlasDataRetentionSettings: 'atlas-data-retention-settings',
   atlasDeviceExport: 'atlas-device-export',

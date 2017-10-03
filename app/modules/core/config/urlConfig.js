@@ -164,12 +164,6 @@
       integration: 'https://pqm.appstaging.ciscoccservice.com/pqm/v1/publish/taskState',
       prod: 'https://pqm.produs1.ciscoccservice.com/pqm/v1/publish/taskState',
     },
-    CcfsUrl: {
-      dev: 'https://ccfs.produs1.ciscoccservice.com/v1/authorize?delegation=true&appType=sunlightdev&callbackUrl=',
-      cfe: 'https://ccfs.produs1.ciscoccservice.com/v1/authorize?delegation=true&appType=sunlightstaging&callbackUrl=',
-      integration: 'https://ccfs.produs1.ciscoccservice.com/v1/authorize?delegation=true&appType=sunlightstaging&callbackUrl=',
-      prod: 'https://ccfs.produs1.ciscoccservice.com/v1/authorize?delegation=true&appType=sunlight&callbackUrl=',
-    },
     CalliopeUrl: {
       dev: 'https://calliope-intb.ciscospark.com/calliope/api/authorization/v1',
       cfe: 'https://calliope-loada.ciscospark.com/calliope/api/authorization/v1',
@@ -211,6 +205,12 @@
       cfe: 'https://discovery.appstaging.ciscoccservice.com/discovery/apps/v1',
       integration: 'https://discovery.appstaging.ciscoccservice.com/discovery/apps/v1',
       prod: 'https://discovery.produs1.ciscoccservice.com/discovery/apps/v1',
+    },
+    ContextCcfsUrl: {
+      dev: 'https://ccfs.appstaging.ciscoccservice.com/v1',
+      cfe: 'https://ccfs.appstaging.ciscoccservice.com/v1',
+      integration: 'https://ccfs.appstaging.ciscoccservice.com/v1',
+      prod: 'https://ccfs.produs1.ciscoccservice.com/v1',
     },
     HybridEncryptionServiceUrl: {
       dev: 'https://encryption-intb.ciscospark.com/encryption/api/v1',
