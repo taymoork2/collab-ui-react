@@ -1,4 +1,4 @@
-import { ISearchElement, QueryParser } from './queryParser';
+import { QueryParser } from './queryParser';
 
 describe('QueryParser', () => {
 
@@ -57,7 +57,7 @@ describe('QueryParser', () => {
   });
 
 
-  function expectQueryToParseTo(query: string, res: ISearchElement) {
+  function expectQueryToParseTo(query: string, res) {
     const parsedQuery = QueryParser.parseQueryString(query);
     expect(JSON.stringify(parsedQuery)).toEqual(JSON.stringify(res));
   }
