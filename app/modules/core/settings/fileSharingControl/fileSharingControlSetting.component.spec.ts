@@ -47,7 +47,17 @@ describe('Controller: FileSharingControlSettingController', () => {
       });
     });
     describe('when getFileSharingControl return blockFileSharingControls set to true', () => {
-      beforeEach(initGetFileSharingControlWithResult(true, false, false, false, false, false, false, false));
+      let fileShareControlSetting = {
+        blockDesktopAppDownload : true,
+        blockWebAppDownload : false,
+        blockMobileAppDownload : false,
+        blockBotsDownload : false,
+        blockDesktopAppUpload : true,
+        blockWebAppUpload : false,
+        blockMobileAppUpload : false,
+        blockBotsUpload : false
+      }
+      beforeEach(initGetFileSharingControlWithResult(fileShareControlSetting));
       beforeEach(initController);
 
       it('should set dataloaded and true for isBlockDesktopAppDownload', () => {
@@ -57,7 +67,17 @@ describe('Controller: FileSharingControlSettingController', () => {
     });
 
     describe('when getFileSharingControl return blockFileSharingControls set to false', () => {
-      beforeEach(initGetFileSharingControlWithResult(false, false, false, false, false, false, false, false));
+      let fileShareControlSetting = {
+        blockDesktopAppDownload : false,
+        blockWebAppDownload : false,
+        blockMobileAppDownload : false,
+        blockBotsDownload : false,
+        blockDesktopAppUpload : false,
+        blockWebAppUpload : false,
+        blockMobileAppUpload : false,
+        blockBotsUpload : false
+      }
+      beforeEach(initGetFileSharingControlWithResult(fileShareControlSetting));
       beforeEach(initController);
 
       it('should set dataloaded and true for isBlockDesktopAppDownload', () => {
@@ -69,7 +89,17 @@ describe('Controller: FileSharingControlSettingController', () => {
 
   describe('updateFileSharingControlSetting', () => {
     beforeEach(function() {
-      initGetFileSharingControlWithResult(false, false, false, false, false, false, false, false);
+      let fileShareControlSetting = {
+        blockDesktopAppDownload : false,
+        blockWebAppDownload : false,
+        blockMobileAppDownload : false,
+        blockBotsDownload : false,
+        blockDesktopAppUpload : false,
+        blockWebAppUpload : false,
+        blockMobileAppUpload : false,
+        blockBotsUpload : false
+      }
+      initGetFileSharingControlWithResult(fileShareControlSetting);
       initGetBlockFileSharingControl();
       initController();
     });
@@ -113,25 +143,21 @@ describe('Controller: FileSharingControlSettingController', () => {
     }
   });
 
-  function initGetFileSharingControlWithResult(
-    blockDesktopAppDownload: boolean,
-    blockWebAppDownload: boolean,
-    blockMobileAppDownload: boolean,
-    blockBotsDownload: boolean,
-    blockDesktopAppUpload: boolean,
-    blockWebAppUpload: boolean,
-    blockMobileAppUpload: boolean,
-    blockBotsUpload: boolean) {
+  interface IFileSharingControlSetting {
+    blockDesktopAppDownload: boolean;
+    blockWebAppDownload: boolean;
+    blockMobileAppDownload: boolean;
+    blockBotsDownload: boolean;
+
+    blockDesktopAppUpload: boolean;
+    blockWebAppUpload: boolean;
+    blockMobileAppUpload: boolean;
+    blockBotsUpload: boolean;
+  }
+
+  function initGetFileSharingControlWithResult(fileShareControlSetting: IFileSharingControlSetting) {
     return () => {
-      AccountOrgService.getFileSharingControl.and.returnValue($q.resolve({
-        blockDesktopAppDownload,
-        blockWebAppDownload,
-        blockMobileAppDownload,
-        blockBotsDownload,
-        blockDesktopAppUpload,
-        blockWebAppUpload,
-        blockMobileAppUpload,
-        blockBotsUpload}));
+      AccountOrgService.getFileSharingControl.and.returnValue($q.resolve(fileShareControlSetting));
     };
   }
 

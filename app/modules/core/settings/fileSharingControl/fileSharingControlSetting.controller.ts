@@ -55,7 +55,7 @@ export class FileSharingControlSettingController {
   }
 
   private fileSharingControlSettingLoaded(fileSharingControl: IGetFileSharingControlSettingResponse) {
-    if (fileSharingControl !== undefined) {
+    if (!_.isUndefined(fileSharingControl)) {
       this._isBlockDesktopAppDownload = fileSharingControl.blockDesktopAppDownload;
       this._isBlockWebAppDownload = fileSharingControl.blockWebAppDownload;
       this._isBlockMobileAppDownload = fileSharingControl.blockMobileAppDownload;
