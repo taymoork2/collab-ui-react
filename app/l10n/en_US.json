@@ -3879,6 +3879,8 @@
     "messengerAppsecurityError": "Failed to change Device Security setting.",
     "messengerExternalCommunicationSuccess": "Successfully changed External Communication setting.",
     "messengerExternalCommunicationError": "Failed to change External Communication setting.",
+    "messengerFileSharingControlSuccess": "Successfully changed File Sharing setting.",
+    "messengerFileSharingControlError": "Failed to change File Sharing setting.",
     "messengerEnableWebexSuccess": "Successfully enabled Webex Messenger Integration.",
     "messengerEnableWebexError": "Failed to enable Webex Messenger Integration.",
     "messengerDisableWebexSuccess": "Successfully disabled Webex Messenger Integration.",
@@ -7841,6 +7843,20 @@
       "subsectionLabel": "Messaging",
       "subsectionDescription": "Secure your organization's data by blocking external messaging.",
       "description": "Block your users from inviting external contacts to Cisco Spark spaces and prevent your users from joining external Cisco Spark spaces."
+    },
+    "fileSharingControl": {
+      "title": "File Sharing Control",
+      "subsectionLabel": "Download and Preview Restrictions",
+      "proPackInfoCopy": "This premium feature is available with Pro Pack. Contact your partner to learn more.",
+      "subsectionDescription": "Upload restriction is applied to selection. ",
+      "downloadSubsectionLabelDescription": "Don't allow users to download or preview files in:",
+      "uploadSubsectionLabel": "Upload Restrictions",
+      "uploadSubsectionLabelDescription": "Don't allow users to upload files in:",
+      "description": "Applies to internal users only. External users can upload and download files.",
+      "desktopApps": "Desktop apps",
+      "webApp": "Web app",
+      "mobileApps": "Mobile apps",
+      "integrationAndBots": "Integration and Bots"
     },
     "support": {
       "title": "Support",
