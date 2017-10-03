@@ -1,8 +1,9 @@
 import { IWebExSite, ISiteNameError, SiteErrorType } from
-'modules/core/setupWizard/meeting-settings/meeting-settings.interface';
-import { Config }  from 'modules/core/config/config';
+  'modules/core/setupWizard/meeting-settings/meeting-settings.interface';
+import { Config } from 'modules/core/config/config';
 import { TrialTimeZoneService } from 'modules/core/trials/trialTimeZone.service';
 import { TrialWebexService } from 'modules/core/trials/trialWebex.service';
+import { EventNames } from './webex-site.constants';
 
 class WebexSiteNewCtrl implements ng.IComponentController {
 
@@ -15,6 +16,7 @@ class WebexSiteNewCtrl implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
+    private $scope: ng.IScope,
     private Config: Config,
     private TrialTimeZoneService: TrialTimeZoneService,
     private TrialWebexService: TrialWebexService,
@@ -31,32 +33,32 @@ class WebexSiteNewCtrl implements ng.IComponentController {
 
   public setupTypeLegacy = this.Config.setupTypes.legacy;
   public currentSubscription = '';
-
   public selectTimeZonePlaceholder = this.$translate.instant('firstTimeWizard.selectTimeZonePlaceholder');
   public timeZoneOptions;
-  public isAllowMultiples = false;
   public audioPackage = '';
-
   public disableValidateButton = false;
-  public onSiteAdd: Function;
-  public onSiteRemove: Function;
+  public onSitesAdd: Function;
+  public onValidationStatusChange: Function;
   public sitesArray: IWebExSite[] = [];
+  public newSitesArray: IWebExSite[] = [];
 
-  public $onChanges (changes) {
-    if (changes.allowMultiples) {
-      this.isAllowMultiples = changes.allowMultiples.currentValue;
-    }
+  public $onChanges(changes) {
     if (changes.audioPackage) {
       this.audioPackage = changes.audioPackage.currentValue;
+    }
+    if (changes.sites) {
+      this.sitesArray = _.clone(changes.sites.currentValue);
     }
   }
 
   public addSite(site) {
-    this.onSiteAdd({ site: site });
+    this.newSitesArray.push(site);
+    this.onValidationStatusChange({ isValid: true });
   }
 
-  public removeSite(site) {
-    this.onSiteRemove({ site: site });
+  public removeSite(index: number): void {
+    this.newSitesArray.splice(index, 1);
+    this.onValidationStatusChange({ isValid: this.newSitesArray.length > 0 });
   }
 
   public validateMeetingSite(): void {
@@ -80,7 +82,6 @@ class WebexSiteNewCtrl implements ng.IComponentController {
         if (this.siteModel.setupType !== this.setupTypeLegacy) {
           delete this.siteModel.setupType;
         }
-        this.sitesArray.push(_.clone(this.siteModel));
         this.addSite(_.clone(this.siteModel));
         this.clearWebexSiteInputs();
       } else {
@@ -94,14 +95,15 @@ class WebexSiteNewCtrl implements ng.IComponentController {
     }).catch(() => {
       this.clearWebexSiteInputs();
     }).finally(() => {
-      if (this.isAllowMultiples) {
-        this.disableValidateButton = false;
-      }
+      this.disableValidateButton = false;
     });
   }
 
   public $onInit(): void {
     this.timeZoneOptions = this.TrialTimeZoneService.getTimeZones();
+    this.$scope.$on(EventNames.addSites, () => {
+      this.onSitesAdd({ sites: this.newSitesArray, isValid: true });
+    });
   }
 
   private validateWebexSiteUrl(siteName): ng.IPromise<any> {
@@ -149,7 +151,7 @@ class WebexSiteNewCtrl implements ng.IComponentController {
         service: audioPackageDisplay,
       });
     }*/
-    return  audioPackageDisiplay;
+    return audioPackageDisiplay;
   }
 }
 
@@ -158,9 +160,9 @@ export class WebexSiteNewComponent implements ng.IComponentOptions {
   public controller = WebexSiteNewCtrl;
   public template = require('modules/core/siteList/webex-site/webex-site-new.html');
   public bindings = {
-    allowMultiples: '<',
-    onSiteAdd: '&',
-    onSiteRemove: '&',
+    sites: '<',
+    onSitesAdd: '&',
+    onValidationStatusChange: '&',
     audioPackage: '<',
   };
 }
