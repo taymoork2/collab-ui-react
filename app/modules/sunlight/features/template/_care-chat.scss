@@ -36,6 +36,7 @@
     font-size: $h6-font-size;
     font-family: $brand-font-light;
     white-space: pre-wrap;
+    overflow-wrap: break-word;
     @include vr-spacing(mt, 0.75);
   }
 }
