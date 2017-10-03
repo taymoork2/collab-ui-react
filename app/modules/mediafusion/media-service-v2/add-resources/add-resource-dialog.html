@@ -10,9 +10,9 @@
 <div class="modal-body">
   <div ng-show="redirectResource.yesProceed && !redirectResource.enableRedirectToTarget && !redirectResource.showDownloadableOption">
     <div>
-      <h4 class="addResourceInlineBlock" translate="mediaFusion.add-resource-dialog.yesInfo1"></h4>
-      <h4 class="addResourceFQDN" tooltip="{{'mediaFusion.add-resource-dialog.fqdn' | translate}}" translate="mediaFusion.add-resource-dialog.yesInfo2"></h4>
-      <h4 class="addResourceInlineBlock" translate="mediaFusion.add-resource-dialog.yesInfo3"></h4>
+      <h5 class="addResourceInlineBlock" translate="mediaFusion.add-resource-dialog.yesInfo1"></h5>
+      <h5 class="addResourceFQDN" tooltip="{{'mediaFusion.add-resource-dialog.fqdn' | translate}}" translate="mediaFusion.add-resource-dialog.yesInfo2"></h5>
+      <h5 class="addResourceInlineBlock" translate="mediaFusion.add-resource-dialog.yesInfo3"></h5>
     </div>
     <form name="inputHostNameForm" class="inputHostNameForm">
       <div>
@@ -57,7 +57,7 @@
   </div>
   <div ng-hide="!redirectResource.showDownloadableOption">
     <div>
-      <h4 translate="mediaFusion.add-resource-dialog.firstStep"></h4>
+      <h5 translate="mediaFusion.add-resource-dialog.firstStep"></h5>
     </div>
     <div class="myAddResourceForm">
       <form name="myAddResourceForm">
@@ -94,18 +94,18 @@
   </div>
   <div ng-show="redirectResource.noProceed">
     <div ng-if="!redirectResource.nameChangeEnabled">
-      <h4 translate="mediaFusion.add-resource-dialog.noInfo"></h4>
+      <h5 translate="mediaFusion.add-resource-dialog.noInfo"></h5>
     </div>
     <div ng-if="redirectResource.nameChangeEnabled">
-      <h4 translate="mediaFusion.add-resource-dialog.noInfoNew" translate-values="{appTitle: redirectResource.getAppTitle()}"></h4>
+      <h5 translate="mediaFusion.add-resource-dialog.noInfoNew" translate-values="{appTitle: redirectResource.getAppTitle()}"></h5>
     </div>
     <br>
     <br>
     <div ng-show="redirectResource.ovaType == 1">
-      <h4 translate="mediaFusion.add-resource-dialog.noRetryInfo"></h4>
+      <h5 translate="mediaFusion.add-resource-dialog.noRetryInfo"></h5>
     </div>
     <div ng-show="redirectResource.ovaType == 0">
-      <h4 translate="mediaFusion.add-resource-dialog.noRetryDemoInfo"></h4>
+      <h5 translate="mediaFusion.add-resource-dialog.noRetryDemoInfo"></h5>
     </div>
     <div class="addResourceBodyInfo">
       <p>
