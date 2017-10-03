@@ -6,13 +6,14 @@ import { WebexSiteNewComponent } from './webex-site-new.component';
 import { WebexSiteSubscriptionComponent } from './webex-site-subscription.component';
 import { WebexSiteTransferComponent } from './webex-site-transfer.component';
 import { WebexSiteNewDisplayComponent } from './webex-site-new-display.component';
-import notifications from 'modules/core/notifications';
 
 export default angular
   .module('core.webex-site', [
     require('collab-ui-ng').default,
     require('angular-translate'),
-    notifications,
+    require('modules/core/notifications').default,
+    require('modules/core/featureToggle').default,
+    require('modules/core/scripts/services/authinfo'),
     require('modules/core/config/config').default,
     require('modules/core/setupWizard/setup-wizard.service').default,
     require('modules/core/scripts/services/authinfo'),
