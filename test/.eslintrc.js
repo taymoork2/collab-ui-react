@@ -1,6 +1,10 @@
 module.exports = {
   extends: ['../.eslintrc.js'],
   plugins: ['lodash', 'promise'],
+  parserOptions: {
+    ecmaVersion: 6,
+    sourceType: 'module',
+  },
   rules: {
     // custom rule defined in config/rules/protractor-guidelines.js
     // deactivated because tons of e2e tests do not pass it…

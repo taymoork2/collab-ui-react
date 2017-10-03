@@ -1,5 +1,7 @@
 'use strict';
 
+require('babel-register');
+
 /* global jasmine, browser, _ */
 
 var HttpsProxyAgent = require('https-proxy-agent');
