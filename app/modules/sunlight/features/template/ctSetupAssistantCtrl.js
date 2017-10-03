@@ -470,7 +470,7 @@
               comment: {
                 displayText: $translate.instant('careChatTpl.ratingComment'),
                 dictionaryType: {
-                  fieldSet: 'cisco.base.ccc.pod',
+                  fieldSet: 'cisco.base.rating',
                   fieldName: 'cccRatingComments',
                 },
               },
@@ -632,7 +632,7 @@
               comment: {
                 displayText: $translate.instant('careChatTpl.ratingComment'),
                 dictionaryType: {
-                  fieldSet: 'cisco.base.ccc.pod',
+                  fieldSet: 'cisco.base.rating',
                   fieldName: 'cccRatingComments',
                 },
               },
@@ -887,7 +887,7 @@
               comment: {
                 displayText: $translate.instant('careChatTpl.ratingComment'),
                 dictionaryType: {
-                  fieldSet: 'cisco.base.ccc.pod',
+                  fieldSet: 'cisco.base.rating',
                   fieldName: 'cccRatingComments',
                 },
               },
@@ -910,7 +910,7 @@
               comment: {
                 displayText: $translate.instant('careChatTpl.ratingComment'),
                 dictionaryType: {
-                  fieldSet: 'cisco.base.ccc.pod',
+                  fieldSet: 'cisco.base.rating',
                   fieldName: 'cccRatingComments',
                 },
               },
@@ -1039,7 +1039,7 @@
             comment: {
               displayText: $translate.instant('careChatTpl.ratingComment'),
               dictionaryType: {
-                fieldSet: 'cisco.base.ccc.pod',
+                fieldSet: 'cisco.base.rating',
                 fieldName: 'cccRatingComments',
               },
             },
