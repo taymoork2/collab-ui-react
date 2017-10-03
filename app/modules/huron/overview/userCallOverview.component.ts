@@ -5,6 +5,7 @@ import { HuronVoicemailService, VOICEMAIL_CHANGE } from 'modules/huron/voicemail
 import { HuronUserService, UserRemoteDestination } from 'modules/huron/users';
 import { PrimaryLineService, PrimaryNumber } from 'modules/huron/primaryLine';
 const SNR_CHANGE = 'SNR_CHANGE';
+const PRIMARY_LINE_SELECTION_CHANGE = 'PRIMARY_LINE_SELECTION_CHANGE';
 class UserCallOverviewCtrl implements ng.IComponentController {
 
   private showPhoneButtonLayout: boolean = false;
@@ -47,6 +48,10 @@ class UserCallOverviewCtrl implements ng.IComponentController {
     });
     this.$scope.$on(SNR_CHANGE, (_e, status) => {
       this.snrEnabled = status;
+      this.initFeatures();
+    });
+    this.$scope.$on(PRIMARY_LINE_SELECTION_CHANGE, (_e, status) => {
+      this.primaryLineEnabled = status;
       this.initFeatures();
     });
   }

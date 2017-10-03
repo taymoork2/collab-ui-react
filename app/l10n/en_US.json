@@ -4475,10 +4475,10 @@
     "externalTransfer": "External Call Transfer/Conference"
   },
   "primaryLine": {
-    "title": "Line selection for calls",
+    "title": "Line Selection for Calls",
     "description": "Choose the default behavior for devices when they go off hook",
-    "autoOption": "Auto - device automatically chooses an available line",
-    "primaryLineOption": "Always use primary line",
+    "autoOption": "Auto - Device automatically chooses an available line",
+    "primaryLineOption": "Always use Primary Line",
     "autoLabel": "Auto",
     "primaryLineLabel": "Primary Line",
     "saveSuccess": "Line selection saved successfully",
