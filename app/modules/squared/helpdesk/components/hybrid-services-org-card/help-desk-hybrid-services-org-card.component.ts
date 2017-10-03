@@ -3,7 +3,6 @@ import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesClusterService, IServiceStatusWithSetup } from 'modules/hercules/services/hybrid-services-cluster.service';
 import { IToolkitModalService } from 'modules/core/modal/index';
 import { Notification } from 'modules/core/notifications/notification.service';
-import { UCCService } from 'modules/hercules/services/ucc-service';
 import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
 
 interface IHybridCard {
@@ -34,7 +33,6 @@ class HelpDeskHybridServicesOrgCardComponentCtrl implements ng.IComponentControl
     private HybridServicesUtilsService: HybridServicesUtilsService,
     private LicenseService,
     private Notification: Notification,
-    private UCCService: UCCService,
   ) { }
 
   public $onInit() {
@@ -77,21 +75,6 @@ class HelpDeskHybridServicesOrgCardComponentCtrl implements ng.IComponentControl
         })
         .catch((response) => {
           this.Notification.errorResponse(response, 'helpdesk.unexpectedError');
-        });
-    }
-
-    if (this.LicenseService.orgIsEntitledTo(org, 'squared-fusion-ec')) {
-      this.UCCService.getOrgVoicemailConfiguration(org.id)
-        .then((data) => {
-          hybridServicesCard.services.push({
-            serviceId: 'voicemail',
-            cssClass: this.UCCService.mapStatusToCss(data.voicemailOrgEnableInfo.orgVoicemailStatus),
-            setup: data.voicemailOrgEnableInfo.orgHybridVoicemailEnabled,
-            status: 'operational', // Just set to some dummy value, will not be used in the template
-          });
-        })
-        .catch((error) => {
-          this.Notification.errorResponse(error, 'helpdesk.hybridVoicemail.cannotReadStatus');
         });
     }
 

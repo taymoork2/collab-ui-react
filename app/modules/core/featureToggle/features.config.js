@@ -36,7 +36,6 @@ module.exports = {
   atlasHybridDataSecurity: 'atlas-hybrid-data-security',
   atlasHybridImp: 'atlas-hybrid-imp',
   atlasHybridNodesView: 'atlas-hybrid-nodes-view',
-  atlasHybridVoicemail: 'atlas-hybrid-voicemail',
   atlasITProPack: 'atlas-it-pro-pack',
   atlasITProPackPurchased: 'atlas-it-pro-pack-purchased',
   atlasJabberInterop: 'atlas-jabber-interop',

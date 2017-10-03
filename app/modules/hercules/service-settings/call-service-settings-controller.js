@@ -6,7 +6,7 @@
     .controller('CallServiceSettingsController', CallServiceSettingsController);
 
   /* @ngInject */
-  function CallServiceSettingsController($modal, Analytics, ServiceDescriptorService, Authinfo, USSService, CertService, Notification, CertificateFormatterService, $translate, hasAtlasHybridCallDiagnosticTool, hasVoicemailFeatureToggle, Orgservice, UCCService, FeatureToggleService) {
+  function CallServiceSettingsController($modal, Analytics, ServiceDescriptorService, Authinfo, USSService, CertService, Notification, CertificateFormatterService, $translate, hasAtlasHybridCallDiagnosticTool, Orgservice, FeatureToggleService) {
     var vm = this;
     vm.formattedCertificateList = [];
     vm.readCerts = readCerts;
@@ -28,7 +28,6 @@
           this.Notification.errorWithTrackingId(response, 'hercules.genericFailure');
         });
     }
-    vm.hasVoicemailFeatureToggle = hasVoicemailFeatureToggle;
     vm.help = {
       title: 'common.help',
     };
@@ -56,21 +55,6 @@
       });
 
     Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CALL_SETTINGS);
-
-    vm.disableVoicemail = function (orgId) {
-      UCCService.getOrgVoicemailConfiguration(orgId)
-        .then(function (data) {
-          if (data.voicemailOrgEnableInfo.orgHybridVoicemailEnabled) {
-            UCCService.disableHybridVoicemail(orgId)
-              .then(function () {
-                Notification.success('hercules.settings.voicemail.disableDescription');
-              })
-              .catch(function (response) {
-                Notification.errorWithTrackingId(response, 'hercules.voicemail.voicemailDisableError');
-              });
-          }
-        });
-    };
 
     vm.loading = true;
     USSService.getOrg(Authinfo.getOrgId())
@@ -146,9 +130,6 @@
     /* Callback from the hs-enable-disable-call-service-connect component  */
     vm.onCallServiceConnectDisabled = function () {
       vm.squaredFusionEc = false;
-      if (hasVoicemailFeatureToggle) {
-        vm.disableVoicemail(Authinfo.getOrgId());
-      }
     };
 
     /* Callback from the verify-sip-destination component  */

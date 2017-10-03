@@ -2390,7 +2390,6 @@
         "squared-fusion-gcal": "Calendar",
         "squared-fusion-o365": "Calendar",
         "squared-fusion-ec": "Connect",
-        "squared-fusion-ec-and-voicemail": "Connect + Voicemail",
         "squared-fusion-ec-place": "Hybrid Call Service Connect"
       },
       "serviceDescriptions": {
@@ -2534,17 +2533,6 @@
       "clusters-title-ept": "SIP Destination",
       "status-title": "Service Status"
     },
-    "hybridVoicemailUserSection": {
-      "automaticallyEnabled": "Voicemail is automatically enabled when Call Service Connect is enabled.",
-      "description": "Users can check their voicemail directly from Cisco Spark.",
-      "header": "Voicemail",
-      "on": "On",
-      "off": "Off",
-      "pilot": "Pilot",
-      "pilotNotConfigured": "Voicemail configuration not found.",
-      "mwi": "Message Waiting Indicator",
-      "toTurnOn": "To turn on voicemail for your users, enable voicemail in <a ng-click=\"{{onclick}}\">Hybrid Call Settings</a>."
-    },
     "hybridCallServiceTestCallTool": {
       "header": "Test Call",
       "description": "Begin a test call with another Cisco Spark user for troubleshooting Call Service Connect configuration.",
@@ -2630,21 +2618,6 @@
       "oneButtonToPushIntervalSecondaryLabel": "minutes before the meeting",
       "oneButtonToPushIntervalMinutesSavingSuccess": "Early join time was successfully saved.",
       "oneButtonToPushIntervalMinutesSavingError": "Could not save the change to early join time. Try again later.",
-      "voicemail": {
-        "heading": "Voicemail",
-        "description": "Users can access on-premises voicemail by using the Cisco Spark app.",
-        "enableDescription": "All users with both Hybrid Call Service Aware and Connect can use voicemail now",
-        "disableDescription": "Voicemail is disabled for all users",
-        "voicemailDisabled": "To enable voicemail Call Service Connect needs to be turned on.",
-        "voicemailStatusError": "Unable to get voicemail status",
-        "voicemailEnableError": "Could not enable voicemail",
-        "voicemailDisableError": "Could not disable voicemail",
-        "voicemailStatusNotConfigured": "Voicemail service not configured",
-        "voicemailStatusRequested": "Voicemail service activation pending",
-        "voicemailStatusHybridSuccess": "Voicemail service operational",
-        "voicemailStatusHybridFailed": "Voicemail service outage (see clusters for alarms)",
-        "voicemailStatusHybridPartial": "Voicemail service impaired (see clusters for alarms)"
-      },
       "documentation": {
         "heading": "Documentation and Software",
         "headingDoc": "Documentation",
@@ -7797,8 +7770,7 @@
           "spark-hybrid-datasecurity": "Data Security",
           "contact-center-context": "Context",
           "squared-fusion-khaos": "Management",
-          "ept": "Private Trunk",
-          "voicemail": "Voicemail"
+          "ept": "Private Trunk"
         }
       },
       "licenses": {
@@ -8279,11 +8251,6 @@
       "displayNameError": "Could not get customer display name."
     },
     "care": "Care",
-    "hybridVoicemail": {
-      "cannotReadStatus": "Could not read Hybrid Voicemail status.",
-      "hybridVoicemail": "Voicemail",
-      "orgNotEnabled": "Organization not enabled."
-    },
     "hybridImp": {
       "hybridImp": "Hybrid Messaging"
     }
