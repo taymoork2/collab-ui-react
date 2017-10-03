@@ -217,7 +217,6 @@ exports.config = {
     global.gssComponent = new GSSComponentPage();
     global.gssService = new GSSServicePage();
     global.gssIncident = new GSSIncidentPage();
-    global.overviewPage = new OverviewPage();
 
     function initReporters(config) {
       var testFile = _.chain(config)

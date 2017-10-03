@@ -4,7 +4,13 @@
 //   - org id: 8078642f-ab1a-4740-bd0a-61738ea76bf0
 // - delete auth entry 'ft--atlas-f3745-auto-assign-licenses' in 'test_helper.js'
 // - delete this file (obviated by 'manageusers-auto-assign-licenses_spec.js')
+
 'use strict';
+
+var LoginPage = require('../pages/login.page');
+var login = new LoginPage();
+var overview = require('../pages/overview.page');
+var utils = require('../utils/test.utils');
 
 describe('Manage Users - Auto-Assign Licenses', function () {
   it('should login as a customer full admin', function () {
@@ -12,7 +18,7 @@ describe('Manage Users - Auto-Assign Licenses', function () {
   });
 
   it('should have an entry "Auto-Assign Licenses" for the "Licenses" card', function () {
-    utils.expectIsDisplayed(overviewPage.cards.licenses.headerText);
-    utils.expectIsDisplayed(overviewPage.cards.licenses.autoAssignLicensesText);
+    utils.expectIsDisplayed(overview.cards.licenses.headerText);
+    utils.expectIsDisplayed(overview.cards.licenses.autoAssignLicensesText);
   });
 });
