@@ -99,7 +99,7 @@ export class MetricsService {
       return;
     }
 
-    if (this.hasInvalidTimingValues(this.$window.performance.timing)) {
+    if (this.hasInvalidTimingValue(this.$window.performance.timing)) {
       return;
     }
 
@@ -110,7 +110,7 @@ export class MetricsService {
       total_duration_in_millis: this.$window.performance.timing.loadEventEnd - this.$window.performance.timing.navigationStart,
     };
 
-    if (this.hasInvalidTimingValues(loadMetric)) {
+    if (this.hasInvalidTimingValue(loadMetric)) {
       return;
     }
 
@@ -280,9 +280,8 @@ export class MetricsService {
     this.$window.performance.clearMeasures(metric.measure);
   }
 
-  private hasInvalidTimingValues(obj: Object) {
-    const numberValues = _.filter(_.valuesIn<any>(obj), value => _.isNumber(value));
-    return _.isEmpty(numberValues) || _.some(numberValues, value => _.isNaN(value) || value < 0);
+  private hasInvalidTimingValue(obj: Object) {
+    return _.some(obj, value => !_.isFinite(value) || value < 0);
   }
 
 }
