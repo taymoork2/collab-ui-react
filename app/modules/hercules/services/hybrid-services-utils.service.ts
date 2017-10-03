@@ -28,7 +28,6 @@ export class HybridServicesUtilsService {
     'spark-hybrid-datasecurity',
     'squared-fusion-khaos',
     'squared-fusion-servicability',
-    'voicemail',
   ];
 
   /* @ngInject */

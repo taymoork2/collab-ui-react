@@ -200,12 +200,6 @@
       integration: 'https://ucc-intb.ciscospark.com/ucm-service/api/v1',
       prod: 'https://ucc-a.wbx2.com/ucm-service/api/v1',
     },
-    HybridVoicemailUrl: {
-      dev: 'https://ucc-intb.ciscospark.com/voicemail/api/v1',
-      cfe: 'https://ucc-loada.ciscospark.com/voicemail/api/v1',
-      integration: 'https://ucc-intb.ciscospark.com/voicemail/api/v1',
-      prod: 'https://ucc-a.wbx2.com/voicemail/api/v1',
-    },
     CccUrl: {
       dev: 'https://calendar-cloud-connector-intb.ciscospark.com/api/v1',
       cfe: 'https://calendar-cloud-connector-loada.ciscospark.com/api/v1',
