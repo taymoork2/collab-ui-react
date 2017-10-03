@@ -315,4 +315,18 @@ describe('Controller: EdiscoverySearchController', function () {
       expect(this.ediscoverySearchController.currentReportId).toBe('4567');
     });
   });
+
+  describe('helper function:', function () {
+    beforeEach(function () {
+      initController.apply(this);
+    });
+
+    it('splitWords should return an array with no empty strings and no white spaces', function () {
+      var words = 'hello,   foo,   abc   ,';
+      var splitWordsResponse = ['hello', 'foo', 'abc'];
+
+      var splitWords = this.ediscoverySearchController.splitWords(words);
+      expect(splitWords).toEqual(splitWordsResponse);
+    });
+  });
 });

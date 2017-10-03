@@ -21,6 +21,7 @@
     vm.advancedSearch = advancedSearch;
     vm.dateErrors = dateErrors;
     vm.validateDate = validateDate;
+    vm.splitWords = splitWords;
     vm.firstEnabledDate = null;
     vm.lastEnabledDate = moment().format('YYYY-MM-DD');
 
@@ -550,9 +551,11 @@
     /* Helper Functions */
     function splitWords(_words) {
       var words = _words ? (_words).split(',').map(
-        function (s) {
-          return s.trim();
-        }) : null;
+        function (m) {
+          return m.trim();
+        }).filter(function (f) {
+        return f !== '';
+      }) : null;
       return words;
     }
 
