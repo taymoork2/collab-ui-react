@@ -77,9 +77,9 @@ export class LocationsService {
       });
   }
 
-  public getLocationList(): IPromise<LocationListItem[]> {
+  public getLocationList(customerId: string = this.Authinfo.getOrgId()): IPromise<LocationListItem[]> {
     return this.locationListResource.get({
-      customerId: this.Authinfo.getOrgId(),
+      customerId: customerId,
       wide: true,
     }).$promise.then(locationData => {
       return _.map(_.get<IRLocationListItem[]>(locationData, 'locations', []), location => {
@@ -221,9 +221,9 @@ export class LocationsService {
     }, location).$promise;
   }
 
-  public getDefaultLocation(): ng.IPromise<LocationListItem> {
+  public getDefaultLocation(customerId: string = this.Authinfo.getOrgId()): ng.IPromise<LocationListItem> {
     if (!this.defaultLocation) {
-      return this.getLocationList().then(locationList => {
+      return this.getLocationList(customerId).then(locationList => {
         //First one is always the default per API definition
         this.defaultLocation = locationList[0];
         return this.defaultLocation;

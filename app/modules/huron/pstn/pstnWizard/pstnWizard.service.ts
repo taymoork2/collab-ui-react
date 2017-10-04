@@ -138,7 +138,7 @@ export class PstnWizardService {
   public initLocations(): ng.IPromise<LocationListItem | undefined> {
     //On success the default location is saved in the LocationsService
     //and will be updated if the default changes.
-    return this.LocationsService.getDefaultLocation()
+    return this.LocationsService.getDefaultLocation(this.PstnModel.getCustomerId())
     .catch(error => {
       this.Notification.errorResponse(error, 'settingsServiceAddress.getError');
       return undefined;
