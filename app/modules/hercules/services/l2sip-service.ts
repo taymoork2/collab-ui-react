@@ -154,6 +154,7 @@ export class L2SipService {
   /* @ngInject */
   constructor(
     private $http: ng.IHttpService,
+    private Authinfo,
     private UrlConfig,
   ) {
     this.l2sipUrl = this.UrlConfig.getL2sipUrl();
@@ -164,8 +165,17 @@ export class L2SipService {
   }
 
   public verifySipDestination(expresswayUrl: string, verifyTls: boolean = true): ng.IPromise<ISipDestinationSteps> {
+    const params: any = {
+      name: expresswayUrl,
+      validateTls: verifyTls,
+    };
+    if (this.Authinfo.isPartner()) {
+      params.orgId = this.Authinfo.getOrgId();
+    }
     return this.$http
-      .get(`${this.l2sipUrl}/test/dns?name=${expresswayUrl}&validateTls=${verifyTls}`)
+      .get(`${this.l2sipUrl}/test/dns`, {
+        params: params,
+      })
       .then(this.extractData);
   }
 
