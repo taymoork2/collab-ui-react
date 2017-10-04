@@ -19,7 +19,6 @@ export class CallSettingsData {
 export class CallSettingsService {
   private callSettingsDataCopy: CallSettingsData;
   private errors: string[] = [];
-  private supportsCompanyMoh: boolean = false;
 
   /* @ngInject */
   constructor(
@@ -29,15 +28,10 @@ export class CallSettingsService {
     private AvrilService: AvrilService,
     private LocationsService: LocationsService,
     private Notification: Notification,
-    private FeatureToggleService,
     private CallerId,
     private ServiceSetup,
     private Authinfo,
-  ) {
-    //Company Media On Hold Support
-    this.FeatureToggleService.supports(FeatureToggleService.features.huronMOHEnable)
-      .then(result => this.supportsCompanyMoh = result);
-  }
+  ) {}
 
   public get(): ng.IPromise<CallSettingsData> {
     this.errors = [];
@@ -63,6 +57,7 @@ export class CallSettingsService {
       .then(() => this.updateAvrilCustomer(data.avrilCustomer, data.customer))
       .then(() => this.updateLocation(data.defaultLocation))
       .then(() => this.saveCompanyCallerId(data.companyCallerId))
+      .then(() => this.saveCompanyMediaOnHold(data.companyMoh))
       .then(() => this.get())
       .catch(() => this.rejectAndNotifyPossibleErrors());
   }
@@ -123,14 +118,11 @@ export class CallSettingsService {
   }
 
   private getCompanyMedia(): ng.IPromise<string> {
-    if (this.supportsCompanyMoh) {
-      return this.MediaOnHoldService.getCompanyMedia()
+    return this.MediaOnHoldService.getCompanyMedia()
       .catch(error => {
         this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohGetError'));
         return this.$q.reject();
       });
-    }
-    return this.$q.resolve('');
   }
 
   private getCompanyCallerId(): ng.IPromise<CompanyNumber> {
@@ -225,6 +217,32 @@ export class CallSettingsService {
     } else {
       return this.$q.resolve();
     }
+  }
+
+  private saveCompanyMediaOnHold(companyMoh: string): ng.IPromise<void> {
+    if (!_.isEqual(companyMoh, this.callSettingsDataCopy.companyMoh)) {
+      const GENERIC_MEDIA_ID = '98765432-DBC2-01BB-476B-CFAF98765432';
+      if (_.isEqual(companyMoh, GENERIC_MEDIA_ID)) {
+        return this.unassignCompanyMediaOnHold();
+      } else {
+        return this.updateCompanyMediaOnHold(companyMoh);
+      }
+    }
+    return this.$q.resolve();
+  }
+
+  private updateCompanyMediaOnHold(mediaFileId: string): ng.IPromise<void> {
+    return this.MediaOnHoldService.updateMediaOnHold(mediaFileId)
+      .catch(error => {
+        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohUpdateError'));
+      });
+  }
+
+  private unassignCompanyMediaOnHold(): ng.IPromise<void> {
+    return this.MediaOnHoldService.unassignMediaOnHold()
+      .catch(error => {
+        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohUpdateError'));
+      });
   }
 
   public getOriginalConfig(): CallSettingsData {
