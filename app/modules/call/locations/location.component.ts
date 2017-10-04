@@ -214,6 +214,7 @@ class CallLocationCtrl implements ng.IComponentController {
 
   public onCancel(): void {
     this.callLocationSettingsData = this.CallLocationSettingsService.getOriginalConfig();
+    //creates IOption for this.number
     this.setEmergencyCallbackNumber(this.callLocationSettingsData.emergencyNumber);
     this.resetForm();
   }
@@ -229,11 +230,16 @@ class CallLocationCtrl implements ng.IComponentController {
     if (!emergencyNumber) {
       return;
     }
-    const options: IOption[] = this.locationSettingsOptions.emergencyNumbersOptions.filter(option => {
-      return option.value === emergencyNumber.pattern;
-    });
-    if (options && options.length) {
+    let options: IOption[] = [];
+    if (_.isEmpty(emergencyNumber.pattern)) {
+      options = this.locationSettingsOptions.emergencyNumbersOptions.filter(option => {
+        return option.value === emergencyNumber.pattern;
+      });
+    }
+    if (options.length > 0) {
       this.number = options[0];
+    } else {
+      this.number = null;
     }
   }
 }

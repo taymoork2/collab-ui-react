@@ -5379,7 +5379,9 @@
     "saveSuccess": "Emergency Service Number updated successfully.",
     "saveError": "Error occurred updating Emergency Service Number.",
     "getError": "Error occurred retrieving Emergency Service Number.",
-    "warning": "Please select a number assigned to a user or Cisco Spark Call feature"
+    "warning": "Please select a number assigned to a user or Cisco Spark Call feature",
+    "needEcbnNoOptions": "Before you can add an emergency callback number to this location, you must add a user or place with an external number",
+    "needEcbnOptions": "Must select an emergency callback number"
   },
   "emergencyServices": {
     "warnNoPstn": "Once you have PSTN set up, you will need to add Emergency Service information to locations",
