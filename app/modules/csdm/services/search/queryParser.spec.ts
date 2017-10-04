@@ -57,9 +57,9 @@ describe('QueryParser', () => {
   });
 
 
-  function expectQueryToParseTo(query: string, res) {
+  function expectQueryToParseTo(query: string, expectedObject: any) {
     const parsedQuery = QueryParser.parseQueryString(query);
-    expect(JSON.stringify(parsedQuery)).toEqual(JSON.stringify(res));
+    expect(JSON.stringify(parsedQuery)).toEqual(JSON.stringify(expectedObject));
   }
 })
 ;
