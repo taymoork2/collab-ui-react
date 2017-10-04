@@ -1,31 +1,148 @@
-export interface ISearchElement {
-}
+export abstract class SearchElement {
 
-export class OperatorAnd implements ISearchElement {
-  public and: ISearchElement[];
+  private parent: SearchElement;
+  protected _isBeingEdited: boolean;
 
-  constructor(andedElements: ISearchElement[]) {
-    this.and = andedElements;
+  public isCollection(): boolean {
+    return (this instanceof OperatorAnd) || (this instanceof OperatorOr);
   }
-}
 
-export class OperatorOr implements ISearchElement {
-  public or: ISearchElement[];
-
-  constructor(oredElements: ISearchElement[]) {
-    this.or = oredElements;
+  public getExpressions(): SearchElement[] {
+    if (this instanceof OperatorAnd) {
+      return this.and;
+    }
+    if (this instanceof OperatorOr) {
+      return this.or;
+    }
+    return [];
   }
+
+  public replaceWith(newElement: SearchElement) {
+    this.parent.getExpressions()[this.parent.getExpressions().indexOf(this)] = newElement;
+    newElement.setParent(this.parent);
+  }
+
+  public setParent(parent: SearchElement) {
+    this.parent = parent;
+  }
+
+  public getParent() {
+    return this.parent;
+  }
+
+  public abstract toQuery(): string;
+
+  public setBeingEdited(beingEdited: boolean) {
+    this._isBeingEdited = beingEdited;
+  }
+
+  public isBeingEdited(): boolean {
+    return this._isBeingEdited;
+  }
+
+  public abstract toJSON(): any;
 }
 
-export class FieldQuery implements ISearchElement {
+export class FieldQuery extends SearchElement {
   public query: string;
   public field?: string;
   public queryType?: string;
 
   constructor(query: string, field?: string, queryType?: string) {
+    super();
     this.query = query;
     this.field = field;
     this.queryType = queryType;
+  }
+
+  public getQueryPrefix(): string {
+    return (this.field) ? this.field + FieldQuery.getMatchOperator(this) + ' ' : '';
+  }
+
+  public static getMatchOperator(fieldQuery: FieldQuery): string {
+    return fieldQuery.queryType === 'exact' ? '=' : ':';
+  }
+
+  public toQuery(): string {
+    let innerQuery = this.query;
+    if (this.queryType === 'exact' || this.query.search(/\s|\(/) > 0) {
+      innerQuery = '"' + innerQuery + '"';
+    }
+    return this.getQueryPrefix() + innerQuery;
+  }
+
+  public toJSON(): any {
+    return {
+      query: this.query,
+      field: this.field,
+      queryType: this.queryType,
+    };
+  }
+}
+
+export class OperatorAnd extends SearchElement {
+  public and: SearchElement[];
+
+  constructor(andedElements: SearchElement[]) {
+    super();
+    this.and = andedElements;
+    _.each(andedElements, s => s.setParent(this));
+  }
+
+  public toQuery(): string {
+    const joinedQuery = _.join(_.map(this.and, (e) => e.toQuery()), ' and ');
+
+    if (this.getParent()) {
+      return '(' + joinedQuery + ')';
+    } else {
+      return joinedQuery;
+    }
+  }
+
+  public toJSON(): any {
+    return {
+      and: this.and,
+    };
+  }
+
+  public addSubElement(newElement: SearchElement) {
+    this.and.push(newElement);
+    newElement.setParent(this);
+  }
+
+  public tryFlattenIntoParent() {
+    const myParent = this.getParent();
+    if (myParent instanceof OperatorAnd) {
+      const spliceParams: any[] = [myParent.and.indexOf(this), 1];
+      _.each(this.and, s => s.setParent(this.getParent()));
+      Array.prototype.splice.apply(myParent.and, spliceParams.concat(this.and));
+    }
+  }
+}
+
+export class OperatorOr extends SearchElement {
+  public or: SearchElement[];
+
+  constructor(oredElements: SearchElement[]) {
+    super();
+    this.or = oredElements;
+    _.each(oredElements, s => s.setParent(this));
+  }
+
+  public toQuery(): string {
+    const joinedQuery = _.join(_.map(this.or, (e) => e.toQuery()), ' or ');
+
+    if (this.getParent()) {
+      return '(' + joinedQuery + ')';
+    } else {
+      return joinedQuery;
+    }
+  }
+
+  public toJSON(): any {
+    return {
+      or: this.or,
+    };
   }
 }
 
@@ -46,18 +163,19 @@ export class QueryParser {
     'product',
     'connectionstatus',
     'sipurl',
-    'errorcodes'];
+    'errorcodes',
+    'tags'];
 
   constructor() {
   }
 
-  public static parseQueryString(queryString: string): ISearchElement {
+  public static parseQueryString(queryString: string): SearchElement {
     return this.parseElement(queryString.toLowerCase());
   }
 
-  private static parseElement(expression: string, searchField?: string, queryType?: string): ISearchElement {
+  private static parseElement(expression: string, searchField?: string, queryType?: string): SearchElement {
 
-    const searchElements: ISearchElement[] = [];
+    const searchElements: SearchElement[] = [];
     let curIndex: number = 0;
     let isOrOperator: boolean = false;
 
@@ -126,7 +244,7 @@ export class QueryParser {
   }
 
   private static getOperatorIndex(currentText: string): number {
-    for (let i = 0; i < currentText.length ; i++) {
+    for (let i = 0; i < currentText.length; i++) {
       if (currentText[i] === '=' || currentText[i] === ':') {
         return i;
       }
@@ -173,7 +291,7 @@ export class QueryParser {
   }
 
   private static getFirstWordEndIndex(currentText: string): number {
-    const wordEnd = currentText.search(/\s+/);
+    const wordEnd = currentText.search(/\s|\(/);
     if (wordEnd < 0) {
       return currentText.length;
     }
@@ -188,7 +306,7 @@ export class QueryParser {
     return whiteSpaceCount;
   }
 
-  private static createSearchElement(searchElements: ISearchElement[], isOrOperator: boolean): ISearchElement {
+  private static createSearchElement(searchElements: SearchElement[], isOrOperator: boolean): SearchElement {
 
     if (searchElements.length === 1) {
       return searchElements[0];
