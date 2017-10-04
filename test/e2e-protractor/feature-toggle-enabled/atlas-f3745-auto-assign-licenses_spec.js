@@ -7,10 +7,10 @@
 
 'use strict';
 
-var LoginPage = require('../pages/login.page');
-var login = new LoginPage();
-var overview = require('../pages/overview.page');
-var utils = require('../utils/test.utils');
+const LoginPage = require('../pages/login.page');
+const login = new LoginPage();
+const overview = require('../pages/overview.page');
+const utils = require('../utils/test.utils');
 
 describe('Manage Users - Auto-Assign Licenses', function () {
   it('should login as a customer full admin', function () {
