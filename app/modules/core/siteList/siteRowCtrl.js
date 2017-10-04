@@ -15,7 +15,6 @@ require('./_site-list.scss');
 
     FeatureToggleService.atlasWebexAddSiteGetStatus().then(function (result) {
       vm.isShowAddSite = result;
-      vm.isShowAddSite = true;
     });
 
     WebExSiteRowService.initSiteRows();

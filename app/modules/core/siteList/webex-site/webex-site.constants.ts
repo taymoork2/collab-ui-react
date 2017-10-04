@@ -1,4 +1,4 @@
 export enum EventNames {
-  validateTransferSite = 'core::validateTransferSite',
-  addSites = 'core::addSites',
+  VALIDATE_TRANSFER_SITE = 'core::transferSiteValidated',
+  ADD_SITES = 'core::sitesAdded',
 }

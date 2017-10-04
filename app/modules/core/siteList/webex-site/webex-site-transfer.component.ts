@@ -46,7 +46,7 @@ class WebexSiteTransferCtrl implements ng.IComponentController {
   public $onInit() {
     this.hasTrialSites = this.SetupWizardService.hasWebexMeetingTrial();
     this.timeZoneOptions = this.TrialTimeZoneService.getTimeZones();
-    this.$scope.$on(EventNames.validateTransferSite, () => {
+    this.$scope.$on(EventNames.VALIDATE_TRANSFER_SITE, () => {
       this.processNext();
     });
   }
@@ -90,7 +90,7 @@ class WebexSiteTransferCtrl implements ng.IComponentController {
       siteUrl: this.transferSiteUrl,
       transferCode: this.transferSiteCode,
     };
-    if (!(_.endsWith(transferSiteDetails.siteUrl, '.webex.com'))) {
+    if (!(_.endsWith(transferSiteDetails.siteUrl, this.Config.siteDomainUrl.webexUrl))) {
       transferSiteDetails.siteUrl += this.Config.siteDomainUrl.webexUrl;
     }
     return this.SetupWizardService.validateTransferCode(transferSiteDetails).then((response) => {
@@ -148,7 +148,7 @@ class WebexSiteTransferCtrl implements ng.IComponentController {
 
 export class WebexSiteTransferComponent implements ng.IComponentOptions {
   public controller = WebexSiteTransferCtrl;
-  public template = require('modules/core/siteList/webex-site/webex-site-transfer.html');
+  public template = require('./webex-site-transfer.html');
   public bindings = {
     onSitesReceived: '&',
     onValidationStatusChange: '&',

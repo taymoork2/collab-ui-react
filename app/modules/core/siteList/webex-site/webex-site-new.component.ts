@@ -1,5 +1,4 @@
-import { IWebExSite, ISiteNameError, SiteErrorType } from
-  'modules/core/setupWizard/meeting-settings/meeting-settings.interface';
+import { IWebExSite, ISiteNameError, SiteErrorType } from 'modules/core/setupWizard/meeting-settings/meeting-settings.interface';
 import { Config } from 'modules/core/config/config';
 import { TrialTimeZoneService } from 'modules/core/trials/trialTimeZone.service';
 import { TrialWebexService } from 'modules/core/trials/trialWebex.service';
@@ -47,17 +46,14 @@ class WebexSiteNewCtrl implements ng.IComponentController {
   public disableValidateButton = false;
   public onSitesAdd: Function;
   public onValidationStatusChange: Function;
-  public sitesArray: IWebExSite[] = [];
+  public sitesArray: IWebExSite[]; // = [];
   public newSitesArray: IWebExSite[] = [];
 
-  public $onChanges(changes) {
-    if (changes.audioPackage) {
-      this.audioPackage = changes.audioPackage.currentValue;
+  /*public $onChanges(changes) {
+    if (changes.sitesArray) {
+      this.sitesArray = _.clone(changes.sitesArray.currentValue);
     }
-    if (changes.sites) {
-      this.sitesArray = _.clone(changes.sites.currentValue);
-    }
-  }
+  }*/
 
   public addSite(site) {
     this.newSitesArray.push(site);
@@ -112,7 +108,7 @@ class WebexSiteNewCtrl implements ng.IComponentController {
     this.shouldShowUserManagement().then(result => {
       this.isShowUserManagement = result;
     });
-    this.$scope.$on(EventNames.addSites, () => {
+    this.$scope.$on(EventNames.ADD_SITES, () => {
       this.onSitesAdd({ sites: this.newSitesArray, isValid: true });
     });
   }
@@ -138,8 +134,7 @@ class WebexSiteNewCtrl implements ng.IComponentController {
   // algendel9/25/17 we show user management if FT is enabled OR the pattern matches
   private shouldShowUserManagement(): ng.IPromise<boolean> {
     const regex = new RegExp(WebexSiteNewCtrl.showUserMgmntEmailPattern);
-    let isPatternMatch = false;
-    isPatternMatch = regex.test(this.Authinfo.getUserName()) || regex.test(this.Authinfo.getPrimaryEmail()) || regex.test(this.Authinfo.getCustomerAdminEmail());
+    const isPatternMatch  = regex.test(this.Authinfo.getUserName()) || regex.test(this.Authinfo.getPrimaryEmail()) || regex.test(this.Authinfo.getCustomerAdminEmail());
     if (isPatternMatch) {
       return this.$q.resolve(true);
     }
@@ -180,9 +175,9 @@ class WebexSiteNewCtrl implements ng.IComponentController {
 
 export class WebexSiteNewComponent implements ng.IComponentOptions {
   public controller = WebexSiteNewCtrl;
-  public template = require('modules/core/siteList/webex-site/webex-site-new.html');
+  public template = require('./webex-site-new.html');
   public bindings = {
-    sites: '<',
+    sitesArray: '<',
     onSitesAdd: '&',
     onValidationStatusChange: '&',
     audioPackage: '<',

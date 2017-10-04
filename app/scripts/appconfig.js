@@ -1909,18 +1909,12 @@
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<webex-add-site-modal subscription-list="$resolve.subscriptionList"  conference-services="$resolve.conferenceServices" audio-licenses="$resolve.audioLicenses" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site->',
+                template: '<webex-add-site-modal subscription-list="$resolve.subscriptionList"  conference-licenses="$resolve.conferenceLicenses" audio-licenses="$resolve.audioLicenses" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site->',
               },
             },
-            params: {
-              existingFieldIds: [],
-              existingFieldData: {},
-              inUse: false,
-              callback: function () { },
-            },
             resolve: {
-              conferenceServices: /* @ngInject */ function (Authinfo) {
-                return Authinfo.getConferenceServices();
+              conferenceLicenses: /* @ngInject */ function (Authinfo) {
+                return _.map(Authinfo.getConferenceServices(), 'license');
               },
               audioLicenses: /*@ngInject */ function (Authinfo, Config) {
                 var audioLicenses = _.filter(Authinfo.getLicenses(), { licenseType: Config.licenseTypes.AUDIO });

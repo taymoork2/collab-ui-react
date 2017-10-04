@@ -169,7 +169,7 @@ class WebexSiteLicensesCtrl implements ng.IComponentController {
 
 export class WebexSiteLicensesComponent implements ng.IComponentOptions {
   public controller = WebexSiteLicensesCtrl;
-  public template = require('modules/core/siteList/webex-site/webex-site-licenses.html');
+  public template = require('./webex-site-licenses.html');
   public bindings = {
     sites: '<',
     meetingLicenses: '<',
