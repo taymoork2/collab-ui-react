@@ -167,7 +167,7 @@
       </div>
       <div class="section__content">
         <uc-emergency-service-number
-          site="$ctrl.huronSettingsData.site"
+          voicemail-pilot-number="$ctrl.huronSettingsData.site.voicemailPilotNumber"
           emergency-callback-number="$ctrl.huronSettingsData.site.emergencyCallBackNumber"
           external-number-options="$ctrl.settingsOptions.emergencyServiceNumberOptions"
           on-number-filter-fn="$ctrl.onEmergencyServiceNumberFilter(filter)"
@@ -198,7 +198,7 @@
       </div>
       <div class="section__content">
         <uc-company-caller-id
-          site="$ctrl.huronSettingsData.site"
+          voicemail-pilot-number="$ctrl.huronSettingsData.site.voicemailPilotNumber"
           company-caller-id="$ctrl.huronSettingsData.companyCallerId"
           external-number-options="$ctrl.settingsOptions.companyCallerIdOptions"
           customer-name="$ctrl.huronSettingsData.customer.name"
