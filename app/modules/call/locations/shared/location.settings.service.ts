@@ -42,7 +42,17 @@ export class CallLocationSettingsService {
     private AvrilService: AvrilService,
   ) {}
 
-  public get(locationId: string): ng.IPromise<CallLocationSettingsData> {
+  public get(locationId: string, isLocationWizardSetup?: boolean): ng.IPromise<CallLocationSettingsData> {
+    if (locationId || isLocationWizardSetup) {
+      return this.getLocationData(locationId);
+    } else {
+      return this.LocationsService.getDefaultLocation()
+        .then((defaultLocation) => this.getLocationData(defaultLocation.uuid ? defaultLocation.uuid : ''))
+        .catch(() => this.getLocationData(''));
+    }
+  }
+
+  public getLocationData(locationId: string): ng.IPromise<CallLocationSettingsData> {
     this.errors = [];
     const callLocationSettingsData = new CallLocationSettingsData();
     return this.$q.all({
