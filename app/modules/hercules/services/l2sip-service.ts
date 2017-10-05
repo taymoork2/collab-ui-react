@@ -169,7 +169,7 @@ export class L2SipService {
       name: expresswayUrl,
       validateTls: verifyTls,
     };
-    if (this.Authinfo.isPartner()) {
+    if (this.Authinfo.isCustomerLaunchedFromPartner()) {
       params.orgId = this.Authinfo.getOrgId();
     }
     return this.$http
