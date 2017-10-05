@@ -96,6 +96,7 @@ module.exports = {
   csdmAtaReboot: 'csdm-ata-reboot',
   csdmDeviceBranding: 'csdm-device-branding',
   csdmDevRed: 'csdm-device-red',
+  csdmDevicePlaceLink: 'csdm-device-place-link',
   csdmHybridCall: 'csdm-hybrid-call',
   csdmMultipleDevicesPerPlace: 'csdm-multiple-devices-per-place',
   csdmPlaceCalendar: 'csdm-hybrid-calendar',
