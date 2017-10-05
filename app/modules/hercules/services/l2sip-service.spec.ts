@@ -14,7 +14,7 @@ describe('L2SIP Service', () => {
     $httpBackend = _$httpBackend_;
     Authinfo = _Authinfo_;
     service = _L2SipService_;
-    spyOn(Authinfo, 'isPartner').and.returnValue(false);
+    spyOn(Authinfo, 'isCustomerLaunchedFromPartner').and.returnValue(false);
     spyOn(Authinfo, 'getOrgId').and.returnValue('abc');
   }
 
@@ -44,7 +44,7 @@ describe('L2SIP Service', () => {
 
     it ('should send the customer org id if logged in as a partner', () => {
 
-      Authinfo.isPartner.and.returnValue(true);
+      Authinfo.isCustomerLaunchedFromPartner.and.returnValue(true);
       $httpBackend.expectGET(`https://l2sip-cfa-web.wbx2.com/l2sip/api/v1/test/dns?name=${sipDestination}&validateTls=true&orgId=abc`).respond('200');
       service.verifySipDestination(sipDestination);
       $httpBackend.flush();
