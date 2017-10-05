@@ -38,7 +38,7 @@ describe('HybridCallServiceAggregatedSectionComponent', () => {
 
   function initController() {
     ctrl = $componentController('hybridCallServiceAggregatedSection', {}, {
-      userUpdatedCallback: _.noop(),
+      userUpdatedCallback: function () {},
     });
   }
 
