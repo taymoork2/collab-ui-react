@@ -1,6 +1,6 @@
 {
   "loginPage": {
-    "title": "Cloud Collaboration Management",
+    "title": "Cisco Spark Control Hub",
     "titleNew": "Cisco Spark Control Hub",
     "titlePro": "Cisco Spark Control Hub Pro",
     "login": "Sign In",
@@ -6478,8 +6478,8 @@
     "urlReportEx": "http://[url of Cisco problem reporting]",
     "helpFaq": "Help Site",
     "matchingTix": "Matching Problem Reports",
-    "matchingDescr": "To match problem reports with the logs that are uploaded to the Cloud Collaboration Management tool, you can enter the string “%%logID%%” (without quotes) into the URL, which will get substituted with the actual logID for each problem report submitted by your users. For example: http://www.example.com/reportproblem?yourLogIDParameter=%%logID%%. This is optional, and may require special configuration within your problem report ticketing system.",
-    "matchingDescrNew": "To match problem reports with the logs that are uploaded to the {{appTitle}} tool, you can enter the string “%%logID%%” (without quotes) into the URL, which will get substituted with the actual logID for each problem report submitted by your users. For example: http://www.example.com/reportproblem?yourLogIDParameter=%%logID%%. This is optional, and may require special configuration within your problem report ticketing system.",
+    "matchingDescr": "To match problem reports with the logs that are uploaded to the {{appTitle}} tool, you can enter the string <strong>%%logID%%</strong> into the URL, which will get substituted with the actual logID for each problem report submitted by your users. For example: http://www.example.com/reportproblem?yourLogIDParameter=%%logID%%. This is optional, and may require special configuration within your problem report ticketing system.",
+    "matchingDescrNew": "To match problem reports with the logs that are uploaded to the {{appTitle}} tool, you can enter the string <strong>%%logID%%</strong> into the URL, which will get substituted with the actual logID for each problem report submitted by your users. For example: http://www.example.com/reportproblem?yourLogIDParameter=%%logID%%. This is optional, and may require special configuration within your problem report ticketing system.",
     "forExample": "For example: http://www.acme.com/reportproblem?id=%%logID%%",
     "brandingTitle": "Customize Branding",
     "supportTitle": "Support Setup",
@@ -7731,7 +7731,7 @@
         "herculesError": "Could not reach the service for Cisco Spark Hybrid Services.",
         "herculesErrorCacheInvalidation": "Could not invalidate current user's Hybrid Services cache.",
         "herculesErrorAuthentication": "The current user is not allowed to read this organization's Hybrid Services data.",
-        "notEnabledText": "Hybrid Services allows you to integrate your on-premises systems with the Cisco Collaboration Platform.",
+        "notEnabledText": "Hybrid Services allows you to integrate your on-premises systems with the Cisco Spark Platform.",
         "notEnabledTextNew": "Hybrid Services allows you to integrate your on-premises systems with the Cisco Spark Platform.",
         "notEnabledActionText": "Learn More",
         "serviceHeader": "Status",

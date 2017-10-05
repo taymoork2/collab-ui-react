@@ -4,7 +4,6 @@ export class ControlHubService {
 
   /* @ngInject */
   constructor(
-    private FeatureToggleService,
     private tabConfigControlHub,
     ) {
     this.image =  '/images/control-hub-logo.svg';
@@ -12,12 +11,6 @@ export class ControlHubService {
       value: false,
       image: '/images/spark-logo.svg',
     };
-  }
-
-  public getControlHubEnabled(): ng.IPromise<boolean> {
-    return this.FeatureToggleService.supports(this.FeatureToggleService.features.atlas2017NameChange).then(result => {
-      return result;
-    });
   }
 
   public getImage() {

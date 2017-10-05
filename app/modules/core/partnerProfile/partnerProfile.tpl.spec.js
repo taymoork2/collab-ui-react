@@ -10,7 +10,6 @@ describe('Template: partnerProfile', function () {
       '$scope',
       'Authinfo',
       'BrandService',
-      'FeatureToggleService',
       'ProPackService',
       'Notification',
       'Orgservice',
@@ -19,7 +18,6 @@ describe('Template: partnerProfile', function () {
     );
 
     spyOn(this.Authinfo, 'isPartner');
-    spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(false));
     spyOn(this.Notification, 'success');
     spyOn(this.Notification, 'error');
@@ -99,14 +97,7 @@ describe('Template: partnerProfile', function () {
   });
 
   describe('2017 name update', function () {
-    it('should contain partnerProfile.matchingDescr when atlas2017NameChangeGetStatus is false', function () {
-      this.initComponent();
-      expect(this.view.text()).toContain('partnerProfile.matchingDescr');
-      expect(this.view.text()).not.toContain('partnerProfile.matchingDescrNew');
-    });
-
-    it('should contain partnerProfile.matchingDescrNew when atlas2017NameChangeGetStatus is true', function () {
-      this.FeatureToggleService.atlas2017NameChangeGetStatus.and.returnValue(this.$q.resolve(true));
+    it('should contain partnerProfile.matchingDescrNew as default', function () {
       this.initComponent();
       expect(this.view.text()).toContain('partnerProfile.matchingDescrNew');
     });
