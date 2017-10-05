@@ -1155,6 +1155,9 @@
               'userPending@user-overview': {
                 template: require('modules/core/users/userOverview/userPending.tpl.html'),
               },
+              'side-panel-container@user-overview': {
+                template: require('modules/core/users/userOverview/userOverviewFirstScreen.tpl.html'),
+              },
             },
             resolve: {
               currentUser: /* @ngInject */ function (UserOverviewService, $stateParams) {
@@ -4152,6 +4155,9 @@
               'header@context-cluster-sidepanel': {
                 template: require('modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html'),
               },
+              'side-panel-container@context-cluster-sidepanel': {
+                template: require('modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-content.html'),
+              },
             },
             // If data not present, $state.current.data.displayName can't be changed
             data: {},
@@ -4359,6 +4365,9 @@
               },
               'header@hds-cluster-details': {
                 template: require('modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html'),
+              },
+              'side-panel-container@hds-cluster-details': {
+                template: require('modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-content.html'),
               },
             },
             data: {},
@@ -4901,6 +4910,9 @@
               'header@expressway-cluster-sidepanel': {
                 template: require('modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html'),
               },
+              'side-panel-container@expressway-cluster-sidepanel': {
+                template: require('modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-content.html'),
+              },
             },
             // If data not present, $state.current.data.displayName can't be changed
             data: {},
@@ -4979,6 +4991,9 @@
               },
               'header@media-cluster-details': {
                 template: require('modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html'),
+              },
+              'side-panel-container@media-cluster-details': {
+                template: require('modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-content.html'),
               },
             },
             data: {},
