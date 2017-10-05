@@ -10,9 +10,9 @@
     </div>
   </cs-sp-header>
   <div class="side-panel-container-view" ui-view="side-panel-container">
-    <cs-sp-container>
+    <cs-sp-container cs-tabindex="customerOverview.form.$dirty ? -1 : 0">
       <cs-sp-section>
-        <cs-sp-buttons ng-show="customerOverview.form.$dirty || CustomerOverview.saved">
+        <cs-sp-buttons ng-show="customerOverview.form.$dirty">
           <button class="btn btn--primary" ng-click="customerOverview.saveLogoSettings()" type="submit" translate="common.save"></button>
           <button ng-click="customerOverview.reset()" translate="common.cancel"></button>
         </cs-sp-buttons>

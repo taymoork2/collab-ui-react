@@ -9,7 +9,7 @@
     </button>
   </cs-sp-buttons>
   <div class="side-panel-container-view" ui-view="side-panel-container">
-    <cs-sp-container>
+    <cs-sp-container cs-tabindex="$ctrl.onPrefLanguageChange ? -1 : 0">
       <cs-sp-section>
         <section-title
           title-key="placesPage.servicesHeader"
