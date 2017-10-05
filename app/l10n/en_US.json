@@ -5826,7 +5826,8 @@
       "title": "Hybrid Media",
       "adoption-title": "Adoption",
       "resources-title": "Resources",
-      "custom": "Custom"
+      "custom": "Custom",
+      "test-org-alert": "Reports might show data inconsistencies as this is a Test Org"
     },
     "deregister": {
       "header": "Deregister Node",
