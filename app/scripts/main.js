@@ -153,6 +153,7 @@
     require('modules/hercules/hybrid-services-nodes-page').default,
     require('modules/hercules/private-trunk/private-trunk-overview-settings').default,
     require('modules/hercules/private-trunk/private-trunk-setup').default,
+    require('modules/hercules/user-sidepanel/hybrid-services-user-sidepanel-section').default,
     require('modules/hercules/resource-group-card').default,
     require('modules/hercules/service-settings/calendar-service-setup').default,
     require('modules/hercules/services/calendar-cloud-connector.service').default,

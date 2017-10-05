@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Directive Controller: HybridServicesCtrl', function () {
+describe('Directive Controller: HybridCloudberrySectionCtrl', function () {
   beforeEach(angular.mock.module('Hercules'));
 
   var vm, $rootScope, $controller, $timeout, $q, Authinfo, Config, USSService, ServiceDescriptorService, Userservice, CloudConnectorService, FeatureToggleService;
@@ -149,7 +149,7 @@ describe('Directive Controller: HybridServicesCtrl', function () {
     if (orgLicenses) {
       Authinfo.getLicenses.and.returnValue(orgLicenses);
     }
-    return $controller('HybridServicesCtrl', {
+    return $controller('HybridCloudberrySectionCtrl', {
       $scope: $rootScope.$new(),
       $timeout: $timeout,
       Authinfo: Authinfo,

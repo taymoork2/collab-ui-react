@@ -1519,7 +1519,7 @@
           .state('user-overview.hybrid-services-spark-hybrid-impinterop', {
             views: {
               'side-panel-container@user-overview': {
-                template: '<hybrid-messaging-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName"></hybrid-messaging-user-settings>',
+                template: '<hybrid-messaging-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName" user-updated-callback="$resolve.userUpdatedCallback(options)"></hybrid-messaging-user-settings>',
               },
             },
             data: {},
@@ -1530,11 +1530,15 @@
               userName: /* @ngInject */ function ($stateParams) {
                 return $stateParams.currentUser.userName;
               },
+              userUpdatedCallback: /* @ngInject */ function ($stateParams) {
+                return $stateParams.userUpdatedCallback;
+              },
               displayName: translateDisplayName('hercules.hybridServiceNames.spark-hybrid-impinterop'),
             },
             params: {
               extensionId: {},
               extensions: {},
+              userUpdatedCallback: Function,
             },
           })
           .state('user-overview.hybrid-services-spark-hybrid-impinterop.history', {
@@ -1612,14 +1616,20 @@
             },
           })
           .state('user-overview.hybrid-services-squared-fusion-uc', {
-            template: '<hybrid-call-service-aggregated-section user-id="$resolve.userId" user-email-address="$resolve.userName"></hybrid-call-service-aggregated-section>',
+            template: '<hybrid-call-service-aggregated-section user-id="$resolve.userId" user-email-address="$resolve.userName" user-updated-callback="$resolve.userUpdatedCallback(options)"></hybrid-call-service-aggregated-section>',
             data: {},
+            params: {
+              userUpdatedCallback: Function,
+            },
             resolve: {
               userId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.currentUser.id;
               },
               userName: /* @ngInject */ function ($stateParams) {
                 return $stateParams.currentUser.userName;
+              },
+              userUpdatedCallback: /* @ngInject */ function ($stateParams) {
+                return $stateParams.userUpdatedCallback;
               },
               displayName: translateDisplayName('hercules.serviceNames.squared-fusion-uc'),
             },

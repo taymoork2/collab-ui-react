@@ -1,0 +1,32 @@
+<cs-sp-section ng-if="$ctrl.orgHasOneOrMoreServicesEnabled()">
+  <div class="section-title-row">
+    <span class="section-name" translate="cloudExtensions.cloudExtensions"></span>
+  </div>
+  <p ng-if="!$ctrl.isLicensed" translate="cloudExtensions.noLicensedServices"></p>
+  <div class="feature-list cloud-extensions" ng-if="$ctrl.isLicensed">
+    <ul>
+      <li class="feature" ng-repeat="service in $ctrl.allServicesinOrg | filter: $ctrl.allEnabledServicesExceptUcFilter">
+        <a href id="link_{{service.id}}"
+           ng-hide="service.id === 'spark-hybrid-impinterop' && !$ctrl.atlasHybridImpFeatureToggle"
+           ui-sref="user-overview.hybrid-services-{{service.id}}({ extensionId: service.id, extensions: $ctrl.allServicesinOrg, userUpdatedCallback: $ctrl.userUpdatedCallback })">
+          <i class="feature-icon" ng-class="$ctrl.serviceIcon(service.id)"></i>
+          <span class="feature-name" translate="hercules.serviceNames.{{service.id}}"></span>
+          <span class="feature-status has-warnings-icon" ng-if="service.userIsEntitled && service.status && service.status.hasWarnings"><i class="icon icon-warning"></i></span>
+          <span class="feature-status" ng-class="service.status ? 'status-' + $ctrl.getStatus(service.status) : ''"
+                ng-if="service.status && service.userIsEntitled"
+                id="{{service.id}}-status"
+                translate="hercules.activationStatus.{{$ctrl.getStatus(service.status)}}"></span>
+          <span class="feature-status" ng-if="!service.userIsEntitled" translate="common.off"></span>
+          <span class="feature-status" ng-if="!service.status && service.userIsEntitled && $ctrl.userStatusLoaded" translate="hercules.activationStatus.notFound"></span>
+          <span cs-loader class="feature-list-loader" ng-if="!service.status && service.userIsEntitled && !$ctrl.userStatusLoaded"></span>
+          <i class="feature-arrow"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <p ng-if="$ctrl.googleCalendarError" class="cloud-extensions">
+    <i class="icon icon-error status-error"></i>
+    <span class="small" translate="hercules.settings.googleCalendar.couldNotReadGoogleCalendarStatus"></span>
+    <span ng-if="$ctrl.googleCalendarError.config.headers.TrackingID" class="small" translate="common.trackingId" translate-values="{ trackingId: $ctrl.googleCalendarError.config.headers.TrackingID }"></span>
+  </p>
+</cs-sp-section>
