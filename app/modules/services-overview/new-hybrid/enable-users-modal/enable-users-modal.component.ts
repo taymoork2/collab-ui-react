@@ -15,10 +15,8 @@ class EnableUsersModalController implements ng.IComponentController {
   ) {}
 
   public $onChanges(changes: { serviceId: ng.IChangesObject<HybridServiceId> }) {
-    window.console.warn('onChanges', changes);
     if (changes.serviceId && changes.serviceId.currentValue) {
       this.service = this.$translate.instant(`hercules.serviceNames.${this.serviceId}`);
-      window.console.warn('this.service', this.service);
     }
   }
 
