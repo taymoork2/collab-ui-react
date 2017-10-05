@@ -2,6 +2,7 @@
   'use strict';
 
   var TimingKey = require('../metrics').TimingKey;
+  var DiagnosticKey = require('../metrics').DiagnosticKey;
 
   /* @ngInject */
   function LoginCtrl($location, $rootScope, $scope, $state, $stateParams, $translate, Auth, Authinfo, CacheWarmUpService, Config, Log, LocalStorage, LogMetricsService, MetricsService, PageParam, SessionStorage, StorageKeys, TokenService, Utils) {
@@ -103,8 +104,17 @@
             $rootScope.$emit('LOGIN');
             return $state.go(state, params).catch(_.noop); // don't reject on $stateChangeStart prevention (eg. unauthorized)
           }
-        }).catch(function () {
+        }).catch(function (response) {
           isSuccess = false;
+          var headers = _.get(response, 'headers');
+          MetricsService.trackDiagnosticMetric(DiagnosticKey.LOGIN_FAILURE, {
+            httpStatus: _.get(response, 'status'),
+            requestMethod: _.get(response, 'config.method'),
+            requestUrl: _.get(response, 'config.url'),
+            responseData: _.get(response, 'data'),
+            trackingId: _.isFunction(headers) ? headers('TrackingID') : undefined,
+            xhrStatus: _.get(response, 'xhrStatus'),
+          });
           return $state.go('login-error');
         }).finally(function () {
           MetricsService.stopTimer(TimingKey.LOGIN_DURATION, {
