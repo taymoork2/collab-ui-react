@@ -1830,8 +1830,8 @@ collab-ui-stickyfill@^1.1.5:
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/collab-ui-stickyfill/-/collab-ui-stickyfill-1.1.5.tgz#9d8ebe06363a3745e1e5461946ee7af6eff31457"
 
 collab-ui@^4.8.0:
-  version "4.9.1"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/collab-ui/-/collab-ui-4.9.1.tgz#26b4a68154d79cf0086121e9f17e45cc4e0eb97e"
+  version "4.9.2"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/collab-ui/-/collab-ui-4.9.2.tgz#6aef687ed5a4b8c3699b9012f8e9a65692d9c5eb"
 
 color-convert@^1.3.0, color-convert@^1.9.0:
   version "1.9.0"
