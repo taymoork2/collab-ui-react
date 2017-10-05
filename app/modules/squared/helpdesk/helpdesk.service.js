@@ -208,9 +208,8 @@
     }
 
     function filterOrders(orders) {
-      var statusFilters = ['PROVISIONED', 'PENDING_PARM', 'PROV_READY'];
       var orderToolFilters = ['CCW', 'CCW-CSB'];
-      return _.filter(orders, function (el) { return _.includes(statusFilters, el.orderStatus) && _.includes(orderToolFilters, el.orderingTool); });
+      return _.filter(orders, function (el) { return _.includes(orderToolFilters, el.orderingTool); });
     }
 
     function resendAdminEmail(orderUUID, isCustomer) {

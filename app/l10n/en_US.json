@@ -8046,6 +8046,8 @@
     "orders": "Orders",
     "orderDetails": "Orders Details",
     "orderNumber": "Order Number: {{orderNumber}}",
+    "debuggingStatus": "Debugging Status",
+    "usedForDebugging": "This value is used for debugging purposes only.",
     "awaitingProvDetails": "Awaiting Provisioning Details",
     "setUpOrder": "Set Up Order",
     "provisioningContactEmail": "Provisioning Contact Email",
