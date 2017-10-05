@@ -15,6 +15,7 @@ class RetryConfig {
   public baseMultiplier = 1;
   public delayInMillis = 0;
   public isLastRetry = false;
+  public origHttpStatus: number;
 }
 
 export class RateLimitService {
@@ -50,6 +51,7 @@ export class RateLimitService {
     if (!config.retryConfig) {
       config.retryConfig = new RetryConfig();
     }
+    config.retryConfig.origHttpStatus = response.status;
     if (config.retryConfig.isLastRetry) {
       return this.$q.reject(response);
     }
@@ -76,6 +78,7 @@ export class RateLimitService {
 
     this.MetricsService.trackOperationalMetric(OperationalKey.RATE_LIMIT_RETRY, {
       delay_in_millis: config.retryConfig.delayInMillis,
+      orig_http_status: config.retryConfig.origHttpStatus,
       request_method: config.method,
       request_url: config.url,
       state,
