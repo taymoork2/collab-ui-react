@@ -2407,7 +2407,8 @@
       "exchange": "Microsoft Exchange",
       "google": "Google Calendar",
       "notSetup": "Not currently set up",
-      "sinceTime": "since {{timestamp}}"
+      "sinceTime": "since {{timestamp}}",
+      "noLicensedServices": "This user must have one or more licensed services to be configured for Hybrid Services."
     },
     "alarms": {
       "affectedNodes": "Affected Nodes",

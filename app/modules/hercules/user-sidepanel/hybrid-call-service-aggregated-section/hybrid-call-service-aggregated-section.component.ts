@@ -20,9 +20,10 @@ class HybridCallServiceAggregatedSectionCtrl implements ng.IComponentController 
 
   public resourceGroupId: string;
 
+  private userUpdatedCallback: Function;
+
   /* @ngInject */
   constructor(
-    private $rootScope: ng.IRootScopeService,
     private HybridServiceUserSidepanelHelperService: HybridServiceUserSidepanelHelperService,
     private Notification: Notification,
     private ServiceDescriptorService: ServiceDescriptorService,
@@ -74,7 +75,13 @@ class HybridCallServiceAggregatedSectionCtrl implements ng.IComponentController 
     if (this.callServiceAware && this.callServiceAware.resourceGroupId) {
       this.resourceGroupId = this.callServiceAware.resourceGroupId;
     }
-    this.$rootScope.$broadcast('entitlementsUpdated');
+    this.userUpdatedCallback({
+      options: {
+        refresh: true,
+        callServiceAware: _.get(this.callServiceAware, 'entitled', false),
+        callServiceConnect: _.get(this.callServiceConnect, 'entitled', false),
+      },
+    });
   }
 
 }
@@ -85,5 +92,6 @@ export class HybridCallServiceAggregatedSectionComponent implements ng.IComponen
   public bindings = {
     userId: '<',
     userEmailAddress: '<',
+    userUpdatedCallback: '&',
   };
 }
