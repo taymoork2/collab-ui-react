@@ -104,17 +104,61 @@
       return MediaClusterServiceV2.addRedirectTarget(hostName, clusterId);
     }
 
-    function redirectPopUpAndClose(hostName, enteredCluster, clusterId, firstTimeSetup) {
-      if (firstTimeSetup) {
-        MediaServiceActivationV2.enableMediaService(vm.currentServiceId);
-      }
+    function redirectPopUpAndClose(hostName, enteredCluster) {
       vm.popup = $window.open('https://' + encodeURIComponent(hostName) + '/?clusterName=' + encodeURIComponent(enteredCluster) + '&clusterId=' + encodeURIComponent(vm.selectedClusterId));
+    }
+
+    function enableMediaServiceEntitlements() {
+      return MediaServiceActivationV2.enableMediaServiceEntitlements();
+    }
+
+    function enableMediaService() {
+      return MediaServiceActivationV2.enableMediaService(vm.currentServiceId);
+    }
+
+    function createFirstTimeSetupCluster(hostName, enteredCluster) {
+      var deferred = $q.defer();
+      MediaClusterServiceV2.createClusterV2(enteredCluster, 'stable').then(function (result) {
+        deferred.resolve();
+        vm.selectedClusterId = result.data.id;
+        // Cluster created, now creating a property set for video quality
+        var payLoad = {
+          type: 'mf.group',
+          name: 'videoQualityPropertySet',
+          properties: {
+            'mf.videoQuality': 'false',
+          },
+        };
+        MediaClusterServiceV2.createPropertySet(payLoad)
+          .then(function (response) {
+            vm.videoPropertySetId = response.data.id;
+            var clusterPayload = {
+              assignedClusters: vm.selectedClusterId,
+            };
+            // Assign it the property set with cluster id
+            MediaClusterServiceV2.updatePropertySetById(vm.videoPropertySetId, clusterPayload)
+              .then('', function (err) {
+                Notification.errorWithTrackingId(err, 'mediaFusion.videoQuality.error');
+              });
+          });
+        whiteListHost(hostName, vm.selectedClusterId);
+      }, function (error) {
+        deferred.reject();
+        var errorMessage = $translate.instant('mediaFusion.clusters.clusterCreationFailed', {
+          enteredCluster: enteredCluster,
+        });
+        Notification.errorWithTrackingId(error, errorMessage);
+      });
+      return deferred.promise;
     }
 
     return {
       addRedirectTargetClicked: addRedirectTargetClicked,
       updateClusterLists: updateClusterLists,
       redirectPopUpAndClose: redirectPopUpAndClose,
+      enableMediaServiceEntitlements: enableMediaServiceEntitlements,
+      createFirstTimeSetupCluster: createFirstTimeSetupCluster,
+      enableMediaService: enableMediaService,
     };
   }
   angular

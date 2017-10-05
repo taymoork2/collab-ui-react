@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Template: userDeleteSelf', function () {
-  var $compile, $scope, $templateCache, $controller, $translate, controller;
+  var $compile, $scope, $controller, $translate, controller;
   var view;
   var DELETE_BUTTON = '#deleteUserButton';
   var OK_BUTTON = '#okButton';
@@ -25,10 +25,9 @@ describe('Template: userDeleteSelf', function () {
   beforeEach(initSpies);
   beforeEach(compileView);
 
-  function dependencies(_$compile_, $rootScope, _$templateCache_, _$controller_, _$translate_) {
+  function dependencies(_$compile_, $rootScope, _$controller_, _$translate_) {
     $compile = _$compile_;
     $scope = $rootScope.$new();
-    $templateCache = _$templateCache_;
     $controller = _$controller_;
     $translate = _$translate_;
   }
@@ -47,7 +46,7 @@ describe('Template: userDeleteSelf', function () {
     controller.isMsgrUser = false;
     controller.msgrloaded = true;
 
-    var template = $templateCache.get('modules/core/users/userDelete/userDeleteSelf.tpl.html');
+    var template = require('modules/core/users/userDelete/userDeleteSelf.tpl.html');
     view = $compile(angular.element(template))($scope);
     $scope.$apply();
   }
@@ -73,7 +72,7 @@ describe('Template: userDeleteSelf', function () {
 
   it('should have ok button with isMsgrUser enabled', function () {
     controller.isMsgrUser = true;
-    var template = $templateCache.get('modules/core/users/userDelete/userDeleteSelf.tpl.html');
+    var template = require('modules/core/users/userDelete/userDeleteSelf.tpl.html');
     view = $compile(angular.element(template))($scope);
     $scope.$apply();
 

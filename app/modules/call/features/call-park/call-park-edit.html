@@ -43,13 +43,25 @@
             ng-class="$ctrl.animation">
           </uc-call-feature-name>
         </div>
+        <div class="sub-section row collapse" ng-if="$ctrl.hasLocation">
+          <h5 class="sub-section__title" translate="callPark.locationLabel"></h5>
+          <uc-call-feature-location
+            call-feature-type="huronFeatureDetails.cp"
+            is-required="true"
+            is-new="false"
+            location="$ctrl.callPark.location"
+            on-change-fn="$ctrl.setCallParkLocation(location)"
+            class="columns medium-6">
+          </uc-call-feature-location>
+        </div>
         <div class="sub-section">
           <h5 class="sub-section__title" translate="callPark.numberLabel"></h5>
           <p class="sub-section__description" translate="callPark.numberDesc"></p>
           <uc-call-park-number
             range="$ctrl.range"
             extension-length="$ctrl.extensionLength"
-            on-change-fn="$ctrl.setCallParkRange(range)">
+            on-change-fn="$ctrl.setCallParkRange(range)"
+            location="$ctrl.callPark.location">
           </uc-call-park-number>
         </div>
       </div>
@@ -65,7 +77,8 @@
           <p class="sub-section__description" translate="callPark.reversionRuleDesc"></p>
           <uc-call-park-fallback-destination
             fallback-destination="$ctrl.callPark.fallbackDestination"
-            on-change-fn="$ctrl.setCallParkFallbackDestination(fallbackDestination)">
+            on-change-fn="$ctrl.setCallParkFallbackDestination(fallbackDestination)"
+            location="$ctrl.callPark.location">
           </uc-call-park-fallback-destination>
         </div>
         <div class="sub-section">
@@ -94,7 +107,8 @@
             card-type="simple"
             show-external-numbers="false"
             drag-and-drop="false"
-            on-change-fn="$ctrl.setCallParkMembers(members)">
+            on-change-fn="$ctrl.setCallParkMembers(members)"
+            location="$ctrl.callPark.location">
           </uc-call-feature-members>
         </div>
       </div>

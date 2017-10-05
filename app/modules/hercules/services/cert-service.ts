@@ -3,9 +3,10 @@ export class CertService {
 
   /* @ngInject */
   constructor(
+    private Authinfo,
+    private UrlConfig,
     private Utils,
     private $http: ng.IHttpService,
-    private UrlConfig,
     private $q: ng.IQService,
     private $window,
   ) {
@@ -43,8 +44,11 @@ export class CertService {
     return deferred.promise;
   }
 
-  public deleteCert(certId: string): ng.IPromise<any> {
-    return this.$http.delete(`${this.CertsUrl}/certificates/${certId}`);
+  public deleteCert(certId: string, orgId?: string): ng.IPromise<any> {
+    if (_.isUndefined(orgId)) {
+      orgId = this.Authinfo.getOrgId();
+    }
+    return this.$http.delete(`${this.CertsUrl}/certificates/${certId}?orgId=${orgId}`);
   }
 }
 export default angular

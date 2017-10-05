@@ -118,17 +118,17 @@ export class ResourceGroupService {
       });
   }
 
-  private extractDataFromResponse<T>(response: ng.IHttpPromiseCallbackArg<T>) {
+  private extractDataFromResponse<T>(response: ng.IHttpResponse<T>) {
     return _.get<T>(response, 'data');
   }
 
-  private extractGroupsFromResponse<T>(response: ng.IHttpPromiseCallbackArg<T>) {
+  private extractGroupsFromResponse<T>(response: ng.IHttpResponse<T>) {
     const data = this.extractDataFromResponse(response);
     return _.get<T[]>(data, 'items', []);
   }
 }
 
 export default angular
-  .module('Hercules')
+  .module('hercules.resource-group-service', [])
   .service('ResourceGroupService', ResourceGroupService)
   .name;

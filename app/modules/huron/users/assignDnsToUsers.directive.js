@@ -9,7 +9,7 @@
     var directive = {
       restrict: 'EA',
       transclude: true,
-      templateUrl: 'modules/huron/users/assignDnsToUsers.tpl.html',
+      template: require('modules/huron/users/assignDnsToUsers.tpl.html'),
     };
 
     return directive;

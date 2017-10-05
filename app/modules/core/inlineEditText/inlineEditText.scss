@@ -44,4 +44,9 @@
       color: $color-primary;
     }
   }
+
+  .pro-badge {
+    margin: auto 1rem;
+    pointer-events: none;
+  }
 }

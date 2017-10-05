@@ -17,6 +17,7 @@ class CopyLocationCtrl implements ng.IComponentController {
 
   public validationMessages = {
     required: this.$translate.instant('common.invalidRequired'),
+    uniqueAsyncValidator: this.$translate.instant('locations.usedLocation'),
   };
 
   public $onInit() {
@@ -25,6 +26,10 @@ class CopyLocationCtrl implements ng.IComponentController {
       this.location.name = '';
       this.location.defaultLocation = false;
     });
+  }
+
+  public onNameChanged(name: string) {
+    this.location.name = name;
   }
 
   public save(): void {
@@ -38,7 +43,7 @@ class CopyLocationCtrl implements ng.IComponentController {
 
 export class CopyLocationComponent implements ng.IComponentOptions {
   public controller = CopyLocationCtrl;
-  public templateUrl = 'modules/call/locations/locations-copy/locations-copy.component.html';
+  public template = require('modules/call/locations/locations-copy/locations-copy.component.html');
   public bindings = {
     dismiss: '&',
     close: '&',

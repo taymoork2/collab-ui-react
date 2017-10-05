@@ -2,10 +2,9 @@ import mediaOnHold from './index';
 
 describe('Component: mediaOnHold', () => {
   const MEDIA_ON_HOLD_SELECT = '.csSelect-container[name="lineMohSelect"]';
-  const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
+  const DROPDOWN_OPTIONS = '.dropdown-menu ul li';
   const MEDIA_FILE_1 = 'drbd-1234-g79e-0op3';
   const MEDIA_FILE_2 = 'bjek-3491-fu69-l140';
-  const MEDIA_MGR = 'a';
 
   beforeEach(function () {
     this.initModules(mediaOnHold);
@@ -42,11 +41,5 @@ describe('Component: mediaOnHold', () => {
   it('should invoke onChangeFn when a format is chosen', function() {
     this.view.find(MEDIA_ON_HOLD_SELECT).find(DROPDOWN_OPTIONS).get(1).click();
     expect(this.$scope.onChangeFn).toHaveBeenCalledWith(MEDIA_FILE_2);
-  });
-
-  it('should have a clickable text calling a modal', function(){
-    expect(this.view).toContainElement(MEDIA_MGR);
-    this.view.find(MEDIA_MGR).click();
-    expect(this.$modal.open).toHaveBeenCalled();
   });
 });

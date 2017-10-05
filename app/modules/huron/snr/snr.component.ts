@@ -1,6 +1,7 @@
 import { SnrService } from './snr.service';
 import { SingleNumberReach } from './snr';
 import { HuronCustomerService } from 'modules/huron/customer/customer.service';
+import { CallDestinationTranslateService, ICallDestinationTranslate } from 'modules/call/shared/call-destination-translate';
 
 interface ITranslationMessages {
   placeholderText: string;
@@ -31,6 +32,8 @@ class SnrCtrl implements ng.IComponentController {
   private snrEnabled: boolean = false;
   private form: ng.IFormController;
   private customTranslations: ITranslationMessages;
+  private inputTranslations: ICallDestinationTranslate;
+  private customNumberValidationPatern: RegExp;
   private snrId: string = '';
 
   /* @ngInject */
@@ -38,6 +41,7 @@ class SnrCtrl implements ng.IComponentController {
     private $translate: ng.translate.ITranslateService,
     private HuronCustomerService: HuronCustomerService,
     private SnrService: SnrService,
+    private CallDestinationTranslateService: CallDestinationTranslateService,
     private $modal,
     private Notification,
     private $scope: ng.IScope,
@@ -50,6 +54,8 @@ class SnrCtrl implements ng.IComponentController {
       placeholderText: this.$translate.instant('callDestination.alternateCustomPlaceholder'),
       helpText: this.$translate.instant('callDestination.alternateCustomHelpText'),
     };
+    this.inputTranslations = this.CallDestinationTranslateService.getCallDestinationTranslate();
+    this.customNumberValidationPatern = this.CallDestinationTranslateService.getCustomNumberValidationPatern();
     this.init();
   }
 
@@ -89,7 +95,7 @@ class SnrCtrl implements ng.IComponentController {
 
   public remove(): void {
     this.$modal.open({
-      templateUrl: 'modules/huron/snr/snrDeleteConfirmation.tpl.html',
+      template: require('modules/huron/snr/snrDeleteConfirmation.tpl.html'),
       type: 'dialog',
     }).result.then(() => {
       this.save(true);
@@ -128,7 +134,7 @@ class SnrCtrl implements ng.IComponentController {
 
 export class SnrComponent implements ng.IComponentOptions {
   public controller = SnrCtrl;
-  public templateUrl = 'modules/huron/snr/snr.html';
+  public template = require('modules/huron/snr/snr.html');
   public bindings = {
     ownerId: '<',
   };

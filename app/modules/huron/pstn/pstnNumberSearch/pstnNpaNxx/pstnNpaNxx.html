@@ -4,6 +4,7 @@
     <div class="medium-4 padding-right">
       <p>{{$ctrl.areaLabel}}</p>
       <cs-select
+        aria-text="{{::$ctrl.areaLabel}}"
         ng-model="$ctrl.area"
         options="$ctrl.areas"
         labelfield="name"
@@ -19,6 +20,7 @@
     <div class="medium-3 padding-right">
       <p translate="pstnSetup.areaCode"></p>
       <cs-select
+        aria-text="{{::'pstnSetup.areaCode' | translate}}"
         ng-model="$ctrl.model.areaCode"
         is-disabled="!$ctrl.model.areaCodeEnable"
         options="$ctrl.model.areaCodeOptions"
@@ -35,6 +37,7 @@
     <div class="medium-3 padding-right">
       <p translate="pstnSetup.nxx"></p>
       <cs-select
+        aria-text="{{::'pstnSetup.nxx' | translate}}"
         ng-model="$ctrl.model.nxx"
         is-disabled="!$ctrl.model.nxxEnable"
         options="$ctrl.model.nxxOptions"
@@ -64,7 +67,7 @@
         ng-model="$ctrl.model.block"
         id="blockChk{{$ctrl.numberType}}"
         name="blockChk{{$ctrl.numberType}}"
-        ng-click="$ctrl.blockClick()"
+        ng-click="$ctrl.onBlockClick()"
         cs-input-label="{{::'pstnSetup.block' | translate}}">
 
       <i class="icon icon-info" tooltip="{{::'pstnSetup.advancedOrder.blockTooltip' | translate}}" tooltip-trigger="mouseenter" tooltip-placement="right" tooltip-animation="false" ></i>
@@ -90,8 +93,8 @@
           type="checkbox"
           ng-model="$ctrl.model.consecutive"
           ng-disabled="!$ctrl.model.block"
-          id="consecutiveChk"
-          name="consecutiveChk"
+          id="consecutiveChk{{$ctrl.numberType}}"
+          name="consecutiveChk{{$ctrl.numberType}}"
           cs-input-label="{{::'pstnSetup.consecutive' | translate}}">
       <i class="icon icon-info"
           tooltip="{{::'pstnSetup.advancedOrder.consecutiveTooltip' | translate}}"

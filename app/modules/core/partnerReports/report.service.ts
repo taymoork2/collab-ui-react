@@ -14,8 +14,8 @@ import {
 } from './partnerReportInterfaces';
 import { CommonReportService } from './commonReportServices/commonReport.service';
 import { ReportConstants } from './commonReportServices/reportConstants.service';
-import { ChartColors } from '../config/chartColors';
-import { Notification } from '../notifications';
+import { ChartColors } from 'modules/core/config/chartColors';
+import { Notification } from 'modules/core/notifications';
 
 export class ReportService {
   private readonly ACTIVE_USERS: string = 'activeUsers';
@@ -58,7 +58,7 @@ export class ReportService {
   }
 
   // Active User Functions
-  public getOverallActiveUserData(filter: ITimespan): ng.IHttpPromise<any> {
+  public getOverallActiveUserData(filter: ITimespan): void {
     this.timeFilter = filter.value;
     this.activeUserCustomerGraphs = {};
     this.overallPopulation = 0;
@@ -86,14 +86,12 @@ export class ReportService {
         this.overallPopulation = this.CommonReportService.getPercentage(overallActive, overallRegistered);
       }
       return;
-    }).catch((error: any) => {
+    }).catch((error: any): string => {
       if (error.status && (error.status !== 0 || error.config.timeout.$$state.status === 0)) {
         this.timeFilter = undefined;
       }
       return this.CommonReportService.returnErrorCheck(error, 'activeUsers.overallActiveUserGraphError', this.TIMEOUT);
     });
-
-    return this.activeUserDetailedPromise;
   }
 
   private formatActiveUserOrgData(org): IActiveUserCustomerData {
@@ -145,30 +143,12 @@ export class ReportService {
   }
 
   public getActiveUserData(customers: IReportsCustomer[], filter: ITimespan): ng.IPromise<IActiveUserReturnData> {
-    let overallStatus = true;
-    let promise: ng.IPromise<any>;
-
     if (_.isUndefined(this.timeFilter) || filter.value !== this.timeFilter || _.isUndefined(this.activeUserDetailedPromise)) {
-      promise = this.getOverallActiveUserData(filter).then((response) => {
-        if (response === this.ABORT) {
-          overallStatus = false;
-        }
-        return;
-      });
-    } else {
-      promise = this.activeUserDetailedPromise;
+      this.getOverallActiveUserData(filter);
     }
 
-    return promise.then(() => {
-      if (overallStatus) {
-        return this.getActiveGraphData(customers, filter);
-      } else {
-        return {
-          graphData: [],
-          isActiveUsers: false,
-          popData: [],
-        };
-      }
+    return this.activeUserDetailedPromise.then(() => {
+      return this.getActiveGraphData(customers, filter);
     });
   }
 

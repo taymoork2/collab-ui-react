@@ -17,7 +17,7 @@
   //     id: String // uuid
   //     trigger: String // 'inComing', 'outGoing'
   //     type: String // 'directoryNumber'
-//     number: String // '<E164>', '<DN>'
+  //     number: String // '<E164>', '<DN>'
   //
   //
   // CeMenu
@@ -370,7 +370,7 @@
 
     function parseSayObject(menuEntry, inObject) {
       var action;
-      if (isDynAnnounceToggle()) {
+      if (isDynAnnounceToggle() && decodeUtf8(inObject.value)) {
         action = new Action('dynamic', '');
         var dynaList = [{
           say: {
@@ -441,6 +441,13 @@
     function createAnnouncements(menuEntry) {
       var actions = menuEntry.actions;
       var newActionArray = [];
+      if (actions.length === 0) {
+        // if save is from the schedule modal, no actions when AA is 1st created
+        newActionArray[0] = {};
+        newActionArray[0].value = '';
+        newActionArray[0].voice = '';
+        return newActionArray;
+      }
       for (var i = 0; i < actions.length; i++) {
         newActionArray[i] = {};
         menuEntry.description = actions[i].description;
@@ -601,9 +608,11 @@
             if (announcements && announcements.length > 0 && !_.isUndefined(announcements[0].play)) {
               action.url = decodeUtf8(announcements[0].play.url);
               action.deleteUrl = decodeUtf8(announcements[0].play.deleteUrl);
+              action.value = decodeUtf8(announcements[0].play.url);
             } else {
               if (announcements.length > 0 && _.has(announcements[0], 'say')) {
-                if (isDynAnnounceToggle()) {
+                //second check is needed to maintain the upload in case of no file uploaded but upload file is selected
+                if (isDynAnnounceToggle() && decodeUtf8(announcements[0].say.value)) {
                   var list = [{
                     say: {
                       value: decodeUtf8(announcements[0].say.value),
@@ -851,7 +860,7 @@
               htmlModel: '',
             }];
           } else {
-            action = new Action(iaType, initialAnnouncementObject.value);
+            action = new Action(iaType, initialAnnouncementObject.deleteUrl);
           }
         } else {
           action = new Action(iaType, '');
@@ -935,7 +944,7 @@
               htmlModel: '',
             }];
           } else {
-            action = new Action(paType, periodicAnnouncementObject.value);
+            action = new Action(paType, periodicAnnouncementObject.deleteUrl);
           }
         } else {
           action = new Action(paType, '');

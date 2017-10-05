@@ -91,6 +91,34 @@ exports.getTerminusServiceUrl = function () {
   }
 };
 
+exports.csdmServiceUrl = {
+  dev: 'https://csdm-intb.ciscospark.com/csdm/api/v1/',
+  integration: 'https://csdm-intb.ciscospark.com/csdm/api/v1/',
+  prod: 'https://csdm-a.wbx2.com/csdm/api/v1/',
+};
+
+exports.getCsdmServiceUrl = function () {
+  if (isProductionBackend) {
+    return this.csdmServiceUrl.prod;
+  } else {
+    return this.csdmServiceUrl.integration;
+  }
+}
+
+exports.pagingServiceUrl = {
+  dev: 'https://paging.huron-int.com/api/v1/',
+  integration: 'https://paging.huron-int.com/api/v1/',
+  prod: 'https://paging.huron-dev.com/api/v1/',
+}
+
+exports.getPagingServiceUrl = function () {
+  if (isProductionBackend) {
+    return this.pagingServiceUrl.prod;
+  } else {
+    return this.pagingServiceUrl.integration;
+  }
+}
+
 exports.deviceUserAgent = {
   android: 'wx2-android/1 (Android 4.4.2; LGE Hammerhead / Google Nexus 5; )[preload=false;locale=en_US;clientidbase=android-google]',
   iPhone: 'wx2_iOS',

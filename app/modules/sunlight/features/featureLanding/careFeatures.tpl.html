@@ -28,7 +28,7 @@
      <div ng-switch-when = "Error" class="features-reload content-container">
        <p class="h4" translate="sunlightDetails.sorryMessage"></p>
        <div class="h2" translate="sunlightDetails.reloadMessage"></div>
-       <button type="button" class="btn btn--link" ng-click="careFeaturesCtrl.init()">Reload</button>
+       <button type="button" class="btn btn--primary" ng-click="careFeaturesCtrl.init()">Reload</button>
      </div>
    </div>
 
@@ -36,8 +36,7 @@
      <div ng-switch-when = "ShowFeatures">
        <cs-page-sub-header>
          <cs-page-sub-header-left>
-           <cs-searchfilter filters="careFeaturesCtrl.filters" set-filter-fn="careFeaturesCtrl.setFilter(filter.filterValue)"
-                            search-item-fn="careFeaturesCtrl.searchData(searchStr)" placeholder-text="{{careFeaturesCtrl.placeholder.name}}" hide-count="true">
+           <cs-searchfilter filters="careFeaturesCtrl.filters" set-filter-fn="careFeaturesCtrl.setFilter(filter.filterValue)" search-item-fn="careFeaturesCtrl.searchData(searchStr)" placeholder-text="{{careFeaturesCtrl.placeholder.name}}" hide-count="true" clear-aria-text="{{::'common.clear' | translate}}" search-placeholder-text="{{::'common.search' | translate}}">
            </cs-searchfilter>
          </cs-page-sub-header-left>
          <cs-page-sub-header-right>

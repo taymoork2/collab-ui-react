@@ -1,5 +1,5 @@
 <div class="modal-header deregister-expressway-modal">
-  <span class="modal-title" translate="hercules.deactivateServiceSingleCluster.title" translate-values="{serviceName: deactivateServiceOnExpresswayModal.localizedServiceName}"></span>
+  <h4 class="modal-title" translate="hercules.deactivateServiceSingleCluster.title" translate-values="{serviceName: deactivateServiceOnExpresswayModal.localizedServiceName}"></h4>
 </div>
 
 <div class="modal-body hercules-fix-paragraphs deregister-expressway-modal">
@@ -8,7 +8,7 @@
 
   <p>
     <i ng-class="deactivateServiceOnExpresswayModal.getIconClassForService() + ' icon-2x serviceicon'"></i>
-    <strong translate="{{deactivateServiceOnExpresswayModal.localizedServiceName}}" class="serviceicon"></strong>
+    <strong class="serviceicon">{{deactivateServiceOnExpresswayModal.localizedServiceName}}</strong>
   </p>
 
   <p translate="hercules.deactivateServiceSingleCluster.fromCluster" translate-values="{clusterName: deactivateServiceOnExpresswayModal.clusterName}"></p>

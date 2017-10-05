@@ -1,22 +1,31 @@
 <div class="cs-card-container">
   <cs-card-layout>
-    <cs-card ng-repeat="careFeature in careFeaturesCtrl.filteredListOfFeatures" class="small header-bar" ng-class="careFeature.color">
-      <article>
+    <cs-card ng-repeat="careFeature in careFeaturesCtrl.filteredListOfFeatures" class="small header-background hoverable" ng-class="careFeature.color">
+      <article ng-click="careFeaturesCtrl.editCareFeature((careFeature), $event)" hover-delay>
         <header>
           <div class="header-with-right-icon">
             <p class="h4 ellipsis" title="{{careFeature.name}}"> {{careFeature.name}} </p>
-            <div class="right card-icons-inline">
-              <span class="card-icon" ng-repeat="icon in careFeature.icons">
+            <div class="right">
+              <button type="button" ng-click="careFeaturesCtrl.deleteCareFeature((careFeature), $event)" class="close">
+                <span class="sr-only" translate="common.close"></span>
+              </button>
+            </div>
+          </div>
+          <p><span class="badge badge--outline" ng-if="careFeature.featureType === 'Va'">{{:: ('sunlightDetails.' + careFeature.featureType) | translate}}</span>
+          <span class="badge badge--outline" translate="common.customerSupportTemplate" ng-if="careFeature.featureType !== 'Va'"></span>
+          </p>
+          <div class="card-icons-inline" ng-if="careFeature.featureType !== 'Va'">
+              <span ng-repeat="icon in careFeature.icons">
                 <i class="icon {{icon}}"></i>
               </span>
-            </div>
           </div>
         </header>
         <footer class="card-footer">
-          <div class="embed-code-txt h6 left" sq-clipboard="careFeaturesCtrl.openEmbedCodeModal(careFeature)"><span translate="careChatTpl.downloadEmbedCode"></span></div>
-          <div class="right">
-            <a class="icon icon-edit" ng-click="careFeaturesCtrl.editCareFeature((careFeature))"> <span class="sr-only" translate="careChatTpl.editAction"></span></a>
-            <a class="icon icon-trash" ng-click="careFeaturesCtrl.deleteCareFeature(careFeature)"><span class="sr-only" translate="careChatTpl.deleteAction"></span></a>
+          <div class="embed-code-txt h6 left">
+            <p><span translate="sunlightDetails.status" ng-if="careFeature.featureType === 'Va' && careFeature.status"></span>{{careFeature.status}}</p>
+          </div>
+          <div class="right icon icon-download" ng-if="careFeature.featureType !== 'Va'" ng-click="careFeaturesCtrl.openEmbedCodeModal((careFeature), $event)">
+              <span class="sr-only" translate="careChatTpl.downloadAction"></span>
           </div>
         </footer>
       </article>

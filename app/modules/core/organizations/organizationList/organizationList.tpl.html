@@ -1,8 +1,8 @@
 <div class="org-list">
-   <cs-page-header title-name="organizationsPage.organizations" id="organizationTitle"></cs-page-header>
+   <cs-page-header title-name="{{'organizationsPage.organizations' | translate}}" id="organizationTitle"></cs-page-header>
   <cs-page-sub-header>
     <cs-page-sub-header-left>
-      <cs-searchfilter filters="filters" set-filter-fn="setFilter(filter.filterValue)" ng-model="placeholder.count" search-item-fn="searchFn(searchStr)" placeholder-text="{{placeholder.name}}">
+      <cs-searchfilter filters="filters" set-filter-fn="setFilter(filter.filterValue)" ng-model="placeholder.count" search-item-fn="searchFn(searchStr)" placeholder-text="{{placeholder.name}}" clear-aria-text="{{::'common.clear' | translate}}" search-placeholder-text="{{::'common.search' | translate}}">
       </cs-searchfilter>
     </cs-page-sub-header-left>
   </cs-page-sub-header>

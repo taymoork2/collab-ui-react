@@ -1,0 +1,12 @@
+#!/bin/bash
+
+this_pwd="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck disable=SC1090
+. "$this_pwd/include/pre-rebase-helpers"
+
+target_head="$1"
+announcement_file=".proj-comms/announcement"
+# print latest version of announcement file if changed
+if file_has_changed "$announcement_file"; then
+    git show "$target_head:$announcement_file" | print_notice_banner
+fi

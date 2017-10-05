@@ -6,13 +6,18 @@
     .controller('AARouteToUserCtrl', AARouteToUserCtrl);
 
   /* @ngInject */
-  function AARouteToUserCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, $q, Authinfo, Userservice, UserListService, UserServiceVoice, AACommonService, LineResource) {
+  function AARouteToUserCtrl($q, $scope, $translate, AAUiModelService, AAUserService, AACommonService, Authinfo, AutoAttendantCeMenuModelService, LineResource, UserListService, Userservice, UserServiceVoice) {
     var vm = this;
     var conditional = 'conditional';
 
     vm.userSelected = {
       description: '',
       id: '',
+    };
+
+    var userQuery = {
+      customerId: Authinfo.getOrgId(),
+      userId: '',
     };
 
     vm.users = [];
@@ -123,7 +128,9 @@
     function getFormattedUserAndExtension(uuid) {
       return getUser(uuid).then(function (user) {
         var userObj = user;
-        return getUserExtension(user.id).then(
+        userQuery.userId = user.id;
+
+        return getUserExtension(userQuery).then(
           function (extension) {
             if (extension != null) {
               return formatName(userObj, extension);
@@ -139,25 +146,30 @@
     }
 
     // get user's primary extension via CMI users API property primaryDirectoryNumber
-    function getUserExtension(uuid) {
-      return UserServiceVoice.query({
-        customerId: Authinfo.getOrgId(),
-        userId: uuid,
-      }).$promise.then(
-        function (response) {
-          // success
-          if (!_.isUndefined(response.primaryDirectoryNumber) && response.primaryDirectoryNumber != null) {
-            return response.primaryDirectoryNumber.pattern;
-          } else {
-            // the user actually has no extension - represented as null in the json, which works here as well
-            return null;
-          }
-        },
-        function (response) {
+    function getUserExtension(user) {
+      if (AACommonService.isMultiSiteEnabled()) {
+        return AAUserService.get(user).$promise.then(function (response) {
+          var numbers = _.map(response.numbers, 'siteToSite');
+
+          return numbers;
+        }).catch(function (error) {
           // failure
-          return $q.reject(response);
+          return $q.reject(error);
+        });
+      }
+      // otherwise not Multi-Site
+      return UserServiceVoice.query(user).$promise.then(function (response) {
+        // success
+        if (!_.isUndefined(response.primaryDirectoryNumber) && response.primaryDirectoryNumber != null) {
+          return [response.primaryDirectoryNumber.pattern];
+        } else {
+          // the user actually has no extension - represented as null in the json, which works here as well
+          return null;
         }
-      );
+      }).catch(function (response) {
+        // failure
+        return $q.reject(response);
+      });
     }
 
     // get extension's voicemail profile
@@ -176,11 +188,22 @@
         }
       );
     }
+    function addExtensionToUsers(aUser, extension) {
+      _.forEach(extension, function (ext) {
+        if (_.size(vm.users) < vm.sort.fullLoad) {
+          vm.users.push({
+            description: formatName(aUser, ext),
+            id: aUser.id,
+          });
+        }
+      });
+    }
 
     vm.abortSearchPromise = null;
 
     // get list of users for the provided search string
     // also retrieves extension for user for display, but not for searching
+
     function getUsers(searchStr, startat) {
       var abortSearchPromise = vm.abortSearchPromise;
 
@@ -200,33 +223,25 @@
       UserListService.listUsers(startat, vm.sort.maxCount, vm.sort.by, vm.sort.order, function (data) {
         if (data.success) {
           var userInfoPromises = [];
-          _.each(data.Resources, function (aUser) {
-            userInfoPromises.push(getUserExtension(aUser.id).then(function (extension) {
+
+          _.forEach(data.Resources, function (aUser) {
+            userQuery.userId = aUser.id;
+            userInfoPromises.push(getUserExtension(userQuery).then(function (extension) {
               // only add to the user list if they have a primary extension
               if (extension) {
                 // and for voicemail, only add to the list if they have a voicemail profile for the extension
                 if ($scope.voicemail) {
                   return getVoicemailProfile(extension).then(function (voicemailProfile) {
                     if (voicemailProfile) {
-                      if (_.size(vm.users) < vm.sort.fullLoad) {
-                        vm.users.push({
-                          description: formatName(aUser, extension),
-                          id: aUser.id,
-                        });
-                      }
+                      addExtensionToUsers(aUser, extension);
                     }
                   });
                 } else {
                   // not voicemail, just add the user with extension
-                  if (_.size(vm.users) < vm.sort.fullLoad) {
-                    vm.users.push({
-                      description: formatName(aUser, extension),
-                      id: aUser.id,
-                    });
-                  }
+                  addExtensionToUsers(aUser, extension);
                 }
               }
-            }, function (error) {
+            }).catch(function (error) {
               // if it's not found, there is no extension, don't add to list.
               if (error.status != 404) {
                 // if CMI user call otherwise failed, not immediately clear if user has extension or not, show just the user in the UI
@@ -237,6 +252,7 @@
               }
             }));
           });
+
           $q.all(userInfoPromises).then(function () {
             // try to offer a minimum amount of matches.
             // if enough users didn't make it past sanity checks,
@@ -270,6 +286,7 @@
       var routeToUserOrVM = !_.isUndefined($scope.voicemail) ? routeToVoiceMail : routeToUser;
 
       var ui = AAUiModelService.getUiModel();
+
       if ($scope.fromDecision) {
         var conditionalAction;
         fromDecision = true;

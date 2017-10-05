@@ -2,7 +2,7 @@
 
 describe('Controller: WebEx Metrics Ctrl', function () {
   beforeEach(function () {
-    this.initModules('Core', 'core.customer-reports');  // 'Core' included for Userservice
+    this.initModules('Core', 'core.customer-reports'); // 'Core' included for Userservice
     this.injectDependencies(
       '$controller',
       '$q',
@@ -11,6 +11,8 @@ describe('Controller: WebEx Metrics Ctrl', function () {
       '$stateParams',
       '$timeout',
       '$window',
+      '$rootScope',
+      'Analytics',
       'Authinfo',
       'LocalStorage',
       'Notification',
@@ -18,7 +20,7 @@ describe('Controller: WebEx Metrics Ctrl', function () {
       'QlikService',
       'Userservice'
     );
-
+    spyOn(this.Analytics, 'trackReportsEvent');
     spyOn(this.Authinfo, 'setEmails');
     spyOn(this.Authinfo, 'getConferenceServicesWithoutSiteUrl').and.returnValue([]);
     spyOn(this.Authinfo, 'getConferenceServicesWithLinkedSiteUrl').and.returnValue([]);
@@ -31,14 +33,25 @@ describe('Controller: WebEx Metrics Ctrl', function () {
         siteUrl: 'siteUrl',
       });
     });
-
     this.initController = function () {
+      var $state = {
+        current: { },
+        go: function () {},
+      };
+      this.$scope.header = {
+        isWebexMetricsEnabled: true,
+        isWebexClassicEnabled: true,
+        webexSiteList: ['go.webex.com', 'alpha.webex.com'],
+      };
       this.controller = this.$controller('WebExMetricsCtrl', {
         $sce: this.$sce,
         $scope: this.$scope,
         $stateParams: this.$stateParams,
         $timeout: this.$timeout,
         $window: this.$window,
+        $rootScope: this.$rootScope,
+        $state: $state,
+        Analytics: this.Analytics,
         Authinfo: this.Authinfo,
         LocalStorage: this.LocalStorage,
         Notification: this.Notification,
@@ -51,21 +64,61 @@ describe('Controller: WebEx Metrics Ctrl', function () {
     this.initController();
   });
 
+  it('should call Analytics.trackReportsEvent during init', function () {
+    expect(this.Analytics.trackReportsEvent).toHaveBeenCalledWith(this.Analytics.sections.REPORTS.eventNames.CUST_WEBEX_REPORT);
+  });
+
   it('premium settings should be controlled by ProPackService or Authinfo.isPremium', function () {
     expect(this.controller.reportView).toEqual(this.controller.webexMetrics.views[0]);
 
     this.ProPackService.hasProPackPurchased.and.returnValue(this.$q.resolve(true));
     this.initController();
-    expect(this.controller.reportView).toEqual(this.controller.webexMetrics.views[1]);
+    expect(this.controller.reportView).toEqual(this.controller.webexMetrics.views[0]);
   });
 
   it('should not have anything in the dropdown for webex metrics', function () {
-    expect(this.controller.webexOptions.length).toBe(0);
+    expect(this.controller.webexOptions.length).toBe(2);
   });
 
   it('initial state, isIframeLoaded should be false, currentFilter should be metrics', function () {
     expect(this.controller.isIframeLoaded).toBeFalsy();
-    expect(this.controller.currentFilter.filterType).toBe('metrics');
+  });
+
+  it('should not go to reports.webex-metrics when at reports.webex-metrics sub state', function () {
+    var event = jasmine.createSpyObj('event', ['preventDefault']);
+    this.controller.onStateChangeStart(event, { name: 'reports.webex-metrics' }, {}, { name: 'reports.webex-metrics.metrics' });
+    expect(event.preventDefault).toHaveBeenCalled();
+  });
+
+  it('should do something when state change success', function () {
+    var event = jasmine.createSpyObj('event', ['preventDefault']);
+    spyOn(this.controller, 'updateWebexMetrics');
+    this.controller.selectEnable = false;
+    this.controller.onStateChangeSuccess(event, { name: 'reports.webex-metrics.metrics' }, {}, { name: 'reports.webex-metrics.classic' });
+
+    expect(this.controller.selectEnable).toBe(true);
+    expect(this.controller.updateWebexMetrics).toHaveBeenCalled();
+
+    this.controller.onStateChangeSuccess(event, { name: 'reports.webex-metrics.classic' });
+    expect(this.controller.selectEnable).toBe(false);
+  });
+
+  it('should jump to metrics tab when init', function () {
+    this.controller.$state.current = { name: 'reports.webex-metrics' };
+    spyOn(this.controller.$state, 'go');
+    this.controller.goMetricsState();
+    expect(this.controller.$state.go).toHaveBeenCalledWith('reports.webex-metrics.metrics');
+  });
+
+  it('should call loadMetricsReport after updateWebexMetrics()', function () {
+    spyOn(this.controller, 'loadMetricsReport');
+    this.controller.webexSelected = 'Timtrinhtrialint150.webex.com';
+    this.controller.updateWebexMetrics();
+    expect(this.controller.loadMetricsReport).toHaveBeenCalled();
+    expect(this.controller.isNoData).toBe(false);
+  });
+  it('should call checkClassic when init, the merticsOptions contains classic tab', function () {
+    expect(this.controller.metricsOptions.length).toBe(3);
   });
 });
 

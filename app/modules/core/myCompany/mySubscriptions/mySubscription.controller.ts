@@ -1,3 +1,4 @@
+import { Config } from 'modules/core/config/config';
 import { DigitalRiverService } from 'modules/online/digitalRiver/digitalRiver.service';
 import { Notification } from 'modules/core/notifications';
 import { OnlineUpgradeService, IBmmpAttr, IProdInst } from 'modules/online/upgrade/upgrade.service';
@@ -7,7 +8,9 @@ import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-ser
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 import { ProPackService } from 'modules/core/proPack/proPack.service';
 
-export class MySubscriptionCtrl {
+export class MySubscriptionCtrl implements ng.IController {
+  private readonly HEADER_BROADCAST = 'TOGGLE_HEADER_BANNER';
+
   public hybridServices: string[] = [];
   public licenseCategory: ISubscriptionCategory[] = [];
   public subscriptionDetails: ISubscription[] = [];
@@ -16,7 +19,6 @@ export class MySubscriptionCtrl {
   public trialUrlFailed: boolean = false;
   public productInstanceFailed: boolean = false;
   public loading: boolean = false;
-  public digitalRiverSubscriptionsUrl: string;
   public emptyBmmpAttr: IBmmpAttr = {
     subscriptionId: '',
     productInstanceId: '',
@@ -28,12 +30,12 @@ export class MySubscriptionCtrl {
   public isSharedMeetingsLicense: boolean = false;
   public isProPackPurchased: boolean = false;
   public isProPackEnabled: boolean = false;
-  public overage: boolean = false;
 
   public proPackData: IOfferData;
   public proPackList: string[] = ['subscriptions.hybridDataSecurity', 'subscriptions.advancedReporting', 'subscriptions.complianceFunctionality'];
   public premiumTooltip: string = this.$translate.instant('subscriptions.premiumTooltip');
 
+  private overage: boolean = false;
   private readonly BASE_CATEGORY: ISubscriptionCategory = {
     offers: [],
     offerWrapper: [],
@@ -45,6 +47,8 @@ export class MySubscriptionCtrl {
   private readonly WEBEX_CLASS: string = 'icon-webex';
   private readonly CALL_CLASS: string = 'icon-calls';
   private readonly CARE_CLASS: string = 'icon-headset';
+  private readonly SPARK: string = 'spark';
+  private readonly WEBEX: string = 'webex';
 
   private readonly CARE: string = 'CARE';
   private readonly SUBSCRIPTION_TYPES = {
@@ -68,9 +72,11 @@ export class MySubscriptionCtrl {
   /* @ngInject */
   constructor(
     private $q: ng.IQService,
+    private $rootScope: ng.IRootScopeService,
+    private $scope: ng.IScope,
     private $translate: ng.translate.ITranslateService,
     private Authinfo,
-    private Config,
+    private Config: Config,
     private DigitalRiverService: DigitalRiverService,
     private HybridServicesUtilsService: HybridServicesUtilsService,
     private Notification: Notification,
@@ -86,17 +92,21 @@ export class MySubscriptionCtrl {
     }).then((toggles: any): void => {
       this.isProPackPurchased = toggles.isProPackPurchased;
       this.isProPackEnabled = toggles.isProPackEnabled;
+
+      _.forEach(this.SUBSCRIPTION_TYPES, (_value, key: string): void => {
+        const category: ISubscriptionCategory = _.cloneDeep(this.BASE_CATEGORY);
+        category.label = $translate.instant('subscriptions.' + key);
+
+        this.licenseCategory.push(category);
+      });
+
+      this.hybridServicesRetrieval();
+      this.subscriptionRetrieval();
     });
 
-    _.forEach(this.SUBSCRIPTION_TYPES, (_value, key: string): void => {
-      const category: ISubscriptionCategory = _.cloneDeep(this.BASE_CATEGORY);
-      category.label = $translate.instant('subscriptions.' + key);
-
-      this.licenseCategory.push(category);
+    this.$scope.$on('$destroy', (): void => {
+      this.$rootScope.$emit(this.HEADER_BROADCAST);
     });
-
-    this.hybridServicesRetrieval();
-    this.subscriptionRetrieval();
   }
 
   public showCategory(category: ISubscriptionCategory): boolean {
@@ -111,8 +121,8 @@ export class MySubscriptionCtrl {
     return _.isNumber(usage);
   }
 
-  private getChangeSubURL(env: string): ng.IPromise<string> {
-    return this.DigitalRiverService.getSubscriptionsUrl(env).then((subscriptionsUrl: string): string => {
+  private getChangeSubURL(): ng.IPromise<string> {
+    return this.DigitalRiverService.getSubscriptionsUrl().then((subscriptionsUrl: string): string => {
       return subscriptionsUrl;
     }).catch((error: any): string => {
       this.loading = false;
@@ -170,8 +180,6 @@ export class MySubscriptionCtrl {
     if (!this.overage) {
       if (offer.usage) {
         this.overage = offer.usage > offer.volume;
-      } else if (offer.totalUsage) {
-        this.overage = offer.totalUsage > offer.volume;
       }
     }
   }
@@ -188,7 +196,9 @@ export class MySubscriptionCtrl {
   }
 
   private subscriptionRetrieval(): void {
-    this.Orgservice.getLicensesUsage(false).then((subscriptions: any[]): void => {
+    this.Orgservice.getInternallyManagedSubscriptions().then((subscriptions: any[]): void => {
+      const authinfoSubscriptions = this.Authinfo.getSubscriptions();
+
       _.forEach(subscriptions, (subscription: any, subIndex: number): void => {
         const newSubscription: ISubscription = {
           licenses: [],
@@ -204,26 +214,31 @@ export class MySubscriptionCtrl {
         }
         if (subscription.internalSubscriptionId && (subscription.internalSubscriptionId !== 'unknown')) {
           newSubscription.internalSubscriptionId = subscription.internalSubscriptionId;
-          if (subscription.internalSubscriptionId !== 'Trial') {
-            newSubscription.isOnline = true;
-          }
         }
-        if (subscription.endDate) {
-          const currentDate = new Date();
-          const subscriptionEndDate = new Date(subscription.endDate);
-          const timeDiff = subscriptionEndDate.getTime() - currentDate.getTime();
-          const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
-          newSubscription.endDate = this.$translate.instant('subscriptions.expires', { date: moment(subscriptionEndDate).format('MMM DD, YYYY') });
-          if (diffDays > this.EXPIRATION_DAYS.warning) {
-            newSubscription.badge = this.EXPIRATION_BADGES.default;
-          } else if (diffDays > this.EXPIRATION_DAYS.alert) {
-            newSubscription.badge = this.EXPIRATION_BADGES.warning;
-          } else if (diffDays > this.EXPIRATION_DAYS.expired) {
-            newSubscription.badge = this.EXPIRATION_BADGES.alert;
-          } else {
-            newSubscription.endDate = this.$translate.instant('subscriptions.expired');
-            newSubscription.badge = this.EXPIRATION_BADGES.alert;
+        const matchingSubscription = _.find(authinfoSubscriptions, (sub: ISubscription) => {
+          return (sub.subscriptionId === subscription.internalSubscriptionId) && (sub.orderingTool === this.Config.orderingTool.online || sub.orderingTool === this.Config.orderingTool.digitalRiver);
+        });
+        if (!_.isUndefined(matchingSubscription)) {
+          newSubscription.isOnline = true;
+          const matchingSubscriptionEndDate = _.get<string>(matchingSubscription, 'endDate', '');
+          if (matchingSubscriptionEndDate) {
+            const currentDate = new Date();
+            const subscriptionEndDate = new Date(matchingSubscriptionEndDate);
+            const timeDiff = subscriptionEndDate.getTime() - currentDate.getTime();
+            const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+            newSubscription.endDate = this.$translate.instant('subscriptions.expires', { date: moment(subscriptionEndDate).format('MMM DD, YYYY') });
+            if (diffDays > this.EXPIRATION_DAYS.warning) {
+              newSubscription.badge = this.EXPIRATION_BADGES.default;
+            } else if (diffDays > this.EXPIRATION_DAYS.alert) {
+              newSubscription.badge = this.EXPIRATION_BADGES.warning;
+            } else if (diffDays > this.EXPIRATION_DAYS.expired) {
+              newSubscription.badge = this.EXPIRATION_BADGES.alert;
+            } else {
+              newSubscription.endDate = this.$translate.instant('subscriptions.expired');
+              newSubscription.badge = this.EXPIRATION_BADGES.alert;
+            }
           }
         }
 
@@ -284,15 +299,13 @@ export class MySubscriptionCtrl {
             const offer: IOfferData = this.generateOffer(license, subIndex, licenseIndex);
 
             newSubscription.proPack = offer;
-            if (this.proPackData && this.proPackData.usage && offer.usage) {
-              this.proPackData.usage += offer.usage;
-              this.proPackData.volume += offer.volume;
-            } else if (this.proPackData && offer.usage) {
-              this.proPackData.usage = offer.usage;
+            if (this.proPackData) {
+              this.proPackData.usage = _.get(this.proPackData, 'usage', 0) + _.get(offer, 'usage', 0);
               this.proPackData.volume += offer.volume;
             } else {
               this.proPackData = _.cloneDeep(offer);
             }
+            this.setOverage(offer);
           }
         });
 
@@ -320,11 +333,6 @@ export class MySubscriptionCtrl {
         this.oneOnlineSub = true;
       }
 
-      if (_.find(this.subscriptionDetails, 'isOnline')) {
-        // create cookie for Digital River
-        this.DigitalRiverService.getDigitalRiverToken();
-      }
-
       let enterpriseSubs = 1;
       let enterpriseTrials = 1;
       this.OnlineUpgradeService.getProductInstances(this.Authinfo.getUserId()).then((instances) => {
@@ -341,6 +349,9 @@ export class MySubscriptionCtrl {
               } else {
                 this.subscriptionDetails[index].name = this.$translate.instant('subscriptions.numberedName', { number: enterpriseSubs++ });
               }
+            }
+            if (this.subscriptionDetails.length === 1) {
+              this.licenseSummary = this.$translate.instant('subscriptions.licenseSummaryEnterprise');
             }
           } else {
             const prodResponse: IProdInst = _.find(instances, ['subscriptionId', subscription.internalSubscriptionId]);
@@ -364,18 +375,18 @@ export class MySubscriptionCtrl {
           this.showSingleSub = true;
         }
       });
+
+      this.setOverageWarning();
     });
   }
 
   private setBMMP(subscription: ISubscription, prodResponse: IProdInst): void {
     subscription.productInstanceId = prodResponse.productInstanceId;
     subscription.name = prodResponse.name;
-    const env: string = _.includes(prodResponse.name, 'Spark') ? 'spark' : 'webex';
-    // TODO Remove the changeplanOverride attribute in production once the
-    // e-commerce team is ready.
-    this.getChangeSubURL(env).then((urlResponse) => {
+    const env: string = _.includes(prodResponse.name, 'Spark') ? this.SPARK : this.WEBEX;
+    this.getChangeSubURL().then((urlResponse) => {
       subscription.changeplanOverride = '';
-      if (this.Config.isProd() && urlResponse) {
+      if (urlResponse && env === this.SPARK) {
         subscription.changeplanOverride = urlResponse;
       }
 
@@ -429,7 +440,7 @@ export class MySubscriptionCtrl {
     this.ServiceDescriptorService.getServices().then((services) => {
       return this.ServiceDescriptorService.filterEnabledServices(services);
     }).then((enabledServices) => {
-      enabledServices.sort((s1, s2) => this.HybridServicesUtilsService.hybridServicesComparator(s1.id, s2.id));
+      enabledServices.sort((s1, s2) => this.HybridServicesUtilsService.hybridServicesComparator({ value: s1.id }, { value: s2.id }));
       return _.map(enabledServices, (service: any) => {
         if (service.id === 'squared-fusion-uc' || service.id === 'squared-fusion-ec') {
           return `hercules.serviceNames.${service.id}.full`;
@@ -479,5 +490,16 @@ export class MySubscriptionCtrl {
     }
 
     return offer;
+  }
+
+  private setOverageWarning(): void {
+    if (this.overage && this.isProPackEnabled) {
+      this.$rootScope.$emit(this.HEADER_BROADCAST, {
+        iconCss: 'icon-warning',
+        translation: 'subscriptions.overageWarning',
+        type: 'danger',
+        visible: true,
+      });
+    }
   }
 }

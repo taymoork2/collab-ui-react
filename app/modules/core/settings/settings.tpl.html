@@ -1,10 +1,18 @@
 <div class="settings">
 
-  <cs-page-header title-name="globalSettings.pageTitle"></cs-page-header>
+  <cs-page-header title-name="{{'globalSettings.pageTitle' | translate}}"></cs-page-header>
 
   <div class="cs-form">
     <setting-section setting="settingsCtrl.security" ng-if="settingsCtrl.security">
       <security-setting></security-setting>
+    </setting-section>
+
+    <setting-section setting="settingsCtrl.externalCommunication" ng-if="settingsCtrl.externalCommunication">
+      <external-communication-setting></external-communication-setting>
+    </setting-section>
+
+    <setting-section setting="settingsCtrl.fileSharingControl" ng-if="settingsCtrl.fileSharingControl">
+      <file-sharing-control-setting></file-sharing-control-setting>
     </setting-section>
 
     <setting-section setting="settingsCtrl.privacy" ng-if="settingsCtrl.privacy">
@@ -25,6 +33,10 @@
 
     <setting-section setting="settingsCtrl.authentication" ng-if="settingsCtrl.authentication">
       <authentication-setting></authentication-setting>
+    </setting-section>
+
+    <setting-section setting="settingsCtrl.email" ng-if="settingsCtrl.email">
+      <email-setting></email-setting>
     </setting-section>
 
     <setting-section setting="settingsCtrl.branding" ng-if="settingsCtrl.branding">

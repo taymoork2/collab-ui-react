@@ -1,0 +1,30 @@
+<div class="search-filters-redux">
+  <form ng-submit="dctrl.onInputSubmit()">
+    <div class="searchinput-redux">
+      <input type="text"
+             class="form-control"
+             ng-class="{'searcherror': dctrl.searchObject.hasError}"
+             ng-model="dctrl.searchInput"
+             ng-blur="dctrl.inputActive=false"
+             ng-focus="dctrl.inputActive=true"
+             placeholder="Search for devices..."
+             ng-change="dctrl.onInputChange()"
+             ng-model-options="{ debounce: { default: 250 } }"
+      />
+    </div>
+  </form>
+  <span class="search-filters-only">
+  <cs-searchfilter filters="dctrl.searchFilters"
+                   search-item-fn="dctrl.setCurrentSearch(searchStr)"
+                   set-filter-fn="dctrl.setCurrentFilterValue(filter.filterValue)"
+                   ng-class="{'searcherror': dctrl.searchObject.hasError}">
+  </cs-searchfilter>
+</span></div>
+<div class="bullets">
+  <span class="bullet" ng-if="!bullet.isBeingEdited()" ng-repeat="bullet in dctrl.getBullets()"
+        ng-dblclick="dctrl.editBullet(bullet)">
+    <span class="field-descriptor" ng-if="bullet.field">{{bullet.field}}: </span>
+    <span>{{bullet.query || bullet.toQuery()}}</span>
+    <i class="icon icon-close" ng-click="dctrl.removeBullet(bullet)"/>
+  </span>
+</div>

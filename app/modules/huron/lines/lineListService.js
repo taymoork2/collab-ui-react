@@ -24,7 +24,7 @@
     };
     return service;
 
-    function getLineList(startIndex, count, sortBy, sortOrder, searchStr, filterType, gridData) {
+    function getLineList(startIndex, count, sortBy, sortOrder, searchStr, filterType, gridData, isH1484) {
       var wildcard = '%';
 
       var queryString = {
@@ -36,6 +36,9 @@
         queryString.internalnumber = wildcard + searchStr + wildcard;
         queryString.externalnumber = wildcard + searchStr + wildcard;
 
+        if (isH1484) {
+          queryString.locationname = wildcard + searchStr + wildcard;
+        }
         queryString.predicatejoinoperator = 'or';
       }
 

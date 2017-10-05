@@ -31,10 +31,6 @@
     vm.localizedAddNewExpressway = $translate.instant('hercules.addResourceDialog.registerNewExpressway');
     vm.localizedAddNewExpresswayHelp = $translate.instant('hercules.addResourceDialog.registerNewExpresswayHelp');
     vm.localizedAddToExistingExpressway = $translate.instant('hercules.addResourceDialog.addToExistingExpressway');
-    vm.localizedWillBeInstalledMessage = $translate.instant('hercules.addResourceDialog.willBeInstalled', {
-      ConnectorName: vm.localizedConnectorName,
-      ServiceName: vm.localizedServiceName,
-    });
     vm.localizedExpresswaysName = $translate.instant('hercules.addResourceDialog.selectClusterPlaceholder');
     vm.localizedCannotProvionError = $translate.instant('hercules.addResourceDialog.cannotProvisionConnector', {
       ConnectorName: vm.localizedConnectorName,
@@ -92,7 +88,7 @@
         vm.warningMessage = $translate.instant('hercules.addResourceDialog.hostnameRegistered');
         return connector.toLowerCase() === vm.hostname.toLowerCase();
       })
-        ) {
+      ) {
         return true;
       }
       return false;
@@ -171,8 +167,8 @@
         _.forEach(cluster.connectorsHostname, function (connector) {
           if (connector.connectorType === 'c_mgmt') {
             vm.connectors.push(
-                    connector.hostname
-                  );
+              connector.hostname
+            );
           }
         });
       });
@@ -240,7 +236,7 @@
         return;
       }
       $modal.open({
-        templateUrl: 'modules/hercules/service-specific-pages/common-expressway-based/confirm-setup-cancel-dialog.html',
+        template: require('modules/hercules/service-specific-pages/common-expressway-based/confirm-setup-cancel-dialog.html'),
         type: 'dialog',
       })
         .result.then(function (isAborting) {

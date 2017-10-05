@@ -16,7 +16,7 @@
           dismiss: function () {},
           link: function () {
             $modal.open({
-              templateUrl: 'modules/huron/pstnSetup/pstnToS/pstnToS.intelepeer.tpl.html',
+              template: require('modules/huron/pstnSetup/pstnToS/pstnToS.intelepeer.tpl.html'),
               controller: 'PstnToSCtrl',
               controllerAs: 'pstnToS',
               type: 'Large',

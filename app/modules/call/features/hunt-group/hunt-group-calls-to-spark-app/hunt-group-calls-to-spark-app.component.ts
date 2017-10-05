@@ -19,7 +19,7 @@ class HuntGroupCallsToSparkAppCtrl implements ng.IComponentController {
 
 export class HuntGroupCallsToSparkAppComponent implements ng.IComponentOptions {
   public controller = HuntGroupCallsToSparkAppCtrl;
-  public templateUrl = 'modules/call/features/hunt-group/hunt-group-calls-to-spark-app/hunt-group-calls-to-spark-app.component.html';
+  public template = require('modules/call/features/hunt-group/hunt-group-calls-to-spark-app/hunt-group-calls-to-spark-app.component.html');
   public bindings = {
     sendToApp: '<',
     onChangeFn: '&',

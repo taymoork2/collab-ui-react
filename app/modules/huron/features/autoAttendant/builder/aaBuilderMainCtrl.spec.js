@@ -106,6 +106,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     $state = _$state_;
     $rootScope = _$rootScope_;
     $modalStack = _$modalStack_;
+
     $q = _$q_;
     $compile = _$compile_;
     $scope = $rootScope.$new();
@@ -117,8 +118,11 @@ describe('Controller: AABuilderMainCtrl', function () {
     AAUiModelService = _AAUiModelService_;
     AAModelService = _AAModelService_;
     AARestModelService = _AARestModelService_;
+
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
+    AutoAttendantLocationService = _AutoAttendantLocationService_;
+
     AAValidationService = _AAValidationService_;
     AutoAttendantCeService = _AutoAttendantCeService_;
     AACommonService = _AACommonService_;
@@ -196,7 +200,7 @@ describe('Controller: AABuilderMainCtrl', function () {
   });
 
   describe('getTimeZoneOptions', function () {
-    it('should retreive the the list of system timezone options', function () {
+    it('should retrieve the the list of system timezone options', function () {
       controller.ui.timeZoneOptions = undefined;
       controller.getTimeZoneOptions();
       $scope.$apply();
@@ -205,11 +209,56 @@ describe('Controller: AABuilderMainCtrl', function () {
   });
 
   describe('getSystemTimeZone', function () {
-    it('should retreive the system timezone', function () {
+    it('should retrieve the system timezone', function () {
       controller.ui.systemTimeZone = undefined;
       controller.getSystemTimeZone();
       $scope.$apply();
       expect(angular.equals(controller.ui.systemTimeZone, translatedTimeZone[0])).toBe(true);
+    });
+  });
+  describe('getSystemTimeZone - multi site', function () {
+    it('should retrieve the system timezone', function () {
+      // As of this JIRA - AUTOATTN-1257
+      sysModel.site.timeZone = null;
+
+      controller.ui.systemTimeZone = undefined;
+      controller.getSystemTimeZone();
+      $scope.$apply();
+      expect(angular.equals(controller.ui.systemTimeZone, translatedTimeZone[0])).toBe(true);
+    });
+  });
+  describe('getSystemDefaultTimeZone - multi site', function () {
+    it('should retrieve the default system timezone', function () {
+      var defaultLoc = {
+        url: 'https://cmi.huron-int.com/api/v2/customers/9b82a3fa-de82-4ced-a3dd-0989081bd6df/locations/108655a5-899a-4885-9f65-f583b0a76132',
+        uuid: '108655a5-899a-4885-9f65-f583b0a76132',
+        name: 'Default Location',
+        timeZone: 'Twilight/Zone',
+        preferredLanguage: 'en_US',
+        defaultLocation: true,
+        regionCodeDialing: {
+          regionCode: null,
+          simplifiedNationalDialing: false,
+        },
+        callerIdNumber: null,
+        callerId: null,
+      };
+
+      var successSpy = jasmine.createSpy('success');
+
+      spyOn(AACommonService, 'isMultiSiteEnabled').and.returnValue(true);
+      spyOn(AutoAttendantLocationService, 'getDefaultLocation').and.returnValue($q.resolve(defaultLoc));
+      AutoAttendantLocationService.getDefaultLocation().then(
+        successSpy
+      );
+
+      controller.getSystemTimeZone();
+
+      $scope.$apply();
+
+      var args = successSpy.calls.mostRecent().args;
+
+      expect(args[0].timeZone).toBe('Twilight/Zone');
     });
   });
 

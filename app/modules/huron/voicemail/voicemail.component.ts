@@ -14,7 +14,6 @@ class VoicemailCtrl implements ng.IComponentController {
   public constructor(
     private HuronVoicemailService: HuronVoicemailService,
     private HuronUserService: HuronUserService,
-    private $translate: ng.translate.ITranslateService,
     private $scope: ng.IScope,
     private $modal,
     private Notification: Notification,
@@ -32,7 +31,7 @@ class VoicemailCtrl implements ng.IComponentController {
   public save() {
     if (!this.enableVoicemail) {
       this.$modal.open({
-        templateUrl: 'modules/huron/voicemail/disableConfirmation.tpl.html',
+        template: require('modules/huron/voicemail/disableConfirmation.tpl.html'),
         scope: this.$scope,
         type: 'dialog',
       }).result.then(() => {
@@ -47,10 +46,10 @@ class VoicemailCtrl implements ng.IComponentController {
   public saveVoiceMail() {
     this.HuronVoicemailService.update(this.ownerId, this.enableVoicemail, this.services).then(services => {
       this.services = services;
-      this.Notification.notify(this.$translate.instant('voicemailPanel.success'), 'success');
+      this.Notification.success('voicemailPanel.success');
     })
       .catch((response) => {
-        this.Notification.notify(this.$translate.instant('voicemailPanel.error') + response.data.errorMessage, 'error');
+        this.Notification.errorResponse(response, 'voicemailPanel.error');
       })
       .finally(() => {
         this.saveInProcess = false;
@@ -69,7 +68,7 @@ class VoicemailCtrl implements ng.IComponentController {
 
 export class VoicemailComponent implements ng.IComponentOptions {
   public controller = VoicemailCtrl;
-  public templateUrl = 'modules/huron/voicemail/voicemail.html';
+  public template = require('modules/huron/voicemail/voicemail.html');
   public bindings = {
     ownerId: '<',
   };

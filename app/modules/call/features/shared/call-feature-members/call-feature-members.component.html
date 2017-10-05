@@ -1,9 +1,14 @@
-<script type="text/ng-template" id="callFeatureMemberTemplate.html">
+<script type="text/ng-template" id="callFeatureMemberWithNumberTemplate.html">
   <a class="member__name">
     <span ng-if="match.label.showName" ng-bind-html="match.label.name | typeaheadHighlight:query"></span>
   </a>
   <a class="member__line">
     <span ng-bind-html="match.label.number | typeaheadHighlight:query"></span>
+  </a>
+</script>
+<script type="text/ng-template" id="callFeatureMemberWithUsernameTemplate.html">
+  <a class="member__name">
+    <span ng-if="match.label.showName" ng-bind-html="match.label.name | typeaheadHighlight:query"></span>
   </a>
 </script>
 <div class="typeahead-large" ng-if="$ctrl.isNew">
@@ -12,7 +17,7 @@
     ng-class="{'error': $ctrl.errorMemberInput}"
     typeahead="member for member in $ctrl.getMemberList($viewValue) | limitTo:10"
     typeahead-on-select="$ctrl.selectMember($item)"
-    typeahead-template-url="callFeatureMemberTemplate.html"
+    typeahead-template-url="{{$ctrl.memberSearchTemplate}}"
     typeahead-min-length="3"
     typeahead-wait-ms="200"
     placeholder="{{:: 'common.searchAddMembers' | translate}}"
@@ -29,7 +34,7 @@
       ng-model="$ctrl.selectedMember"
       typeahead="member for member in $ctrl.getMemberList($viewValue) | limitTo:10"
       typeahead-on-select="$ctrl.selectMember($item)"
-      typeahead-template-url="callFeatureMemberTemplate.html"
+      typeahead-template-url="{{$ctrl.memberSearchTemplate}}"
       typeahead-min-length="3"
       typeahead-wait-ms="200"
       placeholder="{{::'common.selectMembers' | translate}}"

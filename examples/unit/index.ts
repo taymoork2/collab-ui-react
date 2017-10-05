@@ -1,10 +1,11 @@
+import * as ngResource from 'angular-resource';
+
 import { ExampleComponent } from './example.component';
 import { ExampleService } from './example.service';
 
 export default angular
   .module('atlas.example', [
-    'atlas.templates',
-    require('angular-resource'),
+    ngResource,
   ])
   .component('atlasExample', new ExampleComponent())
   .service('ExampleService', ExampleService)

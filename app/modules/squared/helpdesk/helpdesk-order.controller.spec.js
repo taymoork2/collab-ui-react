@@ -110,33 +110,79 @@ describe('Controller: HelpdeskOrderController', function () {
 
     it('update customer admin email will update flag', function () {
       expect(HelpdeskService.getEmailStatus).toHaveBeenCalledTimes(2);
-      orderController.updateCustomerAdminEmail();
+      orderController.updateAdminEmail('customer');
       $scope.$apply();
       expect(HelpdeskService.editAdminEmail).toHaveBeenCalledWith('3e54548d-12ff-43f4-9aff-10c2fcc64130', 'steamboatcsco@gmail.com', true);
-      expect(orderController.customerAdminEmailEdit).toBe(false);
-      expect(orderController.showCustomerEmailSent).toBe(false);
+      expect(orderController.showCustomerEmailEditView).toBe(false);
+      expect(orderController.loadingCustomerEmailUpdate).toBe(true);
       $timeout.flush();
+      expect(orderController.loadingCustomerEmailUpdate).toBe(false);
       expect(HelpdeskService.getEmailStatus).toHaveBeenCalledTimes(3);
     });
 
     it('update partner admin email will update flag', function () {
       expect(HelpdeskService.getEmailStatus).toHaveBeenCalledTimes(2);
-      orderController.updatePartnerAdminEmail();
+      orderController.updateAdminEmail('partner');
       $scope.$apply();
       expect(HelpdeskService.editAdminEmail).toHaveBeenCalledWith('3e54548d-12ff-43f4-9aff-10c2fcc64130', 'boulder.steamboat@gmail.com', false);
-      expect(orderController.partnerAdminEmailEdit).toBe(false);
-      expect(orderController.showPartnerEmailSent).toBe(false);
+      expect(orderController.showPartnerEmailEditView).toBe(false);
+      expect(orderController.loadingPartnerEmailUpdate).toBe(true);
       $timeout.flush();
+      expect(orderController.loadingPartnerEmailUpdate).toBe(false);
       expect(HelpdeskService.getEmailStatus).toHaveBeenCalledTimes(3);
     });
 
     it('resend admin email success', function () {
       expect(HelpdeskService.getEmailStatus).toHaveBeenCalledTimes(2);
-      orderController.resendAdminEmail(true);
+      orderController.resendAdminEmail('customer');
       $scope.$apply();
-      expect(orderController.showCustomerEmailSent).toBe(false);
+      expect(orderController.loadingCustomerEmailUpdate).toBe(true);
       $timeout.flush();
+      expect(orderController.loadingCustomerEmailUpdate).toBe(false);
       expect(HelpdeskService.getEmailStatus).toHaveBeenCalledTimes(3);
+    });
+  });
+  describe('CSM pending purchase order details', function () {
+    beforeEach(function () {
+      spyOn(HelpdeskService, 'searchOrders');
+      $stateParams.order = getJSONFixture('core/json/orders/csmOrder.json');
+      orderController = $controller('HelpdeskOrderController', {
+        $stateParams: $stateParams,
+      });
+      $scope.$apply();
+    });
+    it('uses the order in the $stateParams object', function () {
+      expect(HelpdeskService.searchOrders).not.toHaveBeenCalled();
+    });
+    it('does not call the get account api', function () {
+      expect(HelpdeskService.getAccount).not.toHaveBeenCalled();
+    });
+    it('gets the value for the last email sent', function () {
+      expect(orderController.customerEmailSent).toBeDefined();
+    });
+    it('sets the isProvisionedOrderPending flag to true if order is pending', function () {
+      expect(orderController.isOrderPendingProvisioning()).toBe(true);
+    });
+    it('sets the isAccountActivated flag to not be true', function () {
+      expect(orderController.isAccountActivated()).not.toBe(true);
+    });
+  });
+  describe('CSM provisioned purchase order details', function () {
+    beforeEach(function () {
+      spyOn(HelpdeskService, 'getSubscription').and.returnValue($q.resolve({ customer: { orgId: '123456' } }));
+      $stateParams.order = getJSONFixture('core/json/orders/csmOrder.json');
+      $stateParams.order.orderStatus = 'PROVISIONED';
+      orderController = $controller('HelpdeskOrderController', {
+        $stateParams: $stateParams,
+      });
+      $scope.$apply();
+    });
+    it('gets the value for the orgId if the order is provisioned', function () {
+      expect(HelpdeskService.getSubscription).toHaveBeenCalled();
+      expect(orderController.orgId).toBe('123456');
+    });
+    it('sets the isOrderProvisioned flag to true', function () {
+      expect(orderController.isOrderProvisioned()).toBe(true);
     });
   });
 });

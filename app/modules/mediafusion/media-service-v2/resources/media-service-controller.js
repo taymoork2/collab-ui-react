@@ -2,17 +2,17 @@
   'use strict';
 
   /* @ngInject */
-  function MediaServiceControllerV2($modal, $state, $stateParams, Authinfo, HybridServicesClusterService) {
+  function MediaServiceControllerV2($modal, $state, $stateParams, $translate, Authinfo, HybridServicesClusterService) {
     var vm = this;
     vm.backState = $stateParams.backState || 'services-overview';
 
     // Added for cs-page-header
     vm.tabs = [
       {
-        title: 'common.resources',
+        title: $translate.instant('common.resources'),
         state: 'media-service-v2.list',
       }, {
-        title: 'common.settings',
+        title: $translate.instant('common.settings'),
         state: 'media-service-v2.settings',
       },
     ];
@@ -24,7 +24,7 @@
       type: 'small',
       controller: 'RedirectAddResourceControllerV2',
       controllerAs: 'redirectResource',
-      templateUrl: 'modules/mediafusion/media-service-v2/add-resources/add-resource-dialog.html',
+      template: require('modules/mediafusion/media-service-v2/add-resources/add-resource-dialog.html'),
       modalClass: 'redirect-add-resource',
     };
 
@@ -34,7 +34,7 @@
           vm.addResourceModal.resolve.firstTimeSetup = false;
         } else if (Authinfo.isCustomerLaunchedFromPartner()) {
           $modal.open({
-            templateUrl: 'modules/hercules/service-specific-pages/components/add-resource/partnerAdminWarning.html',
+            template: require('modules/hercules/service-specific-pages/components/add-resource/partnerAdminWarning.html'),
             type: 'dialog',
           });
         } else {

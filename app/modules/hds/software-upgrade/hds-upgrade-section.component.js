@@ -7,7 +7,7 @@
         clusterId: '<',
       },
       controller: HDSUpgradeSectionCtrl,
-      templateUrl: 'modules/hds/software-upgrade/hds-upgrade-section.html',
+      template: require('modules/hds/software-upgrade/hds-upgrade-section.html'),
     });
 
   /* @ngInject */
@@ -85,7 +85,7 @@
         type: 'small',
         controller: 'HDSUpgradeNowController',
         controllerAs: 'hdsUpgradeNowController',
-        templateUrl: 'modules/hds/software-upgrade/hds-upgrade-now-cluster-dialog.html',
+        template: require('modules/hds/software-upgrade/hds-upgrade-now-cluster-dialog.html'),
       });
 
       $scope.$on('$destroy', function () {

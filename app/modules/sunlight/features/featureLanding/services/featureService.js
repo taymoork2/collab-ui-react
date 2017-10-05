@@ -2,11 +2,16 @@
   'use strict';
 
   angular
-      .module('Sunlight')
-      .service('CareFeatureList', CareFeatureList);
+    .module('Sunlight')
+    .service('CareFeatureList', CareFeatureList);
 
   /* @ngInject */
-  function CareFeatureList(Authinfo, ConfigTemplateService) {
+  function CareFeatureList(Authinfo, ConfigTemplateService, VirtualAssistantService) {
+    var filterConstants = {
+      customerSupport: 'customerSupport',
+      virtualAssistant: VirtualAssistantService.serviceCard.type,
+      all: 'all',
+    };
     var service = {
       getChatTemplates: getChatTemplates,
       getCallbackTemplates: getCallbackTemplates,
@@ -14,7 +19,9 @@
       getTemplate: getTemplate,
       formatTemplates: formatTemplates,
       deleteTemplate: deleteTemplate,
+      deleteVirtualAssistantConfig: deleteVirtualAssistantConfig,
       filterCards: filterCards,
+      filterConstants: filterConstants,
     };
 
     return service;
@@ -47,6 +54,10 @@
       }).$promise;
     }
 
+    function deleteVirtualAssistantConfig(configId) {
+      return VirtualAssistantService.delete(configId, Authinfo.getOrgId()).$promise;
+    }
+
     function getTemplate(templateId) {
       return ConfigTemplateService.get({
         orgId: Authinfo.getOrgId(),
@@ -65,8 +76,19 @@
       var filterStringProperties = [
         'name',
       ];
+
       var filteredList = _.filter(list, function (feature) {
-        if (feature.mediaType !== filterValue && filterValue !== 'all') {
+        if (filterValue === filterConstants.customerSupport && feature.mediaType === filterConstants.virtualAssistant) {
+          //if the filter selected is support virtual assistant templates should not be displayed
+          return false;
+        }
+        if (filterValue === filterConstants.virtualAssistant && feature.mediaType !== filterConstants.virtualAssistant) {
+          //if the virtual assistant filter is selected only virtual assistant templates should be displayed
+          return false;
+        }
+        if (filterValue !== filterConstants.customerSupport && filterValue !== filterConstants.virtualAssistant
+          && filterValue !== filterConstants.all) {
+          //if the filter value is not any of the valid values templates should not be displayed
           return false;
         }
         if (_.isEmpty(filterText)) {
@@ -85,6 +107,7 @@
         tpl.featureType = feature.name;
         tpl.color = feature.color;
         tpl.icons = feature.icons;
+        tpl.templateOrConfig = 'template';
         return tpl;
       });
       return orderByCardName(formattedList);

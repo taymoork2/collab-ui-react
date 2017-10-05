@@ -37,7 +37,7 @@ class GmTdImportNumbersFromCsvCtrl implements ng.IComponentController {
   public onSelectFile(event): void {
     this.$modal.open({
       type: 'dialog',
-      templateUrl: 'modules/gemini/telephonyDomain/details/gmTdImportNumbersFromCsvConfirm.tpl.html',
+      template: require('modules/gemini/telephonyDomain/details/gmTdImportNumbersFromCsvConfirm.tpl.html'),
     }).result.then(() => {
       angular.element(event.currentTarget).next().click();
     });
@@ -100,7 +100,7 @@ class GmTdImportNumbersFromCsvCtrl implements ng.IComponentController {
         tollType: this.stripFieldValue(item[3]),
         phoneType: this.stripFieldValue(item[4]),
         country: this.stripFieldValue(item[5]),
-        isHidden: this.stripFieldValue(item[6]) === 'Hidden' ? 'true' : 'false',
+        isHidden: this.stripFieldValue(item[6]) === 'Hidden',
       });
     });
 
@@ -135,5 +135,5 @@ export class GmTdImportNumbersFromCsvComponent implements ng.IComponentOptions {
     isDisabled: '<',
   };
   public controller = GmTdImportNumbersFromCsvCtrl;
-  public templateUrl = 'modules/gemini/telephonyDomain/details/gmTdImportNumbersFromCsv.tpl.html';
+  public template = require('modules/gemini/telephonyDomain/details/gmTdImportNumbersFromCsv.tpl.html');
 }

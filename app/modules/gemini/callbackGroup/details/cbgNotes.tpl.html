@@ -6,12 +6,20 @@
     </i>
   </ul>
   <div class="feature-list">
-    <form name="note" novalidate>
-      <textarea rows="5" ng-maxlength="2048" ng-model="$ctrl.model.postData" required class="form-control optional-row" placeholder="{{'gemini.cbgs.notes.enterNote' | translate}}"></textarea>
+    <form name="note" novalidate ng-class="{'error': note.noteContent.$invalid && note.noteContent.$dirty && note.noteContent.$touched}">
+      <textarea name="noteContent" rows="5" ng-maxlength="2048" ng-model="$ctrl.model.postData" required class="form-control optional-row" placeholder="{{'gemini.cbgs.notes.enterNote' | translate}}"></textarea>
+      <div class="pull-left">
+        <div class="cs-input__messages" ng-messages="note.noteContent.$error" role="alert" ng-if='note.noteContent.$touched'>
+          <div class="message" ng-message="required" translate="common.invalidRequired"></div>
+          <div class="message" ng-message="maxlength"
+               translate="gemini.inputLengthError"
+               translate-values="{length: 2048, field: 'note'}"></div>
+        </div>
+      </div>
+      <div class="text-right ui-mt">
+        <button id="addnote" class="btn info" translate="gemini.cbgs.notes.addNote" ng-click="$ctrl.onSave();" ng-disabled="note.$invalid || $ctrl.loading"></button>
+      </div>
     </form>
-    <div class="text-right ui-mt">
-      <button id="addnote" class="btn info" translate="gemini.cbgs.notes.addNote"  ng-click="$ctrl.onSave()" ng-disabled="note.$invalid"></button>
-    </div>
   </div>
   <div class="ui-mv ui-pt">
     <div ng-if="!$ctrl.loading" translate="gemini.cbgs.notes.notes"></div>

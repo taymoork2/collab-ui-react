@@ -10,17 +10,21 @@
 
   /* @ngInject */
 
-  function CareSetupAssistantCtrl($modal, $scope, $state, $stateParams, $timeout, $translate, $window, Authinfo, CTService, FeatureToggleService, DomainManagementService, LogMetricsService, Notification, SunlightConfigService) {
+  function CareSetupAssistantCtrl($modal, $scope, $state, $stateParams, $timeout, $translate, $window, Authinfo, VirtualAssistantService, CTService, DomainManagementService, LogMetricsService, Notification, SunlightConfigService) {
     var vm = this;
-    init();
+    $scope.controller = vm; // used by ctCancelModal to not be tied to 1 controller.
 
     vm.selectedMediaType = $stateParams.type;
-
+    vm.isCareAssistantEnabled = $state.isCareAssistantEnabled;
+    vm.isCareProactiveChatTrialsEnabled = $state.isCareProactiveChatTrialsEnabled;
     vm.mediaTypes = {
       chat: 'chat',
       callback: 'callback',
       chatPlusCallback: 'chatPlusCallback',
     };
+
+    init();
+
     vm.cancelModal = cancelModal;
     vm.evalKeyPress = evalKeyPress;
 
@@ -28,6 +32,7 @@
     vm.nextPage = nextPage;
     vm.previousPage = previousPage;
     vm.nextButton = nextButton;
+    vm.getLocalizedOrgOrAgentInfo = getLocalizedOrgOrAgentInfo;
     vm.previousButton = previousButton;
     vm.getPageIndex = getPageIndex;
     vm.setAgentProfile = setAgentProfile;
@@ -46,18 +51,40 @@
     vm.isCategoryWarningRequired = isCategoryWarningRequired;
     vm.getCardConfig = getCardConfig;
 
+    vm.shouldShowOverviewPageTooltip = shouldShowOverviewPageTooltip;
+    vm.overviewPageTooltipText = overviewPageTooltipText;
+    vm.isOverviewCardConfigurable = isOverviewCardConfigurable;
+    vm.hasConfiguredVirtualAssistantServices = false;
+    vm.brandingPageTooltipText = brandingPageTooltipText;
+    vm.careVirtualAssistantName = careVirtualAssistantName;
+
+    //chat assistant utils
+    vm.isAgentProfileWithCVA = function () {
+      return vm.isCVAEnabled && (vm.selectedTemplateProfile === vm.profiles.agent);
+    };
+
+    function careVirtualAssistantName() {
+      if (vm.template.configuration.virtualAssistant.config) {
+        return vm.template.configuration.virtualAssistant.config.name;
+      } else {
+        return $translate.instant('careChatTpl.default_cva_name');
+      }
+    }
+
     // Setup Assistant pages with index
     vm.states = {};
 
-    vm.setStates = function (isProactiveFlagEnabled) {
-      vm.states = CTService.getStatesBasedOnType(vm.selectedMediaType, isProactiveFlagEnabled);
+    vm.setStates = function () {
+      vm.states = CTService.getStatesBasedOnType(vm.selectedMediaType, vm.isCareProactiveChatTrialsEnabled);
       vm.currentState = vm.states[0];
     };
+    vm.setStates();
 
     vm.overviewCards = {};
-    vm.setOverviewCards = function (isProactiveFlagEnabled) {
-      vm.overviewCards = CTService.getOverviewPageCards(vm.selectedMediaType, isProactiveFlagEnabled);
+    vm.setOverviewCards = function () {
+      vm.overviewCards = CTService.getOverviewPageCards(vm.selectedMediaType, vm.isCareProactiveChatTrialsEnabled, vm.isCareAssistantEnabled);
     };
+    vm.setOverviewCards();
 
     vm.animationTimeout = 10;
     vm.escapeKey = 27;
@@ -68,13 +95,65 @@
       org: $translate.instant('careChatTpl.org'),
       agent: $translate.instant('careChatTpl.agent'),
     };
+
+    vm.cvaMessage = {
+      orgHeader: $translate.instant('careChatTpl.org'),
+      orgInfo: $translate.instant('careChatTpl.profile_org_info_cva'),
+      agentHeader: $translate.instant('careChatTpl.agent_cva'),
+      agentInfo: $translate.instant('careChatTpl.profile_agent_info_cva'),
+    };
+
+    vm.nonCVAMessage = {
+      orgHeader: $translate.instant('careChatTpl.org'),
+      agentHeader: $translate.instant('careChatTpl.agent'),
+      orgInfo: $translate.instant('careChatTpl.profile_org_info'),
+      agentInfo: $translate.instant('careChatTpl.profile_agent_info'),
+    };
+
+    function brandingPageTooltipText(profileType) {
+      if (profileType === 'bot') {
+        return $translate.instant('careChatTpl.botProfileTooltip');
+      } else {
+        return $translate.instant('careChatTpl.agentProfileTooltip');
+      }
+    }
+
+    function getLocalizedOrgOrAgentInfo(msgType) {
+      vm.isCVAEnabled = vm.template.configuration.virtualAssistant ? vm.template.configuration.virtualAssistant.enabled : false;
+      if (vm.isCVAEnabled) {
+        return vm.cvaMessage[msgType];
+      } else {
+        return vm.nonCVAMessage[msgType];
+      }
+    }
+
+    function setAvaterInBrandingPage() {
+      vm.selectedAvater = vm.isCVAEnabled ? 'bot' : 'agent';
+    }
+
+    function getProfileList() {
+      vm.profileList = [
+        {
+          header: getLocalizedOrgOrAgentInfo('orgHeader'),
+          label: getLocalizedOrgOrAgentInfo('orgInfo'),
+          value: vm.profiles.org,
+        },
+        {
+          header: getLocalizedOrgOrAgentInfo('agentHeader'),
+          label: getLocalizedOrgOrAgentInfo('agentInfo'),
+          value: vm.profiles.agent,
+        },
+      ];
+    }
+
+
     vm.selectedTemplateProfile = vm.profiles.org;
     vm.agentNames = {
       displayName: $translate.instant('careChatTpl.agentDisplayName'),
       alias: $translate.instant('careChatTpl.agentAlias'),
     };
     vm.selectedAgentProfile = vm.agentNames.displayName;
-    vm.agentNamePreview = $translate.instant('careChatTpl.agentAliasPreview');
+    vm.agentNamePreview = $translate.instant('careChatTpl.agentNamePreview');
     vm.logoFile = '';
     vm.logoUploaded = false;
     vm.logoUrl = undefined;
@@ -102,7 +181,8 @@
     vm.isBusinessDaySelected = true;
     vm.promptTime = CTService.getPromptTime();
     vm.promptTimeOptions = CTService.getPromptTimeOptions();
-
+    vm.configuredVirtualAssistantServices = [];
+    vm.virtualAssistantSelectText = $translate.instant('careChatTpl.virtualAssistantSelectText');
     vm.InvalidCharacters = /[<>]/i; // add your invalid character to this regex
 
     /**
@@ -201,13 +281,14 @@
       var config = $stateParams.template.configuration;
       vm.selectedMediaType = config.mediaType;
       if (config.mediaType) {
-        if (config.mediaType === vm.mediaTypes.chat) {
+        if (config.mediaType === vm.mediaTypes.chat || config.mediaType === vm.mediaTypes.chatPlusCallback) {
           vm.selectedTemplateProfile = config.mediaSpecificConfiguration.useOrgProfile ?
             vm.profiles.org : vm.profiles.agent;
           vm.selectedAgentProfile = config.mediaSpecificConfiguration.useAgentRealName ?
             vm.agentNames.displayName : vm.agentNames.alias;
           vm.orgName = config.mediaSpecificConfiguration.displayText;
           vm.logoUrl = config.mediaSpecificConfiguration.orgLogoUrl;
+          setAgentProfile();
         }
         vm.timings.startTime.label = config.pages.offHours.schedule.timings.startTime;
         vm.timings.endTime.label = config.pages.offHours.schedule.timings.endTime;
@@ -221,6 +302,25 @@
       }
     }
     setDayPreview();
+
+    var defaultVirtualAssistantConfig = {
+      enabled: false,
+      config: {
+        id: '',
+        name: '',
+      },
+      welcomeMessage: $translate.instant('careChatTpl.virtualAssistantWelcomeMessage'),
+    };
+
+    vm.selectedVA = {
+      id: '',
+      name: '',
+    };
+
+    vm.vaSelectionCommit = function () {
+      vm.template.configuration.virtualAssistant.config.id = vm.selectedVA.id;
+      vm.template.configuration.virtualAssistant.config.name = vm.selectedVA.name;
+    };
 
     /* Templates */
     var defaultChatTemplate = {
@@ -245,6 +345,7 @@
             },
           },
         },
+        virtualAssistant: _.cloneDeep(defaultVirtualAssistantConfig),
         pages: {
           customerInformation: {
             enabled: true,
@@ -572,6 +673,7 @@
             },
           },
         },
+        virtualAssistant: _.cloneDeep(defaultVirtualAssistantConfig),
         pages: {
           customerInformationChat: {
             enabled: true,
@@ -865,6 +967,26 @@
       feedback: 'circle-star',
     };
 
+    vm.populateVirtualAssistantInfo = function () {
+      vm.selectedVA = vm.template.configuration.virtualAssistant.config;
+
+      // update modified VA Name from the configured VA info
+      if (vm.selectedVA.id && vm.hasConfiguredVirtualAssistantServices) {
+        var selectedVA = _.find(vm.configuredVirtualAssistantServices, {
+          id: vm.selectedVA.id,
+        });
+
+        if (selectedVA) {
+          vm.selectedVA.name = selectedVA.name;
+          vm.vaSelectionCommit();
+        }
+      }
+      if (!selectedVA) {
+        vm.template.configuration.virtualAssistant = _.cloneDeep(defaultVirtualAssistantConfig);
+      }
+      vm.selectedVA = vm.template.configuration.virtualAssistant.config;
+    };
+
     //Use the existing template fields when editing the template
     if ($stateParams.isEditFeature) {
       vm.template = $stateParams.template;
@@ -954,11 +1076,9 @@
       var modelText = $stateParams.isEditFeature ? {
         bodyMessage: $translate.instant('careChatTpl.ctEditBody'),
         trailingMessage: $translate.instant('careChatTpl.ctEditMessage'),
-        process: $translate.instant('careChatTpl.ctEditing'),
       } : {
         bodyMessage: $translate.instant('careChatTpl.ctCreationBody'),
         trailingMessage: $translate.instant('careChatTpl.ctCreationMessage'),
-        process: $translate.instant('careChatTpl.ctCreation'),
       };
 
       vm.cancelModalText = {
@@ -967,15 +1087,11 @@
           bodyMessage: modelText.bodyMessage,
           trailingMessage: modelText.trailingMessage,
         }),
-        continueButton: $translate.instant('careChatTpl.continueButton', {
-          confirmProcess: modelText.process,
-        }),
-        confirmButton: $translate.instant('careChatTpl.confirmButton', {
-          cancelProcess: modelText.process,
-        }),
+        continueButton: $translate.instant('careChatTpl.continueButton'),
+        confirmButton: $translate.instant('careChatTpl.confirmButton'),
       };
       $modal.open({
-        templateUrl: 'modules/sunlight/features/template/ctCancelModal.tpl.html',
+        template: require('modules/sunlight/features/template/ctCancelModal.tpl.html'),
         type: 'dialog',
         scope: $scope,
       });
@@ -1012,7 +1128,7 @@
     }
 
     function getCardConfig(name) {
-      return name === 'proactivePrompt' ? vm.template.configuration[name] : vm.template.configuration.pages[name];
+      return (name === 'proactivePrompt' || name === 'virtualAssistant') ? vm.template.configuration[name] : vm.template.configuration.pages[name];
     }
 
     function isValidField(fieldDisplayText, maxCharLimit) {
@@ -1062,9 +1178,9 @@
 
     function isStatusMessagesPageValid() {
       var chatStatusMessagesObj = vm.template.configuration.chatStatusMessages.messages;
-      return isValidField(chatStatusMessagesObj.waitingMessage.displayText, vm.lengthConstants.singleLineMaxCharLimit25)
-      && isValidField(chatStatusMessagesObj.leaveRoomMessage.displayText, vm.lengthConstants.singleLineMaxCharLimit25)
-      && isValidField(chatStatusMessagesObj.chattingMessage.displayText, vm.lengthConstants.singleLineMaxCharLimit25)
+      return isValidField(chatStatusMessagesObj.waitingMessage.displayText, vm.lengthConstants.singleLineMaxCharLimit50)
+      && isValidField(chatStatusMessagesObj.leaveRoomMessage.displayText, vm.lengthConstants.singleLineMaxCharLimit50)
+      && isValidField(chatStatusMessagesObj.chattingMessage.displayText, vm.lengthConstants.singleLineMaxCharLimit50)
       && vm.isInputValid(chatStatusMessagesObj.waitingMessage.displayText)
       && vm.isInputValid(chatStatusMessagesObj.leaveRoomMessage.displayText)
       && vm.isInputValid(chatStatusMessagesObj.chattingMessage.displayText);
@@ -1073,7 +1189,7 @@
     vm.isTypeDuplicate = false;
 
     var nonHeaderFieldNames = _.filter(_.keys(getCustomerInformationFormFields()),
-        function (name) { return (name !== 'welcomeHeader'); });
+      function (name) { return (name !== 'welcomeHeader'); });
 
     function getConfiguredTypes() {
       var typesConfigured = _.map(nonHeaderFieldNames, function (fieldName) {
@@ -1213,6 +1329,11 @@
         && vm.isDynamicFieldInputValid() && vm.isInputValid(vm.categoryOptionTag);
     }
 
+    function isVirtualAssistantPageValid() {
+      return isValidField(vm.template.configuration.virtualAssistant.welcomeMessage, vm.lengthConstants.singleLineMaxCharLimit50) &&
+        vm.template.configuration.virtualAssistant.config.id.length > 0;
+    }
+
     vm.isInputValid = function (input) {
       return !(vm.InvalidCharacters.test(input));
     };
@@ -1243,6 +1364,8 @@
           return isStatusMessagesPageValid();
         case 'overview':
           return true;
+        case 'virtualAssistant':
+          return isVirtualAssistantPageValid();
         default:
           return 'hidden';
       }
@@ -1262,10 +1385,16 @@
         return vm.states[last];
       }
       var nextPage = vm.template.configuration.pages[vm.states[next]];
-      if (vm.states[next] === 'proactivePrompt') {
-        nextPage = vm.template.configuration[vm.states[next]];
+      switch (vm.states[next]) {
+        case 'proactivePrompt' :
+        case 'virtualAssistant':
+          nextPage = vm.template.configuration[vm.states[next]];
+          break;
+        case 'profile':
+          getProfileList();
+          setAvaterInBrandingPage();
+          break;
       }
-
       if (nextPage && !nextPage.enabled) {
         return getAdjacentEnabledState(next, jump);
       } else {
@@ -1422,6 +1551,25 @@
       }
     }
 
+    vm.profileSettingInfo = function () {
+      if (vm.selectedTemplateProfile === vm.profiles.agent) {
+        return $translate.instant('careChatTpl.agentSettingInfo');
+      } else {
+        return $translate.instant('careChatTpl.orgSettingInfo');
+      }
+    };
+    vm.toggleBotAgentSelection = function (selectedToggle) {
+      vm.selectedAvater = selectedToggle;
+    };
+
+    vm.displaySelectedProfileAttribute = function () {
+      if (vm.isCVAEnabled) {
+        return vm.selectedTemplateProfile === vm.profiles.org ? 'org' : vm.selectedAvater;
+      } else {
+        return vm.selectedTemplateProfile === vm.profiles.org ? 'org' : 'agent';
+      }
+    };
+
     function submitChatTemplate() {
       DomainManagementService.syncDomainsWithCare();
       vm.creatingChatTemplate = true;
@@ -1513,11 +1661,6 @@
     }
 
     function init() {
-      FeatureToggleService.atlasCareProactiveChatTrialsGetStatus().then(function (result) {
-        vm.setStates(result);
-        vm.setOverviewCards(result);
-      });
-
       CTService.getLogoUrl().then(function (url) {
         vm.logoUrl = url;
       });
@@ -1525,6 +1668,27 @@
         vm.logoFile = 'data:image/png;base64,' + $window.btoa(String.fromCharCode.apply(null, new Uint8Array(data.data)));
         vm.logoUploaded = true;
       });
+      //Should invoke VA config only for chat and chat+callback templates
+      if (vm.isCareAssistantEnabled && vm.selectedMediaType !== vm.mediaTypes.callback) {
+        VirtualAssistantService.listConfigs().then(function (result) {
+          vm.configuredVirtualAssistantServices = result.items;
+          vm.hasConfiguredVirtualAssistantServices = (vm.configuredVirtualAssistantServices.length > 0);
+          //if the virtual assistant list has only one VA available. use it by default.
+          if (vm.configuredVirtualAssistantServices.length === 1 && !vm.isEditFeature) {
+            var data = vm.configuredVirtualAssistantServices[0];
+            vm.selectedVA = vm.selectedVA || {};
+            vm.selectedVA.id = data.id;
+            vm.selectedVA.name = data.name;
+
+            vm.vaSelectionCommit();
+          } else if (vm.isEditFeature) {
+            vm.populateVirtualAssistantInfo();
+          }
+        }).catch(function (error) {
+          vm.configuredVirtualAssistantServices = [];
+          Notification.errorWithTrackingId(error, $translate.instant('careChatTpl.getVirtualAssistantListError'));
+        });
+      }
     }
 
     function getCustomerInformationBtnClass() {
@@ -1577,6 +1741,31 @@
         return $translate.instant('careChatTpl.editTitle_' + vm.selectedMediaType);
       } else {
         return $translate.instant('careChatTpl.createTitle_' + vm.selectedMediaType);
+      }
+    }
+
+    function shouldShowOverviewPageTooltip(cardName) {
+      switch (vm.selectedMediaType) {
+        case 'chat': return ((cardName === 'virtualAssistant') && !vm.hasConfiguredVirtualAssistantServices);
+        case 'callback': return (cardName === 'customerInformation');
+        case 'chatPlusCallback': return ((cardName === 'customerInformationCallback') || ((cardName === 'virtualAssistant') && !vm.hasConfiguredVirtualAssistantServices));
+        default: return false;
+      }
+    }
+
+    // used in conjunction with shouldShowOverviewPageTooltip
+    function overviewPageTooltipText(cardName) {
+      switch (cardName) {
+        case 'customerInformation':
+        case 'customerInformationCallback': return $translate.instant('careChatTpl.customerInfoToggleTooltipMessage');
+        case 'virtualAssistant': return $translate.instant('careChatTpl.virtualAssistantToggleTooltipMessage');
+      }
+    }
+
+    function isOverviewCardConfigurable(cardName) {
+      switch (cardName) {
+        case 'virtualAssistant': return vm.hasConfiguredVirtualAssistantServices;
+        default: return true;
       }
     }
   }

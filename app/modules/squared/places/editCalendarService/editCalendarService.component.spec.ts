@@ -320,7 +320,7 @@ describe('EditCalendarService component:', () => {
         state.controller.calService = FUSION_CAL_ENTITLEMENT;
         state.controller.emailOfMailbox = email;
         spyOn(test.CsdmDataModelService, 'updateCloudberryPlace').and.returnValue(test.$q.resolve());
-        spyOn(test.USSService, 'updateUserProps').and.returnValue(test.$q.resolve({}));
+        spyOn(test.USSService, 'updateBulkUserProps').and.returnValue(test.$q.resolve({}));
         state.controller.save();
         test.$rootScope.$digest();
 
@@ -350,7 +350,7 @@ describe('EditCalendarService component:', () => {
         state.controller.calService = FUSION_GCAL_ENTITLEMENT;
         state.controller.emailOfMailbox = email;
         spyOn(test.CsdmDataModelService, 'updateCloudberryPlace').and.returnValue(test.$q.resolve());
-        spyOn(test.USSService, 'updateUserProps').and.returnValue(test.$q.resolve({}));
+        spyOn(test.USSService, 'updateBulkUserProps').and.returnValue(test.$q.resolve({}));
         state.controller.save();
         test.$rootScope.$digest();
 

@@ -6,7 +6,6 @@ export { MakeDefaultLocationComponent };
 
 export default angular
   .module('call.locations.make-default-location', [
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     notifications,
     locationsServiceModule,

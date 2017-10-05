@@ -57,6 +57,14 @@
     title: 'tabs.deviceTab',
     state: 'devices',
     link: '/devices',
+    feature: '!csdm-device-red',
+  }, {
+    tab: 'deviceTab',
+    icon: 'icon-devices',
+    title: 'tabs.deviceTab',
+    state: 'devices-redux',
+    link: '/devices-redux',
+    feature: 'csdm-device-red',
   }, {
     tab: 'reportTab',
     icon: 'icon-bars',
@@ -106,7 +114,7 @@
       }],
   }];
 
-  var tabsAtlas2017NameChange = [{
+  var tabsControlHub = [{
     tab: 'overviewTab',
     icon: 'icon-home-active',
     title: 'tabs.overviewTab',
@@ -129,7 +137,7 @@
     link: '/gss',
   }, {
     tab: 'customerTab',
-    icon: 'icon-user',
+    icon: 'icon-company-active',
     title: 'tabs.customerTab',
     state: 'partnercustomers',
     link: '/partner/customers',
@@ -168,6 +176,15 @@
     title: 'tabs.deviceTab',
     state: 'devices',
     link: '/devices',
+    feature: '!csdm-device-red',
+    iconClass: 'icon-outline',
+  }, {
+    tab: 'deviceTab',
+    icon: 'icon-endpoint-active',
+    title: 'tabs.deviceTab',
+    state: 'devices-redux',
+    link: '/devices-redux',
+    feature: 'csdm-device-red',
     iconClass: 'icon-outline',
   }, {
     tab: 'reportTab',
@@ -226,6 +243,6 @@
   module.exports = angular
     .module('core.tabconfig', [])
     .value('tabConfig', tabs)
-    .value('tabConfigAtlas2017NameChange', tabsAtlas2017NameChange)
+    .value('tabConfigControlHub', tabsControlHub)
     .name;
 }());

@@ -9,7 +9,7 @@ require('./_user-add.scss');
   function crOnboardUsers() {
     return {
       restrict: 'EA',
-      templateUrl: 'modules/core/users/userAdd/onboardUsers.tpl.html',
+      template: require('modules/core/users/userAdd/onboardUsers.tpl.html'),
     };
   }
 })();

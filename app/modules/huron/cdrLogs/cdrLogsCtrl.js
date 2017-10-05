@@ -31,7 +31,7 @@ require('./_cdr-logs.scss');
 
     formlyConfig.setType({
       name: 'custom-file',
-      templateUrl: 'modules/huron/cdrLogs/formly-field-custom-file.tpl.html',
+      template: require('modules/huron/cdrLogs/formly-field-custom-file.tpl.html'),
       wrapper: ['ciscoWrapper'],
       overwriteOk: true,
     });

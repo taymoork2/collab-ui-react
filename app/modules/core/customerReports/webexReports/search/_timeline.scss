@@ -1,6 +1,6 @@
 @import '~collab-ui/scss/settings/colors';
 
-#svg {
+.timelineSvg {
   font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
   .axis path,
   .axis line {
@@ -22,8 +22,7 @@
     text-anchor: end;
   }
 
-  .drawLine {
-    stroke: $gray-light-1;
+  .drawLine line {
     stroke-width: 1;
   }
 
@@ -43,5 +42,43 @@
       stroke-width: 1;
       font-size: 12px;
     }
+  }
+}
+
+.timelineTooltip {
+  position: absolute;
+  text-align: left;
+  padding: .5rem;
+  font: 12px sans-serif !important;
+  line-height: 28px;
+  background: $gray-dark-4;
+  border: 0px;
+  border-radius: 4px;
+  pointer-events: none;
+  z-index: 1500;
+  display: block;
+  color: $white;
+}
+
+.Tooltip-bottom {
+  &::before {
+    position: absolute;
+    left: 50%;
+    bottom: -12px;
+    content: "";
+    border: 6px solid;
+    border-color: $gray-dark-4 transparent transparent transparent;
+    margin-left: -3px;
+  }
+}
+
+.Tooltip-right {
+  &::before {
+    position: absolute;
+    top: 0.5rem;
+    right: -12px;
+    content: "";
+    border: 6px solid;
+    border-color: transparent transparent transparent $gray-dark-4;
   }
 }

@@ -11,7 +11,7 @@ source "${WX2_ADMIN_WEB_CLIENT_HOME}/bin/include/env-var-helpers"
 
 if ! is_ci; then
     echo "Warning: using limited-privilege Sauce creds."
-    inj_build_env_vars_for "dev"
+    inj_build_env_vars_for "dev" >/dev/null
 fi
 
 # notes:
@@ -23,7 +23,7 @@ export SAUCE_USERNAME="${SAUCE__USERNAME}"
 export SAUCE_ACCESS_KEY="${SAUCE__ACCESS_KEY}"
 
 PLATFORM=$(uname)
-SC_VERSION="4.4.3"
+SC_VERSION="${SAUCE__SC_VERSION}"
 WORK_DIR="${WX2_ADMIN_WEB_CLIENT_HOME}/.sauce"
 
 SC_DIR="${WORK_DIR}/sc"

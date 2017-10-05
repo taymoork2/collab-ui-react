@@ -1,12 +1,10 @@
+import serviceModule, { ClusterService } from './cluster-service';
 import { IConnector, ConnectorType, IConnectorAlarm, ConnectorAlarmSeverity, ConnectorState, ConnectorUpgradeState, ClusterTargetType, ICluster, IFMSOrganization, IConnectorProvisioning } from 'modules/hercules/hybrid-services.types';
-import { ClusterService } from './cluster-service';
 
 describe('ClusterService', () => {
-  beforeEach(angular.mock.module('Core'));
-  beforeEach(angular.mock.module('Squared'));
-  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module(serviceModule));
 
-  let $rootScope, $httpBackend, ClusterService: ClusterService, CsdmPoller, forceAction;
+  let $rootScope, $httpBackend: ng.IHttpBackendService, ClusterService: ClusterService, CsdmPoller, forceAction;
 
   beforeEach(angular.mock.module(function ($provide) {
     const Authinfo = {
@@ -15,6 +13,7 @@ describe('ClusterService', () => {
     $provide.value('Authinfo', Authinfo);
 
     const UrlConfig = {
+      getUssUrl: jasmine.createSpy('UrlConfig.getUssUrl').and.returnValue('http://ulv.no'),
       getHerculesUrlV2: jasmine.createSpy('UrlConfig.getHerculesUrlV2').and.returnValue('http://elg.no'),
     };
     $provide.value('UrlConfig', UrlConfig);
@@ -59,6 +58,7 @@ describe('ClusterService', () => {
           link: 'l',
         },
       ],
+      replacementValues: [],
     };
 
     it('should return an empty list when no alarms are present', () => {
@@ -251,6 +251,7 @@ describe('ClusterService', () => {
       const callback = jasmine.createSpy('callback');
       ClusterService.fetch().then(callback);
       $httpBackend.flush();
+      $rootScope.$apply();
 
       const clusterCache = callback.calls.mostRecent().args[0];
       const clusterId = response.clusters[0].id;
@@ -306,7 +307,6 @@ describe('ClusterService', () => {
       expect(managementCluster.id).toEqual(originalCluster.id);
       expect(managementCluster.name).toEqual(originalCluster.name);
       expect(managementCluster.provisioning).toEqual(originalCluster.provisioning);
-      expect(managementCluster.connectors[0]).toEqual(originalCluster.connectors[0]);
       expect(managementCluster.aggregates).toBeDefined();
       expect(managementCluster.aggregates.provisioning).toEqual(jasmine.objectContaining({
         connectorType: 'c_mgmt',
@@ -314,7 +314,7 @@ describe('ClusterService', () => {
       }));
     });
 
-    it('should merge all alarms and override the state with "has_warning_alarms" if there are warning alarms', () => {
+    it('should merge all alarms and override if there are warning alarms', () => {
       const response = org([
         cluster([
           connector('c_mgmt', {
@@ -340,36 +340,6 @@ describe('ClusterService', () => {
       const originalCluster = response.clusters[0];
       const managementCluster = clusterCache.c_mgmt[originalCluster.id];
       expect(managementCluster.aggregates.alarms.length).toBe(3);
-      expect(managementCluster.aggregates.state).toBe('has_warning_alarms');
-    });
-
-    it('should merge all alarms and override the state with "has_warning_alarms" if there are warning alarms', () => {
-      const response = org([
-        cluster([
-          connector('c_mgmt', {
-            alarms: 2,
-            alarmsSeverity: 'error',
-          }),
-          connector('c_mgmt', {
-            alarms: 1,
-            alarmsSeverity: 'critical',
-            hostname: 'host2.example.com',
-          }),
-        ]),
-      ]);
-      $httpBackend
-        .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
-        .respond(response);
-
-      const callback = jasmine.createSpy('callback');
-      ClusterService.fetch().then(callback);
-      $httpBackend.flush();
-
-      const clusterCache = callback.calls.mostRecent().args[0];
-      const originalCluster = response.clusters[0];
-      const managementCluster = clusterCache.c_mgmt[originalCluster.id];
-      expect(managementCluster.aggregates.alarms.length).toBe(3);
-      expect(managementCluster.aggregates.state).toBe('has_error_alarms');
     });
 
     it('should merge running states', () => {
@@ -545,7 +515,7 @@ describe('ClusterService', () => {
     it('should call error callback on failure', () => {
       $httpBackend
         .when('GET', 'http://elg.no/organizations/orgId?fields=@wide')
-        .respond(500, null);
+        .respond(500, undefined);
 
       const callback = jasmine.createSpy('callback');
       ClusterService.fetch().then(_.noop, callback);
@@ -841,6 +811,7 @@ describe('ClusterService', () => {
           description: '',
           solution: '',
           solutionReplacementValues: [],
+          replacementValues: [],
         };
       });
     } else if (_.isArray(alarms)) {

@@ -162,181 +162,57 @@ describe('Service: ServiceSetup', function () {
     });
   });
 
-  describe('createInternalNumberRange', function () {
-    var internalNumberRange = {
-      beginNumber: '5000',
-      endNumber: '5999',
-    };
-
-    beforeEach(function () {
-      $httpBackend.expectPOST(HuronConfig.getCmiUrl() + '/voice/customers/1/internalnumberranges').respond(201, {}, {
-        location: 'http://some/url/123456',
-      });
-    });
-
-    it('should create internal number ranges', function () {
-      expect(internalNumberRange.uuid).toBeUndefined();
-
-      ServiceSetup.createInternalNumberRange(internalNumberRange);
-      $httpBackend.flush();
-
-      expect(internalNumberRange.name).toBeDefined();
-      expect(internalNumberRange.description).toBeDefined();
-      expect(internalNumberRange.patternUsage).toBeDefined();
-      expect(internalNumberRange.uuid).toBeDefined();
-    });
-  });
-
-  describe('deleteInternalNumberRange', function () {
-    var internalNumberRange = {
-      uuid: '5550f6e1-c1f5-493f-b9fd-666480cb0adf',
-    };
-
-    beforeEach(function () {
-      $httpBackend.expectDELETE(HuronConfig.getCmiUrl() + '/voice/customers/1/internalnumberranges/' + internalNumberRange.uuid).respond(204);
-    });
-
-    it('should delete the internal number range', function () {
-      ServiceSetup.deleteInternalNumberRange(internalNumberRange);
-      $httpBackend.flush();
-    });
-  });
-
-  describe('verifyIsObject', function () {
-    var testArray = [{
-      name: 'test',
-    }];
-
-    var testObject = {
-      name: 'test',
-    };
-
-    it('should receive an array and return an object', function () {
-      $httpBackend.expectGET(HuronConfig.getCmiV2Url() + '/customers/1/features/restrictions').respond(testArray);
-      ServiceSetup.listCosRestrictions();
-      $httpBackend.flush();
-
-      expect(ServiceSetup.cosRestrictions).toEqual(jasmine.objectContaining(testObject));
-    });
-
-    it('should receive an object and return an object', function () {
-      $httpBackend.expectGET(HuronConfig.getCmiV2Url() + '/customers/1/features/restrictions').respond(testObject);
-      ServiceSetup.listCosRestrictions();
-      $httpBackend.flush();
-
-      expect(ServiceSetup.cosRestrictions).toEqual(jasmine.objectContaining(testObject));
-    });
-  });
-
-  describe('listInternalNumberRanges', function () {
-    var internalNumberRanges = [{
-      beginNumber: '5000',
-      endNumber: '5999',
-    }];
-
-    beforeEach(function () {
-      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/1/internalnumberranges').respond(internalNumberRanges);
-    });
-
-    it('should get internal number ranges', function () {
-      ServiceSetup.listInternalNumberRanges();
-      $httpBackend.flush();
-
-      expect(angular.equals(ServiceSetup.internalNumberRanges, internalNumberRanges)).toBe(true);
-    });
-  });
-
   describe('getDateFormats', function () {
-    beforeEach(function () {
-      $httpBackend.expectGET('modules/huron/serviceSetup/dateFormats.json').respond(getJSONFixture('huron/json/settings/dateFormat.json'));
-    });
-
     it('should get the Date formats', function () {
       ServiceSetup.getDateFormats().then(function (response) {
         expect(response).toBeDefined();
-        expect(response.length).toBe(3);
+        expect(response.length).toBe(9);
       });
-      $httpBackend.flush();
     });
   });
 
   describe('getTimeFormats', function () {
-    beforeEach(function () {
-      $httpBackend.expectGET('modules/huron/serviceSetup/timeFormat.json').respond(getJSONFixture('huron/json/settings/timeFormats.json'));
-    });
-
     it('should get the Time formats', function () {
       ServiceSetup.getTimeFormats().then(function (response) {
         expect(response).toBeDefined();
         expect(response.length).toBe(2);
       });
-      $httpBackend.flush();
     });
   });
 
   describe('getTimeZones', function () {
-    beforeEach(function () {
-      $httpBackend.expectGET('modules/huron/serviceSetup/jodaTimeZones.json').respond(getJSONFixture('huron/json/timeZones/timeZones.json'));
-    });
-
     it('should get time zones', function () {
       ServiceSetup.getTimeZones().then(function (response) {
         expect(response).toBeDefined();
-        expect(response.length).toBe(472);
+        expect(response.length).toBe(430);
       });
-      $httpBackend.flush();
     });
   });
 
   describe('getSiteLanguages', function () {
-    beforeEach(function () {
-      $httpBackend.expectGET('modules/huron/serviceSetup/siteLanguages.json').respond(getJSONFixture('huron/json/settings/languages.json'));
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
-    });
-
     it('should get site default languages & additional languages since userlocale2 feature toggle was enabled', function () {
       ServiceSetup.getSiteLanguages().then(function (response) {
         expect(response).toBeDefined();
-        expect(response.length).toBe(4);
+        expect(response.length).toBe(12);
         var filteredLanguage = _.find(response, { value: 'es_ES' });
         expect(filteredLanguage).toBeDefined();
         var translatedLanguages = ServiceSetup.getTranslatedSiteLanguages(response);
         expect(translatedLanguages).toBeDefined();
-        expect(translatedLanguages.length).toBe(4);
+        expect(translatedLanguages.length).toBe(12);
       });
-      $httpBackend.flush();
-    });
-
-    it('should get site default languages only since userlocale2 feature toggle was disabled', function () {
-      FeatureToggleService.supports = jasmine.createSpy().and.returnValue($q.resolve(false));
-      ServiceSetup.getSiteLanguages().then(function (response) {
-        expect(response).toBeDefined();
-        expect(response.length).toBe(2);
-        var filteredLanguage = _.find(response, { value: 'es_ES' });
-        expect(filteredLanguage).not.toBeDefined();
-        var translatedLanguages = ServiceSetup.getTranslatedSiteLanguages(response);
-        expect(translatedLanguages).toBeDefined();
-        expect(translatedLanguages.length).toBe(2);
-      });
-      $httpBackend.flush();
     });
   });
 
   describe('getSiteCountries', function () {
-    beforeEach(function () {
-      $httpBackend.expectGET('modules/huron/serviceSetup/siteCountries.json').respond(getJSONFixture('huron/json/settings/countries.json'));
-    });
-
     it('should get site countries', function () {
       FeatureToggleService.supports = jasmine.createSpy().and.returnValue($q.resolve(true));
       ServiceSetup.getSiteCountries().then(function (response) {
         expect(response).toBeDefined();
-        expect(response.length).toBe(2);
+        expect(response.length).toBe(16);
         var translatedCountries = ServiceSetup.getTranslatedSiteCountries(response);
         expect(translatedCountries).toBeDefined();
-        expect(translatedCountries.length).toBe(2);
+        expect(translatedCountries.length).toBe(16);
       });
-      $httpBackend.flush();
     });
   });
 

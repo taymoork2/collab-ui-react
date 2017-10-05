@@ -11,8 +11,7 @@
     <p ng-if="$ctrl.serviceId === 'squared-fusion-cal' || $ctrl.serviceId === 'squared-fusion-uc' || $ctrl.serviceId === 'spark-hybrid-impinterop'" class="sub-section__description">
       <span translate="hercules.deactivateServiceComponent.expresswayDataWiped"
             translate-values="{connectorName: $ctrl.localizedConnectorName}"></span>
-      <span ng-if="!$ctrl.nameChangeEnabled" translate="hercules.deactivateServiceComponent.noClustersWillBeDeregistered"></span>
-      <span ng-if="$ctrl.nameChangeEnabled" translate="hercules.deactivateServiceComponent.noClustersWillBeDeregisteredNew"></span>
+      <span translate="hercules.deactivateServiceComponent.noClustersWillBeDeregistered"></span>
     </p>
 
     <button

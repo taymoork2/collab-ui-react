@@ -8,23 +8,26 @@ import take = require('lodash/take');
 import some = require('lodash/some');
 import { HybridServicesI18NService } from 'modules/hercules/services/hybrid-services-i18n.service';
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
+import { USSService } from 'modules/hercules/services/uss.service';
+import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
+import { ResourceGroupService } from 'modules/hercules/services/resource-group.service';
 
 class UserStatusHistoryCtrl implements ng.IComponentController {
   public readonly numEntriesToShow = 20;
-  public serviceId: string;
+  public serviceId: HybridServiceId;
   public historyEntries: any[];
   private readonly userId;
   private readonly eventTypes = ['AddEntitlement', 'RemoveEntitlement', 'AddUserResourceGroup', 'RemoveUserResourceGroup', 'SetUserStatus'];
 
   /* @ngInject */
   constructor(
-    private USSService,
-    private $stateParams,
+    private $stateParams: ng.ui.IStateParamsService,
     private Authinfo,
-    private Notification: Notification,
-    private HybridServicesI18NService: HybridServicesI18NService,
     private HybridServicesClusterService: HybridServicesClusterService,
-    private ResourceGroupService,
+    private HybridServicesI18NService: HybridServicesI18NService,
+    private Notification: Notification,
+    private ResourceGroupService: ResourceGroupService,
+    private USSService: USSService,
   ) {
     this.userId = (this.$stateParams.currentUser && this.$stateParams.currentUser.id) || this.$stateParams.currentPlace.cisUuid;
     this.historyEntries = [];
@@ -92,7 +95,7 @@ class UserStatusHistoryCtrl implements ng.IComponentController {
 
 export class UserStatusHistoryComponent implements ng.IComponentOptions {
   public controller = UserStatusHistoryCtrl;
-  public templateUrl = 'modules/hercules/user-sidepanel/user-status-history/user-status-history.html';
+  public template = require('modules/hercules/user-sidepanel/user-status-history/user-status-history.html');
   public bindings = {
     serviceId: '<',
   };

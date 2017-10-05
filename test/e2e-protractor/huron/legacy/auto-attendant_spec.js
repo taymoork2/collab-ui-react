@@ -14,32 +14,37 @@
 
 describe('Huron Auto Attendant', function () {
   var remote = require('selenium-webdriver/remote');
+  var testAAName;
+  var testCardClick;
+  var testCardClose;
 
   beforeAll(function () {
 
+    deleteUtils.testAAName = deleteUtils.testAAName + "_" + Date.now();
+
+    testAAName = element(by.css('p[title="' + deleteUtils.testAAName + '"]'));
+    testCardClick = testAAName.element(by.xpath('ancestor::article')).element(by.css('.card-body'));
+    testCardClose = testAAName.element(by.xpath('ancestor::article')).element(by.css('.header-with-right-icon')).element(by.css('.card-icon-div')).element(by.css('.close'));
+
     browser.setFileDetector(new remote.FileDetector());
 
-    login.login('aa-admin', '#/services/call-features');
-
+    login.login('aa-admin', autoattendant.callFeature);
+ 
   }, 120000);
+  
+  afterAll(function () {
+    var flow = protractor.promise.controlFlow();
+    return flow.execute(deleteUtils.findAndDeleteTestAA);
+  });
 
   describe('Create and Delete AA', function () {
 
     // TEST CASES
-    it('should navigate to AA landing page', function () {
-
-      // First ensure the test AA is deleted (in case last test run failed for example)
-      var flow = protractor.promise.controlFlow();
-      var result = flow.execute(deleteUtils.findAndDeleteTestAA);
-
-      // and navigate to the landing page
-
-    }, 120000);
-
-    it('should create a new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+    it('should navigate to AA landing page and create AA', function () {
 
       // click new feature
       utils.click(autoattendant.newFeatureButton);
+      browser.driver.sleep(1000);
 
       // select AA
       utils.wait(autoattendant.featureTypeAA, 20000);
@@ -139,6 +144,7 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.sayMessageInput);
       utils.sendKeys(autoattendant.sayMessageInput, "Welcome to the AA");
       utils.click(autoattendant.sayMessageDynamicButton)
+      utils.wait(autoattendant.dynamicVariable, 320000);
       utils.click(autoattendant.dynamicVariable);
       utils.wait(autoattendant.dynamicVariable, 120000);
       utils.click(autoattendant.variable);
@@ -179,6 +185,7 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.phonesayMessageInput);
       utils.sendKeys(autoattendant.phonesayMessageInput, "Press a key at the menu");
       utils.click(autoattendant.phoneMenuAddDynamicTextButton);
+      utils.wait(autoattendant.dynamicVariable, 120000);
       utils.click(autoattendant.dynamicVariable);
       utils.wait(autoattendant.dynamicVariable, 120000);
       utils.click(autoattendant.variable);
@@ -459,6 +466,7 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.dialByMessageInput);
       utils.sendKeys(autoattendant.dialByMessageInput, "Enter the Extension");
       utils.click(autoattendant.dialByExtensionDynamicButton);
+      utils.wait(autoattendant.dynamicVariable, 120000);
       utils.click(autoattendant.dynamicVariable);
       utils.wait(autoattendant.dynamicVariable, 120000);
       utils.click(autoattendant.variable);
@@ -534,6 +542,7 @@ describe('Huron Auto Attendant', function () {
         utils.click(autoattendant.callerInputSayMessageOption);
         //utils.sendKeys(autoattendant.callerMessageInput, "Extension");
         utils.click(autoattendant.callerInputDynamicButton);
+        utils.wait(autoattendant.dynamicVariable, 120000);
         utils.click(autoattendant.dynamicVariable);
         utils.wait(autoattendant.dynamicVariable, 120000);
         utils.click(autoattendant.variable);
@@ -721,19 +730,30 @@ describe('Huron Auto Attendant', function () {
 
       // REST API
       utils.click(autoattendant.configureApiURL);
+      utils.wait(autoattendant.configureApiURL, 20000);
       utils.sendKeys(autoattendant.configureApiURL, "This is test URL");
 
       utils.click(autoattendant.restResponseDataBlock);
-      utils.sendKeys(autoattendant.restResponseDataBlock, "Test Response Block");
+      utils.sendKeys(autoattendant.restResponseDataBlock, "Test Response Block 1");
 
       utils.click(autoattendant.sessionVar);
       utils.click(autoattendant.newSessionVar);
 
-      utils.sendKeys(autoattendant.newVariableName, "123");
+      utils.sendKeys(autoattendant.newVariableName, "Test Variable 1");
+      utils.click(autoattendant.addVariableToSet);
+
+
+      utils.click(autoattendant.restResponseDataBlock1);
+      
+      utils.sendKeys(autoattendant.restResponseDataBlock1, "Test Response Block2");
+      utils.click(autoattendant.sessionVar1);
+      utils.click(autoattendant.newSessionVar1);
+
+      utils.sendKeys(autoattendant.newVariableName1, "Test Variable 2");
 
       utils.click(autoattendant.addVariableToSet);
 
-      utils.expectCount(autoattendant.sessionVarAll, 2);
+      utils.expectCount(autoattendant.sessionVarAll, 3);
 
       utils.expectIsDisabled(autoattendant.saveBtn);
 
@@ -745,6 +765,10 @@ describe('Huron Auto Attendant', function () {
 
       utils.expectIsDisplayed(autoattendant.restApiUrlLabel);
       utils.waitForText(autoattendant.restApiUrlLabel, "This is test URL");
+      utils.expectIsDisplayed(autoattendant.restApiVariableLabel1);
+      utils.waitForText(autoattendant.restApiVariableLabel1, "Test Variable 1");
+      utils.expectIsDisplayed(autoattendant.restApiVariableLabel2);
+      utils.waitForText(autoattendant.restApiVariableLabel2, "Test Variable 2");
 
     });
 
@@ -756,12 +780,11 @@ describe('Huron Auto Attendant', function () {
     }, 120000);
 
     it('should find new AA named "' + deleteUtils.testAAName + '" on the landing page', function () {
-      utils.wait(autoattendant.testCardName, 20000);
+      utils.wait(testAAName);
 
-      utils.expectIsEnabled(autoattendant.testCardName);
+      utils.expectIsEnabled(testAAName);
 
-      utils.click(autoattendant.testCardClick);
-
+      utils.click(testCardClick);
       utils.wait(autoattendant.addAANumbers, 20000);
 
       utils.expectIsDisplayed(autoattendant.addAANumbers);
@@ -785,11 +808,8 @@ describe('Huron Auto Attendant', function () {
     }, 120000);
 
     it('should delete new AA named "' + deleteUtils.testAAName + '" on the landing page', function () {
-
       // click delete X on the AA card for e2e test AA
-      utils.expectIsEnabled(autoattendant.testCardName);
-
-      utils.click(autoattendant.testCardDelete);
+      utils.click(testCardClose);
 
       // confirm dialog with e2e AA test name in it is there, then agree to delete
       utils.expectText(autoattendant.deleteModalConfirmText, 'Are you sure you want to delete the ' + deleteUtils.testAAName + ' Auto Attendant?').then(function () {
@@ -798,7 +818,6 @@ describe('Huron Auto Attendant', function () {
       });
 
     }, 120000);
-
   });
 
 });

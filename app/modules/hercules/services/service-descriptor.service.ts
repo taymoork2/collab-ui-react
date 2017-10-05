@@ -1,10 +1,12 @@
 import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
+import { ITrunkStatus } from 'modules/hercules/services/enterprise-private-trunk-service';
 
 interface IServiceStatus {
   alarmsUrl: string;
   id: HybridServiceId;
-  state: string; //  "unknown"
+  state: string; //  'operational' | ?
   url: string;
+  resources?: ITrunkStatus[]; // ok?
 }
 
 interface IService {
@@ -28,7 +30,7 @@ export class ServiceDescriptorService {
 
   public getServiceStatus(serviceId: HybridServiceId, orgId?: string): ng.IPromise<IServiceStatus> {
     return this.$http.get<IServiceStatus>(`${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId || this.Authinfo.getOrgId()}/services/${serviceId}/status`)
-      .then(response => response.data as IServiceStatus);
+      .then(response => response.data);
   }
 
   public getServices(orgId?: string): ng.IPromise<IService[]> {

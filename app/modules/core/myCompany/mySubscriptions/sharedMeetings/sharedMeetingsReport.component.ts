@@ -10,6 +10,8 @@ import {
   ISharedMeetingTimeFilter,
   ISharedMeetingData,
   ISharedMeetingCSV,
+  IMaxConcurrentDataCSV,
+  IMonthlyMaxConcurrentData,
 } from './sharedMeetingsReport.interfaces';
 
 class SharedMeetingsReportCtrl {
@@ -17,7 +19,7 @@ class SharedMeetingsReportCtrl {
   private readonly THREE_MONTHS: number = 2;
   private readonly SIX_MONTHS: number = 5;
   private readonly DATE_FORMAT: string = 'MMM \'YY';
-
+  private maxConcurrentData: IMonthlyMaxConcurrentData;
   /* @ngInject */
   constructor(
     private $timeout: ng.ITimeoutService,
@@ -40,7 +42,9 @@ class SharedMeetingsReportCtrl {
   // CSV Download
   public csvDownload: boolean = false;
   public csvHref?: string;
+  public csvHref2?: string;
   public csvFilename?: string;
+  public csvFilename2?: string;
   public csvError: boolean = false;
 
   // Timefilter controls
@@ -84,13 +88,15 @@ class SharedMeetingsReportCtrl {
   }
 
   public isDownloadReady(): boolean {
-    return (this.csvDownload || !_.isUndefined(this.csvHref)) && !this.csvError;
+    return (this.csvDownload || this.csvHref !== undefined) && !this.csvError;
   }
 
   public updateReport(): void {
     this.csvDownload = false;
     this.csvHref = undefined;
+    this.csvHref2 = undefined;
     this.csvFilename = undefined;
+    this.csvFilename2 = undefined;
     this.csvError = false;
     this.showReport();
   }
@@ -105,7 +111,7 @@ class SharedMeetingsReportCtrl {
       .then((response: any): void => {
         const data: any = _.get(response, 'data', undefined);
         const sharedMeetingData: ISharedMeetingData[] = this.compileSharedMeetingData(data);
-
+        this.maxConcurrentData = data;
         this.state = this.ReportConstants.EMPTY;
         if (sharedMeetingData.length > 0) {
           this.chart = this.SharedMeetingsReportService.setChartData(sharedMeetingData, this.chart, this.timeSelected);
@@ -184,10 +190,25 @@ class SharedMeetingsReportCtrl {
 
     this.chart = this.SharedMeetingsReportService.setChartData(dummyData, this.chart, this.timeSelected);
   }
+  private dateFix(dateString: string , optionalMins: number = 0): string {
+    return moment(dateString, 'YYYYMM').add(optionalMins, 'm').format('YYYY/MM/DD HH:mm');
+  }
 
+  private makeCSV(csvLink1: string | undefined, csvLink2: string | undefined): void {
+    if (csvLink1 && csvLink2) {
+      this.csvHref = csvLink1;
+      this.csvHref2 = csvLink2;
+      this.csvFilename = this.SharedMeetingsReportService.FILENAMES[0];
+      this.csvFilename2 = this.SharedMeetingsReportService.FILENAMES[1];
+    } else {
+      // IE download option since IE won't download the created url
+      this.csvDownload = true;
+    }
+  }
   private getDetailedReport(): void {
     this.SharedMeetingsReportService.getDetailedReportData(this.siteUrl, this.getMonth(0), this.getMonth(this.timeSelected.value))
-      .then((response: any): void => {
+      .then((response): void => {
+        const siteName: string = response.data.SiteName;
         const data: ISharedMeetingCSV[] = _.get(response, 'data.ConcurrentMeetingsDetail', []);
         if (data.length > 0) {
           data.unshift({
@@ -195,27 +216,58 @@ class SharedMeetingsReportCtrl {
             StartTime: this.$translate.instant('sharedMeetingReports.csvStartTime'),
             EndTime: this.$translate.instant('sharedMeetingReports.csvEndTime'),
             ConfId: this.$translate.instant('sharedMeetingReports.csvConfId'),
-            Duration: this.$translate.instant('sharedMeetingReports.csvDuration'),
-            MeetingType: this.$translate.instant('sharedMeetingReports.csvMeetingType'),
-            HostId: this.$translate.instant('sharedMeetingReports.csvHostId'),
-            HostName: this.$translate.instant('sharedMeetingReports.csvHostName'),
+            HostName: this.$translate.instant('sharedMeetingReports.csvUserName'),
+            SiteName: this.$translate.instant('sharedMeetingReports.csvSiteName'),
           });
 
-          const csvData: string = ($ as any).csv.fromObjects(data, { headers: false });
-          const url: string | undefined = this.SharedMeetingsReportService.getDownloadCSV(csvData);
-          if (url) {
-            this.csvHref = url;
-            this.csvFilename = this.SharedMeetingsReportService.FILENAME;
-          } else {
-            // IE download option since IE won't download the created url
-            this.csvDownload = true;
+          const reformattedData: any[] = [];
+          reformattedData.push(data[0]);
+          data.shift();
+          _.forEach(data, (meeting) => {
+            reformattedData.push({
+              MeetingTopic: meeting.MeetingTopic,
+              StartTime: meeting.StartTime,
+              EndTime: meeting.EndTime,
+              ConfId:  meeting.ConfId,
+              HostName: meeting.HostName,
+              SiteName: siteName,
+            });
+          });
+          const concurrentData: IMaxConcurrentDataCSV[] = [{
+            SiteName : reformattedData[0].SiteName,
+            Month : this.$translate.instant('sharedMeetingReports.csvMonth'),
+            From : this.$translate.instant('sharedMeetingReports.csvFrom'),
+            To: this.$translate.instant('sharedMeetingReports.csvTo'),
+            ConcurrentMeetingsPeak: this.$translate.instant('sharedMeetingReports.csvConcurrentMeetingsPeak'),
+          }];
+
+          if (this.maxConcurrentData) {
+            _.forEach(this.maxConcurrentData.MaxConcurrentMeetings, (meeting) => {
+              const startMonthYear = moment(meeting.TimeBucketStart, 'YYYYMM').format('MMM-YY');
+              concurrentData.push({
+                SiteName: siteName,
+                Month: startMonthYear,
+                From: this.dateFix(meeting.TimeBucketStart),
+                To: this.dateFix(meeting.TimeBucketStart , this.maxConcurrentData.BucketLengthInMins),
+                ConcurrentMeetingsPeak: String(meeting.NumOfMtgs),
+              });
+            });
           }
+
+          const csvData: string = ($ as any).csv.fromObjects(reformattedData, { headers: false });
+          const csvMaxConcurrentData = ($ as any).csv.fromObjects(concurrentData, { headers: false });
+
+          this.makeCSV(
+              this.SharedMeetingsReportService.getDownloadCSV(csvData),
+              this.SharedMeetingsReportService.getDownloadCSV(csvMaxConcurrentData),
+            );
+
         } else {
           this.Notification.error('sharedMeetingReports.errorLoadingSharedMeetingDetails');
           this.csvError = true;
         }
       })
-      .catch((error: any): void => {
+      .catch((error): void => {
         this.Notification.errorWithTrackingId(error, 'sharedMeetingReports.errorLoadingSharedMeetingDetails');
         this.csvError = true;
       });
@@ -227,7 +279,7 @@ class SharedMeetingsReportCtrl {
 }
 
 export class SharedMeetingComponent implements ng.IComponentOptions {
-  public templateUrl = 'modules/core/myCompany/mySubscriptions/sharedMeetings/sharedMeetingsReport.tpl.html';
+  public template = require('modules/core/myCompany/mySubscriptions/sharedMeetings/sharedMeetingsReport.tpl.html');
   public controller = SharedMeetingsReportCtrl;
   public bindings = {
     siteUrl: '@',

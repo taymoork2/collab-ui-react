@@ -34,8 +34,8 @@ class GmImportTdCtrl implements ng.IComponentController {
   ) {
     this.gridData = [];
     this.isHiddenOptions = [
-      { value: 'true', label: this.$translate.instant('gemini.hidden') },
-      { value: 'false', label: this.$translate.instant('gemini.display') },
+      { value: true, label: this.$translate.instant('gemini.hidden') },
+      { value: false, label: this.$translate.instant('gemini.display') },
     ];
     this.currentTD = this.gemService.getStorage('currentTelephonyDomain');
     this.selectPlaceholder = this.$translate.instant('gemini.tds.selectTdPlaceholder');
@@ -76,11 +76,10 @@ class GmImportTdCtrl implements ng.IComponentController {
     };
 
     this.TelephonyDomainService.getRegionDomains(data)
-      .then((res) => {
+      .then((res: any[]) => {
         this.loadingContent = !this.loadingContent;
-        const optionsSource: any = _.get(res, 'content.data.body');
 
-        this.options = _.map(optionsSource, (item: any) => {
+        this.options = _.map(res, (item: any) => {
           return item.telephonyDomainId && { value: item.ccaDomainId, label: item.domainName };
         });
       })
@@ -148,7 +147,7 @@ class GmImportTdCtrl implements ng.IComponentController {
       delete this.selectedGridLines[row.entity.dnisId];
       return;
     }
-    row.entity.isHidden = _.isEqual(row.entity._isHidden, 'Display') ? 'false' : 'true';
+    row.entity.isHidden = _.isEqual(row.entity._isHidden, 'Hidden');
     this.selectedGridLines[row.entity.dnisId] = row.entity;
   }
 
@@ -156,20 +155,19 @@ class GmImportTdCtrl implements ng.IComponentController {
     const ccaDomainId = this.selected.value;
     const DATA_STATUS = this.gemService.getNumberStatus();
     this.TelephonyDomainService.getNumbers(this.currentTD.customerId, ccaDomainId)
-      .then((res) => {
+      .then((res: any[]) => {
         this.loadingNumbers = false;
-        const data = _.get(res, 'content.data.body', []);
-        const newData = _.filter(data, (item: any) => { return _.toNumber(item.compareToSuperadminPhoneNumberStatus) === DATA_STATUS.NO_CHANGE; });
+        const newData = _.filter(res, (item: any) => { return _.toNumber(item.compareToSuperadminPhoneNumberStatus) === DATA_STATUS.NO_CHANGE; });
         this.gridData = _.map(newData, (item: any) => {
           return _.assignIn({}, item, {
             country: this.countryId2NameMapping[item.countryId],
             callType: item.phoneType,
-            _isHidden: item.isHidden === 'false' ? 'Display' : 'Hidden',
+            _isHidden: item.isHidden ? 'Hidden' : 'Display',
           });
         });
 
-        if (data.length - newData.length > 0) {
-          this.Notification.warning('gemini.tds.numbers.import.resultMsg.importTD', { number: data.length - newData.length }, 'gemini.tds.numbers.import.resultTitle.importComplete');
+        if (res.length - newData.length > 0) {
+          this.Notification.warning('gemini.tds.numbers.import.resultMsg.importTD', { number: res.length - newData.length }, 'gemini.tds.numbers.import.resultTitle.importComplete');
         }
         this.setGridOption();
       });
@@ -185,5 +183,5 @@ class GmImportTdCtrl implements ng.IComponentController {
 export class GmImportTdComponent implements ng.IComponentOptions {
   public controller = GmImportTdCtrl;
   public bindings = { dismiss: '&', close: '&' };
-  public templateUrl = 'modules/gemini/telephonyDomain/details/gmImportTd.html';
+  public template = require('modules/gemini/telephonyDomain/details/gmImportTd.html');
 }

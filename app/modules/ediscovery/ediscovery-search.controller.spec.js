@@ -9,15 +9,15 @@ describe('Controller: EdiscoverySearchController', function () {
   function initDependencySpies() {
     spyOn(this.Analytics, 'trackEvent').and.returnValue(this.$q.resolve());
     spyOn(this.Analytics, 'trackEdiscoverySteps').and.returnValue(this.$q.resolve());
+    spyOn(this.Authinfo, 'isEnterpriseCustomer').and.returnValue(false);
     spyOn(this.FeatureToggleService, 'atlasEdiscoveryGetStatus').and.returnValue(this.$q.resolve(false));
-    spyOn(this.FeatureToggleService, 'atlasEdiscoveryIPSettingGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(false));
     spyOn(this.ProPackService, 'hasProPackEnabled').and.returnValue(this.$q.resolve(false));
   }
 
   function init() {
     this.initModules(ediscoveryModule);
-    this.injectDependencies('$controller', '$q', '$scope', '$translate', 'Analytics', 'EdiscoveryNotificationService', 'EdiscoveryService', 'FeatureToggleService', 'Notification', 'ProPackService'
+    this.injectDependencies('$controller', '$q', '$scope', '$translate', 'Analytics', 'Authinfo', 'EdiscoveryNotificationService', 'EdiscoveryService', 'FeatureToggleService', 'Notification', 'ProPackService'
     );
     initDependencySpies.apply(this);
   }
@@ -27,6 +27,7 @@ describe('Controller: EdiscoverySearchController', function () {
       $scope: this.$scope,
       $translate: this.$translate,
       Analytics: this.Analytics,
+      Authinfo: this.Authinfo,
       EdiscoveryService: this.EdiscoveryService,
       EdiscoveryNotificationService: this.EdiscoveryNotificationService,
       FeatureToggleService: this.FeatureToggleService,
@@ -141,6 +142,11 @@ describe('Controller: EdiscoverySearchController', function () {
   describe('Create report with error', function () {
     beforeEach(function () {
       promise = this.$q.reject({
+        config: {
+          headers: {
+            TrackingID: 12345678,
+          },
+        },
         data: {
           errorCode: 420000,
           message: 'Invalid Input',
@@ -156,7 +162,7 @@ describe('Controller: EdiscoverySearchController', function () {
     });
 
     it('received from atlas backend', function () {
-      var errorNotification = spyOn(this.Notification, 'error');
+      var errorNotification = spyOn(this.Notification, 'errorWithTrackingId');
       this.ediscoverySearchController.createReport();
       this.$scope.$apply();
       expect(errorNotification).toHaveBeenCalled();
@@ -176,7 +182,7 @@ describe('Controller: EdiscoverySearchController', function () {
       spyOn(this.EdiscoveryService, 'generateReport').and.returnValue(this.$q.reject());
       spyOn(this.EdiscoveryService, 'patchReport').and.returnValue(this.$q.resolve({}));
       spyOn(this.EdiscoveryService, 'getReport').and.returnValue(promise);
-      spyOn(this.Notification, 'error').and.callFake(function () {
+      spyOn(this.Notification, 'errorWithTrackingId').and.callFake(function () {
         return true;
       });
     });
@@ -192,7 +198,7 @@ describe('Controller: EdiscoverySearchController', function () {
 
       expect(this.EdiscoveryService.generateReport.calls.count()).toBe(1);
       expect(this.EdiscoveryService.createReport).toHaveBeenCalled();
-      expect(this.Notification.error.calls.count()).toBe(1);
+      expect(this.Notification.errorWithTrackingId).toHaveBeenCalled();
       expect(this.EdiscoveryService.patchReport.calls.count()).toBe(1);
     });
   });
@@ -307,6 +313,20 @@ describe('Controller: EdiscoverySearchController', function () {
       expect(this.ediscoverySearchController.report.id).toEqual('4567');
       expect(this.ediscoverySearchController.report.displayName).toEqual('whatever');
       expect(this.ediscoverySearchController.currentReportId).toBe('4567');
+    });
+  });
+
+  describe('helper function:', function () {
+    beforeEach(function () {
+      initController.apply(this);
+    });
+
+    it('splitWords should return an array with no empty strings and no white spaces', function () {
+      var words = 'hello,   foo,   abc   ,';
+      var splitWordsResponse = ['hello', 'foo', 'abc'];
+
+      var splitWords = this.ediscoverySearchController.splitWords(words);
+      expect(splitWords).toEqual(splitWordsResponse);
     });
   });
 });

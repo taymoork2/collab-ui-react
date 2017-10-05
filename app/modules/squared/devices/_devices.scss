@@ -8,6 +8,10 @@
   @extend %grid-subheader;
   @extend %page-background-white;
 
+  .grid-contents {
+    height: inherit;
+  }
+
   .ui-grid-cell:first-child,
   .ui-grid-header-cell:first-child {
     border-right: 0px;
@@ -24,6 +28,52 @@
   .export-button:hover {
     cursor: pointer;
     color: $link-color;
+  }
+}
+
+.remote-support-modal-success,
+.remote-support-modal-warning {
+  padding: 10px 20px;
+  margin: 0 30px;
+  color: white;
+  display: flex;
+  align-items: center;
+
+  i {
+    padding-right: 15px;
+    font-size: 1.5rem;
+  }
+}
+
+.remote-support-modal-success {
+  background-color: $color-cta-base;
+}
+
+.remote-support-modal-warning {
+  background-color: $color-attention-base;
+}
+
+.remote-support-modal-body {
+  .remote-support-key {
+    padding: 18px 12px;
+    display: flex;
+    flex-direction: column;
+
+    .remote-support-buttons {
+      padding-top: 12px;
+      display: flex;
+      justify-content: center;
+
+      a, div {
+        display: flex;
+        align-items: center;
+        padding: 0 18px;
+
+        i {
+          padding: 0 6px 3px 0;
+        }
+      }
+    }
   }
 }
 
@@ -235,28 +285,6 @@ sq-places-page-overview,
   margin-left: 10px;
 }
 
-.modal-success,
-.modal-warning {
-  padding: 10px 20px;
-  margin: 0 30px;
-  color: white;
-  display: flex;
-  align-items: center;
-
-  i {
-    padding-right: 15px;
-    font-size: 1.5rem;
-  }
-}
-
-.modal-success {
-  background-color: $color-cta-base;
-}
-
-.modal-warning {
-  background-color: $color-attention-base;
-}
-
 .tag-container {
   padding-top: 10px;
   display: flex;
@@ -330,6 +358,14 @@ sq-places-page-overview,
   .errorBox,
   .noSparkCallWarning {
     max-width: 580px;
+  }
+
+  .scrollSpace {
+    height: 130px;
+
+    @media print {
+      height: 0;
+    }
   }
 
   .typeChoice {
@@ -607,8 +643,11 @@ sq-places-page-overview,
   }
 }
 
-.status-indicator {
-  padding-right: 8px;
+.sq-devices-page-overview,
+.sq-devices-page {
+  .status-indicator {
+    padding-right: 8px;
+  }
 }
 
 .device-status-red {

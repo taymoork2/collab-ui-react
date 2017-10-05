@@ -40,14 +40,14 @@ class DocumentationSectionCtrl implements IDocumentationSectionCtrl, ng.ICompone
     }
 
     if (this.serviceId === 'ept') {
-      this.helpLink = 'http://www.cisco.com/go/private-trunking';
+      this.helpLink = 'https://www.cisco.com/go/spark-calling-branch-office';
     }
   }
 }
 
 class DocumentationSectionComponent implements ng.IComponentOptions {
   public controller = DocumentationSectionCtrl;
-  public templateUrl = 'modules/hercules/service-settings/documentation-section/documentation-section.html';
+  public template = require('modules/hercules/service-settings/documentation-section/documentation-section.html');
   public bindings = {
     serviceId: '<',
   };

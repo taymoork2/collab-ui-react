@@ -98,6 +98,9 @@
         ec: {
           entitled: false,
         },
+        imp: {
+          entitled: false,
+        },
         voicemail: {
           entitled: false,
         },
@@ -114,7 +117,10 @@
         hybridServicesCard.entitled = true;
         hybridServicesCard.uc.entitled = true;
         hybridServicesCard.ec.entitled = LicenseService.userIsEntitledTo(user, 'squared-fusion-ec');
-        hybridServicesCard.voicemail.entitled = LicenseService.userIsEntitledTo(user, 'squared-fusion-ec');
+      }
+      if (LicenseService.userIsEntitledTo(user, 'spark-hybrid-impinterop')) {
+        hybridServicesCard.entitled = true;
+        hybridServicesCard.imp.entitled = true;
       }
       return hybridServicesCard;
     }

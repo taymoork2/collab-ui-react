@@ -19,7 +19,8 @@ describe('OverviewHybridServicesCard', function () {
     spyOn(this.Authinfo, 'isEntitled').and.returnValue(true);
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
-    spyOn(this.CloudConnectorService, 'getService').and.returnValue(this.$q.resolve({ serviceId: 'squared-fusion-gcal', setup: false, statusCss: 'default' }));
+    spyOn(this.FeatureToggleService, 'atlasHybridImpGetStatus').and.returnValue(this.$q.resolve(false));
+    spyOn(this.CloudConnectorService, 'getService').and.returnValue(this.$q.resolve({ serviceId: 'squared-fusion-gcal', setup: false, cssClass: 'default' }));
   });
 
   it('should not show card when no services are set up', function () {
@@ -75,12 +76,23 @@ describe('OverviewHybridServicesCard', function () {
 
   it('should show card when google calendar is setup', function () {
     this.HybridServicesClusterService.getAll.and.returnValue(this.$q.resolve(_.cloneDeep(this.jsonData)));
-    this.CloudConnectorService.getService.and.returnValue(this.$q.resolve({ serviceId: 'squared-fusion-gcal', setup: true, statusCss: 'success' }));
+    this.CloudConnectorService.getService.and.returnValue(this.$q.resolve({ serviceId: 'squared-fusion-gcal', setup: true, cssClass: 'success' }));
     var card = this.OverviewHybridServicesCard.createCard();
     this.$rootScope.$apply();
 
     expect(card.enabled).toBe(true);
     expect(card.serviceList[0].setup).toBe(true);
+  });
+
+  it('should show the card even when the Google Calendar lookup fails, if at least one other service is set up in FMS', function () {
+    this.HybridServicesClusterService.getAll.and.returnValue(this.$q.resolve(_.cloneDeep(this.jsonData)));
+    this.CloudConnectorService.getService.and.returnValue(this.$q.reject({}));
+    spyOn(this.HybridServicesClusterService, 'getStatusForService').and.returnValue({
+      setup: true,
+    });
+    var card = this.OverviewHybridServicesCard.createCard();
+    this.$rootScope.$apply();
+    expect(card.enabled).toBe(true);
   });
 
   // 2017 name update

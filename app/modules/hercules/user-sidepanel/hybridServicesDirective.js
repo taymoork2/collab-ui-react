@@ -101,9 +101,9 @@
     };
 
     if (extensionEntitlements.every(
-        function (extensionEntitlement) {
-          return !Authinfo.isEntitled(extensionEntitlement);
-        })) {
+      function (extensionEntitlement) {
+        return !Authinfo.isEntitled(extensionEntitlement);
+      })) {
       return;
     }
 
@@ -114,7 +114,6 @@
     };
 
     var enforceLicenseCheck = vm.isUser && _.size(Authinfo.getLicenses()) > 0;
-    checkEntitlements(enforceLicenseCheck);
 
     function checkEntitlements(enforceLicenseCheck) {
       if (enforceLicenseCheck && !hasCaaSLicense()) {
@@ -140,7 +139,7 @@
           var calServiceExchange = getExtension('squared-fusion-cal') || {};
           var calServiceGoogle = getExtension('squared-fusion-gcal');
           if (calServiceGoogle) {
-            CloudConnectorService.getService()
+            CloudConnectorService.getService('squared-fusion-gcal')
               .then(function (service) {
                 var isSetup = service.setup;
                 calServiceGoogle.isSetup = isSetup;
@@ -155,7 +154,7 @@
                 }
               })
               .catch(function (error) {
-                Notification.errorWithTrackingId(error, 'hercules.settings.googleCalendar.couldNotReadGoogleCalendarStatus');
+                vm.googleCalendarError = error;
               });
           }
           if (vm.isEnabled) {
@@ -272,7 +271,7 @@
         place: '=',
         eservice: '=',
       },
-      templateUrl: 'modules/hercules/user-sidepanel/hybridServices.tpl.html',
+      template: require('modules/hercules/user-sidepanel/hybridServices.tpl.html'),
     };
   }
 }());

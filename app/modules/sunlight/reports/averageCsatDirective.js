@@ -9,7 +9,7 @@
     var directive = {
       restrict: 'EA',
       scope: false,
-      templateUrl: 'modules/sunlight/reports/averageCsat.tpl.html',
+      template: require('modules/sunlight/reports/averageCsat.tpl.html'),
     };
 
     return directive;

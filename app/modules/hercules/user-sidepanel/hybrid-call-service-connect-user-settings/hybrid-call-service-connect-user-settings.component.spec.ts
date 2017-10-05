@@ -1,5 +1,6 @@
 import hybridCallServiceConnectUserSettings from './index';
-import { IUserStatus } from 'modules/hercules/services/hybrid-services-user-sidepanel-helper.service';
+// import { IUserStatus } from 'modules/hercules/services/hybrid-services-user-sidepanel-helper.service';
+type IUserStatus = any;
 
 describe('hybridCallServiceConnectUserSettings', () => {
 
@@ -31,12 +32,11 @@ describe('hybridCallServiceConnectUserSettings', () => {
     spyOn(HybridServiceUserSidepanelHelperService, 'saveUserEntitlements');
   }
 
-  function initController(callback: Function = () => {}, voicemailFeatureToggled: boolean = false) {
+  function initController(callback: Function = () => {}) {
     ctrl = $componentController('hybridCallServiceConnectUserSettings', {}, {
       userId: '1234',
       userEmailAddress: 'test@example.org',
       entitlementUpdatedCallback: callback,
-      voicemailFeatureToggled: voicemailFeatureToggled,
     });
     ctrl.$onInit();
     $scope.$apply();

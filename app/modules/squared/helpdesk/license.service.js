@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  module.exports = LicenseService;
+
   /* @ngInject */
   function LicenseService(Config, $translate, $q, $http, $location, HelpdeskMockData, UrlConfig) {
     var urlBase = UrlConfig.getAdminServiceUrl();
@@ -124,7 +126,4 @@
       getUnlicensedUsersCount: getUnlicensedUsersCount,
     };
   }
-
-  angular.module('Squared')
-    .service('LicenseService', LicenseService);
 }());

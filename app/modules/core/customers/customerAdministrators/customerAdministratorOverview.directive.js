@@ -10,7 +10,7 @@ require('./_customer-admin.scss');
   function ucCustomerAdministratorOverview() {
     var directive = {
       restrict: 'E',
-      templateUrl: 'modules/core/customers/customerAdministrators/customerAdministratorOverview.tpl.html',
+      template: require('modules/core/customers/customerAdministrators/customerAdministratorOverview.tpl.html'),
       controller: 'CustomerAdministratorOverviewCtrl',
       controllerAs: 'customerAdminOverview',
     };

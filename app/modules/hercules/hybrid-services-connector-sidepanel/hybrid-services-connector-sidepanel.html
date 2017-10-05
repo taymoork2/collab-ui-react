@@ -1,4 +1,6 @@
 <div ui-view="header"></div>
-<cs-sp-container>
-  <alarm-list-section alarms="$ctrl.connector.alarms" connector-type="$ctrl.connector.connectorType" new-link="'true'"></alarm-list-section>
-</cs-sp-container>
+<div class="side-panel-container-view" ui-view="side-panel-container">
+  <cs-sp-container>
+    <alarm-list-section alarms="$ctrl.connector.alarms" connector-type="$ctrl.connector.connectorType" new-link="'true'"></alarm-list-section>
+  </cs-sp-container>
+</div>

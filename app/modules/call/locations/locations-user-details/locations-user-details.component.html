@@ -15,12 +15,10 @@
         ng-model="$ctrl.selectedLocation"
         options="$ctrl.locationOptions"
         labelfield="name"
-        valuefield="value"
-        placeholder="$ctrl.locationName"
-        input-placeholder="sel.inputPlaceholder"
+        valuefield="uuid"
         required="true"
         filter="true"
-        on-change-fn="$ctrl.onLocationChanged()"
+        on-change-fn="$ctrl.onLocationChange()"
         refresh-data-fn="sel.getoptions(filter)">
       </cs-select>
     </div>

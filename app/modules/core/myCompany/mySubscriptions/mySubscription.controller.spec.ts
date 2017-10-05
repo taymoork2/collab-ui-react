@@ -48,7 +48,6 @@ describe('Controller: MySubscriptionCtrl', function () {
     spyOn(this.ProPackService, 'hasProPackEnabled').and.returnValue(this.$q.resolve(false));
     spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(false));
     spyOn(this.Authinfo, 'getUserId').and.returnValue('12345');
-    spyOn(this.DigitalRiverService, 'getDigitalRiverToken');
     spyOn(this.DigitalRiverService, 'getDigitalRiverUpgradeTrialUrl').and.returnValue(this.$q.resolve({ data: trialUrlResponse }));
     spyOn(this.DigitalRiverService, 'getSubscriptionsUrl').and.returnValue(this.$q.resolve(drUrlResponse));
     spyOn(this.$rootScope, '$broadcast').and.callThrough();
@@ -73,21 +72,21 @@ describe('Controller: MySubscriptionCtrl', function () {
   });
 
   it('should initialize with expected data for ccw orgs', function () {
-    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.data.subscriptionsResponse));
+    spyOn(this.Orgservice, 'getInternallyManagedSubscriptions').and.returnValue(this.$q.resolve(this.data.subscriptionsResponse));
     this.startController();
 
     expect(this.controller.hybridServices).toEqual(this.data.servicesFormatted);
     expect(this.controller.licenseCategory).toEqual(this.data.licensesFormatted);
     expect(this.controller.subscriptionDetails).toEqual(this.data.subscriptionsFormatted);
     expect(this.controller.visibleSubscriptions).toBeTruthy();
-    expect(this.controller.licenseSummary).toBeUndefined();
+    expect(this.controller.licenseSummary).toEqual('subscriptions.licenseSummaryEnterprise');
     expect(this.$rootScope.$broadcast).toHaveBeenCalled();
   });
 
   it('should initialize with expected data for online orgs', function () {
     this.data.subscriptionsResponse[0].internalSubscriptionId = onlineIntSubId;
-    this.data.subscriptionsResponse[0].endDate = 'subEndDate';
-    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.data.subscriptionsResponse));
+    spyOn(this.Orgservice, 'getInternallyManagedSubscriptions').and.returnValue(this.$q.resolve(this.data.subscriptionsResponse));
+    spyOn(this.Authinfo, 'getSubscriptions').and.returnValue(this.data.subscriptionsAuthinfo);
     this.data.subscriptionsFormatted[0].isOnline = true;
     this.data.subscriptionsFormatted[0].productInstanceId = productInstanceId;
     this.data.subscriptionsFormatted[0].name = productName;
@@ -104,14 +103,13 @@ describe('Controller: MySubscriptionCtrl', function () {
     expect(this.controller.subscriptionDetails).toEqual(this.data.subscriptionsFormatted);
 
     expect(this.controller.visibleSubscriptions).toBeTruthy();
-    expect(this.DigitalRiverService.getDigitalRiverToken).toHaveBeenCalled();
     expect(this.controller.licenseSummary).toEqual('subscriptions.licenseSummaryOnline');
     expect(this.$rootScope.$broadcast).toHaveBeenCalled();
   });
 
   it('should initialize with expected data for ccw trial orgs', function () {
     this.data.subscriptionsTrialResponse[0].internalSubscriptionId = ccwTrialSubId;
-    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.data.subscriptionsTrialResponse));
+    spyOn(this.Orgservice, 'getInternallyManagedSubscriptions').and.returnValue(this.$q.resolve(this.data.subscriptionsTrialResponse));
     this.data.trialSubscriptionData[0].name = 'subscriptions.enterpriseTrial';
     this.data.trialSubscriptionData[0].internalSubscriptionId = ccwTrialSubId;
     this.startController();
@@ -120,14 +118,14 @@ describe('Controller: MySubscriptionCtrl', function () {
     expect(this.controller.licenseCategory).toEqual(this.data.trialLicenseData);
     expect(this.controller.subscriptionDetails).toEqual(this.data.trialSubscriptionData);
     expect(this.controller.visibleSubscriptions).toBeTruthy();
-    expect(this.controller.licenseSummary).toBeUndefined();
+    expect(this.controller.licenseSummary).toEqual('subscriptions.licenseSummaryEnterprise');
     expect(this.$rootScope.$broadcast).toHaveBeenCalled();
   });
 
   it('should initialize with expected data for online trial orgs', function () {
     this.data.subscriptionsTrialResponse[0].internalSubscriptionId = onlineIntSubId;
-    this.data.subscriptionsTrialResponse[0].endDate = 'subEndDate';
-    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.data.subscriptionsTrialResponse));
+    spyOn(this.Orgservice, 'getInternallyManagedSubscriptions').and.returnValue(this.$q.resolve(this.data.subscriptionsTrialResponse));
+    spyOn(this.Authinfo, 'getSubscriptions').and.returnValue(this.data.subscriptionsAuthinfo);
     this.data.trialSubscriptionData[0].isOnline = true;
     this.data.trialSubscriptionData[0].upgradeTrialUrl = trialUrlResponse;
     this.data.trialSubscriptionData[0].productInstanceId = productInstanceId;
@@ -146,12 +144,11 @@ describe('Controller: MySubscriptionCtrl', function () {
     expect(this.controller.visibleSubscriptions).toBeTruthy();
     expect(this.$rootScope.$broadcast).toHaveBeenCalled();
     expect(this.controller.licenseSummary).toEqual(this.$translate.instant('subscriptions.licenseSummaryOnline'));
-    expect(this.DigitalRiverService.getDigitalRiverToken).toHaveBeenCalled();
   });
 
   describe('Tests for Shared Meeting Licenses : ', function () {
     it('The isSharedMeetingsLicense should return false for a service that does not have shared Licenses ', function () {
-      spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.data.subscriptionsTrialResponse));
+      spyOn(this.Orgservice, 'getInternallyManagedSubscriptions').and.returnValue(this.$q.resolve(this.data.subscriptionsTrialResponse));
       this.startController();
       expect(this.controller.isSharedMeetingsLicense).toBeFalsy();
     });
@@ -159,7 +156,7 @@ describe('Controller: MySubscriptionCtrl', function () {
     it('The isSharedMeetingsLicense should return true for a service that has shared licenses', function () {
       const subscriptionsTrialResponse = _.cloneDeep(this.data.subscriptionsTrialResponse);
       subscriptionsTrialResponse[0].licenses[0].licenseModel = this.Config.licenseModel.cloudSharedMeeting;
-      spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(subscriptionsTrialResponse));
+      spyOn(this.Orgservice, 'getInternallyManagedSubscriptions').and.returnValue(this.$q.resolve(subscriptionsTrialResponse));
       this.startController();
       expect(this.controller.isSharedMeetingsLicense).toBeTruthy();
     });
@@ -167,7 +164,7 @@ describe('Controller: MySubscriptionCtrl', function () {
 
   describe('Helper Functions - ', function () {
     beforeEach(function () {
-      spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.data.subscriptionsTrialResponse));
+      spyOn(this.Orgservice, 'getInternallyManagedSubscriptions').and.returnValue(this.$q.resolve(this.data.subscriptionsTrialResponse));
       this.startController();
     });
 

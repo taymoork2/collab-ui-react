@@ -6,7 +6,6 @@ import ProPack from 'modules/core/proPack';
 
 export default angular.module('core.settings.retention', [
   require('angular-cache'),
-  require('scripts/app.templates'),
   require('collab-ui-ng').default,
   require('modules/core/scripts/services/retention.service'),
   require('modules/core/scripts/services/authinfo'),

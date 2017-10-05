@@ -18,11 +18,13 @@ interface IHuntGroupResource extends ng.resource.IResourceClass<ng.resource.IRes
 
 const NUMBER_FORMAT_EXTENSION: string = 'NUMBER_FORMAT_EXTENSION';
 const NUMBER_FORMAT_DIRECT_LINE: string = 'NUMBER_FORMAT_DIRECT_LINE';
+const NUMBER_FORMAT_ENTERPRISE_LINE: string = 'NUMBER_FORMAT_ENTERPRISE_LINE';
 
 export class HuntGroupService {
   private huntGroupResource: IHuntGroupResource;
   private huntGroupCopy: HuntGroup;
   private huntGroupProperties: string[] = ['uuid', 'name', 'huntMethod', 'maxRingSecs', 'maxWaitMins', 'sendToApp', 'destinationRule', 'numbers', 'fallbackDestination', 'alternateDestination', 'members'];
+  private hasLocations: boolean = false;
 
   /* @ngInject */
   constructor(
@@ -32,6 +34,7 @@ export class HuntGroupService {
     private HuronConfig,
     private FeatureMemberService: FeatureMemberService,
     private $translate: ng.translate.ITranslateService,
+    private FeatureToggleService,
   ) {
 
     const updateAction: ng.resource.IActionDescriptor = {
@@ -44,6 +47,10 @@ export class HuntGroupService {
         'Access-Control-Expose-Headers': 'Location',
       },
     };
+
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484).then((supports) => {
+      this.hasLocations = supports;
+    });
 
     this.huntGroupResource = <IHuntGroupResource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/features/huntgroups/:huntGroupId', {},
       {
@@ -87,6 +94,14 @@ export class HuntGroupService {
           timer: _.get<number>(huntGroupResource.alternateDestination, 'timer'),
         });
         huntGroup.alternateDestination.name =  _.isNull(huntGroup.alternateDestination.name) ? _.get<string>(huntGroupResource.alternateDestination, 'userName') : huntGroup.alternateDestination.name;
+
+        huntGroup.numbers = _.filter(huntGroupResource.numbers, (number) => {
+          if (this.hasLocations) {
+            return number.type === NumberType.NUMBER_FORMAT_ENTERPRISE_LINE || number.type === NumberType.NUMBER_FORMAT_DIRECT_LINE;
+          } else {
+            return number.type === NumberType.NUMBER_FORMAT_EXTENSION || number.type === NumberType.NUMBER_FORMAT_DIRECT_LINE;
+          }
+        });
 
         const huntGroupMembers: CallFeatureMember[] = this.consolidateMembers(huntGroupResource.members);
         const promises: ng.IPromise<CallFeatureMember>[] = [];
@@ -190,10 +205,17 @@ export class HuntGroupService {
         sendToVoicemail: data.fallbackDestination.sendToVoicemail,
       },
       numbers: _.map(data.numbers, (number) => {
-        return {
-          number: number.number,
-          type: number.type === NumberType.INTERNAL ? NUMBER_FORMAT_EXTENSION : NUMBER_FORMAT_DIRECT_LINE,
-        };
+        if (this.hasLocations) {
+          return {
+            number: number.siteToSite ? number.siteToSite : number.number,
+            type: number.type ? number.type : number.siteToSite ? NUMBER_FORMAT_ENTERPRISE_LINE : NUMBER_FORMAT_DIRECT_LINE,
+          };
+        } else {
+          return {
+            number: number.number,
+            type: number.type === NumberType.INTERNAL ? NUMBER_FORMAT_EXTENSION : NUMBER_FORMAT_DIRECT_LINE,
+          };
+        }
       }),
       members: _.map(data.members, (member) => {
         return member.uuid;
@@ -227,10 +249,18 @@ export class HuntGroupService {
         timer: data.alternateDestination.timer,
       },
       numbers: _.map(data.numbers, (number) => {
-        return {
-          number: number.number,
-          type: number.type === NumberType.INTERNAL ? NUMBER_FORMAT_EXTENSION : NUMBER_FORMAT_DIRECT_LINE,
-        };
+        if (this.hasLocations) {
+          return {
+            number: number.siteToSite ? number.siteToSite : number.number,
+            type: number.type ? number.type : number.siteToSite ? NUMBER_FORMAT_ENTERPRISE_LINE : NUMBER_FORMAT_DIRECT_LINE,
+          };
+        } else {
+
+          return {
+            number: number.number,
+            type: number.type === NumberType.INTERNAL || number.type === NUMBER_FORMAT_EXTENSION ? NUMBER_FORMAT_EXTENSION : NUMBER_FORMAT_DIRECT_LINE,
+          };
+        }
       }),
       members: _.map(data.members, (member) => {
         // return member.memberUuid;

@@ -93,8 +93,8 @@ describe('Component: PstnWizardComponent', () => {
       this.$httpBackend.verifyNoOutstandingRequest();
     });
 
-    it('should make i387FeatureToggle as true', function () {
-      expect(this.controller.i387FeatureToggle).toBe(true);
+    it('should make ftI387PrivateTrunking as true', function () {
+      expect(this.controller.ftI387PrivateTrunking).toBe(true);
     });
 
     it('should go to the step 8 if the toggle is enabled', function () {
@@ -270,8 +270,8 @@ describe('Component: PstnWizardComponent', () => {
       this.$httpBackend.verifyNoOutstandingRequest();
     });
 
-    it('should make i387FeatureToggle as false if feature toggle is not set', function () {
-      expect(this.controller.i387FeatureToggle).toBe(false);
+    it('should make ftI387PrivateTrunking as false if feature toggle is not set', function () {
+      expect(this.controller.ftI387PrivateTrunking).toBe(false);
     });
 
     it('should go to the step 5 if the toggle is not enabled', function () {

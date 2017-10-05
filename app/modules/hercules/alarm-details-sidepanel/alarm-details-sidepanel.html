@@ -31,9 +31,9 @@
   </cs-sp-section>
   <cs-sp-section>
     <section-title title-key="hercules.alarms.description"></section-title>
-    <p>{{$ctrl.alarm.description}}</p>
+    <p ng-bind-html="$ctrl.alarm.description"></p>
   </cs-sp-section>
-  <cs-sp-section ng-if="$ctrl.alarm.solution">
+  <cs-sp-section ng-if="$ctrl.alarm.solution && !$ctrl.alarm.key">
     <section-title title-key="hercules.alarms.action"></section-title>
     <p>
       <span ng-repeat="element in $ctrl.alarm.alarmSolutionElements">

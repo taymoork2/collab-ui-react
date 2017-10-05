@@ -1,0 +1,96 @@
+<div ng-form="companyVoicemailForm">
+  <label class="sub-section__label" translate="serviceSetupModal.companyVoicemail"></label>
+  <p class="description-block" translate="serviceSetupModal.companyVoicemailDesc"></p>
+  <cs-toggle-switch
+    ng-model="$ctrl.companyVoicemailEnabled"
+    toggle-id="companyVoicemailToggle"
+    name="companyVoicemailToggle"
+    size="small"
+    cs-change="$ctrl.onCompanyVoicemailChange(toggleValue)">
+  </cs-toggle-switch>
+  <div ng-if="$ctrl.companyVoicemailEnabled && !$ctrl.ftsw" class="cs-checkbox-group settings-voicemail-attachment">
+    <label class="control-label" translate="serviceSetupModal.vmDeliveryMethods"></label>
+    <input
+      cs-input
+      type="checkbox"
+      ng-model="$ctrl.externalVoicemailAccess"
+      id="externalVoicemailAccess"
+      name="externalVoicemailAccess"
+      ng-change="$ctrl.onExternalVoicemailAccessChanged()"
+      cs-input-label="{{::'serviceSetupModal.externalVoicemailAccessLabel' | translate}}">
+    <div ng-if="$ctrl.externalVoicemailAccess" class="indent">
+      <p
+        class="description-block"
+        translate="serviceSetupModal.externalNumberDescriptionText">
+      </p>
+      <div class="medium-5 external-voicemail-number">
+        <cs-select
+          name="companyVoicemailNumber"
+          ng-model="$ctrl.selectedNumber"
+          options="$ctrl.externalNumberOptions"
+          input-placeholder="$ctrl.filterPlaceholder"
+          on-change-fn="$ctrl.onCompanyVoicemailNumberChanged()"
+          is-warn="{{$ctrl.missingDirectNumbers}}"
+          warn-msg="{{::'serviceSetupModal.voicemailNoDirectNumbersError' | translate}}"
+          required="true"
+          filter="true"
+          refresh-data-fn="$ctrl.getNumbers(filter)">
+        </cs-select>
+        <p
+          class="help-block"
+          ng-if="!$ctrl.missingDirectNumbers"
+          translate="serviceSetupModal.voicemailPilotHelpText">
+        </p>
+      </div>
+    </div>
+    <input
+      cs-input
+      type="checkbox"
+      ng-model="$ctrl.voicemailToEmail"
+      id="voicemailToEmail"
+      name="voicemailToEmail"
+      ng-change="$ctrl.onVoicemailToEmailChanged(value)"
+      cs-input-label="{{::'serviceSetupModal.voicemailToEmailLabel' | translate}}">
+      <div class="indent cs-radio-group" ng-if="$ctrl.voicemailToEmail">
+        <input
+          cs-input
+          type="radio"
+          id="withAttachment"
+          name="withAttachmentRadio"
+          value="withAttachment"
+          ng-model="$ctrl.attachmentPref"
+          ng-change="$ctrl.onVoicemailToEmailPrefChanged()"
+          cs-input-label="{{:: 'serviceSetupModal.EmailNotificationAttached' | translate}}"
+          cs-input-help-text="{{::'serviceSetupModal.voicemailToEmailHelpText' | translate}}">
+        <input
+          cs-input
+          type="radio"
+          id="withoutAttachment"
+          name="withoutAttachmentRadio"
+          value="withoutAttachment"
+          ng-model="$ctrl.attachmentPref"
+          ng-change="$ctrl.onVoicemailToEmailPrefChanged()"
+          cs-input-label="{{:: 'serviceSetupModal.EmailNotificationWithoutAttached' | translate}}">
+        <input ng-if="$ctrl.avrilI1558"
+          cs-input
+          type="checkbox"
+          ng-model="$ctrl.useTLS"
+          id="useTLS"
+          name="useTLS"
+          ng-change="$ctrl.onUseTLS()"
+          cs-input-label="{{::'serviceSetupModal.vmUseTLS' | translate}}">
+      </div>
+    <div ng-if="$ctrl.avrilI1558 && $ctrl.isMessage">
+      <label class="control-label" translate="serviceSetupModal.vmPinManagement"></label>
+      <p class="description-block" translate="serviceSetupModal.vmPinHelp"></p>
+      <input
+        cs-input
+        type="checkbox"
+        ng-model="$ctrl.enableOTP"
+        id="enableOTP"
+        name="enableOTP"
+        ng-change="$ctrl.onEnableOTPChanged()"
+        cs-input-label="{{::'serviceSetupModal.vmEnableOTP' | translate}}">
+    </div>
+  </div>
+</div>

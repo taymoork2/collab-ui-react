@@ -74,18 +74,10 @@
             on-change-fn="$ctrl.setMaxWaitMins(minutes)">
           </uc-hunt-group-max-wait-time>
         </div>
-        <div ng-if="!$ctrl.isHi1487Supported" class="sub-section">
-          <h5 class="sub-section__title" translate="huronHuntGroup.fallbackLabel"></h5>
-          <p class="sub-section__description" translate="huronHuntGroup.fallbackDesc"></p>
-          <uc-fallback-destination
-            fallback-destination="$ctrl.huntGroup.fallbackDestination"
-            on-change-fn="$ctrl.setHuntGroupFallbackDestination(fallbackDestination)">
-          </uc-fallback-destination>
-        </div>
       </div>
     </div>
 
-    <div class="cs-form__section" ng-if="$ctrl.isHi1487Supported" >
+    <div class="cs-form__section" >
       <div class="section__info">
         <h4 class="section__title" translate="huronHuntGroup.fallbackLabel"></h4>
       </div>
@@ -106,7 +98,7 @@
       </div>
     </div>
 
-    <div ng-if="$ctrl.isHi1487Supported"class="cs-form__section">
+    <div class="cs-form__section">
       <div class="section__info">
         <h4 class="section__title" translate="huronHuntGroup.callsToSparkAppTitle"></h4>
       </div>
@@ -147,6 +139,7 @@
             members="$ctrl.huntGroup.members"
             member-item-type="number"
             remove-key="common.remove"
+            show-numbers="true"
             show-external-numbers="true"
             filter-by="$ctrl.memberProperties"
             drag-and-drop="$ctrl.dragAndDropEnabled"

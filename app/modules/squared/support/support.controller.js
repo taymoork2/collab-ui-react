@@ -7,18 +7,16 @@ require('./_support.scss');
     .controller('SupportCtrl', SupportCtrl);
 
   /* @ngInject */
-  function SupportCtrl($filter, $scope, $translate, $state, $stateParams, $window, Authinfo, CallflowService, CardUtils, Config, FeedbackService, hasAtlasHybridCallUserTestTool, Log, LogService, ModalService, Notification, Orgservice, PageParam, ReportsService, UrlConfig, Userservice, Utils, WindowLocation) {
+  function SupportCtrl($filter, $scope, $translate, $state, $stateParams, $window, Authinfo, CallflowService, CardUtils, Config, FeatureToggleService, FeedbackService, hasAtlasHybridCallUserTestTool, Log, LogService, ModalService, Notification, Orgservice, PageParam, ReportsService, UrlConfig, Userservice, Utils, WindowLocation) {
     $scope.showSupportDetails = false;
     $scope.showSystemDetails = false;
-    $scope.problemHandler = ' by Cisco';
-    $scope.helpHandler = 'by Cisco';
+    $scope.problemHandler = $translate.instant('supportPage.byCisco');
+    $scope.helpHandler = $translate.instant('supportPage.byCisco');
     $scope.reportingUrl = null;
     $scope.helpUrl = Config.helpUrl;
     $scope.ssoUrl = Config.ssoUrl;
     $scope.rolesUrl = Config.rolesUrl;
     $scope.statusPageUrl = UrlConfig.getStatusPageUrl();
-    $scope.problemContent = 'Problem reports are being handled';
-    $scope.helpContent = 'Help content is provided';
     $scope.searchInput = 'none';
     $scope.showCdrCallFlowLink = false;
     $scope.showPartnerManagementLink = false;
@@ -30,7 +28,10 @@ require('./_support.scss');
     $scope.gotoCdrSupport = gotoCdrSupport;
     $scope.gotoEdiscovery = gotoEdiscovery;
     $scope.gotoPartnerManagement = gotoPartnerManagement;
+    $scope.gotoProvisioningConsole = gotoProvisioningConsole;
     $scope.hasAtlasHybridCallUserTestTool = hasAtlasHybridCallUserTestTool;
+    $scope.showOrderProvisioningConsole = false;
+    $scope.hasAtlasEdiscoveryToggle = false;
 
     var vm = this;
     vm.masonryRefreshed = false;
@@ -55,7 +56,18 @@ require('./_support.scss');
       $state.go('partnerManagement.search');
     }
 
+    function gotoProvisioningConsole() {
+      var url = $state.href('provisioning.pending');
+      $window.open(url, '_blank');
+    }
+
     function initializeShowLinks() {
+      FeatureToggleService.atlasOrderProvisioningConsoleGetStatus().then(function (result) {
+        $scope.showOrderProvisioningConsole = Authinfo.isOrderAdminUser() && (!Config.isProd() || result);
+      });
+      FeatureToggleService.atlasEdiscoveryGetStatus().then(function (result) {
+        $scope.hasAtlasEdiscoveryToggle = result;
+      });
       Userservice.getUser('me', function (user, status) {
         if (user.success) {
           var bReinstate = false;
@@ -120,17 +132,17 @@ require('./_support.scss');
     };
 
     $scope.showEdiscoveryLink = function () {
-      return Authinfo.isComplianceUser();
+      return Authinfo.isComplianceUser() && $scope.hasAtlasEdiscoveryToggle;
     };
 
     $scope.tabs = [{
-      title: 'supportPage.tabs.status',
+      title: $translate.instant('supportPage.tabs.status'),
       state: 'support.status',
     }];
 
     if (Authinfo.isInDelegatedAdministrationOrg() && !Authinfo.isHelpDeskAndComplianceUserOnly()) {
       $scope.tabs.push({
-        title: 'supportPage.tabs.logs',
+        title: $translate.instant('supportPage.tabs.logs'),
         state: 'support.logs',
       });
     }
@@ -181,11 +193,11 @@ require('./_support.scss');
 
           if (!_.isEmpty(settings.reportingSiteUrl)) {
             $scope.reportingUrl = settings.reportingSiteUrl;
-            $scope.problemHandler = 'externally';
+            $scope.problemHandler = $translate.instant('supportPage.externally');
           }
           if (!_.isEmpty(settings.helpUrl)) {
             $scope.helpUrl = settings.helpUrl;
-            $scope.helpHandler = 'externally';
+            $scope.helpHandler = $translate.instant('supportPage.externally');
           }
         } else {
           Log.debug('Get org failed. Status: ' + status);

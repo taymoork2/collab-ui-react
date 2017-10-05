@@ -1,11 +1,10 @@
-import { Site } from 'modules/huron/sites';
 import { CompanyNumber, ExternalCallerIdType } from 'modules/call/settings/settings-company-caller-id';
 import { IOption } from 'modules/huron/dialing/dialing.service';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
 import { PstnModel } from 'modules/huron/pstn/pstn.model';
 
 class CompanyCallerId implements ng.IComponentController {
-  public site: Site;
+  public voicemailPilotNumber: string;
   public companyCallerId: CompanyNumber;
   public selectedNumber: string;
   public customerName: string;
@@ -36,7 +35,7 @@ class CompanyCallerId implements ng.IComponentController {
 
     if (externalNumberOptions && externalNumberOptions.currentValue) {
       this.externalNumberOptions = _.filter<IOption>(externalNumberOptions.currentValue, externalNumber => {
-        return !_.isEqual(_.get(externalNumber, 'value'), _.get(this.site, 'voicemailPilotNumber'));
+        return !_.isEqual(_.get(externalNumber, 'value'), this.voicemailPilotNumber);
       });
     }
 
@@ -95,10 +94,9 @@ class CompanyCallerId implements ng.IComponentController {
 
 export class CompanyCallerIdComponent implements ng.IComponentOptions {
   public controller = CompanyCallerId;
-  public templateUrl = 'modules/call/settings/settings-company-caller-id/settings-company-caller-id.component.html';
+  public template = require('modules/call/settings/settings-company-caller-id/settings-company-caller-id.component.html');
   public bindings = {
-    isLocation: '<',
-    site: '<',
+    voicemailPilotNumber: '<',
     customerName: '<',
     companyCallerId: '<',
     externalNumberOptions: '<',

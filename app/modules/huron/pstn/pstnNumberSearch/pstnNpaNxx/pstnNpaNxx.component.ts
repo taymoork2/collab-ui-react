@@ -8,6 +8,7 @@ import { PstnService } from '../../pstn.service';
 import { PstnModel } from '../../pstn.model';
 import {
   NXX_EMPTY, MIN_BLOCK_QUANTITY, MAX_BLOCK_QUANTITY,
+  NUMTYPE_TOLLFREE, NUMTYPE_DID,
 } from '../../pstn.const';
 import { Notification } from 'modules/core/notifications';
 
@@ -38,66 +39,80 @@ class PstnNpaNxxCtrl implements ng.IComponentController {
       this.model.quantity = MIN_BLOCK_QUANTITY;
       this.areaLabel = areaData.typeName;
       this.areas = areaData.areas;
-      //Try to set default Area Code (npa)
-      const stateCode: string|undefined = _.get<string>(this.PstnModel.getServiceAddress(), 'state');
-      if (stateCode) {
-        const name: string = _.result<string>(_.find(this.areas, {
-          abbreviation: stateCode,
-        }), 'name');
-        this.area = new Area(name, stateCode);
-        this.getNpaInventory();
+      if (this.numberType === NUMTYPE_DID) {
+        //Try to set default Area Code (npa)
+        const stateCode: string|undefined = _.get<string>(this.PstnModel.getServiceAddress(), 'state');
+        if (stateCode) {
+          const name: string = _.result<string>(_.find(this.areas, {
+            abbreviation: stateCode,
+          }), 'name');
+          this.area = new Area(name, stateCode);
+          this.getNpaInventory();
+        }
       }
     });
   }
 
   public getNpaInventory(): void {
     if (this.area) {
-      this.PstnService.getCarrierInventory(this.PstnModel.getProviderId(), this.area.abbreviation)
-      .then((response) => {
-        this.model.areaCodeOptions = _.sortBy<IAreaCodeOption>(response.areaCodes, 'code');
-        this.model.areaCode = null;
-        this.model.areaCodeEnable = true;
-        this.model.nxxOptions = null;
-        this.model.nxx = null;
-        this.model.nxxEnable = false;
-        this.model.searchEnable = false;
-        this.model.searchResults = [];
-        this.model.showAdvancedOrder = false;
-      })
-      .catch((response) => {
-        this.Notification.errorResponse(response, 'pstnSetup.errors.states');
-      });
+      if (this.numberType === NUMTYPE_DID) {
+        this.PstnService.getCarrierInventory(this.PstnModel.getProviderId(), this.area.abbreviation)
+        .then((response) => this.setNpaModel(response))
+        .catch((error) => this.Notification.errorResponse(error, 'pstnSetup.errors.states'));
+      }
+      if (this.numberType === NUMTYPE_TOLLFREE) {
+        this.PstnService.getCarrierTollFreeInventory(this.PstnModel.getProviderId())
+        .then(response => this.setNpaModel(response))
+        .catch(error => this.Notification.errorResponse(error, 'pstnSetup.errors.states'));
+      }
     }
+  }
+
+  private setNpaModel(response): void {
+    this.model.areaCodeOptions = _.sortBy<IAreaCodeOption>(response.areaCodes, 'code');
+    this.model.areaCode = null;
+    this.model.areaCodeEnable = true;
+    this.model.nxxOptions = null;
+    this.model.nxx = null;
+    this.model.nxxEnable = false;
+    this.model.searchEnable = false;
+    this.model.searchResults = [];
+    this.model.showAdvancedOrder = false;
   }
 
   public getNxxInventory() {
     if (this.area && this.model.areaCode) {
       this.model.searchEnable = true;
-      this.PstnService.getCarrierInventory(this.PstnModel.getProviderId(),
-        this.area.abbreviation, this.model.areaCode.code)
-      .then((response) => {
-        if (!_.isEmpty(response)) {
-          this.model.nxxOptions = _.sortBy<INxxOption>(response.exchanges, 'code');
-          this.model.nxxOptions.unshift({ code: NXX_EMPTY });
-          this.model.nxx = this.model.nxxOptions[0];
-          this.model.nxxEnable = true;
-          this.model.searchResults = [];
-          this.model.showAdvancedOrder = false;
-        }
-      })
-      .catch((response) => {
-        this.Notification.errorResponse(response, 'pstnSetup.errors.states');
-      });
+      if (this.numberType === NUMTYPE_DID) {
+        this.PstnService.getCarrierInventory(this.PstnModel.getProviderId(),
+          this.area.abbreviation, this.model.areaCode.code)
+        .then(response => this.setNxxModel(response))
+        .catch(error => this.Notification.errorResponse(error, 'pstnSetup.errors.states'));
+      }
+    }
+  }
+
+  private setNxxModel(response): void {
+    if (!_.isEmpty(response)) {
+      this.model.nxxOptions = _.sortBy<INxxOption>(response.exchanges, 'code');
+      this.model.nxxOptions.unshift({ code: NXX_EMPTY });
+      this.model.nxx = this.model.nxxOptions[0];
+      this.model.nxxEnable = true;
+      this.model.searchResults = [];
+      this.model.showAdvancedOrder = false;
     }
   }
 
   public onBlockClick() {
     if (this.model.block) {
-      if (!(this.model.quantity >= MIN_BLOCK_QUANTITY && this.model.quantity <= MAX_BLOCK_QUANTITY)) {
+      if (this.model.quantity == null) {
+        this.model.quantity = MIN_BLOCK_QUANTITY;
+      } else if (!(this.model.quantity >= MIN_BLOCK_QUANTITY && this.model.quantity <= MAX_BLOCK_QUANTITY)) {
         this.model.quantity = MIN_BLOCK_QUANTITY;
       }
     } else {
       this.model.quantity = MIN_BLOCK_QUANTITY;
+      this.model.consecutive = false;
     }
   }
 
@@ -142,9 +157,9 @@ class PstnNpaNxxCtrl implements ng.IComponentController {
 
 export class PstnNpaNxxComponent implements ng.IComponentOptions {
   public controller = PstnNpaNxxCtrl;
-  public templateUrl = 'modules/huron/pstn/pstnNumberSearch/pstnNpaNxx/pstnNpaNxx.html';
+  public template = require('modules/huron/pstn/pstnNumberSearch/pstnNpaNxx/pstnNpaNxx.html');
   public bindings = {
-    model: '=',
+    model: '<',
     search: '&',
     simple: '<',
     numberType: '<',

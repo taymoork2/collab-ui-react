@@ -17,7 +17,7 @@
     return {
       restrict: 'A',
       link: function (scope, element) {
-        element.bind('click', function () {
+        element.bind('click focus', function () {
           //Remove active class from previous selection
           $('.active').each(function () {
             $(this).removeClass('active');
@@ -73,7 +73,7 @@
   function CustomerForm() {
     return {
       restrict: 'AE',
-      templateUrl: 'modules/sunlight/features/template/setupAssistantPages/ctCustomerForm.tpl.html',
+      template: require('modules/sunlight/features/template/setupAssistantPages/ctCustomerForm.tpl.html'),
       controller: ['$scope', CustomerFormController],
       scope: {
         fields: '=',

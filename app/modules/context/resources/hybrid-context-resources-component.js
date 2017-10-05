@@ -6,10 +6,10 @@ require('./_resources.scss');
   angular.module('Context')
     .component('contextResourcesSubHeader', {
       controller: ContextResourcesSubHeaderCtrl,
-      templateUrl: 'modules/context/resources/hybrid-context-resources-header.html',
+      template: require('modules/context/resources/hybrid-context-resources-header.html'),
     });
 
-    /* @ngInject */
+  /* @ngInject */
   function ContextResourcesSubHeaderCtrl($state) {
     var vm = this;
 

@@ -1,0 +1,34 @@
+<div class="meeting-settings" ng-form="meetingCtrl.ccaspForm" ng-init="meetingCtrl.ccaspSetNextDisabled()">
+  <h4 class="element-spacing" translate="firstTimeWizard.ccasp.ccaspSubheading"></h4>
+  <p class="element-spacing" translate="firstTimeWizard.ccasp.ccaspDescription"></p>
+
+  <div class="row element-spacing ccasp-partner__confirmation col-md-6" ng-if="meetingCtrl.audioPartnerName">
+    <i class="icon icon-check verified-check"></i>
+    <b><span translate="firstTimeWizard.ccasp.ccaspPartner" translate-values="{partner: meetingCtrl.audioPartnerName}"></span></b>
+  </div>
+  <label translate="firstTimeWizard.ccasp.ccaspSubscriptionId"></label>
+  <input cs-input type="text"
+    id="directiveInput"
+    ng-model="meetingCtrl.ccasp.subscriptionId"
+    cs-input-group-size="medium-5"
+    ng-change="meetingCtrl.ccaspResetValidation()"
+  />
+  <div class="col-md-4">
+    <button ng-click="meetingCtrl.ccaspValidate()"
+      class="btn--cta"
+      ng-disabled="!(meetingCtrl.ccasp.subscriptionId && meetingCtrl.ccasp.partnerNameSelected) || meetingCtrl.disableValidateButton"
+      translate="common.validate"></button>
+  </div>
+
+  <div class="medium-5" ng-class="{'error': meetingCtrl.ccasp.isError}">
+    <label class="cs-input__label" translate="firstTimeWizard.ccasp.chooseCCASPPartner"></label>
+    <cs-select ng-model="meetingCtrl.ccasp.partnerNameSelected" options="meetingCtrl.ccasp.partnerOptions" placeholder="meetingCtrl.dropdownPlaceholder"
+      on-change-fn="meetingCtrl.ccaspResetValidation()" name="ccasp_partnerName">
+    </cs-select>
+  </div>
+  <div ng-class="{'error': meetingCtrl.ccasp.isError}" class="medium-6">
+    <div class="cs-input__messages error-msg-spacing" role="alert" ng-if="meetingCtrl.ccasp.isError">
+      <div class="message" translate="firstTimeWizard.ccasp.errorNoMatch">
+      </div>
+    </div>
+  </div>

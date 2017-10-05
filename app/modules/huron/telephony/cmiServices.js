@@ -39,18 +39,12 @@
     .factory('SiteService', SiteService)
     .factory('AvrilSiteService', AvrilSiteService)
     .factory('AvrilSiteUpdateService', AvrilSiteUpdateService)
-    .factory('InternalNumberRangeService', InternalNumberRangeService)
     .factory('UserEndpointService', UserEndpointService)
     .factory('SipEndpointService', SipEndpointService)
     .factory('DirectoryNumberUserService', DirectoryNumberUserService)
     .factory('DirectoryNumberSipEndPointService', DirectoryNumberSipEndPointService)
     .factory('SipEndpointDirectoryNumberService', SipEndpointDirectoryNumberService)
     .factory('MediaManagerService', MediaManagerService)
-    .factory('DateFormatService', DateFormatService)
-    .factory('TimeFormatService', TimeFormatService)
-    .factory('TimeZoneService', TimeZoneService)
-    .factory('SiteLanguageService', SiteLanguageService)
-    .factory('SiteCountryService', SiteCountryService)
     .factory('DeviceLogApiService', DeviceLogApiService)
     .factory('UserLineAssociationService', UserLineAssociationService)
     .factory('UserLineAssociationCountService', UserLineAssociationCountService)
@@ -116,10 +110,6 @@
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/directorynumbers/:directoryNumberId', {
       customerId: '@customerId',
       directoryNumberId: '@directoryNumberId',
-    }, {
-      update: {
-        method: 'PUT',
-      },
     });
   }
 
@@ -370,21 +360,6 @@
   }
 
   /* @ngInject */
-  function InternalNumberRangeService($resource, HuronConfig) {
-    return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/internalnumberranges/:internalNumberRangeId', {
-      customerId: '@customerId',
-      internalNumberRangeId: '@internalNumberRangeId',
-    }, {
-      save: {
-        method: 'POST',
-        headers: {
-          'Access-Control-Expose-Headers': 'Location',
-        },
-      },
-    });
-  }
-
-  /* @ngInject */
   function UserEndpointService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/users/:userId/endpoints/:userEndpointAssnId', {
       customerId: '@customerId',
@@ -452,31 +427,6 @@
         },
       },
     });
-  }
-
-  /* @ngInject */
-  function TimeZoneService($resource) {
-    return $resource('modules/huron/serviceSetup/jodaTimeZones.json', {}, {});
-  }
-
-  /* @ngInject */
-  function DateFormatService($resource) {
-    return $resource('modules/huron/serviceSetup/dateFormats.json', {}, {});
-  }
-
-  /* @ngInject */
-  function TimeFormatService($resource) {
-    return $resource('modules/huron/serviceSetup/timeFormat.json', {}, {});
-  }
-
-  /* @ngInject */
-  function SiteLanguageService($resource) {
-    return $resource('modules/huron/serviceSetup/siteLanguages.json', {}, {});
-  }
-
-  /* @ngInject */
-  function SiteCountryService($resource) {
-    return $resource('modules/huron/serviceSetup/siteCountries.json', {}, {});
   }
 
   /* @ngInject */
@@ -581,7 +531,7 @@
     return _.get(responseObj, '[0]', responseObj);
   }
 
-    /* @ngInject */
+  /* @ngInject */
   function PlacesService($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/places/:placesId', {
       customerId: '@customerId',

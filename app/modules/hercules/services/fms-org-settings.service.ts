@@ -22,12 +22,12 @@ export class FmsOrgSettings {
       .then(this.extractDataFromResponse);
   }
 
-  private extractDataFromResponse<T>(response: ng.IHttpPromiseCallbackArg<T>): T {
+  private extractDataFromResponse<T>(response: ng.IHttpResponse<T>): T {
     return _.get<T>(response, 'data');
   }
 }
 
 export default angular
-  .module('Hercules')
+  .module('hercules.fms-org-settings', [])
   .service('FmsOrgSettings', FmsOrgSettings)
   .name;

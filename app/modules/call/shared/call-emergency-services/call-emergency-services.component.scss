@@ -1,0 +1,42 @@
+@import '~collab-ui/scss/tools/placeholders/page-layout';
+
+.call-emergency-services {
+  .ces-warning {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding-top: 1rem;
+    padding-bottom: .5rem;
+
+    i {
+      padding-right: .5rem;
+    }
+  }
+
+  .ces-top-padding {
+    padding-top: 3rem;
+  }
+
+  button {
+    margin-top: 1rem;
+  }
+
+  .ces-address-label {
+    padding-top: 1.75rem;
+  }
+
+  .flex-address {
+    label {
+      padding: 0;
+    }
+  }
+
+  .columns {
+    padding: 0;
+    width: 100%;
+  }
+
+  .validation-padding {
+    display: none;
+  }
+}

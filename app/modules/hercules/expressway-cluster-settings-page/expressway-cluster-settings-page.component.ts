@@ -80,7 +80,7 @@ class ExpresswayClusterSettingsPageCtrl implements ng.IComponentController {
     const component = this;
     if (this.selectedResourceGroup.value === '') { // user is removing resource group
       this.$modal.open({
-        templateUrl: 'modules/hercules/fusion-pages/remove-from-resource-group-dialog.html',
+        template: require('modules/hercules/fusion-pages/remove-from-resource-group-dialog.html'),
         type: 'dialog',
         controller: function () {
           const ctrl = this;
@@ -118,7 +118,7 @@ class ExpresswayClusterSettingsPageCtrl implements ng.IComponentController {
         });
     } else { // user is setting a new resource group
       this.$modal.open({
-        templateUrl: 'modules/hercules/fusion-pages/assign-new-resource-group-dialog.html',
+        template: require('modules/hercules/fusion-pages/assign-new-resource-group-dialog.html'),
         type: 'dialog',
         controller: function () {
           const ctrl = this;
@@ -207,7 +207,7 @@ class ExpresswayClusterSettingsPageCtrl implements ng.IComponentController {
 
   public deactivateService(serviceId, cluster) {
     this.$modal.open({
-      templateUrl: 'modules/hercules/resource-settings/deactivate-service-on-expressway-modal.html',
+      template: require('modules/hercules/resource-settings/deactivate-service-on-expressway-modal.html'),
       controller: 'DeactivateServiceOnExpresswayModalController',
       controllerAs: 'deactivateServiceOnExpresswayModal',
       type: 'small',
@@ -239,7 +239,7 @@ class ExpresswayClusterSettingsPageCtrl implements ng.IComponentController {
 
 export class ExpresswayClusterSettingsPageComponent implements ng.IComponentOptions {
   public controller = ExpresswayClusterSettingsPageCtrl;
-  public templateUrl = 'modules/hercules/expressway-cluster-settings-page/expressway-cluster-settings-page.html';
+  public template = require('modules/hercules/expressway-cluster-settings-page/expressway-cluster-settings-page.html');
   public bindings = {
     clusterId: '<',
   };

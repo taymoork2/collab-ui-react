@@ -7,7 +7,6 @@ export { ExtensionLengthComponent };
 
 export default angular
   .module('call.settings.extension-length', [
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
     extensionPrefixModule,

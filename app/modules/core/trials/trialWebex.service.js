@@ -26,6 +26,8 @@
       getTrialStatus: getTrialStatus,
       provisionWebexSites: provisionWebexSites,
       provisionSubscriptionWithoutWebexSites: provisionSubscriptionWithoutWebexSites,
+      provisionSubscription: provisionSubscription,
+      setProvisioningWebexSendCustomerEmailFlag: setProvisioningWebexSendCustomerEmailFlag,
       setProvisioningWebexSitesData: setProvisioningWebexSitesData,
       getProvisioningWebexSitesData: getProvisioningWebexSitesData,
     };
@@ -56,7 +58,7 @@
       return _trialData;
     }
 
-    function validateSiteUrl(siteUrl) {
+    function validateSiteUrl(siteUrl, source) {
       var validationUrl = UrlConfig.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke';
       var config = {
         method: 'POST',
@@ -73,6 +75,10 @@
         },
       };
 
+      if (_.isString(source)) {
+        _.set(config, 'data.source', source);
+      }
+
       return $http(config).then(function (response) {
         var data = _.get(response, 'data.properties[0]', {});
         var errorCodes = {
@@ -83,8 +89,9 @@
           431397: 'duplicateSite',
         };
         var isValid = (data.isValid === 'true');
+        var doesNotExist = (data.isExist !== 'true');
         return {
-          isValid: isValid && data.errorCode === '0',
+          isValid: isValid && data.errorCode === '0' && doesNotExist,
           errorCode: errorCodes[data.errorCode] || 'invalidSite',
         };
       }).catch(function (response) {
@@ -93,17 +100,29 @@
     }
 
     function setProvisioningWebexSitesData(webexLicenses, subscriptionId) {
-      webexProvisioningData = { webexLicencesPayload: webexLicenses, subscriptionId: subscriptionId };
+      _.set(webexProvisioningData, 'webexLicencesPayload', webexLicenses);
+      _.set(webexProvisioningData, 'subscriptionId', subscriptionId);
     }
 
     function getProvisioningWebexSitesData() {
       return webexProvisioningData;
     }
 
+    function setProvisioningWebexSendCustomerEmailFlag(flag) {
+      if (!_.isBoolean(flag)) {
+        return $q.reject('paramater passed is not a boolean');
+      }
+      _.set(webexProvisioningData, 'sendCustomerEmail', flag);
+    }
+
     function provisionWebexSites() {
       var payload = _.get(webexProvisioningData, 'webexLicencesPayload');
       var subscriptionId = _.get(webexProvisioningData, 'subscriptionId');
-      return provisionSubscription(payload, subscriptionId);
+
+      return provisionSubscription(payload, subscriptionId)
+        .finally(function () {
+          SetupWizardService.clearDeterminantParametersFromSession();
+        });
     }
 
     function provisionSubscriptionWithoutWebexSites() {
@@ -112,6 +131,7 @@
         serviceOrderUUID: SetupWizardService.getActingSubscriptionServiceOrderUUID(),
       };
       var subscriptionId = SetupWizardService.getInternalSubscriptionId();
+
       return provisionSubscription(payload, subscriptionId);
     }
 
@@ -120,6 +140,12 @@
         $q.reject('invlaid paramenters passed to provision subscription.');
       }
       var webexProvisioningUrl = UrlConfig.getAdminServiceUrl() + 'subscriptions/' + subscriptionId + '/provision';
+
+      if (_.has(webexProvisioningData, 'sendCustomerEmail')) {
+        _.set(payload, 'sendCustomerEmail', webexProvisioningData.sendCustomerEmail);
+      } else {
+        _.set(payload, 'sendCustomerEmail', false);
+      }
 
       return $http.post(webexProvisioningUrl, payload);
     }

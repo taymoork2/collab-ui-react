@@ -7,13 +7,13 @@ describe('Component: gmTdModalRequest', () => {
     initSpies.apply(this);
   });
 
-  beforeAll(function () {
+  beforeEach(function () {
     this.preData = getJSONFixture('gemini/common.json');
     this.currentTelephonyDomain = {
       regionId: 'EMEA',
     };
     this.button = '[name="nextButton"]';
-    this.box = '.dropdown-menu ul li a';
+    this.box = '.dropdown-menu ul li';
     this.input = 'input[name="customerName"]';
     this.select = '.csSelect-container[name="region"]';
   });
@@ -44,8 +44,7 @@ describe('Component: gmTdModalRequest', () => {
 
     it('should display the correct element and bind the javasscript event', function () {
       spyOn(this.gemService, 'getStorage').and.returnValue(this.currentTelephonyDomain);
-      const response = this.preData.common;
-      response.content.data.body = [ { regionId: 'EMEA', regionName: 'EMEA' }, { regionId: 'US', regionName: 'US' }];
+      const response = [{ regionId: 'EMEA', regionName: 'EMEA' }, { regionId: 'US', regionName: 'US' }];
       this.TelephonyDomainService.getRegions.and.returnValue(this.$q.resolve(response));
       initComponent.call(this);
 

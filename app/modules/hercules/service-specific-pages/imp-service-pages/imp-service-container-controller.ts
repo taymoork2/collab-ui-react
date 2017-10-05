@@ -6,10 +6,10 @@ import { ServiceDescriptorService } from 'modules/hercules/services/service-desc
 export class ImpServiceContainerController extends ExpresswayContainerController {
 
   public tabs: any = [{
-    title: 'common.resources',
+    title: this.$translate.instant('common.resources'),
     state: 'imp-service.list',
   }, {
-    title: 'common.settings',
+    title: this.$translate.instant('common.settings'),
     state: 'imp-service.settings',
   }];
 
@@ -21,7 +21,7 @@ export class ImpServiceContainerController extends ExpresswayContainerController
     },
     controller: 'AddResourceController',
     controllerAs: 'vm',
-    templateUrl: 'modules/hercules/service-specific-pages/common-expressway-based/add-resource-modal.html',
+    template: require('modules/hercules/service-specific-pages/common-expressway-based/add-resource-modal.html'),
     type: 'small',
   };
 
@@ -30,16 +30,15 @@ export class ImpServiceContainerController extends ExpresswayContainerController
     $modal,
     $scope: ng.IScope,
     $state: ng.ui.IStateService,
+    private $translate: ng.translate.ITranslateService,
     public clusterId: string,
-    Authinfo,
     ClusterService: ClusterService,
-    hasPartnerRegistrationFeatureToggle,
     Notification: Notification,
     ServiceDescriptorService: ServiceDescriptorService,
     ServiceStateChecker,
     USSService,
   ) {
-    super($modal, $scope, $state, Authinfo, ClusterService, hasPartnerRegistrationFeatureToggle, true, Notification, ServiceDescriptorService, ServiceStateChecker, USSService, ['spark-hybrid-impinterop'], 'c_imp');
+    super($modal, $scope, $state, ClusterService, true, Notification, ServiceDescriptorService, ServiceStateChecker, USSService, ['spark-hybrid-impinterop'], 'c_imp');
   }
 
 }

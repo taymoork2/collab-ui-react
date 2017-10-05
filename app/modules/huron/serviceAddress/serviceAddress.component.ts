@@ -1,7 +1,25 @@
 import {
   PstnAreaService,
   IAreaData,
+  IArea,
+  Address,
 } from 'modules/huron/pstn';
+
+export class HRServiceAddressComponent implements ng.IComponentOptions {
+  public controller = ServiceAddressCtrl;
+  public template = require('modules/huron/serviceAddress/serviceAddress.html');
+  public bindings = {
+    address: '<',
+    readOnly: '<',
+    hideSearch: '<',  //Show or Hide the validate button
+    formName: '<',
+    addressValidate: '&',  //Must provide if showing the validate button
+    modify: '&',
+    hideAddress: '<',
+    countryCode: '<',
+  };
+}
+
 
 class ServiceAddressCtrl implements ng.IComponentController {
   public stateOptions;
@@ -9,8 +27,8 @@ class ServiceAddressCtrl implements ng.IComponentController {
   public countryCode: string;
   public stateLabel: string;
   public zipLabel: string;
-  public locationModel;
-  public address;
+  public locationModel?: IArea;
+  public address: Address;
 
   /* @ngInject */
   constructor(
@@ -23,7 +41,7 @@ class ServiceAddressCtrl implements ng.IComponentController {
     this.PstnAreaService.getCountryAreas(this.countryCode).then( (location: IAreaData) => {
       this.zipLabel = location.zipName;
       this.stateLabel = location.typeName;
-      if (this.address.state) {
+      if (this.address && this.address.state) {
         this.locationModel = location.areas.filter(state => state.abbreviation === this.address.state)[0];
       }
       this.stateOptions = location.areas;
@@ -37,33 +55,26 @@ class ServiceAddressCtrl implements ng.IComponentController {
 
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
     const { address } = changes;
-    if (address && (address.currentValue['state'] === '' || address.currentValue['state'] === undefined)) {
-      this.locationModel = undefined;
+    if (address) {
+      if (address.currentValue) {
+        if (address.currentValue['state'] === '' || address.currentValue['state'] === undefined) {
+          this.locationModel = undefined;
+        }
+      } else {
+        this.locationModel = undefined;
+      }
     }
   }
 
   public onLocationSelect () {
-    this.address.state = this.locationModel.abbreviation;
+    if (this.locationModel) {
+      this.address.state = this.locationModel.abbreviation;
+    }
   }
 
   public onModify = function () {
     this.locationModel = undefined;
     this.modify();
-  };
-}
-
-export class HRServiceAddressComponent implements ng.IComponentOptions {
-  public controller = ServiceAddressCtrl;
-  public templateUrl = 'modules/huron/serviceAddress/serviceAddress.html';
-  public bindings = {
-    address: '<',
-    readOnly: '<',
-    hideSearch: '<',
-    formName: '<',
-    addressValidate: '&',
-    modify: '&',
-    hideAddress: '<',
-    countryCode: '<',
   };
 }
 
@@ -99,6 +110,6 @@ export function isolateForm() {
       },
     };
     _.assign(formCtrl, isolatedFormCtrl);
-
   }
+
 }

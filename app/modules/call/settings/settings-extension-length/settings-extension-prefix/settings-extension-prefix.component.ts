@@ -30,7 +30,7 @@ class ExtensionPrefixCtrl implements ng.IComponentController {
 
   public save(): void {
     this.processing = true;
-    this.HuronSettingsService.saveExtensionLengthIncrease(this.newExtensionLength, this.extensionPrefix)
+    this.HuronSettingsService.saveExtensionLengthIncrease(Number(this.newExtensionLength), Number(this.extensionPrefix))
       .then(() => {
         this.Notification.success('serviceSetupModal.extensionLengthSaveSuccess');
         this.close();
@@ -49,7 +49,7 @@ class ExtensionPrefixCtrl implements ng.IComponentController {
 
 export class ExtensionPrefixComponent implements ng.IComponentOptions {
   public controller = ExtensionPrefixCtrl;
-  public templateUrl = 'modules/call/settings/settings-extension-length/settings-extension-prefix/settings-extension-prefix.component.html';
+  public template = require('modules/call/settings/settings-extension-length/settings-extension-prefix/settings-extension-prefix.component.html');
   public bindings = {
     newExtensionLength: '<',
     oldExtensionLength: '<',

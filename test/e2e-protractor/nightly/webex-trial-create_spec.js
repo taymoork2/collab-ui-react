@@ -75,10 +75,6 @@ describe('WebEx Trial Creation', function () {
     it('should navigate first time wizard', function () {
       utils.waitForText(wizard.mainviewTitle, 'Plan Review');
       utils.click(wizard.beginBtn);
-
-      utils.waitForText(wizard.mainviewTitle, 'Message Settings');
-      utils.click(wizard.saveBtn);
-
       utils.waitForText(wizard.mainviewTitle, 'Enterprise Settings');
       utils.waitForText(wizard.sipURLExample, 'These subdomains will be reserved for you:');
       utils.sendKeys(wizard.sipDomain, partner.newTrial.sipDomain + protractor.Key.ENTER);

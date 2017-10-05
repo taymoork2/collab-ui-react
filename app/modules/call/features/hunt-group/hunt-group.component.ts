@@ -25,7 +25,6 @@ class HuntGroupCtrl implements ng.IComponentController {
   public isLoading: boolean = false;
   public saveInProcess: boolean = false;
   public dragAndDropEnabled: boolean;
-  public isHi1487Supported: boolean = false;
 
   /* @ngInject */
   constructor(
@@ -37,7 +36,6 @@ class HuntGroupCtrl implements ng.IComponentController {
     private HuntGroupService: HuntGroupService,
     private Notification: Notification,
     private $translate: ng.translate.ITranslateService,
-    private FeatureToggleService,
   ) {
     this.huntGroupId = _.get<string>(this.$stateParams.feature, 'id');
     this.title = _.get<string>(this.$stateParams.feature, 'cardName');
@@ -46,10 +44,6 @@ class HuntGroupCtrl implements ng.IComponentController {
   public $onInit(): void {
     if (this.$state.current.name === 'huntgroupedit' && !this.huntGroupId) {
       this.$state.go(this.huronFeaturesUrl);
-    } else {
-      this.FeatureToggleService.supports(this.FeatureToggleService.features.hi1487).then(result => {
-        this.isHi1487Supported = result;
-      });
     }
 
     this.isLoading = true;
@@ -146,7 +140,7 @@ class HuntGroupCtrl implements ng.IComponentController {
 
   public cancelModal(): void {
     this.$modal.open({
-      templateUrl: 'modules/call/features/hunt-group/hunt-group-cancel-modal.html',
+      template: require('modules/call/features/hunt-group/hunt-group-cancel-modal.html'),
       type: 'dialog',
     });
   }
@@ -334,11 +328,10 @@ class HuntGroupCtrl implements ng.IComponentController {
     return this.$translate.instant('callPark.createHelpText');
   }
 
-
 }
 
 export class HuntGroupComponent implements ng.IComponentOptions {
   public controller = HuntGroupCtrl;
-  public templateUrl = 'modules/call/features/hunt-group/hunt-group.component.html';
+  public template = require('modules/call/features/hunt-group/hunt-group.component.html');
   public bindings = {};
 }

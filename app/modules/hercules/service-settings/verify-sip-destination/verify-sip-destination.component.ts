@@ -3,7 +3,6 @@ import { Notification } from 'modules/core/notifications';
 
 class VerifySipDestinationComponentCtrl implements ng.IComponentController {
 
-  public resultSet: VerificationStep[];
   public destinationUrl: string;
   private onDestinationSave: Function;
   private onResultReady: Function;
@@ -29,10 +28,10 @@ class VerifySipDestinationComponentCtrl implements ng.IComponentController {
     this.onTestStarted();
     this.L2SipService.verifySipDestination(this.destinationUrl, true)
       .then((result: ISipDestinationSteps) => {
-        this.resultSet =  result.steps;
+        const resultSet = this.L2SipService.formatSipTestResult(result.steps);
         this.onResultReady({
-          succeeded: this.didTestSucceed(this.resultSet),
-          resultSet: this.resultSet,
+          succeeded: this.didTestSucceed(result.steps),
+          resultSet: resultSet,
         });
       })
       .catch((error) => {
@@ -56,7 +55,7 @@ class VerifySipDestinationComponentCtrl implements ng.IComponentController {
 
 export class VerifySipDestinationComponent implements ng.IComponentOptions {
   public controller = VerifySipDestinationComponentCtrl;
-  public templateUrl = 'modules/hercules/service-settings/verify-sip-destination/verify-sip-destination.html';
+  public template = require('modules/hercules/service-settings/verify-sip-destination/verify-sip-destination.html');
   public bindings = {
     destinationUrl: '<',
     onDestinationSave: '&',

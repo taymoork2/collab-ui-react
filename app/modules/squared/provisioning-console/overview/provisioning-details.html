@@ -1,0 +1,124 @@
+<div class="provisioning-details break-word">
+  <cs-sp-header>
+    <div class="header-info">
+      <div class="header-info-wrap">
+        <h5 translate="provisioningConsole.details.orderNumber" translate-values="{orderNumber: provisioningDetailsCtrl.order.webOrderID}"></h5>
+        <p ng-if="provisioningDetailsCtrl.order.status === provisioningDetailsCtrl.status.COMPLETED" translate="provisioningConsole.details.completed" translate-values="{orderDate: provisioningDetailsCtrl.dateInfo}">
+        </p>
+        <p ng-if="provisioningDetailsCtrl.order.status !== provisioningDetailsCtrl.status.COMPLETED" translate="provisioningConsole.details.pending" translate-values="{orderDate: provisioningDetailsCtrl.dateInfo}">
+        </p>
+      </div>
+    </div>
+  </cs-sp-header>
+  <div class="side-panel-container-view" ui-view="side-panel-container">
+    <cs-sp-container>
+      <cs-sp-section>
+        <div class="form-group">
+          <div class="col-sm-12">
+            <p class="form-control-static"><span translate="provisioningConsole.manualCode"></span> {{provisioningDetailsCtrl.order.manualCode}} - {{provisioningDetailsCtrl.getManualCode(provisioningDetailsCtrl.order.manualCode)}}
+            </p>
+          </div>
+        </div>
+        <div  class="form-group" ng-if="provisioningDetailsCtrl.order.status !== provisioningDetailsCtrl.status.COMPLETED" >
+          <div class="col-sm-6">
+            <button cs-btn ng-if="provisioningDetailsCtrl.order.status === provisioningDetailsCtrl.status.PENDING"
+            ng-click="provisioningDetailsCtrl.moveTo(provisioningDetailsCtrl.order, provisioningDetailsCtrl.status.PROGRESS);"
+            class="btn info" loading="provisioningDetailsCtrl.isLoading"><span translate="provisioningConsole.actions.progress"></span></button>
+            <button cs-btn ng-if="provisioningDetailsCtrl.order.status === provisioningDetailsCtrl.status.PROGRESS"
+            ng-click="provisioningDetailsCtrl.moveTo(provisioningDetailsCtrl.order, provisioningDetailsCtrl.status.PENDING);"
+            class="btn info" loading="provisioningDetailsCtrl.isLoading"> <span translate="provisioningConsole.actions.pending"></span></button>
+          </div>
+          <div class="col-sm-6">
+            <button cs-btn ng-if="provisioningDetailsCtrl.order.status !== provisioningDetailsCtrl.status.COMPLETED"
+            ng-click="provisioningDetailsCtrl.moveTo(provisioningDetailsCtrl.order, provisioningDetailsCtrl.status.COMPLETED);"
+            class="btn info" loading="provisioningDetailsCtrl.isLoading"><span  translate="provisioningConsole.actions.completed"></span></button>
+          </div>
+        </div>
+      </cs-sp-section>
+      <cs-sp-section>
+        <section-title title-key="provisioningConsole.details.customerInfo.title">
+        </section-title>
+        <div class="form-group">
+          <label class="col-sm-4 control-label" translate="provisioningConsole.customerName"></label>
+          <div class="col-sm-8">
+            <p class="form-control-static">{{provisioningDetailsCtrl.customerInfo.customerName}}</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-4 control-label" translate="provisioningConsole.customerMail"></label>
+          <div class="col-sm-8">
+            <p class="form-control-static">{{provisioningDetailsCtrl.customerInfo.customerEmail}}</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-4 control-label" translate="provisioningConsole.details.customerInfo.partnerName"></label>
+          <div class="col-sm-8">
+            <p class="form-control-static">{{provisioningDetailsCtrl.customerInfo.partnerName}}</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-4 control-label" translate="provisioningConsole.details.customerInfo.partnerMail"></label>
+          <div class="col-sm-8">
+            <p class="form-control-static">{{provisioningDetailsCtrl.customerInfo.partnerEmail}}</p>
+          </div>
+        </div>
+      </cs-sp-section>
+      <cs-sp-section ng-if="provisioningDetailsCtrl.order.siteUrl">
+        <section-title title-key="provisioningConsole.details.siteInfo.title"></section-title>
+        <div class="text-center" ng-show="provisioningDetailsCtrl.isLoading">
+          <i class="icon icon-spinner icon-2x"></i>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-4 control-label" translate="provisioningConsole.details.siteInfo.url"></label>
+          <div class="col-sm-8">
+            <p class="form-control-static">{{provisioningDetailsCtrl.order.siteUrl || '-'}}</p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="col-sm-4 control-label" translate="provisioningConsole.details.siteInfo.action"></label>
+          <div class="col-sm-8">
+            <p class="form-control-static">{{provisioningDetailsCtrl.selectedSite.action || '-'}}</p>
+          </div>
+        </div>
+        <!-- AG don't have these fields -->
+        <div class="form-group">
+          <label class="col-sm-4 control-label" translate="provisioningConsole.details.siteInfo.timezone"></label>
+          <div class="col-sm-8">
+            <p class="form-control-static">{{provisioningDetailsCtrl.selectedSite.timeZoneId || '-'}}</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-4 control-label" translate="provisioningConsole.details.siteInfo.country"></label>
+          <div class="col-sm-8">
+            <p class="form-control-static">{{provisioningDetailsCtrl.selectedSite.countryCode || '-'}}</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-4 control-label" translate="provisioningConsole.details.siteInfo.handling"></label>
+          <div class="col-sm-8">
+            <p class="form-control-static">{{provisioningDetailsCtrl.selectedSite.specialHandlingRequired || '-'}}</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-4 control-label" translate="provisioningConsole.details.siteInfo.language"></label>
+          <div class="col-sm-8">
+            <p class="form-control-static">{{provisioningDetailsCtrl.selectedSite.primaryLanguage || '-'}}</p>
+          </div>
+        </div>
+      </cs-sp-section>
+      <cs-sp-section>
+        <div class="section-title-row">
+          <button class="btn info" class="btn btn-info" ng-click="provisioningDetailsCtrl.isShowRaw = !provisioningDetailsCtrl.isShowRaw">
+            <span translate= "provisioningConsole.actions.showOrder" ng-show="!provisioningDetailsCtrl.isShowRaw"></span>
+            <span translate= "provisioningConsole.actions.hideOrder" ng-show="provisioningDetailsCtrl.isShowRaw"></span>
+          </button>
+        </div>
+        <div collapse="!provisioningDetailsCtrl.isShowRaw" class="provisioning-details__raw">
+          <hr>
+          <pre>{{provisioningDetailsCtrl.orderContent | json}}</pre>
+        </div>
+      </cs-sp-section>
+    </cs-sp-container>
+  </div>
+</div>

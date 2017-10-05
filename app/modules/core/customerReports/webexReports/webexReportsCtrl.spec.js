@@ -8,8 +8,8 @@ describe('Controller: Customer Reports Ctrl', function () {
   beforeEach(function () {
     this.initModules('Core');
     this.injectDependencies('$controller',
-                            '$scope',
-                            '$q');
+      '$scope',
+      '$q');
     WebexReportService = {
       initReportsObject: function () {},
     };

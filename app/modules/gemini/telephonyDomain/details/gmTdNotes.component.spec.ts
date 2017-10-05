@@ -1,8 +1,8 @@
 import testModule from '../index';
 
 describe('Component: gmTdNotes', () => {
-  beforeAll(function () {
-    this.preData = getJSONFixture('gemini/common.json');
+  beforeEach(function () {
+    this.preData = _.cloneDeep(getJSONFixture('gemini/common.json'));
   });
 
   beforeEach(function () {
@@ -15,6 +15,7 @@ describe('Component: gmTdNotes', () => {
   function initSpies() {
     spyOn(this.PreviousState, 'go');
     spyOn(this.Notification, 'error');
+    spyOn(this.Notification, 'errorResponse');
     spyOn(this.Notification, 'notify');
     spyOn(this.TelephonyDomainService, 'postNotes').and.returnValue(this.$q.resolve());
   }
@@ -68,38 +69,10 @@ describe('Component: gmTdNotes', () => {
     expect(this.Notification.error).toHaveBeenCalled();
   });
 
-  it('onSave but with note exceed max length', function () {
-    this.controller.newNote = '测';
-    this.controller.noteMaxByte = 2;
-    this.controller.onSave();
-    expect(this.Notification.error).toHaveBeenCalled();
-  });
-
-  it('should notify in message for non 0 error returnCode', function() {
-    const mockData = this.preData.common;
-    mockData.content.data.body = [
-      {
-        objectName: 'new_note',
-      },
-    ];
-    mockData.content.data.returnCode = 400;
-
-    this.TelephonyDomainService.postNotes.and.returnValue(this.$q.resolve(mockData));
-    this.controller.newNote = 'new_note';
-    this.controller.onSave();
-    this.$scope.$digest();
-
-    expect(this.Notification.notify).toHaveBeenCalled();
-  });
-
   it('should save new note successfully', function() {
-    const mockData = this.preData.common;
-    mockData.content.data.body = [
-      {
-        objectName: 'new_note',
-      },
-    ];
-    mockData.content.data.returnCode = 0;
+    const mockData = {
+      objectName: 'new_note',
+    };
 
     this.TelephonyDomainService.postNotes.and.returnValue(this.$q.resolve(mockData));
     this.controller.newNote = 'new_note';
@@ -109,15 +82,12 @@ describe('Component: gmTdNotes', () => {
     expect(this.controller.allNotes.length).toBe(2);
   });
 
-  it('should show the error when save note and response body is null', function () {
-    const mockData = this.preData.common;
-    mockData.content.data.body = null;
-    mockData.content.data.returnCode = 0;
-    this.TelephonyDomainService.postNotes.and.returnValue(this.$q.resolve(mockData));
+  it('should show the error when save note fail', function () {
+    this.TelephonyDomainService.postNotes.and.returnValue(this.$q.reject({ status: 404 }));
     this.controller.newNote = 'new_note';
     this.controller.onSave();
     this.$scope.$apply();
 
-    expect(this.Notification.error).toHaveBeenCalled();
+    expect(this.Notification.errorResponse).toHaveBeenCalled();
   });
 });

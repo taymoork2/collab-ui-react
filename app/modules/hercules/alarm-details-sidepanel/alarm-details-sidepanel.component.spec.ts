@@ -2,14 +2,15 @@ import { AlarmDetailsSidepanelCtrl } from './alarm-details-sidepanel.component';
 
 describe('Component: AlarmDetailsSidepanel', () => {
 
-  let $scope, $componentController, controller: AlarmDetailsSidepanelCtrl;
+  let $scope, $componentController, controller: AlarmDetailsSidepanelCtrl, HybridServicesExtrasService;
 
   beforeEach(angular.mock.module('Hercules'));
   beforeEach(inject(dependencies));
 
-  function dependencies(_$componentController_, $rootScope) {
+  function dependencies(_$componentController_, $rootScope, _HybridServicesExtrasService_) {
     $scope = $rootScope.$new();
     $componentController = _$componentController_;
+    HybridServicesExtrasService = _HybridServicesExtrasService_;
   }
 
   function initController(alarm) {
@@ -76,4 +77,23 @@ describe('Component: AlarmDetailsSidepanel', () => {
     expect(controller.alarm.alarmSolutionElements[4].text).toEqual(' replacement values');
     expect(controller.alarm.alarmSolutionElements[4].link).toBeUndefined();
   });
+
+  it('should try to translate alarms that have a key', () => {
+    spyOn(HybridServicesExtrasService, 'translateResourceAlarm');
+    initController(
+      {
+        key: 'this.is.some.key',
+      });
+    expect(HybridServicesExtrasService.translateResourceAlarm).toHaveBeenCalledTimes(1);
+  });
+
+  it('should not try to translate alarms that do not have a key', () => {
+    spyOn(HybridServicesExtrasService, 'translateResourceAlarm');
+    initController(
+      {
+        someProperty: 'but.no.key',
+      });
+    expect(HybridServicesExtrasService.translateResourceAlarm).not.toHaveBeenCalled();
+  });
+
 });

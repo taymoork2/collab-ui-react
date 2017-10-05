@@ -36,6 +36,9 @@ require('./_user-manage.scss');
     function onInit() {
       // save state we came from here so we can go back when exiting this flow
       rootState = $previousState.get().state.name;
+      if (rootState === 'users.manage.emailSuppress') {
+        rootState = 'users.manage.picker';
+      }
 
       $rootScope.$on('add-user-dirsync-started', function () {
         vm.isBusy = true;
@@ -86,7 +89,7 @@ require('./_user-manage.scss');
       if (isCsvProcessing()) {
         $modal.open({
           type: 'dialog',
-          templateUrl: 'modules/core/users/userCsv/userCsvStopImportConfirm.tpl.html',
+          template: require('modules/core/users/userCsv/userCsvStopImportConfirm.tpl.html'),
         }).result.then(function () {
           // cancel the current import
           $scope.csv.isCancelledByUser = true;

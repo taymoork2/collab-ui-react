@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: WebExSiteRowCtrl', function () {
-  var controller, $scope, $q, FeatureToggleService, WebExSiteRowService, TokenService, state;
+  var controller, $controller, $scope, $q, FeatureToggleService, WebExSiteRowService, TokenService, state;
   var fakeShowGridData = true;
   var fakeGridData = {
     siteUrl: 'abc.webex.com',
@@ -13,7 +13,7 @@ describe('Controller: WebExSiteRowCtrl', function () {
   var accessToken = 'Token ABCDERFGHIJK';
 
   afterEach(function () {
-    controller = $scope = $q = FeatureToggleService = WebExSiteRowService = TokenService = state = undefined;
+    controller = $scope = $controller = $q = FeatureToggleService = WebExSiteRowService = TokenService = state = undefined;
   });
 
   afterAll(function () {
@@ -25,9 +25,9 @@ describe('Controller: WebExSiteRowCtrl', function () {
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module('WebExApp'));
 
-  beforeEach(inject(function ($rootScope, $controller, $state, _$q_, _FeatureToggleService_, _WebExSiteRowService_, _TokenService_) {
+  beforeEach(inject(function ($rootScope, _$controller_, $state, _$q_, _FeatureToggleService_, _WebExSiteRowService_, _TokenService_) {
     $scope = $rootScope.$new();
-
+    $controller = _$controller_;
     FeatureToggleService = _FeatureToggleService_;
     WebExSiteRowService = _WebExSiteRowService_;
     TokenService = _TokenService_;
@@ -36,12 +36,17 @@ describe('Controller: WebExSiteRowCtrl', function () {
 
     spyOn(state, 'go');
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
+    spyOn(FeatureToggleService, 'atlasWebexAddSiteGetStatus').and.returnValue($q.resolve(true));
     spyOn(WebExSiteRowService, 'getConferenceServices');
     spyOn(WebExSiteRowService, 'configureGrid');
     spyOn(WebExSiteRowService, 'getGridOptions').and.returnValue(fakeGridOptions);
     spyOn(WebExSiteRowService, 'getShowGridData').and.returnValue(fakeShowGridData);
     spyOn(TokenService, 'getAccessToken').and.returnValue(accessToken);
+  }));
 
+  beforeEach(initController);
+
+  function initController() {
     controller = $controller('WebExSiteRowCtrl', {
       $scope: $scope,
       FeatureToggleService: FeatureToggleService,
@@ -49,7 +54,7 @@ describe('Controller: WebExSiteRowCtrl', function () {
     });
 
     $scope.$apply();
-  }));
+  }
 
   it('can correctly initialize WebExSiteRowCtrl', function () {
     expect(controller).toBeDefined();
@@ -80,5 +85,14 @@ describe('Controller: WebExSiteRowCtrl', function () {
     var siteUrl = 'abc.webex.com';
     controller.linkToReports(siteUrl);
     expect(state.go).toHaveBeenCalledWith(stateName, { siteUrl: siteUrl });
+  });
+  it('will set isShowAddSite to TRUE if \'atlasWebexAddSiteGetStatus\' FT is enabled', function () {
+    expect(controller.isShowAddSite).toBeTruthy();
+  });
+
+  it('will set isShowAddSite to FALSE  if \'atlasWebexAddSiteGetStatus\' FT is disabled', function () {
+    FeatureToggleService.atlasWebexAddSiteGetStatus.and.returnValue($q.resolve(false));
+    initController();
+    expect(controller.isShowAddSite).toBeFalsy();
   });
 });

@@ -27,12 +27,12 @@
           PstnModel.setCountryCode(data.countryCode);
         }
         PstnService.getCustomerV2(PstnModel.getCustomerId())
-        .then(function () {
-          PstnModel.setCustomerExists(true);
-        })
-        .finally(function () {
-          vm.enableCarriers = true;
-        });
+          .then(function () {
+            PstnModel.setCustomerExists(true);
+          })
+          .finally(function () {
+            vm.enableCarriers = true;
+          });
       }, PstnModel.getCustomerId(), params);
     }
 

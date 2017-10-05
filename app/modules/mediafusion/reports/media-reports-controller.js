@@ -53,6 +53,8 @@
     vm.customPlaceholder = $translate.instant('mediaFusion.report.custom');
     vm.total_cloud_heading = $translate.instant('mediaFusion.metrics.totalCloud');
     vm.participants = $translate.instant('mediaFusion.metrics.participants');
+    vm.increasedBy = $translate.instant('mediaFusion.metrics.increasedBy');
+    vm.decreasedBy = $translate.instant('mediaFusion.metrics.decreasedBy');
 
     vm.availabilityCardHeading = '';
     vm.clusterAvailabilityCardHeading = $translate.instant('mediaFusion.metrics.clusterAvailabilityCardHeading');
@@ -60,7 +62,7 @@
 
     vm.second_card_heading = vm.cloud_calls_heading;
     vm.redirected_heading = vm.cloud_calls_heading;
-    vm.second_card_value = 0;
+
     vm.hosted_participants_heading = vm.on_prem_participants_heading;
     vm.hosted_heading = vm.on_prem_calls_heading;
     vm.availabilityCardHeading = vm.clusterAvailabilityCardHeading;
@@ -140,7 +142,7 @@
     vm.cloudParticipantsDesc = $translate.instant('mediaFusion.metrics.cardDescription.cloudParticipants');
     vm.meetsHostTypeDesc = $translate.instant('mediaFusion.metrics.cardDescription.meetsHostType');
     vm.tooltipText = '';
-    vm.cardIndicator = 0;
+    vm.cardIndicatorDiff = 0;
     vm.clusterUnavailablityFlag = false;
 
 
@@ -299,6 +301,7 @@
 
     function setTotalCallsData() {
       MediaReportsService.getTotalCallsData(vm.timeSelected, vm.clusterSelected).then(function (response) {
+        vm.second_card_value = 0;
         if (vm.clusterId === vm.allClusters) {
           if (response === vm.ABORT) {
             return undefined;
@@ -365,7 +368,6 @@
             vm.totalcloudcalls = vm.onprem + vm.cloudOverflow;
           }
           vm.second_card_value = (vm.cloudOverflow == vm.noData) ? vm.noData : abbreviateNumber(vm.cloudOverflow);
-          vm.totalcloudcalls = abbreviateNumber(vm.totalcloudcalls);
         }
         vm.totalcloudShort = (vm.totalcloudcalls == vm.noData) ? vm.noData : abbreviateNumber(vm.totalcloudcalls);
         vm.totalcloudTooltip = checkForTooltip(vm.totalcloudShort) ? vm.totalcloudcalls : '';
@@ -374,7 +376,17 @@
         vm.onpremShort = (vm.onprem == vm.noData) ? vm.noData : abbreviateNumber(vm.onprem);
         vm.onpremTooltip = checkForTooltip(vm.onpremShort) ? vm.onprem : '';
         vm.cloudOverflowTooltip = checkForTooltip(vm.second_card_value) ? vm.cloudOverflow : '';
+
+        var overflow = (vm.cloudOverflow === vm.noData) ? 0 : vm.cloudOverflow;
+        vm.overflowPercentage = (vm.totalcloudcalls > 0) ? (overflow / vm.totalcloudcalls) * 100 : 0;
+        vm.overflowPercentage = _.round(vm.overflowPercentage, 2);
         setOverflowIndicator();
+      }, function () {
+        vm.onprem = vm.noData;
+        vm.cloudOverflow = vm.noData;
+        vm.total = vm.noData;
+        vm.cloudcalls = vm.noData;
+        vm.second_card_value = vm.noData;
       });
     }
 
@@ -383,9 +395,11 @@
         if (response == vm.ABORT) {
           return undefined;
         } else {
-          vm.cardIndicator = response.data.dataProvider[0].value;
-          if (vm.cardIndicator > 0) {
-            vm.cardIndicator = '+' + vm.cardIndicator;
+          vm.cardIndicatorDiff = response.data.dataProvider[0].value;
+          if (vm.cardIndicatorDiff > 0) {
+            vm.cardIndicator = vm.increasedBy + ' ' + vm.cardIndicatorDiff;
+          } else {
+            vm.cardIndicator = vm.decreasedBy + ' ' + vm.cardIndicatorDiff;
           }
         }
       });
@@ -419,6 +433,9 @@
             vm.totalParticipantschartOptions.noData = false;
           }
         }
+      }, function () {
+        AdoptionCardService.setDummyTotalParticipantsPiechart(false);
+        vm.totalParticipantschartOptions.noData = true;
       });
     }
 
@@ -433,6 +450,9 @@
           AdoptionCardService.setClientTypePiechart(response.data);
           vm.clientTypeschartOptions.noData = false;
         }
+      }, function () {
+        AdoptionCardService.setDummyClientTypePiechart();
+        vm.clientTypeschartOptions.noData = true;
       });
     }
 
@@ -458,6 +478,11 @@
           vm.totMeetingsShort = abbreviateNumber(vm.tot_number_meetings);
           vm.totMeetingsTooltip = checkForTooltip(vm.totMeetingsShort) ? vm.tot_number_meetings : '';
         }
+      }, function () {
+        AdoptionCardService.setDummyNumberOfMeetsOnPremisesPiechart();
+        vm.meetsHostedchartOptions.noData = true;
+        vm.totMeetingsShort = vm.noData;
+        vm.totMeetingsTooltip = '';
       });
     }
 

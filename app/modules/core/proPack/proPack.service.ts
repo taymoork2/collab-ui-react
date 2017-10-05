@@ -1,23 +1,22 @@
 export class ProPackService {
 
+  public isProPackCustomer: boolean = false;
+
   /* @ngInject */
   constructor(
+    private $q: ng.IQService,
     private Authinfo,
     private FeatureToggleService,
-    private $q: ng.IQService,
-    ) {}
+    ) {
+  }
 
   public hasProPackEnabled(): ng.IPromise<boolean> {
-    return this.FeatureToggleService.atlasITProPackGetStatus().then(result => {
-      return result;
-    });
+    return this.FeatureToggleService.atlasITProPackGetStatus();
   }
 
   // any calls to getProPackPurchased outside of the service should be calling hasProPackPurchased instead
   private getProPackPurchased(): ng.IPromise<boolean> {
-    return this.FeatureToggleService.atlasITProPackPurchasedGetStatus().then(result => {
-      return result;
-    });
+    return this.FeatureToggleService.atlasITProPackPurchasedGetStatus();
   }
 
   // This will be true if the ProPack Toggle and propack is purchased are true
@@ -52,5 +51,4 @@ export class ProPackService {
       return result.proPack && !(result.proPackPurchased || this.Authinfo.isPremium());
     });
   }
-
 }

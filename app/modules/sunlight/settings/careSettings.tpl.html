@@ -20,8 +20,8 @@
       </div>
     </div>
 
-    <form name="routingSelector" ng-show="localCareSettings.showRouterToggle">
-    <div class="cs-form__section">
+    <form name="orgConfigForm">
+    <div class="cs-form__section" ng-show="localCareSettings.featureToggles.showRouterToggle">
       <div class="section__info">
         <h4 class="section__title" translate="sunlightDetails.settings.routing.header"></h4>
         <p class="sub-section__description ng-scope" translate="sunlightDetails.settings.routing.description"></p>
@@ -36,14 +36,15 @@
                     ng-disabled="localCareSettings.enableRoutingMechanism()"
                     cs-input
                     type="radio"
-                    ng-model="localCareSettings.selectedRouting"
+                    ng-model="localCareSettings.orgChatConfig.selectedRouting"
                     id="{{type.Header}}"
                     value="{{type.Value}}"
                     cs-input-label="{{type.Header}}"
-                    cs-input-help-text="{{type.Label}}">
+                    cs-input-help-text="{{type.Label}}"
+                    name= "selectedRouting">
           </div>
         </div>
-        <div class="body-small care-warning-message" ng-if="routingSelector.$dirty">
+        <div class="body-small care-warning-message" ng-if="orgConfigForm.selectedRouting.$dirty">
           <div class="warning-sign">
             <i class="icon icon-warning"></i>
           </div>
@@ -55,8 +56,52 @@
         </div>
         </div>
     </div>
-    <div class="save-care-section" ng-if="routingSelector.$dirty">
-      <p></p>
+    <div class="cs-form__section" ng-show="localCareSettings.featureToggles.chatToVideoFeatureToggle">
+      <div class="section__info">
+        <h4 class="section__title" translate="sunlightDetails.settings.chatCount.sectionInfoTitle"></h4>
+        <p class="sub-section__description ng-scope"
+          translate="sunlightDetails.settings.chatCount.sectionInfoDescription">
+        </p>
+      </div>
+      <div class="section__content">
+        <div class="sub-section">
+          <h5 class="sub-section__label" translate="sunlightDetails.settings.chatCount.sectionContentTitle"></h5>
+          <p class="cs-input-help-text"
+            translate="sunlightDetails.settings.chatCount.sectionContentDescription"></p>
+          <br>
+          <div class="row">
+            <div class="large-3">
+              <cs-select class="selectedChatCount" name="selectedChatCount" ng-model="localCareSettings.orgChatConfig.selectedChatCount" options="localCareSettings.chatCountOptions">
+              </cs-select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="cs-form__section" ng-show="localCareSettings.featureToggles.chatToVideoFeatureToggle">
+      <div class="section__info">
+        <h4 class="section__title" translate="sunlightDetails.settings.video.sectionInfoTitle"></h4>
+        <p class="sub-section__description ng-scope"
+          translate="sunlightDetails.settings.video.sectionInfoDescription">
+        </p>
+      </div>
+      <div class="section__content">
+        <div class="sub-section">
+          <h5 class="sub-section__label" translate="sunlightDetails.settings.video.sectionContentTitle"></h5>
+          <p class="cs-input-help-text"
+            translate="sunlightDetails.settings.video.sectionContentDescription"></p>
+          <br>
+          <div class="row">
+            <div class="large-3">
+              <cs-toggle-switch ng-model="localCareSettings.orgChatConfig.selectedVideoInChatToggle"
+                toggle-id="selectedVideoInChatToggle" size="small">
+              </cs-toggle-switch>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="save-care-section" ng-if="orgConfigForm.$dirty">
       <button ng-click="localCareSettings.cancelEdit()" translate="common.cancel" ng-disabled="localCareSettings.isProcessing"></button>
       <button class="btn btn--primary" cs-btn loading="localCareSettings.isProcessing" ng-click="localCareSettings.openModal()"><span translate="common.save"></span></button>
     </div>

@@ -2,7 +2,7 @@
   <!-- support form -->
   <form name="partnerProfileForm" novalidate>
     <!-- page title -->
-    <cs-page-header id="orgProfilePageTitle" title-name="partnerProfile.title">
+    <cs-page-header id="orgProfilePageTitle" title-name="{{'partnerProfile.title' | translate}}">
     </cs-page-header>
     <div class="save-section" ng-class="{invisible: !partnerProfileForm.$dirty}">
       <p translate="callerIdPanel.saveConfirmation"></p>
@@ -55,8 +55,8 @@
           </div>
         </div>
         <div class="columns small-12 form-section">
-            <div ng-include="'modules/core/partnerProfile/branding/branding.tpl.html'"
-                 ng-controller="BrandingCtrl as bctrl"></div>
+            <cr-partner-profile-branding
+                 ng-controller="BrandingCtrl as bctrl"></cr-partner-profile-branding>
         </div>
         <div class="columns small-12 form-section">
           <crash-report-setting></crash-report-setting>

@@ -20,6 +20,8 @@
           name="callerIdName"
           ng-model="$ctrl.customCallerIdName"
           cs-input-label="{{'callerIdPanel.customName' | translate}}"
+          cs-input-validators="$ctrl.validator"
+          cs-input-messages="$ctrl.errorMessage"
           ng-change="$ctrl.onChange()"
           maxlength="30"
           required>
@@ -29,7 +31,7 @@
           size="medium-12"
           inputs="$ctrl.callerIdInputs"
           select-type="select"
-          custom-number-translations="$ctrl.customTranslations"
+          input-translations="$ctrl.inputTranslations"
           on-change-fn="$ctrl.setCallerIdNumber(model)">
         </cs-call-destination>
       </div>

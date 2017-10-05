@@ -1,60 +1,54 @@
-import { HybridServicesClusterStatesService, IMergedStateSeverity } from 'modules/hercules/services/hybrid-services-cluster-states.service';
+import serviceModule, { HybridServicesClusterStatesService, IServiceStatusDetails } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 import { IConnector } from 'modules/hercules/hybrid-services.types';
 
 describe('Service: HybridServicesClusterStatesService', () => {
   let HybridServicesClusterStatesService: HybridServicesClusterStatesService;
 
-  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module(serviceModule));
   beforeEach(inject(dependencies));
 
   function dependencies(_HybridServicesClusterStatesService_) {
     HybridServicesClusterStatesService = _HybridServicesClusterStatesService_;
   }
 
-  describe('getStateSeverity()', () => {
+  describe('getConnectorStateSeverity()', () => {
     it('should accept a connector as argument', () => {
       const connector = createConnector({
         alarms: [],
         state: 'running',
       });
-      const severity = HybridServicesClusterStatesService.getStateSeverity(connector);
+      const severity = HybridServicesClusterStatesService.getConnectorStateSeverity(connector.state);
       expect(severity).toBe(0);
     });
 
-    it('should accept a string (state) as argument', () => {
-      const severity = HybridServicesClusterStatesService.getStateSeverity('running');
-      expect(severity).toBe(0);
-    });
-
-    it('should return 2 for the \'has_warning_alarms\' state', () => {
+    it('should return 1 for the \'not_configured\' state', () => {
       const connector = createConnector({
-        alarms: [{ severity: 'warning' }, { severity: 'alert' }],
-        state: 'running',
+        state: 'not_configured',
       });
-      const severity = HybridServicesClusterStatesService.getStateSeverity(connector);
-      expect(severity).toBe(2);
-    });
-
-    it('should return 3 for the \'has_error_alarms\' state', () => {
-      const connector = createConnector({
-        alarms: [{ severity: 'critical' }, { severity: 'error' }],
-        state: 'running',
-      });
-      const severity = HybridServicesClusterStatesService.getStateSeverity(connector);
-      expect(severity).toBe(3);
-    });
-
-    it('should return 1 for the \'no_nodes_registered\' state', () => {
-      const aggregatedState = 'no_nodes_registered';
-      const severity = HybridServicesClusterStatesService.getStateSeverity(aggregatedState);
+      const severity = HybridServicesClusterStatesService.getConnectorStateSeverity(connector.state);
       expect(severity).toBe(1);
     });
 
+    it('should return 2 for the \'initializing\' state', () => {
+      const connector = createConnector({
+        state: 'initializing',
+      });
+      const severity = HybridServicesClusterStatesService.getConnectorStateSeverity(connector.state);
+      expect(severity).toBe(2);
+    });
+
+    it('should return 3 for the \'offline\' state', () => {
+      const connector = createConnector({
+        state: 'offline',
+      });
+      const severity = HybridServicesClusterStatesService.getConnectorStateSeverity(connector.state);
+      expect(severity).toBe(3);
+    });
   });
 
-  describe('getSeverityLabel()', () => {
+  describe('getConnectorStateSeverityLabel()', () => {
     it('should return \'ok\' for a severity of 0', () => {
-      const label = HybridServicesClusterStatesService.getSeverityLabel(0);
+      const label = HybridServicesClusterStatesService.getConnectorStateSeverityLabel(0);
       expect(label).toBe('ok');
     });
   });
@@ -91,39 +85,55 @@ describe('Service: HybridServicesClusterStatesService', () => {
     });
   });
 
-  describe('getMergedStateSeverity()', () => {
-    it('should return the most severe state', () => {
-      const connectors: IConnector[] = [
+  describe('getConnectorStateDetails()', () => { /* TODO */ });
+
+  describe('getServiceStatusDetails()', () => {
+    it('should return operational if all connectors are running', () => {
+      const connectors = [
         createConnector({
           alarms: [],
           state: 'running',
         }),
         createConnector({
           alarms: [],
-          state: 'not_configured',
+          state: 'running',
         }),
         createConnector({
           alarms: [],
-          state: 'stopped',
+          state: 'running',
         },
       )];
-      const state = HybridServicesClusterStatesService.getMergedStateSeverity(connectors);
-      expect(state).toEqual(<IMergedStateSeverity>{
-        cssClass: 'danger',
-        label: 'error',
-        name: 'stopped',
-        severity: 3,
+      const state = HybridServicesClusterStatesService.getServiceStatusDetails(connectors);
+      expect(state).toEqual(<IServiceStatusDetails>{
+        cssClass: 'success',
+        name: 'operational',
       });
     });
 
-    it('should return not_installed when there are not connectors', () => {
+    it('should return impaired when there is a running connector and another offline', () => {
+      const connectors = [
+        createConnector({
+          alarms: [],
+          state: 'running',
+        }),
+        createConnector({
+          alarms: [],
+          state: 'offline',
+        }),
+      ];
+      const state = HybridServicesClusterStatesService.getServiceStatusDetails(connectors);
+      expect(state).toEqual(<IServiceStatusDetails>{
+        cssClass: 'warning',
+        name: 'impaired',
+      });
+    });
+
+    it('should return outage when there are no connectors', () => {
       const connectors = [];
-      const state = HybridServicesClusterStatesService.getMergedStateSeverity(connectors);
-      expect(state).toEqual(<IMergedStateSeverity>{
-        cssClass: 'disabled',
-        label: 'unknown',
-        name: 'not_installed',
-        severity: 1,
+      const state = HybridServicesClusterStatesService.getServiceStatusDetails(connectors);
+      expect(state).toEqual(<IServiceStatusDetails>{
+        cssClass: 'danger',
+        name: 'outage',
       });
     });
   });

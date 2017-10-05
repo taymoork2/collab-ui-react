@@ -8,7 +8,7 @@ require('../devices/_devices.scss');
     .controller('PlacesCtrl',
 
       /* @ngInject */
-      function ($q, $scope, $state, $templateCache, $translate, CsdmFilteredViewFactory, CsdmDataModelService, Userservice, Authinfo, WizardFactory, RemPlaceModal, FeatureToggleService, ServiceDescriptorService) {
+      function ($q, $scope, $state, $translate, CsdmFilteredViewFactory, CsdmDataModelService, Userservice, Authinfo, WizardFactory, RemPlaceModal, FeatureToggleService, ServiceDescriptorService, GridCellService) {
         var vm = this;
 
         vm.data = [];
@@ -37,7 +37,10 @@ require('../devices/_devices.scss');
 
           vm.filteredView.isSearchOnly.then(function () {
             CsdmDataModelService.subscribeToChanges($scope, vm.filteredView.refresh.bind(vm.filteredView));
+            vm.gridOptions.data = vm.filteredView.getResult();
           });
+
+          vm.gridOptions.data = vm.filteredView.getResult();
         }
 
         function fetchAsyncSettings() {
@@ -87,10 +90,10 @@ require('../devices/_devices.scss');
 
         vm.isOrgEntitledToHuron = function () {
           return _.filter(
-              Authinfo.getLicenses(),
-              function (l) {
-                return l.licenseType === 'COMMUNICATION';
-              }).length > 0;
+            Authinfo.getLicenses(),
+            function (l) {
+              return l.licenseType === 'COMMUNICATION';
+            }).length > 0;
         };
 
         vm.numDevices = function (place) {
@@ -104,24 +107,18 @@ require('../devices/_devices.scss');
           });
         };
 
-        vm.gridOptions = {
-          data: 'sc.filteredView.getResult()',
-          rowHeight: 45,
-          enableHorizontalScrollbar: 0,
-          enableRowHeaderSelection: false,
-          enableColumnMenus: false,
-          multiSelect: false,
-          onRegisterApi: function (gridApi) {
-            $scope.gridApi = gridApi;
-            gridApi.selection.on.rowSelectionChanged($scope, function (row) {
-              vm.showPlaceDetails(row.entity);
-            });
-          },
+        vm.selectRow = function (grid, row) {
+          GridCellService.selectRow(grid, row);
+          vm.showPlaceDetails(row.entity);
+        };
 
+        vm.gridOptions = {
+          appScopeProvider: vm,
+          rowHeight: 45,
           columnDefs: [{
             field: 'photos',
             displayName: '',
-            cellTemplate: getTemplate('_imageTpl'),
+            cellTemplate: require('./templates/image.tpl.html'),
             sortable: false,
             width: 70,
           }, {
@@ -133,20 +130,22 @@ require('../devices/_devices.scss');
               priority: 1,
             },
             sortCellFiltered: true,
+            cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showPlaceDetails(row.entity)" cell-value="row.entity.displayName"></cs-grid-cell>',
           }, {
             field: 'readableType',
             displayName: $translate.instant('placesPage.typeHeader'),
             sortable: true,
+            cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showPlaceDetails(row.entity)" cell-value="row.entity.readableType"></cs-grid-cell>',
           }, {
             field: 'devices',
             displayName: $translate.instant('placesPage.deviceHeader'),
-            cellTemplate: getTemplate('_devicesTpl'),
             sortable: true,
             sortingAlgorithm: sortNoDevicesFn,
+            cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showPlaceDetails(row.entity)" cell-value="grid.appScope.numDevices(row.entity)"></cs-grid-cell>',
           }, {
             field: 'action',
             displayName: $translate.instant('placesPage.actionHeader'),
-            cellTemplate: getTemplate('_actionsTpl'),
+            cellTemplate: require('./templates/actions.tpl.html'),
             sortable: false,
           }],
         };
@@ -192,7 +191,7 @@ require('../devices/_devices.scss');
                   sparkCall: 'addDeviceFlow.addLines',
                   sparkCallConnect: 'addDeviceFlow.callConnectOptions',
                   sparkOnly: 'addDeviceFlow.showActivationCode',
-                  sparkOnlyAndCalendar: 'addDeviceFlow.editCalendarService',
+                  calendar: 'addDeviceFlow.editCalendarService',
                 },
               },
               'addDeviceFlow.callConnectOptions': {
@@ -219,15 +218,18 @@ require('../devices/_devices.scss');
           });
         };
 
-        vm.deletePlace = function ($event, place) {
-          $event.stopPropagation();
-          RemPlaceModal
-            .open(place);
+        vm.keyboardDeletePlace = function ($event, place) {
+          if ($event.keyCode === GridCellService.ENTER || $event.keyCode === GridCellService.SPACE) {
+            vm.deletePlace($event, place);
+          } else {
+            $event.stopPropagation();
+          }
         };
 
-        function getTemplate(name) {
-          return $templateCache.get('modules/squared/places/templates/' + name + '.html');
-        }
+        vm.deletePlace = function ($event, place) {
+          $event.stopPropagation();
+          RemPlaceModal.open(place);
+        };
 
         function sortFn(a, b) {
           if (a && a.localeCompare) {

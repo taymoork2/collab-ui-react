@@ -26,7 +26,6 @@ describe('Controller: UserOverviewCtrl', function () {
     this.updatedUser.trainSiteNames = ['testSite'];
     this.invitations = getJSONFixture('core/json/users/invitations.json');
     this.featureToggles = getJSONFixture('core/json/users/me/featureToggles.json');
-    this.languages = getJSONFixture('huron/json/settings/languages.json');
   }
 
   function initDependencySpies() {
@@ -58,7 +57,6 @@ describe('Controller: UserOverviewCtrl', function () {
     spyOn(this.MessengerInteropService, 'hasAssignableMessageOrgEntitlement');
     spyOn(this.Notification, 'success');
     spyOn(this.Authinfo, 'isSquaredTeamMember').and.returnValue(false);
-    spyOn(this.ServiceSetup, 'getAllLanguages').and.returnValue(this.$q.resolve(this.languages));
   }
 
   function initStateParams() {
@@ -74,7 +72,11 @@ describe('Controller: UserOverviewCtrl', function () {
     this.$scope.$apply();
   }
 
-  function initController() {
+  function initController(customUser) {
+    if (!_.isUndefined(customUser)) {
+      this.$stateParams.currentUser = customUser;
+    }
+
     this.controller = this.$controller('UserOverviewCtrl', {
       $scope: this.$scope,
       $stateParams: this.$stateParams,
@@ -297,6 +299,158 @@ describe('Controller: UserOverviewCtrl', function () {
 
     it('should set the controller.isCSB to false', function () {
       expect(this.controller.isCSB).toBe(false);
+    });
+  });
+
+  describe('Free and paid calling alternatives', function () {
+    var callUser;
+
+    beforeEach(function () {
+      callUser = _.cloneDeep(getJSONFixture('core/json/currentUser.json'));
+    });
+
+    afterEach(function () {
+      callUser = undefined;
+      this.$stateParams = this.orginalStateParams;
+    });
+
+    it('should show "Call: Free" if the user has no special calling entitlements', function () {
+      initController.apply(this, [callUser]);
+      var callState = _.find(this.controller.services, { state: 'communication' });
+      expect(callState.detail).toBe('onboardModal.callFree');
+      expect(callState.actionAvailable).toBeFalsy();
+    });
+
+    it('should show "Call: Hybrid Call" if the user is entitled to Call Service Aware', function () {
+      callUser.entitlements.push('squared-fusion-uc');
+      initController.apply(this, [callUser]);
+      var callState = _.find(this.controller.services, { state: 'communication' });
+      expect(callState.detail).toBe('onboardModal.paidCommHybrid');
+      expect(callState.actionAvailable).toBeFalsy();
+    });
+
+    it('should show "Call: Call" if the user is entitled to Huron, and has a license', function () {
+      callUser.entitlements.push('ciscouc');
+      callUser.licenseID.push('CO');
+      initController.apply(this, [callUser]);
+      var callState = _.find(this.controller.services, { state: 'communication' });
+      expect(callState.detail).toBe('onboardModal.paidComm');
+      expect(callState.actionAvailable).toBeTruthy();
+    });
+
+    it('should show "Call: Free" if the user is entitled to Huron, but has not been granted a Huron license', function () {
+      callUser.entitlements.push('ciscouc');
+      callUser.licenseID.push('Certainly not a Huron license');
+      initController.apply(this, [callUser]);
+      var callState = _.find(this.controller.services, { state: 'communication' });
+      expect(callState.detail).toBe('onboardModal.callFree');
+      expect(callState.actionAvailable).toBeFalsy();
+    });
+
+    it('should show "Call: Call" if the user is entitled to both Huron and Hybrid Call Service Aware, because Huron is more important', function () {
+      callUser.entitlements.push('ciscouc');
+      callUser.entitlements.push('squared-fusion-uc');
+      callUser.licenseID.push('CO');
+      initController.apply(this, [callUser]);
+      var callState = _.find(this.controller.services, { state: 'communication' });
+      expect(callState.detail).toBe('onboardModal.paidComm');
+      expect(callState.actionAvailable).toBeTruthy();
+    });
+  });
+
+  describe('When the user is a care user', function () {
+    var careUser;
+    beforeEach(function () {
+      careUser = _.cloneDeep(getJSONFixture('core/json/currentUser.json'));
+      careUser.roles = [];
+    });
+
+    afterEach(function () {
+      careUser = undefined;
+      this.$stateParams = this.orginalStateParams;
+    });
+
+    it('user has CDC license and CDC entitlements', function () {
+      careUser.entitlements.push('contact-center-context');
+      careUser.roles.push('spark.synckms');
+      careUser.entitlements.push('cloud-contact-center');
+      careUser.entitlements.push('cloud-contact-center-digital');
+      careUser.licenseID = [
+        'CDC_xyz123',
+      ];
+
+      initController.apply(this, [careUser]);
+      var contactCenterState = _.find(this.controller.services, { state: 'contactCenter' });
+      expect(contactCenterState.detail).toBe('onboardModal.paidContactCenter');
+    });
+
+    it('user has CVC licnese and CVC entitlements', function () {
+      careUser.entitlements.push('contact-center-context');
+      careUser.roles.push('spark.synckms');
+      careUser.entitlements.push('cloud-contact-center');
+      careUser.entitlements.push('cloud-contact-center-inbound-voice');
+      careUser.licenseID = [
+        'CVC_xyz123',
+      ];
+
+      initController.apply(this, [careUser]);
+      var contactCenterState = _.find(this.controller.services, { state: 'contactCenter' });
+      expect(contactCenterState.detail).toBe('onboardModal.paidContactCenterVoice');
+    });
+
+    it('user has CDC and CVC license , but only CDC entitlements', function () {
+      careUser.entitlements.push('contact-center-context');
+      careUser.roles.push('spark.synckms');
+      careUser.entitlements.push('cloud-contact-center');
+      careUser.entitlements.push('cloud-contact-center-digital');
+      careUser.licenseID = [
+        'CVC_xyz123',
+        'CDC_xyx123',
+      ];
+
+      initController.apply(this, [careUser]);
+      var contactCenterState = _.find(this.controller.services, { state: 'contactCenter' });
+      expect(contactCenterState.detail).toBe('onboardModal.paidContactCenter');
+    });
+
+    it('user has CDC and CVC liencees , but only CVC entitlements', function () {
+      careUser.entitlements.push('contact-center-context');
+      careUser.roles.push('spark.synckms');
+      careUser.entitlements.push('cloud-contact-center');
+      careUser.entitlements.push('cloud-contact-center-inbound-voice');
+      careUser.licenseID = [
+        'CVC_xyz123',
+        'CDC_xyx123',
+      ];
+
+      initController.apply(this, [careUser]);
+      var contactCenterState = _.find(this.controller.services, { state: 'contactCenter' });
+      expect(contactCenterState.detail).toBe('onboardModal.paidContactCenterVoice');
+    });
+
+    it('user has no licnese, but cdc and cvc entitlements', function () {
+      careUser.entitlements.push('contact-center-context');
+      careUser.roles.push('spark.synckms');
+      careUser.entitlements.push('cloud-contact-center');
+      careUser.entitlements.push('cloud-contact-center-digital');
+      careUser.licenseID = [];
+
+      initController.apply(this, [careUser]);
+      var contactCenterState = _.find(this.controller.services, { state: 'contactCenter' });
+      expect(contactCenterState).toBe(undefined);
+    });
+
+    it('user has CDC and CVC licenses, bus has no entitlements', function () {
+      careUser.entitlements.push('contact-center-context');
+      careUser.roles.push('spark.synckms');
+      careUser.licenseID = [
+        'CVC_xyz123',
+        'CDC_xyx123',
+      ];
+
+      initController.apply(this, [careUser]);
+      var contactCenterState = _.find(this.controller.services, { state: 'contactCenter' });
+      expect(contactCenterState).toBe(undefined);
     });
   });
 });

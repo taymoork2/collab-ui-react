@@ -1,5 +1,7 @@
 'use strict';
 
+var featureToggle = require('../utils/featureToggle.utils');
+
 /* globals manageUsersPage */
 
 describe('Squared Add User Flow', function () {
@@ -33,7 +35,7 @@ describe('Squared Add User Flow', function () {
 
   describe('Add users through modal', function () {
     it('should login as pbr org admin and view users', function () {
-      login.login('pbr-admin', '#/users')
+      login.login('account-admin', '#/users')
         .then(function (bearerToken) {
           token = bearerToken;
         });
@@ -45,6 +47,10 @@ describe('Squared Add User Flow', function () {
       utils.waitForText(manageUsersPage.select.title, 'Add or Modify Users');
       utils.click(manageUsersPage.select.radio.orgManual);
       utils.click(manageUsersPage.buttons.next);
+      if (featureToggle.features.atlasEmailSuppress) {
+        utils.wait(manageUsersPage.emailSuppress.emailSuppressIcon);
+        utils.click(manageUsersPage.buttons.next);
+      }
       utils.waitForText(manageUsersPage.select.title, 'Manually Add or Modify Users');
     });
 

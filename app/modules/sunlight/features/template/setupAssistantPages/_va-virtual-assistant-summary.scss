@@ -1,0 +1,49 @@
+.va-summary {
+  @include vr-spacing(mt, 11);
+  align-items: center;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+
+  .success-icon {
+    color: $color-cta-base;
+  }
+
+  .edit-message {
+    @include vr-spacing(pt, 1.2);
+    font-family: CiscoSans;
+    color: $color-attention-darker;
+    line-height: initial;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .description {
+    @include vr-spacing(pl, 1);
+    @include vr-spacing(pv, 1);
+
+    text-align: center;
+    width: 100%;
+  }
+
+  .retry-message {
+    @include vr-spacing(mt, 1);
+    color: $color-alerts-base;
+    display: inline-block;
+
+    .icon-error {
+      @include vr-spacing(mt, 0.1875);
+      float: left;
+      font-size: rem-calc(16px);
+    }
+    .error-message {
+      @include vr-spacing(ml, 0.5);
+    }
+  }
+
+  .vaSetupFinishBtn {
+    @include vr-spacing(mt, 1.8125);
+    border-radius: 2px;
+    width: rem-calc(100px);
+  }
+}

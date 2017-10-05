@@ -19,7 +19,7 @@
         type: 'small',
         controller: 'EditServiceCtrl',
         controllerAs: 'editServiceCtrl',
-        templateUrl: 'modules/gss/services/editService/editService.tpl.html',
+        template: require('modules/gss/services/editService/editService.tpl.html'),
         modalClass: 'status-edit-service',
         resolve: {
           theService: getService(service),

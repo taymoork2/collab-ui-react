@@ -4,7 +4,7 @@
   angular
     .module('Gemini')
     .component('cbgNotes', {
-      templateUrl: 'modules/gemini/callbackGroup/details/cbgNotes.tpl.html',
+      template: require('modules/gemini/callbackGroup/details/cbgNotes.tpl.html'),
       controller: CbgNotesCtrl,
     });
   /* @ngInject */
@@ -29,30 +29,29 @@
 
     function onSave() {
       var postData = {
-        customerID: customerId,
-        siteID: ccaGroupId,
-        action: 'add_notes_cg',
-        objectName: vm.model.postData,
+        customerId: customerId,
+        part: 'CG',
+        siteId: ccaGroupId,
+        note: vm.model.postData,
       };
-      var notes = _.get(postData, 'objectName');
+      var notes = _.get(postData, 'note');
       vm.loading = true;
       if (gemService.getByteLength(notes) > noteMaxByte) {
         Notification.error('gemini.cbgs.notes.errorMsg.maxLength', { maxLength: noteMaxByte });
         return;
       }
       cbgService.postNote(postData).then(function (res) {
-        var resJson = _.get(res.content, 'data.body');
         vm.loading = false;
-        if (resJson.returnCode) {
-          Notification.notify(gemService.showError(resJson.returnCode));
-          return;
-        }
-        vm.allNotes.unshift(resJson);
+
+        vm.allNotes.unshift(res);
         vm.isShowAll = (_.size(vm.allNotes) > showNotesNum);
         vm.notes = (_.size(vm.allNotes) <= showNotesNum ? vm.allNotes : vm.allNotes.slice(0, showNotesNum));
         vm.model.postData = '';
 
+        $scope.$$childTail.$$prevSibling.note.$setPristine();
         $scope.$emit('cbgNotesUpdated', vm.allNotes);
+      }).catch(function (err) {
+        Notification.errorResponse(err, 'errors.statusError', { status: err.status });
       });
     }
 
@@ -66,17 +65,24 @@
     }
 
     function getNotes() {
-      cbgService.getNotes(customerId, ccaGroupId)
+      var data = {
+        siteId: ccaGroupId,
+        objectId: '',
+        customerId: customerId,
+        actionFor: 'Callback Group',
+      };
+
+      cbgService.getHistories(data)
         .then(function (res) {
-          var resJson = _.get(res.content, 'data');
-          if (resJson.returnCode) {
-            Notification.notify(gemService.showError(resJson.returnCode));
-            return;
-          }
-          vm.allNotes = resJson.body;
+          vm.allNotes = _.remove(res, function (item) {
+            return item.action === 'add_notes_cg';
+          });
           vm.isShowAll = (_.size(vm.allNotes) > showNotesNum);
           vm.notes = (_.size(vm.allNotes) <= showNotesNum ? vm.allNotes : vm.allNotes.slice(0, showNotesNum));
           vm.loading = false;
+        })
+        .catch(function (err) {
+          Notification.errorResponse(err, 'errors.statusError', { status: err.status });
         });
     }
   }

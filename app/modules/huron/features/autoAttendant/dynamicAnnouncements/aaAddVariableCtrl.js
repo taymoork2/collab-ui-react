@@ -16,7 +16,6 @@
     CONSTANTS.idSelectorPrefix = '#';
 
     vm.dynamicAdd = dynamicAdd;
-
     vm.variableSelection = {
       label: '',
       value: '',
@@ -26,7 +25,6 @@
       label: '',
       value: '',
     };
-
 
     /////////////////////
 
@@ -42,6 +40,9 @@
             var elementHtml = dynamicElement.replace('DynamicText', vm.variableSelection.value);
             elementHtml = elementHtml.replace('ReadAs', vm.readAsSelection.value);
             var myId = id + Date.now();
+            //replacing element-id
+            elementHtml = elementHtml.replace('elementId', myId);
+            //replacing id
             elementHtml = elementHtml.replace('Id', myId);
             dispatchElementInsertion(id, elementHtml, range);
           }, function () {
@@ -51,7 +52,7 @@
       }
     }
 
-    function cancelledDynamicModal() {}
+    function cancelledDynamicModal() { }
 
     function modalClosed() {
       var dynamicList = range.endContainer.ownerDocument.activeElement;
@@ -123,7 +124,7 @@
           } else {
             attributes = node.attributes;
           }
-          var ele = '<aa-insertion-element element-text="' + attributes[0].value + '" read-as="' + attributes[1].value + '" element-id="' + attributes[2].value + '"></aa-insertion-element>';
+          var ele = '<aa-insertion-element element-text="' + attributes[0].value + '" read-as="' + attributes[1].value + '" element-id="' + attributes[2].value + '"id="' + attributes[2].value + '" contenteditable="false""></aa-insertion-element>';
           opt = {
             say: {
               value: attributes[0].value,
@@ -145,7 +146,7 @@
         value: '',
       };
       return $modal.open({
-        templateUrl: 'modules/huron/features/autoAttendant/dynamicAnnouncements/aaDynamicAnnouncementsModal.tpl.html',
+        template: require('modules/huron/features/autoAttendant/dynamicAnnouncements/aaDynamicAnnouncementsModal.tpl.html'),
         controller: 'AADynamicAnnouncementsModalCtrl',
         controllerAs: 'aaDynamicAnnouncementsModalCtrl',
         type: 'small',

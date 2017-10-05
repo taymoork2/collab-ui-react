@@ -2,14 +2,16 @@
   'use strict';
 
   angular
-  .module('uc.autoattendant')
-  .controller('AADecisionCtrl', AADecisionCtrl);
+    .module('uc.autoattendant')
+    .controller('AADecisionCtrl', AADecisionCtrl);
 
   /* @ngInject */
   function AADecisionCtrl($scope, $translate /*, QueueHelperService*/, AACommonService, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AASessionVariableService) {
     var vm = this;
 
     var actionName = 'conditional';
+    var dependentCeSessionVariablesList = [];
+
     vm.queues = [];
 
     vm.ui = {};
@@ -82,8 +84,8 @@
 
     ///////////////////////////////////////////////////////
     $scope.$on('CE Updated', function () {
-      getSessionVariables().finally(function () {
-        refreshVarSelects();
+      getSessionVariablesOfDependentCe().finally(function () {
+        refreshVars();
       });
     });
 
@@ -97,8 +99,27 @@
       }
     });
 
+    function refreshVars() {
+      vm.sessionVarOptions = _.concat(dependentCeSessionVariablesList, AACommonService.collectThisCeActionValue(vm.ui, true, false));
+
+      vm.sessionVarOptions = _.uniq(vm.sessionVarOptions).sort();
+
+      // resets possibly warning messages
+      setLeft();
+    }
+
     function setWarning(flag) {
       vm.isWarn = flag;
+    }
+
+    function getSessionVariablesOfDependentCe() {
+      dependentCeSessionVariablesList = [];
+
+      return AASessionVariableService.getSessionVariablesOfDependentCeOnly(_.get(AAModelService.getAAModel(), 'aaRecordUUID')).then(function (data) {
+        if (!_.isUndefined(data) && data.length > 0) {
+          dependentCeSessionVariablesList = data;
+        }
+      });
     }
 
     function getSessionVarsAfterRemovingChangedValue(oldCI) {

@@ -5,13 +5,13 @@ var testModule = require('./auth');
 describe('Auth Service', function () {
   beforeEach(angular.mock.module(testModule));
 
-  var Auth, Authinfo, $httpBackend, SessionStorage, $rootScope, $state, $q, OAuthConfig, Storage, UrlConfig, WindowLocation, TokenService;
+  var Auth, Authinfo, $httpBackend, SessionStorage, $rootScope, $state, $q, OAuthConfig, Storage, UrlConfig, WindowLocation, TokenService, AccountService;
 
   afterEach(function () {
-    Auth = Authinfo = $httpBackend = SessionStorage = $rootScope = $state = $q = OAuthConfig = Storage = UrlConfig = WindowLocation = TokenService = undefined;
+    Auth = Authinfo = $httpBackend = SessionStorage = $rootScope = $state = $q = OAuthConfig = Storage = UrlConfig = WindowLocation = TokenService = AccountService = undefined;
   });
 
-  beforeEach(inject(function (_Auth_, _Authinfo_, _$httpBackend_, _SessionStorage_, _LocalStorage_, _TokenService_, _$rootScope_, _$state_, _$q_, _OAuthConfig_, _UrlConfig_, _WindowLocation_) {
+  beforeEach(inject(function (_Auth_, _Authinfo_, _$httpBackend_, _SessionStorage_, _LocalStorage_, _TokenService_, _$rootScope_, _$state_, _$q_, _OAuthConfig_, _UrlConfig_, _WindowLocation_, _AccountService_) {
     $q = _$q_;
     Auth = _Auth_;
     $state = _$state_;
@@ -24,6 +24,7 @@ describe('Auth Service', function () {
     Storage = _LocalStorage_;
     TokenService = _TokenService_;
     WindowLocation = _WindowLocation_;
+    AccountService = _AccountService_;
 
     spyOn(WindowLocation, 'set');
     spyOn($state, 'go').and.returnValue($q.resolve());
@@ -447,7 +448,7 @@ describe('Auth Service', function () {
 
       expect(TokenService.triggerGlobalLogout).not.toHaveBeenCalled(); // should not be called before logout (token revocation) is complete
       logoutDefer.resolve();
-      expect(promise).toBeResolved();  // seems unnecessary, but should be the same promise returned from logoutAndRedirectTo()
+      expect(promise).toBeResolved(); // seems unnecessary, but should be the same promise returned from logoutAndRedirectTo()
       expect(Auth.logoutAndRedirectTo).toHaveBeenCalledWith('logoutUrl');
       expect(TokenService.triggerGlobalLogout).toHaveBeenCalled(); // should only be called after logout (token revocation)
     });
@@ -607,18 +608,15 @@ describe('Auth Service', function () {
       it('will fetch account info if admin', function (done) {
         Authinfo.isAdmin = jasmine.createSpy('isAdmin').and.returnValue(true);
         Authinfo.getOrgId = jasmine.createSpy('getOrgId').and.returnValue(42);
-        Authinfo.updateAccountInfo = jasmine.createSpy('updateAccountInfo');
 
-        $httpBackend
-          .expectGET('path/customers?orgId=42')
-          .respond(200, {});
+        spyOn(AccountService, 'updateAuthinfoAccount').and.returnValue($q.resolve());
 
         Auth.authorize().then(function () {
           _.defer(done);
         });
 
         $httpBackend.flush();
-        expect(Authinfo.updateAccountInfo.calls.count()).toBe(1);
+        expect(AccountService.updateAuthinfoAccount).toHaveBeenCalled();
       });
     });
 
@@ -648,18 +646,15 @@ describe('Auth Service', function () {
       it('will update account info', function (done) {
         Authinfo.isReadOnlyAdmin = jasmine.createSpy('isReadOnlyAdmin').and.returnValue(true);
         Authinfo.getOrgId = jasmine.createSpy('getOrgId').and.returnValue(42);
-        Authinfo.updateAccountInfo = jasmine.createSpy('updateAccountInfo');
 
-        $httpBackend
-          .expectGET('path/customers?orgId=42')
-          .respond(200, {});
+        spyOn(AccountService, 'updateAuthinfoAccount').and.returnValue($q.resolve());
 
         Auth.authorize().then(function () {
           _.defer(done);
         });
 
         $httpBackend.flush();
-        expect(Authinfo.updateAccountInfo.calls.count()).toBe(1);
+        expect(AccountService.updateAuthinfoAccount).toHaveBeenCalled();
       });
     });
 

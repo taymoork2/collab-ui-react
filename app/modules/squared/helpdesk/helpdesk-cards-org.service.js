@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskCardsOrgService($translate, CloudConnectorService, Config, HybridServicesClusterService, HelpdeskHuronService, LicenseService, Notification, UCCService) {
+  function HelpdeskCardsOrgService($translate, Config, HelpdeskHuronService, LicenseService) {
     function getMessageCardForOrg(org, licenses) {
       var entitled = LicenseService.orgIsEntitledTo(org, 'webex-squared');
       return new OrgCard(entitled, licenses, Config.licenseTypes.MESSAGING);
@@ -49,48 +49,6 @@
       this.aggregatedLicenses = LicenseService.aggregatedLicenses(licenses, licenseType);
     }
 
-    function getHybridServicesCardForOrg(org) {
-      var hybridServiceIds = ['squared-fusion-cal', 'squared-fusion-uc', 'squared-fusion-media', 'spark-hybrid-datasecurity', 'contact-center-context'];
-      var hybridServicesCard = {
-        entitled: _.some(hybridServiceIds, function (serviceId) {
-          return LicenseService.orgIsEntitledTo(org, serviceId);
-        }) || LicenseService.orgIsEntitledTo(org, 'squared-fusion-gcal') || LicenseService.orgIsEntitledTo(org, 'squared-fusion-ec'),
-        services: [],
-      };
-      if (!hybridServicesCard.entitled) {
-        return;
-      }
-      HybridServicesClusterService.getAll(org.id).then(function (clusterList) {
-        _.forEach(hybridServiceIds, function (serviceId) {
-          if (LicenseService.orgIsEntitledTo(org, serviceId)) {
-            hybridServicesCard.services.push(HybridServicesClusterService.getStatusForService(serviceId, clusterList));
-          }
-        });
-      }).catch(function (response) {
-        Notification.errorResponse(response, 'helpdesk.unexpectedError');
-      });
-      if (LicenseService.orgIsEntitledTo(org, 'squared-fusion-gcal')) {
-        CloudConnectorService.getService(org.id).then(function (service) {
-          hybridServicesCard.services.push(service);
-        }).catch(function (response) {
-          Notification.errorResponse(response, 'helpdesk.unexpectedError');
-        });
-      }
-      if (LicenseService.orgIsEntitledTo(org, 'squared-fusion-ec')) {
-        UCCService.getOrgVoicemailConfiguration(org.id)
-          .then(function (data) {
-            hybridServicesCard.services.push({
-              serviceId: 'voicemail',
-              statusCss: UCCService.mapStatusToCss(data.voicemailOrgEnableInfo.orgVoicemailStatus),
-            });
-          })
-          .catch(function (error) {
-            Notification.errorResponse(error, 'helpdesk.hybridVoicemail.cannotReadStatus');
-          });
-      }
-      return hybridServicesCard;
-    }
-
     function getCareCardForOrg(org, licenses) {
       var entitled = LicenseService.orgIsEntitledTo(org, 'cloud-contact-center');
       return new OrgCard(entitled, licenses, Config.licenseTypes.CARE);
@@ -100,7 +58,6 @@
       getMessageCardForOrg: getMessageCardForOrg,
       getMeetingCardForOrg: getMeetingCardForOrg,
       getCallCardForOrg: getCallCardForOrg,
-      getHybridServicesCardForOrg: getHybridServicesCardForOrg,
       getRoomSystemsCardForOrg: getRoomSystemsCardForOrg,
       getCareCardForOrg: getCareCardForOrg,
     };

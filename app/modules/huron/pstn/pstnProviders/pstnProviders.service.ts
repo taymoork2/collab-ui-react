@@ -14,7 +14,6 @@ export class PstnProvidersService {
     private PstnService: PstnService,
     private PstnModel: PstnModel,
     private $q: ng.IQService,
-    private $resource: ng.resource.IResourceService,
     private $translate: ng.translate.ITranslateService,
   ) {}
 
@@ -33,7 +32,7 @@ export class PstnProvidersService {
 
   //Get all static carrier informantion
   public getCarriersStatic(): ng.IPromise<any[]> {
-    return this.getCarriersJson().query().$promise.then(carriers => {
+    return this.getCarriersJson().then(carriers => {
       const pstnCarrierStatics: IPstnCarrierStatic[] = new Array<IPstnCarrierStatic>();
       carriers.forEach((carrier: IPstnCarrierStatic) => {
         //translate the feature strings
@@ -48,14 +47,8 @@ export class PstnProvidersService {
   }
 
   //Reading static carrier information from status JSON file
-  private getCarriersJson(): any {
-    return this.$resource('modules/huron/pstn/pstnProviders/pstnProviders.json', {}, {
-      query: {
-        method: 'GET',
-        isArray: true,
-        cache: true,
-      },
-    });
+  private getCarriersJson(): ng.IPromise<any> {
+    return this.$q.resolve(require('./pstnProviders.json'));
   }
 
   //Get array of carriers from Terminus service

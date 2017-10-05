@@ -19,6 +19,7 @@ describe('Service: TrialPstnService: ', function () {
     spyOn(PstnService, 'getCustomerV2').and.returnValue($q.reject());
     spyOn(PstnService, 'orderNumbersV2Swivel').and.returnValue($q.resolve());
     spyOn(PstnService, 'orderNumbers').and.returnValue($q.resolve());
+    spyOn(PstnService, 'createLocation').and.returnValue($q.resolve());
   }));
 
   customerOrgId = '5a949ed2-d212-4dc3-a918-4131fc2ccfc9';
@@ -37,7 +38,10 @@ describe('Service: TrialPstnService: ', function () {
     });
 
     it('should call orderNumbersV2Swivel API if huronEnterprisePrivateTrunking feature toggle is on', function () {
+      var _trialData = TrialPstnService.getData();
+      _trialData.details.pstnProvider.apiImplementation = 'SWIVEL';
       FeatureToggleService.supports.and.returnValue($q.resolve(true));
+      TrialPstnService.ftEnterprisePrivateTrunking = true;
       TrialPstnService.createPstnEntityV2(customerOrgId, customerName);
       $rootScope.$apply();
 
@@ -45,6 +49,8 @@ describe('Service: TrialPstnService: ', function () {
     });
 
     it('should call orderNumbers API if huronEnterprisePrivateTrunking feature toggle is off', function () {
+      var _trialData = TrialPstnService.getData();
+      _trialData.details.pstnProvider.apiImplementation = 'SWIVEL';
       FeatureToggleService.supports.and.returnValue($q.resolve(false));
       TrialPstnService.createPstnEntityV2(customerOrgId, customerName);
       $rootScope.$apply();

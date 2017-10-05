@@ -4,7 +4,7 @@
   module.exports = ServiceSetup;
 
   /* @ngInject */
-  function ServiceSetup($filter, $q, $translate, Authinfo, AvrilSiteService, AvrilSiteUpdateService, CeSiteService, CustomerCommonService, CustomerCosRestrictionServiceV2, DateFormatService, ExternalNumberPool, FeatureToggleService, InternalNumberRangeService, MediaManagerService, SiteCountryService, SiteLanguageService, SiteService, TimeFormatService, TimeZoneService, VoicemailService, VoicemailTimezoneService) {
+  function ServiceSetup($filter, $q, $translate, Authinfo, AvrilSiteService, AvrilSiteUpdateService, CeSiteService, CustomerCommonService, CustomerCosRestrictionServiceV2, ExternalNumberPool, FeatureToggleService, MediaManagerService, SiteService, VoicemailService, VoicemailTimezoneService) {
     return {
       internalNumberRanges: [],
       sites: [],
@@ -99,60 +99,16 @@
         }, customer).$promise;
       },
 
-      createInternalNumberRange: function (internalNumberRange) {
-        if (_.isUndefined(internalNumberRange.uuid)) {
-          internalNumberRange.name = internalNumberRange.description = internalNumberRange.beginNumber + ' - ' + internalNumberRange.endNumber;
-          internalNumberRange.patternUsage = 'Device';
-          return InternalNumberRangeService.save({
-            customerId: Authinfo.getOrgId(),
-          }, internalNumberRange, function (data, headers) {
-            internalNumberRange.uuid = headers('location').split('/').pop();
-          }).$promise;
-        } else {
-          return $q.resolve();
-        }
-      },
-
-      updateInternalNumberRange: function (internalNumberRange) {
-        if (!_.isUndefined(internalNumberRange.uuid)) {
-          internalNumberRange.name = internalNumberRange.description = internalNumberRange.beginNumber + ' - ' + internalNumberRange.endNumber;
-          internalNumberRange.patternUsage = 'Device';
-          return InternalNumberRangeService.save({
-            customerId: Authinfo.getOrgId(),
-            internalNumberRangeId: internalNumberRange.uuid,
-          }, internalNumberRange, function (data, headers) {
-            internalNumberRange.uuid = headers('location').split('/').pop();
-          }).$promise;
-        } else {
-          return $q.resolve();
-        }
-      },
-
-      deleteInternalNumberRange: function (internalNumberRange) {
-        return InternalNumberRangeService.delete({
-          customerId: Authinfo.getOrgId(),
-          internalNumberRangeId: internalNumberRange.uuid,
-        }).$promise;
-      },
-
-      listInternalNumberRanges: function () {
-        return InternalNumberRangeService.query({
-          customerId: Authinfo.getOrgId(),
-        }, _.bind(function (internalNumberRanges) {
-          this.internalNumberRanges = internalNumberRanges;
-        }, this)).$promise;
-      },
-
       getDateFormats: function () {
-        return DateFormatService.query().$promise;
+        return $q.resolve(require('./dateFormats.json'));
       },
 
       getTimeFormats: function () {
-        return TimeFormatService.query().$promise;
+        return $q.resolve(require('./timeFormat.json'));
       },
 
       getTimeZones: function () {
-        return TimeZoneService.query().$promise;
+        return $q.resolve(require('./jodaTimeZones.json'));
       },
 
       getTranslatedTimeZones: function (timeZones) {
@@ -175,7 +131,7 @@
 
       getTranslatedSiteLanguages: function (languages) {
         var localizedLanguages = _.map(languages, function (language) {
-          return _.assign(language, {
+          return _.assign({}, language, {
             label: $translate.instant(language.label),
           });
         });
@@ -183,14 +139,14 @@
       },
 
       getSiteCountries: function () {
-        return SiteCountryService.query().$promise.then(function (countries) {
+        return $q.resolve(require('./siteCountries.json')).then(function (countries) {
           return filterFeatureToggleEnabledObjects(countries);
         });
       },
 
       getTranslatedSiteCountries: function (countries) {
         var localizedCountries = _.map(countries, function (country) {
-          return _.assign(country, {
+          return _.assign({}, country, {
             label: $translate.instant(country.label),
           });
         });
@@ -253,9 +209,9 @@
         });
         return ftSupportedObjects;
       })
-      .catch(function () {
-        return ftSupportedObjects;
-      });
+        .catch(function () {
+          return ftSupportedObjects;
+        });
     }
 
     function checkFeatureToggleSupport(feature) {
@@ -265,7 +221,7 @@
     }
 
     function getAllLanguages() {
-      return SiteLanguageService.query().$promise;
+      return $q.resolve(require('./siteLanguages.json'));
     }
   }
 })();

@@ -18,7 +18,6 @@
 }
 
 .trials {
-
   //TODO: algendel need this until .message overwrite is fixed
   .message {
     font-size: inherit;
@@ -36,6 +35,16 @@
     position: relative;
     display: flex;
     align-items: center;
+  }
+
+  .cs-input-checkbox {
+    display: -ms-grid;
+    -ms-grid-columns: max-content;
+
+    .cs-checkbox {
+      width: max-content;
+      max-width: vr-adjust(440);
+    }
   }
 
   .cs-input-group .cs-input__secondary-label {

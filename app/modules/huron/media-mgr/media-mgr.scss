@@ -8,12 +8,14 @@ media-mgr {
   flex: 1 1 auto;
   flex-direction: column;
   display: flex;
+  min-height: 0;
 
   .reveal-modal.full & .modal-body {
     margin: 0;
     border: 0;
     padding: 0;
     max-width: none;
+    min-height: 0;
   }
 
   .reveal-modal.full & .modal-container {
@@ -22,15 +24,25 @@ media-mgr {
     display: flex;
     align-items: stretch;
     max-width: inherit;
+    min-height: 0;
   }
 
-  .cs-card.large {
-    width: 80%;
-    margin-top: 6rem;
-    border: 1px dashed $gray-light-1;
-    border-radius: 8px;
+  .download-media-card {
     background-color: $gray-light-4;
     align-self: center;
+    margin: 0;
+    padding: 0.5rem;
+
+    .label-download {
+      font-family: 'CiscoSansTT Light';
+      font-size: 16px;
+      color: $gray-dark-3;
+      align-self: center;
+    }
+
+    .icon {
+      vertical-align: middle;
+    }
   }
 
   .mb-nav {
@@ -38,6 +50,30 @@ media-mgr {
     flex-direction: column;
     display: flex;
     align-items: center;
+    margin: .5rem 0rem;
+
+    button:focus {
+      text-decoration: none;
+      outline: none;
+      order: none;
+      box-shadow: none;
+    }
+
+    .icon-music {
+      background: none;
+      margin: .5rem 0rem;
+      color: $gray-base;
+    }
+
+    .icon-trash {
+      background: none;
+      margin: .5rem 0rem;
+      color: $gray-base;
+    }
+
+    .active {
+      color: $color-primary-base;
+    }
   }
 
   .mb-container {
@@ -47,6 +83,7 @@ media-mgr {
     padding-left: 0;
     padding-right: 0;
     width: calc(100% - 94px);
+    min-height: 0;
   }
 
   .mb-panel {
@@ -59,6 +96,20 @@ media-mgr {
     padding-left: 0;
     padding-right: 0;
     overflow-y: auto;
+    min-height: 0;
+
+    .cs-card.large {
+      width: 80%;
+      margin-top: 6rem;
+      border: 1px dashed $gray-light-1;
+      border-radius: 8px;
+      background-color: $gray-light-4;
+      align-self: center;
+    }
+
+    .icon-spinner {
+      color: $color-primary-base;
+    }
   }
 
   .mb-panel-left {
@@ -70,6 +121,14 @@ media-mgr {
     border-left-style: solid;
     padding-left: 0;
     padding-right: 0;
+    min-height: 0;
+
+    .mb-panel-header {
+      display: flex;
+      flex-direction: column;
+      vertical-align: middle;
+      margin: .5rem .75rem 1rem .5rem;
+    }
 
     .nowrap {
       width: 252px;
@@ -77,6 +136,23 @@ media-mgr {
       white-space: nowrap;
       text-overflow: ellipsis;
     }
+  }
+
+  .searchbox .searchinput {
+    border: none;
+    background: none;
+    height: 1.5rem;
+  }
+
+  .searchfilter {
+    border: none;
+    background: none;
+    width: 100%;
+  }
+
+  .icon-search {
+    border: none;
+    top: .25rem;
   }
 
   .mb-panel-right {
@@ -88,9 +164,11 @@ media-mgr {
     border-left-style: solid;
     padding-left: 0;
     padding-right: 0;
+    min-height: 0;
 
     .mb-title {
       margin-top: 0.5rem;
+      margin-bottom: 1rem;
     }
 
     .mb-rows {
@@ -114,30 +192,28 @@ media-mgr {
 
   .mb-panel-header {
     display: flex;
-    justify-content: space-between;
-    font-family: 'CiscoSansTT Extra Light';
-    text-align: end;
-    margin: .5rem 1rem 1rem .5rem;
+    margin: 1.5rem auto 2rem;
+    justify-content: center;
   }
 
   .mb-panel-body {
     display: flex;
     flex-direction: column;
+    flex-grow: 1;
     overflow-y: auto;
   }
 
   .mb-panel-footer {
     display: flex;
     flex-direction: row;
-    margin: auto 1rem 2rem auto;
+    margin: 1.5rem 1rem 2.5rem auto;
+    justify-content: flex-end;
   }
 
   .mb-title {
     font-family: 'CiscoSansTT Extra Light';
     font-size: 26px;
     color: $gray-dark-2;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
   }
 
   .mb-desc {
@@ -180,16 +256,11 @@ media-mgr {
       outline: none !important;
       box-shadow: none !important;
     }
-  }
 
-  .searchbox .searchinput {
-    margin: 0;
-    border: none;
-  }
+    .icon-spinner {
+      color: $color-primary-base;
+    }
 
-  .searchfilter {
-    border: none;
-    width: 100%;
   }
 
   .media-text {
@@ -207,38 +278,44 @@ media-mgr {
     justify-content: flex-start;
   }
 
-  .media-icon-alignment {
-    text-align: right;
-    vertical-align: middle;
-  }
-
   .icon-msg-alignment {
     vertical-align: middle;
-    margin-right: 0.25rem;
-    margin-left: 0.25rem;
-  }
-
-  .icon-music {
-    background: none;
-    margin: 0.5rem;
-    color: $gray-base;
+    margin: 0rem 0.25rem 0rem 0rem;
   }
 
   .icon-trash {
     background: none;
-    margin: 0.5rem;
+    margin: 0 0 0 .5rem;
     color: $gray-light-1;
   }
 
   .icon-back {
     background: none;
-    margin: 0.5rem;
+    margin: 0 0 0 .5rem;
     color: $gray-light-1;
   }
 
-  .icon-spinner {
-    color: $color-primary-base;
-    margin: 0;
+  .icon-download {
+    background: none;
+    color: $gray-base;
+    &:disabled {
+      background: none;
+      color: $gray-light-2;
+    }
+  }
+
+  .btn--none {
+    background: none;
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
+    &:disabled {
+      background: none;
+    }
+  }
+
+  .btn--none.ng-animate {
+    transition: 0s none;
+    animation: 0s none;
   }
 
   .icon-error {
@@ -250,46 +327,44 @@ media-mgr {
     color: $color-primary-base;
     text-align: right;
     margin: 0;
+    padding: 0;
     &:disabled {
       color: $color-primary-lighter;
       margin: 0;
     }
   }
 
-  .active-icon {
-    color: $color-primary-base;
-  }
-
-  .progressbar-label {
-    font-family: 'CiscoSansTT Light';
-    font-size: 14px;
-    color: $gray-dark-2;
-  }
-
-  .progressbar-progress {
-    font-family: 'CiscoSansTT Light';
-    font-size: 14px;
-    color: $gray-dark-2;
-  }
-
-  .progressbar-sublabel {
-    color: $gray-base;
-  }
-
   .progress-bar {
     margin: 6rem;
+
+    .progressbar-icon-alignment {
+      display: flex;
+    }
+
+    .progressbar-content-alignment {
+      flex-grow: 1;
+    }
+
+    .progressbar-label {
+      font-family: 'CiscoSansTT Light';
+      font-size: 14px;
+      color: $gray-dark-2;
+    }
+
+    .progressbar-progress {
+      font-family: 'CiscoSansTT Light';
+      font-size: 14px;
+      color: $gray-dark-2;
+    }
+
+    .progressbar-sublabel {
+      color: $gray-base;
+    }
+
     .icon-exit {
-      align-self: center;
+      align-self: flex-end;
       margin-left: 0.5rem;
     }
-  }
-
-  .progressbar-icon-alignment {
-    display: flex;
-  }
-
-  .progressbar-content-alignment {
-    flex-grow: 1;
   }
 
   .centered {
@@ -299,5 +374,15 @@ media-mgr {
 
   .btn {
     height: 2.25rem;
+  }
+
+  .text-right.nowrap {
+    padding-left: 0.25rem;
+    white-space: nowrap;
+  }
+
+  .text-left.nowrap {
+    padding-right: 0.25rem;
+    white-space: nowrap;
   }
 }

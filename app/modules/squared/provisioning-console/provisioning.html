@@ -1,0 +1,34 @@
+<div class="order-provisioning">
+  <div>
+    <!-- General header (instead of using main.tpl) -->
+    <cs-header navstyle="" headertitle="Cisco Collaboration Management" icon="icon-cisco-logo">
+      <cs-header-left>
+      </cs-header-left>
+      <cs-header-right>
+        <cr-user-info></cr-user-info>
+      </cs-header-right>
+    </cs-header>
+    <br>
+    <br>
+
+    <!-- Page header (instead of using main.tpl) -->
+    <cs-page-header title-name="{{'provisioningConsole.provisioningConsole' | translate}}" tabs="provisioningCtrl.tabs"></cs-page-header>
+
+    <!-- Wrapper for the search and table -->
+    <div class="page-content-wrapper container-fluid" role="main">
+      <div class="row full collapse">
+        <div class="medium-12 columns content-view" ui-view>
+          <!-- Sub header with search -->
+          <cs-page-sub-header>
+            <cs-page-sub-header-left>
+              <cs-searchfilter placeholder-text="Order number" search-item-fn="provisioningCtrl.setCurrentSearch(searchStr)" clear-aria-text="{{::'common.clear' | translate}}" search-placeholder-text="{{::'common.search' | translate}}">
+              </cs-searchfilter>
+            </cs-page-sub-header-left>
+          </cs-page-sub-header>
+          <div class="medium-12 columns content-view" ui-view="provisioningView">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

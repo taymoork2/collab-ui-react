@@ -241,13 +241,13 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
           this.currentStepIndex++;
         }
         if (this.privateTrunkAddError || !this.resourceAddSuccess) {
-          this.Notification.notify(this.errors, 'error');
+          this.Notification.notify(this.errors);
           this.cleanupOnError();
           this.PrivateTrunkPrereqService.dismissModal();
         } else if (this.errors.length) {
           //At least one resouce has been added and one or more resource addition failed.
           //This is success path, but do notify errors.
-          this.Notification.notify(this.errors, 'error');
+          this.Notification.notify(this.errors);
         }
       });
     } else {
@@ -256,7 +256,7 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
         if (this.resourceAddSuccess) {
           this.Notification.success('servicesOverview.cards.privateTrunk.success.resource');
         } else {
-          this.Notification.notify(this.errors, 'error');
+          this.Notification.notify(this.errors);
         }
         this.$state.go('private-trunk-overview.list');
         this.dismiss();
@@ -276,9 +276,9 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
   }
 
   public dismissModal(): void {
-    const templateUrl = (this.isFirstTimeSetup) ? 'modules/hercules/private-trunk/private-trunk-setup/private-trunk-cancel-confirm.html' : 'modules/hercules/private-trunk/private-trunk-setup/private-trunk-destination-cancel-confirm.html';
+    const template = (this.isFirstTimeSetup) ? require('./private-trunk-cancel-confirm.html') : require('./private-trunk-destination-cancel-confirm.html');
     this.$modal.open({
-      templateUrl: templateUrl,
+      template: template,
       type: 'dialog',
     })
       .result.then(() => {
@@ -299,7 +299,7 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
 
 export class PrivateTrunkSetupComponent implements ng.IComponentOptions {
   public controller = PrivateTrunkSetupCtrl;
-  public templateUrl = 'modules/hercules/private-trunk/private-trunk-setup/private-trunk-setup.html';
+  public template = require('modules/hercules/private-trunk/private-trunk-setup/private-trunk-setup.html');
   public bindings = {
     currentStepIndex: '<',
     dismiss: '&',

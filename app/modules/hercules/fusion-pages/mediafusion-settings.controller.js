@@ -6,10 +6,12 @@
     .controller('MediafusionClusterSettingsController', MediafusionClusterSettingsController);
 
   /* @ngInject */
-  function MediafusionClusterSettingsController($stateParams, HybridServicesClusterService, Notification, MediaClusterServiceV2, hasMFFeatureToggle) {
+  function MediafusionClusterSettingsController($stateParams, HybridServicesClusterService, Notification, MediaClusterServiceV2, hasMFFeatureToggle, hasMFSIPFeatureToggle) {
     var vm = this;
     vm.saveSipTrunk = saveSipTrunk;
+    vm.saveTrustedSip = saveTrustedSip;
     vm.hasMFFeatureToggle = hasMFFeatureToggle;
+    vm.hasMFSIPFeatureToggle = hasMFSIPFeatureToggle;
     //vm.sipurlconfiguration = '';
     vm.upgradeSchedule = {
       title: 'hercules.expresswayClusterSettings.upgradeScheduleHeader',
@@ -19,9 +21,25 @@
       title: 'mediaFusion.sipconfiguration.title',
     };
 
+    vm.trustedSip = {
+      title: 'mediaFusion.trustedSip.title',
+    };
+
     MediaClusterServiceV2.getProperties($stateParams.id)
       .then(function (properties) {
         vm.sipurlconfiguration = properties['mf.ucSipTrunk'];
+        vm.trustedsipconfiguration = properties['mf.trustedSipSources'];
+        var sipArray = [];
+        if (!_.isUndefined(vm.trustedsipconfiguration)) {
+          sipArray = _.map(vm.trustedsipconfiguration.split(','), function (value) {
+            return { text: value };
+          });
+        }
+        if (vm.trustedsipconfiguration !== '') {
+          vm.trustedsipconfiguration = sipArray;
+        } else {
+          vm.trustedsipconfiguration = [];
+        }
       });
 
     vm.deregisterModalOptions = {
@@ -32,7 +50,7 @@
       },
       controller: 'DeleteClusterSettingControllerV2',
       controllerAs: 'deleteClust',
-      templateUrl: 'modules/mediafusion/media-service-v2/delete-cluster/delete-cluster-dialog.html',
+      template: require('modules/mediafusion/media-service-v2/delete-cluster/delete-cluster-dialog.html'),
     };
 
     loadCluster($stateParams.id);
@@ -61,11 +79,24 @@
       };
       MediaClusterServiceV2
         .setProperties($stateParams.id, vm.payLoad)
-          .then(function () {
-            Notification.success('mediaFusion.sipconfiguration.success');
-          }, function (err) {
-            Notification.errorWithTrackingId(err, 'hercules.genericFailure');
-          });
+        .then(function () {
+          Notification.success('mediaFusion.sipconfiguration.success');
+        }, function (err) {
+          Notification.errorWithTrackingId(err, 'hercules.genericFailure');
+        });
+    }
+
+    function saveTrustedSip() {
+      vm.payLoad = {
+        'mf.trustedSipSources': _.map(vm.trustedsipconfiguration, 'text').join(', '),
+      };
+      MediaClusterServiceV2
+        .setProperties($stateParams.id, vm.payLoad)
+        .then(function () {
+          Notification.success('mediaFusion.trustedSip.success');
+        }, function (err) {
+          Notification.errorWithTrackingId(err, 'hercules.genericFailure');
+        });
     }
   }
 })();

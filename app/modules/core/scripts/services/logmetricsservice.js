@@ -3,7 +3,7 @@
 
   module.exports = angular.module('core.logmetricsservice', [
     require('modules/core/scripts/services/authinfo'),
-    require('modules/core/config/config'),
+    require('modules/core/config/config').default,
     require('modules/core/scripts/services/log'),
     require('modules/core/storage').default,
     require('modules/core/auth/auth'),

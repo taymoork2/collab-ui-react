@@ -68,7 +68,7 @@ export default angular
     require('angular-translate'),
     require('modules/core/notifications').default,
     require('modules/hercules/services/hybrid-services-extras.service').default,
-    require('modules/hercules/services/uss-service'),
+    require('modules/hercules/services/uss.service').default,
   ])
   .controller('ConnectorUpgradeController', ConnectorUpgradeController)
   .name;

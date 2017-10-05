@@ -7,7 +7,7 @@ describe('Template: assignDnAndDirectLinesModal', function () {
     this.initModules('Core', 'Hercules', 'Huron', 'Messenger', 'Sunlight', 'WebExApp', csvDownloadModule);
     this.injectDependencies('$httpBackend', '$q', '$previousState', 'Orgservice', 'FeatureToggleService', 'CsvDownloadService', 'WebExUtilsFact');
     initDependencySpies.apply(this);
-    this.compileView('OnboardCtrl', 'modules/huron/users/assignDnAndDirectLinesModal.tpl.html');
+    this.compileViewTemplate('OnboardCtrl', require('modules/huron/users/assignDnAndDirectLinesModal.tpl.html'));
   }
 
   function initDependencySpies() {

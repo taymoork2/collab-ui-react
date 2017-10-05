@@ -14,7 +14,7 @@
     </li>
   </ul>
   <ul ng-if="::!$ctrl.hasOnFeatureClick">
-    <li class="feature" ng-repeat="feature in $ctrl.features track by $index">
+    <li class="feature" ng-repeat="feature in $ctrl.features track by $index" tabindex="0">
       <i class="feature-icon" ng-class="feature.icon"></i>
       <span class="feature-name">{{feature.name}}</span>
       <span class="feature-details feature-label">{{feature.detail}}</span>

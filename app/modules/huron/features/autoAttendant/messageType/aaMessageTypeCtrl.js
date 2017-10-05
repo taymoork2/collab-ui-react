@@ -18,19 +18,6 @@
       HEADER_TYPE: 'MENU_OPTION_ANNOUNCEMENT',
     };
 
-    /* US282377:
-     * We have intentionally added the blank space in the following list.
-     * Because isDynamic flag gets true in case of BR or new lines
-     * and we are using this list to not show warning in case of pre-populated
-     * variables and BR or new lines in a say message.
-     */
-    var prePopulatedSessionVariablesList = ['Original-Called-Number',
-      'Original-Caller-Number',
-      'Original-Remote-Party-ID',
-      'Original-Caller-Country-Code',
-      'Original-Caller-Area-Code',
-      ''];
-
     var messageType = {
       ACTION: 1,
       MENUHEADER: 2,
@@ -49,10 +36,11 @@
     var holdActionValue;
     var dependentCeSessionVariablesList = [];
     var dynamicVariablesList = [];
+    var ui;
+    var holdDynaList = [];
 
     vm.menuEntry = {};
     vm.actionEntry = {};
-    vm.ui = {};
     vm.availableSessionVariablesList = [];
     vm.deletedSessionVariablesList = [];
 
@@ -83,23 +71,21 @@
     vm.dynamicValues = [];
     vm.mediaState = {};
     vm.mediaState.uploadProgress = false;
-    vm.fullWarningMsg = fullWarningMsg;
+    vm.togglefullWarningMsg = togglefullWarningMsg;
+    vm.closeFullWarningMsg = closeFullWarningMsg;
     vm.getWarning = getWarning;
     vm.fullWarningMsgValue = false;
     vm.deletedSessionVariablesListAlongWithWarning = '';
 
     vm.MAX_FILE_SIZE_IN_BYTES = 5 * 1024 * 1024;
 
-    vm.addElement = '<aa-insertion-element element-text="DynamicText" read-as="ReadAs" element-id="Id" aa-schedule="' + $scope.schedule + '" aa-index="' + $scope.index + '"></aa-insertion-element>';
+    vm.addElement = '<aa-insertion-element element-text="DynamicText" read-as="ReadAs" element-id="elementId" id="Id" aa-schedule="' + $scope.schedule + '" aa-index="' + $scope.index + ' " contenteditable="false""></aa-insertion-element>';
 
     //////////////////////////////////////////////////////
 
     $scope.$on('CE Updated', function () {
       getDynamicVariables();
       refreshVarSelects();
-      if (_.isEmpty(vm.deletedSessionVariablesList)) {
-        vm.fullWarningMsgValue = false;
-      }
     });
 
     $scope.$on('CIVarNameChanged', function () {
@@ -107,28 +93,31 @@
       refreshVarSelects();
     });
 
-    function fullWarningMsg() {
+    function togglefullWarningMsg() {
       vm.fullWarningMsgValue = !vm.fullWarningMsgValue;
+    }
+    function closeFullWarningMsg() {
+      vm.fullWarningMsgValue = false;
     }
 
     function getWarning() {
-      if (!_.isEmpty(vm.deletedSessionVariablesList)) {
-        if (vm.deletedSessionVariablesList.length > 1) {
-          vm.deletedSessionVariablesListAlongWithWarning = $translate.instant('autoAttendant.dynamicMissingCustomVariables', { deletedSessionVariablesList: vm.deletedSessionVariablesList.toString() });
-        } else {
-          vm.deletedSessionVariablesListAlongWithWarning = $translate.instant('autoAttendant.dynamicMissingCustomVariable', { deletedSessionVariablesList: vm.deletedSessionVariablesList.toString() });
-        }
-        return true;
-      } else {
+      if (_.isEmpty(vm.deletedSessionVariablesList)) {
         return false;
       }
+      if (vm.deletedSessionVariablesList.length > 1) {
+        vm.deletedSessionVariablesListAlongWithWarning = $translate.instant('autoAttendant.dynamicMissingCustomVariables', { deletedSessionVariablesList: vm.deletedSessionVariablesList.toString() });
+      } else {
+        vm.deletedSessionVariablesListAlongWithWarning = $translate.instant('autoAttendant.dynamicMissingCustomVariable', { deletedSessionVariablesList: vm.deletedSessionVariablesList.toString() });
+      }
+      return true;
     }
 
     function addLocalAndQueriedSessionVars() {
       // reset the displayed SessionVars to the original queried items
       vm.availableSessionVariablesList = dependentCeSessionVariablesList;
+      ui = AAUiModelService.getUiModel();
 
-      vm.availableSessionVariablesList = _.concat(vm.availableSessionVariablesList, AACommonService.collectThisCeActionValue(vm.ui, true, false));
+      vm.availableSessionVariablesList = _.concat(vm.availableSessionVariablesList, AACommonService.collectThisCeActionValue(ui, true, false));
       vm.availableSessionVariablesList = _.uniq(vm.availableSessionVariablesList).sort();
     }
 
@@ -141,13 +130,14 @@
 
     function updateIsWarnFlag() {
       vm.deletedSessionVariablesList = [];
-      if (!_.isEmpty(dynamicVariablesList)) {
-        _.forEach(dynamicVariablesList, function (variable) {
-          if (!_.includes(vm.availableSessionVariablesList, variable)) {
-            vm.deletedSessionVariablesList.push(variable);
-          }
-        });
+      if (_.isEmpty(dynamicVariablesList)) {
+        return;
       }
+      _.forEach(dynamicVariablesList, function (variable) {
+        if (!_.includes(vm.availableSessionVariablesList, variable)) {
+          vm.deletedSessionVariablesList.push(JSON.stringify(variable));
+        }
+      });
       vm.deletedSessionVariablesList = _.uniq(vm.deletedSessionVariablesList).sort();
     }
 
@@ -158,20 +148,16 @@
         if (!_.isUndefined(data) && data.length > 0) {
           dependentCeSessionVariablesList = data;
         }
-      }, function (response) {
-        if (response.status === 404) {
-          dependentCeSessionVariablesList = [];
-        }
       });
     }
 
     function getDynamicVariables() {
       dynamicVariablesList = [];
-      var dynamVarList = _.get(vm.menuEntry, 'dynamicList', _.get(vm.menuEntry, 'actions[0].dynamicList'));
+      var dynamVarList = _.get(vm.actionEntry, 'dynamicList', '');
       if (!_.isUndefined(dynamVarList)) {
         _.forEach(dynamVarList, function (entry) {
           if (entry.isDynamic) {
-            if (!_.includes(prePopulatedSessionVariablesList, entry.say.value)) {
+            if (!_.includes(AACommonService.getprePopulatedSessionVariablesList(), entry.say.value)) {
               dynamicVariablesList.push(entry.say.value);
             }
           }
@@ -203,22 +189,39 @@
       holdActionValue = saveValue;
       holdActionDesc = saveDesc;
 
+      //for holding dynamicList in case of retrieval needed when toggle b/w say and play
+      if (isDynamicToggle() && vm.messageOption.value === vm.messageOptions[actionType.PLAY].value) {
+        vm.dynamicValues = [];
+        holdDynaList = action.dynamicList;
+      }
+
+      if (_.isUndefined(holdDynaList) || _.isEmpty(holdDynaList)) {
+        holdDynaList = [{
+          say: {
+            value: '',
+            voice: '',
+          },
+          isDynamic: false,
+          htmlModel: '',
+        }];
+      }
+
       // name could be say, play or runActionsOnInput
       // make sure it is say or play but don't touch runActions
+
+      //just to update dynamicList in case on runActions
+      if (isDynamicToggle() && action.name === 'runActionsOnInput' && vm.messageOption.value === vm.messageOptions[actionType.SAY].value) {
+        action.dynamicList = holdDynaList;
+        createDynamicValues(action);
+      }
 
       if (vm.messageOption.value === vm.messageOptions[actionType.SAY].value) {
         action.description = '';
         if (action.name === vm.messageOptions[actionType.PLAY].action) {
           if (isDynamicToggle()) {
             action.name = 'dynamic';
-            action.dynamicList = [{
-              say: {
-                value: '',
-                voice: '',
-              },
-              isDynamic: false,
-              htmlModel: '',
-            }];
+            action.dynamicList = holdDynaList;
+            createDynamicValues(action);
           } else {
             action.name = vm.messageOptions[actionType.SAY].action;
           }
@@ -229,7 +232,26 @@
         if (action.name === vm.messageOptions[actionType.SAY].action || action.name === 'dynamic') {
           action.name = vm.messageOptions[actionType.PLAY].action;
         }
+        delete action.dynamicList;
       }
+    }
+
+    function createDynamicValues(action) {
+      _.forEach(action.dynamicList, function (opt) {
+        var model = {};
+        if (!opt.isDynamic && _.isEmpty(opt.htmlModel)) {
+          model = {
+            model: opt.say.value,
+            html: opt.say.value,
+          };
+        } else {
+          model = {
+            model: opt.say.value,
+            html: decodeURIComponent(opt.htmlModel),
+          };
+        }
+        vm.dynamicValues.push(model);
+      });
     }
 
     function saveUiModel() {
@@ -241,8 +263,9 @@
       AACommonService.setSayMessageStatus(true);
     }
 
-    function saveDynamicUi() {
+    function saveDynamicUi($event) {
       var action = vm.actionEntry;
+      var backSpace = 8;
       var range = AADynaAnnounceService.getRange();
       finalList = [];
       var dynamicList = range.endContainer.ownerDocument.activeElement;
@@ -258,6 +281,15 @@
             htmlModel: '',
           });
           action.dynamicList = finalList;
+        }
+        //disable warning message at the time of deleting dynamic variable using backspace button
+        if ($event.keyCode === backSpace) {
+          _.forEach(finalList, function (dynamicList) {
+            if (dynamicList.isDynamic) {
+              getDynamicVariables();
+              refreshVarSelects();
+            }
+          });
         }
         AACommonService.setSayMessageStatus(true);
       }
@@ -299,7 +331,7 @@
           } else {
             attributes = node.attributes;
           }
-          var ele = '<aa-insertion-element element-text="' + attributes[0].value + '" read-as="' + attributes[1].value + '" element-id="' + attributes[2].value + '"></aa-insertion-element>';
+          var ele = '<aa-insertion-element element-text="' + attributes[0].value + '" read-as="' + attributes[1].value + '" element-id="' + attributes[2].value + '"id="' + attributes[2].value + '" contenteditable="false""></aa-insertion-element>';
           opt = {
             say: {
               value: attributes[0].value,
@@ -344,21 +376,7 @@
             vm.messageOption = vm.messageOptions[actionType.SAY];
             vm.messageInput = vm.actionEntry.value;
           } else if (_.has(vm.actionEntry, 'dynamicList')) {
-            _.forEach(vm.actionEntry.dynamicList, function (opt) {
-              var model;
-              if (!opt.isDynamic && _.isEmpty(opt.htmlModel)) {
-                model = {
-                  model: opt.say.value,
-                  html: opt.say.value,
-                };
-              } else {
-                model = {
-                  model: opt.say.value,
-                  html: decodeURIComponent(opt.htmlModel),
-                };
-              }
-              vm.dynamicValues.push(model);
-            });
+            createDynamicValues(vm.actionEntry);
           } else {
             vm.messageOption = vm.messageOptions[actionType.PLAY];
           }
@@ -368,21 +386,7 @@
         }
       } else {
         if (_.has(vm.actionEntry, 'dynamicList')) {
-          _.forEach(vm.actionEntry.dynamicList, function (opt) {
-            var model = {};
-            if (!opt.isDynamic && _.isEmpty(opt.htmlModel)) {
-              model = {
-                model: opt.say.value,
-                html: opt.say.value,
-              };
-            } else {
-              model = {
-                model: opt.say.value,
-                html: decodeURIComponent(opt.htmlModel),
-              };
-            }
-            vm.dynamicValues.push(model);
-          });
+          createDynamicValues(vm.actionEntry);
         } else if (_.has(vm, 'actionEntry.name')) {
           vm.messageOption = vm.messageOptions[_.get(actionType, vm.actionEntry.name.toUpperCase())];
           if (vm.actionEntry.name.toLowerCase() === vm.messageOptions[actionType.SAY].action) {
@@ -393,7 +397,6 @@
     }
 
     function setActionEntry() {
-      var ui;
       var uiMenu;
       var sourceQueue;
       var sourceMenu;
@@ -405,55 +408,54 @@
       switch (vm.messageType) {
         case messageType.MENUHEADER:
         case messageType.SUBMENU_HEADER:
-          {
-            vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
-            var actionHeader = getActionHeader(vm.menuEntry);
-            var action = getAction(actionHeader);
+        {
+          vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
+          var actionHeader = getActionHeader(vm.menuEntry);
+          var action = getAction(actionHeader);
 
-            if (action) {
-              vm.actionEntry = action;
-            }
-            break;
+          if (action) {
+            vm.actionEntry = action;
           }
+          break;
+        }
         case messageType.MENUKEY:
-          {
-            vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
-            if (vm.menuEntry.entries.length > $scope.menuKeyIndex && vm.menuEntry.entries[$scope.menuKeyIndex]) {
-              if ($scope.type) {
-                sourceQueue = vm.menuEntry.entries[$scope.menuKeyIndex];
-                queueAction = sourceQueue.actions[0];
-                sourceMenu = queueAction.queueSettings[$scope.type];
-                vm.actionEntry = getAction(sourceMenu);
-              } else {
-                var keyAction = getAction(vm.menuEntry.entries[$scope.menuKeyIndex]);
-                if (keyAction) {
-                  vm.actionEntry = keyAction;
-                }
-              }
-            }
-
-            break;
-          }
-        case messageType.ACTION:
-          {
-            ui = AAUiModelService.getUiModel();
-            vm.ui = ui;
-            uiMenu = ui[$scope.schedule];
-            vm.menuEntry = uiMenu.entries[$scope.index];
+        {
+          vm.menuEntry = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
+          if (vm.menuEntry.entries.length > $scope.menuKeyIndex && vm.menuEntry.entries[$scope.menuKeyIndex]) {
             if ($scope.type) {
-              queueAction = _.get(vm.menuEntry, 'actions[0]');
-
-              if (_.get(queueAction, 'name') === conditional) {
-                queueAction = queueAction.then;
-              }
-
+              sourceQueue = vm.menuEntry.entries[$scope.menuKeyIndex];
+              queueAction = sourceQueue.actions[0];
               sourceMenu = queueAction.queueSettings[$scope.type];
               vm.actionEntry = getAction(sourceMenu);
             } else {
-              vm.actionEntry = getAction(vm.menuEntry);
+              var keyAction = getAction(vm.menuEntry.entries[$scope.menuKeyIndex]);
+              if (keyAction) {
+                vm.actionEntry = keyAction;
+              }
             }
-            break;
           }
+
+          break;
+        }
+        case messageType.ACTION:
+        {
+          ui = AAUiModelService.getUiModel();
+          uiMenu = ui[$scope.schedule];
+          vm.menuEntry = uiMenu.entries[$scope.index];
+          if ($scope.type) {
+            queueAction = _.get(vm.menuEntry, 'actions[0]');
+
+            if (_.get(queueAction, 'name') === conditional) {
+              queueAction = queueAction.then;
+            }
+
+            sourceMenu = queueAction.queueSettings[$scope.type];
+            vm.actionEntry = getAction(sourceMenu);
+          } else {
+            vm.actionEntry = getAction(vm.menuEntry);
+          }
+          break;
+        }
       }
     }
 

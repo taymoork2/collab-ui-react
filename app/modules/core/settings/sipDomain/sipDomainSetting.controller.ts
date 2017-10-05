@@ -1,3 +1,4 @@
+import { Config } from 'modules/core/config/config';
 import { Notification } from 'modules/core/notifications';
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 
@@ -48,13 +49,14 @@ export class SipDomainSettingController {
 
   /* @ngInject */
   constructor(
+    private $element: ng.IRootElementService,
     private $modal,
     private $rootScope: ng.IRootScopeService,
     private $scope: ng.IScope,
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
     private $window: ng.IWindowService,
-    private Config,
+    private Config: Config,
     private FeatureToggleService,
     private Notification: Notification,
     private Orgservice,
@@ -133,6 +135,10 @@ export class SipDomainSettingController {
     } else {
       this.$scope.$emit(this.DISMISS_DISABLE, !this.isConfirmed);
     }
+  }
+
+  public resetFocus() {
+    this.$timeout(() => { this.$element.find('#editSubdomainLink').focus(); });
   }
 
   public validateSipDomain() {
@@ -224,6 +230,7 @@ export class SipDomainSettingController {
   public editSubdomain() {
     if (!this.isCsc) {
       this.toggleSipForm();
+      this.$timeout(() => { this.$element.find('#sipDomainInput').focus(); });
     }
   }
 
@@ -237,7 +244,7 @@ export class SipDomainSettingController {
   }
 
   public openSipHelpWiki() {
-    this.$window.open('https://help.webex.com/docs/DOC-7763', '_blank');
+    this.$window.open('https://collaborationhelp.cisco.com/article/en-us/DOC-7763', '_blank');
   }
 
   public toggleSipForm(): void {
@@ -313,7 +320,7 @@ export class SipDomainSettingController {
   private updateSubdomain(): void {
     this.saving = true;
     this.$modal.open({
-      templateUrl: 'modules/core/settings/sipDomain/updateSipDomainWarning.tpl.html',
+      template: require('modules/core/settings/sipDomain/updateSipDomainWarning.tpl.html'),
       type: 'dialog',
     }).result.then((): void => {
       this.saveSubdomain();

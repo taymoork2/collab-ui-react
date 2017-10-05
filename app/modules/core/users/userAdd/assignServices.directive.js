@@ -9,7 +9,7 @@ require('./_user-add.scss');
   function crAssignServices() {
     return {
       restrict: 'EA',
-      templateUrl: 'modules/core/users/userAdd/assignServices.tpl.html',
+      template: require('modules/core/users/userAdd/assignServices.tpl.html'),
     };
   }
 })();

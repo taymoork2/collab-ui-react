@@ -8,7 +8,7 @@
         onlyDaily: '<',
       },
       controller: UpgradeScheduleConfigurationCtrl,
-      templateUrl: 'modules/hercules/upgrade-schedule-configuration/hs-upgrade-schedule-configuration.component.html',
+      template: require('modules/hercules/upgrade-schedule-configuration/hs-upgrade-schedule-configuration.component.html'),
     });
 
   /* @ngInject */

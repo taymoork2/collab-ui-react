@@ -5,29 +5,36 @@
     .controller('FirstTimeWizardCtrl', FirstTimeWizardCtrl);
 
   /* @ngInject */
-  function FirstTimeWizardCtrl($scope, $state, $translate, Auth, Authinfo, Orgservice, SetupWizardService) {
+  function FirstTimeWizardCtrl($q, $scope, $state, $translate, AccountService, Authinfo, Orgservice, SetupWizardService) {
     $scope.greeting = $translate.instant('index.greeting', {
       name: Authinfo.getUserName(),
     });
 
     $scope.finish = function () {
-      return Orgservice.setSetupDone().then(function () {
+      serviceSetupWizardComplete().then(function () {
         Authinfo.setSetupDone(true);
-      })
-        .then(function () {
-          if (Authinfo.isAdmin()) {
-            return Auth.getCustomerAccount(Authinfo.getOrgId())
-              .then(function (response) {
-                Authinfo.updateAccountInfo(response.data, response.status);
-              });
-          }
-        })
-        .then(function () {
-          return SetupWizardService.processCallbacks();
-        })
-        .finally(function () {
-          $state.go('overview');
-        });
+        $state.go('overview');
+      });
     };
+
+    function serviceSetupWizardComplete() {
+      AccountService.clearCache();
+      if (SetupWizardService.hasPendingLicenses()) {
+        AccountService.updateCacheAge(5);
+        return updateAccountInfo();
+      } else {
+        return Orgservice.setSetupDone().then(function () {
+          return updateAccountInfo();
+        });
+      }
+    }
+
+    function updateAccountInfo() {
+      if (Authinfo.isAdmin()) {
+        return AccountService.updateAuthinfoAccount();
+      } else {
+        return $q.resolve();
+      }
+    }
   }
 })();
