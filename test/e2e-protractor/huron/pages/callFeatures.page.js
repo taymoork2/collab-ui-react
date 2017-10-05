@@ -21,5 +21,10 @@ export class CallFeaturesPage {
     this.pagingGroup = element(by.cssContainingText('span.name', 'Paging Group'));
     this.newButton = element(by.css('button.btn.btn--people.new-feature-button'));
     this.card = element(by.css('article'));
+    this.cpDetailHeader = element(by.css('div.header-with-right-icon'));
+    this.detailHeader = element(by.css('.h4.ellipsis'));
+    this.editCancel = element(by.cssContainingText('button', 'Cancel'));
+    this.editSave = element(by.cssContainingText('button', 'Save'));
+    this.editGroupName = element(by.name('editCallFeatureName'));
   }
 };
