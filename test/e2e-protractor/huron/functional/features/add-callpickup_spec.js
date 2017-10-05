@@ -1,7 +1,7 @@
 import * as provisioner from '../../../provisioner/provisioner';
 import { huronCustomer } from '../../../provisioner/huron/huron-customer-config';
 import { CallFeaturesPage } from '../../pages/callFeatures.page';
-import { CallPickupPage } from '../../pages/addCallPickup.page';
+import { CallPickupPage } from '../../pages/callPickup.page';
 
 const callFeatures = new CallFeaturesPage();
 const callPickup = new CallPickupPage();
