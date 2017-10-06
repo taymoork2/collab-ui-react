@@ -2119,11 +2119,7 @@
       "alarms": "Alarms",
       "hosts": "Nodes",
       "goToHost": "Go to Node",
-      "moveNode": "Move Node",
-      "deregisterNode": "Deregister Node",
-      "removeNode": "Remove Node",
       "localizedConnectorAndHostHeader": "{{connectorName}} on {{hostname}}",
-      "actions": "Actions",
       "no_nodes": "No nodes registered.",
       "goToNodes": "Perform actions on Node"
     },
@@ -2249,7 +2245,6 @@
       "not_operational": "Not operational",
       "not_registered": "Registration not completed",
       "no_nodes_registered": "No Nodes Registered",
-      "urgentUpgradeAvailable": "Urgent upgrade available",
       "registrationTimeout": "Registration timeout",
       "connected": "Connected"
     },

@@ -6,12 +6,11 @@
     .controller('HybridServicesHostDetailsController', HybridServicesHostDetailsController);
 
   /* @ngInject */
-  function HybridServicesHostDetailsController($modal, $rootScope, $scope, $state, $stateParams, $translate, ClusterService, hasNodesViewFeatureToggle) {
+  function HybridServicesHostDetailsController($modal, $rootScope, $scope, $state, $stateParams, $translate, ClusterService) {
     var cluster;
     var vm = this;
     var type = $stateParams.specificType || $stateParams.connectorType;
     var localizedConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + type);
-    vm.actions = [];
     vm.deleteExpressway = deleteExpressway;
     vm.goToNodesPage = goToNodesPage;
     vm.showDeregisterHostDialog = showDeregisterHostDialog;
@@ -36,7 +35,6 @@
           hostname: vm.host.hostname,
         });
         vm.isHybridContextCluster = (cluster.targetType === 'cs_mgmt');
-        vm.actions = getActionsButton();
       }
     }, true);
 
@@ -107,42 +105,13 @@
     }
 
     function showNodeLink() {
-      return vm.host.connectorType === 'mf_mgmt' && hasNodesViewFeatureToggle;
+      return vm.host.connectorType === 'mf_mgmt';
     }
 
     function goToNodesPage() {
       $state.go('mediafusion-cluster.nodes', {
         id: cluster.id,
       });
-    }
-
-    function getActionsButton() {
-      var actions = [];
-      if (!hasNodesViewFeatureToggle && vm.host.connectorType !== 'mf_mgmt') {
-        actions.push({
-          href: 'https://' + vm.host.hostname + '/',
-          textKey: 'hercules.connectors.goToHost',
-        });
-      }
-      if (!hasNodesViewFeatureToggle && vm.host.connectorType === 'mf_mgmt') {
-        actions.push({
-          click: showReassignHostDialog,
-          textKey: 'hercules.connectors.moveNode',
-        });
-      }
-      if (!hasNodesViewFeatureToggle && (vm.host.connectorType === 'mf_mgmt' || vm.host.connectorType === 'hds_app')) {
-        actions.push({
-          click: showDeregisterHostDialog,
-          textKey: 'hercules.connectors.deregisterNode',
-        });
-      }
-      if (!hasNodesViewFeatureToggle && vm.host.state === 'offline' && vm.host.connectorType === 'c_mgmt') {
-        actions.push({
-          click: deleteExpressway,
-          textKey: 'hercules.connectors.removeNode',
-        });
-      }
-      return actions;
     }
   }
 }());

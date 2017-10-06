@@ -37,7 +37,6 @@ module.exports = {
   atlasHybridCucmSupport: 'atlas-hybrid-cucm-support',
   atlasHybridDataSecurity: 'atlas-hybrid-data-security',
   atlasHybridImp: 'atlas-hybrid-imp',
-  atlasHybridNodesView: 'atlas-hybrid-nodes-view',
   atlasITProPack: 'atlas-it-pro-pack',
   atlasITProPackPurchased: 'atlas-it-pro-pack-purchased',
   atlasJabberInterop: 'atlas-jabber-interop',

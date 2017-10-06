@@ -38,7 +38,7 @@ export class ImpServiceContainerController extends ExpresswayContainerController
     ServiceStateChecker,
     USSService,
   ) {
-    super($modal, $scope, $state, ClusterService, true, Notification, ServiceDescriptorService, ServiceStateChecker, USSService, ['spark-hybrid-impinterop'], 'c_imp');
+    super($modal, $scope, $state, ClusterService, Notification, ServiceDescriptorService, ServiceStateChecker, USSService, ['spark-hybrid-impinterop'], 'c_imp');
   }
 
 }
