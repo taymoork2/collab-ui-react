@@ -1007,7 +1007,6 @@
               prevState: null,
             },
           })
-
           .state('users.manage.advanced', {
             abstract: true,
             controller: 'UserManageAdvancedController',
@@ -1046,6 +1045,12 @@
               $scope.bulkSave().then(function () {
                 $scope.umac.isBusy = false;
               });
+            },
+          })
+          .state('users.manage.edit-auto-assign-template', {
+            template: '<edit-auto-assign-template></edit-auto-assign-template>',
+            params: {
+              prevState: 'users.manage.picker',
             },
           })
 
