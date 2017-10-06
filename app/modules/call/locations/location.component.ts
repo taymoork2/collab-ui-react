@@ -23,6 +23,7 @@ class CallLocationCtrl implements ng.IComponentController {
   public huronFeaturesUrl: string = 'call-locations';
   public showRoutingPrefix: boolean = true;
   public number: IOption | null = null;
+  public secondFirstTimeSetup: boolean = false;
 
   /* @ngInject */
   constructor(
@@ -72,8 +73,8 @@ class CallLocationCtrl implements ng.IComponentController {
       .then(() => {
         return this.CallLocationSettingsService.get(this.uuid)
           .then(locationSettings => {
+            this.secondFirstTimeSetup = this.SettingSetupInitService.hasDefaultLocation();
             this.callLocationSettingsData = locationSettings;
-            this.showRoutingPrefix = this.setShowRoutingPrefix(locationSettings.customerVoice.routingPrefixLength);
             this.setEmergencyCallbackNumber(this.callLocationSettingsData.emergencyNumber);
           })
           .catch(error => this.Notification.processErrorResponse(error, 'locations.getFailed'));
@@ -221,19 +222,6 @@ class CallLocationCtrl implements ng.IComponentController {
     if (this.form) {
       this.form.$setPristine();
       this.form.$setUntouched();
-    }
-  }
-
-  private setShowRoutingPrefix(routingPrefixLength: number | null): boolean {
-    // if ftsw check which option was chosen
-    if (this.ftsw) {
-      return this.SettingSetupInitService.getSelected() === 2;
-    } else { // in edit mode check if routingPrefixLength is null or 0
-      if (_.isNull(routingPrefixLength) || routingPrefixLength === 0) {
-        return false;
-      } else {
-        return true;
-      }
     }
   }
 
