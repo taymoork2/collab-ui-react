@@ -321,7 +321,7 @@ require('./_setup-wizard.scss');
     }
 
     function initCareTab(tabs) {
-      /* If in future, Care settings becomes part of the new orders flow (IT Decoupling) 
+      /* If in future, Care settings becomes part of the new orders flow (IT Decoupling)
       the case where hasPendingCareLicenses && isITDecouplingFlow */
       if (Authinfo.isCare() && !isITDecouplingFlow) {
         var careTab = {

@@ -22,7 +22,9 @@ describe('Directive Controller: CalendarServicePreviewCtrl', function () {
     Orgservice = _Orgservice_;
 
     var resourceGroupsAsOptions = [];
-    var userStatuses = [{ userId: '1234', state: 'notActivated', serviceId: 'squared-fusion-cal', entitled: true }];
+    var userStatuses = [{
+      userId: '1234', state: 'notActivated', serviceId: 'squared-fusion-cal', entitled: true,
+    }];
     var userProps = { resourceGroups: {} };
     $stateParams.extensionId = 'squared-fusion-cal';
     $stateParams.currentUser = { id: '1234', userName: 'tvasset@cisco.com', entitlements: ['squared-fusion-cal'] };

@@ -15,7 +15,7 @@
           </label>
           <label class="feature-icon-circle {{feature.color}}" ng-if="feature.icons.length === 0"
                  ng-class="{'feature-icon-disabled': feature.disabled}">
-            <img class="icon" src="{{feature.image}}">
+            <img class="icon" ng-src="{{feature.image}}">
           </label>
         </div>
       <h4 class="feature-label-container {{feature.color}}" ng-class="{'feature-label-disabled': feature.disabled}">

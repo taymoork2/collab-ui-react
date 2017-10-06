@@ -35,7 +35,8 @@
     vm.partnerPlaceholder = $translate.instant('partnerManagement.create.selectPartnerPlaceholder');
     vm.partnerTypes = ['DISTI', 'DVAR', 'RESELLER'];
     vm.partnerOptions = _.map(vm.partnerTypes, function (s) {
-      return { label: $translate.instant('partnerManagement.create.partnerTypes.' + s),
+      return {
+        label: $translate.instant('partnerManagement.create.partnerTypes.' + s),
         value: s,
       };
     });
@@ -102,8 +103,10 @@
         vm.isLoading = false;
         Notification.errorWithTrackingId(resp,
           'partnerManagement.error.searchFailed',
-          { msg: (_.isEmpty(resp.data)) ?
-            $translate.instant('partnerManagement.error.timeout') : resp.data.message });
+          {
+            msg: (_.isEmpty(resp.data)) ?
+              $translate.instant('partnerManagement.error.timeout') : resp.data.message,
+          });
       });
     };
 
@@ -121,8 +124,10 @@
         } else {
           Notification.errorWithTrackingId(resp,
             'partnerManagement.error.createFailed',
-            { msg: (_.isEmpty(resp.data)) ?
-              $translate.instant('partnerManagement.error.timeout') : resp.data.message });
+            {
+              msg: (_.isEmpty(resp.data)) ?
+                $translate.instant('partnerManagement.error.timeout') : resp.data.message,
+            });
         }
       });
     };
@@ -178,8 +183,10 @@
       }).catch(function (resp) {
         Notification.errorWithTrackingId(resp,
           'partnerManagement.error.getOrgDetails',
-          { msg: (_.isEmpty(resp.data)) ?
-            $translate.instant('partnerManagement.error.timeout') : resp.data.message });
+          {
+            msg: (_.isEmpty(resp.data)) ?
+              $translate.instant('partnerManagement.error.timeout') : resp.data.message,
+          });
         vm.showSpinner = false;
       });
     }

@@ -291,7 +291,7 @@
       var uiRestBlocks = AARestModelService.getUiRestBlocks();
       var restBlocks = AARestModelService.getRestBlocks();
 
-      // Quit processing further in case there is no REST block in either GUI or back-end 
+      // Quit processing further in case there is no REST block in either GUI or back-end
       if ((_.size(uiRestBlocks) === 0) && (_.size(restBlocks) === 0)) {
         return $q.resolve();
       }

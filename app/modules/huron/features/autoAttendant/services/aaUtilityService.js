@@ -37,8 +37,7 @@
                        + '"'//match "
                        + ')*'//close non capturing group and do whole op 0...n
                        + '[^"]*'//match up to " 0 to n times
-                       + '$)'//end string and close positive lookahead
-                       ;
+                       + '$)';//end string and close positive lookahead
     var commaSplitterRegex = new RegExp(commaSplitter);//regex --> new RegRxp(/,(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)/)
 
     return service;

@@ -278,7 +278,8 @@ require('modules/core/reports/amcharts-export.scss');
               info: deviceInfo[index].info,
               peopleCount: device.peopleCount,
               duration: secondsTohhmmss(device.callDuration),
-              calls: device.callCount });
+              calls: device.callCount,
+            });
           });
         });
     }

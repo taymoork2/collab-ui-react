@@ -117,7 +117,8 @@ describe('Service : AccountOrgService', function () {
             blockDesktopAppUpload: true,
             blockWebAppUpload: false,
             blockMobileAppUpload: false,
-            blockBotsUpload: false },
+            blockBotsUpload: false,
+          },
         };
         return [200, data];
       });
