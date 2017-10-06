@@ -27,6 +27,7 @@ export class CallFeaturesPage {
     this.editSave = element(by.cssContainingText('button', 'Save'));
     this.editGroupName = element(by.name('editCallFeatureName'));
     this.nextButton = element(by.css('span.icon-arrow-next'));
+    this.backButton = element(by.css('i.icon-arrow-back'));
     this.confirmDelete = element(by.css('button.btn--negative'));
   }
 };
