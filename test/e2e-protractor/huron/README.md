@@ -147,5 +147,6 @@ const customer = huronCustomer({
 - Users: 310-319
 - Hunt Group: 325
 - Call Park: 350-359
+- Call Paging: 375
 
 Obviously if number range is set, the extensions will adjust (ie extension range is 500-599, Hunt Group will be 525).
