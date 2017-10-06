@@ -73,7 +73,9 @@
     function getNumberStatus() {
       var number_status = getStorage('NUMBER_STATUS');
       if (!number_status) {
-        number_status = { NEW: 1, UPDATED: 2, DELETED: 3, NO_CHANGE: 4 };
+        number_status = {
+          NEW: 1, UPDATED: 2, DELETED: 3, NO_CHANGE: 4,
+        };
         setStorage('NUMBER_STATUS', number_status);
       }
 
@@ -83,7 +85,9 @@
     function getTdStatus() {
       var td_status = getStorage('TD_STATUS');
       if (!td_status) {
-        td_status = { EDITED: 'E', SUBMITTED: 'S', CANCELED: 'C', REJECTED: 'R', APPROVED: 'A', PROVISIONED: 'P', FAILED: 'L' };
+        td_status = {
+          EDITED: 'E', SUBMITTED: 'S', CANCELED: 'C', REJECTED: 'R', APPROVED: 'A', PROVISIONED: 'P', FAILED: 'L',
+        };
         setStorage('TD_STATUS', td_status);
       }
 

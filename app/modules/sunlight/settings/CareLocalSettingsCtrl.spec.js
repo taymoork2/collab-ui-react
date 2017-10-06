@@ -763,9 +763,11 @@ describe('Care Settings - Routing Toggling', function () {
         $interval: $intervalSpy,
         Notification: Notification,
       });
-      $scope.orgConfigForm = { dirty: false,
+      $scope.orgConfigForm = {
+        dirty: false,
         $setPristine: function () { },
-        $setUntouched: function () { } };
+        $setUntouched: function () { },
+      };
     })
   );
   it('should show the saved org chat configurations as selected.', function () {

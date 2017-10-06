@@ -1136,8 +1136,7 @@
     }
 
     function statusPageNotifier() {
-      var notifyMessage = $translate.instant('careChatTpl.statusMessage_failureText', {
-        lengthLimit: vm.lengthConstants.singleLineMaxCharLimit25 });
+      var notifyMessage = $translate.instant('careChatTpl.statusMessage_failureText', { lengthLimit: vm.lengthConstants.singleLineMaxCharLimit25 });
       if (!isStatusMessagesPageValid() && $stateParams.isEditFeature) {
         Notification.error(notifyMessage);
       }
@@ -1386,7 +1385,7 @@
       }
       var nextPage = vm.template.configuration.pages[vm.states[next]];
       switch (vm.states[next]) {
-        case 'proactivePrompt' :
+        case 'proactivePrompt':
         case 'virtualAssistant':
           nextPage = vm.template.configuration[vm.states[next]];
           break;
