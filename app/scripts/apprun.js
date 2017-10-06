@@ -20,7 +20,7 @@
       $timeout(MetricsService.reportLoadingMetrics.bind(MetricsService));
     }
     if ($document.readyState === 'complete') {
-      MetricsService.reportLoadingMetrics();
+      timeoutReportLoadingMetrics();
     } else {
       WindowService.registerEventListener('load', timeoutReportLoadingMetrics);
     }

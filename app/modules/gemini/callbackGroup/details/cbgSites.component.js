@@ -26,6 +26,11 @@
           var isSelf = (obj.ccaGroupId === vm.currCbg.ccaGroupId); // don't move to self
           return isSelf || !obj.groupId;
         });
+
+        _.forEach(vm.sites, function (item) {
+          var resArr = _.words(item.siteUrl, /^[a-z][\w]+/g);
+          item.globalSite = 'https://' + _.trim(item.siteUrl) + '/' + _.trim(resArr[0]) + '/globalcallin.php';
+        });
       }
       $state.current.data.displayName = $translate.instant('gemini.cbgs.field.totalSites');
     }
@@ -53,14 +58,14 @@
       };
 
       cbgService.moveSite(data).then(function () {
-        vm.showLoading = false;
-
         _.remove(vm.sites, function (obj) {
           return obj.siteId === site.siteId;
         });
         $rootScope.$emit('cbgsUpdate', true);
       }).catch(function (err) {
         Notification.errorResponse(err, 'errors.statusError', { status: err.status });
+      }).finally(function () {
+        vm.showLoading = false;
       });
     }
 

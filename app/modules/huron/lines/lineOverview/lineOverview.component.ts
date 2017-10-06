@@ -142,10 +142,6 @@ class LineOverview implements ng.IComponentController {
       this.userVoicemailEnabled = lineOverviewData.voicemailEnabled;
       this.showApplyToAllSharedLines = this.setShowApplyToAllSharedLines();
       this.showActions = this.setShowActionsFlag(this.lineOverviewData.line);
-      if (this.isHI1484) {
-        //TODO: (egandhi) use only siteToSite when Locations is GA - lineOverview.html - internalSelected
-        this.lineOverviewData.line.internal = this.lineOverviewData.line.siteToSite;
-      }
       if (!this.lineOverviewData.line.uuid) { // new line, grab first available internal number
         if (this.isHI1484) {
           this.lineOverviewData.line.internal = _.get(this.internalNumbers, '[0].internal');

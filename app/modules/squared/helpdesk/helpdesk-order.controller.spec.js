@@ -37,13 +37,13 @@ describe('Controller: HelpdeskOrderController', function () {
       expect(orderController.orderId).toBe('67891234');
       expect(orderController.account).toBeDefined();
       expect(orderController.orderUuid).toBe('3e54548d-12ff-43f4-9aff-10c2fcc64130');
-      expect(orderController.accountName).toBe('All_Pizza_And_Ice_Cream_You_Can_Eatery');
+      expect(orderController.endCustomerName).toBe('All_Pizza_And_Ice_Cream_You_Can_Eatery');
       expect(orderController.provisionTime).toBe(new Date('2016-09-27T22:56:30.051Z').toGMTString());
     });
 
     it('verify account info is correct', function () {
       $scope.$apply();
-      expect(orderController.accountName).toBe('All_Pizza_And_Ice_Cream_You_Can_Eatery');
+      expect(orderController.endCustomerName).toBe('All_Pizza_And_Ice_Cream_You_Can_Eatery');
       expect(orderController.accountOrgId).toBe('bbbc797b-f8a4-424b-9e1d-927e222f532e');
       expect(orderController.customerAdminEmail).toBe('steamboatcsco@gmail.com');
       expect(orderController.partnerAdminEmail).toBe('boulder.steamboat@gmail.com');
@@ -94,7 +94,7 @@ describe('Controller: HelpdeskOrderController', function () {
       expect(orderController.orderUuid).toBe('9feb25f4-d581-42f9-a732-ccccbe3e2e92');
       expect(orderController.customerAdminEmail).toBe('orderPayload@test.com');
       expect(orderController.partnerAdminEmail).toBe('orderPayloadReseller@test.com');
-      expect(orderController.accountName).toBe('All_Pizza_And_Ice_Cream_You_Can_Eatery');
+      expect(orderController.endCustomerName).toBe('All_Pizza_And_Ice_Cream_You_Can_Eatery');
     });
   });
 
@@ -163,10 +163,25 @@ describe('Controller: HelpdeskOrderController', function () {
     it('sets the isProvisionedOrderPending flag to true if order is pending', function () {
       expect(orderController.isOrderPendingProvisioning()).toBe(true);
     });
-    it('sets the isAccountActivated flag to not be true', function () {
-      expect(orderController.isAccountActivated()).not.toBe(true);
+    it('sets the heading string to read Order Info', function () {
+      expect(orderController.headingString).toBe('helpdesk.orderInfo');
     });
   });
+
+  describe('CSM pending order, if the order contains a service status of other than pending', function () {
+    beforeEach(function () {
+      spyOn(HelpdeskService, 'searchOrders');
+      $stateParams.order = getJSONFixture('core/json/orders/csmOrderConflictingServiceStatus.json');
+      orderController = $controller('HelpdeskOrderController', {
+        $stateParams: $stateParams,
+      });
+      $scope.$apply();
+    });
+    it('sets the hasConflictingServiceStatus to true', function () {
+      expect(orderController.hasConflictingServiceStatus).toBe(true);
+    });
+  });
+
   describe('CSM provisioned purchase order details', function () {
     beforeEach(function () {
       spyOn(HelpdeskService, 'getSubscription').and.returnValue($q.resolve({ customer: { orgId: '123456' } }));
@@ -181,8 +196,11 @@ describe('Controller: HelpdeskOrderController', function () {
       expect(HelpdeskService.getSubscription).toHaveBeenCalled();
       expect(orderController.orgId).toBe('123456');
     });
-    it('sets the isOrderProvisioned flag to true', function () {
-      expect(orderController.isOrderProvisioned()).toBe(true);
+    it('sets the canEditResendAdminEmail to false', function () {
+      expect(orderController.canEditResendAdminEmail()).toBe(false);
+    });
+    it('sets the canEditResendProvisioningContact to false', function () {
+      expect(orderController.canEditResendProvisioningContact()).toBe(false);
     });
   });
 });

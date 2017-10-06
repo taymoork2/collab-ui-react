@@ -405,10 +405,7 @@
 
         // See http://angular-translate.github.io/docs/#/guide/19_security
         $translateProvider.useSanitizeValueStrategy('escapeParameters');
-        $translateProvider.useStaticFilesLoader({
-          prefix: 'l10n/',
-          suffix: '.json',
-        });
+        $translateProvider.useLoader('l10nBundleLoader');
         $translateProvider.addInterpolation('$translateMessageFormatInterpolation');
         $translateProvider.preferredLanguage(languagesProvider.getPreferredLanguage());
         $translateProvider.fallbackLanguage(languagesProvider.getFallbackLanguage());
@@ -1158,6 +1155,9 @@
               'userPending@user-overview': {
                 template: require('modules/core/users/userOverview/userPending.tpl.html'),
               },
+              'side-panel-container@user-overview': {
+                template: require('modules/core/users/userOverview/userOverviewFirstScreen.tpl.html'),
+              },
             },
             resolve: {
               currentUser: /* @ngInject */ function (UserOverviewService, $stateParams) {
@@ -1519,7 +1519,7 @@
           .state('user-overview.hybrid-services-spark-hybrid-impinterop', {
             views: {
               'side-panel-container@user-overview': {
-                template: '<hybrid-messaging-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName"></hybrid-messaging-user-settings>',
+                template: '<hybrid-messaging-user-settings user-id="$resolve.userId" user-email-address="$resolve.userName" user-updated-callback="$resolve.userUpdatedCallback(options)"></hybrid-messaging-user-settings>',
               },
             },
             data: {},
@@ -1530,11 +1530,15 @@
               userName: /* @ngInject */ function ($stateParams) {
                 return $stateParams.currentUser.userName;
               },
+              userUpdatedCallback: /* @ngInject */ function ($stateParams) {
+                return $stateParams.userUpdatedCallback;
+              },
               displayName: translateDisplayName('hercules.hybridServiceNames.spark-hybrid-impinterop'),
             },
             params: {
               extensionId: {},
               extensions: {},
+              userUpdatedCallback: Function,
             },
           })
           .state('user-overview.hybrid-services-spark-hybrid-impinterop.history', {
@@ -1612,14 +1616,20 @@
             },
           })
           .state('user-overview.hybrid-services-squared-fusion-uc', {
-            template: '<hybrid-call-service-aggregated-section user-id="$resolve.userId" user-email-address="$resolve.userName"></hybrid-call-service-aggregated-section>',
+            template: '<hybrid-call-service-aggregated-section user-id="$resolve.userId" user-email-address="$resolve.userName" user-updated-callback="$resolve.userUpdatedCallback(options)"></hybrid-call-service-aggregated-section>',
             data: {},
+            params: {
+              userUpdatedCallback: Function,
+            },
             resolve: {
               userId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.currentUser.id;
               },
               userName: /* @ngInject */ function ($stateParams) {
                 return $stateParams.currentUser.userName;
+              },
+              userUpdatedCallback: /* @ngInject */ function ($stateParams) {
+                return $stateParams.userUpdatedCallback;
               },
               displayName: translateDisplayName('hercules.serviceNames.squared-fusion-uc'),
             },
@@ -1666,7 +1676,7 @@
           .state('user-overview.hybrid-services-squared-fusion-uc.connect-settings', {
             views: {
               'side-panel-container@user-overview': {
-                template: '<hybrid-call-service-connect-user-settings user-id="$resolve.userId" user-email-address="$resolve.userEmailAddress" entitlement-updated-callback="$resolve.onEntitlementChange(options)"  voicemail-feature-toggled="$resolve.voicemailFeatureToggled" user-test-tool-feature-toggled="$resolve.userTestToolFeatureToggled"></hybrid-call-service-connect-user-settings>',
+                template: '<hybrid-call-service-connect-user-settings user-id="$resolve.userId" user-email-address="$resolve.userEmailAddress" entitlement-updated-callback="$resolve.onEntitlementChange(options)" user-test-tool-feature-toggled="$resolve.userTestToolFeatureToggled"></hybrid-call-service-connect-user-settings>',
               },
             },
             data: {},
@@ -1685,9 +1695,6 @@
               },
               onEntitlementChange: /* @ngInject */ function ($stateParams) {
                 return $stateParams.onEntitlementChange;
-              },
-              voicemailFeatureToggled: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridVoicemail);
               },
               userTestToolFeatureToggled: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCallUserTestTool);
@@ -1912,18 +1919,12 @@
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<webex-add-site-modal subscription-list="$resolve.subscriptionList"  conference-services="$resolve.conferenceServices" audio-licenses="$resolve.audioLicenses" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site->',
+                template: '<webex-add-site-modal subscription-list="$resolve.subscriptionList"  conference-licenses="$resolve.conferenceLicenses" audio-licenses="$resolve.audioLicenses" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site->',
               },
             },
-            params: {
-              existingFieldIds: [],
-              existingFieldData: {},
-              inUse: false,
-              callback: function () { },
-            },
             resolve: {
-              conferenceServices: /* @ngInject */ function (Authinfo) {
-                return Authinfo.getConferenceServices();
+              conferenceLicenses: /* @ngInject */ function (Authinfo) {
+                return _.map(Authinfo.getConferenceServices(), 'license');
               },
               audioLicenses: /*@ngInject */ function (Authinfo, Config) {
                 var audioLicenses = _.filter(Authinfo.getLicenses(), { licenseType: Config.licenseTypes.AUDIO });
@@ -4158,6 +4159,9 @@
               'header@context-cluster-sidepanel': {
                 template: require('modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html'),
               },
+              'side-panel-container@context-cluster-sidepanel': {
+                template: require('modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-content.html'),
+              },
             },
             // If data not present, $state.current.data.displayName can't be changed
             data: {},
@@ -4365,6 +4369,9 @@
               },
               'header@hds-cluster-details': {
                 template: require('modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html'),
+              },
+              'side-panel-container@hds-cluster-details': {
+                template: require('modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-content.html'),
               },
             },
             data: {},
@@ -4808,9 +4815,6 @@
               },
             },
             resolve: {
-              hasVoicemailFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridVoicemail);
-              },
               hasAtlasHybridCallDiagnosticTool: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCallDiagnosticTool);
               },
@@ -4910,6 +4914,9 @@
               'header@expressway-cluster-sidepanel': {
                 template: require('modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html'),
               },
+              'side-panel-container@expressway-cluster-sidepanel': {
+                template: require('modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-content.html'),
+              },
             },
             // If data not present, $state.current.data.displayName can't be changed
             data: {},
@@ -4988,6 +4995,9 @@
               },
               'header@media-cluster-details': {
                 template: require('modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html'),
+              },
+              'side-panel-container@media-cluster-details': {
+                template: require('modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-content.html'),
               },
             },
             data: {},

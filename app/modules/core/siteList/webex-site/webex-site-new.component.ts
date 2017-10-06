@@ -1,10 +1,14 @@
-import { IWebExSite, ISiteNameError, SiteErrorType } from
-'modules/core/setupWizard/meeting-settings/meeting-settings.interface';
-import { Config }  from 'modules/core/config/config';
+import { IWebExSite, ISiteNameError, SiteErrorType } from 'modules/core/setupWizard/meeting-settings/meeting-settings.interface';
+import { Config } from 'modules/core/config/config';
 import { TrialTimeZoneService } from 'modules/core/trials/trialTimeZone.service';
 import { TrialWebexService } from 'modules/core/trials/trialWebex.service';
+import { EventNames } from './webex-site.constants';
+import { FeatureToggleService } from 'modules/core/featureToggle/featureToggle.service';
+import { Authinfo } from 'modules/core/scripts/services/authinfo';
 
 class WebexSiteNewCtrl implements ng.IComponentController {
+
+  private static showUserMgmntEmailPattern = '^ordersimp-.*@mailinator.com';
 
   public siteModel: IWebExSite = {
     siteUrl: '',
@@ -14,8 +18,12 @@ class WebexSiteNewCtrl implements ng.IComponentController {
   };
   /* @ngInject */
   constructor(
+    private $q: ng.IQService,
     private $translate: ng.translate.ITranslateService,
+    private $scope: ng.IScope,
     private Config: Config,
+    private Authinfo: Authinfo,
+    private FeatureToggleService: FeatureToggleService,
     private TrialTimeZoneService: TrialTimeZoneService,
     private TrialWebexService: TrialWebexService,
 
@@ -31,32 +39,30 @@ class WebexSiteNewCtrl implements ng.IComponentController {
 
   public setupTypeLegacy = this.Config.setupTypes.legacy;
   public currentSubscription = '';
-
   public selectTimeZonePlaceholder = this.$translate.instant('firstTimeWizard.selectTimeZonePlaceholder');
   public timeZoneOptions;
-  public isAllowMultiples = false;
+  public isShowUserManagement = false;
   public audioPackage = '';
-
   public disableValidateButton = false;
-  public onSiteAdd: Function;
-  public onSiteRemove: Function;
-  public sitesArray: IWebExSite[] = [];
+  public onSitesAdd: Function;
+  public onValidationStatusChange: Function;
+  public sitesArray: IWebExSite[]; // = [];
+  public newSitesArray: IWebExSite[] = [];
 
-  public $onChanges (changes) {
-    if (changes.allowMultiples) {
-      this.isAllowMultiples = changes.allowMultiples.currentValue;
+  /*public $onChanges(changes) {
+    if (changes.sitesArray) {
+      this.sitesArray = _.clone(changes.sitesArray.currentValue);
     }
-    if (changes.audioPackage) {
-      this.audioPackage = changes.audioPackage.currentValue;
-    }
-  }
+  }*/
 
   public addSite(site) {
-    this.onSiteAdd({ site: site });
+    this.newSitesArray.push(site);
+    this.onValidationStatusChange({ isValid: true });
   }
 
-  public removeSite(site) {
-    this.onSiteRemove({ site: site });
+  public removeSite(index: number): void {
+    this.newSitesArray.splice(index, 1);
+    this.onValidationStatusChange({ isValid: this.newSitesArray.length > 0 });
   }
 
   public validateMeetingSite(): void {
@@ -80,7 +86,6 @@ class WebexSiteNewCtrl implements ng.IComponentController {
         if (this.siteModel.setupType !== this.setupTypeLegacy) {
           delete this.siteModel.setupType;
         }
-        this.sitesArray.push(_.clone(this.siteModel));
         this.addSite(_.clone(this.siteModel));
         this.clearWebexSiteInputs();
       } else {
@@ -94,14 +99,18 @@ class WebexSiteNewCtrl implements ng.IComponentController {
     }).catch(() => {
       this.clearWebexSiteInputs();
     }).finally(() => {
-      if (this.isAllowMultiples) {
-        this.disableValidateButton = false;
-      }
+      this.disableValidateButton = false;
     });
   }
 
   public $onInit(): void {
     this.timeZoneOptions = this.TrialTimeZoneService.getTimeZones();
+    this.shouldShowUserManagement().then(result => {
+      this.isShowUserManagement = result;
+    });
+    this.$scope.$on(EventNames.ADD_SITES, () => {
+      this.onSitesAdd({ sites: this.newSitesArray, isValid: true });
+    });
   }
 
   private validateWebexSiteUrl(siteName): ng.IPromise<any> {
@@ -120,6 +129,16 @@ class WebexSiteNewCtrl implements ng.IComponentController {
 
   public onInputChange() {
     this.clearError();
+  }
+
+  // algendel9/25/17 we show user management if FT is enabled OR the pattern matches
+  private shouldShowUserManagement(): ng.IPromise<boolean> {
+    const regex = new RegExp(WebexSiteNewCtrl.showUserMgmntEmailPattern);
+    const isPatternMatch  = regex.test(this.Authinfo.getUserName()) || regex.test(this.Authinfo.getPrimaryEmail()) || regex.test(this.Authinfo.getCustomerAdminEmail());
+    if (isPatternMatch) {
+      return this.$q.resolve(true);
+    }
+    return this.FeatureToggleService.atlasSetupSiteUserManagementGetStatus();
   }
 
   private clearError(): void {
@@ -149,18 +168,18 @@ class WebexSiteNewCtrl implements ng.IComponentController {
         service: audioPackageDisplay,
       });
     }*/
-    return  audioPackageDisiplay;
+    return audioPackageDisiplay;
   }
 }
 
 
 export class WebexSiteNewComponent implements ng.IComponentOptions {
   public controller = WebexSiteNewCtrl;
-  public template = require('modules/core/siteList/webex-site/webex-site-new.html');
+  public template = require('./webex-site-new.html');
   public bindings = {
-    allowMultiples: '<',
-    onSiteAdd: '&',
-    onSiteRemove: '&',
+    sitesArray: '<',
+    onSitesAdd: '&',
+    onValidationStatusChange: '&',
     audioPackage: '<',
   };
 }

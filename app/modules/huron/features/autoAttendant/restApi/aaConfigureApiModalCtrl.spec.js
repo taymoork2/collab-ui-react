@@ -54,13 +54,8 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
     menu = AutoAttendantCeMenuModelService.newCeMenuEntry();
 
     aaUiModel['openHours'].addEntryAt(index, menu);
-    action = AutoAttendantCeMenuModelService.newCeActionEntry('doREST', '');
-    action.url = 'test URL';
-    action.variableSet = [{
-      value: '1',
-      variableName: 'Test1',
-    }];
-    action.method = 'GET';
+    action = AutoAttendantCeMenuModelService.newCeActionEntry('doREST', 'testId');
+    action.varList = ['testVar'];
     aaUiModel[schedule].entries[0].addAction(action);
     $scope.schedule = schedule;
     $scope.index = index;
@@ -157,6 +152,16 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
       c.url = '';
       expect(c.isSaveDisabled()).toEqual(true);
       c.url = 'test URL';
+      c.variableSet = [{
+        value: 'testResponse',
+        newVariableValue: 'Test1',
+        variableName: 'New Variable',
+        isWarn: false,
+      }, {
+        value: 'testRes2',
+        variableName: 'Test1',
+        isWarn: false,
+      }];
       expect(c.isSaveDisabled()).toEqual(false);
     });
   });

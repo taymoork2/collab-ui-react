@@ -1809,9 +1809,9 @@ collab-ui-ng@*:
     masonry-layout "^4.1.1"
     moment "^2.10.6"
 
-collab-ui-ng@~7.2.0:
-  version "7.2.0"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/collab-ui-ng/-/collab-ui-ng-7.2.0.tgz#384e915409c8dead62dfc0870303fdf7cba7f517"
+collab-ui-ng@~7.3.0:
+  version "7.3.0"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/collab-ui-ng/-/collab-ui-ng-7.3.0.tgz#753275e79b19cdfcfabab46f5795be97e13624d9"
   dependencies:
     angular "^1.5.0"
     angular-animate "^1.5.0"
@@ -1830,8 +1830,8 @@ collab-ui-stickyfill@^1.1.5:
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/collab-ui-stickyfill/-/collab-ui-stickyfill-1.1.5.tgz#9d8ebe06363a3745e1e5461946ee7af6eff31457"
 
 collab-ui@^4.8.0:
-  version "4.9.1"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/collab-ui/-/collab-ui-4.9.1.tgz#26b4a68154d79cf0086121e9f17e45cc4e0eb97e"
+  version "4.9.2"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/collab-ui/-/collab-ui-4.9.2.tgz#6aef687ed5a4b8c3699b9012f8e9a65692d9c5eb"
 
 color-convert@^1.3.0, color-convert@^1.9.0:
   version "1.9.0"
@@ -8688,6 +8688,10 @@ useragent@^2.1.12:
   dependencies:
     lru-cache "2.2.x"
     tmp "0.0.x"
+
+usertiming@^0.1.8:
+  version "0.1.8"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/usertiming/-/usertiming-0.1.8.tgz#35378e7f41a248d40e658d05f80423469a7b0650"
 
 util-deprecate@~1.0.1:
   version "1.0.2"

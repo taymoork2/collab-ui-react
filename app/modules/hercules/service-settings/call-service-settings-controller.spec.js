@@ -19,7 +19,6 @@ describe('Controller: CallServiceSettingsController', function () {
     this.initController = function () {
       this.controller = this.$controller('CallServiceSettingsController', {
         $scope: this.$scope,
-        hasVoicemailFeatureToggle: true,
         hasAtlasHybridCallDiagnosticTool: false,
       });
       this.$scope.$apply();

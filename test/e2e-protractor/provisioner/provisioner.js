@@ -95,6 +95,7 @@ export function loginPartner(partnerEmail) {
 }
 
 function switchToCustomerWindow(customerName, doFtsw) {
+  utils.waitForSpinner();
   utils.click(element(by.css('i.icon-search')));
   utils.sendKeys(element(by.id('searchFilter')), customerName);
   utils.waitForSpinner()

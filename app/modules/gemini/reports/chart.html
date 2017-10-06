@@ -1,10 +1,9 @@
 <cs-card class="large medium" ng-if="!$ctrl.size">
   <article>
-    <header class="chartHeader">
-      <h4 class="pull-left">{{$ctrl.title}}</h4>
-    </header>
-
     <section>
+      <div class="chartHeader">
+        <h4>{{$ctrl.title}}</h4>
+      </div>
       <div id="{{$ctrl.chartId}}" class="sm-graphic"></div>
     </section>
   </article>

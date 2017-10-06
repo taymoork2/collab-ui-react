@@ -250,29 +250,6 @@ describe('Controller: HelpdeskController', function () {
       expect(this.controller.currentSearch.orderSearchResults[1].serviceId).toBe('Atlas_Test-testSearch002-dummy-sub2');
       expect(this.controller.currentSearch.orderSearchResults[1].lastModified).toBe('2017-08-24T22:58:28.959Z');
     });
-
-    it('provisioning order search result shows status as provisioned if service is provisioned', function () {
-      this.HelpdeskService.searchOrders.and.returnValue(this.$q.resolve(_.cloneDeep(this.jsonData.orderSearchPendingWithProvService)));
-      this.controller.isOrderSearchEnabled = true;
-      this.controller.searchString = '67891234';
-      this.controller.search();
-      this.$scope.$apply();
-      expect(this.controller.currentSearch.orderSearchResults[0].orderStatus).toBe('PROVISIONED');
-    });
-
-    it('simple search with Rejected order', function () {
-      this.HelpdeskService.searchOrders.and.returnValue(this.$q.resolve(_.cloneDeep(this.jsonData.orderSearchResult2)));
-      this.controller.isOrderSearchEnabled = true;
-
-      expect(this.controller.showOrdersResultPane()).toBeFalsy();
-      expect(this.controller.searchingForOrders).toBeFalsy();
-      this.controller.searchString = '67891234';
-      this.controller.search();
-      this.$scope.$apply();
-      expect(this.controller.searchingForOrders).toBeFalsy();
-
-      expect(this.controller.currentSearch.orderSearchFailure).toEqual('helpdesk.noSearchHits');
-    });
   });
 
   describe('backend http error', function () {

@@ -21,7 +21,7 @@
 </cs-sp-buttons>
 
 <form name="userSettingsView.form" novalidate role="form">
-  <cs-sp-container>
+  <cs-sp-container cs-tabindex="userSettingsView.form.$dirty ? -1 : 0">
     <cs-sp-section>
       <div ng-if="!userSettingsModel.hasLoadError && !userSettingsModel.viewReady"
            id="spinnerSection",

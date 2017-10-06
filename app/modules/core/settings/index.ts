@@ -12,6 +12,7 @@ import privacySectionModule from './privacySection';
 import retentionModule from './retention';
 import securityModule from './security';
 import externalCommunicationModule from './externalCommunication';
+import fileSharingControlModule from './fileSharingControl';
 import sipDomainModule from './sipDomain';
 import supportSectionModule from './supportSection';
 
@@ -28,6 +29,7 @@ export default angular.module('core.settings', [
   retentionModule,
   securityModule,
   externalCommunicationModule,
+  fileSharingControlModule,
   domainsModule,
   sipDomainModule,
   supportSectionModule,

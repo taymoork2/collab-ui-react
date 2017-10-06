@@ -5,7 +5,7 @@
     </button>
     <button class="btn-default" translate="common.cancel" ng-click="$ctrl.reset()"></button>
   </cs-sp-buttons>
-  <cs-sp-container>
+  <cs-sp-container cs-tabindex="$ctrl.form.$dirty ? -1 : 0">
     <div ng-repeat="restriction in $ctrl.currentRestrictions track by restriction.restriction">
       <cs-sp-section>
         <div class="section-title-row">

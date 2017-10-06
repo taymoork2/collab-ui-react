@@ -11,9 +11,7 @@
     </div>
 
     <!-- Media on Hold settings -->
-    <div
-    cr-feature-toggle feature-show="huron-moh-enable"
-    class="cs-form__section">
+    <div class="cs-form__section">
       <div class="section__info">
         <h4 class="section__title" translate="serviceSetupModal.mohTitle"></h4>
         <h6 class="section__description" translate="serviceSetupModal.mohDesc"></h6>
@@ -78,7 +76,7 @@
       </div>
       <div class="section__content">
         <uc-company-caller-id
-          site="$ctrl.callSettingsData.site"
+          voicemail-pilot-number="$ctrl.callSettingsData.defaultLocation.voicemailPilotNumber.number"
           company-caller-id="$ctrl.callSettingsData.companyCallerId"
           external-number-options="$ctrl.settingsOptions.companyCallerIdOptions"
           customer-name="$ctrl.callSettingsData.customer.name"

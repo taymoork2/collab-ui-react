@@ -3,7 +3,6 @@ import _ = require('lodash');
 export class SearchTranslator {
   /* @ngInject */
   constructor(private $translate: any) {
-
   }
 
   public translate(search: string): string {

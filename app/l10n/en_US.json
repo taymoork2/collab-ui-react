@@ -2390,7 +2390,6 @@
         "squared-fusion-gcal": "Calendar",
         "squared-fusion-o365": "Calendar",
         "squared-fusion-ec": "Connect",
-        "squared-fusion-ec-and-voicemail": "Connect + Voicemail",
         "squared-fusion-ec-place": "Hybrid Call Service Connect"
       },
       "serviceDescriptions": {
@@ -2408,7 +2407,8 @@
       "exchange": "Microsoft Exchange",
       "google": "Google Calendar",
       "notSetup": "Not currently set up",
-      "sinceTime": "since {{timestamp}}"
+      "sinceTime": "since {{timestamp}}",
+      "noLicensedServices": "This user must have one or more licensed services to be configured for Hybrid Services."
     },
     "alarms": {
       "affectedNodes": "Affected Nodes",
@@ -2534,17 +2534,6 @@
       "clusters-title-ept": "SIP Destination",
       "status-title": "Service Status"
     },
-    "hybridVoicemailUserSection": {
-      "automaticallyEnabled": "Voicemail is automatically enabled when Call Service Connect is enabled.",
-      "description": "Users can check their voicemail directly from Cisco Spark.",
-      "header": "Voicemail",
-      "on": "On",
-      "off": "Off",
-      "pilot": "Pilot",
-      "pilotNotConfigured": "Voicemail configuration not found.",
-      "mwi": "Message Waiting Indicator",
-      "toTurnOn": "To turn on voicemail for your users, enable voicemail in <a ng-click=\"{{onclick}}\">Hybrid Call Settings</a>."
-    },
     "hybridCallServiceTestCallTool": {
       "header": "Test Call",
       "description": "Begin a test call with another Cisco Spark user for troubleshooting Call Service Connect configuration.",
@@ -2630,21 +2619,6 @@
       "oneButtonToPushIntervalSecondaryLabel": "minutes before the meeting",
       "oneButtonToPushIntervalMinutesSavingSuccess": "Early join time was successfully saved.",
       "oneButtonToPushIntervalMinutesSavingError": "Could not save the change to early join time. Try again later.",
-      "voicemail": {
-        "heading": "Voicemail",
-        "description": "Users can access on-premises voicemail by using the Cisco Spark app.",
-        "enableDescription": "All users with both Hybrid Call Service Aware and Connect can use voicemail now",
-        "disableDescription": "Voicemail is disabled for all users",
-        "voicemailDisabled": "To enable voicemail Call Service Connect needs to be turned on.",
-        "voicemailStatusError": "Unable to get voicemail status",
-        "voicemailEnableError": "Could not enable voicemail",
-        "voicemailDisableError": "Could not disable voicemail",
-        "voicemailStatusNotConfigured": "Voicemail service not configured",
-        "voicemailStatusRequested": "Voicemail service activation pending",
-        "voicemailStatusHybridSuccess": "Voicemail service operational",
-        "voicemailStatusHybridFailed": "Voicemail service outage (see clusters for alarms)",
-        "voicemailStatusHybridPartial": "Voicemail service impaired (see clusters for alarms)"
-      },
       "documentation": {
         "heading": "Documentation and Software",
         "headingDoc": "Documentation",
@@ -3906,6 +3880,8 @@
     "messengerAppsecurityError": "Failed to change Device Security setting.",
     "messengerExternalCommunicationSuccess": "Successfully changed External Communication setting.",
     "messengerExternalCommunicationError": "Failed to change External Communication setting.",
+    "messengerFileSharingControlSuccess": "Successfully changed File Sharing setting.",
+    "messengerFileSharingControlError": "Failed to change File Sharing setting.",
     "messengerEnableWebexSuccess": "Successfully enabled Webex Messenger Integration.",
     "messengerEnableWebexError": "Failed to enable Webex Messenger Integration.",
     "messengerDisableWebexSuccess": "Successfully disabled Webex Messenger Integration.",
@@ -4500,10 +4476,10 @@
     "externalTransfer": "External Call Transfer/Conference"
   },
   "primaryLine": {
-    "title": "Line selection for calls",
+    "title": "Line Selection for Calls",
     "description": "Choose the default behavior for devices when they go off hook",
-    "autoOption": "Auto - device automatically chooses an available line",
-    "primaryLineOption": "Always use primary line",
+    "autoOption": "Auto - Device automatically chooses an available line",
+    "primaryLineOption": "Always use Primary Line",
     "autoLabel": "Auto",
     "primaryLineLabel": "Primary Line",
     "saveSuccess": "Line selection saved successfully",
@@ -7744,6 +7720,7 @@
         "title": "Users",
         "directorySynchronization": "Directory Synchronization",
         "singleSignOn": "Single Sign-On",
+        "autoAssignLicenses": "Auto-Assign Licenses",
         "convertButton": "Review",
         "convertText": "Users ready for license conversion review",
         "unassignedLicenses": "You have <span class=\"convert-nr h4\">{{licenseNumber}}</span> unassigned {{licenseType}} licenses"
@@ -7797,8 +7774,7 @@
           "spark-hybrid-datasecurity": "Data Security",
           "contact-center-context": "Context",
           "squared-fusion-khaos": "Management",
-          "ept": "Private Trunk",
-          "voicemail": "Voicemail"
+          "ept": "Private Trunk"
         }
       },
       "licenses": {
@@ -7869,6 +7845,20 @@
       "subsectionLabel": "Messaging",
       "subsectionDescription": "Secure your organization's data by blocking external messaging.",
       "description": "Block your users from inviting external contacts to Cisco Spark spaces and prevent your users from joining external Cisco Spark spaces."
+    },
+    "fileSharingControl": {
+      "title": "File Sharing Control",
+      "subsectionLabel": "Download and Preview Restrictions",
+      "proPackInfoCopy": "This premium feature is available with Pro Pack. Contact your partner to learn more.",
+      "subsectionDescription": "Upload restriction is applied to selection. ",
+      "downloadSubsectionLabelDescription": "Don't allow users to download or preview files in:",
+      "uploadSubsectionLabel": "Upload Restrictions",
+      "uploadSubsectionLabelDescription": "Don't allow users to upload files in:",
+      "description": "Applies to internal users only. External users can upload and download files.",
+      "desktopApps": "Desktop apps",
+      "webApp": "Web app",
+      "mobileApps": "Mobile apps",
+      "integrationAndBots": "Integration and Bots"
     },
     "support": {
       "title": "Support",
@@ -8056,6 +8046,8 @@
     "orders": "Orders",
     "orderDetails": "Orders Details",
     "orderNumber": "Order Number: {{orderNumber}}",
+    "debuggingStatus": "Debugging Status",
+    "usedForDebugging": "This value is used for debugging purposes only.",
     "awaitingProvDetails": "Awaiting Provisioning Details",
     "setUpOrder": "Set Up Order",
     "provisioningContactEmail": "Provisioning Contact Email",
@@ -8279,11 +8271,6 @@
       "displayNameError": "Could not get customer display name."
     },
     "care": "Care",
-    "hybridVoicemail": {
-      "cannotReadStatus": "Could not read Hybrid Voicemail status.",
-      "hybridVoicemail": "Voicemail",
-      "orgNotEnabled": "Organization not enabled."
-    },
     "hybridImp": {
       "hybridImp": "Hybrid Messaging"
     }
@@ -8462,7 +8449,8 @@
       "users": "Users",
       "inError": "users in error",
       "inPending": "users in pending activation",
-      "active": "users active"
+      "active": "users active",
+      "enableUsers": "Enable users"
     },
     "cards": {
       "shared": {
@@ -8753,6 +8741,14 @@
       "setupNotComplete": "Setup not completed"
     }
   },
+  "enableUsersModal": {
+    "title": "Enable users",
+    "subtitle": "You can now enable {{service}} for your users.",
+    "line1": "To enable users, you can:",
+    "item1": "Enable them individually from the <a ng-click=\"{{onclick}}\">users page</a>.",
+    "item2": "Enable them in bulk using the <a ng-click=\"{{onclick}}\">CSV template</a>.",
+    "line2": "Refer to <a href=\"http://www.cisco.com/go/hybrid-services-calendar\" target=\"_blank\">documentation</a> if you need help enabling users."
+  },
   "readOnlyModal": {
     "banner": "You are in read-only mode"
   },
@@ -8763,7 +8759,7 @@
     "import": "Import",
     "hidden": "Hidden",
     "display": "Display",
-    "inputLengthError": "Your {{field}} should be less than {{length}} characters.",
+    "inputLengthError": "{{field}} should be less than {{length}} characters.",
     "invalidCharacters": "{{field}} can not include invalid characters.",
     "services": {
       "pageTitle": "Service"
@@ -8777,7 +8773,7 @@
     },
     "region": "Region",
     "cbgTitle": "Callback Groups",
-    "tdTitle": "Telephony Domain",
+    "tdTitle": "Telephony Domains",
     "button": {
       "decline": "Decline",
       "approve": "Approve",
@@ -8902,7 +8898,7 @@
         "webDomain": "Web Domain",
         "totalSites": "Sites Assigned",
         "partnerTdName": "Partner TD Name",
-        "telephonyDomains": "Telephony Domains"
+        "telephonyDomains": "Telephony Domain Name"
       },
       "submit": {
         "success": "Telephony domain submitted.",
@@ -8985,7 +8981,7 @@
         "csvFilename": "exported_callbackgroup.csv",
         "result": {
           "success": "Callback Group list has been successfully exported.",
-          "failed": "There was an error exporting Telephony Domain list."
+          "failed": "There was an error exporting Callback Group list."
         }
       },
       "request": {

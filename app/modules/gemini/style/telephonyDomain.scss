@@ -59,6 +59,10 @@
   .edit-td-name {
     display: none;
   }
+
+  .history-ul {
+    padding-bottom: 48px;
+  }
 }
 
 .gmTdDetails-notes-state,
@@ -69,6 +73,14 @@
 
   .edit-td-name {
     display: none;
+  }
+
+  .side-panel-container {
+    height: calc(100vh - 90px);
+  }
+
+  .history-ul {
+    padding-bottom: 48px;
   }
 }
 
@@ -101,6 +113,7 @@
         padding: 0;
         padding-bottom: 50px;
         width: calc(100vw - 216px);
+        height: calc(100vh - 90px);
 
         .breadcrumb-container {
           padding: 0 1rem;

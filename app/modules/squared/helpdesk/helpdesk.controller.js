@@ -31,13 +31,7 @@ require('./helpdesk.scss');
     vm.showSearchHelp = showSearchHelp;
     vm.isCustomerHelpDesk = !Authinfo.isInDelegatedAdministrationOrg();
     vm.orderNumberSize = 8;
-    vm.isOrderSearchEnabled = false;
     vm.isOrderSearchEnabled = Authinfo.isCisco() || Authinfo.isCiscoMock();
-
-    var provStatuses = {
-      PROVISIONED: 'PROVISIONED',
-      PROVISIONING: 'PROVISIONING',
-    };
 
     $scope.$on('helpdeskLoadSearchEvent', function (event, args) {
       var search = args.message;
@@ -434,14 +428,6 @@ require('./helpdesk.scss');
       _.forEach(orders, function (order) {
         if (!(_.includes(serviceIdKeys, order.serviceId))) {
           serviceIdKeys.push(order.serviceId);
-          if (order.purchaseOrderId && order.orderStatus !== provStatuses.PROVISIONED) {
-            var foundProvisionedService = _.find(_.get(order, 'productProvisionStatus.serviceStatus'), function (service) {
-              return _.includes([provStatuses.PROVISIONED, provStatuses.PROVISIONING], service.status);
-            });
-            if (foundProvisionedService) {
-              order.orderStatus = provStatuses.PROVISIONED;
-            }
-          }
           sorted.push(order);
         }
       });

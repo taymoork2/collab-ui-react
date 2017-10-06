@@ -9,10 +9,12 @@
     .factory('OverviewUsersCard', OverviewUsersCard);
 
   /* @ngInject */
-  function OverviewUsersCard($q, $rootScope, $state, $translate, Config, DirSyncService, ModalService, Orgservice) {
+  function OverviewUsersCard($q, $rootScope, $state, $timeout, $translate, Config, DirSyncService, FeatureToggleService, ModalService, Orgservice) {
     return {
       createCard: function createCard() {
         var card = {};
+        card.features = {};
+        card.autoAssignLicensesStatus = undefined;
 
         card.name = 'overview.cards.users.title';
         card.template = usersCardTemplatePath;
@@ -150,10 +152,56 @@
         };
 
         card.manageUsers = function () {
+          // notes:
+          // - simply calling '$state.go(...)' inside of the callback does not seem to produce correct behavior
+          // - workaround for now is to delay the subsequent call till the next tick
+          // TODO: reverify after angular-ui-router upgrade
           $state.go('users.list').then(function () {
-            $state.go('users.manage.picker');
+            $timeout(function () {
+              $state.go('users.manage.picker');
+            });
           });
         };
+
+        card.showAutoAssignLicensesEditModal = function () {
+          $state.go('users.list').then(function () {
+            $timeout(function () {
+              $state.go('users.manage.org');
+            });
+          });
+        };
+
+        card.getAutoAssignLicensesStatusCssClass = function () {
+          var cssClassNames = {
+            ACTIVATED: 'success',
+            DEACTIVATED: 'warning',
+          };
+          if (_.isNil(card.autoAssignLicensesStatus)) {
+            return 'disabled';
+          }
+          return cssClassNames[card.autoAssignLicensesStatus];
+        };
+
+        function initFeatureToggles() {
+          return $q.all({
+            atlasF3745AutoAssignLicenses: FeatureToggleService.atlasF3745AutoAssignLicensesGetStatus(),
+          }).then(function (features) {
+            card.features = features;
+          });
+        }
+
+        // TODO: f3745 - rip this out once backend is available
+        function initFakeValues() {
+          // TODO: f3745 - apply logic for values returned by backend, once known
+          // - currently assume enum of ('ACTIVATED'|'DEACTIVATED'|null)
+          if (card.features.atlasF3745AutoAssignLicenses) {
+            card.autoAssignLicensesStatus = 'ACTIVATED';
+            // card.autoAssignLicensesStatus = 'DEACTIVATED';
+            // card.autoAssignLicensesStatus = null;
+          }
+        }
+
+        initFeatureToggles().then(initFakeValues);
 
         return card;
       },

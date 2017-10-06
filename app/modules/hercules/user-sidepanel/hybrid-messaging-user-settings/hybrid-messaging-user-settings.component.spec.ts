@@ -41,6 +41,7 @@ describe('hybridImpUserSettings', () => {
     ctrl = $componentController('hybridMessagingUserSettings', {}, {
       userId: undefined,
       userEmailAddress: emailAddress,
+      userUpdatedCallback: function () {},
     });
     ctrl.$onChanges({
       userId: {

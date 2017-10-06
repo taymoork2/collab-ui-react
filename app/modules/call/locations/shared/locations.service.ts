@@ -2,10 +2,7 @@ import {
   IRLocation, Location, IRLocationListItem, LocationListItem,
 } from './location';
 
-import {
-  IRCallPhoneNumberData, IRCallPhoneNumber, CallPhoneNumber,
-  IREmergencyNumberData, EmergencyNumber,
-} from 'modules/huron/phoneNumber';
+import { IREmergencyNumberData, EmergencyNumber } from 'modules/huron/phoneNumber';
 
 interface ILocationResource extends ng.resource.IResourceClass<ng.resource.IResource<IRLocationListItem>> {}
 interface ILocationDetailResource extends ng.resource.IResourceClass<ng.resource.IResource<IRLocation>> {
@@ -20,7 +17,6 @@ interface IUserMoveLocationResource extends ng.resource.IResourceClass<ng.resour
   update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
 }
 
-interface INumberResource extends ng.resource.IResourceClass<ng.resource.IResource<IRCallPhoneNumberData>> {}
 interface IREmergencyNumberResource extends ng.resource.IResourceClass<ng.resource.IResource<IREmergencyNumberData>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
 }
@@ -32,7 +28,6 @@ export class LocationsService {
   private userMoveLocationResource: IUserMoveLocationResource;
   private locationDetailResource: ILocationDetailResource;
   private defaultLocation: LocationListItem | undefined = undefined;
-  private numberResource: INumberResource;
   private emergencyNumberResource: IREmergencyNumberResource;
 
   /* @ngInject */
@@ -69,7 +64,6 @@ export class LocationsService {
         update: updateAction,
       });
 
-    this.numberResource = <INumberResource> this.$resource(`${this.HuronConfig.getCmiV2Url()}/customers/:customerId/numbers/:numberId`, {}, {});
     this.emergencyNumberResource = <IREmergencyNumberResource> this.$resource(`${this.HuronConfig.getCmiV2Url()}/customers/:customerId/locations/:locationId/emergencynumbers/:emergencyNumberId`, {},
       {
         update: updateAction,
@@ -77,9 +71,9 @@ export class LocationsService {
       });
   }
 
-  public getLocationList(): IPromise<LocationListItem[]> {
+  public getLocationList(customerId: string = this.Authinfo.getOrgId()): IPromise<LocationListItem[]> {
     return this.locationListResource.get({
-      customerId: this.Authinfo.getOrgId(),
+      customerId: customerId,
       wide: true,
     }).$promise.then(locationData => {
       return _.map(_.get<IRLocationListItem[]>(locationData, 'locations', []), location => {
@@ -194,7 +188,10 @@ export class LocationsService {
       allowExternalTransfer: location.allowExternalTransfer,
       voicemailPilotNumber: location.voicemailPilotNumber,
       regionCodeDialing: location.regionCodeDialing,
-      callerId: location.callerId,
+      callerId: {
+        name: _.get(location, 'callerId.name', null),
+        number: _.get(location, 'callerId.number', null),
+      },
     }).$promise;
   }
 
@@ -221,9 +218,9 @@ export class LocationsService {
     }, location).$promise;
   }
 
-  public getDefaultLocation(): ng.IPromise<LocationListItem> {
+  public getDefaultLocation(customerId: string = this.Authinfo.getOrgId()): ng.IPromise<LocationListItem> {
     if (!this.defaultLocation) {
-      return this.getLocationList().then(locationList => {
+      return this.getLocationList(customerId).then(locationList => {
         //First one is always the default per API definition
         this.defaultLocation = locationList[0];
         return this.defaultLocation;
@@ -264,43 +261,6 @@ export class LocationsService {
         return item.name === name;
       });
       return filterList.length > 0;
-    });
-  }
-
-  //return a list of assigned external numbers that are not the Voicemail Pilot number.
-  public getEmergencyCallbackNumbersOptions(): ng.IPromise<CallPhoneNumber[]> {
-    return this.getDefaultLocation()
-    .then(locationListItem => {
-      if (locationListItem.uuid) {
-        return this.getLocation(locationListItem.uuid);
-      }
-      return this.$q.reject(); //uuid should always be set in this case
-    })
-    .then(location => {
-      return this.numberResource.get({
-        customerId: this.Authinfo.getOrgId(),
-        assigned: true,
-        deprecated: false,
-        type: 'external',
-      })
-      .$promise
-      .then((rNumberData: IRCallPhoneNumberData) => {
-        const numbers: CallPhoneNumber[] = [];
-        if (_.isArray(rNumberData.numbers)) {
-          rNumberData.numbers.forEach((rPhoneNumber: IRCallPhoneNumber) => {
-            let number: string = rPhoneNumber.external ? rPhoneNumber.external : '';
-            if (number.length > 0) {
-              if (number.charAt(0) === '\\') {
-                number = number.slice(1);
-              }
-            }
-            if (location.voicemailPilotNumber === null || location.voicemailPilotNumber.number !== number) {
-              numbers.push(new CallPhoneNumber(rPhoneNumber));
-            }
-          });
-        }
-        return numbers;
-      });
     });
   }
 

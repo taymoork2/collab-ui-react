@@ -973,15 +973,22 @@ require('./_user-add.scss');
       }
       if (services.communication) {
         $scope.communicationFeatures = $scope.communicationFeatures.concat(services.communication);
-        // Set the Spark Call checkbox and usage
-        var commLicenseID = '';
-        if (currentUserHasCall) {
-          commLicenseID = _.find(userLicenseIds, function (license) {
-            return _.startsWith(license, 'CO_');
-          });
-        }
         Orgservice.getLicensesUsage()
           .then(function (licenseUsages) {
+            // Set the Spark Call checkbox and usage
+            var commLicenseID = '';
+            if (currentUserHasCall) {
+              // validCallLicenses should be array of valid 'CO_' licenseIds
+              var licenses = _.flatMap(licenseUsages, 'licenses');
+              var licenseIds = _.map(licenses, 'licenseId');
+              var validCallLicenses = _.filter(licenseIds, function (licenseId) {
+                return _.startsWith(licenseId, 'CO_');
+              });
+              commLicenseID = _.find(userLicenseIds, function (license) {
+                return _.startsWith(license, 'CO_') && validCallLicenses.indexOf(license) !== -1;
+              });
+            }
+
             _.forEach($scope.communicationFeatures, function (commFeature) {
               // Set current communication license checkbox
               if (!_.isUndefined(commFeature.license.licenseId) &&
@@ -1285,17 +1292,23 @@ require('./_user-add.scss');
 
         // Communication
         if (currentUserHasCall) { // has existing communication license
+          var currentLicenseId = _.get($scope.currentUserCommFeature, 'license.licenseId');
           if ($scope.currentUserEnablesCall) { // has selected a communication license
             // check if the license is the same, if not, do the move
-            if ($scope.currentUserCommFeature.license.licenseId !== $scope.selectedCommFeature.license.licenseId) {
-              // move license
-              licenseList.push(new LicenseFeature($scope.currentUserCommFeature.license.licenseId, false));
-              licenseList.push(new LicenseFeature($scope.selectedCommFeature.license.licenseId, true));
+            var selectedLicenseId = _.get($scope.selectedCommFeature, 'license.licenseId');
+            if (currentLicenseId !== selectedLicenseId) {
+              // move license & prevent undefined licenseIds from being passed on to LicenseFeature/licenseList
+              if (currentLicenseId) {
+                licenseList.push(new LicenseFeature(currentLicenseId, false));
+              }
+              if (selectedLicenseId) {
+                licenseList.push(new LicenseFeature(selectedLicenseId, true));
+              }
             }
           } else {
-            // delete license
-            if (action === 'patch') {
-              licenseList.push(new LicenseFeature($scope.currentUserCommFeature.license.licenseId, false));
+            // delete license & prevent undefined licenseIds from being passed on to LicenseFeature/licenseList
+            if (action === 'patch' && currentLicenseId) {
+              licenseList.push(new LicenseFeature(currentLicenseId, false));
             }
           }
         } else { // no existing communication license

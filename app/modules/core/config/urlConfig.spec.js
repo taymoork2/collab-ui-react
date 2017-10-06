@@ -451,4 +451,13 @@ describe('UrlConfigSpec', function () {
       prod: 'https://web.ciscospark.com/',
     });
   });
+
+  it('should return correct ccfs urls', function () {
+    whenCalling('getContextCcfsUrl', 'foo').expectUrlToBe({
+      dev: 'https://ccfs.appstaging.ciscoccservice.com/v1',
+      cfe: 'https://ccfs.appstaging.ciscoccservice.com/v1',
+      integration: 'https://ccfs.appstaging.ciscoccservice.com/v1',
+      prod: 'https://ccfs.produs1.ciscoccservice.com/v1',
+    });
+  });
 });

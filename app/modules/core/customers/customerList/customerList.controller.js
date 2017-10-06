@@ -208,6 +208,7 @@ require('./_customer-list.scss');
       width: '16.5%',
       cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showCustomerDetails(row.entity)" cell-value="grid.appScope.getLicenseCountColumnText(row.entity)" center-text="true"></cs-grid-cell>',
       headerCellClass: 'align-center',
+      sortingAlgorithm: licenseSort,
     };
     /* AG TODO:  once we have data for total users -- add back
         var totalUsersField = {
@@ -408,6 +409,21 @@ require('./_customer-list.scss');
       var aStatus = vm.convertStatusToInt(vm.getAccountStatus(rowA.entity));
       var bStatus = vm.convertStatusToInt(vm.getAccountStatus(rowB.entity));
       return aStatus - bStatus;
+    }
+
+    function licenseSort(a, b, rowA, rowB) {
+      var rowAUnavailable = !isLicenseInfoAvailable(rowA.entity.licenseList);
+      var rowBUnavailable = !isLicenseInfoAvailable(rowB.entity.licenseList);
+
+      if (rowAUnavailable && rowBUnavailable) {
+        return 0;
+      } else if (rowAUnavailable) {
+        return -1;
+      } else if (rowBUnavailable) {
+        return 1;
+      } else {
+        return a - b;
+      }
     }
 
     function convertStatusToInt(a) {
@@ -764,7 +780,7 @@ require('./_customer-list.scss');
       if (!isLicenseInfoAvailable(rowData.licenseList)) {
         return $translate.instant('common.notAvailable');
       }
-      return rowData.totalLicenses;
+      return '' + rowData.totalLicenses; // was not displaying '0' without the `'' + ` preceding
     }
 
     function isPastGracePeriod(rowData) {

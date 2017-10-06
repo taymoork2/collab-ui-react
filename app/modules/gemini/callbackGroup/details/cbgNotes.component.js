@@ -48,6 +48,7 @@
         vm.notes = (_.size(vm.allNotes) <= showNotesNum ? vm.allNotes : vm.allNotes.slice(0, showNotesNum));
         vm.model.postData = '';
 
+        $scope.$$childTail.$$prevSibling.note.$setPristine();
         $scope.$emit('cbgNotesUpdated', vm.allNotes);
       }).catch(function (err) {
         Notification.errorResponse(err, 'errors.statusError', { status: err.status });

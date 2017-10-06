@@ -5,6 +5,7 @@ import { BrandingSetting } from './branding/brandingSetting.component';
 import { DomainsSetting } from './domain/domainsSetting.component';
 import { RetentionSetting } from './retention/retentionSetting.component';
 import { ExternalCommunicationSetting } from './externalCommunication/externalCommunicationSetting.component';
+import { FileSharingControlSetting } from './fileSharingControl/fileSharingControlSetting.component';
 
 import { SecuritySetting } from './security/securitySetting.component';
 import { SipDomainSetting } from './sipDomain/sipDomainSetting.component';
@@ -26,6 +27,7 @@ export class SettingsCtrl {
   public support: SettingSection;
   public retention: SettingSection;
   public externalCommunication: SettingSection;
+  public fileSharingControl: SettingSection;
   public dirsync: SettingSection;
 
   // Footer and broadcast controls
@@ -72,6 +74,7 @@ export class SettingsCtrl {
       if (this.Authinfo.isEnterpriseCustomer()) {
         this.initSecurity();
         this.initBlockExternalCommunication();
+        this.initFileSharingControl();
         this.initRetention();
       }
     }
@@ -150,6 +153,19 @@ export class SettingsCtrl {
     this.$q.all(promises).then((result) => {
       if (result.blockExternalCommunicationToggle) {
         this.externalCommunication = new ExternalCommunicationSetting(result.proPackPurchased);
+      }
+    });
+  }
+
+  private initFileSharingControl() {
+    const promises = {
+      fileSharingControlToggle: this.FeatureToggleService.atlasFileSharingControlSettingsGetStatus(),
+      proPackPurchased: this.ProPackService.hasProPackPurchasedOrNotEnabled(),
+    };
+
+    this.$q.all(promises).then((result) => {
+      if (result.fileSharingControlToggle) {
+        this.fileSharingControl = new FileSharingControlSetting(result.proPackPurchased);
       }
     });
   }
