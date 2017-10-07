@@ -14,7 +14,7 @@ describe('Controller: CustomerListCtrl', function () {
     customerOrgId: '1234-34534-afdagfg-425345-afaf',
     customerName: 'ControllerTestOrg',
     customerEmail: 'customer@cisco.com',
-    daysLeft: NaN,
+    daysLeft: -1,
     communications: {
       isTrial: false,
       volume: 5,
@@ -135,7 +135,7 @@ describe('Controller: CustomerListCtrl', function () {
     }
 
     function setTestDataActive() {
-      testTrialData.daysLeft = NaN;
+      testTrialData.daysLeft = -1;
       testTrialData.communications.isTrial = false;
     }
 

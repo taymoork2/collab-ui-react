@@ -29,7 +29,6 @@ require('./_customer-list.scss');
     vm.openAddTrialModal = openAddTrialModal;
     vm.actionEvents = actionEvents;
     vm.isLicenseInfoAvailable = isLicenseInfoAvailable;
-    vm.isLicenseTypeATrial = isLicenseTypeATrial;
     vm.isLicenseTypeActive = isLicenseTypeActive;
     vm.isLicenseTypeFree = isLicenseTypeFree;
     vm.isNoLicense = isNoLicense;
@@ -40,7 +39,6 @@ require('./_customer-list.scss');
     vm.closeActionsDropdown = closeActionsDropdown;
     vm.addNumbers = addNumbers;
     vm.getLicenseCountColumnText = getLicenseCountColumnText;
-    vm.getAccountStatus = getAccountStatus;
     vm.isLicenseTypeAny = isLicenseTypeAny;
     vm.getUserCountColumnText = getUserCountColumnText;
     vm.isPastGracePeriod = isPastGracePeriod;
@@ -405,14 +403,14 @@ require('./_customer-list.scss');
     }
 
     function accountStatusSort(a, b, rowA, rowB) {
-      var aStatus = vm.convertStatusToInt(vm.getAccountStatus(rowA.entity));
-      var bStatus = vm.convertStatusToInt(vm.getAccountStatus(rowB.entity));
+      var aStatus = vm.convertStatusToInt(rowA.entity.accountStatus);
+      var bStatus = vm.convertStatusToInt(rowB.entity.accountStatus);
       return aStatus - bStatus;
     }
 
     function convertStatusToInt(a) {
       // These numbers are simply used for sorting, meaning lower numbers come first for ascending
-      var statuses = ['active', 'expired', 'trial'];
+      var statuses = ['active', 'pending', 'expired', 'trial'];
       var index = statuses.indexOf(a);
       if (index === -1) {
         return statuses.length;
@@ -437,28 +435,26 @@ require('./_customer-list.scss');
     }*/
 
     function setNotesTextOrder() {
-      var textSuspended = $translate.instant('customerPage.suspended'),
-        textExpiringToday = $translate.instant('customerPage.expiringToday'),
-        textExpired = $translate.instant('customerPage.expired'),
-        textLicenseInfoNotAvailable = $translate.instant('customerPage.licenseInfoNotAvailable');
-      var textArray = [
-        textSuspended,
-        textExpiringToday,
-        textExpired,
-        textLicenseInfoNotAvailable,
+      var notes = [
+        { key: 'suspended', status: 'NOTE_CANCELED' },
+        { key: 'needsSetup', status: 'NOTE_NEEDS_SETUP' },
+        { key: 'expiringToday', status: 'NOTE_EXPIRE_TODAY' },
+        { key: 'expired', status: 'NOTE_EXPIRED' },
+        { key: 'licenseInfoNotAvailable', status: 'NOTE_NO_LICENSE' },
       ];
-      textArray.sort();
-      _.forEach(textArray, function (text, index) {
-        if (text === textSuspended) {
-          PartnerService.customerStatus.NOTE_CANCELED = index;
-        } else if (text === textExpiringToday) {
-          PartnerService.customerStatus.NOTE_EXPIRE_TODAY = index;
-        } else if (text === textExpired) {
-          PartnerService.customerStatus.NOTE_EXPIRED = index;
-        } else if (text === textLicenseInfoNotAvailable) {
-          PartnerService.customerStatus.NOTE_NO_LICENSE = index;
-        }
-      });
+
+      // 600% faster execution than _.forEach
+      for (var i = 0; i < notes.length; i++) {
+        notes[i].xlat = $translate.instant('customerPage.' + notes[i].key);
+      }
+
+      // sort based on translated value, then key value
+      notes = _.sortBy(notes, ['xlat', 'key']);
+
+      // apply sort order to partner service base on index
+      for (i = 0; i < notes.length; i++) {
+        PartnerService.customerStatus[notes[i].status] = i;
+      }
     }
 
     function notesSort(a, b) {
@@ -496,7 +492,7 @@ require('./_customer-list.scss');
         var isVisibleFlags = {
           byAccountFilter: (!selectedFilters.account.length) ||
           _.some(selectedFilters.account, function (filter) {
-            return (vm.getAccountStatus(row.entity) === filter.value);
+            return (row.entity.accountStatus === filter.value);
           }),
           byLicenseFilter: (!selectedFilters.license.length) ||
           _.some(selectedFilters.license, function (filter) {
@@ -559,6 +555,8 @@ require('./_customer-list.scss');
               isCareEnabled: vm.isCareEnabled,
               isAdvanceCareEnabled: vm.isAdvanceCareEnabled,
             });
+
+
             // Not sure why this is set again, afaik it is the same as myOrg
             //AG 9/27 getAdminOrg returns licenses without offerCodes so services are not populated therefore this is needed
             myOrg[0].customerName = custName;
@@ -665,7 +663,7 @@ require('./_customer-list.scss');
     function updateResultCount(visibleRowsData) {
       vm.totalOrgs = visibleRowsData.length;
       var statusTypeCounts = _.countBy(visibleRowsData, function (dataRow) {
-        return vm.getAccountStatus(dataRow);
+        return dataRow.accountStatus;
       });
       var accountFilters = _.filter(vm.filter.options, { isAccountFilter: true });
       _.forEach(accountFilters, function (filter) {
@@ -747,10 +745,6 @@ require('./_customer-list.scss');
       return rowData[licenseTypeField] || null;
     }
 
-    function isLicenseTypeATrial(rowData, licenseTypeField) {
-      return isLicenseInfoAvailable(rowData.licenseList) && PartnerService.isLicenseATrial(getLicenseObj(rowData, licenseTypeField));
-    }
-
     function isLicenseTypeActive(rowData, licenseTypeField) {
       return isLicenseInfoAvailable(rowData.licenseList) && PartnerService.isLicenseActive(getLicenseObj(rowData, licenseTypeField));
     }
@@ -802,16 +796,6 @@ require('./_customer-list.scss');
 
     function setTrial(trial) {
       vm.currentTrial = trial;
-    }
-
-    function getAccountStatus(rowData) {
-      if (rowData.daysLeft <= 0 || _.get(rowData, 'licenseList', []).length === 0) {
-        return 'expired';
-      }
-      var isTrial = _.some(Config.licenseObjectNames, function (type) {
-        return isLicenseTypeATrial(rowData, type);
-      });
-      return isTrial ? 'trial' : 'active';
     }
 
     function selectRow(grid, row) {
