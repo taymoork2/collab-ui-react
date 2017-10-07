@@ -26,7 +26,6 @@ export class CallLocationSettingsData {
 export class CallLocationSettingsService {
   private callLocationSettingsDataCopy: CallLocationSettingsData;
   private errors: string[] = [];
-  private supportsLocationMoh: boolean = false;
 
   /* @ngInject */
   constructor(
@@ -41,14 +40,19 @@ export class CallLocationSettingsService {
     private Notification: Notification,
     private ExtensionLengthService: ExtensionLengthService,
     private AvrilService: AvrilService,
-    private FeatureToggleService,
-  ) {
-    // Location Media On Hold Support
-    this.FeatureToggleService.supports(FeatureToggleService.features.huronMOHEnable)
-      .then(result => this.supportsLocationMoh = result);
+  ) {}
+
+  public get(locationId: string, isLocationWizardSetup?: boolean): ng.IPromise<CallLocationSettingsData> {
+    if (locationId || isLocationWizardSetup) {
+      return this.getLocationData(locationId);
+    } else {
+      return this.LocationsService.getDefaultLocation()
+        .then((defaultLocation) => this.getLocationData(defaultLocation.uuid ? defaultLocation.uuid : ''))
+        .catch(() => this.getLocationData(''));
+    }
   }
 
-  public get(locationId: string): ng.IPromise<CallLocationSettingsData> {
+  public getLocationData(locationId: string): ng.IPromise<CallLocationSettingsData> {
     this.errors = [];
     const callLocationSettingsData = new CallLocationSettingsData();
     return this.$q.all({
@@ -157,7 +161,7 @@ export class CallLocationSettingsService {
   private createParallelRequests(data: CallLocationSettingsData, ftsw: boolean): ng.IPromise<any>[] {
     const promises: ng.IPromise<any>[] = [];
 
-    if (this.supportsLocationMoh && !_.isEqual(data.mediaId, this.callLocationSettingsDataCopy.mediaId)) {
+    if (!_.isEqual(data.mediaId, this.callLocationSettingsDataCopy.mediaId)) {
       const GENERIC_MEDIA_ID = '98765432-DBC2-01BB-476B-CFAF98765432';
       if (_.isEqual(data.mediaId, GENERIC_MEDIA_ID)) {
         promises.push(this.unassignMediaOnHold(data.location.uuid));
@@ -187,14 +191,11 @@ export class CallLocationSettingsService {
   }
 
   private getLocationMedia(locationId: string): ng.IPromise<string> {
-    if (this.supportsLocationMoh) {
-      return this.MediaOnHoldService.getLocationMedia(locationId)
+    return this.MediaOnHoldService.getLocationMedia(locationId)
       .catch(error => {
         this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohGetError'));
         return this.$q.reject();
       });
-    }
-    return this.$q.resolve('');
   }
 
   private updateMediaOnHold(mediaId: string, locationId?: string): ng.IPromise<void> {

@@ -350,6 +350,7 @@ describe('Component: gmTdNumbers', () => {
     this.gemService.setStorage('currentTelephonyDomain', { importTDNumbers: importTDNumbers });
     this.controller.importTD();
     this.fakeModal.ok();
+    this.$timeout.flush();
     this.$scope.$apply();
 
     this.controller.deleteNumber(this.rows[1]);
@@ -371,6 +372,7 @@ describe('Component: gmTdNumbers', () => {
     this.gemService.setStorage('currentTelephonyDomain', { importTDNumbers: importTDNumbers });
     this.controller.importTD();
     this.fakeModal.ok();
+    this.$timeout.flush();
     this.$scope.$apply();
 
     expect(this.controller.gridData.length).toBe(2);
@@ -383,7 +385,7 @@ describe('Component: gmTdNumbers', () => {
     delete number.countryId;
 
     this.controller.importNumberCSV([ number ]);
-    this.$timeout.flush(10);
+    this.$timeout.flush();
 
     expect(this.controller.gridData.length).toBe(2);
   });
@@ -561,7 +563,7 @@ describe('Component: gmTdNumbers', () => {
     delete number.countryId;
 
     this.controller.importNumberCSV([ number ]);
-    this.$timeout.flush(10);
+    this.$timeout.flush();
 
     this.postResponse.code = 5000;
     this.TelephonyDomainService.postTelephonyDomain.and.returnValue(this.$q.resolve(this.postResponse));

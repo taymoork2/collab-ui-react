@@ -21,6 +21,7 @@
     vm.advancedSearch = advancedSearch;
     vm.dateErrors = dateErrors;
     vm.validateDate = validateDate;
+    vm.splitWords = splitWords;
     vm.firstEnabledDate = null;
     vm.lastEnabledDate = moment().format('YYYY-MM-DD');
 
@@ -349,8 +350,8 @@
             runReport(res.runUrl, res.url);
           }
         })
-        .catch(function () {
-          Notification.error('ediscovery.searchResults.createReportFailed');
+        .catch(function (err) {
+          Notification.errorWithTrackingId(err, 'ediscovery.searchResults.createReportFailed');
           vm.report = null;
           vm.createReportInProgress = false;
         });
@@ -413,8 +414,8 @@
 
     function generateReport(postParams) {
       EdiscoveryService.generateReport(postParams)
-        .catch(function () {
-          Notification.error('ediscovery.searchResults.runFailed');
+        .catch(function (err) {
+          Notification.errorWithTrackingId(err, 'ediscovery.searchResults.runFailed');
           EdiscoveryService.patchReport(vm.currentReportId, {
             state: 'FAILED',
             failureReason: 'UNEXPECTED_FAILURE',
@@ -475,8 +476,8 @@
     function downloadReport(report) {
       vm.downloadingReport = true;
       EdiscoveryService.downloadReport(report)
-        .catch(function () {
-          Notification.error('ediscovery.unableToDownloadFile');
+        .catch(function (err) {
+          Notification.errorWithTrackingId(err, 'ediscovery.unableToDownloadFile');
         })
         .finally(function () {
           vm.downloadingReport = false;
@@ -550,9 +551,11 @@
     /* Helper Functions */
     function splitWords(_words) {
       var words = _words ? (_words).split(',').map(
-        function (s) {
-          return s.trim();
-        }) : null;
+        function (m) {
+          return m.trim();
+        }).filter(function (f) {
+        return f !== '';
+      }) : null;
       return words;
     }
 

@@ -25,8 +25,15 @@ describe('Care virtualassistant admin setup virtual assistant', function () {
     utils.expectIsDisplayed(careFeatureLandingPage.createVirtualAssistantTemplateButton);
   });
 
-  it('Start Creating VirtualAssistant Template', function () {
+  it('Choose Virtual Assistant', function () {
     utils.click(careFeatureLandingPage.createVirtualAssistantTemplateButton);
+    utils.expectIsDisplayed(careFeatureLandingPage.careNewFeatureModal);
+    utils.expectIsDisplayed(careFeatureLandingPage.createCustomerVirtualAssistantTemplateButton);
+    utils.expectIsDisplayed(careFeatureLandingPage.createExpertVirtualAssistantTemplateButton);
+  });
+
+  it('Start Creating Customer VirtualAssistant', function () {
+    utils.click(careFeatureLandingPage.createCustomerVirtualAssistantTemplateButton);
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.title);
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.titleDesc);
     utils.expectIsNotDisplayed(careVirtualAssistantTemplateSetupPage.setUpLeftBtn);

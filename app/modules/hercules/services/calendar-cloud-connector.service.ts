@@ -156,7 +156,7 @@ export class CloudConnectorService {
     if (requestedService === 'squared-fusion-o365') {
       requestedService = 'squared-fusion-cal' as CCCService;
     }
-    return this.$http.get(`${this.UrlConfig.getCccUrl()}/orgs/${this.Authinfo.getOrgId()}/services/${requestedService}`)
+    return this.$http.get(`${this.UrlConfig.getCccUrl()}/orgs/${orgId}/services/${requestedService}`)
       .then(this.extractDataFromResponse)
       .then((service: ICCCService) => {
         // Align this with the HybridServicesClusterService.getServiceStatus() to make the UI handling simpler

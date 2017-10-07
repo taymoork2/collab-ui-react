@@ -164,12 +164,6 @@
       integration: 'https://pqm.appstaging.ciscoccservice.com/pqm/v1/publish/taskState',
       prod: 'https://pqm.produs1.ciscoccservice.com/pqm/v1/publish/taskState',
     },
-    CcfsUrl: {
-      dev: 'https://ccfs.produs1.ciscoccservice.com/v1/authorize?delegation=true&appType=sunlightdev&callbackUrl=',
-      cfe: 'https://ccfs.produs1.ciscoccservice.com/v1/authorize?delegation=true&appType=sunlightstaging&callbackUrl=',
-      integration: 'https://ccfs.produs1.ciscoccservice.com/v1/authorize?delegation=true&appType=sunlightstaging&callbackUrl=',
-      prod: 'https://ccfs.produs1.ciscoccservice.com/v1/authorize?delegation=true&appType=sunlight&callbackUrl=',
-    },
     CalliopeUrl: {
       dev: 'https://calliope-intb.ciscospark.com/calliope/api/authorization/v1',
       cfe: 'https://calliope-loada.ciscospark.com/calliope/api/authorization/v1',
@@ -200,12 +194,6 @@
       integration: 'https://ucc-intb.ciscospark.com/ucm-service/api/v1',
       prod: 'https://ucc-a.wbx2.com/ucm-service/api/v1',
     },
-    HybridVoicemailUrl: {
-      dev: 'https://ucc-intb.ciscospark.com/voicemail/api/v1',
-      cfe: 'https://ucc-loada.ciscospark.com/voicemail/api/v1',
-      integration: 'https://ucc-intb.ciscospark.com/voicemail/api/v1',
-      prod: 'https://ucc-a.wbx2.com/voicemail/api/v1',
-    },
     CccUrl: {
       dev: 'https://calendar-cloud-connector-intb.ciscospark.com/api/v1',
       cfe: 'https://calendar-cloud-connector-loada.ciscospark.com/api/v1',
@@ -217,6 +205,12 @@
       cfe: 'https://discovery.appstaging.ciscoccservice.com/discovery/apps/v1',
       integration: 'https://discovery.appstaging.ciscoccservice.com/discovery/apps/v1',
       prod: 'https://discovery.produs1.ciscoccservice.com/discovery/apps/v1',
+    },
+    ContextCcfsUrl: {
+      dev: 'https://ccfs.appstaging.ciscoccservice.com/v1',
+      cfe: 'https://ccfs.appstaging.ciscoccservice.com/v1',
+      integration: 'https://ccfs.appstaging.ciscoccservice.com/v1',
+      prod: 'https://ccfs.produs1.ciscoccservice.com/v1',
     },
     HybridEncryptionServiceUrl: {
       dev: 'https://encryption-intb.ciscospark.com/encryption/api/v1',
@@ -322,6 +316,12 @@
       cfe: 'https://virtual-assistant.appstaging.ciscoccservice.com/bot-services/v1/',
       integration: 'https://virtual-assistant.appstaging.ciscoccservice.com/bot-services/v1/',
       prod: 'https://virtual-assistant.produs1.ciscoccservice.com/bot-services/v1/',
+    },
+    ExpertVirtualAssistantServiceUrl: {
+      dev: 'https://expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
+      cfe: 'https://expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
+      integration: 'https://expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
+      prod: 'https://expert-assistant.produs1.ciscoccservice.com/expert-assistant/v1/',
     },
     WebExReportAppforMEIUrl: {
       dev: 'https://%s/custportal/extensions/MEI/MEI.html',

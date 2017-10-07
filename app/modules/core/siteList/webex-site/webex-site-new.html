@@ -1,26 +1,18 @@
-<div ng-form="$ctrl.siteSetupForm" >
-
+<div ng-form="$ctrl.siteSetupForm">
   <div class="row" ng-repeat="site in $ctrl.sitesArray">
-    <div class="site-description">
-      <div class="col-lg-1">
-        <i class="icon icon-check verified-check"></i>
-      </div>
-      <div class="col-lg-5">
-        <b><div>{{site.siteUrl}}<span translate="firstTimeWizard.pmrSiteURLDomain"></span></div></b>
-        <div ng-if="site.timezone" class="time-zone" translate-values="{label: site.timezone.label}" translate="firstTimeWizard.timeZoneSetTo"></div>
-        <div ng-if="site.setupType && $ctrl.isShowUserManagement" class="time-zone" translate="firstTimeWizard.userManagementViaWebex"></div>
-        <div ng-if="!site.setupType && $ctrl.isShowUserManagement" class="time-zone" translate="firstTimeWizard.userManagementViaSpark"></div>
-      </div>
-      <div class="col-lg-1" ng-if="!(site.setupType === 'TRANSFER' || site.keepExistingSite) && $ctrl.isAllowMultiples">
-        <i class="icon icon-delete delete-site" ng-click="$ctrl.removeSite($index)"></i>
-      </div>
-    </div>
+    <webex-site-new-display-component site="site" is-show-user-management="$ctrl.isShowUserManagement" can-remove-site="false" index="$index">
+    </webex-site-new-display-component>
+  </div>
+  <div class="row" ng-repeat="site in $ctrl.newSitesArray">
+    <webex-site-new-display-component site="site" is-show-user-management="$ctrl.isShowUserManagement" on-remove-site="$ctrl.removeSite(index)"
+      can-remove-site="true" index="$index">
+    </webex-site-new-display-component>
   </div>
   <div class="site-preview">
     <b><div ng-if="$ctrl.siteModel.siteUrl !== ''">{{$ctrl.siteModel.siteUrl}}.webex.com</div></b>
   </div>
   <div class="element-spacing">
-      <label>{{:: (($ctrl.sitesArray.length > 0)? 'firstTimeWizard.addAnotherSite': 'firstTimeWizard.siteName') | translate }} </label>
+    <label>{{:: (($ctrl.sitesArray.length > 0)? 'firstTimeWizard.addAnotherSite': 'firstTimeWizard.siteName') | translate }} </label>
     <div class="row">
       <div class="col-lg-4">
         <div class="cs-input-group" ng-class="{'error': $ctrl.error.isError && $ctrl.error.errorType !== $ctrl.siteErrorType.USER_MGMT}">
@@ -32,10 +24,10 @@
         </div>
       </div>
       <div class="col-lg-4">
-        <div class="cs-input-group"  ng-class="{'error': $ctrl.error.isError && $ctrl.error.errorType === $ctrl.siteErrorType.TIME_ZONE}">
-        <cs-select id="selectTimeZone" name="selectTimeZone" ng-model="$ctrl.siteModel.timezone" options="$ctrl.timeZoneOptions"
-          placeholder="$ctrl.selectTimeZonePlaceholder" ng-change="$ctrl.clearError()">
-        </cs-select>
+        <div class="cs-input-group" ng-class="{'error': $ctrl.error.isError && $ctrl.error.errorType === $ctrl.siteErrorType.TIME_ZONE}">
+          <cs-select id="selectTimeZone" name="selectTimeZone" ng-model="$ctrl.siteModel.timezone" options="$ctrl.timeZoneOptions"
+            placeholder="$ctrl.selectTimeZonePlaceholder" ng-change="$ctrl.clearError()">
+          </cs-select>
         </div>
       </div>
       <div class="col-lg-4">
@@ -43,29 +35,25 @@
       </div>
     </div>
     <div>
-      <div class="row">
+      <div class="row" ng-if="$ctrl.isShowUserManagement">
         <h5 translate="firstTimeWizard.userManagement"></h5>
         <div class="col-lg-6 small"><span translate="firstTimeWizard.userManagementWhere"></span></div>
         <div class="col-lg-6">
           <div class="validation-messages info">
-          <div class="cs-input__messages">
-            <div class="message"><a href="http://www.cisco.com/c/dam/en/us/td/docs/collaboration/webex_centers/esp/Choosing_the_Right_Cisco_WebEx_Admin_Tool.pdf" target="_blank"><span translate="firstTimeWizard.userManagementHelp"></span></a></div>
-          </div>
+            <div class="cs-input__messages">
+              <div class="message"><a href="http://www.cisco.com/c/dam/en/us/td/docs/collaboration/webex_centers/esp/Choosing_the_Right_Cisco_WebEx_Admin_Tool.pdf"
+                  target="_blank"><span translate="firstTimeWizard.userManagementHelp"></span></a></div>
+            </div>
           </div>
         </div>
       </div>
       <div class="row">
         <div class="col-lg-12 element-spacing">
           <div class="cs-radio-group" ng-class="{'error': $ctrl.error.isError &&  $ctrl.error.errorType === $ctrl.siteErrorType.USER_MGMT}">
-            <input cs-input type="radio" ng-model="$ctrl.siteModel.setupType"
-              ng-change="$ctrl.clearError(1)"
-              id="add-webex-users-1" name="addWebexUsers1"
-              value="undefined" ng-required = "$ctrl.siteModel.siteUrl" cs-input-label="{{::'firstTimeWizard.userManagementSpark' | translate }}">
-            <input cs-input ng-required = "$ctrl.siteModel.siteUrl"  type="radio"
-              ng-change="$ctrl.clearError(1)" ng-model="$ctrl.siteModel.setupType"
-              id="add-webex-users-2" name="addWebexUsers2"
-              value="{{$ctrl.setupTypeLegacy}}"
-              cs-input-label="{{::'firstTimeWizard.userManagementWebEx' | translate }}">
+            <input cs-input type="radio" ng-model="$ctrl.siteModel.setupType" ng-change="$ctrl.clearError(1)" id="add-webex-users-1"
+              name="addWebexUsers1" value="undefined" ng-required="$ctrl.siteModel.siteUrl" cs-input-label="{{::'firstTimeWizard.userManagementSpark' | translate }}">
+            <input cs-input ng-required="$ctrl.siteModel.siteUrl" type="radio" ng-change="$ctrl.clearError(1)" ng-model="$ctrl.siteModel.setupType"
+              id="add-webex-users-2" name="addWebexUsers2" value="{{$ctrl.setupTypeLegacy}}" cs-input-label="{{::'firstTimeWizard.userManagementWebEx' | translate }}">
             <div class="cs-input__messages error-msg-spacing" role="alert" ng-if="$ctrl.error.isError && $ctrl.error.errorType === $ctrl.siteErrorType.USER_MGMT">
               <div class="message">{{$ctrl.error.errorMsg}}</div>
             </div>
@@ -75,7 +63,7 @@
     </div>
   </div>
 
-<div class="element-spacing">
- {{:: $ctrl.getSitesAudioPackageDisplay() }}
-</div>
+  <div class="element-spacing">
+    {{:: $ctrl.getSitesAudioPackageDisplay() }}
+  </div>
 </div>

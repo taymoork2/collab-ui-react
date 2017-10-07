@@ -2,6 +2,8 @@ import { CallerIdComponent, CallerIdConfig, CallerIdOption } from './callerId.co
 import { CallerIDService } from './callerId.service';
 import { CallerID, ICallerID } from './callerId';
 import lineService from 'modules/huron/lines/services';
+import FeatureToggleModule from 'modules/core/featureToggle';
+import SharedLocationsModule from 'modules/call/locations/shared';
 
 export { CallerIdConfig, CallerIdOption };
 export { CallerID, ICallerID };
@@ -17,6 +19,8 @@ export default angular
     require('modules/huron/telephony/cmiServices'),
     'call.shared.call-destination-translate',
     lineService,
+    FeatureToggleModule,
+    SharedLocationsModule,
   ])
   .component('ucCallerId', new CallerIdComponent())
   .service('CallerIDService', CallerIDService)

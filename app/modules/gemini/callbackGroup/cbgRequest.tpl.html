@@ -21,9 +21,7 @@
             ng-maxlength="64"
             name="customerName"
             ng-model="cbgrCtrl.model.customerName"
-            cs-input-warning="cbgrCtrl.onWarning()"
             cs-input-messages="cbgrCtrl.messages.customerName"
-            cs-input-warning-message="{{cbgrCtrl.messages.customerName.warning}}"
             cs-input-label="{{::'gemini.cbgs.request.labelCustomer' | translate}}"
             placeholder="{{::'gemini.cbgs.request.customerPlaceholder' | translate}}">
         </div>
@@ -31,9 +29,11 @@
           <input
             cs-input
             type="text"
+            name="customerAttribute"
             ng-maxlength="200"
             ng-model="cbgrCtrl.model.customerAttribute"
             placeholder="{{::'gemini.cbgs.request.customerAttrPlaceholder' | translate}}"
+            cs-input-messages="cbgrCtrl.messages.customerAttribute"
             cs-input-label="{{::'gemini.cbgs.request.labelCustomerAttr' | translate}}">
         </div>
       </div>

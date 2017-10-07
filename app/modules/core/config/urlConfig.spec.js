@@ -389,6 +389,15 @@ describe('UrlConfigSpec', function () {
     });
   });
 
+  it('should return correct Expert Virtual Assistant Service url', function () {
+    whenCalling('getExpertVirtualAssistantServiceUrl').expectUrlToBe({
+      dev: 'https://expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
+      cfe: 'https://expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
+      integration: 'https://expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
+      prod: 'https://expert-assistant.produs1.ciscoccservice.com/expert-assistant/v1/',
+    });
+  });
+
   it('should return correct sunlight chat bubble url', function () {
     whenCalling('getSunlightBubbleUrl').expectUrlToBe({
       dev: 'https://bubble.devus1.ciscoccservice.com',
@@ -449,6 +458,15 @@ describe('UrlConfigSpec', function () {
       cfe: 'https://web.ciscospark.com/',
       integration: 'https://web.ciscospark.com/',
       prod: 'https://web.ciscospark.com/',
+    });
+  });
+
+  it('should return correct ccfs urls', function () {
+    whenCalling('getContextCcfsUrl', 'foo').expectUrlToBe({
+      dev: 'https://ccfs.appstaging.ciscoccservice.com/v1',
+      cfe: 'https://ccfs.appstaging.ciscoccservice.com/v1',
+      integration: 'https://ccfs.appstaging.ciscoccservice.com/v1',
+      prod: 'https://ccfs.produs1.ciscoccservice.com/v1',
     });
   });
 });

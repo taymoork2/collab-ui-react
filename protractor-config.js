@@ -1,5 +1,7 @@
 'use strict';
 
+require('babel-register');
+
 /* global jasmine, browser, _ */
 
 var HttpsProxyAgent = require('https-proxy-agent');
@@ -166,6 +168,7 @@ exports.config = {
     var GSSComponentPage = require('./test/e2e-protractor/pages/gssComponent.page.js');
     var GSSServicePage = require('./test/e2e-protractor/pages/gssService.page.js');
     var GSSIncidentPage = require('./test/e2e-protractor/pages/gssIncident.page.js');
+    var OverviewPage = require('./test/e2e-protractor/pages/overview.page.js');
 
     global.notifications = new Notifications();
     global.navigation = new Navigation();

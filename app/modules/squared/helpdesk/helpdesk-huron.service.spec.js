@@ -234,9 +234,13 @@ describe('HelpdeskHuronService', function () {
     var validResult, validSiteResult, emptyResult;
 
     beforeEach(function () {
-      validResult = [{ steeringDigit: '9', siteSteeringDigit: '8', mediaTraversalMode: 'TURNOnly', vmCluster: null, uuid: '8f667dfe-a3f7-4911-9947-ab985075dceb', url: 'https://cmi.huron-int.com/api/v1/voice/customers/d16100fe-8039-4170-8407-f87eb58382ef/sites/8f667dfe-a3f7-4911-9947-ab985075dceb', links: [{ rel: 'voice', href: '/api/v1/voice/customers/d16100fe-8039-4170-8407-f87eb58382ef/sites/8f667dfe-a3f7-4911-9947-ab985075dceb' }] }];
+      validResult = [{
+        steeringDigit: '9', siteSteeringDigit: '8', mediaTraversalMode: 'TURNOnly', vmCluster: null, uuid: '8f667dfe-a3f7-4911-9947-ab985075dceb', url: 'https://cmi.huron-int.com/api/v1/voice/customers/d16100fe-8039-4170-8407-f87eb58382ef/sites/8f667dfe-a3f7-4911-9947-ab985075dceb', links: [{ rel: 'voice', href: '/api/v1/voice/customers/d16100fe-8039-4170-8407-f87eb58382ef/sites/8f667dfe-a3f7-4911-9947-ab985075dceb' }],
+      }];
 
-      validSiteResult = { customer: { uuid: 'd16100fe-8039-4170-8407-f87eb58382ef', name: 'Atlas-Stoy-Test-4' }, siteIndex: '000001', siteCode: '100', steeringDigit: '9', siteSteeringDigit: '8', timeZone: 'America/Los_Angeles', voicemailPilotNumber: null, mediaTraversalMode: 'TURNOnly', siteDescription: '', vmCluster: null, emergencyCallBackNumber: null, extensionLength: '4', voicemailPilotNumberGenerated: null, uuid: '8f667dfe-a3f7-4911-9947-ab985075dceb', url: 'https://cmi.huron-int.com/api/v1/voice/customers/d16100fe-8039-4170-8407-f87eb58382ef/sites/8f667dfe-a3f7-4911-9947-ab985075dceb', links: [{ rel: 'voice', href: '/api/v1/voice/customers/d16100fe-8039-4170-8407-f87eb58382ef/sites/8f667dfe-a3f7-4911-9947-ab985075dceb' }] };
+      validSiteResult = {
+        customer: { uuid: 'd16100fe-8039-4170-8407-f87eb58382ef', name: 'Atlas-Stoy-Test-4' }, siteIndex: '000001', siteCode: '100', steeringDigit: '9', siteSteeringDigit: '8', timeZone: 'America/Los_Angeles', voicemailPilotNumber: null, mediaTraversalMode: 'TURNOnly', siteDescription: '', vmCluster: null, emergencyCallBackNumber: null, extensionLength: '4', voicemailPilotNumberGenerated: null, uuid: '8f667dfe-a3f7-4911-9947-ab985075dceb', url: 'https://cmi.huron-int.com/api/v1/voice/customers/d16100fe-8039-4170-8407-f87eb58382ef/sites/8f667dfe-a3f7-4911-9947-ab985075dceb', links: [{ rel: 'voice', href: '/api/v1/voice/customers/d16100fe-8039-4170-8407-f87eb58382ef/sites/8f667dfe-a3f7-4911-9947-ab985075dceb' }],
+      };
 
       emptyResult = [];
     });

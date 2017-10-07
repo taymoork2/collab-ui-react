@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <div class="modal-title" translate="hercules.gcalSecondSetupModal.modalTitle"></div>
+  <h4 class="modal-title" translate="hercules.gcalSecondSetupModal.modalTitle"></h4>
 </div>
 <div class="modal-body">
   <div ng-if="$ctrl.loading" class="modal-step">
@@ -8,7 +8,7 @@
     </div>
   </div>
   <div ng-if="!$ctrl.loading" class="modal-step">
-    <h4 class="section__title" translate="hercules.gcalSecondSetupModal.title"></h4>
+    <h5 class="section__title" translate="hercules.gcalSecondSetupModal.title"></h5>
     <p translate="hercules.gcalSecondSetupModal.line1"></p>
     <ol>
       <li translate="hercules.gcalSetupModal.authorization.item1"></li>
@@ -22,7 +22,7 @@
       <li translate="hercules.gcalSetupModal.authorization.item6"></li>
     </ol>
     <div ng-form="$ctrl.testAccountForm">
-      <h4 class="section__title" translate="hercules.gcalSetupModal.testAccount.title"></h4>
+      <h5 class="section__title" translate="hercules.gcalSetupModal.testAccount.title"></h5>
       <p translate="hercules.gcalSetupModal.testAccount.line1">></p>
       <div class="cs-input-group" ng-class="{'error': testAccountForm.testAccount.$invalid}">
         <input

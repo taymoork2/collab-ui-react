@@ -4,6 +4,7 @@ class HybridIMPInactiveCardController implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private $modal: IToolkitModalService,
+    private $state: ng.ui.IStateService,
   ) {}
 
   public openSetUp(): void {
@@ -17,6 +18,9 @@ class HybridIMPInactiveCardController implements ng.IComponentController {
       controllerAs: 'vm',
       template: require('modules/hercules/service-specific-pages/common-expressway-based/add-resource-modal.html'),
       type: 'small',
+    }).result
+    .finally(() => {
+      this.$state.go('services-overview', {}, { reload: true });
     });
   }
 }

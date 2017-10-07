@@ -28,17 +28,11 @@ class GmTdModalRequestCtrl implements ng.IComponentController {
     this.messages = {
       customerName: {
         required: this.$translate.instant('common.invalidRequired'),
-        warning: this.$translate.instant('gemini.invalidCharacters', { field: 'Telephony Domain Name' }),
         maxlength: this.$translate.instant('gemini.inputLengthError', { length: 60, field: 'customer name' }),
       },
       partnerName: { maxlength: this.$translate.instant('gemini.inputLengthError', { length: 50, field: 'partner name' }) },
       noteToCiscoTeam: { maxlength: this.$translate.instant('gemini.inputLengthError', { length: 50, field: 'note' }) },
     };
-  }
-
-  public onWarning() {
-    const reg = /[<>~!@#$%^&*=|/<>"{}\[\]:;']+/g;
-    return reg.test(this.data.domainName);
   }
 
   public getRegions() {

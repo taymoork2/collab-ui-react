@@ -23,6 +23,7 @@ export interface IUserProps {
 
 export interface IUserStatusWithExtendedMessages extends IUserStatus {
   messages: IMessageExtended[];
+  hasWarnings?: boolean;
 }
 
 type UserStatus = 'activated' | 'notActivated' | 'error';
@@ -41,7 +42,7 @@ interface IUserStatus {
   userId: string;
 }
 
-interface IMessage {
+export interface IMessage {
   description: string;
   key: string;
   replacementValues?: IReplacementValue[];
@@ -243,6 +244,21 @@ export class USSService {
     return this.$http
       .patch<IUSSOrg>(`${this.USSUrl}/orgs/${org.id}`, org)
       .then(this.extractData);
+  }
+
+  public getStatusSeverity(status: string): -1 | 0 | 1 | 2 | 3 {
+    switch (status) {
+      case 'not_entitled':
+        return 0;
+      case 'activated':
+        return 1;
+      case 'pending_activation':
+        return 2;
+      case 'error':
+        return 3;
+      default:
+        return -1;
+    }
   }
 
   private convertToTranslateReplacements(messageReplacementValues: IReplacementValue[] | undefined): object {

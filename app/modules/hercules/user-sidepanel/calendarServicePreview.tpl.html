@@ -3,7 +3,7 @@
     translate="common.save"></span></button>
   <button id="btn-cancel" ng-disabled="saving" translate="common.cancel" ng-click="reset()"></button>
 </cs-sp-buttons>
-<cs-sp-container>
+<cs-sp-container cs-tabindex="showButtons ? -1 : 0">
   <cs-sp-section class="cloud-extensions">
     <div class="section-title-row">
       <span class="section-name">{{'hercules.cloudExtensions.serviceNames.' + extension.id | translate}}</span>

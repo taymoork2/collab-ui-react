@@ -20,7 +20,6 @@ class HybridCallServiceConnectUserSettingsCtrl implements ng.IComponentControlle
   public userIsCurrentlyEntitled: boolean;
   public newEntitlementValue: boolean | undefined;
 
-  public voicemailFeatureToggled: boolean;
   public userTestToolFeatureToggled: boolean;
 
   /* @ngInject */
@@ -160,7 +159,6 @@ export class HybridCallServiceConnectUserSettingsComponent implements ng.ICompon
     userId: '<',
     userEmailAddress: '<',
     entitlementUpdatedCallback: '&',
-    voicemailFeatureToggled: '<',
     userTestToolFeatureToggled: '<',
   };
 }

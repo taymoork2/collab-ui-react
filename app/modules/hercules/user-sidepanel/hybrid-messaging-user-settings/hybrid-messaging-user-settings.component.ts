@@ -19,6 +19,8 @@ class HybridMessagingUserSettingsComponentCtrl implements ng.IComponentControlle
   public userIsCurrentlyEntitled: boolean;
   public newEntitlementValue: boolean | undefined;
 
+  private userUpdatedCallback: Function;
+
   /* @ngInject */
   constructor(
     private HybridServiceUserSidepanelHelperService: HybridServiceUserSidepanelHelperService,
@@ -38,7 +40,7 @@ class HybridMessagingUserSettingsComponentCtrl implements ng.IComponentControlle
     }
   }
 
-  private getDataFromUSS(userId: string) {
+  private getDataFromUSS = (userId: string) => {
     this.loadingPage = true;
     return this.USSService.getStatusesForUser(userId)
       .then((statuses) => {
@@ -74,14 +76,23 @@ class HybridMessagingUserSettingsComponentCtrl implements ng.IComponentControlle
 
     this.HybridServiceUserSidepanelHelperService.saveUserEntitlements(this.userId, this.userEmailAddress, entitlements)
       .then(() => {
+        this.userUpdatedCallback({
+          options: {
+            hybridMessaging: this.newEntitlementValue,
+            refresh: true,
+          },
+        });
+      })
+      .then(() => {
         if (!this.newEntitlementValue) {
           this.userIsCurrentlyEntitled = false;
         } else {
           this.userIsCurrentlyEntitled = true;
         }
         this.newEntitlementValue = undefined;
-        this.getDataFromUSS(this.userId);
+        return this.userId;
       })
+      .then(this.getDataFromUSS)
       .catch((error) => {
         this.Notification.error('hercules.userSidepanel.not-updated-specific', {
           userName: this.userEmailAddress,
@@ -119,5 +130,6 @@ export class HybridMessagingUserSettingsComponent implements ng.IComponentOption
   public bindings = {
     userId: '<',
     userEmailAddress: '<',
+    userUpdatedCallback: '&',
   };
 }

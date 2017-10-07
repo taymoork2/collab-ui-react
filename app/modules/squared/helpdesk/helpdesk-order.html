@@ -12,14 +12,13 @@
     <div class="helpdesk-orderDetail">
       <div class="orderTitle">
         <h2>{{helpdeskOrderCtrl.orderId}}</h2>
-        <h5 ng-if="helpdeskOrderCtrl.accountName">{{helpdeskOrderCtrl.accountName}}</h5>
-        <h5 ng-if="helpdeskOrderCtrl.endCustomerName">{{helpdeskOrderCtrl.endCustomerName}}</h5>
+        <h5 ng-if="helpdeskOrderCtrl.accountName">{{::helpdeskOrderCtrl.accountName}}</h5>
+        <h5 ng-if="helpdeskOrderCtrl.endCustomerName">{{::helpdeskOrderCtrl.endCustomerName}}</h5>
       </div>
       <hr>
       <div class="row">
         <div class="medium-5 columns details-heading">
-          <span ng-if="::helpdeskOrderCtrl.isOrderProvisioned() || helpdeskOrderCtrl.accountId"><strong translate="helpdesk.customerInfo"></strong></span>
-          <span ng-if="::helpdeskOrderCtrl.isOrderPendingProvisioning()"><strong translate="helpdesk.orderInfo"></strong></span>
+          <strong>{{helpdeskOrderCtrl.headingString}}</strong>
         </div>
       </div>
 
@@ -31,7 +30,7 @@
           <span>{{helpdeskOrderCtrl.orderId}}</span>
         </div>
         <div class="large-3 columns details-value">
-          <a ng-if="::helpdeskOrderCtrl.supportsHelpDeskOrderSetup && helpdeskOrderCtrl.hasPermissionToEditInfo && helpdeskOrderCtrl.isOrderPendingProvisioning()"
+          <a ng-if="::helpdeskOrderCtrl.showSetupOrder()"
             ng-click="helpdeskOrderCtrl.launchOrderProcessingClient()"
             translate="helpdesk.setUpOrder"></a>
         </div>
@@ -75,14 +74,12 @@
         <div class="large-4 columns details-heading">
           <span translate="helpdesk.companyName"></span>
         </div>
-        <div class="large-5 columns details-value">
-          <span ng-if="helpdeskOrderCtrl.accountName && helpdeskOrderCtrl.isAccountPendingActivation()">{{helpdeskOrderCtrl.accountName}}</span>
-          <span ng-if="helpdeskOrderCtrl.endCustomerName && helpdeskOrderCtrl.isOrderPendingProvisioning()">{{helpdeskOrderCtrl.endCustomerName}}</span>
-          <a ng-click="helpdeskOrderCtrl.goToCustomerPage()" ng-if="helpdeskOrderCtrl.accountActivated === true">{{helpdeskOrderCtrl.accountName}}</a>
-          <a ng-click="helpdeskOrderCtrl.goToProvisionedCustomerPage()" ng-if="helpdeskOrderCtrl.isOrderProvisioned()">{{helpdeskOrderCtrl.endCustomerName}}</a>
+        <div class="large-5 columns details-value" ng-switch="helpdeskOrderCtrl.showOrgDetailsLink()">
+          <span ng-switch-when="false">{{helpdeskOrderCtrl.endCustomerName}}</span>
+          <a ng-switch-when="true" ng-click="helpdeskOrderCtrl.goToCustomerPage()">{{helpdeskOrderCtrl.endCustomerName}}</a>
         </div>
         <div class="large-5 columns details-value">
-          <span ng-if="!helpdeskOrderCtrl.accountName && !helpdeskOrderCtrl.endCustomerName" translate="common.notAvailable"></span>
+          <span ng-if="!helpdeskOrderCtrl.endCustomerName" translate="common.notAvailable"></span>
         </div>
         <div class="large-3">
         </div>
@@ -95,8 +92,8 @@
         <div class="large-5 columns details-value" ng-show="!helpdeskOrderCtrl.showCustomerEmailEditView">
           <span class="custom-spacing">{{helpdeskOrderCtrl.customerAdminEmail}}</span>
         </div>
-        <div class="large-3 columns details-value" ng-if="helpdeskOrderCtrl.isAccountPendingActivation() || helpdeskOrderCtrl.isOrderPendingProvisioning()" ng-show="!helpdeskOrderCtrl.showCustomerEmailEditView">
-          <a class="custom-spacing" ng-if="helpdeskOrderCtrl.hasPermissionToEditInfo" translate="helpdesk.editAdminEmail"
+        <div class="large-3 columns details-value" ng-if="helpdeskOrderCtrl.canEditResendAdminEmail() && !helpdeskOrderCtrl.showCustomerEmailEditView">
+          <a class="custom-spacing" ng-if="helpdeskOrderCtrl.hasPermissionToEditInfo && helpdeskOrderCtrl.accountActivated !== true" translate="helpdesk.editAdminEmail"
              ng-click="helpdeskOrderCtrl.showEmailEditView(helpdeskOrderCtrl.emailTypes.CUSTOMER)"></a>
           <a translate="helpdesk.resendAdminEmail" ng-click="helpdeskOrderCtrl.resendAdminEmail(helpdeskOrderCtrl.emailTypes.CUSTOMER)"></a>
           <i tooltip-html-unsafe="{{'helpdesk.resendTooltip' | translate}}" tooltip-placement="right"
@@ -110,8 +107,6 @@
           <a class="custom-spacing" translate="common.save" ng-click="helpdeskOrderCtrl.updateAdminEmail(helpdeskOrderCtrl.emailTypes.CUSTOMER)"></a>
           <a translate="common.cancel" ng-click="helpdeskOrderCtrl.cancelAdminEmailEdit(helpdeskOrderCtrl.emailTypes.CUSTOMER)"></a>
         </div>
-        <div class="large-3" ng-if="helpdeskOrderCtrl.isAccountActivated() || helpdeskOrderCtrl.isOrderProvisioned()">
-        </div>
       </div>
 
       <div class="row" ng-if="::helpdeskOrderCtrl.lastProvisioningContact">
@@ -121,7 +116,7 @@
         <div class="large-5 columns details-value" ng-show="!helpdeskOrderCtrl.showProvisioningContactEditView">
           <span class="custom-spacing">{{helpdeskOrderCtrl.lastProvisioningContact}}</span>
         </div>
-        <div class="large-3 columns details-value" ng-if="::helpdeskOrderCtrl.isOrderPendingProvisioning()" ng-show="!helpdeskOrderCtrl.showProvisioningContactEditView">
+        <div class="large-3 columns details-value" ng-if="helpdeskOrderCtrl.canEditResendProvisioningContact() && !helpdeskOrderCtrl.showProvisioningContactEditView">
           <a class="custom-spacing" translate="helpdesk.editAdminEmail" ng-if="helpdeskOrderCtrl.hasPermissionToEditInfo"
               ng-click="helpdeskOrderCtrl.showEmailEditView(helpdeskOrderCtrl.emailTypes.PROVISIONING)"></a>
           <a translate="helpdesk.resendAdminEmail" ng-click="helpdeskOrderCtrl.resendAdminEmail(helpdeskOrderCtrl.emailTypes.PROVISIONING)"></a>
@@ -135,8 +130,6 @@
         <div class="large-3 columns details-value" ng-show="helpdeskOrderCtrl.showProvisioningContactEditView">
           <a class="custom-spacing" translate="common.save" ng-click="helpdeskOrderCtrl.updateAdminEmail(helpdeskOrderCtrl.emailTypes.PROVISIONING)"></a>
           <a translate="common.cancel" ng-click="helpdeskOrderCtrl.cancelAdminEmailEdit(helpdeskOrderCtrl.emailTypes.PROVISIONING)"></a>
-        </div>
-        <div class="large-3" ng-if="::helpdeskOrderCtrl.isOrderProvisioned()">
         </div>
       </div>
 
@@ -216,6 +209,21 @@
         </div>
         <hr>
       </div>
+
+      <div class="row">
+        <div class="medium-4 columns details-heading">
+          <span translate="helpdesk.debuggingStatus"></span>
+        </div>
+        <div class="large-5 columns details-value">
+          <span>{{helpdeskOrderCtrl.order.orderStatus}}</span>
+          <i tooltip-html-unsafe="{{'helpdesk.usedForDebugging' | translate}}" tooltip-placement="right"
+            tooltip-trigger="mouseenter"
+            class="icon icon-information icon-lg blue-icon-info"></i>
+        </div>
+        <div class="large-3">
+        </div>
+      </div>
+
     </div>
   </div>
 </div>

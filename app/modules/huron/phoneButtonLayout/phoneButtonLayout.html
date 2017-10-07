@@ -2,7 +2,7 @@
   <button class="btn btn--primary" ng-click="$ctrl.save()" ng-disabled="$ctrl.form.$invalid" type="submit" translate="common.save"></button>
   <button ng-click="$ctrl.reset()" translate="common.cancel"></button>
 </cs-sp-buttons>
-<cs-sp-container class="phonebuttonlayout-panel">
+<cs-sp-container class="phonebuttonlayout-panel" cs-tabindex="($ctrl.editing || $ctrl.reordering)  ? -1 : 0">
   <div class="warning" ng-show="$ctrl.isButtonLimitReached && !$ctrl.editing && !$ctrl.reordering">
     <div class="cs-input__messages">
       <div class="message limit-reach-warning">

@@ -539,8 +539,10 @@
         }
       });
 
-      return { servicesManagedByCurrentPartner: servicesManagedByCurrentPartner,
-        servicesManagedByAnotherPartner: servicesManagedByAnotherPartner };
+      return {
+        servicesManagedByCurrentPartner: servicesManagedByCurrentPartner,
+        servicesManagedByAnotherPartner: servicesManagedByAnotherPartner,
+      };
     }
 
     function isServiceManagedByCurrentPartner(serviceObj) {
@@ -838,7 +840,9 @@
           .join(', ');
         var licenseQty = conferenceServices[0].qty;
         var hasWebex = _.some(conferenceServices, { isWebex: true });
-        trialServices.push({ name: name, sub: conferenceServices, qty: licenseQty, icon: 'icon-circle-group', order: 1, hasWebex: hasWebex });
+        trialServices.push({
+          name: name, sub: conferenceServices, qty: licenseQty, icon: 'icon-circle-group', order: 1, hasWebex: hasWebex,
+        });
       }
 
       if (sparkCare.length > 0) {
@@ -849,7 +853,9 @@
           return o;
         });
         partial.careLicenses = _.sumBy(uniqueSparkCare, 'qty');
-        trialServices.push({ name: careName, sub: uniqueSparkCare, qty: partial.careLicenses, icon: 'icon-circle-contact-centre', order: 5, isSparkCare: true });
+        trialServices.push({
+          name: careName, sub: uniqueSparkCare, qty: partial.careLicenses, icon: 'icon-circle-contact-centre', order: 5, isSparkCare: true,
+        });
       }
 
       if (roomServices.length > 0) {
@@ -916,7 +922,9 @@
         if (licenseInfo) {
           helpers.removeFromFreeServices(freeServices, licenseInfo);
           //from paid or free services
-          if (helpers.isDisplayableService(licenseInfo, { isTrial: isTrial, isShowCMR: true, isCareEnabled: isCareEnabled, isAdvanceCareEnabled: isAdvanceCareEnabled })) { //if conference
+          if (helpers.isDisplayableService(licenseInfo, {
+            isTrial: isTrial, isShowCMR: true, isCareEnabled: isCareEnabled, isAdvanceCareEnabled: isAdvanceCareEnabled,
+          })) { //if conference
             if (licenseInfo.licenseType === Config.licenseTypes.CONFERENCING || licenseInfo.licenseType === Config.licenseTypes.CMR) {
               service = new helpers.LicensedService(licenseInfo, conferenceMapping);
               helpers.addService(meetingServices, service);

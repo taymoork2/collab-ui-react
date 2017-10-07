@@ -11,7 +11,7 @@
     <div class="feature-list">
       <ul class="sites-ul">
         <li class="feature" ng-repeat="val in $ctrl.sites">
-          <span class="feature-name"><a href="{{val.globalSite}}" target="_blank">{{val.siteUrl}}</a></span>
+          <span class="feature-name"><a href="{{val.globalSite}}" target="_blank" onclick="this.blur()">{{val.siteUrl}}</a></span>
           <span ng-if="!$ctrl.showLoading && $ctrl.tds.length" class="action-menu dropdown pull-right action-movesite" cs-dropdown>
             <a class="dropdown-toggle small" cs-dropdown-toggle translate="gemini.cbgs.moveSite"></a>
             <ul class="dropdown-menu dropdown-primary actions-services" cs-dropdown-menu>

@@ -87,7 +87,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
               private FeatureToggleService,
               ) {
     this.contact = this.PstnWizardService.getContact();
-    this.address = (new Address()).copy(PstnModel.getServiceAddress());
+    this.address = _.cloneDeep(PstnModel.getServiceAddress());
     this.countryCode = PstnModel.getCountryCode();
     this.isTrial = PstnModel.getIsTrial();
     this.showPortNumbers = !this.isTrial;
@@ -174,7 +174,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
   public goToOrderNumbers(): void {
     if (!this.PstnModel.isCustomerExists()) {
       this.step = 2;
-    } else if (!this.PstnModel.isSiteExists()) {
+    } else if (!this.address.validated) {
       this.step = 3;
     } else {
       this.step = 4;
@@ -218,6 +218,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
     if (this.ftLocation) {
       this.PstnWizardService.initLocations()
       .then(() => {
+        this.address = _.cloneDeep(this.PstnModel.getServiceAddress());
         //If new PSTN setup show all the carriers even if there only one
         if (this.PstnModel.isCarrierExists()) {
           // Only 1 carrier should exist for a customer
@@ -233,6 +234,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
     } else {
       this.PstnWizardService.initSites()
       .then(() => {
+        this.address = _.cloneDeep(this.PstnModel.getServiceAddress());
         //If new PSTN setup show all the carriers even if there only one
         if (this.PstnModel.isCarrierExists()) {
           // Only 1 carrier should exist for a customer
@@ -396,7 +398,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
       .then((address: Address | null) => {
         if (address) {
           this.address = address;
-          this.PstnModel.setServiceAddress((new Address()).copy(address));
+          this.PstnModel.setServiceAddress(_.cloneDeep(address));
         } else {
           this.Notification.error('pstnSetup.serviceAddressNotFound');
         }
@@ -421,7 +423,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
 
   public resetAddress(): void {
     this.address.reset();
-    this.PstnModel.setServiceAddress(this.address);
+    this.PstnModel.setServiceAddress(_.cloneDeep(this.address));
   }
 
   public launchCustomerPortal(): void {

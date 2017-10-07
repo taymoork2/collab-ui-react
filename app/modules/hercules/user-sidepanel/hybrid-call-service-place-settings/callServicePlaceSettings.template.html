@@ -7,7 +7,7 @@
   <button id="btn-cancel" ng-disabled="saving" translate="common.cancel"
           ng-click="reset()"></button>
 </cs-sp-buttons>
-<cs-sp-container ng-if="isPlace">
+<cs-sp-container ng-if="isPlace" cs-tabindex="showButtons ? -1 : 0">
   <cs-sp-section class="cloud-extensions">
     <div class="section-title-row">
       <span class="section-name" translate="hercules.cloudExtensions.serviceNames.squared-fusion-ec-place"></span>

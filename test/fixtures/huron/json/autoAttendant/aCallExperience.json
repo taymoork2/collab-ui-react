@@ -28,20 +28,13 @@
       },
       {
         "doREST": {
-          "id": "abc066b1-4938-4b5f-9870-9e66ad17edef",
+          "id": "c9e07049-ab7a-446c-9c48-1956bb83a7a5",
           "varList": [
             "testcisco"
           ]
         }
       },
       {
-        "doREST": {
-          "id": "",
-          "varList": [
-            "newRestVar"
-          ]
-        }
-      },{
       "runActionsOnInput": {
         "description": "",
         "prompts": {

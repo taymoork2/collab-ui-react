@@ -91,11 +91,10 @@ class GmTdNotesView implements ng.IComponentController {
     this.isLoading = true;
     this.TelephonyDomainService.getHistories(data)
       .then((res: any[]) => {
-        _.filter(res, (item: any): boolean => {
-          return item.action !== GmTdNotesView.NOTE_ACTION;
+        this.model = _.remove(res, (item: any): boolean => {
+          return item.action === GmTdNotesView.NOTE_ACTION;
         });
 
-        this.model = res;
         this.isLoading = false;
         this.isLoaded = true;
       })

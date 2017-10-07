@@ -37,6 +37,11 @@ var auth = {
     pass: 'C1sc0123!',
     org: 'c1e59258-29e1-42d7-bfa7-84ab26632b46',
   },
+  'ft--atlas-f3745-auto-assign-licenses': {
+    user: 'atlaswebe2e+ft--atlas-f3745-auto-assign-licenses@gmail.com',
+    pass: 'Cisco123!',
+    org: '8078642f-ab1a-4740-bd0a-61738ea76bf0',
+  },
   'gss-testAdmin': {
     user: 'sjsite14-lhsieh@mailinator.com',
     pass: 'Cisco!23',
@@ -249,13 +254,13 @@ var getSSOToken = function (req, jar, creds) {
     req.post(opts, function (err, res, body) {
       if (err) {
         console.error(err, body);
-        reject('Failed to fetch SSO token from CI. Status: ' + (res != null ? res.statusCode : undefined));
+        reject(new Error('Failed to fetch SSO token from CI. Status: ' + (res != null ? res.statusCode : undefined)));
       }
       var cookie = _.find(res.headers['set-cookie'], function (c) {
         return c.indexOf('cisPRODAMAuthCookie') !== -1;
       });
       if (!cookie) {
-        reject('Failed to retrieve a cookie with org credentials. Status: ' + (res != null ? res.statusCode : undefined));
+        reject(new Error('Failed to retrieve a cookie with org credentials. Status: ' + (res != null ? res.statusCode : undefined)));
       }
       var token = cookie.match(/cisPRODAMAuthCookie=(.*); Domain/)[1];
       jar.setCookie('cisPRODiPlanetDirectoryPro=' + token + ' ; path=/; domain=.webex.com', 'https://idbroker.webex.com/');
@@ -289,12 +294,12 @@ var getAuthCode = function (req, creds) {
       var ref;
       if (err) {
         console.error(err, body);
-        reject('Failed to fetch Auth Code from CI. Status: ' + (res != null ? res.statusCode : undefined));
+        reject(new Error('Failed to fetch Auth Code from CI. Status: ' + (res != null ? res.statusCode : undefined)));
       }
       var code = (ref = body.match(/<title>(.*)</)) != null ? ref[1] : undefined;
       if (!code) {
         console.error(body);
-        reject('Failed to extract Auth Code. Status: ' + (res != null ? res.statusCode : undefined));
+        reject(new Error('Failed to extract Auth Code. Status: ' + (res != null ? res.statusCode : undefined)));
       }
       resolve(code);
     });
@@ -321,19 +326,19 @@ var getAccessToken = function (req, code) {
     req.post(opts, function (err, res, body) {
       if (err) {
         console.error(err, body);
-        reject('Failed to fetch Access Token from CI. Status: ' + (res != null ? res.statusCode : undefined));
+        reject(new Error('Failed to fetch Access Token from CI. Status: ' + (res != null ? res.statusCode : undefined)));
       }
       var obj = (function () {
         try {
           return JSON.parse(body);
         } catch (_error) {
           console.error(_error);
-          reject('Failed to parse Access Token JSON. Status: ' + (res != null ? res.statusCode : undefined));
+          reject(new Error('Failed to parse Access Token JSON. Status: ' + (res != null ? res.statusCode : undefined)));
         }
       })();
       if (!(obj != null ? obj.access_token : undefined)) {
         console.error(body);
-        reject('Failed to extract Access Token. Status: ' + (res != null ? res.statusCode : undefined));
+        reject(new Error('Failed to extract Access Token. Status: ' + (res != null ? res.statusCode : undefined)));
       }
       resolve(obj.access_token);
     });

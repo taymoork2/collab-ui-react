@@ -3,7 +3,7 @@
     <cs-page-sub-header-left tabs="$ctrl.tabs"></cs-page-sub-header-left>
 
     <cs-page-sub-header-right ng-if="$ctrl.filterEnable">
-      <div class="col-sm-6">
+      <div class="col-sm-5">
         <cs-select
           name="customers"
           ng-model="$ctrl.data.customerSelected"
@@ -12,7 +12,8 @@
           placeholder="$ctrl.customerPlaceholder"
         ></cs-select>
       </div>
-      <div class="col-sm-4">
+
+      <div class="col-sm-5">
         <cs-select
           name="account"
           ng-model="$ctrl.data.accountSelected"
@@ -21,8 +22,9 @@
           placeholder="$ctrl.data.accountPlaceholder"
         ></cs-select>
       </div>
+
       <div class="getExportcsv">
-        <a class="filterBtn" ng-click="$ctrl.onAdvanced = !$ctrl.onAdvanced">{{$ctrl.onAdvanced ? 'More Filters' : 'Less Filters' }}</a>
+        <a class="filterBtn" ng-click="$ctrl.onAdvanced = !$ctrl.onAdvanced">{{$ctrl.onAdvanced ? 'Less Filters' : 'More Filters' }}</a>
         <span class="icon icon-download icon-2x" ng-if="!$ctrl.loading" ng-csv="$ctrl.onExportCSV()"></span>
       </div>
     </cs-page-sub-header-right>
@@ -32,11 +34,11 @@
     <div class="col-sm-6">
       <div class="col-sm-7">
         <cs-select
-                name="sites"
-                ng-model="$ctrl.data.siteSelected"
-                options="$ctrl.data.siteOptions"
-                on-change-fn="$ctrl.onSites()"
-                placeholder="$ctrl.data.sitePlaceholder"
+          name="sites"
+          ng-model="$ctrl.data.siteSelected"
+          options="$ctrl.data.siteOptions"
+          on-change-fn="$ctrl.onSites()"
+          placeholder="$ctrl.data.sitePlaceholder"
         ></cs-select>
       </div>
       <div class="col-sm-5">
@@ -57,9 +59,9 @@
 
     <div class="col-sm-6">
       <div class="col-sm-7">
-        {{$ctrl.startDateFormat}} {{$ctrl.startDateFormat ? '--' : '' }}  {{$ctrl.endDateFormat}}
+        <p class="durationSelected">{{$ctrl.startDateFormat}} {{$ctrl.startDateFormat ? 'thru' : '' }}  {{$ctrl.endDateFormat}}</p>
       </div>
-      <div class="col-sm-5 pull-right">
+      <div class="col-sm-4 pull-right">
         <cs-select
           name="duration"
           ng-model="$ctrl.data.durationSelected"
@@ -70,27 +72,9 @@
     </div>
   </div>
 
-
   <div class="row chartFilter time-box" ng-if="$ctrl.onAdvanced && $ctrl.data.dateEnable">
     <div class="col-sm-12 pull-right datepickerList">
-      <div class="tk-example-datepicker start-time pull-right" >
-        <div class="example-indent"
-             ng-click="$ctrl.onChangeDate()"
-             tooltip-class="tn-search-error"
-             tooltip-append-to-body="true"
-             tooltip-is-open="$ctrl.errMsg.datePicker !==''"
-             tooltip-html-unsafe="{{$ctrl.errMsg.datePicker}}"
-             ng-class="{'error': $ctrl.errMsg.datePicker !==''}">
 
-          <cs-datepicker
-            ng-model="$ctrl.startDate"
-            placeholder="{{::'webexReports.placeholder-date' | translate}}"
-            first-enabled-date="{{$ctrl.dateRange.start.firstEnableDate}}"
-            last-enabled-date="{{$ctrl.dateRange.start.lastEnableDate}}">
-          </cs-datepicker>
-        </div>
-      </div>
-      <span class="data-span pull-right" translate="webexReports.to"></span>
       <div class="tk-example-datepicker end-time pull-right">
         <div class="example-indent" ng-click="$ctrl.onChangeDate()">
           <cs-datepicker
@@ -101,6 +85,27 @@
           </cs-datepicker>
         </div>
       </div>
+
+      <span class="data-span pull-right" translate="webexReports.to"></span>
+
+      <div class="tk-example-datepicker start-time pull-right" >
+        <div class="example-indent"
+             ng-click="$ctrl.onChangeDate()"
+             tooltip-class="tn-search-error"
+             tooltip-append-to-body="true"
+             tooltip-is-open="$ctrl.errMsg.datePicker !==''"
+             tooltip-html-unsafe="{{$ctrl.errMsg.datePicker}}"
+             ng-class="{'error': $ctrl.errMsg.datePicker !==''}">
+
+          <cs-datepicker
+                  ng-model="$ctrl.startDate"
+                  placeholder="{{::'webexReports.placeholder-date' | translate}}"
+                  first-enabled-date="{{$ctrl.dateRange.start.firstEnableDate}}"
+                  last-enabled-date="{{$ctrl.dateRange.start.lastEnableDate}}">
+          </cs-datepicker>
+        </div>
+      </div>
+
     </div>
   </div>
 

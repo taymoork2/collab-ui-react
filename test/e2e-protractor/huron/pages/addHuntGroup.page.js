@@ -40,7 +40,7 @@ export class AddHuntGroupPage {
     this.externalDest = element(by.cssContainingText('button.call-dest-button', 'External'));
     this.createEnabled = element(by.cssContainingText('div.btn-helptext.helptext-btn--right.active.enabled', 'Create'));
     this.article = element(by.css('article'));
-    this.hgDetailHeader = element(by.cssContainingText('div.header-with-right-icon', 'new-hg'));
+    this.hgDetailHeader = element(by.css('div.header-with-right-icon'));
     this.btnClose = element(by.css('button.close'));
     this.hgPilot = element(by.css('span.card-section-num', '2 Numbers'));
     this.hgMembersCount = element(by.css('span.card-members.left', '1 Members'));

@@ -175,7 +175,16 @@ describe('Controller: CustomerListCtrl', function () {
     beforeEach(initController);
 
     function verifyPartnerOrgServiceObjects(myPartnerOrg) {
-      var expectedServiceObjects = { messaging: 'MS', sparkConferencing: 'CF', communications: 'CO', webexEEConferencing: 'EE', roomSystems: 'SD', sparkBoard: 'SB', care: 'CDC', advanceCare: 'CVC' };
+      var expectedServiceObjects = {
+        messaging: 'MS',
+        sparkConferencing: 'CF',
+        communications: 'CO',
+        webexEEConferencing: 'EE',
+        roomSystems: 'SD',
+        sparkBoard: 'SB',
+        care: 'CDC',
+        advanceCare: 'CVC',
+      };
 
       _.forEach(Object.keys(expectedServiceObjects), function (serviceType) {
         var serviceObject = myPartnerOrg[serviceType];
