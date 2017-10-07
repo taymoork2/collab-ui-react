@@ -15,6 +15,14 @@ export function huronCustomer(huronCustomerOptions) {
   const options = huronCustomerOptions;
   const customerName = `${os.userInfo().username}_${options.test}`;
   let allPstnNumbers = [];
+  if (options.doAllFeatures) {
+    options.users = {};
+    options.places = {};
+    options.users.noOfUsers = 2;
+    options.users.noOfDids = 2;
+    options.places.noOfPlaces = 2;
+    options.places.noOfDids = 2;
+  }
   if (options.pstn) {
     allPstnNumbers = customerNumbersPSTN(options.pstn);
   };
@@ -42,6 +50,7 @@ export function huronCustomer(huronCustomerOptions) {
     doCallPickup: options.doCallPickup || false,
     doCallPark: options.doCallPark || false,
     doCallPaging: options.doCallPaging || false,
+    doAllFeatures: options.doAllFeatures || false,
   };
   return atlasCustomer(customer);
 }
