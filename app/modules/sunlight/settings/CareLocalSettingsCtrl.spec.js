@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: Care Local Settings', function () {
-  var controller, HydraService, sunlightChatConfigUrl, sunlightConfigService, $httpBackend, Notification, orgId, $interval, $intervalSpy, $scope, FeatureToggleService;
+  var controller, HydraService, sunlightChatConfigUrl, sunlightConfigService, $httpBackend, Notification, orgId, $interval, $intervalSpy, $scope, FeatureToggleService, queueDetails, urService, urServiceUrl;
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
     getUserOrgId: jasmine.createSpy('getUserOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
@@ -13,8 +13,9 @@ describe('Controller: Care Local Settings', function () {
     $provide.value('Authinfo', spiedAuthinfo);
   }));
   beforeEach(
-    inject(function ($controller, _$rootScope_, _$httpBackend_, _Notification_, _SunlightConfigService_, _$interval_, UrlConfig, $q, _HydraService_, _FeatureToggleService_) {
+    inject(function ($controller, _$rootScope_, _$httpBackend_, _Notification_, _SunlightConfigService_, _$interval_, UrlConfig, $q, _HydraService_, _FeatureToggleService_, _URService_) {
       sunlightConfigService = _SunlightConfigService_;
+      urService = _URService_;
       HydraService = _HydraService_;
       $httpBackend = _$httpBackend_;
       Notification = _Notification_;
@@ -24,6 +25,8 @@ describe('Controller: Care Local Settings', function () {
       FeatureToggleService = _FeatureToggleService_;
       spyOn(FeatureToggleService, 'atlasCareAutomatedRouteTrialsGetStatus').and.returnValue($q.resolve(true));
       orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
+      urServiceUrl = UrlConfig.getSunlightURServiceUrl() + '/organization/' + orgId + '/queue/' + orgId;
+      queueDetails = getJSONFixture('sunlight/json/features/config/DefaultQueueDetails.json');
       sunlightChatConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + orgId + '/chat';
       controller = $controller('CareLocalSettingsCtrl', {
         $scope: $scope,
@@ -31,6 +34,16 @@ describe('Controller: Care Local Settings', function () {
         Notification: Notification,
       });
       $scope.orgConfigForm = { dirty: false };
+      spyOn(urService, 'createQueue').and.callFake(function () {
+        var deferred = $q.defer();
+        deferred.resolve('fake update response');
+        return deferred.promise;
+      });
+      spyOn(urService, 'updateQueue').and.callFake(function () {
+        var deferred = $q.defer();
+        deferred.resolve('fake update response');
+        return deferred.promise;
+      });
       spyOn(sunlightConfigService, 'updateChatConfig').and.callFake(function () {
         var deferred = $q.defer();
         deferred.resolve('fake update response');
@@ -126,6 +139,7 @@ describe('Controller: Care Local Settings', function () {
   });
 
   describe('CareSettings - Setup Care - Success', function () {
+    var x = console;
     it('should call the onboard config api and flash setup care button', function () {
       $httpBackend.expectGET(sunlightChatConfigUrl).respond(404, {});
       $httpBackend.flush();
@@ -146,6 +160,8 @@ describe('Controller: Care Local Settings', function () {
       controller.defaultQueueStatus = controller.status.SUCCESS;
       controller.onboardToCare();
       $scope.$apply();
+      $httpBackend.expectGET(urServiceUrl)
+        .respond(200, queueDetails);
       $httpBackend.expectGET(sunlightChatConfigUrl)
         .respond(200, {
           csOnboardingStatus: controller.status.SUCCESS,
@@ -160,10 +176,11 @@ describe('Controller: Care Local Settings', function () {
 
   describe('CareSettings - Setup Care - Failure', function () {
     it('should show error toaster if timed out', function () {
-      spyOn(Notification, 'error').and.callFake(function () {
+      spyOn(Notification, 'errorWithTrackingId').and.callFake(function () {
         return true;
       });
       $httpBackend.whenGET(sunlightChatConfigUrl).respond(404, {});
+      $httpBackend.flush();
       controller.defaultQueueStatus = controller.status.SUCCESS;
       controller.onboardToCare();
       $scope.$apply();
@@ -173,7 +190,7 @@ describe('Controller: Care Local Settings', function () {
       }
       $httpBackend.flush();
       expect(controller.state).toBe(controller.NOT_ONBOARDED);
-      expect(Notification.error).toHaveBeenCalled();
+      expect(Notification.errorWithTrackingId).toHaveBeenCalled();
     });
 
     it('should show error toaster if backend API fails', function () {
@@ -204,7 +221,7 @@ describe('Controller: Care Local Settings', function () {
 
 describe('Care Settings - when org has K2 entitlement', function () {
   var controller, sunlightChatConfigUrl, sunlightConfigService, $httpBackend, Notification, orgId, $interval, $intervalSpy,
-    $scope, q, HydraService, FeatureToggleService;
+    $scope, q, HydraService, FeatureToggleService, queueDetails, urService, urServiceUrl;
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
     getUserOrgId: jasmine.createSpy('getUserOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
@@ -216,9 +233,10 @@ describe('Care Settings - when org has K2 entitlement', function () {
     $provide.value('Authinfo', spiedAuthinfo);
   }));
   beforeEach(
-    inject(function ($controller, _$rootScope_, _$httpBackend_, _Notification_, _SunlightConfigService_, _$interval_, UrlConfig, $q, _HydraService_, _FeatureToggleService_) {
+    inject(function ($controller, _$rootScope_, _$httpBackend_, _Notification_, _SunlightConfigService_, _$interval_, UrlConfig, $q, _HydraService_, _FeatureToggleService_, _URService_) {
       q = $q;
       sunlightConfigService = _SunlightConfigService_;
+      urService = _URService_;
       $httpBackend = _$httpBackend_;
       Notification = _Notification_;
       $scope = _$rootScope_.$new();
@@ -226,6 +244,8 @@ describe('Care Settings - when org has K2 entitlement', function () {
       $intervalSpy = jasmine.createSpy('$interval', $interval).and.callThrough();
       orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
       sunlightChatConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + orgId + '/chat';
+      urServiceUrl = UrlConfig.getSunlightURServiceUrl() + '/organization/' + orgId + '/queue/' + orgId;
+      queueDetails = getJSONFixture('sunlight/json/features/config/DefaultQueueDetails.json');
       HydraService = _HydraService_;
       FeatureToggleService = _FeatureToggleService_;
       spyOn(FeatureToggleService, 'atlasCareAutomatedRouteTrialsGetStatus').and.returnValue($q.resolve(true));
@@ -233,6 +253,16 @@ describe('Care Settings - when org has K2 entitlement', function () {
         $scope: $scope,
         $interval: $intervalSpy,
         Notification: Notification,
+      });
+      spyOn(urService, 'createQueue').and.callFake(function () {
+        var deferred = $q.defer();
+        deferred.resolve('fake update response');
+        return deferred.promise;
+      });
+      spyOn(urService, 'updateQueue').and.callFake(function () {
+        var deferred = $q.defer();
+        deferred.resolve('fake update response');
+        return deferred.promise;
       });
       $scope.orgConfigForm = { dirty: false };
       spyOn(sunlightConfigService, 'updateChatConfig').and.callFake(function () {
@@ -260,6 +290,8 @@ describe('Care Settings - when org has K2 entitlement', function () {
 
   it('should enable setup care button, when Org is not onboarded', function () {
     controller.defaultQueueStatus = controller.status.SUCCESS;
+    $httpBackend.expectGET(urServiceUrl)
+        .respond(200, queueDetails);
     $httpBackend.expectGET(sunlightChatConfigUrl)
       .respond(200, {
         csOnboardingStatus: 'Unknown',
@@ -271,6 +303,8 @@ describe('Care Settings - when org has K2 entitlement', function () {
 
   it('should disable setup care, if already onboarded', function () {
     controller.defaultQueueStatus = controller.status.SUCCESS;
+    $httpBackend.expectGET(urServiceUrl)
+        .respond(200, queueDetails);
     $httpBackend.expectGET(sunlightChatConfigUrl)
       .respond(200, {
         csOnboardingStatus: 'Success',
@@ -336,6 +370,8 @@ describe('Care Settings - when org has K2 entitlement', function () {
     controller.defaultQueueStatus = controller.status.SUCCESS;
     controller.onboardToCare();
     $scope.$apply();
+    $httpBackend.expectGET(urServiceUrl)
+        .respond(200, queueDetails);
     $httpBackend.expectGET(sunlightChatConfigUrl)
       .respond(200, {
         csOnboardingStatus: 'Success',
@@ -372,7 +408,7 @@ describe('Care Settings - when org has K2 entitlement', function () {
 
 describe('Partner Logged in as org admin: Care Settings - when org has K2 entitlement', function () {
   var controller, sunlightChatConfigUrl, sunlightConfigService, $httpBackend, Notification, orgId, $interval, $intervalSpy,
-    $scope, q, FeatureToggleService;
+    $scope, q, FeatureToggleService, urService, urServiceUrl, queueDetails;
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
     getUserOrgId: jasmine.createSpy('getUserOrgId').and.returnValue('aeba1221-ab12-cd34-de56-abcdef123456'),
@@ -384,9 +420,10 @@ describe('Partner Logged in as org admin: Care Settings - when org has K2 entitl
     $provide.value('Authinfo', spiedAuthinfo);
   }));
   beforeEach(
-    inject(function ($controller, _$rootScope_, _$httpBackend_, _Notification_, _SunlightConfigService_, _$interval_, UrlConfig, $q, _FeatureToggleService_) {
+    inject(function ($controller, _$rootScope_, _$httpBackend_, _Notification_, _SunlightConfigService_, _$interval_, UrlConfig, $q, _FeatureToggleService_, _URService_) {
       q = $q;
       sunlightConfigService = _SunlightConfigService_;
+      urService = _URService_;
       $httpBackend = _$httpBackend_;
       Notification = _Notification_;
       $scope = _$rootScope_.$new();
@@ -394,6 +431,8 @@ describe('Partner Logged in as org admin: Care Settings - when org has K2 entitl
       $intervalSpy = jasmine.createSpy('$interval', $interval).and.callThrough();
       orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
       sunlightChatConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + orgId + '/chat';
+      urServiceUrl = UrlConfig.getSunlightURServiceUrl() + '/organization/' + orgId + '/queue/' + orgId;
+      queueDetails = getJSONFixture('sunlight/json/features/config/DefaultQueueDetails.json');
       FeatureToggleService = _FeatureToggleService_;
       spyOn(FeatureToggleService, 'atlasCareAutomatedRouteTrialsGetStatus').and.returnValue($q.resolve(true));
       controller = $controller('CareLocalSettingsCtrl', {
@@ -402,6 +441,16 @@ describe('Partner Logged in as org admin: Care Settings - when org has K2 entitl
         Notification: Notification,
       });
       $scope.orgConfigForm = { dirty: false };
+      spyOn(urService, 'createQueue').and.callFake(function () {
+        var deferred = $q.defer();
+        deferred.resolve('fake update response');
+        return deferred.promise;
+      });
+      spyOn(urService, 'updateQueue').and.callFake(function () {
+        var deferred = $q.defer();
+        deferred.resolve('fake update response');
+        return deferred.promise;
+      });
       spyOn(sunlightConfigService, 'updateChatConfig').and.callFake(function () {
         var deferred = q.defer();
         deferred.resolve('fake update response');
@@ -510,6 +559,8 @@ describe('Partner Logged in as org admin: Care Settings - when org has K2 entitl
     controller.defaultQueueStatus = controller.status.SUCCESS;
     controller.onboardToCare();
     $scope.$apply();
+    $httpBackend.expectGET(urServiceUrl)
+        .respond(200, queueDetails);
     $httpBackend.expectGET(sunlightChatConfigUrl)
       .respond(200, {
         csOnboardingStatus: 'Success',
@@ -546,7 +597,7 @@ describe('Partner Logged in as org admin: Care Settings - when org has K2 entitl
 
 describe('Admin logged in: Care Settings - when org has K2 entitlement', function () {
   var controller, sunlightChatConfigUrl, sunlightConfigService, $httpBackend, Notification, orgId, $interval, $intervalSpy,
-    $scope, q, HydraService, FeatureToggleService;
+    $scope, q, HydraService, FeatureToggleService, urService, urServiceUrl, queueDetails;
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
     getUserOrgId: jasmine.createSpy('getUserOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
@@ -568,6 +619,8 @@ describe('Admin logged in: Care Settings - when org has K2 entitlement', functio
       $intervalSpy = jasmine.createSpy('$interval', $interval).and.callThrough();
       orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
       sunlightChatConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + orgId + '/chat';
+      urServiceUrl = UrlConfig.getSunlightURServiceUrl() + '/organization/' + orgId + '/queue/' + orgId;
+      queueDetails = getJSONFixture('sunlight/json/features/config/DefaultQueueDetails.json');
       HydraService = _HydraService_;
       FeatureToggleService = _FeatureToggleService_;
       spyOn(FeatureToggleService, 'atlasCareAutomatedRouteTrialsGetStatus').and.returnValue($q.resolve(true));
@@ -692,6 +745,8 @@ describe('Admin logged in: Care Settings - when org has K2 entitlement', functio
     controller.defaultQueueStatus = controller.status.SUCCESS;
     controller.onboardToCare();
     $scope.$apply();
+    $httpBackend.expectGET(urServiceUrl)
+        .respond(200, queueDetails);
     $httpBackend.expectGET(sunlightChatConfigUrl)
       .respond(200, {
         csOnboardingStatus: 'Success',
@@ -770,6 +825,7 @@ describe('Care Settings - Routing Toggling', function () {
       };
     })
   );
+
   it('should show the saved org chat configurations as selected.', function () {
     spyOn(sunlightConfigService, 'updateChatConfig').and.callFake(function () {
       var deferred = q.defer();
@@ -782,18 +838,36 @@ describe('Care Settings - Routing Toggling', function () {
       return deferred.promise;
     });
     $httpBackend.expectGET(sunlightChatConfigUrl)
-      .respond(200, { routingType: 'push', maxChatCount: 4, videoCallEnabled: true });
+      .respond(200, { maxChatCount: 4, videoCallEnabled: true });
     $httpBackend.flush();
     $httpBackend.expectGET(urServiceUrl)
       .respond(200, queueDetails);
     expect(controller).toBeDefined();
-    expect(controller.orgChatConfig.selectedRouting).toBe(controller.RoutingType.PUSH);
+    expect(controller.queueConfig.selectedRouting).toBe(controller.RoutingType.PICK);
     expect(controller.orgChatConfig.selectedChatCount).toBe(4);
     expect(controller.orgChatConfig.selectedVideoInChatToggle).toBe(true);
   });
 
+  it('should show the saved routing type as selected.', function () {
+    spyOn(urService, 'updateQueue').and.callFake(function () {
+      var deferred = q.defer();
+      deferred.resolve('fake update response');
+      return deferred.promise;
+    });
+    controller.defaultQueueStatus = controller.status.SUCCESS;
+    $httpBackend.expectGET(urServiceUrl)
+      .respond(200, {routingType: 'push'});
+    $httpBackend.flush();
+    expect(controller).toBeDefined();
+    expect(controller.queueConfig.selectedRouting).toBe(controller.RoutingType.PUSH);
+  });
   it('should show success toaster if update of orgChatConfig backend API is a success', function () {
     spyOn(sunlightConfigService, 'updateChatConfig').and.callFake(function () {
+      var deferred = q.defer();
+      deferred.resolve('fake update response');
+      return deferred.promise;
+    });
+    spyOn(urService, 'updateQueue').and.callFake(function () {
       var deferred = q.defer();
       deferred.resolve('fake update response');
       return deferred.promise;
@@ -802,13 +876,13 @@ describe('Care Settings - Routing Toggling', function () {
       return true;
     });
     $httpBackend.expectGET(sunlightChatConfigUrl)
-      .respond(200, { routingType: 'pick', maxChatCount: 4, videoCallEnabled: true });
+      .respond(200, { maxChatCount: 4, videoCallEnabled: true });
     $httpBackend.flush();
     controller.isProcessing = true;
     controller.saveOrgChatConfigurations();
     $scope.$apply();
     expect(Notification.success).toHaveBeenCalled();
-    expect(controller.orgChatConfig.selectedRouting).toBe(controller.RoutingType.PICK);
+    expect(controller.queueConfig.selectedRouting).toBe(controller.RoutingType.PICK);
     expect(controller.orgChatConfig.selectedChatCount).toBe(4);
     expect(controller.orgChatConfig.selectedVideoInChatToggle).toBe(true);
     expect(controller.isProcessing).toBe(false);
@@ -820,20 +894,28 @@ describe('Care Settings - Routing Toggling', function () {
       deferred.reject('fake update response');
       return deferred.promise;
     });
+    spyOn(urService, 'updateQueue').and.callFake(function () {
+      var deferred = q.defer();
+      deferred.resolve('fake update response');
+      return deferred.promise;
+    });
     spyOn(Notification, 'errorWithTrackingId').and.callFake(function () {
       return true;
     });
-    controller.orgChatConfig.selectedRouting = controller.RoutingType.PICK;
+    controller.queueConfig.selectedRouting = controller.RoutingType.PICK;
     controller.orgChatConfig.selectedChatCount = 4;
     controller.orgChatConfig.selectedVideoInChatToggle = true;
+    $httpBackend.expectGET(urServiceUrl)
+      .respond(200, {routingType: 'push'});
     $httpBackend.expectGET(sunlightChatConfigUrl)
-      .respond(200, { routingType: 'push', maxChatCount: 3, videoCallEnabled: false });
+      .respond(200, { maxChatCount: 3, videoCallEnabled: false });
     $httpBackend.flush();
+    controller.saveQueueConfigurations();
     controller.saveOrgChatConfigurations();
     $scope.$apply();
     expect(Notification.errorWithTrackingId).toHaveBeenCalled();
     expect(controller.isProcessing).toBe(false);
-    expect(controller.orgChatConfig.selectedRouting).toBe(controller.RoutingType.PUSH);
+    expect(controller.queueConfig.selectedRouting).toBe(controller.RoutingType.PUSH);
     expect(controller.orgChatConfig.selectedChatCount).toBe(3);
     expect(controller.orgChatConfig.selectedVideoInChatToggle).toBe(false);
   });
@@ -844,16 +926,23 @@ describe('Care Settings - Routing Toggling', function () {
       deferred.resolve('fake update response');
       return deferred.promise;
     });
-    controller.orgChatConfig.selectedRouting = controller.RoutingType.PICK;
+    spyOn(urService, 'updateQueue').and.callFake(function () {
+      var deferred = q.defer();
+      deferred.resolve('fake update response');
+      return deferred.promise;
+    });
+    controller.queueConfig.selectedRouting = controller.RoutingType.PICK;
     controller.orgChatConfig.selectedChatCount = 4;
     controller.orgChatConfig.selectedVideoInChatToggle = true;
+    $httpBackend.expectGET(urServiceUrl)
+      .respond(200, {routingType: 'push'});
     $httpBackend.expectGET(sunlightChatConfigUrl)
-      .respond(200, { routingType: 'push', maxChatCount: 5, videoCallEnabled: false });
+      .respond(200, { maxChatCount: 5, videoCallEnabled: false });
     $httpBackend.flush();
     controller.savedRoutingType = controller.RoutingType.PUSH;
     controller.cancelEdit();
     $scope.$apply();
-    expect(controller.orgChatConfig.selectedRouting).toBe(controller.RoutingType.PUSH);
+    expect(controller.queueConfig.selectedRouting).toBe(controller.RoutingType.PUSH);
     expect(controller.orgChatConfig.selectedChatCount).toBe(5);
     expect(controller.orgChatConfig.selectedVideoInChatToggle).toBe(false);
   });

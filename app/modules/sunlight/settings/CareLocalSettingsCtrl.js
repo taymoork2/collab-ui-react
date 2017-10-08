@@ -57,18 +57,22 @@ var HttpStatus = require('http-status-codes');
     };
 
     var maxChatCount = 5;
-    vm.orgChatConfigDataModel = {
+    vm.orgQueueConfigDataModel = {
       routingType: vm.RoutingType.PICK,
+    };
+    vm.orgChatConfigDataModel = {
       chatCount: maxChatCount,
       videoInChatToggle: true,
     };
 
     vm.enableRoutingMechanism = function () {
-      return !vm.orgChatConfig.selectedRouting;
+      return !vm.queueConfig.selectedRouting;
     };
 
-    vm.orgChatConfig = {
+    vm.queueConfig = {
       selectedRouting: vm.RoutingType.PICK,
+    };
+    vm.orgChatConfig = {
       selectedChatCount: maxChatCount,
       selectedVideoInChatToggle: true,
     };
@@ -80,6 +84,7 @@ var HttpStatus = require('http-status-codes');
         event.preventDefault();
         var message = 'sunlightDetails.settings.saveModal.BodyMsg2';
         vm.openSaveModal(message).result.then(function () {
+          vm.saveQueueConfigurations();
           vm.saveOrgChatConfigurations();
           gotoSelectedPage(next);
         }, function () {
@@ -96,7 +101,10 @@ var HttpStatus = require('http-status-codes');
 
     vm.openModal = function () {
       var message = 'sunlightDetails.settings.saveModal.BodyMsg1';
-      vm.openSaveModal(message).result.then(vm.saveOrgChatConfigurations);
+      vm.openSaveModal(message).result.then(function () {
+        vm.saveQueueConfigurations();
+        vm.saveOrgChatConfigurations();
+      });
     };
 
     vm.openSaveModal = function (message) {
@@ -108,38 +116,58 @@ var HttpStatus = require('http-status-codes');
       });
     };
 
-    function createOrUpdateQueue(orgChatConfig) {
+    function createOrUpdateQueue(queueConfig) {
+      vm.isQueueProcessing = true;
       URService.getQueue(vm.defaultQueueId).then(function () {
         var updateQueueRequest = {
           queueName: 'DEFAULT',
-          notificationUrls: orgChatConfig.notificationUrls,
-          routingType: orgChatConfig.routingType,
+          notificationUrls: queueConfig.notificationUrls,
+          routingType: queueConfig.routingType,
         };
-        URService.updateQueue(vm.defaultQueueId, updateQueueRequest).then(function () {
+        URService.updateQueue(vm.defaultQueueId, updateQueueRequest).then(function (results) {
           vm.defaultQueueStatus = vm.status.SUCCESS;
-          var rr = onboardingStatusDoneByAdminOrPartner();
-          setViewModelState(rr);
-        }, function () {
+          var onboardingStatus = onboardingStatusDoneByAdminOrPartner();
+          setViewModelState(onboardingStatus);
+          Log.debug('Care settings: Org chat configurations updated successfully', results);
+          vm.isQueueProcessing = false;
+          updateSavedQueueConfiguration();
+        }, function (error) {
           vm.defaultQueueStatus = vm.status.UNKNOWN;
+          vm.isQueueProcessing = false;
+          vm.cancelEdit();
+          Log.error('Care settings: Org chat configurations update is a failure', error);
+          Notification.errorWithTrackingId(error, $translate.instant('firstTimeWizard.careSettingsUpdateFailed'));
         });
       }, function (err) {
         if (err.status === 404) {
           var createQueueRequest = {
             queueId: Authinfo.getOrgId(),
             queueName: 'DEFAULT',
-            notificationUrls: orgChatConfig.notificationUrls,
-            routingType: orgChatConfig.routingType,
+            notificationUrls: queueConfig.notificationUrls,
+            routingType: queueConfig.routingType,
           };
-          URService.createQueue(createQueueRequest).then(function () {
+          URService.createQueue(createQueueRequest).then(function (results) {
             vm.defaultQueueStatus = vm.status.SUCCESS;
-            var rr = onboardingStatusDoneByAdminOrPartner();
-            setViewModelState(rr);
-          }, function () {
+            var onboardingStatus = onboardingStatusDoneByAdminOrPartner();
+            setViewModelState(onboardingStatus);
+            Log.debug('Care settings: Org chat configurations updated successfully', results);
+            vm.isQueueProcessing = false;
+            updateSavedQueueConfiguration();
+          }, function (error) {
             vm.defaultQueueStatus = vm.status.UNKNOWN;
+            vm.isQueueProcessing = false;
+            vm.cancelEdit();
+            Log.error('Care settings: Org chat configurations update is a failure', error);
+            Notification.errorWithTrackingId(error, $translate.instant('firstTimeWizard.careSettingsUpdateFailed'));
           });
         }
       });
     }
+
+    vm.saveQueueConfigurations = function () {
+      var queueConfig = getRoutingTypeFromView();
+      createOrUpdateQueue(queueConfig);
+    };
 
     vm.saveOrgChatConfigurations = function () {
       vm.isProcessing = true;
@@ -149,7 +177,6 @@ var HttpStatus = require('http-status-codes');
         Notification.success($translate.instant('sunlightDetails.settings.setUpCareSuccess'));
         vm.isProcessing = false;
         updateSavedConfiguration();
-        createOrUpdateQueue(orgChatConfig);
       }, function (error) {
         vm.isProcessing = false;
         vm.cancelEdit();
@@ -158,15 +185,17 @@ var HttpStatus = require('http-status-codes');
       });
     };
 
+    function updateSavedQueueConfiguration() {
+      vm.orgQueueConfigDataModel.routingType = vm.queueConfig.selectedRouting;
+    }
     function updateSavedConfiguration() {
-      vm.orgChatConfigDataModel.routingType = vm.orgChatConfig.selectedRouting;
       vm.orgChatConfigDataModel.chatCount = vm.orgChatConfig.selectedChatCount;
       vm.orgChatConfigDataModel.videoInChatToggle = vm.orgChatConfig.selectedVideoInChatToggle;
       resetForm();
     }
 
     vm.cancelEdit = function () {
-      vm.orgChatConfig.selectedRouting = vm.orgChatConfigDataModel.routingType;
+      vm.queueConfig.selectedRouting = vm.orgQueueConfigDataModel.routingType;
       vm.orgChatConfig.selectedChatCount = vm.orgChatConfigDataModel.chatCount;
       vm.orgChatConfig.selectedVideoInChatToggle = vm.orgChatConfigDataModel.videoInChatToggle;
       resetForm();
@@ -179,17 +208,29 @@ var HttpStatus = require('http-status-codes');
       }
     }
 
+    function getRoutingTypeFromView() {
+      var queueConfig = {};
+      queueConfig.routingType = vm.queueConfig.selectedRouting;
+      if (vm.queueConfig.selectedRouting === vm.RoutingType.PUSH) {
+        queueConfig.notificationUrls = [UrlConfig.getSunlightPushNotificationUrl()];
+      } else {
+        queueConfig.notificationUrls = [UrlConfig.getSunlightPickNotificationUrl()];
+      }
+      return queueConfig;
+    }
+
     function getOrgChatConfigFromView() {
       var orgChatConfig = {};
-      orgChatConfig.routingType = vm.orgChatConfig.selectedRouting;
-      if (vm.orgChatConfig.selectedRouting === vm.RoutingType.PUSH) {
-        orgChatConfig.notificationUrls = [UrlConfig.getSunlightPushNotificationUrl()];
-      } else {
-        orgChatConfig.notificationUrls = [UrlConfig.getSunlightPickNotificationUrl()];
-      }
       orgChatConfig.videoCallEnabled = vm.orgChatConfig.selectedVideoInChatToggle;
       orgChatConfig.maxChatCount = parseInt(vm.orgChatConfig.selectedChatCount, 10);
       return orgChatConfig;
+    }
+
+    function populateQueueConfigViewModel(result, isCalledOnInit) {
+      if (isCalledOnInit) {
+        vm.orgQueueConfigDataModel.routingType = _.get(result, 'data.routingType', vm.RoutingType.PICK);
+        vm.queueConfig.selectedRouting = vm.orgQueueConfigDataModel.routingType;
+      }
     }
 
     function populateOrgChatConfigViewModel(result, isCalledOnInit) {
@@ -198,9 +239,6 @@ var HttpStatus = require('http-status-codes');
       vm.appOnboardingStatus = _.get(result, 'data.appOnboardStatus');
 
       if (isCalledOnInit) {
-        vm.orgChatConfigDataModel.routingType = _.get(result, 'data.routingType', vm.RoutingType.PICK);
-        vm.orgChatConfig.selectedRouting = vm.orgChatConfigDataModel.routingType;
-
         vm.orgChatConfigDataModel.chatCount = _.get(result, 'data.maxChatCount', maxChatCount);
         vm.orgChatConfig.selectedChatCount = vm.orgChatConfigDataModel.chatCount;
 
@@ -307,9 +345,13 @@ var HttpStatus = require('http-status-codes');
     }
 
     function processOnboardStatus() {
-      SunlightConfigService.getChatConfig().then(function (result) {
-        populateOrgChatConfigViewModel(result);
-        var onboardingStatus = getOnboardingStatus(result);
+      var promises = {};
+      promises.getQueue = URService.getQueue(vm.defaultQueueId);
+      promises.getChatConfig = SunlightConfigService.getChatConfig();
+      $q.all(promises).then(function (result) {
+        populateQueueConfigViewModel(result.getQueue);
+        populateOrgChatConfigViewModel(result.getChatConfig);
+        var onboardingStatus = getOnboardingStatus(result.getChatConfig);
         switch (onboardingStatus) {
           case vm.status.SUCCESS:
             Notification.success($translate.instant('sunlightDetails.settings.setUpCareSuccess'));
@@ -324,17 +366,16 @@ var HttpStatus = require('http-status-codes');
           default:
             Log.debug('Care setup status is not Success: ', result);
         }
-      })
-        .catch(function (error) {
-          if (error.status !== 404) {
-            Log.debug('Fetching Care setup status failed: ', error);
-            if (vm.errorCount++ >= pollErrorCount) {
-              vm.state = vm.NOT_ONBOARDED;
-              Notification.errorWithTrackingId(error, $translate.instant('sunlightDetails.settings.setUpCareFailure'));
-              stopPolling();
-            }
+      }, function (error) {
+        if (error.status !== 404) {
+          Log.debug('Fetching Care setup or queue setup status failed: ', error);
+          if (vm.errorCount++ >= pollErrorCount) {
+            vm.state = vm.NOT_ONBOARDED;
+            Notification.errorWithTrackingId(error, $translate.instant('sunlightDetails.settings.setUpCareFailure'));
+            stopPolling();
           }
-        });
+        }
+      });
     }
 
     function processTimeout(pollerResult) {
@@ -462,8 +503,9 @@ var HttpStatus = require('http-status-codes');
       FeatureToggleService.atlasCareChatToVideoTrialsGetStatus().then(function (result) {
         vm.featureToggles.chatToVideoFeatureToggle = result && Authinfo.isCare();
       });
-      URService.getQueue(vm.defaultQueueId).then(function () {
+      URService.getQueue(vm.defaultQueueId).then(function (result) {
         vm.defaultQueueStatus = vm.status.SUCCESS;
+        populateQueueConfigViewModel(result, true);
         getOnboardingStatusFromOrgChatConfig();
       }, function (error) {
         getOnboardingStatusFromOrgChatConfig();
