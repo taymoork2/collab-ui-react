@@ -5827,7 +5827,7 @@
       "adoption-title": "Adoption",
       "resources-title": "Resources",
       "custom": "Custom",
-      "test-org-alert": "Some reports might not have data, because you're using a test organization."
+      "test-org-alert": "Some reports might not have data, because you are using a test organization."
     },
     "deregister": {
       "header": "Deregister Node",
