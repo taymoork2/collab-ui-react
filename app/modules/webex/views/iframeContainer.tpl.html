@@ -2,18 +2,19 @@
      id="webexIframeLoading"
      name="webexIframeLoading"
      align="center">
-     
+
   <br>
   <i class="icon icon-spinner icon-2x"></i>
 </div>
-    
+
 <div ng-show="isIframeLoaded"
      id="iframeContainer"
      name="iframeContainer">
 
   <iframe id="webexIframeContainer"
           name="webexIframeContainer"
-          onLoad="iframeLoaded('#webexIframeContainer')"
+          load-event
+          on-load-event="iframeLoaded(elemScope)"
           i-frame-resizable="iframeContainer"
           ng-style="{'width': '100%', 'height': iframeHeight }"
           frameborder="0"
@@ -27,17 +28,17 @@
       action={{trustIframeUrl}}
       method="post"
       target="webexIframeContainer">
-               
+
   <input id="adminEmail"
          name="adminEmail"
          type="hidden"
          value={{adminEmail}} />
-         
+
   <input id="authorization"
          name="authorization"
          type="hidden"
          value={{authToken}} />
-  
+
   <input id="locale"
          name="locale"
          type="hidden"
@@ -52,7 +53,7 @@
          name="ngxfullsparkdns"
          type="hidden"
          value={{fullSparkDNS}} />
-  
+
   <button id="submitFormBtn"
           type="submit"
           hidden
