@@ -50,7 +50,7 @@
       formatter: CareFeatureList.formatTemplates,
       i18n: 'careChatTpl.chatTemplate',
       isEmpty: false,
-      color: 'primary',
+      color: 'people',
       icons: ['icon-message'],
       data: [],
     }, {
@@ -59,7 +59,7 @@
       formatter: CareFeatureList.formatTemplates,
       i18n: 'careChatTpl.chatTemplate',
       isEmpty: false,
-      color: 'alerts',
+      color: 'people',
       icons: ['icon-phone'],
       data: [],
     }, {
@@ -190,9 +190,9 @@
 
     vm.editCareFeature = function (feature, $event) {
       $event.stopImmediatePropagation();
-      if (feature.featureType === VirtualAssistantService.serviceCard.id) {
+      if (feature.featureType === VirtualAssistantService.cvaServiceCard.id) {
         VirtualAssistantService.getConfig(feature.templateId).then(function (template) {
-          VirtualAssistantService.serviceCard.goToService($state, {
+          VirtualAssistantService.cvaServiceCard.goToService($state, {
             isEditFeature: true,
             template: template,
           });
@@ -227,9 +227,7 @@
 
     function openNewCareFeatureModal() {
       $modal.open({
-        template: require('modules/sunlight/features/featureLanding/newCareFeatureModal.tpl.html'),
-        controller: 'NewCareFeatureModalCtrl',
-        controllerAs: 'NewCareFeatureModalCtrl',
+        template: '<care-feature-modal dismiss="$dismiss()" class="care-modal"></care-feature-modal>',
       });
     }
 

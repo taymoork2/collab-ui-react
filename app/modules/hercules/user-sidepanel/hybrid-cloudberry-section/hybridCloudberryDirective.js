@@ -3,11 +3,11 @@
 
   angular
     .module('Hercules')
-    .directive('herculesCloudExtensions', herculesCloudExtensions)
-    .controller('HybridServicesCtrl', HybridServicesCtrl);
+    .directive('hybridCloudberrySection', hybridCloudberrySection)
+    .controller('HybridCloudberrySectionCtrl', HybridCloudberrySectionCtrl);
 
   /* @ngInject */
-  function HybridServicesCtrl($scope, $rootScope, $timeout, Authinfo, USSService, HybridServicesUtilsService, ServiceDescriptorService, Notification, Userservice, CloudConnectorService, FeatureToggleService) {
+  function HybridCloudberrySectionCtrl($scope, $rootScope, $timeout, Authinfo, USSService, HybridServicesUtilsService, ServiceDescriptorService, Notification, Userservice, CloudConnectorService, FeatureToggleService) {
     if (!Authinfo.isFusion()) {
       return;
     }
@@ -260,18 +260,18 @@
     });
   }
 
-  function herculesCloudExtensions() {
+  function hybridCloudberrySection() {
     return {
       scope: true,
       restrict: 'E',
-      controller: 'HybridServicesCtrl',
+      controller: 'HybridCloudberrySectionCtrl',
       controllerAs: 'hybridServicesCtrl',
       bindToController: {
         user: '=',
         place: '=',
         eservice: '=',
       },
-      template: require('modules/hercules/user-sidepanel/hybridServices.tpl.html'),
+      template: require('modules/hercules/user-sidepanel/hybrid-cloudberry-section/hybridCloudberrySection.html'),
     };
   }
 }());

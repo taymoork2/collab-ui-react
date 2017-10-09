@@ -2,6 +2,7 @@
 
 describe('Service: AutoAttendantCeMenuModelService', function () {
   var AutoAttendantCeMenuModelService;
+  var AARestModelService;
   var ceInfos = getJSONFixture('huron/json/autoAttendant/rawCeInfos.json');
 
   // Welcome menu
@@ -63,12 +64,25 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
   var cmenu = getJSONFixture('huron/json/autoAttendant/customMenu.json');
   var ceCustom = cmenu.ceCustom;
   var customMenu = cmenu.customMenu;
+  var restBlocks = {
+    testID: {
+      method: 'GET',
+      url: 'test URL',
+      responseActions: [{
+        assignVar: {
+          variableName: 'test var',
+          value: 'res',
+        },
+      }],
+    },
+  };
 
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function (_AutoAttendantCeMenuModelService_) {
+  beforeEach(inject(function (_AARestModelService_, _AutoAttendantCeMenuModelService_) {
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
+    AARestModelService = _AARestModelService_;
     AutoAttendantCeMenuModelService.clearCeMenuMap();
     wmenu = getJSONFixture('huron/json/autoAttendant/welcomeMenu.json');
     ceWelcome = wmenu.ceWelcome;
@@ -83,10 +97,11 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     ceWelcomeWithAnnouncementsKeys = wmenuWithAnnouncements.ceWelcomeWithAnnouncementsKeys;
     ceMenuWithDynaSay = wmenuWithAnnouncements.ceDynamicSay;
     ceMenuWithAnnouncementsPlay = wmenuWithAnnouncements.ceWelcomeWithAnnouncementsPlay;
+    spyOn(AARestModelService, 'getRestBlocks').and.returnValue(restBlocks);
   }));
 
   afterEach(function () {
-
+    AutoAttendantCeMenuModelService = AARestModelService = wmenu = ceWelcome = ceWelcomeNoDescription = ceWelcomeNoDescriptionTemp = welcomeMenu = ceMenuFull = wmenuWithAnnouncements = ceWelcomeMenuWithOldQueue = ceWelcomeWithQueue = ceWelcomeWithAnnouncements = ceWelcomeWithAnnouncementsKeys = ceMenuWithDynaSay = ceMenuWithAnnouncementsPlay = undefined;
   });
 
   describe('createAnnouncements for menuEntry with announcements with dynamic', function () {

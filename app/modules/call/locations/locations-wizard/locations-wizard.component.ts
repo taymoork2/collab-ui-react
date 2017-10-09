@@ -87,7 +87,7 @@ class LocationsWizardController implements ng.IComponentController {
     return this.LocationSettingsOptionsService.getOptions()
       .then(locationOptions => this.locationSettingsOptions = locationOptions)
       .then(() => {
-        return this.CallLocationSettingsService.get('')
+        return this.CallLocationSettingsService.get('', true)
           .then(locationSettings => {
             this.callLocationSettingsData = locationSettings;
             this.showRoutingPrefix = this.setShowRoutingPrefix(locationSettings.customerVoice.routingPrefixLength);

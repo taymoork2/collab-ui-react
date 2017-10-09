@@ -37,7 +37,9 @@ describe('HybridCallServiceAggregatedSectionComponent', () => {
   }
 
   function initController() {
-    ctrl = $componentController('hybridCallServiceAggregatedSection', {}, {});
+    ctrl = $componentController('hybridCallServiceAggregatedSection', {}, {
+      userUpdatedCallback: function () {},
+    });
   }
 
   it('should retrieve the resourceGroupId from USS', () => {

@@ -9,7 +9,7 @@
     </button>
   </cs-sp-buttons>
   <div class="side-panel-container-view" ui-view="side-panel-container">
-    <cs-sp-container>
+    <cs-sp-container cs-tabindex="$ctrl.onPrefLanguageChange ? -1 : 0">
       <cs-sp-section>
         <section-title
           title-key="placesPage.servicesHeader"
@@ -20,7 +20,7 @@
           features="$ctrl.services"
           on-feature-click="$ctrl.clickService(feature)">
         </feature-list>
-        <hercules-cloud-extensions place="$ctrl.getCurrentPlace" eservice="$ctrl.editCloudberryServices" ng-if="$ctrl.anyHybridServiceToggle() && $ctrl.hasHybridEntitlements()"></hercules-cloud-extensions>
+        <hybrid-cloudberry-section place="$ctrl.getCurrentPlace" eservice="$ctrl.editCloudberryServices" ng-if="$ctrl.anyHybridServiceToggle() && $ctrl.hasHybridEntitlements()"></hybrid-cloudberry-section>
       </cs-sp-section>
 
       <cs-sp-section>

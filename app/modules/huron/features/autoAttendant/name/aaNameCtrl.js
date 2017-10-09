@@ -6,7 +6,7 @@
     .controller('aaBuilderNameCtrl', AutoAttendantNameBuilderCtrl);
 
   /* @ngInject */
-  function AutoAttendantNameBuilderCtrl($scope, $rootScope, AAUiModelService, AAValidationService) {
+  function AutoAttendantNameBuilderCtrl($rootScope, $scope, AARestModelService, AAUiModelService, AAValidationService) {
     var vm = this;
 
     vm.ui = {};
@@ -47,6 +47,8 @@
 
     function activate() {
       vm.ui = AAUiModelService.getUiModel();
+      AARestModelService.setUiRestBlocks({});
+      AARestModelService.setRestBlocks({});
     }
 
     function previousButton() {

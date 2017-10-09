@@ -317,6 +317,12 @@
       integration: 'https://virtual-assistant.appstaging.ciscoccservice.com/bot-services/v1/',
       prod: 'https://virtual-assistant.produs1.ciscoccservice.com/bot-services/v1/',
     },
+    ExpertVirtualAssistantServiceUrl: {
+      dev: 'https://expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
+      cfe: 'https://expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
+      integration: 'https://expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
+      prod: 'https://expert-assistant.produs1.ciscoccservice.com/expert-assistant/v1/',
+    },
     WebExReportAppforMEIUrl: {
       dev: 'https://%s/custportal/extensions/MEI/MEI.html',
       cfe: 'https://%s/custportal/extensions/MEI/MEI.html',

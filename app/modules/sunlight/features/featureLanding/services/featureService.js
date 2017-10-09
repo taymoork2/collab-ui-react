@@ -9,7 +9,7 @@
   function CareFeatureList(Authinfo, ConfigTemplateService, VirtualAssistantService) {
     var filterConstants = {
       customerSupport: 'customerSupport',
-      virtualAssistant: VirtualAssistantService.serviceCard.type,
+      virtualAssistant: 'virtualAssistant',
       all: 'all',
     };
     var service = {

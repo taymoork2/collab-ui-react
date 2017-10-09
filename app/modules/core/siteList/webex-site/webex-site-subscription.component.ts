@@ -33,7 +33,7 @@ class WebexSiteSubscriptionCtrl implements ng.IComponentController {
 
 export class WebexSiteSubscriptionComponent implements ng.IComponentOptions {
   public controller = WebexSiteSubscriptionCtrl;
-  public template = require('modules/core/siteList/webex-site/webex-site-subscription.html');
+  public template = require('./webex-site-subscription.html');
   public bindings = {
     subscriptions: '<',
     onSubscriptionChange: '&',

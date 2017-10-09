@@ -76,7 +76,8 @@ describe('Care Setup Assistant Ctrl', function () {
         name: 'type',
         value: { id: 'phone' },
       }],
-    } };
+    },
+  };
   var customerInfoWithLongAttributeValue = {
     welcomeHeader: {
       attributes: [
@@ -89,19 +90,22 @@ describe('Care Setup Assistant Ctrl', function () {
         { name: 'label', value: 'Name' },
         { name: 'hintText', value: 'Something' },
         { name: 'type', value: { id: 'name' } },
-      ] },
+      ],
+    },
     field2: {
       attributes: [
         { name: 'label', value: 'Email' },
         { name: 'hintText', value: getStringOfLength(51) },
         { name: 'type', value: { id: 'email' } },
-      ] },
+      ],
+    },
     field3: {
       attributes: [
         { name: 'label', value: 'SomethingElse' },
         { name: 'hintText', value: 'SomethingElse' },
         { name: 'type', value: { id: 'custom' } },
-      ] },
+      ],
+    },
   };
 
   var customerInfoWithInvalidAttributeValue = {
@@ -116,19 +120,22 @@ describe('Care Setup Assistant Ctrl', function () {
         { name: 'label', value: 'Name <' },
         { name: 'hintText', value: 'Something' },
         { name: 'type', value: { id: 'name' } },
-      ] },
+      ],
+    },
     field2: {
       attributes: [
         { name: 'label', value: 'Email' },
         { name: 'hintText', value: 'Something' },
         { name: 'type', value: { id: 'email' } },
-      ] },
+      ],
+    },
     field3: {
       attributes: [
         { name: 'label', value: 'SomethingElse' },
         { name: 'hintText', value: 'SomethingElse' },
         { name: 'type', value: { id: 'custom' } },
-      ] },
+      ],
+    },
   };
 
   var existingTemplateData = {

@@ -427,6 +427,15 @@ export class CsdmDataModelService implements ICsdmDataModelService {
     const newPlaceUrl = this.getPlaceUrl(item);
     let reloadedPlace = this.placesDataModel[newPlaceUrl];
 
+    if (reloadedPlace && !item.isPlace) {
+      return {
+        item: reloadedPlace,
+        placeAddedToCache: false,
+        deviceAdded: false,
+        placeRenamed: false,
+      };
+    }
+
     if (!reloadedPlace && item.isPlace && item.url) {
       reloadedPlace = this.placesDataModel[item.url];
     }

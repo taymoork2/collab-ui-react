@@ -140,7 +140,9 @@ describe('Service: UserDetails', function () {
       $httpBackend
         .when('GET', 'https://identity.webex.com/organization/5632-f806-org/v1/Machines?filter=id eq "222" or id eq "333"')
         .respond({
-          data: [{ id: '222', name: 'machine1', displayName: 'Cloudberry Device', machineType: 'lyra_space' }],
+          data: [{
+            id: '222', name: 'machine1', displayName: 'Cloudberry Device', machineType: 'lyra_space',
+          }],
         });
       var simulatedResponse = [{
         userId: '111', // User
