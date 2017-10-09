@@ -107,7 +107,14 @@
 
         .bot {
           @extend .agent;
-          border: none;
+          background: $color-white;
+          border: 1px solid $gray-light-1;
+
+          > i {
+            top: 0.5rem;
+            left: 0.6rem;
+            color:$gray-dark-1;
+          }
         }
       }
 

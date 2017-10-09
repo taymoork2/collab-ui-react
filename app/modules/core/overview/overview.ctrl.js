@@ -21,6 +21,7 @@ require('./_overview.scss');
     vm.orgData = null;
 
     var hybridCallHighAvailability = 'atlas.notification.squared-fusion-uc-high-availability.acknowledged';
+    var allHybridCalendarsNotification = 'atlas.notification.squared-fusion-all-calendars.acknowledged';
 
     vm.cards = [
       OverviewCardFactory.createMessageCard(),
@@ -103,11 +104,13 @@ require('./_overview.scss');
         Config.entitlements.fusion_ec,
         Config.entitlements.mediafusion,
         Config.entitlements.hds,
+        Config.entitlements.imp,
       ])
         .filter(Authinfo.isEntitled)
         .map(HybridServicesUtilsService.getAckFlagForHybridServiceId)
         .value();
       hybridServiceNotificationFlags.push(hybridCallHighAvailability);
+      hybridServiceNotificationFlags.push(allHybridCalendarsNotification);
 
       HybridServicesFlagService
         .readFlags(hybridServiceNotificationFlags)
@@ -115,9 +118,21 @@ require('./_overview.scss');
           _.forEach(flags, function (flag) {
             if (!flag.raised) {
               if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.fusion_cal)) {
-                vm.notifications.push(OverviewNotificationFactory.createCalendarNotification());
+                FeatureToggleService.supports(FeatureToggleService.features.atlasOffice365Support)
+                  .then(function (supported) {
+                    if (!supported) {
+                      vm.notifications.push(OverviewNotificationFactory.createCalendarNotification());
+                      resizeNotifications();
+                    }
+                  });
               } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.fusion_gcal)) {
-                vm.notifications.push(OverviewNotificationFactory.createGoogleCalendarNotification($state, CloudConnectorService, HybridServicesFlagService, HybridServicesUtilsService));
+                FeatureToggleService.supports(FeatureToggleService.features.atlasOffice365Support)
+                  .then(function (supported) {
+                    if (!supported) {
+                      vm.notifications.push(OverviewNotificationFactory.createGoogleCalendarNotification($state, HybridServicesFlagService, HybridServicesUtilsService));
+                      resizeNotifications();
+                    }
+                  });
               } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.fusion_uc)) {
                 vm.notifications.push(OverviewNotificationFactory.createCallAwareNotification());
               } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.fusion_ec)) {
@@ -126,6 +141,14 @@ require('./_overview.scss');
                 vm.notifications.push(OverviewNotificationFactory.createHybridMediaNotification());
               } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.hds) && proPackPurchased) {
                 vm.notifications.push(OverviewNotificationFactory.createHybridDataSecurityNotification());
+              } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.imp)) {
+                FeatureToggleService.supports(FeatureToggleService.features.atlasHybridImp)
+                  .then(function (supported) {
+                    if (supported) {
+                      vm.notifications.push(OverviewNotificationFactory.createHybridMessagingNotification($state, HybridServicesFlagService, HybridServicesUtilsService));
+                      resizeNotifications();
+                    }
+                  });
               } else if (flag.name === hybridCallHighAvailability && Authinfo.isEntitled(Config.entitlements.fusion_uc)) {
                 HybridServicesClusterService.serviceIsSetUp('squared-fusion-uc')
                   .then(function (isSetup) {
@@ -136,6 +159,17 @@ require('./_overview.scss');
                             vm.notifications.push(OverviewNotificationFactory.createCallServiceHighAvailability());
                             resizeNotifications();
                           }
+                        });
+                    }
+                  });
+              } else if (flag.name === allHybridCalendarsNotification && Authinfo.isEntitled(Config.entitlements.fusion_cal) && Authinfo.isEntitled(Config.entitlements.fusion_gcal)) {
+                FeatureToggleService.supports(FeatureToggleService.features.atlasOffice365Support)
+                  .then(function (supported) {
+                    if (supported) {
+                      OverviewNotificationFactory.createAllHybridCalendarsNotification($state, CloudConnectorService, HybridServicesClusterService, HybridServicesFlagService, HybridServicesUtilsService)
+                        .then(function (allHybridCalendarsNotification) {
+                          vm.notifications.push(allHybridCalendarsNotification);
+                          resizeNotifications();
                         });
                     }
                   });

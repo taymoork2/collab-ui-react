@@ -145,6 +145,8 @@
     'Core',
     'Squared',
     'ngTagsInput',
+    require('modules/core/overview/notifications/allHybridCalendars.factory').default,
+    require('modules/core/overview/notifications/hybridMessaging.factory').default,
     require('modules/core/users/userAdd/onboard.module'),
     require('modules/hercules/cluster-card').default,
     require('modules/hercules/connector-upgrade-modal/connector-upgrade-modal.controller').default,

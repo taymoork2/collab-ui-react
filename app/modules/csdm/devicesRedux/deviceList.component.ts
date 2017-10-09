@@ -6,9 +6,10 @@ import { IOnChangesObject } from 'angular';
 import { DeviceSearch } from './deviceSearch.component';
 import { GridCellService } from '../../core/csgrid/cs-grid-cell/gridCell.service';
 import IDevice = csdm.IDevice;
-import { Device } from '../services/deviceSearchConverter';
+import { Device, DeviceSearchConverter } from '../services/deviceSearchConverter';
 
 class DeviceList implements ng.IComponentController {
+  private devicePlaceLink: boolean;
   private static RowHeight = 45;
   private static HeaderHeight = 45;
 
@@ -32,7 +33,13 @@ class DeviceList implements ng.IComponentController {
               private $window: Window,
               private Notification,
               private GridCellService: GridCellService,
+              private DeviceSearchConverter: DeviceSearchConverter,
+              private FeatureToggleService,
               Authinfo) {
+
+    this.FeatureToggleService.csdmDevicePlaceLinkGetStatus().then((result: boolean) => {
+      this.devicePlaceLink = result;
+    });
     this.huronDeviceService = CsdmHuronOrgDeviceService.create(Authinfo.getOrgId());
     this.gridOptions = {
       data: this.getResult(),
@@ -128,11 +135,20 @@ class DeviceList implements ng.IComponentController {
   }
 
   public expandDevice(device) {
-    this.$state.go('device-overview', {
-      currentDevice: device,
-      huronDeviceService: this.huronDeviceService,
-      deviceDeleted: this.deviceDeleted(this.searchHits),
-    });
+    if (this.devicePlaceLink && device.accountType === 'MACHINE') {
+      this.$state.go('place-overview.csdmDevice', {
+        currentPlace: this.DeviceSearchConverter.createPlaceholderPlace(device),
+        currentDevice: device,
+        huronDeviceService: this.huronDeviceService,
+        deviceDeleted: this.deviceDeleted(this.searchHits),
+      });
+    } else {
+      this.$state.go('device-overview', {
+        currentDevice: device,
+        huronDeviceService: this.huronDeviceService,
+        deviceDeleted: this.deviceDeleted(this.searchHits),
+      });
+    }
   }
 
   public deviceDeleted(searchHits) {
