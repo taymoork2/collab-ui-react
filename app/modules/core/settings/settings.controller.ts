@@ -165,8 +165,6 @@ export class SettingsCtrl {
 
     this.$q.all(promises).then((result) => {
       if (result.fileSharingControlToggle) {
-        //US22932 Temp remove Pro treatment
-        //this.fileSharingControl = new FileSharingControlSetting(result.proPackPurchased);
         this.fileSharingControl = new FileSharingControlSetting(true);
       }
     });

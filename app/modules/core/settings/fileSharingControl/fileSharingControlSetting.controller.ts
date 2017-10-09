@@ -50,8 +50,6 @@ export class FileSharingControlSettingController {
     this.$q.all(promises)
       .then((response) => {
         this.fileSharingControlSettingLoaded(response.fileSharingControl);
-        //US22932 Temp remove Pro treatment
-        //this.isProPackPurchased = response.proPackPurchased;
         this.isProPackPurchased = true;
       });
   }
