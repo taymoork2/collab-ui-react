@@ -5834,7 +5834,8 @@
       "title": "Hybrid Media",
       "adoption-title": "Adoption",
       "resources-title": "Resources",
-      "custom": "Custom"
+      "custom": "Custom",
+      "test-org-alert": "Some reports might not have data, because you are using a test organization."
     },
     "deregister": {
       "header": "Deregister Node",

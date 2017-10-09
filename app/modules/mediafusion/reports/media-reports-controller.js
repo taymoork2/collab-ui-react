@@ -5,7 +5,7 @@
     .module('Mediafusion')
     .controller('MediaReportsController', MediaReportsController);
   /* @ngInject */
-  function MediaReportsController($q, $scope, $translate, $interval, $timeout, MediaClusterServiceV2, UtilizationResourceGraphService, MeetingLocationAdoptionGraphService, ParticipantDistributionResourceGraphService, NumberOfParticipantGraphService, MediaReportsService, Notification, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService, ClientTypeAdoptionGraphService, AdoptionCardService, hasHmsTwoDotFiveFeatureToggle) {
+  function MediaReportsController($q, $scope, $translate, $interval, $timeout, MediaClusterServiceV2, UtilizationResourceGraphService, MeetingLocationAdoptionGraphService, ParticipantDistributionResourceGraphService, NumberOfParticipantGraphService, MediaReportsService, Notification, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService, ClientTypeAdoptionGraphService, AdoptionCardService, hasHmsTwoDotFiveFeatureToggle, Orgservice) {
     var vm = this;
     var interval = null;
     var deferred = $q.defer();
@@ -167,6 +167,11 @@
     setRefreshInterval();
     getCluster();
     timeUpdate();
+
+    Orgservice.isTestOrg()
+      .then(function (isTestOrg) {
+        vm.isTestOrg = isTestOrg;
+      });
 
     function loadResourceDatas() {
       deferred.promise.then(function () {
