@@ -6,6 +6,7 @@ import ICsdmDataModelService = csdm.ICsdmDataModelService;
 import { FilteredDeviceViewDataSource } from './filtered-deviceview-datasource';
 import { DeviceMatcher } from './device-matcher';
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
+import { CsdmPlaceService } from 'modules/squared/devices/services/CsdmPlaceService';
 
 export class DevicesController {
   public exporting: boolean;
@@ -14,6 +15,7 @@ export class DevicesController {
   public deviceExportFeature: boolean;
   public licenseError: string;
 
+  private devicePlaceLink: boolean;
   private exportProgressDialog: ng.ui.bootstrap.IModalServiceInstance;
   private huronDeviceService: any;
   private currentDevice: IDevice;
@@ -49,6 +51,7 @@ export class DevicesController {
     private ServiceDescriptorService: ServiceDescriptorService,
     private Userservice,
     private WizardFactory,
+    private CsdmPlaceService: CsdmPlaceService,
     $scope: ng.IScope,
     $timeout: ng.ITimeoutService,
     AccountOrgService,
@@ -210,6 +213,9 @@ export class DevicesController {
     this.FeatureToggleService.atlasDeviceExportGetStatus().then((result: boolean) => {
       this.deviceExportFeature = result;
     });
+    this.FeatureToggleService.csdmDevicePlaceLinkGetStatus().then((result: boolean) => {
+      this.devicePlaceLink = result;
+    });
   }
 
   private fetchDetailsForLoggedInUser() {
@@ -250,10 +256,25 @@ export class DevicesController {
 
   private showDeviceDetails(device: IDevice) {
     this.currentDevice = device;
-    this.$state.go('device-overview', {
-      currentDevice: device,
-      huronDeviceService: this.huronDeviceService,
-    });
+    if (this.devicePlaceLink && device.accountType === 'MACHINE') {
+      const newPlaceUrl = this.CsdmPlaceService.getPlacesUrl() + device.cisUuid;
+      const placeholderPlace =  {
+        cisUuid: device.cisUuid,
+        displayName: device.displayName,
+        isPlace: true,
+        url: newPlaceUrl };
+
+      this.$state.go('place-overview.csdmDevice', {
+        currentPlace: placeholderPlace,
+        currentDevice: device,
+        huronDeviceService: this.huronDeviceService,
+      });
+    } else {
+      this.$state.go('device-overview', {
+        currentDevice: device,
+        huronDeviceService: this.huronDeviceService,
+      });
+    }
   }
 
   private wizardWithoutPersonal() {

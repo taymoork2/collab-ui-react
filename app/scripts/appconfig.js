@@ -2236,11 +2236,17 @@
             params: {
               currentPlace: {},
             },
-            data: {
-              displayName: 'Overview',
-            },
+            data: {},
             resolve: {
-              displayName: translateDisplayName('common.overview'),
+              displayName: /* @ngInject */ function ($translate, FeatureToggleService) {
+                return FeatureToggleService.csdmDevicePlaceLinkGetStatus().then(function (enabled) {
+                  if (enabled) {
+                    _.set(this, 'data.displayName', $translate.instant('sidePanelBreadcrumb.place'));
+                  } else {
+                    _.set(this, 'data.displayName', $translate.instant('sidePanelBreadcrumb.overview'));
+                  }
+                }.bind(this));
+              },
             },
           })
           .state('place-overview.placeLocationDetails', {
@@ -2302,7 +2308,15 @@
               channels: /* @ngInject */ function (CsdmUpgradeChannelService) {
                 return CsdmUpgradeChannelService.getUpgradeChannelsPromise();
               },
-              displayName: translateDisplayName('deviceDetailPage.deviceConfig'),
+              displayName: /* @ngInject */ function ($translate, FeatureToggleService) {
+                return FeatureToggleService.csdmDevicePlaceLinkGetStatus().then(function (enabled) {
+                  if (enabled) {
+                    _.set(this, 'data.displayName', $translate.instant('sidePanelBreadcrumb.device'));
+                  } else {
+                    _.set(this, 'data.displayName', $translate.instant('sidePanelBreadcrumb.deviceConfig'));
+                  }
+                }.bind(this));
+              },
             },
             params: {
               currentDevice: {},
