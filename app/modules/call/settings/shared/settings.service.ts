@@ -489,7 +489,8 @@ export class HuronSettingsService {
           || !_.isEqual(this.huronSettingsDataCopy.site.preferredLanguage, siteData.preferredLanguage)
           || !_.isEqual(this.huronSettingsDataCopy.site.extensionLength, siteData.extensionLength)
           || !_.isEqual(this.huronSettingsDataCopy.customer.hasVoicemailService, customerData.hasVoicemailService)
-          || !_.isEqual(this.huronSettingsDataCopy.avrilFeatures, avrilFeatures)) {
+          || !_.isEqual(this.huronSettingsDataCopy.avrilFeatures, avrilFeatures)
+          || !_.isEqual(this.huronSettingsDataCopy.site.voicemailPilotNumber, siteData.voicemailPilotNumber)) {
           return this.updateAvrilSite(siteData, avrilFeatures);
         } else {
           return this.$q.resolve();

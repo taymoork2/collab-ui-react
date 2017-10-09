@@ -28,18 +28,11 @@
           ng-model="$ctrl.selectedNumber"
           options="$ctrl.externalNumberOptions"
           input-placeholder="$ctrl.filterPlaceholder"
-          on-change-fn="$ctrl.onCompanyVoicemailNumberChanged()"
-          is-warn="{{$ctrl.missingDirectNumbers}}"
-          warn-msg="{{::'serviceSetupModal.voicemailNoDirectNumbersError' | translate}}"
-          required="true"
+          placeholder="$ctrl.nonePlaceholder"
+          on-change-fn="$ctrl.onVoicemailToPhoneChanged()"
           filter="true"
           refresh-data-fn="$ctrl.getNumbers(filter)">
         </cs-select>
-        <p
-          class="help-block"
-          ng-if="!$ctrl.missingDirectNumbers"
-          translate="serviceSetupModal.voicemailPilotHelpText">
-        </p>
       </div>
     </div>
     <input
@@ -89,6 +82,7 @@
         id="voicemailToSpark"
         name="voicemailToSpark"
         ng-disabled="!$ctrl.isMessageEntitled"
+        required="!($ctrl.localAvrilFeatures.VM2T || $ctrl.localAvrilFeatures.VM2E)"
         ng-change="$ctrl.onVoicemailFeaturesChanged(value)"
         cs-input-label="{{::'serviceSetupModal.voicemailToSparkLabel' | translate}}">
         <div class="cs-checkbox-group" ng-if="$ctrl.localAvrilFeatures.VM2S || !$ctrl.isMessageEntitled">
