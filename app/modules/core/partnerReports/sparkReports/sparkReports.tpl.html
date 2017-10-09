@@ -17,7 +17,8 @@
        class="full-size">
     <iframe id="sparkReportsIframeContainer"
             name="sparkReportsIframeContainer"
-            ng-onload="$ctrl.iframeLoaded('#sparkReportsIframeContainer')"
+            load-event
+            on-load-event="$ctrl.iframeLoaded(elemScope)"
             i-frame-resizable="iframeContainer"
             class="full-size__iframe"
             frameborder="0">
