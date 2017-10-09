@@ -9,9 +9,7 @@
     .name;
 
   /* @ngInject */
-  function HealthService($http, $q, UrlConfig) {
-    var healthUrl = UrlConfig.getAdminServiceUrl() + 'ping';
-
+  function HealthService($http, UrlConfig) {
     var service = {
       getHealthStatus: getHealthStatus,
     };
@@ -19,12 +17,11 @@
     return service;
 
     function getHealthStatus() {
-      return $http.get(healthUrl)
+      // TODO: move UrlConfig.getAdminServiceUrl() back to initialized variable
+      // after environment initialization is moved to config provider
+      return $http.get(UrlConfig.getAdminServiceUrl() + 'ping')
         .then(function (response) {
           return response.data.serviceState;
-        })
-        .catch(function (error) {
-          return $q.reject(error);
         });
     }
   }
