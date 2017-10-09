@@ -9,6 +9,7 @@ import { AvrilService, AvrilCustomer } from 'modules/huron/avril';
 import { Notification } from 'modules/core/notifications';
 import { PstnAddressService, PstnModel, Address } from 'modules/huron/pstn';
 import { EmergencyNumber } from 'modules/huron/phoneNumber';
+import { SettingSetupInitService } from 'modules/call/settings/settings-setup-init';
 
 export class CallLocationSettingsData {
   public location: Location;
@@ -40,6 +41,7 @@ export class CallLocationSettingsService {
     private Notification: Notification,
     private ExtensionLengthService: ExtensionLengthService,
     private AvrilService: AvrilService,
+    private SettingSetupInitService: SettingSetupInitService,
   ) {}
 
   public get(locationId: string, isLocationWizardSetup?: boolean): ng.IPromise<CallLocationSettingsData> {
@@ -47,7 +49,10 @@ export class CallLocationSettingsService {
       return this.getLocationData(locationId);
     } else {
       return this.LocationsService.getDefaultLocation()
-        .then((defaultLocation) => this.getLocationData(defaultLocation.uuid ? defaultLocation.uuid : ''))
+        .then((defaultLocation) => {
+          this.SettingSetupInitService.setDefaultLocation(defaultLocation);
+          return this.getLocationData(defaultLocation.uuid ? defaultLocation.uuid : '');
+        })
         .catch(() => this.getLocationData(''));
     }
   }

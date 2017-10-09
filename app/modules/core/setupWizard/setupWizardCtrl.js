@@ -22,7 +22,6 @@ require('./_setup-wizard.scss');
   var meetingSettingsSummaryTemplatePath = require('ngtemplate-loader?module=Core!./meeting-settings/meeting-summary.html');
 
   var callSettingsCallPickupCountryTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/serviceHuronCustomerCreate.html');
-  var callSettingsPickLocationTypeTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/serviceSetupInit.html');
   var callSettingsSetupLocationTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/locationSetup.html');
   var callSettingsSetupSiteTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/serviceSetup.html');
 
@@ -248,11 +247,6 @@ require('./_setup-wizard.scss');
         template: callSettingsCallPickupCountryTemplatePath,
       };
 
-      var pickLocationType = {
-        name: 'pickCallLocationType',
-        template: callSettingsPickLocationTypeTemplatePath,
-      };
-
       var setupLocation = {
         name: 'setupCallLocation',
         template: callSettingsSetupLocationTemplatePath,
@@ -287,7 +281,6 @@ require('./_setup-wizard.scss');
           }
 
           if (supportsHI1484) {
-            steps.push(pickLocationType);
             steps.push(setupLocation);
           } else {
             steps.push(setupSite);
