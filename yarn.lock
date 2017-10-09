@@ -5341,8 +5341,8 @@ karma-sourcemap-loader@^0.3.7:
     graceful-fs "^4.1.2"
 
 karma-webpack@^2.0.2:
-  version "2.0.4"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/karma-webpack/-/karma-webpack-2.0.4.tgz#3e2d4f48ba94a878e1c66bb8e1ae6128987a175b"
+  version "2.0.5"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/karma-webpack/-/karma-webpack-2.0.5.tgz#4f56887e32cf4f9583391c2388415de06af06efd"
   dependencies:
     async "~0.9.0"
     loader-utils "^0.2.5"
