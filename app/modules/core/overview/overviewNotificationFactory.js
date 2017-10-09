@@ -6,12 +6,13 @@
     .factory('OverviewNotificationFactory', OverviewNotificationFactory);
 
   /* @ngInject */
-  function OverviewNotificationFactory(OverviewCrashLogNotification, OverviewSetupNotification, OverviewUrgentUpgradeNotification, OverviewCalendarNotification, OverviewGoogleCalendarNotification, OverviewCallConnectNotification, OverviewCallAwareNotification, OverviewCloudSipUriNotification, OverviewDevicesNotification, OverviewHybridMediaNotification, OverviewPMRNotification, OverviewDataSecurityNotification, OverviewPSTNToSNotification, OverviewCareLicenseNotification, OverviewPstnTermsOfServiceNotification, OverviewEsaDisclaimerNotification, CallServiceHighAvailability) {
+  function OverviewNotificationFactory(OverviewCrashLogNotification, OverviewSetupNotification, OverviewUrgentUpgradeNotification, OverviewCalendarNotification, OverviewGoogleCalendarNotification, OverviewCallConnectNotification, OverviewCallAwareNotification, OverviewCloudSipUriNotification, OverviewDevicesNotification, OverviewHybridMediaNotification, OverviewPMRNotification, OverviewDataSecurityNotification, OverviewPSTNToSNotification, OverviewCareLicenseNotification, OverviewPstnTermsOfServiceNotification, OverviewEsaDisclaimerNotification, CallServiceHighAvailability, OverviewHybridMessagingNotification, OverviewAllHybridCalendarsNotification) {
     return {
       createCrashLogNotification: OverviewCrashLogNotification.createNotification,
       createSetupNotification: OverviewSetupNotification.createNotification,
       createUrgentUpgradeNotification: OverviewUrgentUpgradeNotification.createNotification,
       createCalendarNotification: OverviewCalendarNotification.createNotification,
+      createAllHybridCalendarsNotification: OverviewAllHybridCalendarsNotification.createNotification,
       createGoogleCalendarNotification: OverviewGoogleCalendarNotification.createNotification,
       createCallConnectNotification: OverviewCallConnectNotification.createNotification,
       createCallAwareNotification: OverviewCallAwareNotification.createNotification,
@@ -20,6 +21,7 @@
       createHybridMediaNotification: OverviewHybridMediaNotification.createNotification,
       createPMRNotification: OverviewPMRNotification.createNotification,
       createHybridDataSecurityNotification: OverviewDataSecurityNotification.createNotification,
+      createHybridMessagingNotification: OverviewHybridMessagingNotification.createNotification,
       createPSTNToSNotification: OverviewPSTNToSNotification.createNotification,
       createCareLicenseNotification: OverviewCareLicenseNotification.createNotification,
       createPstnTermsOfServiceNotification: OverviewPstnTermsOfServiceNotification.createNotification,
