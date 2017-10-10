@@ -108,25 +108,21 @@ require('./_user-roles.scss');
     $scope.noAdmin = {
       label: $translate.instant('rolesPanel.noAdmin'),
       value: 0,
-      name: 'adminRoles',
       id: 'noAdmin',
     };
     $scope.fullAdmin = {
       label: $translate.instant('rolesPanel.fullAdmin'),
       value: 1,
-      name: 'adminRoles',
       id: 'fullAdmin',
     };
     $scope.readonlyAdmin = {
       label: $translate.instant('rolesPanel.readonlyAdmin'),
       value: 3,
-      name: 'adminRoles',
       id: 'readonlyAdmin',
     };
     $scope.partialAdmin = {
       label: $translate.instant('rolesPanel.partialAdmin'),
       value: 2,
-      name: 'partialAdmin',
       id: 'partialAdmin',
     };
     $scope.messages = {
