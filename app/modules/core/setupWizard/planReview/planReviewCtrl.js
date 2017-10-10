@@ -84,7 +84,11 @@
     };
 
     vm.generateLicenseTooltip = function (service) {
-      return vm.isSharedMeetingsLicense(service) ? '<div class="license-tooltip-html">' + $translate.instant('firstTimeWizard.sharedLicenseTooltip') + '</div>' : '<div class="license-tooltip-html">' + $translate.instant('firstTimeWizard.namedLicenseTooltip') + '</div>';
+      return '<div class="license-tooltip-html">' + vm.generateLicenseTranslation(service) + '</div>';
+    };
+
+    vm.generateLicenseTranslation = function (service) {
+      return vm.isSharedMeetingsLicense(service) ? $translate.instant('firstTimeWizard.sharedLicenseTooltip') : $translate.instant('firstTimeWizard.namedLicenseTooltip');
     };
 
     init();

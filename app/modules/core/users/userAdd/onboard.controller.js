@@ -923,7 +923,11 @@ require('./_user-add.scss');
     };
 
     $scope.generateLicenseTooltip = function (license) {
-      return $scope.isSharedMeetingsLicense(license) ? '<div class="license-tooltip-html">' + $translate.instant('firstTimeWizard.sharedLicenseTooltip') + '</div>' : '<div class="license-tooltip-html">' + $translate.instant('firstTimeWizard.namedLicenseTooltip') + '</div>';
+      return '<div class="license-tooltip-html">' + $scope.generateLicenseTranslation(license) + '</div>';
+    };
+
+    $scope.generateLicenseTranslation = function (license) {
+      return $scope.isSharedMeetingsLicense(license) ? $translate.instant('firstTimeWizard.sharedLicenseTooltip') : $translate.instant('firstTimeWizard.namedLicenseTooltip');
     };
 
     $scope.careTooltip = function () {
