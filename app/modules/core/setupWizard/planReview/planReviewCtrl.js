@@ -105,7 +105,7 @@
         subscriptionId: _.get(option, 'value'),
         view: _.get($state, 'current.data.firstTimeSetup') ? view.serviceSetup : view.meetingSettingsModal,
       };
-      Analytics.trackServiceSetupSteps(_.get(Analytics, 'sections.SERVICE_SETUP.eventNames.SUBSCRIPTION_SELECT'), analyticsProperties);
+      Analytics.trackServiceSetupSteps(Analytics.sections.SERVICE_SETUP.eventNames.SUBSCRIPTION_SELECT, analyticsProperties);
     }
 
     function fetchPendingSubscriptionInfo() {

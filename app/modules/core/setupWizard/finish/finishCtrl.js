@@ -58,7 +58,7 @@
         return $q.reject('A boolean must be passed.');
       }
       TrialWebexService.setProvisioningWebexSendCustomerEmailFlag(flag);
-      Analytics.trackServiceSetupSteps(_.get(this.Analytics, 'sections.SERVICE_SETUP.eventNames.SEND_CUSTOMER_EMAIL'), { customerEmailCheckboxSelected: flag });
+      Analytics.trackServiceSetupSteps(Analytics.sections.SERVICE_SETUP.eventNames.SEND_CUSTOMER_EMAIL, { customerEmailCheckboxSelected: flag });
     }
 
     function pushBlankProvisioningCall() {
@@ -70,13 +70,13 @@
               var properties = {
                 trackingId: Utils.extractTrackingIdFromResponse(response),
               };
-              Analytics.trackServiceSetupSteps(_.get(this.Analytics, 'sections.SERVICE_SETUP.eventNames.PROVISION_WITHOUT_MEETING_SETTINGS_SUCCESS'), properties);
+              Analytics.trackServiceSetupSteps(Analytics.sections.SERVICE_SETUP.eventNames.PROVISION_WITHOUT_MEETING_SETTINGS_SUCCESS, properties);
             }).catch(function (response) {
               Notification.errorWithTrackingId(response, 'firstTimeWizard.webexProvisioningError');
               var properties = {
                 trackingId: Utils.extractTrackingIdFromResponse(response),
               };
-              Analytics.trackServiceSetupSteps(_.get(this.Analytics, 'sections.SERVICE_SETUP.eventNames.PROVISION_WITHOUT_MEETING_SETTINGS_FAILURE'), properties);
+              Analytics.trackServiceSetupSteps(Analytics.sections.SERVICE_SETUP.eventNames.PROVISION_WITHOUT_MEETING_SETTINGS_FAILURE, properties);
             });
           }),
         };

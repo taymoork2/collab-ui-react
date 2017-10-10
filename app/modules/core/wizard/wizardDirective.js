@@ -263,7 +263,7 @@ require('./_wizard.scss');
       // Metrics for IT Decoupling new orders flow: user skips Meeting Settings Tab
       if (isCurrentTab('meetingSettings') && isFirstStep()) {
         var properties = { view: _.get($state, 'current.data.firstTimeSetup') ? 'Service Setup' : 'overview: Meeting Settings Modal' };
-        Analytics.trackServiceSetupSteps(_.get(Analytics, 'sections.SERVICE_SETUP.eventNames.SKIPPED_MEETING_SETTINGS'), properties);
+        Analytics.trackServiceSetupSteps(Analytics.sections.SERVICE_SETUP.eventNames.SKIPPED_MEETING_SETTINGS, properties);
       }
 
       if (_.isArray(tabs)) {
@@ -286,7 +286,7 @@ require('./_wizard.scss');
         step: getStepName(),
         tab: vm.current.tab.name,
       };
-      Analytics.trackServiceSetupSteps(_.get(Analytics, 'eventNames.SERVICE_SETUP.eventNames.BACK'), analyticsProperties);
+      Analytics.trackServiceSetupSteps(Analytics.sections.SERVICE_SETUP.eventNames.BACK, analyticsProperties);
       var steps = getSteps();
       if (_.isArray(steps)) {
         var index = steps.indexOf(getStep());
@@ -302,9 +302,9 @@ require('./_wizard.scss');
       // Assemble call to Analytics service
       var eventName = '';
       if (getStepName() === 'init' && isCurrentTab('planReview')) {
-        eventName = _.get(Analytics, 'sections.SERVICE_SETUP.eventNames.GET_STARTED');
+        eventName = Analytics.sections.SERVICE_SETUP.eventNames.GET_STARTED;
       } else {
-        eventName = _.get(Analytics, 'eventNames.SERVICE_SETUP.eventNames.NEXT');
+        eventName = Analytics.sections.SERVICE_SETUP.eventNames.NEXT;
       }
       var analyticsProperties = {
         view: _.get($state, 'current.data.firstTimeSetup') ? view.serviceSetup : view.meetingSettingsModal,
@@ -377,7 +377,7 @@ require('./_wizard.scss');
     function doNotProvisionAndProceedNext() {
       SetupWizardService.setWillNotProvision(true);
       if (isCurrentTab('provision')) {
-        Analytics.trackServiceSetupSteps(_.get(Analytics, 'sections.SERVICE_SETUP.eventNames.DO_NOT_PROVISION_BUTTON_CLICK'), {});
+        Analytics.trackServiceSetupSteps(Analytics.sections.SERVICE_SETUP.eventNames.DO_NOT_PROVISION_BUTTON_CLICK, {});
       }
       nextStep();
     }

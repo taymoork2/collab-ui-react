@@ -14,7 +14,7 @@
       serviceSetupWizardComplete().then(function () {
         Authinfo.setSetupDone(true);
         $state.go('overview');
-        Analytics.trackServiceSetupSteps(_.get(Analytics, 'sections.SERVICE_SETUP.eventNames.FINISH_BUTTON_CLICK'), { subscriptionId: SetupWizardService.getActingSubscriptionId() });
+        Analytics.trackServiceSetupSteps(Analytics.sections.SERVICE_SETUP.eventNames.FINISH_BUTTON_CLICK, { subscriptionId: SetupWizardService.getActingSubscriptionId() });
       });
     };
 
