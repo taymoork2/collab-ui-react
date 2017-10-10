@@ -17,9 +17,6 @@
   <span ng-if="row.entity.extendedProperties.maintenanceMode === 'on'" class="badge warning" translate="hercules.nodesPage.maintenanceReady"></span>
   <span ng-if="row.entity.extendedProperties.maintenanceMode === 'pending'" class="badge" translate="hercules.nodesPage.maintenancePending"></span>
   <span ng-if="row.entity.extendedProperties.servicesStatus.state.name === 'not_configured'"> | <span translate="hercules.notifications.configure-connector.action-in-grid"></span></span>
-  <span ng-if="!grid.appScope.$ctrl.hasNodesViewFeatureToggle && row.entity.aggregates.upgradeState === 'upgrading'"> | <span translate="hercules.status.upgrading"></span></span>
-  <span ng-if="!grid.appScope.$ctrl.hasNodesViewFeatureToggle && row.entity.aggregates.provisioning.availablePackageIsUrgent && !row.entity.aggregates.upgradeState === 'upgrading'"> |
-  <span translate="hercules.status.urgentUpgradeAvailable"></span></span>
 </div>
 <div class="ui-grid-cell-contents" style="padding-top: 1.5rem" ng-if="grid.appScope.$ctrl.serviceId === 'ept'">
   <cs-statusindicator ng-model="row.entity.extendedProperties.servicesStatus.state.cssClass"></cs-statusindicator>
