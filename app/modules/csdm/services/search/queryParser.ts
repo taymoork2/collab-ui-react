@@ -59,16 +59,20 @@ export class FieldQuery extends SearchElement {
     return (this.field) ? this.field + FieldQuery.getMatchOperator(this) + ' ' : '';
   }
 
+  public getQueryWithoutField() {
+    let innerQuery = this.query;
+    if (this.queryType === 'exact' || this.query.search(/\s|\(/) > 0) {
+      innerQuery = '"' + innerQuery + '"';
+    }
+    return innerQuery;
+  }
+
   public static getMatchOperator(fieldQuery: FieldQuery): string {
     return fieldQuery.queryType === 'exact' ? '=' : ':';
   }
 
   public toQuery(): string {
-    let innerQuery = this.query;
-    if (this.queryType === 'exact' || this.query.search(/\s|\(/) > 0) {
-      innerQuery = '"' + innerQuery + '"';
-    }
-    return this.getQueryPrefix() + innerQuery;
+    return this.getQueryPrefix() + this.getQueryWithoutField();
   }
 
   public toJSON(): any {
