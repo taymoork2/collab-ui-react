@@ -163,7 +163,10 @@ export class LocationsService {
       allowExternalTransfer: location.allowExternalTransfer,
       voicemailPilotNumber: location.voicemailPilotNumber,
       regionCodeDialing: location.regionCodeDialing,
-      callerId: location.callerId,
+      callerId: {
+        name: _.get(location, 'callerId.name', null),
+        number: _.get(location, 'callerId.number', null),
+      },
     },
     (_response, headers) => {
       locationHeader = headers('Location');
