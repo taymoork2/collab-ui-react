@@ -217,7 +217,7 @@ describe('Controller:MediaReportsController', function () {
       expect(controller.cloudOverflow).toBe(30);
       expect(controller.total).toBe(50);
       expect(controller.second_card_value).toBe('30');
-      expect(controller.cardIndicator).toBe(controller.increasedBy + ' ' + '2');
+      expect(controller.cardIndicator).toBe(controller.increaseBy + ' ' + '2');
       expect(controller.overflowPercentage).toBe(60);
     });
 

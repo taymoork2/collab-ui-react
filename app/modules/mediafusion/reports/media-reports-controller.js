@@ -54,7 +54,7 @@
     vm.selectedPeriod = $translate.instant('mediaFusion.report.selectedPeriod');
     vm.total_cloud_heading = $translate.instant('mediaFusion.metrics.totalCloud');
     vm.participants = $translate.instant('mediaFusion.metrics.participants');
-    vm.increasedBy = $translate.instant('mediaFusion.metrics.increasedBy');
+    vm.increaseBy = $translate.instant('mediaFusion.metrics.increaseBy');
     vm.decreasedBy = $translate.instant('mediaFusion.metrics.decreasedBy');
 
     vm.availabilityCardHeading = '';
@@ -403,7 +403,7 @@
         } else {
           vm.cardIndicatorDiff = response.data.dataProvider[0].value;
           if (vm.cardIndicatorDiff > 0) {
-            vm.cardIndicator = vm.increasedBy + ' ' + vm.cardIndicatorDiff;
+            vm.cardIndicator = vm.increaseBy + ' ' + vm.cardIndicatorDiff;
           } else {
             vm.cardIndicator = vm.decreasedBy + ' ' + Math.abs(vm.cardIndicatorDiff);
           }
