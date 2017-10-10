@@ -23,7 +23,12 @@ describe('QueryParser', () => {
     expectQueryToParseTo('term1 and term2', { and: [{ query: 'term1' }, { query: 'term2' }] });
     expectQueryToParseTo(' term1   and  "term2 n" ', { and: [{ query: 'term1' }, { query: 'term2 n' }] });
 
-    expectQueryToParseTo('term1 and product: term2', { and: [{ query: 'term1' }, { query: 'term2', field: 'product' }] });
+    expectQueryToParseTo('term1 and product: term2', {
+      and: [{ query: 'term1' }, {
+        query: 'term2',
+        field: 'product',
+      }],
+    });
   });
 
   it('should parse parenthesis', () => {
@@ -56,10 +61,44 @@ describe('QueryParser', () => {
     expectQueryToParseTo(' product= term1', { query: 'term1', field: 'product', queryType: 'exact' });
   });
 
+  it('should parse mixed and+or queries', () => {
+    expectQueryToParseTo('(a and b) or c', { or: [{ and: [{ query: 'a' }, { query: 'b' }] }, { query: 'c' }] });
+    expectQueryToParseTo('a and (b or c)', { and: [{ query: 'a' }, { or: [{ query: 'b' }, { query: 'c' }] }] });
+    expectQueryToParseTo('(a or b) and c', { and: [{ or: [{ query: 'a' }, { query: 'b' }] }, { query: 'c' }] });
+    expectQueryToParseTo('a or (b and c)', { or: [{ query: 'a' }, { and: [{ query: 'b' }, { query: 'c' }] }] });
+
+    expectQueryToParseTo('(a b) or c', { or: [{ and: [{ query: 'a' }, { query: 'b' }] }, { query: 'c' }] });
+    expectQueryToParseTo('a (b or c)', { and: [{ query: 'a' }, { or: [{ query: 'b' }, { query: 'c' }] }] });
+    expectQueryToParseTo('(a or b) c', { and: [{ or: [{ query: 'a' }, { query: 'b' }] }, { query: 'c' }] });
+    expectQueryToParseTo('a or (b c)', { or: [{ query: 'a' }, { and: [{ query: 'b' }, { query: 'c' }] }] });
+
+    expectQueryToThrow('a and b or c');
+    expectQueryToThrow('a and b or c');
+    expectQueryToThrow('a or b and c');
+    expectQueryToThrow('a or b and c');
+  });
+
+  it('should throw on invalid searches', () => {
+    expectQueryToThrow('hei (mac');
+    expectQueryToThrow('serial: (mac:67');
+    expectQueryToThrow('hei (mac()');
+    expectQueryToThrow('hei "mac');
+    expectQueryToThrow('(hei) (');
+    expectQueryToThrow('((hei)');
+    expectQueryToThrow('(activeInterface) yo(sipUrl1');
+    expectQueryToThrow('(activeInterface) yo(');
+  });
+
+  function expectQueryToThrow(query: string) {
+    try {
+      QueryParser.parseQueryString(query);
+      fail('Query did not throw:' + query);
+    } catch (e) {
+    }
+  }
 
   function expectQueryToParseTo(query: string, expectedObject: any) {
     const parsedQuery = QueryParser.parseQueryString(query);
     expect(JSON.stringify(parsedQuery)).toEqual(JSON.stringify(expectedObject));
   }
-})
-;
+});
