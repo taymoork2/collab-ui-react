@@ -74,36 +74,15 @@
       return _trialData;
     }
 
-    /*
     function createPstnEntityV2(customerOrgId, customerName) {
       return checkForPstnSetup(customerOrgId)
         .catch(function () {
-          if (_trialData.details.pstnProvider.apiImplementation === 'SWIVEL') {
-            _trialData.details.pstnNumberInfo.numbers = _trialData.details.swivelNumbers;
+          if (!_.isString(_trialData.details.pstnContractInfo.companyName) || _trialData.details.pstnContractInfo.companyName.length === 0) {
             _trialData.details.pstnContractInfo.companyName = customerName;
-            return createPstnCustomerV2(customerOrgId)
-              .then(_.partial(createCustomerSite, customerOrgId))
-              .then(_.partial(reserveNumbersWithCustomerV2, customerOrgId))
-              .then(_.partial(getEnterprisePrivateTrunkingFeatureToggle))
-              .then(_.partial(orderNumbers, customerOrgId));
-          } else {
-            return createPstnCustomerV2(customerOrgId)
-              .then(_.partial(createCustomerSite, customerOrgId))
-              .then(_.partial(reserveNumbersWithCustomerV2, customerOrgId))
-              .then(_.partial(orderNumbersV2, customerOrgId));
           }
-        });
-    }
-    */
-
-    function createPstnEntityV2(customerOrgId, customerName) {
-      return checkForPstnSetup(customerOrgId)
-        .catch(function () {
           var promise = createPstnCustomerV2(customerOrgId);
-
           if (_trialData.details.pstnProvider.apiImplementation === 'SWIVEL') {
             _trialData.details.pstnNumberInfo.numbers = _trialData.details.swivelNumbers;
-            _trialData.details.pstnContractInfo.companyName = customerName;
             promise = promise.then(_.partial(getEnterprisePrivateTrunkingFeatureToggle));
           }
           return promise
