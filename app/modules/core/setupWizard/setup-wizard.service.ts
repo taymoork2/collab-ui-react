@@ -341,7 +341,7 @@ export class SetupWizardService {
     });
   }
 
-  public validateCCASPPartner(subscriptionId: string, partnerName: string): ng.IPromise<boolean> {
+  public validateCCASPPartner(subscriptionId: string, partnerName: string): ng.IPromise<any> {
     const payload = {
       ccaspSubscriptionId: subscriptionId,
       ccaspPartnerName: partnerName,
@@ -358,9 +358,19 @@ export class SetupWizardService {
       data: payload,
     };
     return this.$http(config).then((response) => {
-      return (response.data === validationResult.SUCCESS && response.status === 200);
+      return {
+        response: response,
+        isValid: response.data === validationResult.SUCCESS && response.status === 200,
+        payload: payload,
+      };
     })
-    .catch(() => { return false; });
+    .catch((response) => {
+      return {
+        response: response,
+        isValid: false,
+        payload: payload,
+      };
+    });
   }
 
 }

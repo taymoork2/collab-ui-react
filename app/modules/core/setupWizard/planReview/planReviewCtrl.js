@@ -6,11 +6,16 @@
     .controller('PlanReviewCtrl', PlanReviewCtrl);
 
   /* @ngInject */
-  function PlanReviewCtrl($translate, Authinfo, Config, SetupWizardService, TrialService, WebExUtilsFact) {
+  function PlanReviewCtrl($state, $translate, Analytics, Authinfo, Config, SetupWizardService, TrialService, WebExUtilsFact) {
     var vm = this;
     var classes = {
       userService: 'user-service-',
       hasRoomSys: 'has-room-systems',
+    };
+
+    var view = {
+      serviceSetup: 'Service Setup',
+      meetingSettingsModal: 'overview: Meeting Settings Modal',
     };
 
     vm.messagingServices = {
@@ -96,6 +101,11 @@
     function setActingSubscription(option) {
       SetupWizardService.setActingSubscriptionOption(option);
       fetchPendingSubscriptionInfo();
+      var analyticsProperties = {
+        subscriptionId: _.get(option, 'value'),
+        view: _.get($state, 'current.data.firstTimeSetup') ? view.serviceSetup : view.meetingSettingsModal,
+      };
+      Analytics.trackServiceSetupSteps(_.get(Analytics, 'sections.SERVICE_SETUP.eventNames.SUBSCRIPTION_SELECT'), analyticsProperties);
     }
 
     function fetchPendingSubscriptionInfo() {

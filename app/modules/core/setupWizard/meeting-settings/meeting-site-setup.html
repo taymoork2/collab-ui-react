@@ -64,13 +64,24 @@
       <div class="row">
         <div class="col-lg-12 element-spacing">
           <div class="cs-radio-group" ng-class="{'error': meetingCtrl.error.isError &&  meetingCtrl.error.errorType === meetingCtrl.siteErrorType.USER_MGMT}">
-            <input cs-input type="radio" ng-model="meetingCtrl.siteModel.setupType"
-              ng-change="meetingCtrl.clearError(1)"
-              id="add-webex-users-1" name="addWebexUsers1"
-              value="undefined" required cs-input-label="{{::'firstTimeWizard.userManagementSpark' | translate }}">
-            <input cs-input  required type="radio"
-              ng-change="meetingCtrl.clearError(1)" ng-model="meetingCtrl.siteModel.setupType"
-              id="add-webex-users-2" name="addWebexUsers2"
+            <input 
+              cs-input 
+              type="radio"
+              required
+              ng-model="meetingCtrl.siteModel.setupType"
+              ng-change="meetingCtrl.userManagementOptionChange()"
+              id="addWebexUsers1"
+              name="addWebexUsers1"
+              value="undefined"
+              cs-input-label="{{::'firstTimeWizard.userManagementSpark' | translate }}">
+            <input 
+              cs-input  
+              type="radio"
+              required
+              ng-model="meetingCtrl.siteModel.setupType"
+              ng-change="meetingCtrl.userManagementOptionChange()"
+              id="addWebexUsers2"
+              name="addWebexUsers2"
               value="{{meetingCtrl.setupTypeLegacy}}"
               cs-input-label="{{::'firstTimeWizard.userManagementWebEx' | translate }}">
             <div class="cs-input__messages error-msg-spacing" role="alert" ng-if="meetingCtrl.error.isError && meetingCtrl.error.errorType === meetingCtrl.siteErrorType.USER_MGMT">
