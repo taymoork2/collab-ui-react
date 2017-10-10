@@ -12,6 +12,7 @@ export interface INumber {
   type: NumberType;
   external: string;
   directoryNumber: IDirectoryNumber;
+  internal?: string;
   siteToSite?: string;
 }
 
