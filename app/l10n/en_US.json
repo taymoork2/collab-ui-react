@@ -5985,7 +5985,7 @@
       "clusterPartiallyInService": "  Cluster Partially in Service",
       "all": "All",
       "inThe": "in the",
-      "increasedBy": "Increased by",
+      "increaseBy": "Increase by",
       "decreasedBy": "Decreased by"
     },
     "deleteGroup": {
