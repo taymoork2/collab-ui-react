@@ -73,9 +73,9 @@ describe('QueryParser', () => {
     expectQueryToParseTo('a or (b c)', { or: [{ query: 'a' }, { and: [{ query: 'b' }, { query: 'c' }] }] });
 
     expectQueryToThrow('a and b or c');
-    expectQueryToThrow('a and b or c');
+    expectQueryToThrow('a b or c');
     expectQueryToThrow('a or b and c');
-    expectQueryToThrow('a or b and c');
+    expectQueryToThrow('a or b c');
   });
 
   it('should throw on invalid searches', () => {
