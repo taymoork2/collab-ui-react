@@ -1,10 +1,10 @@
-import { ClusterService } from 'modules/hercules/services/cluster-service';
+import ClusterServiceModuleName, { ClusterService } from 'modules/hercules/services/cluster-service';
 import { ConnectorType, HybridServiceId, IExtendedCluster } from 'modules/hercules/hybrid-services.types';
-import { EnterprisePrivateTrunkService, IPrivateTrunkResourceWithStatus } from 'modules/hercules/services/enterprise-private-trunk-service';
-import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
+import EnterprisePrivateTrunkServiceModuleName, { EnterprisePrivateTrunkService, IPrivateTrunkResourceWithStatus } from 'modules/hercules/services/enterprise-private-trunk-service';
+import HybridServicesUtilsServiceModuleName, { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
 
 import './_hybrid-service-cluster-list.scss';
-import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
+import HybridServicesClusterStatesServiceModuleName, { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 import { HighLevelStatusForService } from 'modules/hercules/services/hybrid-services-cluster.service';
 
 export interface IGridApiScope extends ng.IScope {
@@ -138,10 +138,12 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
       },
     };
     if (this.serviceId === 'ept') {
+      this.updateTrunks();
       this.EnterprisePrivateTrunkService.subscribe('data', this.updateTrunks, {
         scope: this.$scope,
       });
     } else {
+      this.updateClusters();
       this.ClusterService.subscribe('data', this.updateClusters, {
         scope: this.$scope,
       });
@@ -204,6 +206,13 @@ export class HybridServiceClusterListComponent implements ng.IComponentOptions {
 }
 
 export default angular
-  .module('Hercules')
+  .module('hybrid-services-service-specific-cluster-list', [
+    require('angular-ui-router'),
+    require('angular-translate'),
+    ClusterServiceModuleName,
+    EnterprisePrivateTrunkServiceModuleName,
+    HybridServicesClusterStatesServiceModuleName,
+    HybridServicesUtilsServiceModuleName,
+  ])
   .component('hybridServiceClusterList', new HybridServiceClusterListComponent())
   .name;
