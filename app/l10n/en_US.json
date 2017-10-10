@@ -6742,6 +6742,11 @@
     "linkedSiteAdminTool": "Launch Site Admin Tool",
     "LinkedSiteProgress": "Account linking progress"
   },
+  "webexSiteManagement": {
+    "redistributeLicenses": "Redistribute Licenses",
+    "redistributeLicensesDesc": "Please indicate how many licenses to put on each site",
+    "redistributeLicensesDesc2": "You must assign all the licenses and each site must have at least one license."
+  },
   "cloudExtensions": {
     "cloudExtensions": "Hybrid Services",
     "enableService": "Activate service for this user",

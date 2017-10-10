@@ -571,6 +571,7 @@ export class Config {
     Site_Admin: [
       'site-list',
       'site-list-add',
+      'site-list-distribute-licenses',
       'site-csv-import',
       'site-csv',
       'site-csv-results',

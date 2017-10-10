@@ -38,6 +38,10 @@ require('./_site-list.scss');
       return $sce.trustAsResourceUrl(src);
     };
 
+    vm.redistributeLicenses = function (entity) {
+      $state.go('site-list-distribute-licenses', { subscriptionId: entity.billingServiceId });
+    };
+
     vm.showGridData = true;
 
     // kill the csv poll when navigating away from the site list page
