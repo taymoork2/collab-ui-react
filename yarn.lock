@@ -158,8 +158,8 @@
     "@types/angular" "*"
 
 "@types/angular-ui-router@~1.1.37":
-  version "1.1.39"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/@types/angular-ui-router/-/angular-ui-router-1.1.39.tgz#dffe4083e8a59b287981cb41896447f32b3663c4"
+  version "1.1.40"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/@types/angular-ui-router/-/angular-ui-router-1.1.40.tgz#d8a10fe4af86a069f8c3302946363f1149e5a6b3"
   dependencies:
     "@types/angular" "*"
 
