@@ -5816,7 +5816,7 @@
     "trustedSip": {
       "success": "Trusted SIP source(s) saved successfully.",
       "title": "Trusted SIP sources",
-      "description": "Enter a comma-separated list of Unified CM or Expressway IP addresses. These entries are treated as trusted SIP sources and allowed to send SIP calls to Hybrid Media Service.",
+      "description": "Enter a comma-separated list of Expressway IP addresses or FQDN. These entries are treated as trusted SIP sources and allowed to send SIP calls to Hybrid Media Service.",
       "placeholder": "Enter the trusted SIP sources..."
     },
     "videoQuality": {
@@ -5830,6 +5830,7 @@
       "adoption-title": "Adoption",
       "resources-title": "Resources",
       "custom": "Custom",
+      "selectedPeriod": "selected period",
       "test-org-alert": "Some reports might not have data, because you are using a test organization."
     },
     "deregister": {
@@ -5979,8 +5980,8 @@
       "clusterPartiallyInService": "  Cluster Partially in Service",
       "all": "All",
       "inThe": "in the",
-      "increasedBy": "Increased By",
-      "decreasedBy": "Decreased By"
+      "increasedBy": "Increased by",
+      "decreasedBy": "Decreased by"
     },
     "deleteGroup": {
       "message": "Are you sure you want to delete {{groupName}} from Cisco Collaboration Cloud?",

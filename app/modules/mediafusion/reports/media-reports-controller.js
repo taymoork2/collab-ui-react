@@ -51,6 +51,7 @@
     vm.redirected_calls_heading = $translate.instant('mediaFusion.metrics.redirectedcalls');
     vm.cluster_availability_heading = $translate.instant('mediaFusion.metrics.overAllAvailability');
     vm.customPlaceholder = $translate.instant('mediaFusion.report.custom');
+    vm.selectedPeriod = $translate.instant('mediaFusion.report.selectedPeriod');
     vm.total_cloud_heading = $translate.instant('mediaFusion.metrics.totalCloud');
     vm.participants = $translate.instant('mediaFusion.metrics.participants');
     vm.increasedBy = $translate.instant('mediaFusion.metrics.increasedBy');
@@ -404,7 +405,7 @@
           if (vm.cardIndicatorDiff > 0) {
             vm.cardIndicator = vm.increasedBy + ' ' + vm.cardIndicatorDiff;
           } else {
-            vm.cardIndicator = vm.decreasedBy + ' ' + vm.cardIndicatorDiff;
+            vm.cardIndicator = vm.decreasedBy + ' ' + Math.abs(vm.cardIndicatorDiff);
           }
         }
       });
