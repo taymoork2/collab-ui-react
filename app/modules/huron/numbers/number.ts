@@ -10,6 +10,7 @@ export interface INumber {
   uuid: string;
   number: string;
   type: NumberType;
+  external: string;
   directoryNumber: IDirectoryNumber;
   siteToSite?: string;
 }

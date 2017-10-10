@@ -11,7 +11,9 @@
           placeholder="$ctrl.selectHolder"
           cs-required="$ctrl.isNumberRequired()"
           is-disabled="!$ctrl.allowEcnSetup"
-          filter="true">
+          filter="true"
+          refresh-data-fn="$ctrl.getEmegencyCallBackNumbers(filter)"
+          wait-time="200">
         </cs-select>
       </div>
     </div>

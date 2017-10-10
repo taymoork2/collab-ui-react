@@ -204,7 +204,7 @@ class CallLocationCtrl implements ng.IComponentController {
 
   public saveDisabled(): boolean {
     if (this.PstnModel.isCustomerExists()) {
-      if (this.callLocationSettingsData.address && this.callLocationSettingsData.address.validated) {
+      if (this.callLocationSettingsData && this.callLocationSettingsData.address && this.callLocationSettingsData.address.validated) {
         return this.form.$invalid;
       }
       return true;
