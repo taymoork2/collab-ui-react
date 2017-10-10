@@ -3,6 +3,8 @@ import {
 } from 'modules/huron/pstn';
 import { IOption } from 'modules/huron/dialing';
 import { Notification } from 'modules/core/notifications';
+import { NumberService, NumberType, NumberOrder } from 'modules/huron/numbers';
+import { PhoneNumberService } from 'modules/huron/phoneNumber';
 
 export class CallEmergencyServicesComponent implements ng.IComponentOptions {
   public controller = CallEmergencyServicesCtrl;
@@ -32,6 +34,7 @@ class CallEmergencyServicesCtrl implements ng.IComponentController {
   public inputHolder: string = '';
   public emergencyCallbackNumberForm: ng.IFormController;
   public emergencyServiceAddressForm: ng.IFormController;
+  public onNumberFilterFn: Function;
 
   /* @ngInject */
   public constructor (
@@ -40,6 +43,8 @@ class CallEmergencyServicesCtrl implements ng.IComponentController {
     private PstnAddressService: PstnAddressService,
     private Notification: Notification,
     private $translate: ng.translate.ITranslateService,
+    private NumberService: NumberService,
+    private PhoneNumberService: PhoneNumberService,
   ) {
   }
 
@@ -103,6 +108,17 @@ class CallEmergencyServicesCtrl implements ng.IComponentController {
       this.emergencyServiceAddressForm.$setPristine();
       this.emergencyServiceAddressForm.$setUntouched();
     }
+  }
+
+  public getEmegencyCallBackNumbers(filter) {
+    this.NumberService.getNumberList(filter, NumberType.EXTERNAL, true, NumberOrder.DESCENDING).then((numberList) => {
+      this.numberOptions = _.map(numberList, number => {
+        return {
+          value: number.external,
+          label: this.PhoneNumberService.getNationalFormat(number.external),
+        } as IOption;
+      });
+    });
   }
 
 }
