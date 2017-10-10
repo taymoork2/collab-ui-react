@@ -137,6 +137,7 @@
     require('modules/call/features').default,
     require('modules/call/features/paging-group/shared').default,
     require('modules/call/features/call-pickup/shared').default,
+    require('modules/huron/lineSettings/directoryNumberService'),
   ])
     .constant('ASTParser', require('acorn'))
     .constant('ASTWalker', require('acorn/dist/walk'));
