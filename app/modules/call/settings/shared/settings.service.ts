@@ -586,7 +586,7 @@ export class HuronSettingsService {
     return this.AvrilService.updateAvrilSite(
       <IAvrilSite>{
         guid: site.uuid,
-        extensionLength: site.extensionLength,
+        extensionLength: site.extensionLength.toString(),
         language: site.preferredLanguage,
         pilotNumber: site.voicemailPilotNumber,
         siteSteeringDigit: site.routingPrefix ? site.routingPrefix.substr(1) : null,
@@ -606,7 +606,7 @@ export class HuronSettingsService {
     return this.AvrilService.createAvrilSite(
       <IAvrilSite>{
         guid: site.uuid,
-        extensionLength: site.extensionLength,
+        extensionLength: site.extensionLength.toString(),
         language: site.preferredLanguage,
         pilotNumber: site.voicemailPilotNumber,
         siteSteeringDigit: site.routingPrefix ? site.routingPrefix.substr(1) : null,

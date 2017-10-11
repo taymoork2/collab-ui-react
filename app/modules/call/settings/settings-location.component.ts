@@ -58,6 +58,16 @@ class CallSettingsCtrl implements ng.IComponentController {
     this.checkForChanges();
   }
 
+  public onDecreaseExtensionLength(extensionLength: number): void {
+    this.callSettingsData.customerVoice.extensionLength = extensionLength;
+    this.setShowDialPlanChangedDialogFlag();
+    this.checkForChanges();
+  }
+
+  public onExtensionLengthSaved(): void {
+    this.$onInit();
+  }
+
   public onCompanyCallerIdChanged(companyCallerId: CompanyNumber): void {
     this.callSettingsData.companyCallerId = companyCallerId;
     this.checkForChanges();
