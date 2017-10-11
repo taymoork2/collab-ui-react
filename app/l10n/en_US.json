@@ -4519,6 +4519,7 @@
     "siteError": "Failed to load site information.",
     "steeringDigitOverlapWarning": "The first digit of the Internal Extension overlaps with the Outbound Dial Digit.",
     "enterpriseSiteNumberLabel": "If your company uses site-to-site dialing:",
+    "locationSiteToSiteNumberLabel": "Within the same location, dial ",
     "externalNumberLabel": "Phone Number",
     "externalNumberTooltip": "Use the direct line to reach this line from outside of the company.",
     "externalNumberPoolError": "Direct lines failed to load.",
@@ -6741,6 +6742,11 @@
     "checkingServices": "Checking services...",
     "linkedSiteAdminTool": "Launch Site Admin Tool",
     "LinkedSiteProgress": "Account linking progress"
+  },
+  "webexSiteManagement": {
+    "redistributeLicenses": "Redistribute Licenses",
+    "redistributeLicensesDesc": "Please indicate how many licenses to put on each site",
+    "redistributeLicensesDesc2": "You must assign all the licenses and each site must have at least one license."
   },
   "cloudExtensions": {
     "cloudExtensions": "Hybrid Services",

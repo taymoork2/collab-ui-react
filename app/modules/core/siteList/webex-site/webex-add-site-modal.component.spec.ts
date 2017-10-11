@@ -3,6 +3,7 @@ describe('Component: WebexAddSiteModalComponent', function () {
 
   const TRANSFER_SCREEN = 'webex-site-transfer';
   const SUBSCRIPTION_SCREEN = 'webex-site-subscription';
+  const ADD_SITE_SCREEN = 'webex-site-new';
   beforeEach(function () {
     this.initModules(module);
     this.injectDependencies('$scope', '$rootScope', 'Config', 'SetupWizardService');
@@ -39,8 +40,22 @@ describe('Component: WebexAddSiteModalComponent', function () {
       });
       expect(this.view.find(SUBSCRIPTION_SCREEN).length).toEqual(1);
       expect(this.view.find(TRANSFER_SCREEN).length).toEqual(0);
+      expect(this.view.find('button.btn-primary').length).toEqual(1);
+      expect(this.view.find('button.btn-primary')[0].innerText.trim()).toEqual('common.next');
     });
 
+    it('should go to a specified screen when singleStep is true and display a save butotn instead of next', function () {
+      this.compileComponent('webexAddSiteModal', {
+        subscriptionList: 'fixtures.subscriptionListMultiple',
+        conferenceServices: 'fixtures.conferenceServices',
+        singleStep: '2',
+      });
+      expect(this.view.find(ADD_SITE_SCREEN).length).toEqual(1);
+      expect(this.view.find(TRANSFER_SCREEN).length).toEqual(0);
+      expect(this.view.find(SUBSCRIPTION_SCREEN).length).toEqual(0);
+      expect(this.view.find('button.btn-primary').length).toEqual(1);
+      expect(this.view.find('button.btn-primary')[0].innerText.trim()).toEqual('common.save');
+    });
   });
 });
 

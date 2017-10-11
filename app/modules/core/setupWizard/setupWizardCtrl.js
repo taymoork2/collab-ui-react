@@ -55,7 +55,7 @@ require('./_setup-wizard.scss');
       var analyticsProperties = {
         subscriptionId: SessionStorage.get(StorageKeys.SUBSCRIPTION_ID),
       };
-      Analytics.trackServiceSetupSteps(_.get(Analytics, 'sections.SERVICE_SETUP.eventNames.FORWARDED_TO_OVERVIEW'), analyticsProperties);
+      Analytics.trackServiceSetupSteps(Analytics.sections.SERVICE_SETUP.eventNames.FORWARDED_TO_OVERVIEW, analyticsProperties);
       return $state.go('overview');
     }
 
@@ -122,14 +122,14 @@ require('./_setup-wizard.scss');
       };
 
       if (SessionStorage.get(StorageKeys.SUBSCRIPTION_ID) && (SessionStorage.get(StorageKeys.PARTNER_ORG_ID) || SessionStorage.get(StorageKeys.PARTNER_ORG_ID))) {
-        Analytics.trackServiceSetupSteps(_.get(Analytics, 'sections.SERVICE_SETUP.eventNames.REDIRECTED_INTO_ATLAS_FROM_OPC'), analyticsProperties);
+        Analytics.trackServiceSetupSteps(Analytics.sections.SERVICE_SETUP.eventNames.REDIRECTED_INTO_ATLAS_FROM_OPC, analyticsProperties);
       } else if (SessionStorage.get(StorageKeys.PARTNER_ORG_ID) || SessionStorage.get(StorageKeys.PARTNER_ORG_ID)) {
         var eventKey = SessionStorage.get(StorageKeys.PARTNER_ORG_ID)
-          ? _.get(Analytics, 'sections.SERVICE_SETUP.eventNames.PARTNER_SETUP_OWNORG')
-          : _.get(Analytics, 'sections.SERVICE_SETUP.eventNames.PARTNER_SETUP_CUSTOMER');
+          ? Analytics.sections.SERVICE_SETUP.eventNames.PARTNER_SETUP_OWNORG
+          : Analytics.sections.SERVICE_SETUP.eventNames.PARTNER_SETUP_CUSTOMER;
         Analytics.trackServiceSetupSteps(eventKey, analyticsProperties);
       } else {
-        Analytics.trackServiceSetupSteps(_.get(Analytics, 'sections.SERVICE_SETUP.eventNames.CUSTOMER_SETUP'), analyticsProperties);
+        Analytics.trackServiceSetupSteps(Analytics.sections.SERVICE_SETUP.eventNames.CUSTOMER_SETUP, analyticsProperties);
       }
     }
 
