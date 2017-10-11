@@ -175,6 +175,8 @@
     require('modules/hercules/services/service-descriptor.service').default,
     require('modules/hercules/services/ucc-service').default,
     require('modules/hercules/services/uss.service').default,
+    require('modules/services-overview/new-hybrid/prerequisites-modals/hybrid-media-prerequisites/hybrid-media-prerequisites.controller').default,
+    require('modules/services-overview/new-hybrid/prerequisites-modals/hybrid-services-prerequisites-helper.service').default,
   ]);
 
   angular.module('HDS', [
