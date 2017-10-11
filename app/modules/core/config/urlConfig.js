@@ -347,6 +347,7 @@
     ItunesStoreUrl: 'http://cs.co/sqios',
     SquaredAppUrl: 'squared://',
     StatusPageUrl: 'http://status.ciscospark.com/',
+    MixpanelUrl: 'https://api.mixpanel.com',
     CallflowServiceUrl: 'https://admin-portal-test-public.wbx2.com/atlas-server/admin/api/v1/',
     LogMetricsUrl: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
     SSOTestUrl: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
