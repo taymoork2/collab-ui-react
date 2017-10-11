@@ -339,7 +339,10 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
   }
 
   public isDisabled(): boolean {
-    return (this.trialForm.$invalid && this.providerImplementation !== this.SWIVEL) || !this.addressFound || this.disableNextButton();
+    if (this.providerImplementation === this.SWIVEL) {
+      return this.trialForm.$invalid || this.disableNextButton();
+    }
+    return this.trialForm.$invalid || !this.addressFound || this.disableNextButton();
   }
 
 }
