@@ -9,11 +9,55 @@
 @import 'ct-summary';
 @import 'ct-proactive-prompt';
 @import 'ct-virtual-assistant';
-@import 'va-virtual-assistant';
+@import 'embed-code-screen';
 
 // These variables define the height of chat template setup assistant page title and desc
 $ct-title-height: 48px;
 $ct-desc-height: 32px;
+
+.careChatSetup {
+  @extend %content-header;
+
+  .cs-setupassistant--content {
+    .cs-card-container {
+      @include vr-spacing(p, 0);
+    }
+  }
+}
+
+.care-chat {
+  &.overlay-panel {
+    cs-setup-assistant {
+      width: 100%;
+    }
+  }
+
+  .panel-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+  }
+}
+
+.ct-confirmation-header {
+  text-align: center;
+}
+
+.ct-confirmation-body {
+  .ct-confirmation-message {
+    font-size: $h6-font-size;
+    font-family: $brand-font-light;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    @include vr-spacing(mt, 0.75);
+  }
+}
+
+.sa-form {
+  margin-top: 0;
+}
 
 .ct-title {
   display: flex;

@@ -1,0 +1,59 @@
+<div>
+  <div class="ct-title">
+    <span class="h3">
+    {{cvaSetupCtrl.getVaText('avatar.title')}}
+    </span>
+  </div>
+  <h6 class="h6 ct-title-desc">
+    {{cvaSetupCtrl.getVaText('avatar.desc')}}
+  </h6>
+  <div ng-switch="cvaSetupCtrl.avatarUploadState" block-view="true">
+
+    <div ng-switch-when="SELECT|PREVIEW" ng-switch-when-separator="|" class="va-dash-box" ngf-drop="cvaSetupCtrl.uploadAvatar($file)" ngf-drag-over-class="'dragover'" ngf-multiple="false">
+        <span ng-if="cvaSetupCtrl.avatarUploadState == 'SELECT'">
+          <div>
+            <div class="va-img-circle">
+              <img class="va-img" src="/images/vaAvatarDefaultIcon.png"></img>
+            </div>
+          </div>
+          <h3 id="avatarUpload" class="header3 ct-title">{{cvaSetupCtrl.getVaText('avatar.upload')}}</h3>
+          <p class="ct-title-desc">{{cvaSetupCtrl.getVaText('avatar.uploadDesc')}}</p>
+          <p class="ct-title-desc">{{cvaSetupCtrl.getVaText('avatar.defaultAvatar')}}</p>
+        </span>
+
+        <span ng-if="cvaSetupCtrl.avatarUploadState == 'PREVIEW'">
+          <div>
+            <div class="va-img-circle">
+              <img class="va-img" ngf-src="cvaSetupCtrl.template.configuration.pages.vaAvatar.fileValue"></img>
+            </div>
+          </div>
+          <h3 id="avatarPreview" class="header3 ct-title">{{cvaSetupCtrl.getVaText('avatar.preview')}}</h3>
+          <p class="ct-title-desc">{{cvaSetupCtrl.getVaText('avatar.previewDesc')}}</p>
+        </span>
+
+        <p class="ct-title-desc">{{cvaSetupCtrl.getVaText('avatar.uploadBestResults')}}</p>
+        <div ngf-select="cvaSetupCtrl.uploadAvatar($file)" ngf-accept="'image/png'" ngf-multiple="false">
+          <p class="ct-title-desc va-input-messages">{{cvaSetupCtrl.getVaText('avatar.dragDropDesc')}}<label class="va-input-label">{{cvaSetupCtrl.getVaText('avatar.fileBrowser')}}</label></p>
+        </div>
+    </div>
+
+    <div ng-switch-when="LOADING" class="va-dash-box">
+      <span id="stopLoad" ng-click="cvaSetupCtrl.avatarStopLoad()">
+        <i class="icon icon-close va-align-right"></i>
+      </span>
+      <div class="va-spinner-center">
+        <i class="icon icon-spinner icon-5x"></i>
+        <h3 class="header3 ct-title">{{cvaSetupCtrl.getVaText('avatar.uploadingImage')}}</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="va-center va-error" ng-if="cvaSetupCtrl.isAvatarError()">
+    <div ng-switch="cvaSetupCtrl.template.configuration.pages.vaAvatar.avatarError" block-view="true">
+      <i class="icon icon-error icon-lg"></i>
+      <span ng-switch-when="FileTypeError"> {{cvaSetupCtrl.getVaText('avatar.errorUnsupportedFile')}}</span>
+      <span ng-switch-when="FileSizeError"> {{cvaSetupCtrl.getVaText('avatar.errorOverMaxFileSizeLimit')}}</span>
+      <span ng-switch-when="FileUploadError"> {{cvaSetupCtrl.getVaText('avatar.errorUploadFile')}}</span>
+    </div>
+  </div>
+</div>

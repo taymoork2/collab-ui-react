@@ -19,16 +19,16 @@
     angular
       .module('Sunlight')
       .directive(directiveName, function () {
-        return createSetupAssistantPageDirective(directiveName);
+        return createCustomerSupportTemplateDirective(directiveName);
       });
   });
 
-  function createSetupAssistantPageDirective(pageFile) {
+  function createCustomerSupportTemplateDirective(pageFile) {
     var directive = {
       link: function ($scope, element, $attributes) {
         $scope.careSetupAssistant.cardMode = $attributes.mode;
       },
-      template: require('modules/sunlight/features/template/setupAssistantPages/' + pageFile + '.tpl.html'),
+      template: require('modules/sunlight/features/customerSupportTemplate/wizardPages/' + pageFile + '.tpl.html'),
       restrict: 'EA',
       scope: false,
     };

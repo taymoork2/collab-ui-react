@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Directive: setupAssistantPages', function () {
+describe('Directive: customerSupportTemplate', function () {
   var $compile, $rootScope;
   var element;
 

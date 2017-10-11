@@ -1094,7 +1094,7 @@
         confirmButton: $translate.instant('careChatTpl.confirmButton'),
       };
       $modal.open({
-        template: require('modules/sunlight/features/template/ctCancelModal.tpl.html'),
+        template: require('modules/sunlight/features/customerSupportTemplate/wizardPages/ctCancelModal.tpl.html'),
         type: 'dialog',
         scope: $scope,
       });

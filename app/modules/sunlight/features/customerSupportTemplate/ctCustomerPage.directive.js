@@ -73,7 +73,7 @@
   function CustomerForm() {
     return {
       restrict: 'AE',
-      template: require('modules/sunlight/features/template/setupAssistantPages/ctCustomerForm.tpl.html'),
+      template: require('modules/sunlight/features/customerSupportTemplate/wizardPages/ctCustomerForm.tpl.html'),
       controller: ['$scope', CustomerFormController],
       scope: {
         fields: '=',

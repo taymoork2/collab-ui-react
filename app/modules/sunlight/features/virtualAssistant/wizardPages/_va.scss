@@ -1,9 +1,9 @@
-@import 'va-virtual-assistant-config-overview';
-@import 'va-virtual-assistant-dialog-integration';
-@import 'va-virtual-assistant-access-token';
-@import 'va-virtual-assistant-name';
-@import 'va-virtual-assistant-summary';
-@import 'va-virtual-assistant-avatar';
+@import 'cva-config-overview';
+@import 'cva-dialog-integration';
+@import 'cva-access-token';
+@import 'va-name';
+@import 'va-summary';
+@import 'va-avatar';
 
 .va-button {
   display: flex;

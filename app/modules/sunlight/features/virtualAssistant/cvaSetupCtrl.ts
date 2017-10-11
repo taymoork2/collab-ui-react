@@ -7,10 +7,10 @@ export interface IScopeWithController extends ng.IScope {
 
 // TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
 // preserve the ng-include module paths
-const requireContext = (require as any).context(`ngtemplate-loader?module=Sunlight&relativeTo=app/!modules/sunlight/features/template/setupAssistantPages`, false, /^\.\/va.*\.tpl\.html$/);
+const requireContext = (require as any).context(`ngtemplate-loader?module=Sunlight&relativeTo=app/!modules/sunlight/features/virtualAssistant/wizardPages/`, false, /^\.\/.*\.tpl\.html$/);
 requireContext.keys().map(key => requireContext(key));
 
-export class CareSetupVirtualAssistantCtrl {
+export class CvaSetupCtrl {
 
   private animationTimeout = 10;
   private escapeKey = 27;
@@ -48,19 +48,19 @@ export class CareSetupVirtualAssistantCtrl {
     configuration: {
       mediaType: this.VirtualAssistantService.cvaServiceCard.type,
       pages: {
-        VirtualAssistantConfigOverview: {
+        cvaConfigOverview: {
           enabled: true,
           isApiAiAgentConfigured: false,
           configurationType: this.VirtualAssistantService.configurationTypes.apiai,
           startTimeInMillis: 0,
           eventName: this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_OVERVIEW_PAGE,
         },
-        VirtualAssistantDialogIntegration: {
+        cvaDialogIntegration: {
           enabled: true,
           startTimeInMillis: 0,
           eventName: this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_DIALOGUE_PAGE,
         },
-        VirtualAssistantAccessToken: {
+        cvaAccessToken: {
           enabled: true,
           accessTokenValue: '',
           invalidToken: true,
@@ -69,13 +69,13 @@ export class CareSetupVirtualAssistantCtrl {
           startTimeInMillis: 0,
           eventName: this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_ACCESS_TOKEN_PAGE,
         },
-        VirtualAssistantName: {
+        vaName: {
           enabled: true,
           nameValue: '',
           startTimeInMillis: 0,
           eventName: this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_NAME_PAGE,
         },
-        VirtualAssistantAvatar: {
+        vaAvatar: {
           enabled: true,
           fileValue: '',
           avatarError: this.avatarErrorType.NO_ERROR,
@@ -83,7 +83,7 @@ export class CareSetupVirtualAssistantCtrl {
           startTimeInMillis: 0,
           eventName: this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_AVATAR_PAGE,
         },
-        VirtualAssistantSummary: {
+        vaSummary: {
           enabled: true,
           visibleError: false,
           startTimeInMillis: 0,
@@ -122,19 +122,19 @@ export class CareSetupVirtualAssistantCtrl {
     private UrlConfig,
   ) {
 
-    this.template.configuration.pages.VirtualAssistantConfigOverview.startTimeInMillis = Date.now();
+    this.template.configuration.pages.cvaConfigOverview.startTimeInMillis = Date.now();
     if (this.$stateParams.isEditFeature) {
       this.isEditFeature = true;
       this.template.templateId = this.$stateParams.template.id;
-      this.template.configuration.pages.VirtualAssistantConfigOverview.isApiAiAgentConfigured = true;
-      this.template.configuration.pages.VirtualAssistantName.nameValue = this.$stateParams.template.name;
-      this.template.configuration.pages.VirtualAssistantAccessToken.accessTokenValue = this.$stateParams.template.config.token;
-      this.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = false;
-      this.template.configuration.pages.VirtualAssistantAccessToken.needsValidation = false;
+      this.template.configuration.pages.cvaConfigOverview.isApiAiAgentConfigured = true;
+      this.template.configuration.pages.vaName.nameValue = this.$stateParams.template.name;
+      this.template.configuration.pages.cvaAccessToken.accessTokenValue = this.$stateParams.template.config.token;
+      this.template.configuration.pages.cvaAccessToken.invalidToken = false;
+      this.template.configuration.pages.cvaAccessToken.needsValidation = false;
 
       if (this.$stateParams.template.icon) {
         this.avatarUploadState = this.avatarState.PREVIEW;
-        this.template.configuration.pages.VirtualAssistantAvatar.fileValue = this.$stateParams.template.icon;
+        this.template.configuration.pages.vaAvatar.fileValue = this.$stateParams.template.icon;
       }
     }
 
@@ -185,7 +185,7 @@ export class CareSetupVirtualAssistantCtrl {
       confirmButton: this.$translate.instant('careChatTpl.confirmButton'),
     };
     this.$modal.open({
-      template: require('modules/sunlight/features/template/ctCancelModal.tpl.html'),
+      template: require('modules/sunlight/features/customerSupportTemplate/wizardPages/ctCancelModal.tpl.html'),
       type: 'dialog',
       scope: this.$scope,
     });
@@ -221,17 +221,17 @@ export class CareSetupVirtualAssistantCtrl {
    */
   public nextButton(): any {
     switch (this.currentState) {
-      case 'VirtualAssistantConfigOverview':
+      case 'cvaConfigOverview':
         return this.isApiAiAgentConfigured(); // check radio button state
-      case 'VirtualAssistantDialogIntegration':
+      case 'cvaDialogIntegration':
         return true;
-      case 'VirtualAssistantAccessToken':
+      case 'cvaAccessToken':
         return this.isAccessTokenValid();
-      case 'VirtualAssistantName':
+      case 'vaName':
         return this.isNameValid() && !this.isAvatarUploading();
-      case 'VirtualAssistantAvatar':
+      case 'vaAvatar':
         return !this.isAvatarUploading();
-      case 'VirtualAssistantSummary':
+      case 'vaSummary':
         return 'hidden';
     }
   }
@@ -243,7 +243,7 @@ export class CareSetupVirtualAssistantCtrl {
    * @param {string} newState
    */
   private onPageLoaded(newState: string): void {
-    if (newState === 'VirtualAssistantAccessToken' &&
+    if (newState === 'cvaAccessToken' &&
       this.isAccessTokenInvalid() &&
       !_.isEmpty(this.tokenFormErrors) &&
       !_.isEmpty(this.tokenForm)) {
@@ -265,7 +265,7 @@ export class CareSetupVirtualAssistantCtrl {
   public nextPage(): void {
     // This is to clear a possible error issued during image loading. For instance one attempts to drag-drop a JPG,
     // the file is invalid, the message is displayed, and it must be cleared when toggling between pages.
-    this.template.configuration.pages.VirtualAssistantAvatar.avatarError = this.avatarErrorType.NO_ERROR;
+    this.template.configuration.pages.vaAvatar.avatarError = this.avatarErrorType.NO_ERROR;
 
     const controller = this;
     const durationInMillis = Date.now() -
@@ -283,7 +283,7 @@ export class CareSetupVirtualAssistantCtrl {
    * @param {string} currentState State before moving to previous page.
    */
   private beforePreviousPage(currentState: string): void {
-    if (currentState === 'VirtualAssistantAccessToken' &&
+    if (currentState === 'cvaAccessToken' &&
         this.isAccessTokenInvalid() &&
         !_.isEmpty(this.tokenForm)) {
       // Token is has errors, so save off the error messages in case we come back. JIRA CA-104
@@ -293,12 +293,12 @@ export class CareSetupVirtualAssistantCtrl {
         controller.tokenFormErrors[key] = controller.tokenForm.$error[key];
       });
     }
-    if (currentState === 'VirtualAssistantName' &&
-        _.isEmpty(this.template.configuration.pages.VirtualAssistantName.nameValue) &&
+    if (currentState === 'vaName' &&
+        _.isEmpty(this.template.configuration.pages.vaName.nameValue) &&
         !_.isEmpty(this.nameForm) &&
         !this.nameForm.$valid) {
       //Name was validated and failed validation. The actual value is in the nameform, so set our value to that; JIRA CA-104
-      this.template.configuration.pages.VirtualAssistantName.nameValue = this.nameForm.nameInput.$viewValue;
+      this.template.configuration.pages.vaName.nameValue = this.nameForm.nameInput.$viewValue;
     }
   }
 
@@ -308,7 +308,7 @@ export class CareSetupVirtualAssistantCtrl {
   public previousPage(): void {
     // This is to clear a possible error issued during image loading. For instance one attempts to drag-drop a JPG,
     // the file is invalid, the message is displayed, and it must be cleared when toggling between pages.
-    this.template.configuration.pages.VirtualAssistantAvatar.avatarError = this.avatarErrorType.NO_ERROR;
+    this.template.configuration.pages.vaAvatar.avatarError = this.avatarErrorType.NO_ERROR;
 
     const controller = this;
     controller.animation = 'slide-right';
@@ -325,28 +325,28 @@ export class CareSetupVirtualAssistantCtrl {
    * @returns {string}
    */
   public getCurrentPage(): string {
-    return `modules/sunlight/features/template/setupAssistantPages/va${this.currentState}.tpl.html`;
+    return `modules/sunlight/features/virtualAssistant/wizardPages/${this.currentState}.tpl.html`;
   }
 
   /**
    * submit the collected template of data for storage.
    */
   public submitFeature(): void {
-    const name = this.template.configuration.pages.VirtualAssistantName.nameValue.trim();
+    const name = this.template.configuration.pages.vaName.nameValue.trim();
     const config = this.createConfigurationObject(); // Note: this is our point of extensibility as other types besides api.ai are supported.
     this.creatingTemplate = true;
-    const avatarDataURL = this.template.configuration.pages.VirtualAssistantAvatar.fileValue;
+    const avatarDataURL = this.template.configuration.pages.vaAvatar.fileValue;
     if (this.isEditFeature) {
-      this.updateFeature(this.template.templateId, this.template.configuration.pages.VirtualAssistantConfigOverview.configurationType, name, config, this.orgId, avatarDataURL);
+      this.updateFeature(this.template.templateId, this.template.configuration.pages.cvaConfigOverview.configurationType, name, config, this.orgId, avatarDataURL);
     } else {
-      this.createFeature(this.template.configuration.pages.VirtualAssistantConfigOverview.configurationType, name, config, this.orgId, avatarDataURL);
+      this.createFeature(this.template.configuration.pages.cvaConfigOverview.configurationType, name, config, this.orgId, avatarDataURL);
     }
   }
 
   public onAPIAITokenChange(): void {
     const controller = this;
-    this.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = true;
-    this.template.configuration.pages.VirtualAssistantAccessToken.needsValidation = true; //changed token needs validation
+    this.template.configuration.pages.cvaAccessToken.invalidToken = true;
+    this.template.configuration.pages.cvaAccessToken.needsValidation = true; //changed token needs validation
     controller.tokenForm.tokenInput.$setValidity('invalidToken', true); // reset validation
   }
 
@@ -355,42 +355,42 @@ export class CareSetupVirtualAssistantCtrl {
    */
   public validateAPIAIToken(): void {
     const controller = this;
-    controller.template.configuration.pages.VirtualAssistantAccessToken.validatingToken = true;
-    const accessToken = (controller.template.configuration.pages.VirtualAssistantAccessToken.accessTokenValue || '').trim();
+    controller.template.configuration.pages.cvaAccessToken.validatingToken = true;
+    const accessToken = (controller.template.configuration.pages.cvaAccessToken.accessTokenValue || '').trim();
     controller.service.isAPIAITokenValid(accessToken)
       .then(function () {
-        controller.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = false;
-        controller.template.configuration.pages.VirtualAssistantAccessToken.needsValidation = false; //we just validated it.
+        controller.template.configuration.pages.cvaAccessToken.invalidToken = false;
+        controller.template.configuration.pages.cvaAccessToken.needsValidation = false; //we just validated it.
         controller.tokenForm.tokenInput.$setValidity('invalidToken', true); //mark input as valid
-        controller.template.configuration.pages.VirtualAssistantAccessToken.validatingToken = false;
+        controller.template.configuration.pages.cvaAccessToken.validatingToken = false;
       })
       .catch(function () {
-        controller.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = true;
-        controller.template.configuration.pages.VirtualAssistantAccessToken.needsValidation = false; //we just validated it; and it failed.
+        controller.template.configuration.pages.cvaAccessToken.invalidToken = true;
+        controller.template.configuration.pages.cvaAccessToken.needsValidation = false; //we just validated it; and it failed.
         controller.tokenForm.tokenInput.$setValidity('invalidToken', false); //mark input as invalid
-        controller.template.configuration.pages.VirtualAssistantAccessToken.validatingToken = false;
+        controller.template.configuration.pages.cvaAccessToken.validatingToken = false;
       });
   }
 
   /** Data Validation functions **/
   public isApiAiAgentConfigured(): boolean {
-    return !!this.template.configuration.pages.VirtualAssistantConfigOverview.isApiAiAgentConfigured;
+    return !!this.template.configuration.pages.cvaConfigOverview.isApiAiAgentConfigured;
   }
 
   public isAccessTokenInvalid(): boolean {
-    return (this.template.configuration.pages.VirtualAssistantAccessToken.invalidToken &&
-           !this.template.configuration.pages.VirtualAssistantAccessToken.needsValidation);
+    return (this.template.configuration.pages.cvaAccessToken.invalidToken &&
+           !this.template.configuration.pages.cvaAccessToken.needsValidation);
   }
 
   public isAccessTokenValid(): boolean {
-    return !!(this.template.configuration.pages.VirtualAssistantAccessToken.accessTokenValue || '').trim()
+    return !!(this.template.configuration.pages.cvaAccessToken.accessTokenValue || '').trim()
       && this.isValidTokenLength()
-      && !this.template.configuration.pages.VirtualAssistantAccessToken.needsValidation
-      && !this.template.configuration.pages.VirtualAssistantAccessToken.invalidToken;
+      && !this.template.configuration.pages.cvaAccessToken.needsValidation
+      && !this.template.configuration.pages.cvaAccessToken.invalidToken;
   }
 
   public isNameValid(): boolean {
-    const name = (this.template.configuration.pages.VirtualAssistantName.nameValue || '').trim();
+    const name = (this.template.configuration.pages.vaName.nameValue || '').trim();
     return !!name && this.isValidNameLength(name) && this.isUniqueName(name);
   }
 
@@ -400,7 +400,7 @@ export class CareSetupVirtualAssistantCtrl {
    * @returns {boolean} return true if error occurred; otherwise false
    */
   public isAvatarError(): boolean {
-    return this.template.configuration.pages.VirtualAssistantAvatar.avatarError !== this.avatarErrorType.NO_ERROR;
+    return this.template.configuration.pages.vaAvatar.avatarError !== this.avatarErrorType.NO_ERROR;
   }
 
   private isAvatarUploading(): boolean {
@@ -408,7 +408,7 @@ export class CareSetupVirtualAssistantCtrl {
   }
 
   private changeAvatarUploadState(): void {
-    this.avatarUploadState = _.isEmpty(this.template.configuration.pages.VirtualAssistantAvatar.fileValue) ? this.avatarState.SELECT : this.avatarState.PREVIEW;
+    this.avatarUploadState = _.isEmpty(this.template.configuration.pages.vaAvatar.fileValue) ? this.avatarState.SELECT : this.avatarState.PREVIEW;
   }
 
   /**
@@ -417,7 +417,7 @@ export class CareSetupVirtualAssistantCtrl {
   public avatarStopLoad(): void {
     if (this.isAvatarUploading()) {
       this.changeAvatarUploadState();
-      this.template.configuration.pages.VirtualAssistantAvatar.uploadCanceled = true;
+      this.template.configuration.pages.vaAvatar.uploadCanceled = true;
     }
   }
 
@@ -443,9 +443,9 @@ export class CareSetupVirtualAssistantCtrl {
    */
   private validateAvatarFile(fileSelected: any): boolean {
     if (!this.isImageFileName(fileSelected.name)) {
-      this.template.configuration.pages.VirtualAssistantAvatar.avatarError = this.avatarErrorType.FILE_TYPE_ERROR;
+      this.template.configuration.pages.vaAvatar.avatarError = this.avatarErrorType.FILE_TYPE_ERROR;
     } else if (fileSelected.size > this.MAX_AVATAR_FILE_SIZE || fileSelected.size <= 0) {
-      this.template.configuration.pages.VirtualAssistantAvatar.avatarError = this.avatarErrorType.FILE_SIZE_ERROR;
+      this.template.configuration.pages.vaAvatar.avatarError = this.avatarErrorType.FILE_SIZE_ERROR;
     }
     return !this.isAvatarError();
   }
@@ -456,8 +456,8 @@ export class CareSetupVirtualAssistantCtrl {
    * @param fileSelected (via drag-and-drop or file select)
    */
   public uploadAvatar(fileSelected: any): void {
-    this.template.configuration.pages.VirtualAssistantAvatar.avatarError = this.avatarErrorType.NO_ERROR;
-    this.template.configuration.pages.VirtualAssistantAvatar.uploadCanceled = false;
+    this.template.configuration.pages.vaAvatar.avatarError = this.avatarErrorType.NO_ERROR;
+    this.template.configuration.pages.vaAvatar.uploadCanceled = false;
     if (fileSelected && ('name' in fileSelected)) {
       if (this.validateAvatarFile(fileSelected)) {
         this.avatarUploadState = this.avatarState.LOADING;
@@ -465,8 +465,8 @@ export class CareSetupVirtualAssistantCtrl {
           .then((avatardataURL) => {
             this.service.isAvatarFileValid(this.orgId, avatardataURL)
               .then(() => {
-                if (!this.template.configuration.pages.VirtualAssistantAvatar.uploadCanceled) {
-                  this.template.configuration.pages.VirtualAssistantAvatar.fileValue = avatardataURL; // update the stored config
+                if (!this.template.configuration.pages.vaAvatar.uploadCanceled) {
+                  this.template.configuration.pages.vaAvatar.fileValue = avatardataURL; // update the stored config
                   this.changeAvatarUploadState();
                 }
               })
@@ -485,8 +485,8 @@ export class CareSetupVirtualAssistantCtrl {
   }
 
   private handleAvatarFileUploadError() {
-    if (!this.template.configuration.pages.VirtualAssistantAvatar.uploadCanceled) {
-      this.template.configuration.pages.VirtualAssistantAvatar.avatarError = this.avatarErrorType.FILE_UPLOAD_ERROR;
+    if (!this.template.configuration.pages.vaAvatar.uploadCanceled) {
+      this.template.configuration.pages.vaAvatar.avatarError = this.avatarErrorType.FILE_UPLOAD_ERROR;
     }
   }
 
@@ -540,7 +540,7 @@ export class CareSetupVirtualAssistantCtrl {
     this.creatingTemplate = false;
     this.$state.go('care.Features');
     this.Notification.success(this.getVaMessageKey('messages.createSuccessText'), {
-      featureName: this.template.configuration.pages.VirtualAssistantName.nameValue,
+      featureName: this.template.configuration.pages.vaName.nameValue,
     });
   }
 
@@ -570,10 +570,10 @@ export class CareSetupVirtualAssistantCtrl {
    */
   private writeMetrics(): void {
     const currentTimeInMillis = Date.now();
-    let durationInMillis = currentTimeInMillis - this.template.configuration.pages.VirtualAssistantSummary.startTimeInMillis;
+    let durationInMillis = currentTimeInMillis - this.template.configuration.pages.vaSummary.startTimeInMillis;
     let analyticProps = { durationInMillis: durationInMillis };
     this.Analytics.trackEvent(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_SUMMARY_PAGE, analyticProps);
-    durationInMillis = currentTimeInMillis - this.template.configuration.pages.VirtualAssistantConfigOverview.startTimeInMillis;
+    durationInMillis = currentTimeInMillis - this.template.configuration.pages.cvaConfigOverview.startTimeInMillis;
     analyticProps = { durationInMillis: durationInMillis };
     this.Analytics.trackEvent(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_START_FINISH, analyticProps);
   }
@@ -588,7 +588,7 @@ export class CareSetupVirtualAssistantCtrl {
     this.$state.go('care.Features');
     const successMsg = this.getVaMessageKey('messages.updateSuccessText');
     this.Notification.success(successMsg, {
-      featureName: this.template.configuration.pages.VirtualAssistantName.nameValue,
+      featureName: this.template.configuration.pages.vaName.nameValue,
     });
   }
 
@@ -617,17 +617,17 @@ export class CareSetupVirtualAssistantCtrl {
   /**
    * This is where we can extend our controller to support other types of assistants besides api.ai.
    * Each one may have a different Configuration object that we are going to add/update.
-   * template.configuration.pages.VirtualAssistantConfigOverview.configurationType  holds the type that is being added/updated.
+   * template.configuration.pages.cvaConfigOverview.configurationType  holds the type that is being added/updated.
    * @returns {*}
    */
   private createConfigurationObject(): any {
     return {
-      token: this.template.configuration.pages.VirtualAssistantAccessToken.accessTokenValue.trim(),
+      token: this.template.configuration.pages.cvaAccessToken.accessTokenValue.trim(),
     };
   }
 
   private isValidTokenLength(): boolean {
-    return (this.template.configuration.pages.VirtualAssistantAccessToken.accessTokenValue || '').trim().length <= this.maxTokenLength;
+    return (this.template.configuration.pages.cvaAccessToken.accessTokenValue || '').trim().length <= this.maxTokenLength;
   }
   private isValidNameLength(name): boolean {
     return name.trim().length <= this.maxNameLength;
@@ -647,4 +647,4 @@ export class CareSetupVirtualAssistantCtrl {
 }
 angular
   .module('Sunlight')
-  .controller('CareSetupVirtualAssistantCtrl', CareSetupVirtualAssistantCtrl);
+  .controller('CvaSetupCtrl', CvaSetupCtrl);

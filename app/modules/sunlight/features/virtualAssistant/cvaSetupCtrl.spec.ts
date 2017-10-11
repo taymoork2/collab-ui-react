@@ -1,39 +1,39 @@
 'use strict';
-import { CareSetupVirtualAssistantCtrl } from './vaSetupAssistantCtrl';
+import { CvaSetupCtrl } from './cvaSetupCtrl';
 
-describe('Care Setup Virtual Assistant Ctrl', function () {
+describe('Customer Virtual Assistant Setup Ctrl', function () {
   const escapeKey = 27;
   const OrgName = 'Test-Org-Name';
   const OrgId = 'Test-Org-Id';
   const pages = [
     {
-      name: 'VirtualAssistantConfigOverview',
+      name: 'cvaConfigOverview',
       previousButtonState: 'hidden',
       nextButtonState: false,
     },
     {
-      name: 'VirtualAssistantDialogIntegration',
+      name: 'cvaDialogIntegration',
       previousButtonState: true,
       nextButtonState: true,
     },
     {
-      name: 'VirtualAssistantAccessToken',
+      name: 'cvaAccessToken',
       previousButtonState: true,
       nextButtonState: false,
     },
     {
-      name: 'VirtualAssistantName',
+      name: 'vaName',
       previousButtonState: true,
       nextButtonState: false,
 
     },
     {
-      name: 'VirtualAssistantAvatar',
+      name: 'vaAvatar',
       previousButtonState: true,
       nextButtonState: true,
     },
     {
-      name: 'VirtualAssistantSummary',
+      name: 'vaSummary',
       previousButtonState: true,
       nextButtonState: 'hidden',
     },
@@ -72,13 +72,13 @@ describe('Care Setup Virtual Assistant Ctrl', function () {
       errorCode: '100106',
     }],
   };
-  let controller: CareSetupVirtualAssistantCtrl, $controller, $q, $scope, $state, $stateParams, $modal, $timeout, CTService, Analytics, Notification, VirtualAssistantService;
+  let controller: CvaSetupCtrl, $controller, $q, $scope, $state, $stateParams, $modal, $timeout, CTService, Analytics, Notification, VirtualAssistantService;
   let getLogoDeferred, getLogoUrlDeferred;
   function resetVars() {
     $controller = $q = $scope = $state = $stateParams = $modal = CTService = Analytics = Notification = VirtualAssistantService = getLogoDeferred = getLogoUrlDeferred = undefined;
   }
   function invokeCtrl() {
-    controller = <CareSetupVirtualAssistantCtrl>$controller('CareSetupVirtualAssistantCtrl', {
+    controller = <CvaSetupCtrl>$controller('CvaSetupCtrl', {
       $scope: $scope,
       $stateParams: $stateParams,
     });
@@ -222,7 +222,7 @@ describe('Care Setup Virtual Assistant Ctrl', function () {
       });
 
       it(expectedPage.name + ': make sure template file exists for page va' + expectedPage.name + '.tpl.html\'', function () {
-        const expectedPageFilename = 'modules/sunlight/features/template/setupAssistantPages/va' + expectedPage.name + '.tpl.html';
+        const expectedPageFilename = 'modules/sunlight/features/virtualAssistant/wizardPages/' + expectedPage.name + '.tpl.html';
         controller.currentState = controller.states[index];
         expect(controller.getCurrentPage()).toEqual(expectedPageFilename);
       });
@@ -248,64 +248,64 @@ describe('Care Setup Virtual Assistant Ctrl', function () {
     });
 
     it('Next button on Config Overview Page enabled when isApiAiAgentConfigured is true', function () {
-      controller.template.configuration.pages.VirtualAssistantConfigOverview.isApiAiAgentConfigured = true;
+      controller.template.configuration.pages.cvaConfigOverview.isApiAiAgentConfigured = true;
       checkStateOfNavigationButtons(CONFIG_OVERVIEW_PAGE_INDEX, 'hidden', true);
     });
 
     it('Next button on Config Overview Page disabled when isApiAiAgentConfigured is false', function () {
-      controller.template.configuration.pages.VirtualAssistantConfigOverview.isApiAiAgentConfigured = false;
+      controller.template.configuration.pages.cvaConfigOverview.isApiAiAgentConfigured = false;
       checkStateOfNavigationButtons(CONFIG_OVERVIEW_PAGE_INDEX, 'hidden', false);
     });
 
     it('Next button on Access Token Page enabled when accessTokenValue is valid and validation not needed', function () {
-      controller.template.configuration.pages.VirtualAssistantAccessToken.accessTokenValue = '123';
-      controller.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = true;
-      controller.template.configuration.pages.VirtualAssistantAccessToken.needsValidation = false;
+      controller.template.configuration.pages.cvaAccessToken.accessTokenValue = '123';
+      controller.template.configuration.pages.cvaAccessToken.invalidToken = true;
+      controller.template.configuration.pages.cvaAccessToken.needsValidation = false;
       checkStateOfNavigationButtons(ACCESS_TOKEN_PAGE_INDEX, true, false);
 
-      controller.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = false;
+      controller.template.configuration.pages.cvaAccessToken.invalidToken = false;
       checkStateOfNavigationButtons(ACCESS_TOKEN_PAGE_INDEX, true, true);
     });
 
     it('Next button on Access Token Page disabled when accessTokenValue is valid and needs validation', function () {
-      controller.template.configuration.pages.VirtualAssistantAccessToken.accessTokenValue = '123';
-      controller.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = true;
-      controller.template.configuration.pages.VirtualAssistantAccessToken.needsValidation = true;
+      controller.template.configuration.pages.cvaAccessToken.accessTokenValue = '123';
+      controller.template.configuration.pages.cvaAccessToken.invalidToken = true;
+      controller.template.configuration.pages.cvaAccessToken.needsValidation = true;
       checkStateOfNavigationButtons(ACCESS_TOKEN_PAGE_INDEX, true, false);
 
-      controller.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = false;
+      controller.template.configuration.pages.cvaAccessToken.invalidToken = false;
       checkStateOfNavigationButtons(ACCESS_TOKEN_PAGE_INDEX, true, false);
     });
 
     it('Next button on Name Page enabled when nameValue is not empty', function () {
-      controller.template.configuration.pages.VirtualAssistantName.nameValue = 'Hello World';
+      controller.template.configuration.pages.vaName.nameValue = 'Hello World';
       checkStateOfNavigationButtons(NAME_PAGE_INDEX, true, true);
     });
 
     it('Next button on Name Page disabled when nameValue too long', function () {
-      controller.template.configuration.pages.VirtualAssistantName.nameValue = repeatString('X', controller.maxNameLength);
+      controller.template.configuration.pages.vaName.nameValue = repeatString('X', controller.maxNameLength);
       checkStateOfNavigationButtons(NAME_PAGE_INDEX, true, true);
 
-      controller.template.configuration.pages.VirtualAssistantName.nameValue = repeatString('X', controller.maxNameLength + 1);
+      controller.template.configuration.pages.vaName.nameValue = repeatString('X', controller.maxNameLength + 1);
       checkStateOfNavigationButtons(NAME_PAGE_INDEX, true, false);
     });
 
     it('Next button on Name Page disabled when nameValue is empty', function () {
-      controller.template.configuration.pages.VirtualAssistantName.nameValue = '';
+      controller.template.configuration.pages.vaName.nameValue = '';
       checkStateOfNavigationButtons(NAME_PAGE_INDEX, true, false);
     });
 
     it('Next button on Name Page disabled when nameValue is only spaces', function () {
-      controller.template.configuration.pages.VirtualAssistantName.nameValue = '  ';
+      controller.template.configuration.pages.vaName.nameValue = '  ';
       checkStateOfNavigationButtons(NAME_PAGE_INDEX, true, false);
     });
 
     it('Next button on Name Page disabled when nameValue is not unique', function () {
       controller.service.featureList.data = [{ name: 'hi i am baymax', id: '1' }];
-      controller.template.configuration.pages.VirtualAssistantName.nameValue = 'Hi I am Baymax';
+      controller.template.configuration.pages.vaName.nameValue = 'Hi I am Baymax';
       checkStateOfNavigationButtons(NAME_PAGE_INDEX, true, false);
 
-      controller.template.configuration.pages.VirtualAssistantName.nameValue = 'Baymax';
+      controller.template.configuration.pages.vaName.nameValue = 'Baymax';
       checkStateOfNavigationButtons(NAME_PAGE_INDEX, true, true);
     });
 
@@ -316,7 +316,7 @@ describe('Care Setup Virtual Assistant Ctrl', function () {
 
     it('Next button on Avatar Page enabled when avatar file error', function () {
       controller.avatarUploadState = controller.avatarState.PREVIEW;
-      controller.template.configuration.pages.VirtualAssistantAvatar.avatarError = 'FileUploadError';
+      controller.template.configuration.pages.vaAvatar.avatarError = 'FileUploadError';
       checkStateOfNavigationButtons(NAME_PAGE_INDEX, true, false);
     });
   });
@@ -332,26 +332,26 @@ describe('Care Setup Virtual Assistant Ctrl', function () {
 
     it('should validateToken successfully', function () {
       deferred.resolve(true);
-      controller.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = true;
-      controller.template.configuration.pages.VirtualAssistantAccessToken.needsValidation = true;
+      controller.template.configuration.pages.cvaAccessToken.invalidToken = true;
+      controller.template.configuration.pages.cvaAccessToken.needsValidation = true;
 
       controller.validateAPIAIToken();
       $scope.$apply();
 
-      expect(controller.template.configuration.pages.VirtualAssistantAccessToken.invalidToken).toEqual(false);
-      expect(controller.template.configuration.pages.VirtualAssistantAccessToken.needsValidation).toEqual(false);
+      expect(controller.template.configuration.pages.cvaAccessToken.invalidToken).toEqual(false);
+      expect(controller.template.configuration.pages.cvaAccessToken.needsValidation).toEqual(false);
     });
 
     it('should validateToken unsuccessfully', function () {
       deferred.reject(false);
-      controller.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = false;
-      controller.template.configuration.pages.VirtualAssistantAccessToken.needsValidation = true;
+      controller.template.configuration.pages.cvaAccessToken.invalidToken = false;
+      controller.template.configuration.pages.cvaAccessToken.needsValidation = true;
 
       controller.validateAPIAIToken();
       $scope.$apply();
 
-      expect(controller.template.configuration.pages.VirtualAssistantAccessToken.invalidToken).toEqual(true);
-      expect(controller.template.configuration.pages.VirtualAssistantAccessToken.needsValidation).toEqual(false);
+      expect(controller.template.configuration.pages.cvaAccessToken.invalidToken).toEqual(true);
+      expect(controller.template.configuration.pages.cvaAccessToken.needsValidation).toEqual(false);
     });
   });
   describe('Avatar Page', function () {
@@ -365,28 +365,28 @@ describe('Care Setup Virtual Assistant Ctrl', function () {
     it('should validate avatar file type', function () {
       deferredFileDataUrl.resolve('');
       const size = 1000;
-      controller.template.configuration.pages.VirtualAssistantAvatar.avatarError = controller.avatarErrorType.NO_ERROR;
+      controller.template.configuration.pages.vaAvatar.avatarError = controller.avatarErrorType.NO_ERROR;
       controller.uploadAvatar({ name: 'abc.jpeg', size });
-      expect(controller.template.configuration.pages.VirtualAssistantAvatar.avatarError).toEqual(controller.avatarErrorType.FILE_TYPE_ERROR);
+      expect(controller.template.configuration.pages.vaAvatar.avatarError).toEqual(controller.avatarErrorType.FILE_TYPE_ERROR);
 
-      controller.template.configuration.pages.VirtualAssistantAvatar.avatarError = controller.avatarErrorType.NO_ERROR;
+      controller.template.configuration.pages.vaAvatar.avatarError = controller.avatarErrorType.NO_ERROR;
       controller.uploadAvatar({ name: 'abc.png', size });
-      expect(controller.template.configuration.pages.VirtualAssistantAvatar.avatarError).toEqual(controller.avatarErrorType.NO_ERROR);
+      expect(controller.template.configuration.pages.vaAvatar.avatarError).toEqual(controller.avatarErrorType.NO_ERROR);
     });
 
     it('should validate avatar file size', function () {
       deferredFileDataUrl.resolve('');
-      controller.template.configuration.pages.VirtualAssistantAvatar.avatarError = controller.avatarErrorType.NO_ERROR;
+      controller.template.configuration.pages.vaAvatar.avatarError = controller.avatarErrorType.NO_ERROR;
       controller.uploadAvatar({ name: 'abc.png' , size: controller.MAX_AVATAR_FILE_SIZE + 1 });
-      expect(controller.template.configuration.pages.VirtualAssistantAvatar.avatarError).toEqual(controller.avatarErrorType.FILE_SIZE_ERROR);
+      expect(controller.template.configuration.pages.vaAvatar.avatarError).toEqual(controller.avatarErrorType.FILE_SIZE_ERROR);
 
-      controller.template.configuration.pages.VirtualAssistantAvatar.avatarError = controller.avatarErrorType.NO_ERROR;
+      controller.template.configuration.pages.vaAvatar.avatarError = controller.avatarErrorType.NO_ERROR;
       controller.uploadAvatar({ name: 'abc.png' , size: 0 });
-      expect(controller.template.configuration.pages.VirtualAssistantAvatar.avatarError).toEqual(controller.avatarErrorType.FILE_SIZE_ERROR);
+      expect(controller.template.configuration.pages.vaAvatar.avatarError).toEqual(controller.avatarErrorType.FILE_SIZE_ERROR);
 
-      controller.template.configuration.pages.VirtualAssistantAvatar.avatarError = controller.avatarErrorType.NO_ERROR;
+      controller.template.configuration.pages.vaAvatar.avatarError = controller.avatarErrorType.NO_ERROR;
       controller.uploadAvatar({ name: 'abc.png' , size: controller.MAX_AVATAR_FILE_SIZE });
-      expect(controller.template.configuration.pages.VirtualAssistantAvatar.avatarError).toEqual(controller.avatarErrorType.NO_ERROR);
+      expect(controller.template.configuration.pages.vaAvatar.avatarError).toEqual(controller.avatarErrorType.NO_ERROR);
     });
   });
   describe('Summary Page', function () {

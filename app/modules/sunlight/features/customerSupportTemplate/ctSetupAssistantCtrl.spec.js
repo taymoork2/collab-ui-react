@@ -1120,7 +1120,7 @@ describe('Care Setup Assistant Ctrl', function () {
       $scope.$apply();
 
       expect($modal.open).toHaveBeenCalledWith({
-        template: require('modules/sunlight/features/template/ctEmbedCodeModal.tpl.html'),
+        template: require('modules/sunlight/features/customerSupportTemplate/wizardPages/ctEmbedCodeModal.tpl.html'),
         type: 'small',
         controller: 'EmbedCodeCtrl',
         controllerAs: 'embedCodeCtrl',
@@ -1158,7 +1158,7 @@ describe('Care Setup Assistant Ctrl', function () {
       $scope.$apply();
 
       expect($modal.open).toHaveBeenCalledWith({
-        template: require('modules/sunlight/features/template/ctEmbedCodeModal.tpl.html'),
+        template: require('modules/sunlight/features/customerSupportTemplate/wizardPages/ctEmbedCodeModal.tpl.html'),
         type: 'small',
         controller: 'EmbedCodeCtrl',
         controllerAs: 'embedCodeCtrl',
