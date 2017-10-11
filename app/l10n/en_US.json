@@ -8655,6 +8655,27 @@
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
+        },
+        "prerequisites": {
+          "title": "Hybrid Media Prerequisites",
+          "cannotReachFlagService": "Failed to read existing checkbox statuses.",
+          "steps": "Steps",
+          "intro": "Use this checklist alongside the deployment guide. Make sure you complete all the prerequisites necessary for deploying Hybrid Media Service in your organization.",
+          "openDocumentation": "Open Documentation",
+          "meetMinimumSystemRequirements": "Meet the minimum system requirements described in Requirements for Hybrid Media Service",
+          "verifyDeploymentModels": "Verify the supported deployment models described in Deployment Models Supported by Hybrid Media Service",
+          "ensureNetworkConnectivity": "Ensure that your network allows connectivity on the ports and using the protocols described in Ports and Protocols Used by Hybrid Media Service",
+          "ensureBandwidth": "Ensure that your network supports the bandwidth requirements described in Bandwidth Requirements for Hybrid Media Service",
+          "acquireInformation": "Acquire the following information to assign to your Hybrid Media Node:",
+          "acquireInformationHelp1": "IP address",
+          "acquireInformationHelp2": "Network mask",
+          "acquireInformationHelp3": "Gateway IP address",
+          "acquireInformationHelp4": "DNS servers",
+          "acquireInformationHelp5": "NTP servers",
+          "acquireInformationHelp6": "Choose the hostname to be configured on the Hybrid Media Node.",
+          "acquireInformationHelp7": "If you plan to configure Hybrid Media Node with FQDN, create both forward- and reverse-DNS (A- and PTR-records) in the DNS confirguration",
+          "chooseSupportedHardware": "Choose a supported hardware or specifications-based configuration for your Hybrid Media Node",
+          "verifyHypervisor": "Make sure your server is running VMware ESXi 6 (or later) and vSphere 6 (or later) with a VM host operational."
         }
       },
       "hybridImp": {
