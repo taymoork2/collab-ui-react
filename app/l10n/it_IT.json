@@ -552,7 +552,7 @@
     "isPartner": "Questa organizzazione è un partner?",
     "beId": "BeID",
     "begeoId": "BegeoId",
-    "addSuccess": "Un'organizzazione è stata avviata correttamente per {{customerOrgName}} con {{licenseCount}} licenze per {{licenseDuration}} giorni.",
+    "addSuccess": "Un'organizzazione è stata avviata correttamente per {{customerOrgName}} con {{licenseCount}} licenze per {{duration}} giorni.",
     "manageBetaFeatures": "Gestione funzioni beta",
     "betaFeatures": "Funzioni beta",
     "errorGettingToggles": "Si è verificato un problema nel richiamo dei pulsanti di attivazione/disattivazione delle funzioni per le organizzazioni selezionate",

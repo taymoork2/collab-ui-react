@@ -144,7 +144,7 @@
     "deleteUserDnFallbackError": "ユーザーの削除中にエラーが発生しました。ユーザーのディレクトリ番号はハント グループのフォールバック先として使用されます。",
     "onboardSuccess": "{{email}} が正常にオンボーディングされました",
     "onboardError": "{{email}} はオンボーディングされていません。ステータス: {{status}}",
-    "onboardedWithoutLicense": "{{Email}} はライセンスなしでオンボーディングされました",
+    "onboardedWithoutLicense": "{{email}} はライセンスなしでオンボーディングされました",
     "accessDeniedError": "{{email}} を追加できません。アクセスが拒否されました。",
     "ciscoucError": "{{email}} は通話サービスに正常にオンボーディングできませんでした。",
     "messageError": "メッセージ: {{message}}",
@@ -1210,7 +1210,7 @@
         "language": "プライマリ言語"
       },
       "audio": {
-        "title": "{{Site}} の音声",
+        "title": "{{site}} の音声",
         "general": "音声",
         "product": "製品名",
         "service": "サービス名",
@@ -1221,7 +1221,7 @@
         "ccaspSubscriptionId": "CCA-SP サブスクリプション ID"
       },
       "conferencing": {
-        "title": "{{Site}} の音声",
+        "title": "{{site}} の音声",
         "general": "電話会議",
         "product": "製品名",
         "service": "サービス名",
@@ -2421,7 +2421,7 @@
     },
     "connectorUpgrade": {
       "title": "コネクタ アップグレード",
-      "text": "{{Version}} への {{name}} コネクタを更新しようとしています。",
+      "text": "{{version}} への {{name}} コネクタを更新しようとしています。",
       "releaseNotes": "リリース ノート",
       "releaseNotesLink": "新しいタブで開く",
       "upgradeNow": "今すぐアップグレード"
@@ -2672,7 +2672,7 @@
         "notPerformed": "実行されません",
         "successful": "成功",
         "failed": "失敗",
-        "testFor": "{{Target}} のテスト",
+        "testFor": "{{target}} のテスト",
         "tests": "テスト",
         "result": "結果",
         "details": "詳細",
@@ -3080,7 +3080,7 @@
       },
       "alertBannerNumber": "{count, plural, other{Upgrades for connectors available!}}",
       "alertBannerTime": "{count, plural, other{They}} が {date} に適用されます。",
-      "alertBannerLink": "<a ng-click=\"{{onclick}}\">{{Service}} コネクタを今すぐアップグレードします</a>。"
+      "alertBannerLink": "<a ng-click=\"{{onclick}}\">{{service}} コネクタを今すぐアップグレードします</a>。"
     },
     "hybridServicesConnectorSidepanel": {
       "alarmDetails": "アラーム詳細"
@@ -3929,7 +3929,7 @@
     "successCreateCe": "{{name}} の作成に成功しました。",
     "successDeleteCe": "{{name}} の削除に成功しました。",
     "successUpdateCe": "{{name}} の更新に成功しました。",
-    "successImport": "{{Hours}} 営業時間と {{holidays}} 休日のコピーに成功しました",
+    "successImport": "{{hours}} 営業時間と {{holidays}} 休日のコピーに成功しました",
     "errorCreateCe": "{{name}} の作成に失敗: {{statusText}} ({{status}})。",
     "errorDeleteCe": "{{name}} の削除に失敗: {{statusText}} ({{status}})。",
     "errorUpdateCe": "{{name}} の更新に失敗: {{statusText}} ({{status}})。",
@@ -4052,11 +4052,11 @@
     "phoneMenuErrorTargetMissing": "{{schedule}} スケジュールの電話メニュー {{at}} のアクションのターゲットを選択し忘れています。",
     "phoneMenuSubmenuErrorTargetMissing": "{{schedule}} スケジュールの電話メニュー {{at}} のサブメニューでターゲット アクションを選択し忘れています。",
     "subMenuErrorNoInputValuesEntered": "{{schedule}} スケジュールの電話メニュー {{at}} のサブメニューでアクションを選択し忘れています。",
-    "routeCallErrorRouteToVoicemailTargetMissing": "{{Schedule}} 通話のルーティングのスケジュール {{at}}: ボイスメールにルーティングするために必要なターゲットがありません。",
-    "routeCallErrorRouteToUserTargetMissing": "{{Schedule}} 通話のルーティングのスケジュール {{at}}: ユーザーにルーティングするために必要なターゲットがありません。",
-    "routeCallErrorRouteToHGTargetMissing": "{{Schedule}} 通話のルーティングのスケジュール {{at}}: ハント グループにルーティングするために必要なターゲットがありません。",
-    "routeCallErrorRouteToAATargetMissing": "{{Schedule}} 通話のルーティングのスケジュール {{at}}: 自動アテンダントにルーティングするために必要なターゲットがありません。",
-    "routeCallErrorRouteToPhoneNumberTargetMissing": "{{Schedule}} 通話のルーティングのスケジュール {{at}}: 電話番号へルーティングするために必要なターゲットがないか、ターゲットが無効です。",
+    "routeCallErrorRouteToVoicemailTargetMissing": "{{schedule}} 通話のルーティングのスケジュール {{at}}: ボイスメールにルーティングするために必要なターゲットがありません。",
+    "routeCallErrorRouteToUserTargetMissing": "{{schedule}} 通話のルーティングのスケジュール {{at}}: ユーザーにルーティングするために必要なターゲットがありません。",
+    "routeCallErrorRouteToHGTargetMissing": "{{schedule}} 通話のルーティングのスケジュール {{at}}: ハント グループにルーティングするために必要なターゲットがありません。",
+    "routeCallErrorRouteToAATargetMissing": "{{schedule}} 通話のルーティングのスケジュール {{at}}: 自動アテンダントにルーティングするために必要なターゲットがありません。",
+    "routeCallErrorRouteToPhoneNumberTargetMissing": "{{schedule}} 通話のルーティングのスケジュール {{at}}: 電話番号へルーティングするために必要なターゲットがないか、ターゲットが無効です。",
     "dynamicText": "ダイナミック テキスト",
     "variable": "変数",
     "readAs": "読み取り",
@@ -4714,7 +4714,7 @@
     "numbers": "{count, plural, other{番号 # 件}}",
     "importNumbersTitle": "Import {count, plural, other{# Numbers}}",
     "newNumbers": "{{count}} 新規",
-    "portNumbers": "{{Count}} ポート",
+    "portNumbers": "{{count}} ポート",
     "thankYou": "ありがとうございます",
     "setupSuccess": "PSTN サービスのセットアップが正常に完了ました。",
     "nextStep": "次のステップ",
@@ -4777,7 +4777,7 @@
         "areacodes": "無料通話の市外局番の検索に失敗しました。",
         "inventory": "無料通話番号の在庫の検索に失敗しました。"
       },
-      "unsupportedNumberType": "電話番号 {{Number}} の番号種別 {{type}} は現在サポートされていません。",
+      "unsupportedNumberType": "電話番号 {{number}} の番号種別 {{type}} は現在サポートされていません。",
       "unsupportedOrderType": "注文をカートに追加する際にエラーが発生しました。注文種別 {{type}} は現在サポートされていません。",
       "phoneNumbers": "最大 10 件の電話番号を追加することができます。",
       "customerNotFound": "PSTN の顧客レコードが見つかりません。アシスタンスが必要な場合は、Cisco TAC に連絡してください。"
@@ -6472,12 +6472,12 @@
     "customInfo": "以下に会社のロゴをアップロードして、Cisco アプリケーションのカスタマー エクスペリエンスをブランディングしましょう。",
     "exampleLink": " (例を参照)",
     "useCiscoLogo": "デフォルトの Cisco ロゴを使用",
-    "usePartnerLogo": "{{Partner}} のロゴを使用",
+    "usePartnerLogo": "{{partner}} のロゴを使用",
     "useOwnLogo": "自分のロゴを使用",
     "logoPlaceholder": "ここにドラッグ アンド ドロップするか、クリックしてアップロードしてください",
     "logoUploadNote": "最高の結果を得るために、ロゴは透明で画像の外側に余白がないものを使用してください。画像ファイルのサイズは 1 MB 未満である必要があります。",
     "customBrandingExample": "カスタム ブランディングの例",
-    "companyLogo": "{{Name}} ロゴ",
+    "companyLogo": "{{name}} ロゴ",
     "brandingExampleIntro": "アップロードされたロゴは、サイズが自動調整されて以下の例のように表示されます。",
     "uploadLogo": "ロゴのアップロード",
     "logoOnAbout": "Cisco Spark 情報タブに表示されている {{name}} のロゴの例。",
@@ -8281,7 +8281,7 @@
     "confirmCsvCancelMsg": "続行すると現在のデータ エクスポートがキャンセルされます。アクションを取り消すことはできません。",
     "isRunning": "エクスポート タスクがすでに実行中です。後でもう一度試してください。",
     "inProgress": "バックグラウンド タスクの {{type}} リストのエクスポートが実行中です...",
-    "success": "{{Type}} リストがコンパイルされ、ダウンロードが開始されました。",
+    "success": "{{type}} リストがコンパイルされ、ダウンロードが開始されました。",
     "error": "ユーザー レポートのエクスポートに失敗しました。",
     "unsupported": "要求されたエクスポート タイプはサポートされていません"
   },

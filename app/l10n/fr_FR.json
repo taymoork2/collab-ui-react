@@ -891,7 +891,7 @@
     "active": "Actif(s)",
     "activeUsers": "Utilisateurs actifs",
     "allUsers": "Utilisateurs les plus actifs {{time}}",
-    "overallActiveUserGraphError": "{{Time}}, ce sont les utilisateurs les plus actifs. La table peut être triée par nom d'utilisateur ou par nombre total de contacts traités.",
+    "overallActiveUserGraphError": "Une erreur s'est produite lors du chargement de données utilisateur actives détaillées.",
     "activeUserTableError": "Une erreur s'est produite lors du chargement des données des utilisateurs les plus actifs pour le(s) client(s) sélectionné(s).",
     "mostActiveError": "Un erreur s'est produite lors du chargement des données des utilisateurs les plus actifs.",
     "calls": "Appels",
@@ -1020,7 +1020,7 @@
     "drilldownShow": "Afficher les utilisateurs les plus efficaces",
     "drilldownHide": "Masquer les utilisateurs les plus efficaces",
     "drilldownTitle": "Utilisateurs les plus efficaces {{time}}",
-    "drilldownDescription": "{{temps}}, ces utilisateurs sont ceux qui ont traité les tâches efficacement avec moins de temps de traitement. Le tableau peut être trié par le nom d’utilisateur ou la moyenne du temps de traitement.",
+    "drilldownDescription": "{{time}}, ces utilisateurs sont ceux qui ont traité les tâches efficacement avec moins de temps de traitement. Le tableau peut être trié par le nom d’utilisateur ou la moyenne du temps de traitement.",
     "drilldownErrorDescription": "Ces données sont momentanément indisponibles. Nos serveurs tentent de les renvoyer au plus tôt, veuillez revérifier ultérieurement.",
     "drilldownEmptyDescription": "{{time}}, il n'y a eu aucun utilisateur actif. Pour afficher le statut utilisateur et renvoyer les invitations à ceux qui sont toujours en attente, visitez l'onglet Utilisateurs.",
     "averageHandleTime": "Moyenne du temps de traitement",
@@ -1033,7 +1033,7 @@
     "drilldownShow": "Afficher les utilisateurs ayant les meilleurs scores de satisfaction client (CSAT)",
     "drilldownHide": "Masquer les utilisateurs ayant les meilleurs scores de satisfaction client (CSAT)",
     "drilldownTitle": "Utilisateurs les mieux notés {{{time}}",
-    "drilldownDescription": "{{temps}}, ces utilisateurs sont ceux qui ont obtenu les meilleurs scores de satisfaction client (CSAT). Le tableau peut être trié par le nom d’utilisateur ou la moyenne des scores de satisfaction client (CSAT).",
+    "drilldownDescription": "{{time}}, ces utilisateurs sont ceux qui ont obtenu les meilleurs scores de satisfaction client (CSAT). Le tableau peut être trié par le nom d’utilisateur ou la moyenne des scores de satisfaction client (CSAT).",
     "drilldownErrorDescription": "Ces données sont momentanément indisponibles. Nos serveurs tentent de les renvoyer au plus tôt, veuillez revérifier ultérieurement.",
     "drilldownEmptyDescription": "{{time}}, il n'y a eu aucun utilisateur actif. Pour afficher le statut utilisateur et renvoyer les invitations à ceux qui sont toujours en attente, visitez l'onglet Utilisateurs.",
     "user": "Utilisateur",
@@ -1852,7 +1852,7 @@
       "desc": "Choisissez si cet utilisateur est autorisé à effectuer des transferts d'appel externes et des conférences. Ceci effacera les paramètres généraux.",
       "neverAllow": "Ne jamais autoriser",
       "alwaysAllow": "Toujours autoriser",
-      "orgSetting": "Paramètres de l’organisation ({{État}})",
+      "orgSetting": "Paramètres de l’organisation ({{state}})",
       "success": "Les paramètres de transferts d'appels externes/conférences ont été enregistrés avec succès.",
       "error": "La modification des paramètres de transferts d'appels externes/conférences a échoué."
     },
@@ -1869,7 +1869,7 @@
       "premiumDesc": "Choisissez si les utilisateurs sont autorisés à composer des numéros sortants payants. Ces numéros incluent ceux commençant par {{premiumNumbers}}.",
       "neverAllow": "Ne jamais autoriser",
       "alwaysAllow": "Toujours autoriser",
-      "orgSetting": "Paramètres de l’organisation ({{État}})",
+      "orgSetting": "Paramètres de l’organisation ({{state}})",
       "success": "Les paramètres de restriction d'appel ont été enregistrés avec succès.",
       "error": "Impossible de modifier les restrictions d’appel"
     },
@@ -3468,7 +3468,7 @@
       "invalidEmailLimit": "Saisissez un maximum de 5 adresses électroniques",
       "invalidSpaceIdLimit": "La recherche doit être limitée à moins de 5 identifiants d'espaces",
       "noMatchesFound": "Aucune correspondance n'a été trouvée",
-      "requestFailed": "La demande a échoué : ID de suivi {{trackingID}}",
+      "requestFailed": "La demande a échoué : ID de suivi {{trackingId}}",
       "504RequestFailed": "La recherche a expiré : ID de suivi {{trackingId}}"
     },
     "encryption": {
@@ -4656,7 +4656,7 @@
     "privatePstnTrunk": "Jonction RTCP privée"
   },
   "pstnOrderDetail": {
-    "orderNumber": "N° de commande {{order}}",
+    "orderNumber": "N° de commande {{orderId}}",
     "pendingNumbers": "{count, plural, =1{Il y a # numéro} other{Il y a # numéros}} en attente pour cette commande",
     "searchPlaceholder": "Rechercher des numéros de téléphone",
     "waitOnTOSAcceptance": "En attente de l'acceptation des Conditions d'utilisation du client",
@@ -5257,8 +5257,8 @@
     "noAccountInfo": "Aucune information sur le compte n'est disponible pour cette organisation. Ceci est probablement dû à l'accès à une organisation basée sur un serveur d'intégration, sur un serveur de production. Veuillez vérifier que cette organisation existe sur le serveur que vous utilisez.",
     "ariaTooltips": {
       "service": "Service {{serviceName}}",
-      "quantity": "Quantité {{quantité}}",
-      "status": "Statut {status}}",
+      "quantity": "Quantité {{quantity}}",
+      "status": "Statut {{status}}",
       "url": "URL {{url}}"
     },
     "popUpTitle": "Fenêtre contextuelle bloquée",

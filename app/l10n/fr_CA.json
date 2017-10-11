@@ -796,7 +796,7 @@
   "sharedMeetingReports": {
     "title": "UTILISATION PARTAGÉE POUR LES RÉUNIONS",
     "link": "Afficher les rapports",
-    "hostsSharingLicenses": "{{Usage}} utilisateurs",
+    "hostsSharingLicenses": "{{usage}} utilisateurs",
     "volumeOfLicenses": "{{volume}} licences de réunions partagées",
     "availableSharedLicenses": "Licences partagées disponibles : ",
     "sharedMeetingReport": "Rapport de réunions partagé",
