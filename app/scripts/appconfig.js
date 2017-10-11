@@ -1821,49 +1821,6 @@
               displayName: translateDisplayName('usersPreview.rolesAndSecurity'),
             },
           })
-          .state('user-overview.cmc', {
-            views: {
-              'side-panel-container@user-overview': {
-                template: '<cmc-user-details-settings user="$resolve.user" ng-if="$resolve.hasCmcFeatureToggle"></cmc-user-details-settings>',
-              },
-            },
-            params: {
-              service: 'CMC',
-            },
-            resolve: {
-              displayName: translateDisplayName('cmc.userSettings.title'),
-              user: /* @ngInject */ function ($stateParams) {
-                return _.get($stateParams, 'currentUser');
-              },
-              hasCmcFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasMobileConvergence);
-              },
-            },
-          })
-          .state('cmc-base', {
-            abstract: true,
-            parent: 'main',
-            template: require('modules/cmc/details/cmc-details.html'),
-          })
-          .state('cmc', {
-            parent: 'cmc-base',
-            views: {
-              header: {
-                template: '<cmc-details-header></cmc-details-header>',
-              },
-              main: {
-                template: '<div ui-view></div>',
-              },
-            },
-          })
-          .state('cmc.settings', {
-            url: '/services/cmc-settings',
-            template: '<cmc-details-settings></cmc-details-settings>',
-          })
-          .state('cmc.status', {
-            url: '/services/cmc-status',
-            template: '<cmc-details-status></cmc-details-status>',
-          })
 
           // FOR Development: allow editing of user's feature toggles
           .state('edit-featuretoggles', {

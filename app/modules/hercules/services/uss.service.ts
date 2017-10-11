@@ -13,7 +13,6 @@ export interface IStatusSummary {
 export interface IUserProps {
   userId: string;
   resourceGroups: {
-    'cmc'?: string,
     'squared-fusion-cal'?: string,
     'squared-fusion-uc'?: string,
     'squared-fusion-ec'?: string,

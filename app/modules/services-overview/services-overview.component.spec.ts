@@ -109,11 +109,6 @@ describe('ServicesOverviewController', () => {
       expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.hybridImp.title' }).length).toBe(1);
     });
 
-    it('should create a cmc card', () => {
-      initController();
-      expect(_.filter(ctrl.getCmcCards(), { name: 'servicesOverview.cards.cmc.title' }).length).toBe(1);
-    });
-
     it('should load the webex site list', () => {
       initController();
       expect(Authinfo.getConferenceServicesWithoutSiteUrl).toHaveBeenCalled();

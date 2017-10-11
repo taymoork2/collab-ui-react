@@ -48,7 +48,6 @@ module.exports = {
   atlasMediaServicePhaseTwoDotFive: 'atlas-media-service-phase-two-dot-five',
   atlasMediaServiceTrustedSIP: 'atlas-media-service-trusted-sip',
   atlasMediaServiceVideo: 'atlas-media-service-video',
-  atlasMobileConvergence: 'atlas-mobile-convergence',
   atlasMyCompanyBillingTab: 'atlas-my-company-billing-tab',
   atlasNewCiDataModel: 'atlas-new-ci-data-model',
   atlasNewRoomSystems: 'atlas-new-roomSystems',
