@@ -1,6 +1,7 @@
 <div ng-form="$ctrl.licenseDistributionForm">
   <div class="distribute-licenses-heading">
-    <h4 translate="firstTimeWizard.distributeYourWebExLicenses"></h4>
+    <h4 translate="webexSiteManagement.redistributeLicensesDesc"></h4>
+    <p translate="webexSiteManagement.redistributeLicensesDesc2"></p>
   </div>
   <div ng-repeat="licenses in $ctrl.distributedLicensesArray">
     <div ng-if="$first" class="row element-spacing adjust-card-margin">
@@ -10,13 +11,14 @@
           <article>
             <section class="row">
               <p class="col-md-7">{{$ctrl.offerCodeToCenterTypeString(site.centerType)}}</p>
-              <p class="col-md-5 count align-license-count" ng-class="{'error': ($ctrl.getLicensesRemaining(site.centerType) < 0)}">{{$ctrl.getLicensesRemaining(site.centerType)}}</p>
+              <p class="col-md-5 count align-license-count"
+                ng-class="{'error': ($ctrl.getLicensesRemaining(site.centerType) < 0)}">{{$ctrl.getLicensesRemaining(site.centerType)}}
+              </p>
             </section>
           </article>
         </cs-card>
       </div>
     </div>
-
     <div class="row license_distrib__row--site">
       <div ng-repeat="site in licenses">
         <div ng-if="$first" class="col-md-3">{{site.siteUrl}}.webex.com</div>
@@ -33,14 +35,18 @@
           </div>
       </div>
     </div>
-    <div class="row error" ng-if="$ctrl.licenseDistributionForm.$dirty" >
-      <div class="message" ng-if ="$ctrl.getLicensesForSite(licenses[0].siteUrl) === 0" translate="firstTimeWizard.meetingSettingsError.totalSiteLicenseNumber" translate-values="{siteUrl: licenses[0].siteUrl}"></div>
+    <div class="row error" ng-if="$ctrl.licenseDistributionForm.$dirty">
+      <div class="message"
+        ng-if="$ctrl.getLicensesForSite(licenses[0].siteUrl) === 0"
+        translate="firstTimeWizard.meetingSettingsError.totalSiteLicenseNumber"
+        translate-values="{siteUrl: licenses[0].siteUrl}"></div>
     </div>
     <div ng-if="$last" class="row element-spacing">
       <div ng-repeat="site in licenses">
         <div ng-if="$first" class="col-md-3" translate="common.total"></div>
-        <div class="col-md-2 align-license-count-total" ng-class="{'error': ($ctrl.getLicensesRemaining(site.centerType) < 0)}">{{$ctrl.getLicensesAssignedTotal(site.centerType)}}</div>
+        <div class="col-md-2 align-license-count-total"
+          ng-class="{'error': ($ctrl.getLicensesRemaining(site.centerType) < 0)}">{{$ctrl.getLicensesAssignedTotal(site.centerType)}}</div>
       </div>
     </div>
-  </div>
+    </div>
 </div>

@@ -1919,13 +1919,10 @@
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<webex-add-site-modal subscription-list="$resolve.subscriptionList"  conference-licenses="$resolve.conferenceLicenses" audio-licenses="$resolve.audioLicenses" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site->',
+                template: '<webex-add-site-modal subscription-list="$resolve.subscriptionList" audio-licenses="$resolve.audioLicenses" title="\'firstTimeWizard.addWebexSite\'" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site->',
               },
             },
             resolve: {
-              conferenceLicenses: /* @ngInject */ function (Authinfo) {
-                return _.map(Authinfo.getConferenceServices(), 'license');
-              },
               audioLicenses: /*@ngInject */ function (Authinfo, Config) {
                 var audioLicenses = _.filter(Authinfo.getLicenses(), { licenseType: Config.licenseTypes.AUDIO });
                 return audioLicenses;
@@ -1933,6 +1930,23 @@
               subscriptionList: /* @ngInject */ function (Authinfo) {
                 var subscriptionIds = _.map(Authinfo.getSubscriptions(), 'externalSubscriptionId');
                 return subscriptionIds;
+              },
+            },
+          })
+          .state('site-list-distribute-licenses', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                template: '<webex-add-site-modal subscription-list="$resolve.subscriptionList" single-step="3" title="\'webexSiteManagement.redistributeLicenses\'" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site->',
+              },
+            },
+            params: {
+              subscriptionId: null,
+            },
+            resolve: {
+              subscriptionList: /* @ngInject */ function (Authinfo, $stateParams) {
+                var subscriptionIds = $stateParams['subscriptionId'];
+                return [subscriptionIds];
               },
             },
           })

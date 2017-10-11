@@ -46,14 +46,9 @@ class WebexSiteNewCtrl implements ng.IComponentController {
   public disableValidateButton = false;
   public onSitesAdd: Function;
   public onValidationStatusChange: Function;
-  public sitesArray: IWebExSite[]; // = [];
+  public sitesArray: IWebExSite[];
   public newSitesArray: IWebExSite[] = [];
 
-  /*public $onChanges(changes) {
-    if (changes.sitesArray) {
-      this.sitesArray = _.clone(changes.sitesArray.currentValue);
-    }
-  }*/
 
   public addSite(site) {
     this.newSitesArray.push(site);
