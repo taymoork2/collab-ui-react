@@ -1927,7 +1927,7 @@
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<webex-add-site-modal subscription-list="$resolve.subscriptionList" audio-licenses="$resolve.audioLicenses" title="\'firstTimeWizard.addWebexSite\'" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site->',
+                template: '<webex-add-site-modal subscription-list="$resolve.subscriptionList" audio-licenses="$resolve.audioLicenses" title="\'firstTimeWizard.addWebexSite\'" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site-modal>',
               },
             },
             resolve: {
@@ -1945,16 +1945,36 @@
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<webex-add-site-modal subscription-list="$resolve.subscriptionList" single-step="3" title="\'webexSiteManagement.redistributeLicenses\'" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site->',
+                template: '<webex-add-site-modal subscription-list="$resolve.subscriptionList" single-step="3" title="\'webexSiteManagement.redistributeLicenses\'" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site-modal>',
               },
             },
             params: {
               subscriptionId: null,
             },
             resolve: {
-              subscriptionList: /* @ngInject */ function (Authinfo, $stateParams) {
+              subscriptionList: /* @ngInject */ function ($stateParams) {
                 var subscriptionIds = $stateParams['subscriptionId'];
                 return [subscriptionIds];
+              },
+            },
+          })
+          .state('site-list-delete', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                template: '<webex-delete-site-modal subscription-id="$resolve.subscriptionId" site-url="$resolve.siteUrl" title="\'webexSiteManagement.redistributeLicenses\'" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-delete-site-modal>',
+              },
+            },
+            params: {
+              subscriptionId: null,
+              siteUrl: null,
+            },
+            resolve: {
+              subscriptionId: /* @ngInject */ function ($stateParams) {
+                return $stateParams['subscriptionId'];
+              },
+              siteUrl: /* @ngInject */ function ($stateParams) {
+                return $stateParams['siteUrl'];
               },
             },
           })

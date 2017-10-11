@@ -1,6 +1,6 @@
 import './webex-site.scss';
 
-import { IWebExSite, IWebexLicencesPayload } from 'modules/core/setupWizard/meeting-settings/meeting-settings.interface';
+import { IWebExSite, IConferenceLicense, IWebexLicencesPayload } from 'modules/core/setupWizard/meeting-settings/meeting-settings.interface';
 import { SetupWizardService } from 'modules/core/setupWizard/setup-wizard.service';
 import { Config } from 'modules/core/config/config';
 import { EventNames } from './webex-site.constants';
@@ -14,7 +14,7 @@ class WebexAddSiteModalController implements ng.IComponentController {
 
   // parameters for child controls
   public sitesArray: IWebExSite[] = [];
-  public conferenceLicensesInSubscription;
+  public conferenceLicensesInSubscription: IConferenceLicense[];
   public audioPackage?: string;
 
   // parameters received
@@ -30,7 +30,6 @@ class WebexAddSiteModalController implements ng.IComponentController {
   public steps: IStep[];
   public currentStep = 0;
   public firstStep = 0;
-
   private totalSteps = 4;
   private isCanProceed = true;
   private audioPartnerName = '';
@@ -64,7 +63,8 @@ class WebexAddSiteModalController implements ng.IComponentController {
       }
     }
     if (changes.subscriptionList) {
-      this.subscriptionList = _.clone(changes.subscriptionList.currentValue);
+      const webexList = <string[]>_.chain(this.SetupWizardService.getWebexLicenses()).map('billingServiceId').uniq().value();
+      this.subscriptionList = _.intersection(changes.subscriptionList.currentValue, webexList);
       this.changeCurrentSubscription(_.first(this.subscriptionList));
       if (this.subscriptionList.length === 1 && _.isNil(this.singleStep)) {
         this.firstStep = 1;

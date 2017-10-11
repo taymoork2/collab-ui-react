@@ -566,6 +566,7 @@ export class Config {
       'site-list',
       'site-list-add',
       'site-list-distribute-licenses',
+      'site-list-delete',
       'site-csv-import',
       'site-csv',
       'site-csv-results',

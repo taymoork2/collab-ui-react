@@ -1,0 +1,28 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$ctrl.cancel()">
+    <span class="sr-only" translate="common.close"></span>
+  </button>
+  <h3 class="modal-title" translate="webexSiteManagement.redistributeLicenses"></h3>
+</div>
+<div class="modal-body">
+  <p translate="webexSiteManagement.redistributeLicensesDelete"
+    translate-values="{siteUrl: $ctrl.siteUrl}"></p>
+  <p translate="webexSiteManagement.deleteSiteNote"></p>
+  <webex-site-licenses sites-array="$ctrl.sitesArray"
+    conference-licenses-in-subscription="$ctrl.conferenceLicensesInSubscription"
+    is-hide-description="true"
+    on-distribution-change="$ctrl.updateSitesWithNewDistribution(sites, isValid)">
+  </webex-site-licenses>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-default"
+    ng-click="$ctrl.cancel()"
+    translate="common.cancel"></button>
+  <button class="btn btn-primary"
+    cs-btn
+    loading="$ctrl.isLoading"
+    ng-click="$ctrl.next()"
+    ng-disabled="$ctrl.isNextDisabled()">
+    <span translate="common.delete"></span>
+  </button>
+</div>

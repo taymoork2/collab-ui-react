@@ -15,12 +15,15 @@ class WebexSiteLicensesCtrl implements ng.IComponentController {
   public sitesArray: IWebExSite[];
   public distributedLicensesArray: IWebExSite[][];
   public centerDetails: { centerType: string; volume: number; }[];
+  public isHideDescription: boolean;
   public onDistributionChange: Function;
 
-  public $onChanges(changes: ng.IOnChangesObject): void {
-    const existingWebexSites = this.getExistingWebexSites(changes.conferenceLicensesInSubscription.currentValue);
-    this.centerDetails = this.getWebExMeetingsLicenseTypeDetails(changes.conferenceLicensesInSubscription.currentValue);
-    this.constructDistributedSitesArray(existingWebexSites);
+  public $onChanges(): void {
+    if (this.sitesArray && this.conferenceLicensesInSubscription) {
+      const existingWebexSites = this.getExistingWebexSites(this.conferenceLicensesInSubscription);
+      this.centerDetails = this.getWebExMeetingsLicenseTypeDetails(this.conferenceLicensesInSubscription);
+      this.constructDistributedSitesArray(existingWebexSites);
+    }
   }
 
   /* AG THIS IMPLEMENTATIONS IS DRASTICALLY DIFFERENT FROM THE WIZARD */
@@ -204,6 +207,7 @@ export class WebexSiteLicensesComponent implements ng.IComponentOptions {
   public bindings = {
     sitesArray: '<',
     conferenceLicensesInSubscription: '<',
+    isHideDescription: '<?',
     onDistributionChange: '&',
   };
 }
