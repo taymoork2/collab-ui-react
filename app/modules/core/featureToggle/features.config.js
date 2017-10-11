@@ -115,7 +115,6 @@ module.exports = {
   geoHintEnabled: 'geo-hint-enabled',
   hf6932Certificate: 'h-f6932-certificate',
   hi1033: 'h-i1033',
-  hI1474: 'h-i1474',
   hI1484: 'h-i1484', // Multi-Location Support
   hI802: 'h-i802',
   hRegionalTones: 'h-regional-tones',

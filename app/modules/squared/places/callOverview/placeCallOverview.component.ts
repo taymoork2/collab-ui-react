@@ -23,7 +23,7 @@ class PlaceCallOverview implements ng.IComponentController {
   public isprov3698: boolean = false;
   public primaryLineEnabled: boolean;
   public userPrimaryNumber: PrimaryNumber;
-  public isPrimaryLineFeatureEnabled: boolean = false;
+  public isPrimaryLineFeatureEnabled: boolean = true;
   private showPhoneButtonLayout: boolean = false;
   public primaryLineFeature: IPrimaryLineFeature;
   public buttonLayoutPromise: any;
@@ -83,13 +83,11 @@ class PlaceCallOverview implements ng.IComponentController {
   private initServices(): void {
     const promises  = {
       1: this.LineService.getLineList(LineConsumerType.PLACES, this.currentPlace.cisUuid, this.wide),
-      2: this.PrimaryLineService.isPrimaryLineFeatureEnabled(),
-      3: this.PlaceCallOverviewService.getCmiPlaceInfo(this.currentPlace.cisUuid),
+      2: this.PlaceCallOverviewService.getCmiPlaceInfo(this.currentPlace.cisUuid),
     };
     this.$q.all(promises).then( data => {
       this.directoryNumbers = data[1];
-      this.isPrimaryLineFeatureEnabled = data[2];
-      this.userPrimaryNumber = _.get(data[3], 'primaryNumber');
+      this.userPrimaryNumber = _.get(data[2], 'primaryNumber');
       this.checkPrimaryLineFeature(this.userPrimaryNumber);
     }).then (() => {
       this.buttonLayoutPromise.finally(() => {
