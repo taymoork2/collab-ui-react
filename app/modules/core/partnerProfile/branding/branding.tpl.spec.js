@@ -74,6 +74,13 @@ describe('Template: branding', function () {
     compileView();
   }
 
+  describe('pre conditions', function () {
+    beforeEach(compileView);
+    it('Verify show branding is set', function () {
+      expect(controller.showBranding).toBe(true);
+    });
+  });
+
   describe('client versions dropdown', function () {
     beforeEach(compileView);
     it('client versions drop down to exist', function () {

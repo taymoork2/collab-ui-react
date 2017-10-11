@@ -5,7 +5,6 @@ import './_settings.scss';
 import authenticationModule from './authentication';
 import emailModule from './email';
 import brandingModule from './branding';
-import deviceBrandingModule from './deviceBranding';
 import domainsModule from './domain';
 import dirSyncModule from './dirsync';
 import privacySectionModule from './privacySection';
@@ -15,6 +14,7 @@ import externalCommunicationModule from './externalCommunication';
 import fileSharingControlModule from './fileSharingControl';
 import sipDomainModule from './sipDomain';
 import supportSectionModule from './supportSection';
+import webexVersionModule from './webexVersion';
 
 export default angular.module('core.settings', [
   require('angular-cache'),
@@ -23,7 +23,6 @@ export default angular.module('core.settings', [
   authenticationModule,
   emailModule,
   brandingModule,
-  deviceBrandingModule,
   dirSyncModule,
   privacySectionModule,
   retentionModule,
@@ -33,6 +32,7 @@ export default angular.module('core.settings', [
   domainsModule,
   sipDomainModule,
   supportSectionModule,
+  webexVersionModule,
 ])
   .controller('SettingsCtrl', SettingsCtrl)
   .name;

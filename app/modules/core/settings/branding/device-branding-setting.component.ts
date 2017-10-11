@@ -4,16 +4,19 @@ import { DeviceBrandingController } from './device-branding-setting.controller';
 export class DeviceBrandingSetting extends SettingSection {
   public description: string;
   public subsectionLabel: string;
+  public deviceBranding = true;
+
   /* @ngInject */
-  public constructor() {
+  public constructor(public isPartner: boolean, public branding: boolean) {
     super('branding');
     this.subsectionLabel = '';
-    this.description = "Brand your employee's experience with Cisco applications, emails and devices by uploading custom logos and/or imagery.";
+    this.subsectionDescription = '';
+    this.description = 'globalSettings.branding.' + (isPartner ? 'descriptionPartner' : 'description');
   }
 }
 
 export class DeviceBrandingSettingComponent implements ng.IComponentOptions {
   public controller = DeviceBrandingController;
   public controllerAs = 'dbctrl';
-  public template = require('modules/core/settings/deviceBranding/device-branding-setting.tpl.html');
+  public template = require('modules/core/settings/branding/device-branding-setting.tpl.html');
 }
