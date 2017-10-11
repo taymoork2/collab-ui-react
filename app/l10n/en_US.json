@@ -5379,7 +5379,7 @@
   "companyCallerId": {
     "companyCallerId": "Company Caller ID",
     "companyCallerIdDesc": "Specify the default outbound Caller ID. Exceptions can be made at the individual user's settings.",
-    "companyCallerIdLocationDesc": "Specify the default outbound Caller ID. Exceptions can be made for each location and at the individual user's settings.",
+    "companyCallerIdLocationDesc": "Specify the default Caller ID for this location. You can also override this setting for individual users.",
     "callerIdName": "Caller ID Name",
     "callerIdNumber": "Caller ID Number"
   },
