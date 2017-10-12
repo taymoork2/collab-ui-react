@@ -12,6 +12,7 @@
           cs-required="$ctrl.isNumberRequired()"
           is-disabled="$ctrl.isNumberDisabled"
           filter="true"
+          on-change-fn="$ctrl.onEcbnChange(value)"
           refresh-data-fn="$ctrl.getEmegencyCallBackNumbers(filter)"
           wait-time="200">
         </cs-select>
