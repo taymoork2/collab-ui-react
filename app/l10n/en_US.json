@@ -8518,7 +8518,7 @@
     "cards": {
       "shared": {
         "service": "Service",
-        "configure": "Configure",
+        "configure": "Edit settings",
         "resources": "Resources",
         "viewAll": "View all"
       },
