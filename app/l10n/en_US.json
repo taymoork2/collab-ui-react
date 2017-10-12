@@ -3125,61 +3125,6 @@
       }
     }
   },
-  "cmc": {
-    "failures": {
-      "preCheckFailure": "Status check of org failed with: {{msg}}",
-      "userStatusFailure": "User Status request failed with: {{msg}}",
-      "saveFailure": "Save failed with: {{msg}}",
-      "alreadyRegisteredForAtLeastOneMoreUser": "is already registered for at least one other user"
-    },
-    "userMenu": {
-      "crossServices": "Cross Services",
-      "mobile": "Mobile",
-      "statusOk": "Mobile Convergence",
-      "statusNok": "Error"
-    },
-    "userSettings": {
-      "title": "Mobile Convergence",
-      "mobileNumber": "Mobile Number",
-      "enabled": "Enabled",
-      "status": "Status"
-    },
-    "detailsPage": {
-      "title": "Mobile",
-      "settings": "Settings",
-      "status": "Status"
-    },
-    "details": {
-      "invalidInput": "Always provide valid mobile number when enabling"
-    },
-    "settingsPage": {
-      "title": "Mobile Convergence",
-      "description": "Current data is read only, for configuration please contact your Cisco specialist.",
-      "mobileProvider": {
-        "title": "Mobile Operator",
-        "description": "The mobile network operator associated with your organization. All Collaboration Mobile Convergence enabled users within your organization must have a mobile plan with this operator."
-      },
-      "serviceProvider": {
-        "title": "Hosted Collaboration Provider",
-        "description": "The service provider hosting and maintaining Cisco Hosted Collaboration Solutions (HCS) for your organization. All collaboration Mobile Convergence enabled users within your organization must be configured for HCS with this provider."
-      }
-    },
-    "statusPage": {
-      "listingFirstActiveUsers": "Listing the first {{noOfActiveUsers}} active users",
-      "callServiceAwareNotEntitled": "Not entitled for Call Aware",
-      "sparkMobileConvergence": "Mobile Convergence",
-      "subHeading": "User Status Report",
-      "status": {
-        "active": "Active"
-      },
-      "table": {
-        "username": "User Name",
-        "mobileNumber": "Mobile Number",
-        "serviceStatus": "Service Status",
-        "lastUpdated": "Last Updated"
-      }
-    }
-  },
   "context": {
     "pageTitle": "Hybrid Context Service",
     "clusters": {
@@ -8800,14 +8745,6 @@
         "routing": "Routing from the cloud to your premise over the enterprise private trunk will happen via the verified domains you selected:",
         "deactivateTitle": "Confirm Deactivate Enterprise Private Trunk",
         "deactivateConfirm": "You are about to deactivate Enterprise Private Trunk Service. Be aware that this action deletes all Cisco Spark remote SIP destinations configuration and disables the service for all users."
-      },
-      "cmc": {
-        "title": "Mobile",
-        "description": "Mobile Convergence is a service which allows you to call any mobile phone from any Cisco device. The service is set up by your Cisco Professional. Please contact your Cisco Professional for changes.",
-        "buttons": {
-          "settings": "Settings",
-          "status": "Status"
-        }
       }
     },
     "showMore": "View all",

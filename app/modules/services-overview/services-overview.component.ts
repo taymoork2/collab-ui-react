@@ -3,7 +3,6 @@ import { ServicesOverviewMessageCard } from './cloud/message-card';
 import { ServicesOverviewMeetingCard } from './cloud/meeting-card';
 import { ServicesOverviewCallCard } from './cloud/cloud-call-card';
 import { ServicesOverviewCareCard } from './cloud/care-card';
-import { ServicesOverviewCmcCard } from './cloud/cmc-card';
 import { ServicesOverviewHybridServicesCard } from './hybrid/hybrid-services-card';
 import { ServicesOverviewHybridAndGoogleCalendarCard } from './hybrid/hybrid-and-google-calendar-card';
 import { ServicesOverviewHybridCalendarCard } from './hybrid/hybrid-calendar-card';
@@ -33,7 +32,6 @@ export class ServicesOverviewController implements ng.IComponentController {
     new ServicesOverviewCallCard(this.Authinfo, this.Config),
     new ServicesOverviewCareCard(this.Authinfo),
     new ServicesOverviewHybridServicesCard(this.Authinfo),
-    new ServicesOverviewCmcCard(this.Authinfo),
     new ServicesOverviewHybridAndGoogleCalendarCard(this.$state, this.$q, this.$modal, this.Authinfo, this.CloudConnectorService, this.Notification),
     new ServicesOverviewHybridCalendarCard(this.Authinfo),
     new ServicesOverviewHybridCallCard(this.Authinfo),
@@ -234,12 +232,6 @@ export class ServicesOverviewController implements ng.IComponentController {
   public getHybridCards() {
     return _.filter(this.cards, {
       cardType: CardType.hybrid,
-    });
-  }
-
-  public getCmcCards() {
-    return _.filter(this.cards, {
-      cardType: CardType.cmc,
     });
   }
 

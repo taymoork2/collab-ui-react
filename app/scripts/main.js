@@ -214,11 +214,6 @@
 
   angular.module('Gemini', ['Core']);
 
-  angular.module('CMC', [
-    'Core',
-    require('modules/cmc').default,
-  ]);
-
   module.exports = angular.module('Main', [
     'Core',
     'Squared',
@@ -235,7 +230,6 @@
     'GSS',
     'oc.lazyLoad',
     'Gemini',
-    'CMC',
     'Csdm',
     require('modules/services-overview').default,
   ]).config(require('./main.config'))
