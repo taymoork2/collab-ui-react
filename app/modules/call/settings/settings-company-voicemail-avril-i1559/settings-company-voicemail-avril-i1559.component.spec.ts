@@ -120,9 +120,9 @@ describe('Component: companyVoicemailAvril', () => {
       this.view.find(VOICEMAIL_TOGGLE).click();
       this.view.find(VOICEMAIL_TO_PHONE).click();
       expect(this.view).toContainElement(COMPANY_NUMBER_SELECT);
-      expect(this.view.find(COMPANY_NUMBER_SELECT).find(DROPDOWN_OPTIONS).get(1)).toHaveText('(972) 555-1212');
-      expect(this.view.find(COMPANY_NUMBER_SELECT).find(DROPDOWN_OPTIONS).get(2)).toHaveText('(972) 555-1313');
-      expect(this.view.find(COMPANY_NUMBER_SELECT).find(DROPDOWN_OPTIONS).get(3)).toHaveText('(972) 555-1414');
+      expect(this.view.find(COMPANY_NUMBER_SELECT).find(DROPDOWN_OPTIONS).get(0)).toHaveText('(972) 555-1212');
+      expect(this.view.find(COMPANY_NUMBER_SELECT).find(DROPDOWN_OPTIONS).get(1)).toHaveText('(972) 555-1313');
+      expect(this.view.find(COMPANY_NUMBER_SELECT).find(DROPDOWN_OPTIONS).get(2)).toHaveText('(972) 555-1414');
     });
 
     it('should call onChangeFn when an external number is chosen', function() {
@@ -139,8 +139,8 @@ describe('Component: companyVoicemailAvril', () => {
       });
       this.view.find(VOICEMAIL_TOGGLE).click();
       this.view.find(VOICEMAIL_TO_PHONE).click();
-      this.view.find(COMPANY_NUMBER_SELECT).find(DROPDOWN_OPTIONS).get(2).click();
-      expect(this.$scope.onChangeFn.calls.argsFor(1)).toEqual(['+19725551212', 'false', true, avrilFeatures]);
+      this.view.find(COMPANY_NUMBER_SELECT).find(DROPDOWN_OPTIONS).get(0).click();
+      expect(this.$scope.onChangeFn.calls.argsFor(1)).toEqual([GENERATED_VM_PILOT_NUMBER, 'true', true, avrilFeatures]);
     });
   });
 

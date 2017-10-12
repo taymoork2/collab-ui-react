@@ -71,7 +71,7 @@ class CompanyVoicemailAvrilI1559ComponentCtrl implements ng.IComponentController
     }
     if (externalNumberOptions) {
       if (externalNumberOptions.currentValue && _.isArray(externalNumberOptions.currentValue)) {
-        if (!_.isUndefined(this.selectedNumber) && !_.isEmpty(this.selectedNumber.value) || externalNumberOptions.currentValue.length) {
+        if (!_.isUndefined(this.selectedNumber) && !_.isEmpty(this.selectedNumber.value)) {
           this.externalNumberOptions.unshift(this.noneOption);
         } else if (externalNumberOptions.currentValue.length === 0) {
           this.selectedNumber = this.noneOption;
@@ -88,10 +88,8 @@ class CompanyVoicemailAvrilI1559ComponentCtrl implements ng.IComponentController
     if (this.localAvrilFeatures.VM2T && !_.isUndefined(this.selectedNumber) && !_.isEmpty(this.selectedNumber.value)) {
       this.onChange(_.get<string>(this.selectedNumber, 'value'), 'false', true);
     } else {
-      if (!this.site.voicemailPilotNumberGenerated) {
-        const pilotNumber = this.ServiceSetup.generateVoiceMailNumber(this.Authinfo.getOrgId(), this.dialPlanCountryCode);
-        this.onChange(pilotNumber, 'true', true);
-      }
+      const pilotNumber = this.ServiceSetup.generateVoiceMailNumber(this.Authinfo.getOrgId(), this.dialPlanCountryCode);
+      this.onChange(pilotNumber, 'true', true);
     }
   }
 
