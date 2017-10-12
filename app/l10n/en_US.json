@@ -7862,7 +7862,7 @@
       "desktopApps": "Desktop apps",
       "webApp": "Web app",
       "mobileApps": "Mobile apps",
-      "integrationAndBots": "Bots"
+      "bots": "Bots"
     },
     "support": {
       "title": "Support",

@@ -26,7 +26,7 @@
     type="checkbox"
     id="blockBotsDownload"
     ng-model="$ctrl.isBlockBotsDownload"
-    cs-input-label="{{::'globalSettings.fileSharingControl.integrationAndBots'|translate}}"
+    cs-input-label="{{::'globalSettings.fileSharingControl.bots'|translate}}"
     ng-disabled="$ctrl.isCheckboxDisabled()"/>
   <h5 class="sub-section__label" translate="globalSettings.fileSharingControl.uploadSubsectionLabel"></h5>
   <p class="sub-section__description" translate="globalSettings.fileSharingControl.uploadSubsectionLabelDescription"></p>
@@ -56,6 +56,6 @@
     type="checkbox"
     id="blockBotsUpload"
     ng-model="$ctrl.isBlockBotsUpload"
-    cs-input-label="{{::'globalSettings.fileSharingControl.integrationAndBots'|translate}}"
+    cs-input-label="{{::'globalSettings.fileSharingControl.bots'|translate}}"
     ng-disabled="$ctrl.isCheckboxDisabled() || $ctrl.isBlockBotsDownload"/>
 </div>
