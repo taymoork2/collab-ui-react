@@ -121,9 +121,9 @@ require('./_setup-wizard.scss');
         view: isFirstTimeSetup ? 'Service Setup' : 'overview: Meeting Settings Modal',
       };
 
-      if (SessionStorage.get(StorageKeys.SUBSCRIPTION_ID) && (SessionStorage.get(StorageKeys.PARTNER_ORG_ID) || SessionStorage.get(StorageKeys.PARTNER_ORG_ID))) {
+      if (SessionStorage.get(StorageKeys.SUBSCRIPTION_ID) && (SessionStorage.get(StorageKeys.PARTNER_ORG_ID) || SessionStorage.get(StorageKeys.CUSTOMER_ORG_ID))) {
         Analytics.trackServiceSetupSteps(Analytics.sections.SERVICE_SETUP.eventNames.REDIRECTED_INTO_ATLAS_FROM_OPC, analyticsProperties);
-      } else if (SessionStorage.get(StorageKeys.PARTNER_ORG_ID) || SessionStorage.get(StorageKeys.PARTNER_ORG_ID)) {
+      } else if (SessionStorage.get(StorageKeys.PARTNER_ORG_ID) || SessionStorage.get(StorageKeys.CUSTOMER_ORG_ID)) {
         var eventKey = SessionStorage.get(StorageKeys.PARTNER_ORG_ID)
           ? Analytics.sections.SERVICE_SETUP.eventNames.PARTNER_SETUP_OWNORG
           : Analytics.sections.SERVICE_SETUP.eventNames.PARTNER_SETUP_CUSTOMER;

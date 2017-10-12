@@ -10,6 +10,7 @@ describe('SetupWizardCtrl', function () {
       '$scope',
       '$state',
       '$stateParams',
+      'Analytics',
       'Authinfo',
       'FeatureToggleService',
       'Orgservice',
@@ -104,6 +105,17 @@ describe('SetupWizardCtrl', function () {
     });
     this.$scope.$apply();
   }
+
+  describe('Before initializing toggles', function () {
+    beforeEach(function () {
+      spyOn(this.Analytics, 'trackServiceSetupSteps').and.callThrough();
+      this.initController();
+    });
+
+    it('Service Setup Wizard metrics calls to Mixpanel should be made', function () {
+      expect(this.Analytics.trackServiceSetupSteps).toHaveBeenCalled();
+    });
+  });
 
   describe('When all toggles are false (and Authinfo.isSetupDone is false as well)', function () {
     beforeEach(function () {
