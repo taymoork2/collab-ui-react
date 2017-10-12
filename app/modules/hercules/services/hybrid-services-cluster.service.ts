@@ -29,12 +29,17 @@ export type HighLevelStatusForService = 'setupNotComplete' | 'operational' | 'im
 
 export class HybridServicesClusterService {
   private static readonly CONTEXT_CONNECTOR_OLD_VERSION = '2.0.1-10131';
+  private static readonly CACHE_KEY = 'hybrid-services-cluster-cache';
+  private static readonly CACHE_AGE_DEFAULT = 29 * 1000; // 29s (1 less then the connectors heartbeat)
+  private static readonly CACHE_EXPIRE_POLICY = 'passive';
+  private allResourcesCache;
 
   /* @ngInject */
   constructor(
     private $http: ng.IHttpService,
     private $q: ng.IQService,
     private Authinfo,
+    private CacheFactory,
     private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
     private HybridServicesUtilsService: HybridServicesUtilsService,
     private HybridServicesExtrasService: HybridServicesExtrasService,
@@ -50,30 +55,47 @@ export class HybridServicesClusterService {
     this.filterUnknownClusters = this.filterUnknownClusters.bind(this);
     this.filterClustersWithEmptyNames = this.filterClustersWithEmptyNames.bind(this);
     this.sortClusters = this.sortClusters.bind(this);
+    this.initCache();
   }
 
   public deleteMoratoria(clusterId: string, moratoriaId: string): ng.IPromise<''> {
     const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}/clusters/${clusterId}/upgradeSchedule/moratoria/${moratoriaId}`;
     return this.$http.delete<''>(url)
-      .then(this.extractDataFromResponse);
+      .then(this.extractDataFromResponse)
+      .then((res) => {
+        this.clearCache();
+        return res;
+      });
   }
 
   public deprovisionConnector(clusterId: string, connectorType: ConnectorType): ng.IPromise<''> {
     const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}/clusters/${clusterId}/provisioning/actions/remove/invoke?connectorType=${connectorType}`;
     return this.$http.post<''>(url, null)
-      .then(this.extractDataFromResponse);
+      .then(this.extractDataFromResponse)
+      .then((res) => {
+        this.clearCache();
+        return res;
+      });
   }
 
   public deregisterCluster(clusterId: string): ng.IPromise<''> {
     const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}/actions/deregisterCluster/invoke?clusterId=${clusterId}`;
     return this.$http.post<''>(url, null)
-      .then(this.extractDataFromResponse);
+      .then(this.extractDataFromResponse)
+      .then((res) => {
+        this.clearCache();
+        return res;
+      });
   }
 
   public deregisterEcpNode(connectorId: string): ng.IPromise<''> {
     const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}/actions/deregister/invoke?managementConnectorId=${connectorId}`;
     return this.$http.post<''>(url, null)
-      .then(this.extractDataFromResponse);
+      .then(this.extractDataFromResponse)
+      .then((res) => {
+        this.clearCache();
+        return res;
+      });
   }
 
   public get(clusterId: string, orgId?: string): ng.IPromise<IExtendedClusterFusion> {
@@ -104,9 +126,9 @@ export class HybridServicesClusterService {
       });
   }
 
-  public getAll(orgId?: string): ng.IPromise<IExtendedClusterFusion[]> {
-    const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId || this.Authinfo.getOrgId()}?fields=@wide`;
-    return this.$http.get<IFMSOrganization>(url)
+  public getAll(orgId = this.Authinfo.getOrgId()): ng.IPromise<IExtendedClusterFusion[]> {
+    const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId}?fields=@wide`;
+    return this.$http.get<IFMSOrganization>(url, { cache: this.allResourcesCache })
       .then(this.extractClustersFromResponse)
       .then(this.filterUnknownClusters)
       .then(this.filterClustersWithEmptyNames)
@@ -138,9 +160,9 @@ export class HybridServicesClusterService {
       .then(this.extractDataFromResponse);
   }
 
-  public getResourceGroups(): ng.IPromise<IResourceGroups> {
-    const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}?fields=@wide`;
-    return this.$http.get<IFMSOrganization>(url)
+  public getResourceGroups(orgId = this.Authinfo.getOrgId()): ng.IPromise<IResourceGroups> {
+    const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId}?fields=@wide`;
+    return this.$http.get<IFMSOrganization>(url, { cache: this.allResourcesCache })
       .then(this.extractDataFromResponse)
       .then((org) => {
         org.clusters = this.filterUnknownClusters(org.clusters);
@@ -200,7 +222,11 @@ export class HybridServicesClusterService {
   public postponeUpgradeSchedule(id: string, upgradeWindow: ITimeWindow): ng.IPromise<IMoratoria> {
     const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}/clusters/${id}/upgradeSchedule/moratoria`;
     return this.$http.post<IMoratoria>(url, { timeWindow: upgradeWindow })
-      .then(this.extractDataFromResponse);
+      .then(this.extractDataFromResponse)
+      .then((res) => {
+        this.clearCache();
+        return res;
+      });
   }
 
   public preregisterCluster(name: string, releaseChannel: string, targetType: ClusterTargetType): ng.IPromise<ICluster> {
@@ -210,7 +236,11 @@ export class HybridServicesClusterService {
       releaseChannel: releaseChannel,
       targetType: targetType,
     })
-    .then(this.extractDataFromResponse);
+    .then(this.extractDataFromResponse)
+    .then((res) => {
+      this.clearCache();
+      return res;
+    });
   }
 
   public processClustersToAggregateStatusForService(serviceId: HybridServiceId, clusterList: IExtendedClusterFusion[]): HighLevelStatusForService {
@@ -224,7 +254,7 @@ export class HybridServicesClusterService {
       return 'setupNotComplete';
     }
     // TODO: today we piggiyback on the method to compute the status for a service, inside a cluster.
-    // But find the status for a service overall (by taking into account al clusters) could be different.
+    // But find the status for a service overall (by taking into account all clusters) could be different.
     // For Expressways, we would have to look at it per resource group, and them have a different algorithm than today to decide.
     return this.HybridServicesClusterStatesService.getServiceStatusDetails(connectors).name;
   }
@@ -253,7 +283,11 @@ export class HybridServicesClusterService {
   public provisionConnector(clusterId: string, connectorType: ConnectorType): ng.IPromise<''> {
     const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}/clusters/${clusterId}/provisioning/actions/add/invoke?connectorType=${connectorType}`;
     return this.$http.post<''>(url, null)
-      .then(this.extractDataFromResponse);
+      .then(this.extractDataFromResponse)
+      .then((res) => {
+        this.clearCache();
+        return res;
+      });
   }
 
   public serviceIsSetUp(serviceId: HybridServiceId): ng.IPromise<boolean> {
@@ -319,19 +353,31 @@ export class HybridServicesClusterService {
   public setClusterInformation(clusterId: string, data: { name?: string; releaseChannel?: string; }): ng.IPromise<''> {
     const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}/clusters/${clusterId}`;
     return this.$http.patch<''>(url, data)
-      .then(this.extractDataFromResponse);
+      .then(this.extractDataFromResponse)
+      .then((res) => {
+        this.clearCache();
+        return res;
+      });
   }
 
   public setUpgradeSchedule(id: string, params: any): ng.IPromise<''> {
     const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}/clusters/${id}/upgradeSchedule`;
     return this.$http.patch<''>(url, params)
-      .then(this.extractDataFromResponse);
+      .then(this.extractDataFromResponse)
+      .then((res) => {
+        this.clearCache();
+        return res;
+      });
   }
 
   public updateHost(serial: string, params: any, orgId?: string): ng.IPromise<''> {
     const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId || this.Authinfo.getOrgId()}/hosts/${serial}`;
     return this.$http.patch<''>(url, params)
-      .then(this.extractDataFromResponse);
+      .then(this.extractDataFromResponse)
+      .then((res) => {
+        this.clearCache();
+        return res;
+      });
   }
 
   // PRIVATE
@@ -547,7 +593,7 @@ export class HybridServicesClusterService {
     }
   }
 
-  // to test
+  // TODO: add unit tests
   private getMaintenanceModeForCluster(cluster: IClusterWithExtendedConnectors): ConnectorMaintenanceMode {
     if (_.some(cluster.connectors, (connector) => connector.extendedProperties.maintenanceMode === 'pending')) {
       return 'pending';
@@ -562,10 +608,25 @@ export class HybridServicesClusterService {
     const allAreUpgraded = _.every(connectors, { upgradeState: 'upgraded' });
     return allAreUpgraded ? 'upgraded' : 'upgrading';
   }
+
+  public clearCache() {
+    this.allResourcesCache.removeAll();
+  }
+
+  private initCache() {
+    this.allResourcesCache = this.CacheFactory.get(HybridServicesClusterService.CACHE_KEY);
+    if (!this.allResourcesCache) {
+      this.allResourcesCache = new this.CacheFactory(HybridServicesClusterService.CACHE_KEY, {
+        maxAge: HybridServicesClusterService.CACHE_AGE_DEFAULT,
+        deleteOnExpire: HybridServicesClusterService.CACHE_EXPIRE_POLICY,
+      });
+    }
+  }
 }
 
 export default angular
   .module('hercules.hybrid-services-cluster-service', [
+    require('angular-cache'),
     require('modules/core/scripts/services/authinfo'),
     require('modules/hercules/services/hybrid-services-cluster-states.service').default,
     require('modules/hercules/services/hybrid-services-utils.service').default,
