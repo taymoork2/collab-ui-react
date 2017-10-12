@@ -6,7 +6,7 @@
   module.exports = Analytics;
 
   /* @ngInject */
-  function Analytics($q, $state, Authinfo, Config, Orgservice, TrialService, UserListService) {
+  function Analytics($q, $state, Authinfo, Config, Orgservice, TrialService, UrlConfig, UserListService) {
     var NO_EVENT_NAME = 'eventName not passed';
 
     var token = {
@@ -250,6 +250,7 @@
         hasInit = true;
         if (result) {
           mixpanel.init(result, {
+            api_host: UrlConfig.getMixpanelUrl(),
             persistence: 'localStorage', // default to localStorage, fallback to cookie
             cross_subdomain_cookie: false, // when cookies are needed, only use specific subdomain
           });
