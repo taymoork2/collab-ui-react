@@ -82,7 +82,6 @@
         id="voicemailToSpark"
         name="voicemailToSpark"
         ng-disabled="!$ctrl.isMessageEntitled"
-        required="!($ctrl.localAvrilFeatures.VM2T || $ctrl.localAvrilFeatures.VM2E)"
         ng-change="$ctrl.onVoicemailFeaturesChanged(value)"
         cs-input-label="{{::'serviceSetupModal.voicemailToSparkLabel' | translate}}">
         <div class="cs-checkbox-group" ng-if="$ctrl.localAvrilFeatures.VM2S || !$ctrl.isMessageEntitled">
