@@ -1140,6 +1140,7 @@ describe('Care Setup Assistant Ctrl', function () {
 
     it('should submit template successfully for Edit', function () {
       //by default, this flag is false
+      controller.template.configuration.virtualAssistant = undefined;
       expect(controller.saveCTErrorOccurred).toBeFalsy();
 
       spyOn($state, 'go');

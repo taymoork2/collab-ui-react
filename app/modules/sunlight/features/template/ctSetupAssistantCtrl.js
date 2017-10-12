@@ -968,6 +968,9 @@
     };
 
     vm.populateVirtualAssistantInfo = function () {
+      if (!vm.template.configuration.virtualAssistant) {
+        vm.template.configuration.virtualAssistant = _.cloneDeep(defaultVirtualAssistantConfig);
+      }
       vm.selectedVA = vm.template.configuration.virtualAssistant.config;
 
       // update modified VA Name from the configured VA info
