@@ -67,6 +67,15 @@
             </span>
         </div>
 
+        <div class="row collapse" ng-if="$ctrl.userStatus.messages.length">
+          <div class="columns small-3">
+            <span class="history-label">{{'cloudExtensions.details' | translate}}:</span>
+          </div>
+          <div class="columns small-9">
+            <user-status-messages messages="$ctrl.userStatus.messages"></user-status-messages>
+          </div>
+        </div>
+
       </div>
 
     </div>
