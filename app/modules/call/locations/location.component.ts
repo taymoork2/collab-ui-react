@@ -90,6 +90,7 @@ class CallLocationCtrl implements ng.IComponentController {
     this.updateECBNValue();
     return this.CallLocationSettingsService.save(this.callLocationSettingsData)
       .then(locationSettingsData => {
+        this.name = locationSettingsData.location.name;
         this.callLocationSettingsData = locationSettingsData;
         this.setEmergencyCallbackNumber(this.callLocationSettingsData.emergencyNumber);
         this.Notification.success('locations.saveSuccess');
