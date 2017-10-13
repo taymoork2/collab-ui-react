@@ -139,7 +139,6 @@ describe('Controller: Care Local Settings', function () {
   });
 
   describe('CareSettings - Setup Care - Success', function () {
-    var x = console;
     it('should call the onboard config api and flash setup care button', function () {
       $httpBackend.expectGET(sunlightChatConfigUrl).respond(404, {});
       $httpBackend.flush();
@@ -291,7 +290,7 @@ describe('Care Settings - when org has K2 entitlement', function () {
   it('should enable setup care button, when Org is not onboarded', function () {
     controller.defaultQueueStatus = controller.status.SUCCESS;
     $httpBackend.expectGET(urServiceUrl)
-        .respond(200, queueDetails);
+      .respond(200, queueDetails);
     $httpBackend.expectGET(sunlightChatConfigUrl)
       .respond(200, {
         csOnboardingStatus: 'Unknown',
@@ -304,7 +303,7 @@ describe('Care Settings - when org has K2 entitlement', function () {
   it('should disable setup care, if already onboarded', function () {
     controller.defaultQueueStatus = controller.status.SUCCESS;
     $httpBackend.expectGET(urServiceUrl)
-        .respond(200, queueDetails);
+      .respond(200, queueDetails);
     $httpBackend.expectGET(sunlightChatConfigUrl)
       .respond(200, {
         csOnboardingStatus: 'Success',
@@ -371,7 +370,7 @@ describe('Care Settings - when org has K2 entitlement', function () {
     controller.onboardToCare();
     $scope.$apply();
     $httpBackend.expectGET(urServiceUrl)
-        .respond(200, queueDetails);
+      .respond(200, queueDetails);
     $httpBackend.expectGET(sunlightChatConfigUrl)
       .respond(200, {
         csOnboardingStatus: 'Success',
@@ -560,7 +559,7 @@ describe('Partner Logged in as org admin: Care Settings - when org has K2 entitl
     controller.onboardToCare();
     $scope.$apply();
     $httpBackend.expectGET(urServiceUrl)
-        .respond(200, queueDetails);
+      .respond(200, queueDetails);
     $httpBackend.expectGET(sunlightChatConfigUrl)
       .respond(200, {
         csOnboardingStatus: 'Success',
@@ -597,7 +596,7 @@ describe('Partner Logged in as org admin: Care Settings - when org has K2 entitl
 
 describe('Admin logged in: Care Settings - when org has K2 entitlement', function () {
   var controller, sunlightChatConfigUrl, sunlightConfigService, $httpBackend, Notification, orgId, $interval, $intervalSpy,
-    $scope, q, HydraService, FeatureToggleService, urService, urServiceUrl, queueDetails;
+    $scope, q, HydraService, FeatureToggleService, urServiceUrl, queueDetails;
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
     getUserOrgId: jasmine.createSpy('getUserOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
@@ -746,7 +745,7 @@ describe('Admin logged in: Care Settings - when org has K2 entitlement', functio
     controller.onboardToCare();
     $scope.$apply();
     $httpBackend.expectGET(urServiceUrl)
-        .respond(200, queueDetails);
+      .respond(200, queueDetails);
     $httpBackend.expectGET(sunlightChatConfigUrl)
       .respond(200, {
         csOnboardingStatus: 'Success',
@@ -856,7 +855,7 @@ describe('Care Settings - Routing Toggling', function () {
     });
     controller.defaultQueueStatus = controller.status.SUCCESS;
     $httpBackend.expectGET(urServiceUrl)
-      .respond(200, {routingType: 'push'});
+      .respond(200, { routingType: 'push' });
     $httpBackend.flush();
     expect(controller).toBeDefined();
     expect(controller.queueConfig.selectedRouting).toBe(controller.RoutingType.PUSH);
@@ -906,7 +905,7 @@ describe('Care Settings - Routing Toggling', function () {
     controller.orgChatConfig.selectedChatCount = 4;
     controller.orgChatConfig.selectedVideoInChatToggle = true;
     $httpBackend.expectGET(urServiceUrl)
-      .respond(200, {routingType: 'push'});
+      .respond(200, { routingType: 'push' });
     $httpBackend.expectGET(sunlightChatConfigUrl)
       .respond(200, { maxChatCount: 3, videoCallEnabled: false });
     $httpBackend.flush();
@@ -935,7 +934,7 @@ describe('Care Settings - Routing Toggling', function () {
     controller.orgChatConfig.selectedChatCount = 4;
     controller.orgChatConfig.selectedVideoInChatToggle = true;
     $httpBackend.expectGET(urServiceUrl)
-      .respond(200, {routingType: 'push'});
+      .respond(200, { routingType: 'push' });
     $httpBackend.expectGET(sunlightChatConfigUrl)
       .respond(200, { maxChatCount: 5, videoCallEnabled: false });
     $httpBackend.flush();
