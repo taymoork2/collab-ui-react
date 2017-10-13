@@ -196,6 +196,18 @@
           FINISH_BUTTON_CLICK: 'Service Setup: Finish button clicked',
         },
       },
+      VIRTUAL_ASSISTANT: {
+        name: 'Virtual Assistant operations',
+        eventNames: {
+          CVA_OVERVIEW_PAGE: 'Customer VA Overview',
+          CVA_DIALOGUE_PAGE: 'Customer VA Dialogue Integration',
+          CVA_ACCESS_TOKEN_PAGE: 'Customer VA Client Access Token',
+          CVA_NAME_PAGE: 'Customer VA Name',
+          CVA_AVATAR_PAGE: 'Customer VA Avatar',
+          CVA_SUMMARY_PAGE: 'Customer VA Summary',
+          CVA_START_FINISH: 'Customer VA the entire wizard',
+        },
+      },
     };
 
     var service = {

@@ -52,28 +52,42 @@ export class CareSetupVirtualAssistantCtrl {
           enabled: true,
           isApiAiAgentConfigured: false,
           configurationType: this.VirtualAssistantService.configurationTypes.apiai,
+          startTimeInMillis: 0,
+          eventName: this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_OVERVIEW_PAGE,
         },
-        VirtualAssistantDialogIntegration: { enabled: true },
+        VirtualAssistantDialogIntegration: {
+          enabled: true,
+          startTimeInMillis: 0,
+          eventName: this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_DIALOGUE_PAGE,
+        },
         VirtualAssistantAccessToken: {
           enabled: true,
           accessTokenValue: '',
           invalidToken: true,
           validatingToken: false,
           needsValidation: true,
+          startTimeInMillis: 0,
+          eventName: this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_ACCESS_TOKEN_PAGE,
         },
         VirtualAssistantName: {
           enabled: true,
           nameValue: '',
+          startTimeInMillis: 0,
+          eventName: this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_NAME_PAGE,
         },
         VirtualAssistantAvatar: {
           enabled: true,
           fileValue: '',
           avatarError: this.avatarErrorType.NO_ERROR,
           uploadCanceled: false,
+          startTimeInMillis: 0,
+          eventName: this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_AVATAR_PAGE,
         },
         VirtualAssistantSummary: {
           enabled: true,
           visibleError: false,
+          startTimeInMillis: 0,
+          eventName: this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_SUMMARY_PAGE,
         },
       },
     },
@@ -103,10 +117,12 @@ export class CareSetupVirtualAssistantCtrl {
     private VirtualAssistantService,
     private Authinfo,
     private CTService,
-    private LogMetricsService,
+    private Analytics,
     private Notification,
     private UrlConfig,
   ) {
+
+    this.template.configuration.pages.VirtualAssistantConfigOverview.startTimeInMillis = Date.now();
     if (this.$stateParams.isEditFeature) {
       this.isEditFeature = true;
       this.template.templateId = this.$stateParams.template.id;
@@ -240,6 +256,8 @@ export class CareSetupVirtualAssistantCtrl {
       });
       controller.tokenFormErrors = {}; //Clear out as they've served their purpose
     }
+
+    this.template.configuration.pages[newState].startTimeInMillis = Date.now();
   }
   /**
    * Move forward to next page in modal series.
@@ -250,6 +268,10 @@ export class CareSetupVirtualAssistantCtrl {
     this.template.configuration.pages.VirtualAssistantAvatar.avatarError = this.avatarErrorType.NO_ERROR;
 
     const controller = this;
+    const durationInMillis = Date.now() -
+      controller.template.configuration.pages[controller.currentState].startTimeInMillis;
+    const analyticProps = { durationInMillis: durationInMillis };
+    controller.Analytics.trackEvent(controller.template.configuration.pages[controller.currentState].eventName, analyticProps);
     controller.animation = 'slide-left';
     controller.$timeout(function () {
       controller.currentState = controller.getAdjacentEnabledState(controller.getPageIndex(), 1);
@@ -535,13 +557,27 @@ export class CareSetupVirtualAssistantCtrl {
     controller.service.addConfig(type, name, config, orgId, avatarDataURL)
       .then(function () {
         controller.handleFeatureCreation();
-        controller.LogMetricsService.logMetrics('Created template for Care Virtual Assistant', controller.LogMetricsService.getEventType('careTemplateFinish'), controller.LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
+        controller.writeMetrics();
       })
       .catch(function (response) {
         controller.handleFeatureError();
         controller.Notification.errorWithTrackingId(response, controller.getVaMessageKey('messages.createConfigFailureText'));
       });
   }
+
+  /**
+   * Writing the metrics to the mixpanel for the last page and the overall wizard
+   */
+  private writeMetrics(): void {
+    const currentTimeInMillis = Date.now();
+    let durationInMillis = currentTimeInMillis - this.template.configuration.pages.VirtualAssistantSummary.startTimeInMillis;
+    let analyticProps = { durationInMillis: durationInMillis };
+    this.Analytics.trackEvent(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_SUMMARY_PAGE, analyticProps);
+    durationInMillis = currentTimeInMillis - this.template.configuration.pages.VirtualAssistantConfigOverview.startTimeInMillis;
+    analyticProps = { durationInMillis: durationInMillis };
+    this.Analytics.trackEvent(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_START_FINISH, analyticProps);
+  }
+
   /**
    * handle the result of successful feature update and store
    * @param response
@@ -570,7 +606,7 @@ export class CareSetupVirtualAssistantCtrl {
     controller.service.updateConfig(templateId, type, name, config, orgId, avatarDataURL)
       .then(function () {
         controller.handleFeatureUpdate();
-        controller.LogMetricsService.logMetrics('Updated template for Care VirtualAssistant', controller.LogMetricsService.getEventType('careTemplateFinish'), controller.LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
+        controller.writeMetrics();
       })
       .catch(function (response) {
         controller.handleFeatureError();
