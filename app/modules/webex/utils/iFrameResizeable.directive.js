@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function iFrameResizableDirective($window, WindowService) {
+  function iFrameResizableDirective($window, WindowEventService) {
     return function iFrameResizable($scope, element, attributes) {
       function initializeWindowSize() {
         var innerHeight = $window.innerHeight;
@@ -32,7 +32,7 @@
 
       initializeWindowSize();
 
-      WindowService.registerEventListener('resize', initializeWindowSizeAndApply, $scope);
+      WindowEventService.registerEventListener('resize', initializeWindowSizeAndApply, $scope);
     }; // iFrameResizable()
   } // iFrameResizableDirective ()
 
