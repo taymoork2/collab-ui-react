@@ -1,11 +1,11 @@
-import { ISite, Site } from './site';
+import { ISite, IRSite, Site } from './site';
 
 export class EmergencyCallBackNumber {
   public uuid: string;
   public pattern: string;
 }
 
-interface ISiteResource extends ng.resource.IResourceClass<ng.resource.IResource<Site>> {
+interface ISiteResource extends ng.resource.IResourceClass<ng.resource.IResource<IRSite>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
 }
 
@@ -93,7 +93,7 @@ export class HuronSiteService {
       voicemailPilotNumber: site.voicemailPilotNumber,
       voicemailPilotNumberGenerated: site.voicemailPilotNumberGenerated,
       siteDescription: site.siteDescription,
-      extensionLength: site.extensionLength,
+      extensionLength: site.extensionLength.toString(),
       preferredLanguage: site.preferredLanguage,
       country: site.country,
       dateFormat: site.dateFormat,
@@ -120,7 +120,7 @@ export class HuronSiteService {
       voicemailPilotNumber: site.voicemailPilotNumber,
       voicemailPilotNumberGenerated: site.voicemailPilotNumberGenerated,
       siteDescription: site.siteDescription,
-      extensionLength: site.extensionLength,
+      extensionLength: site.extensionLength.toString(),
       preferredLanguage: site.preferredLanguage,
       country: site.country,
       dateFormat: site.dateFormat,

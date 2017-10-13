@@ -10,7 +10,7 @@
           currently ng-include templates loaded through ngtemplate-loader
           TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
         -->
-        <div ng-include="vaSetupAssistant.getCurrentPage()"
+        <div ng-include="vaSetupAssistant.getCurrentPage()"  onload="vaSetupAssistant.onPageLoad()"
              ng-class="careChatSA.animation"></div>
       </form>
     </cs-setup-assistant>

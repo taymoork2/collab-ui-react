@@ -113,7 +113,6 @@ export class Config {
     fusion_khaos: 'squared-fusion-khaos',
     message: 'squared-room-moderation',
     imp: 'spark-hybrid-impinterop',
-    cmc: 'cmc',
   };
 
   public readonly licenseModel = {
@@ -271,6 +270,11 @@ export class Config {
   public readonly onlineProducts = {
     spark: 'Spark',
     webex: 'WebEx',
+  };
+
+  public readonly userManagementService = {
+    sparkControlHub: 'Spark Control Hub',
+    webexSiteAdmin: 'WebEx Site Admin',
   };
 
   public readonly licenseStatus = {
@@ -484,11 +488,6 @@ export class Config {
     'squared-fusion-khaos': [
       'cucm-cluster',
     ],
-    cmc: [
-      'cmc',
-      'cmc.status',
-      'cmc.settings',
-    ],
     'spark-hybrid-impinterop': [
       'imp-service',
     ],
@@ -566,6 +565,7 @@ export class Config {
     Site_Admin: [
       'site-list',
       'site-list-add',
+      'site-list-distribute-licenses',
       'site-csv-import',
       'site-csv',
       'site-csv-results',

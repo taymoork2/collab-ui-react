@@ -1,9 +1,11 @@
 import { Customer, CustomerVoice, HuronCustomerService, ServicePackage } from 'modules/huron/customer';
 import { CustomerSettings } from './customer-settings';
+import { ExtensionLengthService } from './extension-length.service';
 import { LocationsService, Location } from 'modules/call/locations/shared';
 import { CompanyNumber, ExternalCallerIdType } from 'modules/call/settings/settings-company-caller-id';
 import { MediaOnHoldService } from 'modules/huron/media-on-hold';
 import { AvrilService, AvrilCustomer } from 'modules/huron/avril';
+import { InternalNumberRange, InternalNumberRangeService } from 'modules/call/shared/internal-number-range';
 import { Notification } from 'modules/core/notifications';
 
 export class CallSettingsData {
@@ -28,6 +30,8 @@ export class CallSettingsService {
     private AvrilService: AvrilService,
     private LocationsService: LocationsService,
     private Notification: Notification,
+    private ExtensionLengthService: ExtensionLengthService,
+    private InternalNumberRangeService: InternalNumberRangeService,
     private CallerId,
     private ServiceSetup,
     private Authinfo,
@@ -58,6 +62,7 @@ export class CallSettingsService {
       .then(() => this.updateLocation(data.defaultLocation))
       .then(() => this.saveCompanyCallerId(data.companyCallerId))
       .then(() => this.saveCompanyMediaOnHold(data.companyMoh))
+      .then(() => this.saveExtensionLengthDecrease(data.customerVoice))
       .then(() => this.get())
       .catch(() => this.rejectAndNotifyPossibleErrors());
   }
@@ -196,6 +201,23 @@ export class CallSettingsService {
     }
   }
 
+  public saveExtensionLengthDecrease(customerVoice: CustomerVoice): ng.IPromise<any> {
+    if (!_.isEqual(this.callSettingsDataCopy.customerVoice.extensionLength, customerVoice.extensionLength)) {
+      return this.ExtensionLengthService.saveExtensionLength(customerVoice.extensionLength, null)
+      .then(() => this.getDefaultLocation())
+      .then(defaultLocation => {
+        const newDefaultInternalNumberRange: InternalNumberRange = this.InternalNumberRangeService.calculateDefaultExtensionRange(_.get(customerVoice, 'extensionLength'));
+        return this.InternalNumberRangeService.createLocationInternalNumberRange(_.get(defaultLocation, 'uuid'), newDefaultInternalNumberRange);
+      })
+      .catch(error => {
+        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.extensionLengthSaveFail'));
+        return this.$q.reject();
+      });
+    } else {
+      return this.$q.resolve();
+    }
+  }
+
   private getDefaultLocation() {
     return this.LocationsService.getDefaultLocation()
       .then(defaultLocation => {
@@ -207,9 +229,9 @@ export class CallSettingsService {
       });
   }
 
-  private updateLocation(data: Location): ng.IPromise<void> {
-    if (!_.isEqual(this.callSettingsDataCopy.defaultLocation, data.defaultLocation)) {
-      return this.LocationsService.updateLocation(data)
+  private updateLocation(location: Location): ng.IPromise<void> {
+    if (!_.isEqual(this.callSettingsDataCopy.defaultLocation, location)) {
+      return this.LocationsService.updateLocation(location)
       .catch(error => {
         this.errors.push(this.Notification.processErrorResponse(error, 'locations.updateFailed'));
         return this.$q.reject();

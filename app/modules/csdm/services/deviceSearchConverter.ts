@@ -2,11 +2,25 @@ import IHttpResponse = angular.IHttpResponse;
 import { DeviceHelper, HuronDeviceHelper } from './csdmHelper';
 import { SearchResult } from './search/searchResult';
 
+interface IPlace {
+  displayName: string;
+  cisUuid: string;
+  isPlace?: boolean;
+  url: string;
+}
+
+interface IIdentifiableDevice {
+  cisUuid: string;
+  displayName: string;
+}
+
 export class DeviceSearchConverter {
+  private csdmPlacesUrl: string;
   private deviceHelper: DeviceHelper;
 
   /* @ngInject */
-  constructor($translate) {
+  constructor($translate, private UrlConfig, private Authinfo) {
+    this.csdmPlacesUrl = this.UrlConfig.getCsdmServiceUrl() + '/organization/' + this.Authinfo.getOrgId() + '/places/';
     this.deviceHelper = new DeviceHelper($translate);
   }
 
@@ -17,9 +31,18 @@ export class DeviceSearchConverter {
     return result;
   }
 
+  public createPlaceholderPlace(device: IIdentifiableDevice): IPlace {
+    const newPlaceUrl = this.csdmPlacesUrl + device.cisUuid;
+
+    return {
+      cisUuid: device.cisUuid,
+      displayName: device.displayName,
+      isPlace: true,
+      url: newPlaceUrl };
+  }
 }
 
-export class Device {
+export class Device implements IIdentifiableDevice {
   public image: string;
   private imageFileName: string;
   public tags: string[];
@@ -32,6 +55,8 @@ export class Device {
   public isCloudberryDevice?: boolean;
   public isHuronDevice?: boolean;
   public url: string;
+  public displayName: string;
+  public cisUuid: string;
 
   constructor(deviceHelper) {
     Device.init(deviceHelper, this);

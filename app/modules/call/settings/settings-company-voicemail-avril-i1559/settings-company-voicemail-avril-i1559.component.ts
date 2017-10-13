@@ -7,7 +7,6 @@ class CompanyVoicemailAvrilI1559ComponentCtrl implements ng.IComponentController
   public site: Site;
   public features: IAvrilSiteFeatures;
   public selectedNumber: IOption;
-  public missingDirectNumbers: boolean = false;
   public filterPlaceholder: string;
   public externalNumberOptions: IOption[];
   public dialPlanCountryCode: string;
@@ -15,13 +14,15 @@ class CompanyVoicemailAvrilI1559ComponentCtrl implements ng.IComponentController
   public voicemailToPhone: boolean;
   public onNumberFilter: Function;
   public onChangeFn: Function;
-  public missingDirectNumbersHelpText: string = '';
   public avrilI1558: boolean = false;
   public avrilI1559: boolean = false;
   public isMessageEntitled: boolean = false;
   public localAvrilFeatures: IAvrilSiteFeatures;
   public siteLanguage: string;
   public isFirstTime: boolean;
+  public nonePlaceholder: string;
+  public placeholder: string;
+  private noneOption: IOption;
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
@@ -31,6 +32,12 @@ class CompanyVoicemailAvrilI1559ComponentCtrl implements ng.IComponentController
     private FeatureToggleService,
   ) {
     this.filterPlaceholder = this.$translate.instant('directoryNumberPanel.searchNumber');
+    this.placeholder = this.$translate.instant('directoryNumberPanel.chooseNumber');
+    this.nonePlaceholder = this.$translate.instant('directoryNumberPanel.none');
+    this.noneOption = {
+      label: this.nonePlaceholder,
+      value: '',
+    };
   }
 
   public $onInit(): void {
@@ -56,37 +63,35 @@ class CompanyVoicemailAvrilI1559ComponentCtrl implements ng.IComponentController
 
     if (site && site.currentValue) {
       if (_.get(site.currentValue, 'voicemailPilotNumber') &&
-        _.get(site.currentValue, 'voicemailPilotNumberGenerated') === false) {
+          _.get(site.currentValue, 'voicemailPilotNumberGenerated') === false) {
         this.localAvrilFeatures.VM2T = true;
         this.selectedNumber = this.setCurrentOption(_.get<string>(site.currentValue, 'voicemailPilotNumber'), this.externalNumberOptions);
-      } else {
-        this.localAvrilFeatures.VM2T = false;
       }
       this.siteLanguage = _.get<string>(site.currentValue, 'preferredLanguage');
     }
     if (externalNumberOptions) {
       if (externalNumberOptions.currentValue && _.isArray(externalNumberOptions.currentValue)) {
         if (!_.isUndefined(this.selectedNumber) && !_.isEmpty(this.selectedNumber.value) || externalNumberOptions.currentValue.length) {
-          this.missingDirectNumbers = false;
-          this.missingDirectNumbersHelpText = '';
+          this.externalNumberOptions.unshift(this.noneOption);
         } else if (externalNumberOptions.currentValue.length === 0) {
-          this.missingDirectNumbers = true;
-          this.missingDirectNumbersHelpText = this.$translate.instant('serviceSetupModal.voicemailNoDirectNumbersError');
+          this.selectedNumber = this.noneOption;
         }
       }
     }
   }
 
   public onCompanyVoicemailNumberChanged(): void {
-    this.onChange(this.selectedNumber.value, 'false', true);
+    this.onChange(_.get<string>(this.selectedNumber, 'value'), 'false', true);
   }
 
   public onVoicemailToPhoneChanged(): void {
-    if (this.localAvrilFeatures.VM2T) {
+    if (this.localAvrilFeatures.VM2T && !_.isUndefined(this.selectedNumber) && !_.isEmpty(this.selectedNumber.value)) {
       this.onChange(_.get<string>(this.selectedNumber, 'value'), 'false', true);
     } else {
-      const pilotNumber = this.ServiceSetup.generateVoiceMailNumber(this.Authinfo.getOrgId(), this.dialPlanCountryCode);
-      this.onChange(pilotNumber, 'true', true);
+      if (!this.site.voicemailPilotNumberGenerated) {
+        const pilotNumber = this.ServiceSetup.generateVoiceMailNumber(this.Authinfo.getOrgId(), this.dialPlanCountryCode);
+        this.onChange(pilotNumber, 'true', true);
+      }
     }
   }
 

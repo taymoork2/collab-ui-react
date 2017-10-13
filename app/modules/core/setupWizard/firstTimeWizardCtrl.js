@@ -5,7 +5,7 @@
     .controller('FirstTimeWizardCtrl', FirstTimeWizardCtrl);
 
   /* @ngInject */
-  function FirstTimeWizardCtrl($q, $scope, $state, $translate, AccountService, Authinfo, Orgservice, SetupWizardService) {
+  function FirstTimeWizardCtrl($q, $scope, $state, $translate, AccountService, Analytics, Authinfo, Orgservice, SetupWizardService) {
     $scope.greeting = $translate.instant('index.greeting', {
       name: Authinfo.getUserName(),
     });
@@ -14,6 +14,7 @@
       serviceSetupWizardComplete().then(function () {
         Authinfo.setSetupDone(true);
         $state.go('overview');
+        Analytics.trackServiceSetupSteps(Analytics.sections.SERVICE_SETUP.eventNames.FINISH_BUTTON_CLICK, { subscriptionId: SetupWizardService.getActingSubscriptionId() });
       });
     };
 

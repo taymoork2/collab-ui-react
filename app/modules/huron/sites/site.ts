@@ -18,7 +18,6 @@ interface IBaseSite {
   mediaTraversalMode?: string;
   siteDescription?: string;
   emergencyCallBackNumber?: EmergencyCallbackNumber;
-  extensionLength: string;
   preferredLanguage: string;
   country: string;
   dateFormat: string;
@@ -26,11 +25,12 @@ interface IBaseSite {
   routingPrefix?: string;
 }
 
-interface ISiteResponse extends IBaseSite {
+export interface IRSite extends IBaseSite {
   disableVoicemail?: string;
   regionCodeDialing?: IRegionCodeDialingResponse;
   voicemailPilotNumberGenerated?: string;
   allowExternalTransfer?: string;
+  extensionLength: string;
 }
 
 export interface ISite extends IBaseSite {
@@ -38,30 +38,31 @@ export interface ISite extends IBaseSite {
   regionCodeDialing: IRegionCodeDialing;
   voicemailPilotNumberGenerated: boolean;
   allowExternalTransfer: boolean;
+  extensionLength: number;
 }
 
 export class Site implements ISite {
-  public uuid;
-  public siteIndex;
-  public steeringDigit;
-  public siteCode;
-  public timeZone;
-  public voicemailPilotNumber;
-  public mediaTraversalMode;
-  public siteDescription;
-  public emergencyCallBackNumber;
-  public extensionLength;
-  public preferredLanguage;
-  public country;
-  public dateFormat;
-  public timeFormat;
-  public routingPrefix;
-  public disableVoicemail;
-  public regionCodeDialing;
-  public voicemailPilotNumberGenerated;
-  public allowExternalTransfer;
+  public uuid?: string;
+  public siteIndex: string;
+  public steeringDigit: string;
+  public siteCode?: string;
+  public timeZone: string;
+  public voicemailPilotNumber?: string;
+  public mediaTraversalMode?: string;
+  public siteDescription?: string;
+  public emergencyCallBackNumber?: EmergencyCallbackNumber;
+  public extensionLength: number;
+  public preferredLanguage: string;
+  public country: string;
+  public dateFormat: string;
+  public timeFormat: string;
+  public routingPrefix?: string;
+  public disableVoicemail: boolean;
+  public regionCodeDialing: IRegionCodeDialing;
+  public voicemailPilotNumberGenerated: boolean;
+  public allowExternalTransfer: boolean;
 
-  constructor(site: ISiteResponse = {
+  constructor(site: IRSite = {
     uuid: undefined,
     siteCode: undefined,
     siteIndex: DEFAULT_SITE_INDEX,
@@ -91,7 +92,7 @@ export class Site implements ISite {
     this.mediaTraversalMode = site.mediaTraversalMode;
     this.siteDescription = site.siteDescription;
     this.emergencyCallBackNumber = site.emergencyCallBackNumber;
-    this.extensionLength = site.extensionLength;
+    this.extensionLength = _.toSafeInteger(site.extensionLength);
     this.preferredLanguage = site.preferredLanguage;
     this.country = site.country;
     this.dateFormat = site.dateFormat;

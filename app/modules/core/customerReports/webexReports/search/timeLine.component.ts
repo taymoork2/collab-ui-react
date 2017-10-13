@@ -237,6 +237,7 @@ class TimeLine implements ng.IComponentController {
           this.tip.transition()
             .duration(500)
             .style('opacity', .6)
+            .style('z-index', 1025)
             .style('left', () => (left - 3 - tipWidth / 2) + 'px' )
             .style('top', () => (top - tipHeight - 12) + 'px' );
         })

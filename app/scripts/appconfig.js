@@ -771,6 +771,17 @@
               modalType: 'Partner',
             },
           })
+          .state('deviceBrandingExample', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                template: require('modules/core/settings/branding/deviceBrandingExample.html'),
+                controller: 'BrandingExampleCtrl',
+                controllerAs: 'brandEg',
+              },
+            },
+            authenticate: false,
+          })
           .state('processorder', {
             url: '/processorder',
             template: require('modules/squared/views/processorder.html'),
@@ -1810,49 +1821,6 @@
               displayName: translateDisplayName('usersPreview.rolesAndSecurity'),
             },
           })
-          .state('user-overview.cmc', {
-            views: {
-              'side-panel-container@user-overview': {
-                template: '<cmc-user-details-settings user="$resolve.user" ng-if="$resolve.hasCmcFeatureToggle"></cmc-user-details-settings>',
-              },
-            },
-            params: {
-              service: 'CMC',
-            },
-            resolve: {
-              displayName: translateDisplayName('cmc.userSettings.title'),
-              user: /* @ngInject */ function ($stateParams) {
-                return _.get($stateParams, 'currentUser');
-              },
-              hasCmcFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasMobileConvergence);
-              },
-            },
-          })
-          .state('cmc-base', {
-            abstract: true,
-            parent: 'main',
-            template: require('modules/cmc/details/cmc-details.html'),
-          })
-          .state('cmc', {
-            parent: 'cmc-base',
-            views: {
-              header: {
-                template: '<cmc-details-header></cmc-details-header>',
-              },
-              main: {
-                template: '<div ui-view></div>',
-              },
-            },
-          })
-          .state('cmc.settings', {
-            url: '/services/cmc-settings',
-            template: '<cmc-details-settings></cmc-details-settings>',
-          })
-          .state('cmc.status', {
-            url: '/services/cmc-status',
-            template: '<cmc-details-status></cmc-details-status>',
-          })
 
           // FOR Development: allow editing of user's feature toggles
           .state('edit-featuretoggles', {
@@ -1919,13 +1887,10 @@
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<webex-add-site-modal subscription-list="$resolve.subscriptionList"  conference-licenses="$resolve.conferenceLicenses" audio-licenses="$resolve.audioLicenses" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site->',
+                template: '<webex-add-site-modal subscription-list="$resolve.subscriptionList" audio-licenses="$resolve.audioLicenses" title="\'firstTimeWizard.addWebexSite\'" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site->',
               },
             },
             resolve: {
-              conferenceLicenses: /* @ngInject */ function (Authinfo) {
-                return _.map(Authinfo.getConferenceServices(), 'license');
-              },
               audioLicenses: /*@ngInject */ function (Authinfo, Config) {
                 var audioLicenses = _.filter(Authinfo.getLicenses(), { licenseType: Config.licenseTypes.AUDIO });
                 return audioLicenses;
@@ -1933,6 +1898,23 @@
               subscriptionList: /* @ngInject */ function (Authinfo) {
                 var subscriptionIds = _.map(Authinfo.getSubscriptions(), 'externalSubscriptionId');
                 return subscriptionIds;
+              },
+            },
+          })
+          .state('site-list-distribute-licenses', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                template: '<webex-add-site-modal subscription-list="$resolve.subscriptionList" single-step="3" title="\'webexSiteManagement.redistributeLicenses\'" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site->',
+              },
+            },
+            params: {
+              subscriptionId: null,
+            },
+            resolve: {
+              subscriptionList: /* @ngInject */ function (Authinfo, $stateParams) {
+                var subscriptionIds = $stateParams['subscriptionId'];
+                return [subscriptionIds];
               },
             },
           })
@@ -2236,11 +2218,17 @@
             params: {
               currentPlace: {},
             },
-            data: {
-              displayName: 'Overview',
-            },
+            data: {},
             resolve: {
-              displayName: translateDisplayName('common.overview'),
+              displayName: /* @ngInject */ function ($translate, FeatureToggleService) {
+                return FeatureToggleService.csdmDevicePlaceLinkGetStatus().then(function (enabled) {
+                  if (enabled) {
+                    _.set(this, 'data.displayName', $translate.instant('sidePanelBreadcrumb.place'));
+                  } else {
+                    _.set(this, 'data.displayName', $translate.instant('sidePanelBreadcrumb.overview'));
+                  }
+                }.bind(this));
+              },
             },
           })
           .state('place-overview.placeLocationDetails', {
@@ -2302,7 +2290,15 @@
               channels: /* @ngInject */ function (CsdmUpgradeChannelService) {
                 return CsdmUpgradeChannelService.getUpgradeChannelsPromise();
               },
-              displayName: translateDisplayName('deviceDetailPage.deviceConfig'),
+              displayName: /* @ngInject */ function ($translate, FeatureToggleService) {
+                return FeatureToggleService.csdmDevicePlaceLinkGetStatus().then(function (enabled) {
+                  if (enabled) {
+                    _.set(this, 'data.displayName', $translate.instant('sidePanelBreadcrumb.device'));
+                  } else {
+                    _.set(this, 'data.displayName', $translate.instant('sidePanelBreadcrumb.deviceConfig'));
+                  }
+                }.bind(this));
+              },
             },
             params: {
               currentDevice: {},
@@ -3957,7 +3953,7 @@
                 template: '<context-resources-sub-header></context-resources-sub-header>',
               },
               contextServiceView: {
-                template: '<hybrid-service-cluster-list service-id="\'contact-center-context\'" cluster-id="$resolve.clusterId" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></hybrid-service-cluster-list>',
+                template: '<hybrid-service-cluster-list service-id="\'contact-center-context\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>',
                 controller: /* @ngInject */ function (Analytics) {
                   return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CONTEXT_LIST);
                 },
@@ -3969,9 +3965,6 @@
             resolve: {
               clusterId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.clusterId;
-              },
-              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
               },
             },
           })
@@ -4222,15 +4215,12 @@
             url: '/list',
             views: {
               sipDestinationList: {
-                template: '<hybrid-service-cluster-list service-id="\'ept\'" cluster-id="$resolve.clusterId" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></hybrid-service-cluster-list>',
+                template: '<hybrid-service-cluster-list service-id="\'ept\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>',
               },
             },
             resolve: {
               clusterId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.clusterId;
-              },
-              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
               },
             },
           })
@@ -4249,18 +4239,13 @@
               host: null,
               hostSerial: null,
             },
-            resolve: {
-              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
-              },
-            },
           })
           // Cluster settings and nodes
           .state('expressway-cluster', {
             abstract: true,
             url: '/services/cluster/expressway/:id',
             parent: 'main',
-            template: '<hybrid-services-cluster-page cluster-id="$resolve.id" back-state="$resolve.backState" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></hybrid-services-cluster-page>',
+            template: '<hybrid-services-cluster-page cluster-id="$resolve.id" back-state="$resolve.backState"></hybrid-services-cluster-page>',
             params: {
               backState: null,
             },
@@ -4270,9 +4255,6 @@
               },
               backState: /* @ngInject */ function ($stateParams) {
                 return $stateParams.backState;
-              },
-              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
               },
             },
           })
@@ -4336,7 +4318,7 @@
             url: '/hds/resources',
             views: {
               fullPane: {
-                template: '<hybrid-service-cluster-list service-id="\'spark-hybrid-datasecurity\'" cluster-id="$resolve.clusterId" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></hybrid-service-cluster-list>',
+                template: '<hybrid-service-cluster-list service-id="\'spark-hybrid-datasecurity\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>',
                 controller: /* @ngInject */ function (Analytics) {
                   return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_HDS_LIST);
                 },
@@ -4345,9 +4327,6 @@
             resolve: {
               clusterId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.clusterId;
-              },
-              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
               },
             },
           })
@@ -4365,7 +4344,7 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                template: '<cluster-sidepanel-overview cluster-type="\'hds_app\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></cluster-sidepanel-overview>',
+                template: '<cluster-sidepanel-overview cluster-type="\'hds_app\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType"></cluster-sidepanel-overview>',
               },
               'header@hds-cluster-details': {
                 template: require('modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html'),
@@ -4386,9 +4365,6 @@
               connectorType: /* @ngInject */ function ($stateParams) {
                 return $stateParams.connectorType;
               },
-              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
-              },
               displayName: translateDisplayName('sidePanelBreadcrumb.overview'),
             },
           })
@@ -4406,9 +4382,6 @@
               hostSerial: null,
             },
             resolve: {
-              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
-              },
               displayName: translateDisplayName('sidePanelBreadcrumb.node'),
             },
           })
@@ -4433,7 +4406,7 @@
             abstract: true,
             url: '/services/cluster/hds/:id',
             parent: 'main',
-            template: '<hybrid-services-cluster-page cluster-id="$resolve.id" back-state="$resolve.backState" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></hybrid-services-cluster-page>',
+            template: '<hybrid-services-cluster-page cluster-id="$resolve.id" back-state="$resolve.backState"></hybrid-services-cluster-page>',
             params: {
               backState: null,
             },
@@ -4443,9 +4416,6 @@
               },
               backState: /* @ngInject */ function ($stateParams) {
                 return $stateParams.backState;
-              },
-              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
               },
             },
           })
@@ -4461,7 +4431,7 @@
             abstract: true,
             url: '/services/cluster/mediafusion/:id',
             parent: 'main',
-            template: '<hybrid-services-cluster-page cluster-id="$resolve.id" back-state="$resolve.backState" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></hybrid-services-cluster-page>',
+            template: '<hybrid-services-cluster-page cluster-id="$resolve.id" back-state="$resolve.backState"></hybrid-services-cluster-page>',
             params: {
               backState: null,
             },
@@ -4471,9 +4441,6 @@
               },
               backState: /* @ngInject */ function ($stateParams) {
                 return $stateParams.backState;
-              },
-              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
               },
             },
           })
@@ -4499,7 +4466,7 @@
             abstract: true,
             url: '/services/cluster/cucm/:id',
             parent: 'main',
-            template: '<hybrid-services-cluster-page cluster-id="$resolve.id" back-state="$resolve.backState" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></hybrid-services-cluster-page>',
+            template: '<hybrid-services-cluster-page cluster-id="$resolve.id" back-state="$resolve.backState"></hybrid-services-cluster-page>',
             params: {
               backState: null,
             },
@@ -4509,9 +4476,6 @@
               },
               backState: /* @ngInject */ function ($stateParams) {
                 return $stateParams.backState;
-              },
-              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
               },
             },
           })
@@ -4730,11 +4694,6 @@
             },
             parent: 'main',
             abstract: true,
-            resolve: {
-              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
-              },
-            },
           })
           .state('calendar-service.list', {
             url: '/services/calendar',
@@ -4788,11 +4747,6 @@
               clusterId: null,
             },
             parent: 'main',
-            resolve: {
-              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
-              },
-            },
           })
           .state('call-service.list', {
             url: '/services/call',
@@ -4909,7 +4863,7 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                template: '<cluster-sidepanel-overview cluster-type="\'c_mgmt\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></cluster-sidepanel-overview>',
+                template: '<cluster-sidepanel-overview cluster-type="\'c_mgmt\'" cluster-id="$resolve.id" connector-type="$resolve.connectorType"></cluster-sidepanel-overview>',
               },
               'header@expressway-cluster-sidepanel': {
                 template: require('modules/hercules/cluster-sidepanel/cluster-sidepanel-overview/cluster-sidepanel-overview-header.html'),
@@ -4931,9 +4885,6 @@
               connectorType: /* @ngInject */ function ($stateParams) {
                 return $stateParams.connectorType;
               },
-              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
-              },
             },
           })
           .state('expressway-cluster-sidepanel.host-details', {
@@ -4952,11 +4903,6 @@
               // we inherit params from the parent, and because of management connectors we shouldn't override
               // the parent connectorType param…
               specificType: null,
-            },
-            resolve: {
-              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
-              },
             },
           })
           .state('expressway-cluster-sidepanel.alarm-details', {
@@ -5030,11 +4976,6 @@
               host: null,
               hostSerial: null,
             },
-            resolve: {
-              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
-              },
-            },
           })
           .state('media-cluster-details.alarm-details', {
             views: {
@@ -5068,7 +5009,7 @@
             url: '/mediaserviceV2',
             views: {
               fullPane: {
-                template: '<hybrid-service-cluster-list service-id="\'squared-fusion-media\'" cluster-id="$resolve.clusterId" has-nodes-view-feature-toggle="$resolve.hasNodesViewFeatureToggle"></hybrid-service-cluster-list>',
+                template: '<hybrid-service-cluster-list service-id="\'squared-fusion-media\'" cluster-id="$resolve.clusterId"></hybrid-service-cluster-list>',
                 controller: /* @ngInject */ function (Analytics) {
                   return Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_MEDIA_LIST);
                 },
@@ -5077,9 +5018,6 @@
             resolve: {
               clusterId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.clusterId;
-              },
-              hasNodesViewFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridNodesView);
               },
             },
           })

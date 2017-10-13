@@ -120,7 +120,7 @@ export class LocationSettingsOptionsService {
   }
 
   public loadEmergencyNumbersOptions(): ng.IPromise<IOption[]> {
-    return this.NumberService.getNumberList(undefined, NumberType.EXTERNAL)
+    return this.NumberService.getNumberList(undefined, NumberType.EXTERNAL, true)
       .then(externalNumbers => {
         return _.map(externalNumbers, externalNumber => {
           return {

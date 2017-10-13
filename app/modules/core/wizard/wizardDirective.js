@@ -51,7 +51,7 @@ require('./_wizard.scss');
   /* @ngInject */
   function WizardCtrl($controller, $modal,
     $rootScope, $scope, $state, $stateParams, $timeout, $translate,
-    Authinfo, Config, PromiseHook, SessionStorage, SetupWizardService) {
+    Analytics, Authinfo, Config, PromiseHook, SessionStorage, SetupWizardService) {
     var vm = this;
     vm.current = {};
 
@@ -106,6 +106,11 @@ require('./_wizard.scss');
     vm.isSingleTab = isSingleTab;
     vm.wizardNextLoad = false;
     vm.showSkipTabBtn = false;
+
+    var view = {
+      serviceSetup: 'Service Setup',
+      meetingSettingsModal: 'overview: Meeting Settings Modal',
+    };
 
     // If tabs change (feature support in SetupWizard) and a step is not defined, re-initialize
     $scope.$watchCollection('tabs', function (tabs) {
@@ -254,6 +259,13 @@ require('./_wizard.scss');
     function nextTab() {
       var tabs = getTabs();
       vm.wizardNextLoad = false;
+
+      // Metrics for IT Decoupling new orders flow: user skips Meeting Settings Tab
+      if (isCurrentTab('meetingSettings') && isFirstStep()) {
+        var properties = { view: _.get($state, 'current.data.firstTimeSetup') ? 'Service Setup' : 'overview: Meeting Settings Modal' };
+        Analytics.trackServiceSetupSteps(Analytics.sections.SERVICE_SETUP.eventNames.SKIPPED_MEETING_SETTINGS, properties);
+      }
+
       if (_.isArray(tabs)) {
         var tabIndex = tabs.indexOf(getTab());
         $scope.tabs[tabIndex].required = false;
@@ -269,6 +281,12 @@ require('./_wizard.scss');
     }
 
     function previousStep() {
+      var analyticsProperties = {
+        view: _.get($state, 'current.data.firstTimeSetup') ? view.serviceSetup : view.meetingSettingsModal,
+        step: getStepName(),
+        tab: vm.current.tab.name,
+      };
+      Analytics.trackServiceSetupSteps(Analytics.sections.SERVICE_SETUP.eventNames.BACK, analyticsProperties);
       var steps = getSteps();
       if (_.isArray(steps)) {
         var index = steps.indexOf(getStep());
@@ -281,6 +299,20 @@ require('./_wizard.scss');
     }
 
     function nextStep() {
+      // Assemble call to Analytics service
+      var eventName = '';
+      if (getStepName() === 'init' && isCurrentTab('planReview')) {
+        eventName = Analytics.sections.SERVICE_SETUP.eventNames.GET_STARTED;
+      } else {
+        eventName = Analytics.sections.SERVICE_SETUP.eventNames.NEXT;
+      }
+      var analyticsProperties = {
+        view: _.get($state, 'current.data.firstTimeSetup') ? view.serviceSetup : view.meetingSettingsModal,
+        step: getStepName(),
+        tab: vm.current.tab.name,
+      };
+      Analytics.trackServiceSetupSteps(eventName, analyticsProperties);
+
       var subTabControllerAs = _.isUndefined(getSubTab()) ? undefined : getSubTab().controllerAs;
       new PromiseHook($scope, getStepName() + 'Next', getTab().controllerAs, subTabControllerAs).then(function () {
         if (getTab().name === 'enterpriseSettings') {
@@ -344,6 +376,9 @@ require('./_wizard.scss');
 
     function doNotProvisionAndProceedNext() {
       SetupWizardService.setWillNotProvision(true);
+      if (isCurrentTab('provision')) {
+        Analytics.trackServiceSetupSteps(Analytics.sections.SERVICE_SETUP.eventNames.DO_NOT_PROVISION_BUTTON_CLICK, {});
+      }
       nextStep();
     }
 

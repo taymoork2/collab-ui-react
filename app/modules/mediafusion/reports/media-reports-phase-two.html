@@ -28,6 +28,7 @@
   </cs-page-sub-header>
   <div class="content-container media-reports-container">
     <div class="row" >
+      <cs-alert-banner type="info" closeable="true" ng-if="nav.isTestOrg"><span translate="mediaFusion.report.test-org-alert"></span></cs-alert-banner>
       <cs-card-layout ng-if="nav.displayResources">
         <uc-media-report-flip-chart-card parentcntrl="nav" headername="nav.total_participants_heading" tooltip-value="nav.totalcloudTooltip" headercolor="'grey'" chart-options="nav.totalParticipantschartOptions" card-class="'three-cards'" card-desc="nav.clientTypeDesc"></uc-media-report-flip-chart-card>
         <uc-media-report-card parentcntrl="nav" headername="nav.second_card_heading" value="nav.second_card_value" headercolor="'orange'" card-class="'three-cards'"></uc-media-report-card>

@@ -83,9 +83,8 @@
           <uc-extension-length
             first-time-setup="$ctrl.ftsw"
             extension-length="$ctrl.huronSettingsData.site.extensionLength"
-            huron-settings-data="$ctrl.huronSettingsData"
-            has-voicemail-service="$ctrl.huronSettingsData.customer.hasVoicemailService"
-            extensions-assigned="$ctrl.settingsOptions.extensionsAssigned"
+            settings-data="$ctrl.huronSettingsData"
+            extension-decrease-allowed="$ctrl.settingsOptions.extensionDecreaseAllowed"
             extension-length-saved-fn="$ctrl.onExtensionLengthSaved()"
             decrease-extension-length-fn="$ctrl.onDecreaseExtensionLength(extensionLength)"
             on-change-fn="$ctrl.onExtensionLengthChanged(extensionLength)">

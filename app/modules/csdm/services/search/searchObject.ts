@@ -42,19 +42,19 @@ export class SearchObject {
     this.from += 20;
   }
 
-  public removeBullet(bullet: SearchElement) {
+  public removeSearchElement(elementToRemove: SearchElement) {
     if (!this.parsedQuery) {
       return;
     }
 
-    if (!bullet) {
+    if (!elementToRemove) {
       return;
     }
 
-    if (bullet.getParent() && bullet.getParent().getExpressions()) {
-      const index = bullet.getParent().getExpressions().indexOf(bullet, 0);
+    if (elementToRemove.getParent() && elementToRemove.getParent().getExpressions()) {
+      const index = elementToRemove.getParent().getExpressions().indexOf(elementToRemove, 0);
       if (index > -1) {
-        bullet.getParent().getExpressions().splice(index, 1);
+        elementToRemove.getParent().getExpressions().splice(index, 1);
       }
 
       this.setQuery(this.parsedQuery.toQuery(), this.parsedQuery);
@@ -92,29 +92,35 @@ export class SearchObject {
   }
 
   public setWorkingElementText(translatedQuery: string) {
-    try {
 
-      const parsedNewQuery = QueryParser.parseQueryString(translatedQuery);
-      this.hasError = false;
-      parsedNewQuery.setBeingEdited(true);
+    const alreadyEdited = SearchObject.findEditedElement(this.parsedQuery);
 
-      const alreadyEdited = SearchObject.findEditedElement(this.parsedQuery);
-      if (alreadyEdited) {
-        if (alreadyEdited === this.parsedQuery) {
-          this.parsedQuery = parsedNewQuery;
+    if (_.isEmpty(translatedQuery) && alreadyEdited) {
+      this.removeSearchElement(alreadyEdited);
+    } else {
+      try {
+        const parsedNewQuery = QueryParser.parseQueryString(translatedQuery);
+        this.hasError = false;
+        parsedNewQuery.setBeingEdited(true);
+
+        if (alreadyEdited) {
+          if (alreadyEdited === this.parsedQuery) {
+            this.parsedQuery = parsedNewQuery;
+          } else {
+            alreadyEdited.replaceWith(parsedNewQuery);
+          }
         } else {
-          alreadyEdited.replaceWith(parsedNewQuery);
+          this.addParsedSearchElement(parsedNewQuery);
         }
-      } else {
-        this.addParsedSearchElement(parsedNewQuery);
+        this.setQuery(this.parsedQuery.toQuery(), this.parsedQuery);
+
+      } catch (error) {
+        this.hasError = true;
       }
-      this.setQuery(this.parsedQuery.toQuery(), this.parsedQuery);
-    } catch (error) {
-      this.hasError = true;
     }
   }
 
-  public clearWorkingElement() {
+  public submitWorkingElement() {
     const alreadyEdited = SearchObject.findEditedElement(this.parsedQuery);
     if (alreadyEdited) {
       alreadyEdited.setBeingEdited(false);

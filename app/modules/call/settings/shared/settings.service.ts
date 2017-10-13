@@ -489,7 +489,8 @@ export class HuronSettingsService {
           || !_.isEqual(this.huronSettingsDataCopy.site.preferredLanguage, siteData.preferredLanguage)
           || !_.isEqual(this.huronSettingsDataCopy.site.extensionLength, siteData.extensionLength)
           || !_.isEqual(this.huronSettingsDataCopy.customer.hasVoicemailService, customerData.hasVoicemailService)
-          || !_.isEqual(this.huronSettingsDataCopy.avrilFeatures, avrilFeatures)) {
+          || !_.isEqual(this.huronSettingsDataCopy.avrilFeatures, avrilFeatures)
+          || !_.isEqual(this.huronSettingsDataCopy.site.voicemailPilotNumber, siteData.voicemailPilotNumber)) {
           return this.updateAvrilSite(siteData, avrilFeatures);
         } else {
           return this.$q.resolve();
@@ -585,7 +586,7 @@ export class HuronSettingsService {
     return this.AvrilService.updateAvrilSite(
       <IAvrilSite>{
         guid: site.uuid,
-        extensionLength: site.extensionLength,
+        extensionLength: site.extensionLength.toString(),
         language: site.preferredLanguage,
         pilotNumber: site.voicemailPilotNumber,
         siteSteeringDigit: site.routingPrefix ? site.routingPrefix.substr(1) : null,
@@ -605,7 +606,7 @@ export class HuronSettingsService {
     return this.AvrilService.createAvrilSite(
       <IAvrilSite>{
         guid: site.uuid,
-        extensionLength: site.extensionLength,
+        extensionLength: site.extensionLength.toString(),
         language: site.preferredLanguage,
         pilotNumber: site.voicemailPilotNumber,
         siteSteeringDigit: site.routingPrefix ? site.routingPrefix.substr(1) : null,

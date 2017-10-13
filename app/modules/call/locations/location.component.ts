@@ -23,6 +23,7 @@ class CallLocationCtrl implements ng.IComponentController {
   public huronFeaturesUrl: string = 'call-locations';
   public showRoutingPrefix: boolean = true;
   public number: IOption | null = null;
+  public secondFirstTimeSetup: boolean = false;
 
   /* @ngInject */
   constructor(
@@ -72,8 +73,8 @@ class CallLocationCtrl implements ng.IComponentController {
       .then(() => {
         return this.CallLocationSettingsService.get(this.uuid)
           .then(locationSettings => {
+            this.secondFirstTimeSetup = this.SettingSetupInitService.hasDefaultLocation();
             this.callLocationSettingsData = locationSettings;
-            this.showRoutingPrefix = this.setShowRoutingPrefix(locationSettings.customerVoice.routingPrefixLength);
             this.setEmergencyCallbackNumber(this.callLocationSettingsData.emergencyNumber);
           })
           .catch(error => this.Notification.processErrorResponse(error, 'locations.getFailed'));
@@ -203,7 +204,7 @@ class CallLocationCtrl implements ng.IComponentController {
 
   public saveDisabled(): boolean {
     if (this.PstnModel.isCustomerExists()) {
-      if (this.callLocationSettingsData.address && this.callLocationSettingsData.address.validated) {
+      if (this.callLocationSettingsData && this.callLocationSettingsData.address && this.callLocationSettingsData.address.validated) {
         return this.form.$invalid;
       }
       return true;
@@ -213,6 +214,7 @@ class CallLocationCtrl implements ng.IComponentController {
 
   public onCancel(): void {
     this.callLocationSettingsData = this.CallLocationSettingsService.getOriginalConfig();
+    //creates IOption for this.number
     this.setEmergencyCallbackNumber(this.callLocationSettingsData.emergencyNumber);
     this.resetForm();
   }
@@ -224,28 +226,20 @@ class CallLocationCtrl implements ng.IComponentController {
     }
   }
 
-  private setShowRoutingPrefix(routingPrefixLength: number | null): boolean {
-    // if ftsw check which option was chosen
-    if (this.ftsw) {
-      return this.SettingSetupInitService.getSelected() === 2;
-    } else { // in edit mode check if routingPrefixLength is null or 0
-      if (_.isNull(routingPrefixLength) || routingPrefixLength === 0) {
-        return false;
-      } else {
-        return true;
-      }
-    }
-  }
-
   private setEmergencyCallbackNumber(emergencyNumber: EmergencyNumber | null): void {
     if (!emergencyNumber) {
       return;
     }
-    const options: IOption[] = this.locationSettingsOptions.emergencyNumbersOptions.filter(option => {
-      return option.value === emergencyNumber.pattern;
-    });
-    if (options && options.length) {
+    let options: IOption[] = [];
+    if (_.isEmpty(emergencyNumber.pattern)) {
+      options = this.locationSettingsOptions.emergencyNumbersOptions.filter(option => {
+        return option.value === emergencyNumber.pattern;
+      });
+    }
+    if (options.length > 0) {
       this.number = options[0];
+    } else {
+      this.number = null;
     }
   }
 }

@@ -1,5 +1,5 @@
 import { Config } from 'modules/core/config/config';
-import { IPendingOrderSubscription, IPendingLicense, IConferenceService, ICCASPLicense, ITSPLicense } from './meeting-settings/meeting-settings.interface';
+import { IPendingOrderSubscription, IPendingLicense, IConferenceService, ICCASPLicense, IConferenceLicense, ITSPLicense } from './meeting-settings/meeting-settings.interface';
 import { HuronCustomerService } from 'modules/huron/customer';
 import { HuronCompassService } from 'modules/huron/compass';
 
@@ -140,6 +140,14 @@ export class SetupWizardService {
     return this.$http.get(pendingServiceOrderUrl).then((response) => {
       return _.get(response, 'data.productProvStatus');
     });
+  }
+
+  public getConferenceLicensesBySubscriptionId(subscriptionId) {
+    const conferenceLicenses = _.map(this.Authinfo.getConferenceServices(), 'license');
+    const actingSubscriptionLicenses = _.filter(conferenceLicenses, { billingServiceId: subscriptionId });
+    const existingConferenceLicensesInActingSubscripton = _.filter(actingSubscriptionLicenses,
+      (license: IConferenceLicense) => _.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC], license.offerName));
+    return existingConferenceLicensesInActingSubscripton;
   }
 
   public getWillNotProvision(): boolean {
@@ -341,7 +349,7 @@ export class SetupWizardService {
     });
   }
 
-  public validateCCASPPartner(subscriptionId: string, partnerName: string): ng.IPromise<boolean> {
+  public validateCCASPPartner(subscriptionId: string, partnerName: string): ng.IPromise<any> {
     const payload = {
       ccaspSubscriptionId: subscriptionId,
       ccaspPartnerName: partnerName,
@@ -358,9 +366,19 @@ export class SetupWizardService {
       data: payload,
     };
     return this.$http(config).then((response) => {
-      return (response.data === validationResult.SUCCESS && response.status === 200);
+      return {
+        response: response,
+        isValid: response.data === validationResult.SUCCESS && response.status === 200,
+        payload: payload,
+      };
     })
-    .catch(() => { return false; });
+    .catch((response) => {
+      return {
+        response: response,
+        isValid: false,
+        payload: payload,
+      };
+    });
   }
 
 }

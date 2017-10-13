@@ -6,7 +6,6 @@ export class ClusterSidepanelOverviewCtrl implements ng.IComponentController {
   private clusterId: string;
 
   private cluster: IExtendedCluster;
-  public hasNodesViewFeatureToggle: boolean;
   public hasResourceGroupFeatureToggle: boolean;
 
   public clusterType: ClusterTargetType;
@@ -71,6 +70,17 @@ export class ClusterSidepanelOverviewCtrl implements ng.IComponentController {
       });
     }
   }
+
+  public showMediaUpgradeSection(): boolean {
+    return this.isMediaCluster() && this.hasConnectors() && this.cluster.releaseChannel !== 'latest';
+  }
+
+  public showButtonToNodesPage(): boolean {
+    // Doesn't make sense for empty Expressways and EPT
+    // Media doesn't really use the nodes page yet, they still have the node list on this sidepanel
+    // Nodes page not implemented yet for Context, but should be done at some point!
+    return !this.isMediaCluster() && !this.isHybridContextCluster() && !(this.isExpresswayCluster() && !this.hasConnectors());
+  }
 }
 
 export class ClusterSidepanelOverviewComponent implements ng.IComponentOptions {
@@ -80,7 +90,6 @@ export class ClusterSidepanelOverviewComponent implements ng.IComponentOptions {
     clusterType: '<',
     clusterId: '<',
     connectorType: '<',
-    hasNodesViewFeatureToggle: '<',
     hasResourceGroupFeatureToggle: '<',
   };
 }

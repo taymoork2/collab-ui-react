@@ -163,6 +163,12 @@
   .low-z-index {
     z-index: 0;
   }
+  .cs-alert-banner--info {
+    border-radius: 5px;
+    margin: auto 7px;
+    border-top: solid 4px #049FD9;
+    background-color: #C5E9F7;
+  }
 }
 .availabilityCursor {
   .amcharts-category-axis .amcharts-axis-label {

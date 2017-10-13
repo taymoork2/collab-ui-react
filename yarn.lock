@@ -158,8 +158,8 @@
     "@types/angular" "*"
 
 "@types/angular-ui-router@~1.1.37":
-  version "1.1.39"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/@types/angular-ui-router/-/angular-ui-router-1.1.39.tgz#dffe4083e8a59b287981cb41896447f32b3663c4"
+  version "1.1.40"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/@types/angular-ui-router/-/angular-ui-router-1.1.40.tgz#d8a10fe4af86a069f8c3302946363f1149e5a6b3"
   dependencies:
     "@types/angular" "*"
 
@@ -5341,8 +5341,8 @@ karma-sourcemap-loader@^0.3.7:
     graceful-fs "^4.1.2"
 
 karma-webpack@^2.0.2:
-  version "2.0.4"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/karma-webpack/-/karma-webpack-2.0.4.tgz#3e2d4f48ba94a878e1c66bb8e1ae6128987a175b"
+  version "2.0.5"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/karma-webpack/-/karma-webpack-2.0.5.tgz#4f56887e32cf4f9583391c2388415de06af06efd"
   dependencies:
     async "~0.9.0"
     loader-utils "^0.2.5"
@@ -9144,9 +9144,9 @@ typescript@^2.1.4:
   version "2.5.2"
   resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/typescript/-/typescript-2.5.2.tgz#038a95f7d9bbb420b1bf35ba31d4c5c1dd3ffe34"
 
-typescript@~2.4.1:
-  version "2.4.2"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/typescript/-/typescript-2.4.2.tgz#f8395f85d459276067c988aa41837a8f82870844"
+typescript@^2.5.3:
+  version "2.5.3"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/typescript/-/typescript-2.5.3.tgz#df3dcdc38f3beb800d4bc322646b04a3f6ca7f0d"
 
 typhonjs-ast-walker@^0.1.0:
   version "0.1.1"
