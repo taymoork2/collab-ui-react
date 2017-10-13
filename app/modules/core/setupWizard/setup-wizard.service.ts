@@ -24,6 +24,7 @@ export class SetupWizardService {
   private actingSubscription?: IPendingSubscription;
   private pendingSubscriptions: IPendingSubscription[] = [];
   private country = '';
+  private endCustomer = '';
   private willNotProvision = false;
   private actingSubscriptionChangeFn: Function = _.noop;
 
@@ -259,10 +260,11 @@ export class SetupWizardService {
     };
   }
 
-  public getOrderAndSubId() {
+  public getOrderDetails() {
     return {
       orderId: this.getActingOrderId(),
       subscriptionId: this.getActingSubscriptionId(),
+      endCustomer: this.getEndCustomerName(),
     };
   }
 
@@ -281,6 +283,7 @@ export class SetupWizardService {
     return this.Orgservice.getOrg(_.noop, this.Authinfo.getOrgId(), params).then((response) => {
       const org = _.get(response, 'data', null);
       this.country = _.get<string>(org, 'countryCode', 'US');
+      this.endCustomer = _.get<string>(org, 'displayName');
       if (_.get(org, 'orgSettings.sparkCallBaseDomain')) {
         //check cmi in base domain for customer
         return this.findCustomerInDc(_.get(org, 'orgSettings.sparkCallBaseDomain'));
@@ -306,6 +309,10 @@ export class SetupWizardService {
 
   public getCustomerCountry() {
     return this.country;
+  }
+
+  public getEndCustomerName() {
+    return this.endCustomer;
   }
 
   public findCustomerInDc(baseDomain) {
