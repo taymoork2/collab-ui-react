@@ -28,15 +28,22 @@ export interface IApiKey {
 
 export type CCCService = 'squared-fusion-gcal' | 'squared-fusion-o365';
 
-/* List of error codes from https://sqbu-github.cisco.com/WebExSquared/calendar-cloud-connector/issues/390 */
 enum ProvisioningResult {
-  'OK' = 0,                       // All good
-  'INVALID_API_ACCESS_KEY' = 1,   // Invalid API access key
-  'DATABASE_ERROR' = 2,           // Database error
-  'REQUIRED_SCOPE_MISSING' = 3,   // Missing required auth scope
-  'SECURITY_FAILURE' = 4,         // Some kind of security issue
-  'GENERAL_ERROR' = 6,            // Default error
-  'TEST_ACCOUNT_NONEXISTENT' = 7, // No such account
+  'OK' = 0,                                // All good
+  'INVALID_API_ACCESS_KEY' = 1,            // Invalid API access key
+  'DATABASE_ERROR' = 2,                    // Database error
+  'REQUIRED_SCOPE_MISSING' = 3,            // Missing required auth scope
+  'SECURITY_FAILURE' = 4,                  // Some kind of security issue
+  'GENERAL_ERROR' = 6,                     // Default error
+  'TEST_ACCOUNT_NONEXISTENT' = 7,          // No such account
+  'SYNC_KMS_ROLE_FAILURE' = 8,             // Error adding sync KMS role
+  'MACHINE_ACCOUNT_CREATION_FAILURE' = 9,  // Error creating machine account
+  'PASSWORD_CREATION_FAILURE' = 10,        // Error creating passwords
+  'INVALID_SESSION_ID' = 11,               // Invalid session id
+  'BAD_ADMIN_CONSENT' = 12,                // Invalid admin consent
+  'PRECONDITIONS_NOT_MET' = 13,            // Session timeout
+  'MACHINE_ACCOUNT_DELETION_FAILURE' = 14, // Error creating machine account
+  'ORGANIZATION_ADDITION_FAILURE' = 15,    // Error adding organization
 }
 
 interface IRequestAdminConsentResponse {
