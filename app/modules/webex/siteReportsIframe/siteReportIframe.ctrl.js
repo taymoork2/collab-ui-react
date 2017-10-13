@@ -15,6 +15,7 @@
     $window,
     Log,
     Authinfo,
+    FeatureToggleService,
     TokenService,
     WebExUtilsFact
   ) {
@@ -73,6 +74,18 @@
       'locale=' + $scope.locale + '\n' +
       'trustIframeUrl=' + $scope.trustIframeUrl;
     Log.debug(_this.logMsg);
+
+    $scope.classicLink = getWebexClassicLink();
+
+    function getWebexClassicLink() {
+      var isClassicOn = FeatureToggleService.webexMetricsGetStatus();
+      var classicLink = 'reports.webex-metrics.classic';
+      if (isClassicOn) {
+        classicLink = 'reports.webex';
+      }
+      classicLink += '({siteUrl:' + siteUrl + '})';
+      return classicLink;
+    }
 
     $rootScope.lastSite = siteUrl;
     $log.log('last site ' + $rootScope.lastSite);

@@ -122,17 +122,23 @@
       integration: 'https://feature-a.wbx2.com/feature/api/v1',
       prod: 'https://feature-a.wbx2.com/feature/api/v1',
     },
+    HydraServiceUrl: {
+      dev: 'https://api.ciscospark.com/v1',
+      cfe: 'https://api.ciscospark.com/v1',
+      integration: 'https://api.ciscospark.com/v1',
+      prod: 'https://api.ciscospark.com/v1',
+    },
     SunlightConfigServiceUrl: {
       dev: 'https://config.devus1.ciscoccservice.com/config/v1',
       cfe: 'https://config.appstaging.ciscoccservice.com/config/v1',
       integration: 'https://config.appstaging.ciscoccservice.com/config/v1',
       prod: 'https://config.produs1.ciscoccservice.com/config/v1',
     },
-    VirtualAssistantConfigServiceUrl: {
-      dev: 'http://localhost:8080/bot-services/v1/config',
-      cfe: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/config',
-      integration: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/config',
-      prod: 'https://bot-services.produs1.ciscoccservice.com/bot-services/v1/config',
+    SunlightURServiceUrl: {
+      dev: 'https://pick.devus1.ciscoccservice.com/qnr/v1',
+      cfe: 'https://pick.appstaging.ciscoccservice.com/qnr/v1',
+      integration: 'https://pick.appstaging.ciscoccservice.com/qnr/v1',
+      prod: 'https://pick.produs1.ciscoccservice.com/qnr/v1',
     },
     SunlightBubbleUrl: {
       dev: 'https://bubble.devus1.ciscoccservice.com',
@@ -158,12 +164,6 @@
       integration: 'https://pqm.appstaging.ciscoccservice.com/pqm/v1/publish/taskState',
       prod: 'https://pqm.produs1.ciscoccservice.com/pqm/v1/publish/taskState',
     },
-    CcfsUrl: {
-      dev: 'https://ccfs.produs1.ciscoccservice.com/v1/authorize?delegation=true&appType=sunlightdev&callbackUrl=',
-      cfe: 'https://ccfs.produs1.ciscoccservice.com/v1/authorize?delegation=true&appType=sunlightstaging&callbackUrl=',
-      integration: 'https://ccfs.produs1.ciscoccservice.com/v1/authorize?delegation=true&appType=sunlightstaging&callbackUrl=',
-      prod: 'https://ccfs.produs1.ciscoccservice.com/v1/authorize?delegation=true&appType=sunlight&callbackUrl=',
-    },
     CalliopeUrl: {
       dev: 'https://calliope-intb.ciscospark.com/calliope/api/authorization/v1',
       cfe: 'https://calliope-loada.ciscospark.com/calliope/api/authorization/v1',
@@ -177,8 +177,8 @@
       prod: 'https://hades.huron-dev.com/api/v1/elasticsearch/',
     },
     GeminiUrl: {
-      dev: 'https://hfccap2.qa.webex.com/pcs/api/v2/',
-      cfe: 'https://hfccap2.qa.webex.com/pcs/api/v2/',
+      dev: 'https://hfccap1.qa.webex.com/pcs/api/v2/',
+      cfe: 'https://hfccap1.qa.webex.com/pcs/api/v2/',
       integration: 'https://ccaportalbts.webex.com/pcs/api/v2/',
       prod: 'https://ccaportal.webex.com/pcs/api/v2/',
     },
@@ -194,12 +194,6 @@
       integration: 'https://ucc-intb.ciscospark.com/ucm-service/api/v1',
       prod: 'https://ucc-a.wbx2.com/ucm-service/api/v1',
     },
-    HybridVoicemailUrl: {
-      dev: 'https://ucc-intb.ciscospark.com/voicemail/api/v1',
-      cfe: 'https://ucc-loada.ciscospark.com/voicemail/api/v1',
-      integration: 'https://ucc-intb.ciscospark.com/voicemail/api/v1',
-      prod: 'https://ucc-a.wbx2.com/voicemail/api/v1',
-    },
     CccUrl: {
       dev: 'https://calendar-cloud-connector-intb.ciscospark.com/api/v1',
       cfe: 'https://calendar-cloud-connector-loada.ciscospark.com/api/v1',
@@ -211,6 +205,12 @@
       cfe: 'https://discovery.appstaging.ciscoccservice.com/discovery/apps/v1',
       integration: 'https://discovery.appstaging.ciscoccservice.com/discovery/apps/v1',
       prod: 'https://discovery.produs1.ciscoccservice.com/discovery/apps/v1',
+    },
+    ContextCcfsUrl: {
+      dev: 'https://ccfs.appstaging.ciscoccservice.com/v1',
+      cfe: 'https://ccfs.appstaging.ciscoccservice.com/v1',
+      integration: 'https://ccfs.appstaging.ciscoccservice.com/v1',
+      prod: 'https://ccfs.produs1.ciscoccservice.com/v1',
     },
     HybridEncryptionServiceUrl: {
       dev: 'https://encryption-intb.ciscospark.com/encryption/api/v1',
@@ -261,10 +261,22 @@
       prod: 'https://qlick.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/premium_spark_v1',
     },
     SparkReportQBSforPartnerUrl: {
-      dev: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/partner_spark_v1', //dfw-qlickbts
+      dev: 'https://qlik1-rl-lab.cisco.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/partner_spark_v1', //dfw-qlickbts
       cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/partner_spark_v1',
       integration: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/partner_spark_v1',
       prod: 'https://qlick.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/partner_spark_v1',
+    },
+    WebExReportQBSforMEIUrl: {
+      dev: 'https://qlik1-rl-lab.cisco.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/mei',
+      cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/mei',
+      integration: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/mei',
+      prod: 'https://qlick.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/mei',
+    },
+    SparkReportQBSforMEIUrl: {
+      dev: 'https://qlik1-rl-lab.cisco.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/mei',
+      cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/mei',
+      integration: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/mei',
+      prod: 'https://qlick.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/mei',
     },
     //for Qlik mashup application Server. Currently, it's https://sjc-ngxbts.webex.com
     //qlik_reverse_proxy is populated after an API response
@@ -299,11 +311,23 @@
       integration: 'https://%s/custportal/extensions/spark-report-partner/spark-report-partner.html',
       prod: 'https://%s/custportal/extensions/spark-report-partner/spark-report-partner.html',
     },
-    BotServicesConfigUrl: {
-      dev: 'https://bot-services.produs1.ciscoccservice.com/bot-services/v1/',
-      cfe: 'https://bot-services.produs1.ciscoccservice.com/bot-services/v1/',
-      integration: 'https://bot-services.produs1.ciscoccservice.com/bot-services/v1/',
-      prod: 'https://bot-services.produs1.ciscoccservice.com/bot-services/v1/',
+    VirtualAssistantServiceUrl: {
+      dev: 'https://virtual-assistant.appstaging.ciscoccservice.com/bot-services/v1/',
+      cfe: 'https://virtual-assistant.appstaging.ciscoccservice.com/bot-services/v1/',
+      integration: 'https://virtual-assistant.appstaging.ciscoccservice.com/bot-services/v1/',
+      prod: 'https://virtual-assistant.produs1.ciscoccservice.com/bot-services/v1/',
+    },
+    WebExReportAppforMEIUrl: {
+      dev: 'https://%s/custportal/extensions/MEI/MEI.html',
+      cfe: 'https://%s/custportal/extensions/MEI/MEI.html',
+      integration: 'https://%s/custportal/extensions/MEI/MEI.html',
+      prod: 'https://%s/custportal/extensions/MEI/MEI.html',
+    },
+    SparkReportAppforMEIUrl: {
+      dev: 'https://%s/custportal/extensions/MEI/MEI.html',
+      cfe: 'https://%s/custportal/extensions/MEI/MEI.html',
+      integration: 'https://%s/custportal/extensions/MEI/MEI.html',
+      prod: 'https://%s/custportal/extensions/MEI/MEI.html',
     },
     // urls same for all environments
 
@@ -321,11 +345,12 @@
     LogMetricsUrl: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
     SSOTestUrl: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
     SSOSetupUrl: 'https://idbroker.webex.com/idb/idbconfig/',
+    EscalationIntentUrl: 'https://care-assistant.produs1.ciscoccservice.com/onboarding/apiai/escalation.json',
   };
 
   module.exports = angular
     .module('core.urlconfig', [
-      require('modules/core/config/config'),
+      require('modules/core/config/config').default,
       require('modules/core/scripts/services/utils'),
     ])
     .factory('UrlConfig', UrlConfig)

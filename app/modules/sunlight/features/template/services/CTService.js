@@ -90,7 +90,7 @@
     }
 
     function labelForTime(time) {
-      return moment(time, 'HH:mm').format('hh:mm A');
+      return moment(time, 'HH:mm').locale('en').format('hh:mm A');
     }
 
     function hoursWithSuffix(suffix) {
@@ -217,7 +217,7 @@
     function openEmbedCodeModal(templateId, templateName) {
       var header = $translate.instant('careChatTpl.embedCodeFor');
       $modal.open({
-        templateUrl: 'modules/sunlight/features/template/ctEmbedCodeModal.tpl.html',
+        template: require('modules/sunlight/features/template/ctEmbedCodeModal.tpl.html'),
         type: 'small',
         controller: 'EmbedCodeCtrl',
         controllerAs: 'embedCodeCtrl',
@@ -295,6 +295,7 @@
             states.push('proactivePrompt');
           }
           states.push('customerInformation');
+          states.push('virtualAssistant');
           states.push('agentUnavailable');
           states.push('offHours');
           states.push('feedback');
@@ -317,6 +318,7 @@
             states.push('proactivePrompt');
           }
           states.push('customerInformationChat');
+          states.push('virtualAssistant');
           states.push('agentUnavailable');
           states.push('feedback');
           states.push('profile');
@@ -325,11 +327,6 @@
           states.push('feedbackCallback');
           states.push('offHours');
           states.push('summary');
-          break;
-        case 'virtualAssistant':
-          states.push('virtualAssistantName');
-          states.push('virtualAssistantAvatar');
-          states.push('virtualAssistantSummary');
           break;
         default:
           return states;

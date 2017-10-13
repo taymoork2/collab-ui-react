@@ -3,8 +3,8 @@ import { TelephonyDomainService } from '../telephonyDomain.service';
 
 class GmTdHistories implements ng.IComponentController {
   private _getDataFromHttp: boolean = true;
-  private static readonly HISTORY_ACTION: string = 'add_notes_td';
-  private static readonly HISTORY_ACTION_MOVE_SITE: string = 'Edit_td_move_site';
+  private static readonly NOTE_ACTION: string = 'add_notes_td';
+  private static readonly HISTORY_ACTION_FOR: string = 'Telephony Domain';
 
   public model: any[] = [];
   public domainName: string;
@@ -52,38 +52,27 @@ class GmTdHistories implements ng.IComponentController {
 
     const data = {
       siteId: this.ccaDomainId,
-      objectID: this.domainName,
+      objectId: this.domainName,
       customerId: this.customerId,
-      actionFor: 'Telephony Domain',
+      actionFor: GmTdHistories.HISTORY_ACTION_FOR,
     };
 
     this.isLoading = true;
     this.TelephonyDomainService.getHistories(data)
-      .then((res) => {
-        if (_.get(res, 'content.data.returnCode')) {
-          this.Notification.error('gemini.errorCode.loadError');
-          return;
-        }
-
-        let data: any[] = _.get(res, 'content.data.body', []);
-
-        data = _.filter(data, (item: any): boolean => {
-          return item.action !== GmTdHistories.HISTORY_ACTION;
+      .then((res: any[]) => {
+        _.remove(res, (item: any): boolean => {
+          return item.action === GmTdHistories.NOTE_ACTION;
         });
 
-        this.model = _.map(data, (item) => {
-          const formattedItem = _.assignIn({}, item, {
-            action: _.upperFirst(item.action),
-          });
-
-          if (item.action === GmTdHistories.HISTORY_ACTION_MOVE_SITE) {
-            const moveSiteMsg = item.siteID + ' ' + this.$translate.instant('gemini.cbgs.moveFrom') + ' ' + item.objectID
-              + ' to ' + item.objectName;
-            formattedItem.objectName = '';
-            formattedItem.moveSiteMsg = moveSiteMsg;
-            formattedItem.action = this.$translate.instant('gemini.cbgs.siteMoved');
+        this.model = _.map(res, (item) => {
+          if (_.includes(item.action, 'site')) {
+            const moveSiteMsg = item.siteID + ' ' + this.$translate.instant('gemini.cbgs.moveFrom') + ' ' + item.objectID + ' to ' + item.objectName;
+            item.objectName = '';
+            item.moveSiteMsg = moveSiteMsg;
+            item.action = this.$translate.instant('gemini.cbgs.siteMoved');
           }
-          return formattedItem;
+          item.action = _.upperFirst(item.action);
+          return item;
         });
 
         this.isLoaded = true;
@@ -96,5 +85,5 @@ class GmTdHistories implements ng.IComponentController {
 
 export class GmTdHistoriesComponent implements ng.IComponentOptions {
   public controller = GmTdHistories;
-  public templateUrl = 'modules/gemini/telephonyDomain/details/gmTdHistories.tpl.html';
+  public template = require('modules/gemini/telephonyDomain/details/gmTdHistories.tpl.html');
 }

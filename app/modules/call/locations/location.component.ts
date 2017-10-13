@@ -1,9 +1,14 @@
-import { CallLocationSettingsData, CallLocationSettingsService, LocationSettingsOptionsService, LocationSettingsOptions, VoicemailPilotNumber } from 'modules/call/locations/shared';
+import {
+  CallLocationSettingsData, CallLocationSettingsService,
+  LocationSettingsOptionsService, LocationSettingsOptions,
+  VoicemailPilotNumber, LocationCallerId,
+} from './shared';
+import { IOption } from 'modules/huron/dialing';
 import { InternalNumberRange } from 'modules/call/shared/internal-number-range';
-import { LocationCallerId } from 'modules/call/locations/shared';
-import { PstnService } from 'modules/huron/pstn';
+import { PstnService, PstnModel } from 'modules/huron/pstn';
 import { SettingSetupInitService } from 'modules/call/settings/settings-setup-init';
 import { Notification } from 'modules/core/notifications';
+import { EmergencyNumber } from 'modules/huron/phoneNumber';
 
 class CallLocationCtrl implements ng.IComponentController {
   public ftsw: boolean;
@@ -17,7 +22,7 @@ class CallLocationCtrl implements ng.IComponentController {
   public processing: boolean = false;
   public huronFeaturesUrl: string = 'call-locations';
   public showRoutingPrefix: boolean = true;
-  public isTerminusCustomer: boolean = false;
+  public number: IOption | null = null;
 
   /* @ngInject */
   constructor(
@@ -29,6 +34,7 @@ class CallLocationCtrl implements ng.IComponentController {
     private LocationSettingsOptionsService: LocationSettingsOptionsService,
     private SettingSetupInitService: SettingSetupInitService,
     private PstnService: PstnService,
+    private PstnModel: PstnModel,
     private Authinfo,
   ) {}
 
@@ -40,8 +46,9 @@ class CallLocationCtrl implements ng.IComponentController {
       this.$q.resolve(this.initComponentData()).finally( () => this.loading = false);
     }
 
-    this.PstnService.getCustomer(this.Authinfo.getOrgId()).then(() => {
-      this.isTerminusCustomer = true;
+    this.PstnService.getCustomerV2(this.Authinfo.getOrgId()).then(() => {
+      this.PstnModel.setCustomerId(this.Authinfo.getOrgId());
+      this.PstnModel.setCustomerExists(true);
     });
 
     if (this.ftsw) {
@@ -67,6 +74,7 @@ class CallLocationCtrl implements ng.IComponentController {
           .then(locationSettings => {
             this.callLocationSettingsData = locationSettings;
             this.showRoutingPrefix = this.setShowRoutingPrefix(locationSettings.customerVoice.routingPrefixLength);
+            this.setEmergencyCallbackNumber(this.callLocationSettingsData.emergencyNumber);
           })
           .catch(error => this.Notification.processErrorResponse(error, 'locations.getFailed'));
       });
@@ -78,15 +86,27 @@ class CallLocationCtrl implements ng.IComponentController {
 
   public saveLocation(): ng.IPromise<void> {
     this.processing = true;
+    this.updateECBNValue();
     return this.CallLocationSettingsService.save(this.callLocationSettingsData)
       .then(locationSettingsData => {
         this.callLocationSettingsData = locationSettingsData;
+        this.setEmergencyCallbackNumber(this.callLocationSettingsData.emergencyNumber);
         this.Notification.success('locations.saveSuccess');
       })
       .finally(() => {
         this.processing = false;
         this.resetForm();
       });
+  }
+
+  public updateECBNValue(): void {
+    if (this.number) {
+      if (!this.callLocationSettingsData.emergencyNumber) {
+        this.callLocationSettingsData.emergencyNumber = new EmergencyNumber();
+      }
+      this.callLocationSettingsData.emergencyNumber.name = this.callLocationSettingsData.location.name;
+      this.callLocationSettingsData.emergencyNumber.pattern = this.number.value;
+    }
   }
 
   public onNameChanged(name: string): void {
@@ -101,6 +121,16 @@ class CallLocationCtrl implements ng.IComponentController {
 
   public onTimeZoneChanged(timeZone: string): void {
     this.callLocationSettingsData.location.timeZone = timeZone;
+    this.checkForChanges();
+  }
+
+  public onTimeFormatChanged(timeFormat: string): void {
+    this.callLocationSettingsData.location.timeFormat = timeFormat;
+    this.checkForChanges();
+  }
+
+  public onDateFormatChanged(dateFormat: string): void {
+    this.callLocationSettingsData.location.dateFormat = dateFormat;
     this.checkForChanges();
   }
 
@@ -171,8 +201,19 @@ class CallLocationCtrl implements ng.IComponentController {
     }
   }
 
+  public saveDisabled(): boolean {
+    if (this.PstnModel.isCustomerExists()) {
+      if (this.callLocationSettingsData.address && this.callLocationSettingsData.address.validated) {
+        return this.form.$invalid;
+      }
+      return true;
+    }
+    return this.form.$invalid;
+  }
+
   public onCancel(): void {
     this.callLocationSettingsData = this.CallLocationSettingsService.getOriginalConfig();
+    this.setEmergencyCallbackNumber(this.callLocationSettingsData.emergencyNumber);
     this.resetForm();
   }
 
@@ -195,11 +236,23 @@ class CallLocationCtrl implements ng.IComponentController {
       }
     }
   }
+
+  private setEmergencyCallbackNumber(emergencyNumber: EmergencyNumber | null): void {
+    if (!emergencyNumber) {
+      return;
+    }
+    const options: IOption[] = this.locationSettingsOptions.emergencyNumbersOptions.filter(option => {
+      return option.value === emergencyNumber.pattern;
+    });
+    if (options && options.length) {
+      this.number = options[0];
+    }
+  }
 }
 
 export class CallLocationComponent implements ng.IComponentOptions {
   public controller = CallLocationCtrl;
-  public templateUrl = 'modules/call/locations/location.component.html';
+  public template = require('modules/call/locations/location.component.html');
   public bindings = {
     ftsw: '<',
     uuid: '<',

@@ -61,7 +61,7 @@ describe('HybridServicesHostDetailsController: ', function () {
     var correctReassignHostDialogOptions = {
       controller: 'ReassignClusterControllerV2',
       controllerAs: 'reassignCluster',
-      templateUrl: 'modules/mediafusion/media-service-v2/side-panel/reassign-node-to-different-cluster/reassign-cluster-dialog.html',
+      template: require('modules/mediafusion/media-service-v2/side-panel/reassign-node-to-different-cluster/reassign-cluster-dialog.html'),
     };
     controller.showReassignHostDialog();
     expect($modal.open).toHaveBeenCalledWith(jasmine.objectContaining(correctReassignHostDialogOptions));
@@ -71,7 +71,7 @@ describe('HybridServicesHostDetailsController: ', function () {
     var correctDeregisterHostDialogOptions = {
       controller: 'HostDeregisterControllerV2',
       controllerAs: 'hostDeregister',
-      templateUrl: 'modules/mediafusion/media-service-v2/side-panel/deregister-node/host-deregister-dialog.html',
+      template: require('modules/mediafusion/media-service-v2/side-panel/deregister-node/host-deregister-dialog.html'),
     };
     controller.showDeregisterHostDialog();
     expect($modal.open).toHaveBeenCalledWith(jasmine.objectContaining(correctDeregisterHostDialogOptions));
@@ -79,7 +79,7 @@ describe('HybridServicesHostDetailsController: ', function () {
 
   it('should open the correct modal window when deleteExpressway() is called', function () {
     var correctDeleteExpresswayNodeDialogOptions = {
-      templateUrl: 'modules/hercules/cluster-sidepanel/host-details/confirm-deleteHost-dialog.html',
+      template: require('modules/hercules/hybrid-services-nodes-page/delete-expressway-host-modal/confirm-deleteHost-dialog.html'),
       controller: 'ConfirmDeleteHostController',
       controllerAs: 'confirmDeleteHostDialog',
     };

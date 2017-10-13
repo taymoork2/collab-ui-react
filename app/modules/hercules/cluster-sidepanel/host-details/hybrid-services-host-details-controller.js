@@ -42,7 +42,7 @@
 
     function deleteExpressway() {
       $modal.open({
-        templateUrl: 'modules/hercules/cluster-sidepanel/host-details/confirm-deleteHost-dialog.html',
+        template: require('modules/hercules/hybrid-services-nodes-page/delete-expressway-host-modal/confirm-deleteHost-dialog.html'),
         type: 'dialog',
         controller: 'ConfirmDeleteHostController',
         controllerAs: 'confirmDeleteHostDialog',
@@ -71,7 +71,7 @@
         type: 'small',
         controller: 'ReassignClusterControllerV2',
         controllerAs: 'reassignCluster',
-        templateUrl: 'modules/mediafusion/media-service-v2/side-panel/reassign-node-to-different-cluster/reassign-cluster-dialog.html',
+        template: require('modules/mediafusion/media-service-v2/side-panel/reassign-node-to-different-cluster/reassign-cluster-dialog.html'),
       })
         .result
         .then(function () {
@@ -93,7 +93,7 @@
         type: 'dialog',
         controller: 'HostDeregisterControllerV2',
         controllerAs: 'hostDeregister',
-        templateUrl: 'modules/mediafusion/media-service-v2/side-panel/deregister-node/host-deregister-dialog.html',
+        template: require('modules/mediafusion/media-service-v2/side-panel/deregister-node/host-deregister-dialog.html'),
       })
         .result
         .then(function () {

@@ -1,9 +1,9 @@
-import { Site, EmergencyCallbackNumber } from 'modules/huron/sites';
+import { EmergencyCallbackNumber } from 'modules/huron/sites';
 import { HuronSettingsService, E911_ADDRESS_PENDING, IEmergencyNumberOption } from 'modules/call/settings/shared';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
 
 class EmergencyServiceNumberCtrl implements ng.IComponentController {
-  public site: Site;
+  public voicemailPilotNumber: string;
   public emergencyCallbackNumber: EmergencyCallbackNumber;
   public selectedNumber: IEmergencyNumberOption | null;
   public externalNumberOptions: IEmergencyNumberOption[];
@@ -33,7 +33,7 @@ class EmergencyServiceNumberCtrl implements ng.IComponentController {
 
     if (externalNumberOptions && externalNumberOptions.currentValue) {
       this.externalNumberOptions = _.filter<IEmergencyNumberOption>(externalNumberOptions.currentValue, externalNumber => {
-        return !_.isEqual(_.get(externalNumber, 'pattern'), _.get(this.site, 'voicemailPilotNumber'));
+        return !_.isEqual(_.get(externalNumber, 'pattern'), this.voicemailPilotNumber);
       });
     }
 
@@ -96,9 +96,9 @@ class EmergencyServiceNumberCtrl implements ng.IComponentController {
 
 export class EmergencyServiceNumberComponent implements ng.IComponentOptions {
   public controller = EmergencyServiceNumberCtrl;
-  public templateUrl = 'modules/call/settings/settings-emergency-service-number/settings-emergency-service-number.component.html';
+  public template = require('modules/call/settings/settings-emergency-service-number/settings-emergency-service-number.component.html');
   public bindings = {
-    site: '<',
+    voicemailPilotNumber: '<',
     emergencyCallbackNumber: '<',
     externalNumberOptions: '<',
     onNumberFilterFn: '&',

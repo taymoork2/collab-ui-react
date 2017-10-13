@@ -92,7 +92,8 @@
           reset-address="$ctrl.resetAddress()"
           read-only="$ctrl.readOnly"
           validate-address="$ctrl.validateAddress()"
-          show-validation="true"></emergency-services>
+          show-validation="true">
+        </emergency-services>
       </div>
     </div>
 
@@ -110,9 +111,13 @@
     ng-disabled="$ctrl.trial.loading"
     translate="common.back">
   </button>
-  <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn loading="$ctrl.trial.loading"
+  <button id="startTrialButton"
+    class="btn btn--primary"
+    type="button"
+    cs-btn
+    loading="$ctrl.trial.loading"
     ng-click="$ctrl.trialForm.$setPristine(true); $ctrl.trial.nextStep()"
-    ng-disabled="($ctrl.trialForm.$invalid && $ctrl.providerImplementation !== $ctrl.SWIVEL) || $ctrl.disableNextButton()">
+    ng-disabled="$ctrl.isDisabled()">
     <span ng-if="!$ctrl.trial.hasNextStep()" translate="partnerHomePage.startTrial"></span>
     <span ng-if="$ctrl.trial.hasNextStep()" translate="common.next"></span>
   </button>

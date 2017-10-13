@@ -1,3 +1,4 @@
+import { Config } from 'modules/core/config/config';
 import { DigitalRiverService } from 'modules/online/digitalRiver/digitalRiver.service';
 import { IOrderDetail } from './myCompanyOrders.service';
 import { Notification } from 'modules/core/notifications';
@@ -21,8 +22,7 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private $translate: angular.translate.ITranslateService,
-    private $window: ng.IWindowService,
-    private Config,
+    private Config: Config,
     private DigitalRiverService: DigitalRiverService,
     private Notification: Notification,
     private MyCompanyOrdersService: MyCompanyOrdersService,
@@ -32,28 +32,37 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
     this.loading = true;
     this.initGridOptions();
     this.MyCompanyOrdersService.getOrderDetails().then(orderDetails => {
-      this.orderDetailList = _.filter(orderDetails, (orderDetail: any) => {
-        if (CLOSED !== orderDetail.status) {
-          if (_.size(orderDetail.productDescriptionList) > 0) {
-            orderDetail.productDescriptionList =
-                this.formatProductDescriptionList(orderDetail.productDescriptionList);
-          }
-          orderDetail.isTrial = false;
-          if (_.includes(orderDetail.productDescriptionList, TRIAL) ||
-              _.includes(orderDetail.productDescriptionList, FREE)) {
-            orderDetail.isTrial = true;
-          }
-          if (COMPLETED === orderDetail.status) {
-            orderDetail.status = this.$translate.instant('myCompanyOrders.completed');
-          } else if (this.Config.webexSiteStatus.PENDING_PARM === orderDetail.status) {
-            orderDetail.status = this.$translate.instant('myCompanyOrders.pendingActivation');
-          } else {
-            orderDetail.status = this.$translate.instant('myCompanyOrders.pending');
-          }
-          return orderDetail;
+      // create a modified version of the order details to display in the table, excluding closed orders
+      this.orderDetailList = _.map(_.filter(orderDetails, orderDetail => orderDetail.status !== CLOSED), (origOrderDetail: any) => {
+        const orderDetail = _.clone(origOrderDetail);
+        if (_.size(orderDetail.productDescriptionList) > 0) {
+          orderDetail.productDescriptionList = orderDetail.productDescriptionList.join(', ');
         }
+        orderDetail.isTrial = false;
+        if (_.includes(orderDetail.productDescriptionList, TRIAL) ||
+            _.includes(orderDetail.productDescriptionList, FREE)) {
+          // trial orders don't display a price
+          orderDetail.isTrial = true;
+        }
+        if (COMPLETED === orderDetail.status) {
+          orderDetail.status = this.$translate.instant('myCompanyOrders.completed');
+          if (!orderDetail.isTrial) {
+            // generate the URL to display the Digital River invoice
+            const product = _.includes(orderDetail.productDescriptionList, this.Config.onlineProducts.webex)
+              ? this.Config.onlineProducts.webex : this.Config.onlineProducts.spark;
+            this.DigitalRiverService.getInvoiceUrl(orderDetail.externalOrderId, product)
+              .then((invoiceUrl: string): void => {
+                orderDetail.invoiceURL = invoiceUrl;
+              });
+          }
+        } else if (this.Config.webexSiteStatus.PENDING_PARM === orderDetail.status) {
+          orderDetail.status = this.$translate.instant('myCompanyOrders.pendingActivation');
+        } else {
+          orderDetail.status = this.$translate.instant('myCompanyOrders.pending');
+        }
+        return orderDetail;
       });
-      // sort orders with newest in top
+      // sort orders with newest on top
       this.orderDetailList.sort((a: IOrderDetail, b: IOrderDetail): number => {
         if (a.orderDate < b.orderDate) {
           return 1;
@@ -97,16 +106,10 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
       }, {
         name: 'total',
         displayName: this.$translate.instant('myCompanyOrders.priceHeader'),
-        cellTemplate: 'modules/core/myCompany/orders/myCompanyOrdersAction.tpl.html',
+        cellTemplate: require('modules/core/myCompany/orders/myCompanyOrdersAction.tpl.html'),
         width: '14%',
       }],
     };
-  }
-
-  public viewInvoice(orderId: string, product: string): void {
-    this.DigitalRiverService.getInvoiceUrl(orderId, product).then((invoiceUrl: string): void => {
-      this.$window.open(invoiceUrl, '_blank');
-    });
   }
 
   public formatProductDescriptionList(productDescriptionList: string[] = []): string {
@@ -117,6 +120,6 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
 angular
   .module('Core')
   .component('myCompanyOrders', {
-    templateUrl: 'modules/core/myCompany/orders/myCompanyOrders.tpl.html',
+    template: require('modules/core/myCompany/orders/myCompanyOrders.tpl.html'),
     controller: MyCompanyOrdersCtrl,
   });

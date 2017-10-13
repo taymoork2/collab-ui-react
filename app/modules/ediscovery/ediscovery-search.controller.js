@@ -21,6 +21,7 @@
     vm.advancedSearch = advancedSearch;
     vm.dateErrors = dateErrors;
     vm.validateDate = validateDate;
+    vm.splitWords = splitWords;
     vm.firstEnabledDate = null;
     vm.lastEnabledDate = moment().format('YYYY-MM-DD');
 
@@ -30,8 +31,6 @@
     vm.generateReport = generateReport;
     vm.runReport = runReport;
     vm.reportProgress = reportProgress;
-    vm.isOnPrem = isOnPrem;
-    $scope.downloadReportModal = downloadReportModal;
     vm.downloadReport = downloadReport;
     vm.cancelReport = cancelReport;
     vm.keyPressHandler = keyPressHandler;
@@ -54,7 +53,7 @@
     vm.searchBySelected = '' || vm.searchByOptions[0];
     vm.searchModel = null;
     vm.queryModel = null;
-    vm.limitError = false;
+    vm.limitErrorMessage = null;
 
     vm.searchResults = {
       keywords: [],
@@ -97,12 +96,10 @@
         ProPackService.hasProPackEnabled(),
         ProPackService.hasProPackPurchased(),
         FeatureToggleService.atlasEdiscoveryGetStatus(),
-        FeatureToggleService.atlasEdiscoveryIPSettingGetStatus(),
       ]).then(function (toggles) {
         vm.proPackEnabled = toggles[0];
         vm.proPackPurchased = toggles[1];
         vm.ediscoveryToggle = toggles[2];
-        vm.ediscoveryIPSettingToggle = toggles[3];
         if (!vm.proPackPurchased) {
           vm.firstEnabledDate = moment().subtract(90, 'days').format('YYYY-MM-DD');
         }
@@ -211,8 +208,8 @@
 
     function searchByLimit() {
       var limit = !_.isNull(vm.searchModel) ? splitWords(vm.searchModel) : null;
-      if (_.isArray(limit) && _.isLength(limit.length) > 100) {
-        vm.limitError = true;
+      if (_.isArray(limit) && limit.length > 5) {
+        vm.limitErrorMessage = _.eq(vm.searchByOptions[0], vm.searchBySelected) ? $translate.instant('ediscovery.searchErrors.invalidEmailLimit') : $translate.instant('ediscovery.searchErrors.invalidSpaceIdLimit');
       } else {
         advancedSearch();
       }
@@ -282,16 +279,26 @@
                 resetSearchPageToInitialState();
               } else {
                 searchResults(result);
+                var convertedSize = bytesToSize(result.data.totalSizeInBytes);
+                var splitConvertedSize = convertedSize.split(' ');
+                var reportSize = parseInt(splitConvertedSize[0], 10);
+                var sizeInUnits = splitConvertedSize[1];
                 if (result.data.numRooms > 2500) {
                   vm.isReportMaxRooms = true;
                   vm.isReport = false;
+                } else if (reportSize >= 5 && sizeInUnits === 'GB') {
+                  vm.isReportTooBig = true;
                 }
               }
             })
             .catch(function (err) {
-              vm.error = $translate.instant('ediscovery.searchErrors.requestFailed', {
+              var timeoutError = $translate.instant('ediscovery.searchErrors.504RequestFailed', {
                 trackingId: err.data.trackingId,
               });
+              var requestError = $translate.instant('ediscovery.searchErrors.requestFailed', {
+                trackingId: err.data.trackingId,
+              });
+              vm.error = err.status === 504 ? timeoutError : requestError;
               Analytics.trackEdiscoverySteps(Analytics.sections.EDISCOVERY.eventNames.SEARCH_ERROR, {
                 trackingId: err.data.trackingId,
                 emailSelected: vm.emailSelected && vm.searchModel,
@@ -343,8 +350,8 @@
             runReport(res.runUrl, res.url);
           }
         })
-        .catch(function () {
-          Notification.error('ediscovery.searchResults.createReportFailed');
+        .catch(function (err) {
+          Notification.errorWithTrackingId(err, 'ediscovery.searchResults.createReportFailed');
           vm.report = null;
           vm.createReportInProgress = false;
         });
@@ -407,8 +414,8 @@
 
     function generateReport(postParams) {
       EdiscoveryService.generateReport(postParams)
-        .catch(function () {
-          Notification.error('ediscovery.searchResults.runFailed');
+        .catch(function (err) {
+          Notification.errorWithTrackingId(err, 'ediscovery.searchResults.runFailed');
           EdiscoveryService.patchReport(vm.currentReportId, {
             state: 'FAILED',
             failureReason: 'UNEXPECTED_FAILURE',
@@ -466,27 +473,11 @@
       }
     }
 
-    function isOnPrem(report) {
-      $scope.reportHeader = $translate.instant('ediscovery.reportsList.modalHeader', {
-        name: report.displayName,
-      });
-      $scope.modalPlaceholder = $translate.instant('ediscovery.reportsList.modalPlaceholder');
-      vm.report = report;
-      var onPrem = vm.ediscoveryIPSettingToggle ? EdiscoveryService.openReportModal($scope) : downloadReport(report);
-      return onPrem;
-    }
-
-    function downloadReportModal() {
-      var downloadUrl = _.get(vm.report, 'downloadUrl');
-      vm.report.downloadUrl = _.replace(downloadUrl, downloadUrl.split('/')[2], $scope.ipAddressModel);
-      downloadReport(vm.report);
-    }
-
     function downloadReport(report) {
       vm.downloadingReport = true;
       EdiscoveryService.downloadReport(report)
-        .catch(function () {
-          Notification.error('ediscovery.unableToDownloadFile');
+        .catch(function (err) {
+          Notification.errorWithTrackingId(err, 'ediscovery.unableToDownloadFile');
         })
         .finally(function () {
           vm.downloadingReport = false;
@@ -538,7 +529,7 @@
     function searchButtonDisabled(_error) {
       var error = !_.isUndefined(_error) ? _error : false;
       var disable = !vm.searchCriteria.roomId || vm.searchCriteria.roomId === '' || vm.searchingForRoom === true;
-      return vm.ediscoveryToggle ? (error || vm.dateValidationError) : disable;
+      return vm.ediscoveryToggle ? (error || vm.dateValidationError || !vm.searchModel) : disable;
     }
 
     function retrySearch() {
@@ -547,7 +538,7 @@
 
     function resetSearchPageToInitialState() {
       vm.roomInfo = false;
-      vm.limitError = false;
+      vm.limitErrorMessage = null;
       vm.queryModel = null;
       vm.generateDescription = null;
       vm.isReport = true;
@@ -560,16 +551,18 @@
     /* Helper Functions */
     function splitWords(_words) {
       var words = _words ? (_words).split(',').map(
-        function (s) {
-          return s.trim();
-        }) : null;
+        function (m) {
+          return m.trim();
+        }).filter(function (f) {
+        return f !== '';
+      }) : null;
       return words;
     }
 
-    function convertBytesToGB(bytes) {
+    function bytesToSize(bytes) {
       var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
       var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10);
-      return _.isNaN(i) ? 0 : Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+      return _.isNaN(i) ? '0 Bytes' : Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
     }
 
     function searchSetup() {
@@ -598,7 +591,7 @@
         numRooms: result.data.numRooms,
         numFiles: result.data.numFiles,
         numMessages: result.data.numMessages,
-        totalSize: convertBytesToGB(result.data.totalSizeInBytes),
+        totalSize: bytesToSize(result.data.totalSizeInBytes),
       };
       vm.searchResultsHeader = _.eq(vm.searchByOptions[0], vm.searchBySelected) ? $translate.instant('ediscovery.searchResults.emailAddress') : $translate.instant('ediscovery.searchResults.spaceId');
     }

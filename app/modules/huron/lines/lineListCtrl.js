@@ -6,7 +6,7 @@
     .controller('LinesListCtrl', LinesListCtrl);
 
   /* @ngInject */
-  function LinesListCtrl($scope, $templateCache, $timeout, $translate, LineListService, Log, Config, Notification, $state, FeatureToggleService, Authinfo) {
+  function LinesListCtrl($scope, $timeout, $translate, LineListService, Log, Config, Notification, $state, FeatureToggleService, Authinfo) {
     var vm = this;
 
     vm.currentDataPosition = 0;
@@ -35,7 +35,10 @@
         .then(function (supported) {
           vm.ishI1484 = supported;
           if (!supported) {
+            vm.gridOptions.columnDefs.splice(0, 1);
             vm.gridOptions.columnDefs.splice(2, 1);
+          } else {
+            vm.gridOptions.columnDefs.splice(1, 1);
           }
         });
     }
@@ -54,8 +57,10 @@
       filterValue: 'all',
     };
 
-    vm.isCallTrial = Authinfo.getLicenseIsTrial('COMMUNICATION', 'ciscouc') || Authinfo.getLicenseIsTrial('SHARED_DEVICES', false);
-
+    vm.isCallTrial = (_.isUndefined(Authinfo.getLicenseIsTrial('COMMUNICATION', 'ciscouc')) ||
+                       Authinfo.getLicenseIsTrial('COMMUNICATION', 'ciscouc')) &&
+                       (_.isUndefined(Authinfo.getLicenseIsTrial('SHARED_DEVICES', false)) ||
+                       Authinfo.getLicenseIsTrial('SHARED_DEVICES', false));
     // Defines Grid Filters "Unassigned" and "Assigned"
     vm.filters = [{
       name: $translate.instant('linesPage.unassignedLines'),
@@ -200,6 +205,13 @@
         gridApi.core.on.sortChanged($scope, sortColumn);
       },
       columnDefs: [{
+        field: 'siteToSite',
+        displayName: $translate.instant('linesPage.internalNumberHeader'),
+        width: '20%',
+        cellClass: 'internalNumberColumn',
+        headerCellClass: 'internalNumberHeader',
+        sortable: true,
+      }, {
         field: 'internalNumber',
         displayName: $translate.instant('linesPage.internalNumberHeader'),
         width: '20%',
@@ -214,8 +226,7 @@
         headerCellClass: 'externalNumberHeader',
         width: '20%',
       }, {
-        //TODO: (egandhi): replace with Lcation column once API is available
-        field: 'firstName',
+        field: 'locationName',
         displayName: $translate.instant('usersPreview.location'),
         sortable: true,
         cellClass: 'anyColumn',
@@ -224,7 +235,7 @@
       }, {
         field: 'displayField()',
         displayName: $translate.instant('linesPage.assignedTo'),
-        cellTemplate: getTemplate('_tooltipTpl'),
+        cellTemplate: require('./templates/_tooltipTpl.html'),
         sortable: true,
         sort: {
           direction: 'asc',
@@ -237,7 +248,7 @@
         field: 'actions',
         displayName: $translate.instant('linesPage.actionHeader'),
         enableSorting: false,
-        cellTemplate: getTemplate('_actionsTpl'),
+        cellTemplate: require('./templates/_actionsTpl.html'),
         width: '20%',
         cellClass: 'actionsColumn',
         headerCellClass: 'actionsHeader',
@@ -259,10 +270,6 @@
         }
         getLineList();
       }
-    }
-
-    function getTemplate(name) {
-      return $templateCache.get('modules/huron/lines/templates/' + name + '.html');
     }
 
     FeatureToggleService.supports(FeatureToggleService.features.huronPstn)

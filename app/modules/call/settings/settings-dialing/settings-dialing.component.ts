@@ -102,7 +102,7 @@ class DialingSetupCtrl implements ng.IComponentController {
 
 export class DialingSetupComponent {
   public controller = DialingSetupCtrl;
-  public templateUrl = 'modules/call/settings/settings-dialing/settings-dialing.component.html';
+  public template = require('modules/call/settings/settings-dialing/settings-dialing.component.html');
   public bindings = {
     steeringDigit: '<',
     useSimplifiedNationalDialing: '<',

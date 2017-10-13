@@ -8,8 +8,8 @@ export interface IGridApiScope extends ng.IScope {
 
 class TelephonyDomains implements ng.IComponentController {
 
-  public gridData = [];
-  public gridData_ = []; // the data source for search
+  public gridData: any[] = [];
+  public gridData_: any[] = []; // the data source for search
   public gridOptions = {};
   public searchStr: string;
   public gridRefresh = true;
@@ -29,7 +29,6 @@ class TelephonyDomains implements ng.IComponentController {
     private $modal: IToolkitModalService,
     private $rootScope: ng.IRootScopeService,
     private $stateParams: ng.ui.IStateParamsService,
-    private $templateCache: ng.ITemplateCacheService,
     private $translate: ng.translate.ITranslateService,
     private TelephonyDomainService: TelephonyDomainService,
   ) {
@@ -118,23 +117,17 @@ class TelephonyDomains implements ng.IComponentController {
 
   private setGridData(): void {
     this.TelephonyDomainService.getTelephonyDomains(this.customerId)
-      .then((res) => {
-        if (_.get(res, 'content.data.returnCode')) {
-          this.Notification.error('gemini.errorCode.loadError');
-        }
-
-        const data: any = _.get(res, 'content.data.body');
-        _.forEach(data, (item) => {
+      .then((res: any[]) => {
+        _.forEach(res, (item) => {
           const text = 'N/A';
           const text_ = (item.backupBridgeName || 'N/A') + ' + ' + (item.primaryBridgeName || 'N/A');
 
           item.domainName = item.telephonyDomainName || item.domainName;
           item.totalSites = item.telephonyDomainSites.length;
           item.bridgeSet = (!item.primaryBridgeName && !item.backupBridgeName) ? text : text_;
-          item.webDomainName = !item.webDomainName ? text : item.webDomainName;
           item.status_ = (item.status ? this.$translate.instant('gemini.cbgs.field.status.' + item.status) : '');
         });
-        this.gridData = this.gridData_ =  data;
+        this.gridData = this.gridData_ = res;
         this.gridRefresh = false;
       })
       .catch((err) => {
@@ -144,7 +137,7 @@ class TelephonyDomains implements ng.IComponentController {
 
   private setGridOptions(): void {
     const columnDefs = [{
-      width: '18%',
+      width: '30%',
       sortable: true,
       cellTooltip: true,
       field: 'domainName',
@@ -162,15 +155,10 @@ class TelephonyDomains implements ng.IComponentController {
       field: 'bridgeSet',
       displayName: this.$translate.instant('gemini.tds.field.bridgeSet'),
     }, {
-      width: '16%',
-      cellTooltip: true,
-      field: 'webDomainName',
-      displayName: this.$translate.instant('gemini.tds.field.webDomain'),
-    }, {
       width: '12%',
       field: 'status',
       displayName: this.$translate.instant('gemini.cbgs.field.status_'),
-      cellTemplate: this.$templateCache.get('modules/gemini/callbackGroup/cbgsStatus.tpl.html'),
+      cellTemplate: require('modules/gemini/callbackGroup/cbgsStatus.tpl.html'),
     }, {
       field: 'customerAttribute',
       cellTooltip: true,
@@ -197,5 +185,5 @@ class TelephonyDomains implements ng.IComponentController {
 
 export class TelephonyDomainsComponent implements ng.IComponentOptions {
   public controller = TelephonyDomains;
-  public templateUrl = 'modules/gemini/telephonyDomain/telephonyDomains.html';
+  public template = require('modules/gemini/telephonyDomain/telephonyDomains.html');
 }

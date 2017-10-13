@@ -2,7 +2,8 @@
 
 describe('Controller: AARouteToUserCtrl', function () {
   var $controller;
-  var AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAModelService, $httpBackend, HuronConfig;
+  var AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAModelService, $httpBackend, HuronConfig, aaCommonService;
+
   var $rootScope, $scope, UrlConfig;
 
   var aaModel = {
@@ -16,13 +17,7 @@ describe('Controller: AARouteToUserCtrl', function () {
     },
   };
 
-  var Authinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
-  };
-
-  beforeEach(angular.mock.module(function ($provide) {
-    $provide.value('Authinfo', Authinfo);
-  }));
+  var authinfo;
 
   var completeUserCisResponse = {
     userName: 'dudette@gmail.com',
@@ -365,7 +360,7 @@ describe('Controller: AARouteToUserCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$controller_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_, _$httpBackend_, _Authinfo_, _HuronConfig_, _UrlConfig_) {
+  beforeEach(inject(function (_$controller_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_, _$httpBackend_, _Authinfo_, _HuronConfig_, _UrlConfig_, _AACommonService_/* , _AAUserService_ */) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
 
@@ -374,9 +369,10 @@ describe('Controller: AARouteToUserCtrl', function () {
     AAUiModelService = _AAUiModelService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
+    aaCommonService = _AACommonService_;
 
     $httpBackend = _$httpBackend_;
-    Authinfo = _Authinfo_;
+    authinfo = _Authinfo_;
     UrlConfig = _UrlConfig_;
     HuronConfig = _HuronConfig_;
 
@@ -384,6 +380,8 @@ describe('Controller: AARouteToUserCtrl', function () {
     $scope.index = index;
     $scope.keyIndex = keyIndex;
     $scope.menuId = menuId;
+
+    spyOn(authinfo, 'getOrgId').and.returnValue('1');
 
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
     aaModel.ceInfos = raw2CeInfos(rawCeInfos);
@@ -393,7 +391,7 @@ describe('Controller: AARouteToUserCtrl', function () {
     aaUiModel[schedule] = AutoAttendantCeMenuModelService.newCeMenu();
     aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenu());
 
-    var listUsersUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) +
+    var listUsersUrl = UrlConfig.getScimUrl(authinfo.getOrgId()) +
       '?' + '&' + listUsersProps.attributes +
       '&' + listUsersProps.filter +
       '&count=' + listUsersProps.count +
@@ -401,7 +399,7 @@ describe('Controller: AARouteToUserCtrl', function () {
       '&sortOrder=' + listUsersProps.sortOrder;
     $httpBackend.whenGET(listUsersUrl).respond(200, userListCISResponse);
 
-    var listUsersUrl2 = UrlConfig.getScimUrl(Authinfo.getOrgId()) +
+    var listUsersUrl2 = UrlConfig.getScimUrl(authinfo.getOrgId()) +
       '?' + '&' + listUsersProps.attributes +
       '&' + listUsersProps.filter +
       '&startIndex=10' +
@@ -410,7 +408,7 @@ describe('Controller: AARouteToUserCtrl', function () {
       '&sortOrder=' + listUsersProps.sortOrder;
     $httpBackend.whenGET(listUsersUrl2).respond(200, userListCISResponse2);
 
-    var listUsersUrl3 = UrlConfig.getScimUrl(Authinfo.getOrgId()) +
+    var listUsersUrl3 = UrlConfig.getScimUrl(authinfo.getOrgId()) +
       '?' + '&' + listUsersProps.attributes +
       '&' + listUsersProps.filter +
       '&startIndex=20' +
@@ -419,7 +417,7 @@ describe('Controller: AARouteToUserCtrl', function () {
       '&sortOrder=' + listUsersProps.sortOrder;
     $httpBackend.whenGET(listUsersUrl3).respond(200, userListEmptyCISResponse);
 
-    var listUsersUrl4 = UrlConfig.getScimUrl(Authinfo.getOrgId()) +
+    var listUsersUrl4 = UrlConfig.getScimUrl(authinfo.getOrgId()) +
       '?' + '&' + listUsersProps.attributes +
       '&' + listUsersProps.filter +
       '&startIndex=10' +
@@ -428,7 +426,7 @@ describe('Controller: AARouteToUserCtrl', function () {
       '&sortOrder=' + listUsersProps.sortOrder;
     $httpBackend.whenGET(listUsersUrl4).respond(200, userListCISResponse2);
 
-    var listUsersUrl5 = UrlConfig.getScimUrl(Authinfo.getOrgId()) +
+    var listUsersUrl5 = UrlConfig.getScimUrl(authinfo.getOrgId()) +
       '?' + '&' + listUsersProps.attributes +
       '&' + listUsersProps.filter +
       '&startIndex=10' +
@@ -438,18 +436,18 @@ describe('Controller: AARouteToUserCtrl', function () {
     $httpBackend.whenGET(listUsersUrl5).respond(200, userListCISResponse2);
 
     // user with all props including display name and extension
-    var userCisUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + users[0].id;
+    var userCisUrl = UrlConfig.getScimUrl(authinfo.getOrgId()) + '/' + users[0].id;
     $httpBackend.whenGET(userCisUrl).respond(200, completeUserCisResponse);
-    cmiCompleteUserGet = $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/users/' + users[0].id);
+    cmiCompleteUserGet = $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/' + authinfo.getOrgId() + '/users/' + users[0].id);
     cmiCompleteUserGet.respond(200, directoryCmiResponse);
 
     // user with missing displayname and without extension
-    userCisUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + users[1].id;
+    userCisUrl = UrlConfig.getScimUrl(authinfo.getOrgId()) + '/' + users[1].id;
     $httpBackend.whenGET(userCisUrl).respond(200, notSoCompleteUserCisResponse);
-    cmiNotSoCompleteUserGet = $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/users/' + users[1].id);
+    cmiNotSoCompleteUserGet = $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/' + authinfo.getOrgId() + '/users/' + users[1].id);
     cmiNotSoCompleteUserGet.respond(200, noDirectoryCmiResponse);
 
-    var cmiDirectoryNumberUrl = HuronConfig.getCmiUrl() + '/voice/customers/directorynumbers?order=pattern-asc&pattern=2252';
+    var cmiDirectoryNumberUrl = HuronConfig.getCmiUrl() + '/voice/customers/' + authinfo.getOrgId() + '/directorynumbers?order=pattern-asc&pattern=2252';
     var cmiExtensionInfo = [{
       pattern: '5801',
       description: '',
@@ -461,6 +459,31 @@ describe('Controller: AARouteToUserCtrl', function () {
     cmiExtensionInfoGet = $httpBackend.whenGET(cmiDirectoryNumberUrl);
     cmiExtensionInfoGet.respond(200, cmiExtensionInfo);
   }));
+
+  afterEach(function () {
+    cmiCompleteUserGet = null;
+    cmiNotSoCompleteUserGet = null;
+    cmiExtensionInfoGet = null;
+
+    $rootScope = null;
+    $scope = null;
+
+    $controller = null;
+    AAModelService = null;
+    AAUiModelService = null;
+    AutoAttendantCeInfoModelService = null;
+    AutoAttendantCeMenuModelService = null;
+    aaCommonService = null;
+
+    $httpBackend = null;
+    authinfo = null;
+    UrlConfig = null;
+    HuronConfig = null;
+
+    aaModel.ceInfos = null;
+
+    aaUiModel[schedule] = null;
+  });
 
   describe('AARouteToUser', function () {
     it('should be able to create new route to user entry', function () {
@@ -685,6 +708,64 @@ describe('Controller: AARouteToUserCtrl', function () {
         expect(controller.userSelected.id).toEqual(users[0].id);
       });
     });
+
+    describe('Multi-Site', function () {
+      var response = {};
+      response.numbers = [{
+        siteToSite: '81001111',
+      }, {
+        siteToSite: '81002222',
+      }, {
+        siteToSite: '81003333',
+      }];
+      var userMultiSite;
+
+      beforeEach(function () {
+        userMultiSite = HuronConfig.getCmiV2Url() + '/customers/' + authinfo.getOrgId() + '/users/' + users[0].id;
+        spyOn(aaCommonService, 'isMultiSiteEnabled').and.returnValue(true);
+      });
+
+      afterEach(function () {
+        userMultiSite = null;
+      });
+
+      it('should get extension from User Service', function () {
+        $httpBackend.whenGET(userMultiSite).respond(200, response);
+        var controller = $controller('AARouteToUserCtrl', {
+          $scope: $scope,
+        });
+
+        controller.getUsers('', undefined);
+
+        $httpBackend.flush();
+
+        $scope.$apply();
+
+        expect(controller.users[0].description).toContain('81001111');
+        expect(controller.users[1].description).toContain('81002222');
+        expect(controller.users[2].description).toContain('81003333');
+      });
+      it('should not get extension from User Service', function () {
+        $httpBackend.whenGET(userMultiSite).respond(404, { error: 'error 404' });
+        var controller = $controller('AARouteToUserCtrl', {
+          $scope: $scope,
+        });
+
+        controller.getUsers('', undefined);
+        $httpBackend.flush();
+
+        $scope.$apply();
+        var descrips = _.chain(controller.users)
+          .map('description')
+          .filter(function (o) {
+            return o.includes('81001111');
+          })
+          .value();
+
+        expect(descrips.length).toBe(0);
+      });
+    });
+
     describe('fromDecision', function () {
       beforeEach(function () {
         $scope.fromDecision = true;

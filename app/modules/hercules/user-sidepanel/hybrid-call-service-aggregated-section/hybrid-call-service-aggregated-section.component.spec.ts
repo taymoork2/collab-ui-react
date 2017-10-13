@@ -2,7 +2,7 @@ import hybridCallServiceAggregatedSection from './index';
 
 describe('HybridCallServiceAggregatedSectionComponent', () => {
 
-  let $componentController, $httpBackend, $q, $state, $scope, ctrl, FeatureToggleService, HybridServiceUserSidepanelHelperService, ServiceDescriptorService, UCCService;
+  let $componentController, $httpBackend, $q, $state, $scope, ctrl, FeatureToggleService, HybridServiceUserSidepanelHelperService, ServiceDescriptorService;
 
   beforeEach(angular.mock.module('Hercules'));
 
@@ -14,7 +14,7 @@ describe('HybridCallServiceAggregatedSectionComponent', () => {
   beforeEach(initSpies);
   afterEach(cleanup);
 
-  function dependencies (_$componentController_, _$httpBackend_, _$q_, _$state_, $rootScope, _FeatureToggleService_, _HybridServiceUserSidepanelHelperService_, _ServiceDescriptorService_, _UCCService_) {
+  function dependencies (_$componentController_, _$httpBackend_, _$q_, _$state_, $rootScope, _FeatureToggleService_, _HybridServiceUserSidepanelHelperService_, _ServiceDescriptorService_) {
     $componentController = _$componentController_;
     $httpBackend = _$httpBackend_;
     $q = _$q_;
@@ -23,53 +23,24 @@ describe('HybridCallServiceAggregatedSectionComponent', () => {
     FeatureToggleService = _FeatureToggleService_;
     HybridServiceUserSidepanelHelperService = _HybridServiceUserSidepanelHelperService_;
     ServiceDescriptorService = _ServiceDescriptorService_;
-    UCCService = _UCCService_;
   }
 
   function cleanup() {
-    $componentController = $httpBackend = $q = $state = $scope = ctrl = FeatureToggleService = HybridServiceUserSidepanelHelperService = ServiceDescriptorService = UCCService = undefined;
+    $componentController = $httpBackend = $q = $state = $scope = ctrl = FeatureToggleService = HybridServiceUserSidepanelHelperService = ServiceDescriptorService = undefined;
   }
 
   function initSpies() {
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve({}));
     spyOn(HybridServiceUserSidepanelHelperService, 'getDataFromUSS').and.returnValue($q.resolve([{}, {}]));
-    spyOn(UCCService, 'getOrgVoicemailConfiguration').and.returnValue($q.resolve({
-      voicemailOrgEnableInfo: {
-        orgHybridVoicemailEnabled: true,
-      },
-    }));
     spyOn(ServiceDescriptorService, 'isServiceEnabled').and.returnValue($q.resolve({}));
     $httpBackend.expectGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200);
   }
 
   function initController() {
-    ctrl = $componentController('hybridCallServiceAggregatedSection', {}, {});
+    ctrl = $componentController('hybridCallServiceAggregatedSection', {}, {
+      userUpdatedCallback: function () {},
+    });
   }
-
-
-  it ('should call UCC to get voicemail data if the org is voicemail feature toggled', () => {
-
-    FeatureToggleService.supports.and.returnValue($q.resolve(true));
-
-    initController();
-    ctrl.$onInit();
-    $scope.$apply();
-
-    expect(UCCService.getOrgVoicemailConfiguration.calls.count()).toBe(1);
-    expect(ctrl.voicemailEnabled).toBe(true);
-  });
-
-  it ('should not call UCC to get voicemail data if the org is not voicemail feature toggled', () => {
-
-    FeatureToggleService.supports.and.returnValue($q.resolve(false));
-
-    initController();
-    ctrl.$onInit();
-    $scope.$apply();
-
-    expect(UCCService.getOrgVoicemailConfiguration.calls.count()).toBe(0);
-    expect(ctrl.voicemailEnabled).toBe(false);
-  });
 
   it('should retrieve the resourceGroupId from USS', () => {
 

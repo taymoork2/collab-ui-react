@@ -43,7 +43,7 @@ source ./bin/include/env-var-helpers
 #   in a Jenkins build env, as env vars are injected via other means)
 if ! is_ci; then
     echo "[INFO] detected running in local dev environment, injecting build env vars for \"dev\"."
-    inj_build_env_vars_for "dev"
+    inj_build_env_vars_for "dev" >/dev/null
 fi
 
 
@@ -98,17 +98,17 @@ function phase_2 {
     (
         set +e
         # - 'typings' seems to be required for webpack to succeed
-        npm run typings
-        time nice -10 npm run build -- --env.nolint --env.noprogress --devtool source-map
+        yarn typings
+        time nice -10 yarn build --env.nolint --env.noprogress --devtool source-map
         echo $? > ./.cache/webpack_exit_code
         set -e
     ) &
     webpack_pid=$!
 
-    npm run lint
-    npm run json-verify
-    npm run languages-verify
-    nice -15 npm run test -- --env.noprogress
+    yarn lint
+    yarn json-verify
+    yarn languages-verify
+    nice -15 yarn test --env.noprogress
     set +e
 
 

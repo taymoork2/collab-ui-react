@@ -6,32 +6,39 @@ require('./_site-list.scss');
   angular
     .module('Core')
     .controller('WebExSiteRowCtrl', WebExSiteRowCtrl);
-  //TokenService, WebExUtilsFact,
 
   /*@ngInject*/
-  function WebExSiteRowCtrl($scope, $sce, $state, $timeout, TokenService, WebExUtilsFact, WebExSiteRowService) {
-    this.showGridData = false;
+  function WebExSiteRowCtrl($scope, $sce, $state, $timeout, FeatureToggleService, TokenService, WebExUtilsFact, WebExSiteRowService) {
+    var vm = this;
+    vm.showGridData = false;
+    vm.isShowAddSite = false;
+
+    FeatureToggleService.atlasWebexAddSiteGetStatus().then(function (result) {
+      vm.isShowAddSite = result;
+    });
 
     WebExSiteRowService.initSiteRows();
-    this.gridOptions = WebExSiteRowService.getGridOptions();
+    vm.gridOptions = WebExSiteRowService.getGridOptions();
 
-    this.linkToReports = function (siteUrl) {
+    vm.gridOptions.appScopeProvider = vm;
+
+    vm.linkToReports = function (siteUrl) {
       $state.go('reports.webex-metrics', { siteUrl: siteUrl });
     };
 
-    this.linkToSiteAdminHomePage = function (siteUrl) {
-      linkTOSiteAdminPage.call(this, siteUrl, false);
+    vm.linkToSiteAdminHomePage = function (siteUrl) {
+      linkTOSiteAdminPage.call(vm, siteUrl, false);
     };
 
-    this.linkToSiteAdminLinkedPage = function (siteUrl) {
-      linkTOSiteAdminPage.call(this, siteUrl, true);
+    vm.linkToSiteAdminLinkedPage = function (siteUrl) {
+      linkTOSiteAdminPage.call(vm, siteUrl, true);
     };
 
-    this.trustSrc = function (src) {
+    vm.trustSrc = function (src) {
       return $sce.trustAsResourceUrl(src);
     };
 
-    this.showGridData = true;
+    vm.showGridData = true;
 
     // kill the csv poll when navigating away from the site list page
     $scope.$on('$destroy', function () {
@@ -47,9 +54,9 @@ require('./_site-list.scss');
         adminUrl.push(encodeURIComponent('accountlinking.do?siteUrl='));
         adminUrl.push(WebExUtilsFact.getSiteName(siteUrl));
       }
-      this.siteAdminUrl = adminUrl.join('');
+      vm.siteAdminUrl = adminUrl.join('');
 
-      this.accessToken = TokenService.getAccessToken();
+      vm.accessToken = TokenService.getAccessToken();
       $timeout(function () {
         angular.element('#webExLinkedSiteFormBtn').click();
       }, 100);

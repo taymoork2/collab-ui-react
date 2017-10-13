@@ -12,6 +12,12 @@
   function AccountOrgService($http, $q, UrlConfig) {
     var accountUrl = UrlConfig.getAdminServiceUrl();
 
+    var FileShareControlType = {
+      BLOCK_BOTH: 'BLOCK_BOTH',
+      BLOCK_UPLOAD: 'BLOCK_UPLOAD',
+      NONE: 'NONE',
+    };
+
     var service = {
       getAccount: getAccount,
       getServices: getServices,
@@ -24,6 +30,10 @@
       getOrgSettings: getOrgSettings,
       getAppSecurity: getAppSecurity,
       setAppSecurity: setAppSecurity,
+      getBlockExternalCommunication: getBlockExternalCommunication,
+      setBlockExternalCommunication: setBlockExternalCommunication,
+      getFileSharingControl: getFileSharingControl,
+      setFileSharingControl: setFileSharingControl,
     };
 
     return service;
@@ -147,6 +157,128 @@
       return $http.put(url, {
         clientSecurityPolicy: appSecurityStatus,
       });
+    }
+
+    // Get block external communication from the blockExternalCommunications API(boolean)
+    function getBlockExternalCommunication(org) {
+      if (!org || org === '') {
+        return $q.reject('A Valid organization ID must be Entered');
+      }
+      var url = getDeviceSettingsUrl(org) + '/blockExternalCommunications';
+
+      return $http.get(url).then(function (response) {
+        return _.get(response, 'data.blockExternalCommunications', false);
+      });
+    }
+
+    // Sets block external communication to blockExternalCommunications API
+    function setBlockExternalCommunication(org, blockExternalCommunication) {
+      if (!org || org === '') {
+        return $q.reject('A Valid organization ID must be Entered');
+      }
+
+      var url = getDeviceSettingsUrl(org) + '/blockExternalCommunications';
+
+      return $http.put(url, {
+        blockExternalCommunications: blockExternalCommunication,
+      });
+    }
+
+    // Get FileSharingControl from the FileSharingControl API(boolean)
+    function getFileSharingControl(org) {
+      if (!org || org === '') {
+        return $q.reject('A Valid organization ID must be Entered');
+      }
+      // TODO using hardcode first, wait for backend code
+      var url = getDeviceSettingsUrl(org);
+      return $http.get(url).then(function (response) {
+        var fileSharingControl = {
+          blockDesktopAppDownload: false,
+          blockDesktopAppUpload: false,
+          blockMobileAppDownload: false,
+          blockMobileAppUpload: false,
+          blockWebAppDownload: false,
+          blockWebAppUpload: false,
+          blockBotsDownload: false,
+          blockBotsUpload: false,
+        };
+        var orgSettings = JSON.parse(response.data.orgSettings[0]);
+        if (_.has(orgSettings, 'desktopFileShareControl')) {
+          if (_.get(orgSettings, 'desktopFileShareControl') === FileShareControlType.BLOCK_BOTH) {
+            fileSharingControl.blockDesktopAppDownload = true;
+            fileSharingControl.blockDesktopAppUpload = true;
+          } else if (_.get(orgSettings, 'desktopFileShareControl') === FileShareControlType.BLOCK_UPLOAD) {
+            fileSharingControl.blockDesktopAppUpload = true;
+          }
+        }
+        if (_.has(orgSettings, 'mobileFileShareControl')) {
+          if (_.get(orgSettings, 'mobileFileShareControl') === FileShareControlType.BLOCK_BOTH) {
+            fileSharingControl.blockMobileAppDownload = true;
+            fileSharingControl.blockMobileAppUpload = true;
+          } else if (_.get(orgSettings, 'mobileFileShareControl') === FileShareControlType.BLOCK_UPLOAD) {
+            fileSharingControl.blockMobileAppUpload = true;
+          }
+        }
+        if (_.has(orgSettings, 'webFileShareControl')) {
+          if (_.get(orgSettings, 'webFileShareControl') === FileShareControlType.BLOCK_BOTH) {
+            fileSharingControl.blockWebAppDownload = true;
+            fileSharingControl.blockWebAppUpload = true;
+          } else if (_.get(orgSettings, 'webFileShareControl') === FileShareControlType.BLOCK_UPLOAD) {
+            fileSharingControl.blockWebAppUpload = true;
+          }
+        }
+        if (_.has(orgSettings, 'botFileShareControl')) {
+          if (_.get(orgSettings, 'botFileShareControl') === FileShareControlType.BLOCK_BOTH) {
+            fileSharingControl.blockBotsDownload = true;
+            fileSharingControl.blockBotsUpload = true;
+          } else if (_.get(orgSettings, 'botFileShareControl') === FileShareControlType.BLOCK_UPLOAD) {
+            fileSharingControl.blockBotsUpload = true;
+          }
+        }
+        return fileSharingControl;
+      });
+    }
+
+    // Sets FileSharingControl to fileSharingControl API
+    function setFileSharingControl(org, fileSharingControl) {
+      if (!org || org === '') {
+        return $q.reject('A Valid organization ID must be Entered');
+      }
+      var fileSharingSetting = {};
+      if (fileSharingControl.blockDesktopAppDownload && fileSharingControl.blockDesktopAppUpload) {
+        fileSharingSetting.desktopFileShareControl = FileShareControlType.BLOCK_BOTH;
+      } else if (fileSharingControl.blockDesktopAppUpload) {
+        fileSharingSetting.desktopFileShareControl = FileShareControlType.BLOCK_UPLOAD;
+      } else {
+        fileSharingSetting.desktopFileShareControl = FileShareControlType.NONE;
+      }
+
+      if (fileSharingControl.blockMobileAppDownload && fileSharingControl.blockMobileAppUpload) {
+        fileSharingSetting.mobileFileShareControl = FileShareControlType.BLOCK_BOTH;
+      } else if (fileSharingControl.blockMobileAppUpload) {
+        fileSharingSetting.mobileFileShareControl = FileShareControlType.BLOCK_UPLOAD;
+      } else {
+        fileSharingSetting.mobileFileShareControl = FileShareControlType.NONE;
+      }
+
+      if (fileSharingControl.blockWebAppDownload && fileSharingControl.blockWebAppUpload) {
+        fileSharingSetting.webFileShareControl = FileShareControlType.BLOCK_BOTH;
+      } else if (fileSharingControl.blockWebAppUpload) {
+        fileSharingSetting.webFileShareControl = FileShareControlType.BLOCK_UPLOAD;
+      } else {
+        fileSharingSetting.webFileShareControl = FileShareControlType.NONE;
+      }
+
+      if (fileSharingControl.blockBotsDownload && fileSharingControl.blockBotsUpload) {
+        fileSharingSetting.botFileShareControl = FileShareControlType.BLOCK_BOTH;
+      } else if (fileSharingControl.blockBotsUpload) {
+        fileSharingSetting.botFileShareControl = FileShareControlType.BLOCK_UPLOAD;
+      } else {
+        fileSharingSetting.botFileShareControl = FileShareControlType.NONE;
+      }
+
+      var url = getDeviceSettingsUrl(org);
+      return $http.patch(url, fileSharingSetting);
     }
   }
 })();

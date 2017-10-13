@@ -3,8 +3,7 @@
 
   var pageDirectiveNames = [
     'ctName',
-    'ctVirtualAssistantName',
-    'ctVirtualAssistantAvatar',
+    'ctVirtualAssistant',
     'ctProfile',
     'ctOverview',
     'ctProactivePrompt',
@@ -14,14 +13,13 @@
     'ctOffHours',
     'ctChatStatusMessages',
     'ctSummary',
-    'ctVirtualAssistantSummary',
   ];
 
   pageDirectiveNames.forEach(function (directiveName) {
     angular
       .module('Sunlight')
       .directive(directiveName, function () {
-        return createSetupAssistantPageDirective(directiveName + '.tpl.html');
+        return createSetupAssistantPageDirective(directiveName);
       });
   });
 
@@ -30,7 +28,7 @@
       link: function ($scope, element, $attributes) {
         $scope.careSetupAssistant.cardMode = $attributes.mode;
       },
-      templateUrl: 'modules/sunlight/features/template/setupAssistantPages/' + pageFile,
+      template: require('modules/sunlight/features/template/setupAssistantPages/' + pageFile + '.tpl.html'),
       restrict: 'EA',
       scope: false,
     };

@@ -7,7 +7,7 @@ import {
 
 export class HRServiceAddressComponent implements ng.IComponentOptions {
   public controller = ServiceAddressCtrl;
-  public templateUrl = 'modules/huron/serviceAddress/serviceAddress.html';
+  public template = require('modules/huron/serviceAddress/serviceAddress.html');
   public bindings = {
     address: '<',
     readOnly: '<',
@@ -41,7 +41,7 @@ class ServiceAddressCtrl implements ng.IComponentController {
     this.PstnAreaService.getCountryAreas(this.countryCode).then( (location: IAreaData) => {
       this.zipLabel = location.zipName;
       this.stateLabel = location.typeName;
-      if (this.address.state) {
+      if (this.address && this.address.state) {
         this.locationModel = location.areas.filter(state => state.abbreviation === this.address.state)[0];
       }
       this.stateOptions = location.areas;
@@ -55,8 +55,14 @@ class ServiceAddressCtrl implements ng.IComponentController {
 
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
     const { address } = changes;
-    if (address && (address.currentValue['state'] === '' || address.currentValue['state'] === undefined)) {
-      this.locationModel = undefined;
+    if (address) {
+      if (address.currentValue) {
+        if (address.currentValue['state'] === '' || address.currentValue['state'] === undefined) {
+          this.locationModel = undefined;
+        }
+      } else {
+        this.locationModel = undefined;
+      }
     }
   }
 

@@ -8,8 +8,7 @@
     &.cpselect {
       margin-top: calc(32vh - 143px);
       text-align: center;
-      flex-direction: column;
-      flex-wrap: nowrap;
+      flex-flow: column nowrap;
       justify-content: center;
       align-items: center;
 

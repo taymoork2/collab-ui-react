@@ -1,10 +1,10 @@
-import { HybridServicesFlagService, HybridServicesFlag } from './hs-flag-service';
+import moduleName, { HybridServicesFlagService, HybridServicesFlag } from './hs-flag-service';
 
 describe('FlagService', () => {
   let HybridServicesFlagService: HybridServicesFlagService;
-  let $httpBackend: any;
+  let $httpBackend: ng.IHttpBackendService;
 
-  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module(moduleName));
   beforeEach(angular.mock.module(mockDeps));
   beforeEach(inject(dependencies));
 

@@ -23,6 +23,7 @@ export interface IUserProps {
 
 export interface IUserStatusWithExtendedMessages extends IUserStatus {
   messages: IMessageExtended[];
+  hasWarnings?: boolean;
 }
 
 type UserStatus = 'activated' | 'notActivated' | 'error';
@@ -41,7 +42,7 @@ interface IUserStatus {
   userId: string;
 }
 
-interface IMessage {
+export interface IMessage {
   description: string;
   key: string;
   replacementValues?: IReplacementValue[];
@@ -216,7 +217,7 @@ export class USSService {
       .then(this.extractData);
   }
 
-  public notifyReadOnlyLaunch(): ng.IPromise<''> {
+  public invalidateHybridUserCache = (): ng.IPromise<''> => {
     return this.$http.post<''>(`${this.USSUrl}/internals/actions/invalidateUser/invoke`, null)
       .then(this.extractData);
   }
@@ -243,6 +244,21 @@ export class USSService {
     return this.$http
       .patch<IUSSOrg>(`${this.USSUrl}/orgs/${org.id}`, org)
       .then(this.extractData);
+  }
+
+  public getStatusSeverity(status: string): -1 | 0 | 1 | 2 | 3 {
+    switch (status) {
+      case 'not_entitled':
+        return 0;
+      case 'activated':
+        return 1;
+      case 'pending_activation':
+        return 2;
+      case 'error':
+        return 3;
+      default:
+        return -1;
+    }
   }
 
   private convertToTranslateReplacements(messageReplacementValues: IReplacementValue[] | undefined): object {
@@ -282,7 +298,7 @@ export class USSService {
       });
   }
 
-  // From how this method is used, `any` should be `ng.IHttpPromiseCallbackArg<any> | IUserStatus[]`
+  // From how this method is used, `any` should be `ng.IHttpResponse<any> | IUserStatus[]`
   private extractAndTweakUserStatuses(res: any): IUserStatusWithExtendedMessages[] {
     const userStatuses: IUserStatus[] = res.data ? res.data.userStatuses : res;
     const result = _.chain(userStatuses)
@@ -294,11 +310,11 @@ export class USSService {
     return result as IUserStatusWithExtendedMessages[];
   }
 
-  private extractData<T>(res: ng.IHttpPromiseCallbackArg<T>): T {
-    return res.data as T;
+  private extractData<T>(res: ng.IHttpResponse<T>): T {
+    return res.data;
   }
 
-  private extractJournalEntries(res: ng.IHttpPromiseCallbackArg<any>): IJournalEntry[] {
+  private extractJournalEntries(res: ng.IHttpResponse<any>): IJournalEntry[] {
     const entries: IJournalEntry[] = res.data.entries || [];
     const result = _.chain(entries)
       .map((entry) => {
@@ -311,7 +327,7 @@ export class USSService {
     return result;
   }
 
-  private extractUserProps(res: ng.IHttpPromiseCallbackArg<any>): IUserProps[] {
+  private extractUserProps(res: ng.IHttpResponse<any>): IUserProps[] {
     return res.data.userProps;
   }
 

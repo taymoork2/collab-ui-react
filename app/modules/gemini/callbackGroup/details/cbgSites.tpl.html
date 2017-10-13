@@ -1,4 +1,8 @@
 <cs-sp-container>
+  <div ng-if="$ctrl.showLoading" class="grid-refresh">
+    <i class="icon icon-spinner icon-3x"></i>
+  </div>
+
   <cs-sp-section class="side-panel-sites">
     <div class="section-title-row">
       <span class="section-name" translate="gemini.cbgs.field.totalSites"></span>
@@ -6,11 +10,9 @@
     <div class="feature-list">
       <ul class="sites-ul">
         <li class="feature" ng-repeat="val in $ctrl.sites">
-          <span class="feature-name">{{val.siteUrl}}</span>
-          <span class="action-menu dropdown pull-right action-movesite" cs-dropdown>
-            <button class="actions-button btn--none dropdown-toggle small" cs-dropdown-toggle>
-              Move Site
-            </button>
+          <span class="feature-name"><a href="{{val.globalSite}}" target="_blank" onclick="this.blur()">{{val.siteUrl}}</a></span>
+          <span ng-if="$ctrl.cbgs.length" class="action-menu dropdown pull-right action-movesite" cs-dropdown>
+            <a class="dropdown-toggle small" cs-dropdown-toggle translate="gemini.cbgs.moveSite"></a>
             <ul class="dropdown-menu dropdown-primary actions-services" cs-dropdown-menu>
               <li ng-repeat="cbg in $ctrl.cbgs" ng-click="$ctrl.onClick(val,{ toCcaGroupId:cbg.ccaGroupId, toGroupName: cbg.groupName })">
                 <small class="ellipsis">{{cbg.groupName ? cbg.groupName : cbg.customerName}}</small>

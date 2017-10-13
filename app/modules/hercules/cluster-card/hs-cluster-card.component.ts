@@ -68,7 +68,7 @@ export class ClusterCardController implements ng.IComponentController {
       },
       controller: 'ClusterDeregisterController',
       controllerAs: 'clusterDeregister',
-      templateUrl: 'modules/hercules/rename-and-deregister-cluster-section/deregister-dialog.html',
+      template: require('modules/hercules/rename-and-deregister-cluster-section/deregister-dialog.html'),
       type: 'dialog',
     })
     .result
@@ -81,18 +81,22 @@ export class ClusterCardController implements ng.IComponentController {
     if (type === 'c_mgmt') {
       this.$state.go('expressway-cluster.nodes', {
         id: id,
+        backState: 'cluster-list',
       });
     } else if (type === 'mf_mgmt') {
       this.$state.go('mediafusion-cluster.nodes', {
         id: id,
+        backState: 'cluster-list',
       });
     } else if (type === 'hds_app') {
       this.$state.go('hds-cluster.nodes', {
         id: id,
+        backState: 'cluster-list',
       });
     } else if (type === 'ucm_mgmt') {
       this.$state.go('cucm-cluster.nodes', {
         id: id,
+        backState: 'cluster-list',
       });
     }
   }
@@ -164,7 +168,7 @@ export class ClusterCardController implements ng.IComponentController {
 
 export class ClusterCardComponent implements ng.IComponentOptions {
   public controller = ClusterCardController;
-  public templateUrl = 'modules/hercules/cluster-card/hs-cluster-card.component.html';
+  public template = require('modules/hercules/cluster-card/hs-cluster-card.component.html');
   public bindings = {
     cluster: '<',
   };

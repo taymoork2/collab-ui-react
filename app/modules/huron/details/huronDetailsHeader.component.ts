@@ -1,3 +1,5 @@
+import { Config } from 'modules/core/config/config';
+
 interface IHeaderTab {
   title: string;
   state: string;
@@ -12,7 +14,7 @@ class HuronDetailsHeaderComponentCtrl implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private Authinfo,
-    private Config,
+    private Config: Config,
     private FeatureToggleService,
     private $translate: ng.translate.ITranslateService,
   ) { }
@@ -64,6 +66,6 @@ class HuronDetailsHeaderComponentCtrl implements ng.IComponentController {
 
 export class HuronDetailsHeaderComponent implements ng.IComponentOptions {
   public controller = HuronDetailsHeaderComponentCtrl;
-  public templateUrl = 'modules/huron/details/huronDetailsHeader.html';
+  public template = require('modules/huron/details/huronDetailsHeader.html');
   public bindings = { };
 }

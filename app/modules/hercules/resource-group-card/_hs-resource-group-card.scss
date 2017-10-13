@@ -28,6 +28,14 @@ hs-resource-group-card {
         font-size: 16px;
         margin-right: auto;
       }
+
+      > .resource-group-caret > cs-statusindicator {
+        padding-right: 4px;
+
+        i {
+          vertical-align: 2px;
+        }
+      }
     }
 
     .resource-group-caret {
@@ -161,6 +169,10 @@ hs-resource-group-card {
 
         h4 {
           padding-top: 0;
+        }
+
+        cs-statusindicator {
+          padding-right: 4px;
         }
       }
 

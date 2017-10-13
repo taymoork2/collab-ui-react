@@ -1,0 +1,28 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$ctrl.cancel()">
+    <span class="sr-only" translate="common.close"></span>
+  </button>
+  <h3 class="modal-title" translate="firstTimeWizard.addWebexSite"></h3>
+</div>
+<div class="modal-body">
+  <h4 translate="common.stepCurrentOfTotal" translate-values="{current: $ctrl.getCurrentStep(), total: $ctrl.getTotalSteps()}"></h4>
+  <p ng-if="$ctrl.currentStep > 0">{{$ctrl.currentSubscription}}</p>
+   <webex-site-subscription subscriptions="$ctrl.subscriptionList" current-subscription="$ctrl.currentSubscription"
+    on-subscription-change="$ctrl.changeCurrentSubscription(subId)" ng-if="$ctrl.currentStep===0">
+  </webex-site-subscription>
+  <webex-site-transfer current-subscription="$ctrl.currentSubscription" on-sites-received="$ctrl.addTransferredSites(sites, isValid)"
+    on-validation-status-change="$ctrl.setNextEnabled(isValid)" ng-if="$ctrl.currentStep===1">
+  </webex-site-transfer>
+  <webex-site-new sites-array="$ctrl.sitesArray" audio-package="$ctrl.audioPackage" on-sites-add="$ctrl.addNewSites(sites, isValid)"
+  on-validation-status-change="$ctrl.setNextEnabled(isValid)"
+    ng-if="$ctrl.currentStep===2">
+  </webex-site-new>
+  <webex-site-licenses sites="$ctrl.sitesArray" existing-webex-sites="$ctrl.existingWebexSites" meeting-licenses="$ctrl.meetingLicenses"
+    on-distribution-change="$ctrl.updateSitesWithNewDistribution(sites, isValid )" ng-if="$ctrl.currentStep===3"></webex-site-licenses>
+  </div>
+<div class="modal-footer">
+  <button class="btn btn-default" ng-click="$ctrl.cancel()" translate="common.cancel"></button>
+  <button class="btn btn-primary" cs-btn loading="$ctrl.isLoading"  ng-click="$ctrl.next()" ng-disabled="$ctrl.isNextDisabled()">
+    <span>{{ ($ctrl.hasNext()? 'common.next': 'common.save') | translate }} </span>
+  </button>
+</div>

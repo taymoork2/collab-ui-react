@@ -9,12 +9,11 @@ var EnumDataTypeUtils = DataTypeDefinition.EnumDataTypeUtils;
   angular.module('Context')
     .component('contextFieldsSidepanel', {
       controller: ContextFieldsSidepanelCtrl,
-      templateUrl: 'modules/context/fields/sidepanel/hybrid-context-fields-sidepanel.html',
+      template: require('modules/context/fields/sidepanel/hybrid-context-fields-sidepanel.html'),
       bindings: {
         field: '<',
         process: '<',
         callback: '<',
-        hasContextExpandedTypesToggle: '<',
       },
     });
 
@@ -87,7 +86,7 @@ var EnumDataTypeUtils = DataTypeDefinition.EnumDataTypeUtils;
     };
 
     vm.isDataTypeWithOptions = function () {
-      return vm.hasContextExpandedTypesToggle ? _.get(vm, 'field.dataTypeDefinition.type') === 'enum' : false;
+      return _.get(vm, 'field.dataTypeDefinition.type') === 'enum';
     };
 
     vm.getOptionSidepanelOptions = function () {

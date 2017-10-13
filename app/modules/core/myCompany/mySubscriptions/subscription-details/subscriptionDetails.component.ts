@@ -18,6 +18,10 @@ class SubscriptionDetailsCtrl {
     });
   }
 
+  public getProPackStatus(): boolean {
+    return this.isProPackPurchased && !_.isUndefined(this.subscription.proPack);
+  }
+
   public getUsage(offer: IOfferData): string  {
     if (_.isNumber(offer.usage)) {
       return `${offer.usage}/${offer.volume}`;
@@ -64,7 +68,7 @@ class SubscriptionDetailsCtrl {
 }
 
 export class SubscriptionDetailsComponent implements ng.IComponentOptions {
-  public templateUrl = 'modules/core/myCompany/mySubscriptions/subscription-details/subscriptionDetails.tpl.html';
+  public template = require('modules/core/myCompany/mySubscriptions/subscription-details/subscriptionDetails.tpl.html');
   public controller = SubscriptionDetailsCtrl;
   public bindings = {
     subscription: '<',

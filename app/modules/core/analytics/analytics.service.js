@@ -123,6 +123,7 @@
           VISIT_HDS_SETTINGS: 'Visit Hybrid Data Security Service Settings',
           VISIT_CAL_EXC_LIST: 'Visit Hybrid Calendar (Exchange) Service Cluster List',
           VISIT_CAL_EXC_SETTINGS: 'Visit Hybrid Calendar (Exchange) Service Settings', // TODO
+          VISIT_CAL_O365_SETTINGS: 'Visit Hybrid Calendar (Office 365) Service Settings',
           VISIT_CAL_GOOG_SETTINGS: 'Visit Hybrid Calendar (Google) Service Settings',
           VISIT_CALL_LIST: 'Visit Hybrid Call Service Cluster List',
           VISIT_CALL_SETTINGS: 'Visit Hybrid Call Service Settings',
@@ -209,7 +210,10 @@
       }).then(function (result) {
         hasInit = true;
         if (result) {
-          mixpanel.init(result);
+          mixpanel.init(result, {
+            persistence: 'localStorage', // default to localStorage, fallback to cookie
+            cross_subdomain_cookie: false, // when cookies are needed, only use specific subdomain
+          });
         }
       });
     }

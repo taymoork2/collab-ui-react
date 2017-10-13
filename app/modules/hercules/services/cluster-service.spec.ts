@@ -58,6 +58,7 @@ describe('ClusterService', () => {
           link: 'l',
         },
       ],
+      replacementValues: [],
     };
 
     it('should return an empty list when no alarms are present', () => {
@@ -810,6 +811,7 @@ describe('ClusterService', () => {
           description: '',
           solution: '',
           solutionReplacementValues: [],
+          replacementValues: [],
         };
       });
     } else if (_.isArray(alarms)) {

@@ -4,11 +4,12 @@
   var TimingKey = require('../metrics').TimingKey;
 
   /* @ngInject */
-  function LoginCtrl($location, $rootScope, $scope, $state, $stateParams, $translate, Auth, Authinfo, Config, Log, LocalStorage, LogMetricsService, MetricsService, PageParam, SessionStorage, StorageKeys, TokenService, Utils, CacheWarmUpService) {
+  function LoginCtrl($interval, $location, $rootScope, $scope, $state, $stateParams, $translate, Auth, Authinfo, Config, Log, LocalStorage, LogMetricsService, MetricsService, PageParam, SessionStorage, StorageKeys, TokenService, Utils, CacheWarmUpService) {
+    MetricsService.startTimer(TimingKey.LOGIN_DURATION);
     var queryParams = SessionStorage.popObject(StorageKeys.REQUESTED_QUERY_PARAMS);
-    var language = LocalStorage.get('language');
+    var language = LocalStorage.get(StorageKeys.LANGUAGE);
 
-    $scope.message = LocalStorage.get('loginMessage');
+    $scope.message = LocalStorage.get(StorageKeys.LOGIN_MESSAGE);
 
     if (language) {
       $translate.use(language).then(function () {
@@ -22,19 +23,19 @@
     }
 
     if ($stateParams.customerOrgId) {
-      SessionStorage.put('customerOrgId', $stateParams.customerOrgId);
+      SessionStorage.put(StorageKeys.CUSTOMER_ORG_ID, $stateParams.customerOrgId);
     } else if ($stateParams.partnerOrgId) {
-      SessionStorage.put('partnerOrgId', $stateParams.partnerOrgId);
+      SessionStorage.put(StorageKeys.PARTNER_ORG_ID, $stateParams.partnerOrgId);
     }
 
     if ($stateParams.subscriptionId) {
-      SessionStorage.put('subscriptionId', $stateParams.subscriptionId);
+      SessionStorage.put(StorageKeys.SUBSCRIPTION_ID, $stateParams.subscriptionId);
     }
 
     // If the tab has logged out and we are logged into another tab
     // we want to allow the tab to get auth tokens from another logged in tab
-    if (SessionStorage.get('logout')) {
-      SessionStorage.remove('logout');
+    if (SessionStorage.get(StorageKeys.LOGOUT)) {
+      SessionStorage.remove(StorageKeys.LOGOUT);
     }
 
     // Enable Atlas to seamlessly login (when already authenticated through CI) by allowing email parameter
@@ -56,11 +57,15 @@
 
     var authorizeUser = function () {
       $scope.loading = true;
+      var isSuccess = true;
       Auth.authorize({
         reauthorize: $stateParams.reauthorize,
       })
         .then(function () {
           CacheWarmUpService.warmUpCaches();
+          $interval(function () {
+            CacheWarmUpService.warmUpCaches();
+          }, 100000);
 
           if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {
             $state.go('firsttimewizard');
@@ -73,18 +78,18 @@
             } else if (SessionStorage.get(StorageKeys.REQUESTED_STATE_NAME)) {
               state = SessionStorage.pop(StorageKeys.REQUESTED_STATE_NAME);
               params = SessionStorage.popObject(StorageKeys.REQUESTED_STATE_PARAMS);
-            } else if ((Authinfo.isPartnerAdmin() || Authinfo.isPartnerSalesAdmin()) && !$stateParams.customerOrgId && !$stateParams.partnerOrgId) {
+            } else if ((Authinfo.isPartnerAdmin() || Authinfo.isPartnerSalesAdmin()) && !SessionStorage.get(StorageKeys.CUSTOMER_ORG_ID) && !SessionStorage.get(StorageKeys.PARTNER_ORG_ID)) {
               Log.debug('Sending "partner logged in" metrics');
               LogMetricsService.logMetrics('Partner logged in', LogMetricsService.getEventType('partnerLogin'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
               state = 'partneroverview';
               Authinfo.setCustomerView(false);
             } else if (Authinfo.isSupportUser()) {
               state = 'support.status';
-            } else if (!$stateParams.customerOrgId && Authinfo.isHelpDeskUserOnly()) {
+            } else if (!SessionStorage.get(StorageKeys.CUSTOMER_ORG_ID) && Authinfo.isHelpDeskUserOnly()) {
               state = 'helpdesk.search';
-            } else if (!$stateParams.customerOrgId && Authinfo.isComplianceUserOnly()) {
+            } else if (!SessionStorage.get(StorageKeys.CUSTOMER_ORG_ID) && Authinfo.isComplianceUserOnly()) {
               state = 'ediscovery.search';
-            } else if (!$stateParams.customerOrgId && Authinfo.isHelpDeskAndComplianceUserOnly()) {
+            } else if (!SessionStorage.get(StorageKeys.CUSTOMER_ORG_ID) && Authinfo.isHelpDeskAndComplianceUserOnly()) {
               state = 'support.status';
             } else if (Authinfo.isPartnerUser()) {
               state = 'partnercustomers.list';
@@ -99,12 +104,15 @@
               LogMetricsService.logMetrics('Customer logged in', LogMetricsService.getEventType('customerLogin'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
             }
             $rootScope.$emit('LOGIN');
-            return $state.go(state, params);
+            return $state.go(state, params).catch(_.noop); // don't reject on $stateChangeStart prevention (eg. unauthorized)
           }
         }).catch(function () {
+          isSuccess = false;
           return $state.go('login-error');
         }).finally(function () {
-          MetricsService.stopTimer(TimingKey.LOGIN_DURATION);
+          MetricsService.stopTimer(TimingKey.LOGIN_DURATION, {
+            success: isSuccess,
+          });
         });
     };
 

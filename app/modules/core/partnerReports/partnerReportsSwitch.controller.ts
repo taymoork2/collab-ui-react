@@ -6,14 +6,14 @@ export class PartnerReportsSwitchCtrl implements ng.IComponentController {
   ) {
   }
   public $onInit(): void {
-    this.FeatureToggleService.webexMetricsGetStatus().then((toggle: boolean): void => {
+    this.FeatureToggleService.atlasPartnerSparkReportsGetStatus().then((toggle: boolean): void => {
       this.switchView(toggle);
     });
   }
 
   public switchView(toggle: boolean): void {
     if (!toggle) {
-      this.$state.go('partnerreports.base');
+      this.$state.go('partnerreports.tab.base');
     } else {
       this.$state.go('partnerreports.spark');
     }

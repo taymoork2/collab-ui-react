@@ -80,7 +80,7 @@ describe('Controller: AARestApiCtrl', function () {
         result: modal.promise,
       });
       var actionEntry = AutoAttendantCeMenuModelService.newCeActionEntry('doREST', '');
-      actionEntry.dynamicList = [{
+      actionEntry.url = [{
         action: {
           eval: {
             value: 'Original-Caller-Number',
@@ -109,7 +109,7 @@ describe('Controller: AARestApiCtrl', function () {
         result: modal.promise,
       });
       var actionEntry = AutoAttendantCeMenuModelService.newCeActionEntry('doREST', '');
-      actionEntry.dynamicList = [{
+      actionEntry.url = [{
         action: {
           eval: {
             value: 'Static text',
@@ -136,7 +136,7 @@ describe('Controller: AARestApiCtrl', function () {
   describe('activate', function () {
     it('should read and display an existing entry when isDynamic is false', function () {
       var actionEntry = AutoAttendantCeMenuModelService.newCeActionEntry('doREST', '');
-      actionEntry.dynamicList = [{
+      actionEntry.url = [{
         action: {
           eval: {
             value: 'Original-Caller-Name',
@@ -156,7 +156,7 @@ describe('Controller: AARestApiCtrl', function () {
 
     it('should read and display an existing entry when isDynamic is true', function () {
       var actionEntry = AutoAttendantCeMenuModelService.newCeActionEntry('doREST', '');
-      actionEntry.dynamicList = [{
+      actionEntry.url = [{
         action: {
           eval: {
             value: 'Original-Caller-Name',

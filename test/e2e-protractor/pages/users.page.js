@@ -2,6 +2,8 @@
 
 'use strict';
 
+var featureToggle = require('../utils/featureToggle.utils');
+
 // TODO - break up into UserList/UserAdd/UserPreview
 var UsersPage = function () {
   this.inviteTestUser = {
@@ -149,7 +151,7 @@ var UsersPage = function () {
 
   this.breadcrumb = {};
   this.breadcrumb.overview = element(by.cssContainingText('ul.breadcrumbs li a', 'Overview'));
-  this.rolesAndSecurityMenuOption = element(by.css('[translate="usersPreview.rolesAndSecurity"] + .actions-menu'));
+  this.rolesAndSecurityMenuOption = element(by.id('rolesAndSecurity'));
 
   this.headerOrganizationName = element(by.css('.navbar-orgname'));
   this.messageLicenses = element(by.id('messaging'));
@@ -258,6 +260,10 @@ var UsersPage = function () {
     utils.waitForText(manageUsersPage.select.title, 'Add or Modify Users');
     utils.click(manageUsersPage.select.radio.orgManual);
     utils.click(manageUsersPage.buttons.next);
+    if (featureToggle.features.atlasEmailSuppress) {
+      utils.wait(manageUsersPage.emailSuppress.emailSuppressIcon);
+      utils.click(manageUsersPage.buttons.next);
+    }
 
     utils.click(this.nameAndEmailRadio);
     utils.sendKeys(this.firstName, 'Test');
@@ -269,7 +275,9 @@ var UsersPage = function () {
 
   this.createUserWithLicense = function (alias, checkbox) {
     users.createUser(alias);
-    utils.click(checkbox);
+    if (checkbox) {
+      utils.click(checkbox);
+    }
     utils.click(users.onboardButton);
     utils.expectIsDisplayed(users.finishButton);
     utils.click(users.finishButton);

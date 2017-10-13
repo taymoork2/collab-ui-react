@@ -40,6 +40,8 @@ require('./_customer-overview.scss');
     vm.isOrgSetup = null;
     vm.isUpdateStatusEnabled = true;
     vm.isProPackEnabled = false;
+    vm.isMediaFusionEnabled = false;
+    vm.isNewPatchFlow = false;
 
     vm.partnerOrgId = Authinfo.getOrgId();
     vm.isPartnerAdmin = Authinfo.isPartnerAdmin();
@@ -64,22 +66,27 @@ require('./_customer-overview.scss');
       FeatureToggleService.atlasCareTrialsGetStatus(),
       FeatureToggleService.atlasCareInboundTrialsGetStatus(),
       FeatureToggleService.atlasITProPackGetStatus(),
+      FeatureToggleService.atlasJira2126UseAltEndpointGetStatus(),
     ]).then(function (results) {
-      if (_.find(vm.currentCustomer.offers, { id: Config.offerTypes.roomSystems })) {
+      if (_.find(vm.currentCustomer.offers, {
+        id: Config.offerTypes.roomSystems,
+      })) {
         vm.showRoomSystems = true;
       }
       var isCareEnabled = results[0];
       var isAdvanceCareEnabled = results[1];
       vm.isProPackEnabled = results[2];
-
+      vm.isNewPatchFlow = results[3];
       setOffers(isCareEnabled, isAdvanceCareEnabled);
     });
 
 
     function setOffers(isCareEnabled, isAdvanceCareEnabled) {
-      var licAndOffers = PartnerService.parseLicensesAndOffers(vm.currentCustomer, { isCareEnabled: isCareEnabled,
+      var licAndOffers = PartnerService.parseLicensesAndOffers(vm.currentCustomer, {
+        isCareEnabled: isCareEnabled,
         isAdvanceCareEnabled: isAdvanceCareEnabled,
-        isTrial: true });
+        isTrial: true,
+      });
       vm.offer = vm.currentCustomer.offer = _.get(licAndOffers, 'offer');
       vm.trialServices = _.chain(vm.currentCustomer.offer)
         .get('trialServices')
@@ -90,8 +97,10 @@ require('./_customer-overview.scss');
           });
         })
         .value();
-      vm.freeOrPaidServices = _.map(PartnerService.getFreeOrActiveServices(vm.currentCustomer, { isCareEnabled: isCareEnabled,
-        isTrial: false }), function (service) {
+      vm.freeOrPaidServices = _.map(PartnerService.getFreeOrActiveServices(vm.currentCustomer, {
+        isCareEnabled: isCareEnabled,
+        isTrial: false,
+      }), function (service) {
         return _.assign({}, service, {
           detail: service.free ? FREE : service.qty + ' ' + QTY,
           actionAvailable: hasSubview(service),
@@ -206,14 +215,17 @@ require('./_customer-overview.scss');
       return licIds;
     } //collectLicenses
 
-    function launchCustomerPortal() {
+    /* algendel 9/25/17 this uses UI to patch the permissions. There is a new endpoint. This should
+    /* remain in place until the new endpoint is thoroughly tested */
+
+    function updateUserAndCustomerOrgLegacy() {
       // TODO: revisit this function
       // - a simpler version was implemented in '649c251aeaefdedd57620e9fd3f4cd488b87b1f5'
       //   ...however, it did not include the logic to make the appropriate call to
       //   'Userservice.updateUsers()'
       // - this call is required in order to patch the partner-admin user as appropriate such that
       //   admin access to webex sites is enabled
-      vm.loadingCustomerPortal = true;
+
       var liclist = vm.currentCustomer.licenseList;
       var licIds = collectLicenseIdsForWebexSites(liclist);
       var partnerEmail = Authinfo.getPrimaryEmail();
@@ -224,6 +236,7 @@ require('./_customer-overview.scss');
       if (vm.isPartnerAdmin) {
         promise = PartnerService.modifyManagedOrgs(vm.customerOrgId);
       }
+
       return promise.then(function () {
         // non-admin users (e.g. sales admins) should not try to update their own licenses, but
         // instead launch the portal immediately
@@ -246,7 +259,18 @@ require('./_customer-overview.scss');
           });
           return $q.all(updateUsersList);
         });
-      })
+      });
+    }
+
+    /* algendel 9/25/17 this uses the new endpoint instead of relying on patching in the ui */
+    function updateUserAndCustomerOrg() {
+      return PartnerService.updateOrgForCustomerView(vm.customerOrgId);
+    }
+
+    function launchCustomerPortal() {
+      vm.loadingCustomerPortal = true;
+      var promise = (vm.isNewPatchFlow) ? updateUserAndCustomerOrg() : updateUserAndCustomerOrgLegacy();
+      return promise
         .then(vm._helpers.openCustomerPortal)
         .catch(function (response) {
           Notification.errorWithTrackingId(response, 'customerPage.launchCustomerPortalError');
@@ -304,7 +328,7 @@ require('./_customer-overview.scss');
       if (!openWindow || openWindow.closed || typeof openWindow.closed === 'undefined') {
         $modal.open({
           type: 'dialog',
-          templateUrl: 'modules/core/customers/customerOverview/popUpBlocked.tpl.html',
+          template: require('modules/core/customers/customerOverview/popUpBlocked.tpl.html'),
         });
       }
 
@@ -382,11 +406,17 @@ require('./_customer-overview.scss');
       if (service.hasWebex || service.isMeeting) {
         var isTrial = _.get(options, 'isTrial', false);
         var services = isTrial ? PartnerService.getTrialMeetingServices(vm.currentCustomer.licenseList) : service.sub;
-        $state.go('customer-overview.meetingDetail', { meetingLicenses: services });
+        $state.go('customer-overview.meetingDetail', {
+          meetingLicenses: services,
+        });
       } else if (service.isRoom) {
-        $state.go('customer-overview.sharedDeviceDetail', { sharedDeviceLicenses: service.sub });
+        $state.go('customer-overview.sharedDeviceDetail', {
+          sharedDeviceLicenses: service.sub,
+        });
       } else if (service.isSparkCare) {
-        $state.go('customer-overview.careLicenseDetail', { careLicense: service.sub });
+        $state.go('customer-overview.careLicenseDetail', {
+          careLicense: service.sub,
+        });
       }
     }
 
@@ -419,6 +449,7 @@ require('./_customer-overview.scss');
 
     // Refactor this out.
     // Preferably call another service for this, or call once and store into universal data object
+    // we are setting vm.isMediaFusionEnabled from orgsetting to block deletion of org inmediafusion is enabled
     function getCountryCode() {
       var params = {
         basicInfo: true,
@@ -428,37 +459,53 @@ require('./_customer-overview.scss');
           if (data.countryCode) {
             vm.countryCode = data.countryCode;
           }
+          if (data.orgSettings) {
+            vm.isMediaFusionEnabled = data.orgSettings.isMediaFusionEnabled;
+          }
         } else {
           Log.error('Query org info failed. Status: ' + status);
         }
       }, vm.customerOrgId, params);
     }
 
+    //if vm.isMediaFusionEnabled then we ask the user to deactivate hybrid media service and not allowing deletion.
     function deleteTestOrg() {
       if (vm.isTest) {
-        $modal.open({
-          type: 'dialog',
-          templateUrl: 'modules/core/customers/customerOverview/customerDeleteConfirm.tpl.html',
-          controller: function () {
-            var ctrl = this;
-            ctrl.orgName = vm.customerName;
-          },
-          controllerAs: 'ctrl',
-        }).result.then(function () {
-          // delete the customer
-          vm.isDeleting = true;
-          Orgservice.deleteOrg(vm.customerOrgId).then(function () {
-            $state.go('partnercustomers.list');
-            Notification.success('customerPage.deleteOrgSuccess', {
-              orgName: vm.customerName,
-            });
-          }).catch(function (error) {
-            vm.isDeleting = false;
-            Notification.errorResponse(error, 'customerPage.deleteOrgError', {
-              orgName: vm.customerName,
+        if (vm.isMediaFusionEnabled) {
+          $modal.open({
+            type: 'dialog',
+            template: require('modules/core/customers/customerOverview/customerDeleteConfirmErrorHMS.tpl.html'),
+            controller: function () {
+              var ctrl = this;
+              ctrl.orgName = vm.customerName;
+            },
+            controllerAs: 'ctrl',
+          });
+        } else {
+          $modal.open({
+            type: 'dialog',
+            template: require('modules/core/customers/customerOverview/customerDeleteConfirm.tpl.html'),
+            controller: function () {
+              var ctrl = this;
+              ctrl.orgName = vm.customerName;
+            },
+            controllerAs: 'ctrl',
+          }).result.then(function () {
+            // delete the customer
+            vm.isDeleting = true;
+            Orgservice.deleteOrg(vm.customerOrgId).then(function () {
+              $state.go('partnercustomers.list');
+              Notification.success('customerPage.deleteOrgSuccess', {
+                orgName: vm.customerName,
+              });
+            }).catch(function (error) {
+              vm.isDeleting = false;
+              Notification.errorResponse(error, 'customerPage.deleteOrgError', {
+                orgName: vm.customerName,
+              });
             });
           });
-        });
+        }
       }
     }
   }

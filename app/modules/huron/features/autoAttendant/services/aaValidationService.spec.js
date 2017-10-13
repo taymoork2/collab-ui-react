@@ -286,11 +286,9 @@ describe('Service: AAValidationService', function () {
 
       expect(valid).toEqual(false);
 
-      expect(AANotificationService.error.calls.argsFor(0)).toEqual(['autoAttendant.phoneMenuSubmenuErrorRouteToAATargetMissing', {
-        key: '0',
+      expect(AANotificationService.error.calls.argsFor(0)).toEqual(['autoAttendant.phoneMenuSubmenuErrorTargetMissing', {
         schedule: 'autoAttendant.scheduleOpen',
         at: 1,
-        subkey: '2',
       }]);
 
       expect(AANotificationService.error).toHaveBeenCalled();

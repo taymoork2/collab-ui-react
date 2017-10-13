@@ -45,7 +45,7 @@
     }
 
     function showMyCompany() {
-      return Utils.isAdminPage() && Authinfo.isCustomerAdmin() && Authinfo.isCustomerView();
+      return Utils.isAdminPage() && (Authinfo.isCustomerAdmin() || Authinfo.isReadOnlyAdmin()) && Authinfo.isCustomerView();
     }
 
     function showProBadge() {
@@ -55,7 +55,7 @@
     function getAdminTabs() {
       if (showMyCompany()) {
         vm.adminTabs = [{
-          icon: 'icon-settings-active',
+          icon: 'icon-company-active',
           title: Authinfo.getOrgName(),
           link: '/my-company',
           iconClass: 'icon-outline',

@@ -23,14 +23,22 @@ describe('SetupWizardCtrl', function () {
 
     spyOn(this.Authinfo, 'isCustomerAdmin').and.returnValue(true);
     spyOn(this.Authinfo, 'isSetupDone').and.returnValue(false);
+    spyOn(this.Authinfo, 'setSetupDone').and.callThrough();
     spyOn(this.Authinfo, 'isCSB').and.returnValue(true);
     spyOn(this.Authinfo, 'isCare').and.returnValue(false);
-    spyOn(this.SetupWizardService, 'getPendingLicenses').and.returnValue(this.$q.resolve());
+    spyOn(this.$state, 'go');
+    spyOn(this.SetupWizardService, 'populatePendingSubscriptions').and.returnValue(this.$q.resolve());
     spyOn(this.SetupWizardService, 'hasPendingLicenses').and.returnValue(true);
     spyOn(this.SetupWizardService, 'hasPendingWebExMeetingLicenses').and.returnValue(false);
     spyOn(this.SetupWizardService, 'hasPendingCallLicenses').and.returnValue(false);
     spyOn(this.SetupWizardService, 'hasPendingServiceOrder').and.returnValue(false);
+    spyOn(this.SetupWizardService, 'hasPendingSubscriptionOptions').and.returnValue(false);
     spyOn(this.SetupWizardService, 'isCustomerPresent').and.returnValue(this.$q.resolve(true));
+    spyOn(this.SetupWizardService, 'isProvisionedSubscription').and.returnValue(false);
+    spyOn(this.SetupWizardService, 'hasPendingCCASPPackage').and.returnValue(false);
+    spyOn(this.SetupWizardService, 'hasPendingTSPAudioPackage').and.returnValue(false);
+    spyOn(this.SetupWizardService, 'getActiveCCASPPackage').and.returnValue(undefined);
+    spyOn(this.SetupWizardService, 'getActiveTSPAudioPackage').and.returnValue(undefined);
     spyOn(this.Authinfo, 'getLicenses').and.returnValue([{
       licenseType: 'SHARED_DEVICES',
     }]);
@@ -120,28 +128,17 @@ describe('SetupWizardCtrl', function () {
     });
   });
 
-  describe('When subscription does not have a pending service order', function () {
-    beforeEach(function () {
-      this.SetupWizardService.hasPendingServiceOrder.and.returnValue(false);
-      this.initController();
-    });
-
-    it('the setup wizard should not call getPendingLicenses API', function () {
-      expect(this.SetupWizardService.getPendingLicenses).not.toHaveBeenCalled();
-    });
-  });
-
   describe('When subscription has a pending service order', function () {
     beforeEach(function () {
       this.SetupWizardService.hasPendingServiceOrder.and.returnValue(true);
       this.initController();
     });
 
-    it('the setup wizard should call getPendingLicenses API', function () {
-      expect(this.SetupWizardService.getPendingLicenses).toHaveBeenCalled();
+    it('the setup wizard should call populatePendingSubscriptions API', function () {
+      expect(this.SetupWizardService.populatePendingSubscriptions).toHaveBeenCalled();
     });
 
-    it('the setup wizard should call getPendingLicenses API', function () {
+    it('the setup wizard should change the title of the tab', function () {
       var tab = _.find(this.$scope.tabs, { name: 'planReview' });
       expect(tab.label).toBe('firstTimeWizard.subscriptionReview');
       expect(tab.title).toBe('firstTimeWizard.subscriptionReview');
@@ -154,14 +151,39 @@ describe('SetupWizardCtrl', function () {
       this.initController();
     });
 
-    it('the setup wizard should call getPendingLicenses API', function () {
-      expect(this.SetupWizardService.getPendingLicenses).not.toHaveBeenCalled();
+    it('the setup wizard should still call populatePendingSubscriptions API', function () {
+      expect(this.SetupWizardService.populatePendingSubscriptions).toHaveBeenCalled();
     });
 
-    it('the setup wizard should call getPendingLicenses API', function () {
+    it('the setup wizard should not change the title of the tab', function () {
       var tab = _.find(this.$scope.tabs, { name: 'planReview' });
       expect(tab.label).toBe('firstTimeWizard.planReview');
       expect(tab.title).toBe('firstTimeWizard.planReview');
+    });
+  });
+
+  describe('When SessionStorage has a subscriptionId ', function () {
+    beforeEach(function () {
+      _.set(this.$state, 'current.data.firstTimeSetup', true);
+      this.SetupWizardService.isProvisionedSubscription.and.returnValue(false);
+      this.initController();
+    });
+
+    it('of a subscription that is not active, the user should not be navigated to the customer overview view', function () {
+      expect(this.$state.go).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('When SessionStorage has a subscriptionId ', function () {
+    beforeEach(function () {
+      _.set(this.$state, 'current.data.firstTimeSetup', true);
+      this.SetupWizardService.isProvisionedSubscription.and.returnValue(true);
+      this.initController();
+    });
+
+    it('of an active subscription, the user should be navigated to the customer overview view', function () {
+      expect(this.Authinfo.setSetupDone).toHaveBeenCalledWith(true);
+      expect(this.$state.go).toHaveBeenCalledWith('overview');
     });
   });
 
@@ -282,7 +304,7 @@ describe('SetupWizardCtrl', function () {
     });
   });
 
-  describe('When Authinfo.isCare is enabled and addUsers too', function () {
+  describe('When Authinfo.isCare, addUsers enabled and old order flow ', function () {
     beforeEach(function () {
       this.Authinfo.isCare.and.returnValue(true);
       this.Authinfo.isCSB.and.returnValue(false);
@@ -295,6 +317,19 @@ describe('SetupWizardCtrl', function () {
 
     it('careSettings should have a single substep', function () {
       this.expectSubStepOrder('careSettings', ['csonboard']);
+    });
+  });
+
+  describe('When pending Care license, and new orders flow ', function () {
+    beforeEach(function () {
+      this.SetupWizardService.hasPendingServiceOrder.and.returnValue(true);
+      this.SetupWizardService.hasPendingSubscriptionOptions.and.returnValue(true);
+      this.SetupWizardService.hasPendingLicenses.and.returnValue(true);
+      this.initController();
+    });
+
+    it('the wizard should have the 4 steps', function () {
+      this.expectStepOrder(['planReview', 'serviceSetup', 'enterpriseSettings', 'finish']);
     });
   });
 
@@ -359,12 +394,11 @@ describe('SetupWizardCtrl', function () {
     });
 
     it('the wizard should have a lot of settings', function () {
-      this.expectStepOrder(['planReview', 'serviceSetup', 'meetingSettings', 'enterpriseSettings', 'careSettings']);
+      this.expectStepOrder(['planReview', 'serviceSetup', 'meetingSettings', 'enterpriseSettings']);
       this.expectSubStepOrder('planReview', ['init']);
       this.expectSubStepOrder('serviceSetup', ['pickCallLocationType', 'setupCallLocation']);
       this.expectSubStepOrder('meetingSettings', ['migrateTrial', 'siteSetup', 'licenseDistribution', 'summary']);
       this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'enterprisePmrSetup', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
-      this.expectSubStepOrder('careSettings', ['csonboard']);
     });
   });
 
@@ -372,12 +406,19 @@ describe('SetupWizardCtrl', function () {
     beforeEach(function () {
       this.SetupWizardService.hasPendingServiceOrder.and.returnValue(true);
       this.SetupWizardService.hasPendingWebExMeetingLicenses.and.returnValue(true);
-      spyOn(this.SetupWizardService, 'hasTSPAudioPackage').and.returnValue(true);
-      this.initController();
+      this.SetupWizardService.hasPendingTSPAudioPackage.and.returnValue(true);
     });
 
-    it('displays the set TSP partner view during meeting setup', function () {
+    it('displays the set TSP partner view during meeting setup if there is not active TSP license present', function () {
+      this.SetupWizardService.getActiveTSPAudioPackage.and.returnValue(undefined);
+      this.initController();
       this.expectSubStepOrder('meetingSettings', ['migrateTrial', 'siteSetup', 'licenseDistribution', 'setPartnerAudio', 'summary']);
+    });
+
+    it('does not display TSP partner view during meeting setup if there is active TSP license present', function () {
+      this.SetupWizardService.getActiveTSPAudioPackage.and.returnValue({});
+      this.initController();
+      this.expectSubStepOrder('meetingSettings', ['migrateTrial', 'siteSetup', 'licenseDistribution', 'summary']);
     });
   });
 
@@ -387,14 +428,21 @@ describe('SetupWizardCtrl', function () {
       this.SetupWizardService.hasPendingWebExMeetingLicenses.and.returnValue(true);
     });
 
-    it('displays the CCASP tab when CCASP Audio license is present', function () {
-      spyOn(this.SetupWizardService, 'hasCCASPPackage').and.returnValue(true);
+    it('displays the CCASP tab when pending CCASP Audio license is present and no active CCASP audio', function () {
+      this.SetupWizardService.hasPendingCCASPPackage.and.returnValue(true);
+      this.SetupWizardService.getActiveCCASPPackage.and.returnValue(undefined);
       this.initController();
       this.expectSubStepOrder('meetingSettings', ['migrateTrial', 'siteSetup', 'licenseDistribution', 'setCCASP', 'summary']);
     });
+    it('does NOT display the CCASP tab when pending CCASP Audio license is present and there is an  active CCASP audio', function () {
+      this.SetupWizardService.hasPendingCCASPPackage.and.returnValue(true);
+      this.SetupWizardService.getActiveCCASPPackage.and.returnValue({});
+      this.initController();
+      this.expectSubStepOrder('meetingSettings', ['migrateTrial', 'siteSetup', 'licenseDistribution', 'summary']);
+    });
 
-    it('does NOT display the set CCASP tab when CCASP Audio license is NOT present', function () {
-      spyOn(this.SetupWizardService, 'hasCCASPPackage').and.returnValue(false);
+    it('does NOT display the set CCASP tab when pending CCASP Audio license is NOT present', function () {
+      this.SetupWizardService.hasPendingCCASPPackage.and.returnValue(false);
       this.initController();
       this.expectSubStepOrder('meetingSettings', ['migrateTrial', 'siteSetup', 'licenseDistribution', 'summary']);
     });

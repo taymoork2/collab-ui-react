@@ -50,7 +50,7 @@ export class SidePanelOptionsListCtrl implements ng.IComponentController {
 
 export class SidePanelOptionsListComponent implements ng.IComponentOptions {
   public controller = SidePanelOptionsListCtrl;
-  public templateUrl = 'modules/context/fields/sidepanel/optionsList/hybrid-context-field-options-list.html';
+  public template = require('modules/context/fields/sidepanel/optionsList/hybrid-context-field-options-list.html');
   public bindings = {
     // NOTE: using 'dataTypeDefinition' results in a kebab-case of 'data-type-definition', and any HTML attribute that
     // starts with 'data-' is "special", so we can't use that

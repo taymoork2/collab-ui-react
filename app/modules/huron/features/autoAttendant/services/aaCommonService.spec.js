@@ -43,7 +43,8 @@ describe('Service:AACommonService', function () {
   }));
 
   afterEach(function () {
-
+    AACommonService = null;
+    AutoAttendantCeMenuModelService = null;
   });
 
   describe('AACommonService services', function () {
@@ -146,13 +147,13 @@ describe('Service:AACommonService', function () {
       AACommonService.setIsValid('2', true);
       expect(AACommonService.isValid()).toBeTruthy();
     });
-    it('setCallerInputToggle should set to false', function () {
-      AACommonService.setCallerInputToggle(false);
-      expect(AACommonService.isCallerInputToggle()).toBeFalsy();
+    it('setMultiSiteEnabledToggle should set to false', function () {
+      AACommonService.setMultiSiteEnabledToggle(false);
+      expect(AACommonService.isMultiSiteEnabled()).toBeFalsy();
     });
-    it('setCallerInputToggle should set to true', function () {
-      AACommonService.setCallerInputToggle(true);
-      expect(AACommonService.isCallerInputToggle()).toBeTruthy();
+    it('setMultiSiteEnabledToggle should set to true', function () {
+      AACommonService.setMultiSiteEnabledToggle(true);
+      expect(AACommonService.isMultiSiteEnabled()).toBeTruthy();
     });
     it('setRouteSIPAddressToggle should set to false', function () {
       AACommonService.setRouteSIPAddressToggle(false);

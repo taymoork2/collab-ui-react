@@ -15,5 +15,5 @@ export class DeviceBrandingSetting extends SettingSection {
 export class DeviceBrandingSettingComponent implements ng.IComponentOptions {
   public controller = DeviceBrandingController;
   public controllerAs = 'dbctrl';
-  public templateUrl = 'modules/core/settings/deviceBranding/device-branding-setting.tpl.html';
+  public template = require('modules/core/settings/deviceBranding/device-branding-setting.tpl.html');
 }

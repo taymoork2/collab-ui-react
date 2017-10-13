@@ -8,10 +8,9 @@
     </div>
     <div class="sub-section>">
       <p class="sub-section__label" translate="hercules.settings.call.domainVerification"></p>
-      <div class="hercules-connect-setting"
-         ng-controller="DomainManagementCtrl as dv"
-         ng-include="'modules/core/domainManagement/domainManagement.tpl.html'">
-      </div>
+      <cr-domain-management class="hercules-connect-setting"
+         ng-controller="DomainManagementCtrl as dv">
+      </cr-domain-management>
     </div>
   </setting-section>
 
@@ -158,11 +157,6 @@
       </button>
     </div>
   </setting-section>
-
-  <hybrid-voicemail-settings
-    is-call-service-connect-enabled="callServiceSettings.squaredFusionEc"
-    ng-if="callServiceSettings.hasVoicemailFeatureToggle">
-  </hybrid-voicemail-settings>
 
   <deactivate-section
     class="needs-border-top"

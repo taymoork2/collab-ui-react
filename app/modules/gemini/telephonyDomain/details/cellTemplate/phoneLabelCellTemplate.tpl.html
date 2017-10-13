@@ -1,4 +1,5 @@
-<div ng-if="grid.appScope.isEdit && row.entity.isEdit"
+<div ng-if="grid.appScope.isEdit"
+     ng-mouseover="row.entity.isEdit=true"
      class="ui-grid-cell-contents"
      ng-class="{'error': row.entity.validation.label.invalid || row.entity.duplicatedRowValidation.invalid}"
      tooltip-class="tn-error"
@@ -14,12 +15,6 @@
          title="{{row.entity.label}}"
          ng-change="grid.appScope.changeLabel(row, '{{row.entity.label}}')"
          ng-model="row.entity.label">
-</div>
-<div ng-if="grid.appScope.isEdit && !row.entity.isEdit"
-     ng-mouseover="row.entity.isEdit=true"
-     class="ui-grid-cell-contents"
-     title="{{row.entity.label}}">
-  <input type="text" cs-input value="{{row.entity.label}}">
 </div>
 <div ng-if="!grid.appScope.isEdit"
      class="ui-grid-cell-contents read-only-text"

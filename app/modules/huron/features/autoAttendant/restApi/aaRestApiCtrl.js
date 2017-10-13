@@ -50,9 +50,9 @@
         vm.method = action.method;
         vm.variables = action.variableSet;
         if (!_.isEmpty(action)) {
-          if (_.has(action, 'dynamicList')) {
+          if (!_.isEmpty(action.url)) {
             vm.dynamicValues = [];
-            _.forEach(action.dynamicList, function (opt) {
+            _.forEach(action.url, function (opt) {
               var model;
               var evalValue = _.get(opt.action.eval, 'value', '');
               if (!opt.isDynamic) {
@@ -66,6 +66,7 @@
             });
           }
         }
+        vm.url = action.url;
         if (!_.isEmpty(vm.method) && !_.isEmpty(vm.dynamicValues)) {
           AACommonService.setRestApiStatus(true);
           AACommonService.setIsValid(vm.uniqueCtrlIdentifer, true);
@@ -82,7 +83,7 @@
 
     function openModal() {
       return $modal.open({
-        templateUrl: 'modules/huron/features/autoAttendant/restApi/aaConfigureApiModal.tpl.html',
+        template: require('modules/huron/features/autoAttendant/restApi/aaConfigureApiModal.tpl.html'),
         controller: 'AAConfigureApiModalCtrl',
         controllerAs: 'aaConfigureApiModal',
         type: 'full',
@@ -101,21 +102,25 @@
       if (_.isEmpty(action)) {
         return;
       }
-      if (!_.has(action, 'dynamicList')) {
+      if (_.isEmpty(action.url)) {
         return;
       }
       vm.dynamicValues = [];
-      _.forEach(action.dynamicList, function (opt) {
+      _.forEach(action.url, function (opt) {
         var model;
         var evalValue = _.get(opt.action.eval, 'value');
         if (!opt.isDynamic) {
-          model = createAction(evalValue, evalValue, false);
+          model = createAction(decodeURIComponent(evalValue), evalValue, false);
         } else {
           model = createAction(evalValue, decodeURIComponent(opt.htmlModel), true);
         }
-        vm.dynamicValues.push(model);
+
+        if (!_.isEqual(opt.htmlModel, '%3Cbr%3E')) {
+          vm.dynamicValues.push(model);
+        }
       });
       vm.method = action.method;
+      vm.variables = action.variableSet;
     }
 
     function activate() {
@@ -128,6 +133,7 @@
         action = AutoAttendantCeMenuModelService.newCeActionEntry(doREST, '');
         action.url = '';
         action.method = '';
+        action.variables = [];
         vm.menuEntry.addAction(action);
         AACommonService.setRestApiStatus(false);
         AACommonService.setIsValid(vm.uniqueCtrlIdentifer, false);

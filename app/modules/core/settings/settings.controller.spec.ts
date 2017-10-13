@@ -16,6 +16,8 @@ describe('SettingsCtrl', function () {
     spyOn(this.FeatureToggleService, 'atlasDataRetentionSettingsGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'csdmDeviceBrandingGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'atlasPinSettingsGetStatus').and.returnValue(this.$q.resolve(true));
+    spyOn(this.FeatureToggleService, 'atlasBlockExternalCommunicationSettingsGetStatus').and.returnValue(this.$q.resolve(true));
+    spyOn(this.FeatureToggleService, 'atlasEmailSuppressGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.ProPackService, 'hasProPackPurchasedOrNotEnabled');
   });
 
@@ -44,11 +46,13 @@ describe('SettingsCtrl', function () {
       expect(this.controller.branding).toBeTruthy();
       expect(this.controller.security).toBeFalsy();
       expect(this.controller.authentication).toBeFalsy();
+      expect(this.controller.email).toBeFalsy();
       expect(this.controller.domains).toBeFalsy();
       expect(this.controller.privacy).toBeFalsy();
       expect(this.controller.sipDomain).toBeFalsy();
       expect(this.controller.dirsync).toBeFalsy();
       expect(this.controller.retention).toBeFalsy();
+      expect(this.controller.externalCommunication).toBeFalsy();
     });
   });
 
@@ -66,11 +70,13 @@ describe('SettingsCtrl', function () {
       // these should exist for non-Partner admin
       expect(this.controller.security).toBeTruthy();
       expect(this.controller.authentication).toBeTruthy();
+      expect(this.controller.email).toBeTruthy();
       expect(this.controller.domains).toBeTruthy();
       expect(this.controller.privacy).toBeTruthy();
       expect(this.controller.sipDomain).toBeTruthy();
       expect(this.controller.dirsync).toBeTruthy();
       expect(this.controller.retention).toBeTruthy();
+      expect(this.controller.externalCommunication).toBeTruthy();
     });
   });
 
@@ -98,10 +104,12 @@ describe('SettingsCtrl', function () {
         expect(this.controller.domains).toBeTruthy();
         expect(this.controller.sipDomain).toBeTruthy();
         expect(this.controller.authentication).toBeTruthy();
+        expect(this.controller.email).toBeTruthy();
         expect(this.controller.support).toBeTruthy();
         expect(this.controller.branding).toBeTruthy();
         expect(this.controller.privacy).toBeTruthy();
         expect(this.controller.retention).toBeTruthy();
+        expect(this.controller.externalCommunication).toBeTruthy();
       });
     });
 
@@ -122,10 +130,12 @@ describe('SettingsCtrl', function () {
         expect(this.controller.domains).toBeTruthy();
         expect(this.controller.sipDomain).toBeTruthy();
         expect(this.controller.authentication).toBeTruthy();
+        expect(this.controller.email).toBeTruthy();
         expect(this.controller.support).toBeTruthy();
         expect(this.controller.branding).toBeFalsy();
         expect(this.controller.privacy).toBeTruthy();
         expect(this.controller.retention).toBeTruthy();
+        expect(this.controller.externalCommunication).toBeTruthy();
       });
     });
   });

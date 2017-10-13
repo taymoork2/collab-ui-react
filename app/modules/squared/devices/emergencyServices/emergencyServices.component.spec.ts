@@ -1,23 +1,12 @@
-import { JSON_US } from 'modules/huron/pstn';
-
 describe('component: emergencyServices', () => {
   const EMERGENCYNUMBER_SELECT = '.csSelect-container[name="emergencyCallbackNumber"]';
-  const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
-
-  const location = {
-    type: 'State',
-    areas: [{
-      name: 'Texas',
-      abbreviation: 'TX',
-    }],
-  };
+  const DROPDOWN_OPTIONS = '.dropdown-menu ul li';
 
   beforeEach(function() {
     this.initModules('Huron');
     this.injectDependencies('$q', 'EmergencyServicesService', '$httpBackend');
 
     this.$httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200, {});
-    this.$httpBackend.whenGET(JSON_US).respond(location.areas);
 
     spyOn(this.EmergencyServicesService, 'getOptions').and
     .returnValue(this.$q.resolve(['1', '2']));

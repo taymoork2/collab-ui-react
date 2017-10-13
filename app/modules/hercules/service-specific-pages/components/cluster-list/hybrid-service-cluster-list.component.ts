@@ -1,5 +1,5 @@
 import { ClusterService } from 'modules/hercules/services/cluster-service';
-import { ConnectorType, HybridServiceId, ICluster, ConnectorMaintenanceMode, IExtendedCluster } from 'modules/hercules/hybrid-services.types';
+import { ConnectorType, HybridServiceId, IExtendedCluster } from 'modules/hercules/hybrid-services.types';
 import { EnterprisePrivateTrunkService, IPrivateTrunkResourceWithStatus } from 'modules/hercules/services/enterprise-private-trunk-service';
 import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
 
@@ -9,10 +9,6 @@ import { HighLevelStatusForService } from 'modules/hercules/services/hybrid-serv
 
 export interface IGridApiScope extends ng.IScope {
   gridApi?: any;
-}
-
-export interface IClusterWithMaintenanceModeLabel extends ICluster {
-  maintenanceModeLabel?: ConnectorMaintenanceMode;
 }
 
 export class HybridServiceClusterListCtrl implements ng.IComponentController {
@@ -123,12 +119,12 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
       columnDefs: [{
         field: 'name',
         displayName: this.$translate.instant(`hercules.clusterListComponent.clusters-title-${this.serviceId}`),
-        cellTemplate: 'modules/hercules/service-specific-pages/components/cluster-list/cluster-list-display-name.html',
+        cellTemplate: require('modules/hercules/service-specific-pages/components/cluster-list/cluster-list-display-name.html'),
         width: '35%',
       }, {
         field: 'serviceStatus',
         displayName: this.$translate.instant('hercules.clusterListComponent.status-title'),
-        cellTemplate: 'modules/hercules/service-specific-pages/components/cluster-list/cluster-list-status.html',
+        cellTemplate: require('modules/hercules/service-specific-pages/components/cluster-list/cluster-list-status.html'),
         width: '65%',
       }],
       onRegisterApi: (gridApi) => {
@@ -199,7 +195,7 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
 
 export class HybridServiceClusterListComponent implements ng.IComponentOptions {
   public controller = HybridServiceClusterListCtrl;
-  public templateUrl = 'modules/hercules/service-specific-pages/components/cluster-list/hybrid-service-cluster-list.html';
+  public template = require('modules/hercules/service-specific-pages/components/cluster-list/hybrid-service-cluster-list.html');
   public bindings = {
     serviceId: '<',
     clusterId: '<',

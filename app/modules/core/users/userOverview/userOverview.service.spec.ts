@@ -20,7 +20,6 @@ describe('Service: UserOverviewService', () => {
     this.updatedUser = _.cloneDeep(this.pristineUser);
     this.$rootScope.services = _.cloneDeep(getJSONFixture('squared/json/services.json'));
     this.isCIEnabledSiteSpy = spyOn(this.WebExUtilsFact, 'isCIEnabledSite').and.returnValue(true);
-    this.isOnlineOrgSpy = spyOn(this.Auth, 'isOnlineOrg').and.returnValue(this.$q.resolve(false));
     this.SunlightConfigServiceSpy = spyOn(this.SunlightConfigService, 'getUserInfo').and.returnValue(this.$q.resolve());
     this.languages = _.cloneDeep(getJSONFixture('huron/json/settings/languages.json'));
     this.ServiceSetupSpy = spyOn(this.ServiceSetup, 'getAllLanguages').and.returnValue(this.$q.resolve(this.languages));
@@ -141,8 +140,12 @@ describe('Service: UserOverviewService', () => {
 
     describe('getAccountActiveStatus', () => {
 
-      it('should return false if user has no entitlements', function () {
+      it('should return false if user has no ciscouc, nor lastLoginTime, nor spark.signUpDate', function () {
         expect(this.UserOverviewService.getAccountActiveStatus(this.updatedUser)).toBeFalsy();
+      });
+      it('should return true if user has lastLoginTime', function () {
+        this.updatedUser.meta.lastLoginTime = '09/06/2017 09:50 AM';
+        expect(this.UserOverviewService.getAccountActiveStatus(this.updatedUser)).toBeTruthy();
       });
 
     });
@@ -150,7 +153,6 @@ describe('Service: UserOverviewService', () => {
     describe('getAccountStatus', () => {
 
       it('should reject getUser if there is an error fetching data', function () {
-        // reject call to Auth.IsOnlineOrg()
         this.$httpBackend.expectGET(/.*\/userid.*/g).respond(400);
 
         const promise = this.UserOverviewService.getUser('userid');
@@ -200,27 +202,15 @@ describe('Service: UserOverviewService', () => {
         }));
       });
 
-      it('should set pendingStatus true regardless of Auth.isOnlineOrg status', function () {
+      it('should set pendingStatus true', function () {
         _.remove(this.updatedUser.entitlements, (n) => n === 'ciscouc');
         this.updatedUser.userSettings = [];
 
         this.$httpBackend.whenGET(/.*\/userid.*/g).respond(200, this.updatedUser);
 
-        // test when isOnlineOrg is true
-        this.isOnlineOrgSpy.and.returnValue(this.$q.resolve(true));
-        const promise1 = this.UserOverviewService.getUser('userid');
+        const promise = this.UserOverviewService.getUser('userid');
         this.$httpBackend.flush();
-        expect(promise1).toBeResolvedWith(jasmine.objectContaining({
-          user: jasmine.objectContaining({
-            pendingStatus: true,
-          }),
-        }));
-
-        // test when isOnlineOrg is false
-        this.isOnlineOrgSpy.and.returnValue(this.$q.resolve(false));
-        const promise2 = this.UserOverviewService.getUser('userid');
-        this.$httpBackend.flush();
-        expect(promise2).toBeResolvedWith(jasmine.objectContaining({
+        expect(promise).toBeResolvedWith(jasmine.objectContaining({
           user: jasmine.objectContaining({
             pendingStatus: true,
           }),
@@ -229,7 +219,6 @@ describe('Service: UserOverviewService', () => {
       });
 
       it('should set pendingStatus false when user has entitlement "ciscouc"', function () {
-        this.isOnlineOrgSpy.and.returnValue(this.$q.resolve(false));
         this.updatedUser.userSettings = [];
         this.updatedUser.entitlements.push('ciscouc');
 

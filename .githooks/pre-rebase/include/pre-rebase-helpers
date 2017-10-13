@@ -1,0 +1,33 @@
+#!/bin/bash
+
+target_head="$1"
+changed_files="$(git diff-tree --no-commit-id --name-only -r "$target_head" HEAD)"
+
+function file_has_changed {
+    local test_file="$1"
+    [ -z "$test_file" ] && return 1
+    echo "$changed_files" | grep -q "$test_file"
+    return $?
+}
+
+# note:
+# - this function expects banner contents to be piped in
+#
+#   ```
+#   # e.g. cat contents of './foo'
+#   cat ./foo | print_notice_banner
+#
+#   # e.g. cat heredoc contents
+#   cat << _EOF | print_notice_banner
+#   hello world.
+#   _EOF
+#   ```
+function print_notice_banner {
+    echo ""
+    echo "********************** ATTENTION **********************"
+    echo ""
+    cat
+    echo ""
+    echo "*******************************************************"
+    echo ""
+}

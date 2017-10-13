@@ -185,28 +185,20 @@ require('./_overview.scss');
           Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
         }
       }, Authinfo.getOrgId(), params);
-      Orgservice.getAdminOrgUsage()
-        .then(function (response) {
-          var sharedDevicesUsage = -1;
-          var seaGullsUsage = -1;
-          _.each(response.data, function (subscription) {
-            _.each(subscription, function (licenses) {
-              _.each(licenses, function (license) {
-                if (license.status === Config.licenseStatus.ACTIVE) {
-                  if (license.offerName === Config.offerCodes.SD) {
-                    sharedDevicesUsage = license.usage;
-                  } else if (license.offerName === Config.offerCodes.SB) {
-                    seaGullsUsage = license.usage;
-                  }
-                }
-              });
-            });
-          });
-          if (sharedDevicesUsage === 0 || seaGullsUsage === 0) {
+      Orgservice.getLicensesUsage()
+        .then(function (subscriptions) {
+          var activeLicenses = _.filter(_.flatMap(subscriptions, 'licenses'), ['status', Config.licenseStatus.ACTIVE]);
+          var sharedDeviceLicenses = _.filter(activeLicenses, ['offerName', Config.offerCodes.SD]);
+          var sharedDevicesUsage = _.sumBy(sharedDeviceLicenses, 'usage');
+          var showSharedDevicesNotification = sharedDeviceLicenses.length > 0 && sharedDevicesUsage === 0;
+          var sparkBoardLicenses = _.filter(activeLicenses, ['offerName', Config.offerCodes.SB]);
+          var sparkBoardUsage = _.sumBy(sparkBoardLicenses, 'usage');
+          var showSparkBoardNotification = sparkBoardLicenses.length > 0 && sparkBoardUsage === 0;
+          if (showSharedDevicesNotification || showSparkBoardNotification) {
             setRoomSystemEnabledDevice(true);
-            if (sharedDevicesUsage === 0 && seaGullsUsage === 0) {
+            if (showSharedDevicesNotification && showSparkBoardNotification) {
               vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpDevices'));
-            } else if (seaGullsUsage === 0) {
+            } else if (showSparkBoardNotification) {
               vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSparkBoardDevices'));
             } else {
               vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSharedDevices'));
@@ -293,8 +285,7 @@ require('./_overview.scss');
     function findAnyUrgentUpgradeInHybridServices() {
       HybridServicesClusterService.getAll()
         .then(function (clusters) {
-          // c_mgmt will be tested when it will have its own service page back
-          var connectorsToTest = ['c_cal', 'c_ucmc'];
+          var connectorsToTest = ['c_mgmt', 'c_cal', 'c_ucmc', 'c_imp'];
           connectorsToTest.forEach(function (connectorType) {
             var hasUrgentUpgrade = _.find(clusters, function (cluster) {
               return _.some(cluster.provisioning, function (p) {
@@ -338,13 +329,24 @@ require('./_overview.scss');
       });
     }
 
+    function initializeProvisioningEventHandler() {
+      if (SetupWizardService.hasPendingServiceOrder()) {
+        var pendingServiceOrderUUID = SetupWizardService.getActingSubscriptionServiceOrderUUID();
+
+        SetupWizardService.getPendingOrderStatusDetails(pendingServiceOrderUUID).then(function (productProvStatus) {
+          forwardEvent('provisioningEventHandler', productProvStatus);
+        });
+      }
+    }
+
     forwardEvent('licenseEventHandler', Authinfo.getLicenses());
 
-    if (SetupWizardService.hasPendingServiceOrder()) {
-      var pendingServiceOrderUUID = SetupWizardService.getActingSubscriptionServiceOrderUUID();
-
-      SetupWizardService.getPendingOrderStatusDetails(pendingServiceOrderUUID).then(function (productProvStatus) {
-        forwardEvent('provisioningEventHandler', productProvStatus);
+    // Initialize Pending Subscription data if org has pending subscriptions
+    if (SetupWizardService.serviceDataHasBeenInitialized) {
+      initializeProvisioningEventHandler();
+    } else {
+      SetupWizardService.populatePendingSubscriptions().then(function () {
+        initializeProvisioningEventHandler();
       });
     }
 

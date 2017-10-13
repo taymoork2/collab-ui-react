@@ -235,7 +235,7 @@ export class ShowActivationCodeCtrl extends WizardCtrl {
       .then((code) => {
         this.activationCode = code.code;
         this.friendlyActivationCode = this.formatActivationCode(this.activationCode);
-        this.expiryTime = code.friendlyExpiresOn;
+        this.expiryTime = code.expiresOn;
         this.generateQRCode();
       }, err => {
         this.onCodeCreationFailure(err);

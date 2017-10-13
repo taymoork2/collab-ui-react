@@ -1,8 +1,12 @@
 import { SettingSection } from './settingSection';
 import { AuthenticationSetting } from './authentication/authenticationSetting.component';
+import { EmailSetting } from './email/emailSetting.component';
 import { BrandingSetting } from './branding/brandingSetting.component';
 import { DomainsSetting } from './domain/domainsSetting.component';
 import { RetentionSetting } from './retention/retentionSetting.component';
+import { ExternalCommunicationSetting } from './externalCommunication/externalCommunicationSetting.component';
+import { FileSharingControlSetting } from './fileSharingControl/fileSharingControlSetting.component';
+
 import { SecuritySetting } from './security/securitySetting.component';
 import { SipDomainSetting } from './sipDomain/sipDomainSetting.component';
 import { SupportSetting } from './supportSection/supportSetting.component';
@@ -17,10 +21,13 @@ export class SettingsCtrl {
   public domains: SettingSection;
   public sipDomain: SettingSection;
   public authentication: SettingSection;
+  public email: SettingSection;
   public branding: SettingSection;
   public deviceBranding: SettingSection;
   public support: SettingSection;
   public retention: SettingSection;
+  public externalCommunication: SettingSection;
+  public fileSharingControl: SettingSection;
   public dirsync: SettingSection;
 
   // Footer and broadcast controls
@@ -59,15 +66,17 @@ export class SettingsCtrl {
     // if they are not a partner, provide everything else
     if (!this.Authinfo.isPartner()) {
       this.authentication = new AuthenticationSetting();
+      this.initEmailSuppress();
       this.domains = new DomainsSetting();
       this.privacy = new PrivacySetting();
       this.sipDomain = new SipDomainSetting();
       this.dirsync = new DirSyncSetting();
       if (this.Authinfo.isEnterpriseCustomer()) {
         this.initSecurity();
+        this.initBlockExternalCommunication();
+        this.initFileSharingControl();
         this.initRetention();
       }
-
     }
     //TODO temporary adding device branding
     this.initDeviceBranding();
@@ -135,6 +144,32 @@ export class SettingsCtrl {
     });
   }
 
+  private initBlockExternalCommunication() {
+    const promises = {
+      blockExternalCommunicationToggle: this.FeatureToggleService.atlasBlockExternalCommunicationSettingsGetStatus(),
+      proPackPurchased: this.ProPackService.hasProPackPurchasedOrNotEnabled(),
+    };
+
+    this.$q.all(promises).then((result) => {
+      if (result.blockExternalCommunicationToggle) {
+        this.externalCommunication = new ExternalCommunicationSetting(result.proPackPurchased);
+      }
+    });
+  }
+
+  private initFileSharingControl() {
+    const promises = {
+      fileSharingControlToggle: this.FeatureToggleService.atlasFileSharingControlSettingsGetStatus(),
+      proPackPurchased: this.ProPackService.hasProPackPurchasedOrNotEnabled(),
+    };
+
+    this.$q.all(promises).then((result) => {
+      if (result.fileSharingControlToggle) {
+        this.fileSharingControl = new FileSharingControlSetting(result.proPackPurchased);
+      }
+    });
+  }
+
   private initRetention() {
     const promises = {
       retentionToggle: this.FeatureToggleService.atlasDataRetentionSettingsGetStatus(),
@@ -144,6 +179,14 @@ export class SettingsCtrl {
     this.$q.all(promises).then((result) => {
       if (result.retentionToggle) {
         this.retention = new RetentionSetting(result.proPackPurchased);
+      }
+    });
+  }
+
+  private initEmailSuppress() {
+    this.FeatureToggleService.atlasEmailSuppressGetStatus().then((toggle) => {
+      if (toggle) {
+        this.email = new EmailSetting();
       }
     });
   }

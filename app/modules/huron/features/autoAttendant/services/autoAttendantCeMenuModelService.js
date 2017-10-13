@@ -285,9 +285,9 @@
 
 
   /* @ngInject */
-  function AutoAttendantCeMenuModelService(AAUtilityService, $translate) {
+  function AutoAttendantCeMenuModelService($translate, AARestModelService, AAUtilityService) {
     // cannot use aaCommon's defined variables because of circular dependency.
-    // aaCommonService shou not have this service, need to refactor it out.
+    // aaCommonService should not have this service, need to refactor it out.
 
     var DIGITS_DIAL_BY = 2;
     var DIGITS_RAW = 3;
@@ -441,6 +441,13 @@
     function createAnnouncements(menuEntry) {
       var actions = menuEntry.actions;
       var newActionArray = [];
+      if (actions.length === 0) {
+        // if save is from the schedule modal, no actions when AA is 1st created
+        newActionArray[0] = {};
+        newActionArray[0].value = '';
+        newActionArray[0].voice = '';
+        return newActionArray;
+      }
       for (var i = 0; i < actions.length; i++) {
         newActionArray[i] = {};
         menuEntry.description = actions[i].description;
@@ -484,6 +491,12 @@
       cesFallback(action, inAction.routeToQueue);
 
       return action;
+    }
+
+    function updateActionFromRestBlock(action, restBlock) {
+      action.method = restBlock.method;
+      action.url = restBlock.url;
+      action.variableSet = parseResponseBlock(restBlock);
     }
 
     function parseAction(menuEntry, inAction) {
@@ -595,6 +608,7 @@
             if (announcements && announcements.length > 0 && !_.isUndefined(announcements[0].play)) {
               action.url = decodeUtf8(announcements[0].play.url);
               action.deleteUrl = decodeUtf8(announcements[0].play.deleteUrl);
+              action.value = decodeUtf8(announcements[0].play.url);
             } else {
               if (announcements.length > 0 && _.has(announcements[0], 'say')) {
                 //second check is needed to maintain the upload in case of no file uploaded but upload file is selected
@@ -658,10 +672,10 @@
         }
         menuEntry.addAction(action);
       } else if (!_.isUndefined(inAction.doREST)) {
-        action = new Action('doREST', '');
-        action.url = inAction.doREST.url;
-        action.method = inAction.doREST.method;
-        action.variableSet = parseResponseBlock(inAction.doREST);
+        action = new Action('doREST', inAction.doREST.id);
+        var restBlocks = AARestModelService.getRestBlocks();
+        var restBlock = restBlocks[action.value];
+        updateActionFromRestBlock(action, restBlock);
         menuEntry.addAction(action);
       } else if (inAction.conditional) {
         var exp;
@@ -846,7 +860,7 @@
               htmlModel: '',
             }];
           } else {
-            action = new Action(iaType, initialAnnouncementObject.value);
+            action = new Action(iaType, initialAnnouncementObject.deleteUrl);
           }
         } else {
           action = new Action(iaType, '');
@@ -930,7 +944,7 @@
               htmlModel: '',
             }];
           } else {
-            action = new Action(paType, periodicAnnouncementObject.value);
+            action = new Action(paType, periodicAnnouncementObject.deleteUrl);
           }
         } else {
           action = new Action(paType, '');
@@ -1335,8 +1349,13 @@
       });
     }
 
+    function getRestVariableSet(varSet) {
+      return (_.has(varSet, 'newVariableValue')) ? varSet.newVariableValue : varSet.variableName;
+    }
+
     function createWelcomeMenu(aaMenu) {
       var newActionArray = [];
+      var uiRestBlocks = AARestModelService.getUiRestBlocks();
       for (var i = 0; i < aaMenu.entries.length; i++) {
         var menuEntry = aaMenu.entries[i];
         newActionArray[i] = {};
@@ -1392,8 +1411,8 @@
             } else if (actionName === 'conditional') {
               newActionArray[i][actionName] = createConditional(menuEntry.actions[0]);
             } else if (actionName === 'doREST') {
-              var action = menuEntry.actions[0];
-              var dyn = {};
+              //var action = menuEntry.actions[0];
+              /*var dyn = {};
               dyn.dynamic = {};
               dyn.dynamic.dynamicOperations = action.dynamicList;
 
@@ -1403,14 +1422,28 @@
                     actions: [],
                   },
                 },
+              };*/
+              //newActionArray[i][actionName].url.action.concat.actions[0] = dyn;
+              //newActionArray[i][actionName].method = menuEntry.actions[0].method;
+              //newActionArray[i][actionName].responseActions = createResponseBlock(menuEntry.actions[0]);
+
+              var restBlockId = menuEntry.actions[0].value;
+              if (_.isEmpty(restBlockId)) {
+                restBlockId = AARestModelService.getRestTempId();
+              }
+              newActionArray[i][actionName].varList = _.map(menuEntry.actions[0].variableSet, getRestVariableSet);
+              newActionArray[i][actionName].id = restBlockId;
+              var overrideProps = {
+                url: menuEntry.actions[0].url,
+                method: menuEntry.actions[0].method,
+                responseActions: createResponseBlock(menuEntry.actions[0]),
               };
-              newActionArray[i][actionName].url.action.concat.actions[0] = dyn;
-              newActionArray[i][actionName].method = menuEntry.actions[0].method;
-              newActionArray[i][actionName].responseActions = createResponseBlock(menuEntry.actions[0]);
+              _.set(uiRestBlocks, restBlockId, overrideProps);
             }
           }
         }
       }
+      AARestModelService.setUiRestBlocks(uiRestBlocks);
       return newActionArray;
     }
 
@@ -1436,9 +1469,9 @@
       return responseActions;
     }
 
-    function parseResponseBlock(inAction) {
+    function parseResponseBlock(action) {
       var variableSet = [];
-      _.forEach(inAction.responseActions, function (responseAction) {
+      _.forEach(action.responseActions, function (responseAction) {
         var varSetItem = {};
         varSetItem.value = responseAction.assignVar.value;
         varSetItem.variableName = responseAction.assignVar.variableName;
@@ -1561,6 +1594,8 @@
           newActionArray[i][actionName].url = val;
         } else if (actionName === 'routeToQueue') {
           newActionArray[i][actionName] = populateRouteToQueue(actions[i]);
+        } else if (actionName === 'doREST') {
+          newActionArray[i][actionName].id = val;
         } else if (actionName === 'disconnect') {
           if (val && val !== 'none') {
             newActionArray[i][actionName].treatment = val;

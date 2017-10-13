@@ -22,13 +22,16 @@
               </cs-select>
             </div>
             <div class="col-md-6">
-              <div class="cs-input-group search-box" ng-class="{'error': ediscoverySearchCtrl.limitError}">
-                <form class="input-validation" novalidate>
-                  <input class="cs-input" type="text" ng-model="ediscoverySearchCtrl.searchModel" autofocus="true"
-                   ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)" placeholder="{{ediscoverySearchCtrl.searchPlaceholder}}">
-                   <p class="cs-input__help-text search-spacing">{{ediscoverySearchCtrl.searchHelpText}}</p>
-                  <div class="cs-input__messages" ng-if="ediscoverySearchCtrl.limitError" role="alert">
-                    <div translate="ediscovery.searchErrors.invalidLimit"></div>
+              <div class="cs-input-group search-box" ng-class="{'error': ediscoverySearchCtrl.limitErrorMessage || (sForm.sInput.$invalid && sForm.sInput.$touched)}">
+                <form name="sForm" class="input-validation" novalidate>
+                  <input required class="cs-input" type="text" name="sInput" ng-model="ediscoverySearchCtrl.searchModel" autofocus="true"
+                   ng-keyup="ediscoverySearchCtrl.keyPressHandler($event)" placeholder="{{ediscoverySearchCtrl.searchPlaceholder}}" >
+                   <p ng-if="!ediscoverySearchCtrl.limitErrorMessage" class="cs-input__help-text search-spacing">{{ediscoverySearchCtrl.searchHelpText}}</p>
+                  <div ng-class="{'search-req-msg': !ediscoverySearchCtrl.limitErrorMessage}" class="cs-input__messages" role="alert">
+                    <div ng-messages="sForm.sInput.$error" class="search-limit-msg">
+                      <span ng-message="required" translate="common.fieldRequired"></span>
+                    </div>
+                    <span ng-if="ediscoverySearchCtrl.limitErrorMessage" class="search-limit-msg">{{ediscoverySearchCtrl.limitErrorMessage}}</span>
                   </div>
                 </form>
               </div>
@@ -129,7 +132,7 @@
     </div>
   </div>
 
-  <div class="search-result-area" ng-if="ediscoverySearchCtrl.roomInfo && !ediscoverySearchCtrl.ediscoveryToggle" ng-include="'modules/ediscovery/ediscovery-search-result.html'"></div>
-  <div class="search-result-area" ng-if="ediscoverySearchCtrl.roomInfo && ediscoverySearchCtrl.ediscoveryToggle" ng-include="'modules/ediscovery/ediscovery-search-result-adv.html'"></div>
+  <ediscovery-search-result class="search-result-area" ng-if="ediscoverySearchCtrl.roomInfo && !ediscoverySearchCtrl.ediscoveryToggle"></ediscovery-search-result>
+  <ediscovery-search-result-adv class="search-result-area" ng-if="ediscoverySearchCtrl.roomInfo && ediscoverySearchCtrl.ediscoveryToggle"></ediscovery-search-result-adv>
 
 </div>

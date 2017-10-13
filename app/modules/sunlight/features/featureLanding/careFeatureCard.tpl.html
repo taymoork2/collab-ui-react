@@ -22,7 +22,7 @@
         </header>
         <footer class="card-footer">
           <div class="embed-code-txt h6 left">
-            <p><span translate="sunlightDetails.status" ng-if="careFeature.featureType === 'Va'"></span>{{careFeature.status}}</p>
+            <p><span translate="sunlightDetails.status" ng-if="careFeature.featureType === 'Va' && careFeature.status"></span>{{careFeature.status}}</p>
           </div>
           <div class="right icon icon-download" ng-if="careFeature.featureType !== 'Va'" ng-click="careFeaturesCtrl.openEmbedCodeModal((careFeature), $event)">
               <span class="sr-only" translate="careChatTpl.downloadAction"></span>

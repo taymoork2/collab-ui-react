@@ -49,7 +49,9 @@ export class CallParkRangeValidator implements ng.IDirective {
         }
       }
 
-      return this.CallParkService.getEndRange(modelValue)
+      const location = _attrs.location ? JSON.parse(_attrs.location) : undefined;
+
+      return this.CallParkService.getEndRange(modelValue, location)
         .then(endRange => endRange.length ? true : this.$q.reject('Extension number already in use'));
     };
   }

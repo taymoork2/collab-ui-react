@@ -1,27 +1,30 @@
 {
   "groupId": "bbcd1234-abcd-abcd-abcddef123456",
   "name": "Test2",
-  "members": [ 
-  {
-    "memberId": "0002", 
-    "deviceIds": [], 
-    "type": "PLACE"
-  },
-  {
-    "memberId": "0001", 
-    "deviceIds": [], 
-    "type": "USER"
-  }
+  "url": "",
+  "members": [
+    {
+      "uuid": "0001",
+      "name": "Pager1",
+      "type": "user"
+    },
+    {
+      "uuid": "0002",
+      "name": "Pager2",
+      "type": "place"
+    }
   ],
   "initiatorType": "CUSTOM",
   "initiators": [
-    { 
-      "initiatorId": "0001",
-      "type": "USER" 
+    {
+      "uuid": "0001",
+      "name": "Pager1",
+      "type": "user"
     },
-    { 
-      "initiatorId": "0002", 
-      "type": "PLACE" 
+    {
+      "uuid": "0002",
+      "name": "Pager2",
+      "type": "place"
     }
   ]
 }

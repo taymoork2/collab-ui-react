@@ -19,7 +19,6 @@ describe('Controller: CallServiceSettingsController', function () {
     this.initController = function () {
       this.controller = this.$controller('CallServiceSettingsController', {
         $scope: this.$scope,
-        hasVoicemailFeatureToggle: true,
         hasAtlasHybridCallDiagnosticTool: false,
       });
       this.$scope.$apply();
@@ -56,7 +55,7 @@ describe('Controller: CallServiceSettingsController', function () {
     expect(this.$modal.open).toHaveBeenCalledWith(jasmine.objectContaining({
       controller: 'VerifySipDestinationModalController',
       controllerAs: 'vm',
-      templateUrl: 'modules/hercules/service-settings/verify-sip-destination/verify-sip-destination-modal.html',
+      template: require('modules/hercules/service-settings/verify-sip-destination/verify-sip-destination-modal.html'),
     }));
   });
 });

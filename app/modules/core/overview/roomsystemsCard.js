@@ -1,6 +1,9 @@
 (function () {
   'use strict';
 
+  // TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
+  var genericCardTemplatePath = require('ngtemplate-loader?module=Core!./genericCard.tpl.html');
+
   angular
     .module('Core')
     .factory('OverviewRoomSystemsCard', OverviewRoomSystemsCard);
@@ -10,7 +13,7 @@
     return {
       createCard: function createCard() {
         var card = {};
-        card.template = 'modules/core/overview/genericCard.tpl.html';
+        card.template = genericCardTemplatePath;
         card.icon = 'icon-circle-telepresence';
         card.desc = 'overview.cards.roomSystem.desc';
         card.name = 'overview.cards.roomSystem.title';

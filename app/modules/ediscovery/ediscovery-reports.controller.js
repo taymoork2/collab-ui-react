@@ -6,7 +6,7 @@ require('@ciscospark/internal-plugin-search');
 
   module.exports = EdiscoveryReportsController;
   /* @ngInject */
-  function EdiscoveryReportsController($interval, $scope, $state, $translate, $window, Analytics, Authinfo, EdiscoveryService, EdiscoveryNotificationService, FeatureToggleService, Notification, ReportUtilService, uiGridConstants) {
+  function EdiscoveryReportsController($interval, $scope, $state, $translate, $window, Analytics, Authinfo, EdiscoveryService, EdiscoveryNotificationService, Notification, ReportUtilService, uiGridConstants) {
     $scope.$on('$viewContentLoaded', function () {
       $window.document.title = $translate.instant('ediscovery.browserTabHeaderTitle');
     });
@@ -17,9 +17,7 @@ require('@ciscospark/internal-plugin-search');
     vm.concat = false;
     vm.moreReports = false;
 
-    $scope.isOnPrem = isOnPrem;
     $scope.downloadReport = downloadReport;
-    $scope.downloadReportModal = downloadReportModal;
     $scope.prettyPrintBytes = EdiscoveryService.prettyPrintBytes;
     $scope.cancelReport = cancelReport;
     $scope.rerunReport = rerunReport;
@@ -28,10 +26,6 @@ require('@ciscospark/internal-plugin-search');
     $scope.getKey = getKey;
     $scope.isUserReportCreator = isUserReportCreator;
 
-    $scope.reportHeader = '';
-    $scope.ipAddressModel = null;
-    $scope.ediscoveryIPSettingToggle = false;
-    $scope.report = null;
     $scope.downloadingReportId = undefined;
     $scope.oldOffset = 0;
     $scope.offset = 0;
@@ -41,10 +35,6 @@ require('@ciscospark/internal-plugin-search');
     var avalonPoller = $interval(pollAvalonReport, 5000);
     var avalonPollerCancelled = false;
     var avalonRefreshPoller = null;
-
-    FeatureToggleService.atlasEdiscoveryIPSettingGetStatus().then(function (result) {
-      $scope.ediscoveryIPSettingToggle = result;
-    });
 
     function cancelAvalonPoller() {
       $interval.cancel(avalonPoller);
@@ -60,22 +50,6 @@ require('@ciscospark/internal-plugin-search');
     spark = EdiscoveryService.setupSpark();
 
     pollAvalonReport();
-
-    function isOnPrem(report) {
-      $scope.reportHeader = $translate.instant('ediscovery.reportsList.modalHeader', {
-        name: report.displayName,
-      });
-      $scope.modalPlaceholder = $translate.instant('ediscovery.reportsList.modalPlaceholder');
-      $scope.report = report;
-      var onPrem = $scope.ediscoveryIPSettingToggle ? EdiscoveryService.openReportModal($scope) : downloadReport(report);
-      return onPrem;
-    }
-
-    function downloadReportModal() {
-      var downloadUrl = _.get($scope.report, 'downloadUrl');
-      $scope.report.downloadUrl = _.replace(downloadUrl, downloadUrl.split('/')[2], $scope.ipAddressModel);
-      downloadReport($scope.report);
-    }
 
     function downloadReport(report) {
       $scope.downloadingReportId = report.id;
@@ -160,31 +134,31 @@ require('@ciscospark/internal-plugin-search');
         field: 'displayName',
         displayName: $translate.instant('ediscovery.reportsList.name'),
         sortable: true,
-        cellTemplate: 'modules/ediscovery/cell-template-name.html',
+        cellTemplate: require('modules/ediscovery/cell-template-name.html'),
         width: '*',
       }, {
         field: 'createdTime',
         displayName: $translate.instant('ediscovery.reportsList.dateGenerated'),
         sortable: false,
-        cellTemplate: 'modules/ediscovery/cell-template-createdTime.html',
+        cellTemplate: require('modules/ediscovery/cell-template-createdTime.html'),
         width: '*',
       }, {
         field: 'size',
         displayName: $translate.instant('ediscovery.reportsList.size'),
         sortable: false,
-        cellTemplate: 'modules/ediscovery/cell-template-size.html',
+        cellTemplate: require('modules/ediscovery/cell-template-size.html'),
         width: '110',
       }, {
         field: 'state',
         displayName: $translate.instant('ediscovery.reportsList.status'),
         sortable: false,
-        cellTemplate: 'modules/ediscovery/cell-template-state.html',
+        cellTemplate: require('modules/ediscovery/cell-template-state.html'),
         width: '*',
       }, {
         field: 'actions',
         displayName: $translate.instant('ediscovery.reportsList.actions'),
         sortable: false,
-        cellTemplate: 'modules/ediscovery/cell-template-action.html',
+        cellTemplate: require('modules/ediscovery/cell-template-action.html'),
         width: '160',
       }],
     };
@@ -242,7 +216,7 @@ require('@ciscospark/internal-plugin-search');
           .then(function (key) {
             $scope.reportName = report.displayName;
             $scope.reportKey = key;
-            EdiscoveryService.openReportModal($scope, EdiscoveryService.modalTypes.PASSWORD);
+            EdiscoveryService.openReportModal($scope);
           })
           .catch(function () {
             Notification.error('ediscovery.encryption.unableGetPassword');

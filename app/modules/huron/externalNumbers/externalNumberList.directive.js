@@ -8,7 +8,7 @@
   function hrExternalNumberList() {
     var directive = {
       restrict: 'E',
-      templateUrl: 'modules/huron/externalNumbers/externalNumberList.tpl.html',
+      template: require('modules/huron/externalNumbers/externalNumberList.tpl.html'),
       scope: {
         numbers: '=',
         countTranslateKey: '@',

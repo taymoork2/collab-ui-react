@@ -470,11 +470,11 @@ export class HybridServicesClusterService {
       });
   }
 
-  private extractClustersFromResponse<T>(response: ng.IHttpPromiseCallbackArg<T>): ICluster[] {
+  private extractClustersFromResponse<T>(response: ng.IHttpResponse<T>): ICluster[] {
     return _.get(this.extractDataFromResponse(response), 'clusters', []);
   }
 
-  private extractDataFromResponse<T>(response: ng.IHttpPromiseCallbackArg<T>): T {
+  private extractDataFromResponse<T>(response: ng.IHttpResponse<T>): T {
     return _.get<T>(response, 'data');
   }
 
@@ -549,9 +549,9 @@ export class HybridServicesClusterService {
 
   // to test
   private getMaintenanceModeForCluster(cluster: IClusterWithExtendedConnectors): ConnectorMaintenanceMode {
-    if (_.some(cluster.connectors, (connector) => connector.connectorStatus && connector.connectorStatus.maintenanceMode === 'pending')) {
+    if (_.some(cluster.connectors, (connector) => connector.extendedProperties.maintenanceMode === 'pending')) {
       return 'pending';
-    } else if (_.some(cluster.connectors, (connector) => connector.connectorStatus && connector.connectorStatus.maintenanceMode === 'on')) {
+    } else if (_.some(cluster.connectors, (connector) => connector.extendedProperties.maintenanceMode === 'on')) {
       return 'on';
     } else {
       return 'off';

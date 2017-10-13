@@ -7,7 +7,7 @@ require('./_customer-list.scss');
     .controller('CustomerListCtrl', CustomerListCtrl);
 
   /* @ngInject */
-  function CustomerListCtrl($q, $scope, $state, $templateCache, $translate, $window, Analytics, Authinfo, Config, ExternalNumberService, FeatureToggleService, GridCellService, HuronCompassService, Log, Notification, Orgservice, PartnerService, TrialService) {
+  function CustomerListCtrl($q, $scope, $state, $translate, $window, Analytics, Authinfo, Config, ExternalNumberService, FeatureToggleService, GridCellService, HuronCompassService, Log, Notification, Orgservice, PartnerService, TrialService) {
     var PREMIUM = 'premium';
     var STANDARD = 'standard';
 
@@ -170,9 +170,9 @@ require('./_customer-list.scss');
       updateServiceForOrg: updateServiceForOrg,
     };
 
-    var nameTemplate = $templateCache.get('modules/core/customers/customerList/grid/nameColumn.tpl.html');
-    var compactServiceTemplate = $templateCache.get('modules/core/customers/customerList/grid/compactServiceColumn.tpl.html');
-    var accountStatusTemplate = $templateCache.get('modules/core/customers/customerList/grid/accountStatusColumn.tpl.html');
+    var nameTemplate = require('modules/core/customers/customerList/grid/nameColumn.tpl.html');
+    var compactServiceTemplate = require('modules/core/customers/customerList/grid/compactServiceColumn.tpl.html');
+    var accountStatusTemplate = require('modules/core/customers/customerList/grid/accountStatusColumn.tpl.html');
 
     // new column defs for the customer list redesign. These should stay once the feature is rolled out
     var customerNameField = {
@@ -208,6 +208,7 @@ require('./_customer-list.scss');
       width: '16.5%',
       cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showCustomerDetails(row.entity)" cell-value="grid.appScope.getLicenseCountColumnText(row.entity)" center-text="true"></cs-grid-cell>',
       headerCellClass: 'align-center',
+      sortingAlgorithm: licenseSort,
     };
     /* AG TODO:  once we have data for total users -- add back
         var totalUsersField = {
@@ -408,6 +409,21 @@ require('./_customer-list.scss');
       var aStatus = vm.convertStatusToInt(vm.getAccountStatus(rowA.entity));
       var bStatus = vm.convertStatusToInt(vm.getAccountStatus(rowB.entity));
       return aStatus - bStatus;
+    }
+
+    function licenseSort(a, b, rowA, rowB) {
+      var rowAUnavailable = !isLicenseInfoAvailable(rowA.entity.licenseList);
+      var rowBUnavailable = !isLicenseInfoAvailable(rowB.entity.licenseList);
+
+      if (rowAUnavailable && rowBUnavailable) {
+        return 0;
+      } else if (rowAUnavailable) {
+        return -1;
+      } else if (rowBUnavailable) {
+        return 1;
+      } else {
+        return a - b;
+      }
     }
 
     function convertStatusToInt(a) {
@@ -764,7 +780,7 @@ require('./_customer-list.scss');
       if (!isLicenseInfoAvailable(rowData.licenseList)) {
         return $translate.instant('common.notAvailable');
       }
-      return rowData.totalLicenses;
+      return '' + rowData.totalLicenses; // was not displaying '0' without the `'' + ` preceding
     }
 
     function isPastGracePeriod(rowData) {

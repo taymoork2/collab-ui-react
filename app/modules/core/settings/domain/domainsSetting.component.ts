@@ -14,5 +14,5 @@ export class DomainsSetting extends SettingSection {
 export class DomainsSettingComponent implements ng.IComponentOptions {
   public controller = DomainManagementCtrl;
   public controllerAs = 'dv';
-  public templateUrl = 'modules/core/domainManagement/domainManagement.tpl.html';
+  public template = require('modules/core/domainManagement/domainManagement.tpl.html');
 }

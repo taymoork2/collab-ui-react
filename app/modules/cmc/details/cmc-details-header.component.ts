@@ -6,7 +6,7 @@ interface IHeaderTab {
 class CmcDetailsHeaderComponentCtrl implements ng.IComponentController {
   public tabs: IHeaderTab[] = [];
   public back: boolean = true;
-  public backState: string = 'services-overview';
+  public backState = 'services-overview';
 
   /* @ngInject */
   constructor(
@@ -27,6 +27,6 @@ class CmcDetailsHeaderComponentCtrl implements ng.IComponentController {
 
 export class CmcDetailsHeaderComponent implements ng.IComponentOptions {
   public controller = CmcDetailsHeaderComponentCtrl;
-  public templateUrl = 'modules/cmc/details/cmc-details-header.html';
+  public template = require('modules/cmc/details/cmc-details-header.html');
   public bindings = { };
 }

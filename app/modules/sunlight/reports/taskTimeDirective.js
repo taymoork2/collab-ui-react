@@ -9,7 +9,7 @@
     var directive = {
       restrict: 'EA',
       scope: false,
-      templateUrl: 'modules/sunlight/reports/taskTime.tpl.html',
+      template: require('modules/sunlight/reports/taskTime.tpl.html'),
     };
 
     return directive;

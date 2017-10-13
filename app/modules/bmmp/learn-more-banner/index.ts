@@ -6,7 +6,6 @@ import './learn-more-banner.scss';
 
 export default angular
   .module('bmmp.learn-more-banner', [
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
     require('modules/core/analytics'),

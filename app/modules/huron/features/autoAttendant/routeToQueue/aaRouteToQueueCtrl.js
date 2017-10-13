@@ -13,6 +13,7 @@
 
     var dependentCeSessionVariablesList = [];
     var dynamicVariablesList = [];
+    var dynamicVariableListBeforeCancelClick = [];
 
     vm.togglefullWarningMsg = togglefullWarningMsg;
     vm.closeFullWarningMsg = closeFullWarningMsg;
@@ -66,12 +67,20 @@
     $scope.$on('CE Updated', function () {
       getDynamicVariables();
       refreshVarSelects();
-      if (_.isEmpty(vm.deletedSessionVariablesList)) {
-        vm.fullWarningMsgValue = false;
-      }
     });
 
     $scope.$on('CIVarNameChanged', function () {
+      getDynamicVariables();
+      refreshVarSelects();
+    });
+
+    $scope.$on('AACancelQueueSettings', function () {
+      addLocalAndQueriedSessionVars();
+      getDeletedSessionVariablesList();
+    });
+
+    $scope.$on('AASaveQueueSettings', function () {
+      dynamicVariableListBeforeCancelClick = [];
       getDynamicVariables();
       refreshVarSelects();
     });
@@ -108,6 +117,16 @@
       addLocalAndQueriedSessionVars();
       // resets possibly warning messages
       updateIsWarnFlag();
+    }
+
+    function getDeletedSessionVariablesList() {
+      vm.deletedSessionVariablesList = [];
+      _.forEach(dynamicVariableListBeforeCancelClick, function (variable) {
+        if (!_.includes(vm.availableSessionVariablesList, variable)) {
+          vm.deletedSessionVariablesList.push(JSON.stringify(variable));
+        }
+      });
+      vm.deletedSessionVariablesList = _.sortBy(_.uniq(vm.deletedSessionVariablesList));
     }
 
     function updateIsWarnFlag() {
@@ -160,6 +179,9 @@
           }
         });
       }
+      if (!_.isEmpty(dynamicVariablesList) && _.isEmpty(dynamicVariableListBeforeCancelClick)) {
+        dynamicVariableListBeforeCancelClick = dynamicVariablesList;
+      }
     }
 
     function openQueueTreatmentModal() {
@@ -202,11 +224,12 @@
           vm.menuKeyEntry.actions[0] = master;
         }
       });
+      getDynamicVariables();
     }
 
     function openQueueSettings() {
       return $modal.open({
-        templateUrl: 'modules/huron/features/autoAttendant/routeToQueue/aaNewTreatmentModal.tpl.html',
+        template: require('modules/huron/features/autoAttendant/routeToQueue/aaNewTreatmentModal.tpl.html'),
         controller: 'AANewTreatmentModalCtrl',
         controllerAs: 'aaNewTreatmentModalCtrl',
         type: 'full',

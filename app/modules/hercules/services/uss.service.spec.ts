@@ -45,7 +45,7 @@ describe('Service: USSService', function () {
         }, {
           userId: '123',
           orgId: 'cisco',
-          serviceId: 'squared-fusion-voicemail',
+          serviceId: 'squared-fusion-monaco',
           entitled: true,
           state: 'activated',
         }],
@@ -55,7 +55,7 @@ describe('Service: USSService', function () {
       .then(function (response) {
         expect(response.length).toBe(2);
         expect(response[0].serviceId).toBe('squared-fusion-yolo');
-        expect(response[1].serviceId).toBe('squared-fusion-voicemail');
+        expect(response[1].serviceId).toBe('squared-fusion-monaco');
       });
 
     $httpBackend.flush();

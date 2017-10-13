@@ -147,7 +147,7 @@
     }
 
     function save() {
-      action.url = vm.url;
+      action.url = vm.menuEntry.actions[0].dynamicList;
       action.variableSet = vm.variableSet;
       //for now set method to GET as default
       action.method = GET;
@@ -169,7 +169,9 @@
       var range = AADynaAnnounceService.getRange();
       var dynamicList = range.endContainer.ownerDocument.activeElement;
       if (dynamicList.className.includes('dynamic-prompt') && !(_.isEqual(dynamicList.id, 'configureApiUrl{{schedule + index}}'))) {
+        //vm.menuEntry.actions[0].dynamicList = createDynamicList(dynamicList, []);
         vm.menuEntry.actions[0].dynamicList = createDynamicList(dynamicList, []);
+        vm.menuEntry.actions[0].url = vm.menuEntry.actions[0].dynamicList;
       }
     }
 
@@ -238,7 +240,8 @@
 
     function isDynamicListEmpty() {
       var status = true;
-      var dynamicList = _.get(vm.menuEntry, 'actions[0].dynamicList');
+      vm.menuEntry.actions[0].url = vm.menuEntry.actions[0].dynamicList;
+      var dynamicList = _.get(vm.menuEntry, 'actions[0].url');
       _.forEach(dynamicList, function (dynamic) {
         if (!_.isEmpty(_.get(dynamic, 'action.eval.value', ''))) {
           status = false;
@@ -303,10 +306,10 @@
 
     function populateUiModel() {
       if (!_.isEmpty(action)) {
-        if (_.has(action, 'dynamicList')) {
-          lastSavedDynList = _.get(vm.menuEntry, 'actions[0].dynamicList');
+        if (!_.isEmpty(action.url)) {
+          lastSavedDynList = _.get(vm.menuEntry, 'actions[0].url');
           vm.dynamicValues = [];
-          _.forEach(action.dynamicList, function (opt) {
+          _.forEach(action.url, function (opt) {
             var model;
             if (!opt.isDynamic) {
               model = {

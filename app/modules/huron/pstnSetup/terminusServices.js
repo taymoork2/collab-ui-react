@@ -6,7 +6,7 @@
   module.exports = angular.module('huron.TerminusServices', [
     require('angular-resource'),
     require('modules/huron/telephony/telephonyConfig'),
-    require('modules/core/config/config'),
+    require('modules/core/config/config').default,
   ])
     .factory('TerminusCustomerService', TerminusCustomerService)
     .factory('TerminusCustomerV2Service', TerminusCustomerV2Service)
@@ -22,7 +22,6 @@
     .factory('TerminusOrderV2Service', TerminusOrderV2Service)
     .factory('TerminusCarrierService', TerminusCarrierService)
     .factory('TerminusCarrierV2Service', TerminusCarrierV2Service)
-    .factory('TerminusStateService', TerminusStateService)
     .factory('TerminusV2LookupE911Service', TerminusV2LookupE911Service)
     .factory('TerminusUserDeviceE911Service', TerminusUserDeviceE911Service)
     .factory('TerminusV2CarrierNumberService', TerminusV2CarrierNumberService)
@@ -148,17 +147,6 @@
     return LazyResource($resource, function () {
       return HuronConfig.getTerminusV2Url() + '/carriers/:carrierId';
     }, {});
-  }
-
-  /* @ngInject */
-  function TerminusStateService($resource) {
-    return $resource('modules/huron/pstn/pstnAreaService/states.json', {}, {
-      query: {
-        method: 'GET',
-        isArray: true,
-        cache: true,
-      },
-    });
   }
 
   /* @ngInject */

@@ -5,7 +5,7 @@ import { CallLinesPage } from '../pages/callLines.page';
 const callLines = new CallLinesPage();
 
 describe('Huron Functional: call-lines', () => {
-  const customer = huronCustomer('call-lines');
+  const customer = huronCustomer({ test: 'call-lines' });
   beforeAll(done => {
     provisioner.provisionCustomerAndLogin(customer)
       .then(done);

@@ -1,4 +1,9 @@
 {
+  "subscriptionsAuthinfo": [{
+    "subscriptionId": "intSubId",
+    "endDate": "subEndDate",
+    "orderingTool": "CISCO_ONLINE_OPC"
+  }],
   "subscriptionsTrialResponse": [{
     "licenses": [{
       "features": ["squared-room-moderation"],

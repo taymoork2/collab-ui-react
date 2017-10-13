@@ -50,8 +50,8 @@ var MediaServicePage = function () {
   this.releaseChannelTitle = element(by.cssContainingText('.section-title-row', 'Release Channel'));
   this.softwareUpgradeTitle = element(by.cssContainingText('.section-title-row', 'Software Upgrade'));
   this.nodesTitle = element(by.cssContainingText('.section-title-row', 'Nodes'));
-  this.moveNodeLink = element(by.css('a[ng-click="$ctrl.openMoveNodeModal(node)"]'));
-  this.deregisterMoveNodeLink = element(by.css('a[ng-click="$ctrl.openDeregisterNodeModal(node)"]'));
+  this.moveNodeLink = element(by.id('move-ecp'));
+  this.deregisterMoveNodeLink = element(by.id('deregister-ecp'));
   this.moveNodeModalHeader = element(by.cssContainingText('.modal-title', 'Move Node'));
   this.deregisterMoveNodeHeader = element(by.cssContainingText('.modal-title', 'Deregister Node'));
   this.moveNodeModalCancelButton = element(by.css('button[ng-click="$dismiss()"]'));

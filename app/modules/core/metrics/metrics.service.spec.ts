@@ -171,12 +171,20 @@ describe('Metrics:', () => {
           spyOn(this.MetricsService.sdk, 'submit');
           spyOn(this.MetricsService.sdk, 'submitClientMetrics');
 
-          this.MetricsService.addTimingMetric(new TimingMetric(
-            'test-key' as TimingKey,
-            'test-measure' as MeasureKey,
-            'test-mark-start' as MarkKey,
-            'test-mark-stop' as MarkKey,
-          ));
+          this.MetricsService.addTimingMetric(new TimingMetric({
+            key: 'test-key' as TimingKey,
+            measure: 'test-measure' as MeasureKey,
+            markStart: 'test-mark-start' as MarkKey,
+            markStop: 'test-mark-stop' as MarkKey,
+          }));
+
+          this.MetricsService.addTimingMetric(new TimingMetric({
+            key: 'one-time-test-key' as TimingKey,
+            measure: 'one-time-test-measure' as MeasureKey,
+            markStart: 'one-time-test-mark-start' as MarkKey,
+            markStop: 'one-time-test-mark-stop' as MarkKey,
+            isOneTime: true,
+          }));
 
           jasmine.clock().install();
           jasmine.clock().mockDate();
@@ -207,22 +215,103 @@ describe('Metrics:', () => {
           jasmine.clock().uninstall();
         });
 
-        it('should submit a metric', function () {
+        it('should submit a timing metric multiple times', function () {
           this.MetricsService.startTimer('test-key');
           jasmine.clock().tick(5000);
 
-          this.MetricsService.stopTimer('test-key');
+          this.MetricsService.stopTimer('test-key', {
+            additionalField: 1,
+            additionalTag: true,
+          });
           expect(this.MetricsService.sdk.submitClientMetrics).toHaveBeenCalledWith('test-key', {
             type: ['operational'],
             fields: {
               duration_in_millis: 5000,
+              additionalField: 1,
+            },
+            tags: {
+              additionalTag: true,
+            },
+          });
+          expect(this.MetricsService.sdk.submit).not.toHaveBeenCalled();
+
+          this.MetricsService.sdk.submitClientMetrics.calls.reset();
+
+          this.MetricsService.startTimer('test-key');
+          jasmine.clock().tick(1000);
+
+          this.MetricsService.stopTimer('test-key', {
+            additionalField: 2,
+            additionalTag: false,
+          });
+          expect(this.MetricsService.sdk.submitClientMetrics).toHaveBeenCalledWith('test-key', {
+            type: ['operational'],
+            fields: {
+              duration_in_millis: 1000,
+              additionalField: 2,
+            },
+            tags: {
+              additionalTag: false,
+            },
+          });
+          expect(this.MetricsService.sdk.submit).not.toHaveBeenCalled();
+        });
+
+        it('should submit a one-time timing metric only once', function () {
+          this.MetricsService.startTimer('one-time-test-key');
+          jasmine.clock().tick(2000);
+
+          this.MetricsService.stopTimer('one-time-test-key');
+          expect(this.MetricsService.sdk.submitClientMetrics).toHaveBeenCalledWith('one-time-test-key', {
+            type: ['operational'],
+            fields: {
+              duration_in_millis: 2000,
+            },
+            tags: {},
+          });
+          expect(this.MetricsService.sdk.submit).not.toHaveBeenCalled();
+
+          this.MetricsService.sdk.submitClientMetrics.calls.reset();
+
+          this.MetricsService.startTimer('one-time-test-key');
+          jasmine.clock().tick(3000);
+
+          this.MetricsService.stopTimer('one-time-test-key');
+          expect(this.MetricsService.sdk.submitClientMetrics).not.toHaveBeenCalled();
+          expect(this.MetricsService.sdk.submit).not.toHaveBeenCalled();
+        });
+
+        it('should calculate load timing metric', function () {
+          this.MetricsService.reportLoadingMetrics();
+          expect(this.MetricsService.sdk.submitClientMetrics).toHaveBeenCalledWith(TimingKey.LOAD_DURATION, {
+            type: ['operational'],
+            fields: {
+              dom_duration_in_millis: 1000,
+              navigation_duration_in_millis: 100,
+              network_duration_in_millis: 900,
+              total_duration_in_millis: 2000,
             },
             tags: {},
           });
           expect(this.MetricsService.sdk.submit).not.toHaveBeenCalled();
         });
 
-        it('should calculate load timing metric', function () {
+        it('should not submit metric if loading metrics have negative calculations from invalid data', function () {
+          const origLoadEventEnd = this.$window.performance.timing.loadEventEnd;
+          this.$window.performance.timing.loadEventEnd = 0;
+
+          this.MetricsService.reportLoadingMetrics();
+          expect(this.MetricsService.sdk.submitClientMetrics).not.toHaveBeenCalled();
+          expect(this.MetricsService.sdk.submit).not.toHaveBeenCalled();
+
+          this.$window.performance.timing.loadEventEnd = NaN;
+
+          this.MetricsService.reportLoadingMetrics();
+          expect(this.MetricsService.sdk.submitClientMetrics).not.toHaveBeenCalled();
+          expect(this.MetricsService.sdk.submit).not.toHaveBeenCalled();
+
+          this.$window.performance.timing.loadEventEnd = origLoadEventEnd;
+
           this.MetricsService.reportLoadingMetrics();
           expect(this.MetricsService.sdk.submitClientMetrics).toHaveBeenCalledWith(TimingKey.LOAD_DURATION, {
             type: ['operational'],

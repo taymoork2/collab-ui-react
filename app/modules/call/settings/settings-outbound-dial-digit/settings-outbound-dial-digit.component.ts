@@ -59,7 +59,7 @@ class OutboundDialDigitCtrl implements ng.IComponentController {
 
 export class OutboundDialDigitComponent implements ng.IComponentOptions {
   public controller = OutboundDialDigitCtrl;
-  public templateUrl = 'modules/call/settings/settings-outbound-dial-digit/settings-outbound-dial-digit.component.html';
+  public template = require('modules/call/settings/settings-outbound-dial-digit/settings-outbound-dial-digit.component.html');
   public bindings = {
     steeringDigit: '<',
     internalNumberRanges: '<',

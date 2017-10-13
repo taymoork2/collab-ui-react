@@ -6,7 +6,7 @@
     .controller('AAInsertionElementCtrl', AAInsertionElementCtrl);
 
   /* @ngInject */
-  function AAInsertionElementCtrl($modal, $rootScope, $scope, $translate, AACommonService, AADynaAnnounceService, AAUiModelService) {
+  function AAInsertionElementCtrl($modal, $rootScope, $scope, $translate, AACommonService, AAUiModelService) {
     var vm = this;
 
     var ui;
@@ -69,6 +69,7 @@
                 .then(function (result) {
                   setResult(node, actionType, result, insertionElementID);
                   AACommonService.setSayMessageStatus(true);
+                  $rootScope.$broadcast('CE Updated');
                 });
           }
         }
@@ -77,7 +78,7 @@
 
     function openModal(say) {
       return $modal.open({
-        templateUrl: 'modules/huron/features/autoAttendant/dynamicAnnouncements/aaDynamicAnnouncementsModal.tpl.html',
+        template: require('modules/huron/features/autoAttendant/dynamicAnnouncements/aaDynamicAnnouncementsModal.tpl.html'),
         controller: 'AADynamicAnnouncementsModalCtrl',
         controllerAs: 'aaDynamicAnnouncementsModalCtrl',
         type: 'small',
@@ -97,10 +98,10 @@
     }
 
     function closeClickFn() {
-      var range = AADynaAnnounceService.getRange();
-      range.endContainer.parentElement.parentElement.parentElement.remove();
-
       var id = $scope.elementId;
+      var idSelectorPrefix = '#';
+      angular.element(idSelectorPrefix.concat(id)).remove();
+
       populateUiModel(id);
       var dynaList = actionEntry.actions[0].dynamicList;
       _.forEach(dynaList, function (node) {

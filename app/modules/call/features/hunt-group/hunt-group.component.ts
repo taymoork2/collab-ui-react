@@ -140,7 +140,7 @@ class HuntGroupCtrl implements ng.IComponentController {
 
   public cancelModal(): void {
     this.$modal.open({
-      templateUrl: 'modules/call/features/hunt-group/hunt-group-cancel-modal.html',
+      template: require('modules/call/features/hunt-group/hunt-group-cancel-modal.html'),
       type: 'dialog',
     });
   }
@@ -328,11 +328,10 @@ class HuntGroupCtrl implements ng.IComponentController {
     return this.$translate.instant('callPark.createHelpText');
   }
 
-
 }
 
 export class HuntGroupComponent implements ng.IComponentOptions {
   public controller = HuntGroupCtrl;
-  public templateUrl = 'modules/call/features/hunt-group/hunt-group.component.html';
+  public template = require('modules/call/features/hunt-group/hunt-group.component.html');
   public bindings = {};
 }

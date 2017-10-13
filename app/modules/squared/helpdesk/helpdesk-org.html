@@ -17,7 +17,8 @@
         validation-messages="helpdeskOrgCtrl.editOrgValidationMessages"
         async-validators="helpdeskOrgCtrl.editOrgAsyncValidators"
         is-text-clickable="helpdeskOrgCtrl.supportsExtendedInformation"
-        on-text-click="helpdeskOrgCtrl.openExtendedInformation()">
+        on-text-click="helpdeskOrgCtrl.openExtendedInformation()"
+        show-pro-pack-icon="helpdeskOrgCtrl.isProPackCustomer">
       </cr-inline-edit-text>
       <hr>
 
@@ -206,10 +207,9 @@
 
     </div>
 
-    <div class="columns large-8 medium-7 card-panel"
-         ng-if="helpdeskOrgCtrl.cardsAvailable"
-         ng-include src="'modules/squared/helpdesk/org-cards.html'">
-    </div>
+    <help-desk-org-cards class="columns large-8 medium-7 card-panel"
+         ng-if="helpdeskOrgCtrl.cardsAvailable">
+    </help-desk-org-cards>
 
     <div class="columns large-8 medium-7"
          ng-if="!helpdeskOrgCtrl.cardsAvailable">

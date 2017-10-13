@@ -4,10 +4,10 @@
             ng-disabled="$ctrl.form.$invalid" type="submit" translate="common.save"></button>
     <button ng-click="$ctrl.reset()" translate="common.cancel"></button>
   </cs-sp-buttons>
-  <cs-sp-container>
+  <cs-sp-container cs-tabindex="($ctrl.editing || $ctrl.reordering)  ? -1 : 0">
     <div class="warning" ng-show="$ctrl.reachSpeedDialLimit() && !$ctrl.editing && !$ctrl.reordering">
       <div class="cs-input__messages">
-        <div class="message limit-reach-warning" translate="speedDial.limitSpeedDialsReach"></div>
+        <div class="message limit-reach-warning" translate="speedDials.limitSpeedDialsReach"></div>
       </div>
     </div>
     <cs-sp-section>
@@ -60,6 +60,7 @@
                     name="number{{$index}}"
                     select-type="select"
                     custom-number-translations="$ctrl.customTranslations"
+                    custom-number-validation-pattern="$ctrl.customNumberValidationPatern"
                     input-translations="$ctrl.inputTranslations"
                     on-change-fn="$ctrl.setSpeedDial(model)">
                 </cs-call-destination>

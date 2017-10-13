@@ -1,15 +1,17 @@
-import { Notification } from 'modules/core/notifications';
 import {
   NUMBER_ORDER, PORT_ORDER, BLOCK_ORDER, NXX, NUMTYPE_DID, NUMTYPE_TOLLFREE,
   NXX_EMPTY, MIN_VALID_CODE, MAX_VALID_CODE, MAX_DID_QUANTITY,
   TOLLFREE_ORDERING_CAPABILITY, TOKEN_FIELD_ID, SWIVEL_ORDER, SWIVEL,
 } from '../pstn.const';
-import { INumbersModel } from '../pstnNumberSearch/number.model';
-import { PstnService } from '../pstn.service';
 import {
   PstnModel, IOrder, IAuthCustomer, IAuthLicense,
 } from '../pstn.model';
+import { INumbersModel } from '../pstnNumberSearch/number.model';
+import { PstnService, TerminusLocation } from '../pstn.service';
+import { PstnAddressService, Address } from '../shared/pstn-address';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
+import { Notification } from 'modules/core/notifications';
+import { LocationsService, LocationListItem } from 'modules/call/locations';
 
 export class PstnWizardService {
   public STEP_TITLE: {
@@ -33,14 +35,18 @@ export class PstnWizardService {
   private newTollFreeOrders: IOrder[] = [];
   private newOrders: IOrder[] = [];
   private orderCart: IOrder[] = [];
+  private location: TerminusLocation = new TerminusLocation();
   private ftEnterprisePrivateTrunking: boolean = false;
+  private ftLocation: boolean = false;
 
   /* @ngInject */
   constructor(
     private $q: ng.IQService,
     private PstnModel: PstnModel,
     private PstnService: PstnService,
-    private PstnServiceAddressService,
+    private PstnServiceAddressService,              //Site based
+    private PstnAddressService: PstnAddressService, //Location based
+    private LocationsService: LocationsService,
     private Notification: Notification,
     private $translate: ng.translate.ITranslateService,
     private PhoneNumberService: PhoneNumberService,
@@ -67,12 +73,12 @@ export class PstnWizardService {
 
   public init(): ng.IPromise<any> {
     const deferred = this.$q.defer();
+
     //Get and save organization/customer information
     const params = {
       basicInfo: true,
     };
     this.checkReseller();
-    this.checkCustomer();
     this.Orgservice.getOrg(data => {
       if (data.countryCode) {
         this.PstnModel.setCountryCode(data.countryCode);
@@ -84,7 +90,10 @@ export class PstnWizardService {
           this.PstnModel.setEsaSigned(true);
         }
         deferred.resolve(true);
-      }, () => deferred.resolve(true));
+      }, () => {
+        this.PstnModel.setCustomerExists(false);
+        deferred.resolve(true);
+      });
     }, this.PstnModel.getCustomerId(), params);
     return deferred.promise;
   }
@@ -123,24 +132,52 @@ export class PstnWizardService {
     .catch(error => this.Notification.errorResponse(error, 'pstnSetup.resellerCreateError'));
   }
 
-  //PSTN check if customer is setup as a carrier customer.
-  private checkCustomer(): void {
-    if (!this.PstnModel.isCustomerExists()) {
-      this.PstnService.getCustomer(this.PstnModel.getCustomerId())
-        .then(() => this.PstnModel.setCustomerExists(true));
-    }
-  }
-
   private get provider(): any {
     return this.PstnModel.getProvider();
+  }
+
+  public initLocations(): ng.IPromise<LocationListItem | undefined> {
+    //On success the default location is saved in the LocationsService
+    //and will be updated if the default changes.
+    return this.LocationsService.getDefaultLocation(this.PstnModel.getCustomerId())
+    .then((location: LocationListItem) => {
+      const locaionId: string = _.isString(location.uuid) ? location.uuid : '';
+      //Save the default ESA
+      return this.PstnAddressService.getByLocation(this.PstnModel.getCustomerId(), locaionId)
+      .then((addresses: Address[]) => {
+        this.PstnModel.setServiceAddress(addresses[0]);
+        return location;
+      });
+    })
+    .catch(error => {
+      this.Notification.errorResponse(error, 'settingsServiceAddress.getError');
+      return undefined;
+    });
+  }
+
+  public createLocation(): ng.IPromise<string | void> {
+    return this.PstnService.createLocation(this.location)
+    .catch(error => {
+      this.Notification.errorResponse(error, 'locations.createFailed');
+    });
   }
 
   public initSites(): ng.IPromise<any> {
     return this.PstnServiceAddressService.listCustomerSites(this.PstnModel.getCustomerId())
       .then(sites => {
-        // If we have sites, set the flag and store the first site address
+        //Currently only one site per customer -- removing sites for locations
+        //If we have sites, set the flag and store the first site address
         if (_.isArray(sites) && _.size(sites)) {
           this.PstnModel.setSiteExists(true);
+          const serviceAddress = _.get(sites[0], 'serviceAddress');
+          const address = new Address();
+          address.streetAddress = _.get<string>(serviceAddress, 'serviceStreetNumber') + ' ' + _.get<string>(serviceAddress, 'serviceStreetName');
+          address.city = _.get<string>(serviceAddress, 'serviceCity');
+          address.state = _.get<string>(serviceAddress, 'serviceState');
+          address.zip = _.get<string>(serviceAddress, 'serviceZip');
+          address.default = true;
+          address.validated = true;
+          this.PstnModel.setServiceAddress(address);
         }
       })
       .catch(response => {
@@ -180,12 +217,14 @@ export class PstnWizardService {
     }
   }
 
-  private getEnterprisePrivateTrunkingFeatureToggle(): ng.IPromise<any> {
+  private getEnterprisePrivateTrunkingFeatureToggle(): ng.IPromise<boolean> {
     return this.FeatureToggleService.supports(this.FeatureToggleService.features.huronEnterprisePrivateTrunking)
-      .then((supported) => {
-        this.ftEnterprisePrivateTrunking = supported;
-        return supported;
-      });
+      .then((enabled) => this.ftEnterprisePrivateTrunking = enabled);
+  }
+
+  private getLocationFeatureToggle(): ng.IPromise<boolean> {
+    return this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484)
+    .then((enabled) => this.ftLocation = enabled);
   }
 
   private createNumbers(): ng.IPromise<any> {
@@ -280,7 +319,8 @@ export class PstnWizardService {
   }
 
   private createCustomerV2(): ng.IPromise<boolean> {
-    return this.Auth.getCustomerAccount(this.PstnModel.getCustomerId()).then((org) => {
+    return this.Auth.getCustomerAccount(this.PstnModel.getCustomerId())
+    .then((org) => {
       let isTrial: boolean = true;
       const customer: IAuthCustomer = _.get<IAuthCustomer>(org, 'data.customers[0]');
       if (customer) {
@@ -294,7 +334,17 @@ export class PstnWizardService {
         this.PstnModel.getCustomerEmail(),
         this.PstnModel.getProviderId(),
         isTrial,
-      ).catch(function (response) {
+      )
+      .then(() => {
+        //Setup Location Object
+        this.location.name = this.PstnModel.getCustomerName();
+        this.location.default = true; //This is the first location on a new customer
+        const address: Address = this.PstnModel.getServiceAddress();
+        address.default = true; //This is the first address on a new location
+        this.location.addresses = [address.getRAddress()];
+        return true;
+      })
+      .catch(function (response) {
         this.Notification.errorResponse(response, 'PstnModel.customerCreateError');
         return this.$q.reject(response);
       });
@@ -309,9 +359,17 @@ export class PstnWizardService {
       promise = this.updateCustomerCarrier();
     }
     return promise
-      .then(this.createSite.bind(this))
+      .then(this.getLocationFeatureToggle.bind(this))
+      .then(this.createLocationOrSite.bind(this))
       .then(this.getEnterprisePrivateTrunkingFeatureToggle.bind(this))
       .then(this.createNumbers.bind(this));
+  }
+
+  private createLocationOrSite(): ng.IPromise<any> {
+    if (this.ftLocation) {
+      return this.createLocation();
+    }
+    return this.createSite();
   }
 
   public finalizeImport(): ng.IPromise<any> {

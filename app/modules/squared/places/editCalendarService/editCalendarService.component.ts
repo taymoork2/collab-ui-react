@@ -269,7 +269,7 @@ class EditCalendarService implements ng.IComponentController {
 export class EditCalendarServiceOverviewComponent implements ng.IComponentOptions {
   public controller = EditCalendarService;
   public controllerAs = 'editCalendarService';
-  public templateUrl = 'modules/squared/places/editCalendarService/editCalendarService.tpl.html';
+  public template = require('modules/squared/places/editCalendarService/editCalendarService.tpl.html');
   public bindings = {
     dismiss: '&',
   };

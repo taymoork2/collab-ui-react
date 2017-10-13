@@ -1,0 +1,74 @@
+@import '~collab-ui/scss/settings/colors';
+
+.add-webex-site {
+
+  .error input[type=radio]+label:before {
+    border-color: $color-red-base;
+  }
+
+  .site-preview {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  .time-zone {
+    font-size: 14px;
+    color: $gray-base;
+  }
+
+  .verified-check {
+    font-size: 24px;
+    color: $color-cta-base;
+  }
+
+  .site-description,
+  .distribute-licenses-heading,
+  .element-spacing {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  .small {
+    span {
+      font-size: .75rem;
+    }
+  }
+  .info .cs-input__messages {
+    padding-top: 0px;
+  }
+
+
+  .count {
+    color: $color-primary-base;
+  }
+
+  .site-heading {
+    font-weight: bolder;
+  }
+
+  .align-license-count {
+    text-align: right;
+  }
+
+  .align-license-count-total {
+    text-align: end;
+  }
+
+  .notice {
+    font-size: 18px;
+  }
+
+  .error {
+    color: $brand-danger;
+    .message {
+      font-size: .8rem;
+    }
+  }
+  .icon-help {
+    color: $color-blue-darker;
+  }
+
+  .license_distrib__row--site {
+    word-break: break-all;
+  }
+}

@@ -14,7 +14,7 @@ class HuntGroupMaxRingTimeCtrl implements ng.IComponentController {
 
 export class HuntGroupMaxRingTimeComponent implements ng.IComponentOptions {
   public controller = HuntGroupMaxRingTimeCtrl;
-  public templateUrl = 'modules/call/features/hunt-group/hunt-group-max-ring-time/hunt-group-max-ring-time.component.html';
+  public template = require('modules/call/features/hunt-group/hunt-group-max-ring-time/hunt-group-max-ring-time.component.html');
   public bindings = {
     maxRingSecs: '<',
     onChangeFn: '&',

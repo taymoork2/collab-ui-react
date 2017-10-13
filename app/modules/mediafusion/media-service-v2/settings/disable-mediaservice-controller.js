@@ -26,7 +26,13 @@
     vm.continue = function () {
       vm.step = '2';
     };
+    vm.done = function () {
+      $modalInstance.close();
+      $state.go('overview');
+      Notification.success('mediaFusion.deactivate.success');
+    };
     vm.deactivate = function () {
+      vm.step = '2';
       var loopPromises = deRegisterCluster();
       var promise = $q.all(loopPromises);
       promise.then(function (response) {
@@ -37,7 +43,6 @@
             vm.hadError = true;
           }
         });
-        $modalInstance.close();
         if (!vm.hadError) {
           ServiceDescriptorService.disableService(vm.serviceId);
           MediaServiceActivationV2.setisMediaServiceEnabled(false);
@@ -45,9 +50,8 @@
           MediaServiceActivationV2.disableOrpheusForMediaFusion();
           MediaServiceActivationV2.deactivateHybridMedia();
           MediaServiceActivationV2.disableMFOrgSettingsForDevOps();
-          $state.go('overview');
-          Notification.success('mediaFusion.deactivate.success');
         } else {
+          $modalInstance.close();
           Notification.error('mediaFusion.deactivate.error');
         }
       });

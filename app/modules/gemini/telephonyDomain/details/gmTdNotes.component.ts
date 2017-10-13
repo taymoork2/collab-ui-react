@@ -60,14 +60,13 @@ class GmTdNotesCtrl implements ng.IComponentController {
 
   public onSave(): void {
     const postData = {
-      customerID: this.customerId,
-      siteID: this.ccaDomainId,
-      action: 'add_notes_td',
-      actionFor: 'Telephony Domain',
-      objectName: this.newNote,
+      customerId: this.customerId,
+      part: 'TD',
+      siteId: this.ccaDomainId,
+      note: this.newNote,
     };
 
-    const notes = _.get(postData, 'objectName');
+    const notes = _.get(postData, 'note');
     if (this.gemService.getByteLength(notes) > this.noteMaxByte) {
       this.Notification.error('gemini.cbgs.notes.errorMsg.maxLength', { maxLength: this.noteMaxByte });
       return;
@@ -77,18 +76,7 @@ class GmTdNotesCtrl implements ng.IComponentController {
     this.TelephonyDomainService.postNotes(postData).then((res) => {
       this.loading = false;
 
-      const resJson: any = _.get(res, 'content.data');
-      if (resJson.returnCode) {
-        this.Notification.notify(this.gemService.showError(resJson.returnCode));
-        return;
-      }
-
-      if (!resJson.body) {
-        this.Notification.error('gemini.errorCode.genericError');
-        return;
-      }
-
-      this.allNotes.unshift(resJson.body);
+      this.allNotes.unshift(res);
       this.isShowAll = _.size(this.allNotes) > this.showNotesNum;
       this.notes = _.size(this.allNotes) > this.showNotesNum ? _.slice(this.allNotes, 0, this.showNotesNum) : this.allNotes;
       this.newNote = '';
@@ -96,6 +84,8 @@ class GmTdNotesCtrl implements ng.IComponentController {
       this.$scope.$$childTail.$$prevSibling.noteForm.$setPristine();
 
       this.$scope.$emit('detailWatch', { notes: this.allNotes });
+    }).catch((err) => {
+      this.Notification.errorResponse(err, 'errors.statusError', { status: err.status });
     });
   }
 
@@ -107,5 +97,5 @@ class GmTdNotesCtrl implements ng.IComponentController {
 
 export class GmTdNotesComponent implements ng.IComponentOptions {
   public controller = GmTdNotesCtrl;
-  public templateUrl = 'modules/gemini/telephonyDomain/details/gmTdNotes.tpl.html';
+  public template = require('modules/gemini/telephonyDomain/details/gmTdNotes.tpl.html');
 }

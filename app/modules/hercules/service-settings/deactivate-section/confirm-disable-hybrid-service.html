@@ -8,7 +8,7 @@
 </div>
 <div class="modal-body hercules-fix-paragraphs deregister-expressway-modal">
 
-  <p ng-if="$ctrl.serviceId !== 'squared-fusion-gcal'"
+  <p ng-if="$ctrl.serviceId !== 'squared-fusion-gcal' && $ctrl.serviceId !== 'squared-fusion-o365' "
      translate="hercules.deactivateServiceComponent.deactivateServiceConfirmationText"
      translate-values="{connectorName: $ctrl.localizedConnectorName}">
   </p>
@@ -16,6 +16,10 @@
   <p ng-if="$ctrl.serviceId === 'squared-fusion-gcal'"
      translate="hercules.deactivateServiceComponent.deactivateServiceConfirmationTextGoogleCalendar">
   </p>
+
+  <p ng-if="$ctrl.serviceId === 'squared-fusion-o365'"
+  translate="hercules.deactivateServiceComponent.deactivateServiceConfirmationTextGoogleCalendar">
+</p>
 
 </div>
 <div class="modal-footer">

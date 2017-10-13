@@ -1,7 +1,8 @@
 const SunlightConfigService = require('./sunlightConfigService');
 const SunlightReportService = require('./sunlightReportService');
+const HydraService = require('./hydraService');
 const ConfigServices = require('./sunlightServices');
-const VirtualAssistantService = require('./virtualAssistantService');
+const URService = require('./urService');
 
 const urlConfigModule = require('modules/core/config/urlConfig');
 const authInfoModule = require('modules/core/scripts/services/authinfo');
@@ -14,8 +15,8 @@ export default angular
   ])
   .service('SunlightConfigService', SunlightConfigService)
   .service('SunlightReportService', SunlightReportService)
-  .service('VirtualAssistantService', VirtualAssistantService)
+  .service('HydraService', HydraService)
+  .service('URService', URService)
   .factory('ConfigTemplateService', ConfigServices.ConfigTemplateService)
-  .factory('VirtualAssistantConfigService', ConfigServices.VirtualAssistantConfigService)
   .factory('ConfigUserService', ConfigServices.ConfigUserService)
   .name;

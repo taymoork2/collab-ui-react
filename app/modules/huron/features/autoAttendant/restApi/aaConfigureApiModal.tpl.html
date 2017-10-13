@@ -10,7 +10,7 @@
     <div class="large-8 medium-8 small-12 columns">
       <div class="row">
         <div  ng-if="aaConfigureApiModal.isDynamicToggle()" class="aa-dynamic-prompt aa-message-width aa-message-only-type large-11 medium-11 small-11 columns">
-          <dynamic-prompt class="small-12 columns dynamic-prompt aa-message-height" ng-model="aaConfigureApiModal.url" dynamic-tags="aaConfigureApiModal.dynamicTags" model-values="aaConfigureApiModal.dynamicValues" insert-element="insertElement" aa-keypress ng-change = "aaConfigureApiModal.saveDynamicUi()" id="configureApiUrl{{schedule + index}}" name="url" data-placeholder="{{:: aaConfigureApiModal.messageInputPlaceholder}}"></dynamic-prompt>
+          <dynamic-prompt class="small-12 columns dynamic-prompt aa-message-height" ng-model="aaConfigureApiModal.url" dynamic-tags="aaConfigureApiModal.dynamicTags" model-values="aaConfigureApiModal.dynamicValues" insert-element="insertElement" aa-keypress ng-keyup = "aaConfigureApiModal.saveDynamicUi()" id="configureApiUrl{{schedule + index}}" name="url" data-placeholder="{{:: aaConfigureApiModal.messageInputPlaceholder}}"></dynamic-prompt>
         <div ng-if="aaConfigureApiModal.getWarning()">
           <br></br>
           <div class="columns small-12 aa-div-click" ng-click="aaConfigureApiModal.toggleFullWarningMsg()" ng-blur="aaConfigureApiModal.closeFullWarningMsg()"> 

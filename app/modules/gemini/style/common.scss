@@ -42,6 +42,12 @@
   }
 }
 
+.side-panel {
+  cs-sp-container {
+    position: inherit;
+  }
+}
+
 .gemini-side-panel {
   .side-panel-container {
     padding-bottom: $ui-padding--huge;

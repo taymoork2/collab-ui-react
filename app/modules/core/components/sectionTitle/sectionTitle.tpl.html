@@ -7,7 +7,7 @@
       </button>
       <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
         <li ng-repeat="action in $ctrl.actionList">
-          <a ng-click="action.actionFunction()" translate="{{action.actionKey}}"></a>
+          <a href ng-click="action.actionFunction()" translate="{{action.actionKey}}"></a>
         </li>
       </ul>
     </span>

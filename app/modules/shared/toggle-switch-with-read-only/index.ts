@@ -3,7 +3,6 @@ import { ToggleSwitchWithReadOnlyComponent } from './toggle-switch-with-read-onl
 
 export default angular
   .module('shared.toggle-switch-with-read-only', [
-    require('scripts/app.templates'),
     require('angular-translate'),
     booleanTextFieldModuleName,
   ])

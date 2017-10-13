@@ -62,7 +62,25 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
     menu = AutoAttendantCeMenuModelService.newCeMenuEntry();
 
     aaUiModel['openHours'].addEntryAt(index, menu);
-    action = AutoAttendantCeMenuModelService.newCeActionEntry('doREST', '');
+    action = AutoAttendantCeMenuModelService.newCeActionEntry('doREST', 'testId');
+    action.varList = ['testVar'];
+    action.url = [{
+      action: {
+        eval: {
+          value: 'Static text',
+        },
+      },
+      isDynamic: false,
+      htmlModel: '',
+    }, {
+      action: {
+        eval: {
+          value: 'Original-Caller-Number',
+        },
+      },
+      isDynamic: true,
+      htmlModel: '',
+    }];
     action.dynamicList = [{
       action: {
         eval: {
@@ -80,12 +98,6 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
       isDynamic: true,
       htmlModel: '',
     }];
-    action.url = 'test URL';
-    action.variableSet = [{
-      value: '1',
-      variableName: 'Test1',
-    }];
-    action.method = 'GET';
     aaUiModel[schedule].entries[0].addAction(action);
     $scope.schedule = schedule;
     $scope.index = index;
@@ -181,6 +193,30 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
 
   describe('isSaveDisabled', function () {
     it('should disable save whenever any field is empty', function () {
+      var action = AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', '');
+      action.dynamicList = [{
+        action: {
+          eval: {
+            value: 'Static Text',
+          },
+        },
+        isDynamic: false,
+        htmlModel: '',
+      }];
+      var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+      menuEntry.addAction(action);
+      aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+      aaUiModel.openHours.addEntryAt(0, menuEntry);
+      controller.variableSet = [{
+        value: 'testResponse',
+        newVariableValue: 'Test1',
+        variableName: 'New Variable',
+        isWarn: false,
+      }, {
+        value: 'testRes2',
+        variableName: 'Test1',
+        isWarn: false,
+      }];
       $scope.$apply();
       expect(controller.isSaveDisabled()).toBe(false);
     });
@@ -283,28 +319,6 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
 
     it('should be able to create dynamicList', function () {
       spyOn(AACommonService, 'isDynAnnounceToggle').and.returnValue(true);
-      var action = AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', '');
-      action.dynamicList = [{
-        action: {
-          eval: {
-            value: 'Static Text',
-          },
-        },
-        isDynamic: false,
-        htmlModel: '',
-      }];
-      var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-      menuEntry.addAction(action);
-      aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
-      aaUiModel.openHours.addEntryAt(0, menuEntry);
-      expect(_.get(menuEntry.actions[0], 'dynamicList[0].action.eval.value', '')).toBe('Static Text');
-      $scope.$apply();
-      controller.saveDynamicUi();
-      expect(_.get(menuEntry.actions[0], 'dynamicList[0].isDynamic', '')).toBe(false);
-    });
-
-    it('should be able to create dynamicList', function () {
-      spyOn(AACommonService, 'isDynAnnounceToggle').and.returnValue(false);
       var action = AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', '');
       action.dynamicList = [{
         action: {

@@ -1,6 +1,9 @@
 export enum NumberType {
-  INTERNAL = <any>'internal',
-  EXTERNAL = <any>'external',
+  INTERNAL = 'internal',
+  EXTERNAL = 'external',
+  NUMBER_FORMAT_ENTERPRISE_LINE = 'NUMBER_FORMAT_ENTERPRISE_LINE',
+  NUMBER_FORMAT_EXTENSION = 'NUMBER_FORMAT_EXTENSION',
+  NUMBER_FORMAT_DIRECT_LINE = 'NUMBER_FORMAT_DIRECT_LINE',
 }
 
 export interface INumber {
@@ -8,6 +11,7 @@ export interface INumber {
   number: string;
   type: NumberType;
   directoryNumber: IDirectoryNumber;
+  siteToSite?: string;
 }
 
 export interface IDirectoryNumber {

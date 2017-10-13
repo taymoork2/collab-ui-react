@@ -5,7 +5,7 @@ describe('UserManageOrgController', function () {
 
   function init() {
     this.initModules('Core', 'Huron', 'Sunlight');
-    this.injectDependencies('$scope', '$stateParams', '$controller', 'Analytics', 'UserCsvService', 'OnboardService', 'Orgservice');
+    this.injectDependencies('$scope', '$stateParams', '$controller', 'Analytics', 'UserCsvService', 'OnboardService', 'Orgservice', 'FeatureToggleService', '$q');
 
     this.$state = {
       modal: {
@@ -26,6 +26,7 @@ describe('UserManageOrgController', function () {
       UserCsvService: this.UserCsvService,
       OnboardService: this.OnboardService,
       Orgservice: this.Orgservice,
+      FeatureToggleService: this.FeatureToggleService,
     });
     this.$scope.$apply();
   }
@@ -36,6 +37,7 @@ describe('UserManageOrgController', function () {
         success: false,
       });
     });
+    spyOn(this.FeatureToggleService, 'atlasEmailSuppressGetStatus').and.returnValue(this.$q.resolve(false));
 
     initController.apply(this);
   }
@@ -47,6 +49,19 @@ describe('UserManageOrgController', function () {
         totalResults: 1,
       });
     });
+    spyOn(this.FeatureToggleService, 'atlasEmailSuppressGetStatus').and.returnValue(this.$q.resolve(false));
+
+    initController.apply(this);
+  }
+
+  function initControllerAndUnlicensedUsersAndFeatureToggleOn() {
+    spyOn(this.Orgservice, 'getUnlicensedUsers').and.callFake(function (callback) {
+      callback({
+        success: true,
+        totalResults: 1,
+      });
+    });
+    spyOn(this.FeatureToggleService, 'atlasEmailSuppressGetStatus').and.returnValue(this.$q.resolve(true));
 
     initController.apply(this);
   }
@@ -118,7 +133,7 @@ describe('UserManageOrgController', function () {
 
   it('should go to users.manage.advanced.add.ob.installConnector', function () {
     initControllerAndDefaults.apply(this);
-    this.controller.manageType = 'advanced';
+    this.controller.manageType = 'advancedNoDS';
 
     this.controller.onNext();
     expect(this.$state.go).toHaveBeenCalledWith('users.manage.advanced.add.ob.installConnector');
@@ -134,5 +149,16 @@ describe('UserManageOrgController', function () {
       manageUsers: true,
     });
     expect(this.Analytics.trackAddUsers).not.toHaveBeenCalled();
+  });
+
+  it('when emailSuppress toggle is on, should go to users.manage.emailSuppress', function () {
+    initControllerAndUnlicensedUsersAndFeatureToggleOn.apply(this);
+    this.controller.manageType = 'manual';
+
+    this.controller.onNext();
+    expect(this.$state.go).toHaveBeenCalledWith('users.manage.emailSuppress', {
+      manageType: 'manual',
+      prevState: 'users.manage.org',
+    });
   });
 });

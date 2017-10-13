@@ -15,7 +15,6 @@ export default angular
   .module('cmc', [
     UserDetailsModule,
     orgServiceModule,
-    require('scripts/app.templates'),
   ])
   .component('cmcDetailsHeader', new CmcDetailsHeaderComponent())
   .component('cmcDetailsStatus', new CmcDetailsStatusComponent())

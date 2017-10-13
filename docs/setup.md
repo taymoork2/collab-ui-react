@@ -1,13 +1,13 @@
 ## Setup the environment
 
 * On macOS: install Xcode toolchain: `xcode-select --install`
-* Project requires node v6 and npm v3+.
+* Project requires node v6, npm v3+, and yarn v1.0.0+
 * Use [nvm](https://github.com/creationix/nvm) to manage your node versions
   * `nvm install lts/boron` to install the latest [LTS](https://github.com/nodejs/LTS) version
   * `nvm ls` to see list of locally available versions
   * `nvm ls-remote` to see list of installable versions
-* `npm install` to install project dependencies (need to rerun after branch updates for new dependencies)
-* `npm start` or `npm run serve` to serve the dev application
+* `yarn` to install project dependencies (need to rerun after branch updates for new dependencies)
+* `yarn start` or `yarn serve` to serve the dev application
 
 #### Alternative node/npm installation
 * If you dislike the convenience of a node version manager, you can install node/npm directly
@@ -29,7 +29,7 @@
 
 ## TypeScript Definitions
 
-* `npm run typings` to install configured TypeScript definitions from `typings.json`
+* `yarn typings` to install configured TypeScript definitions from `typings.json`
 * Definitions (\*.d.ts files) are installed under typings directory.
 * Microsoft VSCode automatically detects definition files and provides IntelliSense support (https://code.visualstudio.com/Docs/languages/javascript)
 * Add new TypeScript definitions using [typings (TypeScript Definition manager)](https://github.com/typings/typings)
@@ -37,6 +37,6 @@
 ## Adding External Dependencies
 
 * Dependencies are added to the project through npm
-* Add application dependencies with `npm install <package_name> --save`
-* Add build dependencies with `npm install <package_name> --save-dev`
+* Add application dependencies with `yarn add <package_name>`
+* Add build dependencies with `yarn add <package_name> --dev`
 * [`require`](https://webpack.github.io/docs/commonjs.html) the package in the application for webpack to bundle the dependency in the included module

@@ -1,6 +1,8 @@
 import './settings.component.scss';
 
 import { HuronSettingsComponent } from './settings.component';
+import { SettingsNewDirectiveFactory } from './settings-new.directive';
+import { SettingsEditDirectiveFactory } from './settings-edit.directive';
 import { CallSettingsComponent } from './settings-location.component';
 
 //module dependancy names
@@ -16,6 +18,7 @@ import timeZoneModule from 'modules/call/shared/settings-time-zone';
 import outboundDialDigitModule from 'modules/call/settings/settings-outbound-dial-digit';
 import companyVoicemailModule from 'modules/call/settings/settings-company-voicemail';
 import companyVoicemailAvrilModule from 'modules/call/settings/settings-company-voicemail-avril';
+import companyVoicemailAvrilI1559Module from 'modules/call/settings/settings-company-voicemail-avril-i1559';
 import companyVoicemailLocationModule from 'modules/call/settings/settings-company-voicemail-locations';
 import dialingModule from 'modules/call/settings/settings-dialing';
 import timeFormatModule from 'modules/call/settings/settings-time-format';
@@ -36,7 +39,6 @@ import trialRegionalSettings from 'modules/core/trials/regionalSettings';
 
 export default angular
   .module('call.settings', [
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     require('angular-translate'),
     require('modules/huron/pstn/pstn.service').default,
@@ -53,6 +55,7 @@ export default angular
     outboundDialDigitModule,
     companyVoicemailModule,
     companyVoicemailAvrilModule,
+    companyVoicemailAvrilI1559Module,
     companyVoicemailLocationModule,
     dialingModule,
     timeFormatModule,
@@ -74,4 +77,6 @@ export default angular
   ])
   .component('ucSettings', new HuronSettingsComponent())
   .component('ucCallSettings', new CallSettingsComponent())
+  .directive('ucSettingsNew', SettingsNewDirectiveFactory)
+  .directive('ucSettingsEdit', SettingsEditDirectiveFactory)
   .name;

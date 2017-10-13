@@ -4,6 +4,7 @@ import { CallFeaturesPage } from '../pages/callFeatures.page';
 import { AddHuntGroupPage } from '../pages/addHuntGroup.page';
 import { CallUserPage } from '../pages/callUser.page';
 import * as os from 'os';
+import * as featureToggle from '../../utils/featureToggle.utils';
 
 const callFeatures = new CallFeaturesPage();
 const addHuntGroup = new AddHuntGroupPage();
@@ -13,7 +14,10 @@ const now = Date.now();
 /* globals LONG_TIMEOUT, manageUsersPage, navigation, users, telephony */
 
 describe('Huron Functional: adding-huntgroup', () => {
-  const customer = huronCustomer('adding-huntgroup');
+  const customer = huronCustomer({
+    test: 'adding-huntgroup',
+    users: { noOfUsers: 3, noOfDids: 0 },
+  });
   beforeAll(done => {
     provisioner.provisionCustomerAndLogin(customer)
       .then(done);
@@ -42,6 +46,10 @@ describe('Huron Functional: adding-huntgroup', () => {
 
     it('should navigate to manually add user with "email" or "Names and email" when hit "Next"', () => {
       utils.click(manageUsersPage.buttons.next);
+      if (featureToggle.features.atlasEmailSuppress) {
+        utils.wait(manageUsersPage.emailSuppress.emailSuppressIcon);
+        utils.click(manageUsersPage.buttons.next);
+      }
       utils.expectIsDisplayed(manageUsersPage.manual.emailAddress.addUsersField, LONG_TIMEOUT);
       utils.expectIsDisplayed(manageUsersPage.manual.radio.emailAddress);
       utils.click(manageUsersPage.manual.radio.emailAddress);
@@ -67,11 +75,11 @@ describe('Huron Functional: adding-huntgroup', () => {
         utils.expectIsEnabled(manageUsersPage.buttons.next);
       });
       utils.click(manageUsersPage.buttons.next);
-      utils.expectIsDisplayed(addUser.sparkCallRadio);
     });
 
     it('should select Cisco Spark Call', () => {
       utils.expectIsEnabled(manageUsersPage.buttons.save);
+      utils.waitForPresence(addUser.sparkCallRadio, 6000);
       utils.click(addUser.sparkCallRadio);
       utils.expectIsEnabled(manageUsersPage.buttons.next);
     });
@@ -248,8 +256,8 @@ describe('Huron Functional: adding-huntgroup', () => {
     });
 
     it('should input pilot number', () => {
-      utils.sendKeys(addHuntGroup.inputNumber, '310');
-      browser.driver.sleep(500);
+      utils.sendKeys(addHuntGroup.inputNumber, '325');
+      browser.driver.sleep(1000);
       utils.sendKeys(addHuntGroup.inputNumber, protractor.Key.ENTER);
     });
 
@@ -269,8 +277,8 @@ describe('Huron Functional: adding-huntgroup', () => {
     });
 
     it('should input second pilot number', () => {
-      utils.sendKeys(addHuntGroup.inputNumber, '311');
-      browser.driver.sleep(500);
+      utils.sendKeys(addHuntGroup.inputNumber, '326');
+      browser.driver.sleep(1000);
       utils.sendKeys(addHuntGroup.inputNumber, protractor.Key.ENTER);
     });
     it('should displays both the cards', () => {
@@ -335,7 +343,7 @@ describe('Huron Functional: adding-huntgroup', () => {
     it('should start selecting members', () => {
       utils.click(addHuntGroup.enableBtn);
       utils.sendKeys(addHuntGroup.inputMember, `${os.userInfo().username}`);
-      browser.driver.sleep(500);
+      browser.driver.sleep(1000);
       utils.sendKeys(addHuntGroup.inputNumber, protractor.Key.ENTER);
     });
 
@@ -380,7 +388,7 @@ describe('Huron Functional: adding-huntgroup', () => {
 
     it('should enter internal destination', () => {
       utils.sendKeys(addHuntGroup.inputMember, `${os.userInfo().username}`);
-      browser.driver.sleep(500);
+      browser.driver.sleep(1000);
       utils.sendKeys(addHuntGroup.inputNumber, protractor.Key.ENTER);
     });
 

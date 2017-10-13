@@ -9,7 +9,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     .controller('UserListCtrl', UserListCtrl);
 
   /* @ngInject */
-  function UserListCtrl($q, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Auth, Config, FeatureToggleService, GridCellService,
+  function UserListCtrl($q, $rootScope, $scope, $state, $timeout, $translate, Authinfo, Config, FeatureToggleService, GridCellService,
     Log, LogMetricsService, Notification, Orgservice, Userservice, UserListService, Utils, DirSyncService, UserOverviewService) {
     var vm = this;
 
@@ -44,7 +44,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
       order: 'ascending',
     };
     $scope.placeholder = {
-      name: $translate.instant('usersPage.all'),
+      name: $translate.instant('common.all'),
       filterValue: '',
       count: 0,
     };
@@ -94,6 +94,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     vm.firstOfType = firstOfType;
     vm.isValidThumbnail = Userservice.isValidThumbnail;
     vm.getUserPhoto = Userservice.getUserPhoto;
+    vm.getImageAria = getImageAria;
     vm.showUserDetails = showUserDetails;
     vm.selectRow = selectRow;
 
@@ -109,7 +110,6 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
       var promises = {
         atlasEmailStatus: FeatureToggleService.atlasEmailStatusGetStatus(),
         configureGrid: vm.configureGrid(),
-        isOnlineOrg: Auth.isOnlineOrg(),
       };
 
       $q.all(promises).then(function (results) {
@@ -149,10 +149,6 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
           getUserList();
         }
       });
-    }
-
-    function getTemplate(name) {
-      return $templateCache.get('modules/core/users/userList/templates/' + name + '.html');
     }
 
     function getUserList(startAt) {
@@ -539,7 +535,8 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
       var columnDefs = [{
         field: 'photos',
         displayName: '',
-        cellTemplate: getTemplate('photoCell.tpl'),
+        cellTemplate: require('./templates/photoCell.tpl.html'),
+        headerCellTemplate: '<div class="ui-grid-cell-contents" aria-label="{{:: \'usersPage.userImage\' | translate}}" tabindex="0"></div>',
         width: 70,
       }, {
         field: 'name.givenName',
@@ -566,11 +563,11 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
         id: 'userStatus',
         cellFilter: 'userListFilter',
         displayName: $translate.instant('usersPage.status'),
-        cellTemplate: getTemplate('status.tpl'),
+        cellTemplate: require('./templates/status.tpl.html'),
       }, {
         field: 'action',
         displayName: $translate.instant('usersPage.actionHeader'),
-        cellTemplate: getTemplate('actions.tpl'),
+        cellTemplate: require('./templates/actions.tpl.html'),
       }];
 
       function onRegisterApi(gridApi) {
@@ -602,6 +599,10 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
 
     function deselectRow() {
       $scope.currentUser = null;
+    }
+
+    function getImageAria(user) {
+      return user.displayName + ' ' + $translate.instant('usersPage.userImage');
     }
 
     function selectRow(grid, row) {

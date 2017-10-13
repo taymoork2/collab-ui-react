@@ -247,6 +247,40 @@
               {{callTrial.validationMessages.phone7832.trialDeviceQuantityValidator}}
               </div>
             </div>
+
+            <!-- 8841 -->
+            <div class="cs-checkbox-group medium-12">
+              <input
+                cs-input
+                type="checkbox"
+                ng-model="callTrial.phone8841.enabled"
+                id="trial--devices--phone8841"
+                name="trialDevicesPhone8841"
+                ng-change="callTrial.setQuantityInputDefault(callTrial.phone8841)"
+                ng-disabled="!callTrial.canAddCallDevice"
+                cs-input-label="{{::'trialModal.call.phone8841' | translate}}"
+                cs-input-group-size="medium-6 medium-offset-1">
+              <input
+                cs-input
+                type="number"
+                ng-model="callTrial.phone8841.quantity"
+                id="trial--devices--phone8841Quantity"
+                name="trialDevicesPhone8841Quantity"
+                min="0"
+                cs-input-label="{{:: 'trialModal.call.quantity' | translate}}"
+                cs-input-group-size="pull-left medium-5 label-left label-medium-6"
+                cs-input-size="medium-5 medium-offset-1"
+                trial-device-quantity-validator="{type: 'callDevices', name: 'phone8841'}"
+                error-messages="callTrial.validationMessages.phone8841"
+                ng-model-options="{ allowInvalid: true}"
+                ng-required="callTrial.phone8841.enabled"
+                ng-disabled="callTrial.areTemplateOptionsDisabled(callTrial.phone8841)">
+            </div>
+            <div ng-messages="trialForm.trialDevicesPhone8841Quantity.$error" class="cs-input__messages error medium-11 medium-offset-1">
+              <div ng-message="trialDeviceQuantityValidator" class="message">
+                {{callTrial.validationMessages.phone8841.trialDeviceQuantityValidator}}
+               </div>
+             </div>
             <!-- 7841 -->
             <div class="cs-checkbox-group medium-12">
               <input
@@ -340,8 +374,10 @@
           <div class="pull-left medium-8 with-slim-offset" ng-hide="callTrial.selectedCountryCode !== 'US'">
             <label translate="trialModal.call.state" for="state"/>
             <cs-select
+              aria-text="{{::'trialModal.call.state' | translate}}"
               ng-model="callTrial.shippingInfo.state"
               options="callTrial.usStates"
+              placeholder="::'common.select' | translate"
               id="trial--devices--state"
               name="trialDevicesState"
               labelfield="abbr"
@@ -376,10 +412,12 @@
           <div class="medium-12 cs-input-group">
             <label for="country" translate="trialModal.call.country"/>
             <cs-select
+              aria-text="{{::'trialModal.call.country' | translate}}"
               ng-model="callTrial.shippingInfo.country"
               id="trial--devices--country"
               name="trialDevicesCountry"
               options="callTrial.countries"
+              placeholder="::'common.select' | translate"
               ng-required="true"
               ng-change-fn="callTrial.countryChanged()">
             </cs-select>

@@ -101,6 +101,7 @@ describe('Controller: AAInsertionElementCtrl', function () {
         htmlModel: encodeURIComponent(ele),
       }];
       menuEntry.addAction(action);
+      spyOn($rootScope, '$broadcast');
       var variableSelection = {
         label: 'testVar',
         value: 'testVal',
@@ -119,6 +120,7 @@ describe('Controller: AAInsertionElementCtrl', function () {
       $scope.$apply();
       expect(controller.elementText).toBe('testVar');
       expect(controller.readAs).toBe('testValRead');
+      expect($rootScope.$broadcast).toHaveBeenCalledWith('CE Updated');
     });
 
     it('elementText and readAs values should be updated upon calling mainClickFn from REST block', function () {
@@ -176,6 +178,7 @@ describe('Controller: AAInsertionElementCtrl', function () {
           return true;
         },
         focus: function () {},
+        remove: function () {},
       };
       var rangeGetter = function () {
         var range = {
@@ -197,6 +200,7 @@ describe('Controller: AAInsertionElementCtrl', function () {
       };
       spyOn(angular, 'element').and.returnValue(dynamicElement);
       spyOn(dynamicElement, 'focus');
+      spyOn(dynamicElement, 'remove');
       spyOn(dynamicElement, 'scope').and.returnValue(scopeElement);
       spyOn(scopeElement, 'insertElement');
       spyOn($window, 'getSelection').and.returnValue({

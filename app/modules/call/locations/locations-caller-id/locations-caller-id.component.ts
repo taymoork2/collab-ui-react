@@ -13,6 +13,7 @@ class LocationCallerIdCtrl implements ng.IComponentController {
   public onChangeFn: Function;
   public onNumberFilter: Function;
   public locationCallerIdEnabled: boolean;
+  public size: string;
 
 
   /* @ngInject */
@@ -44,7 +45,8 @@ class LocationCallerIdCtrl implements ng.IComponentController {
     if (value) {
       this.callerId = new LocationCallerId({
         name: this.companyName,
-        number: null,
+        number: '',
+        uuid: '',
       });
       this.onChange(this.callerId);
     } else {
@@ -73,6 +75,9 @@ class LocationCallerIdCtrl implements ng.IComponentController {
   }
 
   public onChange(callerId: LocationCallerId | null): void {
+    if (callerId && callerId.uuid) {
+      callerId.uuid = undefined;
+    }
     this.onChangeFn({
       callerId: _.cloneDeep(callerId),
     });
@@ -82,7 +87,7 @@ class LocationCallerIdCtrl implements ng.IComponentController {
 
 export class LocationCallerIdComponent implements ng.IComponentOptions {
   public controller = LocationCallerIdCtrl;
-  public templateUrl = 'modules/call/locations/locations-caller-id/locations-caller-id.component.html';
+  public template = require('modules/call/locations/locations-caller-id/locations-caller-id.component.html');
   public bindings = {
     showLabel: '<',
     callerId: '<',
@@ -92,5 +97,6 @@ export class LocationCallerIdComponent implements ng.IComponentOptions {
     companyName: '<',
     onNumberFilter: '&',
     onChangeFn: '&',
+    size: '&',
   };
 }

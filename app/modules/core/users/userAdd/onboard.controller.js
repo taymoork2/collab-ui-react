@@ -8,7 +8,7 @@ require('./_user-add.scss');
     .controller('OnboardCtrl', OnboardCtrl);
 
   /*@ngInject*/
-  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Analytics, Authinfo, Config, FeatureToggleService, DialPlanService, Log, LogMetricsService, MessengerInteropService, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, LocationsService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact, ServiceSetup, ExternalNumberPool, DirSyncService) {
+  function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Analytics, Authinfo, Config, FeatureToggleService, DialPlanService, Log, LogMetricsService, MessengerInteropService, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, LocationsService, NumberService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact, ServiceSetup, ExternalNumberPool, DirSyncService) {
     var vm = this;
 
     $scope.hasAccount = Authinfo.hasAccount();
@@ -31,6 +31,8 @@ require('./_user-add.scss');
     $scope.searchPlaceholder = $translate.instant('usersPage.convertUserSearch');
     $scope.manageUsers = $stateParams.manageUsers;
 
+    $scope.labelField = '';
+
     $scope.loadLocations = loadLocations;
     $scope.loadInternalNumberPool = loadInternalNumberPool;
     $scope.loadExternalNumberPool = loadExternalNumberPool;
@@ -50,7 +52,6 @@ require('./_user-add.scss');
     $scope.processing = false;
     $scope.PATTERN_LIMIT = 50;
     $scope.messagingLicenseAvailability = 0;
-    $scope.communicationsLicenseAvailability = 0;
     $scope.conferencingLicenseAvailability = 0;
     $scope.dirSyncConnectorDownload = 'https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/DirectoryConnector.zip';
 
@@ -107,6 +108,8 @@ require('./_user-add.scss');
     $scope.shouldAddCallService = shouldAddCallService;
     $scope.cancelModal = cancelModal;
     var currentUserHasCall = false;
+    $scope.currentUserEnablesCall = false;
+    $scope.currentUserCommFeature = $scope.selectedCommFeature = null;
 
     $scope.isCareAndCDCEnabled = Authinfo.isCareAndCDC();
     $scope.isCareAndCVCEnabled = Authinfo.isCareVoiceAndCVC();
@@ -127,14 +130,11 @@ require('./_user-add.scss');
     function setLicenseAvailability() {
       return Orgservice.getLicensesUsage()
         .then(function (result) {
-          $scope.licenses = result[0].licenses;
+          $scope.licenses = _.get(result, '[0].licenses', []);
           _.forEach($scope.licenses, function (license) {
             switch (license.licenseType) {
               case Config.licenseTypes.MESSAGING:
                 $scope.messagingLicenseAvailability = license.volume - license.usage;
-                break;
-              case Config.licenseTypes.COMMUNICATION:
-                $scope.communicationLicenseAvailability = license.volume - license.usage;
                 break;
               case Config.licenseTypes.CONFERENCING:
                 $scope.conferencingLicenseAvailability = license.volume - license.usage;
@@ -156,11 +156,35 @@ require('./_user-add.scss');
       }
     };
 
+    $scope.checkCommLicenseAvailability = function (licenseModel, commFeature) {
+      if (!commFeature) {
+        return;
+      }
+      if (licenseModel) {
+        $scope.currentUserEnablesCall = true;
+        $scope.selectedCommFeature = commFeature;
+      } else {
+        $scope.currentUserEnablesCall = false;
+        $scope.selectedCommFeature = null;
+        return;
+      }
+      var availableLicenses = commFeature.license.volume - commFeature.license.usage;
+      if (availableLicenses < $scope.currentUserCount) {
+        $scope.licenseCheckModal();
+      }
+    };
+
+    $scope.disableCommCheckbox = function (commFeature) {
+      return $scope.currentUserEnablesCall
+        && $scope.selectedCommFeature
+        && commFeature.license.licenseId !== $scope.selectedCommFeature.license.licenseId;
+    };
+
     $scope.licenseCheckModal = function () {
       if (Authinfo.isOnline()) {
         $modal.open({
           type: 'dialog',
-          templateUrl: 'modules/core/users/userAdd/licenseErrorModal.tpl.html',
+          template: require('modules/core/users/userAdd/licenseErrorModal.tpl.html'),
         }).result.then(function () {
           $previousState.forget('modalMemo');
           $state.go('my-company.subscriptions');
@@ -193,6 +217,9 @@ require('./_user-add.scss');
     }
 
     var rootState = $previousState.get().state.name;
+    if (rootState === 'users.manage.emailSuppress') {
+      rootState = 'users.manage.picker';
+    }
     $scope.onBack = function (state) {
       var goToState = state || rootState;
       Analytics.trackAddUsers(Analytics.eventNames.BACK, Analytics.sections.ADD_USERS.uploadMethods.MANUAL, { emailEntryMethod: Analytics.sections.ADD_USERS.manualMethods[$scope.model.userInputOption.toString()] });
@@ -238,19 +265,19 @@ require('./_user-add.scss');
     function returnInternalNumberlist(pattern, locationUuid) {
       if ($scope.ishI1484) {
         loadLocationInternalNumberPool(pattern, locationUuid);
-      } else if (pattern) {
-        loadInternalNumberPool(pattern);
       } else {
-        return $scope.internalNumberPool;
+        loadInternalNumberPool(pattern);
       }
     }
 
     function loadLocationInternalNumberPool(pattern, locationUuid, userEntity) {
-      return TelephonyInfoService.loadLocationInternalNumberPool(pattern, $scope.PATTERN_LIMIT, locationUuid)
+      $scope.labelField = 'siteToSite';
+      $scope.order = 'SITETOSITE-ASC';
+      return NumberService.getNumberList(pattern, 'internal', false, $scope.order, null, null, locationUuid)
         .then(function (internalNumberPool) {
           $scope.internalNumberPool = internalNumberPool;
           if (userEntity) {
-            userEntity.assignedDn.pattern = internalNumberPool[0].pattern;
+            userEntity.assignedDn.pattern = internalNumberPool[0].internal;
           }
           return $scope.internalNumberPool;
         }).catch(function (response) {
@@ -260,12 +287,14 @@ require('./_user-add.scss');
     }
 
     function loadInternalNumberPool(pattern) {
-      return TelephonyInfoService.loadInternalNumberPool(pattern, $scope.PATTERN_LIMIT).then(function (internalNumberPool) {
-        $scope.internalNumberPool = internalNumberPool;
-      }).catch(function (response) {
-        $scope.internalNumberPool = [];
-        Notification.errorResponse(response, 'directoryNumberPanel.internalNumberPoolError');
-      });
+      $scope.labelField = 'number';
+      return NumberService.getNumberList(pattern, 'internal', false, null, null, null, null)
+        .then(function (internalNumberPool) {
+          $scope.internalNumberPool = internalNumberPool;
+        }).catch(function (response) {
+          $scope.internalNumberPool = [];
+          Notification.errorResponse(response, 'directoryNumberPanel.internalNumberPoolError');
+        });
     }
 
     function loadLocations() {
@@ -274,7 +303,7 @@ require('./_user-add.scss');
           .then(function (locationOptions) {
             $scope.locationOptions = locationOptions;
             _.forEach(locationOptions, function (result) {
-              if (result.defaultLocation == true) {
+              if (result.defaultLocation === true) {
                 _.forEach($scope.usrlist, function (data) {
                   data.selectedLocation = { uuid: result.uuid, name: result.name };
                   $scope.selectedLocation = data.selectedLocation.uuid;
@@ -376,12 +405,18 @@ require('./_user-add.scss');
       };
       for (var i = 0; i < $scope.usrlist.length - 1; i++) {
         for (var j = i + 1; j < $scope.usrlist.length; j++) {
-          if (!_.isUndefined($scope.usrlist[i].assignedDn) && !_.isUndefined($scope.usrlist[j].assignedDn) && ($scope.usrlist[i].assignedDn.uuid !== 'none') && ($scope.usrlist[i].assignedDn.pattern === $scope.usrlist[j].assignedDn.pattern)) {
-            //same extension across different locations are allowed to be set
-            if ($scope.ishI1484 && $scope.usrlist[i].selectedLocation.uuid !== $scope.usrlist[j].selectedLocation.uuid) {
-              break;
+          if ($scope.ishI1484) {
+            if (!_.isUndefined($scope.usrlist[i].assignedDn) && !_.isUndefined($scope.usrlist[j].assignedDn) && ($scope.usrlist[i].assignedDn.uuid !== 'none') && ($scope.usrlist[i].assignedDn.siteToSite === $scope.usrlist[j].assignedDn.siteToSite)) {
+              //same extension across different locations are allowed to be set
+              if ($scope.usrlist[i].selectedLocation.uuid !== $scope.usrlist[j].selectedLocation.uuid) {
+                break;
+              }
+              didDnDupe.dnDupe = true;
             }
-            didDnDupe.dnDupe = true;
+          } else {
+            if (!_.isUndefined($scope.usrlist[i].assignedDn) && !_.isUndefined($scope.usrlist[j].assignedDn) && ($scope.usrlist[i].assignedDn.uuid !== 'none') && ($scope.usrlist[i].assignedDn.number === $scope.usrlist[j].assignedDn.number)) {
+              didDnDupe.dnDupe = true;
+            }
           }
           if (!_.isUndefined($scope.usrlist[i].externalNumber) && !_.isUndefined($scope.usrlist[j].externalNumber) && ($scope.usrlist[i].externalNumber.uuid !== 'none') && ($scope.usrlist[i].externalNumber.pattern === $scope.usrlist[j].externalNumber.pattern)) {
             didDnDupe.didDupe = true;
@@ -418,8 +453,8 @@ require('./_user-add.scss');
 
     function initToggles() {
       FeatureToggleService.supports(FeatureToggleService.features.hI1484)
-        .then(function (ishI1484) {
-          $scope.ishI1484 = ishI1484;
+        .then(function (supports) {
+          $scope.ishI1484 = supports;
         });
     }
 
@@ -504,7 +539,7 @@ require('./_user-add.scss');
           _.forEach($scope.usrlist, function (user, userIndex) {
             if ($scope.usrlist[userIndex].selectedLocation.uuid === selectedLocationColumn) {
               _.forEach(internalNumberPool, function (internalNumber, index) {
-                if (internalNumberPool[index].pattern == $scope.usrlist[userIndex].assignedDn.pattern) {
+                if (internalNumberPool[index].siteToSite === $scope.usrlist[userIndex].assignedDn.siteToSite) {
                   //if the number is present on the grid, then set its index position to 1 on the copyArray
                   copyArray[index] = 1;
                 }
@@ -514,7 +549,7 @@ require('./_user-add.scss');
           for (var i = 0; i < copyArray.length; i++) {
             //pick the first number which is not already on the grid, in copy array, the element is not 1, and that index from the internalNumberPool
             if (copyArray[i] !== 1) {
-              rowEntity.assignedDn.pattern = internalNumberPool[i].pattern;
+              rowEntity.assignedDn.siteToSite = internalNumberPool[i].siteToSite;
               break;
             }
           }
@@ -549,7 +584,7 @@ require('./_user-add.scss');
     $scope.confirmAdditionalServiceSetup = function () {
       $modal.open({
         type: 'dialog',
-        templateUrl: 'modules/core/users/userAdd/confirmLeavingDialog.tpl.html',
+        template: require('modules/core/users/userAdd/confirmLeavingDialog.tpl.html'),
       }).result.then(function () {
         $state.go('firsttimewizard');
       });
@@ -697,15 +732,15 @@ require('./_user-add.scss');
     }
 
     if (userEnts) {
-      for (var x = 0; x < userEnts.length; x++) {
-        if (userEnts[x] === 'ciscouc') {
-          $scope.radioStates.commRadio = true;
-          currentUserHasCall = true;
-        } else if (userEnts[x] === 'squared-room-moderation') {
-          $scope.radioStates.msgRadio = true;
-        } else if (userEnts[x] === 'cloud-contact-center') {
-          setCareService();
-        }
+      if (userEnts.indexOf('ciscouc') > -1) {
+        currentUserHasCall = true;
+        $scope.currentUserEnablesCall = true;
+      }
+      if (userEnts.indexOf('squared-room-moderation') > -1) {
+        $scope.radioStates.msgRadio = true;
+      }
+      if (userEnts.indexOf('cloud-contact-center') > -1) {
+        setCareService();
       }
     }
 
@@ -733,7 +768,7 @@ require('./_user-add.scss');
     }
 
     function shouldAddCallService() {
-      return !currentUserHasCall && ($scope.radioStates.commRadio || $scope.entitlements.ciscoUC);
+      return !currentUserHasCall && ($scope.currentUserEnablesCall || $scope.entitlements.ciscoUC);
     }
 
     function createFeatures(obj) {
@@ -938,6 +973,43 @@ require('./_user-add.scss');
       }
       if (services.communication) {
         $scope.communicationFeatures = $scope.communicationFeatures.concat(services.communication);
+        Orgservice.getLicensesUsage()
+          .then(function (licenseUsages) {
+            // Set the Spark Call checkbox and usage
+            var commLicenseID = '';
+            if (currentUserHasCall) {
+              // validCallLicenses should be array of valid 'CO_' licenseIds
+              var licenses = _.flatMap(licenseUsages, 'licenses');
+              var licenseIds = _.map(licenses, 'licenseId');
+              var validCallLicenses = _.filter(licenseIds, function (licenseId) {
+                return _.startsWith(licenseId, 'CO_');
+              });
+              commLicenseID = _.find(userLicenseIds, function (license) {
+                return _.startsWith(license, 'CO_') && validCallLicenses.indexOf(license) !== -1;
+              });
+            }
+
+            _.forEach($scope.communicationFeatures, function (commFeature) {
+              // Set current communication license checkbox
+              if (!_.isUndefined(commFeature.license.licenseId) &&
+                commFeature.license.licenseId === commLicenseID) {
+                commFeature.commRadio = true;
+                $scope.currentUserCommFeature = $scope.selectedCommFeature = commFeature;
+              } else {
+                commFeature.commRadio = false;
+              }
+              // Set communication license usage
+              commFeature.license.usage = 0;
+              _.forEach(licenseUsages, function (licenseUsage) {
+                var index = _.findIndex(licenseUsage.licenses, function (license) {
+                  return license.licenseId === commFeature.license.licenseId;
+                });
+                if (index >= 0) {
+                  commFeature.license.usage = licenseUsage.licenses[index].usage;
+                }
+              });
+            });
+          });
       }
       if (services.care) {
         $scope.careFeatures = $scope.careFeatures.concat(services.care);
@@ -973,7 +1045,7 @@ require('./_user-add.scss');
       'refresh-data-fn="grid.appScope.returnInternalNumberlist(filter, row.entity.selectedLocation.uuid)" wait-time="0" ' +
       'placeholder="placeholder" input-placeholder="inputPlaceholder" ' +
       'on-change-fn="grid.appScope.syncGridDidDn(row.entity, \'internalNumber\')"' +
-      'labelfield="pattern" valuefield="uuid" required="true" filter="true"' +
+      'labelfield="{{grid.appScope.labelField}}" valuefield="uuid" required="true" filter="true"' +
       ' is-warn="{{grid.appScope.checkDnOverlapsSteeringDigit(row.entity)}}" warn-msg="{{\'usersPage.steeringDigitOverlapWarning\' | translate: { steeringDigitInTranslation: telephonyInfo.steeringDigit } }}" > </cs-select></div>' +
       '<div ng-show="row.entity.assignedDn === undefined"> ' +
       '<cs-select name="noInternalNumber" ' +
@@ -1004,7 +1076,7 @@ require('./_user-add.scss');
     $scope.noExternalNum = $translate.instant('usersPage.notApplicable');
 
     $scope.$watch('model.userList', function (newVal, oldVal) {
-      if (newVal != oldVal) {
+      if (newVal !== oldVal) {
         $scope.usrlist = addressparser.parse($scope.model.userList);
       }
     });
@@ -1025,8 +1097,8 @@ require('./_user-add.scss');
       }
     }, true);
 
-    $scope.$watch('radioStates.commRadio', function (newVal, oldVal) {
-      if (newVal != oldVal) {
+    $scope.$watch('currentUserEnablesCall', function (newVal, oldVal) {
+      if (newVal !== oldVal) {
         // Store value of checkbox in service (cast to bool)
         OnboardService.huronCallEntitlement = !!newVal;
 
@@ -1218,13 +1290,32 @@ require('./_user-add.scss');
           }
         }
 
-        // Communication: straightforward license, for now
-        var commIndex = $scope.radioStates.commRadio ? 1 : 0;
-        var selCommService = $scope.communicationFeatures[commIndex];
-        if ('licenseId' in selCommService.license) {
-          licenseList.push(new LicenseFeature(selCommService.license.licenseId, true));
-        } else if ((action === 'patch') && ($scope.communicationFeatures.length > 1) && ('licenseId' in $scope.communicationFeatures[1].license)) {
-          licenseList.push(new LicenseFeature($scope.communicationFeatures[1].license.licenseId, false));
+        // Communication
+        if (currentUserHasCall) { // has existing communication license
+          var currentLicenseId = _.get($scope.currentUserCommFeature, 'license.licenseId');
+          if ($scope.currentUserEnablesCall) { // has selected a communication license
+            // check if the license is the same, if not, do the move
+            var selectedLicenseId = _.get($scope.selectedCommFeature, 'license.licenseId');
+            if (currentLicenseId !== selectedLicenseId) {
+              // move license & prevent undefined licenseIds from being passed on to LicenseFeature/licenseList
+              if (currentLicenseId) {
+                licenseList.push(new LicenseFeature(currentLicenseId, false));
+              }
+              if (selectedLicenseId) {
+                licenseList.push(new LicenseFeature(selectedLicenseId, true));
+              }
+            }
+          } else {
+            // delete license & prevent undefined licenseIds from being passed on to LicenseFeature/licenseList
+            if (action === 'patch' && currentLicenseId) {
+              licenseList.push(new LicenseFeature(currentLicenseId, false));
+            }
+          }
+        } else { // no existing communication license
+          if ($scope.currentUserEnablesCall) {
+            // add new license (may select trial)
+            licenseList.push(new LicenseFeature($scope.selectedCommFeature.license.licenseId, true));
+          }
         }
 
         // BEGIN: Care License provisioning for users
@@ -1326,7 +1417,11 @@ require('./_user-add.scss');
 
       // make sure we have any internal extension and direct line set up for the users
       _.forEach(users, function (user) {
-        user.internalExtension = _.get(user, 'assignedDn.pattern');
+        if (!$scope.ishI1484) {
+          user.internalExtension = _.get(user, 'assignedDn.number');
+        } else {
+          user.internalExtension = _.get(user, 'assignedDn.internal');
+        }
         if ($scope.ishI1484 && $scope.locationOptions.length > 1) {
           user.location = _.get(user, 'selectedLocation.uuid');
         }
@@ -1831,16 +1926,23 @@ require('./_user-add.scss');
 
         _.each(usersList, function (userItem) {
           var userAndDnObj = $scope.usrlist.filter(function (user) {
-            return (user.address == userItem.address);
+            return (user.address === userItem.address);
           });
 
           if ($scope.ishI1484 && $scope.locationOptions.length > 1) {
             userItem.location = userAndDnObj[0].selectedLocation.uuid;
           }
 
-          if (userAndDnObj[0].assignedDn && userAndDnObj[0].assignedDn.pattern.length > 0) {
-            userItem.internalExtension = userAndDnObj[0].assignedDn.pattern;
+          if ($scope.ishI1484) {
+            if (userAndDnObj[0].assignedDn && userAndDnObj[0].assignedDn.siteToSite.length > 0) {
+              userItem.internalExtension = userAndDnObj[0].assignedDn.internal;
+            }
+          } else {
+            if (userAndDnObj[0].assignedDn && userAndDnObj[0].assignedDn.number.length > 0) {
+              userItem.internalExtension = userAndDnObj[0].assignedDn.number;
+            }
           }
+
           if (userAndDnObj[0].externalNumber && userAndDnObj[0].externalNumber.uuid !== 'none') {
             userItem.directLine = userAndDnObj[0].externalNumber.pattern;
           }

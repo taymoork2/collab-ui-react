@@ -2,7 +2,7 @@ import { LineService, LineConsumerType, Line, LINE_CHANGE } from 'modules/huron/
 import { IActionItem } from 'modules/core/components/sectionTitle/sectionTitle.component';
 import { IFeature } from 'modules/core/components/featureList/featureList.component';
 import { PlaceCallOverviewService, PlaceCallOverviewData } from './placeCallOverview.service';
-
+import { PrimaryLineService, PrimaryNumber, IPrimaryLineFeature } from 'modules/huron/primaryLine';
 class PlaceCallOverview implements ng.IComponentController {
 
   public currentPlace;
@@ -20,7 +20,13 @@ class PlaceCallOverview implements ng.IComponentController {
   public placeCallOverviewData: PlaceCallOverviewData;
   public displayDescription: string;
   public wide: boolean = true;
-
+  public isprov3698: boolean = false;
+  public primaryLineEnabled: boolean;
+  public userPrimaryNumber: PrimaryNumber;
+  public isPrimaryLineFeatureEnabled: boolean = false;
+  private showPhoneButtonLayout: boolean = false;
+  public primaryLineFeature: IPrimaryLineFeature;
+  public buttonLayoutPromise: any;
 
   /* @ngInject */
   constructor(
@@ -28,9 +34,12 @@ class PlaceCallOverview implements ng.IComponentController {
     private $state: ng.ui.IStateService,
     $stateParams: any,
     private $translate: ng.translate.ITranslateService,
+    private FeatureToggleService,
     CsdmDataModelService: any,
     private LineService: LineService,
     private PlaceCallOverviewService: PlaceCallOverviewService,
+    private PrimaryLineService: PrimaryLineService,
+    private $q: ng.IQService,
   ) {
 
     this.displayPlace($stateParams.currentPlace);
@@ -46,9 +55,13 @@ class PlaceCallOverview implements ng.IComponentController {
 
   public $onInit(): void {
     if (this.hasSparkCall) {
+      this.buttonLayoutPromise = this.FeatureToggleService.supports(this.FeatureToggleService.features.huronPhoneButtonLayout)
+      .then(result => {
+        this.showPhoneButtonLayout = result;
+      });
       this.initActions();
-      this.initFeatures();
       this.initNumbers();
+      this.initServices();
     }
   }
 
@@ -67,6 +80,24 @@ class PlaceCallOverview implements ng.IComponentController {
     }
   }
 
+  private initServices(): void {
+    const promises  = {
+      1: this.LineService.getLineList(LineConsumerType.PLACES, this.currentPlace.cisUuid, this.wide),
+      2: this.PrimaryLineService.isPrimaryLineFeatureEnabled(),
+      3: this.PlaceCallOverviewService.getCmiPlaceInfo(this.currentPlace.cisUuid),
+    };
+    this.$q.all(promises).then( data => {
+      this.directoryNumbers = data[1];
+      this.isPrimaryLineFeatureEnabled = data[2];
+      this.userPrimaryNumber = _.get(data[3], 'primaryNumber');
+      this.checkPrimaryLineFeature(this.userPrimaryNumber);
+    }).then (() => {
+      this.buttonLayoutPromise.finally(() => {
+        this.initFeatures();
+      });
+    });
+  }
+
   private initFeatures(): void {
     this.features = [];
     if (this.currentPlace.type === 'huron') {
@@ -76,7 +107,19 @@ class PlaceCallOverview implements ng.IComponentController {
         detail: undefined,
         actionAvailable: true,
       };
-      this.features.push(service);
+      if (!this.showPhoneButtonLayout) {
+        this.features.push(service);
+      }
+
+      const phoneButtonLayoutService: IFeature = {
+        name: this.$translate.instant('telephonyPreview.phoneButtonLayout'),
+        state: 'phoneButtonLayout',
+        detail: undefined,
+        actionAvailable: true,
+      };
+      if (this.showPhoneButtonLayout) {
+        this.features.push(phoneButtonLayoutService);
+      }
 
       const cosService: IFeature = {
         name: this.$translate.instant('serviceSetupModal.cos.title'),
@@ -95,6 +138,17 @@ class PlaceCallOverview implements ng.IComponentController {
         actionAvailable: true,
       };
       this.features.push(transferService);
+    }
+
+    if (this.currentPlace.type === 'huron' && this.isPrimaryLineFeatureEnabled) {
+      const primaryLineService: IFeature = {
+        name: this.$translate.instant('primaryLine.title'),
+        state: 'primaryLine',
+        detail: this.primaryLineEnabled ? this.$translate.instant('primaryLine.primaryLineLabel')
+                                        : this.$translate.instant('primaryLine.autoLabel'),
+        actionAvailable: true,
+      };
+      this.features.push(primaryLineService);
     }
   }
 
@@ -139,14 +193,27 @@ class PlaceCallOverview implements ng.IComponentController {
   }
 
   public clickFeature(feature: IFeature) {
+    const lineSelection = {
+      primaryLineEnabled: this.primaryLineEnabled,
+      module: 'place',
+    };
     this.$state.go('place-overview.communication.' + feature.state, {
       currentPlace: this.currentPlace,
+      lineSelection: lineSelection,
     });
-    this.onCancelPreferredLanguage();
+  }
+
+  private checkPrimaryLineFeature(userPrimaryNumber: PrimaryNumber): void {
+    if (!_.isEmpty(userPrimaryNumber)) {
+      this.primaryLineEnabled = userPrimaryNumber.alwaysUseForOutboundCalls;
+    }
+    if (!this.PrimaryLineService.checkIfMultiLineExists(this.directoryNumbers)) {
+      this.isPrimaryLineFeatureEnabled = false;
+    }
   }
 }
 
 export class PlaceCallOverviewComponent implements ng.IComponentOptions {
   public controller = PlaceCallOverview;
-  public templateUrl = 'modules/squared/places/callOverview/placeCallOverview.html';
+  public template = require('modules/squared/places/callOverview/placeCallOverview.html');
 }

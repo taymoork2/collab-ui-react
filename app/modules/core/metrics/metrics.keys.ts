@@ -1,9 +1,11 @@
 export enum DiagnosticKey {
   LICENSE_MAP_ERROR = 'atlas_license_map_error',
+  NOTIFICATION = 'atlas_notification',
 }
 
 export enum OperationalKey {
   NOTIFICATION = 'atlas_notification',
+  RATE_LIMIT_RETRY = 'atlas_rate_limit_retry',
 }
 
 export enum TimingKey {

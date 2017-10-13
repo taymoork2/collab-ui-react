@@ -40,6 +40,9 @@
             var elementHtml = dynamicElement.replace('DynamicText', vm.variableSelection.value);
             elementHtml = elementHtml.replace('ReadAs', vm.readAsSelection.value);
             var myId = id + Date.now();
+            //replacing element-id
+            elementHtml = elementHtml.replace('elementId', myId);
+            //replacing id
             elementHtml = elementHtml.replace('Id', myId);
             dispatchElementInsertion(id, elementHtml, range);
           }, function () {
@@ -49,7 +52,7 @@
       }
     }
 
-    function cancelledDynamicModal() {}
+    function cancelledDynamicModal() { }
 
     function modalClosed() {
       var dynamicList = range.endContainer.ownerDocument.activeElement;
@@ -142,7 +145,7 @@
         value: '',
       };
       return $modal.open({
-        templateUrl: 'modules/huron/features/autoAttendant/dynamicAnnouncements/aaDynamicAnnouncementsModal.tpl.html',
+        template: require('modules/huron/features/autoAttendant/dynamicAnnouncements/aaDynamicAnnouncementsModal.tpl.html'),
         controller: 'AADynamicAnnouncementsModalCtrl',
         controllerAs: 'aaDynamicAnnouncementsModalCtrl',
         type: 'small',

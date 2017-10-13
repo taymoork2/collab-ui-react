@@ -3,7 +3,7 @@
     <button class="btn btn--primary" ng-click="$ctrl.save()" ng-disabled="$ctrl.form.$invalid" type="submit" translate="common.save"></button>
     <button ng-click="$ctrl.reset()" translate="common.cancel"></button>
   </cs-sp-buttons>
-  <cs-sp-container>
+  <cs-sp-container cs-tabindex="$ctrl.form.$dirty ? -1 : 0">
     <cs-sp-section class="userLocation-panel">
       <div class="section-title-row">
         <span class="section-name" translate="usersPreview.location"></span>
@@ -15,12 +15,10 @@
         ng-model="$ctrl.selectedLocation"
         options="$ctrl.locationOptions"
         labelfield="name"
-        valuefield="value"
-        placeholder="$ctrl.locationName"
-        input-placeholder="sel.inputPlaceholder"
+        valuefield="uuid"
         required="true"
         filter="true"
-        on-change-fn="$ctrl.onLocationChanged()"
+        on-change-fn="$ctrl.onLocationChange()"
         refresh-data-fn="sel.getoptions(filter)">
       </cs-select>
     </div>

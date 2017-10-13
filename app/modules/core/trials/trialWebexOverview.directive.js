@@ -8,7 +8,7 @@
   function trialWebexOverview() {
     var directive = {
       restrict: 'E',
-      templateUrl: 'modules/core/trials/trialWebexOverview.tpl.html',
+      template: require('modules/core/trials/trialWebexOverview.tpl.html'),
       controller: 'TrialWebexOverviewCtrl',
       controllerAs: 'trialWebexOverview',
     };

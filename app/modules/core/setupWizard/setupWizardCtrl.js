@@ -3,11 +3,40 @@ require('./_setup-wizard.scss');
 (function () {
   'use strict';
 
+  // TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
+  var planReviewInitTemplatePath = require('ngtemplate-loader?module=Core!./planReview/planReview.tpl.html');
+  var planReviewSelectSubscriptionTemplatePath = require('ngtemplate-loader?module=Core!./planReview/select-subscription.html');
+
+  var enterpriseSetSipDomainTemplatePath = require('ngtemplate-loader?module=Core!./enterpriseSettings/enterprise.setSipDomain.tpl.html');
+  var enterpriseInitTemplatePath = require('ngtemplate-loader?module=Core!./enterpriseSettings/enterprise.init.tpl.html');
+  var enterpriseExportMetadataTemplatePath = require('ngtemplate-loader?module=Core!./enterpriseSettings/enterprise.exportMetadata.tpl.html');
+  var enterpriseImportIdpTemplatePath = require('ngtemplate-loader?module=Core!./enterpriseSettings/enterprise.importIdp.tpl.html');
+  var enterpriseTestSSOTemplatePath = require('ngtemplate-loader?module=Core!./enterpriseSettings/enterprise.testSSO.tpl.html');
+  var enterprisePmrSetupTemplatePath = require('ngtemplate-loader?module=Core!./enterpriseSettings/enterprise.pmrSetup.tpl.html');
+
+  var meetingSettingsMigrateTrialTemplatePath = require('ngtemplate-loader?module=Core!./meeting-settings/meeting-migrate-trial.html');
+  var meetingSettingsSiteSetupTemplatePath = require('ngtemplate-loader?module=Core!./meeting-settings/meeting-site-setup.html');
+  var meetingSettingsLicenseDistributionTemplatePath = require('ngtemplate-loader?module=Core!./meeting-settings/meeting-license-distribution.html');
+  var meetingSettingsSetPartnerAudioTemplatePath = require('ngtemplate-loader?module=Core!./meeting-settings/meeting-audio-partner.html');
+  var meetingSettingsSetCCASPTemplatePath = require('ngtemplate-loader?module=Core!./meeting-settings/meeting-ccasp.html');
+  var meetingSettingsSummaryTemplatePath = require('ngtemplate-loader?module=Core!./meeting-settings/meeting-summary.html');
+
+  var callSettingsCallPickupCountryTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/serviceHuronCustomerCreate.html');
+  var callSettingsPickLocationTypeTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/serviceSetupInit.html');
+  var callSettingsSetupLocationTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/locationSetup.html');
+  var callSettingsSetupSiteTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/serviceSetup.html');
+
+  var careSettingsTemplatePath = require('ngtemplate-loader?module=Core!./careSettings/careSettings.tpl.html');
+
+  var finishProvisionTemplatePath = require('ngtemplate-loader?module=Core!./finish/provision.html');
+  var finishDoneTemplatePath = require('ngtemplate-loader?module=Core!./finish/finish.html');
+
   angular.module('Core')
     .controller('SetupWizardCtrl', SetupWizardCtrl);
 
-  function SetupWizardCtrl($q, $scope, $state, $stateParams, $timeout, Authinfo, Config, FeatureToggleService, Orgservice, SetupWizardService, Utils, Notification) {
+  function SetupWizardCtrl($q, $scope, $state, $stateParams, $timeout, Authinfo, Config, FeatureToggleService, Orgservice, SessionStorage, SetupWizardService, StorageKeys, Notification) {
     var isFirstTimeSetup = _.get($state, 'current.data.firstTimeSetup', false);
+    var isITDecouplingFlow = false;
     var shouldRemoveSSOSteps = false;
     var isSharedDevicesOnlyLicense = false;
     var shouldShowMeetingsTab = false;
@@ -20,7 +49,15 @@ require('./_setup-wizard.scss');
     $scope.isCSB = Authinfo.isCSB();
     $scope.isCustomerPresent = SetupWizardService.isCustomerPresent();
 
+    // If a partner cross-launches into a customer through the Order Processing flow
+    // with a subscriptionId of an active subscription, we navigate the user to overview
+    if (isFirstTimeSetup && SetupWizardService.isProvisionedSubscription(SessionStorage.get(StorageKeys.SUBSCRIPTION_ID))) {
+      Authinfo.setSetupDone(true);
+      return $state.go('overview');
+    }
+
     if (Authinfo.isCustomerAdmin()) {
+      SetupWizardService.onActingSubscriptionChange(init);
       initToggles().finally(init);
     }
 
@@ -36,8 +73,9 @@ require('./_setup-wizard.scss');
 
       var adminOrgUsagePromise = Orgservice.getAdminOrgUsage()
         .then(function (subscriptions) {
-          var licenseTypes = Utils.getDeepKeyValues(subscriptions, 'licenseType');
-          isSharedDevicesOnlyLicense = _.without(licenseTypes, Config.licenseTypes.SHARED_DEVICES).length === 0;
+          var licenses = _.flatMap(subscriptions, 'licenses');
+          var uniqueLicenseTypes = _.uniq(_.map(licenses, 'licenseType'));
+          isSharedDevicesOnlyLicense = _.without(uniqueLicenseTypes, Config.licenseTypes.SHARED_DEVICES).length === 0;
         })
         .catch(_.noop);
 
@@ -46,25 +84,20 @@ require('./_setup-wizard.scss');
           supportsAtlasPMRonM2 = _supportsAtlasPMRonM2;
         });
 
+      var pendingSubscriptionsPromise = SetupWizardService.populatePendingSubscriptions();
+
       var promises = [
         adminOrgUsagePromise,
         atlasPMRonM2Promise,
         hI1484Promise,
+        pendingSubscriptionsPromise,
       ];
-
-      if (SetupWizardService.hasPendingServiceOrder()) {
-        var tabsBasedOnPendingLicensesPromise = SetupWizardService.getPendingLicenses().then(function () {
-          shouldShowMeetingsTab = SetupWizardService.hasPendingWebExMeetingLicenses();
-          hasPendingCallLicenses = SetupWizardService.hasPendingCallLicenses();
-          hasPendingLicenses = SetupWizardService.hasPendingLicenses();
-        });
-        promises.push(tabsBasedOnPendingLicensesPromise);
-      }
-
       return $q.all(promises);
     }
 
     function init() {
+      isITDecouplingFlow = SetupWizardService.hasPendingServiceOrder() || SetupWizardService.hasPendingSubscriptionOptions();
+      getPendingSubscriptionFlags();
       var tabs = getInitTabs();
 
       initPlanReviewTab(tabs);
@@ -78,6 +111,12 @@ require('./_setup-wizard.scss');
       $scope.tabs = filterTabsByStateParams(tabs);
     }
 
+    function getPendingSubscriptionFlags() {
+      shouldShowMeetingsTab = SetupWizardService.hasPendingWebExMeetingLicenses();
+      hasPendingCallLicenses = SetupWizardService.hasPendingCallLicenses();
+      hasPendingLicenses = SetupWizardService.hasPendingLicenses();
+    }
+
     function getInitTabs() {
       return [{
         name: 'enterpriseSettings',
@@ -88,19 +127,19 @@ require('./_setup-wizard.scss');
         controller: 'EnterpriseSettingsCtrl as entprCtrl',
         steps: [{
           name: 'enterpriseSipUrl',
-          template: 'modules/core/setupWizard/enterpriseSettings/enterprise.setSipDomain.tpl.html',
+          template: enterpriseSetSipDomainTemplatePath,
         }, {
           name: 'init',
-          template: 'modules/core/setupWizard/enterpriseSettings/enterprise.init.tpl.html',
+          template: enterpriseInitTemplatePath,
         }, {
           name: 'exportMetadata',
-          template: 'modules/core/setupWizard/enterpriseSettings/enterprise.exportMetadata.tpl.html',
+          template: enterpriseExportMetadataTemplatePath,
         }, {
           name: 'importIdp',
-          template: 'modules/core/setupWizard/enterpriseSettings/enterprise.importIdp.tpl.html',
+          template: enterpriseImportIdpTemplatePath,
         }, {
           name: 'testSSO',
-          template: 'modules/core/setupWizard/enterpriseSettings/enterprise.testSSO.tpl.html',
+          template: enterpriseTestSSOTemplatePath,
         }],
       },
       ];
@@ -116,11 +155,20 @@ require('./_setup-wizard.scss');
         controller: 'PlanReviewCtrl as planReview',
         steps: [{
           name: 'init',
-          template: 'modules/core/setupWizard/planReview/planReview.tpl.html',
+          template: planReviewInitTemplatePath,
         }],
       };
 
-      if (SetupWizardService.hasPendingServiceOrder()) {
+      if (SetupWizardService.hasPendingSubscriptionOptions()) {
+        var step = {
+          name: 'select-subscription',
+          template: planReviewSelectSubscriptionTemplatePath,
+          title: 'firstTimeWizard.selectSubscriptionTitle',
+        };
+        tab.steps.splice(0, 0, step);
+      }
+
+      if (SetupWizardService.hasPendingServiceOrder() || SetupWizardService.hasPendingSubscriptionOptions()) {
         tab.label = 'firstTimeWizard.subscriptionReview';
         tab.title = 'firstTimeWizard.subscriptionReview';
       }
@@ -140,35 +188,35 @@ require('./_setup-wizard.scss');
         controllerAs: 'meetingCtrl',
         steps: [{
           name: 'migrateTrial',
-          template: 'modules/core/setupWizard/meeting-settings/meeting-migrate-trial.html',
+          template: meetingSettingsMigrateTrialTemplatePath,
         },
         {
           name: 'siteSetup',
-          template: 'modules/core/setupWizard/meeting-settings/meeting-site-setup.html',
+          template: meetingSettingsSiteSetupTemplatePath,
         },
         {
           name: 'licenseDistribution',
-          template: 'modules/core/setupWizard/meeting-settings/meeting-license-distribution.html',
+          template: meetingSettingsLicenseDistributionTemplatePath,
         },
         {
           name: 'setPartnerAudio',
-          template: 'modules/core/setupWizard/meeting-settings/meeting-audio-partner.html',
+          template: meetingSettingsSetPartnerAudioTemplatePath,
         },
         {
           name: 'setCCASP',
-          template: 'modules/core/setupWizard/meeting-settings/meeting-ccasp.html',
+          template: meetingSettingsSetCCASPTemplatePath,
         },
         {
           name: 'summary',
-          template: 'modules/core/setupWizard/meeting-settings/meeting-summary.html',
+          template: meetingSettingsSummaryTemplatePath,
         }],
       };
 
       if (shouldShowMeetingsTab) {
-        if (!SetupWizardService.hasTSPAudioPackage()) {
+        if (!SetupWizardService.hasPendingTSPAudioPackage() || SetupWizardService.getActiveTSPAudioPackage() !== undefined) {
           _.remove(meetingTab.steps, { name: 'setPartnerAudio' });
         }
-        if (!SetupWizardService.hasCCASPPackage()) {
+        if (!SetupWizardService.hasPendingCCASPPackage() || SetupWizardService.getActiveCCASPPackage() !== undefined) {
           _.remove(meetingTab.steps, { name: 'setCCASP' });
         }
         tabs.splice(1, 0, meetingTab);
@@ -197,22 +245,22 @@ require('./_setup-wizard.scss');
     function initCallSettingsTab(tabs) {
       var pickCountry = {
         name: 'callPickCountry',
-        template: 'modules/core/setupWizard/callSettings/serviceHuronCustomerCreate.html',
+        template: callSettingsCallPickupCountryTemplatePath,
       };
 
       var pickLocationType = {
         name: 'pickCallLocationType',
-        template: 'modules/core/setupWizard/callSettings/serviceSetupInit.html',
+        template: callSettingsPickLocationTypeTemplatePath,
       };
 
       var setupLocation = {
         name: 'setupCallLocation',
-        template: 'modules/core/setupWizard/callSettings/locationSetup.html',
+        template: callSettingsSetupLocationTemplatePath,
       };
 
       var setupSite = {
         name: 'setupCallSite',
-        template: 'modules/core/setupWizard/callSettings/serviceSetup.html',
+        template: callSettingsSetupSiteTemplatePath,
       };
 
       if (showCallSettings()) {
@@ -222,7 +270,7 @@ require('./_setup-wizard.scss');
               $timeout(function () {
                 //   $scope.$emit('wizardNextButtonDisable', true);
               });
-              if (error.errorCode === 42003) {
+              if (error.status === 412) {
                 //Error code from Drachma
                 Notification.errorWithTrackingId(error, 'firstTimeWizard.error.overCapacity');
               } else {
@@ -264,13 +312,18 @@ require('./_setup-wizard.scss');
         return true;
       }
 
+      var currentSubscription = SetupWizardService.getActingPendingSubscriptionOptionSelection();
+
       return _.some(Authinfo.getLicenses(), function (license) {
-        return license.licenseType === Config.licenseTypes.COMMUNICATION || license.licenseType === Config.licenseTypes.SHARED_DEVICES;
+        return (license.licenseType === Config.licenseTypes.COMMUNICATION || license.licenseType === Config.licenseTypes.SHARED_DEVICES)
+          && (_.isUndefined(currentSubscription) || license.billingServiceId === currentSubscription.value);
       });
     }
 
     function initCareTab(tabs) {
-      if (Authinfo.isCare()) {
+      /* If in future, Care settings becomes part of the new orders flow (IT Decoupling) 
+      the case where hasPendingCareLicenses && isITDecouplingFlow */
+      if (Authinfo.isCare() && !isITDecouplingFlow) {
         var careTab = {
           name: 'careSettings',
           label: 'firstTimeWizard.careSettings',
@@ -280,7 +333,7 @@ require('./_setup-wizard.scss');
           controller: 'CareSettingsCtrl as careSettings',
           steps: [{
             name: 'csonboard',
-            template: 'modules/core/setupWizard/careSettings/careSettings.tpl.html',
+            template: careSettingsTemplatePath,
           }],
         };
 
@@ -300,7 +353,7 @@ require('./_setup-wizard.scss');
       if (supportsAtlasPMRonM2) {
         var step = {
           name: 'enterprisePmrSetup',
-          template: 'modules/core/setupWizard/enterpriseSettings/enterprise.pmrSetup.tpl.html',
+          template: enterprisePmrSetupTemplatePath,
         };
         var enterpriseSettings = _.find(tabs, {
           name: 'enterpriseSettings',
@@ -322,10 +375,10 @@ require('./_setup-wizard.scss');
           controller: 'WizardFinishCtrl',
           steps: [{
             name: 'provision',
-            template: 'modules/core/setupWizard/finish/provision.html',
+            template: finishProvisionTemplatePath,
           }, {
             name: 'done',
-            template: 'modules/core/setupWizard/finish/finish.html',
+            template: finishDoneTemplatePath,
           }],
         };
 
@@ -370,6 +423,13 @@ require('./_setup-wizard.scss');
           tab.steps = _.slice(tab.steps, index, index + $stateParams.numberOfSteps);
         }
       }
+
+      // Show Subscription selection step if user is setting up WebEx meetings
+      if ($stateParams.currentTab === 'meetingSettings') {
+        var planReviewTab = _.find(tabs, { name: 'planReview' });
+        filteredTabs.unshift(planReviewTab);
+      }
+
       return filteredTabs;
     }
   }

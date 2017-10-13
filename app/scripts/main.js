@@ -5,7 +5,6 @@
 
   angular.module('Core', [
     'angular-cache',
-    require('scripts/app.templates'),
     require('collab-ui-ng').default,
     'cisco.formly',
     require('modules/core/auth/tos').default,
@@ -14,7 +13,7 @@
     require('modules/core/auth/token.service'),
     require('modules/core/modal').default,
     'core.body',
-    'core.chartColors',
+    require('modules/core/config/chartColors').default,
     require('modules/core/controlHub').default,
     require('modules/core/l10n').default,
     'core.localize',
@@ -52,6 +51,7 @@
     'rzModule',
     'dragularModule',
     require('modules/bmmp/learn-more-banner').default,
+    require('modules/core/account').default,
     require('modules/core/banner').default,
     require('modules/core/csgrid').default,
     require('modules/core/users/userOverview').default,
@@ -92,6 +92,8 @@
     require('modules/core/validation').default,
     require('modules/core/customerReports').default,
     require('modules/core/partnerReports').default,
+    require('modules/gemini/reports').default,
+    require('modules/core/siteList/webex-site').default,
   ])
     .constant('CryptoJS', require('crypto-js'))
     .constant('addressparser', require('emailjs-addressparser'));
@@ -104,6 +106,7 @@
     'Sunlight',
     require('modules/squared/devices/services/CsdmCacheUpdater'),
     require('modules/squared/devices/services/CsdmPoller'),
+    require('modules/squared/helpdesk').default,
     require('modules/squared/partner-management').default,
     require('modules/squared/provisioning-console').default,
   ]);
@@ -119,8 +122,6 @@
     'uc.cdrlogsupport',
     'uc.autoattendant',
     'ngIcal',
-    'huron.paging-group',
-    'huron.call-pickup.setup-assistant',
     'huron.TerminusServices',
     'huron.externalNumberService',
     'huron.place-overview',
@@ -134,6 +135,8 @@
     require('modules/huron/lines/deleteExternalNumber').default,
     require('modules/huron/media-mgr').default,
     require('modules/call/features').default,
+    require('modules/call/features/paging-group/shared').default,
+    require('modules/call/features/call-pickup/shared').default,
   ])
     .constant('ASTParser', require('acorn'))
     .constant('ASTWalker', require('acorn/dist/walk'));
@@ -150,12 +153,15 @@
     require('modules/hercules/hybrid-services-nodes-page').default,
     require('modules/hercules/private-trunk/private-trunk-overview-settings').default,
     require('modules/hercules/private-trunk/private-trunk-setup').default,
+    require('modules/hercules/user-sidepanel/hybrid-services-user-sidepanel-section').default,
     require('modules/hercules/resource-group-card').default,
     require('modules/hercules/service-settings/calendar-service-setup').default,
+    require('modules/hercules/services/calendar-cloud-connector.service').default,
     require('modules/hercules/services/cluster-service').default,
     require('modules/hercules/services/enterprise-private-trunk-service').default,
     require('modules/hercules/services/excel-service').default,
     require('modules/hercules/services/fms-org-settings.service').default,
+    require('modules/hercules/services/hs-flag-service').default,
     require('modules/hercules/services/hybrid-services-cluster-states.service').default,
     require('modules/hercules/services/hybrid-services-cluster.service').default,
     require('modules/hercules/services/hybrid-services-extras.service').default,
@@ -164,10 +170,15 @@
     require('modules/hercules/services/l2sip-service').default,
     require('modules/hercules/services/resource-group.service').default,
     require('modules/hercules/services/service-descriptor.service').default,
+    require('modules/hercules/services/ucc-service').default,
     require('modules/hercules/services/uss.service').default,
   ]);
 
-  angular.module('HDS', ['Core', 'Hercules']);
+  angular.module('HDS', [
+    'Core',
+    'Hercules',
+    require('modules/hds/services/hds.service'),
+  ]);
 
   angular.module('Mediafusion', ['Core', 'Hercules', 'Squared']);
 
@@ -219,6 +230,8 @@
     'oc.lazyLoad',
     'Gemini',
     'CMC',
+    'Csdm',
+    require('modules/services-overview').default,
   ]).config(require('./main.config'))
     .run(require('./main.run'))
     .name;
@@ -228,7 +241,7 @@
   // require all other app files - ignore bootstrap.js, preload.js, newrelic
   requireAll(require.context('../', true, /\.\/(?!.*(\.spec|bootstrap.js$|scripts\/preload.js$|\/newrelic\/.*.js$)).*\.(js|ts)$/));
   // require all other assets
-  requireAll(require.context('../', true, /\.(jpg|png|svg|ico|json|csv|pdf)$/));
+  requireAll(require.context('../', true, /\.(jpg|png|svg|ico|csv|pdf)$/));
 
   function requireAll(requireContext) {
     return requireContext.keys().map(requireContext);

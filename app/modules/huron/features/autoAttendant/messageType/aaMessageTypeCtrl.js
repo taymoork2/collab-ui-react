@@ -79,16 +79,13 @@
 
     vm.MAX_FILE_SIZE_IN_BYTES = 5 * 1024 * 1024;
 
-    vm.addElement = '<aa-insertion-element element-text="DynamicText" read-as="ReadAs" element-id="Id" aa-schedule="' + $scope.schedule + '" aa-index="' + $scope.index + '"></aa-insertion-element>';
+    vm.addElement = '<aa-insertion-element element-text="DynamicText" read-as="ReadAs" element-id="elementId" id="Id" aa-schedule="' + $scope.schedule + '" aa-index="' + $scope.index + ' " contenteditable="false""></aa-insertion-element>';
 
     //////////////////////////////////////////////////////
 
     $scope.$on('CE Updated', function () {
       getDynamicVariables();
       refreshVarSelects();
-      if (_.isEmpty(vm.deletedSessionVariablesList)) {
-        vm.fullWarningMsgValue = false;
-      }
     });
 
     $scope.$on('CIVarNameChanged', function () {
@@ -196,17 +193,19 @@
       if (isDynamicToggle() && vm.messageOption.value === vm.messageOptions[actionType.PLAY].value) {
         vm.dynamicValues = [];
         holdDynaList = action.dynamicList;
-        if (_.isUndefined(action.dynamicList)) {
-          holdDynaList = [{
-            say: {
-              value: '',
-              voice: '',
-            },
-            isDynamic: false,
-            htmlModel: '',
-          }];
-        }
       }
+
+      if (_.isUndefined(holdDynaList) || _.isEmpty(holdDynaList)) {
+        holdDynaList = [{
+          say: {
+            value: '',
+            voice: '',
+          },
+          isDynamic: false,
+          htmlModel: '',
+        }];
+      }
+
       // name could be say, play or runActionsOnInput
       // make sure it is say or play but don't touch runActions
 
@@ -264,8 +263,9 @@
       AACommonService.setSayMessageStatus(true);
     }
 
-    function saveDynamicUi() {
+    function saveDynamicUi($event) {
       var action = vm.actionEntry;
+      var backSpace = 8;
       var range = AADynaAnnounceService.getRange();
       finalList = [];
       var dynamicList = range.endContainer.ownerDocument.activeElement;
@@ -281,6 +281,15 @@
             htmlModel: '',
           });
           action.dynamicList = finalList;
+        }
+        //disable warning message at the time of deleting dynamic variable using backspace button
+        if ($event.keyCode === backSpace) {
+          _.forEach(finalList, function (dynamicList) {
+            if (dynamicList.isDynamic) {
+              getDynamicVariables();
+              refreshVarSelects();
+            }
+          });
         }
         AACommonService.setSayMessageStatus(true);
       }
@@ -322,7 +331,7 @@
           } else {
             attributes = node.attributes;
           }
-          var ele = '<aa-insertion-element element-text="' + attributes[0].value + '" read-as="' + attributes[1].value + '" element-id="' + attributes[2].value + '"></aa-insertion-element>';
+          var ele = '<aa-insertion-element element-text="' + attributes[0].value + '" read-as="' + attributes[1].value + '" element-id="' + attributes[2].value + '"id="' + attributes[2].value + '" contenteditable="false""></aa-insertion-element>';
           opt = {
             say: {
               value: attributes[0].value,

@@ -7,6 +7,6 @@ require('./_setting-section.scss');
         setting: '=',
       },
       transclude: true,
-      templateUrl: 'modules/core/components/setting-section.html',
+      template: require('modules/core/components/setting-section.html'),
     });
 })();

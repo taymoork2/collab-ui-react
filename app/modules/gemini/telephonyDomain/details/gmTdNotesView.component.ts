@@ -6,7 +6,7 @@ class GmTdNotesView implements ng.IComponentController {
   private _getDataFromHttp: boolean = true;
   private static readonly MAX_LENGTH_NOTE: number = 2048;
   private static readonly NOTE_ACTION: string = 'add_notes_td';
-  private static readonly NOTE_POST_ACTION_FOR: string = 'Telephony Domain';
+  private static readonly NOTE_ACTION_FOR: string = 'Telephony Domain';
 
   public newNote: any;
   public model: any[] = [];
@@ -22,7 +22,6 @@ class GmTdNotesView implements ng.IComponentController {
   public constructor(private gemService,
                      private $scope: ICustomGmtNotesScope,
                      private Notification: Notification,
-                     private $translate: ng.translate.ITranslateService,
                      private TelephonyDomainService: TelephonyDomainService,
   ) {
     const currentTD = this.gemService.getStorage('currentTelephonyDomain');
@@ -49,14 +48,13 @@ class GmTdNotesView implements ng.IComponentController {
 
   public onSave(): void {
     const postData = {
-      customerID: this.customerId,
-      siteID: this.ccaDomainId,
-      action: GmTdNotesView.NOTE_ACTION,
-      actionFor: GmTdNotesView.NOTE_POST_ACTION_FOR,
-      objectName: this.newNote,
+      customerId: this.customerId,
+      part: 'TD',
+      siteId: this.ccaDomainId,
+      note: this.newNote,
     };
 
-    const notes = _.get(postData, 'objectName');
+    const notes = _.get(postData, 'note');
     if (this.gemService.getByteLength(notes) > GmTdNotesView.MAX_LENGTH_NOTE) {
       this.Notification.error('gemini.cbgs.notes.errorMsg.maxLength', { maxLength: GmTdNotesView.MAX_LENGTH_NOTE });
       return;
@@ -66,24 +64,15 @@ class GmTdNotesView implements ng.IComponentController {
     this.TelephonyDomainService.postNotes(postData).then((res) => {
       this.isSubmitting = false;
 
-      const resJson: any = _.get(res, 'content.data');
-      if (resJson.returnCode) {
-        this.Notification.error(this.$translate.instant('gemini.errorCode.genericError'));
-        return;
-      }
-
-      if (!resJson.body) {
-        this.Notification.error(this.$translate.instant('gemini.errorCode.genericError'));
-        return;
-      }
-
-      this.model.unshift(resJson.body);
+      this.model.unshift(res);
       if (this.displayCount === this.model.length - 1) {
         this.displayCount = this.model.length;
       }
       this.newNote = '';
       this.$scope.$$childTail.$$childTail.noteForm.$setPristine();
       this.$scope.$emit('detailWatch', { notes: this.model });
+    }).catch((err) => {
+      this.Notification.errorResponse(err, 'errors.statusError', { status: err.status });
     });
   }
 
@@ -92,14 +81,20 @@ class GmTdNotesView implements ng.IComponentController {
       return;
     }
 
+    const data = {
+      siteId: this.ccaDomainId,
+      objectId: '',
+      customerId: this.customerId,
+      actionFor: GmTdNotesView.NOTE_ACTION_FOR,
+    };
+
     this.isLoading = true;
-    this.TelephonyDomainService.getNotes(this.customerId, this.ccaDomainId)
-      .then((res) => {
-        if (_.get(res, 'content.data.returnCode')) {
-          this.Notification.error(this.$translate.instant('getListError'));
-          return;
-        }
-        this.model = _.get(res, 'content.data.body', []);
+    this.TelephonyDomainService.getHistories(data)
+      .then((res: any[]) => {
+        this.model = _.remove(res, (item: any): boolean => {
+          return item.action === GmTdNotesView.NOTE_ACTION;
+        });
+
         this.isLoading = false;
         this.isLoaded = true;
       })
@@ -111,5 +106,5 @@ class GmTdNotesView implements ng.IComponentController {
 
 export class GmTdNotesViewComponent implements ng.IComponentOptions {
   public controller = GmTdNotesView;
-  public templateUrl = 'modules/gemini/telephonyDomain/details/gmTdNotesView.tpl.html';
+  public template = require('modules/gemini/telephonyDomain/details/gmTdNotesView.tpl.html');
 }

@@ -1,6 +1,8 @@
-import { PSTN, NUMTYPE_DID, NXX, NPA, GROUP_BY, NUMTYPE_TOLLFREE, TATA, BLOCK_ORDER, NUMBER_ORDER, PORT_ORDER, AUDIT, UPDATE, DELETE, ADD, PROVISIONED, CANCELLED, PENDING, QUEUED, TYPE_PORT, ORDER, ADMINTYPE_PARTNER, ADMINTYPE_CUSTOMER, PSTN_CARRIER_ID, E911_SIGNEE, SWIVEL } from './pstn.const';
-
-import { Notification } from 'modules/core/notifications/notification.service';
+import {
+  PSTN, NUMTYPE_DID, NXX, NPA, GROUP_BY, NUMTYPE_TOLLFREE, TATA, BLOCK_ORDER, NUMBER_ORDER,
+  PORT_ORDER, AUDIT, UPDATE, DELETE, ADD, PROVISIONED, CANCELLED, PENDING, QUEUED, TYPE_PORT,
+  ORDER, ADMINTYPE_PARTNER, ADMINTYPE_CUSTOMER, PSTN_CARRIER_ID, E911_SIGNEE, SWIVEL,
+} from './pstn.const';
 import {
   PstnModel,
   IOrder,
@@ -9,9 +11,36 @@ import {
   TerminusService,
   INumberOrder,
 } from './terminus.service';
+import { IRAddress } from './shared/pstn-address';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
 import { PhoneNumberType } from 'google-libphonenumber';
+import { Notification } from 'modules/core/notifications/notification.service';
 
+export interface IRTerminusLocation {
+  uuid?: string;
+  name: string;
+  addresses?: IRAddress[];
+  default?: boolean;
+  voiceLocationRef?: string;
+}
+
+export class TerminusLocation implements IRTerminusLocation {
+  public uuid?: string;
+  public name: string;
+  public addresses?: IRAddress[];
+  public default?: boolean;
+  public voiceLocationRef?: string;
+
+  constructor(terminusLocation: IRTerminusLocation = {
+    name: '',
+  }) {
+    this.uuid = terminusLocation.uuid;
+    this.name = terminusLocation.name;
+    this.addresses = terminusLocation.addresses;
+    this.default = terminusLocation.default;
+    this.voiceLocationRef = terminusLocation.voiceLocationRef;
+  }
+}
 
 export class PstnService {
   /* @ngInject */
@@ -642,11 +671,10 @@ export class PstnService {
       'Account Number and PIN Required': this.$translate.instant('pstnSetup.orderStatus.pinRequired'),
       'Address Mismatch': this.$translate.instant('pstnSetup.orderStatus.addressMismatch'),
       'BTN Mismatch': this.$translate.instant('pstnSetup.orderStatus.btnMismatch'),
-      'Customer has Trial Status': this.$translate.instant('pstnSetup.orderStatus.trialStatus'),
+      'Customer has Trial Status': this.$translate.instant('pstnSetup.orderStatus.tosNotSigned'),
       'FOC Received': this.$translate.instant('pstnSetup.orderStatus.focReceived'),
       'Invalid Authorization Signature': this.$translate.instant('pstnSetup.orderStatus.invalidSig'),
       'LOA Not Signed': this.$translate.instant('pstnSetup.orderStatus.loaNotSigned'),
-      'Terms of Service has not yet been accepted': this.$translate.instant('pstnSetup.orderStatus.tosNotSigned'),
       'Master Service Agreement not signed': this.$translate.instant('pstnSetup.orderStatus.msaNotSigned'),
       'Pending FOC from Vendor': this.$translate.instant('pstnSetup.orderStatus.pendingVendor'),
       Rejected: this.$translate.instant('pstnSetup.orderStatus.rejected'),
@@ -765,10 +793,24 @@ export class PstnService {
     return (this.Authinfo.isCustomerLaunchedFromPartner() || this.Authinfo.isPartner()) ? ADMINTYPE_PARTNER : ADMINTYPE_CUSTOMER;
   }
 
+  public createLocation(terminusLocation: TerminusLocation): ng.IPromise<string> {
+    let uuid: string;
+    return this.TerminusService.customerLocations<IRTerminusLocation>()
+    .save({
+      customerId: this.PstnModel.getCustomerId(),
+    },
+    terminusLocation,
+    (_response, headers) => {
+      uuid = headers('location').split('/').pop();
+    })
+    .$promise
+    .then(() => uuid);
+  }
+
 }
 
-import pstnModelName from './pstn.model';
-import terminusServiceName from './terminus.service';
+import pstnModelModule from './pstn.model';
+import terminusServiceModule from './terminus.service';
 
 export default angular
   .module('huron.pstn.pstn-service', [
@@ -776,11 +818,10 @@ export default angular
     require('modules/core/scripts/services/authinfo'),
     require('modules/core/notifications').default,
     require('modules/core/featureToggle').default,
-    require('modules/huron/pstnSetup/terminusServices'),
     require('modules/huron/telephony/telephonyConfig'),
     require('modules/huron/phoneNumber').default,
-    pstnModelName,
-    terminusServiceName,
+    pstnModelModule,
+    terminusServiceModule,
   ])
   .service('PstnService', PstnService)
   .name;

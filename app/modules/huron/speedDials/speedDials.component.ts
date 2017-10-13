@@ -29,6 +29,7 @@ class SpeedDialCtrl implements ng.IComponentController {
   private numberMessages: IValidationMessages;
   private customTranslations: ITranslationMessages;
   private inputTranslations: ICallDestinationTranslate;
+  private customNumberValidationPatern: RegExp;
   private actionList: IActionItem[];
   private actionListCopy: IActionItem[] = [];
   private callDestInputs: string[];
@@ -100,6 +101,7 @@ class SpeedDialCtrl implements ng.IComponentController {
     });
     this.actionList = _.cloneDeep(this.actionListCopy);
     this.inputTranslations = this.CallDestinationTranslateService.getCallDestinationTranslate();
+    this.customNumberValidationPatern = this.CallDestinationTranslateService.getCustomNumberValidationPatern();
   }
 
   public extensionOwned(number: string): void {
@@ -248,7 +250,7 @@ class SpeedDialCtrl implements ng.IComponentController {
 
   public delete(sd): void {
     this.$modal.open({
-      templateUrl: 'modules/huron/speedDials/deleteConfirmation.tpl.html',
+      template: require('modules/huron/speedDials/deleteConfirmation.tpl.html'),
       type: 'dialog',
     }).result.then(() => {
       _.pull(this.speedDialList, sd);
@@ -273,7 +275,7 @@ class SpeedDialCtrl implements ng.IComponentController {
 
 export class SpeedDialComponent implements ng.IComponentOptions {
   public controller = SpeedDialCtrl;
-  public templateUrl = 'modules/huron/speedDials/speedDials.html';
+  public template = require('modules/huron/speedDials/speedDials.html');
   public bindings = {
     ownerId: '<',
     ownerType: '@',

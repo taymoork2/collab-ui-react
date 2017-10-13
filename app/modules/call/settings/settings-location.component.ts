@@ -1,7 +1,10 @@
 import { CallSettingsService, CallSettingsData } from 'modules/call/settings/shared';
+import { Config } from 'modules/core/config/config';
+import { VoicemailPilotNumber } from 'modules/call/locations/shared';
 import { HuronSettingsOptionsService, HuronSettingsOptions } from 'modules/call/settings/shared';
 import { CompanyNumber } from 'modules/call/settings/settings-company-caller-id';
 import { IAvrilCustomerFeatures } from 'modules/huron/avril';
+import { IOption } from 'modules/huron/dialing/dialing.service';
 import { Notification } from 'modules/core/notifications';
 
 // TODO: (jlowery) This component will eventually replace
@@ -25,7 +28,7 @@ class CallSettingsCtrl implements ng.IComponentController {
     private $translate: ng.translate.ITranslateService,
     private $state: ng.ui.IStateService,
     private Authinfo,
-    private Config,
+    private Config: Config,
     private ModalService,
     private Notification: Notification,
   ) { }
@@ -65,11 +68,17 @@ class CallSettingsCtrl implements ng.IComponentController {
     this.checkForChanges();
   }
 
-  public onCompanyVoicemailChanged(companyVoicemailEnabled: boolean, features: IAvrilCustomerFeatures): void {
+  public onCompanyVoicemailChanged(companyVoicemailEnabled: boolean, voicemailPilotNumber: VoicemailPilotNumber, features: IAvrilCustomerFeatures): void {
     _.set(this.callSettingsData.customer, 'hasVoicemailService', companyVoicemailEnabled);
+    _.set(this.callSettingsData.defaultLocation, 'voicemailPilotNumber', voicemailPilotNumber);
     _.set(this.callSettingsData.avrilCustomer, 'features', features);
     this.setShowVoiceMailDisableDialogFlag();
     this.checkForChanges();
+  }
+
+  public onCompanyVoicemailFilter(filter: string): ng.IPromise<IOption[]> {
+    return this.HuronSettingsOptionsService.loadCompanyVoicemailNumbers(filter)
+      .then(numbers => this.settingsOptions.companyVoicemailOptions = numbers);
   }
 
   public save(): ng.IPromise<void> {
@@ -170,6 +179,6 @@ class CallSettingsCtrl implements ng.IComponentController {
 
 export class CallSettingsComponent implements ng.IComponentOptions {
   public controller = CallSettingsCtrl;
-  public templateUrl = 'modules/call/settings/settings-location.component.html';
+  public template = require('modules/call/settings/settings-location.component.html');
   public bindings = {};
 }

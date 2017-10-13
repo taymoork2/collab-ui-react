@@ -5,7 +5,7 @@
     .controller('WizardFinishCtrl', WizardFinishCtrl);
 
   /* @ngInject */
-  function WizardFinishCtrl($q, $scope, $translate, Authinfo, Notification, SetupWizardService, TrialWebexService) {
+  function WizardFinishCtrl($q, $scope, $translate, Authinfo, Notification, Orgservice, SetupWizardService, TrialWebexService) {
     $scope.hasPendingLicenses = SetupWizardService.hasPendingLicenses();
     $scope.sendEmailModel = false;
     $scope.doNotProvision = false;
@@ -33,10 +33,12 @@
 
     // wizard PromiseHook
     $scope.provisionNext = function () {
+      Orgservice.clearOrgUsageCache();
       if (SetupWizardService.getWillNotProvision()) {
         $scope.doNotProvision = true;
       } else {
         $scope.doNotProvision = false;
+        Orgservice.updateOrgUsageCacheAge(5);
         return provision();
       }
     };

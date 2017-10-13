@@ -1,0 +1,35 @@
+<form novalidate name="$ctrl.form" novalidate role="form">
+  <cs-sp-buttons ng-show="$ctrl.isLineSelectionChanged">
+    <button class="btn btn--primary" ng-click="$ctrl.onSave()" ng-disabled="$ctrl.form.$invalid" type="submit" translate="common.save"></button>
+    <button ng-click="$ctrl.onCancel();$ctrl.dismiss()" translate="common.cancel"></button>
+  </cs-sp-buttons>
+  <cs-sp-container cs-tabindex="$ctrl.isLineSelectionChanged ? -1 : 0">
+    <cs-sp-section>
+      <div class="section-title-row">
+          <span class="section-name" translate="primaryLine.title"></span>
+      </div>
+      <p class="description-block" translate="primaryLine.description"></p>
+      <div class="cs-radio-group">
+        <input
+          cs-input
+          type="radio"
+          id="lineSelectionAuto"
+          name="optionSelected"
+          ng-model="$ctrl.optionSelected"
+          ng-value="false"
+          ng-change="$ctrl.onLineSelectionChange()"
+          cs-input-label="{{::'primaryLine.autoOption'|translate}}">
+
+        <input
+          cs-input
+          type="radio"
+          id="lineSelectionPrimaryLine"
+          name="optionSelected"
+          ng-model="$ctrl.optionSelected"
+          ng-value="true"
+          ng-change="$ctrl.onLineSelectionChange()"
+          cs-input-label="{{::'primaryLine.primaryLineOption'|translate}}">
+      </div>
+    </cs-sp-section>
+  </cs-sp-container>
+</form>

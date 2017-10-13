@@ -10,13 +10,13 @@ class TermsOfServiceCtrl implements ng.IComponentController {
     bottomPos: 0,
     bodyHeight: 0,
   };
+  private isFrameInitialized = false;
 
   /* @ngInject */
   constructor(
     private $state: ng.ui.IStateService,
     private Auth,
     private TOSService: TOSService,
-    private $templateCache: ng.ITemplateCacheService,
     private $modal: IToolkitModalService,
     private $window: ng.IWindowService,
     private $scope: ng.IScope,
@@ -37,11 +37,6 @@ class TermsOfServiceCtrl implements ng.IComponentController {
   }
 
   public $onInit(): void {
-    // Load a copy of the ToS PDF that was converted to HTML. This WILL be out of date with what
-    // is in the hosted PDF, but it looks nice and we can track the user scrolling to the bottom
-    const tosHtml: string = this.$templateCache.get<string>('modules/core/auth/tos/tos.html');
-    const tosStyle: string = this.$templateCache.get<string>('modules/core/auth/tos/tos-style.html');
-
     this.acceptingToS = false;
 
     // Load the external hosted PDF.  This does not look good since we are up to the whims of the
@@ -68,7 +63,31 @@ class TermsOfServiceCtrl implements ng.IComponentController {
     // </style>`;
 
     // manually update the iframe content
-    const iframeDoc = <Document>this.$window.frames['tos-frame'].document;
+    const tosFrame = this.getTermsOfServiceFrame();
+    if (tosFrame) {
+      this.initFrameDocument(tosFrame.document);
+    } else {
+      const deregisterWatch = this.$scope.$watch(() => this.getTermsOfServiceFrame(), (tosFrame) => {
+        if (tosFrame && !this.isFrameInitialized) {
+          deregisterWatch();
+          this.initFrameDocument(tosFrame.document);
+        }
+      });
+    }
+  }
+
+  private getTermsOfServiceFrame() {
+    return this.$window.frames['tos-frame'];
+  }
+
+  private initFrameDocument(iframeDoc: Document) {
+    this.isFrameInitialized = true;
+
+    // Load a copy of the ToS PDF that was converted to HTML. This WILL be out of date with what
+    // is in the hosted PDF, but it looks nice and we can track the user scrolling to the bottom
+    const tosHtml: string = require('modules/core/auth/tos/tos.html');
+    const tosStyle: string = require('modules/core/auth/tos/tos-style.html');
+
     const iframe = $(iframeDoc);
     const style = $(tosStyle);
     iframeDoc.open();
@@ -122,5 +141,5 @@ class TermsOfServiceCtrl implements ng.IComponentController {
 
 export class TermsOfServiceComponent implements ng.IComponentOptions {
   public controller = TermsOfServiceCtrl;
-  public templateUrl = 'modules/core/auth/tos/termsOfService.html';
+  public template = require('modules/core/auth/tos/termsOfService.html');
 }

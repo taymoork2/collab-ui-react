@@ -11,8 +11,10 @@
       searchUsers: searchUsers,
       searchOrgs: searchOrgs,
       searchOrders: searchOrders,
+      filterOrders: filterOrders,
       resendAdminEmail: resendAdminEmail,
       editAdminEmail: editAdminEmail,
+      getOrderProcessingUrl: getOrderProcessingUrl,
       getUser: getUser,
       getOrg: getOrg,
       isEmailBlocked: isEmailBlocked,
@@ -38,6 +40,7 @@
       invokeInviteEmail: invokeInviteEmail,
       getAccount: getAccount,
       getOrder: getOrder,
+      getSubscription: getSubscription,
       getEmailStatus: getEmailStatus,
       hasBounceDetails: hasBounceDetails,
       clearBounceDetails: clearBounceDetails,
@@ -204,9 +207,14 @@
         .then(extractData);
     }
 
-    function resendAdminEmail(orderUUID, toCustomer) {
+    function filterOrders(orders) {
+      var orderToolFilters = ['CCW', 'CCW-CSB'];
+      return _.filter(orders, function (el) { return _.includes(orderToolFilters, el.orderingTool); });
+    }
+
+    function resendAdminEmail(orderUUID, isCustomer) {
       var url;
-      if (toCustomer) {
+      if (isCustomer) {
         url = urlBase + 'helpdesk/orders/' + orderUUID + '/actions/resendcustomeradminemail/invoke';
       } else {
         url = urlBase + 'helpdesk/orders/' + orderUUID + '/actions/resendpartneradminemail/invoke';
@@ -235,6 +243,14 @@
         url = urlBase + 'helpdesk/orders/' + orderUUID + '/partnerAdminEmail';
       }
       return $http.post(url, payload).then(extractData);
+    }
+
+    function getOrderProcessingUrl(purchaseOrderId) {
+      return $http
+        .get(urlBase + 'ordersetup/' + encodeURIComponent(purchaseOrderId) + '/csmlink')
+        .then(function (response) {
+          return response.data;
+        });
     }
 
     function getUser(orgId, userId) {
@@ -496,9 +512,9 @@
     function elevateToReadonlyAdmin(orgId) {
       return $http
         .post(urlBase + 'helpdesk/organizations/' + encodeURIComponent(orgId) + '/actions/elevatereadonlyadmin/invoke')
-        .then(USSService.notifyReadOnlyLaunch)
+        .then(USSService.invalidateHybridUserCache)
         .catch(angular.noop)
-        .then(HybridServicesExtrasService.notifyReadOnlyLaunch)
+        .then(HybridServicesExtrasService.invalidateHybridUserCache)
         .catch(angular.noop);
     }
 
@@ -532,6 +548,12 @@
     function getOrder(orderId) {
       return $http
         .get(urlBase + 'orders/' + encodeURIComponent(orderId))
+        .then(extractData);
+    }
+
+    function getSubscription(subscriptionId) {
+      return $http
+        .get(urlBase + 'subscriptions/' + encodeURIComponent(subscriptionId))
         .then(extractData);
     }
 

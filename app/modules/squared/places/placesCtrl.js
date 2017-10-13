@@ -8,7 +8,7 @@ require('../devices/_devices.scss');
     .controller('PlacesCtrl',
 
       /* @ngInject */
-      function ($q, $scope, $state, $templateCache, $translate, CsdmFilteredViewFactory, CsdmDataModelService, Userservice, Authinfo, WizardFactory, RemPlaceModal, FeatureToggleService, ServiceDescriptorService, GridCellService) {
+      function ($q, $scope, $state, $translate, CsdmFilteredViewFactory, CsdmDataModelService, Userservice, Authinfo, WizardFactory, RemPlaceModal, FeatureToggleService, ServiceDescriptorService, GridCellService) {
         var vm = this;
 
         vm.data = [];
@@ -118,7 +118,7 @@ require('../devices/_devices.scss');
           columnDefs: [{
             field: 'photos',
             displayName: '',
-            cellTemplate: getTemplate('image.tpl'),
+            cellTemplate: require('./templates/image.tpl.html'),
             sortable: false,
             width: 70,
           }, {
@@ -145,7 +145,7 @@ require('../devices/_devices.scss');
           }, {
             field: 'action',
             displayName: $translate.instant('placesPage.actionHeader'),
-            cellTemplate: getTemplate('actions.tpl'),
+            cellTemplate: require('./templates/actions.tpl.html'),
             sortable: false,
           }],
         };
@@ -191,7 +191,7 @@ require('../devices/_devices.scss');
                   sparkCall: 'addDeviceFlow.addLines',
                   sparkCallConnect: 'addDeviceFlow.callConnectOptions',
                   sparkOnly: 'addDeviceFlow.showActivationCode',
-                  sparkOnlyAndCalendar: 'addDeviceFlow.editCalendarService',
+                  calendar: 'addDeviceFlow.editCalendarService',
                 },
               },
               'addDeviceFlow.callConnectOptions': {
@@ -230,10 +230,6 @@ require('../devices/_devices.scss');
           $event.stopPropagation();
           RemPlaceModal.open(place);
         };
-
-        function getTemplate(name) {
-          return $templateCache.get('modules/squared/places/templates/' + name + '.html');
-        }
 
         function sortFn(a, b) {
           if (a && a.localeCompare) {

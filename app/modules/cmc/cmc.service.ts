@@ -1,4 +1,5 @@
 import { ICmcUserData, ICmcOrgStatusResponse, ICmcUserStatusResponse, ICmcUser, ICmcIssue } from './cmc.interface';
+import { Config } from 'modules/core/config/config';
 
 export class CmcService {
 
@@ -13,7 +14,7 @@ export class CmcService {
   constructor(
     private $q: ng.IQService,
     private Orgservice,
-    private Config,
+    private Config: Config,
     private UrlConfig,
     private CmcServiceMock,
     private $http: ng.IHttpService,
@@ -68,7 +69,7 @@ export class CmcService {
       //this.requestTimeout(deferred);
       const url: string = this.cmcUrl + `/organizations/${orgId}/status`;
       return this.$http.get<ICmcOrgStatusResponse>(url, { timeout: this.requestTimeout() }).then((response) => {
-        return response.data as ICmcOrgStatusResponse;
+        return response.data;
       });
     } else {
       return this.CmcServiceMock.mockOrgStatus(orgId);

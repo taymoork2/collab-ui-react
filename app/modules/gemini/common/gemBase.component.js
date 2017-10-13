@@ -5,7 +5,7 @@
     .module('Gemini')
     .component('gemBase', {
       controller: GemBaseCtrl,
-      templateUrl: 'modules/gemini/common/gemBase.html',
+      template: require('modules/gemini/common/gemBase.html'),
     });
 
   /* @ngInject */
@@ -17,7 +17,7 @@
       title: $translate.instant('gemini.tdTitle'),
     }, {
       state: 'gem.base.cbgs',
-      title: $translate.instant('gemini.cbgs.title'),
+      title: $translate.instant('gemini.cbgTitle'),
     }];
 
     function $onInit() {
