@@ -2,15 +2,20 @@
   'use strict';
 
   /* @ngInject */
-  function iFrameResizableDirective($window) {
+  function iFrameResizableDirective($window, WindowEventService) {
     return function iFrameResizable($scope, element, attributes) {
-      $scope.initializeWindowSize = function () {
+      function initializeWindowSize() {
         var innerHeight = $window.innerHeight;
         var targetElementId = attributes['iFrameResizable'];
-        var targetElement = $window.document.getElementById(targetElementId).getBoundingClientRect();
+        var targetElement = $window.document.getElementById(targetElementId);
+
+        if (!targetElement) {
+          return;
+        }
+        var targetElementBoundingClientRect = targetElement.getBoundingClientRect();
         var targetElementLocation = {
-          left: targetElement.left + $window.pageXOffset,
-          top: targetElement.top + $window.pageYOffset,
+          left: targetElementBoundingClientRect.left + $window.pageXOffset,
+          top: targetElementBoundingClientRect.top + $window.pageYOffset,
         };
 
         var iframeTopMargin = targetElementLocation.top;
@@ -18,14 +23,16 @@
         var iframeTotalMargin = iframeTopMargin + iframeBottomMargin;
 
         $scope.iframeHeight = (iframeTotalMargin >= innerHeight) ? 0 : innerHeight - iframeTotalMargin;
-      };
+      }
 
-      $scope.initializeWindowSize();
+      function initializeWindowSizeAndApply() {
+        initializeWindowSize();
+        $scope.$apply();
+      }
 
-      return angular.element($window).bind('resize', function () {
-        $scope.initializeWindowSize();
-        return $scope.$apply();
-      });
+      initializeWindowSize();
+
+      WindowEventService.registerEventListener('resize', initializeWindowSizeAndApply, $scope);
     }; // iFrameResizable()
   } // iFrameResizableDirective ()
 

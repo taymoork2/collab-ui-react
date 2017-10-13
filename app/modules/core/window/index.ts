@@ -1,9 +1,9 @@
-import { WindowService } from './window.service';
+import { WindowEventService } from './window-event.service';
 
-export { WindowService };
+export { WindowEventService };
 
 export default angular
   .module('core.window', [])
-  .service('WindowService', WindowService)
+  .service('WindowEventService', WindowEventService)
   .service('WindowLocation', require('./windowLocation'))
   .name;

@@ -1,4 +1,4 @@
-export class WindowService {
+export class WindowEventService {
   private static readonly DESTROY = '$destroy';
 
   /* @ngInject */
@@ -12,7 +12,7 @@ export class WindowService {
    */
   public registerEventListener(eventName: string, eventListener: EventListenerOrEventListenerObject, scopeOnDestroy: ng.IScope = this.$rootScope): void {
     this.$window.addEventListener(eventName, eventListener);
-    scopeOnDestroy.$on(WindowService.DESTROY, () => {
+    scopeOnDestroy.$on(WindowEventService.DESTROY, () => {
       this.$window.removeEventListener(eventName, eventListener);
     });
   }
