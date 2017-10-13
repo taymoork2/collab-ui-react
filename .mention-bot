@@ -41,13 +41,30 @@
       "app/modules/squared/places/**/*"
     ]
   }, {
-     "name": "WebExSquared/atlas-call-team",
-     "files": [
-       "app/modules/call/**/*",
-       "app/modules/huron/**/*",
-       "app/modules/squared/places/**/*"
-      ]
-   }],
+    "name": "WebExSquared/atlas-call-team",
+    "files": [
+      "app/modules/call/**/*",
+      "app/modules/huron/**/*",
+      "app/modules/squared/places/**/*"
+    ]
+  }, {
+    "name": "WebExSquared/spark-care",
+    "files": [
+      "app/modules/sunlight/**/*"
+    ]
+  }],
   "fileBlacklist": ["app/l10n/*.json", "yarn.lock"],
-  "userBlacklist": ["admolla", "atlas-ui-bot-gen", "cidylle", "cstoy", "mikecan", "thobasse", "stimurbe", "svanneyg", "zamamoha", "zzatking"]
+  "userBlacklist": [
+    "admolla",
+    "atlas-ui-bot-gen",
+    "cidylle",
+    "claughbo",
+    "cstoy",
+    "mikecan",
+    "stimurbe",
+    "svanneyg",
+    "thobasse",
+    "zamamoha",
+    "zzatking"
+  ]
 }
