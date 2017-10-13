@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: CustomerListCtrl', function () {
+describe('Controller: CustomerListCtrl', function () {
   var $httpBackend, $q, $controller, $state, $scope, Analytics, Authinfo, Config, HuronConfig, FeatureToggleService, Notification, Orgservice, PartnerService, TrialService;
   var controller;
 

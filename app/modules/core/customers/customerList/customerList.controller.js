@@ -45,8 +45,6 @@ require('./_customer-list.scss');
     vm.isPstnSetup = isPstnSetup;
     vm.exportCsv = exportCsv;
 
-    vm.convertStatusToInt = convertStatusToInt;
-
     vm.activeFilter = 'all';
     vm.filterList = _.debounce(filterAction, vm.timeoutVal);
 
@@ -84,8 +82,15 @@ require('./_customer-list.scss');
         previousState: false,
       });
     }
-    // Might as well sort by label...
-    vm.filter.options = _.sortBy(vm.filter.options, ['label']);
+
+    function sortFilterList() {
+      // Sort filter list into four buckets: selected, services, accounts, premiums
+      vm.filter.options = _.sortBy(vm.filter.options, ['isSelected',
+        function (o) { return o.isAccountFilter || o.isPremiumFilter; },
+        'isPremiumFilter', 'label',
+      ]);
+    }
+    sortFilterList();
 
     $scope.$watch(function () {
       return vm.filter.selected;
@@ -219,6 +224,7 @@ require('./_customer-list.scss');
     init();
 
     function init() {
+      setStatusTextOrder();
       setNotesTextOrder();
       initColumns();
 
@@ -314,9 +320,7 @@ require('./_customer-list.scss');
     }
 
     function accountStatusSort(a, b, rowA, rowB) {
-      var aStatus = vm.convertStatusToInt(rowA.entity.accountStatus);
-      var bStatus = vm.convertStatusToInt(rowB.entity.accountStatus);
-      return aStatus - bStatus;
+      return vm.statusTextOrder[rowA.entity.accountStatus] - vm.statusTextOrder[rowB.entity.accountStatus];
     }
 
     function licenseSort(a, b, rowA, rowB) {
@@ -332,16 +336,6 @@ require('./_customer-list.scss');
       } else {
         return a - b;
       }
-    }
-
-    function convertStatusToInt(a) {
-      // These numbers are simply used for sorting, meaning lower numbers come first for ascending
-      var statuses = ['active', 'pending', 'expired', 'trial'];
-      var index = statuses.indexOf(a);
-      if (index === -1) {
-        return statuses.length;
-      }
-      return index;
     }
 
     /* AG TODO:  once we have data for total users -- add back
@@ -360,6 +354,27 @@ require('./_customer-list.scss');
       return aPercent - bPercent;
     }*/
 
+    function setStatusTextOrder() {
+      var status = [
+        { key: 'active', xlat: 'purchased' },
+        { key: 'trial' },
+        { key: 'expired' },
+        { key: 'pending' },
+      ];
+
+      // Sort values by translated strings
+      for (var i = 0; i < status.length; i++) {
+        status[i].xlat = $translate.instant('customerPage.' + ((status[i].xlat) ? status[i].xlat : status[i].key));
+      }
+      status = _.sortBy(status, ['xlat']);
+
+      // Store sort order in array for future reference
+      vm.statusTextOrder = [];
+      for (i = 0; i < status.length; i++) {
+        vm.statusTextOrder[status[i].key] = i;
+      }
+    }
+
     function setNotesTextOrder() {
       var notes = [
         { key: 'suspended', status: 'NOTE_CANCELED' },
@@ -375,7 +390,7 @@ require('./_customer-list.scss');
       }
 
       // sort based on translated value, then key value
-      notes = _.sortBy(notes, ['xlat', 'key']);
+      notes = _.sortBy(notes, ['xlat']);
 
       // apply sort order to partner service base on index
       for (i = 0; i < notes.length; i++) {
@@ -432,20 +447,20 @@ require('./_customer-list.scss');
 
         row.visible = _.every(isVisibleFlags);
       });
-      var visibleRowsData = _.chain(rows).filter({ visible: true }).map(function (row) { return row.entity; }).value();
 
-      updateResultCount(visibleRowsData);
+      var visibleRowData = _.chain(rows).filter({ visible: true }).map(function (row) { return row.entity; }).value();
+      var allRowData = _.chain(rows).map(function (row) { return row.entity; }).value();
+      updateResultCount(visibleRowData, allRowData);
+      sortFilterList();
+
       return rows;
     }
 
     function isPremiumFilterType(filterValue, isPremium) {
       if (filterValue === PREMIUM) {
         return isPremium;
-      } else if (filterValue === STANDARD) {
-        return !isPremium;
-      } else {
-        return false;
       }
+      return !isPremium;
     }
 
     function filterAction(value) {
@@ -577,10 +592,10 @@ require('./_customer-list.scss');
         });
     }
 
-    function updateResultCount(visibleRowsData) {
-      vm.totalOrgs = visibleRowsData.length;
-      var statusTypeCounts = _.countBy(visibleRowsData, function (dataRow) {
-        return dataRow.accountStatus;
+    function updateResultCount(visibleRows, allRows) {
+      vm.totalOrgs = visibleRows.length;
+      var statusTypeCounts = _.countBy(allRows, function (rowData) {
+        return rowData.accountStatus;
       });
       var accountFilters = _.filter(vm.filter.options, { isAccountFilter: true });
       _.forEach(accountFilters, function (filter) {
@@ -592,8 +607,8 @@ require('./_customer-list.scss');
 
       if (vm.isProPackEnabled) {
         var counts = {};
-        counts[PREMIUM] = _.filter(visibleRowsData, { isPremium: true });
-        counts[STANDARD] = _.filter(visibleRowsData, { isPremium: false });
+        counts[PREMIUM] = _.filter(visibleRows, { isPremium: true });
+        counts[STANDARD] = _.filter(visibleRows, { isPremium: false });
         var premiumFilters = _.filter(vm.filter.options, { isPremiumFilter: true });
 
         _.forEach(premiumFilters, function (filter) {
