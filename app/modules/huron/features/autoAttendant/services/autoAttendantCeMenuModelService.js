@@ -1411,22 +1411,6 @@
             } else if (actionName === 'conditional') {
               newActionArray[i][actionName] = createConditional(menuEntry.actions[0]);
             } else if (actionName === 'doREST') {
-              //var action = menuEntry.actions[0];
-              /*var dyn = {};
-              dyn.dynamic = {};
-              dyn.dynamic.dynamicOperations = action.dynamicList;
-
-              newActionArray[i][actionName].url = {
-                action: {
-                  concat: {
-                    actions: [],
-                  },
-                },
-              };*/
-              //newActionArray[i][actionName].url.action.concat.actions[0] = dyn;
-              //newActionArray[i][actionName].method = menuEntry.actions[0].method;
-              //newActionArray[i][actionName].responseActions = createResponseBlock(menuEntry.actions[0]);
-
               var restBlockId = menuEntry.actions[0].value;
               if (_.isEmpty(restBlockId)) {
                 restBlockId = AARestModelService.getRestTempId();
