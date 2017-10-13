@@ -238,11 +238,8 @@
     }
 
     function getThirdPartyRestApiDynamicUrl(doRest) {
-      var operation = {};
-      _.set(operation, 'isDynamic', false);
-      _.set(operation, 'action.eval.value', doRest.url);
       var dummyUrlObj = {};
-      _.set(dummyUrlObj, 'action.concat.actions[0].dynamic.dynamicOperations[0]', operation);
+      _.set(dummyUrlObj, 'action.concat.actions[0].dynamic.dynamicOperations', doRest.url);
       return dummyUrlObj;
     }
 
@@ -649,7 +646,7 @@
           };
 
           // make use of 'response' to get rest of the items to be shown under the REST block
-          var restApiUrl = _.get(response, 'url.action.concat.actions[0].dynamic.dynamicOperations[0].action.eval.value');
+          var restApiUrl = _.get(response, 'url.action.concat.actions[0].dynamic.dynamicOperations');
           if (restApiUrl) {
             _.set(overrideProps, 'url', restApiUrl);
           }
