@@ -1,5 +1,5 @@
 import { INumberData, IRPagingGroupNumber, PagingGroupNumber } from 'modules/call/features/paging-group/shared';
-import { NumberType, NumberService } from 'modules/huron/numbers';
+import { NumberType, NumberService, NumberOrder } from 'modules/huron/numbers';
 
 interface IPagingGroupNumbersResource extends ng.resource.IResourceClass<ng.resource.IResource<IRPagingGroupNumber>> {}
 
@@ -36,7 +36,7 @@ export class PagingNumberService {
   }
 
   public getInternalNumbers(filter?: string): ng.IPromise<string[]> {
-    return this.NumberService.getNumberList(filter, NumberType.INTERNAL, false)
+    return this.NumberService.getNumberList(filter, NumberType.INTERNAL, false, NumberOrder.SITETOSITE_ASC)
       .then(response => _.map(response, dn => {
         return this.hasLocations ? dn.siteToSite || '' : dn.number;
       }));
