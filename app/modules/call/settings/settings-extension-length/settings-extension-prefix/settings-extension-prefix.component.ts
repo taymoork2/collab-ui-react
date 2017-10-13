@@ -1,4 +1,4 @@
-import { HuronSettingsService } from 'modules/call/settings/shared';
+import { ExtensionLengthService } from 'modules/call/settings/shared';
 import { Notification } from 'modules/core/notifications';
 
 class ExtensionPrefixCtrl implements ng.IComponentController {
@@ -14,10 +14,10 @@ class ExtensionPrefixCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    private HuronSettingsService: HuronSettingsService,
+    private ExtensionLengthService: ExtensionLengthService,
     private $translate: ng.translate.ITranslateService,
     private Notification: Notification,
-  ) { }
+  ) {}
 
   public $onInit(): void {
     this.prefixLength = _.toSafeInteger(this.newExtensionLength) - _.toSafeInteger(this.oldExtensionLength);
@@ -30,7 +30,7 @@ class ExtensionPrefixCtrl implements ng.IComponentController {
 
   public save(): void {
     this.processing = true;
-    this.HuronSettingsService.saveExtensionLengthIncrease(Number(this.newExtensionLength), Number(this.extensionPrefix))
+    this.ExtensionLengthService.saveExtensionLength(Number(this.newExtensionLength), Number(this.extensionPrefix))
       .then(() => {
         this.Notification.success('serviceSetupModal.extensionLengthSaveSuccess');
         this.close();

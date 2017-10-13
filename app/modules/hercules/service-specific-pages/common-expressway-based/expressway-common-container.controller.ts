@@ -16,7 +16,6 @@ export abstract class ExpresswayContainerController {
     private $scope: ng.IScope,
     private $state: ng.ui.IStateService,
     private ClusterService: ClusterService,
-    protected hasNodesViewFeatureToggle,
     protected Notification: Notification,
     protected ServiceDescriptorService: ServiceDescriptorService,
     private ServiceStateChecker,

@@ -145,6 +145,7 @@ class LineOverview implements ng.IComponentController {
       if (!this.lineOverviewData.line.uuid) { // new line, grab first available internal number
         if (this.isHI1484) {
           this.lineOverviewData.line.internal = _.get(this.internalNumbers, '[0].internal');
+          this.lineOverviewData.line.siteToSite = _.get(this.internalNumbers, '[0].siteToSite');
         } else if (typeof this.internalNumbers[0] === 'string') {
           this.lineOverviewData.line.internal = String(this.internalNumbers[0]);
         }

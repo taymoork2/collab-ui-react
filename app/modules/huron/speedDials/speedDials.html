@@ -27,8 +27,8 @@
                 </div>
                 <div ng-if="!$ctrl.editing && !$ctrl.reordering">
                   <i ng-if="sd.callPickupEnabled" tooltip="{{$ctrl.getTooltipText(sd)}}" tooltip-placement="left" tooltip-trigger="mouseenter focus" class="icon icon-info sd-spacing-edit"></i>
-                  <a class="icon icon-edit sd-spacing-edit" ng-click="$ctrl.setEdit(sd)"></a>
-                  <a class="icon icon-trash" ng-click="$ctrl.delete(sd)"></a>
+                  <a href class="icon icon-edit sd-spacing-edit" ng-click="$ctrl.setEdit(sd)" aria-label="{{::'common.edit | translate'}}"></a>
+                  <a href class="icon icon-trash" ng-click="$ctrl.delete(sd)" aria-label="{{::'common.delete | translate'}}"></a>
                 </div>
                 <div ng-if="$ctrl.reordering">
                   <a class="icon icon-tables"></a>

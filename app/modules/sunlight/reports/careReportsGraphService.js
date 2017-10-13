@@ -70,7 +70,8 @@
       graphBulletAlpha: 1,
     };
 
-    baseVariables['title'] = [{ 'text': '',
+    baseVariables['title'] = [{
+      'text': '',
       'bold': false,
       'font-family': 'Verdana',
       'size': 12,

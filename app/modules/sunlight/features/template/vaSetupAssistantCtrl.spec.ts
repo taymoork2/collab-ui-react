@@ -256,13 +256,24 @@ describe('Care Setup Virtual Assistant Ctrl', function () {
       checkStateOfNavigationButtons(CONFIG_OVERVIEW_PAGE_INDEX, 'hidden', false);
     });
 
-    it('Next button on Access Token Page enabled when accessTokenValue is valid', function () {
+    it('Next button on Access Token Page enabled when accessTokenValue is valid and validation not needed', function () {
       controller.template.configuration.pages.VirtualAssistantAccessToken.accessTokenValue = '123';
       controller.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = true;
+      controller.template.configuration.pages.VirtualAssistantAccessToken.needsValidation = false;
       checkStateOfNavigationButtons(ACCESS_TOKEN_PAGE_INDEX, true, false);
 
       controller.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = false;
       checkStateOfNavigationButtons(ACCESS_TOKEN_PAGE_INDEX, true, true);
+    });
+
+    it('Next button on Access Token Page disabled when accessTokenValue is valid and needs validation', function () {
+      controller.template.configuration.pages.VirtualAssistantAccessToken.accessTokenValue = '123';
+      controller.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = true;
+      controller.template.configuration.pages.VirtualAssistantAccessToken.needsValidation = true;
+      checkStateOfNavigationButtons(ACCESS_TOKEN_PAGE_INDEX, true, false);
+
+      controller.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = false;
+      checkStateOfNavigationButtons(ACCESS_TOKEN_PAGE_INDEX, true, false);
     });
 
     it('Next button on Name Page enabled when nameValue is not empty', function () {
@@ -321,21 +332,25 @@ describe('Care Setup Virtual Assistant Ctrl', function () {
     it('should validateToken successfully', function () {
       deferred.resolve(true);
       controller.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = true;
+      controller.template.configuration.pages.VirtualAssistantAccessToken.needsValidation = true;
 
       controller.validateAPIAIToken();
       $scope.$apply();
 
       expect(controller.template.configuration.pages.VirtualAssistantAccessToken.invalidToken).toEqual(false);
+      expect(controller.template.configuration.pages.VirtualAssistantAccessToken.needsValidation).toEqual(false);
     });
 
     it('should validateToken unsuccessfully', function () {
       deferred.reject(false);
       controller.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = false;
+      controller.template.configuration.pages.VirtualAssistantAccessToken.needsValidation = true;
 
       controller.validateAPIAIToken();
       $scope.$apply();
 
       expect(controller.template.configuration.pages.VirtualAssistantAccessToken.invalidToken).toEqual(true);
+      expect(controller.template.configuration.pages.VirtualAssistantAccessToken.needsValidation).toEqual(false);
     });
   });
   describe('Avatar Page', function () {

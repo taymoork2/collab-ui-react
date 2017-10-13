@@ -5,7 +5,7 @@
     .module('Mediafusion')
     .controller('MediaReportsController', MediaReportsController);
   /* @ngInject */
-  function MediaReportsController($q, $scope, $translate, $interval, $timeout, MediaClusterServiceV2, UtilizationResourceGraphService, MeetingLocationAdoptionGraphService, ParticipantDistributionResourceGraphService, NumberOfParticipantGraphService, MediaReportsService, Notification, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService, ClientTypeAdoptionGraphService, AdoptionCardService, hasHmsTwoDotFiveFeatureToggle) {
+  function MediaReportsController($q, $scope, $translate, $interval, $timeout, MediaClusterServiceV2, UtilizationResourceGraphService, MeetingLocationAdoptionGraphService, ParticipantDistributionResourceGraphService, NumberOfParticipantGraphService, MediaReportsService, Notification, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService, ClientTypeAdoptionGraphService, AdoptionCardService, hasHmsTwoDotFiveFeatureToggle, Orgservice) {
     var vm = this;
     var interval = null;
     var deferred = $q.defer();
@@ -51,9 +51,10 @@
     vm.redirected_calls_heading = $translate.instant('mediaFusion.metrics.redirectedcalls');
     vm.cluster_availability_heading = $translate.instant('mediaFusion.metrics.overAllAvailability');
     vm.customPlaceholder = $translate.instant('mediaFusion.report.custom');
+    vm.selectedPeriod = $translate.instant('mediaFusion.report.selectedPeriod');
     vm.total_cloud_heading = $translate.instant('mediaFusion.metrics.totalCloud');
     vm.participants = $translate.instant('mediaFusion.metrics.participants');
-    vm.increasedBy = $translate.instant('mediaFusion.metrics.increasedBy');
+    vm.increaseBy = $translate.instant('mediaFusion.metrics.increaseBy');
     vm.decreasedBy = $translate.instant('mediaFusion.metrics.decreasedBy');
 
     vm.availabilityCardHeading = '';
@@ -167,6 +168,11 @@
     setRefreshInterval();
     getCluster();
     timeUpdate();
+
+    Orgservice.isTestOrg()
+      .then(function (isTestOrg) {
+        vm.isTestOrg = isTestOrg;
+      });
 
     function loadResourceDatas() {
       deferred.promise.then(function () {
@@ -397,9 +403,9 @@
         } else {
           vm.cardIndicatorDiff = response.data.dataProvider[0].value;
           if (vm.cardIndicatorDiff > 0) {
-            vm.cardIndicator = vm.increasedBy + ' ' + vm.cardIndicatorDiff;
+            vm.cardIndicator = vm.increaseBy + ' ' + vm.cardIndicatorDiff;
           } else {
-            vm.cardIndicator = vm.decreasedBy + ' ' + vm.cardIndicatorDiff;
+            vm.cardIndicator = vm.decreasedBy + ' ' + Math.abs(vm.cardIndicatorDiff);
           }
         }
       });

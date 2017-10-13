@@ -77,11 +77,11 @@ class CustomerReportsHeaderCtrl {
   };
 
   private filterTestSites (siteUrls): string[] {
-    const webexTestSites: string[] = ['.my.dmz.webex.com', '.my.webex.com', '.dmz.webex.com', '.qa.webex.com'];
+    const webexTestSites: string[] = ['.my.webex.com', '.dmz.webex.com', '.qa.webex.com'];
     let sites: any[] = [];
     sites = _.filter(siteUrls, function (site) {
       return !_.find(webexTestSites, function (testSite) {
-        return _.includes(site, testSite);
+        return _.endsWith(site, testSite);
       });
     });
     return sites;
@@ -104,8 +104,8 @@ class CustomerReportsHeaderCtrl {
       const siteUrls: any[] = this.getConferenceServiceWebexSiteUrls() || [];
       let webexSiteUrls: any[] = this.filterSiteList(siteUrls) || [];
 
+      webexSiteUrls = this.filterTestSites(webexSiteUrls);
       if (this.Config.isIntegration()) {
-        webexSiteUrls = this.filterTestSites(webexSiteUrls);
         webexSiteUrls = this.fixWebexSites(webexSiteUrls);
       }
 

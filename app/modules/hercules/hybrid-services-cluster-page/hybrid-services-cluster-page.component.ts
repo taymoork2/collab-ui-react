@@ -4,7 +4,6 @@ class HybridServicesClusterPageCtrl implements ng.IComponentController {
   public tabs: { title: string, state: string }[] = [];
   public title: string;
   public backState = 'cluster-list';
-  public hasNodesViewFeatureToggle: boolean;
 
   /* @ngInject */
   constructor(
@@ -49,16 +48,13 @@ class HybridServicesClusterPageCtrl implements ng.IComponentController {
           default:
             route = '';
         }
-        // Don't show any tabs if the "Nodes" one is not available. Only the "Settings" tab would be weird
-        if (this.hasNodesViewFeatureToggle) {
-          this.tabs = [{
-            title: this.$translate.instant('common.nodes'),
-            state: `${route}-cluster.nodes`,
-          }, {
-            title: this.$translate.instant('common.settings'),
-            state: `${route}-cluster.settings`,
-          }];
-        }
+        this.tabs = [{
+          title: this.$translate.instant('common.nodes'),
+          state: `${route}-cluster.nodes`,
+        }, {
+          title: this.$translate.instant('common.settings'),
+          state: `${route}-cluster.settings`,
+        }];
       });
 
     const deregister = this.$rootScope.$on('cluster-name-update', (_event, name) => {
@@ -75,6 +71,5 @@ export class HybridServicesClusterPageComponent implements ng.IComponentOptions 
   public bindings = {
     backState: '<',
     clusterId: '<',
-    hasNodesViewFeatureToggle: '<',
   };
 }

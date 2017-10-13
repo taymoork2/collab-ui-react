@@ -205,7 +205,7 @@
         gridApi.core.on.sortChanged($scope, sortColumn);
       },
       columnDefs: [{
-        field: 'siteToSite',
+        field: 'siteToSiteNumber',
         displayName: $translate.instant('linesPage.internalNumberHeader'),
         width: '20%',
         cellClass: 'internalNumberColumn',

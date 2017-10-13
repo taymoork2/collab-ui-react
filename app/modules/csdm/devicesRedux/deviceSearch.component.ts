@@ -21,7 +21,6 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
   private searchResultChanged: (e: { result?: SearchResult }) => {};
   public searchObject: SearchObject;
   private searchInteraction: SearchInteraction;
-  public search: string;
   public searchResult: Device[];
   private isSearching: boolean;
 
@@ -35,7 +34,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
   }
 
   get searching(): boolean {
-    return this.inputActive || !!this.search;
+    return this.inputActive;
   }
 
   public $onInit(): void {
@@ -63,7 +62,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
     if (this.searchObject.hasError) {
       return;
     }
-    this.searchObject.clearWorkingElement();
+    this.searchObject.submitWorkingElement();
     this.searchInput = '';
     this.lastSearchInput = '';
     this.searchChange();
@@ -79,18 +78,30 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
 
   public editBullet(bullet: SearchElement) {
     if (!this.searchObject.hasError) {
-      this.searchObject.clearWorkingElement();
+      this.searchObject.submitWorkingElement();
       this.searchInput = '';
       this.lastSearchInput = '';
     }
     this.searchObject.hasError = false;
     this.lastSearchInput = bullet.toQuery();
     this.searchInput = this.lastSearchInput;
+    this.setFocusToInputField();
     bullet.setBeingEdited(true);
   }
 
+  public clearSearchInput() {
+    this.searchObject.setWorkingElementText('');
+    this.searchInput = '';
+    this.lastSearchInput = '';
+    this.searchChange();
+  }
+
+  public setFocusToInputField() {
+    angular.element('#searchFilterInput').focus();
+  }
+
   public removeBullet(bullet: SearchElement) {
-    this.searchObject.removeBullet(bullet);
+    this.searchObject.removeSearchElement(bullet);
     this.searchChange();
   }
 
@@ -114,7 +125,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
   public searchChange() {
     if (this.lastSearchObject && this.lastSearchObject.equals(this.searchObject)) {
       return;
-    } else if (this.searchObject.hasError && this.lastSearchObject.currentFilterValue === this.searchObject.currentFilterValue) {
+    } else if (this.searchObject.hasError && (!this.lastSearchObject || this.lastSearchObject.currentFilterValue === this.searchObject.currentFilterValue)) {
       return;
     }
     const searchClone = this.searchObject.clone();
@@ -235,12 +246,10 @@ export class SearchInteraction implements ISearchHandler {
 export class DeviceSearchComponent implements ng.IComponentOptions {
   public controller = DeviceSearch;
   public bindings = {
-    search: '=',
     searchInteraction: '<',
     searchResultChanged: '&',
     searchObject: '<',
     isSearching: '=',
-    clearSearch: '&',
   };
   public controllerAs = 'dctrl';
   public template = require('modules/csdm/devicesRedux/deviceSearch.html');

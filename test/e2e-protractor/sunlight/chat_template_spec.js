@@ -95,6 +95,8 @@ describe('Care admin should be able to', function () {
     utils.expectIsDisplayed(careLandingPage.creatCTButton);
     utils.click(careLandingPage.creatCTButton);
     validateDisplayNewFeatureModal();
+    utils.click(careFeatureLandingPage.createCustomerSupportTemplateButton);
+    validateDisplayCustomerSupportTemplateModal();
     utils.click(careFeatureLandingPage.createChatTemplateButton);
     utils.expectIsDisplayed(careChatTemplateSetupPage.ctNameInput);
     utils.waitForText(careChatTemplateSetupPage.nameHint, 'Enter a name for you to identify this template');
@@ -104,7 +106,14 @@ describe('Care admin should be able to', function () {
 
   function validateDisplayNewFeatureModal() {
     utils.expectIsDisplayed(careFeatureLandingPage.careNewFeatureModal);
+    utils.expectIsDisplayed(careFeatureLandingPage.createCustomerSupportTemplateButton);
+  }
+
+  function validateDisplayCustomerSupportTemplateModal() {
+    utils.expectIsDisplayed(careFeatureLandingPage.careNewFeatureModal);
     utils.expectIsDisplayed(careFeatureLandingPage.createChatTemplateButton);
+    utils.expectIsDisplayed(careFeatureLandingPage.createCallbackTemplateButton);
+    utils.expectIsDisplayed(careFeatureLandingPage.createChatPlusCallbackTemplateButton);
   }
 
   function editTemplate(templateNameSuffix) {

@@ -137,6 +137,7 @@
     require('modules/call/features').default,
     require('modules/call/features/paging-group/shared').default,
     require('modules/call/features/call-pickup/shared').default,
+    require('modules/huron/lineSettings/directoryNumberService'),
   ])
     .constant('ASTParser', require('acorn'))
     .constant('ASTWalker', require('acorn/dist/walk'));
@@ -145,6 +146,8 @@
     'Core',
     'Squared',
     'ngTagsInput',
+    require('modules/core/overview/notifications/allHybridCalendars.factory').default,
+    require('modules/core/overview/notifications/hybridMessaging.factory').default,
     require('modules/core/users/userAdd/onboard.module'),
     require('modules/hercules/cluster-card').default,
     require('modules/hercules/connector-upgrade-modal/connector-upgrade-modal.controller').default,
@@ -156,6 +159,7 @@
     require('modules/hercules/user-sidepanel/hybrid-services-user-sidepanel-section').default,
     require('modules/hercules/resource-group-card').default,
     require('modules/hercules/service-settings/calendar-service-setup').default,
+    require('modules/hercules/service-specific-pages/components/cluster-list/hybrid-service-cluster-list.component').default,
     require('modules/hercules/services/calendar-cloud-connector.service').default,
     require('modules/hercules/services/cluster-service').default,
     require('modules/hercules/services/enterprise-private-trunk-service').default,
@@ -172,6 +176,8 @@
     require('modules/hercules/services/service-descriptor.service').default,
     require('modules/hercules/services/ucc-service').default,
     require('modules/hercules/services/uss.service').default,
+    require('modules/services-overview/new-hybrid/prerequisites-modals/hybrid-media-prerequisites/hybrid-media-prerequisites.controller').default,
+    require('modules/services-overview/new-hybrid/prerequisites-modals/hybrid-services-prerequisites-helper.service').default,
   ]);
 
   angular.module('HDS', [
@@ -208,11 +214,6 @@
 
   angular.module('Gemini', ['Core']);
 
-  angular.module('CMC', [
-    'Core',
-    require('modules/cmc').default,
-  ]);
-
   module.exports = angular.module('Main', [
     'Core',
     'Squared',
@@ -229,7 +230,6 @@
     'GSS',
     'oc.lazyLoad',
     'Gemini',
-    'CMC',
     'Csdm',
     require('modules/services-overview').default,
   ]).config(require('./main.config'))

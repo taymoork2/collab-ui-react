@@ -6,6 +6,14 @@ class HybridMediaInactiveCardController implements ng.IComponentController {
     private $modal: IToolkitModalService,
   ) {}
 
+  public openPrerequisites(): void {
+    this.$modal.open({
+      controller: 'HybridMediaPrerequisitesController',
+      controllerAs: 'vm',
+      template: require('modules/services-overview/new-hybrid/prerequisites-modals/hybrid-media-prerequisites/hybrid-media-prerequisites.html'),
+    });
+  }
+
   public openSetUp(): void {
     this.$modal.open({
       resolve: {
@@ -32,6 +40,7 @@ export class HybridMediaInactiveCardComponent implements ng.IComponentOptions {
         <p translate="servicesOverview.cards.hybridMedia.description"></p>
       </div>
       <div class="inactive-card_footer">
+        <p><button class="btn btn--link" ng-click="$ctrl.openPrerequisites()" translate="servicesOverview.genericButtons.prereq"></button></p>
         <p><button class="btn btn--primary" ng-click="$ctrl.openSetUp()" translate="servicesOverview.genericButtons.setup"></button></p>
       </div>
     </article>

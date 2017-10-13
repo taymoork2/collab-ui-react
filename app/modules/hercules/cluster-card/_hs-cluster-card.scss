@@ -9,11 +9,6 @@ hs-cluster-card {
       position: relative;
       padding: 1.25rem 1rem 0.9375rem !important;
 
-      &.one-liner {
-        display: flex;
-        align-items: baseline;
-      }
-
       h4 {
         @include text-overflow();
         margin-right: 0.625rem;

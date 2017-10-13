@@ -29,7 +29,7 @@
               messages="$ctrl.validationMessages"
               ng-model="$ctrl.callLocationSettingsData.location.name"
               ng-model-options="{ debounce: 500 }">
-            <p class="input-description">{{'locations.locationDesc' | translate}}</p>
+            <p class="input-description" translate="locations.locationDesc"></p>
             <div class="cs-input__messages error" ng-messages="$ctrl.form.locationName.$error" role="alert">
               <div ng-repeat="(key, value) in $ctrl.validationMessages" class="message">
                 <span ng-message="{{key}}">{{value}}</span>
@@ -43,7 +43,7 @@
           <div class="cs-form__section location-create-step">
             <div class="section__content">
               <h4 class="step-title" translate="callerIdPanel.title"></h4>
-              <div class="step-desc">Specify the default outbound Caller ID. Exceptions can be made for each location and at the individual user's settings.</div>
+              <div class="step-desc" translate="companyCallerId.companyCallerIdLocationDesc"></div>
               <div class="sub-section">
                 <uc-location-caller-id
                   caller-id="$ctrl.callLocationSettingsData.location.callerId"
@@ -158,7 +158,7 @@
               <uc-call-emergency-services
                 address="$ctrl.callLocationSettingsData.address"
                 is-pstn-setup="$ctrl.PstnModel.isCustomerExists()"
-                allow-ecn-setup="false">
+                allow-ecbn-setup="false">
               </uc-call-emergency-services>
             </div>
           </div>

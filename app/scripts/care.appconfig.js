@@ -54,6 +54,12 @@
                 $state.isVirtualAssistantEnabled = isEnabled;
               });
           },
+          isExpertCareAssistantEnabled: /* @ngInject */ function (FeatureToggleService, $state) {
+            return FeatureToggleService.supports(FeatureToggleService.features.atlasExpertVirtualAssistantEnable)
+              .then(function (isEnabled) {
+                $state.isExpertVirtualAssistantEnabled = isEnabled;
+              });
+          },
         },
       })
       .state('care.setupAssistant', {

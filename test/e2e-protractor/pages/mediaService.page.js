@@ -76,7 +76,7 @@ var MediaServicePage = function () {
   this.meetLocationCardDiv = element(by.css('#meeting-location-card'));
   this.totMeetsByHostHeader = element(by.cssContainingText('.report-section-header', 'Total Meetings by Host Type'));
   this.clientTypeHeader = element(by.cssContainingText('.report-section-header', 'Client Type Distribution'));
-  this.performActionsOnNodeBtn = element(by.cssContainingText('.btn--white', 'Perform actions on Node'));
+  this.performActionsOnNodeBtn = element(by.cssContainingText('.btn--primary', 'Perform actions on Node'));
   this.actionsBtn = element(by.cssContainingText('.actions-button', 'Actions'));
 
   this.totalmeetsFlip = element(by.css('i[ng-click="isFlipped=true"]'));

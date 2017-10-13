@@ -23,7 +23,6 @@
       'cloudMeetings:login',
       'webex-messenger:get_webextoken',
       'cloud-contact-center:admin',
-      'cmc-controller:get_status',
       'spark-compliance:rooms_read',
       'compliance:spark_conversations_read',
       'contact-center-context:pod_read',
@@ -39,6 +38,10 @@
       // to onboard bot account
       'spark:applications_write',
       'spark:applications_read',
+      // for Care Virtual Assistant
+      'spark:messages_read',
+      'spark:memberships_read',
+      'spark:rooms_read',
     ];
 
     var oauth2Scope = encodeURIComponent(scopes.join(' '));

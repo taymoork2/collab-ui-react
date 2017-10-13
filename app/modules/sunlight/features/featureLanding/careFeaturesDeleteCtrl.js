@@ -15,14 +15,14 @@
     vm.featureType = $stateParams.deleteFeatureType;
     vm.confirmationText = 'careChatTpl.deleteFeatureTextConfirmation';
 
-    if (vm.featureType === VirtualAssistantService.serviceCard.id) {
+    if (vm.featureType === VirtualAssistantService.cvaServiceCard.id) {
       vm.confirmationText = 'careChatTpl.deleteVaFeatureTextConfirmation';
     }
 
     function deleteFeature() {
       vm.deleteBtnDisabled = true;
       var deleteFunc = CareFeatureList.deleteTemplate;
-      if (vm.featureType === VirtualAssistantService.serviceCard.id) {
+      if (vm.featureType === VirtualAssistantService.cvaServiceCard.id) {
         deleteFunc = VirtualAssistantService.deleteConfig.bind(VirtualAssistantService);
       }
       deleteFunc(vm.featureId).then(function () {

@@ -301,8 +301,7 @@
     deviceOverview.saveTimeZoneAndWait = function () {
       if (deviceOverview.currentDevice.isATA && deviceOverview.ataRebootWarningToggle) {
         ConfirmAtaRebootModal
-          .open({ name: $translate.instant('deviceOverviewPage.timeZone'),
-          })
+          .open({ name: $translate.instant('deviceOverviewPage.timeZone') })
           .then(executeSaveTimeZoneAndWait)
           .catch(getCurrentDeviceInfo);
       } else {

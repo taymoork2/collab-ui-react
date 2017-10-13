@@ -1,5 +1,7 @@
 'use strict';
 
+/* eslint no-restricted-globals:0 */
+
 var consoleWarn = console.warn;
 console.warn = function () {
   consoleWarn.apply(console, arguments);

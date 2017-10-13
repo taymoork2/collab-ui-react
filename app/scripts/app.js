@@ -81,7 +81,7 @@
     require('modules/core/modal').default,
     require('modules/core/notifications').default,
     require('modules/core/scripts/services/authinfo'),
-    require('modules/core/healthMonitor/healthService'),
+    require('modules/core/health-monitor').default,
     require('modules/core/users').default,
     require('modules/core/rate-limit').default,
     require('modules/core/scripts/services/localize'),

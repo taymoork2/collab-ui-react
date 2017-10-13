@@ -968,10 +968,13 @@
     };
 
     vm.populateVirtualAssistantInfo = function () {
+      if (!vm.template.configuration.virtualAssistant) {
+        vm.template.configuration.virtualAssistant = _.cloneDeep(defaultVirtualAssistantConfig);
+      }
       vm.selectedVA = vm.template.configuration.virtualAssistant.config;
 
       // update modified VA Name from the configured VA info
-      if (vm.selectedVA.id && vm.hasConfiguredVirtualAssistantServices) {
+      if (vm.selectedVA && vm.selectedVA.id && vm.hasConfiguredVirtualAssistantServices) {
         var selectedVA = _.find(vm.configuredVirtualAssistantServices, {
           id: vm.selectedVA.id,
         });
@@ -1136,8 +1139,7 @@
     }
 
     function statusPageNotifier() {
-      var notifyMessage = $translate.instant('careChatTpl.statusMessage_failureText', {
-        lengthLimit: vm.lengthConstants.singleLineMaxCharLimit25 });
+      var notifyMessage = $translate.instant('careChatTpl.statusMessage_failureText', { lengthLimit: vm.lengthConstants.singleLineMaxCharLimit25 });
       if (!isStatusMessagesPageValid() && $stateParams.isEditFeature) {
         Notification.error(notifyMessage);
       }
@@ -1386,7 +1388,7 @@
       }
       var nextPage = vm.template.configuration.pages[vm.states[next]];
       switch (vm.states[next]) {
-        case 'proactivePrompt' :
+        case 'proactivePrompt':
         case 'virtualAssistant':
           nextPage = vm.template.configuration[vm.states[next]];
           break;
@@ -1686,7 +1688,7 @@
           }
         }).catch(function (error) {
           vm.configuredVirtualAssistantServices = [];
-          Notification.errorWithTrackingId(error, $translate.instant('careChatTpl.getVirtualAssistantListError'));
+          Notification.errorWithTrackingId(error, 'careChatTpl.getVirtualAssistantListError');
         });
       }
     }

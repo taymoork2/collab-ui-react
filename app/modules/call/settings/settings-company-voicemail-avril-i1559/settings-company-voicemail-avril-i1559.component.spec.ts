@@ -9,7 +9,7 @@ describe('Component: companyVoicemailAvril', () => {
   const NO_EXTERNAL_NUMBER_WARNING = COMPANY_NUMBER_SELECT + ' ' + MESSAGE_CONTAINER;
   const DROPDOWN_OPTIONS = '.dropdown-menu ul li';
   const GENERATED_VM_PILOT_NUMBER = '+150708071004091414081311041300051000081';
-  const externalNumberOptions = getJSONFixture('huron/json/settings/externalNumbersOptions.json');
+  const externalNumberOptions = getJSONFixture('huron/json/settings/externalNumbers.json');
 
   const VOICEMAIL_TO_EMAIL = 'input#voicemailToEmail';
   const VOICEMAIL_TO_EMAIL_WITH_ATTACHMENT = 'input#emailWithAttachment';
@@ -120,9 +120,9 @@ describe('Component: companyVoicemailAvril', () => {
       this.view.find(VOICEMAIL_TOGGLE).click();
       this.view.find(VOICEMAIL_TO_PHONE).click();
       expect(this.view).toContainElement(COMPANY_NUMBER_SELECT);
-      expect(this.view.find(COMPANY_NUMBER_SELECT).find(DROPDOWN_OPTIONS).get(0)).toHaveText('(972) 555-1212');
-      expect(this.view.find(COMPANY_NUMBER_SELECT).find(DROPDOWN_OPTIONS).get(1)).toHaveText('(972) 555-1313');
-      expect(this.view.find(COMPANY_NUMBER_SELECT).find(DROPDOWN_OPTIONS).get(2)).toHaveText('(972) 555-1414');
+      expect(this.view.find(COMPANY_NUMBER_SELECT).find(DROPDOWN_OPTIONS).get(1)).toHaveText('(972) 555-1212');
+      expect(this.view.find(COMPANY_NUMBER_SELECT).find(DROPDOWN_OPTIONS).get(2)).toHaveText('(972) 555-1313');
+      expect(this.view.find(COMPANY_NUMBER_SELECT).find(DROPDOWN_OPTIONS).get(3)).toHaveText('(972) 555-1414');
     });
 
     it('should call onChangeFn when an external number is chosen', function() {
@@ -139,8 +139,8 @@ describe('Component: companyVoicemailAvril', () => {
       });
       this.view.find(VOICEMAIL_TOGGLE).click();
       this.view.find(VOICEMAIL_TO_PHONE).click();
-      this.view.find(COMPANY_NUMBER_SELECT).find(DROPDOWN_OPTIONS).get(0).click();
-      expect(this.$scope.onChangeFn.calls.argsFor(2)).toEqual(['+19725551212', 'false', true, avrilFeatures]);
+      this.view.find(COMPANY_NUMBER_SELECT).find(DROPDOWN_OPTIONS).get(2).click();
+      expect(this.$scope.onChangeFn.calls.argsFor(1)).toEqual(['+19725551212', 'false', true, avrilFeatures]);
     });
   });
 

@@ -22,6 +22,7 @@ module.exports = {
     'consistent-return': 0,
     'eqeqeq': 0,
     'func-names': 0,
+    'function-paren-newline': 0,
     'global-require': 0,
     'linebreak-style': [2, process.platform === 'win32' ? 'windows' : 'unix'],
     'max-len': 0,

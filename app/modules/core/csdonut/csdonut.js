@@ -133,7 +133,7 @@
         $scope.clean = function clean(dataset) {
           return dataset.map(function map(value) {
             if ($scope.property) {
-              if (isNaN(Number(value[$scope.property]))) {
+              if (_.isNaN(Number(value[$scope.property]))) {
                 value[$scope.property] = 0;
               } else {
                 value[$scope.property] = Number(value[$scope.property]);
@@ -142,7 +142,7 @@
               return value;
             }
 
-            if (isNaN(Number(value))) {
+            if (_.isNaN(Number(value))) {
               return 0;
             }
 

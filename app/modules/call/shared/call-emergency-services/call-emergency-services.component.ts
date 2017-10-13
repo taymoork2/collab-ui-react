@@ -3,6 +3,8 @@ import {
 } from 'modules/huron/pstn';
 import { IOption } from 'modules/huron/dialing';
 import { Notification } from 'modules/core/notifications';
+import { NumberService, NumberType, NumberOrder } from 'modules/huron/numbers';
+import { PhoneNumberService } from 'modules/huron/phoneNumber';
 
 export class CallEmergencyServicesComponent implements ng.IComponentOptions {
   public controller = CallEmergencyServicesCtrl;
@@ -13,7 +15,7 @@ export class CallEmergencyServicesComponent implements ng.IComponentOptions {
     address: '=',       //Address: Model for emergency service address (ESA)
     required: '<',      //boolean: Is the component required
     isPstnSetup: '<',   //boolean: that will allow ESA to be Entered and Validated
-    allowEcnSetup: '<', //boolean: that will allow ECN to be setup
+    allowEcbnSetup: '<', //boolean: that will allow ECBN to be setup
   };
 }
 
@@ -24,7 +26,7 @@ class CallEmergencyServicesCtrl implements ng.IComponentController {
   public address: Address;
   public required: boolean;
   public isPstnSetup: boolean;
-  public allowEcnSetup: boolean;
+  public allowEcbnSetup: boolean;
   //Class properties
   public addressValidating: boolean = false;
   public addressReadOnly: boolean = false;
@@ -32,6 +34,8 @@ class CallEmergencyServicesCtrl implements ng.IComponentController {
   public inputHolder: string = '';
   public emergencyCallbackNumberForm: ng.IFormController;
   public emergencyServiceAddressForm: ng.IFormController;
+  public onNumberFilterFn: Function;
+  public isNumberDisabled: boolean = false;
 
   /* @ngInject */
   public constructor (
@@ -40,6 +44,8 @@ class CallEmergencyServicesCtrl implements ng.IComponentController {
     private PstnAddressService: PstnAddressService,
     private Notification: Notification,
     private $translate: ng.translate.ITranslateService,
+    private NumberService: NumberService,
+    private PhoneNumberService: PhoneNumberService,
   ) {
   }
 
@@ -52,8 +58,8 @@ class CallEmergencyServicesCtrl implements ng.IComponentController {
     if (!_.isBoolean(this.required)) {
       this.required = true;
     }
-    if (!_.isBoolean(this.allowEcnSetup)) {
-      this.allowEcnSetup = false;
+    if (!_.isBoolean(this.allowEcbnSetup)) {
+      this.allowEcbnSetup = false;
     }
 
     if (!_.isEmpty(this.PstnModel.getCustomerId())) {
@@ -65,14 +71,44 @@ class CallEmergencyServicesCtrl implements ng.IComponentController {
         });
       }
     }
+    //isNumberDisabled is set at Init time
+    //The reason is the this.numberOptions will change because
+    //of the html cs-select refresh function
+    this.isNumberDisabled = this.getIsNumberDisabled();
   }
 
-  public showES() {
+  private getIsNumberDisabled(): boolean {
+    let disabled: boolean = false;
+    if (!this.allowEcbnSetup) {
+      disabled = true;
+    } else if (_.isEmpty(this.numberOptions)) {
+      disabled = true;
+    }
+    return disabled;
+  }
+
+  public showES(): boolean {
     return this.isPstnSetup;
   }
 
-  public isNumberRequired() {
-    return this.required && this.allowEcnSetup;
+  public showNumberMessage(): boolean {
+    if (!this.allowEcbnSetup) {
+      return false;
+    }
+    if (!this.number) {
+      return true;
+    }
+    if (!_.isString(this.number.value)) {
+      return true;
+    }
+    if (_.isEmpty(this.number.value)) {
+      return true;
+    }
+    return false;
+  }
+
+  public isNumberRequired(): boolean {
+    return this.required && this.allowEcbnSetup && !this.isNumberDisabled;
   }
 
   public onValidateAddress(): void {
@@ -102,6 +138,19 @@ class CallEmergencyServicesCtrl implements ng.IComponentController {
     if (this.emergencyServiceAddressForm) {
       this.emergencyServiceAddressForm.$setPristine();
       this.emergencyServiceAddressForm.$setUntouched();
+    }
+  }
+
+  public getEmegencyCallBackNumbers(filter) {
+    if (_.isString(filter)) {
+      this.NumberService.getNumberList(filter, NumberType.EXTERNAL, true, NumberOrder.DESCENDING).then((numberList) => {
+        this.numberOptions = _.map(numberList, number => {
+          return {
+            value: number.external,
+            label: this.PhoneNumberService.getNationalFormat(number.external),
+          } as IOption;
+        });
+      });
     }
   }
 

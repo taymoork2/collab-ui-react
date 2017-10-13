@@ -25,6 +25,9 @@
   <!-- CSV icon and results link -->
   <cr-site-actions-csv-icon></cr-site-actions-csv-icon>
 
+  <!-- redistribute licenses icon -->
+ <cr-site-actions-licenses-icon ng-if="grid.appScope.isShowAddSite" ng-click="grid.appScope.redistributeLicenses(row.entity.license)"></cr-site-actions-licenses-icon>
+
   <!-- Start of Loading indication -->
   <span ng-if="!row.entity.isLinkedSite">
     <span ng-if="(!row.entity.showCSVIconAndResults &&

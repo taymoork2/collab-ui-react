@@ -52,7 +52,6 @@ describe('HybridServicesHostDetailsController: ', function () {
       $stateParams: $stateParams,
       ClusterService: ClusterService,
       HybridServicesClusterStatesService: HybridServicesClusterStatesService,
-      hasNodesViewFeatureToggle: false,
     });
     $scope.$apply();
   }));
@@ -90,13 +89,11 @@ describe('HybridServicesHostDetailsController: ', function () {
   it('should support HDS connector parsing', function () {
     expect(controller.host.connectorType).toBe('hds_app');
     expect(controller.host.state).toBe('running');
-    expect(controller.actions.length).toBe(2);
   });
 
   it('should support HDS connector offline function', function () {
     controller.host = {};
     controller.host.state = 'offline';
     controller.host.connectorType = 'hds_app';
-    expect(controller.actions.length).toBe(2);
   });
 });

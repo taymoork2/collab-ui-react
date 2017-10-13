@@ -4,6 +4,7 @@ import { VirtualAssistantService } from './VirtualAssistantService';
 describe('Care Virtual Assistant Service', function () {
 
   const SERVICE_URL = 'testApp.ciscoservice.com/bot-services/v1/';
+  const EXPERT_SERVICE_URL = 'testApp.ciscoservice.com/expert-assistant/v1/';
   const TEST_ORG_ID = 'A-UUID-VALUE';
   const TEST_BOT_NAME = 'A NAME';
   const TEST_BOT_CONFIG_ID = 'ANOTHER-UUID-VALUE';
@@ -12,6 +13,7 @@ describe('Care Virtual Assistant Service', function () {
 
   const spiedUrlConfig = {
     getVirtualAssistantServiceUrl: jasmine.createSpy('getVirtualAssistantServiceUrl').and.returnValue(SERVICE_URL),
+    getExpertVirtualAssistantServiceUrl: jasmine.createSpy('getExpertVirtualAssistantServiceUrl').and.returnValue(EXPERT_SERVICE_URL),
   };
 
   const spiedAuthinfo = {
@@ -34,7 +36,7 @@ describe('Care Virtual Assistant Service', function () {
 
   it('service Card goto Service should do just that', function () {
     const goSpy = spyOn($state, 'go');
-    VirtualAssistantService.serviceCard.goToService($state);
+    VirtualAssistantService.cvaServiceCard.goToService($state, { type: 'virtualAssistant' });
     expect(goSpy).toHaveBeenCalledWith('care.assistant', {
       type: 'virtualAssistant',
     });
@@ -59,6 +61,24 @@ describe('Care Virtual Assistant Service', function () {
     done();
   });
 
+  it('URL should support listExpertAssistants', function () {
+    const url = new RegExp('.*/organization/' + TEST_ORG_ID + '/botconfig');
+    const expectedVirtualAssistantList = { items: [{ id: '7cc2966d-e697-4c32-8be9-413c1bfae585', name: 'HI', queueId: '7cc2966d-e697-4c32-8be9-413c1bfae585' }] };
+    $httpBackend.whenGET(url).respond(200, expectedVirtualAssistantList);
+    VirtualAssistantService.listExpertAssistants(TEST_ORG_ID).then(function (response) {
+      expect(response.data).toBe(expectedVirtualAssistantList);
+    });
+  });
+
+  it('URL should Fail listExpertAssistants when error', function (done) {
+    const url = new RegExp('.*/organization/' + TEST_ORG_ID + '/botconfig');
+    $httpBackend.expectGET(url).respond(500);
+    VirtualAssistantService.listExpertAssistants(TEST_ORG_ID).then(function () {
+    }, function (response) {
+      expect(response.status).toEqual(500);
+    });
+    done();
+  });
 
   it('URL should support getConfig', function () {
     const url = new RegExp('.*/organization/' + TEST_ORG_ID + '/botconfig/' + TEST_BOT_CONFIG_ID);

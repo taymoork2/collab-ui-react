@@ -500,20 +500,23 @@ describe('Controller: AABuilderMainCtrl', function () {
     it('should update an existing aaRecord with REST block deleted', function () {
       aaModel.aaRecords.push(rawCeInfo);
       controller.ui.openHours.entries = [
-        { actions: [{
-          id: '',
-          name: 'foo',
-        }],
+        {
+          actions: [{
+            id: '',
+            name: 'foo',
+          }],
         },
-        { actions: [{
-          id: '',
-          name: 'bar',
-        }],
+        {
+          actions: [{
+            id: '',
+            name: 'bar',
+          }],
         },
-        { actions: [{
-          id: '',
-          name: 'bat',
-        }],
+        {
+          actions: [{
+            id: '',
+            name: 'bat',
+          }],
         },
       ];
 
@@ -528,20 +531,23 @@ describe('Controller: AABuilderMainCtrl', function () {
     it('should report failure if REST block does not get deleted successfully', function () {
       aaModel.aaRecords.push(rawCeInfo);
       controller.ui.openHours.entries = [
-        { actions: [{
-          id: '',
-          name: 'foo',
-        }],
+        {
+          actions: [{
+            id: '',
+            name: 'foo',
+          }],
         },
-        { actions: [{
-          id: '',
-          name: 'bar',
-        }],
+        {
+          actions: [{
+            id: '',
+            name: 'bar',
+          }],
         },
-        { actions: [{
-          id: '',
-          name: 'bat',
-        }],
+        {
+          actions: [{
+            id: '',
+            name: 'bat',
+          }],
         },
       ];
       aaModel.aaRecordUUID = 'c16a6027-caef-4429-b3af-9d61ddc7964b';
@@ -561,20 +567,23 @@ describe('Controller: AABuilderMainCtrl', function () {
       aaModel.aaRecords.push(rawCeInfo);
 
       controller.ui.openHours.entries = [
-        { actions: [{
-          id: '',
-          name: 'foo',
-        }],
+        {
+          actions: [{
+            id: '',
+            name: 'foo',
+          }],
         },
-        { actions: [{
-          id: '',
-          name: 'bar',
-        }],
+        {
+          actions: [{
+            id: '',
+            name: 'bar',
+          }],
         },
-        { actions: [{
-          id: '',
-          name: 'bat',
-        }],
+        {
+          actions: [{
+            id: '',
+            name: 'bat',
+          }],
         },
       ];
       aaModel.aaRecordUUID = 'c16a6027-caef-4429-b3af-9d61ddc7964b';
@@ -595,20 +604,23 @@ describe('Controller: AABuilderMainCtrl', function () {
     it('should not report failure if REST block does not get deleted successfully with a 404', function () {
       aaModel.aaRecords.push(rawCeInfo);
       controller.ui.openHours.entries = [
-        { actions: [{
-          id: '',
-          name: 'foo',
-        }],
+        {
+          actions: [{
+            id: '',
+            name: 'foo',
+          }],
         },
-        { actions: [{
-          id: '',
-          name: 'bar',
-        }],
+        {
+          actions: [{
+            id: '',
+            name: 'bar',
+          }],
         },
-        { actions: [{
-          id: '',
-          name: 'bat',
-        }],
+        {
+          actions: [{
+            id: '',
+            name: 'bat',
+          }],
         },
       ];
       aaModel.aaRecordUUID = 'c16a6027-caef-4429-b3af-9d61ddc7964b';
