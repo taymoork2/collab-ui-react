@@ -30,8 +30,8 @@ module.exports = {
   // valid URLs which can be loaded using script interfaces (Fetch, XMLHttpRequest, WebSocket, etc.)
   connectSrc: [
     '\'self\'',
-    'http://ciscowebex.d1.sc.omtrdc.net', // Adobe DTM Omniture
-    'http://dpm.demdex.net', // Adobe DTM Omniture
+    'https://ciscowebex.d1.sc.omtrdc.net', // Adobe DTM Omniture
+    'https://dpm.demdex.net', // Adobe DTM Omniture
     'http://rpbtqlkhsn002.webex.com:8080',
     'https://*.amazonaws.com', // MOH Media
     'https://*.cisco.com',
@@ -64,8 +64,8 @@ module.exports = {
     'https://*.clouddrive.com',
     'https://*.localytics.com',
     'https://*.rackcdn.com',
-    'http://webexglobal.112.2o7.net', // Adobe DTM Omniture
-    'http://*.d1.sc.omtrdc.net', // Adobe DTM Omniture
+    'https://webexglobal.112.2o7.net', // Adobe DTM Omniture
+    'https://*.d1.sc.omtrdc.net', // Adobe DTM Omniture
     'https://bam.nr-data.net', // New Relic Browser
   ],
   // valid sources for sources for JavaScript
@@ -76,9 +76,9 @@ module.exports = {
     'https://*.webex.com',
     'https://api.mixpanel.com', // Mixpanel
     'https://cdn.mxpnl.com', // Mixpanel
-    'http://assets.adobedtm.com', // Adobe DTM Omniture
-    'http://dpm.demdex.net', // Adobe DTM Omniture
-    'http://ciscowebex.d1.sc.omtrdc.net', // Adobe DTM Omniture
+    'https://assets.adobedtm.com', // Adobe DTM Omniture
+    'https://dpm.demdex.net', // Adobe DTM Omniture
+    'https://*.omtrdc.net', // Adobe DTM Ominture
     'https://buy.ciscospark.com', // Digital River
     'https://js-agent.newrelic.com', // New Relic Browser
     'https://bam.nr-data.net', // New Relic Browser
