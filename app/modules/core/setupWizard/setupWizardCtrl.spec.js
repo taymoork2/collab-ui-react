@@ -6,6 +6,7 @@ describe('SetupWizardCtrl', function () {
 
     this.injectDependencies(
       '$controller',
+      '$httpBackend',
       '$q',
       '$scope',
       '$state',
@@ -40,6 +41,7 @@ describe('SetupWizardCtrl', function () {
     spyOn(this.SetupWizardService, 'hasPendingTSPAudioPackage').and.returnValue(false);
     spyOn(this.SetupWizardService, 'getActiveCCASPPackage').and.returnValue(undefined);
     spyOn(this.SetupWizardService, 'getActiveTSPAudioPackage').and.returnValue(undefined);
+    spyOn(this.SetupWizardService, 'getOrg');
     spyOn(this.Authinfo, 'getLicenses').and.returnValue([{
       licenseType: 'SHARED_DEVICES',
     }]);
@@ -507,6 +509,22 @@ describe('SetupWizardCtrl', function () {
 
       this.expectStepOrder(['enterpriseSettings']);
       this.expectSubStepOrder('enterpriseSettings', ['init', 'exportMetadata', 'importIdp', 'testSSO']);
+    });
+  });
+
+  describe('Should create customer in CMI if licensed but no record found', function () {
+    beforeEach(function () {
+      this.SetupWizardService.isCustomerPresent.and.returnValue(this.$q.resolve(false));
+      this.SetupWizardService.getOrg.and.returnValue({
+        id: '123456',
+        displayName: 'Bob Belcher',
+        countryCode: 'US',
+      });
+      this.initController();
+    });
+
+    it('should create customer', function () {
+      this.$httpBackend.expectPOST('/customers').respond(200);
     });
   });
 });

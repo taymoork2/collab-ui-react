@@ -25,6 +25,7 @@ export class SetupWizardService {
   private pendingSubscriptions: IPendingSubscription[] = [];
   private country = '';
   private endCustomer = '';
+  private org;
   private willNotProvision = false;
   private actingSubscriptionChangeFn: Function = _.noop;
 
@@ -281,16 +282,16 @@ export class SetupWizardService {
     };
 
     return this.Orgservice.getOrg(_.noop, this.Authinfo.getOrgId(), params).then((response) => {
-      const org = _.get(response, 'data', null);
-      this.country = _.get<string>(org, 'countryCode', 'US');
-      this.endCustomer = _.get<string>(org, 'displayName');
-      if (_.get(org, 'orgSettings.sparkCallBaseDomain')) {
+      this.org = _.get(response, 'data', null);
+      this.country = _.get<string>(this.org, 'countryCode', 'US');
+      this.endCustomer = _.get<string>(this.org, 'displayName');
+      if (_.get(this.org, 'orgSettings.sparkCallBaseDomain')) {
         //check cmi in base domain for customer
-        return this.findCustomerInDc(_.get(org, 'orgSettings.sparkCallBaseDomain'));
+        return this.findCustomerInDc(_.get(this.org, 'orgSettings.sparkCallBaseDomain'));
       } else {
         //check CI for country
-        if (_.get(org, 'countryCode')) {
-          if (_.get(org, 'countryCode') === 'GB') {
+        if (_.get(this.org, 'countryCode')) {
+          if (_.get(this.org, 'countryCode') === 'GB') {
             //check CMI in EC DC
             return this.findCustomerInDc('sparkc-eu.com');
           } else {
@@ -313,6 +314,10 @@ export class SetupWizardService {
 
   public getEndCustomerName() {
     return this.endCustomer;
+  }
+
+  public getOrg() {
+    return this.org;
   }
 
   public findCustomerInDc(baseDomain) {

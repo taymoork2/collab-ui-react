@@ -33,7 +33,7 @@ require('./_setup-wizard.scss');
   angular.module('Core')
     .controller('SetupWizardCtrl', SetupWizardCtrl);
 
-  function SetupWizardCtrl($q, $scope, $state, $stateParams, $timeout, Analytics, Authinfo, Config, FeatureToggleService, Orgservice, SessionStorage, SetupWizardService, StorageKeys, Notification) {
+  function SetupWizardCtrl($q, $scope, $state, $stateParams, $timeout, Analytics, Authinfo, Config, FeatureToggleService, Orgservice, SessionStorage, SetupWizardService, StorageKeys, Notification, CustomerCommonService) {
     var isFirstTimeSetup = _.get($state, 'current.data.firstTimeSetup', false);
     var isITDecouplingFlow = false;
     var shouldRemoveSSOSteps = false;
@@ -301,6 +301,14 @@ require('./_setup-wizard.scss');
 
           if (!customer && hasPendingCallLicenses) {
             steps.push(pickCountry);
+          } else if (!customer) {
+            var org = SetupWizardService.getOrg();
+            CustomerCommonService.save({}, {
+              uuid: org.id,
+              name: org.displayName,
+              countryCode: org.countryCode,
+              servicePackage: 'VOICE_ONLY',
+            });
           }
 
           if (supportsHI1484) {
