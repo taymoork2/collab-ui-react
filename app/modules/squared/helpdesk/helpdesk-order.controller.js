@@ -286,13 +286,10 @@
       if (vm.hasConflictingServiceStatus) {
         return false;
       }
-      return vm.isOrderPendingProvisioning() || (!_.isUndefined(vm.accountId) && vm.order.orderStatus === PROVISIONED);
+      return !_.isUndefined(vm.accountId) && vm.order.orderStatus === PROVISIONED;
     }
 
     function canEditResendProvisioningContact() {
-      if (vm.hasConflictingServiceStatuses) {
-        return false;
-      }
       return vm.isOrderPendingProvisioning() && !vm.hasConflictingServiceStatus;
     }
 

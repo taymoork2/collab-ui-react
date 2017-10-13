@@ -3633,6 +3633,7 @@
     "subscriptionId": "Subscription IDs",
     "subscriptionID": "Subscription ID: ",
     "orderNumber": "Order Number: ",
+    "endCustomer": "End Customer: ",
     "spark": "Cisco Spark",
     "sparkStub": "Set up Cisco Spark",
     "webex": "WebEx",

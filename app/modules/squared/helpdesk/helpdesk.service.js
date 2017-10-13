@@ -249,8 +249,21 @@
       return $http
         .get(urlBase + 'ordersetup/' + encodeURIComponent(purchaseOrderId) + '/csmlink')
         .then(function (response) {
-          return response.data;
+          return encodeOpcUrl(response.data);
         });
+    }
+
+    function encodeOpcUrl(url) {
+      var encodedUrl = '';
+      _.forEach(url.split('&'), function (param) {
+        var paramSplit = param.split('=', 2);
+        if (paramSplit.length === 1) {
+          encodedUrl += param + '&';
+        } else {
+          encodedUrl += paramSplit[0] + '=' + encodeURIComponent(paramSplit[1]) + '&';
+        }
+      });
+      return encodedUrl.slice(0, -1);
     }
 
     function getUser(orgId, userId) {
