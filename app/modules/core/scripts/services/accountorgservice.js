@@ -244,41 +244,45 @@
       if (!org || org === '') {
         return $q.reject('A Valid organization ID must be Entered');
       }
-      var fileSharingSetting = {};
-      if (fileSharingControl.blockDesktopAppDownload && fileSharingControl.blockDesktopAppUpload) {
-        fileSharingSetting.desktopFileShareControl = FileShareControlType.BLOCK_BOTH;
-      } else if (fileSharingControl.blockDesktopAppUpload) {
-        fileSharingSetting.desktopFileShareControl = FileShareControlType.BLOCK_UPLOAD;
-      } else {
-        fileSharingSetting.desktopFileShareControl = FileShareControlType.NONE;
-      }
-
-      if (fileSharingControl.blockMobileAppDownload && fileSharingControl.blockMobileAppUpload) {
-        fileSharingSetting.mobileFileShareControl = FileShareControlType.BLOCK_BOTH;
-      } else if (fileSharingControl.blockMobileAppUpload) {
-        fileSharingSetting.mobileFileShareControl = FileShareControlType.BLOCK_UPLOAD;
-      } else {
-        fileSharingSetting.mobileFileShareControl = FileShareControlType.NONE;
-      }
-
-      if (fileSharingControl.blockWebAppDownload && fileSharingControl.blockWebAppUpload) {
-        fileSharingSetting.webFileShareControl = FileShareControlType.BLOCK_BOTH;
-      } else if (fileSharingControl.blockWebAppUpload) {
-        fileSharingSetting.webFileShareControl = FileShareControlType.BLOCK_UPLOAD;
-      } else {
-        fileSharingSetting.webFileShareControl = FileShareControlType.NONE;
-      }
-
-      if (fileSharingControl.blockBotsDownload && fileSharingControl.blockBotsUpload) {
-        fileSharingSetting.botFileShareControl = FileShareControlType.BLOCK_BOTH;
-      } else if (fileSharingControl.blockBotsUpload) {
-        fileSharingSetting.botFileShareControl = FileShareControlType.BLOCK_UPLOAD;
-      } else {
-        fileSharingSetting.botFileShareControl = FileShareControlType.NONE;
-      }
 
       var url = getDeviceSettingsUrl(org);
-      return $http.patch(url, fileSharingSetting);
+      return $http.get(url).then(function (response) {
+        var orgSettings = JSON.parse(response.data.orgSettings[0]); // get the latest orgSettings before patching
+
+        if (fileSharingControl.blockDesktopAppDownload && fileSharingControl.blockDesktopAppUpload) {
+          orgSettings.desktopFileShareControl = FileShareControlType.BLOCK_BOTH;
+        } else if (fileSharingControl.blockDesktopAppUpload) {
+          orgSettings.desktopFileShareControl = FileShareControlType.BLOCK_UPLOAD;
+        } else {
+          orgSettings.desktopFileShareControl = FileShareControlType.NONE;
+        }
+
+        if (fileSharingControl.blockMobileAppDownload && fileSharingControl.blockMobileAppUpload) {
+          orgSettings.mobileFileShareControl = FileShareControlType.BLOCK_BOTH;
+        } else if (fileSharingControl.blockMobileAppUpload) {
+          orgSettings.mobileFileShareControl = FileShareControlType.BLOCK_UPLOAD;
+        } else {
+          orgSettings.mobileFileShareControl = FileShareControlType.NONE;
+        }
+
+        if (fileSharingControl.blockWebAppDownload && fileSharingControl.blockWebAppUpload) {
+          orgSettings.webFileShareControl = FileShareControlType.BLOCK_BOTH;
+        } else if (fileSharingControl.blockWebAppUpload) {
+          orgSettings.webFileShareControl = FileShareControlType.BLOCK_UPLOAD;
+        } else {
+          orgSettings.webFileShareControl = FileShareControlType.NONE;
+        }
+
+        if (fileSharingControl.blockBotsDownload && fileSharingControl.blockBotsUpload) {
+          orgSettings.botFileShareControl = FileShareControlType.BLOCK_BOTH;
+        } else if (fileSharingControl.blockBotsUpload) {
+          orgSettings.botFileShareControl = FileShareControlType.BLOCK_UPLOAD;
+        } else {
+          orgSettings.botFileShareControl = FileShareControlType.NONE;
+        }
+
+        return $http.patch(url, orgSettings);
+      });
     }
   }
 })();
