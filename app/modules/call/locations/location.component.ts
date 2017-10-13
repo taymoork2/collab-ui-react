@@ -202,6 +202,12 @@ class CallLocationCtrl implements ng.IComponentController {
     }
   }
 
+  public onEcbnChange(value: IOption): void {
+    this.number = value;
+    this.updateECBNValue();
+    this.checkForChanges();
+  }
+
   public saveDisabled(): boolean {
     if (this.PstnModel.isCustomerExists()) {
       if (this.callLocationSettingsData && this.callLocationSettingsData.address && this.callLocationSettingsData.address.validated) {
@@ -231,7 +237,7 @@ class CallLocationCtrl implements ng.IComponentController {
       return;
     }
     let options: IOption[] = [];
-    if (_.isEmpty(emergencyNumber.pattern)) {
+    if (!_.isEmpty(emergencyNumber.pattern)) {
       options = this.locationSettingsOptions.emergencyNumbersOptions.filter(option => {
         return option.value === emergencyNumber.pattern;
       });

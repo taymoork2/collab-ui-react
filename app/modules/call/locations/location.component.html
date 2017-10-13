@@ -323,7 +323,8 @@
               number-options="$ctrl.locationSettingsOptions.emergencyNumbersOptions"
               address="$ctrl.callLocationSettingsData.address"
               is-pstn-setup="$ctrl.PstnModel.isCustomerExists()"
-              allow-ecbn-setup="true">
+              allow-ecbn-setup="true"
+              ecbn-change-fn="$ctrl.onEcbnChange(value)">
             </uc-call-emergency-services>
           </div>
         </div>
