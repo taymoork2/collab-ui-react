@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: CustomerListCtrl', function () {
+fdescribe('Controller: CustomerListCtrl', function () {
   var $httpBackend, $q, $controller, $state, $scope, Analytics, Authinfo, Config, HuronConfig, FeatureToggleService, Notification, Orgservice, PartnerService, TrialService;
   var controller;
 
@@ -98,6 +98,20 @@ describe('Controller: CustomerListCtrl', function () {
     it('should initialize', function () {
       expect(controller.activeFilter).toBe('all');
     });
+
+    it('should have correct notes text order after initilization', function () {
+      expect(PartnerService.customerStatus.FREE).toBe(0);
+      expect(PartnerService.customerStatus.TRIAL).toBe(1);
+      expect(PartnerService.customerStatus.ACTIVE).toBe(2);
+      expect(PartnerService.customerStatus.CANCELED).toBe(99);
+      expect(PartnerService.customerStatus.NO_LICENSE).toBe(-1);
+      expect(PartnerService.customerStatus.NOTE_EXPIRED).toBe(0);
+      expect(PartnerService.customerStatus.NOTE_EXPIRE_TODAY).toBe(1);
+      expect(PartnerService.customerStatus.NOTE_NEEDS_SETUP).toBe(3);
+      expect(PartnerService.customerStatus.NOTE_NO_LICENSE).toBe(2);
+      expect(PartnerService.customerStatus.NOTE_CANCELED).toBe(4);
+      expect(PartnerService.customerStatus.NOTE_NOT_EXPIRED).toBe(99);
+    });
   });
 
   describe('grid column display', function () {
@@ -159,15 +173,6 @@ describe('Controller: CustomerListCtrl', function () {
     it('should return the correct text for user count', function () {
       setTestDataTrial();
       expect(controller.getUserCountColumnText(testTrialData)).toBe(testTrialData.activeUsers + ' / ' + testTrialData.numUsers);
-    });
-
-    it('should return the correct account status', function () {
-      setTestDataExpired();
-      expect(controller.getAccountStatus(testTrialData)).toBe('expired');
-      setTestDataTrial();
-      expect(controller.getAccountStatus(testTrialData)).toBe('trial');
-      setTestDataActive();
-      expect(controller.getAccountStatus(testTrialData)).toBe('active');
     });
   });
 
@@ -290,9 +295,9 @@ describe('Controller: CustomerListCtrl', function () {
   });
 
   describe('filterColumns', function () {
-    it('return 9 items in the filter list without Care with care FT turned off', function () {
+    it('return 10 items in the filter list without Care with care FT turned off', function () {
       initController();
-      expect(controller.filter.options.length).toBe(9);
+      expect(controller.filter.options.length).toBe(10);
       expect(controller.filter.options).toContain(jasmine.objectContaining({
         value: 'sparkBoard',
       }));
@@ -310,7 +315,7 @@ describe('Controller: CustomerListCtrl', function () {
     it('show care in the filter list with care FT on', function () {
       FeatureToggleService.atlasCareTrialsGetStatus.and.returnValue($q.resolve(true));
       initController();
-      expect(controller.filter.options.length).toBe(10);
+      expect(controller.filter.options.length).toBe(11);
       expect(controller.filter.options).toContain(jasmine.objectContaining({
         value: 'care',
       }));
@@ -322,7 +327,7 @@ describe('Controller: CustomerListCtrl', function () {
     it('show Pro Pack in the filter list with correct FT on', function () {
       FeatureToggleService.atlasITProPackGetStatus.and.returnValue($q.resolve(true));
       initController();
-      expect(controller.filter.options.length).toBe(11);
+      expect(controller.filter.options.length).toBe(12);
       expect(controller.filter.options).toContain(jasmine.objectContaining({
         value: 'premium',
       }));

@@ -5336,6 +5336,7 @@
     "trialAccountsFilter": "Trial Accounts ({{count}})",
     "activeAccountsFilter": "Purchased Accounts ({{count}})",
     "expiredAccountsFilter": "Expired Accounts ({{count}})",
+    "pendingAccountsFilter": "Pending Accounts ({{count}})",
     "premiumAccountsFilter": "Pro Pack Accounts ({{count}})",
     "standardAccountsFilter": "Standard Accounts ({{count}})",
     "orderRequest": "Order Request",
