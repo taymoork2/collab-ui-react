@@ -116,6 +116,7 @@ exports.config = {
     global.deleteUtils = require('./test/e2e-protractor/utils/delete.utils.js');
     global.createUtils = require('./test/e2e-protractor/utils/create.utils.js');
     global.config = require('./test/e2e-protractor/utils/test.config.js');
+    global.aaGetCeUtils = require('./test/e2e-protractor/utils/aaGetCe.utils.js');
     global.deleteTrialUtils = require('./test/e2e-protractor/utils/deleteTrial.utils.js');
 
     var Navigation = require('./test/e2e-protractor/pages/navigation.page.js');

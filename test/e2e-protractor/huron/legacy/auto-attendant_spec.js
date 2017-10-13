@@ -17,7 +17,9 @@ describe('Huron Auto Attendant', function () {
   var testAAName;
   var testCardClick;
   var testCardClose;
+  var flow;
 
+  var ceInfos = require('./aaE2ETest.json');
   beforeAll(function () {
 
     deleteUtils.testAAName = deleteUtils.testAAName + "_" + Date.now();
@@ -29,11 +31,10 @@ describe('Huron Auto Attendant', function () {
     browser.setFileDetector(new remote.FileDetector());
 
     login.login('aa-admin', autoattendant.callFeature);
- 
   }, 120000);
   
   afterAll(function () {
-    var flow = protractor.promise.controlFlow();
+    flow = protractor.promise.controlFlow();
     return flow.execute(deleteUtils.findAndDeleteTestAA);
   });
 
@@ -126,7 +127,7 @@ describe('Huron Auto Attendant', function () {
       // and delete -- once clio local upload is working -- CORS ISSUE TODO
       //utils.click(autoattendant.deleteMedia);
       //utils.click(autoattendant.deleteConfirmationModalClose);
-
+      utils.expectIsEnabled(autoattendant.deleteMedia, 120000);
       utils.click(autoattendant.messageOptions);
 
       // No save and until valid Phone Menu - see AutoAttn 922
@@ -145,12 +146,13 @@ describe('Huron Auto Attendant', function () {
       utils.sendKeys(autoattendant.sayMessageInput, "Welcome to the AA");
       utils.click(autoattendant.sayMessageDynamicButton)
       utils.wait(autoattendant.dynamicVariable, 320000);
+      utils.click(autoattendant.readAs);
+      utils.click(autoattendant.readAsVariable);
       utils.click(autoattendant.dynamicVariable);
       utils.wait(autoattendant.dynamicVariable, 120000);
       utils.click(autoattendant.variable);
       utils.wait(autoattendant.dynamicVariable, 120000);
-      utils.click(autoattendant.readAs);
-      utils.click(autoattendant.readAsVariable);
+      
       utils.click(autoattendant.okButton);
       utils.wait(autoattendant.okButton, 1200);
       
@@ -186,12 +188,12 @@ describe('Huron Auto Attendant', function () {
       utils.sendKeys(autoattendant.phonesayMessageInput, "Press a key at the menu");
       utils.click(autoattendant.phoneMenuAddDynamicTextButton);
       utils.wait(autoattendant.dynamicVariable, 120000);
+      utils.click(autoattendant.readAs);
+      utils.click(autoattendant.readAsVariable);
       utils.click(autoattendant.dynamicVariable);
       utils.wait(autoattendant.dynamicVariable, 120000);
       utils.click(autoattendant.variable);
       utils.wait(autoattendant.dynamicVariable, 120000);
-      utils.click(autoattendant.readAs);
-      utils.click(autoattendant.readAsVariable);
       utils.click(autoattendant.okButton);
       utils.wait(autoattendant.okButton, 1200);
       utils.expectIsEnabled(autoattendant.saveButton);
@@ -256,10 +258,14 @@ describe('Huron Auto Attendant', function () {
         utils.expectIsEnabled(autoattendant.saveButton);
 
         utils.click(autoattendant.saveButton);
-
         autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
-
         utils.expectIsDisabled(autoattendant.saveButton);
+        utils.wait(autoattendant.saveButton, 120000);
+        flow = browser.controlFlow();
+        flow.execute(function () {
+    return aaGetCeUtils.validateCesDefinition(ceInfos.Test0.actionSets);
+       });
+        utils.wait(autoattendant.saveButton, 120000);
       });
 
     }, 120000);
@@ -296,14 +302,19 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsEnabled(autoattendant.saveButton);
 
       utils.click(autoattendant.saveButton);
-
+      utils.wait(autoattendant.saveButton, 120000);
+      flow = browser.controlFlow();
+      flow.execute(function () {
+    return aaGetCeUtils.validateCesDefinition(ceInfos.Test1.actionSets);
+       });
+      utils.wait(autoattendant.saveButton, 120000);
       autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
 
       utils.expectIsDisabled(autoattendant.saveButton);
 
     }, 120000);
 
-    it('should add route to SIP endpoint to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+   it('should add route to SIP endpoint to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
       utils.click(autoattendant.repeatPlus);
       //Add Route to SIP Number
@@ -327,6 +338,12 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsEnabled(autoattendant.saveButton);
 
       utils.click(autoattendant.saveButton);
+      utils.wait(autoattendant.saveButton, 120000);
+      flow = browser.controlFlow();
+     flow.execute(function () {
+    return aaGetCeUtils.validateCesDefinition(ceInfos.Test2.actionSets);
+       });
+      utils.wait(autoattendant.saveButton, 120000);
 
       autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
 
@@ -397,6 +414,12 @@ describe('Huron Auto Attendant', function () {
       autoattendant.scrollIntoView(autoattendant.phoneMenuAll.first());
 
       utils.click(autoattendant.saveButton);
+      utils.wait(autoattendant.saveButton, 120000);
+      flow = browser.controlFlow();
+      flow.execute(function () {
+    return aaGetCeUtils.validateCesDefinition(ceInfos.Test3.actionSets);
+       });
+      utils.wait(autoattendant.saveButton, 120000);
 
       // but leave in a saveable state
 
@@ -488,6 +511,12 @@ describe('Huron Auto Attendant', function () {
       // and save
       // utils.expectIsEnabled(autoattendant.saveButton);
       utils.click(autoattendant.saveButton);
+      utils.wait(autoattendant.saveButton, 120000);
+      flow = browser.controlFlow();
+      flow.execute(function () {
+    return aaGetCeUtils.validateCesDefinition(ceInfos.Test4.actionSets);
+       });
+      utils.wait(autoattendant.saveButton, 120000);
 
       autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
 
@@ -513,6 +542,12 @@ describe('Huron Auto Attendant', function () {
         utils.wait(autoattendant.saveButton, 120000);
 
         utils.click(autoattendant.saveButton);
+        utils.wait(autoattendant.saveButton, 120000);
+        flow = browser.controlFlow();
+        flow.execute(function () {
+    return aaGetCeUtils.validateCesDefinition(ceInfos.Test5.actionSets);
+       });
+        utils.wait(autoattendant.saveButton, 120000);
 
         autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
 
@@ -563,6 +598,12 @@ describe('Huron Auto Attendant', function () {
         utils.wait(autoattendant.saveButton, 120000);
         utils.expectIsEnabled(autoattendant.saveButton);
         utils.click(autoattendant.saveButton);
+        utils.wait(autoattendant.saveButton, 120000);
+        flow = browser.controlFlow();
+        flow.execute(function () {
+    return aaGetCeUtils.validateCesDefinition(ceInfos.Test6.actionSets);
+       });
+        utils.wait(autoattendant.saveButton, 120000);
         autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
       });
 
@@ -818,6 +859,7 @@ describe('Huron Auto Attendant', function () {
       });
 
     }, 120000);
+    
   });
 
 });
