@@ -7866,7 +7866,7 @@
       "desktopApps": "Desktop apps",
       "webApp": "Web app",
       "mobileApps": "Mobile apps",
-      "integrationAndBots": "Integration and Bots"
+      "bots": "Bots"
     },
     "support": {
       "title": "Support",
