@@ -66,9 +66,10 @@ describe('Controller: PlanReviewCtrl', function () {
       offerName: 'CF',
       capacity: 200,
     }]);
-    spyOn(SetupWizardService, 'getOrderAndSubId').and.returnValue({
+    spyOn(SetupWizardService, 'getOrderDetails').and.returnValue({
       orderId: 'abc123',
       subscriptionId: 'def456',
+      endCustomer: 'My Company',
     });
     spyOn(SetupWizardService, 'getPendingCareLicenses').and.returnValue([{
       offerName: 'CVC',
