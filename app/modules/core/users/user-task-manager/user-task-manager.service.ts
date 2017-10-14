@@ -1,4 +1,4 @@
-import { ITask } from './user-task-mgr.component';
+import { ITask } from './user-task-manager.component';
 
 export interface IPaging {
   count: number;
@@ -14,14 +14,13 @@ export interface IGetTasksResponse {
   paging: IPaging;
 }
 
-export class UserTaskMgrService {
+export class UserTaskManagerService {
 
   /* @ngInject */
   constructor(
     private Authinfo,
     private UrlConfig,
     private $http: ng.IHttpService,
-    // private $q: ng.IQService,
   ) {}
 
   public getTasks(): ng.IPromise<ITask[]> {

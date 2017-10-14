@@ -1,7 +1,7 @@
-import userTaskMgrModule from './index';
-import { ITask } from './user-task-mgr.component';
+import userTaskManagerModalModule from './index';
+import { ITask } from './user-task-manager.component';
 
-describe('Component: userTaskMgrModule', () => {
+describe('Component: userTaskManagerModalModule', () => {
 
   const PANEL_HEADER = '.flex-container.base-margin';
   const PANEL_TITLE = 'h4';
@@ -11,19 +11,15 @@ describe('Component: userTaskMgrModule', () => {
   };
 
   beforeEach(function() {
-    this.initModules(userTaskMgrModule);
+    this.initModules(userTaskManagerModalModule);
     this.injectDependencies(
       '$scope',
       '$q',
     );
 
-    this.$scope.onDoneImport = jasmine.createSpy('onDoneImport');
-    this.$scope.onCancelmport = jasmine.createSpy('onCancelImport');
     this.$scope.activeTask = aTask;
 
     this.compileComponent('csvUploadResults', {
-      onDoneImport: 'onDoneImport()',
-      onCancelmport: 'onCancelmport()',
       activeTask: 'activeTask',
     });
   });

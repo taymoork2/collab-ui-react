@@ -7,9 +7,9 @@
       <div class="progressbar">
         <div class="progressbar-info">
           <span class="progressbar-label"
-                ng-if="$ctrl.processProgress < 100 && !$ctrl.csvData.isCancelledByUser"
+                ng-if="$ctrl.processProgress < 100 && !$ctrl.isCancelledByUser"
                 translate="firstTimeWizard.processing"></span>
-          <span class="progressbar-label" ng-if="$ctrl.csvData.isCancelledByUser"
+          <span class="progressbar-label" ng-if="$ctrl.isCancelledByUser"
                 translate="firstTimeWizard.canceling"></span>
           <span class="progressbar-progress">{{$ctrl.processProgress}}%</span>
         </div>
@@ -18,7 +18,7 @@
         <div class="csv-filename">{{$ctrl.fileName}}</div>
       </div>
       <div ng-if="$ctrl.isProcessing" class="close-button">
-        <a class="icon icon-close" ng-click="$ctrl.onCancelImport()">
+        <a href class="icon icon-close" ng-click="$ctrl.onCancelImport()">
           <span class="sr-only" translate="common.close"></span>
         </a>
       </div>
@@ -36,7 +36,7 @@
 
   <!-- display the results stats -->
   <div class="flex-item-no-resize upload-stats">
-    <div class="stat new-users" ng-class="{disabled: $ctrl.numNewUsers === 0}" ng-if="!$ctrl.csvData.isDirSyncEnabled">
+    <div class="stat new-users" ng-class="{disabled: $ctrl.numNewUsers === 0}" ng-if="!$ctrl.isDirSyncEnabled">
       <div class="total">{{$ctrl.numNewUsers}}</div>
       <h4 class="total-title" translate="userManage.bulk.newUsers"></h4>
     </div>
@@ -44,7 +44,7 @@
       <div class="total">{{$ctrl.numUpdatedUsers}}</div>
       <h4 class="total-title" translate="userManage.bulk.existingUsers"></h4>
     </div>
-    <div class="stat error-users" ng-class="{disabled: $ctrl.userErrorArray.length === 0}">
+    <div class="stat error-users" ng-class="{disabled: $ctrl.numErroredUsers === 0}">
       <div class="total">{{$ctrl.numErroredUsers}}</div>
       <h4 class="total-title" translate="userManage.bulk.errorUsers"></h4>
     </div>

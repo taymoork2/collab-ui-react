@@ -1114,10 +1114,10 @@
               },
             },
           })
-          .state('users.csv.taskmgr', {
+          .state('users.csv.task-manager', {
             views: {
               'usersCsv@users.csv': {
-                template: '<user-task-mgr dismiss="$dismiss()"></user-task-mgr>',
+                template: '<user-task-manager-modal dismiss="$dismiss()"></user-task-manager-modal>',
               },
             },
             params: {

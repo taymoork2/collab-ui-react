@@ -1,7 +1,8 @@
-import userTaskMgrModule from './index';
-import { ITask, ModalView } from './user-task-mgr.component';
+import userTaskManagerModalModule from './index';
+import { ITask, ModalView } from './user-task-manager.component';
+const taskList: ITask[] = require('./test-tasks.json');
 
-describe('Component: userTaskMgrModule', () => {
+describe('Component: userTaskManagerModalModule', () => {
 
   const MODAL_TITLE = '.modal-header';
   const MODAL_BODY = '.modal-body';
@@ -13,29 +14,23 @@ describe('Component: userTaskMgrModule', () => {
   const NAV_ACTIVE = 'active';
   const TASKS = '.tm-panel-left .tm-panel-body .row.collapse';
 
-  const taskList: ITask[] = [
-    { jobInstanceId: 'CSV Import 1', created: '2017-10-06T20:54:22.535Z', started: '20:54', lastModified: '2017-10-06T21:09:09.491Z', stopped: 'Oct 6, 2017', creatorUserId: '010e453a-865b-4d34-b3d9-daf94ab0805e', modifierUserId: '010e453a-865b-4d34-b3d9-daf94ab0805e', status: 'Completed', message: '', filename: '200Users.csv',     fileSize: 487, fileMd5: '', totalUsers: 100, addedUsers: 10, updatedUsers: 10, erroredUsers: 10 },
-    { jobInstanceId: 'CSV Import 2', created: '2017-10-06T20:54:22.535Z', started: '22:01', lastModified: '2017-10-06T21:09:09.491Z', stopped: 'Oct 6, 2017', creatorUserId: '010e453a-865b-4d34-b3d9-daf94ab0805e', modifierUserId: '010e453a-865b-4d34-b3d9-daf94ab0805e', status: 'Processing', message: '', filename: 'AllSparkCall.csv', fileSize: 487, fileMd5: '', totalUsers: 100, addedUsers: 20, updatedUsers: 20, erroredUsers: 20 },
-    { jobInstanceId: 'CSV Import 3', created: '2017-10-06T20:54:22.535Z', started: '09:13', lastModified: '2017-10-06T21:09:09.491Z', stopped: 'Oct 6, 2017', creatorUserId: '010e453a-865b-4d34-b3d9-daf94ab0805e', modifierUserId: '010e453a-865b-4d34-b3d9-daf94ab0805e', status: 'Completed',  message: '', filename: 'WebEx.csv',        fileSize: 487, fileMd5: '', totalUsers: 100, addedUsers: 30, updatedUsers: 30, erroredUsers: 40 },
-  ];
-
   beforeEach(function() {
-    this.initModules(userTaskMgrModule);
+    this.initModules(userTaskManagerModalModule);
     this.injectDependencies(
       '$scope',
       '$q',
-      'UserTaskMgrService',
+      'UserTaskManagerService',
     );
 
     this.$scope.dismiss = jasmine.createSpy('dismiss');
-    spyOn(this.UserTaskMgrService, 'getTasks').and.returnValue(this.$q.resolve(taskList));
+    spyOn(this.UserTaskManagerService, 'getTasks').and.returnValue(this.$q.resolve(taskList));
 
-    this.compileComponent('userTaskMgr', {
+    this.compileComponent('userTaskManagerModal', {
       dismiss: 'dismiss()',
     });
   });
 
-  describe('UserTaskMgr modal at init', () => {
+  describe('UserTaskManagerModal at init', () => {
     it('should have modal title, body, left panel, right panel and options', function() {
       expect(this.view.find(MODAL_TITLE)).toExist();
       expect(this.view.find(MODAL_BODY)).toExist();
@@ -44,7 +39,7 @@ describe('Component: userTaskMgrModule', () => {
       expect(this.view.find(LEFT_PANEL_HEADER).find(BUTTONS).get(0)).toExist();
       expect(this.view.find(LEFT_PANEL_HEADER).find(BUTTONS).get(1)).toExist();
       expect(this.view.find(MODAL_CONTAINER).find(MODAL_PANEL_RIGHT)).toExist();
-      expect(this.UserTaskMgrService.getTasks).toHaveBeenCalled();
+      expect(this.UserTaskManagerService.getTasks).toHaveBeenCalled();
       expect(this.controller.allTaskList).toHaveLength(3);
       expect(this.controller.inProcessTaskList).toHaveLength(1);
       expect(this.controller.activeTask.jobInstanceId).toEqual('CSV Import 1');
@@ -52,7 +47,7 @@ describe('Component: userTaskMgrModule', () => {
     });
   });
 
-  describe('UserTaskMgr modal task type', () => {
+  describe('UserTaskManagerModal task type', () => {
     it('when all-task selected', function() {
       spyOn(this.controller, 'setModal').and.callThrough();
       spyOn(this.controller, 'setActiveTask').and.callThrough();
@@ -81,7 +76,7 @@ describe('Component: userTaskMgrModule', () => {
     });
   });
 
-  describe('UserTaskMgr switch task', () => {
+  describe('UserTaskManagerModal picks a new task', () => {
     it('when select 2nd task', function() {
       spyOn(this.controller, 'setActiveTask').and.callThrough();
       const secondTask = this.view.find(TASKS).get(1);

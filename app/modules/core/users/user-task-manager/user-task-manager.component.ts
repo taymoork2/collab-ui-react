@@ -1,5 +1,4 @@
-import { UserTaskMgrService } from 'modules/core/users/userTaskMgr';
-import { Notification } from 'modules/core/notifications';
+import { UserTaskManagerService } from 'modules/core/users/user-task-manager';
 
 export interface ITask {
   jobInstanceId: string;
@@ -38,7 +37,7 @@ export enum TaskStatus {
   ABANDONED = 'ABANDONED',
 }
 
-export class UserTaskMgrCtrl implements ng.IComponentController {
+export class UserTaskManagerModalCtrl implements ng.IComponentController {
 
   public activeTask: ITask;
   public loading = false;
@@ -51,8 +50,8 @@ export class UserTaskMgrCtrl implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private $stateParams,
-    private Notification: Notification,
-    private UserTaskMgrService: UserTaskMgrService,
+    private Notification,
+    private UserTaskManagerService: UserTaskManagerService,
   ) {
     this.activeTask = _.get<ITask>(this.$stateParams, 'task', undefined);
     this.activeModal = _.isUndefined(this.activeTask) ? ModalView.ALL : ModalView.ACTIVE;
@@ -101,33 +100,31 @@ export class UserTaskMgrCtrl implements ng.IComponentController {
 
   public getTasks(): ng.IPromise<any> {
     // Get all tasks and identify  tasks
-    return this.UserTaskMgrService.getTasks()
+    return this.UserTaskManagerService.getTasks()
     .then(tasks => {
       this.allTaskList = tasks;
       this.populateInProcessTaskList();
       // Find the active task and fill task data
       // otherwise, show the first row
       this.setModal(this.activeModal);
-    }).catch(response => this.Notification.errorResponse(response, 'mediaMgrModal.getMediaListError'));
+    }).catch(response => this.Notification.errorResponse(response, 'userTaskManagerModal.getTaskListError'));
   }
 
   private populateInProcessTaskList(): void {
     this.inProcessTaskList = [];
-    _.forEach(this.allTaskList, task => {
-      if (task.status === TaskStatus.STARTING || task.status === TaskStatus.STARTED) {
-        this.inProcessTaskList.push(task);
-      }
+    this.inProcessTaskList = _.filter(this.allTaskList, task => {
+      return task.status === TaskStatus.STARTING || task.status === TaskStatus.STARTED;
     });
   }
 
-  public closeTaskMgrModal(): void {
+  public closeTaskManagerModal(): void {
     this.dismiss();
   }
 }
 
-export class UserTaskMgrComponent implements ng.IComponentOptions {
-  public controller = UserTaskMgrCtrl;
-  public template = require('modules/core/users/userTaskMgr/user-task-mgr.html');
+export class UserTaskManagerModalComponent implements ng.IComponentOptions {
+  public controller = UserTaskManagerModalCtrl;
+  public template = require('./user-task-manager.html');
   public bindings = {
     dismiss: '&',
   };

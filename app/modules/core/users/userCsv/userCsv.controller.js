@@ -37,9 +37,9 @@ require('./_user-csv.scss');
     var USER_ID_EMAIL_HEADER = 'User ID/Email (Required)';
     var NO_RESOURCE_GROUP = '**no resource group**';
 
-    var isAtlasCsvImportTaskMgrToggled = false;
-    FeatureToggleService.atlasCsvImportTaskMgrGetStatus().then(function (toggled) {
-      isAtlasCsvImportTaskMgrToggled = toggled;
+    var isAtlasCsvImportTaskManagerToggled = false;
+    FeatureToggleService.atlasCsvImportTaskManagerGetStatus().then(function (toggled) {
+      isAtlasCsvImportTaskManagerToggled = toggled;
     });
 
     CsvDownloadService.getCsv('headers').then(function (csvData) {
@@ -178,13 +178,13 @@ require('./_user-csv.scss');
     };
 
     vm.startUpload = function () {
-      if (isAtlasCsvImportTaskMgrToggled) {
+      if (isAtlasCsvImportTaskManagerToggled) {
         // TO-DO
         // * do the CSV pre-check validation, if CSV is valid, continue.
         // * send the file to the file server and get a file location URL
         // * submit the file URL to CLCP and get a job ID
         // * then open the task dialog
-        $state.go('users.csv.taskmgr');
+        $state.go('users.csv.task-manager');
       } else {
         Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.CSV_UPLOAD);
         beforeSubmitCsv().then(function () {

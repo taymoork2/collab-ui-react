@@ -1,7 +1,7 @@
 import userOverview from './userOverview';
 import userCsv from './userCsv';
 import userManage from './userManage';
-import userTaskMgr from './userTaskMgr';
+import userTaskManagerModal from './user-task-manager';
 import './_users.scss';
 
 export default angular
@@ -9,6 +9,6 @@ export default angular
     userOverview,
     userCsv,
     userManage,
-    userTaskMgr,
+    userTaskManagerModal,
   ])
   .name;

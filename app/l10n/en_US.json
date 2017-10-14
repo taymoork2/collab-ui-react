@@ -310,9 +310,10 @@
       "instructions": "Select the service entitlements that you want to provide to users."
     }
   },
-  "userTaskMgr": {
+  "userTaskManagerModal": {
     "title": "Tasks",
-    "viewAllTasks": "View all tasks"
+    "viewAllTasks": "View all tasks",
+    "getTaskListError": "An error occurred obtaining the list of task. Please refresh to try again."
   },
   "onboardModal": {
     "ciscoSparkJabberInterop": "Cisco Spark / Jabber Interop",
