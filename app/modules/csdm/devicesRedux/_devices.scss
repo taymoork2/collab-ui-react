@@ -386,7 +386,7 @@
         }
         > input {
           font-family: $brand-font-light;
-          max-width: 200px;
+          max-width: 350px;
           min-width: 35px;
           font-size: 1.125rem;
           color: $gray !important;
@@ -399,6 +399,7 @@
           display: inline-block;
           @include easing-transition(width, 500ms, $easeOutQuint);
           &:focus {
+            margin-right: 30px;
             outline: none !important;
             box-shadow: none !important;
             background-color: white !important;
@@ -423,6 +424,44 @@
           margin-right: 30px;
           + i.clear {
             display: block;
+          }
+        }
+        .suggestions-dropdown {
+          position: absolute;
+          top: 35px;
+          left: -1px;
+          width: 370px;
+          background-color: white;
+          z-index: 1;
+          border: 1px solid $gray-light-2;
+          border-radius: 2px;
+
+          .active {
+            background-color: $gray-light-2;
+          }
+          ul {
+            margin-left: 0;
+          }
+          li {
+            display: flex;
+            justify-content: space-between;
+            list-style: none;
+            i {
+              margin-left: 4px;
+              margin-right:4px;
+            }
+            .field {
+              min-width: 90px;
+            }
+            .text {
+              flex-grow: 2;
+            }
+            .count {
+              align-self: flex-end;
+              margin-right: 4px;
+              font-size: 0.75rem;
+              color: $gray-base;
+            }
           }
         }
       }

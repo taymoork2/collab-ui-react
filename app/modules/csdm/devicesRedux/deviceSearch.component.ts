@@ -5,17 +5,36 @@ import { Caller, CsdmSearchService } from '../services/csdmSearch.service';
 import { Notification } from '../../core/notifications/notification.service';
 import { SearchElement } from '../services/search/queryParser';
 import { SearchTranslator } from 'modules/csdm/services/search/searchTranslator';
+import { KeyCodes } from 'collab-ui-ng/src/directives/dropdown/keyCodes';
+import { ISuggestion, ISuggestionDropdown, SuggestionDropdown } from '../services/search/suggestion';
 
 export class DeviceSearch implements ng.IComponentController, ISearchHandler {
-
   private lastSearchInput = '';
   public searchInput = '';
   public searchField = '';
   public searchFilters;
   private lastSearchObject: SearchObject;
-  private inputActive: boolean;
+  private _inputActive: boolean;
   private searchDelayTimer: ng.IPromise<any> | null;
   private static readonly SEARCH_DELAY_MS = 200;
+
+  get inputActive(): boolean {
+    return this._inputActive;
+  }
+
+  set inputActive(value: boolean) {
+    this._inputActive = value;
+    if (value) {
+      this.showHideSuggestionDropdown(true);
+    } else {
+      this.$timeout(() => {
+        this.showHideSuggestionDropdown(false);
+      }, 300);
+    }
+  }
+
+  public suggestions: ISuggestionDropdown;
+  public showSuggestions = false;
 
   //bindings
   private searchResultChanged: (e: { result?: SearchResult }) => {};
@@ -26,14 +45,15 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
 
   /* @ngInject */
   constructor(private CsdmSearchService: CsdmSearchService,
-              private $translate,
+              private $translate: ng.translate.ITranslateService,
               private Notification,
               private $timeout: ng.ITimeoutService) {
+    this.suggestions = new SuggestionDropdown($translate);
     this.updateSearchFilters();
   }
 
   get searching(): boolean {
-    return this.inputActive;
+    return this._inputActive;
   }
 
   public $onInit(): void {
@@ -64,6 +84,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
     this.searchObject.submitWorkingElement();
     this.searchInput = '';
     this.lastSearchInput = '';
+    this.suggestions.showEmpty();
     this.searchChange();
   }
 
@@ -72,6 +93,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
       this.searchObject.setWorkingElementText(this.searchInput);
       this.lastSearchInput = this.searchInput;
       this.searchChange();
+      this.suggestions.updateBasedOnInput(this.searchInput);
     }
   }
 
@@ -137,11 +159,48 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
     this.searchDelayTimer = this.$timeout(() => {
       this.performSearch(searchClone); //TODO avoid at now
       this.lastSearchObject = searchClone;
+      this.suggestions.onSearchChanged(this.getBullets());
 
       if (this.searchObject.currentFilterValue) {
         this.performFilterUpdateSearch();
       }
     }, DeviceSearch.SEARCH_DELAY_MS);
+  }
+
+  public selectSuggestion = (suggestion: ISuggestion) => {
+    if (suggestion) {
+      this.searchObject.setWorkingElementText(suggestion.searchString);
+    }
+    this.searchObject.submitWorkingElement();
+    this.searchInput = '';
+    this.lastSearchInput = '';
+    this.searchChange();
+    this.suggestions.showEmpty();
+  }
+
+  public onSearchInputKeyDown($keyEvent: KeyboardEvent) {
+    if ($keyEvent && $keyEvent.keyCode) {
+      switch ($keyEvent.keyCode) {
+        case KeyCodes.DOWN:
+          this.suggestions.nextSuggestion();
+          break;
+        case KeyCodes.UP:
+          this.suggestions.previousSuggestion();
+          break;
+        case KeyCodes.ESCAPE:
+          this.showHideSuggestionDropdown(false);
+          break;
+        case KeyCodes.ENTER:
+          const activeSuggestion = this.suggestions.getActiveSuggestion();
+          if (activeSuggestion) {
+            this.selectSuggestion(activeSuggestion);
+          }
+      }
+    }
+  }
+
+  private showHideSuggestionDropdown(showDropdown: boolean) {
+    this.showSuggestions = showDropdown;
   }
 
   private performSearch(search: SearchObject) {
@@ -189,6 +248,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
   }
 
   private updateSearchFilters(searchResult?: SearchResult) {
+    this.suggestions.updateSuggestionsBasedOnSearchResult(this.getDocCount, searchResult, this.searchInput);
     this.searchFilters = [
       {
         count: searchResult && searchResult.hits.total || 0,
