@@ -2295,7 +2295,7 @@
                   if (enabled) {
                     _.set(this, 'data.displayName', $translate.instant('sidePanelBreadcrumb.device'));
                   } else {
-                    _.set(this, 'data.displayName', $translate.instant('sidePanelBreadcrumb.deviceConfig'));
+                    _.set(this, 'data.displayName', $translate.instant('sidePanelBreadcrumb.deviceConfiguration'));
                   }
                 }.bind(this));
               },
