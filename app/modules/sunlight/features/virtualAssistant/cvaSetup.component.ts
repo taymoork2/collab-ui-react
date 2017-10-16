@@ -10,7 +10,10 @@ export interface IScopeWithController extends ng.IScope {
 const requireContext = (require as any).context(`ngtemplate-loader?module=Sunlight&relativeTo=app/!modules/sunlight/features/virtualAssistant/wizardPages/`, false, /^\.\/.*\.tpl\.html$/);
 requireContext.keys().map(key => requireContext(key));
 
-export class CvaSetupCtrl {
+/**
+ * CustomerVirtualAssistantSetupCtrl
+ */
+class CustomerVirtualAssistantSetupCtrl implements ng.IComponentController {
 
   private animationTimeout = 10;
   private escapeKey = 27;
@@ -121,7 +124,12 @@ export class CvaSetupCtrl {
     private Notification,
     private UrlConfig,
   ) {
+  }
 
+  /**
+   * Initialize the controller
+   */
+  public $onInit() {
     this.template.configuration.pages.cvaConfigOverview.startTimeInMillis = Date.now();
     if (this.$stateParams.isEditFeature) {
       this.isEditFeature = true;
@@ -156,9 +164,9 @@ export class CvaSetupCtrl {
    */
   public getTitle(): string {
     if (this.isEditFeature) {
-      return this.getCvaText('editTitle');
+      return this.getText('editTitle');
     } else {
-      return this.getCvaText('createTitle');
+      return this.getText('createTitle');
     }
   }
 
@@ -168,9 +176,9 @@ export class CvaSetupCtrl {
    */
   public getSummaryDescription(): string {
     if (this.isEditFeature) {
-      return this.getCvaText('summary.editDesc');
+      return this.getText('summary.editDesc');
     } else {
-      return this.getCvaText('summary.desc');
+      return this.getText('summary.desc');
     }
   }
 
@@ -180,7 +188,7 @@ export class CvaSetupCtrl {
   public cancelModal(): void {
     this.cancelModalText = {
       cancelHeader: this.$translate.instant('careChatTpl.cancelHeader'),
-      cancelDialog: this.getCvaText('cancelDialog'),
+      cancelDialog: this.getText('cancelDialog'),
       continueButton: this.$translate.instant('careChatTpl.continueButton'),
       confirmButton: this.$translate.instant('careChatTpl.confirmButton'),
     };
@@ -284,8 +292,8 @@ export class CvaSetupCtrl {
    */
   private beforePreviousPage(currentState: string): void {
     if (currentState === 'cvaAccessToken' &&
-        this.isAccessTokenInvalid() &&
-        !_.isEmpty(this.tokenForm)) {
+      this.isAccessTokenInvalid() &&
+      !_.isEmpty(this.tokenForm)) {
       // Token is has errors, so save off the error messages in case we come back. JIRA CA-104
 
       const controller = this;
@@ -294,9 +302,9 @@ export class CvaSetupCtrl {
       });
     }
     if (currentState === 'vaName' &&
-        _.isEmpty(this.template.configuration.pages.vaName.nameValue) &&
-        !_.isEmpty(this.nameForm) &&
-        !this.nameForm.$valid) {
+      _.isEmpty(this.template.configuration.pages.vaName.nameValue) &&
+      !_.isEmpty(this.nameForm) &&
+      !this.nameForm.$valid) {
       //Name was validated and failed validation. The actual value is in the nameform, so set our value to that; JIRA CA-104
       this.template.configuration.pages.vaName.nameValue = this.nameForm.nameInput.$viewValue;
     }
@@ -379,7 +387,7 @@ export class CvaSetupCtrl {
 
   public isAccessTokenInvalid(): boolean {
     return (this.template.configuration.pages.cvaAccessToken.invalidToken &&
-           !this.template.configuration.pages.cvaAccessToken.needsValidation);
+    !this.template.configuration.pages.cvaAccessToken.needsValidation);
   }
 
   public isAccessTokenValid(): boolean {
@@ -490,12 +498,12 @@ export class CvaSetupCtrl {
     }
   }
 
-  public getCvaText(textIdExtension: string): string {
-    return this.service.getCvaText(textIdExtension);
+  public getText(textIdExtension: string): string {
+    return this.service.getText(textIdExtension);
   }
 
-  public getCvaMessageKey(textIdExtension: string): string {
-    return this.service.getCvaMessageKey(textIdExtension);
+  public getMessageKey(textIdExtension: string): string {
+    return this.service.getMessageKey(textIdExtension);
   }
 
 
@@ -539,7 +547,7 @@ export class CvaSetupCtrl {
   private handleFeatureCreation(): void {
     this.creatingTemplate = false;
     this.$state.go('care.Features');
-    this.Notification.success(this.getCvaMessageKey('messages.createSuccessText'), {
+    this.Notification.success(this.getMessageKey('messages.createSuccessText'), {
       featureName: this.template.configuration.pages.vaName.nameValue,
     });
   }
@@ -561,7 +569,7 @@ export class CvaSetupCtrl {
       })
       .catch(function (response) {
         controller.handleFeatureError();
-        controller.Notification.errorWithTrackingId(response, controller.getCvaMessageKey('messages.createConfigFailureText'));
+        controller.Notification.errorWithTrackingId(response, controller.getMessageKey('messages.createConfigFailureText'));
       });
   }
 
@@ -586,7 +594,7 @@ export class CvaSetupCtrl {
   private handleFeatureUpdate(): void {
     this.creatingTemplate = false;
     this.$state.go('care.Features');
-    const successMsg = this.getCvaMessageKey('messages.updateSuccessText');
+    const successMsg = this.getMessageKey('messages.updateSuccessText');
     this.Notification.success(successMsg, {
       featureName: this.template.configuration.pages.vaName.nameValue,
     });
@@ -610,7 +618,7 @@ export class CvaSetupCtrl {
       })
       .catch(function (response) {
         controller.handleFeatureError();
-        controller.Notification.errorWithTrackingId(response, controller.getCvaMessageKey('messages.updateConfigFailureText'));
+        controller.Notification.errorWithTrackingId(response, controller.getMessageKey('messages.updateConfigFailureText'));
       });
   }
 
@@ -645,6 +653,17 @@ export class CvaSetupCtrl {
     return isUnique;
   }
 }
-angular
+/**
+ * Customer Virtual Assistant Component used for Creating new Customer Virtual Assistant
+ */
+export class CustomerVirtualAssistantSetupComponent implements ng.IComponentOptions {
+  public controller = CustomerVirtualAssistantSetupCtrl;
+  public template = require('modules/sunlight/features/virtualAssistant/vaSetup.tpl.html');
+  public bindings = {
+    dismiss: '&',
+  };
+}
+
+export default angular
   .module('Sunlight')
-  .controller('CvaSetupCtrl', CvaSetupCtrl);
+  .component('cvaSetup', new CustomerVirtualAssistantSetupComponent());

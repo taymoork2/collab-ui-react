@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Care virtualassistant admin setup virtual assistant', function () {
+describe('CVA feature setup', function () {
   // NOTE: these variables will only be saved AFTER DELETE is implemented in the page
   var APIAITestClientToken = '22e724e0bc604e99b0cfd281cd6c282a';
   var APIAITestAgentName = 'e2e-careVirtualAssistantTemplate-' + utils.randomId();

@@ -41,7 +41,7 @@ describe('Care Customer Virtual Assistant Service', function () {
   it('service Card goto Service should do just that', function () {
     const goSpy = spyOn($state, 'go');
     CvaService.cvaServiceCard.goToService($state, { type: 'virtualAssistant' });
-    expect(goSpy).toHaveBeenCalledWith('care.assistant', {
+    expect(goSpy).toHaveBeenCalledWith('care.customerVirtualAssistant', {
       type: 'virtualAssistant',
     });
   });

@@ -1,7 +1,6 @@
-'use strict';
-import { CvaSetupCtrl } from './cvaSetupCtrl';
+import cvaSetupModule from './cvaSetup.component';
 
-describe('Customer Virtual Assistant Setup Ctrl', function () {
+describe('Care Customer Virtual Assistant Setup Component', () => {
   const escapeKey = 27;
   const OrgName = 'Test-Org-Name';
   const OrgId = 'Test-Org-Id';
@@ -52,11 +51,6 @@ describe('Customer Virtual Assistant Setup Ctrl', function () {
 
   const expectedStates = Object.keys(expectedPageTemplate.configuration.pages);
 
-  const spiedAuthinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue(OrgId),
-    getOrgName: jasmine.createSpy('getOrgName').and.returnValue(OrgName),
-  };
-
   const getDummyLogo = function (data) {
     return {
       data: data,
@@ -72,54 +66,46 @@ describe('Customer Virtual Assistant Setup Ctrl', function () {
       errorCode: '100106',
     }],
   };
-  let controller: CvaSetupCtrl, $controller, $q, $scope, $state, $stateParams, $modal, $timeout, CTService, Analytics, Notification, CvaService;
-  let getLogoDeferred, getLogoUrlDeferred;
-  function resetVars() {
-    $controller = $q = $scope = $state = $stateParams = $modal = CTService = Analytics = Notification = CvaService = getLogoDeferred = getLogoUrlDeferred = undefined;
-  }
-  function invokeCtrl() {
-    controller = <CvaSetupCtrl>$controller('CvaSetupCtrl', {
-      $scope: $scope,
-      $stateParams: $stateParams,
-    });
-  }
-  function initializeCtrl(invokeTheCtrl?, isEditFeature?) {
-    return function (_$controller_, _$q_, $rootScope, _$state_, _$stateParams_, _$modal_, _$timeout_, _CTService_, _Analytics_, _Notification_, _CvaService_) {
-      $scope = $rootScope.$new();
-      $modal = _$modal_;
-      $q = _$q_;
-      $timeout = _$timeout_;
-      CTService = _CTService_;
-      CvaService = _CvaService_;
-      $state = _$state_;
-      $stateParams = _$stateParams_;
-      Notification = _Notification_;
-      Analytics = _Analytics_;
 
-      //create mock deferred object which will be used to return promises
-      getLogoDeferred = $q.defer();
-      getLogoUrlDeferred = $q.defer();
-      spyOn($modal, 'open');
-      spyOn(CTService, 'getLogo').and.returnValue(getLogoDeferred.promise);
-      spyOn(CTService, 'getLogoUrl').and.returnValue(getLogoUrlDeferred.promise);
-      spyOn(Notification, 'success');
-      spyOn(Notification, 'error');
-      spyOn(Notification, 'errorWithTrackingId');
-      spyOn(Analytics, 'trackEvent');
-      spyOn(Date, 'now').and.returnValues(0, 10, 10, 10, 10, 10, 10);
-      $stateParams.isEditFeature = isEditFeature;
-      $controller = _$controller_;
-      if (invokeTheCtrl) {
-        invokeCtrl();
-      }
-    };
-  }
-  beforeEach(angular.mock.module('Sunlight'));
-  beforeEach(angular.mock.module('Hercules'));
-  beforeEach(angular.mock.module(function ($provide) {
-    $provide.value('Authinfo', spiedAuthinfo);
-  }));
-  afterEach(resetVars);
+  let getLogoDeferred, getLogoUrlDeferred, controller;
+
+  beforeEach(function () {
+    this.initModules('Sunlight', cvaSetupModule);
+    this.injectDependencies(
+      '$q',
+      '$scope',
+      '$state',
+      '$stateParams',
+      '$modal',
+      '$timeout',
+      'CTService',
+      'Analytics',
+      'Authinfo',
+      'Notification',
+      'CvaService',
+    );
+
+    //create mock deferred object which will be used to return promises
+    getLogoDeferred = this.$q.defer();
+    getLogoUrlDeferred = this.$q.defer();
+
+    spyOn(this.$modal, 'open');
+    spyOn(this.CTService, 'getLogo').and.returnValue(getLogoDeferred.promise);
+    spyOn(this.CTService, 'getLogoUrl').and.returnValue(getLogoUrlDeferred.promise);
+    spyOn(this.Notification, 'success');
+    spyOn(this.Notification, 'error');
+    spyOn(this.Notification, 'errorWithTrackingId');
+    spyOn(this.Analytics, 'trackEvent');
+    spyOn(this.Authinfo, 'getOrgId').and.returnValue(OrgId);
+    spyOn(this.Authinfo, 'getOrgName').and.returnValue(OrgName);
+    spyOn(Date, 'now').and.returnValues(0, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10);
+
+    this.compileComponent('cva-setup', {
+      dismiss: 'dismiss()',
+    });
+
+    controller = this.controller;
+  });
 
   function repeatString(str: string, count: number): string {
     let result = '';
@@ -135,52 +121,41 @@ describe('Customer Virtual Assistant Setup Ctrl', function () {
     expect(controller.nextButton()).toEqual(nextButtonState);
   }
 
-  function resolveLogoPromise() {
-    getLogoDeferred.resolve(getDummyLogo('abcd'));
-    $scope.$apply();
-  }
-
-  function resolveLogoUrlPromise() {
-    getLogoUrlDeferred.resolve(dummyLogoUrl);
-    $scope.$apply();
-  }
-
   describe('should test the', function () {
     let deferred;
-    beforeEach(inject(initializeCtrl(true)));
     beforeEach(function () {
-      deferred = $q.defer();
-      spyOn(controller, 'getCvaText').and.returnValue(deferred.promise);
+      deferred = this.$q.defer();
+      spyOn(controller, 'getText').and.returnValue(deferred.promise);
     });
 
     it('getTitle', function () {
       controller.getTitle();
-      expect(controller.getCvaText).toHaveBeenCalledWith('createTitle');
+      expect(controller.getText).toHaveBeenCalledWith('createTitle');
     });
 
     it('getTitle with isEditFeature true', function () {
       controller.isEditFeature = true;
       controller.getTitle();
-      expect(controller.getCvaText).toHaveBeenCalledWith('editTitle');
+      expect(controller.getText).toHaveBeenCalledWith('editTitle');
     });
 
     it('getSummaryDescription', function () {
       controller.getSummaryDescription();
-      expect(controller.getCvaText).toHaveBeenCalledWith('summary.desc');
+      expect(controller.getText).toHaveBeenCalledWith('summary.desc');
     });
 
     it('getSummaryDescription with isEditFeature true', function () {
       controller.isEditFeature = true;
       controller.getSummaryDescription();
-      expect(controller.getCvaText).toHaveBeenCalledWith('summary.editDesc');
+      expect(controller.getText).toHaveBeenCalledWith('summary.editDesc');
     });
   });
 
   describe('Page Structures', function () {
-    beforeEach(inject(initializeCtrl(true)));
     beforeEach(function () {
-      resolveLogoPromise();
-      resolveLogoUrlPromise();
+      getLogoDeferred.resolve(getDummyLogo('abcd'));
+      getLogoUrlDeferred.resolve(dummyLogoUrl);
+      this.$scope.$apply();
     });
 
     it('States correlate to pages', function () {
@@ -193,16 +168,16 @@ describe('Customer Virtual Assistant Setup Ctrl', function () {
 
     it('keyboard functionality', function () {
       controller.evalKeyPress(escapeKey);
-      expect($modal.open).toHaveBeenCalled();
+      expect(this.$modal.open).toHaveBeenCalled();
     });
 
     it('Walk pages forward in order ', function () {
       for (let i = 0; i < controller.states.length; i++) {
         expect(controller.currentState).toEqual(controller.states[i]);
         controller.nextPage();
-        expect(Analytics.trackEvent).toHaveBeenCalledWith(controller.template.configuration.pages[controller.currentState].eventName, { durationInMillis: 10 });
-        Analytics.trackEvent.calls.reset();
-        $timeout.flush();
+        expect(this.Analytics.trackEvent).toHaveBeenCalledWith(controller.template.configuration.pages[controller.currentState].eventName, { durationInMillis: 0 });
+        this.Analytics.trackEvent.calls.reset();
+        this.$timeout.flush();
       }
     });
 
@@ -211,7 +186,7 @@ describe('Customer Virtual Assistant Setup Ctrl', function () {
       for (let i = (controller.states.length - 1); 0 <= i; i--) {
         expect(controller.currentState).toEqual(controller.states[i]);
         controller.previousPage();
-        $timeout.flush();
+        this.$timeout.flush();
       }
     });
 
@@ -242,7 +217,6 @@ describe('Customer Virtual Assistant Setup Ctrl', function () {
     const ACCESS_TOKEN_PAGE_INDEX = 2;
     const NAME_PAGE_INDEX = 3;
 
-    beforeEach(inject(initializeCtrl(true)));
     beforeEach(function () {
       controller.nameForm = getForm('nameInput');
     });
@@ -322,10 +296,9 @@ describe('Customer Virtual Assistant Setup Ctrl', function () {
   });
   describe('AccessToken Page', function () {
     let deferred;
-    beforeEach(inject(initializeCtrl(true)));
     beforeEach(function () {
-      deferred = $q.defer();
-      spyOn(CvaService, 'isAPIAITokenValid').and.returnValue(deferred.promise);
+      deferred = this.$q.defer();
+      spyOn(this.CvaService, 'isAPIAITokenValid').and.returnValue(deferred.promise);
 
       controller.tokenForm = getForm('tokenInput');
     });
@@ -336,7 +309,7 @@ describe('Customer Virtual Assistant Setup Ctrl', function () {
       controller.template.configuration.pages.cvaAccessToken.needsValidation = true;
 
       controller.validateAPIAIToken();
-      $scope.$apply();
+      this.$scope.$apply();
 
       expect(controller.template.configuration.pages.cvaAccessToken.invalidToken).toEqual(false);
       expect(controller.template.configuration.pages.cvaAccessToken.needsValidation).toEqual(false);
@@ -348,7 +321,7 @@ describe('Customer Virtual Assistant Setup Ctrl', function () {
       controller.template.configuration.pages.cvaAccessToken.needsValidation = true;
 
       controller.validateAPIAIToken();
-      $scope.$apply();
+      this.$scope.$apply();
 
       expect(controller.template.configuration.pages.cvaAccessToken.invalidToken).toEqual(true);
       expect(controller.template.configuration.pages.cvaAccessToken.needsValidation).toEqual(false);
@@ -356,10 +329,9 @@ describe('Customer Virtual Assistant Setup Ctrl', function () {
   });
   describe('Avatar Page', function () {
     let deferredFileDataUrl;
-    beforeEach(inject(initializeCtrl(true)));
     beforeEach(function() {
-      deferredFileDataUrl = $q.defer();
-      spyOn(CvaService, 'getFileDataUrl').and.returnValue(deferredFileDataUrl.promise);
+      deferredFileDataUrl = this.$q.defer();
+      spyOn(this.CvaService, 'getFileDataUrl').and.returnValue(deferredFileDataUrl.promise);
     });
 
     it('should validate avatar file type', function () {
@@ -391,11 +363,10 @@ describe('Customer Virtual Assistant Setup Ctrl', function () {
   });
   describe('Summary Page', function () {
     let deferred;
-    beforeEach(inject(initializeCtrl(true)));
     beforeEach(function () {
-      deferred = $q.defer();
-      spyOn(CvaService, 'addConfig').and.returnValue(deferred.promise);
-      spyOn(CvaService, 'updateConfig').and.returnValue(deferred.promise);
+      deferred = this.$q.defer();
+      spyOn(this.CvaService, 'addConfig').and.returnValue(deferred.promise);
+      spyOn(this.CvaService, 'updateConfig').and.returnValue(deferred.promise);
     });
 
     it("When save template failed, the 'saveTemplateErrorOccurred' is set", function () {
@@ -404,17 +375,17 @@ describe('Customer Virtual Assistant Setup Ctrl', function () {
       deferred.reject(failedData);
 
       controller.submitFeature();
-      $scope.$apply();
+      this.$scope.$apply();
 
       expect(controller.saveTemplateErrorOccurred).toBeTruthy();
-      expect(Notification.errorWithTrackingId).toHaveBeenCalledWith(failedData, jasmine.any(String));
+      expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(failedData, jasmine.any(String));
     });
 
     it('should submit template successfully', function () {
       //by default, this flag is false
       expect(controller.saveTemplateErrorOccurred).toBeFalsy();
 
-      spyOn($state, 'go');
+      spyOn(this.$state, 'go');
       deferred.resolve({
         success: true,
         botServicesConfigId: 'ABotConfigurationId',
@@ -422,36 +393,36 @@ describe('Customer Virtual Assistant Setup Ctrl', function () {
       });
 
       controller.submitFeature();
-      $scope.$apply();
+      this.$scope.$apply();
 
-      expect(Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
+      expect(this.Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
         featureName: jasmine.any(String),
       });
       expect(controller.saveTemplateErrorOccurred).toBeFalsy();
-      expect($state.go).toHaveBeenCalled();
-      expect(Analytics.trackEvent).toHaveBeenCalledWith(Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_SUMMARY_PAGE, { durationInMillis: 10 });
-      expect(Analytics.trackEvent).toHaveBeenCalledWith(Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_START_FINISH, { durationInMillis: 10 });
+      expect(this.$state.go).toHaveBeenCalled();
+      expect(this.Analytics.trackEvent).toHaveBeenCalledWith(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_SUMMARY_PAGE, { durationInMillis: 10 });
+      expect(this.Analytics.trackEvent).toHaveBeenCalledWith(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_START_FINISH, { durationInMillis: 0 });
     });
 
     it('should submit template successfully for Edit', function () {
       //by default, this flag is false
       expect(controller.saveTemplateErrorOccurred).toBeFalsy();
       controller.isEditFeature = true;
-      spyOn($state, 'go');
+      spyOn(this.$state, 'go');
       deferred.resolve({
         success: true,
         status: 200,
       });
       controller.submitFeature();
-      $scope.$apply();
+      this.$scope.$apply();
 
-      expect(Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
+      expect(this.Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
         featureName: jasmine.any(String),
       });
       expect(controller.saveTemplateErrorOccurred).toBeFalsy();
-      expect($state.go).toHaveBeenCalled();
-      expect(Analytics.trackEvent).toHaveBeenCalledWith(Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_SUMMARY_PAGE, { durationInMillis: 10 });
-      expect(Analytics.trackEvent).toHaveBeenCalledWith(Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_START_FINISH, { durationInMillis: 10 });
+      expect(this.$state.go).toHaveBeenCalled();
+      expect(this.Analytics.trackEvent).toHaveBeenCalledWith(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_SUMMARY_PAGE, { durationInMillis: 10 });
+      expect(this.Analytics.trackEvent).toHaveBeenCalledWith(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_START_FINISH, { durationInMillis: 0 });
     });
 
     it('should submit template failed for Edit', function () {
@@ -461,10 +432,10 @@ describe('Customer Virtual Assistant Setup Ctrl', function () {
       controller.isEditFeature = true;
 
       controller.submitFeature();
-      $scope.$apply();
+      this.$scope.$apply();
 
       expect(controller.saveTemplateErrorOccurred).toBeTruthy();
-      expect(Notification.errorWithTrackingId).toHaveBeenCalledWith(failedData, jasmine.any(String));
+      expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(failedData, jasmine.any(String));
     });
   });
 });

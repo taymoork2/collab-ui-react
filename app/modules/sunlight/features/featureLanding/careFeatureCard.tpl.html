@@ -9,7 +9,7 @@
               <button type="button" ng-click="careFeaturesCtrl.deleteCareFeature((careFeature), $event)" class="close" aria-label="{{::'common.close' | translate}}"></button>
             </div>
           </div>
-          <p><span class="badge badge--outline" ng-if="careFeature.mediaType === 'virtualAssistant'">{{:: ('careChatTpl.virtualAssistant.featureText.' + careFeature.mediaType) | translate}}</span>
+          <p><span class="badge badge--outline" ng-if="careFeature.mediaType === 'virtualAssistant'">{{:: ('sunlightDetails.' + careFeature.mediaType) | translate}}</span>
           <span class="badge badge--outline" translate="common.customerSupportTemplate" ng-if="careFeature.mediaType !== 'virtualAssistant'"></span>
           </p>
           <div class="card-icons-inline" ng-if="careFeature.mediaType !== 'virtualAssistant'">
