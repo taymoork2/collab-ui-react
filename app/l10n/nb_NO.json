@@ -2577,7 +2577,7 @@
       "success": "Bra! Google Calendar er nå riktig konfigurert."
     },
     "settings": {
-      "deactivateServiceHeading": "Deaktiver {{serviceName}}",
+      "deactivateServiceHeading": "Deaktiver {{ServiceName}}",
       "deactivateService": "Deaktivering av{{ServiceName}} avinstallerer {{ConnectorName}} fra Expressway-klyngene og deaktiverer tjenesten for brukere.",
       "deactivate": "Deaktiver",
       "emailNotificationsHeading": "E-postvarsler",
@@ -5909,7 +5909,7 @@
       "continue": "Fortsett",
       "deregisterAllconfirmation": "Jeg forstår at alle nodene i denne klyngen vil bli avregistrert automatisk, og at klyngen vil bli slettet permanent. Jeg forstår også at jeg ikke kan omgjøre denne handlingen.",
       "unabletomovenodes": "Kunne ikke flytte/frakoble {{nodes}}, trykk avbryt og prøv igjen",
-      "clusterdeleteSuccess": "{{item}} ble slettet",
+      "clusterdeleteSuccess": "{{clustername}} ble slettet",
       "clusterCreationFailed": "Kunne ikke opprette ny klynge: {{enteredCluster}}",
       "movedTo": "{{nodeName}} flyttet til: {{clusterName}}",
       "upgradeSchedule": "Oppgraderingsplan",
