@@ -7,6 +7,14 @@ class HybridCalendarExchangeInactiveCardController implements ng.IComponentContr
     private $state: ng.ui.IStateService,
   ) {}
 
+  public openPrerequisites(): void {
+    this.$modal.open({
+      controller: 'HybridCalendarPrerequisitesController',
+      controllerAs: 'vm',
+      template: require('modules/services-overview/new-hybrid/prerequisites-modals/hybrid-calendar-prerequisites/hybrid-calendar-prerequisites.html'),
+    });
+  }
+
   public openSetUp(): void {
     this.$modal.open({
       resolve: {
@@ -37,6 +45,7 @@ export class HybridCalendarExchangeInactiveCardComponent implements ng.IComponen
         <p translate="servicesOverview.cards.hybridCalendar.description"></p>
       </div>
       <div class="inactive-card_footer">
+        <p><button class="btn btn--link" ng-click="$ctrl.openPrerequisites()" translate="servicesOverview.genericButtons.prereq"></button></p>
         <p><button class="btn btn--primary" ng-click="$ctrl.openSetUp()" translate="servicesOverview.genericButtons.setup"></button></p>
       </div>
     </article>

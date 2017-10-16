@@ -32,7 +32,7 @@ export class HybridMediaPrerequisitesController {
         this.checkboxes = checkboxes;
       })
       .catch((error) => {
-        this.Notification.errorWithTrackingId(error, 'servicesOverview.cards.hybridMedia.prerequisites.cannotReachFlagService');
+        this.Notification.errorWithTrackingId(error, 'servicesOverview.commonPrerequisites.cannotReachFlagService');
       });
   }
 

@@ -1,28 +1,25 @@
 import { HybridServicesPrerequisitesHelperService } from 'modules/services-overview/new-hybrid/prerequisites-modals/hybrid-services-prerequisites-helper.service';
 import { Notification } from 'modules/core/notifications';
-import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 
-export class CallServiceConnectPrerequisitesComponentController implements ng.IComponentController {
+export class OnPremisesExchangePrerequisitesComponentController implements ng.IComponentController {
 
   public checkboxes = {
-    isAwareSetup: false,
-    prepareEdge: false,
-    deployPair: false,
-    installOrUpgrade: false,
-    downloadDirectoryConnector: false,
-    followUCMrequirements: false,
-    useSupportedCodecs: false,
-    configureSettingsForCTI: false,
-    configureToAvoidAudioOnly: false,
+    configureImpersonation: false,
+    runSupportedExchange: false,
+    ensureActiveDirectory: false,
+    providePortAccess: false,
+    configureWebEx: false,
+    setUpTMS: false,
+    configureTMSXE: false,
+    reviewLicensing: false,
   };
-  private flagPrefix = 'atlas.hybrid.setup.call.connect.';
+  private flagPrefix = 'atlas.hybrid.setup.calendar.onpremises.';
   public onChange: Function;
 
   /* @ngInject */
   constructor(
     private Notification: Notification,
     private HybridServicesPrerequisitesHelperService: HybridServicesPrerequisitesHelperService,
-    private ServiceDescriptorService: ServiceDescriptorService,
   ) { }
 
   public $onInit(): void {
@@ -30,22 +27,10 @@ export class CallServiceConnectPrerequisitesComponentController implements ng.IC
     this.HybridServicesPrerequisitesHelperService.readFlags(prefixedFlags, this.flagPrefix, this.checkboxes)
       .then((checkboxes) => {
         this.checkboxes = checkboxes;
+        this.onChange(this.HybridServicesPrerequisitesHelperService.buildNumbersCheckedObject(this.checkboxes));
       })
       .catch((error) => {
         this.Notification.errorWithTrackingId(error, 'servicesOverview.commonPrerequisites.cannotReachFlagService');
-      })
-      .finally(() => {
-        this.findCallServiceAwareStatus();
-      });
-  }
-
-  private findCallServiceAwareStatus() {
-    return this.ServiceDescriptorService.isServiceEnabled('squared-fusion-uc')
-      .then((setup) => {
-        this.checkboxes['isAwareSetup'] = setup;
-      })
-      .finally(() => {
-        this.onChange(this.HybridServicesPrerequisitesHelperService.buildNumbersCheckedObject(this.checkboxes));
       });
   }
 
@@ -64,9 +49,9 @@ export class CallServiceConnectPrerequisitesComponentController implements ng.IC
 
 }
 
-export class CallServiceConnectPrerequisitesComponent implements ng.IComponentOptions {
-  public controller = CallServiceConnectPrerequisitesComponentController;
-  public template = require('modules/services-overview/new-hybrid/prerequisites-modals/call-service-connect-prerequisites/call-service-connect-prerequisites.component.html');
+export class OnPremisesExchangePrerequisitesComponent implements ng.IComponentOptions {
+  public controller = OnPremisesExchangePrerequisitesComponentController;
+  public template = require('modules/services-overview/new-hybrid/prerequisites-modals/on-premises-exchange-prerequisites/on-premises-exchange-prerequisites.component.html');
   public bindings = {
     onChange: '&',
   };
