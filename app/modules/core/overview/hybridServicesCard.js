@@ -24,14 +24,9 @@
 
         function init(hasInvalidated) {
           $q.all({
-            nameChangeEnabled: FeatureToggleService.atlas2017NameChangeGetStatus(),
             hybridImp: FeatureToggleService.atlasHybridImpGetStatus(),
           }).then(function (featureToggles) {
-            if (featureToggles.nameChangeEnabled) {
-              card.notEnabledText = 'overview.cards.hybrid.notEnabledTextNew';
-            } else {
-              card.notEnabledText = 'overview.cards.hybrid.notEnabledText';
-            }
+            card.notEnabledText = 'overview.cards.hybrid.notEnabledTextNew';
 
             return HybridServicesUtilsService.allSettled({
               clusterList: HybridServicesClusterService.getAll(),

@@ -23,8 +23,7 @@
                           ng-disabled="!ctrl.useCustomSupportUrl">
                 </textarea>
     <h6 translate="partnerProfile.matchingTix"></h6>
-    <p ng-if="!ctrl.nameChangeEnabled" class="body-small form-section" translate="partnerProfile.matchingDescr"></p>
-    <p ng-if="ctrl.nameChangeEnabled" class="body-small form-section" translate="partnerProfile.matchingDescrNew" translate-values="{appTitle: ctrl.getAppTitle()}"></p>
+    <p class="body-small form-section" translate="partnerProfile.matchingDescrNew" translate-values="{appTitle: ctrl.getAppTitle()}"></p>
     <button cs-btn class="btn btn--primary" ng-if="ctrl.showCustomSupportUrlSaveButton"
             ng-click="ctrl.saveUseCustomSupportUrl()"
             loading="ctrl.savingProgress">{{::"common.save" | translate}}
