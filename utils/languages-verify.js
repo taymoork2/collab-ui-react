@@ -80,10 +80,13 @@ ${invalidMessageFormatSyntaxString}
   const variableDifferences = getVariableDifferenceTranslations(flatTranslations, englishFlatTranslations);
   if (!_.isEmpty(variableDifferences)) {
     hasError = true;
-    const variableDifferencesString = formatObjectToMultilineString(variableDifferences);
+    const variableDifferencesWithEnglishString = _.map(variableDifferences, (val, key) => {
+      const englishValue = englishFlatTranslations[key];
+      return `${key} (${fileName}): ${val}\n${key} (en_US): ${englishValue}`;
+    }).join('\n-----\n');
     console.error(`[ERROR] ${languageFile} contains variables that do not match the source in ${L10N_ENGLISH_FILE}:
 
-${variableDifferencesString}
+${variableDifferencesWithEnglishString}
     `);
   }
 });
