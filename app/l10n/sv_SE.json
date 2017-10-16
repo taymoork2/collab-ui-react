@@ -2577,7 +2577,7 @@
       "success": "Snyggt! Google Kalender har konfigurerats korrekt."
     },
     "settings": {
-      "deactivateServiceHeading": "Inaktivera {{serviceName}}",
+      "deactivateServiceHeading": "Inaktivera {{ServiceName}}",
       "deactivateService": "Genom att avaktivera {{ServiceName}} avinstalleras {{ConnectorName}} från dina Expressway-kluster och tjänsten avaktiveras för användarna.",
       "deactivate": "Inaktivera",
       "emailNotificationsHeading": "E-postaviseringar",

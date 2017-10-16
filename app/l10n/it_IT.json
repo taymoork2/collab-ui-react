@@ -229,7 +229,7 @@
       "advancedDetails": "Aggiungi nuove licenze a tutti gli utenti."
     },
     "manual": {
-      "titleModify": "Il tempo attività indica il tempo di coda e gestione di un'attività. Il grafico mostra il tempo attività {{time}}. Passa il mouse sul grafico per visualizzare i dettagli del tempo in coda medio e del tempo di gestione medio delle attività per un {{interval}}.",
+      "titleModify": "Modificare manualmente gli utenti",
       "titleAddModify": "Aggiungi o modifica utenti manualmente",
       "instructions": "Inserire fino a {{maxUsers}} utenti da modificare.",
       "tooManyUsers": "L'elenco utenti supera il limite di {{maxUsers}}. Per aggiornare più di {{maxUsers}} utenti, utilizzare il modello CSV per l'aggiornamento in massa.",
@@ -2438,7 +2438,7 @@
       "removeFromResourceGroupSuccess": "{{ClusterName}} è stato rimosso da \"{{ResourceGroup}}\".",
       "removeFromResourceGroupSuccessWithUpgrade": "{{ClusterName}} è stato rimosso da \"{{ResourceGroup}}\". Tutti i connettori verranno aggiornati nel successivo aggiornamento pianificato.",
       "moveResourceGroupDialogHeader": "Assegna gruppo di risorse",
-      "moveResourceGroupDialogParagraph": "{{ClusterName}} verrà spostato in \"{{CurrentResourceGroup}}\".",
+      "moveResourceGroupDialogParagraph": "{{ClusterName}} verrà spostato in \"{{NewResourceGroup}}\".",
       "moveResourceGroupDialogConnectorsList": "I seguenti connettori verranno aggiornati nella successiva finestra di aggiornamento: ",
       "moveResourceGroupSuccess": "{{ClusterName}} è stato assegnato a \"{{NewResourceGroup}}\".",
       "moveResourceGroupSuccessWithUpgrade": "{{ClusterName}} è stato assegnato a \"{{NewResourceGroup}}\". Tutti i connettori verranno aggiornati nel successivo aggiornamento pianificato.",

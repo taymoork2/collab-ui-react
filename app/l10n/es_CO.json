@@ -4320,7 +4320,7 @@
     "nameLabel": "Nombre de contestación de llamada",
     "memberLabel": "Miembros de contestación de llamada",
     "successUpdate": "La contestación de llamada '{{callPickupName}}' se actualizó correctamente",
-    "errorUpdate": "Error al actualizar la contestación de llamada '{{callParkName}}'",
+    "errorUpdate": "Error al actualizar la contestación de llamada '{{callPickupName}}'",
     "title": "Contestación de llamada",
     "code": "PI",
     "modalDescription": "La característica de Contestación de llamada permite a los usuarios de llamadas contestar las llamadas entrantes en un grupo de usuarios.",

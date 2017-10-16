@@ -374,7 +374,7 @@
     "proceedFree": "Continuer avec des licences gratuites",
     "proceedFreeMessage": "Si vous n’avez plus de licences pour un service Cisco Spark, une licence gratuite sera assignée à tous les utilisateurs restants pour ce service.",
     "reviewPlanButton": "Révisez votre plan",
-    "proceedFreeButton": "Continuez avec le/l’ {{serviceName}} gratuit",
+    "proceedFreeButton": "Continuez avec gratuit",
     "getCareEntitlementsErrorForuser": "Échec de l’obtention d’autorisations de l’assistance pour l’utilisateur",
     "result": {
       "200": "autorisé avec succès",

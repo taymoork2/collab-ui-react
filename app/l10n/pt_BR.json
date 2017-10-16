@@ -224,7 +224,7 @@
       "manualLabel": "Modificar usuários manualmente",
       "manualDetails": "Tudo que você precisa são os endereços de e-mail para editar até {{maxUsersInManual}} usuários.",
       "bulkLabel": "Exportar e modificar usuários com um arquivo CSV",
-      "bulkDetails": "O melhor método para editar até {{maxUsers}} usuários ao mesmo tempo.",
+      "bulkDetails": "O melhor método para editar até {{maxUsersInCSV}} usuários ao mesmo tempo.",
       "advancedLabel": "Modificar todos os usuários sincronizados",
       "advancedDetails": "Adicionar novas licenças a todos os usuários."
     },
@@ -2465,12 +2465,12 @@
       "couldNotDeregisterCluster": "Não foi possível cancelar o registo do grupo.",
       "deregisterConfirmRemoval": "Confirmar remoção",
       "deregisterConfirmationText": "Você está prestes a cancelar o registro <strong>{{clusterName}}</strong> do Cisco Collaboration Cloud.",
-      "deregisterConfirmPopup": "O {{ClusterName}} foi removido com sucesso do Cisco Collaboration Cloud."
+      "deregisterConfirmPopup": "O {{clusterName}} foi removido com sucesso do Cisco Collaboration Cloud."
     },
     "deactivateServiceComponent": {
       "deactivateServiceLabel": "Desativar {{serviceName}}",
       "deactivateServiceCommon": "Desativar o {{serviceName}} remove todos os recursos relacionados ao serviço para os usuários.",
-      "expresswayDataWiped": "{{ConnectorName}} será removido de todos os grupos Expressway e as configurações locais de todos os conectores serão excluídas.",
+      "expresswayDataWiped": "{{connectorName}} será removido de todos os grupos Expressway e as configurações locais de todos os conectores serão excluídas.",
       "noClustersWillBeDeregistered": "Os grupos não terão o registro cancelado do Cisco Collaboration Cloud.",
       "deactivateServiceConfirmationHeader": "Desativar {{serviceName}}",
       "deactivateServiceConfirmationTextGoogleCalendar": "Você tem certeza? Os recursos relacionados ao serviços serão removidos para os usuários.",

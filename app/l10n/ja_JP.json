@@ -5909,7 +5909,7 @@
       "continue": "続行",
       "deregisterAllconfirmation": "私はこのクラスタのすべてのノードが自動的に登録解除され、クラスタが永久に削除されることを理解しています。また、この操作を取り消せないことも理解しています。",
       "unabletomovenodes": "{{nodes}} を移動/除去できませんでした。[キャンセル] を押して再試行してください",
-      "clusterdeleteSuccess": "{{clusterName}} が正常に削除されました",
+      "clusterdeleteSuccess": "{{clustername}} が正常に削除されました",
       "clusterCreationFailed": "新規クラスタの作成に失敗しました: {{enteredCluster}}",
       "movedTo": "{{nodeName}} の移動先: {{clusterName}}",
       "upgradeSchedule": "アップグレードのスケジュール",

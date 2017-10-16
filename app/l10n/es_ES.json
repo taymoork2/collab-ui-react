@@ -4320,7 +4320,7 @@
     "nameLabel": "Nombre de la recepción de llamadas",
     "memberLabel": "Miembros de la recepción de llamadas",
     "successUpdate": "La recepción de llamadas “{{callPickupName}}” se ha creado correctamente",
-    "errorUpdate": "Error al actualizar la recepción de llamadas “{{callParkName}}”",
+    "errorUpdate": "Error al actualizar la recepción de llamadas “{{callPickupName}}”",
     "title": "Recepción de llamadas",
     "code": "PI",
     "modalDescription": "La función de recepción de llamadas permite que los usuarios respondan a las llamadas entrantes dentro de un grupo de usuarios.",
@@ -9266,7 +9266,7 @@
       "addComponentFailed": "Error al añadir el componente {{componentName}}.",
       "updateComponentSucceed": "El componente {{componentName}} del grupo {{componentGroupName}} se ha actualizado correctamente.",
       "updateComponentFailed": "Error al actualizar el componente {{componentName}}.",
-      "deleteComponentSucceed": "El componente {{componentName}} del grupo {{componentGroupName}} se ha eliminado correctamente.",
+      "deleteComponentSucceed": "El componente {{componentName}} se ha eliminado correctamente.",
       "deleteComponentFailed": "Error al eliminar el componente {{componentName}}."
     },
     "incidentsPage": {

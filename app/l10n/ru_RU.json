@@ -2444,7 +2444,7 @@
       "moveResourceGroupSuccessWithUpgrade": "Кластер {{ClusterName}} назначен в группу \"{{NewResourceGroup}}\". Модернизация всех соединителей будет выполнена при следующей запланированной модернизации.",
       "deactivateServicesHeader": "Деактивировать службы",
       "deactivateServicesParagraph": "Деактивируйте службу {{ServiceName}}, чтобы удалить все связанные со службой функции из этого кластера.",
-      "deactivateServicesSubHeader": "Деактивировать службу {{serviceName}}",
+      "deactivateServicesSubHeader": "Деактивировать службу {{service}}",
       "noHybridServicesProvisioned": "В этом кластере Expressway не включена ни одна служба гибридного типа. Чтобы включить службу гибридного типа, перейдите на страницу соответствующей службы."
     },
     "renameAndDeregisterComponent": {
