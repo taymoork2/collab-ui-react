@@ -1,8 +1,10 @@
 class LocationsRoutingPrefixCtrl implements ng.IComponentController {
+  //Component input properties
   public ftsw: boolean;
   public routingPrefix: string;
   public routingPrefixLength: string;
   public onChangeFn: Function;
+  //Controller class properties
   public routingPrefixForm: ng.IFormController;
   public messages: any = {};
   public minRoutingPrefixLength: string = '1';
@@ -11,6 +13,16 @@ class LocationsRoutingPrefixCtrl implements ng.IComponentController {
   constructor(
     private $translate: ng.translate.ITranslateService,
   ) {}
+
+  public isRequired(): boolean {
+    if (this.ftsw) {
+      return true;
+    }
+    if (!this.routingPrefixLength) {
+      return false;
+    }
+    return true;
+  }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const { routingPrefixLength } = changes;
