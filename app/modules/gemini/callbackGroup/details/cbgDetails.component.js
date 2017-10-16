@@ -91,8 +91,9 @@
           if (vm.remedyTicket) {
             vm.remedyTicket.createTime = moment(vm.remedyTicket.createTime).toDate().toString();
             vm.remedyTicket.status = _.replace(vm.remedyTicket.status, /Cancelled/, 'Canceled');
-            vm.remedyTicketLoading = false;
           }
+
+          vm.remedyTicketLoading = false;
         });
     }
 

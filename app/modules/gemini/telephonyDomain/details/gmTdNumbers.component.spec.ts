@@ -340,6 +340,7 @@ describe('Component: gmTdNumbers', () => {
 
     this.controller.submitLoading = false;
     this.controller.deleteNumber(this.rows[0]);
+    this.$timeout.flush();
     expect(this.controller.gridData.length).toBe(0);
   });
 
@@ -354,6 +355,7 @@ describe('Component: gmTdNumbers', () => {
     this.$scope.$apply();
 
     this.controller.deleteNumber(this.rows[1]);
+    this.$timeout.flush();
     expect(this.controller.gridData.length).toBe(1);
   });
 
