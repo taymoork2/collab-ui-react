@@ -373,10 +373,15 @@
         } else if (rowData.status === 'ACTIVE' || rowData.status === 'EXPIRED') {
           // while "daysLeft > 0" and expired doesn't make sense, the other 2 cases have the same text
           if (rowData.daysLeft > 0) {
-            notes.sortOrder = customerStatus.NOTE_NOT_EXPIRED;
-            notes.text = $translate.instant('customerPage.daysLeftToPurchase', {
-              count: rowData.daysLeft,
-            }, 'messageformat');
+            if ((rowData.accountStatus === 'pending') || ((rowData.accountStatus === 'trial') && !rowData.startDate)) {
+              notes.sortOrder = customerStatus.NOTE_NEED_SETUP;
+              notes.text = $translate.instant('customerPage.needsSetup');
+            } else {
+              notes.sortOrder = customerStatus.NOTE_NOT_EXPIRED;
+              notes.text = $translate.instant('customerPage.daysLeftToPurchase', {
+                count: rowData.daysLeft,
+              }, 'messageformat');
+            }
           } else if (rowData.daysLeft === 0) {
             notes.sortOrder = customerStatus.NOTE_EXPIRE_TODAY;
             notes.text = $translate.instant('customerPage.expiringToday');

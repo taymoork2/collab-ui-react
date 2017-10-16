@@ -349,7 +349,7 @@ describe('Controller: CustomerListCtrl', function () {
         count: 0,
       }];
 
-      controller._helpers.updateResultCount(controller.gridOptions.data);
+      controller._helpers.updateResultCount(controller.gridOptions.data, controller.gridOptions.data);
       var activeFilter = _.find(controller.filter.options, { value: 'trial' });
       expect(activeFilter.count).toBe(2);
     });
@@ -367,15 +367,15 @@ describe('Controller: CustomerListCtrl', function () {
         count: 0,
       }];
 
-      controller._helpers.updateResultCount(controller.gridOptions.data);
+      controller._helpers.updateResultCount(controller.gridOptions.data, controller.gridOptions.data);
       expect(Analytics.trackPremiumEvent).toHaveBeenCalledWith(Analytics.sections.PREMIUM.eventNames.PREMIUM_FILTER);
       Analytics.trackPremiumEvent.calls.reset();
 
-      controller._helpers.updateResultCount(controller.gridOptions.data);
+      controller._helpers.updateResultCount(controller.gridOptions.data, controller.gridOptions.data);
       expect(Analytics.trackPremiumEvent).not.toHaveBeenCalled();
 
       controller.filter.options[0].isSelected = false;
-      controller._helpers.updateResultCount(controller.gridOptions.data);
+      controller._helpers.updateResultCount(controller.gridOptions.data, controller.gridOptions.data);
       expect(Analytics.trackPremiumEvent).not.toHaveBeenCalled();
     });
   });
