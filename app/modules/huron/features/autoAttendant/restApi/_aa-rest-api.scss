@@ -5,6 +5,7 @@
 .aa-rest-api-block {
   display: inline-block;
   resize: vertical;
+  white-space: inline;
 }
 
 .aa-text-overflow.aa-text-overflow {
@@ -48,8 +49,10 @@
 }
 
 .aa-static-var {
-  margin-bottom: 0.5rem;
   margin-top: 0.2rem;
+  line-height: 1.5rem;
+  display: inline-block;
+  word-wrap: break-word;
 }
 
 .aa-url {
