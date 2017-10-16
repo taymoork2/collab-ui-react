@@ -161,6 +161,7 @@
 
     function updateUiModel() {
       vm.menuEntry.actions[0].dynamicList = lastSavedDynList;
+      vm.menuEntry.actions[0].url = lastSavedDynList;
       vm.menuEntry.actions[0].variableSet = lastSavedVariableList;
     }
 
@@ -169,7 +170,6 @@
       var range = AADynaAnnounceService.getRange();
       var dynamicList = range.endContainer.ownerDocument.activeElement;
       if (dynamicList.className.includes('dynamic-prompt') && !(_.isEqual(dynamicList.id, 'configureApiUrl{{schedule + index}}'))) {
-        //vm.menuEntry.actions[0].dynamicList = createDynamicList(dynamicList, []);
         vm.menuEntry.actions[0].dynamicList = createDynamicList(dynamicList, []);
         vm.menuEntry.actions[0].url = vm.menuEntry.actions[0].dynamicList;
       }
