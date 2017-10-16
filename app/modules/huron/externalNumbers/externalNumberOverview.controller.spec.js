@@ -93,6 +93,7 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
           isTrial: true,
         },
       };
+      $scope.showContractIncomplete = false;
       ExternalNumberService.isTerminusCustomer.and.returnValue($q.resolve(true));
       controller.isTerminusCustomer();
       $scope.$apply();
@@ -102,6 +103,7 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
         customerEmail: controller.currentCustomer.customerEmail,
         customerCommunicationLicenseIsTrial: true,
         customerRoomSystemsLicenseIsTrial: true,
+        showContractIncomplete: false,
       });
     });
 
@@ -114,6 +116,7 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
           isTrial: false,
         },
       };
+      $scope.showContractIncomplete = false;
       ExternalNumberService.isTerminusCustomer.and.returnValue($q.resolve(true));
       controller.isTerminusCustomer();
       $scope.$apply();
@@ -123,6 +126,7 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
         customerEmail: controller.currentCustomer.customerEmail,
         customerCommunicationLicenseIsTrial: false,
         customerRoomSystemsLicenseIsTrial: true,
+        showContractIncomplete: false,
       });
     });
 
@@ -132,6 +136,7 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
         customerName: 'ControllerTestOrg',
         customerEmail: 'customer@cisco.com',
       };
+      $scope.showContractIncomplete = false;
       ExternalNumberService.isTerminusCustomer.and.returnValue($q.resolve(true));
       controller.isTerminusCustomer();
       $scope.$apply();
@@ -141,6 +146,7 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
         customerEmail: controller.currentCustomer.customerEmail,
         customerCommunicationLicenseIsTrial: true,
         customerRoomSystemsLicenseIsTrial: true,
+        showContractIncomplete: false,
       });
     });
 
@@ -154,6 +160,7 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
           isTrial: true,
         },
       };
+      $scope.showContractIncomplete = false;
       ExternalNumberService.isTerminusCustomer.and.returnValue($q.resolve(true));
       controller.isTerminusCustomer();
       $scope.$apply();
@@ -163,6 +170,7 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
         customerEmail: controller.currentCustomer.customerEmail,
         customerCommunicationLicenseIsTrial: false,
         customerRoomSystemsLicenseIsTrial: false,
+        showContractIncomplete: false,
       });
     });
   });

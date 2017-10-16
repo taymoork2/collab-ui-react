@@ -3513,6 +3513,7 @@
               customerEmail: '',
               customerCommunicationLicenseIsTrial: '',
               customerRoomSystemsLicenseIsTrial: '',
+              showContractIncomplete: {},
               refreshFn: function () {},
             },
             views: {
@@ -3566,6 +3567,7 @@
               customerEmail: {},
               customerCommunicationLicenseIsTrial: {},
               customerRoomSystemsLicenseIsTrial: {},
+              showContractIncomplete: {},
               refreshFn: function () {},
             },
             views: {

@@ -21,6 +21,7 @@ export class PstnWizardComponent implements ng.IComponentOptions {
     customerEmail: '<',
     customerCommunicationLicenseIsTrial: '<',
     customerRoomSystemsLicenseIsTrial: '<',
+    showContractIncomplete: '&',
   };
 }
 

@@ -118,6 +118,13 @@ export class PstnService {
     }).$promise;
   }
 
+  public getCustomerV2FetchFromCarrier(customerId: string): ng.IPromise<any> {
+    return this.TerminusService.customerV2().get({
+      customerId: customerId,
+      deep: true,
+    }).$promise;
+  }
+
   public getCustomerTrialV2(customerId: string): ng.IPromise<any> {
     return this.TerminusService.customerTrialsV2().get({
       customerId: customerId,
