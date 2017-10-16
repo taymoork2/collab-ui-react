@@ -1,11 +1,11 @@
 <div class="intro">
   <p translate="servicesOverview.cards.hybridCall.prerequisites.connectSetup.intro"></p>
   <button class="btn btn--primary" ng-click="$ctrl.openDocumentation()">
-    <span translate="servicesOverview.cards.hybridCall.prerequisites.openDocumentation"></span>
+    <span translate="servicesOverview.commonPrerequisites.openDocumentation"></span>
   </button>
 </div>
 <div class="steps-list">
-  <h5 translate="servicesOverview.cards.hybridCall.prerequisites.steps"></h5>
+  <h5 translate="servicesOverview.commonPrerequisites.steps"></h5>
   <div class="cs-checkbox-group">
 
     <input
@@ -43,9 +43,9 @@
         name="checkboxConnect3"
         ng-change="$ctrl.processChange('deployPair', $ctrl.checkboxes.deployPair)"
         cs-input-label="{{:: 'servicesOverview.cards.hybridCall.prerequisites.connectSetup.deployPair' | translate}}">
-    <ul class="checklist-help-text">
+    <div class="checklist-help-text">
       <span translate="servicesOverview.cards.hybridCall.prerequisites.connectSetup.deployPairHelp1"></span>
-    </ul>
+    </div>
   </div>
 
   <p translate="servicesOverview.cards.hybridCall.prerequisites.connectSetup.alreadyDeployedPairIntro" class="condition"></p>
@@ -57,9 +57,9 @@
     name="checkboxConnect4"
     ng-change="$ctrl.processChange('installOrUpgrade', $ctrl.checkboxes.installOrUpgrade)"
     cs-input-label="{{:: 'servicesOverview.cards.hybridCall.prerequisites.connectSetup.installOrUpgrade' | translate}}">
-  <ul class="checklist-help-text">
+  <div class="checklist-help-text">
     <span translate="servicesOverview.cards.hybridCall.prerequisites.connectSetup.installOrUpgradeHelp1"></span>
-  </ul>
+  </div>
 
   <input
     cs-input

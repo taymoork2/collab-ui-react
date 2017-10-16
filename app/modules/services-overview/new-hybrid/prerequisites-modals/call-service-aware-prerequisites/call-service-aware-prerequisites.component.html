@@ -1,11 +1,11 @@
 <div class="intro">
   <p translate="servicesOverview.cards.hybridCall.prerequisites.awareSetup.intro"></p>
   <button class="btn btn--primary" ng-click="$ctrl.openDocumentation()">
-    <span translate="servicesOverview.cards.hybridCall.prerequisites.openDocumentation"></span>
+    <span translate="servicesOverview.commonPrerequisites.openDocumentation"></span>
   </button>
 </div>
 <div class="steps-list">
-  <h5 translate="servicesOverview.cards.hybridCall.prerequisites.steps"></h5>
+  <h5 translate="servicesOverview.commonPrerequisites.steps"></h5>
   <div class="cs-checkbox-group">
 
     <input
@@ -25,9 +25,9 @@
         name="checkboxAware2"
         ng-change="$ctrl.processChange('registerAllDomains', $ctrl.checkboxes.registerAllDomains)"
         cs-input-label="{{:: 'servicesOverview.cards.hybridCall.prerequisites.awareSetup.registerAllDomains' | translate}}">
-    <ul class="checklist-help-text">
+    <div class="checklist-help-text">
       <span translate="servicesOverview.cards.hybridCall.prerequisites.awareSetup.registerAllDomainsHelp1"></span>
-    </ul>
+    </div>
 
     <input
         cs-input
@@ -59,9 +59,9 @@
         name="checkboxAware5"
         ng-change="$ctrl.processChange('setFormat', $ctrl.checkboxes.setFormat)"
         cs-input-label="{{:: 'servicesOverview.cards.hybridCall.prerequisites.awareSetup.setFormat' | translate}}">
-    <ul class="checklist-help-text">
+    <div class="checklist-help-text">
       <span translate="servicesOverview.cards.hybridCall.prerequisites.awareSetup.setFormatHelp1"></span>
-    </ul>
+    </div>
 
     <input
         cs-input
