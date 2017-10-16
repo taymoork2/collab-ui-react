@@ -50,8 +50,12 @@ export class CallLocationSettingsService {
     } else {
       return this.LocationsService.getDefaultLocation()
         .then(defaultLocation => {
-          this.SettingSetupInitService.setDefaultLocation(defaultLocation);
-          return this.getLocationData(defaultLocation.uuid ? defaultLocation.uuid : '');
+          if (defaultLocation) {
+            this.SettingSetupInitService.setDefaultLocation(defaultLocation);
+            return this.getLocationData(defaultLocation.uuid ? defaultLocation.uuid : '');
+          } else {
+            return this.getLocationData('');
+          }
         })
         .catch(() => this.getLocationData(''));
     }

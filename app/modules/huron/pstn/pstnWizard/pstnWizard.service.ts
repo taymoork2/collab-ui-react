@@ -11,7 +11,7 @@ import { PstnService, TerminusLocation } from '../pstn.service';
 import { PstnAddressService, Address } from '../shared/pstn-address';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
 import { Notification } from 'modules/core/notifications';
-import { LocationsService, LocationListItem } from 'modules/call/locations';
+import { LocationsService, Location } from 'modules/call/locations';
 
 export class PstnWizardService {
   public STEP_TITLE: {
@@ -136,11 +136,11 @@ export class PstnWizardService {
     return this.PstnModel.getProvider();
   }
 
-  public initLocations(): ng.IPromise<LocationListItem | undefined> {
+  public initLocations(): ng.IPromise<Location | undefined> {
     //On success the default location is saved in the LocationsService
     //and will be updated if the default changes.
     return this.LocationsService.getDefaultLocation(this.PstnModel.getCustomerId())
-    .then((location: LocationListItem) => {
+    .then((location: Location) => {
       const locaionId: string = _.isString(location.uuid) ? location.uuid : '';
       //Save the default ESA
       return this.PstnAddressService.getByLocation(this.PstnModel.getCustomerId(), locaionId)
