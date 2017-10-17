@@ -26,6 +26,8 @@ var cspDevConfig = {
     'ws://dev-admin.ciscospark.com:8000', // manual DNS entry for local dev
     'ws://localhost:8000', // Browser Sync
     'ws://localhost:8443', // Browser Sync
+    'http://ciscowebex.d1.sc.omtrdc.net', // Adobe DTM Omniture
+    'http://dpm.demdex.net', // Adobe DTM Omniture
   ],
   fontSrc: [
     'http://dev-admin.ciscospark.com:8000', // manual DNS entry for local dev
@@ -34,6 +36,8 @@ var cspDevConfig = {
     'blob:', // Webpack Dev
     'http://*.localytics.com', // Localytics will load a pixel image using http when developing locally
     'http://dev-admin.ciscospark.com:8000', // manual DNS entry for local dev
+    'http://webexglobal.112.2o7.net', // Adobe DTM Omniture
+    'http://*.d1.sc.omtrdc.net', // Adobe DTM Omniture
   ],
   scriptSrc: [
     // During development, we only have 2 inline scripts: the one preloading the background image
@@ -43,6 +47,9 @@ var cspDevConfig = {
     '\'unsafe-inline\'',
     '127.0.0.1',
     'http://dev-admin.ciscospark.com:8000', // manual DNS entry for local dev
+    'http://assets.adobedtm.com', // Adobe DTM Omniture
+    'http://dpm.demdex.net', // Adobe DTM Omniture
+    'http://*.omtrdc.net', // Adobe DTM Ominture
   ],
   styleSrc: [
     'blob:', // Webpack Dev

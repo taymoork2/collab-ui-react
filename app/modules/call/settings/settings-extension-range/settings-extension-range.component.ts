@@ -60,7 +60,9 @@ class ExtensionRangeCtrl implements ng.IComponentController {
       beginNumber: '',
       endNumber: '',
     });
-    this.extensionRangeForm.$setDirty();
+    if (this.extensionRangeForm) {
+      this.extensionRangeForm.$setDirty();
+    }
     this.onExtensionRangeChange();
   }
 

@@ -148,7 +148,7 @@
       }
 
       vm.showPendingView = vm.hasPendingLicenses;
-      vm.orderDetails = SetupWizardService.getOrderAndSubId();
+      vm.orderDetails = SetupWizardService.getOrderDetails();
     }
 
     function getUserServiceRowClass(hasRoomSystem) {

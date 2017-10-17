@@ -89,7 +89,7 @@
           $translate.instant('customerPage.ariaTooltips.service', tooltipDataObj),
           $translate.instant('customerPage.ariaTooltips.quantity', tooltipDataObj),
           $translate.instant('customerPage.ariaTooltips.status', tooltipDataObj),
-        ], ' ,');
+        ], ', ');
         return $interpolate(tooltip[0].outerHTML)(tooltipDataObj);
       }
 

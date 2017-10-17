@@ -58,6 +58,7 @@
             customerEmail: vm.currentCustomer.customerEmail,
             customerCommunicationLicenseIsTrial: getCommTrial(vm.currentCustomer, 'communications'),
             customerRoomSystemsLicenseIsTrial: getCommTrial(vm.currentCustomer, 'roomSystems'),
+            showContractIncomplete: $scope.showContractIncomplete,
           });
         } else {
           return Notification.error('pstnSetup.errors.customerNotFound');

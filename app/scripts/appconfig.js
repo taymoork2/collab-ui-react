@@ -1114,6 +1114,16 @@
               },
             },
           })
+          .state('users.csv.task-manager', {
+            views: {
+              'usersCsv@users.csv': {
+                template: '<user-task-manager-modal dismiss="$dismiss()"></user-task-manager-modal>',
+              },
+            },
+            params: {
+              task: undefined,
+            },
+          })
           .state('editService', {
             parent: 'modal',
             resolve: {
@@ -2295,7 +2305,7 @@
                   if (enabled) {
                     _.set(this, 'data.displayName', $translate.instant('sidePanelBreadcrumb.device'));
                   } else {
-                    _.set(this, 'data.displayName', $translate.instant('sidePanelBreadcrumb.deviceConfig'));
+                    _.set(this, 'data.displayName', $translate.instant('sidePanelBreadcrumb.deviceConfiguration'));
                   }
                 }.bind(this));
               },
@@ -3513,6 +3523,7 @@
               customerEmail: '',
               customerCommunicationLicenseIsTrial: '',
               customerRoomSystemsLicenseIsTrial: '',
+              showContractIncomplete: {},
               refreshFn: function () {},
             },
             views: {
@@ -3566,6 +3577,7 @@
               customerEmail: {},
               customerCommunicationLicenseIsTrial: {},
               customerRoomSystemsLicenseIsTrial: {},
+              showContractIncomplete: {},
               refreshFn: function () {},
             },
             views: {

@@ -33,7 +33,7 @@ require('./_setup-wizard.scss');
   angular.module('Core')
     .controller('SetupWizardCtrl', SetupWizardCtrl);
 
-  function SetupWizardCtrl($q, $scope, $state, $stateParams, $timeout, Analytics, Authinfo, Config, FeatureToggleService, Orgservice, SessionStorage, SetupWizardService, StorageKeys, Notification) {
+  function SetupWizardCtrl($q, $scope, $state, $stateParams, $timeout, Analytics, Authinfo, Config, FeatureToggleService, Orgservice, SessionStorage, SetupWizardService, StorageKeys, Notification, CustomerCommonService) {
     var isFirstTimeSetup = _.get($state, 'current.data.firstTimeSetup', false);
     var isITDecouplingFlow = false;
     var shouldRemoveSSOSteps = false;
@@ -121,9 +121,9 @@ require('./_setup-wizard.scss');
         view: isFirstTimeSetup ? 'Service Setup' : 'overview: Meeting Settings Modal',
       };
 
-      if (SessionStorage.get(StorageKeys.SUBSCRIPTION_ID) && (SessionStorage.get(StorageKeys.PARTNER_ORG_ID) || SessionStorage.get(StorageKeys.PARTNER_ORG_ID))) {
+      if (SessionStorage.get(StorageKeys.SUBSCRIPTION_ID) && (SessionStorage.get(StorageKeys.PARTNER_ORG_ID) || SessionStorage.get(StorageKeys.CUSTOMER_ORG_ID))) {
         Analytics.trackServiceSetupSteps(Analytics.sections.SERVICE_SETUP.eventNames.REDIRECTED_INTO_ATLAS_FROM_OPC, analyticsProperties);
-      } else if (SessionStorage.get(StorageKeys.PARTNER_ORG_ID) || SessionStorage.get(StorageKeys.PARTNER_ORG_ID)) {
+      } else if (SessionStorage.get(StorageKeys.PARTNER_ORG_ID) || SessionStorage.get(StorageKeys.CUSTOMER_ORG_ID)) {
         var eventKey = SessionStorage.get(StorageKeys.PARTNER_ORG_ID)
           ? Analytics.sections.SERVICE_SETUP.eventNames.PARTNER_SETUP_OWNORG
           : Analytics.sections.SERVICE_SETUP.eventNames.PARTNER_SETUP_CUSTOMER;
@@ -301,6 +301,14 @@ require('./_setup-wizard.scss');
 
           if (!customer && hasPendingCallLicenses) {
             steps.push(pickCountry);
+          } else if (!customer) {
+            var org = SetupWizardService.getOrg();
+            CustomerCommonService.save({}, {
+              uuid: org.id,
+              name: org.displayName,
+              countryCode: org.countryCode,
+              servicePackage: 'VOICE_ONLY',
+            });
           }
 
           if (supportsHI1484) {

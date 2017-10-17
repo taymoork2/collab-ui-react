@@ -1,4 +1,4 @@
-import { WindowService } from 'modules/core/window';
+import { WindowEventService } from 'modules/core/window';
 
 interface IDialogState {
   button1text?: string;
@@ -31,7 +31,7 @@ class LaunchAdvancedSettingsController {
     private CsdmDeviceService,
     private currentDevice,
     private Utils,
-    private WindowService: WindowService,
+    private WindowEventService: WindowEventService,
     private Notification,
   ) {
     this.buildStates();
@@ -147,7 +147,7 @@ class LaunchAdvancedSettingsController {
 
     const endpointOrigin = 'http://' + this.currentDevice.ip;
 
-    this.WindowService.registerEventListener('message', this.handleMessageEvent.bind(this), this.$scope);
+    this.WindowEventService.registerEventListener('message', this.handleMessageEvent.bind(this), this.$scope);
 
     this.endpointWindow = createEndpointWindow(endpointOrigin, this.currentDevice);
 

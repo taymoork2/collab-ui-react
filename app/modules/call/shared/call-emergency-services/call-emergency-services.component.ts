@@ -16,6 +16,7 @@ export class CallEmergencyServicesComponent implements ng.IComponentOptions {
     required: '<',      //boolean: Is the component required
     isPstnSetup: '<',   //boolean: that will allow ESA to be Entered and Validated
     allowEcbnSetup: '<', //boolean: that will allow ECBN to be setup
+    ecbnChangeFn: '&',   //Notification function when ECBN is changed
   };
 }
 
@@ -27,6 +28,7 @@ class CallEmergencyServicesCtrl implements ng.IComponentController {
   public required: boolean;
   public isPstnSetup: boolean;
   public allowEcbnSetup: boolean;
+  public ecbnChangeFn: Function;
   //Class properties
   public addressValidating: boolean = false;
   public addressReadOnly: boolean = false;
@@ -129,6 +131,16 @@ class CallEmergencyServicesCtrl implements ng.IComponentController {
         .finally(() => {
           this.addressValidating = false;
         });
+    }
+  }
+
+  public onEcbnChange(value: any): void {
+    if (!_.isEmpty(value)) {
+      if (this.ecbnChangeFn) {
+        this.ecbnChangeFn({
+          value: value,
+        });
+      }
     }
   }
 

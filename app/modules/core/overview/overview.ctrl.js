@@ -42,6 +42,7 @@ require('./_overview.scss');
     vm.notificationComparator = notificationComparator;
     vm.ftHuronPstn = false;
     vm.ftEnterpriseTrunking = false;
+    vm.showUserTaskManagerModal = showUserTaskManagerModal;
 
     ////////////////////////////////
 
@@ -371,6 +372,10 @@ require('./_overview.scss');
           forwardEvent('provisioningEventHandler', productProvStatus);
         });
       }
+    }
+
+    function showUserTaskManagerModal() {
+      $state.go('users.csv.task-manager');
     }
 
     forwardEvent('licenseEventHandler', Authinfo.getLicenses());

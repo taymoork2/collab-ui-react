@@ -1,6 +1,6 @@
 {
   "loginPage": {
-    "title": "Cloud Collaboration Management",
+    "title": "Cisco Spark Control Hub",
     "titleNew": "Cisco Spark Control Hub",
     "titlePro": "Cisco Spark Control Hub Pro",
     "login": "Sign In",
@@ -309,6 +309,11 @@
       "title": "Add Services for Users",
       "instructions": "Select the service entitlements that you want to provide to users."
     }
+  },
+  "userTaskManagerModal": {
+    "title": "Tasks",
+    "viewAllTasks": "View all tasks",
+    "getTaskListError": "An error occurred obtaining the list of task. Please refresh to try again."
   },
   "onboardModal": {
     "ciscoSparkJabberInterop": "Cisco Spark / Jabber Interop",
@@ -1422,6 +1427,7 @@
   "common": {
     "actions": "Actions",
     "activate": "Activate",
+    "active": "Active",
     "add": "Add",
     "agree": "Agree",
     "alert": "Alert",
@@ -1851,9 +1857,9 @@
     "voicemailPrefixTitle": "Voicemail ID Prefix",
     "voicemailPrefixDesc": "Select a prefix to reserve for dialing mailboxes from a device. Extensions between {{number}}{{extensionLength0}} and {{number}}{{extensionLength9}} are not recommended for assignment.",
     "vmUseTLS": "Secure email delivery (use TLS)",
-    "vmPinManagement": "Pin Management",
-    "vmPinHelp": "OTP will be shared over Spark in case of user voicemail toggle on/off and user account locked/expired.",
-    "vmEnableOTP": "Enable OTP (One-time Pin)",
+    "vmPinManagement": "PIN Management",
+    "vmPinHelp": "A One-Time PIN (OTP) is shared in Cisco Spark when a user is on-boarded or user's voicemail account is locked or expired.",
+    "vmEnableOTP": "Enable OTP",
     "dialing": "Dialing Preferences",
     "internalDialing": "Internal Dialing",
     "externalDialing": "External Dialing",
@@ -3633,6 +3639,7 @@
     "subscriptionId": "Subscription IDs",
     "subscriptionID": "Subscription ID: ",
     "orderNumber": "Order Number: ",
+    "endCustomer": "End Customer: ",
     "spark": "Cisco Spark",
     "sparkStub": "Set up Cisco Spark",
     "webex": "WebEx",
@@ -4781,6 +4788,8 @@
     "orderNumber": "Order Number",
     "numberCart": "Number Cart",
     "tollFreeTitle": "Search and add toll-free phone numbers by entering a valid area code. Valid toll-free area codes include {{areaCodes}}",
+    "unableToAddTollFreeNumbers": "Unable to add toll-free numbers because the customer PSTN contract is incomplete. Please remind your customer to sign and submit their contract.",
+    "unableToAddPortedNumbers": "Unable to add ported numbers because the customer PSTN contract is incomplete. Please remind your customer to sign and submit their contract.",
     "pstnSelector": {
       "searchPlaceholder": "Enter area code and/or number prefix",
       "searchDesc": "e.g. 972 or 972867",
@@ -5287,6 +5296,7 @@
     "viewSubscriptionInfo": "View Subscription Info",
     "updateLicensesAuthError": "Current user is not authorized to update user license info.",
     "noAccountInfo": "No account information available for this organization. This is most likely due to accessing an Integration server based organization on a Production server.  Please verify that this organization exists on the server you are using.",
+    "pstnContractIncomplete": "Customer PSTN contract incomplete. Please remind your customer to sign and submit their contract.",
     "ariaTooltips": {
       "service": "Service {{serviceName}}",
       "quantity": "Quantity {{quantity}}",
@@ -6477,8 +6487,8 @@
     "urlReportEx": "http://[url of Cisco problem reporting]",
     "helpFaq": "Help Site",
     "matchingTix": "Matching Problem Reports",
-    "matchingDescr": "To match problem reports with the logs that are uploaded to the Cloud Collaboration Management tool, you can enter the string “%%logID%%” (without quotes) into the URL, which will get substituted with the actual logID for each problem report submitted by your users. For example: http://www.example.com/reportproblem?yourLogIDParameter=%%logID%%. This is optional, and may require special configuration within your problem report ticketing system.",
-    "matchingDescrNew": "To match problem reports with the logs that are uploaded to the {{appTitle}} tool, you can enter the string “%%logID%%” (without quotes) into the URL, which will get substituted with the actual logID for each problem report submitted by your users. For example: http://www.example.com/reportproblem?yourLogIDParameter=%%logID%%. This is optional, and may require special configuration within your problem report ticketing system.",
+    "matchingDescr": "To match problem reports with the logs that are uploaded to the {{appTitle}} tool, you can enter the string <strong>%%logID%%</strong> into the URL, which will get substituted with the actual logID for each problem report submitted by your users. For example: http://www.example.com/reportproblem?yourLogIDParameter=%%logID%%. This is optional, and may require special configuration within your problem report ticketing system.",
+    "matchingDescrNew": "To match problem reports with the logs that are uploaded to the {{appTitle}} tool, you can enter the string <strong>%%logID%%</strong> into the URL, which will get substituted with the actual logID for each problem report submitted by your users. For example: http://www.example.com/reportproblem?yourLogIDParameter=%%logID%%. This is optional, and may require special configuration within your problem report ticketing system.",
     "forExample": "For example: http://www.acme.com/reportproblem?id=%%logID%%",
     "brandingTitle": "Customize Branding",
     "supportTitle": "Support Setup",
@@ -7730,7 +7740,7 @@
         "herculesError": "Could not reach the service for Cisco Spark Hybrid Services.",
         "herculesErrorCacheInvalidation": "Could not invalidate current user's Hybrid Services cache.",
         "herculesErrorAuthentication": "The current user is not allowed to read this organization's Hybrid Services data.",
-        "notEnabledText": "Hybrid Services allows you to integrate your on-premises systems with the Cisco Collaboration Platform.",
+        "notEnabledText": "Hybrid Services allows you to integrate your on-premises systems with the Cisco Spark Platform.",
         "notEnabledTextNew": "Hybrid Services allows you to integrate your on-premises systems with the Cisco Spark Platform.",
         "notEnabledActionText": "Learn More",
         "serviceHeader": "Status",
@@ -7865,7 +7875,7 @@
       "desktopApps": "Desktop apps",
       "webApp": "Web app",
       "mobileApps": "Mobile apps",
-      "integrationAndBots": "Integration and Bots"
+      "bots": "Bots"
     },
     "support": {
       "title": "Support",
@@ -8524,7 +8534,27 @@
         "exchangeTitle": "Microsoft Exchange",
         "googleTitle": "Google Calendar",
         "office365Title": "Office 365",
-        "error": "Could not retrieve Google Calendar status"
+        "error": "Could not retrieve Google Calendar status",
+        "premisesBasedPrerequisites": {
+          "title": "Hybrid Calendar (Exchange) Prerequisites",
+          "tabHeading": "On-premises Exchange or Office 365 ({{checked}}/{{total}})",
+          "intro": "Use this checklist alongside the \"Prepare Your Environment\" chapter in the deployment guide. Make sure you complete all the prerequisites necessary for deploying Hybrid Calendar Service for on-premises Exchange or Office 365 in your organization.",
+          "configureImpersonation": "Configure the impersonation account",
+          "runSupportedExchange": "Install or make sure you're running a supported version of Microsoft Exchange or Office 365, as described in the hybrid calendar deployment documentation.",
+          "ensureActiveDirectory": "Ensure that users are listed in Active Directory and have a discoverable mailbox in the organization's Exchange server",
+          "providePortAccess": "Provide the following port access:",
+          "providePortAccessHelp1": "HTTPS or secure web sockets outbound from Expressway to *.ciscospark.com, *.wbx2.com, and *.webex.com: TCP port 443 (secure)",
+          "providePortAccessHelp2": "EWS outbound from Expressway to Exchange: TCP port 443 (secure) or TCP port 80 (nonsecure) ",
+          "providePortAccessHelp3": "LDAP outbound from Expressway to Active Directory: TCP port 636 (secure) or TCP port 389 (nonsecure)",
+          "providePortAccessHelp4": "Microsoft Global Catalog search: TCP port 3269 (for Global Catalog search secured by SSL) or TCP port 3268 (for unsecured Global Catalog search).",
+          "forWebExFunctionality": "For @webex functionality",
+          "configureWebEx": "Configure or use a Cisco WebEx Meeting Center site with CMR Cloud",
+          "toMakeOBTP": "To make One Button to Push (OBTP) available for Unified CM-registered endpoints managed by Cisco TMS on @spark or @webex meetings:",
+          "setUpTMS": "Set up Cisco TMS 15.0 and Cisco TMSXE 5.0 or higher with Microsoft Exchange integration (Cisco Collaboration Meeting Rooms (CMR) Hybrid Configuration Guide). Cisco TMS and Cisco TMSXE require no additional configuration to support Hybrid Calendar Service.",
+          "configureTMSXE": "To make conference rooms schedulable in Microsoft Outlook/Exchange, configure them in Cisco TMSXE as if you were using on-premises conferencing (Cisco TelePresence Management Suite Extension for Microsoft Exchange Administration Guide).",
+          "reviewLicensing": "Review the licensing requirements",
+          "reviewLicensingHelp": "Cisco TMS and Cisco TMSXE Licensing is the same as if using on-premises resources. You require enough licenses to cover the number of endpoints that will use OBTP."
+        }
       },
       "hybridCall": {
         "title": "Hybrid Call",
@@ -8535,11 +8565,9 @@
         },
         "prerequisites": {
           "title": "Hybrid Call Prerequisites",
-          "cannotReachFlagService": "Failed to read existing checkbox statuses.",
-          "steps": "Steps",
-          "openDocumentation": "Open Documentation",
           "expresswaySetup": {
             "intro": "Use this checklist alongside the \"Prepare Your Environment\" chapter in the deployment guide. Make sure you complete all the prerequsites necessary for deploying the Expressway-C connector host.",
+            "tabHeading": "Expressway-C Connector Host ({{checked}}/{{total}})",
             "planCapacity": "Plan your connector capacity (dedicated or shared)",
             "redundancy": "Deploy Expressway-C in a cluster for redundancy",
             "followRequirements": "Follow requirements for the Expressway software",
@@ -8555,6 +8583,7 @@
           },
           "awareSetup": {
             "intro": "Use this checklist alongside the \"Prepare Your Environment\" chapter in the deployment guide. Make sure you complete all the prerequsites necessary for deploying Hybrid Call Service Aware in your organization.",
+            "tabHeading": "Hybrid Call Service Aware ({{checked}}/{{total}})",
             "determineCertificateTrust": "Determine your certificate trust method (manual or automatic)",
             "registerAllDomains": "Register all the domains (directory URIs and email addresses) to Cisco Spark",
             "registerAllDomainsHelp1": "Ensure that the subject alternate names (SANs) belong to the registered domains",
@@ -8571,6 +8600,7 @@
           },
           "connectSetup": {
             "intro": "Hybrid Call Connect is an optional feature of Hybrid Call. Use this checklist alongside the \"Prepare Your Environment\" chapter in the deployment guide. Make sure you complete all the prerequsites necessary for deploying Hybrid Call Service Connect in your organization.",
+            "tabHeading": "Hybrid Call Service Connect ({{checked}}/{{total}})",
             "isAwareSetup": "Hybrid Call Service Aware must be deployed and configured",
             "prepareEdge": "Prepare your Expressway-E for the mutual TLS connection between Cisco Spark and your call control environment",
             "prepareEdgeHelp1": "For an SRV record (multiple Expressway-E for redundancy): If you have an existing SRV, allow the time to request a dedicated SRV for Hybird Call Service Connect.",
@@ -8610,10 +8640,7 @@
         },
         "prerequisites": {
           "title": "Hybrid Media Prerequisites",
-          "cannotReachFlagService": "Failed to read existing checkbox statuses.",
-          "steps": "Steps",
           "intro": "Use this checklist alongside the deployment guide. Make sure you complete all the prerequisites necessary for deploying Hybrid Media Service in your organization.",
-          "openDocumentation": "Open Documentation",
           "meetMinimumSystemRequirements": "Meet the minimum system requirements described in Requirements for Hybrid Media Service",
           "verifyDeploymentModels": "Verify the supported deployment models described in Deployment Models Supported by Hybrid Media Service",
           "ensureNetworkConnectivity": "Ensure that your network allows connectivity on the ports and using the protocols described in Ports and Protocols Used by Hybrid Media Service",
@@ -8763,6 +8790,11 @@
       "unknown": "Unknown",
       "disabled": "Disabled",
       "setupNotComplete": "Setup not completed"
+    },
+    "commonPrerequisites": {
+      "cannotReachFlagService": "Failed to read existing checkbox statuses.",
+      "openDocumentation": "Open Documentation",
+      "steps": "Steps"
     }
   },
   "enableUsersModal": {

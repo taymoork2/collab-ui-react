@@ -3,22 +3,7 @@
 
   angular
     .module('core.partner-reports')
-    .controller('SparkReportsCtrl', SparkReportsCtrl)
-    .directive('ngOnload', ngOnloadDirective);
-
-  function ngOnloadDirective() {
-    return {
-      restrict: 'A',
-      scope: {
-        callback: '&ngOnload',
-      },
-      link: function (scope, element) {
-        element.on('load', function (event) {
-          scope.callback({ event: event });
-        });
-      },
-    };
-  }
+    .controller('SparkReportsCtrl', SparkReportsCtrl);
 
   /* @ngInject */
   function SparkReportsCtrl(
@@ -94,8 +79,7 @@
       );
     }
 
-    vm.iframeLoaded = function (iframeId) {
-      var currScope = angular.element(iframeId).scope();
+    vm.iframeLoaded = function (currScope) {
       var phase = currScope.$$phase;
 
       if (!phase) {

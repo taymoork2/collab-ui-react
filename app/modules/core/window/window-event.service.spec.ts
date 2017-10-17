@@ -1,9 +1,9 @@
 import windowModule from './index';
 
-describe('WindowService', () => {
+describe('WindowEventService', () => {
   beforeEach(function () {
     this.initModules(windowModule);
-    this.injectDependencies('WindowService', '$rootScope', '$scope', '$window');
+    this.injectDependencies('WindowEventService', '$rootScope', '$scope', '$window');
     this.eventListener = jasmine.createSpy('listenerSpy');
     this.eventName = 'test-event';
   });
@@ -26,11 +26,11 @@ describe('WindowService', () => {
     });
 
     it('should trigger listener when event is fired on specified scope', function () {
-      this.WindowService.registerEventListener(this.eventName, this.eventListener, this.$scope);
+      this.WindowEventService.registerEventListener(this.eventName, this.eventListener, this.$scope);
       this.testEventListenerOnScope(this.$scope);
     });
     it('should trigger listener when event is fired without specified scope', function () {
-      this.WindowService.registerEventListener(this.eventName, this.eventListener);
+      this.WindowEventService.registerEventListener(this.eventName, this.eventListener);
       this.testEventListenerOnScope(this.$rootScope);
     });
   });

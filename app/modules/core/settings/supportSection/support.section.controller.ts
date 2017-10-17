@@ -3,7 +3,6 @@ import { CsdmConfigurationService } from '../../../squared/devices/services/Csdm
 
 export class SupportSettingsController {
   private proPackEnabled: boolean = false;
-  public nameChangeEnabled: boolean = false;
   public csdmShowSupportSectionToggle = false;
 
   private customSupport = { enable: false, url: '', text: '' };
@@ -122,11 +121,9 @@ export class SupportSettingsController {
   ) {
     this.$q.all({
       proPackEnabled: this.ProPackService.hasProPackPurchased(),
-      nameChangeEnabled: this.FeatureToggleService.atlas2017NameChangeGetStatus(),
       csdmDeviceBranding: this.FeatureToggleService.csdmDeviceBrandingGetStatus(),
     }).then((toggles: any): void => {
       this.proPackEnabled = toggles.proPackEnabled;
-      this.nameChangeEnabled = toggles.nameChangeEnabled;
       this.csdmShowSupportSectionToggle = toggles.csdmDeviceBranding;
     });
 

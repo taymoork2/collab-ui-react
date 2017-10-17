@@ -135,4 +135,15 @@
       outline: none;
     }
   }
+
+  div.banner-info {
+    background-color: $color-red-light;
+    text-align: center;
+  }
+
+  .banner-top-stripe {
+    height: 4px;
+    width: 100%;
+    background-color: $color-red-base;
+  }
 }

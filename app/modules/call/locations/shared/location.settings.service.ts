@@ -44,12 +44,12 @@ export class CallLocationSettingsService {
     private SettingSetupInitService: SettingSetupInitService,
   ) {}
 
-  public get(locationId: string, isLocationWizardSetup?: boolean): ng.IPromise<CallLocationSettingsData> {
-    if (locationId || isLocationWizardSetup) {
+  public get(locationId?: string): ng.IPromise<CallLocationSettingsData> {
+    if (locationId) {
       return this.getLocationData(locationId);
     } else {
       return this.LocationsService.getDefaultLocation()
-        .then((defaultLocation) => {
+        .then(defaultLocation => {
           this.SettingSetupInitService.setDefaultLocation(defaultLocation);
           return this.getLocationData(defaultLocation.uuid ? defaultLocation.uuid : '');
         })

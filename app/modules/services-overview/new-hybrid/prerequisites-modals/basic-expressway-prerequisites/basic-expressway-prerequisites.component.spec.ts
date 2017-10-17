@@ -1,9 +1,11 @@
+import moduleName from './index';
+
 describe('BasicExpresswayPrerequisitesComponentController', () => {
 
   let controller, $componentController, $q, $scope, HybridServicesFlagService;
   const flagPrefix = 'atlas.hybrid.setup.call.expressway.';
 
-  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module(moduleName));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
   afterEach(cleanup);
