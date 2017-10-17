@@ -6659,11 +6659,13 @@
     "areaCode": "Non è un prefisso valido."
   },
   "CsdmStatus": {
-    "Online": "Online",
-    "OnlineWithIssues": "Online, con problemi",
-    "Offline": "Offline",
-    "OfflineExpired": "Disattivato",
-    "Unknown": "Sconosciuto",
+    "connectionStatus": {
+      "Online": "Online",
+      "OnlineWithIssues": "Online, con problemi",
+      "Offline": "Offline",
+      "OfflineExpired": "Disattivato",
+      "Unknown": "Sconosciuto"
+    },
     "WithDevices": "Con dispositivi",
     "upgradeChannels": {
       "Stable": "Stabile",

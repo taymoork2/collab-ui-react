@@ -175,7 +175,7 @@ describe('CsdmConverterSpec', function () {
           connectionStatus: 'CONNECTED',
         },
       }];
-      expect(converter.convertCloudberryDevices(arr)[0].state.readableState).toBe('CsdmStatus.OnlineWithIssues');
+      expect(converter.convertCloudberryDevices(arr)[0].state.readableState).toBe('CsdmStatus.connectionStatus.OnlineWithIssues');
       expect(converter.convertCloudberryDevices(arr)[0].state.priority).toBe('1');
       expect(converter.convertCloudberryDevices(arr)[0].cssColorClass).toBe('warning');
     });
@@ -186,7 +186,7 @@ describe('CsdmConverterSpec', function () {
           connectionStatus: 'CONNECTED',
         },
       }];
-      expect(converter.convertCloudberryDevices(arr)[0].state.readableState).toBe('CsdmStatus.Online');
+      expect(converter.convertCloudberryDevices(arr)[0].state.readableState).toBe('CsdmStatus.connectionStatus.Online');
       expect(converter.convertCloudberryDevices(arr)[0].state.priority).toBe('5');
       expect(converter.convertCloudberryDevices(arr)[0].cssColorClass).toBe('success');
     });
@@ -197,7 +197,7 @@ describe('CsdmConverterSpec', function () {
           connectionStatus: 'UNKNOWN',
         },
       }];
-      expect(converter.convertCloudberryDevices(arr)[0].state.readableState).toBe('CsdmStatus.Offline');
+      expect(converter.convertCloudberryDevices(arr)[0].state.readableState).toBe('CsdmStatus.connectionStatus.Offline');
       expect(converter.convertCloudberryDevices(arr)[0].state.priority).toBe('2');
       expect(converter.convertCloudberryDevices(arr)[0].cssColorClass).toBe('danger');
     });

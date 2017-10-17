@@ -6659,11 +6659,13 @@
     "areaCode": "Il semble que ce ne soit pas un indicatif valide."
   },
   "CsdmStatus": {
-    "Online": "En ligne",
-    "OnlineWithIssues": "En ligne, avec des problèmes",
-    "Offline": "Hors-ligne",
-    "OfflineExpired": "Désactivé(s)",
-    "Unknown": "Inconnu(e)",
+    "connectionStatus": {
+      "Online": "En ligne",
+      "OnlineWithIssues": "En ligne, avec des problèmes",
+      "Offline": "Hors-ligne",
+      "OfflineExpired": "Désactivé(s)",
+      "Unknown": "Inconnu(e)"
+    },
     "WithDevices": "Avec les périphériques",
     "upgradeChannels": {
       "Stable": "Stable",

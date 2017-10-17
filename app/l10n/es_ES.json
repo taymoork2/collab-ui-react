@@ -6659,11 +6659,13 @@
     "areaCode": "Parece que este prefijo telefónico no es válido."
   },
   "CsdmStatus": {
-    "Online": "En línea",
-    "OnlineWithIssues": "En línea, con errores",
-    "Offline": "Sin conexión:",
-    "OfflineExpired": "Desactivado",
-    "Unknown": "Desconocido",
+    "connectionStatus": {
+      "Online": "En línea",
+      "OnlineWithIssues": "En línea, con errores",
+      "Offline": "Sin conexión:",
+      "OfflineExpired": "Desactivado",
+      "Unknown": "Desconocido"
+    },
     "WithDevices": "Con dispositivos",
     "upgradeChannels": {
       "Stable": "Estable",

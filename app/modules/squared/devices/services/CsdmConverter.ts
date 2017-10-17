@@ -347,8 +347,8 @@ export class Helper {
   }
 
   public getActiveInterface(obj): string {
-    if (obj.status) {
-      const translationKey = 'CsdmStatus.activeInterface.' + (obj.status.activeInterface || '').toLowerCase();
+    if (obj.status && obj.status.activeInterface) {
+      const translationKey = 'CsdmStatus.activeInterface.' + obj.status.activeInterface.toLowerCase();
       if (this.isTranslatable(translationKey)) {
         return this.$translate.instant(translationKey);
       }
@@ -408,17 +408,17 @@ export class Helper {
       case 'CONNECTED':
         if (Helper.hasIssues(obj)) {
           return {
-            readableState: this.t('CsdmStatus.OnlineWithIssues'),
+            readableState: this.t('CsdmStatus.connectionStatus.OnlineWithIssues'),
             priority: '1',
           };
         }
         return {
-          readableState: this.t('CsdmStatus.Online'),
+          readableState: this.t('CsdmStatus.connectionStatus.Online'),
           priority: '5',
         };
       default:
         return {
-          readableState: this.t('CsdmStatus.Offline'),
+          readableState: this.t('CsdmStatus.connectionStatus.Offline'),
           priority: '2',
         };
     }

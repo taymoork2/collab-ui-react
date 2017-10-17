@@ -25,7 +25,7 @@ export class SearchObject {
   public sortField: string = Aggregate[Aggregate.connectionStatus];
   public sortOrder: string = 'asc';
   public hasError: boolean;
-  public lastGoodQuery: string;
+  public lastGoodQuery: SearchElement;
   private parsedQuery: SearchElement;
   public currentFilterValue: string;
 
@@ -85,7 +85,7 @@ export class SearchObject {
       this.parsedQuery = alreadyParsedQuery || QueryParser.parseQueryString(query);
       this.from = 0;
       this.hasError = false;
-      this.lastGoodQuery = query;
+      this.lastGoodQuery = _.cloneDeep(this.parsedQuery);
     } catch (error) {
       this.hasError = true;
     }
@@ -167,15 +167,20 @@ export class SearchObject {
     this.from = 0;
   }
 
-  public getSearchQuery(): string {
+  public getSearchQuery(deviceSearchTranslator: SearchTranslator | null): string {
+
+    const translatedQuery = deviceSearchTranslator
+      ? deviceSearchTranslator.translateQuery(this.lastGoodQuery).toQuery()
+      : (this.lastGoodQuery ? this.lastGoodQuery.toQuery() : '');
+
     if (this.currentFilterValue) {
-      if (this.lastGoodQuery) {
-        return '(' + this.lastGoodQuery + ') AND ' + this.currentFilterValue;
+      if (translatedQuery) {
+        return '(' + translatedQuery + ') AND ' + this.currentFilterValue;
       } else {
         return this.currentFilterValue;
       }
     } else {
-      return this.lastGoodQuery || '';
+      return translatedQuery || '';
     }
   }
 
@@ -197,12 +202,5 @@ export class SearchObject {
 
   public clone(): SearchObject {
     return _.cloneDeep(this);
-  }
-
-  public translate(DeviceSearchTranslator: SearchTranslator): SearchObject {
-    //TODO: use this.parsedQuery.translate() instead!
-    const myClone = this.clone();
-    myClone.lastGoodQuery = DeviceSearchTranslator.translate(myClone.lastGoodQuery);
-    return myClone;
   }
 }

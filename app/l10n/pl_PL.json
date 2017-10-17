@@ -6659,11 +6659,13 @@
     "areaCode": "Nie jest to prawidłowy numer kierunkowy."
   },
   "CsdmStatus": {
-    "Online": "Online",
-    "OnlineWithIssues": "Online, z problemami",
-    "Offline": "Offline",
-    "OfflineExpired": "Dezaktywowano",
-    "Unknown": "Nieznany",
+    "connectionStatus": {
+      "Online": "Online",
+      "OnlineWithIssues": "Online, z problemami",
+      "Offline": "Offline",
+      "OfflineExpired": "Dezaktywowano",
+      "Unknown": "Nieznany"
+    },
     "WithDevices": "Za pomocą urządzeń",
     "upgradeChannels": {
       "Stable": "Stabilna",

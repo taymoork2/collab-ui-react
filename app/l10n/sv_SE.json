@@ -6659,11 +6659,13 @@
     "areaCode": "Detta verkar inte vara ett giltigt riktnummer."
   },
   "CsdmStatus": {
-    "Online": "Online",
-    "OnlineWithIssues": "Online, med problem",
-    "Offline": "Offline",
-    "OfflineExpired": "Inaktiverad",
-    "Unknown": "Okänt",
+    "connectionStatus": {
+      "Online": "Online",
+      "OnlineWithIssues": "Online, med problem",
+      "Offline": "Offline",
+      "OfflineExpired": "Inaktiverad",
+      "Unknown": "Okänt"
+    },
     "WithDevices": "Med enheter",
     "upgradeChannels": {
       "Stable": "Stabil",
