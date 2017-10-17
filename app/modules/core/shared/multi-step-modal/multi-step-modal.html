@@ -23,12 +23,16 @@
     ng-if="$ctrl.next && !$ctrl.nextRemoved"
     ng-disabled="$ctrl.nextDisabled"
     ng-click="$ctrl.next()"
+    cs-btn
+    loading="$ctrl.nextLoading"
     ><span translate="common.next"></span>
   </button>
   <button type="button" class="btn btn--primary save"
     ng-if="$ctrl.save && !$ctrl.saveRemoved"
     ng-disabled="$ctrl.saveDisabled"
     ng-click="$ctrl.save()"
+    cs-btn
+    loading="$ctrl.saveLoading"
     ><span translate="common.save"></span>
   </button>
 </div>

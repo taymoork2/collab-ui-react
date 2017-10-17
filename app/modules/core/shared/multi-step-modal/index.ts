@@ -4,6 +4,7 @@ import { MultiStepModalComponent } from './multi-step-modal.component';
 export default angular
   .module('core.shared.multi-step-modal', [
     require('angular-translate'),
+    require('collab-ui-ng').default,
   ])
   .component('multiStepModal', new MultiStepModalComponent())
   .name;

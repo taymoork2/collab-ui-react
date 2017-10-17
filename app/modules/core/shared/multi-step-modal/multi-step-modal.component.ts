@@ -17,8 +17,10 @@ export class MultiStepModalComponent implements ng.IComponentOptions {
     next: '&?',
     nextDisabled: '<?',
     nextRemoved: '<?',
+    nextLoading: '<?',
     save: '&?',
     saveDisabled: '<?',
     saveRemoved: '<?',
+    saveLoading: '<?',
   };
 }
