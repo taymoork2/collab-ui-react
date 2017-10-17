@@ -277,7 +277,7 @@ require('./_user-roles.scss');
           $scope.rolesEdit.form.displayName.$setValidity('notblank', true);
         }
         if ($scope.showRolesSection) {
-          $scope.rolesEdit.form.partialAdmin.$setValidity('noSelection', true);
+          $scope.rolesEdit.form.adminRoles.$setValidity('noSelection', true);
         }
       }
     }
@@ -564,7 +564,7 @@ require('./_user-roles.scss');
         $scope.rolesEdit.form.displayName.$setValidity('notblank', true);
       }
       if ($scope.showRolesSection) {
-        $scope.rolesEdit.form.partialAdmin.$setValidity('noSelection', getPartialAdminValidity());
+        $scope.rolesEdit.form.adminRoles.$setValidity('noSelection', getPartialAdminValidity());
       }
     }
 
