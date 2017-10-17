@@ -93,9 +93,7 @@ describe('Controller: SipDomainSettingController', function () {
       }],
     }]));
 
-    spyOn(this.Orgservice, 'getOrg').and.callFake((callback) => {
-      callback(this.orgServiceJSONFixture.getOrg, 200);
-    });
+    spyOn(this.Orgservice, 'getOrg').and.returnValue(this.$q.resolve({ data: this.orgServiceJSONFixture.getOrg }));
 
     spyOn(this.ServiceDescriptorService, 'isServiceEnabled').and.returnValue(this.$q.resolve(true));
 
@@ -138,12 +136,10 @@ describe('Controller: SipDomainSettingController', function () {
     });
 
     it('initialization should gracefully error', function () {
-      this.Orgservice.getOrg.and.callFake((callback) => {
-        callback(this.orgServiceJSONFixture.getOrg, 201);
-      });
+      this.Orgservice.getOrg.and.returnValue(this.$q.reject());
       this.initController();
 
-      expect(this.Notification.error).toHaveBeenCalled();
+      expect(this.Notification.errorWithTrackingId).toHaveBeenCalled();
     });
 
     it('initialization should emit wizardNextDisabled and', function () {

@@ -81,9 +81,7 @@ describe('Controller: OverviewCtrl', function () {
     spyOn(this.Orgservice, 'getAdminOrg').and.callFake(_.noop);
     spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.orgServiceJSONFixture.getLicensesUsage.singleSub));
     spyOn(this.Orgservice, 'getUnlicensedUsers').and.callFake(_.noop);
-    spyOn(this.Orgservice, 'getOrg').and.callFake(function (callback) {
-      callback(getOrgNoSip, 200);
-    });
+    spyOn(this.Orgservice, 'getOrg').and.returnValue(this.$q.resolve({ data: getOrgNoSip }));
 
     spyOn(this.PstnService, 'isSwivelCustomerAndEsaUnsigned').and.returnValue(this.$q.resolve(true));
     spyOn(this.PstnService, 'getCustomerTrialV2').and.returnValue(this.$q.resolve({ acceptedDate: 'today' }));
