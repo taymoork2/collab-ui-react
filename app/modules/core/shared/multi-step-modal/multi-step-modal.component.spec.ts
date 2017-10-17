@@ -20,6 +20,9 @@ describe('Component: multiStepModal:', () => {
     });
 
     it('should render button elements if a corresponding attribute is set', function () {
+      this.compileTemplate('<multi-step-modal></multi-step-modal>');
+      expect(this.view.find('button.btn').length).toBe(0);
+
       this.compileTemplate('<multi-step-modal cancel="_.noop()"></multi-step-modal>');
       expect(this.view.find('button.btn.cancel').length).toBe(1);
 
