@@ -37,6 +37,7 @@
       if (SetupWizardService.getWillNotProvision()) {
         $scope.doNotProvision = true;
       } else {
+        $scope.wizard.isNextDisabled = true;
         $scope.doNotProvision = false;
         Orgservice.updateOrgUsageCacheAge(5);
         return provision();
