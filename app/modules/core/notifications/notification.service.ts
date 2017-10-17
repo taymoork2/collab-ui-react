@@ -10,7 +10,6 @@ enum NotificationType {
 }
 
 enum CustomHttpStatus {
-  REJECTED = -1,
   UNKNOWN = 0,
 }
 
@@ -167,20 +166,29 @@ export class Notification {
 
   private addResponseMessage(errorMsg: string, response: ng.IHttpResponse<any>, useResponseData: boolean = false): string {
     const status = _.get<number>(response, 'status');
+    let responseErrorKey: string | undefined;
     if (this.isAbortResponse(response)) {
-      errorMsg = this.addTranslateKeyMessage(errorMsg, 'errors.statusCancelled');
+      responseErrorKey = 'errors.statusCancelled';
     } else if (this.isOfflineStatus(response)) {
-      errorMsg = this.addTranslateKeyMessage(errorMsg, 'errors.statusOffline');
+      responseErrorKey = 'errors.statusOffline';
     } else if (this.isTimeoutResponse(response)) {
-      errorMsg = this.addTranslateKeyMessage(errorMsg, 'errors.statusTimeout');
+      responseErrorKey = 'errors.statusTimeout';
     } else if (this.isErrorResponse(response)) {
-      errorMsg = this.addTranslateKeyMessage(errorMsg, 'errors.statusRejected');
+      responseErrorKey = 'errors.statusRejected';
     } else if (this.isNotFoundStatus(status)) {
-      errorMsg = this.addTranslateKeyMessage(errorMsg, 'errors.status404');
+      responseErrorKey = 'errors.status404';
     } else if (this.isUnauthorizedStatus(status)) {
-      errorMsg = this.addTranslateKeyMessage(errorMsg, 'errors.statusUnauthorized');
+      responseErrorKey = 'errors.statusUnauthorized';
+    } else if (this.isUnavailableStatus(status)) {
+      responseErrorKey = 'errors.status503';
+    } else if (this.isThrottledStatus(status)) {
+      responseErrorKey = 'errors.status429';
     } else if (this.isUnknownStatus(status)) {
-      errorMsg = this.addTranslateKeyMessage(errorMsg, 'errors.statusUnknown');
+      responseErrorKey = 'errors.statusUnknown';
+    }
+
+    if (responseErrorKey) {
+      errorMsg = this.addTranslateKeyMessage(errorMsg, responseErrorKey);
     } else if (useResponseData) {
       errorMsg = this.addMessageFromResponseData(errorMsg, response);
     }
@@ -218,6 +226,14 @@ export class Notification {
 
   private isUnauthorizedStatus(status: number): boolean {
     return status === HttpStatus.UNAUTHORIZED;
+  }
+
+  private isUnavailableStatus(status: number): boolean {
+    return status === HttpStatus.SERVICE_UNAVAILABLE;
+  }
+
+  private isThrottledStatus(status: number): boolean {
+    return status === HttpStatus.TOO_MANY_REQUESTS;
   }
 
   private addMessageFromResponseData(errorMsg: string, response: ng.IHttpResponse<any>): string {

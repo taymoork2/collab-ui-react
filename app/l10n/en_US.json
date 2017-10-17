@@ -2026,7 +2026,9 @@
     "text": "The authorization service is currently unavailable. Please check back later."
   },
   "errors": {
-    "status404": "Requested resource not found.",
+    "status404": "The requested resource was not found.",
+    "status429": "The server is busy. Please wait and try again.",
+    "status503": "The requested resource is currently unavailable. Please try again.",
     "statusCancelled": "The request was cancelled.",
     "statusOffline": "Your network is currently offline. Please try again.",
     "statusRejected": "A network error has occurred. Please try again.",
