@@ -93,10 +93,8 @@
     function init() {
       $q.all({
         sipUpdateToggle: FeatureToggleService.atlasSubdomainUpdateGetStatus(),
-        nameChangeEnabled: FeatureToggleService.atlas2017NameChangeGetStatus(),
       }).then(function (toggles) {
         vm.sipUpdateToggle = toggles.sipUpdateToggle;
-        $scope.nameChangeEnabled = toggles.nameChangeEnabled;
       });
 
       setPMRSiteUrlFromSipDomain();

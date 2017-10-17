@@ -1,13 +1,7 @@
 <div ng-form="privateTrunkCertificateForm" class="private-trunk">
   <h5 ng-if="!$ctrl.isFirstTimeSetup" class="cert-top-margin" translate="servicesOverview.cards.privateTrunk.certificateTitle"></h5>
   <h4 ng-if="$ctrl.isFirstTimeSetup" translate="servicesOverview.cards.privateTrunk.certificateTitle"></h4>
-  <span ng-if="!$ctrl.nameChangeEnabled"
-    class="span-font-size"
-    ng-class="{'font-settings': !$ctrl.isFirstTimeSetup}"
-    translate="servicesOverview.cards.privateTrunk.certDesc"
-    translate-values="{href: 'https://collaborationhelp.cisco.com/article/en-us/DOC-4302'}"></span>
-  <span ng-if="$ctrl.nameChangeEnabled"
-    class="span-font-size"
+  <span class="span-font-size"
     ng-class="{'font-settings': !$ctrl.isFirstTimeSetup}"
     translate="servicesOverview.cards.privateTrunk.certDescNew"
     translate-values="{href: 'https://collaborationhelp.cisco.com/article/en-us/DOC-4302'}"></span>
@@ -92,8 +86,7 @@
       <div class="box multibox-margin">
           <div ng-class="{'box-disabled': $ctrl.isCustomEnabled()}">
             <i class="icon icon-certified icon-lg cert-icon" ng-class="{'cert-color': !$ctrl.isCustomEnabled()}" ></i>
-            <span ng-if="!$ctrl.nameChangeEnabled" class="span-filename" translate="servicesOverview.cards.privateTrunk.certificateDefaultList"></span>
-            <span ng-if="$ctrl.nameChangeEnabled" class="span-filename" translate="servicesOverview.cards.privateTrunk.certificateDefaultListNew"></span>
+            <span class="span-filename" translate="servicesOverview.cards.privateTrunk.certificateDefaultListNew"></span>
             <a class="close-icon-align body-small float-right-view" href="https://collaborationhelp.cisco.com/article/en-us/DOC-4302" target="_blank" translate="servicesOverview.cards.privateTrunk.view"></a>
           </div>
       </div>

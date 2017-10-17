@@ -16,7 +16,6 @@ describe('Component: PrivateTrunkPrereq component', function () {
 
     this.getVerifiedDomainsDefer = this.$q.defer();
     spyOn(this.PrivateTrunkPrereqService, 'getVerifiedDomains').and.returnValue(this.getVerifiedDomainsDefer.promise);
-    spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
 
     this.compileComponent('privateTrunkPrereq', { });
   });
@@ -39,11 +38,7 @@ describe('Component: PrivateTrunkPrereq component', function () {
   });
 
   // 2017 name change
-  it('should display new help text based on atlas2017NameChangeGetStatus', function () {
-    expect(this.view.text()).toContain('servicesOverview.cards.privateTrunk.defaultTrustHelp');
-    expect(this.view.text()).not.toContain('servicesOverview.cards.privateTrunk.defaultTrustHelpNew');
-
-    this.FeatureToggleService.atlas2017NameChangeGetStatus.and.returnValue(this.$q.resolve(true));
+  it('should display new help text as default', function () {
     this.compileComponent('privateTrunkPrereq', { });
     expect(this.view.text()).toContain('servicesOverview.cards.privateTrunk.defaultTrustHelpNew');
   });

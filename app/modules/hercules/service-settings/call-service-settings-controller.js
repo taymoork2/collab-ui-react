@@ -6,7 +6,7 @@
     .controller('CallServiceSettingsController', CallServiceSettingsController);
 
   /* @ngInject */
-  function CallServiceSettingsController($modal, Analytics, ServiceDescriptorService, Authinfo, USSService, CertService, Notification, CertificateFormatterService, $translate, hasAtlasHybridCallDiagnosticTool, Orgservice, FeatureToggleService) {
+  function CallServiceSettingsController($modal, $translate, Analytics, Authinfo, CertService, CertificateFormatterService, hasAtlasHybridCallDiagnosticTool, Notification, Orgservice, ServiceDescriptorService, USSService) {
     var vm = this;
     vm.formattedCertificateList = [];
     vm.readCerts = readCerts;
@@ -42,12 +42,7 @@
       title: 'hercules.serviceNames.squared-fusion-ec',
     };
     vm.showSIPTestTool = false;
-    vm.nameChangeEnabled = false;
     vm.sipDestinationTestSucceeded = undefined;
-
-    FeatureToggleService.atlas2017NameChangeGetStatus().then(function (toggle) {
-      vm.nameChangeEnabled = toggle;
-    });
 
     Orgservice.isTestOrg()
       .then(function (isTestOrg) {

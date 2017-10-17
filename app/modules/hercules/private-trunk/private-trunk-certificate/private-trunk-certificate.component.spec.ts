@@ -20,7 +20,6 @@ describe('Component: privateTrunkCertificate component', () => {
     spyOn(this.PrivateTrunkCertificateService, 'deleteCert');
     spyOn(this.PrivateTrunkCertificateService, 'deleteCerts');
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
-    spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
 
     this.initComponent = (): void => {
       this.compileComponent('privateTrunkCertificate', {
@@ -57,11 +56,7 @@ describe('Component: privateTrunkCertificate component', () => {
   });
 
   // 2017 name change
-  it('new name usage should depend on atlas2017NameChangeGetStatus', function () {
-    expect(this.view.text()).toContain('servicesOverview.cards.privateTrunk.certDesc');
-    expect(this.view.text()).not.toContain('servicesOverview.cards.privateTrunk.certDescNew');
-
-    this.FeatureToggleService.atlas2017NameChangeGetStatus.and.returnValue(this.$q.resolve(true));
+  it('name usage should be certDescNew as default', function () {
     this.initComponent();
     expect(this.view.text()).toContain('servicesOverview.cards.privateTrunk.certDescNew');
   });

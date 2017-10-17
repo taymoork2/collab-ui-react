@@ -22,7 +22,6 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
 
     this.$scope.wizard = { nextTab: jasmine.createSpy('nextTab') };
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('bcd7afcd-839d-4c61-a7a8-31c6c7f016d7');
-    spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.FeatureToggleService, 'atlasSubdomainUpdateGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.ServiceSetup, 'getTimeZones').and.returnValue(this.$q.resolve());
     spyOn(this.ServiceSetup, 'getTranslatedTimeZones').and.returnValue(['1', '2', '3']);
@@ -145,17 +144,6 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     it('should shallow validate the Sip Domain', function () {
       this.initController();
       expect(this.Orgservice.validateSiteUrl).toHaveBeenCalledWith('amtest2.ciscospark.com');
-    });
-  });
-
-  describe('2017 Name change', function () {
-    it('nameChangeEnabled should be set based on what atlas2017NameChangeGetStatus returns', function () {
-      this.initController();
-      expect(this.$scope.nameChangeEnabled).toBeFalsy();
-
-      this.FeatureToggleService.atlas2017NameChangeGetStatus.and.returnValue(this.$q.resolve(true));
-      this.initController();
-      expect(this.$scope.nameChangeEnabled).toBeTruthy();
     });
   });
 });
