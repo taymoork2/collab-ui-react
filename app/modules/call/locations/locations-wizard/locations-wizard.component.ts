@@ -13,10 +13,20 @@ import { Notification } from 'modules/core/notifications';
 export class LocationsWizardComponent {
   public controller = LocationsWizardController;
   public template = require('modules/call/locations/locations-wizard/locations-wizard.component.html');
-  public bindings = {};
+  public bindings = {
+    onKeyPressFn: '&',
+  };
 }
 
 const PAGE_ESA: number = 5;
+
+enum PageNumbers {
+  PAGE1 = 1,
+  PAGE2 = 2,
+  PAGE3 = 3,
+  PAGE4 = 4,
+  PAGE5 = 5,
+}
 
 class LocationsWizardController implements ng.IComponentController {
   private static readonly PAGE_TRANSITION_TIMEOUT: number = 10;
@@ -35,12 +45,14 @@ class LocationsWizardController implements ng.IComponentController {
   public isRoutingPrefixValid: boolean;
 
   private lastIndex = 5;
+  public onKeyPressFn: Function;
 
   /* @ngInject */
   constructor(
     private $q: ng.IQService,
     private $timeout: ng.ITimeoutService,
     private $element: ng.IRootElementService,
+    private $scope: ng.IScope,
     private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
     private $modal,
@@ -60,6 +72,28 @@ class LocationsWizardController implements ng.IComponentController {
   }
 
   public $onInit(): void {
+    this.$scope.$watch((): number => {
+      return this.index;
+    }, (newIndex: number, oldIndex: number) => {
+      if (newIndex !== oldIndex && (newIndex === PageNumbers.PAGE2 || newIndex === PageNumbers.PAGE4)) {
+        this.$timeout(() => {
+          this.$element.find('#selectMain').focus();
+        }, 100);
+      } else if (newIndex !== oldIndex && newIndex === PageNumbers.PAGE5) {
+        this.$timeout(() => {
+          this.$element.find('#emergencyServiceBtn').focus();
+        }, 100);
+      } else if (newIndex !== oldIndex && newIndex === PageNumbers.PAGE3) {
+        this.$timeout(() => {
+          this.$element.find('#dialingPrefix').focus();
+        }, 100);
+      } else if (newIndex !== oldIndex && newIndex === PageNumbers.PAGE1) {
+        this.$timeout(() => {
+          this.$element.find('#locationCallerIdToggleSwitch').focus();
+        }, 100);
+      }
+    });
+
     this.loading = true;
     this.Orgservice.getOrg(_.noop, null, { basicInfo: true }).then( data => {
       if (data.countryCode) {
@@ -162,6 +196,41 @@ class LocationsWizardController implements ng.IComponentController {
       return HIDDEN;
     }
     return true;
+  }
+
+  public evalEscKeyPress($event: KeyboardEvent): void {
+    const keycode = $event.which;
+    switch (keycode) {
+      case 27:
+      //escape key
+        this.cancelModal();
+        $event.preventDefault();
+        $event.stopPropagation();
+        break;
+      default:
+        break;
+    }
+  }
+
+  public evalKeyPress($event: KeyboardEvent): void {
+    const keycode = $event.which;
+    switch (keycode) {
+      case 13:
+      case 39:
+      //right arrow
+        if (this.nextButton() === true) {
+          this.nextPage();
+        }
+        break;
+      case 37:
+      //left arrow
+        if (this.previousButton() === true) {
+          this.previousPage();
+        }
+        break;
+      default:
+        break;
+    }
   }
 
   public nextButton(): any {

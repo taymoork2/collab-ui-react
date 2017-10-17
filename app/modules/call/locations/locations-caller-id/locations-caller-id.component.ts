@@ -14,6 +14,7 @@ class LocationCallerIdCtrl implements ng.IComponentController {
   public onNumberFilter: Function;
   public locationCallerIdEnabled: boolean;
   public size: string;
+  public keyPress: Function;
 
 
   /* @ngInject */
@@ -83,6 +84,10 @@ class LocationCallerIdCtrl implements ng.IComponentController {
     });
   }
 
+  public evalKeyPress ($event): void {
+    this.keyPress($event);
+  }
+
 }
 
 export class LocationCallerIdComponent implements ng.IComponentOptions {
@@ -98,5 +103,6 @@ export class LocationCallerIdComponent implements ng.IComponentOptions {
     onNumberFilter: '&',
     onChangeFn: '&',
     size: '&',
+    keyPress: '&',
   };
 }
