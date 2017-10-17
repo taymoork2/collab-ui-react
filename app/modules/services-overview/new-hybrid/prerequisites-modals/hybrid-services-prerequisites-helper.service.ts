@@ -1,4 +1,4 @@
-import { HybridServicesFlagService } from 'modules/hercules/services/hs-flag-service';
+import HybridServicesFlagServiceModuleName, { HybridServicesFlagService } from 'modules/hercules/services/hs-flag-service';
 
 interface INumbersChangedObject {
   options: {
@@ -64,6 +64,8 @@ export class HybridServicesPrerequisitesHelperService {
 }
 
 export default angular
-  .module('Hercules')
+  .module('services-overview.hybrid-services-prerequisites-helper-service', [
+    HybridServicesFlagServiceModuleName,
+  ])
   .service('HybridServicesPrerequisitesHelperService', HybridServicesPrerequisitesHelperService)
   .name;

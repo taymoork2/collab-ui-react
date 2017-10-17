@@ -2,9 +2,9 @@ import { GridCellService } from './cs-grid-cell/gridCell.service';
 
 class CsGridCtrl {
   public gridOptions: uiGrid.IGridOptions;
-  public gridApi: uiGrid.IGridApi;
+  public gridApi?: uiGrid.IGridApi;
   public name: string;
-  public spinner: boolean;
+  public spinner?: boolean;
   public state?: string;
   public stateChangeFunction?: Function;
 
@@ -51,7 +51,9 @@ class CsGridCtrl {
             this.stateChangeFunction();
           }
 
-          this.gridApi.selection.clearSelectedRows();
+          if (this.gridApi) {
+            this.gridApi.selection.clearSelectedRows();
+          }
         }
       });
       this.$scope.$on('$destroy', stateChangeEvent);
@@ -67,15 +69,15 @@ class CsGridCtrl {
         if (this.gridApi && column && (event.keyCode === this.GridCellService.ENTER || event.keyCode === this.GridCellService.SPACE)) {
           if (columnDirection === this.uiGridConstants.ASC) {
             this.gridApi.grid.sortColumn(column, this.uiGridConstants.DESC).then((): void => {
-              this.gridApi.grid.notifyDataChange(this.uiGridConstants.dataChange.ALL);
+              this.gridApi!.grid.notifyDataChange(this.uiGridConstants.dataChange.ALL);
             });
           } else if (columnDirection === this.uiGridConstants.DESC) {
             this.gridApi.grid.sortColumn(column).then((): void => {
-              this.gridApi.grid.notifyDataChange(this.uiGridConstants.dataChange.ALL);
+              this.gridApi!.grid.notifyDataChange(this.uiGridConstants.dataChange.ALL);
             });
           } else {
             this.gridApi.grid.sortColumn(column, this.uiGridConstants.ASC).then((): void => {
-              this.gridApi.grid.notifyDataChange(this.uiGridConstants.dataChange.ALL);
+              this.gridApi!.grid.notifyDataChange(this.uiGridConstants.dataChange.ALL);
             });
           }
         }
@@ -88,11 +90,11 @@ export class CsGridComponent implements ng.IComponentOptions {
   public template = require('modules/core/csgrid/csGrid.tpl.html');
   public controller = CsGridCtrl;
   public bindings = {
-    gridApi: '<',
+    gridApi: '<?',
     gridOptions: '=',
-    name: '@',
-    spinner: '<',
-    state: '@',
-    stateChangeFunction: '&',
+    name: '@?',
+    spinner: '<?',
+    state: '@?',
+    stateChangeFunction: '&?',
   };
 }

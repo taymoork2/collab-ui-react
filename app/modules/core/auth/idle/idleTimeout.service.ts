@@ -1,4 +1,4 @@
-import { WindowService } from 'modules/core/window';
+import { WindowEventService } from 'modules/core/window';
 import { StorageKeys } from 'modules/core/storage/storage.keys';
 import { Config } from 'modules/core/config/config';
 
@@ -25,7 +25,7 @@ export class IdleTimeoutService {
     private Config: Config,
     private Log,
     private LocalStorage,
-    private WindowService: WindowService,
+    private WindowEventService: WindowEventService,
   ) {
     this.logoutEvent = 'logout' + this.Config.getEnv();
     this.keepAliveEvent = this.Config.idleTabKeepAliveEvent;
@@ -122,7 +122,7 @@ export class IdleTimeoutService {
           angular.element(this.$document).bind(EventName, throttled);
         });
         //listen to storage
-        this.WindowService.registerEventListener('storage', this.checkActive.bind(this));
+        this.WindowEventService.registerEventListener('storage', this.checkActive.bind(this));
       }
 
     });

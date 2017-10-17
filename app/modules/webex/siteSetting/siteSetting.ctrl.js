@@ -94,11 +94,9 @@
       0
     );
 
-    $window.iframeLoaded = function (iframeId) {
+    $scope.iframeLoaded = function (currScope) {
       var funcName = 'iframeLoaded()';
       var logMsg = funcName;
-
-      var currScope = angular.element(iframeId).scope();
       var phase = currScope.$$phase;
 
       logMsg = funcName + '\n' +

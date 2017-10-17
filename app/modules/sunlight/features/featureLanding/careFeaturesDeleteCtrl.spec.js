@@ -72,27 +72,19 @@ describe('Care Feature Delete Ctrl', function () {
     });
   }
 
-  it('should broadcast CARE_FEATURE_DELETED event when chat template is deleted successfully', function () {
+  it('should delete chat template successfully', function () {
     callController($stateParams);
     controller.deleteFeature();
     deferred.resolve(successResponse);
     $scope.$apply();
     $timeout.flush();
     expect($rootScope.$broadcast).toHaveBeenCalledWith('CARE_FEATURE_DELETED');
-  });
-
-  it('should give a successful notification when chat template is deleted successfully', function () {
-    callController($stateParams);
-    controller.deleteFeature();
-    deferred.resolve(successResponse);
-    $scope.$apply();
-    $timeout.flush();
     expect(Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
       featureName: $stateParams.deleteFeatureName,
     });
   });
 
-  it('should give an error notification when chat template deletion fails', function () {
+  it('should fail at deleting chat template', function () {
     callController($stateParams);
     controller.deleteFeature();
     deferred.reject(failureResponse);
@@ -103,27 +95,19 @@ describe('Care Feature Delete Ctrl', function () {
     });
   });
 
-  it('should broadcast CARE_FEATURE_DELETED event when VA config is deleted successfully', function () {
+  it('should delete VA config successfully', function () {
     callController(vaStateParams);
     controller.deleteFeature();
     vaDeferred.resolve(successResponse);
     $scope.$apply();
     $timeout.flush();
     expect($rootScope.$broadcast).toHaveBeenCalledWith('CARE_FEATURE_DELETED');
-  });
-
-  it('should give a successful notification when VA config is deleted successfully', function () {
-    callController(vaStateParams);
-    controller.deleteFeature();
-    vaDeferred.resolve(successResponse);
-    $scope.$apply();
-    $timeout.flush();
     expect(Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
       featureName: vaStateParams.deleteFeatureName,
     });
   });
 
-  it('should give an error notification when VA config deletion fails', function () {
+  it('should fail at deleting VA config', function () {
     callController(vaStateParams);
     controller.deleteFeature();
     vaDeferred.reject(failureResponse);
@@ -132,34 +116,5 @@ describe('Care Feature Delete Ctrl', function () {
     expect(Notification.errorWithTrackingId).toHaveBeenCalledWith(failureResponse, jasmine.any(String), {
       featureName: vaStateParams.deleteFeatureName,
     });
-  });
-
-  it('should broadcast CARE_FEATURE_DELETED event when VA config is deleted successfully', function () {
-    callController(vaStateParams);
-    controller.deleteFeature();
-    vaDeferred.resolve(successResponse);
-    $scope.$apply();
-    $timeout.flush();
-    expect($rootScope.$broadcast).toHaveBeenCalledWith('CARE_FEATURE_DELETED');
-  });
-
-  it('should give a successful notification when VA config is deleted successfully', function () {
-    callController(vaStateParams);
-    controller.deleteFeature();
-    vaDeferred.resolve(successResponse);
-    $scope.$apply();
-    $timeout.flush();
-    expect(Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
-      featureName: vaStateParams.deleteFeatureName,
-    });
-  });
-
-  it('should give an error notification when VA config deletion fails', function () {
-    callController(vaStateParams);
-    controller.deleteFeature();
-    vaDeferred.reject(failureResponse);
-    $scope.$apply();
-    $timeout.flush();
-    expect(Notification.errorWithTrackingId).toHaveBeenCalledWith(failureResponse, jasmine.any(String), jasmine.any(Object));
   });
 });

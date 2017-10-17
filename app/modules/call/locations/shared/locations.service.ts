@@ -27,7 +27,7 @@ export class LocationsService {
   private placeLocationDetailResource: IPlaceLocationDetailResource;
   private userMoveLocationResource: IUserMoveLocationResource;
   private locationDetailResource: ILocationDetailResource;
-  private defaultLocation: LocationListItem | undefined = undefined;
+  private defaultLocation: Location | undefined = undefined;
   private emergencyNumberResource: IREmergencyNumberResource;
 
   /* @ngInject */
@@ -163,7 +163,10 @@ export class LocationsService {
       allowExternalTransfer: location.allowExternalTransfer,
       voicemailPilotNumber: location.voicemailPilotNumber,
       regionCodeDialing: location.regionCodeDialing,
-      callerId: location.callerId,
+      callerId: {
+        name: _.get(location, 'callerId.name', null),
+        number: _.get(location, 'callerId.number', null),
+      },
     },
     (_response, headers) => {
       locationHeader = headers('Location');
@@ -218,12 +221,15 @@ export class LocationsService {
     }, location).$promise;
   }
 
-  public getDefaultLocation(customerId: string = this.Authinfo.getOrgId()): ng.IPromise<LocationListItem> {
+  public getDefaultLocation(customerId: string = this.Authinfo.getOrgId()): ng.IPromise<Location | undefined> {
     if (!this.defaultLocation) {
       return this.getLocationList(customerId).then(locationList => {
-        //First one is always the default per API definition
-        this.defaultLocation = locationList[0];
-        return this.defaultLocation;
+        if (_.isArray(locationList) && locationList.length > 0) {
+          //First one is always the default per API definition
+          return this.getLocation(_.get(locationList[0], 'uuid')).then(location => this.defaultLocation = location);
+        } else {
+          return this.$q.resolve(undefined);
+        }
       });
     } else {
       return this.$q.resolve(this.defaultLocation);

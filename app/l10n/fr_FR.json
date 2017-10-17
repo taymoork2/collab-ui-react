@@ -890,8 +890,8 @@
   "activeUsers": {
     "active": "Actif(s)",
     "activeUsers": "Utilisateurs actifs",
-    "allUsers": "Utilisateurs les plus actifs {{time}}",
-    "overallActiveUserGraphError": "{{Time}}, ce sont les utilisateurs les plus actifs. La table peut être triée par nom d'utilisateur ou par nombre total de contacts traités.",
+    "allUsers": "Tous les utilisateurs",
+    "overallActiveUserGraphError": "Une erreur s'est produite lors du chargement de données utilisateur actives détaillées.",
     "activeUserTableError": "Une erreur s'est produite lors du chargement des données des utilisateurs les plus actifs pour le(s) client(s) sélectionné(s).",
     "mostActiveError": "Un erreur s'est produite lors du chargement des données des utilisateurs les plus actifs.",
     "calls": "Appels",
@@ -1020,7 +1020,7 @@
     "drilldownShow": "Afficher les utilisateurs les plus efficaces",
     "drilldownHide": "Masquer les utilisateurs les plus efficaces",
     "drilldownTitle": "Utilisateurs les plus efficaces {{time}}",
-    "drilldownDescription": "{{temps}}, ces utilisateurs sont ceux qui ont traité les tâches efficacement avec moins de temps de traitement. Le tableau peut être trié par le nom d’utilisateur ou la moyenne du temps de traitement.",
+    "drilldownDescription": "{{time}}, ces utilisateurs sont ceux qui ont traité les tâches efficacement avec moins de temps de traitement. Le tableau peut être trié par le nom d’utilisateur ou la moyenne du temps de traitement.",
     "drilldownErrorDescription": "Ces données sont momentanément indisponibles. Nos serveurs tentent de les renvoyer au plus tôt, veuillez revérifier ultérieurement.",
     "drilldownEmptyDescription": "{{time}}, il n'y a eu aucun utilisateur actif. Pour afficher le statut utilisateur et renvoyer les invitations à ceux qui sont toujours en attente, visitez l'onglet Utilisateurs.",
     "averageHandleTime": "Moyenne du temps de traitement",
@@ -1033,7 +1033,7 @@
     "drilldownShow": "Afficher les utilisateurs ayant les meilleurs scores de satisfaction client (CSAT)",
     "drilldownHide": "Masquer les utilisateurs ayant les meilleurs scores de satisfaction client (CSAT)",
     "drilldownTitle": "Utilisateurs les mieux notés {{{time}}",
-    "drilldownDescription": "{{temps}}, ces utilisateurs sont ceux qui ont obtenu les meilleurs scores de satisfaction client (CSAT). Le tableau peut être trié par le nom d’utilisateur ou la moyenne des scores de satisfaction client (CSAT).",
+    "drilldownDescription": "{{time}}, ces utilisateurs sont ceux qui ont obtenu les meilleurs scores de satisfaction client (CSAT). Le tableau peut être trié par le nom d’utilisateur ou la moyenne des scores de satisfaction client (CSAT).",
     "drilldownErrorDescription": "Ces données sont momentanément indisponibles. Nos serveurs tentent de les renvoyer au plus tôt, veuillez revérifier ultérieurement.",
     "drilldownEmptyDescription": "{{time}}, il n'y a eu aucun utilisateur actif. Pour afficher le statut utilisateur et renvoyer les invitations à ceux qui sont toujours en attente, visitez l'onglet Utilisateurs.",
     "user": "Utilisateur",
@@ -1635,7 +1635,7 @@
     "setUpPMRDescription": "La fonctionnalité des Salles de réunion personnelles (PMR) a été ajoutée à votre abonnement.",
     "setUpPMRUrl": "Configurer les salles de réunion personnelles (PMR) maintenant",
     "setupPMRsiteNameModalTitle": "Configuration de la salle de réunion personnelle",
-    "setUpHybridMediaService": "Sélectionnez un préfixe à réserver pour appeler les boites aux lettres à partir d'un périphérique. Les extensions entre {{number}}{{extensionLength0}} et {{number}}{{extensionLength9}} ne sont pas recommandées pour les attributions.",
+    "setUpHybridMediaService": "Le Service de média hybride est disponible. Étendre les médias du nuage pour utiliser les ressources disponibles sur place pour les appels et les réunions.",
     "getStarted": "Mise en route",
     "urgentUpgrade": "Une mise à niveau urgente est disponible pour <a ui-sref='{{link}}'>{{connector}}</a> et la mise à niveau s'effectuera lors de la prochaine mise à niveau programmée.",
     "setUpHybridDataSecurity": "Créer un domaine de sécurité sur site avec la Sécurité des données hybrides.",
@@ -1852,7 +1852,7 @@
       "desc": "Choisissez si cet utilisateur est autorisé à effectuer des transferts d'appel externes et des conférences. Ceci effacera les paramètres généraux.",
       "neverAllow": "Ne jamais autoriser",
       "alwaysAllow": "Toujours autoriser",
-      "orgSetting": "Paramètres de l’organisation ({{État}})",
+      "orgSetting": "Paramètres de l’organisation ({{state}})",
       "success": "Les paramètres de transferts d'appels externes/conférences ont été enregistrés avec succès.",
       "error": "La modification des paramètres de transferts d'appels externes/conférences a échoué."
     },
@@ -1869,7 +1869,7 @@
       "premiumDesc": "Choisissez si les utilisateurs sont autorisés à composer des numéros sortants payants. Ces numéros incluent ceux commençant par {{premiumNumbers}}.",
       "neverAllow": "Ne jamais autoriser",
       "alwaysAllow": "Toujours autoriser",
-      "orgSetting": "Paramètres de l’organisation ({{État}})",
+      "orgSetting": "Paramètres de l’organisation ({{state}})",
       "success": "Les paramètres de restriction d'appel ont été enregistrés avec succès.",
       "error": "Impossible de modifier les restrictions d’appel"
     },
@@ -3360,7 +3360,7 @@
       "settings": {
         "servicestatusTitle": "Statut du service",
         "servicePreTrialModeTitle": "Commencer un essai",
-        "serviceNodeDescHeader0": "Installez et configurez le logiciel sur votre serveur et retournez sur Cisco {{appTitle}} pour enregistrer votre nœud de sécurité des données hybrides.",
+        "serviceNodeDescHeader0": "Vous êtes presque prêt à utiliser le Service de sécurité des données hybrides. Il suffit d’ajouter les ressources nécessaires ici et, après avoir commencé l’essai, d’ajouter certains utilisateurs.",
         "serviceNodeDescHeader": "Ajoutez des utilisateurs et commencez à utiliser la sécurité des données hybrides",
         "registeredNodes": "Enregistrer les nœuds",
         "suggestedNodeNumber": "(3 à 5 suggérés) ",
@@ -3468,7 +3468,7 @@
       "invalidEmailLimit": "Saisissez un maximum de 5 adresses électroniques",
       "invalidSpaceIdLimit": "La recherche doit être limitée à moins de 5 identifiants d'espaces",
       "noMatchesFound": "Aucune correspondance n'a été trouvée",
-      "requestFailed": "La demande a échoué : ID de suivi {{trackingID}}",
+      "requestFailed": "La demande a échoué : ID de suivi {{trackingId}}",
       "504RequestFailed": "La recherche a expiré : ID de suivi {{trackingId}}"
     },
     "encryption": {
@@ -4656,12 +4656,12 @@
     "privatePstnTrunk": "Jonction RTCP privée"
   },
   "pstnOrderDetail": {
-    "orderNumber": "N° de commande {{order}}",
+    "orderNumber": "N° de commande {{orderId}}",
     "pendingNumbers": "{count, plural, =1{Il y a # numéro} other{Il y a # numéros}} en attente pour cette commande",
     "searchPlaceholder": "Rechercher des numéros de téléphone",
     "waitOnTOSAcceptance": "En attente de l'acceptation des Conditions d'utilisation du client",
     "orderCreationDate": "Le {{date}} ",
-    "createdBy": "par {{date}}",
+    "createdBy": "par {{createdBy}}",
     "byopstnCreatedBy": "Par {{createdBy}} ",
     "orderCreatedBy": "Partenaire"
   },
@@ -4733,7 +4733,7 @@
     "orderNumbersError": "Un problème a été rencontré avec votre commande. Veuillez consulter l'historique de votre commande pour plus de détails.",
     "blockOrderError": "Impossible de commander {{quantity}} bloc(s) de numéro(s) avec le code région {{areaCode}}.",
     "swivel": "SWIVEL",
-    "swivelAddError": "Limitée à {{max}} téléphones personnels &amp; de bureau partagés",
+    "swivelAddError": "Impossible d’ajouter {{number}}.",
     "swivelDuplicateError": "Échec de l'ajout de {{number}}. Le numéro existe déjà.",
     "resellerCreateError": "Impossible de créer le Revendeur",
     "customerCreateError": "Impossible de créer le client avec l'opérateur.",
@@ -5257,8 +5257,8 @@
     "noAccountInfo": "Aucune information sur le compte n'est disponible pour cette organisation. Ceci est probablement dû à l'accès à une organisation basée sur un serveur d'intégration, sur un serveur de production. Veuillez vérifier que cette organisation existe sur le serveur que vous utilisez.",
     "ariaTooltips": {
       "service": "Service {{serviceName}}",
-      "quantity": "Quantité {{quantité}}",
-      "status": "Statut {status}}",
+      "quantity": "Quantité {{quantity}}",
+      "status": "Statut {{status}}",
       "url": "URL {{url}}"
     },
     "popUpTitle": "Fenêtre contextuelle bloquée",
@@ -5874,7 +5874,7 @@
         "calldistributionClusterDesc": "Fournit une vue de la tendance de l'activité d'appel sur un cluster spécifique. Cette information aide un administrateur à prévoir la capacité d'un cluster d'une organisation. Les appels qui ne peuvent pas être hébergés sur ce cluster spécifique sont redirigés vers un autre cluster sur site. Ces redirections sont représentées sous forme de points sur le graphe. Survolez un point pour afficher le nombre d'appels redirigés à partir de ce cluster spécifique à cette instance.",
         "clusterInServiceOrgDesc": "Nombre de clusters qui étaient en service pour héberger les appels sur la période sélectionnée. Cliquez sur les clusters dans le graphe Disponibilité des clusters pour aller directement dans le graphe Nœuds en service.<br>Vert : clusters dont tous les nœuds sont en service.<br>Jaune : clusters dont 1 ou plusieurs nœuds ne sont pas en service.<br>Rouge : clusters qui n'ont aucun nœud disponible en service.<br>Gris : Données non disponibles.",
         "clusterInServiceClusterDesc": "Nombre de nœuds qui sont en service pour héberger les appels sur la période sélectionnée.<br>Vert : le nœud est en service.<br>Rouge : le nœud n'est pas en service.<br>Gris : Données non disponibles.",
-        "meetHostTypeDesc": "Êtes-vous sûr de vouloir supprimer {{groupName}} du nuage de contrôle Cisco Spark ?",
+        "meetHostTypeDesc": "Fournit une tendance du nombre de réunions dans une organisation, selon l’endroit depuis lequel les appels ont été effectués",
         "clientTypeDesc": "Fournit la tendance d'utilisation des différents types de clients qui sont utilisés dans une organisation"
       },
       "allOff": "Tous désactivés",
@@ -6461,7 +6461,7 @@
     "brandingInfo": "Si vous souhaitez afficher votre propre charte graphique en plus de Cisco Spark, veuillez charger votre logo ci-dessous.",
     "usePartnerLogo": "Utiliser le même logo en cours d'utilisation par {{partner}}",
     "supportInfo": "Si vous fournissez une assistance à vos utilisateurs, saisissez vos paramètres d'assistance ci-dessous. Ces paramètres seront affichés dans Options d'assistance dans l'application Cisco Spark.",
-    "supportAccessTitle": "Exemple du logo de {{name}} affiché sur l'onglet À propos de Cisco Spark.",
+    "supportAccessTitle": "Accès à l’assistance",
     "supportAccessInfo": "Ce paramètre donne accès en lecture seule à l'Assistance Cisco à votre application de gestion. Il n'autorise aucune modification dans les détails de votre organisation.",
     "supportAccessCheckbox": "Autoriser l'accès en lecture seule à l'Assistance Cisco à votre application de gestion."
   },
@@ -7465,7 +7465,7 @@
     "waitTimeSecondaryLabel": "Minutes",
     "waitTimeDesc": "Durée maximum pendant laquelle un appelant patientera avant d'être envoyé vers la destination de renvoi.",
     "fallbackLabel": "Destination de renvoi",
-    "fallbackNumber": "La durée de sonnerie la plus courte est {{secs}} secondes",
+    "fallbackNumber": "Numéro de la destination de rechange",
     "fallbackNumberHint": "Les appels sont envoyés vers ce numéro si aucun membre n'y répond",
     "fallbackDesc": "Il s'agit de la destination de l'appel en cas de non réponse par ce groupe de recherche.",
     "fallbackRule": "Règle de destination de renvoi",
@@ -7510,7 +7510,7 @@
   "digitalRiver": {
     "enterEmailAddr": {
       "startTrial": "Vous devez créer un compte pour démarrer un essai Cisco Spark.",
-      "enterEmail": "La personne « {{email}} » suivante gèrera-t'elle les services Cisco Spark ?",
+      "enterEmail": "Veuillez saisir l’adresse courriel du compte",
       "emailPlaceholder": "Saisissez l'adresse électronique",
       "validation": {
         "emptyEmail": "L'adresse électronique est manquante ou non valide."
@@ -7692,7 +7692,7 @@
     },
     "privacy": {
       "title": "Confidentialité",
-      "supportAccessHeader": "Exemple du logo de {{name}} affiché sur l'onglet À propos de Cisco Spark.",
+      "supportAccessHeader": "Accès à l’assistance",
       "supportAccessDescription": "Ce paramètre donne à Cisco l'accès à l'assistance Cisco en lecture seule à votre organisation. Il n'autorise pas les modifications effectuées dans les détails de votre organisation.",
       "allowReadOnlyOrgAccess": "Autoriser votre organisation à accéder à l'Assistance Cisco en lecture seule",
       "crashReportTitle": "Rapport automatique de panne",

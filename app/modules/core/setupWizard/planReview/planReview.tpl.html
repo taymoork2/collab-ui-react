@@ -10,7 +10,8 @@
       <h4 class="plan-review-subtitle" translate="firstTimeWizard.servicesInSubscription"></h4>
       <div class="order-and-subscription-numbers">
         <span translate="firstTimeWizard.orderNumber"></span><span>{{planReview.orderDetails.orderId}}</span><br>
-        <span translate="firstTimeWizard.subscriptionID"></span><span>{{planReview.orderDetails.subscriptionId}}</span>
+        <span translate="firstTimeWizard.subscriptionID"></span><span>{{planReview.orderDetails.subscriptionId}}</span><br>
+        <span translate="firstTimeWizard.endCustomer"></span><span>{{planReview.orderDetails.endCustomer}}</span>
       </div>
       <div class="plan-review-help">
         <div><span class="icon icon-warning icon-lg"></span></div>
@@ -117,8 +118,8 @@
                 <div class="quantity-mtg-details product-entity-reposition">
                   <span class="license-type">{{service.license.volume}} {{planReview.determineLicenseType(service)}}</span>
                   <span class="license-entity-tooltip">
-                    <i class="icon icon-info" tooltip-trigger="mouseenter" tooltip-placement="bottom-left" tooltip-animation="false"
-                        tooltip-html-unsafe="{{planReview.generateLicenseTooltip(service)}}">
+                    <i class="icon icon-info" tooltip-trigger="focus mouseenter" tooltip-placement="bottom-left" tooltip-animation="false"
+                        tooltip-html-unsafe="{{::planReview.generateLicenseTooltip(service)}}" tabindex="0" aria-label="{{::planReview.generateLicenseTranslation(service)}}">
                     </i>
                   </span>
                 </div>
@@ -139,8 +140,8 @@
                 <div class="quantity-mtg-details product-entity-reposition">
                   <span class="license-type">{{service.license.volume}} {{planReview.determineLicenseType(service)}}</span>
                   <span class="license-entity-tooltip">
-                    <i class="icon icon-info" tooltip-trigger="mouseenter" tooltip-placement="bottom-left" tooltip-animation="false"
-                        tooltip-html-unsafe="{{planReview.generateLicenseTooltip(service)}}">
+                    <i class="icon icon-info" tooltip-trigger="focus mouseenter" tooltip-placement="bottom-left" tooltip-animation="false"
+                        tooltip-html-unsafe="{{::planReview.generateLicenseTooltip(service)}}" tabindex="0" aria-label="{{::planReview.generateLicenseTranslation(service)}}">
                     </i>
                   </span>
                 </div>

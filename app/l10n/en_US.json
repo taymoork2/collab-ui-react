@@ -1,6 +1,6 @@
 {
   "loginPage": {
-    "title": "Cloud Collaboration Management",
+    "title": "Cisco Spark Control Hub",
     "titleNew": "Cisco Spark Control Hub",
     "titlePro": "Cisco Spark Control Hub Pro",
     "login": "Sign In",
@@ -309,6 +309,11 @@
       "title": "Add Services for Users",
       "instructions": "Select the service entitlements that you want to provide to users."
     }
+  },
+  "userTaskManagerModal": {
+    "title": "Tasks",
+    "viewAllTasks": "View all tasks",
+    "getTaskListError": "An error occurred obtaining the list of task. Please refresh to try again."
   },
   "onboardModal": {
     "ciscoSparkJabberInterop": "Cisco Spark / Jabber Interop",
@@ -1422,6 +1427,7 @@
   "common": {
     "actions": "Actions",
     "activate": "Activate",
+    "active": "Active",
     "add": "Add",
     "agree": "Agree",
     "alert": "Alert",
@@ -1502,6 +1508,7 @@
     "ok": "Ok",
     "on": "On",
     "online": "Online",
+    "open": "Open",
     "optional": "Optional",
     "or": "or",
     "overview": "Overview",
@@ -1761,10 +1768,13 @@
     "extensionLengthDescription": "Specify the total number of digits users must dial before placing an internal call.",
     "extensionLengthHelpText": "After being set, this value can only be changed if no extensions are assigned.",
     "extensionLengthServicesHelpText": "Enabled only when no extensions have been assigned.",
+    "extensionLengthServicesHelpTextForLocation": "Enabled only when no extensions have been assigned and only one location is configured.",
     "extensionLengthDisabledVM": "Enabled only when voicemail is disabled.",
     "extensionLengthSingleOptionHelpText": "Option {{minExtLength}} only available when no extensions have been assigned.",
+    "extensionLengthSingleOptionHelpTextForLocation": "Option {{minExtLength}} only available when no extensions have been assigned and only one location is configured.",
     "extensionLengthRangeOptionHelpText": "Options {{minExtLength}} thru {{extLengthMinusOne}} only available when no extensions have been assigned.",
-    "saveCallSettingsExtensionLengthAllowed": "After you specify the length of extensions, you can only change this value if you remove Auto Attendants, Hunt Groups and  the Call entitlement from all users. Removing the Call entitlement deletes all call service data for every user (for example, speed dials and voicemail messages).",
+    "extensionLengthRangeOptionHelpTextForLocation": "Options {{minExtLength}} thru {{extLengthMinusOne}} only available when no extensions have been assigned and only one location is configured.",
+    "saveCallSettingsExtensionLengthAllowed": "After you specify the length of extensions, you can only change this value if you remove Auto Attendants, Hunt Groups and the Call entitlement from all users. Removing the Call entitlement deletes all call service data for every user (for example, speed dials and voicemail messages).",
     "choosePrefixTitle": "Choose Prefix",
     "extensionPrefixDescription": "You have chosen a longer extension length.  Please specify digit(s) to prepend to extensions not mapped to phone numbers.",
     "extensionPrefixExample": "Example: Extension 555 will change to {{prefix}}555",
@@ -1847,9 +1857,9 @@
     "voicemailPrefixTitle": "Voicemail ID Prefix",
     "voicemailPrefixDesc": "Select a prefix to reserve for dialing mailboxes from a device. Extensions between {{number}}{{extensionLength0}} and {{number}}{{extensionLength9}} are not recommended for assignment.",
     "vmUseTLS": "Secure email delivery (use TLS)",
-    "vmPinManagement": "Pin Management",
-    "vmPinHelp": "OTP will be shared over Spark in case of user voicemail toggle on/off and user account locked/expired.",
-    "vmEnableOTP": "Enable OTP (One-time Pin)",
+    "vmPinManagement": "PIN Management",
+    "vmPinHelp": "A One-Time PIN (OTP) is shared in Cisco Spark when a user is on-boarded or user's voicemail account is locked or expired.",
+    "vmEnableOTP": "Enable OTP",
     "dialing": "Dialing Preferences",
     "internalDialing": "Internal Dialing",
     "externalDialing": "External Dialing",
@@ -2119,11 +2129,7 @@
       "alarms": "Alarms",
       "hosts": "Nodes",
       "goToHost": "Go to Node",
-      "moveNode": "Move Node",
-      "deregisterNode": "Deregister Node",
-      "removeNode": "Remove Node",
       "localizedConnectorAndHostHeader": "{{connectorName}} on {{hostname}}",
-      "actions": "Actions",
       "no_nodes": "No nodes registered.",
       "goToNodes": "Perform actions on Node"
     },
@@ -2249,7 +2255,6 @@
       "not_operational": "Not operational",
       "not_registered": "Registration not completed",
       "no_nodes_registered": "No Nodes Registered",
-      "urgentUpgradeAvailable": "Urgent upgrade available",
       "registrationTimeout": "Registration timeout",
       "connected": "Connected"
     },
@@ -3127,61 +3132,6 @@
       }
     }
   },
-  "cmc": {
-    "failures": {
-      "preCheckFailure": "Status check of org failed with: {{msg}}",
-      "userStatusFailure": "User Status request failed with: {{msg}}",
-      "saveFailure": "Save failed with: {{msg}}",
-      "alreadyRegisteredForAtLeastOneMoreUser": "is already registered for at least one other user"
-    },
-    "userMenu": {
-      "crossServices": "Cross Services",
-      "mobile": "Mobile",
-      "statusOk": "Mobile Convergence",
-      "statusNok": "Error"
-    },
-    "userSettings": {
-      "title": "Mobile Convergence",
-      "mobileNumber": "Mobile Number",
-      "enabled": "Enabled",
-      "status": "Status"
-    },
-    "detailsPage": {
-      "title": "Mobile",
-      "settings": "Settings",
-      "status": "Status"
-    },
-    "details": {
-      "invalidInput": "Always provide valid mobile number when enabling"
-    },
-    "settingsPage": {
-      "title": "Mobile Convergence",
-      "description": "Current data is read only, for configuration please contact your Cisco specialist.",
-      "mobileProvider": {
-        "title": "Mobile Operator",
-        "description": "The mobile network operator associated with your organization. All Collaboration Mobile Convergence enabled users within your organization must have a mobile plan with this operator."
-      },
-      "serviceProvider": {
-        "title": "Hosted Collaboration Provider",
-        "description": "The service provider hosting and maintaining Cisco Hosted Collaboration Solutions (HCS) for your organization. All collaboration Mobile Convergence enabled users within your organization must be configured for HCS with this provider."
-      }
-    },
-    "statusPage": {
-      "listingFirstActiveUsers": "Listing the first {{noOfActiveUsers}} active users",
-      "callServiceAwareNotEntitled": "Not entitled for Call Aware",
-      "sparkMobileConvergence": "Mobile Convergence",
-      "subHeading": "User Status Report",
-      "status": {
-        "active": "Active"
-      },
-      "table": {
-        "username": "User Name",
-        "mobileNumber": "Mobile Number",
-        "serviceStatus": "Service Status",
-        "lastUpdated": "Last Updated"
-      }
-    }
-  },
   "context": {
     "pageTitle": "Hybrid Context Service",
     "clusters": {
@@ -3689,6 +3639,7 @@
     "subscriptionId": "Subscription IDs",
     "subscriptionID": "Subscription ID: ",
     "orderNumber": "Order Number: ",
+    "endCustomer": "End Customer: ",
     "spark": "Cisco Spark",
     "sparkStub": "Set up Cisco Spark",
     "webex": "WebEx",
@@ -4524,6 +4475,7 @@
     "siteError": "Failed to load site information.",
     "steeringDigitOverlapWarning": "The first digit of the Internal Extension overlaps with the Outbound Dial Digit.",
     "enterpriseSiteNumberLabel": "If your company uses site-to-site dialing:",
+    "locationSiteToSiteNumberLabel": "Within the same location, dial ",
     "externalNumberLabel": "Phone Number",
     "externalNumberTooltip": "Use the direct line to reach this line from outside of the company.",
     "externalNumberPoolError": "Direct lines failed to load.",
@@ -4836,6 +4788,8 @@
     "orderNumber": "Order Number",
     "numberCart": "Number Cart",
     "tollFreeTitle": "Search and add toll-free phone numbers by entering a valid area code. Valid toll-free area codes include {{areaCodes}}",
+    "unableToAddTollFreeNumbers": "Unable to add toll-free numbers because the customer PSTN contract is incomplete. Please remind your customer to sign and submit their contract.",
+    "unableToAddPortedNumbers": "Unable to add ported numbers because the customer PSTN contract is incomplete. Please remind your customer to sign and submit their contract.",
     "pstnSelector": {
       "searchPlaceholder": "Enter area code and/or number prefix",
       "searchDesc": "e.g. 972 or 972867",
@@ -4968,6 +4922,7 @@
     "noResults": "No Results",
     "expiredHeading": "Expired Trials",
     "addTrial": "Start Trial",
+    "companySearch": "Search for Company",
     "trialsCustomerName": "Active Trials",
     "trialsEndDate": "Day(s) Left",
     "trialsNumUsers": "Users/ Licenses",
@@ -5344,6 +5299,7 @@
     "viewSubscriptionInfo": "View Subscription Info",
     "updateLicensesAuthError": "Current user is not authorized to update user license info.",
     "noAccountInfo": "No account information available for this organization. This is most likely due to accessing an Integration server based organization on a Production server.  Please verify that this organization exists on the server you are using.",
+    "pstnContractIncomplete": "Customer PSTN contract incomplete. Please remind your customer to sign and submit their contract.",
     "ariaTooltips": {
       "service": "Service {{serviceName}}",
       "quantity": "Quantity {{quantity}}",
@@ -5385,7 +5341,7 @@
   "companyCallerId": {
     "companyCallerId": "Company Caller ID",
     "companyCallerIdDesc": "Specify the default outbound Caller ID. Exceptions can be made at the individual user's settings.",
-    "companyCallerIdLocationDesc": "Specify the default outbound Caller ID. Exceptions can be made for each location and at the individual user's settings.",
+    "companyCallerIdLocationDesc": "Specify the default Caller ID for this location. You can also override this setting for individual users.",
     "callerIdName": "Caller ID Name",
     "callerIdNumber": "Caller ID Number"
   },
@@ -5437,7 +5393,9 @@
     "saveSuccess": "Emergency Service Number updated successfully.",
     "saveError": "Error occurred updating Emergency Service Number.",
     "getError": "Error occurred retrieving Emergency Service Number.",
-    "warning": "Please select a number assigned to a user or Cisco Spark Call feature"
+    "warning": "Please select a number assigned to a user or Cisco Spark Call feature",
+    "needEcbnNoOptions": "Before you can add an emergency callback number to this location, you must add a user or place with an external number",
+    "needEcbnOptions": "Must select an emergency callback number"
   },
   "emergencyServices": {
     "warnNoPstn": "Once you have PSTN set up, you will need to add Emergency Service information to locations",
@@ -5824,7 +5782,7 @@
     "trustedSip": {
       "success": "Trusted SIP source(s) saved successfully.",
       "title": "Trusted SIP sources",
-      "description": "Enter a comma-separated list of Unified CM or Expressway IP addresses. These entries are treated as trusted SIP sources and allowed to send SIP calls to Hybrid Media Service.",
+      "description": "Enter a comma-separated list of Expressway IP addresses or FQDN. These entries are treated as trusted SIP sources and allowed to send SIP calls to Hybrid Media Service.",
       "placeholder": "Enter the trusted SIP sources..."
     },
     "videoQuality": {
@@ -5837,7 +5795,9 @@
       "title": "Hybrid Media",
       "adoption-title": "Adoption",
       "resources-title": "Resources",
-      "custom": "Custom"
+      "custom": "Custom",
+      "selectedPeriod": "selected period",
+      "test-org-alert": "Some reports might not have data, because you are using a test organization."
     },
     "deregister": {
       "header": "Deregister Node",
@@ -5986,8 +5946,8 @@
       "clusterPartiallyInService": "  Cluster Partially in Service",
       "all": "All",
       "inThe": "in the",
-      "increasedBy": "Increased By",
-      "decreasedBy": "Decreased By"
+      "increaseBy": "Increase by",
+      "decreasedBy": "Decreased by"
     },
     "deleteGroup": {
       "message": "Are you sure you want to delete {{groupName}} from Cisco Collaboration Cloud?",
@@ -6530,8 +6490,8 @@
     "urlReportEx": "http://[url of Cisco problem reporting]",
     "helpFaq": "Help Site",
     "matchingTix": "Matching Problem Reports",
-    "matchingDescr": "To match problem reports with the logs that are uploaded to the Cloud Collaboration Management tool, you can enter the string “%%logID%%” (without quotes) into the URL, which will get substituted with the actual logID for each problem report submitted by your users. For example: http://www.example.com/reportproblem?yourLogIDParameter=%%logID%%. This is optional, and may require special configuration within your problem report ticketing system.",
-    "matchingDescrNew": "To match problem reports with the logs that are uploaded to the {{appTitle}} tool, you can enter the string “%%logID%%” (without quotes) into the URL, which will get substituted with the actual logID for each problem report submitted by your users. For example: http://www.example.com/reportproblem?yourLogIDParameter=%%logID%%. This is optional, and may require special configuration within your problem report ticketing system.",
+    "matchingDescr": "To match problem reports with the logs that are uploaded to the {{appTitle}} tool, you can enter the string <strong>%%logID%%</strong> into the URL, which will get substituted with the actual logID for each problem report submitted by your users. For example: http://www.example.com/reportproblem?yourLogIDParameter=%%logID%%. This is optional, and may require special configuration within your problem report ticketing system.",
+    "matchingDescrNew": "To match problem reports with the logs that are uploaded to the {{appTitle}} tool, you can enter the string <strong>%%logID%%</strong> into the URL, which will get substituted with the actual logID for each problem report submitted by your users. For example: http://www.example.com/reportproblem?yourLogIDParameter=%%logID%%. This is optional, and may require special configuration within your problem report ticketing system.",
     "forExample": "For example: http://www.acme.com/reportproblem?id=%%logID%%",
     "brandingTitle": "Customize Branding",
     "supportTitle": "Support Setup",
@@ -6747,6 +6707,11 @@
     "checkingServices": "Checking services...",
     "linkedSiteAdminTool": "Launch Site Admin Tool",
     "LinkedSiteProgress": "Account linking progress"
+  },
+  "webexSiteManagement": {
+    "redistributeLicenses": "Redistribute Licenses",
+    "redistributeLicensesDesc": "Please indicate how many licenses to put on each site",
+    "redistributeLicensesDesc2": "You must assign all the licenses and each site must have at least one license."
   },
   "cloudExtensions": {
     "cloudExtensions": "Hybrid Services",
@@ -7778,7 +7743,7 @@
         "herculesError": "Could not reach the service for Cisco Spark Hybrid Services.",
         "herculesErrorCacheInvalidation": "Could not invalidate current user's Hybrid Services cache.",
         "herculesErrorAuthentication": "The current user is not allowed to read this organization's Hybrid Services data.",
-        "notEnabledText": "Hybrid Services allows you to integrate your on-premises systems with the Cisco Collaboration Platform.",
+        "notEnabledText": "Hybrid Services allows you to integrate your on-premises systems with the Cisco Spark Platform.",
         "notEnabledTextNew": "Hybrid Services allows you to integrate your on-premises systems with the Cisco Spark Platform.",
         "notEnabledActionText": "Learn More",
         "serviceHeader": "Status",
@@ -7806,7 +7771,43 @@
     "pageTitle": "Settings",
     "branding": {
       "title": "Branding",
-      "subsectionLabel": "Branding"
+      "description": "Brand your employees' experience with Cisco applications and devices by uploading custom logos and/or imagery.",
+      "descriptionPartner": "Brand your customers' experience with Cisco applications by uploading a custom logo.",
+      "useDefaultBranding": "Use default branding"
+    },
+    "applicationBranding": {
+      "subsectionLabel": "Applications"
+    },
+    "deviceBranding": {
+      "subsectionLabel": "Devices",
+      "useCustomBranding": "Use custom brand imagery on devices",
+      "exampleLink": "(see examples)",
+      "logolight": "Brand logo (light)",
+      "logodark": "Brand logo (dark)",
+      "halfwakeBackground": "Custom brand image",
+      "dropFile": "Drop file here or click to select file",
+      "removeFile": "Remove",
+      "fileGuide": "For best results, logos should be transparent png files, without padding and 272x272px. Recommended brand image image size is 3840x2160 (1920x1080 minimum), png or jpeg.",
+      "failedToSave": "Failed to save",
+      "fileApplied": "Applied to all room devices.",
+      "uploading": "Uploading...",
+      "uploaded": "Uploaded",
+      "uploadFailed": "Upload Failed",
+      "uploadFailedWithReason": "Failed to upload image. Reason:",
+      "example": {
+        "title": "Device Branding Examples",
+        "wakeupTab": "Wake-up flow",
+        "awakeTab": "Awake state",
+        "wakeupDescription": "As the device wakes up from standby, it will either display default branding or custom branding. Custom branding can include a custom brand image and/or a light brand logo.",
+        "awakeDescription": "When the device is awake, custom branding can be shown by applying a dark brand logo.",
+        "defaultBrand": "Default Branding",
+        "customBrandImageLogo": "Custom brand image and brand logo (light) applied",
+        "customBrandLogo": "Custom brand logo (dark) applied"
+      }
+
+    },
+    "webexVersion": {
+      "title": "Webex Version"
     },
     "sipDomain": {
       "title": "Cisco Spark SIP Address",
@@ -7877,7 +7878,7 @@
       "desktopApps": "Desktop apps",
       "webApp": "Web app",
       "mobileApps": "Mobile apps",
-      "integrationAndBots": "Integration and Bots"
+      "bots": "Bots"
     },
     "support": {
       "title": "Support",
@@ -7886,7 +7887,11 @@
       "problemReportsToCustomUrl": "Send problem reports to a custom URL",
       "problemReportsTextPlaceholder": "Enter additional support contact information here, like phone numbers or email addresses",
       "helpSiteLabel": "Help Site",
-      "useCustomHelpSite": "Use a custom help site"
+      "useCustomHelpSite": "Use a custom help site",
+      "noDeviceSupportText": "No support text on screen",
+      "enableDeviceSupportText": "Show custom support text on screen",
+      "supportTextPlaceholder": "e.g. For support call +1 (800)2XX-27XX",
+      "deviceSupportTextDescription": "This will be displayed in the bottom left corner of the main screens, in awake state. For best results, limit your text entry to 35 characters."
     },
     "dirsync": {
       "loading": "Updating Status",
@@ -8474,7 +8479,7 @@
     "cards": {
       "shared": {
         "service": "Service",
-        "configure": "Configure",
+        "configure": "Edit settings",
         "resources": "Resources",
         "viewAll": "View all"
       },
@@ -8532,7 +8537,27 @@
         "exchangeTitle": "Microsoft Exchange",
         "googleTitle": "Google Calendar",
         "office365Title": "Office 365",
-        "error": "Could not retrieve Google Calendar status"
+        "error": "Could not retrieve Google Calendar status",
+        "premisesBasedPrerequisites": {
+          "title": "Hybrid Calendar (Exchange) Prerequisites",
+          "tabHeading": "On-premises Exchange or Office 365 ({{checked}}/{{total}})",
+          "intro": "Use this checklist alongside the \"Prepare Your Environment\" chapter in the deployment guide. Make sure you complete all the prerequisites necessary for deploying Hybrid Calendar Service for on-premises Exchange or Office 365 in your organization.",
+          "configureImpersonation": "Configure the impersonation account",
+          "runSupportedExchange": "Install or make sure you're running a supported version of Microsoft Exchange or Office 365, as described in the hybrid calendar deployment documentation.",
+          "ensureActiveDirectory": "Ensure that users are listed in Active Directory and have a discoverable mailbox in the organization's Exchange server",
+          "providePortAccess": "Provide the following port access:",
+          "providePortAccessHelp1": "HTTPS or secure web sockets outbound from Expressway to *.ciscospark.com, *.wbx2.com, and *.webex.com: TCP port 443 (secure)",
+          "providePortAccessHelp2": "EWS outbound from Expressway to Exchange: TCP port 443 (secure) or TCP port 80 (nonsecure) ",
+          "providePortAccessHelp3": "LDAP outbound from Expressway to Active Directory: TCP port 636 (secure) or TCP port 389 (nonsecure)",
+          "providePortAccessHelp4": "Microsoft Global Catalog search: TCP port 3269 (for Global Catalog search secured by SSL) or TCP port 3268 (for unsecured Global Catalog search).",
+          "forWebExFunctionality": "For @webex functionality",
+          "configureWebEx": "Configure or use a Cisco WebEx Meeting Center site with CMR Cloud",
+          "toMakeOBTP": "To make One Button to Push (OBTP) available for Unified CM-registered endpoints managed by Cisco TMS on @spark or @webex meetings:",
+          "setUpTMS": "Set up Cisco TMS 15.0 and Cisco TMSXE 5.0 or higher with Microsoft Exchange integration (Cisco Collaboration Meeting Rooms (CMR) Hybrid Configuration Guide). Cisco TMS and Cisco TMSXE require no additional configuration to support Hybrid Calendar Service.",
+          "configureTMSXE": "To make conference rooms schedulable in Microsoft Outlook/Exchange, configure them in Cisco TMSXE as if you were using on-premises conferencing (Cisco TelePresence Management Suite Extension for Microsoft Exchange Administration Guide).",
+          "reviewLicensing": "Review the licensing requirements",
+          "reviewLicensingHelp": "Cisco TMS and Cisco TMSXE Licensing is the same as if using on-premises resources. You require enough licenses to cover the number of endpoints that will use OBTP."
+        }
       },
       "hybridCall": {
         "title": "Hybrid Call",
@@ -8543,11 +8568,9 @@
         },
         "prerequisites": {
           "title": "Hybrid Call Prerequisites",
-          "cannotReachFlagService": "Failed to read existing checkbox statuses.",
-          "steps": "Steps",
-          "openDocumentation": "Open Documentation",
           "expresswaySetup": {
             "intro": "Use this checklist alongside the \"Prepare Your Environment\" chapter in the deployment guide. Make sure you complete all the prerequsites necessary for deploying the Expressway-C connector host.",
+            "tabHeading": "Expressway-C Connector Host ({{checked}}/{{total}})",
             "planCapacity": "Plan your connector capacity (dedicated or shared)",
             "redundancy": "Deploy Expressway-C in a cluster for redundancy",
             "followRequirements": "Follow requirements for the Expressway software",
@@ -8563,6 +8586,7 @@
           },
           "awareSetup": {
             "intro": "Use this checklist alongside the \"Prepare Your Environment\" chapter in the deployment guide. Make sure you complete all the prerequsites necessary for deploying Hybrid Call Service Aware in your organization.",
+            "tabHeading": "Hybrid Call Service Aware ({{checked}}/{{total}})",
             "determineCertificateTrust": "Determine your certificate trust method (manual or automatic)",
             "registerAllDomains": "Register all the domains (directory URIs and email addresses) to Cisco Spark",
             "registerAllDomainsHelp1": "Ensure that the subject alternate names (SANs) belong to the registered domains",
@@ -8579,6 +8603,7 @@
           },
           "connectSetup": {
             "intro": "Hybrid Call Connect is an optional feature of Hybrid Call. Use this checklist alongside the \"Prepare Your Environment\" chapter in the deployment guide. Make sure you complete all the prerequsites necessary for deploying Hybrid Call Service Connect in your organization.",
+            "tabHeading": "Hybrid Call Service Connect ({{checked}}/{{total}})",
             "isAwareSetup": "Hybrid Call Service Aware must be deployed and configured",
             "prepareEdge": "Prepare your Expressway-E for the mutual TLS connection between Cisco Spark and your call control environment",
             "prepareEdgeHelp1": "For an SRV record (multiple Expressway-E for redundancy): If you have an existing SRV, allow the time to request a dedicated SRV for Hybird Call Service Connect.",
@@ -8615,6 +8640,24 @@
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
+        },
+        "prerequisites": {
+          "title": "Hybrid Media Prerequisites",
+          "intro": "Use this checklist alongside the deployment guide. Make sure you complete all the prerequisites necessary for deploying Hybrid Media Service in your organization.",
+          "meetMinimumSystemRequirements": "Meet the minimum system requirements described in Requirements for Hybrid Media Service",
+          "verifyDeploymentModels": "Verify the supported deployment models described in Deployment Models Supported by Hybrid Media Service",
+          "ensureNetworkConnectivity": "Ensure that your network allows connectivity on the ports and using the protocols described in Ports and Protocols Used by Hybrid Media Service",
+          "ensureBandwidth": "Ensure that your network supports the bandwidth requirements described in Bandwidth Requirements for Hybrid Media Service",
+          "acquireInformation": "Acquire the following information to assign to your Hybrid Media Node:",
+          "acquireInformationHelp1": "IP address",
+          "acquireInformationHelp2": "Network mask",
+          "acquireInformationHelp3": "Gateway IP address",
+          "acquireInformationHelp4": "DNS servers",
+          "acquireInformationHelp5": "NTP servers",
+          "acquireInformationHelp6": "Choose the hostname to be configured on the Hybrid Media Node.",
+          "acquireInformationHelp7": "If you plan to configure Hybrid Media Node with FQDN, create both forward- and reverse-DNS (A- and PTR-records) in the DNS confirguration",
+          "chooseSupportedHardware": "Choose a supported hardware or specifications-based configuration for your Hybrid Media Node",
+          "verifyHypervisor": "Make sure your server is running VMware ESXi 6 (or later) and vSphere 6 (or later) with a VM host operational."
         }
       },
       "hybridImp": {
@@ -8735,14 +8778,6 @@
         "routing": "Routing from the cloud to your premise over the enterprise private trunk will happen via the verified domains you selected:",
         "deactivateTitle": "Confirm Deactivate Enterprise Private Trunk",
         "deactivateConfirm": "You are about to deactivate Enterprise Private Trunk Service. Be aware that this action deletes all Cisco Spark remote SIP destinations configuration and disables the service for all users."
-      },
-      "cmc": {
-        "title": "Mobile",
-        "description": "Mobile Convergence is a service which allows you to call any mobile phone from any Cisco device. The service is set up by your Cisco Professional. Please contact your Cisco Professional for changes.",
-        "buttons": {
-          "settings": "Settings",
-          "status": "Status"
-        }
       }
     },
     "showMore": "View all",
@@ -8758,6 +8793,11 @@
       "unknown": "Unknown",
       "disabled": "Disabled",
       "setupNotComplete": "Setup not completed"
+    },
+    "commonPrerequisites": {
+      "cannotReachFlagService": "Failed to read existing checkbox statuses.",
+      "openDocumentation": "Open Documentation",
+      "steps": "Steps"
     }
   },
   "enableUsersModal": {

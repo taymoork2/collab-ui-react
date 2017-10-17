@@ -5,7 +5,7 @@
     .controller('HeaderCtrl', HeaderCtrl);
 
   /* @ngInject */
-  function HeaderCtrl($q, $translate, Authinfo, ProPackService, Utils, Orgservice, ControlHubService) {
+  function HeaderCtrl($q, $translate, Authinfo, ProPackService, Utils, Orgservice) {
     var vm = this;
     vm.partnerInfo = null;
     vm.adminTabs = [];
@@ -19,18 +19,15 @@
       vm.icon = 'icon-cisco-logo';
       $q.all({
         proPackEnabled: ProPackService.hasProPackPurchased(),
-        nameChangeEnabled: ControlHubService.getControlHubEnabled(),
       }).then(function (toggles) {
-        if (toggles.proPackEnabled && toggles.nameChangeEnabled) {
+        if (toggles.proPackEnabled) {
           vm.headerTitle = $translate.instant('loginPage.titlePro');
           getAdminTabs();
           getPartnerInfo();
-        } else if (toggles.nameChangeEnabled) {
+        } else {
           vm.headerTitle = $translate.instant('loginPage.titleNew');
           getAdminTabs();
           getPartnerInfo();
-        } else {
-          vm.headerTitle = $translate.instant('loginPage.title');
         }
       });
       vm.navStyle = 'admin';

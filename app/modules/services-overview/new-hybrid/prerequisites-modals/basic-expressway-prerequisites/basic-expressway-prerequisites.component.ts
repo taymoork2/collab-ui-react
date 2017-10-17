@@ -27,7 +27,7 @@ export class BasicExpresswayPrerequisitesComponentController implements ng.IComp
         this.checkboxes = checkboxes;
       })
       .catch((error) => {
-        this.Notification.errorWithTrackingId(error, 'servicesOverview.cards.hybridCall.prerequisites.cannotReachFlagService');
+        this.Notification.errorWithTrackingId(error, 'servicesOverview.commonPrerequisites.cannotReachFlagService');
       })
       .finally(() => {
         this.onChange(this.HybridServicesPrerequisitesHelperService.buildNumbersCheckedObject(this.checkboxes));

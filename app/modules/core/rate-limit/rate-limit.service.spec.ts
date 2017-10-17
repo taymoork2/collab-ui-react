@@ -222,6 +222,7 @@ describe('RateLimitService', () => {
           url: '/rate-limited-url',
           retryConfig: {
             delayInMillis: 1000,
+            origHttpStatus: 429,
           },
         },
         status: 429,
@@ -242,6 +243,7 @@ describe('RateLimitService', () => {
         status: 200,
       }));
       expect(this.MetricsService.trackOperationalMetric).toHaveBeenCalledWith('atlas_rate_limit_retry', {
+        orig_http_status: 429,
         request_method: 'GET',
         request_url: '/rate-limited-url',
         state: 'success',
@@ -255,6 +257,7 @@ describe('RateLimitService', () => {
         status: 500, // still a "successful" retry because it wasn't throttled
       }));
       expect(this.MetricsService.trackOperationalMetric).toHaveBeenCalledWith('atlas_rate_limit_retry', {
+        orig_http_status: 429,
         request_method: 'GET',
         request_url: '/rate-limited-url',
         state: 'success',
@@ -266,6 +269,7 @@ describe('RateLimitService', () => {
     it('should track metric for an throttled response which requires another retry', function () {
       this.RateLimitService.trackMetric(this.responseWithRetry);
       expect(this.MetricsService.trackOperationalMetric).toHaveBeenCalledWith('atlas_rate_limit_retry', {
+        orig_http_status: 429,
         request_method: 'GET',
         request_url: '/rate-limited-url',
         state: 'retry',
@@ -283,6 +287,7 @@ describe('RateLimitService', () => {
         },
       }));
       expect(this.MetricsService.trackOperationalMetric).toHaveBeenCalledWith('atlas_rate_limit_retry', {
+        orig_http_status: 429,
         request_method: 'GET',
         request_url: '/rate-limited-url',
         state: 'fail',

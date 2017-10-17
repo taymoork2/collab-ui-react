@@ -1637,7 +1637,7 @@
     "setupPMRsiteNameModalTitle": "Configuración de la sala de reuniones personales",
     "setUpHybridMediaService": "El servicio de medio híbrido está disponible. Amplía el uso del contenido multimedia en la nube con el fin de utilizar recursos en entornos locales para realizar llamadas y celebrar reuniones.",
     "getStarted": "Empezar",
-    "urgentUpgrade": "Ya hay disponible una actualización urgente de <a ui-sref='{{link}}'>{{conector}}</a> que se ejecutará durante la siguiente actualización planificada.",
+    "urgentUpgrade": "Ya hay disponible una actualización urgente de <a ui-sref='{{link}}'>{{connector}}</a> que se ejecutará durante la siguiente actualización planificada.",
     "setUpHybridDataSecurity": "Cree un dominio de seguridad local con Seguridad de datos híbridos.",
     "careLicenseMsgMissingText": "El mensaje es obligatorio para prestar los servicios de atención al cliente. Para activar el mensaje,",
     "careLicenseCallMissingText": "La llamada es obligatoria para prestar los servicios de atención al cliente por voz. Para activar la llamada,",
@@ -4320,7 +4320,7 @@
     "nameLabel": "Nombre de la recepción de llamadas",
     "memberLabel": "Miembros de la recepción de llamadas",
     "successUpdate": "La recepción de llamadas “{{callPickupName}}” se ha creado correctamente",
-    "errorUpdate": "Error al actualizar la recepción de llamadas “{{callParkName}}”",
+    "errorUpdate": "Error al actualizar la recepción de llamadas “{{callPickupName}}”",
     "title": "Recepción de llamadas",
     "code": "PI",
     "modalDescription": "La función de recepción de llamadas permite que los usuarios respondan a las llamadas entrantes dentro de un grupo de usuarios.",
@@ -4943,7 +4943,7 @@
     "pstnCountry": "Elija el país en el que se van a suministrar los servicios de llamada (PSTN incluida).",
     "aria": {
       "daysLeft": "{count, plural, =1{Queda # día} other{Quedan # días}} de prueba",
-      "userTotals": "{{Users}} licencias utilizadas de {{licenses}}",
+      "userTotals": "{{users}} licencias utilizadas de {{licenses}}",
       "daysSinceExp": "Caducidad alcanzada hace {count, plural, =1{# día} other{# días}}"
     }
 
@@ -9266,7 +9266,7 @@
       "addComponentFailed": "Error al añadir el componente {{componentName}}.",
       "updateComponentSucceed": "El componente {{componentName}} del grupo {{componentGroupName}} se ha actualizado correctamente.",
       "updateComponentFailed": "Error al actualizar el componente {{componentName}}.",
-      "deleteComponentSucceed": "El componente {{componentName}} del grupo {{componentGroupName}} se ha eliminado correctamente.",
+      "deleteComponentSucceed": "El componente {{componentName}} se ha eliminado correctamente.",
       "deleteComponentFailed": "Error al eliminar el componente {{componentName}}."
     },
     "incidentsPage": {

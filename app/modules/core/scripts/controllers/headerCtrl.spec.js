@@ -7,11 +7,9 @@ describe('Controller: HeaderCtrl', function () {
       '$scope',
       'Authinfo',
       'ProPackService',
-      'Utils',
-      'ControlHubService'
+      'Utils'
     );
 
-    spyOn(this.ControlHubService, 'getControlHubEnabled').and.returnValue(this.$q.resolve(false));
     spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(false));
 
     this.initController = function () {
@@ -93,19 +91,12 @@ describe('Controller: HeaderCtrl', function () {
   });
 
   describe('2017 name update', function () {
-    it('should default headerTitle to loginPage.title', function () {
-      this.initController();
-      expect(this.controller.headerTitle).toEqual('loginPage.title');
-    });
-
-    it('should set headerTitle to loginPage.titleNew when getControlHubEnabled is true', function () {
-      this.ControlHubService.getControlHubEnabled.and.returnValue(this.$q.resolve(true));
+    it('should default headerTitle to loginPage.titleNew', function () {
       this.initController();
       expect(this.controller.headerTitle).toEqual('loginPage.titleNew');
     });
 
-    it('should set headerTitle to loginPage.titlePro when getControlHubEnabled and hasProPackPurchased is true', function () {
-      this.ControlHubService.getControlHubEnabled.and.returnValue(this.$q.resolve(true));
+    it('should set headerTitle to loginPage.titlePro when hasProPackPurchased is true', function () {
       this.ProPackService.hasProPackPurchased.and.returnValue(this.$q.resolve(true));
       this.initController();
       expect(this.controller.headerTitle).toEqual('loginPage.titlePro');

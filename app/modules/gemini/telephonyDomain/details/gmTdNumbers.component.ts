@@ -406,15 +406,21 @@ class GmTdNumbersCtrl implements ng.IComponentController {
       return;
     }
 
-    _.remove(this.gridData, (data: any) => {
-      return row.entity.rowId === data.rowId;
-    });
+    this.loading = true;
 
-    if (row.entity.dataType === DATA_TYPE.SUBMITTED) {
-      this.deleteTelephonyNumberData.push(row);
-    } else if (row.entity.dataType === DATA_TYPE.IMPORT_TD) {
-      delete this.dnisId2ImportedNumberMapping[row.entity.dnisId];
-    }
+    this.$timeout(() => {
+      _.remove(this.gridData, (data: any) => {
+        return row.entity.rowId === data.rowId;
+      });
+
+      if (row.entity.dataType === DATA_TYPE.SUBMITTED) {
+        this.deleteTelephonyNumberData.push(row);
+      } else if (row.entity.dataType === DATA_TYPE.IMPORT_TD) {
+        _.unset(this.dnisId2ImportedNumberMapping, row.entity.dnisId);
+      }
+
+      this.loading = false;
+    }, 100);
   }
 
   public downloadTemplate() {
@@ -717,7 +723,7 @@ class GmTdNumbersCtrl implements ng.IComponentController {
     });
 
     _.forEach(deletedRows, (data: any) => {
-      delete this.dnisId2ImportedNumberMapping[data.dnisId];
+      _.unset(this.dnisId2ImportedNumberMapping, data.dnisId);
     });
   }
 
@@ -742,7 +748,7 @@ class GmTdNumbersCtrl implements ng.IComponentController {
   public getGridHeight() {
     return {
       height: (this.gridData.length * 43 + 48) + 'px',
-      'min-height': 'calc(100vh - 405px)',
+      'min-height': 'calc(100vh - 365px)',
     };
   }
 

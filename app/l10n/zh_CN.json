@@ -2803,8 +2803,8 @@
         "description": "使用呼叫服务需要至少一个已验证域。在设置中添加域。"
       },
       "release-channel": {
-        "title": "“{{Name}}”发布通道",
-        "description": "“{{Name}}”正在使用的发布通道 ({{current}}) 不同于缺省发布通道 ({{default}})。<a ng-click=\"{{onclick}}\">请更改此发布通道</a>以避免混合服务的不一致。"
+        "title": "“{{name}}”发布通道",
+        "description": "“{{name}}”正在使用的发布通道 ({{current}}) 不同于缺省发布通道 ({{default}})。<a ng-click=\"{{onclick}}\">请更改此发布通道</a>以避免混合服务的不一致。"
       },
       "user-activation-errors": {
         "title": "激活错误",
@@ -4065,10 +4065,10 @@
     "digits": "数字",
     "word": "字样",
     "callerInputMenuErrorVariableNameMissing": "您忘记了在 {{schedule}} 安排的主叫输入菜单 {{at}} 中输入名称变量。",
-    "conditionalThenTargetMissing": "“决策菜单”{{at}} 处的 {{Schedule}} 安排缺少“操作”条目的目标",
-    "conditionalIsEntryVariableMissing": "“决策菜单”{{at}} 处的 {{Schedule}} 安排缺少“是”的条目",
-    "conditionalIsEntryVariableUnevenQouotes": "“决策菜单”{{at}} 处的 {{Schedule}} 安排缺少“是”的右引号",
-    "conditionalIfEntryVariableMissing": "“决策菜单”{{at}} 处的 {{Schedule}} 安排缺少“If”的条目",
+    "conditionalThenTargetMissing": "“决策菜单”{{at}} 处的 {{schedule}} 安排缺少“操作”条目的目标",
+    "conditionalIsEntryVariableMissing": "“决策菜单”{{at}} 处的 {{schedule}} 安排缺少“是”的条目",
+    "conditionalIsEntryVariableUnevenQouotes": "“决策菜单”{{at}} 处的 {{schedule}} 安排缺少“是”的右引号",
+    "conditionalIfEntryVariableMissing": "“决策菜单”{{at}} 处的 {{schedule}} 安排缺少“If”的条目",
     "addNumberMsg": "此自动语音应答将对以下号码的所有呼叫进行应答。您可以随时添加或删除号码。",
     "numberInfoPopover": "如果您不在此处输入号码也可以。呼叫仍可以来自其他自动语音应答。",
     "routeCallPopover": "选择转接呼叫方式。",
@@ -4597,7 +4597,7 @@
     "speedDialChangesFailed": "保存快速拨号更改失败。",
     "labelIncorrectCharacter": "快速拨号标签不能包含 &lt; 或 &gt;",
     "limitSpeedDialsReach": "您已达到 125 条的快速拨号条目上限。",
-    "blfPickup": "{{Username}} 可以查看和代接分机 {{extension}} 的响铃呼叫"
+    "blfPickup": "{{username}} 可以查看和代接分机 {{extension}} 的响铃呼叫"
   },
   "lineLabel": {
     "title": "线路标签",

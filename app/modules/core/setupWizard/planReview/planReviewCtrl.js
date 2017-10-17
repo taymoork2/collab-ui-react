@@ -6,11 +6,16 @@
     .controller('PlanReviewCtrl', PlanReviewCtrl);
 
   /* @ngInject */
-  function PlanReviewCtrl($translate, Authinfo, Config, SetupWizardService, TrialService, WebExUtilsFact) {
+  function PlanReviewCtrl($state, $translate, Analytics, Authinfo, Config, SetupWizardService, TrialService, WebExUtilsFact) {
     var vm = this;
     var classes = {
       userService: 'user-service-',
       hasRoomSys: 'has-room-systems',
+    };
+
+    var view = {
+      serviceSetup: 'Service Setup',
+      meetingSettingsModal: 'overview: Meeting Settings Modal',
     };
 
     vm.messagingServices = {
@@ -84,7 +89,11 @@
     };
 
     vm.generateLicenseTooltip = function (service) {
-      return vm.isSharedMeetingsLicense(service) ? '<div class="license-tooltip-html">' + $translate.instant('firstTimeWizard.sharedLicenseTooltip') + '</div>' : '<div class="license-tooltip-html">' + $translate.instant('firstTimeWizard.namedLicenseTooltip') + '</div>';
+      return '<div class="license-tooltip-html">' + vm.generateLicenseTranslation(service) + '</div>';
+    };
+
+    vm.generateLicenseTranslation = function (service) {
+      return vm.isSharedMeetingsLicense(service) ? $translate.instant('firstTimeWizard.sharedLicenseTooltip') : $translate.instant('firstTimeWizard.namedLicenseTooltip');
     };
 
     init();
@@ -92,6 +101,11 @@
     function setActingSubscription(option) {
       SetupWizardService.setActingSubscriptionOption(option);
       fetchPendingSubscriptionInfo();
+      var analyticsProperties = {
+        subscriptionId: _.get(option, 'value'),
+        view: _.get($state, 'current.data.firstTimeSetup') ? view.serviceSetup : view.meetingSettingsModal,
+      };
+      Analytics.trackServiceSetupSteps(Analytics.sections.SERVICE_SETUP.eventNames.SUBSCRIPTION_SELECT, analyticsProperties);
     }
 
     function fetchPendingSubscriptionInfo() {
@@ -134,7 +148,7 @@
       }
 
       vm.showPendingView = vm.hasPendingLicenses;
-      vm.orderDetails = SetupWizardService.getOrderAndSubId();
+      vm.orderDetails = SetupWizardService.getOrderDetails();
     }
 
     function getUserServiceRowClass(hasRoomSystem) {

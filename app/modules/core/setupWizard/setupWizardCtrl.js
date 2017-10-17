@@ -22,7 +22,6 @@ require('./_setup-wizard.scss');
   var meetingSettingsSummaryTemplatePath = require('ngtemplate-loader?module=Core!./meeting-settings/meeting-summary.html');
 
   var callSettingsCallPickupCountryTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/serviceHuronCustomerCreate.html');
-  var callSettingsPickLocationTypeTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/serviceSetupInit.html');
   var callSettingsSetupLocationTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/locationSetup.html');
   var callSettingsSetupSiteTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/serviceSetup.html');
 
@@ -34,7 +33,7 @@ require('./_setup-wizard.scss');
   angular.module('Core')
     .controller('SetupWizardCtrl', SetupWizardCtrl);
 
-  function SetupWizardCtrl($q, $scope, $state, $stateParams, $timeout, Authinfo, Config, FeatureToggleService, Orgservice, SessionStorage, SetupWizardService, StorageKeys, Notification) {
+  function SetupWizardCtrl($q, $scope, $state, $stateParams, $timeout, Analytics, Authinfo, Config, FeatureToggleService, Orgservice, SessionStorage, SetupWizardService, StorageKeys, Notification, CustomerCommonService) {
     var isFirstTimeSetup = _.get($state, 'current.data.firstTimeSetup', false);
     var isITDecouplingFlow = false;
     var shouldRemoveSSOSteps = false;
@@ -53,10 +52,15 @@ require('./_setup-wizard.scss');
     // with a subscriptionId of an active subscription, we navigate the user to overview
     if (isFirstTimeSetup && SetupWizardService.isProvisionedSubscription(SessionStorage.get(StorageKeys.SUBSCRIPTION_ID))) {
       Authinfo.setSetupDone(true);
+      var analyticsProperties = {
+        subscriptionId: SessionStorage.get(StorageKeys.SUBSCRIPTION_ID),
+      };
+      Analytics.trackServiceSetupSteps(Analytics.sections.SERVICE_SETUP.eventNames.FORWARDED_TO_OVERVIEW, analyticsProperties);
       return $state.go('overview');
     }
 
     if (Authinfo.isCustomerAdmin()) {
+      sendAnalytics();
       SetupWizardService.onActingSubscriptionChange(init);
       initToggles().finally(init);
     }
@@ -109,6 +113,24 @@ require('./_setup-wizard.scss');
       initFinishTab(tabs);
       removeTabsWithEmptySteps(tabs);
       $scope.tabs = filterTabsByStateParams(tabs);
+    }
+
+    function sendAnalytics() {
+      var analyticsProperties = {
+        subscriptionId: SetupWizardService.getActingSubscriptionId(),
+        view: isFirstTimeSetup ? 'Service Setup' : 'overview: Meeting Settings Modal',
+      };
+
+      if (SessionStorage.get(StorageKeys.SUBSCRIPTION_ID) && (SessionStorage.get(StorageKeys.PARTNER_ORG_ID) || SessionStorage.get(StorageKeys.CUSTOMER_ORG_ID))) {
+        Analytics.trackServiceSetupSteps(Analytics.sections.SERVICE_SETUP.eventNames.REDIRECTED_INTO_ATLAS_FROM_OPC, analyticsProperties);
+      } else if (SessionStorage.get(StorageKeys.PARTNER_ORG_ID) || SessionStorage.get(StorageKeys.CUSTOMER_ORG_ID)) {
+        var eventKey = SessionStorage.get(StorageKeys.PARTNER_ORG_ID)
+          ? Analytics.sections.SERVICE_SETUP.eventNames.PARTNER_SETUP_OWNORG
+          : Analytics.sections.SERVICE_SETUP.eventNames.PARTNER_SETUP_CUSTOMER;
+        Analytics.trackServiceSetupSteps(eventKey, analyticsProperties);
+      } else {
+        Analytics.trackServiceSetupSteps(Analytics.sections.SERVICE_SETUP.eventNames.CUSTOMER_SETUP, analyticsProperties);
+      }
     }
 
     function getPendingSubscriptionFlags() {
@@ -248,11 +270,6 @@ require('./_setup-wizard.scss');
         template: callSettingsCallPickupCountryTemplatePath,
       };
 
-      var pickLocationType = {
-        name: 'pickCallLocationType',
-        template: callSettingsPickLocationTypeTemplatePath,
-      };
-
       var setupLocation = {
         name: 'setupCallLocation',
         template: callSettingsSetupLocationTemplatePath,
@@ -284,10 +301,17 @@ require('./_setup-wizard.scss');
 
           if (!customer && hasPendingCallLicenses) {
             steps.push(pickCountry);
+          } else if (!customer) {
+            var org = SetupWizardService.getOrg();
+            CustomerCommonService.save({}, {
+              uuid: org.id,
+              name: org.displayName,
+              countryCode: org.countryCode,
+              servicePackage: 'VOICE_ONLY',
+            });
           }
 
           if (supportsHI1484) {
-            steps.push(pickLocationType);
             steps.push(setupLocation);
           } else {
             steps.push(setupSite);

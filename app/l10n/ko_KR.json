@@ -4974,7 +4974,7 @@
       "title": "평가판 설정 - 장치 발송",
       "deviceTrialCapacityHeader": "장치를 추가할 수 없음",
       "remainingDeviceTrials": "조직에 20개의 동시 활동 장치 평가판 중에 {{number}}개가 남았습니다.",
-      "deviceTrialLimitReachedA": "조직에서 {{number}}의 동시 제한에 도달했습니다.",
+      "deviceTrialLimitReachedA": "조직에서 의 동시 제한에 도달했습니다.",
       "deviceTrialLimitReachedB": "기존의 평가판으로 변환하면 다른 장치 평가판을 추가할 수 있습니다.",
       "activeDeviceTrial": "활동 장치 평가판",
       "activeDeviceTrialTip": "배송된 장치에서 진행중인 평가판",

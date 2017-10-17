@@ -335,6 +335,12 @@
       integration: 'https://%s/custportal/extensions/MEI/MEI.html',
       prod: 'https://%s/custportal/extensions/MEI/MEI.html',
     },
+    AdminBatchServiceUrl: {
+      dev: 'https://admin-batch-service.intb1.ciscospark.com/api/v1',
+      cfe: 'https://admin-batch-service.intb1.ciscospark.com/api/v1',
+      integration: 'https://admin-batch-service.intb1.ciscospark.com/api/v1',
+      prod: 'https://admin-batch-service.wbx2.com/api/v1',
+    },
     // urls same for all environments
 
     ProdAdminServiceUrl: 'https://atlas-a.wbx2.com/admin/api/v1/',
@@ -347,6 +353,7 @@
     ItunesStoreUrl: 'http://cs.co/sqios',
     SquaredAppUrl: 'squared://',
     StatusPageUrl: 'http://status.ciscospark.com/',
+    MixpanelUrl: 'https://api.mixpanel.com',
     CallflowServiceUrl: 'https://admin-portal-test-public.wbx2.com/atlas-server/admin/api/v1/',
     LogMetricsUrl: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
     SSOTestUrl: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',

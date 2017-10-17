@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function MediaClusterServiceV2($http, CsdmPoller, CsdmCacheUpdater, CsdmHubFactory, UrlConfig, Authinfo) {
+  function MediaClusterServiceV2($http, CsdmPoller, CsdmCacheUpdater, CsdmHubFactory, HybridServicesClusterService, UrlConfig, Authinfo) {
     var clusterCache = {
       mf_mgmt: {},
     };
@@ -223,7 +223,11 @@
 
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters';
       return $http
-        .post(url, payLoad);
+        .post(url, payLoad)
+        .then(function (res) {
+          HybridServicesClusterService.clearCache();
+          return res;
+        });
     };
 
     var addRedirectTarget = function (hostName, clusterId) {
@@ -233,7 +237,11 @@
 
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/allowedRegistrationHosts';
       return $http
-        .post(url, payLoad);
+        .post(url, payLoad)
+        .then(function (res) {
+          HybridServicesClusterService.clearCache();
+          return res;
+        });
     };
 
     function get(clusterId) {
@@ -258,7 +266,11 @@
 
     function deleteV2Cluster(clusterId) {
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
-      return $http.delete(url);
+      return $http.delete(url)
+        .then(function (res) {
+          HybridServicesClusterService.clearCache();
+          return res;
+        });
     }
 
     function updateV2Cluster(clusterId, clusterName, releaseChannel) {
@@ -269,19 +281,30 @@
 
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
       return $http
-        .patch(url, payLoad);
+        .patch(url, payLoad)
+        .then(function (res) {
+          HybridServicesClusterService.clearCache();
+          return res;
+        });
     }
 
     function moveV2Host(connectorId, fromCluster, toCluster) {
-      //var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/actions/moveNodeByManagementConnectorId/invoke';
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/actions/moveNodeByManagementConnectorId/invoke?managementConnectorId=' + connectorId + '&fromClusterId=' + fromCluster + '&toClusterId=' + toCluster;
       return $http
-        .post(url);
+        .post(url)
+        .then(function (res) {
+          HybridServicesClusterService.clearCache();
+          return res;
+        });
     }
 
     function deleteClusterWithConnector(clusterId) {
       var url = UrlConfig.getHerculesUrlV2() + '/organizations/' + Authinfo.getOrgId() + '/actions/deregisterCluster/invoke?clusterId=' + clusterId;
-      return $http.post(url);
+      return $http.post(url)
+        .then(function (res) {
+          HybridServicesClusterService.clearCache();
+          return res;
+        });
     }
 
     function getProperties(clusterId) {
@@ -294,7 +317,11 @@
     function setProperties(clusterId, payLoad) {
       var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/properties';
       return $http
-        .post(url, payLoad);
+        .post(url, payLoad)
+        .then(function (res) {
+          HybridServicesClusterService.clearCache();
+          return res;
+        });
     }
 
     function getV1Clusters() {
@@ -314,13 +341,21 @@
     function createPropertySet(payLoad) {
       var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/property_sets';
       return $http
-        .post(url, payLoad);
+        .post(url, payLoad)
+        .then(function (res) {
+          HybridServicesClusterService.clearCache();
+          return res;
+        });
     }
 
     function updatePropertySetById(id, payLoad) {
       var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/property_sets/' + id;
       return $http
-        .post(url, payLoad);
+        .post(url, payLoad)
+        .then(function (res) {
+          HybridServicesClusterService.clearCache();
+          return res;
+        });
     }
 
     function getClustersByConnectorType(type) {

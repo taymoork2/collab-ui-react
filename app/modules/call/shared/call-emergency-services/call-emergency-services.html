@@ -1,6 +1,6 @@
 <div class="call-emergency-services">
   <div ng-if="$ctrl.showES()">
-    <div ng-if="$ctrl.allowEcnSetup">
+    <div ng-if="$ctrl.allowEcbnSetup">
       <label class="sub-section__label" translate="spacesPage.ecn"></label>
       <div ng-form="$ctrl.emergencyCallbackNumberForm">
         <cs-select
@@ -10,9 +10,24 @@
           valuefield="value"
           placeholder="$ctrl.selectHolder"
           cs-required="$ctrl.isNumberRequired()"
-          is-disabled="!$ctrl.allowEcnSetup"
-          filter="true">
+          is-disabled="$ctrl.isNumberDisabled"
+          filter="true"
+          on-change-fn="$ctrl.onEcbnChange(value)"
+          refresh-data-fn="$ctrl.getEmegencyCallBackNumbers(filter)"
+          wait-time="200">
         </cs-select>
+      </div>
+      <div ng-if="$ctrl.showNumberMessage()">
+        <p class="ces-messages">
+          <div ng-if="$ctrl.isNumberDisabled">
+              <span><i class="icon icon-warning"></i></span>
+              <span translate="settingsServiceNumber.needEcbnNoOptions"></span>
+          </div>
+          <div ng-if="!$ctrl.isNumberDisabled">
+              <span><i class="icon icon-error"></i></span>
+              <span translate="settingsServiceNumber.needEcbnOptions"></span>
+          </div>
+        </p>
       </div>
     </div>
     <label class="sub-section__label ces-address-label" translate="spacesPage.esa"></label>
@@ -40,7 +55,7 @@
     </div>
   </div>
   <div ng-if="!$ctrl.showES()">
-    <p class="ces-warning ces-top-padding">
+    <p class="ces-messages ces-top-padding">
       <span><i class="icon icon-warning warning"></i></span>
       <span translate="emergencyServices.warnNoPstn"></span>
     </p>

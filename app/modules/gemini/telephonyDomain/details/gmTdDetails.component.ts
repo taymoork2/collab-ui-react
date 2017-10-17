@@ -117,11 +117,12 @@ class GmtdDetails implements ng.IComponentController {
           remedyTicket.status = _.replace(remedyTicket.status, /Cancelled/, 'Canceled');
 
           this.remedyTicket = remedyTicket;
-          this.remedyTicketLoading = false;
         }
       })
       .catch((err) => {
         this.Notification.errorResponse(err, 'errors.statusError', { status: err.status });
+      }).finally(() => {
+        this.remedyTicketLoading = false;
       });
   }
 

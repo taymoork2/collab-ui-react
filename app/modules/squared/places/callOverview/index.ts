@@ -6,7 +6,7 @@ import preferredLanguageModule from '../../../huron/preferredLanguage';
 import FeatureToggleService from 'modules/core/featureToggle';
 import primaryLineModule from 'modules/huron/primaryLine';
 
-export * from './placeCallOverview.service';
+export { PlaceCallOverviewService };
 
 export default angular
   .module('huron.place-call-overview', [

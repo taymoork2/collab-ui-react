@@ -5,7 +5,7 @@
     .module('uc.autoattendant')
     .factory('AACommonService', AACommonService);
 
-  function AACommonService(AutoAttendantCeMenuModelService) {
+  function AACommonService($translate, AutoAttendantCeMenuModelService) {
     var aaSayMessageForm = false;
     var aaPhoneMenuOptions = false;
     var aaCallerInputStatus = false;
@@ -26,6 +26,14 @@
 
     var invalidList = {};
     var schedules = ['openHours', 'closedHours', 'Holidays'];
+
+    var varOptions = {
+      'Original-Called-Number': $translate.instant('autoAttendant.decisionNumberDialed'),
+      'Original-Caller-Number': $translate.instant('autoAttendant.decisionCallerNumber'),
+      'Original-Remote-Party-ID': $translate.instant('autoAttendant.decisionCallerName'),
+      'Original-Caller-Country-Code': $translate.instant('autoAttendant.decisionCallerCountryCode'),
+      'Original-Caller-Area-Code': $translate.instant('autoAttendant.decisionCallerAreaCode'),
+    };
 
     /* We have intentionally added the blank space in the following list.
      * Because isDynamic flag gets true in case of BR or new lines
@@ -77,6 +85,7 @@
       DIGITS_RAW: 3,
       DIGITS_CHOICE: 4,
       getprePopulatedSessionVariablesList: getprePopulatedSessionVariablesList,
+      getVarOption: getVarOption,
     };
 
     return service;
@@ -85,6 +94,10 @@
 
     function getprePopulatedSessionVariablesList() {
       return prePopulatedSessionVariablesList;
+    }
+
+    function getVarOption(value) {
+      return varOptions[value];
     }
 
     function isFormDirty() {

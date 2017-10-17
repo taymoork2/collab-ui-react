@@ -6,7 +6,7 @@
   module.exports = Analytics;
 
   /* @ngInject */
-  function Analytics($q, $state, Authinfo, Config, Orgservice, TrialService, UserListService) {
+  function Analytics($q, $state, Authinfo, Config, Orgservice, TrialService, UrlConfig, UserListService) {
     var NO_EVENT_NAME = 'eventName not passed';
 
     var token = {
@@ -158,6 +158,56 @@
         },
         persistentProperties: null,
       },
+      SERVICE_SETUP: {
+        name: 'Service Setup',
+        eventNames: {
+          NEXT: 'Service Setup: User clicked \'Next\' button',
+          BACK: 'Service Setup: User clicked \'Back\' button',
+          SUBSCRIPTION_SELECT: 'Service Setup: Subscription selected from dropdown',
+          FORWARDED_TO_OVERVIEW: 'Service Setup: Forwarded to overview for provisioned subscription',
+          REDIRECTED_INTO_ATLAS_FROM_OPC: 'Service Setup: Redirected into atlas from Order Processing Client',
+          PARTNER_LAUNCH: 'Service Setup: Partner launches customer/own org from customers tab',
+          PARTNER_SETUP_OWNORG: 'Service Setup: Partner Setting up ownorg',
+          PARTNER_SETUP_CUSTOMER: 'Service Setup: Partner Setting up customer',
+          CUSTOMER_SETUP: 'Service Setup: Customer logs into portal directly and is setting up',
+          GET_STARTED: 'Service Setup: Clicked on Get Started at the start for Service Setup Wizard',
+          MEETING_SETTINGS: 'Service Setup: Attempt to setup Meeting Settings',
+          SKIPPED_MEETING_SETTINGS: 'Service Setup: Clicked on skip for Meeting Settings',
+          TRIAL_EXISTING_SITES: 'Service Setup: Use existing site checkbox clicked',
+          CLIENT_VERSION_RADIO: 'Service Setup: Client version radio selection made',
+          INVALID_WEBEX_SITE: 'Service Setup: WebEx Shallow validation: invalid site',
+          DUPLICATE_WEBEX_SITE: 'Service Setup: WebEx Shallow validation: duplicate site',
+          SEND_CUSTOMER_EMAIL: 'Service Setup: Send customer email checkbox changed',
+          DO_NOT_PROVISION: 'Service Setup: Do Not Provision button clicked',
+          VALIDATE_SITE_URL: 'Service Setup: Validate Site Url button clicked',
+          VALIDATE_TRANSFER_CODE: 'Service Setup: Transfer code validated',
+          NEW_SITE_ADDED: 'Service Setup: A new site was added',
+          REMOVE_SITE: 'Service Setup: Removed validated site',
+          TRANSFER_SITE_ADDED: 'Service Setup: Transfer site was added to sites list',
+          INVALID_TRANSFER_CODE: 'Service Setup: Transfer code/siteUrl combination invalid',
+          CCASP_VALIDATION_FAILURE: 'Service Setup: CCASP audio partner validation succeeded',
+          CCASP_VALIDATION_SUCCESS: 'Service Setup: CCASP audio partner validation succeeded',
+          AUDIO_PARTNER_SELECTED: 'Service Setup: Audio partner selection made',
+          DO_NOT_PROVISION_BUTTON_CLICK: 'Service Setup: The \'Do Not Provision\' button was clicked',
+          PROVISION_CALL_SUCCESS: 'Service Setup: Call to provision succeeded',
+          PROVISION_CALL_FAILURE: 'Service Setup: Call to provision failed',
+          PROVISION_WITHOUT_MEETING_SETTINGS_SUCCESS: 'Service Setup: Provisioned without Meeting Settings setup',
+          PROVISION_WITHOUT_MEETING_SETTINGS_FAILURE: 'Service Setup: Provision without Meeting Settings call failed',
+          FINISH_BUTTON_CLICK: 'Service Setup: Finish button clicked',
+        },
+      },
+      VIRTUAL_ASSISTANT: {
+        name: 'Virtual Assistant operations',
+        eventNames: {
+          CVA_OVERVIEW_PAGE: 'Customer VA Overview',
+          CVA_DIALOGUE_PAGE: 'Customer VA Dialogue Integration',
+          CVA_ACCESS_TOKEN_PAGE: 'Customer VA Client Access Token',
+          CVA_NAME_PAGE: 'Customer VA Name',
+          CVA_AVATAR_PAGE: 'Customer VA Avatar',
+          CVA_SUMMARY_PAGE: 'Customer VA Summary',
+          CVA_START_FINISH: 'Customer VA the entire wizard',
+        },
+      },
     };
 
     var service = {
@@ -176,6 +226,7 @@
       trackEvent: trackEvent,
       trackPremiumEvent: trackPremiumEvent,
       trackEdiscoverySteps: trackEdiscoverySteps,
+      trackServiceSetupSteps: trackServiceSetupSteps,
       trackPartnerActions: trackPartnerActions,
       trackTrialSteps: trackTrialSteps,
       trackUserOnboarding: trackUserOnboarding,
@@ -211,6 +262,7 @@
         hasInit = true;
         if (result) {
           mixpanel.init(result, {
+            api_host: UrlConfig.getMixpanelUrl(),
             persistence: 'localStorage', // default to localStorage, fallback to cookie
             cross_subdomain_cookie: false, // when cookies are needed, only use specific subdomain
           });
@@ -300,6 +352,33 @@
         _.extend(properties, data);
         delete properties.realOrgId;
       });
+
+      return trackEvent(eventName, properties);
+    }
+
+    /**
+     * IT Decoupling: New order Service Setup flow
+     */
+    function trackServiceSetupSteps(eventName, adminProperties) {
+      if (!_.isString(eventName)) {
+        return $q.reject(NO_EVENT_NAME);
+      }
+      var adminType = '';
+
+      if ((Authinfo.isPartner() && !Authinfo.isCustomerLaunchedFromPartner()) || Authinfo.isPartnerSalesAdmin()) {
+        adminType = 'Partner';
+      } else {
+        adminType = 'Customer';
+      }
+
+      var properties = {
+        subscriptionId: _.get(adminProperties, 'subscriptionId', 'N/A'),
+        userOrgId: Authinfo.getUserOrgId(),
+        userId: Authinfo.getUserId(),
+        loggedInUser: getLoggedInUser(),
+        adminSettingUp: adminType,
+      };
+      _.assignIn(properties, adminProperties);
 
       return trackEvent(eventName, properties);
     }
@@ -527,6 +606,17 @@
 
     function _getDomainFromEmail(email) {
       return email ? email.split('@')[1] || '' : '';
+    }
+
+    // TODO: Refactor this into Authinfo
+    function getLoggedInUser() {
+      if (_.includes(Authinfo.getUserName(), '@')) {
+        return Authinfo.getUserName();
+      } else if (_.includes(Authinfo.getPrimaryEmail(), '@')) {
+        return Authinfo.getPrimaryEmail();
+      } else if (_.includes(Authinfo.getCustomerAdminEmail(), '@')) {
+        return Authinfo.getCustomerAdminEmail();
+      }
     }
   }
 })();

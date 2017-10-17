@@ -1,16 +1,24 @@
 @import '~collab-ui/scss/tools/placeholders/page-layout';
+@import '~collab-ui/scss/settings/colors';
 
 .call-emergency-services {
-  .ces-warning {
+  .ces-messages {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
-    padding-top: 1rem;
     padding-bottom: .5rem;
 
     i {
       padding-right: .5rem;
     }
+  }
+
+  .icon-warning {
+    color: $color-yellow-base;
+  }
+
+  .icon-error {
+    color: $color-red-base;
   }
 
   .ces-top-padding {

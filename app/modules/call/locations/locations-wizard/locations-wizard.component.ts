@@ -1,6 +1,6 @@
 import {
   CallLocationSettingsService, LocationSettingsOptionsService,
-  CallLocationSettingsData, LocationSettingsOptions, LocationListItem,
+  CallLocationSettingsData, LocationSettingsOptions,
   LocationCallerId, HIDDEN,
 } from '../shared';
 import { InternalNumberRange } from 'modules/call/shared/internal-number-range';
@@ -32,7 +32,6 @@ class LocationsWizardController implements ng.IComponentController {
   public showRoutingPrefix: boolean = true;
   public loading: boolean = false;
   public processing: boolean = false;
-  public defaultLocation: LocationListItem;
   public isRoutingPrefixValid: boolean;
 
   private lastIndex = 5;
@@ -87,8 +86,12 @@ class LocationsWizardController implements ng.IComponentController {
     return this.LocationSettingsOptionsService.getOptions()
       .then(locationOptions => this.locationSettingsOptions = locationOptions)
       .then(() => {
-        return this.CallLocationSettingsService.get('', true)
+        return this.CallLocationSettingsService.get() // Calling get() with no parameters returns default location
           .then(locationSettings => {
+            locationSettings.location.uuid = undefined;
+            locationSettings.location.name = '';
+            locationSettings.location.defaultLocation = false;
+            locationSettings.location.callerId = null;
             this.callLocationSettingsData = locationSettings;
             this.showRoutingPrefix = this.setShowRoutingPrefix(locationSettings.customerVoice.routingPrefixLength);
           });

@@ -13,7 +13,8 @@
         ng-minlength="$ctrl.minRoutingPrefixLength"
         ng-model="$ctrl.routingPrefix"
         ng-change="$ctrl.onRoutingPrefixChanged()"
-        ng-required="!$ctrl.ftsw"
+        ng-required="$ctrl.isRequired()"
+        ng-disabled="!$ctrl.isRequired()"
         cs-input-messages="$ctrl.messages"
         cs-input-group-size="medium-5"
         cs-input-help-text="{{::'serviceSetupModal.routingPrefix.exampleHelpText'|translate}}">

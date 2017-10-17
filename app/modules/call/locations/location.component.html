@@ -51,47 +51,49 @@
         </uc-default-country>
       </div>
 
-      <h4 class="title-margin-bottom"translate="locations.internalDialingTitle"></h4>
-      <div class="row full service-setup bottom-margin" ng-if="$ctrl.showRoutingPrefix">
-        <uc-location-routing-prefix
-          ftsw="true"
-          routing-prefix="$ctrl.callLocationSettingsData.location.routingPrefix"
-          routing-prefix-length="7"
-          on-change-fn="$ctrl.onRoutingPrefixChanged(routingPrefix)">
-        </uc-location-routing-prefix>
-      </div>
-      <div class="row full service-setup bottom-margin">
-        <uc-extension-length
-          first-time-setup="$ctrl.ftsw"
-          extension-length="$ctrl.callLocationSettingsData.customerVoice.extensionLength"
-          on-change-fn="$ctrl.onExtensionLengthChanged(extensionLength)">
-        </uc-extension-length>
-      </div>
-      <div class="row full service-setup bottom-margin">
-        <uc-extension-range
-          number-ranges="$ctrl.callLocationSettingsData.internalNumberRanges"
-          extension-length="$ctrl.callLocationSettingsData.customerVoice.extensionLength"
-          steering-digit="$ctrl.callLocationSettingsData.location.steeringDigit"
-          first-time-setup="$ctrl.ftsw"
-          on-change-fn="$ctrl.onExtensionRangeChanged(extensionRanges)">
-        </uc-extension-range>
-      </div>
+      <div ng-if="!$ctrl.secondFirstTimeSetup">
+        <h4 class="title-margin-bottom"translate="locations.internalDialingTitle"></h4>
+        <div class="row full service-setup bottom-margin">
+          <uc-location-routing-prefix
+            ftsw="true"
+            routing-prefix="$ctrl.callLocationSettingsData.location.routingPrefix"
+            routing-prefix-length="7"
+            on-change-fn="$ctrl.onRoutingPrefixChanged(routingPrefix)">
+          </uc-location-routing-prefix>
+        </div>
+        <div class="row full service-setup bottom-margin">
+          <uc-extension-length
+            first-time-setup="$ctrl.ftsw"
+            extension-length="$ctrl.callLocationSettingsData.customerVoice.extensionLength"
+            on-change-fn="$ctrl.onExtensionLengthChanged(extensionLength)">
+          </uc-extension-length>
+        </div>
+        <div class="row full service-setup bottom-margin">
+          <uc-extension-range
+            number-ranges="$ctrl.callLocationSettingsData.internalNumberRanges"
+            extension-length="$ctrl.callLocationSettingsData.customerVoice.extensionLength"
+            steering-digit="$ctrl.callLocationSettingsData.location.steeringDigit"
+            first-time-setup="$ctrl.ftsw"
+            on-change-fn="$ctrl.onExtensionRangeChanged(extensionRanges)">
+          </uc-extension-range>
+        </div>
 
-      <h4 class="title-margin-bottom"translate="locations.externalDialingTitle"></h4>
-      <div class="row full service-setup bottom-margin">
-        <uc-outbound-dial-digit
-          steering-digit="$ctrl.callLocationSettingsData.location.steeringDigit"
-          internal-number-ranges="$ctrl.callLocationSettingsData.internalNumberRanges"
-          is-terminus-customer="$ctrl.PstnModel.isCustomerExists()"
-          on-change-fn="$ctrl.onSteeringDigitChanged(steeringDigit)">
-        </uc-outbound-dial-digit>
-      </div>
-      <div class="row full service-setup bottom-margin">
-        <uc-location-company-voicemail
-          ftsw="true"
-          company-voicemail-enabled="$ctrl.callLocationSettingsData.customer.hasVoicemailService"
-          on-change-fn="$ctrl.onCompanyVoicemailChanged(voicemailPilotNumber, voicemailPilotNumberGenerated, companyVoicemailEnabled)">
-        </uc-location-company-voicemail>
+        <h4 class="title-margin-bottom"translate="locations.externalDialingTitle"></h4>
+        <div class="row full service-setup bottom-margin">
+          <uc-outbound-dial-digit
+            steering-digit="$ctrl.callLocationSettingsData.location.steeringDigit"
+            internal-number-ranges="$ctrl.callLocationSettingsData.internalNumberRanges"
+            is-terminus-customer="$ctrl.PstnModel.isCustomerExists()"
+            on-change-fn="$ctrl.onSteeringDigitChanged(steeringDigit)">
+          </uc-outbound-dial-digit>
+        </div>
+        <div class="row full service-setup bottom-margin">
+          <uc-location-company-voicemail
+            ftsw="true"
+            company-voicemail-enabled="$ctrl.callLocationSettingsData.customer.hasVoicemailService"
+            on-change-fn="$ctrl.onCompanyVoicemailChanged(voicemailPilotNumber, voicemailPilotNumberGenerated, companyVoicemailEnabled)">
+          </uc-location-company-voicemail>
+        </div>
       </div>
     </div>
   </form>
@@ -321,7 +323,8 @@
               number-options="$ctrl.locationSettingsOptions.emergencyNumbersOptions"
               address="$ctrl.callLocationSettingsData.address"
               is-pstn-setup="$ctrl.PstnModel.isCustomerExists()"
-              allow-ecn-setup="true">
+              allow-ecbn-setup="true"
+              ecbn-change-fn="$ctrl.onEcbnChange(value)">
             </uc-call-emergency-services>
           </div>
         </div>

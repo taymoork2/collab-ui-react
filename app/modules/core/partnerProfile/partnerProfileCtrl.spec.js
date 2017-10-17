@@ -9,7 +9,6 @@ describe('Controller: PartnerProfileCtrl', function () {
       '$scope',
       'Authinfo',
       'BrandService',
-      'FeatureToggleService',
       'ProPackService',
       'Notification',
       'Orgservice',
@@ -17,7 +16,6 @@ describe('Controller: PartnerProfileCtrl', function () {
       'UserListService'
     );
 
-    spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(false));
     spyOn(this.Notification, 'success');
     spyOn(this.Notification, 'error');
@@ -115,14 +113,6 @@ describe('Controller: PartnerProfileCtrl', function () {
     });
 
     describe('2017 name update', function () {
-      it('nameChangeEnabled should depend on atlas2017NameChangeGetStatus', function () {
-        expect(this.$scope.nameChangeEnabled).toBeFalsy();
-
-        this.FeatureToggleService.atlas2017NameChangeGetStatus.and.returnValue(this.$q.resolve(true));
-        this.initController();
-        expect(this.$scope.nameChangeEnabled).toBeTruthy();
-      });
-
       it('getAppTitle should depend on hasProPackPurchased', function () {
         expect(this.$scope.getAppTitle()).toEqual('loginPage.titleNew');
 

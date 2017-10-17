@@ -142,7 +142,7 @@
         countries.push({ value: vm.allCountries[key].id, label: vm.allCountries[key].name });
       });
       vm.inValidCountry = _.join(inValidCountry, ',');
-      vm.selected = _.concat(vm.selected, countries);
+      vm.selected = _.unionBy(vm.selected, countries, 'value');
     }
 
     function setUploadProgress(percent) {

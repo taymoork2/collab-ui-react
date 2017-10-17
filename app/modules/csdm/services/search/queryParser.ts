@@ -59,16 +59,20 @@ export class FieldQuery extends SearchElement {
     return (this.field) ? this.field + FieldQuery.getMatchOperator(this) + ' ' : '';
   }
 
+  public getQueryWithoutField() {
+    let innerQuery = this.query;
+    if (this.queryType === 'exact' || this.query.search(/\s|\(/) > 0) {
+      innerQuery = '"' + innerQuery + '"';
+    }
+    return innerQuery;
+  }
+
   public static getMatchOperator(fieldQuery: FieldQuery): string {
     return fieldQuery.queryType === 'exact' ? '=' : ':';
   }
 
   public toQuery(): string {
-    let innerQuery = this.query;
-    if (this.queryType === 'exact' || this.query.search(/\s|\(/) > 0) {
-      innerQuery = '"' + innerQuery + '"';
-    }
-    return this.getQueryPrefix() + innerQuery;
+    return this.getQueryPrefix() + this.getQueryWithoutField();
   }
 
   public toJSON(): any {
@@ -146,6 +150,48 @@ export class OperatorOr extends SearchElement {
   }
 }
 
+export class SearchElementBuilder {
+  private searchElements: SearchElement[] = [];
+
+  private isOrOperator = false;
+  private previousOperatorWasOr = false;
+
+  public add(e: SearchElement) {
+    if (this.isOrOperator && !this.previousOperatorWasOr) {
+      throw Error('Mixing and/or requires parenthesis');
+    }
+    this.searchElements.push(e);
+    this.previousOperatorWasOr = false;
+  }
+
+  public setOperatorAnd() {
+    if (this.isOrOperator) {
+      throw Error('Mixing and/or requires parenthesis');
+    }
+  }
+
+  public setOperatorOr() {
+    if (!this.isOrOperator && this.searchElements.length > 1) {
+      throw Error('Mixing and/or requires parenthesis');
+    }
+    this.isOrOperator = true;
+    this.previousOperatorWasOr = true;
+  }
+
+  public createSearchElement(): SearchElement {
+
+    if (this.searchElements.length === 1) {
+      return this.searchElements[0];
+    }
+
+    if (this.isOrOperator) {
+      return new OperatorOr(this.searchElements);
+    } else {
+      return new OperatorAnd(this.searchElements);
+    }
+  }
+}
+
 export class QueryParser {
 
   private static validFieldNames = ['displayname',
@@ -175,9 +221,8 @@ export class QueryParser {
 
   private static parseElement(expression: string, searchField?: string, queryType?: string): SearchElement {
 
-    const searchElements: SearchElement[] = [];
+    const builder = new SearchElementBuilder();
     let curIndex: number = 0;
-    let isOrOperator: boolean = false;
 
     while (curIndex < expression.length) {
       curIndex += QueryParser.getLeadingWhiteSpaceCount(expression, curIndex);
@@ -189,11 +234,11 @@ export class QueryParser {
 
       if (QueryParser.startsPhrase(currentText)) {
         const endIndex = QueryParser.getQuotationEndIndex(currentText);
-        searchElements.push(new FieldQuery(currentText.substring(1, endIndex).trim(), searchField, queryType));
+        builder.add(new FieldQuery(currentText.substring(1, endIndex).trim(), searchField, queryType));
         curIndex += endIndex + 1;
       } else if (QueryParser.startsParenthesis(currentText)) {
         const endIndex = QueryParser.getParenthesisEndIndex(currentText);
-        searchElements.push(QueryParser.parseElement(currentText.substring(1, endIndex), searchField, queryType));
+        builder.add(QueryParser.parseElement(currentText.substring(1, endIndex), searchField, queryType));
         curIndex += endIndex + 1;
       } else if (searchField == null && QueryParser.startsField(currentText)) {
         const fieldOperatorIndex = QueryParser.getOperatorIndex(currentText);
@@ -206,17 +251,17 @@ export class QueryParser {
 
         if (QueryParser.startsPhrase(currentFieldText)) {
           const endIndex = QueryParser.getQuotationEndIndex(currentFieldText);
-          searchElements.push(new FieldQuery(currentFieldText.substring(1, endIndex), fieldName, fieldQueryType));
+          builder.add(new FieldQuery(currentFieldText.substring(1, endIndex), fieldName, fieldQueryType));
           curIndex += endIndex + 1;
         } else if (QueryParser.startsParenthesis(currentFieldText)) {
           const endIndex = QueryParser.getParenthesisEndIndex(currentFieldText);
-          searchElements.push(QueryParser.parseElement(currentFieldText.substring(1, endIndex), fieldName, fieldQueryType));
+          builder.add(QueryParser.parseElement(currentFieldText.substring(1, endIndex), fieldName, fieldQueryType));
           curIndex += endIndex + 1;
         } else {
           //It's a term. Grab the first word
           const endIndex = QueryParser.getFirstWordEndIndex(currentFieldText);
-          searchElements.push(new FieldQuery(currentFieldText.substring(0, endIndex), fieldName, fieldQueryType));
-          curIndex += endIndex + 1;
+          builder.add(new FieldQuery(currentFieldText.substring(0, endIndex), fieldName, fieldQueryType));
+          curIndex += endIndex;
         }
 
       } else {
@@ -225,22 +270,19 @@ export class QueryParser {
 
         switch (word) {
           case 'or':
-            isOrOperator = true;
+            builder.setOperatorOr();
             break;
           case 'and':
-            if (isOrOperator) {
-              throw new Error('And and OR not supported without parenthesis');
-            }
+            builder.setOperatorAnd();
             break;
           default:
-            searchElements.push(new FieldQuery(word, searchField, queryType));
+            builder.add(new FieldQuery(word, searchField, queryType));
             break;
         }
-        curIndex += endIndex + 1;
+        curIndex += endIndex;
       }
     }
-
-    return QueryParser.createSearchElement(searchElements, isOrOperator);
+    return builder.createSearchElement();
   }
 
   private static getOperatorIndex(currentText: string): number {
@@ -285,7 +327,7 @@ export class QueryParser {
   private static getQuotationEndIndex(currentText: string): number {
     const endIndex = currentText.indexOf('\"', 1);
     if (endIndex < 0) {
-      throw new Error('Unfinished quotation mark for field');
+      throw new Error('Unfinished quotation');
     }
     return endIndex;
   }
@@ -304,19 +346,6 @@ export class QueryParser {
       whiteSpaceCount++;
     }
     return whiteSpaceCount;
-  }
-
-  private static createSearchElement(searchElements: SearchElement[], isOrOperator: boolean): SearchElement {
-
-    if (searchElements.length === 1) {
-      return searchElements[0];
-    }
-
-    if (isOrOperator) {
-      return new OperatorOr(searchElements);
-    } else {
-      return new OperatorAnd(searchElements);
-    }
   }
 
   private static startsPhrase(expression: string): boolean {

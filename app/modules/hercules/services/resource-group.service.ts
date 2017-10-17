@@ -38,7 +38,11 @@ export class ResourceGroupService {
         name,
         releaseChannel,
       })
-      .then(this.extractDataFromResponse);
+      .then(this.extractDataFromResponse)
+      .then(function (res) {
+        this.HybridServicesClusterService.clearCache();
+        return res;
+      });
   }
 
   public remove(resourceGroupId: string, orgId?: string): ng.IPromise<EmptyHTTPResponse> {
@@ -51,7 +55,11 @@ export class ResourceGroupService {
       .patch<EmptyHTTPResponse>(`${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId || this.Authinfo.getOrgId()}/resourceGroups/${resourceGroupId}`, {
         name: name,
       })
-      .then(this.extractDataFromResponse);
+      .then(this.extractDataFromResponse)
+      .then(function (res) {
+        this.HybridServicesClusterService.clearCache();
+        return res;
+      });
   }
 
   public setReleaseChannel(resourceGroupId: string, releaseChannel: string, orgId?: string): ng.IPromise<EmptyHTTPResponse> {
@@ -59,7 +67,11 @@ export class ResourceGroupService {
       .patch<EmptyHTTPResponse>(`${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId || this.Authinfo.getOrgId()}/resourceGroups/${resourceGroupId}`, {
         releaseChannel,
       })
-      .then(this.extractDataFromResponse);
+      .then(this.extractDataFromResponse)
+      .then(function (res) {
+        this.HybridServicesClusterService.clearCache();
+        return res;
+      });
   }
 
   public getAllowedChannels(orgId?: string): ng.IPromise<string[]> {

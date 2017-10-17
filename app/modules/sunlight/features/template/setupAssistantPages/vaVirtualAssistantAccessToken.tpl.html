@@ -12,7 +12,7 @@
       <cs-card class="va-box va-access-token-box va-card">
         <p class="h6">{{vaSetupAssistant.getVaText('accessToken.boxDesc')}}</p>
         <div ng-form="vaSetupAssistant.tokenForm">
-          <div class="cs-input-group medium-12 columns" ng-class="{'error': vaSetupAssistant.tokenForm.tokenInput.$invalid}">
+          <div class="cs-input-group medium-12 columns" ng-class="{'error': vaSetupAssistant.isAccessTokenInvalid()}">
           <label class="cs-input__label input-label" for="tokenInput">{{vaSetupAssistant.getVaText('accessToken.inputLabel')}}</label>
             <div class="input-row">
             <input
@@ -22,7 +22,7 @@
               ng-change="vaSetupAssistant.onAPIAITokenChange()"
               ng-model="vaSetupAssistant.template.configuration.pages.VirtualAssistantAccessToken.accessTokenValue"
               ng-disabled="vaSetupAssistant.template.configuration.pages.VirtualAssistantAccessToken.validatingToken">
-            <i class="icon icon-check token-check-mark" ng-hide="!(vaSetupAssistant.template.configuration.pages.VirtualAssistantAccessToken.invalidToken === false)"></i>
+            <i class="icon icon-check token-check-mark" ng-hide="vaSetupAssistant.template.configuration.pages.VirtualAssistantAccessToken.invalidToken"></i>
             <button cs-btn class="btn btn--primary validate-button"
                 ng-disabled="!(vaSetupAssistant.template.configuration.pages.VirtualAssistantAccessToken.accessTokenValue)"
                 loading="vaSetupAssistant.template.configuration.pages.VirtualAssistantAccessToken.validatingToken"
@@ -30,7 +30,7 @@
                 {{vaSetupAssistant.getVaText('accessToken.validateButtonText')}}
             </button>
             </div>
-            <div class="cs-input__messages" ng-messages="vaSetupAssistant.tokenForm.tokenInput.$error" ng-if="vaSetupAssistant.tokenForm.tokenInput.$invalid">
+            <div class="cs-input__messages" ng-messages="vaSetupAssistant.tokenForm.tokenInput.$error" ng-if="vaSetupAssistant.isAccessTokenInvalid()">
               <div class="message" ng-message="maxlength">{{vaSetupAssistant.getVaText('accessToken.maxLengthError')}}</div>
               <div class="message" ng-message="invalidToken">{{vaSetupAssistant.getVaText('accessToken.invalidTokenText')}}</div>
             </div>

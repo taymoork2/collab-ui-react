@@ -1,5 +1,5 @@
 import { Config } from 'modules/core/config/config';
-import { IPendingOrderSubscription, IPendingLicense, IConferenceService, ICCASPLicense, ITSPLicense } from './meeting-settings/meeting-settings.interface';
+import { IPendingOrderSubscription, IPendingLicense, IConferenceService, ICCASPLicense, IConferenceLicense, ITSPLicense } from './meeting-settings/meeting-settings.interface';
 import { HuronCustomerService } from 'modules/huron/customer';
 import { HuronCompassService } from 'modules/huron/compass';
 
@@ -24,6 +24,8 @@ export class SetupWizardService {
   private actingSubscription?: IPendingSubscription;
   private pendingSubscriptions: IPendingSubscription[] = [];
   private country = '';
+  private endCustomer = '';
+  private org;
   private willNotProvision = false;
   private actingSubscriptionChangeFn: Function = _.noop;
 
@@ -142,6 +144,14 @@ export class SetupWizardService {
     });
   }
 
+  public getConferenceLicensesBySubscriptionId(subscriptionId) {
+    const conferenceLicenses = _.map(this.Authinfo.getConferenceServices(), 'license');
+    const actingSubscriptionLicenses = _.filter(conferenceLicenses, { billingServiceId: subscriptionId });
+    const existingConferenceLicensesInActingSubscripton = _.filter(actingSubscriptionLicenses,
+      (license: IConferenceLicense) => _.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC], license.offerName));
+    return existingConferenceLicensesInActingSubscripton;
+  }
+
   public getWillNotProvision(): boolean {
     return this.willNotProvision;
   }
@@ -251,10 +261,11 @@ export class SetupWizardService {
     };
   }
 
-  public getOrderAndSubId() {
+  public getOrderDetails() {
     return {
       orderId: this.getActingOrderId(),
       subscriptionId: this.getActingSubscriptionId(),
+      endCustomer: this.getEndCustomerName(),
     };
   }
 
@@ -271,15 +282,16 @@ export class SetupWizardService {
     };
 
     return this.Orgservice.getOrg(_.noop, this.Authinfo.getOrgId(), params).then((response) => {
-      const org = _.get(response, 'data', null);
-      this.country = _.get<string>(org, 'countryCode', 'US');
-      if (_.get(org, 'orgSettings.sparkCallBaseDomain')) {
+      this.org = _.get(response, 'data', null);
+      this.country = _.get<string>(this.org, 'countryCode', 'US');
+      this.endCustomer = _.get<string>(this.org, 'displayName');
+      if (_.get(this.org, 'orgSettings.sparkCallBaseDomain')) {
         //check cmi in base domain for customer
-        return this.findCustomerInDc(_.get(org, 'orgSettings.sparkCallBaseDomain'));
+        return this.findCustomerInDc(_.get(this.org, 'orgSettings.sparkCallBaseDomain'));
       } else {
         //check CI for country
-        if (_.get(org, 'countryCode')) {
-          if (_.get(org, 'countryCode') === 'GB') {
+        if (_.get(this.org, 'countryCode')) {
+          if (_.get(this.org, 'countryCode') === 'GB') {
             //check CMI in EC DC
             return this.findCustomerInDc('sparkc-eu.com');
           } else {
@@ -298,6 +310,14 @@ export class SetupWizardService {
 
   public getCustomerCountry() {
     return this.country;
+  }
+
+  public getEndCustomerName() {
+    return this.endCustomer;
+  }
+
+  public getOrg() {
+    return this.org;
   }
 
   public findCustomerInDc(baseDomain) {
@@ -341,7 +361,7 @@ export class SetupWizardService {
     });
   }
 
-  public validateCCASPPartner(subscriptionId: string, partnerName: string): ng.IPromise<boolean> {
+  public validateCCASPPartner(subscriptionId: string, partnerName: string): ng.IPromise<any> {
     const payload = {
       ccaspSubscriptionId: subscriptionId,
       ccaspPartnerName: partnerName,
@@ -358,9 +378,19 @@ export class SetupWizardService {
       data: payload,
     };
     return this.$http(config).then((response) => {
-      return (response.data === validationResult.SUCCESS && response.status === 200);
+      return {
+        response: response,
+        isValid: response.data === validationResult.SUCCESS && response.status === 200,
+        payload: payload,
+      };
     })
-    .catch(() => { return false; });
+    .catch((response) => {
+      return {
+        response: response,
+        isValid: false,
+        payload: payload,
+      };
+    });
   }
 
 }

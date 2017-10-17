@@ -12,7 +12,8 @@ import { SipDomainSetting } from './sipDomain/sipDomainSetting.component';
 import { SupportSetting } from './supportSection/supportSetting.component';
 import { PrivacySetting } from './privacySection/privacySettings.component';
 import { DirSyncSetting } from './dirsync/dirSyncSetting.component';
-import { DeviceBrandingSetting } from './deviceBranding/device-branding-setting.component';
+import { DeviceBrandingSetting } from './branding/device-branding-setting.component';
+import { WebexVersionSetting } from './webexVersion/webex-version.component';
 
 export class SettingsCtrl {
 
@@ -23,12 +24,13 @@ export class SettingsCtrl {
   public authentication: SettingSection;
   public email: SettingSection;
   public branding: SettingSection;
-  public deviceBranding: SettingSection;
+  public brandingWrapper: SettingSection;
   public support: SettingSection;
   public retention: SettingSection;
   public externalCommunication: SettingSection;
   public fileSharingControl: SettingSection;
   public dirsync: SettingSection;
+  public webexVersion: SettingSection;
 
   // Footer and broadcast controls
   public saveCancelFooter: boolean = false;
@@ -78,8 +80,6 @@ export class SettingsCtrl {
         this.initRetention();
       }
     }
-    //TODO temporary adding device branding
-    this.initDeviceBranding();
 
     const settingsToShow = _.get<any>(this.$stateParams, 'showSettings', null);
     if (!_.isNull(settingsToShow)) {
@@ -110,24 +110,46 @@ export class SettingsCtrl {
   }
 
   private initBranding() {
+    this.initDeviceBranding();
+  }
+
+  private initOldBranding(setBranding: boolean): IPromise<boolean> {
+    const defered = this.$q.defer<boolean>();
     if (this.Authinfo.isPartner() || this.Authinfo.isDirectCustomer()) {
-      this.branding = new BrandingSetting();
+      if (setBranding) {
+        this.branding = new BrandingSetting();
+      }
+      defered.resolve(true);
     } else if (this.Authinfo.isCustomerAdmin()) {
       const params = {
         basicInfo: true,
       };
       this.Orgservice.getOrg(_.noop, null, params).then(response => {
         if (_.get(response, 'data.orgSettings.allowCustomerLogos')) {
-          this.branding = new BrandingSetting();
+          if (setBranding) {
+            this.branding = new BrandingSetting();
+          }
+          defered.resolve(true);
         }
+        defered.resolve(false);
       });
+    } else {
+      defered.resolve(false);
     }
+    return defered.promise;
   }
 
   private initDeviceBranding() {
     this.FeatureToggleService.csdmDeviceBrandingGetStatus().then((toggle) => {
       if (toggle) {
-        this.deviceBranding = new DeviceBrandingSetting();
+        this.initOldBranding(false).then((showBranding: boolean) => {
+          this.brandingWrapper = new DeviceBrandingSetting(this.Authinfo.isPartner(), showBranding);
+          if (showBranding && this.Authinfo.isPartner()) {
+            this.webexVersion = new WebexVersionSetting();
+          }
+        });
+      } else {
+        this.initOldBranding(true);
       }
     });
   }
@@ -165,7 +187,7 @@ export class SettingsCtrl {
 
     this.$q.all(promises).then((result) => {
       if (result.fileSharingControlToggle) {
-        this.fileSharingControl = new FileSharingControlSetting(result.proPackPurchased);
+        this.fileSharingControl = new FileSharingControlSetting(true);
       }
     });
   }

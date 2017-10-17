@@ -50,7 +50,7 @@ export class FileSharingControlSettingController {
     this.$q.all(promises)
       .then((response) => {
         this.fileSharingControlSettingLoaded(response.fileSharingControl);
-        this.isProPackPurchased = response.proPackPurchased;
+        this.isProPackPurchased = true;
       });
   }
 

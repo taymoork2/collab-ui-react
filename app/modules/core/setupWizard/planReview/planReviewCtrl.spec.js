@@ -66,9 +66,10 @@ describe('Controller: PlanReviewCtrl', function () {
       offerName: 'CF',
       capacity: 200,
     }]);
-    spyOn(SetupWizardService, 'getOrderAndSubId').and.returnValue({
+    spyOn(SetupWizardService, 'getOrderDetails').and.returnValue({
       orderId: 'abc123',
       subscriptionId: 'def456',
+      endCustomer: 'My Company',
     });
     spyOn(SetupWizardService, 'getPendingCareLicenses').and.returnValue([{
       offerName: 'CVC',
@@ -144,6 +145,11 @@ describe('Controller: PlanReviewCtrl', function () {
       var result = controller.generateLicenseTooltip(dataWithNamedUserLicense);
       expect(result).toContain('firstTimeWizard.namedLicenseTooltip');
     });
+
+    it('The generateLicenseTranslation() function should return Named User License tooltip string', function () {
+      var result = controller.generateLicenseTranslation(dataWithNamedUserLicense);
+      expect(result).toEqual('firstTimeWizard.namedLicenseTooltip');
+    });
   });
 
   describe('Tests for Shared Meeting Licenses : ', function () {
@@ -161,6 +167,11 @@ describe('Controller: PlanReviewCtrl', function () {
     it('The generateLicenseTooltip() function should return Shared Meeting License tooltip string', function () {
       var result = controller.generateLicenseTooltip(dataWithSharedMeetingsLicense);
       expect(result).toContain('firstTimeWizard.sharedLicenseTooltip');
+    });
+
+    it('The generateLicenseTranslation() function should return Shared Meeting License tooltip string', function () {
+      var result = controller.generateLicenseTranslation(dataWithSharedMeetingsLicense);
+      expect(result).toEqual('firstTimeWizard.sharedLicenseTooltip');
     });
   });
 
