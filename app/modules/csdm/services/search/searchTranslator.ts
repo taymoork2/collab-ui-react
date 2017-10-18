@@ -36,7 +36,10 @@ export class SearchTranslator {
     const translations = this.findTranslations(search, matchCountThreshold);
     if (translations.length > 0) {
       return new OperatorOr([_.cloneDeep(search)].concat(translations));
-    } else if (search instanceof OperatorAnd && search.getExpressions().length >= 2) {
+    } else if (search instanceof OperatorAnd) {
+      if (search.getExpressions().length === 1) {
+        return this.translateQuery(search.getExpressions()[0]);
+      }
       //ABCD -> try ABC, BCD, AB, CD, A, D
 
       const numElements = search.getExpressions().length;
