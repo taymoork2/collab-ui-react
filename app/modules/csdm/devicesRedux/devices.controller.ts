@@ -284,7 +284,7 @@ export class DevicesCtrl {
             sparkCall: 'addDeviceFlow.addLines',
             sparkCallConnect: 'addDeviceFlow.callConnectOptions',
             sparkOnly: 'addDeviceFlow.showActivationCode',
-            sparkOnlyAndCalendar: 'addDeviceFlow.editCalendarService',
+            calendar: 'addDeviceFlow.editCalendarService',
           },
         },
         'addDeviceFlow.addLines': {
@@ -364,7 +364,7 @@ export class DevicesCtrl {
             sparkCall: 'addDeviceFlow.addLines',
             sparkCallConnect: 'addDeviceFlow.callConnectOptions',
             sparkOnly: 'addDeviceFlow.showActivationCode',
-            sparkOnlyAndCalendar: 'addDeviceFlow.editCalendarService',
+            calendar: 'addDeviceFlow.editCalendarService',
           },
         },
         'addDeviceFlow.addLines': {
