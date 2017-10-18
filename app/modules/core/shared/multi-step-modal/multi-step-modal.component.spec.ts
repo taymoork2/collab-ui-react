@@ -82,6 +82,24 @@ describe('Component: multiStepModal:', () => {
       expect(this.view.find('button.btn.cancel[disabled]').length).toBe(0);
     });
 
+    it('should reflect a loading state if a forward-stepping button is set and the "*-loading" attribute is truthy', function () {
+      this.compileTemplate('<multi-step-modal next="_.noop()" next-loading="true"></multi-step-modal>');
+      expect(this.view.find('button.btn.next[loading] > .cs-loading').length).toBe(1);
+      this.compileTemplate('<multi-step-modal next="_.noop()" next-loading="false"></multi-step-modal>');
+      expect(this.view.find('button.btn.next[loading] > .cs-loading').length).toBe(0);
+
+      // same behavior applies if the bound property on the controller is truthy
+      this.compileTemplate('<multi-step-modal next="_.noop()"></multi-step-modal>');
+      this.controller = this.view.controller('multi-step-modal');
+      expect(this.view.find('button.btn.next[loading] > .cs-loading').length).toBe(0);
+      this.controller.nextLoading = true;
+      this.$scope.$apply();
+      expect(this.view.find('button.btn.next[loading] > .cs-loading').length).toBe(1);
+      this.controller.nextLoading = false;
+      this.$scope.$apply();
+      expect(this.view.find('button.btn.next[loading] > .cs-loading').length).toBe(0);
+    });
+
     it('should transclude its contents into the modal body', function () {
       this.compileTemplate('<multi-step-modal><span class="foo">fake-content</span></multi-step-modal>');
       expect(this.view.find('.modal-body > span.foo').length).toBe(1);
