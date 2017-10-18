@@ -8,6 +8,7 @@ export class MultiStepModalComponent implements ng.IComponentOptions {
   public bindings = {
     l10nTitle: '@',
     dismiss: '&?',
+    close: '&?',
     cancel: '&?',
     cancelDisabled: '<?',
     cancelRemoved: '<?',
