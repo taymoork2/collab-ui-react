@@ -52,14 +52,13 @@ describe('Component: multiStepModal:', () => {
       this.compileTemplate('<multi-step-modal cancel="_.noop()" cancel-removed="false"></multi-step-modal>');
       expect(this.view.find('button.btn.cancel').length).toBe(1);
 
-      // same behavior applies if the bound property on the controller is truthy
-      this.compileTemplate('<multi-step-modal cancel="_.noop()"></multi-step-modal>');
-      this.controller = this.view.controller('multi-step-modal');
+      // same behavior applies if the bound property on the scope is truthy
+      this.compileTemplate('<multi-step-modal cancel="_.noop()" cancel-removed="cancelRemoved"></multi-step-modal>');
       expect(this.view.find('button.btn.cancel').length).toBe(1);
-      this.controller.cancelRemoved = true;
+      this.$scope.cancelRemoved = true;
       this.$scope.$apply();
       expect(this.view.find('button.btn.cancel').length).toBe(0);
-      this.controller.cancelRemoved = false;
+      this.$scope.cancelRemoved = false;
       this.$scope.$apply();
       expect(this.view.find('button.btn.cancel').length).toBe(1);
     });
@@ -70,14 +69,13 @@ describe('Component: multiStepModal:', () => {
       this.compileTemplate('<multi-step-modal cancel="_.noop()" cancel-disabled="false"></multi-step-modal>');
       expect(this.view.find('button.btn.cancel[disabled]').length).toBe(0);
 
-      // same behavior applies if the bound property on the controller is truthy
-      this.compileTemplate('<multi-step-modal cancel="_.noop()"></multi-step-modal>');
-      this.controller = this.view.controller('multi-step-modal');
+      // same behavior applies if the bound property on the scope is truthy
+      this.compileTemplate('<multi-step-modal cancel="_.noop()" cancel-disabled="cancelDisabled"></multi-step-modal>');
       expect(this.view.find('button.btn.cancel[disabled]').length).toBe(0);
-      this.controller.cancelDisabled = true;
+      this.$scope.cancelDisabled = true;
       this.$scope.$apply();
       expect(this.view.find('button.btn.cancel[disabled]').length).toBe(1);
-      this.controller.cancelDisabled = false;
+      this.$scope.cancelDisabled = false;
       this.$scope.$apply();
       expect(this.view.find('button.btn.cancel[disabled]').length).toBe(0);
     });
@@ -88,14 +86,13 @@ describe('Component: multiStepModal:', () => {
       this.compileTemplate('<multi-step-modal next="_.noop()" next-loading="false"></multi-step-modal>');
       expect(this.view.find('button.btn.next[loading] > .cs-loading').length).toBe(0);
 
-      // same behavior applies if the bound property on the controller is truthy
-      this.compileTemplate('<multi-step-modal next="_.noop()"></multi-step-modal>');
-      this.controller = this.view.controller('multi-step-modal');
+      // same behavior applies if the bound property on the scope is truthy
+      this.compileTemplate('<multi-step-modal next="_.noop()" next-loading="nextLoading"></multi-step-modal>');
       expect(this.view.find('button.btn.next[loading] > .cs-loading').length).toBe(0);
-      this.controller.nextLoading = true;
+      this.$scope.nextLoading = true;
       this.$scope.$apply();
       expect(this.view.find('button.btn.next[loading] > .cs-loading').length).toBe(1);
-      this.controller.nextLoading = false;
+      this.$scope.nextLoading = false;
       this.$scope.$apply();
       expect(this.view.find('button.btn.next[loading] > .cs-loading').length).toBe(0);
     });
