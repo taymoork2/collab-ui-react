@@ -51,12 +51,34 @@ describe('Component: multiStepModal:', () => {
       expect(this.view.find('button.btn.cancel').length).toBe(0);
       this.compileTemplate('<multi-step-modal cancel="_.noop()" cancel-removed="false"></multi-step-modal>');
       expect(this.view.find('button.btn.cancel').length).toBe(1);
+
+      // same behavior applies if the bound property on the controller is truthy
+      this.compileTemplate('<multi-step-modal cancel="_.noop()"></multi-step-modal>');
+      this.controller = this.view.controller('multi-step-modal');
+      expect(this.view.find('button.btn.cancel').length).toBe(1);
+      this.controller.cancelRemoved = true;
+      this.$scope.$apply();
+      expect(this.view.find('button.btn.cancel').length).toBe(0);
+      this.controller.cancelRemoved = false;
+      this.$scope.$apply();
+      expect(this.view.find('button.btn.cancel').length).toBe(1);
     });
 
     it('should render disabled button elements if a corresponding attribute is set and the "*-disabled" attribute is truthy', function () {
       this.compileTemplate('<multi-step-modal cancel="_.noop()" cancel-disabled="true"></multi-step-modal>');
       expect(this.view.find('button.btn.cancel[disabled]').length).toBe(1);
       this.compileTemplate('<multi-step-modal cancel="_.noop()" cancel-disabled="false"></multi-step-modal>');
+      expect(this.view.find('button.btn.cancel[disabled]').length).toBe(0);
+
+      // same behavior applies if the bound property on the controller is truthy
+      this.compileTemplate('<multi-step-modal cancel="_.noop()"></multi-step-modal>');
+      this.controller = this.view.controller('multi-step-modal');
+      expect(this.view.find('button.btn.cancel[disabled]').length).toBe(0);
+      this.controller.cancelDisabled = true;
+      this.$scope.$apply();
+      expect(this.view.find('button.btn.cancel[disabled]').length).toBe(1);
+      this.controller.cancelDisabled = false;
+      this.$scope.$apply();
       expect(this.view.find('button.btn.cancel[disabled]').length).toBe(0);
     });
 
