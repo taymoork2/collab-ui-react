@@ -11,6 +11,7 @@ describe('Controller: HeaderCtrl', function () {
     );
 
     spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(false));
+    spyOn(this.ProPackService, 'showProBadge').and.returnValue(false);
 
     this.initController = function () {
       this.controller = this.$controller('HeaderCtrl', {
