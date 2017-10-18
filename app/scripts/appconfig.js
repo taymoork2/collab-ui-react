@@ -1047,8 +1047,8 @@
               });
             },
           })
-          .state('users.manage.edit-auto-assign-template', {
-            template: '<edit-auto-assign-template></edit-auto-assign-template>',
+          .state('users.manage.edit-auto-assign-template-modal', {
+            template: '<edit-auto-assign-template-modal></edit-auto-assign-template-modal>',
             params: {
               prevState: 'users.manage.picker',
             },

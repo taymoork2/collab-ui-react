@@ -1,9 +1,9 @@
 import emailSuppressModuleName from './emailSuppress';
-import editAutoAssignTemplateModuleName from './edit-auto-assign-template';
+import editAutoAssignTemplateModalModuleName from './edit-auto-assign-template-modal';
 
 export default angular
   .module('core.users.userManage', [
     emailSuppressModuleName,
-    editAutoAssignTemplateModuleName,
+    editAutoAssignTemplateModalModuleName,
   ])
   .name;

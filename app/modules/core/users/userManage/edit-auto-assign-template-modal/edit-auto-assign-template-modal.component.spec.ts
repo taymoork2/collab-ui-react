@@ -1,6 +1,6 @@
 import moduleName from './index';
 
-describe('Component: editAutoAssignTemplate:', () => {
+describe('Component: editAutoAssignTemplateModal:', () => {
   beforeEach(function () {
     this.initModules(moduleName);
     this.injectDependencies(
@@ -12,7 +12,7 @@ describe('Component: editAutoAssignTemplate:', () => {
 
   describe('primary behaviors (view):', () => {
     beforeEach(function () {
-      this.compileComponent('edit-auto-assign-template');
+      this.compileComponent('edit-auto-assign-template-modal');
     });
 
     it('should always render a title, a header, a description, and a tooltip', function () {
@@ -38,7 +38,7 @@ describe('Component: editAutoAssignTemplate:', () => {
       this.$stateParams.prevState = 'fake-previous-state';
       spyOn(this.Analytics, 'trackAddUsers');
 
-      this.compileComponent('edit-auto-assign-template');
+      this.compileComponent('edit-auto-assign-template-modal');
     });
 
     it('should navigate to previous state when back button is clicked', function () {

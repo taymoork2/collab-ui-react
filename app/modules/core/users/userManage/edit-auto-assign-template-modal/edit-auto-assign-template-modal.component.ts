@@ -4,7 +4,7 @@ interface IStateServiceWithModal extends ng.ui.IStateService {
   };
 }
 
-class EditAutoAssignTemplateController implements ng.IComponentController {
+class EditAutoAssignTemplateModalController implements ng.IComponentController {
 
   private prevState: string;
 
@@ -32,7 +32,7 @@ class EditAutoAssignTemplateController implements ng.IComponentController {
   }
 }
 
-export class EditAutoAssignTemplateComponent implements ng.IComponentOptions {
-  public controller = EditAutoAssignTemplateController;
-  public template = require('./edit-auto-assign-template.html');
+export class EditAutoAssignTemplateModalComponent implements ng.IComponentOptions {
+  public controller = EditAutoAssignTemplateModalController;
+  public template = require('./edit-auto-assign-template-modal.html');
 }
