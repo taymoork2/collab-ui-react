@@ -6659,11 +6659,13 @@
     "areaCode": "Dit is geen geldig netnummer."
   },
   "CsdmStatus": {
-    "Online": "Online",
-    "OnlineWithIssues": "Online, met problemen",
-    "Offline": "Offline",
-    "OfflineExpired": "Gedeactiveerd",
-    "Unknown": "Onbekend",
+    "connectionStatus": {
+      "Online": "Online",
+      "OnlineWithIssues": "Online, met problemen",
+      "Offline": "Offline",
+      "OfflineExpired": "Gedeactiveerd",
+      "Unknown": "Onbekend"
+    },
     "WithDevices": "Met apparaten",
     "upgradeChannels": {
       "Stable": "Stabiel",

@@ -4,12 +4,14 @@ import { SearchObject } from './search/searchObject';
 import { SearchResult } from './search/searchResult';
 import { IDeferred, IHttpService, IQService } from 'angular';
 import * as _ from 'lodash';
+import { SearchTranslator } from './search/searchTranslator';
 
 export class CsdmSearchService {
   private pendingPromise: Map<Caller, IDeferred<undefined>> = {};
 
   /* @ngInject */
-  constructor(private $http: IHttpService, private $q: IQService, private UrlConfig, private Authinfo, private DeviceSearchConverter: DeviceSearchConverter) {
+  constructor(private $http: IHttpService, private $q: IQService, private UrlConfig, private Authinfo,
+              private DeviceSearchConverter: DeviceSearchConverter, private DeviceSearchTranslator: SearchTranslator) {
 
   }
 
@@ -32,7 +34,7 @@ export class CsdmSearchService {
     }
 
     const params = {
-      query: so.getSearchQuery(),
+      query: so.getSearchQuery(this.DeviceSearchTranslator),
       aggregates: so.aggregates,
       size: so.size,
       from: so.from,

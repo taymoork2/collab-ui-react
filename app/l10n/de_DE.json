@@ -6659,11 +6659,13 @@
     "areaCode": "Dies scheint keine gültige Vorwahl zu sein."
   },
   "CsdmStatus": {
-    "Online": "Online",
-    "OnlineWithIssues": "Online, mit Problemen",
-    "Offline": "Offline",
-    "OfflineExpired": "Deaktiviert",
-    "Unknown": "Unbekannt",
+    "connectionStatus": {
+      "Online": "Online",
+      "OnlineWithIssues": "Online, mit Problemen",
+      "Offline": "Offline",
+      "OfflineExpired": "Deaktiviert",
+      "Unknown": "Unbekannt"
+    },
     "WithDevices": "Mit Geräten",
     "upgradeChannels": {
       "Stable": "Stabil",

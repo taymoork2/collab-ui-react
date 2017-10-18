@@ -77,12 +77,12 @@ export class DevicesCtrl {
   }
 
   public emptysearchresult(): boolean {
-    return this._searchObject && this._searchObject.getSearchQuery() !== ''
+    return this._searchObject && this._searchObject.getSearchQuery(null) !== ''
       && (this._searchResult && this._searchResult.hits.total === 0);
   }
 
   public emptydatasource(): boolean {
-    return this._searchObject && this._searchObject.getSearchQuery() === ''
+    return this._searchObject && this._searchObject.getSearchQuery(null) === ''
       && (this._searchResult && this._searchResult.hits.total === 0);
   }
 

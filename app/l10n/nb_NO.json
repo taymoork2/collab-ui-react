@@ -6659,11 +6659,13 @@
     "areaCode": "Dette ser ikke ut til å være et gyldig retningsnummer."
   },
   "CsdmStatus": {
-    "Online": "Online",
-    "OnlineWithIssues": "Online, med problemer",
-    "Offline": "Ikke pålogget",
-    "OfflineExpired": "Deaktivert",
-    "Unknown": "Ukjent",
+    "connectionStatus": {
+      "Online": "Online",
+      "OnlineWithIssues": "Online, med problemer",
+      "Offline": "Ikke pålogget",
+      "OfflineExpired": "Deaktivert",
+      "Unknown": "Ukjent"
+    },
     "WithDevices": "Med enheter",
     "upgradeChannels": {
       "Stable": "Stabil",

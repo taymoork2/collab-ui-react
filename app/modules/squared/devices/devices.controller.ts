@@ -85,21 +85,21 @@ export class DevicesController {
       },
     }, {
       count: 0,
-      name: $translate.instant('CsdmStatus.OnlineWithIssues'),
+      name: $translate.instant('CsdmStatus.connectionStatus.OnlineWithIssues'),
       filterValue: 'issues',
       passes: function (item: IDevice) {
         return item.hasIssues && item.isOnline;
       },
     }, {
       count: 0,
-      name: $translate.instant('CsdmStatus.Offline'),
+      name: $translate.instant('CsdmStatus.connectionStatus.Offline'),
       filterValue: 'offline',
       passes: function (item: IDevice) {
         return !item.isOnline;
       },
     }, {
       count: 0,
-      name: $translate.instant('CsdmStatus.Online'),
+      name: $translate.instant('CsdmStatus.connectionStatus.Online'),
       filterValue: 'online',
       passes: function (item: IDevice) {
         return item.isOnline;

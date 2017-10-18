@@ -6729,11 +6729,13 @@
     "areaCode": "This does not appear to be a valid area code."
   },
   "CsdmStatus": {
-    "Online": "Online",
-    "OnlineWithIssues": "Online, With Issues",
-    "Offline": "Offline",
-    "OfflineExpired": "Deactivated",
-    "Unknown": "Unknown",
+    "connectionStatus": {
+      "Online": "Online",
+      "OnlineWithIssues": "Online, With Issues",
+      "Offline": "Offline",
+      "OfflineExpired": "Deactivated",
+      "Unknown": "Unknown"
+    },
     "WithDevices": "With Devices",
     "upgradeChannels": {
       "Stable": "Stable",

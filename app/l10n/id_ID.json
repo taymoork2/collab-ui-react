@@ -6659,11 +6659,13 @@
     "areaCode": "Sepertinya ini bukan kode area yang valid."
   },
   "CsdmStatus": {
-    "Online": "Online",
-    "OnlineWithIssues": "Online, Dengan Masalah",
-    "Offline": "Offline",
-    "OfflineExpired": "Dinonaktifkan",
-    "Unknown": "Tidak Diketahui",
+    "connectionStatus": {
+      "Online": "Online",
+      "OnlineWithIssues": "Online, Dengan Masalah",
+      "Offline": "Offline",
+      "OfflineExpired": "Dinonaktifkan",
+      "Unknown": "Tidak Diketahui"
+    },
     "WithDevices": "Dengan Perangkat",
     "upgradeChannels": {
       "Stable": "Stabil",
