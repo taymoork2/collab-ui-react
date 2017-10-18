@@ -26,9 +26,11 @@
       };
     }; // initSiteRowsObj()
 
-    this.initSiteRows = function () {
+    this.initSiteRows = function (dontShowLinkedServices) {
       _this.getConferenceServices();
-      _this.getLinkedConferenceServices();
+      if (!dontShowLinkedServices) {
+        _this.getLinkedConferenceServices();
+      }
       _this.configureGrid();
     }; // initSiteRows()
 

@@ -1888,10 +1888,33 @@
           })
           .state('site-list', {
             url: '/site-list',
-            template: require('modules/core/siteList/siteList.tpl.html'),
-            controller: 'WebExSiteRowCtrl',
+            template: require('modules/core/siteList/siteListBase.tpl.html'),
+            controller: 'WebExSiteBaseCtrl',
             controllerAs: 'siteList',
             parent: 'main',
+            params: {
+              accountLinkingV2: false,
+            },
+          })
+          .state('site-list.not-linked', {
+            url: '/site-list/not-linked',
+            views: {
+              tabContent: {
+                controllerAs: 'siteList',
+                controller: 'WebExSiteRowCtrl',
+                template: require('modules/core/siteList/siteList.tpl.html'),
+              },
+            },
+          })
+          .state('site-list.linked', {
+            url: '/site-list/linked',
+            views: {
+              tabContent: {
+                controllerAs: 'siteList',
+                controller: 'WebExSiteRowCtrl',
+                template: 'preliminary placeholder for linked sites component',
+              },
+            },
           })
           .state('site-list-add', {
             parent: 'modal',

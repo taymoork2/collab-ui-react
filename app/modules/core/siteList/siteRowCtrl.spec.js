@@ -39,6 +39,7 @@ describe('Controller: WebExSiteRowCtrl', function () {
     spyOn(FeatureToggleService, 'atlasWebexAddSiteGetStatus').and.returnValue($q.resolve(true));
     spyOn(WebExSiteRowService, 'getConferenceServices');
     spyOn(WebExSiteRowService, 'configureGrid');
+    spyOn(WebExSiteRowService, 'initSiteRows');
     spyOn(WebExSiteRowService, 'getGridOptions').and.returnValue(fakeGridOptions);
     spyOn(WebExSiteRowService, 'getShowGridData').and.returnValue(fakeShowGridData);
     spyOn(TokenService, 'getAccessToken').and.returnValue(accessToken);
@@ -94,5 +95,29 @@ describe('Controller: WebExSiteRowCtrl', function () {
     FeatureToggleService.atlasWebexAddSiteGetStatus.and.returnValue($q.resolve(false));
     initController();
     expect(controller.isShowAddSite).toBeFalsy();
+  });
+
+  it('remove linked sites if Account Linking V2', function () {
+    controller = $controller('WebExSiteRowCtrl', {
+      $scope: $scope,
+      FeatureToggleService: FeatureToggleService,
+      WebExSiteRowService: WebExSiteRowService,
+      $stateParams: {
+        accountLinkingV2: true,
+      },
+    });
+    expect(WebExSiteRowService.initSiteRows).toHaveBeenCalledWith(true);
+  });
+
+  it('dont remove linked sites if Account Linking V1', function () {
+    controller = $controller('WebExSiteRowCtrl', {
+      $scope: $scope,
+      FeatureToggleService: FeatureToggleService,
+      WebExSiteRowService: WebExSiteRowService,
+      $stateParams: {
+        accountLinkingV2: false,
+      },
+    });
+    expect(WebExSiteRowService.initSiteRows).toHaveBeenCalledWith(false);
   });
 });
