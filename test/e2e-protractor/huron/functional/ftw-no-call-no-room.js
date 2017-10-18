@@ -5,7 +5,6 @@ describe('Huron Functional: first-time-setup', () => {
   const customerOptions = {
     test: 'ftw-msg-only',
     offers: ['MESSAGE'],
-    callOptions: false,
     doFtsw: true,
   };
   const customer = huronCustomer(customerOptions);

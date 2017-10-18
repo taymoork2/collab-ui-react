@@ -3,7 +3,7 @@
 
 describe('Partner managing other orgs: Controller: Care Settings', function () {
   var controller, sunlightChatConfigUrl, $httpBackend, Notification, $interval, $intervalSpy, $scope,
-    sunlightConfigService, $q;
+    sunlightConfigService, urService, urServiceUrl, orgId, $q;
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
     getUserOrgId: jasmine.createSpy('getUserOrgId').and.returnValue('aeba1221-ab12-cd34-de56-abcdef123456'),
@@ -16,7 +16,8 @@ describe('Partner managing other orgs: Controller: Care Settings', function () {
     $provide.value('Authinfo', spiedAuthinfo);
   }));
   beforeEach(
-    inject(function ($controller, _$q_, _$rootScope_, _$httpBackend_, _Notification_, _$interval_, Authinfo, UrlConfig, _SunlightConfigService_) {
+    inject(function ($controller, _$q_, _$rootScope_, _$httpBackend_, _Notification_, _$interval_, Authinfo, UrlConfig, _SunlightConfigService_, _URService_) {
+      urService = _URService_;
       sunlightConfigService = _SunlightConfigService_;
       $q = _$q_;
       $httpBackend = _$httpBackend_;
@@ -26,11 +27,18 @@ describe('Partner managing other orgs: Controller: Care Settings', function () {
       $intervalSpy = jasmine.createSpy('$interval', $interval).and.callThrough();
       $scope.wizard = {};
       $scope.wizard.isNextDisabled = false;
+      orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
+      urServiceUrl = UrlConfig.getSunlightURServiceUrl() + '/organization/' + orgId + '/queue/' + orgId;
       sunlightChatConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/chat';
       controller = $controller('CareSettingsCtrl', {
         $scope: $scope,
         $interval: $intervalSpy,
         Notification: Notification,
+      });
+      spyOn(urService, 'getQueue').and.callFake(function () {
+        var deferred = $q.defer();
+        deferred.resolve('fake update response');
+        return deferred.promise;
       });
       spyOn(sunlightConfigService, 'onBoardCare').and.callFake(function () {
         var deferred = $q.defer();
@@ -67,7 +75,19 @@ describe('Partner managing other orgs: Controller: Care Settings', function () {
       expect($scope.wizard.isNextDisabled).toBe(true);
     });
 
-    it('should allow proceeding with next steps, if cs and aa are already onboarded', function () {
+    it('show enabled setup care button and disabled next button, if default sunlight queue is not created', function () {
+      $httpBackend.expectGET(urServiceUrl).respond(404);
+      expect(controller.state).toBe(controller.status.UNKNOWN);
+      $httpBackend.flush();
+      expect(controller.state).toBe(controller.NOT_ONBOARDED);
+      expect($scope.wizard.isNextDisabled).toBe(true);
+    });
+
+    it('should allow proceeding with next steps, if queue is created, cs and aa are already onboarded', function () {
+      var getQueueResponse = {
+        defaultQueueStatus: controller.status.SUCCESS,
+      };
+      $httpBackend.expectGET(urServiceUrl).respond(200, getQueueResponse);
       var chatConfigResponse = {
         csOnboardingStatus: controller.status.SUCCESS,
         aaOnboardingStatus: controller.status.SUCCESS,
@@ -81,6 +101,10 @@ describe('Partner managing other orgs: Controller: Care Settings', function () {
     });
 
     it('should show loading and disabled next button, if csOnboardingStatus is Pending ', function () {
+      var getQueueResponse = {
+        defaultQueueStatus: controller.status.SUCCESS,
+      };
+      $httpBackend.expectGET(urServiceUrl).respond(200, getQueueResponse);
       var chatConfigResponse = {
         csOnboardingStatus: controller.status.PENDING,
         aaOnboardingStatus: controller.status.SUCCESS,
@@ -93,6 +117,10 @@ describe('Partner managing other orgs: Controller: Care Settings', function () {
     });
 
     it('should show loading and enable next button, if aaOnboardStatus is Pending because isCareVoice is false ', function () {
+      var getQueueResponse = {
+        defaultQueueStatus: controller.status.SUCCESS,
+      };
+      $httpBackend.expectGET(urServiceUrl).respond(200, getQueueResponse);
       var chatConfigResponse = {
         csOnboardingStatus: controller.status.SUCCESS,
         aaOnboardingStatus: controller.status.PENDING,
@@ -110,6 +138,7 @@ describe('Partner managing other orgs: Controller: Care Settings', function () {
       $httpBackend.expectGET(sunlightChatConfigUrl).respond(404, {});
       $httpBackend.flush();
       expect(controller.state).toBe(controller.NOT_ONBOARDED);
+      controller.defaultQueueStatus = controller.status.SUCCESS;
       controller.onboardToCare();
       $scope.$apply();
       $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { csOnboardingStatus: 'Pending' });
@@ -125,11 +154,12 @@ describe('Partner managing other orgs: Controller: Care Settings', function () {
       $httpBackend.expectGET(sunlightChatConfigUrl).respond(404, {});
       $httpBackend.flush();
       expect(controller.state).toBe(controller.NOT_ONBOARDED);
+      controller.defaultQueueStatus = controller.status.SUCCESS;
       controller.onboardToCare();
       $scope.$apply();
       var chatConfigResponse = {
         csOnboardingStatus: controller.status.SUCCESS,
-        appOnboardStatus: controller.status.SUCCESS,
+        aaOnboardStatus: controller.status.SUCCESS,
       };
       $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, chatConfigResponse);
       $interval.flush(10002);
@@ -145,7 +175,9 @@ describe('Partner managing other orgs: Controller: Care Settings', function () {
       spyOn(Notification, 'error').and.callFake(function () {
         return true;
       });
+      $httpBackend.whenGET(urServiceUrl).respond(200);
       $httpBackend.whenGET(sunlightChatConfigUrl).respond(404, {});
+      controller.defaultQueueStatus = controller.status.SUCCESS;
       controller.onboardToCare();
       $scope.$apply();
       for (var i = 30; i >= 0; i--) {
@@ -162,9 +194,12 @@ describe('Partner managing other orgs: Controller: Care Settings', function () {
       spyOn(Notification, 'errorWithTrackingId').and.callFake(function () {
         return true;
       });
+      $httpBackend.whenGET(urServiceUrl).respond(500);
       $httpBackend.whenGET(sunlightChatConfigUrl).respond(500, {});
+      controller.defaultQueueStatus = controller.status.SUCCESS;
       controller.onboardToCare();
       $scope.$apply();
+      $httpBackend.flush();
       for (var i = 3; i >= 0; i--) {
         $httpBackend.whenGET(sunlightChatConfigUrl).respond(500, {});
         $interval.flush(10001);
@@ -190,6 +225,7 @@ describe('Partner managing other orgs: Controller: Care Settings', function () {
       $httpBackend.expectGET(sunlightChatConfigUrl).respond(404, {});
       $httpBackend.flush();
       expect(controller.state).toBe(controller.NOT_ONBOARDED);
+      controller.defaultQueueStatus = controller.status.SUCCESS;
       controller.onboardToCare();
       $scope.$apply();
       $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { csOnboardingStatus: 'Failure' });
@@ -203,7 +239,7 @@ describe('Partner managing other orgs: Controller: Care Settings', function () {
 });
 
 describe('Partner managing other orgs: Care Settings - when org has K2 entitlement', function () {
-  var controller, sunlightChatConfigUrl, sunlightConfigService, $httpBackend, Notification, orgId, $interval, $intervalSpy,
+  var controller, sunlightChatConfigUrl, sunlightConfigService, $httpBackend, Notification, urServiceUrl, orgId, $interval, $intervalSpy,
     $scope, q;
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
@@ -227,6 +263,7 @@ describe('Partner managing other orgs: Care Settings - when org has K2 entitleme
       $scope.wizard = {};
       $scope.wizard.isNextDisabled = false;
       orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
+      urServiceUrl = UrlConfig.getSunlightURServiceUrl() + '/organization/' + orgId + '/queue/' + orgId;
       sunlightChatConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + orgId + '/chat';
       controller = $controller('CareSettingsCtrl', {
         $scope: $scope,
@@ -252,6 +289,8 @@ describe('Partner managing other orgs: Care Settings - when org has K2 entitleme
   );
 
   it('should show enabled setup care button and disabled next button, if Org is not onboarded already.', function () {
+    $httpBackend.expectGET(urServiceUrl)
+      .respond(200);
     $httpBackend.expectGET(sunlightChatConfigUrl)
       .respond(200, {
         csOnboardingStatus: 'Unknown',
@@ -265,6 +304,8 @@ describe('Partner managing other orgs: Care Settings - when org has K2 entitleme
   });
 
   it('should allow proceeding with next steps, if cs and aa are already onboarded', function () {
+    $httpBackend.expectGET(urServiceUrl)
+      .respond(200);
     $httpBackend.expectGET(sunlightChatConfigUrl)
       .respond(200, {
         csOnboardingStatus: 'Success',
@@ -278,6 +319,8 @@ describe('Partner managing other orgs: Care Settings - when org has K2 entitleme
   });
 
   it('should show loading and disabled next button, if aaOnboardingStatus is Pending ', function () {
+    $httpBackend.expectGET(urServiceUrl)
+      .respond(200);
     $httpBackend.expectGET(sunlightChatConfigUrl)
       .respond(200, {
         csOnboardingStatus: 'Success',
@@ -291,6 +334,8 @@ describe('Partner managing other orgs: Care Settings - when org has K2 entitleme
   });
 
   it('should show loading animation on setup care button, if Org csOnboardingStatus is in progress', function () {
+    $httpBackend.expectGET(urServiceUrl)
+      .respond(200);
     $httpBackend.expectGET(sunlightChatConfigUrl)
       .respond(200, {
         csOnboardingStatus: 'Pending',
@@ -303,6 +348,8 @@ describe('Partner managing other orgs: Care Settings - when org has K2 entitleme
   });
 
   it('should show loading animation on setup care button, if appOnboardStatus is pending', function () {
+    $httpBackend.expectGET(urServiceUrl)
+      .respond(200);
     $httpBackend.expectGET(sunlightChatConfigUrl)
       .respond(200, {
         csOnboardingStatus: 'Success',
@@ -338,6 +385,7 @@ describe('Partner managing other orgs: Care Settings - when org has K2 entitleme
     $httpBackend.expectGET(sunlightChatConfigUrl).respond(404, {});
     $httpBackend.flush();
     expect(controller.state).toBe(controller.NOT_ONBOARDED);
+    controller.defaultQueueStatus = controller.status.SUCCESS;
     controller.onboardToCare();
     $scope.$apply();
     $httpBackend.expectGET(sunlightChatConfigUrl)
@@ -353,6 +401,9 @@ describe('Partner managing other orgs: Care Settings - when org has K2 entitleme
   });
 
   it('should show error notification, if any of the onboarding promises fail', function () {
+    var dummyResponse = { status: 202 };
+    var promise = q.resolve(dummyResponse);
+    sunlightConfigService.onBoardCare.and.returnValue(promise);
     spyOn(sunlightConfigService, 'aaOnboard').and.callFake(function () {
       var deferred = q.defer();
       deferred.reject('fake update response');
@@ -364,11 +415,13 @@ describe('Partner managing other orgs: Care Settings - when org has K2 entitleme
     $httpBackend.expectGET(sunlightChatConfigUrl).respond(404, {});
     $httpBackend.flush();
     expect(controller.state).toBe(controller.NOT_ONBOARDED);
+    controller.defaultQueueStatus = controller.status.SUCCESS;
     controller.onboardToCare();
     $scope.$apply();
     $httpBackend.verifyNoOutstandingExpectation();
     $httpBackend.verifyNoOutstandingRequest();
     expect(controller.state).toBe(controller.NOT_ONBOARDED);
+    expect(controller.csOnboardingStatus).toBe(controller.status.SUCCESS);
     expect(Notification.errorWithTrackingId).toHaveBeenCalled();
   });
 });
@@ -428,6 +481,7 @@ describe('Partner managing his own org: Controller: Care Settings', function () 
     });
 
     it('show enabled setup care button and disabled next button, if onboarded status is UNKNOWN', function () {
+      controller.defaultQueueStatus = controller.status.SUCCESS;
       var chatConfigResponse = {
         csOnboardingStatus: controller.status.UNKNOWN,
         aaOnboardingStatus: controller.status.SUCCESS,
@@ -440,6 +494,7 @@ describe('Partner managing his own org: Controller: Care Settings', function () 
     });
 
     it('should not allow proceeding with next steps, if cs and aa are already onboarded but apponboarding is UNKNOWN', function () {
+      controller.defaultQueueStatus = controller.status.SUCCESS;
       var chatConfigResponse = {
         csOnboardingStatus: controller.status.SUCCESS,
         aaOnboardingStatus: controller.status.SUCCESS,
@@ -453,6 +508,7 @@ describe('Partner managing his own org: Controller: Care Settings', function () 
     });
 
     it('should show loading and disabled next button, if csOnboardingStatus is Pending ', function () {
+      controller.defaultQueueStatus = controller.status.SUCCESS;
       var chatConfigResponse = {
         csOnboardingStatus: controller.status.PENDING,
         aaOnboardingStatus: controller.status.SUCCESS,
@@ -465,6 +521,7 @@ describe('Partner managing his own org: Controller: Care Settings', function () 
     });
 
     it('should show loading and enable next button, if aaOnboardStatus is Pending because isCareVoice is false ', function () {
+      controller.defaultQueueStatus = controller.status.SUCCESS;
       var chatConfigResponse = {
         csOnboardingStatus: controller.status.SUCCESS,
         aaOnboardingStatus: controller.status.PENDING,
@@ -483,6 +540,7 @@ describe('Partner managing his own org: Controller: Care Settings', function () 
       $httpBackend.expectGET(sunlightChatConfigUrl).respond(404, {});
       $httpBackend.flush();
       expect(controller.state).toBe(controller.NOT_ONBOARDED);
+      controller.defaultQueueStatus = controller.status.SUCCESS;
       controller.onboardToCare();
       $scope.$apply();
       $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { csOnboardingStatus: 'Pending' });
@@ -498,6 +556,7 @@ describe('Partner managing his own org: Controller: Care Settings', function () 
       $httpBackend.expectGET(sunlightChatConfigUrl).respond(404, {});
       $httpBackend.flush();
       expect(controller.state).toBe(controller.NOT_ONBOARDED);
+      controller.defaultQueueStatus = controller.status.SUCCESS;
       controller.onboardToCare();
       $scope.$apply();
       var chatConfigResponse = {
@@ -519,6 +578,7 @@ describe('Partner managing his own org: Controller: Care Settings', function () 
         return true;
       });
       $httpBackend.whenGET(sunlightChatConfigUrl).respond(404, {});
+      controller.defaultQueueStatus = controller.status.SUCCESS;
       controller.onboardToCare();
       $scope.$apply();
       for (var i = 30; i >= 0; i--) {
@@ -536,6 +596,7 @@ describe('Partner managing his own org: Controller: Care Settings', function () 
         return true;
       });
       $httpBackend.whenGET(sunlightChatConfigUrl).respond(500, {});
+      controller.defaultQueueStatus = controller.status.SUCCESS;
       controller.onboardToCare();
       $scope.$apply();
       for (var i = 3; i >= 0; i--) {
@@ -563,6 +624,7 @@ describe('Partner managing his own org: Controller: Care Settings', function () 
       $httpBackend.expectGET(sunlightChatConfigUrl).respond(404, {});
       $httpBackend.flush();
       expect(controller.state).toBe(controller.NOT_ONBOARDED);
+      controller.defaultQueueStatus = controller.status.SUCCESS;
       controller.onboardToCare();
       $scope.$apply();
       $httpBackend.expectGET(sunlightChatConfigUrl).respond(200, { csOnboardingStatus: 'Failure' });
@@ -625,6 +687,7 @@ describe('Partner managing his own org: Care Settings - when org has K2 entitlem
   );
 
   it('should show enabled setup care button and disabled next button, if Org is not onboarded already.', function () {
+    controller.defaultQueueStatus = controller.status.SUCCESS;
     $httpBackend.expectGET(sunlightChatConfigUrl)
       .respond(200, {
         csOnboardingStatus: 'Unknown',
@@ -638,6 +701,7 @@ describe('Partner managing his own org: Care Settings - when org has K2 entitlem
   });
 
   it('should allow proceeding with next steps, if cs, app and aa are already onboarded', function () {
+    controller.defaultQueueStatus = controller.status.SUCCESS;
     $httpBackend.expectGET(sunlightChatConfigUrl)
       .respond(200, {
         csOnboardingStatus: 'Success',
@@ -651,6 +715,7 @@ describe('Partner managing his own org: Care Settings - when org has K2 entitlem
   });
 
   it('should show loading and disabled next button, if aaOnboardingStatus is Pending ', function () {
+    controller.defaultQueueStatus = controller.status.SUCCESS;
     $httpBackend.expectGET(sunlightChatConfigUrl)
       .respond(200, {
         csOnboardingStatus: 'Success',
@@ -664,6 +729,7 @@ describe('Partner managing his own org: Care Settings - when org has K2 entitlem
   });
 
   it('should show loading animation on setup care button, if Org csOnboardingStatus is in progress', function () {
+    controller.defaultQueueStatus = controller.status.SUCCESS;
     $httpBackend.expectGET(sunlightChatConfigUrl)
       .respond(200, {
         csOnboardingStatus: 'Pending',
@@ -676,6 +742,7 @@ describe('Partner managing his own org: Care Settings - when org has K2 entitlem
   });
 
   it('should show loading animation on setup care button, if appOnboardStatus is pending', function () {
+    controller.defaultQueueStatus = controller.status.SUCCESS;
     $httpBackend.expectGET(sunlightChatConfigUrl)
       .respond(200, {
         csOnboardingStatus: 'Success',
@@ -688,6 +755,7 @@ describe('Partner managing his own org: Care Settings - when org has K2 entitlem
   });
 
   it('should enable setup care button, if csOnboarding or aaOnboarding is failure', function () {
+    controller.defaultQueueStatus = controller.status.SUCCESS;
     $httpBackend.expectGET(sunlightChatConfigUrl)
       .respond(200, {
         csOnboardingStatus: 'Success',
@@ -711,6 +779,7 @@ describe('Partner managing his own org: Care Settings - when org has K2 entitlem
     $httpBackend.expectGET(sunlightChatConfigUrl).respond(404, {});
     $httpBackend.flush();
     expect(controller.state).toBe(controller.NOT_ONBOARDED);
+    controller.defaultQueueStatus = controller.status.SUCCESS;
     controller.onboardToCare();
     $scope.$apply();
     $httpBackend.expectGET(sunlightChatConfigUrl)

@@ -10,7 +10,7 @@ const SpeedDialsPage = new CallSpeedDialsPage();
 describe('Huron Functional: user-features', () => {
   const customer = huronCustomer({
     test: 'user-features',
-    users: 5,
+    users: { noOfUsers: 5, noOfDids: 0 },
   });
   const USERS = customer.users;
 
@@ -31,7 +31,7 @@ describe('Huron Functional: user-features', () => {
     navigation.expectDriverCurrentUrl('users');
   });
 
-  it('Enter the user details on the search bar and Navigate to user details view', () => {
+  it('should enter the user details on the search bar and Navigate to user details view', () => {
     utils.click(CallUser.usersList.searchFilter);
     utils.searchAndClick(USERS[0].email);
     utils.expectIsDisplayed(users.servicesPanel);

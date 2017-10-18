@@ -25,9 +25,9 @@
           </span>
         </div>
 
-        <button ng-disabled="!$ctrl.isEdit || $ctrl.submitLoading" class="btn" translate="gemini.tds.request.importNumber.fromTd" ng-click="$ctrl.importTD()"></button>
-        <gm-td-import-numbers-from-csv is-disabled="!$ctrl.isEdit || $ctrl.submitLoading" on-imported="$ctrl.importNumberCSV(numbers)"></gm-td-import-numbers-from-csv>
-        <button class="btn btn--primary" ng-disabled="!$ctrl.isEdit || $ctrl.submitLoading" id="addNumber" translate="gemini.tds.request.addNumber" ng-click="$ctrl.addNumber()"></button>
+        <button ng-disabled="!$ctrl.isEdit || $ctrl.submitLoading || $ctrl.loading || $ctrl.gridData.length >= 300" class="btn" translate="gemini.tds.request.importNumber.fromTd" ng-click="$ctrl.importTD()"></button>
+        <gm-td-import-numbers-from-csv is-disabled="!$ctrl.isEdit || $ctrl.submitLoading || $ctrl.loading || $ctrl.gridData.length >= 300" on-imported="$ctrl.importNumberCSV(numbers)"></gm-td-import-numbers-from-csv>
+        <button class="btn btn--primary" ng-disabled="!$ctrl.isEdit || $ctrl.submitLoading || $ctrl.loading || $ctrl.gridData.length >= 300" id="addNumber" translate="gemini.tds.request.addNumber" ng-click="$ctrl.addNumber()"></button>
       </cs-page-sub-header-right>
     </cs-page-sub-header>
     <div class="grid-his-note">
@@ -42,7 +42,7 @@
       <gm-td-histories ng-if="$ctrl.ccaDomainId"></gm-td-histories>
     </div>
     <cs-sp-buttons>
-      <button type="button" class="btn btn--primary" cs-btn loading="$ctrl.submitLoading" ng-disabled="!$ctrl.TelephonyNumberDataService.gridOptions.data.length || !$ctrl.isEdit" ng-click="$ctrl.submitTD()">
+      <button type="button" class="btn btn--primary" cs-btn loading="$ctrl.submitLoading" ng-disabled="!$ctrl.TelephonyNumberDataService.gridOptions.data.length || !$ctrl.isEdit || $ctrl.loading" ng-click="$ctrl.submitTD()">
         <span translate="gemini.button.submitRequest"></span>
       </button>
       <button type="button" class="btn btn-default" ng-click="$ctrl.onCancel()"><span translate="common.cancel"></span></button>

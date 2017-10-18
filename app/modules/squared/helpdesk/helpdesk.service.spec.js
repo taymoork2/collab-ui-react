@@ -446,6 +446,17 @@ describe('HelpdeskService', function () {
     });
   });
 
+  describe('getting the CSM link:', function () {
+    beforeEach(installPromiseMatchers);
+    it('fetches and encodes the CSM link', function () {
+      $httpBackend
+        .expectGET(urlBase + 'ordersetup/12345/csmlink').respond('https://local.ciscospark.com/#/order-setup?CSM&email=phtest77+mockorgOrderAdmin@gmail.com&orgId=abc&enc=def');
+      var promise = Service.getOrderProcessingUrl('12345');
+      $httpBackend.flush();
+      expect(promise).toBeResolvedWith('https://local.ciscospark.com/#/order-setup?CSM&email=phtest77%2BmockorgOrderAdmin%40gmail.com&orgId=abc&enc=def');
+    });
+  });
+
   describe('unixTimestampToUTC:', function () {
     it('should print UTC formatted date time given a Unix timestamp in seconds', function () {
       var timestampInSec = 1482652800;

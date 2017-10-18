@@ -9,10 +9,16 @@
       </div>
     </div>
   </cs-sp-header>
+  <div class="banner-info" ng-if="customerOverview.showContractIncomplete">
+    <div class="banner-top-stripe"></div>
+    <div class="side-panel-header">
+      <span translate="customerPage.pstnContractIncomplete"></span>
+    </div>
+  </div>
   <div class="side-panel-container-view" ui-view="side-panel-container">
-    <cs-sp-container>
+    <cs-sp-container cs-tabindex="customerOverview.form.$dirty ? -1 : 0">
       <cs-sp-section>
-        <cs-sp-buttons ng-show="customerOverview.form.$dirty || CustomerOverview.saved">
+        <cs-sp-buttons ng-show="customerOverview.form.$dirty">
           <button class="btn btn--primary" ng-click="customerOverview.saveLogoSettings()" type="submit" translate="common.save"></button>
           <button ng-click="customerOverview.reset()" translate="common.cancel"></button>
         </cs-sp-buttons>
@@ -85,7 +91,7 @@
           </ul>
         </div>
       </cs-sp-section>
-      <uc-external-number-overview ng-if="customerOverview.isSquaredUC"></uc-external-number-overview>
+      <uc-external-number-overview ng-if="customerOverview.isSquaredUC" show-contract-incomplete="{{customerOverview.showContractIncomplete}}"></uc-external-number-overview>
       <cs-sp-section>
         <div class="section-title-row">
           <span class="section-name" translate="customerPage.branding"></span>

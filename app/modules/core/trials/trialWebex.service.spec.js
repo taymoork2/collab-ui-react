@@ -174,7 +174,9 @@ describe('Service: Webex Trial Service', function () {
         provisionOrder: true,
         serviceOrderUUID: 'some-service-uuid-here',
         webexProvisioningParams: {
-          webexSiteDetailsList: [{ siteUrl: 'somenewsiteurl@webex.com', timezone: '7', centerType: 'MC', quantity: 4 }],
+          webexSiteDetailsList: [{
+            siteUrl: 'somenewsiteurl@webex.com', timezone: '7', centerType: 'MC', quantity: 4,
+          }],
           audioPartnerName: 'someaudiopartnerhere@gmail.com',
         },
       };
@@ -194,7 +196,9 @@ describe('Service: Webex Trial Service', function () {
         provisionOrder: true,
         serviceOrderUUID: 'some-service-uuid-here',
         webexProvisioningParams: {
-          webexSiteDetailsList: [{ siteUrl: 'somenewsiteurl@webex.com', timezone: '7', centerType: 'someInvalidCenterTypeHere', quantity: 4 }],
+          webexSiteDetailsList: [{
+            siteUrl: 'somenewsiteurl@webex.com', timezone: '7', centerType: 'someInvalidCenterTypeHere', quantity: 4,
+          }],
           audioPartnerName: 'someaudiopartnerhere@gmail.com',
         },
       };

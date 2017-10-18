@@ -51,6 +51,7 @@ export class PstnTrialSetupComponent implements ng.IComponentOptions {
 }
 
 export class PstnTrialSetupCtrl implements ng.IComponentController {
+  public trialForm: ng.IFormController;
   public dismiss: Function;
   public trialData: ITrialData;
   public providerImplementation: string;
@@ -335,6 +336,13 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
     this.HuronCompassService.setIsCustomer(false);
     this.PstnModel.clear();
     this.dismiss();
+  }
+
+  public isDisabled(): boolean {
+    if (this.providerImplementation === this.SWIVEL) {
+      return this.trialForm.$invalid || this.disableNextButton();
+    }
+    return this.trialForm.$invalid || !this.addressFound || this.disableNextButton();
   }
 
 }

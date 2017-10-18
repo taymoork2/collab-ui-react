@@ -1,9 +1,11 @@
 import { Customer, CustomerVoice, HuronCustomerService, ServicePackage } from 'modules/huron/customer';
 import { CustomerSettings } from './customer-settings';
+import { ExtensionLengthService } from './extension-length.service';
 import { LocationsService, Location } from 'modules/call/locations/shared';
 import { CompanyNumber, ExternalCallerIdType } from 'modules/call/settings/settings-company-caller-id';
 import { MediaOnHoldService } from 'modules/huron/media-on-hold';
 import { AvrilService, AvrilCustomer } from 'modules/huron/avril';
+import { InternalNumberRange, InternalNumberRangeService } from 'modules/call/shared/internal-number-range';
 import { Notification } from 'modules/core/notifications';
 
 export class CallSettingsData {
@@ -19,7 +21,6 @@ export class CallSettingsData {
 export class CallSettingsService {
   private callSettingsDataCopy: CallSettingsData;
   private errors: string[] = [];
-  private supportsCompanyMoh: boolean = false;
 
   /* @ngInject */
   constructor(
@@ -29,15 +30,12 @@ export class CallSettingsService {
     private AvrilService: AvrilService,
     private LocationsService: LocationsService,
     private Notification: Notification,
-    private FeatureToggleService,
+    private ExtensionLengthService: ExtensionLengthService,
+    private InternalNumberRangeService: InternalNumberRangeService,
     private CallerId,
     private ServiceSetup,
     private Authinfo,
-  ) {
-    //Company Media On Hold Support
-    this.FeatureToggleService.supports(FeatureToggleService.features.huronMOHEnable)
-      .then(result => this.supportsCompanyMoh = result);
-  }
+  ) {}
 
   public get(): ng.IPromise<CallSettingsData> {
     this.errors = [];
@@ -63,6 +61,8 @@ export class CallSettingsService {
       .then(() => this.updateAvrilCustomer(data.avrilCustomer, data.customer))
       .then(() => this.updateLocation(data.defaultLocation))
       .then(() => this.saveCompanyCallerId(data.companyCallerId))
+      .then(() => this.saveCompanyMediaOnHold(data.companyMoh))
+      .then(() => this.saveExtensionLengthDecrease(data.customerVoice))
       .then(() => this.get())
       .catch(() => this.rejectAndNotifyPossibleErrors());
   }
@@ -123,14 +123,11 @@ export class CallSettingsService {
   }
 
   private getCompanyMedia(): ng.IPromise<string> {
-    if (this.supportsCompanyMoh) {
-      return this.MediaOnHoldService.getCompanyMedia()
+    return this.MediaOnHoldService.getCompanyMedia()
       .catch(error => {
         this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohGetError'));
         return this.$q.reject();
       });
-    }
-    return this.$q.resolve('');
   }
 
   private getCompanyCallerId(): ng.IPromise<CompanyNumber> {
@@ -204,6 +201,23 @@ export class CallSettingsService {
     }
   }
 
+  public saveExtensionLengthDecrease(customerVoice: CustomerVoice): ng.IPromise<any> {
+    if (!_.isEqual(this.callSettingsDataCopy.customerVoice.extensionLength, customerVoice.extensionLength)) {
+      return this.ExtensionLengthService.saveExtensionLength(customerVoice.extensionLength, null)
+      .then(() => this.getDefaultLocation())
+      .then(defaultLocation => {
+        const newDefaultInternalNumberRange: InternalNumberRange = this.InternalNumberRangeService.calculateDefaultExtensionRange(_.get(customerVoice, 'extensionLength'));
+        return this.InternalNumberRangeService.createLocationInternalNumberRange(_.get(defaultLocation, 'uuid'), newDefaultInternalNumberRange);
+      })
+      .catch(error => {
+        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.extensionLengthSaveFail'));
+        return this.$q.reject();
+      });
+    } else {
+      return this.$q.resolve();
+    }
+  }
+
   private getDefaultLocation() {
     return this.LocationsService.getDefaultLocation()
       .then(defaultLocation => {
@@ -215,9 +229,9 @@ export class CallSettingsService {
       });
   }
 
-  private updateLocation(data: Location): ng.IPromise<void> {
-    if (!_.isEqual(this.callSettingsDataCopy.defaultLocation, data.defaultLocation)) {
-      return this.LocationsService.updateLocation(data)
+  private updateLocation(location: Location): ng.IPromise<void> {
+    if (!_.isEqual(this.callSettingsDataCopy.defaultLocation, location)) {
+      return this.LocationsService.updateLocation(location)
       .catch(error => {
         this.errors.push(this.Notification.processErrorResponse(error, 'locations.updateFailed'));
         return this.$q.reject();
@@ -225,6 +239,32 @@ export class CallSettingsService {
     } else {
       return this.$q.resolve();
     }
+  }
+
+  private saveCompanyMediaOnHold(companyMoh: string): ng.IPromise<void> {
+    if (!_.isEqual(companyMoh, this.callSettingsDataCopy.companyMoh)) {
+      const GENERIC_MEDIA_ID = '98765432-DBC2-01BB-476B-CFAF98765432';
+      if (_.isEqual(companyMoh, GENERIC_MEDIA_ID)) {
+        return this.unassignCompanyMediaOnHold();
+      } else {
+        return this.updateCompanyMediaOnHold(companyMoh);
+      }
+    }
+    return this.$q.resolve();
+  }
+
+  private updateCompanyMediaOnHold(mediaFileId: string): ng.IPromise<void> {
+    return this.MediaOnHoldService.updateMediaOnHold(mediaFileId)
+      .catch(error => {
+        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohUpdateError'));
+      });
+  }
+
+  private unassignCompanyMediaOnHold(): ng.IPromise<void> {
+    return this.MediaOnHoldService.unassignMediaOnHold()
+      .catch(error => {
+        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohUpdateError'));
+      });
   }
 
   public getOriginalConfig(): CallSettingsData {

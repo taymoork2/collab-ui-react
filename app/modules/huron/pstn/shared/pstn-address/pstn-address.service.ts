@@ -64,6 +64,7 @@ export class Address implements IAddress {
   }
 
   public reset (): void {
+    this.uuid = undefined;
     this.streetAddress = null;
     this.unit = undefined;
     this.city = null;
@@ -72,18 +73,6 @@ export class Address implements IAddress {
     this.country = null;
     this.default = false;
     this.validated = false;
-  }
-
-  public copy (address: Address): Address {
-    this.uuid = address.uuid;
-    this.streetAddress = address.streetAddress;
-    this.unit = address.unit;
-    this.city = address.city;
-    this.state = address.state;
-    this.zip = address.zip;
-    this.country = address.country;
-    this.default = address.default;
-    return this;
   }
 }
 

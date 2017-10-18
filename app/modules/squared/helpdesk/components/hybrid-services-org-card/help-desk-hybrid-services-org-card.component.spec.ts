@@ -2,7 +2,7 @@ import helpDeskHybridServicesOrgCard from './index';
 
 describe('HelpDeskHybridServicesOrgCardComponentCtrl', () => {
 
-  let $componentController, $scope, $q, CloudConnectorService, LicenseService, HybridServicesClusterService, UCCService, ctrl;
+  let $componentController, $scope, $q, CloudConnectorService, LicenseService, HybridServicesClusterService, ctrl;
 
   beforeEach(angular.mock.module('Squared'));
 
@@ -15,29 +15,23 @@ describe('HelpDeskHybridServicesOrgCardComponentCtrl', () => {
     spyOn(HybridServicesClusterService, 'getStatusForService');
     spyOn(CloudConnectorService, 'getService').and.returnValue($q.resolve({ serviceId: 'squared-fusion-gcal', setup: true, status: 'OK', cssClass: 'success' }));
     spyOn(LicenseService, 'orgIsEntitledTo').and.callThrough();
-    spyOn(UCCService, 'getOrgVoicemailConfiguration').and.returnValue($q.resolve({
-      voicemailOrgEnableInfo: {
-        orgVoicemailStatus: 'HYBRID_SUCCESS',
-      },
-    }));
   }
 
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
   afterEach(cleanup);
 
-  function dependencies (_$componentController_, $rootScope, _$q_, _CloudConnectorService_, _HybridServicesClusterService_, _LicenseService_, _UCCService_) {
+  function dependencies (_$componentController_, $rootScope, _$q_, _CloudConnectorService_, _HybridServicesClusterService_, _LicenseService_) {
     $componentController = _$componentController_;
     $q = _$q_;
     $scope = $rootScope.$new();
     CloudConnectorService = _CloudConnectorService_;
     LicenseService = _LicenseService_;
     HybridServicesClusterService = _HybridServicesClusterService_;
-    UCCService = _UCCService_;
   }
 
   function cleanup() {
-    $componentController = $scope = $q = ctrl = CloudConnectorService = LicenseService = HybridServicesClusterService = UCCService = undefined;
+    $componentController = $scope = $q = ctrl = CloudConnectorService = LicenseService = HybridServicesClusterService = undefined;
   }
 
   function initController(org) {
@@ -134,35 +128,6 @@ describe('HelpDeskHybridServicesOrgCardComponentCtrl', () => {
     expect(ctrl.hybridServicesCard.services[0].status).toEqual('OK');
     expect(ctrl.hybridServicesCard.services[0].setup).toBeTruthy();
     expect(ctrl.hybridServicesCard.services[0].cssClass).toEqual('success');
-  });
-
-  it('should get the voicemail status from UCCService if the org is entitled to Call Service Connect, and show a green icon if the service is good', () => {
-    const org = {
-      services: ['squared-fusion-mgmt', 'squared-fusion-ec'],
-    };
-    LicenseService.orgIsEntitledTo.and.callFake((_org, service) => {
-      return service === 'squared-fusion-ec';
-    });
-
-    ctrl = initController(org);
-    ctrl.$onInit();
-    $scope.$apply();
-
-    expect(ctrl.hybridServicesCard.services.length).toBe(1);
-    expect(ctrl.hybridServicesCard.services[0].cssClass).toEqual('success');
-    expect(UCCService.getOrgVoicemailConfiguration).toHaveBeenCalled();
-  });
-
-  it('should not get voicemail status if the org is not entitled to Call Service Connect', () => {
-    LicenseService.orgIsEntitledTo.and.returnValue(false);
-    const org = {
-      services: ['squared-fusion-mgmt'],
-    };
-    ctrl = initController(org);
-    ctrl.$onInit();
-    $scope.$apply();
-
-    expect(UCCService.getOrgVoicemailConfiguration).not.toHaveBeenCalled();
   });
 
   it('should get and display Hybrid IM and Presence status if the organization is entitled', () => {

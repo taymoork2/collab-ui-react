@@ -19,6 +19,7 @@ describe('Component: myCompanyOrders', () => {
       productDescriptionList: [
         'first description',
       ],
+      invoiceURL: 'invoice.com',
     }, {
       externalOrderId: '2',
       orderDate: new Date(),
@@ -28,6 +29,7 @@ describe('Component: myCompanyOrders', () => {
         'fourth description',
         'fifth description',
       ],
+      invoiceURL: '',
     }, {
       externalOrderId: '3',
       orderDate: new Date(),
@@ -36,6 +38,7 @@ describe('Component: myCompanyOrders', () => {
       productDescriptionList: [
         'second description',
       ],
+      invoiceURL: '',
     }, {
       externalOrderId: '4',
       orderDate: new Date(),
@@ -44,6 +47,7 @@ describe('Component: myCompanyOrders', () => {
       productDescriptionList: [
         'closed description',
       ],
+      invoiceURL: '',
     }];
 
     this.purchaseOrdersList = purchaseOrdersList;
@@ -56,7 +60,6 @@ describe('Component: myCompanyOrders', () => {
     spyOn(this.DigitalRiverService, 'logout').and.returnValue(this.$q.resolve());
 
     this.compileComponent('myCompanyOrders');
-    spyOn(this.controller, 'viewInvoice');
   });
 
   it('should render ui-grid from gridOptions', function () {
@@ -103,6 +106,7 @@ describe('Component: myCompanyOrders', () => {
       expect(this.controller.orderDetailList[0].status).toEqual('myCompanyOrders.completed');
       expect(this.controller.orderDetailList[1].status).toEqual('myCompanyOrders.pending');
       expect(this.controller.orderDetailList[2].status).toEqual('myCompanyOrders.pendingActivation');
+      expect(this.controller.orderDetailList[0].invoiceURL).toEqual('invoice.com');
     });
 
     it('should have a data row and no loading icon', function () {
@@ -124,11 +128,6 @@ describe('Component: myCompanyOrders', () => {
 
       expect(this.view.find('.ui-grid-row').first()).toContainText('2');
       expect(this.view.find('.ui-grid-row').last()).toContainText('1');
-    });
-
-    it('should call viewInvoice on action click', function () {
-      this.view.find('.my-company-order-history-actions').click();
-      expect(this.controller.viewInvoice).toHaveBeenCalled();
     });
   });
 });

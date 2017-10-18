@@ -4,7 +4,6 @@ import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-ser
 import { HybridServiceId, ClusterTargetType, IExtendedClusterFusion } from 'modules/hercules/hybrid-services.types';
 
 export class ClusterCardController implements ng.IComponentController {
-  private hasNodesViewFeatureToggle = false;
   private cluster: IExtendedClusterFusion;
   public formatTimeAndDate = this.HybridServicesI18NService.formatTimeAndDate;
   public getLocalizedReleaseChannel = this.HybridServicesI18NService.getLocalizedReleaseChannel;
@@ -15,17 +14,9 @@ export class ClusterCardController implements ng.IComponentController {
     private $modal: IToolkitModalService,
     private $state: ng.ui.IStateService,
     private $window: ng.IWindowService,
-    private FeatureToggleService,
     private HybridServicesI18NService: HybridServicesI18NService,
     private HybridServicesUtilsService: HybridServicesUtilsService,
   ) { }
-
-  public $onInit() {
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridNodesView)
-      .then((supported) => {
-        this.hasNodesViewFeatureToggle = supported;
-      });
-  }
 
   public countHosts() {
     return _.chain(this.cluster.connectors)
@@ -163,6 +154,12 @@ export class ClusterCardController implements ng.IComponentController {
     // these target types don't follow an upgrade
     // schedule but instead upgrade automatically
     return _.includes(['cs_mgmt'], cluster.targetType);
+  }
+
+  public showLinkToNodesPage(): boolean {
+    // Doesn't make sense for empty Expressways and EPT
+    // Nodes page not implemented yet for Context, but should be done at some point!
+    return !(this.cluster.extendedProperties.isEmpty && this.cluster.targetType === 'c_mgmt') && this.cluster.targetType !== 'ept' && this.cluster.targetType !== 'cs_mgmt';
   }
 }
 

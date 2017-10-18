@@ -169,9 +169,11 @@ describe('Component: LocationsWizardComponent -', () => {
       const steeringDigit: string = '9';
       const regionCode: string = '+1';
       const useSimplifiedNationalDialing: boolean = true;
-      const callerId: LocationCallerId = new LocationCallerId();
-      callerId.name = 'foo';
-      callerId.number = '-19725551212';
+      const callerId: LocationCallerId = {
+        name: 'foo',
+        number: '-19725551212',
+        uuid: '',
+      };
 
       this.controller.onTimeZoneChanged(timeZone);
       this.controller.onPreferredLanguageChanged(preferredLanguage);

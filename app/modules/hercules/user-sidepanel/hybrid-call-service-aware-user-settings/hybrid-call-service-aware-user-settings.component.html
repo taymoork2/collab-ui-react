@@ -11,7 +11,7 @@
     <span translate="common.cancel"></span>
   </button>
 </cs-sp-buttons>
-<cs-sp-container>
+<cs-sp-container cs-tabindex="$ctrl.showSaveButton() ? -1 : 0">
     <cs-sp-section class="cloud-extensions">
       <div class="section-title-row">
         <span class="section-name" translate="hercules.cloudExtensions.serviceNames.squared-fusion-uc"></span>
@@ -65,6 +65,15 @@
               <a ui-sref="user-overview.hybrid-services-squared-fusion-uc.aware-settings.uc-history"
                  translate="hercules.userHistory.seeHistory"></a>
             </span>
+          </div>
+
+          <div class="row collapse" ng-if="$ctrl.userStatusAware.messages.length">
+            <div class="columns small-3">
+              <span class="history-label">{{'cloudExtensions.details' | translate}}:</span>
+            </div>
+            <div class="columns small-9">
+              <user-status-messages messages="$ctrl.userStatusAware.messages"></user-status-messages>
+            </div>
           </div>
         </div>
 

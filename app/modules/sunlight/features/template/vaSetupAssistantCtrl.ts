@@ -1,4 +1,5 @@
 import { IToolkitModalService } from 'modules/core/modal';
+import * as _ from 'lodash';
 
 export interface IScopeWithController extends ng.IScope {
   controller?: any;
@@ -30,6 +31,7 @@ export class CareSetupVirtualAssistantCtrl {
   public cancelModalText = {};
   public nameForm: ng.IFormController;
   public tokenForm: ng.IFormController;
+  private tokenFormErrors = {};
   private escalationIntentUrl: string;
 
   // Avatar file error
@@ -44,33 +46,48 @@ export class CareSetupVirtualAssistantCtrl {
     templateId: '',
     name: '',
     configuration: {
-      mediaType: this.VirtualAssistantService.serviceCard.type,
+      mediaType: this.VirtualAssistantService.cvaServiceCard.type,
       pages: {
         VirtualAssistantConfigOverview: {
           enabled: true,
           isApiAiAgentConfigured: false,
           configurationType: this.VirtualAssistantService.configurationTypes.apiai,
+          startTimeInMillis: 0,
+          eventName: this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_OVERVIEW_PAGE,
         },
-        VirtualAssistantDialogIntegration: { enabled: true },
+        VirtualAssistantDialogIntegration: {
+          enabled: true,
+          startTimeInMillis: 0,
+          eventName: this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_DIALOGUE_PAGE,
+        },
         VirtualAssistantAccessToken: {
           enabled: true,
           accessTokenValue: '',
           invalidToken: true,
           validatingToken: false,
+          needsValidation: true,
+          startTimeInMillis: 0,
+          eventName: this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_ACCESS_TOKEN_PAGE,
         },
         VirtualAssistantName: {
           enabled: true,
           nameValue: '',
+          startTimeInMillis: 0,
+          eventName: this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_NAME_PAGE,
         },
         VirtualAssistantAvatar: {
           enabled: true,
           fileValue: '',
           avatarError: this.avatarErrorType.NO_ERROR,
           uploadCanceled: false,
+          startTimeInMillis: 0,
+          eventName: this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_AVATAR_PAGE,
         },
         VirtualAssistantSummary: {
           enabled: true,
           visibleError: false,
+          startTimeInMillis: 0,
+          eventName: this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_SUMMARY_PAGE,
         },
       },
     },
@@ -100,10 +117,12 @@ export class CareSetupVirtualAssistantCtrl {
     private VirtualAssistantService,
     private Authinfo,
     private CTService,
-    private LogMetricsService,
+    private Analytics,
     private Notification,
     private UrlConfig,
   ) {
+
+    this.template.configuration.pages.VirtualAssistantConfigOverview.startTimeInMillis = Date.now();
     if (this.$stateParams.isEditFeature) {
       this.isEditFeature = true;
       this.template.templateId = this.$stateParams.template.id;
@@ -111,6 +130,7 @@ export class CareSetupVirtualAssistantCtrl {
       this.template.configuration.pages.VirtualAssistantName.nameValue = this.$stateParams.template.name;
       this.template.configuration.pages.VirtualAssistantAccessToken.accessTokenValue = this.$stateParams.template.config.token;
       this.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = false;
+      this.template.configuration.pages.VirtualAssistantAccessToken.needsValidation = false;
 
       if (this.$stateParams.template.icon) {
         this.avatarUploadState = this.avatarState.PREVIEW;
@@ -120,7 +140,6 @@ export class CareSetupVirtualAssistantCtrl {
 
     const controller = this;
     (<IScopeWithController>this.$scope).controller = controller; // used by ctCancelModal to not be tied to 1 controller.
-
     controller.CTService.getLogoUrl().then(function (url) {
       controller.logoUrl = url;
     });
@@ -216,6 +235,30 @@ export class CareSetupVirtualAssistantCtrl {
         return 'hidden';
     }
   }
+  public onPageLoad(): void {
+    this.onPageLoaded(this.currentState);
+  }
+  /**
+   * called when page corresponding to newState is loaded event
+   * @param {string} newState
+   */
+  private onPageLoaded(newState: string): void {
+    if (newState === 'VirtualAssistantAccessToken' &&
+      this.isAccessTokenInvalid() &&
+      !_.isEmpty(this.tokenFormErrors) &&
+      !_.isEmpty(this.tokenForm)) {
+      // We've already visited this page and it had errors, so reinstate the messages for them. JIRA CA-104
+
+      const controller = this;
+      controller.tokenForm.tokenInput.$setValidity('invalidToken', false);
+      _.keys(controller.tokenFormErrors).forEach( function (key){
+        controller.tokenForm.$error[key] = controller.tokenFormErrors[key];
+      });
+      controller.tokenFormErrors = {}; //Clear out as they've served their purpose
+    }
+
+    this.template.configuration.pages[newState].startTimeInMillis = Date.now();
+  }
   /**
    * Move forward to next page in modal series.
    */
@@ -225,10 +268,38 @@ export class CareSetupVirtualAssistantCtrl {
     this.template.configuration.pages.VirtualAssistantAvatar.avatarError = this.avatarErrorType.NO_ERROR;
 
     const controller = this;
+    const durationInMillis = Date.now() -
+      controller.template.configuration.pages[controller.currentState].startTimeInMillis;
+    const analyticProps = { durationInMillis: durationInMillis };
+    controller.Analytics.trackEvent(controller.template.configuration.pages[controller.currentState].eventName, analyticProps);
     controller.animation = 'slide-left';
     controller.$timeout(function () {
       controller.currentState = controller.getAdjacentEnabledState(controller.getPageIndex(), 1);
     }, controller.animationTimeout);
+  }
+
+  /**
+   * conduct certain actions for the just before moving to previous page from another.
+   * @param {string} currentState State before moving to previous page.
+   */
+  private beforePreviousPage(currentState: string): void {
+    if (currentState === 'VirtualAssistantAccessToken' &&
+        this.isAccessTokenInvalid() &&
+        !_.isEmpty(this.tokenForm)) {
+      // Token is has errors, so save off the error messages in case we come back. JIRA CA-104
+
+      const controller = this;
+      _.keys(controller.tokenForm.$error).forEach(function (key) {
+        controller.tokenFormErrors[key] = controller.tokenForm.$error[key];
+      });
+    }
+    if (currentState === 'VirtualAssistantName' &&
+        _.isEmpty(this.template.configuration.pages.VirtualAssistantName.nameValue) &&
+        !_.isEmpty(this.nameForm) &&
+        !this.nameForm.$valid) {
+      //Name was validated and failed validation. The actual value is in the nameform, so set our value to that; JIRA CA-104
+      this.template.configuration.pages.VirtualAssistantName.nameValue = this.nameForm.nameInput.$viewValue;
+    }
   }
 
   /**
@@ -244,6 +315,7 @@ export class CareSetupVirtualAssistantCtrl {
     controller.saveTemplateErrorOccurred = false;
     controller.templateButtonText = this.$translate.instant('common.finish');
     controller.$timeout(function () {
+      controller.beforePreviousPage(controller.currentState);
       controller.currentState = controller.getAdjacentEnabledState(controller.getPageIndex(), -1);
     }, controller.animationTimeout);
   }
@@ -274,6 +346,7 @@ export class CareSetupVirtualAssistantCtrl {
   public onAPIAITokenChange(): void {
     const controller = this;
     this.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = true;
+    this.template.configuration.pages.VirtualAssistantAccessToken.needsValidation = true; //changed token needs validation
     controller.tokenForm.tokenInput.$setValidity('invalidToken', true); // reset validation
   }
 
@@ -287,11 +360,13 @@ export class CareSetupVirtualAssistantCtrl {
     controller.service.isAPIAITokenValid(accessToken)
       .then(function () {
         controller.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = false;
+        controller.template.configuration.pages.VirtualAssistantAccessToken.needsValidation = false; //we just validated it.
         controller.tokenForm.tokenInput.$setValidity('invalidToken', true); //mark input as valid
         controller.template.configuration.pages.VirtualAssistantAccessToken.validatingToken = false;
       })
       .catch(function () {
         controller.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = true;
+        controller.template.configuration.pages.VirtualAssistantAccessToken.needsValidation = false; //we just validated it; and it failed.
         controller.tokenForm.tokenInput.$setValidity('invalidToken', false); //mark input as invalid
         controller.template.configuration.pages.VirtualAssistantAccessToken.validatingToken = false;
       });
@@ -302,9 +377,15 @@ export class CareSetupVirtualAssistantCtrl {
     return !!this.template.configuration.pages.VirtualAssistantConfigOverview.isApiAiAgentConfigured;
   }
 
+  public isAccessTokenInvalid(): boolean {
+    return (this.template.configuration.pages.VirtualAssistantAccessToken.invalidToken &&
+           !this.template.configuration.pages.VirtualAssistantAccessToken.needsValidation);
+  }
+
   public isAccessTokenValid(): boolean {
     return !!(this.template.configuration.pages.VirtualAssistantAccessToken.accessTokenValue || '').trim()
       && this.isValidTokenLength()
+      && !this.template.configuration.pages.VirtualAssistantAccessToken.needsValidation
       && !this.template.configuration.pages.VirtualAssistantAccessToken.invalidToken;
   }
 
@@ -476,13 +557,27 @@ export class CareSetupVirtualAssistantCtrl {
     controller.service.addConfig(type, name, config, orgId, avatarDataURL)
       .then(function () {
         controller.handleFeatureCreation();
-        controller.LogMetricsService.logMetrics('Created template for Care Virtual Assistant', controller.LogMetricsService.getEventType('careTemplateFinish'), controller.LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
+        controller.writeMetrics();
       })
       .catch(function (response) {
         controller.handleFeatureError();
         controller.Notification.errorWithTrackingId(response, controller.getVaMessageKey('messages.createConfigFailureText'));
       });
   }
+
+  /**
+   * Writing the metrics to the mixpanel for the last page and the overall wizard
+   */
+  private writeMetrics(): void {
+    const currentTimeInMillis = Date.now();
+    let durationInMillis = currentTimeInMillis - this.template.configuration.pages.VirtualAssistantSummary.startTimeInMillis;
+    let analyticProps = { durationInMillis: durationInMillis };
+    this.Analytics.trackEvent(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_SUMMARY_PAGE, analyticProps);
+    durationInMillis = currentTimeInMillis - this.template.configuration.pages.VirtualAssistantConfigOverview.startTimeInMillis;
+    analyticProps = { durationInMillis: durationInMillis };
+    this.Analytics.trackEvent(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_START_FINISH, analyticProps);
+  }
+
   /**
    * handle the result of successful feature update and store
    * @param response
@@ -511,7 +606,7 @@ export class CareSetupVirtualAssistantCtrl {
     controller.service.updateConfig(templateId, type, name, config, orgId, avatarDataURL)
       .then(function () {
         controller.handleFeatureUpdate();
-        controller.LogMetricsService.logMetrics('Updated template for Care VirtualAssistant', controller.LogMetricsService.getEventType('careTemplateFinish'), controller.LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
+        controller.writeMetrics();
       })
       .catch(function (response) {
         controller.handleFeatureError();

@@ -35,7 +35,10 @@
         .then(function (supported) {
           vm.ishI1484 = supported;
           if (!supported) {
+            vm.gridOptions.columnDefs.splice(0, 1);
             vm.gridOptions.columnDefs.splice(2, 1);
+          } else {
+            vm.gridOptions.columnDefs.splice(1, 1);
           }
         });
     }
@@ -158,6 +161,7 @@
           });
           vm.gridRefresh = false;
           vm.vendor = LineListService.getVendor();
+          $scope.gridApi.infiniteScroll.dataLoaded();
         })
         .catch(function (response) {
           Log.debug('Query for line associations failed.');
@@ -196,12 +200,18 @@
             vm.currentDataPosition++;
             vm.load = false;
             getLineList((vm.currentDataPosition * Config.usersperpage) + 1);
-            $scope.gridApi.infiniteScroll.dataLoaded();
           }
         });
         gridApi.core.on.sortChanged($scope, sortColumn);
       },
       columnDefs: [{
+        field: 'siteToSiteNumber',
+        displayName: $translate.instant('linesPage.internalNumberHeader'),
+        width: '20%',
+        cellClass: 'internalNumberColumn',
+        headerCellClass: 'internalNumberHeader',
+        sortable: true,
+      }, {
         field: 'internalNumber',
         displayName: $translate.instant('linesPage.internalNumberHeader'),
         width: '20%',

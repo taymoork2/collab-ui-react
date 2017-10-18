@@ -134,10 +134,7 @@ describe('Huron Functional: add-places', () => {
       describe('Test Naboo (Spark + Spark Call place) setup', () => {
         it('should list newly added place by search', () =>{
           utils.click(CallPlaces.searchPlaces);
-          utils.sendKeys(CallPlaces.searchBar, PLACE_NABOO);
-        });
-        it('should click on newly added place and bring up side menu', () => {
-          utils.click(CallPlaces.clickLocation);
+          utils.searchAndClick(PLACE_NABOO);
         });
 
         describe('Side Panel Options', () => {
@@ -199,10 +196,7 @@ describe('Huron Functional: add-places', () => {
       describe('Test Jedha (Spark-only place without PSTN service) setup', () => {
         it('should clear previous search and search for Jedha', () => {
           utils.click(CallPlaces.clearSearchPlace);
-          utils.sendKeys(CallPlaces.searchBar, PLACE_JEDHA);
-        });
-        it('should click on newly added place and bring up side menu', () => {
-          utils.click(CallPlaces.clickLocation2);
+          utils.searchAndClick(PLACE_JEDHA);
         });
 
         describe('Side Panel Options', () => {
@@ -231,7 +225,7 @@ describe('Huron Functional: add-places', () => {
       describe('Test Eadu (Spark-only place with PSTN service) setup', () => {
         it('should clear previous search and search for Eadu', () => {
           utils.click(CallPlaces.clearSearchPlace);
-          utils.sendKeys(CallPlaces.searchBar, PLACE_EADU);
+          utils.searchAndClick(PLACE_EADU);
         });
         it('should click on newly added place and bring up side menu', () => {
           utils.click(CallPlaces.clickLocation3);

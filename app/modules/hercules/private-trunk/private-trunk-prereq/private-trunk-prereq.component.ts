@@ -8,19 +8,13 @@ export class PrivateTrunkPrereqCtrl implements ng.IComponentController {
   public connectivityHelpMessages: ITranslationMessages[];
   public fullServiceHelpMessages: ITranslationMessages[];
 
-  private nameChangeEnabled: boolean = false;
-
   /* @ngInject */
   constructor(
     private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
     private PrivateTrunkPrereqService: PrivateTrunkPrereqService,
-    private FeatureToggleService,
   ) {
-    this.FeatureToggleService.atlas2017NameChangeGetStatus().then((toggle: boolean): void => {
-      this.nameChangeEnabled = toggle;
-      this.initModalHelpMessage();
-    });
+    this.initModalHelpMessage();
   }
 
   public $onInit(): void {
@@ -36,7 +30,7 @@ export class PrivateTrunkPrereqCtrl implements ng.IComponentController {
     }, {
       helpText: this.$translate.instant('servicesOverview.cards.privateTrunk.dNSzoneHelp'),
     }, {
-      helpText: this.nameChangeEnabled ? this.$translate.instant('servicesOverview.cards.privateTrunk.defaultTrustHelpNew') : this.$translate.instant('servicesOverview.cards.privateTrunk.defaultTrustHelp'),
+      helpText: this.$translate.instant('servicesOverview.cards.privateTrunk.defaultTrustHelpNew'),
     }];
     this.fullServiceHelpMessages = [{
       helpText:  this.$translate.instant('servicesOverview.cards.privateTrunk.allZonesHelp'),

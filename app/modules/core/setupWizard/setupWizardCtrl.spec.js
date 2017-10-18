@@ -6,10 +6,12 @@ describe('SetupWizardCtrl', function () {
 
     this.injectDependencies(
       '$controller',
+      '$httpBackend',
       '$q',
       '$scope',
       '$state',
       '$stateParams',
+      'Analytics',
       'Authinfo',
       'FeatureToggleService',
       'Orgservice',
@@ -32,12 +34,14 @@ describe('SetupWizardCtrl', function () {
     spyOn(this.SetupWizardService, 'hasPendingWebExMeetingLicenses').and.returnValue(false);
     spyOn(this.SetupWizardService, 'hasPendingCallLicenses').and.returnValue(false);
     spyOn(this.SetupWizardService, 'hasPendingServiceOrder').and.returnValue(false);
+    spyOn(this.SetupWizardService, 'hasPendingSubscriptionOptions').and.returnValue(false);
     spyOn(this.SetupWizardService, 'isCustomerPresent').and.returnValue(this.$q.resolve(true));
     spyOn(this.SetupWizardService, 'isProvisionedSubscription').and.returnValue(false);
     spyOn(this.SetupWizardService, 'hasPendingCCASPPackage').and.returnValue(false);
     spyOn(this.SetupWizardService, 'hasPendingTSPAudioPackage').and.returnValue(false);
     spyOn(this.SetupWizardService, 'getActiveCCASPPackage').and.returnValue(undefined);
     spyOn(this.SetupWizardService, 'getActiveTSPAudioPackage').and.returnValue(undefined);
+    spyOn(this.SetupWizardService, 'getOrg');
     spyOn(this.Authinfo, 'getLicenses').and.returnValue([{
       licenseType: 'SHARED_DEVICES',
     }]);
@@ -103,6 +107,17 @@ describe('SetupWizardCtrl', function () {
     });
     this.$scope.$apply();
   }
+
+  describe('Before initializing toggles', function () {
+    beforeEach(function () {
+      spyOn(this.Analytics, 'trackServiceSetupSteps').and.callThrough();
+      this.initController();
+    });
+
+    it('Service Setup Wizard metrics calls to Mixpanel should be made', function () {
+      expect(this.Analytics.trackServiceSetupSteps).toHaveBeenCalled();
+    });
+  });
 
   describe('When all toggles are false (and Authinfo.isSetupDone is false as well)', function () {
     beforeEach(function () {
@@ -303,7 +318,7 @@ describe('SetupWizardCtrl', function () {
     });
   });
 
-  describe('When Authinfo.isCare is enabled and addUsers too', function () {
+  describe('When Authinfo.isCare, addUsers enabled and old order flow ', function () {
     beforeEach(function () {
       this.Authinfo.isCare.and.returnValue(true);
       this.Authinfo.isCSB.and.returnValue(false);
@@ -316,6 +331,19 @@ describe('SetupWizardCtrl', function () {
 
     it('careSettings should have a single substep', function () {
       this.expectSubStepOrder('careSettings', ['csonboard']);
+    });
+  });
+
+  describe('When pending Care license, and new orders flow ', function () {
+    beforeEach(function () {
+      this.SetupWizardService.hasPendingServiceOrder.and.returnValue(true);
+      this.SetupWizardService.hasPendingSubscriptionOptions.and.returnValue(true);
+      this.SetupWizardService.hasPendingLicenses.and.returnValue(true);
+      this.initController();
+    });
+
+    it('the wizard should have the 4 steps', function () {
+      this.expectStepOrder(['planReview', 'serviceSetup', 'enterpriseSettings', 'finish']);
     });
   });
 
@@ -380,12 +408,11 @@ describe('SetupWizardCtrl', function () {
     });
 
     it('the wizard should have a lot of settings', function () {
-      this.expectStepOrder(['planReview', 'serviceSetup', 'meetingSettings', 'enterpriseSettings', 'careSettings']);
+      this.expectStepOrder(['planReview', 'serviceSetup', 'meetingSettings', 'enterpriseSettings']);
       this.expectSubStepOrder('planReview', ['init']);
-      this.expectSubStepOrder('serviceSetup', ['pickCallLocationType', 'setupCallLocation']);
+      this.expectSubStepOrder('serviceSetup', ['setupCallLocation']);
       this.expectSubStepOrder('meetingSettings', ['migrateTrial', 'siteSetup', 'licenseDistribution', 'summary']);
       this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'enterprisePmrSetup', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
-      this.expectSubStepOrder('careSettings', ['csonboard']);
     });
   });
 
@@ -482,6 +509,22 @@ describe('SetupWizardCtrl', function () {
 
       this.expectStepOrder(['enterpriseSettings']);
       this.expectSubStepOrder('enterpriseSettings', ['init', 'exportMetadata', 'importIdp', 'testSSO']);
+    });
+  });
+
+  describe('Should create customer in CMI if licensed but no record found', function () {
+    beforeEach(function () {
+      this.SetupWizardService.isCustomerPresent.and.returnValue(this.$q.resolve(false));
+      this.SetupWizardService.getOrg.and.returnValue({
+        id: '123456',
+        displayName: 'Bob Belcher',
+        countryCode: 'US',
+      });
+      this.initController();
+    });
+
+    it('should create customer', function () {
+      this.$httpBackend.expectPOST('/customers').respond(200);
     });
   });
 });

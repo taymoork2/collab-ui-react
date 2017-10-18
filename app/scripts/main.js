@@ -93,6 +93,7 @@
     require('modules/core/customerReports').default,
     require('modules/core/partnerReports').default,
     require('modules/gemini/reports').default,
+    require('modules/core/siteList/webex-site').default,
   ])
     .constant('CryptoJS', require('crypto-js'))
     .constant('addressparser', require('emailjs-addressparser'));
@@ -136,6 +137,7 @@
     require('modules/call/features').default,
     require('modules/call/features/paging-group/shared').default,
     require('modules/call/features/call-pickup/shared').default,
+    require('modules/huron/lineSettings/directoryNumberService'),
   ])
     .constant('ASTParser', require('acorn'))
     .constant('ASTWalker', require('acorn/dist/walk'));
@@ -144,6 +146,8 @@
     'Core',
     'Squared',
     'ngTagsInput',
+    require('modules/core/overview/notifications/allHybridCalendars.factory').default,
+    require('modules/core/overview/notifications/hybridMessaging.factory').default,
     require('modules/core/users/userAdd/onboard.module'),
     require('modules/hercules/cluster-card').default,
     require('modules/hercules/connector-upgrade-modal/connector-upgrade-modal.controller').default,
@@ -152,8 +156,10 @@
     require('modules/hercules/hybrid-services-nodes-page').default,
     require('modules/hercules/private-trunk/private-trunk-overview-settings').default,
     require('modules/hercules/private-trunk/private-trunk-setup').default,
+    require('modules/hercules/user-sidepanel/hybrid-services-user-sidepanel-section').default,
     require('modules/hercules/resource-group-card').default,
     require('modules/hercules/service-settings/calendar-service-setup').default,
+    require('modules/hercules/service-specific-pages/components/cluster-list/hybrid-service-cluster-list.component').default,
     require('modules/hercules/services/calendar-cloud-connector.service').default,
     require('modules/hercules/services/cluster-service').default,
     require('modules/hercules/services/enterprise-private-trunk-service').default,
@@ -206,9 +212,16 @@
 
   angular.module('Gemini', ['Core']);
 
-  angular.module('CMC', [
-    'Core',
-    require('modules/cmc').default,
+  angular.module('ServicesOverview', [
+    require('modules/services-overview').default,
+    require('modules/services-overview/new-hybrid/prerequisites-modals/basic-expressway-prerequisites').default,
+    require('modules/services-overview/new-hybrid/prerequisites-modals/call-service-aware-prerequisites').default,
+    require('modules/services-overview/new-hybrid/prerequisites-modals/call-service-connect-prerequisites').default,
+    require('modules/services-overview/new-hybrid/prerequisites-modals/hybrid-calendar-prerequisites/hybrid-calendar-prerequisites.controller').default,
+    require('modules/services-overview/new-hybrid/prerequisites-modals/hybrid-call-prerequisites-modal/hybrid-call-prerequisites.controller').default,
+    require('modules/services-overview/new-hybrid/prerequisites-modals/hybrid-media-prerequisites/hybrid-media-prerequisites.controller').default,
+    require('modules/services-overview/new-hybrid/prerequisites-modals/hybrid-services-prerequisites-helper.service').default,
+    require('modules/services-overview/new-hybrid/prerequisites-modals/on-premises-exchange-prerequisites').default,
   ]);
 
   module.exports = angular.module('Main', [
@@ -227,9 +240,8 @@
     'GSS',
     'oc.lazyLoad',
     'Gemini',
-    'CMC',
     'Csdm',
-    require('modules/services-overview').default,
+    'ServicesOverview',
   ]).config(require('./main.config'))
     .run(require('./main.run'))
     .name;
@@ -238,8 +250,6 @@
   requireAll(require.context('modules/', true, /\.module\.(js|ts)$/));
   // require all other app files - ignore bootstrap.js, preload.js, newrelic
   requireAll(require.context('../', true, /\.\/(?!.*(\.spec|bootstrap.js$|scripts\/preload.js$|\/newrelic\/.*.js$)).*\.(js|ts)$/));
-  // require translation files
-  requireAll(require.context('file-loader?name=[path][name].[ext]!../l10n', false, /\.(json)$/));
   // require all other assets
   requireAll(require.context('../', true, /\.(jpg|png|svg|ico|csv|pdf)$/));
 

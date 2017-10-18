@@ -62,7 +62,7 @@ export function createAtlasUser(token, orgId, userList) {
     body: userList,
     json: true,
   };
-  console.log('Start to create Users!');
+  console.log('Creating users...');
   return provisionerHelper.makeRequest(options);
 };
 

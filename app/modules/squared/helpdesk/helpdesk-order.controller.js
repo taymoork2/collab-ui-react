@@ -26,10 +26,11 @@
     vm.showProvisioningContactEditView = false;
 
     // Logic for showing links
-    vm.isAccountActivated = isAccountActivated;
-    vm.isAccountPendingActivation = isAccountPendingActivation;
     vm.isOrderPendingProvisioning = isOrderPendingProvisioning;
-    vm.isOrderProvisioned = isOrderProvisioned;
+    vm.showSetupOrder = showSetupOrder;
+    vm.showOrgDetailsLink = showOrgDetailsLink;
+    vm.canEditResendAdminEmail = canEditResendAdminEmail;
+    vm.canEditResendProvisioningContact = canEditResendProvisioningContact;
 
     vm.showEmailEditView = showEmailEditView;
     vm.updateAdminEmail = updateAdminEmail;
@@ -39,7 +40,6 @@
     vm.hasPermissionToEditInfo = Authinfo.isOrderAdminUser();
     vm.goToCustomerPage = goToCustomerPage;
     vm.goToPartnerPage = goToPartnerPage;
-    vm.goToProvisionedCustomerPage = goToProvisionedCustomerPage;
     vm.launchOrderProcessingClient = launchOrderProcessingClient;
 
     // Feature toggle to hide setup link
@@ -57,6 +57,7 @@
 
     var oneTier = '1-tier';
     var PROVISIONED = 'PROVISIONED';
+    var UNPROVISIONED_STATUSES = ['PENDING_PARM', 'PROV_READY'];
 
     var emailObjsMap = {
       customer: {
@@ -111,6 +112,7 @@
       vm.subscriptionId = orderObj.serviceId;
       vm.accountId = orderObj.accountId;
       vm.orderId = orderObj.externalOrderId;
+      vm.hasConflictingServiceStatus = checkForConflictingServiceStatuses(orderObj);
 
       //Getting the customer info from order payload or update clientContent
       var emailUpdates = _.get(orderObj, 'clientContent.adminEmailUpdates');
@@ -145,19 +147,20 @@
       vm.oldpartnerAdminEmail = vm.partnerAdminEmail;
 
       if (!vm.accountId) {
-        vm.provisionTime = orderObj.orderStatus !== PROVISIONED ? null : (new Date(orderObj.lastModified)).toUTCString();
+        vm.provisionTime = (orderObj.orderStatus !== PROVISIONED && !vm.hasConflictingServiceStatus) ? null : (new Date(orderObj.lastModified)).toUTCString();
         vm.endCustomerName = _.get(orderObj, 'orderContent.common.customerInfo.endCustomerInfo.name');
         vm.customerEmailSent = orderObj.lastProvisioningEmailTimestamp ? (new Date(orderObj.lastProvisioningEmailTimestamp)).toUTCString() : undefined;
         vm.purchaseOrderId = orderObj.purchaseOrderId;
         vm.lastProvisioningContact = vm.order.lastProvisioningContact;
         vm.oldLastProvisioningContact = _.clone(vm.lastProvisioningContact);
       }
+      vm.headingString = getOrderOrCustomerInfoString();
       // Getting the account details using the account Id from order.
       if (vm.accountId) {
         HelpdeskService.getAccount(vm.accountId)
           .then(function (account) {
             vm.account = account;
-            vm.accountName = account.accountName;
+            vm.endCustomerName = account.accountName;
             vm.accountOrgId = account.accountOrgId;
             // Getting partner Info only if Partner OrgId exists.
             vm.partnerOrgId = account.partnerOrgId;
@@ -178,6 +181,10 @@
                   vm.accountActivated = true;
                   vm.accountActivationInfo = (new Date(activationDate)).toUTCString();
                 }
+              }, function (response) {
+                Notification.errorResponse(response, 'helpdesk.getOrgDetailsFailure');
+                vm.accountActivated = $translate.instant('common.notAvailable');
+                vm.accountActivationInfo = $translate.instant('common.notAvailable');
               });
             }
 
@@ -188,7 +195,7 @@
             if (vm.partnerOrgId) {
               getEmailStatus(vm.emailTypes.PARTNER);
             }
-          }, function (response) {
+          }).catch(function (response) {
             Notification.errorResponse(response, 'helpdesk.getOrgDetailsFailure');
             vm.accountName = $translate.instant('common.notAvailable');
             vm.provisionTime = $translate.instant('common.notAvailable');
@@ -251,20 +258,43 @@
         });
     }
 
-    function isAccountActivated() {
-      return vm.accountId && vm.accountActivated;
+    function checkForConflictingServiceStatuses(orderObj) {
+      if (orderObj.purchaseOrderId && orderObj.orderStatus !== PROVISIONED) {
+        var foundConflictingServiceStatus = _.some(_.get(orderObj, 'productProvisionStatus.serviceStatus'), function (service) {
+          return !_.includes(UNPROVISIONED_STATUSES, service.status);
+        });
+        return foundConflictingServiceStatus;
+      }
     }
 
-    function isAccountPendingActivation() {
-      return vm.accountId && !vm.accountActivated;
+    function getOrderOrCustomerInfoString() {
+      return isOrderPendingProvisioning() ? $translate.instant('helpdesk.orderInfo') : $translate.instant('helpdesk.customerInfo');
+    }
+
+    function showSetupOrder() {
+      if (vm.hasConflictingServiceStatus) {
+        return false;
+      }
+      return vm.supportsHelpDeskOrderSetup && vm.hasPermissionToEditInfo && vm.isOrderPendingProvisioning();
+    }
+
+    function showOrgDetailsLink() {
+      return vm.accountActivated === true || (vm.purchaseOrderId && (vm.order.orderStatus === PROVISIONED || vm.hasConflictingServiceStatus));
+    }
+
+    function canEditResendAdminEmail() {
+      if (vm.hasConflictingServiceStatus) {
+        return false;
+      }
+      return !_.isUndefined(vm.accountId) && vm.order.orderStatus === PROVISIONED;
+    }
+
+    function canEditResendProvisioningContact() {
+      return vm.isOrderPendingProvisioning() && !vm.hasConflictingServiceStatus;
     }
 
     function isOrderPendingProvisioning() {
-      return vm.purchaseOrderId && vm.order.orderStatus !== PROVISIONED;
-    }
-
-    function isOrderProvisioned() {
-      return vm.purchaseOrderId && vm.order.orderStatus === PROVISIONED;
+      return vm.purchaseOrderId && _.includes(UNPROVISIONED_STATUSES, vm.order.orderStatus);
     }
 
     // Cancel (close) the Edit option
@@ -292,18 +322,18 @@
 
     // Transition to the customer page if account has been activated.
     function goToCustomerPage() {
-      $state.go('helpdesk.org', { id: vm.accountOrgId });
+      if (vm.purchaseOrderId) {
+        if (!vm.orgId) {
+          return Notification.error('helpdesk.getOrgDetailsFailure');
+        }
+        $state.go('helpdesk.org', { id: vm.orgId });
+      } else if (vm.accountId) {
+        $state.go('helpdesk.org', { id: vm.accountOrgId });
+      }
     }
 
     function goToPartnerPage() {
       $state.go('helpdesk.org', { id: vm.partnerOrgId });
-    }
-
-    function goToProvisionedCustomerPage() {
-      if (!vm.orgId) {
-        return Notification.error('helpdesk.getOrgDetailsFailure');
-      }
-      $state.go('helpdesk.org', { id: vm.orgId });
     }
 
     function launchOrderProcessingClient() {

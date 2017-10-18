@@ -24,7 +24,7 @@ export class HuntGroupService {
   private huntGroupResource: IHuntGroupResource;
   private huntGroupCopy: HuntGroup;
   private huntGroupProperties: string[] = ['uuid', 'name', 'huntMethod', 'maxRingSecs', 'maxWaitMins', 'sendToApp', 'destinationRule', 'numbers', 'fallbackDestination', 'alternateDestination', 'members'];
-  private hasLocations: boolean = false;
+  private locationPromise: ng.IPromise<boolean>;
 
   /* @ngInject */
   constructor(
@@ -48,9 +48,7 @@ export class HuntGroupService {
       },
     };
 
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484).then((supports) => {
-      this.hasLocations = supports;
-    });
+    this.locationPromise = this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484);
 
     this.huntGroupResource = <IHuntGroupResource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/features/huntgroups/:huntGroupId', {},
       {
@@ -60,20 +58,41 @@ export class HuntGroupService {
   }
 
   public getHuntGroupList(): ng.IPromise<ng.resource.IResourceArray<ng.resource.IResource<HuntGroup>>> {
-    return this.huntGroupResource.query({
+    const huntGroupListPromise = this.huntGroupResource.query({
       customerId: this.Authinfo.getOrgId(),
     }).$promise;
+
+    return this.$q.all({
+      huntGroups: huntGroupListPromise,
+      locations: this.locationPromise,
+    }).then(promises => {
+      _.forEach(promises.huntGroups, huntGroup => {
+        _.set(huntGroup, 'numbers', _.filter(_.get(huntGroup, 'numbers'), (number) => {
+          if (promises.locations) {
+            return _.get(number, 'type') === NumberType.NUMBER_FORMAT_ENTERPRISE_LINE || _.get(number, 'type') === NumberType.NUMBER_FORMAT_DIRECT_LINE;
+          } else {
+            return _.get(number, 'type') === NumberType.NUMBER_FORMAT_EXTENSION || _.get(number, 'type') === NumberType.NUMBER_FORMAT_DIRECT_LINE;
+          }
+        }));
+      });
+      return promises.huntGroups;
+    });
   }
 
   public getHuntGroup(huntGroupId: string): ng.IPromise<HuntGroup> {
     if (!huntGroupId) {
       return this.$q.resolve(new HuntGroup());
     } else {
-      return this.huntGroupResource.get({
+      const huntGroupPromise = this.huntGroupResource.get({
         customerId: this.Authinfo.getOrgId(),
         huntGroupId: huntGroupId,
-      }).$promise
-      .then( (huntGroupResource) => {
+      }).$promise;
+
+      return this.$q.all({
+        huntGroups: huntGroupPromise,
+        locations: this.locationPromise,
+      }).then( (results) => {
+        const huntGroupResource = results.huntGroups;
         const huntGroup = new HuntGroup(_.pick<HuntGroup, HuntGroup>(huntGroupResource, this.huntGroupProperties));
         // TODO (jlowery): remove when CMI normalizes fallbackDestination payloads across APIs
         huntGroup.fallbackDestination = new FallbackDestination({
@@ -96,7 +115,7 @@ export class HuntGroupService {
         huntGroup.alternateDestination.name =  _.isNull(huntGroup.alternateDestination.name) ? _.get<string>(huntGroupResource.alternateDestination, 'userName') : huntGroup.alternateDestination.name;
 
         huntGroup.numbers = _.filter(huntGroupResource.numbers, (number) => {
-          if (this.hasLocations) {
+          if (results.locations) {
             return number.type === NumberType.NUMBER_FORMAT_ENTERPRISE_LINE || number.type === NumberType.NUMBER_FORMAT_DIRECT_LINE;
           } else {
             return number.type === NumberType.NUMBER_FORMAT_EXTENSION || number.type === NumberType.NUMBER_FORMAT_DIRECT_LINE;
@@ -194,80 +213,84 @@ export class HuntGroupService {
 
   public createHuntGroup(data: HuntGroup): ng.IPromise<string> {
     let location: string;
-    return this.huntGroupResource.save({
-      customerId: this.Authinfo.getOrgId(),
-    }, {
-      name: data.name,
-      huntMethod: data.huntMethod,
-      fallbackDestination: {
-        number: data.fallbackDestination.number,
-        numberUuid: data.fallbackDestination.numberUuid,
-        sendToVoicemail: data.fallbackDestination.sendToVoicemail,
-      },
-      numbers: _.map(data.numbers, (number) => {
-        if (this.hasLocations) {
-          return {
-            number: number.siteToSite ? number.siteToSite : number.number,
-            type: number.siteToSite ? NUMBER_FORMAT_ENTERPRISE_LINE : NUMBER_FORMAT_DIRECT_LINE,
-          };
-        } else {
-          return {
-            number: number.number,
-            type: number.type === NumberType.INTERNAL ? NUMBER_FORMAT_EXTENSION : NUMBER_FORMAT_DIRECT_LINE,
-          };
-        }
-      }),
-      members: _.map(data.members, (member) => {
-        return member.uuid;
-      }),
-    }, (_response, headers) => {
-      location = headers('Location');
-    }).$promise
-    .then( () => location);
+    return this.locationPromise.then(locations => {
+      return this.huntGroupResource.save({
+        customerId: this.Authinfo.getOrgId(),
+      }, {
+        name: data.name,
+        huntMethod: data.huntMethod,
+        fallbackDestination: {
+          number: data.fallbackDestination.number,
+          numberUuid: data.fallbackDestination.numberUuid,
+          sendToVoicemail: data.fallbackDestination.sendToVoicemail,
+        },
+        numbers: _.map(data.numbers, (number) => {
+          if (locations) {
+            return {
+              number: number.siteToSite ? number.siteToSite : number.number,
+              type: number.type ? number.type : number.siteToSite ? NUMBER_FORMAT_ENTERPRISE_LINE : NUMBER_FORMAT_DIRECT_LINE,
+            };
+          } else {
+            return {
+              number: number.number,
+              type: number.type === NumberType.INTERNAL ? NUMBER_FORMAT_EXTENSION : NUMBER_FORMAT_DIRECT_LINE,
+            };
+          }
+        }),
+        members: _.map(data.members, (member) => {
+          return member.uuid;
+        }),
+      }, (_response, headers) => {
+        location = headers('Location');
+      }).$promise
+      .then( () => location);
+    });
   }
 
   public updateHuntGroup(huntGroupId: string, data: HuntGroup): ng.IPromise<HuntGroup> {
-    return this.huntGroupResource.update({
-      customerId: this.Authinfo.getOrgId(),
-      huntGroupId: huntGroupId,
-    }, {
-      name: data.name,
-      huntMethod: data.huntMethod,
-      maxRingSecs: data.maxRingSecs,
-      maxWaitMins: data.maxWaitMins,
-      sendToApp: data.sendToApp,
-      destinationRule: data.destinationRule,
-      fallbackDestination: {
-        number: data.fallbackDestination.number,
-        numberUuid: data.fallbackDestination.numberUuid,
-        sendToVoicemail: data.fallbackDestination.sendToVoicemail,
-      },
-      alternateDestination: {
-        number: data.alternateDestination.number,
-        numberUuid: data.alternateDestination.numberUuid,
-        sendToVoicemail: data.alternateDestination.sendToVoicemail,
-        timer: data.alternateDestination.timer,
-      },
-      numbers: _.map(data.numbers, (number) => {
-        if (this.hasLocations) {
-          return {
-            number: number.siteToSite ? number.siteToSite : number.number,
-            type: number.siteToSite ? NUMBER_FORMAT_ENTERPRISE_LINE : NUMBER_FORMAT_DIRECT_LINE,
-          };
-        } else {
-          return {
-            number: number.number,
-            type: number.type === NumberType.INTERNAL ? NUMBER_FORMAT_EXTENSION : NUMBER_FORMAT_DIRECT_LINE,
-          };
-        }
-      }),
-      members: _.map(data.members, (member) => {
-        // return member.memberUuid;
-        return member.uuid;
-      }),
-    }).$promise
-    .then( () => {
-      return this.getHuntGroup(huntGroupId);
+    return this.locationPromise.then(locations => {
+      return this.huntGroupResource.update({
+        customerId: this.Authinfo.getOrgId(),
+        huntGroupId: huntGroupId,
+      }, {
+        name: data.name,
+        huntMethod: data.huntMethod,
+        maxRingSecs: data.maxRingSecs,
+        maxWaitMins: data.maxWaitMins,
+        sendToApp: data.sendToApp,
+        destinationRule: data.destinationRule,
+        fallbackDestination: {
+          number: data.fallbackDestination.number,
+          numberUuid: data.fallbackDestination.numberUuid,
+          sendToVoicemail: data.fallbackDestination.sendToVoicemail,
+        },
+        alternateDestination: {
+          number: data.alternateDestination.number,
+          numberUuid: data.alternateDestination.numberUuid,
+          sendToVoicemail: data.alternateDestination.sendToVoicemail,
+          timer: data.alternateDestination.timer,
+        },
+        numbers: _.map(data.numbers, (number) => {
+          if (locations) {
+            return {
+              number: number.siteToSite ? number.siteToSite : number.number,
+              type: number.type ? number.type : number.siteToSite ? NUMBER_FORMAT_ENTERPRISE_LINE : NUMBER_FORMAT_DIRECT_LINE,
+            };
+          } else {
+            return {
+              number: number.number,
+              type: number.type === NumberType.INTERNAL || number.type === NUMBER_FORMAT_EXTENSION ? NUMBER_FORMAT_EXTENSION : NUMBER_FORMAT_DIRECT_LINE,
+            };
+          }
+        }),
+        members: _.map(data.members, (member) => {
+          // return member.memberUuid;
+          return member.uuid;
+        }),
+      }).$promise
+      .then( () => {
+        return this.getHuntGroup(huntGroupId);
+      });
     });
   }
 

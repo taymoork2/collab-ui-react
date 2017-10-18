@@ -77,11 +77,11 @@ class CustomerReportsHeaderCtrl {
   };
 
   private filterTestSites (siteUrls): string[] {
-    const webexTestSites: string[] = ['.my.dmz.webex.com', '.my.webex.com', '.dmz.webex.com'];
+    const webexTestSites: string[] = ['.my.webex.com', '.dmz.webex.com', '.qa.webex.com'];
     let sites: any[] = [];
     sites = _.filter(siteUrls, function (site) {
       return !_.find(webexTestSites, function (testSite) {
-        return _.includes(site, testSite);
+        return _.endsWith(site, testSite);
       });
     });
     return sites;
@@ -90,7 +90,7 @@ class CustomerReportsHeaderCtrl {
   private fixWebexSites (siteUrls): string[] {
     const ciscoSites: string[] = ['go.webex.com'/*, 'cisco.webex.com'*/];
     const ciscoOrg: string = '1eb65fdf-9643-417f-9974-ad72cae0e10f';
-    let sites: any[] = [];
+    let sites: any[] = siteUrls;
     if (this.Authinfo.getOrgId() === ciscoOrg) {
       sites = _.concat(siteUrls, ciscoSites);
     }
@@ -104,8 +104,8 @@ class CustomerReportsHeaderCtrl {
       const siteUrls: any[] = this.getConferenceServiceWebexSiteUrls() || [];
       let webexSiteUrls: any[] = this.filterSiteList(siteUrls) || [];
 
+      webexSiteUrls = this.filterTestSites(webexSiteUrls);
       if (this.Config.isIntegration()) {
-        webexSiteUrls = this.filterTestSites(webexSiteUrls);
         webexSiteUrls = this.fixWebexSites(webexSiteUrls);
       }
 

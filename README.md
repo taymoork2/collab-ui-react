@@ -11,6 +11,7 @@ Learn more about project specifics:
 * [structure](docs/structure.md)
 * [technologies](docs/technology.md)
 * [webpack](docs/webpack.md)
+* [security](docs/security.md)
 
 Post any questions to the 'Atlas UI Dev Team' Spark room. Contributors are expected to be actively engaged on Spark. If you need more help or access to a Spark room, please reach out to a [core team member](http://cs.co/atlas-triage#im-still-stuck-who-can-i-contact).
 

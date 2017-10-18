@@ -10,12 +10,10 @@ describe('AddResourceControllerClusterViewV2', function () {
       '$translate',
       '$window',
       'AddResourceCommonServiceV2',
-      'FeatureToggleService',
       'ProPackService'
     );
 
     this.jsonData = getJSONFixture('mediafusion/json/delete-cluster.json');
-    spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(false));
     spyOn(this.AddResourceCommonServiceV2, 'addRedirectTargetClicked').and.returnValue(this.$q.resolve({}));
     spyOn(this.AddResourceCommonServiceV2, 'redirectPopUpAndClose');
@@ -38,7 +36,6 @@ describe('AddResourceControllerClusterViewV2', function () {
         $translate: this.$translate,
         $state: this.$state,
         AddResourceCommonServiceV2: this.AddResourceCommonServiceV2,
-        FeatureToggleService: this.FeatureToggleService,
         ProPackService: this.ProPackService,
       });
       this.$scope.$apply();
@@ -97,17 +94,7 @@ describe('AddResourceControllerClusterViewV2', function () {
   });
 
   // 2017 name change
-  describe('atlasProPackGetStatus && atlas2017NameChangeGetStatus - ', function () {
-    it('nameChangeEnabled should be false when atlas2017NameChangeGetStatus is false', function () {
-      expect(this.controller.nameChangeEnabled).toBeFalsy();
-    });
-
-    it('nameChangeEnabled should be true when atlas2017NameChangeGetStatus is true', function () {
-      this.FeatureToggleService.atlas2017NameChangeGetStatus.and.returnValue(this.$q.resolve(true));
-      this.initController();
-      expect(this.controller.nameChangeEnabled).toBeTruthy();
-    });
-
+  describe('atlasProPackGetStatus - ', function () {
     it('getAppTitle should return pro name if ProPackService is true', function () {
       expect(this.controller.getAppTitle()).toEqual('loginPage.titleNew');
 

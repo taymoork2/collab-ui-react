@@ -9,6 +9,7 @@ import { AvrilService, AvrilCustomer } from 'modules/huron/avril';
 import { Notification } from 'modules/core/notifications';
 import { PstnAddressService, PstnModel, Address } from 'modules/huron/pstn';
 import { EmergencyNumber } from 'modules/huron/phoneNumber';
+import { SettingSetupInitService } from 'modules/call/settings/settings-setup-init';
 
 export class CallLocationSettingsData {
   public location: Location;
@@ -26,7 +27,6 @@ export class CallLocationSettingsData {
 export class CallLocationSettingsService {
   private callLocationSettingsDataCopy: CallLocationSettingsData;
   private errors: string[] = [];
-  private supportsLocationMoh: boolean = false;
 
   /* @ngInject */
   constructor(
@@ -41,14 +41,27 @@ export class CallLocationSettingsService {
     private Notification: Notification,
     private ExtensionLengthService: ExtensionLengthService,
     private AvrilService: AvrilService,
-    private FeatureToggleService,
-  ) {
-    // Location Media On Hold Support
-    this.FeatureToggleService.supports(FeatureToggleService.features.huronMOHEnable)
-      .then(result => this.supportsLocationMoh = result);
+    private SettingSetupInitService: SettingSetupInitService,
+  ) {}
+
+  public get(locationId?: string): ng.IPromise<CallLocationSettingsData> {
+    if (locationId) {
+      return this.getLocationData(locationId);
+    } else {
+      return this.LocationsService.getDefaultLocation()
+        .then(defaultLocation => {
+          if (defaultLocation) {
+            this.SettingSetupInitService.setDefaultLocation(defaultLocation);
+            return this.getLocationData(defaultLocation.uuid ? defaultLocation.uuid : '');
+          } else {
+            return this.getLocationData('');
+          }
+        })
+        .catch(() => this.getLocationData(''));
+    }
   }
 
-  public get(locationId: string): ng.IPromise<CallLocationSettingsData> {
+  public getLocationData(locationId: string): ng.IPromise<CallLocationSettingsData> {
     this.errors = [];
     const callLocationSettingsData = new CallLocationSettingsData();
     return this.$q.all({
@@ -154,10 +167,10 @@ export class CallLocationSettingsService {
       });
   }
 
-  private createParallelRequests(data: CallLocationSettingsData, ftsw: boolean): ng.IPromise<any>[] {
+  private createParallelRequests(data: CallLocationSettingsData, newLocation: boolean): ng.IPromise<any>[] {
     const promises: ng.IPromise<any>[] = [];
 
-    if (this.supportsLocationMoh && !_.isEqual(data.mediaId, this.callLocationSettingsDataCopy.mediaId)) {
+    if (!_.isEqual(data.mediaId, this.callLocationSettingsDataCopy.mediaId)) {
       const GENERIC_MEDIA_ID = '98765432-DBC2-01BB-476B-CFAF98765432';
       if (_.isEqual(data.mediaId, GENERIC_MEDIA_ID)) {
         promises.push(this.unassignMediaOnHold(data.location.uuid));
@@ -167,10 +180,10 @@ export class CallLocationSettingsService {
     }
 
     if (!_.isEqual(data.internalNumberRanges, this.callLocationSettingsDataCopy.internalNumberRanges)) {
-      promises.push(...this.updateInternalNumberRanges(data.location.uuid || '', data.internalNumberRanges));
+      promises.push(...this.updateInternalNumberRanges(data.location.uuid || '', data.internalNumberRanges, newLocation));
     }
 
-    if (!ftsw && !_.isEqual(data.cosRestrictions, this.callLocationSettingsDataCopy.cosRestrictions)) {
+    if (!newLocation && !_.isEqual(data.cosRestrictions, this.callLocationSettingsDataCopy.cosRestrictions)) {
       promises.push(this.saveCosRestrictions(data.location.uuid || '', data.cosRestrictions));
     }
     //Emergency Service Address(ESA)
@@ -187,14 +200,11 @@ export class CallLocationSettingsService {
   }
 
   private getLocationMedia(locationId: string): ng.IPromise<string> {
-    if (this.supportsLocationMoh) {
-      return this.MediaOnHoldService.getLocationMedia(locationId)
+    return this.MediaOnHoldService.getLocationMedia(locationId)
       .catch(error => {
         this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohGetError'));
         return this.$q.reject();
       });
-    }
-    return this.$q.resolve('');
   }
 
   private updateMediaOnHold(mediaId: string, locationId?: string): ng.IPromise<void> {
@@ -305,6 +315,7 @@ export class CallLocationSettingsService {
         });
     }
   }
+
   private createInternalNumberRange(locationId: string, range: InternalNumberRange): ng.IPromise<string> {
     return this.InternalNumberRangeService.createLocationInternalNumberRange(locationId, range)
       .catch(error => {
@@ -325,26 +336,34 @@ export class CallLocationSettingsService {
       });
   }
 
-  private updateInternalNumberRanges(locationId: string, internalNumberRanges: InternalNumberRange[]): ng.IPromise<any>[] {
+  private updateInternalNumberRanges(locationId: string, internalNumberRanges: InternalNumberRange[], newLocation: boolean): ng.IPromise<any>[] {
     const promises: ng.IPromise<any>[] = [];
-    // first look for ranges to delete.
-    _.forEach(this.callLocationSettingsDataCopy.internalNumberRanges, range => {
-      if (!_.find(internalNumberRanges, { beginNumber: range.beginNumber, endNumber: range.endNumber })) {
-        promises.push(this.deleteInternalNumberRange(locationId, range));
-      }
-    });
-
-    // look for ranges to add or update
-    _.forEach(internalNumberRanges, range => {
-      if (!_.find(this.callLocationSettingsDataCopy.internalNumberRanges, { beginNumber: range.beginNumber, endNumber: range.endNumber })) {
-        if (!_.isUndefined(range.uuid)) {
-          range.uuid = undefined;
-          promises.push(this.createInternalNumberRange(locationId, range));
-        } else {
-          promises.push(this.createInternalNumberRange(locationId, range));
+    if (newLocation) { // Just create ranges for new locations
+      _.forEach(internalNumberRanges, range => {
+        promises.push(this.createInternalNumberRange(locationId, range));
+      });
+    } else {
+      // first look for ranges to delete.
+      _.forEach(this.callLocationSettingsDataCopy.internalNumberRanges, range => {
+        if (!_.find(internalNumberRanges, { beginNumber: range.beginNumber, endNumber: range.endNumber })) {
+          promises.push(this.deleteInternalNumberRange(locationId, range));
         }
-      }
-    });
+      });
+
+      // look for ranges to add or update
+      _.forEach(internalNumberRanges, range => {
+        if (!_.find(this.callLocationSettingsDataCopy.internalNumberRanges, { beginNumber: range.beginNumber, endNumber: range.endNumber })) {
+          if (!_.isUndefined(range.uuid)) {
+            range.uuid = undefined;
+            promises.push(this.createInternalNumberRange(locationId, range));
+          } else {
+            promises.push(this.createInternalNumberRange(locationId, range));
+          }
+        }
+      });
+    }
+
+
     return promises;
   }
 

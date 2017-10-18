@@ -5,7 +5,7 @@
     .module('uc.autoattendant')
     .directive('dynamicPrompt', DynamicPrompt);
 
-  function DynamicPrompt($sce, $window, $compile, AADynaAnnounceService) {
+  function DynamicPrompt($compile, $sce, $timeout, $window, AADynaAnnounceService) {
     var CONSTANTS = {};
     CONSTANTS.read = 'blur keyup change';
     CONSTANTS.defaultElementParentType = 'span';
@@ -30,14 +30,16 @@
         if (!validate(ngModel)) {
           return;
         }
-        setup(element, attrs, scope, ngModel);
-        render(ngModel, element);
-        element.on(CONSTANTS.read, function (event) {
-          scope.$evalAsync(function () {
-            read(event, element, scope, ngModel);
+        $timeout(function () {
+          setup(element, attrs, scope, ngModel);
+          render(ngModel, element);
+          element.on(CONSTANTS.read, function (event) {
+            scope.$evalAsync(function () {
+              read(event, element, scope, ngModel);
+            });
           });
+          read(false, element, scope, ngModel);
         });
-        read(false, element, scope, ngModel);
         scope.insertElement = function (html, range) {
           scope.$evalAsync(function () {
             doFormatInsertion(html, element, scope, range);

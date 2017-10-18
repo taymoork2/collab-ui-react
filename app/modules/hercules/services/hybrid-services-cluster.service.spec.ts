@@ -38,6 +38,13 @@ describe('Service: HybridServicesClusterService', function () {
       getUssUrl: jasmine.createSpy('UrlConfig.getUssUrl').and.returnValue('http://whatever.no/'),
     };
     $provide.value('UrlConfig', UrlConfig);
+    const CacheFactory = class {
+      public static get() {
+        return 'whatever';
+      }
+      constructor () {}
+    };
+    $provide.value('CacheFactory', CacheFactory);
   }
 
   describe('get()', function () {

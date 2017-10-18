@@ -6,11 +6,16 @@
     .controller('PlanReviewCtrl', PlanReviewCtrl);
 
   /* @ngInject */
-  function PlanReviewCtrl($translate, Authinfo, Config, SetupWizardService, TrialService, WebExUtilsFact) {
+  function PlanReviewCtrl($state, $translate, Analytics, Authinfo, Config, SetupWizardService, TrialService, WebExUtilsFact) {
     var vm = this;
     var classes = {
       userService: 'user-service-',
       hasRoomSys: 'has-room-systems',
+    };
+
+    var view = {
+      serviceSetup: 'Service Setup',
+      meetingSettingsModal: 'overview: Meeting Settings Modal',
     };
 
     vm.messagingServices = {
@@ -84,7 +89,11 @@
     };
 
     vm.generateLicenseTooltip = function (service) {
-      return vm.isSharedMeetingsLicense(service) ? '<div class="license-tooltip-html">' + $translate.instant('firstTimeWizard.sharedLicenseTooltip') + '</div>' : '<div class="license-tooltip-html">' + $translate.instant('firstTimeWizard.namedLicenseTooltip') + '</div>';
+      return '<div class="license-tooltip-html">' + vm.generateLicenseTranslation(service) + '</div>';
+    };
+
+    vm.generateLicenseTranslation = function (service) {
+      return vm.isSharedMeetingsLicense(service) ? $translate.instant('firstTimeWizard.sharedLicenseTooltip') : $translate.instant('firstTimeWizard.namedLicenseTooltip');
     };
 
     init();
@@ -92,22 +101,54 @@
     function setActingSubscription(option) {
       SetupWizardService.setActingSubscriptionOption(option);
       fetchPendingSubscriptionInfo();
+      var analyticsProperties = {
+        subscriptionId: _.get(option, 'value'),
+        view: _.get($state, 'current.data.firstTimeSetup') ? view.serviceSetup : view.meetingSettingsModal,
+      };
+      Analytics.trackServiceSetupSteps(Analytics.sections.SERVICE_SETUP.eventNames.SUBSCRIPTION_SELECT, analyticsProperties);
     }
 
     function fetchPendingSubscriptionInfo() {
-      // TODO update this logic when Room, Message and Care licenses are implemented.
-      vm.pendingMeetingLicenses = SetupWizardService.getPendingMeetingLicenses().concat(SetupWizardService.getPendingAudioLicenses());
-      vm.pendingCallLicenses = SetupWizardService.getPendingCallLicenses();
-      vm.pendingMessageLicenses = SetupWizardService.getPendingMessageLicenses();
-      vm.pendingCareLicenses = SetupWizardService.getPendingCareLicenses();
-      vm.hasPendingLicenses = vm.pendingMeetingLicenses.concat(vm.pendingCallLicenses, vm.pendingMessageLicenses, vm.pendingCareLicenses).length > 0;
+      // TODO update this logic when Room licenses are implemented.
+      vm.pendingLicenses = [
+        {
+          title: $translate.instant('firstTimeWizard.meeting'),
+          icon: 'icon-circle-group',
+          licenses: SetupWizardService.getPendingMeetingLicenses().concat(SetupWizardService.getPendingAudioLicenses()),
+        },
+        {
+          title: $translate.instant('firstTimeWizard.call'),
+          icon: 'icon-circle-call',
+          licenses: SetupWizardService.getPendingCallLicenses(),
+        },
+        {
+          title: $translate.instant('firstTimeWizard.message'),
+          icon: 'icon-circle-message',
+          licenses: SetupWizardService.getPendingMessageLicenses(),
+        },
+        {
+          title: $translate.instant('firstTimeWizard.care'),
+          icon: 'icon-circle-contact-centre',
+          licenses: SetupWizardService.getPendingCareLicenses(),
+        },
+      ];
+
+      vm.hasPendingLicenses = _.some(vm.pendingLicenses, function (licenseMeta) {
+        return !_.isEmpty(licenseMeta.licenses);
+      });
+
       if (vm.hasPendingLicenses) {
-        _.forEach([vm.pendingMeetingLicenses, vm.pendingCallLicenses, vm.pendingMessageLicenses, vm.pendingCareLicenses], function (licenseArray) {
-          getPendingLicenseDisplayValues(licenseArray);
+        vm.pendingLicenses = _.reject(vm.pendingLicenses, function (licenseMeta) {
+          return _.isEmpty(licenseMeta.licenses);
         });
+        _.forEach(vm.pendingLicenses, function (licenseMeta) {
+          getPendingLicenseDisplayValues(licenseMeta);
+        });
+        vm.pendingLicenses = _.chunk(vm.pendingLicenses, 3);
       }
+
       vm.showPendingView = vm.hasPendingLicenses;
-      vm.orderDetails = SetupWizardService.getOrderAndSubId();
+      vm.orderDetails = SetupWizardService.getOrderDetails();
     }
 
     function getUserServiceRowClass(hasRoomSystem) {
@@ -122,8 +163,8 @@
       return _.max([confLength, vm.messagingServices.services.length, vm.commServices.services.length]);
     }
 
-    function getPendingLicenseDisplayValues(licenses) {
-      _.forEach(licenses, function (license) {
+    function getPendingLicenseDisplayValues(licenseMeta) {
+      _.forEach(licenseMeta.licenses, function (license) {
         var translatedNameString = 'subscriptions.licenseTypes.' + license.offerName;
         license.displayName = $translate.instant(translatedNameString);
         if (license.capacity && license.offerName !== 'CF') {

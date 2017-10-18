@@ -9,35 +9,35 @@ export function setupHuntGroup(customer) {
 }
 
 export function setupCallPickup(customer) {
-  if (customer.doCallPickUp) {
+  if (customer.doCallPickup) {
     const callPickupName = `${customer.name}_test_pickup`
-    const member_Obi = 'Obi'
-    const member_Princess = 'Princess'
-    let uuid_Obi = ''
-    let uuid_Princess = ''
-    console.log(`Provisioing call pickup for ${customer.name}!`);
+    const member0 = customer.users[0].name.givenName
+    const member1 = customer.users[1].name.givenName
+    let uuid0 = ''
+    let uuid1 = ''
+    console.log('Provisioning call pickup ...');
     return provisionerHelper.getToken(customer.partner)
       .then(token => {
-        return cmiHelper.getUserUUID(token, customer.callOptions.cmiCustomer.uuid, `${member_Obi}`)
+        return cmiHelper.getUserUUID(token, customer.callOptions.cmiCustomer.uuid, member0)
           .then(response => {
             return cmiHelper.getNumberUUID(token, customer.callOptions.cmiCustomer.uuid, `${response.members[0].uuid}`)
               .then(response => {
-                uuid_Obi = `${response.numbers[0].uuid}`
-                return cmiHelper.getUserUUID(token, customer.callOptions.cmiCustomer.uuid, `${member_Princess}`)
+                uuid0 = `${response.numbers[0].uuid}`
+                return cmiHelper.getUserUUID(token, customer.callOptions.cmiCustomer.uuid, member1)
                   .then(response => {
                     return cmiHelper.getNumberUUID(token, customer.callOptions.cmiCustomer.uuid, `${response.members[0].uuid}`)
                       .then(response => {
-                        uuid_Princess = `${response.numbers[0].uuid}`
-                        var pickUpBody = {
+                        uuid1 = `${response.numbers[0].uuid}`
+                        var pickupBody = {
                           name: `${callPickupName}`,
                           members: [
-                            `${uuid_Obi}`,
-                            `${uuid_Princess}`,
+                            uuid0,
+                            uuid1,
                           ],
                         }
-                        return cmiHelper.createCallPickUp(token, customer.callOptions.cmiCustomer.uuid, pickUpBody)
+                        return cmiHelper.createCallPickup(token, customer.callOptions.cmiCustomer.uuid, pickupBody)
                           .then(() => {
-                            console.log(`Successfully added call pickup${customer.name}!`);
+                            console.log(`Successfully added call pickup ${customer.name}!`);
                           })
                       })
                   })
@@ -48,10 +48,10 @@ export function setupCallPickup(customer) {
 }
 
 export function setupCallPark(customer) {
-  var promises = [];
-  var userMembers = [];
-
   if (customer.doCallPark && (customer.users.length >= 2)) {
+    var promises = [];
+    var userMembers = [];
+
     const callParkName = `${customer.name}_test_callpark`
 
     return provisionerHelper.getToken(customer.partner)
@@ -80,5 +80,54 @@ export function setupCallPark(customer) {
             });
         });
       });
+  }
+}
+
+export function setupCallPaging(customer) {
+  if (customer.doCallPaging) {
+    const callPagingName = 'Death Star'
+    const userName = customer.users[0].name.givenName
+    const placeName = customer.places[0].name
+    let userToAdd = {}
+    let placeToAdd = {}
+    const initiator = 'CUSTOM'
+    let setExtension = (parseInt(customer.callOptions.numberRange.beginNumber) + 75).toString()
+    console.log(`Provisioning call paging for ${customer.name}...`);
+    return provisionerHelper.getToken(customer.partner)
+      .then(token => {
+        return cmiHelper.getUserUUID(token, customer.callOptions.cmiCustomer.uuid, userName)
+          .then(response => {
+            userToAdd.uuid = response.members[0].uuid;
+            userToAdd.type = 'USER';
+            return cmiHelper.getPlaceUUID(token, customer.callOptions.cmiCustomer.uuid, placeName)
+              .then(response => {
+                placeToAdd.uuid = response.places[0].uuid;
+                placeToAdd.type = 'PLACE';
+                var pagingBody = {
+                  name: callPagingName,
+                  extension: setExtension,
+                  initiatorType: initiator,
+                  initiators: [{
+                    initiatorId: userToAdd.uuid,
+                    type: userToAdd.type,
+                  }, {
+                    initiatorId: placeToAdd.uuid,
+                    type: placeToAdd.type,
+                  }],
+                  members: [{
+                    memberId: userToAdd.uuid,
+                    type: userToAdd.type,
+                  }, {
+                    memberId: placeToAdd.uuid,
+                    type: placeToAdd.type,
+                  }],
+                }
+                return cmiHelper.createCallPaging(token, customer.callOptions.cmiCustomer.uuid, pagingBody)
+                  .then(() => {
+                    console.log('Successfully created call paging group!');
+                  })
+              })
+          })
+      })
   }
 }

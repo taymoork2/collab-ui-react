@@ -1,3 +1,4 @@
+import 'usertiming'; // polyfill for performance methods - https://developer.mozilla.org/en-US/docs/Web/API/Performance
 import 'babel-polyfill';
 import '@ciscospark/internal-plugin-metrics';
 import '@ciscospark/plugin-logger';
@@ -98,12 +99,20 @@ export class MetricsService {
       return;
     }
 
+    if (this.hasInvalidTimingValue(this.$window.performance.timing)) {
+      return;
+    }
+
     const loadMetric = {
       dom_duration_in_millis: this.$window.performance.timing.loadEventEnd - this.$window.performance.timing.responseEnd,
       navigation_duration_in_millis: this.$window.performance.timing.fetchStart - this.$window.performance.timing.navigationStart,
       network_duration_in_millis: this.$window.performance.timing.responseEnd - this.$window.performance.timing.fetchStart,
       total_duration_in_millis: this.$window.performance.timing.loadEventEnd - this.$window.performance.timing.navigationStart,
     };
+
+    if (this.hasInvalidTimingValue(loadMetric)) {
+      return;
+    }
 
     this.sendToInflux(TimingKey.LOAD_DURATION, loadMetric);
   }
@@ -269,6 +278,10 @@ export class MetricsService {
     this.$window.performance.clearMarks(metric.markStart);
     this.$window.performance.clearMarks(metric.markStop);
     this.$window.performance.clearMeasures(metric.measure);
+  }
+
+  private hasInvalidTimingValue(obj: Object) {
+    return _.some(obj, value => !_.isFinite(value) || value < 0);
   }
 
 }

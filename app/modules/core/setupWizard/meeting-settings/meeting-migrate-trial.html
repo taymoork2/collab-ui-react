@@ -7,7 +7,7 @@
   <div ng-if="meetingCtrl.hasTrialSites" >
     <h4 class="element-spacing" translate="firstTimeWizard.keepExistingWebexSites"></h4>
     <p class="element-spacing" translate="firstTimeWizard.existingWebExTrialSites"></p>
-    <div class="keep-existing-trials element-spacing" ng-repeat="site in meetingCtrl.existingSites">
+    <div class="keep-existing-trials element-spacing" ng-repeat="site in meetingCtrl.existingTrialSites">
       <p class="existing-sites">{{site.siteUrl}}<span translate="firstTimeWizard.pmrSiteURLDomain"></span></p>
       <input
         cs-input

@@ -1,5 +1,5 @@
 import { HuntGroupNumber } from 'modules/call/features/hunt-group';
-import { NumberService, INumber } from 'modules/huron/numbers';
+import { NumberService, INumber, NumberOrder } from 'modules/huron/numbers';
 
 const NUMBER_FORMAT_ENTERPRISE_LINE = 'NUMBER_FORMAT_ENTERPRISE_LINE';
 class HuntGroupNumbersCtrl implements ng.IComponentController {
@@ -25,7 +25,7 @@ class HuntGroupNumbersCtrl implements ng.IComponentController {
   }
 
   public getNumberList(value: string): ng.IPromise<INumber[]> {
-    return this.NumberService.getNumberList(value, undefined, false).then( numbers => {
+    return this.NumberService.getNumberList(value, undefined, false, NumberOrder.SITETOSITE_ASC).then( numbers => {
       const filteredNumbers = _.filter(numbers, (number) => {
         return this.isNewNumber(number.uuid);
       });

@@ -23,9 +23,8 @@
         </li>
         <li class="feature"
             ng-hide="!$ctrl.callServiceConnectEnabledForOrg">
-          <a ui-sref="user-overview.hybrid-services-squared-fusion-uc.connect-settings({userId: $ctrl.userId, userEmailAddress: $ctrl.userEmailAddress, voicemailFeatureToggled: $ctrl.voicemailFeatureToggled, onEntitlementChange: $ctrl.onEntitlementChanges, })">
-            <span class="feature-name" ng-if="!$ctrl.voicemailEnabled" translate="hercules.cloudExtensions.serviceNames.squared-fusion-ec"></span>
-            <span class="feature-name" ng-if="$ctrl.voicemailEnabled" translate="hercules.cloudExtensions.serviceNames.squared-fusion-ec-and-voicemail"></span>
+          <a ui-sref="user-overview.hybrid-services-squared-fusion-uc.connect-settings({userId: $ctrl.userId, userEmailAddress: $ctrl.userEmailAddress, onEntitlementChange: $ctrl.onEntitlementChanges, })">
+            <span class="feature-name" translate="hercules.cloudExtensions.serviceNames.squared-fusion-ec"></span>
             <span class="feature-status"
                   ng-if="$ctrl.callServiceConnect && !$ctrl.loadingPage"
                   ng-class="$ctrl.callServiceConnect ? 'status-' + $ctrl.getStatus($ctrl.callServiceConnect) : ''"

@@ -1,26 +1,12 @@
 import * as _ from 'lodash';
-import { ISearchElement, QueryParser } from './queryParser';
+import { SearchElement, QueryParser, OperatorAnd } from './queryParser';
+import { SearchTranslator } from './searchTranslator';
 
 enum Aggregate {
   connectionStatus, product, productFamily, activeInterface, errorCodes, upgradeChannel, software,
 }
 
-export enum SearchFields {product, software, ip, serial, mac, displayName, any, connectionStatus, errorCodes}
-
 export class SearchObject {
-
-  public static SearchFields: { [x: string]: string } = {
-    [SearchFields[SearchFields.product]]: 'Product',
-    [SearchFields[SearchFields.software]]: 'Software',
-    [SearchFields[SearchFields.ip]]: 'IP',
-    [SearchFields[SearchFields.serial]]: 'Serial',
-    [SearchFields[SearchFields.mac]]: 'Mac',
-    [SearchFields[SearchFields.connectionStatus]]: 'Status',
-    [SearchFields[SearchFields.displayName]]: 'DisplayName',
-    [SearchFields[SearchFields.errorCodes]]: 'Error',
-    tags: 'Tags',
-  };
-
 
   public query: string;
   public tokenizedQuery: { [key: string]: { searchField: string, query: string, active: boolean } };
@@ -40,7 +26,7 @@ export class SearchObject {
   public sortOrder: string = 'asc';
   public hasError: boolean;
   public lastGoodQuery: string;
-  private parsedQuery: ISearchElement;
+  private parsedQuery: SearchElement;
   public currentFilterValue: string;
 
   private constructor() {
@@ -56,27 +42,35 @@ export class SearchObject {
     this.from += 20;
   }
 
-  public setTokenizedQuery(searchField: string, query: string, active: boolean) {
-    if (active) {
-      _.forEach(this.tokenizedQuery, (t) => t.active = false);
+  public removeSearchElement(elementToRemove: SearchElement) {
+    if (!this.parsedQuery) {
+      return;
     }
-    this.tokenizedQuery[searchField] = { searchField: searchField, query: query, active: active };
-    this.updateQuery();
+
+    if (!elementToRemove) {
+      return;
+    }
+
+    if (elementToRemove.getParent() && elementToRemove.getParent().getExpressions()) {
+      const index = elementToRemove.getParent().getExpressions().indexOf(elementToRemove, 0);
+      if (index > -1) {
+        elementToRemove.getParent().getExpressions().splice(index, 1);
+      }
+
+      this.setQuery(this.parsedQuery.toQuery(), this.parsedQuery);
+    } else {
+      this.setQuery('');
+    }
   }
 
-  private updateQuery() {
-    this.query = _
-      .chain(this.tokenizedQuery)
-      .map((v, k) => {
-        return (k === 'any' ? '' : k + ':') + v.query;
-      })
-      .join(',')
-      .value();
-  }
-
-  public removeToken(searchField: string) {
-    delete this.tokenizedQuery[searchField];
-    this.updateQuery();
+  public getBullets(): SearchElement[] {
+    if (!this.parsedQuery) {
+      return [];
+    }
+    if (this.parsedQuery instanceof OperatorAnd) {
+      return this.parsedQuery.getExpressions();
+    }
+    return [this.parsedQuery];
   }
 
   public setSortOrder(field: string, order: string) {
@@ -85,16 +79,87 @@ export class SearchObject {
     this.from = 0;
   }
 
-  public setQuery(translatedQuery: string) {
+  public setQuery(query: string, alreadyParsedQuery?: SearchElement) {
     try {
-      this.query = translatedQuery;
-      this.parsedQuery = QueryParser.parseQueryString(translatedQuery);
+      this.query = query;
+      this.parsedQuery = alreadyParsedQuery || QueryParser.parseQueryString(query);
       this.from = 0;
       this.hasError = false;
-      this.lastGoodQuery = translatedQuery;
+      this.lastGoodQuery = query;
     } catch (error) {
       this.hasError = true;
     }
+  }
+
+  public setWorkingElementText(translatedQuery: string) {
+
+    const alreadyEdited = SearchObject.findEditedElement(this.parsedQuery);
+
+    if (_.isEmpty(translatedQuery) && alreadyEdited) {
+      this.removeSearchElement(alreadyEdited);
+    } else {
+      try {
+        const parsedNewQuery = QueryParser.parseQueryString(translatedQuery);
+        this.hasError = false;
+        parsedNewQuery.setBeingEdited(true);
+
+        if (alreadyEdited) {
+          if (alreadyEdited === this.parsedQuery) {
+            this.parsedQuery = parsedNewQuery;
+          } else {
+            alreadyEdited.replaceWith(parsedNewQuery);
+          }
+        } else {
+          this.addParsedSearchElement(parsedNewQuery);
+        }
+        this.setQuery(this.parsedQuery.toQuery(), this.parsedQuery);
+
+      } catch (error) {
+        this.hasError = true;
+      }
+    }
+  }
+
+  public submitWorkingElement() {
+    const alreadyEdited = SearchObject.findEditedElement(this.parsedQuery);
+    if (alreadyEdited) {
+      alreadyEdited.setBeingEdited(false);
+    }
+    if (alreadyEdited instanceof OperatorAnd) {
+      alreadyEdited.tryFlattenIntoParent();
+    }
+  }
+
+  private static findEditedElement(element: SearchElement): SearchElement | null {
+    if (!element) {
+      return null;
+    }
+    if (element.isBeingEdited()) {
+      return element;
+    }
+    if (element.getExpressions().length < 1) {
+      return null;
+    }
+    return _.first(_.map(element.getExpressions(), (e) => {
+      return SearchObject.findEditedElement(e);
+    }).filter(e => e != null));
+  }
+
+  public addSearchElement(translatedQuery: string) {
+    const parsedNewQuery = QueryParser.parseQueryString(translatedQuery);
+    this.addParsedSearchElement(parsedNewQuery);
+    this.setQuery(translatedQuery, this.parsedQuery);
+  }
+
+  private addParsedSearchElement(newElement: SearchElement) {
+    if (!this.parsedQuery) {
+      this.parsedQuery = newElement;
+    } else if (this.parsedQuery instanceof OperatorAnd) {
+      this.parsedQuery.addSubElement(newElement);
+    } else {
+      this.parsedQuery = new OperatorAnd([this.parsedQuery, newElement]);
+    }
+    this.setQuery(this.parsedQuery.toQuery(), this.parsedQuery);
   }
 
   public setFilterValue(filterValue: string) {
@@ -123,10 +188,21 @@ export class SearchObject {
   }
 
   public cloneWithoutFilters(): SearchObject {
-    const myClone = _.cloneDeep(this);
+    const myClone = this.clone();
     myClone.setFilterValue('');
     myClone.size = 0;
     myClone.from = 0;
+    return myClone;
+  }
+
+  public clone(): SearchObject {
+    return _.cloneDeep(this);
+  }
+
+  public translate(DeviceSearchTranslator: SearchTranslator): SearchObject {
+    //TODO: use this.parsedQuery.translate() instead!
+    const myClone = this.clone();
+    myClone.lastGoodQuery = DeviceSearchTranslator.translate(myClone.lastGoodQuery);
     return myClone;
   }
 }

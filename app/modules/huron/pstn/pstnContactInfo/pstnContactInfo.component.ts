@@ -17,17 +17,10 @@ export class PstnContactInfoComponent implements ng.IComponentOptions {
 
 export class PstnProvidersCtrl implements ng.IComponentController {
   public contact: IPstnContractInfo;
-  public emailValidators: Object;
-  public errorMessages: Object;
   public form: ng.IFormController;
 
-  public $onInit(): void {
-    this.emailValidators = {
-      emailsDonotMatch: (viewValue: string) => this.verifyConfirmEmailAddress(viewValue),
-    };
-  }
-
-  public verifyConfirmEmailAddress(viewValue: string): boolean {
-    return _.isEqual(viewValue.toLowerCase(), this.contact.emailAddress.toLowerCase());
+  public verifyConfirmEmailAddress() {
+    const isMatched = _.isEqual(this.contact.confirmEmailAddress.toLowerCase(), this.contact.emailAddress.toLowerCase());
+    this.form.confirmEmailAddress.$setValidity('emailsDonotMatch', isMatched);
   }
 }

@@ -15,7 +15,7 @@ describe('Controller: PlanReviewCtrl', function () {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('5632f806-ad09-4a26-a0c0-a49a13f38873'),
     getMessageServices: jasmine.createSpy('getMessageServices').and.returnValue(getJSONFixture('core/json/authInfo/messagingServices.json').singleLicense),
     getCommunicationServices: jasmine.createSpy('getCommunicationServices').and.returnValue(getJSONFixture('core/json/authInfo/commServices.json').singleLicense),
-    getConferenceServices: jasmine.createSpy('getConferenceServices').and.returnValue(getJSONFixture('core/json/authInfo/confServices.json')),
+    getConferenceServices: jasmine.createSpy('getConferenceServices').and.returnValue(_.clone(getJSONFixture('core/json/authInfo/confServices.json'))),
     getCareServices: jasmine.createSpy('getCareServices').and.returnValue(getJSONFixture('core/json/authInfo/careServices.json').careLicense),
     getCmrServices: jasmine.createSpy('getCmrServices').and.returnValue(getJSONFixture('core/json/authInfo/cmrServices.json')),
     getLicenses: jasmine.createSpy('getLicenses').and.returnValue(getJSONFixture('core/json/authInfo/licenseServices.json')),
@@ -66,10 +66,15 @@ describe('Controller: PlanReviewCtrl', function () {
       offerName: 'CF',
       capacity: 200,
     }]);
-    spyOn(SetupWizardService, 'getOrderAndSubId').and.returnValue({
+    spyOn(SetupWizardService, 'getOrderDetails').and.returnValue({
       orderId: 'abc123',
       subscriptionId: 'def456',
+      endCustomer: 'My Company',
     });
+    spyOn(SetupWizardService, 'getPendingCareLicenses').and.returnValue([{
+      offerName: 'CVC',
+      capacity: 10,
+    }]);
     controller = $controller('PlanReviewCtrl', {
       $scope: $scope,
     });
@@ -115,12 +120,12 @@ describe('Controller: PlanReviewCtrl', function () {
       expect(controller.showPendingView).toBe(true);
     });
 
-    it('Should concat meeting and audio licenses', function () {
-      expect(controller.pendingMeetingLicenses.length).toBe(2);
-    });
-
-    it('Should set the display value for the licenses', function () {
-      expect(controller.pendingMeetingLicenses[0].displayName).toBeDefined();
+    it('Should correctly assemble the pendingLicenses array', function () {
+      expect(controller.pendingLicenses.length).toBe(2);
+      expect(controller.pendingLicenses[1].length).toBe(1);
+      expect(controller.pendingLicenses[0][0].title).toBeDefined();
+      expect(controller.pendingLicenses[0][0].licenses.length).toBe(2);
+      expect(controller.pendingLicenses[0][0].licenses[0].displayName).toBeDefined();
     });
   });
 
@@ -140,6 +145,11 @@ describe('Controller: PlanReviewCtrl', function () {
       var result = controller.generateLicenseTooltip(dataWithNamedUserLicense);
       expect(result).toContain('firstTimeWizard.namedLicenseTooltip');
     });
+
+    it('The generateLicenseTranslation() function should return Named User License tooltip string', function () {
+      var result = controller.generateLicenseTranslation(dataWithNamedUserLicense);
+      expect(result).toEqual('firstTimeWizard.namedLicenseTooltip');
+    });
   });
 
   describe('Tests for Shared Meeting Licenses : ', function () {
@@ -157,6 +167,11 @@ describe('Controller: PlanReviewCtrl', function () {
     it('The generateLicenseTooltip() function should return Shared Meeting License tooltip string', function () {
       var result = controller.generateLicenseTooltip(dataWithSharedMeetingsLicense);
       expect(result).toContain('firstTimeWizard.sharedLicenseTooltip');
+    });
+
+    it('The generateLicenseTranslation() function should return Shared Meeting License tooltip string', function () {
+      var result = controller.generateLicenseTranslation(dataWithSharedMeetingsLicense);
+      expect(result).toEqual('firstTimeWizard.sharedLicenseTooltip');
     });
   });
 

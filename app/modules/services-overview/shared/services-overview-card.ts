@@ -16,7 +16,6 @@ export interface ICardStatus {
 export enum CardType {
   cloud,
   hybrid,
-  cmc,
 }
 
 export interface ICardParams {

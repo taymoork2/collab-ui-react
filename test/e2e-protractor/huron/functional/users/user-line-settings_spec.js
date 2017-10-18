@@ -12,7 +12,7 @@ const callSettingsPage = new CallSettingsPage();
 describe('Huron Functional: user-line-settings', () => {
   const customer = huronCustomer({
     test: 'user-line-settings',
-    users: 2,
+    users: { noOfUsers: 2, noOfDids: 0 },
   });
 
   const USERS = customer.users;

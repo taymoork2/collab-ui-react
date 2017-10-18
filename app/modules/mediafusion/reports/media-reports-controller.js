@@ -5,7 +5,7 @@
     .module('Mediafusion')
     .controller('MediaReportsController', MediaReportsController);
   /* @ngInject */
-  function MediaReportsController($q, $scope, $translate, $interval, $timeout, MediaClusterServiceV2, UtilizationResourceGraphService, MeetingLocationAdoptionGraphService, ParticipantDistributionResourceGraphService, NumberOfParticipantGraphService, MediaReportsService, Notification, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService, ClientTypeAdoptionGraphService, AdoptionCardService, hasHmsTwoDotFiveFeatureToggle) {
+  function MediaReportsController($q, $scope, $translate, $interval, $timeout, MediaClusterServiceV2, UtilizationResourceGraphService, MeetingLocationAdoptionGraphService, ParticipantDistributionResourceGraphService, NumberOfParticipantGraphService, MediaReportsService, Notification, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService, ClientTypeAdoptionGraphService, AdoptionCardService, hasHmsTwoDotFiveFeatureToggle, Orgservice) {
     var vm = this;
     var interval = null;
     var deferred = $q.defer();
@@ -51,8 +51,11 @@
     vm.redirected_calls_heading = $translate.instant('mediaFusion.metrics.redirectedcalls');
     vm.cluster_availability_heading = $translate.instant('mediaFusion.metrics.overAllAvailability');
     vm.customPlaceholder = $translate.instant('mediaFusion.report.custom');
+    vm.selectedPeriod = $translate.instant('mediaFusion.report.selectedPeriod');
     vm.total_cloud_heading = $translate.instant('mediaFusion.metrics.totalCloud');
     vm.participants = $translate.instant('mediaFusion.metrics.participants');
+    vm.increaseBy = $translate.instant('mediaFusion.metrics.increaseBy');
+    vm.decreasedBy = $translate.instant('mediaFusion.metrics.decreasedBy');
 
     vm.availabilityCardHeading = '';
     vm.clusterAvailabilityCardHeading = $translate.instant('mediaFusion.metrics.clusterAvailabilityCardHeading');
@@ -140,7 +143,7 @@
     vm.cloudParticipantsDesc = $translate.instant('mediaFusion.metrics.cardDescription.cloudParticipants');
     vm.meetsHostTypeDesc = $translate.instant('mediaFusion.metrics.cardDescription.meetsHostType');
     vm.tooltipText = '';
-    vm.cardIndicator = 0;
+    vm.cardIndicatorDiff = 0;
     vm.clusterUnavailablityFlag = false;
 
 
@@ -165,6 +168,11 @@
     setRefreshInterval();
     getCluster();
     timeUpdate();
+
+    Orgservice.isTestOrg()
+      .then(function (isTestOrg) {
+        vm.isTestOrg = isTestOrg;
+      });
 
     function loadResourceDatas() {
       deferred.promise.then(function () {
@@ -376,7 +384,7 @@
         vm.cloudOverflowTooltip = checkForTooltip(vm.second_card_value) ? vm.cloudOverflow : '';
 
         var overflow = (vm.cloudOverflow === vm.noData) ? 0 : vm.cloudOverflow;
-        vm.overflowPercentage = (overflow / vm.totalcloudcalls) * 100;
+        vm.overflowPercentage = (vm.totalcloudcalls > 0) ? (overflow / vm.totalcloudcalls) * 100 : 0;
         vm.overflowPercentage = _.round(vm.overflowPercentage, 2);
         setOverflowIndicator();
       }, function () {
@@ -393,9 +401,11 @@
         if (response == vm.ABORT) {
           return undefined;
         } else {
-          vm.cardIndicator = response.data.dataProvider[0].value;
-          if (vm.cardIndicator > 0) {
-            vm.cardIndicator = '+' + vm.cardIndicator;
+          vm.cardIndicatorDiff = response.data.dataProvider[0].value;
+          if (vm.cardIndicatorDiff > 0) {
+            vm.cardIndicator = vm.increaseBy + ' ' + vm.cardIndicatorDiff;
+          } else {
+            vm.cardIndicator = vm.decreasedBy + ' ' + Math.abs(vm.cardIndicatorDiff);
           }
         }
       });

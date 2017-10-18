@@ -19,8 +19,9 @@ describe('Service: SetupWizard Service', function () {
     this.pendingSubscriptionResponses = getJSONFixture('core/json/setupWizard/pendingSubscriptionResponses.json');
     this.pendingSubscriptions = getJSONFixture('core/json/setupWizard/pendingSubscriptions.json');
     this.pendingSubscriptionOptions = getJSONFixture('core/json/setupWizard/pendingSubscriptionOptions.json');
-
+    this.conferenceServices = _.clone(getJSONFixture('core/json/authInfo/confServices.json'));
     spyOn(this.Authinfo, 'getSubscriptions').and.returnValue(this.authinfoPendingSubscriptions);
+    spyOn(this.Authinfo, 'getConferenceServices').and.returnValue(this.conferenceServices);
   });
 
   afterEach(function () {
@@ -160,7 +161,7 @@ describe('Service: SetupWizard Service', function () {
       const verifyUrl = `${this.UrlConfig.getAdminServiceUrl()}orders/123/ccasp/verify`;
       this.$httpBackend.when('POST', verifyUrl).respond(200, 'INVALID');
       this.SetupWizardService.validateCCASPPartner('123', 'someName').then((result) => {
-        expect(result).toBe(false);
+        expect(result.isValid).toBe(false);
       });
       this.$httpBackend.flush();
     });
@@ -170,7 +171,7 @@ describe('Service: SetupWizard Service', function () {
       const verifyUrl = `${this.UrlConfig.getAdminServiceUrl()}orders/123/ccasp/verify`;
       this.$httpBackend.when('POST', verifyUrl).respond(200, 'VALID');
       this.SetupWizardService.validateCCASPPartner('123', 'someName').then((result) => {
-        expect(result).toBe(true);
+        expect(result.isValid).toBe(true);
       });
       this.$httpBackend.flush();
     });
@@ -180,7 +181,7 @@ describe('Service: SetupWizard Service', function () {
       const verifyUrl = `${this.UrlConfig.getAdminServiceUrl()}orders/123/ccasp/verify`;
       this.$httpBackend.when('POST', verifyUrl).respond(400, 'VALID');
       this.SetupWizardService.validateCCASPPartner('123', 'someName').then((result) => {
-        expect(result).toBe(false);
+        expect(result.isValid).toBe(false);
       });
       this.$httpBackend.flush();
     });
@@ -203,6 +204,13 @@ describe('Service: SetupWizard Service', function () {
     it('with a subscriptionId referencing a subscription that is being modified (has a status of ACTIVE but contains a pendingServiceOrderUUID), isProvisionedSubscription should return boolean false', function () {
       this.Authinfo.getSubscriptions.and.returnValue(this.authinfoActiveSubscriptions);
       expect(this.SetupWizardService.isProvisionedSubscription('Sub-os090835')).toBe(false);
+    });
+  });
+
+  describe('getConferenceLicensesBySubscriptionId', function () {
+    it('should return the list of conference licenses', function () {
+      const result = this.SetupWizardService.getConferenceLicensesBySubscriptionId('SubCt31test20161222111');
+      expect(result.length).toBe(2);
     });
   });
 });

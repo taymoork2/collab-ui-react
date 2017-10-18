@@ -76,9 +76,9 @@ describe('ServicesOverviewController', () => {
     HybridServicesClusterService = _HybridServicesClusterService_;
   }
 
-  function initController(hasOffice365FeatureToggle = false) {
+  function initController(hasServicesOverviewRefreshToggle = false) {
     ctrl = $componentController('servicesOverview', {}, {
-      hasOffice365FeatureToggle: hasOffice365FeatureToggle,
+      hasServicesOverviewRefreshToggle: hasServicesOverviewRefreshToggle,
       urlParams: {
         office365: undefined,
       },
@@ -107,11 +107,6 @@ describe('ServicesOverviewController', () => {
       expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.hybridContext.title' }).length).toBe(1);
       expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.privateTrunk.title' }).length).toBe(1);
       expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.hybridImp.title' }).length).toBe(1);
-    });
-
-    it('should create a cmc card', () => {
-      initController();
-      expect(_.filter(ctrl.getCmcCards(), { name: 'servicesOverview.cards.cmc.title' }).length).toBe(1);
     });
 
     it('should load the webex site list', () => {

@@ -6,7 +6,7 @@ import { Notification } from 'modules/core/notifications';
 import { LocationsService, LocationListItem } from 'modules/call/locations';
 
 class CallParkCtrl implements ng.IComponentController {
-  private static readonly DEFAULT_EXTENSION_LENGTH: string  = '4';
+  private static readonly DEFAULT_EXTENSION_LENGTH: number  = 4;
   private static readonly PAGE_TRANSITION_TIMEOUT: number = 10;
 
   // setup assistant specific data
@@ -24,7 +24,7 @@ class CallParkCtrl implements ng.IComponentController {
   public callPark: CallPark;
   public range: ICallParkRangeItem;
   public selectedMembers: string[] = [];
-  public extensionLength: string = CallParkCtrl.DEFAULT_EXTENSION_LENGTH;
+  public extensionLength: number = CallParkCtrl.DEFAULT_EXTENSION_LENGTH;
   public isLoading: boolean = false;
   public saveInProcess: boolean = false;
   public hasLocation: boolean = false;
@@ -87,7 +87,14 @@ class CallParkCtrl implements ng.IComponentController {
     this.checkForChanges();
   }
 
-  public setCallParkLocation(location): void {
+  public setCallParkLocation(location: LocationListItem): void {
+    if (this.callPark.location) {
+      this.setCallParkRange(<ICallParkRangeItem>{
+        startRange: '',
+        endRange: '',
+      });
+      this.setCallParkMembers([]);
+    }
     this.callPark.location = location;
     this.checkForChanges();
   }

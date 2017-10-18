@@ -72,10 +72,10 @@ describe('Care Setup Virtual Assistant Ctrl', function () {
       errorCode: '100106',
     }],
   };
-  let controller: CareSetupVirtualAssistantCtrl, $controller, $q, $scope, $state, $stateParams, $modal, $timeout, CTService, LogMetricsService, Notification, VirtualAssistantService;
+  let controller: CareSetupVirtualAssistantCtrl, $controller, $q, $scope, $state, $stateParams, $modal, $timeout, CTService, Analytics, Notification, VirtualAssistantService;
   let getLogoDeferred, getLogoUrlDeferred;
   function resetVars() {
-    $controller = $q = $scope = $state = $stateParams = $modal = CTService = LogMetricsService = Notification = VirtualAssistantService = getLogoDeferred = getLogoUrlDeferred = undefined;
+    $controller = $q = $scope = $state = $stateParams = $modal = CTService = Analytics = Notification = VirtualAssistantService = getLogoDeferred = getLogoUrlDeferred = undefined;
   }
   function invokeCtrl() {
     controller = <CareSetupVirtualAssistantCtrl>$controller('CareSetupVirtualAssistantCtrl', {
@@ -84,7 +84,7 @@ describe('Care Setup Virtual Assistant Ctrl', function () {
     });
   }
   function initializeCtrl(invokeTheCtrl?, isEditFeature?) {
-    return function (_$controller_, _$q_, $rootScope, _$state_, _$stateParams_, _$modal_, _$timeout_, _CTService_, _LogMetricsService_, _Notification_, _VirtualAssistantService_) {
+    return function (_$controller_, _$q_, $rootScope, _$state_, _$stateParams_, _$modal_, _$timeout_, _CTService_, _Analytics_, _Notification_, _VirtualAssistantService_) {
       $scope = $rootScope.$new();
       $modal = _$modal_;
       $q = _$q_;
@@ -92,9 +92,9 @@ describe('Care Setup Virtual Assistant Ctrl', function () {
       CTService = _CTService_;
       VirtualAssistantService = _VirtualAssistantService_;
       $state = _$state_;
-      Notification = _Notification_;
       $stateParams = _$stateParams_;
-      LogMetricsService = _LogMetricsService_;
+      Notification = _Notification_;
+      Analytics = _Analytics_;
 
       //create mock deferred object which will be used to return promises
       getLogoDeferred = $q.defer();
@@ -105,10 +105,9 @@ describe('Care Setup Virtual Assistant Ctrl', function () {
       spyOn(Notification, 'success');
       spyOn(Notification, 'error');
       spyOn(Notification, 'errorWithTrackingId');
-      spyOn(LogMetricsService, 'logMetrics').and.callFake(function () {});
-      $stateParams = {
-        isEditFeature: isEditFeature || false,
-      };
+      spyOn(Analytics, 'trackEvent');
+      spyOn(Date, 'now').and.returnValues(0, 10, 10, 10, 10, 10, 10);
+      $stateParams.isEditFeature = isEditFeature;
       $controller = _$controller_;
       if (invokeTheCtrl) {
         invokeCtrl();
@@ -201,6 +200,8 @@ describe('Care Setup Virtual Assistant Ctrl', function () {
       for (let i = 0; i < controller.states.length; i++) {
         expect(controller.currentState).toEqual(controller.states[i]);
         controller.nextPage();
+        expect(Analytics.trackEvent).toHaveBeenCalledWith(controller.template.configuration.pages[controller.currentState].eventName, { durationInMillis: 10 });
+        Analytics.trackEvent.calls.reset();
         $timeout.flush();
       }
     });
@@ -256,13 +257,24 @@ describe('Care Setup Virtual Assistant Ctrl', function () {
       checkStateOfNavigationButtons(CONFIG_OVERVIEW_PAGE_INDEX, 'hidden', false);
     });
 
-    it('Next button on Access Token Page enabled when accessTokenValue is valid', function () {
+    it('Next button on Access Token Page enabled when accessTokenValue is valid and validation not needed', function () {
       controller.template.configuration.pages.VirtualAssistantAccessToken.accessTokenValue = '123';
       controller.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = true;
+      controller.template.configuration.pages.VirtualAssistantAccessToken.needsValidation = false;
       checkStateOfNavigationButtons(ACCESS_TOKEN_PAGE_INDEX, true, false);
 
       controller.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = false;
       checkStateOfNavigationButtons(ACCESS_TOKEN_PAGE_INDEX, true, true);
+    });
+
+    it('Next button on Access Token Page disabled when accessTokenValue is valid and needs validation', function () {
+      controller.template.configuration.pages.VirtualAssistantAccessToken.accessTokenValue = '123';
+      controller.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = true;
+      controller.template.configuration.pages.VirtualAssistantAccessToken.needsValidation = true;
+      checkStateOfNavigationButtons(ACCESS_TOKEN_PAGE_INDEX, true, false);
+
+      controller.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = false;
+      checkStateOfNavigationButtons(ACCESS_TOKEN_PAGE_INDEX, true, false);
     });
 
     it('Next button on Name Page enabled when nameValue is not empty', function () {
@@ -321,21 +333,25 @@ describe('Care Setup Virtual Assistant Ctrl', function () {
     it('should validateToken successfully', function () {
       deferred.resolve(true);
       controller.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = true;
+      controller.template.configuration.pages.VirtualAssistantAccessToken.needsValidation = true;
 
       controller.validateAPIAIToken();
       $scope.$apply();
 
       expect(controller.template.configuration.pages.VirtualAssistantAccessToken.invalidToken).toEqual(false);
+      expect(controller.template.configuration.pages.VirtualAssistantAccessToken.needsValidation).toEqual(false);
     });
 
     it('should validateToken unsuccessfully', function () {
       deferred.reject(false);
       controller.template.configuration.pages.VirtualAssistantAccessToken.invalidToken = false;
+      controller.template.configuration.pages.VirtualAssistantAccessToken.needsValidation = true;
 
       controller.validateAPIAIToken();
       $scope.$apply();
 
       expect(controller.template.configuration.pages.VirtualAssistantAccessToken.invalidToken).toEqual(true);
+      expect(controller.template.configuration.pages.VirtualAssistantAccessToken.needsValidation).toEqual(false);
     });
   });
   describe('Avatar Page', function () {
@@ -391,7 +407,6 @@ describe('Care Setup Virtual Assistant Ctrl', function () {
       $scope.$apply();
 
       expect(controller.saveTemplateErrorOccurred).toBeTruthy();
-      expect(LogMetricsService.logMetrics).not.toHaveBeenCalled();
       expect(Notification.errorWithTrackingId).toHaveBeenCalledWith(failedData, jasmine.any(String));
     });
 
@@ -400,7 +415,6 @@ describe('Care Setup Virtual Assistant Ctrl', function () {
       expect(controller.saveTemplateErrorOccurred).toBeFalsy();
 
       spyOn($state, 'go');
-      spyOn($stateParams, 'isEditFeature').and.returnValue(false);
       deferred.resolve({
         success: true,
         botServicesConfigId: 'ABotConfigurationId',
@@ -415,20 +429,19 @@ describe('Care Setup Virtual Assistant Ctrl', function () {
       });
       expect(controller.saveTemplateErrorOccurred).toBeFalsy();
       expect($state.go).toHaveBeenCalled();
-      expect(LogMetricsService.logMetrics.calls.argsFor(0)[1]).toEqual('CARETEMPLATEFINISH');
+      expect(Analytics.trackEvent).toHaveBeenCalledWith(Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_SUMMARY_PAGE, { durationInMillis: 10 });
+      expect(Analytics.trackEvent).toHaveBeenCalledWith(Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_START_FINISH, { durationInMillis: 10 });
     });
 
     it('should submit template successfully for Edit', function () {
       //by default, this flag is false
       expect(controller.saveTemplateErrorOccurred).toBeFalsy();
-
+      controller.isEditFeature = true;
       spyOn($state, 'go');
-      spyOn($stateParams, 'isEditFeature').and.returnValue(true);
       deferred.resolve({
         success: true,
         status: 200,
       });
-
       controller.submitFeature();
       $scope.$apply();
 
@@ -437,30 +450,21 @@ describe('Care Setup Virtual Assistant Ctrl', function () {
       });
       expect(controller.saveTemplateErrorOccurred).toBeFalsy();
       expect($state.go).toHaveBeenCalled();
-      expect(LogMetricsService.logMetrics.calls.argsFor(0)[1]).toEqual('CARETEMPLATEFINISH');
+      expect(Analytics.trackEvent).toHaveBeenCalledWith(Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_SUMMARY_PAGE, { durationInMillis: 10 });
+      expect(Analytics.trackEvent).toHaveBeenCalledWith(Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_START_FINISH, { durationInMillis: 10 });
     });
 
-    it('should submit template successfully', function () {
+    it('should submit template failed for Edit', function () {
       //by default, this flag is false
       expect(controller.saveTemplateErrorOccurred).toBeFalsy();
-
-      spyOn($state, 'go');
-      spyOn($stateParams, 'isEditFeature').and.returnValue(false);
-      deferred.resolve({
-        success: true,
-        botServicesConfigId: 'ABotConfigurationId',
-        status: 201,
-      });
+      deferred.reject(failedData);
+      controller.isEditFeature = true;
 
       controller.submitFeature();
       $scope.$apply();
 
-      expect(Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
-        featureName: jasmine.any(String),
-      });
-      expect(controller.saveTemplateErrorOccurred).toBeFalsy();
-      expect($state.go).toHaveBeenCalled();
-      expect(LogMetricsService.logMetrics.calls.argsFor(0)[1]).toEqual('CARETEMPLATEFINISH');
+      expect(controller.saveTemplateErrorOccurred).toBeTruthy();
+      expect(Notification.errorWithTrackingId).toHaveBeenCalledWith(failedData, jasmine.any(String));
     });
   });
 });

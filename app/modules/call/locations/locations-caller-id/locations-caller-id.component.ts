@@ -45,7 +45,8 @@ class LocationCallerIdCtrl implements ng.IComponentController {
     if (value) {
       this.callerId = new LocationCallerId({
         name: this.companyName,
-        number: null,
+        number: '',
+        uuid: '',
       });
       this.onChange(this.callerId);
     } else {
@@ -74,6 +75,9 @@ class LocationCallerIdCtrl implements ng.IComponentController {
   }
 
   public onChange(callerId: LocationCallerId | null): void {
+    if (callerId && callerId.uuid) {
+      callerId.uuid = undefined;
+    }
     this.onChangeFn({
       callerId: _.cloneDeep(callerId),
     });

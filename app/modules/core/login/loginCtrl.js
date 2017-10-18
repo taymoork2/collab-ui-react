@@ -2,9 +2,11 @@
   'use strict';
 
   var TimingKey = require('../metrics').TimingKey;
+  var DiagnosticKey = require('../metrics').DiagnosticKey;
 
   /* @ngInject */
-  function LoginCtrl($interval, $location, $rootScope, $scope, $state, $stateParams, $translate, Auth, Authinfo, Config, Log, LocalStorage, LogMetricsService, MetricsService, PageParam, SessionStorage, StorageKeys, TokenService, Utils, CacheWarmUpService) {
+  function LoginCtrl($location, $rootScope, $scope, $state, $stateParams, $translate, Auth, Authinfo, CacheWarmUpService, Config, Log, LocalStorage, LogMetricsService, MetricsService, PageParam, SessionStorage, StorageKeys, TokenService, Utils) {
+    MetricsService.startTimer(TimingKey.LOGIN_DURATION);
     var queryParams = SessionStorage.popObject(StorageKeys.REQUESTED_QUERY_PARAMS);
     var language = LocalStorage.get(StorageKeys.LANGUAGE);
 
@@ -61,10 +63,7 @@
         reauthorize: $stateParams.reauthorize,
       })
         .then(function () {
-          CacheWarmUpService.warmUpCaches();
-          $interval(function () {
-            CacheWarmUpService.warmUpCaches();
-          }, 100000);
+          CacheWarmUpService.warmUpOnInterval();
 
           if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {
             $state.go('firsttimewizard');
@@ -105,8 +104,17 @@
             $rootScope.$emit('LOGIN');
             return $state.go(state, params).catch(_.noop); // don't reject on $stateChangeStart prevention (eg. unauthorized)
           }
-        }).catch(function () {
+        }).catch(function (response) {
           isSuccess = false;
+          var headers = _.get(response, 'headers');
+          MetricsService.trackDiagnosticMetric(DiagnosticKey.LOGIN_FAILURE, {
+            httpStatus: _.get(response, 'status'),
+            requestMethod: _.get(response, 'config.method'),
+            requestUrl: _.get(response, 'config.url'),
+            responseData: _.get(response, 'data'),
+            trackingId: _.isFunction(headers) ? headers('TrackingID') : undefined,
+            xhrStatus: _.get(response, 'xhrStatus'),
+          });
           return $state.go('login-error');
         }).finally(function () {
           MetricsService.stopTimer(TimingKey.LOGIN_DURATION, {

@@ -11,14 +11,10 @@
     </div>
 
     <!-- Media on Hold settings -->
-    <div
-    cr-feature-toggle feature-show="huron-moh-enable"
-    class="cs-form__section">
+    <div class="cs-form__section">
       <div class="section__info">
-        <div cs-sticky>
-          <h4 class="section__title" translate="serviceSetupModal.mohTitle"></h4>
-          <h6 class="section__description" translate="serviceSetupModal.mohDesc"></h6>
-        </div>
+        <h4 class="section__title" translate="serviceSetupModal.mohTitle"></h4>
+        <h6 class="section__description" translate="serviceSetupModal.mohDesc"></h6>
       </div>
       <div class="section__content">
         <div class="sub-section">
@@ -34,9 +30,7 @@
     <!-- internal dialing section -->
     <div class="cs-form__section" ng-if="$ctrl.showRegionAndVoicemail">
       <div class="section__info">
-        <div cs-sticky>
-          <h4 class="section__title" translate="serviceSetupModal.internalDialing"></h4>
-        </div>
+        <h4 class="section__title" translate="serviceSetupModal.internalDialing"></h4>
       </div>
       <div class="section__content">
         <!-- routing Prefix length goes here  -->
@@ -44,9 +38,8 @@
           <uc-extension-length
             first-time-setup="$ctrl.ftsw"
             extension-length="$ctrl.callSettingsData.customerVoice.extensionLength"
-            huron-settings-data="$ctrl.callSettingsData"
-            has-voicemail-service="$ctrl.callSettingsData.customer.hasVoicemailService"
-            extensions-assigned="$ctrl.settingsOptions.extensionsAssigned"
+            settings-data="$ctrl.callSettingsData"
+            extension-decrease-allowed="$ctrl.settingsOptions.extensionDecreaseAllowed"
             extension-length-saved-fn="$ctrl.onExtensionLengthSaved()"
             decrease-extension-length-fn="$ctrl.onDecreaseExtensionLength(extensionLength)"
             on-change-fn="$ctrl.onExtensionLengthChanged(extensionLength)">
@@ -58,9 +51,7 @@
     <!-- company voicemail selection -->
     <div class="cs-form__section" ng-if="$ctrl.showRegionAndVoicemail">
       <div class="section__info">
-        <div cs-sticky>
-          <h4 class="section__title" translate="serviceSetupModal.voicemail"></h4>
-        </div>
+        <h4 class="section__title" translate="serviceSetupModal.voicemail"></h4>
       </div>
       <div class="section__content">
         <uc-location-company-voicemail
@@ -79,14 +70,12 @@
     <!-- company caller id selection -->
     <div class="cs-form__section">
       <div class="section__info">
-        <div cs-sticky>
-          <h4 class="section__title" translate="companyCallerId.companyCallerId"></h4>
-          <h6 class="section__description" translate="companyCallerId.companyCallerIdLocationDesc"></h6>
-        </div>
+        <h4 class="section__title" translate="companyCallerId.companyCallerId"></h4>
+        <h6 class="section__description" translate="companyCallerId.companyCallerIdLocationDesc"></h6>
       </div>
       <div class="section__content">
         <uc-company-caller-id
-          site="$ctrl.callSettingsData.site"
+          voicemail-pilot-number="$ctrl.callSettingsData.defaultLocation.voicemailPilotNumber.number"
           company-caller-id="$ctrl.callSettingsData.companyCallerId"
           external-number-options="$ctrl.settingsOptions.companyCallerIdOptions"
           customer-name="$ctrl.callSettingsData.customer.name"

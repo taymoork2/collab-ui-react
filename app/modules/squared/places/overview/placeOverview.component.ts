@@ -176,7 +176,7 @@ class PlaceOverview implements ng.IComponentController {
         actionAvailable: true,
       };
     } else if (this.hasEntitlement('squared-fusion-uc')) {
-      //dont add call services, it will be handled by hercules-cloud-extensions
+      //dont add call services, it will be handled by hybrid-cloudberry-section
       this.services = [];
       return;
     } else {

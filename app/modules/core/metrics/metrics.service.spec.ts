@@ -295,6 +295,36 @@ describe('Metrics:', () => {
           });
           expect(this.MetricsService.sdk.submit).not.toHaveBeenCalled();
         });
+
+        it('should not submit metric if loading metrics have negative calculations from invalid data', function () {
+          const origLoadEventEnd = this.$window.performance.timing.loadEventEnd;
+          this.$window.performance.timing.loadEventEnd = 0;
+
+          this.MetricsService.reportLoadingMetrics();
+          expect(this.MetricsService.sdk.submitClientMetrics).not.toHaveBeenCalled();
+          expect(this.MetricsService.sdk.submit).not.toHaveBeenCalled();
+
+          this.$window.performance.timing.loadEventEnd = NaN;
+
+          this.MetricsService.reportLoadingMetrics();
+          expect(this.MetricsService.sdk.submitClientMetrics).not.toHaveBeenCalled();
+          expect(this.MetricsService.sdk.submit).not.toHaveBeenCalled();
+
+          this.$window.performance.timing.loadEventEnd = origLoadEventEnd;
+
+          this.MetricsService.reportLoadingMetrics();
+          expect(this.MetricsService.sdk.submitClientMetrics).toHaveBeenCalledWith(TimingKey.LOAD_DURATION, {
+            type: ['operational'],
+            fields: {
+              dom_duration_in_millis: 1000,
+              navigation_duration_in_millis: 100,
+              network_duration_in_millis: 900,
+              total_duration_in_millis: 2000,
+            },
+            tags: {},
+          });
+          expect(this.MetricsService.sdk.submit).not.toHaveBeenCalled();
+        });
       });
     });
   });

@@ -14,7 +14,7 @@
   <div ng-if="!card.areNoneActive()" class="semi-card-container">
     <div class="semi-card">
       <div class="h6 semi-card-title ellipsis">
-        <img src="/images/hybrid-services/Microsoft_Exchange_logo_small.png" alt="{{::servicesOverview.cards.hybridCalendar.exchangeTitle | translate}}">
+        <img src="/images/hybrid-services/Microsoft_Exchange_logo_small.png" alt="{{::'servicesOverview.cards.hybridCalendar.exchangeTitle' | translate}}">
       </div>
       <div class="semi-card-content">
         <div ng-if="card.active" ng-repeat="button in card.hybridCalendarButtons">
@@ -33,7 +33,7 @@
     </div>
     <div class="semi-card">
       <div class="h6 semi-card-title ellipsis">
-        <img src="/images/hybrid-services/Google_Calendar_logo_small.png" alt="{{::servicesOverview.cards.hybridCalendar.googleTitle | translate}}">
+        <img src="/images/hybrid-services/Google_Calendar_logo_small.png" alt="{{::'servicesOverview.cards.hybridCalendar.googleTitle' | translate}}">
       </div>
       <div class="semi-card-content">
         <div ng-if="card.googleActive">

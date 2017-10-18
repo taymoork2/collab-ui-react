@@ -1,7 +1,7 @@
 import { E911_ADDRESS_PENDING } from 'modules/call/settings/shared';
 import { Notification } from 'modules/core/notifications';
 import { PstnModel, PstnAddressService, Address } from 'modules/huron/pstn';
-import { LocationsService, LocationListItem } from 'modules/call/locations';
+import { LocationsService } from 'modules/call/locations';
 
 
 const UPDATE_ADDRESS_WAIT_MS: number = 100;
@@ -48,9 +48,9 @@ class EmergencyServiceAddressCtrl implements ng.IComponentController {
   private initAddress() {
     if (this.ftHasLocations) {
       this.LocationsService.getDefaultLocation()
-      .then((location: LocationListItem) => {
-        if (_.isString(location.uuid)) {
-          return this.PstnAddressService.getByLocation(this.PstnModel.getCustomerId(), location.uuid)
+      .then(location => {
+        if (location) {
+          return this.PstnAddressService.getByLocation(this.PstnModel.getCustomerId(), location.uuid || '')
           .then(addresses => {
             if (_.isArray(addresses) && addresses.length > 0) {
               this.originalAddress = _.cloneDeep(addresses[0]);

@@ -216,13 +216,13 @@ class HuronSettingsCtrl implements ng.IComponentController {
     this.checkForChanges();
   }
 
-  public onExtensionLengthChanged(extensionLength: string): void {
+  public onExtensionLengthChanged(extensionLength: number): void {
     this.huronSettingsData.site.extensionLength = extensionLength;
     this.setShowDialPlanChangedDialogFlag();
     this.checkForChanges();
   }
 
-  public onDecreaseExtensionLength(extensionLength: string): void {
+  public onDecreaseExtensionLength(extensionLength: number): void {
     this.huronSettingsData.internalNumberRanges = [];
     this.huronSettingsData.site.extensionLength = extensionLength;
     this.setShowDialPlanChangedDialogFlag();
@@ -295,7 +295,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
     this.huronSettingsData.site.voicemailPilotNumber = voicemailPilotNumber;
     this.huronSettingsData.site.voicemailPilotNumberGenerated = voicemailPilotNumberGenerated;
     this.huronSettingsData.avrilFeatures = features;
-    if (this.avrilI1559) {
+    if (this.avrilI1559 && companyVoicemailEnabled) {
       if (!this.huronSettingsData.avrilFeatures.VM2T && !this.huronSettingsData.avrilFeatures.VM2S) {
         this.resetForm();
       }

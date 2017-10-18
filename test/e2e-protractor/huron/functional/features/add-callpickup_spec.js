@@ -1,7 +1,7 @@
 import * as provisioner from '../../../provisioner/provisioner';
 import { huronCustomer } from '../../../provisioner/huron/huron-customer-config';
 import { CallFeaturesPage } from '../../pages/callFeatures.page';
-import { CallPickupPage } from '../../pages/addCallPickup.page';
+import { CallPickupPage } from '../../pages/callPickup.page';
 
 const callFeatures = new CallFeaturesPage();
 const callPickup = new CallPickupPage();
@@ -9,7 +9,7 @@ const callPickup = new CallPickupPage();
 describe('Huron Functional: add call pickup', () => {
   const customer = huronCustomer({
     test: 'add-callPickUp',
-    users: 4,
+    users: { noOfUsers: 4, noOfDids: 0 },
   });
 
   const USERS = customer.users;
@@ -34,7 +34,7 @@ describe('Huron Functional: add call pickup', () => {
       navigation.clickServicesTab();
       utils.click(callFeatures.callFeatures);
     });
-    
+
     it('should click on call pickup button', () => {
       utils.click(callFeatures.newFeatureButton);
       utils.click(callFeatures.piFeatureButton);
@@ -78,7 +78,7 @@ describe('Huron Functional: add call pickup', () => {
       utils.expectIsDisplayed(callPickup.memberDrop);
       utils.sendKeys(callPickup.memberInput, protractor.Key.ENTER);
     });
-    
+
     it('should save the feature', () => {
       utils.expectIsNotDisplayed(callPickup.saveBtnDisabled);
       utils.click(callPickup.saveBtn);

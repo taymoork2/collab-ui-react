@@ -1,11 +1,15 @@
 import { Device } from '../services/deviceSearchConverter';
-import { SearchFields, SearchObject } from '../services/search/searchObject';
+import { SearchObject } from '../services/search/searchObject';
 import { SearchResult } from '../services/search/searchResult';
 import { Caller, CsdmSearchService } from '../services/csdmSearch.service';
 import { SearchTranslator } from '../services/search/searchTranslator';
 import { Notification } from '../../core/notifications/notification.service';
+import { SearchElement } from '../services/search/queryParser';
 
 export class DeviceSearch implements ng.IComponentController, ISearchHandler {
+
+  private lastSearchInput = '';
+  public searchInput = '';
   public searchField = '';
   public searchFilters;
   private lastSearchObject: SearchObject;
@@ -17,7 +21,6 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
   private searchResultChanged: (e: { result?: SearchResult }) => {};
   public searchObject: SearchObject;
   private searchInteraction: SearchInteraction;
-  public search: string;
   public searchResult: Device[];
   private isSearching: boolean;
 
@@ -31,7 +34,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
   }
 
   get searching(): boolean {
-    return this.inputActive || !!this.search;
+    return this.inputActive;
   }
 
   public $onInit(): void {
@@ -46,13 +49,59 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
     }
   }
 
-  public addToSearch(field: string, query: string) {
-    this.searchObject.setTokenizedQuery(field, query, false);
+  public setSortOrder(field: string, order: string) {
+    this.searchObject.setSortOrder(field, order);
     this.searchChange();
   }
 
-  public setSortOrder(field: string, order: string) {
-    this.searchObject.setSortOrder(field, order);
+  public addToSearch(field: string, query: string) {
+    this.searchObject.addSearchElement((field ? (field + ':') : '') + query);
+  }
+
+  public onInputSubmit() {
+    if (this.searchObject.hasError) {
+      return;
+    }
+    this.searchObject.submitWorkingElement();
+    this.searchInput = '';
+    this.lastSearchInput = '';
+    this.searchChange();
+  }
+
+  public onInputChange() {
+    if (this.lastSearchInput !== this.searchInput) {
+      this.searchObject.setWorkingElementText(this.searchInput);
+      this.lastSearchInput = this.searchInput;
+      this.searchChange();
+    }
+  }
+
+  public editBullet(bullet: SearchElement) {
+    if (!this.searchObject.hasError) {
+      this.searchObject.submitWorkingElement();
+      this.searchInput = '';
+      this.lastSearchInput = '';
+    }
+    this.searchObject.hasError = false;
+    this.lastSearchInput = bullet.toQuery();
+    this.searchInput = this.lastSearchInput;
+    this.setFocusToInputField();
+    bullet.setBeingEdited(true);
+  }
+
+  public clearSearchInput() {
+    this.searchObject.setWorkingElementText('');
+    this.searchInput = '';
+    this.lastSearchInput = '';
+    this.searchChange();
+  }
+
+  public setFocusToInputField() {
+    angular.element('#searchFilterInput').focus();
+  }
+
+  public removeBullet(bullet: SearchElement) {
+    this.searchObject.removeSearchElement(bullet);
     this.searchChange();
   }
 
@@ -60,7 +109,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
     const newSearch = (search || '').trim();
     if (newSearch !== this.searchField) {
       this.searchField = newSearch;
-      this.searchObject.setQuery(this.DeviceSearchTranslator.translate(this.searchField));
+      this.searchObject.setQuery(this.searchField);
       this.searchChange();
     }
   }
@@ -76,10 +125,10 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
   public searchChange() {
     if (this.lastSearchObject && this.lastSearchObject.equals(this.searchObject)) {
       return;
-    } else if (this.searchObject.hasError && this.lastSearchObject.currentFilterValue === this.searchObject.currentFilterValue) {
+    } else if (this.searchObject.hasError && (!this.lastSearchObject || this.lastSearchObject.currentFilterValue === this.searchObject.currentFilterValue)) {
       return;
     }
-    const search = _.cloneDeep(this.searchObject);
+    const searchClone = this.searchObject.clone();
 
     if (this.searchDelayTimer) {
       this.$timeout.cancel(this.searchDelayTimer);
@@ -87,8 +136,8 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
     }
 
     this.searchDelayTimer = this.$timeout(() => {
-      this.performSearch(search); //TODO avoid at now
-      this.lastSearchObject = search;
+      this.performSearch(searchClone); //TODO avoid at now
+      this.lastSearchObject = searchClone;
 
       if (this.searchObject.currentFilterValue) {
         this.performFilterUpdateSearch();
@@ -98,7 +147,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
 
   private performSearch(search: SearchObject) {
     this.isSearching = true;
-    this.CsdmSearchService.search(search, Caller.searchOrLoadMore).then((response) => {
+    this.CsdmSearchService.search(search.translate(this.DeviceSearchTranslator), Caller.searchOrLoadMore).then((response) => {
       if (response && response.data) {
         this.updateSearchResult(response.data);
         return;
@@ -121,7 +170,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
   }
 
   private performFilterUpdateSearch() {
-    this.CsdmSearchService.search(this.searchObject.cloneWithoutFilters(), Caller.aggregator)
+    this.CsdmSearchService.search(this.searchObject.translate(this.DeviceSearchTranslator).cloneWithoutFilters(), Caller.aggregator)
       .then(response => {
         if (response && response.data) {
           this.updateSearchFilters(response.data);
@@ -132,13 +181,8 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
       .catch(e => DeviceSearch.ShowSearchError(this.Notification, e));
   }
 
-  public getTokens() {
-    return _.filter(this.searchObject.tokenizedQuery, (t) => !t.active);
-  }
-
-  public removeBullet(bullet: Bullet) {
-    this.searchObject.removeToken(bullet.searchField);
-    this.searchChange();
+  public getBullets(): SearchElement[] {
+    return this.searchObject.getBullets();
   }
 
   private updateSearchFilters(searchResult?: SearchResult) {
@@ -177,72 +221,6 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
   }
 }
 
-class Bullet {
-  private _text = '';
-  public searchField = '';
-  public active = false;
-
-  get searchfieldWithPrefix() {
-    return this.searchField.length > 0 ? this.searchField + ':' : this.searchField;
-  }
-
-  get text(): string {
-    return this._text;
-  }
-
-  set text(value: string) {
-    const tokens = Bullet.createTokens(this.searchfieldWithPrefix + (value || ''));
-    const token = tokens.pop();
-    if (!token) {
-      return;
-    }
-    tokens.forEach((t) => {
-      this.searchObject.setTokenizedQuery(t.searchField, t.query, false);
-    });
-
-    if (token.valid) {
-      this._text = token.query;
-      this.searchField = token.searchField;
-      this.active = true;
-      const anyField = this.searchObject.tokenizedQuery[SearchFields[SearchFields.any]];
-      if (anyField && anyField.active && token.searchField.search(anyField.query) >= 0) {
-        this.searchObject.removeToken(anyField.searchField);
-      }
-      this.searchObject.setTokenizedQuery(token.searchField, token.query, true);
-    } else {
-      this.searchField = '';
-      this._text = token.query || '';
-      if (tokens.length === 0 || this._text.length > 0) {
-        this.searchObject.setTokenizedQuery('any', token.query, true);
-      }
-    }
-  }
-
-  constructor(private searchObject: SearchObject) {
-  }
-
-  public static createTokens(search: string) {
-    const splitted = _.split(search, ',');
-    const token = _.map(splitted, (s) => Bullet.createToken(s));
-    return token;
-  }
-
-  public static createToken(search: string): { searchField: string, query: string, valid: boolean } {
-    const splitted = _.split(search, ':');
-    if (splitted.length === 2) {
-      if (_.some(_.keys(SearchObject.SearchFields)), (a) => splitted === a) {
-        return { searchField: splitted[0], query: splitted[1], valid: true };
-      }
-      return { searchField: SearchFields[SearchFields.any], query: splitted[1], valid: false };
-    }
-    return { searchField: SearchFields[SearchFields.any], query: search, valid: false };
-  }
-
-  public isCurrentField(field: string) {
-    return (this.searchField || 'any') === (field || 'any');
-  }
-}
-
 export interface ISearchHandler {
   addToSearch(field: string, query: string);
 
@@ -268,12 +246,10 @@ export class SearchInteraction implements ISearchHandler {
 export class DeviceSearchComponent implements ng.IComponentOptions {
   public controller = DeviceSearch;
   public bindings = {
-    search: '=',
     searchInteraction: '<',
     searchResultChanged: '&',
     searchObject: '<',
     isSearching: '=',
-    clearSearch: '&',
   };
   public controllerAs = 'dctrl';
   public template = require('modules/csdm/devicesRedux/deviceSearch.html');

@@ -42,6 +42,7 @@ require('./_customer-overview.scss');
     vm.isProPackEnabled = false;
     vm.isMediaFusionEnabled = false;
     vm.isNewPatchFlow = false;
+    vm.showContractIncomplete = false;
 
     vm.partnerOrgId = Authinfo.getOrgId();
     vm.isPartnerAdmin = Authinfo.isPartnerAdmin();
@@ -124,6 +125,7 @@ require('./_customer-overview.scss');
     function init() {
       initCustomer();
       initTrialActions();
+      initSignedContractStatus();
       getLogoSettings();
       getIsSetupDone();
       getCountryCode();
@@ -150,6 +152,10 @@ require('./_customer-overview.scss');
           });
         }
       }
+    }
+
+    function initSignedContractStatus() {
+      vm.showContractIncomplete = false;
     }
 
     function resetForm() {

@@ -3,7 +3,7 @@
     <button cs-btn id="saveButton" class="btn btn--primary" ng-click="updateRoles()" type="button" ng-disabled="rolesEdit.form.$invalid" loading="updatingUser">{{::'common.save'|translate}}</button>
     <button id="cancelButton" translate="common.cancel" ng-click="resetFormData()" type="button" ng-disabled="updatingUser"></button>
   </cs-sp-buttons>
-  <cs-sp-container>
+  <cs-sp-container cs-tabindex="rolesEdit.form.$dirty ? -1 : 0">
     <cs-sp-section>
       <div id="rolesDetailsPanel">
         <div class="edit-panel">
@@ -48,7 +48,7 @@
                     type="radio"
                     ng-model="rolesObj.adminRadioValue"
                     ng-value="noAdmin.value"
-                    name="{{noAdmin.name}}"
+                    name="adminRoles"
                     id="{{noAdmin.id}}"
                     cs-input-label="{{noAdmin.label}}"
                     ng-click="clearCheckboxes();"
@@ -61,7 +61,7 @@
                     type="radio"
                     ng-model="rolesObj.adminRadioValue"
                     ng-value="fullAdmin.value"
-                    name="{{fullAdmin.name}}"
+                    name="adminRoles"
                     id="{{fullAdmin.id}}"
                     cs-input-label="{{fullAdmin.label}}"
                     ng-click="clearCheckboxes();"
@@ -80,7 +80,7 @@
                     type="radio"
                     ng-model="rolesObj.adminRadioValue"
                     ng-value="readonlyAdmin.value"
-                    name="{{readonlyAdmin.name}}"
+                    name="adminRoles"
                     id="{{readonlyAdmin.id}}"
                     cs-input-label="{{readonlyAdmin.label}}"
                     ng-click="clearCheckboxes();"
@@ -99,7 +99,7 @@
                     type="radio"
                     ng-model="rolesObj.adminRadioValue"
                     ng-value="partialAdmin.value"
-                    name="{{partialAdmin.name}}"
+                    name="adminRoles"
                     id="{{partialAdmin.id}}"
                     cs-input-label="{{partialAdmin.label}}"
                     ng-click="supportCheckboxes();"

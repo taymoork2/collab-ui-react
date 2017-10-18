@@ -1,10 +1,9 @@
 import { IOption } from 'modules/huron/dialing/dialing.service';
 import { IDialPlan, DialPlanService } from 'modules/huron/dialPlans';
 import { NumberService, NumberType } from 'modules/huron/numbers';
-import { PhoneNumberService, CallPhoneNumber } from 'modules/huron/phoneNumber';
+import { PhoneNumberService } from 'modules/huron/phoneNumber';
 import { MediaOnHoldService } from 'modules/huron/media-on-hold';
 import { Notification } from 'modules/core/notifications';
-import { LocationsService } from './locations.service';
 
 export class LocationSettingsOptions {
   public mediaOnHoldOptions: IOption[];
@@ -31,7 +30,6 @@ export class LocationSettingsOptionsService {
      private Notification: Notification,
      private ServiceSetup,
      private FeatureToggleService,
-     private LocationsService: LocationsService,
   ) { }
 
   public getOptions(): ng.IPromise<LocationSettingsOptions> {
@@ -99,36 +97,37 @@ export class LocationSettingsOptionsService {
 
   public loadLocationCallerIdNumbers(filter: string | undefined): ng.IPromise<IOption[]> {
     return this.NumberService.getNumberList(filter, NumberType.EXTERNAL)
-      .then(externalNumbers => {
-        return _.map(externalNumbers, externalNumber => {
-          return <IOption> {
-            value: externalNumber.number,
-            label: this.PhoneNumberService.getNationalFormat(externalNumber.number),
-          };
-        });
+    .then(externalNumbers => {
+      return _.map(externalNumbers, externalNumber => {
+        return {
+          value: _.get(externalNumber, 'external'),
+          label: this.PhoneNumberService.getNationalFormat(_.get(externalNumber, 'external')),
+        } as IOption;
       });
+    });
   }
 
   public loadCompanyVoicemailNumbers(filter: string | undefined): ng.IPromise<IOption[]> {
     return this.NumberService.getNumberList(filter, NumberType.EXTERNAL, false)
       .then(externalNumbers => {
         return _.map(externalNumbers, externalNumber => {
-          return <IOption> {
-            value: externalNumber.number,
-            label: this.PhoneNumberService.getNationalFormat(externalNumber.number),
-          };
+          return {
+            value: _.get(externalNumber, 'external'),
+            label: this.PhoneNumberService.getNationalFormat(_.get(externalNumber, 'external')),
+          } as IOption;
         });
       });
   }
 
   public loadEmergencyNumbersOptions(): ng.IPromise<IOption[]> {
-    return this.LocationsService.getEmergencyCallbackNumbersOptions().then((numbers: CallPhoneNumber[]) => {
-      return _.map(numbers, number => {
-        return <IOption> {
-          value: number.external,
-          label: number.externalLabel,
-        };
+    return this.NumberService.getNumberList(undefined, NumberType.EXTERNAL, true)
+      .then(externalNumbers => {
+        return _.map(externalNumbers, externalNumber => {
+          return {
+            value: _.get(externalNumber, 'external'),
+            label: this.PhoneNumberService.getNationalFormat(_.get(externalNumber, 'external')),
+          } as IOption;
+        });
       });
-    });
   }
 }

@@ -890,7 +890,7 @@ describe('OnboardCtrl: Ctrl', function () {
         _.assign(this.$scope.usrlist[0], {
           assignedDn: {
             uuid: '111',
-            pattern: '123',
+            number: '123',
           },
           externalNumber: {
             uuid: '444',
@@ -908,7 +908,7 @@ describe('OnboardCtrl: Ctrl', function () {
         _.assign(this.$scope.usrlist[0], {
           assignedDn: {
             uuid: '111',
-            pattern: '123',
+            number: '123',
           },
           externalNumber: {
             uuid: 'none',
@@ -1378,6 +1378,11 @@ describe('OnboardCtrl: Ctrl', function () {
       var result = this.$scope.generateLicenseTooltip(dataWithNamedUserLicense);
       expect(result).toContain('firstTimeWizard.namedLicenseTooltip');
     });
+
+    it('The generateLicenseTranslation() function should return Named User License tooltip string', function () {
+      var result = this.$scope.generateLicenseTranslation(dataWithNamedUserLicense);
+      expect(result).toEqual('firstTimeWizard.namedLicenseTooltip');
+    });
   });
 
   describe('Tests Shared Meeting License: ', function () {
@@ -1401,6 +1406,11 @@ describe('OnboardCtrl: Ctrl', function () {
     it('The generateLicenseTooltip() function should return Shared Meeting License tooltip string', function () {
       var result = this.$scope.generateLicenseTooltip(dataWithSharedMeetingsLicense);
       expect(result).toContain('firstTimeWizard.sharedLicenseTooltip');
+    });
+
+    it('The generateLicenseTranslation() function should return Shared Meeting License tooltip string', function () {
+      var result = this.$scope.generateLicenseTranslation(dataWithSharedMeetingsLicense);
+      expect(result).toEqual('firstTimeWizard.sharedLicenseTooltip');
     });
   });
 

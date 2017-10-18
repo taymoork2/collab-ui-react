@@ -96,7 +96,9 @@
                 tooltip-trigger="focus mouseenter"
                 tooltip-class="long-msg"
                 tooltip-placement="top"
-                tooltip-animation="false"></i>
+                tooltip-animation="false"
+                tabindex="0"
+                aria-label="{{::'usersPage.ciscoSparkJabberInteropTooltip' | translate}}"></i>
             </span>
           </div>
         </div>
@@ -119,7 +121,7 @@
               <span class="license-entity under-label-reposition">{{determineLicenseType(lic)}}
                 <span class="license-entity-tooltip">
                   <i class="icon icon-info icon-offset-l" tooltip-trigger="focus mouseenter" tooltip-placement="top" tooltip-animation="false"
-                      tooltip-html-unsafe="{{generateLicenseTooltip(lic)}}">
+                      tooltip-html-unsafe="{{::generateLicenseTooltip(lic)}}" tabindex="0" aria-label="{{::generateLicenseTranslation(lic)}}">
                   </i>
                 </span>
               </span>
@@ -142,7 +144,7 @@
                 <span class="license-entity under-label-reposition">{{determineLicenseType(lic)}}
                   <span class="license-entity-tooltip">
                     <i class="icon icon-info icon-offset-l" tooltip-trigger="focus mouseenter" tooltip-placement="top" tooltip-animation="false"
-                       tooltip-html-unsafe="{{generateLicenseTooltip(lic)}}">
+                       tooltip-html-unsafe="{{::generateLicenseTooltip(lic)}}" tabindex="0" aria-label="{{::generateLicenseTranslation(lic)}}">
                     </i>
                   </span>
                 </span>
@@ -206,7 +208,7 @@
         <span class="item-mtg-license" translate="onboardModal.contactCenter"></span>
         <span class="license-entity-tooltip">
           <i class="icon icon-info icon-offset-l" tooltip-trigger="focus mouseenter" tooltip-placement="top" tooltip-animation="false"
-          tooltip-html-unsafe="{{careTooltip()}}">
+          tooltip-html-unsafe="{{::careTooltip()}}" tabindex="0" aria-label="{{::'firstTimeWizard.careTooltip' | translate}}">
           </i>
         </span>
         <div class="entitle-check-grp" ng-show="multipleSubscriptions.showCareLicenses(careFeatures)" >

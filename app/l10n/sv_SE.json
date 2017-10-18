@@ -425,7 +425,7 @@
     "security": "Säkerhet",
     "resetAccessTipForBasicPack": "Om du vill återställa åtkomsten för dina användare kontaktar du din partner eller Cisco-representant om Pro-paketet.",
     "resetAccessSuccess": "Åtkomståterställning för {{name}} lyckades. Vänta några timmar tills återställningen genomförts.",
-    "resetAccessFailure": "Åtkomståterställning för {{namn}} misslyckades. Försök igen senare.",
+    "resetAccessFailure": "Åtkomståterställning för {{name}} misslyckades. Försök igen senare.",
     "resetAccess": "Åtkomståterställning",
     "learnMore": "Läs mer.",
     "resetAccessDetail": "Återkalla användaråtkomstnyckel för Cisco Spark-appen på datorn, webben och mobilen. Detta tar bort allt cachelagrat innehåll och uppmanar användaren att logga in igen.",
@@ -2577,7 +2577,7 @@
       "success": "Snyggt! Google Kalender har konfigurerats korrekt."
     },
     "settings": {
-      "deactivateServiceHeading": "Inaktivera {{serviceName}}",
+      "deactivateServiceHeading": "Inaktivera {{ServiceName}}",
       "deactivateService": "Genom att avaktivera {{ServiceName}} avinstalleras {{ConnectorName}} från dina Expressway-kluster och tjänsten avaktiveras för användarna.",
       "deactivate": "Inaktivera",
       "emailNotificationsHeading": "E-postaviseringar",
@@ -3064,7 +3064,7 @@
       "goToNode": "Gå till nod",
       "moveNode": "Flytta nod",
       "deregisterNode": "Avregistrera nod",
-      "pendingTooltip": "Väntar sedan: {{datum}}. Underhållsläge har begärts. Vänta tills noden är klar.",
+      "pendingTooltip": "Väntar sedan: {{date}}. Underhållsläge har begärts. Vänta tills noden är klar.",
       "maintenanceModeTooltip": "Använd underhållsläget för att stoppa anslutningarna i den här noden och stoppa e-postmeddelanden om alarm.",
       "maintenancePending": "Underhåll väntar",
       "maintenanceReady": "Klar för underhåll",
@@ -4729,7 +4729,7 @@
     "listSiteError": "Kunde inte hämta webbplatslistan för denna kund.",
     "orderNumbersPrompt": "Måste lägga till nummer för att fortsätta.",
     "invalidNumberPrompt": "Rätta till ogiltiga nummer innan du fortsätter.",
-    "duplicateNumber": "{{nummer}} är ett dubblettnummer.",
+    "duplicateNumber": "{{number}} är ett dubblettnummer.",
     "orderNumbersError": "Det uppstod ett problem med din beställning. Kontrollera beställningshistoriken för detaljer.",
     "blockOrderError": "Kunde inte beställa {{quantity}} blocknummer med riktnummer {{areaCode}}.",
     "swivel": "SWIVEL",
@@ -4750,7 +4750,7 @@
     "serviceAddressNotFound": "Kunde inte hitta adressen. Uppdatera och försök igen.",
     "orderNumber": "Ordernummer",
     "numberCart": "Vagnnummer",
-    "tollFreeTitle": "Sök och lägg till avgiftsfria telefonnummer genom att ange ett giltigt riktnummer. Giltiga avgiftsfria riktnummer är {{Areacodes}}",
+    "tollFreeTitle": "Sök och lägg till avgiftsfria telefonnummer genom att ange ett giltigt riktnummer. Giltiga avgiftsfria riktnummer är {{areaCodes}}",
     "pstnSelector": {
       "searchPlaceholder": "Ange riktnummer och/eller nummerprefix",
       "searchDesc": "t.ex. 972 eller 972867",
@@ -7503,8 +7503,8 @@
     "invalidFallback": "Välj ett nummer eller ange ett giltigt nummer",
     "error": {
       "required": "Detta fält är obligatoriskt",
-      "minRingSecs": "Den kortaste ringtiden är {{sek}} sekunder",
-      "maxRingSecs": "Den längsta ringtiden är {{sek}} sekunder"
+      "minRingSecs": "Den kortaste ringtiden är {{secs}} sekunder",
+      "maxRingSecs": "Den längsta ringtiden är {{secs}} sekunder"
     }
   },
   "digitalRiver": {
@@ -8594,7 +8594,7 @@
           "resultMsg": {
             "noItemFound": "Inga objekt hittades.",
             "exceedMax": "{{importedNumbersCount}}/{{allNumbersCount}} nya nummer har importerats. Det maximala antalet telefonnummer är 300. Alla nummer utöver detta antal har nekats.",
-            "importTD": "{{nummer}} nummer har ännu inte synkroniserats med WebEx och kan inte importeras. Försök igen senare.",
+            "importTD": "{{number}} nummer har ännu inte synkroniserats med WebEx och kan inte importeras. Försök igen senare.",
             "success": "Importen har slutförts. {{importedNumbersCount}} nya nummer har importerats. Tilldela ett nummer som avgiftsbelagt standardnummer innan du skickar din begäran."
           },
           "csvConfirm": {

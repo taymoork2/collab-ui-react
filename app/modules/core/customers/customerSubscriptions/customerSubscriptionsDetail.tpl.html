@@ -1,5 +1,5 @@
-<cs-sp-container class="subscriptions-detail">
-  <cs-sp-buttons ng-show="customerOverview.form.$dirty || CustomerOverview.saved">
+<cs-sp-container class="subscriptions-detail" cs-tabindex="customerOverview.form.$dirty ? -1 : 0">
+  <cs-sp-buttons ng-show="customerOverview.form.$dirty">
     <button class="btn btn--primary" ng-click="customerOverview.saveLogoSettings()" type="submit" translate="common.save"></button>
     <button ng-click="customerOverview.reset()" translate="common.cancel"></button>
   </cs-sp-buttons>

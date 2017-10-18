@@ -134,6 +134,12 @@
       integration: 'https://config.appstaging.ciscoccservice.com/config/v1',
       prod: 'https://config.produs1.ciscoccservice.com/config/v1',
     },
+    SunlightURServiceUrl: {
+      dev: 'https://pick.devus1.ciscoccservice.com/qnr/v1',
+      cfe: 'https://pick.appstaging.ciscoccservice.com/qnr/v1',
+      integration: 'https://pick.appstaging.ciscoccservice.com/qnr/v1',
+      prod: 'https://pick.produs1.ciscoccservice.com/qnr/v1',
+    },
     SunlightBubbleUrl: {
       dev: 'https://bubble.devus1.ciscoccservice.com',
       cfe: 'https://bubble.appstaging.ciscoccservice.com',
@@ -157,12 +163,6 @@
       cfe: 'https://pqm.appstaging.ciscoccservice.com/pqm/v1/publish/taskState',
       integration: 'https://pqm.appstaging.ciscoccservice.com/pqm/v1/publish/taskState',
       prod: 'https://pqm.produs1.ciscoccservice.com/pqm/v1/publish/taskState',
-    },
-    CcfsUrl: {
-      dev: 'https://ccfs.produs1.ciscoccservice.com/v1/authorize?delegation=true&appType=sunlightdev&callbackUrl=',
-      cfe: 'https://ccfs.produs1.ciscoccservice.com/v1/authorize?delegation=true&appType=sunlightstaging&callbackUrl=',
-      integration: 'https://ccfs.produs1.ciscoccservice.com/v1/authorize?delegation=true&appType=sunlightstaging&callbackUrl=',
-      prod: 'https://ccfs.produs1.ciscoccservice.com/v1/authorize?delegation=true&appType=sunlight&callbackUrl=',
     },
     CalliopeUrl: {
       dev: 'https://calliope-intb.ciscospark.com/calliope/api/authorization/v1',
@@ -194,12 +194,6 @@
       integration: 'https://ucc-intb.ciscospark.com/ucm-service/api/v1',
       prod: 'https://ucc-a.wbx2.com/ucm-service/api/v1',
     },
-    HybridVoicemailUrl: {
-      dev: 'https://ucc-intb.ciscospark.com/voicemail/api/v1',
-      cfe: 'https://ucc-loada.ciscospark.com/voicemail/api/v1',
-      integration: 'https://ucc-intb.ciscospark.com/voicemail/api/v1',
-      prod: 'https://ucc-a.wbx2.com/voicemail/api/v1',
-    },
     CccUrl: {
       dev: 'https://calendar-cloud-connector-intb.ciscospark.com/api/v1',
       cfe: 'https://calendar-cloud-connector-loada.ciscospark.com/api/v1',
@@ -211,6 +205,12 @@
       cfe: 'https://discovery.appstaging.ciscoccservice.com/discovery/apps/v1',
       integration: 'https://discovery.appstaging.ciscoccservice.com/discovery/apps/v1',
       prod: 'https://discovery.produs1.ciscoccservice.com/discovery/apps/v1',
+    },
+    ContextCcfsUrl: {
+      dev: 'https://ccfs.appstaging.ciscoccservice.com/v1',
+      cfe: 'https://ccfs.appstaging.ciscoccservice.com/v1',
+      integration: 'https://ccfs.appstaging.ciscoccservice.com/v1',
+      prod: 'https://ccfs.produs1.ciscoccservice.com/v1',
     },
     HybridEncryptionServiceUrl: {
       dev: 'https://encryption-intb.ciscospark.com/encryption/api/v1',
@@ -317,6 +317,12 @@
       integration: 'https://virtual-assistant.appstaging.ciscoccservice.com/bot-services/v1/',
       prod: 'https://virtual-assistant.produs1.ciscoccservice.com/bot-services/v1/',
     },
+    ExpertVirtualAssistantServiceUrl: {
+      dev: 'https://expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
+      cfe: 'https://expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
+      integration: 'https://expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
+      prod: 'https://expert-assistant.produs1.ciscoccservice.com/expert-assistant/v1/',
+    },
     WebExReportAppforMEIUrl: {
       dev: 'https://%s/custportal/extensions/MEI/MEI.html',
       cfe: 'https://%s/custportal/extensions/MEI/MEI.html',
@@ -328,6 +334,12 @@
       cfe: 'https://%s/custportal/extensions/MEI/MEI.html',
       integration: 'https://%s/custportal/extensions/MEI/MEI.html',
       prod: 'https://%s/custportal/extensions/MEI/MEI.html',
+    },
+    AdminBatchServiceUrl: {
+      dev: 'https://admin-batch-service.intb1.ciscospark.com/api/v1',
+      cfe: 'https://admin-batch-service.intb1.ciscospark.com/api/v1',
+      integration: 'https://admin-batch-service.intb1.ciscospark.com/api/v1',
+      prod: 'https://admin-batch-service.wbx2.com/api/v1',
     },
     // urls same for all environments
 
@@ -341,11 +353,12 @@
     ItunesStoreUrl: 'http://cs.co/sqios',
     SquaredAppUrl: 'squared://',
     StatusPageUrl: 'http://status.ciscospark.com/',
+    MixpanelUrl: 'https://api.mixpanel.com',
     CallflowServiceUrl: 'https://admin-portal-test-public.wbx2.com/atlas-server/admin/api/v1/',
     LogMetricsUrl: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
     SSOTestUrl: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
     SSOSetupUrl: 'https://idbroker.webex.com/idb/idbconfig/',
-    EscalationIntentUrl: 'https://care-assistant.produs1.ciscoccservice.com/onboarding/apiai/escalation.json',
+    EscalationIntentUrl: 'https://virtual-assistant.produs1.ciscoccservice.com/apiai/escalation.json',
   };
 
   module.exports = angular

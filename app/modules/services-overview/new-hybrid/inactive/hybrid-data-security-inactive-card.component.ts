@@ -2,21 +2,17 @@ import { Config } from 'modules/core/config/config';
 import { Notification } from 'modules/core/notifications';
 import { ProPackService } from 'modules/core/proPack/proPack.service';
 
-class HybridDataSecurityInactiveCardController implements ng.IComponentController {
-  private hasProPackPurchased: boolean = false;
-  private hasProPackEnabled: boolean = false;
-  public showProBadge: boolean = false;
-  public infoText: string = '';
+export class HybridDataSecurityInactiveCardController implements ng.IComponentController {
+  public treatAsPurchased = false;
+  public loading = true;
 
   /* @ngInject */
   constructor(
     private $q: ng.IQService,
     private $state: ng.ui.IStateService,
-    private $translate: ng.translate.ITranslateService,
     private Authinfo,
     private Config: Config,
     private HDSService,
-    private ModalService,
     private Notification: Notification,
     private ProPackService: ProPackService,
   ) {}
@@ -28,17 +24,9 @@ class HybridDataSecurityInactiveCardController implements ng.IComponentControlle
     };
     this.$q.all(PropackPromises)
       .then(result => {
-        this.proPackEventHandler(result);
+        this.treatAsPurchased = result.hasProPackPurchased || !result.hasProPackEnabled;
+        this.loading = false;
       });
-  }
-
-  public openPrerequisites(): void {
-    this.ModalService.open({
-      hideDismiss: true,
-      title: 'Not implemented yet',
-      message: '¯\_(ツ)_/¯',
-      close: this.$translate.instant('common.close'),
-    });
   }
 
   public openSetUp(): void {
@@ -60,16 +48,6 @@ class HybridDataSecurityInactiveCardController implements ng.IComponentControlle
         this.Notification.errorWithTrackingId(error, 'Error setting HDS service entitlements');
       });
   }
-
-  public proPackEventHandler(result): void {
-    this.hasProPackEnabled = result.hasProPackEnabled;
-    this.hasProPackPurchased = result.hasProPackPurchased;
-    this.infoText = this.treatAsPurchased() ? '' : 'common.proPackTooltip';
-  }
-
-  private treatAsPurchased(): boolean {
-    return this.hasProPackPurchased || !this.hasProPackEnabled;
-  }
 }
 
 export class HybridDataSecurityInactiveCardComponent implements ng.IComponentOptions {
@@ -78,14 +56,17 @@ export class HybridDataSecurityInactiveCardComponent implements ng.IComponentOpt
     <article>
       <div class="inactive-card_header">
         <h4 translate="servicesOverview.cards.hybridDataSecurity.title"></h4>
-        <cr-pro-pack-icon ng-if="$ctrl.showProBadge" tooltip="{{::$ctrl.infoText| translate}}" tooltip-append-to-body="true" tooltip-placement="right" tooltip-trigger="focus mouseenter" tabindex="0" aria-label="{{::$ctrl.infoText| translate}}"></cr-pro-pack-icon>
+        <div class="inactive-card_logo"><cr-pro-pack-icon ng-if="!$ctrl.loading && !$ctrl.treatAsPurchased" tooltip="{{::'common.proPackTooltip' | translate}}" tooltip-append-to-body="true" tooltip-placement="right" tooltip-trigger="focus mouseenter" tabindex="0" aria-label="{{::$ctrl.infoText| translate}}"></cr-pro-pack-icon></div>
       </div>
-      <div class="inactive-card_content">
+      <div ng-if="$ctrl.loading">
+        <i class="icon icon-spinner icon-2x"></i>
+      </div>
+      <div class="inactive-card_content" ng-if="!$ctrl.loading">
         <p translate="servicesOverview.cards.hybridDataSecurity.description"></p>
       </div>
-      <div class="inactive-card_footer">
-        <p><a href ng-click="$ctrl.openPrerequisites()" translate="servicesOverview.genericButtons.prereq"></a></p>
-        <p><button class="btn btn--primary" ng-click="$ctrl.openSetUp()" translate="servicesOverview.genericButtons.setup"></button></p>
+      <div class="inactive-card_footer" ng-if="!$ctrl.loading">
+        <p ng-if="$ctrl.treatAsPurchased"><button class="btn btn--primary" ng-click="$ctrl.openSetUp()" translate="servicesOverview.genericButtons.setup"></button></p>
+        <p ng-if="!$ctrl.treatAsPurchased"><a class="btn btn--primary" href="http://www.cisco.com/go/hybrid-data-security" target="_blank" translate="servicesOverview.genericButtons.learnMore"></a></p>
       </div>
     </article>
   `;

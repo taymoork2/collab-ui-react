@@ -4,9 +4,9 @@ var ediscoveryModule = require('./ediscovery.module');
 describe('Controller: EdiscoveryReportsController', function () {
   beforeEach(angular.mock.module(ediscoveryModule));
 
-  var $controller, $q, $scope, $translate, Analytics, Authinfo, controller, EdiscoveryService, FeatureToggleService, TrialService;
+  var $controller, $q, $scope, $translate, Analytics, Authinfo, controller, EdiscoveryService, TrialService;
 
-  beforeEach(inject(function (_$controller_, _$q_, _$rootScope_, _$translate_, _Analytics_, _Authinfo_, _EdiscoveryService_, _FeatureToggleService_, _TrialService_) {
+  beforeEach(inject(function (_$controller_, _$q_, _$rootScope_, _$translate_, _Analytics_, _Authinfo_, _EdiscoveryService_, _TrialService_) {
     $scope = _$rootScope_.$new();
     $controller = _$controller_;
     $translate = _$translate_;
@@ -14,7 +14,6 @@ describe('Controller: EdiscoveryReportsController', function () {
     Analytics = _Analytics_;
     Authinfo = _Authinfo_;
     EdiscoveryService = _EdiscoveryService_;
-    FeatureToggleService = _FeatureToggleService_;
     TrialService = _TrialService_;
 
     var promise = $q.resolve({
@@ -34,7 +33,6 @@ describe('Controller: EdiscoveryReportsController', function () {
     spyOn(Analytics, 'trackEvent').and.returnValue($q.resolve({}));
     spyOn(Authinfo, 'getOrgId');
     spyOn(EdiscoveryService, 'getReports');
-    spyOn(FeatureToggleService, 'atlasEdiscoveryIPSettingGetStatus').and.returnValue($q.resolve(false));
     spyOn(TrialService, 'getDaysLeftForCurrentUser');
 
     EdiscoveryService.getReports.and.returnValue(promise);

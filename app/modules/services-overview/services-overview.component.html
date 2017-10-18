@@ -12,7 +12,7 @@
     </cs-card>
   </cs-card-layout>
 
-  <div cr-feature-toggle feature-hide="atlas-office365-support">
+  <div ng-if="!$ctrl.hasServicesOverviewRefreshToggle">
     <h5><span translate="servicesOverview.hybridServices"></span></h5>
     <p class="no-hybrid-cards-found"
       ng-if="!$ctrl.hasActiveHybridCards()">
@@ -30,14 +30,15 @@
     </cs-card-layout>
   </div>
 
-  <div cr-feature-toggle feature-show="atlas-office365-support">
-    <h5><span translate="servicesOverview.hybridServices"></span></h5>
+  <div ng-if="$ctrl.hasServicesOverviewRefreshToggle">
     <div ng-if="$ctrl.loadingHybridServicesCards">
+      <h5><span translate="servicesOverview.hybridServices"></span></h5>
       <span class="icon icon-spinner icon-2x"></span>
     </div>
     <div ng-if="!$ctrl.loadingHybridServicesCards">
-      <cs-card-layout block-view="true">
-        <on-premises-card class="cs-card small active-card" clusters="$ctrl.clusters"></on-premises-card>
+      <h5 ng-if="$ctrl.isAnyHybridServiceActive()"><span translate="servicesOverview.hybridServices"></span></h5>
+      <cs-card-layout block-view="true" ng-if="$ctrl.isAnyHybridServiceActive()">
+        <on-premises-card ng-if="$ctrl.showOnPremisesCard()" class="cs-card small active-card" clusters="$ctrl.clusters"></on-premises-card>
         <hybrid-calendar-exchange-active-card ng-if="$ctrl.isActive('squared-fusion-cal')" service-status="$ctrl.getServiceStatus('squared-fusion-cal')" class="cs-card small active-card"></hybrid-calendar-exchange-active-card>
         <hybrid-calendar-o365-active-card ng-if="$ctrl.isActive('squared-fusion-o365')" service-status="$ctrl.getServiceStatus('squared-fusion-o365')" class="cs-card small active-card"></hybrid-calendar-o365-active-card>
         <hybrid-calendar-google-active-card ng-if="$ctrl.isActive('squared-fusion-gcal')" service-status="$ctrl.getServiceStatus('squared-fusion-gcal')" class="cs-card small active-card"></hybrid-calendar-google-active-card>
@@ -49,7 +50,7 @@
         <hybrid-data-security-active-card ng-if="$ctrl.isActive('spark-hybrid-datasecurity')" service-status="$ctrl.getServiceStatus('spark-hybrid-datasecurity')" class="cs-card small active-card"></hybrid-data-security-active-card>
       </cs-card-layout>
 
-      <h5><span>Inactive Hybrid Services</span></h5>
+      <h5><span translate="servicesOverview.inactiveHybridServices"></span></h5>
       <cs-card-layout block-view="true">
         <hybrid-calendar-exchange-inactive-card ng-if="$ctrl.isInactive('squared-fusion-cal')" class="cs-card small inactive-card"></hybrid-calendar-exchange-inactive-card>
         <hybrid-calendar-o365-inactive-card ng-if="$ctrl.isInactive('squared-fusion-o365')" class="cs-card small inactive-card"></hybrid-calendar-o365-inactive-card>
@@ -62,18 +63,5 @@
         <hybrid-data-security-inactive-card ng-if="$ctrl.isInactive('spark-hybrid-datasecurity')" class="cs-card small inactive-card"></hybrid-data-security-inactive-card>
       </cs-card-layout>
     </div>
-  </div>
-
-  <div cr-feature-toggle feature-show="atlas-mobile-convergence">
-    <h5><span translate="servicesOverview.crossServices"></span></h5>
-    <cs-card-layout>
-      <cs-card class="small" ng-class="card.cardClass" ng-repeat="card in $ctrl.getCmcCards()" ng-if="card.display">
-        <!--
-          currently ng-include templates loaded through ngtemplate-loader
-          TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
-        -->
-        <article ng-include="card.template"></article>
-      </cs-card>
-    </cs-card-layout>
   </div>
 </div>

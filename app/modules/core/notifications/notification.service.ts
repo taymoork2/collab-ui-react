@@ -1,6 +1,6 @@
 import { Config } from 'modules/core/config/config';
 import { DiagnosticKey, MetricsService, OperationalKey } from 'modules/core/metrics';
-import { WindowService } from 'modules/core/window';
+import { WindowEventService } from 'modules/core/window';
 import * as HttpStatus from 'http-status-codes';
 
 enum NotificationType {
@@ -39,7 +39,7 @@ export class Notification {
     private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
     private MetricsService: MetricsService,
-    private WindowService: WindowService,
+    private WindowEventService: WindowEventService,
     private Config: Config,
     private toaster,
   ) {
@@ -320,7 +320,7 @@ export class Notification {
   }
 
   private initOfflineListeners(): void {
-    this.WindowService.registerEventListener('offline', this.setNetworkOffline.bind(this));
-    this.WindowService.registerEventListener('online', this.setNetworkOnline.bind(this));
+    this.WindowEventService.registerEventListener('offline', this.setNetworkOffline.bind(this));
+    this.WindowEventService.registerEventListener('online', this.setNetworkOnline.bind(this));
   }
 }

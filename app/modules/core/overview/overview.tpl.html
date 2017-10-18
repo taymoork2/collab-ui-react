@@ -36,6 +36,7 @@
               <span class="notification-spacing">
                 <span class="badge {{notification.badgeType}}" translate="{{notification.badgeText}}"></span>
                 <span class="text" translate="{{notification.text}}" translate-values="{{notification.textValues}}" translate-compile></span>
+                <span ng-if="notification.extendedText" class="text" translate="{{notification.extendedText}}"></span>
                 <div class="text-right">
                   <a href ng-if="notification.linkText.length > 0" ng-click="notification.link()" translate="{{notification.linkText}}"></a>
                 </div>
@@ -43,6 +44,11 @@
               <button type="button" class="close" ng-if="notification.canDismiss" ng-click="overview.dismissNotification(notification)" aria-label="{{'common.close' | translate}}"></button>
             </div>
           </section>
+          <footer>
+            <div class="card-footer" cr-feature-toggle feature-show="atlas-csv-import-task-manager">
+              <button type="button" class="btn btn--primary" ng-click="overview.showUserTaskManagerModal()" translate="userTaskManagerModal.viewAllTasks"></button>
+            </div>
+          </footer>
         </article>
       </cs-card>
     </cs-card-layout>

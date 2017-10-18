@@ -371,12 +371,30 @@ describe('UrlConfigSpec', function () {
     });
   });
 
+  it('should return correct Sunlight UR Service url', function () {
+    whenCalling('getSunlightURServiceUrl').expectUrlToBe({
+      dev: 'https://pick.devus1.ciscoccservice.com/qnr/v1',
+      cfe: 'https://pick.appstaging.ciscoccservice.com/qnr/v1',
+      integration: 'https://pick.appstaging.ciscoccservice.com/qnr/v1',
+      prod: 'https://pick.produs1.ciscoccservice.com/qnr/v1',
+    });
+  });
+
   it('should return correct Virtual Assistant Service url', function () {
     whenCalling('getVirtualAssistantServiceUrl').expectUrlToBe({
       dev: 'https://virtual-assistant.appstaging.ciscoccservice.com/bot-services/v1/',
       cfe: 'https://virtual-assistant.appstaging.ciscoccservice.com/bot-services/v1/',
       integration: 'https://virtual-assistant.appstaging.ciscoccservice.com/bot-services/v1/',
       prod: 'https://virtual-assistant.produs1.ciscoccservice.com/bot-services/v1/',
+    });
+  });
+
+  it('should return correct Expert Virtual Assistant Service url', function () {
+    whenCalling('getExpertVirtualAssistantServiceUrl').expectUrlToBe({
+      dev: 'https://expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
+      cfe: 'https://expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
+      integration: 'https://expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
+      prod: 'https://expert-assistant.produs1.ciscoccservice.com/expert-assistant/v1/',
     });
   });
 
@@ -440,6 +458,15 @@ describe('UrlConfigSpec', function () {
       cfe: 'https://web.ciscospark.com/',
       integration: 'https://web.ciscospark.com/',
       prod: 'https://web.ciscospark.com/',
+    });
+  });
+
+  it('should return correct ccfs urls', function () {
+    whenCalling('getContextCcfsUrl', 'foo').expectUrlToBe({
+      dev: 'https://ccfs.appstaging.ciscoccservice.com/v1',
+      cfe: 'https://ccfs.appstaging.ciscoccservice.com/v1',
+      integration: 'https://ccfs.appstaging.ciscoccservice.com/v1',
+      prod: 'https://ccfs.produs1.ciscoccservice.com/v1',
     });
   });
 });

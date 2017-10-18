@@ -2379,7 +2379,7 @@
       "exchange": "Microsoft Exchange",
       "google": "Google-kalender",
       "notSetup": "Ikke opsat i øjeblikket",
-      "sinceTime": "siden {{tidsstempel}}"
+      "sinceTime": "siden {{timestamp}}"
     },
     "alarms": {
       "affectedNodes": "Påvirkede knuder",
@@ -2531,7 +2531,7 @@
         "changeUser": "Skift bruger",
         "hybridCallConnectStatus": "Status for Hybrid-tilslutning til opkald: ",
         "warnings": {
-          "warnAboutPhonesRinging": "{{Callee}}s ansøgninger, enheder og telefoner vil ringe, som om {{caller}} ringede. De vil dernæst frakoble straks.",
+          "warnAboutPhonesRinging": "{{callee}}s ansøgninger, enheder og telefoner vil ringe, som om {{caller}} ringede. De vil dernæst frakoble straks.",
           "callerAndCalleeTheSame": "Personen, som ringer op, kan ikke være den samme, som den der modtager opkaldet. Vælg venligst forskellige brugere."
         }
       }
@@ -4778,7 +4778,7 @@
         "inventory": "Kunne ikke hente gratis nummerarkiv."
       },
       "unsupportedNumberType": "Nummertypen {{type}} for telefonnummer {{number}} er i øjeblikket ikke understøttet endnu.",
-      "unsupportedOrderType": "Fejl ved tilføjelse af din ordre til indkøbskurven. Ordretypen {{typen}} er i øjeblikket ikke understøttet endnu.",
+      "unsupportedOrderType": "Fejl ved tilføjelse af din ordre til indkøbskurven. Ordretypen {{type}} er i øjeblikket ikke understøttet endnu.",
       "phoneNumbers": "Du kan kun tilføje op til 10 telefonnumre.",
       "customerNotFound": "PSTN-kunderegister ikke fundet. Du bedes kontakte Cisco TAC for mere hjælp."
     },
@@ -7916,7 +7916,7 @@
     "mobile": "mobil",
     "work": "arbejde",
     "fax": "telefax",
-    "searchingOrg": "Søger {{navn}}",
+    "searchingOrg": "Søger {{name}}",
     "status": "Status",
     "organization": "Kunde",
     "accountCreated": "Konto oprettet",

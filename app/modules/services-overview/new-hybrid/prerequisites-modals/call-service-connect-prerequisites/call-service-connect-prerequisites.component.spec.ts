@@ -1,9 +1,11 @@
+import moduleName from './index';
+
 describe('CallServiceConnectPrerequisitesComponentController', () => {
 
   let controller, $componentController, $q, $scope, HybridServicesFlagService, ServiceDescriptorService;
   const flagPrefix = 'atlas.hybrid.setup.call.connect.';
 
-  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module(moduleName));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
   afterEach(cleanup);

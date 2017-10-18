@@ -4319,7 +4319,7 @@
   "callPickup": {
     "nameLabel": "Naam Gesprek aannemen",
     "memberLabel": "Leden Gesprek aannemen",
-    "successUpdate": "Gesprek aannemen '{{callParkName}}' is bijgewerkt.",
+    "successUpdate": "Gesprek aannemen '{{callPickupName}}' is bijgewerkt.",
     "errorUpdate": "Kan Gesprek aannemen '{{callPickupName}}' niet bijwerken",
     "title": "Gesprek aannemen",
     "code": "PI",
@@ -4334,7 +4334,7 @@
     "namePlaceholder": "Gesprek aannemen een naam geven",
     "memberPlaceholder": "Leden selecteren",
     "pickupNameHint": "De lijnen van deze gebruikers of plaatsen maken deel uit van deze Gesprek aannemen. Minimaal 2 leden",
-    "successSave": "Gesprek aannemen '{{callParkName}}' is gemaakt.",
+    "successSave": "Gesprek aannemen '{{callPickupName}}' is gemaakt.",
     "errorSave": "Kan de Gesprek aannemen niet maken: '{{message}}'",
     "memberHint": "De lijnen van deze gebruikers of plaatsen maken deel uit van deze Gesprek aannemen.",
     "members": " Leden",

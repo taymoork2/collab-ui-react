@@ -36,18 +36,11 @@ export interface IConferenceService {
   license: IConferenceLicense;
 }
 
-export interface IConferenceLicense {
+export interface IConferenceLicense  extends IPendingLicense {
   billingServiceId: string;
   capacity: number;
-  features: string[];
   siteId?: string;
-  isTrial: boolean;
   trialId: string;
-  licenseId: string;
-  licenseType: string;
-  offerName: string;
-  status: string;
-  volume: number;
   siteUrl?: string;
   isCIUnifiedSite?: true;
   licenseModel: string;

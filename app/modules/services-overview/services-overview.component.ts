@@ -3,7 +3,6 @@ import { ServicesOverviewMessageCard } from './cloud/message-card';
 import { ServicesOverviewMeetingCard } from './cloud/meeting-card';
 import { ServicesOverviewCallCard } from './cloud/cloud-call-card';
 import { ServicesOverviewCareCard } from './cloud/care-card';
-import { ServicesOverviewCmcCard } from './cloud/cmc-card';
 import { ServicesOverviewHybridServicesCard } from './hybrid/hybrid-services-card';
 import { ServicesOverviewHybridAndGoogleCalendarCard } from './hybrid/hybrid-and-google-calendar-card';
 import { ServicesOverviewHybridCalendarCard } from './hybrid/hybrid-calendar-card';
@@ -33,7 +32,6 @@ export class ServicesOverviewController implements ng.IComponentController {
     new ServicesOverviewCallCard(this.Authinfo, this.Config),
     new ServicesOverviewCareCard(this.Authinfo),
     new ServicesOverviewHybridServicesCard(this.Authinfo),
-    new ServicesOverviewCmcCard(this.Authinfo),
     new ServicesOverviewHybridAndGoogleCalendarCard(this.$state, this.$q, this.$modal, this.Authinfo, this.CloudConnectorService, this.Notification),
     new ServicesOverviewHybridCalendarCard(this.Authinfo),
     new ServicesOverviewHybridCallCard(this.Authinfo),
@@ -45,7 +43,7 @@ export class ServicesOverviewController implements ng.IComponentController {
   ];
 
   // ⚠️ The properties below are exclusive to the new cards coming with the office 365 feature
-  private hasOffice365FeatureToggle: boolean; // this feature toggle is used to decide if we display the new design for hybrid cards
+  private hasServicesOverviewRefreshToggle: boolean; // this feature toggle is used to decide if we display the new design for hybrid cards
   private urlParams: ng.ui.IStateParamsService;
   public _servicesToDisplay: HybridServiceId[] = []; // made public for easier testing
   public _servicesActive: HybridServiceId[] = []; // made public for easier testing
@@ -95,7 +93,7 @@ export class ServicesOverviewController implements ng.IComponentController {
       huronEnterprisePrivateTrunking: this.FeatureToggleService.supports(this.FeatureToggleService.features.huronEnterprisePrivateTrunking),
     });
 
-    if (!this.hasOffice365FeatureToggle) {
+    if (!this.hasServicesOverviewRefreshToggle) {
       this.loadHybridServicesStatuses();
       features
         .then((response) => {
@@ -216,6 +214,17 @@ export class ServicesOverviewController implements ng.IComponentController {
     return _.includes(this._servicesToDisplay, serviceId) && _.includes(this._servicesInactive, serviceId);
   }
 
+  public isAnyHybridServiceActive(): boolean {
+    return this._servicesActive.length > 0;
+  }
+
+  public showOnPremisesCard(): boolean {
+    // If one of the active services is a service containing "resources"
+    return _.some(this._servicesActive, (service) => {
+      return _.includes<HybridServiceId>(['squared-fusion-cal', 'squared-fusion-uc', 'spark-hybrid-impinterop', 'squared-fusion-media', 'spark-hybrid-datasecurity', 'contact-center-context', 'ept'], service);
+    });
+  }
+
   public getServiceStatus(serviceId: HybridServiceId): any {
     return _.find(this.servicesStatuses, { serviceId: serviceId });
   }
@@ -223,12 +232,6 @@ export class ServicesOverviewController implements ng.IComponentController {
   public getHybridCards() {
     return _.filter(this.cards, {
       cardType: CardType.hybrid,
-    });
-  }
-
-  public getCmcCards() {
-    return _.filter(this.cards, {
-      cardType: CardType.cmc,
     });
   }
 
@@ -316,7 +319,7 @@ export class ServicesOverviewComponent implements ng.IComponentOptions {
   public controller = ServicesOverviewController;
   public template = require('modules/services-overview/services-overview.component.html');
   public bindings = {
-    hasOffice365FeatureToggle: '<',
+    hasServicesOverviewRefreshToggle: '<',
     urlParams: '<',
   };
 }

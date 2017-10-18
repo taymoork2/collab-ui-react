@@ -923,7 +923,11 @@ require('./_user-add.scss');
     };
 
     $scope.generateLicenseTooltip = function (license) {
-      return $scope.isSharedMeetingsLicense(license) ? '<div class="license-tooltip-html">' + $translate.instant('firstTimeWizard.sharedLicenseTooltip') + '</div>' : '<div class="license-tooltip-html">' + $translate.instant('firstTimeWizard.namedLicenseTooltip') + '</div>';
+      return '<div class="license-tooltip-html">' + $scope.generateLicenseTranslation(license) + '</div>';
+    };
+
+    $scope.generateLicenseTranslation = function (license) {
+      return $scope.isSharedMeetingsLicense(license) ? $translate.instant('firstTimeWizard.sharedLicenseTooltip') : $translate.instant('firstTimeWizard.namedLicenseTooltip');
     };
 
     $scope.careTooltip = function () {
@@ -973,15 +977,22 @@ require('./_user-add.scss');
       }
       if (services.communication) {
         $scope.communicationFeatures = $scope.communicationFeatures.concat(services.communication);
-        // Set the Spark Call checkbox and usage
-        var commLicenseID = '';
-        if (currentUserHasCall) {
-          commLicenseID = _.find(userLicenseIds, function (license) {
-            return _.startsWith(license, 'CO_');
-          });
-        }
         Orgservice.getLicensesUsage()
           .then(function (licenseUsages) {
+            // Set the Spark Call checkbox and usage
+            var commLicenseID = '';
+            if (currentUserHasCall) {
+              // validCallLicenses should be array of valid 'CO_' licenseIds
+              var licenses = _.flatMap(licenseUsages, 'licenses');
+              var licenseIds = _.map(licenses, 'licenseId');
+              var validCallLicenses = _.filter(licenseIds, function (licenseId) {
+                return _.startsWith(licenseId, 'CO_');
+              });
+              commLicenseID = _.find(userLicenseIds, function (license) {
+                return _.startsWith(license, 'CO_') && validCallLicenses.indexOf(license) !== -1;
+              });
+            }
+
             _.forEach($scope.communicationFeatures, function (commFeature) {
               // Set current communication license checkbox
               if (!_.isUndefined(commFeature.license.licenseId) &&
@@ -1285,17 +1296,23 @@ require('./_user-add.scss');
 
         // Communication
         if (currentUserHasCall) { // has existing communication license
+          var currentLicenseId = _.get($scope.currentUserCommFeature, 'license.licenseId');
           if ($scope.currentUserEnablesCall) { // has selected a communication license
             // check if the license is the same, if not, do the move
-            if ($scope.currentUserCommFeature.license.licenseId !== $scope.selectedCommFeature.license.licenseId) {
-              // move license
-              licenseList.push(new LicenseFeature($scope.currentUserCommFeature.license.licenseId, false));
-              licenseList.push(new LicenseFeature($scope.selectedCommFeature.license.licenseId, true));
+            var selectedLicenseId = _.get($scope.selectedCommFeature, 'license.licenseId');
+            if (currentLicenseId !== selectedLicenseId) {
+              // move license & prevent undefined licenseIds from being passed on to LicenseFeature/licenseList
+              if (currentLicenseId) {
+                licenseList.push(new LicenseFeature(currentLicenseId, false));
+              }
+              if (selectedLicenseId) {
+                licenseList.push(new LicenseFeature(selectedLicenseId, true));
+              }
             }
           } else {
-            // delete license
-            if (action === 'patch') {
-              licenseList.push(new LicenseFeature($scope.currentUserCommFeature.license.licenseId, false));
+            // delete license & prevent undefined licenseIds from being passed on to LicenseFeature/licenseList
+            if (action === 'patch' && currentLicenseId) {
+              licenseList.push(new LicenseFeature(currentLicenseId, false));
             }
           }
         } else { // no existing communication license
@@ -1404,7 +1421,11 @@ require('./_user-add.scss');
 
       // make sure we have any internal extension and direct line set up for the users
       _.forEach(users, function (user) {
-        user.internalExtension = _.get(user, 'assignedDn.pattern');
+        if (!$scope.ishI1484) {
+          user.internalExtension = _.get(user, 'assignedDn.number');
+        } else {
+          user.internalExtension = _.get(user, 'assignedDn.internal');
+        }
         if ($scope.ishI1484 && $scope.locationOptions.length > 1) {
           user.location = _.get(user, 'selectedLocation.uuid');
         }

@@ -5,6 +5,7 @@ import { HuronVoicemailService, VOICEMAIL_CHANGE } from 'modules/huron/voicemail
 import { HuronUserService, UserRemoteDestination } from 'modules/huron/users';
 import { PrimaryLineService, PrimaryNumber } from 'modules/huron/primaryLine';
 const SNR_CHANGE = 'SNR_CHANGE';
+const PRIMARY_LINE_SELECTION_CHANGE = 'PRIMARY_LINE_SELECTION_CHANGE';
 class UserCallOverviewCtrl implements ng.IComponentController {
 
   private showPhoneButtonLayout: boolean = false;
@@ -20,7 +21,7 @@ class UserCallOverviewCtrl implements ng.IComponentController {
   public wide: boolean = true;
   public primaryLineEnabled: boolean = false;
   public userPrimaryNumber: PrimaryNumber;
-  public isPrimaryLineFeatureEnabled: boolean = false;
+  public isPrimaryLineFeatureEnabled: boolean = true;
   public buttonLayoutPromise: any;
 
   /* @ngInject */
@@ -47,6 +48,10 @@ class UserCallOverviewCtrl implements ng.IComponentController {
     });
     this.$scope.$on(SNR_CHANGE, (_e, status) => {
       this.snrEnabled = status;
+      this.initFeatures();
+    });
+    this.$scope.$on(PRIMARY_LINE_SELECTION_CHANGE, (_e, status) => {
+      this.primaryLineEnabled = status;
       this.initFeatures();
     });
   }
@@ -76,7 +81,6 @@ class UserCallOverviewCtrl implements ng.IComponentController {
       2: this.HuronUserService.getUserServices(this.currentUser.id),
       3: this.HuronUserService.getRemoteDestinations(this.currentUser.id),
       4: this.HuronUserService.getUserLineSelection(this.currentUser.id),
-      5: this.PrimaryLineService.isPrimaryLineFeatureEnabled(),
     };
     this.$q.all(promises).then( data => {
       this.customerVmEnabled = data[1];
@@ -84,7 +88,6 @@ class UserCallOverviewCtrl implements ng.IComponentController {
       const rd: UserRemoteDestination[] = data[3];
       this.snrEnabled = (!_.isEmpty(rd) && rd[0].enableMobileConnect === 'true');
       this.userPrimaryNumber = data[4];
-      this.isPrimaryLineFeatureEnabled = data[5];
       this.checkPrimaryLineFeature(this.userPrimaryNumber);
     }).then(() => {
       this.userVmEnabled = this.HuronVoicemailService.isEnabledForUser(this.userServices);

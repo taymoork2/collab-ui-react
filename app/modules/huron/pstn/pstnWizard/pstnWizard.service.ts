@@ -8,10 +8,10 @@ import {
 } from '../pstn.model';
 import { INumbersModel } from '../pstnNumberSearch/number.model';
 import { PstnService, TerminusLocation } from '../pstn.service';
-import { Address } from '../shared/pstn-address';
+import { PstnAddressService, Address } from '../shared/pstn-address';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
 import { Notification } from 'modules/core/notifications';
-import { LocationsService, LocationListItem } from 'modules/call/locations';
+import { LocationsService, Location } from 'modules/call/locations';
 
 export class PstnWizardService {
   public STEP_TITLE: {
@@ -45,6 +45,7 @@ export class PstnWizardService {
     private PstnModel: PstnModel,
     private PstnService: PstnService,
     private PstnServiceAddressService,              //Site based
+    private PstnAddressService: PstnAddressService, //Location based
     private LocationsService: LocationsService,
     private Notification: Notification,
     private $translate: ng.translate.ITranslateService,
@@ -135,10 +136,19 @@ export class PstnWizardService {
     return this.PstnModel.getProvider();
   }
 
-  public initLocations(): ng.IPromise<LocationListItem | undefined> {
+  public initLocations(): ng.IPromise<Location | undefined> {
     //On success the default location is saved in the LocationsService
     //and will be updated if the default changes.
-    return this.LocationsService.getDefaultLocation()
+    return this.LocationsService.getDefaultLocation(this.PstnModel.getCustomerId())
+    .then((location: Location) => {
+      const locaionId: string = _.isString(location.uuid) ? location.uuid : '';
+      //Save the default ESA
+      return this.PstnAddressService.getByLocation(this.PstnModel.getCustomerId(), locaionId)
+      .then((addresses: Address[]) => {
+        this.PstnModel.setServiceAddress(addresses[0]);
+        return location;
+      });
+    })
     .catch(error => {
       this.Notification.errorResponse(error, 'settingsServiceAddress.getError');
       return undefined;
@@ -155,9 +165,19 @@ export class PstnWizardService {
   public initSites(): ng.IPromise<any> {
     return this.PstnServiceAddressService.listCustomerSites(this.PstnModel.getCustomerId())
       .then(sites => {
-        // If we have sites, set the flag and store the first site address
+        //Currently only one site per customer -- removing sites for locations
+        //If we have sites, set the flag and store the first site address
         if (_.isArray(sites) && _.size(sites)) {
           this.PstnModel.setSiteExists(true);
+          const serviceAddress = _.get(sites[0], 'serviceAddress');
+          const address = new Address();
+          address.streetAddress = _.get<string>(serviceAddress, 'serviceStreetNumber') + ' ' + _.get<string>(serviceAddress, 'serviceStreetName');
+          address.city = _.get<string>(serviceAddress, 'serviceCity');
+          address.state = _.get<string>(serviceAddress, 'serviceState');
+          address.zip = _.get<string>(serviceAddress, 'serviceZip');
+          address.default = true;
+          address.validated = true;
+          this.PstnModel.setServiceAddress(address);
         }
       })
       .catch(response => {

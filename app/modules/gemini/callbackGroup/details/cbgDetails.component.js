@@ -90,8 +90,10 @@
           vm.remedyTicket = _.first(resArr);
           if (vm.remedyTicket) {
             vm.remedyTicket.createTime = moment(vm.remedyTicket.createTime).toDate().toString();
-            vm.remedyTicketLoading = false;
+            vm.remedyTicket.status = _.replace(vm.remedyTicket.status, /Cancelled/, 'Canceled');
           }
+
+          vm.remedyTicketLoading = false;
         });
     }
 
@@ -112,11 +114,12 @@
 
           _.forEach(vm.allHistories, function (item) {
             if (_.includes(item.action, 'site')) {
-              var moveSiteMsg = item.siteID + ' ' + $translate.instant('gemini.cbgs.moveFrom') + ' ' + item.objectName + ' to ' + item.objectID;
+              var moveSiteMsg = item.siteID + ' ' + $translate.instant('gemini.cbgs.moveFrom') + ' ' + item.objectID + ' to ' + item.objectName;
               item.objectName = '';
               item.moveSiteMsg = moveSiteMsg;
               item.action = $translate.instant('gemini.cbgs.siteMoved');
             }
+            item.action = _.upperFirst(item.action);
           });
           vm.histories = (_.size(vm.allHistories) <= showHistoriesNum ? vm.allHistories : _.slice(vm.allHistories, 0, showHistoriesNum));
           vm.isShowAllHistories = (_.size(vm.allHistories) > showHistoriesNum);

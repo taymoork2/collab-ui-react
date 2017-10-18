@@ -25,7 +25,9 @@ describe('Directive Controller: CallServicePreviewCtrl', function () {
     UCCService = _UCCService_;
 
     var resourceGroupsAsOptions = [];
-    var userStatuses = [{ userId: '1234', state: 'activated', serviceId: 'squared-fusion-uc', entitled: true, clusterId: 'clusterId', connectorId: '1234' }];
+    var userStatuses = [{
+      userId: '1234', state: 'activated', serviceId: 'squared-fusion-uc', entitled: true, clusterId: 'clusterId', connectorId: '1234',
+    }];
     var userDiscovery = { directoryURI: 'tvasset@cisco.com' };
     var cluster = { id: 'clusterId', name: 'SuperCluster', connectors: [{ id: '1234', hostname: 'jalla.com' }] };
     var domains = [{ status: 'verified', text: 'cisco.com' }];
@@ -110,7 +112,9 @@ describe('Directive Controller: CallServicePreviewCtrl', function () {
         entitled: true,
         clusterId: 'clusterId',
         connectorId: '1234',
-      }, { userId: '1234', state: 'activated', serviceId: 'squared-fusion-ec', entitled: true }]));
+      }, {
+        userId: '1234', state: 'activated', serviceId: 'squared-fusion-ec', entitled: true,
+      }]));
       $stateParams.currentUser = {
         id: '1234',
         userName: 'tvasset@cisco.com',

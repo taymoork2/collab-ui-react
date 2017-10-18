@@ -1,17 +1,13 @@
 'use strict';
 
 describe('Controller: AABuilderMainCtrl', function () {
-  var controller, $controller, AANotificationService, AutoAttendantCeService;
-  var AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantLocationService, AAValidationService, AANumberAssignmentService, AACommonService, HuronConfig, $httpBackend;
-  var $state, $rootScope, $scope, $q, $stateParams, $compile, $modalStack;
-  var AAUiScheduleService, AACalendarService;
-  var AATrackChangeService, AADependencyService;
-  var FeatureToggleService;
-  var ServiceSetup, timeZone, translatedTimeZone, sysModel;
-  var element;
-
+  var $controller, controller;
+  var AACalendarService, AACommonService, AADependencyService, AAModelService, AANotificationService, AANumberAssignmentService, AARestModelService, AATrackChangeService, AAUiModelService, AAUiScheduleService, AAValidationService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantCeService, AutoAttendantLocationService, DoRestService, FeatureToggleService, HuronConfig;
+  var $compile, $httpBackend, $modalStack, $q, $rootScope, $scope, $state, $stateParams;
+  var element, sysModel, ServiceSetup, timeZone, translatedTimeZone;
   var ces = getJSONFixture('huron/json/autoAttendant/callExperiences.json');
   var aCe = getJSONFixture('huron/json/autoAttendant/aCallExperience.json');
+  var doRest = getJSONFixture('huron/json/autoAttendant/doRest.json');
   var a3LaneCe = getJSONFixture('huron/json/autoAttendant/a3LaneCe.json');
   var combinedMenus = getJSONFixture('huron/json/autoAttendant/combinedMenu.json');
   var menuWithNewStep = combinedMenus['menuWithNewStep'];
@@ -25,8 +21,54 @@ describe('Controller: AABuilderMainCtrl', function () {
       uuid: '00097a86-45ef-44a7-aa78-6d32a0ca1d3b',
     }],
   };
+  var restBlock = {
+    restConfigUrl: 'https://ces.hitest.huron-dev.com/api/v1/rest/customers/6662df48-b367-4c1e-9c3c-aa408aaa79a1/restConfigs/89c76add-0e5d-48fe-9a4c-36aa201ec8ae',
+  };
 
+  var restId = 'fca066b1-4938-4b5f-9870-9e66ad17e0a2';
   var aaModel = {};
+  var restBlocks = {};
+  var uiRestBlocks = {};
+  uiRestBlocks['fca066b1-4938-4b5f-9870-9e66ad17e0a2'] = {
+    method: 'GET',
+    url: 'test URL',
+    responseActions: [{
+      assignVar: {
+        variableName: 'test var3',
+        value: 'res3',
+      },
+    }],
+  };
+  uiRestBlocks['TEMP_0'] = {
+    method: 'GET',
+    url: 'test URL3',
+    responseActions: [{
+      assignVar: {
+        variableName: 'test var',
+        value: 'res',
+      },
+    }],
+  };
+  restBlocks['abc066b1-4938-4b5f-9870-9e66ad17edef'] = {
+    method: 'GET',
+    url: 'test URL2',
+    responseActions: [{
+      assignVar: {
+        variableName: 'test var2',
+        value: 'res2',
+      },
+    }],
+  };
+  restBlocks['abc066b2-3938-445f-9870-9e66ad17edef'] = {
+    method: 'GET',
+    url: 'test URL23',
+    responseActions: [{
+      assignVar: {
+        variableName: 'test var23',
+        value: 'res23',
+      },
+    }],
+  };
 
   function ce2CeInfo(rawCeInfo) {
     var _ceInfo = AutoAttendantCeInfoModelService.newCeInfo();
@@ -57,7 +99,10 @@ describe('Controller: AABuilderMainCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$state_, _$rootScope_, _$q_, _$compile_, _$stateParams_, _$controller_, _AACommonService_, _AANotificationService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AutoAttendantLocationService_, _AAUiModelService_, _AAModelService_, _AANumberAssignmentService_, _AutoAttendantCeService_, _AAValidationService_, _HuronConfig_, _$httpBackend_, _AAUiScheduleService_, _AACalendarService_, _AATrackChangeService_, _AADependencyService_, _FeatureToggleService_, _ServiceSetup_, _$modalStack_) {
+  beforeEach(inject(function (_$compile_, _$controller_, _$httpBackend_, _$modalStack_, _$q_, _$rootScope_, _$state_, _$stateParams_,
+    _AACalendarService_, _AACommonService_, _AADependencyService_, _AAModelService_, _AANotificationService_, _AANumberAssignmentService_,
+    _AATrackChangeService_, _AARestModelService_, _AAUiModelService_, _AAUiScheduleService_, _AAValidationService_, _AutoAttendantCeInfoModelService_,
+    _AutoAttendantCeMenuModelService_, _AutoAttendantCeService_, _AutoAttendantLocationService_, _DoRestService_, _FeatureToggleService_, _HuronConfig_, _ServiceSetup_) {
     $state = _$state_;
     $rootScope = _$rootScope_;
     $modalStack = _$modalStack_;
@@ -72,7 +117,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     $controller = _$controller_;
     AAUiModelService = _AAUiModelService_;
     AAModelService = _AAModelService_;
-    AACommonService = _AACommonService_;
+    AARestModelService = _AARestModelService_;
 
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
@@ -80,6 +125,8 @@ describe('Controller: AABuilderMainCtrl', function () {
 
     AAValidationService = _AAValidationService_;
     AutoAttendantCeService = _AutoAttendantCeService_;
+    AACommonService = _AACommonService_;
+    DoRestService = _DoRestService_;
     AANumberAssignmentService = _AANumberAssignmentService_;
     AANotificationService = _AANotificationService_;
     HuronConfig = _HuronConfig_;
@@ -116,6 +163,8 @@ describe('Controller: AABuilderMainCtrl', function () {
     spyOn($state, 'go');
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
     spyOn(AAUiModelService, 'initUiModel');
+    spyOn(AARestModelService, 'getRestBlocks').and.returnValue(restBlocks);
+    spyOn(AARestModelService, 'getUiRestBlocks').and.returnValue(uiRestBlocks);
     spyOn(AutoAttendantCeInfoModelService, 'getCeInfosList').and.returnValue($q.resolve($stateParams.aaName));
     spyOn(AutoAttendantCeMenuModelService, 'clearCeMenuMap');
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
@@ -138,7 +187,7 @@ describe('Controller: AABuilderMainCtrl', function () {
   }));
 
   afterEach(function () {
-
+    $state = $rootScope = $modalStack = $q = $compile = $scope = $stateParams = $controller = AAUiModelService = AAModelService = AutoAttendantCeInfoModelService = AutoAttendantCeMenuModelService = AAValidationService = AutoAttendantCeService = AACommonService = DoRestService = AANumberAssignmentService = AANotificationService = HuronConfig = $httpBackend = AAUiScheduleService = AACalendarService = AATrackChangeService = AADependencyService = FeatureToggleService = ServiceSetup = sysModel = timeZone = translatedTimeZone = controller = undefined;
   });
 
   describe('$locationChangeStart', function () {
@@ -336,12 +385,18 @@ describe('Controller: AABuilderMainCtrl', function () {
   describe('saveAARecords', function () {
     var createCeSpy;
     var updateCeSpy;
+    var updateDoRestSpy;
+    var deleteDoRestSpy;
     var nameValidationSpy;
     var aaNameChangedSpy;
+    var errorNotificationParams;
 
     beforeEach(function () {
       createCeSpy = spyOn(AutoAttendantCeService, 'createCe').and.returnValue($q.resolve(_.cloneDeep(rawCeInfo)));
       updateCeSpy = spyOn(AutoAttendantCeService, 'updateCe').and.returnValue($q.resolve(_.cloneDeep(rawCeInfo)));
+      updateDoRestSpy = spyOn(DoRestService, 'updateDoRest').and.returnValue($q.resolve(rawCeInfo));
+      deleteDoRestSpy = spyOn(DoRestService, 'deleteDoRest').and.returnValue($q.resolve(rawCeInfo));
+      spyOn(DoRestService, 'createDoRest').and.returnValue($q.resolve(restBlock));
       spyOn(AANotificationService, 'success');
       spyOn(AANotificationService, 'error');
       spyOn(AANotificationService, 'errorResponse');
@@ -355,7 +410,14 @@ describe('Controller: AABuilderMainCtrl', function () {
       nameValidationSpy = spyOn(AAValidationService, 'isNameValidationSuccess').and.returnValue(true);
       aaModel.ceInfos = [];
       aaModel.aaRecords = [];
-      aaModel.aaRecord = aCe;
+      //We don't want a modified copy of aCe from one test to be used in other
+      aaModel.aaRecord = _.cloneDeep(aCe);
+
+      errorNotificationParams = { name: 'AAA2', statusText: 'server error', status: 500 };
+    });
+
+    afterEach(function () {
+      createCeSpy = updateCeSpy = updateDoRestSpy = deleteDoRestSpy = nameValidationSpy = aaNameChangedSpy = errorNotificationParams = undefined;
     });
 
     it('should save a new aaRecord successfully', function () {
@@ -376,6 +438,201 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect(AATrackChangeService.isChanged).not.toHaveBeenCalled();
 
       expect(AANotificationService.success).toHaveBeenCalledWith('autoAttendant.successCreateCe', jasmine.any(Object));
+    });
+
+    it('should update an existing aaRecord with one REST block modified and one new REST block (PUT and POST)', function () {
+      aaModel.aaRecords.push(rawCeInfo);
+
+      aaModel.aaRecordUUID = 'c16a6027-caef-4429-b3af-9d61ddc7964b';
+
+      controller.saveAARecords();
+      $scope.$apply();
+
+      expect(DoRestService.updateDoRest).toHaveBeenCalled();
+      expect(DoRestService.createDoRest).toHaveBeenCalled();
+      expect(AutoAttendantCeService.updateCe).toHaveBeenCalled();
+
+      //Check if the REST block id gets updated well in the CE.
+      expect(_.get(controller.aaModel.aaRecord.actionSets[0], 'actions[1].doREST.id')).toBe(restId);
+    });
+
+    it('should report failure if an existing aaRecord with REST block modified fails', function () {
+      aaModel.aaRecords.push(rawCeInfo);
+      aaModel.aaRecordUUID = 'c16a6027-caef-4429-b3af-9d61ddc7964b';
+      //Explicitly make updateDoRest fail
+      updateDoRestSpy.and.returnValue($q.reject({
+        statusText: 'server error',
+        status: 500,
+      }));
+
+      controller.saveAARecords();
+      $scope.$apply();
+
+      expect(DoRestService.updateDoRest).toHaveBeenCalled();
+      expect(AANotificationService.errorResponse).toHaveBeenCalledWith(jasmine.any(Object), jasmine.any(String), errorNotificationParams);
+      expect(AutoAttendantCeService.updateCe).not.toHaveBeenCalled();
+    });
+
+    it('should report failure if an existing aaRecord with one REST block modified fails but other gets passed', function () {
+      aaModel.aaRecords.push(rawCeInfo);
+      aaModel.aaRecordUUID = 'c16a6027-caef-4429-b3af-9d61ddc7964b';
+      updateDoRestSpy.and.returnValues($q.resolve(rawCeInfo), $q.reject({
+        statusText: 'server error',
+        status: 500,
+      }));
+
+      controller.saveAARecords();
+      $scope.$apply();
+
+      expect(DoRestService.updateDoRest).toHaveBeenCalled();
+      //We will also see if Save button POSTs the newly created REST block.
+      aaModel.ceInfos = [];
+      aaModel.aaRecords = [];
+      aaModel.aaRecords.push(rawCeInfo);
+      controller.saveAARecords();
+      $scope.$apply();
+
+      expect(DoRestService.createDoRest.calls.count()).toBe(2);
+      expect(DoRestService.updateDoRest.calls.count()).toBe(2);
+      expect(AANotificationService.errorResponse).toHaveBeenCalledWith(jasmine.any(Object), jasmine.any(String), errorNotificationParams);
+    });
+
+    it('should update an existing aaRecord with REST block deleted', function () {
+      aaModel.aaRecords.push(rawCeInfo);
+      controller.ui.openHours.entries = [
+        {
+          actions: [{
+            id: '',
+            name: 'foo',
+          }],
+        },
+        {
+          actions: [{
+            id: '',
+            name: 'bar',
+          }],
+        },
+        {
+          actions: [{
+            id: '',
+            name: 'bat',
+          }],
+        },
+      ];
+
+      aaModel.aaRecordUUID = 'c16a6027-caef-4429-b3af-9d61ddc7964b';
+      controller.saveAARecords();
+      $scope.$apply();
+
+      expect(DoRestService.deleteDoRest).toHaveBeenCalled();
+      expect(AutoAttendantCeService.updateCe).toHaveBeenCalled();
+    });
+
+    it('should report failure if REST block does not get deleted successfully', function () {
+      aaModel.aaRecords.push(rawCeInfo);
+      controller.ui.openHours.entries = [
+        {
+          actions: [{
+            id: '',
+            name: 'foo',
+          }],
+        },
+        {
+          actions: [{
+            id: '',
+            name: 'bar',
+          }],
+        },
+        {
+          actions: [{
+            id: '',
+            name: 'bat',
+          }],
+        },
+      ];
+      aaModel.aaRecordUUID = 'c16a6027-caef-4429-b3af-9d61ddc7964b';
+      DoRestService.deleteDoRest.and.returnValue($q.reject({
+        statusText: 'server error',
+        status: 500,
+      }));
+      controller.saveAARecords();
+      $scope.$apply();
+
+      expect(DoRestService.deleteDoRest).toHaveBeenCalled();
+      expect(AutoAttendantCeService.updateCe).not.toHaveBeenCalled();
+      expect(AANotificationService.errorResponse).toHaveBeenCalledWith(jasmine.any(Object), jasmine.any(String), errorNotificationParams);
+    });
+
+    it('should report failure if one of the REST blocks does not get deleted successfully but the other does', function () {
+      aaModel.aaRecords.push(rawCeInfo);
+
+      controller.ui.openHours.entries = [
+        {
+          actions: [{
+            id: '',
+            name: 'foo',
+          }],
+        },
+        {
+          actions: [{
+            id: '',
+            name: 'bar',
+          }],
+        },
+        {
+          actions: [{
+            id: '',
+            name: 'bat',
+          }],
+        },
+      ];
+      aaModel.aaRecordUUID = 'c16a6027-caef-4429-b3af-9d61ddc7964b';
+
+      deleteDoRestSpy.and.returnValues($q.resolve(rawCeInfo), $q.reject({
+        statusText: 'server error',
+        status: 500,
+      }));
+      controller.saveAARecords();
+      $scope.$apply();
+
+      expect(DoRestService.deleteDoRest).toHaveBeenCalled();
+      expect(AutoAttendantCeService.updateCe).not.toHaveBeenCalled();
+      expect(AANotificationService.errorResponse).toHaveBeenCalled();
+      expect(AANotificationService.errorResponse).toHaveBeenCalledWith(jasmine.any(Object), jasmine.any(String), errorNotificationParams);
+    });
+
+    it('should not report failure if REST block does not get deleted successfully with a 404', function () {
+      aaModel.aaRecords.push(rawCeInfo);
+      controller.ui.openHours.entries = [
+        {
+          actions: [{
+            id: '',
+            name: 'foo',
+          }],
+        },
+        {
+          actions: [{
+            id: '',
+            name: 'bar',
+          }],
+        },
+        {
+          actions: [{
+            id: '',
+            name: 'bat',
+          }],
+        },
+      ];
+      aaModel.aaRecordUUID = 'c16a6027-caef-4429-b3af-9d61ddc7964b';
+      deleteDoRestSpy.and.returnValue($q.reject({
+        statusText: 'server error',
+        status: 404,
+      }));
+      controller.saveAARecords();
+      $scope.$apply();
+      expect(DoRestService.deleteDoRest).toHaveBeenCalled();
+      expect(AutoAttendantCeService.updateCe).toHaveBeenCalled();
+      expect(AANotificationService.errorResponse).not.toHaveBeenCalled();
     });
 
     it('should report failure if AutoAttendantCeService.createCe() failed', function () {
@@ -408,6 +665,31 @@ describe('Controller: AABuilderMainCtrl', function () {
       // check that ceInfos is updated successfully too because it is required on the landing page
       var ceInfo = ce2CeInfo(rawCeInfo);
       expect(angular.equals(aaModel.ceInfos[0], ceInfo)).toEqual(true);
+
+      // if AA Name is not changed, don't call AADependencyService.notifyAANameChange()
+      expect(AATrackChangeService.isChanged).toHaveBeenCalled();
+      expect(AADependencyService.notifyAANameChange).not.toHaveBeenCalled();
+      expect(AATrackChangeService.track).not.toHaveBeenCalled();
+
+      expect(AANotificationService.success).toHaveBeenCalledWith('autoAttendant.successUpdateCe', jasmine.any(Object));
+    });
+
+    it('should update an existing aaRecord successfully in non-REST api toggled tenants too', function () {
+      aaModel.aaRecords.push(rawCeInfo);
+      aaModel.aaRecordUUID = 'c16a6027-caef-4429-b3af-9d61ddc7964b';
+      spyOn(AACommonService, 'isRestApiToggle').and.returnValue(false);
+
+      controller.saveAARecords();
+      $scope.$apply();
+
+      expect(AutoAttendantCeService.updateCe).toHaveBeenCalled();
+
+      // check that aaRecord is saved successfully into model
+      expect(angular.equals(aaModel.aaRecords[0], rawCeInfo)).toBe(true);
+
+      // check that ceInfos is updated successfully too because it is required on the landing page
+      var ceInfo = ce2CeInfo(rawCeInfo);
+      expect(angular.equals(aaModel.ceInfos[0], ceInfo)).toBe(true);
 
       // if AA Name is not changed, don't call AADependencyService.notifyAANameChange()
       expect(AATrackChangeService.isChanged).toHaveBeenCalled();
@@ -468,9 +750,11 @@ describe('Controller: AABuilderMainCtrl', function () {
 
   describe('selectAA', function () {
     var readCe;
+    var readDoRestSpy;
 
     beforeEach(function () {
       readCe = spyOn(AutoAttendantCeService, 'readCe').and.returnValue($q.resolve(_.cloneDeep(aCe)));
+      readDoRestSpy = spyOn(DoRestService, 'readDoRest').and.returnValue($q.resolve(doRest));
       spyOn($scope.vm, 'populateUiModel');
       spyOn(AANotificationService, 'error');
       spyOn(AANotificationService, 'errorResponse');
@@ -478,6 +762,10 @@ describe('Controller: AABuilderMainCtrl', function () {
       spyOn(AADependencyService, 'notifyAANameChange');
       spyOn(AATrackChangeService, 'isChanged');
       spyOn(AATrackChangeService, 'track');
+    });
+
+    afterEach(function () {
+      readCe = readDoRestSpy = undefined;
     });
 
     it('should create a new aaRecord successfully when no name is given and vm.aaModel.aaRecord is undefined', function () {
@@ -553,20 +841,90 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect(AATrackChangeService.track).toHaveBeenCalled();
     });
 
+    it('should be able to read an existing aaRecord successfully on a non-RESTAPI toggled tenant when a name is given', function () {
+      controller.aaModel = {};
+      controller.aaModel.aaRecords = ces;
+      spyOn(AACommonService, 'isRestApiToggle').and.returnValue(false);
+      controller.selectAA('AA2');
+      $scope.$apply();
+
+      expect(AAModelService.getNewAARecord).not.toHaveBeenCalled();
+      expect(AANotificationService.error).not.toHaveBeenCalled();
+
+      expect(_.get(controller.aaModel.aaRecord, 'callExperienceName')).toBe(aCe.callExperienceName);
+      expect(controller.populateUiModel).toHaveBeenCalled();
+
+      // start tracking AAName when reading an existing aaRecord
+      expect(_.get(controller.aaModel, 'aaRecords').length).toBe(3);
+      expect(AATrackChangeService.isChanged).not.toHaveBeenCalled();
+      expect(AADependencyService.notifyAANameChange).not.toHaveBeenCalled();
+      expect(AATrackChangeService.track).toHaveBeenCalled();
+    });
+
     it('should return error when the backend return 500 error', function () {
       readCe.and.returnValue(
         $q.reject({
           status: 500,
         })
       );
-      $scope.vm.aaModel = {};
-      $scope.vm.aaModel.aaRecords = ces;
+      controller.aaModel = {};
+      controller.aaModel.aaRecords = ces;
       controller.selectAA('AA2');
       $scope.$apply();
 
       expect(AANotificationService.errorResponse).toHaveBeenCalled();
       expect(AAModelService.getNewAARecord).not.toHaveBeenCalled();
-      expect($scope.vm.populateUiModel).not.toHaveBeenCalled();
+      expect(controller.populateUiModel).not.toHaveBeenCalled();
+    });
+
+    it('should be able to read an existing aaRecord successfully when a REST block is already there', function () {
+      readCe.and.returnValue($q.resolve(aCe));
+      controller.aaModel = {};
+      controller.aaModel.aaRecords = ces;
+      expect(_.get(controller.aaModel, 'aaRecords').length).toBe(3);
+      controller.selectAA('AAA3');
+      $scope.$apply();
+
+      expect(AAModelService.getNewAARecord).not.toHaveBeenCalled();
+      expect(AANotificationService.error).not.toHaveBeenCalled();
+      expect(DoRestService.readDoRest).toHaveBeenCalled();
+      expect(controller.populateUiModel).toHaveBeenCalled();
+      expect(_.get(controller.aaModel.aaRecord.actionSets[0], 'actions').length).toBe(4);
+      expect(_.get(controller.aaModel.aaRecord.actionSets[0], 'actions[1].doREST.id')).toBe('fca066b1-4938-4b5f-9870-9e66ad17e0a2');
+    });
+
+    it('should return an error when an existing REST block read gets errored', function () {
+      readCe.and.returnValue($q.resolve(aCe));
+      readDoRestSpy.and.returnValue(
+        $q.reject({
+          status: 500,
+        })
+      );
+      controller.aaModel = {};
+      controller.aaModel.aaRecords = ces;
+      controller.selectAA('AAA3');
+      $scope.$apply();
+      expect(AANotificationService.errorResponse).toHaveBeenCalled();
+      expect(AAModelService.getNewAARecord).not.toHaveBeenCalled();
+      expect(controller.populateUiModel).toHaveBeenCalled();
+    });
+
+    it('should return an error when one REST block gets successfully read but other REST block read gets errored', function () {
+      readCe.and.returnValue($q.resolve(aCe));
+      readDoRestSpy.and.returnValues($q.resolve(doRest),
+        $q.reject({
+          status: 500,
+        })
+      );
+      controller.aaModel = {};
+      controller.aaModel.aaRecords = ces;
+      controller.selectAA('AAA3');
+      $scope.$apply();
+      expect(AAModelService.getNewAARecord).not.toHaveBeenCalled();
+      expect(AANotificationService.errorResponse).toHaveBeenCalled();
+      expect(controller.populateUiModel).toHaveBeenCalled();
+      expect(_.get(controller.aaModel.aaRecord.actionSets[0], 'actions').length).toBe(4);
+      expect(_.get(controller.aaModel.aaRecord.actionSets[0], 'actions[1].doREST.id')).toBe('fca066b1-4938-4b5f-9870-9e66ad17e0a2');
     });
   });
 

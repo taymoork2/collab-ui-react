@@ -8,15 +8,11 @@
       "app/modules/mediafusion/**/*"
     ]
   }, {
-    "name": "mipark2",
-    "files": [
-      "bin/**/*"
-    ]
-  }, {
     "name": "WebExSquared/atlas-web-jedi",
     "files": [
       "*.sh",
       ".githooks/**/*",
+      "bin/**/*",
       "config/**/*",
       "protractor/**/*",
       "sauce/**/*",
@@ -26,7 +22,8 @@
   }, {
     "name": "WebExSquared/atlas-web-core-team",
     "files": [
-      "app/modules/core/**/*"
+      "app/modules/core/**/*",
+      "package.json"
     ]
   }, {
     "name": "WebExSquared/atlas-hybrid-services-ui",
@@ -44,13 +41,30 @@
       "app/modules/squared/places/**/*"
     ]
   }, {
-     "name": "WebExSquared/atlas-call-team",
-     "files": [
-       "app/modules/call/**/*",
-       "app/modules/huron/**/*",
-       "app/modules/squared/places/**/*"
-      ]
-   }],
+    "name": "WebExSquared/atlas-call-team",
+    "files": [
+      "app/modules/call/**/*",
+      "app/modules/huron/**/*",
+      "app/modules/squared/places/**/*"
+    ]
+  }, {
+    "name": "WebExSquared/spark-care",
+    "files": [
+      "app/modules/sunlight/**/*"
+    ]
+  }],
   "fileBlacklist": ["app/l10n/*.json", "yarn.lock"],
-  "userBlacklist": ["admolla", "atlas-ui-bot-gen", "cidylle", "cstoy", "mikecan", "thobasse", "stimurbe", "svanneyg", "zamamoha", "zzatking"]
+  "userBlacklist": [
+    "admolla",
+    "atlas-ui-bot-gen",
+    "cidylle",
+    "claughbo",
+    "cstoy",
+    "mikecan",
+    "stimurbe",
+    "svanneyg",
+    "thobasse",
+    "zamamoha",
+    "zzatking"
+  ]
 }

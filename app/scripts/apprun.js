@@ -6,7 +6,7 @@
   /* @ngInject */
   function wx2AdminWebClientApp($animate, $document, $interval, $location, $rootScope, $state, $timeout, $translate, $window, Auth, Authinfo, Config,
     HealthService, IdleTimeoutService, Localize, Log, LogMetricsService, MetricsService, OnlineUpgradeService, PreviousState, SessionStorage,
-    StorageKeys, TokenService, TrackingId, Utils, TOSService, WindowService) {
+    StorageKeys, TokenService, TrackingId, Utils, TOSService, WindowEventService) {
     //Expose the localize service globally.
     $rootScope.Localize = Localize;
     $rootScope.Utils = Utils;
@@ -20,9 +20,9 @@
       $timeout(MetricsService.reportLoadingMetrics.bind(MetricsService));
     }
     if ($document.readyState === 'complete') {
-      MetricsService.reportLoadingMetrics();
+      timeoutReportLoadingMetrics();
     } else {
-      WindowService.registerEventListener('load', timeoutReportLoadingMetrics);
+      WindowEventService.registerEventListener('load', timeoutReportLoadingMetrics);
     }
 
     $rootScope.typeOfExport = {

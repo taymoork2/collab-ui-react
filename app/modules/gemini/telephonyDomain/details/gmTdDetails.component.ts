@@ -114,13 +114,15 @@ class GmtdDetails implements ng.IComponentController {
         const remedyTicket: any = _.first(resArr);
         if (remedyTicket) {
           remedyTicket.createTime = moment(remedyTicket.createTime).toDate().toString();
+          remedyTicket.status = _.replace(remedyTicket.status, /Cancelled/, 'Canceled');
 
           this.remedyTicket = remedyTicket;
-          this.remedyTicketLoading = false;
         }
       })
       .catch((err) => {
         this.Notification.errorResponse(err, 'errors.statusError', { status: err.status });
+      }).finally(() => {
+        this.remedyTicketLoading = false;
       });
   }
 
@@ -154,6 +156,7 @@ class GmtdDetails implements ng.IComponentController {
             item.moveSiteMsg = moveSiteMsg;
             item.action = this.$translate.instant('gemini.cbgs.siteMoved');
           }
+          item.action = _.upperFirst(item.action);
         });
         this.histories = (_.size(this.allHistories) <= this.showHistoriesNum ? this.allHistories : _.slice(this.allHistories, 0, this.showHistoriesNum));
         this.isShowAllHistories = (_.size(this.allHistories) > this.showHistoriesNum);

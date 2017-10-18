@@ -1813,7 +1813,7 @@
     "errorGettingOptionaVmDidToggle": "Terdapat masalah dalam mendapatkan tombol optionalVmDid.",
     "externalNumberDescriptionText": "Pilih nomor yang dapat dihubungi oleh pengguna untuk memeriksa kotak suara mereka dari luar jaringan perusahaan.",
     "voicemailPrefixTitle": "Awalan ID Surat Suara",
-    "voicemailPrefixDesc": "Pilih awalan yang akan digunakan untuk memanggil kotak surat dari perangkat. Ekstensi antara {{number}}{{extensionLength0}} hingga {{number}}{{extensionLenght9}} tidak disarankan untuk ditetapkan.",
+    "voicemailPrefixDesc": "Pilih awalan yang akan digunakan untuk memanggil kotak surat dari perangkat. Ekstensi antara {{number}}{{extensionLength0}} hingga {{number}}{{extensionLength9}} tidak disarankan untuk ditetapkan.",
     "vmUseTLS": "Gunakan TLS",
     "vmPinManagement": "Manajemen Pin",
     "vmPinHelp": "OTP akan dibagikan melalui Spark apabila surat suara pengguna hidup/mati bergantian dan akun pengguna dikunci/berakhir.",
@@ -2044,8 +2044,8 @@
     "advancedSettings": {
       "advancedSettings": "Pengaturan Lanjutan",
       "launchAdvancedSettings": "Luncurkan Pengaturan Lanjutan",
-      "connecting": "Menyambung ke Pengaturan Lanjutan pada {{product}} {{name}}...",
-      "connectingTitle": "{{product}} {{name}}",
+      "connecting": "Menyambung ke Pengaturan Lanjutan pada {product} {name}...",
+      "connectingTitle": "{product} {name}",
       "offlineHeader": "Perangkat kamar ini sedang offline",
       "offlineMessage": "Untuk mengakses Pengaturan Lanjutan, periksa bahwa perangkat kamar diaktifkan dan tersambung ke jaringan, kemudian coba lagi.",
       "oldSoftwareMessage": "Pengaturan Lanjutan saat ini tidak tersedia pada versi perangkat lunak yang dijalankan oleh perangkat kamar Anda.",
@@ -2097,7 +2097,7 @@
       "modalText2": "Pilih jenis informasi yang ingin disertakan dalam laporan:",
       "modalNote": "Catatan: Semakin banyak pengguna yang disertakan, proses pembuatan laporan akan semakin lama.",
       "modalCTA": "Ekspor ke CSV",
-      "guesstimate": "Pilihan diperkirakan {{minute}}mnt {{seconds}}dtk",
+      "guesstimate": "Pilihan diperkirakan {{minutes}}mnt {{seconds}}dtk",
       "userNotFound": "Tidak Ditemukan",
       "readingUserStatuses": "Membaca status pengguna…",
       "readingConnectors": "Membaca penugasan klaster…",
@@ -3310,7 +3310,7 @@
       "confirmationDialogBody": "Anda yakin ingin membatalkan persiapan layanan?"
     },
     "clusters": {
-      "clusterCreationFailed": "Gagal membuat klaster baru: {{eneterdCluster}}",
+      "clusterCreationFailed": "Gagal membuat klaster baru: {{enteredCluster}}",
       "listing": {
         "no_clusters_heading": "Tidak ada klaster Layanan Data Hybrid yang terdaftar",
         "no_clusters_text": "Lihat tindakan dan dokumentasi yang diperlukan di atas untuk memulai."
@@ -5910,7 +5910,7 @@
       "deregisterAllconfirmation": "Saya memahami bahwa semua pendaftaran nodus dalam klaster ini akan dibatalkan secara otomatis, dan bahwa klaster akan dihapus secara permanen. Saya juga memahami bahwa saya tidak dapat membatalkan tindakan ini.",
       "unabletomovenodes": "Gagal memindahkan/meredam{{nodes}} tekan batal dan coba lagi",
       "clusterdeleteSuccess": "Berhasil menghapus {{clustername}}",
-      "clusterCreationFailed": "Gagal membuat klaster baru: {{eneterdCluster}}",
+      "clusterCreationFailed": "Gagal membuat klaster baru: {{enteredCluster}}",
       "movedTo": "{{nodeName}} dipindahkan ke: {{clusterName}}",
       "upgradeSchedule": "Jadwal Pemutakhiran",
       "everyDay": "Setiap Hari di",

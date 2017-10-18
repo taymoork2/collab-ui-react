@@ -1,11 +1,8 @@
 <cs-card class="cluster-card medium">
   <article>
-    <header ng-class="{'one-liner': !$ctrl.hasNodesViewFeatureToggle}">
+    <header>
       <h4>{{::$ctrl.cluster.name}}</h4>
-      <div ng-if="!($ctrl.cluster.extendedProperties.isEmpty && $ctrl.cluster.targetType === 'c_mgmt') && !$ctrl.hasNodesViewFeatureToggle && $ctrl.cluster.targetType !== 'ept'" class="cluster-list-hosts" tooltip-html-unsafe="{{$ctrl.getHostnames($ctrl.cluster)}}" tooltip-trigger="mouseenter" tooltip-placement="bottom">
-        <div translate="hercules.fusion.list.nodes" translate-values="{count: $ctrl.countHosts($ctrl.cluster)}" translate-interpolation="messageformat"></div>
-      </div>
-      <div ng-if="!($ctrl.cluster.extendedProperties.isEmpty && $ctrl.cluster.targetType === 'c_mgmt') && $ctrl.hasNodesViewFeatureToggle && $ctrl.cluster.targetType !== 'ept'" class="cluster-nodes-link">
+      <div ng-if="$ctrl.showLinkToNodesPage()" class="cluster-nodes-link">
         <a ng-click="$ctrl.openNodes($ctrl.cluster.targetType, $ctrl.cluster.id)">
           <span translate="hercules.fusion.list.nodes" translate-values="{count: $ctrl.countHosts($ctrl.cluster)}" translate-interpolation="messageformat"></span>
           <span class="badge badge-{{$ctrl.cluster.extendedProperties.alarmsBadgeCss}}" ng-if="$ctrl.cluster.extendedProperties.alarms !== 'none'" translate="hercules.alarms.alarms"></span>

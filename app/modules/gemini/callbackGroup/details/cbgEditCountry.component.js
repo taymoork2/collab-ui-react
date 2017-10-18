@@ -16,19 +16,28 @@
     vm.countries = [];
     vm.btnDisable = true;
     vm.model = {
+      groupId: _.get(info, 'groupId'),
       groupName: _.get(info, 'groupName') || _.get(info, 'customerName'),
       customerAttribute: _.get(info, 'customerAttribute'),
     };
+    vm.groupNameLabel = vm.model.groupId ? $translate.instant('gemini.cbgs.field.cbgName') : $translate.instant('gemini.cbgs.request.labelCustomer');
     vm.customerId = _.get($stateParams, 'obj.customerId', '');
 
     vm.onSave = onSave;
     vm.$onInit = $onInit;
     vm.onCancel = onCancel;
     vm.onSetBtnDisable = setBtnDisable;
+    vm.messages = {
+      groupName: {
+        required: $translate.instant('common.invalidRequired'),
+        maxlength: $translate.instant('gemini.inputLengthError', { length: 64, field: vm.groupNameLabel }),
+      },
+      customerAttribute: {
+        maxlength: $translate.instant('gemini.inputLengthError', { length: 200, field: $translate.instant('gemini.cbgs.field.alias') }),
+      },
+    };
 
     function $onInit() {
-      vm.isReadonly = _.includes(['S', 'A'], info.status);
-
       $scope.$watchCollection(function () {
         return vm.countries;
       }, function () {
@@ -79,7 +88,7 @@
     }
 
     function setBtnDisable(flag) {
-      if (!vm.countries.length || (!vm.isReadonly && !vm.model.groupName)) {
+      if (!vm.countries.length || !vm.model.groupName) {
         vm.btnDisable = true;
         return;
       }
