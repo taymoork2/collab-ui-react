@@ -2,7 +2,6 @@ import { Device } from '../services/deviceSearchConverter';
 import { SearchObject } from '../services/search/searchObject';
 import { SearchResult } from '../services/search/searchResult';
 import { Caller, CsdmSearchService } from '../services/csdmSearch.service';
-import { SearchTranslator } from '../services/search/searchTranslator';
 import { Notification } from '../../core/notifications/notification.service';
 import { SearchElement } from '../services/search/queryParser';
 
@@ -28,8 +27,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
   constructor(private CsdmSearchService: CsdmSearchService,
               private $translate,
               private Notification,
-              private $timeout: ng.ITimeoutService,
-              private DeviceSearchTranslator: SearchTranslator) {
+              private $timeout: ng.ITimeoutService) {
     this.updateSearchFilters();
   }
 
@@ -147,7 +145,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
 
   private performSearch(search: SearchObject) {
     this.isSearching = true;
-    this.CsdmSearchService.search(search.translate(this.DeviceSearchTranslator), Caller.searchOrLoadMore).then((response) => {
+    this.CsdmSearchService.search(search, Caller.searchOrLoadMore).then((response) => {
       if (response && response.data) {
         this.updateSearchResult(response.data);
         return;
@@ -170,7 +168,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
   }
 
   private performFilterUpdateSearch() {
-    this.CsdmSearchService.search(this.searchObject.translate(this.DeviceSearchTranslator).cloneWithoutFilters(), Caller.aggregator)
+    this.CsdmSearchService.search(this.searchObject.cloneWithoutFilters(), Caller.aggregator)
       .then(response => {
         if (response && response.data) {
           this.updateSearchFilters(response.data);
@@ -193,20 +191,20 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
         filterValue: 'all',
       }, {
         count: this.getDocCount(searchResult, 'connectionStatus', 'connected_with_issues'),
-        name: this.$translate.instant('CsdmStatus.OnlineWithIssues'),
+        name: this.$translate.instant('CsdmStatus.connectionStatus.OnlineWithIssues'),
         filterValue: 'connectionStatus=CONNECTED_WITH_ISSUES',
       }, {
         count: this.getDocCount(searchResult, 'connectionStatus', 'offline')
         + this.getDocCount(searchResult, 'connectionStatus', 'disconnected'),
-        name: this.$translate.instant('CsdmStatus.Offline'),
+        name: this.$translate.instant('CsdmStatus.connectionStatus.Offline'),
         filterValue: 'connectionStatus=DISCONNECTED',
       }, {
         count: this.getDocCount(searchResult, 'connectionStatus', 'offline_expired'),
-        name: this.$translate.instant('CsdmStatus.OfflineExpired'),
+        name: this.$translate.instant('CsdmStatus.connectionStatus.OfflineExpired'),
         filterValue: 'connectionStatus=OFFLINE_EXPIRED',
       }, {
         count: this.getDocCount(searchResult, 'connectionStatus', 'connected'),
-        name: this.$translate.instant('CsdmStatus.Online'),
+        name: this.$translate.instant('CsdmStatus.connectionStatus.Online'),
         filterValue: 'connectionStatus="CONNECTED"',
       }];
   }

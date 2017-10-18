@@ -6659,11 +6659,13 @@
     "areaCode": "Не является допустимым кодом региона."
   },
   "CsdmStatus": {
-    "Online": "Онлайн",
-    "OnlineWithIssues": "Онлайн, со сложностями",
-    "Offline": "Автономно",
-    "OfflineExpired": "Деактивировано",
-    "Unknown": "Неизвестно",
+    "connectionStatus": {
+      "Online": "Онлайн",
+      "OnlineWithIssues": "Онлайн, со сложностями",
+      "Offline": "Автономно",
+      "OfflineExpired": "Деактивировано",
+      "Unknown": "Неизвестно"
+    },
     "WithDevices": "С устройствами",
     "upgradeChannels": {
       "Stable": "Стабильная версия",

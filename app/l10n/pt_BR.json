@@ -6659,11 +6659,13 @@
     "areaCode": "Isso não parece ser um código de área válido."
   },
   "CsdmStatus": {
-    "Online": "Online",
-    "OnlineWithIssues": "On-line, com problemas",
-    "Offline": "Offline",
-    "OfflineExpired": "Desativado",
-    "Unknown": "Desconhecido",
+    "connectionStatus": {
+      "Online": "Online",
+      "OnlineWithIssues": "On-line, com problemas",
+      "Offline": "Offline",
+      "OfflineExpired": "Desativado",
+      "Unknown": "Desconhecido"
+    },
     "WithDevices": "Com dispositivos",
     "upgradeChannels": {
       "Stable": "Estável",
