@@ -1,25 +1,20 @@
-interface IStateServiceWithModal extends ng.ui.IStateService {
-  modal: {
-    dismiss: Function,
-  };
-}
-
 class EditAutoAssignTemplateModalController implements ng.IComponentController {
 
   private prevState: string;
+  private dismiss: Function;
 
   /* @ngInject */
   constructor(
-    private $state: IStateServiceWithModal,
+    private $state: ng.ui.IStateService,
     private $stateParams,
     private Analytics,
   ) {
     this.prevState = _.get<string>(this.$stateParams, 'prevState', 'users.manage.picker');
   }
 
-  public dismiss(): void {
+  public dismissModal(): void {
     this.Analytics.trackAddUsers(this.Analytics.eventNames.CANCEL_MODAL);
-    this.$state.modal.dismiss();
+    this.dismiss();
   }
 
   public back(): void {
@@ -35,4 +30,7 @@ class EditAutoAssignTemplateModalController implements ng.IComponentController {
 export class EditAutoAssignTemplateModalComponent implements ng.IComponentOptions {
   public controller = EditAutoAssignTemplateModalController;
   public template = require('./edit-auto-assign-template-modal.html');
+  public bindings = {
+    dismiss: '&?',
+  };
 }

@@ -12,7 +12,7 @@ describe('Component: editAutoAssignTemplateModal:', () => {
 
   describe('primary behaviors (view):', () => {
     beforeEach(function () {
-      this.compileComponent('edit-auto-assign-template-modal');
+      this.compileTemplate('<edit-auto-assign-template-modal dismiss="_.noop()"></edit-auto-assign-template-modal>');
     });
 
     it('should always render a title, a header, a description, and a tooltip', function () {
@@ -32,13 +32,10 @@ describe('Component: editAutoAssignTemplateModal:', () => {
   describe('primary behaviors (controller):', () => {
     beforeEach(function () {
       spyOn(this.$state, 'go');
-      this.$state.modal = {
-        dismiss: jasmine.createSpy('dismiss'),
-      };
       this.$stateParams.prevState = 'fake-previous-state';
       spyOn(this.Analytics, 'trackAddUsers');
 
-      this.compileComponent('edit-auto-assign-template-modal');
+      this.compileTemplate('<edit-auto-assign-template-modal dismiss="_.noop()"></edit-auto-assign-template-modal>');
     });
 
     it('should navigate to previous state when back button is clicked', function () {
@@ -49,7 +46,6 @@ describe('Component: editAutoAssignTemplateModal:', () => {
     it('should track the event when the modal is dismissed', function () {
       this.view.find('button.close[aria-label="common.close"]').click();
       expect(this.Analytics.trackAddUsers).toHaveBeenCalledWith(this.Analytics.eventNames.CANCEL_MODAL);
-      expect(this.$state.modal.dismiss).toHaveBeenCalled();
     });
   });
 });
