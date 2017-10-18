@@ -18,6 +18,7 @@ export function atlasCustomer(customerOptions) {
     doCallPark: options.doCallPark || false,
     doHuntGroup: options.doHuntGroup || false,
     doCallPaging: options.doCallPaging || false,
+    doAllFeatures: options.doAllFeatures || false,
   };
   return customer;
 }
