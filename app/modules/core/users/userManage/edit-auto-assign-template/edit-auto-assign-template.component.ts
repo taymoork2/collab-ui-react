@@ -14,7 +14,7 @@ class EditAutoAssignTemplateController implements ng.IComponentController {
     private $stateParams,
     private Analytics,
   ) {
-    this.prevState = _.get<string>(this.$stateParams, 'prevState');
+    this.prevState = _.get<string>(this.$stateParams, 'prevState', 'users.manage.picker');
   }
 
   public dismiss(): void {
