@@ -16,7 +16,6 @@ describe('Service: OnlineUpgradeService', () => {
       'DigitalRiverService',
       'OnlineUpgradeService',
       'UrlConfig',
-      'FeatureToggleService',
     );
 
     spyOn(this.Authinfo, 'isOnline');
@@ -24,7 +23,6 @@ describe('Service: OnlineUpgradeService', () => {
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('123');
     spyOn(this.DigitalRiverService, 'getDigitalRiverToken').and.returnValue(this.$q.resolve('abc+123'));
     spyOn(this.$modal, 'open').and.callThrough();
-    spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
   });
 
   afterEach(function () {

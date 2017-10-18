@@ -325,11 +325,6 @@
           .state('sidepanel', {
             abstract: true,
             onExit: panelOnExit,
-            resolve: {
-              atlas2017NameChangeFeatureToggled: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlas2017NameChange);
-              },
-            },
             onEnter: panelOnEnter(),
           })
           .state('largepanel', {
@@ -338,23 +333,16 @@
             onEnter: panelOnEnter({
               type: 'large',
             }),
-            resolve: {
-              atlas2017NameChangeFeatureToggled: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlas2017NameChange);
-              },
-            },
           });
         // Enter and Exit functions for panel(large or side)
         function panelOnEnter(options) {
           options = options || {};
-          return /* @ngInject */ function ($modal, $state, $previousState, atlas2017NameChangeFeatureToggled) {
+          return /* @ngInject */ function ($modal, $state, $previousState) {
             if (_.get($state, 'current.data.sidepanel', '') !== 'not-full') {
-              if (atlas2017NameChangeFeatureToggled) {
-                if (!options.type) {
-                  options.type = 'side-panel-full-height nav-expanded';
-                } else {
-                  options.type += ' side-panel-full-height nav-expanded';
-                }
+              if (!options.type) {
+                options.type = 'side-panel-full-height nav-expanded';
+              } else {
+                options.type += ' side-panel-full-height nav-expanded';
               }
             }
 
