@@ -1,4 +1,4 @@
-import { PrivateTrunkPrereqService } from 'modules/hercules/private-trunk/private-trunk-prereq/private-trunk-prereq.service';
+import { PrivateTrunkPrereqService } from 'modules/services-overview/new-hybrid/prerequisites-modals/private-trunk-prereq';
 import { IToolkitModalService } from 'modules/core/modal';
 import { IOption, PrivateTrunkResource } from './private-trunk-setup';
 import { IformattedCertificate } from 'modules/hercules/services/certificate-formatter-service';

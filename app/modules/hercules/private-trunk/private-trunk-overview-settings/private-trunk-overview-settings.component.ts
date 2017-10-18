@@ -1,6 +1,6 @@
 import { ICertificate, IformattedCertificate } from 'modules/hercules/services/certificate-formatter-service';
 import { CiscoCollaborationCloudCertificateService } from 'modules/hercules/service-settings/cisco-collaboration-cloud-certificate-store';
-import { PrivateTrunkPrereqService } from 'modules/hercules/private-trunk/private-trunk-prereq/private-trunk-prereq.service';
+import { PrivateTrunkPrereqService } from 'modules/services-overview/new-hybrid/prerequisites-modals/private-trunk-prereq';
 import { IOption } from 'modules/hercules/private-trunk/private-trunk-setup/private-trunk-setup';
 import { PrivateTrunkService } from 'modules/hercules/private-trunk/private-trunk-services/';
 import { Notification } from 'modules/core/notifications';
