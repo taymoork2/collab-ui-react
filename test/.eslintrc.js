@@ -46,6 +46,7 @@ module.exports = {
     config: true,
     customers: true,
     deleteUtils: true,
+    aaGetCeUtils: true,
     createUtils: true,
     describe: true,
     disyncwizard: true,

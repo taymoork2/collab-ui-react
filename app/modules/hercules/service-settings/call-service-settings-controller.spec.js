@@ -3,10 +3,9 @@
 describe('Controller: CallServiceSettingsController', function () {
   beforeEach(function () {
     this.initModules('Hercules', 'Squared');
-    this.injectDependencies('$controller', '$httpBackend', '$modal', '$scope', '$q', 'Analytics', 'FeatureToggleService');
+    this.injectDependencies('$controller', '$httpBackend', '$modal', '$scope', '$q', 'Analytics');
 
     spyOn(this.Analytics, 'trackHSNavigation');
-    spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
 
     this.$httpBackend.whenGET('https://atlas-intb.ciscospark.com/admin/api/v1/organizations/null?basicInfo=true&disableCache=false').respond(200, true);
     this.$httpBackend.whenGET('https://uss-intb.ciscospark.com/uss/api/v1/orgs/null').respond(500, []);
@@ -31,17 +30,6 @@ describe('Controller: CallServiceSettingsController', function () {
     this.$scope.$apply();
     this.$httpBackend.flush();
     expect(this.controller.formattedCertificateList[0].organization).toBe('Cisco Systems, Inc.');
-  });
-
-  // 2017 name change
-  it('nameChangeEnabled should always match what atlas2017NameChangeGetStatus returns', function () {
-    this.$httpBackend.flush();
-    expect(this.controller.nameChangeEnabled).toBeFalsy();
-
-    this.FeatureToggleService.atlas2017NameChangeGetStatus.and.returnValue(this.$q.resolve(true));
-    this.initController();
-    this.$httpBackend.flush();
-    expect(this.controller.nameChangeEnabled).toBeTruthy();
   });
 
   it('should open the correct modal window ', function () {

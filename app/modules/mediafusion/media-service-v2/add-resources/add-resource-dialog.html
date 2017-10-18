@@ -93,10 +93,7 @@
     </div>
   </div>
   <div ng-show="redirectResource.noProceed">
-    <div ng-if="!redirectResource.nameChangeEnabled">
-      <h5 translate="mediaFusion.add-resource-dialog.noInfo"></h5>
-    </div>
-    <div ng-if="redirectResource.nameChangeEnabled">
+    <div>
       <h5 translate="mediaFusion.add-resource-dialog.noInfoNew" translate-values="{appTitle: redirectResource.getAppTitle()}"></h5>
     </div>
     <br>
