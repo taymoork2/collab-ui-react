@@ -7142,8 +7142,6 @@
   },
   "careChatTpl": {
     "editAction": "Edit",
-    "deleteAction": "Delete",
-    "downloadAction": "Download",
     "deleteFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}?",
     "deleteVaFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}?<br>Deleting the Customer Virtual Assistant removes it from all Customer Support Templates. Customers can no longer interact with the virtual assistant.",
     "createSuccessText": "{{ featureName }} template has been created successfully.",
@@ -7573,7 +7571,6 @@
     "aa": "AA",
     "cp": "CP",
     "editAction": "Edit",
-    "deleteAction": "Delete",
     "deleteHuntGroup": "Delete Hunt Group",
     "deleteHuntGroupConfText": "Are you sure you want to delete the {{ huntGroupName }} hunt group?",
     "messageError": "Message {{ message }}",
