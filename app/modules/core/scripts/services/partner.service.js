@@ -470,18 +470,15 @@
       dataObj.daysUsed = TrialService.calcDaysUsed(customer.startDate);
       dataObj.percentUsed = (dataObj.duration > 0) ? Math.round((dataObj.daysUsed / dataObj.duration) * 100) : 0;
 
-      var daysLeft = TrialService.calcDaysLeft(customer.startDate, dataObj.duration);
-      dataObj.daysLeft = daysLeft;
-      if (dataObj.isTrialData) {
-        if (daysLeft < 0) {
-          dataObj.status = $translate.instant('customerPage.expired');
-          dataObj.state = 'EXPIRED';
-        }
+      dataObj.daysLeft = TrialService.calcDaysLeft(customer.startDate, dataObj.duration);
+      if ((dataObj.isTrialData) && (dataObj.daysLeft < 0)) {
+        dataObj.status = $translate.instant('customerPage.expired');
+        dataObj.state = 'EXPIRED';
       }
 
       var serviceEntry = {
         status: dataObj.status,
-        daysLeft: daysLeft,
+        daysLeft: dataObj.daysLeft,
         customerName: dataObj.customerName,
       };
 

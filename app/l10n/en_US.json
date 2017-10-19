@@ -5237,7 +5237,7 @@
     "duration": "Duration",
     "days": "Days",
     "dayTrial": "Day Trial",
-    "daysLeft": "Day(s) left",
+    "daysLeft": "{days, plural, =1{# Day left} other{# Days left}}",
     "allTrials": "All",
     "activeTrials": "Active Trials",
     "expiring": "Trial Expiring",

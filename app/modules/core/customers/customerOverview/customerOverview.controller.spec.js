@@ -127,7 +127,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
   });
 
   it('should display number of days left', function () {
-    expect(controller.getDaysLeft(1)).toEqual(1);
+    expect(controller.getDaysLeft(1)).toEqual('customerPage.daysLeft');
     expect(controller.getDaysLeft(0)).toEqual('customerPage.expiresToday');
     expect(controller.getDaysLeft(-1)).toEqual('customerPage.expired');
   });
