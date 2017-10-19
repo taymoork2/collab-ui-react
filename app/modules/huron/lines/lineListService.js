@@ -33,11 +33,13 @@
 
       if (searchStr.length > 0) {
         queryString.userid = wildcard + searchStr + wildcard;
-        queryString.internalnumber = wildcard + searchStr + wildcard;
         queryString.externalnumber = wildcard + searchStr + wildcard;
 
         if (isH1484) {
           queryString.locationname = wildcard + searchStr + wildcard;
+          queryString.sitetositenumber = wildcard + searchStr + wildcard;
+        } else {
+          queryString.internalnumber = wildcard + searchStr + wildcard;
         }
         queryString.predicatejoinoperator = 'or';
       }
