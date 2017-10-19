@@ -3,7 +3,6 @@ import IHttpPromise = angular.IHttpPromise;
 import { SearchObject } from './search/searchObject';
 import { SearchResult } from './search/searchResult';
 import { IDeferred, IHttpService, IQService } from 'angular';
-import * as _ from 'lodash';
 import { SearchTranslator } from './search/searchTranslator';
 
 export class CsdmSearchService {
@@ -22,33 +21,25 @@ export class CsdmSearchService {
     const url = this.UrlConfig.getCsdmServiceUrl() + '/organization/' + this.Authinfo.getOrgId() + '/devices/_search';
     this.pendingPromise[caller] = this.$q.defer();
     return this.$http
-      .get<SearchResult>(
-        url + this.constructSearchString(search),
+      .post<SearchResult>(
+        url,
+        this.constructSearchRequest(search),
         { timeout: this.pendingPromise[caller].promise })
       .then(data => this.DeviceSearchConverter.convertSearchResult(data));
   }
 
-  public constructSearchString(so: SearchObject): string {
+  public constructSearchRequest(so: SearchObject): any {
     if (!so) {
       throw new Error('Invalid search state.');
     }
-
-    const params = {
-      query: so.getSearchQuery(this.DeviceSearchTranslator),
+    return {
+      query: so.getTranslatedSearchElement(this.DeviceSearchTranslator),
       aggregates: so.aggregates,
       size: so.size,
       from: so.from,
       sortField: so.sortField,
       sortOrder: so.sortOrder,
     };
-
-    const search = _.join(_.map(params, (v: any, k: string) => {
-      return k + '=' + encodeURIComponent(v);
-    }), '&');
-    if (search && search.length > 0) {
-      return '?' + search;
-    }
-    return '';
   }
 }
 

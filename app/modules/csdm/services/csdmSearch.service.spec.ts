@@ -20,8 +20,8 @@ describe('CsdmSearchService', () => {
   describe('perform empty search', () => {
     it('should return a data object', function () {
       const searchObj = SearchObject.createWithQuery('');
-      const url = this.UrlConfig.getCsdmServiceUrl() + '/organization/--org--/devices/_search' + this.CsdmSearchService.constructSearchString(searchObj);
-      this.$httpBackend.expectGET(url).respond(200);
+      const url = this.UrlConfig.getCsdmServiceUrl() + '/organization/--org--/devices/_search';
+      this.$httpBackend.expectPOST(url, this.CsdmSearchService.constructSearchRequest(searchObj)).respond(200);
       this.CsdmSearchService.search(searchObj);
       this.$httpBackend.flush();
     });
@@ -30,8 +30,8 @@ describe('CsdmSearchService', () => {
   describe('perform type search', () => {
     it('should return a data object', function () {
       const searchObj = SearchObject.createWithQuery('cloudberry');
-      const url = this.UrlConfig.getCsdmServiceUrl() + '/organization/--org--/devices/_search' + this.CsdmSearchService.constructSearchString(searchObj);
-      this.$httpBackend.expectGET(url).respond(200);
+      const url = this.UrlConfig.getCsdmServiceUrl() + '/organization/--org--/devices/_search';
+      this.$httpBackend.expectPOST(url, this.CsdmSearchService.constructSearchRequest(searchObj)).respond(200);
       this.CsdmSearchService.search(searchObj);
       this.$httpBackend.flush();
     });
@@ -40,8 +40,8 @@ describe('CsdmSearchService', () => {
   describe('perform type and any search', () => {
     it('should return a data object', function () {
       const searchObj = SearchObject.createWithQuery('product:sx10,any:test');
-      const url = this.UrlConfig.getCsdmServiceUrl() + '/organization/--org--/devices/_search' + this.CsdmSearchService.constructSearchString(searchObj);
-      this.$httpBackend.expectGET(url).respond(200);
+      const url = this.UrlConfig.getCsdmServiceUrl() + '/organization/--org--/devices/_search';
+      this.$httpBackend.expectPOST(url, this.CsdmSearchService.constructSearchRequest(searchObj)).respond(200);
       this.CsdmSearchService.search(searchObj);
       this.$httpBackend.flush();
     });
@@ -50,9 +50,9 @@ describe('CsdmSearchService', () => {
   describe('perform two consequtive search', () => {
     it('should cancel the first request', function () {
       const searchObj = SearchObject.createWithQuery('');
-      const url = this.UrlConfig.getCsdmServiceUrl() + '/organization/--org--/devices/_search' + this.CsdmSearchService.constructSearchString(searchObj);
-      this.$httpBackend.expectGET(url).respond(200);
-      this.$httpBackend.expectGET(url).respond(200);
+      const url = this.UrlConfig.getCsdmServiceUrl() + '/organization/--org--/devices/_search';
+      this.$httpBackend.expectPOST(url, this.CsdmSearchService.constructSearchRequest(searchObj)).respond(200);
+      this.$httpBackend.expectPOST(url, this.CsdmSearchService.constructSearchRequest(searchObj)).respond(200);
       let queryOneExecuted = false;
       let queryOneFinally = false;
       let queryTwoExecuted = false;
@@ -74,9 +74,9 @@ describe('CsdmSearchService', () => {
   describe('perform two consequtive search with different caller', () => {
     it('should allow both requests', function () {
       const searchObj = SearchObject.createWithQuery('');
-      const url = this.UrlConfig.getCsdmServiceUrl() + '/organization/--org--/devices/_search' + this.CsdmSearchService.constructSearchString(searchObj);
-      this.$httpBackend.expectGET(url).respond(200);
-      this.$httpBackend.expectGET(url).respond(200);
+      const url = this.UrlConfig.getCsdmServiceUrl() + '/organization/--org--/devices/_search';
+      this.$httpBackend.expectPOST(url, this.CsdmSearchService.constructSearchRequest(searchObj)).respond(200);
+      this.$httpBackend.expectPOST(url, this.CsdmSearchService.constructSearchRequest(searchObj)).respond(200);
       let queryOneExecuted = false;
       let queryOneFinally = false;
       let queryTwoExecuted = false;
