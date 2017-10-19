@@ -65,7 +65,7 @@
       .state('care.setupAssistant', {
         url: '/setupAssistant/:type',
         parent: 'care.Details',
-        template: require('modules/sunlight/features/template/ctSetupAssistant.tpl.html'),
+        template: require('modules/sunlight/features/customerSupportTemplate/wizardPages/ctSetupAssistant.tpl.html'),
         controller: 'CareSetupAssistantCtrl',
         controllerAs: 'careSetupAssistant',
         params: {
@@ -90,9 +90,9 @@
       .state('care.assistant', {
         url: '/virtualAssistant',
         parent: 'care.Details',
-        template: require('modules/sunlight/features/template/vaSetupAssistant.tpl.html'),
-        controller: 'CareSetupVirtualAssistantCtrl',
-        controllerAs: 'vaSetupAssistant',
+        template: require('modules/sunlight/features/virtualAssistant/cvaSetup.tpl.html'),
+        controller: 'CvaSetupCtrl',
+        controllerAs: 'cvaSetupCtrl',
         params: {
           isEditFeature: null,
           template: null,

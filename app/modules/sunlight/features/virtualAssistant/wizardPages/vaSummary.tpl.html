@@ -1,0 +1,22 @@
+<div class="va-summary">
+  <i class="icon icon-circle-check-mark-success icon-5x success-icon"></i>
+  <div class="h4 description">
+    {{cvaSetupCtrl.getSummaryDescription()}}
+  </div>
+  <div class="h4 description" ng-if="!cvaSetupCtrl.saveTemplateErrorOccurred">
+    {{cvaSetupCtrl.getVaText('summary.descCont')}}
+  </div>
+  <button loading="cvaSetupCtrl.creatingTemplate"
+          cs-btn
+          id="vaSetupFinishBtn"
+          class="btn btn--primary vaSetupFinishBtn"
+          ng-click="cvaSetupCtrl.submitFeature()">
+            {{cvaSetupCtrl.templateButtonText}}
+  </button>
+  <div class="body-small edit-message" ng-if="cvaSetupCtrl.isEditFeature">
+  </div>
+  <div class="h6 retry-message" ng-if="cvaSetupCtrl.saveTemplateErrorOccurred && !cvaSetupCtrl.creatingTemplate">
+    <i class="icon icon-error"></i>
+    <span class="error-message">{{cvaSetupCtrl.getVaText('summary.errorCreateTemplate')}}</span>
+  </div>
+</div>

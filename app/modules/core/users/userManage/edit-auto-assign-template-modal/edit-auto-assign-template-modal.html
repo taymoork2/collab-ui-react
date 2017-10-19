@@ -1,0 +1,23 @@
+<!-- TODO: enable 'next' button once appropriate UI state is determined -->
+<multi-step-modal
+  l10n-title="userManage.autoAssignTemplate.edit.title"
+  dismiss="$ctrl.dismissModal()"
+  back="$ctrl.back()"
+  next="$ctrl.next()"
+  next-disabled="true">
+  <h4 translate="userManage.autoAssignTemplate.edit.header"></h4>
+  <p translate="userManage.autoAssignTemplate.edit.description"></p>
+  <p>
+    <span translate="userManage.autoAssignTemplate.edit.note"></span>
+    <a>
+      <i class="icon icon-info"
+        tooltip="{{::'userManage.autoAssignTemplate.edit.tooltip' | translate}}"
+        tooltip-placement="bottom"
+        tooltip-trigger="focus mouseenter"
+        tooltip-animation="false"></i>
+    </a>
+  </p>
+  <div style="border:1px solid red; height: 400px; margin-top: 25px;">
+    **TODO: f3745 - populate this content with services selection grid**
+  </div>
+</multi-step-modal>

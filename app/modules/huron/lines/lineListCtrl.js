@@ -161,7 +161,6 @@
           });
           vm.gridRefresh = false;
           vm.vendor = LineListService.getVendor();
-          $scope.gridApi.infiniteScroll.dataLoaded();
         })
         .catch(function (response) {
           Log.debug('Query for line associations failed.');
@@ -200,6 +199,7 @@
             vm.currentDataPosition++;
             vm.load = false;
             getLineList((vm.currentDataPosition * Config.usersperpage) + 1);
+            $scope.gridApi.infiniteScroll.dataLoaded();
           }
         });
         gridApi.core.on.sortChanged($scope, sortColumn);

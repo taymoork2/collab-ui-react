@@ -61,7 +61,7 @@
 
   .columns .box {
     @include vr-spacing(mh, 1);
-    @include vr-spacing(mt, 2);
+    @include vr-spacing(mv, 2);
 
     border: thin solid $gray-light-2;
     color: $gray-base;

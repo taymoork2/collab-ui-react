@@ -16,12 +16,13 @@
      class="fullSize">
     <iframe id="sparkMetricsIframeContainer"
             name="sparkMetricsIframeContainer"
-            onLoad="iframeLoaded('#sparkMetricsIframeContainer')"
+            load-event
+            on-load-event="$ctrl.onIframeLoad({elem: elem})"
             class="fullSize"
             frameborder="0">
     </iframe>
     <form id="iframeForm"
-          name="iframeForm"
+          name="$ctrl.iframeForm"
           action={{$ctrl.data.trustIframeUrl}}
           method="get"
           hidden
