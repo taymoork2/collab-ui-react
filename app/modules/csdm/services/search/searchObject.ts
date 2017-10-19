@@ -10,7 +10,7 @@ export class SearchObject {
 
   public query: string;
   public tokenizedQuery: { [key: string]: { searchField: string, query: string, active: boolean } };
-  public aggregates?: string = _.join([
+  public aggregates?: string[] = [
     Aggregate[Aggregate.product],
     Aggregate[Aggregate.connectionStatus],
     Aggregate[Aggregate.productFamily],
@@ -18,7 +18,7 @@ export class SearchObject {
     Aggregate[Aggregate.errorCodes],
     Aggregate[Aggregate.software],
     Aggregate[Aggregate.upgradeChannel],
-  ], ',');
+  ];
 
   public size: number = 20;
   public from: number = 0;
@@ -167,21 +167,26 @@ export class SearchObject {
     this.from = 0;
   }
 
-  public getSearchQuery(deviceSearchTranslator: SearchTranslator | null): string {
+  public getTranslatedSearchElement(deviceSearchTranslator: SearchTranslator | null): SearchElement {
 
     const translatedQuery = deviceSearchTranslator
-      ? deviceSearchTranslator.translateQuery(this.lastGoodQuery).toQuery()
-      : (this.lastGoodQuery ? this.lastGoodQuery.toQuery() : '');
+      ? deviceSearchTranslator.translateQuery(this.lastGoodQuery)
+      : this.lastGoodQuery;
 
     if (this.currentFilterValue) {
+      const parsedFilter = QueryParser.parseQueryString(this.currentFilterValue);
       if (translatedQuery) {
-        return '(' + translatedQuery + ') AND ' + this.currentFilterValue;
+        return new OperatorAnd([translatedQuery, parsedFilter]);
       } else {
-        return this.currentFilterValue;
+        return QueryParser.parseQueryString(this.currentFilterValue);
       }
     } else {
-      return translatedQuery || '';
+      return translatedQuery;
     }
+  }
+
+  public getTranslatedQueryString(deviceSearchTranslator: SearchTranslator | null): string {
+    return this.getTranslatedSearchElement(deviceSearchTranslator).toQuery();
   }
 
   public equals(other: SearchObject): boolean {
