@@ -10,7 +10,7 @@
   <div ng-if="siteList.tabs.length > 0" class="tabs-container">
     <ul class="menu">
       <li class="link" ng-repeat="tab in siteList.tabs">
-        <span ui-sref="{{tab.state}}" ui-sref-active="active">{{tab.title}}</span>
+        <span ui-sref="{{tab.state}}" ui-sref-active="active" translate="{{tab.title}}"></span>
       </li>
     </ul>
   </div>

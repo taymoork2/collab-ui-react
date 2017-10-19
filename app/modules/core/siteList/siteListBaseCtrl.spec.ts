@@ -8,7 +8,7 @@ describe('Controller: WebExSiteBaseCtrl ', function () {
     this.initController = (): void => {
       this.controller = this.$controller('WebExSiteBaseCtrl', {
         $state: this.$state,
-        $stateParams: { accountLinkingV2: false },
+        accountLinkingPhase2: false,
       });
     };
     this.initController();
@@ -23,22 +23,20 @@ describe('Controller: WebExSiteBaseCtrl ', function () {
     this.initController = (): void => {
       this.controller = this.$controller('WebExSiteBaseCtrl', {
         $state: this.$state,
-        $stateParams: { accountLinkingV2: false },
+        accountLinkingPhase2: false,
       });
     };
     this.initController();
     expect(this.controller.tabs.length).toEqual(0);
     expect(this.$state.go).toHaveBeenCalledWith('site-list.not-linked');
-    expect(this.isAccountLinkingV2).toBeFalsy();
-
   });
 
-  describe('account linking v2', function () {
+  describe('account linking phase 2 uses tabs', function () {
     it('show two tabs', function () {
       this.initController = (): void => {
         this.controller = this.$controller('WebExSiteBaseCtrl', {
           $state: this.$state,
-          $stateParams: { accountLinkingV2: true },
+          accountLinkingPhase2: true,
         });
       };
       this.initController();

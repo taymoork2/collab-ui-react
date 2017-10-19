@@ -1897,8 +1897,10 @@
             controller: 'WebExSiteBaseCtrl',
             controllerAs: 'siteList',
             parent: 'main',
-            params: {
-              accountLinkingV2: false,
+            resolve: {
+              accountLinkingPhase2: function () {
+                return false;
+              },
             },
           })
           .state('site-list.not-linked', {

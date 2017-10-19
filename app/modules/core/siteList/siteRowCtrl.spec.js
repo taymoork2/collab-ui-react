@@ -52,6 +52,8 @@ describe('Controller: WebExSiteRowCtrl', function () {
       $scope: $scope,
       FeatureToggleService: FeatureToggleService,
       WebExSiteRowService: WebExSiteRowService,
+      hasAtlasHybridCallUserTestTool: false,
+      accountLinkingPhase2: false,
     });
 
     $scope.$apply();
@@ -87,6 +89,7 @@ describe('Controller: WebExSiteRowCtrl', function () {
     controller.linkToReports(siteUrl);
     expect(state.go).toHaveBeenCalledWith(stateName, { siteUrl: siteUrl });
   });
+
   it('will set isShowAddSite to TRUE if \'atlasWebexAddSiteGetStatus\' FT is enabled', function () {
     expect(controller.isShowAddSite).toBeTruthy();
   });
@@ -97,27 +100,17 @@ describe('Controller: WebExSiteRowCtrl', function () {
     expect(controller.isShowAddSite).toBeFalsy();
   });
 
-  it('remove linked sites if Account Linking V2', function () {
+  it('dont exclude linked sites'), function () {
+    expect(WebExSiteRowService.initSiteRows).toHaveBeenCalledWith(false);
+  }
+
+  it('exclude linked sites if Account Linking Phase 2', function () {
     controller = $controller('WebExSiteRowCtrl', {
       $scope: $scope,
       FeatureToggleService: FeatureToggleService,
       WebExSiteRowService: WebExSiteRowService,
-      $stateParams: {
-        accountLinkingV2: true,
-      },
+      accountLinkingPhase2: true,
     });
     expect(WebExSiteRowService.initSiteRows).toHaveBeenCalledWith(true);
-  });
-
-  it('dont remove linked sites if Account Linking V1', function () {
-    controller = $controller('WebExSiteRowCtrl', {
-      $scope: $scope,
-      FeatureToggleService: FeatureToggleService,
-      WebExSiteRowService: WebExSiteRowService,
-      $stateParams: {
-        accountLinkingV2: false,
-      },
-    });
-    expect(WebExSiteRowService.initSiteRows).toHaveBeenCalledWith(false);
   });
 });

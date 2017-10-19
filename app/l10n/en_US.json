@@ -6247,6 +6247,10 @@
     "logoAltText": "Cisco WebEx",
     "breadcrumbsAltText": "You are here"
   },
+  "webexSiteListTabs": {
+    "notLinkedSites": "Cisco Spark Control Hub managed site",
+    "linkedSites": "Site Admin managed site"
+  },
   "webexSiteSettingsLabels": {
     "siteSettingsIndexPageTitle": "Configure WebEx Site",
     "siteSettingsIndexPageTitleFull": "Configure {{siteUrl}}",

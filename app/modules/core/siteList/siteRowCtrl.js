@@ -8,14 +8,14 @@ require('./_site-list.scss');
     .controller('WebExSiteRowCtrl', WebExSiteRowCtrl);
 
   /*@ngInject*/
-  function WebExSiteRowCtrl($log, $scope, $sce, $state, $timeout, FeatureToggleService, TokenService, WebExUtilsFact, WebExSiteRowService, $stateParams) {
+  function WebExSiteRowCtrl($log, $scope, $sce, $state, $timeout, FeatureToggleService, TokenService, WebExUtilsFact, WebExSiteRowService, $stateParams, accountLinkingPhase2) {
     var vm = this;
     vm.showGridData = false;
     vm.isShowAddSite = false;
 
     $log.debug('StateParams in sitreRowCrtl', $stateParams);
 
-    var dontShowLinkedSites = $stateParams.accountLinkingV2;
+    var dontShowLinkedSites = accountLinkingPhase2;
     FeatureToggleService.atlasWebexAddSiteGetStatus().then(function (result) {
       vm.isShowAddSite = result;
     });
