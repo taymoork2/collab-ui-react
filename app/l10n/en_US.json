@@ -7425,96 +7425,127 @@
     "configureOrgLogoMsg": "Go to Settings page to modify your organization logo",
     "virtualAssistant": {
       "featureText": {
-        "virtualAssistantCode": "Va",
-        "virtualAssistantMediaType": "Virtual Assistants",
         "selectVADesc": "Create virtual assistants that can provide automated chat support to customers, or manage escalated chat requests in Cisco Spark.",
-        "selectCVADesc": "Create a virtual assistant who provides automated chat support and escalates issues as needed.",
-        "selectEVADesc": "Create a virtual assistant who connects subject matter experts in Cisco Spark spaces to customers with chat requests.",
-        "evaDisabledTooltip": "You can only have one Expert Virtual Assistant for your organization. To change the settings of your existing Expert Virtual Assistant, edit it from the Features page.",
-        "virtualAssistantType": "Virtual Assistant",
-        "expertVirtualAssistantType": "Expert <br> Virtual Assistant",
-        "customerVirtualAssistantType": "Customer <br> Virtual Assistant"
+        "virtualAssistant": "Virtual Assistant"
       },
-      "createTitle": "Create Customer Virtual Assistant",
-      "editTitle": "Edit Customer Virtual Assistant",
-      "configOverview": {
-        "title": "Customer Virtual Assistant Configuration Requirements",
-        "desc": "Review the prerequisites for creating a Customer Virtual Assistant",
-        "boxTitle": "Create an API.AI agent before you create your Customer Virtual Assistant.",
-        "boxDesc": "Build an automated agent in API.AI with a natural language dialogue. Your integrated Customer Virtual Assistant uses the built-in dialogue to interact with your customers and escalate a conversation to live agents as needed.",
-        "boxRadioOne": "No, I don’t have a preconfigured API.AI agent",
-        "boxRadioOneDesc1": "Go to ",
-        "boxRadioApiai": "API.AI",
-        "boxRadioOneDesc2": " to create an agent. To get started, see the ",
-        "boxRadioApiaiDoc": "API.AI documentation",
-        "boxRadioTwo": "Yes, I have a preconfigured API.AI agent and am ready to proceed",
-        "boxRadioTwoDesc": "Click the arrow to continue to integrate your API.AI agent with a Customer Virtual Assistant"
+      "cva": {
+        "featureName": "Customer Virtual Assistant",
+        "featureText": {
+          "virtualAssistantCode": "cva",
+          "virtualAssistantMediaType": "Virtual Assistants",
+          "selectCVADesc": "Create a virtual assistant who provides automated chat support and escalates issues as needed.",
+          "virtualAssistantType": "Virtual Assistant",
+          "customerVirtualAssistantType": "Customer <br> Virtual Assistant"
+        },
+        "createTitle": "Create Customer Virtual Assistant",
+        "editTitle": "Edit Customer Virtual Assistant",
+        "configOverview": {
+          "title": "Customer Virtual Assistant Configuration Requirements",
+          "desc": "Review the prerequisites for creating a Customer Virtual Assistant",
+          "boxTitle": "Create an API.AI agent before you create your Customer Virtual Assistant.",
+          "boxDesc": "Build an automated agent in API.AI with a natural language dialogue. Your integrated Customer Virtual Assistant uses the built-in dialogue to interact with your customers and escalate a conversation to live agents as needed.",
+          "boxRadioOne": "No, I don’t have a preconfigured API.AI agent",
+          "boxRadioOneDesc1": "Go to ",
+          "boxRadioApiai": "API.AI",
+          "boxRadioOneDesc2": " to create an agent. To get started, see the ",
+          "boxRadioApiaiDoc": "API.AI documentation",
+          "boxRadioTwo": "Yes, I have a preconfigured API.AI agent and am ready to proceed",
+          "boxRadioTwoDesc": "Click the arrow to continue to integrate your API.AI agent with a Customer Virtual Assistant"
+        },
+        "dialogIntegration": {
+          "title": "Configure Dialogue Integration",
+          "desc": "Add a preconfigured Escalation Intent to complete your API.AI agent configuration",
+          "boxStepOne": "Download preconfigured Escalation Intent JSON file.",
+          "boxStepOneDesc": "An Escalation Intent allows your Customer Virtual Assistant to escalate a conversation to an agent.",
+          "boxStepTwo": "Upload Escalation Intent to API.AI Agent.",
+          "boxStepTwoDesc": "On your API.AI agent’s Intents page, click the vertical ellipsis (⋮) and choose Upload Intent. Upload the escalation.json file you downloaded.",
+          "boxStepThree": "Customize Escalation Intent in API.AI.",
+          "boxStepThreeDesc": "On your API.AI agent’s Intents page, choose Escalation Intent. Modify the User Says fields to change the user expressions that trigger escalation. All user expressions must:",
+          "boxBulletOne": "Use template mode",
+          "boxBulletTwo": "Contain a reference to @sys.any:Topic",
+          "boxStepThreeDescCont": "The @ symbol next to the user expression indicates the template mode. Click the symbol to toggle the mode. Do not modify the GetExpert action.",
+          "downloadButtonText": "Download Escalation Intent",
+          "learnMoreLink": "Learn more",
+          "finalNote": "about integrating Customer Virtual Assistants."
+        },
+        "accessToken": {
+          "title": "Complete Dialogue Integration",
+          "desc": "Complete your integration to enable the use of natural dialogue in your customer interactions",
+          "boxDesc": "Each API.AI agent has a unique client access token stored in the agent settings. Copy the token from your configured API.AI agent settings, enter it here, and click \"Validate\" to check the token before you complete the dialogue integration.",
+          "inputLabel": "API.AI Client Access Token",
+          "validateButtonText": "Validate",
+          "maxLengthError": "Client Access Token cannot be longer than 128 characters.",
+          "invalidTokenText": "Invalid API.AI client access token. Verify token and try again."
+        },
+        "name": {
+          "title": "Customer Virtual Assistant Name",
+          "desc": "Specify the name your customers see when they interact with your Customer Virtual Assistant",
+          "boxDesc": "Choose a unique name for your Customer Virtual Assistant that is no longer than 50 characters.",
+          "inputLabel": "Enter Name",
+          "maxLengthError": "Name cannot be longer than 50 characters.",
+          "duplicateError": "Customer Virtual Assistant must have a unique name."
+        },
+        "avatar": {
+          "title": "Customer Virtual Assistant Avatar",
+          "desc": "Choose the avatar your customers see in their chat window, when they interact with your Customer Virtual Assistant",
+          "upload": "Upload Avatar",
+          "preview": "Avatar Preview",
+          "fileBrowser": "file browser",
+          "uploadingImage": "Uploading image...",
+          "uploadDesc": "Upload an image of maximum 1MB. Supported file type is PNG.",
+          "previewDesc": "To edit, upload a new image of maximum 1MB. Supported file type is PNG.",
+          "defaultAvatar": "If no image is uploaded, this default image is used.",
+          "uploadBestResults": "For best results make sure that your image has a transparent background with no padding.",
+          "dragDropDesc": "Drag and drop a file or use the ",
+          "errorUnsupportedFile": "Cannot upload unsupported file. Supported file type is PNG.",
+          "errorOverMaxFileSizeLimit": "The image file size must be less than 1 MB.",
+          "errorUploadFile": "Cannot upload image. Try again."
+        },
+        "summary": {
+          "desc": "You have configured your {{ featureName }}. To use the assisted service feature in your organization's chat application, add your assistant to a {{ featureName }}.",
+          "editDesc": "You have edited your {{ featureName }}. To use the assisted service feature in your organization’s chat application, add your assistant to a {{ featureName }}.",
+          "descCont": "Click Finish to save the configuration.",
+          "errorCreateTemplate": "Cannot save Customer Virtual Assistant. Try again."
+        },
+        "messages": {
+          "createSuccessText": "You have successfully created {{ featureName }}.",
+          "updateSuccessText": "You have successfully updated {{ featureName }}.",
+          "listConfigsFailureText": "Failed to list the Customer Virtual Assistants.",
+          "getConfigFailureText": "Failed to load the Customer Virtual Assistant.",
+          "deleteConfigFailureText": "Failed to delete the Customer Virtual Assistant.",
+          "createConfigFailureText": "Failed to save Customer Virtual Assistant.",
+          "updateConfigFailureText": "Failed to save Customer Virtual Assistant."
+        },
+        "cancelDialog": "Are you sure you want to cancel?\nThe Customer Virtual Assistant will not be saved."
       },
-      "dialogIntegration": {
-        "title": "Configure Dialogue Integration",
-        "desc": "Add a preconfigured Escalation Intent to complete your API.AI agent configuration",
-        "boxStepOne": "Download preconfigured Escalation Intent JSON file.",
-        "boxStepOneDesc": "An Escalation Intent allows your Customer Virtual Assistant to escalate a conversation to an agent.",
-        "boxStepTwo": "Upload Escalation Intent to API.AI Agent.",
-        "boxStepTwoDesc": "On your API.AI agent’s Intents page, click the vertical ellipsis (⋮) and choose Upload Intent. Upload the escalation.json file you downloaded.",
-        "boxStepThree": "Customize Escalation Intent in API.AI.",
-        "boxStepThreeDesc": "On your API.AI agent’s Intents page, choose Escalation Intent. Modify the User Says fields to change the user expressions that trigger escalation. All user expressions must:",
-        "boxBulletOne": "Use template mode",
-        "boxBulletTwo": "Contain a reference to @sys.any:Topic",
-        "boxStepThreeDescCont": "The @ symbol next to the user expression indicates the template mode. Click the symbol to toggle the mode. Do not modify the GetExpert action.",
-        "downloadButtonText": "Download Escalation Intent",
-        "learnMoreLink": "Learn more",
-        "finalNote": "about integrating Customer Virtual Assistants."
-      },
-      "accessToken": {
-        "title": "Complete Dialogue Integration",
-        "desc": "Complete your integration to enable the use of natural dialogue in your customer interactions",
-        "boxDesc": "Each API.AI agent has a unique client access token stored in the agent settings. Copy the token from your configured API.AI agent settings, enter it here, and click \"Validate\" to check the token before you complete the dialogue integration.",
-        "inputLabel": "API.AI Client Access Token",
-        "validateButtonText": "Validate",
-        "maxLengthError": "Client Access Token cannot be longer than 128 characters.",
-        "invalidTokenText": "Invalid API.AI client access token. Verify token and try again."
-      },
-      "name": {
-        "title": "Customer Virtual Assistant Name",
-        "desc": "Specify the name your customers see when they interact with your Customer Virtual Assistant",
-        "boxDesc": "Choose a unique name for your Customer Virtual Assistant that is no longer than 50 characters.",
-        "inputLabel": "Enter Name",
-        "maxLengthError": "Name cannot be longer than 50 characters.",
-        "duplicateError": "Customer Virtual Assistant must have a unique name."
-      },
-      "avatar": {
-        "title": "Customer Virtual Assistant Avatar",
-        "desc": "Choose the avatar your customers see in their chat window, when they interact with your Customer Virtual Assistant",
-        "upload": "Upload Avatar",
-        "preview": "Avatar Preview",
-        "fileBrowser": "file browser",
-        "uploadingImage": "Uploading image...",
-        "uploadDesc": "Upload an image of maximum 1MB. Supported file type is PNG.",
-        "previewDesc": "To edit, upload a new image of maximum 1MB. Supported file type is PNG.",
-        "defaultAvatar": "If no image is uploaded, this default image is used.",
-        "uploadBestResults": "For best results make sure that your image has a transparent background with no padding.",
-        "dragDropDesc": "Drag and drop a file or use the ",
-        "errorUnsupportedFile": "Cannot upload unsupported file. Supported file type is PNG.",
-        "errorOverMaxFileSizeLimit": "The image file size must be less than 1 MB.",
-        "errorUploadFile": "Cannot upload image. Try again."
-      },
-      "summary": {
-        "desc": "You have configured your Customer Virtual Assistant. To use the assisted service feature in your organization's chat application, add your assistant to a Customer Support Template.",
-        "editDesc": "You have edited your Customer Virtual Assistant. To use the assisted service feature in your organization’s chat application, add your assistant to a Customer Support Template.",
-        "descCont": "Click Finish to save the configuration.",
-        "errorCreateTemplate": "Cannot save Customer Virtual Assistant. Try again."
-      },
-      "messages": {
-        "createSuccessText": "You have successfully created {{ featureName }}.",
-        "updateSuccessText": "You have successfully updated {{ featureName }}.",
-        "listConfigsFailureText": "Failed to list the Customer Virtual Assistants.",
-        "getConfigFailureText": "Failed to load the Customer Virtual Assistant.",
-        "deleteConfigFailureText": "Failed to delete the Customer Virtual Assistant.",
-        "createConfigFailureText": "Failed to save Customer Virtual Assistant.",
-        "updateConfigFailureText": "Failed to save Customer Virtual Assistant."
-      },
-      "cancelDialog": "Are you sure you want to cancel?\nThe Customer Virtual Assistant will not be saved."
+      "eva": {
+        "featureName": "Expert Virtual Assistant",
+        "featureText": {
+          "virtualAssistantCode": "eva",
+          "virtualAssistantMediaType": "Virtual Assistants",
+          "selectEVADesc": "Create a virtual assistant who connects subject matter experts in Cisco Spark spaces to customers with chat requests.",
+          "evaDisabledTooltip": "You can only have one Expert Virtual Assistant for your organization. To change the settings of your existing Expert Virtual Assistant, edit it from the Features page.",
+          "expertVirtualAssistantType": "Expert <br> Virtual Assistant"
+        },
+        "createTitle": "Create Expert Virtual Assistant",
+        "editTitle": "Edit Expert Virtual Assistant",
+        "summary": {
+          "desc": "You configured {{ featureName }}. To enable escalation to Cisco Spark, add your {{ featureName }} to your Customer Support Templates and expert spaces.",
+          "editDesc": "You edited {{ featureName }}. Click Finish to save the configuration so Cisco Spark users from your organization working in expert spaces can interact with this updated {{ featureName }}.",
+          "descCont": "Click Finish to save the configuration.",
+          "errorCreateTemplate": "Cannot save Expert Virtual Assistant. Try again."
+        },
+        "messages": {
+          "createSuccessText": "You have successfully created {{ featureName }}.",
+          "updateSuccessText": "You have successfully updated {{ featureName }}.",
+          "listConfigsFailureText": "Failed to list the Expert Virtual Assistants.",
+          "getConfigFailureText": "Failed to load the Expert Virtual Assistant.",
+          "deleteConfigFailureText": "Failed to delete the Expert Virtual Assistant.",
+          "createConfigFailureText": "Failed to save Expert Virtual Assistant.",
+          "updateConfigFailureText": "Failed to save Expert Virtual Assistant."
+        },
+        "cancelDialog": "Do you want to discard your Expert Virtual Assistant?"
+      }
     }
   },
   "huronHuntGroup": {

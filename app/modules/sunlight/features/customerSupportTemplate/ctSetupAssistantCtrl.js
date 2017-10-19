@@ -10,7 +10,7 @@
 
   /* @ngInject */
 
-  function CareSetupAssistantCtrl($modal, $scope, $state, $stateParams, $timeout, $translate, $window, Authinfo, VirtualAssistantService, CTService, DomainManagementService, LogMetricsService, Notification, SunlightConfigService) {
+  function CareSetupAssistantCtrl($modal, $scope, $state, $stateParams, $timeout, $translate, $window, Authinfo, CvaService, CTService, DomainManagementService, LogMetricsService, Notification, SunlightConfigService) {
     var vm = this;
     $scope.controller = vm; // used by ctCancelModal to not be tied to 1 controller.
 
@@ -1672,7 +1672,7 @@
       });
       //Should invoke VA config only for chat and chat+callback templates
       if (vm.isCareAssistantEnabled && vm.selectedMediaType !== vm.mediaTypes.callback) {
-        VirtualAssistantService.listConfigs().then(function (result) {
+        CvaService.listConfigs().then(function (result) {
           vm.configuredVirtualAssistantServices = result.items;
           vm.hasConfiguredVirtualAssistantServices = (vm.configuredVirtualAssistantServices.length > 0);
           //if the virtual assistant list has only one VA available. use it by default.

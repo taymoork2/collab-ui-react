@@ -12,7 +12,8 @@ class VirtualAssistantModalCtrl implements ng.IComponentController {
   constructor(
     public $state,
     public Authinfo,
-    public VirtualAssistantService) {
+    public CvaService,
+    public EvaService) {
   }
 
   /**
@@ -24,18 +25,18 @@ class VirtualAssistantModalCtrl implements ng.IComponentController {
 
     const serviceCards: any[] = [];
     if (this.$state.isVirtualAssistantEnabled) {
-      serviceCards.push(this.VirtualAssistantService.cvaServiceCard);
+      serviceCards.push(this.CvaService.cvaServiceCard);
       if (this.$state.isExpertVirtualAssistantEnabled) {
         this.loading = true;
-        this.VirtualAssistantService.evaServiceCard.disabled = false;
+        this.EvaService.evaServiceCard.disabled = false;
         const vaCtrl = this;
-        return vaCtrl.VirtualAssistantService.listExpertAssistants().then(function (data: any) {
+        return vaCtrl.EvaService.listExpertAssistants().then(function (data: any) {
           if (data && data.items && data.items.length >= 1) {
-            vaCtrl.VirtualAssistantService.evaServiceCard.disabled = true;
+            vaCtrl.EvaService.evaServiceCard.disabled = true;
           }
         }).finally (function() {
           vaCtrl.loading = false;
-          serviceCards.push(vaCtrl.VirtualAssistantService.evaServiceCard);
+          serviceCards.push(vaCtrl.EvaService.evaServiceCard);
 
           if (vaCtrl.Authinfo.isCare()) {
             vaCtrl.features = serviceCards;
@@ -52,9 +53,9 @@ class VirtualAssistantModalCtrl implements ng.IComponentController {
 
   public ok(featureId: string): void {
     // For now, it will do nothing but close the modal for expert virtual assistant
-    if (featureId === this.VirtualAssistantService.cvaServiceCard.id) {
+    if (featureId === this.CvaService.cvaServiceCard.id) {
       this.$state.go('care.assistant', {
-        type: this.VirtualAssistantService.cvaServiceCard.type,
+        type: this.CvaService.cvaServiceCard.type,
       });
     }
     this.dismiss();

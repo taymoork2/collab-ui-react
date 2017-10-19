@@ -4,7 +4,7 @@ export interface IConfigurationResource extends ng.resource.IResourceClass<any> 
   update(any): any;
 }
 
-export class VirtualAssistantService {
+export class CvaService {
 
   /* types of configurations supported by virtualAssistant
    as more are added they should be put here and used in the controller.
@@ -16,30 +16,16 @@ export class VirtualAssistantService {
 
   // Service Card definition. describes how to render the top-level virtual assistant 'card' for care.
   public cvaServiceCard = {
-    id: 'Va',
-    type: 'virtualAssistant',
-    code: this.getVaMessageKey('featureText.virtualAssistantCode'),
-    label: this.getVaMessageKey('featureText.customerVirtualAssistantType'),
-    description: this.getVaMessageKey('featureText.selectCVADesc'),
+    id: 'customerVirtualAssistant',
+    type: 'customerVirtualAssistant',
+    mediaType: 'virtualAssistant', // for filter
+    code: this.getCvaMessageKey('featureText.virtualAssistantCode'),
+    label: this.getCvaMessageKey('featureText.customerVirtualAssistantType'),
+    description: this.getCvaMessageKey('featureText.selectCVADesc'),
     icons: [],
     image: '/images/cvaIcon.png',
     color: 'feature-va-color',
     disabled: false,
-    goToService: this.goToService.bind(this),
-  };
-
-  // Service Card definition. describes how to render the top-level virtual assistant 'card' for care.
-  public evaServiceCard = {
-    id: 'eVa',
-    type: 'eVirtualAssistant',
-    code: this.getVaMessageKey('featureText.virtualAssistantCode'),
-    label: this.getVaMessageKey('featureText.expertVirtualAssistantType'),
-    description: this.getVaMessageKey('featureText.selectEVADesc'),
-    icons: [],
-    image: '/images/evaIcon.png',
-    color: 'feature-va-color',
-    disabled: false,
-    disabledTooltip:  this.getVaMessageKey('featureText.evaDisabledTooltip'),
     goToService: this.goToService.bind(this),
   };
 
@@ -57,8 +43,8 @@ export class VirtualAssistantService {
   };
   // Feature List Filter definition. describes how to filter this feature
   public featureFilter = {
-    name: this.getVaText('featureText.virtualAssistantMediaType'),
-    filterValue: this.cvaServiceCard.type,
+    name: this.getCvaText('featureText.virtualAssistantMediaType'),
+    filterValue: this.cvaServiceCard.mediaType,
   };
 
 
@@ -77,10 +63,11 @@ export class VirtualAssistantService {
   /**
    * Function to obtain translated string off virtual-assistant's area for strings
    * @param textIdExtension
-   * @returns {string|{[p: string]: string}|*}
+   * @returns {string}
    */
-  public getVaText(textIdExtension: string): string {
-    return this.$translate.instant('careChatTpl.virtualAssistant.' + textIdExtension);
+  public getCvaText(textIdExtension: string): string {
+    const featureName = this.$translate.instant('careChatTpl.virtualAssistant.cva.featureName');
+    return this.$translate.instant('careChatTpl.virtualAssistant.cva.' + textIdExtension, { featureName });
   }
 
   /**
@@ -88,8 +75,8 @@ export class VirtualAssistantService {
    * @param textIdExtension
    * @returns {string}
    */
-  public getVaMessageKey(textIdExtension: string): string {
-    return 'careChatTpl.virtualAssistant.' + textIdExtension;
+  public getCvaMessageKey(textIdExtension: string): string {
+    return 'careChatTpl.virtualAssistant.cva.' + textIdExtension;
   }
 
   /** Functions used by service object **/
@@ -100,16 +87,12 @@ export class VirtualAssistantService {
    * @returns {String} id of Service
    */
   private goToService($state: ng.ui.IStateService, params?: object): string {
-    // For now, it will do nothing but close the modal for expert virtual assistant
-    if (_.get(params, 'type') === this.evaServiceCard.type) {
-      return this.evaServiceCard.id;
-    }
     $state.go('care.assistant', (<any>Object).assign({
       type: params,
     }, params));
     return this.cvaServiceCard.id;
   }
-  // LogMetricsService.logMetrics('Created template for Care', LogMetricsService.getEventType('careTemplateFinish'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
+
   /**
    * obtain resource for Virtual Assistant configuration API Rest calls.
    * @param orgId
@@ -117,7 +100,7 @@ export class VirtualAssistantService {
    * @returns {*}
    */
   private getConfigResource(orgId: string, botServicesConfigId?: string): IConfigurationResource {
-    const  baseUrl = this.UrlConfig.getVirtualAssistantServiceUrl();
+    const  baseUrl = this.UrlConfig.getCvaServiceUrl();
     return <IConfigurationResource>this.$resource(baseUrl + 'config/organization/:orgId/botconfig/:botServicesConfigId', {
       orgId: orgId,
       botServicesConfigId: botServicesConfigId,
@@ -138,33 +121,6 @@ export class VirtualAssistantService {
       .get().$promise;
   }
 
-  /**
-   * list all Expert Virtual Assistants for orgId
-   * @param orgId
-   * returns promise resolving to JSON array of configurations or empty array on error
-   */
-  public listExpertAssistants(orgId: string): ng.IPromise<any> {
-    return this.getExpertAssistantResource(orgId || this.Authinfo.getOrgId())
-      .get().$promise;
-  }
-
-  /**
-   * obtain resource for Expert Virtual Assistant API Rest calls.
-   * @param orgId
-   * @param expertAssistantId
-   * @returns {*}
-   */
-  private getExpertAssistantResource(orgId: string, expertAssistantId?: string): IConfigurationResource {
-    const  baseUrl = this.UrlConfig.getExpertVirtualAssistantServiceUrl();
-    return <IConfigurationResource>this.$resource(baseUrl + 'config/organization/:orgId/expert-assistant/:expertAssistantId', {
-      orgId: orgId,
-      expertAssistantId: expertAssistantId,
-    }, {
-      update: {
-        method: 'PUT',
-      },
-    });
-  }
   /**
    * get a single identified configuration for orgId
    * @param botServicesConfigId
@@ -270,7 +226,7 @@ export class VirtualAssistantService {
    * @returns {*}
    */
   private getValidateResource(orgId?: string): IConfigurationResource {
-    const baseUrl = this.UrlConfig.getVirtualAssistantServiceUrl();
+    const baseUrl = this.UrlConfig.getCvaServiceUrl();
     return <IConfigurationResource>this.$resource(baseUrl + 'validateIcon', {
       orgId: orgId,
     }, {
@@ -296,12 +252,11 @@ export class VirtualAssistantService {
   }
 
   /**
-   * Return formatted list to render as cards
-   * on CareFeatures page
-   * @param {Object} list fetched list of configurations
-   * @param {Object} feature definition to use when rendering the list as cards.
-   * @returns {T[]|boolean[]|Array} card definitions to be rendered.
-   */
+   * Return formatted list to render as cards on CareFeatures page
+   * @param list
+   * @param feature
+   * @returns {any}
+     */
   private formatVirtualAssistantConfigs(list: any, feature: any): any[] {
     const service = this;
     const formattedList = _.map(list.items, function (item: any) {
@@ -309,7 +264,7 @@ export class VirtualAssistantService {
       if (!item.name) {
         item.name = item.templateId;
       }
-      item.mediaType = service.cvaServiceCard.type;
+      item.mediaType = service.cvaServiceCard.mediaType;
       // CA-115: indicates that item.status should not be visible until UX defines the value to be set when "In use"
       // item.status = 'Not in use';
       item.featureType = feature.name;
@@ -325,7 +280,7 @@ export class VirtualAssistantService {
 
   /**
    * Get the data url from file object
-   * @param {Object} fileObject
+   * @param fileObject
    * @returns {Promise<String>} promise resolving to the data url on success; otherwise promise rejected
    */
   public getFileDataUrl(fileObject: any): ng.IPromise<String> {
@@ -346,5 +301,5 @@ export class VirtualAssistantService {
 }
 export default angular
   .module('Sunlight')
-  .service('VirtualAssistantService', VirtualAssistantService)
+  .service('CvaService', CvaService)
   .name;

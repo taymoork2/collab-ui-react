@@ -4,7 +4,7 @@
     {{cvaSetupCtrl.getSummaryDescription()}}
   </div>
   <div class="h4 description" ng-if="!cvaSetupCtrl.saveTemplateErrorOccurred">
-    {{cvaSetupCtrl.getVaText('summary.descCont')}}
+    {{cvaSetupCtrl.getCvaText('summary.descCont')}}
   </div>
   <button loading="cvaSetupCtrl.creatingTemplate"
           cs-btn
@@ -17,6 +17,6 @@
   </div>
   <div class="h6 retry-message" ng-if="cvaSetupCtrl.saveTemplateErrorOccurred && !cvaSetupCtrl.creatingTemplate">
     <i class="icon icon-error"></i>
-    <span class="error-message">{{cvaSetupCtrl.getVaText('summary.errorCreateTemplate')}}</span>
+    <span class="error-message">{{cvaSetupCtrl.getCvaText('summary.errorCreateTemplate')}}</span>
   </div>
 </div>

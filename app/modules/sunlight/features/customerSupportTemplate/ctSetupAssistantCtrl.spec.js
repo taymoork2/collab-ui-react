@@ -2,7 +2,7 @@
 
 describe('Care Setup Assistant Ctrl', function () {
   var controller, $scope, $modal, $q, CTService, getLogoDeferred, getTogglePromise, getLogoUrlDeferred, SunlightConfigService, $state, $stateParams, LogMetricsService;
-  var Notification, $translate, _scomUrl, $httpBackend, VirtualAssistantService;
+  var Notification, $translate, _scomUrl, $httpBackend, CvaService;
 
   var escapeKey = 27;
   var templateName = 'Atlas UT Template';
@@ -186,7 +186,7 @@ describe('Care Setup Assistant Ctrl', function () {
 
   afterEach(function () {
     controller = $scope = $modal = $q = CTService = getLogoDeferred = getTogglePromise = getLogoUrlDeferred = SunlightConfigService = $state = $stateParams = LogMetricsService = undefined;
-    Notification = $translate = VirtualAssistantService = undefined;
+    Notification = $translate = CvaService = undefined;
   });
 
   afterAll(function () {
@@ -201,12 +201,12 @@ describe('Care Setup Assistant Ctrl', function () {
 
   var intializeCtrl = function (mediaType, template, isEditFeature, isCareProactiveChatTrialsFt, isCareAssistantFt) {
     return function (_$rootScope_, $controller, _$modal_, _$q_, _$translate_,
-      _$window_, _VirtualAssistantService_, _CTService_, _SunlightConfigService_, _$state_, _Notification_, _$stateParams_, _LogMetricsService_, UrlConfig, _$httpBackend_) {
+      _$window_, _CvaService_, _CTService_, _SunlightConfigService_, _$state_, _Notification_, _$stateParams_, _LogMetricsService_, UrlConfig, _$httpBackend_) {
       $scope = _$rootScope_.$new();
       $modal = _$modal_;
       $q = _$q_;
       $translate = _$translate_;
-      VirtualAssistantService = _VirtualAssistantService_;
+      CvaService = _CvaService_;
       CTService = _CTService_;
       SunlightConfigService = _SunlightConfigService_;
       $state = _$state_;
@@ -225,7 +225,7 @@ describe('Care Setup Assistant Ctrl', function () {
       spyOn($modal, 'open');
       spyOn(CTService, 'getLogo').and.returnValue(getLogoDeferred.promise);
       spyOn(CTService, 'getLogoUrl').and.returnValue(getLogoUrlDeferred.promise);
-      spyOn(VirtualAssistantService, 'listConfigs').and.callFake(function () {
+      spyOn(CvaService, 'listConfigs').and.callFake(function () {
         var defered = $q.defer();
         var result = {
           items: [

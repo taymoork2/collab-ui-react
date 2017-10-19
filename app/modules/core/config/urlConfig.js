@@ -311,13 +311,13 @@
       integration: 'https://%s/custportal/extensions/spark-report-partner/spark-report-partner.html',
       prod: 'https://%s/custportal/extensions/spark-report-partner/spark-report-partner.html',
     },
-    VirtualAssistantServiceUrl: {
+    CvaServiceUrl: {
       dev: 'https://virtual-assistant.appstaging.ciscoccservice.com/bot-services/v1/',
       cfe: 'https://virtual-assistant.appstaging.ciscoccservice.com/bot-services/v1/',
       integration: 'https://virtual-assistant.appstaging.ciscoccservice.com/bot-services/v1/',
       prod: 'https://virtual-assistant.produs1.ciscoccservice.com/bot-services/v1/',
     },
-    ExpertVirtualAssistantServiceUrl: {
+    EvaServiceUrl: {
       dev: 'https://expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
       cfe: 'https://expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
       integration: 'https://expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',

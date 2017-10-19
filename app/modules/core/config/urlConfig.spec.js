@@ -380,8 +380,8 @@ describe('UrlConfigSpec', function () {
     });
   });
 
-  it('should return correct Virtual Assistant Service url', function () {
-    whenCalling('getVirtualAssistantServiceUrl').expectUrlToBe({
+  it('should return correct Customer Virtual Assistant Service url', function () {
+    whenCalling('getCvaServiceUrl').expectUrlToBe({
       dev: 'https://virtual-assistant.appstaging.ciscoccservice.com/bot-services/v1/',
       cfe: 'https://virtual-assistant.appstaging.ciscoccservice.com/bot-services/v1/',
       integration: 'https://virtual-assistant.appstaging.ciscoccservice.com/bot-services/v1/',
@@ -390,7 +390,7 @@ describe('UrlConfigSpec', function () {
   });
 
   it('should return correct Expert Virtual Assistant Service url', function () {
-    whenCalling('getExpertVirtualAssistantServiceUrl').expectUrlToBe({
+    whenCalling('getEvaServiceUrl').expectUrlToBe({
       dev: 'https://expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
       cfe: 'https://expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
       integration: 'https://expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',

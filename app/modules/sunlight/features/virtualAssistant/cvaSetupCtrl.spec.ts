@@ -72,10 +72,10 @@ describe('Customer Virtual Assistant Setup Ctrl', function () {
       errorCode: '100106',
     }],
   };
-  let controller: CvaSetupCtrl, $controller, $q, $scope, $state, $stateParams, $modal, $timeout, CTService, Analytics, Notification, VirtualAssistantService;
+  let controller: CvaSetupCtrl, $controller, $q, $scope, $state, $stateParams, $modal, $timeout, CTService, Analytics, Notification, CvaService;
   let getLogoDeferred, getLogoUrlDeferred;
   function resetVars() {
-    $controller = $q = $scope = $state = $stateParams = $modal = CTService = Analytics = Notification = VirtualAssistantService = getLogoDeferred = getLogoUrlDeferred = undefined;
+    $controller = $q = $scope = $state = $stateParams = $modal = CTService = Analytics = Notification = CvaService = getLogoDeferred = getLogoUrlDeferred = undefined;
   }
   function invokeCtrl() {
     controller = <CvaSetupCtrl>$controller('CvaSetupCtrl', {
@@ -84,13 +84,13 @@ describe('Customer Virtual Assistant Setup Ctrl', function () {
     });
   }
   function initializeCtrl(invokeTheCtrl?, isEditFeature?) {
-    return function (_$controller_, _$q_, $rootScope, _$state_, _$stateParams_, _$modal_, _$timeout_, _CTService_, _Analytics_, _Notification_, _VirtualAssistantService_) {
+    return function (_$controller_, _$q_, $rootScope, _$state_, _$stateParams_, _$modal_, _$timeout_, _CTService_, _Analytics_, _Notification_, _CvaService_) {
       $scope = $rootScope.$new();
       $modal = _$modal_;
       $q = _$q_;
       $timeout = _$timeout_;
       CTService = _CTService_;
-      VirtualAssistantService = _VirtualAssistantService_;
+      CvaService = _CvaService_;
       $state = _$state_;
       $stateParams = _$stateParams_;
       Notification = _Notification_;
@@ -150,29 +150,29 @@ describe('Customer Virtual Assistant Setup Ctrl', function () {
     beforeEach(inject(initializeCtrl(true)));
     beforeEach(function () {
       deferred = $q.defer();
-      spyOn(controller, 'getVaText').and.returnValue(deferred.promise);
+      spyOn(controller, 'getCvaText').and.returnValue(deferred.promise);
     });
 
     it('getTitle', function () {
       controller.getTitle();
-      expect(controller.getVaText).toHaveBeenCalledWith('createTitle');
+      expect(controller.getCvaText).toHaveBeenCalledWith('createTitle');
     });
 
     it('getTitle with isEditFeature true', function () {
       controller.isEditFeature = true;
       controller.getTitle();
-      expect(controller.getVaText).toHaveBeenCalledWith('editTitle');
+      expect(controller.getCvaText).toHaveBeenCalledWith('editTitle');
     });
 
     it('getSummaryDescription', function () {
       controller.getSummaryDescription();
-      expect(controller.getVaText).toHaveBeenCalledWith('summary.desc');
+      expect(controller.getCvaText).toHaveBeenCalledWith('summary.desc');
     });
 
     it('getSummaryDescription with isEditFeature true', function () {
       controller.isEditFeature = true;
       controller.getSummaryDescription();
-      expect(controller.getVaText).toHaveBeenCalledWith('summary.editDesc');
+      expect(controller.getCvaText).toHaveBeenCalledWith('summary.editDesc');
     });
   });
 
@@ -325,7 +325,7 @@ describe('Customer Virtual Assistant Setup Ctrl', function () {
     beforeEach(inject(initializeCtrl(true)));
     beforeEach(function () {
       deferred = $q.defer();
-      spyOn(VirtualAssistantService, 'isAPIAITokenValid').and.returnValue(deferred.promise);
+      spyOn(CvaService, 'isAPIAITokenValid').and.returnValue(deferred.promise);
 
       controller.tokenForm = getForm('tokenInput');
     });
@@ -359,7 +359,7 @@ describe('Customer Virtual Assistant Setup Ctrl', function () {
     beforeEach(inject(initializeCtrl(true)));
     beforeEach(function() {
       deferredFileDataUrl = $q.defer();
-      spyOn(VirtualAssistantService, 'getFileDataUrl').and.returnValue(deferredFileDataUrl.promise);
+      spyOn(CvaService, 'getFileDataUrl').and.returnValue(deferredFileDataUrl.promise);
     });
 
     it('should validate avatar file type', function () {
@@ -394,8 +394,8 @@ describe('Customer Virtual Assistant Setup Ctrl', function () {
     beforeEach(inject(initializeCtrl(true)));
     beforeEach(function () {
       deferred = $q.defer();
-      spyOn(VirtualAssistantService, 'addConfig').and.returnValue(deferred.promise);
-      spyOn(VirtualAssistantService, 'updateConfig').and.returnValue(deferred.promise);
+      spyOn(CvaService, 'addConfig').and.returnValue(deferred.promise);
+      spyOn(CvaService, 'updateConfig').and.returnValue(deferred.promise);
     });
 
     it("When save template failed, the 'saveTemplateErrorOccurred' is set", function () {
