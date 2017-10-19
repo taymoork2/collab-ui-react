@@ -8554,6 +8554,16 @@
           "configureTMSXE": "To make conference rooms schedulable in Microsoft Outlook/Exchange, configure them in Cisco TMSXE as if you were using on-premises conferencing (Cisco TelePresence Management Suite Extension for Microsoft Exchange Administration Guide).",
           "reviewLicensing": "Review the licensing requirements",
           "reviewLicensingHelp": "Cisco TMS and Cisco TMSXE Licensing is the same as if using on-premises resources. You require enough licenses to cover the number of endpoints that will use OBTP."
+        },
+        "googlePrerequisites": {
+          "title": "Hybrid Calendar (Google) Prerequisites",
+          "intro": "Use this checklist alongside the Google Calendar deployment documentation. Make sure you complete all the prerequisites necessary for deploying Hybrid Calendar Service in your G Suite organization.",
+          "gSuiteOrganization": "A Google G Suite organization (formerly Google Apps for Work) with Google accounts for all users in the organization",
+          "webExSite": "Cisco WebEx site: Minimum versions of WebEx for @webex scheduling and WebEx Meeting Center Video for One Button to Push (OBTP) on room devices.",
+          "sparkOrganization": "A Cisco Spark organization with a minimum of Basic Meetings and Business Messaging (M1)",
+          "matchingEmails": "User email addresses that are exact matches in Cisco Spark, WebEx, and Google.",
+          "aclAdminAccount": "(Optional) If you use room resources, an authorized access control list (ACL) admin account.",
+          "removeHangouts": "(Optional) Remove Google Hangouts in Meeting Events"
         }
       },
       "hybridCall": {

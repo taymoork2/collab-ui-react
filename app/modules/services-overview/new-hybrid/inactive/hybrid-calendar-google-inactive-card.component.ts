@@ -1,10 +1,18 @@
 import { CloudConnectorService } from 'modules/hercules/services/calendar-cloud-connector.service';
+import { IToolkitModalService } from 'modules/core/modal/index';
 
 class HybridCalendarGoogleInactiveCardController implements ng.IComponentController {
   /* @ngInject */
   constructor(
+    private $modal: IToolkitModalService,
     private CloudConnectorService: CloudConnectorService,
   ) {}
+
+  public openPrerequisites(): void {
+    this.$modal.open({
+      template: '<google-calendar-prerequisites close="$close()" dismiss="$dismiss()"></google-calendar-prerequisites>',
+    });
+  }
 
   public openSetUp(): void {
     this.CloudConnectorService.openSetupModal();
@@ -23,6 +31,7 @@ export class HybridCalendarGoogleInactiveCardComponent implements ng.IComponentO
         <p translate="servicesOverview.cards.hybridCalendar.description"></p>
       </div>
       <div class="inactive-card_footer">
+        <p><button class="btn btn--link" ng-click="$ctrl.openPrerequisites()" translate="servicesOverview.genericButtons.prereq"></button></p>
         <p><button class="btn btn--primary" ng-click="$ctrl.openSetUp()" translate="servicesOverview.genericButtons.setup"></button></p>
       </div>
     </article>
