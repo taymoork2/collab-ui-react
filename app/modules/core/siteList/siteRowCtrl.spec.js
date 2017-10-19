@@ -100,9 +100,9 @@ describe('Controller: WebExSiteRowCtrl', function () {
     expect(controller.isShowAddSite).toBeFalsy();
   });
 
-  it('dont exclude linked sites'), function () {
+  it('dont exclude linked sites', function () {
     expect(WebExSiteRowService.initSiteRows).toHaveBeenCalledWith(false);
-  }
+  });
 
   it('exclude linked sites if Account Linking Phase 2', function () {
     controller = $controller('WebExSiteRowCtrl', {
