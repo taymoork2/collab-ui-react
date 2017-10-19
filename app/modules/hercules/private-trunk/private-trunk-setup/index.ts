@@ -2,7 +2,7 @@ import { PrivateTrunkSetupComponent } from './private-trunk-setup.component';
 import privateTrunkService from 'modules/hercules/private-trunk/private-trunk-services';
 import 'modules/hercules/private-trunk/_private-trunk.scss';
 import privateTrunkPrereq from 'modules/hercules/private-trunk/private-trunk-prereq';
-import privateTrunkCertificate from 'modules/hercules/private-trunk/private-trunk-certificate';
+import privateTrunkCertificate from 'modules/hercules/service-settings/cisco-collaboration-cloud-certificate-store';
 import privateTrunkDomain from 'modules/hercules/private-trunk/private-trunk-domain';
 import privateTrunkDestination from 'modules/hercules/private-trunk/private-trunk-destination';
 import privateTrunkSetupComplete from 'modules/hercules/private-trunk/private-trunk-setup-complete';

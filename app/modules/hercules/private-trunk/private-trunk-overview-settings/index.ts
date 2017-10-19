@@ -1,6 +1,6 @@
 import { PrivateTrunkOverviewSettingsComponent } from './private-trunk-overview-settings.component';
 import privateTrunkPrereq from 'modules/hercules/private-trunk/private-trunk-prereq';
-import privateTrunkCertificate from 'modules/hercules/private-trunk/private-trunk-certificate';
+import privateTrunkCertificate from 'modules/hercules/service-settings/cisco-collaboration-cloud-certificate-store';
 import privateTrunkService from 'modules/hercules/private-trunk/private-trunk-services';
 import privateTrunkDeactivate from 'modules/hercules/private-trunk/private-trunk-deactivate';
 import privateTrunkDomain from 'modules/hercules/private-trunk/private-trunk-domain';

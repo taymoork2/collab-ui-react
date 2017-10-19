@@ -2652,12 +2652,7 @@
       "call": {
         "domainVerification": "Domain Verification",
         "aware": "Users can share content from the Cisco Spark app during a call from their work phones and view their call history in the app.",
-        "connectSettingsHeading": "Connect Settings",
-        "connectSettings": "Required settings for the Connect feature.",
         "connect": "Users' incoming calls will ring their work phones and the Cisco Spark app. Users can call their colleagues from either their phones or the app, too.",
-        "certificatesHeading": "Certificates for Encrypted SIP Calls",
-        "certificates": "Use certificates provided from the Cisco Collaboration default trust list or upload your own.  If you use your own, make sure the hostnames are on a verified domain. For help, click <a href=\"http://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">here.</a>",
-        "certificatesNew": "Use certificates provided from the Cisco Spark Control default trust list or upload your own.  If you use your own, make sure the hostnames are on a verified domain. For help, click <a href=\"http://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">here.</a>",
         "certificatesCannotRead": "Could not read certificate list.",
         "certificatesCannotDelete": "Could not delete certificate. Try again later",
         "certificatesDeleted": "Certificate deleted successfully.",
@@ -2672,13 +2667,9 @@
         "certificatesExpires": "Expires",
         "certificatesUpload": "Upload",
         "certificatesModalHeading": "Remove Certificate",
-        "certificatesModalText": "Are you sure you want to remove the following certificate?",
         "sipDomainHeading": "SIP Destination",
         "sipDomainButtonTooltip": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS. If your SRV record is \"_sips._tcp.sipmtls.example.com\", then enter \"sipmtls.example.com\" here.",
-        "sipDomainPlaceholder": "Enter a SIP Destination",
-        "certificateDeleteTooltip": "Delete Certificate",
-        "noUploadedCertificate": "No certificates uploaded. Using the default trust list.",
-        "uploadedCertificates": "Uploaded Certificates:"
+        "sipDomainPlaceholder": "Enter a SIP Destination"
       },
       "verifySipDestination": {
         "title": "Verify SIP Destination",
@@ -8711,7 +8702,7 @@
         "title": "Enterprise Private Trunking ",
         "description": "Extends your existing Unified CM call control environment without deploying more hardware. Cisco Spark call brings cloud PSTN service to smaller branches that tie back in to your main branch.",
         "buttons": {
-          "view": "View prerequisites",
+          "view": "View Prerequisites",
           "resources": "SIP Destinations"
         },
         "error": {
@@ -8746,8 +8737,8 @@
         "certificateHelp": "The Cisco Spark Call certificate authority are in the Expresssway-E trust store. See ",
         "help": "<a href=\"{{href}}\" target=\"_blank\">help</a>.",
         "dNSzoneHelp": "The DNS zone has been created on the Expressway-E to accept the inbound connection from the cloud. See ",
-        "defaultTrustHelp": "Use Certificates provided from the Cisco Spark Control Hub default trust list or upload your own. If you use your own, make sure that the host names are on a verified domain. See ",
-        "defaultTrustHelpNew": "Use Certificates provided from the Cisco Spark Control Hub default trust list or upload your own. If you use your own, make sure that the host names are on a verified domain. See ",
+        "defaultTrustHelp": "Use Certificates provided from the Cisco Collaboration default trust list or upload your own. If you use your own, make sure that the host names are on a verified domain. See ",
+        "defaultTrustHelpNew": "Use Certificates provided from the Cisco Collaboration Cloud default trust list or upload your own. If you use your own, make sure that the host names are on a verified domain. See ",
         "fullService": "Full service: in and outbound calling",
         "allZonesHelp": "All zones and rules must be set up on Expressway-E. See ",
         "routingHelp": "The correct routing must be configured on CUCM. See ",
@@ -8769,18 +8760,18 @@
         "hybridDestination": "Use one or more Expressway-E configured for Hybrid Call Connect ",
         "addSipDestination": "Add SIP destination",
         "certificateTitle": "Certificates",
-        "certificateDescription": "Choose whether you want to use the certificates provided by the Cisco Spark Control Hub default trust list or upload your own.",
-        "certificateDescriptionNew": "Choose whether you want to use the certificates provided by the Cisco Spark Control Hub default trust list or upload your own.",
-        "certDesc": "Use certificates provided from the <a href=\"{{href}}\" target=\"_blank\">Cisco Spark Control Hub default trust list</a>",
-        "certDescNew": "Use certificates provided from the <a href=\"{{href}}\" target=\"_blank\">Cisco Spark Control Hub default trust list</a>",
+        "certificateDescription": "Choose whether you want to use the certificates provided by the Cisco Collaboration default trust list or upload your own.",
+        "certificateDescriptionNew": "Choose whether you want to use the certificates provided by the Cisco Collaboration Cloud default trust list or upload your own.",
+        "certDesc": "Use certificates provided from the <a href=\"{{href}}\" target=\"_blank\">Cisco Collaboration default trust list</a>",
+        "certDescNew": "Use certificates provided from the <a href=\"{{href}}\" target=\"_blank\">Cisco Collaboration Cloud default trust list</a>",
         "upload": "or upload your own. If you use your own, make sure the hostnames are on a verified domain",
         "click": ". For help, <a href=\"{{href}}\" target=\"_blank\">click here</a>.",
         "certificateDefault": "Default Cisco Certificates",
         "certificateDefaultInactive": "Default Cisco Certificates - inactive",
         "inactiveHelp": "The default trust list is ignored if you upload your own certificates. ",
         "restore": "Restore default certificates.",
-        "certificateDefaultList": "Cisco Spark Control Hub default trust list",
-        "certificateDefaultListNew": "Cisco Spark Control Hub default trust list",
+        "certificateDefaultList": "Cisco Collaboration default trust list",
+        "certificateDefaultListNew": "Cisco Collaboration Cloud default trust list",
         "certificateCustom": "Upload your own certificate",
         "view": "View",
         "dragAndDropKeyFileHere": "Drag and drop the certificate file here or ",
@@ -8804,8 +8795,8 @@
     },
     "showMore": "View all",
     "genericButtons": {
-      "setup": "Set up",
-      "prereq": "View prerequisites",
+      "setup": "Set Up",
+      "prereq": "View Prerequisites",
       "learnMore": "Learn More"
     },
     "cardStatus": {

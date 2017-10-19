@@ -3,7 +3,7 @@ import { IToolkitModalService } from 'modules/core/modal';
 import { CertService } from 'modules/hercules/services/cert-service';
 import { Notification } from 'modules/core/notifications';
 
-export class PrivateTrunkCertificateService {
+export class CiscoCollaborationCloudCertificateService {
   private formattedCertList: IformattedCertificate[];
   private isImporting: boolean = false;
   private uploadedCertIds: string[] = [];
@@ -50,7 +50,7 @@ export class PrivateTrunkCertificateService {
 
   public deleteCert(certId: string): ng.IPromise<any> {
     return this.$modal.open({
-      template: require('modules/hercules/private-trunk/private-trunk-certificate/private-trunk-certificate-delete-confirm.html'),
+      template: require('./certificate-delete-confirm.html'),
       type: 'dialog',
     })
       .result.then(() => {
@@ -64,7 +64,7 @@ export class PrivateTrunkCertificateService {
 
   public deleteCerts(): ng.IPromise<any> {
     return this.$modal.open({
-      template: require('modules/hercules/private-trunk/private-trunk-certificate/private-trunk-all-certificates-delete-confirm.html'),
+      template: require('./all-certificates-delete-confirm.html'),
       type: 'dialog',
     })
       .result.then(() => {

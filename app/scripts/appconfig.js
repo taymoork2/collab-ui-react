@@ -4805,14 +4805,7 @@
             url: '/services/call/settings',
             views: {
               callServiceView: {
-                controllerAs: 'callServiceSettings',
-                controller: 'CallServiceSettingsController',
-                template: require('modules/hercules/service-settings/call-service-settings.html'),
-              },
-            },
-            resolve: {
-              hasAtlasHybridCallDiagnosticTool: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCallDiagnosticTool);
+                template: '<call-service-settings-page></call-service-settings-page>',
               },
             },
           })

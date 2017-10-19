@@ -1,15 +1,15 @@
-import privateTrunkCertificateModule from './index';
+import ciscoCollaborationCloudCertificateModule from './index';
 
-describe('Component: privateTrunkCertificate component', () => {
+describe('Component: ciscoCollaborationCloudCertificateModule', () => {
   const CHK_BOX = 'input#certificateChk';
   const ICON_UPLOAD = '.icon.icon-upload';
 
   beforeEach(function() {
-    this.initModules(privateTrunkCertificateModule);
+    this.initModules(ciscoCollaborationCloudCertificateModule);
     this.injectDependencies(
       '$scope',
       '$translate',
-      'PrivateTrunkCertificateService',
+      'CiscoCollaborationCloudCertificateService',
       '$httpBackend',
       'FeatureToggleService',
       '$q',
@@ -17,12 +17,12 @@ describe('Component: privateTrunkCertificate component', () => {
 
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
     this.$scope.onChangeOptionFn = jasmine.createSpy('onChangeOptionFn');
-    spyOn(this.PrivateTrunkCertificateService, 'deleteCert');
-    spyOn(this.PrivateTrunkCertificateService, 'deleteCerts');
+    spyOn(this.CiscoCollaborationCloudCertificateService, 'deleteCert');
+    spyOn(this.CiscoCollaborationCloudCertificateService, 'deleteCerts');
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
 
     this.initComponent = (): void => {
-      this.compileComponent('privateTrunkCertificate', {
+      this.compileComponent('ciscoCollaborationCloudCertificateStore', {
         isFirstTimeSetup: true,
         formattedCertList: 'formattedCertList',
         isImporting: 'isImporting',

@@ -1,7 +1,7 @@
 import { IformattedCertificate } from 'modules/hercules/services/certificate-formatter-service';
-import { PrivateTrunkCertificateService } from './';
+import { CiscoCollaborationCloudCertificateService } from './';
 
-export class PrivateTrunkCertificateCtrl implements ng.IComponentController {
+export class CiscoCollaborationCloudCertificateStoreCtrl implements ng.IComponentController {
   public certificateCustom: boolean = false;
   public certificate: any;
   public file: File;
@@ -19,7 +19,7 @@ export class PrivateTrunkCertificateCtrl implements ng.IComponentController {
   constructor(
    private $scope: ng.IScope,
    private $translate: ng.translate.ITranslateService,
-   private PrivateTrunkCertificateService: PrivateTrunkCertificateService,
+   private CiscoCollaborationCloudCertificateService: CiscoCollaborationCloudCertificateService,
    private FeatureToggleService,
    ) {  }
 
@@ -75,7 +75,7 @@ export class PrivateTrunkCertificateCtrl implements ng.IComponentController {
 
   public deleteCert(certId: string) {
 
-    this.PrivateTrunkCertificateService.deleteCert(certId)
+    this.CiscoCollaborationCloudCertificateService.deleteCert(certId)
     .then( cert => {
       if (cert) {
         this.formattedCertList = cert.formattedCertList || [];
@@ -87,7 +87,7 @@ export class PrivateTrunkCertificateCtrl implements ng.IComponentController {
   }
 
   public deleteAllCerts() {
-    this.PrivateTrunkCertificateService.deleteCerts()
+    this.CiscoCollaborationCloudCertificateService.deleteCerts()
     .then( () => {
       this.formattedCertList = [];
       this.certificateCustom = false;
@@ -107,9 +107,9 @@ export class PrivateTrunkCertificateCtrl implements ng.IComponentController {
   }
 }
 
-export class PrivateTrunkCertificateComponent implements ng.IComponentOptions {
-  public controller = PrivateTrunkCertificateCtrl;
-  public template = require('modules/hercules/private-trunk/private-trunk-certificate/private-trunk-certificate.html');
+export class CiscoCollaborationCloudCertificateStoreComponent implements ng.IComponentOptions {
+  public controller = CiscoCollaborationCloudCertificateStoreCtrl;
+  public template = require('./cisco-collaboration-cloud-certificate.html');
   public bindings = {
     isFirstTimeSetup: '<',
     formattedCertList: '<',
