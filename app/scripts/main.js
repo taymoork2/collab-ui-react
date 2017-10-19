@@ -219,6 +219,7 @@
     require('modules/services-overview/new-hybrid/prerequisites-modals/basic-expressway-prerequisites').default,
     require('modules/services-overview/new-hybrid/prerequisites-modals/call-service-aware-prerequisites').default,
     require('modules/services-overview/new-hybrid/prerequisites-modals/call-service-connect-prerequisites').default,
+    require('modules/services-overview/new-hybrid/prerequisites-modals/google-calendar-prerequisites').default,
     require('modules/services-overview/new-hybrid/prerequisites-modals/hybrid-calendar-prerequisites/hybrid-calendar-prerequisites.controller').default,
     require('modules/services-overview/new-hybrid/prerequisites-modals/hybrid-call-prerequisites-modal/hybrid-call-prerequisites.controller').default,
     require('modules/services-overview/new-hybrid/prerequisites-modals/hybrid-media-prerequisites/hybrid-media-prerequisites.controller').default,
