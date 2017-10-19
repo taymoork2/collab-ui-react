@@ -10,7 +10,6 @@ export interface ISuggestion {
 }
 
 export interface ISuggestionDropdown {
-  suggestions: ISuggestion[];
   uiSuggestions: ISuggestion[];
 
   showEmpty(): void;
@@ -34,12 +33,13 @@ export interface ISuggestionDropdown {
   updateSuggestionsBasedOnSearchResult(docCountFunc: (searchResult: SearchResult | undefined, aggregation: string, bucketName: string) => number,
                                        searchResult: SearchResult | undefined,
                                        searchInput: string): void;
-  onSearchChanged(searchElements: SearchElement[]);
+  onSearchChanged(searchElements: SearchElement[], searchInput: string): void;
 }
 
 export class SuggestionDropdown implements ISuggestionDropdown {
-  public suggestions: ISuggestion[] = SuggestionsHelper.emptySuggestions;
+  private suggestions: ISuggestion[] = [];
   public uiSuggestions: ISuggestion[] = this.suggestions;
+  private inputBasedSuggestions: ISuggestion[] = [];
 
   public activeSuggestion?: string;
   private activeSuggestionIndex: number | undefined;
@@ -50,35 +50,29 @@ export class SuggestionDropdown implements ISuggestionDropdown {
   }
 
   public showEmpty(): void {
-    this.suggestions = SuggestionsHelper.emptySuggestions;
+    this.suggestions = [];
     this.uiSuggestions = this.suggestions;
     this.resetActive();
   }
 
-  public updateBasedOnInput(searchInput: string): void {
-    // this.suggestions = [
-    //   {
-    //     searchString: '"' + searchInput + '"',
-    //     field: 'All devices',
-    //     text: 'containing "' + searchInput + '"',
-    //   },
-    //   {
-    //     searchString: 'connectionStatus:"' + searchInput + '"',
-    //     field: 'Status',
-    //     text: 'containing "' + searchInput + '"',
-    //   },
-    //   {
-    //     searchString: 'product:"' + searchInput + '"',
-    //     field: 'Type',
-    //     text: 'containing "' + searchInput + '"',
-    //   },
-    // ];
+  public updateBasedOnInput(searchInput: string, totalCount: number| undefined = undefined, updateUiSuggestions = true): void {
+    this.inputBasedSuggestions = [
+      {
+        count: totalCount,
+        searchString: `"${searchInput}"`,
+        field: 'All devices',
+        text: `containing "${searchInput}"`,
+      },
+    ];
     this.searchInput = searchInput;
-    this.updateUiSuggestions();
+    if (updateUiSuggestions) {
+      this.updateUiSuggestions();
+    }
   }
 
-  public onSearchChanged(searchElements: SearchElement[]) {
+  public onSearchChanged(searchElements: SearchElement[], searchInput: string) {
     this.currentBullets = searchElements;
+    this.searchInput = searchInput;
     this.updateUiSuggestions();
   }
 
@@ -140,13 +134,14 @@ export class SuggestionDropdown implements ISuggestionDropdown {
   public updateSuggestionsBasedOnSearchResult(getDocCount: (searchResult: SearchResult | undefined, aggregation: string, bucketName: string) => number,
                                               searchResult: SearchResult,
                                               searchInput: string): void {
+    this.updateBasedOnInput(searchInput, searchResult && searchResult.hits.total || 0, false);
     this.suggestions = [
-      {
-        count: searchResult && searchResult.hits.total || 0,
-        searchString: '"' + searchInput + '"',
-        field: 'All devices',
-        text: 'containing "' + searchInput + '"',
-      },
+      // {
+      //   count: searchResult && searchResult.hits.total || 0,
+      //   searchString: '"' + searchInput + '"',
+      //   field: 'All devices',
+      //   text: 'containing "' + searchInput + '"',
+      // },
       {
         count: getDocCount(searchResult, 'connectionStatus', 'connected_with_issues'),
         searchString: 'connectionStatus=CONNECTED_WITH_ISSUES',
@@ -206,7 +201,8 @@ export class SuggestionDropdown implements ISuggestionDropdown {
   private updateUiSuggestions() {
     this.uiSuggestions =
       SuggestionDropdown.removeExistingQueries(
-        SuggestionDropdown.filterSuggestion(this.suggestions, this.searchInput), this.currentBullets);
+        SuggestionDropdown.filterSuggestion(
+          _.concat(this.inputBasedSuggestions, this.suggestions), this.searchInput), this.currentBullets);
   }
 
   public static removeExistingQueries = (suggestions: ISuggestion[], currentSearchBullets: SearchElement[]): ISuggestion[] => {
@@ -228,20 +224,4 @@ export class SuggestionDropdown implements ISuggestionDropdown {
       return su.text.toLowerCase().indexOf(searchInput) > -1 || su.field.toLowerCase().indexOf(searchInput) > -1;
     });
   }
-}
-
-
-export class SuggestionsHelper {
-  public static emptySuggestions: ISuggestion[] = [
-    {
-      searchString: 'connectionStatus:"connected_with_issues"',
-      field: 'Status',
-      text: 'Online, With Issues',
-    },
-    {
-      searchString: 'product:"Cisco Spark Board 55"',
-      field: 'Type',
-      text: 'Cisco Spark Board 55',
-    },
-  ];
 }

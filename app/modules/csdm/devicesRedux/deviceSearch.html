@@ -24,23 +24,22 @@
         >
         <i class="icon icon-exit-outline clear" ng-click="dctrl.clearSearchInput();"></i>
         <div class="suggestions-dropdown" ng-mouseleave="dctrl.suggestions.resetActive()"
-             ng-show="true || dctrl.showSuggestions">
+             ng-show="dctrl.showSuggestions || dctrl.startSelecting" ng-mousedown="dctrl.startSelecting = true"
+             ng-mouseup="dctrl.selectSuggestion(dctrl.suggestions.getActiveSuggestion());dctrl.startSelecting = false">
           <ul>
             <li
               ng-repeat="suggestion in dctrl.suggestions.uiSuggestions track by $index"
               ng-class="{active: dctrl.suggestions.isSuggestionActive($index)}"
-              ng-mouseenter="dctrl.suggestions.setActiveSuggestion($index)"
-              ng-click="dctrl.selectSuggestion(suggestion)">
+              ng-mouseenter="dctrl.suggestions.setActiveSuggestion($index)">
               <div class="field"><i ng-bind-html="suggestion.field | highlight:dctrl.searchInput"></i></div>
               <div class="text" ng-bind-html="suggestion.text | highlight:dctrl.searchInput"></div>
-              <div class="count">({{suggestion.count}})</div>
+              <div class="count" ng-if="suggestion.count > 0 || suggestion.count === 0">({{suggestion.count}})</div>
             </li>
           </ul>
         </div>
       </div>
     </div>
   </form>
-  <span>{{ dctrl.activeSuggestion }}</span>
   <span class="search-filters-only">
     <cs-searchfilter filters="dctrl.searchFilters"
                      search-item-fn="dctrl.setCurrentSearch(searchStr)"

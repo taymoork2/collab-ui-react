@@ -427,6 +427,7 @@
           }
         }
         .suggestions-dropdown {
+          user-select: none;
           position: absolute;
           top: 35px;
           left: -1px;
@@ -435,6 +436,9 @@
           z-index: 1;
           border: 1px solid $gray-light-2;
           border-radius: 2px;
+          max-height: 300px;
+          overflow-x: hidden;
+          overflow-y: auto;
 
           .active {
             background-color: $gray-light-2;
@@ -446,12 +450,12 @@
             display: flex;
             justify-content: space-between;
             list-style: none;
-            i {
-              margin-left: 4px;
-              margin-right:4px;
-            }
             .field {
               min-width: 90px;
+              i {
+                margin-left: 4px;
+                margin-right:4px;
+              }
             }
             .text {
               flex-grow: 2;

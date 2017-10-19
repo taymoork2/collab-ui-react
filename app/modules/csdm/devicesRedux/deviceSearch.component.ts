@@ -24,13 +24,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
 
   set inputActive(value: boolean) {
     this._inputActive = value;
-    if (value) {
-      this.showHideSuggestionDropdown(true);
-    } else {
-      this.$timeout(() => {
-        this.showHideSuggestionDropdown(false);
-      }, 300);
-    }
+    this.showHideSuggestionDropdown(value);
   }
 
   public suggestions: ISuggestionDropdown;
@@ -159,7 +153,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
     this.searchDelayTimer = this.$timeout(() => {
       this.performSearch(searchClone); //TODO avoid at now
       this.lastSearchObject = searchClone;
-      this.suggestions.onSearchChanged(this.getBullets());
+      this.suggestions.onSearchChanged(this.getBullets(), this.searchInput);
 
       if (this.searchObject.currentFilterValue) {
         this.performFilterUpdateSearch();
