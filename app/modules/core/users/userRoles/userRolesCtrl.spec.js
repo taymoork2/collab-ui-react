@@ -97,7 +97,7 @@ describe('Controller: UserRolesCtrl', function () {
         displayName: {
           $setValidity: _.noop,
         },
-        partialAdmin: {
+        adminRoles: {
           $setValidity: _.noop,
         },
       },
@@ -105,7 +105,7 @@ describe('Controller: UserRolesCtrl', function () {
     spyOn($scope.rolesEdit.form, '$setPristine').and.callFake(_.noop);
     spyOn($scope.rolesEdit.form, '$setUntouched').and.callFake(_.noop);
     spyOn($scope.rolesEdit.form.displayName, '$setValidity').and.callFake(_.noop);
-    spyOn($scope.rolesEdit.form.partialAdmin, '$setValidity').and.callFake(_.noop);
+    spyOn($scope.rolesEdit.form.adminRoles, '$setValidity').and.callFake(_.noop);
   }
 
   describe('UserRolesCtrl Initialization: ', function () {
@@ -212,14 +212,14 @@ describe('Controller: UserRolesCtrl', function () {
         $scope.formUserData.displayName = '';
         $scope.checkAdminDisplayName();
         expect($scope.rolesEdit.form.displayName.$setValidity).toHaveBeenCalledWith('notblank', false);
-        expect($scope.rolesEdit.form.partialAdmin.$setValidity).toHaveBeenCalledWith('noSelection', false);
+        expect($scope.rolesEdit.form.adminRoles.$setValidity).toHaveBeenCalledWith('noSelection', false);
       });
 
       it('should invalidate display name if not first name, last name and display name are all blank', function () {
         $scope.formUserData.displayName = 'DN';
         $scope.checkAdminDisplayName();
         expect($scope.rolesEdit.form.displayName.$setValidity).toHaveBeenCalledWith('notblank', true);
-        expect($scope.rolesEdit.form.partialAdmin.$setValidity).toHaveBeenCalledWith('noSelection', false);
+        expect($scope.rolesEdit.form.adminRoles.$setValidity).toHaveBeenCalledWith('noSelection', false);
       });
     });
 
@@ -235,7 +235,7 @@ describe('Controller: UserRolesCtrl', function () {
         $scope.formUserData.displayName = '';
         $scope.checkAdminDisplayName();
         expect($scope.rolesEdit.form.displayName.$setValidity).toHaveBeenCalledWith('notblank', true);
-        expect($scope.rolesEdit.form.partialAdmin.$setValidity).toHaveBeenCalledWith('noSelection', true);
+        expect($scope.rolesEdit.form.adminRoles.$setValidity).toHaveBeenCalledWith('noSelection', true);
       });
     });
 
