@@ -3429,6 +3429,8 @@
     "heading": "Search Compliance Data",
     "subheading": "Choose to search for specific users or spaces. Add up to 5 users or spaces by separating with commas.",
     "searchTip": "Search data by space ID",
+    "searchingHeader": "Searching Compliance Data",
+    "searchingSubheader": "Search may take up to a few minutes",
     "unableToDownloadFile": "Unable to download file",
     "timeout": "Timeout",
     "dateError": {
@@ -3493,7 +3495,7 @@
       "files": "Files",
       "estReport": "Est. Report Size",
       "generateReport": "Generate Report",
-      "generateText": "Enter report information to generate a report. The time to generate the report depends on the estimated report size.",
+      "generateText": "Enter report information to generate a report. Reports may take up to a few hours or more to generate.",
       "description": "Description",
       "exportFormat": "Export Format",
       "totalReportSize": "Total Report Size",
