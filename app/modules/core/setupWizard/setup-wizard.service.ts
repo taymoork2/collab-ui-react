@@ -144,12 +144,17 @@ export class SetupWizardService {
     });
   }
 
-  public getConferenceLicensesBySubscriptionId(subscriptionId) {
+  public getConferenceLicensesBySubscriptionId(subscriptionId): IConferenceLicense[] {
+    const webexLicenses = this.getWebexLicenses();
+    const actingSubscriptionLicenses = <IConferenceLicense[]>_.filter(webexLicenses, { billingServiceId: subscriptionId });
+    return actingSubscriptionLicenses;
+  }
+
+  public getWebexLicenses(): IPendingLicense[] {
+    const webexOffers = [this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC];
     const conferenceLicenses = _.map(this.Authinfo.getConferenceServices(), 'license');
-    const actingSubscriptionLicenses = _.filter(conferenceLicenses, { billingServiceId: subscriptionId });
-    const existingConferenceLicensesInActingSubscripton = _.filter(actingSubscriptionLicenses,
-      (license: IConferenceLicense) => _.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC], license.offerName));
-    return existingConferenceLicensesInActingSubscripton;
+    const webexLicenses = <IPendingLicense[]>_.filter(conferenceLicenses, (license: IPendingLicense) => _.includes(webexOffers, license.offerName));
+    return webexLicenses;
   }
 
   public getWillNotProvision(): boolean {
@@ -368,7 +373,7 @@ export class SetupWizardService {
     };
 
     const orderUuid = this.getActingSubscriptionServiceOrderUUID();
-    enum validationResult  {
+    enum validationResult {
       SUCCESS = 'VALID',
       FAILURE = 'INVALID',
     }
@@ -384,13 +389,13 @@ export class SetupWizardService {
         payload: payload,
       };
     })
-    .catch((response) => {
-      return {
-        response: response,
-        isValid: false,
-        payload: payload,
-      };
-    });
+      .catch((response) => {
+        return {
+          response: response,
+          isValid: false,
+          payload: payload,
+        };
+      });
   }
 
 }

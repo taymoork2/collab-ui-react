@@ -1465,6 +1465,7 @@
     "devices": "Devices",
     "disable": "Disable",
     "disabled": "Disabled",
+    "dismiss": "Dismiss",
     "done": "Done",
     "doNotProvision": "Do not Provision",
     "download": "Download",
@@ -6661,6 +6662,7 @@
     "nonCIWebExSiteAccess": "<a href='https://{{siteUrl}}' target='_blank' ng-click='{{click}}'>Sign in to manage</a>",
     "conferencing": "WebEx Sites",
     "siteName": "Site Name",
+    "subscriptionId": "Subscription Id",
     "licenseCount": "License Count",
     "licenseTypes": "License Type",
     "siteSettings": "Configure",
@@ -6707,12 +6709,20 @@
     "multipleLicenses": "Multiple...",
     "checkingServices": "Checking services...",
     "linkedSiteAdminTool": "Launch Site Admin Tool",
-    "LinkedSiteProgress": "Account linking progress"
+    "LinkedSiteProgress": "Account linking progress",
+    "deleteSiteTooltip": "Delete Site"
   },
   "webexSiteManagement": {
     "redistributeLicenses": "Redistribute Licenses",
     "redistributeLicensesDesc": "Please indicate how many licenses to put on each site",
-    "redistributeLicensesDesc2": "You must assign all the licenses and each site must have at least one license."
+    "redistributeLicensesDesc2": "You must assign all the licenses and each site must have at least one license.",
+    "redistributeLicensesDelete": "<strong>To finish deleting site:</strong> The WebEx site <strong>{{siteUrl}}</strong> is ready to be deleted. First you must reassign the licenses from it to the remaining sites in this subscription.",
+    "deleteSiteNote": "Note: Site deletion may take time to be reflected in all systems.",
+    "deleteSiteModalTitle": "Delete WebEx Site?",
+    "deleteSiteModalBody": "Are you sure you want to delete <strong>{{siteUrl}}</strong>?",
+    "deleteSiteModalBody2": "All data related to the site will be lost and this action can not be undone.",
+    "deleteSiteRejectModalTitle": "Cannot Delete",
+    "deleteSiteRejectModalBody": "You cannot delete the last site in a subscription"
   },
   "cloudExtensions": {
     "cloudExtensions": "Hybrid Services",
