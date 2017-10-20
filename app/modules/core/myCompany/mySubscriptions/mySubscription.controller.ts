@@ -167,21 +167,32 @@ export class MySubscriptionCtrl implements ng.IController {
         offer.volume += item.volume;
         exists = true;
       }
-      this.setOverage(offer);
     });
 
     if (!exists) {
       offers.push(item);
-      this.setOverage(item);
     }
   }
 
-  private setOverage(offer: IOfferData) {
-    if (!this.overage) {
-      if (offer.usage) {
-        this.overage = offer.usage > offer.volume;
-      }
+  private setOverage (offer?: IOfferData) {
+    const isUsageGreaterThanVolume = (offer) => offer.usage ? offer.usage > offer.volume : false;
+    if (offer) {
+      return this.overage = isUsageGreaterThanVolume(offer);
     }
+    let over = this.overage;
+    _.forEach(this.licenseCategory, cat => {
+      over = over ||  _.some(cat.offers, offer => {
+        return isUsageGreaterThanVolume(offer);
+      });
+      if (!over && !_.isEmpty(cat.offerWrapper)) {
+        over = _.some(cat.offerWrapper, siteIndex => {
+          return _.some(siteIndex.offers, offer => {
+            return isUsageGreaterThanVolume(offer);
+          });
+        });
+      }
+    });
+    this.overage = over;
   }
 
   private sortSubscription(index: number, siteIndex: number): void {
@@ -376,6 +387,7 @@ export class MySubscriptionCtrl implements ng.IController {
         }
       });
 
+      this.setOverage();
       this.setOverageWarning();
     });
   }
@@ -493,7 +505,7 @@ export class MySubscriptionCtrl implements ng.IController {
   }
 
   private setOverageWarning(): void {
-    if (this.overage && this.isProPackEnabled) {
+    if (this.overage) {
       this.$rootScope.$emit(this.HEADER_BROADCAST, {
         iconCss: 'icon-warning',
         translation: 'subscriptions.overageWarning',
