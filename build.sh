@@ -105,7 +105,9 @@ function phase_2 {
     ) &
     webpack_pid=$!
 
-    yarn lint
+    # run linting tasks in parallel
+    parallel yarn ::: eslint tslint stylelint
+
     yarn json-verify
     yarn languages-verify
 
