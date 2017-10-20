@@ -1,0 +1,124 @@
+{
+  "schemas": [
+    "urn:scim:schemas:core:1.0",
+    "urn:scim:schemas:extension:cisco:commonidentity:1.0"
+  ],
+  "userName": "yevfimio@blessedorigin.com",
+  "emails": [
+    {
+      "primary": true,
+      "type": "work",
+      "value": "yevfimio@blessedorigin.com"
+    }
+  ],
+  "name": {
+    "givenName": "Yuri",
+    "familyName": "Evfimiou"
+  },
+  "entitlements": [
+    "squared-fusion-mgmt",
+    "spark-admin",
+    "spark",
+    "squared-room-moderation",
+    "cloudmeetings",
+    "squared-call-initiation",
+    "webex-squared",
+    "compliance"
+  ],
+  "userStatus": "active",
+  "id": "fc8c1aa1-4939-4661-8003-aaa431fec4fa",
+  "meta": {
+    "created": "2016-10-24T20:02:35.613Z",
+    "lastModified": "2017-10-13T02:14:53.429Z",
+    "lastLoginTime": "2017-10-20T06:57:16.175Z",
+    "version": "W/\"83173672839\"",
+    "lastServiceAccessTime": [
+      {
+        "type": "spark-access",
+        "value": "2017-10-20T03:16:21.704Z"
+      },
+      {
+        "type": "webex-messenger",
+        "value": "2017-03-07T17:15:40.608Z"
+      },
+      {
+        "type": "ciscouc",
+        "value": "2017-03-07T17:15:42.490Z"
+      }
+    ],
+    "location": "https://identity.webex.com/identity/scim/acb14e01-d869-47e4-a595-e67453279b08/v1/Users/fc8c1aa1-4939-4661-8003-aaa431fec4fa",
+    "organizationID": "acb14e01-d869-47e4-a595-e67453279b08"
+  },
+  "ims": [
+    {
+      "type": "webex-squared-jid",
+      "value": "yevfimio@blessedorigin.com"
+    },
+    {
+      "type": "webex-messenger-jid",
+      "value": "yevfimio@blessedorigin.com",
+      "primary": true
+    }
+  ],
+  "displayName": "Yuri Evfimiou",
+  "roles": [
+    "id_full_admin"
+  ],
+  "active": true,
+  "accountStatus": [
+    "active"
+  ],
+  "licenseID": [
+    "EE_662acdd6-215b-42a7-92c6-cc1d60991bc6_blessedorigin.webex.com",
+    "CMR_69d3ec25-32c6-4518-abb5-b101946dc0de_blessedorigin.webex.com",
+    "MS_98276a93-84dd-4fde-8470-45df6276e459"
+  ],
+  "userSettings": [
+    "{\"spark.signUpDate\":\"1485544140901\"}"
+  ],
+  "userPreferences": [
+    "SparkTOSAccept"
+  ],
+  "sipAddresses": [
+    {
+      "type": "cloud-calling",
+      "value": "yevfimio@bo.call.ciscospark.com",
+      "primary": true
+    },
+    {
+      "type": "personal-room",
+      "value": "152171040@betatrain.webex.com"
+    },
+    {
+      "type": "personal-room",
+      "value": "yevfimio@betatrain.webex.com"
+    },
+    {
+      "type": "personal-room",
+      "value": "yevfimio@blessedorigin.webex.com"
+    },
+    {
+      "type": "personal-room",
+      "value": "928813771@blessedorigin.webex.com"
+    }
+  ],
+  "trainSiteNames": [
+    "blessedorigin.webex.com"
+  ],
+  "adminTrainSiteNames": [
+    "betatrain.webex.com",
+    "blessedorigin.webex.com"
+  ],
+  "linkedTrainSiteNames": [
+    "betatrain.webex.com"
+  ],
+  "extLinkedAccts": [
+    {
+      "providerID": "betatrain.webex.com",
+      "accountGUID": "500892267",
+      "status": "active"
+    }
+  ],
+  "secretKey": "dfad502b50413633af51a7429734af364de49ca8698bb61ac303fb1815e7794094803937c94c3345fc306ca7f8522170151116ff9d4d4238f3bb5b03aef76e0e",
+  "avatarSyncEnabled": false
+}

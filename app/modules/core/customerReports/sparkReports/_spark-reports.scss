@@ -2,12 +2,19 @@
 @import 'modules/sunlight/reports/_care-task';
 @import '~collab-ui/scss/tools/mixins/spacing-responsive';
 @import '~collab-ui/scss/tools/placeholders/page-layout';
+@import '../../../../styles/variables';
 
 .customer-reports {
   @extend %page-content-padding;
 
   .sparkMetricsContent {
     height: calc(100vh - (#{$page-header-height})) !important;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .sparkMetricsContentWithReadOnly {
+    height: calc(100vh - (#{$page-header-height} + #{$read-only-banner-height})) !important;
     overflow-x: hidden;
     overflow-y: auto;
   }

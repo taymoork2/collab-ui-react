@@ -1,6 +1,8 @@
 @import '~collab-ui/scss/settings/core';
 @import '~collab-ui/scss/settings/page';
 @import '~collab-ui/scss/settings/fonts';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '../../../styles/variables';
 
 .customer-reports {
   .metricsContent {
@@ -15,6 +17,10 @@
 
   .webexMetricsContent {
     height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height})) !important;
+  }
+
+  .webexMetricsContentWithReadOnly {
+    height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height} + #{$read-only-banner-height})) !important;
   }
 
   .metrics-loading-icon {

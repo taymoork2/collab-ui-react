@@ -709,6 +709,7 @@
       "title": "WebEx",
       "metrics": "Metrics",
       "MEI": "MEI",
+      "System": "System",
       "diagnostics": "Diagnostics",
       "classic": "Classic",
       "webexClassic": "WebEx Classic",
@@ -718,7 +719,8 @@
       "webexReportInQlikApp": "Qlik app",
       "sparkReportInMashup": "Cisco Spark Reports",
       "webexReportWithTicket": "CHP Reports Login",
-      "sparkReportWithTicket": "Cisco Spark Reports Login"
+      "sparkReportWithTicket": "Cisco Spark Reports Login",
+      "errorRequest": "Authorization has been denied for this request"
     }
   },
   "webexReports": {
