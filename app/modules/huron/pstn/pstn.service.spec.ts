@@ -245,7 +245,7 @@ describe('Service: PstnService', function () {
   });
 
   it('should retrieve a resellers\'s carriers', function () {
-    this.$httpBackend.expectGET(this.HuronConfig.getTerminusUrl() + '/resellers/' + suite.partnerId + '/carriers').respond(resellerCarrierList);
+    this.$httpBackend.expectGET(this.HuronConfig.getTerminusV2Url() + '/resellers/' + suite.partnerId + '/carriers').respond(resellerCarrierList);
     this.$httpBackend.expectGET(this.HuronConfig.getTerminusUrl() + '/carriers/' + suite.carrierId).respond(carrierIntelepeer);
 
     const promise = this.PstnService.listResellerCarriers();
