@@ -334,7 +334,7 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
 
   public dismissModal() {
     this.HuronCompassService.setIsCustomer(false);
-    this.PstnModel.clear();
+    this.PstnModel.clear(this.ftLocation);
     this.dismiss();
   }
 
