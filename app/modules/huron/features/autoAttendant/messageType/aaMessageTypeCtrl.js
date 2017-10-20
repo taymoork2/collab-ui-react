@@ -4,6 +4,8 @@
   angular.module('uc.autoattendant')
     .controller('AAMessageTypeCtrl', AAMessageTypeCtrl);
 
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
   /* @ngInject */
   function AAMessageTypeCtrl($scope, $translate, AADynaAnnounceService, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, AASessionVariableService, AAModelService/*, $window*/) {
     var vm = this;
@@ -265,7 +267,6 @@
 
     function saveDynamicUi($event) {
       var action = vm.actionEntry;
-      var backSpace = 8;
       var range = AADynaAnnounceService.getRange();
       finalList = [];
       var dynamicList = range.endContainer.ownerDocument.activeElement;
@@ -283,7 +284,7 @@
           action.dynamicList = finalList;
         }
         //disable warning message at the time of deleting dynamic variable using backspace button
-        if ($event.keyCode === backSpace) {
+        if ($event.keyCode === KeyCodes.BACKSPACE) {
           _.forEach(finalList, function (dynamicList) {
             if (dynamicList.isDynamic) {
               getDynamicVariables();

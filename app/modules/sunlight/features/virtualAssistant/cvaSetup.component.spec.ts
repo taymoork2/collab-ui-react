@@ -1,7 +1,7 @@
 import cvaSetupModule from './cvaSetup.component';
+import { KeyCodes } from 'modules/core/accessibility';
 
 describe('Care Customer Virtual Assistant Setup Component', () => {
-  const escapeKey = 27;
   const OrgName = 'Test-Org-Name';
   const OrgId = 'Test-Org-Id';
   const pages = [
@@ -167,7 +167,7 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
     });
 
     it('keyboard functionality', function () {
-      controller.evalKeyPress(escapeKey);
+      controller.evalKeyPress(KeyCodes.ESCAPE);
       expect(this.$modal.open).toHaveBeenCalled();
     });
 

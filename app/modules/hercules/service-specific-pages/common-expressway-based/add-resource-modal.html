@@ -33,8 +33,7 @@
         id="NewExpressway"
         name="NewExpressway"
         value="new"
-        cs-input-label="{{vm.localizedAddNewExpressway}}"
-      >
+        cs-input-label="{{vm.localizedAddNewExpressway}}">
 
       <input
         cs-input
@@ -46,12 +45,10 @@
         id="hostNameWarning"
         ng-if="vm.selectedAction === 'new'"
         ng-disabled="vm.selectedAction === 'existing'"
-        ng-keyup="$event.keyCode == 13 && vm.completeEnterHostnameScreen()"
+        ng-keyup="vm.isEnterKeypress($event) && vm.completeEnterHostnameScreen()"
         cs-input-warning="vm.warning()"
         cs-input-warning-message="{{vm.warningMessage}}"
-        cs-input-help-text="{{vm.localizedAddNewExpresswayHelp}}"
-      >
-
+        cs-input-help-text="{{vm.localizedAddNewExpresswayHelp}}">
 
       <input
         cs-input
@@ -63,8 +60,7 @@
         cs-input-label="{{vm.localizedAddToExistingExpressway}}"
         disabled
         ng-if="vm.expresswayOptions.length === 0"
-        class="radioNoTranform"
-      >
+        class="radioNoTranform">
 
       <input
         cs-input
@@ -75,23 +71,20 @@
         value="existing"
         cs-input-label="{{vm.localizedAddToExistingExpressway}}"
         ng-if="vm.expresswayOptions.length !== 0"
-        class="radioNoTranform"
-      >
+        class="radioNoTranform">
 
       <cs-select
         ng-model="vm.selectedCluster"
         options="vm.expresswayOptions"
         placeholder="vm.localizedClusterlistPlaceholder"
         class="addResourceModalInput"
-        is-disabled="vm.expresswayOptions.length === 0 || vm.selectedAction === 'new'"
-      >
+        is-disabled="vm.expresswayOptions.length === 0 || vm.selectedAction === 'new'">
       </cs-select>
     </div>
   </form>
 
   <div ng-show="vm.inClusterNameSelectionScreen()">
     <p translate="hercules.addResourceDialog.enterDisplayName"></p>
-
     <form name="chooseClusterName" novalidate>
 
         <input
@@ -105,8 +98,7 @@
           cs-input-help-text={{vm.localizedHostNameHelpText}}
           cs-input-messages="vm.validationMessages"
           ng-required="true"
-          ng-keyup="$event.keyCode == 13 && vm.completeClusterNameScreen()"
-        >
+          ng-keyup="vm.isEnterKeypress($event) && vm.completeClusterNameScreen()">
     </form>
   </div>
 
@@ -131,8 +123,7 @@
         value="yes"
         id="assignToResourceGroup_yes"
         cs-input-label="{{vm._translation.assignYes}}"
-        ng-disabled="vm.couldNotReadResourceGroupsFromServer"
-      >
+        ng-disabled="vm.couldNotReadResourceGroupsFromServer">
       <div ng-if="vm.assignToResourceGroup === 'yes'" class="select-resource-group">
         <p translate="hercules.addResourceDialog.selectResourceGroup"></p>
         <cs-select
@@ -158,10 +149,7 @@
     <p><span translate="hercules.addResourceDialog.go-to-your-expressway"
              translate-values="{ConnectorName: vm.localizedConnectorName}"></span>
     </p>
-
   </div>
-
-
 
   <div ng-show="vm.provisioningToExistingExpresswayCompleted" class="hercules-fix-paragraphs deregister-expressway-modal">
     <p translate="hercules.addResourceDialog.connectorIsProvisioned" translate-values="{ClusterName: vm.selectedCluster.label}"></p>
@@ -173,7 +161,6 @@
 
     <p translate="hercules.addResourceDialog.logInToConfigureThem" translate-values="{ClusterName: vm.selectedCluster.label, hostname: vm.hostname, ConnectorName: vm.localizedConnectorName}"></p>
   </div>
-
 </div>
 
 <div class="modal-footer add-resource">
@@ -234,9 +221,7 @@
   <button class="btn btn--primary"
           ng-show="vm.inFinalScreen()"
           ng-click="vm.completeAddResourceModal()"
-          ng-keyup="$event.keyCode == 13 && vm.completeAddResourceModal()"
-  >
+          ng-keyup="vm.isEnterKeypress($event) && vm.completeAddResourceModal()">
     <span translate="hercules.addResourceDialog.registerResourceButton"></span>
   </button>
-
 </div>

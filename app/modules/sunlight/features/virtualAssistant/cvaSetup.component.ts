@@ -1,4 +1,5 @@
 import { IToolkitModalService } from 'modules/core/modal';
+import { KeyCodes } from 'modules/core/accessibility';
 import * as _ from 'lodash';
 
 export interface IScopeWithController extends ng.IScope {
@@ -16,7 +17,6 @@ requireContext.keys().map(key => requireContext(key));
 class CustomerVirtualAssistantSetupCtrl implements ng.IComponentController {
 
   private animationTimeout = 10;
-  private escapeKey = 27;
 
   public animation = '';
   public maxNameLength = 50;
@@ -204,7 +204,7 @@ class CustomerVirtualAssistantSetupCtrl implements ng.IComponentController {
    */
   public evalKeyPress(keyCode: number): void {
     switch (keyCode) {
-      case this.escapeKey:
+      case KeyCodes.ESCAPE:
         this.cancelModal();
         break;
       default:

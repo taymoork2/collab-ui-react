@@ -1,10 +1,11 @@
 'use strict';
 
+var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
 describe('Care Setup Assistant Ctrl', function () {
   var controller, $scope, $modal, $q, CTService, getLogoDeferred, getTogglePromise, getLogoUrlDeferred, SunlightConfigService, $state, $stateParams, LogMetricsService;
   var Notification, $translate, _scomUrl, $httpBackend, CvaService;
 
-  var escapeKey = 27;
   var templateName = 'Atlas UT Template';
   var NAME_PAGE_INDEX = 0;
   var OVERVIEW_PAGE_INDEX = 1;
@@ -317,7 +318,7 @@ describe('Care Setup Assistant Ctrl', function () {
     });
 
     it('keyboard functionality', function () {
-      controller.evalKeyPress(escapeKey);
+      controller.evalKeyPress(KeyCodes.ESCAPE);
       expect($modal.open).toHaveBeenCalled();
     });
   });
