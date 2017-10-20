@@ -7332,25 +7332,25 @@
       "configOverview": {
         "title": "Requisitos de configuración del asistente virtual del cliente",
         "desc": "Revisar los requisitos previos para crear un asistente virtual del cliente",
-        "boxTitle": "Cree un agente API.AI antes de crear su asistente virtual del cliente.",
-        "boxDesc": "Genere un agente automatizado en API.AI con un diálogo de lenguaje natural. Su asistente virtual del cliente integrado utiliza el diálogo incorporado para interactuar con sus clientes y remitir una conversación con agentes en vivo a una instancia superior, según sea necesario.",
-        "boxRadioOne": "No, no tengo un agente API.AI preconfigurado",
+        "boxTitle": "Cree un agente Dialogflow antes de crear su asistente virtual del cliente.",
+        "boxDesc": "Genere un agente automatizado en Dialogflow con un diálogo de lenguaje natural. Su asistente virtual del cliente integrado utiliza el diálogo incorporado para interactuar con sus clientes y remitir una conversación con agentes en vivo a una instancia superior, según sea necesario.",
+        "boxRadioOne": "No, no tengo un agente Dialogflow preconfigurado",
         "boxRadioOneDesc1": "Vaya a ",
-        "boxRadioApiai": "API.AI",
+        "boxRadioDialogflow": "Dialogflow",
         "boxRadioOneDesc2": " para crear un agente. Para comenzar, consulte la ",
-        "boxRadioApiaiDoc": "documentación de API.AI",
-        "boxRadioTwo": "Sí, tengo un agente API.AI preconfigurado y estoy listo para continuar",
-        "boxRadioTwoDesc": "Haga clic en la flecha para continuar integrando su agente API.AI con un asistente virtual del cliente"
+        "boxRadioDialogflowDoc": "documentación de Dialogflow",
+        "boxRadioTwo": "Sí, tengo un agente Dialogflow preconfigurado y estoy listo para continuar",
+        "boxRadioTwoDesc": "Haga clic en la flecha para continuar integrando su agente Dialogflow con un asistente virtual del cliente"
       },
       "dialogIntegration": {
         "title": "Configurar la integración de diálogo",
-        "desc": "Agregue un intento preconfigurado de remisión a una instancia superior para completar la configuración de su agente API.AI",
+        "desc": "Agregue un intento preconfigurado de remisión a una instancia superior para completar la configuración de su agente Dialogflow",
         "boxStepOne": "Descargue el archivo JSON de intento preconfigurado de remisión a una instancia superior.",
         "boxStepOneDesc": "Un intento de remisión a una instancia superior permite a su asistente virtual del cliente remitir una conversación con un agente a una instancia superior.",
-        "boxStepTwo": "Cargue el intento de remisión a una instancia superior al agente API.AI.",
-        "boxStepTwoDesc": "En la página de intentos del agente API.AI, haga clic en los puntos suspensivos verticales (⋮) y elija Cargar intento. Cargue el archivo.json de remisión a una instancia superior que descargó.",
-        "boxStepThree": "Personalice el intento de remisión a una instancia superior en API.AI.",
-        "boxStepThreeDesc": "En la página de intentos del agente API.AI, elija Intento de remisión a una instancia superior. Modifique los campos \"El usuario dice\" para cambiar las expresiones del usuario que activan la remisión a una instancia superior. Todas las expresiones del usuario deben:",
+        "boxStepTwo": "Cargue el intento de remisión a una instancia superior al agente Dialogflow.",
+        "boxStepTwoDesc": "En la página de intentos del agente Dialogflow, haga clic en los puntos suspensivos verticales (⋮) y elija Cargar intento. Cargue el archivo.json de remisión a una instancia superior que descargó.",
+        "boxStepThree": "Personalice el intento de remisión a una instancia superior en Dialogflow.",
+        "boxStepThreeDesc": "En la página de intentos del agente Dialogflow, elija Intento de remisión a una instancia superior. Modifique los campos \"El usuario dice\" para cambiar las expresiones del usuario que activan la remisión a una instancia superior. Todas las expresiones del usuario deben:",
         "boxBulletOne": "Utilizar el modo de plantilla",
         "boxBulletTwo": "Contener una referencia a @sys.any:Tema",
         "boxStepThreeDescCont": "El símbolo @ junto a la expresión del usuario indica el modo de plantilla. Haga clic en el símbolo para alternar el modo. No modifique la acción GetExpert.",
@@ -7361,11 +7361,11 @@
       "accessToken": {
         "title": "Completar la integración de diálogo",
         "desc": "Complete su integración para permitir el uso de diálogo natural en sus interacciones con el cliente",
-        "boxDesc": "Cada agente API.AI tiene un token de acceso de cliente único almacenado en la configuración del agente. Copie el token de la configuración del agente API.AI, introdúzcala aquí y haga clic en \"Validar\" para comprobar el token antes de completar la integración del diálogo.",
-        "inputLabel": "Token de acceso de cliente API.AI",
+        "boxDesc": "Cada agente Dialogflow tiene un token de acceso de cliente único almacenado en la configuración del agente. Copie el token de la configuración del agente Dialogflow, introdúzcala aquí y haga clic en \"Validar\" para comprobar el token antes de completar la integración del diálogo.",
+        "inputLabel": "Token de acceso de cliente Dialogflow",
         "validateButtonText": "Validar",
         "maxLengthError": "El token de acceso de cliente no puede tener más de 128 caracteres.",
-        "invalidTokenText": "Token de acceso de cliente API.AI no válido. Verifique el token y vuelva a intentarlo."
+        "invalidTokenText": "Token de acceso de cliente Dialogflow no válido. Verifique el token y vuelva a intentarlo."
       },
       "name": {
         "title": "Nombre del asistente virtual del cliente",

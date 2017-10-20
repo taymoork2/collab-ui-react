@@ -221,13 +221,13 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
       controller.nameForm = getForm('nameInput');
     });
 
-    it('Next button on Config Overview Page enabled when isApiAiAgentConfigured is true', function () {
-      controller.template.configuration.pages.cvaConfigOverview.isApiAiAgentConfigured = true;
+    it('Next button on Config Overview Page enabled when isDialogflowAgentConfigured is true', function () {
+      controller.template.configuration.pages.cvaConfigOverview.isDialogflowAgentConfigured = true;
       checkStateOfNavigationButtons(CONFIG_OVERVIEW_PAGE_INDEX, 'hidden', true);
     });
 
-    it('Next button on Config Overview Page disabled when isApiAiAgentConfigured is false', function () {
-      controller.template.configuration.pages.cvaConfigOverview.isApiAiAgentConfigured = false;
+    it('Next button on Config Overview Page disabled when isDialogflowAgentConfigured is false', function () {
+      controller.template.configuration.pages.cvaConfigOverview.isDialogflowAgentConfigured = false;
       checkStateOfNavigationButtons(CONFIG_OVERVIEW_PAGE_INDEX, 'hidden', false);
     });
 
@@ -298,8 +298,7 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
     let deferred;
     beforeEach(function () {
       deferred = this.$q.defer();
-      spyOn(this.CvaService, 'isAPIAITokenValid').and.returnValue(deferred.promise);
-
+      spyOn(this.CvaService, 'isDialogflowTokenValid').and.returnValue(deferred.promise);
       controller.tokenForm = getForm('tokenInput');
     });
 
@@ -308,7 +307,7 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
       controller.template.configuration.pages.cvaAccessToken.invalidToken = true;
       controller.template.configuration.pages.cvaAccessToken.needsValidation = true;
 
-      controller.validateAPIAIToken();
+      controller.validateDialogflowToken();
       this.$scope.$apply();
 
       expect(controller.template.configuration.pages.cvaAccessToken.invalidToken).toEqual(false);
@@ -320,7 +319,7 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
       controller.template.configuration.pages.cvaAccessToken.invalidToken = false;
       controller.template.configuration.pages.cvaAccessToken.needsValidation = true;
 
-      controller.validateAPIAIToken();
+      controller.validateDialogflowToken();
       this.$scope.$apply();
 
       expect(controller.template.configuration.pages.cvaAccessToken.invalidToken).toEqual(true);

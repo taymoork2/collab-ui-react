@@ -7332,25 +7332,25 @@
       "configOverview": {
         "title": "Requisitos de configuración del asistente virtual para clientes",
         "desc": "Consulte los requisitos previos para crear un asistente virtual para clientes",
-        "boxTitle": "Cree un agente API.AI antes de crear el asistente virtual para clientes.",
-        "boxDesc": "Cree un agente automatizado en API.AI que ofrezca un diálogo en un lenguaje natural. Su asistente virtual para clientes integrado emplea el diálogo de serie para interactuar con sus clientes y derivar una conversación a agentes en directo cuando sea necesario.",
-        "boxRadioOne": "No, no tengo ningún agente API.AI preconfigurado",
+        "boxTitle": "Cree un agente Dialogflow antes de crear el asistente virtual para clientes.",
+        "boxDesc": "Cree un agente automatizado en Dialogflow que ofrezca un diálogo en un lenguaje natural. Su asistente virtual para clientes integrado emplea el diálogo de serie para interactuar con sus clientes y derivar una conversación a agentes en directo cuando sea necesario.",
+        "boxRadioOne": "No, no tengo ningún agente Dialogflow preconfigurado",
         "boxRadioOneDesc1": "Vaya a ",
-        "boxRadioApiai": "API.AI",
+        "boxRadioDialogflow": "Dialogflow",
         "boxRadioOneDesc2": " para crear un agente. Para comenzar, consulte la ",
-        "boxRadioApiaiDoc": "documentación de API.AI",
-        "boxRadioTwo": "Sí, tengo un agente API.AI preconfigurado y puedo continuar",
-        "boxRadioTwoDesc": "Haga clic en la flecha para proceder con la integración de su agente API.AI en un asistente virtual para clientes"
+        "boxRadioDialogflowDoc": "documentación de Dialogflow",
+        "boxRadioTwo": "Sí, tengo un agente Dialogflow preconfigurado y puedo continuar",
+        "boxRadioTwoDesc": "Haga clic en la flecha para proceder con la integración de su agente Dialogflow en un asistente virtual para clientes"
       },
       "dialogIntegration": {
         "title": "Configurar la integración del diálogo",
-        "desc": "Añada un objetivo de derivación preconfigurado para finalizar la configuración del agente API.AI",
+        "desc": "Añada un objetivo de derivación preconfigurado para finalizar la configuración del agente Dialogflow",
         "boxStepOne": "Descargue el archivo JSON del objetivo de derivación preconfigurado.",
         "boxStepOneDesc": "Los objetivos de derivación permiten que el asistente virtual para clientes derive una conversación a un agente.",
-        "boxStepTwo": "Cargue el objetivo de derivación en el agente API.AI.",
-        "boxStepTwoDesc": "En la página de objetivos del agente API.AI, haga clic en los tres puntos verticales (⋮) y elija la opción de cargar un objetivo. Cargue el archivo escalation.json descargado.",
-        "boxStepThree": "Personalizar el objetivo de derivación en API.AI.",
-        "boxStepThreeDesc": "En la página de objetivos del agente API.AI, elija Objetivo de derivación. Modifique los campos de El usuario dice para cambiar las frases del usuario que provocarán la derivación. Todas las frases del usuario deben cumplir estos requisitos:",
+        "boxStepTwo": "Cargue el objetivo de derivación en el agente Dialogflow.",
+        "boxStepTwoDesc": "En la página de objetivos del agente Dialogflow, haga clic en los tres puntos verticales (⋮) y elija la opción de cargar un objetivo. Cargue el archivo escalation.json descargado.",
+        "boxStepThree": "Personalizar el objetivo de derivación en Dialogflow.",
+        "boxStepThreeDesc": "En la página de objetivos del agente Dialogflow, elija Objetivo de derivación. Modifique los campos de El usuario dice para cambiar las frases del usuario que provocarán la derivación. Todas las frases del usuario deben cumplir estos requisitos:",
         "boxBulletOne": "Utilizar el modo de plantilla",
         "boxBulletTwo": "Contener una referencia a @sys.any:Topic",
         "boxStepThreeDescCont": "El símbolo @ que se encuentra junto a la frase del usuario indica el modo de plantilla. Haga clic en el símbolo para cambiar de modo. No modifique la acción GetExpert.",
@@ -7361,11 +7361,11 @@
       "accessToken": {
         "title": "Finalizar la integración del diálogo",
         "desc": "Finalice la integración para activar el uso del diálogo natural en las interacciones con el cliente",
-        "boxDesc": "Cada agente API.AI posee un token único de acceso para clientes almacenado en la configuración del agente. Copie el token de la configuración del agente API.AI establecido, introdúzcalo aquí y haga clic en “Validar” para comprobarlo antes de finalizar la integración del diálogo.",
-        "inputLabel": "Token de acceso para clientes API.AI",
+        "boxDesc": "Cada agente Dialogflow posee un token único de acceso para clientes almacenado en la configuración del agente. Copie el token de la configuración del agente Dialogflow establecido, introdúzcalo aquí y haga clic en “Validar” para comprobarlo antes de finalizar la integración del diálogo.",
+        "inputLabel": "Token de acceso para clientes Dialogflow",
         "validateButtonText": "Validar",
         "maxLengthError": "El token de acceso para clientes no puede tener más de 128 caracteres.",
-        "invalidTokenText": "El token de acceso para clientes API.AI no es válido. Compruébelo y vuelva a intentarlo."
+        "invalidTokenText": "El token de acceso para clientes Dialogflow no es válido. Compruébelo y vuelva a intentarlo."
       },
       "name": {
         "title": "Nombre del asistente virtual para clientes",

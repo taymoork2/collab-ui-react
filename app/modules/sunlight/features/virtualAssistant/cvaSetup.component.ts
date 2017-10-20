@@ -53,8 +53,8 @@ class CustomerVirtualAssistantSetupCtrl implements ng.IComponentController {
       pages: {
         cvaConfigOverview: {
           enabled: true,
-          isApiAiAgentConfigured: false,
-          configurationType: this.CvaService.configurationTypes.apiai,
+          isDialogflowAgentConfigured: false,
+          configurationType: this.CvaService.configurationTypes.dialogflow,
           startTimeInMillis: 0,
           eventName: this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_OVERVIEW_PAGE,
         },
@@ -134,7 +134,7 @@ class CustomerVirtualAssistantSetupCtrl implements ng.IComponentController {
     if (this.$stateParams.isEditFeature) {
       this.isEditFeature = true;
       this.template.templateId = this.$stateParams.template.id;
-      this.template.configuration.pages.cvaConfigOverview.isApiAiAgentConfigured = true;
+      this.template.configuration.pages.cvaConfigOverview.isDialogflowAgentConfigured = true;
       this.template.configuration.pages.vaName.nameValue = this.$stateParams.template.name;
       this.template.configuration.pages.cvaAccessToken.accessTokenValue = this.$stateParams.template.config.token;
       this.template.configuration.pages.cvaAccessToken.invalidToken = false;
@@ -230,7 +230,7 @@ class CustomerVirtualAssistantSetupCtrl implements ng.IComponentController {
   public nextButton(): any {
     switch (this.currentState) {
       case 'cvaConfigOverview':
-        return this.isApiAiAgentConfigured(); // check radio button state
+        return this.isDialogflowAgentConfigured(); // check radio button state
       case 'cvaDialogIntegration':
         return true;
       case 'cvaAccessToken':
@@ -341,7 +341,7 @@ class CustomerVirtualAssistantSetupCtrl implements ng.IComponentController {
    */
   public submitFeature(): void {
     const name = this.template.configuration.pages.vaName.nameValue.trim();
-    const config = this.createConfigurationObject(); // Note: this is our point of extensibility as other types besides api.ai are supported.
+    const config = this.createConfigurationObject(); // Note: this is our point of extensibility as other types besides dialogflow are supported.
     this.creatingTemplate = true;
     const avatarDataURL = this.template.configuration.pages.vaAvatar.fileValue;
     if (this.isEditFeature) {
@@ -351,7 +351,7 @@ class CustomerVirtualAssistantSetupCtrl implements ng.IComponentController {
     }
   }
 
-  public onAPIAITokenChange(): void {
+  public onDialogflowTokenChange(): void {
     const controller = this;
     this.template.configuration.pages.cvaAccessToken.invalidToken = true;
     this.template.configuration.pages.cvaAccessToken.needsValidation = true; //changed token needs validation
@@ -359,13 +359,13 @@ class CustomerVirtualAssistantSetupCtrl implements ng.IComponentController {
   }
 
   /**
-   * validate the api.ai Token
+   * validate the Dialogflow Token
    */
-  public validateAPIAIToken(): void {
+  public validateDialogflowToken(): void {
     const controller = this;
     controller.template.configuration.pages.cvaAccessToken.validatingToken = true;
     const accessToken = (controller.template.configuration.pages.cvaAccessToken.accessTokenValue || '').trim();
-    controller.service.isAPIAITokenValid(accessToken)
+    controller.service.isDialogflowTokenValid(accessToken)
       .then(function () {
         controller.template.configuration.pages.cvaAccessToken.invalidToken = false;
         controller.template.configuration.pages.cvaAccessToken.needsValidation = false; //we just validated it.
@@ -381,8 +381,8 @@ class CustomerVirtualAssistantSetupCtrl implements ng.IComponentController {
   }
 
   /** Data Validation functions **/
-  public isApiAiAgentConfigured(): boolean {
-    return !!this.template.configuration.pages.cvaConfigOverview.isApiAiAgentConfigured;
+  public isDialogflowAgentConfigured(): boolean {
+    return !!this.template.configuration.pages.cvaConfigOverview.isDialogflowAgentConfigured;
   }
 
   public isAccessTokenInvalid(): boolean {
@@ -623,7 +623,7 @@ class CustomerVirtualAssistantSetupCtrl implements ng.IComponentController {
   }
 
   /**
-   * This is where we can extend our controller to support other types of assistants besides api.ai.
+   * This is where we can extend our controller to support other types of assistants besides Dialogflow.
    * Each one may have a different Configuration object that we are going to add/update.
    * template.configuration.pages.cvaConfigOverview.configurationType  holds the type that is being added/updated.
    * @returns {*}
