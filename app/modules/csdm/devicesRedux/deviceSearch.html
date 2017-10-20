@@ -32,15 +32,15 @@
                      ng-class="{'searcherror': dctrl.searchObject.hasError}">
     </cs-searchfilter>
   </span>
-
 </div>
 <div class="bullets">
   <span class="bullet" ng-if="!bullet.isBeingEdited()" ng-repeat="bullet in dctrl.getBullets()"
         ng-dblclick="dctrl.editBullet(bullet)">
-    <span class="field-descriptor" ng-if="bullet.field">{{bullet.field}}: </span>
-    <span>{{bullet.getQueryWithoutField() || bullet.toQuery()}}</span>
+    <span class="field-descriptor" ng-if="bullet.field">{{bullet.getQueryPrefix()}} </span>
+    <span>{{bullet.getQueryWithoutField()}}</span>
     <i class="icon icon-close" ng-click="dctrl.removeBullet(bullet)"/>
   </span>
 </div>
 
-<!--<label style="margin:0; font-size: xx-small">{{ dctrl.searchObject.parsedQuery.toQuery()}}</label>-->
+<!--Enable this to see the final query for debugging:-->
+<!--<label style="margin:0; font-size: xx-small">{{ dctrl.getTranslatedQuery() }}</label>-->

@@ -4,6 +4,7 @@ import { SearchResult } from '../services/search/searchResult';
 import { Caller, CsdmSearchService } from '../services/csdmSearch.service';
 import { Notification } from '../../core/notifications/notification.service';
 import { SearchElement } from '../services/search/queryParser';
+import { SearchTranslator } from 'modules/csdm/services/search/searchTranslator';
 
 export class DeviceSearch implements ng.IComponentController, ISearchHandler {
 
@@ -181,6 +182,10 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler {
 
   public getBullets(): SearchElement[] {
     return this.searchObject.getBullets();
+  }
+
+  public getTranslatedQuery(): string {
+    return this.searchObject.getTranslatedQueryString(new SearchTranslator(this.$translate));
   }
 
   private updateSearchFilters(searchResult?: SearchResult) {

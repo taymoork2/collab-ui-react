@@ -167,11 +167,15 @@ export class SearchObject {
     this.from = 0;
   }
 
-  public getTranslatedSearchElement(deviceSearchTranslator: SearchTranslator | null): SearchElement {
+  public getTranslatedSearchElement(deviceSearchTranslator: SearchTranslator | null): SearchElement | null {
 
-    const translatedQuery = deviceSearchTranslator
-      ? deviceSearchTranslator.translateQuery(this.lastGoodQuery)
+    const query = (this.lastGoodQuery instanceof OperatorAnd && this.lastGoodQuery.getExpressions().length === 0)
+      ? null
       : this.lastGoodQuery;
+
+    const translatedQuery = (query && deviceSearchTranslator)
+      ? deviceSearchTranslator.translateQuery(query)
+      : query;
 
     if (this.currentFilterValue) {
       const parsedFilter = QueryParser.parseQueryString(this.currentFilterValue);
@@ -186,7 +190,8 @@ export class SearchObject {
   }
 
   public getTranslatedQueryString(deviceSearchTranslator: SearchTranslator | null): string {
-    return this.getTranslatedSearchElement(deviceSearchTranslator).toQuery();
+    const translatedQuery = this.getTranslatedSearchElement(deviceSearchTranslator);
+    return translatedQuery ? translatedQuery.toQuery() : '';
   }
 
   public equals(other: SearchObject): boolean {
