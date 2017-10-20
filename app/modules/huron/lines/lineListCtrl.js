@@ -76,6 +76,7 @@
       if (vm.activeFilter !== filter) {
         vm.activeFilter = filter;
         getLineList();
+        vm.currentDataPosition = 0;
       }
     };
 
@@ -93,6 +94,7 @@
         if (str.length >= 3 || str === '') {
           vm.searchStr = str;
           getLineList();
+          vm.currentDataPosition = 0;
         }
       }, vm.timeoutVal);
     };
@@ -159,6 +161,13 @@
           });
           vm.gridRefresh = false;
           vm.vendor = LineListService.getVendor();
+
+          if (response.length === 0) {
+            //stop firing any more infinite scroll events
+            $scope.gridApi.infiniteScroll.dataLoaded(false, false);
+          } else {
+            $scope.gridApi.infiniteScroll.dataLoaded();
+          }
         })
         .catch(function (response) {
           Log.debug('Query for line associations failed.');
@@ -197,7 +206,6 @@
             vm.currentDataPosition++;
             vm.load = false;
             getLineList((vm.currentDataPosition * Config.usersperpage) + 1);
-            $scope.gridApi.infiniteScroll.dataLoaded();
           }
         });
         gridApi.core.on.sortChanged($scope, sortColumn);
