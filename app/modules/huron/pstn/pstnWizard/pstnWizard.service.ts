@@ -223,7 +223,7 @@ export class PstnWizardService {
   }
 
   private getLocationFeatureToggle(): ng.IPromise<boolean> {
-    return this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484)
+    return this.FeatureToggleService.getCallFeatureForCustomer(this.PstnModel.getCustomerId(), this.FeatureToggleService.features.hI1484)
     .then((enabled) => this.ftLocation = enabled);
   }
 
@@ -336,12 +336,14 @@ export class PstnWizardService {
         isTrial,
       )
       .then(() => {
-        //Setup Location Object
-        this.location.name = this.PstnModel.getCustomerName();
-        this.location.default = true; //This is the first location on a new customer
-        const address: Address = this.PstnModel.getServiceAddress();
-        address.default = true; //This is the first address on a new location
-        this.location.addresses = [address.getRAddress()];
+        if (this.ftLocation) {
+          //Setup Location Object
+          this.location.name = this.PstnModel.getCustomerName();
+          this.location.default = true; //This is the first location on a new customer
+          const address: Address = this.PstnModel.getServiceAddress();
+          address.default = true; //This is the first address on a new location
+          this.location.addresses = [address.getRAddress()];
+        }
         return true;
       })
       .catch(function (response) {

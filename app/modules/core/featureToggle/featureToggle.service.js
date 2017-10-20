@@ -37,6 +37,7 @@
       getFeaturesForUser: getFeaturesForUser,
       getFeatureForOrg: getFeatureForOrg,
       getFeaturesForOrg: getFeaturesForOrg,
+      getCallFeatureForCustomer: getCallFeatureForCustomer,
       setFeatureToggles: setFeatureToggles,
       generateFeatureToggleRule: generateFeatureToggleRule,
       stateSupportsFeature: stateSupportsFeature,
@@ -248,6 +249,20 @@
           isArray: true,
           cache: true,
         },
+      });
+    }
+
+    function getCallFeatureForCustomer(customerId, feature) {
+      return $resource(HuronConfig.getToggleUrl() + '/features/customers/:customerId/developer/:feature', {
+        customerId: '@customerId',
+        feature: '@feature',
+      }).get({
+        customerId: customerId,
+        feature: feature,
+      }).$promise.then(function (data) {
+        return data.val;
+      }).catch(function () {
+        return false;
       });
     }
   }
