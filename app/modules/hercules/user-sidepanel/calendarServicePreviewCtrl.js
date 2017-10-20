@@ -184,6 +184,9 @@
     var readResourceGroups = function () {
       ResourceGroupService.getAllAsOptions().then(function (options) {
         if (options.length > 0) {
+          options = options.sort(function (a, b) {
+            return a.label.localeCompare(b.label);
+          });
           $scope.resourceGroup.options = $scope.resourceGroup.options.concat(options);
           if ($scope.extension.status && $scope.extension.status.resourceGroupId) {
             setSelectedResourceGroup($scope.extension.status.resourceGroupId);
