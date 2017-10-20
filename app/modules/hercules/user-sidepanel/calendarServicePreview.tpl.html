@@ -64,25 +64,8 @@
         </div>
       </div>
 
-      <div class="row collapse" ng-if="extension.currentUserEntitled && extension.homedCluster">
-        <div class="columns small-3">
-          <span class="cloud-extension-label">{{::'cloudExtensions.cluster' | translate}}:</span>
-        </div>
-        <div class="columns small-9">
-          <span class="cloud-extension-label">{{extension.homedCluster.name}}</span>
-        </div>
-      </div>
-
-      <div class="row collapse" ng-if="extension.currentUserEntitled && extension.homedConnector">
-        <div class="columns small-3">
-          <span class="cloud-extension-label">{{::'hercules.connectors.host_name' | translate}}:</span>
-        </div>
-        <div class="columns small-9">
-          <span class="cloud-extension-label">
-            <a href="https://{{extension.homedConnector.hostname}}" target="_blank">{{extension.homedConnector.hostname}}</a>
-          </span>
-        </div>
-      </div>
+      <hybrid-services-user-homed-cluster-and-hostname ng-if="extension.currentUserEntitled && extension.status.connectorId"
+                                                       connector-id="extension.status.connectorId"></hybrid-services-user-homed-cluster-and-hostname>
 
       <div class="cloud-extension-label" ng-show="extension.currentUserEntitled && extension.id === 'squared-fusion-cal' && extension.hasShowPreferredWebExSiteNameFeatureToggle">
         <span class="cloud-extension-label">{{'hercules.cloudExtensions.preferredWebExSite' | translate}}:</span>

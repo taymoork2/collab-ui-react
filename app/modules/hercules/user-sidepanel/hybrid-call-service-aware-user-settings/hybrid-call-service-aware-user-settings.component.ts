@@ -4,8 +4,6 @@ import { DomainManagementService } from 'modules/core/domainManagement/domainman
 import { UriVerificationService } from 'modules/hercules/services/uri-verification-service';
 import { HybridServiceUserSidepanelHelperService, IEntitlementNameAndState } from 'modules/hercules/services/hybrid-services-user-sidepanel-helper.service';
 import { Notification } from 'modules/core/notifications/notification.service';
-import { ICluster, IConnector } from 'modules/hercules/hybrid-services.types';
-import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 import { USSService, IUserStatusWithExtendedMessages } from 'modules/hercules/services/uss.service';
 
 class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController {
@@ -25,8 +23,7 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
   private userStatusConnect: IUserStatusWithExtendedMessages | undefined;
   public lastStateChangeText: string = '';
 
-  public homedCluster: ICluster;
-  public homedConnector: IConnector;
+  public connectorId: string;
   public directoryUri: string;
   public domainVerificationError = false;
 
@@ -37,7 +34,6 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
     private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
     private DomainManagementService: DomainManagementService,
-    private HybridServicesClusterService: HybridServicesClusterService,
     private ModalService,
     private HybridServicesI18NService: HybridServicesI18NService,
     private HybridServiceUserSidepanelHelperService: HybridServiceUserSidepanelHelperService,
@@ -81,8 +77,8 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
           this.entitledToggle = this.userIsCurrentlyEntitled = false;
         }
 
-        if (this.userStatusAware && this.userStatusAware.clusterId) {
-          this.getDataFromFMS(this.userStatusAware.clusterId);
+        if (this.userStatusAware && this.userStatusAware.connectorId) {
+          this.connectorId = this.userStatusAware.connectorId;
         }
 
         if (this.userStatusAware && this.userStatusAware.lastStateChange) {
@@ -99,14 +95,6 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
       })
       .finally(() => {
         this.loadingPage = false;
-      });
-  }
-
-  private getDataFromFMS(clusterId) {
-    this.HybridServicesClusterService.get(clusterId)
-      .then((cluster: ICluster) => {
-        this.homedCluster = cluster;
-        this.homedConnector = _.find(cluster.connectors, { id: this.userStatusAware && this.userStatusAware.connectorId });
       });
   }
 
