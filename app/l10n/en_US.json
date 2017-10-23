@@ -6723,7 +6723,9 @@
     "deleteSiteModalBody": "Are you sure you want to delete <strong>{{siteUrl}}</strong>?",
     "deleteSiteModalBody2": "All data related to the site will be lost and this action can not be undone.",
     "deleteSiteRejectModalTitle": "Cannot Delete",
-    "deleteSiteRejectModalBody": "You cannot delete the last site in a subscription"
+    "deleteSiteRejectModalBody": "You cannot delete the last site in a subscription",
+    "redistributeRejectModalTitle": "Cannot Redistribute",
+    "redistributeRejectModalBody": "You cannot redistribute licenses between sites because there is only one site."
   },
   "cloudExtensions": {
     "cloudExtensions": "Hybrid Services",

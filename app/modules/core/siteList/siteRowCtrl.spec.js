@@ -116,6 +116,36 @@ describe('Controller: WebExSiteRowCtrl', function () {
     });
     expect(WebExSiteRowService.initSiteRows).toHaveBeenCalledWith(true);
   });
+
+  describe('isOnlySiteInSubscription function', function () {
+    var entity;
+    var licensesGroupedBySites = _.groupBy(getJSONFixture('core/json/authInfo/webexLicenses.json'), 'siteUrl');
+
+    beforeEach(function () {
+      entity = {
+        billingServiceId: '123',
+        siteUrl: 'ag-test1-org.webex.com',
+      };
+    });
+    it('should return FALSE if there are 2 or more sites in subscription', function () {
+      expect(_.keys(licensesGroupedBySites).length >= 2).toBeTruthy();
+      expect(controller.isOnlySiteInSubscription(entity)).toBeFalsy();
+    });
+
+    it('should return TRUE if there is only one site in subscription', function () {
+      var oneSite = _.pick(licensesGroupedBySites, 'ag-test1-org.webex.com');
+      WebExSiteRowService.getLicensesInSubscriptionGroupedBySites.and.returnValue(oneSite);
+      expect(controller.isOnlySiteInSubscription(entity)).toBeTruthy();
+    });
+
+    it('should return TRUE if entity does not have billingServiceId (e.g. trial site)', function () {
+      entity = {
+        siteUrl: 'ag-test1-org.webex.com',
+      };
+      expect(controller.isOnlySiteInSubscription(entity)).toBeTruthy();
+    });
+  });
+
   describe('delete behavior', function () {
     var entity;
     var licensesGroupedBySites = _.groupBy(getJSONFixture('core/json/authInfo/webexLicenses.json'), 'siteUrl');
@@ -129,7 +159,7 @@ describe('Controller: WebExSiteRowCtrl', function () {
 
     it('should launch license redistribution if there are more than 2 sites in subscription', function () {
       var expectedModalTitle = '<h3 class="modal-title" translate="webexSiteManagement.deleteSiteModalTitle"></h3>';
-      expect(controller.canDeleteSite(entity)).toBeTruthy();
+      expect(controller.isOnlySiteInSubscription(entity)).toBeFalsy();
       controller.deleteSite(entity);
       $scope.$digest();
       var modalCallArgs = $modal.open.calls.mostRecent().args[0];
@@ -154,7 +184,7 @@ describe('Controller: WebExSiteRowCtrl', function () {
       ];
 
       WebExSiteRowService.getLicensesInSubscriptionGroupedBySites.and.returnValue(twoSites);
-      expect(controller.canDeleteSite(entity)).toBeTruthy();
+      expect(controller.isOnlySiteInSubscription(entity)).toBeFalsy();
       controller.deleteSite(entity);
       $scope.$digest();
       expect(state.go).not.toHaveBeenCalled();
@@ -165,12 +195,39 @@ describe('Controller: WebExSiteRowCtrl', function () {
       var expectedModalTitle = '<h3 class="modal-title" translate="webexSiteManagement.deleteSiteRejectModalTitle"></h3>';
       var oneSite = _.pick(licensesGroupedBySites, 'ag-test1-org.webex.com');
       WebExSiteRowService.getLicensesInSubscriptionGroupedBySites.and.returnValue(oneSite);
-      expect(controller.canDeleteSite(entity)).toBeFalsy();
+      expect(controller.isOnlySiteInSubscription(entity)).toBeTruthy();
       controller.deleteSite(entity);
       var modalCallArgs = $modal.open.calls.mostRecent().args[0];
       expect(modalCallArgs.template.indexOf(expectedModalTitle) > -1);
       expect(state.go).not.toHaveBeenCalled();
       expect(WebExSiteRowService.deleteSite).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('redistribute licenses behavior', function () {
+    var entity;
+    var licensesGroupedBySites = _.groupBy(getJSONFixture('core/json/authInfo/webexLicenses.json'), 'siteUrl');
+
+    beforeEach(function () {
+      entity = {
+        billingServiceId: '123',
+        siteUrl: 'ag-test1-org.webex.com',
+      };
+    });
+    it('should not launch redistribution if there is only one site in subscription', function () {
+      var expectedModalTitle = '<h3 class="modal-title" translate="webexSiteManagement.redistributeRejectModalTitle"></h3>';
+      var oneSite = _.pick(licensesGroupedBySites, 'ag-test1-org.webex.com');
+      WebExSiteRowService.getLicensesInSubscriptionGroupedBySites.and.returnValue(oneSite);
+      expect(controller.isOnlySiteInSubscription(entity)).toBeTruthy();
+      controller.redistributeLicenses(entity);
+      var modalCallArgs = $modal.open.calls.mostRecent().args[0];
+      expect(modalCallArgs.template.indexOf(expectedModalTitle) > -1);
+      expect(state.go).not.toHaveBeenCalled();
+    });
+    it('should launch license redistribution if there are more than 2 sites in subscription', function () {
+      expect(controller.isOnlySiteInSubscription(entity)).toBeFalsy();
+      controller.redistributeLicenses(entity);
+      expect(state.go).toHaveBeenCalledWith('site-list-distribute-licenses', { subscriptionId: '123' });
     });
   });
 });

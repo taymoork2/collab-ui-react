@@ -8,7 +8,7 @@ require('./_site-list.scss');
     .controller('WebExSiteRowCtrl', WebExSiteRowCtrl);
 
   /*@ngInject*/
-  function WebExSiteRowCtrl($log, $modal, $scope, $sce, $state, $stateParams, $timeout, accountLinkingPhase2, FeatureToggleService, TokenService, WebExUtilsFact, WebExSiteRowService, Utils) {
+  function WebExSiteRowCtrl($log, $modal, $scope, $sce, $state, $stateParams, $timeout, $translate, accountLinkingPhase2, FeatureToggleService, ModalService, TokenService, WebExUtilsFact, WebExSiteRowService, Utils) {
     var vm = this;
     vm.showGridData = false;
     vm.isShowAddSite = false;
@@ -43,18 +43,29 @@ require('./_site-list.scss');
     };
 
     vm.redistributeLicenses = function (entity) {
-      $state.go('site-list-distribute-licenses', { subscriptionId: entity.billingServiceId });
+      if (!vm.isOnlySiteInSubscription(entity)) {
+        $state.go('site-list-distribute-licenses', { subscriptionId: entity.billingServiceId });
+      } else {
+        ModalService.open({
+          title: $translate.instant('webexSiteManagement.redistributeRejectModalTitle'),
+          message: $translate.instant('webexSiteManagement.redistributeRejectModalBody'),
+          dismiss: $translate.instant('common.dismiss'),
+        });
+      }
     };
 
-    vm.canDeleteSite = function (entity) {
+    vm.isOnlySiteInSubscription = function (entity) {
+      if (!entity.billingServiceId) {
+        return true;
+      }
       var siteUrl = _.keys(WebExSiteRowService.getLicensesInSubscriptionGroupedBySites(entity.billingServiceId, entity.siteUrl));
-      return siteUrl.length > 1;
+      return siteUrl.length === 1;
     };
 
     vm.deleteSite = function (entity) {
       var subscriptionId = entity.billingServiceId;
       var siteUrl = entity.siteUrl;
-      if (vm.canDeleteSite(entity)) {
+      if (!vm.isOnlySiteInSubscription(entity)) {
         $modal.open({
           type: 'dialog',
           template: require('./siteDeleteConfirmModal.tpl.html'),
@@ -67,9 +78,10 @@ require('./_site-list.scss');
           deleteSite(subscriptionId, siteUrl);
         });
       } else {
-        $modal.open({
-          type: 'dialog',
-          template: require('./siteDeleteRejectModal.tpl.html'),
+        ModalService.open({
+          title: $translate.instant('webexSiteManagement.deleteSiteRejectModalTitle'),
+          message: $translate.instant('webexSiteManagement.deleteSiteRejectModalBody'),
+          dismiss: $translate.instant('common.dismiss'),
         });
       }
     };

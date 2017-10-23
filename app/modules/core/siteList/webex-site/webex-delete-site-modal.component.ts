@@ -12,7 +12,6 @@ class WebexDeleteSiteModalController implements ng.IComponentController {
   public siteUrl: string;
 
   // parameters received
-  public title: string;
   public subscriptionId: string;
   public dismiss: Function;
 
