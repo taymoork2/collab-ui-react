@@ -33,34 +33,35 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
     this.initGridOptions();
     this.MyCompanyOrdersService.getOrderDetails().then(orderDetails => {
       // create a modified version of the order details to display in the table, excluding closed orders
-      this.orderDetailList = _.map(_.filter(orderDetails, orderDetail => orderDetail.status !== CLOSED), (origOrderDetail: any) => {
-        const orderDetail = _.clone(origOrderDetail);
-        if (_.size(orderDetail.productDescriptionList) > 0) {
-          orderDetail.productDescriptionList = orderDetail.productDescriptionList.join(', ');
-        }
-        orderDetail.isTrial = false;
+      _.map(_.filter(orderDetails, orderDetail => orderDetail.status !== CLOSED), (origOrderDetail: any) => {
+        const orderDetail: IOrderDetail = {
+          externalOrderId: origOrderDetail.externalOrderId,
+          orderDate: origOrderDetail.orderDate,
+          total: origOrderDetail.total,
+          productDescriptionList: _.map<string, string>(origOrderDetail.productList, 'description').join(', '),
+          isTrial: false,
+          status: this.$translate.instant('myCompanyOrders.pending'),
+          invoiceURL: '',
+        };
         if (_.includes(orderDetail.productDescriptionList, TRIAL) ||
             _.includes(orderDetail.productDescriptionList, FREE)) {
           // trial orders don't display a price
           orderDetail.isTrial = true;
-        }
-        if (COMPLETED === orderDetail.status) {
-          orderDetail.status = this.$translate.instant('myCompanyOrders.completed');
-          if (!orderDetail.isTrial) {
-            // generate the URL to display the Digital River invoice
-            const product = _.includes(orderDetail.productDescriptionList, this.Config.onlineProducts.webex)
-              ? this.Config.onlineProducts.webex : this.Config.onlineProducts.spark;
-            this.DigitalRiverService.getInvoiceUrl(orderDetail.externalOrderId, product)
-              .then((invoiceUrl: string): void => {
-                orderDetail.invoiceURL = invoiceUrl;
-              });
-          }
-        } else if (this.Config.webexSiteStatus.PENDING_PARM === orderDetail.status) {
-          orderDetail.status = this.$translate.instant('myCompanyOrders.pendingActivation');
         } else {
-          orderDetail.status = this.$translate.instant('myCompanyOrders.pending');
+          // generate the URL to display the Digital River invoice
+          const product = _.includes(orderDetail.productDescriptionList, this.Config.onlineProducts.webex)
+            ? this.Config.onlineProducts.webex : this.Config.onlineProducts.spark;
+          this.DigitalRiverService.getInvoiceUrl(orderDetail.externalOrderId, product)
+            .then((invoiceUrl: string): void => {
+              orderDetail.invoiceURL = invoiceUrl;
+            });
         }
-        return orderDetail;
+        if (COMPLETED === origOrderDetail.status) {
+          orderDetail.status = this.$translate.instant('myCompanyOrders.completed');
+        } else if (this.Config.webexSiteStatus.PENDING_PARM === origOrderDetail.status) {
+          orderDetail.status = this.$translate.instant('myCompanyOrders.pendingActivation');
+        }
+        this.orderDetailList.push(orderDetail);
       });
       // sort orders with newest on top
       this.orderDetailList.sort((a: IOrderDetail, b: IOrderDetail): number => {
@@ -110,10 +111,6 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
         width: '14%',
       }],
     };
-  }
-
-  public formatProductDescriptionList(productDescriptionList: string[] = []): string {
-    return productDescriptionList.join(', ');
   }
 }
 
