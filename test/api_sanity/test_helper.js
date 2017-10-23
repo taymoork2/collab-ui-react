@@ -113,7 +113,8 @@ var auth = {
     org: '4214d345-7caf-4e32-b015-34de878d1158',
   },
   'partner-admin': {
-    user: 'atlaspartneradmin@atlas.test.com',
+    // TODO: replace with original partner admin after more org cleanup
+    user: 'vivitron+atlaspartneradmin@gmail.com',
     pass: 'P@ssword123',
     org: 'c054027f-c5bd-4598-8cd8-07c08163e8cd',
   },

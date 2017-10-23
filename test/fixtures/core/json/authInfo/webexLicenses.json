@@ -1,0 +1,64 @@
+ [
+    {
+      "licenseId": "EE_348506b4-f827-4f8b-92fc-aea191241a81_jp88000.webex.com",
+      "offerName": "EE",
+      "licenseType": "CONFERENCING",
+      "features": [
+        "cloudmeetings"
+      ],
+      "volume": 100,
+      "isTrial": true,
+      "trialId": "5dd04fdb-9931-42bc-bd26-a38779fff099",
+      "status": "ACTIVE",
+      "capacity": 200,
+      "siteUrl": "jp-test1-org.webex.com",
+      "partnerOrgId": "4e2befa3-9d82-4fdf-ad31-bb862133f078",
+      "partnerEmail": "admin@squareduc-partner.com",
+      "isCIUnifiedSite": true
+    },
+    {
+      "licenseId": "CMR_4b982113-0548-4409-8604-ab22f2aa30cd_jp88000.webex.com",
+      "offerName": "CMR",
+      "licenseType": "CMR",
+      "features": [],
+      "volume": 100,
+      "isTrial": true,
+      "trialId": "5dd04fdb-9931-42bc-bd26-a38779fff099",
+      "status": "ACTIVE",
+      "capacity": 200,
+      "siteUrl": "JP-TEST-ORG.webex.com",
+      "partnerOrgId": "4e2befa3-9d82-4fdf-ad31-bb862133f078",
+      "partnerEmail": "admin@squareduc-partner.com",
+      "isCIUnifiedSite": true
+    },
+    {
+      "licenseId": "TC_4b982113-0548-4409-8604-ab22f2aa30cd_jp88000.webex.com",
+      "offerName": "TC",
+      "licenseType": "TC",
+      "features": [],
+      "volume": 100,
+      "isTrial": true,
+      "trialId": "5dd04fdb-9931-42bc-bd26-a38779fff099",
+      "status": "ACTIVE",
+      "capacity": 200,
+      "siteUrl": "jp-test1-org.webex.com",
+      "partnerOrgId": "4e2befa3-9d82-4fdf-ad31-bb862133f078",
+      "partnerEmail": "admin@squareduc-partner.com",
+      "isCIUnifiedSite": true
+    },
+    {
+      "licenseId": "TC_4b982113-0548-4409-8604-ab22f2aa30cd_jp88000.webex.com",
+      "offerName": "TC",
+      "licenseType": "TC",
+      "features": [],
+      "volume": 100,
+      "isTrial": true,
+      "trialId": "5dd04fdb-9931-42bc-bd26-a38779fff099",
+      "status": "ACTIVE",
+      "capacity": 200,
+      "siteUrl": "ag-test1-org.webex.com",
+      "partnerOrgId": "4e2befa3-9d82-4fdf-ad31-bb862133f078",
+      "partnerEmail": "admin@squareduc-partner.com",
+      "isCIUnifiedSite": true
+    }
+  ]

@@ -1,4 +1,4 @@
-import { PrivateTrunkPrereqService } from 'modules/hercules/private-trunk/private-trunk-prereq/private-trunk-prereq.service';
+import { PrivateTrunkPrereqService } from 'modules/services-overview/new-hybrid/prerequisites-modals/private-trunk-prereq';
 import { PrivateTrunkResource, Destination } from 'modules/hercules/private-trunk/private-trunk-setup/private-trunk-setup';
 import { PrivateTrunkService } from 'modules/hercules/private-trunk/private-trunk-services';
 import { USSService } from 'modules/hercules/services/uss.service';

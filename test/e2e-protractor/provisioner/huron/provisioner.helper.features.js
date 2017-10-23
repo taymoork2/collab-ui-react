@@ -3,19 +3,18 @@ import * as cmiHelper from './provisioner.helper.cmi';
 import * as hgHelper from './huron-huntgroup-config';
 
 export function setupHuntGroup(customer) {
-  if (customer.doHuntGroup) {
+  if (customer.doHuntGroup || customer.doAllFeatures) {
     hgHelper.createHuntGroup(customer);
   }
 }
 
 export function setupCallPickup(customer) {
-  if (customer.doCallPickup) {
+  if (customer.doCallPickup || customer.doAllFeatures) {
     const callPickupName = `${customer.name}_test_pickup`
     const member0 = customer.users[0].name.givenName
     const member1 = customer.users[1].name.givenName
     let uuid0 = ''
     let uuid1 = ''
-    console.log('Provisioning call pickup ...');
     return provisionerHelper.getToken(customer.partner)
       .then(token => {
         return cmiHelper.getUserUUID(token, customer.callOptions.cmiCustomer.uuid, member0)
@@ -48,7 +47,7 @@ export function setupCallPickup(customer) {
 }
 
 export function setupCallPark(customer) {
-  if (customer.doCallPark && (customer.users.length >= 2)) {
+  if ((customer.doCallPark && (customer.users.length >= 2)) || customer.doAllFeatures) {
     var promises = [];
     var userMembers = [];
 
@@ -84,7 +83,7 @@ export function setupCallPark(customer) {
 }
 
 export function setupCallPaging(customer) {
-  if (customer.doCallPaging) {
+  if (customer.doCallPaging || customer.doAllFeatures) {
     const callPagingName = 'Death Star'
     const userName = customer.users[0].name.givenName
     const placeName = customer.places[0].name
@@ -92,7 +91,6 @@ export function setupCallPaging(customer) {
     let placeToAdd = {}
     const initiator = 'CUSTOM'
     let setExtension = (parseInt(customer.callOptions.numberRange.beginNumber) + 75).toString()
-    console.log(`Provisioning call paging for ${customer.name}...`);
     return provisionerHelper.getToken(customer.partner)
       .then(token => {
         return cmiHelper.getUserUUID(token, customer.callOptions.cmiCustomer.uuid, userName)
@@ -124,7 +122,7 @@ export function setupCallPaging(customer) {
                 }
                 return cmiHelper.createCallPaging(token, customer.callOptions.cmiCustomer.uuid, pagingBody)
                   .then(() => {
-                    console.log('Successfully created call paging group!');
+                    console.log(`Successfully added call paging group for ${customer.name}`);
                   })
               })
           })

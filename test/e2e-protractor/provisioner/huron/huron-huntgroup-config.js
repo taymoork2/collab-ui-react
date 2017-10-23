@@ -38,7 +38,7 @@ export function createHuntGroup(customer) {
           }
           return cmiHelper.createCmiHuntGroup(token, customer.callOptions.cmiCustomer.uuid, hgBody)
             .then(() => {
-              console.log(`Successfully provisioned hunt group for ${customer.name}!`);
+              console.log(`Successfully added hunt group for ${customer.name}!`);
             });
         });
     });

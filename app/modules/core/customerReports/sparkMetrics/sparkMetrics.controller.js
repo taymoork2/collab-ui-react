@@ -106,12 +106,11 @@
       $scope.$broadcast('updateIframe', iframeUrl, data);
     }
 
-    $window.iframeLoaded = function (iframeId) {
-      var rec = angular.element(iframeId);
-      rec.ready(function () {
+    $scope.iframeLoaded = function (elem) {
+      elem.ready(function () {
         var token = $window.sessionStorage.getItem('accessToken');
         var orgID = Authinfo.getOrgId();
-        rec[0].contentWindow.postMessage(token + ',' + orgID, '*');
+        elem[0].contentWindow.postMessage(token + ',' + orgID, '*');
       });
     };
   }

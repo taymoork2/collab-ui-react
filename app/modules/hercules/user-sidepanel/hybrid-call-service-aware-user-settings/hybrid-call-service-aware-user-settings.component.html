@@ -77,25 +77,8 @@
           </div>
         </div>
 
-        <div class="row collapse" ng-if="$ctrl.userIsCurrentlyEntitled && $ctrl.homedCluster">
-          <div class="columns small-3">
-            <span class="cloud-extension-label">{{::'cloudExtensions.cluster' | translate}}:</span>
-          </div>
-          <div class="columns small-9">
-            <span class="cloud-extension-label">{{$ctrl.homedCluster.name}}</span>
-          </div>
-        </div>
-
-        <div class="row collapse" ng-if="$ctrl.userIsCurrentlyEntitled && $ctrl.homedConnector">
-          <div class="columns small-3">
-            <span class="cloud-extension-label">{{::'hercules.connectors.host_name' | translate}}:</span>
-          </div>
-          <div class="columns small-9">
-            <span class="cloud-extension-label">
-              <a href="https://{{$ctrl.homedConnector.hostname}}" target="_blank">{{$ctrl.homedConnector.hostname}}</a>
-            </span>
-          </div>
-        </div>
+        <hybrid-services-user-homed-cluster-and-hostname ng-if="$ctrl.userIsCurrentlyEntitled && $ctrl.connectorId"
+                                                         connector-id="$ctrl.connectorId"></hybrid-services-user-homed-cluster-and-hostname>
 
         <div class="row collapse" ng-if="$ctrl.directoryUri || ($ctrl.userStatusAware.state === 'error' || $ctrl.userStatusAware.state === 'activated')">
           <div class="columns small-3">

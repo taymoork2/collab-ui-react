@@ -1,10 +1,10 @@
-import { PrivateTrunkPrereqService } from 'modules/hercules/private-trunk/private-trunk-prereq/private-trunk-prereq.service';
+import { PrivateTrunkPrereqService } from 'modules/services-overview/new-hybrid/prerequisites-modals/private-trunk-prereq';
 import { IToolkitModalService } from 'modules/core/modal';
 import { IOption, PrivateTrunkResource } from './private-trunk-setup';
 import { IformattedCertificate } from 'modules/hercules/services/certificate-formatter-service';
 import { PrivateTrunkService } from 'modules/hercules/private-trunk/private-trunk-services/private-trunk.service';
 import { IPrivateTrunkResource } from 'modules/hercules/private-trunk/private-trunk-services/private-trunk';
-import { PrivateTrunkCertificateService } from 'modules/hercules/private-trunk/private-trunk-certificate';
+import { CiscoCollaborationCloudCertificateService } from 'modules/hercules/service-settings/cisco-collaboration-cloud-certificate-store';
 import { Notification } from 'modules/core/notifications';
 
 export interface  ICertificateArray {
@@ -48,7 +48,7 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private PrivateTrunkPrereqService: PrivateTrunkPrereqService,
-    private PrivateTrunkCertificateService: PrivateTrunkCertificateService,
+    private CiscoCollaborationCloudCertificateService: CiscoCollaborationCloudCertificateService,
     private $state: ng.ui.IStateService,
     private $modal: IToolkitModalService,
     private Notification: Notification,
@@ -145,7 +145,7 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
       return;
     }
     this.isImporting = true;
-    this.PrivateTrunkCertificateService.uploadCertificate(file)
+    this.CiscoCollaborationCloudCertificateService.uploadCertificate(file)
       .then( cert => {
         if (cert) {
           this.formattedCertList = cert.formattedCertList || [];
@@ -173,7 +173,7 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
   }
 
   public initCertificateInfo(): void {
-    this.PrivateTrunkCertificateService.readCerts()
+    this.CiscoCollaborationCloudCertificateService.readCerts()
       .then((cert) => {
         if (!_.isUndefined(cert)) {
           this.formattedCertList = cert.formattedCertList;
@@ -266,7 +266,7 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
 
   public cleanupOnError(): void {
     this.PrivateTrunkService.removePrivateTrunkResources();
-    this.PrivateTrunkCertificateService.deleteUploadedCerts();
+    this.CiscoCollaborationCloudCertificateService.deleteUploadedCerts();
   }
 
 
@@ -282,7 +282,7 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
       type: 'dialog',
     })
       .result.then(() => {
-        this.PrivateTrunkCertificateService.deleteUploadedCerts();
+        this.CiscoCollaborationCloudCertificateService.deleteUploadedCerts();
         if (!this.isFirstTimeSetup) {
           this.dismiss();
           this.$state.go('private-trunk-overview.settings');

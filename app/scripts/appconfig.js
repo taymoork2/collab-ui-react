@@ -325,11 +325,6 @@
           .state('sidepanel', {
             abstract: true,
             onExit: panelOnExit,
-            resolve: {
-              atlas2017NameChangeFeatureToggled: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlas2017NameChange);
-              },
-            },
             onEnter: panelOnEnter(),
           })
           .state('largepanel', {
@@ -338,23 +333,16 @@
             onEnter: panelOnEnter({
               type: 'large',
             }),
-            resolve: {
-              atlas2017NameChangeFeatureToggled: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlas2017NameChange);
-              },
-            },
           });
         // Enter and Exit functions for panel(large or side)
         function panelOnEnter(options) {
           options = options || {};
-          return /* @ngInject */ function ($modal, $state, $previousState, atlas2017NameChangeFeatureToggled) {
+          return /* @ngInject */ function ($modal, $state, $previousState) {
             if (_.get($state, 'current.data.sidepanel', '') !== 'not-full') {
-              if (atlas2017NameChangeFeatureToggled) {
-                if (!options.type) {
-                  options.type = 'side-panel-full-height nav-expanded';
-                } else {
-                  options.type += ' side-panel-full-height nav-expanded';
-                }
+              if (!options.type) {
+                options.type = 'side-panel-full-height nav-expanded';
+              } else {
+                options.type += ' side-panel-full-height nav-expanded';
               }
             }
 
@@ -1007,7 +995,6 @@
               prevState: null,
             },
           })
-
           .state('users.manage.advanced', {
             abstract: true,
             controller: 'UserManageAdvancedController',
@@ -1046,6 +1033,12 @@
               $scope.bulkSave().then(function () {
                 $scope.umac.isBusy = false;
               });
+            },
+          })
+          .state('users.manage.edit-auto-assign-template-modal', {
+            template: '<edit-auto-assign-template-modal dismiss="$dismiss()"></edit-auto-assign-template-modal>',
+            params: {
+              prevState: 'users.manage.picker',
             },
           })
 
@@ -1808,15 +1801,7 @@
               },
             },
             resolve: {
-              displayName: /* @ngInject */ function ($state, $translate, FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasRolesAndSecurity).then(function (enabled) {
-                  if (enabled) {
-                    _.set(this, 'data.displayName', $translate.instant('usersPreview.userDetails'));
-                  } else {
-                    _.set(this, 'data.displayName', $translate.instant('rolesPanel.roles'));
-                  }
-                }.bind(this));
-              },
+              displayName: translateDisplayName('usersPreview.userDetails'),
             },
           })
           .state('user-overview.roles-and-security', {
@@ -1888,16 +1873,41 @@
           })
           .state('site-list', {
             url: '/site-list',
-            template: require('modules/core/siteList/siteList.tpl.html'),
-            controller: 'WebExSiteRowCtrl',
+            template: require('modules/core/siteList/siteListBase.tpl.html'),
+            controller: 'WebExSiteBaseCtrl',
             controllerAs: 'siteList',
             parent: 'main',
+            resolve: {
+              accountLinkingPhase2: function () {
+                return false;
+              },
+            },
+          })
+          .state('site-list.not-linked', {
+            url: '/site-list/not-linked',
+            views: {
+              tabContent: {
+                controllerAs: 'siteList',
+                controller: 'WebExSiteRowCtrl',
+                template: require('modules/core/siteList/siteList.tpl.html'),
+              },
+            },
+          })
+          .state('site-list.linked', {
+            url: '/site-list/linked',
+            views: {
+              tabContent: {
+                controllerAs: 'siteList',
+                controller: 'WebExSiteRowCtrl',
+                template: 'preliminary placeholder for linked sites component',
+              },
+            },
           })
           .state('site-list-add', {
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<webex-add-site-modal subscription-list="$resolve.subscriptionList" audio-licenses="$resolve.audioLicenses" title="\'firstTimeWizard.addWebexSite\'" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site->',
+                template: '<webex-add-site-modal subscription-list="$resolve.subscriptionList" audio-licenses="$resolve.audioLicenses" title="\'firstTimeWizard.addWebexSite\'" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site-modal>',
               },
             },
             resolve: {
@@ -1915,16 +1925,36 @@
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<webex-add-site-modal subscription-list="$resolve.subscriptionList" single-step="3" title="\'webexSiteManagement.redistributeLicenses\'" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site->',
+                template: '<webex-add-site-modal subscription-list="$resolve.subscriptionList" single-step="3" title="\'webexSiteManagement.redistributeLicenses\'" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site-modal>',
               },
             },
             params: {
               subscriptionId: null,
             },
             resolve: {
-              subscriptionList: /* @ngInject */ function (Authinfo, $stateParams) {
+              subscriptionList: /* @ngInject */ function ($stateParams) {
                 var subscriptionIds = $stateParams['subscriptionId'];
                 return [subscriptionIds];
+              },
+            },
+          })
+          .state('site-list-delete', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                template: '<webex-delete-site-modal subscription-id="$resolve.subscriptionId" site-url="$resolve.siteUrl" title="\'webexSiteManagement.redistributeLicenses\'" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-delete-site-modal>',
+              },
+            },
+            params: {
+              subscriptionId: null,
+              siteUrl: null,
+            },
+            resolve: {
+              subscriptionId: /* @ngInject */ function ($stateParams) {
+                return $stateParams['subscriptionId'];
+              },
+              siteUrl: /* @ngInject */ function ($stateParams) {
+                return $stateParams['siteUrl'];
               },
             },
           })
@@ -4775,14 +4805,7 @@
             url: '/services/call/settings',
             views: {
               callServiceView: {
-                controllerAs: 'callServiceSettings',
-                controller: 'CallServiceSettingsController',
-                template: require('modules/hercules/service-settings/call-service-settings.html'),
-              },
-            },
-            resolve: {
-              hasAtlasHybridCallDiagnosticTool: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCallDiagnosticTool);
+                template: '<call-service-settings-page></call-service-settings-page>',
               },
             },
           })

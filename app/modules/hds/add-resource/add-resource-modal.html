@@ -36,10 +36,7 @@
     </div>
   </div>
   <div ng-show="hdsRedirectAddResourceController.currentState === hdsRedirectAddResourceController.states.NO_PROCEED">
-    <div ng-if="!hdsRedirectAddResourceController.nameChangeEnabled">
-      <h4 translate="hds.add-resource-dialog.noInfo"></h4>
-    </div>
-    <div ng-if="hdsRedirectAddResourceController.nameChangeEnabled">
+    <div>
       <h4 translate="hds.add-resource-dialog.noInfoNew" translate-values="{appTitle: getAppTitle()}"></h4>
     </div>
     <br>

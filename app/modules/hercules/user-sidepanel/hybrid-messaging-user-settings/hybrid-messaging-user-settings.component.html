@@ -67,6 +67,9 @@
             </span>
         </div>
 
+        <hybrid-services-user-homed-cluster-and-hostname ng-if="$ctrl.userIsCurrentlyEntitled && $ctrl.connectorId"
+                                                         connector-id="$ctrl.connectorId"></hybrid-services-user-homed-cluster-and-hostname>
+
         <div class="row collapse" ng-if="$ctrl.userStatus.messages.length">
           <div class="columns small-3">
             <span class="history-label">{{'cloudExtensions.details' | translate}}:</span>

@@ -311,13 +311,13 @@
       integration: 'https://%s/custportal/extensions/spark-report-partner/spark-report-partner.html',
       prod: 'https://%s/custportal/extensions/spark-report-partner/spark-report-partner.html',
     },
-    VirtualAssistantServiceUrl: {
+    CvaServiceUrl: {
       dev: 'https://virtual-assistant.appstaging.ciscoccservice.com/bot-services/v1/',
       cfe: 'https://virtual-assistant.appstaging.ciscoccservice.com/bot-services/v1/',
       integration: 'https://virtual-assistant.appstaging.ciscoccservice.com/bot-services/v1/',
       prod: 'https://virtual-assistant.produs1.ciscoccservice.com/bot-services/v1/',
     },
-    ExpertVirtualAssistantServiceUrl: {
+    EvaServiceUrl: {
       dev: 'https://expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
       cfe: 'https://expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
       integration: 'https://expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
@@ -358,7 +358,7 @@
     LogMetricsUrl: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
     SSOTestUrl: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
     SSOSetupUrl: 'https://idbroker.webex.com/idb/idbconfig/',
-    EscalationIntentUrl: 'https://care-assistant.produs1.ciscoccservice.com/onboarding/apiai/escalation.json',
+    EscalationIntentUrl: 'https://virtual-assistant.produs1.ciscoccservice.com/apiai/escalation.json',
   };
 
   module.exports = angular

@@ -84,8 +84,8 @@
             error: 'trialModal.errorServerDown',
           };
         } else {
-          // we allow duplicate emails for the  the user who is a consumer
-          if (obj.isExist === 'true' && !(key === 'endCustomerEmail' && obj.isConsumer === 'true')) {
+          // we allow duplicate emails for the consumer users and duplicate organization names
+          if (obj.isExist === 'true' && !(key === 'endCustomerEmail' && obj.isConsumer === 'true') && key !== 'organizationName') {
             return {
               error: 'trialModal.errorInUse',
             };

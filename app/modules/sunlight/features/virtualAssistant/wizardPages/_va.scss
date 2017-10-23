@@ -1,0 +1,45 @@
+@import 'cva-config-overview';
+@import 'cva-dialog-integration';
+@import 'cva-access-token';
+@import 'va-name';
+@import 'va-summary';
+@import 'va-avatar';
+
+.va-button {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  color: $gray-dark-2;
+}
+
+.input-label {
+  @include vr-spacing(mt, 2.3125);
+  font-family: 'CiscoSansTT Regular';
+  font-size: 20px;
+  color: $gray-dark-2;
+  letter-spacing: 0;
+  line-height: 24px;
+}
+
+.va-card {
+  @include vr-spacing(mt, 5);
+
+  display: flex;
+  flex-flow: column;
+}
+
+.va-card-center {
+  justify-content: center;
+  width: 100% !important;
+}
+
+.va-box {
+  border: 1px solid $gray-light-2;
+  border-radius: 3px;
+
+  .submit {
+    @include vr-spacing(m, 0);
+  }
+}
+

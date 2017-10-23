@@ -24,6 +24,11 @@ var manageUsersPage = function () {
     cancelButton: element(by.css('.reveal-modal.dialog .modal-content .modal-footer button:not(.btn--primary)')),
   };
 
+  // Auto-Assign Licenses
+  this.autoAssignLicenses = {
+    title: element(by.css('.modal-header > h3[translate]')),
+  };
+
   // add or modify users
   this.select = {
     title: element(by.css('.modal-body h4:first-of-type')),

@@ -19,7 +19,6 @@ class RenameAndDeregisterClusterSectionCtrl implements ng.IComponentController {
     type: 'dialog',
   };
 
-  public nameChangeEnabled: boolean = false;
   public atlasHybridAuditLogEnabled = false;
   public serviceId: string;
   public showRenameSection: boolean;
@@ -43,9 +42,6 @@ class RenameAndDeregisterClusterSectionCtrl implements ng.IComponentController {
   ) { }
 
   public $onInit() {
-    this.FeatureToggleService.atlas2017NameChangeGetStatus().then((toggle: boolean): void => {
-      this.nameChangeEnabled = toggle;
-    });
     this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridAuditLog)
       .then((enabled: boolean) => {
         this.atlasHybridAuditLogEnabled = enabled;

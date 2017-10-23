@@ -19,7 +19,7 @@
       <div>
         <form name="$ctrl.form" novalidate role="form">
           <div id="speedDialsContainer" class="sd-container">
-            <div ng-repeat="sd in $ctrl.speedDialList" ng-class="{'sd-reorder': $ctrl.reordering}">
+            <div ng-repeat="sd in $ctrl.speedDialList" id="speedDial{{$index + 1}}" ng-class="{'sd-reorder': $ctrl.reordering}" tabindex="{{$ctrl.reordering ? 0 : -1}}" ng-keydown="$ctrl.speedDialKeypress($event, sd)">
               <div ng-if="!sd.edit" class="sd-readonly-wrapper">
                 <div>
                   <p class="sd-label">{{sd.label}}</p>
@@ -31,7 +31,7 @@
                   <a href class="icon icon-trash" ng-click="$ctrl.delete(sd)" aria-label="{{::'common.delete | translate'}}"></a>
                 </div>
                 <div ng-if="$ctrl.reordering">
-                  <a class="icon icon-tables"></a>
+                  <a class="icon icon-tables" ng-class="{'selected': $ctrl.isSelectedSpeedDial(sd)}"></a>
                </div>
               </div>
             </div>

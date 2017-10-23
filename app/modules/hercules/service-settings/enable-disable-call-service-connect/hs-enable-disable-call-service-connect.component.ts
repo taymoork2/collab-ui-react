@@ -6,12 +6,13 @@ class HsEnableDisableCallServiceConnectComponentCtrl implements ng.IComponentCon
   public serviceIsEnabled;
   private onCallServiceConnectEnabled: Function;
   private onCallServiceConnectDisabled: Function;
-
+  public showPrerequisitesButton = false;
   private saving = false;
 
   /* @ngInject */
   constructor(
     private $modal,
+    private FeatureToggleService,
     private Notification: Notification,
     private ServiceDescriptorService: ServiceDescriptorService,
   ) {}
@@ -22,6 +23,13 @@ class HsEnableDisableCallServiceConnectComponentCtrl implements ng.IComponentCon
     if (serviceIsEnabled && serviceIsEnabled.currentValue) {
       this.serviceIsEnabled = serviceIsEnabled.currentValue;
     }
+  }
+
+  public $onInit() {
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasServicesOverviewRefresh)
+      .then((result) => {
+        this.showPrerequisitesButton = result;
+      });
   }
 
   public flipStatus(): void {
@@ -69,6 +77,17 @@ class HsEnableDisableCallServiceConnectComponentCtrl implements ng.IComponentCon
         this.saving = false;
       });
 
+  }
+
+  public openPrerequisites(): void {
+    this.$modal.open({
+      controller: 'HybridCallPrerequisitesController',
+      controllerAs: 'vm',
+      template: require('modules/services-overview/new-hybrid/prerequisites-modals/hybrid-call-prerequisites-modal/hybrid-call-prerequisites.html'),
+      resolve: {
+        callServiceConnectOnly: () => true,
+      },
+    });
   }
 
 }

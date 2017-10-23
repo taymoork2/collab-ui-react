@@ -1,11 +1,10 @@
-<span id="{{row.entity.license.siteUrl}}_licensesIcon" name="{{row.entity.license.siteUrl}}_licensesIcon">
-  <i id="{{row.entity.license.siteUrl}}_webex-site-licenses"
-    name="{{row.entity.license.siteUrl}}_webex-site-licenses"
-    ng-click="grid.appScope.redistributeLicenses(row.entity.license)"
+<span id="{{$ctrl.license.siteUrl}}_licensesIcon" name="{{$ctrl.license.siteUrl}}_licensesIcon">
+  <i id="{{$ctrl.license.siteUrl}}_webex-site-licenses"
     class="icon icon-browser iconEnabledWithHover grid-vcenter"
     tabindex="0"
     tooltip-append-to-body="true"
     tooltip="{{::'webexSiteManagement.redistributeLicenses' | translate}}"
+    ng-click="$ctrl.redistributeLicenses($ctrl.license)"
     tooltip-trigger="focus mouseenter">
   </i>
 </span>

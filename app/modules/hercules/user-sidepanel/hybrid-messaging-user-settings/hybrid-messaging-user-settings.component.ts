@@ -19,6 +19,7 @@ class HybridMessagingUserSettingsComponentCtrl implements ng.IComponentControlle
   public userIsCurrentlyEntitled: boolean;
   public newEntitlementValue: boolean | undefined;
 
+  private connectorId: string;
   private userUpdatedCallback: Function;
 
   /* @ngInject */
@@ -51,6 +52,10 @@ class HybridMessagingUserSettingsComponentCtrl implements ng.IComponentControlle
           this.entitledToggle = this.userIsCurrentlyEntitled = this.userStatus.entitled;
         } else {
           this.entitledToggle = this.userIsCurrentlyEntitled = false;
+        }
+
+        if (this.userStatus && this.userStatus.connectorId) {
+          this.connectorId = this.userStatus.connectorId;
         }
 
         if (this.userStatus && this.userStatus.lastStateChange) {

@@ -12,6 +12,9 @@ class HybridCallInactiveCardController implements ng.IComponentController {
       controller: 'HybridCallPrerequisitesController',
       controllerAs: 'vm',
       template: require('modules/services-overview/new-hybrid/prerequisites-modals/hybrid-call-prerequisites-modal/hybrid-call-prerequisites.html'),
+      resolve: {
+        callServiceConnectOnly: () => false,
+      },
     });
   }
 

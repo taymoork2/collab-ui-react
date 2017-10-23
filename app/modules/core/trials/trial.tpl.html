@@ -33,8 +33,8 @@
               ng-model-options="{updateOn: 'default blur', debounce: { default: 2000, blur: 0 } }"
               required>
             <div class="cs-input__messages" ng-messages="trialForm.customerName.$error" role="alert">
-              <div ng-repeat="(key, value) in trial.validationMessages.general" class="message">
-                <span ng-message="{{key}}">{{value}}</span>
+              <div ng-repeat="(key, value) in trial.validationMessages.general">
+                <span class="message" ng-message="{{key}}">{{value}}</span>
               </div>
             </div>
           </div>

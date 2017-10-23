@@ -2,8 +2,7 @@
   <cs-overlay-panel
     class="overlay-panel typeahead-group"
     overlay-title="{{::'locations.createLocation' | translate}}" close="$ctrl.cancelModal()"
-    ng-keyup="$ctrl.evalKeyPress($event.keyCode)"
-    ng-keypress="$ctrl.enterNextPage($event.keyCode)">
+    ng-keyup="$ctrl.evalEscKeyPress($event)">
 
     <div class="wizard-loading-spinner" ng-if="$ctrl.loading">
       <i class="icon icon-spinner"></i>
@@ -28,7 +27,8 @@
               focus-on
               messages="$ctrl.validationMessages"
               ng-model="$ctrl.callLocationSettingsData.location.name"
-              ng-model-options="{ debounce: 500 }">
+              ng-model-options="{ debounce: 500 }"
+              ng-keydown="$ctrl.evalKeyPress($event)">
             <p class="input-description" translate="locations.locationDesc"></p>
             <div class="cs-input__messages error" ng-messages="$ctrl.form.locationName.$error" role="alert">
               <div ng-repeat="(key, value) in $ctrl.validationMessages" class="message">
@@ -53,7 +53,8 @@
                   voicemail-pilot-number="$ctrl.callLocationSettingsData.location.voicemailPilotNumber"
                   company-name="$ctrl.callLocationSettingsData.customerVoice.name"
                   on-change-fn="$ctrl.onCallerIdChanged(callerId)"
-                  size="large">
+                  size="large"
+                  key-press="$ctrl.evalKeyPress($event)">
                 </uc-location-caller-id>
               </div>
             </div>
@@ -84,7 +85,8 @@
                 <uc-default-country
                   default-country="$ctrl.callLocationSettingsData.location.tone"
                   default-country-options="$ctrl.locationSettingsOptions.defaultCountryOptions"
-                  on-change-fn="$ctrl.onDefaultCountryChanged(defaultCountry)">
+                  on-change-fn="$ctrl.onDefaultCountryChanged(defaultCountry)"
+                  ng-keypress="$ctrl.evalKeyPress($event)">
                 </uc-default-country>
               </div>
             </div>

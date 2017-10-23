@@ -1,6 +1,6 @@
 import componentModule from '../../index';
 
-import { PrivateTrunkPrereqService } from '../../../hercules/private-trunk/private-trunk-prereq';
+import { PrivateTrunkPrereqService } from 'modules/services-overview/new-hybrid/prerequisites-modals/private-trunk-prereq';
 import { EPTInactiveCardController } from 'modules/services-overview/new-hybrid/inactive/ept-inactive-card.component';
 
 describe('Component: EPTInactiveCardController', () => {

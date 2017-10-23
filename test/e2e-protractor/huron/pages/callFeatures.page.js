@@ -20,7 +20,7 @@ export class CallFeaturesPage {
     this.huntGroup = element(by.cssContainingText('span.name', 'Hunt Group'));
     this.pagingGroup = element(by.cssContainingText('span.name', 'Paging Group'));
     this.newButton = element(by.css('button.btn.btn--people.new-feature-button'));
-    this.card = element(by.css('article'));
+    this.card = element(by.css('section.card-body'));
     this.cpDetailHeader = element(by.css('div.header-with-right-icon'));
     this.detailHeader = element(by.css('.h4.ellipsis'));
     this.editCancel = element(by.cssContainingText('button', 'Cancel'));
@@ -29,5 +29,11 @@ export class CallFeaturesPage {
     this.nextButton = element(by.css('span.icon-arrow-next'));
     this.backButton = element(by.css('i.icon-arrow-back'));
     this.confirmDelete = element(by.css('button.btn--negative'));
+    this.countCard = element.all(by.repeater('huronFeature in huronFeaturesCtrl.listOfFeatures'));
+    this.cpHeading = element(by.cssContainingText('h4.section__title', 'Call Park Settings'));
+    this.cpuHeading = element(by.cssContainingText('h4.section__title', 'Call Pickup Settings'));
+    this.hgHeading = element(by.cssContainingText('h4.section__title', 'Hunt Group Settings'));
+    this.pgHeading = element(by.cssContainingText('h4.section__title', 'Paging Group Settings'));
+    this.featureCard = element(by.css('article'));
   }
 };

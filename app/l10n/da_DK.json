@@ -6659,11 +6659,13 @@
     "areaCode": "Dette lader ikke til at være et gyldigt områdekode."
   },
   "CsdmStatus": {
-    "Online": "Online",
-    "OnlineWithIssues": "Online, med problemer",
-    "Offline": "Offline",
-    "OfflineExpired": "Deaktiveret",
-    "Unknown": "Ukendt",
+    "connectionStatus": {
+      "Online": "Online",
+      "OnlineWithIssues": "Online, med problemer",
+      "Offline": "Offline",
+      "OfflineExpired": "Deaktiveret",
+      "Unknown": "Ukendt"
+    },
     "WithDevices": "Med enheder",
     "upgradeChannels": {
       "Stable": "Stabil",

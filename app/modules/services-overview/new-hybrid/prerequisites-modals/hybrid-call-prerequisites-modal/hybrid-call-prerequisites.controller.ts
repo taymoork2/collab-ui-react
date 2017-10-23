@@ -17,6 +17,7 @@ export class HybridCallPrerequisitesController {
   constructor(
     private $translate: ng.translate.ITranslateService,
     private $window: ng.IWindowService,
+    public callServiceConnectOnly: boolean,
   ) {
   }
 

@@ -31,7 +31,8 @@ describe('Component: virtual assistant modal', () => {
       '$scope',
       'Authinfo',
       '$state',
-      'VirtualAssistantService',
+      'CvaService',
+      'EvaService',
     );
     this.$scope.dismiss = jasmine.createSpy('dismiss');
 
@@ -39,7 +40,7 @@ describe('Component: virtual assistant modal', () => {
     spyOn(this.$modal, 'open');
     spyOn(this.$state, 'go');
     spyOn(this.Authinfo, 'isCare').and.returnValue(true);
-    spyOn(this.VirtualAssistantService, 'listExpertAssistants').and.returnValue(expertVaDeferred.promise);
+    spyOn(this.EvaService, 'listExpertAssistants').and.returnValue(expertVaDeferred.promise);
 
     this.$state.isVirtualAssistantEnabled = true;
     this.$state.isExpertVirtualAssistantEnabled = true;
@@ -51,10 +52,10 @@ describe('Component: virtual assistant modal', () => {
   });
 
   it('ok function call for VirtualAssistant results in no initiating state call But does close the care new feature Modal with the value chosen.', function () {
-    this.controller.ok('Va');
+    this.controller.ok('customerVirtualAssistant');
     expect(this.$scope.dismiss).toHaveBeenCalledWith();
     expect(this.$state.go).toHaveBeenCalledWith('care.assistant', {
-      type: 'virtualAssistant',
+      type: 'customerVirtualAssistant',
     });
   });
 

@@ -10,6 +10,8 @@
 const LoginPage = require('../pages/login.page');
 const login = new LoginPage();
 const overview = require('../pages/overview.page');
+const ManageUsersPage = require('../pages/manageUsers.page');
+const manageUsers = new ManageUsersPage();
 const utils = require('../utils/test.utils');
 
 describe('Manage Users - Auto-Assign Licenses', function () {
@@ -20,5 +22,10 @@ describe('Manage Users - Auto-Assign Licenses', function () {
   it('should have an entry "Auto-Assign Licenses" for the "Licenses" card', function () {
     utils.expectIsDisplayed(overview.cards.licenses.headerText);
     utils.expectIsDisplayed(overview.cards.licenses.autoAssignLicensesText);
+  });
+
+  it('should open modal to set up Auto-Assign Licenses', function () {
+    utils.click(overview.cards.licenses.settingsIcon);
+    utils.expectIsDisplayed(manageUsers.autoAssignLicenses.title);
   });
 });

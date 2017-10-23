@@ -37,7 +37,7 @@ export default angular
     require('modules/core/proPack').default,
     require('modules/core/scripts/services/authinfo'),
     require('modules/hds/services/hds.service'),
-    require('modules/hercules/private-trunk/private-trunk-prereq').default,
+    require('modules/services-overview/new-hybrid/prerequisites-modals/private-trunk-prereq').default,
     require('modules/hercules/private-trunk/private-trunk-services').default,
     require('modules/hercules/services/calendar-cloud-connector.service').default,
     require('modules/hercules/services/enterprise-private-trunk-service').default,

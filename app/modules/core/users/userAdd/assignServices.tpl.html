@@ -1,4 +1,4 @@
-<div id="licenseBlock" class="onboard-block license-block" ng-if="collabRadio === 1 && !hasAccount">
+<div id="licenseBlock" class="onboard-block license-block" ng-if="!hasAccount">
   <div class="bold">
     <span translate="onboardModal.entitlements"></span>
     <hr class="onboard-divider"/>
@@ -9,5 +9,5 @@
     </div>
   </div>
 </div>
-<cr-services-panels ng-if="collabRadio === 1 && hasAccount" radioStates="radioStates"></cr-services-panels>
+<cr-services-panels ng-if="hasAccount" radioStates="radioStates"></cr-services-panels>
 <hybrid-services-panel bind-entitlements="updateExtensionEntitlements(entitlements)"></hybrid-services-panel>

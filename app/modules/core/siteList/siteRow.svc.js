@@ -13,11 +13,12 @@
     $interval,
     $translate,
     Authinfo,
-    Userservice,
-    WebExUtilsFact,
+    SetupWizardService,
     UrlConfig,
+    Userservice,
     WebExApiGatewayService,
-    WebExApiGatewayConstsService
+    WebExApiGatewayConstsService,
+    WebExUtilsFact
   ) {
     this.initSiteRowsObj = function () {
       _this.siteRows = {
@@ -26,9 +27,11 @@
       };
     }; // initSiteRowsObj()
 
-    this.initSiteRows = function () {
+    this.initSiteRows = function (dontShowLinkedServices) {
       _this.getConferenceServices();
-      _this.getLinkedConferenceServices();
+      if (!dontShowLinkedServices) {
+        _this.getLinkedConferenceServices();
+      }
       _this.configureGrid();
     }; // initSiteRows()
 
@@ -94,6 +97,12 @@
         sortable: false,
         width: '17%',
       });
+      _this.siteRows.gridOptions.columnDefs.push({
+        field: 'license.billingServiceId',
+        displayName: $translate.instant('siteList.subscriptionId'),
+        sortable: true,
+        width: '15%',
+      });
 
       _this.siteRows.gridOptions.columnDefs.push({
         field: 'siteActions',
@@ -104,6 +113,16 @@
 
       _this.updateConferenceServices();
     }; //configureGrid
+
+    //TODO: algendel 10/16/2017 -- call backend API to update licenses and remove the site.
+    this.deleteSite = function (urlToDelete, remainingSite) {
+      return [urlToDelete, remainingSite];
+    };
+
+    this.getLicensesInSubscriptionGroupedBySites = function (subscriptionId) {
+      var sites = _.groupBy(SetupWizardService.getConferenceLicensesBySubscriptionId(subscriptionId), 'siteUrl');
+      return sites;
+    };
 
     this.getConferenceServices = function () {
       var funcName = 'getConferenceServices()';

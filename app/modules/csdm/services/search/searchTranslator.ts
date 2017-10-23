@@ -1,135 +1,173 @@
 import _ = require('lodash');
+import { FieldQuery, OperatorAnd, OperatorOr, QueryParser, SearchElement } from './queryParser';
 
 export class SearchTranslator {
   /* @ngInject */
-  constructor(private $translate: any) {
+  constructor($translate: any) {
+    const csdmTranslationTable = _.pickBy($translate.getTranslationTable(),
+      (_value, key: string) => {
+        return _.startsWith(key, 'CsdmStatus') && (_.split(key, '.').length > 2);
+      });
+    this.csdmPartOfTranslationTable = _.toPairs(csdmTranslationTable);
   }
 
-  public translate(search: string): string {
+  private static readonly translationKeyToSearchFieldConversionTable = {
+    'CsdmStatus.errorCodes.': QueryParser.Field_ErrorCodes,
+    'CsdmStatus.upgradeChannels.': QueryParser.Field_UpgradeChannel,
+    'CsdmStatus.activeInterface.': QueryParser.Field_ActiveInterface,
+    'CsdmStatus.connectionStatus.': QueryParser.Field_ConnectionStatus,
+  };
+
+  private csdmPartOfTranslationTable: any[];
+
+  public translateQuery(search: SearchElement): SearchElement {
     if (!search) {
       return search;
     }
-    const csdmPartOfTranslationTable = _.pickBy(this.$translate.getTranslationTable(), (_value, key: string) => {
-      return _.startsWith(key, 'CsdmStatus');
-    });
-    const splittedSearch = _.split(_.trim(search), ' ');
-    const translationKeyMatch = this.findTranslationKeyInTable(csdmPartOfTranslationTable, splittedSearch);
-    const resolvedSearchExpression = SearchTranslator.getSearchExpressionFromTranslationKey(translationKeyMatch);
 
-    if (resolvedSearchExpression) {
-      return translationKeyMatch.createSearchString(resolvedSearchExpression);
+    const matchCountThreshold = 3;
+
+    if (search instanceof OperatorOr && search.getExpressions().length >= 2) {
+      return new OperatorOr(_.map(search.getExpressions(), (oredElement) => {
+        return this.translateQuery(oredElement);
+      }));
     }
-    return search;
-  }
 
-  private static getSearchExpressionFromTranslationKey(translationKeyMatch: TranslationMatch) {
-    let translatedExpression = '';
-    if (_.startsWith(translationKeyMatch.translationKey, 'CsdmStatus.errorCodes')) {
-      const splittedKey = _.split(translationKeyMatch.translationKey || '', '.');
-      if (splittedKey.length === 4) {
-        //CsdmStatus.errorCodes.mediaProtocol.type  or message
-        translatedExpression = 'errorCodes=' + splittedKey[2];
+    const translations = this.findTranslations(search, matchCountThreshold);
+    if (translations.length > 0) {
+      return new OperatorOr([_.cloneDeep(search)].concat(translations));
+    } else if (search instanceof OperatorAnd) {
+      if (search.getExpressions().length === 1) {
+        return this.translateQuery(search.getExpressions()[0]);
       }
-    } else if (_.startsWith(translationKeyMatch.translationKey, 'CsdmStatus.upgradeChannels')) {
-      const splittedKey = _.split(translationKeyMatch.translationKey || '', '.');
-      if (splittedKey.length === 3) {
-        //CsdmStatus.errorCodes.mediaProtocol.type  or message
-        translatedExpression = 'upgradeChannel=' + splittedKey[2];
-      }
-    } else if (_.startsWith(translationKeyMatch.translationKey, 'CsdmStatus.activeInterface')) {
-      const splittedKey = _.split(translationKeyMatch.translationKey || '', '.');
-      if (splittedKey.length === 3) {
-        //CsdmStatus.errorCodes.mediaProtocol.type  or message
-        translatedExpression = 'activeInterface=' + splittedKey[2];
-      }
-    } else {
+      //ABCD -> try ABC, BCD, AB, CD, A, D
 
-      switch (translationKeyMatch.translationKey) {
-        case 'CsdmStatus.OnlineWithIssues':
-          translatedExpression = 'connectionStatus=CONNECTED_WITH_ISSUES';
-          break;
-        case 'CsdmStatus.Online':
-          translatedExpression = 'connectionStatus=CONNECTED';
-          break;
-        case 'CsdmStatus.Offline':
-          translatedExpression = 'connectionStatus=DISCONNECTED';
-          break;
-        case 'CsdmStatus.OfflineExpired':
-          translatedExpression = 'connectionStatus=OFFLINE_EXPIRED';
-          break;
-        case 'CsdmStatus.Unknown':
-          translatedExpression = 'connectionStatus=UNKNOWN';
-          break;
-        default:
-          translatedExpression = '';
-      }
-    }
-    return translatedExpression;
-  }
+      const numElements = search.getExpressions().length;
+      for (let elementsToSkip = 1; elementsToSkip <= numElements - 1; elementsToSkip++) {
 
-  private findTranslationKeyInTable(translationTable: {}, splittedSearch: string[]): TranslationMatch {
-    for (let i = 0; i < splittedSearch.length; i++) {
-      for (let j = 0; j < splittedSearch.length; j++) {
-        const translationKeyMatch = this.findTranslationKeyInSubSearch(translationTable, splittedSearch, i, splittedSearch.length - j);
-        if (translationKeyMatch.match) {
-          return translationKeyMatch;
+        const leftElements = search.getExpressions().slice(0, numElements - elementsToSkip);
+        const leftTranslations = this.findTranslations(new OperatorAnd(leftElements, false), matchCountThreshold);
+        if (leftTranslations.length > 0) {
+          const remainingElements = search.getExpressions().slice(numElements - elementsToSkip, numElements);
+          const translatedRemainingElements = this.translateRemainingAndedElements(remainingElements);
+          const replacedElement = leftElements.length > 1 ? [new OperatorAnd(_.cloneDeep(leftElements))] : leftElements;
+          const newLeftElement = new OperatorOr(_.concat(replacedElement, leftTranslations));
+          return new OperatorAnd(_.concat([newLeftElement], translatedRemainingElements));
+        }
+
+        const rightElements = search.getExpressions().slice(elementsToSkip, numElements);
+        const rightTranslations = this.findTranslations(new OperatorAnd(rightElements, false), matchCountThreshold);
+        if (rightTranslations.length > 0) {
+          const remainingElements = search.getExpressions().slice(0, elementsToSkip);
+          const translatedRemainingElements = this.translateRemainingAndedElements(remainingElements);
+          const replacedElement = rightElements.length > 1 ? [new OperatorAnd(_.cloneDeep(rightElements))] : rightElements;
+          const newRightElement = new OperatorOr(_.concat(replacedElement, rightTranslations));
+          return new OperatorAnd(_.concat(translatedRemainingElements, [newRightElement]));
         }
       }
     }
-    return new TranslationMatch(splittedSearch, false);
+
+    return search;
   }
 
-  private findTranslationKeyInSubSearch(translationTable: {}, splittedSearch: string[], start: number, end: number): TranslationMatch {
-    if (start === end) {
-      return new TranslationMatch(splittedSearch, false);
-    }
-    const partialSearch = _
-      .chain(splittedSearch)
-      .slice(start, end)
-      .join(' ')
-      .toLower()
-      .value();
-    let translationKey = '';
-    if (partialSearch.length < 4) {
-      translationKey =  _.findKey(translationTable, function (value: string) {
-        return _.isEqual(_.toLower(value), partialSearch);
-      });
+  private translateRemainingAndedElements(remainingElements: SearchElement[]): SearchElement[] {
+    if (remainingElements.length === 1) {
+      return [this.translateQuery(remainingElements[0])];
     } else {
-      translationKey = _.findKey(translationTable, function (value: string) {
-        return _.startsWith(_.toLower(value), partialSearch);
-      });
-      if (!translationKey) {
-        translationKey = _.findKey(translationTable, function (value: string) {
-          return _.toLower(value).indexOf(partialSearch) >= 0;
-        });
+      const translatedAnd = this.translateQuery(new OperatorAnd(remainingElements, false));
+      if (translatedAnd instanceof OperatorAnd) {
+        return translatedAnd.getExpressions();
+      } else {
+        return [translatedAnd];
       }
     }
-    return new TranslationMatch(splittedSearch, !!translationKey, translationKey, start, end);
-  }
-}
-
-class TranslationMatch {
-
-  constructor(private splittedSearch: string[], public match: boolean, public translationKey?: string, private matchStart?: number, private matchEnd?: number) {
   }
 
-  public createSearchString(translatedExpression: string): string {
-    const headMatch = _.slice(this.splittedSearch, 0, this.matchStart);
-    const theMatch = _.slice(this.splittedSearch, this.matchStart, this.matchEnd);
-    const tailMatch = _.slice(this.splittedSearch, this.matchEnd, this.splittedSearch.length);
-    const anyAdditional = headMatch.length > 0 || tailMatch.length > 0;
-
-    return _
-      .chain(headMatch)
-      .concat(anyAdditional ? ['('] : [])
-      .concat(theMatch.length > 1 ? ['('] : [])
-      .concat(theMatch)
-      .concat(theMatch.length > 1 ? [')'] : [])
-      .concat(['OR', translatedExpression])
-      .concat(anyAdditional ? [')'] : [])
-      .concat(_.slice(this.splittedSearch, this.matchEnd, this.splittedSearch.length))
-      .join(' ')
+//If they match between 1 and matchThreshold translation values, return a searchElement representing these.
+  public findTranslations(elementToTranslate: SearchElement, matchThreshold: number): SearchElement[] {
+    return _(this.csdmPartOfTranslationTable)
+      .filter(([tKey, tValue]) => this.matches(elementToTranslate, tKey, tValue))
+      .map(([tKey, tValue]) => {
+        return [tKey.split('.').splice(0, 3).join('.'), tValue];
+      })
+      .uniqBy(([tKey]) => tKey)
+      .take(matchThreshold + 1)
+      .filter((_k, _i, col) => col.length <= matchThreshold)
+      .map(([tKey]) => SearchTranslator.CreateFieldQuery(tKey))
       .value();
+  }
+
+  private static CreateFieldQuery(translationKey: string) {
+    const searchField = SearchTranslator.getSearchField(translationKey);
+
+    let searchQuery = translationKey;
+    switch (searchField) {
+      case (QueryParser.Field_ActiveInterface):
+      case (QueryParser.Field_UpgradeChannel):
+      case (QueryParser.Field_ErrorCodes): {
+        searchQuery = translationKey.split('.')[2];
+        break;
+      }
+      case (QueryParser.Field_ConnectionStatus): {
+        searchQuery = SearchTranslator.mapConnectionStatusQuery(translationKey);
+        break;
+      }
+      default: {
+        searchQuery = translationKey;
+      }
+    }
+
+    return new FieldQuery(searchQuery, searchField, FieldQuery.QueryTypeExact);
+  }
+
+  private static mapConnectionStatusQuery(translationKey: string) {
+    const connectionStatusSubCode = translationKey.split('.')[2];
+    switch (connectionStatusSubCode) {
+      case 'OnlineWithIssues':
+        return 'CONNECTED_WITH_ISSUES';
+      case 'Online':
+        return 'CONNECTED';
+      case 'Offline':
+        return 'DISCONNECTED';
+      case 'OfflineExpired':
+        return 'OFFLINE_EXPIRED';
+      case 'Unknown':
+        return 'UNKNOWN';
+      default:
+        return connectionStatusSubCode;
+    }
+  }
+
+  private matches(element: SearchElement, translationKey: string, translationValue: string): boolean {
+    if (element instanceof OperatorAnd) {
+      return _.every(element.getExpressions(), (subExpr) => this.matches(subExpr, translationKey, translationValue));
+    }
+    if (element instanceof OperatorOr) {
+      return _.some(element.getExpressions(), (subExpr) => this.matches(subExpr, translationKey, translationValue));
+    }
+    if (element instanceof FieldQuery) {
+      if (element.field) {//errorCode
+        const fieldForTranslationKey = SearchTranslator.getSearchField(translationKey);
+        if (!_.isEqual(fieldForTranslationKey, element.field)) {
+          return false;
+        }
+      }
+      return SearchTranslator.queryFoundInFieldValue(element.query, element.type === FieldQuery.QueryTypeExact, translationValue);
+    }
+    return false;
+  }
+
+  private static queryFoundInFieldValue(query: string, exactMatch: boolean, fieldValue: string) {
+    return exactMatch ?
+      _.isEqual(_.lowerCase(query), _.lowerCase(fieldValue)) :
+      (_.includes(_.lowerCase(fieldValue), _.lowerCase(query)));
+  }
+
+  public static getSearchField(translationKey: string) {
+    return _.find(SearchTranslator.translationKeyToSearchFieldConversionTable,
+      (_field, transKeyPrefix) => {
+        return _.startsWith(translationKey, transKeyPrefix);
+      });
   }
 }
 

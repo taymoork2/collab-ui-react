@@ -308,6 +308,15 @@
     "services": {
       "title": "Add Services for Users",
       "instructions": "Select the service entitlements that you want to provide to users."
+    },
+    "autoAssignTemplate": {
+      "edit": {
+        "title": "Set Up Auto-Assign Template",
+        "header": "Add Services for Users",
+        "description": "Select the services that you want to provide to users.",
+        "note": "Note: If you select more than one Message or Call license, only one license will be assigned to each user.",
+        "tooltip": "If one subscription runs out of licenses, the next selected subscription automatically assigns more."
+      }
     }
   },
   "userTaskManagerModal": {
@@ -326,8 +335,6 @@
     "addUserText": "Who would you like to add?",
     "userInput": "Enter email addresses separated by commas.",
     "enableServiceText": "Enable Services",
-    "enableCollab": "Enable collaboration services individually",
-    "enableCollabGroup": "Enable collaboration services based on group membership",
     "addUsersSelect": "Add users to:",
     "manageBtn": "Manage Groups",
     "onboardBtn": "Onboard",
@@ -1288,6 +1295,7 @@
       "900": "Temporary feature filtering manual code",
       "910": "CMR changes for non-CI sites",
       "920": "TSP partner to partner transfer",
+      "930": "Session swap for non-CI site",
       "1000": "Messenger"
     }
   },
@@ -1456,6 +1464,7 @@
     "devices": "Devices",
     "disable": "Disable",
     "disabled": "Disabled",
+    "dismiss": "Dismiss",
     "done": "Done",
     "doNotProvision": "Do not Provision",
     "download": "Download",
@@ -1704,7 +1713,7 @@
     "enableSSOTitle": "Enable SSO",
     "importMetadataDesc": "Begin configuring the trust relationship between your identity provider (IdP) and the Cisco Collaboration Cloud by obtaining a trust metadata file from your IdP and uploading it here.",
     "importMetadataNote": "Note: By importing the metadata file, SSO will be turned <b>on</b>. If you are simply testing SSO, please remember to turn it off in the next screen.",
-    "exportMetadataDesc1": "Download the following trust metadata file from the Cisco Collaboration service, and upload it into your identity provider (IdP) management interface.",
+    "exportMetadataDesc1": "Download the following trust metadata file from the Cisco Spark Control service, and upload it into your identity provider (IdP) management interface.",
     "exportMetadataDesc1New": "Download the following trust metadata file from the Cisco Spark Control service, and upload it into your identity provider (IdP) management interface.",
     "exportMetadataDesc2": "When you have finished uploading the file into your IdP, return to this screen and press Next.",
     "testSSOSetupDesc": "Press the button below to test your SSO configuration. The test will open in a new browser window. Enter valid SSO credentials and verify the login was successful.",
@@ -2016,7 +2025,9 @@
     "text": "The authorization service is currently unavailable. Please check back later."
   },
   "errors": {
-    "status404": "Requested resource not found.",
+    "status404": "The requested resource was not found.",
+    "status429": "The server is busy. Please wait and try again.",
+    "status503": "The requested resource is currently unavailable. Please try again.",
     "statusCancelled": "The request was cancelled.",
     "statusOffline": "Your network is currently offline. Please try again.",
     "statusRejected": "A network error has occurred. Please try again.",
@@ -2643,12 +2654,7 @@
       "call": {
         "domainVerification": "Domain Verification",
         "aware": "Users can share content from the Cisco Spark app during a call from their work phones and view their call history in the app.",
-        "connectSettingsHeading": "Connect Settings",
-        "connectSettings": "Required settings for the Connect feature.",
         "connect": "Users' incoming calls will ring their work phones and the Cisco Spark app. Users can call their colleagues from either their phones or the app, too.",
-        "certificatesHeading": "Certificates for Encrypted SIP Calls",
-        "certificates": "Use certificates provided from the Cisco Collaboration default trust list or upload your own.  If you use your own, make sure the hostnames are on a verified domain. For help, click <a href=\"http://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">here.</a>",
-        "certificatesNew": "Use certificates provided from the Cisco Spark Control default trust list or upload your own.  If you use your own, make sure the hostnames are on a verified domain. For help, click <a href=\"http://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">here.</a>",
         "certificatesCannotRead": "Could not read certificate list.",
         "certificatesCannotDelete": "Could not delete certificate. Try again later",
         "certificatesDeleted": "Certificate deleted successfully.",
@@ -2663,13 +2669,9 @@
         "certificatesExpires": "Expires",
         "certificatesUpload": "Upload",
         "certificatesModalHeading": "Remove Certificate",
-        "certificatesModalText": "Are you sure you want to remove the following certificate?",
         "sipDomainHeading": "SIP Destination",
         "sipDomainButtonTooltip": "Enter an SRV domain, hostname:port, or IP address:port that resolves to your Expressway-E for mutual TLS. If your SRV record is \"_sips._tcp.sipmtls.example.com\", then enter \"sipmtls.example.com\" here.",
-        "sipDomainPlaceholder": "Enter a SIP Destination",
-        "certificateDeleteTooltip": "Delete Certificate",
-        "noUploadedCertificate": "No certificates uploaded. Using the default trust list.",
-        "uploadedCertificates": "Uploaded Certificates:"
+        "sipDomainPlaceholder": "Enter a SIP Destination"
       },
       "verifySipDestination": {
         "title": "Verify SIP Destination",
@@ -6061,7 +6063,7 @@
       "fullOva-helpText": "(Full capacity and used for production deployment of Hybrid Media)",
       "demoOva-helpText": "(Limited capacity, lifespan, and lower CPU requirement for demo deployment of Hybrid Media)",
       "noProceed-helptext": "(Software will automatically download)",
-      "noInfo": "Install and configure the software on your server and return to Cisco Cloud Collaboration Management to register your Hybrid Media Node.",
+      "noInfo": "Install and configure the software on your server and return to {{appTitle}} to register your Hybrid Media Node.",
       "noInfoNew": "Install and configure the software on your server and return to {{appTitle}} to register your Hybrid Media Node.",
       "noRetryInfo": "Software did not automatically download? <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/Media-Fusion-Management-Connector/mfusion.ova'>Try Again.</a>",
       "noRetryDemoInfo": "Software did not automatically download? <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/hybrid-media-demo/hybridmedia_demo.ova'>Try Again.</a>",
@@ -6240,6 +6242,10 @@
   "webexCommon": {
     "logoAltText": "Cisco WebEx",
     "breadcrumbsAltText": "You are here"
+  },
+  "webexSiteListTabs": {
+    "notLinkedSites": "Cisco Spark Control Hub managed site",
+    "linkedSites": "Site Admin managed site"
   },
   "webexSiteSettingsLabels": {
     "siteSettingsIndexPageTitle": "Configure WebEx Site",
@@ -6660,6 +6666,7 @@
     "nonCIWebExSiteAccess": "<a href='https://{{siteUrl}}' target='_blank' ng-click='{{click}}'>Sign in to manage</a>",
     "conferencing": "WebEx Sites",
     "siteName": "Site Name",
+    "subscriptionId": "Subscription Id",
     "licenseCount": "License Count",
     "licenseTypes": "License Type",
     "siteSettings": "Configure",
@@ -6706,12 +6713,20 @@
     "multipleLicenses": "Multiple...",
     "checkingServices": "Checking services...",
     "linkedSiteAdminTool": "Launch Site Admin Tool",
-    "LinkedSiteProgress": "Account linking progress"
+    "LinkedSiteProgress": "Account linking progress",
+    "deleteSiteTooltip": "Delete Site"
   },
   "webexSiteManagement": {
     "redistributeLicenses": "Redistribute Licenses",
     "redistributeLicensesDesc": "Please indicate how many licenses to put on each site",
-    "redistributeLicensesDesc2": "You must assign all the licenses and each site must have at least one license."
+    "redistributeLicensesDesc2": "You must assign all the licenses and each site must have at least one license.",
+    "redistributeLicensesDelete": "<strong>To finish deleting site:</strong> The WebEx site <strong>{{siteUrl}}</strong> is ready to be deleted. First you must reassign the licenses from it to the remaining sites in this subscription.",
+    "deleteSiteNote": "Note: Site deletion may take time to be reflected in all systems.",
+    "deleteSiteModalTitle": "Delete WebEx Site?",
+    "deleteSiteModalBody": "Are you sure you want to delete <strong>{{siteUrl}}</strong>?",
+    "deleteSiteModalBody2": "All data related to the site will be lost and this action can not be undone.",
+    "deleteSiteRejectModalTitle": "Cannot Delete",
+    "deleteSiteRejectModalBody": "You cannot delete the last site in a subscription"
   },
   "cloudExtensions": {
     "cloudExtensions": "Hybrid Services",
@@ -6732,11 +6747,13 @@
     "areaCode": "This does not appear to be a valid area code."
   },
   "CsdmStatus": {
-    "Online": "Online",
-    "OnlineWithIssues": "Online, With Issues",
-    "Offline": "Offline",
-    "OfflineExpired": "Deactivated",
-    "Unknown": "Unknown",
+    "connectionStatus": {
+      "Online": "Online",
+      "OnlineWithIssues": "Online, With Issues",
+      "Offline": "Offline",
+      "OfflineExpired": "Deactivated",
+      "Unknown": "Unknown"
+    },
     "WithDevices": "With Devices",
     "upgradeChannels": {
       "Stable": "Stable",
@@ -7409,96 +7426,127 @@
     "configureOrgLogoMsg": "Go to Settings page to modify your organization logo",
     "virtualAssistant": {
       "featureText": {
-        "virtualAssistantCode": "Va",
-        "virtualAssistantMediaType": "Virtual Assistants",
         "selectVADesc": "Create virtual assistants that can provide automated chat support to customers, or manage escalated chat requests in Cisco Spark.",
-        "selectCVADesc": "Create a virtual assistant who provides automated chat support and escalates issues as needed.",
-        "selectEVADesc": "Create a virtual assistant who connects subject matter experts in Cisco Spark spaces to customers with chat requests.",
-        "evaDisabledTooltip": "You can only have one Expert Virtual Assistant for your organization. To change the settings of your existing Expert Virtual Assistant, edit it from the Features page.",
-        "virtualAssistantType": "Virtual Assistant",
-        "expertVirtualAssistantType": "Expert <br> Virtual Assistant",
-        "customerVirtualAssistantType": "Customer <br> Virtual Assistant"
+        "virtualAssistant": "Virtual Assistant"
       },
-      "createTitle": "Create Customer Virtual Assistant",
-      "editTitle": "Edit Customer Virtual Assistant",
-      "configOverview": {
-        "title": "Customer Virtual Assistant Configuration Requirements",
-        "desc": "Review the prerequisites for creating a Customer Virtual Assistant",
-        "boxTitle": "Create an API.AI agent before you create your Customer Virtual Assistant.",
-        "boxDesc": "Build an automated agent in API.AI with a natural language dialogue. Your integrated Customer Virtual Assistant uses the built-in dialogue to interact with your customers and escalate a conversation to live agents as needed.",
-        "boxRadioOne": "No, I don’t have a preconfigured API.AI agent",
-        "boxRadioOneDesc1": "Go to ",
-        "boxRadioApiai": "API.AI",
-        "boxRadioOneDesc2": " to create an agent. To get started, see the ",
-        "boxRadioApiaiDoc": "API.AI documentation",
-        "boxRadioTwo": "Yes, I have a preconfigured API.AI agent and am ready to proceed",
-        "boxRadioTwoDesc": "Click the arrow to continue to integrate your API.AI agent with a Customer Virtual Assistant"
+      "cva": {
+        "featureName": "Customer Virtual Assistant",
+        "featureText": {
+          "virtualAssistantCode": "cva",
+          "virtualAssistantMediaType": "Virtual Assistants",
+          "selectCVADesc": "Create a virtual assistant who provides automated chat support and escalates issues as needed.",
+          "virtualAssistantType": "Virtual Assistant",
+          "customerVirtualAssistantType": "Customer <br> Virtual Assistant"
+        },
+        "createTitle": "Create Customer Virtual Assistant",
+        "editTitle": "Edit Customer Virtual Assistant",
+        "configOverview": {
+          "title": "Customer Virtual Assistant Configuration Requirements",
+          "desc": "Review the prerequisites for creating a Customer Virtual Assistant",
+          "boxTitle": "Create an API.AI agent before you create your Customer Virtual Assistant.",
+          "boxDesc": "Build an automated agent in API.AI with a natural language dialogue. Your integrated Customer Virtual Assistant uses the built-in dialogue to interact with your customers and escalate a conversation to live agents as needed.",
+          "boxRadioOne": "No, I don’t have a preconfigured API.AI agent",
+          "boxRadioOneDesc1": "Go to ",
+          "boxRadioApiai": "API.AI",
+          "boxRadioOneDesc2": " to create an agent. To get started, see the ",
+          "boxRadioApiaiDoc": "API.AI documentation",
+          "boxRadioTwo": "Yes, I have a preconfigured API.AI agent and am ready to proceed",
+          "boxRadioTwoDesc": "Click the arrow to continue to integrate your API.AI agent with a Customer Virtual Assistant"
+        },
+        "dialogIntegration": {
+          "title": "Configure Dialogue Integration",
+          "desc": "Add a preconfigured Escalation Intent to complete your API.AI agent configuration",
+          "boxStepOne": "Download preconfigured Escalation Intent JSON file.",
+          "boxStepOneDesc": "An Escalation Intent allows your Customer Virtual Assistant to escalate a conversation to an agent.",
+          "boxStepTwo": "Upload Escalation Intent to API.AI Agent.",
+          "boxStepTwoDesc": "On your API.AI agent’s Intents page, click the vertical ellipsis (⋮) and choose Upload Intent. Upload the escalation.json file you downloaded.",
+          "boxStepThree": "Customize Escalation Intent in API.AI.",
+          "boxStepThreeDesc": "On your API.AI agent’s Intents page, choose Escalation Intent. Modify the User Says fields to change the user expressions that trigger escalation. All user expressions must:",
+          "boxBulletOne": "Use template mode",
+          "boxBulletTwo": "Contain a reference to @sys.any:Topic",
+          "boxStepThreeDescCont": "The @ symbol next to the user expression indicates the template mode. Click the symbol to toggle the mode. Do not modify the GetExpert action.",
+          "downloadButtonText": "Download Escalation Intent",
+          "learnMoreLink": "Learn more",
+          "finalNote": "about integrating Customer Virtual Assistants."
+        },
+        "accessToken": {
+          "title": "Complete Dialogue Integration",
+          "desc": "Complete your integration to enable the use of natural dialogue in your customer interactions",
+          "boxDesc": "Each API.AI agent has a unique client access token stored in the agent settings. Copy the token from your configured API.AI agent settings, enter it here, and click \"Validate\" to check the token before you complete the dialogue integration.",
+          "inputLabel": "API.AI Client Access Token",
+          "validateButtonText": "Validate",
+          "maxLengthError": "Client Access Token cannot be longer than 128 characters.",
+          "invalidTokenText": "Invalid API.AI client access token. Verify token and try again."
+        },
+        "name": {
+          "title": "Customer Virtual Assistant Name",
+          "desc": "Specify the name your customers see when they interact with your Customer Virtual Assistant",
+          "boxDesc": "Choose a unique name for your Customer Virtual Assistant that is no longer than 50 characters.",
+          "inputLabel": "Enter Name",
+          "maxLengthError": "Name cannot be longer than 50 characters.",
+          "duplicateError": "Customer Virtual Assistant must have a unique name."
+        },
+        "avatar": {
+          "title": "Customer Virtual Assistant Avatar",
+          "desc": "Choose the avatar your customers see in their chat window, when they interact with your Customer Virtual Assistant",
+          "upload": "Upload Avatar",
+          "preview": "Avatar Preview",
+          "fileBrowser": "file browser",
+          "uploadingImage": "Uploading image...",
+          "uploadDesc": "Upload an image of maximum 1MB. Supported file type is PNG.",
+          "previewDesc": "To edit, upload a new image of maximum 1MB. Supported file type is PNG.",
+          "defaultAvatar": "If no image is uploaded, this default image is used.",
+          "uploadBestResults": "For best results make sure that your image has a transparent background with no padding.",
+          "dragDropDesc": "Drag and drop a file or use the ",
+          "errorUnsupportedFile": "Cannot upload unsupported file. Supported file type is PNG.",
+          "errorOverMaxFileSizeLimit": "The image file size must be less than 1 MB.",
+          "errorUploadFile": "Cannot upload image. Try again."
+        },
+        "summary": {
+          "desc": "You have configured your {{ featureName }}. To use the assisted service feature in your organization's chat application, add your assistant to a {{ featureName }}.",
+          "editDesc": "You have edited your {{ featureName }}. To use the assisted service feature in your organization’s chat application, add your assistant to a {{ featureName }}.",
+          "descCont": "Click Finish to save the configuration.",
+          "errorCreateTemplate": "Cannot save Customer Virtual Assistant. Try again."
+        },
+        "messages": {
+          "createSuccessText": "You have successfully created {{ featureName }}.",
+          "updateSuccessText": "You have successfully updated {{ featureName }}.",
+          "listConfigsFailureText": "Failed to list the Customer Virtual Assistants.",
+          "getConfigFailureText": "Failed to load the Customer Virtual Assistant.",
+          "deleteConfigFailureText": "Failed to delete the Customer Virtual Assistant.",
+          "createConfigFailureText": "Failed to save Customer Virtual Assistant.",
+          "updateConfigFailureText": "Failed to save Customer Virtual Assistant."
+        },
+        "cancelDialog": "Are you sure you want to cancel?\nThe Customer Virtual Assistant will not be saved."
       },
-      "dialogIntegration": {
-        "title": "Configure Dialogue Integration",
-        "desc": "Add a preconfigured Escalation Intent to complete your API.AI agent configuration",
-        "boxStepOne": "Download preconfigured Escalation Intent JSON file.",
-        "boxStepOneDesc": "An Escalation Intent allows your Customer Virtual Assistant to escalate a conversation to an agent.",
-        "boxStepTwo": "Upload Escalation Intent to API.AI Agent.",
-        "boxStepTwoDesc": "On your API.AI agent’s Intents page, click the vertical ellipsis (⋮) and choose Upload Intent. Upload the escalation.json file you downloaded.",
-        "boxStepThree": "Customize Escalation Intent in API.AI.",
-        "boxStepThreeDesc": "On your API.AI agent’s Intents page, choose Escalation Intent. Modify the User Says fields to change the user expressions that trigger escalation. All user expressions must:",
-        "boxBulletOne": "Use template mode",
-        "boxBulletTwo": "Contain a reference to @sys.any:Topic",
-        "boxStepThreeDescCont": "The @ symbol next to the user expression indicates the template mode. Click the symbol to toggle the mode. Do not modify the GetExpert action.",
-        "downloadButtonText": "Download Escalation Intent",
-        "learnMoreLink": "Learn more",
-        "finalNote": "about integrating Customer Virtual Assistants."
-      },
-      "accessToken": {
-        "title": "Complete Dialogue Integration",
-        "desc": "Complete your integration to enable the use of natural dialogue in your customer interactions",
-        "boxDesc": "Each API.AI agent has a unique client access token stored in the agent settings. Copy the token from your configured API.AI agent settings, enter it here, and click \"Validate\" to check the token before you complete the dialogue integration.",
-        "inputLabel": "API.AI Client Access Token",
-        "validateButtonText": "Validate",
-        "maxLengthError": "Client Access Token cannot be longer than 128 characters.",
-        "invalidTokenText": "Invalid API.AI client access token. Verify token and try again."
-      },
-      "name": {
-        "title": "Customer Virtual Assistant Name",
-        "desc": "Specify the name your customers see when they interact with your Customer Virtual Assistant",
-        "boxDesc": "Choose a unique name for your Customer Virtual Assistant that is no longer than 50 characters.",
-        "inputLabel": "Enter Name",
-        "maxLengthError": "Name cannot be longer than 50 characters.",
-        "duplicateError": "Customer Virtual Assistant must have a unique name."
-      },
-      "avatar": {
-        "title": "Customer Virtual Assistant Avatar",
-        "desc": "Choose the avatar your customers see in their chat window, when they interact with your Customer Virtual Assistant",
-        "upload": "Upload Avatar",
-        "preview": "Avatar Preview",
-        "fileBrowser": "file browser",
-        "uploadingImage": "Uploading image...",
-        "uploadDesc": "Upload an image of maximum 1MB. Supported file type is PNG.",
-        "previewDesc": "To edit, upload a new image of maximum 1MB. Supported file type is PNG.",
-        "defaultAvatar": "If no image is uploaded, this default image is used.",
-        "uploadBestResults": "For best results make sure that your image has a transparent background with no padding.",
-        "dragDropDesc": "Drag and drop a file or use the ",
-        "errorUnsupportedFile": "Cannot upload unsupported file. Supported file type is PNG.",
-        "errorOverMaxFileSizeLimit": "The image file size must be less than 1 MB.",
-        "errorUploadFile": "Cannot upload image. Try again."
-      },
-      "summary": {
-        "desc": "You have configured your Customer Virtual Assistant. To use the assisted service feature in your organization's chat application, add your assistant to a Customer Support Template.",
-        "editDesc": "You have edited your Customer Virtual Assistant. To use the assisted service feature in your organization’s chat application, add your assistant to a Customer Support Template.",
-        "descCont": "Click Finish to save the configuration.",
-        "errorCreateTemplate": "Cannot save Customer Virtual Assistant. Try again."
-      },
-      "messages": {
-        "createSuccessText": "You have successfully created {{ featureName }}.",
-        "updateSuccessText": "You have successfully updated {{ featureName }}.",
-        "listConfigsFailureText": "Failed to list the Customer Virtual Assistants.",
-        "getConfigFailureText": "Failed to load the Customer Virtual Assistant.",
-        "deleteConfigFailureText": "Failed to delete the Customer Virtual Assistant.",
-        "createConfigFailureText": "Failed to save Customer Virtual Assistant.",
-        "updateConfigFailureText": "Failed to save Customer Virtual Assistant."
-      },
-      "cancelDialog": "Are you sure you want to cancel?\nThe Customer Virtual Assistant will not be saved."
+      "eva": {
+        "featureName": "Expert Virtual Assistant",
+        "featureText": {
+          "virtualAssistantCode": "eva",
+          "virtualAssistantMediaType": "Virtual Assistants",
+          "selectEVADesc": "Create a virtual assistant who connects subject matter experts in Cisco Spark spaces to customers with chat requests.",
+          "evaDisabledTooltip": "You can only have one Expert Virtual Assistant for your organization. To change the settings of your existing Expert Virtual Assistant, edit it from the Features page.",
+          "expertVirtualAssistantType": "Expert <br> Virtual Assistant"
+        },
+        "createTitle": "Create Expert Virtual Assistant",
+        "editTitle": "Edit Expert Virtual Assistant",
+        "summary": {
+          "desc": "You configured {{ featureName }}. To enable escalation to Cisco Spark, add your {{ featureName }} to your Customer Support Templates and expert spaces.",
+          "editDesc": "You edited {{ featureName }}. Click Finish to save the configuration so Cisco Spark users from your organization working in expert spaces can interact with this updated {{ featureName }}.",
+          "descCont": "Click Finish to save the configuration.",
+          "errorCreateTemplate": "Cannot save Expert Virtual Assistant. Try again."
+        },
+        "messages": {
+          "createSuccessText": "You have successfully created {{ featureName }}.",
+          "updateSuccessText": "You have successfully updated {{ featureName }}.",
+          "listConfigsFailureText": "Failed to list the Expert Virtual Assistants.",
+          "getConfigFailureText": "Failed to load the Expert Virtual Assistant.",
+          "deleteConfigFailureText": "Failed to delete the Expert Virtual Assistant.",
+          "createConfigFailureText": "Failed to save Expert Virtual Assistant.",
+          "updateConfigFailureText": "Failed to save Expert Virtual Assistant."
+        },
+        "cancelDialog": "Do you want to discard your Expert Virtual Assistant?"
+      }
     }
   },
   "huronHuntGroup": {
@@ -8059,7 +8107,7 @@
   },
   "helpdesk": {
     "browserTabHeaderTitle": "Help Desk Support",
-    "navHeaderTitle": "Cloud Collaboration Help Desk",
+    "navHeaderTitle": "Cisco Spark Control Hub Help Desk",
     "navHeaderTitleNew": "Cisco Spark Control Hub Help Desk",
     "helpdesk": "Help Desk",
     "searchHeading": "Help Desk Support",
@@ -8301,7 +8349,7 @@
   },
   "partnerManagement": {
     "browserTabHeaderTitle": "Partner Management",
-    "navHeaderTitle": "Cloud Collaboration Management",
+    "navHeaderTitle": "Cisco Spark Control Hub",
     "navHeaderTitleNew": "Cisco Spark Control Hub",
     "navHeaderTitlePro": "Cisco Spark Control Hub Pro",
     "back": "Back",
@@ -8557,6 +8605,16 @@
           "configureTMSXE": "To make conference rooms schedulable in Microsoft Outlook/Exchange, configure them in Cisco TMSXE as if you were using on-premises conferencing (Cisco TelePresence Management Suite Extension for Microsoft Exchange Administration Guide).",
           "reviewLicensing": "Review the licensing requirements",
           "reviewLicensingHelp": "Cisco TMS and Cisco TMSXE Licensing is the same as if using on-premises resources. You require enough licenses to cover the number of endpoints that will use OBTP."
+        },
+        "googlePrerequisites": {
+          "title": "Hybrid Calendar (Google) Prerequisites",
+          "intro": "Use this checklist alongside the Google Calendar deployment documentation. Make sure you complete all the prerequisites necessary for deploying Hybrid Calendar Service in your G Suite organization.",
+          "gSuiteOrganization": "A Google G Suite organization (formerly Google Apps for Work) with Google accounts for all users in the organization",
+          "webExSite": "Cisco WebEx site: Minimum versions of WebEx for @webex scheduling and WebEx Meeting Center Video for One Button to Push (OBTP) on room devices.",
+          "sparkOrganization": "A Cisco Spark organization with a minimum of Basic Meetings and Business Messaging (M1)",
+          "matchingEmails": "User email addresses that are exact matches in Cisco Spark, WebEx, and Google.",
+          "aclAdminAccount": "(Optional) If you use room resources, an authorized access control list (ACL) admin account.",
+          "removeHangouts": "(Optional) Remove Google Hangouts in Meeting Events"
         }
       },
       "hybridCall": {
@@ -8689,8 +8747,32 @@
         "title": "Enterprise Private Trunking ",
         "description": "Extends your existing Unified CM call control environment without deploying more hardware. Cisco Spark call brings cloud PSTN service to smaller branches that tie back in to your main branch.",
         "buttons": {
-          "view": "View prerequisites",
+          "view": "View Prerequisites",
           "resources": "SIP Destinations"
+        },
+        "prerequisites": {
+          "title": "Enterprise Private Trunking Prerequisites",
+          "intro": "Use this checklist alongside the \"Prepare Your Environment\" chapter in the deployment guide. Make sure you complete all the prerequisites necessary for deploying Cisco Spark Calling for Branch Offices in your organization.",
+          "openPort5062": "Allow extra time to open port 5062 on your Internet firewall for mutual TLS authentication.",
+          "verifyDomains": "Verify any domains in your existing deployment (for example, domains used in your user directory URIs and email address).",
+          "obtainCertificates": "Obtain certificates to use to secure the Expressway-E and Cisco Spark Calling connection.",
+          "openRequiredPorts": "Open the required ports, as described in the \"Port Requirements\" section.",
+          "runSupportedSoftware": "Run the minimum supported versions of on-premises software, as described in the \"System Requirements\" section.",
+          "determinePSTN": "Determine the type of PSTN service that you require",
+          "determinePSTNHelp1": "On-premises PSTN through Unified CM.",
+          "determinePSTNHelp2": "Cloud PSTN through Cisco Spark Calling Preferred Media Providers.",
+          "prepareExpressway": "Prepare your Expressway-E for the secure mutual TLS connection between Cisco Spark and your call control environment:",
+          "prepareExpresswayHelp1": "For an SRV record (multiple Expressway-Es for redundancy):",
+          "prepareExpresswayHelp2": "If you have an existing SRV, allow the time to request a dedicated SRV for Cisco Spark Calling for Branch Offices and use port 5062. The SRV record resolves into Expressway-E A-records; the hostname is the A-record for Expressway-E.",
+          "prepareExpresswayHelp3": "Request that port 5062 be open on the enterprise firewall.",
+          "prepareExpresswayHelp4": "Make sure the port is open to and from the Internet.",
+          "prepareExpresswayHelp5": "Verify that the mutual MTLS port is reachable by using a ping utility – for example, telnet [domainname or ip] [port] in a command prompt.",
+          "prepareExpresswayHelp6": "If you don't have time to request a dedicated SRV domain or don't want to wait, you can use hostname:port to avoid blocking the rest of setup.",
+          "prepareExpresswayHelp7": "To ensure unique SRV record provisioning, don’t use SRV records on the base domain: private_trunking.example.com instead of example.com.",
+          "pluralDomains": "are verified domains",
+          "singularDomains": "is a verified domain",
+          "noDomains": "You don't have any verified domains.",
+          "verifyDomain": "Verify a domain."
         },
         "error": {
           "invalidMaxLength": "Domain/SRV length cannot be more than {{max}}.",
@@ -8710,25 +8792,8 @@
           "resource": "Sip Destination has been successfully added to the Enterprise Private Trunk",
           "activate": "Enterprise Private Trunk has been successfully created"
         },
-        "prereqTitle": "Enterprise Private Trunking prerequisites",
         "setupTitle": "Set up Enterprise Private Trunking ",
-        "setupDescription": "Before you set up Private Trunking, complete the following prerequisites. See the <a href=\"{{href}}\" target=\"_blank\">documentation</a> for guidance.",
-        "domainVerification": "Domain verification",
-        "domainError": "You don't have any verified domain. You need at least one verified domain for setting up Enterprise Private Trunking. ",
-        "domains": "Domains",
-        "verifyADomain": "Verify a domain",
-        "verifiedDomain": "You have multiple verified domains.",
-        "aVerifiedDomain": "is a verfied domain",
         "domainDesc": "Select a domain that you want to use for private trunking. Click Settings and go to the Domains section to add and verify domains.",
-        "basicConnectivity": "Basic connectivity between the cloud and on-premises",
-        "certificateHelp": "The Cisco Spark Call certificate authority are in the Expresssway-E trust store. See ",
-        "help": "<a href=\"{{href}}\" target=\"_blank\">help</a>.",
-        "dNSzoneHelp": "The DNS zone has been created on the Expressway-E to accept the inbound connection from the cloud. See ",
-        "defaultTrustHelp": "Use Certificates provided from the Cisco Collaboration default trust list or upload your own. If you use your own, make sure that the host names are on a verified domain. See ",
-        "defaultTrustHelpNew": "Use Certificates provided from the Cisco Spark Control Hub default trust list or upload your own. If you use your own, make sure that the host names are on a verified domain. See ",
-        "fullService": "Full service: in and outbound calling",
-        "allZonesHelp": "All zones and rules must be set up on Expressway-E. See ",
-        "routingHelp": "The correct routing must be configured on CUCM. See ",
         "select": "Select verified domain",
         "selectDomain": "Select Domain",
         "singular": " Domain Selected",
@@ -8748,9 +8813,9 @@
         "addSipDestination": "Add SIP destination",
         "certificateTitle": "Certificates",
         "certificateDescription": "Choose whether you want to use the certificates provided by the Cisco Collaboration default trust list or upload your own.",
-        "certificateDescriptionNew": "Choose whether you want to use the certificates provided by the Cisco Spark Control Hub default trust list or upload your own.",
+        "certificateDescriptionNew": "Choose whether you want to use the certificates provided by the Cisco Collaboration Cloud default trust list or upload your own.",
         "certDesc": "Use certificates provided from the <a href=\"{{href}}\" target=\"_blank\">Cisco Collaboration default trust list</a>",
-        "certDescNew": "Use certificates provided from the <a href=\"{{href}}\" target=\"_blank\">Cisco Spark Control Hub default trust list</a>",
+        "certDescNew": "Use certificates provided from the <a href=\"{{href}}\" target=\"_blank\">Cisco Collaboration Cloud default trust list</a>",
         "upload": "or upload your own. If you use your own, make sure the hostnames are on a verified domain",
         "click": ". For help, <a href=\"{{href}}\" target=\"_blank\">click here</a>.",
         "certificateDefault": "Default Cisco Certificates",
@@ -8758,7 +8823,7 @@
         "inactiveHelp": "The default trust list is ignored if you upload your own certificates. ",
         "restore": "Restore default certificates.",
         "certificateDefaultList": "Cisco Collaboration default trust list",
-        "certificateDefaultListNew": "Cisco Spark Control Hub default trust list",
+        "certificateDefaultListNew": "Cisco Collaboration Cloud default trust list",
         "certificateCustom": "Upload your own certificate",
         "view": "View",
         "dragAndDropKeyFileHere": "Drag and drop the certificate file here or ",
@@ -8782,8 +8847,8 @@
     },
     "showMore": "View all",
     "genericButtons": {
-      "setup": "Set up",
-      "prereq": "View prerequisites",
+      "setup": "Set Up",
+      "prereq": "View Prerequisites",
       "learnMore": "Learn More"
     },
     "cardStatus": {
@@ -9680,7 +9745,9 @@
     "saveButton": "Save",
     "cancelButton": "Cancel",
     "deleteButton": "Delete All",
+    "restoreMedia": "Restore Media",
     "searchPlaceholder": "Search Media",
+    "uploadFile": "Upload audio file.",
     "uploading": "Uploading...",
     "uploadProcessing": "Processing...",
     "deleted": "Deleted on",

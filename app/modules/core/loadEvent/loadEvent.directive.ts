@@ -15,6 +15,7 @@ export class LoadEvent implements ng.IDirective {
       scope.$apply();
       if (_.isFunction(scope.onLoadEvent)) {
         scope.onLoadEvent({
+          elem: elem,
           elemScope: elem.scope(),
         });
       }

@@ -44,31 +44,32 @@ export abstract class SearchElement {
 }
 
 export class FieldQuery extends SearchElement {
+  public static readonly QueryTypeExact: string = 'exact';
   public query: string;
   public field?: string;
-  public queryType?: string;
+  public type?: string;
 
   constructor(query: string, field?: string, queryType?: string) {
     super();
     this.query = query;
     this.field = field;
-    this.queryType = queryType;
+    this.type = queryType;
   }
 
   public getQueryPrefix(): string {
-    return (this.field) ? this.field + FieldQuery.getMatchOperator(this) + ' ' : '';
+    return (this.field) ? this.field + FieldQuery.getMatchOperator(this) : '';
   }
 
   public getQueryWithoutField() {
     let innerQuery = this.query;
-    if (this.queryType === 'exact' || this.query.search(/\s|\(/) > 0) {
+    if (this.query.search(/\s|\(/) > 0) {
       innerQuery = '"' + innerQuery + '"';
     }
     return innerQuery;
   }
 
   public static getMatchOperator(fieldQuery: FieldQuery): string {
-    return fieldQuery.queryType === 'exact' ? '=' : ':';
+    return fieldQuery.type === FieldQuery.QueryTypeExact ? '=' : ':';
   }
 
   public toQuery(): string {
@@ -79,7 +80,7 @@ export class FieldQuery extends SearchElement {
     return {
       query: this.query,
       field: this.field,
-      queryType: this.queryType,
+      type: this.type,
     };
   }
 }
@@ -87,10 +88,12 @@ export class FieldQuery extends SearchElement {
 export class OperatorAnd extends SearchElement {
   public and: SearchElement[];
 
-  constructor(andedElements: SearchElement[]) {
+  constructor(andedElements: SearchElement[], takeOwnerShip: boolean = true) {
     super();
     this.and = andedElements;
-    _.each(andedElements, s => s.setParent(this));
+    if (takeOwnerShip) {
+      _.each(andedElements, s => s.setParent(this));
+    }
   }
 
   public toQuery(): string {
@@ -127,10 +130,12 @@ export class OperatorAnd extends SearchElement {
 export class OperatorOr extends SearchElement {
   public or: SearchElement[];
 
-  constructor(oredElements: SearchElement[]) {
+  constructor(oredElements: SearchElement[], takeOwnerShip: boolean = true) {
     super();
     this.or = oredElements;
-    _.each(oredElements, s => s.setParent(this));
+    if (takeOwnerShip) {
+      _.each(oredElements, s => s.setParent(this));
+    }
   }
 
   public toQuery(): string {
@@ -194,10 +199,15 @@ export class SearchElementBuilder {
 
 export class QueryParser {
 
+  public static readonly Field_ErrorCodes = 'errorcodes';
+  public static readonly Field_UpgradeChannel = 'upgradechannel';
+  public static readonly Field_ActiveInterface = 'activeinterface';
+  public static readonly Field_ConnectionStatus = 'connectionstatus';
+
   private static validFieldNames = ['displayname',
     'cisuuid',
     'accounttype',
-    'activeinterface',
+    QueryParser.Field_ActiveInterface,
     'serial',
     'mac',
     'ip',
@@ -205,11 +215,11 @@ export class QueryParser {
     'description',
     'productfamily',
     'software',
-    'upgradechannel',
+    QueryParser.Field_UpgradeChannel,
     'product',
-    'connectionstatus',
+    QueryParser.Field_ConnectionStatus,
     'sipurl',
-    'errorcodes',
+    QueryParser.Field_ErrorCodes,
     'tags'];
 
   constructor() {
@@ -242,7 +252,7 @@ export class QueryParser {
         curIndex += endIndex + 1;
       } else if (searchField == null && QueryParser.startsField(currentText)) {
         const fieldOperatorIndex = QueryParser.getOperatorIndex(currentText);
-        const fieldQueryType = currentText[fieldOperatorIndex] === '=' ? 'exact' : undefined;
+        const fieldQueryType = currentText[fieldOperatorIndex] === '=' ? FieldQuery.QueryTypeExact : undefined;
         const fieldName = currentText.substring(0, fieldOperatorIndex).trim();
         curIndex += fieldOperatorIndex + 1;
         curIndex += QueryParser.getLeadingWhiteSpaceCount(expression, curIndex);

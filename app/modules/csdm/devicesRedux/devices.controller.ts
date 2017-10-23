@@ -77,12 +77,12 @@ export class DevicesCtrl {
   }
 
   public emptysearchresult(): boolean {
-    return this._searchObject && this._searchObject.getSearchQuery() !== ''
+    return this._searchObject && this._searchObject.getTranslatedQueryString(null) !== ''
       && (this._searchResult && this._searchResult.hits.total === 0);
   }
 
   public emptydatasource(): boolean {
-    return this._searchObject && this._searchObject.getSearchQuery() === ''
+    return this._searchObject && this._searchObject.getTranslatedQueryString(null) === ''
       && (this._searchResult && this._searchResult.hits.total === 0);
   }
 
@@ -284,7 +284,7 @@ export class DevicesCtrl {
             sparkCall: 'addDeviceFlow.addLines',
             sparkCallConnect: 'addDeviceFlow.callConnectOptions',
             sparkOnly: 'addDeviceFlow.showActivationCode',
-            sparkOnlyAndCalendar: 'addDeviceFlow.editCalendarService',
+            calendar: 'addDeviceFlow.editCalendarService',
           },
         },
         'addDeviceFlow.addLines': {
@@ -364,7 +364,7 @@ export class DevicesCtrl {
             sparkCall: 'addDeviceFlow.addLines',
             sparkCallConnect: 'addDeviceFlow.callConnectOptions',
             sparkOnly: 'addDeviceFlow.showActivationCode',
-            sparkOnlyAndCalendar: 'addDeviceFlow.editCalendarService',
+            calendar: 'addDeviceFlow.editCalendarService',
           },
         },
         'addDeviceFlow.addLines': {

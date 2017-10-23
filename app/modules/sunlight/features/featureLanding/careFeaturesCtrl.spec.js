@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Care Feature Ctrl should ', function () {
-  var controller, $filter, $q, $rootScope, $state, $scope, Authinfo, CareFeatureList, VirtualAssistantService,
+  var controller, $filter, $q, $rootScope, $state, $scope, Authinfo, CareFeatureList, CvaService,
     Log, Notification, deferred, callbackDeferred, chatPlusCallbackDeferred, virtualAssistantDeferred, $translate;
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('Test-Org-Id'),
@@ -61,7 +61,7 @@ describe('Care Feature Ctrl should ', function () {
     $provide.value('Authinfo', spiedAuthinfo);
   }));
 
-  beforeEach(inject(function (_$rootScope_, $controller, _$filter_, _$state_, _$q_, _Authinfo_, _CareFeatureList_, _Notification_, _Log_, _$translate_, _VirtualAssistantService_) {
+  beforeEach(inject(function (_$rootScope_, $controller, _$filter_, _$state_, _$q_, _Authinfo_, _CareFeatureList_, _Notification_, _Log_, _$translate_, _CvaService_) {
     $rootScope = _$rootScope_;
     $filter = _$filter_;
     $q = _$q_;
@@ -70,7 +70,7 @@ describe('Care Feature Ctrl should ', function () {
     Authinfo = _Authinfo_;
     $translate = _$translate_;
     CareFeatureList = _CareFeatureList_;
-    VirtualAssistantService = _VirtualAssistantService_;
+    CvaService = _CvaService_;
     Log = _Log_;
     Notification = _Notification_;
 
@@ -82,7 +82,7 @@ describe('Care Feature Ctrl should ', function () {
     spyOn(CareFeatureList, 'getChatTemplates').and.returnValue(deferred.promise);
     spyOn(CareFeatureList, 'getCallbackTemplates').and.returnValue(callbackDeferred.promise);
     spyOn(CareFeatureList, 'getChatPlusCallbackTemplates').and.returnValue(chatPlusCallbackDeferred.promise);
-    spyOn(VirtualAssistantService.featureList, 'getFeature').and.returnValue(virtualAssistantDeferred.promise);
+    spyOn(CvaService.featureList, 'getFeature').and.returnValue(virtualAssistantDeferred.promise);
     spyOn($state, 'go');
 
     // Turned on virtual assistant enabled flag
@@ -97,7 +97,7 @@ describe('Care Feature Ctrl should ', function () {
       Log: Log,
       Notification: Notification,
       $translate: $translate,
-      VirtualAssistantService: VirtualAssistantService,
+      CvaService: CvaService,
     });
   }));
 

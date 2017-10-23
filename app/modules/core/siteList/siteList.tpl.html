@@ -1,13 +1,12 @@
-<div ng-if='siteList.showGridData' id="site-list" class="site-list">
-
-  <cs-page-header title-name="{{'siteList.conferencing' | translate}}"></cs-page-header>
-  <cs-page-sub-header ng-if="siteList.isShowAddSite">
-    <cs-page-sub-header-right class="action-panel" ng-show="Utils.isAdminPage()">
-      <a class="btn btn-primary" ui-sref="site-list-add"
-        translate="firstTimeWizard.addSiteButton"></a>
-    </cs-page-sub-header-right>
-  </cs-page-sub-header>
-
+<div ng-if='siteList.showGridData' id="site-list">
+  <div class="page-sub-header" ng-if="siteList.isAdminPage && siteList.isShowAddSite">
+    <div class="page-sub-header__right">
+      <a class="btn btn-primary"
+        ui-sref="site-list-add"
+        translate="firstTimeWizard.addSiteButton">
+      </a>
+    </div>
+  </div>
   <cs-grid grid-options="siteList.gridOptions" spinner="false"></cs-grid>
   <!-- Start Webex linked form -->
   <form action="{{siteList.trustSrc(siteList.siteAdminUrl)}}" class="webex-hidden-form" method="post" target="_blank">

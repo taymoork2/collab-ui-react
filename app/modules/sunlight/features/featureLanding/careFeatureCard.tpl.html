@@ -11,10 +11,10 @@
               </button>
             </div>
           </div>
-          <p><span class="badge badge--outline" ng-if="careFeature.featureType === 'Va'">{{:: ('sunlightDetails.' + careFeature.featureType) | translate}}</span>
-          <span class="badge badge--outline" translate="common.customerSupportTemplate" ng-if="careFeature.featureType !== 'Va'"></span>
+          <p><span class="badge badge--outline" ng-if="careFeature.mediaType === 'virtualAssistant'">{{:: ('careChatTpl.virtualAssistant.featureText.' + careFeature.mediaType) | translate}}</span>
+          <span class="badge badge--outline" translate="common.customerSupportTemplate" ng-if="careFeature.mediaType !== 'virtualAssistant'"></span>
           </p>
-          <div class="card-icons-inline" ng-if="careFeature.featureType !== 'Va'">
+          <div class="card-icons-inline" ng-if="careFeature.mediaType !== 'virtualAssistant'">
               <span ng-repeat="icon in careFeature.icons">
                 <i class="icon {{icon}}"></i>
               </span>
@@ -22,9 +22,9 @@
         </header>
         <footer class="card-footer">
           <div class="embed-code-txt h6 left">
-            <p><span translate="sunlightDetails.status" ng-if="careFeature.featureType === 'Va' && careFeature.status"></span>{{careFeature.status}}</p>
+            <p><span translate="sunlightDetails.status" ng-if="careFeature.mediaType === 'virtualAssistant' && careFeature.status"></span>{{careFeature.status}}</p>
           </div>
-          <div class="right icon icon-download" ng-if="careFeature.featureType !== 'Va'" ng-click="careFeaturesCtrl.openEmbedCodeModal((careFeature), $event)">
+          <div class="right icon icon-download" ng-if="careFeature.mediaType !== 'virtualAssistant'" ng-click="careFeaturesCtrl.openEmbedCodeModal((careFeature), $event)">
               <span class="sr-only" translate="careChatTpl.downloadAction"></span>
           </div>
         </footer>

@@ -39,7 +39,7 @@ export class ResourceGroupService {
         releaseChannel,
       })
       .then(this.extractDataFromResponse)
-      .then(function (res) {
+      .then((res) => {
         this.HybridServicesClusterService.clearCache();
         return res;
       });
@@ -56,7 +56,7 @@ export class ResourceGroupService {
         name: name,
       })
       .then(this.extractDataFromResponse)
-      .then(function (res) {
+      .then((res) => {
         this.HybridServicesClusterService.clearCache();
         return res;
       });
@@ -68,7 +68,7 @@ export class ResourceGroupService {
         releaseChannel,
       })
       .then(this.extractDataFromResponse)
-      .then(function (res) {
+      .then((res) => {
         this.HybridServicesClusterService.clearCache();
         return res;
       });

@@ -20,7 +20,9 @@ export class PstnProvidersCtrl implements ng.IComponentController {
   public form: ng.IFormController;
 
   public verifyConfirmEmailAddress() {
-    const isMatched = _.isEqual(this.contact.confirmEmailAddress.toLowerCase(), this.contact.emailAddress.toLowerCase());
-    this.form.confirmEmailAddress.$setValidity('emailsDonotMatch', isMatched);
+    if (!_.isEmpty(this.contact.emailAddress && !_.isEmpty(this.contact.confirmEmailAddress))) {
+      const isMatched = _.isEqual(this.contact.confirmEmailAddress.toLowerCase(), this.contact.emailAddress.toLowerCase());
+      this.form.confirmEmailAddress.$setValidity('emailsDonotMatch', isMatched);
+    }
   }
 }

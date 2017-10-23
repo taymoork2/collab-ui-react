@@ -1,20 +1,20 @@
 <div ng-form="$ctrl.siteSetupForm">
   <div class="row"
     ng-repeat="site in $ctrl.sitesArray">
-    <webex-site-new-display-component site="site"
+    <webex-site-new-display site="site"
       is-show-user-management="$ctrl.isShowUserManagement"
       can-remove-site="false"
       index="$index">
-    </webex-site-new-display-component>
+    </webex-site-new-display>
   </div>
   <div class="row"
     ng-repeat="site in $ctrl.newSitesArray">
-    <webex-site-new-display-component site="site"
+    <webex-site-new-display site="site"
       is-show-user-management="$ctrl.isShowUserManagement"
       on-remove-site="$ctrl.removeSite(index)"
       can-remove-site="true"
       index="$index">
-    </webex-site-new-display-component>
+    </webex-site-new-display>
   </div>
   <div class="site-preview">
     <b><div ng-if="$ctrl.siteModel.siteUrl !== ''">{{$ctrl.siteModel.siteUrl}}.webex.com</div></b>

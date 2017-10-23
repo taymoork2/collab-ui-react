@@ -163,10 +163,12 @@
           });
         };
 
-        card.showAutoAssignLicensesEditModal = function () {
+        card.showEditAutoAssignTemplateModal = function () {
           $state.go('users.list').then(function () {
             $timeout(function () {
-              $state.go('users.manage.org');
+              $state.go('users.manage.edit-auto-assign-template-modal', {
+                prevState: 'users.manage.picker',
+              });
             });
           });
         };
