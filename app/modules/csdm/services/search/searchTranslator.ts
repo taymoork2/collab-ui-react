@@ -152,7 +152,7 @@ export class SearchTranslator {
           return false;
         }
       }
-      return SearchTranslator.queryFoundInFieldValue(element.query, element.queryType === FieldQuery.QueryTypeExact, translationValue);
+      return SearchTranslator.queryFoundInFieldValue(element.query, element.type === FieldQuery.QueryTypeExact, translationValue);
     }
     return false;
   }
