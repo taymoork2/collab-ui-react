@@ -8,9 +8,9 @@ require('./_customer-list.scss');
 
   /* @ngInject */
   function CustomerListCtrl($q, $scope, $state, $translate, Analytics, Authinfo, Config, ExternalNumberService, FeatureToggleService, GridCellService, HuronCompassService, Log, Notification, Orgservice, PartnerService, TrialService) {
-    var nameTemplate = require('modules/core/customers/customerList/grid/nameColumn.tpl.html');
-    var compactServiceTemplate = require('modules/core/customers/customerList/grid/compactServiceColumn.tpl.html');
-    var accountStatusTemplate = require('modules/core/customers/customerList/grid/accountStatusColumn.tpl.html');
+    var nameTemplate = require('./grid/nameColumn.tpl.html');
+    var compactServiceTemplate = require('./grid/compactServiceColumn.tpl.html');
+    var accountStatusTemplate = require('./grid/accountStatusColumn.tpl.html');
 
     var PREMIUM = 'premium';
     var STANDARD = 'standard';
@@ -250,7 +250,7 @@ require('./_customer-list.scss');
           headerCellClass: 'align-center',
           sortingAlgorithm: columnSort.license,
         }, {
-        /*
+        /* AG TODO:  once we have data for total users -- add back
           field: 'totalUsers',
           displayName: '$translate.instant('customerPage.'active') + ' / ' + $translate.instant('customerPage.totalUsers'),
           width: '16%',
@@ -331,8 +331,8 @@ require('./_customer-list.scss');
       vm.gridColumns = columnDefs;
       vm.gridOptions.columnDefs = columnDefs;
 
-      setStatusTextOrder(); // sort order for 'status' column
-      setNotesTextOrder(); // sort order for 'text' column
+      initStatusTextOrder(); // sort order for 'status' column
+      initNotesTextOrder(); // sort order for 'text' column
 
       initFilters();
 
@@ -376,7 +376,10 @@ require('./_customer-list.scss');
       return customer.customerOrgId === Authinfo.getOrgId();
     }
 
-    function setStatusTextOrder() {
+    // notes:
+    // - sort order based on the translated text for account status fields
+    // - we do this because the actual text in the columns includes a status icon and that prevent us from using the standard alpha sort built into ui-grid
+    function initStatusTextOrder() {
       var status = [
         { key: 'active', xlat: 'purchased' },
         { key: 'trial' },
@@ -397,7 +400,7 @@ require('./_customer-list.scss');
       }
     }
 
-    function setNotesTextOrder() {
+    function initNotesTextOrder() {
       var notes = [
         { key: 'suspended', status: 'NOTE_CANCELED' },
         { key: 'needsSetup', status: 'NOTE_NEEDS_SETUP' },
@@ -506,8 +509,6 @@ require('./_customer-list.scss');
               isCareEnabled: vm.isCareEnabled,
               isAdvanceCareEnabled: vm.isAdvanceCareEnabled,
             });
-
-
             // Not sure why this is set again, afaik it is the same as myOrg
             //AG 9/27 getAdminOrg returns licenses without offerCodes so services are not populated therefore this is needed
             myOrg[0].customerName = custName;

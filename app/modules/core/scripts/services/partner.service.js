@@ -351,6 +351,7 @@
       if (isTrial) {
         status = (rowData.daysLeft < 0) ? 'expired' : 'trial';
       } else if (_.get(rowData, 'licenseList', []).length === 0) {
+        // condition for pending status is empty license array (and not a trial)
         status = 'pending';
       }
 
@@ -373,6 +374,10 @@
         } else if (rowData.status === 'ACTIVE' || rowData.status === 'EXPIRED') {
           // while "daysLeft > 0" and expired doesn't make sense, the other 2 cases have the same text
           if (rowData.daysLeft > 0) {
+            // notes:
+            // - using "Needs Setup" for BOTH pending customer orgs and trials which do not have a start date set
+            // - no trial should ever normally not have a start date (it is started when it is created) but we have orders in orgs that meet this condition
+            // TODO: determine if the above quirk applies to live customers in production --^, and rm this check if not applicable
             if ((rowData.accountStatus === 'pending') || ((rowData.accountStatus === 'trial') && !rowData.startDate)) {
               notes.sortOrder = customerStatus.NOTE_NEED_SETUP;
               notes.text = $translate.instant('customerPage.needsSetup');
