@@ -4,7 +4,7 @@ type IUserStatus = any; // HACK
 
 describe('hybridCallServiceAwareUserSettings', () => {
 
-  let $componentController, $q, $scope, ctrl, DomainManagementService, HybridServicesClusterService, HybridServiceUserSidepanelHelperService, ModalService, UCCService, UriVerificationService;
+  let $componentController, $q, $scope, ctrl, DomainManagementService, HybridServiceUserSidepanelHelperService, ModalService, UCCService, UriVerificationService;
 
   beforeEach(angular.mock.module('Hercules'));
 
@@ -16,12 +16,11 @@ describe('hybridCallServiceAwareUserSettings', () => {
   beforeEach(initSpies);
   afterEach(cleanup);
 
-  function dependencies (_$componentController_, _$q_, $rootScope, _DomainManagementService_, _HybridServicesClusterService_, _HybridServiceUserSidepanelHelperService_, _ModalService_, _UCCService_, _UriVerificationService_) {
+  function dependencies (_$componentController_, _$q_, $rootScope, _DomainManagementService_, _HybridServiceUserSidepanelHelperService_, _ModalService_, _UCCService_, _UriVerificationService_) {
     $componentController = _$componentController_;
     $q = _$q_;
     $scope = $rootScope;
     DomainManagementService = _DomainManagementService_;
-    HybridServicesClusterService = _HybridServicesClusterService_;
     HybridServiceUserSidepanelHelperService = _HybridServiceUserSidepanelHelperService_;
     ModalService = _ModalService_;
     UCCService = _UCCService_;
@@ -29,13 +28,12 @@ describe('hybridCallServiceAwareUserSettings', () => {
   }
 
   function cleanup() {
-    $componentController = ctrl = $scope = DomainManagementService = HybridServicesClusterService = HybridServiceUserSidepanelHelperService = UCCService = UriVerificationService = undefined;
+    $componentController = ctrl = $scope = DomainManagementService = HybridServiceUserSidepanelHelperService = UCCService = UriVerificationService = undefined;
   }
 
   function initSpies() {
     spyOn(HybridServiceUserSidepanelHelperService, 'getDataFromUSS');
     spyOn(HybridServiceUserSidepanelHelperService, 'saveUserEntitlements');
-    spyOn(HybridServicesClusterService, 'get');
     spyOn(UCCService, 'getUserDiscovery');
     spyOn(DomainManagementService, 'getVerifiedDomains').and.returnValue($q.resolve({}));
     spyOn(UriVerificationService, 'isDomainVerified').and.returnValue(false);
@@ -103,36 +101,6 @@ describe('hybridCallServiceAwareUserSettings', () => {
 
     expect(ctrl.directoryUri).toBe(expectedDirectoryURI);
     expect(ctrl.domainVerificationError).toBe(true);
-  });
-
-  it('should get the homed connector and cluster from FMS if USS says the user is homed', () => {
-    const clusterId = '3.14';
-    const connectorId = '2.718';
-    const expectedConnector = {
-      id: connectorId,
-    };
-    const expectedCluster = {
-      id: clusterId,
-      connectors: [expectedConnector],
-    };
-
-    const callServiceAwareExpectedStatus: IUserStatus = {
-      connectorId: connectorId,
-      clusterId: clusterId,
-      serviceId: 'squared-fusion-uc',
-      entitled: true,
-      lastStateChange: 1234,
-      lastStateChangeText: 'something',
-    };
-    HybridServiceUserSidepanelHelperService.getDataFromUSS.and.returnValue($q.resolve([callServiceAwareExpectedStatus, {}]));
-    HybridServicesClusterService.get.and.returnValue($q.resolve(expectedCluster));
-    UCCService.getUserDiscovery.and.returnValue($q.resolve({}));
-
-    initController();
-
-    expect(ctrl.homedCluster).toBe(expectedCluster);
-    expect(ctrl.homedConnector).toBe(expectedConnector);
-    expect(HybridServicesClusterService.get.calls.count()).toBe(1);
   });
 
   it('should display a popup confirmation on save if Call Service Connect is enabled for the user', () => {

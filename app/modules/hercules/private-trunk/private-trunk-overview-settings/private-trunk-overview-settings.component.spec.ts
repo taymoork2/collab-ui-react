@@ -4,7 +4,7 @@ describe('Component: PrivateTrunkOverviewSettings component', () => {
     this.initModules(privateTrunkOverviewSettingsModule);
     this.injectDependencies(
       '$state',
-      'PrivateTrunkCertificateService',
+      'CiscoCollaborationCloudCertificateService',
       'PrivateTrunkService',
       'PrivateTrunkPrereqService',
       '$q',
@@ -20,9 +20,9 @@ describe('Component: PrivateTrunkOverviewSettings component', () => {
     this.$httpBackend.whenGET('https://identity.webex.com/identity/scim/1234/v1/Users/me').respond(200);
 
     spyOn(this.PrivateTrunkPrereqService, 'getVerifiedDomains').and.returnValue(this.$q.resolve([]));
-    spyOn(this.PrivateTrunkCertificateService, 'readCerts').and.returnValue(this.$q.resolve({}));
-    spyOn(this.PrivateTrunkCertificateService, 'uploadCertificate').and.returnValue({});
-    spyOn(this.PrivateTrunkCertificateService, 'deleteCert').and.returnValue({});
+    spyOn(this.CiscoCollaborationCloudCertificateService, 'readCerts').and.returnValue(this.$q.resolve({}));
+    spyOn(this.CiscoCollaborationCloudCertificateService, 'uploadCertificate').and.returnValue({});
+    spyOn(this.CiscoCollaborationCloudCertificateService, 'deleteCert').and.returnValue({});
     spyOn(this.PrivateTrunkService, 'getPrivateTrunk').and.returnValue(this.$q.resolve({}));
     spyOn(this.PrivateTrunkService, 'setPrivateTrunk').and.returnValue(this.$q.resolve({}));
     this.compileComponent('privateTrunkOverviewSettings', {

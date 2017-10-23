@@ -37,8 +37,6 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     $scope.currentUser = null;
     $scope.popup = Notification.popup;
     $scope.filterByAdmin = false;
-    $scope.userPreviewActive = false;
-    $scope.userDetailsActive = false;
     $scope.sort = {
       by: 'name',
       order: 'ascending',

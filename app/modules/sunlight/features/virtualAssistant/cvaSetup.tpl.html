@@ -1,0 +1,19 @@
+<div class="careChatSetup">
+  <cs-overlay-panel class="care-chat overlay-panel typeahead-group"
+                    overlay-title={{cvaSetupCtrl.getTitle()}}
+                    close="cvaSetupCtrl.cancelModal()"
+                    ng-keyup="cvaSetupCtrl.evalKeyPress($event.keyCode)">
+    <cs-setup-assistant previous="cvaSetupCtrl.previousButton()"  next="cvaSetupCtrl.nextButton()"
+                        previous-fn="cvaSetupCtrl.previousPage()" next-fn="cvaSetupCtrl.nextPage()">
+      <form name="virtualAssistantSetupForm" class="sa-form">
+        <!--
+          currently ng-include templates loaded through ngtemplate-loader
+          TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
+        -->
+        <div ng-include="cvaSetupCtrl.getCurrentPage()"  onload="cvaSetupCtrl.onPageLoad()"
+             ng-class="careChatSA.animation"></div>
+      </form>
+    </cs-setup-assistant>
+  </cs-overlay-panel>
+
+</div>

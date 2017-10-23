@@ -4,6 +4,7 @@ describe('Component: WebexAddSiteModalComponent', function () {
   const TRANSFER_SCREEN = 'webex-site-transfer';
   const SUBSCRIPTION_SCREEN = 'webex-site-subscription';
   const ADD_SITE_SCREEN = 'webex-site-new';
+  const confServices = getJSONFixture('core/json/authInfo/webexLicenses.json');
   beforeEach(function () {
     this.initModules(module);
     this.injectDependencies('$scope', '$rootScope', 'Config', 'SetupWizardService');
@@ -14,12 +15,19 @@ describe('Component: WebexAddSiteModalComponent', function () {
       conferenceLicenses: getJSONFixture('core/json/setupWizard/sites/conference-licenses.json'),
     };
 
+    initSpies.apply(this);
+
     this.compileComponent('webexAddSiteModal', {
       subscriptionList: 'fixtures.subscriptionListSingle',
       conferenceServices: 'fixtures.conferenceServices',
       audioLicenses: 'fixtures.audioLicenses',
     });
   });
+
+  function initSpies() {
+    spyOn(this.SetupWizardService, 'getWebexLicenses').and.returnValue([{ billingServiceId: 'Sub-012' }, { billingServiceId: '013' }]);
+    spyOn(this.SetupWizardService, 'getConferenceLicensesBySubscriptionId').and.returnValue(confServices);
+  }
 
   describe('When first opened', () => {
     it('should go straight to transfer site screen if there is only one subscription', function () {

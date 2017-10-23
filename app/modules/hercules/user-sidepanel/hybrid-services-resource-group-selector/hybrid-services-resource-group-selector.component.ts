@@ -69,6 +69,7 @@ class HybridServicesResourceGroupSelectorCtrl implements ng.IComponentController
     this.ResourceGroupService.getAllAsOptions()
       .then((options: IResourceGroupOptionPair[]) => {
         if (options.length > 0) {
+          options = options.sort((a, b) => a.label.localeCompare(b.label));
           this.options = this.options.concat(options);
           if (this.resourceGroupId) {
             this.setSelectedResourceGroup(this.resourceGroupId);

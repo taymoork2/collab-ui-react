@@ -21,7 +21,7 @@ import { ICluster, HybridServiceId, IExtendedClusterFusion } from 'modules/hercu
 import { IPrivateTrunkResource } from 'modules/hercules/private-trunk/private-trunk-services/private-trunk';
 import { IToolkitModalService } from 'modules/core/modal';
 import { Notification } from 'modules/core/notifications';
-import { PrivateTrunkPrereqService } from 'modules/hercules/private-trunk/private-trunk-prereq';
+import { PrivateTrunkPrereqService } from 'modules/services-overview/new-hybrid/prerequisites-modals/private-trunk-prereq';
 import { ProPackService }  from 'modules/core/proPack/proPack.service';
 
 export class ServicesOverviewController implements ng.IComponentController {

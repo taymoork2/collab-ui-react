@@ -17,14 +17,14 @@
     private-trunk-resource="$ctrl.privateTrunkResource"
     on-change-fn="$ctrl.setResources(privateTrunkResource)">
   </private-trunk-destination>
-  <private-trunk-certificate ng-if="$ctrl.currentStepIndex === 3"
+  <cisco-collaboration-cloud-certificate-store ng-if="$ctrl.currentStepIndex === 3"
     is-first-time-setup = true
     is-certificate-default = "$ctrl.isCertificateDefault"
     is-importing = "$ctrl.isImporting"
     formatted-cert-list="$ctrl.formattedCertList"
     on-change-fn="$ctrl.uploadFile(file)"
     on-change-option-fn="$ctrl.changeOption(isCertificateDefault)">
-  </private-trunk-certificate>
+  </cisco-collaboration-cloud-certificate-store>
   <private-trunk-setup-complete ng-if="$ctrl.currentStepIndex === 4 && $ctrl.isFirstTimeSetup"
     verified-domains="$ctrl.selectedVerifiedDomains">
   </private-trunk-setup-complete`>

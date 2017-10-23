@@ -27,8 +27,7 @@
     ng-if="$ctrl.currentStep===2">
   </webex-site-new>
   <webex-site-licenses sites-array="$ctrl.sitesArray"
-    existing-webex-sites="$ctrl.existingWebexSites"
-    meeting-licenses="$ctrl.meetingLicenses"
+    conference-licenses-in-subscription="$ctrl.conferenceLicensesInSubscription"
     on-distribution-change="$ctrl.updateSitesWithNewDistribution(sites, isValid )"
     ng-if="$ctrl.currentStep===3">
   </webex-site-licenses>

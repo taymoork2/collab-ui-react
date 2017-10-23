@@ -115,6 +115,7 @@ const customer = huronCustomer({
   doCallPickup: true,
   doCallPark: true,
   doCallPaging: true,
+  doAllFeatures: true,
   doFtsw: true,
   offers: 'CALL'
 });
@@ -135,6 +136,8 @@ const customer = huronCustomer({
 * This will create a call park group with 2 users. Be sure there are at least 2 users created in the provisioner!
 ### `doCallPaging:` Toggles the call paging feature. True toggles it on. If this is not called, it will default to false.
 * This will create a call paging group with 1 user and 1 place. Be sure there are at least 1 of each created in the provisioner!
+### `doAllFeatures:` Toggles all call features above to allow for testing.
+* See the note on each of the above feature to see what gets implemented. This toggle will create 2 users and 2 places each with 2 dids. No need to add them via users and places toggle.
 ### `doFtsw:` Toggles the ability to do first time setup wizard. True allows for ftsw, false will have provisioner skip it.
 ### `offers:` Toggles different offers for customer.
 - `'CALL'`: Creates a customer with call feature only

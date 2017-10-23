@@ -1,10 +1,10 @@
 'use strict';
 
 describe('Service: WebExSiteRowService', function () {
-  var $rootScope, $q, WebExSiteRowService, Auth, Authinfo, FeatureToggleService, WebExUtilsFact, WebExApiGatewayService, WebExApiGatewayConstsService, deferred_licenseInfo, deferredIsSiteSupportsIframe, deferredCsvStatus;
+  var $rootScope, $q, WebExSiteRowService, Auth, Authinfo, FeatureToggleService, SetupWizardService, WebExUtilsFact, WebExApiGatewayService, WebExApiGatewayConstsService, deferred_licenseInfo, deferredIsSiteSupportsIframe, deferredCsvStatus;
 
   afterEach(function () {
-    $rootScope = $q = WebExSiteRowService = Auth = Authinfo = FeatureToggleService = WebExUtilsFact = WebExApiGatewayService = WebExApiGatewayConstsService = deferred_licenseInfo = deferredIsSiteSupportsIframe = deferredCsvStatus = undefined;
+    $rootScope = $q = WebExSiteRowService = Auth = Authinfo = FeatureToggleService = WebExUtilsFact = WebExApiGatewayService = SetupWizardService = WebExApiGatewayConstsService = deferred_licenseInfo = deferredIsSiteSupportsIframe = deferredCsvStatus = undefined;
   });
 
   var fakeSiteRow1 = {
@@ -135,6 +135,7 @@ describe('Service: WebExSiteRowService', function () {
     $$hashKey: 'uiGrid-0009',
     showCSVIconAndResults: true,
   };
+  var confServices = getJSONFixture('core/json/authInfo/webexLicenses.json');
 
   // var fakeConferenceService1 = {
   //   "label": "Meeting Center 200",
@@ -201,11 +202,12 @@ describe('Service: WebExSiteRowService', function () {
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module('WebExApp'));
 
-  beforeEach(inject(function (_$rootScope_, _$q_, _Auth_, _Authinfo_, _FeatureToggleService_, _WebExUtilsFact_, _WebExApiGatewayService_, _WebExApiGatewayConstsService_, _WebExSiteRowService_) {
+  beforeEach(inject(function (_$rootScope_, _$q_, _Auth_, _Authinfo_, _FeatureToggleService_, _SetupWizardService_, _WebExUtilsFact_, _WebExApiGatewayService_, _WebExApiGatewayConstsService_, _WebExSiteRowService_) {
     Auth = _Auth_;
     Authinfo = _Authinfo_;
     WebExSiteRowService = _WebExSiteRowService_;
     FeatureToggleService = _FeatureToggleService_;
+    SetupWizardService = _SetupWizardService_;
     WebExUtilsFact = _WebExUtilsFact_;
     WebExApiGatewayService = _WebExApiGatewayService_;
     WebExApiGatewayConstsService = _WebExApiGatewayConstsService_;
@@ -252,6 +254,7 @@ describe('Service: WebExSiteRowService', function () {
         return false;
       }
     });
+    spyOn(SetupWizardService, 'getConferenceLicensesBySubscriptionId').and.returnValue(confServices);
   }));
 
   ////////
@@ -714,5 +717,10 @@ describe('Service: WebExSiteRowService', function () {
       expect(WebExSiteRowService.siteFunctionsSuccess).toHaveBeenCalled();
       expect(WebExSiteRowService.updateCSVStatusInRow).not.toHaveBeenCalled();
     });
+  });
+
+  it('can group licenses by sites correctly', function () {
+    var sites = WebExSiteRowService.getLicensesInSubscriptionGroupedBySites();
+    expect(_.keys(sites).length).toEqual(3);
   });
 });

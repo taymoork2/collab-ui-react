@@ -78,7 +78,7 @@ interface IJournalEntry {
   };
 }
 
-interface IUSSOrg {
+export interface IUSSOrg {
   id: string;
   sipDomain: string;
 }

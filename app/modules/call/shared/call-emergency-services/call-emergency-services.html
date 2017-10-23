@@ -51,7 +51,7 @@
       <h6 translate="trialModal.pstn.addrFound"></h6>
       <h5>{{$ctrl.address.streetAddress}} {{$ctrl.address.unit}}</h5>
       <h5>{{$ctrl.address.city}}, {{$ctrl.address.state}}, {{$ctrl.address.zip}}</h5>
-      <a href="" class="primary" ng-click="$ctrl.onResetAddress()" translate="trialModal.pstn.addrRetry"></a>
+      <a href class="primary" ng-click="$ctrl.onResetAddress()" translate="trialModal.pstn.addrRetry" id="emergencyServiceBtn"></a>
     </div>
   </div>
   <div ng-if="!$ctrl.showES()">

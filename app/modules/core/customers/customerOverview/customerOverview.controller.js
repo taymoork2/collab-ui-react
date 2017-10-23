@@ -8,7 +8,7 @@ require('./_customer-overview.scss');
     .controller('CustomerOverviewCtrl', CustomerOverviewCtrl);
 
   /* @ngInject */
-  function CustomerOverviewCtrl($modal, $q, $state, $stateParams, $translate, $window, AccountOrgService, Analytics, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, TrialPstnService, TrialService, Userservice, PstnService) {
+  function CustomerOverviewCtrl($modal, $q, $state, $stateParams, $translate, $window, AccountOrgService, Analytics, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, PstnService, TrialPstnService, TrialService, Userservice) {
     var vm = this;
     vm.currentCustomer = $stateParams.currentCustomer;
     vm.customerName = vm.currentCustomer.customerName;
@@ -158,11 +158,12 @@ require('./_customer-overview.scss');
       if (vm.currentCustomer.purchased) {
         PstnService.getCustomerV2FetchFromCarrier(vm.currentCustomer.customerOrgId)
           .then(function (response) {
-            var _isContractSigned = _.get(response, 'isContractSigned');
-            if (!_.isUndefined(_isContractSigned) || _isContractSigned !== null) {
-              vm.showContractIncomplete = !_isContractSigned;
+            var isContractSigned = _.get(response, 'isContractSigned');
+            var isTerminusTrialAccount = _.get(response, 'trial');
+            if (isContractSigned && !isTerminusTrialAccount) {
+              vm.showContractIncomplete = !isContractSigned;
             }
-          }).catch(function () {});
+          });
       }
     }
 

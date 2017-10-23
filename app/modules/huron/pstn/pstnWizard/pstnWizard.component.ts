@@ -106,7 +106,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
     this.FeatureToggleService.supports(this.FeatureToggleService.features.huronEnterprisePrivateTrunking).then((enabled) => {
       this.ftI387PrivateTrunking = enabled;
     });
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484).then((enabled) => {
+    this.FeatureToggleService.getCallFeatureForCustomer(this.PstnModel.getCustomerId(), this.FeatureToggleService.features.hI1484).then((enabled) => {
       this.ftLocation = enabled;
     });
   }
@@ -423,7 +423,19 @@ export class PstnWizardCtrl implements ng.IComponentController {
   }
 
   public resetAddress(): void {
-    this.address.reset();
+    if (this.ftLocation) {
+      this.address.reset();
+    } else {
+      this.address.uuid = undefined;
+      this.address.streetAddress = null;
+      this.address.unit = undefined;
+      this.address.city = null;
+      this.address.state = null;
+      this.address.zip = null;
+      this.address.country = null;
+      this.address.default = false;
+      this.address.validated = false;
+    }
     this.PstnModel.setServiceAddress(_.cloneDeep(this.address));
   }
 
@@ -504,7 +516,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
   }
 
   public dismissModal() {
-    this.PstnModel.clear();
+    this.PstnModel.clear(this.ftLocation);
     this.dismiss();
   }
 

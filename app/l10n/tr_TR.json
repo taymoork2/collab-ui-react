@@ -6659,11 +6659,13 @@
     "areaCode": "Bu, geçerli bir bölge kodu gibi görünmüyor."
   },
   "CsdmStatus": {
-    "Online": "Çevrimiçi",
-    "OnlineWithIssues": "Çevrimiçi, Sorunları Var",
-    "Offline": "Çevrimdışı",
-    "OfflineExpired": "Devre Dışı",
-    "Unknown": "Bilinmiyor",
+    "connectionStatus": {
+      "Online": "Çevrimiçi",
+      "OnlineWithIssues": "Çevrimiçi, Sorunları Var",
+      "Offline": "Çevrimdışı",
+      "OfflineExpired": "Devre Dışı",
+      "Unknown": "Bilinmiyor"
+    },
     "WithDevices": "Cihazlarla",
     "upgradeChannels": {
       "Stable": "Sabit",

@@ -4,7 +4,7 @@
   angular
     .module('core.customer-reports')
     .component('metricsFrame', {
-      template: require('modules/core/customerReports/webexMetrics/metrics/metricsFrame.tpl.html'),
+      template: require('./metricsFrame.tpl.html'),
       controller: metricsFrameController,
     });
 
@@ -23,9 +23,10 @@
       vm.data = data;
       $timeout(
         function loadIframe() {
-          var submitFormBtn = $window.document.getElementById('submitFormBtn');
-          submitFormBtn.click();
-          startLoadReport();
+          if (vm.iframeForm) {
+            startLoadReport();
+            vm.iframeForm.$$element[0].submit();
+          }
         },
         0
       );
@@ -46,13 +47,10 @@
     }
 
     function unfreezeState(event, isLoaded) {
-      var iframeEle = angular.element('#webexMetricsIframeContainer');
-      var currScope = iframeEle.scope();
-
       if (event) {
         vm.isIframeLoaded = isLoaded;
       } else {
-        currScope.$apply(function () {
+        $scope.$apply(function () {
           vm.isIframeLoaded = isLoaded;
         });
       }
@@ -68,6 +66,9 @@
     }
 
     this.$onDestroy = function () {
+      if (vm.startLoadReportTimer) {
+        $timeout.cancel(vm.startLoadReportTimer);
+      }
       stateChangeStart();
       $window.removeEventListener('message', messageHandle, true);
     };

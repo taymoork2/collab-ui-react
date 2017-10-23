@@ -1,9 +1,30 @@
+import { IStatusSummary, USSService } from 'modules/hercules/services/uss.service';
+import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
+
 class Office365SettingsCtrl implements ng.IComponentController {
   public backState = 'services-overview';
+  public userStatusesSummary: IStatusSummary[] = [];
+  private subscribeStatusesSummary: any;
+
+  private serviceId: HybridServiceId = 'squared-fusion-cal';
 
   /* @ngInject */
   constructor(
+    private USSService: USSService,
   ) {}
+
+  public $onInit() {
+    this.extractSummary();
+    this.subscribeStatusesSummary = this.USSService.subscribeStatusesSummary('data', this.extractSummary.bind(this));
+  }
+
+  public $onDestroy() {
+    this.subscribeStatusesSummary.cancel();
+  }
+
+  public extractSummary() {
+    this.userStatusesSummary = this.USSService.extractSummaryForAService([this.serviceId]);
+  }
 }
 
 export class Office365SettingsPageComponent implements ng.IComponentOptions {

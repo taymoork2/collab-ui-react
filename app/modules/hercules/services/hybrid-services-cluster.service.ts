@@ -160,6 +160,28 @@ export class HybridServicesClusterService {
       .then(this.extractDataFromResponse);
   }
 
+  public getConnector(connectorId: string, orgId?: string): ng.IPromise<IConnector> {
+    const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId || this.Authinfo.getOrgId()}/connectors/${connectorId}`;
+    return this.$http.get<IConnector>(url)
+      .then(this.extractDataFromResponse);
+  }
+
+  public getHomedClusternameAndHostname(connectorId: string, orgId = this.Authinfo.getOrgId()): ng.IPromise<{ clustername: string, hostname: string}> {
+    return this.getAll(orgId)
+      .then((clusters) => {
+        const connectors: IConnector[] = _.chain(clusters)
+          .map((cluster) => cluster.connectors)
+          .flatten<IConnector>()
+          .value();
+        const connector = _.find(connectors, { id: connectorId } );
+        const cluster = _.find(clusters, { id: connector.clusterId });
+        return {
+          clustername: cluster.name,
+          hostname: connector.hostname,
+        };
+      });
+  }
+
   public getResourceGroups(orgId = this.Authinfo.getOrgId()): ng.IPromise<IResourceGroups> {
     const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId}?fields=@wide`;
     return this.$http.get<IFMSOrganization>(url, { cache: this.allResourcesCache })

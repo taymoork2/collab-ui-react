@@ -15,8 +15,6 @@
     vm.timeoutVal = 1000;
     vm.timer = 0;
     vm.activeFilter = 'all';
-    vm.userPreviewActive = false;
-    vm.userDetailsActive = false;
     vm.load = false;
     vm.sortColumn = sortColumn;
     vm.getLineList = getLineList;

@@ -48,13 +48,22 @@ export class PstnModel {
     this.clear();
   }
 
-  public clear(): void {
+  public clear(locations?): void {
     this.customerId = '';
     this.customerName = '';
     this.customerFirstName = '';
     this.customerLastName = '';
     this.customerEmail = '';
-    this.serviceAddress.reset();
+    if (locations) {
+      this.serviceAddress.reset();
+    } else {
+      this.serviceAddress.streetAddress = null;
+      this.serviceAddress.unit = undefined;
+      this.serviceAddress.city = null;
+      this.serviceAddress.state = null;
+      this.serviceAddress.zip = null;
+      this.serviceAddress.validated = false;
+    }
     this.customerExists = false;
     this.resellerExists = false;
     this.carrierExists = false;

@@ -1,0 +1,21 @@
+<div class="site-list">
+  <cs-page-header title-name="{{'siteList.conferencing' | translate}}"></cs-page-header>
+  <cs-page-sub-header ng-if="siteList.isShowAddSite">
+    <cs-page-sub-header-right class="action-panel" ng-show="Utils.isAdminPage()">
+      <a class="btn btn-primary" ui-sref="site-list-add"
+         translate="firstTimeWizard.addSiteButton"></a>
+    </cs-page-sub-header-right>
+  </cs-page-sub-header>
+
+  <div ng-if="siteList.tabs.length > 0" class="tabs-container">
+    <ul class="menu">
+      <li class="link" ng-repeat="tab in siteList.tabs">
+        <span ui-sref="{{tab.state}}" ui-sref-active="active" translate="{{tab.title}}"></span>
+      </li>
+    </ul>
+  </div>
+
+  <div>
+    <div ui-view="tabContent"></div>
+  </div>
+</div>

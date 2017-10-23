@@ -147,7 +147,7 @@
       vm.oldpartnerAdminEmail = vm.partnerAdminEmail;
 
       if (!vm.accountId) {
-        vm.provisionTime = orderObj.orderStatus !== PROVISIONED ? null : (new Date(orderObj.lastModified)).toUTCString();
+        vm.provisionTime = (orderObj.orderStatus !== PROVISIONED && !vm.hasConflictingServiceStatus) ? null : (new Date(orderObj.lastModified)).toUTCString();
         vm.endCustomerName = _.get(orderObj, 'orderContent.common.customerInfo.endCustomerInfo.name');
         vm.customerEmailSent = orderObj.lastProvisioningEmailTimestamp ? (new Date(orderObj.lastProvisioningEmailTimestamp)).toUTCString() : undefined;
         vm.purchaseOrderId = orderObj.purchaseOrderId;
@@ -279,7 +279,7 @@
     }
 
     function showOrgDetailsLink() {
-      return vm.accountActivated === true || (vm.purchaseOrderId && vm.order.orderStatus === PROVISIONED);
+      return vm.accountActivated === true || (vm.purchaseOrderId && (vm.order.orderStatus === PROVISIONED || vm.hasConflictingServiceStatus));
     }
 
     function canEditResendAdminEmail() {

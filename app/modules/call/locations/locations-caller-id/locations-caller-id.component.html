@@ -4,11 +4,13 @@
     translate="locations.locationCallerId">
   </label>
   <cs-toggle-switch
+    id="locationCallerIdToggleSwitch"
     ng-model="$ctrl.locationCallerIdEnabled"
     toggle-id="locationCallerIdToggle"
     name="locationCallerIdToggle"
     size="$ctrl.size"
-    cs-change="$ctrl.onLocationCallerIdToggled(toggleValue)">
+    cs-change="$ctrl.onLocationCallerIdToggled(toggleValue)"
+    ng-keypress="$ctrl.evalKeyPress($event)">
   </cs-toggle-switch>
   <div ng-if="$ctrl.locationCallerIdEnabled">
     <input

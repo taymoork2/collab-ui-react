@@ -221,11 +221,15 @@ export class LocationsService {
     }, location).$promise;
   }
 
-  public getDefaultLocation(customerId: string = this.Authinfo.getOrgId()): ng.IPromise<Location> {
+  public getDefaultLocation(customerId: string = this.Authinfo.getOrgId()): ng.IPromise<Location | undefined> {
     if (!this.defaultLocation) {
       return this.getLocationList(customerId).then(locationList => {
-        //First one is always the default per API definition
-        return this.getLocation(_.get(locationList[0], 'uuid')).then(location => this.defaultLocation = location);
+        if (_.isArray(locationList) && locationList.length > 0) {
+          //First one is always the default per API definition
+          return this.getLocation(_.get(locationList[0], 'uuid')).then(location => this.defaultLocation = location);
+        } else {
+          return this.$q.resolve(undefined);
+        }
       });
     } else {
       return this.$q.resolve(this.defaultLocation);

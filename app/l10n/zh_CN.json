@@ -6659,11 +6659,13 @@
     "areaCode": "这似乎并不是有效区号。"
   },
   "CsdmStatus": {
-    "Online": "在线",
-    "OnlineWithIssues": "在线，有问题",
-    "Offline": "离线",
-    "OfflineExpired": "已停用",
-    "Unknown": "未知",
+    "connectionStatus": {
+      "Online": "在线",
+      "OnlineWithIssues": "在线，有问题",
+      "Offline": "离线",
+      "OfflineExpired": "已停用",
+      "Unknown": "未知"
+    },
     "WithDevices": "使用设备",
     "upgradeChannels": {
       "Stable": "稳定",

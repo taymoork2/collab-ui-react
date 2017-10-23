@@ -10,7 +10,6 @@ class OnlineUpgrade {
   public bodyText: string = '';
   public cancelBodyText: string = '';
   public titleText: string = '';
-  public nameChangeEnabled: boolean;
   public bmmpAttr: IBmmpAttr;
 
   /* @ngInject */

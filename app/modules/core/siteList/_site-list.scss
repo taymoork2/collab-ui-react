@@ -58,5 +58,36 @@
   .webex-hidden-form {
     display: none;
   }
+
+  .tabs-container {
+    padding: 1rem;
+
+    ul.menu {
+      margin-left: 0.25rem;
+      padding: 0;
+      border: 0px;
+
+      li {
+        display: inline;
+        margin-right: 1rem;
+        font-size: 1rem;
+
+        &:hover {
+          cursor: pointer;
+          color: $color-primary-base;
+        }
+        .active {
+          color: $color-primary-base;
+        }
+        .link {
+          color: $gray-light-1;
+          font-size: 1rem;
+          border: 0px;
+          outline: none;
+        }
+      }
+    }
+  }
+
 }
 

@@ -6,7 +6,7 @@
     .controller('AddResourceControllerClusterViewV2', AddResourceControllerClusterViewV2);
 
   /* @ngInject */
-  function AddResourceControllerClusterViewV2($translate, $state, $stateParams, $window, $q, AddResourceCommonServiceV2, FeatureToggleService, ProPackService) {
+  function AddResourceControllerClusterViewV2($translate, $state, $stateParams, $window, $q, AddResourceCommonServiceV2, ProPackService) {
     var vm = this;
     vm.clusterList = [];
     vm.selectPlaceholder = $translate.instant('mediaFusion.add-resource-dialog.cluster-placeholder');
@@ -24,7 +24,6 @@
     vm.radio = 1;
     vm.ovaType = 1;
     vm.noProceed = false;
-    vm.nameChangeEnabled = false;
     vm.yesProceed = $state.params.yesProceed;
     vm.fromClusters = $state.params.fromClusters;
     vm.showDownloadableOption = vm.fromClusters;
@@ -34,10 +33,8 @@
     var proPackEnabled = undefined;
     $q.all({
       proPackEnabled: ProPackService.hasProPackPurchased(),
-      nameChangeEnabled: FeatureToggleService.atlas2017NameChangeGetStatus(),
     }).then(function (toggles) {
       proPackEnabled = toggles.proPackEnabled;
-      vm.nameChangeEnabled = toggles.nameChangeEnabled;
     });
 
     // Forming clusterList which contains all cluster name of type mf_mgmt and sorting it.

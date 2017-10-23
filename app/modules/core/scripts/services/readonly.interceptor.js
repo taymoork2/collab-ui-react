@@ -34,6 +34,7 @@
       '/qlik-gtwy/api/v1/report/',
       '/custportal/extensions/',
       '/users/report',
+      '/devices/_search',
     ];
 
     var allowedState = [

@@ -5,7 +5,6 @@ describe('Component: hsRenameAndDeregisterClusterSection', function () {
     this.initModules(renameAndDeregisterClusterSection);
     this.injectDependencies('$componentController', '$q', '$scope', 'PrivateTrunkService', 'HybridServicesClusterService', 'Notification', 'FeatureToggleService');
 
-    spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
     spyOn(this.HybridServicesClusterService, 'setClusterInformation').and.returnValue(this.$q.resolve({}));
     spyOn(this.PrivateTrunkService, 'setPrivateTrunkResource').and.returnValue(this.$q.resolve({}));
@@ -117,16 +116,6 @@ describe('Component: hsRenameAndDeregisterClusterSection', function () {
       this.$scope.$apply();
       expect(this.PrivateTrunkService.setPrivateTrunkResource.calls.count()).toBe(0);
       expect(this.HybridServicesClusterService.setClusterInformation.calls.count()).toBe(1);
-    });
-
-    // 2017 name changes
-    it('nameChangeEnabled should match atlas2017NameChangeGetStatus', function () {
-      this.initController();
-      expect(this.controller.nameChangeEnabled).toBeFalsy();
-
-      this.FeatureToggleService.atlas2017NameChangeGetStatus.and.returnValue(this.$q.resolve(true));
-      this.initController();
-      expect(this.controller.nameChangeEnabled).toBeTruthy();
     });
   });
 });

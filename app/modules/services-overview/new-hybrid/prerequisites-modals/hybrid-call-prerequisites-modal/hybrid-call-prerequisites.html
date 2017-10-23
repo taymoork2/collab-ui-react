@@ -6,7 +6,7 @@
   <h5 class="modal-title" translate="servicesOverview.cards.hybridCall.prerequisites.title"></h5>
 </div>
 <div class="modal-body hybrid-service-prerequisites">
-  <tabset justified="true">
+  <tabset justified="true" ng-if="!vm.callServiceConnectOnly">
     <tab heading="{{vm.expresswayTabHeading}}">
       <div class="tab-content">
         <basic-expressway-prerequisites on-change="vm.expresswayData(options)"></basic-expressway-prerequisites>
@@ -23,6 +23,7 @@
       </div>
     </tab>
   </tabset>
+  <call-service-connect-prerequisites ng-if="vm.callServiceConnectOnly" on-change="vm.connectData(options)"></call-service-connect-prerequisites>
 </div>
 <div class="modal-footer">
   <button class="btn btn-primary" ng-click="$close()">

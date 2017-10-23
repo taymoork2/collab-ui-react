@@ -188,38 +188,35 @@ require('./_overview.scss');
         disableCache: true,
       };
 
-      Orgservice.getOrg(function (data, status) {
-        if (status === 200) {
-          vm.orgData = data;
+      Orgservice.getOrg(_.noop, Authinfo.getOrgId(), params).then(function (response) {
+        vm.orgData = response.data;
 
-          getTOSStatus();
-          getEsaDisclaimerStatus();
+        getTOSStatus();
+        getEsaDisclaimerStatus();
 
-          if (!data.orgSettings.sipCloudDomain) {
-            vm.notifications.push(OverviewNotificationFactory.createCloudSipUriNotification());
-          }
-          if (vm.isDeviceManagement && _.isUndefined(data.orgSettings.allowCrashLogUpload)) {
-            vm.notifications.push(OverviewNotificationFactory.createCrashLogNotification());
-          }
-          if (Authinfo.isCare() || Authinfo.isCareVoice()) {
-            var hasMessage = Authinfo.isMessageEntitled();
-            var hasCall = Authinfo.isSquaredUC();
-            if (!hasMessage && !hasCall) {
-              vm.notifications.push(OverviewNotificationFactory
-                .createCareLicenseNotification('homePage.careLicenseMsgAndCallMissingText', 'homePage.careLicenseLinkText'));
-            } else if (!hasMessage) {
-              vm.notifications.push(OverviewNotificationFactory
-                .createCareLicenseNotification('homePage.careLicenseMsgMissingText', 'homePage.careLicenseLinkText'));
-            } else if (!hasCall) {
-              vm.notifications.push(OverviewNotificationFactory
-                .createCareLicenseNotification('homePage.careLicenseCallMissingText', 'homePage.careLicenseLinkText'));
-            }
-          }
-        } else {
-          Log.debug('Get existing org failed. Status: ' + status);
-          Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
+        if (!_.get(vm.orgData, 'orgSettings.sipCloudDomain')) {
+          vm.notifications.push(OverviewNotificationFactory.createCloudSipUriNotification());
         }
-      }, Authinfo.getOrgId(), params);
+        if (vm.isDeviceManagement && _.isUndefined(_.get(vm.orgData, 'orgSettings.allowCrashLogUpload'))) {
+          vm.notifications.push(OverviewNotificationFactory.createCrashLogNotification());
+        }
+        if (Authinfo.isCare() || Authinfo.isCareVoice()) {
+          var hasMessage = Authinfo.isMessageEntitled();
+          var hasCall = Authinfo.isSquaredUC();
+          if (!hasMessage && !hasCall) {
+            vm.notifications.push(OverviewNotificationFactory
+              .createCareLicenseNotification('homePage.careLicenseMsgAndCallMissingText', 'homePage.careLicenseLinkText'));
+          } else if (!hasMessage) {
+            vm.notifications.push(OverviewNotificationFactory
+              .createCareLicenseNotification('homePage.careLicenseMsgMissingText', 'homePage.careLicenseLinkText'));
+          } else if (!hasCall) {
+            vm.notifications.push(OverviewNotificationFactory
+              .createCareLicenseNotification('homePage.careLicenseCallMissingText', 'homePage.careLicenseLinkText'));
+          }
+        }
+      }).catch(function (response) {
+        Notification.errorWithTrackingId(response, 'firstTimeWizard.sparkDomainManagementServiceErrorMessage');
+      });
       Orgservice.getLicensesUsage()
         .then(function (subscriptions) {
           var activeLicenses = _.filter(_.flatMap(subscriptions, 'licenses'), ['status', Config.licenseStatus.ACTIVE]);
