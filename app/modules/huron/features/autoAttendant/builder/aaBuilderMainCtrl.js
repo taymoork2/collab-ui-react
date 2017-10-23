@@ -108,7 +108,7 @@
         // otherwise, filter on the passed-in field and compare
         var a1 = _.map(aa1, tag);
         var a2 = _.map(aa2, tag);
-        return (_.difference(a1, a2).length > 0 || _.difference(a2, a1).length > 0);
+        return _.difference(a1, a2).length !== 0;
       }
     }
 
@@ -118,8 +118,10 @@
       if (!_.isUndefined(vm.aaModel.aaRecord) && areAssignedResourcesDifferent(vm.aaModel.aaRecord.assignedResources, vm.ui.ceInfo.getResources(), 'id')) {
         var ceInfo = AutoAttendantCeInfoModelService.getCeInfo(vm.aaModel.aaRecord);
         return AANumberAssignmentService.setAANumberAssignment(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, ceInfo.getResources()).then(
-          function (response) {
-            return response;
+          function () {
+            return AANumberAssignmentService.getAANumberAssignments(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID).then(function (numbers) {
+              return numbers;
+            });
           },
           function (response) {
             AANotificationService.error('autoAttendant.errorResetCMI');
@@ -136,9 +138,40 @@
 
     function closePanel() {
       AAMediaUploadService.resetResources();
+      var aaRecord = vm.aaModel.aaRecord;
+      var aaRecords = vm.aaModel.aaRecords;
+      var recNum = 0;
+      var ceURL = null;
 
       AutoAttendantCeMenuModelService.clearCeMenuMap();
-      unAssignAssigned().finally(function () {
+
+      unAssignAssigned().then(function (numbers) {
+        if (numbers.length === 0) {
+          return;
+        }
+        _.forEach(aaRecord.assignedResources, function (resource) {
+          resource.uuid = _.find(numbers, { number: resource.number }).uuid;
+        });
+
+        if (vm.aaModel.aaRecordUUID.length > 0) {
+          for (recNum = 0; recNum < aaRecords.length; recNum++) {
+            if (AutoAttendantCeInfoModelService.extractUUID(aaRecords[recNum].callExperienceURL) === vm.aaModel.aaRecordUUID) {
+              ceURL = aaRecords[recNum].callExperienceURL;
+              break;
+            }
+          }
+        }
+
+        return AutoAttendantCeService.updateCe(
+          ceURL,
+          aaRecord).catch(function (response) {
+          AANotificationService.errorResponse(response, 'autoAttendant.errorUpdateCe', {
+            name: aaRecord.callExperienceName,
+            statusText: response.statusText,
+            status: response.status,
+          });
+        });
+      }).finally(function () {
         $state.go('huronfeatures');
       });
     }
