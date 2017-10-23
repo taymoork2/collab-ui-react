@@ -110,7 +110,6 @@ module.exports = {
   flagMsg: 'flag-msg',
   gemServicesTab: 'gem-services-tab',
   geoHintEnabled: 'geo-hint-enabled',
-  hf6932Certificate: 'h-f6932-certificate',
   hi1033: 'h-i1033',
   hI1484: 'h-i1484', // Multi-Location Support
   hI802: 'h-i802',
