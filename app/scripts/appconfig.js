@@ -1801,15 +1801,7 @@
               },
             },
             resolve: {
-              displayName: /* @ngInject */ function ($state, $translate, FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasRolesAndSecurity).then(function (enabled) {
-                  if (enabled) {
-                    _.set(this, 'data.displayName', $translate.instant('usersPreview.userDetails'));
-                  } else {
-                    _.set(this, 'data.displayName', $translate.instant('rolesPanel.roles'));
-                  }
-                }.bind(this));
-              },
+              displayName: translateDisplayName('usersPreview.userDetails'),
             },
           })
           .state('user-overview.roles-and-security', {

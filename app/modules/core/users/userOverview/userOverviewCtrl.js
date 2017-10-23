@@ -34,7 +34,6 @@
     vm.clickUserDetailsService = clickUserDetailsService;
     vm.actionList = [];
     vm.hasSparkCall = false;
-    vm.enableRolesAndSecurityOption = false;
     var msgState = {
       name: $translate.instant('onboardModal.message'),
       icon: 'icon-circle-message',
@@ -76,9 +75,6 @@
       currentUserId: '',
       hasSparkCall: false,
     };
-    FeatureToggleService.supports(FeatureToggleService.features.atlasRolesAndSecurity).then(function (enabled) {
-      vm.enableRolesAndSecurityOption = enabled;
-    });
     init();
 
     /////////////////////////////

@@ -97,7 +97,6 @@ require('./_user-roles.scss');
     $scope.resetFormData = resetFormData;
     $scope.isEnterpriseCustomer = Authinfo.isEnterpriseCustomer();
     $scope.enableReadonlyAdminOption = false;
-    $scope.enableRolesAndSecurityOption = false;
     $scope.showUserDetailSection = true;
     $scope.showSecuritySection = false;
     $scope.showRolesSection = true;
@@ -137,26 +136,22 @@ require('./_user-roles.scss');
     $scope.checkAdminDisplayName = checkAdminDisplayName;
     $scope.updatingUser = false;
 
+    if ($state.current.name === 'user-overview.user-profile') {
+      $scope.showUserDetailSection = true;
+      $scope.showSecuritySection = false;
+      $scope.showRolesSection = false;
+    } else if ($state.current.name === 'user-overview.roles-and-security') {
+      $scope.showUserDetailSection = false;
+      $scope.showSecuritySection = true;
+      $scope.showRolesSection = true;
+    }
+
     FeatureToggleService.supports(FeatureToggleService.features.atlasReadOnlyAdmin).then(function () {
       $scope.enableReadonlyAdminOption = true;
     });
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasComplianceRole).then(function (enabled) {
       $scope.showComplianceRole = !!enabled;
-    });
-    FeatureToggleService.supports(FeatureToggleService.features.atlasRolesAndSecurity).then(function (enabled) {
-      $scope.enableRolesAndSecurityOption = enabled;
-      if ($scope.enableRolesAndSecurityOption) {
-        if ($state.current.name === 'user-overview.user-profile') {
-          $scope.showUserDetailSection = true;
-          $scope.showSecuritySection = false;
-          $scope.showRolesSection = false;
-        } else if ($state.current.name === 'user-overview.roles-and-security') {
-          $scope.showUserDetailSection = false;
-          $scope.showSecuritySection = true;
-          $scope.showRolesSection = true;
-        }
-      }
     });
     ProPackService.hasProPackEnabled()
       .then(function (proPackFeatureEnabled) {
