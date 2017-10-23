@@ -99,7 +99,6 @@ export class ServicesOverviewController implements ng.IComponentController {
       this.loadHybridServicesStatuses();
       features
         .then((response) => {
-          this.forwardEvent('hybridDataSecurityFeatureToggleEventHandler', response.atlasHybridDataSecurity);
           this.forwardEvent('atlasHybridImpFeatureToggleEventHandler', response.atlasHybridImp);
           if (response.atlasPMRonM2) {
             this.getPMRStatus();

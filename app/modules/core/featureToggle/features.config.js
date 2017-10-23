@@ -35,7 +35,6 @@ module.exports = {
   atlasHybridCallDiagnosticTool: 'atlas-hybrid-call-diagnostic-tool',
   atlasHybridCallUserTestTool: 'atlas-hybrid-call-user-test-tool',
   atlasHybridCucmSupport: 'atlas-hybrid-cucm-support',
-  atlasHybridDataSecurity: 'atlas-hybrid-data-security',
   atlasHybridImp: 'atlas-hybrid-imp',
   atlasITProPack: 'atlas-it-pro-pack',
   atlasITProPackPurchased: 'atlas-it-pro-pack-purchased',

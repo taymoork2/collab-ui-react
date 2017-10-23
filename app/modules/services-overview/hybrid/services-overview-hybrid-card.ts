@@ -5,7 +5,6 @@ import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
 export interface IHybridCardParams extends ICardParams {
   serviceId: HybridServiceId;
   routerState: string;
-  initEventsNumber?: number;
 }
 
 export function filterAndGetCssStatus(services: IServiceStatusWithSetup[], serviceId: HybridServiceId): string | undefined {
@@ -36,7 +35,6 @@ export function filterAndGetEnabledService(statuses: IServiceStatusWithSetup[], 
 export abstract class ServicesOverviewHybridCard extends ServicesOverviewCard {
   private serviceId: HybridServiceId;
   private routerState: string;
-  protected initEventsNumber = 0;
 
   public constructor(
     params: IHybridCardParams,
@@ -44,9 +42,6 @@ export abstract class ServicesOverviewHybridCard extends ServicesOverviewCard {
     super(params);
     this.serviceId = params.serviceId;
     this.routerState = params.routerState;
-    if (params.initEventsNumber) {
-      this.initEventsNumber = params.initEventsNumber;
-    }
   }
 
   public hybridStatusEventHandler(servicesStatuses: IServiceStatusWithSetup[]): void {
@@ -57,10 +52,6 @@ export abstract class ServicesOverviewHybridCard extends ServicesOverviewCard {
     };
     this.active = filterAndGetEnabledService(servicesStatuses, this.serviceId);
     this.setupMode = !this.active;
-    this.setLoading();
-  }
-
-  protected setLoading(): void {
-    this.initEventsNumber === 0 ? this.loading = false : this.initEventsNumber--;
+    this.loading = false;
   }
 }
