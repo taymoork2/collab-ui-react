@@ -49,14 +49,27 @@ describe('Component: locations-caller-id', () => {
     });
 
     it('should call onChangeFn when company caller id is toggled', function() {
-      const callerId = new LocationCallerId({
+      this.controller.callerId = null;
+      this.controller.$onInit();
+      this.view.find(CALLER_ID_TOGGLE).click();
+      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(null);
+    });
+
+    it('should restore the original callerId when toggle is turned off and then on', function() {
+      this.controller.callerId = new LocationCallerId({
         name: 'Awesome Sauce',
         number: '',
         uuid: '',
       });
+      this.controller.$onInit();
+      this.$scope.$apply();
       this.view.find(CALLER_ID_TOGGLE).click();
-      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(callerId);
+      this.view.find(CALLER_ID_TOGGLE).click();
+      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(null);
+      this.view.find(CALLER_ID_TOGGLE).click();
+      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(this.controller.callerId);
     });
+
 
     it('should have Caller ID Name and Caller ID Number when Caller ID is enabled', function() {
       this.view.find(CALLER_ID_TOGGLE).click();
