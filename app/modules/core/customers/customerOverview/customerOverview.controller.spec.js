@@ -99,13 +99,13 @@ describe('Controller: CustomerOverviewCtrl', function () {
   xit('should transition to trialEdit.info state', function () {
     controller.openEditTrialModal();
     expect($state.go).toHaveBeenCalled();
-    expect($state.go.calls.mostRecent().args[0]).toEqual('trialEdit.info');
+    expect($state.go.calls.mostRecent().args[0]).toBe('trialEdit.info');
 
     $state.go.calls.reset();
 
     $scope.$apply(); // modal is closed and promise is resolved
     expect($state.go).toHaveBeenCalled();
-    expect($state.go.calls.mostRecent().args[0]).toEqual('partnercustomers.list');
+    expect($state.go.calls.mostRecent().args[0]).toBe('partnercustomers.list');
   });
 
   it('should check the customer org id to see if it is a test org', function () {
@@ -127,13 +127,13 @@ describe('Controller: CustomerOverviewCtrl', function () {
   });
 
   it('should display number of days left', function () {
-    expect(controller.getDaysLeft(1)).toEqual('customerPage.daysLeft');
-    expect(controller.getDaysLeft(0)).toEqual('customerPage.expiresToday');
-    expect(controller.getDaysLeft(-1)).toEqual('customerPage.expired');
+    expect(controller.getDaysLeft(1)).toBe('customerPage.daysLeft');
+    expect(controller.getDaysLeft(0)).toBe('customerPage.expiresToday');
+    expect(controller.getDaysLeft(-1)).toBe('customerPage.expired');
   });
 
   it('should set the isSquaredUC flag based on services', function () {
-    expect(controller.isSquaredUC).toEqual(true);
+    expect(controller.isSquaredUC).toBe(true);
   });
 
 

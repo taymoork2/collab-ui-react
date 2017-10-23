@@ -205,7 +205,7 @@ describe('Partner Service -', function () {
     expect(returnList[0].orderedServices.servicesManagedByAnotherPartner.length).toBe(1);
     expect(returnList[0].orderedServices.servicesManagedByAnotherPartner).toEqual(expectedServicesManagedByOthers);
     // accountStatus should reflect value returned by getAccountStatus()
-    expect(returnList[0].accountStatus).toEqual('trial');
+    expect(returnList[0].accountStatus).toBe('trial');
   });
 
   it('should successfully return a list customer orgs with orderedServices property from calling loadRetrievedDataToList with isCareEnabled being false', function () {
