@@ -141,9 +141,6 @@ var UsersPage = function () {
   this.titleField = element(by.id('titleField'));
   this.userTab = element(by.id('usertab'));
 
-  this.collabRadio1 = element(by.id('collabRadioLabel1'));
-  this.collabRadio2 = element(by.id('collabRadioLabel2'));
-
   // TODO: rename 'rolesChevron' to something more appropriate
   // - as of 2017-08-18, this 'a#rolesChevron' does NOT navigate to a UI state that offers anything
   //   to do with role-management, only first/last/display name management

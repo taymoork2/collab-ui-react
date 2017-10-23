@@ -335,8 +335,6 @@
     "addUserText": "Who would you like to add?",
     "userInput": "Enter email addresses separated by commas.",
     "enableServiceText": "Enable Services",
-    "enableCollab": "Enable collaboration services individually",
-    "enableCollabGroup": "Enable collaboration services based on group membership",
     "addUsersSelect": "Add users to:",
     "manageBtn": "Manage Groups",
     "onboardBtn": "Onboard",

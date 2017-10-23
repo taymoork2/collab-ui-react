@@ -1026,20 +1026,6 @@ require('./_user-add.scss');
       getAccountServices();
     }
 
-    $scope.collabRadio1 = {
-      label: $translate.instant('onboardModal.enableCollab'),
-      value: 1,
-      name: 'collabRadio',
-      id: 'collabRadio1',
-    };
-
-    $scope.collabRadio2 = {
-      label: $translate.instant('onboardModal.enableCollabGroup'),
-      value: 2,
-      name: 'collabRadio',
-      id: 'collabRadio2',
-    };
-
     var nameTemplate = '<div class="ui-grid-cell-contents"><span class="name-display-style">{{row.entity.name}}</span>' +
       '<span class="email-display-style">{{row.entity.address}}</span></div>';
 
@@ -1196,8 +1182,6 @@ require('./_user-add.scss');
         $scope.addDnGridOptions.columnDefs.splice(1, 0, vm.locationColumn);
       }
     }
-
-    $scope.collabRadio = 1;
 
     $scope.onboardUsers = onboardUsers;
 
@@ -1962,8 +1946,7 @@ require('./_user-add.scss');
         entitleList = getEntitlements('add');
 
         // - as of 2017-05-19, this conditional branch does not collect enabled entitlements
-        // TODO: determine what '$scope.collabRadio === 1' means, and re-write this more readably
-        if (Authinfo.hasAccount() && $scope.collabRadio === 1) {
+        if (Authinfo.hasAccount()) {
           licenseList = getAccountLicenses('additive');
 
           // - so either isolate the messenger interop entitlement, or reset the list
@@ -2406,7 +2389,7 @@ require('./_user-add.scss');
         if (successMovedUsers.length > 0) {
           var entitleList = [];
           var licenseList = [];
-          if (Authinfo.hasAccount() && $scope.collabRadio === 1) {
+          if (Authinfo.hasAccount()) {
             licenseList = getAccountLicenses('patch');
           } else {
             entitleList = getEntitlements('add');
@@ -2664,7 +2647,7 @@ require('./_user-add.scss');
       var entitleList = [];
       var licenseList = [];
       var isCommunicationSelected;
-      if (Authinfo.hasAccount() && $scope.collabRadio === 1) {
+      if (Authinfo.hasAccount()) {
         licenseList = getAccountLicenses('additive') || [];
         isCommunicationSelected = !!_.find(licenseList, function (license) {
           return _.startsWith(license.id, 'CO_');
