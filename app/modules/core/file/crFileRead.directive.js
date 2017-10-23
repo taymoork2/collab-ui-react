@@ -5,6 +5,7 @@
     .directive('crFileRead', fileRead);
 
   var md5 = require('js-md5');
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
   /* @ngInject */
   function fileRead($window) {
@@ -30,6 +31,9 @@
     function link(scope, element, attrs) {
       element.on('change', onChange);
       element.on('click', onClick);
+      if (attrs.id) {
+        $('label[for="' + attrs.id + '"]').on('keydown', onKeydown); // does not register keydown events on the element otherwise
+      }
 
       function checkSize(size) {
         if (_.isUndefined(attrs.fileMaxSize) || (size / 1024) / 1024 < attrs.fileMaxSize) {
@@ -141,6 +145,15 @@
 
       function onClick() {
         element.val('');
+      }
+
+      function onKeydown($event) {
+        switch ($event.which) {
+          case KeyCodes.ENTER:
+          case KeyCodes.SPACE:
+            element.click(); // just calling the onClick function here does not work; the element itself must receive an actual click
+            break;
+        }
       }
     }
   }
