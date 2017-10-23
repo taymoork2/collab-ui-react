@@ -6,7 +6,7 @@
     .service('CareFeatureList', CareFeatureList);
 
   /* @ngInject */
-  function CareFeatureList(Authinfo, ConfigTemplateService, VirtualAssistantService) {
+  function CareFeatureList(Authinfo, ConfigTemplateService, CvaService) {
     var filterConstants = {
       customerSupport: 'customerSupport',
       virtualAssistant: 'virtualAssistant',
@@ -55,7 +55,7 @@
     }
 
     function deleteVirtualAssistantConfig(configId) {
-      return VirtualAssistantService.delete(configId, Authinfo.getOrgId()).$promise;
+      return CvaService.delete(configId, Authinfo.getOrgId()).$promise;
     }
 
     function getTemplate(templateId) {

@@ -18,7 +18,7 @@ export class CvaSetupCtrl {
   public animation = '';
   public maxNameLength = 50;
   public maxTokenLength = 128;
-  public service = this.VirtualAssistantService;
+  public service = this.CvaService;
   public logoUrl = '';
   public logoFile = '';
   public logoUploaded = false;
@@ -46,12 +46,12 @@ export class CvaSetupCtrl {
     templateId: '',
     name: '',
     configuration: {
-      mediaType: this.VirtualAssistantService.cvaServiceCard.type,
+      mediaType: this.CvaService.cvaServiceCard.type,
       pages: {
         cvaConfigOverview: {
           enabled: true,
           isApiAiAgentConfigured: false,
-          configurationType: this.VirtualAssistantService.configurationTypes.apiai,
+          configurationType: this.CvaService.configurationTypes.apiai,
           startTimeInMillis: 0,
           eventName: this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_OVERVIEW_PAGE,
         },
@@ -114,7 +114,7 @@ export class CvaSetupCtrl {
     private $translate: ng.translate.ITranslateService,
     private $timeout: ng.ITimeoutService,
     private $window: ng.IWindowService,
-    private VirtualAssistantService,
+    private CvaService,
     private Authinfo,
     private CTService,
     private Analytics,
@@ -156,9 +156,9 @@ export class CvaSetupCtrl {
    */
   public getTitle(): string {
     if (this.isEditFeature) {
-      return this.getVaText('editTitle');
+      return this.getCvaText('editTitle');
     } else {
-      return this.getVaText('createTitle');
+      return this.getCvaText('createTitle');
     }
   }
 
@@ -168,9 +168,9 @@ export class CvaSetupCtrl {
    */
   public getSummaryDescription(): string {
     if (this.isEditFeature) {
-      return this.getVaText('summary.editDesc');
+      return this.getCvaText('summary.editDesc');
     } else {
-      return this.getVaText('summary.desc');
+      return this.getCvaText('summary.desc');
     }
   }
 
@@ -180,7 +180,7 @@ export class CvaSetupCtrl {
   public cancelModal(): void {
     this.cancelModalText = {
       cancelHeader: this.$translate.instant('careChatTpl.cancelHeader'),
-      cancelDialog: this.getVaText('cancelDialog'),
+      cancelDialog: this.getCvaText('cancelDialog'),
       continueButton: this.$translate.instant('careChatTpl.continueButton'),
       confirmButton: this.$translate.instant('careChatTpl.confirmButton'),
     };
@@ -490,12 +490,12 @@ export class CvaSetupCtrl {
     }
   }
 
-  public getVaText(textIdExtension: string): string {
-    return this.service.getVaText(textIdExtension);
+  public getCvaText(textIdExtension: string): string {
+    return this.service.getCvaText(textIdExtension);
   }
 
-  public getVaMessageKey(textIdExtension: string): string {
-    return this.service.getVaMessageKey(textIdExtension);
+  public getCvaMessageKey(textIdExtension: string): string {
+    return this.service.getCvaMessageKey(textIdExtension);
   }
 
 
@@ -539,7 +539,7 @@ export class CvaSetupCtrl {
   private handleFeatureCreation(): void {
     this.creatingTemplate = false;
     this.$state.go('care.Features');
-    this.Notification.success(this.getVaMessageKey('messages.createSuccessText'), {
+    this.Notification.success(this.getCvaMessageKey('messages.createSuccessText'), {
       featureName: this.template.configuration.pages.vaName.nameValue,
     });
   }
@@ -561,7 +561,7 @@ export class CvaSetupCtrl {
       })
       .catch(function (response) {
         controller.handleFeatureError();
-        controller.Notification.errorWithTrackingId(response, controller.getVaMessageKey('messages.createConfigFailureText'));
+        controller.Notification.errorWithTrackingId(response, controller.getCvaMessageKey('messages.createConfigFailureText'));
       });
   }
 
@@ -586,7 +586,7 @@ export class CvaSetupCtrl {
   private handleFeatureUpdate(): void {
     this.creatingTemplate = false;
     this.$state.go('care.Features');
-    const successMsg = this.getVaMessageKey('messages.updateSuccessText');
+    const successMsg = this.getCvaMessageKey('messages.updateSuccessText');
     this.Notification.success(successMsg, {
       featureName: this.template.configuration.pages.vaName.nameValue,
     });
@@ -610,7 +610,7 @@ export class CvaSetupCtrl {
       })
       .catch(function (response) {
         controller.handleFeatureError();
-        controller.Notification.errorWithTrackingId(response, controller.getVaMessageKey('messages.updateConfigFailureText'));
+        controller.Notification.errorWithTrackingId(response, controller.getCvaMessageKey('messages.updateConfigFailureText'));
       });
   }
 
