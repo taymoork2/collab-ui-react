@@ -141,7 +141,7 @@
       var aaRecord = vm.aaModel.aaRecord;
       var aaRecords = vm.aaModel.aaRecords;
       var recNum = 0;
-      var ceURL = null;
+      var ceURL = '';
 
       AutoAttendantCeMenuModelService.clearCeMenuMap();
 
