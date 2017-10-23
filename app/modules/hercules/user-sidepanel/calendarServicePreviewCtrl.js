@@ -6,7 +6,7 @@
     .controller('CalendarServicePreviewCtrl', CalendarServicePreviewCtrl);
 
   /*@ngInject*/
-  function CalendarServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Orgservice, Notification, USSService, HybridServicesClusterService, $translate, ResourceGroupService, FeatureToggleService, HybridServicesI18NService) {
+  function CalendarServicePreviewCtrl($scope, $state, $stateParams, Authinfo, Userservice, Orgservice, Notification, USSService, $translate, ResourceGroupService, FeatureToggleService, HybridServicesI18NService) {
     $scope.entitlementNames = {
       'squared-fusion-cal': 'squaredFusionCal',
       'squared-fusion-gcal': 'squaredFusionGCal',
@@ -133,12 +133,6 @@
         $scope.extension.status = _.find(statuses, function (status) {
           return $scope.extension.id === status.serviceId;
         });
-        if ($scope.extension.status && $scope.extension.status.clusterId) {
-          HybridServicesClusterService.get($scope.extension.status.clusterId).then(function (cluster) {
-            $scope.extension.homedCluster = cluster;
-            $scope.extension.homedConnector = _.find(cluster.connectors, { id: $scope.extension.status.connectorId });
-          });
-        }
         if ($scope.extension.status && $scope.extension.status.lastStateChange) {
           $scope.extension.status.lastStateChangeText = HybridServicesI18NService.getTimeSinceText($scope.extension.status.lastStateChange);
         }
