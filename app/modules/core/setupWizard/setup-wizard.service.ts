@@ -21,6 +21,8 @@ export class SetupWizardService {
   public provisioningCallbacks = {};
   public serviceDataHasBeenInitialized: boolean = false;
 
+  public static readonly ONLINE_SUFFIX = '-ONL-';
+
   private actingSubscription?: IPendingSubscription;
   private pendingSubscriptions: IPendingSubscription[] = [];
   private country = '';
@@ -349,7 +351,12 @@ export class SetupWizardService {
   }
 
   public hasWebexMeetingTrial() {
-    const conferencingServices: IConferenceService[] = _.filter(this.Authinfo.getConferenceServices(), { license: { isTrial: true } });
+    let conferencingServices: IConferenceService[] = _.filter(this.Authinfo.getConferenceServices(), { license: { isTrial: true } });
+    // Make sure not to touch online trial sites
+    conferencingServices = _.reject(conferencingServices, (service: IConferenceService) => {
+      return _.includes(service.license.masterOfferName, SetupWizardService.ONLINE_SUFFIX);
+    });
+
     return _.some(conferencingServices, (service: IConferenceService) => _.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC, this.Config.offerCodes.CF, this.Config.offerCodes.CMR], service.license.offerName));
   }
 
