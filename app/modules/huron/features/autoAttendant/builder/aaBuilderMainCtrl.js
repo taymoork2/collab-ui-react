@@ -140,7 +140,6 @@
       AAMediaUploadService.resetResources();
       var aaRecord = vm.aaModel.aaRecord;
       var aaRecords = vm.aaModel.aaRecords;
-      var recNum = 0;
       var ceURL = '';
 
       AutoAttendantCeMenuModelService.clearCeMenuMap();
@@ -154,12 +153,11 @@
         });
 
         if (vm.aaModel.aaRecordUUID.length > 0) {
-          for (recNum = 0; recNum < aaRecords.length; recNum++) {
-            if (AutoAttendantCeInfoModelService.extractUUID(aaRecords[recNum].callExperienceURL) === vm.aaModel.aaRecordUUID) {
-              ceURL = aaRecords[recNum].callExperienceURL;
-              break;
+          _.forEach(aaRecords, function (aa) {
+            if (AutoAttendantCeInfoModelService.extractUUID(aa.callExperienceURL) === vm.aaModel.aaRecordUUID) {
+              ceURL = aa.callExperienceURL;
             }
-          }
+          });
         }
 
         return AutoAttendantCeService.updateCe(
