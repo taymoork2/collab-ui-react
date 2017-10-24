@@ -146,26 +146,26 @@ export class SuggestionDropdown implements ISuggestionDropdown {
         count: getDocCount(searchResult, 'connectionStatus', 'connected_with_issues'),
         searchString: 'connectionStatus=CONNECTED_WITH_ISSUES',
         field: this.$translate.instant('spacesPage.statusHeader'),
-        text: this.$translate.instant('CsdmStatus.OnlineWithIssues'),
+        text: this.$translate.instant('CsdmStatus.connectionStatus.OnlineWithIssues'),
       },
       {
         count: getDocCount(searchResult, 'connectionStatus', 'offline')
         + getDocCount(searchResult, 'connectionStatus', 'disconnected'),
         searchString: 'connectionStatus=DISCONNECTED',
         field: this.$translate.instant('spacesPage.statusHeader'),
-        text: this.$translate.instant('CsdmStatus.Offline'),
+        text: this.$translate.instant('CsdmStatus.connectionStatus.Offline'),
       },
       {
         count: getDocCount(searchResult, 'connectionStatus', 'offline_expired'),
         searchString: 'connectionStatus=OFFLINE_EXPIRED',
         field: this.$translate.instant('spacesPage.statusHeader'),
-        text: this.$translate.instant('CsdmStatus.OfflineExpired'),
+        text: this.$translate.instant('CsdmStatus.connectionStatus.OfflineExpired'),
       },
       {
         count: getDocCount(searchResult, 'connectionStatus', 'connected'),
         searchString: 'connectionStatus="CONNECTED"',
         field: this.$translate.instant('spacesPage.statusHeader'),
-        text: this.$translate.instant('CsdmStatus.Online'),
+        text: this.$translate.instant('CsdmStatus.connectionStatus.Online'),
       },
     ];
     const productSuggestions = this.generateProductSuggestions(searchResult);
