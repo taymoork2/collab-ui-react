@@ -1,12 +1,12 @@
 import { LinkedSitesComponent } from './linked-sites.component';
 import featureToggleServiceModule from 'modules/core/featureToggle';
+import webExUtilsModule from 'modules/webex/utils';
+import * as authInfoModule from 'modules/core/scripts/services/authinfo';
 
 export default angular
   .module('account-linking', [
-    require('collab-ui-ng').default,
-    require('angular-translate'),
-    require('modules/core/scripts/services/authinfo'),
-    require('modules/webex/utils').default,
+    authInfoModule,
+    webExUtilsModule,
     featureToggleServiceModule,
   ])
   .component('linkedSites', new LinkedSitesComponent())
