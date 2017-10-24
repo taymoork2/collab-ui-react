@@ -5581,7 +5581,8 @@
     "deleteATAConfText": "Are you sure you want to delete Port 1?",
     "deleteDeviceType": "Delete {{deviceType}}",
     "analog": "Analog Telephone",
-    "failedToFetchCountries": "Failed to fetch countries. Reason:"
+    "failedToFetchCountries": "Failed to fetch countries. Reason:",
+    "failedToDisplayDevice": "Some device information may have failed to load."
   },
   "ataSettings": {
     "analog": "Analog Telephone",

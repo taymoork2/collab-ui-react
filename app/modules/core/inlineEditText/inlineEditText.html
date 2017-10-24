@@ -16,7 +16,7 @@
       ng-bind="$ctrl.value">
     </span>
     <cr-pro-pack-icon ng-if="$ctrl.showProPackIcon" class="pro-badge"></cr-pro-pack-icon>
-    <i class="icon icon-edit" ng-click="$ctrl.enableEdit()"></i>
+    <i class="icon icon-edit" ng-click="$ctrl.enableEdit()" aria-label="{{:: 'common.edit' | translate}}"></i>
   </div>
   <form
     name="$ctrl.form"
