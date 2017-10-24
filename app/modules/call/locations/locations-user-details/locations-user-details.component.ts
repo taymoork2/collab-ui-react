@@ -1,8 +1,7 @@
-import {
-  LocationsService, LocationListItem,
-} from '../shared';
-
+import { LocationsService, LocationListItem } from '../shared';
 import { Notification } from 'modules/core/notifications';
+import { HuronUserService } from 'modules/huron/users';
+import { TerminusService } from 'modules/huron/pstn';
 export const MEMBER_TYPE_USER: string = 'user';
 export const MEMBER_TYPE_PLACE: string = 'place';
 
@@ -16,6 +15,8 @@ class UserLocationDetailsCtrl implements ng.IComponentController {
   public saveInProcess: boolean;
   public memberType: string;
   public validateFlag: boolean;
+  public disableLocation: boolean = false;
+  public loading: boolean = false;
 
   /* @ngInject */
   constructor(
@@ -23,11 +24,35 @@ class UserLocationDetailsCtrl implements ng.IComponentController {
     private $state: ng.ui.IStateService,
     private $stateParams: ng.ui.IStateParamsService,
     private Notification: Notification,
-
+    private HuronUserService: HuronUserService,
+    private TerminusService: TerminusService,
+    private Authinfo,
   ) { }
 
   public $onInit(): void {
     this.getDetails();
+    this.checkNumberE911();
+  }
+
+  public checkNumberE911() {
+    this.loading = true;
+    this.HuronUserService.getUserV2Numbers(this.userId).then(numbers => {
+      return _.find(numbers, number => {
+        if (!_.isNull(number.external)) {
+          return this.TerminusService.customerNumberE911V2().get({
+            customerId: this.Authinfo.getOrgId(),
+            number: number.external,
+          }).$promise.then((e911) => {
+            if (e911.useCustomE911Address === false && e911.status === 'PENDING') {
+              this.disableLocation = true;
+              return true;
+            }
+          });
+        } else {
+          return false;
+        }
+      });
+    }).finally(() => this.loading = false);
   }
 
   public getDetails(): void {
