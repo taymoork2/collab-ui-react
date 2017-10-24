@@ -11,10 +11,10 @@ class DeviceSettings implements ng.IComponentController {
   private updatingUpgradeChannel;
   private unsupportedDeviceTypeForUpgradeChannel: string;
 
-  private shouldShowGuiSettings;
-  private _guiSettingsEnabled;
-  private updatingGuiSettings;
-  private unsupportedDeviceTypeForGuiSettings: string;
+  private shouldShowSettingsLockDown;
+  private _settingsLockedDown;
+  private updatingSettingsLockDown;
+  private unsupportedDeviceTypeForSettingsLockDown: string;
 
   /* @ngInject */
   constructor(
@@ -44,23 +44,23 @@ class DeviceSettings implements ng.IComponentController {
       });
   }
 
-  get guiSettingsEnabled(): boolean {
-    return this._guiSettingsEnabled;
+  get settingsLockedDown(): boolean {
+    return this._settingsLockedDown;
   }
 
-  set guiSettingsEnabled(newSetting: boolean) {
-    this.updatingGuiSettings = true;
-    this.CsdmConfigurationService.updateRuleForPlace(this.ownerId, 'gui_settings_enabled', newSetting)
+  set settingsLockedDown(newSetting: boolean) {
+    this.updatingSettingsLockDown = true;
+    this.CsdmConfigurationService.updateRuleForPlace(this.ownerId, 'gui_settings_enabled', !newSetting)
       .then(() => {
-        this.Notification.success('deviceSettings.guiSettingsUpdated');
-        this._guiSettingsEnabled = newSetting;
+        this.Notification.success('deviceSettings.settingsLockUpdated');
+        this._settingsLockedDown = newSetting;
       })
       .catch(error => {
         this.Notification.errorResponse(error, 'deviceOverviewPage.failedToSaveChanges');
-        this.resetGuiSettingsEnabled();
+        this.resetSettingsLockedDown();
       })
       .finally(() => {
-        this.updatingGuiSettings = false;
+        this.updatingSettingsLockDown = false;
       });
   }
 
@@ -87,10 +87,10 @@ class DeviceSettings implements ng.IComponentController {
       if (placeGuiSettings) {
         const firstUnsupportedDevice = _.find(this.deviceList || [], (d: any) => d.productFamily !== 'Cloudberry');
         if (firstUnsupportedDevice) {
-          this.unsupportedDeviceTypeForGuiSettings = firstUnsupportedDevice.product;
+          this.unsupportedDeviceTypeForSettingsLockDown = firstUnsupportedDevice.product;
         }
-        this.shouldShowGuiSettings = true;
-        this.resetGuiSettingsEnabled();
+        this.shouldShowSettingsLockDown = true;
+        this.resetSettingsLockedDown();
       }
     });
   }
@@ -105,11 +105,11 @@ class DeviceSettings implements ng.IComponentController {
     });
   }
 
-  private resetGuiSettingsEnabled() {
+  private resetSettingsLockedDown() {
     this.CsdmConfigurationService.getRuleForPlace(this.ownerId, 'gui_settings_enabled').then(rule => {
-      this._guiSettingsEnabled = rule.value;
+      this._settingsLockedDown = !rule.value;
     }).catch(() => {
-      this._guiSettingsEnabled = true;
+      this._settingsLockedDown = false;
     });
   }
 
