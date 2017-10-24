@@ -25,8 +25,16 @@ function kebab_case_to_pascal_case {
   sed -E 's/(^|-)([a-z])/\U\2/g'
 }
 
+function pascal_case_to_camel_case {
+  sed -E 's/^([A-Z])/\L\1/'
+}
+
 function html_element_to_component_basename {
     echo "$1" | kebab_case_to_pascal_case
+}
+
+function html_element_to_directive_name {
+    echo "$1" | kebab_case_to_pascal_case | pascal_case_to_camel_case
 }
 
 function subdir_path_to_ng_module_name {
@@ -57,6 +65,7 @@ js_component_file_no_ext="${html_element_name}.component"
 js_component_spec_file="${html_element_name}.component.spec.ts"
 template_file="${html_element_name}.html"
 js_component_name="$(html_element_to_component_basename "$html_element_name")Component"
+js_directive_name="$(html_element_to_directive_name "$html_element_name")"
 js_controller_name="$(html_element_to_component_basename "$html_element_name")Controller"
 ng_module_name="$(get_ng_module_name "$html_element_name")"
 
@@ -68,7 +77,7 @@ export default angular.module('${ng_module_name}', [
   require('angular-translate'),
   require('collab-ui-ng').default,
 ])
-  .component('${html_element_name}', new ${js_component_name}())
+  .component('${js_directive_name}', new ${js_component_name}())
   .name;
 _EOF
 }
