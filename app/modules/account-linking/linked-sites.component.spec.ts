@@ -19,9 +19,7 @@ describe('Component: linkedSites', () => {
   describe('at startup', () => {
 
     it('make sure its available is feature toggle set', function (done) {
-      spyOn(this.FeatureToggleService, 'supports').and.callFake(() => {
-        return this.$q.resolve(true);
-      });
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
       this.controller.$onInit();
       this.$rootScope.$digest();
       expect(this.controller.ready).toEqual(true);
@@ -29,9 +27,7 @@ describe('Component: linkedSites', () => {
     });
 
     it('make sure its unavailable if feature toggle not set', function (done) {
-      spyOn(this.FeatureToggleService, 'supports').and.callFake(() => {
-        return this.$q.resolve(false);
-      });
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
       this.controller.$onInit();
       this.$rootScope.$digest();
       expect(this.controller.ready).toEqual(false);
