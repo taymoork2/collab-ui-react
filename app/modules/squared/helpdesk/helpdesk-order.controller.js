@@ -201,12 +201,10 @@
             vm.provisionTime = $translate.instant('common.notAvailable');
             vm.accountActivated = $translate.instant('common.notAvailable');
           });
-      } else if (!vm.isOrderPendingProvisioning()) {
+      } else if (_.has(vm.order, 'subscriptionUuid')) {
         HelpdeskService.getSubscription(vm.order.subscriptionUuid)
           .then(function (res) {
             vm.orgId = _.get(res, 'customer.orgId');
-          }, function (response) {
-            Notification.errorResponse(response, 'helpdesk.getOrgDetailsFailure');
           });
       }
     }
@@ -279,7 +277,7 @@
     }
 
     function showOrgDetailsLink() {
-      return vm.accountActivated === true || (vm.purchaseOrderId && (vm.order.orderStatus === PROVISIONED || vm.hasConflictingServiceStatus));
+      return vm.accountActivated === true || !_.isUndefined(vm.orgId);
     }
 
     function canEditResendAdminEmail() {
@@ -323,9 +321,6 @@
     // Transition to the customer page if account has been activated.
     function goToCustomerPage() {
       if (vm.purchaseOrderId) {
-        if (!vm.orgId) {
-          return Notification.error('helpdesk.getOrgDetailsFailure');
-        }
         $state.go('helpdesk.org', { id: vm.orgId });
       } else if (vm.accountId) {
         $state.go('helpdesk.org', { id: vm.accountOrgId });
