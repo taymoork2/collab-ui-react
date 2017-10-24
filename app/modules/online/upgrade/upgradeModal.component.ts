@@ -35,7 +35,8 @@ class OnlineUpgrade {
       this.bodyText = this.$translate.instant('onlineUpgradeModal.body');
       this.cancelBodyText = this.$translate.instant('onlineUpgradeModal.cancelBody');
       this.showBmmpButton = true;
-      this.showCancelButton = !this.OnlineUpgradeService.hasCancelledSubscriptions();
+      this.showCancelButton = !this.OnlineUpgradeService.hasCancelledSubscriptions() &&
+                              !this.OnlineUpgradeService.hasOnlySparkSubscriptions();
     }
     if (this.showBmmpButton) {
       this.OnlineUpgradeService.getProductInstances(this.Authinfo.getUserId()).then((productInstances: IProdInst[]) => {
