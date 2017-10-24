@@ -275,7 +275,7 @@
         customerOrgId: customerOrgId,
       };
 
-      return $resource(patchAdminUrl, params).post();
+      return $resource(patchAdminUrl, params).save().$promise;
     }
 
     function getLicenseObj(rowData, licenseTypeField) {
