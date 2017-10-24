@@ -1878,8 +1878,8 @@
             controllerAs: 'siteList',
             parent: 'main',
             resolve: {
-              accountLinkingPhase2: function () {
-                return false;
+              accountLinkingPhase2: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasAccountLinkingPhase2);
               },
             },
           })
@@ -1899,7 +1899,7 @@
               tabContent: {
                 controllerAs: 'siteList',
                 controller: 'WebExSiteRowCtrl',
-                template: 'preliminary placeholder for linked sites component',
+                template: '<linked-sites></linked-sites>',
               },
             },
           })

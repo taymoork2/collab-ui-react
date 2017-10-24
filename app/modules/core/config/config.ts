@@ -575,6 +575,7 @@ export class Config {
       'reports.webex',
       'webex-reports-iframe',
       'services-overview',
+      'account-linking',
     ],
     Application: ['organizations', 'organization-overview'],
     Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org', 'helpdesklaunch', 'provisioning', 'order-details'],
