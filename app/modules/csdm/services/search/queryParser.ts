@@ -47,13 +47,13 @@ export class FieldQuery extends SearchElement {
   public static readonly QueryTypeExact: string = 'exact';
   public query: string;
   public field?: string;
-  public queryType?: string;
+  public type?: string;
 
   constructor(query: string, field?: string, queryType?: string) {
     super();
     this.query = query;
     this.field = field;
-    this.queryType = queryType;
+    this.type = queryType;
   }
 
   public getQueryPrefix(): string {
@@ -69,7 +69,7 @@ export class FieldQuery extends SearchElement {
   }
 
   public static getMatchOperator(fieldQuery: FieldQuery): string {
-    return fieldQuery.queryType === FieldQuery.QueryTypeExact ? '=' : ':';
+    return fieldQuery.type === FieldQuery.QueryTypeExact ? '=' : ':';
   }
 
   public toQuery(): string {
@@ -80,7 +80,7 @@ export class FieldQuery extends SearchElement {
     return {
       query: this.query,
       field: this.field,
-      queryType: this.queryType,
+      type: this.type,
     };
   }
 }

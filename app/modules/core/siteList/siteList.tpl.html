@@ -1,5 +1,12 @@
 <div ng-if='siteList.showGridData' id="site-list">
-
+  <div class="page-sub-header" ng-if="siteList.isAdminPage && siteList.isShowAddSite">
+    <div class="page-sub-header__right">
+      <a class="btn btn-primary"
+        ui-sref="site-list-add"
+        translate="firstTimeWizard.addSiteButton">
+      </a>
+    </div>
+  </div>
   <cs-grid grid-options="siteList.gridOptions" spinner="false"></cs-grid>
   <!-- Start Webex linked form -->
   <form action="{{siteList.trustSrc(siteList.siteAdminUrl)}}" class="webex-hidden-form" method="post" target="_blank">

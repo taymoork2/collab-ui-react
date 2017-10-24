@@ -6,7 +6,7 @@
     .controller('CareFeaturesCtrl', CareFeaturesCtrl);
 
   /* @ngInject */
-  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification, VirtualAssistantService) {
+  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification, CvaService) {
     var vm = this;
     vm.isVirtualAssistantEnabled = $state.isVirtualAssistantEnabled;
     vm.init = init;
@@ -82,8 +82,8 @@
     ];
 
     if (vm.isVirtualAssistantEnabled) {
-      vm.features.push(VirtualAssistantService.featureList);
-      vm.filters.push(VirtualAssistantService.featureFilter);
+      vm.features.push(CvaService.featureList);
+      vm.filters.push(CvaService.featureFilter);
     }
 
     init();
@@ -190,9 +190,9 @@
 
     vm.editCareFeature = function (feature, $event) {
       $event.stopImmediatePropagation();
-      if (feature.featureType === VirtualAssistantService.cvaServiceCard.id) {
-        VirtualAssistantService.getConfig(feature.templateId).then(function (template) {
-          VirtualAssistantService.cvaServiceCard.goToService($state, {
+      if (feature.featureType === CvaService.cvaServiceCard.id) {
+        CvaService.getConfig(feature.templateId).then(function (template) {
+          CvaService.cvaServiceCard.goToService($state, {
             isEditFeature: true,
             template: template,
           });

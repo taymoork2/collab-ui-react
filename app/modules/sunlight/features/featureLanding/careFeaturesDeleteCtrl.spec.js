@@ -1,8 +1,8 @@
 'use strict';
 
 describe('Care Feature Delete Ctrl', function () {
-  var controller, $rootScope, $q, $scope, $stateParams, $timeout, $translate, CareFeatureList, VirtualAssistantService, Log, Notification, Authinfo;
-  var deferred, vaDeferred;
+  var controller, $rootScope, $q, $scope, $stateParams, $timeout, $translate, CareFeatureList, CvaService, Log, Notification, Authinfo;
+  var deferred, cvaDeferred;
 
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
@@ -22,7 +22,7 @@ describe('Care Feature Delete Ctrl', function () {
     $provide.value('Authinfo', spiedAuthinfo);
   }));
 
-  beforeEach(inject(function (_$rootScope_, $controller, _$stateParams_, _$timeout_, _$translate_, _$q_, _Authinfo_, _CareFeatureList_, _VirtualAssistantService_, _Notification_, _Log_) {
+  beforeEach(inject(function (_$rootScope_, $controller, _$stateParams_, _$timeout_, _$translate_, _$q_, _Authinfo_, _CareFeatureList_, _CvaService_, _Notification_, _Log_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
@@ -30,21 +30,25 @@ describe('Care Feature Delete Ctrl', function () {
     $translate = _$translate_;
     $timeout = _$timeout_;
     CareFeatureList = _CareFeatureList_;
-    VirtualAssistantService = _VirtualAssistantService_;
+    CvaService = _CvaService_;
     Notification = _Notification_;
     Log = _Log_;
     controller = $controller;
     Authinfo = _Authinfo_;
 
     deferred = $q.defer();
-    vaDeferred = $q.defer();
+    cvaDeferred = $q.defer();
     spyOn(CareFeatureList, 'deleteTemplate').and.returnValue(deferred.promise);
-    spyOn(VirtualAssistantService, 'deleteConfig').and.returnValue(vaDeferred.promise);
+    spyOn(CvaService, 'deleteConfig').and.returnValue(cvaDeferred.promise);
     spyOn(Notification, 'success');
     spyOn(Notification, 'error');
     spyOn(Notification, 'errorWithTrackingId');
     spyOn($rootScope, '$broadcast').and.callThrough();
   }));
+
+  afterEach(function () {
+    controller = $rootScope = $q = $scope = $stateParams = $timeout = $translate = CareFeatureList = CvaService = Log = Notification = Authinfo = deferred = cvaDeferred = undefined;
+  });
 
   $stateParams = {
     deleteFeatureId: 123,
@@ -52,10 +56,10 @@ describe('Care Feature Delete Ctrl', function () {
     deleteFeatureType: 'Ch',
   };
 
-  var vaStateParams = {
+  var cvaStateParams = {
     deleteFeatureId: 123,
-    deleteFeatureName: 'Virtual Assistant Dev Config',
-    deleteFeatureType: 'Va',
+    deleteFeatureName: 'Customer Virtual Assistant Dev Config',
+    deleteFeatureType: 'customerVirtualAssistant',
   };
 
   function callController(_stateParams) {
@@ -96,25 +100,25 @@ describe('Care Feature Delete Ctrl', function () {
   });
 
   it('should delete VA config successfully', function () {
-    callController(vaStateParams);
+    callController(cvaStateParams);
     controller.deleteFeature();
-    vaDeferred.resolve(successResponse);
+    cvaDeferred.resolve(successResponse);
     $scope.$apply();
     $timeout.flush();
     expect($rootScope.$broadcast).toHaveBeenCalledWith('CARE_FEATURE_DELETED');
     expect(Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
-      featureName: vaStateParams.deleteFeatureName,
+      featureName: cvaStateParams.deleteFeatureName,
     });
   });
 
   it('should fail at deleting VA config', function () {
-    callController(vaStateParams);
+    callController(cvaStateParams);
     controller.deleteFeature();
-    vaDeferred.reject(failureResponse);
+    cvaDeferred.reject(failureResponse);
     $scope.$apply();
     $timeout.flush();
     expect(Notification.errorWithTrackingId).toHaveBeenCalledWith(failureResponse, jasmine.any(String), {
-      featureName: vaStateParams.deleteFeatureName,
+      featureName: cvaStateParams.deleteFeatureName,
     });
   });
 });

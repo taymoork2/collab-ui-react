@@ -1,5 +1,6 @@
 import { MediaMgrService } from 'modules/huron/media-mgr';
 import { Notification } from 'modules/core/notifications';
+import { AccessibilityService } from 'modules/core/accessibility';
 
 export interface IMedia {
   mediaId: string;
@@ -36,6 +37,13 @@ const GET_MEDIA_INTERVAL: number = 30000;
 
 const ERROR_DELETE_IN_USE: number = 106;
 
+// html id tags
+const MEDIA_DESCRIPTION: string = '#mediaDescription';
+const MEDIA_DOWNLOAD: string = '#mediaDownload';
+const MEDIA_SPINNER: string = '#mediaDownloadSpinner';
+const MEDIA_TITLE: string = '#mediaTitle';
+const SEARCH_FILTER: string = '#searchFilter';
+
 export class MediaMgrCtrl implements ng.IComponentController {
 
   public media: IMedia;
@@ -69,13 +77,15 @@ export class MediaMgrCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
+    private $document: ng.IDocumentService,
+    private $element: ng.IRootElementService,
+    private $q: ng.IQService,
+    private $timeout: ng.ITimeoutService,
+    private $translate: ng.translate.ITranslateService,
+    private $window: ng.IWindowService,
+    private AccessibilityService: AccessibilityService,
     private Notification: Notification,
     private MediaMgrService: MediaMgrService,
-    private $translate: ng.translate.ITranslateService,
-    private $timeout: ng.ITimeoutService,
-    private $q: ng.IQService,
-    private $window: ng.IWindowService,
-    private $document: ng.IDocumentService,
     private ModalService,
   ) {}
 
@@ -165,6 +175,7 @@ export class MediaMgrCtrl implements ng.IComponentController {
 
   public downloadFromUrl(mohFile: IMedia): void {
     this.mohDownloadInProgress = true;
+    this.AccessibilityService.setFocus(this.$element, MEDIA_SPINNER);
     this.MediaMgrService.downloadFromUrl(mohFile)
     .then(response => {
       const data = response.data;
@@ -196,6 +207,7 @@ export class MediaMgrCtrl implements ng.IComponentController {
       this.Notification.errorResponse(error, 'mediaMgrModal.downloadMediaError');
     }).finally(() => {
       this.mohDownloadInProgress = false;
+      this.AccessibilityService.setFocus(this.$element, MEDIA_DOWNLOAD);
     });
   }
 
@@ -211,18 +223,22 @@ export class MediaMgrCtrl implements ng.IComponentController {
     if (content === 'Title') {
       this.mohEditStatus.title = true;
       this.mohEditStatus.description = false;
+      this.AccessibilityService.setFocus(this.$element, MEDIA_TITLE);
     } else if (content === 'Description') {
       this.mohEditStatus.title = false;
       this.mohEditStatus.description = true;
+      this.AccessibilityService.setFocus(this.$element, MEDIA_DESCRIPTION);
     } else {
       this.mohEditStatus.title = true;
       this.mohEditStatus.description = true;
+      this.AccessibilityService.setFocus(this.$element, MEDIA_TITLE);
     }
   }
 
   public editMediaComplete() {
     this.mohEditStatus.title = false;
     this.mohEditStatus.description = false;
+    this.AccessibilityService.setFocus(this.$element, MEDIA_TITLE);
   }
 
   public mohEditInProgress(content?: string): boolean {
@@ -275,6 +291,7 @@ export class MediaMgrCtrl implements ng.IComponentController {
     this.MediaMgrService.deleteMedia(mohFile)
       .then(() => {
         this.setActiveMedia(undefined);
+        this.AccessibilityService.setFocus(this.$element, SEARCH_FILTER);
         return this.getMedia();
       }).catch(error => {
         if (error.data.error.key === ERROR_DELETE_IN_USE) {

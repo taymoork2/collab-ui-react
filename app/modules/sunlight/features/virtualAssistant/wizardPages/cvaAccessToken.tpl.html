@@ -1,19 +1,19 @@
 <div>
   <div class="ct-title">
     <span class="h3">
-      {{cvaSetupCtrl.getVaText('accessToken.title')}}
+      {{cvaSetupCtrl.getCvaText('accessToken.title')}}
     </span>
   </div>
   <h6 class="ct-title-desc">
-    {{cvaSetupCtrl.getVaText('accessToken.desc')}}
+    {{cvaSetupCtrl.getCvaText('accessToken.desc')}}
   </h6>
   <div class="cs-card-container ct-sa-content">
     <cs-card-layout block-view="true" class="va-card-center">
       <cs-card class="va-box cva-access-token-box va-card">
-        <p class="h6">{{cvaSetupCtrl.getVaText('accessToken.boxDesc')}}</p>
+        <p class="h6">{{cvaSetupCtrl.getCvaText('accessToken.boxDesc')}}</p>
         <div ng-form="cvaSetupCtrl.tokenForm">
           <div class="cs-input-group medium-12 columns" ng-class="{'error': cvaSetupCtrl.isAccessTokenInvalid()}">
-          <label class="cs-input__label input-label" for="tokenInput">{{cvaSetupCtrl.getVaText('accessToken.inputLabel')}}</label>
+          <label class="cs-input__label input-label" for="tokenInput">{{cvaSetupCtrl.getCvaText('accessToken.inputLabel')}}</label>
             <div class="input-row">
             <input
               name="tokenInput"
@@ -27,12 +27,12 @@
                 ng-disabled="!(cvaSetupCtrl.template.configuration.pages.cvaAccessToken.accessTokenValue)"
                 loading="cvaSetupCtrl.template.configuration.pages.cvaAccessToken.validatingToken"
                 ng-click="cvaSetupCtrl.validateAPIAIToken()">
-                {{cvaSetupCtrl.getVaText('accessToken.validateButtonText')}}
+                {{cvaSetupCtrl.getCvaText('accessToken.validateButtonText')}}
             </button>
             </div>
             <div class="cs-input__messages" ng-messages="cvaSetupCtrl.tokenForm.tokenInput.$error" ng-if="cvaSetupCtrl.isAccessTokenInvalid()">
-              <div class="message" ng-message="maxlength">{{cvaSetupCtrl.getVaText('accessToken.maxLengthError')}}</div>
-              <div class="message" ng-message="invalidToken">{{cvaSetupCtrl.getVaText('accessToken.invalidTokenText')}}</div>
+              <div class="message" ng-message="maxlength">{{cvaSetupCtrl.getCvaText('accessToken.maxLengthError')}}</div>
+              <div class="message" ng-message="invalidToken">{{cvaSetupCtrl.getCvaText('accessToken.invalidTokenText')}}</div>
             </div>
           </div>
         </div>

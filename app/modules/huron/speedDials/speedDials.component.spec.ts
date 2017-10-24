@@ -1,4 +1,4 @@
-import { KeyCodes } from 'modules/core/accessibility/accessibility.service';
+import { KeyCodes } from 'modules/core/accessibility';
 
 describe('component: speedDial', () => {
   const DROPDOWN_LIST = 'button[cs-dropdown-toggle]';

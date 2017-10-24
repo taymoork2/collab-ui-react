@@ -37,4 +37,5 @@ Do not use Github, UI bugs should be reported in [JIRA](https://jira-eng-chn-sjc
 
 * [Browser support](./browser-support.md)
 * [Everything you need to know about Atlas UI deployments](./deployments.md)
+* [Keyboard Accessibility](./accessibility.md)
 * *more to come*

@@ -8,10 +8,11 @@ require('./_site-list.scss');
     .controller('WebExSiteRowCtrl', WebExSiteRowCtrl);
 
   /*@ngInject*/
-  function WebExSiteRowCtrl($log, $modal, $scope, $sce, $state, $timeout, FeatureToggleService, TokenService, WebExUtilsFact, WebExSiteRowService, $stateParams, accountLinkingPhase2) {
+  function WebExSiteRowCtrl($log, $modal, $scope, $sce, $state, $stateParams, $timeout, accountLinkingPhase2, FeatureToggleService, TokenService, WebExUtilsFact, WebExSiteRowService, Utils) {
     var vm = this;
     vm.showGridData = false;
     vm.isShowAddSite = false;
+    vm.isAdminPage = Utils.isAdminPage();
 
     $log.debug('StateParams in sitreRowCrtl', $stateParams);
 

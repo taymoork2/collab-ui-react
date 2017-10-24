@@ -179,4 +179,24 @@ describe('Controller: MySubscriptionCtrl', function () {
       expect(this.controller.isUsageDefined(undefined)).toBeFalsy();
     });
   });
+  describe('Overage Warning Banner', function () {
+    it('should show if combined license usage exceeds combined license volume', function () {
+      spyOn(this.$rootScope, '$emit');
+      spyOn(this.Orgservice, 'getInternallyManagedSubscriptions').and.returnValue(this.$q.resolve(this.data.multiSubscriptionsResponse));
+      this.data.multiSubscriptionsResponse[0].licenses[0].usage = 11;
+      this.data.multiSubscriptionsResponse[1].licenses[0].usage = 6;
+      this.data.multiSubscriptionsResponse[2].licenses[0].usage = 51;
+      this.startController();
+      expect(this.controller.licenseCategory[0].offers[0].usage).toBeGreaterThan(this.controller.licenseCategory[0].offers[0].volume);
+      expect(this.$rootScope.$emit).toHaveBeenCalled();
+    });
+    it('should not show if only one license has an overage', function () {
+      spyOn(this.$rootScope, '$emit');
+      spyOn(this.Orgservice, 'getInternallyManagedSubscriptions').and.returnValue(this.$q.resolve(this.data.multiSubscriptionsResponse));
+      this.data.multiSubscriptionsResponse[1].licenses[1].usage = 11;
+      this.startController();
+      expect(this.data.multiSubscriptionsResponse[1].licenses[1].usage).toBeGreaterThan(this.data.multiSubscriptionsResponse[1].licenses[1].volume);
+      expect(this.$rootScope.$emit).not.toHaveBeenCalled();
+    });
+  });
 });

@@ -2,7 +2,7 @@ import { SpeedDialService, ISpeedDial } from './speedDial.service';
 import { IActionItem } from 'modules/core/components/sectionTitle/sectionTitle.component';
 import { Notification } from 'modules/core/notifications';
 import { CallDestinationTranslateService, ICallDestinationTranslate } from 'modules/call/shared/call-destination-translate';
-import { AccessibilityService, KeyCodes } from 'modules/core/accessibility/accessibility.service';
+import { AccessibilityService, KeyCodes } from 'modules/core/accessibility';
 import { IToolkitModalService } from 'modules/core/modal';
 
 interface IValidationMessages {

@@ -58,7 +58,7 @@ describe('QueryParser', () => {
         { query: 'b', field: 'product' }],
     });
 
-    expectQueryToParseTo(' product= term1', { query: 'term1', field: 'product', queryType: 'exact' });
+    expectQueryToParseTo(' product= term1', { query: 'term1', field: 'product', type: 'exact' });
   });
 
   it('should parse mixed and+or queries', () => {
