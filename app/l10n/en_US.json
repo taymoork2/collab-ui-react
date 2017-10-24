@@ -6912,7 +6912,8 @@
     "voicemailInstructionEnabled": "Voicemail for your company is enabled with Voicemail to Email activated.",
     "voicemailInstructionDisabled": "Voicemail for your company is enabled with Voicemail to Email not activated.",
     "voicemailInstruction": "This can be changed from the Company Call Settings page.",
-    "voicemailFilter": "Type number to filter"
+    "voicemailFilter": "Type number to filter",
+    "waitForE911": "We are currently processing an address change for this user, which may take a few minutes. Please check back later."
   },
   "sunlightDetails": {
     "title": "Care",
