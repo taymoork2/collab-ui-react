@@ -269,6 +269,7 @@ export class MeetingSettingsCtrl {
       } else {
         this.nextButtonDisabledStatus = true;
         _.set(this.$scope.wizard, 'isNextDisabled', true);
+        this.showError(this.$translate.instant('firstTimeWizard.transferCodeInvalidError'));
         const properties = _.assignIn(transferSiteDetails , { trackingId: this.Utils.extractTrackingIdFromResponse(response) });
         this.sendMetrics(this.Analytics.sections.SERVICE_SETUP.eventNames.INVALID_TRANSFER_CODE, properties);
         return this.$q.reject();
