@@ -6,9 +6,7 @@
           <div class="header-with-right-icon">
             <p class="h4 ellipsis" title="{{careFeature.name}}"> {{careFeature.name}} </p>
             <div class="right">
-              <button type="button" ng-click="careFeaturesCtrl.deleteCareFeature((careFeature), $event)" class="close">
-                <span class="sr-only" translate="common.close"></span>
-              </button>
+              <button type="button" ng-click="careFeaturesCtrl.deleteCareFeature((careFeature), $event)" class="close" aria-label="{{::'common.close' | translate}}"></button>
             </div>
           </div>
           <p><span class="badge badge--outline" ng-if="careFeature.mediaType === 'virtualAssistant'">{{:: ('careChatTpl.virtualAssistant.featureText.' + careFeature.mediaType) | translate}}</span>
@@ -24,9 +22,7 @@
           <div class="embed-code-txt h6 left">
             <p><span translate="sunlightDetails.status" ng-if="careFeature.mediaType === 'virtualAssistant' && careFeature.status"></span>{{careFeature.status}}</p>
           </div>
-          <div class="right icon icon-download" ng-if="careFeature.mediaType !== 'virtualAssistant'" ng-click="careFeaturesCtrl.openEmbedCodeModal((careFeature), $event)">
-              <span class="sr-only" translate="careChatTpl.downloadAction"></span>
-          </div>
+          <div class="right icon icon-download" ng-if="careFeature.mediaType !== 'virtualAssistant'" ng-click="careFeaturesCtrl.openEmbedCodeModal((careFeature), $event)" aria-label="{{::'common.download' | translate}}"></div>
         </footer>
       </article>
     </cs-card>
