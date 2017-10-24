@@ -54,7 +54,7 @@
           cs-input-nested="1"
           cs-input-label="{{:: 'serviceSetupModal.notificationAttached' | translate}}"
           cs-input-help-text="{{::'serviceSetupModal.voicemailToEmailHelpText' | translate}}">
-        <input ng-if="$ctrl.siteLanguage === 'en_US'"
+        <input ng-if="$ctrl.isLanguageEnglish()"
           cs-input
           type="checkbox"
           id="emailWithTranscript"
@@ -63,7 +63,7 @@
           ng-change="$ctrl.onVoicemailFeaturesChanged()"
           cs-input-nested="1"
           cs-input-label="{{:: 'serviceSetupModal.notificationTranscript' | translate}}">
-         <input ng-if="$ctrl.avrilI1558"
+         <input
           cs-input
           type="checkbox"
           ng-model="$ctrl.localAvrilFeatures.VM2E_TLS"
@@ -95,7 +95,7 @@
             ng-change="$ctrl.onVoicemailFeaturesChanged()"
             cs-input-nested="1"
             cs-input-label="{{:: 'serviceSetupModal.notificationAttached' | translate}}">
-          <input ng-if="$ctrl.siteLanguage === 'en_US'"
+          <input ng-if="$ctrl.isLanguageEnglish()"
             cs-input
             type="checkbox"
             id="sparkWithTranscript"

@@ -3,7 +3,7 @@ import { Config } from 'modules/core/config/config';
 import { VoicemailPilotNumber } from 'modules/call/locations/shared';
 import { HuronSettingsOptionsService, HuronSettingsOptions } from 'modules/call/settings/shared';
 import { CompanyNumber } from 'modules/call/settings/settings-company-caller-id';
-import { IAvrilCustomerFeatures } from 'modules/huron/avril';
+import { IAvrilFeatures } from 'modules/call/avril';
 import { IOption } from 'modules/huron/dialing/dialing.service';
 import { Notification } from 'modules/core/notifications';
 
@@ -19,6 +19,7 @@ class CallSettingsCtrl implements ng.IComponentController {
   public settingsOptions: HuronSettingsOptions = new HuronSettingsOptions();
   public showDialPlanChangedDialog: boolean = false;
   public showVoiceMailDisableDialog: boolean = false;
+  public avrilI1559: boolean;
 
   /* @ngInject */
   constructor(
@@ -31,13 +32,16 @@ class CallSettingsCtrl implements ng.IComponentController {
     private Config: Config,
     private ModalService,
     private Notification: Notification,
+    private FeatureToggleService,
   ) { }
 
   public $onInit(): void {
     this.showRegionAndVoicemail = this.Authinfo.getLicenses().filter(license => {
       return license.licenseType === this.Config.licenseTypes.COMMUNICATION;
     }).length > 0;
-
+    this.FeatureToggleService.avrilI1559GetStatus().then((toggle) => {
+      this.avrilI1559 = toggle;
+    });
     this.loading = true;
     this.$q.resolve(this.initComponentData()).finally(() => this.loading = false);
   }
@@ -78,7 +82,7 @@ class CallSettingsCtrl implements ng.IComponentController {
     this.checkForChanges();
   }
 
-  public onCompanyVoicemailChanged(companyVoicemailEnabled: boolean, voicemailPilotNumber: VoicemailPilotNumber, features: IAvrilCustomerFeatures): void {
+  public onCompanyVoicemailChanged(companyVoicemailEnabled: boolean, voicemailPilotNumber: VoicemailPilotNumber, features: IAvrilFeatures): void {
     _.set(this.callSettingsData.customer, 'hasVoicemailService', companyVoicemailEnabled);
     _.set(this.callSettingsData.defaultLocation, 'voicemailPilotNumber', voicemailPilotNumber);
     _.set(this.callSettingsData.avrilCustomer, 'features', features);

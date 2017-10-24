@@ -213,17 +213,6 @@
         <h4 class="section__title" translate="serviceSetupModal.companyVoicemail"></h4>
       </div>
       <div class="section__content">
-        <uc-company-voicemail
-          ng-if="!$ctrl.supportsAvrilVoicemail && !$ctrl.supportsAvrilVoicemailMailbox"
-          site="$ctrl.huronSettingsData.site"
-          dial-plan-country-code="$ctrl.settingsOptions.dialPlan.countryCode"
-          external-number-options="$ctrl.settingsOptions.companyVoicemailOptions"
-          company-voicemail-enabled="$ctrl.huronSettingsData.customer.hasVoicemailService"
-          voicemail-to-email="$ctrl.huronSettingsData.voicemailToEmailSettings.voicemailToEmail"
-          on-change-fn="$ctrl.onCompanyVoicemailChanged(voicemailPilotNumber, voicemailPilotNumberGenerated, companyVoicemailEnabled)"
-          on-number-filter="$ctrl.onCompanyVoicemailFilter(filter)"
-          on-voicemail-to-email-changed-fn="$ctrl.onVoicemailToEmailChanged(voicemailToEmail)">
-        </uc-company-voicemail>
         <div ng-if="!$ctrl.avrilI1559">
           <uc-company-voicemail-avril
             ng-if="$ctrl.supportsAvrilVoicemail || $ctrl.supportsAvrilVoicemailMailbox"
@@ -245,7 +234,6 @@
             dial-plan-country-code="$ctrl.settingsOptions.dialPlan.countryCode"
             external-number-options="$ctrl.settingsOptions.companyVoicemailOptions"
             company-voicemail-enabled="$ctrl.huronSettingsData.customer.hasVoicemailService"
-            voicemail-to-email="$ctrl.huronSettingsData.voicemailToEmailSettings.voicemailToEmail"
             on-change-fn="$ctrl.onCompanyVoicemailAvrilChanged(voicemailPilotNumber, voicemailPilotNumberGenerated, companyVoicemailEnabled, features)"
             on-number-filter="$ctrl.onCompanyVoicemailFilter(filter)">
           </uc-company-voicemail-avril-i1559>

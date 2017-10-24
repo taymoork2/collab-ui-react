@@ -5,7 +5,7 @@ export * from './avril-customer';
 export { AvrilService };
 
 export default angular
-  .module('huron.avril.service', [
+  .module('call.avril.service', [
     require('angular-resource'),
     require('modules/core/scripts/services/authinfo'),
     require('modules/huron/telephony/telephonyConfig'),

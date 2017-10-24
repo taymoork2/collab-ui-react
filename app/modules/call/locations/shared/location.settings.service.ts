@@ -5,7 +5,7 @@ import { LocationCosService, LocationCos } from 'modules/call/shared/cos';
 import { InternalNumberRange, InternalNumberRangeService } from 'modules/call/shared/internal-number-range';
 import { Customer, CustomerVoice, HuronCustomerService, ServicePackage } from 'modules/huron/customer';
 import { ExtensionLengthService, IExtensionLength } from 'modules/call/settings/shared/extension-length.service';
-import { AvrilService, AvrilCustomer } from 'modules/huron/avril';
+import { AvrilService, AvrilCustomer } from 'modules/call/avril';
 import { Notification } from 'modules/core/notifications';
 import { PstnAddressService, PstnModel, Address } from 'modules/huron/pstn';
 import { EmergencyNumber } from 'modules/huron/phoneNumber';

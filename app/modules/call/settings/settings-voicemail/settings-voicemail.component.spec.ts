@@ -1,13 +1,11 @@
-import companyVoicemailAvrilI1559Module from './index';
-import { AvrilSiteFeatures } from 'modules/call/avril';
+import voicemailModule from './index';
+import { AvrilFeatures } from 'modules/call/avril';
+import { VoicemailPilotNumber } from 'modules/call/locations/shared';
 
-describe('Component: companyVoicemailAvril', () => {
+describe('Component: voicemail', () => {
   const VOICEMAIL_TOGGLE = 'input#companyVoicemailToggle';
   const VOICEMAIL_TO_PHONE = 'input#voicemailToPhone';
   const COMPANY_NUMBER_SELECT = '.csSelect-container[name="companyVoicemailNumber"]';
-  const MESSAGE_CONTAINER = '.msg-container';
-  const NO_EXTERNAL_NUMBER_WARNING = COMPANY_NUMBER_SELECT + ' ' + MESSAGE_CONTAINER;
-  const DROPDOWN_OPTIONS = '.dropdown-menu ul li';
   const GENERATED_VM_PILOT_NUMBER = '+150708071004091414081311041300051000081';
   const externalNumberOptions = getJSONFixture('huron/json/settings/externalNumbers.json');
 
@@ -21,8 +19,7 @@ describe('Component: companyVoicemailAvril', () => {
   const VOICEMAIL_TO_SPARK_WITH_TRANSCRIPT = 'input#sparkWithTranscript';
   const ENABLE_OTP = 'input#enableOTP';
 
-  const SITES = getJSONFixture('huron/json/settings/sites.json');
-  const AVRIL_FEATURES = new AvrilSiteFeatures({
+  const AVRIL_FEATURES = new AvrilFeatures({
     VM2T: false,
     VM2E: false,
     VM2E_Attachment: false,
@@ -35,10 +32,9 @@ describe('Component: companyVoicemailAvril', () => {
   });
 
   beforeEach(function() {
-    this.initModules(companyVoicemailAvrilI1559Module);
+    this.initModules(voicemailModule);
     this.injectDependencies(
       '$scope',
-      '$timeout',
       'PhoneNumberService',
       'ServiceSetup',
       'FeatureToggleService',
@@ -52,14 +48,15 @@ describe('Component: companyVoicemailAvril', () => {
     spyOn(this.FeatureToggleService, 'avrilI1558GetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'avrilI1559GetStatus').and.returnValue(this.$q.resolve(true));
 
-    this.compileComponent('ucCompanyVoicemailAvrilI1559', {
-      site: 'sites',
+    this.compileComponent('ucVoicemail', {
       features: 'features',
+      voicemailPilotNumber: 'voicemailPilotNumber',
       dialPlanCountryCode: 'dialPlanCountryCode',
       externalNumberOptions: 'externalNumberOptions',
       companyVoicemailEnabled: 'companyVoicemailEnabled',
+      preferredLanguage: 'preferredLanguage',
+      onChangeFn: 'onChangeFn(companyVoicemailEnabled, voicemailPilotNumber, features)',
       onNumberFilter: 'onNumberFilter(filter)',
-      onChangeFn: 'onChangeFn(voicemailPilotNumber, voicemailPilotNumberGenerated, companyVoicemailEnabled, features)',
     });
   });
 
@@ -80,15 +77,19 @@ describe('Component: companyVoicemailAvril', () => {
 
   describe('Enable Voicemail: with 0 external numbers available', () => {
     beforeEach(function() {
-      this.$scope.features = new AvrilSiteFeatures();
+      this.$scope.features = new AvrilFeatures();
       this.$scope.externalNumberOptions = [];
-      this.$scope.sites = SITES[0];
+      this.$scope.preferredLanguage = 'en_US';
       this.$scope.$apply();
     });
 
     it('should call onChangeFn when voicemail is toggled', function() {
+      const pilotNumber = new VoicemailPilotNumber ({
+        number: GENERATED_VM_PILOT_NUMBER,
+        generated: true,
+      });
       this.view.find(VOICEMAIL_TOGGLE).click();
-      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(GENERATED_VM_PILOT_NUMBER, 'true', true, AVRIL_FEATURES);
+      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(true, pilotNumber, AVRIL_FEATURES);
     });
 
     it('should have External Voicemail Access and Voicemail to Email checkboxes when voicemail is toggled on', function() {
@@ -103,57 +104,21 @@ describe('Component: companyVoicemailAvril', () => {
       this.view.find(VOICEMAIL_TOGGLE).click();
       expect(this.view).toContainElement(VOICEMAIL_TO_PHONE);
       this.view.find(VOICEMAIL_TO_PHONE).click();
+      expect(this.view.find(VOICEMAIL_TO_PHONE)).toBeChecked();
       expect(this.view).toContainElement(COMPANY_NUMBER_SELECT);
-      expect(this.view).toContainElement(NO_EXTERNAL_NUMBER_WARNING);
-    });
-  });
-
-  describe('Enable Voicemail: with 3 external numbers available', () => {
-    beforeEach(function() {
-      this.$scope.features = new AvrilSiteFeatures();
-      this.$scope.externalNumberOptions = externalNumberOptions;
-      this.$scope.sites = SITES[0];
-      this.$scope.$apply();
-    });
-
-    it('should have a drop down list of numbers and display warning text when External Voicemail Access is checked.', function() {
-      this.view.find(VOICEMAIL_TOGGLE).click();
-      this.view.find(VOICEMAIL_TO_PHONE).click();
-      expect(this.view).toContainElement(COMPANY_NUMBER_SELECT);
-      expect(this.view.find(COMPANY_NUMBER_SELECT).find(DROPDOWN_OPTIONS).get(0)).toHaveText('(972) 555-1212');
-      expect(this.view.find(COMPANY_NUMBER_SELECT).find(DROPDOWN_OPTIONS).get(1)).toHaveText('(972) 555-1313');
-      expect(this.view.find(COMPANY_NUMBER_SELECT).find(DROPDOWN_OPTIONS).get(2)).toHaveText('(972) 555-1414');
-    });
-
-    it('should call onChangeFn when an external number is chosen', function() {
-      const avrilFeatures = new AvrilSiteFeatures({
-        VM2T: true,
-        VM2E: false,
-        VM2E_Attachment: false,
-        VM2E_Transcript: false,
-        VM2E_TLS: false,
-        VM2S: true,
-        VM2S_Attachment: true,
-        VM2S_Transcript: true,
-        VMOTP: true,
-      });
-      this.view.find(VOICEMAIL_TOGGLE).click();
-      this.view.find(VOICEMAIL_TO_PHONE).click();
-      this.view.find(COMPANY_NUMBER_SELECT).find(DROPDOWN_OPTIONS).get(0).click();
-      expect(this.$scope.onChangeFn.calls.argsFor(1)).toEqual([GENERATED_VM_PILOT_NUMBER, 'true', true, avrilFeatures]);
     });
   });
 
   describe('Enable Voicemail with Voicemail to Email (VM2E)', () => {
     beforeEach(function() {
-      this.$scope.features = new AvrilSiteFeatures();
+      this.$scope.features = new AvrilFeatures();
       this.$scope.externalNumberOptions = [];
-      this.$scope.sites = SITES[0];
+      this.$scope.preferredLanguage = 'en_US';
       this.$scope.$apply();
     });
 
     it('should call onChangeFn when VM2E checked with features set for Email with Attachment, Email with Transcript, use TLS', function() {
-      const avrilFeatures = new AvrilSiteFeatures({
+      const avrilFeatures = new AvrilFeatures({
         VM2T: false,
         VM2E: true,
         VM2E_Attachment: true,
@@ -164,17 +129,19 @@ describe('Component: companyVoicemailAvril', () => {
         VM2S_Transcript: true,
         VMOTP: true,
       });
-
       this.view.find(VOICEMAIL_TOGGLE).click();
       this.view.find(VOICEMAIL_TO_EMAIL).click();
       expect(this.view.find(VOICEMAIL_TO_EMAIL_WITH_ATTACHMENT)).toBeChecked();
       expect(this.view.find(VOICEMAIL_TO_EMAIL_WITH_TRANSCRIPT)).toBeChecked();
       expect(this.view.find(VOICEMAIL_TO_EMAIL_USE_TLS)).toBeChecked();
-      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(GENERATED_VM_PILOT_NUMBER, 'true', true, avrilFeatures);
+      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(true, new VoicemailPilotNumber ({
+        number: GENERATED_VM_PILOT_NUMBER,
+        generated: true,
+      }), avrilFeatures);
     });
 
     it('should check VM2E with Attachment unchecked call is made with correct features', function() {
-      const avrilFeatures = new AvrilSiteFeatures({
+      const avrilFeatures = new AvrilFeatures({
         VM2T: false,
         VM2E: true,
         VM2E_Attachment: false,
@@ -188,6 +155,7 @@ describe('Component: companyVoicemailAvril', () => {
 
       this.view.find(VOICEMAIL_TOGGLE).click();
       this.view.find(VOICEMAIL_TO_EMAIL).click();
+      expect(this.view.find(VOICEMAIL_TO_EMAIL)).toBeChecked();
 
       expect(this.view.find(VOICEMAIL_TO_EMAIL_WITH_TRANSCRIPT)).toBeChecked();
       expect(this.view.find(VOICEMAIL_TO_EMAIL_USE_TLS)).toBeChecked();
@@ -195,11 +163,14 @@ describe('Component: companyVoicemailAvril', () => {
 
       this.view.find(VOICEMAIL_TO_EMAIL_WITH_ATTACHMENT).click();
       expect(this.view.find(VOICEMAIL_TO_EMAIL_WITH_ATTACHMENT)).not.toBeChecked();
-      expect(this.$scope.onChangeFn.calls.argsFor(1)).toEqual([GENERATED_VM_PILOT_NUMBER, 'true', true, avrilFeatures]);
+      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(true, new VoicemailPilotNumber ({
+        number: GENERATED_VM_PILOT_NUMBER,
+        generated: true,
+      }), avrilFeatures);
     });
 
     it('should check VM2E with Transcript unchecked call is made with correct features', function() {
-      const avrilFeatures = new AvrilSiteFeatures({
+      const avrilFeatures = new AvrilFeatures({
         VM2T: false,
         VM2E: true,
         VM2E_Attachment: true,
@@ -220,11 +191,14 @@ describe('Component: companyVoicemailAvril', () => {
 
       this.view.find(VOICEMAIL_TO_EMAIL_WITH_TRANSCRIPT).click();
       expect(this.view.find(VOICEMAIL_TO_EMAIL_WITH_TRANSCRIPT)).not.toBeChecked();
-      expect(this.$scope.onChangeFn.calls.argsFor(1)).toEqual([GENERATED_VM_PILOT_NUMBER, 'true', true, avrilFeatures]);
+      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(true, new VoicemailPilotNumber ({
+        number: GENERATED_VM_PILOT_NUMBER,
+        generated: true,
+      }), avrilFeatures);
     });
 
     it('should check VM2E with TLS unchecked call is made with correct features', function() {
-      const avrilFeatures = new AvrilSiteFeatures({
+      const avrilFeatures = new AvrilFeatures({
         VM2T: false,
         VM2E: true,
         VM2E_Attachment: true,
@@ -245,21 +219,24 @@ describe('Component: companyVoicemailAvril', () => {
 
       this.view.find(VOICEMAIL_TO_EMAIL_USE_TLS).click();
       expect(this.view.find(VOICEMAIL_TO_EMAIL_USE_TLS)).not.toBeChecked();
-      expect(this.$scope.onChangeFn.calls.argsFor(1)).toEqual([GENERATED_VM_PILOT_NUMBER, 'true', true, avrilFeatures]);
+      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(true, new VoicemailPilotNumber ({
+        number: GENERATED_VM_PILOT_NUMBER,
+        generated: true,
+      }), avrilFeatures);
     });
 
   });
 
   describe('Enable Voicemail with Voicemail to Spark(VM2S)', () => {
     beforeEach(function() {
-      this.$scope.features = new AvrilSiteFeatures();
+      this.$scope.features = new AvrilFeatures();
       this.$scope.externalNumberOptions = [];
-      this.$scope.sites = SITES[0];
+      this.$scope.preferredLanguage = 'en_US';
       this.$scope.$apply();
     });
 
     it('should enable Voicemail to Spark with Attachment and Transcript features checked', function() {
-      const avrilFeatures = new AvrilSiteFeatures({
+      const avrilFeatures = new AvrilFeatures({
         VM2T: false,
         VM2E: false,
         VM2E_Attachment: false,
@@ -276,11 +253,14 @@ describe('Component: companyVoicemailAvril', () => {
       expect(this.view).toContainElement(VOICEMAIL_TO_SPARK_WITH_ATTACHMENT);
       expect(this.view.find(VOICEMAIL_TO_SPARK_WITH_ATTACHMENT)).toBeChecked();
       expect(this.view.find(VOICEMAIL_TO_SPARK_WITH_TRANSCRIPT)).toBeChecked();
-      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(GENERATED_VM_PILOT_NUMBER, 'true', true, avrilFeatures);
+      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(true, new VoicemailPilotNumber ({
+        number: GENERATED_VM_PILOT_NUMBER,
+        generated: true,
+      }), avrilFeatures);
     });
 
     it('should enable Voicemail to Spark with Attachment unchecked', function() {
-      const avrilFeatures = new AvrilSiteFeatures({
+      const avrilFeatures = new AvrilFeatures({
         VM2T: false,
         VM2E: false,
         VM2E_Attachment: false,
@@ -299,11 +279,14 @@ describe('Component: companyVoicemailAvril', () => {
       this.$scope.features.VM2S = true;
       this.view.find(VOICEMAIL_TO_SPARK_WITH_ATTACHMENT).click();
       expect(this.view.find(VOICEMAIL_TO_SPARK_WITH_ATTACHMENT)).not.toBeChecked();
-      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(GENERATED_VM_PILOT_NUMBER, 'true', true, avrilFeatures);
+      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(true, new VoicemailPilotNumber ({
+        number: GENERATED_VM_PILOT_NUMBER,
+        generated: true,
+      }), avrilFeatures);
     });
 
     it('should enable Voicemail to Spark with Transcript unchecked', function() {
-      const avrilFeatures = new AvrilSiteFeatures({
+      const avrilFeatures = new AvrilFeatures({
         VM2T: false,
         VM2E: false,
         VM2E_Attachment: false,
@@ -311,7 +294,7 @@ describe('Component: companyVoicemailAvril', () => {
         VM2E_TLS: false,
         VM2S: true,
         VM2S_Attachment: true,
-        VM2S_Transcript: false,
+        VM2S_Transcript: true,
         VMOTP: true,
       });
 
@@ -319,22 +302,22 @@ describe('Component: companyVoicemailAvril', () => {
       expect(this.view).toContainElement(VOICEMAIL_TO_SPARK_WITH_ATTACHMENT);
       expect(this.view.find(VOICEMAIL_TO_SPARK_WITH_ATTACHMENT)).toBeChecked();
       expect(this.view.find(VOICEMAIL_TO_SPARK_WITH_TRANSCRIPT)).toBeChecked();
-      this.$scope.features.VM2S = true;
-      this.view.find(VOICEMAIL_TO_SPARK_WITH_TRANSCRIPT).click();
-      expect(this.view.find(VOICEMAIL_TO_SPARK_WITH_TRANSCRIPT)).not.toBeChecked();
-      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(GENERATED_VM_PILOT_NUMBER, 'true', true, avrilFeatures);
+      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(true, new VoicemailPilotNumber ({
+        number: GENERATED_VM_PILOT_NUMBER,
+        generated: true,
+      }), avrilFeatures);
     });
   });
 
   describe('Voicemail Enabled: Enable OTP ', () => {
     beforeEach(function() {
-      this.$scope.features = new AvrilSiteFeatures();
+      this.$scope.features = new AvrilFeatures();
       this.$scope.externalNumberOptions = [];
-      this.$scope.sites = SITES[0];
+      this.$scope.preferredLanguage = 'en_US';
       this.$scope.$apply();
     });
     it('should call onChangeFn when enable OTP is unchecked', function() {
-      const avrilFeatures = new AvrilSiteFeatures({
+      const avrilFeatures = new AvrilFeatures({
         VM2T: false,
         VM2E: false,
         VM2E_Attachment: false,
@@ -350,7 +333,10 @@ describe('Component: companyVoicemailAvril', () => {
       expect(this.view.find(ENABLE_OTP)).toBeChecked();
       this.view.find(ENABLE_OTP).click();
       expect(this.view.find(ENABLE_OTP)).not.toBeChecked();
-      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(GENERATED_VM_PILOT_NUMBER, 'true', true, avrilFeatures);
+      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(true, new VoicemailPilotNumber ({
+        number: GENERATED_VM_PILOT_NUMBER,
+        generated: true,
+      }), avrilFeatures);
     });
   });
 
@@ -367,7 +353,7 @@ describe('Component: companyVoicemailAvril', () => {
 
     it('should call onChangeFn when voicemail is turned off', function() {
       this.view.find(VOICEMAIL_TOGGLE).click();
-      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(null, null, false, undefined);
+      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(false, null, undefined);
     });
   });
 });

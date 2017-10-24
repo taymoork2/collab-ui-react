@@ -1,5 +1,5 @@
 import companyVoicemailAvrilModule from './index';
-import { AvrilSiteFeatures } from 'modules/huron/avril';
+import { AvrilSiteFeatures } from 'modules/call/avril';
 
 describe('Component: companyVoicemailAvril', () => {
   const VOICEMAIL_TOGGLE = 'input#companyVoicemailToggle';

@@ -1,28 +1,26 @@
-import { Site } from 'modules/huron/sites';
 import { IOption } from 'modules/huron/dialing/dialing.service';
-import { IAvrilSiteFeatures } from 'modules/call/avril';
+import { IAvrilFeatures } from 'modules/call/avril';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
+import { VoicemailPilotNumber } from 'modules/call/locations/shared';
 
-class CompanyVoicemailAvrilI1559ComponentCtrl implements ng.IComponentController {
-  public site: Site;
-  public features: IAvrilSiteFeatures;
+class VoicemailComponentCtrl implements ng.IComponentController {
+  public features: IAvrilFeatures;
   public selectedNumber: IOption;
   public filterPlaceholder: string;
   public externalNumberOptions: IOption[];
   public dialPlanCountryCode: string;
   public companyVoicemailEnabled: boolean;
-  public voicemailToPhone: boolean;
   public onNumberFilter: Function;
   public onChangeFn: Function;
-  public avrilI1558: boolean = false;
   public avrilI1559: boolean = false;
   public isMessageEntitled: boolean = false;
-  public localAvrilFeatures: IAvrilSiteFeatures;
-  public siteLanguage: string;
-  public isFirstTime: boolean;
+  public localAvrilFeatures: IAvrilFeatures;
+  public preferredLanguage: string;
   public nonePlaceholder: string;
   public placeholder: string;
   private noneOption: IOption;
+  public voicemailPilotNumber: VoicemailPilotNumber;
+
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
@@ -41,9 +39,6 @@ class CompanyVoicemailAvrilI1559ComponentCtrl implements ng.IComponentController
   }
 
   public $onInit(): void {
-    this.FeatureToggleService.avrilI1558GetStatus().then((toggle) => {
-      this.avrilI1558 = toggle;
-    });
     this.FeatureToggleService.avrilI1559GetStatus().then((toggle) => {
       this.avrilI1559 = toggle;
     });
@@ -53,23 +48,22 @@ class CompanyVoicemailAvrilI1559ComponentCtrl implements ng.IComponentController
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const {
       features,
-      site,
+      voicemailPilotNumber,
       externalNumberOptions,
+      preferredLanguage,
     } = changes;
 
     if (features && features.currentValue) {
       this.localAvrilFeatures = _.clone(features.currentValue);
     }
 
-    if (site && site.currentValue) {
-      if (_.get(site.currentValue, 'voicemailPilotNumber') &&
-          _.get(site.currentValue, 'voicemailPilotNumberGenerated') === false) {
+    if (!_.isUndefined(voicemailPilotNumber)) {
+      if (!_.isUndefined(voicemailPilotNumber.currentValue) && !_.isNull(voicemailPilotNumber.currentValue.number) && !voicemailPilotNumber.currentValue.generated) {
         this.localAvrilFeatures.VM2T = true;
-        this.selectedNumber = this.setCurrentOption(_.get<string>(site.currentValue, 'voicemailPilotNumber'), this.externalNumberOptions);
+        this.selectedNumber = this.setCurrentOption(_.get<string>(voicemailPilotNumber.currentValue, 'number'), this.externalNumberOptions);
       }
-      this.siteLanguage = _.get<string>(site.currentValue, 'preferredLanguage');
     }
-    if (externalNumberOptions) {
+    if (!_.isUndefined(externalNumberOptions)) {
       if (externalNumberOptions.currentValue && _.isArray(externalNumberOptions.currentValue)) {
         if (!_.isUndefined(this.selectedNumber) && !_.isEmpty(this.selectedNumber.value)) {
           this.externalNumberOptions.unshift(this.noneOption);
@@ -78,18 +72,21 @@ class CompanyVoicemailAvrilI1559ComponentCtrl implements ng.IComponentController
         }
       }
     }
+    if (!_.isUndefined(preferredLanguage)) {
+      this.preferredLanguage = preferredLanguage.currentValue;
+    }
   }
 
   public onCompanyVoicemailNumberChanged(): void {
-    this.onChange(_.get<string>(this.selectedNumber, 'value'), 'false', true);
+    this.onChange(_.get<string>(this.selectedNumber, 'value'), false, true);
   }
 
   public onVoicemailToPhoneChanged(): void {
     if (this.localAvrilFeatures.VM2T && !_.isUndefined(this.selectedNumber) && !_.isEmpty(this.selectedNumber.value)) {
-      this.onChange(_.get<string>(this.selectedNumber, 'value'), 'false', true);
+      this.onChange(_.get<string>(this.selectedNumber, 'value'), false, true);
     } else {
       const pilotNumber = this.ServiceSetup.generateVoiceMailNumber(this.Authinfo.getOrgId(), this.dialPlanCountryCode);
-      this.onChange(pilotNumber, 'true', true);
+      this.onChange(pilotNumber, true, true);
     }
   }
 
@@ -111,7 +108,7 @@ class CompanyVoicemailAvrilI1559ComponentCtrl implements ng.IComponentController
   }
 
   public isVM2EChanged(): boolean {
-    return (this.localAvrilFeatures.VM2E !== this.features.VM2E);
+    return (_.isUndefined(this.features) || this.localAvrilFeatures.VM2E !== this.features.VM2E);
   }
 
   public isVM2SChanged(): boolean {
@@ -119,7 +116,7 @@ class CompanyVoicemailAvrilI1559ComponentCtrl implements ng.IComponentController
   }
 
   public isLanguageEnglish(): boolean {
-    return (this.siteLanguage === 'en_US');
+    return (this.preferredLanguage === 'en_US');
   }
 
   public onCompanyVoicemailChange(value: boolean, initFeatures: boolean = true): void {
@@ -132,10 +129,11 @@ class CompanyVoicemailAvrilI1559ComponentCtrl implements ng.IComponentController
         this.onCompanyVoicemailNumberChanged();
       } else {
         pilotNumber = this.ServiceSetup.generateVoiceMailNumber(this.Authinfo.getOrgId(), this.dialPlanCountryCode);
-        this.onChange(pilotNumber, 'true', value);
+        this.onChange(pilotNumber, true, value);
       }
     } else {
-      this.onChange(null, null, value);
+      this.initVoicemailFeatures();
+      this.onChange(null, false, value);
     }
   }
 
@@ -150,11 +148,13 @@ class CompanyVoicemailAvrilI1559ComponentCtrl implements ng.IComponentController
     }
   }
 
-  public onChange(voicemailPilotNumber: string | null, voicemailPilotNumberGenerated: string | null, companyVoicemailEnabled: boolean): void {
+  public onChange(number: string | null, voicemailPilotNumberGenerated: boolean, companyVoicemailEnabled: boolean): void {
+    const pilotNumber: VoicemailPilotNumber = new VoicemailPilotNumber();
+    pilotNumber.number =  number;
+    pilotNumber.generated = voicemailPilotNumberGenerated;
     this.onChangeFn({
-      voicemailPilotNumber: voicemailPilotNumber,
-      voicemailPilotNumberGenerated: voicemailPilotNumberGenerated,
       companyVoicemailEnabled: companyVoicemailEnabled,
+      voicemailPilotNumber: number ? pilotNumber : null,
       features: this.localAvrilFeatures,
     });
   }
@@ -181,16 +181,17 @@ class CompanyVoicemailAvrilI1559ComponentCtrl implements ng.IComponentController
 
 }
 
-export class CompanyVoicemailAvrilI1559Component implements ng.IComponentOptions {
-  public controller = CompanyVoicemailAvrilI1559ComponentCtrl;
-  public template = require('modules/call/settings/settings-company-voicemail-avril-i1559/settings-company-voicemail-avril-i1559.component.html');
+export class VoicemailComponent implements ng.IComponentOptions {
+  public controller = VoicemailComponentCtrl;
+  public template = require('modules/call/settings/settings-voicemail/settings-voicemail.component.html');
   public bindings = {
-    site: '<',
     features: '<',
+    voicemailPilotNumber: '<',
     dialPlanCountryCode: '<',
     externalNumberOptions: '<',
     companyVoicemailEnabled: '<',
-    onNumberFilter: '&',
+    preferredLanguage: '<',
     onChangeFn: '&',
+    onNumberFilter: '&',
   };
 }
