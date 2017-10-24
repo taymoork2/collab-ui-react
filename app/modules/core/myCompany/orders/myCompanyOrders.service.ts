@@ -3,8 +3,9 @@ export interface IOrderDetail {
   orderDate: Date;
   status: string;
   total: number;
-  productDescriptionList: string[];
+  productDescriptionList: string;
   invoiceURL: string;
+  isTrial: boolean;
 }
 
 export interface IOrderList {
@@ -23,7 +24,7 @@ export class MyCompanyOrdersService {
     this.ordersService = this.$resource(this.UrlConfig.getAdminServiceUrl() + 'commerce/purchaseorders/customer/:customerId');
   }
 
-  public getOrderDetails(): ng.IPromise<IOrderDetail[]> {
+  public getOrderDetails(): ng.IPromise<any[]> {
     // we only want the online account for Order History
     const customerId = _.get(_.find(this.Authinfo.getCustomerAccounts(), {
       customerType: 'Online',
