@@ -4,7 +4,7 @@ describe('Controller: AABuilderMainCtrl', function () {
   var $controller, controller;
   var AACalendarService, AACommonService, AADependencyService, AAModelService, AANotificationService, AANumberAssignmentService, AARestModelService, AATrackChangeService, AAUiModelService, AAUiScheduleService, AAValidationService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantCeService, AutoAttendantLocationService, DoRestService, FeatureToggleService, HuronConfig;
   var $compile, $httpBackend, $modalStack, $q, $rootScope, $scope, $state, $stateParams;
-  var element, sysModel, ServiceSetup, timeZone, translatedTimeZone;
+  var authInfo, element, sysModel, ServiceSetup, timeZone, translatedTimeZone;
   var ces = getJSONFixture('huron/json/autoAttendant/callExperiences.json');
   var aCe = getJSONFixture('huron/json/autoAttendant/aCallExperience.json');
   var doRest = getJSONFixture('huron/json/autoAttendant/doRest.json');
@@ -16,6 +16,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     callExperienceURL: 'https://ces.hitest.huron-dev.com/api/v1/customers/6662df48-b367-4c1e-9c3c-aa408aaa79a1/callExperiences/c16a6027-caef-4429-b3af-9d61ddc7964b',
     assignedResources: [{
       id: '00097a86-45ef-44a7-aa78-6d32a0ca1d3b',
+      number: '1111111',
       type: 'directoryNumber',
       trigger: 'incomingCall',
       uuid: '00097a86-45ef-44a7-aa78-6d32a0ca1d3b',
@@ -101,7 +102,7 @@ describe('Controller: AABuilderMainCtrl', function () {
 
   beforeEach(inject(function (_$compile_, _$controller_, _$httpBackend_, _$modalStack_, _$q_, _$rootScope_, _$state_, _$stateParams_,
     _AACalendarService_, _AACommonService_, _AADependencyService_, _AAModelService_, _AANotificationService_, _AANumberAssignmentService_,
-    _AATrackChangeService_, _AARestModelService_, _AAUiModelService_, _AAUiScheduleService_, _AAValidationService_, _AutoAttendantCeInfoModelService_,
+    _AATrackChangeService_, _AARestModelService_, _AAUiModelService_, _AAUiScheduleService_, _AAValidationService_, _Authinfo_, _AutoAttendantCeInfoModelService_,
     _AutoAttendantCeMenuModelService_, _AutoAttendantCeService_, _AutoAttendantLocationService_, _DoRestService_, _FeatureToggleService_, _HuronConfig_, _ServiceSetup_) {
     $state = _$state_;
     $rootScope = _$rootScope_;
@@ -118,6 +119,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     AAUiModelService = _AAUiModelService_;
     AAModelService = _AAModelService_;
     AARestModelService = _AARestModelService_;
+    authInfo = _Authinfo_;
 
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
@@ -348,6 +350,35 @@ describe('Controller: AABuilderMainCtrl', function () {
       $scope.$apply();
 
       expect(errorSpy).toHaveBeenCalled();
+    });
+    it('should unassign Assigned and reAssign with new uuid', function () {
+      spyOn(authInfo, 'getOrgId').and.returnValue('cuid');
+
+      $httpBackend.when('PUT', HuronConfig.getCmiV2Url() + '/customers/cuid/features/autoattendants/uuid/numbers').respond(function () {
+        return [200, 'good'];
+      });
+
+      $httpBackend.when('GET', HuronConfig.getCmiV2Url() + '/customers/cuid/features/autoattendants/uuid/numbers').respond(function () {
+        return [200, { numbers: [{ number: '1111111', uuid: 'newUUID' }] }];
+      });
+
+      var resource = AutoAttendantCeInfoModelService.newResource();
+      resource.setType(aCe.assignedResources.type);
+      resource.setId('1111111');
+      resource.setNumber('1111111');
+
+      aaModel.aaRecord = _.cloneDeep(aCe);
+
+      aaModel.aaRecordUUID = 'uuid';
+
+      controller.ui.ceInfo.addResource({ id: '33333333' });
+      controller.close();
+
+      $httpBackend.flush();
+
+      $scope.$apply();
+
+      expect(aaModel.aaRecord.assignedResources[0].uuid).toEqual('newUUID');
     });
   });
 
