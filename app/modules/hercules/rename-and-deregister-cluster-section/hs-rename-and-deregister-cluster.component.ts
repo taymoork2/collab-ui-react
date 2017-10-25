@@ -2,14 +2,26 @@ import { Notification } from 'modules/core/notifications';
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 import { IToolkitModalService } from 'modules/core/modal';
 import { PrivateTrunkService } from 'modules/hercules/private-trunk/private-trunk-services/private-trunk.service';
+import { ICluster } from 'modules/hercules/hybrid-services.types';
+
+export interface IDeregisterModalOptions {
+  resolve: {
+    cluster: Function;
+  };
+  controller?: string;
+  controllerAs?: string;
+  template?: string;
+  templateUrl?: string;
+  type?: 'dialog' | 'small' | 'full';
+}
 
 class RenameAndDeregisterClusterSectionCtrl implements ng.IComponentController {
 
   private clusterId: string;
-  private cluster: any;
+  private cluster: ICluster;
   private onNameUpdate: Function;
-  private deregisterModalOptions: any;
-  private defaultDeregisterModalOptions: any = {
+  private deregisterModalOptions: IDeregisterModalOptions;
+  private defaultDeregisterModalOptions: IDeregisterModalOptions = {
     resolve: {
       cluster: () => this.cluster,
     },
