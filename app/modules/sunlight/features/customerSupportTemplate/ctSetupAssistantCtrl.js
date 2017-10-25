@@ -643,7 +643,7 @@
             enabled: true,
             fields: {
               callbackConfirmationMessage: {
-                displayText: 'Your callback request has been received.',
+                displayText: $translate.instant('careChatTpl.callbackConfirmationMsg'),
               },
             },
           },
@@ -897,7 +897,7 @@
             enabled: true,
             fields: {
               callbackConfirmationMessage: {
-                displayText: 'Your callback request has been received.',
+                displayText: $translate.instant('careChatTpl.callbackConfirmationMsg'),
               },
             },
           },
@@ -997,6 +997,13 @@
       populateCustomerInformationField4();
       populateFeedbackInformation();
       populateProactivePromptInformation();
+      populateCallbackConfirmationMessage();
+    }
+
+    function populateCallbackConfirmationMessage() {
+      if (vm.template.configuration.pages.callbackConfirmation && vm.selectedMediaType != vm.mediaTypes.chat) {
+        vm.template.configuration.pages.callbackConfirmation.fields.callbackConfirmationMessage.displayText = $translate.instant('careChatTpl.callbackConfirmationMsg');
+      }
     }
 
     function populateCustomerInformationField4() {

@@ -7181,6 +7181,7 @@
     "customerInformation": "Customer Information",
     "customerInfo_chat": "Customer Information for Chat",
     "customerInfo_callback": "Customer Information for Callback",
+    "callbackConfirmationMsg": "Callback request received successfully.",
     "feedback_chat": "Feedback",
     "feedback_chatPlusCallback": "Chat Feedback",
     "feedbackCallback_callback": "Feedback",
