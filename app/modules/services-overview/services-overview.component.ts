@@ -87,7 +87,7 @@ export class ServicesOverviewController implements ng.IComponentController {
     const features = this.$q.all({
       atlasHybridDataSecurity: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridDataSecurity),
       atlasHybridImp: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridImp),
-      atlasOffice365Support: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasOffice365Support), // cleaner this way, but utimately same value has this.showNewUI
+      atlasOffice365Support: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasOffice365Support),
       atlasPMRonM2: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasPMRonM2),
       hI1484: this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484),
       hI802: this.FeatureToggleService.supports(this.FeatureToggleService.features.hI802),
@@ -103,7 +103,6 @@ export class ServicesOverviewController implements ng.IComponentController {
           if (response.atlasPMRonM2) {
             this.getPMRStatus();
           }
-          this.forwardEvent('atlasHybridImpFeatureToggleEventHandler', response.atlasHybridImp);
           this.forwardEvent('hI1484FeatureToggleEventhandler', response.hI1484);
           this.forwardEvent('sparkCallCdrReportingFeatureToggleEventhandler', response.hI802);
           this.forwardEvent('privateTrunkFeatureToggleEventHandler', response.huronEnterprisePrivateTrunking);
@@ -116,6 +115,14 @@ export class ServicesOverviewController implements ng.IComponentController {
     } else {
       features
         .then((response) => {
+          // Used by cloud cards
+          if (response.atlasPMRonM2) {
+            this.getPMRStatus();
+          }
+          this.forwardEvent('hI1484FeatureToggleEventhandler', response.hI1484);
+          this.forwardEvent('sparkCallCdrReportingFeatureToggleEventhandler', response.hI802);
+
+          // Used by hybrid cards
           if (this.Authinfo.isFusionUC()) {
             this._servicesToDisplay.push('squared-fusion-uc');
           }
