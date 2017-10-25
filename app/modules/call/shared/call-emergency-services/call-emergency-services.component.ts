@@ -39,13 +39,20 @@ class CallEmergencyServicesCtrl implements ng.IComponentController {
   public onNumberFilterFn: Function;
   public isNumberDisabled: boolean = false;
 
+  //To be used by the HTML Template as constants
+  public ECBN_OK: number = 0;
+  public ECBN_NO_NUMBERS: number = 1;
+  public ECBN_NOT_SELECTED: number = 2;
+  public ECBN_MISSING_ASSIGN: number = 3;
+  public stateECBN: number = this.ECBN_OK;
+
   /* @ngInject */
   public constructor (
+    private $translate: ng.translate.ITranslateService,
     private PstnModel: PstnModel,
     private PstnService: PstnService,
     private PstnAddressService: PstnAddressService,
     private Notification: Notification,
-    private $translate: ng.translate.ITranslateService,
     private NumberService: NumberService,
     private PhoneNumberService: PhoneNumberService,
   ) {
@@ -73,10 +80,20 @@ class CallEmergencyServicesCtrl implements ng.IComponentController {
         });
       }
     }
-    //isNumberDisabled is set at Init time
+    //Set at Init time
     //The reason is the this.numberOptions will change because
     //of the html cs-select refresh function
     this.isNumberDisabled = this.getIsNumberDisabled();
+    if (this.isNumberDisabled) {
+      this.stateECBN = this.ECBN_NO_NUMBERS;
+      if (this.number && !_.isEmpty(this.number.value)) {
+        this.stateECBN = this.ECBN_MISSING_ASSIGN;
+      }
+    } else {
+      this.stateECBN = this.ECBN_NOT_SELECTED;
+    }
+    //Test for ECBN_MISSING_ASSIGN
+    this.showNumberMessage();
   }
 
   private getIsNumberDisabled(): boolean {
@@ -104,6 +121,17 @@ class CallEmergencyServicesCtrl implements ng.IComponentController {
       return true;
     }
     if (_.isEmpty(this.number.value)) {
+      return true;
+    }
+    if (_.isEmpty(this.numberOptions)) {
+      return true;
+    }
+    //Find the number in the numberOptions
+    const options = this.numberOptions.filter(option => {
+      return option.value === this.number.value;
+    });
+    if (_.isEmpty(options)) {
+      this.stateECBN = this.ECBN_MISSING_ASSIGN;
       return true;
     }
     return false;
