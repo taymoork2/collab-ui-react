@@ -230,6 +230,11 @@
     require('modules/services-overview/new-hybrid/prerequisites-modals/on-premises-exchange-prerequisites').default,
   ]);
 
+  angular.module('AccountLinking', [
+    'Core',
+    require('modules/account-linking').default,
+  ]);
+
   module.exports = angular.module('Main', [
     'Core',
     'Squared',
@@ -248,6 +253,7 @@
     'Gemini',
     'Csdm',
     'ServicesOverview',
+    'AccountLinking',
   ]).config(require('./main.config'))
     .run(require('./main.run'))
     .name;

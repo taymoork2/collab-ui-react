@@ -8,6 +8,7 @@ module.exports = {
   androidMessageSearch: 'android-message-search',
   androidModernTokenRefresh: 'android-modern-token-refresh',
   androidTeams: 'android-teams',
+  atlasAccountLinkingPhase2: 'atlas-account-linking-phase2',
   atlasBlockExternalCommunicationSettings: 'atlas-block-external-communication-settings',
   atlasCareAutomatedRouteTrials: 'care-automated-routing',
   atlasCareChatAssistant: 'care-chat-assistant',
