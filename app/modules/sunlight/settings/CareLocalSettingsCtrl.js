@@ -7,7 +7,7 @@ var HttpStatus = require('http-status-codes');
     .controller('CareLocalSettingsCtrl', CareLocalSettingsCtrl);
 
   /* @ngInject */
-  function CareLocalSettingsCtrl($location, $interval, $q, $scope, $translate, Authinfo, HydraService, Log, Notification, SunlightConfigService, ModalService, FeatureToggleService, UrlConfig, URService) {
+  function CareLocalSettingsCtrl($location, $interval, $q, $scope, $translate, Authinfo, Log, Notification, SunlightConfigService, ModalService, FeatureToggleService, UrlConfig, URService) {
     var vm = this;
 
     vm.ONBOARDED = 'onboarded';
@@ -351,7 +351,7 @@ var HttpStatus = require('http-status-codes');
       $q.all(promises).then(function (result) {
         populateQueueConfigViewModel(result.getQueue);
         populateOrgChatConfigViewModel(result.getChatConfig);
-        var onboardingStatus = getOnboardingStatus(result.getChatConfig);
+        var onboardingStatus = getOnboardingStatus();
         switch (onboardingStatus) {
           case vm.status.SUCCESS:
             Notification.success($translate.instant('sunlightDetails.settings.setUpCareSuccess'));
@@ -384,12 +384,8 @@ var HttpStatus = require('http-status-codes');
       Notification.error($translate.instant('sunlightDetails.settings.setUpCareFailure'));
     }
 
-    function getOnboardingStatus(result) {
-      var onboardingStatus = vm.status.UNKNOWN;
-      vm.csOnboardingStatus = _.get(result, 'data.csOnboardingStatus');
-      vm.aaOnboardingStatus = _.get(result, 'data.aaOnboardingStatus');
-      onboardingStatus = onboardingStatusDoneByAdminOrPartner();
-      return onboardingStatus;
+    function getOnboardingStatus() {
+      return onboardingStatusDoneByAdminOrPartner();
     }
 
     function onboardingStatusDoneByAdminOrPartner() {
@@ -440,12 +436,8 @@ var HttpStatus = require('http-status-codes');
       return status;
     }
 
-    function setAppOnboardingStatus(status) {
-      vm.appOnboardingStatus = status;
-    }
-
     function getOnboardStatusAndUpdateConfigIfRequired(result) {
-      var onboardingStatus = getOnboardingStatus(result);
+      var onboardingStatus = getOnboardingStatus();
       setViewModelState(onboardingStatus);
       if (result.data.orgName === '' || !(_.get(result, 'data.orgName'))) {
         result.data.orgName = Authinfo.getOrgName();
@@ -455,37 +447,10 @@ var HttpStatus = require('http-status-codes');
       }
     }
 
-    function enableSetupButtonForAppOnboarding(orgConfigResponse) {
-      var onboardingStatus = getOnboardingStatus(orgConfigResponse);
-      setViewModelState(onboardingStatus);
-      var requestPayload = _.cloneDeep(orgConfigResponse);
-      requestPayload.data.appOnboardStatus = vm.status.UNKNOWN;
-      SunlightConfigService.updateChatConfig(requestPayload.data).then(function (response) {
-        Log.debug('Successfully updated org config with appOnboardStatus as Unknown', response);
-      });
-    }
-
-    function getCsAaAppOnboardingStatus(result) {
-      if (result.data && result.data.appOnboardStatus === vm.status.SUCCESS && vm.careSetupDoneByOrgAdmin) {
-        HydraService.getHydraApplicationDetails(result.data.hydraAppId).then(function () {
-          setAppOnboardingStatus(vm.status.SUCCESS);
-          getOnboardStatusAndUpdateConfigIfRequired(result);
-        })
-          .catch(function (error) {
-            if (error.status === 403) {
-              setAppOnboardingStatus(vm.status.UNKNOWN);
-              enableSetupButtonForAppOnboarding(result);
-            }
-          });
-      } else {
-        getOnboardStatusAndUpdateConfigIfRequired(result);
-      }
-    }
-
     function getOnboardingStatusFromOrgChatConfig() {
       SunlightConfigService.getChatConfig().then(function (result) {
         populateOrgChatConfigViewModel(result, true);
-        getCsAaAppOnboardingStatus(result);
+        getOnboardStatusAndUpdateConfigIfRequired(result);
       }, function (error) {
         if (error.status === 404) {
           vm.state = vm.NOT_ONBOARDED;

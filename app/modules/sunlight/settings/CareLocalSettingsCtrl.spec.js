@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: Care Local Settings', function () {
-  var controller, HydraService, sunlightChatConfigUrl, sunlightConfigService, $httpBackend, Notification, orgId, $interval, $intervalSpy, $scope, FeatureToggleService, queueDetails, urService, urServiceUrl;
+  var controller, sunlightChatConfigUrl, sunlightConfigService, $httpBackend, Notification, orgId, $interval, $intervalSpy, $scope, FeatureToggleService, queueDetails, urService, urServiceUrl;
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
     getUserOrgId: jasmine.createSpy('getUserOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
@@ -13,10 +13,9 @@ describe('Controller: Care Local Settings', function () {
     $provide.value('Authinfo', spiedAuthinfo);
   }));
   beforeEach(
-    inject(function ($controller, _$rootScope_, _$httpBackend_, _Notification_, _SunlightConfigService_, _$interval_, UrlConfig, $q, _HydraService_, _FeatureToggleService_, _URService_) {
+    inject(function ($controller, _$rootScope_, _$httpBackend_, _Notification_, _SunlightConfigService_, _$interval_, UrlConfig, $q, _FeatureToggleService_, _URService_) {
       sunlightConfigService = _SunlightConfigService_;
       urService = _URService_;
-      HydraService = _HydraService_;
       $httpBackend = _$httpBackend_;
       Notification = _Notification_;
       $scope = _$rootScope_.$new();
@@ -57,11 +56,6 @@ describe('Controller: Care Local Settings', function () {
       spyOn(sunlightConfigService, 'onboardCareBot').and.callFake(function () {
         var deferred = $q.defer();
         deferred.resolve('fake onboardCareBot response');
-        return deferred.promise;
-      });
-      spyOn(HydraService, 'getHydraApplicationDetails').and.callFake(function () {
-        var deferred = $q.defer();
-        deferred.resolve('fake hydraApplicationDetails response');
         return deferred.promise;
       });
     })
@@ -220,7 +214,7 @@ describe('Controller: Care Local Settings', function () {
 
 describe('Care Settings - when org has K2 entitlement', function () {
   var controller, sunlightChatConfigUrl, sunlightConfigService, $httpBackend, Notification, orgId, $interval, $intervalSpy,
-    $scope, q, HydraService, FeatureToggleService, queueDetails, urService, urServiceUrl;
+    $scope, q, FeatureToggleService, queueDetails, urService, urServiceUrl;
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
     getUserOrgId: jasmine.createSpy('getUserOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
@@ -232,7 +226,7 @@ describe('Care Settings - when org has K2 entitlement', function () {
     $provide.value('Authinfo', spiedAuthinfo);
   }));
   beforeEach(
-    inject(function ($controller, _$rootScope_, _$httpBackend_, _Notification_, _SunlightConfigService_, _$interval_, UrlConfig, $q, _HydraService_, _FeatureToggleService_, _URService_) {
+    inject(function ($controller, _$rootScope_, _$httpBackend_, _Notification_, _SunlightConfigService_, _$interval_, UrlConfig, $q, _FeatureToggleService_, _URService_) {
       q = $q;
       sunlightConfigService = _SunlightConfigService_;
       urService = _URService_;
@@ -245,7 +239,6 @@ describe('Care Settings - when org has K2 entitlement', function () {
       sunlightChatConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + orgId + '/chat';
       urServiceUrl = UrlConfig.getSunlightURServiceUrl() + '/organization/' + orgId + '/queue/' + orgId;
       queueDetails = getJSONFixture('sunlight/json/features/config/DefaultQueueDetails.json');
-      HydraService = _HydraService_;
       FeatureToggleService = _FeatureToggleService_;
       spyOn(FeatureToggleService, 'atlasCareAutomatedRouteTrialsGetStatus').and.returnValue($q.resolve(true));
       controller = $controller('CareLocalSettingsCtrl', {
@@ -277,11 +270,6 @@ describe('Care Settings - when org has K2 entitlement', function () {
       spyOn(sunlightConfigService, 'onboardCareBot').and.callFake(function () {
         var deferred = $q.defer();
         deferred.resolve('fake onboardCareBot response');
-        return deferred.promise;
-      });
-      spyOn(HydraService, 'getHydraApplicationDetails').and.callFake(function () {
-        var deferred = $q.defer();
-        deferred.resolve('fake hydraApplicationDetails response');
         return deferred.promise;
       });
     })
@@ -596,7 +584,7 @@ describe('Partner Logged in as org admin: Care Settings - when org has K2 entitl
 
 describe('Admin logged in: Care Settings - when org has K2 entitlement', function () {
   var controller, sunlightChatConfigUrl, sunlightConfigService, $httpBackend, Notification, orgId, $interval, $intervalSpy,
-    $scope, q, HydraService, FeatureToggleService, urServiceUrl, queueDetails;
+    $scope, q, FeatureToggleService, urServiceUrl, queueDetails;
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
     getUserOrgId: jasmine.createSpy('getUserOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
@@ -608,7 +596,7 @@ describe('Admin logged in: Care Settings - when org has K2 entitlement', functio
     $provide.value('Authinfo', spiedAuthinfo);
   }));
   beforeEach(
-    inject(function ($controller, _$rootScope_, _$httpBackend_, _Notification_, _SunlightConfigService_, _$interval_, UrlConfig, $q, _HydraService_, _FeatureToggleService_) {
+    inject(function ($controller, _$rootScope_, _$httpBackend_, _Notification_, _SunlightConfigService_, _$interval_, UrlConfig, $q, _FeatureToggleService_) {
       q = $q;
       sunlightConfigService = _SunlightConfigService_;
       $httpBackend = _$httpBackend_;
@@ -620,7 +608,6 @@ describe('Admin logged in: Care Settings - when org has K2 entitlement', functio
       sunlightChatConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + orgId + '/chat';
       urServiceUrl = UrlConfig.getSunlightURServiceUrl() + '/organization/' + orgId + '/queue/' + orgId;
       queueDetails = getJSONFixture('sunlight/json/features/config/DefaultQueueDetails.json');
-      HydraService = _HydraService_;
       FeatureToggleService = _FeatureToggleService_;
       spyOn(FeatureToggleService, 'atlasCareAutomatedRouteTrialsGetStatus').and.returnValue($q.resolve(true));
       controller = $controller('CareLocalSettingsCtrl', {
@@ -642,11 +629,6 @@ describe('Admin logged in: Care Settings - when org has K2 entitlement', functio
       spyOn(sunlightConfigService, 'onboardCareBot').and.callFake(function () {
         var deferred = $q.defer();
         deferred.resolve('fake onboardCareBot response');
-        return deferred.promise;
-      });
-      spyOn(HydraService, 'getHydraApplicationDetails').and.callFake(function () {
-        var deferred = $q.defer();
-        deferred.resolve('fake hydraApplicationDetails response');
         return deferred.promise;
       });
     })
