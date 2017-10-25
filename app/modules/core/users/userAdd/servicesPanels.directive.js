@@ -1,10 +1,11 @@
 require('./_user-add.scss');
 
+// TODO: rm this after 'cr-services-panels' component fulfills this functionality
 (function () {
   'use strict';
 
   angular.module('Core')
-    .directive('crServicesPanels', crServicesPanels);
+    .directive('crServicesPanelsLegacy', crServicesPanels);
 
   function crServicesPanels() {
     return {
