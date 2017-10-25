@@ -97,6 +97,9 @@ class CallLocationCtrl implements ng.IComponentController {
         this.setEmergencyCallbackNumber(this.callLocationSettingsData.emergencyNumber);
         this.Notification.success('locations.saveSuccess');
       })
+      .catch(() => {
+        this.callLocationSettingsData = this.CallLocationSettingsService.getOriginalConfig();
+      })
       .finally(() => {
         this.processing = false;
         this.resetForm();
