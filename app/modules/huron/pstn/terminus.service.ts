@@ -178,10 +178,6 @@ export class TerminusService {
     return this.$resource(this.HuronConfig.getTerminusV2Url() + '/resellers/:resellerId', {}, {});
   }
 
-  public resellerCarrier(): ng.resource.IResourceClass<ng.resource.IResource<any>>  {
-    return this.$resource(this.HuronConfig.getTerminusUrl() + '/resellers/:resellerId/carriers/:carrierId', {}, {});
-  }
-
   public resellerCarrierV2(): ng.resource.IResourceClass<ng.resource.IResource<any>>  {
     return this.$resource(this.HuronConfig.getTerminusV2Url() + '/resellers/:resellerId/carriers/:carrierId', {}, {});
   }
