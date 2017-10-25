@@ -1,4 +1,5 @@
 require('./_add-resource.scss');
+import { FeatureToggleService } from 'modules/core/featureToggle';
 
 class AddResourceComponentCtrl implements ng.IComponentController {
 
@@ -12,7 +13,7 @@ class AddResourceComponentCtrl implements ng.IComponentController {
     private $modal,
     private $state,
     private Authinfo,
-    private FeatureToggleService,
+    private FeatureToggleService: FeatureToggleService,
     private $translate: ng.translate.ITranslateService,
   ) {  }
 

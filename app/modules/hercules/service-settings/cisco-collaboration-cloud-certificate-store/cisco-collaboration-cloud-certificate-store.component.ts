@@ -1,5 +1,6 @@
 import { IformattedCertificate } from 'modules/hercules/services/certificate-formatter-service';
 import { CiscoCollaborationCloudCertificateService } from './';
+import { FeatureToggleService } from 'modules/core/featureToggle';
 
 export class CiscoCollaborationCloudCertificateStoreCtrl implements ng.IComponentController {
   public certificateCustom: boolean = false;
@@ -20,7 +21,7 @@ export class CiscoCollaborationCloudCertificateStoreCtrl implements ng.IComponen
    private $scope: ng.IScope,
    private $translate: ng.translate.ITranslateService,
    private CiscoCollaborationCloudCertificateService: CiscoCollaborationCloudCertificateService,
-   private FeatureToggleService,
+   private FeatureToggleService: FeatureToggleService,
    ) {  }
 
   public $onInit(): void {

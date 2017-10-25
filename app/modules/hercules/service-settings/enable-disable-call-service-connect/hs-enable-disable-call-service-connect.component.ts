@@ -1,3 +1,4 @@
+import { FeatureToggleService } from 'modules/core/featureToggle';
 import { Notification } from 'modules/core/notifications/notification.service';
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 
@@ -12,7 +13,7 @@ class HsEnableDisableCallServiceConnectComponentCtrl implements ng.IComponentCon
   /* @ngInject */
   constructor(
     private $modal,
-    private FeatureToggleService,
+    private FeatureToggleService: FeatureToggleService,
     private Notification: Notification,
     private ServiceDescriptorService: ServiceDescriptorService,
   ) {}
@@ -26,7 +27,7 @@ class HsEnableDisableCallServiceConnectComponentCtrl implements ng.IComponentCon
   }
 
   public $onInit() {
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasServicesOverviewRefresh)
+    this.FeatureToggleService.hasFeatureToggleOrIsTestOrg(this.FeatureToggleService.features.atlasServicesOverviewRefresh)
       .then((result) => {
         this.showPrerequisitesButton = result;
       });

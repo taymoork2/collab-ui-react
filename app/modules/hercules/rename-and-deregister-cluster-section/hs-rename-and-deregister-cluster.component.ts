@@ -1,3 +1,4 @@
+import { FeatureToggleService } from 'modules/core/featureToggle';
 import { Notification } from 'modules/core/notifications';
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 import { IToolkitModalService } from 'modules/core/modal';
@@ -38,7 +39,7 @@ class RenameAndDeregisterClusterSectionCtrl implements ng.IComponentController {
     private HybridServicesClusterService: HybridServicesClusterService,
     private Notification: Notification,
     private PrivateTrunkService: PrivateTrunkService,
-    private FeatureToggleService,
+    private FeatureToggleService: FeatureToggleService,
   ) { }
 
   public $onInit() {

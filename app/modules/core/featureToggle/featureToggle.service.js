@@ -4,7 +4,7 @@
   module.exports = FeatureToggleService;
 
   /* @ngInject */
-  function FeatureToggleService($http, $q, $resource, $rootScope, $state, Authinfo, HuronConfig, UrlConfig) {
+  function FeatureToggleService($http, $q, $resource, $rootScope, $state, Authinfo, HuronConfig, Orgservice, UrlConfig) {
     var features = require('./features.config');
     var toggles = {};
     var huronCustomerResource;
@@ -42,6 +42,7 @@
       generateFeatureToggleRule: generateFeatureToggleRule,
       stateSupportsFeature: stateSupportsFeature,
       supports: supports,
+      hasFeatureToggleOrIsTestOrg: hasFeatureToggleOrIsTestOrg,
       features: features,
     };
 
@@ -178,6 +179,20 @@
           });
         }
       });
+    }
+
+    function hasFeatureToggleOrIsTestOrg(feature) {
+      var promises = {
+        hasFeatureToggle: supports(feature),
+        isTestOrg: Orgservice.isTestOrg(),
+      };
+      return $q.all(promises)
+        .then(function (results) {
+          return results.hasFeatureToggle || results.isTestOrg;
+        })
+        .catch(function () {
+          return false;
+        });
     }
 
     function setFeatureToggles(isUser, listOfFeatureToggleRules) {

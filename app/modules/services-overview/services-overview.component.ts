@@ -16,6 +16,7 @@ import { ServicesOverviewPrivateTrunkCard } from './hybrid/private-trunk-card';
 import { Config } from 'modules/core/config/config';
 import { CloudConnectorService, CCCService, ICCCService } from 'modules/hercules/services/calendar-cloud-connector.service';
 import { EnterprisePrivateTrunkService, IPrivateTrunkResourceWithStatus } from 'modules/hercules/services/enterprise-private-trunk-service';
+import { FeatureToggleService } from 'modules/core/featureToggle';
 import { HybridServicesClusterService, IServiceStatusWithSetup } from 'modules/hercules/services/hybrid-services-cluster.service';
 import { ICluster, HybridServiceId, IExtendedClusterFusion } from 'modules/hercules/hybrid-services.types';
 import { IPrivateTrunkResource } from 'modules/hercules/private-trunk/private-trunk-services/private-trunk';
@@ -63,7 +64,7 @@ export class ServicesOverviewController implements ng.IComponentController {
     private CloudConnectorService: CloudConnectorService,
     private Config: Config,
     private EnterprisePrivateTrunkService: EnterprisePrivateTrunkService,
-    private FeatureToggleService,
+    private FeatureToggleService: FeatureToggleService,
     private HDSService,
     private HybridServicesClusterService: HybridServicesClusterService,
     private Notification: Notification,
