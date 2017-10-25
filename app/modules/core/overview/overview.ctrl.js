@@ -319,12 +319,18 @@ require('./_overview.scss');
         .then(function (clusters) {
           var connectorsToTest = ['c_mgmt', 'c_cal', 'c_ucmc', 'c_imp'];
           connectorsToTest.forEach(function (connectorType) {
-            var hasUrgentUpgrade = _.find(clusters, function (cluster) {
-              return _.some(cluster.provisioning, function (p) {
+            var shouldDisplayNotification = _.some(clusters, function (cluster) {
+              var urgentUpgrade = _.find(cluster.provisioning, function (p) {
                 return p.connectorType === connectorType && p.availablePackageIsUrgent;
               });
+              if (urgentUpgrade) {
+                return _.some(cluster.connectors, function (connector) {
+                  return connector.connectorType === connectorType && connector.runningVersion !== urgentUpgrade.availableVersion;
+                });
+              }
+              return false;
             });
-            if (hasUrgentUpgrade) {
+            if (shouldDisplayNotification) {
               vm.notifications.push(OverviewNotificationFactory.createUrgentUpgradeNotification(connectorType));
             }
           });
