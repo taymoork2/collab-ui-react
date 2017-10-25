@@ -26,10 +26,10 @@
   <cr-site-actions-csv-icon></cr-site-actions-csv-icon>
 
   <!-- redistribute licenses icon -->
- <cr-site-actions-licenses-icon ng-if="grid.appScope.isShowAddSite" license="row.entity.license" on-click-fn="grid.appScope.redistributeLicenses(license)"></cr-site-actions-licenses-icon>
+ <cr-site-actions-licenses-icon ng-if="grid.appScope.isShowAddSite" is-only-site="grid.appScope.isOnlySiteInSubscription(row.entity.license)" license="row.entity.license" on-click-fn="grid.appScope.redistributeLicenses(license)"></cr-site-actions-licenses-icon>
 
  <!-- redistribute licenses icon -->
- <cr-site-actions-delete-icon ng-if="grid.appScope.isShowAddSite" can-delete="grid.appScope.canDeleteSite(row.entity.license)" license="row.entity.license"  on-click-fn="grid.appScope.deleteSite(license)"></cr-site-actions-licenses-icon>
+ <cr-site-actions-delete-icon ng-if="grid.appScope.isShowAddSite" is-only-site="grid.appScope.isOnlySiteInSubscription(row.entity.license)" license="row.entity.license"  on-click-fn="grid.appScope.deleteSite(license)"></cr-site-actions-licenses-icon>
 
   <!-- Start of Loading indication -->
   <span ng-if="!row.entity.isLinkedSite">

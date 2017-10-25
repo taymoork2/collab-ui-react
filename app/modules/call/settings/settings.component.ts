@@ -7,7 +7,7 @@ import { EmergencyCallbackNumber } from 'modules/huron/sites';
 import { PstnService } from 'modules/huron/pstn/pstn.service';
 import { PstnModel } from 'modules/huron/pstn/pstn.model';
 import { PstnCarrier } from 'modules/huron/pstn/pstnProviders/pstnCarrier';
-import { IAvrilSiteFeatures } from 'modules/huron/avril';
+import { IAvrilFeatures } from 'modules/call/avril';
 import { SetupWizardService } from 'modules/core/setupWizard/setup-wizard.service';
 import { Config } from 'modules/core/config/config';
 
@@ -285,7 +285,7 @@ class HuronSettingsCtrl implements ng.IComponentController {
     this.checkForChanges();
   }
 
-  public onCompanyVoicemailAvrilChanged(voicemailPilotNumber: string, voicemailPilotNumberGenerated: boolean, companyVoicemailEnabled: boolean, features: IAvrilSiteFeatures) {
+  public onCompanyVoicemailAvrilChanged(voicemailPilotNumber: string, voicemailPilotNumberGenerated: boolean, companyVoicemailEnabled: boolean, features: IAvrilFeatures) {
     _.set(this.huronSettingsData.customer, 'hasVoicemailService', companyVoicemailEnabled);
     if (!companyVoicemailEnabled) {
       this.huronSettingsData.site.disableVoicemail = true;

@@ -25,6 +25,7 @@ const CANCELLED = 'CANCELLED';
 const CANCEL = 'CANCEL';
 const DOWNGRADE = 'DOWNGRADE';
 const FREE_SKU = 'FREE';
+const SPARK_SKU = 'A-SPK';
 
 export class OnlineUpgradeService {
   private subscriptionResource: ISubscriptionResource;
@@ -145,6 +146,13 @@ export class OnlineUpgradeService {
 
   public isPending(): boolean {
     return isPendingFlag;
+  }
+
+  public hasOnlySparkSubscriptions(): boolean {
+    const subscriptions = this.Authinfo.getSubscriptions();
+    return (!!subscriptions.length &&
+            _.every(subscriptions, subscription => _.startsWith(_.get<string>(subscription,
+              'licenses[0].masterOfferName'), SPARK_SKU)));
   }
 
   private isSubscriptionCancelledOrExpired(subscription): boolean {

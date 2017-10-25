@@ -19,7 +19,7 @@ class WebexAddSiteModalController implements ng.IComponentController {
 
   // parameters received
   public singleStep?: number;
-  public title: string;
+  public modalTitle: string;
   public subscriptionList: string[];
   public audioLicenses: {}[] = [];
   public dismiss: Function;
@@ -209,7 +209,7 @@ export class WebexAddSiteModalComponent implements ng.IComponentOptions {
   public bindings = {
     subscriptionList: '<',
     audioLicenses: '<',
-    title: '<',
+    modalTitle: '<',
     dismiss: '&',
     singleStep: '<',
   };

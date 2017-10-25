@@ -181,6 +181,10 @@ class CsvDownloadCtrl implements ng.IComponentController {
     }
   }
 
+  public getDownloadTranslation() {
+    return this.anchorText ? this.anchorText : this.$translate.instant('common.download');
+  }
+
   public goToDownload() {
     if (this.downloading && !_.isEmpty(this.downloadState)) {
       this.$state.go(this.downloadState);

@@ -2,7 +2,7 @@ class SiteActionsDeleteSiteIconController implements ng.IComponentController {
 
   public onClickFn: Function;
   public license;
-  public canDelete;
+  public isOnlySite;
 
   public delete(license) {
     this.onClickFn({ license: license });
@@ -13,7 +13,7 @@ export class SiteActionsDeleteSiteIconComponent implements ng.IComponentOptions 
   public template = require('./siteActionsDeleteIcon.tpl.html');
   public controller = SiteActionsDeleteSiteIconController;
   public bindings = {
-    canDelete: '<',
+    isOnlySite: '<',
     license: '<',
     onClickFn: '&',
   };

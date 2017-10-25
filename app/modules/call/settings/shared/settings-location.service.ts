@@ -4,7 +4,7 @@ import { ExtensionLengthService } from './extension-length.service';
 import { LocationsService, Location } from 'modules/call/locations/shared';
 import { CompanyNumber, ExternalCallerIdType } from 'modules/call/settings/settings-company-caller-id';
 import { MediaOnHoldService } from 'modules/huron/media-on-hold';
-import { AvrilService, AvrilCustomer } from 'modules/huron/avril';
+import { AvrilService, AvrilCustomer, AvrilFeatures } from 'modules/call/avril';
 import { InternalNumberRange, InternalNumberRangeService } from 'modules/call/shared/internal-number-range';
 import { Notification } from 'modules/core/notifications';
 
@@ -15,6 +15,7 @@ export class CallSettingsData {
   public companyCallerId: CompanyNumber;
   public avrilCustomer: AvrilCustomer;
   public defaultLocation: Location;
+  public avrilFeatures: AvrilFeatures;
 }
 // TODO: (jlowery) This service will eventually replace
 // the HuronSettings service when multilocation goes GA.

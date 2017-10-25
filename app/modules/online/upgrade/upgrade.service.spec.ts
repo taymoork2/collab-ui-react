@@ -196,6 +196,34 @@ describe('Service: OnlineUpgradeService', () => {
     });
   });
 
+  describe('hasOnlySparkSubscriptions()', () => {
+    it('should be true if all subscriptions are Spark', function () {
+      this.Authinfo.getSubscriptions.and.returnValue([{
+        licenses: [{
+          masterOfferName: 'A-SPK',
+        }],
+      }, {
+        licenses: [{
+          masterOfferName: 'A-SPK',
+        }],
+      }]);
+      expect(this.OnlineUpgradeService.hasOnlySparkSubscriptions()).toBe(true);
+    });
+
+    it('should be false if not all subscriptions are Spark', function () {
+      this.Authinfo.getSubscriptions.and.returnValue([{
+        licenses: [{
+          masterOfferName: 'A-SPK',
+        }],
+      }, {
+        licenses: [{
+          masterOfferName: 'A-WEBEX',
+        }],
+      }]);
+      expect(this.OnlineUpgradeService.hasOnlySparkSubscriptions()).toBe(false);
+    });
+  });
+
   describe('Upgrade Modal', () => {
     beforeEach(function () {
       this.OnlineUpgradeService.openUpgradeModal();

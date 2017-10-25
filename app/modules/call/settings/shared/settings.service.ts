@@ -3,7 +3,7 @@ import { CustomerSettings } from './customer-settings';
 import { ISite, HuronSiteService } from 'modules/huron/sites';
 import { Notification } from 'modules/core/notifications';
 import { CompanyNumber, ExternalCallerIdType } from 'modules/call/settings/settings-company-caller-id';
-import { AvrilService, IAvrilSite, AvrilSite, IAvrilSiteFeatures, AvrilSiteFeatures } from 'modules/huron/avril';
+import { AvrilService, IAvrilSite, AvrilSite, IAvrilSiteFeatures, AvrilSiteFeatures } from 'modules/call/avril';
 import { MediaOnHoldService } from 'modules/huron/media-on-hold';
 import { TerminusService } from 'modules/huron/pstn';
 import { ExtensionLengthService } from './extension-length.service';

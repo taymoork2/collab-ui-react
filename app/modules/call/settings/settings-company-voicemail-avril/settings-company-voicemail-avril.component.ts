@@ -1,6 +1,6 @@
 import { Site } from 'modules/huron/sites';
 import { IOption } from 'modules/huron/dialing/dialing.service';
-import { IAvrilSiteFeatures } from 'modules/huron/avril';
+import { IAvrilSiteFeatures } from 'modules/call/avril';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
 
 const VM_TO_EMAIL_WITH_ATTACH: string = 'withAttachment';

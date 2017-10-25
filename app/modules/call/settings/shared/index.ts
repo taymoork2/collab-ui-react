@@ -12,7 +12,7 @@ export const E911_ADDRESS_PENDING: string = 'PENDING';
 import siteServiceModule from 'modules/huron/sites';
 import customerServiceModule from 'modules/huron/customer';
 import serviceSetupModule from 'modules/huron/serviceSetup';
-import avrilServiceModule from 'modules/huron/avril';
+import avrilServiceModule from 'modules/call/avril';
 import terminusServiceName from 'modules/huron/pstn/terminus.service';
 import mediaOnHoldModule from 'modules/huron/media-on-hold';
 import internalNumberRangeServiceModule from 'modules/call/shared/internal-number-range';

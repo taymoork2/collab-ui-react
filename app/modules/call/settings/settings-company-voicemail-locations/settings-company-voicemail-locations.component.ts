@@ -1,4 +1,4 @@
-import { IAvrilCustomerFeatures } from 'modules/huron/avril';
+import { IAvrilCustomerFeatures } from 'modules/call/avril';
 import { VoicemailPilotNumber } from 'modules/call/locations/shared';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
 import { IOption } from 'modules/huron/dialing';

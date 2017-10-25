@@ -2,7 +2,7 @@ import { HuronVoicemailService, VOICEMAIL_CHANGE } from './voicemail.service';
 import { HuronUserService } from 'modules/huron/users/user.service';
 import { Notification } from 'modules/core/notifications';
 
-class VoicemailCtrl implements ng.IComponentController {
+class UserVoicemailCtrl implements ng.IComponentController {
   public ownerId: string;
   public enableVoicemail: boolean;
   public customerId: string;
@@ -66,8 +66,8 @@ class VoicemailCtrl implements ng.IComponentController {
   }
 }
 
-export class VoicemailComponent implements ng.IComponentOptions {
-  public controller = VoicemailCtrl;
+export class UserVoicemailComponent implements ng.IComponentOptions {
+  public controller = UserVoicemailCtrl;
   public template = require('modules/huron/voicemail/voicemail.html');
   public bindings = {
     ownerId: '<',

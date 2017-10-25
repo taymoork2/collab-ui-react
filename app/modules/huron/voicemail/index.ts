@@ -1,4 +1,4 @@
-import { VoicemailComponent } from './voicemail.component';
+import { UserVoicemailComponent } from './voicemail.component';
 import { HuronVoicemailService } from './voicemail.service';
 import customerServiceModule from 'modules/huron/customer';
 import userServiceModule from 'modules/huron/users';
@@ -16,6 +16,6 @@ export default angular
     featureToggleModule,
     huronUserServiceModule,
   ])
-  .component('ucVoicemail', new VoicemailComponent())
+  .component('ucUserVoicemail', new UserVoicemailComponent())
   .service('HuronVoicemailService', HuronVoicemailService)
   .name;

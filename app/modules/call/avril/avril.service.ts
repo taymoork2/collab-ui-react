@@ -1,4 +1,4 @@
-import { IAvrilSite, AvrilSite, IAvrilCustomer, AvrilCustomer } from 'modules/huron/avril';
+import { IAvrilSite, AvrilSite, IAvrilCustomer, AvrilCustomer } from 'modules/call/avril';
 
 interface IAvrilSiteResource extends ng.resource.IResourceClass<ng.resource.IResource<IAvrilSite>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;

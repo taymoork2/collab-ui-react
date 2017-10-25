@@ -3429,6 +3429,8 @@
     "heading": "Search Compliance Data",
     "subheading": "Choose to search for specific users or spaces. Add up to 5 users or spaces by separating with commas.",
     "searchTip": "Search data by space ID",
+    "searchingHeader": "Searching Compliance Data",
+    "searchingSubheader": "Search may take up to a few minutes",
     "unableToDownloadFile": "Unable to download file",
     "timeout": "Timeout",
     "dateError": {
@@ -3493,7 +3495,7 @@
       "files": "Files",
       "estReport": "Est. Report Size",
       "generateReport": "Generate Report",
-      "generateText": "Enter report information to generate a report. The time to generate the report depends on the estimated report size.",
+      "generateText": "Enter report information to generate a report. Reports may take up to a few hours or more to generate.",
       "description": "Description",
       "exportFormat": "Export Format",
       "totalReportSize": "Total Report Size",
@@ -6723,7 +6725,9 @@
     "deleteSiteModalBody": "Are you sure you want to delete <strong>{{siteUrl}}</strong>?",
     "deleteSiteModalBody2": "All data related to the site will be lost and this action can not be undone.",
     "deleteSiteRejectModalTitle": "Cannot Delete",
-    "deleteSiteRejectModalBody": "You cannot delete the last site in a subscription"
+    "deleteSiteRejectModalBody": "You cannot delete the last site in a subscription",
+    "redistributeRejectModalTitle": "Cannot Redistribute",
+    "redistributeRejectModalBody": "You cannot redistribute licenses between sites because there is only one site."
   },
   "cloudExtensions": {
     "cloudExtensions": "Hybrid Services",
@@ -6912,7 +6916,8 @@
     "voicemailInstructionEnabled": "Voicemail for your company is enabled with Voicemail to Email activated.",
     "voicemailInstructionDisabled": "Voicemail for your company is enabled with Voicemail to Email not activated.",
     "voicemailInstruction": "This can be changed from the Company Call Settings page.",
-    "voicemailFilter": "Type number to filter"
+    "voicemailFilter": "Type number to filter",
+    "waitForE911": "We are currently processing an address change for this user, which may take a few minutes. Please check back later."
   },
   "sunlightDetails": {
     "title": "Care",
@@ -7142,8 +7147,6 @@
   },
   "careChatTpl": {
     "editAction": "Edit",
-    "deleteAction": "Delete",
-    "downloadAction": "Download",
     "deleteFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}?",
     "deleteVaFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}?<br>Deleting the Customer Virtual Assistant removes it from all Customer Support Templates. Customers can no longer interact with the virtual assistant.",
     "createSuccessText": "{{ featureName }} template has been created successfully.",
@@ -7573,7 +7576,6 @@
     "aa": "AA",
     "cp": "CP",
     "editAction": "Edit",
-    "deleteAction": "Delete",
     "deleteHuntGroup": "Delete Hunt Group",
     "deleteHuntGroupConfText": "Are you sure you want to delete the {{ huntGroupName }} hunt group?",
     "messageError": "Message {{ message }}",

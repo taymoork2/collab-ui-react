@@ -122,7 +122,7 @@ export class Notification {
     if (!notificationMessages.length) {
       return;
     }
-    const closeHtml = `<button type="button" class="close toast-close-button"><span class="sr-only">${this.$translate.instant('common.close')}</span></button>`;
+    const closeHtml = `<button type="button" class="close toast-close-button" arial-label="${this.$translate.instant('common.close')}"></button>`;
     const directiveData = {};
     _.set(directiveData, allowHtml ? Notification.HTML_MESSAGES : Notification.MESSAGES , notificationMessages);
 

@@ -20,6 +20,7 @@ import companyVoicemailModule from 'modules/call/settings/settings-company-voice
 import companyVoicemailAvrilModule from 'modules/call/settings/settings-company-voicemail-avril';
 import companyVoicemailAvrilI1559Module from 'modules/call/settings/settings-company-voicemail-avril-i1559';
 import companyVoicemailLocationModule from 'modules/call/settings/settings-company-voicemail-locations';
+import voicemailModule from 'modules/call/settings/settings-voicemail';
 import dialingModule from 'modules/call/settings/settings-dialing';
 import timeFormatModule from 'modules/call/settings/settings-time-format';
 import dateFormatModule from 'modules/call/settings/settings-date-format';
@@ -57,6 +58,7 @@ export default angular
     companyVoicemailAvrilModule,
     companyVoicemailAvrilI1559Module,
     companyVoicemailLocationModule,
+    voicemailModule,
     dialingModule,
     timeFormatModule,
     dateFormatModule,
