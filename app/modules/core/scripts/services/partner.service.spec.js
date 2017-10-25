@@ -20,6 +20,7 @@ describe('Partner Service -', function () {
 
     testData = getJSONFixture('core/json/partner/partner.service.json');
     spyOn(Authinfo, 'getOrgId').and.returnValue('12345');
+    spyOn(Authinfo, 'getUserId').and.returnValue('123');
     spyOn(Authinfo, 'getPrimaryEmail').and.returnValue('fake-primaryEmail');
     spyOn(Authinfo, 'getManagedOrgs').and.returnValue([]);
     spyOn(Analytics, 'trackPartnerActions');
@@ -255,6 +256,18 @@ describe('Partner Service -', function () {
       expect(customers).toEqual(testData.exportCSVResultWithCare);
     });
     $httpBackend.flush();
+  });
+
+  describe('updateOrgForCustomerView function', function () {
+    beforeEach(installPromiseMatchers);
+    it('should execute and call the appropriate back end url', function () {
+      var url = UrlConfig.getAdminServiceUrl() + 'organizations/12345/users/123/actions/configureCustomerAdmin/invoke?customerOrgId=1a1';
+      $httpBackend.expectPOST(url).respond(200);
+      var promise = PartnerService.updateOrgForCustomerView('1a1');
+      $scope.$apply();
+      $httpBackend.flush();
+      expect(promise).toBeResolved();
+    });
   });
 
   describe('modifyManagedOrgs function', function () {
