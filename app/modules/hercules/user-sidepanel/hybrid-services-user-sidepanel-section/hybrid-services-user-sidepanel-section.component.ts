@@ -1,3 +1,4 @@
+import { FeatureToggleService } from 'modules/core/featureToggle';
 import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
 import { IServiceDescription, ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
@@ -31,7 +32,7 @@ class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComponentCo
     private $timeout: ng.ITimeoutService,
     private Authinfo,
     private CloudConnectorService: CloudConnectorService,
-    private FeatureToggleService,
+    private FeatureToggleService: FeatureToggleService,
     private HybridServicesUtilsService: HybridServicesUtilsService,
     private Notification: Notification,
     private ServiceDescriptorService: ServiceDescriptorService,

@@ -3960,7 +3960,7 @@
             parent: 'main',
             resolve: {
               atlasServicesOverviewRefresh: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasServicesOverviewRefresh);
+                return FeatureToggleService.hasFeatureToggleOrIsTestOrg(FeatureToggleService.features.atlasServicesOverviewRefresh);
               },
               urlParams: /* @ngInject */ function ($stateParams) {
                 return $stateParams;
