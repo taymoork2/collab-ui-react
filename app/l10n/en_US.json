@@ -6243,8 +6243,8 @@
     "breadcrumbsAltText": "You are here"
   },
   "webexSiteListTabs": {
-    "notLinkedSites": "Cisco Spark Control Hub managed site",
-    "linkedSites": "Site Admin managed site"
+    "notLinkedSites": "Control Hub Managed Sites",
+    "linkedSites": "Linked Classic Sites"
   },
   "webexSiteSettingsLabels": {
     "siteSettingsIndexPageTitle": "Configure WebEx Site",
@@ -9792,5 +9792,56 @@
     "activationCodeExplanation": "An activation code can be used to activate a new device or reactivate an existing device.",
     "multipleDevicesWarning": "Note that if you put multiple devices in a place that are not designed to work together, it could create interference issues between them.",
     "okGotIt": "Ok, got it"
+  },
+  "accountLinking": {
+    "name": "Account Linking",
+    "banner": {
+      "pre": "Webex user:",
+      "link": "Link your users",
+      "post": "to Cisco Spark - A new way to experience WebEx meetings"
+    },
+    "siteDetails": {
+      "breadCrumb": "Overview",
+      "siteInfo": "Site Info",
+      "siteName": "Site Name",
+      "licenseType": "License Type",
+      "modify": "Modify",
+      "linkingMode": "Linking Mode",
+      "linkedUsers": "Linked Users",
+      "siteUsageReports": "Site Usage Reports",
+      "viewReports": "View Reports",
+      "readOnly": "You don't have administrative priviliges for this site."
+    },
+    "wizard": {
+      "title": "WebEx Users Link Mode",
+      "siteName": "Site Name: {{siteName}}",
+      "mode": {
+        "automatic": {
+          "title": "Automatic",
+          "intro": "Invited users will NOT receive any invitation email, their Cisco Spark account will be pre-verified. Potentional impacts.",
+          "agreementLabel": "No Email - Via Agreement",
+          "agreementLabelHelp": "Cisco can link your users on behalf on you without sending eny email, so you can skip a lot of steps. You'll sign an agreement in next step.",
+          "verifyDomainLabel": "No Email - Verified Domain",
+          "verifyDomainLabelHelp": "You must have your domains verified, or enable SSO and Directory Sync.",
+          "agreementTitle": "Cisco Spark Agreement",
+          "agreementInfo": "Please read the agreement thoroughly and accept on the bottom",
+          "agreementIntro": "Cisco will verify all the domains on your site. Some domains will NOT be verified such as : gmail.com, yahoo.com",
+          "agreementText": "",
+          "agreementAcceptLabel": "I have read read and accept the agreement.",
+          "agreementAcceptTitle": "Automatic Linking, No email via Agreement",
+          "agreementAcceptInfo": "User linking may take up to 24 hours to complete. Go to the Services > WebEx Site List to see progress. Once complete, your users can use Cisco Spark and experience the best meeting quality.",
+          "verifyDomainTitle": "Automatic Linking, No email - Verified Domain",
+          "verifyDomainInfo": "TBD (Is the wireframe text correct)",
+          "verifyDomainButton": "Verify Domain"
+        },
+        "manual": {
+          "title": "Manual",
+          "intro": "Invited users will receive an invitation email to activate their Cisco Spark account.",
+          "info": "Cisco will send out invitation email when you invite users to Cisco Spark. Now, login to WebEx Site Admin and invite users to Cisco Spark",
+          "manualLabel": "Send Email",
+          "manualLabelHelp": "Cisco will send invitation email when you invite users to Cisco Spark"
+        }
+      }
+    }
   }
 }

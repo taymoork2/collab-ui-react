@@ -1884,7 +1884,7 @@
             },
           })
           .state('site-list.not-linked', {
-            url: '/site-list/not-linked',
+            url: '/not-linked',
             views: {
               tabContent: {
                 controllerAs: 'siteList',
@@ -1894,14 +1894,45 @@
             },
           })
           .state('site-list.linked', {
-            url: '/site-list/linked',
+            url: '/linked',
             views: {
               tabContent: {
-                controllerAs: 'siteList',
-                controller: 'WebExSiteRowCtrl',
                 template: '<linked-sites></linked-sites>',
               },
             },
+            params: {
+              originator: 'Menu',
+            },
+          })
+          .state('site-list.linked.details', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                template: '<linked-sites-details></linked-sites-details>',
+              },
+            },
+            params: {
+              siteInfo: null,
+            },
+            data: {},
+            resolve: {
+              displayName: translateDisplayName('accountLinking.siteDetails.breadCrumb'),
+            },
+          })
+          .state('site-list.linked.details.wizard', {
+            views: {
+              'modal@': {
+                template: '<account-linking-wizard></account-linking-wizard>',
+              },
+            },
+            params: {
+              siteInfo: null,
+              operation: null,
+            },
+            onEnter: modalOnEnter({
+              type: 'full',
+            }),
+            onExit: modalOnExit,
           })
           .state('site-list-add', {
             parent: 'modal',

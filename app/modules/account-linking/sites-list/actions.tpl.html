@@ -1,0 +1,37 @@
+<div class="grid-contents" ng-click="grid.appScope.selectRow(grid, row)">
+  <span cs-dropdown class="actions-menu">
+    <button cs-dropdown-toggle id="actionsButton" class="btn--none dropdown-toggle icon icon-three-dots"
+            ng-click="$event.stopPropagation();" ng-keydown="$event.stopPropagation();" ng-class="dropdown-toggle">
+    </button>
+    <ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu">
+
+      <li>
+        <a href
+          ng-click="grid.appScope.gotoWebexHomePage(row.entity.linkedSiteUrl)">
+          Launch WebEx Site Admin
+        </a>
+      </li>
+
+      <li>
+        <a href
+           ng-click="grid.appScope.showReports(row.entity.linkedSiteUrl)">
+          WebEx Reports
+        </a>
+      </li>
+
+      <li>
+        <a href
+           ng-click="grid.appScope.gotoWebexListSitesPage(row.entity.linkedSiteUrl)">
+          Account Linking Progress
+        </a>
+      </li>
+
+      <li>
+        <a href
+           ng-click="grid.appScope.modifyLinkingMethod(row.entity.linkedSiteUrl)">
+          Change Linking Method
+        </a>
+      </li>
+    </ul>
+  </span>
+</div>
