@@ -1,12 +1,44 @@
-.ct-name {
+.eva-email {
+  display: flex;
   position: absolute;
   top: 50%;
   left: 25%;
   width: 50%;
 
+  .email-form {
+    display: flex;
+
+    .extension {
+      font-family: 'CiscoSansTT Thin';
+      margin-left: 1rem;
+    }
+
+    .extension.valid-extension {
+        color: $color-green-darker;
+    }
+
+    .extension.invalid-extension {
+        color: $color-red-base;
+    }
+
+    .icon-check {
+      color: $color-green-darker;
+      margin-top: .4rem;
+      margin-left: .5rem;
+      order: 3;
+    }
+
+    .icon-check.invisible {
+      visibility: hidden;
+    }
+
+    .icon-check.visibe {
+      visibility: visible;
+    }
+  }
+
   .ct-input-hint {
     @include vr-spacing(p, 1);
-    @include vr-spacing(mt, 0.2);
 
     border: 0;
     width: 100%;
@@ -30,16 +62,16 @@
     border-top: solid 1px $color-negative-dark !important;
   }
 
-  .ct-input-error-wrapper {
-    float: left;
-  }
-
   .ct-input-error {
     color: $color-alerts-base;
     padding: rem-calc(5px);
     text-align: center;
-    position: absolute;
-    width: 100%;
+  }
+
+  .ct-input-pending {
+    color: $color-blue-base;
+    padding: rem-calc(5px);
+    text-align: center;
   }
 
   .ct-input-no-focus:focus {
@@ -56,5 +88,9 @@
     &:focus ~ .ct-input-hint {
       border-top: solid rem(1px) $brand-primary;
     }
+  }
+
+  .message {
+    margin: 0;
   }
 }

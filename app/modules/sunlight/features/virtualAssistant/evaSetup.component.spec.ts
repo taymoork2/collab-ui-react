@@ -11,6 +11,16 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
       nextButtonState: true,
     },
     {
+      name: 'vaName',
+      previousButtonState: true,
+      nextButtonState: false,
+    },
+    {
+      name: 'evaEmail',
+      previousButtonState: true,
+      nextButtonState: false,
+    },
+    {
       name: 'vaSummary',
       previousButtonState: true,
       nextButtonState: 'hidden',
@@ -28,12 +38,28 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
   //fill in expected PageTemplate pages from Pages array above.
   pages.forEach(function (page) { expectedPageTemplate.configuration.pages[page.name] = jasmine.any(Object); });
 
+  const getForm = function(inputName): any {
+    return {
+      [inputName]: {
+        $setValidity: jasmine.createSpy('$setValidity'),
+      },
+    };
+  };
+
   const expectedStates = Object.keys(expectedPageTemplate.configuration.pages);
 
   const getDummyLogo = function (data) {
     return {
       data: data,
     };
+  };
+
+  const failedData = {
+    success: false,
+    status: 403,
+    Errors: [{
+      errorCode: '100106',
+    }],
   };
 
   const dummyLogoUrl = 'https://www.example.com/logo.png';
@@ -54,6 +80,7 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
       'Authinfo',
       'Notification',
       'EvaService',
+      'SparkService',
     );
 
     //create mock deferred object which will be used to return promises
@@ -104,14 +131,16 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
     });
 
     it('getSummaryDescription', function () {
+      controller.template.configuration.pages.vaName.nameValue = 'testName';
       controller.getSummaryDescription();
-      expect(controller.getText).toHaveBeenCalledWith('summary.desc');
+      expect(controller.getText).toHaveBeenCalledWith('summary.desc', { name: controller.template.configuration.pages.vaName.nameValue });
     });
 
     it('getSummaryDescription with isEditFeature true', function () {
       controller.isEditFeature = true;
+      controller.template.configuration.pages.vaName.nameValue = 'testName';
       controller.getSummaryDescription();
-      expect(controller.getText).toHaveBeenCalledWith('summary.editDesc');
+      expect(controller.getText).toHaveBeenCalledWith('summary.editDesc', { name: controller.template.configuration.pages.vaName.nameValue });
     });
   });
 
@@ -168,20 +197,114 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
     });
   });
 
+  describe('vaName Page', function () {
+    beforeEach(function () {
+      controller.nameForm = getForm('nameInput');
+    });
+
+    it ('isNameValid to return true when name input field is populated and less than maxNameLength', function () {
+      controller.template.configuration.pages.vaName.nameValue = 'testUser';
+
+      const isNameValid = controller.isNameValid();
+      expect(controller.nameForm.nameInput.$setValidity).toHaveBeenCalledWith(controller.NameErrorMessages.ERROR_CHAR_50, true);
+      expect(isNameValid).toBe(true);
+    });
+
+    it ('isNameValid to return false when name input field is empty', function () {
+      controller.template.configuration.pages.vaName.nameValue = '';
+
+      const isNameValid = controller.isNameValid();
+      expect(isNameValid).toBe(true);
+    });
+
+    it ('isNameValid to return false when name is longer than maxNameLength', function () {
+      controller.template.configuration.pages.vaName.nameValue = '123456789012345678901234567890123456789012345678901';
+
+      const isNameValid = controller.isNameValid();
+      expect(controller.nameForm.nameInput.$setValidity).toHaveBeenCalledWith(controller.NameErrorMessages.ERROR_CHAR_50, false);
+      expect(isNameValid).toBe(false);
+    });
+
+    it ('isNamePageValid to return false when name input field is empty', function () {
+      controller.template.configuration.pages.vaName.nameValue = '';
+
+      spyOn(this.controller, 'isNameValid').and.returnValue(true);
+      const isNameValid = controller.isNamePageValid();
+      expect(isNameValid).toBe(false);
+    });
+  });
+
+  describe('evaEmail Page', function () {
+    beforeEach(function () {
+      controller.emailForm = getForm('emailInput');
+    });
+
+    it('isEmailpageValid should return true when emailForm is $valid and email input is populated', function () {
+      controller.template.configuration.pages.evaEmail.value = 'zyx89';
+      controller.emailForm.$valid = true;
+
+      const isEmailPageValid = controller.isEmailPageValid();
+      expect(isEmailPageValid).toBe(true);
+    });
+
+    it('isEmailPageValid should return false when email input field is empty', function () {
+      controller.template.configuration.pages.evaEmail.value = '';
+      controller.emailForm.$valid = true;
+
+      const isEmailPageValid = controller.isEmailPageValid();
+      expect(isEmailPageValid).toBe(false);
+    });
+
+    it('isEmailPageValid should return false when emailForm is NOT $valid', function () {
+      controller.template.configuration.pages.evaEmail.value = 'a@b';
+      controller.emailForm.$valid = false;
+
+      const isEmailPageValid = controller.isEmailPageValid();
+      expect(isEmailPageValid).toBe(false);
+    });
+  });
+
   describe('Summary Page', function () {
     let deferred;
     beforeEach(function () {
       deferred = this.$q.defer();
+      spyOn(this.EvaService, 'addExpertAssistant').and.returnValue(deferred.promise);
     });
 
-    it('When invoke Finish button, the submitFeature function is called', function () {
-      spyOn(this.$state, 'go');
+    it("When save template failed, the 'saveTemplateErrorOccurred' is set", function () {
+      //by default, this flag is false
+      expect(controller.saveTemplateErrorOccurred).toBeFalsy();
+      deferred.reject(failedData);
 
       controller.submitFeature();
       this.$scope.$apply();
 
-      expect(this.$state.go).toHaveBeenCalledWith('care.Features');
-      expect(controller.creatingTemplate).toEqual(false);
+      const featureNameObj = { featureName: 'careChatTpl.virtualAssistant.eva.featureText.name' };
+      expect(controller.saveTemplateErrorOccurred).toBeTruthy();
+      expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(failedData, jasmine.any(String), featureNameObj);
+    });
+
+    it('should submit template successfully', function () {
+      //by default, this flag is false
+      expect(controller.saveTemplateErrorOccurred).toBeFalsy();
+
+      spyOn(this.$state, 'go');
+      deferred.resolve({
+        success: true,
+        botServicesConfigId: 'AnExpertAssistantId',
+        status: 201,
+      });
+
+      controller.submitFeature();
+      this.$scope.$apply();
+
+      expect(this.Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
+        featureName: jasmine.any(String),
+      });
+      expect(controller.saveTemplateErrorOccurred).toBeFalsy();
+      expect(this.$state.go).toHaveBeenCalled();
+      expect(this.Analytics.trackEvent).toHaveBeenCalledWith(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_SUMMARY_PAGE, { durationInMillis: 10 });
+      expect(this.Analytics.trackEvent).toHaveBeenCalledWith(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_START_FINISH, { durationInMillis: 0 });
     });
   });
 });

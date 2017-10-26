@@ -1,4 +1,6 @@
 import { IToolkitModalService } from 'modules/core/modal';
+import { UniqueEmailValidator } from './uniqueEmailValidator.directive';
+import * as _ from 'lodash';
 
 export interface IScopeWithController extends ng.IScope {
   controller?: any;
@@ -19,6 +21,8 @@ class ExpertVirtualAssistantSetupCtrl implements ng.IComponentController {
 
   public animation = '';
   public maxNameLength = 50;
+  public maxEmailLength = 63;
+  public validateEmailChars = /^([A-Za-z0-9-._~/|?%^&{}!#$'`*=]+)$/;
   public service = this.EvaService;
   public logoUrl = '';
   public logoFile = '';
@@ -31,8 +35,12 @@ class ExpertVirtualAssistantSetupCtrl implements ng.IComponentController {
   public saveTemplateErrorOccurred = false;
   public cancelModalText = {};
   public nameForm: ng.IFormController;
-  public tokenForm: ng.IFormController;
-  private escalationIntentUrl: string;
+  public emailForm: ng.IFormController;
+
+  public NameErrorMessages = {
+    DUPLICATE_ERROR: 'duplicate_error',
+    ERROR_CHAR_50: 'error_char_50',
+  };
 
   public avatarErrorType = {
     NO_ERROR: 'None',
@@ -51,6 +59,18 @@ class ExpertVirtualAssistantSetupCtrl implements ng.IComponentController {
           enabled: true,
           startTimeInMillis: 0,
           eventName: this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_OVERVIEW_PAGE,
+        },
+        vaName: {
+          enabled: true,
+          nameValue: '',
+          startTimeInMillis: 0,
+          eventName: this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_NAME_PAGE,
+        },
+        evaEmail: {
+          enabled: true,
+          value: '',
+          startTimeInMillis: 0,
+          eventName: this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_EMAIL_PAGE,
         },
         vaSummary: {
           enabled: true,
@@ -86,7 +106,7 @@ class ExpertVirtualAssistantSetupCtrl implements ng.IComponentController {
     private Authinfo,
     private CTService,
     private Analytics,
-    private UrlConfig,
+    private Notification,
   ) {
 
     const controller = this;
@@ -98,7 +118,6 @@ class ExpertVirtualAssistantSetupCtrl implements ng.IComponentController {
       controller.logoFile = 'data:image/png;base64,' + controller.$window.btoa(String.fromCharCode.apply(null, new Uint8Array(data.data)));
       controller.logoUploaded = true;
     });
-    this.escalationIntentUrl = this.UrlConfig.getEscalationIntentUrl();
   }
 
   /**
@@ -119,9 +138,9 @@ class ExpertVirtualAssistantSetupCtrl implements ng.IComponentController {
    */
   public getSummaryDescription(): string {
     if (this.isEditFeature) {
-      return this.getText('summary.editDesc');
+      return this.getText('summary.editDesc', { name: this.template.configuration.pages.vaName.nameValue });
     } else {
-      return this.getText('summary.desc');
+      return this.getText('summary.desc', { name: this.template.configuration.pages.vaName.nameValue });
     }
   }
 
@@ -160,6 +179,12 @@ class ExpertVirtualAssistantSetupCtrl implements ng.IComponentController {
    * @returns {boolean}
    */
   public previousButton(): any {
+    if (this.currentState === 'evaEmail') {
+      return !_.get(this, 'emailForm.input.$pending', false);
+    }
+    if (this.creatingTemplate) {
+      return false;
+    }
     if (0 === this.getPageIndex()) {
       return 'hidden';
     }
@@ -174,6 +199,10 @@ class ExpertVirtualAssistantSetupCtrl implements ng.IComponentController {
     switch (this.currentState) {
       case 'evaOverview':
         return true;
+      case 'vaName':
+        return this.isNamePageValid();
+      case 'evaEmail':
+        return this.isEmailPageValid();
       case 'vaSummary':
         return 'hidden';
     }
@@ -181,6 +210,7 @@ class ExpertVirtualAssistantSetupCtrl implements ng.IComponentController {
   public onPageLoad(): void {
     this.onPageLoaded(this.currentState);
   }
+
   /**
    * called when page corresponding to newState is loaded event
    * @param {string} newState
@@ -188,6 +218,7 @@ class ExpertVirtualAssistantSetupCtrl implements ng.IComponentController {
   private onPageLoaded(newState: string): void {
     this.template.configuration.pages[newState].startTimeInMillis = Date.now();
   }
+
   /**
    * Move forward to next page in modal series.
    */
@@ -227,19 +258,99 @@ class ExpertVirtualAssistantSetupCtrl implements ng.IComponentController {
     return `modules/sunlight/features/virtualAssistant/wizardPages/${this.currentState}.tpl.html`;
   }
 
-  public submitFeature(): void {
-    this.$state.go('care.Features');
-    this.creatingTemplate = false;
+  /**
+   * Writing the metrics to the mixpanel for the last page and the overall wizard
+   */
+  private writeMetrics(): void {
+    const currentTimeInMillis = Date.now();
+    let durationInMillis = currentTimeInMillis - this.template.configuration.pages.vaSummary.startTimeInMillis;
+    let analyticProps = { durationInMillis: durationInMillis };
+    this.Analytics.trackEvent(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_SUMMARY_PAGE, analyticProps);
+    durationInMillis = currentTimeInMillis - this.template.configuration.pages.evaOverview.startTimeInMillis;
+    analyticProps = { durationInMillis: durationInMillis };
+    this.Analytics.trackEvent(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_START_FINISH, analyticProps);
   }
 
-  public getText(textIdExtension: string): string {
-    return this.service.getText(textIdExtension);
+  /**
+   * handle template create/edit error.
+   */
+  private handleFeatureError(): void {
+    this.creatingTemplate = false;
+    this.saveTemplateErrorOccurred = true;
+    this.templateButtonText = this.$translate.instant('common.retry');
+  }
+
+  /**
+   * handle result of successful feature create and store
+   * @param headers
+   */
+  private handleFeatureCreation(): void {
+    this.creatingTemplate = false;
+    this.$state.go('care.Features');
+    this.Notification.success(this.getMessageKey('messages.createSuccessText'), {
+      featureName: this.template.configuration.pages.vaName.nameValue,
+    });
+  }
+
+  /**
+  * create and store the current feature
+  * @param type
+  * @param name
+  * @param config
+  * @param orgId
+  * @param avatarDataURL optional
+  */
+  private createFeature(name: string, orgId: string, email: string): void {
+    const controller = this;
+    controller.service.addExpertAssistant(name, orgId, email)
+      .then(function () {
+        controller.handleFeatureCreation();
+        controller.writeMetrics();
+      })
+      .catch(function (response) {
+        controller.handleFeatureError();
+        controller.Notification.errorWithTrackingId(response, controller.getMessageKey('messages.createConfigFailureText'), {
+          featureName: controller.$translate.instant('careChatTpl.virtualAssistant.eva.featureText.name'),
+        });
+      });
+  }
+
+  public submitFeature(): void {
+    const name = this.template.configuration.pages.vaName.nameValue.trim();
+    const emailPrefix = this.template.configuration.pages.evaEmail.value.trim();
+    const email = `${emailPrefix}@sparkbot.io`;
+    this.creatingTemplate = true;
+    this.createFeature(name, this.orgId, email);
+  }
+
+  public getText(textIdExtension: string, params?: object): string {
+    return this.service.getText(textIdExtension, params);
   }
 
   public getMessageKey(textIdExtension: string): string {
     return this.service.getMessageKey(textIdExtension);
   }
 
+  public isNameValid(): boolean {
+    const name = (this.template.configuration.pages.vaName.nameValue || '').trim();
+    const isLengthValid = (_.get(name, 'length', 0) <= this.maxNameLength);
+
+    if (this.nameForm && name) {
+      this.nameForm.nameInput.$setValidity(this.NameErrorMessages.ERROR_CHAR_50, isLengthValid);
+    }
+
+    return isLengthValid;
+  }
+
+  public isNamePageValid(): boolean {
+    const name = (this.template.configuration.pages.vaName.nameValue || '').trim();
+    return name !== '' && this.isNameValid();
+  }
+
+  public isEmailPageValid(): boolean {
+    const emailPrefix = (this.template.configuration.pages.evaEmail.value || '').trim();
+    return emailPrefix !== '' && _.get(this, 'emailForm.$valid', false);
+  }
 
   /**
    * obtain the current index of the page associated with the current state.
@@ -265,6 +376,7 @@ class ExpertVirtualAssistantSetupCtrl implements ng.IComponentController {
     }
   }
 }
+
 /**
  * Expert Virtual Assistant Component used for Creating new Expert Virtual Assistant
  */
@@ -278,4 +390,5 @@ export class ExpertVirtualAssistantSetupComponent implements ng.IComponentOption
 
 export default angular
   .module('Sunlight')
+  .directive('uniqueEmail', UniqueEmailValidator.factory)
   .component('evaSetup', new ExpertVirtualAssistantSetupComponent());

@@ -7680,7 +7680,7 @@
       "cva": {
         "createTitle": "Create {{ featureName }}",
         "editTitle": "Edit {{ featureName }}",
-        "cancelDialog": "Are you sure you want to cancel?\nThe {{ featureName }} will not be saved.",
+        "cancelDialog": "Do you want to discard your\n {{ featureName }}?",
         "featureText": {
           "name": "Customer Virtual Assistant",
           "code": "cva",
@@ -7727,12 +7727,11 @@
           "invalidTokenText": "Invalid Dialogflow client access token. Verify token and try again."
         },
         "name": {
-          "title": "{{ featureName }} Name",
-          "desc": "Specify the name your customers see when they interact with your {{ featureName }}",
-          "boxDesc": "Choose a unique name for your {{ featureName }} that is no longer than 50 characters.",
-          "inputLabel": "Enter Name",
-          "maxLengthError": "Name cannot be longer than 50 characters.",
-          "duplicateError": "{{ featureName }} must have a unique name."
+          "namePlaceholder": "Enter {{ featureName }} Name",
+          "nameHint": "Specify the name your customers see when they interact with your {{ featureName }}.",
+          "errorChar50": "Name cannot exceed 50 characters.",
+          "duplicateError": "{{ featureName }} must have a unique name.",
+          "processing": "Checking {{ featureName }} name availability…"
         },
         "avatar": {
           "title": "{{ featureName }} Avatar",
@@ -7769,7 +7768,7 @@
       "eva": {
         "createTitle": "Create {{ featureName }}",
         "editTitle": "Edit {{ featureName }}",
-        "cancelDialog": "Are you sure you want to cancel?\nThe {{ featureName }} will not be saved.",
+        "cancelDialog": "Do you want to discard your\n {{ featureName }}?",
         "featureText": {
           "name": "Expert Virtual Assistant",
           "code": "eva",
@@ -7778,10 +7777,34 @@
           "selectDesc": "Create a virtual assistant who connects subject matter experts in Cisco Spark spaces to customers with chat requests.",
           "disabledTooltip": "You can only have one Expert Virtual Assistant for your organization. To change the settings of your existing Expert Virtual Assistant, edit it from the Features page."
         },
+        "overview": {
+          "title": "{{ featureName }} Overview",
+          "desc": "An {{ featureName }} acts as a liaison between customers and experts in Cisco Spark.",
+          "boxTitle": "Escalations Using an {{ featureName }}",
+          "boxDesc": "See how an {{ featureName }} enables smart escalations, ensuring quick and effective handling of customer issues.",
+          "learnMoreLink": "Learn More"
+        },
+        "name": {
+          "namePlaceholder": "Enter {{ featureName }} Name",
+          "nameHint": "Specify the name Cisco Spark users in your organization see when they interact with your {{ featureName }} in expert spaces.",
+          "errorChar50": "Name cannot exceed 50 characters."
+        },
+        "email": {
+          "namePlaceholder": "Create {{ featureName }} Email",
+          "nameHint": "Create the email you use to add your {{ featureName }} to Cisco Spark expert spaces.",
+          "pending": "Checking {{ featureName }} email availability...",
+          "duplicateError": "Email is already taken. Try again.",
+          "errorChar63": "Email cannot exceed 63 characters.",
+          "badCharError": "Email cannot contain spaces or the following characters: <>:;[]+()\\”,@."
+        },
         "summary": {
-          "desc": "You configured Cumulus Expert. To enable escalation to Cisco Spark, add your Expert Virtual Assistant to your Customer Support Templates and expert spaces.",
+          "desc": "You configured {{ name }}. To enable escalation to Cisco Spark, add your Expert Virtual Assistant to your Customer Support Templates and expert spaces.",
           "descCont": "Click Finish to save the configuration.",
-          "errorCreateTemplate": "Cannot save {{ featureName }}. Try again."
+          "errorCreateTemplate": "Cannot save {{ featureName }}. Try again.",
+          "invalidEmailError": "The email you entered is invalid. Please enter a valid email.",
+          "duplicateEmailError": "The email you entered already exists. Please enter a unique email.",
+          "invalidNameError": "The Expert Virtual Assistant name is invalid. Please enter a valid name.",
+          "invalidAvatarError": "The Expert Virtual Assistant avatar is invalid. Please upload a valid avatar."
         },
         "messages": {
           "createSuccessText": "You have successfully created {{ featureName }}.",
@@ -7790,6 +7813,7 @@
           "getConfigFailureText": "Failed to load the {{ featureName }}.",
           "deleteConfigFailureText": "Failed to delete the {{ featureName }}.",
           "createConfigFailureText": "Failed to save {{ featureName }}.",
+          "createSpecificFailureText": "Failed to save {{ featureName }} {{ inputItem }}.",
           "updateConfigFailureText": "Failed to save {{ featureName }}."
         }
       }

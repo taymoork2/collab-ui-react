@@ -105,6 +105,25 @@ export class SparkService {
   }
 
   /**
+   * Cisco Spark API:  people.get(email)
+   * @param {string} email
+   * @returns {angular.IPromise<ISparkPerson>}
+   */
+  public getPersonByEmail(email: string): ng.IPromise<ISparkPerson> {
+    return this.sdk().request({
+      service: 'hydra',
+      resource: `people/?email=${email}`,
+    })
+    .then(response => <ISparkPerson>response.body)
+    .catch(error => {
+      if (_.has(error, 'message')) {
+        error.message = error.message + ': SparkService getPersonByEmail';
+      }
+      return this.$q.reject(error);
+    });
+  }
+
+  /**
    * Cisco Spark API:  memberships.list
    * @returns {angular.IPromise<ISparkPage<ISparkMembership>>}
    */

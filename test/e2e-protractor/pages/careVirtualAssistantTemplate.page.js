@@ -24,6 +24,14 @@ var VirtualAssistantTemplateCreation = function () {
   // Name page info
   this.name = element(by.name('nameInput'));
 
+  // Email page info
+  this.email = element(by.name('input'));
+  this.validEmailExtension = element(by.css('.valid-extension'));
+  this.invalidEmailExtension = element(by.css('.invalid-extension'));
+  this.visibleCheckIcon = element(by.css('.icon.icon-check.icon-2x.visible'));
+  this.errorMessage = element(by.css('.ct-input-error'));
+
+
   // Avatar upload/preview
   this.avatarUpload = element(by.id('avatarUpload'));
   this.avatarPreview = element(by.id('avatarPreview'));
