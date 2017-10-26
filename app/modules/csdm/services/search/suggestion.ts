@@ -98,7 +98,7 @@ export class SuggestionDropdown implements ISuggestionDropdown {
   }
 
   public getActiveSuggestion(): ISuggestion | null {
-    if (this.activeSuggestionIndex
+    if (this.activeSuggestionIndex !== undefined
       && (this.activeSuggestionIndex < this.uiSuggestions.length)
       && this.activeSuggestionIndex >= 0) {
       return this.uiSuggestions[this.activeSuggestionIndex];
