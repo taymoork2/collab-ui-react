@@ -3131,6 +3131,98 @@
       "ept.service.key": {
         "title": "Enterprise Private Trunking Alarm",
         "description": "There is an issue with SIP Destination connectivity"
+      },
+      "uss": {
+        "thresholdAlarmTriggered": {
+          "title": "Users in Error",
+          "description": "{{usersInError}} users out of {{usersInError}} users in error."
+        }
+      }
+    },
+    "userStatusMessages": {
+      "c_cal@activated": {
+        "description": "The user was successfully activated for Hybrid Calendar.",
+        "title": "Activation Successful"
+      },
+      "c_cal@NoPrimaryEmail": {
+        "description": "No primary email address found for user.",
+        "title": "Email Address Error"
+      },
+      "ErrorExceededSubscriptionCount": {
+        "description": "You have exceeded the available subscriptions for your account. Remove unnecessary subscriptions and try your request again.",
+        "title": "Subscription Error"
+      },
+      "ErrorMailboxStoreUnavailable": {
+        "description": "The mailbox database is temporarily unavailable.",
+        "title": "Mailbox Database Error"
+      },
+      "ErrorNonExistentMailbox": {
+        "description": "The SMTP address has no mailbox associated with it.",
+        "title": "User Mailbox Error"
+      },
+      "notSpecified": {
+        "description": "Failed to start streaming subscription connection.",
+        "title": "Subscription Error"
+      },
+      "null-user-mailbox-error": {
+        "description": "Could not find user mailbox.",
+        "title": "User Mailbox Error"
+      },
+      "c_ucmc": {
+        "ECUSER_ACTIVATED": {
+          "title": "Activation Successful",
+          "description": "The user was successfully activated for Hybrid Call Service Connect."
+        },
+        "ECUSER_ACTIVATION_FAILED": {
+          "title": "Activation Failed",
+          "description": "The user failed to activate for Hybrid Call Service Connect."
+        },
+        "ONBOARD_SUCCESSFUL": {
+          "title": "Activation Successful",
+          "description": "The user was successfully activated for Hybrid Call Service Aware."
+        },
+        "USER_EC_ASSIGNMENT_SUCCESS": {
+          "title": "Assignment Successful",
+          "description": "The user was successfully assigned to Hybrid Call Service Connect."
+        },
+        "USER_EMAIL_ASSOCIATION_NOT_FOUND": {
+          "title": "Email Address Lookup Failed",
+          "description": "Could not find a user with this email address. Enter an email address for the user in Unified CM."
+        },
+        "USER_RD_UPDATE_CTI_REQUEST_TIMEOUT": {
+          "title": "Remote Destination Update Timeout",
+          "description": "In Unified CM CTIManager, a request timed out to update the remote destination."
+        },
+        "USER_UC_ASSIGNMENT_SUCCESS": {
+          "title": "Assignment Successful",
+          "description": "The user was successfully assigned to Hybrid Call Service Aware"
+        }
+      },
+      "das": {
+        "unableAssignUser": {
+          "title": "Unable to assign",
+          "description": "Failed to assign user to a cluster. We'll try to assign the user again."
+        },
+        "noOperationalConnector": {
+          "title": "No operational connector found",
+          "description": "No operational connector found for user. Check the cluster configuration and then try again."
+        },
+        "clusterResourceGroupMismatch": {
+          "title": "Cluster resource group mismatch",
+          "description": "The user's resource group does not match the cluster resource group. Check the cluster configuration and then try again."
+        },
+        "clusterUpgrading": {
+          "title": "Cluster is upgrading",
+          "description": "The cluster was upgrading when trying to assign user. We'll try to assign the user again."
+        },
+        "clusterCapacityLimitReached": {
+          "title": "Cluster capacity is at maximum",
+          "description": "Cannot assign user, because the cluster capacity reached its upper limit. We'll try to assign the user again."
+        },
+        "clusterNotAssignedToResourceGroup": {
+          "title": "No cluster assigned to resource group",
+          "description": "No cluster assigned to the user's resource group. Check the cluster configuration and then try again."
+        }
       }
     }
   },
