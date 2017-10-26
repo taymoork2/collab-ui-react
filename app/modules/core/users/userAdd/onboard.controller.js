@@ -583,20 +583,6 @@ require('./_user-add.scss');
       this.features = Config.getDefaultEntitlements();
     }
 
-    $scope.confirmAdditionalServiceSetup = function () {
-      $modal.open({
-        type: 'dialog',
-        template: require('modules/core/users/userAdd/confirmLeavingDialog.tpl.html'),
-      }).result.then(function () {
-        $state.go('firsttimewizard');
-      });
-    };
-
-    $scope.disableCommFeatureAssignment = function () {
-      // disable the communication feature assignment unless the UserAdd is part of the First Time Setup Wizard work flow
-      return (!Authinfo.isSetupDone() && ((typeof $state.current.data === 'undefined') || (!$state.current.data.firstTimeSetup)));
-    };
-
     function checkSite() {
       ServiceSetup.listSites().then(function () {
         $scope.hasSite = (ServiceSetup.sites.length !== 0);
@@ -616,11 +602,9 @@ require('./_user-add.scss');
     $scope.licenses = [];
     $scope.licenseStatus = [];
     $scope.populateConf = populateConf;
-    $scope.disableCheckbox = disableCheckbox;
     $scope.populateConfInvitations = populateConfInvitations;
     $scope.getAccountLicenses = getAccountLicenses;
     $scope.setCareService = setCareService;
-    $scope.checkMessageVisibility = checkMessageVisibility;
     var convertUsersCount = 0;
     var convertStartTime = 0;
     var convertCancelled = false;
@@ -652,25 +636,6 @@ require('./_user-add.scss');
       userLicenseIds = $scope.currentUser.licenseID;
       userInvites = $scope.currentUser.invitations;
       $scope.hybridCallServiceAware = userEnts && userEnts.indexOf('squared-fusion-uc') > -1;
-    }
-
-    function checkMessageVisibility(licenses, selectedSubscription) {
-      if (licenses.length === 1) {
-        var license = licenses[0];
-        if (license.billingServiceId && selectedSubscription) {
-          return license.billingServiceId === selectedSubscription;
-        }
-        return true;
-      }
-      return false;
-    }
-
-    function disableCheckbox(lic) {
-      if (_.isArray(lic)) {
-        return _.get(lic[0], 'status') === 'DISABLED';
-      } else {
-        return _.get(lic, 'status') === 'DISABLED';
-      }
     }
 
     function populateConf() {
@@ -789,13 +754,6 @@ require('./_user-add.scss');
       };
     }
 
-    $scope.checkCMR = function (cfLic, cmrLics) {
-      if (cfLic.offerName === 'MC' || cfLic.offerName === 'EE') {
-        cmrLics.forEach(function (cmrLic) {
-          cmrLic.cmrModel = cfLic.confModel;
-        });
-      }
-    };
 
     $scope.updateCmrLicensesForMetric = function (cmrModel, licenseId) {
       $scope.cmrLicensesForMetric[licenseId] = !cmrModel;
@@ -932,23 +890,11 @@ require('./_user-add.scss');
       return $scope.isSharedMeetingsLicense(license) ? $translate.instant('firstTimeWizard.sharedLicenseTooltip') : $translate.instant('firstTimeWizard.namedLicenseTooltip');
     };
 
-    $scope.careTooltip = function () {
-      return '<div class="license-tooltip-html">' + $translate.instant('firstTimeWizard.careTooltip') + '</div>';
-    };
-
     $scope.isSubscribeable = function (license) {
       if (license.status === 'ACTIVE' || license.status === 'PENDING') {
         return (license.volume > 0);
       }
       return false;
-    };
-
-    $scope.hasAssignableMessageItems = MessengerInteropService.hasAssignableMessageItems.bind(MessengerInteropService);
-    $scope.showMessengerInteropToggle = function () {
-      if (!_.get($state, 'current.data.showMessengerInteropToggle')) {
-        return false;
-      }
-      return MessengerInteropService.hasAssignableMessageOrgEntitlement();
     };
 
     var getAccountServices = function () {

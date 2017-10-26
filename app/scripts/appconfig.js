@@ -932,6 +932,7 @@
               },
             },
             data: {
+              // TODO: rm this, no longer needed
               showMessengerInteropToggle: true,
             },
           })
