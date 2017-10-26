@@ -22,22 +22,24 @@
     vm.isBYOPSTNCarrier = isBYOPSTNCarrier;
     vm.exportCsv = exportCsv;
 
-    $scope.gridData = [];
-    $scope.canShowActionsMenu = canShowActionsMenu;
-    $scope.canShowExternalNumberDelete = canShowExternalNumberDelete;
-    $scope.deleteExternalNumber = deleteExternalNumber;
-    $scope.initToggles = initToggles;
+    vm.canShowActionsMenu = canShowActionsMenu;
+    vm.canShowExternalNumberDelete = canShowExternalNumberDelete;
+    vm.deleteExternalNumber = deleteExternalNumber;
+    vm.clearRows = clearRows;
+    vm.initToggles = initToggles;
 
     function initToggles() {
       return FeatureToggleService.supports(FeatureToggleService.features.hI1484)
         .then(function (supported) {
           vm.ishI1484 = supported;
           if (!supported) {
-            vm.gridOptions.columnDefs.splice(0, 1);
-            vm.gridOptions.columnDefs.splice(2, 1);
+            columnDefs.splice(0, 1);
+            columnDefs.splice(2, 1);
           } else {
-            vm.gridOptions.columnDefs.splice(1, 1);
+            columnDefs.splice(1, 1);
           }
+
+          initGridOptions();
         });
     }
 
@@ -140,20 +142,20 @@
       vm.currentLine = null;
 
       // Get "unassigned" internal and external lines
-      LineListService.getLineList(startIndex, Config.usersperpage, vm.sort.by, vm.sort.order, vm.searchStr, vm.activeFilter, $scope.gridData, vm.ishI1484)
+      LineListService.getLineList(startIndex, Config.usersperpage, vm.sort.by, vm.sort.order, vm.searchStr, vm.activeFilter, vm.gridOptions.data, vm.ishI1484)
         .then(function (response) {
           $timeout(function () {
             vm.load = true;
           });
 
           if (startIndex === 0) {
-            $scope.gridData = response;
+            vm.gridOptions.data = response;
           } else {
-            $scope.gridData = $scope.gridData.concat(response);
+            vm.gridOptions.data = vm.gridOptions.data.concat(response);
           }
 
           //function for sorting based on which piece of data the row has
-          _.forEach($scope.gridData, function (row) {
+          _.forEach(vm.gridOptions.data, function (row) {
             row.displayField = function () {
               var displayName = formatUserName(this.firstName, this.lastName, this.userId);
               return (!_.isEmpty(displayName) ? displayName : $translate.instant('linesPage.unassignedLines')) + (this.status ? ' - ' + this.status : '');
@@ -186,80 +188,81 @@
       return userName;
     }
 
-    var gridRowHeight = 44;
+    function clearRows() {
+      $scope.gridApi.selection.clearSelectedRows();
+    }
 
-    vm.gridOptions = {
-      data: 'gridData',
-      multiSelect: false,
-      showFilter: false,
-      rowHeight: gridRowHeight,
-      enableRowSelection: false,
-      enableRowHeaderSelection: false,
-      modifierKeysToMultiSelect: false,
-      useExternalSorting: false,
-      enableColumnMenus: false,
-      noUnselect: true,
-      onRegisterApi: function (gridApi) {
-        $scope.gridApi = gridApi;
-        gridApi.infiniteScroll.on.needLoadMoreData($scope, function () {
-          if (vm.load) {
-            vm.currentDataPosition++;
-            vm.load = false;
-            getLineList((vm.currentDataPosition * Config.usersperpage) + 1);
-          }
-        });
-        gridApi.core.on.sortChanged($scope, sortColumn);
+    var columnDefs = [{
+      field: 'siteToSiteNumber',
+      displayName: $translate.instant('linesPage.internalNumberHeader'),
+      width: '20%',
+      cellClass: 'internalNumberColumn',
+      headerCellClass: 'internalNumberHeader',
+      cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.clearRows()" cell-value="row.entity.siteToSiteNumber"></cs-grid-cell>',
+    }, {
+      field: 'internalNumber',
+      displayName: $translate.instant('linesPage.internalNumberHeader'),
+      width: '20%',
+      cellClass: 'internalNumberColumn',
+      headerCellClass: 'internalNumberHeader',
+      cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.clearRows()" cell-value="row.entity.internalNumber"></cs-grid-cell>',
+    }, {
+      field: 'externalNumber',
+      displayName: $translate.instant('linesPage.phoneNumbers'),
+      cellClass: 'externalNumberColumn',
+      headerCellClass: 'externalNumberHeader',
+      width: '20%',
+      cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.clearRows()" cell-value="row.entity.externalNumber"></cs-grid-cell>',
+    }, {
+      field: 'locationName',
+      displayName: $translate.instant('usersPreview.location'),
+      cellClass: 'anyColumn',
+      headerCellClass: 'anyHeader',
+      width: '*',
+      cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.clearRows()" cell-value="row.entity.locationName"></cs-grid-cell>',
+    }, {
+      field: 'displayField()',
+      displayName: $translate.instant('linesPage.assignedTo'),
+      cellTemplate: require('./templates/_tooltipTpl.html'),
+      sort: {
+        direction: 'asc',
+        priority: 0,
       },
-      columnDefs: [{
-        field: 'siteToSiteNumber',
-        displayName: $translate.instant('linesPage.internalNumberHeader'),
-        width: '20%',
-        cellClass: 'internalNumberColumn',
-        headerCellClass: 'internalNumberHeader',
-        sortable: true,
-      }, {
-        field: 'internalNumber',
-        displayName: $translate.instant('linesPage.internalNumberHeader'),
-        width: '20%',
-        cellClass: 'internalNumberColumn',
-        headerCellClass: 'internalNumberHeader',
-        sortable: true,
-      }, {
-        field: 'externalNumber',
-        displayName: $translate.instant('linesPage.phoneNumbers'),
-        sortable: true,
-        cellClass: 'externalNumberColumn',
-        headerCellClass: 'externalNumberHeader',
-        width: '20%',
-      }, {
-        field: 'locationName',
-        displayName: $translate.instant('usersPreview.location'),
-        sortable: true,
-        cellClass: 'anyColumn',
-        headerCellClass: 'anyHeader',
-        width: '*',
-      }, {
-        field: 'displayField()',
-        displayName: $translate.instant('linesPage.assignedTo'),
-        cellTemplate: require('./templates/_tooltipTpl.html'),
-        sortable: true,
-        sort: {
-          direction: 'asc',
-          priority: 0,
+      sortCellFiltered: true,
+      cellClass: 'assignedToColumn',
+      headerCellClass: 'assignedToHeader',
+    }, {
+      field: 'actions',
+      displayName: $translate.instant('linesPage.actionHeader'),
+      cellTemplate: require('./templates/_actionsTpl.html'),
+      enableSorting: false,
+      width: '20%',
+      cellClass: 'actionsColumn',
+      headerCellClass: 'actionsHeader',
+    }];
+
+    function initGridOptions() {
+      vm.gridOptions = {
+        data: [],
+        appScopeProvider: vm,
+        showFilter: false,
+        rowHeight: 44,
+        useExternalSorting: false,
+        noUnselect: true,
+        onRegisterApi: function (gridApi) {
+          $scope.gridApi = gridApi;
+          gridApi.infiniteScroll.on.needLoadMoreData($scope, function () {
+            if (vm.load) {
+              vm.currentDataPosition++;
+              vm.load = false;
+              getLineList((vm.currentDataPosition * Config.usersperpage) + 1);
+            }
+          });
+          gridApi.core.on.sortChanged($scope, sortColumn);
         },
-        sortCellFiltered: true,
-        cellClass: 'assignedToColumn',
-        headerCellClass: 'assignedToHeader',
-      }, {
-        field: 'actions',
-        displayName: $translate.instant('linesPage.actionHeader'),
-        enableSorting: false,
-        cellTemplate: require('./templates/_actionsTpl.html'),
-        width: '20%',
-        cellClass: 'actionsColumn',
-        headerCellClass: 'actionsHeader',
-      }],
-    };
+        columnDefs: columnDefs,
+      };
+    }
 
     function sortColumn(scope, sortColumns) {
       if (_.isUndefined(_.get(sortColumns, '[0]'))) {
