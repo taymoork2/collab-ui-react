@@ -120,7 +120,7 @@ class LocationsWizardController implements ng.IComponentController {
     return this.LocationSettingsOptionsService.getOptions()
       .then(locationOptions => this.locationSettingsOptions = locationOptions)
       .then(() => {
-        return this.CallLocationSettingsService.get() // Calling get() with no parameters returns default location
+        return this.CallLocationSettingsService.get(undefined, true) // Calling with parameter indicating new location to prevent default location ESA being populated.
           .then(locationSettings => {
             locationSettings.location.uuid = undefined;
             locationSettings.location.name = '';

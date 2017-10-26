@@ -9,6 +9,8 @@ import huronCustomerModule from 'modules/huron/customer';
 import callSettingsSharedModule from 'modules/call/settings/shared';
 import huronPstnModule from 'modules/huron/pstn';
 import PstnAddressServiceModule from 'modules/huron/pstn/shared/pstn-address';
+import settingSetupInitModule from 'modules/call/settings/settings-setup-init';
+import notificationModule from 'modules/core/notifications';
 
 export * from './location';
 export { LocationsService };
@@ -27,8 +29,9 @@ export default angular
     callSettingsSharedModule,
     huronPstnModule,
     PstnAddressServiceModule,
+    settingSetupInitModule,
+    notificationModule,
   ])
-
   .service('LocationsService', LocationsService)
   .service('CallLocationSettingsService', CallLocationSettingsService)
   .service('LocationSettingsOptionsService', LocationSettingsOptionsService)
