@@ -1,0 +1,10 @@
+<div class="task" ng-class="{'task--active' : $ctrl.isActiveTask}">
+  <div class="task__row">
+    <span class="task__text">{{::$ctrl.task.jobInstanceId}}</span>
+    <span class="task__text task__text--right">{{::$ctrl.task.started}}</span>
+  </div>
+  <div class="task__row">
+    <span class="task__subtext">{{::$ctrl.task.status}}</span>
+    <span class="task__subtext task__subtext--right">{{::$ctrl.task.stopped}}</span>
+  </div>
+</div>
