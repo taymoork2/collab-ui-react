@@ -19,14 +19,18 @@
       </div>
       <div ng-if="$ctrl.showNumberMessage()">
         <p class="ces-messages">
-          <div ng-if="$ctrl.isNumberDisabled">
+          <div ng-if="$ctrl.stateECBN === $ctrl.ECBN_NO_NUMBERS">
               <span><i class="icon icon-warning"></i></span>
               <span translate="settingsServiceNumber.needEcbnNoOptions"></span>
           </div>
-          <div ng-if="!$ctrl.isNumberDisabled">
+          <div ng-if="$ctrl.stateECBN === $ctrl.ECBN_NOT_SELECTED">
               <span><i class="icon icon-error"></i></span>
               <span translate="settingsServiceNumber.needEcbnOptions"></span>
           </div>
+          <div ng-if="$ctrl.stateECBN === $ctrl.ECBN_MISSING_ASSIGN">
+            <span><i class="icon icon-error"></i></span>
+            <span translate="settingsServiceNumber.missingECBNError"></span>
+        </div>
         </p>
       </div>
     </div>

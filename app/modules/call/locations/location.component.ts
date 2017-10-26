@@ -9,6 +9,7 @@ import { PstnService, PstnModel } from 'modules/huron/pstn';
 import { SettingSetupInitService } from 'modules/call/settings/settings-setup-init';
 import { Notification } from 'modules/core/notifications';
 import { EmergencyNumber } from 'modules/huron/phoneNumber';
+import { PhoneNumberService } from 'modules/huron/phoneNumber';
 
 class CallLocationCtrl implements ng.IComponentController {
   public ftsw: boolean;
@@ -36,6 +37,7 @@ class CallLocationCtrl implements ng.IComponentController {
     private SettingSetupInitService: SettingSetupInitService,
     private PstnService: PstnService,
     private PstnModel: PstnModel,
+    private PhoneNumberService: PhoneNumberService,
     private Authinfo,
   ) {}
 
@@ -209,9 +211,29 @@ class CallLocationCtrl implements ng.IComponentController {
     this.checkForChanges();
   }
 
+  private isValidNumber(): boolean {
+    if (this.callLocationSettingsData.emergencyNumber && !_.isEmpty(this.callLocationSettingsData.emergencyNumber.pattern)) {
+      const options = this.locationSettingsOptions.emergencyNumbersOptions.filter(option => {
+        return option.value === this.callLocationSettingsData.emergencyNumber.pattern;
+      });
+      if (!_.isEmpty(options)) {
+        return true;
+      }
+      return false;
+    }
+    return true;
+  }
+
+  private isValidAddress(): boolean {
+    if (this.callLocationSettingsData.address && this.callLocationSettingsData.address.validated) {
+      return true;
+    }
+    return false;
+  }
+
   public saveDisabled(): boolean {
     if (this.PstnModel.isCustomerExists()) {
-      if (this.callLocationSettingsData && this.callLocationSettingsData.address && this.callLocationSettingsData.address.validated) {
+      if (this.callLocationSettingsData && this.isValidAddress() && this.isValidNumber()) {
         return this.form.$invalid;
       }
       return true;
@@ -246,7 +268,10 @@ class CallLocationCtrl implements ng.IComponentController {
     if (options.length > 0) {
       this.number = options[0];
     } else {
-      this.number = null;
+      this.number = {
+        label: this.PhoneNumberService.getNationalFormat(emergencyNumber.pattern),
+        value: emergencyNumber.pattern,
+      } as IOption;
     }
   }
 }

@@ -192,7 +192,7 @@ export class CallLocationSettingsService {
     }
 
     //Emergency Callback Number (ECBA)
-    if (!_.isEqual(this.callLocationSettingsDataCopy.emergencyNumber, data.emergencyNumber) ) {
+    if (!_.isEqual(this.callLocationSettingsDataCopy.emergencyNumber, data.emergencyNumber) && !_.isEmpty(data.emergencyNumber.pattern)) {
       promises.push(this.saveEmergencyCallbackNumber(data));
     }
 
