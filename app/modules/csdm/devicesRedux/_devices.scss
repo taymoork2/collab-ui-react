@@ -8,7 +8,7 @@
 
   .ui-grid-cell:first-child,
   .ui-grid-header-cell:first-child {
-    border-right: 0px;
+    border-right: 0;
 
     .space_avatar {
       margin: 4px 5px 4px 30px;
@@ -27,72 +27,7 @@
   }
   .page-sub-header {
     height: auto;
-  }
-  .devices-header {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    //border-bottom: solid $gray-darkest 1px;
-    height: 305px;
-    .clearfix {
-      flex-grow: 1;
-      button {
-        z-index: 1;
-      }
-    }
-    .chart-header {
-      flex-basis: 100%;
-    }
-    .graphCarousel {
-      float: right;
-      align-self: flex-end;
-      position: relative;
-      //background-color: #00cc66;
-      height: 230px;
-      width: 500px;
-      #chartArea {
-        position: absolute;
-        top: -50px;
-        left: -50px;
-        height: 250px;
-        width: 600px;
-        margin: auto;
-      }
-      .carousel {
-        .title {
-          flex-basis: 100%;
-          font-size: 1.2rem;
-        }
-        .large {
-          font-size: 2rem;
-        }
-        .selected {
-          font-size: 0.9rem;
-        }
-        .icon {
-          line-height: 1rem;
-        }
-
-        font-size: 0.6rem;
-        justify-content: center;
-        text-align: center;
-        display: flex;
-        flex-wrap: wrap;
-        position: absolute;
-        bottom: 0px;
-        margin: 0 35%;
-        width: 30%;
-      }
-    }
-    .bottom {
-      display: flex;
-      flex-basis: 100%;
-      justify-content: center;
-      font-size: 2.5rem;
-      i {
-        line-height: 0.5;
-      }
-    }
+    flex-wrap: nowrap;
   }
 
   background-color: white !important;
@@ -223,7 +158,7 @@
     position: relative;
     top: 30vh;
     width: inherit;
-    height: 0px;
+    height: 0;
     z-index: 2;
     .loadmore {
       position: relative;
@@ -297,7 +232,7 @@
     .loadmorecontainer {
       position: relative;
       width: inherit;
-      height: 0px;
+      height: 0;
       .loadmore {
         position: relative;
         height: 100px;
@@ -354,7 +289,7 @@
       margin-left: 10px;
       .searchbox {
         visibility: hidden;
-        width: 0px;
+        width: 0;
       }
     }
 
@@ -454,7 +389,7 @@
               min-width: 90px;
               i {
                 margin-left: 4px;
-                margin-right:4px;
+                margin-right: 4px;
               }
             }
             .text {
@@ -495,23 +430,47 @@
   }
   .bullets {
     display: flex;
+    justify-content: flex-start;
     flex-wrap: wrap;
     flex-basis: 100%;
-    .current {
-      //flex: none;
-    }
+    margin: 8px 0;
   }
-  .bullet {
-    background-color: $gray-dark-2;
-    border-radius: 0.3rem;
-    color: lightgrey;
-    height: 1.75rem;
-    margin: 8px 8px 0 0;
-    padding: 0px 7px;
-    font-size: 0.875rem;
-    line-height: 2;
-    .field-descriptor {
-      color: white;
+
+  device-search-bullet {
+    margin: 0;
+    padding: 0;
+
+    .bullet {
+      display: inline-block;
+      background-color: $gray-dark-2;
+      border-radius: 0.3rem;
+      color: lightgrey;
+      font-size: 0.875rem;
+      line-height: 2;
+      .field-descriptor {
+        color: white;
+      }
+      .collection-operator {
+        color: white;
+        padding: 0px;
+      }
+      .icon-remove {
+        top: -2px;
+        left: 5px;
+      }
+    }
+    .bullet_toplevel {
+      display: block;
+      margin: 4px 8px 0 0;
+      padding: 0 7px;
+    }
+    .bullet_edited {
+      display:none;
+      color: black;
+      background-color: lightgrey;
+      border-color: darkgrey;
+      border-width: 2px;
+      border-style: dotted;
     }
   }
 

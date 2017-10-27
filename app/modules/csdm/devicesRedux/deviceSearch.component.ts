@@ -7,8 +7,10 @@ import { SearchElement } from '../services/search/queryParser';
 import { SearchTranslator } from 'modules/csdm/services/search/searchTranslator';
 import { KeyCodes } from 'collab-ui-ng/src/directives/dropdown/keyCodes';
 import { ISuggestion, ISuggestionDropdown, SuggestionDropdown } from '../services/search/suggestion';
+import { IBulletContainer } from './deviceSearchBullet.component';
 
-export class DeviceSearch implements ng.IComponentController, ISearchHandler {
+export class DeviceSearch implements ng.IComponentController, ISearchHandler, IBulletContainer {
+
   private lastSearchInput = '';
   public searchInput = '';
   public searchField = '';
