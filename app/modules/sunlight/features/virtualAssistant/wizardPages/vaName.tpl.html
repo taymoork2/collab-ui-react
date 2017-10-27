@@ -1,29 +1,29 @@
 <div>
   <div class="ct-title">
     <span class="h3">
-    {{cvaSetupCtrl.getCvaText('name.title')}}
+    {{$ctrl.getText('name.title')}}
     </span>
   </div>
 	<h6 class="ct-title-desc">
-		{{cvaSetupCtrl.getCvaText('name.desc')}}
+		{{$ctrl.getText('name.desc')}}
   </h6>
   <div class="cs-card-container ct-sa-content">
     <cs-card-layout block-view="true" class="va-card-center">
       <cs-card class="va-box va-name-box va-card">
-				<p class="h6">{{cvaSetupCtrl.getCvaText('name.boxDesc')}}</p>
-				<div ng-form="cvaSetupCtrl.nameForm">
-					<div class="cs-input-group medium-10 columns" ng-class="{'error': cvaSetupCtrl.nameForm.nameInput.$invalid}">
-						<label class="cs-input__label input-label" for="nameInput">{{cvaSetupCtrl.getCvaText('name.inputLabel')}}</label>
+				<p class="h6">{{$ctrl.getText('name.boxDesc')}}</p>
+				<div ng-form="$ctrl.nameForm">
+					<div class="cs-input-group medium-10 columns" ng-class="{'error': $ctrl.nameForm.nameInput.$invalid}">
+						<label class="cs-input__label input-label" for="nameInput">{{$ctrl.getText('name.inputLabel')}}</label>
 						<input
 							name="nameInput"
 							type="text"
 							autocomplete="off"
-							ng-model="cvaSetupCtrl.template.configuration.pages.vaName.nameValue"
-							ng-maxlength="cvaSetupCtrl.maxNameLength"
+							ng-model="$ctrl.template.configuration.pages.vaName.nameValue"
+							ng-maxlength="$ctrl.maxNameLength"
 						/>
-						<div class="cs-input__messages" ng-messages="cvaSetupCtrl.nameForm.nameInput.$error" ng-if="cvaSetupCtrl.nameForm.nameInput.$invalid">
-							<div class="message" ng-message="maxlength">{{cvaSetupCtrl.getCvaText('name.maxLengthError')}}</div>
-							<div class="message" ng-message="duplicateNameError">{{cvaSetupCtrl.getCvaText('name.duplicateError')}}</div>
+						<div class="cs-input__messages" ng-messages="$ctrl.nameForm.nameInput.$error" ng-if="$ctrl.nameForm.nameInput.$invalid">
+							<div class="message" ng-message="maxlength">{{$ctrl.getText('name.maxLengthError')}}</div>
+							<div class="message" ng-message="duplicateNameError">{{$ctrl.getText('name.duplicateError')}}</div>
 						</div>
 					</div>
 				</div>

@@ -1,3 +1,5 @@
+import { KeyCodes } from 'modules/core/accessibility';
+
 require('./_domainManagement.scss');
 
 declare let punycode: any;
@@ -43,7 +45,7 @@ export class DomainManageAddCtrl {
   }
 
   public keyPressInInputField(keyEvent) {
-    if (keyEvent.which === 13) {
+    if (keyEvent.which === KeyCodes.ENTER) {
       this.add();
     }
   }

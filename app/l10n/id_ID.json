@@ -7332,25 +7332,25 @@
       "configOverview": {
         "title": "Persyaratan Konfigurasi Asisten Virtual Pelanggan",
         "desc": "Tinjau prasyarat untuk membuat Asisten Virtual Pelanggan",
-        "boxTitle": "Buat agen API.AI sebelum Anda membuat Asisten Virtual Pelanggan.",
-        "boxDesc": "Bangun agen otomatis di API.AI dengan dialog bahasa alami. Asisten Virtual Pelanggan terintegrasi Anda menggunakan dialog bawaan untuk berinteraksi dengan pelanggan dan mengeskalasikan percakapan ke agen jika dibutuhkan.",
-        "boxRadioOne": "Tidak, saya tidak memiliki agen API.AI yang telah dikonfigurasikan",
+        "boxTitle": "Buat agen Dialogflow sebelum Anda membuat Asisten Virtual Pelanggan.",
+        "boxDesc": "Bangun agen otomatis di Dialogflow dengan dialog bahasa alami. Asisten Virtual Pelanggan terintegrasi Anda menggunakan dialog bawaan untuk berinteraksi dengan pelanggan dan mengeskalasikan percakapan ke agen jika dibutuhkan.",
+        "boxRadioOne": "Tidak, saya tidak memiliki agen Dialogflow yang telah dikonfigurasikan",
         "boxRadioOneDesc1": "Buka ",
-        "boxRadioApiai": "API.AI",
+        "boxRadioDialogflow": "Dialogflow",
         "boxRadioOneDesc2": " untuk membuat agen. Untuk memulai, lihat ",
-        "boxRadioApiaiDoc": "dokumentasi API.AI",
-        "boxRadioTwo": "Ya, saya memiliki agen API.AI yang telah dikonfigurasikan dan siap untuk melanjutkan",
-        "boxRadioTwoDesc": "Klik tanda panah untuk melanjutkan integrasi agen API.AI Anda dengan Asisten Virtual Pelanggan"
+        "boxRadioDialogflowDoc": "dokumentasi Dialogflow",
+        "boxRadioTwo": "Ya, saya memiliki agen Dialogflow yang telah dikonfigurasikan dan siap untuk melanjutkan",
+        "boxRadioTwoDesc": "Klik tanda panah untuk melanjutkan integrasi agen Dialogflow Anda dengan Asisten Virtual Pelanggan"
       },
       "dialogIntegration": {
         "title": "Konfigurasikan Integrasi Dialog",
-        "desc": "Tambahkan Intent Eskalasi yang telah dikonfigurasikan untuk melengkapi konfigurasi agen API.AI",
+        "desc": "Tambahkan Intent Eskalasi yang telah dikonfigurasikan untuk melengkapi konfigurasi agen Dialogflow",
         "boxStepOne": "Unduh file JSON Intent Eskalasi yang telah dikonfigurasikan.",
         "boxStepOneDesc": "Intent Eskalasi memungkinkan Asisten Virtual Pelanggan mengeskalasikan percakapan ke seorang age.",
-        "boxStepTwo": "Unggah Intent Eskalasi ke Agen API.AI.",
-        "boxStepTwoDesc": "Di halaman Intent agen API.AI Anda, klik elipsis vertikal (⋮) lalu pilih Unggah Intent. Unggah file escalation.json yang telah diunduh.",
-        "boxStepThree": "Sesuaikan Intent Eskalasi di API.AI.",
-        "boxStepThreeDesc": "Di halaman Intent agen API.AI Anda, pilih Intent Eskalasi. Ubah bidang User Says untuk mengubah ekspresi pengguna yang memicu eskalasi. Semua ekspresi pengguna harus:",
+        "boxStepTwo": "Unggah Intent Eskalasi ke Agen Dialogflow.",
+        "boxStepTwoDesc": "Di halaman Intent agen Dialogflow Anda, klik elipsis vertikal (⋮) lalu pilih Unggah Intent. Unggah file escalation.json yang telah diunduh.",
+        "boxStepThree": "Sesuaikan Intent Eskalasi di Dialogflow.",
+        "boxStepThreeDesc": "Di halaman Intent agen Dialogflow Anda, pilih Intent Eskalasi. Ubah bidang User Says untuk mengubah ekspresi pengguna yang memicu eskalasi. Semua ekspresi pengguna harus:",
         "boxBulletOne": "Menggunakan mode templat",
         "boxBulletTwo": "Berisi rujukan ke @sys.any:Topic",
         "boxStepThreeDescCont": "Simbol @ di samping ekspresi pengguna menunjukkan mode templat. Klik simbol ini untuk beralih mode. Jangan ubah tindakan GetExpert.",
@@ -7361,11 +7361,11 @@
       "accessToken": {
         "title": "Selesaikan Integrasi Dialog",
         "desc": "Selesaikan integrasi Anda untuk memungkinkan penggunaan dialog alami dalam interaksi pelanggan",
-        "boxDesc": "Setiap agen API.AI memiliki token akses klien unik yag disimpan di pengaturan agen. Salin token dari pengaturan agen API.AI yang telah dikonfigurasikan, masukkan di sini, lalu klik \"Validasi\" untuk memeriksa token sebelum Anda menyelesaikan integrasi dialog.",
-        "inputLabel": "Token Akses Klien API.AI",
+        "boxDesc": "Setiap agen Dialogflow memiliki token akses klien unik yag disimpan di pengaturan agen. Salin token dari pengaturan agen Dialogflow yang telah dikonfigurasikan, masukkan di sini, lalu klik \"Validasi\" untuk memeriksa token sebelum Anda menyelesaikan integrasi dialog.",
+        "inputLabel": "Token Akses Klien Dialogflow",
         "validateButtonText": "Validasi",
         "maxLengthError": "Token Akses Klien tidak boleh lebih panjang dari 128 karakter.",
-        "invalidTokenText": "Token akses klien API.AI tidak valid. Verifikasi token dan coba lagi."
+        "invalidTokenText": "Token akses klien Dialogflow tidak valid. Verifikasi token dan coba lagi."
       },
       "name": {
         "title": "Nama Asisten Virtual Pelanggan",

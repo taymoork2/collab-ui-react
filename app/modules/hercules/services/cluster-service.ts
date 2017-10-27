@@ -1,4 +1,4 @@
-import { IFMSOrganization, ICluster, IConnector, IExtendedCluster, IExtendedConnector, ConnectorType, IClusterAggregate, IConnectorAlarm, IExtendedConnectorAlarm, IExtendedClusterFusion, IClusterWithExtendedConnectors, ConnectorMaintenanceMode } from 'modules/hercules/hybrid-services.types';
+import { IFMSOrganization, ICluster, IConnector, IExtendedCluster, IExtendedConnector, ConnectorType, IClusterAggregate, IConnectorAlarm, IClusterPropertySet, IExtendedConnectorAlarm, IExtendedClusterFusion, IClusterWithExtendedConnectors, ConnectorMaintenanceMode } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesClusterStatesService, IConnectorStateDetails } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 import { CsdmPollerFactory as CsdmPoller, CsdmHubFactory } from 'modules/squared/devices/services/CsdmPoller';
 import { CsdmCacheUpdater } from 'modules/squared/devices/services/CsdmCacheUpdater';
@@ -218,6 +218,21 @@ export class ClusterService {
       .then((data) => {
         this.poller.forceAction();
         return data;
+      });
+  }
+
+  public getProperties(clusterId: string): ng.IPromise<IClusterPropertySet> {
+    const url = `${this.UrlConfig.getHerculesUrl()}/organizations/${this.Authinfo.getOrgId()}/clusters/${clusterId}/properties`;
+    return this.$http.get(url)
+      .then(this.extractDataFromResponse);
+  }
+
+  public setProperties(clusterId: string, payload: IClusterPropertySet): ng.IPromise<{}> {
+    const url = `${this.UrlConfig.getHerculesUrl()}/organizations/${this.Authinfo.getOrgId()}/clusters/${clusterId}/properties`;
+    return this.$http.post(url, payload)
+      .then((res) => {
+        this.HybridServicesClusterService.clearCache();
+        return res;
       });
   }
 

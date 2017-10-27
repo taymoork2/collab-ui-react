@@ -15,7 +15,7 @@
                    type="text"
                    ng-model="$ctrl.searchStr"
                    ng-blur="$ctrl.onBlur();"
-                   ng-keyup="$event.keyCode === 13 && $ctrl.onKeySearch();"
+                   ng-keyup="$ctrl.onKeySearch($event)"
                    placeholder="{{::'webexReports.placeholder-text' | translate}}" >
             <i class="icon icon-exit-outline clear" ng-click="$ctrl.searchStr = ''; $ctrl.store.searchStr = ''; $ctrl.gridData = []; "></i>
           </div>

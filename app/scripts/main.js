@@ -155,6 +155,7 @@
     require('modules/hercules/cluster-card').default,
     require('modules/hercules/connector-upgrade-modal/connector-upgrade-modal.controller').default,
     require('modules/hercules/google-calendar-settings/google-calendar-config-section/google-calendar-second-time-setup').default,
+    require('modules/hercules/hybrid-media-cluster-settings').default,
     require('modules/hercules/hybrid-services-cluster-list-with-cards').default,
     require('modules/hercules/hybrid-services-nodes-page').default,
     require('modules/hercules/private-trunk/private-trunk-overview-settings').default,

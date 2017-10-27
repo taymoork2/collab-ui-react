@@ -7332,25 +7332,25 @@
       "configOverview": {
         "title": "Krav til konfigurasjon for virtuell assistent for kunde",
         "desc": "Gjennomgå betingelser for å opprette en virtuell assistent for kunde",
-        "boxTitle": "Opprett en API.AI-agent før du oppretter din virtuelle assistent for kunde.",
-        "boxDesc": "Bygg en automatisert agent i et API.AI med en naturlig språkdialog. Din integrerte virtuelle assistent for kunde bruker den innebygde dialogen for å interagere med kundene dine og eskalere en samtale til agenter ved behov.",
-        "boxRadioOne": "Nei, jeg har ikke en forhåndskonfigurert API.AI-agent",
+        "boxTitle": "Opprett en Dialogflow-agent før du oppretter din virtuelle assistent for kunde.",
+        "boxDesc": "Bygg en automatisert agent i et Dialogflow med en naturlig språkdialog. Din integrerte virtuelle assistent for kunde bruker den innebygde dialogen for å interagere med kundene dine og eskalere en samtale til agenter ved behov.",
+        "boxRadioOne": "Nei, jeg har ikke en forhåndskonfigurert Dialogflow-agent",
         "boxRadioOneDesc1": "Gå til ",
-        "boxRadioApiai": "API.AI",
+        "boxRadioDialogflow": "Dialogflow",
         "boxRadioOneDesc2": " for å opprette en agent. For å komme i gang, se ",
-        "boxRadioApiaiDoc": "API.AI-dokumentasjonen",
-        "boxRadioTwo": "Ja, jeg har en forhåndskonfigurert API.AI-agent og jeg er klar til å fortsette",
-        "boxRadioTwoDesc": "Klikk på pilen for å fortsette å integrere din API.AI-agent med en virtuell assistent for kunde"
+        "boxRadioDialogflowDoc": "Dialogflow-dokumentasjonen",
+        "boxRadioTwo": "Ja, jeg har en forhåndskonfigurert Dialogflow-agent og jeg er klar til å fortsette",
+        "boxRadioTwoDesc": "Klikk på pilen for å fortsette å integrere din Dialogflow-agent med en virtuell assistent for kunde"
       },
       "dialogIntegration": {
         "title": "Konfigurer dialog integrering",
-        "desc": "Legg til en forhåndskonfigurert eskaleringsintensjon for å fullføre din API.AI-konfigurasjon",
+        "desc": "Legg til en forhåndskonfigurert eskaleringsintensjon for å fullføre din Dialogflow-konfigurasjon",
         "boxStepOne": "Last ned en forhåndskonfigurert JSON-fil med eskaleringsintensjon.",
         "boxStepOneDesc": "En eskaleringsintensjon lar din virtuelle assistent for kunde for å eskalere en samtale til en agent.",
-        "boxStepTwo": "Last opp eskaleringsintensjon til en API.AI-agent.",
-        "boxStepTwoDesc": "På din API.AI-agents intensjonsside, klikk på det vertikale ellipse-tegnet (⋮) og velg opplastingsintensjon. Last opp den escalation.json-filen som du lastet ned.",
-        "boxStepThree": "Tilpass eskaleringsintensjon i API.AI.",
-        "boxStepThreeDesc": "Velg eskaleringsintensjon på din API.AI-agents intensjonsside. Rediger brukers si-felter for å endre brukeruttrykk som utløser eskalering. Alle brukeruttrykk må:",
+        "boxStepTwo": "Last opp eskaleringsintensjon til en Dialogflow-agent.",
+        "boxStepTwoDesc": "På din Dialogflow-agents intensjonsside, klikk på det vertikale ellipse-tegnet (⋮) og velg opplastingsintensjon. Last opp den escalation.json-filen som du lastet ned.",
+        "boxStepThree": "Tilpass eskaleringsintensjon i Dialogflow.",
+        "boxStepThreeDesc": "Velg eskaleringsintensjon på din Dialogflow-agents intensjonsside. Rediger brukers si-felter for å endre brukeruttrykk som utløser eskalering. Alle brukeruttrykk må:",
         "boxBulletOne": "Bruk mal-modus",
         "boxBulletTwo": "Sett inn en referanse til @sys.any:Topic",
         "boxStepThreeDescCont": "@-symbolet ved siden av brukeruttrykket indikerer mal-modus. Klikk på symbolet for å skifte modus. Ikke modifiser GetExpert-handling.",
@@ -7361,11 +7361,11 @@
       "accessToken": {
         "title": "Fullfør dialog integrering",
         "desc": "Fullfør din integrering for å aktivere bruk av naturlig dialog i dine kundeinteraksjoner",
-        "boxDesc": "Hver API.AI-agent har et unikt klienttilgangstoken lagret i innstillingene for agenten. Kopier tokenet fra innstillingene for din konfigurerte API.AI-agent, legg den inn her og klikk på «Valider» for å kontrollere tokenet før du fullfører dialogintegreringen.",
-        "inputLabel": "API.AI-klienttilgangstoken",
+        "boxDesc": "Hver Dialogflow-agent har et unikt klienttilgangstoken lagret i innstillingene for agenten. Kopier tokenet fra innstillingene for din konfigurerte Dialogflow-agent, legg den inn her og klikk på «Valider» for å kontrollere tokenet før du fullfører dialogintegreringen.",
+        "inputLabel": "Dialogflow-klienttilgangstoken",
         "validateButtonText": "Bekreft",
         "maxLengthError": "Klienttilgangstokenet kan ikke være lengre enn 128 tegn.",
-        "invalidTokenText": "Ugyldig API.AI-klienttilgangstoken. Verifiser token og prøv på nytt."
+        "invalidTokenText": "Ugyldig Dialogflow-klienttilgangstoken. Verifiser token og prøv på nytt."
       },
       "name": {
         "title": "Navn på virtuell kundeassistent",

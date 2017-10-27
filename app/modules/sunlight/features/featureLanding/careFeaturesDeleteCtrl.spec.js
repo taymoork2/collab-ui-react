@@ -99,7 +99,7 @@ describe('Care Feature Delete Ctrl', function () {
     });
   });
 
-  it('should delete VA config successfully', function () {
+  it('should delete CVA config successfully', function () {
     callController(cvaStateParams);
     controller.deleteFeature();
     cvaDeferred.resolve(successResponse);
@@ -111,7 +111,7 @@ describe('Care Feature Delete Ctrl', function () {
     });
   });
 
-  it('should fail at deleting VA config', function () {
+  it('should fail at deleting CVA config', function () {
     callController(cvaStateParams);
     controller.deleteFeature();
     cvaDeferred.reject(failureResponse);

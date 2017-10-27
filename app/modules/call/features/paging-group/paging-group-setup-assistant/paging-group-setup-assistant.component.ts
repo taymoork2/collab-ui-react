@@ -1,6 +1,7 @@
 import { IMemberData, INumberData, IInitiatorData, IMemberWithPicture, PagingGroupService, PLACE, USER, PUBLIC, CUSTOM } from 'modules/call/features/paging-group/shared';
 import { USER_REAL_USER } from 'modules/huron/members';
 import { IToolkitModalService } from 'modules/core/modal';
+import { KeyCodes } from 'modules/core/accessibility';
 
 class PgSetupAssistantCtrl implements ng.IComponentController {
 
@@ -113,19 +114,16 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
   }
 
   public evalKeyPress(keyCode: number): void {
-    const ESCAPE_KEY = 27;
-    const LEFT_ARROW = 37;
-    const RIGHT_ARROW = 39;
     switch (keyCode) {
-      case ESCAPE_KEY:
+      case KeyCodes.ESCAPE:
         this.cancelModal();
         break;
-      case RIGHT_ARROW:
+      case KeyCodes.RIGHT:
         if (this.nextButton() === true) {
           this.nextPage();
         }
         break;
-      case LEFT_ARROW:
+      case KeyCodes.LEFT:
         if (this.previousButton() === true) {
           this.previousPage();
         }
@@ -136,7 +134,7 @@ class PgSetupAssistantCtrl implements ng.IComponentController {
   }
 
   public enterNextPage(keyCode: number): void {
-    if ((keyCode === 13) && this.nextButton()) {
+    if ((keyCode === KeyCodes.ENTER) && this.nextButton()) {
       this.nextPage();
     }
   }

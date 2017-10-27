@@ -2,6 +2,7 @@ import './_search.scss';
 import * as moment from 'moment';
 import { SearchService } from './searchService';
 import { Notification } from 'modules/core/notifications';
+import { KeyCodes } from 'modules/core/accessibility';
 
 const DATERANGE = 6;
 export interface IGridApiScope extends ng.IScope {
@@ -53,8 +54,10 @@ class WebexReportsSearch implements ng.IComponentController {
     this.$state.go('webexReportsPanel', {}, { reload: true });
   }
 
-  public onKeySearch() {
-    this.startSearch();
+  public onKeySearch($event: KeyboardEvent) {
+    if ($event.which === KeyCodes.ENTER) {
+      this.startSearch();
+    }
   }
 
   public onBlur() {

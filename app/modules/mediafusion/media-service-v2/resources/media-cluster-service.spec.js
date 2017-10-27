@@ -235,18 +235,6 @@ describe('Service: MediaClusterServiceV2', function () {
     Service.getClustersV2();
     expect($httpBackend.flush).not.toThrow();
   });
-  it('MediaClusterServiceV2 getProperties successfully should return the data', function () {
-    $httpBackend.when('GET', /^\w+.*/).respond({});
-    Service.getProperties('clusterId');
-    expect($httpBackend.flush).not.toThrow();
-  });
-  it('should setproperty', function () {
-    $httpBackend.when('POST', /^\w+.*/).respond(204);
-    var callback = jasmine.createSpy('callback');
-    Service.setProperties('clusterId', 'sipUri').then(callback);
-    $httpBackend.flush();
-    expect(callback.calls.count()).toBe(1);
-  });
   it('MediaClusterServiceV2 getV1Clusters successfully should return the data', function () {
     $httpBackend.when('GET', /^\w+.*/).respond({});
     Service.getV1Clusters();

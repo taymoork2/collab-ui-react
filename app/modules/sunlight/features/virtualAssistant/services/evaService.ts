@@ -10,14 +10,14 @@ export class EvaService {
     id: 'expertVirtualAssistant',
     type: 'expertVirtualAssistant',
     mediaType: 'virtualAssistant', // for filter
-    code: this.getEvaMessageKey('featureText.virtualAssistantCode'),
-    label: this.getEvaMessageKey('featureText.expertVirtualAssistantType'),
-    description: this.getEvaMessageKey('featureText.selectEVADesc'),
+    code: this.getMessageKey('featureText.code'),
+    label: this.getMessageKey('featureText.type'),
+    description: this.getMessageKey('featureText.selectDesc'),
     icons: [],
     image: '/images/evaIcon.png',
     color: 'feature-va-color',
     disabled: false,
-    disabledTooltip:  this.getEvaMessageKey('featureText.evaDisabledTooltip'),
+    disabledTooltip:  this.getMessageKey('featureText.disabledTooltip'),
     goToService: this.goToService.bind(this),
   };
 
@@ -35,7 +35,7 @@ export class EvaService {
   };
   // Feature List Filter definition. describes how to filter this feature
   public featureFilter = {
-    name: this.getEvaText('featureText.virtualAssistantMediaType'),
+    name: this.getText('featureText.mediaType'),
     filterValue: this.evaServiceCard.mediaType,
   };
 
@@ -56,8 +56,8 @@ export class EvaService {
    * @param textIdExtension
    * @returns {string}
    */
-  public getEvaText(textIdExtension: string): string {
-    const featureName = this.$translate.instant('careChatTpl.virtualAssistant.eva.featureName');
+  public getText(textIdExtension: string): string {
+    const featureName = this.$translate.instant('careChatTpl.virtualAssistant.eva.featureText.name');
     return this.$translate.instant('careChatTpl.virtualAssistant.eva.' + textIdExtension, { featureName });
   }
 
@@ -66,7 +66,7 @@ export class EvaService {
    * @param textIdExtension
    * @returns {string}
    */
-  public getEvaMessageKey(textIdExtension: string): string {
+  public getMessageKey(textIdExtension: string): string {
     return 'careChatTpl.virtualAssistant.eva.' + textIdExtension;
   }
 

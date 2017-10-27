@@ -5,6 +5,8 @@
     .module('Core')
     .controller('DeviceOverviewCtrl', DeviceOverviewCtrl);
 
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
   /* @ngInject */
   function DeviceOverviewCtrl($q, $state, $scope, $interval, Notification, $stateParams, $translate, $timeout, Authinfo,
     FeedbackService, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal,
@@ -499,7 +501,7 @@
     };
 
     deviceOverview.addTagOnEnter = function ($event) {
-      if ($event.keyCode == 13) {
+      if ($event.keyCode === KeyCodes.ENTER) {
         deviceOverview.addTag();
       }
     };

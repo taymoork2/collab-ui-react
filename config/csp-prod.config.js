@@ -46,7 +46,7 @@ module.exports = {
     'https://*.wbx2.com',
     'https://*.webex.com',
     'https://*.webexconnect.com',
-    'https://api.api.ai', // Virtual Assistant testing api.ai token
+    'https://api.dialogflow.com', // Virtual Assistant testing dialogflow token
     'https://api.mixpanel.com',
     'https://bam.nr-data.net', // New Relic Browser
     'https://cdn.mxpnl.com',

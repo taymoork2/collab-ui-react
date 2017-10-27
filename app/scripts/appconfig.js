@@ -4523,10 +4523,11 @@
           })
           .state('mediafusion-cluster.settings', {
             url: '/settings',
-            template: require('modules/hercules/fusion-pages/mediafusion-settings.html'),
-            controller: 'MediafusionClusterSettingsController',
-            controllerAs: 'clusterSettings',
+            template: '<hybrid-media-cluster-settings cluster-id="$resolve.id" has-mf-phase-two-toggle="$resolve.hasMFFeatureToggle" has-mf-trusted-sip-toggle="$resolve.hasMFSIPFeatureToggle"></hybrid-media-cluster-settings>',
             resolve: {
+              id: /* @ngInject */ function ($stateParams) {
+                return $stateParams.id;
+              },
               hasMFFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServicePhaseTwo);
               },

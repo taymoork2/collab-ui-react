@@ -1,5 +1,6 @@
 import { CloudConnectorService } from 'modules/hercules/services/calendar-cloud-connector.service';
 import { Notification } from 'modules/core/notifications';
+import { KeyCodes } from 'modules/core/accessibility';
 
 import './office-365-test-modal.scss';
 
@@ -54,7 +55,7 @@ class Office365TestModalController implements ng.IComponentController {
   }
 
   public handleKeypress(event: KeyboardEvent): void {
-    if (event.keyCode === 13 && this.emailTestingForm.$valid) {
+    if (event.keyCode === KeyCodes.ENTER && this.emailTestingForm.$valid) {
       this.test(this.email);
     }
   }

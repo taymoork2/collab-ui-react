@@ -1,10 +1,10 @@
 'use strict';
 
-describe('Care virtualassistant admin setup virtual assistant', function () {
+describe('CVA feature setup', function () {
   // NOTE: these variables will only be saved AFTER DELETE is implemented in the page
-  var APIAITestClientToken = '22e724e0bc604e99b0cfd281cd6c282a';
-  var APIAITestAgentName = 'e2e-careVirtualAssistantTemplate-' + utils.randomId();
-  var RenamedAPIAITestAgentName = APIAITestAgentName + '-NewName';
+  var DialogflowTestClientToken = '22e724e0bc604e99b0cfd281cd6c282a';
+  var DialogflowTestAgentName = 'e2e-careVirtualAssistantTemplate-' + utils.randomId();
+  var RenamedDialogflowTestAgentName = DialogflowTestAgentName + '-NewName';
   beforeAll(function () {
     login.login('virtualassistant-admin', '#/services');
   });
@@ -37,13 +37,13 @@ describe('Care virtualassistant admin setup virtual assistant', function () {
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.title);
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.titleDesc);
     utils.expectIsNotDisplayed(careVirtualAssistantTemplateSetupPage.setUpLeftBtn);
-    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.apiaiIsNotPreconfigured);
-    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.apiaiIsPreconfigured);
-    // set apiai as preconfigured
-    utils.click(careVirtualAssistantTemplateSetupPage.apiaiIsPreconfigured);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.dialogflowIsNotPreconfigured);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.dialogflowIsPreconfigured);
+    // set dialogflow as preconfigured
+    utils.click(careVirtualAssistantTemplateSetupPage.dialogflowIsPreconfigured);
   });
 
-  it('Create: Indicate API.AI is Configured and move to DialogIntegeration Modal', function () {
+  it('Create: Indicate Dialogflow is Configured and move to DialogIntegeration Modal', function () {
     utils.click(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
 
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.title);
@@ -61,9 +61,9 @@ describe('Care virtualassistant admin setup virtual assistant', function () {
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.titleDesc);
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpLeftBtn);
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
-    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.apiaiClientAccessToken);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.dialogflowClientAccessToken);
 
-    utils.sendKeys(careVirtualAssistantTemplateSetupPage.apiaiClientAccessToken, APIAITestClientToken);
+    utils.sendKeys(careVirtualAssistantTemplateSetupPage.dialogflowClientAccessToken, DialogflowTestClientToken);
 
     utils.click(careVirtualAssistantTemplateSetupPage.validateBtn);
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.checkMarkIcon);
@@ -78,7 +78,7 @@ describe('Care virtualassistant admin setup virtual assistant', function () {
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.name);
 
-    utils.sendKeys(careVirtualAssistantTemplateSetupPage.name, APIAITestAgentName);
+    utils.sendKeys(careVirtualAssistantTemplateSetupPage.name, DialogflowTestAgentName);
   });
 
   it('Create: Move to Avatar Upload Modal', function () {
@@ -101,14 +101,14 @@ describe('Care virtualassistant admin setup virtual assistant', function () {
 
   it('Create: Save/Finish', function () {
     utils.click(careVirtualAssistantTemplateSetupPage.finishBtn);
-    notifications.assertSuccess('You have successfully created ' + APIAITestAgentName + '.');
+    notifications.assertSuccess('You have successfully created ' + DialogflowTestAgentName + '.');
   });
 
   it('Find created Template', function () {
     utils.click(utils.searchbox);
     utils.clear(utils.searchField);
-    utils.sendKeys(utils.searchField, APIAITestAgentName);
-    utils.waitForText(careLandingPage.foundCardName, APIAITestAgentName);
+    utils.sendKeys(utils.searchField, DialogflowTestAgentName);
+    utils.waitForText(careLandingPage.foundCardName, DialogflowTestAgentName);
   });
   it('Start Editing VirtualAssistant Template.', function () {
     utils.click(careLandingPage.editCardBtnOnCard);
@@ -117,7 +117,7 @@ describe('Care virtualassistant admin setup virtual assistant', function () {
     utils.expectIsNotDisplayed(careVirtualAssistantTemplateSetupPage.setUpLeftBtn);
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
   });
-  it('Edit: Indicate API.AI is Configured and move to DialogIntegeration Modal', function () {
+  it('Edit: Indicate Dialogflow is Configured and move to DialogIntegeration Modal', function () {
     utils.click(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
 
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.title);
@@ -134,7 +134,7 @@ describe('Care virtualassistant admin setup virtual assistant', function () {
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.titleDesc);
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpLeftBtn);
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
-    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.apiaiClientAccessToken);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.dialogflowClientAccessToken);
 
     utils.click(careVirtualAssistantTemplateSetupPage.validateBtn);
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.checkMarkIcon);
@@ -150,7 +150,7 @@ describe('Care virtualassistant admin setup virtual assistant', function () {
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.name);
 
     utils.clear(careVirtualAssistantTemplateSetupPage.name);
-    utils.sendKeys(careVirtualAssistantTemplateSetupPage.name, RenamedAPIAITestAgentName);
+    utils.sendKeys(careVirtualAssistantTemplateSetupPage.name, RenamedDialogflowTestAgentName);
   });
 
   it('Edit: Move to Avatar Upload Modal', function () {
@@ -173,31 +173,31 @@ describe('Care virtualassistant admin setup virtual assistant', function () {
 
   it('Edit: Save/Finish', function () {
     utils.click(careVirtualAssistantTemplateSetupPage.finishBtn);
-    notifications.assertSuccess('You have successfully updated ' + RenamedAPIAITestAgentName + '.');
+    notifications.assertSuccess('You have successfully updated ' + RenamedDialogflowTestAgentName + '.');
   });
 
   it('Find edited template', function () {
     utils.click(utils.searchbox);
     utils.clear(utils.searchField);
-    utils.sendKeys(utils.searchField, RenamedAPIAITestAgentName);
-    utils.waitForText(careLandingPage.foundCardName, RenamedAPIAITestAgentName);
+    utils.sendKeys(utils.searchField, RenamedDialogflowTestAgentName);
+    utils.waitForText(careLandingPage.foundCardName, RenamedDialogflowTestAgentName);
   });
 
   it('Delete: Edited template', function () {
     utils.click(careLandingPage.deleteCardBtnOnCard);
     utils.click(careLandingPage.deleteTemplateOnModal);
-    notifications.assertSuccess(RenamedAPIAITestAgentName + ' has been deleted successfully.');
+    notifications.assertSuccess(RenamedDialogflowTestAgentName + ' has been deleted successfully.');
   });
 
   it('Validate non of our created or edit templates exist anymore', function () {
     utils.click(utils.searchbox);
     utils.clear(utils.searchField);
-    utils.sendKeys(utils.searchField, RenamedAPIAITestAgentName);
+    utils.sendKeys(utils.searchField, RenamedDialogflowTestAgentName);
     utils.expectIsNotDisplayed(careLandingPage.foundCardName);
 
     utils.click(utils.searchbox);
     utils.clear(utils.searchField);
-    utils.sendKeys(utils.searchField, APIAITestAgentName);
+    utils.sendKeys(utils.searchField, DialogflowTestAgentName);
     utils.expectIsNotDisplayed(careLandingPage.foundCardName);
   });
 });

@@ -4,6 +4,7 @@ import { FallbackDestination } from 'modules/call/features/shared/call-feature-f
 import { HuronSiteService } from 'modules/huron/sites';
 import { Notification } from 'modules/core/notifications';
 import { LocationsService, LocationListItem } from 'modules/call/locations';
+import { KeyCodes } from 'modules/core/accessibility';
 
 class CallParkCtrl implements ng.IComponentController {
   private static readonly DEFAULT_EXTENSION_LENGTH: number  = 4;
@@ -171,18 +172,15 @@ class CallParkCtrl implements ng.IComponentController {
 
   public evalKeyPress($keyCode): void {
     switch ($keyCode) {
-      case 27:
-      //escape key
+      case KeyCodes.ESCAPE:
         this.cancelModal();
         break;
-      case 39:
-      //right arrow
+      case KeyCodes.RIGHT:
         if (this.nextButton(this.pageIndex)) {
           this.nextPage();
         }
         break;
-      case 37:
-      //left arrow
+      case KeyCodes.LEFT:
         if (this.previousButton(this.pageIndex)) {
           this.previousPage();
         }
@@ -193,7 +191,7 @@ class CallParkCtrl implements ng.IComponentController {
   }
 
   public enterNextPage($keyCode): boolean | undefined {
-    if ($keyCode === 13 && this.nextButton(this.pageIndex)) {
+    if ($keyCode === KeyCodes.ENTER && this.nextButton(this.pageIndex)) {
       this.nextPage();
     } else {
       return false;

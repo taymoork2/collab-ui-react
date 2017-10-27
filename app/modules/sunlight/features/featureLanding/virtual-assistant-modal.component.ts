@@ -52,12 +52,7 @@ class VirtualAssistantModalCtrl implements ng.IComponentController {
   }
 
   public ok(featureId: string): void {
-    // For now, it will do nothing but close the modal for expert virtual assistant
-    if (featureId === this.CvaService.cvaServiceCard.id) {
-      this.$state.go('care.assistant', {
-        type: this.CvaService.cvaServiceCard.type,
-      });
-    }
+    this.$state.go('care.' + featureId);
     this.dismiss();
   }
 

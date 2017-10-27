@@ -1,4 +1,5 @@
 import { IToolkitModalService } from 'modules/core/modal';
+import { KeyCodes } from 'modules/core/accessibility';
 import * as _ from 'lodash';
 
 export interface IScopeWithController extends ng.IScope {
@@ -10,10 +11,12 @@ export interface IScopeWithController extends ng.IScope {
 const requireContext = (require as any).context(`ngtemplate-loader?module=Sunlight&relativeTo=app/!modules/sunlight/features/virtualAssistant/wizardPages/`, false, /^\.\/.*\.tpl\.html$/);
 requireContext.keys().map(key => requireContext(key));
 
-export class CvaSetupCtrl {
+/**
+ * CustomerVirtualAssistantSetupCtrl
+ */
+class CustomerVirtualAssistantSetupCtrl implements ng.IComponentController {
 
   private animationTimeout = 10;
-  private escapeKey = 27;
 
   public animation = '';
   public maxNameLength = 50;
@@ -50,8 +53,8 @@ export class CvaSetupCtrl {
       pages: {
         cvaConfigOverview: {
           enabled: true,
-          isApiAiAgentConfigured: false,
-          configurationType: this.CvaService.configurationTypes.apiai,
+          isDialogflowAgentConfigured: false,
+          configurationType: this.CvaService.configurationTypes.dialogflow,
           startTimeInMillis: 0,
           eventName: this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_OVERVIEW_PAGE,
         },
@@ -121,12 +124,17 @@ export class CvaSetupCtrl {
     private Notification,
     private UrlConfig,
   ) {
+  }
 
+  /**
+   * Initialize the controller
+   */
+  public $onInit() {
     this.template.configuration.pages.cvaConfigOverview.startTimeInMillis = Date.now();
     if (this.$stateParams.isEditFeature) {
       this.isEditFeature = true;
       this.template.templateId = this.$stateParams.template.id;
-      this.template.configuration.pages.cvaConfigOverview.isApiAiAgentConfigured = true;
+      this.template.configuration.pages.cvaConfigOverview.isDialogflowAgentConfigured = true;
       this.template.configuration.pages.vaName.nameValue = this.$stateParams.template.name;
       this.template.configuration.pages.cvaAccessToken.accessTokenValue = this.$stateParams.template.config.token;
       this.template.configuration.pages.cvaAccessToken.invalidToken = false;
@@ -156,9 +164,9 @@ export class CvaSetupCtrl {
    */
   public getTitle(): string {
     if (this.isEditFeature) {
-      return this.getCvaText('editTitle');
+      return this.getText('editTitle');
     } else {
-      return this.getCvaText('createTitle');
+      return this.getText('createTitle');
     }
   }
 
@@ -168,9 +176,9 @@ export class CvaSetupCtrl {
    */
   public getSummaryDescription(): string {
     if (this.isEditFeature) {
-      return this.getCvaText('summary.editDesc');
+      return this.getText('summary.editDesc');
     } else {
-      return this.getCvaText('summary.desc');
+      return this.getText('summary.desc');
     }
   }
 
@@ -180,7 +188,7 @@ export class CvaSetupCtrl {
   public cancelModal(): void {
     this.cancelModalText = {
       cancelHeader: this.$translate.instant('careChatTpl.cancelHeader'),
-      cancelDialog: this.getCvaText('cancelDialog'),
+      cancelDialog: this.getText('cancelDialog'),
       continueButton: this.$translate.instant('careChatTpl.continueButton'),
       confirmButton: this.$translate.instant('careChatTpl.confirmButton'),
     };
@@ -196,7 +204,7 @@ export class CvaSetupCtrl {
    */
   public evalKeyPress(keyCode: number): void {
     switch (keyCode) {
-      case this.escapeKey:
+      case KeyCodes.ESCAPE:
         this.cancelModal();
         break;
       default:
@@ -222,7 +230,7 @@ export class CvaSetupCtrl {
   public nextButton(): any {
     switch (this.currentState) {
       case 'cvaConfigOverview':
-        return this.isApiAiAgentConfigured(); // check radio button state
+        return this.isDialogflowAgentConfigured(); // check radio button state
       case 'cvaDialogIntegration':
         return true;
       case 'cvaAccessToken':
@@ -284,8 +292,8 @@ export class CvaSetupCtrl {
    */
   private beforePreviousPage(currentState: string): void {
     if (currentState === 'cvaAccessToken' &&
-        this.isAccessTokenInvalid() &&
-        !_.isEmpty(this.tokenForm)) {
+      this.isAccessTokenInvalid() &&
+      !_.isEmpty(this.tokenForm)) {
       // Token is has errors, so save off the error messages in case we come back. JIRA CA-104
 
       const controller = this;
@@ -294,9 +302,9 @@ export class CvaSetupCtrl {
       });
     }
     if (currentState === 'vaName' &&
-        _.isEmpty(this.template.configuration.pages.vaName.nameValue) &&
-        !_.isEmpty(this.nameForm) &&
-        !this.nameForm.$valid) {
+      _.isEmpty(this.template.configuration.pages.vaName.nameValue) &&
+      !_.isEmpty(this.nameForm) &&
+      !this.nameForm.$valid) {
       //Name was validated and failed validation. The actual value is in the nameform, so set our value to that; JIRA CA-104
       this.template.configuration.pages.vaName.nameValue = this.nameForm.nameInput.$viewValue;
     }
@@ -333,7 +341,7 @@ export class CvaSetupCtrl {
    */
   public submitFeature(): void {
     const name = this.template.configuration.pages.vaName.nameValue.trim();
-    const config = this.createConfigurationObject(); // Note: this is our point of extensibility as other types besides api.ai are supported.
+    const config = this.createConfigurationObject(); // Note: this is our point of extensibility as other types besides dialogflow are supported.
     this.creatingTemplate = true;
     const avatarDataURL = this.template.configuration.pages.vaAvatar.fileValue;
     if (this.isEditFeature) {
@@ -343,7 +351,7 @@ export class CvaSetupCtrl {
     }
   }
 
-  public onAPIAITokenChange(): void {
+  public onDialogflowTokenChange(): void {
     const controller = this;
     this.template.configuration.pages.cvaAccessToken.invalidToken = true;
     this.template.configuration.pages.cvaAccessToken.needsValidation = true; //changed token needs validation
@@ -351,13 +359,13 @@ export class CvaSetupCtrl {
   }
 
   /**
-   * validate the api.ai Token
+   * validate the Dialogflow Token
    */
-  public validateAPIAIToken(): void {
+  public validateDialogflowToken(): void {
     const controller = this;
     controller.template.configuration.pages.cvaAccessToken.validatingToken = true;
     const accessToken = (controller.template.configuration.pages.cvaAccessToken.accessTokenValue || '').trim();
-    controller.service.isAPIAITokenValid(accessToken)
+    controller.service.isDialogflowTokenValid(accessToken)
       .then(function () {
         controller.template.configuration.pages.cvaAccessToken.invalidToken = false;
         controller.template.configuration.pages.cvaAccessToken.needsValidation = false; //we just validated it.
@@ -373,13 +381,13 @@ export class CvaSetupCtrl {
   }
 
   /** Data Validation functions **/
-  public isApiAiAgentConfigured(): boolean {
-    return !!this.template.configuration.pages.cvaConfigOverview.isApiAiAgentConfigured;
+  public isDialogflowAgentConfigured(): boolean {
+    return !!this.template.configuration.pages.cvaConfigOverview.isDialogflowAgentConfigured;
   }
 
   public isAccessTokenInvalid(): boolean {
     return (this.template.configuration.pages.cvaAccessToken.invalidToken &&
-           !this.template.configuration.pages.cvaAccessToken.needsValidation);
+    !this.template.configuration.pages.cvaAccessToken.needsValidation);
   }
 
   public isAccessTokenValid(): boolean {
@@ -490,12 +498,12 @@ export class CvaSetupCtrl {
     }
   }
 
-  public getCvaText(textIdExtension: string): string {
-    return this.service.getCvaText(textIdExtension);
+  public getText(textIdExtension: string): string {
+    return this.service.getText(textIdExtension);
   }
 
-  public getCvaMessageKey(textIdExtension: string): string {
-    return this.service.getCvaMessageKey(textIdExtension);
+  public getMessageKey(textIdExtension: string): string {
+    return this.service.getMessageKey(textIdExtension);
   }
 
 
@@ -539,7 +547,7 @@ export class CvaSetupCtrl {
   private handleFeatureCreation(): void {
     this.creatingTemplate = false;
     this.$state.go('care.Features');
-    this.Notification.success(this.getCvaMessageKey('messages.createSuccessText'), {
+    this.Notification.success(this.getMessageKey('messages.createSuccessText'), {
       featureName: this.template.configuration.pages.vaName.nameValue,
     });
   }
@@ -561,7 +569,7 @@ export class CvaSetupCtrl {
       })
       .catch(function (response) {
         controller.handleFeatureError();
-        controller.Notification.errorWithTrackingId(response, controller.getCvaMessageKey('messages.createConfigFailureText'));
+        controller.Notification.errorWithTrackingId(response, controller.getMessageKey('messages.createConfigFailureText'));
       });
   }
 
@@ -586,7 +594,7 @@ export class CvaSetupCtrl {
   private handleFeatureUpdate(): void {
     this.creatingTemplate = false;
     this.$state.go('care.Features');
-    const successMsg = this.getCvaMessageKey('messages.updateSuccessText');
+    const successMsg = this.getMessageKey('messages.updateSuccessText');
     this.Notification.success(successMsg, {
       featureName: this.template.configuration.pages.vaName.nameValue,
     });
@@ -610,12 +618,12 @@ export class CvaSetupCtrl {
       })
       .catch(function (response) {
         controller.handleFeatureError();
-        controller.Notification.errorWithTrackingId(response, controller.getCvaMessageKey('messages.updateConfigFailureText'));
+        controller.Notification.errorWithTrackingId(response, controller.getMessageKey('messages.updateConfigFailureText'));
       });
   }
 
   /**
-   * This is where we can extend our controller to support other types of assistants besides api.ai.
+   * This is where we can extend our controller to support other types of assistants besides Dialogflow.
    * Each one may have a different Configuration object that we are going to add/update.
    * template.configuration.pages.cvaConfigOverview.configurationType  holds the type that is being added/updated.
    * @returns {*}
@@ -645,6 +653,17 @@ export class CvaSetupCtrl {
     return isUnique;
   }
 }
-angular
+/**
+ * Customer Virtual Assistant Component used for Creating new Customer Virtual Assistant
+ */
+export class CustomerVirtualAssistantSetupComponent implements ng.IComponentOptions {
+  public controller = CustomerVirtualAssistantSetupCtrl;
+  public template = require('modules/sunlight/features/virtualAssistant/vaSetup.tpl.html');
+  public bindings = {
+    dismiss: '&',
+  };
+}
+
+export default angular
   .module('Sunlight')
-  .controller('CvaSetupCtrl', CvaSetupCtrl);
+  .component('cvaSetup', new CustomerVirtualAssistantSetupComponent());

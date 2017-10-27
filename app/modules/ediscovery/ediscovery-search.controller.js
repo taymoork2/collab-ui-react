@@ -2,6 +2,8 @@
 (function () {
   'use strict';
 
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
   module.exports = EdiscoverySearchController;
   /* @ngInject */
   function EdiscoverySearchController($q, $stateParams, $translate, $timeout, $scope, $window, Analytics, Authinfo, EdiscoveryService, EdiscoveryNotificationService,
@@ -503,22 +505,20 @@
     }
 
     function keyPressHandler(event) {
-      var ESC = 27;
-      var ENTER = 13;
       var activeElement = angular.element($window.document.activeElement);
       var searchInput = activeElement[0]['id'] === 'searchInput';
       var searchModel = activeElement[0].getAttribute('ng-model') === 'ediscoverySearchCtrl.searchModel';
       var queryModel = activeElement[0].getAttribute('ng-model') === 'ediscoverySearchCtrl.queryModel';
       var inputFieldHasFocus = searchInput || searchModel || queryModel;
-      if (!inputFieldHasFocus || !(event.keyCode === ESC || event.keyCode === ENTER)) {
+      if (!inputFieldHasFocus || !(event.keyCode === KeyCodes.ESCAPE || event.keyCode === KeyCodes.ENTER)) {
         return; // if not escape and enter, nothing to do
       }
       switch (event.keyCode) {
-        case ESC:
+        case KeyCodes.ESCAPE:
           init();
           break;
 
-        case ENTER:
+        case KeyCodes.ENTER:
           $timeout(function () {
             angular.element('#ediscoverySearchButton').trigger('click');
           });

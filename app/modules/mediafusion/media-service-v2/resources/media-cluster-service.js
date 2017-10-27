@@ -307,23 +307,6 @@
         });
     }
 
-    function getProperties(clusterId) {
-      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/properties';
-      return $http
-        .get(url)
-        .then(extractDataFromResponse);
-    }
-
-    function setProperties(clusterId, payLoad) {
-      var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/properties';
-      return $http
-        .post(url, payLoad)
-        .then(function (res) {
-          HybridServicesClusterService.clearCache();
-          return res;
-        });
-    }
-
     function getV1Clusters() {
       var url = UrlConfig.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/';
       return $http
@@ -390,8 +373,6 @@
       updateV2Cluster: updateV2Cluster,
       deleteClusterWithConnector: deleteClusterWithConnector,
       moveV2Host: moveV2Host,
-      getProperties: getProperties,
-      setProperties: setProperties,
       getClustersByConnectorType: getClustersByConnectorType,
       getRunningStateSeverity: getRunningStateSeverity,
       mergeAllAlarms: mergeAllAlarms,
