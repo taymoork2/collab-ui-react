@@ -7332,25 +7332,25 @@
       "configOverview": {
         "title": "Identificação de marca e identidade",
         "desc": "Identificação de marca e identidade de bate-papo",
-        "boxTitle": "Crie um agente API.AI antes de criar seu Assistente virtual do cliente.",
-        "boxDesc": "Crie um agente automatizado no API.AI com um diálogo de linguagem natural. O Assistente virtual do cliente integrado usa o diálogo interno para interagir com seus clientes e escalar uma conversa para agentes ao vivo conforme necessário.",
-        "boxRadioOne": "Não, eu não tenho um agente API.AI pré-configurado",
+        "boxTitle": "Crie um agente Dialogflow antes de criar seu Assistente virtual do cliente.",
+        "boxDesc": "Crie um agente automatizado no Dialogflow com um diálogo de linguagem natural. O Assistente virtual do cliente integrado usa o diálogo interno para interagir com seus clientes e escalar uma conversa para agentes ao vivo conforme necessário.",
+        "boxRadioOne": "Não, eu não tenho um agente Dialogflow pré-configurado",
         "boxRadioOneDesc1": "Acesse ",
-        "boxRadioApiai": "API.AI",
+        "boxRadioDialogflow": "Dialogflow",
         "boxRadioOneDesc2": " para criar um agente. Para começar, veja a ",
-        "boxRadioApiaiDoc": "documentação API.AI",
-        "boxRadioTwo": "Sim, tenho um agente API.AI pré-configurado e estou pronto para prosseguir",
-        "boxRadioTwoDesc": "Clique na seta para continuar a integrar o agente API.AI com um Assistente virtual do cliente"
+        "boxRadioDialogflowDoc": "documentação Dialogflow",
+        "boxRadioTwo": "Sim, tenho um agente Dialogflow pré-configurado e estou pronto para prosseguir",
+        "boxRadioTwoDesc": "Clique na seta para continuar a integrar o agente Dialogflow com um Assistente virtual do cliente"
       },
       "dialogIntegration": {
         "title": "Configurar a integração de diálogo",
-        "desc": "Adicione uma Intenção de escalação pré-configurada para concluir a configuração do agente API.AI.",
+        "desc": "Adicione uma Intenção de escalação pré-configurada para concluir a configuração do agente Dialogflow.",
         "boxStepOne": "Baixe o arquivo JSON de Intenção de escalação pré-configurada.",
         "boxStepOneDesc": "Uma Intenção de escalação permite ao Assistente virtual do cliente escalar uma conversa para um agente.",
-        "boxStepTwo": "Carregue a Intenção de escalação ao agente API.AI.",
-        "boxStepTwoDesc": "Na página de Intenções do seu agente API.AI, clique nas reticências verticais (⋮) e escolha Carregar intenção. Carregue o arquivo escalation.json que você baixou.",
-        "boxStepThree": "Personalize a Intenção de escalação no API.AI.",
-        "boxStepThreeDesc": "Na página de Intenções do seu agente API.AI, escolha Intenção de escalação. Modifique os campos Usuário diz para alterar as expressões do usuário que desencadeiam a escalação. Todas as expressões do usuário devem:",
+        "boxStepTwo": "Carregue a Intenção de escalação ao agente Dialogflow.",
+        "boxStepTwoDesc": "Na página de Intenções do seu agente Dialogflow, clique nas reticências verticais (⋮) e escolha Carregar intenção. Carregue o arquivo escalation.json que você baixou.",
+        "boxStepThree": "Personalize a Intenção de escalação no Dialogflow.",
+        "boxStepThreeDesc": "Na página de Intenções do seu agente Dialogflow, escolha Intenção de escalação. Modifique os campos Usuário diz para alterar as expressões do usuário que desencadeiam a escalação. Todas as expressões do usuário devem:",
         "boxBulletOne": "Usar o modo de modelo",
         "boxBulletTwo": "Contém uma referência a @sys.any: tópico",
         "boxStepThreeDescCont": "O símbolo @ ao lado da expressão do usuário indica o modo de modelo. Clique no símbolo para alternar o modo. Não modifique a ação GetExpert.",
@@ -7361,11 +7361,11 @@
       "accessToken": {
         "title": "Concluir a integração do diálogo",
         "desc": "Conclua a integração para permitir o uso do diálogo natural nas interações do cliente",
-        "boxDesc": "Cada agente API.AI possui um token exclusivo de acesso ao cliente armazenado nas configurações do agente. Copie o token das definições do agente API.AI configuradas, insira-o aqui e clique em \"Validar\" para verificar o token antes de concluir a integração do diálogo.",
-        "inputLabel": "Token de acesso para cliente API.AI",
+        "boxDesc": "Cada agente Dialogflow possui um token exclusivo de acesso ao cliente armazenado nas configurações do agente. Copie o token das definições do agente Dialogflow configuradas, insira-o aqui e clique em \"Validar\" para verificar o token antes de concluir a integração do diálogo.",
+        "inputLabel": "Token de acesso para cliente Dialogflow",
         "validateButtonText": "Validar",
         "maxLengthError": "O token de acesso ao cliente não pode ter mais de 128 caracteres.",
-        "invalidTokenText": "Token de acesso ao cliente API.AI inválido. Verifique o token e tente novamente."
+        "invalidTokenText": "Token de acesso ao cliente Dialogflow inválido. Verifique o token e tente novamente."
       },
       "name": {
         "title": "Nome do assistente virtual do cliente",

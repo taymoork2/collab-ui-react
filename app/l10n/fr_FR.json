@@ -7332,25 +7332,25 @@
       "configOverview": {
         "title": "Prérequis pour la configuration de l'assistant clientèle virtuel",
         "desc": "Revoir les prérequis pour la création d'un assistant clientèle virtuel",
-        "boxTitle": "Créez un agent API.AI avant de créer votre assistant clientèle virtuel.",
-        "boxDesc": "Créez un agent automatisé dans API.AI avec un dialogue linguistique naturel. Votre assistant clientèle virtuel intégré utilise le dialogue intégré pour interagir avec vos clients et transférer une conversation aux agents en direct si nécessaire.",
-        "boxRadioOne": "Non, je n'ai pas d'agent API.AI préconfiguré",
+        "boxTitle": "Créez un agent Dialogflow avant de créer votre assistant clientèle virtuel.",
+        "boxDesc": "Créez un agent automatisé dans Dialogflow avec un dialogue linguistique naturel. Votre assistant clientèle virtuel intégré utilise le dialogue intégré pour interagir avec vos clients et transférer une conversation aux agents en direct si nécessaire.",
+        "boxRadioOne": "Non, je n'ai pas d'agent Dialogflow préconfiguré",
         "boxRadioOneDesc1": "Aller à ",
-        "boxRadioApiai": "API.AI",
+        "boxRadioDialogflow": "Dialogflow",
         "boxRadioOneDesc2": " pour créer un agent. Pour commencer, voir la ",
-        "boxRadioApiaiDoc": "documentation API.AI",
-        "boxRadioTwo": "Oui, j'ai un agent API.AI préconfiguré et je suis prêt à continuer",
-        "boxRadioTwoDesc": "Cliquez sur la flèche pour continuer à intégrer votre agent API.AI avec un assistant clientèle virtuel"
+        "boxRadioDialogflowDoc": "documentation Dialogflow",
+        "boxRadioTwo": "Oui, j'ai un agent Dialogflow préconfiguré et je suis prêt à continuer",
+        "boxRadioTwoDesc": "Cliquez sur la flèche pour continuer à intégrer votre agent Dialogflow avec un assistant clientèle virtuel"
       },
       "dialogIntegration": {
         "title": "Configurer l'intégration du dialogue",
-        "desc": "Ajouter une Intention de transfert préconfigurée pour terminer la configuration de votre agent API.AI",
+        "desc": "Ajouter une Intention de transfert préconfigurée pour terminer la configuration de votre agent Dialogflow",
         "boxStepOne": "Télécharger le fichier JSON Intention de transfert préconfigurée.",
         "boxStepOneDesc": "Une Intention de transfert permet à votre assistant clientèle virtuel de transférer une conversation à un agent.",
-        "boxStepTwo": "Charger l'Intention de transfert vers un agent API.AI.",
-        "boxStepTwoDesc": "Sur la page Intentions de votre agent API.AI, cliquez sur les points verticaux (⋮) et choisissez Intention de chargement. Chargez le fichier transfert.json que vous avez téléchargé.",
-        "boxStepThree": "Personnaliser l'Intention de transfert dans l'API.AI.",
-        "boxStepThreeDesc": "Sur la page Intentions de votre agent API.AI, choisissez Intention de transfert. Modifiez les champs L'utilisateur dit pour changer les expressions qui déclenchent le transfert. Toutes les expressions des utilisateurs doivent :",
+        "boxStepTwo": "Charger l'Intention de transfert vers un agent Dialogflow.",
+        "boxStepTwoDesc": "Sur la page Intentions de votre agent Dialogflow, cliquez sur les points verticaux (⋮) et choisissez Intention de chargement. Chargez le fichier transfert.json que vous avez téléchargé.",
+        "boxStepThree": "Personnaliser l'Intention de transfert dans l'Dialogflow.",
+        "boxStepThreeDesc": "Sur la page Intentions de votre agent Dialogflow, choisissez Intention de transfert. Modifiez les champs L'utilisateur dit pour changer les expressions qui déclenchent le transfert. Toutes les expressions des utilisateurs doivent :",
         "boxBulletOne": "utiliser le mode modèle",
         "boxBulletTwo": "contenir une référence vers @sys.any : Sujet",
         "boxStepThreeDescCont": "Le symbole @ situé à côté de l'expression de l'utilisateur indique le mode modèle. Cliquez sur le symbole pour activer ou désactiver le mode. Ne modifiez pas l'action ObetnirExpert (GetExpert).",
@@ -7361,11 +7361,11 @@
       "accessToken": {
         "title": "Terminer l'intégration du dialogue",
         "desc": "Terminez votre intégration pour activer l'utilisation du dialogue naturel dans vos interactions avec la clientèle",
-        "boxDesc": "Chaque agent API.AI a un jeton d'accès au client unique enregistré dans les paramètres de l'agent. Copiez le jeton à partir des paramètres de votre agent API.AI configuré, saisissez-le ici, puis cliquez sur « Valider » pour vérifier le jeton avant que vous terminiez l'intégration du dialogue.",
-        "inputLabel": "Jeton d'accès au client API.AI",
+        "boxDesc": "Chaque agent Dialogflow a un jeton d'accès au client unique enregistré dans les paramètres de l'agent. Copiez le jeton à partir des paramètres de votre agent Dialogflow configuré, saisissez-le ici, puis cliquez sur « Valider » pour vérifier le jeton avant que vous terminiez l'intégration du dialogue.",
+        "inputLabel": "Jeton d'accès au client Dialogflow",
         "validateButtonText": "Valider",
         "maxLengthError": "Le jeton d'accès au client le peut pas dépasser 128 caractères.",
-        "invalidTokenText": "Jeton d'accès au client API.AI non valide. Vérifiez le jeton et réessayez."
+        "invalidTokenText": "Jeton d'accès au client Dialogflow non valide. Vérifiez le jeton et réessayez."
       },
       "name": {
         "title": "Nom de l'assistant clientèle virtuel",

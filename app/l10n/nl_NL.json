@@ -7332,25 +7332,25 @@
       "configOverview": {
         "title": "Configuratievereisten voor virtuele assistent voor klant",
         "desc": "Bestudeer de vereisten voor het maken van een virtuele assistent voor de klant",
-        "boxTitle": "Maak een API.AI-agent voordat u een virtuele assistent voor de klant maakt.",
-        "boxDesc": "Bouw een geautomatiseerde agent in API.AI met een dialoog die natuurlijk klinkt. Uw geïntegreerde virtuele assistent voor de klant gebruikt deze ingebouwde dialoog om met uw klanten te communiceren en indien nodig gesprekken naar live-agenten te escaleren.",
-        "boxRadioOne": "Nee, ik heb geen vooraf ingestelde API.AI-agent",
+        "boxTitle": "Maak een Dialogflow-agent voordat u een virtuele assistent voor de klant maakt.",
+        "boxDesc": "Bouw een geautomatiseerde agent in Dialogflow met een dialoog die natuurlijk klinkt. Uw geïntegreerde virtuele assistent voor de klant gebruikt deze ingebouwde dialoog om met uw klanten te communiceren en indien nodig gesprekken naar live-agenten te escaleren.",
+        "boxRadioOne": "Nee, ik heb geen vooraf ingestelde Dialogflow-agent",
         "boxRadioOneDesc1": "Ga naar ",
-        "boxRadioApiai": "API.AI",
+        "boxRadioDialogflow": "Dialogflow",
         "boxRadioOneDesc2": " om een agent te maken. Zie de ",
-        "boxRadioApiaiDoc": "API.AI-documentatie om te beginnen",
-        "boxRadioTwo": "Ja, ik heb een vooraf ingestelde API.AI-agent en ben klaar om door te gaan",
-        "boxRadioTwoDesc": "Klik op de pijl om door te gaan met het integreren van de API.AI-agent met een virtuele assistent voor de klant"
+        "boxRadioDialogflowDoc": "Dialogflow-documentatie om te beginnen",
+        "boxRadioTwo": "Ja, ik heb een vooraf ingestelde Dialogflow-agent en ben klaar om door te gaan",
+        "boxRadioTwoDesc": "Klik op de pijl om door te gaan met het integreren van de Dialogflow-agent met een virtuele assistent voor de klant"
       },
       "dialogIntegration": {
         "title": "Dialoogintegratie configureren",
-        "desc": "Voeg een vooraf ingesteld escalatieplan toe om de configuratie van de API.AI-agent te voltooien",
+        "desc": "Voeg een vooraf ingesteld escalatieplan toe om de configuratie van de Dialogflow-agent te voltooien",
         "boxStepOne": "Een JSON-bestand met een vooraf ingesteld escalatieplan downloaden.",
         "boxStepOneDesc": "Met een escalatieplan kan de virtuele assistent voor de klant een gesprek escaleren naar een agent.",
-        "boxStepTwo": "Een escalatieplan uploaden naar de API.AI-agent.",
-        "boxStepTwoDesc": "Klik op de planpagina van de API.AI-agent op het verticale weglatingsteken (⋮) en kies Plan uploaden. Upload het escalation.json-bestand dat u hebt gedownload.",
-        "boxStepThree": "Escalatieplan in API.AI aanpassen.",
-        "boxStepThreeDesc": "Kies Escalatieplan op de planpagina van de API.AI-agent. Wijzig de velden Gebruiker zegt om de gebruikerstermen te wijzigen die de escalatie triggeren. Alle gebruikerstermen moeten:",
+        "boxStepTwo": "Een escalatieplan uploaden naar de Dialogflow-agent.",
+        "boxStepTwoDesc": "Klik op de planpagina van de Dialogflow-agent op het verticale weglatingsteken (⋮) en kies Plan uploaden. Upload het escalation.json-bestand dat u hebt gedownload.",
+        "boxStepThree": "Escalatieplan in Dialogflow aanpassen.",
+        "boxStepThreeDesc": "Kies Escalatieplan op de planpagina van de Dialogflow-agent. Wijzig de velden Gebruiker zegt om de gebruikerstermen te wijzigen die de escalatie triggeren. Alle gebruikerstermen moeten:",
         "boxBulletOne": "De sjabloonmodus gebruiken",
         "boxBulletTwo": "Een referentie bevatten naar @sys.any:Topic",
         "boxStepThreeDescCont": "Het @-symbool naast de gebruikersterm geeft de sjabloonmodus aan. Klik op het symbool om van modus te wisselen. Wijzig de GetExpert-actie niet.",
@@ -7361,11 +7361,11 @@
       "accessToken": {
         "title": "Dialoogintegratie voltooien",
         "desc": "Voltooi uw integratie om het gebruik van een natuurlijke dialoog in de interactie met klanten mogelijk te maken.",
-        "boxDesc": "Elke API.AI-agent heeft een uniek toegangstoken voor de klant opgeslagen in de instellingen voor de agent. Kopieer het token uit de geconfigureerde instellingen van de API.AI-agent, voer ze hier in en klik op “Valideren” om het token te controleren voordat u begint met het voltooien van de dialoogintegratie.",
-        "inputLabel": "API.AI-toegangstoken klant",
+        "boxDesc": "Elke Dialogflow-agent heeft een uniek toegangstoken voor de klant opgeslagen in de instellingen voor de agent. Kopieer het token uit de geconfigureerde instellingen van de Dialogflow-agent, voer ze hier in en klik op “Valideren” om het token te controleren voordat u begint met het voltooien van de dialoogintegratie.",
+        "inputLabel": "Dialogflow-toegangstoken klant",
         "validateButtonText": "Valideren",
         "maxLengthError": "Toegangstoken klant kan niet langer zijn dan 128 tekens.",
-        "invalidTokenText": "Ongeldige API.AI-toegangstoken klant. Verifieer token en probeer het opnieuw."
+        "invalidTokenText": "Ongeldige Dialogflow-toegangstoken klant. Verifieer token en probeer het opnieuw."
       },
       "name": {
         "title": "Naam virtuele assistent voor de klant",

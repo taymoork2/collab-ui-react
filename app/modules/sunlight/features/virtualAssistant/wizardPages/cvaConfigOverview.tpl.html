@@ -20,18 +20,18 @@
 							type="radio"
 							id="radio-one"
 							name="radio"
-							ng-model="$ctrl.template.configuration.pages.cvaConfigOverview.isApiAiAgentConfigured"
+							ng-model="$ctrl.template.configuration.pages.cvaConfigOverview.isDialogflowAgentConfigured"
 							ng-value="false"
 							cs-input-label="{{$ctrl.getText('configOverview.boxRadioOne')}}"
 						/>
 						<p class="radio-desc">
 							<span class="h5">{{$ctrl.getText('configOverview.boxRadioOneDesc1')}}</span>
-							<a href="https://api.ai/" target="_blank">
-								{{$ctrl.getText('configOverview.boxRadioApiai')}}
+							<a href="https://dialogflow.com/docs/getting-started/basics" target="_blank">
+								{{$ctrl.getText('configOverview.boxRadioDialogflow')}}
 							</a>
 							<span class="h5">{{$ctrl.getText('configOverview.boxRadioOneDesc2')}}</span>
-							<a href="https://api.ai/docs/getting-started/basics" target="_blank">
-								{{$ctrl.getText('configOverview.boxRadioApiaiDoc')}}
+							<a href="https://dialogflow.com/docs/getting-started/basics" target="_blank">
+								{{$ctrl.getText('configOverview.boxRadioDialogflowDoc')}}
 							</a>
 						</p>
 						<input
@@ -40,7 +40,7 @@
 							type="radio"
 							id="radio-two"
 							name="radio"
-							ng-model="$ctrl.template.configuration.pages.cvaConfigOverview.isApiAiAgentConfigured"
+							ng-model="$ctrl.template.configuration.pages.cvaConfigOverview.isDialogflowAgentConfigured"
 							ng-value="true"
 							cs-input-label="{{$ctrl.getText('configOverview.boxRadioTwo')}}"
 						/>

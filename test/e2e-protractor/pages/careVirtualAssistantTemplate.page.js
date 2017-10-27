@@ -10,14 +10,14 @@ var VirtualAssistantTemplateCreation = function () {
   this.closePanelX = element(by.id('close-panel'));
 
   // config overview page info
-  this.apiaiIsNotPreconfigured = element(by.cssContainingText('label', 'No, I don’t have a preconfigured API.AI agent'));
-  this.apiaiIsPreconfigured = element(by.cssContainingText('label', 'Yes, I have a preconfigured API.AI agent and am ready to proceed'));
+  this.dialogflowIsNotPreconfigured = element(by.cssContainingText('label', 'No, I don’t have a preconfigured Dialogflow agent'));
+  this.dialogflowIsPreconfigured = element(by.cssContainingText('label', 'Yes, I have a preconfigured Dialogflow agent and am ready to proceed'));
 
   // Config dialog integration page info
   this.downloadEscalationIntentBtn = element(by.css('.btn.download-button'));
 
   // Access Token page info
-  this.apiaiClientAccessToken = element(by.name('tokenInput'));
+  this.dialogflowClientAccessToken = element(by.name('tokenInput'));
   this.validateBtn = element(by.css('.btn.validate-button'));
   this.checkMarkIcon = element(by.css('.icon.icon-check'));
 
