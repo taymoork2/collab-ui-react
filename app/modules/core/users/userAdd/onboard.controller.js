@@ -1245,7 +1245,7 @@ require('./_user-add.scss');
           } else if (_.startsWith(licenseId, Config.offerCodes.CVC)) {
             removeCareLicence($scope.cdcCareFeature, licenseList);
           }
-        } else if (action === 'patch') { // will get invoked when None is selected in care radio
+        } else if (action === 'patch' && $scope.careRadioValue.NONE !== $scope.radioStates.initialCareRadioState) { // will get invoked when None is selected in care radio and  previous state was not none
           removeCareLicence($scope.cdcCareFeature, licenseList);
           removeCareLicence($scope.cvcCareFeature, licenseList);
         }
