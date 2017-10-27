@@ -147,15 +147,15 @@ export class SetupWizardService {
   }
 
   public getConferenceLicensesBySubscriptionId(subscriptionId): IConferenceLicense[] {
-    const webexLicenses = this.getWebexLicenses();
+    const webexLicenses = this.getNonTrialWebexLicenses();
     const actingSubscriptionLicenses = <IConferenceLicense[]>_.filter(webexLicenses, { billingServiceId: subscriptionId });
     return actingSubscriptionLicenses;
   }
 
-  public getWebexLicenses(): IPendingLicense[] {
+  public getNonTrialWebexLicenses(): IConferenceLicense[] {
     const webexOffers = [this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC];
     const conferenceLicenses = _.map(this.Authinfo.getConferenceServices(), 'license');
-    const webexLicenses = <IPendingLicense[]>_.filter(conferenceLicenses, (license: IPendingLicense) => _.includes(webexOffers, license.offerName));
+    const webexLicenses = <IConferenceLicense[]>_.filter(conferenceLicenses, (license: IConferenceLicense) => _.includes(webexOffers, license.offerName) && license.billingServiceId);
     return webexLicenses;
   }
 
@@ -363,6 +363,22 @@ export class SetupWizardService {
   public validateTransferCode(payload) {
     const orderUuid = this.getActingSubscriptionServiceOrderUUID();
     const url = `${this.UrlConfig.getAdminServiceUrl()}orders/${orderUuid}/transferCode/verify`;
+    return this.$http.post(url, payload);
+  }
+
+  public validateTransferCodeBySubscriptionId(siteUrl: string, transferCode: string, externalSubscriptionId: string, orderUuid?: string) {
+    const payload = {
+      siteUrl: siteUrl,
+      transferCode: transferCode,
+      serviceId: externalSubscriptionId,
+      orderUuid: orderUuid,
+    };
+    const url = `${this.UrlConfig.getAdminServiceUrl()}subscriptions/site/verifytransfercode`;
+    return this.$http.post(url, payload);
+  }
+
+  public addSiteToActiveSubscription(payload) {
+    const url = `${this.UrlConfig.getAdminServiceUrl()}subscriptions/site`;
     return this.$http.post(url, payload);
   }
 

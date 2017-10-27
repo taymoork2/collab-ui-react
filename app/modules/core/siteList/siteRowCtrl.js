@@ -12,6 +12,7 @@ require('./_site-list.scss');
     var vm = this;
     vm.showGridData = false;
     vm.isShowAddSite = false;
+    vm.canAddSite = WebExSiteRowService.canAddSite();
     vm.isAdminPage = Utils.isAdminPage();
 
     $log.debug('StateParams in sitreRowCrtl', $stateParams);

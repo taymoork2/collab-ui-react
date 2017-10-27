@@ -7,7 +7,7 @@ import { EventNames } from './webex-site.constants';
 
 class WebexSiteTransferCtrl implements ng.IComponentController {
 
-  private currentSubscriptionId;
+  public currentSubscription;
   public existingSites;
   public hasTrialSites;
   public showTransferCodeInput;
@@ -51,12 +51,6 @@ class WebexSiteTransferCtrl implements ng.IComponentController {
     });
   }
 
-  public $onChanges(changes: ng.IOnChangesObject) {
-    if (changes.currentSubscription) {
-      this.currentSubscriptionId = changes.currentSubscription.currentValue;
-    }
-  }
-
   public checkValidTransferData() {
     this.clearError();
     let invalid = false;
@@ -73,11 +67,11 @@ class WebexSiteTransferCtrl implements ng.IComponentController {
 
   public processNext() {
     this.migrateTrialNext().then(() => {
-      this.onSitesReceived({ sites: this.sitesArray, isValid: true });
+      this.onSitesReceived({ sites: this.sitesArray, transferCode: this.transferSiteCode, isValid: true });
     })
       .catch(() => {
         this.onValidationStatusChange({ isValid: false });
-        this.onSitesReceived({ sites: null, isValid: false });
+        this.onSitesReceived({ sites: null, transferCode: null, isValid: false });
       });
   }
 
@@ -93,7 +87,8 @@ class WebexSiteTransferCtrl implements ng.IComponentController {
     if (!(_.endsWith(transferSiteDetails.siteUrl, this.Config.siteDomainUrl.webexUrl))) {
       transferSiteDetails.siteUrl += this.Config.siteDomainUrl.webexUrl;
     }
-    return this.SetupWizardService.validateTransferCode(transferSiteDetails).then((response) => {
+    return this.SetupWizardService.validateTransferCodeBySubscriptionId(this.transferSiteUrl, this.transferSiteCode, this.currentSubscription)
+    .then((response) => {
       const status = _.get(response, 'data.status');
       if (!status || status !== 'INVALID') {
         // if transferred sites have already been added and the back button clicked, strip old sites.

@@ -42,13 +42,13 @@ class WebexSiteNewCtrl implements ng.IComponentController {
   public selectTimeZonePlaceholder = this.$translate.instant('firstTimeWizard.selectTimeZonePlaceholder');
   public timeZoneOptions;
   public isShowUserManagement = false;
-  public audioPackage = '';
+  public audioPackage;
   public disableValidateButton = false;
   public onSitesAdd: Function;
   public onValidationStatusChange: Function;
   public sitesArray: IWebExSite[];
   public newSitesArray: IWebExSite[] = [];
-
+  public audioPartnerName?: string;
 
   public addSite(site) {
     this.newSitesArray.push(site);
@@ -155,15 +155,14 @@ class WebexSiteNewCtrl implements ng.IComponentController {
     }
 
     const audioPackageType = this.$translate.instant('subscriptions.licenseTypes.' + this.audioPackage);
-    const audioPackageDisiplay = this.$translate.instant('firstTimeWizard.audioPackageWithType', { type: audioPackageType });
-    //TODO: algendel 9/23 when we have audio partner name requirement add:
-    /*if (this.audioPartnerName) {
-      audioPackageDisplay = this.$translate.instant('firstTimeWizard.conferencingAudioProvided', {
+    let audioPackageDisplay = this.$translate.instant('firstTimeWizard.audioPackageWithType', { type: audioPackageType });
+    if (this.audioPartnerName) {
+      audioPackageDisplay = this.$translate.instant('firstTimeWizard.conferencingAudioProvidedShort', {
         partner:  this.audioPartnerName,
         service: audioPackageDisplay,
       });
-    }*/
-    return audioPackageDisiplay;
+    }
+    return audioPackageDisplay;
   }
 }
 
@@ -176,6 +175,7 @@ export class WebexSiteNewComponent implements ng.IComponentOptions {
     onSitesAdd: '&',
     onValidationStatusChange: '&',
     audioPackage: '<',
+    audioPartnerName: '<',
   };
 }
 

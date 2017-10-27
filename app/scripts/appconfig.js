@@ -1938,17 +1938,7 @@
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<webex-add-site-modal subscription-list="$resolve.subscriptionList" audio-licenses="$resolve.audioLicenses" modal-title="\'firstTimeWizard.addWebexSite\'" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site-modal>',
-              },
-            },
-            resolve: {
-              audioLicenses: /*@ngInject */ function (Authinfo, Config) {
-                var audioLicenses = _.filter(Authinfo.getLicenses(), { licenseType: Config.licenseTypes.AUDIO });
-                return audioLicenses;
-              },
-              subscriptionList: /* @ngInject */ function (Authinfo) {
-                var subscriptionIds = _.map(Authinfo.getSubscriptions(), 'externalSubscriptionId');
-                return subscriptionIds;
+                template: '<webex-add-site-modal  modal-title="\'firstTimeWizard.addWebexSite\'" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site-modal>',
               },
             },
           })
@@ -1956,16 +1946,15 @@
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<webex-add-site-modal subscription-list="$resolve.subscriptionList" single-step="3" modal-title="\'webexSiteManagement.redistributeLicenses\'" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site-modal>',
+                template: '<webex-add-site-modal subscription-id="$resolve.subscriptionId" single-step="3" modal-title="\'webexSiteManagement.redistributeLicenses\'" dismiss="$dismiss()" class="context-modal add-webex-site"></webex-add-site-modal>',
               },
             },
             params: {
               subscriptionId: null,
             },
             resolve: {
-              subscriptionList: /* @ngInject */ function ($stateParams) {
-                var subscriptionIds = $stateParams['subscriptionId'];
-                return [subscriptionIds];
+              subscriptionId: /* @ngInject */ function ($stateParams) {
+                return $stateParams['subscriptionId'];
               },
             },
           })

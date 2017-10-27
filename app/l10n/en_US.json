@@ -3774,6 +3774,7 @@
     "tspPartnerRequired": "You have purchased TSP for your audio plan. A partner is required to provide this service.",
     "chooseTSPPartner": "Choose TSP Provider",
     "conferencingAudioProvided": "Conferencing Audio: {{service}} provided by {{partner}}",
+    "conferencingAudioProvidedShort": "{{service}} provided by {{partner}}",
     "ccasp": {
       "ccaspSubheading": "Conferencing audio setup",
       "ccaspDescription": "You have purchased audio from an audio partner. Please enter your audio provider's subscription ID number.  If you do not have one then contact your partner from whom you purchased this subscription",
@@ -6820,7 +6821,8 @@
     "deleteSiteRejectModalTitle": "Cannot Delete",
     "deleteSiteRejectModalBody": "You cannot delete the last site in a subscription",
     "redistributeRejectModalTitle": "Cannot Redistribute",
-    "redistributeRejectModalBody": "You cannot redistribute licenses between sites because there is only one site."
+    "redistributeRejectModalBody": "You cannot redistribute licenses between sites because there is only one site.",
+    "addSiteSuccess": "Site has been added successfully"
   },
   "cloudExtensions": {
     "cloudExtensions": "Hybrid Services",

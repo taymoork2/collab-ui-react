@@ -124,6 +124,10 @@
       return sites;
     };
 
+    this.canAddSite = function () {
+      return !_.isEmpty(SetupWizardService.getNonTrialWebexLicenses());
+    };
+
     this.getConferenceServices = function () {
       var funcName = 'getConferenceServices()';
       var logMsg = '';

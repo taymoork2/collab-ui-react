@@ -14,12 +14,13 @@
     ng-if="$ctrl.currentStep===0">
   </webex-site-subscription>
   <webex-site-transfer current-subscription="$ctrl.currentSubscriptionId"
-    on-sites-received="$ctrl.addTransferredSites(sites, isValid)"
+    on-sites-received="$ctrl.addTransferredSites(sites, transferCode, isValid)"
     on-validation-status-change="$ctrl.setNextEnabled(isValid)"
     ng-if="$ctrl.currentStep===1">
   </webex-site-transfer>
   <webex-site-new sites-array="$ctrl.sitesArray"
     audio-package="$ctrl.audioPackage"
+    audio-partner-name="$ctrl.audioPartnerName"
     on-sites-add="$ctrl.addNewSites(sites, isValid)"
     on-validation-status-change="$ctrl.setNextEnabled(isValid)"
     ng-if="$ctrl.currentStep===2">

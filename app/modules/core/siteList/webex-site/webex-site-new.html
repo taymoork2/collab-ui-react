@@ -106,7 +106,5 @@
       </div>
     </div>
   </div>
-  <div class="element-spacing">
-    {{:: $ctrl.getSitesAudioPackageDisplay() }}
-  </div>
+  <h5 ng-if="$ctrl.audioPackage">{{:: $ctrl.getSitesAudioPackageDisplay()}}</h5>
 </div>
