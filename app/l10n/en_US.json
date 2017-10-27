@@ -6962,6 +6962,7 @@
     "getLocationNumberRangesFailed:": "Failed to get internal number ranges.",
     "getCustomerFailed": "Failed to get customer.",
     "updateFailed": "Failed to update location.",
+    "voicemailPilotUpdateFailed": "The number, {{number}}, is being used as an Emergency Number.  It can not be assigned as a Voicemail Pilot.  Choose another number.",
     "updateLocationCosFailed": "Failed to update dialing restrictions.",
     "updateExtensionLengthFailed": "Failed to save extension length.",
     "saveSuccess": "Location settings saved successfully.",

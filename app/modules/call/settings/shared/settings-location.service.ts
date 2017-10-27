@@ -234,7 +234,15 @@ export class CallSettingsService {
     if (!_.isEqual(this.callSettingsDataCopy.defaultLocation, location)) {
       return this.LocationsService.updateLocation(location)
       .catch(error => {
-        this.errors.push(this.Notification.processErrorResponse(error, 'locations.updateFailed'));
+        const ERRORCODE = '19416';
+        if (_.has(error.data, 'details') &&
+            _.isArray(error.data.details) &&
+            _.has(error.data.details[0], 'productErrorMessage') &&
+            _.includes(error.data.details[0].productErrorMessage, ERRORCODE)) {
+          this.errors.push(this.Notification.processErrorResponse(error, 'locations.voicemailPilotUpdateFailed', { number : location.voicemailPilotNumber ? location.voicemailPilotNumber.number : '' }));
+        } else {
+          this.errors.push(this.Notification.processErrorResponse(error, 'locations.updateFailed'));
+        }
         return this.$q.reject();
       });
     } else {
