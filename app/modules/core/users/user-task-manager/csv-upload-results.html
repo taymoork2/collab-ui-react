@@ -1,4 +1,4 @@
-<div class="flex-container base-margin">
+<div class="flex-container base-margin" ng-show="$ctrl.activeTask !== undefined">
   <h4 translate="userManage.bulk.import.status"></h4>
 
   <!-- progress bar -->
@@ -24,12 +24,11 @@
   </div>
 
   <!-- done import status -->
-  <div class="flex-item-no-resize upload-progress upload-complete" ng-show="$ctrl.processProgress == 100">
-      <span class="progressbar-label">
-        <span class="progressbar-label" translate="userManage.bulk.import.completedAt"
-              translate-values="{ filename: $ctrl.fileName }"></span>
-        <span class="progressbar-label">{{$ctrl.importCompletedAt | date:'short'}}</span>
-      </span>
+  <div class="flex-item-no-resize upload-progress upload-complete" ng-show="$ctrl.processProgress > 0">
+    <span class="progressbar-label">
+      <span class="progressbar-label" translate="userTaskManagerModal.startedAt"
+        translate-values="{ time: $ctrl.startedTime, date: $ctrl.startedDate, person: $ctrl.startedBy }"></span>
+    </span>
   </div>
 
   <!-- display the results stats -->
@@ -75,8 +74,8 @@
       <div class="flex-item-resize table-body">
         <div class="scroller">
           <div ng-repeat="data in $ctrl.userErrorArray" class="row">
-            <span class="columns small-2 center error-row">{{::data.row}}</span>
-            <span class="columns small-10 error-desc">{{::data.error}}</span>
+            <span class="columns small-2 center error-row">{{::data.itemNumber}}</span>
+            <span class="columns small-10 error-desc">{{::data.errorMessage}}</span>
           </div>
         </div>
       </div>

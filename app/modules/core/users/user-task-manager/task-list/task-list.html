@@ -2,5 +2,8 @@
   ng-repeat="task in $ctrl.taskList track by task.jobInstanceId"
   task="task"
   is-active-task="$ctrl.isActiveTask(task)"
+  is-task-in-process="$ctrl.isTaskInProcess(task)"
+  is-task-error="$ctrl.isTaskError(task)"
+  is-task-canceled="$ctrl.isTaskCanceled(task)"
   ng-click="$ctrl.setActiveTask(task)">
 </user-task-list-item>

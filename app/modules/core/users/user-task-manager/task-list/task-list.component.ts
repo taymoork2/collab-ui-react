@@ -1,12 +1,17 @@
 import './task-list.scss';
-
 import { ITask } from '../user-task-manager.component';
+import { UserTaskManagerService } from '../user-task-manager.service';
 
 class TaskListController implements ng.IComponentController {
   public taskList: ITask[];
   public onActiveTaskChange: Function;
 
   private activeTask;
+
+  /* @ngInject */
+  constructor(
+    private UserTaskManagerService: UserTaskManagerService,
+  ) {}
 
   public $onChanges(changes: ng.IOnChangesObject) {
     if (changes.task) {
@@ -26,6 +31,30 @@ class TaskListController implements ng.IComponentController {
       return false;
     }
     return this.activeTask.jobInstanceId === task.jobInstanceId;
+  }
+
+  public isTaskInProcess(task: ITask) {
+    if (!_.isUndefined(task)) {
+      return this.UserTaskManagerService.isTaskInProcess(task.status);
+    } else {
+      return false;
+    }
+  }
+
+  public isTaskError(task: ITask) {
+    if (!_.isUndefined(task)) {
+      return this.UserTaskManagerService.isTaskError(task.status);
+    } else {
+      return false;
+    }
+  }
+
+  public isTaskCanceled(task: ITask) {
+    if (!_.isUndefined(task)) {
+      return this.UserTaskManagerService.isTaskCanceled(task.status);
+    } else {
+      return false;
+    }
   }
 }
 

@@ -356,7 +356,22 @@
   "userTaskManagerModal": {
     "title": "Tasks",
     "viewAllTasks": "View all tasks",
-    "getTaskListError": "An error occurred obtaining the list of task. Please refresh to try again."
+    "getTaskListError": "An error occurred obtaining the list of task. Please refresh to try again.",
+    "submitCsvError": "An error occurred submitting the CSV file.",
+    "cancelCsvError": "An error occurred canceling the CSV import.",
+    "csvImport": "CSV Import",
+    "backgroundTasksRunning": "Background tasks running...",
+    "startedAt": "Started at {{time}} on {{date}} by {{person}}",
+    "taskStatus": {
+      "canceled": "Canceled",
+      "completed": "Completed",
+      "completedWithErrors": "Completed with Errors",
+      "created": "Created",
+      "failed": "Failed",
+      "stopped": "Stopped",
+      "stoppedForMaintenance": "Stopped for Maintenance",
+      "processing": "Processing..."
+    }
   },
   "onboardModal": {
     "ciscoSparkJabberInterop": "Cisco Spark / Jabber Interop",

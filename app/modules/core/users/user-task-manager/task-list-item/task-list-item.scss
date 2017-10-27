@@ -1,5 +1,6 @@
 @import '~collab-ui/scss/settings/colors';
 @import '~collab-ui/scss/settings/fonts';
+@import '~collab-ui/scss/tools/mixins/spacing-responsive';
 
 user-task-list-item {
   display: block;
@@ -20,6 +21,9 @@ user-task-list-item {
     &__subtext {
       text-overflow: ellipsis;
       overflow: hidden;
+      &-icon {
+        vertical-align: middle;
+      }
     }
 
     &__text {
@@ -37,6 +41,10 @@ user-task-list-item {
       color: $gray-light-1;
       &--right {
         text-align: right;
+      }
+      &--icon {
+        vertical-align: middle;
+        @include vr-spacing(mr, 0.15);
       }
     }
   }
