@@ -20,12 +20,40 @@
     color: $gray-light-1;
   }
 
+  .care-badge {
+    @include vr-spacing(pt, 0.25);
+    display: block;
+    float: left;
+  }
+
+  .care-icon {
+    @include vr-spacing(pt, 0.5);
+    @include vr-spacing(ml, 0.25);
+    display: block;
+    float: left;
+
+    .people {
+      color: $color-mint-darker;
+    }
+    .cta {
+      color: $color-violet-darker;
+    }
+    .icon {
+      @include vr-spacing(ml, 0.25);
+    }
+  }
   .cs-card.hoverable {
     article {
       &.hover,
       &:focus {
-        .embed-code-txt,
+        .embed-code-txt {
+          color: $color-white;
+          .email {
+            color: $color-white;
+          }
+        }
         .card-icons-inline,
+        .icon,
         .icon-download {
           color: $color-white;
         }
@@ -48,14 +76,17 @@
     .embed-code-txt {
       @include vr-spacing(pt, 1.5);
       color: $gray-base;
+      .email {
+        color: $gray-dark-4;
+      }
     }
 
     .icon-download {
       font-size: rem-calc(24);
       color: $gray-light-1;
-      top: -2px;
 
       @include vr-spacing(ml, 0.5);
+      @include vr-spacing(pt, 1.5);
     }
   }
 
