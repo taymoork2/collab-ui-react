@@ -35,12 +35,12 @@ export class DeviceSearchBullet implements ng.IComponentController {
     if (this.searchElement instanceof FieldQuery) {
       const parent = this.searchElement.getParent();
       if (parent instanceof OperatorOr) {
-        return parent.fieldIfAllSubElementsAreSameField() ? '' : this.searchElement.getQueryPrefix();
+        return parent.getFieldNameIfAllSubElementsAreSameField() ? '' : this.searchElement.getQueryPrefix();
       }
       return this.searchElement.getQueryPrefix();
     }
     if (this.searchElement instanceof OperatorOr) {
-      return this.searchElement.fieldIfAllSubElementsAreSameField();
+      return this.searchElement.getFieldNameIfAllSubElementsAreSameField();
     }
     return '';
   }

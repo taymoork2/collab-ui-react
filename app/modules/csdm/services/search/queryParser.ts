@@ -154,7 +154,7 @@ export class OperatorOr extends SearchElement {
     };
   }
 
-  public fieldIfAllSubElementsAreSameField() {
+  public getFieldNameIfAllSubElementsAreSameField() {
     if (this.or.length > 1) {
       const firstSubExpr = this.or[0];
       if (firstSubExpr instanceof FieldQuery) {
