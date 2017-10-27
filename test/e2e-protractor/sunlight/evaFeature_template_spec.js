@@ -2,7 +2,7 @@
 
 describe('EVA feature setup', function () {
   beforeAll(function () {
-    login.login('virtualassistant-admin', '#/services');
+    login.login('expertvirtualassistant-admin', '#/services');
   });
   it('Services Page should have a CareCard with feature link.', function () {
     utils.expectIsDisplayed(careLandingPage.careCard);
