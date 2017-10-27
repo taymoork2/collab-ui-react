@@ -3,6 +3,8 @@ require('./helpdesk.scss');
 (function () {
   'use strict';
 
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
   /* @ngInject */
   function HelpdeskController($modal, $q, $scope, $state, $translate, $window, Authinfo, Config, HelpdeskHuronService, HelpdeskSearchHistoryService, HelpdeskService, HelpdeskSplunkReporterService, LicenseService) {
     $scope.$on('$viewContentLoaded', function () {
@@ -435,40 +437,33 @@ require('./helpdesk.scss');
     }
 
     function keyPressHandler(event) {
-      var LEFT_ARROW = 37;
-      var UP_ARROW = 38;
-      var RIGHT_ARROW = 39;
-      var DOWN_ARROW = 40;
-      var ESC = 27;
-      var ENTER = 13;
       var S = 83;
-
       var activeElement = angular.element($window.document.activeElement);
       var inputFieldHasFocus = activeElement[0]['id'] === 'searchInput';
-      if (inputFieldHasFocus && !(event.keyCode === 27 || event.keyCode === 13)) {
+      if (inputFieldHasFocus && !(event.keyCode === KeyCodes.ESCAPE || event.keyCode === KeyCodes.ENTER)) {
         return; // if not escape and enter, nothing to do
       }
       var activeTabIndex = activeElement[0]['tabIndex'];
       var newTabIndex = -1;
 
       switch (event.keyCode) {
-        case LEFT_ARROW:
+        case KeyCodes.LEFT:
           newTabIndex = activeTabIndex - 1;
           break;
 
-        case UP_ARROW:
+        case KeyCodes.UP:
           newTabIndex = activeTabIndex - 10;
           break;
 
-        case RIGHT_ARROW:
+        case KeyCodes.RIGHT:
           newTabIndex = activeTabIndex + 1;
           break;
 
-        case DOWN_ARROW:
+        case KeyCodes.DOWN:
           newTabIndex = activeTabIndex + 10;
           break;
 
-        case ESC:
+        case KeyCodes.ESCAPE:
           if (inputFieldHasFocus) {
             initSearchWithoutOrgFilter();
           } else {
@@ -477,7 +472,7 @@ require('./helpdesk.scss');
           }
           break;
 
-        case ENTER:
+        case KeyCodes.ENTER:
           if (!inputFieldHasFocus) {
             activeElement.click();
           }

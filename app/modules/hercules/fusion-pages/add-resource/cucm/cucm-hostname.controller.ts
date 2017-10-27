@@ -1,3 +1,5 @@
+import { KeyCodes } from 'modules/core/accessibility';
+
 export class CucmHostnameController {
 
   public hostname: string = '';
@@ -30,7 +32,7 @@ export class CucmHostnameController {
   }
 
   public handleKeypress(event) {
-    if (event.keyCode === 13 && this.canGoNext()) {
+    if (event.keyCode === KeyCodes.ENTER && this.canGoNext()) {
       this.next();
     }
   }

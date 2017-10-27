@@ -5,6 +5,8 @@
     .module('uc.autoattendant')
     .controller('AAHelpCtrl', AAHelpCtrl);
 
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
   /* @ngInject */
   function AAHelpCtrl($scope, $translate, Config, AAMetricNameService, Analytics) {
     var vm = this;
@@ -25,7 +27,7 @@
 
     /////////////////////
     function checkEvents($event) {
-      if ($event.keyCode == 27) {
+      if ($event.keyCode == KeyCodes.ESCAPE) {
         /* Don't propagate Esc when help button is focused*/
         $event.stopPropagation();
       }

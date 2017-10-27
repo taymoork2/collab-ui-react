@@ -1,5 +1,6 @@
 import callPickupMembersModule from './index';
 import { Member } from 'modules/huron/members';
+import { KeyCodes } from 'modules/core/accessibility';
 
 describe('Component: callPickupMembers', () => {
   const MEMBER_INPUT = 'input#memberInput';
@@ -326,8 +327,6 @@ describe('Component: callPickupMembers', () => {
     });
 
     it('displayModalLinesTaken test', function () {
-      const ENTER_KEY = 13;
-
       this.getNumbersDefer.resolve(numbersArray);
       this.isLineInPickupGroupDefer.resolve('helpdesk');
 
@@ -336,7 +335,7 @@ describe('Component: callPickupMembers', () => {
       const member = { userName: 'johndoe@gmail.com', uuid: '1000' };
       spyOn(this.controller, 'getActiveMember').and.returnValue(member);
 
-      const evt = $.Event('keydown', { keyCode: ENTER_KEY });
+      const evt = $.Event('keydown', { keyCode: KeyCodes.ENTER });
       const spyStopPropagation = spyOn(evt, 'stopPropagation');
       const spyModal = spyOn(this.$modal, 'open');
 

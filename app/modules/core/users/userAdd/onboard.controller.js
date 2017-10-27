@@ -7,6 +7,8 @@ require('./_user-add.scss');
   angular.module('Core')
     .controller('OnboardCtrl', OnboardCtrl);
 
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
   /*@ngInject*/
   function OnboardCtrl($modal, $previousState, $q, $rootScope, $scope, $state, $stateParams, $timeout, $translate, addressparser, Analytics, Authinfo, Config, FeatureToggleService, DialPlanService, Log, LogMetricsService, MessengerInteropService, NAME_DELIMITER, Notification, OnboardService, Orgservice, TelephonyInfoService, LocationsService, NumberService, Userservice, Utils, UserCsvService, UserListService, WebExUtilsFact, ServiceSetup, ExternalNumberPool, DirSyncService) {
     var vm = this;
@@ -1696,7 +1698,7 @@ require('./_user-add.scss');
     };
 
     $scope.onEnterKey = function (keyEvent) {
-      if (keyEvent.which === 13) {
+      if (keyEvent.which === KeyCodes.ENTER) {
         $scope.addToUsersfield();
       }
     };
