@@ -86,7 +86,6 @@ export class ServicesOverviewController implements ng.IComponentController {
       });
 
     const features = this.$q.all({
-      atlasHybridDataSecurity: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridDataSecurity),
       atlasHybridImp: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridImp),
       atlasOffice365Support: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasOffice365Support),
       atlasPMRonM2: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasPMRonM2),
@@ -138,7 +137,7 @@ export class ServicesOverviewController implements ng.IComponentController {
           if (this.Authinfo.isFusionMedia() && _.some(this.Authinfo.getRoles(), (role) => role === this.Config.roles.full_admin || this.Config.roles.readonly_admin)) {
             this._servicesToDisplay.push('squared-fusion-media');
           }
-          if ((this.Authinfo.isFusionHDS() || response.atlasHybridDataSecurity) && this.Authinfo.isEnterpriseCustomer() && _.some(this.Authinfo.getRoles(), (role) => role === this.Config.roles.full_admin || this.Config.roles.readonly_admin)) {
+          if (this.Authinfo.isFusionHDS() && this.Authinfo.isEnterpriseCustomer() && _.some(this.Authinfo.getRoles(), (role) => role === this.Config.roles.full_admin || this.Config.roles.readonly_admin)) {
             this._servicesToDisplay.push('spark-hybrid-datasecurity');
           }
           if (this.Authinfo.isContactCenterContext()) {
