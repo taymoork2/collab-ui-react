@@ -54,12 +54,8 @@ class LinkedSitesGotoWebexComponentCtrl implements ng.IComponentController {
 
 export class LinkedSitesGotoWebexComponent implements ng.IComponentOptions {
 
-  /* @ngInject */
-  constructor() {
-  }
-
   public controller = LinkedSitesGotoWebexComponentCtrl;
-  public template = require('modules/account-linking/linked-sites-gotowebex.component.html');
+  public template = require('./linked-sites-gotowebex.component.html');
   public bindings = {
     webexPage: '<',
     readyToLaunch: '&',

@@ -11,7 +11,7 @@
           {{$ctrl.selectedSite.linkedSiteUrl}}
         </div>
         <div class="header-subinfo">
-          Legacy WebEx License
+          <span translate="accountLinking.siteDetails.legacyWebexLicense"></span>
         </div>
       </div>
     </div>
@@ -36,7 +36,7 @@
           </li>
           <li class="feature">
             <span class="feature-name" translate="accountLinking.siteDetails.licenseType"></span>
-            <span class="feature-details">unknown</span>
+            <span class="feature-details">?</span>
           </li>
         </ul>
       </div>
@@ -54,11 +54,11 @@
         <ul>
           <li class="feature">
             <span class="feature-name" translate="accountLinking.siteDetails.linkingMode"></span>
-            <span class="feature-details">unknown</span>
+            <span class="feature-details">?</span>
           </li>
           <li class="feature">
             <span class="feature-name" translate="accountLinking.siteDetails.linkedUsers"></span>
-            <span class="feature-details">unknown</span>
+            <span class="feature-details">?</span>
           </li>
         </ul>
       </div>
@@ -75,7 +75,7 @@
 
     <cs-sp-section ng-show="$ctrl.selectedSite.isSiteAdmin">
       <div class="section-title-row">
-        <a class="btn btn--people" ng-click="$ctrl.launchSiteAdmin()" role="button">Launch WebEx Site Admin</a>
+        <a class="btn btn--people" ng-click="$ctrl.launchSiteAdmin()" role="button" translate="accountLinking.siteDetails.launchWebexSiteAdmin"></a>
       </div>
     </cs-sp-section>
 

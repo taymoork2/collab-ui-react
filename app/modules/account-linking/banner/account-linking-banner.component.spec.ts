@@ -38,7 +38,7 @@ describe('Component: accountLinkingBanner ', () => {
     return $componentController('accountLinkingBanner', {}, {});
   }
 
-  it('shuld show banner if overview and has linked sites', () => {
+  it('should show banner if overview and has linked sites', () => {
     ctrl = initController();
     $state.current = {
       name: 'overview',
@@ -57,7 +57,7 @@ describe('Component: accountLinkingBanner ', () => {
     this.compileComponent('accountLinkingBanner');
     expect(this.view).toContainElement('a');
     this.view.find('a').click();
-    expect($state.go).toHaveBeenCalledWith('account-linking', { originator: LinkingOriginator.Banner }, { reload: false });
+    expect($state.go).toHaveBeenCalledWith('site-list.linked', { originator: LinkingOriginator.Banner }, { reload: false });
   });
 
 });

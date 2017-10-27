@@ -22,7 +22,7 @@ class LinkedSitesGridComponentCtrl implements ng.IComponentController {
     this.createGridConfig();
   }
 
-  public $onChanges = (ch) => {
+  public $onChanges = (ch: {[bindings: string]: ng.IChangesObject<any>}) => {
     if (ch.sitesInfo && ch.sitesInfo.currentValue) {
       this.sitesInfo = ch.sitesInfo.currentValue;
       this.gridConfig.data = this.sitesInfo;
@@ -44,6 +44,7 @@ class LinkedSitesGridComponentCtrl implements ng.IComponentController {
     this.gridConfig.enableSorting = true;
     this.gridConfig.appScopeProvider = this;
     this.gridConfig.data = [];
+    //TODO: Include i18n when final columns and content is decided
     this.gridConfig.columnDefs = [
       { field: 'linkedSiteUrl', displayName: 'Site URL', enableColumnMenu: false },
       { field: 'accountLinkingStatus', displayName: 'Account Linking Status', enableColumnMenu: false },

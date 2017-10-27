@@ -39,12 +39,8 @@ class AccountLinkingBannerComponentCtrl implements ng.IComponentController {
 
 export class AccountLinkingBannerComponent implements ng.IComponentOptions {
 
-  /* @ngInject */
-  constructor() {
-  }
-
   public controller = AccountLinkingBannerComponentCtrl;
-  public template = require('modules/account-linking/banner/account-linking-banner.component.html');
+  public template = require('./account-linking-banner.component.html');
 
   public bindings = {
   };

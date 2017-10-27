@@ -46,14 +46,14 @@ class LinkedSitesDetailsComponentCtrl implements ng.IComponentController {
       toSiteListPage: toSiteListPage,
     };
 
-    this.$log.debug(' webexPage', this.webexPage);
+    this.$log.debug('webexPage', this.webexPage);
   }
 }
 
 export class LinkedSitesDetailsComponent implements ng.IComponentOptions {
 
   public controller = LinkedSitesDetailsComponentCtrl;
-  public template = require('modules/account-linking/linked-sites-details.component.html');
+  public template = require('./linked-sites-details.component.html');
   public bindings = {
   };
 }

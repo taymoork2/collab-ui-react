@@ -57,19 +57,6 @@ class LinkedSitesComponentCtrl implements ng.IComponentController {
     this.$state.go('site-list.linked.details', { siteInfo: selectedSiteInfo, operation: LinkingOperation.New });
   }
 
-  // private collectStatusInfo(linkedConferenceServices): IACSiteInfo[] {
-  //   const data: IACSiteInfo[] = [];
-  //   _.each(linkedConferenceServices, function (site) {
-  //     const element: IACSiteInfo = {
-  //       linkedSiteUrl: site.license.linkedSiteUrl,
-  //       accountLinkingStatus: 'Unknown',
-  //       usersLinked: 'Unknown',
-  //     };
-  //     data.push(element);
-  //   });
-  //   return data;
-  // }
-
 }
 
 export class LinkedSitesComponent implements ng.IComponentOptions {

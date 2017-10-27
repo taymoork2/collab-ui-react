@@ -13,6 +13,7 @@ export class LinkedSitesService {
 
   public filterSites(): ng.IPromise<IACSiteInfo[]> {
     const userId = this.Authinfo.getUserId();
+    //TODO: Explore unhappy cases. Currently only handling happy cases !
     return this.Userservice.getUserAsPromise(userId).then((response) => {
       const adminTrainSiteNames =  response.data.adminTrainSiteNames;
       const conferenceServicesWithLinkedSiteUrl = this.Authinfo.getConferenceServicesWithLinkedSiteUrl();
