@@ -95,6 +95,7 @@
     require('modules/core/customerReports').default,
     require('modules/core/partnerReports').default,
     require('modules/gemini/reports').default,
+    require('modules/account-linking/banner').default,
     require('modules/core/siteList/webex-site').default,
   ])
     .constant('CryptoJS', require('crypto-js'))
