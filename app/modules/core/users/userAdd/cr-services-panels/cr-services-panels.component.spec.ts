@@ -82,6 +82,30 @@ describe('Component: crServicesPanels:', () => {
       });
     });
 
+    describe('isSubscribeable():', () => {
+      it('should return true only for a license with correct "status" and a positive "volume" count', function () {
+        this.compileComponent('crServicesPanels');
+        const fakeLicense = {
+          status: 'ACTIVE',
+          volume: 1,
+        };
+
+        expect(this.controller.isSubscribeable(fakeLicense)).toBe(true);
+        fakeLicense.status = 'PENDING';
+        expect(this.controller.isSubscribeable(fakeLicense)).toBe(true);
+
+        fakeLicense.status = 'something-else';
+        expect(this.controller.isSubscribeable(fakeLicense)).toBe(false);
+
+        // status doesn't matter if volume is less than 1
+        fakeLicense.volume = 0;
+        fakeLicense.status = 'ACTIVE';
+        expect(this.controller.isSubscribeable(fakeLicense)).toBe(false);
+        fakeLicense.status = 'PENDING';
+        expect(this.controller.isSubscribeable(fakeLicense)).toBe(false);
+      });
+    });
+
     describe('showMessengerInteropToggle():', () => {
       it('should return false if "$state.current.data.showMessengerInteropToggle" is falsey', function () {
         _.set(this, '$state.current.data.showMessengerInteropToggle', false);

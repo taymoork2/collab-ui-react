@@ -890,13 +890,6 @@ require('./_user-add.scss');
       return $scope.isSharedMeetingsLicense(license) ? $translate.instant('firstTimeWizard.sharedLicenseTooltip') : $translate.instant('firstTimeWizard.namedLicenseTooltip');
     };
 
-    $scope.isSubscribeable = function (license) {
-      if (license.status === 'ACTIVE' || license.status === 'PENDING') {
-        return (license.volume > 0);
-      }
-      return false;
-    };
-
     var getAccountServices = function () {
       var services = {
         message: Authinfo.getMessageServices({ assignableOnly: true }),

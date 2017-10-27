@@ -71,7 +71,7 @@
               <div ng-if="msgFeature.licenses.length > 1">
                   <div class="onboard-fieldset"
                     ng-show="multipleSubscriptions.showLicenses(license.billingServiceId, license.isTrial)"
-                    ng-repeat="license in msgFeature.licenses | filter:isSubscribeable | orderBy:'billingServiceId'">
+                    ng-repeat="license in msgFeature.licenses | filter:$ctrl.isSubscribeable | orderBy:'billingServiceId'">
                     <cs-checkbox ckid="{{license.licenseId}}" ng-model="license.model"
                     label="{{'onboardModal.paidCiscoSparkMessaging' | translate}}"></cs-checkbox>
                     <span class="license-entity under-label-reposition" translate="firstTimeWizard.namedLicense"></span>

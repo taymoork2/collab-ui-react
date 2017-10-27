@@ -34,6 +34,13 @@ class CrServicesPanelsController implements ng.IComponentController {
     }
   }
 
+  public isSubscribeable(license): boolean {
+    if (license.status === 'ACTIVE' || license.status === 'PENDING') {
+      return (license.volume > 0);
+    }
+    return false;
+  }
+
   public showMessengerInteropToggle(): boolean {
     // TODO: rm this, no longer needed as of 2017-05-22 ('showMessengerInteropToggle' has been set globally to true)
     if (!_.get(this.$state, 'current.data.showMessengerInteropToggle')) {
