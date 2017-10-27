@@ -50,6 +50,7 @@ export class ServicesOverviewController implements ng.IComponentController {
   public _servicesActive: HybridServiceId[] = []; // made public for easier testing
   public _servicesInactive: HybridServiceId[] = []; // made public for easier testing
   public clusters: IExtendedClusterFusion[] | null = null;
+  public trunks: IPrivateTrunkResourceWithStatus[] | null = null;
   public servicesStatuses: (ICCCService | IPrivateTrunkResourceWithStatus | IServiceStatusWithSetup)[] = [];
   public loadingHybridServicesCards = true;
 
@@ -169,6 +170,13 @@ export class ServicesOverviewController implements ng.IComponentController {
                 }));
             } else if (serviceId === 'ept') {
               return this.EnterprisePrivateTrunkService.fetch()
+                .then((trunks) => {
+                  this.trunks = trunks;
+                  return {
+                    serviceId: serviceId,
+                    setup: trunks.length > 0,
+                  };
+                })
                 .catch(() => ({
                   serviceId: serviceId,
                   setup: false,

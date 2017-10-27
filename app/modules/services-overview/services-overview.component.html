@@ -38,7 +38,7 @@
     <div ng-if="!$ctrl.loadingHybridServicesCards">
       <h5 ng-if="$ctrl.isAnyHybridServiceActive()"><span translate="servicesOverview.hybridServices"></span></h5>
       <cs-card-layout block-view="true" ng-if="$ctrl.isAnyHybridServiceActive()">
-        <on-premises-card ng-if="$ctrl.showOnPremisesCard()" class="cs-card small active-card" clusters="$ctrl.clusters"></on-premises-card>
+        <on-premises-card ng-if="$ctrl.showOnPremisesCard()" class="cs-card small active-card" clusters="$ctrl.clusters" trunks="$ctrl.trunks"></on-premises-card>
         <hybrid-calendar-exchange-active-card ng-if="$ctrl.isActive('squared-fusion-cal')" service-status="$ctrl.getServiceStatus('squared-fusion-cal')" class="cs-card small active-card"></hybrid-calendar-exchange-active-card>
         <hybrid-calendar-o365-active-card ng-if="$ctrl.isActive('squared-fusion-o365')" service-status="$ctrl.getServiceStatus('squared-fusion-o365')" class="cs-card small active-card"></hybrid-calendar-o365-active-card>
         <hybrid-calendar-google-active-card ng-if="$ctrl.isActive('squared-fusion-gcal')" service-status="$ctrl.getServiceStatus('squared-fusion-gcal')" class="cs-card small active-card"></hybrid-calendar-google-active-card>

@@ -1,5 +1,5 @@
 class OnPremisesActiveCardController implements ng.IComponentController {
-  public activeLink = false;
+  public linkActive = false;
 
   /* @ngInject */
   constructor(
@@ -7,7 +7,10 @@ class OnPremisesActiveCardController implements ng.IComponentController {
 
   public $onChanges(changes: ng.IOnChangesObject): void {
     if (changes.clusters && changes.clusters.currentValue) {
-      this.activeLink = changes.clusters.currentValue.length > 0;
+      this.linkActive = changes.clusters.currentValue.length > 0;
+    }
+    if (changes.trunks && changes.trunks.currentValue) {
+      this.linkActive = changes.trunks.currentValue.length > 0;
     }
   }
 }
@@ -21,11 +24,11 @@ export class OnPremisesActiveCardComponent implements ng.IComponentOptions {
       </div>
       <div class="active-card_content">
         <p class="active-card_textfix" translate="servicesOverview.cards.clusterList.description"></p>
-        <div class="active-card_section" ng-if="$ctrl.activeLink">
+        <div class="active-card_section" ng-if="$ctrl.linkActive">
           <div class="active-card_title" translate="servicesOverview.cards.clusterList.buttons.all"></div>
           <div class="active-card_action"><a ui-sref="cluster-list" translate="servicesOverview.cards.clusterList.buttons.view"></a></div>
         </div>
-        <div class="active-card_section" ng-if="!$ctrl.activeLink">
+        <div class="active-card_section" ng-if="!$ctrl.linkActive">
           <div class="active-card_title" translate="servicesOverview.cards.clusterList.buttons.all"></div>
           <div class="active-card_action" translate="servicesOverview.cards.clusterList.buttons.none"></div>
         </div>
@@ -34,5 +37,6 @@ export class OnPremisesActiveCardComponent implements ng.IComponentOptions {
   `;
   public bindings = {
     clusters: '<',
+    trunks: '<',
   };
 }
