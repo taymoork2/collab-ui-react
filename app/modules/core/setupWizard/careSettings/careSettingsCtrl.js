@@ -60,9 +60,15 @@ var HttpStatus = require('http-status-codes');
         Log.debug('Care onboarding is success', results);
         startPolling();
       }, function (error) {
-        vm.state = vm.NOT_ONBOARDED;
-        Log.error('Care onboarding failed with error', error);
-        Notification.errorWithTrackingId(error, $translate.instant('firstTimeWizard.setUpCareFailure'));
+        // config throws 412 if on-boarding is already success, recover the failure.
+        if (error.status === 412) {
+          Log.debug('Care onboarding is already completed.', error);
+          startPolling();
+        } else {
+          vm.state = vm.NOT_ONBOARDED;
+          Log.error('Care onboarding failed with error', error);
+          Notification.errorWithTrackingId(error, $translate.instant('firstTimeWizard.setUpCareFailure'));
+        }
       });
     }
 

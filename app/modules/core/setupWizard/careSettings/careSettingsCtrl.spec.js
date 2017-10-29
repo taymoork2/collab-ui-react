@@ -813,4 +813,31 @@ describe('Partner managing his own org: Care Settings - when org has K2 entitlem
     expect(controller.state).toBe(controller.NOT_ONBOARDED);
     expect(Notification.errorWithTrackingId).toHaveBeenCalled();
   });
+
+  it('should not show error notification and disable setup care button, if org is already onboarded', function () {
+    spyOn(sunlightConfigService, 'aaOnboard').and.callFake(function () {
+      var deferred = q.defer();
+      deferred.reject({ status: 412 });
+      return deferred.promise;
+    });
+    spyOn(Notification, 'success').and.callFake(function () {
+      return true;
+    });
+    $httpBackend.expectGET(sunlightChatConfigUrl).respond(404, {});
+    $httpBackend.flush();
+    expect(controller.state).toBe(controller.NOT_ONBOARDED);
+    controller.defaultQueueStatus = controller.status.SUCCESS;
+    controller.onboardToCare();
+    $scope.$apply();
+    $httpBackend.expectGET(sunlightChatConfigUrl)
+      .respond(200, {
+        csOnboardingStatus: 'Success',
+        appOnboardStatus: 'Success',
+        aaOnboardingStatus: 'Success',
+      });
+    $interval.flush(10001);
+    $httpBackend.flush();
+    expect(controller.state).toBe(controller.ONBOARDED);
+    expect(Notification.success).toHaveBeenCalled();
+  });
 });
