@@ -65,6 +65,14 @@ describe('Controller: MeetingSettingsCtrl', () => {
       expect(hasSiteUrlFromTrialLicense).toBe(true);
     });
 
+    it('should ignore existing online trial sites', function () {
+      const hasSiteUrlFromOnlineTrialLicense = _.some(this.controller.existingTrialSites, { siteUrl: 'someonlinesite.my' });
+      const addsTrialSiteToExistingWebexSites = _.some(this.controller.existingWebexSites, { siteUrl: 'someonlinesite.my' });
+      expect(hasSiteUrlFromOnlineTrialLicense).toBe(false);
+      expect(addsTrialSiteToExistingWebexSites).toBe(false);
+      expect(this.controller.existingTrialSites.length).toBe(1);
+    });
+
     it('should set the user management setup type correctly', function () {
       const sparkSetupSite = _.find(this.controller.sitesArray, { siteUrl: 'frankSinatraTest.dmz' });
       const legacySetupSite = _.find(this.controller.sitesArray, { siteUrl: 'frankSinatraTestWX.dmz' });

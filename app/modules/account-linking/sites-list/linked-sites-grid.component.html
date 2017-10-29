@@ -1,0 +1,12 @@
+<div class="account-linking" gridscrollbar ui-grid="$ctrl.gridConfig" ui-grid-selection>
+
+  <div class="loading-sites" ng-show="$ctrl.loading">
+    <span class="loading-sites-spinner">
+      <i class="icon icon-spinner"></i>
+    </span>
+  </div>
+
+</div>
+
+<!-- TODO: Replace by creating form programatically ? -->
+<linked-sites-goto-webex ready-to-launch="$ctrl.readyToLaunch(buttonId)" webex-page="$ctrl.webexPage"></linked-sites-goto-webex>

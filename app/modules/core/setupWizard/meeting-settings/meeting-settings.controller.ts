@@ -674,7 +674,11 @@ export class MeetingSettingsCtrl {
 
   // For existing trials that have a WebEx site, we will allow the customer to migrate the trial site into a paid subscription
   public findExistingWebexTrialSites(): ExistingWebExSite[] {
-    const conferencingServices = _.filter(this.Authinfo.getConferenceServices(), { license: { isTrial: true } });
+    let conferencingServices = _.filter(this.Authinfo.getConferenceServices(), { license: { isTrial: true } });
+    // Make sure not to touch online trial sites
+    conferencingServices = _.reject(conferencingServices, (service: IConferenceService) => {
+      return _.includes(service.license.masterOfferName, SetupWizardService.ONLINE_SUFFIX);
+    });
     const existingTrials = _.filter(conferencingServices, (service: IConferenceService) => {
       return _.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC], service.license.offerName);
     });
@@ -698,8 +702,12 @@ export class MeetingSettingsCtrl {
   public findExistingWebexSites(): WebExSite[] {
     const actingSubscriptionLicenses = this.SetupWizardService.getActingSubscriptionLicenses();
     const includedOfferNames = [this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC];
-    const existingConferenceServicesInActingSubscripton = _.filter(actingSubscriptionLicenses, (license: IConferenceLicense) =>
+    let existingConferenceServicesInActingSubscripton = _.filter(actingSubscriptionLicenses, (license: IConferenceLicense) =>
       _.includes(includedOfferNames, license.offerName)) as IConferenceLicense[];
+    // Make sure not to touch online trial sites
+    existingConferenceServicesInActingSubscripton = _.reject(existingConferenceServicesInActingSubscripton, (license: IConferenceLicense) => {
+      return _.includes(license.masterOfferName, SetupWizardService.ONLINE_SUFFIX);
+    });
     // Create an array of existing sites
     const existingWebexSites = _.map(existingConferenceServicesInActingSubscripton, (license) => {
 

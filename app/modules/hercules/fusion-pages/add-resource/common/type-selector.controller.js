@@ -4,6 +4,8 @@
   angular.module('Hercules')
     .controller('TypeSelectorController', TypeSelectorController);
 
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
   /* @ngInject */
   function TypeSelectorController($q, $stateParams, $translate, Authinfo, Config, HybridServicesClusterService, hasCucmSupportFeatureToggle, hasImpSupportFeatureToggle) {
     var vm = this;
@@ -94,7 +96,7 @@
     }
 
     function handleKeypress(event) {
-      if (event.keyCode === 13 && canGoNext()) {
+      if (event.keyCode === KeyCodes.ENTER && canGoNext()) {
         next();
       }
     }

@@ -7332,25 +7332,25 @@
       "configOverview": {
         "title": "客户虚拟助手配置要求",
         "desc": "查看创建客户虚拟助手的先决条件",
-        "boxTitle": "在创建客户虚拟助手之前创建一个 API.AI 客服。",
-        "boxDesc": "使用自然语言对话框在 API.AI 中构建自动化客服。集成的客户虚拟助手使用该内置对话框与客户进行交互，并根据需要将对话上报给真实客服。",
-        "boxRadioOne": "不，我没有预配置的 API.AI 客服",
+        "boxTitle": "在创建客户虚拟助手之前创建一个 Dialogflow 客服。",
+        "boxDesc": "使用自然语言对话框在 Dialogflow 中构建自动化客服。集成的客户虚拟助手使用该内置对话框与客户进行交互，并根据需要将对话上报给真实客服。",
+        "boxRadioOne": "不，我没有预配置的 Dialogflow 客服",
         "boxRadioOneDesc1": "转至 ",
-        "boxRadioApiai": "API.AI",
+        "boxRadioDialogflow": "Dialogflow",
         "boxRadioOneDesc2": " 以创建客服。要开始创建，请参阅 ",
-        "boxRadioApiaiDoc": "API.AI 文档",
-        "boxRadioTwo": "是的，我有预配置的 API.AI 客服并已做好继续操作的准备",
-        "boxRadioTwoDesc": "单击该箭头以继续集成 API.AI 客服与客户虚拟助手"
+        "boxRadioDialogflowDoc": "Dialogflow 文档",
+        "boxRadioTwo": "是的，我有预配置的 Dialogflow 客服并已做好继续操作的准备",
+        "boxRadioTwoDesc": "单击该箭头以继续集成 Dialogflow 客服与客户虚拟助手"
       },
       "dialogIntegration": {
         "title": "配置对话框集成",
-        "desc": "添加预配置的上报意图来完成 API.AI 客服配置",
+        "desc": "添加预配置的上报意图来完成 Dialogflow 客服配置",
         "boxStepOne": "下载预配置的上报意图 JSON 文件。",
         "boxStepOneDesc": "上报意图能让客户虚拟助手将对话上报给真实客服。",
-        "boxStepTwo": "将上报意图上传至 API.AI 客服。",
-        "boxStepTwoDesc": "在 API.AI 客服的“意图”页面上，单击垂直的省略号 (⋮) 并选择“上传意图”。上传刚才下载的 escalation.json 文件。",
-        "boxStepThree": "在 API.AI 中自定义上报意图",
-        "boxStepThreeDesc": "在 API.AI 客服的“意图”页面上，选择“上报意图”。修改“用户引言”字段来更改触发上报的用户表达式。所有用户表达式都必须：",
+        "boxStepTwo": "将上报意图上传至 Dialogflow 客服。",
+        "boxStepTwoDesc": "在 Dialogflow 客服的“意图”页面上，单击垂直的省略号 (⋮) 并选择“上传意图”。上传刚才下载的 escalation.json 文件。",
+        "boxStepThree": "在 Dialogflow 中自定义上报意图",
+        "boxStepThreeDesc": "在 Dialogflow 客服的“意图”页面上，选择“上报意图”。修改“用户引言”字段来更改触发上报的用户表达式。所有用户表达式都必须：",
         "boxBulletOne": "使用模板模式",
         "boxBulletTwo": "包含对“@sys.any:主题”的引用",
         "boxStepThreeDescCont": "用户表达式旁边的 @ 符号表示模板模式。单击该符号可切换模式。请勿修改 GetExpert 操作。",
@@ -7361,11 +7361,11 @@
       "accessToken": {
         "title": "完成对话框集成",
         "desc": "完成对话框集成以实现在客户交互中使用自然对话",
-        "boxDesc": "每个 API.AI 客服都有唯一的客户端访问令牌存储在客服设置中。在完成对话集成之前，从您配置的 API.AI 客服设置中复制该令牌，将它输入到这里，然后单击“验证”来检查令牌。",
-        "inputLabel": "API.AI 客户端访问令牌",
+        "boxDesc": "每个 Dialogflow 客服都有唯一的客户端访问令牌存储在客服设置中。在完成对话集成之前，从您配置的 Dialogflow 客服设置中复制该令牌，将它输入到这里，然后单击“验证”来检查令牌。",
+        "inputLabel": "Dialogflow 客户端访问令牌",
         "validateButtonText": "验证",
         "maxLengthError": "客户端访问令牌的长度不能超过 128 个字符。",
-        "invalidTokenText": "API.AI 客户端访问令牌无效。请验证令牌并重试。"
+        "invalidTokenText": "Dialogflow 客户端访问令牌无效。请验证令牌并重试。"
       },
       "name": {
         "title": "客户虚拟助手名称",

@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
   /* @ngInject */
   function HelpdeskHuronDeviceController($stateParams, $window, HelpdeskHuronService, HelpdeskService, Notification) {
     $('body').css('background', 'white');
@@ -51,7 +53,7 @@
     }
 
     function keyPressHandler(event) {
-      if (event.keyCode === 27) { // Esc
+      if (event.keyCode === KeyCodes.ESCAPE) {
         $window.history.back();
       }
     }

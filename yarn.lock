@@ -1947,15 +1947,16 @@ collab-ui-ng@*:
     masonry-layout "^4.1.1"
     moment "^2.10.6"
 
-collab-ui-ng@~7.5.1:
-  version "7.5.1"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/collab-ui-ng/-/collab-ui-ng-7.5.1.tgz#42cae4672575afd9a58246a9e7d83bf6e3c8f86b"
+collab-ui-ng@~7.3.0:
+  version "7.3.0"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/collab-ui-ng/-/collab-ui-ng-7.3.0.tgz#753275e79b19cdfcfabab46f5795be97e13624d9"
   dependencies:
     angular "^1.5.0"
     angular-animate "^1.5.0"
     angular-messages "^1.5.0"
     angular-ui-grid "~3.0.7"
     angular-ui-router "^0.3.1"
+    collab-ui-stickyfill "^1.1.5"
     google-libphonenumber "^2.0.15"
     imagesloaded "3.1.8"
     jquery "2.1.1"

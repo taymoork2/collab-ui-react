@@ -8,7 +8,7 @@
     .directive('validateCharacters', validateCharactersDirective)
     .controller('CareSetupAssistantCtrl', CareSetupAssistantCtrl);
 
-  /* @ngInject */
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
   function CareSetupAssistantCtrl($modal, $scope, $state, $stateParams, $timeout, $translate, $window, Authinfo, CvaService, CTService, DomainManagementService, LogMetricsService, Notification, SunlightConfigService) {
     var vm = this;
@@ -87,7 +87,6 @@
     vm.setOverviewCards();
 
     vm.animationTimeout = 10;
-    vm.escapeKey = 27;
 
     // Template branding page related constants
     vm.orgName = Authinfo.getOrgName();
@@ -1109,7 +1108,7 @@
 
     function evalKeyPress(keyCode) {
       switch (keyCode) {
-        case vm.escapeKey:
+        case KeyCodes.ESCAPE:
           cancelModal();
           break;
         default:
@@ -1509,7 +1508,7 @@
     };
 
     vm.onEnterKey = function (keyEvent) {
-      if (keyEvent.which === 13) {
+      if (keyEvent.which === KeyCodes.ENTER) {
         vm.addCategoryOption();
       }
     };

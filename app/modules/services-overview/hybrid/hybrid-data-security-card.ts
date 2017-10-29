@@ -54,16 +54,10 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
     return hasRequiredRoles;
   }
 
-  public hybridDataSecurityFeatureToggleEventHandler(hasFeature: boolean): void {
-    this.display = this.checkRoles() && (this.Authinfo.isFusionHDS() || hasFeature) && this.Authinfo.isEnterpriseCustomer();
-    this.setLoading();
-  }
-
   public proPackEventHandler(result): void {
     this.hasProPackEnabled = result.hasProPackEnabled;
     this.hasProPackPurchased = result.hasProPackPurchased;
     this.infoText = this.treatAsPurchased() ? '' : 'common.proPackTooltip';
-    this.setLoading();
   }
 
   private treatAsPurchased(): boolean {
@@ -88,7 +82,6 @@ export class ServicesOverviewHybridDataSecurityCard extends ServicesOverviewHybr
       routerState: 'hds.list',
       serviceId: 'spark-hybrid-datasecurity',
       infoText: 'common.proPackTooltip',
-      initEventsNumber: 2,
     });
     this.display = this.checkRoles() && this.Authinfo.isFusionHDS() && this.Authinfo.isEnterpriseCustomer();
     this.hasProPackPurchased = false;

@@ -1,1 +1,6 @@
-Linked-sites component placeholder ready = {{$ctrl.ready}}
+<div class="account-linking">
+  <linked-sites-grid
+    sites-info="$ctrl.sitesInfo"
+    on-site-selected-fn="$ctrl.onSiteSelectedFn(site)">
+  </linked-sites-grid>
+</div>

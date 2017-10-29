@@ -7332,25 +7332,25 @@
       "configOverview": {
         "title": "고객 가상 도우미 구성 요구 사항",
         "desc": "고객 가상 도우미를 만들기 위한 전제 조건 리뷰",
-        "boxTitle": "고객 가상 도우미를 만들기 전에 API.AI 에이전트를 만드십시오.",
-        "boxDesc": "API.AI에 기본 언어 대화 상자를 포함하여 자동화된 에이전트를 만드십시오. 통합된 고객 가상 도우미는 내장된 대화 상자를 사용하여 고객과 작업하고 필요에 따라 실시간 에이전트에게 대화를 에스컬레이션합니다.",
-        "boxRadioOne": "아니요. 미리 구성된 API.AI 에이전트가 없습니다.",
+        "boxTitle": "고객 가상 도우미를 만들기 전에 Dialogflow 에이전트를 만드십시오.",
+        "boxDesc": "Dialogflow에 기본 언어 대화 상자를 포함하여 자동화된 에이전트를 만드십시오. 통합된 고객 가상 도우미는 내장된 대화 상자를 사용하여 고객과 작업하고 필요에 따라 실시간 에이전트에게 대화를 에스컬레이션합니다.",
+        "boxRadioOne": "아니요. 미리 구성된 Dialogflow 에이전트가 없습니다.",
         "boxRadioOneDesc1": "이동 ",
-        "boxRadioApiai": "API.AI",
+        "boxRadioDialogflow": "Dialogflow",
         "boxRadioOneDesc2": " 로 이동하여 에이전트를 만드십시오. 시작하려면 다음을 참조하십시오. ",
-        "boxRadioApiaiDoc": "API.AI 문서",
-        "boxRadioTwo": "예. API.AI 에이전트를 미리 구성했으며 진행할 준비가 되었습니다.",
-        "boxRadioTwoDesc": "귀하의 API.AI 에이전트를 고객 가상 도우미와 계속 통합하려면 화살표를 클릭하십시오."
+        "boxRadioDialogflowDoc": "Dialogflow 문서",
+        "boxRadioTwo": "예. Dialogflow 에이전트를 미리 구성했으며 진행할 준비가 되었습니다.",
+        "boxRadioTwoDesc": "귀하의 Dialogflow 에이전트를 고객 가상 도우미와 계속 통합하려면 화살표를 클릭하십시오."
       },
       "dialogIntegration": {
         "title": "대화 상자 통합 구성",
-        "desc": "미리 구성된 에스컬레이션 의도를 추가하여 API.AI 에이전트 구성 완료",
+        "desc": "미리 구성된 에스컬레이션 의도를 추가하여 Dialogflow 에이전트 구성 완료",
         "boxStepOne": "미리 구성된 에스컬레이션 의도 JSON 파일을 다운로드하십시오.",
         "boxStepOneDesc": "에스컬레이션 의도를 사용하면 고객 가상 도우미가 대화를 에이전트에게 에스컬레이션할 수 있습니다.",
-        "boxStepTwo": "API.AI 에이전트에게 에스컬레이션 의도를 업로드하십시오.",
-        "boxStepTwoDesc": "API.AI 에이전트의 의도 페이지에서 세로 말줄임표(⋮)를 클릭하고 의도 업로드를 선택합니다. 다운로드한 escalation.json 파일을 업로드합니다.",
-        "boxStepThree": "API.AI에서 에스컬레이션 의도를 사용자 정의하십시오.",
-        "boxStepThreeDesc": "API.AI 에이전트의 의도 페이지에서 에스컬레이션 의도를 선택합니다. 에스컬레이션을 시작하는 사용자 표현을 변경하려면 사용자가 말함 필드를 수정하십시오. 모든 사용자 표현은 다음 사항을 충족해야 합니다.",
+        "boxStepTwo": "Dialogflow 에이전트에게 에스컬레이션 의도를 업로드하십시오.",
+        "boxStepTwoDesc": "Dialogflow 에이전트의 의도 페이지에서 세로 말줄임표(⋮)를 클릭하고 의도 업로드를 선택합니다. 다운로드한 escalation.json 파일을 업로드합니다.",
+        "boxStepThree": "Dialogflow에서 에스컬레이션 의도를 사용자 정의하십시오.",
+        "boxStepThreeDesc": "Dialogflow 에이전트의 의도 페이지에서 에스컬레이션 의도를 선택합니다. 에스컬레이션을 시작하는 사용자 표현을 변경하려면 사용자가 말함 필드를 수정하십시오. 모든 사용자 표현은 다음 사항을 충족해야 합니다.",
         "boxBulletOne": "템플릿 모드 사용",
         "boxBulletTwo": "@sys.any:Topic으로 참조 포함",
         "boxStepThreeDescCont": "사용자 표현 옆에 있는 @ 기호는 템플릿 모드를 가리킵니다. 모드를 토글하려면 기호를 클릭하십시오. GetExpert 작업은 수정하지 마십시오.",
@@ -7361,11 +7361,11 @@
       "accessToken": {
         "title": "대화 상자 통합 완료",
         "desc": "고객 작업에서 기본 대화 상자의 사용을 활성화하려면 통합을 완료하십시오.",
-        "boxDesc": "각 API.AI 에이전트에는 에이전트 설정에 저장된 고유한 클라이언트 액세스 토큰이 있습니다. 대화 상자 통합을 완료하기 전에 구성된 API.AI 에이전트 설정에서 토큰을 복사하고 여기에 입력한 후 \"유효성 검증\"을 클릭하여 토큰을 확인하십시오.",
-        "inputLabel": "API.AI 클라이언트 액세스 토큰",
+        "boxDesc": "각 Dialogflow 에이전트에는 에이전트 설정에 저장된 고유한 클라이언트 액세스 토큰이 있습니다. 대화 상자 통합을 완료하기 전에 구성된 Dialogflow 에이전트 설정에서 토큰을 복사하고 여기에 입력한 후 \"유효성 검증\"을 클릭하여 토큰을 확인하십시오.",
+        "inputLabel": "Dialogflow 클라이언트 액세스 토큰",
         "validateButtonText": "유효성 검증",
         "maxLengthError": "클라이언트 액세스 토큰은 128자보다 길 수 없습니다.",
-        "invalidTokenText": "유효하지 않은 API.AI 클라이언트 액세스 토큰. 토큰을 확인하고 다시 시도하십시오."
+        "invalidTokenText": "유효하지 않은 Dialogflow 클라이언트 액세스 토큰. 토큰을 확인하고 다시 시도하십시오."
       },
       "name": {
         "title": "고객 가상 도우미 이름",

@@ -7332,25 +7332,25 @@
       "configOverview": {
         "title": "Wymagania konfiguracji wirtualnego asystenta klienta",
         "desc": "Zapoznaj się z wymaganiami wstępnymi, które należy spełnić przed utworzeniem wirtualnego asystenta klienta",
-        "boxTitle": "Przed utworzeniem wirtualnego asystenta klienta należy utworzyć agenta API.AI.",
-        "boxDesc": "Utwórz w API.AI automatycznego agenta z dialogiem w języku naturalnym. Zintegrowany wirtualny asystent klienta używa wbudowanego dialogu do interakcji z klientami, a w razie potrzeby eskaluje rozmowę do agenta-człowieka.",
-        "boxRadioOne": "Nie, nie mam skonfigurowanego wstępnie agenta API.AI",
+        "boxTitle": "Przed utworzeniem wirtualnego asystenta klienta należy utworzyć agenta Dialogflow.",
+        "boxDesc": "Utwórz w Dialogflow automatycznego agenta z dialogiem w języku naturalnym. Zintegrowany wirtualny asystent klienta używa wbudowanego dialogu do interakcji z klientami, a w razie potrzeby eskaluje rozmowę do agenta-człowieka.",
+        "boxRadioOne": "Nie, nie mam skonfigurowanego wstępnie agenta Dialogflow",
         "boxRadioOneDesc1": "Przejdź do ",
-        "boxRadioApiai": "API.AI",
+        "boxRadioDialogflow": "Dialogflow",
         "boxRadioOneDesc2": " w celu utworzenia agenta. Na początek zapoznaj się ",
-        "boxRadioApiaiDoc": "z dokumentacją API.AI",
-        "boxRadioTwo": "Tak, mam skonfigurowanego wstępnie agenta API.AI i mogę przejść dalej",
-        "boxRadioTwoDesc": "Kliknij strzałkę, aby przejść do integrowania agenta API.AI z wirtualnym asystentem klienta"
+        "boxRadioDialogflowDoc": "z dokumentacją Dialogflow",
+        "boxRadioTwo": "Tak, mam skonfigurowanego wstępnie agenta Dialogflow i mogę przejść dalej",
+        "boxRadioTwoDesc": "Kliknij strzałkę, aby przejść do integrowania agenta Dialogflow z wirtualnym asystentem klienta"
       },
       "dialogIntegration": {
         "title": "Skonfiguruj integrację dialogu",
-        "desc": "Dodaj wcześniej skonfigurowany zamiar eskalacji, aby ukończyć konfigurację agenta API.AI",
+        "desc": "Dodaj wcześniej skonfigurowany zamiar eskalacji, aby ukończyć konfigurację agenta Dialogflow",
         "boxStepOne": "Pobierz plik JSON z wcześniej skonfigurowanym zamiarem eskalacji.",
         "boxStepOneDesc": "Zamiar eskalacji umożliwia wirtualnemu asystentowi klienta eskalację rozmowy do agenta.",
-        "boxStepTwo": "Prześlij zamiar eskalacji do agenta API.AI.",
-        "boxStepTwoDesc": "Na stronie zamiaru agenta API.AI, kliknij trzy kropki w pionie (⋮) i wybierz polecenie Upload Intent (Prześlij zamiar). Prześlij wcześniej pobrany plik escalation.json.",
-        "boxStepThree": "Dostosuj zamiar eskalacji w API.AI.",
-        "boxStepThreeDesc": "Na stronie intencji agenta API.AI wybierz polecenie Escalation Intent (Zamiar eskalacji). Zmodyfikuj pola User Says (Użytkownik mówi), aby zmienić wyrażenia użytkownika, które powodują eskalację. Wszystkie te wyrażenia użytkownika muszą:",
+        "boxStepTwo": "Prześlij zamiar eskalacji do agenta Dialogflow.",
+        "boxStepTwoDesc": "Na stronie zamiaru agenta Dialogflow, kliknij trzy kropki w pionie (⋮) i wybierz polecenie Upload Intent (Prześlij zamiar). Prześlij wcześniej pobrany plik escalation.json.",
+        "boxStepThree": "Dostosuj zamiar eskalacji w Dialogflow.",
+        "boxStepThreeDesc": "Na stronie intencji agenta Dialogflow wybierz polecenie Escalation Intent (Zamiar eskalacji). Zmodyfikuj pola User Says (Użytkownik mówi), aby zmienić wyrażenia użytkownika, które powodują eskalację. Wszystkie te wyrażenia użytkownika muszą:",
         "boxBulletOne": "Używać trybu szablonu",
         "boxBulletTwo": "Zawierać odwołanie do @sys.any:Topic",
         "boxStepThreeDescCont": "Symbol @ obok wyrażenia użytkownika oznacza tryb szablonu. Kliknięcie tego symbolu powoduje przełączenie trybu. Nie zmieniaj akcji GetExpert.",
@@ -7361,11 +7361,11 @@
       "accessToken": {
         "title": "Dokończ integrację dialogu",
         "desc": "Dokończ integrację, aby umożliwić korzystanie z dialogu w języku naturalnym w interakcjach z klientami",
-        "boxDesc": "Każdy agent API.AI ma zapisany w swoich ustawieniach unikalny token dostępu klienta. Skopiuj ten token z ustawień skonfigurowanego agenta API.AI, wprowadź go tutaj, a następnie kliknij przycisk „Sprawdź poprawność”, aby sprawdzić token przed ukończeniem integracji dialogu.",
-        "inputLabel": "Token dostępu klienta API.AI",
+        "boxDesc": "Każdy agent Dialogflow ma zapisany w swoich ustawieniach unikalny token dostępu klienta. Skopiuj ten token z ustawień skonfigurowanego agenta Dialogflow, wprowadź go tutaj, a następnie kliknij przycisk „Sprawdź poprawność”, aby sprawdzić token przed ukończeniem integracji dialogu.",
+        "inputLabel": "Token dostępu klienta Dialogflow",
         "validateButtonText": "Sprawdź poprawność",
         "maxLengthError": "Token dostępu klienta nie może mieć więcej niż 128 znaków.",
-        "invalidTokenText": "Nieprawidłowy token dostępu klienta API.AI. Popraw token i spróbuj ponownie."
+        "invalidTokenText": "Nieprawidłowy token dostępu klienta Dialogflow. Popraw token i spróbuj ponownie."
       },
       "name": {
         "title": "Nazwa wirtualnego asystenta klienta",

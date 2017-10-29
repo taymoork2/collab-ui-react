@@ -4,6 +4,8 @@
   angular.module('Hercules')
     .controller('MediafusionEnterHostnameController', MediafusionEnterHostnameController);
 
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
   /* @ngInject */
   function MediafusionEnterHostnameController($stateParams, $translate) {
     var vm = this;
@@ -34,7 +36,7 @@
     }
 
     function handleKeypress(event) {
-      if (event.keyCode === 13 && canGoNext()) {
+      if (event.keyCode === KeyCodes.ENTER && canGoNext()) {
         next();
       }
     }

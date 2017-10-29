@@ -5,6 +5,7 @@
     .module('Hercules')
     .controller('AddResourceController', AddResourceController);
 
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
   /* @ngInject */
   function AddResourceController($modal, $modalInstance, $state, $translate, $window, connectorType, firstTimeSetup, FmsOrgSettings, HybridServicesClusterService, HybridServicesExtrasService, HybridServicesUtilsService, Notification, ResourceGroupService, serviceId) {
@@ -291,6 +292,10 @@
     vm.completeAddResourceModal = function () {
       $modalInstance.close();
       $window.open('https://' + encodeURIComponent(vm.hostname) + '/fusionregistration');
+    };
+
+    vm.isEnterKeypress = function ($event) {
+      return $event.which === KeyCodes.Enter;
     };
 
     vm.back = function () {

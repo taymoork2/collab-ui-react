@@ -22,7 +22,7 @@ export class EPTActiveCardComponent implements ng.IComponentOptions {
           <div class="active-card_action"><a ui-sref="private-trunk-overview.list" translate="servicesOverview.cards.shared.viewAll"></a></div>
         </div>
       </div>
-      <div class="active-card_footer">
+      <div class="active-card_footer" style="display:none">
         <a ui-sref="private-trunk-overview.list">
           <span translate="{{'servicesOverview.cardStatus.'+$ctrl.serviceStatus.status}}"></span>
           <cs-statusindicator ng-model="$ctrl.serviceStatus.cssClass"></cs-statusindicator>

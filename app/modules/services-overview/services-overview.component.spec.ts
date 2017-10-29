@@ -255,7 +255,20 @@ describe('ServicesOverviewController', () => {
     });
 
     it('should consider EPT active, if the service is setup', () => {
-      fetch.and.returnValue($q.resolve({ setup: true })); // = has trunks
+      fetch.and.returnValue($q.resolve([{
+        name: 'string',
+        address: 'string',
+        status: {
+          id: 'abc',
+          state: 'operational',
+          type: '',
+          destinations: [{
+            address: 'string',
+            state: 'operational',
+          }],
+          alarms: [],
+        },
+      }]));
       isSquaredUC.and.returnValue(true);
       enabledFeatureToggles = [FeatureToggleService.features.huronEnterprisePrivateTrunking];
       initController(true);

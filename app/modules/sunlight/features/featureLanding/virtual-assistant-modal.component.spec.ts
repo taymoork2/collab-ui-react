@@ -2,8 +2,6 @@ import virtualAssistantModule from './virtual-assistant-modal.component';
 
 describe('Component: virtual assistant modal', () => {
 
-  const featureIds = ['Va', 'eVa'];
-
   let expertVaDeferred;
 
   const listExpertAssistantsSuccess = function () {
@@ -31,7 +29,6 @@ describe('Component: virtual assistant modal', () => {
       '$scope',
       'Authinfo',
       '$state',
-      'CvaService',
       'EvaService',
     );
     this.$scope.dismiss = jasmine.createSpy('dismiss');
@@ -52,11 +49,9 @@ describe('Component: virtual assistant modal', () => {
   });
 
   it('ok function call for VirtualAssistant results in no initiating state call But does close the care new feature Modal with the value chosen.', function () {
-    this.controller.ok('customerVirtualAssistant');
+    this.controller.ok('cva');
     expect(this.$scope.dismiss).toHaveBeenCalledWith();
-    expect(this.$state.go).toHaveBeenCalledWith('care.assistant', {
-      type: 'customerVirtualAssistant',
-    });
+    expect(this.$state.go).toHaveBeenCalledWith('care.cva');
   });
 
   it('virtualAssistant Enabled, but expert virtual assistant disabled feature list to have care - customer only', function () {
@@ -73,14 +68,14 @@ describe('Component: virtual assistant modal', () => {
   it('virtualAssistant Enabled feature list to have care - customer and expert virtualAssistants disabled', function () {
     expertVaDeferred.resolve(listExpertAssistantsSuccess());
     this.$scope.$apply();
-    expect(this.controller.features.length).toEqual(featureIds.length);
+    expect(this.controller.features.length).toEqual(2);
     expect(this.controller.features[1].disabled).toEqual(true);
   });
 
   it('virtualAssistant Enabled feature list to have care - customer and expert virtualAssistants enabled', function () {
     expertVaDeferred.resolve(listExpertAssistantsEmpty());
     this.$scope.$apply();
-    expect(this.controller.features.length).toEqual(featureIds.length);
+    expect(this.controller.features.length).toEqual(2);
     expect(this.controller.features[1].disabled).toEqual(false);
   });
 });

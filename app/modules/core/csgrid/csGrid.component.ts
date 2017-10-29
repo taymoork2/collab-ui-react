@@ -1,4 +1,4 @@
-import { GridCellService } from './cs-grid-cell/gridCell.service';
+import { KeyCodes } from 'modules/core/accessibility';
 
 class CsGridCtrl {
   public gridOptions: uiGrid.IGridOptions;
@@ -15,7 +15,6 @@ class CsGridCtrl {
     private $scope: ng.IScope,
     private $state: ng.ui.IStateService,
     private $timeout: ng.ITimeoutService,
-    private GridCellService: GridCellService,
     private uiGridConstants: uiGrid.IUiGridConstants,
   ) {}
 
@@ -66,7 +65,7 @@ class CsGridCtrl {
         const column = _.get(this.gridApi, `grid.columns[${index}]`, undefined);
         const columnDirection = _.get(column, 'sort.direction', undefined);
 
-        if (this.gridApi && column && (event.keyCode === this.GridCellService.ENTER || event.keyCode === this.GridCellService.SPACE)) {
+        if (this.gridApi && column && (event.keyCode === KeyCodes.ENTER || event.keyCode === KeyCodes.SPACE)) {
           if (columnDirection === this.uiGridConstants.ASC) {
             this.gridApi.grid.sortColumn(column, this.uiGridConstants.DESC).then((): void => {
               this.gridApi!.grid.notifyDataChange(this.uiGridConstants.dataChange.ALL);

@@ -1,5 +1,6 @@
 import { IPickupGroup, IMember, ICallPickupNumbers, IMemberNumber, ICardMemberCheckbox, CallPickupGroupService } from 'modules/call/features/call-pickup/shared';
 import { Member } from 'modules/huron/members';
+import { KeyCodes } from 'modules/core/accessibility';
 
 class CallPickupCtrl implements ng.IComponentController {
 
@@ -189,19 +190,16 @@ class CallPickupCtrl implements ng.IComponentController {
   }
 
   public evalKeyPress(keyCode: number): void {
-    const ESCAPE_KEY = 27;
-    const LEFT_ARROW = 37;
-    const RIGHT_ARROW = 39;
     switch (keyCode) {
-      case ESCAPE_KEY:
+      case KeyCodes.ESCAPE:
         this.cancelModal();
         break;
-      case RIGHT_ARROW:
+      case KeyCodes.RIGHT:
         if (this.nextButton() === true) {
           this.nextPage();
         }
         break;
-      case LEFT_ARROW:
+      case KeyCodes.LEFT:
         if (this.previousButton() === true) {
           this.previousPage();
         }
@@ -212,7 +210,7 @@ class CallPickupCtrl implements ng.IComponentController {
   }
 
   public enterNextPage(keyCode: number): void {
-    if (keyCode === 13 && this.nextButton() === true) {
+    if (keyCode === KeyCodes.ENTER && this.nextButton() === true) {
       this.nextPage();
     }
   }

@@ -180,6 +180,11 @@ var auth = {
     pass: 'Cisco@123',
     org: '5abcd266-e194-475e-bc48-010af5da6dde',
   },
+  'expertvirtualassistant-admin': {
+    user: 'sparkexpertbot+admin@gmail.com',
+    pass: 'Cisco@123',
+    org: 'a97e8ec7-c885-4990-8b81-ccec270a169f',
+  },
   'wbx-multipleCenterLicenseTestAdmin': {
     user: 't31r1-regression-adm@mailinator.com',
     pass: 'Cisco!23',

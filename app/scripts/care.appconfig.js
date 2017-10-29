@@ -87,15 +87,38 @@
           },
         },
       })
-      .state('care.assistant', {
-        url: '/virtualAssistant',
+      .state('care.customerVirtualAssistant', {
+        url: '/customerVirtualAssistant',
         parent: 'care.Details',
-        template: require('modules/sunlight/features/virtualAssistant/cvaSetup.tpl.html'),
-        controller: 'CvaSetupCtrl',
-        controllerAs: 'cvaSetupCtrl',
+        template: '<cva-setup dismiss="$dismiss()" is-edit-feature="$resolve.isEditFeature" template="$resolve.template"></cva-setup>',
         params: {
           isEditFeature: null,
           template: null,
+        },
+        resolve: {
+          isEditFeature: /* @ngInject */ function ($stateParams) {
+            return $stateParams.isEditFeature;
+          },
+          template: /* @ngIngect */ function ($stateParams) {
+            return $stateParams.template;
+          },
+        },
+      })
+      .state('care.expertVirtualAssistant', {
+        url: '/expertVirtualAssistant',
+        parent: 'care.Details',
+        template: '<eva-setup dismiss="$dismiss()" is-edit-feature="$resolve.isEditFeature" template="$resolve.template"></eva-setup>',
+        params: {
+          isEditFeature: null,
+          template: null,
+        },
+        resolve: {
+          isEditFeature: /* @ngInject */ function ($stateParams) {
+            return $stateParams.isEditFeature;
+          },
+          template: /* @ngIngect */ function ($stateParams) {
+            return $stateParams.template;
+          },
         },
       })
       .state('care.Features.DeleteFeature', {

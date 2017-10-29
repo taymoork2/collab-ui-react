@@ -206,6 +206,11 @@
           CVA_AVATAR_PAGE: 'Customer VA Avatar',
           CVA_SUMMARY_PAGE: 'Customer VA Summary',
           CVA_START_FINISH: 'Customer VA the entire wizard',
+          EVA_OVERVIEW_PAGE: 'Expert VA Overview',
+          EVA_NAME_PAGE: 'Expert VA Name',
+          EVA_AVATAR_PAGE: 'Expert VA Avatar',
+          EVA_SUMMARY_PAGE: 'Expert VA Summary',
+          EVA_START_FINISH: 'Expert VA the entire wizard',
         },
       },
     };

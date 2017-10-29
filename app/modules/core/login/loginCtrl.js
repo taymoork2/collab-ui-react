@@ -3,6 +3,7 @@
 
   var TimingKey = require('../metrics').TimingKey;
   var DiagnosticKey = require('../metrics').DiagnosticKey;
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
   /* @ngInject */
   function LoginCtrl($location, $rootScope, $scope, $state, $stateParams, $translate, Auth, Authinfo, CacheWarmUpService, Config, Log, LocalStorage, LogMetricsService, MetricsService, PageParam, SessionStorage, StorageKeys, TokenService, Utils) {
@@ -51,7 +52,7 @@
     $scope.checkForIeWorkaround = Utils.checkForIeWorkaround();
 
     $scope.login = function (keyCode) {
-      if (!keyCode || (keyCode === 13 && $scope.loginForm.email.$valid)) {
+      if (!keyCode || (keyCode === KeyCodes.ENTER && $scope.loginForm.email.$valid)) {
         Auth.redirectToLogin($scope.email);
       }
     };

@@ -6,21 +6,20 @@
           <div class="header-with-right-icon">
             <p class="h4 ellipsis" title="{{careFeature.name}}"> {{careFeature.name}} </p>
             <div class="right">
-              <button type="button" ng-click="careFeaturesCtrl.deleteCareFeature((careFeature), $event)" class="close" aria-label="{{::'common.close' | translate}}"></button>
+              <button type="button" ng-click="careFeaturesCtrl.deleteCareFeature((careFeature), $event)" class="close" aria-label="{{::'common.close' | translate}}" ng-disabled="careFeature.featureType === 'expertVirtualAssistant'"></button>
             </div>
           </div>
-          <p><span class="badge badge--outline" ng-if="careFeature.mediaType === 'virtualAssistant'">{{:: ('careChatTpl.virtualAssistant.featureText.' + careFeature.mediaType) | translate}}</span>
-          <span class="badge badge--outline" translate="common.customerSupportTemplate" ng-if="careFeature.mediaType !== 'virtualAssistant'"></span>
-          </p>
-          <div class="card-icons-inline" ng-if="careFeature.mediaType !== 'virtualAssistant'">
-              <span ng-repeat="icon in careFeature.icons">
-                <i class="icon {{icon}}"></i>
-              </span>
+          <div class="care-badge">
+            <span  class="badge badge--outline" translate="careChatTpl.filterType.{{careFeature.mediaType}}"></span>
+          </div>
+          <div class="care-icon">
+            <span ng-repeat="icon in careFeature.icons"><i class="icon {{icon}} {{careFeature.color}} icon-lg"></i></span>
           </div>
         </header>
         <footer class="card-footer">
-          <div class="embed-code-txt h6 left">
-            <p><span translate="sunlightDetails.status" ng-if="careFeature.mediaType === 'virtualAssistant' && careFeature.status"></span>{{careFeature.status}}</p>
+          <div class="embed-code-txt h6 left ellipsis">
+            <span translate="sunlightDetails.status" ng-if="careFeature.status">{{careFeature.status}}</span>
+            <span class="email" ng-if="careFeature.email">{{careFeature.email}}</span>
           </div>
           <div class="right icon icon-download" ng-if="careFeature.mediaType !== 'virtualAssistant'" ng-click="careFeaturesCtrl.openEmbedCodeModal((careFeature), $event)" aria-label="{{::'common.download' | translate}}"></div>
         </footer>

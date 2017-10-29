@@ -1,3 +1,4 @@
+import { KeyCodes } from 'modules/core/accessibility';
 interface InlineEditTextForm extends ng.IFormController {
   editInput: ng.INgModelController;
 }
@@ -25,8 +26,6 @@ class InlineEditText implements ng.IComponentController {
   public isTextClickable: boolean | undefined;
   public onTextClick: Function | undefined;
   public showTextLink: boolean;
-
-  private static readonly ESCAPE_KEY = 27;
 
   /* @ngInject */
   constructor(
@@ -67,7 +66,7 @@ class InlineEditText implements ng.IComponentController {
   }
 
   public keyPress(e: KeyboardEvent): void {
-    if (e.keyCode === InlineEditText.ESCAPE_KEY) {
+    if (e.keyCode === KeyCodes.ESCAPE) {
       this.disableEdit();
     }
     e.stopPropagation();

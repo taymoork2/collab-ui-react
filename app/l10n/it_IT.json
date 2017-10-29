@@ -7332,25 +7332,25 @@
       "configOverview": {
         "title": "Requisiti di configurazione dell'assistente virtuale cliente",
         "desc": "Esaminare i prerequisiti per la creazione di un assistente virtuale cliente",
-        "boxTitle": "Creare un agente API.AI prima di creare l'assistente virtuale cliente.",
-        "boxDesc": "Compilare un agente automatizzato in API.AI con un dialogo in linguaggio naturale. L'assistente virtuale cliente può utilizzare il dialogo incorporato per interagire con i clienti e inoltrare una conversazione con agenti in diretta, come necessario.",
-        "boxRadioOne": "No, non dispongo di un agente API.AI preconfigurato",
+        "boxTitle": "Creare un agente Dialogflow prima di creare l'assistente virtuale cliente.",
+        "boxDesc": "Compilare un agente automatizzato in Dialogflow con un dialogo in linguaggio naturale. L'assistente virtuale cliente può utilizzare il dialogo incorporato per interagire con i clienti e inoltrare una conversazione con agenti in diretta, come necessario.",
+        "boxRadioOne": "No, non dispongo di un agente Dialogflow preconfigurato",
         "boxRadioOneDesc1": "Vai a ",
-        "boxRadioApiai": "API.AI",
+        "boxRadioDialogflow": "Dialogflow",
         "boxRadioOneDesc2": " per creare un agente. Per iniziare, vedere la ",
-        "boxRadioApiaiDoc": "documentazione API.AI",
-        "boxRadioTwo": "Sì, dispongo di un agente API.AI preconfigurato e sono pronto a procedere",
-        "boxRadioTwoDesc": "Fare clic sulla freccia per continuare l'integrazione dell'agente API.AI con un assistente virtuale cliente"
+        "boxRadioDialogflowDoc": "documentazione Dialogflow",
+        "boxRadioTwo": "Sì, dispongo di un agente Dialogflow preconfigurato e sono pronto a procedere",
+        "boxRadioTwoDesc": "Fare clic sulla freccia per continuare l'integrazione dell'agente Dialogflow con un assistente virtuale cliente"
       },
       "dialogIntegration": {
         "title": "Configura integrazione dialogo",
-        "desc": "Aggiungere un motivo di escalation preconfigurato per completare la configurazione dell'agente API.AI",
+        "desc": "Aggiungere un motivo di escalation preconfigurato per completare la configurazione dell'agente Dialogflow",
         "boxStepOne": "Scaricare un file JSON di motivo di escalation.",
         "boxStepOneDesc": "Un motivo di escalation consente all'assistente virtuale cliente di inoltrare una conversazione a un agente.",
-        "boxStepTwo": "Caricare il motivo di escalation sull'agente API.AI.",
-        "boxStepTwoDesc": "Nella pagina dei motivi dell'agente API.AI, fare clic sui tre puntini in verticale (⋮) e scegliere Carica motivo. Caricare il file escalation.json scaricato",
-        "boxStepThree": "Personalizzare il motivo di escalation in API.AI.",
-        "boxStepThreeDesc": "Nella pagina dei motivi dell'agente API.AI, scegliere Motivo escalation. Modificare i campi Affermazione utente per modificare le espressioni dell'utente che attivano l'escalation. Tutte le espressioni dell'utente devono:",
+        "boxStepTwo": "Caricare il motivo di escalation sull'agente Dialogflow.",
+        "boxStepTwoDesc": "Nella pagina dei motivi dell'agente Dialogflow, fare clic sui tre puntini in verticale (⋮) e scegliere Carica motivo. Caricare il file escalation.json scaricato",
+        "boxStepThree": "Personalizzare il motivo di escalation in Dialogflow.",
+        "boxStepThreeDesc": "Nella pagina dei motivi dell'agente Dialogflow, scegliere Motivo escalation. Modificare i campi Affermazione utente per modificare le espressioni dell'utente che attivano l'escalation. Tutte le espressioni dell'utente devono:",
         "boxBulletOne": "Utilizzare una modalità modello",
         "boxBulletTwo": "Contenere un riferimento a @sys.any:Topic",
         "boxStepThreeDescCont": "Il simbolo @ accanto all'espressione utente indica la modalità modello. Fare clic sul simbolo per attivare la modalità. Non modificare l'azione GetExpert.",
@@ -7361,11 +7361,11 @@
       "accessToken": {
         "title": "Completa integrazione dialogo",
         "desc": "Completare l'integrazione per consentire l'uso del dialogo naturale nelle interazioni con i clienti",
-        "boxDesc": "Ciascun agente API.AI dispone di un token di accesso univoco al client memorizzato nelle impostazioni agente. Copiare il token dalle impostazioni dell'agente API.AI configurato, inserirlo qui, quindi fare clic su \"Convalida\" per controllare il token prima di completare l'integrazione del dialogo.",
-        "inputLabel": "Token di accesso al client API.AI",
+        "boxDesc": "Ciascun agente Dialogflow dispone di un token di accesso univoco al client memorizzato nelle impostazioni agente. Copiare il token dalle impostazioni dell'agente Dialogflow configurato, inserirlo qui, quindi fare clic su \"Convalida\" per controllare il token prima di completare l'integrazione del dialogo.",
+        "inputLabel": "Token di accesso al client Dialogflow",
         "validateButtonText": "Convalida",
         "maxLengthError": "Il token di accesso al client non può essere più lungo di 128 caratteri.",
-        "invalidTokenText": "Token di accesso al client API.AI non valido. Verificare il token e riprovare."
+        "invalidTokenText": "Token di accesso al client Dialogflow non valido. Verificare il token e riprovare."
       },
       "name": {
         "title": "Nome assistente virtuale cliente",

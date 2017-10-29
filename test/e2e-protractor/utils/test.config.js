@@ -14,6 +14,13 @@ var scopes = [
   'compliance:spark_conversations_read',
   'contact-center-context:pod_read',
   'contact-center-context:pod_write',
+  // to onboard bot account
+  'spark:applications_write',
+  'spark:applications_read',
+  // for Care Virtual Assistant
+  'spark:messages_read',
+  'spark:memberships_read',
+  'spark:rooms_read',
 ];
 var oauth2Scope = scopes.join(' ');
 

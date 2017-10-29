@@ -266,3 +266,14 @@ export interface IReleaseChannelEntitlement {
   entitled: boolean;
 }
 
+export interface IClusterPropertySet {
+  'mf.group.displayName'?: string;
+  'mf.group.region'?: string;
+  'mf.role'?: string;
+  'mf.ucSipTrunk'?: string;
+  'mf.videoQuality'?: string;
+  'mf.trustedSipSources'?: string;
+  'fms.releaseChannel'?: string;
+  'fms.calendarAssignmentType'?: 'standard' | 'activeActive';
+  'fms.callManagerAssignmentType'?: 'standard' | 'activeActive';
+}
