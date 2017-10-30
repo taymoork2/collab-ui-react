@@ -9,10 +9,13 @@ describe('Care Expert Virtual Assistant Service', function () {
   const TEST_EXPERT_VA_ID = 'ANOTHER-UUID-VALUE';
   const TEST_EMAIL = 'test@cisco.com';
   const TEST_ICON_URL = 'iconUrl';
+  const EXPERT_QUEUE_UR_URL = 'testApp.ciscoservice.com/qnr/v1/';
+  const TEST_QUEUE_ID = 'TEST-QUEUE-ID';
   let EvaService: EvaService, $httpBackend, $state;
 
   const spiedUrlConfig = {
     getEvaServiceUrl: jasmine.createSpy('getEvaServiceUrl').and.returnValue(EXPERT_SERVICE_URL),
+    getSunlightURServiceUrl: jasmine.createSpy('getSunlightURServiceUrl()').and.returnValue(EXPERT_QUEUE_UR_URL),
   };
 
   const spiedAuthinfo = {
@@ -30,6 +33,7 @@ describe('Care Expert Virtual Assistant Service', function () {
     EvaService = _EvaService_;
     $httpBackend = _$httpBackend_;
     $state = _$state_;
+    installPromiseMatchers();
   }));
 
   afterEach(function () {
@@ -81,6 +85,25 @@ describe('Care Expert Virtual Assistant Service', function () {
         expect(response.data).toEqual(expected.data);
       });
     $httpBackend.flush();
+  });
+
+  it('should perform a DELETE on the queue associated with expert Virtual Assistant', function () {
+    const url = new RegExp('.*/organization/' + TEST_ORG_ID + '/queue/' + TEST_QUEUE_ID);
+    let promise;
+    $httpBackend.expectDELETE(url).respond(200);
+    promise = EvaService.deleteExpertAssistantQueue(TEST_ORG_ID, TEST_QUEUE_ID);
+    $httpBackend.flush();
+    expect(promise).toBeResolved();
+
+    $httpBackend.expectDELETE(url).respond(404);
+    promise = EvaService.deleteExpertAssistantQueue(TEST_ORG_ID, TEST_QUEUE_ID);
+    $httpBackend.flush();
+    expect(promise).toBeRejected();
+
+    $httpBackend.expectDELETE(url).respond(500);
+    promise = EvaService.deleteExpertAssistantQueue(TEST_ORG_ID, TEST_QUEUE_ID);
+    $httpBackend.flush();
+    expect(promise).toBeRejected();
   });
 
   it('URL should support deleteExpertAssistant', function () {

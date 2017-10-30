@@ -7309,6 +7309,7 @@
     "editAction": "Edit",
     "deleteFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}?",
     "deleteVaFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}?<br>Deleting the Customer Virtual Assistant removes it from all Customer Support Templates. Customers can no longer interact with the virtual assistant.",
+    "deleteEvaFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}?<br>You can no longer escalate chat requests to Cisco Spark expert spaces.",
     "createSuccessText": "{{ featureName }} template has been created successfully.",
     "createTemplateFailureText": "Failed to create Care template.",
     "editSuccessText": "{{ featureName }} template has been updated successfully.",
