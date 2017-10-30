@@ -14,8 +14,7 @@ describe('field modal component', () => {
     description: '',
     classification: 'ENCRYPTED',
     classificationUI: 'context.dictionary.fieldPage.encrypted',
-    dataTypeUI: '',
-    dataType: undefined,
+    dataType: '',
     translations: ({ en_US: '' }),
     searchable: false,
     lastUpdated: undefined,
@@ -67,11 +66,15 @@ describe('field modal component', () => {
         dismiss: 'dismiss()',
         inUse: false,
       });
+
+      // default to (logically) valid values
+      this.controller.fieldData.dataType = 'string';
+      this.controller.fieldData.dataTypeValue = { label: 'string', value: 'string' };
     });
 
     describe('fixDataForApi', function () {
       it('should correctly fix dataType and classification', function () {
-        this.controller.fieldData.dataTypeUI = 'context.dictionary.dataTypes.string';
+        this.controller.fieldData.dataTypeValue.value = 'string';
         this.controller.fieldData.classificationUI = 'context.dictionary.fieldPage.unencrypted';
         const fixedField = this.controller.fixDataForApi();
         expect(fixedField.dataType).toBe('string');
@@ -134,7 +137,7 @@ describe('field modal component', () => {
       it('should return true if valid id, label, and datatype are selected', function () {
         this.controller.fieldData.id = 'someId';
         this.controller.fieldData.translations.en_US = 'label';
-        this.controller.fieldData.dataTypeUI = 'dataType';
+        this.controller.fieldData.dataTypeValue = { label: 'dataType', value: 'dataType' };
         expect(this.controller.createOrSaveButtonEnabled()).toBe(true);
       });
 
@@ -174,6 +177,8 @@ describe('field modal component', () => {
         this.controller.fieldData.id = 'id';
         this.controller.fieldData.translations.en_US = 'label';
         this.controller.fieldData.dataType = '';
+        this.controller.fieldData.dataTypeValue = { label: '', value: '' };
+
         expect(this.controller.createOrSaveButtonEnabled()).toBe(false);
       });
 
@@ -256,12 +261,12 @@ describe('field modal component', () => {
           dismiss: 'dismiss()',
         });
 
-        expect(Object.keys(this.controller.dataTypeApiMap)).toEqual([
-          'context.dictionary.dataTypes.boolean',
-          'context.dictionary.dataTypes.double',
-          'context.dictionary.dataTypes.integer',
-          'context.dictionary.dataTypes.string',
-          'context.dictionary.dataTypes.enumString',
+        expect(this.controller.dataTypeOptions).toEqual([
+          { label: 'context.dictionary.dataTypes.boolean',    value: 'boolean' },
+          { label: 'context.dictionary.dataTypes.double',     value: 'double' },
+          { label: 'context.dictionary.dataTypes.integer',    value: 'integer' },
+          { label: 'context.dictionary.dataTypes.string',     value: 'string' },
+          { label: 'context.dictionary.dataTypes.enumString', value: 'enumString' },
         ]);
       });
 
@@ -286,7 +291,7 @@ describe('field modal component', () => {
             inactiveEnumerations: undefined,
           };
 
-          this.controller.fieldData.dataTypeUI = 'context.dictionary.dataTypes.enumString';
+          this.controller.fieldData.dataTypeValue = { label: 'enumString', value: 'enumString' };
           this.controller.fieldData.dataTypeDefinition = _.cloneDeep(testDefinition);
 
           // get the "fixed" field data
@@ -695,7 +700,11 @@ describe('field modal component', () => {
 
       describe('isSingleSelectCheckPassed', function () {
         it('should return false if the otpions is less than two', function () {
-          this.controller.fieldData.dataTypeUI = 'context.dictionary.dataTypes.enumString';
+          this.controller.fieldData.dataTypeValue = {
+            label: 'enumString',
+            value: 'enumString',
+          };
+
           this.controller.optionsListCopy = [
             { index: 0, edit: false, value: '1' },
           ];
@@ -703,7 +712,6 @@ describe('field modal component', () => {
         });
 
         it('should return true if the otpions is equal to two', function () {
-          this.controller.fieldData.dataTypeUI = 'context.dictionary.dataTypes.enumString';
           this.controller.optionsListCopy = [
             { index: 0, edit: false, value: '1' },
             { index: 1, edit: false, value: '2' },
@@ -748,7 +756,6 @@ describe('field modal component', () => {
         description: 'A field description',
         classification: 'ENCRYPTED',
         classificationUI: 'context.dictionary.fieldPage.encrypted',
-        dataTypeUI: this.$translate.instant('context.dictionary.dataTypes.enumString'),
         dataType: 'string',
         translations: { en_US: 'The field label' },
         searchable: true,
