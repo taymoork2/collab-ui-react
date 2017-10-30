@@ -58,7 +58,7 @@
           <div class="small-6 medium-6 large-6">
             <cs-select
               is-disabled="$ctrl.isDisabledWhenInUse()"
-              ng-model="$ctrl.fieldData.dataTypeUI"
+              ng-model="$ctrl.fieldData.dataTypeValue"
               options="$ctrl.dataTypeOptions"
               placeholder="$ctrl.dataTypePlaceholder">
             </cs-select>
@@ -210,3 +210,4 @@
     ng-click="$ctrl.update()"
     ng-disabled="!$ctrl.createOrSaveButtonEnabled() || forms.newFieldForm.$pristine"></button>
 </div>
+
