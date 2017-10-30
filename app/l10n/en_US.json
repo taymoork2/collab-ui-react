@@ -6845,7 +6845,7 @@
       "Online": "Online",
       "OnlineWithIssues": "Online, With Issues",
       "Offline": "Offline",
-      "OfflineExpired": "Deactivated",
+      "OfflineExpired": "Requires Activation",
       "Unknown": "Unknown"
     },
     "WithDevices": "With Devices",
