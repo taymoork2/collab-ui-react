@@ -1,5 +1,6 @@
 var OnboardService = require('./onboard.service');
-var MessengerInteropService = require('./messenger-interop.service').default;
+var crServicesPanelsModuleName = require('./cr-services-panels').default;
+var sharedModuleName = require('./shared').default;
 
 require('./_user-add.scss');
 
@@ -13,8 +14,9 @@ require('./_user-add.scss');
     .module('core.users.userAdd', [
       require('modules/core/scripts/services/authinfo'),
       require('modules/core/config/config').default,
+      crServicesPanelsModuleName,
+      sharedModuleName,
     ])
     .service('OnboardService', OnboardService)
-    .service('MessengerInteropService', MessengerInteropService)
     .name;
 })();
