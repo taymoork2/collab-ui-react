@@ -813,9 +813,54 @@ describe('Partner managing his own org: Care Settings - when org has K2 entitlem
     expect(controller.state).toBe(controller.NOT_ONBOARDED);
     expect(Notification.errorWithTrackingId).toHaveBeenCalled();
   });
+});
+
+describe('Care Settings - when org is already onboarded', function () {
+  var controller, sunlightChatConfigUrl, sunlightConfigService, $httpBackend, Notification, orgId, $interval, $intervalSpy,
+    $scope, q;
+  var spiedAuthinfo = {
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
+    getUserOrgId: jasmine.createSpy('getUserOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
+    getOrgName: jasmine.createSpy('getOrgName').and.returnValue('SunlightConfigService test org'),
+    isCareVoice: jasmine.createSpy('isCareVoice').and.returnValue(true),
+  };
+  beforeEach(angular.mock.module('Sunlight'));
+  beforeEach(angular.mock.module(function ($provide) {
+    $provide.value('Authinfo', spiedAuthinfo);
+  }));
+  beforeEach(
+    inject(function ($controller, _$httpBackend_, _$interval_, $q, _$rootScope_, _Notification_, _SunlightConfigService_, UrlConfig) {
+      q = $q;
+      sunlightConfigService = _SunlightConfigService_;
+      $httpBackend = _$httpBackend_;
+      Notification = _Notification_;
+      $scope = _$rootScope_.$new();
+      $interval = _$interval_;
+      $intervalSpy = jasmine.createSpy('$interval', $interval).and.callThrough();
+      $scope.wizard = {};
+      $scope.wizard.isNextDisabled = false;
+      orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
+      sunlightChatConfigUrl = UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + orgId + '/chat';
+      controller = $controller('CareSettingsCtrl', {
+        $scope: $scope,
+        $interval: $intervalSpy,
+        Notification: Notification,
+      });
+      spyOn(sunlightConfigService, 'updateChatConfig').and.callFake(function () {
+        var deferred = q.defer();
+        deferred.resolve('fake update response');
+        return deferred.promise;
+      });
+      spyOn(sunlightConfigService, 'onBoardCare').and.callFake(function () {
+        var deferred = q.defer();
+        deferred.resolve('fake update response');
+        return deferred.promise;
+      });
+    })
+  );
 
   it('should not show error notification and disable setup care button, if org is already onboarded', function () {
-    spyOn(sunlightConfigService, 'aaOnboard').and.callFake(function () {
+    spyOn(sunlightConfigService, 'onboardCareBot').and.callFake(function () {
       var deferred = q.defer();
       deferred.reject({ status: 412 });
       return deferred.promise;
