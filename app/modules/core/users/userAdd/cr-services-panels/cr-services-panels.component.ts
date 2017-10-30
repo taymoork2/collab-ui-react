@@ -2,6 +2,10 @@ import { IToolkitModalService } from 'modules/core/modal';
 import MessengerInteropService from 'modules/core/users/userAdd/shared/messenger-interop.service';
 
 class CrServicesPanelsController implements ng.IComponentController {
+  public isCareEnabled = false;
+  public isCareAndCDCEnabled = false;
+  public isCareAndCVCEnabled = false;
+
   /* @ngInject */
   constructor (
     private $modal: IToolkitModalService,
@@ -10,6 +14,12 @@ class CrServicesPanelsController implements ng.IComponentController {
     private Authinfo,
     private MessengerInteropService: MessengerInteropService,
   ) {}
+
+  public $onInit(): void {
+    this.isCareAndCDCEnabled = this.Authinfo.isCareAndCDC();
+    this.isCareAndCVCEnabled = this.Authinfo.isCareVoiceAndCVC();
+    this.isCareEnabled = this.isCareAndCDCEnabled || this.isCareAndCVCEnabled;
+  }
 
   public hasAssignableMessageItems(): boolean {
     return this.MessengerInteropService.hasAssignableMessageItems();
@@ -80,7 +90,6 @@ export class CrServicesPanelsComponent implements ng.IComponentOptions {
   // - these bindings are a transition measure, to facilitate migrating code out of `OnboardCtrl`
   // - TODO (mipark2): rm bindings as code is migrated out of `OnboardCtrl`
   public bindings = {
-    isCareEnabled: '<',
     messageFeatures: '<',
     radioStates: '<',
     checkLicenseAvailability: '<',
@@ -100,7 +109,6 @@ export class CrServicesPanelsComponent implements ng.IComponentOptions {
     careRadioValue: '<',
     cdcCareFeature: '<',
     currentUserEnablesCall: '<',
-    isCareAndCVCEnabled: '<',
     cvcCareFeature: '<',
     careFeatures: '<',
   };
