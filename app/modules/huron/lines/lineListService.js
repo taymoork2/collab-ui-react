@@ -196,18 +196,22 @@
               }
               // header line for CSV file
               var headerLine = {};
-              headerLine.internalNumber = 'internalNumber';
-              headerLine.externalNumber = 'externalNumber';
-              headerLine.userId = 'userId';
+              headerLine.internalNumber = $translate.instant('linesPage.headerLabelInternalNumber');
+              headerLine.externalNumber = $translate.instant('linesPage.headerLabelExternalNumber');
+              headerLine.userId = $translate.instant('linesPage.headerLabelUserId');
               if (vm.ishI1484) {
-                headerLine.locationname = 'location';
+                headerLine.locationname = $translate.instant('linesPage.headerLabelLocation');
               }
               exportedLines.push(headerLine);
 
               // data to export for CSV file
               for (var i = 0; i < lines.length; i++) {
                 var exportedLine = {};
-                exportedLine.internalNumber = lines[i].internalNumber;
+                if (vm.ishI1484) {
+                  exportedLine.internalNumber = lines[i].siteToSiteNumber;
+                } else {
+                  exportedLine.internalNumber = lines[i].internalNumber;
+                }
                 exportedLine.externalNumber = lines[i].externalNumber;
                 exportedLine.userId = lines[i].userId;
                 if (vm.ishI1484) {
