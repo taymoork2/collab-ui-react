@@ -42,10 +42,6 @@ class CrServicesPanelsController implements ng.IComponentController {
   }
 
   public showMessengerInteropToggle(): boolean {
-    // TODO: rm this, no longer needed as of 2017-05-22 ('showMessengerInteropToggle' has been set globally to true)
-    if (!_.get(this.$state, 'current.data.showMessengerInteropToggle')) {
-      return false;
-    }
     return this.MessengerInteropService.hasAssignableMessageOrgEntitlement();
   }
 

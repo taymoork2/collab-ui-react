@@ -107,14 +107,7 @@ describe('Component: crServicesPanels:', () => {
     });
 
     describe('showMessengerInteropToggle():', () => {
-      it('should return false if "$state.current.data.showMessengerInteropToggle" is falsey', function () {
-        _.set(this, '$state.current.data.showMessengerInteropToggle', false);
-        this.compileComponent('crServicesPanels');
-        expect(this.controller.showMessengerInteropToggle()).toBe(false);
-      });
-
-      it('should (if the above param is truthy) return the result of "MessengerInteropService.hasAssignableMessageOrgEntitlement()"', function () {
-        _.set(this, '$state.current.data.showMessengerInteropToggle', true);
+      it('should return the result of "MessengerInteropService.hasAssignableMessageOrgEntitlement()"', function () {
         spyOn(this.MessengerInteropService, 'hasAssignableMessageOrgEntitlement').and.returnValue(true);
         this.compileComponent('crServicesPanels');
         expect(this.controller.showMessengerInteropToggle()).toBe(true);
