@@ -1,0 +1,33 @@
+@import 'styles/partials/mixins';
+@import '~collab-ui/scss/settings/colors';
+
+task-container {
+  @include keep-flex(column);
+
+  .task-container {
+    @include keep-flex(row);
+
+    &__panel {
+      @include keep-flex(column, 1);
+      flex-basis: 0;
+      min-width: 0;
+      border-right: 1px solid $gray-light;
+
+      &-header {
+        border-bottom: 1px solid $gray-light;
+      }
+
+      &-list {
+        flex: 1 1 0;
+        overflow-y: auto;
+      }
+    }
+
+    &__details {
+      @include keep-flex(column, 2);
+      flex-basis: 0;
+      min-width: 0;
+      overflow-y: auto;
+    }
+  }
+}

@@ -1,5 +1,6 @@
 import { ITask, TaskStatus } from './user-task-manager.component';
 
+// TODO: brspence refactor component into task-details
 export class CsvUploadResultsCtrl implements ng.IComponentController {
 
   public activeTask: ITask;
@@ -23,24 +24,38 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
   public $onInit(): void {
   }
 
-  public $onChanges(onChangesObj: ng.IOnChangesObject): void {
-    if (onChangesObj.activeTask) {
+  public $onChanges(changes: ng.IOnChangesObject): void {
+    if (changes.activeTask) {
       // stop the previousValue activeTask status polling
-      this.fillTaskData(onChangesObj.activeTask.currentValue);
+      this.fillTaskData(changes.activeTask.currentValue);
       // start the currentValue activeTask status polling
     }
   }
 
   private fillTaskData(taskSelection: ITask): void {
-    this.numTotalUsers = taskSelection.totalUsers;
-    this.numNewUsers = taskSelection.addedUsers;
-    this.numUpdatedUsers = taskSelection.updatedUsers;
-    this.numErroredUsers = taskSelection.erroredUsers;
-    this.processProgress = Math.floor((this.numNewUsers + this.numUpdatedUsers + this.numErroredUsers) * 100 / this.numTotalUsers);
-    this.isProcessing = taskSelection.status === TaskStatus.STARTED || taskSelection.status === TaskStatus.STARTING;
-    this.isCancelledByUser = false;
-    this.fileName = taskSelection.filename;
-    this.importCompletedAt = taskSelection.stopped;
+    // TODO: refactor for better initialization and an empty data state
+    if (taskSelection) {
+      this.numTotalUsers = taskSelection.totalUsers;
+      this.numNewUsers = taskSelection.addedUsers;
+      this.numUpdatedUsers = taskSelection.updatedUsers;
+      this.numErroredUsers = taskSelection.erroredUsers;
+      this.processProgress = Math.floor((this.numNewUsers + this.numUpdatedUsers + this.numErroredUsers) * 100 / this.numTotalUsers);
+      this.isProcessing = taskSelection.status === TaskStatus.STARTED || taskSelection.status === TaskStatus.STARTING;
+      this.isCancelledByUser = false;
+      this.fileName = taskSelection.filename;
+      this.importCompletedAt = taskSelection.stopped;
+    } else {
+      this.numTotalUsers = 0;
+      this.numNewUsers = 0;
+      this.numUpdatedUsers = 0;
+      this.numErroredUsers = 0;
+      this.processProgress = 0;
+      this.isProcessing = false;
+      this.userErrorArray = [];
+      this.isCancelledByUser = false;
+      this.fileName = '';
+      this.importCompletedAt = '';
+    }
   }
 
   public onCancelImport(): void {

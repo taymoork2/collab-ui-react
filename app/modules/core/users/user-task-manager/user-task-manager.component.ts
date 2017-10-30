@@ -1,4 +1,6 @@
-import { UserTaskManagerService } from 'modules/core/users/user-task-manager';
+import { UserTaskManagerService } from './user-task-manager.service';
+import { TaskListFilterType } from './task-list-filter/task-list-filter.component';
+import { Notification } from 'modules/core/notifications';
 
 export interface ITask {
   jobInstanceId: string;
@@ -19,10 +21,6 @@ export interface ITask {
   erroredUsers: number;
 }
 
-export enum ModalView {
-  ALL = 1,
-  ACTIVE,
-}
 
 export enum TaskStatus {
   CREATED = 'CREATED',
@@ -39,86 +37,70 @@ export enum TaskStatus {
 
 export class UserTaskManagerModalCtrl implements ng.IComponentController {
 
-  public activeTask: ITask;
+  public activeTask?: ITask;
   public loading = false;
   public dismiss: Function;
-  public ModalView = ModalView;
-  public allTaskList: ITask[];
-  public inProcessTaskList: ITask[];
-  public activeModal: ModalView = ModalView.ALL;
+  public allTaskList: ITask[] = [];
+  public inProcessTaskList: ITask[] = [];
+  public activeFilter: TaskListFilterType = TaskListFilterType.ALL;
 
   /* @ngInject */
   constructor(
     private $stateParams,
-    private Notification,
+    private Notification: Notification,
     private UserTaskManagerService: UserTaskManagerService,
-  ) {
-    this.activeTask = _.get<ITask>(this.$stateParams, 'task', undefined);
-    this.activeModal = _.isUndefined(this.activeTask) ? ModalView.ALL : ModalView.ACTIVE;
-  }
+  ) {}
 
   public $onInit(): ng.IPromise<any> {
     this.loading = true;
-    return this.getTasks()
-    .finally(() => this.loading = false);
+    this.initActives();
+    return this.fetchTasks()
+      .finally(() => this.loading = false);
   }
 
-  public setModal(modalSelection: ModalView): void {
-    this.activeModal = modalSelection;
-    if (this.isModalAll()) {
-      if (!_.isEmpty(this.allTaskList)) {
-        this.setActiveTask(this.allTaskList[0]);
-      }
-    } else {
-      if (!_.isEmpty(this.inProcessTaskList)) {
-        this.setActiveTask(this.inProcessTaskList[0]);
-      }
+  public setActiveFilter(activeFilter: TaskListFilterType): void {
+    this.activeFilter = activeFilter;
+    this.activeTask = this.taskList[0];
+  }
+
+  public get taskList() {
+    switch (this.activeFilter) {
+      case TaskListFilterType.ALL:
+        return this.allTaskList;
+      case TaskListFilterType.ACTIVE:
+        return this.inProcessTaskList;
     }
-  }
-
-  public isModalAll(): boolean {
-    return this.activeModal === ModalView.ALL;
-  }
-
-  public isModalActive(): boolean {
-    return this.activeModal === ModalView.ACTIVE;
   }
 
   public setActiveTask(taskSelection: ITask): void {
     this.activeTask = taskSelection;
-    // TO-DO Stop polling the previous task and
+    // TODO: Stop polling the previous task and
     // start polling data for this task
   }
 
-  public isActiveTask(taskSelection: ITask): boolean {
-    if (_.isUndefined(this.activeTask) || _.isUndefined(taskSelection)) {
-      return false;
-    } else {
-      return this.activeTask.jobInstanceId === taskSelection.jobInstanceId;
-    }
-  }
-
-  public getTasks(): ng.IPromise<any> {
-    // Get all tasks and identify  tasks
-    return this.UserTaskManagerService.getTasks()
-    .then(tasks => {
-      this.allTaskList = tasks;
-      this.populateInProcessTaskList();
-      // Find the active task and fill task data
-      // otherwise, show the first row
-      this.setModal(this.activeModal);
-    }).catch(response => this.Notification.errorResponse(response, 'userTaskManagerModal.getTaskListError'));
-  }
-
-  private populateInProcessTaskList(): void {
-    this.inProcessTaskList = [];
-    this.inProcessTaskList = _.filter(this.allTaskList, task => {
-      return task.status === TaskStatus.STARTING || task.status === TaskStatus.STARTED;
-    });
-  }
-
-  public closeTaskManagerModal(): void {
+  public dismissModal(): void {
     this.dismiss();
+  }
+
+  private initActives() {
+    this.activeTask = _.get<ITask>(this.$stateParams, 'task', undefined);
+    this.activeFilter = _.isUndefined(this.activeTask) ? TaskListFilterType.ALL : TaskListFilterType.ACTIVE;
+  }
+
+  private fetchTasks(): ng.IPromise<any> {
+    // Get all tasks and identify tasks
+    return this.UserTaskManagerService.getTasks()
+      .then(tasks => {
+        this.allTaskList = tasks;
+        this.inProcessTaskList = this.filterInProcessTasks(tasks);
+        if (!this.activeTask) {
+          this.activeTask = this.taskList[0];
+        }
+      }).catch(response => this.Notification.errorResponse(response, 'userTaskManagerModal.getTaskListError'));
+  }
+
+  private filterInProcessTasks(taskList: ITask[]) {
+    return _.filter(taskList, task => _.includes([TaskStatus.STARTING, TaskStatus.STARTED], task.status));
   }
 }
 
