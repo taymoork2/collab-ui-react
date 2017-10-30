@@ -8953,7 +8953,7 @@
     "cardStatus": {
       "operational": "Operational",
       "impaired": "Impaired Service",
-      "outage": "Outage",
+      "outage": "Not Operational",
       "unknown": "Unknown",
       "disabled": "Disabled",
       "setupNotComplete": "Setup not completed"
