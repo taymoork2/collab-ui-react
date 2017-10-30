@@ -153,6 +153,23 @@ export class OperatorOr extends SearchElement {
       or: this.or,
     };
   }
+
+  public getFieldNameIfAllSubElementsAreSameField() {
+    if (this.or.length > 1) {
+      const firstSubExpr = this.or[0];
+      if (firstSubExpr instanceof FieldQuery) {
+        if (_.every(this.or,
+            (fq) => {
+              return fq instanceof FieldQuery
+                && _.isEqual(_.lowerCase(firstSubExpr.field), _.lowerCase(fq.field))
+                && _.isEqual(FieldQuery.getMatchOperator(firstSubExpr), FieldQuery.getMatchOperator(fq));
+            })) {
+          return firstSubExpr.getQueryPrefix();
+        }
+      }
+    }
+    return '';
+  }
 }
 
 export class SearchElementBuilder {

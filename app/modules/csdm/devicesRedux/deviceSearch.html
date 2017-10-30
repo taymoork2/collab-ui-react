@@ -1,4 +1,7 @@
-<div class="search-filters-redux searchFilter">
+<div class="bullets">
+  <device-search-bullet ng-repeat="bullet in dctrl.getBullets()" search-element="bullet" bullet-container="dctrl"></device-search-bullet>
+</div>
+<div class="search-filters-redux">
   <form ng-submit="dctrl.onInputSubmit()" ng-class="{ 'active': dctrl.inputActive}">
     <div class="searchbox" onclick="angular.element('#searchFilterInput').focus();">
       <div class="searchinput" ng-class="{'searcherror': dctrl.searchObject.hasError}">
@@ -46,14 +49,6 @@
                      set-filter-fn="dctrl.setCurrentFilterValue(filter.filterValue)"
                      ng-class="{'searcherror': dctrl.searchObject.hasError}">
     </cs-searchfilter>
-  </span>
-</div>
-<div class="bullets">
-  <span class="bullet" ng-if="!bullet.isBeingEdited()" ng-repeat="bullet in dctrl.getBullets()"
-        ng-dblclick="dctrl.editBullet(bullet)">
-    <span class="field-descriptor" ng-if="bullet.field">{{bullet.getQueryPrefix()}} </span>
-    <span>{{bullet.getQueryWithoutField()}}</span>
-    <i class="icon icon-close" ng-click="dctrl.removeBullet(bullet)"/>
   </span>
 </div>
 
