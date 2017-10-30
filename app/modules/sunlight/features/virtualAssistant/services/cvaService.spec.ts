@@ -3,7 +3,7 @@ import { CvaService } from './cvaService';
 
 describe('Care Customer Virtual Assistant Service', function () {
 
-  const SERVICE_URL = 'testApp.ciscoservice.com/bot-services/v1/';
+  const SERVICE_URL = 'testApp.ciscoservice.com/virtual-assistant/v1/';
   const TEST_ORG_ID = 'A-UUID-VALUE';
   const TEST_BOT_NAME = 'A NAME';
   const TEST_BOT_CONFIG_ID = 'ANOTHER-UUID-VALUE';
