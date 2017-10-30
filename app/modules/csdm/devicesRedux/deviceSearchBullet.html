@@ -13,7 +13,6 @@
     <span ng-if="bctrl.getQueryPrefix()" class="collection-operator">(</span>
     <span ng-repeat="subElem in bctrl.subElements()">
       <span class="collection-operator" ng-if="subElem !== bctrl.subElements()[0]"> {{ bctrl.collectionOperator() }}
-        <!--<button ng-click="vm.changeOperator()" >v</button>-->
       </span>
       <device-search-bullet is-sub-level=true search-element="subElem"
                             bullet-container="bctrl.bulletContainer"></device-search-bullet>

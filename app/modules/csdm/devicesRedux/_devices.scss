@@ -444,14 +444,14 @@
       display: inline-block;
       background-color: $gray-dark-2;
       border-radius: 0.3rem;
-      color: lightgrey;
+      color: $gray-light;
       font-size: 0.875rem;
       line-height: 2;
       .field-descriptor {
-        color: white;
+        color: $white;
       }
       .collection-operator {
-        color: white;
+        color: $white;
         padding: 0px;
       }
       .icon-remove {
@@ -466,9 +466,9 @@
     }
     .bullet_edited {
       display:none;
-      color: black;
-      background-color: lightgrey;
-      border-color: darkgrey;
+      color: $black;
+      background-color: $gray-light;
+      border-color: $gray-dark;
       border-width: 2px;
       border-style: dotted;
     }
