@@ -130,7 +130,7 @@
               } else {
                 attributes = node.attributes;
               }
-              var ele = '<aa-insertion-element element-text="' + attributes[0].value + '" read-as="' + attributes[1].value + '" element-id="' + attributes[2].value + '" aa-Element-Type="' + $scope.aaElementType + '"></aa-insertion-element>';
+              var ele = '<aa-insertion-element element-text="' + attributes[0].value + '" read-as="' + attributes[1].value + '" element-id="' + attributes[2].value + '"id="' + attributes[2].value + '" aa-Element-Type="' + $scope.aaElementType + '"></aa-insertion-element>';
               opt = setActionValue(attributes[0].value, true, encodeURIComponent(ele), attributes[1].value);
           }
         }

@@ -35,7 +35,7 @@
     vm.deletedSessionVariablesList = [];
 
     vm.selectVariablePlaceholder = $translate.instant('autoAttendant.selectVariablePlaceholder');
-    vm.addElement = '<aa-insertion-element element-text="DynamicText" read-as="ReadAs" element-id="Id" aa-schedule="' + aa_schedule + '" aa-index="' + aa_index + '" aa-element-type="' + vm.aaElementType + '"></aa-insertion-element>';
+    vm.addElement = '<aa-insertion-element element-text="DynamicText" read-as="ReadAs" element-id="elementId" id="Id" aa-schedule="' + aa_schedule + '" aa-index="' + aa_index + '" aa-element-type="' + vm.aaElementType + '"></aa-insertion-element>';
 
     vm.dynamicTags = ['DYNAMIC-EXAMPLE'];
     vm.isDynamicToggle = isDynamicToggle;
@@ -218,7 +218,7 @@
               } else {
                 attributes = node.attributes;
               }
-              var ele = '<aa-insertion-element element-text="' + attributes[0].value + '" read-as="' + attributes[1].value + '" element-id="' + attributes[2].value + '" aa-element-type="' + vm.aaElementType + '"></aa-insertion-element>';
+              var ele = '<aa-insertion-element element-text="' + attributes[0].value + '" read-as="' + attributes[1].value + '" element-id="' + attributes[2].value + '"id="' + attributes[2].value + '" aa-element-type="' + vm.aaElementType + '"></aa-insertion-element>';
               opt = createAction(attributes[0].value, true, encodeURIComponent(ele));
           }
 
@@ -307,7 +307,7 @@
     function populateUiModel() {
       if (!_.isEmpty(action)) {
         if (!_.isEmpty(action.url)) {
-          lastSavedDynList = _.get(vm.menuEntry, 'actions[0].url');
+          lastSavedDynList = _.cloneDeep(_.get(vm.menuEntry, 'actions[0].url'));
           vm.dynamicValues = [];
           _.forEach(action.url, function (opt) {
             var model;
@@ -327,8 +327,9 @@
         }
       }
       vm.url = action.url;
+      action.dynamicList = action.url;
       if (!_.isEmpty(action.variableSet)) {
-        lastSavedVariableList = action.variableSet;
+        lastSavedVariableList = _.cloneDeep(action.variableSet);
         vm.variableSet = action.variableSet;
       }
     }
