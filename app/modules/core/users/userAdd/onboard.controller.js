@@ -113,10 +113,6 @@ require('./_user-add.scss');
     $scope.currentUserEnablesCall = false;
     $scope.currentUserCommFeature = $scope.selectedCommFeature = null;
 
-    $scope.isCareAndCDCEnabled = Authinfo.isCareAndCDC();
-    $scope.isCareAndCVCEnabled = Authinfo.isCareVoiceAndCVC();
-    $scope.isCareEnabled = $scope.isCareAndCDCEnabled || $scope.isCareAndCVCEnabled;
-
     $scope.isDirSyncEnabled = DirSyncService.isDirSyncEnabled();
     $scope.convertUsersReadOnly = $stateParams.readOnly || $scope.isDirSyncEnabled;
 

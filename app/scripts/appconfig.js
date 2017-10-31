@@ -931,10 +931,6 @@
                 },
               },
             },
-            data: {
-              // TODO: rm this, no longer needed
-              showMessengerInteropToggle: true,
-            },
           })
           .state('users.add.services.dn', {
             views: {
