@@ -53,6 +53,10 @@ describe('Partner managing other orgs: Controller: Care Settings', function () {
     })
   );
 
+  afterAll(function () {
+    controller = sunlightChatConfigUrl = $httpBackend = Notification = $interval = $intervalSpy = $scope = sunlightConfigService = urService = urServiceUrl = orgId = $q = spiedAuthinfo = undefined;
+  });
+
   describe('CareSettings - Init', function () {
     it('should show enabled setup care button and disabled next button, if Org is not onboarded already.', function () {
       $httpBackend.expectGET(sunlightChatConfigUrl).respond(404, {});
@@ -288,6 +292,10 @@ describe('Partner managing other orgs: Care Settings - when org has K2 entitleme
     })
   );
 
+  afterAll(function () {
+    controller = sunlightChatConfigUrl = $httpBackend = Notification = $interval = $intervalSpy = $scope = sunlightConfigService = urServiceUrl = orgId = q = spiedAuthinfo = undefined;
+  });
+
   it('should show enabled setup care button and disabled next button, if Org is not onboarded already.', function () {
     $httpBackend.expectGET(urServiceUrl)
       .respond(200);
@@ -469,6 +477,10 @@ describe('Partner managing his own org: Controller: Care Settings', function () 
       });
     })
   );
+
+  afterAll(function () {
+    controller = sunlightChatConfigUrl = $httpBackend = Notification = $interval = $intervalSpy = $scope = sunlightConfigService = $q = spiedAuthinfo = undefined;
+  });
 
   describe('CareSettings - Init', function () {
     it('should show enabled setup care button and disabled next button, if Org is not onboarded already.', function () {
@@ -686,6 +698,10 @@ describe('Partner managing his own org: Care Settings - when org has K2 entitlem
     })
   );
 
+  afterAll(function () {
+    controller = sunlightChatConfigUrl = $httpBackend = Notification = $interval = $intervalSpy = $scope = sunlightConfigService = orgId = q = spiedAuthinfo = undefined;
+  });
+
   it('should show enabled setup care button and disabled next button, if Org is not onboarded already.', function () {
     controller.defaultQueueStatus = controller.status.SUCCESS;
     $httpBackend.expectGET(sunlightChatConfigUrl)
@@ -858,6 +874,10 @@ describe('Care Settings - when org is already onboarded', function () {
       });
     })
   );
+
+  afterAll(function () {
+    controller = sunlightChatConfigUrl = $httpBackend = Notification = $interval = $intervalSpy = $scope = sunlightConfigService = orgId = q = spiedAuthinfo = undefined;
+  });
 
   it('should not show error notification and disable setup care button, if org is already onboarded', function () {
     spyOn(sunlightConfigService, 'onboardCareBot').and.callFake(function () {

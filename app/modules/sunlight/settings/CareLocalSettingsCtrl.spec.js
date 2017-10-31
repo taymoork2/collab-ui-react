@@ -61,6 +61,10 @@ describe('Controller: Care Local Settings', function () {
     })
   );
 
+  afterAll(function () {
+    controller = sunlightChatConfigUrl = sunlightConfigService = $httpBackend = Notification = orgId = $interval = $intervalSpy = $scope = FeatureToggleService = queueDetails = urService = urServiceUrl = spiedAuthinfo = undefined;
+  });
+
   describe('CareSettings - Init', function () {
     it('should show enabled setup care button, if Org is not onboarded already.', function () {
       $httpBackend.expectGET(sunlightChatConfigUrl).respond(404, {});
@@ -275,6 +279,10 @@ describe('Care Settings - when org has K2 entitlement', function () {
     })
   );
 
+  afterAll(function () {
+    controller = sunlightChatConfigUrl = sunlightConfigService = $httpBackend = Notification = orgId = $interval = $intervalSpy = $scope = q = FeatureToggleService = queueDetails = urService = urServiceUrl = spiedAuthinfo = undefined;
+  });
+
   it('should enable setup care button, when Org is not onboarded', function () {
     controller.defaultQueueStatus = controller.status.SUCCESS;
     $httpBackend.expectGET(urServiceUrl)
@@ -485,6 +493,10 @@ describe('Partner Logged in as org admin: Care Settings - when org has K2 entitl
     })
   );
 
+  afterAll(function () {
+    controller = sunlightChatConfigUrl = sunlightConfigService = $httpBackend = Notification = orgId = $interval = $intervalSpy = $scope = q = FeatureToggleService = queueDetails = urService = urServiceUrl = spiedAuthinfo = undefined;
+  });
+
   it('should enable setup care button, when Org is not onboarded', function () {
     $httpBackend.expectGET(sunlightChatConfigUrl)
       .respond(200, {
@@ -663,6 +675,10 @@ describe('Admin logged in: Care Settings - when org has K2 entitlement', functio
     })
   );
 
+  afterAll(function () {
+    controller = sunlightChatConfigUrl = sunlightConfigService = $httpBackend = Notification = orgId = $interval = $intervalSpy = $scope = q = FeatureToggleService = queueDetails = urServiceUrl = spiedAuthinfo = undefined;
+  });
+
   it('should enable setup care button, when Org is not onboarded', function () {
     $httpBackend.expectGET(sunlightChatConfigUrl)
       .respond(200, {
@@ -835,6 +851,10 @@ describe('Care Settings - Routing Toggling', function () {
       };
     })
   );
+
+  afterAll(function () {
+    controller = sunlightChatConfigUrl = sunlightConfigService = $httpBackend = Notification = orgId = $interval = $intervalSpy = $scope = q = FeatureToggleService = queueDetails = urService = urServiceUrl = spiedAuthinfo = undefined;
+  });
 
   it('should show the saved org chat configurations as selected.', function () {
     spyOn(sunlightConfigService, 'updateChatConfig').and.callFake(function () {
