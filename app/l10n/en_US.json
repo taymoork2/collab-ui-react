@@ -4104,6 +4104,8 @@
     "configureApi": "Configure API",
     "configureRestApi": "Configure REST API",
     "requestRestApi": "Request",
+    "responseRestApi": "Response",
+    "assignmentRestApi": "Assignment",
     "schedule": "Schedule",
     "scheduleAllDay": "Open 24 hours",
     "scheduleOpen": "Open Hours",

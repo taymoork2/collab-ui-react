@@ -6,9 +6,7 @@
     .controller('AAConfigureApiModalCtrl', AAConfigureApiModalCtrl);
 
   /* @ngInject */
-  function AAConfigureApiModalCtrl($modalInstance, $scope, $translate, aa_schedule, aa_index,
-    AACommonService, AADynaAnnounceService, AAModelService, AASessionVariableService, AAUiModelService,
-    RestApiService) {
+  function AAConfigureApiModalCtrl($modalInstance, $scope, $translate, aa_schedule, aa_index, AACommonService, AADynaAnnounceService, AAModelService, AASessionVariableService, AAUiModelService, RestApiService) {
     var vm = this;
 
     var GET = 'GET';
