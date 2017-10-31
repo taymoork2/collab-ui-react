@@ -20,6 +20,7 @@ import locationVoicemailModule from 'modules/call/locations/locations-voicemail'
 import locationCallerIdModule from 'modules/call/locations/locations-caller-id';
 import externalCallTransferModule from 'modules/call/settings/settings-external-call-transfer';
 import callEmergencyServicesModule from 'modules/call/shared/call-emergency-services';
+import DialPlanServiceModule from 'modules/huron/dialPlans';
 
 export * from './shared';
 export * from './locations-user-details';
@@ -46,6 +47,7 @@ export default angular
     locationCallerIdModule,
     externalCallTransferModule,
     callEmergencyServicesModule,
+    DialPlanServiceModule,
   ])
 .component('ucCallLocations', new CallLocationsComponent())
 .component('ucCallLocation', new CallLocationComponent())
