@@ -2,7 +2,7 @@ import { SpeedDialService, ISpeedDial } from './speedDial.service';
 import { IActionItem } from 'modules/core/components/sectionTitle/sectionTitle.component';
 import { Notification } from 'modules/core/notifications';
 import { CallDestinationTranslateService, ICallDestinationTranslate } from 'modules/call/shared/call-destination-translate';
-import { AccessibilityService, KeyCodes } from 'modules/core/accessibility';
+import { DraggableService, DraggableInstance } from 'modules/core/accessibility';
 import { IToolkitModalService } from 'modules/core/modal';
 
 interface IValidationMessages {
@@ -21,9 +21,7 @@ const inputs: string[] = ['external', 'uri', 'custom'];
 class SpeedDialCtrl implements ng.IComponentController {
   private ownerId: string;
   private ownerType: string;
-  private firstReordering: boolean = true;
   private editing: boolean;
-  private reordering: boolean;
   private speedDialList: ISpeedDial[] = [];
   private copyList: ISpeedDial[] | undefined;
   private newLabel: string;
@@ -37,8 +35,7 @@ class SpeedDialCtrl implements ng.IComponentController {
   private actionListCopy: IActionItem[] = [];
   private callDestInputs: string[];
   private optionSelected: string = '';
-  private selectedSpeedDial?: ISpeedDial;
-  private dragularInstance: any;
+  private draggableInstance: DraggableInstance;
 
   public ownerName: string = '';
   public isValid: boolean = false;
@@ -54,12 +51,11 @@ class SpeedDialCtrl implements ng.IComponentController {
     private $modal: IToolkitModalService,
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
-    private AccessibilityService: AccessibilityService,
     private Authinfo,
     private BlfInternalExtValidation,
     private BlfURIValidation,
     private CallDestinationTranslateService: CallDestinationTranslateService,
-    private dragularService,
+    private DraggableService: DraggableService,
     private FeatureMemberService,
     private Notification: Notification,
     private Orgservice,
@@ -72,9 +68,7 @@ class SpeedDialCtrl implements ng.IComponentController {
       this.countryCode = response.data.countryCode;
     });
     this.callDestInputs = inputs;
-    this.firstReordering = true;
     this.editing = false;
-    this.reordering = false;
     this.FeatureMemberService.getUser(this.ownerId).then((user) => {
       this.ownerName = this.FeatureMemberService.getFullNameFromUser(user);
     });
@@ -174,17 +168,17 @@ class SpeedDialCtrl implements ng.IComponentController {
       sd.label = this.newLabel;
       sd.callPickupEnabled = this.callPickupEnabled;
       sd.number = _.replace(this.newNumber, / /g, '');
-    } else if (this.reordering) {
+    } else if (this.isReordering()) {
       this.updateIndex();
       this.copyList = undefined;
+      this.deactivateDraggable();
     }
 
     this.SpeedDialService.updateSpeedDials(this.ownerType, this.ownerId, this.speedDialList).then(() => {
       this.isValid = false;
-      this.reordering = false;
       this.editing = false;
       this.actionList = _.cloneDeep(this.actionListCopy);
-      this.selectedSpeedDial = undefined;
+      this.deactivateDraggable();
     }, () => {
       this.Notification.error('speedDials.speedDialChangesFailed');
       if (_.has(this, 'ownerId')) {
@@ -194,10 +188,9 @@ class SpeedDialCtrl implements ng.IComponentController {
           this.Notification.error('speedDials.retrieveSpeedDialsFail');
         });
       }
-      this.reordering = false;
       this.editing = false;
       this.actionList = _.cloneDeep(this.actionListCopy);
-      this.selectedSpeedDial = undefined;
+      this.deactivateDraggable();
     });
   }
 
@@ -217,115 +210,46 @@ class SpeedDialCtrl implements ng.IComponentController {
       this.newNumber = '';
       this.callPickupEnabled = false;
       this.isValid = false;
-    } else if (this.reordering) {
+    } else if (this.isReordering()) {
       this.speedDialList.length = 0;
       Array.prototype.push.apply(this.speedDialList, _.cloneDeep(this.copyList));
     }
     this.editing = false;
-    this.reordering = false;
     this.actionList = _.cloneDeep(this.actionListCopy);
-    this.selectedSpeedDial = undefined;
+    this.deactivateDraggable();
   }
 
   public setReorder(): void {
-    this.reordering = true;
     this.actionList = [];
     this.copyList = _.cloneDeep(this.speedDialList);
-    if (this.firstReordering) {
-      this.firstReordering = false;
-      this.dragularInstance = this.createDragularInstance();
-    }
-  }
-
-  private createDragularInstance() {
-    return this.dragularService('#speedDialsContainer', {
-      classes: {
-        transit: 'sd-reorder-transit',
-      },
-      containersModel: [this.speedDialList],
-      moves: () => {
-        return this.reordering;
-      },
-    });
-  }
-
-  // TODO: a separate component for drag and drop lists should be created so that
-  // there's uniform keyboard navigation for all places where dragular is used
-  // without breaking the existing functionality and avoiding duplicate code
-  public speedDialKeypress($event: KeyboardEvent, sd: ISpeedDial) {
-    if (!this.reordering) {
-      return;
-    }
-
-    const keycode = $event.which;
-    switch (keycode) {
-      case KeyCodes.ENTER:
-      case KeyCodes.SPACE:
-        if (_.isUndefined(this.selectedSpeedDial)) {
-          this.selectedSpeedDial = sd;
-        } else {
-          this.selectedSpeedDial = undefined;
-        }
-        break;
-      case KeyCodes.UP:
-        if (_.isUndefined(this.selectedSpeedDial) && sd.index > 1) {
-          this.AccessibilityService.setFocus(this.$element, `#speedDial${sd.index - 1}`);
-        } else if (sd.index > 1) {
-          this.pushSpeedDial(keycode);
-        }
-        break;
-      case KeyCodes.DOWN:
-        if (_.isUndefined(this.selectedSpeedDial) && sd.index < this.speedDialList.length) {
-          this.AccessibilityService.setFocus(this.$element, `#speedDial${sd.index + 1}`);
-        } else if (sd.index < this.speedDialList.length) {
-          this.pushSpeedDial(keycode);
-        }
-        break;
-      case KeyCodes.TAB: // prevent tab from breaking arrow navigation
-        if ($event.shiftKey && this.selectedSpeedDial && sd.index > 1) {
-          $event.preventDefault();
-          $event.stopPropagation();
-          this.pushSpeedDial(KeyCodes.UP);
-        } else if (!$event.shiftKey && this.selectedSpeedDial && sd.index < this.speedDialList.length) {
-          $event.preventDefault();
-          $event.stopPropagation();
-          this.pushSpeedDial(KeyCodes.DOWN);
-        } else { // resets to undefined for tabbing out of the speed dial re-order menu
-          this.selectedSpeedDial = undefined;
-        }
-        break;
-    }
-  }
-
-  private pushSpeedDial(keycode: number) {
-    if (this.selectedSpeedDial) {
-      const index = this.selectedSpeedDial.index;
-      const speedDialList = _.cloneDeep(this.speedDialList);
-      speedDialList.splice(index - 1, 1);  // remove selectedSpeedDial from list
-
-      // reinsert selectedSpeedDial into list at new position
-      if (keycode === KeyCodes.UP) {
-        speedDialList.splice(index - 2, 0, this.selectedSpeedDial);
-        this.selectedSpeedDial.index = index - 1;
-      } else {
-        speedDialList.splice(index, 0, this.selectedSpeedDial);
-        this.selectedSpeedDial.index = index + 1;
-      }
-
-      // re-order the speed dial index numbers
-      _.forEach(speedDialList, (speedDial: ISpeedDial, index: number) => {
-        speedDial.index = index + 1;
+    if (_.isUndefined(this.draggableInstance)) {
+      this.draggableInstance = this.DraggableService.createDraggableInstance({
+        elem: this.$element,
+        identifier: '#speedDialsContainer',
+        transitClass: 'sd-reorder',
+        itemIdentifier: '#speedDial',
+        list: this.speedDialList,
       });
-
-      this.speedDialList = speedDialList;
-      this.dragularInstance.destroy();
-      this.dragularInstance = this.createDragularInstance();
-      this.AccessibilityService.setFocus(this.$element, `#speedDial${this.selectedSpeedDial!.index}`);
+    } else {
+      this.draggableInstance.reordering = true;
     }
+  }
+
+  public speedDialKeypress($event: KeyboardEvent, sd: ISpeedDial) {
+    if (!this.isReordering()) {
+      return;
+    } else if (_.get(this.draggableInstance, 'keyPress')) {
+      this.draggableInstance.keyPress($event, sd);
+      this.speedDialList = this.draggableInstance.list;
+    }
+  }
+
+  public isReordering() {
+    return _.get(this.draggableInstance, 'reordering', false);
   }
 
   public isSelectedSpeedDial(sd: ISpeedDial) {
-    return sd === this.selectedSpeedDial;
+    return sd === _.get(this.draggableInstance, 'selectedItem');
   }
 
   public setEdit(sd: ISpeedDial): void {
@@ -357,6 +281,13 @@ class SpeedDialCtrl implements ng.IComponentController {
   public getTooltipText(sd: ISpeedDial): string {
     const tooltipText = this.$translate.instant('speedDials.blfPickup', { username: this.ownerName, extension: sd.number });
     return tooltipText;
+  }
+
+  private deactivateDraggable() {
+    if (!_.isUndefined(this.draggableInstance)) {
+      this.draggableInstance.selectedItem = undefined;
+      this.draggableInstance.reordering = false;
+    }
   }
 
   private updateIndex(): void {
