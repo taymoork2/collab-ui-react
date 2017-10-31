@@ -1,4 +1,4 @@
-var OnboardService = require('./onboard.service');
+var OnboardService = require('./onboard.service').default;
 var crServicesPanelsModuleName = require('./cr-services-panels').default;
 var sharedModuleName = require('./shared').default;
 
