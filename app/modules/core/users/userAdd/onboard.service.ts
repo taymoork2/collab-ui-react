@@ -10,6 +10,7 @@ export default class OnboardService {
   ) {
   }
 
+  // TODO: add TS types
   // email validation logic
   public validateEmail(input): boolean {
     const emailregex = /\S+@\S+\.\S+/;
