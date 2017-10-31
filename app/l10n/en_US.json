@@ -3642,7 +3642,9 @@
       "anotherDownloadInProgress": "Another download is in progress",
       "waitingForDownload": "Downloading, please wait...",
       "expires": "Expires",
-      "expired": "Expired"
+      "expired": "Expired",
+      "reportsBanner": "Your report is being generated and may take up to a few hours or more. You can view the status in the list below or <a href ui-sref=\"{{sref}}\">generate another report</a>.",
+      "generating": "Generating..."
     },
     "originalConsole": {
       "subheading": "Find all relevant data for a space.",
