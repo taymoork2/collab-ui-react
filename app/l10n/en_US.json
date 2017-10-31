@@ -7675,147 +7675,148 @@
     "virtualAssistant": {
       "featureText": {
         "selectDesc": "Create virtual assistants that can provide automated chat support to customers, or manage escalated chat requests in Cisco Spark.",
-        "virtualAssistant": "Virtual Assistant"
+        "virtualAssistant": "Virtual Assistant",
+        "mediaType": "Virtual Assistants"
       },
       "cva": {
-        "createTitle": "Create {{ featureName }}",
-        "editTitle": "Edit {{ featureName }}",
-        "cancelDialog": "Do you want to discard your\n {{ featureName }}?",
         "featureText": {
           "name": "Customer Virtual Assistant",
           "code": "cva",
-          "mediaType": "Virtual Assistants",
           "type": "Customer <br> Virtual Assistant",
           "selectDesc": "Create a virtual assistant who provides automated chat support and escalates issues as needed."
-        },
-        "configOverview": {
-          "title": "{{ featureName }} Configuration Requirements",
-          "desc": "Review the prerequisites for creating a {{ featureName }}",
-          "boxTitle": "Create an Dialogflow agent before you create your {{ featureName }}.",
-          "boxDesc": "Build an automated agent in Dialogflow with a natural language dialogue. Your integrated {{ featureName }} uses the built-in dialogue to interact with your customers and escalate a conversation to live agents as needed.",
-          "boxRadioOne": "No, I don’t have a preconfigured Dialogflow agent",
-          "boxRadioOneDesc1": "Go to ",
-          "boxRadioDialogflow": "Dialogflow",
-          "boxRadioOneDesc2": " to create an agent. To get started, see the ",
-          "boxRadioDialogflowDoc": "Dialogflow documentation",
-          "boxRadioTwo": "Yes, I have a preconfigured Dialogflow agent and am ready to proceed",
-          "boxRadioTwoDesc": "Click the arrow to continue to integrate your Dialogflow agent with a {{ featureName }}"
-        },
-        "dialogIntegration": {
-          "title": "Configure Dialogue Integration",
-          "desc": "Add a preconfigured Escalation Intent to complete your Dialogflow agent configuration",
-          "boxStepOne": "Download preconfigured Escalation Intent JSON file.",
-          "boxStepOneDesc": "An Escalation Intent allows your {{ featureName }} to escalate a conversation to an agent.",
-          "boxStepTwo": "Upload Escalation Intent to Dialogflow Agent.",
-          "boxStepTwoDesc": "On your Dialogflow agent’s Intents page, click the vertical ellipsis (⋮) and choose Upload Intent. Upload the escalation.json file you downloaded.",
-          "boxStepThree": "Customize Escalation Intent in Dialogflow.",
-          "boxStepThreeDesc": "On your Dialogflow agent’s Intents page, choose Escalation Intent. Modify the User Says fields to change the user expressions that trigger escalation. All user expressions must:",
-          "boxBulletOne": "Use template mode",
-          "boxBulletTwo": "Contain a reference to @sys.any:Topic",
-          "boxStepThreeDescCont": "The @ symbol next to the user expression indicates the template mode. Click the symbol to toggle the mode. Do not modify the GetExpert action.",
-          "downloadButtonText": "Download Escalation Intent",
-          "learnMoreLink": "Learn more",
-          "finalNote": "about integrating {{ featureName }}s."
-        },
-        "accessToken": {
-          "title": "Complete Dialogue Integration",
-          "desc": "Complete your integration to enable the use of natural dialogue in your customer interactions",
-          "boxDesc": "Each Dialogflow agent has a unique client access token stored in the agent settings. Copy the token from your configured Dialogflow agent settings, enter it here, and click \"Validate\" to check the token before you complete the dialogue integration.",
-          "inputLabel": "Dialogflow Client Access Token",
-          "validateButtonText": "Validate",
-          "maxLengthError": "Client Access Token cannot be longer than 128 characters.",
-          "invalidTokenText": "Invalid Dialogflow client access token. Verify token and try again."
-        },
-        "name": {
-          "namePlaceholder": "Enter {{ featureName }} Name",
-          "nameHint": "Specify the name your customers see when they interact with your {{ featureName }}.",
-          "errorChar50": "Name cannot exceed 50 characters.",
-          "duplicateError": "{{ featureName }} must have a unique name.",
-          "processing": "Checking {{ featureName }} name availability…"
-        },
-        "avatar": {
-          "title": "{{ featureName }} Avatar",
-          "desc": "Choose the avatar your customers see in their chat window, when they interact with your {{ featureName }}",
-          "upload": "Upload Avatar",
-          "preview": "Avatar Preview",
-          "fileBrowser": "file browser",
-          "uploadingImage": "Uploading image...",
-          "uploadDesc": "Upload an image of maximum 1MB. Supported file type is PNG.",
-          "previewDesc": "To edit, upload a new image of maximum 1MB. Supported file type is PNG.",
-          "defaultAvatar": "If no image is uploaded, this default image is used.",
-          "uploadBestResults": "For best results make sure that your image has a transparent background with no padding.",
-          "dragDropDesc": "Drag and drop a file or use the ",
-          "errorUnsupportedFile": "Cannot upload unsupported file. Supported file type is PNG.",
-          "errorOverMaxFileSizeLimit": "The image file size must be less than 1 MB.",
-          "errorUploadFile": "Cannot upload image. Try again."
-        },
-        "summary": {
-          "desc": "You have configured your {{ featureName }}. To use the assisted service feature in your organization's chat application, add your assistant to a {{ featureName }}.",
-          "editDesc": "You have edited your {{ featureName }}. To use the assisted service feature in your organization’s chat application, add your assistant to a {{ featureName }}.",
-          "descCont": "Click Finish to save the configuration.",
-          "errorCreateTemplate": "Cannot save {{ featureName }}. Try again."
-        },
-        "messages": {
-          "createSuccessText": "You have successfully created {{ featureName }}.",
-          "updateSuccessText": "You have successfully updated {{ featureName }}.",
-          "listConfigsFailureText": "Failed to list the {{ featureName }}s.",
-          "getConfigFailureText": "Failed to load the {{ featureName }}.",
-          "deleteConfigFailureText": "Failed to delete the {{ featureName }}.",
-          "createConfigFailureText": "Failed to save {{ featureName }}.",
-          "updateConfigFailureText": "Failed to save {{ featureName }}."
         }
       },
       "eva": {
-        "createTitle": "Create {{ featureName }}",
-        "editTitle": "Edit {{ featureName }}",
-        "cancelDialog": "Do you want to discard your\n {{ featureName }}?",
         "featureText": {
           "name": "Expert Virtual Assistant",
           "code": "eva",
-          "mediaType": "Virtual Assistants",
           "type": "Expert <br> Virtual Assistant",
           "selectDesc": "Create a virtual assistant who connects subject matter experts in Cisco Spark spaces to customers with chat requests.",
           "disabledTooltip": "You can only have one Expert Virtual Assistant for your organization. To change the settings of your existing Expert Virtual Assistant, edit it from the Features page."
-        },
-        "overview": {
-          "title": "{{ featureName }} Overview",
-          "desc": "An {{ featureName }} acts as a liaison between customers and experts in Cisco Spark.",
-          "boxTitle": "Escalations Using an {{ featureName }}",
-          "boxDesc": "See how an {{ featureName }} enables smart escalations, ensuring quick and effective handling of customer issues.",
-          "learnMoreLink": "Learn More"
-        },
-        "name": {
-          "namePlaceholder": "Enter {{ featureName }} Name",
-          "nameHint": "Specify the name Cisco Spark users in your organization see when they interact with your {{ featureName }} in expert spaces.",
-          "errorChar50": "Name cannot exceed 50 characters."
-        },
-        "email": {
-          "namePlaceholder": "Create {{ featureName }} Email",
-          "nameHint": "Create the email you use to add your {{ featureName }} to Cisco Spark expert spaces.",
-          "pending": "Checking {{ featureName }} email availability...",
-          "duplicateError": "Email is already taken. Try again.",
-          "errorChar63": "Email cannot exceed 63 characters.",
-          "badCharError": "Email cannot contain spaces or the following characters: <>:;[]+()\\”,@."
-        },
-        "summary": {
-          "desc": "You configured {{ name }}. To enable escalation to Cisco Spark, add your Expert Virtual Assistant to your Customer Support Templates and expert spaces.",
-          "descCont": "Click Finish to save the configuration.",
-          "errorCreateTemplate": "Cannot save {{ featureName }}. Try again.",
-          "invalidEmailError": "The email you entered is invalid. Please enter a valid email.",
-          "duplicateEmailError": "The email you entered already exists. Please enter a unique email.",
-          "invalidNameError": "The Expert Virtual Assistant name is invalid. Please enter a valid name.",
-          "invalidAvatarError": "The Expert Virtual Assistant avatar is invalid. Please upload a valid avatar."
-        },
-        "messages": {
-          "createSuccessText": "You have successfully created {{ featureName }}.",
-          "updateSuccessText": "You have successfully updated {{ featureName }}.",
-          "listConfigsFailureText": "Failed to list the {{ featureName }}s.",
-          "getConfigFailureText": "Failed to load the {{ featureName }}.",
-          "deleteConfigFailureText": "Failed to delete the {{ featureName }}.",
-          "createConfigFailureText": "Failed to save {{ featureName }}.",
-          "createSpecificFailureText": "Failed to save {{ featureName }} {{ inputItem }}.",
-          "updateConfigFailureText": "Failed to save {{ featureName }}."
         }
+      },
+      "createTitle": "Create {{ featureName }}",
+      "editTitle": "Edit {{ featureName }}",
+      "cancelDialog": "Do you want to discard your\n {{ featureName }}?",
+      "configOverview": {
+        "title": "{{ featureName }} Configuration Requirements",
+        "desc": "Review the prerequisites for creating a {{ featureName }}",
+        "boxTitle": "Create an Dialogflow agent before you create your {{ featureName }}.",
+        "boxDesc": "Build an automated agent in Dialogflow with a natural language dialogue. Your integrated {{ featureName }} uses the built-in dialogue to interact with your customers and escalate a conversation to live agents as needed.",
+        "boxRadioOne": "No, I don’t have a preconfigured Dialogflow agent",
+        "boxRadioOneDesc1": "Go to ",
+        "boxRadioDialogflow": "Dialogflow",
+        "boxRadioOneDesc2": " to create an agent. To get started, see the ",
+        "boxRadioDialogflowDoc": "Dialogflow documentation",
+        "boxRadioTwo": "Yes, I have a preconfigured Dialogflow agent and am ready to proceed",
+        "boxRadioTwoDesc": "Click the arrow to continue to integrate your Dialogflow agent with a {{ featureName }}"
+      },
+      "dialogIntegration": {
+        "title": "Configure Dialogue Integration",
+        "desc": "Add a preconfigured Escalation Intent to complete your Dialogflow agent configuration",
+        "boxStepOne": "Download preconfigured Escalation Intent JSON file.",
+        "boxStepOneDesc": "An Escalation Intent allows your {{ featureName }} to escalate a conversation to an agent.",
+        "boxStepTwo": "Upload Escalation Intent to Dialogflow Agent.",
+        "boxStepTwoDesc": "On your Dialogflow agent’s Intents page, click the vertical ellipsis (⋮) and choose Upload Intent. Upload the escalation.json file you downloaded.",
+        "boxStepThree": "Customize Escalation Intent in Dialogflow.",
+        "boxStepThreeDesc": "On your Dialogflow agent’s Intents page, choose Escalation Intent. Modify the User Says fields to change the user expressions that trigger escalation. All user expressions must:",
+        "boxBulletOne": "Use template mode",
+        "boxBulletTwo": "Contain a reference to @sys.any:Topic",
+        "boxStepThreeDescCont": "The @ symbol next to the user expression indicates the template mode. Click the symbol to toggle the mode. Do not modify the GetExpert action.",
+        "downloadButtonText": "Download Escalation Intent",
+        "learnMoreLink": "Learn more",
+        "finalNote": "about integrating {{ featureName }}s."
+      },
+      "accessToken": {
+        "title": "Complete Dialogue Integration",
+        "desc": "Complete your integration to enable the use of natural dialogue in your customer interactions",
+        "boxDesc": "Each Dialogflow agent has a unique client access token stored in the agent settings. Copy the token from your configured Dialogflow agent settings, enter it here, and click \"Validate\" to check the token before you complete the dialogue integration.",
+        "inputLabel": "Dialogflow Client Access Token",
+        "validateButtonText": "Validate",
+        "maxLengthError": "Client Access Token cannot be longer than 128 characters.",
+        "invalidTokenText": "Invalid Dialogflow client access token. Verify token and try again."
+      },
+      "name": {
+        "namePlaceholder": "Enter {{ featureName }} Name",
+        "nameHint": "Specify the name your customers see when they interact with your {{ featureName }}.",
+        "nameHintEva": "Specify the name Cisco Spark users in your organization see when they interact with your {{ featureName }} in expert spaces.",
+        "errorChar50": "Name cannot exceed 50 characters.",
+        "duplicateError": "{{ featureName }} must have a unique name.",
+        "processing": "Checking {{ featureName }} name availability…"
+      },
+      "avatar": {
+        "title": "{{ featureName }} Avatar",
+        "desc": "Choose the avatar your customers see in their chat window, when they interact with your {{ featureName }}",
+        "descEva": "Choose the avatar Cisco Spark users in your organization see when they interact with your {{ featureName }} in expert spaces.",
+        "upload": "Upload Avatar",
+        "preview": "Avatar Preview",
+        "fileBrowser": "file browser",
+        "uploadingImage": "Uploading image...",
+        "uploadDesc": "Upload a PNG of maximum 1MB. For best results make sure that your image has a transparent background with no padding.",
+        "dragDropDesc": "Drag and drop a file or use the ",
+        "errorUnsupportedFile": "Cannot upload unsupported file. Supported file type is PNG.",
+        "errorOverMaxFileSizeLimit": "The image file size must be less than 1 MB.",
+        "errorUploadFile": "Cannot upload image. Try again."
+      },
+      "summary": {
+        "cvaDesc": "You have configured {{ name }}. To use the assisted service feature in your organization's chat application, add your assistant to a Customer Support Template.",
+        "cvaDescEdit": "You have edited {{ name }}. Click Finish to save the configuration so customers can interact with this updated {{ featureName }} during chats with your organization.",
+        "descCont": "Click Finish to save the configuration.",
+        "evaDesc": "You have configured {{ name }}. To enable escalation to Cisco Spark, add your Expert Virtual Assistant to your Customer Support Templates and expert spaces.",
+        "evaDescEdit": "You have edited {{ name }}. Click Finish to save the configuration so Cisco Spark users from your organization working in expert spaces can interact with this updated {{ featureName }}.",
+        "errorCreateTemplate": "Cannot save {{ featureName }}. Try again.",
+        "invalidEmailError": "The email you entered is invalid. Please enter a valid email.",
+        "duplicateEmailError": "The email you entered already exists. Please enter a unique email.",
+        "invalidNameError": "The Expert Virtual Assistant name is invalid. Please enter a valid name.",
+        "invalidAvatarError": "The Expert Virtual Assistant avatar is invalid. Please upload a valid avatar."
+      },
+      "overview": {
+        "title": "{{ featureName }} Overview",
+        "desc": "An {{ featureName }} acts as a liaison between customers and experts in Cisco Spark.",
+        "boxTitle": "Escalations Using an {{ featureName }}",
+        "boxDesc": "See how an {{ featureName }} enables smart escalations, ensuring quick and effective handling of customer issues.",
+        "learnMoreLink": "Learn More"
+      },
+      "email": {
+        "namePlaceholder": "Create {{ featureName }} Email",
+        "nameHint": "Create the email you use to add your {{ featureName }} to Cisco Spark expert spaces.",
+        "pending": "Checking {{ featureName }} email availability...",
+        "duplicateError": "Email is already taken. Try again.",
+        "errorChar63": "Email cannot exceed 63 characters.",
+        "badCharError": "Email cannot contain spaces or the following characters: <>:;[]+()\\”,@."
+      },
+      "defaultSpace": {
+        "title": "Default Expert Space Configuration",
+        "desc": "Define a fallback Cisco Spark expert space for your {{ featureName }} escalations.",
+        "boxDesc": "The {{ featureName }} uses the default space as a fallback to escalate requests that are not matched with any other expert space topics. Ensure that users who can respond to customer requests are in this space.",
+        "learnMoreLink": "Learn more",
+        "placeHolder": "Search and select an existing Cisco Spark space",
+        "noteInfo": "If the space you want to use is not in this list, create the space in Cisco Spark. Then restart the wizard to see and select the new space in the list."
+      },
+      "configurationSteps": {
+        "title": "Required Configuration in Cisco Spark",
+        "desc": "Set up expert spaces in Cisco Spark where you can add your {{ featureName }}.",
+        "boxTitle": "To enable your Expert Virtual Assistant to escalate requests to the right people in Cisco Spark:",
+        "boxStepOne": "Create more expert spaces in Cisco Spark.",
+        "boxStepOneTooltip": "Give each space a unique topic name that helps the {{ featureName }} match keywords from a chat to the space.",
+        "boxStepTwo": "Add the Expert Virtual Assistant to the expert spaces.",
+        "boxStepTwoTooltip": "After you configure the {{ featureName }}, use the @sparkbot.io email you specified to the add the assistant to your expert spaces.",
+        "boxStepThree": "Add users to the expert spaces you create.",
+        "boxStepThreeTooltip": "Add appropriate users who can answer customer questions about the expert space topics.",
+        "boxStepFour": "Configure chat escalation to Cisco Spark in your Customer Support Templates.",
+        "boxStepFourTooltip": "Enable chat escalation to Cisco Spark in Customer Support Templates. Go to the Care Features page to create a new template or to edit an existing one.",
+        "learnMoreLink": "Learn more",
+        "finalNote": "about these required {{ featureName }} configuration steps."
+      },
+      "messages": {
+        "createSuccessText": "You have successfully created {{ featureName }}.",
+        "updateSuccessText": "You have successfully updated {{ featureName }}.",
+        "listConfigsFailureText": "Failed to list the {{ featureName }}s.",
+        "getConfigFailureText": "Failed to load the {{ featureName }}.",
+        "deleteConfigFailureText": "Failed to delete the {{ featureName }}.",
+        "createConfigFailureText": "Failed to save {{ featureName }}.",
+        "createSpecificFailureText": "Failed to save {{ featureName }} {{ inputItem }}.",
+        "updateConfigFailureText": "Failed to save {{ featureName }}."
       }
     }
   },

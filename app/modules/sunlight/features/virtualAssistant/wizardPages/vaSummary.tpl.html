@@ -3,7 +3,7 @@
   <div class="h4 description">
     {{$ctrl.getSummaryDescription()}}
   </div>
-  <div class="h4 description" ng-if="!$ctrl.saveTemplateErrorOccurred">
+  <div class="h4 description" ng-if="!$ctrl.saveTemplateErrorOccurred && !$ctrl.isEditFeature">
     {{$ctrl.getText('summary.descCont')}}
   </div>
   <button loading="$ctrl.creatingTemplate"

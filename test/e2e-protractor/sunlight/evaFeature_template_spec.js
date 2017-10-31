@@ -1,7 +1,6 @@
 'use strict';
 
 describe('EVA feature setup', function () {
-  // NOTE: these variables will only be saved AFTER DELETE is implemented in the page
   var evaTestName = 'e2e-careExpertVirtualAssistant-' + utils.randomId();
   var evaTestInvalidEmailPrefix = 'a@b';
   var evaTestEmailPrefix = 'e2e-careExpertVirtualAssistantTemplate-' + utils.randomId();
@@ -33,7 +32,7 @@ describe('EVA feature setup', function () {
     utils.expectIsDisplayed(careFeatureLandingPage.createExpertVirtualAssistantTemplateButton);
   });
 
-  it('Start Creating Expert Virtual Assistant', function () {
+  it('Start Creating Expert Virtual Assistant: empty page', function () {
     utils.click(careFeatureLandingPage.createExpertVirtualAssistantTemplateButton);
     utils.expectIsNotDisplayed(careVirtualAssistantTemplateSetupPage.setUpLeftBtn);
 
@@ -64,6 +63,33 @@ describe('EVA feature setup', function () {
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.visibleCheckIcon);
     utils.expectIsNotDisplayed(careVirtualAssistantTemplateSetupPage.errorMessage);
 
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpLeftBtn);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
+  });
+
+  it('Create: Avatar page', function () {
+    utils.click(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.title);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.titleDesc);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.avatarUpload);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpLeftBtn);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
+  });
+
+  it('Create: default space page', function () {
+    utils.click(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.title);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.titleDesc);
+    // Choose one of the drop down, then right button should be enabled
+    utils.click(careVirtualAssistantTemplateSetupPage.defaultSpaceDropDown);
+    utils.click(careVirtualAssistantTemplateSetupPage.defaultSpaceDropDown.all(by.cssContainingText('li', 'Expert Virtual Assistant Default Space')).first());
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpLeftBtn);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
+  });
+
+  it('Create: required configuration page', function () {
+    utils.click(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.title);
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpLeftBtn);
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
   });

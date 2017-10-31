@@ -7,8 +7,6 @@ var VirtualAssistantTemplateCreation = function () {
   this.setUpLeftBtn = element(by.css('.btn--primary.btn--left'));
   this.setUpRightBtn = element(by.css('.btn--primary.btn--right'));
 
-  this.closePanelX = element(by.id('close-panel'));
-
   // config overview page info
   this.dialogflowIsNotPreconfigured = element(by.cssContainingText('label', 'No, I don’t have a preconfigured Dialogflow agent'));
   this.dialogflowIsPreconfigured = element(by.cssContainingText('label', 'Yes, I have a preconfigured Dialogflow agent and am ready to proceed'));
@@ -43,6 +41,9 @@ var VirtualAssistantTemplateCreation = function () {
   this.cancelBtn = element(by.id('cancelChat'));
 
   // Delete Template
+
+  // Expert Virtual Assistant
+  this.defaultSpaceDropDown = element(by.id('defaultSpaceDropdown'));
 };
 
 module.exports = VirtualAssistantTemplateCreation;

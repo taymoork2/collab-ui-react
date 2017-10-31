@@ -21,6 +21,21 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
       nextButtonState: false,
     },
     {
+      name: 'vaAvatar',
+      previousButtonState: true,
+      nextButtonState: true,
+    },
+    {
+      name: 'evaDefaultSpace',
+      previousButtonState: true,
+      nextButtonState: false,
+    },
+    {
+      name: 'evaConfigurationSteps',
+      previousButtonState: true,
+      nextButtonState: true,
+    },
+    {
       name: 'vaSummary',
       previousButtonState: true,
       nextButtonState: 'hidden',
@@ -63,8 +78,54 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
   };
 
   const dummyLogoUrl = 'https://www.example.com/logo.png';
+  const personId = 'personId';
+  const listRoomsResponse = {
+    items: [
+      {
+        id: 'roomId1',
+        title: 'room title 1',
+        creatorId: 'personId',
+      },
+      {
+        id: 'roomId2',
+        title: 'room title 2',
+        creatorId: 'random id 2',
+      },
+      {
+        id: 'roomId3',
+        title: 'room title 3',
+        creatorId: 'personId',
+      },
+      {
+        id: 'roomId4',
+        title: 'room title 4',
+        creatorId: 'random id 4',
+      },
+      {
+        id: 'roomId5',
+        title: 'room title 5',
+        creatorId: 'random id 5',
+      },
+    ],
+  };
+  const listMembershipsResponse = {
+    items: [
+      {
+        isModerator: true,
+        roomId: 'roomId4',
+      },
+      {
+        isModerator: false,
+        roomId: 'roomId5',
+      },
+      {
+        isModerator: true,
+        roomId: 'roomIdnotmatched',
+      },
+    ],
+  };
 
-  let getLogoDeferred, getLogoUrlDeferred, controller;
+  let getLogoDeferred, getLogoUrlDeferred, controller, listRoomsDeferred, getPersonDeferred, listMembershipsDeferred;
 
   beforeEach(function () {
     this.initModules('Sunlight', evaSetupModule);
@@ -83,9 +144,16 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
       'SparkService',
     );
 
+    afterEach(function () {
+      getLogoDeferred = getLogoUrlDeferred = controller = listRoomsDeferred = getPersonDeferred = listMembershipsDeferred = undefined;
+    });
+
     //create mock deferred object which will be used to return promises
     getLogoDeferred = this.$q.defer();
     getLogoUrlDeferred = this.$q.defer();
+    listRoomsDeferred = this.$q.defer();
+    getPersonDeferred = this.$q.defer();
+    listMembershipsDeferred = this.$q.defer();
 
     spyOn(this.$modal, 'open');
     spyOn(this.CTService, 'getLogo').and.returnValue(getLogoDeferred.promise);
@@ -96,8 +164,10 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
     spyOn(this.Analytics, 'trackEvent');
     spyOn(this.Authinfo, 'getOrgId').and.returnValue(OrgId);
     spyOn(this.Authinfo, 'getOrgName').and.returnValue(OrgName);
-    spyOn(Date, 'now').and.returnValues(10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10);
-
+    spyOn(Date, 'now').and.returnValues(10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190);
+    spyOn(this.SparkService, 'listRooms').and.returnValue(listRoomsDeferred.promise);
+    spyOn(this.SparkService, 'getPerson').and.returnValue(getPersonDeferred.promise);
+    spyOn(this.SparkService, 'listMemberships').and.returnValue(listMembershipsDeferred.promise);
 
     this.compileComponent('eva-setup', {
       dismiss: 'dismiss()',
@@ -133,14 +203,14 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
     it('getSummaryDescription', function () {
       controller.template.configuration.pages.vaName.nameValue = 'testName';
       controller.getSummaryDescription();
-      expect(controller.getText).toHaveBeenCalledWith('summary.desc', { name: controller.template.configuration.pages.vaName.nameValue });
+      expect(controller.getText).toHaveBeenCalledWith('summary.evaDesc', { name: controller.template.configuration.pages.vaName.nameValue });
     });
 
     it('getSummaryDescription with isEditFeature true', function () {
       controller.isEditFeature = true;
       controller.template.configuration.pages.vaName.nameValue = 'testName';
       controller.getSummaryDescription();
-      expect(controller.getText).toHaveBeenCalledWith('summary.editDesc', { name: controller.template.configuration.pages.vaName.nameValue });
+      expect(controller.getText).toHaveBeenCalledWith('summary.evaDescEdit', { name: controller.template.configuration.pages.vaName.nameValue });
     });
   });
 
@@ -148,33 +218,36 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
     beforeEach(function () {
       getLogoDeferred.resolve(getDummyLogo('abcd'));
       getLogoUrlDeferred.resolve(dummyLogoUrl);
+      listRoomsDeferred.resolve(listRoomsResponse);
+      getPersonDeferred.resolve(personId);
+      listMembershipsDeferred.resolve(listMembershipsResponse);
       this.$scope.$apply();
     });
 
-    it('States correlate to pages', function () {
+    it('should validate the states correlate to pages', function () {
       expect(controller.states).toEqual(expectedStates);
     });
 
-    it('First state is initial state', function () {
+    it('should validate the first state is initial state', function () {
       expect(controller.currentState).toEqual(controller.states[0]);
     });
 
-    it('keyboard functionality', function () {
+    it('should validate the keyboard functionality', function () {
       controller.evalKeyPress(escapeKey);
       expect(this.$modal.open).toHaveBeenCalled();
     });
 
-    it('Walk pages forward in order ', function () {
+    it('should walk pages forward in order ', function () {
       for (let i = 0; i < controller.states.length; i++) {
         expect(controller.currentState).toEqual(controller.states[i]);
         controller.nextPage();
-        expect(this.Analytics.trackEvent).toHaveBeenCalledWith(controller.template.configuration.pages[controller.currentState].eventName, { durationInMillis: 0 });
+        expect(this.Analytics.trackEvent).toHaveBeenCalledWith(controller.template.configuration.pages[controller.currentState].eventName, { durationInMillis: 10 });
         this.Analytics.trackEvent.calls.reset();
         this.$timeout.flush();
       }
     });
 
-    it('Walk pages Backward in order ', function () {
+    it('should walk pages Backward in order ', function () {
       controller.currentState = controller.states[controller.states.length - 1];
       for (let i = (controller.states.length - 1); 0 <= i; i--) {
         expect(controller.currentState).toEqual(controller.states[i]);
@@ -194,6 +267,56 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
         controller.currentState = controller.states[index];
         expect(controller.getCurrentPage()).toEqual(expectedPageFilename);
       });
+    });
+
+  });
+
+  describe('Field Checks on All Pages with fields', function () {
+    const AVATAR_PAGE_INDEX = 3;
+
+    it('should disable Next and Back button on Avatar Page when avatar file is loading', function () {
+      controller.avatarUploadState = controller.avatarState.LOADING;
+      checkStateOfNavigationButtons(AVATAR_PAGE_INDEX, false, false);
+    });
+
+    it('should enable Next button on Default Space Page after select something', function () {
+      controller.template.configuration.pages.evaDefaultSpace.selectedDefaultSpace.id = 'something';
+      checkStateOfNavigationButtons(AVATAR_PAGE_INDEX, true, true);
+    });
+  });
+
+  describe('Avatar Page', function () {
+    let deferredFileDataUrl;
+    beforeEach(function() {
+      deferredFileDataUrl = this.$q.defer();
+      spyOn(this.EvaService, 'getFileDataUrl').and.returnValue(deferredFileDataUrl.promise);
+    });
+
+    it('should validate avatar file type', function () {
+      deferredFileDataUrl.resolve('');
+      const size = 1000;
+      controller.template.configuration.pages.vaAvatar.avatarError = controller.avatarErrorType.NO_ERROR;
+      controller.uploadAvatar({ name: 'abc.jpeg', size });
+      expect(controller.template.configuration.pages.vaAvatar.avatarError).toEqual(controller.avatarErrorType.FILE_TYPE_ERROR);
+
+      controller.template.configuration.pages.vaAvatar.avatarError = controller.avatarErrorType.NO_ERROR;
+      controller.uploadAvatar({ name: 'abc.png', size });
+      expect(controller.template.configuration.pages.vaAvatar.avatarError).toEqual(controller.avatarErrorType.NO_ERROR);
+    });
+
+    it('should validate avatar file size', function () {
+      deferredFileDataUrl.resolve('');
+      controller.template.configuration.pages.vaAvatar.avatarError = controller.avatarErrorType.NO_ERROR;
+      controller.uploadAvatar({ name: 'abc.png' , size: controller.MAX_AVATAR_FILE_SIZE + 1 });
+      expect(controller.template.configuration.pages.vaAvatar.avatarError).toEqual(controller.avatarErrorType.FILE_SIZE_ERROR);
+
+      controller.template.configuration.pages.vaAvatar.avatarError = controller.avatarErrorType.NO_ERROR;
+      controller.uploadAvatar({ name: 'abc.png' , size: 0 });
+      expect(controller.template.configuration.pages.vaAvatar.avatarError).toEqual(controller.avatarErrorType.FILE_SIZE_ERROR);
+
+      controller.template.configuration.pages.vaAvatar.avatarError = controller.avatarErrorType.NO_ERROR;
+      controller.uploadAvatar({ name: 'abc.png' , size: controller.MAX_AVATAR_FILE_SIZE });
+      expect(controller.template.configuration.pages.vaAvatar.avatarError).toEqual(controller.avatarErrorType.NO_ERROR);
     });
   });
 
@@ -291,10 +414,9 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
       spyOn(this.$state, 'go');
       deferred.resolve({
         success: true,
-        botServicesConfigId: 'AnExpertAssistantId',
+        expertAssistantId: 'AnExpertAssistantId',
         status: 201,
       });
-
       controller.submitFeature();
       this.$scope.$apply();
 
@@ -303,8 +425,8 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
       });
       expect(controller.saveTemplateErrorOccurred).toBeFalsy();
       expect(this.$state.go).toHaveBeenCalled();
-      expect(this.Analytics.trackEvent).toHaveBeenCalledWith(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_SUMMARY_PAGE, { durationInMillis: 10 });
-      expect(this.Analytics.trackEvent).toHaveBeenCalledWith(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_START_FINISH, { durationInMillis: 0 });
+      expect(this.Analytics.trackEvent).toHaveBeenCalledWith(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_SUMMARY_PAGE, { durationInMillis: 30 });
+      expect(this.Analytics.trackEvent).toHaveBeenCalledWith(this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_START_FINISH, { durationInMillis: 10 });
     });
   });
 });
