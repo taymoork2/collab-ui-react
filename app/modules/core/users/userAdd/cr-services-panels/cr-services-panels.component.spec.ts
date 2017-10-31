@@ -11,6 +11,10 @@ describe('Component: crServicesPanels:', () => {
       'Authinfo',
       'MessengerInteropService',
     );
+
+    this.mock = {};
+    this.mock.getConferenceServices = getJSONFixture('core/json/authInfo/confServices.json');
+    this.mock.basicLicenses = require('./fake--OnboardCtrl--scope--basicLicenses.json');
   });
 
   describe('primary behaviors (controller):', () => {
@@ -184,6 +188,35 @@ describe('Component: crServicesPanels:', () => {
         this.compileComponent('crServicesPanels');
         const expectedResult = '<div class="license-tooltip-html">firstTimeWizard.careTooltip</div>';
         expect(this.controller.careTooltip()).toBe(expectedResult);
+      });
+    });
+
+    describe('selectedSubscriptionHasBasicLicenses():', () => {
+      beforeEach(function () {
+        spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
+        spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
+        spyOn(this.Authinfo, 'getConferenceServices').and.returnValue(this.mock.getConferenceServices);
+        this.compileComponent('crServicesPanels', {
+          basicLicenses: this.mock.basicLicenses,
+        });
+      });
+
+      it('should return false for a subscription that does not have basic licenses', function () {
+        const billingServiceId = 'Sub20161222115';
+        const result = this.controller.selectedSubscriptionHasBasicLicenses(billingServiceId);
+        expect(result).toBe(false);
+      });
+
+      it('should return true for a subscription that has basic licenses', function () {
+        const billingServiceId = 'SubCt31test20161222111';
+        const result = this.controller.selectedSubscriptionHasBasicLicenses(billingServiceId);
+        expect(result).toBe(true);
+      });
+
+      it('should return true for a subscription that is a Trial and has basic licenses', function () {
+        const billingServiceId = 'Trial';
+        const result = this.controller.selectedSubscriptionHasBasicLicenses(billingServiceId);
+        expect(result).toBe(true);
       });
     });
   });

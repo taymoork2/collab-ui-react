@@ -838,24 +838,10 @@ require('./_user-add.scss');
         }
       });
 
-      $scope.hasBasicLicenses = !_.isEmpty($scope.basicLicenses);
       $scope.hasAdvancedLicenses = !_.isEmpty($scope.advancedLicenses);
 
       populateConf();
       populateConfInvitations();
-    };
-
-    /* TODO: Refactor this functions into MultipleSubscriptions Controller */
-    $scope.selectedSubscriptionHasBasicLicenses = function (subscriptionId) {
-      if (subscriptionId && subscriptionId !== Config.subscriptionState.trial) {
-        return _.some($scope.basicLicenses, function (service) {
-          if (_.get(service, 'billing') === subscriptionId) {
-            return !_.has(service, 'site');
-          }
-        });
-      } else {
-        return $scope.hasBasicLicenses;
-      }
     };
 
     /* TODO: Refactor this functions into MultipleSubscriptions Controller */

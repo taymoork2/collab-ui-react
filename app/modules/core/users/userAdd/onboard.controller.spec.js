@@ -1338,48 +1338,16 @@ describe('OnboardCtrl: Ctrl', function () {
     });
   });
 
-  describe('Tests for hasBasicLicenses and hasAdvancedLicenses functions: ', function () {
+  describe('Tests for hasAdvancedLicenses functions: ', function () {
     beforeEach(function () {
       spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
       spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
       spyOn(this.Authinfo, 'getConferenceServices').and.returnValue(this.mock.getConferenceServices);
     });
     beforeEach(initController);
-
-    it('The hasBasicLicenses() should return true for Conference Services data that have basic licenses', function () {
-      var result = this.$scope.hasBasicLicenses;
-      expect(result).toEqual(true);
-    });
 
     it('The hasAdvancedLicenses() should return true for Conference Services data that have advanced licenses', function () {
       var result = this.$scope.hasAdvancedLicenses;
-      expect(result).toEqual(true);
-    });
-  });
-
-  describe('selectedSubscriptionHasBasicLicenses function ', function () {
-    beforeEach(function () {
-      spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
-      spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
-      spyOn(this.Authinfo, 'getConferenceServices').and.returnValue(this.mock.getConferenceServices);
-    });
-    beforeEach(initController);
-
-    it('should return false for a subscription that does not have basic licenses', function () {
-      var billingServiceId = 'Sub20161222115';
-      var result = this.$scope.selectedSubscriptionHasBasicLicenses(billingServiceId);
-      expect(result).toEqual(false);
-    });
-
-    it('should return true for a subscription that has basic licenses', function () {
-      var billingServiceId = 'SubCt31test20161222111';
-      var result = this.$scope.selectedSubscriptionHasBasicLicenses(billingServiceId);
-      expect(result).toEqual(true);
-    });
-
-    it('should return true for a subscription that is a Trial and has basic licenses', function () {
-      var billingServiceId = 'Trial';
-      var result = this.$scope.selectedSubscriptionHasBasicLicenses(billingServiceId);
       expect(result).toEqual(true);
     });
   });

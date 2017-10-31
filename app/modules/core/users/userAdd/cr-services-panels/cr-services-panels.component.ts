@@ -1,10 +1,12 @@
 import { IToolkitModalService } from 'modules/core/modal';
+import { Config } from 'modules/core/config/config';
 import MessengerInteropService from 'modules/core/users/userAdd/shared/messenger-interop.service';
 
 class CrServicesPanelsController implements ng.IComponentController {
   public isCareEnabled = false;
   public isCareAndCDCEnabled = false;
   public isCareAndCVCEnabled = false;
+  public basicLicenses: any[];
 
   /* @ngInject */
   constructor (
@@ -12,6 +14,7 @@ class CrServicesPanelsController implements ng.IComponentController {
     private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
     private Authinfo,
+    private Config: Config,
     private MessengerInteropService: MessengerInteropService,
   ) {}
 
@@ -80,6 +83,17 @@ class CrServicesPanelsController implements ng.IComponentController {
   public careTooltip(): string {
     return '<div class="license-tooltip-html">' + this.$translate.instant('firstTimeWizard.careTooltip') + '</div>';
   }
+
+  public selectedSubscriptionHasBasicLicenses(subscriptionId: string): boolean {
+    if (subscriptionId && subscriptionId !== this.Config.subscriptionState.trial) {
+      return _.some(this.basicLicenses, function (service) {
+        if (_.get(service, 'billing') === subscriptionId) {
+          return !_.has(service, 'site');
+        }
+      });
+    }
+    return !_.isEmpty(this.basicLicenses);
+  }
 }
 
 export class CrServicesPanelsComponent implements ng.IComponentOptions {
@@ -94,7 +108,6 @@ export class CrServicesPanelsComponent implements ng.IComponentOptions {
     radioStates: '<',
     checkLicenseAvailability: '<',
     entitlements: '<',
-    selectedSubscriptionHasBasicLicenses: '<',
     basicLicenses: '<',
     determineLicenseType: '<',
     generateLicenseTooltip: '<',
