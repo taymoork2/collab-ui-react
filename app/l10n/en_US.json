@@ -4100,9 +4100,10 @@
     "actionDialByExtensionHint": "Prompt the caller for an internal extension and route the call.",
     "actionDialByExtensionHelp": "Enter the message used to prompt the caller for the extension to dial. Select the language and the voice for this phrase.",
     "actionEndCall": "Disconnect",
-    "actionRestApi": "REST API",
+    "actionRestApi": "Invoke REST API",
     "configureApi": "Configure API",
     "configureRestApi": "Configure REST API",
+    "requestRestApi": "Request",
     "schedule": "Schedule",
     "scheduleAllDay": "Open 24 hours",
     "scheduleOpen": "Open Hours",
@@ -4337,7 +4338,15 @@
     "AACustomDesc": "Create a custom Auto Attendant.",
     "AABusinessHours": "Business Hours",
     "AABusinessHoursDesc": "Simple open/closed schedule with custom actions.",
-    "variables": "Variables:"
+    "variables": "Variables:",
+    "configureApiHeading":"Request Test and Response Assignment",
+    "configureApiHeadingHelperText":"Provide test data for the variables defined in the url to test the connection and response to your REST API.",
+    "configureApiHelpertext":"Values below will be entered into the URL for testing and response assignment only.",
+    "restApiResponseVar":"Response Variable",
+    "restApiResponseVal":"Response Value",
+    "restApiCustomVar":"Custom Variable",
+    "customVariablesAssignmentHelpText":"Select Customer Variables to assign the value of the Responses from the REST API to use in the call flow.",
+    "Variables":"Variables"
   },
   "callPark": {
     "code": "CP",

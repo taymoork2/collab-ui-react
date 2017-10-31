@@ -6,7 +6,9 @@
     .controller('AAConfigureApiModalCtrl', AAConfigureApiModalCtrl);
 
   /* @ngInject */
-  function AAConfigureApiModalCtrl($modalInstance, $scope, $translate, aa_schedule, aa_index, AACommonService, AADynaAnnounceService, AAModelService, AASessionVariableService, AAUiModelService) {
+  function AAConfigureApiModalCtrl($modalInstance, $scope, $translate, aa_schedule, aa_index,
+    AACommonService, AADynaAnnounceService, AAModelService, AASessionVariableService, AAUiModelService,
+    RestApiService) {
     var vm = this;
 
     var GET = 'GET';
@@ -14,13 +16,14 @@
     var action;
     var CONSTANTS = {};
     var ui;
+    var count;
 
     var dependentCeSessionVariablesList = [];
     var dynamicVariablesList = [];
     var availableSessionVariablesList = [];
     var lastSavedDynList = [];
     var lastSavedVariableList = [];
-
+    var lastSaveDynamicValueSet = [];
     CONSTANTS.idSelectorPrefix = '#';
 
     vm.url = '';
@@ -45,8 +48,8 @@
     vm.cancel = cancel;
     vm.isNewVariable = isNewVariable;
     vm.canShowWarn = canShowWarn;
-    vm.isSaveDisabled = isSaveDisabled;
     vm.saveDynamicUi = saveDynamicUi;
+    vm.isSaveDisabled = isSaveDisabled;
 
     vm.newVariable = $translate.instant('autoAttendant.newVariable');
     vm.validationMsgs = {
@@ -63,6 +66,18 @@
 
     vm.maxVariableLength = 16;
     vm.minVariableLength = 3;
+    vm.isNextDisabled = isNextDisabled;
+    vm.callTestRestApiConfigs = callTestRestApiConfigs;
+    vm.isDynamicListEmpty = isDynamicListEmpty;
+    vm.dynamicData = [];
+    vm.stepBack = stepBack;
+    vm.stepNext = stepNext;
+    vm.restApiRequest = '';
+    vm.restApiResponse = '';
+    vm.currentStep = 0;
+    vm.isTestDisabled = isTestDisabled;
+    vm.showStep = showStep;
+    vm.saveButtonDisable = true;
     /////////////////////
 
     $scope.$on('CE Updated', function () {
@@ -147,10 +162,12 @@
     }
 
     function save() {
-      action.url = vm.menuEntry.actions[0].dynamicList;
-      action.variableSet = vm.variableSet;
       //for now set method to GET as default
       action.method = GET;
+      action.restApiRequest = vm.restApiRequest;
+      action.restApiResponse = vm.restApiResponse;
+      action.variableSet = vm.variableSet;
+      action.dynamics = saveDynamics(vm.dynamics);
       $modalInstance.close();
     }
 
@@ -160,9 +177,9 @@
     }
 
     function updateUiModel() {
-      vm.menuEntry.actions[0].dynamicList = lastSavedDynList;
-      vm.menuEntry.actions[0].url = lastSavedDynList;
-      vm.menuEntry.actions[0].variableSet = lastSavedVariableList;
+      action.url = lastSavedDynList;
+      action.variableSet = lastSavedVariableList;
+      action.dynamics = saveDynamics(lastSaveDynamicValueSet);
     }
 
     function saveDynamicUi() {
@@ -234,10 +251,6 @@
       return finalDynamicList;
     }
 
-    function isSaveDisabled() {
-      return (areVariableSetsEmpty() || isDynamicListEmpty());
-    }
-
     function isDynamicListEmpty() {
       var status = true;
       vm.menuEntry.actions[0].url = vm.menuEntry.actions[0].dynamicList;
@@ -307,7 +320,7 @@
     function populateUiModel() {
       if (!_.isEmpty(action)) {
         if (!_.isEmpty(action.url)) {
-          lastSavedDynList = _.cloneDeep(_.get(vm.menuEntry, 'actions[0].url'));
+          vm.url = action.url;
           vm.dynamicValues = [];
           _.forEach(action.url, function (opt) {
             var model;
@@ -325,12 +338,26 @@
             vm.dynamicValues.push(model);
           });
         }
-      }
-      vm.url = action.url;
-      action.dynamicList = action.url;
-      if (!_.isEmpty(action.variableSet)) {
-        lastSavedVariableList = _.cloneDeep(action.variableSet);
-        vm.variableSet = action.variableSet;
+        if (!_.isEmpty(action.variableSet)) {
+          vm.variableSet = action.variableSet;
+        }
+        if (!_.isEmpty(action.dynamics)) {
+          vm.dynamics = [];
+          _.forEach(action.dynamics, function (dyna) {
+            vm.dynamics.push(dyna.assignVar);
+          });
+        }
+        if (!_.isEmpty(action.restApiRequest)) {
+          vm.restApiRequest = action.restApiRequest;
+        }
+        if (!_.isEmpty(action.restApiResponse)) {
+          vm.restApiResponse = action.restApiResponse;
+        }
+        if (count === 0) {
+          lastSavedVariableList = action.variableSet;
+          lastSavedDynList = _.get(vm.menuEntry, 'actions[0].url');
+          lastSaveDynamicValueSet = vm.dynamics;
+        }
       }
     }
 
@@ -362,9 +389,119 @@
       });
     }
 
+    function showStep(step) {
+      return step == vm.currentStep;
+    }
+
+    function stepBack() {
+      vm.currentStep--;
+      count++;
+      populateUiModel();
+    }
+
+    function stepNext() {
+      vm.currentStep++;
+      if (vm.menuEntry.actions[0].dynamicList) {
+        action.url = vm.menuEntry.actions[0].dynamicList;
+      } else {
+        action.url = vm.menuEntry.actions[0].url;
+      }
+      if (vm.currentStep === 2) {
+        updateDynamicsList(action.url);
+      }
+    }
+
+    function updateDynamicsList(url) {
+      var arr = [];
+      _.forEach(url, function (dyna) {
+        if (_.isEqual(dyna.isDynamic, true) && dyna.action.eval.value !== '') {
+          arr.push({ variableName: dyna.action.eval.value, value: '' });
+        }
+      });
+      if (vm.dynamics.length !== 0) {
+        _.forEach(vm.dynamics, function (newValue) {
+          _.forEach(arr, function (oldValue) {
+            if (newValue.variableName === oldValue.variableName) {
+              oldValue.value = newValue.value;
+            }
+          });
+        });
+      }
+      vm.dynamics = arr;
+      action.dynamics = saveDynamics(vm.dynamics);
+    }
+
+    function isNextDisabled() {
+      return (_.isEmpty(vm.url) || areVariableSetsEmpty());
+    }
+
+    function callTestRestApiConfigs() {
+      return RestApiService.testRestApiConfigs(JSON.stringify(updateRequestBody()))
+        .then(function (data) {
+          vm.restApiRequest = JSON.stringify(JSON.parse(data.request), null, 2);
+          if (data.responseCode === '200') {
+            vm.restApiResponse = data.response;
+            isSaveDisabled(false);
+          } else {
+            vm.restApiResponse = data.responseCode + ': ' + data.response;
+          }
+        });
+    }
+
+    function updateRequestBody() {
+      var req = {},
+        urlData = _.cloneDeep(action.url);
+      _.forEach(urlData, function (dyna) {
+        dyna.action.eval.value = decodedValue(dyna.action.eval.value);
+        delete (dyna.htmlModel);
+        _.forEach(vm.dynamics, function (dynamic) {
+          if (_.isEqual(dyna.action.eval.value, dynamic.variableName)) {
+            dyna.action.eval.value = dynamic.value;
+            dyna.isDynamic = false;
+          }
+        });
+      });
+      _.set(req, 'url.action.concat.actions[0].dynamic.dynamicOperations', urlData);
+      _.set(req, 'method', 'GET');
+      return req;
+    }
+
+    function isTestDisabled() {
+      var status = false;
+      if (!_.isEmpty(vm.dynamics)) {
+        _.forEach(vm.dynamics, function (dyna) {
+          if (_.isEmpty(dyna.value)) {
+            status = true;
+          }
+        });
+      }
+      return status;
+    }
+
+    function saveDynamics(dynamics) {
+      var preTestActions = [];
+      var assignedVariables = {};
+      _.forEach(dynamics, function (dyna) {
+        assignedVariables = {};
+        _.set(assignedVariables, 'assignVar', dyna);
+        preTestActions.push(assignedVariables);
+        if (dyna.$$hashKey) {
+          delete (dyna.$$hashKey);
+        }
+      });
+      return preTestActions;
+    }
+
+    function isSaveDisabled(value) {
+      vm.saveButtonDisable = value;
+    }
+
     function init() {
       $scope.schedule = aa_schedule;
       $scope.index = aa_index;
+      vm.currentStep = 1;
+      vm.dynamics = [];
+      count = 0;
       activate();
     }
 

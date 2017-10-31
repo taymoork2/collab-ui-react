@@ -5,6 +5,7 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
   var AAUiModelService, AutoAttendantCeMenuModelService;
   var AASessionVariableService;
   var AACommonService;
+  var RestApiService;
   var customVarJson = getJSONFixture('huron/json/autoAttendant/aaCustomVariables.json');
 
   var $rootScope, $scope;
@@ -29,10 +30,18 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
     },
   };
 
-  beforeEach(angular.mock.module('uc.autoattendant'));
+  beforeEach(angular.mock.module('uc.autoattendant', function ($provide) {
+    $provide.value(RestApiService, {
+      testRestApiConfigs: function () {
+        var deferred = q.defer();
+        deferred.resolve({ request: 'aa', response: 'aaaa', responsecode: '200' });
+        return deferred.promise();
+      },
+    });
+  }));
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function ($controller, $q, _$rootScope_, _$translate_, _$window_, _AutoAttendantCeMenuModelService_, _AACommonService_, _AASessionVariableService_, _AAUiModelService_) {
+  beforeEach(inject(function ($controller, $q, _$rootScope_, _$translate_, _$window_, _AutoAttendantCeMenuModelService_, _AACommonService_, _AASessionVariableService_, _AAUiModelService_, _RestApiService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
     q = $q;
@@ -50,6 +59,7 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
     $window = _$window_;
 
     AAUiModelService = _AAUiModelService_;
+    RestApiService = _RestApiService_;
     AACommonService = _AACommonService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
     $translate = _$translate_;
@@ -98,6 +108,19 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
       isDynamic: true,
       htmlModel: '',
     }];
+    action.variableSet = [{
+      value: '',
+      variableName: '',
+      isWarn: false,
+    }];
+    action.dynamics = [{
+      assignVar: {
+        variableName: 'aa',
+        value: 'aa',
+      },
+    }];
+    action.restApiRequest = 'http://www.mocky.io';
+    action.restApiResponse = 'message: Hello';
     aaUiModel[schedule].entries[0].addAction(action);
     $scope.schedule = schedule;
     $scope.index = index;
@@ -122,6 +145,7 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
     AutoAttendantCeMenuModelService = null;
     AASessionVariableService = null;
     AACommonService = null;
+    RestApiService = null;
     controller = null;
     aaUiModel = null;
     menu = null;
@@ -188,37 +212,6 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
       expect(controller.variableSet.length).toBe(1);
       controller.addVariableSet();
       expect(controller.variableSet.length).toBe(2);
-    });
-  });
-
-  describe('isSaveDisabled', function () {
-    it('should disable save whenever any field is empty', function () {
-      var action = AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', '');
-      action.dynamicList = [{
-        action: {
-          eval: {
-            value: 'Static Text',
-          },
-        },
-        isDynamic: false,
-        htmlModel: '',
-      }];
-      var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-      menuEntry.addAction(action);
-      aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
-      aaUiModel.openHours.addEntryAt(0, menuEntry);
-      controller.variableSet = [{
-        value: 'testResponse',
-        newVariableValue: 'Test1',
-        variableName: 'New Variable',
-        isWarn: false,
-      }, {
-        value: 'testRes2',
-        variableName: 'Test1',
-        isWarn: false,
-      }];
-      $scope.$apply();
-      expect(controller.isSaveDisabled()).toBe(false);
     });
   });
 
@@ -411,6 +404,113 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
         $rootScope.$broadcast('CIVarNameChanged');
         controller.getWarning();
         expect(controller.fullWarningMsgValue).toBe(false);
+      });
+    });
+
+    describe('should test the api configure modal wizard', function () {
+      it('should test showStep function', function () {
+        var step = 1;
+        controller.currentStep = 1;
+        expect(controller.showStep(step)).toBe(true);
+        step = 2;
+        expect(controller.showStep(step)).toBe(false);
+      });
+
+      it('should test stepBack function', function () {
+        controller.currentStep = 2;
+        var action = {};
+        action.variableSet = [{ a: 'a' }];
+        action.dynamics = [{ variablename: 'variable', value: 'vale' }];
+        action.restApiRequest = 'http://www.mocky.io';
+        action.restApiResponse = 'message: hellow';
+        controller.stepBack();
+        expect(controller.currentStep).toEqual(1);
+      });
+
+      it('should test stepNext functions', function () {
+        controller.menuEntry.actions[0].dynamicList = '';
+        controller.menuEntry.actions[0].url = [{ a: 'a' }];
+        controller.stepNext();
+        expect(action.url).toEqual(controller.menuEntry.actions[0].url);
+
+        controller.menuEntry.actions[0].dynamicList = [
+          {
+            isDynamic: true,
+            action: {
+              eval: {
+                value: 'aaa',
+              },
+            },
+          },
+        ];
+        controller.currentStep = 1;
+        controller.stepNext();
+        expect(action.url).toEqual(controller.menuEntry.actions[0].dynamicList);
+
+        controller.dynamics = [{ variableName: 'aaa', value: 'aa', $$hashkey: 'aa' }];
+        controller.stepNext();
+
+        controller.dynamics = [
+          {
+            variableName: 'aa',
+            value: 'a',
+          },
+        ];
+        controller.stepNext();
+      });
+
+      it('should test isNextDisabled function', function () {
+        controller.url = '';
+        expect(controller.isNextDisabled()).toBe(true);
+
+        controller.url = { a: 'a' };
+        controller.isNextDisabled();
+
+        controller.variableSet = [
+          {
+            value: 'aaa',
+            variableName: 'aaa',
+            newVariableValue: 'bbb',
+          },
+        ];
+        controller.newVariable = 'aaa';
+        controller.isNextDisabled();
+
+        controller.newVariable = 'qq';
+        controller.isNextDisabled();
+        expect(controller.isNextDisabled()).toBe(false);
+      });
+
+      it('should test isTestDisabled function', function () {
+        controller.dynamics = '';
+        controller.isTestDisabled();
+
+        controller.dynamics = [
+          {
+            value: '',
+          },
+        ];
+        controller.isTestDisabled();
+
+        controller.dynamics[0].value = 'aaa';
+        controller.isTestDisabled();
+        expect(controller.isTestDisabled()).toBe(false);
+      });
+
+      it('should test callTestRestApiConfigs function', function () {
+        controller.dynamics = [{
+          variableName: 'Static text',
+          value: '',
+        }];
+        controller.callTestRestApiConfigs();
+        expect(controller.dynamics[0].$$hashkey).not.toBeDefined();
+      });
+
+      it('should test isSaveDisabled function', function () {
+        var value = true;
+        controller.saveButtonDisable = false;
+        controller.isSaveDisabled(value);
+        expect(controller.saveButtonDisable).toBe(true);
       });
     });
   });
