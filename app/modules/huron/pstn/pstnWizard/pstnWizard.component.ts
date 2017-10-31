@@ -21,7 +21,6 @@ export class PstnWizardComponent implements ng.IComponentOptions {
     customerEmail: '<',
     customerCommunicationLicenseIsTrial: '<',
     customerRoomSystemsLicenseIsTrial: '<',
-    showContractIncomplete: '&',
   };
 }
 
@@ -54,6 +53,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
     pstn: new NumberModel(),
     tollFree: new NumberModel(),
   };
+  public showContractIncomplete = false;
   public tokenfieldId: string = TOKEN_FIELD_ID;
   public showPortNumbers: boolean = false;
   public showTollFreeNumbers: boolean = false;
@@ -79,6 +79,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
               private PstnAddressService: PstnAddressService, //Location Based
               private Notification: Notification,
               private $state: ng.ui.IStateService,
+              private $stateParams: ng.ui.IStateParamsService,
               private $window: ng.IWindowService,
               private $timeout: ng.ITimeoutService,
               private PstnService: PstnService,
@@ -99,6 +100,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
     if ($state['modal'] && $state['modal'].result) {
       $state['modal'].result.finally(PstnModel.clear);
     }
+    this.showContractIncomplete = _.get<boolean>(this.$stateParams, 'showContractIncomplete');
   }
 
   public $onInit(): void {

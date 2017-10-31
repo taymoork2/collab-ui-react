@@ -1,7 +1,8 @@
 import pstnWizard from './index';
 
 describe('Component: PstnWizardComponent', () => {
-
+  let $componentController: ng.IComponentControllerService;
+  let ctrl;
   const swivelCarrierDetails = [{
     uuid: '4f5f5bf7-0034-4ade-8b1c-db63777f062c',
     name: 'INTELEPEER-SWIVEL',
@@ -33,6 +34,15 @@ describe('Component: PstnWizardComponent', () => {
 
     installPromiseMatchers();
   });
+
+
+  beforeEach(inject((_$componentController_) => {
+    $componentController = _$componentController_;
+  }));
+
+  function initController(showContractIncomplete): ng.IComponentControllerService {
+    return $componentController('ucPstnPaidWizard', { $stateParams: { showContractIncomplete } }, {});
+  }
 
   function initComponent() {
     spyOn(this.PstnService, 'listResellerCarriersV2');
@@ -289,6 +299,22 @@ describe('Component: PstnWizardComponent', () => {
       });
       this.$rootScope.$digest();
       expect(promise).toBeResolved();
+    });
+  });
+
+  describe('showContractIncomplete', () => {
+    it('should show the contract incomplete message', function () {
+      const showContractIncomplete = true;
+      ctrl = initController(showContractIncomplete);
+      ctrl.$onInit();
+      expect(ctrl.showContractIncomplete).toBe(true);
+    });
+
+    it('should NOT show the contract incomplete message', function () {
+      const showContractIncomplete = false;
+      ctrl = initController(showContractIncomplete);
+      ctrl.$onInit();
+      expect(ctrl.showContractIncomplete).toBe(false);
     });
   });
 });

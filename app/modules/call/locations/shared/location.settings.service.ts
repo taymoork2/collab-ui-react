@@ -44,7 +44,7 @@ export class CallLocationSettingsService {
     private SettingSetupInitService: SettingSetupInitService,
   ) {}
 
-  public get(locationId?: string): ng.IPromise<CallLocationSettingsData> {
+  public get(locationId?: string|undefined, newLocation?: boolean): ng.IPromise<CallLocationSettingsData> {
     if (locationId) {
       return this.getLocationData(locationId);
     } else {
@@ -52,7 +52,7 @@ export class CallLocationSettingsService {
         .then(defaultLocation => {
           if (defaultLocation) {
             this.SettingSetupInitService.setDefaultLocation(defaultLocation);
-            return this.getLocationData(defaultLocation.uuid ? defaultLocation.uuid : '');
+            return this.getLocationData(defaultLocation.uuid ? defaultLocation.uuid : '', newLocation);
           } else {
             return this.getLocationData('');
           }
@@ -61,12 +61,12 @@ export class CallLocationSettingsService {
     }
   }
 
-  public getLocationData(locationId: string): ng.IPromise<CallLocationSettingsData> {
+  public getLocationData(locationId: string, newLocation?: boolean): ng.IPromise<CallLocationSettingsData> {
     this.errors = [];
     const callLocationSettingsData = new CallLocationSettingsData();
     return this.$q.all({
       location: this.getLocation(locationId).then(location => callLocationSettingsData.location = location),
-      address: this.getEmergencyServiceAddress(locationId).then(address => callLocationSettingsData.address = address),
+      address: newLocation ? callLocationSettingsData.address = new Address() : this.getEmergencyServiceAddress(locationId).then(address => callLocationSettingsData.address = address),
       emergencyNumber: this.getEmergencyCallbackNumber(locationId).then(emergencyNumber => callLocationSettingsData.emergencyNumber = emergencyNumber),
       mediaId: this.getLocationMedia(locationId).then(mediaId => callLocationSettingsData.mediaId = mediaId),
       internalNumberRanges: this.getInternalNumberRanges(locationId).then(internalNumberRanges => callLocationSettingsData.internalNumberRanges = internalNumberRanges),
@@ -74,7 +74,8 @@ export class CallLocationSettingsService {
       customerVoice: this.getCustomerVoice().then(customerVoice => callLocationSettingsData.customerVoice = customerVoice),
       customer: this.getCustomer().then(customer => callLocationSettingsData.customer = customer),
     })
-    .then(() => this.getAvrilCustomer(callLocationSettingsData.customer.hasVoicemailService).then(avrilCustomer => callLocationSettingsData.avrilCustomer = avrilCustomer))
+    .then(() => this.getAvrilCustomer(callLocationSettingsData.customer.hasVoicemailService)
+      .then(avrilCustomer => callLocationSettingsData.avrilCustomer = avrilCustomer))
     .then(() => {
       this.callLocationSettingsDataCopy = this.cloneSettingsData(callLocationSettingsData);
       return callLocationSettingsData;

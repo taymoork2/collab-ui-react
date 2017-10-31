@@ -116,7 +116,7 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
           isTrial: false,
         },
       };
-      $scope.showContractIncomplete = false;
+      $scope.showContractIncomplete = true;
       ExternalNumberService.isTerminusCustomer.and.returnValue($q.resolve(true));
       controller.isTerminusCustomer();
       $scope.$apply();
@@ -126,7 +126,7 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
         customerEmail: controller.currentCustomer.customerEmail,
         customerCommunicationLicenseIsTrial: false,
         customerRoomSystemsLicenseIsTrial: true,
-        showContractIncomplete: false,
+        showContractIncomplete: true,
       });
     });
 
