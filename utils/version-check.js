@@ -28,7 +28,8 @@ const yarnVersion = parseFloat(versionObj.yarn);
 const nodeVersion = parseFloat(versionObj.node);
 
 const isYarnValid = yarnVersion >= 1;
-const isNodeValid = (nodeVersion >= 6) && (nodeVersion < 7);
+const isNode6 = (nodeVersion >= 6) && (nodeVersion < 7);
+const isNodeValid = (nodeVersion >= 8) && (nodeVersion < 9);
 
 if (!isYarnValid) {
   console.error(`
@@ -37,9 +38,11 @@ if (!isYarnValid) {
   exitWithError();
 }
 
-if (!isNodeValid) {
+if (isNode6) {
+  printNodeWarningMessage();
+} else if (!isNodeValid) {
   console.error(`
-[ERROR] Node.js should be current LTS (v6). Current: ${nodeVersion}
+[ERROR] Node.js should be current LTS (v8.9.0+). Current: ${nodeVersion}
 
 Please see setup documentation for more information.
 https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/blob/master/docs/setup.md
@@ -51,6 +54,12 @@ function printUpdateYarnMessage() {
   console.error(`
 Please update to the latest version of Yarn.
 https://yarnpkg.com/lang/en/docs/install/
+  `);
+}
+
+function printNodeWarningMessage() {
+  console.error(`
+🔥  Please update to Node.JS v8.9.0+ by following the instructions in docs/setup.md.
   `);
 }
 
