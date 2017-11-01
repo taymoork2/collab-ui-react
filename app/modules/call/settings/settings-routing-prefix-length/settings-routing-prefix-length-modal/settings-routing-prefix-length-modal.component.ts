@@ -1,0 +1,61 @@
+import { RoutingPrefixLengthService } from 'modules/call/settings/shared';
+import { Notification } from 'modules/core/notifications';
+
+class RoutingPrefixLengthModalCtrl implements ng.IComponentController {
+  public routingPrefix: string;
+  public currentRoutingPrefix: string;
+  public newRoutingPrefixLength: string;
+  public oldRoutingPrefixLength: string;
+  public prefixLength: number;
+  public close: Function;
+  public dismiss: Function;
+  public routingPrefixForm: ng.IFormController;
+  public processing: boolean = false;
+  public exampleRoutingPrefixHelpText: string = '';
+
+  /* @ngInject */
+  constructor(
+    private RoutingPrefixLengthService: RoutingPrefixLengthService,
+    private $translate: ng.translate.ITranslateService,
+    private Notification: Notification,
+  ) {}
+
+  public $onInit(): void {
+    this.prefixLength = _.toSafeInteger(this.newRoutingPrefixLength) - (this.oldRoutingPrefixLength ? _.toSafeInteger(this.oldRoutingPrefixLength) : 0);
+    this.exampleRoutingPrefixHelpText = this.getExampleRoutingPrefix(this.routingPrefix);
+  }
+
+  public onRoutingPrefixChanges() {
+    this.exampleRoutingPrefixHelpText = this.getExampleRoutingPrefix(this.routingPrefix);
+  }
+
+  public save(): void {
+    this.processing = true;
+    this.RoutingPrefixLengthService.saveRoutingPrefixLength(this.routingPrefix)
+      .then(() => {
+        this.Notification.success('serviceSetupModal.routingPrefixLength.modal.saveSuccess');
+        this.close();
+      })
+      .catch(error => {
+        this.Notification.errorWithTrackingId(error, 'serviceSetupModal.routingPrefixLength.modal.saveFail');
+      })
+      .finally(() => this.processing = false);
+  }
+
+  private getExampleRoutingPrefix(routingPrefix: string): string {
+    return this.$translate.instant('serviceSetupModal.routingPrefixLength.modal.example', { prefix: routingPrefix, currentPrefix: this.currentRoutingPrefix });
+  }
+
+}
+
+export class RoutingPrefixLengthModalComponent implements ng.IComponentOptions {
+  public controller = RoutingPrefixLengthModalCtrl;
+  public template = require('modules/call/settings/settings-routing-prefix-length/settings-routing-prefix-length-modal/settings-routing-prefix-length-modal.component.html');
+  public bindings = {
+    currentRoutingPrefix: '<',
+    newRoutingPrefixLength: '<',
+    oldRoutingPrefixLength: '<',
+    close: '&',
+    dismiss: '&',
+  };
+}

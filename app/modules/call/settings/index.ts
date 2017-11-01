@@ -14,6 +14,7 @@ import preferredLanguageModule from 'modules/call/settings/settings-preferred-la
 import extensionRangeModule from 'modules/call/settings/settings-extension-range';
 import extensionLengthModule from 'modules/call/settings/settings-extension-length';
 import routingPrefixModule from 'modules/call/settings/settings-routing-prefix';
+import routingPrefixLengthModule from 'modules/call/settings/settings-routing-prefix-length';
 import timeZoneModule from 'modules/call/shared/settings-time-zone';
 import outboundDialDigitModule from 'modules/call/settings/settings-outbound-dial-digit';
 import companyVoicemailModule from 'modules/call/settings/settings-company-voicemail';
@@ -52,6 +53,7 @@ export default angular
     extensionRangeModule,
     extensionLengthModule,
     routingPrefixModule,
+    routingPrefixLengthModule,
     timeZoneModule,
     outboundDialDigitModule,
     companyVoicemailModule,

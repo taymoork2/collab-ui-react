@@ -1,0 +1,15 @@
+<label class="sub-section__label" translate="serviceSetupModal.routingPrefixLength.title"></label>
+<span>
+  <p class="description-block" translate="serviceSetupModal.routingPrefixLength.desc1"></p>
+  <p ng-if="$ctrl.originalRoutingPrefixLength === 0" class="description-block" translate="serviceSetupModal.routingPrefixLength.desc2"></p>
+</span>
+<div class="medium-2">
+  <cs-select
+    name="routingPrefixLength"
+    ng-model="$ctrl.routingPrefixLength"
+    options="$ctrl.routingPrefixLengthOptions"
+    on-change-fn="$ctrl.onRoutingPrefixLengthChanged()"
+    is-disabled="$ctrl.isDisabled"
+    required="true">
+  </cs-select>
+</div>
