@@ -37,50 +37,6 @@ csv-upload-results {
     overflow-y: scroll;
   }
 
-  // csv upload pane in dialog
-  .upload-progress {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    .csv-process-content {
-      @include vr-spacing(mt, 1);
-
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-      width: 85%;
-
-      .progressbar {
-        @include vr-spacing(mb, 2.25);
-        width: 100%;
-      }
-
-      .csv-filename {
-        @include vr-spacing(mt, 0.25);
-        font-size: small;
-      }
-
-      .close-button {
-        @include vr-spacing(ml, 1);
-        @include vr-spacing(mt, -1.5);
-        font-size: medium;
-
-        a {
-          color: $gray-light-1;
-          &:hover {
-            color: $color-primary-base;
-          }
-        }
-      }
-
-      .progressbar-label span {
-        font-size: inherit;
-      }
-    }
-  }
-
   .upload-complete {
     align-items: flex-start;
     @include vr-spacing(mv, 0.5);
@@ -138,14 +94,6 @@ csv-upload-results {
         color: $brand-warning;
       }
     }
-  }
-
-  // Timer display
-  .upload-timer {
-    @include vr-spacing(mv, 1);
-    @include vr-spacing(mh, 0);
-
-    text-align: center;
   }
 
   // Error display

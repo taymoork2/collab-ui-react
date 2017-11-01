@@ -1,27 +1,14 @@
 <div class="flex-container base-margin" ng-show="$ctrl.activeTask !== undefined">
   <h4 translate="userManage.bulk.import.status"></h4>
 
-  <!-- progress bar -->
-  <div class="flex-item-no-resize upload-progress" ng-show="$ctrl.isProcessing">
-    <div class="csv-process-content">
-      <div class="progressbar">
-        <div class="progressbar-info">
-          <span class="progressbar-label"
-                ng-if="$ctrl.processProgress < 100 && !$ctrl.isCancelledByUser"
-                translate="firstTimeWizard.processing"></span>
-          <span class="progressbar-label" ng-if="$ctrl.isCancelledByUser"
-                translate="firstTimeWizard.canceling"></span>
-          <span class="progressbar-progress">{{$ctrl.processProgress}}%</span>
-        </div>
-        <progressbar animate="false" class="progress-striped active" value="$ctrl.processProgress"
-                      type="primary"></progressbar>
-        <div class="csv-filename">{{$ctrl.fileName}}</div>
-      </div>
-      <div ng-if="$ctrl.isProcessing" class="close-button">
-        <a href class="icon icon-close" ng-click="$ctrl.onCancelImport()" aria-label="{{::'common.close' | translate}}"></a>
-      </div>
-    </div>
-  </div>
+  <cr-progressbar
+    progressbar-label="$ctrl.progressbarLabel"
+    progressbar-filename="$ctrl.fileName"
+    progressbar-value="$ctrl.processProgress"
+    progressbar-is-processing="$ctrl.isProcessing"
+    progressbar-on-cancel="$ctrl.onCancelImport()"
+    >
+  </cr-progressbar>
 
   <!-- done import status -->
   <div class="flex-item-no-resize upload-progress upload-complete" ng-show="$ctrl.processProgress > 0">

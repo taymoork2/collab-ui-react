@@ -78,6 +78,12 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
     this.cancelPolling();
   }
 
+  public get progressbarLabel() {
+    if (this.isCancelledByUser) {
+      return this.$translate.instant('common.cancelingEllipsis');
+    }
+  }
+
   private setActiveTaskData(task: ITask): void {
     this.numTotalUsers = task.totalUsers;
     this.numNewUsers = task.addedUsers;
@@ -147,6 +153,7 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
       btnType: 'alert',
     }).result.then(() => {
       this.UserTaskManagerService.cancelTask(this.activeTask!.jobInstanceId)
+      .then(() => this.isCancelledByUser = true)
       .catch(response => {
         this.Notification.errorResponse(response, 'userTaskManagerModal.cancelCsvError');
       });
