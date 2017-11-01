@@ -68,9 +68,9 @@ describe('Component: locationRoutingPrefix', () => {
       expect(this.view).toContainElement(PREFIX_INPUT);
     });
 
-    it('form should not be valid when input is too short', function() {
-      this.view.find(PREFIX_INPUT).val('12345').change();
-      expect(this.controller.routingPrefixForm.$valid).toBeFalsy();
+    it('form should be valid even when input is too short', function() {
+      this.view.find(PREFIX_INPUT).val('').change();
+      expect(this.controller.routingPrefixForm.$valid).toBeTruthy();
     });
 
     it('form should not be valid when input is too long', function() {
