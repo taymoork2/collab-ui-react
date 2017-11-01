@@ -1,17 +1,18 @@
 ## Setup the environment
 
 * On macOS: install Xcode toolchain: `xcode-select --install`
-* Project requires node v6, npm v3+, and yarn v1.0.0+
+* Project requires node v8.9.0+ and yarn v1.1.0+
 * Use [nvm](https://github.com/creationix/nvm) to manage your node versions
-  * `nvm install lts/boron` to install the latest [LTS](https://github.com/nodejs/LTS) version
-  * `nvm ls` to see list of locally available versions
+  * `nvm install lts/carbon` to install the latest [LTS](https://github.com/nodejs/LTS) version
+  * `nvm ls` to see list of locally installed/available versions
   * `nvm ls-remote` to see list of installable versions
+* If you are upgrading from a version inferior to 8, you need to delete your `node_modules` folder before proceeding further.
 * `yarn` to install project dependencies (need to rerun after branch updates for new dependencies)
 * `yarn start` or `yarn serve` to serve the dev application
 
 #### Alternative node/npm installation
 * If you dislike the convenience of a node version manager, you can install node/npm directly
-* Install `node v6`: `brew install node@6` (macOS)
+* Install `node v8`: `brew install node@8` (macOS)
 * But please note that you are on your own if you go this route (no support)
 
 #### Alternative project dependencies installation
