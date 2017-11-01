@@ -2728,17 +2728,17 @@
           "UnexpectedException": "Unexpected Exception"
         },
         "fixes": {
-          "IOFailure": "TCP failure: TCP read/write failure: Please try again. If the error persists, check network connectivity, firewall configuration, and Mutual TLS configuration.",
-          "NoDNSHopsFound": "DNS Lookup failed. Check that a DNS or SRV record exists for your SIP Destination and that it resolves to one or more valid IP addresses.",
+          "IOFailure": "TCP failure: TCP read/write failure: Please try again. If the error persists, check network connectivity, firewall configuration, and Mutual TLS configuration. Search for ‘socket failure’ in the <a href=\"https://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">Troubleshooting Documentation</a.",
+          "NoDNSHopsFound": "DNS Lookup failed. Check that a DNS or SRV record exists for your SIP Destination and that it resolves to one or more valid IP addresses. Search for ‘DNS SRV’ in the <a href=\"https://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">Troubleshooting Documentation</a>.",
           "PingFailed": "SIP ping failed.",
-          "SipDestinationNotFound": "SIP destination not found. Check the value that you entered under Services > Hybrid Call > Settings in admin.ciscospark.com.",
-          "SipException": "SIP exception: Ensure the Expressway SIP configuration is valid. If error persists, open a support ticket in admin.ciscospark.com",
-          "SocketConnectionFailure": "TCP Connection failure: Check network connectivity, connection speed, and/or firewall configuration.",
-          "SocketReadWriteFailure": "TCP read/write failure: Please try again. If the error persists, check network connectivity, firewall configuration, and Mutual TLS configuration.",
-          "SocketTimedOut": "Network and/or Mutual TLS connection timed out. Check network connectivity, connection speed, firewall configuration, and Mutual TLS configuration.",
-          "SSLHandshakeFailure": "Mutual TLS Error: Check Mutual TLS configuration in both Expressway and admin.ciscospark.com, and that Mutual TLS certificates are present and valid in both locations.",
-          "UnexpectedError": "Unexpected error. Please try again. If the error persists, open a support ticket in admin.ciscospark.com",
-          "UnexpectedException": "Unexpected error: Please try again. If the error persists, open a support ticket in admin.ciscospark.com"
+          "SipDestinationNotFound": "SIP destination not found. Check the value that you entered under Services > Hybrid Call > Settings in <a href=\"https://admin.ciscospark.com\">admin.ciscospark.com</a>.",
+          "SipException": "SIP exception: Ensure the Expressway SIP configuration is valid. If error persists, open a support ticket in <a href=\"https://admin.ciscospark.com\">admin.ciscospark.com</a>.",
+          "SocketConnectionFailure": "TCP Connection failure: Check network connectivity, connection speed, and/or firewall configuration. Search for ‘socket failure’ in the <a href=\"https://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">Troubleshooting Documentation</a>.",
+          "SocketReadWriteFailure": "TCP read/write failure: Please try again. If the error persists, check network connectivity, firewall configuration, and Mutual TLS configuration. Search for ‘socket failure’ in the <a href=\"https://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">Troubleshooting Documentation</a>.",
+          "SocketTimedOut": "Network and/or Mutual TLS connection timed out. Check network connectivity, connection speed, firewall configuration, and Mutual TLS configuration. Search for ‘socket failure’ in the <a href=\"https://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">Troubleshooting Documentation</a>.",
+          "SSLHandshakeFailure": "Mutual TLS Error: Check Mutual TLS configuration in both Expressway and <a href=\"https://admin.ciscospark.com\">admin.ciscospark.com</a>, and that Mutual TLS certificates are present and valid in both locations.  Search for ‘Mutual TLS Handshake Failures’ in the <a href=\"https://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">Troubleshooting Documentation</a>.",
+          "UnexpectedError": "Unexpected error. Please try again. If the error persists, open a support ticket in <a href=\"https://admin.ciscospark.com\">admin.ciscospark.com</a>.",
+          "UnexpectedException": "Unexpected error: Please try again. If the error persists, open a support ticket in <a href=\"https://admin.ciscospark.com\">admin.ciscospark.com</a>."
         }
       },
       "googleCalendar": {
