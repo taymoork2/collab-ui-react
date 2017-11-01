@@ -70,6 +70,13 @@
         }
       }
 
+      .uploded-bot-img {
+        height: 3rem;
+        width: 3rem;
+        border-radius: 50%;
+        border: 1px solid $gray-light-1;
+      }
+
       .bot {
         font-size: 1.8rem;
         border: 1px solid $gray-light-1;
