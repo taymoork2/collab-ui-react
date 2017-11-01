@@ -97,7 +97,7 @@ require('./_customer-list.scss');
         var rowBUnavailable = !isLicenseInfoAvailable(rowB.entity.licenseList);
 
         if (rowAUnavailable && rowBUnavailable) {
-          return columnSort.accountStatus(a, b, rowA, rowB);
+          return 0;
         } else if (rowAUnavailable) {
           return -1;
         } else if (rowBUnavailable) {
@@ -107,17 +107,24 @@ require('./_customer-list.scss');
       },
 
       notes: function (a, b) {
-        // Want to treat 'expiring today' as '0 days left' for purposes of organizing these
-        // with other expiring trials
-        var modA = (a.sortOrder === PartnerService.customerStatus.NOTE_EXPIRE_TODAY) ? '0' : a.text;
-        var modB = (b.sortOrder === PartnerService.customerStatus.NOTE_EXPIRE_TODAY) ? '0' : b.text;
-
+        var modA = (a.sortOrder === PartnerService.customerStatus.NOTE_DAYS_LEFT) ? '0' : a.text;
+        var modB = (b.sortOrder === PartnerService.customerStatus.NOTE_DAYS_LEFT) ? '0' : b.text;
         if (modA < modB) {
           return -1;
         } else if (modA > modB) {
           return 1;
+        } else if (a.sortOrder === PartnerService.customerStatus.NOTE_DAYS_LEFT) {
+          // Anything with 'days left' is sorted by the actual days, not the text
+          // which may vary depending on locale.  Also, all expired trials are treated
+          // as -1 days so that they are in a bucket to allow secondary column sorting
+          return Math.max(a.daysLeft, -1) - Math.max(b.daysLeft, -1);
         }
         return 0;
+      },
+
+      service: function (a, b, rowA, rowB) {
+        // Sorting by aggregate number of total licenses
+        return rowA.entity.uniqueServiceCount - rowB.entity.uniqueServiceCount;
       },
 
       /* AG TODO:  once we have data for total users -- add back
@@ -192,18 +199,18 @@ require('./_customer-list.scss');
         options: [],
       };
 
-      for (var i = 0; i < arFilters.length; i++) {
-        var isPremium = (arFilters[i][0] === PREMIUM) || (arFilters[i][0] === STANDARD);
+      _.forEach(arFilters, function (filter) {
+        var isPremium = (filter[0] === PREMIUM) || (filter[0] === STANDARD);
         vm.filter.options.push({
           count: 0,
-          value: arFilters[i][0],
-          label: $translate.instant('customerPage.' + arFilters[i][1], { count: 0 }),
+          value: filter[0],
+          label: $translate.instant('customerPage.' + filter[1], { count: 0 }),
           isSelected: false,
-          isAccountFilter: (arFilters[i][1].indexOf('Accounts') !== -1) && !isPremium,
+          isAccountFilter: (filter[1].indexOf('Accounts') !== -1) && !isPremium,
           isPremiumFilter: isPremium,
           previousState: false,
         });
-      }
+      });
 
       sortFilterList();
     }
@@ -235,6 +242,7 @@ require('./_customer-list.scss');
           width: '25%',
           cellTemplate: compactServiceTemplate,
           headerCellClass: 'align-center',
+          sortingAlgorithm: columnSort.service,
         }, {
           field: 'accountStatus',
           displayName: 'accountStatus',
@@ -266,9 +274,9 @@ require('./_customer-list.scss');
       ];
 
       // post-processing of columnDefs array
-      for (var i = 0; i < columnDefs.length; i++) {
-        columnDefs[i].displayName = $translate.instant('customerPage.' + columnDefs[i].displayName);
-      }
+      _.forEach(columnDefs, function (o) {
+        o.displayName = $translate.instant('customerPage.' + o.displayName);
+      });
 
       vm.gridOptions = {
         //gridOptions.data is populated directly by the functions supplying the data.
@@ -332,7 +340,6 @@ require('./_customer-list.scss');
       vm.gridOptions.columnDefs = columnDefs;
 
       initStatusTextOrder(); // sort order for 'status' column
-      initNotesTextOrder(); // sort order for 'text' column
 
       initFilters();
 
@@ -380,7 +387,7 @@ require('./_customer-list.scss');
     // - sort order based on the translated text for account status fields
     // - we do this because the actual text in the columns includes a status icon and that prevent us from using the standard alpha sort built into ui-grid
     function initStatusTextOrder() {
-      var status = [
+      var statuses = [
         { key: 'active', xlat: 'purchased' },
         { key: 'trial' },
         { key: 'expired' },
@@ -388,39 +395,16 @@ require('./_customer-list.scss');
       ];
 
       // Sort values by translated strings
-      for (var i = 0; i < status.length; i++) {
-        status[i].xlat = $translate.instant('customerPage.' + ((status[i].xlat) ? status[i].xlat : status[i].key));
-      }
-      status = _.sortBy(status, ['xlat']);
+      _.forEach(statuses, function (status) {
+        status.xlat = $translate.instant('customerPage.' + ((status.xlat) ? status.xlat : status.key));
+      });
+      statuses = _.sortBy(statuses, ['xlat']);
 
-      // Store sort order in array for future reference
-      vm.statusTextOrder = [];
-      for (i = 0; i < status.length; i++) {
-        vm.statusTextOrder[status[i].key] = i;
-      }
-    }
-
-    function initNotesTextOrder() {
-      var notes = [
-        { key: 'suspended', status: 'NOTE_CANCELED' },
-        { key: 'needsSetup', status: 'NOTE_NEEDS_SETUP' },
-        { key: 'expiringToday', status: 'NOTE_EXPIRE_TODAY' },
-        { key: 'expired', status: 'NOTE_EXPIRED' },
-        { key: 'licenseInfoNotAvailable', status: 'NOTE_NO_LICENSE' },
-      ];
-
-      // 600% faster execution than _.forEach
-      for (var i = 0; i < notes.length; i++) {
-        notes[i].xlat = $translate.instant('customerPage.' + notes[i].key);
-      }
-
-      // sort based on translated value, then key value
-      notes = _.sortBy(notes, ['xlat']);
-
-      // apply sort order to partner service base on index
-      for (i = 0; i < notes.length; i++) {
-        PartnerService.customerStatus[notes[i].status] = i;
-      }
+      // Store sort order for future reference
+      vm.statusTextOrder = {};
+      _.forEach(statuses, function (status, index) {
+        vm.statusTextOrder[status.key] = index;
+      });
     }
 
     // this function is called every time the grid needs to refresh after column filtering and before sorting
@@ -461,8 +445,8 @@ require('./_customer-list.scss');
         row.visible = _.every(isVisibleFlags);
       });
 
-      var visibleRowData = _.chain(rows).filter({ visible: true }).map(function (row) { return row.entity; }).value();
-      var allRowData = _.chain(rows).map(function (row) { return row.entity; }).value();
+      var visibleRowData = _.map(_.filter(rows, { visible: true }), 'entity');
+      var allRowData = _.map(rows, 'entity');
       updateResultCount(visibleRowData, allRowData);
       sortFilterList();
 
@@ -470,10 +454,7 @@ require('./_customer-list.scss');
     }
 
     function isPremiumFilterType(filterValue, isPremium) {
-      if (filterValue === PREMIUM) {
-        return isPremium;
-      }
-      return !isPremium;
+      return (filterValue === PREMIUM) ? isPremium : !isPremium;
     }
 
     function filterAction(value) {
@@ -605,9 +586,7 @@ require('./_customer-list.scss');
 
     function updateResultCount(visibleRows, allRows) {
       vm.totalOrgs = visibleRows.length;
-      var statusTypeCounts = _.countBy(allRows, function (rowData) {
-        return rowData.accountStatus;
-      });
+      var statusTypeCounts = _.countBy(allRows, 'accountStatus');
       var accountFilters = _.filter(vm.filter.options, { isAccountFilter: true });
       _.forEach(accountFilters, function (filter) {
         filter.count = statusTypeCounts[filter.value] || 0;

@@ -19,12 +19,7 @@
       ACTIVE: 2,
       CANCELED: 99,
       NO_LICENSE: -1,
-      NOTE_EXPIRED: 0,
-      NOTE_EXPIRE_TODAY: 0,
-      NOTE_NO_LICENSE: 0,
-      NOTE_CANCELED: 0,
-      NOTE_NEEDS_SETUP: 0,
-      NOTE_NOT_EXPIRED: 99,
+      NOTE_DAYS_LEFT: 100,
     };
 
     var helpers = {
@@ -363,13 +358,10 @@
       notes.daysLeft = rowData.daysLeft;
       if (isLicenseInfoAvailable(rowData.licenseList)) {
         if (rowData.status === 'CANCELED') {
-          notes.sortOrder = customerStatus.NOTE_CANCELED;
           notes.text = $translate.instant('customerPage.suspended');
         } else if (rowData.purchased) {
-          notes.sortOrder = customerStatus.ACTIVE;
           notes.text = $translate.instant('customerPage.purchased');
         } else if (rowData.customerOrgId === Authinfo.getOrgId()) {
-          notes.sortOrder = customerStatus.ACTIVE;
           notes.text = $translate.instant('customerPage.myOrganization');
         } else if (rowData.status === 'ACTIVE' || rowData.status === 'EXPIRED') {
           // while "daysLeft > 0" and expired doesn't make sense, the other 2 cases have the same text
@@ -379,19 +371,18 @@
             // - no trial should ever normally not have a start date (it is started when it is created) but we have orders in orgs that meet this condition
             // TODO: determine if the above quirk applies to live customers in production --^, and rm this check if not applicable
             if ((rowData.accountStatus === 'pending') || ((rowData.accountStatus === 'trial') && !rowData.startDate)) {
-              notes.sortOrder = customerStatus.NOTE_NEED_SETUP;
               notes.text = $translate.instant('customerPage.needsSetup');
             } else {
-              notes.sortOrder = customerStatus.NOTE_NOT_EXPIRED;
+              notes.sortOrder = customerStatus.NOTE_DAYS_LEFT;
               notes.text = $translate.instant('customerPage.daysLeftToPurchase', {
                 count: rowData.daysLeft,
               }, 'messageformat');
             }
           } else if (rowData.daysLeft === 0) {
-            notes.sortOrder = customerStatus.NOTE_EXPIRE_TODAY;
+            notes.sortOrder = customerStatus.NOTE_DAYS_LEFT;
             notes.text = $translate.instant('customerPage.expiringToday');
           } else if (rowData.daysLeft < 0) {
-            notes.sortOrder = customerStatus.NOTE_EXPIRED;
+            notes.sortOrder = customerStatus.NOTE_DAYS_LEFT;
             if (rowData.accountStatus === 'pending') {
               notes.text = $translate.instant('customerPage.needsSetup');
             } else if (_.inRange(rowData.daysLeft, 0, Config.trialGracePeriod)) {
@@ -404,7 +395,6 @@
       }
       // If any of the previous tests fail, fall back to no license info
       if (!_.has(notes, 'text')) {
-        notes.sortOrder = customerStatus.NOTE_NO_LICENSE;
         notes.text = $translate.instant('customerPage.licenseInfoNotAvailable');
       }
       rowData.notes = notes;

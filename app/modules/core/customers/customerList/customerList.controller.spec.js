@@ -98,20 +98,6 @@ describe('Controller: CustomerListCtrl', function () {
     it('should initialize', function () {
       expect(controller.activeFilter).toBe('all');
     });
-
-    it('should have correct notes text order after initilization', function () {
-      expect(PartnerService.customerStatus.FREE).toBe(0);
-      expect(PartnerService.customerStatus.TRIAL).toBe(1);
-      expect(PartnerService.customerStatus.ACTIVE).toBe(2);
-      expect(PartnerService.customerStatus.CANCELED).toBe(99);
-      expect(PartnerService.customerStatus.NO_LICENSE).toBe(-1);
-      expect(PartnerService.customerStatus.NOTE_EXPIRED).toBe(0);
-      expect(PartnerService.customerStatus.NOTE_EXPIRE_TODAY).toBe(1);
-      expect(PartnerService.customerStatus.NOTE_NEEDS_SETUP).toBe(3);
-      expect(PartnerService.customerStatus.NOTE_NO_LICENSE).toBe(2);
-      expect(PartnerService.customerStatus.NOTE_CANCELED).toBe(4);
-      expect(PartnerService.customerStatus.NOTE_NOT_EXPIRED).toBe(99);
-    });
   });
 
   describe('grid column display', function () {
