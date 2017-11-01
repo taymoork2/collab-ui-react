@@ -4348,7 +4348,8 @@
     "restApiResponseVal":"Response Value",
     "restApiCustomVar":"Custom Variable",
     "customVariablesAssignmentHelpText":"Select Customer Variables to assign the value of the Responses from the REST API to use in the call flow.",
-    "Variables":"Variables"
+    "Variables":"Variables",
+    "value":"Value"
   },
   "callPark": {
     "code": "CP",

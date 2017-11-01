@@ -14,7 +14,7 @@
     var action;
     var CONSTANTS = {};
     var ui;
-    var count;
+    var initialPageEnterCount;
 
     var dependentCeSessionVariablesList = [];
     var dynamicVariablesList = [];
@@ -351,7 +351,7 @@
         if (!_.isEmpty(action.restApiResponse)) {
           vm.restApiResponse = action.restApiResponse;
         }
-        if (count === 0) {
+        if (initialPageEnterCount === 0) {
           lastSavedVariableList = action.variableSet;
           lastSavedDynList = _.get(vm.menuEntry, 'actions[0].url');
           lastSaveDynamicValueSet = vm.dynamics;
@@ -393,7 +393,7 @@
 
     function stepBack() {
       vm.currentStep--;
-      count++;
+      initialPageEnterCount++;
       populateUiModel();
     }
 
@@ -412,7 +412,7 @@
     function updateDynamicsList(url) {
       var arr = [];
       _.forEach(url, function (dyna) {
-        if (_.isEqual(dyna.isDynamic, true) && dyna.action.eval.value !== '') {
+        if (_.isEqual(dyna.isDynamic, true) && !_.isEmpty(dyna.action.eval.value)) {
           arr.push({ variableName: dyna.action.eval.value, value: '' });
         }
       });
@@ -428,6 +428,7 @@
       vm.dynamics = arr;
       action.dynamics = saveDynamics(vm.dynamics);
     }
+
 
     function isNextDisabled() {
       return (_.isEmpty(vm.url) || areVariableSetsEmpty());
@@ -499,7 +500,7 @@
       $scope.index = aa_index;
       vm.currentStep = 1;
       vm.dynamics = [];
-      count = 0;
+      initialPageEnterCount = 0;
       activate();
     }
 

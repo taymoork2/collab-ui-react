@@ -68,18 +68,18 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     testID: {
       method: 'GET',
       url: 'test URL',
-      testResponse:{
-        preTestActions:[
-           {
-              assignVar:{
-                 variableName:"city",
-                 value:"Gurgaon"
-               }
-           }
+      testResponse: {
+        preTestActions: [
+          {
+            assignVar: {
+              variableName: 'city',
+              value: 'Gurgaon',
+            },
+          },
         ],
-        request:"http://www.mocky.io/v2/59f3a8e8320000fa1da6264f/",
-        response:"Hello"
-     },
+        request: 'http://www.mocky.io/v2/59f3a8e8320000fa1da6264f/',
+        response: 'Hello',
+      },
       responseActions: [{
         assignVar: {
           variableName: 'test var',

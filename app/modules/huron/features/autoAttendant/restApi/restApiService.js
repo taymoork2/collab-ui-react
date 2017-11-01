@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  // TODO: convert this file to TypeScript
+
   angular
     .module('uc.autoattendant')
     .factory('RestApiService', RestApiService);
