@@ -838,22 +838,8 @@ require('./_user-add.scss');
         }
       });
 
-      $scope.hasAdvancedLicenses = !_.isEmpty($scope.advancedLicenses);
-
       populateConf();
       populateConfInvitations();
-    };
-
-    /* TODO: Refactor this functions into MultipleSubscriptions Controller */
-    $scope.selectedSubscriptionHasAdvancedLicenses = function (subscriptionId) {
-      var advancedLicensesInSubscription = _.filter($scope.advancedLicenses, { confLic: [{ billing: subscriptionId }] });
-      if (subscriptionId && subscriptionId !== Config.subscriptionState.trial) {
-        return _.some(advancedLicensesInSubscription, function (service) {
-          return _.has(service, 'site');
-        });
-      } else {
-        return $scope.hasAdvancedLicenses;
-      }
     };
 
     $scope.isSharedMeetingsLicense = function (license) {

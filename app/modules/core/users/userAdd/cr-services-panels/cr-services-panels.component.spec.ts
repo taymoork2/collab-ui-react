@@ -15,6 +15,7 @@ describe('Component: crServicesPanels:', () => {
     this.mock = {};
     this.mock.getConferenceServices = getJSONFixture('core/json/authInfo/confServices.json');
     this.mock.basicLicenses = require('./fake--OnboardCtrl--scope--basicLicenses.json');
+    this.mock.advancedLicenses = require('./fake--OnboardCtrl--scope--advancedLicenses.json');
   });
 
   describe('primary behaviors (controller):', () => {
@@ -216,6 +217,35 @@ describe('Component: crServicesPanels:', () => {
       it('should return true for a subscription that is a Trial and has basic licenses', function () {
         const billingServiceId = 'Trial';
         const result = this.controller.selectedSubscriptionHasBasicLicenses(billingServiceId);
+        expect(result).toBe(true);
+      });
+    });
+
+    describe('selectedSubscriptionHasAdvancedLicenses():', function () {
+      beforeEach(function () {
+        spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
+        spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
+        spyOn(this.Authinfo, 'getConferenceServices').and.returnValue(this.mock.getConferenceServices);
+        this.compileComponent('crServicesPanels', {
+          advancedLicenses: this.mock.advancedLicenses,
+        });
+      });
+
+      it('should return false for a subscription that does not have advanced licenses', function () {
+        const billingServiceId = 'Sub20161222111';
+        const result = this.controller.selectedSubscriptionHasAdvancedLicenses(billingServiceId);
+        expect(result).toBe(false);
+      });
+
+      it('should return true for a subscriptions that have advanced licenses', function () {
+        const billingServiceId = 'SubCt31test20161222111';
+        const result = this.controller.selectedSubscriptionHasAdvancedLicenses(billingServiceId);
+        expect(result).toBe(true);
+      });
+
+      it('should return true for a subscriptions that are Trial and have advanced licenses', function () {
+        const billingServiceId = 'Trial';
+        const result = this.controller.selectedSubscriptionHasAdvancedLicenses(billingServiceId);
         expect(result).toBe(true);
       });
     });

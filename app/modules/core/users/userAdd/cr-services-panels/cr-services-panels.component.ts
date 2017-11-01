@@ -7,6 +7,7 @@ class CrServicesPanelsController implements ng.IComponentController {
   public isCareAndCDCEnabled = false;
   public isCareAndCVCEnabled = false;
   public basicLicenses: any[];
+  public advancedLicenses: any[];
 
   /* @ngInject */
   constructor (
@@ -94,6 +95,18 @@ class CrServicesPanelsController implements ng.IComponentController {
     }
     return !_.isEmpty(this.basicLicenses);
   }
+
+  public selectedSubscriptionHasAdvancedLicenses(subscriptionId: string): boolean {
+    const advancedLicensesInSubscription = _.filter(this.advancedLicenses, {
+      confLic: [{ billing: subscriptionId }],
+    });
+    if (subscriptionId && subscriptionId !== this.Config.subscriptionState.trial) {
+      return _.some(advancedLicensesInSubscription, function (service) {
+        return _.has(service, 'site');
+      });
+    }
+    return !_.isEmpty(this.advancedLicenses);
+  }
 }
 
 export class CrServicesPanelsComponent implements ng.IComponentOptions {
@@ -112,7 +125,6 @@ export class CrServicesPanelsComponent implements ng.IComponentOptions {
     determineLicenseType: '<',
     generateLicenseTooltip: '<',
     generateLicenseTranslation: '<',
-    selectedSubscriptionHasAdvancedLicenses: '<',
     advancedLicenses: '<',
     updateCmrLicensesForMetric: '<',
     communicationFeatures: '<',

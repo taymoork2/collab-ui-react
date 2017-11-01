@@ -1338,47 +1338,6 @@ describe('OnboardCtrl: Ctrl', function () {
     });
   });
 
-  describe('Tests for hasAdvancedLicenses functions: ', function () {
-    beforeEach(function () {
-      spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
-      spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
-      spyOn(this.Authinfo, 'getConferenceServices').and.returnValue(this.mock.getConferenceServices);
-    });
-    beforeEach(initController);
-
-    it('The hasAdvancedLicenses() should return true for Conference Services data that have advanced licenses', function () {
-      var result = this.$scope.hasAdvancedLicenses;
-      expect(result).toEqual(true);
-    });
-  });
-
-  describe('selectedSubscriptionHasAdvancedLicenses function ', function () {
-    beforeEach(function () {
-      spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
-      spyOn(this.Authinfo, 'hasAccount').and.returnValue(true);
-      spyOn(this.Authinfo, 'getConferenceServices').and.returnValue(this.mock.getConferenceServices);
-    });
-    beforeEach(initController);
-
-    it('should return false for a subscription that does not have advanced licenses', function () {
-      var billingServiceId = 'Sub20161222111';
-      var result = this.$scope.selectedSubscriptionHasAdvancedLicenses(billingServiceId);
-      expect(result).toEqual(false);
-    });
-
-    it('should return true for a subscriptions that have advanced licenses', function () {
-      var billingServiceId = 'SubCt31test20161222111';
-      var result = this.$scope.selectedSubscriptionHasAdvancedLicenses(billingServiceId);
-      expect(result).toEqual(true);
-    });
-
-    it('should return true for a subscriptions that are Trial and have advanced licenses', function () {
-      var billingServiceId = 'Trial';
-      var result = this.$scope.selectedSubscriptionHasAdvancedLicenses(billingServiceId);
-      expect(result).toEqual(true);
-    });
-  });
-
   describe('fetch different siteUrl cases ', function () {
     beforeEach(function () {
       spyOn(this.Authinfo, 'isInitialized').and.returnValue(true);
