@@ -1300,7 +1300,7 @@
           .state('user-overview.communication.voicemail', {
             views: {
               'side-panel-container@user-overview': {
-                template: '<uc-voicemail  owner-id="$resolve.ownerId"  ></uc-voicemail>',
+                template: '<uc-user-voicemail  owner-id="$resolve.ownerId"></uc-user-voicemail>',
               },
             },
             params: {
