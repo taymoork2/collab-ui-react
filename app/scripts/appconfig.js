@@ -4034,6 +4034,27 @@
               },
             },
           })
+          .state('context-cluster', {
+            abstract: true,
+            url: '/services/cluster/context/:id',
+            parent: 'main',
+            template: '<hybrid-services-cluster-page cluster-id="$resolve.id" back-state="$resolve.backState"></hybrid-services-cluster-page>',
+            params: {
+              backState: null,
+            },
+            resolve: {
+              id: /* @ngInject */ function ($stateParams) {
+                return $stateParams.id;
+              },
+              backState: /* @ngInject */ function ($stateParams) {
+                return $stateParams.backState;
+              },
+            },
+          })
+          .state('context-cluster.nodes', {
+            url: '/nodes',
+            template: '<hybrid-services-nodes-page cluster-id="$resolve.id"></hybrid-services-nodes-page>',
+          })
           .state('context-fields', {
             url: '/services/context/fields',
             parent: 'context',
