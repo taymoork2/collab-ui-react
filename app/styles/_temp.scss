@@ -693,7 +693,7 @@ a:active.ftwNavLink {
 .header-text {
   opacity: 1;
   font-size: 32px;
-  font-family: 'CiscoSansTT Extra Light', 'Cisco_Toolkit_Icons';
+  font-family: 'CiscoSansTT Extra Light', $icon-font-name;
   color: #444;
   -webkit-font-smoothing: antialiased;
 }

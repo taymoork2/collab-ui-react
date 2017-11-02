@@ -1,5 +1,7 @@
 @import '~collab-ui/scss/settings/colors';
 @import '~collab-ui/scss/settings/page';
+@import '~collab-ui/scss/settings/fonts';
+@import '~collab-ui-icons/scss/variables';
 
 .gemini-side-panel {
   .feature-arrow {
@@ -56,7 +58,7 @@
 
       .session-type-list li {
         overflow: hidden;
-        font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-family: $brand-font-light;
         span {
           float: right;
         }
@@ -358,7 +360,7 @@
             span {
               color: $color-primary-base;
               font-size: 0.575rem;
-              font-family: "Cisco_Toolkit_Icons";
+              font-family: $icon-font-name;
             }
           }
         }
@@ -366,7 +368,7 @@
         span {
           font-size: 14px;
           color: $gray-base;
-          font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+          font-family: $brand-font-light;
         }
       }
     }
@@ -432,7 +434,7 @@
     font-size: 0.75rem;
 
     &::before {
-      font-family: "Cisco_Toolkit_Icons";
+      font-family: $icon-font-name;
       color: $color-alerts-base;
       //content: '\E0B0'; //TODO  same about.
       content: '\E0BA';
