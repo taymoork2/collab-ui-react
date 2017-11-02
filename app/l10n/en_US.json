@@ -1899,6 +1899,20 @@
       "tooLongError": "Routing Prefix can contain a maximum of seven digits.",
       "required": "Routing Prefix is required."
     },
+    "routingPrefixLength": {
+      "title": "Routing Prefix Length",
+      "desc1": "Specify the total number of digits to be used to connect with users at other locations.",
+      "desc2": "If you prefer not to use a prefix, choose 0.",
+      "increaseWarning": "Changing the routing prefix length will change all internal numbers.  All phones will restart automatically.",
+      "modal": {
+        "title": "Choose Routing Prefix",
+        "validation": "Routing prefix must contain {{prefixLength}} digits.",
+        "description": "You have chosen a longer routing prefix length.  Please specify digit(s) to prepend to routing prefix.",
+        "saveSuccess": "Routing prefix length saved successfully.",
+        "saveFail": "Failed to update routing prefix length.",
+        "example": "Example: Routing prefix {{currentPrefix}} will change to {{prefix}}{{currentPrefix}}"
+      }
+    },
     "externalTransfer": {
       "title": "External Call Transfer/Conference",
       "desc": "Choose whether this user is allowed to do external call transfers and conferences. This will override global settings.",
