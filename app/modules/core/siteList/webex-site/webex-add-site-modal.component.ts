@@ -22,9 +22,8 @@ class WebexAddSiteModalController implements ng.IComponentController {
   public sitesArray: IWebExSite[] = [];
   public conferenceLicensesInSubscription: IConferenceLicense[];
   public audioPackage?: string;
-  public audioPartnerName = '';
+  public audioPartnerName = null;
   public subscriptionList: string[] = [];
-
 
   // parameters received
   public singleStep?: number;
@@ -226,6 +225,7 @@ class WebexAddSiteModalController implements ng.IComponentController {
       transferCode: this.transferCode,
       ccaspSubscriptionId: this.ccaspSubscriptionId,
       asIs: false,
+      siteManagementAction: 'ADD',
     });
     return webexLicensesPayload;
   }
