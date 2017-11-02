@@ -5,7 +5,9 @@
     .module('Mediafusion')
     .service('MediaReportsService', MediaReportsService);
 
-  function MediaReportsService($http, $translate, Authinfo, Notification, UrlConfig, chartColors, InsightGraphService) {
+  var ChartColors = require('modules/core/config/chartColors').ChartColors;
+
+  function MediaReportsService($http, $translate, Authinfo, Notification, UrlConfig, InsightGraphService) {
     var vm = this;
 
     vm.urlBase = UrlConfig.getAthenaServiceUrl() + '/organizations/' + Authinfo.getOrgId();
@@ -55,16 +57,16 @@
     function adjustCallVolumeData(activeData, returnData, startTime, endTime) {
       var returnDataArray = [];
       var graphItem = {
-        colorOne: chartColors.primaryBase,
-        colorTwo: chartColors.attentionBase,
+        colorOne: ChartColors.primaryBase,
+        colorTwo: ChartColors.attentionBase,
         balloon: true,
         call_reject: 0,
         active_calls: 0,
         timestamp: null,
       };
       var startDate = {
-        colorOne: chartColors.primaryBase,
-        colorTwo: chartColors.attentionBase,
+        colorOne: ChartColors.primaryBase,
+        colorTwo: ChartColors.attentionBase,
         call_reject: 0,
         active_calls: 0,
         timestamp: startTime,
@@ -78,8 +80,8 @@
         returnDataArray.push(tmpItem);
       }
       var endDate = {
-        colorOne: chartColors.primaryBase,
-        colorTwo: chartColors.attentionBase,
+        colorOne: ChartColors.primaryBase,
+        colorTwo: ChartColors.attentionBase,
         timestamp: endTime,
       };
       returnDataArray.push(endDate);

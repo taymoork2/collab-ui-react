@@ -10,7 +10,6 @@ export default angular
     'core.notifications',
     'core.urlconfig',
     featureToggleModule,
-    require('modules/core/config/chartColors').default,
   ])
   .service('CommonGraphService', CommonGraphService)
   .service('CommonReportService', CommonReportService)

@@ -1,5 +1,7 @@
 'use strict';
 
+var ChartColors = require('modules/core/config/chartColors').ChartColors;
+
 describe('Controller: CdrOverviewCtrl', function () {
   beforeEach(angular.mock.module('uc.cdrlogsupport'));
   beforeEach(angular.mock.module('Huron'));
@@ -11,7 +13,7 @@ describe('Controller: CdrOverviewCtrl', function () {
   var remoteSessionID = '46d23e9a00105000a00074a02fc0a7fe';
 
   var tableOptions = {
-    cursorcolor: '#aaa',
+    cursorcolor: ChartColors.gray,
     cursorborder: '0px',
     cursorwidth: '7px',
     railpadding: {

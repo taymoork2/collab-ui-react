@@ -2,8 +2,11 @@
   'use strict';
 
   angular.module('Mediafusion').service('DummyMetricsReportService', DummyMetricsReportService);
+
+  var ChartColors = require('modules/core/config/chartColors').ChartColors;
+
   /* @ngInject */
-  function DummyMetricsReportService($translate, chartColors) {
+  function DummyMetricsReportService($translate) {
     var vm = this;
     vm.average_utilzation = $translate.instant('mediaFusion.metrics.avgutilization');
     var timeFormat = 'YYYY-MM-DDTHH:mm:ss';
@@ -19,7 +22,7 @@
       var start;
       var end;
       var duration;
-      var color = chartColors.grayLightTwo;
+      var color = ChartColors.grayLightTwo;
       var period;
       if (filter.value === 0) {
         end = moment().utc().format(timeFormat);
@@ -90,8 +93,8 @@
             call_reject: Math.floor((Math.random() * 1) + 1),
             active_calls: Math.floor((Math.random() * 1) + 1),
             balloon: false,
-            colorOne: chartColors.grayLightThree,
-            colorTwo: chartColors.grayLightTwo,
+            colorOne: ChartColors.grayLightThree,
+            colorTwo: ChartColors.grayLightTwo,
           });
         }
       } else if (filter.value === 1) {
@@ -101,8 +104,8 @@
             call_reject: Math.floor((Math.random() * 1) + 1),
             active_calls: Math.floor((Math.random() * 1) + 1),
             balloon: false,
-            colorOne: chartColors.grayLightThree,
-            colorTwo: chartColors.grayLightTwo,
+            colorOne: ChartColors.grayLightThree,
+            colorTwo: ChartColors.grayLightTwo,
           });
         }
       } else if (filter.value === 2) {
@@ -112,8 +115,8 @@
             call_reject: Math.floor((Math.random() * 1) + 1),
             active_calls: Math.floor((Math.random() * 1) + 1),
             balloon: false,
-            colorOne: chartColors.grayLightThree,
-            colorTwo: chartColors.grayLightTwo,
+            colorOne: ChartColors.grayLightThree,
+            colorTwo: ChartColors.grayLightTwo,
           });
         }
       } else {
@@ -123,8 +126,8 @@
             call_reject: Math.floor((Math.random() * 1) + 1),
             active_calls: Math.floor((Math.random() * 1) + 1),
             balloon: false,
-            colorOne: chartColors.grayLightThree,
-            colorTwo: chartColors.grayLightTwo,
+            colorOne: ChartColors.grayLightThree,
+            colorTwo: ChartColors.grayLightTwo,
           });
         }
       }
@@ -175,7 +178,7 @@
         title: vm.average_utilzation,
         valueField: vm.average_utilzation,
         dashLength: 4,
-        lineColor: chartColors.grayLightTwo,
+        lineColor: ChartColors.grayLightTwo,
         showBalloon: false,
       });
       return dummyGraph;

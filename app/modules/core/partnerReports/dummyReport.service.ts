@@ -1,4 +1,5 @@
 import { ReportConstants } from './commonReportServices/reportConstants.service';
+import { ChartColors } from 'modules/core/config/chartColors';
 import {
   IActiveUserData,
   ICallMetricsData,
@@ -14,7 +15,6 @@ export class DummyReportService {
   constructor(
     private $translate: ng.translate.ITranslateService,
     private ReportConstants: ReportConstants,
-    private chartColors,
   ) {}
 
   private getTimeAndOffset(filter: ITimespan, index) {
@@ -87,9 +87,9 @@ export class DummyReportService {
       customerName: name,
       percentage: 85 - (index * 10),
       overallPopulation: 50,
-      color: this.chartColors.grayLightFour,
+      color: ChartColors.grayLightFour,
       balloon: false,
-      labelColorField: this.chartColors.grayLightTwo,
+      labelColorField: ChartColors.grayLightTwo,
     };
   }
 
@@ -135,11 +135,11 @@ export class DummyReportService {
       dataProvider: [{
         label: this.$translate.instant('callMetrics.callConditionFail'),
         value: 200,
-        color: this.chartColors.grayLightThree,
+        color: ChartColors.grayLightThree,
       }, {
         label: this.$translate.instant('callMetrics.callConditionSuccessful'),
         value: 800,
-        color: this.chartColors.grayLightFour,
+        color: ChartColors.grayLightFour,
       }],
       labelData: {
         numTotalCalls: 1000,

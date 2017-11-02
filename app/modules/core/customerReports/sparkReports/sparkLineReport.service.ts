@@ -1,5 +1,6 @@
 import { CommonReportService } from '../../partnerReports/commonReportServices/commonReport.service';
 import { ReportConstants } from '../../partnerReports/commonReportServices/reportConstants.service';
+import { ChartColors } from 'modules/core/config/chartColors';
 import {
   IActiveTableBase,
   IActiveUserData,
@@ -35,7 +36,6 @@ export class SparkLineReportService {
     private $q: ng.IQService,
     private CommonReportService: CommonReportService,
     private ReportConstants: ReportConstants,
-    private chartColors,
   ) {}
 
   // Active User Data
@@ -302,12 +302,12 @@ export class SparkLineReportService {
         callCondition: this.$translate.instant('callMetrics.audioCalls'),
         numCalls: 0,
         percentage: 0,
-        color: this.chartColors.attentionBase,
+        color: ChartColors.attentionBase,
       }, {
         callCondition: this.$translate.instant('callMetrics.videoCalls'),
         numCalls: 0,
         percentage: 0,
-        color: this.chartColors.primaryBase,
+        color: ChartColors.primaryBase,
       }],
       displayData: undefined,
       dummy: false,

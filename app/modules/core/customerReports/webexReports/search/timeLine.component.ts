@@ -1,3 +1,4 @@
+import { ChartColors } from 'modules/core/config/chartColors';
 import './_timeline.scss';
 import * as d3 from 'd3';
 import * as moment from 'moment';
@@ -52,7 +53,7 @@ class TimeLine implements ng.IComponentController {
 
   private initParameters(): void {
     const width = this.$element.find('.timelineSvg').width();
-    this.colorArr = ['#32c655', '#f0a309', '#e74a3e', '#AEAEAF'];
+    this.colorArr = ['#32c655', '#f0a309', '#e74a3e', ChartColors.grayLightOne];
     this.option.width = width ? width : this.option.width;
     this.data.endTime = this.sourceData.overview.endTime;
     this.data.startTime = this.sourceData.overview.startTime;

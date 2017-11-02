@@ -2,8 +2,11 @@
   'use strict';
 
   angular.module('Mediafusion').service('MetricsGraphService', MetricsGraphService);
+
+  var ChartColors = require('modules/core/config/chartColors').ChartColors;
+
   /* @ngInject */
-  function MetricsGraphService($translate, CommonMetricsGraphService, chartColors, $window) {
+  function MetricsGraphService($translate, CommonMetricsGraphService, $window) {
     // Keys for base variables in CommonMetricsGraphService
     var COLUMN = 'column';
     var AXIS = 'axis';
@@ -40,8 +43,8 @@
     var availabilityStatus = $translate.instant('mediaFusion.metrics.availabilityStatus');
     var availabilityOfHost = $translate.instant('mediaFusion.metrics.availabilityOfHost');
     var clusterTitle = $translate.instant('mediaFusion.metrics.clusterTitle');
-    var availabilityLegendCluster = [{ title: availableTitle, color: chartColors.metricDarkGreen }, { title: unavailableTitle, color: chartColors.negativeDarker }];
-    var availabilityLegendAllcluster = [{ title: availableTitle, color: chartColors.metricDarkGreen }, { title: unavailableTitle, color: chartColors.negativeDarker }, { title: partialTitle, color: chartColors.attentionBase }];
+    var availabilityLegendCluster = [{ title: availableTitle, color: ChartColors.metricDarkGreen }, { title: unavailableTitle, color: ChartColors.negativeDarker }];
+    var availabilityLegendAllcluster = [{ title: availableTitle, color: ChartColors.metricDarkGreen }, { title: unavailableTitle, color: ChartColors.negativeDarker }, { title: partialTitle, color: ChartColors.attentionBase }];
 
     return {
       setUtilizationGraph: setUtilizationGraph,
@@ -287,7 +290,7 @@
       if (data === null || data === 'undefined' || data.length === 0) {
         return undefined;
       } else if (utilizationChart !== null && !_.isUndefined(utilizationChart)) {
-        if (data[0].colorTwo === chartColors.grayLightTwo) {
+        if (data[0].colorTwo === ChartColors.grayLightTwo) {
           isDummy = true;
         }
         var startDuration = 1;
@@ -312,7 +315,7 @@
         utilizationChart.validateData();
         return utilizationChart;
       } else {
-        if (data[0].colorTwo === chartColors.grayLightTwo) {
+        if (data[0].colorTwo === ChartColors.grayLightTwo) {
           isDummy = true;
         }
 
@@ -325,7 +328,7 @@
         utilizationChart.chartCursor.valueLineEnabled = true;
         utilizationChart.chartCursor.valueBalloonsEnabled = true;
         utilizationChart.chartCursor.oneBalloonOnly = true;
-        utilizationChart.chartCursor.balloonColor = chartColors.grayLightTwo;
+        utilizationChart.chartCursor.balloonColor = ChartColors.grayLightTwo;
         if (isDummy) {
           utilizationChart.chartCursor.valueLineBalloonEnabled = false;
           utilizationChart.chartCursor.valueLineEnabled = false;

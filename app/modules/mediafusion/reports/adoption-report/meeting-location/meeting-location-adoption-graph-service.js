@@ -2,8 +2,11 @@
   'use strict';
 
   angular.module('Mediafusion').service('MeetingLocationAdoptionGraphService', MeetingLocationAdoptionGraphService);
+
+  var ChartColors = require('modules/core/config/chartColors').ChartColors;
+
   /* @ngInject */
-  function MeetingLocationAdoptionGraphService(CommonReportsGraphService, chartColors, $translate, $rootScope) {
+  function MeetingLocationAdoptionGraphService(CommonReportsGraphService, $translate, $rootScope) {
     var vm = this;
     vm.meetingLocationdiv = 'meetingLocationdiv';
     vm.exportDiv = 'meeting-location-div';
@@ -53,7 +56,7 @@
         meetingLocationChart.chartCursor.valueLineEnabled = true;
         meetingLocationChart.chartCursor.categoryBalloonEnabled = true;
         meetingLocationChart.chartCursor.oneBalloonOnly = true;
-        meetingLocationChart.chartCursor.balloonColor = chartColors.grayLightTwo;
+        meetingLocationChart.chartCursor.balloonColor = ChartColors.grayLightTwo;
         meetingLocationChart.chartCursor.valueBalloonsEnabled = true;
         if (isDummy) {
           meetingLocationChart.chartCursor.valueLineBalloonEnabled = false;
@@ -160,8 +163,8 @@
 
       var chartData = CommonReportsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames, vm.exportDiv));
       chartData.legend = CommonReportsGraphService.getBaseVariable(vm.LEGEND);
-      if (chartData.graphs[0].lineColor == '#D7D7D8') {
-        chartData.legend.color = '#343537';
+      if (chartData.graphs[0].lineColor === ChartColors.grayLightTwo) {
+        chartData.legend.color = ChartColors.grayDarkThree;
       }
       chartData.legend.labelText = '[[title]]';
       chartData.legend.useGraphSettings = true;

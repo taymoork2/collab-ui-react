@@ -2,8 +2,11 @@
   'use strict';
 
   angular.module('Mediafusion').service('ClientTypeAdoptionGraphService', ClientTypeAdoptionGraphService);
+
+  var ChartColors = require('modules/core/config/chartColors').ChartColors;
+
   /* @ngInject */
-  function ClientTypeAdoptionGraphService(CommonReportsGraphService, chartColors, $translate, $rootScope) {
+  function ClientTypeAdoptionGraphService(CommonReportsGraphService, $translate, $rootScope) {
     var vm = this;
     vm.clientTypediv = 'clientTypediv';
     vm.exportDiv = 'client-type-div';
@@ -66,7 +69,7 @@
         clientTypeChart.chartCursor.valueLineEnabled = true;
         clientTypeChart.chartCursor.categoryBalloonEnabled = true;
         clientTypeChart.chartCursor.oneBalloonOnly = true;
-        clientTypeChart.chartCursor.balloonColor = chartColors.grayLightTwo;
+        clientTypeChart.chartCursor.balloonColor = ChartColors.grayLightTwo;
         clientTypeChart.chartCursor.valueBalloonsEnabled = true;
         if (isDummy) {
           clientTypeChart.chartCursor.valueLineBalloonEnabled = false;
@@ -166,8 +169,8 @@
 
       var chartData = CommonReportsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames, vm.exportDiv));
       chartData.legend = CommonReportsGraphService.getBaseVariable(vm.LEGEND);
-      if (chartData.graphs[0].lineColor == '#D7D7D8') {
-        chartData.legend.color = '#343537';
+      if (chartData.graphs[0].lineColor === ChartColors.grayLightTwo) {
+        chartData.legend.color = ChartColors.grayDarkThree;
       }
       chartData.legend.labelText = '[[title]]';
       chartData.legend.useGraphSettings = true;

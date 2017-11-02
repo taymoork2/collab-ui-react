@@ -1,8 +1,9 @@
 'use strict';
 
+var ChartColors = require('modules/core/config/chartColors').ChartColors;
+
 describe('Service: Metrics Graph Service', function () {
   var MetricsGraphService;
-  var chartColors;
   var callVolumeChart, availabilityChart;
   var validateService = {
     validate: function () {},
@@ -15,9 +16,8 @@ describe('Service: Metrics Graph Service', function () {
 
   beforeEach(angular.mock.module('Mediafusion'));
 
-  beforeEach(inject(function (_MetricsGraphService_, _chartColors_) {
+  beforeEach(inject(function (_MetricsGraphService_) {
     MetricsGraphService = _MetricsGraphService_;
-    chartColors = _chartColors_;
 
     spyOn(validateService, 'validate');
   }));
@@ -70,7 +70,7 @@ describe('Service: Metrics Graph Service', function () {
   it('setCallVolumeGraph should return an amchart object successfully', function () {
     var data = [{
       baloon: 'true',
-      colorTwo: chartColors.grayLightTwo,
+      colorTwo: ChartColors.grayLightTwo,
     }];
     var callVolumeChart = {
       dataProvider: [],
@@ -83,7 +83,7 @@ describe('Service: Metrics Graph Service', function () {
     expect(setCallVolumeGraphResponse.dataProvider).toEqual(
       [{
         baloon: 'true',
-        colorTwo: chartColors.grayLightTwo,
+        colorTwo: ChartColors.grayLightTwo,
       }]);
   });
   it('setCallVolumeGraph should return an amchart object successfully when callVolumeChart is unavailable', function () {
@@ -102,7 +102,7 @@ describe('Service: Metrics Graph Service', function () {
   it('setUtilizationGraph should return an amchart object successfully', function () {
     var data = [{
       baloon: 'false',
-      colorTwo: chartColors.grayLightTwo,
+      colorTwo: ChartColors.grayLightTwo,
     }];
     var graphs = [{
       title: 'graphTitle',
@@ -133,13 +133,13 @@ describe('Service: Metrics Graph Service', function () {
     expect(setUtilizationGraphResponse.dataProvider).toEqual(
       [{
         baloon: 'false',
-        colorTwo: chartColors.grayLightTwo,
+        colorTwo: ChartColors.grayLightTwo,
       }]);
   });
   it('setUtilizationGraph should return an amchart object successfully when utilizationChart is unavailable', function () {
     var data = [{
       baloon: 'false',
-      colorTwo: chartColors.grayLightTwo,
+      colorTwo: ChartColors.grayLightTwo,
     }];
     var graphs = [{
       title: 'graphTitle',
@@ -155,7 +155,7 @@ describe('Service: Metrics Graph Service', function () {
     expect(setUtilizationGraphResponse.dataProvider).toEqual(
       [{
         baloon: 'false',
-        colorTwo: chartColors.grayLightTwo,
+        colorTwo: ChartColors.grayLightTwo,
       }]);
   });
   xdescribe('Active Users graph services', function () {

@@ -40,7 +40,6 @@ export class ReportService {
     private $translate: ng.translate.ITranslateService,
     private $q: ng.IQService,
     private CommonReportService: CommonReportService,
-    private chartColors: ChartColors,
     private Notification: Notification,
     private ReportConstants: ReportConstants,
     private PartnerService,
@@ -101,7 +100,7 @@ export class ReportService {
       percentage: undefined,
       overallPopulation: this.overallPopulation,
       color: undefined,
-      labelColorField: this.chartColors.grayDarkThree,
+      labelColorField: ChartColors.grayDarkThree,
       balloon: true,
     };
     let totalActive = 0;
@@ -169,7 +168,7 @@ export class ReportService {
         overallPopulation: this.overallPopulation,
         balloon: true,
         color: undefined,
-        labelColorField: this.chartColors.grayDarkThree,
+        labelColorField: ChartColors.grayDarkThree,
       };
       const orgData: IActiveUserCustomerData = this.activeUserCustomerGraphs[org.value];
 
@@ -395,11 +394,11 @@ export class ReportService {
           dataProvider: [{
             label: this.$translate.instant('callMetrics.callConditionFail'),
             value: 0,
-            color: this.chartColors.grayDarkThree,
+            color: ChartColors.grayDarkThree,
           }, {
             label: this.$translate.instant('callMetrics.callConditionSuccessful'),
             value: 0,
-            color: this.chartColors.peopleLight,
+            color: ChartColors.peopleLight,
           }],
           labelData: {
             numTotalCalls: 0,
