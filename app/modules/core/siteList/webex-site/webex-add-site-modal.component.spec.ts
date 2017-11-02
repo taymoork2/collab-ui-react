@@ -27,7 +27,6 @@ describe('Component: WebexAddSiteModalComponent', function () {
     spyOn(this.SetupWizardService, 'getConferenceLicensesBySubscriptionId').and.returnValue(confServicesSub100448);
   }
 
-
   describe('When first opened', () => {
     it('should go straight to transfer site screen if there is only one subscription', function () {
       const licenses = _.filter(confServices, { billingServiceId: 'Sub100448' });
@@ -84,10 +83,41 @@ describe('Component: WebexAddSiteModalComponent', function () {
           centerType: '',
         },
       ];
-      expect(this.controller.subscriptionList).toEqual(['Sub100448', 'Sub100449']);
+      expect(this.controller.subscriptionList).toEqual([{ id: 'Sub100448', isPending: false } , { id: 'Sub100449', isPending: false }]);
       expect(this.controller.currentSubscriptionId).toBe('Sub100448');
       expect(this.controller.sitesArray).toEqual(expectedSites_48);
       expect(this.controller.audioPackage).toBe('CCASP');
+    });
+  });
+
+  describe('Call back functions handling', () => {
+    it('should on change subscription callback change the subscription id and repopulateInfo with new subscription id', function () {
+      this.controller.currentSubscriptionId = '123';
+      this.controller.changeCurrentSubscription('345');
+      expect(this.controller.currentSubscriptionId).toBe('345');
+      expect(this.SetupWizardService.getConferenceLicensesBySubscriptionId).toHaveBeenCalledWith('345');
+    });
+
+    it('should on tranfer site callback add the site to the sites array and enable the next button  and go to add sites if last argument is true', function () {
+      const sites = [{
+        siteUrl: 'abc.dmz.webex.com',
+        timezone: '1',
+      }];
+      this.controller.currentStep = 1;
+      const numberOfSites = this.controller.sitesArray.length;
+      this.controller.addTransferredSites(sites, '123', true);
+      expect(this.controller.sitesArray).toContain(jasmine.objectContaining({ siteUrl: 'abc.dmz.webex.com' }));
+      expect(this.controller.sitesArray.length).toBe(numberOfSites + 1);
+      expect(this.controller.currentStep).toBe(2);
+      expect(this.controller.transferCode).toBe('123');
+    });
+
+    it('should on tranfer site callback add the site to the sites array and enable the next button  and go to add sites if last argument is true', function () {
+      this.controller.currentStep = 1;
+      const numberOfSites = this.controller.sitesArray.length;
+      this.controller.addTransferredSites(null, null, false);
+      expect(this.controller.sitesArray.length).toBe(numberOfSites);
+      expect(this.controller.transferCode).toBeUndefined();
     });
   });
 });

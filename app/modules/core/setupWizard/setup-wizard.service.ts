@@ -159,6 +159,22 @@ export class SetupWizardService {
     return webexLicenses;
   }
 
+  public getSubscriptionListWithStatus(): { id: string; isPending: boolean }[] {
+    const list = _.chain(this.getNonTrialWebexLicenses())
+      .uniqBy('billingServiceId')
+      .map((sub) => {
+        return { id: sub.billingServiceId, isPending: this.isSubscriptionPending(sub.billingServiceId) };
+      })
+      .orderBy(['isPending']['asc'])
+      .value();
+    return list;
+  }
+
+  public isSubscriptionPending(subscriptionId: string): boolean {
+    const subscription = _.find(this.Authinfo.getSubscriptions(), { externalSubscriptionId: subscriptionId });
+    return _.get(subscription, 'pendingServiceOrderUUID', false) ? true : false;
+  }
+
   public getWillNotProvision(): boolean {
     return this.willNotProvision;
   }

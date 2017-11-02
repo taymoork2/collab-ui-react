@@ -50,6 +50,10 @@ describe('Service: SetupWizard Service', function () {
     return result;
   }
 
+  function getSubscriptionsFromCustomers(accounts) {
+    return _.without(_.flattenDeep(_.map(accounts, 'subscriptions')), undefined);
+  }
+
   describe('populatePendingSubscriptions()', () => {
     describe('with multiple subscriptions', () => {
       beforeEach(function () {
@@ -264,15 +268,32 @@ describe('Service: SetupWizard Service', function () {
       };
       const url = `${this.UrlConfig.getAdminServiceUrl()}subscriptions/site/verifytransfercode`;
       this.SetupWizardService.validateTransferCodeBySubscriptionId('www.somesite', '123', 's_id123')
-      .then( result => {
-        expect(result.data.siteList).toEqual(['www.somesite']);
-        expect(result.status).toBe(200);
-      });
+        .then(result => {
+          expect(result.data.siteList).toEqual(['www.somesite']);
+          expect(result.status).toBe(200);
+        });
       this.$httpBackend.expectPOST(url, payload)
         .respond(200, {
           siteList: ['www.somesite'],
         });
       this.$httpBackend.flush();
+    });
+  });
+
+  describe('getting the subscriptions status correctly', function () {
+    beforeEach(function() {
+      this.Authinfo.getConferenceServices.and.returnValue(getLicensesFromCustomers(this.webexTrialMixed['customers']));
+      this.Authinfo.getSubscriptions.and.returnValue(getSubscriptionsFromCustomers(this.webexTrialMixed['customers']));
+    });
+
+    it('should return true if subscription has \'pendingServiceOrderUUID\'', function () {
+      const result = this.SetupWizardService.isSubscriptionPending('Sub110871');
+      expect(result).toBe(true);
+    });
+
+    it('should have getSubscriptionListWithStatus() correctly return the billingServiceIds with their pending status', function () {
+      const result = this.SetupWizardService.getSubscriptionListWithStatus();
+      expect(result).toEqual([{ id: 'Sub110871', isPending: true }]);
     });
   });
 });

@@ -1,8 +1,22 @@
-<div ng-form="$ctrl.subscriptionForm" >
-      <div class="cs-input-group col-md-6">
-        <label translate="firstTimeWizard.selectSubscription"></label>
-        <cs-select id="currentSubscription" name="currentSubscription" ng-model="$ctrl.currentSubscription" options="$ctrl.subscriptionList"
-          placeholder="$ctrl.selectTimeZonePlaceholder" on-change-fn="$ctrl.setSubscription()">
-        </cs-select>
+<div ng-form="$ctrl.subscriptionForm">
+  <div class="cs-input-group col-md-6"
+    ng-if="$ctrl.subscriptions.length > 1">
+    <label translate="firstTimeWizard.selectSubscription"></label>
+    <cs-select id="currentSubscription"
+      name="currentSubscription"
+      ng-model="$ctrl.currentSubscription"
+      options="$ctrl.subscriptions"
+      labelfield="id"
+      placeholder="$ctrl.selectTimeZonePlaceholder"
+      on-change-fn="$ctrl.setSubscription()"> </cs-select>
+    <div class="error"
+      ng-if="$ctrl.isPending">
+      <p translate="webexSiteManagement.addSiteSelectPending"
+        translate-value-onclick="$ctrl.goToMeetingSetup()"></p>
     </div>
+  </div>
+  <div ng-if="$ctrl.isPending && $ctrl.subscriptions.length == 1">
+    <p translate="webexSiteManagement.addSiteRejectPending"
+      translate-value-onclick="$ctrl.goToMeetingSetup()"></p>
+  </div>
 </div>

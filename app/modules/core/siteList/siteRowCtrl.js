@@ -44,29 +44,31 @@ require('./_site-list.scss');
     };
 
     vm.redistributeLicenses = function (entity) {
-      if (!vm.isOnlySiteInSubscription(entity)) {
+      if (vm.canModify(entity)) {
         $state.go('site-list-distribute-licenses', { subscriptionId: entity.billingServiceId });
       } else {
-        ModalService.open({
-          title: $translate.instant('webexSiteManagement.redistributeRejectModalTitle'),
-          message: $translate.instant('webexSiteManagement.redistributeRejectModalBody'),
-          dismiss: $translate.instant('common.dismiss'),
-        });
+        var isOnlySite = isOnlySiteInSubscription(entity);
+        var errorMessage = isOnlySite ? 'webexSiteManagement.redistributeRejectModalBodyOnlySite' : 'webexSiteManagement.redistributeRejectModalBodyPending';
+        showRejectionModal(isOnlySite, 'webexSiteManagement.redistributeRejectModalTitle', errorMessage);
       }
     };
 
-    vm.isOnlySiteInSubscription = function (entity) {
-      if (!entity.billingServiceId) {
-        return true;
+    vm.addSite = function () {
+      if (WebExSiteRowService.hasNonPendingSubscriptions()) {
+        $state.go('site-list-add');
+      } else {
+        showRejectionModal(false, 'webexSiteManagement.addSiteRejectModalTitle', 'webexSiteManagement.addSiteRejectPending');
       }
-      var siteUrl = _.keys(WebExSiteRowService.getLicensesInSubscriptionGroupedBySites(entity.billingServiceId, entity.siteUrl));
-      return siteUrl.length === 1;
+    };
+
+    vm.canModify = function (entity) {
+      return !isOnlySiteInSubscription(entity) && !WebExSiteRowService.isSubscriptionPending(entity.billingServiceId);
     };
 
     vm.deleteSite = function (entity) {
       var subscriptionId = entity.billingServiceId;
       var siteUrl = entity.siteUrl;
-      if (!vm.isOnlySiteInSubscription(entity)) {
+      if (vm.canModify(entity)) {
         $modal.open({
           type: 'dialog',
           template: require('./siteDeleteConfirmModal.tpl.html'),
@@ -79,14 +81,11 @@ require('./_site-list.scss');
           deleteSite(subscriptionId, siteUrl);
         });
       } else {
-        ModalService.open({
-          title: $translate.instant('webexSiteManagement.deleteSiteRejectModalTitle'),
-          message: $translate.instant('webexSiteManagement.deleteSiteRejectModalBody'),
-          dismiss: $translate.instant('common.dismiss'),
-        });
+        var isOnlySite = isOnlySiteInSubscription(entity);
+        var errorMessage = isOnlySite ? 'webexSiteManagement.deleteSiteRejectModalBodyOnlySite' : 'webexSiteManagement.deleteSiteRejectModalBodyPending';
+        showRejectionModal(isOnlySite, 'webexSiteManagement.deleteSiteRejectModalTitle', errorMessage);
       }
     };
-
     vm.showGridData = true;
 
     // kill the csv poll when navigating away from the site list page
@@ -104,6 +103,14 @@ require('./_site-list.scss');
       } else { //open modal to redistribute licenses
         $state.go('site-list-delete', { subscriptionId: subscriptionId, siteUrl: siteUrl });
       }
+    }
+
+    function isOnlySiteInSubscription(entity) {
+      if (!entity.billingServiceId) {
+        return true;
+      }
+      var siteUrl = _.keys(WebExSiteRowService.getLicensesInSubscriptionGroupedBySites(entity.billingServiceId, entity.siteUrl));
+      return siteUrl.length === 1;
     }
 
     function moveLicensesToRemainingSite(subscriptionId, sites, urlToRemove) {
@@ -148,6 +155,34 @@ require('./_site-list.scss');
       $timeout(function () {
         angular.element('#webExLinkedSiteFormBtn').click();
       }, 100);
+    }
+
+    function goToMeetingSetup() {
+      $state.go('setupwizardmodal', {
+        currentTab: 'meetingSettings',
+        onlyShowSingleTab: true,
+        showStandardModal: true,
+      });
+    }
+
+    function showRejectionModal(isOnlySite, title, errorMessage) {
+      var params = {
+        title: $translate.instant(title),
+        message: $translate.instant(errorMessage),
+      };
+      if (isOnlySite) {
+        params.close = $translate.instant('common.dismiss');
+        params.hideDismiss = true;
+        //close: isOnlySite ? undefined : $translate.instant('common.setUp'),
+      } else {
+        params.dismiss = $translate.instant('common.dismiss');
+        params.close = $translate.instant('common.setUp');
+      }
+      ModalService.open(params).result.then(function () {
+        if (!isOnlySite) {
+          goToMeetingSetup();
+        }
+      });
     }
   } // WebExSiteRowCtrl()
 })(); // top level function

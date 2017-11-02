@@ -4,30 +4,48 @@ class WebexSiteSubscriptionCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
+    private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
   ) {
   }
   public subscriptionForm: ng.IFormController;
 
-  public currentSubscription = '';
+  public currentSubscriptionId;
+  public currentSubscription: {
+    id: string;
+    isPending: boolean;
+  };
   public selectPlaceholder = this.$translate.instant('common.select');
-
-  public subscriptions;
-  public subscriptionList: string[] = [];
+  public subscriptions: {
+    id: string;
+    isPending: boolean;
+  }[];
+  //public subscriptionList
   public onSubscriptionChange: Function;
+  public onValidationStatusChange: Function;
+  public isPending = false;
 
-  public $onChanges (changes: ng.IOnChangesObject) {
-    if (changes.subscriptions) {
-      const subs =  changes.subscriptions.currentValue;
-      this.subscriptionList = _.clone(subs) as string[];
-    }
-    if (changes.currentSubscription) {
-      this.currentSubscription = changes.currentSubscription.currentValue;
+  public $onInit() {
+    this.currentSubscription = _.find(this.subscriptions, { id: this.currentSubscriptionId });
+    if (this.currentSubscription.isPending) {
+      this.isPending = true;
     }
   }
 
   public setSubscription() {
-    this.onSubscriptionChange({ subId: this.currentSubscription });
+    this.isPending = this.currentSubscription.isPending;
+    this.onValidationStatusChange({ isValid: !this.currentSubscription.isPending });
+    if (!this.currentSubscription.isPending) {
+      this.onSubscriptionChange({ subId: this.currentSubscription.id });
+    }
+  }
+
+  public goToMeetingSetup() {
+    this.$state.go('setupwizardmodal', {
+      currentTab: 'meetingSettings',
+      onlyShowSingleTab: true,
+      showStandardModal: true,
+    });
   }
 }
 
@@ -37,7 +55,8 @@ export class WebexSiteSubscriptionComponent implements ng.IComponentOptions {
   public bindings = {
     subscriptions: '<',
     onSubscriptionChange: '&',
-    currentSubscription: '<',
+    currentSubscriptionId: '<',
+    onValidationStatusChange: '&',
   };
 }
 

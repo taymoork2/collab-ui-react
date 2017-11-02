@@ -5,6 +5,7 @@ import { SetupWizardService } from 'modules/core/setupWizard/setup-wizard.servic
 import { Config } from 'modules/core/config/config';
 import { Notification } from 'modules/core/notifications';
 import { EventNames } from './webex-site.constants';
+import { Authinfo } from 'modules/core/scripts/services/authinfo';
 
 export interface IStep {
   name: string;
@@ -22,8 +23,12 @@ class WebexAddSiteModalController implements ng.IComponentController {
   public sitesArray: IWebExSite[] = [];
   public conferenceLicensesInSubscription: IConferenceLicense[];
   public audioPackage?: string;
+
   public audioPartnerName = null;
-  public subscriptionList: string[] = [];
+  public subscriptionList: {
+    id: string;
+    isPending: boolean;
+  }[] = [];
 
   // parameters received
   public singleStep?: number;
@@ -45,7 +50,7 @@ class WebexAddSiteModalController implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    private Authinfo,
+    private Authinfo: Authinfo,
     private Config: Config,
     private Notification: Notification,
     private SetupWizardService: SetupWizardService,
@@ -67,11 +72,20 @@ class WebexAddSiteModalController implements ng.IComponentController {
   }
 
   public $onInit(): void {
-    this.subscriptionList = <string[]>_.chain(this.SetupWizardService.getNonTrialWebexLicenses()).map('billingServiceId').uniq().value();
-    this.changeCurrentSubscription(_.first(this.subscriptionList));
-    if (this.subscriptionList.length === 1 && _.isNil(this.singleStep)) {
-      this.firstStep = 1;
-      this.next();
+    this.subscriptionList = this.SetupWizardService.getSubscriptionListWithStatus();
+
+    // if there are any non-pending subs the first will be non-pending
+    const firstSubscription = _.first(this.subscriptionList);
+    if (! firstSubscription.isPending) {
+      this.changeCurrentSubscription(firstSubscription.id);
+      if (this.subscriptionList.length === 1 && _.isNil(this.singleStep)) {
+        this.firstStep = 1;
+        this.next();
+      }
+    } else {
+      this.currentSubscriptionId = firstSubscription.id;
+      this.isCanProceed = false;
+      this.singleStep = 1;
     }
   }
 
@@ -95,7 +109,7 @@ class WebexAddSiteModalController implements ng.IComponentController {
   public isNextDisabled(): boolean {
     switch (this.currentStep) {
       case 0:
-        return _.isEmpty(this.currentSubscriptionId);
+        return _.isEmpty(this.currentSubscriptionId) || !this.isCanProceed;
       case 1:
       case 2:
       case 3:
