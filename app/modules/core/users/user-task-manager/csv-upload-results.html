@@ -18,21 +18,11 @@
     </span>
   </div>
 
-  <!-- display the results stats -->
-  <div class="flex-item-no-resize upload-stats">
-    <div class="stat new-users" ng-class="{disabled: $ctrl.numNewUsers === 0}" ng-if="!$ctrl.isDirSyncEnabled">
-      <div class="total">{{$ctrl.numNewUsers}}</div>
-      <h4 class="total-title" translate="userManage.bulk.newUsers"></h4>
-    </div>
-    <div class="stat updated-users" ng-class="{disabled: $ctrl.numUpdatedUsers === 0}">
-      <div class="total">{{$ctrl.numUpdatedUsers}}</div>
-      <h4 class="total-title" translate="userManage.bulk.existingUsers"></h4>
-    </div>
-    <div class="stat error-users" ng-class="{disabled: $ctrl.numErroredUsers === 0}">
-      <div class="total">{{$ctrl.numErroredUsers}}</div>
-      <h4 class="total-title" translate="userManage.bulk.errorUsers"></h4>
-    </div>
-  </div>
+  <cr-users-tile-totals
+   new-total="$ctrl.numNewUsers"
+   updated-total="$ctrl.numUpdatedUsers"
+   error-total="$ctrl.numErroredUsers">
+  </cr-users-tile-totals>
 
   <!-- display the error details -->
   <div class="flex-item-resize">

@@ -42,60 +42,6 @@ csv-upload-results {
     @include vr-spacing(mv, 0.5);
   }
 
-  // boxes containing counts of added, updated, retry, and error users
-  .upload-stats {
-    @include vr-spacing(mb, 1);
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    height: 5rem;
-    .stat {
-      flex: 1 1 auto;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      background-color: $gray-light-4;
-      position: relative;
-
-      + .stat {
-        @include vr-spacing(ml, 1);
-      }
-
-      .total {
-        font-size: 2rem;
-        line-height: 1;
-        font-family: $brand-font-thin;
-      }
-
-      .total-title {
-        @include vr-spacing(mb, 0.1);
-
-        font-size: 0.75rem;
-      }
-
-      &.disabled {
-        color: $gray-light-1;
-      }
-
-      &.new-users:not(.disabled) .total {
-        color: $color-cta-base;
-      }
-
-      &.updated-users:not(.disabled) .total {
-        color: $color-primary-base;
-      }
-
-      &.error-users:not(.disabled) .total {
-        color: $color-negative-light;
-      }
-
-      &.retry-users:not(.disabled) .total {
-        color: $brand-warning;
-      }
-    }
-  }
-
   // Error display
   .upload-errors {
     background-color: transparent;

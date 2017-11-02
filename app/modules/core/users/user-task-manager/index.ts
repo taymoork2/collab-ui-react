@@ -9,6 +9,7 @@ import modalModuleName from 'modules/core/modal';
 import notificationsModuleName from 'modules/core/notifications';
 import coreSharedModuleName from 'modules/core/shared';
 import featureToggleModuleName from 'modules/core/featureToggle';
+import usersSharedModuleName from 'modules/core/users/shared';
 
 import './user-task-manager.scss';
 import './csv-upload-results.scss';
@@ -25,6 +26,7 @@ export default angular
     notificationsModuleName,
     coreSharedModuleName,
     featureToggleModuleName,
+    usersSharedModuleName,
   ])
   .component('userTaskManagerModal', new UserTaskManagerModalComponent())
   .component('csvUploadResults', new CsvUploadResultsComponent())
