@@ -52,7 +52,11 @@ describe('Component: locations-caller-id', () => {
       this.controller.callerId = null;
       this.controller.$onInit();
       this.view.find(CALLER_ID_TOGGLE).click();
-      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(null);
+      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(new LocationCallerId({
+        name: 'Awesome Sauce',
+        number: '',
+        uuid: '',
+      }));
     });
 
     it('should restore the original callerId when toggle is turned off and then on', function() {
