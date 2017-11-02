@@ -59,6 +59,7 @@ describe('SearchTranslator', () => {
 
     transMock = this.$translate;
     spyOn(this.$translate, 'getTranslationTable').and.returnValue(keyMock);
+    spyOn(this.$translate, 'proposedLanguage').and.returnValue('nb_NO');
   });
 
   it('should map correct search field', function () {

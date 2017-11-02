@@ -1,14 +1,11 @@
 import _ = require('lodash');
+
 import { FieldQuery, OperatorAnd, OperatorOr, QueryParser, SearchElement } from './queryParser';
 
 export class SearchTranslator {
   /* @ngInject */
-  constructor($translate: any) {
-    const csdmTranslationTable = _.pickBy($translate.getTranslationTable(),
-      (_value, key: string) => {
-        return _.startsWith(key, 'CsdmStatus') && (_.split(key, '.').length > 2);
-      });
-    this.csdmPartOfTranslationTable = _.toPairs(csdmTranslationTable);
+  constructor(private $translate: ng.translate.ITranslateService| any) {
+    this.updateLanguageIfNeeded();
   }
 
   private static readonly translationKeyToSearchFieldConversionTable = {
@@ -19,8 +16,21 @@ export class SearchTranslator {
   };
 
   private csdmPartOfTranslationTable: any[];
+  private currentLanguage: string;
+
+  private updateLanguageIfNeeded() {
+    if (this.$translate.proposedLanguage() !== this.currentLanguage) {
+      this.currentLanguage = this.$translate.proposedLanguage();
+      const csdmTranslationTable = _.pickBy(this.$translate.getTranslationTable(),
+        (_value, key: string) => {
+          return _.startsWith(key, 'CsdmStatus') && (_.split(key, '.').length > 2);
+        });
+      this.csdmPartOfTranslationTable = _.toPairs(csdmTranslationTable);
+    }
+  }
 
   public translateQuery(search: SearchElement): SearchElement {
+    this.updateLanguageIfNeeded();
     if (!search) {
       return search;
     }
