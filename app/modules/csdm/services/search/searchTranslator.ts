@@ -1,14 +1,11 @@
 import _ = require('lodash');
+
 import { FieldQuery, OperatorAnd, OperatorOr, QueryParser, SearchElement } from './queryParser';
 
 export class SearchTranslator {
   /* @ngInject */
-  constructor($translate: any) {
-    const csdmTranslationTable = _.pickBy($translate.getTranslationTable(),
-      (_value, key: string) => {
-        return _.startsWith(key, 'CsdmStatus') && (_.split(key, '.').length > 2);
-      });
-    this.csdmPartOfTranslationTable = _.toPairs(csdmTranslationTable);
+  constructor(private $translate: ng.translate.ITranslateService| any) {
+    this.updateLanguageIfNeeded();
   }
 
   private static readonly translationKeyToSearchFieldConversionTable = {
@@ -19,8 +16,21 @@ export class SearchTranslator {
   };
 
   private csdmPartOfTranslationTable: any[];
+  private currentLanguage: string;
+
+  private updateLanguageIfNeeded() {
+    if (this.$translate.proposedLanguage() !== this.currentLanguage) {
+      this.currentLanguage = this.$translate.proposedLanguage();
+      const csdmTranslationTable = _.pickBy(this.$translate.getTranslationTable(),
+        (_value, key: string) => {
+          return _.startsWith(key, 'CsdmStatus') && (_.split(key, '.').length > 2);
+        });
+      this.csdmPartOfTranslationTable = _.toPairs(csdmTranslationTable);
+    }
+  }
 
   public translateQuery(search: SearchElement): SearchElement {
+    this.updateLanguageIfNeeded();
     if (!search) {
       return search;
     }
@@ -32,41 +42,30 @@ export class SearchTranslator {
         return this.translateQuery(oredElement);
       }));
     }
-
     const translations = this.findTranslations(search, matchCountThreshold);
     if (translations.length > 0) {
       return new OperatorOr([_.cloneDeep(search)].concat(translations));
-    } else if (search instanceof OperatorAnd) {
-      if (search.getExpressions().length === 1) {
-        return this.translateQuery(search.getExpressions()[0]);
-      }
-      //ABCD -> try ABC, BCD, AB, CD, A, D
+    }
+    if (search instanceof OperatorAnd && search.getExpressions().length === 1) {
+      return this.translateQuery(search.getExpressions()[0]);
+    }
 
-      const numElements = search.getExpressions().length;
-      for (let elementsToSkip = 1; elementsToSkip <= numElements - 1; elementsToSkip++) {
-
-        const leftElements = search.getExpressions().slice(0, numElements - elementsToSkip);
-        const leftTranslations = this.findTranslations(new OperatorAnd(leftElements, false), matchCountThreshold);
-        if (leftTranslations.length > 0) {
-          const remainingElements = search.getExpressions().slice(numElements - elementsToSkip, numElements);
-          const translatedRemainingElements = this.translateRemainingAndedElements(remainingElements);
-          const replacedElement = leftElements.length > 1 ? [new OperatorAnd(_.cloneDeep(leftElements))] : leftElements;
-          const newLeftElement = new OperatorOr(_.concat(replacedElement, leftTranslations));
-          return new OperatorAnd(_.concat([newLeftElement], translatedRemainingElements));
-        }
-
-        const rightElements = search.getExpressions().slice(elementsToSkip, numElements);
-        const rightTranslations = this.findTranslations(new OperatorAnd(rightElements, false), matchCountThreshold);
-        if (rightTranslations.length > 0) {
-          const remainingElements = search.getExpressions().slice(0, elementsToSkip);
-          const translatedRemainingElements = this.translateRemainingAndedElements(remainingElements);
-          const replacedElement = rightElements.length > 1 ? [new OperatorAnd(_.cloneDeep(rightElements))] : rightElements;
-          const newRightElement = new OperatorOr(_.concat(replacedElement, rightTranslations));
-          return new OperatorAnd(_.concat(translatedRemainingElements, [newRightElement]));
+    const numElements = search.getExpressions().length;
+    for (let elementChunkSize = numElements; elementChunkSize > 0; elementChunkSize--) {
+      for (let chunkStart = 0; (chunkStart + elementChunkSize) <= numElements; chunkStart++) {
+        const elementChunk = search.getExpressions().slice(chunkStart, chunkStart + elementChunkSize);
+        const chunkTranslations = this.findTranslations(new OperatorAnd(elementChunk, false), matchCountThreshold);
+        if (chunkTranslations.length > 0) {
+          const elementsBeforeChunk = search.getExpressions().slice(0, chunkStart);
+          const translatedElmentsBeforeChunk = this.translateRemainingAndedElements(elementsBeforeChunk);
+          const elementsAfterChunk = search.getExpressions().slice(chunkStart + elementChunkSize, numElements);
+          const translatedElmentsAfterChunk = this.translateRemainingAndedElements(elementsAfterChunk);
+          const replacedElement = elementChunk.length > 1 ? [new OperatorAnd(_.cloneDeep(elementChunk))] : elementChunk;
+          const newElementChunk = new OperatorOr(_.concat(replacedElement, chunkTranslations));
+          return new OperatorAnd(_.concat(translatedElmentsBeforeChunk, [newElementChunk], translatedElmentsAfterChunk));
         }
       }
     }
-
     return search;
   }
 
