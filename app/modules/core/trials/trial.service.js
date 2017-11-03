@@ -376,8 +376,7 @@
 
     function calcDaysLeft(startDate, trialPeriod, currentDate) {
       var daysUsed = calcDaysUsed(startDate, currentDate);
-      var daysLeft = trialPeriod - daysUsed;
-      return Number.isNaN(daysLeft) ? -1 : daysLeft;
+      return (daysUsed < 0) ? -1 : trialPeriod - daysUsed;
     }
 
     function calcDaysUsed(startDate, currentDate) {

@@ -1013,10 +1013,6 @@ describe('Partner Service -', function () {
         data.daysLeft = -1;
         data.communications.isTrial = false;
         expect(PartnerService.getAccountStatus(data)).toBe('active');
-
-        // Empty license array and no 'named' license marked as 'isTrial' means 'pending' setup
-        data.licenseList = [];
-        expect(PartnerService.getAccountStatus(data)).toBe('pending');
       });
     });
 
