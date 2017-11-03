@@ -99,3 +99,36 @@ touch "${dir_path}/${template_file}"
 touch "${dir_path}/${js_component_spec_file}"
 print_component_ts > "${dir_path}/${js_component_file}"
 print_index_ts > "${dir_path}/index.ts"
+
+function has_parent_index_ts {
+    test -s "$(get_parent_index_ts_file "$1")"
+}
+
+function get_parent_index_ts_file  {
+    echo "${1}/../index.ts"
+}
+
+function add_import_of_module_name {
+    local dir_path="$1"
+    local js_directive_name="$2"
+    local html_element_name="$3"
+    local parent_index_ts_file
+    parent_index_ts_file="$(get_parent_index_ts_file "$dir_path")"
+    local line_num_of_last_import_statement
+
+    # grep for lines with 'import'-statement
+    line_num_of_last_import_statement="$(grep -n "^import " "$parent_index_ts_file" 2>/dev/null | tail -1 | cut -d: -f1)"
+    line_num_of_last_import_statement="${line_num_of_last_import_statement}"
+    local import_statement="import ${js_directive_name}ModuleName from './${html_element_name}';"
+
+    # if no line found, insert at line 1, otherwise insert after last import statement
+    if [ -z "$line_num_of_last_import_statement" ]; then
+        sed -i -E "1i $import_statement" "$parent_index_ts_file"
+    else
+        sed -i -E "${line_num_of_last_import_statement}a $import_statement" "$parent_index_ts_file"
+    fi
+}
+
+if has_parent_index_ts "$dir_path"; then
+    add_import_of_module_name "$dir_path" "$js_directive_name" "$html_element_name"
+fi
