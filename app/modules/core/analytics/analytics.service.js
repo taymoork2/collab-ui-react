@@ -600,7 +600,7 @@
     }
 
     function _getOrgStatus(daysLeft, licenseList) {
-      if (daysLeft <= 0 || _.get(licenseList, 'length', 0) === 0) {
+      if (daysLeft < 0 || _.get(licenseList, 'length', 0) === 0) {
         return 'expired';
       }
       var isTrial = _.some(licenseList, function (license) {

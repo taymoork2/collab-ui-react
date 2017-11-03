@@ -31,8 +31,8 @@
         ng-class="{'overview-footer-content-trial' : card.trial ,  'overview-footer-content'  : !card.trial }"
         ng-if="card.enabled">
   <span class="footer-content">
-  <span class="badge warning" ng-if="card.trial && (overview.trialDaysLeft > 0 || !overview.trialDaysLeft)" translate="customerPage.trial"></span>
-  <span class="badge alert" ng-if="card.trial && (overview.trialDaysLeft && overview.trialDaysLeft <= 0)" translate="customerPage.expired"></span>
+  <span class="badge warning" ng-if="card.trial && (!overview.trialDaysLeft || overview.trialDaysLeft >= 0)" translate="customerPage.trial"></span>
+  <span class="badge alert" ng-if="card.trial && (overview.trialDaysLeft < 0)" translate="customerPage.expired"></span>
   <a ng-href="{{overview.statusPageUrl}}" target="_blank" class="monitoring-cell" ng-show="card.showHealth" aria-label="{{::card.healthStatusAria}}">
     <cs-statusindicator ng-model="card.healthStatus"></cs-statusindicator>
     <span>{{card.levelText}}</span>
