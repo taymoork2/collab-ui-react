@@ -53,7 +53,6 @@
             </div>
             <div>
               <span ng-class="{'trial-danger': customerOverview.currentCustomer.daysLeft <= 5, 'user-title': customerOverview.currentCustomer.daysLeft > 5}">{{customerOverview.getDaysLeft(customerOverview.currentCustomer.daysLeft)}}</span>
-              <span ng-if="customerOverview.currentCustomer.daysLeft > 0" ng-class="{'trial-danger': customerOverview.currentCustomer.daysLeft <= 5, 'user-title': customerOverview.currentCustomer.daysLeft > 5}" translate="customerPage.daysLeft"></span>
             </div>
           </div>
           <div class="progress">

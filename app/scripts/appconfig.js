@@ -2103,6 +2103,14 @@
               },
             },
           })
+          .state('reports.webex-metrics.system', {
+            url: '/system',
+            views: {
+              metricsContent: {
+                template: '<div> To be continue...</div>',
+              },
+            },
+          })
           .state('reports.webex-metrics.diagnostics', {
             url: '/diagnostics',
             views: {

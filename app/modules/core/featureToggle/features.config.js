@@ -202,6 +202,7 @@ module.exports = {
   uwpImportantFilter: 'uwp-important-filter',
   webexCSV: 'webex-CSV',
   webexMEI: 'webex-MEI',
+  webexSystem: 'webex-system',
   webexMetrics: 'webex-metrics',
   webGuestCall: 'web-guest-call',
   webHuronCalls: 'web-huron-calls',

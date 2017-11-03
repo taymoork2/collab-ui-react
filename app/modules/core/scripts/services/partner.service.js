@@ -19,11 +19,7 @@
       ACTIVE: 2,
       CANCELED: 99,
       NO_LICENSE: -1,
-      NOTE_EXPIRED: 0,
-      NOTE_EXPIRE_TODAY: 0,
-      NOTE_NO_LICENSE: 0,
-      NOTE_CANCELED: 0,
-      NOTE_NOT_EXPIRED: 99,
+      NOTE_DAYS_LEFT: 100,
     };
 
     var helpers = {
@@ -43,6 +39,7 @@
 
     var factory = {
       customerStatus: customerStatus,
+      getAccountStatus: getAccountStatus,
       getManagedOrgsList: getManagedOrgsList,
       modifyManagedOrgs: modifyManagedOrgs,
       isLicenseATrial: isLicenseATrial,
@@ -340,34 +337,55 @@
       }
     }
 
+    function getAccountStatus(rowData) {
+      var status = 'active';
+      var isTrial = _.some(Config.licenseObjectNames, function (type) {
+        return isLicenseInfoAvailable(rowData.licenseList) && isLicenseATrial(getLicenseObj(rowData, type));
+      });
+
+      if (isTrial) {
+        status = (rowData.daysLeft < 0) ? 'expired' : 'trial';
+      } else if (_.get(rowData, 'licenseList', []).length === 0) {
+        // condition for pending status is empty license array (and not a trial)
+        status = 'pending';
+      }
+
+      return status;
+    }
+
     function setNotesSortOrder(rowData) {
       var notes = {};
       notes.daysLeft = rowData.daysLeft;
       if (isLicenseInfoAvailable(rowData.licenseList)) {
         if (rowData.status === 'CANCELED') {
-          notes.sortOrder = customerStatus.NOTE_CANCELED;
           notes.text = $translate.instant('customerPage.suspended');
         } else if (rowData.purchased) {
-          notes.sortOrder = customerStatus.ACTIVE;
           notes.text = $translate.instant('customerPage.purchased');
         } else if (rowData.customerOrgId === Authinfo.getOrgId()) {
-          notes.sortOrder = customerStatus.ACTIVE;
           notes.text = $translate.instant('customerPage.myOrganization');
         } else if (rowData.status === 'ACTIVE' || rowData.status === 'EXPIRED') {
           // while "daysLeft > 0" and expired doesn't make sense, the other 2 cases have the same text
           if (rowData.daysLeft > 0) {
-            notes.sortOrder = customerStatus.NOTE_NOT_EXPIRED;
-            notes.text = $translate.instant('customerPage.daysLeftToPurchase', {
-              count: rowData.daysLeft,
-            }, 'messageformat');
+            // notes:
+            // - using "Needs Setup" for BOTH pending customer orgs and trials which do not have a start date set
+            // - no trial should ever normally not have a start date (it is started when it is created) but we have orders in orgs that meet this condition
+            // TODO: determine if the above quirk applies to live customers in production --^, and rm this check if not applicable
+            if ((rowData.accountStatus === 'pending') || ((rowData.accountStatus === 'trial') && !rowData.startDate)) {
+              notes.text = $translate.instant('customerPage.needsSetup');
+            } else {
+              notes.sortOrder = customerStatus.NOTE_DAYS_LEFT;
+              notes.text = $translate.instant('customerPage.daysLeftToPurchase', {
+                count: rowData.daysLeft,
+              }, 'messageformat');
+            }
           } else if (rowData.daysLeft === 0) {
-            notes.sortOrder = customerStatus.NOTE_EXPIRE_TODAY;
+            notes.sortOrder = customerStatus.NOTE_DAYS_LEFT;
             notes.text = $translate.instant('customerPage.expiringToday');
           } else if (rowData.daysLeft < 0) {
-            notes.sortOrder = customerStatus.NOTE_EXPIRED;
-            // equal to the maximum days past expiration, always negative!
-            var gracePeriodDays = Config.trialGracePeriod;
-            if (_.inRange(rowData.daysLeft, 0, gracePeriodDays)) {
+            notes.sortOrder = customerStatus.NOTE_DAYS_LEFT;
+            if (rowData.accountStatus === 'pending') {
+              notes.text = $translate.instant('customerPage.needsSetup');
+            } else if (_.inRange(rowData.daysLeft, 0, Config.trialGracePeriod)) {
               notes.text = $translate.instant('customerPage.expiredWithGracePeriod');
             } else {
               notes.text = $translate.instant('customerPage.expired');
@@ -377,7 +395,6 @@
       }
       // If any of the previous tests fail, fall back to no license info
       if (!_.has(notes, 'text')) {
-        notes.sortOrder = customerStatus.NOTE_NO_LICENSE;
         notes.text = $translate.instant('customerPage.licenseInfoNotAvailable');
       }
       rowData.notes = notes;
@@ -392,6 +409,7 @@
     function massageDataForCustomer(customer, options) {
       var edate = moment(customer.startDate).add(customer.trialPeriod, 'days').format('MMM D, YYYY');
       var dataObj = {
+        accountStatus: '',
         trialId: customer.trialId,
         customerOrgId: customer.customerOrgId || customer.id,
         customerName: customer.customerName || customer.displayName,
@@ -400,7 +418,7 @@
         startDate: customer.startDate,
         numUsers: customer.allUsers || 0, // sometimes we get back undefined users, temp workaround
         activeUsers: customer.activeUsers || 0,
-        daysLeft: 0,
+        daysLeft: -1,
         usage: 0,
         licenses: 0,
         deviceLicenses: 0,
@@ -417,7 +435,7 @@
         advanceCare: null,
         daysUsed: 0,
         percentUsed: 0,
-        duration: customer.trialPeriod,
+        duration: customer.trialPeriod || 0,
         dealId: customer.dealId,
         offer: {},
         offers: customer.offers,
@@ -444,22 +462,18 @@
       });
       dataObj.isPremium = _.some(premiumLicenses);
 
-      var daysDone = TrialService.calcDaysUsed(customer.startDate);
-      dataObj.daysUsed = daysDone;
-      dataObj.percentUsed = Math.round((daysDone / customer.trialPeriod) * 100);
+      dataObj.daysUsed = TrialService.calcDaysUsed(customer.startDate);
+      dataObj.percentUsed = (dataObj.duration > 0) ? Math.round((dataObj.daysUsed / dataObj.duration) * 100) : 0;
 
-      var daysLeft = TrialService.calcDaysLeft(customer.startDate, customer.trialPeriod);
-      dataObj.daysLeft = daysLeft;
-      if (dataObj.isTrialData) {
-        if (daysLeft < 0) {
-          dataObj.status = $translate.instant('customerPage.expired');
-          dataObj.state = 'EXPIRED';
-        }
+      dataObj.daysLeft = TrialService.calcDaysLeft(customer.startDate, dataObj.duration);
+      if ((dataObj.isTrialData) && (dataObj.daysLeft < 0)) {
+        dataObj.status = $translate.instant('customerPage.expired');
+        dataObj.state = 'EXPIRED';
       }
 
       var serviceEntry = {
         status: dataObj.status,
-        daysLeft: daysLeft,
+        daysLeft: dataObj.daysLeft,
         customerName: dataObj.customerName,
       };
 
@@ -490,6 +504,7 @@
 
       dataObj.orderedServices = _getOrderedServices(dataObj, options);
 
+      dataObj.accountStatus = getAccountStatus(dataObj);
       setNotesSortOrder(dataObj);
       return dataObj;
     }

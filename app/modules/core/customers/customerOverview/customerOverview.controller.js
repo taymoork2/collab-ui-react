@@ -381,9 +381,8 @@ require('./_customer-overview.scss');
         return $translate.instant('customerPage.expired');
       } else if (daysLeft === 0) {
         return $translate.instant('customerPage.expiresToday');
-      } else {
-        return daysLeft;
       }
+      return $translate.instant('customerPage.daysLeft', { days: daysLeft }, 'messageformat');
     }
 
     function isSquaredUC() {

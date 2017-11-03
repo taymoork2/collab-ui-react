@@ -14,7 +14,7 @@ describe('Controller: CustomerListCtrl', function () {
     customerOrgId: '1234-34534-afdagfg-425345-afaf',
     customerName: 'ControllerTestOrg',
     customerEmail: 'customer@cisco.com',
-    daysLeft: NaN,
+    daysLeft: -1,
     communications: {
       isTrial: false,
       volume: 5,
@@ -135,7 +135,7 @@ describe('Controller: CustomerListCtrl', function () {
     }
 
     function setTestDataActive() {
-      testTrialData.daysLeft = NaN;
+      testTrialData.daysLeft = -1;
       testTrialData.communications.isTrial = false;
     }
 
@@ -159,15 +159,6 @@ describe('Controller: CustomerListCtrl', function () {
     it('should return the correct text for user count', function () {
       setTestDataTrial();
       expect(controller.getUserCountColumnText(testTrialData)).toBe(testTrialData.activeUsers + ' / ' + testTrialData.numUsers);
-    });
-
-    it('should return the correct account status', function () {
-      setTestDataExpired();
-      expect(controller.getAccountStatus(testTrialData)).toBe('expired');
-      setTestDataTrial();
-      expect(controller.getAccountStatus(testTrialData)).toBe('trial');
-      setTestDataActive();
-      expect(controller.getAccountStatus(testTrialData)).toBe('active');
     });
   });
 
@@ -290,9 +281,9 @@ describe('Controller: CustomerListCtrl', function () {
   });
 
   describe('filterColumns', function () {
-    it('return 9 items in the filter list without Care with care FT turned off', function () {
+    it('return 10 items in the filter list without Care with care FT turned off', function () {
       initController();
-      expect(controller.filter.options.length).toBe(9);
+      expect(controller.filter.options.length).toBe(10);
       expect(controller.filter.options).toContain(jasmine.objectContaining({
         value: 'sparkBoard',
       }));
@@ -310,7 +301,7 @@ describe('Controller: CustomerListCtrl', function () {
     it('show care in the filter list with care FT on', function () {
       FeatureToggleService.atlasCareTrialsGetStatus.and.returnValue($q.resolve(true));
       initController();
-      expect(controller.filter.options.length).toBe(10);
+      expect(controller.filter.options.length).toBe(11);
       expect(controller.filter.options).toContain(jasmine.objectContaining({
         value: 'care',
       }));
@@ -322,7 +313,7 @@ describe('Controller: CustomerListCtrl', function () {
     it('show Pro Pack in the filter list with correct FT on', function () {
       FeatureToggleService.atlasITProPackGetStatus.and.returnValue($q.resolve(true));
       initController();
-      expect(controller.filter.options.length).toBe(11);
+      expect(controller.filter.options.length).toBe(12);
       expect(controller.filter.options).toContain(jasmine.objectContaining({
         value: 'premium',
       }));
@@ -344,7 +335,7 @@ describe('Controller: CustomerListCtrl', function () {
         count: 0,
       }];
 
-      controller._helpers.updateResultCount(controller.gridOptions.data);
+      controller._helpers.updateResultCount(controller.gridOptions.data, controller.gridOptions.data);
       var activeFilter = _.find(controller.filter.options, { value: 'trial' });
       expect(activeFilter.count).toBe(2);
     });
@@ -362,15 +353,15 @@ describe('Controller: CustomerListCtrl', function () {
         count: 0,
       }];
 
-      controller._helpers.updateResultCount(controller.gridOptions.data);
+      controller._helpers.updateResultCount(controller.gridOptions.data, controller.gridOptions.data);
       expect(Analytics.trackPremiumEvent).toHaveBeenCalledWith(Analytics.sections.PREMIUM.eventNames.PREMIUM_FILTER);
       Analytics.trackPremiumEvent.calls.reset();
 
-      controller._helpers.updateResultCount(controller.gridOptions.data);
+      controller._helpers.updateResultCount(controller.gridOptions.data, controller.gridOptions.data);
       expect(Analytics.trackPremiumEvent).not.toHaveBeenCalled();
 
       controller.filter.options[0].isSelected = false;
-      controller._helpers.updateResultCount(controller.gridOptions.data);
+      controller._helpers.updateResultCount(controller.gridOptions.data, controller.gridOptions.data);
       expect(Analytics.trackPremiumEvent).not.toHaveBeenCalled();
     });
   });

@@ -157,7 +157,7 @@
       }
 
       function getServiceStatus(rowData, type) {
-        // note that this logic is slightly different than the logic in getAccountStatus within CustomerListCtrl
+        // note that this logic is slightly different than the logic in getAccountStatus within PartnerService
         // This service status can include free, whereas account status cannot
         var licenseList = rowData.licenseList;
         var serviceData = rowData[type];

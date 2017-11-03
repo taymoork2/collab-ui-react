@@ -75,16 +75,26 @@
       'trustIframeUrl=' + $scope.trustIframeUrl;
     Log.debug(_this.logMsg);
 
-    $scope.classicLink = getWebexClassicLink();
+    // $scope.classicLink = getWebexClassicLink();
+    getWebexClassicLink();
 
     function getWebexClassicLink() {
-      var isClassicOn = FeatureToggleService.webexMetricsGetStatus();
+      FeatureToggleService.webexMetricsGetStatus().then(function (isWebexMetricsOn) {
+        var classicLink = 'reports.webex';
+        if (isWebexMetricsOn) {
+          classicLink = 'reports.webex-metrics.classic';
+        }
+        classicLink += '({siteUrl:' + siteUrl + '})';
+        $scope.classicLink = classicLink;
+        return classicLink;
+      });
+      /*var isClassicOn = FeatureToggleService.webexMetricsGetStatus();
       var classicLink = 'reports.webex-metrics.classic';
       if (isClassicOn) {
         classicLink = 'reports.webex';
       }
       classicLink += '({siteUrl:' + siteUrl + '})';
-      return classicLink;
+      return classicLink;*/
     }
 
     $rootScope.lastSite = siteUrl;

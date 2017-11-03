@@ -59,6 +59,7 @@ describe('SearchTranslator', () => {
 
     transMock = this.$translate;
     spyOn(this.$translate, 'getTranslationTable').and.returnValue(keyMock);
+    spyOn(this.$translate, 'proposedLanguage').and.returnValue('nb_NO');
   });
 
   it('should map correct search field', function () {
@@ -156,6 +157,10 @@ describe('SearchTranslator', () => {
       expectQueryToTranslateTo('sx20 med problemer', 'sx20 and ((med and problemer) or connectionstatus=CONNECTED_WITH_ISSUES)');
     });
 
+    it('should translate an partial expression match with no match before', function () {
+      expectQueryToTranslateTo('"spark board" deaktivert 70', '"spark board" and (deaktivert or connectionstatus=OFFLINE_EXPIRED or errorcodes=noupgrade) and 70');
+    });
+
     it('should allow for parenthesis', function () {
       expectQueryToTranslateTo('(med problemer) AND (sxx or 88)', '((med and problemer) or connectionstatus=CONNECTED_WITH_ISSUES) and (sxx or 88)');
     });
@@ -164,7 +169,7 @@ describe('SearchTranslator', () => {
       const searchTranslator = new SearchTranslator(transMock);
       const parsedQuery = QueryParser.parseQueryString(query);
       const translatedQuery = searchTranslator.translateQuery(parsedQuery);
-      expect(expectedQuery).toBe(translatedQuery.toQuery());
+      expect(translatedQuery.toQuery()).toBe(expectedQuery || '');
     }
   });
 
