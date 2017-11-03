@@ -173,7 +173,6 @@ require('./_site-list.scss');
       if (isOnlySite) {
         params.close = $translate.instant('common.dismiss');
         params.hideDismiss = true;
-        //close: isOnlySite ? undefined : $translate.instant('common.setUp'),
       } else {
         params.dismiss = $translate.instant('common.dismiss');
         params.close = $translate.instant('common.setUp');
