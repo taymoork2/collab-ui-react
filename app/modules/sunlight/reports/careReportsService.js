@@ -4,14 +4,16 @@
   angular.module('Sunlight')
     .service('CareReportsService', CareReportsService);
 
+  var ChartColors = require('modules/core/config/chartColors').ChartColors;
+
   /* @ngInject */
-  function CareReportsService($translate, CareReportsGraphService, chartColors) {
+  function CareReportsService($translate, CareReportsGraphService) {
     var today = true;
 
     function dummifyGraph(chartConfig) {
-      var dummyColors = [chartColors.grayLightOne, chartColors.grayLightTwo];
+      var dummyColors = [ChartColors.grayLightOne, ChartColors.grayLightTwo];
       if (today) {
-        dummyColors = [chartColors.grayLightOne, chartColors.grayLightTwo, chartColors.grayLightThree, chartColors.grayLightFour];
+        dummyColors = [ChartColors.grayLightOne, ChartColors.grayLightTwo, ChartColors.grayLightThree, ChartColors.grayLightFour];
       }
 
       var dummyGraphs = _.map(chartConfig.graphs, function (graph, i) {
@@ -68,8 +70,8 @@
 
       var abandonedGraph = {
         title: $translate.instant('careReportsPage.abandoned'),
-        lineColor: chartColors.alertsBase,
-        fillColors: chartColors.colorLightRedFill,
+        lineColor: ChartColors.alertsBase,
+        fillColors: ChartColors.colorLightRedFill,
         valueField: 'numTasksAbandonedState',
         showBalloon: true,
         balloonFunction: balloonTextForTaskVolume,
@@ -77,7 +79,7 @@
 
       var handledGraph = {
         title: $translate.instant('careReportsPage.handled'),
-        lineColor: chartColors.ctaBase,
+        lineColor: ChartColors.ctaBase,
         valueField: 'numTasksHandledState',
       };
 
@@ -130,8 +132,8 @@
 
       var percentMissedGraph = {
         title: $translate.instant('careReportsPage.missed'),
-        lineColor: chartColors.alertsBase,
-        fillColors: chartColors.colorLightRedFill,
+        lineColor: ChartColors.alertsBase,
+        fillColors: ChartColors.colorLightRedFill,
         valueField: 'tasksMissed',
         showBalloon: true,
         balloonFunction: balloonTextForTaskOffered,
@@ -139,7 +141,7 @@
 
       var percentAcceptedGraph = {
         title: $translate.instant('careReportsPage.accepted'),
-        lineColor: chartColors.ctaBase,
+        lineColor: ChartColors.ctaBase,
         valueField: 'tasksAccepted',
       };
 
@@ -278,8 +280,8 @@
 
       var queueGraph = {
         title: $translate.instant('careReportsPage.queueTime'),
-        lineColor: chartColors.attentionBase,
-        fillColors: chartColors.attentionBase,
+        lineColor: ChartColors.attentionBase,
+        fillColors: ChartColors.attentionBase,
         valueField: 'avgTaskWaitTime',
         dashLength: 2,
         fillAlphas: 1,
@@ -289,8 +291,8 @@
       };
       var handleGraph = {
         title: $translate.instant('careReportsPage.handleTime'),
-        lineColor: chartColors.ctaBase,
-        fillColors: chartColors.colorLightGreenFill,
+        lineColor: ChartColors.ctaBase,
+        fillColors: ChartColors.colorLightGreenFill,
         valueField: 'avgTaskCloseTime',
       };
 
@@ -346,8 +348,8 @@
 
       var inQueueGraph = {
         title: $translate.instant('careReportsPage.in-queue'),
-        lineColor: chartColors.attentionBase,
-        fillColors: chartColors.attentionBase,
+        lineColor: ChartColors.attentionBase,
+        fillColors: ChartColors.attentionBase,
         valueField: 'numPendingTasks',
         dashLength: 2,
         fillAlphas: 1,
@@ -358,8 +360,8 @@
 
       var assignedGraph = {
         title: $translate.instant('careReportsPage.assigned'),
-        lineColor: chartColors.attentionBase,
-        fillColors: chartColors.colorLightYellowFill,
+        lineColor: ChartColors.attentionBase,
+        fillColors: ChartColors.colorLightYellowFill,
         valueField: 'numWorkingTasks',
       };
 
@@ -410,8 +412,8 @@
 
       var csatGraph = {
         title: $translate.instant('careReportsPage.averageCsat'),
-        lineColor: chartColors.ctaBase,
-        fillColors: chartColors.brandWhite,
+        lineColor: ChartColors.ctaBase,
+        fillColors: ChartColors.brandWhite,
         valueField: 'avgCsatScores',
         showBalloon: true,
         balloonFunction: balloonTextForAvgCsat,

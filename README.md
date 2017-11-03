@@ -25,7 +25,7 @@ Adherence is mandatory. Please refactor non-compliant code.
 * **Unit tests are mandatory**.  Unit tests are the foundation of our testing strategy.
   They provide a way to test business logic and components in isolation while controlling all conditions and expectations.
   See the [examples](examples/unit) module for examples of different types of unit tests.
-* **Code reviews are mandatory**. Code reviews are performend through GitHub's [Pull Requests](https://help.github.com/articles/using-pull-requests/).
+* **Code reviews are mandatory**. Code reviews are performed through GitHub's [Pull Requests](https://help.github.com/articles/using-pull-requests/).
   GitHub provides an easy-to-use tool for reviewing and maintaining commit history by linking commits
   with their associated pull requests.
 * **Code style is mandatory**. Style should be enforced through linting and code reviews.

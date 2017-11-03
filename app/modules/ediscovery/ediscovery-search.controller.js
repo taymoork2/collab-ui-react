@@ -6,7 +6,7 @@
 
   module.exports = EdiscoverySearchController;
   /* @ngInject */
-  function EdiscoverySearchController($q, $stateParams, $translate, $timeout, $scope, $window, Analytics, Authinfo, EdiscoveryService, EdiscoveryNotificationService,
+  function EdiscoverySearchController($q, $scope, $stateParams, $translate, $timeout, $window, Analytics, Authinfo, EdiscoveryService, EdiscoveryNotificationService,
     FeatureToggleService, ProPackService, Notification) {
     $scope.$on('$viewContentLoaded', function () {
       $window.document.title = $translate.instant('ediscovery.browserTabHeaderTitle');

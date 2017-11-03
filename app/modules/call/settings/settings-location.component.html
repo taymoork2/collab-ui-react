@@ -33,7 +33,12 @@
         <h4 class="section__title" translate="serviceSetupModal.internalDialing"></h4>
       </div>
       <div class="section__content">
-        <!-- routing Prefix length goes here  -->
+        <div class="sub-section">
+          <uc-routing-prefix-length
+            settings-data="$ctrl.callSettingsData"
+            routing-prefix-length-saved-fn="$ctrl.onRoutingPrefixLengthSaved()">
+          </uc-routing-prefix-length>
+        </div>
         <div class="sub-section">
           <uc-extension-length
             first-time-setup="$ctrl.ftsw"

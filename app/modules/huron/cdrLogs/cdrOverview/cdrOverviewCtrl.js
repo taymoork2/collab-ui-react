@@ -7,8 +7,10 @@ require('./_cdr-overview.scss');
     .module('uc.cdrlogsupport')
     .controller('CdrOverviewCtrl', CdrOverviewCtrl);
 
+  var ChartColors = require('modules/core/config/chartColors').ChartColors;
+
   /* @ngInject */
-  function CdrOverviewCtrl($state, $stateParams, $translate, CdrService, chartColors) {
+  function CdrOverviewCtrl($state, $stateParams, $translate, CdrService) {
     var vm = this;
     var call = $stateParams.call;
     var logstashPath = $stateParams.logstashPath;
@@ -35,7 +37,7 @@ require('./_cdr-overview.scss');
     });
 
     vm.tableOptions = {
-      cursorcolor: chartColors.gray,
+      cursorcolor: ChartColors.gray,
       cursorborder: '0px',
       cursorwidth: '7px',
       railpadding: {

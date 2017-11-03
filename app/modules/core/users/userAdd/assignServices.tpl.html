@@ -11,17 +11,14 @@
 </div>
 <cr-services-panels
   ng-if="hasAccount"
-  is-care-enabled="isCareEnabled"
   message-features="messageFeatures"
   radio-states="radioStates"
   check-license-availability="checkLicenseAvailability"
   entitlements="entitlements"
-  selected-subscription-has-basic-licenses="selectedSubscriptionHasBasicLicenses"
   basic-licenses="basicLicenses"
   determine-license-type="determineLicenseType"
   generate-license-tooltip="generateLicenseTooltip"
   generate-license-translation="generateLicenseTranslation"
-  selected-subscription-has-advanced-licenses="selectedSubscriptionHasAdvancedLicenses"
   advanced-licenses="advancedLicenses"
   update-cmr-licenses-for-metric="updateCmrLicensesForMetric"
   communication-features="communicationFeatures"
@@ -31,7 +28,6 @@
   care-radio-value="careRadioValue"
   cdc-care-feature="cdcCareFeature"
   current-user-enables-call="currentUserEnablesCall"
-  is-care-and-c-v-c-enabled="isCareAndCVCEnabled"
   cvc-care-feature="cvcCareFeature"
   care-features="careFeatures"
   ></cr-services-panels>

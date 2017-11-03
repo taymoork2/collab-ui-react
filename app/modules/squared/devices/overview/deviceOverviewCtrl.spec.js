@@ -79,6 +79,11 @@ describe('Controller: DeviceOverviewCtrl', function () {
 
   function initControllerWithSettings(channels, stateParams) {
     controller = $controller('DeviceOverviewCtrl', {
+      $element: {
+        find: jasmine.createSpy('find').and.returnValue({
+          focus: _.noop,
+        }),
+      },
       $scope: $scope,
       channels: channels,
       $stateParams: stateParams,
@@ -568,6 +573,11 @@ describe('Huron Device', function () {
 
   function initController() {
     controller = $controller('DeviceOverviewCtrl', {
+      $element: {
+        find: jasmine.createSpy('find').and.returnValue({
+          focus: _.noop,
+        }),
+      },
       $scope: $scope,
       channels: {},
       $stateParams: $stateParams,

@@ -7,7 +7,9 @@ describe('ControlHubService', () => {
       '$rootScope',
       '$q',
       'ControlHubService',
+      'ProPackService',
     );
+    spyOn(this.ProPackService, 'showProBadge').and.returnValue(false);
     installPromiseMatchers();
   });
 

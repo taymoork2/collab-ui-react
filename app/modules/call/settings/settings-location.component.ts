@@ -72,6 +72,10 @@ class CallSettingsCtrl implements ng.IComponentController {
     this.$onInit();
   }
 
+  public onRoutingPrefixLengthSaved(): void {
+    this.$onInit();
+  }
+
   public onCompanyCallerIdChanged(companyCallerId: CompanyNumber): void {
     this.callSettingsData.companyCallerId = companyCallerId;
     this.checkForChanges();

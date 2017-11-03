@@ -2,8 +2,11 @@
   'use strict';
 
   angular.module('Mediafusion').service('CommonMetricsGraphService', CommonMetricsGraphService);
+
+  var ChartColors = require('modules/core/config/chartColors').ChartColors;
+
   /* @ngInject */
-  function CommonMetricsGraphService($translate, chartColors) {
+  function CommonMetricsGraphService($translate) {
     var amchartsImages = './amcharts/images/';
     // Base variables for building grids and charts
     var baseVariables = [];
@@ -11,15 +14,15 @@
       type: 'column',
       fillAlphas: 1,
       lineAlpha: 0,
-      balloonColor: chartColors.grayLightTwo,
+      balloonColor: ChartColors.grayLightTwo,
       columnWidth: 4,
     };
     baseVariables['smoothedLine'] = {
       type: 'smoothedLine',
-      lineColor: chartColors.colorPurple,
+      lineColor: ChartColors.colorPurple,
       lineThickness: 2,
-      balloonColor: chartColors.grayLightTwo,
-      negativeLineColor: chartColors.colorPurple,
+      balloonColor: ChartColors.grayLightTwo,
+      negativeLineColor: ChartColors.colorPurple,
       negativeBase: 100,
     };
     baseVariables['line'] = {
@@ -31,27 +34,27 @@
       hidden: false,
     };
     baseVariables['axis'] = {
-      axisColor: chartColors.grayLightTwo,
-      gridColor: chartColors.grayLightTwo,
-      color: chartColors.grayDarkThree,
-      titleColor: chartColors.grayDarkThree,
+      axisColor: ChartColors.grayLightTwo,
+      gridColor: ChartColors.grayLightTwo,
+      color: ChartColors.grayDarkThree,
+      titleColor: ChartColors.grayDarkThree,
       fontFamily: 'CiscoSansTT Light',
       gridAlpha: 0,
       axisAlpha: 1,
       tickLength: 0,
     };
     baseVariables['guideaxis'] = {
-      axisColor: chartColors.grayLightTwo,
-      gridColor: chartColors.grayLightTwo,
-      color: chartColors.grayDarkThree,
-      titleColor: chartColors.grayDarkThree,
+      axisColor: ChartColors.grayLightTwo,
+      gridColor: ChartColors.grayLightTwo,
+      color: ChartColors.grayDarkThree,
+      titleColor: ChartColors.grayDarkThree,
       fontFamily: 'CiscoSansTT Light',
       gridAlpha: 0,
       axisAlpha: 1,
       tickLength: 0,
     };
     baseVariables['legend'] = {
-      color: chartColors.grayDarkThree,
+      color: ChartColors.grayDarkThree,
       autoMargins: false,
       align: 'center',
       position: 'bottom',
@@ -75,7 +78,7 @@
       adjustBorderColor: true,
       borderThickness: 1,
       fillAlpha: 1,
-      fillColor: chartColors.brandWhite,
+      fillColor: ChartColors.brandWhite,
       fixedPosition: true,
       shadowAlpha: 0,
     };
@@ -131,7 +134,7 @@
         startEffect: 'easeOutSine',
         addClassNames: true,
         fontFamily: 'CiscoSansTT Extra Light',
-        backgroundColor: chartColors.brandWhite,
+        backgroundColor: ChartColors.brandWhite,
         backgroundAlpha: 1,
         balloon: baseVariables['balloon'],
         autoMarginOffset: 25,
@@ -204,7 +207,7 @@
         valueScrollbar: {
           autoGridCount: true,
           color: '#AAAAAA',
-          backgroundColor: '#ffffff',
+          backgroundColor: ChartColors.brandWhite,
           backgroundAlpha: 1,
         },
         chartCursor: {

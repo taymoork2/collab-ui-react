@@ -11,6 +11,7 @@
     vm.tabs = [];
     vm.image = null;
     vm.collapsed = null;
+    vm.icon = null;
 
     initTabs();
 
@@ -71,6 +72,7 @@
 
     function initTabs() {
       vm.image = ControlHubService.getImage();
+      vm.icon = ControlHubService.getIcon();
       vm.collapsed = ControlHubService.getCollapsed();
       vm.unfilteredTabs = initializeTabs();
       vm.features = getUpdatedFeatureTogglesFromTabs(vm.unfilteredTabs, vm.features);

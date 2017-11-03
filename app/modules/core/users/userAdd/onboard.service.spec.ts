@@ -1,12 +1,10 @@
-'use strict';
+import moduleName from './index';
 
-var moduleName = require('./onboard.module');
-
-describe('OnboardService:', function () {
+describe('OnboardService:', () => {
   beforeEach(function () {
     this.initModules(moduleName);
     this.injectDependencies(
-      'OnboardService'
+      'OnboardService',
     );
   });
 
@@ -18,9 +16,9 @@ describe('OnboardService:', function () {
     };
   });
 
-  describe('getEntitlements():', function () {
+  describe('getEntitlements():', () => {
     it('should add elements to results list only if entitlement is true:', function () {
-      var result = this.OnboardService.getEntitlements('add', this.fakeEntitlements);
+      let result = this.OnboardService.getEntitlements('add', this.fakeEntitlements);
       expect(result.length).toBe(1);
 
       this.fakeEntitlements.fake2 = true;
@@ -33,7 +31,7 @@ describe('OnboardService:', function () {
     });
 
     it('should add elements with that have specific properties', function () {
-      var result = this.OnboardService.getEntitlements('add', this.fakeEntitlements);
+      const result = this.OnboardService.getEntitlements('add', this.fakeEntitlements);
       expect(result[0].entitlementName).toBe('fake1');
       expect(result[0].entitlementState).toBe('ACTIVE');
       expect(result[0].properties).toEqual({});

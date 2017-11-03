@@ -2,8 +2,11 @@
   'use strict';
 
   angular.module('Mediafusion').service('AvailabilityResourceGraphService', AvailabilityResourceGraphService);
+
+  var ChartColors = require('modules/core/config/chartColors').ChartColors;
+
   /* @ngInject */
-  function AvailabilityResourceGraphService(CommonReportsGraphService, chartColors, $translate, $rootScope) {
+  function AvailabilityResourceGraphService(CommonReportsGraphService, $translate, $rootScope) {
     var vm = this;
     vm.availabilitydiv = 'availabilitydiv';
     vm.exportDiv = 'availability-div';
@@ -26,8 +29,8 @@
     vm.unavailableTitle = $translate.instant('mediaFusion.metrics.unavailableTitle');
     vm.partialTitle = $translate.instant('mediaFusion.metrics.partialTitle');
 
-    vm.availabilityLegendCluster = [{ title: vm.availableTitle, color: chartColors.metricDarkGreen }, { title: vm.unavailableTitle, color: chartColors.negativeDarker }];
-    vm.availabilityLegendAllcluster = [{ title: vm.availableTitle, color: chartColors.metricDarkGreen }, { title: vm.unavailableTitle, color: chartColors.negativeDarker }, { title: vm.partialTitle, color: chartColors.attentionBase }];
+    vm.availabilityLegendCluster = [{ title: vm.availableTitle, color: ChartColors.metricDarkGreen }, { title: vm.unavailableTitle, color: ChartColors.negativeDarker }];
+    vm.availabilityLegendAllcluster = [{ title: vm.availableTitle, color: ChartColors.metricDarkGreen }, { title: vm.unavailableTitle, color: ChartColors.negativeDarker }, { title: vm.partialTitle, color: ChartColors.attentionBase }];
 
     return {
       setAvailabilityGraph: setAvailabilityGraph,
@@ -145,7 +148,7 @@
       var ExportFileName = 'MediaService_Availability_' + cluster + '_' + daterange + '_' + new Date();
       var chartData = CommonReportsGraphService.getGanttGraph(data.data[0].clusterCategories, valueAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames, vm.exportDiv), catAxes);
       chartData.legend = CommonReportsGraphService.getBaseVariable(vm.LEGEND);
-      chartData.legend.color = '#343537';
+      chartData.legend.color = ChartColors.grayDarkThree;
       chartData.legend.labelText = '[[title]]';
       chartData.legend.data = legend;
       chartData.graph.showHandOnHover = (selectedCluster === vm.allClusters);

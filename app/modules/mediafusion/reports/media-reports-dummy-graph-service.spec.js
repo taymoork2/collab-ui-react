@@ -1,5 +1,7 @@
 'use strict';
 
+var ChartColors = require('modules/core/config/chartColors').ChartColors;
+
 describe('Service: Media Reports Dummy Graph', function () {
   var vm = this;
   vm.timeFilter = [{
@@ -22,9 +24,8 @@ describe('Service: Media Reports Dummy Graph', function () {
   };
   beforeEach(angular.mock.module('Mediafusion'));
   describe('Dummy Data Responses', function () {
-    beforeEach(inject(function (_MediaReportsDummyGraphService_, _chartColors_) {
+    beforeEach(inject(function (_MediaReportsDummyGraphService_) {
       vm.MediaReportsDummyGraphService = _MediaReportsDummyGraphService_;
-      vm.chartColors = _chartColors_;
     }));
 
     it('MediaReportsDummyGraphService should return the expected responses for dummyAvailabilityData', function () {
@@ -52,11 +53,11 @@ describe('Service: Media Reports Dummy Graph', function () {
 
       vm.checkForDefined(responseFor4hrs, responseFor24hrs, respomseForLastWeek, responseForLastMonth, responseForLastThreeMonth);
 
-      expect(responseFor4hrs[0].colorTwo).toBe(vm.chartColors.grayLightTwo);
-      expect(responseFor24hrs[0].colorTwo).toBe(vm.chartColors.grayLightTwo);
-      expect(respomseForLastWeek[0].colorTwo).toBe(vm.chartColors.grayLightTwo);
-      expect(responseForLastMonth[0].colorTwo).toBe(vm.chartColors.grayLightTwo);
-      expect(responseForLastThreeMonth[0].colorTwo).toBe(vm.chartColors.grayLightTwo);
+      expect(responseFor4hrs[0].colorTwo).toBe(ChartColors.grayLightTwo);
+      expect(responseFor24hrs[0].colorTwo).toBe(ChartColors.grayLightTwo);
+      expect(respomseForLastWeek[0].colorTwo).toBe(ChartColors.grayLightTwo);
+      expect(responseForLastMonth[0].colorTwo).toBe(ChartColors.grayLightTwo);
+      expect(responseForLastThreeMonth[0].colorTwo).toBe(ChartColors.grayLightTwo);
     });
 
     it('MediaReportsDummyGraphService should return the expected responses for dummyLineChartData', function () {

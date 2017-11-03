@@ -186,6 +186,7 @@
     "insufficientEntitlementsError": "{{email}} cannot be added.  There are insufficient licenses to create this user.",
     "telstraAppRedirect": "Connecting to Telstra Apps Marketplace",
     "careAddUserError": "Failed to add user to Care.",
+    "careDeleteUserError": "Failed to delete the user from Care.",
     "careAddUserRoleError": "Error adding roles to user.",
     "careDeleteCESRoleError": "Error deleting CES role from user",
     "loadError": "An error while loading the users list.",
@@ -1898,6 +1899,20 @@
       "tooLongError": "Routing Prefix can contain a maximum of seven digits.",
       "required": "Routing Prefix is required."
     },
+    "routingPrefixLength": {
+      "title": "Routing Prefix Length",
+      "desc1": "Specify the total number of digits to be used to connect with users at other locations.",
+      "desc2": "If you prefer not to use a prefix, choose 0.",
+      "increaseWarning": "Changing the routing prefix length will change all internal numbers.  All phones will restart automatically.",
+      "modal": {
+        "title": "Choose Routing Prefix",
+        "validation": "Routing prefix must contain {{prefixLength}} digits.",
+        "description": "You have chosen a longer routing prefix length.  Please specify digit(s) to prepend to routing prefix.",
+        "saveSuccess": "Routing prefix length saved successfully.",
+        "saveFail": "Failed to update routing prefix length.",
+        "example": "Example: Routing prefix {{currentPrefix}} will change to {{prefix}}{{currentPrefix}}"
+      }
+    },
     "externalTransfer": {
       "title": "External Call Transfer/Conference",
       "desc": "Choose whether this user is allowed to do external call transfers and conferences. This will override global settings.",
@@ -2728,17 +2743,17 @@
           "UnexpectedException": "Unexpected Exception"
         },
         "fixes": {
-          "IOFailure": "TCP failure: TCP read/write failure: Please try again. If the error persists, check network connectivity, firewall configuration, and Mutual TLS configuration.",
-          "NoDNSHopsFound": "DNS Lookup failed. Check that a DNS or SRV record exists for your SIP Destination and that it resolves to one or more valid IP addresses.",
+          "IOFailure": "TCP failure: TCP read/write failure: Please try again. If the error persists, check network connectivity, firewall configuration, and Mutual TLS configuration. Search for ‘socket failure’ in the <a href=\"https://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">Troubleshooting Documentation</a.",
+          "NoDNSHopsFound": "DNS Lookup failed. Check that a DNS or SRV record exists for your SIP Destination and that it resolves to one or more valid IP addresses. Search for ‘DNS SRV’ in the <a href=\"https://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">Troubleshooting Documentation</a>.",
           "PingFailed": "SIP ping failed.",
-          "SipDestinationNotFound": "SIP destination not found. Check the value that you entered under Services > Hybrid Call > Settings in admin.ciscospark.com.",
-          "SipException": "SIP exception: Ensure the Expressway SIP configuration is valid. If error persists, open a support ticket in admin.ciscospark.com",
-          "SocketConnectionFailure": "TCP Connection failure: Check network connectivity, connection speed, and/or firewall configuration.",
-          "SocketReadWriteFailure": "TCP read/write failure: Please try again. If the error persists, check network connectivity, firewall configuration, and Mutual TLS configuration.",
-          "SocketTimedOut": "Network and/or Mutual TLS connection timed out. Check network connectivity, connection speed, firewall configuration, and Mutual TLS configuration.",
-          "SSLHandshakeFailure": "Mutual TLS Error: Check Mutual TLS configuration in both Expressway and admin.ciscospark.com, and that Mutual TLS certificates are present and valid in both locations.",
-          "UnexpectedError": "Unexpected error. Please try again. If the error persists, open a support ticket in admin.ciscospark.com",
-          "UnexpectedException": "Unexpected error: Please try again. If the error persists, open a support ticket in admin.ciscospark.com"
+          "SipDestinationNotFound": "SIP destination not found. Check the value that you entered under Services > Hybrid Call > Settings in <a href=\"https://admin.ciscospark.com\">admin.ciscospark.com</a>.",
+          "SipException": "SIP exception: Ensure the Expressway SIP configuration is valid. If error persists, open a support ticket in <a href=\"https://admin.ciscospark.com\">admin.ciscospark.com</a>.",
+          "SocketConnectionFailure": "TCP Connection failure: Check network connectivity, connection speed, and/or firewall configuration. Search for ‘socket failure’ in the <a href=\"https://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">Troubleshooting Documentation</a>.",
+          "SocketReadWriteFailure": "TCP read/write failure: Please try again. If the error persists, check network connectivity, firewall configuration, and Mutual TLS configuration. Search for ‘socket failure’ in the <a href=\"https://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">Troubleshooting Documentation</a>.",
+          "SocketTimedOut": "Network and/or Mutual TLS connection timed out. Check network connectivity, connection speed, firewall configuration, and Mutual TLS configuration. Search for ‘socket failure’ in the <a href=\"https://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">Troubleshooting Documentation</a>.",
+          "SSLHandshakeFailure": "Mutual TLS Error: Check Mutual TLS configuration in both Expressway and <a href=\"https://admin.ciscospark.com\">admin.ciscospark.com</a>, and that Mutual TLS certificates are present and valid in both locations.  Search for ‘Mutual TLS Handshake Failures’ in the <a href=\"https://www.cisco.com/go/hybrid-services-call\" target=\"_blank\">Troubleshooting Documentation</a>.",
+          "UnexpectedError": "Unexpected error. Please try again. If the error persists, open a support ticket in <a href=\"https://admin.ciscospark.com\">admin.ciscospark.com</a>.",
+          "UnexpectedException": "Unexpected error: Please try again. If the error persists, open a support ticket in <a href=\"https://admin.ciscospark.com\">admin.ciscospark.com</a>."
         }
       },
       "googleCalendar": {
@@ -3627,7 +3642,9 @@
       "anotherDownloadInProgress": "Another download is in progress",
       "waitingForDownload": "Downloading, please wait...",
       "expires": "Expires",
-      "expired": "Expired"
+      "expired": "Expired",
+      "reportsBanner": "Your report is being generated and may take up to a few hours or more. You can view the status in the list below or <a href ui-sref=\"{{sref}}\">generate another report</a>.",
+      "generating": "Generating..."
     },
     "originalConsole": {
       "subheading": "Find all relevant data for a space.",
@@ -4100,9 +4117,12 @@
     "actionDialByExtensionHint": "Prompt the caller for an internal extension and route the call.",
     "actionDialByExtensionHelp": "Enter the message used to prompt the caller for the extension to dial. Select the language and the voice for this phrase.",
     "actionEndCall": "Disconnect",
-    "actionRestApi": "REST API",
+    "actionRestApi": "Invoke REST API",
     "configureApi": "Configure API",
     "configureRestApi": "Configure REST API",
+    "requestRestApi": "Request",
+    "responseRestApi": "Response",
+    "assignmentRestApi": "Assignment",
     "schedule": "Schedule",
     "scheduleAllDay": "Open 24 hours",
     "scheduleOpen": "Open Hours",
@@ -4337,7 +4357,16 @@
     "AACustomDesc": "Create a custom Auto Attendant.",
     "AABusinessHours": "Business Hours",
     "AABusinessHoursDesc": "Simple open/closed schedule with custom actions.",
-    "variables": "Variables:"
+    "variables": "Variables:",
+    "configureApiHeading":"Request Test and Response Assignment",
+    "configureApiHeadingHelperText":"Provide test data for the variables defined in the url to test the connection and response to your REST API.",
+    "configureApiHelpertext":"Values below will be entered into the URL for testing and response assignment only.",
+    "restApiResponseVar":"Response Variable",
+    "restApiResponseVal":"Response Value",
+    "restApiCustomVar":"Custom Variable",
+    "customVariablesAssignmentHelpText":"Select Customer Variables to assign the value of the Responses from the REST API to use in the call flow.",
+    "Variables":"Variables",
+    "value":"Value"
   },
   "callPark": {
     "code": "CP",
@@ -5569,7 +5598,8 @@
     "deleteATAConfText": "Are you sure you want to delete Port 1?",
     "deleteDeviceType": "Delete {{deviceType}}",
     "analog": "Analog Telephone",
-    "failedToFetchCountries": "Failed to fetch countries. Reason:"
+    "failedToFetchCountries": "Failed to fetch countries. Reason:",
+    "failedToDisplayDevice": "Some device information may have failed to load."
   },
   "ataSettings": {
     "analog": "Analog Telephone",

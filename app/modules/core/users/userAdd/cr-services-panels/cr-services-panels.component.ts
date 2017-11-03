@@ -1,15 +1,29 @@
 import { IToolkitModalService } from 'modules/core/modal';
+import { Config } from 'modules/core/config/config';
 import MessengerInteropService from 'modules/core/users/userAdd/shared/messenger-interop.service';
 
 class CrServicesPanelsController implements ng.IComponentController {
+  public isCareEnabled = false;
+  public isCareAndCDCEnabled = false;
+  public isCareAndCVCEnabled = false;
+  public basicLicenses: any[];
+  public advancedLicenses: any[];
+
   /* @ngInject */
   constructor (
     private $modal: IToolkitModalService,
     private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
     private Authinfo,
+    private Config: Config,
     private MessengerInteropService: MessengerInteropService,
   ) {}
+
+  public $onInit(): void {
+    this.isCareAndCDCEnabled = this.Authinfo.isCareAndCDC();
+    this.isCareAndCVCEnabled = this.Authinfo.isCareVoiceAndCVC();
+    this.isCareEnabled = this.isCareAndCDCEnabled || this.isCareAndCVCEnabled;
+  }
 
   public hasAssignableMessageItems(): boolean {
     return this.MessengerInteropService.hasAssignableMessageItems();
@@ -42,10 +56,6 @@ class CrServicesPanelsController implements ng.IComponentController {
   }
 
   public showMessengerInteropToggle(): boolean {
-    // TODO: rm this, no longer needed as of 2017-05-22 ('showMessengerInteropToggle' has been set globally to true)
-    if (!_.get(this.$state, 'current.data.showMessengerInteropToggle')) {
-      return false;
-    }
     return this.MessengerInteropService.hasAssignableMessageOrgEntitlement();
   }
 
@@ -74,6 +84,29 @@ class CrServicesPanelsController implements ng.IComponentController {
   public careTooltip(): string {
     return '<div class="license-tooltip-html">' + this.$translate.instant('firstTimeWizard.careTooltip') + '</div>';
   }
+
+  public selectedSubscriptionHasBasicLicenses(subscriptionId: string): boolean {
+    if (subscriptionId && subscriptionId !== this.Config.subscriptionState.trial) {
+      return _.some(this.basicLicenses, function (service) {
+        if (_.get(service, 'billing') === subscriptionId) {
+          return !_.has(service, 'site');
+        }
+      });
+    }
+    return !_.isEmpty(this.basicLicenses);
+  }
+
+  public selectedSubscriptionHasAdvancedLicenses(subscriptionId: string): boolean {
+    const advancedLicensesInSubscription = _.filter(this.advancedLicenses, {
+      confLic: [{ billing: subscriptionId }],
+    });
+    if (subscriptionId && subscriptionId !== this.Config.subscriptionState.trial) {
+      return _.some(advancedLicensesInSubscription, function (service) {
+        return _.has(service, 'site');
+      });
+    }
+    return !_.isEmpty(this.advancedLicenses);
+  }
 }
 
 export class CrServicesPanelsComponent implements ng.IComponentOptions {
@@ -84,17 +117,14 @@ export class CrServicesPanelsComponent implements ng.IComponentOptions {
   // - these bindings are a transition measure, to facilitate migrating code out of `OnboardCtrl`
   // - TODO (mipark2): rm bindings as code is migrated out of `OnboardCtrl`
   public bindings = {
-    isCareEnabled: '<',
     messageFeatures: '<',
     radioStates: '<',
     checkLicenseAvailability: '<',
     entitlements: '<',
-    selectedSubscriptionHasBasicLicenses: '<',
     basicLicenses: '<',
     determineLicenseType: '<',
     generateLicenseTooltip: '<',
     generateLicenseTranslation: '<',
-    selectedSubscriptionHasAdvancedLicenses: '<',
     advancedLicenses: '<',
     updateCmrLicensesForMetric: '<',
     communicationFeatures: '<',
@@ -104,7 +134,6 @@ export class CrServicesPanelsComponent implements ng.IComponentOptions {
     careRadioValue: '<',
     cdcCareFeature: '<',
     currentUserEnablesCall: '<',
-    isCareAndCVCEnabled: '<',
     cvcCareFeature: '<',
     careFeatures: '<',
   };

@@ -552,7 +552,7 @@ export class Config {
       'users',
       'customerPstnOrdersOverview',
     ],
-    Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram'],
+    Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram', 'webexReportsPanel'],
     Tech_Support: ['gss'],
     WX2_User: ['overview', 'support', 'activateProduct'],
     WX2_Support: ['overview', 'reports', 'support'],

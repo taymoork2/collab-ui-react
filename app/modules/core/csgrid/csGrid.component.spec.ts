@@ -18,6 +18,7 @@ describe('Component: csGrid', () => {
       return {
         grid: {
           columns: [{
+            enableSorting: true,
             sort: {
               direction: direction,
             },

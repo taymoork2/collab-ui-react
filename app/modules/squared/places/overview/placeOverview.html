@@ -44,7 +44,7 @@
                 </a>
               </li>
               <li class="feature" ng-if="$ctrl.showLanguage()">
-                <a ng-if="$ctrl.preferredLanguage" ng-click="$ctrl.openPreferredLanguage()">
+                <a href ng-if="$ctrl.preferredLanguage" ng-click="$ctrl.openPreferredLanguage()">
                   <span class="feature-name" translate="serviceSetupModal.preferredLanguage"></span>
                   <span class="feature-details feature-label">
                     {{$ctrl.preferredLanguage.label}}

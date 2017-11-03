@@ -12,6 +12,7 @@ describe('ProPackService', () => {
       'ProPackService',
     );
     spyOn(this.Authinfo, 'isPremium').and.returnValue(false);
+    spyOn(this.Authinfo, 'isEnterpriseCustomer').and.returnValue(false);
     spyOn(this.FeatureToggleService, 'atlasITProPackGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'atlasITProPackPurchasedGetStatus').and.returnValue(this.$q.resolve(true));
     installPromiseMatchers();

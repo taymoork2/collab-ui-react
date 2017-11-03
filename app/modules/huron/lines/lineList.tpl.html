@@ -26,5 +26,5 @@
 
     </cs-page-sub-header-right>
   </cs-page-sub-header>
-  <div id="linesListPanel" class="gridStyle col-md-12" ui-grid="linesListCtrl.gridOptions" ui-grid-infinite-scroll grid-spinner="linesListCtrl.gridRefresh"></div>
+  <cs-grid ng-if="linesListCtrl.gridOptions" id="linesListPanel" grid-api="gridApi" grid-options="linesListCtrl.gridOptions" spinner="linesListCtrl.gridRefresh"></cs-grid>
 </div>

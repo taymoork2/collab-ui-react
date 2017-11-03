@@ -26,6 +26,7 @@ class LocationCallerIdCtrl implements ng.IComponentController {
   public $onInit(): void {
     this.origCallerId = _.cloneDeep(this.callerId);
   }
+
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const {
       callerId,
@@ -48,8 +49,15 @@ class LocationCallerIdCtrl implements ng.IComponentController {
   }
 
   public onLocationCallerIdToggled(value: boolean): void {
-    if (value) {
+    if (value && this.origCallerId) {
       this.onChange(this.origCallerId);
+    } else if (value) {
+      this.callerId = new LocationCallerId({
+        name: this.companyName,
+        number: '',
+        uuid: '',
+      });
+      this.onChange(this.callerId);
     } else {
       this.onChange(null);
     }

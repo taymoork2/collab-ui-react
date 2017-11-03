@@ -9,8 +9,10 @@
                 <div class="h4 ct-card-info" translate="careChatTpl.preview"></div>
                 <article class="profile-preview ct-article">
                     <header>
-                        <div class="img">
-                            <i class="icon bot icon-bot-four icon-2x"></i>
+                        <img ng-if="careSetupAssistant.selectedVA.icon" class="uploded-bot-img"
+                          ng-src="{{careSetupAssistant.selectedVA.icon}}"/>
+                        <div class="img" ng-if="!careSetupAssistant.selectedVA.icon">
+                          <i class="icon bot icon-bot-four icon-2x"></i>
                         </div>
                         <div class="h5 profile-name" ng-bind="careSetupAssistant.template.configuration.virtualAssistant.config.name"></div>
                         <div class="right actions">

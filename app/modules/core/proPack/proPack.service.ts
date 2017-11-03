@@ -51,4 +51,8 @@ export class ProPackService {
       return result.proPack && !(result.proPackPurchased || this.Authinfo.isPremium());
     });
   }
+
+  public showProBadge(): boolean {
+    return this.Authinfo.isEnterpriseCustomer() && this.Authinfo.isPremium();
+  }
 }

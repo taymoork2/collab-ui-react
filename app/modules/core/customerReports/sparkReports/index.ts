@@ -27,7 +27,6 @@ export default angular
     require('angular-translate'),
     require('modules/core/config/urlConfig'),
     require('modules/core/scripts/services/authinfo'),
-    require('modules/core/config/chartColors').default,
   ])
   .controller('SparkReportCtrl', SparkReportCtrl)
   .service('DummySparkDataService', DummySparkDataService)

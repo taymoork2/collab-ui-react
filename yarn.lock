@@ -1931,45 +1931,30 @@ collab-ui-formly@~2.0.3:
     api-check "~7.5.0"
     collab-ui-ng "*"
 
-collab-ui-ng@*:
-  version "7.0.1"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/collab-ui-ng/-/collab-ui-ng-7.0.1.tgz#1b8b575fb89c453f0839d5e577a60a2938b24845"
+collab-ui-icons@^1.0.0:
+  version "1.0.0"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/collab-ui-icons/-/collab-ui-icons-1.0.0.tgz#961743805f0d7650c21fa2071d068de21499b74c"
+
+collab-ui-ng@*, collab-ui-ng@~7.7.0:
+  version "7.7.0"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/collab-ui-ng/-/collab-ui-ng-7.7.0.tgz#8ffe281de5d2deff99d3952beca8b6b6ebc80467"
   dependencies:
     angular "^1.5.0"
     angular-animate "^1.5.0"
     angular-messages "^1.5.0"
     angular-ui-grid "~3.0.7"
     angular-ui-router "^0.3.1"
-    collab-ui-stickyfill "^1.1.5"
     google-libphonenumber "^2.0.15"
     imagesloaded "3.1.8"
     jquery "2.1.1"
     masonry-layout "^4.1.1"
     moment "^2.10.6"
 
-collab-ui-ng@~7.3.0:
-  version "7.3.0"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/collab-ui-ng/-/collab-ui-ng-7.3.0.tgz#753275e79b19cdfcfabab46f5795be97e13624d9"
+collab-ui@~5.0.1:
+  version "5.0.1"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/collab-ui/-/collab-ui-5.0.1.tgz#a3d9c538d809ee079d332f5ae6945514e2d607e8"
   dependencies:
-    angular "^1.5.0"
-    angular-animate "^1.5.0"
-    angular-messages "^1.5.0"
-    angular-ui-grid "~3.0.7"
-    angular-ui-router "^0.3.1"
-    collab-ui-stickyfill "^1.1.5"
-    google-libphonenumber "^2.0.15"
-    imagesloaded "3.1.8"
-    jquery "2.1.1"
-    masonry-layout "^4.1.1"
-    moment "^2.10.6"
-
-collab-ui-stickyfill@^1.1.5:
-  version "1.1.5"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/collab-ui-stickyfill/-/collab-ui-stickyfill-1.1.5.tgz#9d8ebe06363a3745e1e5461946ee7af6eff31457"
-
-collab-ui@^4.8.0:
-  version "4.9.2"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-ui-npm-group/collab-ui/-/collab-ui-4.9.2.tgz#6aef687ed5a4b8c3699b9012f8e9a65692d9c5eb"
+    collab-ui-icons "^1.0.0"
 
 collection-visit@^1.0.0:
   version "1.0.0"

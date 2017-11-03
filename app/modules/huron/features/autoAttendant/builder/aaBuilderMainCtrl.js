@@ -279,6 +279,7 @@
         url: getThirdPartyRestApiDynamicUrl(action),
         method: action.method,
         responseActions: action.responseActions,
+        testResponse: action.testResponse,
       };
       return doRestBody;
     }
@@ -674,6 +675,7 @@
             url: '',
             method: response.method,
             responseActions: response.responseActions,
+            testResponse: response.testResponse,
           };
 
           // make use of 'response' to get rest of the items to be shown under the REST block

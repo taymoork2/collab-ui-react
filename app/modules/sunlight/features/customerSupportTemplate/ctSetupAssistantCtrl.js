@@ -967,26 +967,28 @@
     };
 
     vm.populateVirtualAssistantInfo = function () {
-      if (!vm.template.configuration.virtualAssistant) {
+      if (!vm.template.configuration.virtualAssistant || !vm.template.configuration.virtualAssistant.config) {
         vm.template.configuration.virtualAssistant = _.cloneDeep(defaultVirtualAssistantConfig);
       }
       vm.selectedVA = vm.template.configuration.virtualAssistant.config;
 
       // update modified VA Name from the configured VA info
-      if (vm.selectedVA && vm.selectedVA.id && vm.hasConfiguredVirtualAssistantServices) {
-        var selectedVA = _.find(vm.configuredVirtualAssistantServices, {
+      if (vm.hasConfiguredVirtualAssistantServices) {
+        var selectedVAFound = _.find(vm.configuredVirtualAssistantServices, {
           id: vm.selectedVA.id,
         });
-
-        if (selectedVA) {
-          vm.selectedVA.name = selectedVA.name;
+        if (selectedVAFound) {
+          vm.selectedVA.name = selectedVAFound.name;
+          vm.selectedVA.icon = selectedVAFound.icon;
           vm.vaSelectionCommit();
+        } else {
+          vm.template.configuration.virtualAssistant = _.cloneDeep(defaultVirtualAssistantConfig);
+          vm.selectedVA = vm.template.configuration.virtualAssistant.config;
         }
-      }
-      if (!selectedVA) {
+      } else {
         vm.template.configuration.virtualAssistant = _.cloneDeep(defaultVirtualAssistantConfig);
+        vm.selectedVA = vm.template.configuration.virtualAssistant.config;
       }
-      vm.selectedVA = vm.template.configuration.virtualAssistant.config;
     };
 
     //Use the existing template fields when editing the template
@@ -1692,7 +1694,7 @@
           } else if (vm.isEditFeature) {
             vm.populateVirtualAssistantInfo();
           }
-        }).catch(function (error) {
+        }, function (error) {
           vm.configuredVirtualAssistantServices = [];
           Notification.errorWithTrackingId(error, 'careChatTpl.getVirtualAssistantListError');
         });

@@ -582,9 +582,24 @@
   }
 
   .ediscovery-reports {
-    padding-top: 9.5rem;
     background-color: $gray-light-4;
     min-height: 100vh;
+
+    .report-banner {
+      padding-top: 9.5rem;
+
+      &--generating {
+        padding-top: 6.4rem;
+
+        .banner-padding {
+          padding-bottom: 52px;
+        }
+
+        .cs-alert-banner-text {
+          max-width: none;
+        }
+      }
+    }
 
     .group-icon {
       font-size: 1.5rem;

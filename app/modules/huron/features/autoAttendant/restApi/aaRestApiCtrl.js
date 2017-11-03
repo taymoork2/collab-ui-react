@@ -134,6 +134,8 @@
         action.url = '';
         action.method = '';
         action.variables = [];
+        action.restApiRequest = '';
+        action.restApiResponse = '';
         vm.menuEntry.addAction(action);
         AACommonService.setRestApiStatus(false);
         AACommonService.setIsValid(vm.uniqueCtrlIdentifer, false);

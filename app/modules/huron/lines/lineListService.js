@@ -186,7 +186,7 @@
             if (response.length > 0) {
               lines = lines.concat(response);
               page++;
-              getLinesInBatches((page * 100) + 1);
+              getLinesInBatches((page * 100));
             } else if (response.length <= 0) {
               Log.debug('No more lines returned. Exporting to file.');
 

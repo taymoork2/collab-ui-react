@@ -3,6 +3,7 @@ import {
   LocationSettingsOptionsService, LocationSettingsOptions,
   VoicemailPilotNumber, LocationCallerId,
 } from './shared';
+import { SWIVEL } from 'modules/huron/pstn';
 import { IOption } from 'modules/huron/dialing';
 import { InternalNumberRange } from 'modules/call/shared/internal-number-range';
 import { PstnService, PstnModel } from 'modules/huron/pstn';
@@ -206,6 +207,10 @@ class CallLocationCtrl implements ng.IComponentController {
     if (this.CallLocationSettingsService.matchesOriginalConfig(this.callLocationSettingsData)) {
       this.resetForm();
     }
+  }
+
+  public showES(): boolean {
+    return this.PstnModel.getProvider().apiImplementation !== SWIVEL;
   }
 
   public onEcbnChange(value: IOption): void {

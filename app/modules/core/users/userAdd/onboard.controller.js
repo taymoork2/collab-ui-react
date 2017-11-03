@@ -113,10 +113,6 @@ require('./_user-add.scss');
     $scope.currentUserEnablesCall = false;
     $scope.currentUserCommFeature = $scope.selectedCommFeature = null;
 
-    $scope.isCareAndCDCEnabled = Authinfo.isCareAndCDC();
-    $scope.isCareAndCVCEnabled = Authinfo.isCareVoiceAndCVC();
-    $scope.isCareEnabled = $scope.isCareAndCDCEnabled || $scope.isCareAndCVCEnabled;
-
     $scope.isDirSyncEnabled = DirSyncService.isDirSyncEnabled();
     $scope.convertUsersReadOnly = $stateParams.readOnly || $scope.isDirSyncEnabled;
 
@@ -842,36 +838,8 @@ require('./_user-add.scss');
         }
       });
 
-      $scope.hasBasicLicenses = !_.isEmpty($scope.basicLicenses);
-      $scope.hasAdvancedLicenses = !_.isEmpty($scope.advancedLicenses);
-
       populateConf();
       populateConfInvitations();
-    };
-
-    /* TODO: Refactor this functions into MultipleSubscriptions Controller */
-    $scope.selectedSubscriptionHasBasicLicenses = function (subscriptionId) {
-      if (subscriptionId && subscriptionId !== Config.subscriptionState.trial) {
-        return _.some($scope.basicLicenses, function (service) {
-          if (_.get(service, 'billing') === subscriptionId) {
-            return !_.has(service, 'site');
-          }
-        });
-      } else {
-        return $scope.hasBasicLicenses;
-      }
-    };
-
-    /* TODO: Refactor this functions into MultipleSubscriptions Controller */
-    $scope.selectedSubscriptionHasAdvancedLicenses = function (subscriptionId) {
-      var advancedLicensesInSubscription = _.filter($scope.advancedLicenses, { confLic: [{ billing: subscriptionId }] });
-      if (subscriptionId && subscriptionId !== Config.subscriptionState.trial) {
-        return _.some(advancedLicensesInSubscription, function (service) {
-          return _.has(service, 'site');
-        });
-      } else {
-        return $scope.hasAdvancedLicenses;
-      }
     };
 
     $scope.isSharedMeetingsLicense = function (license) {
@@ -1277,7 +1245,7 @@ require('./_user-add.scss');
           } else if (_.startsWith(licenseId, Config.offerCodes.CVC)) {
             removeCareLicence($scope.cdcCareFeature, licenseList);
           }
-        } else if (action === 'patch') { // will get invoked when None is selected in care radio
+        } else if (action === 'patch' && $scope.careRadioValue.NONE !== $scope.radioStates.initialCareRadioState) { // will get invoked when None is selected in care radio and  previous state was not none
           removeCareLicence($scope.cdcCareFeature, licenseList);
           removeCareLicence($scope.cvcCareFeature, licenseList);
         }

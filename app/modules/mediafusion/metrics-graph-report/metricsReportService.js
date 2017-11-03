@@ -2,8 +2,11 @@
   'use strict';
 
   angular.module('Mediafusion').service('MetricsReportService', MetricsReportService);
+
+  var ChartColors = require('modules/core/config/chartColors').ChartColors;
+
   /* @ngInject */
-  function MetricsReportService($http, $translate, $q, Authinfo, Notification, chartColors, UrlConfig) {
+  function MetricsReportService($http, $translate, $q, Authinfo, Notification, UrlConfig) {
     var urlBase = UrlConfig.getAthenaServiceUrl() + '/organizations/' + Authinfo.getOrgId();
     var utilizationUrl = '/utilization';
     var callVolumeUrl = '/call_volume';
@@ -132,16 +135,16 @@
     function adjustCallVolumeData(activeData, returnData, startTime, endTime) {
       var returnDataArray = [];
       var graphItem = {
-        colorOne: chartColors.primaryBase,
-        colorTwo: chartColors.attentionBase,
+        colorOne: ChartColors.primaryBase,
+        colorTwo: ChartColors.attentionBase,
         balloon: true,
         call_reject: 0,
         active_calls: 0,
         timestamp: null,
       };
       var startDate = {
-        colorOne: chartColors.primaryBase,
-        colorTwo: chartColors.attentionBase,
+        colorOne: ChartColors.primaryBase,
+        colorTwo: ChartColors.attentionBase,
         call_reject: 0,
         active_calls: 0,
         timestamp: startTime,
@@ -155,8 +158,8 @@
         returnDataArray.push(tmpItem);
       }
       var endDate = {
-        colorOne: chartColors.primaryBase,
-        colorTwo: chartColors.attentionBase,
+        colorOne: ChartColors.primaryBase,
+        colorTwo: ChartColors.attentionBase,
         timestamp: endTime,
       };
       returnDataArray.push(endDate);

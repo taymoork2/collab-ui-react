@@ -5,7 +5,7 @@ var Spark = require('@ciscospark/spark-core').default;
 
   module.exports = EdiscoveryService;
   /* @ngInject */
-  function EdiscoveryService($document, $http, $location, $modal, $q, $timeout, $window, Authinfo, CacheFactory, EdiscoveryMockData, ReportUtilService, TokenService, UrlConfig) {
+  function EdiscoveryService($document, $http, $location, $modal, $q, $state, $timeout, $window, Authinfo, CacheFactory, EdiscoveryMockData, ReportUtilService, TokenService, UrlConfig) {
     var urlBase = UrlConfig.getAdminServiceUrl();
 
     var avalonRoomsUrlCache = CacheFactory.get('avalonRoomsUrlCache');
@@ -143,7 +143,8 @@ var Spark = require('@ciscospark/spark-core').default;
       };
       return $http
         .post(urlBase + 'compliance/organizations/' + orgId + '/reports/', roomParams)
-        .then(extractData);
+        .then(extractData)
+        .finally($state.go('ediscovery.reports'));
     }
 
     // new report generation api using argonaut notes:
