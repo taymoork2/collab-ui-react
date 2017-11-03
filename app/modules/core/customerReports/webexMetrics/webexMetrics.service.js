@@ -106,7 +106,7 @@
     function checkWebexAccessiblity() {
       var promises = {
         hasMetricsSites: hasMetricsSites(),
-        hasClassicEnabled: hasClassicEnabled(),
+        // hasClassicEnabled: hasClassicEnabled(),
         isMEIOn: isMEIFeatureToggleOn(),
         isSystemOn: isSystemFeatureToggleOn(),
       };

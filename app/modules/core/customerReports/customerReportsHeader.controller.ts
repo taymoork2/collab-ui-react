@@ -75,15 +75,23 @@ class CustomerReportsHeaderCtrl {
       if (isMetricsOn) {
         this.WebexMetricsService.checkWebexAccessiblity().then((supports: any): void => {
           const isSupported: any[] = this.WebexMetricsService.isAnySupported(supports);
-          if (supports.hasClassicEnabled) {
-            this.isWebexClassicEnabled = true;
-          }
           if (isSupported) {
             this.headerTabs.push({
               title: this.$translate.instant('reportsPage.webexMetrics.title'),
               state: 'reports.webex-metrics',
             });
           }
+          this.WebexMetricsService.hasClassicEnabled().then((hasClassicSite: any) => {
+            if (hasClassicSite) {
+              this.isWebexClassicEnabled = true;
+              if (!isSupported) {
+                this.headerTabs.push({
+                  title: this.$translate.instant('reportsPage.webexMetrics.title'),
+                  state: 'reports.webex-metrics',
+                });
+              }
+            }
+          });
         });
       } else {
         this.WebexMetricsService.hasClassicEnabled().then((hasClassicSite: any) => {
