@@ -221,7 +221,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
       const trackingId = response.config && response.config.headers && response.config.headers.TrackingID;
       if (!response.data.successfullyRetrievedFromCmi && !response.data.successfullyRetrievedFromCsdm) {
         DeviceSearch.ShowSearchError(Notification, null);
-      } else if (response.data.successfullyRetrievedFromCmi || response.data.successfullyRetrievedFromCsdm) {
+      } else if (!response.data.successfullyRetrievedFromCmi || !response.data.successfullyRetrievedFromCsdm) {
         if (!DeviceSearch.partialSearchError) {
           DeviceSearch.partialSearchError = true;
           DeviceSearch.ShowPartialSearchError(Notification, trackingId);
