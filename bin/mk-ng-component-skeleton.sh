@@ -95,9 +95,42 @@ export class $js_component_name implements ng.IComponentOptions {
 _EOF
 }
 
+function print_component_spec_ts {
+    cat << _EOF
+import moduleName from './index';
+
+describe('Component: ${js_directive_name}:', () => {
+  beforeEach(function() {
+    this.initModules(moduleName);
+    this.injectDependencies(
+      // TODO: add dependencies here
+    );
+  });
+
+  // TODO: use as-appropriate
+  beforeEach(function () {
+    // this.compileTemplate('<${html_element_name}></${html_element_name}>');
+    // this.compileComponent('${js_directive_name}', { ... });
+  });
+
+  describe('primary behaviors (view):', () => {
+    it('...', function () {
+      // TODO: implement
+    });
+  });
+
+  describe('primary behaviors (controller):', () => {
+    it('...', function () {
+      // TODO: implement
+    });
+  });
+});
+_EOF
+}
+
 touch "${dir_path}/${template_file}"
-touch "${dir_path}/${js_component_spec_file}"
 print_component_ts > "${dir_path}/${js_component_file}"
+print_component_spec_ts  > "${dir_path}/${js_component_spec_file}"
 print_index_ts > "${dir_path}/index.ts"
 
 function has_parent_index_ts {
