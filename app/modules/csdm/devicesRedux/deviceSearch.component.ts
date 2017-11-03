@@ -11,6 +11,8 @@ import { IBulletContainer } from './deviceSearchBullet.component';
 
 export class DeviceSearch implements ng.IComponentController, ISearchHandler, IBulletContainer {
 
+  private static partialSearchError: boolean;
+
   private lastSearchInput = '';
   public searchInput = '';
   public searchField = '';
@@ -204,6 +206,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
     this.CsdmSearchService.search(search, Caller.searchOrLoadMore).then((response) => {
       if (response && response.data) {
         this.updateSearchResult(response.data);
+        DeviceSearch.ShowPartialSearchErrors(response, this.Notification);
         return;
       }
       this.updateSearchResult();
@@ -213,6 +216,29 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
     });
   }
 
+  public static ShowPartialSearchErrors(response, Notification: Notification) {
+    if (response && response.data) {
+      const trackingId = response.config && response.config.headers && response.config.headers.TrackingID;
+      if (!response.data.successfullyRetrievedFromCmi && !response.data.successfullyRetrievedFromCsdm) {
+        DeviceSearch.ShowSearchError(Notification, null);
+      } else if (response.data.successfullyRetrievedFromCmi || response.data.successfullyRetrievedFromCsdm) {
+        if (!DeviceSearch.partialSearchError) {
+          DeviceSearch.partialSearchError = true;
+          DeviceSearch.ShowPartialSearchError(Notification, trackingId);
+        }
+      } else {
+        DeviceSearch.partialSearchError = false;
+      }
+    }
+  }
+
+  private static ShowPartialSearchError(Notification: Notification, trackingId: string) {
+    Notification.error('spacesPage.failedToLoadAllDevicesDetails',
+      { trackingID: trackingId },
+      'spacesPage.failedToLoadAllDevicesTitle',
+      true);
+  }
+
   public static ShowSearchError(Notification: Notification, e) {
     if (e) {
       if (e.status === 400) {
@@ -220,6 +246,8 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
       } else {
         Notification.errorResponse(e, 'spacesPage.searchFailed');
       }
+    } else {
+      Notification.error('spacesPage.searchFailed');
     }
   }
 
@@ -228,6 +256,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
       .then(response => {
         if (response && response.data) {
           this.updateSearchFilters(response.data);
+          DeviceSearch.ShowPartialSearchErrors(response.data, this.Notification);
           return;
         }
         this.updateSearchFilters();
