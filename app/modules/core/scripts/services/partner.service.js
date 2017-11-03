@@ -345,9 +345,8 @@
 
       if (isTrial) {
         status = (rowData.daysLeft < 0) ? 'expired' : 'trial';
-      } else if (_.get(rowData, 'licenseList', []).length === 0) {
-        // condition for pending status is empty license array (and not a trial)
-        status = 'pending';
+      } else if (_.isEmpty(rowData.licenseList)) {
+        status = 'expired';
       }
 
       return status;
@@ -364,28 +363,17 @@
         } else if (rowData.customerOrgId === Authinfo.getOrgId()) {
           notes.text = $translate.instant('customerPage.myOrganization');
         } else if (rowData.status === 'ACTIVE' || rowData.status === 'EXPIRED') {
-          // while "daysLeft > 0" and expired doesn't make sense, the other 2 cases have the same text
+          notes.sortOrder = customerStatus.NOTE_DAYS_LEFT;
           if (rowData.daysLeft > 0) {
-            // notes:
-            // - using "Needs Setup" for BOTH pending customer orgs and trials which do not have a start date set
-            // - no trial should ever normally not have a start date (it is started when it is created) but we have orders in orgs that meet this condition
-            // TODO: determine if the above quirk applies to live customers in production --^, and rm this check if not applicable
-            if ((rowData.accountStatus === 'pending') || ((rowData.accountStatus === 'trial') && !rowData.startDate)) {
-              notes.text = $translate.instant('customerPage.needsSetup');
-            } else {
-              notes.sortOrder = customerStatus.NOTE_DAYS_LEFT;
-              notes.text = $translate.instant('customerPage.daysLeftToPurchase', {
-                count: rowData.daysLeft,
-              }, 'messageformat');
-            }
+            notes.text = $translate.instant('customerPage.daysLeftToPurchase', {
+              count: rowData.daysLeft,
+            }, 'messageformat');
           } else if (rowData.daysLeft === 0) {
-            notes.sortOrder = customerStatus.NOTE_DAYS_LEFT;
             notes.text = $translate.instant('customerPage.expiringToday');
           } else if (rowData.daysLeft < 0) {
-            notes.sortOrder = customerStatus.NOTE_DAYS_LEFT;
             if (rowData.accountStatus === 'pending') {
               notes.text = $translate.instant('customerPage.needsSetup');
-            } else if (_.inRange(rowData.daysLeft, 0, Config.trialGracePeriod)) {
+            } else if (rowData.startDate && _.inRange(rowData.daysLeft, 0, Config.trialGracePeriod)) {
               notes.text = $translate.instant('customerPage.expiredWithGracePeriod');
             } else {
               notes.text = $translate.instant('customerPage.expired');
