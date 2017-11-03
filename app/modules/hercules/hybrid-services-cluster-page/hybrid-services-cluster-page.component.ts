@@ -45,6 +45,9 @@ class HybridServicesClusterPageCtrl implements ng.IComponentController {
           case 'ucm_mgmt':
             route = 'cucm';
             break;
+          case 'cs_mgmt':
+            route = 'context';
+            break;
           default:
             route = '';
         }
@@ -55,6 +58,10 @@ class HybridServicesClusterPageCtrl implements ng.IComponentController {
           title: this.$translate.instant('common.settings'),
           state: `${route}-cluster.settings`,
         }];
+        // Context clusters doesn't have settings so no need to display the tabs for now
+        if (cluster.targetType === 'cs_mgmt') {
+          this.tabs = [];
+        }
       });
 
     const deregister = this.$rootScope.$on('cluster-name-update', (_event, name) => {

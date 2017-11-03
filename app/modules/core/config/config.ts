@@ -480,6 +480,7 @@ export class Config {
       'context-fieldset-modal',
       'context-fieldsets-sidepanel',
       'context-resources',
+      'context-cluster',
       'context-cluster-sidepanel',
       'add-resource',
       'context-fields-sidepanel',
