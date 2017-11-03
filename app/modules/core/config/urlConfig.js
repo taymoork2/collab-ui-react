@@ -219,10 +219,10 @@
       prod: 'https://encryption-a.wbx2.com/encryption/api/v1',
     },
     L2sipUrl: {
-      dev: 'https://l2sip-cfa-web.wbx2.com/api/v1',
-      cfe: 'https://l2sip-loada.ciscospark.com/api/v1',
-      integration: 'https://l2sip-cfa-web.wbx2.com/api/v1', // Tool is not working in integration, we need to point to prod for now.
-      prod: 'https://l2sip-cfa-web.wbx2.com/api/v1',
+      dev: 'https://l2sip-cfa-web.wbx2.com/l2sip/api/v1',
+      cfe: 'https://l2sip-loada.ciscospark.com/l2sip/api/v1',
+      integration: 'https://l2sip-cfa-web.wbx2.com/l2sip/api/v1', // Tool is not working in integration, we need to point to prod for now.
+      prod: 'https://l2sip-cfa-web.wbx2.com/l2sip/api/v1',
     },
     ArgonautReportUrl: {
       dev: 'https://argonaut-intb.ciscospark.com/argonaut/api/v1/compliance/report',

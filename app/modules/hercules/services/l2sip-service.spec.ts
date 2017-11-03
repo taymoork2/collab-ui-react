@@ -27,7 +27,7 @@ describe('L2SIP Service', () => {
     it ('should call the DNS test tool with the correct SIP Destination and TLS validation settings', () => {
 
       validateTls = true;
-      $httpBackend.expectGET(`https://l2sip-cfa-web.wbx2.com/api/v1/test/dns?name=${sipDestination}&validateTls=${validateTls}`).respond('200');
+      $httpBackend.expectGET(`https://l2sip-cfa-web.wbx2.com/l2sip/api/v1/test/dns?name=${sipDestination}&validateTls=${validateTls}`).respond('200');
       service.verifySipDestination(sipDestination, validateTls);
       $httpBackend.flush();
 
@@ -35,7 +35,7 @@ describe('L2SIP Service', () => {
 
     it ('should enforce TLS validation unless otherwise specified', () => {
 
-      $httpBackend.expectGET(`https://l2sip-cfa-web.wbx2.com/api/v1/test/dns?name=${sipDestination}&validateTls=true`).respond('200');
+      $httpBackend.expectGET(`https://l2sip-cfa-web.wbx2.com/l2sip/api/v1/test/dns?name=${sipDestination}&validateTls=true`).respond('200');
       service.verifySipDestination(sipDestination);
       $httpBackend.flush();
 
@@ -45,7 +45,7 @@ describe('L2SIP Service', () => {
     it ('should send the customer org id if logged in as a partner', () => {
 
       Authinfo.isCustomerLaunchedFromPartner.and.returnValue(true);
-      $httpBackend.expectGET(`https://l2sip-cfa-web.wbx2.com/api/v1/test/dns?name=${sipDestination}&validateTls=true&orgId=abc`).respond('200');
+      $httpBackend.expectGET(`https://l2sip-cfa-web.wbx2.com/l2sip/api/v1/test/dns?name=${sipDestination}&validateTls=true&orgId=abc`).respond('200');
       service.verifySipDestination(sipDestination);
       $httpBackend.flush();
 
@@ -65,7 +65,7 @@ describe('L2SIP Service', () => {
       const caller = '1234';
       const callee = '5678';
 
-      $httpBackend.expectGET(`https://l2sip-cfa-web.wbx2.com/api/v1/test/users?caller=${caller}&called=${callee}`).respond('200');
+      $httpBackend.expectGET(`https://l2sip-cfa-web.wbx2.com/l2sip/api/v1/test/users?caller=${caller}&called=${callee}`).respond('200');
       service.userTestCall(caller, callee);
       $httpBackend.flush();
 
