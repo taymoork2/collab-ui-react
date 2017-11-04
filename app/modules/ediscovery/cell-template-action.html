@@ -1,11 +1,4 @@
 <div class="ui-grid-cell-contents">
-  <span ng-if="!row.entity.isDone"
-        tooltip-placement="{{grid.renderContainers.body.visibleRowCache.indexOf(row) === 0 ? 'left' : 'top'}}"
-        tooltip="{{'ediscovery.reportsList.viewDetails' | translate}}"
-        tooltip-animation="false"
-        tooltip-append-to-body="true"
-        class="icon icon-info-outline action-icons"
-        ng-click="grid.appScope.viewReport(row.entity)"></span>
   <span ng-if="row.entity.canBeDownloaded">
     <span ng-if="!grid.appScope.downloadingReportId"
           tooltip-placement="{{grid.renderContainers.body.visibleRowCache.indexOf(row) === 0 ? 'left' : 'top'}}"
@@ -36,17 +29,10 @@
         tooltip-append-to-body="true"
         class="icon icon-report action-icons disabled">
   </span>
-
+  
   <span ng-if="row.entity.canBeCancelled && !grid.appScope.reportsBeingCancelled[row.entity.id]"
-        tooltip-placement="{{grid.renderContainers.body.visibleRowCache.indexOf(row) === 0 ? 'left' : 'top'}}"
-        tooltip="{{'ediscovery.reportsList.cancelReport' | translate}}"
-        tooltip-animation="false"
-        tooltip-append-to-body="true"
-        class="icon icon-exit action-icons"
-        ng-click="grid.appScope.cancelReport(row.entity.id)"></span>
-  <span ng-if="grid.appScope.reportsBeingCancelled[row.entity.id]" class="cancel-wait">
-    <i class="icon icon-exit action-icons"></i>
-    <i class="icon icon-spinner action-icons"></i>
+        translate="ediscovery.reportsList.cancel"
+        ng-click="grid.appScope.openCancelReportModal(row.entity.id)"></span>
   </span>
   <span ng-if="row.entity.encryptionKeyUrl"
         tooltip-placement="{{grid.renderContainers.body.visibleRowCache.indexOf(row) === 0 ? 'left' : 'top'}}"
