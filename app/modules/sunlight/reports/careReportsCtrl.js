@@ -3,13 +3,14 @@
 
   angular.module('Sunlight').controller('CareReportsController', CareReportsController);
   /* @ngInject */
-  function CareReportsController($log, $q, $scope, $timeout, $translate, CardUtils, CareReportsService, DrillDownReportProps, DummyCareReportService, Notification, ReportConstants, SunlightReportService) {
+  function CareReportsController($log, $q, $scope, $timeout, $translate, CardUtils, CareReportsService, DrillDownReportProps, DummyCareReportService, Notification, ReportConstants, SunlightReportService, FeatureToggleService) {
     var vm = this;
     var REFRESH = 'refresh';
     var SET = 'set';
     var EMPTY = 'empty';
     var RESIZE_DELAY_IN_MS = 100;
 
+    vm.isVideoEnabled = EMPTY;
     vm.dataStatus = REFRESH;
     vm.tableDataStatus = EMPTY;
     vm.snapshotDataStatus = REFRESH;
@@ -62,14 +63,6 @@
       return vm.timeSelected;
     }
 
-    vm.taskIncomingDrilldownProps = DrillDownReportProps.taskIncomingDrilldownProps(timeSelected);
-
-    vm.taskOfferedDrilldownProps = DrillDownReportProps.taskOfferedDrilldownProps(timeSelected);
-
-    vm.avgCsatDrilldownProps = DrillDownReportProps.avgCsatDrilldownProps(timeSelected);
-
-    vm.taskTimeDrilldownProps = DrillDownReportProps.taskTimeDrilldownProps(timeSelected);
-
     vm.filtersUpdate = filtersUpdate;
 
     var mediaTypes = ['all', 'chat', 'callback', 'voice'];
@@ -83,15 +76,27 @@
 
     vm.mediaTypeSelected = vm.mediaTypeOptions[1];
     vm.callbackFeature = false;
+
+    function setDrillDownProps() {
+      vm.taskIncomingDrilldownProps = DrillDownReportProps.taskIncomingDrilldownProps(timeSelected, vm.isVideoEnabled, vm.mediaTypeSelected.name);
+      vm.taskOfferedDrilldownProps = DrillDownReportProps.taskOfferedDrilldownProps(timeSelected);
+      vm.avgCsatDrilldownProps = DrillDownReportProps.avgCsatDrilldownProps(timeSelected, vm.isVideoEnabled, vm.mediaTypeSelected.name);
+      vm.taskTimeDrilldownProps = DrillDownReportProps.taskTimeDrilldownProps(timeSelected, vm.isVideoEnabled, vm.mediaTypeSelected.name);
+    }
+
     function filtersUpdate() {
+      setDrillDownProps();
       vm.dataStatus = REFRESH;
       vm.snapshotDataStatus = REFRESH;
       vm.tableDataStatus = EMPTY;
       vm.tableData = [];
+
       tableDataFor = _.pick(vm, ['mediaTypeSelected', 'timeSelected']);
       if (vm.tableDataPromise) {
         vm.tableDataPromise = undefined;
       }
+
+
       setFilterBasedTextForCare();
 
       showReportsWithDummyData();
@@ -271,8 +276,19 @@
       resizeCards();
       delayedResize();
     }
-    $timeout(function () {
-      filtersUpdate();
-    }, 30);
+
+    function renderCards(result) {
+      vm.isVideoEnabled = result;
+      setDrillDownProps();
+      $timeout(function () {
+        filtersUpdate();
+      }, 30);
+    }
+
+    vm.featurePromise = FeatureToggleService.atlasCareChatToVideoTrialsGetStatus().then(function (result) {
+      renderCards(result);
+    }).catch(function () {
+      renderCards(false);
+    });
   }
 })();

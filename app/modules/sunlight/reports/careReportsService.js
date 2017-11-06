@@ -431,6 +431,10 @@
         'createdTime', categoryAxis, valueAxes, exportReport, titles);
     }
 
+    function roundCSATAvg(value) {
+      return Math.round(value * 100) / 100;
+    }
+
     var service = {
       showTaskIncomingGraph: showTaskIncomingGraph,
       showTaskIncomingDummy: showTaskIncomingDummy,
@@ -448,6 +452,7 @@
       getAverageCsatGraphConfig: getAverageCsatGraphConfig,
       getTaskAggregateGraphConfig: getTaskAggregateGraphConfig,
       millisToTime: millisToTime,
+      roundCSATAvg: roundCSATAvg,
     };
 
     return service;
