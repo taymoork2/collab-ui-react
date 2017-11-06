@@ -1,6 +1,6 @@
 import cacheModuleName from './index';
 
-describe('CacheWarmUpService', () => {
+describe('ApiCacheManagementService', () => {
   const orgId = 'cisco';
   const csdmUrl = 'https://www.csdm.com/';
 
@@ -11,7 +11,7 @@ describe('CacheWarmUpService', () => {
       '$interval',
       '$q',
       'Authinfo',
-      'CacheWarmUpService',
+      'ApiCacheManagementService',
       'UrlConfig',
     );
     spyOn(this.Authinfo, 'getOrgId').and.returnValue(orgId);
@@ -54,7 +54,7 @@ describe('CacheWarmUpService', () => {
     spyOn(this.Authinfo, 'isAdmin').and.returnValue(true);
     this.expectCacheRequests();
 
-    this.CacheWarmUpService.warmUpCaches().catch((error) => {
+    this.ApiCacheManagementService.warmUpAsynchronousCaches().catch((error) => {
       fail(error);
     });
     this.$httpBackend.flush(this.numberOfExpectedRequests);
@@ -62,7 +62,7 @@ describe('CacheWarmUpService', () => {
 
   it('should not warm up any cache for non admins', function() {
     spyOn(this.Authinfo, 'isAdmin').and.returnValue(false);
-    this.CacheWarmUpService.warmUpCaches().catch((error) => {
+    this.ApiCacheManagementService.warmUpAsynchronousCaches().catch((error) => {
       fail(error);
     });
   });
@@ -71,14 +71,14 @@ describe('CacheWarmUpService', () => {
     spyOn(this.Authinfo, 'isAdmin').and.returnValue(true);
     this.expectCacheRequests();
 
-    this.CacheWarmUpService.warmUpOnInterval().catch(error => expect(error).toBe('canceled'));
+    this.ApiCacheManagementService.warmUpOnInterval().catch(error => expect(error).toBe('canceled'));
     this.$httpBackend.flush(this.numberOfExpectedRequests);
 
     this.expectCacheRequestsAfterInterval();
     this.expectCacheRequestsAfterInterval();
 
     // retriggering interval should cancel previous interval gracefully
-    this.CacheWarmUpService.warmUpOnInterval().catch(error => fail(error));
+    this.ApiCacheManagementService.warmUpOnInterval().catch(error => fail(error));
     this.$httpBackend.flush(this.numberOfExpectedRequests);
 
     this.expectCacheRequestsAfterInterval();
