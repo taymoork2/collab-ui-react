@@ -1,5 +1,31 @@
 'use strict';
 
+function initDependencies(object) {
+  object.injectDependencies('$controller', '$q', '$rootScope', '$httpBackend', 'Notification', '$interval',
+    'Authinfo', 'SunlightConfigService', 'UrlConfig', 'FeatureToggleService', 'URService');
+  object.$scope = object.$rootScope.$new();
+  object.$scope.orgConfigForm = { dirty: false };
+  object.intervalSpy = jasmine.createSpy('$interval', object.$interval).and.callThrough();
+  object.orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
+  object.urServiceUrl = object.UrlConfig.getSunlightURServiceUrl() + '/organization/' + object.orgId + '/queue/' + object.orgId;
+  object.sunlightChatConfigUrl = object.UrlConfig.getSunlightConfigServiceUrl() + '/organization/' +
+    object.Authinfo.getOrgId() + '/chat';
+  object.controller = object.$controller('CareLocalSettingsCtrl', {
+    $scope: object.$scope,
+    $interval: object.intervalSpy,
+    Notification: object.Notification,
+  });
+}
+
+function initSpies(object) {
+  spyOn(object.URService, 'createQueue').and.returnValue(object.$q.resolve('fake createQueue response'));
+  spyOn(object.URService, 'updateQueue').and.returnValue(object.$q.resolve('fake updateQueue response'));
+  spyOn(object.SunlightConfigService, 'updateChatConfig').and.returnValue(object.$q.resolve('fake updateChatConfig response'));
+  spyOn(object.SunlightConfigService, 'onBoardCare').and.returnValue(object.$q.resolve('fake onBoardCare response'));
+  spyOn(object.SunlightConfigService, 'onboardCareBot').and.returnValue(object.$q.resolve('fake onboardCareBot response'));
+  spyOn(object.FeatureToggleService, 'atlasCareAutomatedRouteTrialsGetStatus').and.returnValue(object.$q.resolve(true));
+}
+
 describe('Controller: Care Local Settings', function () {
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
@@ -13,26 +39,8 @@ describe('Controller: Care Local Settings', function () {
   }));
   beforeEach(
     function () {
-      this.injectDependencies('$controller', '$q', '$rootScope', '$httpBackend', 'Notification', '$interval',
-        'SunlightConfigService', 'UrlConfig', 'FeatureToggleService', 'URService');
-      this.$scope = this.$rootScope.$new();
-      this.intervalSpy = jasmine.createSpy('$interval', this.$interval).and.callThrough();
-      spyOn(this.FeatureToggleService, 'atlasCareAutomatedRouteTrialsGetStatus').and.returnValue(this.$q.resolve(true));
-      this.orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
-      this.urServiceUrl = this.UrlConfig.getSunlightURServiceUrl() + '/organization/' + this.orgId + '/queue/' + this.orgId;
-      this.queueDetails = getJSONFixture('sunlight/json/features/config/DefaultQueueDetails.json');
-      this.sunlightChatConfigUrl = this.UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + this.orgId + '/chat';
-      this.controller = this.$controller('CareLocalSettingsCtrl', {
-        $scope: this.$scope,
-        $interval: this.intervalSpy,
-        Notification: this.Notification,
-      });
-      this.$scope.orgConfigForm = { dirty: false };
-      spyOn(this.URService, 'createQueue').and.returnValue(this.$q.resolve('fake createQueue response'));
-      spyOn(this.URService, 'updateQueue').and.returnValue(this.$q.resolve('fake updateQueue response'));
-      spyOn(this.SunlightConfigService, 'updateChatConfig').and.returnValue(this.$q.resolve('fake updateChatConfig response'));
-      spyOn(this.SunlightConfigService, 'onBoardCare').and.returnValue(this.$q.resolve('fake onBoardCare response'));
-      spyOn(this.SunlightConfigService, 'onboardCareBot').and.returnValue(this.$q.resolve('fake onboardCareBot response'));
+      initDependencies(this);
+      initSpies(this);
     });
 
   describe('CareSettings - Init', function () {
@@ -193,26 +201,8 @@ describe('Care Settings - when org has K2 entitlement', function () {
   }));
   beforeEach(
     function () {
-      this.injectDependencies('$controller', '$q', '$rootScope', '$httpBackend', 'Notification', '$interval',
-        'FeatureToggleService', 'SunlightConfigService', 'UrlConfig', 'URService');
-      this.$scope = this.$rootScope.$new();
-      this.$scope.orgConfigForm = { dirty: false };
-      this.intervalSpy = jasmine.createSpy('$interval', this.$interval).and.callThrough();
-      this.orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
-      this.sunlightChatConfigUrl = this.UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + this.orgId + '/chat';
-      this.urServiceUrl = this.UrlConfig.getSunlightURServiceUrl() + '/organization/' + this.orgId + '/queue/' + this.orgId;
-      this.queueDetails = getJSONFixture('sunlight/json/features/config/DefaultQueueDetails.json');
-      spyOn(this.FeatureToggleService, 'atlasCareAutomatedRouteTrialsGetStatus').and.returnValue(this.$q.resolve(true));
-      this.controller = this.$controller('CareLocalSettingsCtrl', {
-        $scope: this.$scope,
-        $interval: this.intervalSpy,
-        Notification: this.Notification,
-      });
-      spyOn(this.URService, 'createQueue').and.returnValue(this.$q.resolve('fake createQueue response'));
-      spyOn(this.URService, 'updateQueue').and.returnValue(this.$q.resolve('fake updateQueue response'));
-      spyOn(this.SunlightConfigService, 'updateChatConfig').and.returnValue(this.$q.resolve('fake updateChatConfig response'));
-      spyOn(this.SunlightConfigService, 'onBoardCare').and.returnValue(this.$q.resolve('fake onBoardCare response'));
-      spyOn(this.SunlightConfigService, 'onboardCareBot').and.returnValue(this.$q.resolve('fake onboardCareBot response'));
+      initDependencies(this);
+      initSpies(this);
     });
 
   it('should enable setup care button, when Org is not onboarded', function () {
@@ -357,26 +347,8 @@ describe('Partner Logged in as org admin: Care Settings - when org has K2 entitl
   }));
   beforeEach(
     function () {
-      this.injectDependencies('$controller', '$q', '$rootScope', '$httpBackend', 'Notification', '$interval',
-        'Authinfo', 'SunlightConfigService', 'UrlConfig', 'URService', 'FeatureToggleService');
-      this.$scope = this.$rootScope.$new();
-      this.intervalSpy = jasmine.createSpy('$interval', this.$interval).and.callThrough();
-      this.orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
-      this.sunlightChatConfigUrl = this.UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + this.orgId + '/chat';
-      this.urServiceUrl = this.UrlConfig.getSunlightURServiceUrl() + '/organization/' + this.orgId + '/queue/' + this.orgId;
-      this.queueDetails = getJSONFixture('sunlight/json/features/config/DefaultQueueDetails.json');
-      spyOn(this.FeatureToggleService, 'atlasCareAutomatedRouteTrialsGetStatus').and.returnValue(this.$q.resolve(true));
-      this.controller = this.$controller('CareLocalSettingsCtrl', {
-        $scope: this.$scope,
-        $interval: this.intervalSpy,
-        Notification: this.Notification,
-      });
-      this.$scope.orgConfigForm = { dirty: false };
-      spyOn(this.URService, 'createQueue').and.returnValue(this.$q.resolve('fake createQueue response'));
-      spyOn(this.URService, 'updateQueue').and.returnValue(this.$q.resolve('fake updateQueue response'));
-      spyOn(this.SunlightConfigService, 'updateChatConfig').and.returnValue(this.$q.resolve('fake updateChatConfig response'));
-      spyOn(this.SunlightConfigService, 'onBoardCare').and.returnValue(this.$q.resolve('fake onBoardCare response'));
-      spyOn(this.SunlightConfigService, 'onboardCareBot').and.returnValue(this.$q.resolve('fake onboardCareBot response'));
+      initDependencies(this);
+      initSpies(this);
     });
 
   it('should enable setup care button, when Org is not onboarded', function () {
@@ -506,24 +478,8 @@ describe('Admin logged in: Care Settings - when org has K2 entitlement', functio
   }));
   beforeEach(
     function () {
-      this.injectDependencies('$controller', '$q', '$rootScope', '$httpBackend', 'Notification', '$interval',
-        'SunlightConfigService', 'UrlConfig', 'URService', 'FeatureToggleService');
-      this.$scope = this.$rootScope.$new();
-      this.intervalSpy = jasmine.createSpy('$interval', this.$interval).and.callThrough();
-      this.orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
-      this.sunlightChatConfigUrl = this.UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + this.orgId + '/chat';
-      this.urServiceUrl = this.UrlConfig.getSunlightURServiceUrl() + '/organization/' + this.orgId + '/queue/' + this.orgId;
-      this.queueDetails = getJSONFixture('sunlight/json/features/config/DefaultQueueDetails.json');
-      spyOn(this.FeatureToggleService, 'atlasCareAutomatedRouteTrialsGetStatus').and.returnValue(this.$q.resolve(true));
-      this.controller = this.$controller('CareLocalSettingsCtrl', {
-        $scope: this.$scope,
-        $interval: this.intervalSpy,
-        Notification: this.Notification,
-      });
-      this.$scope.orgConfigForm = { dirty: false };
-      spyOn(this.SunlightConfigService, 'updateChatConfig').and.returnValue(this.$q.resolve('fake updateChatConfig response'));
-      spyOn(this.SunlightConfigService, 'onBoardCare').and.returnValue(this.$q.resolve('fake onBoardCare response'));
-      spyOn(this.SunlightConfigService, 'onboardCareBot').and.returnValue(this.$q.resolve('fake onboardCareBot response'));
+      initDependencies(this);
+      initSpies(this);
     });
 
   it('should enable setup care button, when Org is not onboarded', function () {
@@ -659,20 +615,8 @@ describe('Care Settings - Routing Toggling', function () {
   }));
   beforeEach(
     function () {
-      this.injectDependencies('$controller', '$q', '$rootScope', '$httpBackend', 'Notification', '$interval',
-        'FeatureToggleService', 'SunlightConfigService', 'UrlConfig', 'URService');
-      this.$scope = this.$rootScope.$new();
-      this.intervalSpy = jasmine.createSpy('$interval', this.$interval).and.callThrough();
-      spyOn(this.FeatureToggleService, 'atlasCareAutomatedRouteTrialsGetStatus').and.returnValue(this.$q.resolve(true));
-      this.orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
-      this.queueDetails = getJSONFixture('sunlight/json/features/config/DefaultQueueDetails.json');
-      this.urServiceUrl = this.UrlConfig.getSunlightURServiceUrl() + '/organization/' + this.orgId + '/queue/' + this.orgId;
-      this.sunlightChatConfigUrl = this.UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + this.orgId + '/chat';
-      this.controller = this.$controller('CareLocalSettingsCtrl', {
-        $scope: this.$scope,
-        $interval: this.intervalSpy,
-        Notification: this.Notification,
-      });
+      initDependencies(this);
+      initSpies(this);
       this.$scope.orgConfigForm = {
         dirty: false,
         $setPristine: function () { },
@@ -681,8 +625,6 @@ describe('Care Settings - Routing Toggling', function () {
     });
 
   it('should show the saved org chat configurations as selected.', function () {
-    spyOn(this.SunlightConfigService, 'updateChatConfig').and.returnValue(this.$q.resolve('fake updateChatConfig response'));
-    spyOn(this.URService, 'createQueue').and.returnValue(this.$q.resolve('fake createQueue response'));
     this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
       .respond(200, { maxChatCount: 4, videoCallEnabled: true });
     this.$httpBackend.flush();
@@ -695,7 +637,6 @@ describe('Care Settings - Routing Toggling', function () {
   });
 
   it('should show the saved routing type as selected.', function () {
-    spyOn(this.URService, 'updateQueue').and.returnValue(this.$q.resolve('fake updateQueue response'));
     this.controller.defaultQueueStatus = this.controller.status.SUCCESS;
     this.$httpBackend.expectGET(this.urServiceUrl)
       .respond(200, { routingType: 'push' });
@@ -704,8 +645,6 @@ describe('Care Settings - Routing Toggling', function () {
     expect(this.controller.queueConfig.selectedRouting).toBe(this.controller.RoutingType.PUSH);
   });
   it('should show success toaster if update of orgChatConfig backend API is a success', function () {
-    spyOn(this.SunlightConfigService, 'updateChatConfig').and.returnValue(this.$q.resolve('fake updateChatConfig response'));
-    spyOn(this.URService, 'updateQueue').and.returnValue(this.$q.resolve('fake updateQueue response'));
     spyOn(this.Notification, 'success').and.returnValue(true);
     this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
       .respond(200, { maxChatCount: 4, videoCallEnabled: true });
@@ -721,8 +660,7 @@ describe('Care Settings - Routing Toggling', function () {
   });
 
   it('should show failure toaster if org chat config update backend API fails', function () {
-    spyOn(this.SunlightConfigService, 'updateChatConfig').and.returnValue(this.$q.reject('fake updateChatConfig response'));
-    spyOn(this.URService, 'updateQueue').and.returnValue(this.$q.resolve('fake updateQueue response'));
+    this.SunlightConfigService.updateChatConfig = jasmine.createSpy().and.returnValue(this.$q.reject('fake updateChatConfig response'));
     spyOn(this.Notification, 'errorWithTrackingId').and.returnValue(true);
     this.controller.queueConfig.selectedRouting = this.controller.RoutingType.PICK;
     this.controller.orgChatConfig.selectedChatCount = 4;
@@ -743,8 +681,6 @@ describe('Care Settings - Routing Toggling', function () {
   });
 
   it('should reset form if modification made is cancelled', function () {
-    spyOn(this.SunlightConfigService, 'updateChatConfig').and.returnValue(this.$q.resolve('fake updateChatConfig response'));
-    spyOn(this.URService, 'updateQueue').and.returnValue(this.$q.resolve('fake updateQueue response'));
     this.controller.queueConfig.selectedRouting = this.controller.RoutingType.PICK;
     this.controller.orgChatConfig.selectedChatCount = 4;
     this.controller.orgChatConfig.selectedVideoInChatToggle = true;

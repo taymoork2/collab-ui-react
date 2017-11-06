@@ -1,5 +1,29 @@
 'use strict';
 
+function init(object) {
+  object.injectDependencies('$controller', '$q', '$rootScope', '$httpBackend', 'Notification', '$interval',
+    'Authinfo', 'SunlightConfigService', 'UrlConfig', 'URService');
+  object.$scope = object.$rootScope.$new();
+  object.intervalSpy = jasmine.createSpy('$interval', object.$interval).and.callThrough();
+  object.$scope.wizard = {};
+  object.$scope.wizard.isNextDisabled = false;
+  object.orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
+  object.urServiceUrl = object.UrlConfig.getSunlightURServiceUrl() + '/organization/' + object.orgId + '/queue/' + object.orgId;
+  object.sunlightChatConfigUrl = object.UrlConfig.getSunlightConfigServiceUrl() + '/organization/' +
+    object.Authinfo.getOrgId() + '/chat';
+  object.controller = object.$controller('CareSettingsCtrl', {
+    $scope: object.$scope,
+    $interval: object.intervalSpy,
+    Notification: object.Notification,
+  });
+}
+
+function initSpies(object) {
+  spyOn(object.URService, 'getQueue').and.returnValue(object.$q.resolve('fake getQueue response'));
+  spyOn(object.SunlightConfigService, 'updateChatConfig').and.returnValue(object.$q.resolve('fake updateChatConfig response'));
+  spyOn(object.SunlightConfigService, 'onBoardCare').and.returnValue(object.$q.resolve('fake onBoardCare response'));
+  spyOn(object.SunlightConfigService, 'onboardCareBot').and.returnValue(object.$q.resolve('fake onboardCareBot response'));
+}
 describe('Partner managing other orgs: Controller: Care Settings', function () {
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('deba1221-ab12-cd34-de56-abcdef123456'),
@@ -14,24 +38,8 @@ describe('Partner managing other orgs: Controller: Care Settings', function () {
   }));
   beforeEach(
     function () {
-      this.injectDependencies('$controller', '$q', '$rootScope', '$httpBackend', 'Notification', '$interval',
-        'Authinfo', 'SunlightConfigService', 'UrlConfig', 'URService');
-      this.$scope = this.$rootScope.$new();
-      this.intervalSpy = jasmine.createSpy('$interval', this.$interval).and.callThrough();
-      this.$scope.wizard = {};
-      this.$scope.wizard.isNextDisabled = false;
-      this.orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
-      this.urServiceUrl = this.UrlConfig.getSunlightURServiceUrl() + '/organization/' + this.orgId + '/queue/' + this.orgId;
-      this.sunlightChatConfigUrl = this.UrlConfig.getSunlightConfigServiceUrl() + '/organization/' +
-        this.Authinfo.getOrgId() + '/chat';
-      this.controller = this.$controller('CareSettingsCtrl', {
-        $scope: this.$scope,
-        $interval: this.intervalSpy,
-        Notification: this.Notification,
-      });
-      spyOn(this.URService, 'getQueue').and.returnValue(this.$q.resolve('fake getQueue response'));
-      spyOn(this.SunlightConfigService, 'onBoardCare').and.returnValue(this.$q.resolve('fake onBoardCare response'));
-      spyOn(this.SunlightConfigService, 'onboardCareBot').and.returnValue(this.$q.resolve('fake onboardCareBot response'));
+      init(this);
+      initSpies(this);
     });
 
   describe('CareSettings - Init', function () {
@@ -224,23 +232,8 @@ describe('Partner managing other orgs: Care Settings - when org has K2 entitleme
   }));
   beforeEach(
     function () {
-      this.injectDependencies('$controller', '$q', '$rootScope', '$httpBackend', 'Notification', '$interval',
-        'SunlightConfigService', 'UrlConfig', 'URService');
-      this.$scope = this.$rootScope.$new();
-      this.intervalSpy = jasmine.createSpy('$interval', this.$interval).and.callThrough();
-      this.$scope.wizard = {};
-      this.$scope.wizard.isNextDisabled = false;
-      this.orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
-      this.urServiceUrl = this.UrlConfig.getSunlightURServiceUrl() + '/organization/' + this.orgId + '/queue/' + this.orgId;
-      this.sunlightChatConfigUrl = this.UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + this.orgId + '/chat';
-      this.controller = this.$controller('CareSettingsCtrl', {
-        $scope: this.$scope,
-        $interval: this.intervalSpy,
-        Notification: this.Notification,
-      });
-      spyOn(this.SunlightConfigService, 'updateChatConfig').and.returnValue(this.$q.resolve('fake updateChatConfig response'));
-      spyOn(this.SunlightConfigService, 'onBoardCare').and.returnValue(this.$q.resolve('fake onBoardCare response'));
-      spyOn(this.SunlightConfigService, 'onboardCareBot').and.returnValue(this.$q.resolve('fake onboardCareBot response'));
+      init(this);
+      initSpies(this);
     });
 
   it('should show enabled setup care button and disabled next button, if Org is not onboarded already.', function () {
@@ -383,21 +376,8 @@ describe('Partner managing his own org: Controller: Care Settings', function () 
   }));
   beforeEach(
     function () {
-      this.injectDependencies('$controller', '$q', '$rootScope', '$httpBackend', 'Notification', '$interval',
-        'Authinfo', 'SunlightConfigService', 'UrlConfig');
-      this.$scope = this.$rootScope.$new();
-      this.intervalSpy = jasmine.createSpy('$interval', this.$interval).and.callThrough();
-      this.$scope.wizard = {};
-      this.$scope.wizard.isNextDisabled = false;
-      this.sunlightChatConfigUrl = this.UrlConfig.getSunlightConfigServiceUrl() + '/organization/' +
-        this.Authinfo.getOrgId() + '/chat';
-      this.controller = this.$controller('CareSettingsCtrl', {
-        $scope: this.$scope,
-        $interval: this.intervalSpy,
-        Notification: this.Notification,
-      });
-      spyOn(this.SunlightConfigService, 'onBoardCare').and.returnValue(this.$q.resolve('fake onBoardCare response'));
-      spyOn(this.SunlightConfigService, 'onboardCareBot').and.returnValue(this.$q.resolve('fake onboardCareBot response'));
+      init(this);
+      initSpies(this);
     });
 
   describe('CareSettings - Init', function () {
@@ -572,22 +552,8 @@ describe('Partner managing his own org: Care Settings - when org has K2 entitlem
   }));
   beforeEach(
     function () {
-      this.injectDependencies('$controller', '$q', '$rootScope', '$httpBackend', 'Notification', '$interval',
-        'SunlightConfigService', 'UrlConfig');
-      this.$scope = this.$rootScope.$new();
-      this.intervalSpy = jasmine.createSpy('$interval', this.$interval).and.callThrough();
-      this.$scope.wizard = {};
-      this.$scope.wizard.isNextDisabled = false;
-      this.orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
-      this.sunlightChatConfigUrl = this.UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + this.orgId + '/chat';
-      this.controller = this.$controller('CareSettingsCtrl', {
-        $scope: this.$scope,
-        $interval: this.intervalSpy,
-        Notification: this.Notification,
-      });
-      spyOn(this.SunlightConfigService, 'updateChatConfig').and.returnValue(this.$q.resolve('fake updateChatConfig response'));
-      spyOn(this.SunlightConfigService, 'onBoardCare').and.returnValue(this.$q.resolve('fake onBoardCare response'));
-      spyOn(this.SunlightConfigService, 'onboardCareBot').and.returnValue(this.$q.resolve('fake onboardCareBot response'));
+      init(this);
+      initSpies(this);
     });
 
   it('should show enabled setup care button and disabled next button, if Org is not onboarded already.', function () {
@@ -720,21 +686,7 @@ describe('Care Settings - when org is already onboarded', function () {
   }));
   beforeEach(
     function () {
-      this.injectDependencies('$controller', '$httpBackend', '$interval', '$q', '$rootScope', 'Notification',
-        'SunlightConfigService', 'UrlConfig');
-      this.intervalSpy = jasmine.createSpy('$interval', this.$interval).and.callThrough();
-      this.$scope = this.$rootScope.$new();
-      this.$scope.wizard = {};
-      this.$scope.wizard.isNextDisabled = false;
-      this.orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
-      this.sunlightChatConfigUrl = this.UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + this.orgId + '/chat';
-      this.controller = this.$controller('CareSettingsCtrl', {
-        $scope: this.$scope,
-        $interval: this.intervalSpy,
-        Notification: this.Notification,
-      });
-      spyOn(this.SunlightConfigService, 'updateChatConfig').and.returnValue(this.$q.resolve('fake updateChatConfig response'));
-      spyOn(this.SunlightConfigService, 'onBoardCare').and.returnValue(this.$q.resolve('fake onBoardCare response'));
+      init(this);
       spyOn(this.SunlightConfigService, 'onboardCareBot').and.returnValue(this.$q.reject({ status: 412 }));
     }
   );
