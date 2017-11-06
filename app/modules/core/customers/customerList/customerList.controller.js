@@ -106,7 +106,7 @@ require('./_customer-list.scss');
         return (a - b);
       },
 
-      notes: function (a, b) {
+      notes: function (a, b, rowA, rowB) {
         var modA = (a.sortOrder === PartnerService.customerStatus.NOTE_DAYS_LEFT) ? '0' : a.text;
         var modB = (b.sortOrder === PartnerService.customerStatus.NOTE_DAYS_LEFT) ? '0' : b.text;
         if (modA < modB) {
@@ -115,9 +115,21 @@ require('./_customer-list.scss');
           return 1;
         } else if (a.sortOrder === PartnerService.customerStatus.NOTE_DAYS_LEFT) {
           // Anything with 'days left' is sorted by the actual days, not the text
-          // which may vary depending on locale.  Also, all expired trials are treated
-          // as -1 days so that they are in a bucket to allow secondary column sorting
-          return Math.max(a.daysLeft, -1) - Math.max(b.daysLeft, -1);
+          // Then lump all expired but within grace period trials together (-1)
+          // Then lump all expired trials together (-2)
+          if (a.daysLeft < 0) {
+            modA = (rowA.entity.startDate && _.inRange(a.daysLeft, 0, Config.trialGracePeriod)) ? -1 : -2;
+          } else {
+            modA = a.daysLeft;
+          }
+
+          if (b.daysLeft < 0) {
+            modB = (rowB.entity.startDate && _.inRange(b.daysLeft, 0, Config.trialGracePeriod)) ? -1 : -2;
+          } else {
+            modB = b.daysLeft;
+          }
+
+          return modA - modB;
         }
         return 0;
       },
