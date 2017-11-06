@@ -50,10 +50,6 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
     this.updateSearchFilters();
   }
 
-  get searching(): boolean {
-    return this._inputActive;
-  }
-
   public $onInit(): void {
     this.performSearch(this.searchObject);
     this.searchInteraction.receiver = this;
@@ -109,7 +105,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
   }
 
   public clearSearchInput() {
-    this.searchObject.setWorkingElementText('');
+    this.searchObject.setQuery('');
     this.searchInput = '';
     this.lastSearchInput = '';
     this.searchChange();
@@ -179,6 +175,12 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
   public onSearchInputKeyDown($keyEvent: KeyboardEvent) {
     if ($keyEvent && $keyEvent.keyCode) {
       switch ($keyEvent.keyCode) {
+        case KeyCodes.BACKSPACE:
+          const target = $keyEvent.target;
+          if (target instanceof HTMLInputElement && target.selectionEnd === 0) {
+            this.deleteLastBullet();
+          }
+          break;
         case KeyCodes.DOWN:
           this.suggestions.nextSuggestion();
           break;
@@ -207,9 +209,10 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
       if (response && response.data) {
         this.updateSearchResult(response.data);
         DeviceSearch.ShowPartialSearchErrors(response, this.Notification);
-        return;
+      } else {
+        this.updateSearchResult();
       }
-      this.updateSearchResult();
+      this.isSearching = false;
     }).catch(e => {
       this.isSearching = false;
       DeviceSearch.ShowSearchError(this.Notification, e);
@@ -306,6 +309,14 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
       && searchResult.aggregations[aggregation].buckets;
     const bucket = _.find(buckets || [], { key: bucketName });
     return bucket && bucket.docCount || 0;
+  }
+
+  private deleteLastBullet() {
+    const bulletList = this.searchObject.getBullets();
+    const lastBullet = _.findLast(bulletList, b => !b.isBeingEdited());
+    if (lastBullet) {
+      this.removeBullet(lastBullet);
+    }
   }
 }
 
