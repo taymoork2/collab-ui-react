@@ -9,18 +9,24 @@ describe('Component: extensionPrefix', () => {
     this.initModules(routingPrefixLengthModalModule);
     this.injectDependencies(
       '$scope',
+      'FeatureToggleService',
+      'CustomerConfigService',
+      '$q',
     );
-
-    this.compileComponent('ucRoutingPrefixLengthModal', {
-      newRoutingPrefixLength: 'newRoutingPrefixLength',
-      oldRoutingPrefixLength: 'oldRoutingPrefixLength',
-      close: 'close()',
-      dismiss: 'dismiss()',
-    });
+    this.initComponent = () => {
+      this.compileComponent('ucRoutingPrefixLengthModal', {
+        newRoutingPrefixLength: 'newRoutingPrefixLength',
+        oldRoutingPrefixLength: 'oldRoutingPrefixLength',
+        close: 'close()',
+        dismiss: 'dismiss()',
+      });
+    };
   });
 
   describe('increase extension length from 3 to 7', () => {
     beforeEach(function() {
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
+      this.initComponent();
       this.$scope.oldRoutingPrefixLength = '3';
       this.$scope.newRoutingPrefixLength = '7';
       this.$scope.$apply();
@@ -35,6 +41,21 @@ describe('Component: extensionPrefix', () => {
       expect(this.view.find(INPUT_TEXT_CLASS).first()).toHaveClass(ERROR);
     });
 
+  });
+
+  describe('customerConfig for Toggle ON', () => {
+    beforeEach(function() {
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
+      spyOn(this.CustomerConfigService, 'createCompanyLevelCustomerConfig').and.callThrough();
+      this.initComponent();
+      this.$scope.$apply();
+    });
+
+    it('should have called customerConfig', function() {
+      this.view.find('#routingPrefix').val(1).change();
+      this.view.find('button.btn.btn-primary').click();
+      expect(this.CustomerConfigService.createCompanyLevelCustomerConfig).toHaveBeenCalled();
+    });
   });
 
 });

@@ -2,6 +2,7 @@ import { RoutingPrefixLengthComponent } from './settings-routing-prefix-length.c
 import routingPrefixModalModule from './settings-routing-prefix-length-modal';
 import settingsServiceModule from 'modules/call/settings/shared';
 import modalServiceModule from 'modules/core/modal';
+import customerConfigCesModule from 'modules/call/shared/customer-config-ces' ;
 
 export { RoutingPrefixLengthComponent };
 
@@ -12,6 +13,7 @@ export default angular
     routingPrefixModalModule,
     settingsServiceModule,
     modalServiceModule,
+    customerConfigCesModule,
   ])
   .component('ucRoutingPrefixLength', new RoutingPrefixLengthComponent())
   .name;

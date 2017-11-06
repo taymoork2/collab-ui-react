@@ -4,6 +4,7 @@ import { IToolkitModalService } from 'modules/core/modal';
 const MAX_ROUTING_PREFIX_LENGTH: number = 7;
 
 class RoutingPrefixLengthCtrl implements ng.IComponentController {
+  public extenstionLength: string;
   public routingPrefix: string;
   public routingPrefixLength: number;
   public settingsData: CallSettingsData;
@@ -22,6 +23,7 @@ class RoutingPrefixLengthCtrl implements ng.IComponentController {
 
   public $onInit(): void {
     this.routingPrefix = _.get(this.settingsData, 'defaultLocation.routingPrefix');
+    this.extenstionLength = _.get(this.settingsData, 'customerVoice.extensionLength');
     this.routingPrefixLength = this.originalRoutingPrefixLength = this.routingPrefix ? this.routingPrefix.length : 0;
     this.routingPrefixLengthOptions = this.buildRoutingPrefixLengthOptions();
   }
@@ -75,7 +77,7 @@ class RoutingPrefixLengthCtrl implements ng.IComponentController {
   private openRoutingPrefixModal(): ng.IPromise<any> {
     return this.$modal.open({
       type: 'small',
-      template: `<uc-routing-prefix-length-modal class="ucRoutingPrefixModal" current-routing-prefix="${this.routingPrefix}" new-routing-prefix-length="${this.routingPrefixLength}" old-routing-prefix-length="${this.originalRoutingPrefixLength}" dismiss="$dismiss()" close="$close()"></uc-routing-prefix-length-modal>`,
+      template: `<uc-routing-prefix-length-modal class="ucRoutingPrefixModal" current-routing-prefix="${this.routingPrefix}" new-routing-prefix-length="${this.routingPrefixLength}" old-routing-prefix-length="${this.originalRoutingPrefixLength}" extension-length="${this.extenstionLength}" dismiss="$dismiss()" close="$close()"></uc-routing-prefix-length-modal>`,
     }).result;
   }
 
