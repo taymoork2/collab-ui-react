@@ -5,7 +5,6 @@ import { SetupWizardService } from 'modules/core/setupWizard/setup-wizard.servic
 import { Config } from 'modules/core/config/config';
 import { Notification } from 'modules/core/notifications';
 import { EventNames } from './webex-site.constants';
-import { Authinfo } from 'modules/core/scripts/services/authinfo';
 
 export interface IStep {
   name: string;
@@ -50,7 +49,7 @@ class WebexAddSiteModalController implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    private Authinfo: Authinfo,
+    private Authinfo,
     private Config: Config,
     private Notification: Notification,
     private SetupWizardService: SetupWizardService,
@@ -73,19 +72,20 @@ class WebexAddSiteModalController implements ng.IComponentController {
 
   public $onInit(): void {
     this.subscriptionList = this.SetupWizardService.getSubscriptionListWithStatus();
+    const hasActionableSubscriptions = !_.isEmpty(this.subscriptionList) && !_.first(this.subscriptionList).isPending;
+    if (hasActionableSubscriptions) {
 
-    // if there are any non-pending subs the first will be non-pending
-    const firstSubscription = _.first(this.subscriptionList);
-    if (! firstSubscription.isPending) {
+      // if there are any non-pending subs the first will be non-pending
+      const firstSubscription = _.first(this.subscriptionList);
       this.changeCurrentSubscription(firstSubscription.id);
       if (this.subscriptionList.length === 1 && _.isNil(this.singleStep)) {
         this.firstStep = 1;
         this.next();
       }
     } else {
-      this.currentSubscriptionId = firstSubscription.id;
+      this.currentSubscriptionId = _.get(this.subscriptionList, '[0].id', '');
       this.isCanProceed = false;
-      this.singleStep = 1;
+      this.singleStep = this.totalSteps =  1;
     }
   }
 

@@ -6864,7 +6864,8 @@
     "redistributeRejectModalBodyPending": "You cannot redistribute licenses between sites because the WebEx service in this subscription has not been provisioned. Please go to Meeting Service Setup to provision this WebEx subscription.",
     "addSiteSuccess": "Site has been added successfully",
     "addSiteRejectModalTitle": "Cannot Add Site",
-    "addSiteRejectPending": "The WebEx service in this subscription is not yet provisioned, therefore you cannot add another site. Please go to <a ng-click=\"{{onclick}}\">Meeting Service Setup</a> and provision the WebEx service.",
+    "addSiteRejectNoSubscription": "You cannot add site because you have no active WebEx subscriptions",
+    "addSiteRejectPending": "The WebEx service in this subscription is not yet provisioned, therefore you cannot add another site. Please go to Meeting Service Setup and provision the WebEx service.",
     "addSiteSelectPending": "The WebEx service in this subscription is not yet provisioned, therefore you cannot add another site. Please select a different subscription or else go to <a ng-click=\"{{onclick}}\">Meeting Service Setup</a> and provision the WebEx service for this subscription."
 
   },

@@ -24,10 +24,13 @@ class WebexSiteSubscriptionCtrl implements ng.IComponentController {
   public onSubscriptionChange: Function;
   public onValidationStatusChange: Function;
   public isPending = false;
+  public noSubscription = false;
 
   public $onInit() {
     this.currentSubscription = _.find(this.subscriptions, { id: this.currentSubscriptionId });
-    if (this.currentSubscription.isPending) {
+    if (!this.currentSubscription) {
+      this.noSubscription = true;
+    } else if (this.currentSubscription.isPending) {
       this.isPending = true;
     }
   }

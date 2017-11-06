@@ -12,11 +12,16 @@
     <div class="error"
       ng-if="$ctrl.isPending">
       <p translate="webexSiteManagement.addSiteSelectPending"
-        translate-value-onclick="$ctrl.goToMeetingSetup()"></p>
+        translate-value-onclick="$ctrl.goToMeetingSetup()"
+        translate-compile></p>
     </div>
   </div>
-  <div ng-if="$ctrl.isPending && $ctrl.subscriptions.length == 1">
-    <p translate="webexSiteManagement.addSiteRejectPending"
-      translate-value-onclick="$ctrl.goToMeetingSetup()"></p>
+  <div class="error"
+    ng-if="$ctrl.isPending && $ctrl.subscriptions.length == 1">
+    <p translate="webexSiteManagement.addSiteRejectPending"></p>
+  </div>
+  <div class="error"
+    ng-if="$ctrl.noSubscription">
+    <p translate="webexSiteManagement.addSiteRejectNoSubscription"></p>
   </div>
 </div>

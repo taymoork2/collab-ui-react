@@ -88,9 +88,19 @@ describe('Component: WebexAddSiteModalComponent', function () {
       expect(this.controller.sitesArray).toEqual(expectedSites_48);
       expect(this.controller.audioPackage).toBe('CCASP');
     });
+    it('should not throw if there are no webex subscriptions', function () {
+      this.SetupWizardService.getNonTrialWebexLicenses.and.returnValue([]);
+      this.compileComponent('webexAddSiteModal');
+      expect(() => {
+        this.controller.$onInit();
+      }).not.toThrow();
+      expect(this.controller.currentSubscriptionId).toBe('');
+      expect(this.controller.isCanProceed).toBeFalsy();
+      expect(this.controller.totalSteps).toBe(1);
+    });
   });
 
-  describe('Call back functions handling', () => {
+  describe('Callback functions handling', () => {
     it('should on change subscription callback change the subscription id and repopulateInfo with new subscription id', function () {
       this.controller.currentSubscriptionId = '123';
       this.controller.changeCurrentSubscription('345');
