@@ -28,26 +28,6 @@ class CustomerReportsHeaderCtrl {
           state: 'reports.spark',
         });
       }
-      if (features.hasClassicEnabled) {
-        this.isWebexClassicEnabled = true;
-      }
-      if (features.webexMetrics) {
-        this.isWebexMetricsEnabled = true;
-        this.WebexMetricsService.checkWebexAccessiblity().then((supports: any): void => {
-          const isSupported: any[] = this.WebexMetricsService.isAnySupported(supports);
-          if (isSupported) {
-            this.headerTabs.push({
-              title: this.$translate.instant('reportsPage.webexMetrics.title'),
-              state: 'reports.webex-metrics',
-            });
-          }
-        });
-      } else {
-        this.headerTabs.push({
-          title: this.$translate.instant('reportsPage.webex'),
-          state: 'reports.webex',
-        });
-      }
       if (features.isMfEnabled) {
         if (features.mf) {
           this.headerTabs.push({
@@ -74,6 +54,7 @@ class CustomerReportsHeaderCtrl {
         this.goToFirstReportsTab();
       }
     });
+    this.checkWebex();
   }
 
   public isWebexClassicEnabled: boolean = false;
@@ -86,8 +67,44 @@ class CustomerReportsHeaderCtrl {
     isMfEnabled: this.MediaServiceActivationV2.getMediaServiceState(),
     webexMetrics: this.FeatureToggleService.webexMetricsGetStatus(),
     proPackEnabled: this.ProPackService.hasProPackEnabled(),
-    hasClassicEnabled: this.WebexMetricsService.hasClassicEnabled(),
   };
+
+  public checkWebex(): void {
+    this.FeatureToggleService.webexMetricsGetStatus().then((isMetricsOn: any) => {
+      this.isWebexMetricsEnabled = isMetricsOn;
+      if (isMetricsOn) {
+        this.WebexMetricsService.checkWebexAccessiblity().then((supports: any): void => {
+          const isSupported: any[] = this.WebexMetricsService.isAnySupported(supports);
+          if (isSupported) {
+            this.headerTabs.push({
+              title: this.$translate.instant('reportsPage.webexMetrics.title'),
+              state: 'reports.webex-metrics',
+            });
+          }
+          this.WebexMetricsService.hasClassicEnabled().then((hasClassicSite: any) => {
+            if (hasClassicSite) {
+              this.isWebexClassicEnabled = true;
+              if (!isSupported) {
+                this.headerTabs.push({
+                  title: this.$translate.instant('reportsPage.webexMetrics.title'),
+                  state: 'reports.webex-metrics',
+                });
+              }
+            }
+          });
+        });
+      } else {
+        this.WebexMetricsService.hasClassicEnabled().then((hasClassicSite: any) => {
+          if (hasClassicSite) {
+            this.headerTabs.push({
+              title: this.$translate.instant('reportsPage.webex'),
+              state: 'reports.webex',
+            });
+          }
+        });
+      }
+    });
+  }
 
   public goToFirstReportsTab(): void {
     const firstTab = this.headerTabs[0];

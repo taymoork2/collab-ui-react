@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function WebExMetricsCtrl(
-    $log,
     $q,
     $sce,
     $scope,
@@ -69,6 +68,7 @@
     vm.onStateChangeSuccess = onStateChangeSuccess;
     vm.updateWebexMetrics = updateWebexMetrics;
     vm.updateIframe = updateIframe;
+    vm.features = [];
 
     init();
 
@@ -108,12 +108,13 @@
       setViewHeight();
       var promises = {
         isMetricsOn: FeatureToggleService.webexMetricsGetStatus(),
-        hasClassicSite: WebexMetricsService.hasClassicEnabled(),
+        // hasClassicSite: WebexMetricsService.hasClassicEnabled(),
         hasMetricsSite: WebexMetricsService.hasMetricsSites(),
         isMEIOn: FeatureToggleService.webexMEIGetStatus(),
         isSystemOn: FeatureToggleService.webexSystemGetStatus(),
       };
       $q.all(promises).then(function (features) {
+        vm.features = features;
         if (features.isMetricsOn && features.hasMetricsSite) {
           vm.metricsOptions.push({
             title: 'reportsPage.webexMetrics.metrics',
@@ -136,9 +137,15 @@
             state: 'reports.webex-metrics.system',
           });
         }
-        $log.log('-----------webexMetricsController features ------------------');
+        /*$log.log('-----------webexMetricsController features ------------------');
         $log.log(features);
         if (features.isMetricsOn && features.hasClassicSite) {
+          vm.metricsOptions.push({
+            title: 'reportsPage.webexMetrics.classic',
+            state: 'reports.webex-metrics.classic',
+          });
+        }*/
+        if (features.isMetricsOn && $scope.header.isWebexClassicEnabled) {
           vm.metricsOptions.push({
             title: 'reportsPage.webexMetrics.classic',
             state: 'reports.webex-metrics.classic',

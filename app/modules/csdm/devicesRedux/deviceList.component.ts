@@ -170,6 +170,7 @@ class DeviceList implements ng.IComponentController {
         .then((response) => {
           if (response && response.data) {
             this.searchHits.hits.push.apply(this.searchHits.hits, response.data.hits.hits);
+            DeviceSearch.ShowPartialSearchErrors(response.data, this.Notification);
           }
         })
         .catch(e => DeviceSearch.ShowSearchError(this.Notification, e))

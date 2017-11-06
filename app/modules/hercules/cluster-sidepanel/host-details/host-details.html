@@ -24,10 +24,10 @@
     </table>
   </cs-sp-section>
 
-  <cs-sp-section ng-if="hostDetailsCtrl.showNodeLink()">
+  <cs-sp-section>
     <p style="padding-top: .875rem;"><a class="btn btn--primary" translate="hercules.connectors.goToNodes" ng-click="$ctrl.goToNodesPage()"></a></p>
   </cs-sp-section>
 
-  <alarm-list-section ng-if="!hostDetailsCtrl.isHybridContextCluster" alarms="hostDetailsCtrl.host.alarms" connector-type="hostDetailsCtrl.host.connectorType"></alarm-list-section>
+  <alarm-list-section alarms="hostDetailsCtrl.host.alarms" connector-type="hostDetailsCtrl.host.connectorType"></alarm-list-section>
 
 </cs-sp-container>

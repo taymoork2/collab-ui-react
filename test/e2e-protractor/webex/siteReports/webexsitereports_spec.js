@@ -18,7 +18,7 @@ while (1 >= webExCommon.testInfo.describeCount) {
       webExCommon.testInfo.describeText = 'WebEx site reports iframe test for BTS ' + webExCommon.testInfo.testType + ' site ' + webExCommon.BTS4.siteUrl;
   }
 
-  describe(webExCommon.testInfo.describeText, function () {
+  xdescribe(webExCommon.testInfo.describeText, function () {
     var setup = false;
 
     if (webExCommon.testInfo.testType == 'T31') {
