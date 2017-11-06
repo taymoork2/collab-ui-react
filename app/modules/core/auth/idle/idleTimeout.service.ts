@@ -10,7 +10,7 @@ export class IdleTimeoutService {
   private static readonly LOCAL_STORAGE_DEBOUNCE_INTERVAL = 60; //seconds
   private idleSetter;
   private logoutEvent = '';
-  private static readonly LOGIN_EVENT = 'LOGIN';
+  private static readonly LOGIN_EVENT = 'Core::loginCompleted';
   private keepAliveEvent = '';
   private keepAliveDeregistrer;
   private isInitialized = false;
