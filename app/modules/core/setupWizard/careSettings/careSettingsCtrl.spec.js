@@ -1,6 +1,6 @@
 'use strict';
 
-function init(object) {
+function initDependencies(object) {
   object.injectDependencies('$controller', '$q', '$rootScope', '$httpBackend', 'Notification', '$interval',
     'Authinfo', 'SunlightConfigService', 'UrlConfig', 'URService');
   object.$scope = object.$rootScope.$new();
@@ -38,7 +38,7 @@ describe('Partner managing other orgs: Controller: Care Settings', function () {
   }));
   beforeEach(
     function () {
-      init(this);
+      initDependencies(this);
       initSpies(this);
     });
 
@@ -232,7 +232,7 @@ describe('Partner managing other orgs: Care Settings - when org has K2 entitleme
   }));
   beforeEach(
     function () {
-      init(this);
+      initDependencies(this);
       initSpies(this);
     });
 
@@ -376,7 +376,7 @@ describe('Partner managing his own org: Controller: Care Settings', function () 
   }));
   beforeEach(
     function () {
-      init(this);
+      initDependencies(this);
       initSpies(this);
     });
 
@@ -552,7 +552,7 @@ describe('Partner managing his own org: Care Settings - when org has K2 entitlem
   }));
   beforeEach(
     function () {
-      init(this);
+      initDependencies(this);
       initSpies(this);
     });
 
@@ -686,7 +686,7 @@ describe('Care Settings - when org is already onboarded', function () {
   }));
   beforeEach(
     function () {
-      init(this);
+      initDependencies(this);
       spyOn(this.SunlightConfigService, 'onboardCareBot').and.returnValue(this.$q.reject({ status: 412 }));
     }
   );
