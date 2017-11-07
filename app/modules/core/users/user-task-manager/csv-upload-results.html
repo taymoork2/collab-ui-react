@@ -24,39 +24,8 @@
    error-total="$ctrl.numErroredUsers">
   </cr-users-tile-totals>
 
-  <!-- display the error details -->
-  <div class="flex-item-resize">
-    <div class="flex-container upload-errors" ng-if="$ctrl.userErrorArray.length > 0">
-
-      <div class="flex-item-no-resize">
-        <h5 translate="userManage.bulk.errorUsers"></h5>
-        <p>
-          <span translate="userManage.bulk.import.errorResolveInstructions"></span>
-          <span class="icon icon-info" tooltip="{{::'userManage.bulk.import.errorResolveTooltip' | translate}}"
-                tooltip-placement="top"></span>
-        </p>
-        <div class="error-download" ng-disabled="$ctrl.isProcessing">
-          <csv-download type="error" filename="errors.csv" no-icon="false" analytics-eventname="{{$ctrl.DOWNLOAD_ERRORS}}"
-                        anchor-text="{{::'userManage.bulk.import.exportErrors'|translate}}"></csv-download>
-        </div>
-      </div>
-
-      <div class="flex-item-no-resize table-header">
-        <div class="row">
-          <span class="columns small-2 center error-row" translate="userManage.bulk.import.headerRow"></span>
-          <span class="columns small-10 error-desc" translate="userManage.bulk.import.headerErrorMessage"></span>
-        </div>
-      </div>
-
-      <div class="flex-item-resize table-body">
-        <div class="scroller">
-          <div ng-repeat="data in $ctrl.userErrorArray" class="row">
-            <span class="columns small-2 center error-row">{{::data.itemNumber}}</span>
-            <span class="columns small-10 error-desc">{{::data.errorMessage}}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <cr-users-error-results ng-if="$ctrl.userErrorArray.length > 0"
+    user-error-array="$ctrl.userErrorArray">
+  </cr-users-error-results>
 
 </div>

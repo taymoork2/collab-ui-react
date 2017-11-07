@@ -3,7 +3,11 @@
 @import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
 @import '~collab-ui/scss/tools/mixins/spacing-responsive';
 
+@import 'styles/partials/mixins';
+
 csv-upload-results {
+
+  @include keep-flex(column);
 
   .base-margin {
     margin: 1em;
@@ -33,76 +37,9 @@ csv-upload-results {
     flex: 0 0 auto;
   }
 
-  .scroller {
-    overflow-y: scroll;
-  }
-
   .upload-complete {
     align-items: flex-start;
     @include vr-spacing(mv, 0.5);
   }
 
-  // Error display
-  .upload-errors {
-    background-color: transparent;
-
-    .error-download {
-      display: flex;
-      justify-content: flex-end;
-      flex-direction: row;
-    }
-
-    .csv-download {
-      font-size: small;
-      margin: 0;
-    }
-
-    p {
-      .icon {
-        color: $gray-light-1;
-        top: 0.1rem;
-
-        &:hover {
-          color: $color-primary-base;
-        }
-      }
-    }
-
-    .row {
-      border-color: $gray-dark;
-      border-style: solid;
-      border-width: thin thin 0;
-      display: flex;
-    }
-
-    div.row:last-child {
-      border-bottom-width: thin;
-    }
-
-    .error-row {
-      padding: 0.5rem 1rem;
-      overflow-x: hidden;
-    }
-
-    .error-desc {
-      border-color: $gray-dark;
-      border-style: solid;
-      border-width: 0 0 0 thin;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
-      padding: 0.5rem 1rem;
-    }
-
-    .table-header {
-      background-color: $gray-light-4;
-      color: $gray-dark;
-      text-align: left;
-      font-weight: bold;
-    }
-
-    .table-body {
-      color: $gray-base;
-    }
-  }
 }
