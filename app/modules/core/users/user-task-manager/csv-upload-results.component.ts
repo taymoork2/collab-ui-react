@@ -96,8 +96,11 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
     this.isProcessing = this.UserTaskManagerService.isTaskInProcess(task.status);
     this.isCancelledByUser = false;
     this.fileName = this.getShortFileName(task.filename);
-    this.startedDate = task.startedDate;
-    this.startedTime = task.startedTime;
+    const startedMoment = moment(task.started);
+    if (startedMoment.isValid()) {
+      this.startedDate = startedMoment.format('ll');
+      this.startedTime = startedMoment.format('LT');
+    }
     this.UserTaskManagerService.getUserDisplayAndEmail(task.creatorUserId)
     .then(userDisplayNameAndEmail => {
       this.startedBy = userDisplayNameAndEmail;
