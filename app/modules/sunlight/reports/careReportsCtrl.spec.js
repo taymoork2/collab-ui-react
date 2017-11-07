@@ -4,6 +4,7 @@ describe('Controller: Care Reports Controller', function () {
   var controller, $q, $scope, $translate, $timeout, CareReportsService, DummyCareReportService, FeatureToggleService,
     Notification, SunlightReportService, deferredReportingData, deferredTableData, deferredFeatureToggle,
     DrillDownReportProps;
+
   var timeOptions = [{
     value: 0,
     label: 'careReportsPage.today',
@@ -83,6 +84,10 @@ describe('Controller: Care Reports Controller', function () {
       spyOn(DummyCareReportService, 'dummyOrgStatsData');
       spyOn(Notification, 'errorResponse');
       spyOn(FeatureToggleService, 'atlasCareChatToVideoTrialsGetStatus').and.returnValue(deferredFeatureToggle.promise);
+      Object.keys(CareReportsService).forEach(function (key) {
+        spyOn(CareReportsService, key).and.returnValue([{}, {}]);
+      });
+
       controller = $controller('CareReportsController', {
         $scope: $scope,
         $q: $q,
@@ -109,6 +114,53 @@ describe('Controller: Care Reports Controller', function () {
     timeOptions = mediaTypeOptions = spiedAuthinfo = undefined;
   });
 
+  function verifyDummyDataTitle() {
+    expect(CareReportsService.showTaskIncomingDummy.calls.argsFor(0)[4]).toBeUndefined();
+    expect(CareReportsService.showTaskOfferedDummy.calls.argsFor(0)[3]).toBeUndefined();
+    expect(CareReportsService.showAverageCsatDummy.calls.argsFor(0)[4]).toBeUndefined();
+    expect(CareReportsService.showTaskAggregateDummy.calls.argsFor(0)[4]).toBeUndefined();
+    expect(CareReportsService.showTaskTimeDummy.calls.argsFor(0)[4]).toBeUndefined();
+  }
+
+  function verifyRealDataTitle(title, isToday) {
+    expect(CareReportsService.showTaskIncomingGraph.calls.argsFor(0)[4]).toEqual(title);
+    expect(CareReportsService.showTaskOfferedGraph.calls.argsFor(0)[3]).toEqual(title);
+    expect(CareReportsService.showAverageCsatGraph.calls.argsFor(0)[4]).toEqual(title);
+    expect(CareReportsService.showTaskTimeGraph.calls.argsFor(0)[4]).toEqual(title);
+
+    if (isToday) {
+      expect(CareReportsService.showTaskAggregateGraph.calls.argsFor(0)[4]).toEqual(title);
+    }
+  }
+
+  function verifyDummyData() {
+    expect(CareReportsService.showTaskIncomingDummy.calls.argsFor(0)[0]).toEqual('taskIncomingdiv');
+    expect(CareReportsService.showTaskOfferedDummy.calls.argsFor(0)[0]).toEqual('taskOffereddiv');
+    expect(CareReportsService.showAverageCsatDummy.calls.argsFor(0)[0]).toEqual('averageCsatDiv');
+    expect(CareReportsService.showTaskAggregateDummy.calls.argsFor(0)[0]).toEqual('taskAggregateDiv');
+    expect(CareReportsService.showTaskTimeDummy.calls.argsFor(0)[0]).toEqual('taskTimeDiv');
+
+    expect(CareReportsService.showTaskIncomingDummy.calls.argsFor(0)[1]).toEqual('taskIncomingBreakdownDiv');
+    expect(CareReportsService.showAverageCsatDummy.calls.argsFor(0)[1]).toEqual('averageCsatBreakdownDiv');
+    expect(CareReportsService.showTaskAggregateDummy.calls.argsFor(0)[1]).toEqual('taskAggregateBreakdownDiv');
+    expect(CareReportsService.showTaskTimeDummy.calls.argsFor(0)[1]).toEqual('taskTimeBreakdownDiv');
+  }
+
+  function verifyRealData(isToday) {
+    expect(CareReportsService.showTaskIncomingGraph.calls.argsFor(0)[0]).toEqual('taskIncomingdiv');
+    expect(CareReportsService.showTaskOfferedGraph.calls.argsFor(0)[0]).toEqual('taskOffereddiv');
+    expect(CareReportsService.showAverageCsatGraph.calls.argsFor(0)[0]).toEqual('averageCsatDiv');
+    expect(CareReportsService.showTaskTimeGraph.calls.argsFor(0)[0]).toEqual('taskTimeDiv');
+
+    expect(CareReportsService.showTaskIncomingGraph.calls.argsFor(0)[1]).toEqual('taskIncomingBreakdownDiv');
+    expect(CareReportsService.showAverageCsatGraph.calls.argsFor(0)[1]).toEqual('averageCsatBreakdownDiv');
+    expect(CareReportsService.showTaskTimeGraph.calls.argsFor(0)[1]).toEqual('taskTimeBreakdownDiv');
+    if (isToday) {
+      expect(CareReportsService.showTaskAggregateGraph.calls.argsFor(0)[0]).toEqual('taskAggregateDiv');
+      expect(CareReportsService.showTaskAggregateGraph.calls.argsFor(0)[1]).toEqual('taskAggregateBreakdownDiv');
+    }
+  }
+
   describe('CareReportsController - Init', function () {
     it('should show five time options', function () {
       expect(controller).toBeDefined();
@@ -133,66 +185,47 @@ describe('Controller: Care Reports Controller', function () {
     });
 
     it('should show Today and Task Incoming, Task Aggregate and Average Csat graphs on Init', function () {
-      $timeout(function () {
-        expect(CareReportsService.showTaskIncomingDummy.calls.argsFor(0)[0]).toEqual('taskIncomingdiv');
-        expect(CareReportsService.showTaskIncomingDummy.calls.argsFor(0)[0]).toEqual('taskOffereddiv');
-        expect(CareReportsService.showAverageCsatDummy.calls.argsFor(0)[0]).toEqual('averageCsatDiv');
-        expect(CareReportsService.showTaskAggregateDummy.calls.argsFor(0)[0]).toEqual('taskAggregateDiv');
-        expect(CareReportsService.showTaskIncomingGraph.calls.argsFor(0)[0]).toEqual('taskIncomingdiv');
-        expect(CareReportsService.showTaskOfferedGraph.calls.argsFor(0)[0]).toEqual('taskOffereddiv');
-        expect(CareReportsService.showAverageCsatGraph.calls.argsFor(0)[0]).toEqual('averageCsatDiv');
-        expect(CareReportsService.showTaskAggregateGraph.calls.argsFor(0)[0]).toEqual('taskAggregateDiv');
-        expect(CareReportsService.showTaskTimeDummy).not.toHaveBeenCalled();
-        expect(CareReportsService.showTaskTimeGraph).not.toHaveBeenCalled();
-      }, 1000);
+      deferredFeatureToggle.resolve(false);
+      $scope.$digest();
+      $timeout.flush();
+      verifyDummyData();
+      deferredReportingData.resolve([{}, {}]); $scope.$digest();
+      verifyRealData(true);
     });
   });
 
   describe('CareReportsController - Graph title', function () {
     it('should set title for dummydata as empty and todays date for actual data', function () {
       var title = moment().format('MMM D');
-      $timeout(function () {
-        expect(CareReportsService.showTaskIncomingDummy.calls.argsFor(0)[3]).toBeUndefined();
-        expect(CareReportsService.showTaskOfferedDummy.calls.argsFor(0)[3]).toBeUndefined();
-        expect(CareReportsService.showAverageCsatDummy.calls.argsFor(0)[3]).toBeUndefined();
-        expect(CareReportsService.showTaskAggregateDummy.calls.argsFor(0)[3]).toBeUndefined();
-        expect(CareReportsService.showTaskIncomingGraph.calls.argsFor(0)[3]).toEqual(title);
-        expect(CareReportsService.showTaskOfferedGraph.calls.argsFor(0)[3]).toEqual(title);
-        expect(CareReportsService.showAverageCsatGraph.calls.argsFor(0)[3]).toEqual(title);
-        expect(CareReportsService.showTaskAggregateGraph.calls.argsFor(0)[3]).toEqual(title);
-      }, 100);
+      deferredFeatureToggle.resolve(false);
+      $scope.$digest();
+      $timeout.flush();
+      verifyDummyDataTitle();
+      deferredReportingData.resolve([{}, {}]); $scope.$digest();
+      verifyRealDataTitle(title, true);
     });
 
     it('should set title for dummydata as empty and Yesterdays date for actual data', function () {
       controller.timeSelected = timeOptions[1];
-      controller.filtersUpdate();
       var title = (moment().subtract(1, 'days').format('MMM D'));
-      $timeout(function () {
-        expect(CareReportsService.showTaskIncomingDummy.calls.argsFor(0)[3]).toBeUndefined();
-        expect(CareReportsService.showTaskOfferedDummy.calls.argsFor(0)[3]).toBeUndefined();
-        expect(CareReportsService.showAverageCsatDummy.calls.argsFor(0)[3]).toBeUndefined();
-        expect(CareReportsService.showTaskAggregateDummy.calls.argsFor(0)[3]).toBeUndefined();
-        expect(CareReportsService.showTaskIncomingGraph.calls.argsFor(0)[3]).toEqual(title);
-        expect(CareReportsService.showTaskOfferedGraph.calls.argsFor(0)[3]).toEqual(title);
-        expect(CareReportsService.showAverageCsatGraph.calls.argsFor(0)[3]).toEqual(title);
-        expect(CareReportsService.showTaskAggregateGraph.calls.argsFor(0)[3]).toEqual(title);
-      }, 100);
+
+      deferredFeatureToggle.resolve(false);
+      $scope.$digest();
+      $timeout.flush();
+      verifyDummyDataTitle();
+      deferredReportingData.resolve([{}, {}]); $scope.$digest();
+      verifyRealDataTitle(title);
     });
 
     it('should set title for dummydata as empty and undefined for actual data when time selected is not today or yesterday', function () {
       var randomIndex = Math.floor((Math.random() * 3) + 2);
       controller.timeSelected = timeOptions[randomIndex];
-      controller.filtersUpdate();
-      $timeout(function () {
-        expect(CareReportsService.showTaskIncomingDummy.calls.argsFor(0)[3]).toBeUndefined();
-        expect(CareReportsService.showTaskOfferedDummy.calls.argsFor(0)[3]).toBeUndefined();
-        expect(CareReportsService.showAverageCsatDummy.calls.argsFor(0)[3]).toBeUndefined();
-        expect(CareReportsService.showTaskAggregateDummy.calls.argsFor(0)[3]).toBeUndefined();
-        expect(CareReportsService.showTaskIncomingGraph.calls.argsFor(0)[3]).toBeUndefined();
-        expect(CareReportsService.showTaskOfferedGraph.calls.argsFor(0)[3]).toBeUndefined();
-        expect(CareReportsService.showAverageCsatGraph.calls.argsFor(0)[3]).toBeUndefined();
-        expect(CareReportsService.showTaskAggregateGraph.calls.argsFor(0)[3]).toBeUndefined();
-      }, 100);
+      deferredFeatureToggle.resolve(false);
+      $scope.$digest();
+      $timeout.flush();
+      verifyDummyDataTitle();
+      deferredReportingData.resolve([{}, {}]); $scope.$digest();
+      verifyRealDataTitle();
     });
   });
 
@@ -201,29 +234,25 @@ describe('Controller: Care Reports Controller', function () {
     it('should send options for last week on selection', function () {
       controller.timeSelected = timeOptions[2];
       controller.mediaTypeSelected = mediaTypeOptions[1];
-      controller.filtersUpdate();
+
+      deferredFeatureToggle.resolve(false);
+      $scope.$digest();
+      $timeout.flush();
       expect(DummyCareReportService.dummyOrgStatsData.calls.argsFor(0)).toEqual([2]);
       expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_stats', 2, 'chat']);
       expect(SunlightReportService.getReportingData.calls.argsFor(1)).not.toEqual(['org_snapshot_stats', 1, 'chat']);
-
-      $timeout(function () {
-        expect(CareReportsService.showTaskIncomingDummy.calls.argsFor(0)[0]).toEqual('taskIncomingdiv');
-        expect(CareReportsService.showTaskOfferedDummy.calls.argsFor(0)[0]).toEqual('taskOffereddiv');
-        expect(CareReportsService.showTaskTimeDummy.calls.argsFor(0)[0]).toEqual('taskTimeDiv');
-        expect(CareReportsService.showAverageCsatDummy.calls.argsFor(0)[0]).toEqual('averageCsatDiv');
-        expect(CareReportsService.showTaskIncomingGraph.calls.argsFor(0)[0]).toEqual('taskIncomingdiv');
-        expect(CareReportsService.showTaskOfferedGraph.calls.argsFor(0)[0]).toEqual('taskOffereddiv');
-        expect(CareReportsService.showTaskTimeGraph.calls.argsFor(0)[0]).toEqual('taskTimeDiv');
-        expect(CareReportsService.showAverageCsatGraph.calls.argsFor(0)[0]).toEqual('averageCsatDiv');
-        expect(CareReportsService.showTaskAggregateDummy).not.toHaveBeenCalled();
-        expect(CareReportsService.showTaskAggregateGraph).not.toHaveBeenCalled();
-      }, 100);
+      verifyDummyData();
+      deferredReportingData.resolve([{}, {}]); $scope.$digest();
+      verifyRealData();
+      expect(CareReportsService.showTaskAggregateGraph).not.toHaveBeenCalled();
     });
 
     it('should send options for last month on selection', function () {
       controller.timeSelected = timeOptions[3];
       controller.mediaTypeSelected = mediaTypeOptions[0];
+      controller.mediaTypeSelected.label = 'All Tasks';
       controller.filtersUpdate();
+      $timeout.flush();
       expect(DummyCareReportService.dummyOrgStatsData.calls.argsFor(0)).toEqual([3]);
       expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_stats', 3, 'all']);
       expect(SunlightReportService.getReportingData.calls.argsFor(1)).not.toEqual(['org_snapshot_stats', 1, 'all']);
@@ -233,6 +262,7 @@ describe('Controller: Care Reports Controller', function () {
       controller.timeSelected = timeOptions[4];
       controller.mediaTypeSelected = mediaTypeOptions[2];
       controller.filtersUpdate();
+      $timeout.flush();
       expect(DummyCareReportService.dummyOrgStatsData.calls.argsFor(0)).toEqual([4]);
       expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_stats', 4, 'callback']);
       expect(SunlightReportService.getReportingData.calls.argsFor(1)).not.toEqual(['org_snapshot_stats', 1, 'callback']);
@@ -253,6 +283,7 @@ describe('Controller: Care Reports Controller', function () {
       controller.timeSelected = timeOptions[0];
       controller.mediaTypeSelected = mediaTypeOptions[1];
       controller.filtersUpdate();
+      $timeout.flush();
       var testOnSuccess = function (data) {
         expect(data).toBeDefined();
         done();
@@ -268,6 +299,7 @@ describe('Controller: Care Reports Controller', function () {
       controller.timeSelected = timeOptions[0];
       controller.mediaTypeSelected = mediaTypeOptions[1];
       controller.filtersUpdate();
+      $timeout.flush();
       var data1 = null;
       var testOnSuccess = function (data) {
         expect(data).toBeDefined();
@@ -306,7 +338,9 @@ describe('Controller: Care Reports Controller', function () {
     it('should ignore dirty data, if media type or time filters are updated', function (done) {
       controller.timeSelected = timeOptions[2];
       controller.mediaTypeSelected = mediaTypeOptions[0];
+      controller.mediaTypeSelected.label = 'All Tasks';
       controller.filtersUpdate();
+      $timeout.flush();
 
       var testOnError = function (err) {
         expect(_.get(err, 'reason')).toEqual('filtersChanged');
@@ -319,7 +353,7 @@ describe('Controller: Care Reports Controller', function () {
       controller.timeSelected = timeOptions[1];
       controller.mediaTypeSelected = mediaTypeOptions[1];
       controller.filtersUpdate();
-
+      $timeout.flush();
       deferredReportingData.resolve(allUserFifteenMinutesStats.data);
       deferredTableData.resolve(ciUserStats);
       $scope.$digest();
@@ -332,7 +366,9 @@ describe('Controller: Care Reports Controller', function () {
 
       controller.timeSelected = timeOptions[2];
       controller.mediaTypeSelected = mediaTypeOptions[0];
+      controller.mediaTypeSelected.label = 'All Tasks';
       controller.filtersUpdate();
+      $timeout.flush();
 
       var testOnSuccess = function (data) {
         expect(data).not.toEqual([{ name: 'Test User' }]);
@@ -370,30 +406,30 @@ describe('Controller: Care Reports Controller', function () {
       failureResponse = undefined;
     });
 
-    it('should notify with error toaster on failure for yesterday', function (done) {
-      deferredReportingData.reject();
+    it('should notify with error toaster on failure for yesterday', function () {
+      deferredReportingData.reject(failureResponse);
       $scope.$apply();
       controller.timeSelected = timeOptions[0];
       controller.mediaTypeSelected = mediaTypeOptions[1];
-      controller.filtersUpdate().catch(function () {
-        expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Customer Satisfaction' });
-        expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Task Time Measure' });
-        expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Offered Tasks' });
-        expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Total Completed Tasks' });
-      }).finally(done());
+      controller.filtersUpdate();
+      $timeout.flush();
+      expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, 'careReportsPage.taskDataGetError');
+      expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, 'careReportsPage.taskDataGetError');
+      expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, 'careReportsPage.taskDataGetError');
+      expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, 'careReportsPage.taskDataGetError');
     });
 
-    it('should notify with error toaster on failure for today', function (done) {
-      deferredReportingData.reject();
+    it('should notify with error toaster on failure for today', function () {
+      deferredReportingData.reject(failureResponse);
       $scope.$apply();
       controller.timeSelected = timeOptions[0];
       controller.mediaTypeSelected = mediaTypeOptions[1];
-      controller.filtersUpdate().catch(function () {
-        expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Customer Satisfaction' });
-        expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Aggregated Tasks' });
-        expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Offered Tasks' });
-        expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, jasmine.any(String), { dataType: 'Total Completed Tasks' });
-      }).finally(done());
+      controller.filtersUpdate();
+      $timeout.flush();
+      expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, 'careReportsPage.taskDataGetError');
+      expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, 'careReportsPage.taskDataGetError');
+      expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, 'careReportsPage.taskDataGetError');
+      expect(Notification.errorResponse).toHaveBeenCalledWith(failureResponse, 'careReportsPage.taskDataGetError');
     });
   });
 });
