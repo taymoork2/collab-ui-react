@@ -31,19 +31,21 @@ describe('drilldownReports Controller Positive Test cases', function () {
       searchPlaceholder: 'Dummy Search Placeholder',
       state: 'SET',
       table: {
-        columnDefs: [
-          {
-            field: 'userName',
-            id: 'userName',
-            displayName: 'Dummy userName',
-            sortable: true,
-          }, {
-            field: 'csat',
-            id: 'averageCsat',
-            displayName: 'Dummy Csat',
-            sortable: true,
-          },
-        ],
+        gridOptions: {
+          columnDefs: [
+            {
+              field: 'userName',
+              id: 'userName',
+              displayName: 'Dummy userName',
+              sortable: true,
+            }, {
+              field: 'csat',
+              id: 'averageCsat',
+              displayName: 'Dummy Csat',
+              sortable: true,
+            },
+          ],
+        },
       },
       title: 'Dummy Title',
     };
@@ -114,5 +116,20 @@ describe('drilldownReports Controller Positive Test cases', function () {
     ddController.onGetDataSuccess([1, 2, 3]);
     ddController.toggleDrilldownReport();
     expect(callbackSpy).not.toHaveBeenCalled();
+  });
+
+  it('on change of props attribute, should set onRegisterApi attribute of gridOptions', function () {
+    var changeObj = {
+      props: {
+        currentValue: {
+          table: {
+            gridOptions: {},
+          },
+        },
+      },
+    };
+    expect(ddController.props.table.gridOptions.onRegisterApi).not.toBeDefined();
+    ddController.$onChanges(changeObj);
+    expect(ddController.props.table.gridOptions.onRegisterApi).toBeDefined();
   });
 });
