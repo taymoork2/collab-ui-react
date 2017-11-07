@@ -107,7 +107,7 @@ describe(' sunlightReportService', function () {
     $httpBackend.flush();
 
     sunlightReportService.getStats('all_user_stats', config).then(function (response) {
-      expect(response.data.data.length).toBe(12);
+      expect(response.data.data.length).toBe(14);
       expect(response.data.metadata.jobName).toBe('user_contact_stats_fifteen_minutes');
     });
     $httpBackend.flush();
@@ -207,19 +207,22 @@ describe(' sunlightReportService', function () {
     sunlightReportService.getAllUsersAggregatedData('all_user_stats', 1, 'chat').then(function (aggregatedData) {
       expect(aggregatedData.length).toBe(7);
 
-      expect(aggregatedData[0].avgCsatScore).toBe('-');
-      expect(aggregatedData[0].tasksHandled).toBe(1);
-      expect(aggregatedData[0].tasksAssigned).toBe(0);
-      expect(aggregatedData[0].handleTime).toBe(0);
+      expect(aggregatedData[0].avgCsatScore).toBe(3.2);
+      expect(aggregatedData[0].tasksHandled).toBe(5);
+      expect(aggregatedData[0].tasksAssigned).toBe(10);
+      expect(aggregatedData[0].avgHandleTime).toBe(17000);
       expect(aggregatedData[0].tasksOffered).toBe(20);
       expect(aggregatedData[0].tasksMissed).toBe(24);
       expect(aggregatedData[0].tasksAccepted).toBe(0);
+      expect(aggregatedData[0].avgWebcallHandleTime).toBe(13000);
+      expect(aggregatedData[0].avgWebcallCsatScore).toBe(3.4);
+      expect(aggregatedData[0].webcallTasksHandled).toBe(5);
       expect(aggregatedData[0].displayName).toBe('A GT user5');
 
       expect(aggregatedData[1].avgCsatScore).toBe(3.67);
       expect(aggregatedData[1].tasksHandled).toBe(3);
       expect(aggregatedData[1].tasksAssigned).toBe(4);
-      expect(aggregatedData[1].handleTime).toBe(27887);
+      expect(aggregatedData[1].avgHandleTime).toBe(27887);
       expect(aggregatedData[1].tasksOffered).toBe(25);
       expect(aggregatedData[1].tasksMissed).toBe(20);
       expect(aggregatedData[1].tasksAccepted).toBe(5);
@@ -228,7 +231,7 @@ describe(' sunlightReportService', function () {
       expect(aggregatedData[2].avgCsatScore).toBe(4);
       expect(aggregatedData[2].tasksHandled).toBe(7);
       expect(aggregatedData[2].tasksAssigned).toBe(10);
-      expect(aggregatedData[2].handleTime).toBe(401973);
+      expect(aggregatedData[2].avgHandleTime).toBe(401973);
       expect(aggregatedData[2].tasksOffered).toBe(80);
       expect(aggregatedData[2].tasksMissed).toBe(53);
       expect(aggregatedData[2].tasksAccepted).toBe(27);
@@ -237,7 +240,7 @@ describe(' sunlightReportService', function () {
       expect(aggregatedData[3].avgCsatScore).toBe(4);
       expect(aggregatedData[3].tasksHandled).toBe(0);
       expect(aggregatedData[3].tasksAssigned).toBe(0);
-      expect(aggregatedData[3].handleTime).toBe(0);
+      expect(aggregatedData[3].avgHandleTime).toBe(0);
       expect(aggregatedData[3].tasksOffered).toBe(15);
       expect(aggregatedData[3].tasksMissed).toBe(7);
       expect(aggregatedData[3].tasksAccepted).toBe(8);

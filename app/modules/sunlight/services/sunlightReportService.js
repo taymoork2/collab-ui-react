@@ -30,11 +30,16 @@
     var emptyUserstats = {
       tasksHandled: 0,
       tasksAssigned: 0,
-      avgCsatScore: 0,
+      totalCSAT: 0,
       handleTime: 0,
       numCsatScores: 0,
       tasksOffered: 0,
       tasksMissed: 0,
+
+      webcallTasksHandled: 0,
+      webcallTotalCSAT: 0,
+      webcallHandleTime: 0,
+      webcallNumCsatScores: 0,
     };
 
     var service = {
@@ -142,8 +147,8 @@
     function finalAggregatedData(aggregatedData, careUserIDNameMap, isError) {
       _.forEach(aggregatedData, function (reportingUserData) {
         reportingUserData.displayName = careUserIDNameMap[reportingUserData.userId];
-        reportingUserData.avgCsatScore = reportingUserData.avgCsatScore ? roundTwoDecimalPlaces(reportingUserData.avgCsatScore) : '-';
-        reportingUserData.handleTime = Number((reportingUserData.handleTime).toFixed(0));
+        reportingUserData.avgHandleTime = Number((reportingUserData.avgHandleTime).toFixed(0));
+        reportingUserData.avgWebcallHandleTime = Number((reportingUserData.avgWebcallHandleTime).toFixed(0));
       });
 
       var deletedUserIndex = 0;
@@ -441,6 +446,10 @@
       var downSampledStatsByUserId = [];
       _.map(statsGroupedByUserId, function (statsList) {
         var reducedForUserId = _.reduce(statsList, reduceUserStats, emptyUserstats);
+        reducedForUserId.avgHandleTime = calculateAvg(reducedForUserId.handleTime, reducedForUserId.tasksHandled);
+        reducedForUserId.avgCsatScore = calculateAvg(reducedForUserId.totalCSAT, reducedForUserId.numCsatScores);
+        reducedForUserId.avgWebcallHandleTime = calculateAvg(reducedForUserId.webcallHandleTime, reducedForUserId.webcallTasksHandled);
+        reducedForUserId.avgWebcallCsatScore = calculateAvg(reducedForUserId.webcallTotalCSAT, reducedForUserId.webcallNumCsatScores);
         downSampledStatsByUserId.push(reducedForUserId);
       });
       _.map(downSampledStatsByUserId, function (stats) {
@@ -449,16 +458,24 @@
       return downSampledStatsByUserId;
     }
 
-    function reduceUserStats(stats1, stats2) {
-      var resultStats = _.clone(stats2);
-      resultStats.tasksHandled = stats1.tasksHandled + stats2.tasksHandled;
-      resultStats.tasksOffered = stats1.tasksOffered + stats2.tasksOffered;
-      resultStats.tasksMissed = stats1.tasksMissed + stats2.tasksMissed;
-      resultStats.tasksAssigned = stats1.tasksAssigned + stats2.tasksAssigned;
-      resultStats.numCsatScores = stats1.numCsatScores + stats2.numCsatScores;
-      resultStats.handleTime = calculateAvgHandleTime(stats1, stats2);
-      resultStats.avgCsatScore = calculateUserAverageCsat(stats1, stats2);
-      return resultStats;
+    function reduceUserStats(reducedResult, currentStats) {
+      var clonedResult = _.clone(reducedResult);
+      if (currentStats.mediaType === 'webcall') {
+        clonedResult.webcallTasksHandled += currentStats.tasksHandled;
+        clonedResult.webcallNumCsatScores += currentStats.numCsatScores;
+        clonedResult.webcallHandleTime += currentStats.handleTime * currentStats.tasksHandled;
+        clonedResult.webcallTotalCSAT += currentStats.avgCsatScore * currentStats.numCsatScores;
+      } else {
+        clonedResult.tasksHandled += currentStats.tasksHandled;
+        clonedResult.numCsatScores += currentStats.numCsatScores;
+        clonedResult.handleTime += currentStats.handleTime * currentStats.tasksHandled;
+        clonedResult.totalCSAT += currentStats.avgCsatScore * currentStats.numCsatScores;
+      }
+      clonedResult.tasksOffered = reducedResult.tasksOffered + currentStats.tasksOffered;
+      clonedResult.tasksMissed = reducedResult.tasksMissed + currentStats.tasksMissed;
+      clonedResult.tasksAssigned = reducedResult.tasksAssigned + currentStats.tasksAssigned;
+      clonedResult.userId = currentStats.userId;
+      return clonedResult;
     }
 
     function reduceOrgSnapshotStatsByHour(stats1, stats2) {
@@ -539,24 +556,14 @@
       return ((totalTasks != 0) ? (duration / totalTasks) : 0);
     }
 
-    function calculateAvgHandleTime(stats1, stats2) {
-      var totalHandledTasks = stats1.tasksHandled + stats2.tasksHandled;
-      var handleTime = (stats1.tasksHandled * stats1.handleTime) + (stats2.tasksHandled * stats2.handleTime);
-      return ((totalHandledTasks != 0) ? (handleTime / totalHandledTasks) : 0);
+    function calculateAvg(total, count) {
+      return count != 0 ? (total / count) : 0;
     }
 
     function calculateOrgAverageCsat(stats1, stats2) {
       var totalCsatScores = stats1.numCsatScores + stats2.numCsatScores;
       var csat = (totalCsatScores > 0) ?
         ((stats1.avgCsatScores * stats1.numCsatScores) + (stats2.avgCsatScores * stats2.numCsatScores)) /
-        (stats1.numCsatScores + stats2.numCsatScores) : 0;
-      return csat;
-    }
-
-    function calculateUserAverageCsat(stats1, stats2) {
-      var totalNumCsats = stats1.numCsatScores + stats2.numCsatScores;
-      var csat = (totalNumCsats > 0) ?
-        ((stats1.avgCsatScore * stats1.numCsatScores) + (stats2.avgCsatScore * stats2.numCsatScores)) /
         (stats1.numCsatScores + stats2.numCsatScores) : 0;
       return csat;
     }

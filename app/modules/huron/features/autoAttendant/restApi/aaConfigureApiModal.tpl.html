@@ -81,34 +81,37 @@
         <label class="h4 bold" translate="autoAttendant.configureApiHeading"></label>   
       </div>    
       <div class="large-12 medium-12 small-12 columns">   
-        <label translate="autoAttendant.configureApiHeadingHelperText"></label>   
+        <label class ="aa-rest-header-text" translate="autoAttendant.configureApiHeadingHelperText"></label>   
       </div>    
     </div>
     <div class="row">
         <div class="large-12 medium-12 small-12 columns">   
-          <label class="h4 bold" translate="autoAttendant.Variables"></label>   
-        </div>    
-        <div class="large-12 medium-12 small-12 columns">   
-          <label translate="autoAttendant.configureApiHelpertext"></label>    
+          <label class="h4 bold aa-variable-text" translate="autoAttendant.Variables"></label>   
         </div>    
       </div>  
     <div class="row">   
+      <div class="large-12 medium-12 small-12 columns">   
+          <label class ="aa-rest-helper-text" translate="autoAttendant.configureApiHelpertext"></label>    
+      </div>  
+
       <div class="large-10 medium-10 small-10 columns">
         <div class="row" ng-repeat="i in aaConfigureApiModal.dynamics">   
+          <p class = "large-12 medium-12 small-12 columns aa-rest-value-text" translate = "autoAttendant.value"></p>
           <div class="large-6 medium-6 small-6 columns">    
-            <input type="text" name="variables" ng-disabled = "true" ng-model="i.variableName">   
-          </div>    
+              <input type="text" name="value" ng-model="i.value" ng-keyup = "aaConfigureApiModal.isSaveDisabled(true)">   
+          </div>
           <div class="large-6 medium-6 small-6 columns">    
-            <input type="text" name="value" ng-model="i.value" ng-keyup = "aaConfigureApiModal.isSaveDisabled(true)">   
-          </div>    
-        </div>  
+            <label name="variables" class = "aa-rest-dynamic-variables">{{i.variableName}}</label>  
+          </div>        
+        </div>
       </div>    
+      <div> </div>
     </div>    
     <div class="row">   
       <div class="large-12 medium-12 small-12 columns">   
-        <button id="testBtn" class="btn btn-primary" ng-click="aaConfigureApiModal.callTestRestApiConfigs()" ng-disabled="aaConfigureApiModal.isTestDisabled();">{{ :: 'common.test' | translate }}</button>    
+        <button id="testBtn" class="btn btn-primary aa-rest-test-button-spacing" ng-click="aaConfigureApiModal.callTestRestApiConfigs()" ng-disabled="aaConfigureApiModal.isTestDisabled();">{{ :: 'common.test' | translate }}</button>    
       </div>    
-    </div>    
+    </div>
     <div class="row">   
       <div class="large-12 medium-12 small-12 columns">   
         <tabset>    

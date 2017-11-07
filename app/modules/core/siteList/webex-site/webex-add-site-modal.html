@@ -4,13 +4,14 @@
 </div>
 <div class="modal-body">
   <h4 translate="common.stepCurrentOfTotal"
-    ng-if="!$ctrl.singleStep"
+    ng-if="$ctrl.totalSteps > 1"
     translate-values="{current: $ctrl.getCurrentStep(), total: $ctrl.getTotalSteps()}">
   </h4>
   <p ng-if="$ctrl.currentStep > 0">{{$ctrl.currentSubscriptionId}}</p>
   <webex-site-subscription subscriptions="$ctrl.subscriptionList"
-    current-subscription="$ctrl.currentSubscriptionId"
+    current-subscription-id="$ctrl.currentSubscriptionId"
     on-subscription-change="$ctrl.changeCurrentSubscription(subId)"
+    on-validation-status-change="$ctrl.setNextEnabled(isValid)"
     ng-if="$ctrl.currentStep===0">
   </webex-site-subscription>
   <webex-site-transfer current-subscription="$ctrl.currentSubscriptionId"

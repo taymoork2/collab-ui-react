@@ -2,7 +2,8 @@
 
 describe('Controller: Care Reports Controller', function () {
   var controller, $q, $scope, $translate, $timeout, CareReportsService, DummyCareReportService, FeatureToggleService,
-    Notification, SunlightReportService, deferredReportingData, deferredTableData;
+    Notification, SunlightReportService, deferredReportingData, deferredTableData, deferredFeatureToggle,
+    DrillDownReportProps;
   var timeOptions = [{
     value: 0,
     label: 'careReportsPage.today',
@@ -60,7 +61,7 @@ describe('Controller: Care Reports Controller', function () {
   };
   beforeEach(
     inject(function ($controller, _$q_, _$translate_, _$timeout_, $rootScope, _CareReportsService_,
-      _DummyCareReportService_, _FeatureToggleService_, _Notification_, _SunlightReportService_) {
+      _DummyCareReportService_, _FeatureToggleService_, _Notification_, _SunlightReportService_, _DrillDownReportProps_) {
       $scope = $rootScope.$new();
       $translate = _$translate_;
       $timeout = _$timeout_;
@@ -70,12 +71,18 @@ describe('Controller: Care Reports Controller', function () {
       FeatureToggleService = _FeatureToggleService_;
       DummyCareReportService = _DummyCareReportService_;
       CareReportsService = _CareReportsService_;
+      DrillDownReportProps = _DrillDownReportProps_;
       deferredReportingData = _$q_.defer();
       deferredTableData = _$q_.defer();
+      deferredFeatureToggle = _$q_.defer();
       spyOn(SunlightReportService, 'getReportingData').and.returnValue(deferredReportingData.promise);
       spyOn(SunlightReportService, 'getAllUsersAggregatedData').and.returnValue(deferredTableData.promise);
+      spyOn(DrillDownReportProps, 'taskIncomingDrilldownProps');
+      spyOn(DrillDownReportProps, 'avgCsatDrilldownProps');
+      spyOn(DrillDownReportProps, 'taskTimeDrilldownProps');
       spyOn(DummyCareReportService, 'dummyOrgStatsData');
       spyOn(Notification, 'errorResponse');
+      spyOn(FeatureToggleService, 'atlasCareChatToVideoTrialsGetStatus').and.returnValue(deferredFeatureToggle.promise);
       controller = $controller('CareReportsController', {
         $scope: $scope,
         $q: $q,
@@ -85,6 +92,7 @@ describe('Controller: Care Reports Controller', function () {
         FeatureToggleService: FeatureToggleService,
         DummyCareReportService: DummyCareReportService,
         CareReportsService: CareReportsService,
+        DrillDownReportProps: DrillDownReportProps,
       });
     })
   );
@@ -94,7 +102,7 @@ describe('Controller: Care Reports Controller', function () {
     SunlightReportService.getReportingData.calls.reset();
     SunlightReportService.getAllUsersAggregatedData.calls.reset();
     $scope = $translate = $timeout = $q = SunlightReportService = Notification = FeatureToggleService = DummyCareReportService =
-      CareReportsService = deferredReportingData = deferredTableData = controller = undefined;
+      CareReportsService = deferredReportingData = deferredTableData = deferredFeatureToggle = controller = undefined;
   });
 
   afterAll(function () {
@@ -111,14 +119,17 @@ describe('Controller: Care Reports Controller', function () {
       expect(controller.mediaTypeOptions.length).toEqual(4);
     });
 
-    it('should make calls to data services with correct options', function (done) {
-      $timeout(function () {
-        expect(DummyCareReportService.dummyOrgStatsData.calls.argsFor(0)).toEqual([0]);
-        expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_snapshot_stats', 0, 'chat', true]);
-        expect(SunlightReportService.getReportingData.calls.argsFor(1)).toEqual(['org_stats', 0, 'chat']);
-        done();
-      }, 100);
+    it('should make calls to data services with correct options', function () {
+      deferredFeatureToggle.resolve(false);
+      $scope.$digest();
       $timeout.flush();
+      expect(controller.isVideoEnabled).toEqual(false);
+      expect(DummyCareReportService.dummyOrgStatsData.calls.argsFor(0)).toEqual([0]);
+      expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_snapshot_stats', 0, 'chat', true]);
+      expect(SunlightReportService.getReportingData.calls.argsFor(1)).toEqual(['org_stats', 0, 'chat']);
+      expect(DrillDownReportProps.taskIncomingDrilldownProps.calls.argsFor(0)[1]).toEqual(false);
+      expect(DrillDownReportProps.avgCsatDrilldownProps.calls.argsFor(0)[1]).toEqual(false);
+      expect(DrillDownReportProps.taskTimeDrilldownProps.calls.argsFor(0)[1]).toEqual(false);
     });
 
     it('should show Today and Task Incoming, Task Aggregate and Average Csat graphs on Init', function () {

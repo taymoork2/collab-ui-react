@@ -11,7 +11,10 @@ describe('Component: extensionPrefix', () => {
       '$scope',
       'Authinfo',
       'Orgservice',
+      'FeatureToggleService',
+      'CustomerConfigService',
       '$httpBackend',
+      '$q',
     );
 
     this.$scope.onChangeFn = jasmine.createSpy('close');
@@ -23,16 +26,20 @@ describe('Component: extensionPrefix', () => {
     });
     this.$httpBackend.whenGET('https://identity.webex.com/identity/scim/1/v1/Users/me').respond(200);
 
-    this.compileComponent('ucExtensionPrefixModal', {
-      newExtensionLength: 'newExtensionLength',
-      oldExtensionLength: 'oldExtensionLength',
-      close: 'close()',
-      dismiss: 'dismiss()',
-    });
+    this.initComponent = () => {
+      this.compileComponent('ucExtensionPrefixModal', {
+        newExtensionLength: 'newExtensionLength',
+        oldExtensionLength: 'oldExtensionLength',
+        close: 'close()',
+        dismiss: 'dismiss()',
+      });
+    };
   });
 
   describe('increase extension length from 3 to 7', () => {
     beforeEach(function() {
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
+      this.initComponent();
       this.$scope.oldExtensionLength = '3';
       this.$scope.newExtensionLength = '7';
       this.$scope.$apply();
@@ -47,6 +54,21 @@ describe('Component: extensionPrefix', () => {
       expect(this.view.find(INPUT_TEXT_CLASS).first()).toHaveClass(ERROR);
     });
 
+  });
+
+  describe('customerConfig for Toggle ON', () => {
+    beforeEach(function() {
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
+      spyOn(this.CustomerConfigService, 'createCompanyLevelCustomerConfig').and.callThrough();
+      this.initComponent();
+      this.$scope.$apply();
+    });
+
+    it('should have called customerConfig', function() {
+      this.view.find('#extensionPrefix').val(1).change();
+      this.view.find('button.btn.btn-primary').click();
+      expect(this.CustomerConfigService.createCompanyLevelCustomerConfig).toHaveBeenCalled();
+    });
   });
 
 });

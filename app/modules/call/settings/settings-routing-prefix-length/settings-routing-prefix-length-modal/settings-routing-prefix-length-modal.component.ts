@@ -1,7 +1,9 @@
 import { RoutingPrefixLengthService } from 'modules/call/settings/shared';
+import { CustomerConfigService } from 'modules/call/shared/customer-config-ces/customerConfig.service';
 import { Notification } from 'modules/core/notifications';
 
 class RoutingPrefixLengthModalCtrl implements ng.IComponentController {
+  public extensionLength: string;
   public routingPrefix: string;
   public currentRoutingPrefix: string;
   public newRoutingPrefixLength: string;
@@ -12,15 +14,34 @@ class RoutingPrefixLengthModalCtrl implements ng.IComponentController {
   public routingPrefixForm: ng.IFormController;
   public processing: boolean = false;
   public exampleRoutingPrefixHelpText: string = '';
+  public countryCode: string;
+  private isHI1484: boolean = false;
 
   /* @ngInject */
   constructor(
     private RoutingPrefixLengthService: RoutingPrefixLengthService,
+    private CustomerConfigService: CustomerConfigService,
+    private FeatureToggleService,
     private $translate: ng.translate.ITranslateService,
     private Notification: Notification,
+    private Orgservice,
   ) {}
 
   public $onInit(): void {
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484)
+    .then(isSupported => {
+      this.isHI1484 = isSupported;
+      if (isSupported) {
+        this.Orgservice.getOrg(_.noop, null, { basicInfo: true }).then( response => {
+          if (response.data.countryCode) {
+            this.countryCode = response.data.countryCode;
+          } else {
+            this.countryCode = 'US';
+          }
+        });
+      }
+    });
+
     this.prefixLength = _.toSafeInteger(this.newRoutingPrefixLength) - (this.oldRoutingPrefixLength ? _.toSafeInteger(this.oldRoutingPrefixLength) : 0);
     this.exampleRoutingPrefixHelpText = this.getExampleRoutingPrefix(this.routingPrefix);
   }
@@ -31,6 +52,9 @@ class RoutingPrefixLengthModalCtrl implements ng.IComponentController {
 
   public save(): void {
     this.processing = true;
+    if (this.isHI1484) {
+      this.CustomerConfigService.createCompanyLevelCustomerConfig(this.newRoutingPrefixLength, this.extensionLength, this.countryCode);
+    }
     this.RoutingPrefixLengthService.saveRoutingPrefixLength(this.routingPrefix)
       .then(() => {
         this.Notification.success('serviceSetupModal.routingPrefixLength.modal.saveSuccess');
@@ -55,6 +79,7 @@ export class RoutingPrefixLengthModalComponent implements ng.IComponentOptions {
     currentRoutingPrefix: '<',
     newRoutingPrefixLength: '<',
     oldRoutingPrefixLength: '<',
+    extensionLength: '<',
     close: '&',
     dismiss: '&',
   };

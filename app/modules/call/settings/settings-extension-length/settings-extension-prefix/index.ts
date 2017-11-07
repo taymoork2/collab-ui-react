@@ -4,6 +4,7 @@ import { ExtensionPrefixComponent } from './settings-extension-prefix.component'
 import notifications from 'modules/core/notifications';
 import huronSettingsServiceModule from 'modules/call/settings/shared';
 import locationsServiceModule from 'modules/call/locations/shared';
+import customerConfigCesModule from 'modules/call/shared/customer-config-ces' ;
 
 export default angular
   .module('call.settings.extension-prefix', [
@@ -15,6 +16,7 @@ export default angular
     notifications,
     huronSettingsServiceModule,
     locationsServiceModule,
+    customerConfigCesModule,
   ])
   .component('ucExtensionPrefixModal', new ExtensionPrefixComponent())
   .name;

@@ -15,7 +15,7 @@
 
     <!-- Reports -->
     <div class="content-container">
-      <cs-card-layout>
+      <cs-card-layout ng-if="nav.isVideoEnabled !== 'empty'">
         <cc-task-incoming></cc-task-incoming>
         <cc-task-offered></cc-task-offered>
         <cc-task-time></cc-task-time>
