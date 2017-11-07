@@ -14,6 +14,7 @@
     vm.deleteExpressway = deleteExpressway;
     vm.goToNodesPage = goToNodesPage;
     vm.showDeregisterHostDialog = showDeregisterHostDialog;
+    vm.showNodeLink = showNodeLink;
     vm.showReassignHostDialog = showReassignHostDialog;
 
     $state.current.data.displayName = localizedConnectorName;
@@ -33,6 +34,7 @@
           connectorName: localizedConnectorName,
           hostname: vm.host.hostname,
         });
+        vm.isHybridContextCluster = (cluster.targetType === 'cs_mgmt');
       }
     }, true);
 
@@ -100,6 +102,10 @@
             $state.go('hds.list');
           }
         });
+    }
+
+    function showNodeLink() {
+      return vm.host.connectorType === 'mf_mgmt';
     }
 
     function goToNodesPage() {
