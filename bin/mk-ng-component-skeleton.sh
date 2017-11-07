@@ -21,6 +21,23 @@ if [[ "$1" == "--help" \
     exit 1
 fi
 
+this_pwd="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck disable=SC1090
+source "${this_pwd}/include/core-helpers"
+
+function is_bsd_sed {
+    ! sed --version >/dev/null 2>&1
+}
+
+if [ "$(uname)" = "Darwin" ] && is_bsd_sed; then
+    echo_error "Need \`sed\` with enhanced regex support. On OSX this can be installed with:"
+    >&2 echo ""
+    >&2 echo "  brew install gnu-sed --with-default-names"
+    >&2 echo ""
+    echo_warn "This will replace your default \`sed\` command. Do not run the above if you do not wish to do this."
+    abort
+fi
+
 function kebab_case_to_pascal_case {
   sed -E 's/(^|-)([a-z])/\U\2/g'
 }
@@ -44,11 +61,8 @@ function subdir_path_to_ng_module_name {
 
 function get_ng_module_name {
     local dir_name="$1"
-    local THIS_PWD
-    THIS_PWD="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
     # start search for relevant subdir from '.../app/modules'
-    pushd "$THIS_PWD/../app/modules" > /dev/null
+    pushd "$this_pwd/../app/modules" > /dev/null
     local subdir_path
     subdir_path="$(find . -type d -name "${dir_name}")"
     subdir_path="$(subdir_path_to_ng_module_name "$subdir_path")"
