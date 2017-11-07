@@ -1672,7 +1672,7 @@
     "setUpGoogleCalendarService": "Hybrid Calendar (Google) is available. Use @WebEx or @Spark in a meeting location to insert join details, show upcoming meetings in the Cisco Spark app, and provide One Button to Push (OBTP) to Join.",
     "setUpCallAwareService": "Call Service Aware is available. Users can instantly share their desktops from their Cisco Spark clients while on a call.",
     "setUpCallConnectService": "Call Service Connect is available. Users can answer calls to their work phones on their Cisco Spark clients, and place calls to others' work phones from their Cisco Spark clients.",
-    "setUpHybridMessaging": "Hybrid Messaging Service is available.",
+    "setUpHybridMessaging": "Hybrid Message Service is available.",
     "setUpDevices": "Activate your devices when they arrive.",
     "setUpSharedDevices": "Activate your room devices when they arrive.",
     "setUpSparkBoardDevices": "Activate your Cisco Spark Boards when they arrive.",
@@ -2337,7 +2337,7 @@
       "squared-fusion-ec": "Call Service Connect",
       "squared-fusion-ec.full": "Call Service Connect",
       "squared-fusion-mgmt": "Expressway Management Service",
-      "spark-hybrid-impinterop": "Messaging Service"
+      "spark-hybrid-impinterop": "Message Service"
     },
     "hybridServiceNames": {
       "squared-fusion-mgmt": "Hybrid Management Service",
@@ -2349,7 +2349,7 @@
       "squared-fusion-media": "Hybrid Media Service",
       "hybrid-context": "Hybrid Context Service",
       "ept": "Enterprise Private Trunking",
-      "spark-hybrid-impinterop": "Hybrid Messaging Service"
+      "spark-hybrid-impinterop": "Hybrid Message Service"
     },
     "connectorNames": {
       "squared-fusion-uc": "Call Connector",
@@ -2359,7 +2359,7 @@
       "contact-center-context": "Context Connector",
       "squared-fusion-ec": "Call Connector",
       "squared-fusion-mgmt": "Management Connector",
-      "spark-hybrid-impinterop": "Hybrid Messaging Connector"
+      "spark-hybrid-impinterop": "Hybrid Message Connector"
     },
     "connectorNameFromConnectorType": {
       "c_cal": "Calendar Connector",
@@ -2371,7 +2371,7 @@
       "cs_context": "Context Connector",
       "ucm_mgmt": "Management Connector",
       "c_serab": "Serviceability Connector",
-      "c_imp": "Hybrid Messaging Connector"
+      "c_imp": "Hybrid Message Connector"
     },
     "shortConnectorNameFromConnectorType": {
       "c_cal": "Calendar",
@@ -2383,7 +2383,7 @@
       "cs_context": "Context",
       "ucm_mgmt": "Management",
       "c_serab": "Serviceability",
-      "c_imp": "Messaging"
+      "c_imp": "Message"
     },
     "serviceNameFromConnectorType": {
       "c_cal": "Calendar Service",
@@ -2393,7 +2393,7 @@
       "cs_context": "Context Connector",
       "ucm_mgmt": "Management Connector",
       "c_serab": "Serviceability Connector",
-      "c_imp": "Messaging Service"
+      "c_imp": "Message Service"
     },
     "clusterTypeFromServiceId": {
       "squared-fusion-mgmt": "Expressway",
@@ -2443,7 +2443,7 @@
         "squared-fusion-gcal": "Add @spark to an invitation to create a Cisco Spark room for your meeting. Add @webex to attach your WebEx Personal Room.",
         "squared-fusion-o365": "Add @spark to an invitation to create a Cisco Spark room for your meeting. Add @webex to attach your WebEx Personal Room.",
         "squared-fusion-ec": "Users' incoming calls will ring their work phones and the Cisco Spark app. Users can call their colleagues from either their phones or the app, too.",
-        "spark-hybrid-impinterop": "[TODO: Here is a description of what Hybrid Messaging can do.]"
+        "spark-hybrid-impinterop": "[TODO: Here is a description of what Hybrid Message can do.]"
       },
       "preferredWebExSite": "Preferred WebEx Site",
       "preferredWebExSiteDefault": "Default",
@@ -2924,7 +2924,7 @@
           "error": "Error fetching the different cluster types.",
           "title": "What type of resource do you want to add?",
           "expressway-description": "Can run Hybrid Call Service or Hybrid Calendar Service",
-          "expressway-description-with-imp": "Can run Hybrid Call Service, Hybrid Calendar Service, or Hybrid Messaging",
+          "expressway-description-with-imp": "Can run Hybrid Call Service, Hybrid Calendar Service, or Hybrid Message Service.",
           "expressway-not-setup": "Expressway not set up",
           "mediafusion-description": "Can run Hybrid Media Service",
           "mediafusion-not-setup": "Media Service not set up",
@@ -2939,9 +2939,9 @@
             "title": "Choose services that you want the Expressway to manage:",
             "call-not-setup": "Hybrid Call Service not set up",
             "calendar-not-setup": "Hybrid Calendar Service not set up",
-            "imp-not-setup": "Hybrid Messaging Service not set up",
+            "imp-not-setup": "Hybrid Message Service not set up",
             "add-more-later": "You can add more services later by clicking Add Resource in the Call or Calendar page.",
-            "add-more-later-with-imp": "You can add more services later by clicking Add Resource in the Call, Calendar, or Messaging page."
+            "add-more-later-with-imp": "You can add more services later by clicking Add Resource in the Call, Calendar, or Message page."
           },
           "end": {
             "line1": "You may now register the Expressway with Cisco Collaboration Cloud.",
@@ -7950,7 +7950,7 @@
           "squared-fusion-gcal": "Calendar (Google)",
           "squared-fusion-o365": "Calendar (Office 365)",
           "squared-fusion-uc": "Call",
-          "spark-hybrid-impinterop": "Messaging",
+          "spark-hybrid-impinterop": "Message",
           "squared-fusion-mgmt": "Management",
           "squared-fusion-media": "Media",
           "spark-hybrid-datasecurity": "Data Security",
@@ -8494,7 +8494,7 @@
     },
     "care": "Care",
     "hybridImp": {
-      "hybridImp": "Hybrid Messaging"
+      "hybridImp": "Hybrid Message"
     }
   },
   "partnerManagement": {
@@ -8869,8 +8869,8 @@
         }
       },
       "hybridImp": {
-        "title": "Hybrid Messaging",
-        "description": "[A description of Hybrid Messaging goes here]",
+        "title": "Hybrid Message",
+        "description": "[A description of Hybrid Message goes here]",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
