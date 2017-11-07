@@ -28,6 +28,11 @@ task-container {
       flex-basis: 0;
       min-width: 0;
       overflow-y: auto;
+
+      task-container-details {
+        @include keep-flex(column);
+        flex-basis: 0;
+      }
     }
   }
 }
