@@ -159,6 +159,9 @@
             }
             starttime = moment().set(dateData).set(startData);
             endtime = moment().set(dateData).set(endData);
+            if (hoursRange.endtime === '12:00 AM') {
+              endtime = endtime.add(1, 'day');
+            }
             if (hoursRange.recurAnnually) {
               //Set the rule in the calendar
               strRRule = '';
