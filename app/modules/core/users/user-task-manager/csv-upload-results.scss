@@ -1,45 +1,33 @@
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/settings/fonts';
-@import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
-@import '~collab-ui/scss/tools/mixins/spacing-responsive';
-
 @import 'styles/partials/mixins';
 
 csv-upload-results {
 
   @include keep-flex(column);
 
-  .base-margin {
-    margin: 1em;
+  .csv-upload-results {
+    @include keep-flex(column);
+    padding: 1rem;
+
+    &__title {
+      margin-top: 0.25rem;
+    }
+
+    &__description {
+      margin-top: 0.5rem;
+    }
+
+    &__line-break {
+      margin-top: 2.25rem;
+      margin-bottom: 1.25rem;
+    }
   }
 
-  .flex-container {
-    display: flex;
-    height: 100%;
-    flex-grow: 1;
-    flex-direction: column;
+  cr-progressbar {
+    margin: 2.25rem 2.25rem 0;
   }
 
-  &.modal-body .flex-container {
-    flex-shrink: 1;
-  }
-
-  .flex-item-resize {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 auto;
-    min-height: 0;
-  }
-
-  .flex-item-no-resize {
-    display: flex;
-    flex-direction: column;
-    flex: 0 0 auto;
-  }
-
-  .upload-complete {
-    align-items: flex-start;
-    @include vr-spacing(mv, 0.5);
+  cr-users-tile-totals {
+    margin-top: 2.25rem;
   }
 
 }

@@ -1,7 +1,13 @@
-<div class="flex-container base-margin" ng-show="$ctrl.activeTask !== undefined">
-  <h4 translate="userManage.bulk.import.status"></h4>
+<div class="csv-upload-results" ng-if="$ctrl.activeTask !== undefined">
+  <h4 class="csv-upload-results__title"
+    translate="userManage.bulk.import.status"></h4>
 
-  <cr-progressbar
+  <p class="csv-upload-results__description"
+    ng-if="$ctrl.startedTime && $ctrl.startedDate && $ctrl.startedBy"
+    translate="userTaskManagerModal.startedAt"
+    translate-values="{ time: $ctrl.startedTime, date: $ctrl.startedDate, person: $ctrl.startedBy }"></p>
+
+  <cr-progressbar ng-if="$ctrl.isProcessing"
     progressbar-label="$ctrl.progressbarLabel"
     progressbar-filename="$ctrl.fileName"
     progressbar-value="$ctrl.processProgress"
@@ -10,19 +16,14 @@
     >
   </cr-progressbar>
 
-  <!-- done import status -->
-  <div class="flex-item-no-resize upload-progress upload-complete" ng-show="$ctrl.processProgress > 0">
-    <span class="progressbar-label">
-      <span class="progressbar-label" translate="userTaskManagerModal.startedAt"
-        translate-values="{ time: $ctrl.startedTime, date: $ctrl.startedDate, person: $ctrl.startedBy }"></span>
-    </span>
-  </div>
-
   <cr-users-tile-totals
    new-total="$ctrl.numNewUsers"
    updated-total="$ctrl.numUpdatedUsers"
    error-total="$ctrl.numErroredUsers">
   </cr-users-tile-totals>
+
+  <hr class="csv-upload-results__line-break"
+    ng-if="$ctrl.userErrorArray.length > 0">
 
   <cr-users-error-results ng-if="$ctrl.userErrorArray.length > 0"
     user-error-array="$ctrl.userErrorArray">
