@@ -300,6 +300,14 @@ require('./_user-add.scss');
         return LocationsService.getLocationList()
           .then(function (locationOptions) {
             $scope.locationOptions = locationOptions;
+            // enable mapDidToDn only when we have 1 location(default)
+            if ($scope.locationOptions.length === 1) {
+              $scope.isMapped = false;
+              $scope.isMapEnabled = true;
+            } else {
+              $scope.isMapped = true;
+              $scope.isMapEnabled = false;
+            }
             _.forEach(locationOptions, function (result) {
               if (result.defaultLocation === true) {
                 _.forEach($scope.usrlist, function (data) {
@@ -385,6 +393,20 @@ require('./_user-add.scss');
           if (externalNumberMappings[i].directoryNumber !== null) {
             $scope.usrlist[i].externalNumber = externalNumberMappings[i];
             $scope.usrlist[i].assignedDn = externalNumberMappings[i].directoryNumber;
+            if ($scope.ishI1484) {
+              $scope.usrlist[i].assignedDn.internal = externalNumberMappings[i].directoryNumber.pattern;
+              // update the siteTosite for I1484 labelField
+              // Use the routingPrefix from default location since mapping is only enabled with 1 location for now
+              if (!_.isUndefined($scope.locationOptions[0].routingPrefix) && $scope.locationOptions[0].routingPrefix !== null) {
+                $scope.usrlist[i].assignedDn.siteToSite = $scope.locationOptions[0].routingPrefix + externalNumberMappings[i].directoryNumber.pattern;
+              } else {
+                $scope.usrlist[i].assignedDn.siteToSite = externalNumberMappings[i].directoryNumber.pattern;
+              }
+            } else {
+              // fix a bug with non multilocation Internal Extension
+              $scope.usrlist[i].assignedDn.number = externalNumberMappings[i].directoryNumber.pattern;
+              $scope.usrlist[i].assignedDn.internal = externalNumberMappings[i].directoryNumber.pattern;
+            }
           } else {
             $scope.usrlist[i].externalNumber = externalNumberMappings[i];
             $scope.usrlist[i].didDnMapMsg = 'usersPage.noExtMappingAvail';
@@ -986,7 +1008,10 @@ require('./_user-add.scss');
       if ($scope.isMapped) {
         $scope.isMapped = false;
       } else {
-        $scope.isMapEnabled = true;
+        // For I1484 feature, turn on map only when location count is 1 (default)
+        if (!$scope.ishI1484 || ($scope.ishI1484 && $scope.locationOptions.length === 1)) {
+          $scope.isMapEnabled = true;
+        }
       }
 
       if ($scope.isReset) {
