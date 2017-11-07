@@ -377,6 +377,35 @@ describe('Authinfo:', function () {
     });
   });
 
+  describe('should return for partial admin roles only when those roles are present', function () {
+    it('should not return true for isUserAdminUser or isDeviceAdminUser when user is Full_Admin', function () {
+      setupConfig();
+      var Authinfo = setupUser({
+        roles: ['Full_Admin'],
+      });
+      expect(Authinfo.isUserAdminUser()).toBe(false);
+      expect(Authinfo.isDeviceAdminUser()).toBe(false);
+    });
+
+    it('should return true for isUserAdminUser when user is User_Admin', function () {
+      setupConfig();
+      var Authinfo = setupUser({
+        roles: ['User_Admin'],
+      });
+      expect(Authinfo.isUserAdminUser()).toBe(true);
+      expect(Authinfo.isDeviceAdminUser()).toBe(false);
+    });
+
+    it('should return true for isDeviceAdminUser when user is Device_Admin', function () {
+      setupConfig();
+      var Authinfo = setupUser({
+        roles: ['Device_Admin'],
+      });
+      expect(Authinfo.isDeviceAdminUser()).toBe(true);
+      expect(Authinfo.isUserAdminUser()).toBe(false);
+    });
+  });
+
   describe('customer with CONFERENCING license', function () {
     var accountData = {
       customers: [{
