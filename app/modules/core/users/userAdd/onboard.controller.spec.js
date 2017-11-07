@@ -475,7 +475,7 @@ describe('OnboardCtrl: Ctrl', function () {
       this.$scope.$apply();
       expect(this.$scope.externalNumberMapping.length).toEqual(2);
       expect(this.$scope.usrlist[0].externalNumber.pattern).toEqual('+14084744532');
-      expect(this.$scope.usrlist[0].assignedDn).toEqual('4532');
+      expect(this.$scope.usrlist[0].assignedDn.pattern).toEqual('4532');
       expect(this.$scope.usrlist[1].didDnMapMsg).toEqual('usersPage.noExtMappingAvail');
     });
 
