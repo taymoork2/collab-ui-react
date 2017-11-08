@@ -1,7 +1,9 @@
 'use strict';
 
+var hybridServicesPanelCtrlModuleName = require('./index.ts').default;
+
 describe('Directive Controller: hybridServicesPanelCtrl', function () {
-  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module(hybridServicesPanelCtrlModuleName));
 
   var vm, $scope, $rootScope, $controller, $q, FeatureToggleService, $translate, OnboardService, ServiceDescriptorService, CloudConnectorService, Authinfo;
 
