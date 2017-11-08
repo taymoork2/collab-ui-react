@@ -7,6 +7,7 @@ import { WebexSiteSubscriptionComponent } from './webex-site-subscription.compon
 import { WebexSiteTransferComponent } from './webex-site-transfer.component';
 import { WebexSiteNewDisplayComponent } from './webex-site-new-display.component';
 import { WebexDeleteSiteModalComponent } from './webex-delete-site-modal.component';
+import { WebExSiteService } from './webex-site.service';
 
 export default angular
   .module('core.webex-site', [
@@ -27,4 +28,5 @@ export default angular
   .component('webexSiteSubscription', new WebexSiteSubscriptionComponent ())
   .component('webexSiteNewDisplay', new WebexSiteNewDisplayComponent ())
   .component('webexDeleteSiteModal', new WebexDeleteSiteModalComponent ())
+  .service('WebExSiteService', WebExSiteService)
   .name;

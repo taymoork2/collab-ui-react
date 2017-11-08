@@ -8,7 +8,7 @@ require('./_site-list.scss');
     .controller('WebExSiteRowCtrl', WebExSiteRowCtrl);
 
   /*@ngInject*/
-  function WebExSiteRowCtrl($log, $modal, $scope, $sce, $state, $stateParams, $timeout, $translate, accountLinkingPhase2, FeatureToggleService, ModalService, TokenService, WebExUtilsFact, WebExSiteRowService, Utils) {
+  function WebExSiteRowCtrl($log, $modal, $scope, $sce, $state, $stateParams, $timeout, $translate, accountLinkingPhase2, FeatureToggleService, ModalService, TokenService, WebExUtilsFact, WebExSiteRowService, WebExSiteService, Utils) {
     var vm = this;
     vm.showGridData = false;
     vm.isShowAddSite = false;
@@ -98,8 +98,13 @@ require('./_site-list.scss');
       var sites = WebExSiteRowService.getLicensesInSubscriptionGroupedBySites(subscriptionId);
       if (_.keys(sites).length === 2) {
         var remainingSite = moveLicensesToRemainingSite(subscriptionId, sites, siteUrl);
-        WebExSiteRowService.deleteSite(siteUrl, remainingSite);
-        //TODO: algendel 10/16/2017 -- call backend API to update licenses and remove the site.
+        WebExSiteService.deleteSite(subscriptionId, remainingSite)
+          .then(function () {
+            this.Notification.success(this.$translate.instant('webexSiteManagement.deleteSiteSuccess'));
+          })
+          .catch(function (response) {
+            this.Notification.errorWithTrackingId(response);
+          });
       } else { //open modal to redistribute licenses
         $state.go('site-list-delete', { subscriptionId: subscriptionId, siteUrl: siteUrl });
       }

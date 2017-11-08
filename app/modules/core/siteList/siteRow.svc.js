@@ -114,11 +114,6 @@
       _this.updateConferenceServices();
     }; //configureGrid
 
-    //TODO: algendel 10/16/2017 -- call backend API to update licenses and remove the site.
-    this.deleteSite = function (urlToDelete, remainingSite) {
-      return [urlToDelete, remainingSite];
-    };
-
     this.getLicensesInSubscriptionGroupedBySites = function (subscriptionId) {
       var sites = _.groupBy(SetupWizardService.getConferenceLicensesBySubscriptionId(subscriptionId), 'siteUrl');
       return sites;

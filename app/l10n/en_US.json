@@ -6881,6 +6881,7 @@
     "deleteSiteRejectModalTitle": "Cannot Delete Site",
     "deleteSiteRejectModalBodyOnlySite": "You cannot delete the last site in a subscription",
     "deleteSiteRejectModalBodyPending": "You cannot delete this site because the WebEx service in this subscription has not been provisioned. Please go to Meeting Service Setup to provision the WebEx subscription",
+    "deleteSiteSuccess": "Site has been deleted successfully",
     "redistributeRejectModalTitle": "Cannot Redistribute Licenses",
     "redistributeRejectModalBodyOnlySite": "You cannot redistribute licenses between sites because there is only one site.",
     "redistributeRejectModalBodyPending": "You cannot redistribute licenses between sites because the WebEx service in this subscription has not been provisioned. Please go to Meeting Service Setup to provision this WebEx subscription.",
