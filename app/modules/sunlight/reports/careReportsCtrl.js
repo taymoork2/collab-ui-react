@@ -8,7 +8,7 @@
     var REFRESH = 'refresh';
     var SET = 'set';
     var EMPTY = 'empty';
-    var RESIZE_DELAY_IN_MS = 100;
+    var RESIZE_DELAY_IN_MS = 600;
 
     vm.isVideoEnabled = EMPTY;
     vm.dataStatus = REFRESH;
