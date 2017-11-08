@@ -1,10 +1,10 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Hercules')
-    .directive('hybridServicesPanel', hybridServicesPanel)
-    .controller('hybridServicesPanelCtrl', hybridServicesPanelCtrl);
+  module.exports = {
+    hybridServicesPanelCtrl: hybridServicesPanelCtrl,
+    hybridServicesPanel: hybridServicesPanel,
+  };
 
   /* @ngInject */
   function hybridServicesPanelCtrl(Authinfo, OnboardService, ServiceDescriptorService, CloudConnectorService, $q, $translate) {
@@ -131,7 +131,7 @@
       bindToController: true,
       controllerAs: 'hybridServicesPanelCtrl',
       controller: 'hybridServicesPanelCtrl',
-      template: require('modules/hercules/user-sidepanel/hybridServicesPanel.tpl.html'),
+      template: require('modules/core/users/userAdd/hybrid-services-entitlements-panel/hybridServicesPanel.tpl.html'),
     };
   }
 })();
