@@ -8,7 +8,7 @@
   var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
   /* @ngInject */
-  function AAHelpCtrl($scope, $translate, Config, AAMetricNameService, Analytics) {
+  function AAHelpCtrl($scope, $translate, $window, Config, AAMetricNameService, Analytics) {
     var vm = this;
 
     vm.content = '';
@@ -19,7 +19,7 @@
 
     vm.optionHelp = $translate.instant('autoAttendant.aaHelpFAQ');
     vm.helpUrlAATag = Config.helpUrl + '/tags#/?tags=auto%20attendant';
-    vm.optionHelpLink = "<a href='" + vm.helpUrlAATag + "' target='blank'>" + vm.helpUrlAATag + '</a>';
+    vm.optionHelpLink = '<a href="' + vm.helpUrlAATag + '" target="blank" tabindex="-1">' + vm.helpUrlAATag + '</a>';
 
     vm.getHelpText = getHelpText;
     vm.sendMetrics = sendMetrics;
@@ -27,9 +27,16 @@
 
     /////////////////////
     function checkEvents($event) {
-      if ($event.keyCode == KeyCodes.ESCAPE) {
-        /* Don't propagate Esc when help button is focused*/
-        $event.stopPropagation();
+      switch ($event.keyCode) {
+        case KeyCodes.ESCAPE:
+          /* Don't propagate Esc when help button is focused*/
+          $event.stopPropagation();
+          break;
+        case KeyCodes.ENTER:
+          if (vm.showLink) {
+            $window.open(vm.helpUrlAATag, '_blank');
+          }
+          break;
       }
     }
 
