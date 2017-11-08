@@ -1,4 +1,5 @@
 import { FieldQuery, OperatorAnd, OperatorOr, SearchElement } from '../services/search/queryParser';
+import { SearchTranslator } from '../services/search/searchTranslator';
 
 export interface IBulletContainer {
   removeBullet(bullet: SearchElement);
@@ -14,7 +15,7 @@ export class DeviceSearchBullet implements ng.IComponentController {
   public isSubLevel: boolean;
 
   /* @ngInject */
-  constructor() {
+  constructor(private searchTranslator: SearchTranslator) {
   }
 
   public subElements(): SearchElement[] {
@@ -31,18 +32,37 @@ export class DeviceSearchBullet implements ng.IComponentController {
     return '';
   }
 
-  public getQueryPrefix(): string {
-    if (this.searchElement instanceof FieldQuery) {
-      const parent = this.searchElement.getParent();
+  public getQueryField(): string {
+    const searchElement = this.searchElement;
+    if (searchElement instanceof FieldQuery) {
+      const parent = searchElement.getParent();
       if (parent instanceof OperatorOr) {
-        return parent.getFieldNameIfAllSubElementsAreSameField() ? '' : this.searchElement.getQueryPrefix();
+        return parent.getFieldNameIfAllSubElementsAreSameField() ? '' : searchElement.getQueryPrefix();
       }
-      return this.searchElement.getQueryPrefix();
+      return searchElement.field + '';
     }
     if (this.searchElement instanceof OperatorOr) {
       return this.searchElement.getFieldNameIfAllSubElementsAreSameField();
     }
     return '';
+  }
+
+  public getTranslatedQueryValue() {
+    const searchElement = this.searchElement;
+    if (searchElement instanceof FieldQuery) {
+      return this.searchTranslator.translateQueryValue(searchElement.field + '', searchElement.getQueryWithoutField());
+    }
+    return '';
+  }
+
+  public getTranslatedQueryPrefix(): string {
+    const searchElement = this.searchElement;
+
+    if (!(searchElement instanceof FieldQuery) || _.isEmpty(searchElement.field)) {
+      return '';
+    }
+
+    return this.searchTranslator.translateQueryField(searchElement.field + '') + searchElement.getMatchOperator();
   }
 }
 

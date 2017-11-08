@@ -4,7 +4,7 @@ import { FieldQuery, OperatorAnd, OperatorOr, QueryParser, SearchElement } from 
 
 export class SearchTranslator {
   /* @ngInject */
-  constructor(private $translate: ng.translate.ITranslateService| any) {
+  constructor(private $translate: ng.translate.ITranslateService | any) {
     this.updateLanguageIfNeeded();
   }
 
@@ -167,6 +167,54 @@ export class SearchTranslator {
       (_field, transKeyPrefix) => {
         return _.startsWith(translationKey, transKeyPrefix);
       });
+  }
+
+  // private static validFieldNames = ['displayname',
+  //   'cisuuid',
+  //   'accounttype',
+  //   QueryParser.Field_ActiveInterface,
+  //   'serial',
+  //   'mac',
+  //   'ip',
+  //   'activeinterface',
+  //   'description',
+  //   'productfamily',
+  //   'software',
+  //   QueryParser.Field_UpgradeChannel,
+  //   'product',
+  //   QueryParser.Field_ConnectionStatus,
+  //   'sipurl',
+  //   QueryParser.Field_ErrorCodes,
+  //   'tags'];
+
+
+  private static fieldNameTranslations: { [fieldKey: string]: { tKey: string, tValuePrefix?: string } } = {
+    displayname: { tKey: 'spacesPage.nameHeader' },
+    connectionstatus: { tKey: 'spacesPage.statusHeader', tValuePrefix: 'CsdmStatus.connectionStatus.' },
+    product: { tKey: 'spacesPage.typeHeader' },
+  };
+
+  public getFieldTranslationKey(field: string): string {
+    const translationMatch = SearchTranslator.fieldNameTranslations[field];
+    return translationMatch ? translationMatch.tKey : field;
+  }
+
+  public translateQueryField(field: string): string {
+
+    const fieldTranslationKey = this.getFieldTranslationKey(field);
+    if (_.isEmpty(fieldTranslationKey)) {
+      return field;
+    }
+    return this.$translate.instant(fieldTranslationKey);
+
+  }
+
+  public translateQueryValue(field: string, value: string): string {
+    const translationMatch = field && SearchTranslator.fieldNameTranslations[field];
+    if (!translationMatch || !translationMatch.tValuePrefix) {
+      return value;
+    }
+    return this.$translate.instant(translationMatch.tValuePrefix + value);
   }
 }
 

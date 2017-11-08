@@ -57,7 +57,7 @@ export class FieldQuery extends SearchElement {
   }
 
   public getQueryPrefix(): string {
-    return (this.field) ? this.field + FieldQuery.getMatchOperator(this) : '';
+    return (this.field) ? this.field + this.getMatchOperator() : '';
   }
 
   public getQueryWithoutField() {
@@ -68,8 +68,8 @@ export class FieldQuery extends SearchElement {
     return innerQuery;
   }
 
-  public static getMatchOperator(fieldQuery: FieldQuery): string {
-    return fieldQuery.type === FieldQuery.QueryTypeExact ? '=' : ':';
+  public getMatchOperator(): string {
+    return this.type === FieldQuery.QueryTypeExact ? '=' : ':';
   }
 
   public toQuery(): string {
@@ -162,7 +162,7 @@ export class OperatorOr extends SearchElement {
             (fq) => {
               return fq instanceof FieldQuery
                 && _.isEqual(_.lowerCase(firstSubExpr.field), _.lowerCase(fq.field))
-                && _.isEqual(FieldQuery.getMatchOperator(firstSubExpr), FieldQuery.getMatchOperator(fq));
+                && _.isEqual(firstSubExpr.getMatchOperator(), fq.getMatchOperator());
             })) {
           return firstSubExpr.getQueryPrefix();
         }
