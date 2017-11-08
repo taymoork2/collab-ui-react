@@ -5,9 +5,9 @@ describe('Controller: CustomerListCtrl', function () {
   var controller;
 
   var adminJSONFixture = getJSONFixture('core/json/organizations/adminServices.json');
-  var partnerService = getJSONFixture('core/json/partner/partner.service.json');
-  var managedOrgsResponse = partnerService.managedOrgsResponse;
-  var authinfoLicenses = partnerService.authinfoLicenses;
+  var partnerJSONFixture = getJSONFixture('core/json/partner/partner.service.json');
+  var managedOrgsResponse = partnerJSONFixture.managedOrgsResponse;
+  var authinfoLicenses = partnerJSONFixture.authinfoLicenses;
   var orgId = 'b93b10ad-ae24-4abf-9c21-76e8b86faf01';
   var orgName = 'testOrg';
   var testOrg = {
@@ -542,6 +542,155 @@ describe('Controller: CustomerListCtrl', function () {
       expect(testOrg.customerOrgId).toBe('1234-34534-afdagfg-425345-afaf');
       controller.modifyManagedOrgs(testOrg.customerOrgId);
       expect(PartnerService.modifyManagedOrgs).toHaveBeenCalled();
+    });
+  });
+
+  describe('column sort', function () {
+    var a, b, c, d, cs;
+
+    beforeEach(function () {
+      initController();
+      cs = controller._helpers.columnSort;
+      a = {
+        customerName: 'Alpha',
+        daysLeft: 0,
+        sortOrder: PartnerService.customerStatus.NOTE_DAYS_LEFT,
+        entity: {
+          accountStatus: 'trial',
+          uniqueServiceCount: 0,
+        },
+      };
+      b = {
+        customerName: 'Bravo',
+        sortOrder: PartnerService.customerStatus.NOTE_DAYS_LEFT,
+        daysLeft: 10,
+        entity: {
+          accountStatus: 'active',
+          licenseList: ['MC', 'EE'],
+          uniqueServiceCount: 2,
+        },
+      };
+      c = {
+        customerName: 'Charlie',
+        sortOrder: PartnerService.customerStatus.ACTIVE,
+        text: 'Purchased',
+        entity: {
+          accountStatus: 'expired',
+          licenseList: ['EE'],
+          uniqueServiceCount: 1,
+        },
+      };
+      d = {
+        customerName: 'Delta',
+        daysLeft: -1,
+        sortOrder: PartnerService.customerStatus.CANCELED,
+        text: 'This account has been suspended',
+        entity: {
+          accountStatus: 'expired',
+          licenseList: [],
+          uniqueServiceCount: 0,
+        },
+      };
+    });
+
+    it('should alpha-sort on .name', function () {
+      expect(cs.name(a, b)).toBe(-1);
+      expect(cs.name(b, a)).toBe(1);
+      expect(cs.name(c, c)).toBe(0);
+    });
+
+    it('should favor orgName on .namePartnerAtTop', function () {
+      Authinfo.getOrgName.and.returnValue(b.customerName);
+
+      // Partner is 'b'
+      expect(cs.namePartnerAtTop(a.customerName, b.customerName)).toBe(1);
+      expect(cs.namePartnerAtTop(b.customerName, a.customerName)).toBe(-1);
+      expect(cs.namePartnerAtTop(b.customerName, b.customerName)).toBe(0);
+      expect(cs.namePartnerAtTop(a.customerName, c.customerName)).toBe(-1);
+      expect(cs.namePartnerAtTop(c.customerName, c.customerName)).toBe(0);
+    });
+
+    it('should sort by account status', function () {
+      expect(cs.accountStatus(a, b, a, b)).toBeGreaterThan(0);
+      expect(cs.accountStatus(b, a, b, a)).toBeLessThan(0);
+      expect(cs.accountStatus(b, c, b, c)).toBeGreaterThan(0);
+      expect(cs.accountStatus(c, c, c, c)).toBe(0);
+    });
+
+    it('should sort by license list', function () {
+      expect(cs.license(a, a, a, a)).toBe(0);
+      expect(cs.license(a, b, a, b)).toBe(-1);
+      expect(cs.license(b, a, b, a)).toBe(1);
+      expect(cs.license(b.entity.licenseList.length, c.entity.licenseList.length, b, c)).toBe(1);
+      expect(cs.license(c.entity.licenseList.length, b.entity.licenseList.length, c, b)).toBe(-1);
+      expect(cs.license(b.entity.licenseList.length, b.entity.licenseList.length, b, b)).toBe(0);
+    });
+
+    describe('notes field', function () {
+      it('should alpha-sort by text', function () {
+        expect(cs.notes(c, d, c, d)).toBe(-1);
+        expect(cs.notes(d, c, c, d)).toBe(1);
+        expect(cs.notes(d, d, c, d)).toBe(0);
+      });
+
+      it('should sort by daysLeft when days >= 0', function () {
+        expect(cs.notes(a, b, a, b)).toBeGreaterThan(0);
+        expect(cs.notes(b, a, b, a)).toBeLessThan(0);
+        b.daysLeft = 1;
+        expect(cs.notes(a, b, a, b)).toBeGreaterThan(0);
+        b.daysLeft = 0;
+        expect(cs.notes(a, b, a, b)).toBe(0);
+      });
+
+      it('should sort by type of expired when daysLeft < 0', function () {
+        // expired vs. not expired
+        b.daysLeft = -1;
+        b.accountStatus = 'expired';
+        expect(cs.notes(a, b, a, b)).toBeLessThan(0);
+        expect(cs.notes(b, a, b, a)).toBeGreaterThan(0);
+
+        // expired vs. more expired (all in same bucket)
+        d.text = 'Expired';
+        d.sortOrder = PartnerService.customerStatus.NOTE_DAYS_LEFT;
+        expect(cs.notes(b, d, b, d)).toBe(0);
+        b.daysLeft = -2;
+        expect(cs.notes(b, d, b, d)).toBe(0);
+        expect(cs.notes(d, b, d, b)).toBe(0);
+
+        // expired vs. expired within grace period ('b' is within grace)
+        b.entity.startDate = new Date();
+        expect(cs.notes(b, d, b, d)).toBeLessThan(0);
+        expect(cs.notes(d, b, d, b)).toBeGreaterThan(0);
+
+        // expired in grace vs. expired in grace (same bucket)
+        d.entity.startDate = new Date();
+        expect(cs.notes(b, d, b, d)).toBe(0);
+        expect(cs.notes(d, b, d, b)).toBe(0);
+      });
+
+      it('should sort by mixed alpa and date types', function () {
+        // alpha vs. daysLeft > 0
+        expect(cs.notes(a, c, a, c)).toBe(-1);
+        expect(cs.notes(c, a, c, a)).toBe(1);
+
+        // alpha vs. expired
+        b.daysLeft = -1;
+        b.accountStatus = 'expired';
+        expect(cs.notes(b, c, b, c)).toBe(-1);
+        expect(cs.notes(c, b, c, b)).toBe(1);
+
+        // alpha vs. expired within grace period
+        b.entity.startDate = new Date();
+        expect(cs.notes(b, c, b, c)).toBe(-1);
+        expect(cs.notes(c, b, c, b)).toBe(1);
+      });
+    });
+
+    it('should sort by unique service count', function () {
+      expect(cs.service(a, b, a, b)).toBeLessThan(0);
+      expect(cs.service(b, a, b, a)).toBeGreaterThan(0);
+      expect(cs.service(b, c, b, c)).toBeGreaterThan(0);
+      expect(cs.service(c, c, c, c)).toBe(0);
     });
   });
 });
