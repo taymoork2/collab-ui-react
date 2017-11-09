@@ -2,12 +2,11 @@
   'use strict';
 
   module.exports = {
-    hybridServicesPanelCtrl: hybridServicesPanelCtrl,
-    hybridServicesPanel: hybridServicesPanel,
+    hybridServicesEntitlementsPanelCtrl: hybridServicesEntitlementsPanelCtrl,
   };
 
   /* @ngInject */
-  function hybridServicesPanelCtrl(Authinfo, OnboardService, ServiceDescriptorService, CloudConnectorService, $q, $translate) {
+  function hybridServicesEntitlementsPanelCtrl($q, $translate, Authinfo, CloudConnectorService, FeatureToggleService, OnboardService, ServiceDescriptorService) {
     var vm = this;
     vm.isEnabled = false;
     vm.entitlements = [];
@@ -15,11 +14,15 @@
     vm.services = {
       calendarEntitled: false,
       selectedCalendarType: null,
+      hybridMessage: null,
       calendarExchange: null,
       calendarGoogle: null,
       callServiceAware: null,
       callServiceConnect: null,
       notSetupText: $translate.instant('hercules.cloudExtensions.notSetup'),
+      hasHybridMessageService: function () {
+        return this.hybridMessage !== null;
+      },
       hasCalendarService: function () {
         return this.calendarExchange !== null || this.calendarGoogle !== null;
       },
@@ -52,22 +55,30 @@
     };
     vm.setEntitlements = setEntitlements;
     vm.hasHuronCallEntitlement = hasHuronCallEntitlement;
+    vm.$onInit = $onInit;
+    vm.$onChanges = $onChanges;
 
-    init();
-
-    ////////////////
-
-    function init() {
+    function $onInit() {
       $q.all({
         servicesFromFms: ServiceDescriptorService.getServices(),
         gcalService: CloudConnectorService.getService('squared-fusion-gcal'),
+        hasHybridMessageFeatureToggle: FeatureToggleService.supports(FeatureToggleService.features.atlasHybridImp),
       }).then(function (response) {
         vm.services.calendarExchange = getServiceIfEnabled(response.servicesFromFms, 'squared-fusion-cal');
         vm.services.callServiceAware = getServiceIfEnabled(response.servicesFromFms, 'squared-fusion-uc');
         vm.services.callServiceConnect = getServiceIfEnabled(response.servicesFromFms, 'squared-fusion-ec');
         vm.services.calendarGoogle = (response.gcalService && response.gcalService.setup) ? response.gcalService : null;
-        vm.isEnabled = vm.services.hasCalendarService() || vm.services.hasCallService();
+        if (response.hasHybridMessageFeatureToggle) {
+          vm.services.hybridMessage = getServiceIfEnabled(response.servicesFromFms, 'spark-hybrid-impinterop');
+        }
+        vm.isEnabled = vm.services.hasCalendarService() || vm.services.hasCallService() || vm.services.hasHybridMessageService();
       });
+    }
+
+    function $onChanges(changes) {
+      if (changes.userIsLicensed && !changes.userIsLicensed.currentValue && changes.userIsLicensed.previousValue) {
+        clearSelectedHybridServicesEntitlements();
+      }
     }
 
     function setEntitlements() {
@@ -75,15 +86,15 @@
       vm.entitlements = [];
       if (vm.services.calendarEntitled) {
         vm.services.setSelectedCalendarEntitlement();
-        if (vm.services.calendarExchange && vm.services.calendarExchange.entitled) {
+        if (_.get(vm.services, 'calendarExchange.entitled')) {
           vm.entitlements.push({ entitlementState: 'ACTIVE', entitlementName: 'squaredFusionCal' });
-        } else if (vm.services.calendarGoogle && vm.services.calendarGoogle.entitled) {
+        } else if (_.get(vm.services, 'calendarGoogle.entitled')) {
           vm.entitlements.push({ entitlementState: 'ACTIVE', entitlementName: 'squaredFusionGCal' });
         }
       } else {
         vm.services.selectedCalendarType = null;
       }
-      if (!hasHuronCallEntitlement() && vm.services.callServiceAware && vm.services.callServiceAware.entitled) {
+      if (!hasHuronCallEntitlement() && _.get(vm.services, 'callServiceAware.entitled')) {
         vm.entitlements.push({ entitlementState: 'ACTIVE', entitlementName: 'squaredFusionUC' });
         if (vm.services.callServiceConnect && vm.services.callServiceConnect.entitled) {
           vm.entitlements.push({ entitlementState: 'ACTIVE', entitlementName: 'squaredFusionEC' });
@@ -96,8 +107,11 @@
           vm.services.callServiceConnect.entitled = false;
         }
       }
-      if (!_.isUndefined(vm.updateEntitlements)) {
-        vm.updateEntitlements({
+      if (_.get(vm.services, 'hybridMessage.entitled')) {
+        vm.entitlements.push({ entitlementState: 'ACTIVE', entitlementName: 'sparkHybridImpInterop' });
+      }
+      if (!_.isUndefined(vm.entitlementsCallback)) {
+        vm.entitlementsCallback({
           entitlements: vm.entitlements,
         });
       }
@@ -119,19 +133,19 @@
     function hasHuronCallEntitlement() {
       return OnboardService.huronCallEntitlement;
     }
-  }
 
-  /* @ngInject */
-  function hybridServicesPanel() {
-    return {
-      restrict: 'E',
-      scope: {
-        updateEntitlements: '&bindEntitlements',
-      },
-      bindToController: true,
-      controllerAs: 'hybridServicesPanelCtrl',
-      controller: 'hybridServicesPanelCtrl',
-      template: require('modules/core/users/userAdd/hybrid-services-entitlements-panel/hybridServicesPanel.tpl.html'),
-    };
+    function clearSelectedHybridServicesEntitlements() {
+      vm.services.calendarEntitled = false;
+      if (vm.services.callServiceAware) {
+        vm.services.callServiceAware.entitled = false;
+      }
+      if (vm.services.callServiceConnect) {
+        vm.services.callServiceConnect.entitled = false;
+      }
+      if (vm.services.hybridMessage) {
+        vm.services.hybridMessage.entitled = false;
+      }
+      setEntitlements();
+    }
   }
 })();
