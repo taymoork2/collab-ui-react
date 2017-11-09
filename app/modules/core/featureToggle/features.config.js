@@ -101,6 +101,7 @@ module.exports = {
   csdmPlaceGuiSettings: 'csdm-place-gui-settings',
   csdmPlaceUpgradeChannel: 'csdm-place-upgrade-channel',
   csdmT38: 'csdm-ata-t38',
+  csdmApiAccess: 'csdm-api-access',
   deleteContent: 'delete-content',
   dirSync: 'atlas-dir-sync',
   disableCacheForFeatures: 'disableCacheForFeatures',

@@ -227,6 +227,8 @@ class PlaceOverview implements ng.IComponentController {
             });
           }
         });
+      this.FeatureToggleService.supports(this.FeatureToggleService.features.csdmApiAccess)
+        .then(r => this.showDeviceSettings = r || this.showDeviceSettings);
     }
     this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484)
     .then(result => this.ishI1484 = result);
