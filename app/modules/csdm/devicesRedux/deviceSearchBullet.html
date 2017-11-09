@@ -5,9 +5,8 @@
   <span class="field-descriptor" ng-if="bctrl.getQueryField()">{{bctrl.getTranslatedQueryPrefix()}} </span>
 
   <span ng-if="!bctrl.collectionOperator()">
-    <span>{{bctrl.getTranslatedQueryWithoutField()}}</span>
+    <span>{{bctrl.getTranslatedQueryValue()}}</span>
   </span>
-
 
   <span ng-if="bctrl.collectionOperator()">
     <span ng-if="bctrl.getQueryField()" class="collection-operator">(</span>

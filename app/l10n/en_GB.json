@@ -6660,11 +6660,11 @@
   },
   "CsdmStatus": {
     "connectionStatus": {
-      "Online": "Online",
-      "OnlineWithIssues": "Online, With Issues",
-      "Offline": "Offline",
-      "OfflineExpired": "Deactivated",
-      "Unknown": "Unknown"
+      "CONNECTED": "Online",
+      "CONNECTED_WITH_ISSUES": "Online, With Issues",
+      "DISCONNECTED": "Offline",
+      "OFFLINE_EXPIRED": "Deactivated",
+      "UNKNOWN": "Unknown"
     },
     "WithDevices": "With Devices",
     "upgradeChannels": {

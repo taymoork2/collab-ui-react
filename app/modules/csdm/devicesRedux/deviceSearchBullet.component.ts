@@ -15,7 +15,7 @@ export class DeviceSearchBullet implements ng.IComponentController {
   public isSubLevel: boolean;
 
   /* @ngInject */
-  constructor(private searchTranslator: SearchTranslator) {
+  constructor(private DeviceSearchTranslator: SearchTranslator) {
   }
 
   public subElements(): SearchElement[] {
@@ -50,7 +50,7 @@ export class DeviceSearchBullet implements ng.IComponentController {
   public getTranslatedQueryValue() {
     const searchElement = this.searchElement;
     if (searchElement instanceof FieldQuery) {
-      return this.searchTranslator.translateQueryValue(searchElement.field + '', searchElement.getQueryWithoutField());
+      return this.DeviceSearchTranslator.translateQueryValue(searchElement.field + '', searchElement.getQueryWithoutField());
     }
     return '';
   }
@@ -62,7 +62,7 @@ export class DeviceSearchBullet implements ng.IComponentController {
       return '';
     }
 
-    return this.searchTranslator.translateQueryField(searchElement.field + '') + searchElement.getMatchOperator();
+    return this.DeviceSearchTranslator.translateQueryField(searchElement.field + '') + searchElement.getMatchOperator();
   }
 }
 

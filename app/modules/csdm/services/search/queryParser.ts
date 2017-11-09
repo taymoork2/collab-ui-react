@@ -228,7 +228,6 @@ export class QueryParser {
     'serial',
     'mac',
     'ip',
-    'activeinterface',
     'description',
     'productfamily',
     'software',

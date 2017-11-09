@@ -96,19 +96,16 @@ export class SearchTranslator {
       .value();
   }
 
-  private static CreateFieldQuery(translationKey: string) {
+  private static CreateFieldQuery(translationKey: string): FieldQuery {
     const searchField = SearchTranslator.getSearchField(translationKey);
 
     let searchQuery = translationKey;
     switch (searchField) {
       case (QueryParser.Field_ActiveInterface):
       case (QueryParser.Field_UpgradeChannel):
-      case (QueryParser.Field_ErrorCodes): {
-        searchQuery = translationKey.split('.')[2];
-        break;
-      }
+      case (QueryParser.Field_ErrorCodes):
       case (QueryParser.Field_ConnectionStatus): {
-        searchQuery = SearchTranslator.mapConnectionStatusQuery(translationKey);
+        searchQuery = translationKey.split('.')[2];
         break;
       }
       default: {
@@ -117,24 +114,6 @@ export class SearchTranslator {
     }
 
     return new FieldQuery(searchQuery, searchField, FieldQuery.QueryTypeExact);
-  }
-
-  private static mapConnectionStatusQuery(translationKey: string) {
-    const connectionStatusSubCode = translationKey.split('.')[2];
-    switch (connectionStatusSubCode) {
-      case 'OnlineWithIssues':
-        return 'CONNECTED_WITH_ISSUES';
-      case 'Online':
-        return 'CONNECTED';
-      case 'Offline':
-        return 'DISCONNECTED';
-      case 'OfflineExpired':
-        return 'OFFLINE_EXPIRED';
-      case 'Unknown':
-        return 'UNKNOWN';
-      default:
-        return connectionStatusSubCode;
-    }
   }
 
   private matches(element: SearchElement, translationKey: string, translationValue: string): boolean {
@@ -188,15 +167,17 @@ export class SearchTranslator {
   //   'tags'];
 
 
-  private static fieldNameTranslations: { [fieldKey: string]: { tKey: string, tValuePrefix?: string } } = {
+  private static fieldNameTranslations: { [fieldKey: string]: { tKey?: string, tValuePrefix?: string } } = {
     displayname: { tKey: 'spacesPage.nameHeader' },
     connectionstatus: { tKey: 'spacesPage.statusHeader', tValuePrefix: 'CsdmStatus.connectionStatus.' },
+    upgradechannel: { tValuePrefix: 'CsdmStatus.upgradeChannels.' },
+    activeinterface: { tValuePrefix: 'CsdmStatus.activeInterface.' },
     product: { tKey: 'spacesPage.typeHeader' },
   };
 
   public getFieldTranslationKey(field: string): string {
     const translationMatch = SearchTranslator.fieldNameTranslations[field];
-    return translationMatch ? translationMatch.tKey : field;
+    return (translationMatch && translationMatch.tKey) ? translationMatch.tKey : field;
   }
 
   public translateQueryField(field: string): string {

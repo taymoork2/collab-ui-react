@@ -6660,11 +6660,11 @@
   },
   "CsdmStatus": {
     "connectionStatus": {
-      "Online": "Online",
-      "OnlineWithIssues": "Online, met problemen",
-      "Offline": "Offline",
-      "OfflineExpired": "Gedeactiveerd",
-      "Unknown": "Onbekend"
+      "CONNECTED": "Online",
+      "CONNECTED_WITH_ISSUES": "Online, met problemen",
+      "DISCONNECTED": "Offline",
+      "OFFLINE_EXPIRED": "Gedeactiveerd",
+      "UNKNOWN": "Onbekend"
     },
     "WithDevices": "Met apparaten",
     "upgradeChannels": {

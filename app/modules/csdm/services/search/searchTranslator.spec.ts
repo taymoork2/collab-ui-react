@@ -11,11 +11,11 @@ describe('SearchTranslator', () => {
     this.injectDependencies('$translate', 'CsdmSearchService', 'UrlConfig', 'Authinfo', '$rootScope');
 
     const keyMock = {
-      'CsdmStatus.connectionStatus.Online': 'Online',
-      'CsdmStatus.connectionStatus.OnlineWithIssues': 'Online, med problemer',
-      'CsdmStatus.connectionStatus.Offline': 'Ikke pålogget',
-      'CsdmStatus.connectionStatus.OfflineExpired': 'Deaktivert',
-      'CsdmStatus.connectionStatus.Unknown': 'Ukjent',
+      'CsdmStatus.connectionStatus.CONNECTED': 'Online',
+      'CsdmStatus.connectionStatus.CONNECTED_WITH_ISSUES': 'Online, med problemer',
+      'CsdmStatus.connectionStatus.DISCONNECTED': 'Ikke pålogget',
+      'CsdmStatus.connectionStatus.OFFLINE_EXPIRED': 'Deaktivert',
+      'CsdmStatus.connectionStatus.UNKNOWN': 'Ukjent',
       'CsdmStatus.WithDevices': 'Med enheter',
       'CsdmStatus.upgradeChannels.SpecialCharOne': '在线',
       'CsdmStatus.upgradeChannels.Stable': 'Stabil',
@@ -65,7 +65,7 @@ describe('SearchTranslator', () => {
   it('should map correct search field', function () {
     expect('upgradechannel').toEqual(SearchTranslator.getSearchField('CsdmStatus.upgradeChannels.Preview'));
     expect('errorcodes').toEqual(SearchTranslator.getSearchField('CsdmStatus.errorCodes.TouchPanelConnection.message'));
-    expect('connectionstatus').toEqual(SearchTranslator.getSearchField('CsdmStatus.connectionStatus.Offline'));
+    expect('connectionstatus').toEqual(SearchTranslator.getSearchField('CsdmStatus.connectionStatus.DISCONNECTED'));
     expect('upgradechannel').toEqual(SearchTranslator.getSearchField('CsdmStatus.upgradeChannels.Preview'));
     expect(SearchTranslator.getSearchField('Csdm.The.unknown.thing')).toBeUndefined();
   });
