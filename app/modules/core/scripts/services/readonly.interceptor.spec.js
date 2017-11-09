@@ -115,6 +115,36 @@ describe('ReadonlyInterceptor', function () {
       expect(this.Notification.notifyReadOnly.calls.count()).toBe(0);
     });
 
+    it('does not intercept global status service POST operation', function () {
+      var config = {
+        method: 'POST',
+        url: 'https://service-collaborationhelp.cisco.com/status',
+      };
+      this.ReadonlyInterceptor.request(config);
+      expect(this.$q.reject.calls.count()).toBe(0);
+      expect(this.Notification.notifyReadOnly.calls.count()).toBe(0);
+    });
+
+    it('does not intercept global status service PUT operation', function () {
+      var config = {
+        method: 'PUT',
+        url: 'https://service-collaborationhelp.cisco.com/status',
+      };
+      this.ReadonlyInterceptor.request(config);
+      expect(this.$q.reject.calls.count()).toBe(0);
+      expect(this.Notification.notifyReadOnly.calls.count()).toBe(0);
+    });
+
+    it('does not intercept global status service DELETE operation', function () {
+      var config = {
+        method: 'DELETE',
+        url: 'https://service-collaborationhelp.cisco.com/status',
+      };
+      this.ReadonlyInterceptor.request(config);
+      expect(this.$q.reject.calls.count()).toBe(0);
+      expect(this.Notification.notifyReadOnly.calls.count()).toBe(0);
+    });
+
     it('does not intercept white-listed states', function () {
       var config = {
         data: 'x',

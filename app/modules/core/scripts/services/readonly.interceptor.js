@@ -35,6 +35,7 @@
       '/custportal/extensions/',
       '/users/report',
       '/devices/_search',
+      '/status',
     ];
 
     var allowedState = [
